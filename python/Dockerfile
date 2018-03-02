@@ -9,4 +9,8 @@ ADD . .
 
 RUN pip install -r requirements.txt
 
-CMD ["bash"]
+EXPOSE 5000
+
+ENV FLASK_APP shared/app.py
+
+CMD ["flask", "run", "--host=0.0.0.0"]
