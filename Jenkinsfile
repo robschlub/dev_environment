@@ -4,7 +4,7 @@ pipeline {
         stage('Python Lint Check') {
         		agent { 
 				    	dockerfile {
-				        dir 'python'
+				        file Dockerfile_python
 				    	}
 				    }
             steps {
@@ -14,7 +14,7 @@ pipeline {
         stage('Python Tests') {
         		agent { 
 				    	dockerfile {
-				        dir 'python'
+				        file Dockerfile_python
 				    	}
 				    }
             steps {
@@ -26,7 +26,7 @@ pipeline {
         stage('JS Linting') {
         		agent { 
 				    	dockerfile {
-				        dir 'node'
+				        file Dockerfile_js
 				    	}
 				    }
             steps {
