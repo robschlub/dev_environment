@@ -7,7 +7,8 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh '/app/python pytest'
+                sh 'flake8'
+                sh 'pytest'
             }
         }
     }
