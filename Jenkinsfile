@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker 'python:3.6.4-slim' }
+    agent { docker 'test-python' }
     stages {
         stage('build') {
             steps {
