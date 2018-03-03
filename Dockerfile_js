@@ -2,10 +2,10 @@ FROM node:9.7.0-slim
 
 WORKDIR /app
 
-ADD . .
-
 # This is the folder that will be shared with the docker host machine
 RUN mkdir shared
+
+ADD .eslintrc.json .
 
 # Install eslint and dependencies
 RUN npm init -y
