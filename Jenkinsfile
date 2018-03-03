@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'python flake8'
+                sh 'python --version'
             }
         }
     }
