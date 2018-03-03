@@ -1,7 +1,7 @@
 pipeline {
     agent none
     stages {
-        stage('build') {
+        stage('Python Lint Check') {
         		agent { 
 				    	dockerfile {
 				        dir 'python'
@@ -9,6 +9,15 @@ pipeline {
 				    }
             steps {
                 sh "flake8"
+            }
+        stage('Python Tests') {
+        		agent { 
+				    	dockerfile {
+				        dir 'python'
+				    	}
+				    }
+            steps {
+                sh "pytest"
             }
         }
     }
