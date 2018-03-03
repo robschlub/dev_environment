@@ -10,6 +10,7 @@ pipeline {
             steps {
                 sh "flake8"
             }
+        }
         stage('Python Tests') {
         		agent { 
 				    	dockerfile {
