@@ -21,5 +21,15 @@ pipeline {
                 sh "pytest"
             }
         }
+        stage('JS Linting') {
+        		agent { 
+				    	dockerfile {
+				        dir 'node'
+				    	}
+				    }
+            steps {
+                sh "eslint shared"
+            }
+        }
     }
 }
