@@ -18,6 +18,8 @@ pipeline {
 				    	}
 				    }
             steps {
+            		sh "ls -la"
+            		sh "pwd"
                 sh "pytest"
             }
         }
