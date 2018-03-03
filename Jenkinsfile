@@ -8,7 +8,7 @@ pipeline {
 				    	}
 				    }
             steps {
-                sh flake8
+                sh "flake8"
             }
         }
     }
