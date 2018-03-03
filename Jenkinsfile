@@ -1,13 +1,14 @@
 pipeline {
-    agent { 
-    	dockerfile {
-        dir 'python'
-    	}
-    }
+    agent none
     stages {
+    		agent { 
+		    	dockerfile {
+		        dir 'python'
+		    	}
+		    }
         stage('build') {
             steps {
-                sh 'flake8'
+                sh flake8
             }
         }
     }
