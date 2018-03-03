@@ -9,7 +9,7 @@ ADD . .
 
 RUN pip install -r requirements.txt
 
-ENV FLASK_APP shared/app.py
+ENV FLASK_APP shared/app/app.py
 
 CMD ["bash"]
 
