@@ -2,6 +2,7 @@ pipeline {
     agent { 
     	dockerfile {
         dir 'python'
+    	}
     }
     stages {
         stage('build') {
