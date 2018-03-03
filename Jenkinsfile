@@ -28,6 +28,8 @@ pipeline {
 				    	}
 				    }
             steps {
+            		sh "ls -la"
+            		sh "pwd"
                 sh "eslint shared"
             }
         }
