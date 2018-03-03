@@ -8,7 +8,6 @@ pipeline {
         stage('build') {
             steps {
                 sh 'flake8'
-                sh 'pytest'
             }
         }
     }
