@@ -12,13 +12,24 @@ ADD package.json .
 ADD .babelrc .
 ADD .flowconfig .
 
-# RUN npm install --save-dev eslint eslint-plugin-import eslint-config-airbnb-base eslint-plugin-flowtype
-# RUN npm install --save-dev webpack webpack-cli babel-preset-env babel-loader babel-core babel-preset-flow flow-bin babel-eslint
-# RUN npm install --save-dev uglifyjs-webpack-plugin
+RUN npm install --save-dev eslint@4.18.2 \
+													 eslint-plugin-import@2.9.0 \
+													 eslint-config-airbnb-base@12.1.0 \
+													 eslint-plugin-flowtype@2.46.1 \
+													 webpack@4.1.1 \
+													 webpack-cli@2.0.11 \
+													 babel-preset-env@1.6.1 \
+													 babel-loader@7.1.4 \
+													 babel-core@6.26.0 \
+													 babel-preset-flow@6.23.0 \
+													 flow-bin@0.67.1 \
+													 babel-eslint@8.2.2 \
+													 uglifyjs-webpack-plugin@1.2.3
 
-RUN npm update -D
+# RUN npm update -D
 
 # Update path so eslint can be run from anywhere
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
 CMD ["bash"]
+
