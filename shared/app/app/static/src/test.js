@@ -1,3 +1,5 @@
+// @flow
+
 // function Console(text) {
 //   console.log(text); // eslint-disable-line no-console
 // }
@@ -6,4 +8,4 @@
 // import cal from './mod_test';
 import * as tools from './mod_test';
 
-tools.Console(tools.calc(1, 4));
+tools.Console(tools.calc(1, 2).toString());

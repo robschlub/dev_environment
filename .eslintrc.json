@@ -1,7 +1,15 @@
 {
-    "extends": "airbnb-base",
+    "extends": ["plugin:flowtype/recommended", "airbnb-base"],
     "rules": {
-        "no-console": "error"
+        "no-console": "warn"
         // "quotes": ["error", "double"]
-      }
+      },
+    "plugins": [
+      "flowtype"],
+
+    "settings": {
+      "flowtype": {
+        "onlyFilesWithFlowAnnotation": true
+    }
+  }
 }

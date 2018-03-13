@@ -10,9 +10,10 @@ ADD .eslintignore .
 ADD webpack.config.js .
 ADD package.json .
 ADD .babelrc .
+ADD .flowconfig .
 
-RUN npm install --save-dev eslint eslint-plugin-import eslint-config-airbnb-base 
-RUN npm install --save-dev webpack webpack-cli babel-preset-env babel-loader babel-core 
+RUN npm install --save-dev eslint eslint-plugin-import eslint-config-airbnb-base eslint-plugin-flowtype
+RUN npm install --save-dev webpack webpack-cli babel-preset-env babel-loader babel-core babel-preset-flow flow-bin babel-eslint
 
 
 # Update path so eslint can be run from anywhere
