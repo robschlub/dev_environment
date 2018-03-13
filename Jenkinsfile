@@ -29,6 +29,7 @@ pipeline {
 				    }
             steps {
                 sh "eslint shared"
+                sh "flow"
             }
         }
         stage('JS Building') {
