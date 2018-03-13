@@ -1,9 +1,9 @@
 const path = require('path');
 
 const config = {
-  entry: './shared/app/js/src/test.js',
+  entry: './shared/app/app/static/src/test.js',
   output: {
-    path: path.resolve(__dirname, 'shared', 'app', 'js', 'build'),
+    path: path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'build'),
     filename: 'main.bundle.js',
   },
   module: {

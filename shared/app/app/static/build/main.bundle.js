@@ -66,20 +66,20 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./shared/app/js/src/test.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./shared/app/app/static/src/test.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./shared/app/js/src/test.js":
-/*!***********************************!*\
-  !*** ./shared/app/js/src/test.js ***!
-  \***********************************/
+/***/ "./shared/app/app/static/src/test.js":
+/*!*******************************************!*\
+  !*** ./shared/app/app/static/src/test.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nfunction Console(text) {\n  console.log(text); // eslint-disable-line no-console\n}\n\nConsole.log('asdf');\n\n//# sourceURL=webpack:///./shared/app/js/src/test.js?");
+eval("\n\nfunction Console(text) {\n  console.log(text); // eslint-disable-line no-console\n}\n\nConsole('asdf');\n\n//# sourceURL=webpack:///./shared/app/app/static/src/test.js?");
 
 /***/ })
 

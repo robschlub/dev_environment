@@ -31,5 +31,15 @@ pipeline {
                 sh "eslint shared"
             }
         }
+        stage('JS Building') {
+        		agent { 
+				    	dockerfile {
+				        filename "Dockerfile_js"
+				    	}
+				    }
+            steps {
+                sh "npm run webpack"
+            }
+        }
     }
 }
