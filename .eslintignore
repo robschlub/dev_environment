@@ -1,0 +1,3 @@
+shared/app/app/static/build/*
+shared/app/app/static/build_flask_gen/*
+shared/app/app/static/.webassets-cache/*

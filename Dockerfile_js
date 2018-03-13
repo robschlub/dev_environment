@@ -6,6 +6,7 @@ WORKDIR /app
 RUN mkdir shared
 
 ADD .eslintrc.json .
+ADD .eslintignore .
 ADD webpack.config.js .
 ADD package.json .
 ADD .babelrc .
