@@ -26,6 +26,7 @@ docker build -t test-$1 .
 
 docker run -it --rm \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/shared:/app/shared \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/webpack.config.js:/app/webpack.config.js \
     --name dev-$1 \
     -p $PORT:5000 \
     test-$1

@@ -43,7 +43,7 @@ const config = {
       },
     }),
   ],
-  mode: 'production',
+  mode: 'development', // Make this production to remove eval statements from bundle output
 };
 
 module.exports = config;
