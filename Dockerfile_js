@@ -6,11 +6,12 @@ WORKDIR /app
 RUN mkdir shared
 
 ADD .eslintrc.json .
+ADD webpack.config.js .
+ADD package.json .
+ADD .babelrc .
 
-# Install eslint and dependencies
-RUN npm init -y
-
-RUN npm install eslint eslint-plugin-import eslint-config-airbnb-base
+RUN npm install --save-dev eslint eslint-plugin-import eslint-config-airbnb-base 
+RUN npm install --save-dev webpack webpack-cli babel-preset-env babel-loader babel-core 
 
 
 # Update path so eslint can be run from anywhere

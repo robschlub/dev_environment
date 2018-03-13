@@ -18,8 +18,6 @@ pipeline {
 				    	}
 				    }
             steps {
-            		sh "ls -la"
-            		sh "pwd"
                 sh "pytest"
             }
         }
@@ -30,8 +28,6 @@ pipeline {
 				    	}
 				    }
             steps {
-            		sh "ls -la"
-            		sh "pwd"
                 sh "eslint shared"
             }
         }
