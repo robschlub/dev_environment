@@ -71,6 +71,18 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./shared/app/app/static/src/mod_test.js":
+/*!***********************************************!*\
+  !*** ./shared/app/app/static/src/mod_test.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar Console = function Console(text) {\n  console.log(text); // eslint-disable-line no-console\n};\n\nexports.default = Console;\n\n//# sourceURL=webpack:///./shared/app/app/static/src/mod_test.js?");
+
+/***/ }),
+
 /***/ "./shared/app/app/static/src/test.js":
 /*!*******************************************!*\
   !*** ./shared/app/app/static/src/test.js ***!
@@ -79,7 +91,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nfunction Console(text) {\n  console.log(text); // eslint-disable-line no-console\n}\n\nConsole('asdf');\n\n//# sourceURL=webpack:///./shared/app/app/static/src/test.js?");
+eval("\n\nvar _mod_test = __webpack_require__(/*! ./mod_test */ \"./shared/app/app/static/src/mod_test.js\");\n\nvar _mod_test2 = _interopRequireDefault(_mod_test);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n(0, _mod_test2.default)('asdf'); // function Console(text) {\n//   console.log(text); // eslint-disable-line no-console\n// }\n\n//# sourceURL=webpack:///./shared/app/app/static/src/test.js?");
 
 /***/ })
 
