@@ -8,4 +8,5 @@
 // import cal from './mod_test';
 import * as tools from './mod_test';
 
-tools.Console(tools.calc(1, 2).toString());
+tools.Console(tools.add(1, 5).toString());
+tools.Console(tools.mulToString(1, 5).toString());

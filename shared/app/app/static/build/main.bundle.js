@@ -79,7 +79,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.calc = calc;\nvar Console = exports.Console = function Console(text) {\n  console.log(text); // eslint-disable-line no-console\n};\n\nfunction calc(a, b) {\n  return a + b;\n}\n\n// export { Console as default };\n\n//# sourceURL=webpack:///./shared/app/app/static/src/mod_test.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.add = add;\nexports.mulToString = mulToString;\nvar Console = exports.Console = function Console(text) {\n  console.log(text); // eslint-disable-line no-console\n};\n\nfunction add(a, b) {\n  return a + b;\n}\n\nfunction mulToString(a, b) {\n  return (a * b).toString();\n}\n// export { Console as default };\n\n//# sourceURL=webpack:///./shared/app/app/static/src/mod_test.js?");
 
 /***/ }),
 
@@ -91,7 +91,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nvar _mod_test = __webpack_require__(/*! ./mod_test */ \"./shared/app/app/static/src/mod_test.js\");\n\nvar tools = _interopRequireWildcard(_mod_test);\n\nfunction _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }\n\ntools.Console(tools.calc(1, 4)); // function Console(text) {\n//   console.log(text); // eslint-disable-line no-console\n// }\n\n// import Console from './mod_test';\n// import cal from './mod_test';\n\n//# sourceURL=webpack:///./shared/app/app/static/src/test.js?");
+eval("\n\nvar _mod_test = __webpack_require__(/*! ./mod_test */ \"./shared/app/app/static/src/mod_test.js\");\n\nvar tools = _interopRequireWildcard(_mod_test);\n\nfunction _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }\n\ntools.Console(tools.add(1, 5).toString());\n\n// function Console(text) {\n//   console.log(text); // eslint-disable-line no-console\n// }\n\n// import Console from './mod_test';\n// import cal from './mod_test';\n\ntools.Console(tools.mulToString(1, 5).toString());\n\n//# sourceURL=webpack:///./shared/app/app/static/src/test.js?");
 
 /***/ })
 
