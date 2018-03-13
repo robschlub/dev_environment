@@ -2,6 +2,8 @@
 //   console.log(text); // eslint-disable-line no-console
 // }
 
-import Console from './mod_test';
+// import Console from './mod_test';
+// import cal from './mod_test';
+import * as tools from './mod_test';
 
-Console('asdf');
+tools.Console(tools.calc(1, 4));

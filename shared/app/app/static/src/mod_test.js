@@ -1,5 +1,9 @@
-const Console = (text) => {
+export const Console = (text) => {
   console.log(text); // eslint-disable-line no-console
 };
 
-export { Console as default };
+export function calc(a, b) {
+  return a + b;
+}
+
+// export { Console as default };

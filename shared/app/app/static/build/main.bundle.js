@@ -79,7 +79,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar Console = function Console(text) {\n  console.log(text); // eslint-disable-line no-console\n};\n\nexports.default = Console;\n\n//# sourceURL=webpack:///./shared/app/app/static/src/mod_test.js?");
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.calc = calc;\nvar Console = exports.Console = function Console(text) {\n  console.log(text); // eslint-disable-line no-console\n};\n\nfunction calc(a, b) {\n  return a + b;\n}\n\n// export { Console as default };\n\n//# sourceURL=webpack:///./shared/app/app/static/src/mod_test.js?");
 
 /***/ }),
 
@@ -91,7 +91,7 @@ eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nvar _mod_test = __webpack_require__(/*! ./mod_test */ \"./shared/app/app/static/src/mod_test.js\");\n\nvar _mod_test2 = _interopRequireDefault(_mod_test);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n(0, _mod_test2.default)('asdf'); // function Console(text) {\n//   console.log(text); // eslint-disable-line no-console\n// }\n\n//# sourceURL=webpack:///./shared/app/app/static/src/test.js?");
+eval("\n\nvar _mod_test = __webpack_require__(/*! ./mod_test */ \"./shared/app/app/static/src/mod_test.js\");\n\nvar tools = _interopRequireWildcard(_mod_test);\n\nfunction _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }\n\ntools.Console(tools.calc(1, 4)); // function Console(text) {\n//   console.log(text); // eslint-disable-line no-console\n// }\n\n// import Console from './mod_test';\n// import cal from './mod_test';\n\n//# sourceURL=webpack:///./shared/app/app/static/src/test.js?");
 
 /***/ })
 
