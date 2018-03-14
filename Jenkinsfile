@@ -39,6 +39,7 @@ pipeline {
 				    	}
 				    }
             steps {
+                sh "npm ls --depth=0"
                 sh "npm run webpack"
             }
         }
