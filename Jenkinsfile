@@ -8,12 +8,14 @@ pipeline {
 			    	}
 			    }
             environment {
-                PATH = "/app/:$PATH"
+                PATH = "/app/node_modules/.bin:$PATH"
               }
             steps {
                 sh "flow"
                 sh "ls /app/node_modules"
                 sh "echo $PATH"
+                sh "pwd"
+                sh "ls"
                 sh "ls /app/node_modules/uglifyjs-webpack-plugin"
                 sh "npm list"
                 sh "npm -g list"
