@@ -8,6 +8,7 @@ pipeline {
 				    	}
 				    }
             steps {
+                sh "flow"
                 sh "ls /app/node_modules"
                 sh "ls /app/node_modules/uglifyjs-webpack-plugin"
                 sh "npm run webpack"
