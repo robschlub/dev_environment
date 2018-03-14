@@ -32,6 +32,16 @@ pipeline {
                 sh "eslint shared"
             }
         }
+        stage('JS Tests') {
+            agent { 
+                    dockerfile {
+                        filename "Dockerfile_js"
+                    }
+                }
+            steps {
+                sh "jest"
+            }
+        }
         stage('JS Building') {
             agent { 
                     dockerfile {
