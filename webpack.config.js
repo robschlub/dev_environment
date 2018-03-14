@@ -8,8 +8,8 @@ const config = {
     path: path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'build'),
     filename: 'main.bundle.js',
   },
-  resolveLoader: {
-    root: path.join(__dirname, 'node_modules')
+  resolve: {
+    modules: ['/app/node_modules'],
   },
   module: {
     rules: [
