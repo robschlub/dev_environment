@@ -12,9 +12,9 @@ pipeline {
             //  }
             steps {
                 dir('/app') {
-                sh "flow"
+                // sh "flow"
                 // sh "ls /app/node_modules"
-                sh "echo $PATH"
+                // sh "echo $PATH"
                 sh "pwd"
                 sh "ls -la"
                 sh "ls -la app"
