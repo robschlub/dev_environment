@@ -17,7 +17,7 @@ pipeline {
                 sh "pwd"
                 sh "ls"
                 // sh "ls /app/node_modules/uglifyjs-webpack-plugin"
-
+                sh "whoami"
                 sh "npm list"
                 sh "npm -g list"
                 sh "npm run webpack"
