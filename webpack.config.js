@@ -1,4 +1,5 @@
 const path = require('path');
+var webpack = require('webpack');
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 
 const config = {
