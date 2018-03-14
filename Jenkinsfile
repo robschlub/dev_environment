@@ -16,7 +16,7 @@ pipeline {
 //                // sh "flow"
 //                // sh "ls /app/node_modules"
 //                // sh "echo $PATH"
-                  sh "cd /app && pwd"
+//                  sh "cd /app && pwd"
 //                sh "ls -la"
 //                sh "ls -la app"
 //                // sh "ls /app/node_modules/uglifyjs-webpack-plugin"
@@ -25,7 +25,7 @@ pipeline {
 //                sh "ls -la /app"
 //                sh "npm list"
 //                sh "npm -g list"
-//                sh "npm run webpack"
+                  sh "cd /app && npm run webpack"
 //                }
             }
         }
