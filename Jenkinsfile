@@ -34,6 +34,7 @@ pipeline {
                   sh "cd /app && ls shared/app/app"
                   sh "cd /app && ls shared/app/app/static"
                   sh "cd /app && ls shared/app/app/static/src"
+                  sh "cd /app && npm list --depth=0"
                   sh "cd /app && npm run webpack"
 //                }
             }
