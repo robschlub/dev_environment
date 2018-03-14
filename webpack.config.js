@@ -13,7 +13,7 @@ const config = {
   },
   resolveLoader: {
     modules: ['/app/node_modules', 'node_modules'],
-  }
+  },
   module: {
     rules: [
       {
