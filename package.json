@@ -6,7 +6,8 @@
   "scripts": {
     "webpack": "webpack",
     "flow": "flow",
-    "jest": "jest"
+    "jest": "jest",
+    "lint": "eslint shared"
   },
   "keywords": [],
   "author": "",
