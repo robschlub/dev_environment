@@ -2,42 +2,42 @@ pipeline {
     agent none
     stages {
         stage('Python Lint Check') {
-                agent { 
-                        dockerfile {
+            agent { 
+                    dockerfile {
                         filename "Dockerfile_python"
-                        }
                     }
+                }
             steps {
                 sh "flake8"
             }
         }
         stage('Python Tests') {
-                agent { 
-                        dockerfile {
+            agent { 
+                    dockerfile {
                         filename "Dockerfile_python"
-                        }
                     }
+                }
             steps {
                 sh "pytest"
             }
         }
         stage('JS Linting') {
-                agent { 
-                        dockerfile {
+            agent { 
+                    dockerfile {
                         filename "Dockerfile_js"
-                        }
                     }
+                }
             steps {
-                sh "eslint shared"
                 sh "flow"
+                sh "eslint shared"
             }
         }
         stage('JS Building') {
-                agent { 
-                        dockerfile {
+            agent { 
+                    dockerfile {
                         filename "Dockerfile_js"
-                        }
                     }
+                }
             steps {
                 sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
                 sh "cd /app && npm run webpack"
