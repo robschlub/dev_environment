@@ -2,13 +2,10 @@ pipeline {
     agent none
     stages {
         stage('JS Building') {
-            environment {
-            workingDir = pwd()
-            }
     		agent { 
                 docker {
 			         	image 'test-js'
-                        args '-v ${workingDir}/shared:/app/shared'
+                        args '-v ${WORKSPACE}/shared:/app/shared'
                     }
 			    }
             //environment {
