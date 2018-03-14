@@ -7,9 +7,6 @@ pipeline {
 			        filename "Dockerfile_js"
 			    	}
 			    }
-            environment {
-                PATH = "/app/node_modules/.bin:$PATH"
-              }
             steps {
                 sh "flow"
                 sh "ls /app/node_modules"

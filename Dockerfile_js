@@ -27,7 +27,7 @@ RUN npm install -no--optional --save-dev eslint@4.18.2 \
 													 babel-eslint@8.2.2
 													 
 # Update path so eslint can be run from anywhere
-ENV PATH="/app/node_modules/.bin:/app/node_modules/${PATH}"
+ENV PATH="/app/node_modules/.bin:/app/node_modules/:${PATH}"
 
 CMD ["bash"]
 
