@@ -11,6 +11,7 @@ pipeline {
                 PATH = "/app/node_modules/.bin:/app/node_modules:${PATH}"
               }
             steps {
+                dir "/app"
                 sh "flow"
                 // sh "ls /app/node_modules"
                 sh "echo $PATH"
