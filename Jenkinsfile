@@ -19,6 +19,7 @@ pipeline {
                 sh "ls -la app"
                 // sh "ls /app/node_modules/uglifyjs-webpack-plugin"
                 sh "whoami"
+                sh "which flow"
                 sh "npm list"
                 sh "npm -g list"
                 sh "npm run webpack"
