@@ -27,7 +27,7 @@ pipeline {
 //                sh "npm -g list"
 //                sh "npm run webpack"
 //                }
-//            }
+            }
         }
     }
 }
