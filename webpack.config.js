@@ -7,12 +7,7 @@ const config = {
     path: path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'build'),
     filename: 'main.bundle.js',
   },
-  // resolve: {
-  //   modules: ['/app/node_modules', 'node_modules'],
-  // },
-  // resolveLoader: {
-  //   modules: ['/app/node_modules', 'node_modules'],
-  // },
+  
   module: {
     rules: [
       {
