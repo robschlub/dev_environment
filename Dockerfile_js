@@ -24,7 +24,10 @@ RUN npm install --save-dev eslint@4.18.2 \
 													 babel-preset-flow@6.23.0 \
 													 flow-bin@0.67.1 \
 													 uglifyjs-webpack-plugin@1.2.3 \
-													 babel-eslint@8.2.2
+													 babel-eslint@8.2.2 \
+													 jest@22.4.2 \
+													 babel-jest@22.4.1 \
+    											 regenerator-runtime@0.11.1
 													 
 # Update path so eslint can be run from anywhere
 ENV PATH="/app/node_modules/.bin:${PATH}"
