@@ -3,9 +3,7 @@ pipeline {
     stages {
         stage('JS Building') {
     		agent { 
-			    	dockerfile {
-			        filename "Dockerfile_js"
-			    	}
+			    	image 'test-js'
 			    }
             environment {
                 PATH = "/app/node_modules/.bin:/app/node_modules:${PATH}"
