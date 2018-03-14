@@ -16,34 +16,34 @@ const config = {
       },
     ],
   },
-  plugins: [
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        ecma: 8,
-        warnings: false,
-        // parse: { ...options },
-        // compress: { ...options },
-        // mangle: {
-        //   ...options,
-        //   properties: {
-        //     // mangle property options
-        //   },
-        // },
-        output: {
-          comments: false,
-          beautify: false,
-          // ...options
-        },
-        toplevel: false,
-        nameCache: null,
-        ie8: false,
-        keep_classnames: undefined,
-        keep_fnames: false,
-        safari10: false,
-      },
-    }),
-  ],
-  mode: 'production', // Make this production to remove eval statements from bundle output
+  // plugins: [
+  //   new UglifyJsPlugin({
+  //     uglifyOptions: {
+  //       ecma: 8,
+  //       warnings: false,
+  //       // parse: { ...options },
+  //       // compress: { ...options },
+  //       // mangle: {
+  //       //   ...options,
+  //       //   properties: {
+  //       //     // mangle property options
+  //       //   },
+  //       // },
+  //       output: {
+  //         comments: false,
+  //         beautify: false,
+  //         // ...options
+  //       },
+  //       toplevel: false,
+  //       nameCache: null,
+  //       ie8: false,
+  //       keep_classnames: undefined,
+  //       keep_fnames: false,
+  //       safari10: false,
+  //     },
+  //   }),
+  // ],
+  mode: 'development', // Make this production to remove eval statements from bundle output
 };
 
 module.exports = config;
