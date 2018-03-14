@@ -15,7 +15,7 @@ pipeline {
                 // sh "ls /app/node_modules"
                 sh "echo $PATH"
                 sh "pwd"
-                sh "ls"
+                sh "ls -la"
                 // sh "ls /app/node_modules/uglifyjs-webpack-plugin"
                 sh "whoami"
                 sh "npm list"
