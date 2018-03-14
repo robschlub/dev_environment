@@ -25,6 +25,12 @@ pipeline {
 //                sh "ls -la /app"
 //                sh "npm list"
 //                sh "npm -g list"
+                  sh "cd /app && ls"
+                  sh "cd /app && ls shared"
+                  sh "cd /app && ls shared/app"
+                  sh "cd /app && ls shared/app/app"
+                  sh "cd /app && ls shared/app/app/static"
+                  sh "cd /app && ls shared/app/app/static/src"
                   sh "cd /app && npm run webpack"
 //                }
             }
