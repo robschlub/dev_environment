@@ -1,5 +1,5 @@
 const path = require('path');
-const UglifyJsPlugin = require('/app/node_modules/uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 
 const config = {
   entry: './shared/app/app/static/src/test.js',
