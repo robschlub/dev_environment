@@ -11,7 +11,7 @@ pipeline {
             //    PATH = "/app/node_modules/.bin:/app/node_modules:${PATH}"
             //  }
             steps {
-                dir("/app")
+                dir('/app') {
                 sh "flow"
                 // sh "ls /app/node_modules"
                 sh "echo $PATH"
@@ -25,6 +25,7 @@ pipeline {
                 sh "npm list"
                 sh "npm -g list"
                 sh "npm run webpack"
+                }
             }
         }
     }
