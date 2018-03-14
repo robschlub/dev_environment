@@ -7,11 +7,11 @@ pipeline {
 			         	image 'test-js'
                     }
 			    }
-            environment {
-                PATH = "/app/node_modules/.bin:/app/node_modules:${PATH}"
-              }
+            //environment {
+            //    PATH = "/app/node_modules/.bin:/app/node_modules:${PATH}"
+            //  }
             steps {
-                dir "/app"
+                dir("/app")
                 sh "flow"
                 // sh "ls /app/node_modules"
                 sh "echo $PATH"
