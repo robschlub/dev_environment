@@ -27,6 +27,7 @@ pipeline {
 //                sh "npm -g list"
                   sh "echo ${WORKSPACE}"
                   sh "echo ${HOME}"
+                  sh "cp shared/* /app/shared/"
                   sh "cd /app && ls"
                   sh "cd /app && ls shared"
                   sh "cd /app && ls shared/app"
