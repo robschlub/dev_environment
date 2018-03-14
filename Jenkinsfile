@@ -7,6 +7,9 @@ pipeline {
 			        filename "Dockerfile_js"
 			    	}
 			    }
+            environment {
+                PATH = "/app/node_modules/.bin:/app/node_modules:${PATH}"
+              }
             steps {
                 sh "flow"
                 sh "ls /app/node_modules"
@@ -14,6 +17,7 @@ pipeline {
                 sh "pwd"
                 sh "ls"
                 sh "ls /app/node_modules/uglifyjs-webpack-plugin"
+
                 sh "npm list"
                 sh "npm -g list"
                 sh "npm run webpack"
