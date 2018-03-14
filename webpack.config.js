@@ -9,8 +9,11 @@ const config = {
     filename: 'main.bundle.js',
   },
   resolve: {
-    modules: ['/app/node_modules'],
+    modules: ['/app/node_modules', 'node_modules'],
   },
+  resolveLoader: {
+    modules: ['/app/node_modules', 'node_modules'],
+  }
   module: {
     rules: [
       {
