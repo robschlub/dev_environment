@@ -2,27 +2,21 @@ pipeline {
     agent none
     stages {
         stage('JS Building') {
-            steps {
-                dir('new-dir') {
-                    withDockerContainer(image: 'test-js') {
-                        sh 'pwd'
+            
+    		agent { 
+                docker {
+			         	image 'test-js'
                     }
-                }
-            }
-//    		agent { 
-//                docker {
-//			         	image 'test-js'
-//                    }
-//			    }
+			    }
             //environment {
             //    PATH = "/app/node_modules/.bin:/app/node_modules:${PATH}"
             //  }
-//            steps {
+            steps {
 //                dir('/app') {
 //                // sh "flow"
 //                // sh "ls /app/node_modules"
 //                // sh "echo $PATH"
-//                sh "pwd"
+                  sh "cd /app && pwd"
 //                sh "ls -la"
 //                sh "ls -la app"
 //                // sh "ls /app/node_modules/uglifyjs-webpack-plugin"
