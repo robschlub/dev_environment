@@ -5,12 +5,7 @@ WORKDIR /app
 # This is the folder that will be shared with the docker host machine
 RUN mkdir shared
 
-ADD .eslintrc.json .
-ADD .eslintignore .
-ADD webpack.config.js .
 ADD package.json .
-ADD .babelrc .
-ADD .flowconfig .
 
 RUN npm install --save-dev eslint@4.18.2 \
 													 eslint-plugin-import@2.9.0 \
@@ -24,8 +19,18 @@ RUN npm install --save-dev eslint@4.18.2 \
 													 babel-preset-flow@6.23.0 \
 													 flow-bin@0.67.1 \
 													 uglifyjs-webpack-plugin@1.2.3 \
-													 babel-eslint@8.2.2
-													 
+													 babel-eslint@8.2.2 \
+													 jest@22.4.2 \
+													 babel-jest@22.4.1 \
+    											 regenerator-runtime@0.11.1 \
+    											 eslint-plugin-jest@21.14.1
+					
+ADD .eslintrc.json .
+ADD .eslintignore .
+ADD webpack.config.js .
+ADD .babelrc .
+ADD .flowconfig .
+
 # Update path so eslint can be run from anywhere
 ENV PATH="/app/node_modules/.bin:${PATH}"
 

@@ -1,11 +1,12 @@
 {
-    "extends": ["plugin:flowtype/recommended", "airbnb-base"],
+    "extends": ["plugin:flowtype/recommended", "plugin:jest/recommended","airbnb-base"],
     "rules": {
-        "no-console": "warn"
+        "no-console": "error"
         // "quotes": ["error", "double"]
       },
     "plugins": [
-      "flowtype"],
+      "flowtype",
+      "jest"],
 
     "settings": {
       "flowtype": {

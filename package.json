@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
-    "flow": "flow"
+    "flow": "flow",
+    "jest": "jest",
+    "lint": "eslint shared"
   },
   "keywords": [],
   "author": "",

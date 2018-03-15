@@ -32,6 +32,17 @@ pipeline {
                 sh "eslint shared"
             }
         }
+        stage('JS Tests') {
+            agent { 
+                    dockerfile {
+                        filename "Dockerfile_js"
+                    }
+                }
+            steps {
+                sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
+                sh "cd /app && npm run jest"
+            }
+        }
         stage('JS Building') {
             agent { 
                     dockerfile {

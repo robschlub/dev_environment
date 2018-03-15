@@ -6,7 +6,7 @@
 
 // import Console from './mod_test';
 // import cal from './mod_test';
-import * as tools from './mod_test';
+import * as tools from './tools';
 
 tools.Console(tools.add(2, 10).toString());
 tools.Console(tools.mulToString(2, 5).toString());
