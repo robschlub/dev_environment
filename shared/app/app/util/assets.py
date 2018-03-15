@@ -5,11 +5,11 @@ bundles = {
 
     'compiled_map_js': Bundle(
         'build/main.bundle.js.map',
-        output='dist/main.bundle.js.map'),
+        output='dist/main.flask.bundle.js.map'),
 
     'compiled_js': Bundle(
         'build/main.bundle.js',
-        output='dist/main.bundle.js'),
+        output='dist/main.flask.bundle.js'),
 }
 
 assets = Environment(app)
