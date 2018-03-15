@@ -9,7 +9,7 @@ bundles = {
 
     'compiled_js': Bundle(
         'build/main.bundle.js',
-        output='build_flask_gen/main.bundle.js'),
+        output='dist/main.bundle.js'),
 }
 
 assets = Environment(app)
