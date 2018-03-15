@@ -69,6 +69,7 @@ const config = {
   entry: {
     main: './shared/app/app/static/src/main.js',
     entry2: './shared/app/app/static/src/entry2.js',
+    entry3: './shared/app/app/static/src/entry3.js',
   },
   output: {
     path: buildPath,
@@ -86,6 +87,11 @@ const config = {
   plugins: pluginArray,
   mode: e.webpackMode,
   devtool: e.devtool,
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 };
 
 module.exports = config;
