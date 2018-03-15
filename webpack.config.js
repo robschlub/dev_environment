@@ -90,7 +90,26 @@ const config = {
   optimization: {
     splitChunks: {
       chunks: 'all',
-      minSize: 10,
+      minSize: 30000,
+      cacheGroups: {
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+        tools: {
+          minSize: 10,
+          minChunks: 2,
+          priority: -10,
+          reuseExistingChunk: true,
+          test: /src\/tools/,
+          name: 'tools',
+        },
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+        },
+      },
     },
   },
 };
