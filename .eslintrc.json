@@ -11,6 +11,9 @@
     "settings": {
       "flowtype": {
         "onlyFilesWithFlowAnnotation": true
+      },
+    },
+    "env": {
+      "browser": true
     }
-  }
 }
