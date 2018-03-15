@@ -7,6 +7,11 @@ fi
 
 if [ $1 = "prod" ]
 then
+  PORT=5000
+fi
+
+if [ $1 = "flask" ]
+then
   PORT=5001
 fi
 
@@ -19,7 +24,7 @@ if [ $1 = "js" ]
 then
   PORT=5003
 fi
-# echo $DOCKERFILE $PORT
+
 cp $DOCKERFILE Dockerfile
 
 docker build -t test-$1 .
