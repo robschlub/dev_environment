@@ -90,6 +90,7 @@ const config = {
   optimization: {
     splitChunks: {
       chunks: 'all',
+      minSize: 10,
     },
   },
 };
