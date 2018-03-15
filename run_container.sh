@@ -24,6 +24,8 @@ cp $DOCKERFILE Dockerfile
 
 docker build -t test-$1 .
 
+rm Dockerfile
+
 docker run -it --rm \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/shared:/app/shared \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/webpack.config.js:/app/webpack.config.js \
