@@ -1,12 +1,12 @@
 // @flow
 
-// function Console(text) {
-//   console.log(text); // eslint-disable-line no-console
-// }
-
-// import Console from './mod_test';
-// import cal from './mod_test';
 import * as tools from './tools';
 
 tools.Console(tools.add(2, 10).toString());
 tools.Console(tools.mulToString(2, 5).toString());
+
+const myId:HTMLElement | null = document.getElementById("intro");
+
+if (myId instanceof HTMLElement){
+  myId.innerHTML = '<p>Hello from JS</p>';
+}
