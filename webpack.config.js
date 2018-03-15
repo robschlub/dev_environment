@@ -66,7 +66,10 @@ const pluginArray = [
   clean].filter(elem => elem !== '');
 
 const config = {
-  entry: './shared/app/app/static/src/main.js',
+  entry: {
+    main: './shared/app/app/static/src/main.js',
+    entry2: './shared/app/app/static/src/entry2.js',
+  },
   output: {
     path: buildPath,
     filename: '[name].bundle.js',
