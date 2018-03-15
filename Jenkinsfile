@@ -39,7 +39,8 @@ pipeline {
                     }
                 }
             steps {
-                sh "jest"
+                sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
+                sh "cd /app && npm run jest"
             }
         }
         stage('JS Building') {
