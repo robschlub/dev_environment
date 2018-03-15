@@ -50,11 +50,17 @@ The following can be used in the Python development environment:
 
 If running the flask app in this environment, it can be accessed on port 5002 on the host machine.
 
-## Production Environment
+## Flask Development Environment
 
-The production environment is used to run the python flask app. It is setup to have fewer packages installed, and its ports are mapped 
+The flask development environment is used to run the python flask app. It is setup to have fewer packages installed, it loads straight into flask, and its ports are mapped.
 
 If running the flask app in this environment, it can be accessed on port 5001 on the host machine.
+
+## Production Environment
+
+The production environment is used to run the python flask app. It is setup to have fewer packages installed, it loads straight into flask and its ports are mapped.
+
+If running the flask app in this environment, it can be accessed on port 5000 on the host machine.
 
 ## Jenkins support
 

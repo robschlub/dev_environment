@@ -1,6 +1,16 @@
 <html>
-{% assets "compiled_js" %} 
+
+<div id="intro">Hello World</div>
+
+{% assets "tools_js" %} 
   <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %} 
-<p>Hello World</p>
+
+<!-- {% assets "tools_map_js" %} 
+  <script type="application/json" src="{{ ASSET_URL }}"></script>
+{% endassets %} 
+ -->
+{% assets "main_js" %} 
+  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %} 
 </html>
