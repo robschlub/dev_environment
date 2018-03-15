@@ -1,5 +1,8 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
+const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
+
+const buildPath = path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'build');
 
 const envs = {
   prod: {
@@ -56,13 +59,16 @@ const uglify = e.uglify ?
     sourceMap: e.uglifySourceMap,
   })
   : '';
+const clean = new CleanWebpackPlugin([buildPath]);
 
-const pluginArray = [uglify].filter(elem => elem !== '');
+const pluginArray = [
+  uglify,
+  clean].filter(elem => elem !== '');
 
 const config = {
   entry: './shared/app/app/static/src/main.js',
   output: {
-    path: path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'build'),
+    path: buildPath,
     filename: '[name].bundle.js',
   },
   module: {
