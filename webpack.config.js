@@ -5,7 +5,7 @@ const config = {
   entry: './shared/app/app/static/src/main.js',
   output: {
     path: path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'build'),
-    filename: 'main.bundle.js',
+    filename: '[name].bundle.js',
   },
   module: {
     rules: [
