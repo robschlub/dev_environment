@@ -88,6 +88,7 @@ const config = {
   mode: e.webpackMode,
   devtool: e.devtool,
   optimization: {
+    // SplitChunks docs at https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
     splitChunks: {
       chunks: 'all',
       minSize: 30000,
