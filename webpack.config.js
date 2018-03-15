@@ -28,7 +28,7 @@ const envs = {
   },
 };
 
-const e = envs.dev;
+const e = envs.prod;
 console.log(`Building for ${e.name}`); // eslint-disable-line no-console
 
 const uglify = e.uglify ?
