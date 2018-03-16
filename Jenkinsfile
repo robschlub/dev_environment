@@ -32,15 +32,20 @@ pipeline {
                     }
                 }
             steps {
-                // branch = env.BRANCH_NAME
-                // echo branch
-                sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
-                sh "cd /app && npm run webpack -- --env.mode=stage"
-                echo env.BRANCH_NAME
                 script {
                     if (env.BRANCH_NAME == "heroku-integration-test") {
+                        sh "ls -la shared/app/app/static/dist"
+                        sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
                         sh "cd /app && npm run webpack -- --env.mode=prod"
+                        sh "rm -rf shared/app/app/static/src/dist"
+                        sh "cp -R /app/shared/app/app/static/src/dist shared/app/app/src"
+                        sh "git status"
+                        sh "ls -la shared/app/app/static/dist"
                         }
+                    else {
+                        sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
+                        sh "cd /app && npm run webpack -- --env.mode=stage"
+                    }
                 }
             }
         }
