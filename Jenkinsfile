@@ -37,6 +37,7 @@ pipeline {
                         // sh "ls -la shared/app/app/static/dist"
                         sh "ls -la"
                         sh "pwd"
+                        sh "ls -la shared/app/app/static/src"
                         sh "ls /app"
 
                         sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
@@ -49,11 +50,11 @@ pipeline {
                         
                         sh "mkdir shared/app/app/static/src/dist"
                         
-                        sh "cp -R /app/shared/app/app/static/src/dist shared/app/app/src/static/dist"
+                        sh "cp -R /app/shared/app/app/static/src/dist shared/app/app/static/src/dist"
                         
                         sh "git status"
                         
-                        sh "ls -la shared/app/app/static/dist"
+                        sh "ls -la shared/app/app/static/src/dist"
                         }
                     else {
                         sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
