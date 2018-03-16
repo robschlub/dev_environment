@@ -2,15 +2,7 @@
 
 <div id="intro">Hello World</div>
 
-{% assets "tools_js" %} 
-  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %} 
+<script type="text/javascript" src="/static/build/tools.bundle.js"></script>
+<script type="text/javascript" src="/static/build/main.bundle.js"></script>
 
-<!-- {% assets "tools_map_js" %} 
-  <script type="application/json" src="{{ ASSET_URL }}"></script>
-{% endassets %} 
- -->
-{% assets "main_js" %} 
-  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %} 
 </html>
