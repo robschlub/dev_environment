@@ -1,7 +1,7 @@
 pipeline {
     agent none
     stages {
-        stage('Python Lint Check') {
+        stage('Python Lint and Test Check') {
             agent { 
                     dockerfile {
                         filename "Dockerfile_python"
@@ -9,37 +9,19 @@ pipeline {
                 }
             steps {
                 sh "flake8"
-            }
-        }
-        stage('Python Tests') {
-            agent { 
-                    dockerfile {
-                        filename "Dockerfile_python"
-                    }
-                }
-            steps {
                 sh "pytest"
             }
         }
-        stage('JS Linting') {
+        stage('JS Lint and Test') {
             agent { 
                     dockerfile {
                         filename "Dockerfile_js"
                     }
                 }
             steps {
-                sh "flow"
-                sh "eslint shared"
-            }
-        }
-        stage('JS Tests') {
-            agent { 
-                    dockerfile {
-                        filename "Dockerfile_js"
-                    }
-                }
-            steps {
-                sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
+                sh "cp -R shared/* /app/shared"     
+                sh "cd /app flow"
+                sh "cd /app eslint shared"   
                 sh "cd /app && npm run jest"
             }
         }
@@ -51,7 +33,7 @@ pipeline {
                 }
             steps {
                 sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
-                sh "cd /app && npm run webpack"
+                sh "cd /app && npm run webpack --env=prod"
             }
         }
     }
