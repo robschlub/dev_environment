@@ -11,9 +11,8 @@ RUN pip install --no-cache-dir -q -r requirements.txt
 
 ADD shared/app/. .
 
-# RUN adduser -D myuser
-# USER myuser
+RUN adduser --disabled-login myuser
+USER myuser
 
-# CMD echo $PORT
-
-CMD gunicorn --bind 0.0.0.0:4000 wsgi 
+# CMD bash
+CMD gunicorn --bind 0.0.0.0:$PORT wsgi 
