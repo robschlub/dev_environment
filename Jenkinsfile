@@ -46,15 +46,15 @@ pipeline {
                         
                         sh "cd /app && npm run webpack -- --env.mode=prod"
                         
-                        // sh "rm -rf shared/app/app/static/src/dist"
+                        // sh "rm -rf shared/app/app/static/dist"
                         
-                        sh "mkdir shared/app/app/static/src/dist"
+                        sh "mkdir shared/app/app/static/dist"
                         
-                        sh "cp -R /app/shared/app/app/static/src/dist shared/app/app/static/src/dist"
+                        sh "cp -R /app/shared/app/app/static/dist shared/app/app/static/dist"
                         
                         sh "git status"
                         
-                        sh "ls -la shared/app/app/static/src/dist"
+                        sh "ls -la shared/app/app/static/dist"
                         }
                     else {
                         sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
