@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -q -r requirements.txt
 
 ADD shared/app/. .
 
-RUN adduser --disabled-login myuser
+RUN useradd -m myuser
 USER myuser
 
 # CMD bash
