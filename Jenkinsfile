@@ -36,6 +36,7 @@ pipeline {
                     if (env.BRANCH_NAME == "heroku-integration-test") {
                         // sh "ls -la shared/app/app/static/dist"
                         sh "ls -la"
+                        sh "pwd"
                         sh "ls /app"
 
                         sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
