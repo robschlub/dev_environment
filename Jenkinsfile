@@ -32,11 +32,12 @@ pipeline {
                     }
                 }
             steps {
-                branch = env.BRANCH_NAME
+                // branch = env.BRANCH_NAME
                 echo branch
                 sh "cp -R shared/* /app/shared"     // This is needed as jenkins runs in the workspace path and not the container path
                 sh "cd /app && npm run webpack -- --env.mode=stage"
-                if (branch == "heroku-integration") {
+                echo env.BRANCH_NAME
+                if (env.BRANCH_NAME == "heroku-integration-test") {
                     sh "cd /app && npm run webpack -- --env.mode=prod"
                     }
             }
