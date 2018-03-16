@@ -2,7 +2,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 
-const buildPath = path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'build');
+const buildPath = path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'dist');
 
 const envs = {
   prod: {
