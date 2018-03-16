@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-li
 
 const buildPath = path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'dist');
 
-const envs = {
+const envConfig = {
   prod: {
     name: 'production',
     uglify: true,
@@ -20,7 +20,7 @@ const envs = {
     uglifySourceMap: true,
   },
   dev: {
-    name: 'dev',
+    name: 'development',
     uglify: false,
     webpackMode: 'development',
     devtool: 'source-map',
@@ -28,91 +28,107 @@ const envs = {
   },
 };
 
-const e = envs.stage;
-console.log(`Building for ${e.name}`); // eslint-disable-line no-console
+module.exports = (env) => {
+  // setup environmnet mode for dev, stage or prod
+  let e = envConfig.dev;
+  if (env !== undefined) {
+    if (env.mode === 'prod') {
+      e = envConfig.prod;
+    }
+    if (env.mode === 'stage') {
+      e = envConfig.stage;
+    }
+    if (env.mode === 'dev') {
+      e = envConfig.dev;
+    }
+  }
 
-const uglify = e.uglify ?
-  new UglifyJsPlugin({
-    uglifyOptions: {
-      ecma: 8,
-      warnings: false,
-      // parse: { ...options },
-      // compress: { ...options },
-      // mangle: {
-      //   ...options,
-      //   properties: {
-      //     // mangle property options
-      //   },
-      // },
-      output: {
-        comments: false,
-        beautify: false,
-        // ...options
+  console.log(`Building for ${e.name}`); // eslint-disable-line no-console
+
+  let uglify = '';
+
+  if (e.uglify) {
+    uglify = new UglifyJsPlugin({
+      uglifyOptions: {
+        ecma: 8,
+        warnings: false,
+        // parse: { ...options },
+        // compress: { ...options },
+        // mangle: {
+        //   ...options,
+        //   properties: {
+        //     // mangle property options
+        //   },
+        // },
+        output: {
+          comments: false,
+          beautify: false,
+          // ...options
+        },
+        toplevel: false,
+        nameCache: null,
+        ie8: false,
+        keep_classnames: undefined,
+        keep_fnames: false,
+        safari10: false,
       },
-      toplevel: false,
-      nameCache: null,
-      ie8: false,
-      keep_classnames: undefined,
-      keep_fnames: false,
-      safari10: false,
+      sourceMap: e.uglifySourceMap,
+    });
+  }
+  const clean = new CleanWebpackPlugin([buildPath]);
+
+  // Make the plugin array filtering out those plugins that are null
+  const pluginArray = [
+    uglify,
+    clean].filter(elem => elem !== '');
+
+  return {
+    entry: {
+      main: './shared/app/app/static/src/main.js',
+      entry2: './shared/app/app/static/src/entry2.js',
+      entry3: './shared/app/app/static/src/entry3.js',
     },
-    sourceMap: e.uglifySourceMap,
-  })
-  : '';
-const clean = new CleanWebpackPlugin([buildPath]);
-
-const pluginArray = [
-  uglify,
-  clean].filter(elem => elem !== '');
-
-const config = {
-  entry: {
-    main: './shared/app/app/static/src/main.js',
-    entry2: './shared/app/app/static/src/entry2.js',
-    entry3: './shared/app/app/static/src/entry3.js',
-  },
-  output: {
-    path: buildPath,
-    filename: '[name].bundle.js',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /(node_modules)/,
-        use: 'babel-loader',
-      },
-    ],
-  },
-  plugins: pluginArray,
-  mode: e.webpackMode,
-  devtool: e.devtool,
-  optimization: {
-    // SplitChunks docs at https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
-    splitChunks: {
-      chunks: 'all',
-      minSize: 30000,
-      cacheGroups: {
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true,
+    output: {
+      path: buildPath,
+      filename: '[name].bundle.js',
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules)/,
+          use: 'babel-loader',
         },
-        tools: {
-          minSize: 10,
-          minChunks: 2,
-          priority: -10,
-          reuseExistingChunk: true,
-          test: /src\/tools/,
-          name: 'tools',
-        },
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10,
+      ],
+    },
+    plugins: pluginArray,
+    mode: e.webpackMode,
+    devtool: e.devtool,
+    optimization: {
+      // SplitChunks docs at https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
+      splitChunks: {
+        chunks: 'all',
+        minSize: 30000,
+        cacheGroups: {
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          tools: {
+            minSize: 10,
+            minChunks: 2,
+            priority: -10,
+            reuseExistingChunk: true,
+            test: /src\/tools/,
+            name: 'tools',
+          },
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+          },
         },
       },
     },
-  },
+  };
 };
-
-module.exports = config;
