@@ -19,7 +19,11 @@ before_script:
   - docker images
 
 script:
+  - HOST_PATH=`pwd`
   - docker run -t -d -v $HOST_PATH/app:/opt/app/app --name devbuild devbuild 
+  - ls
+  - docker exec devbuild 'ls'
+  - docker exec devbuild 'ls app'
   - docker exec devbuild 'npm' -c 'run' 'lint'
   - docker exec devbuild 'npm' -c 'run' 'flow'
   - docker exec devbuild 'npm' -c 'run' 'jest'
@@ -27,7 +31,7 @@ script:
   - docker exec devbuild 'flake8'
   - docker exec devbuild 'npm' -c 'run' 'webpack' '--' '--env.mode=prod'
   - docker stop devbuild
-  - docker rm debbuild
+  - docker rm devbuild
   - cp containers/Dockerfile_prod ./Dockerfile
   - docker -build -t for_heroku .
   - docker images 
