@@ -1,3 +1,8 @@
+sudo: required
+
+services:
+  - docker
+
 branches:
   only:
     - master
@@ -7,6 +12,11 @@ language: python
 
 python:
   - "3.6"
+
+before-install:
+  - cp containers/Dockerfile_prod .
+  - docker build -t prod .
+  - docker images
 
 script:
   - python --version
