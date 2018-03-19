@@ -13,17 +13,19 @@ language: python
 python:
   - "3.6"
 
-script:
-  - pwd
-  - ls -la
-  - ls app/app/static
-  - python --version
+before_script:
   - cp containers/Dockerfile_dev ./Dockerfile
   - docker build -t devbuild .
-  - docker images  
+  - docker images
+
+script:
   - ./build.sh prod
-  - ls app/app/static/dist
-  - ./build.sh dev
-  - ls app/app/static/dist
+
+after_succes:
+  - cp containers/Dockerfile_prod ./Dockerfile
+  - docker -build -t for_heroku .
+  - docker images
+  - echo "Successful build!"
+  
 
   
