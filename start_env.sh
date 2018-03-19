@@ -23,7 +23,7 @@ then
   CONTAINTER_PORT=5000
 fi
 
-cp setup/$DOCKERFILE Dockerfile
+cp containers/$DOCKERFILE Dockerfile
 
 GUNICORN_PORT=4000
 docker build -t devenv-$1 .
@@ -36,7 +36,7 @@ then
     --name devenv-$1 \
     -p $HOST_PORT:$CONTAINTER_PORT \
     --env PORT=$CONTAINTER_PORT \
-    test-$1
+    devenv-$1
 else
   docker run -it --rm \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/tests:/opt/app/tests \

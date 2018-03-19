@@ -13,7 +13,7 @@ WORKDIR /opt/app
 RUN mkdir app
 RUN mkdir tests
 
-ADD setup/requirements_prod.txt requirements.txt
+ADD containers/shared/requirements_prod.txt requirements.txt
 
 RUN pip install --no-cache-dir -q -r requirements.txt
 
@@ -22,6 +22,9 @@ RUN pip install --no-cache-dir -q -r requirements.txt
 
 
 ENV FLASK_APP app/my_app.py
+
+
+
 
 RUN useradd -m myuser
 USER myuser

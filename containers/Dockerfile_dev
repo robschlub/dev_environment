@@ -18,7 +18,7 @@ RUN mkdir tests
 # ## Javascript ##
 
 # Node packages
-ADD setup/package.json .
+ADD containers/dev/package.json .
 RUN npm install --save-dev eslint@4.18.2 \
 													 eslint-plugin-import@2.9.0 \
 													 eslint-config-airbnb-base@12.1.0 \
@@ -55,7 +55,7 @@ ENV PATH="/opt/app/node_modules/.bin:${PATH}"
 # ## Python ##
 
 # Python packages
-ADD setup/requirements_dev.txt requirements.txt
+ADD containers/dev/requirements_dev.txt requirements.txt
 RUN pip install -r requirements.txt
 
 # Python linting

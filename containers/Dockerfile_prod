@@ -13,11 +13,14 @@ WORKDIR /opt/app
 
 
 
-ADD setup/requirements_prod.txt requirements.txt
+ADD containers/shared/requirements_prod.txt requirements.txt
 
 RUN pip install --no-cache-dir -q -r requirements.txt
 
 ADD app/. .
+ADD containers/prod/Procfile .
+ADD containers/prod/runtime.txt .
+ADD containers/prod/wsgi.py .
 
 
 
