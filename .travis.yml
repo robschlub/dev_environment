@@ -1,11 +1,12 @@
 branches:
   only:
-    heroku-integration-test
+    - master
+    - travis
 
-  language: python
-  
-  python:
-    - "3.6.4"
-  
-  script:
-    - pytest
+language: python
+
+python:
+  - "3.6"
+
+script:
+  - python --version
