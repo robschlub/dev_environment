@@ -14,10 +14,11 @@ python:
   - "3.6"
 
 script:
-  - cp containers/Dockerfile_prod .
-  - docker build -t prod .
-  - docker images
   - pwd
   - ls -la
   - python --version
+  - cp containers/Dockerfile_prod .
+  - docker build -t prod .
+  - docker images
+
   
