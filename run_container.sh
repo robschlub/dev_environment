@@ -35,6 +35,12 @@ then
   CONTAINTER_PORT=4000
 fi
 
+if [ $1 = "nodepy" ];
+then
+  HOST_PORT=5005
+  CONTAINTER_PORT=5000
+fi
+
 cp $DOCKERFILE Dockerfile
 
 GUNICORN_PORT=4000
