@@ -17,8 +17,12 @@ script:
   - pwd
   - ls -la
   - python --version
-  - cp containers/Dockerfile_prod .
-  - docker build -t prod .
+  - cp containers/Dockerfile_dev .
+  - docker build -t build ./Dockerfile
   - docker images
+  - docker run -it --rm -v /Users/rob/Dropbox/Programming/Repositories Test_Projects/dev_environment/app:/opt/app/app --name build-temp --entrypoint "npm" build-temp -c run webpack -- --env.mode=dev
+  - ls app/app/static/dist
+  - build.sh
+  - ls app/app/static/dist
 
   
