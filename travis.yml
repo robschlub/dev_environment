@@ -1,0 +1,11 @@
+branches:
+  only:
+    heroku-integration-test
+
+  language: python
+  
+  python:
+    - "3.6.4"
+  
+  script:
+    - pytest
