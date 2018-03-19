@@ -16,13 +16,14 @@ python:
 script:
   - pwd
   - ls -la
+  - ls app/app/static
   - python --version
   - cp containers/Dockerfile_dev ./Dockerfile
   - docker build -t build .
   - docker images
-  - docker run -it --rm -v /Users/rob/Dropbox/Programming/Repositories Test_Projects/dev_environment/app:/opt/app/app --name build-temp --entrypoint "npm" build-temp -c run webpack -- --env.mode=dev
+  - docker run -it --rm -v app:/opt/app/app --name build-temp --entrypoint "npm" build-temp -c run webpack -- --env.mode=dev
   - ls app/app/static/dist
-  - build.sh
+  - ./build.sh
   - ls app/app/static/dist
 
   

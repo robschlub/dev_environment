@@ -44,7 +44,7 @@ ADD .eslintignore .
 ADD .flowconfig .
 
 # Packaging
-ADD setup/webpack.config.js .
+ADD containers/dev/webpack.config.js .
 ADD .babelrc .
 
 # Update path so eslint can be run from anywhere
