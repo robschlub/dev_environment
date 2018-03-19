@@ -10,17 +10,19 @@ then
   MODE=stage
 fi
 
-cp setup/Dockerfile_dev Dockerfile
+cp containers/Dockerfile_dev Dockerfile
 
-docker build -t build-temp .
+docker build -t devbuild .
 
 rm Dockerfile
 
+HOST_PATH=`pwd`
+
 docker run -it --rm \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/app:/opt/app/app \
-    --name build-temp \
+    -v $HOST_PATH/app:/opt/app/app \
+    --name devbuild \
     --entrypoint "npm" \
-    build-temp \
+    devbuild \
     -c run webpack -- --env.mode=$MODE
 
 

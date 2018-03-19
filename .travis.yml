@@ -19,11 +19,11 @@ script:
   - ls app/app/static
   - python --version
   - cp containers/Dockerfile_dev ./Dockerfile
-  - docker build -t build .
-  - docker images
-  - docker run -it --rm -v app:/opt/app/app --name build-temp --entrypoint "npm" build-temp -c run webpack -- --env.mode=dev
+  - docker build -t devbuild .
+  - docker images  
+  - ./build.sh prod
   - ls app/app/static/dist
-  - ./build.sh
+  - ./build.sh dev
   - ls app/app/static/dist
 
   
