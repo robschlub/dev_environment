@@ -19,13 +19,18 @@ before_script:
   - docker images
 
 script:
-  - ./build.sh prod
-
-after_succes:
+  - docker run -t -d -v $HOST_PATH/app:/opt/app/app --name devbuild devbuild 
+  - docker exec devbuild 'npm' -c 'run' 'lint'
+  - docker exec devbuild 'npm' -c 'run' 'flow'
+  - docker exec devbuild 'npm' -c 'run' 'jest'
+  - docker exec devbuild 'pytest'
+  - docker exec devbuild 'flake8'
+  - docker exec devbuild 'npm' -c 'run' 'webpack' '--' '--env.mode=prod'
+  - docker stop devbuild
+  - docker rm debbuild
   - cp containers/Dockerfile_prod ./Dockerfile
   - docker -build -t for_heroku .
-  - docker images
-  - echo "Successful build!"
-  
+  - docker images 
 
-  
+after_succes:
+  - echo "successful test and build"
