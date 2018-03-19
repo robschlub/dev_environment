@@ -7,10 +7,11 @@
 FROM rschlub/nodepy
 
 # ## General ##
-WORKDIR /app
+WORKDIR /opt/app
 
 # This is the folder that will be shared with the docker host machine
-RUN mkdir shared
+RUN mkdir app
+RUN mkdir tests
 
 
 
@@ -47,7 +48,7 @@ ADD setup/webpack.config.js .
 ADD .babelrc .
 
 # Update path so eslint can be run from anywhere
-ENV PATH="/app/node_modules/.bin:${PATH}"
+ENV PATH="/opt/app/node_modules/.bin:${PATH}"
 
 
 
@@ -61,7 +62,7 @@ RUN pip install -r requirements.txt
 ADD .flake8 .
 
 # Environment variable for flask
-ENV FLASK_APP shared/app/my_app.py
+ENV FLASK_APP app/my_app.py
 ENV FLASK_DEBUG 1
 
 # Use this is you want to load straight into flask

@@ -7,10 +7,11 @@
 
 FROM python:3.6.4-slim
 
-WORKDIR /app
+WORKDIR /opt/app
 
 # This is the folder that will be shared with the docker host machine
-RUN mkdir shared
+RUN mkdir app
+RUN mkdir tests
 
 ADD setup/requirements_prod.txt requirements.txt
 
@@ -20,7 +21,7 @@ RUN pip install --no-cache-dir -q -r requirements.txt
 
 
 
-ENV FLASK_APP shared/app/my_app.py
+ENV FLASK_APP app/my_app.py
 
 RUN useradd -m myuser
 USER myuser

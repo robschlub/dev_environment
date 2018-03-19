@@ -7,7 +7,8 @@
 
 FROM python:3.6.4-slim
 
-WORKDIR /app
+WORKDIR /opt/app
+
 
 
 
@@ -16,7 +17,7 @@ ADD setup/requirements_prod.txt requirements.txt
 
 RUN pip install --no-cache-dir -q -r requirements.txt
 
-ADD shared/app/. .
+ADD app/. .
 
 
 

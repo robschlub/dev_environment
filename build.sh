@@ -17,7 +17,7 @@ docker build -t build-temp .
 rm Dockerfile
 
 docker run -it --rm \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/shared:/app/shared \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/app:/opt/app/app \
     --name build-temp \
     --entrypoint "npm" \
     build-temp \

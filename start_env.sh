@@ -39,8 +39,9 @@ then
     test-$1
 else
   docker run -it --rm \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/shared:/app/shared \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/setup/webpack.config.js:/app/webpack.config.js \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/tests:/opt/app/tests \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/app:/opt/app/app \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/setup/webpack.config.js:/opt/app/webpack.config.js \
     --name dev-$1 \
     -p $HOST_PORT:$CONTAINTER_PORT \
     test-$1

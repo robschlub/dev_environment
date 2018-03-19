@@ -2,7 +2,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 
-const buildPath = path.resolve(__dirname, 'shared', 'app', 'app', 'static', 'dist');
+const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
 const envConfig = {
   prod: {
@@ -84,9 +84,9 @@ module.exports = (env) => {
 
   return {
     entry: {
-      main: './shared/app/app/static/src/main.js',
-      entry2: './shared/app/app/static/src/entry2.js',
-      entry3: './shared/app/app/static/src/entry3.js',
+      main: './app/app/static/src/main.js',
+      entry2: './app/app/static/src/entry2.js',
+      entry3: './app/app/static/src/entry3.js',
     },
     output: {
       path: buildPath,

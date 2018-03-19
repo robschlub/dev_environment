@@ -8,7 +8,7 @@
     "webpack": "webpack",
     "flow": "flow",
     "jest": "jest",
-    "lint": "eslint shared"
+    "lint": "eslint app tests"
   },
   "keywords": [],
   "author": "",
