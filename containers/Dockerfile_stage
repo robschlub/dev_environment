@@ -21,8 +21,8 @@ RUN pip install --no-cache-dir -q -r requirements.txt
 
 
 
-ENV FLASK_APP app/my_app.py
 
+ENV FLASK_APP app/my_app.py
 
 
 

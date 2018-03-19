@@ -32,4 +32,5 @@ USER myuser
 
 
 
-ENTRYPOINT gunicorn --bind 0.0.0.0:$PORT wsgi
+ENTRYPOINT gunicorn 
+CMD --bind 0.0.0.0:$PORT wsgi
