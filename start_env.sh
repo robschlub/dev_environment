@@ -26,14 +26,14 @@ fi
 cp setup/$DOCKERFILE Dockerfile
 
 GUNICORN_PORT=4000
-docker build -t test-$1 .
+docker build -t devenv-$1 .
 
 rm Dockerfile
 
 if [ $1 = 'prod' ];
 then
   docker run -it --rm \
-    --name dev-$1 \
+    --name devenv-$1 \
     -p $HOST_PORT:$CONTAINTER_PORT \
     --env PORT=$CONTAINTER_PORT \
     test-$1
@@ -42,8 +42,8 @@ else
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/tests:/opt/app/tests \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/app:/opt/app/app \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/setup/webpack.config.js:/opt/app/webpack.config.js \
-    --name dev-$1 \
+    --name devenv-$1 \
     -p $HOST_PORT:$CONTAINTER_PORT \
-    test-$1
+    devenv-$1
 fi
 
