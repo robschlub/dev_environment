@@ -8,5 +8,5 @@ tools.Console(tools.mulToString(2, 5).toString());
 const myId:HTMLElement | null = document.getElementById('intro');
 
 if (myId instanceof HTMLElement) {
-  myId.innerHTML = '<p>Hello from JS - Auto deployed by travis - with colors in console, and error fixed!!</p>';
+  myId.innerHTML = '<p>Hello from JS - Auto deployed by travis from travis branch!!</p>';
 }

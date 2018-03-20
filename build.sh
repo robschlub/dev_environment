@@ -115,18 +115,15 @@ if [ $2 ];
       then
       APP_NAME=$HEROKU_APP_NAME
       TITLE_STRING='============= Deploying to Production =============='
-      echo "App Name:" $APP_NAME
-      echo "Heroku App Name:" $HEROKU_APP_NAME
     fi
     if [ $BRANCH = "release-candidate" ];
       then
       APP_NAME=$HEROKU_DEV_APP_NAME
       TITLE_STRING='================= Deploying to Dev ================='
     fi
-
     if [ $APP_NAME ];
       then
-      echo "${bold}${cyan}" TITLE_STRING "${reset}"
+      echo "${bold}${cyan}" $TITLE_STRING "${reset}"
       docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
 
       cp containers/Dockerfile_prod ./Dockerfile
