@@ -17,6 +17,8 @@ bold=`tput bold`
 reset=`tput sgr0`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
+echo "BRANCH:" $BRANCH
+exit 0
 
 # Check first command line argument to see how to build javascript
 if [ $1 = "dev" ];
@@ -100,6 +102,7 @@ check_status "Building"
 # Deploy to:
 #   Production if branch is master
 #   Dev if branch is release-candidate
+
 
 if [ $2 ];
   then
