@@ -2,8 +2,24 @@
 MODE=prod
 HOST_PATH=`pwd`
 
+red=`tput setaf 1`
+green=`tput setaf 2`
+cyan=`tput setaf 6`
+bold=`tput bold`
+reset=`tput sgr0`
+
+if [ $1 = "dev" ];
+then
+  MODE=dev
+fi
+
+if [ $1 = "stage" ];
+then
+  MODE=stage
+fi
+
 docker_run() {
-  echo $1 "Starting"
+  echo "${bold}${cyan}" $1 "Starting${reset}"
   if [ $3 ];
     then
     docker run -it --rm \
@@ -24,31 +40,27 @@ docker_run() {
 
   if [ $? != 0 ];
     then
-    echo $1 "Failed"
+    echo "${bold}${cyan}" $1 "${red}Failed${reset}"
+    echo
     FAIL=1
     else
-    echo $1 "Succeeded"
+    echo "${bold}${cyan}" $1 "${green}Succeeded${reset}"
+    echo
   fi
 }
 
 check_status() {
   if [ $FAIL != 0 ];
     then
-    echo "Failed" $1
+    echo "${bold}${red}Build failed at${cyan}" $1 "${reset}"
     exit 1    
   fi
 }
 
-if [ $1 = "dev" ];
-then
-  MODE=dev
-fi
 
-if [ $1 = "stage" ];
-then
-  MODE=stage
-fi
 
+# Lint and type checking
+echo "${bold}${cyan}================= Building Image ===================${reset}"
 cp containers/Dockerfile_dev Dockerfile
 docker build -t devbuild .
 rm Dockerfile
@@ -56,20 +68,20 @@ rm Dockerfile
 FAIL=0
 
 # Lint and type checking
-echo "============ Linting and Type Checking ============="
+echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
 docker_run "JS Linting" npm run lint
 docker_run "Flow" npm run flow
 docker_run "Python Linting" flake8
 check_status "Linting and Type Checking"
 
 # Testing
-echo "===================== Testing ======================"
+echo "${bold}${cyan}===================== Testing ======================${reset}"
 docker_run "JS Testing" npm run jest
 docker_run "Python Testing" pytest
 check_status "Tests"
 
 # Packaging
-echo "==================== Packaging ====================="
+echo "${bold}${cyan}==================== Packaging =====================${reset}"
 docker_run "Packaging" npm run webpack -- --env.mode=prod
 check_status "Building"
 
@@ -78,7 +90,7 @@ if [ $2 ];
   then
   if [ $2 = "deploy" ];
     then
-    echo "===================== Deploying ======================"
+    echo "${bold}${cyan}===================== Deploying ======================${reset}"
     cp containers/Dockerfile_prod ./Dockerfile
     docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
     docker build -t registry.heroku.com/$HEROKU_APP_NAME/web .
