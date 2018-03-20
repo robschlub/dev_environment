@@ -27,10 +27,13 @@ reset=`tput sgr0`
 echo "Travis pull request:" $TRAVIS_PULL_REQUEST
 if [ $TRAVIS_PULL_REQUEST ];
   then
-  if [ "$TRAVIS_PULL_REQUEST" != "false" ];
+  echo "Got here 1"
+  if [ "$TRAVIS_PULL_REQUEST" -neq "false" ];
     then
+    echo "Got here 2"
     if [ $TRAVIS_BRANCH = DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != DEPLOY_DEV_BRANCH ];
       then
+      echo "Got here 3"
       echo "Can only merge to" $DEPLOY_PROD_BRANCH "from" $DEPLOY_DEV_BRANCH
       exit 1
     fi
