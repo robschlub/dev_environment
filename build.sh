@@ -28,7 +28,7 @@ echo "Travis pull request:" $TRAVIS_PULL_REQUEST
 if [ $TRAVIS_PULL_REQUEST ];
   then
   echo "Got here 1"
-  if [ "$TRAVIS_PULL_REQUEST" -neq "false" ];
+  if [ "$TRAVIS_PULL_REQUEST" != "false" ];
     then
     echo "Got here 2"
     if [ $TRAVIS_BRANCH = DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != DEPLOY_DEV_BRANCH ];
@@ -39,6 +39,8 @@ if [ $TRAVIS_PULL_REQUEST ];
     fi
   fi
 fi
+
+exit 0
 
 # Get the current branch - if it is not yet defined, then get it from git.
 # Note, that this git command will not work in a Heroku Environment, so BRANCH
