@@ -16,7 +16,7 @@ cyan=`tput setaf 6`
 bold=`tput bold`
 reset=`tput sgr0`
 
-if [ !BRANCH ];
+if [ !$BRANCH ];
   then
   BRANCH=`git rev-parse --abbrev-ref HEAD`
 fi
