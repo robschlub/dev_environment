@@ -127,9 +127,18 @@ if [ $2 ];
       docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
 
       cp containers/Dockerfile_prod ./Dockerfile
-      
+      echo "${bold}${cyan}Building deployment image${reset}"
       docker build -t registry.heroku.com/$APP_NAME/web .
+      echo "${bold}${cyan}Pushing deployment image${reset}"
       docker push registry.heroku.com/$APP_NAME/web
+
+      if [ $? != 0 ];
+        then
+        echo "${bold}${cyan}" Deployment "${bold}${red}Failed${reset}"
+        FAIL=1
+        else
+        echo "${bold}${cyan}" Deployment "${bold}${green}Succeeded${reset}"
+      fi
     fi
   fi
 fi
