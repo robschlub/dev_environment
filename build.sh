@@ -1,13 +1,22 @@
 #!/usr/bin/env sh
+
+# Use:
+#   ./build.sh dev              Lint, test and build dev version of app
+#   ./build.sh stage            Lint, test and build stage version of app
+#   ./build.sh prod             Lint, test and build prod version of app
+#   ./build.sh prod deploy      Lint, test, build and deploy
+
 MODE=prod
 HOST_PATH=`pwd`
 
+# Setup colors and text formatting
 red=`tput setaf 1`
 green=`tput setaf 2`
 cyan=`tput setaf 6`
 bold=`tput bold`
 reset=`tput sgr0`
 
+# Check first command line argument to see how to build javascript
 if [ $1 = "dev" ];
 then
   MODE=dev
@@ -18,6 +27,7 @@ then
   MODE=stage
 fi
 
+# Run a container while binding the appropriate volumes
 docker_run() {
   echo "${bold}${cyan}" $1 "Starting${reset}"
   if [ $3 ];
@@ -49,6 +59,7 @@ docker_run() {
   fi
 }
 
+# Check current build status and exit if in failure state
 check_status() {
   if [ $FAIL != 0 ];
     then
@@ -58,8 +69,7 @@ check_status() {
 }
 
 
-
-# Lint and type checking
+# Build docker image
 echo "${bold}${cyan}================= Building Image ===================${reset}"
 cp containers/Dockerfile_dev Dockerfile
 docker build -t devbuild .
@@ -67,25 +77,25 @@ rm Dockerfile
 
 FAIL=0
 
-# Lint and type checking
+# Lint and type check
 echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
 docker_run "JS Linting" npm run lint
 docker_run "Flow" npm run flow
 docker_run "Python Linting" flake8
 check_status "Linting and Type Checking"
 
-# Testing
+# Test
 echo "${bold}${cyan}===================== Testing ======================${reset}"
 docker_run "JS Testing" npm run jest
 docker_run "Python Testing" pytest
 check_status "Tests"
 
-# Packaging
+# Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
 docker_run "Packaging" npm run webpack -- --env.mode=prod
 check_status "Building"
 
-# Deploy
+# Depoly
 if [ $2 ];
   then
   if [ $2 = "deploy" ];
