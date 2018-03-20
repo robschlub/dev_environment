@@ -3,5 +3,5 @@ Dockerfile
 requirements.txt
 .webassets-cache/
 build_flask_gen/
-shared/app/app/static/build
-shared/app/app/static/dist
+app/app/static/build
+app/app/static/dist
