@@ -50,11 +50,11 @@ docker_run() {
 
   if [ $? != 0 ];
     then
-    echo "${bold}${cyan}" $1 "${red}Failed${reset}"
+    echo "${bold}${cyan}" $1 "${bold}${red}Failed${reset}"
     echo
     FAIL=1
     else
-    echo "${bold}${cyan}" $1 "${green}Succeeded${reset}"
+    echo "${bold}${cyan}" $1 "${bold}${green}Succeeded${reset}"
     echo
   fi
 }
@@ -63,7 +63,7 @@ docker_run() {
 check_status() {
   if [ $FAIL != 0 ];
     then
-    echo "${bold}${red}Build failed at${cyan}" $1 "${reset}"
+    echo "${bold}${red}Build failed at${bold}${cyan}" $1 "${reset}"
     exit 1    
   fi
 }
