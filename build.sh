@@ -20,8 +20,6 @@ if [ -z "${BRANCH}" ];
   then
   BRANCH=`git rev-parse --abbrev-ref HEAD`
 fi
-echo $BRANCH
-exit 0
 
 # Check first command line argument to see how to build javascript
 if [ $1 = "dev" ];
