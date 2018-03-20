@@ -33,6 +33,7 @@ if [ $TRAVIS_PULL_REQUEST ];
     echo "Got here 2"
     echo "Travis Branch:" $TRAVIS_BRANCH
     echo "Travis Pull Request Branch:" $TRAVIS_PULL_REQUEST_BRANCH
+    
     if [ $TRAVIS_BRANCH = $DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != $DEPLOY_DEV_BRANCH ];
       then
       echo "Got here 3"
