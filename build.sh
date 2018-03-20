@@ -16,6 +16,8 @@ cyan=`tput setaf 6`
 bold=`tput bold`
 reset=`tput sgr0`
 
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+
 # Check first command line argument to see how to build javascript
 if [ $1 = "dev" ];
 then
@@ -95,15 +97,35 @@ echo "${bold}${cyan}==================== Packaging =====================${reset}
 docker_run "Packaging" npm run webpack -- --env.mode=prod
 check_status "Building"
 
-# Depoly
+# Deploy to:
+#   Production if branch is master
+#   Dev if branch is release-candidate
 if [ $2 ];
   then
   if [ $2 = "deploy" ];
     then
-    echo "${bold}${cyan}===================== Deploying ======================${reset}"
-    cp containers/Dockerfile_prod ./Dockerfile
-    docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
-    docker build -t registry.heroku.com/$HEROKU_APP_NAME/web .
-    docker push registry.heroku.com/$HEROKU_APP_NAME/web
+    APP_NAME=''
+    TITLE_STRING=''
+    if [ $BRANCH = "travis"];
+      then
+      APP_NAME=$HEROKU_APP_NAME
+      TITLE_STRING='============= Deploying to Production =============='
+    fi
+    if [ $BRANCH = "release-candidate"];
+      then
+      APP_NAME=$HEROKU_DEV_APP_NAME
+      TITLE_STRING='================= Deploying to Dev ================='
+    fi
+
+    if [ $APP_NAME ];
+      then
+      echo "${bold}${cyan}" TITLE_STRING "${reset}"
+      docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
+
+      cp containers/Dockerfile_prod ./Dockerfile
+      
+      docker build -t registry.heroku.com/$APP_NAME/web .
+      docker push registry.heroku.com/$APP_NAME/web
+    fi
   fi
 fi
