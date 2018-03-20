@@ -22,6 +22,23 @@ cyan=`tput setaf 6`
 bold=`tput bold`
 reset=`tput sgr0`
 
+# If pull requesting to master, check that it is coming from release-candidate
+# branch only
+if [ $TRAVIS_PULL_REQUEST ];
+  then
+  if [ $TRAVIS_PULL_REQUEST != "false" ];
+    then
+    if [ $TRAVIS_BRANCH = DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != DEPLOY_DEV_BRANCH ];
+      then
+      echo "Can only merge to" $DEPLOY_PROD_BRANCH "from" $DEPLOY_DEV_BRANCH
+      exit 1
+    fi
+  fi
+fi
+
+# Get the current branch - if it is not yet defined, then get it from git.
+# Note, that this git command will not work in a Heroku Environment, so BRANCH
+# already be set as env variable before calling this script on Heroku.
 if [ -z "${BRANCH}" ];
   then
   BRANCH=`git rev-parse --abbrev-ref HEAD`
