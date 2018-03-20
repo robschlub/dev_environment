@@ -57,9 +57,6 @@ then
   MODE=stage
 fi
 
-echo "App name:" $HEROKU_DEV_APP_NAME
-
-
 # Run a container while binding the appropriate volumes
 docker_run() {
   echo "${bold}${cyan}" $1 "Starting${reset}"
