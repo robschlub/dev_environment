@@ -106,12 +106,12 @@ if [ $2 ];
     then
     APP_NAME=''
     TITLE_STRING=''
-    if [ $BRANCH = "travis"];
+    if [ $BRANCH = "travis" ];
       then
       APP_NAME=$HEROKU_APP_NAME
       TITLE_STRING='============= Deploying to Production =============='
     fi
-    if [ $BRANCH = "release-candidate"];
+    if [ $BRANCH = "release-candidate" ];
       then
       APP_NAME=$HEROKU_DEV_APP_NAME
       TITLE_STRING='================= Deploying to Dev ================='
