@@ -32,6 +32,10 @@ then
   MODE=stage
 fi
 
+echo "App name:" $HEROKU_DEV_APP_NAME
+exit 0
+
+
 # Run a container while binding the appropriate volumes
 docker_run() {
   echo "${bold}${cyan}" $1 "Starting${reset}"
@@ -103,8 +107,6 @@ check_status "Building"
 # Deploy to:
 #   Production if branch is master
 #   Dev if branch is release-candidate
-
-
 if [ $2 ];
   then
   if [ $2 = "deploy" ];
@@ -135,7 +137,7 @@ if [ $2 ];
       if [ $? != 0 ];
         then
         echo "${bold}${cyan}" Deployment "${bold}${red}Failed${reset}"
-        FAIL=1
+        exit 1
         else
         echo "${bold}${cyan}" Deployment "${bold}${green}Succeeded${reset}"
       fi
