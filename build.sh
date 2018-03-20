@@ -31,7 +31,9 @@ if [ $TRAVIS_PULL_REQUEST ];
   if [ "$TRAVIS_PULL_REQUEST" != "false" ];
     then
     echo "Got here 2"
-    if [ $TRAVIS_BRANCH = DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != DEPLOY_DEV_BRANCH ];
+    echo "Travis Branch:" $TRAVIS_BRANCH
+    echo "Travis Pull Request Branch:" $TRAVIS_PULL_REQUEST_BRANCH
+    if [ $TRAVIS_BRANCH = $DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != $DEPLOY_DEV_BRANCH ];
       then
       echo "Got here 3"
       echo "Can only merge to" $DEPLOY_PROD_BRANCH "from" $DEPLOY_DEV_BRANCH
