@@ -11,16 +11,11 @@ branches:
 
 language: python
 
-env:
-  - HEROKU_APP_NAME=itgeti
-  - HEROKU_DEV_APP_NAME=itgetidev
-
 python:
   - "3.6"
 
 script:
+  - export HEROKU_APP_NAME=itgeti
+  - export HEROKU_DEV_APP_NAME=itgetidev
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - echo $TRAVIS_BRANCH
-  - echo $TRAVIS_PULL_REQUEST
-  - echo $BRANCH
   - ./build.sh prod deploy  
