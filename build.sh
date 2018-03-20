@@ -27,7 +27,7 @@ reset=`tput sgr0`
 echo "Travis pull request:" $TRAVIS_PULL_REQUEST
 if [ $TRAVIS_PULL_REQUEST ];
   then
-  if [ $TRAVIS_PULL_REQUEST != "false" ];
+  if [ "$TRAVIS_PULL_REQUEST" != "false" ];
     then
     if [ $TRAVIS_BRANCH = DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != DEPLOY_DEV_BRANCH ];
       then
