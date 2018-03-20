@@ -100,6 +100,7 @@ check_status "Building"
 # Deploy to:
 #   Production if branch is master
 #   Dev if branch is release-candidate
+
 if [ $2 ];
   then
   if [ $2 = "deploy" ];
@@ -110,6 +111,8 @@ if [ $2 ];
       then
       APP_NAME=$HEROKU_APP_NAME
       TITLE_STRING='============= Deploying to Production =============='
+      echo "App Name:" $APP_NAME
+      echo "Heroku App Name:" $HEROKU_APP_NAME
     fi
     if [ $BRANCH = "release-candidate" ];
       then
