@@ -32,10 +32,9 @@ script:
   - docker exec devbuild 'npm' -c 'run' 'webpack' '--' '--env.mode=prod'
   - docker stop devbuild
   - docker rm devbuild
+
+after_succes:
   - cp containers/Dockerfile_prod ./Dockerfile
   - docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
   - docker build -t registry.heroku.com/$HEROKU_APP_NAME/web .
   - docker push registry.heroku.com/$HEROKU_APP_NAME/web
-
-after_succes:
-  - echo "successful test and build"
