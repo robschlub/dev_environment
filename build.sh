@@ -27,23 +27,17 @@ reset=`tput sgr0`
 echo "Travis pull request:" $TRAVIS_PULL_REQUEST
 if [ $TRAVIS_PULL_REQUEST ];
   then
-  echo "Got here 1"
   if [ "$TRAVIS_PULL_REQUEST" != "false" ];
     then
-    echo "Got here 2"
-    echo "Travis Branch:" $TRAVIS_BRANCH
-    echo "Travis Pull Request Branch:" $TRAVIS_PULL_REQUEST_BRANCH
-    
     if [ $TRAVIS_BRANCH = $DEPLOY_PROD_BRANCH -a $TRAVIS_PULL_REQUEST_BRANCH != $DEPLOY_DEV_BRANCH ];
       then
-      echo "Got here 3"
-      echo "Can only merge to" $DEPLOY_PROD_BRANCH "from" $DEPLOY_DEV_BRANCH
+      echo "${bold}${red}Build Failed.${reset}"
+      echo "Tried to merge branch ${bold}${red}" $TRAVIS_PULL_REQUEST_BRANCH "${reset}into${bold}${cyan}" $DEPLOY_PROD_BRANCH "${reset}"
+      echo "Can only merge from branch ${bold}${cyan}" $DEPLOY_DEV_BRANCH "${reset}into${bold}${cyan}" $DEPLOY_PROD_BRANCH
       exit 1
     fi
   fi
 fi
-
-exit 0
 
 # Get the current branch - if it is not yet defined, then get it from git.
 # Note, that this git command will not work in a Heroku Environment, so BRANCH
