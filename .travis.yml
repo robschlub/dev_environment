@@ -7,8 +7,13 @@ branches:
   only:
     - master
     - travis
+    - release-candidate
 
 language: python
+
+env:
+  - HEROKU_APP_NAME=itgeti
+  - HEROKU_DEV_APP_NAME=itgetidev
 
 python:
   - "3.6"

@@ -33,7 +33,6 @@ then
 fi
 
 echo "App name:" $HEROKU_DEV_APP_NAME
-exit 0
 
 
 # Run a container while binding the appropriate volumes
