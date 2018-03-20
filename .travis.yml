@@ -33,8 +33,9 @@ script:
   - docker stop devbuild
   - docker rm devbuild
   - cp containers/Dockerfile_prod ./Dockerfile
-  - docker build -t for_heroku .
-  - docker images 
+  - docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
+  - docker build -t registry.heroku.com/whispering-anchorage-25467/web .
+  - docker push registry.heroku.com/whispering-anchorage-25467/web
 
 after_succes:
   - echo "successful test and build"
