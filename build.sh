@@ -8,6 +8,10 @@
 
 MODE=prod
 HOST_PATH=`pwd`
+HEROKU_APP_NAME=itgeti              # Production app name on Heroku
+HEROKU_DEV_APP_NAME=itgetidev       # Dev app name on Heroku
+DEPLOY_PROD_BRANCH=master           # Branch to test and deploy to prod
+DEPLOY_DEV_BRANCH=release-candidate # Branch to test and deploy to dev
 
 # Setup colors and text formatting
 red=`tput setaf 1`
@@ -112,12 +116,12 @@ if [ $2 ];
     then
     APP_NAME=''
     TITLE_STRING=''
-    if [ $BRANCH = "master" ];
+    if [ $BRANCH = $DEPLOY_PROD_BRANCH ];
       then
       APP_NAME=$HEROKU_APP_NAME
       TITLE_STRING='============= Deploying to Production =============='
     fi
-    if [ $BRANCH = "travis" ];
+    if [ $BRANCH = $DEPLOY_DEV_BRANCH ];
       then
       APP_NAME=$HEROKU_DEV_APP_NAME
       TITLE_STRING='================= Deploying to Dev ================='
