@@ -13,31 +13,5 @@ language: python
 python:
   - "3.6"
 
-before_script:
-  - cp containers/Dockerfile_dev ./Dockerfile
-  - docker build -t devbuild .
-  - docker images
-
 script:
-  - HOST_PATH=`pwd`
-  - docker run -t -d -v $HOST_PATH/app:/opt/app/app -v $HOST_PATH/tests:/opt/app/tests --name devbuild devbuild 
-  - ls
-  - docker exec devbuild 'ls'
-  - docker exec devbuild 'ls' -c 'app'
-  - docker exec devbuild 'npm' -c 'run' 'lint'
-  - docker exec devbuild 'npm' -c 'run' 'flow'
-  - docker exec devbuild 'npm' -c 'run' 'jest'
-  - docker exec devbuild 'pytest'
-  - docker exec devbuild 'flake8'
-  - docker exec devbuild 'npm' -c 'run' 'webpack' '--' '--env.mode=prod'
-  - docker stop devbuild
-  - docker rm devbuild
-
-after_success:
-  - cp containers/Dockerfile_prod ./Dockerfile
-  - docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
-  - docker build -t registry.heroku.com/$HEROKU_APP_NAME/web .
-  - docker push registry.heroku.com/$HEROKU_APP_NAME/web
-
-after_failure:
-  - echo "Actually, it failed!"
+  - ./build.sh prod deploy  
