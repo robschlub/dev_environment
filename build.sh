@@ -24,6 +24,7 @@ reset=`tput sgr0`
 
 # If pull requesting to master, check that it is coming from release-candidate
 # branch only
+echo "Travis pull request:" $TRAVIS_PULL_REQUEST
 if [ $TRAVIS_PULL_REQUEST ];
   then
   if [ $TRAVIS_PULL_REQUEST != "false" ];
