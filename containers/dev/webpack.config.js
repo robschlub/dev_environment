@@ -1,6 +1,7 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
+const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
@@ -11,6 +12,7 @@ const envConfig = {
     webpackMode: 'production',
     devtool: false,
     uglifySourceMap: false,
+    reactDevMode: false,
   },
   stage: {
     name: 'stage',
@@ -18,6 +20,7 @@ const envConfig = {
     webpackMode: 'production',
     devtool: 'source-map',
     uglifySourceMap: true,
+    reactDevMode: false,
   },
   dev: {
     name: 'development',
@@ -25,6 +28,7 @@ const envConfig = {
     webpackMode: 'development',
     devtool: 'source-map',
     uglifySourceMap: false,
+    reactDevMode: true,
   },
 };
 
@@ -77,9 +81,17 @@ module.exports = (env) => {
   }
   const clean = new CleanWebpackPlugin([buildPath]);
 
+  let define = '';
+  if (envConfig.reactDevMode) {
+    define = new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    });
+  }
+
   // Make the plugin array filtering out those plugins that are null
   const pluginArray = [
     uglify,
+    define,
     clean].filter(elem => elem !== '');
 
   return {
