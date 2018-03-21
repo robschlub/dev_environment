@@ -1,8 +1,28 @@
-# dev_environment
+# Dev Environment
 
 Basic dev environment for python/javascript apps.
 
-To submit anything to master branch, all code must pass testing, lint checking and building.
+Currently supports:
+
+* Python
+   * Flask
+   * Flake8
+   * Pytest
+* Javascript
+   * ES6
+   * Flow
+   * Jest
+   * React
+   * Packaging
+      - Flow removal
+      - ES5 transpiling
+      - Bundling
+      - Minification
+* Continuous integration
+   * Travis
+
+# Use
+To submit anything to release-candidate or master branch, all code must pass testing, lint checking and building.
 
 During development, to check whether code is going to pass this criteria, development environments are provided where the lint checking, building and testing can be performed.
 
