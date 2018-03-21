@@ -12,6 +12,7 @@ const envConfig = {
     webpackMode: 'production',
     devtool: false,
     uglifySourceMap: false,
+    reactDevMode: false,
   },
   stage: {
     name: 'stage',
@@ -19,6 +20,7 @@ const envConfig = {
     webpackMode: 'production',
     devtool: 'source-map',
     uglifySourceMap: true,
+    reactDevMode: false,
   },
   dev: {
     name: 'development',
@@ -26,6 +28,7 @@ const envConfig = {
     webpackMode: 'development',
     devtool: 'source-map',
     uglifySourceMap: false,
+    reactDevMode: true,
   },
 };
 
@@ -78,10 +81,12 @@ module.exports = (env) => {
   }
   const clean = new CleanWebpackPlugin([buildPath]);
 
-  const define = new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify('production'),
-  });
-
+  let define = '';
+  if (envConfig.reactDevMode) {
+    define = new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    });
+  }
 
   // Make the plugin array filtering out those plugins that are null
   const pluginArray = [
