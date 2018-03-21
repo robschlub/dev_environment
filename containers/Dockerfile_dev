@@ -4,39 +4,7 @@
 #   - JS Building
 #   - Flask debugging
 
-FROM rschlub/nodepy
-
-# ## General ##
-WORKDIR /opt/app
-
-# This is the folder that will be shared with the docker host machine
-RUN mkdir app
-RUN mkdir tests
-
-
-
-# ## Javascript ##
-
-# Node packages
-ADD containers/dev/package.json .
-RUN npm install --save-dev eslint@4.18.2 \
-													 eslint-plugin-import@2.9.0 \
-													 eslint-config-airbnb-base@12.1.0 \
-													 eslint-plugin-flowtype@2.46.1 \
-													 webpack@4.1.1 \
-													 webpack-cli@2.0.11 \
-													 babel-preset-env@1.6.1 \
-													 babel-loader@7.1.4 \
-													 babel-core@6.26.0 \
-													 babel-preset-flow@6.23.0 \
-													 flow-bin@0.67.1 \
-													 uglifyjs-webpack-plugin@1.2.3 \
-													 babel-eslint@8.2.2 \
-													 jest@22.4.2 \
-													 babel-jest@22.4.1 \
-    											 regenerator-runtime@0.11.1 \
-    											 eslint-plugin-jest@21.14.1 \
-    											 clean-webpack-plugin@0.1.19
+FROM rschlub/nodepy:dev
 
 # Linting
 ADD .eslintrc.json .
@@ -47,17 +15,6 @@ ADD .flowconfig .
 ADD containers/dev/webpack.config.js .
 ADD .babelrc .
 
-# Update path so eslint can be run from anywhere
-ENV PATH="/opt/app/node_modules/.bin:${PATH}"
-
-
-
-# ## Python ##
-
-# Python packages
-ADD containers/dev/requirements_dev.txt requirements.txt
-RUN pip install -r requirements.txt
-
 # Python linting
 ADD .flake8 .
 
@@ -67,6 +24,5 @@ ENV FLASK_DEBUG 1
 
 # Use this is you want to load straight into flask
 # CMD ["flask", "run", "--host=0.0.0.0"]
-
 
 ENTRYPOINT ["bash"]
