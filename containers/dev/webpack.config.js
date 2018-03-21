@@ -96,9 +96,9 @@ module.exports = (env) => {
 
   return {
     entry: {
-      main: './app/app/static/src/main.js',
-      entry2: './app/app/static/src/entry2.js',
-      entry3: './app/app/static/src/entry3.js',
+      main: './src/js/main.js',
+      entry2: './src/js/entry2.js',
+      entry3: './src/js/entry3.js',
     },
     output: {
       path: buildPath,

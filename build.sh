@@ -65,6 +65,7 @@ docker_run() {
     docker run -it --rm \
       -v $HOST_PATH/app:/opt/app/app \
       -v $HOST_PATH/tests:/opt/app/tests \
+      -v $HOST_PATH/src:/opt/app/src \
       --name devbuild \
       --entrypoint $2 \
       devbuild \
@@ -73,6 +74,7 @@ docker_run() {
     docker run -it --rm \
       -v $HOST_PATH/app:/opt/app/app \
       -v $HOST_PATH/tests:/opt/app/tests \
+      -v $HOST_PATH/src:/opt/app/src \
       --name devbuild \
       --entrypoint $2 \
       devbuild
