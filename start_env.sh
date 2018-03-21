@@ -41,7 +41,8 @@ else
   docker run -it --rm \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/tests:/opt/app/tests \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/app:/opt/app/app \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/setup/webpack.config.js:/opt/app/webpack.config.js \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/webpack.config.js:/opt/app/webpack.config.js \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.eslintrc.json:/opt/app/.eslintrc.json \
     --name devenv-$1 \
     -p $HOST_PORT:$CONTAINTER_PORT \
     devenv-$1
