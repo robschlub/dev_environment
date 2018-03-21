@@ -122,7 +122,7 @@ check_status "Tests"
 
 # Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
-docker_run "Packaging" npm run webpack -- --env.mode=prod
+docker_run "Packaging" npm run webpack -- --env.mode=$MODE
 check_status "Building"
 
 # Deploy to:
