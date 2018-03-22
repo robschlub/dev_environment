@@ -132,31 +132,24 @@ module.exports = (env) => {
               loader: 'css-loader',
               options: {
                 importLoaders: 2,
-                sourceMap: true,
+                sourceMap: envConfig.uglifySourceMap,
               },
             },
             {
               loader: 'postcss-loader',
               options: {
                 plugins: [Autoprefixer],
-                sourceMap: true,
+                sourceMap: envConfig.uglifySourceMap,
               },
             },
             {
               loader: 'sass-loader',
               options: {
-                sourceMap: true,
+                sourceMap: envConfig.uglifySourceMap,
               },
             },
           ],
         },
-        // {
-        //   test: /\.css$/,
-        //   use: ExtractTextPlugin.extract({
-        //     fallback: 'style-loader',
-        //     use: 'css-loader',
-        //   }),
-        // },
       ],
     },
     plugins: pluginArray,
@@ -181,9 +174,18 @@ module.exports = (env) => {
             test: /js\/tools/,
             name: 'tools',
           },
+          // commoncss: {
+          //   minSize: 10,
+          //   minChunks: 2,
+          //   priority: -10,
+          //   reuseExistingChunk: true,
+          //   test: /\.(css|scss|sass)$/,
+          //   name: 'common',
+          // },
           vendors: {
             test: /[\\/]node_modules[\\/]/,
             priority: -10,
+            name: 'vendors',
           },
         },
       },
