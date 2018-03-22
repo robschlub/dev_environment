@@ -38,16 +38,15 @@ An example contribution work flow is:
   * `./start_env.sh dev-server`
     * Automatic environment that hosts app at `localhost:5003`
     * Automatically rebuilds and rehosts app each time a source file is changed
+    * Browser cache might need to be cleared each time
+      * Safari: CMD+OPT+e, then CMD+r
+      * Chrome: Hold click the refresh icon and select `Empty Cache and Reload` (only works in developer mode)
   * `./start_env.sh stage`
     * Automatic environment that runs flask and hosts app at `localhost:5001`
     * Container has no npm packages installed, and only the python packages needed for production.
   * `./start_env.sh prod`
     * Automatic environment that runs nginx and hosts app at `localhost:5000`
-    * Container has no npm packages installed, and only the python packages needed for production.
-* Open browswer and go to `localhost:5003` to view updates in real time
-  * Browser cache might need to be cleared each time
-    * Safari: CMD+OPT+e, then CMD+r
-    * Chrome: Hold click the refresh icon and select `Empty Cache and Reload` (only works in developer mode)
+    * Container has no npm packages installed, and only the python packages needed for production.  
 * Contribute to source code
   * Javascript, HTML and CSS are in dev_environment/src
   * Python is in dev_environment/app
@@ -90,4 +89,5 @@ An example contribution work flow is:
 * If all is ok, create pull request to merge `release-candidate` into `master`
 * Once merged in master, the new app will be deployed to the production site
 
+# Setting up sublime
 
