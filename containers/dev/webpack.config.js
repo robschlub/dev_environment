@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-lin
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
-
+const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
 const envConfig = {
@@ -125,10 +125,29 @@ module.exports = (env) => {
           use: 'babel-loader',
         },
         {
-          test: /\.css$/,
+          test: /\.(css|sass|scss)$/,
           use: [
             MiniCssExtractPlugin.loader,
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 2,
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: [Autoprefixer],
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
           ],
         },
         // {
