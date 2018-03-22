@@ -5,13 +5,15 @@ import ReactDOM from 'react-dom';
 import '../css/style2.css';
 import '../css/style.css';
 import '../css/style3.scss';
-
+import component from './button';
 
 const myId:HTMLElement | null = document.getElementById('intro');
 
 if (myId instanceof HTMLElement) {
   ReactDOM.render(
     <div className="container-fluid">
+      {component}
+      <div>Helloooooo</div>
       <div className="row">
         <div className="col test">
           hello1
