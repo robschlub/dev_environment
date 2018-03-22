@@ -16,3 +16,14 @@ from app import app
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/favicon.ico')
+def icon():
+    return app.send_static_file('favicon.ico')
+
+
+@app.route('/apple-touch-icon-precomposed.png')
+@app.route('/apple-touch-icon.png')
+def apple_touch_icon():
+    return app.send_static_file('icon.png')
