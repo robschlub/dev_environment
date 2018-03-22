@@ -182,6 +182,13 @@ module.exports = (env) => {
           //   test: /\.(css|scss|sass)$/,
           //   name: 'common',
           // },
+          // bootstrap: {
+          //   test: /bootstrap\.css/,
+          //   name: 'bootstrap',
+          //   minChunks: 1,
+          //   minSize: 10,
+          //   priority: -20,
+          // },
           vendors: {
             test: /[\\/]node_modules[\\/]/,
             priority: -10,
