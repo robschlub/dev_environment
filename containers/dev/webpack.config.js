@@ -2,6 +2,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
+const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
@@ -88,10 +89,22 @@ module.exports = (env) => {
     });
   }
 
+  const extract = new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: '[name].css',
+    chunkFilename: '[id].css',
+  });
+  // const extract = new ExtractTextPlugin({
+  //   filename: '[name].css',
+  //   allChunks: true,
+  // });
+
   // Make the plugin array filtering out those plugins that are null
   const pluginArray = [
     uglify,
     define,
+    extract,
     clean].filter(elem => elem !== '');
 
   return {
@@ -111,6 +124,20 @@ module.exports = (env) => {
           exclude: /(node_modules)/,
           use: 'babel-loader',
         },
+        {
+          test: /\.css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+          ],
+        },
+        // {
+        //   test: /\.css$/,
+        //   use: ExtractTextPlugin.extract({
+        //     fallback: 'style-loader',
+        //     use: 'css-loader',
+        //   }),
+        // },
       ],
     },
     plugins: pluginArray,
@@ -132,7 +159,7 @@ module.exports = (env) => {
             minChunks: 2,
             priority: -10,
             reuseExistingChunk: true,
-            test: /src\/tools/,
+            test: /js\/tools/,
             name: 'tools',
           },
           vendors: {
