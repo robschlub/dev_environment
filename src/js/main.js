@@ -10,7 +10,7 @@ const myId:HTMLElement | null = document.getElementById('intro');
 
 if (myId instanceof HTMLElement) {
   ReactDOM.render(
-    <div className="test"><h1>Hello, world from react!</h1></div>,
+    <div className="test"><h1>Hello world, from react using css!</h1></div>,
     myId,
   );
 }
