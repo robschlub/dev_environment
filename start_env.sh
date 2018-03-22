@@ -65,6 +65,7 @@ else
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/src:/opt/app/src \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/webpack.config.js:/opt/app/webpack.config.js \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.eslintrc.json:/opt/app/.eslintrc.json \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.flake8:/opt/app/.flake8 \
     --name devenv-$1 \
     -p $HOST_PORT:$CONTAINTER_PORT \
     devenv-$1 $CMD
