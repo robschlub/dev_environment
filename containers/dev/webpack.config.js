@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-lin
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
-
+const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
 const envConfig = {
@@ -125,19 +125,31 @@ module.exports = (env) => {
           use: 'babel-loader',
         },
         {
-          test: /\.css$/,
+          test: /\.(css|sass|scss)$/,
           use: [
             MiniCssExtractPlugin.loader,
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 2,
+                sourceMap: envConfig.uglifySourceMap,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: [Autoprefixer],
+                sourceMap: envConfig.uglifySourceMap,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: envConfig.uglifySourceMap,
+              },
+            },
           ],
         },
-        // {
-        //   test: /\.css$/,
-        //   use: ExtractTextPlugin.extract({
-        //     fallback: 'style-loader',
-        //     use: 'css-loader',
-        //   }),
-        // },
       ],
     },
     plugins: pluginArray,
@@ -162,9 +174,18 @@ module.exports = (env) => {
             test: /js\/tools/,
             name: 'tools',
           },
+          // commoncss: {
+          //   minSize: 10,
+          //   minChunks: 2,
+          //   priority: -10,
+          //   reuseExistingChunk: true,
+          //   test: /\.(css|scss|sass)$/,
+          //   name: 'common',
+          // },
           vendors: {
             test: /[\\/]node_modules[\\/]/,
             priority: -10,
+            name: 'vendors',
           },
         },
       },
