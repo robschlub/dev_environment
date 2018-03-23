@@ -12,18 +12,22 @@ const myId:HTMLElement | null = document.getElementById('intro');
 
 if (myId instanceof HTMLElement) {
   ReactDOM.render(
-    <Jumbotron className="jumbotron jumbotron-fluid text-xs-center"
-    style={{
-             backgroundImage: 'url(static/flower.jpg',
-             backgroundSize: 'cover',
-             backgroundPosition: 'bottom',
-           }}>
-      <div className="container">
+    <Jumbotron className="jumbotron -fluid text-center"
+                style={{
+                  backgroundImage: 'url(static/flower.jpg',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'bottom',
+                }}
+                containerFluid={false}
+                >
 
-        <h1>Helloooooo</h1>
 
-        <Button label='This is a normal button' className="-secondary"/>
-        <Button label='Big button' className="-primary -lg -block"/>
+        <h1>This is a title</h1>
+        <p>With a subtitle</p>
+
+        <Button type='button' label='Go' className="-primary"/>
+        <Button type='button' label='Stop' className="-primary -danger"/>
+        <Button label='Big button' className="-outline-primary -danger -block"/>
         <Button label={'b3'}/>
 
         <div className="row">
@@ -46,7 +50,7 @@ if (myId instanceof HTMLElement) {
             <p>Test</p>
           </div>
         </div>
-      </div>,
+
     </Jumbotron>,
     myId,
   );

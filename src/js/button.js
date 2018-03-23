@@ -14,12 +14,14 @@ type Props = {
 export default class Button extends React.Component
                                     <Props> {
   render() {
-    const Tag = this.props.href ? 'a' : 'button';
-    const label = this.props.label || 'Button';
-    const className = classify('btn', this.props.className || '');
+    const props = Object.assign({}, this.props);
+    const Tag = props.href ? 'a' : 'button';
+    const label = props.label || 'Button';
+    const className = classify('btn', props.className || '');
+    delete props.label;
 
-    return <Tag {...this.props} className={className}>
-      <p>{label}</p>
+    return <Tag {...props} className={className}>
+      {label}
     </Tag>;
   }
 }
