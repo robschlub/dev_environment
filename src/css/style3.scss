@@ -1,7 +1,49 @@
+@import 'redefines';
+@import "bootstrap/bootstrap";
+
 $font-stack:    Helvetica, sans-serif;
 $primary-color: #009;
 
 .test {
   font: 100% $font-stack;
   color: $primary-color;
+}
+
+.btn {
+  // background-color: green;
+  // color: $primary;
+}
+
+h1 {
+  color: white;
+}
+
+@include media-breakpoint-up(xs) {
+  h1 {
+    color: red;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  h1 {
+    color: blue;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  h1 {
+    color: yellow;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  h1 {
+    color: green;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  h1 {
+    color: cyan;
+  }
 }

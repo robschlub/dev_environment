@@ -14,7 +14,13 @@ function mulToString(a: number, b: number): string {
 
 const divide = (a: number, b: number): number => a / b;
 
-export { divide, mulToString, add, Console };
-// export dividedBy;
-// export dividedBy;
-// export { Console as default };
+const classify = (key: string, value: string) => {
+  const nonEmpty = value || key;
+  const withKey = nonEmpty[0] === '-' || nonEmpty.startsWith(`${key}-`) ?
+    `${key} ${nonEmpty}` :
+    nonEmpty;
+  const joinStr = ` ${key}-`;
+  return `${withKey.split(' -').join(joinStr)}`;
+};
+
+export { divide, mulToString, add, Console, classify };

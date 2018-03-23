@@ -3,3 +3,8 @@
     background-color: yellow;
     color: red;
 }
+
+.redbox {
+  background-color: purple;
+  border-color: green;
+}
