@@ -1,9 +1,30 @@
 import * as tools from './tools';
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(tools.add(1, 2)).toBe(3);
+// CLassify method tests
+test('Empty inputs case', () => {
+  expect(tools.classify('', '')).toBe('');
 });
 
-test('divide 6 by 2 to equal 3', () => {
-  expect(tools.divide(6, 2)).toBe(3);
+test('Empty value case', () => {
+  expect(tools.classify('btn', '')).toBe('btn');
+});
+
+test('Empty key case', () => {
+  expect(tools.classify('', '-test')).toBe(' -test');
+});
+
+test('btn, btn -> btn', () => {
+  expect(tools.classify('btn', 'btn')).toBe('btn');
+});
+
+test('btn, -test -> btn btn-test', () => {
+  expect(tools.classify('btn', '-test')).toBe('btn btn-test');
+});
+
+test('btn, btn -test -> btn btn-test', () => {
+  expect(tools.classify('btn', 'btn -test')).toBe('btn btn-test');
+});
+
+test('btn, -test -test2 -> btn btn-test btn-test2', () => {
+  expect(tools.classify('btn', '-test -test2')).toBe('btn btn-test btn-test2');
 });

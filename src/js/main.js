@@ -21,9 +21,9 @@ if (myId instanceof HTMLElement) {
 
         <h1>Helloooooo</h1>
 
-        <Button text={'This is a button'}/>
-        <Button text={'button 2'}/>
-        <Button text={'b3'}/>
+        <Button label='This is a normal button' className="-secondary"/>
+        <Button label='Big button' className="-primary -lg -block"/>
+        <Button label={'b3'}/>
 
         <div className="row">
           <div className="col test">

@@ -2,19 +2,24 @@
 
 import React from 'react';
 import '../css/style3.scss';
-
+import { classify } from './tools/tools';
 // import ReactDOM from 'react-dom';
 
 type Props = {
-  text: string,
+  label: string,
+  href?: string,
+  className?: string,
 };
 
 export default class Button extends React.Component
                                     <Props> {
   render() {
-    return <div className="btn btn-primary">
-      <p>{this.props.text}</p>
-    </div>;
+    const Tag = this.props.href ? 'a' : 'button';
+    const label = this.props.label || 'Button';
+    const className = classify('btn', this.props.className || '');
+
+    return <Tag className={className}>
+      <p>{label}</p>
+    </Tag>;
   }
 }
-
