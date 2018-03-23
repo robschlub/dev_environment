@@ -21,6 +21,10 @@ test('btn, -test -> btn btn-test', () => {
   expect(tools.classify('btn', '-test')).toBe('btn btn-test');
 });
 
+test('Do nothing case: btn, btn-test -> btn btn-test', () => {
+  expect(tools.classify('btn', 'btn-test')).toBe('btn btn-test');
+});
+
 test('btn, btn -test -> btn btn-test', () => {
   expect(tools.classify('btn', 'btn -test')).toBe('btn btn-test');
 });
