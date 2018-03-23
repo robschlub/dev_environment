@@ -6,16 +6,17 @@ import '../css/style2.css';
 import '../css/style.css';
 import '../css/style3.scss';
 import Button from './button';
+import Jumbotron from './jumbotron';
 
 const myId:HTMLElement | null = document.getElementById('intro');
 
 if (myId instanceof HTMLElement) {
   ReactDOM.render(
-    <div className="jumbotron jumbotron-fluid text-xs-center"
+    <Jumbotron className="jumbotron jumbotron-fluid text-xs-center"
     style={{
              backgroundImage: 'url(static/flower.jpg',
              backgroundSize: 'cover',
-             backgroundPosition: 'top',
+             backgroundPosition: 'bottom',
            }}>
       <div className="container">
 
@@ -46,7 +47,7 @@ if (myId instanceof HTMLElement) {
           </div>
         </div>
       </div>,
-    </div>,
+    </Jumbotron>,
     myId,
   );
 }
