@@ -13,12 +13,7 @@ const myId:HTMLElement | null = document.getElementById('intro');
 if (myId instanceof HTMLElement) {
   ReactDOM.render(
     <div>
-      <Jumbotron className="jumbotron -fluid"
-                  style={{
-                    backgroundImage: 'url(static/flower.jpg',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'bottom',
-                  }}
+      <Jumbotron className="jumbotron -fluid splash"
                   containerFluid={false}
                   >
         <div className="col-6">

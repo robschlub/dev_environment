@@ -18,6 +18,12 @@ h1 {
   color: white;
 }
 
+.splash {
+  background-image: url(/static/flower2.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
 @include media-breakpoint-up(xs) {
   h1 {
     color: red;
