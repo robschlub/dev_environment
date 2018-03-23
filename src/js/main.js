@@ -13,7 +13,7 @@ const myId:HTMLElement | null = document.getElementById('intro');
 if (myId instanceof HTMLElement) {
   ReactDOM.render(
     <div>
-      <Jumbotron className="jumbotron"
+      <Jumbotron className="jumbotron -fluid"
                   style={{
                     backgroundImage: 'url(static/flower.jpg',
                     backgroundSize: 'cover',
@@ -21,15 +21,17 @@ if (myId instanceof HTMLElement) {
                   }}
                   containerFluid={false}
                   >
-        <h1 className="display-4">Hello, world!</h1>
-        <p className="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-        <hr className="my-4"/>
-        <p>It uses utility classes for typography and spacing to space
-           content out within the larger container.
-        </p>
-        <p className="lead">
-          <Button label="Learn More" className="-primary -lg" href="#"/>
-        </p>
+        <div className="col-6">
+          <h1 className="display-4">Hello, world!</h1>
+          <p className="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+          <hr className="my-4"/>
+          <p>It uses utility classes for typography and spacing to space
+             content out within the larger container.
+          </p>
+          <p className="lead">
+            <Button label="Learn More" className="-primary -lg" href="#"/>
+          </p>
+        </div>
     </Jumbotron>
     <Jumbotron className="jumbotron -fluid text-center"
                 style={{
