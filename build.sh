@@ -12,6 +12,7 @@ MODE=prod
 HOST_PATH=`pwd`
 HEROKU_APP_NAME=itgeti              # Production app name on Heroku
 HEROKU_DEV_APP_NAME=itgetidev       # Dev app name on Heroku
+HEROKU_TEST_APP_NAME=itgetitest     # Dev app name on Heroku
 DEPLOY_PROD_BRANCH=master           # Branch to test and deploy to prod
 DEPLOY_DEV_BRANCH=release-candidate # Branch to test and deploy to dev
 
@@ -100,7 +101,6 @@ check_status() {
   fi
 }
 
-
 # Build docker image
 echo "${bold}${cyan}================= Building Image ===================${reset}"
 cp containers/Dockerfile_dev Dockerfile
@@ -145,6 +145,11 @@ if [ $2 ];
       then
       APP_NAME=$HEROKU_DEV_APP_NAME
       TITLE_STRING='================= Deploying to Dev ================='
+    fi
+    if [ $3 = "test" ];
+      then
+      APP_NAME=$HEROKU_TEST_APP_NAME;
+      TITLE_STRING='================= Deploying to Test ================='
     fi
     if [ $APP_NAME ];
       then
