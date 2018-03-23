@@ -5,8 +5,16 @@ import '../css/style3.scss';
 
 // import ReactDOM from 'react-dom';
 
-const component = <div className="btn btn-secondary">
-    hello there
-  </div>;
+type Props = {
+  text: string,
+};
 
-export default component;
+export default class Button extends React.Component
+                                    <Props> {
+  render() {
+    return <div className="btn btn-primary">
+      <p>{this.props.text}</p>
+    </div>;
+  }
+}
+

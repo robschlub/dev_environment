@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import '../css/style2.css';
 import '../css/style.css';
 import '../css/style3.scss';
-import component from './button';
+import Button from './button';
 
 const myId:HTMLElement | null = document.getElementById('intro');
 
@@ -21,7 +21,9 @@ if (myId instanceof HTMLElement) {
 
         <h1>Helloooooo</h1>
 
-        {component}
+        <Button text={'This is a button'}/>
+        <Button text={'button 2'}/>
+        <Button text={'b3'}/>
 
         <div className="row">
           <div className="col test">
@@ -29,7 +31,7 @@ if (myId instanceof HTMLElement) {
           </div>
           <div className="col-6">
             hello2</div>
-          <div className="col">
+          <div className="col redbox">
             hello3
           </div>
         </div>
@@ -43,9 +45,6 @@ if (myId instanceof HTMLElement) {
             <p>Test</p>
           </div>
         </div>
-        <div className="row">{component}</div>
-        <div className="row">{component}</div>
-        <div className="row">{component}</div>
       </div>,
     </div>,
     myId,

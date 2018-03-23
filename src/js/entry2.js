@@ -1,8 +1,8 @@
 // @flow
 
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
 // import '../css/style2.css';
 // import '../css/style.css';
 // import '../css/style3.scss';
