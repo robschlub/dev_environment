@@ -47,6 +47,10 @@ h1 {
   background-position: center; 
 }
 
+.homeicon {
+  margin-right: 5px;
+}
+
 @include media-breakpoint-up(xs) {
   h1 {
     color: red;
