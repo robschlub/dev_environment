@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import '../css/style.scss';
 import { classify } from './tools/tools';
 // import ReactDOM from 'react-dom';
@@ -9,6 +9,7 @@ type Props = {
   label: string,
   href?: string,
   className?: string,
+  children?: React.Node,
 };
 
 export default class Button extends React.Component
@@ -16,7 +17,7 @@ export default class Button extends React.Component
   render() {
     const props = Object.assign({}, this.props);
     const Tag = props.href ? 'a' : 'button';
-    const label = props.label || 'Button';
+    const label = props.label || props.children || 'Button';
     const className = classify('btn', props.className || '');
     delete props.label;
 

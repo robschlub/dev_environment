@@ -36,7 +36,7 @@ const introPage = () => {
           <h1>This is a title</h1>
           <p>With a subtitle</p>
 
-          <Button type='button' label='Go' className="-primary"/>
+          <Button type='button' className="-primary">Goo</Button>
           <Button type='button' label='Stop' className="-primary -danger"/>
           <Button label='Big button' className="-outline-primary -danger -block"/>
           <Button label={'b3'}/>
