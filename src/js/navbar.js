@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import '../css/style3.scss';
+import '../css/style.scss';
 
 type Props = {
   className?: string,

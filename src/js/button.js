@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import '../css/style3.scss';
+import '../css/style.scss';
 import { classify } from './tools/tools';
 // import ReactDOM from 'react-dom';
 

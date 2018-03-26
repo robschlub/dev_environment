@@ -2,9 +2,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../css/style2.css';
-import '../../css/style.css';
-import '../../css/style3.scss';
+// import '../../css/style2.css';
+import '../../css/introduction.scss';
+// import '../../css/style3.scss';
 import Button from './../button';
 import Jumbotron from './../jumbotron';
 import Navbar from './../navbar';
@@ -15,10 +15,9 @@ const introPage = () => {
   if (introId instanceof HTMLElement) {
     ReactDOM.render(
       <div>
-        <Navbar>
-        </Navbar>
+        <Navbar/>
 
-        <Jumbotron className="jumbotron -fluid splash"
+        <Jumbotron className="jumbotron -fluid intro"
                     containerFluid={false}
                     >
           <div className="col-6">
@@ -33,7 +32,7 @@ const introPage = () => {
             </p>
           </div>
       </Jumbotron>
-      <Jumbotron className="jumbotron -fluid text-center splash1"
+      <Jumbotron className="jumbotron -fluid text-center intro1"
                   containerFluid={false}
                   >
           <h1>This is a title</h1>

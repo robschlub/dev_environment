@@ -2,9 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../css/style2.css';
-import '../../css/style.css';
-import '../../css/style3.scss';
+import '../../css/about.scss';
 import Button from './../button';
 import Jumbotron from './../jumbotron';
 import Navbar from './../navbar';
@@ -15,10 +13,9 @@ const aboutPage = () => {
   if (aboutId instanceof HTMLElement) {
     ReactDOM.render(
       <div>
-        <Navbar>
-        </Navbar>
+        <Navbar/>
 
-        <Jumbotron className="jumbotron -fluid splash"
+        <Jumbotron className="jumbotron -fluid about"
                     containerFluid={false}
                     >
           <div className="col-6">

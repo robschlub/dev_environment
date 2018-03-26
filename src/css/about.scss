@@ -1,0 +1,40 @@
+@import "style";
+
+$about-image-sm: $flower-sm-image;
+$about-image-md: $flower-md-image;
+$about-image-lg: $flower-lg-image;
+
+.about {
+  background-size: cover;
+  background-position: center; 
+}
+
+@include media-breakpoint-up(xs) {
+  .about {
+    background-image: $about-image-sm;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .about {
+    background-image: $about-image-sm;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .about {
+    background-image: $about-image-md;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .about {
+    background-image: $about-image-lg;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .about {
+    background-image: $about-image-lg;
+  }
+}
