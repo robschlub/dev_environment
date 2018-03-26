@@ -1,33 +1,6 @@
 // @import 'redefines';
+
 @import "bootstrap/bootstrap";
-
-$font-stack:    Helvetica, sans-serif;
-$primary-color: #009;
-$flower-sm-image: url(/static/flower-sm.jpg);
-$flower-md-image: url(/static/flower-md.jpg);
-$flower-lg-image: url(/static/flower-lg.jpg);
-$flower2-sm-image: url(/static/flower2-sm.jpg);
-$flower2-md-image: url(/static/flower2-md.jpg);
-$flower2-lg-image: url(/static/flower2-lg.jpg);
-$fence-sm-image: url(/static/fence-sm.jpg);
-$fence-md-image: url(/static/fence-md.jpg);
-$fence-lg-image: url(/static/fence-lg.jpg);
-
-
-.test {
-  font: 100% $font-stack;
-  color: $primary-color;
-}
-
-.btn {
-  // background-color: green;
-  // color: $primary;
-}
-
-h1 {
-  color: white;
-}
-
-.homeicon {
-  margin-right: 5px;
-}
+@import "base";
+@import "about";
+@import "introduction";

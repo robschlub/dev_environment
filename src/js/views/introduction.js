@@ -2,9 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import '../../css/style2.css';
-import '../../css/introduction.scss';
-// import '../../css/style3.scss';
+import '../../css/style.scss';
 import Button from './../button';
 import Jumbotron from './../jumbotron';
 import Navbar from './../navbar';
