@@ -6,7 +6,7 @@ import { classify } from './tools/tools';
 // import ReactDOM from 'react-dom';
 
 type Props = {
-  label: string,
+  label?: string,
   href?: string,
   className?: string,
   children?: React.Node,

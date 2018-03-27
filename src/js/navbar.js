@@ -9,10 +9,30 @@ type Props = {
   containerFluid?: boolean
 };
 
+type State = {
+  active: string;
+};
+
 export default class Navbar extends React.Component
-                                    <Props> {
+                                    <Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    (this: any).activatePage = this.activate.bind(this);
+    this.state = {
+      active: 'Home',
+    };
+  }
+
+  activate(page: string) {
+    this.setState({ active: page });
+  }
+
   render() {
     const props = Object.assign({}, this.props);
+    const nav1 = 'Introduction';
+    const nav2 = 'About';
+
 
     const body =
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
@@ -26,11 +46,17 @@ export default class Navbar extends React.Component
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
-              <a className="nav-link" href="/">Introduction</a>
+            <li className="nav-item">
+              <a className={`nav-link ${this.state.active === { nav1 } ? 'active' : ''}`}
+                 href={`/${nav1.toLowerCase()}`}>
+                  { nav1 }
+              </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/about">About</a>
+              <a className={`nav-link ${this.state.active === { nav2 } ? 'active' : ''}`}
+                 href={`/${nav2.toLowerCase()}`}>
+                  { nav2 }
+              </a>
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
