@@ -13,7 +13,7 @@ const introPage = () => {
   if (introId instanceof HTMLElement) {
     ReactDOM.render(
       <div>
-        <Navbar/>
+        <Navbar active='Introduction'/>
 
         <Jumbotron className="jumbotron -fluid intro"
                     containerFluid={false}

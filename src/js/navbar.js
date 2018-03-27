@@ -4,35 +4,22 @@ import * as React from 'react';
 import '../css/style.scss';
 
 type Props = {
-  className?: string,
-  children?: React.Node,
-  containerFluid?: boolean
+  // className?: string,
+  // children?: React.Node,
+  active?: string
 };
 
-type State = {
-  active: string;
-};
 
 export default class Navbar extends React.Component
-                                    <Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    (this: any).activatePage = this.activate.bind(this);
-    this.state = {
-      active: 'Home',
-    };
-  }
-
-  activate(page: string) {
-    this.setState({ active: page });
-  }
-
+                                    <Props> {
   render() {
     const props = Object.assign({}, this.props);
     const nav1 = 'Introduction';
     const nav2 = 'About';
+    const nav1Class = `nav-link ${props.active === nav1 ? 'active' : ''}`;
+    const nav2Class = `nav-link ${props.active === nav2 ? 'active' : ''}`;
 
+    delete props.active;
 
     const body =
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
@@ -47,13 +34,13 @@ export default class Navbar extends React.Component
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
-              <a className={`nav-link ${this.state.active === { nav1 } ? 'active' : ''}`}
+              <a className={nav1Class}
                  href={`/${nav1.toLowerCase()}`}>
                   { nav1 }
               </a>
             </li>
             <li className="nav-item">
-              <a className={`nav-link ${this.state.active === { nav2 } ? 'active' : ''}`}
+              <a className={nav2Class}
                  href={`/${nav2.toLowerCase()}`}>
                   { nav2 }
               </a>
