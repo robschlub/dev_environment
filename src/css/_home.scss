@@ -1,8 +1,10 @@
 // @import "style";
 
+$home-image-xs: $bark-sm-image;
 $home-image-sm: $bark-sm-image;
 $home-image-md: $bark-md-image;
 $home-image-lg: $bark-lg-image;
+$home-image-xl: $bark-lg-image;
 
 .home {
   background-size: cover;
@@ -11,7 +13,7 @@ $home-image-lg: $bark-lg-image;
 
 @include media-breakpoint-up(xs) {
   .home {
-    background-image: $home-image-sm;
+    background-image: $home-image-xs;
   }
 }
 
@@ -35,6 +37,6 @@ $home-image-lg: $bark-lg-image;
 
 @include media-breakpoint-up(xl) {
   .home {
-    background-image: $home-image-lg;
+    background-image: $home-image-xl;
   }
 }
