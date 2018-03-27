@@ -22,13 +22,12 @@ export default class Content extends React.Component
 
   componentDidMount() {
     fetch('/lessons/chapter1')
-      .then( response => response.text())
+      .then(response => response.text())
       .then((response) => {
         this.setState({
           content: response,
         });
-        console.log(response); 
-    });
+      });
   }
 
   render() {

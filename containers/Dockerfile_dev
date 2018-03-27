@@ -20,6 +20,10 @@ RUN mkdir src
 
 # Node packages
 ADD containers/dev/package.json .
+
+RUN npm install --save 		 react@16.2.0 \
+    											 react-dom@16.2.0
+
 RUN npm install --save-dev eslint@4.18.2 \
 													 eslint-plugin-import@2.9.0 \
 													 eslint-config-airbnb-base@12.1.0 \
@@ -48,9 +52,6 @@ RUN npm install --save-dev eslint@4.18.2 \
 												   autoprefixer@8.2.0 \
 													 react-test-renderer@16.2.0 \
 													 whatwg-fetch@2.0.3
-
-RUN npm install --save 		 react@16.2.0 \
-    											 react-dom@16.2.0
 
 
 # Linting
