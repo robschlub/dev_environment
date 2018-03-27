@@ -3,9 +3,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../../css/style.scss';
-import Button from './../button';
+import Button from './../components/button';
 import Jumbotron from './../jumbotron';
-import Navbar from './../navbar';
+import Navbar from './../components/navbar';
 
 const introPage = () => {
   const introId:HTMLElement | null = document.getElementById('intro');
