@@ -1,8 +1,12 @@
 // @import "style";
 
+$about-image-xs: $flower-sm-image;
 $about-image-sm: $flower-sm-image;
+
 $about-image-md: $flower-md-image;
+
 $about-image-lg: $flower-lg-image;
+$about-image-xl: $flower-lg-image;
 
 .about {
   background-size: cover;
@@ -11,7 +15,7 @@ $about-image-lg: $flower-lg-image;
 
 @include media-breakpoint-up(xs) {
   .about {
-    background-image: $about-image-sm;
+    background-image: $about-image-xs;
   }
 }
 
@@ -35,6 +39,6 @@ $about-image-lg: $flower-lg-image;
 
 @include media-breakpoint-up(xl) {
   .about {
-    background-image: $about-image-lg;
+    background-image: $about-image-xl;
   }
 }

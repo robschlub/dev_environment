@@ -1,8 +1,10 @@
 // @import "style";
 
+$intro-image-xs: $fence-sm-image;
 $intro-image-sm: $fence-sm-image;
 $intro-image-md: $fence-md-image;
 $intro-image-lg: $fence-lg-image;
+$intro-image-xl: $fence-lg-image;
 
 $intro1-image-sm: $flower2-sm-image;
 $intro1-image-md: $flower2-md-image;
@@ -25,7 +27,7 @@ $intro1-image-lg: $flower2-lg-image;
     color: red;
   }
   .intro {
-    background-image: $intro-image-sm;
+    background-image: $intro-image-xs;
   }
   .intro1{
     background-image: $intro1-image-sm;
@@ -73,7 +75,7 @@ $intro1-image-lg: $flower2-lg-image;
     color: cyan;
   }
   .intro {
-    background-image: $intro-image-lg;
+    background-image: $intro-image-xl;
   }
   .intro1 {
     background-image: $intro1-image-lg;
