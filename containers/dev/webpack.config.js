@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-li
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
 const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved
+
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
 const envConfig = {
@@ -109,7 +110,7 @@ module.exports = (env) => {
 
   return {
     entry: {
-      main: './src/js/main.js',
+      main: ['whatwg-fetch', './src/js/main.js'],
       entry2: './src/js/entry2.js',
       entry3: './src/js/entry3.js',
     },

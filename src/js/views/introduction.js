@@ -6,11 +6,16 @@ import '../../css/style.scss';
 import Button from './../components/button';
 import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
+import Content from './../components/content';
 
 const introPage = () => {
   const introId:HTMLElement | null = document.getElementById('intro');
 
   if (introId instanceof HTMLElement) {
+    // let content;
+    // fetch('/lessons/chapter1')
+    //   .then((response) => { content = response; });
+
     ReactDOM.render(
       <div>
         <Navbar active='Introduction'/>
@@ -63,6 +68,7 @@ const introPage = () => {
           </div>
 
       </Jumbotron>
+      <Content />
       </div>,
       introId,
     );

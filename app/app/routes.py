@@ -37,3 +37,8 @@ def icon():
 @app.route('/apple-touch-icon.png')
 def apple_touch_icon():
     return app.send_static_file('icon.png')
+
+
+@app.route('/lessons/chapter1')
+def chapter1():
+    return "Chapter 1 Content"
