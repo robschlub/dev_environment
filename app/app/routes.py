@@ -14,5 +14,31 @@ from app import app
 
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return render_template('home.html')
+
+
+@app.route('/introduction')
+def introduction():
+    return render_template('introduction.html')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/favicon.ico')
+def icon():
+    return app.send_static_file('favicon.ico')
+
+
+@app.route('/apple-touch-icon-precomposed.png')
+@app.route('/apple-touch-icon.png')
+def apple_touch_icon():
+    return app.send_static_file('icon.png')
+
+
+@app.route('/lessons/chapter1')
+def chapter1():
+    return "Chapter 1 Content"

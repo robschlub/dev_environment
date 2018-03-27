@@ -1,0 +1,14 @@
+
+
+.nav-responsive {
+}
+
+@include media-breakpoint-up(md){
+  .nav-responsive {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: $zindex-fixed;
+  }
+}

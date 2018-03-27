@@ -1,6 +1,9 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
+const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
+const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
+const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
@@ -11,6 +14,7 @@ const envConfig = {
     webpackMode: 'production',
     devtool: false,
     uglifySourceMap: false,
+    reactDevMode: false,
   },
   stage: {
     name: 'stage',
@@ -18,6 +22,7 @@ const envConfig = {
     webpackMode: 'production',
     devtool: 'source-map',
     uglifySourceMap: true,
+    reactDevMode: false,
   },
   dev: {
     name: 'development',
@@ -25,6 +30,7 @@ const envConfig = {
     webpackMode: 'development',
     devtool: 'source-map',
     uglifySourceMap: false,
+    reactDevMode: true,
   },
 };
 
@@ -77,16 +83,36 @@ module.exports = (env) => {
   }
   const clean = new CleanWebpackPlugin([buildPath]);
 
+  let define = '';
+  if (envConfig.reactDevMode) {
+    define = new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    });
+  }
+
+  const extract = new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: '[name].css',
+    chunkFilename: '[id].css',
+  });
+  // const extract = new ExtractTextPlugin({
+  //   filename: '[name].css',
+  //   allChunks: true,
+  // });
+
   // Make the plugin array filtering out those plugins that are null
   const pluginArray = [
     uglify,
+    define,
+    extract,
     clean].filter(elem => elem !== '');
 
   return {
     entry: {
-      main: './app/app/static/src/main.js',
-      entry2: './app/app/static/src/entry2.js',
-      entry3: './app/app/static/src/entry3.js',
+      main: ['whatwg-fetch', './src/js/main.js'],
+      entry2: './src/js/entry2.js',
+      entry3: './src/js/entry3.js',
     },
     output: {
       path: buildPath,
@@ -98,6 +124,32 @@ module.exports = (env) => {
           test: /\.js$/,
           exclude: /(node_modules)/,
           use: 'babel-loader',
+        },
+        {
+          test: /\.(css|sass|scss)$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 2,
+                sourceMap: envConfig.uglifySourceMap,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: [Autoprefixer],
+                sourceMap: envConfig.uglifySourceMap,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: envConfig.uglifySourceMap,
+              },
+            },
+          ],
         },
       ],
     },
@@ -120,12 +172,28 @@ module.exports = (env) => {
             minChunks: 2,
             priority: -10,
             reuseExistingChunk: true,
-            test: /src\/tools/,
+            test: /js\/tools/,
             name: 'tools',
           },
+          // commoncss: {
+          //   minSize: 10,
+          //   minChunks: 2,
+          //   priority: -10,
+          //   reuseExistingChunk: true,
+          //   test: /\.(css|scss|sass)$/,
+          //   name: 'common',
+          // },
+          // bootstrap: {
+          //   test: /bootstrap\.css/,
+          //   name: 'bootstrap',
+          //   minChunks: 1,
+          //   minSize: 10,
+          //   priority: -20,
+          // },
           vendors: {
             test: /[\\/]node_modules[\\/]/,
             priority: -10,
+            name: 'vendors',
           },
         },
       },
