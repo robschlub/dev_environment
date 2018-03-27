@@ -1,5 +1,257 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Navbar Make "About" item active 1`] = `
+<div>
+  <nav
+    className="navbar navbar-expand-md nav-responsive navbar-dark bg-dark"
+  >
+    <a
+      className="navbar-brand"
+      href="/"
+    >
+      <img
+        alt=""
+        className="d-inline-block align-top homeicon"
+        height="30"
+        src="/static/icon-lg.png"
+        width="30"
+      />
+    </a>
+    <button
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      className="navbar-toggler"
+      data-target="#navbarSupportedContent"
+      data-toggle="collapse"
+      type="button"
+    >
+      <span
+        className="navbar-toggler-icon"
+      />
+    </button>
+    <div
+      className="collapse navbar-collapse"
+      id="navbarSupportedContent"
+    >
+      <ul
+        className="navbar-nav mr-auto"
+      >
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link "
+            href="/introduction"
+          >
+            Introduction
+          </a>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link active"
+            href="/about"
+          >
+            About
+          </a>
+        </li>
+        <li
+          className="nav-item dropdown"
+        >
+          <a
+            aria-expanded="false"
+            aria-haspopup="true"
+            className="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+          >
+            Go to
+          </a>
+          <div
+            aria-labelledby="navbarDropdown"
+            className="dropdown-menu"
+          >
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Chapter 1 - shapes
+            </a>
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Chapter 2 - circles
+            </a>
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Chapter 3 - abstraction
+            </a>
+            <div
+              className="dropdown-divider"
+            />
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Glossary
+            </a>
+          </div>
+        </li>
+      </ul>
+      <form
+        className="form-inline"
+      >
+        <input
+          aria-label="Search"
+          className="form-control mr-sm-2"
+          placeholder="Search"
+          type="search"
+        />
+        <button
+          className="btn btn-outline-success my-2 my-sm-0"
+          type="submit"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+  </nav>
+</div>
+`;
+
+exports[`Navbar Make "Introduction" item active 1`] = `
+<div>
+  <nav
+    className="navbar navbar-expand-md nav-responsive navbar-dark bg-dark"
+  >
+    <a
+      className="navbar-brand"
+      href="/"
+    >
+      <img
+        alt=""
+        className="d-inline-block align-top homeicon"
+        height="30"
+        src="/static/icon-lg.png"
+        width="30"
+      />
+    </a>
+    <button
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      className="navbar-toggler"
+      data-target="#navbarSupportedContent"
+      data-toggle="collapse"
+      type="button"
+    >
+      <span
+        className="navbar-toggler-icon"
+      />
+    </button>
+    <div
+      className="collapse navbar-collapse"
+      id="navbarSupportedContent"
+    >
+      <ul
+        className="navbar-nav mr-auto"
+      >
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link active"
+            href="/introduction"
+          >
+            Introduction
+          </a>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link "
+            href="/about"
+          >
+            About
+          </a>
+        </li>
+        <li
+          className="nav-item dropdown"
+        >
+          <a
+            aria-expanded="false"
+            aria-haspopup="true"
+            className="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+          >
+            Go to
+          </a>
+          <div
+            aria-labelledby="navbarDropdown"
+            className="dropdown-menu"
+          >
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Chapter 1 - shapes
+            </a>
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Chapter 2 - circles
+            </a>
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Chapter 3 - abstraction
+            </a>
+            <div
+              className="dropdown-divider"
+            />
+            <a
+              className="dropdown-item"
+              href="#"
+            >
+              Glossary
+            </a>
+          </div>
+        </li>
+      </ul>
+      <form
+        className="form-inline"
+      >
+        <input
+          aria-label="Search"
+          className="form-control mr-sm-2"
+          placeholder="Search"
+          type="search"
+        />
+        <button
+          className="btn btn-outline-success my-2 my-sm-0"
+          type="submit"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+  </nav>
+</div>
+`;
+
 exports[`Navbar No props 1`] = `
 <div>
   <nav
