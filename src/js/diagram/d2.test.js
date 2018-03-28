@@ -109,4 +109,41 @@ describe('d2 tests', () => {
     const q = d2.point(0, 0);
     expect(p.isEqualTo(q)).toEqual(true);
   });
+  test('(0, 0) != (1, 0) using isNotEqualTo', () => {
+    const p = d2.point(0, 0);
+    const q = d2.point(1, 0);
+    expect(p.isNotEqualTo(q)).toEqual(true);
+  });
+
+  // Points can be on a line
+  test('(0, 0) is within the line <(-1, 0) (1, 0)>', () => {
+    const l = d2.line(d2.point(-1, 0), d2.point(1, 0));
+    const p = d2.point(0, 0);
+    expect(p.isOnLine(l)).toEqual(true);
+  });
+  test('(1, 0) is within the line <(-1, 0) (1, 0)>', () => {
+    const l = d2.line(d2.point(-1, 0), d2.point(1, 0));
+    const p = d2.point(1, 0);
+    expect(p.isOnLine(l)).toEqual(true);
+  });
+  test('(0, 1) is not within the line <(-1, 0) (1, 0)>', () => {
+    const l = d2.line(d2.point(-1, 0), d2.point(1, 0));
+    const p = d2.point(0, 1);
+    expect(p.isOnLine(l)).toEqual(false);
+  });
+  test('(2, 0) is not within the line <(-1, 0) (1, 0)>', () => {
+    const l = d2.line(d2.point(-1, 0), d2.point(1, 0));
+    const p = d2.point(2, 0);
+    expect(p.isOnLine(l)).toEqual(false);
+  });
+  test('(2, 0) is on the unbound line <(-1, 0) (1, 0)>', () => {
+    const l = d2.line(d2.point(-1, 0), d2.point(1, 0));
+    const p = d2.point(2, 0);
+    expect(p.isOnUnboundLine(l)).toEqual(true);
+  });
+  test('(2, 2) is not on the unbound line <(-1, 0) (1, 0)>', () => {
+    const l = d2.line(d2.point(-1, 0), d2.point(1, 0));
+    const p = d2.point(2, 2);
+    expect(p.isOnUnboundLine(l)).toEqual(false);
+  });
 });

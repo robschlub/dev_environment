@@ -17,7 +17,13 @@
               ],
               "allowSamePrecedence": true
           }
-    ]
+        ],
+        "no-multi-spaces": [
+          "error",
+          {
+            "ignoreEOLComments": true
+          }
+        ]
       },
     "plugins": [
       "flowtype",
