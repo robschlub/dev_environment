@@ -4,8 +4,20 @@
                 "plugin:react/recommended",
                 "airbnb-base"],
     "rules": {
-        "no-console": "error"
+        "no-console": "error",
         // "quotes": ["error", "double"]
+        "no-mixed-operators": [
+          "error",
+          {
+              "groups": [
+                  ["&", "|", "^", "~", "<<", ">>", ">>>"],
+                  ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+                  ["&&", "||"],
+                  ["in", "instanceof"]
+              ],
+              "allowSamePrecedence": true
+          }
+    ]
       },
     "plugins": [
       "flowtype",

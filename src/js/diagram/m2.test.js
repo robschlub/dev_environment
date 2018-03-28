@@ -1,5 +1,5 @@
 import * as m2 from './m2';
-import round from './mathtools';
+import { round } from './mathtools';
 
 describe('m2', () => {
   test('Create an identity matrix', () => {

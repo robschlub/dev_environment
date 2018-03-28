@@ -1,4 +1,4 @@
-import round from './mathtools';
+import { round } from './mathtools';
 
 describe('Math tools testing', () => {
   // Rounding a value
