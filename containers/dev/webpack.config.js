@@ -110,7 +110,7 @@ module.exports = (env) => {
 
   return {
     entry: {
-      main: ['whatwg-fetch', './src/js/main.js'],
+      main: ['whatwg-fetch', 'babel-polyfill', './src/js/main.js'],
       entry2: './src/js/entry2.js',
       entry3: './src/js/entry3.js',
     },
