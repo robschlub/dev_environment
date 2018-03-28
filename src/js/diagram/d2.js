@@ -3,9 +3,6 @@
 import { roundNum } from './mathtools';
 import { Console } from '../tools/tools';
 
-// function point(x: number, y: number) {
-//   return new Point(x, y);
-// }
 /* eslint-disable comma-dangle */
 function Point(x: number, y: number) {
   this.x = x;
