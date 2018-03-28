@@ -13,11 +13,7 @@ const roundValue = (value: number, precision: number = 5) => {
 const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
   let result = 0;
   if (arrayOrValue instanceof Array) {
-    result = [];
-    // result = arrayOrValue.map(elem, round(elem, precision));
-    for (let i = 0, j = arrayOrValue.length; i < j; i += 1) {
-      result[i] = round(arrayOrValue[i], precision);
-    }
+    result = arrayOrValue.map(elem => round(elem, precision));
   // } else if (arrayOrValue.constructor == d2.point(0,0).constructor){
   //     result = roundPoint(arrayOrValue, precision);
   } else {

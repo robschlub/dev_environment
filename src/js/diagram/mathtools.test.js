@@ -19,7 +19,11 @@ describe('Math tools testing', () => {
   });
 
   // Round an array
-  test('Round an array of numbers to 1st decimal place', () => {
+  test('Round an array of numbers whole numbers', () => {
     expect(round([0.5, 0.9, 1.2, 2.3], 0)).toEqual([1, 1, 1, 2]);
+  });
+
+  test('Round 1 element array', () => {
+    expect(round([0.2])).toEqual([0.2]);
   });
 });
