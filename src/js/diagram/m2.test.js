@@ -64,75 +64,49 @@ describe('m2', () => {
     const result = m2.transform(transformMatrix, 1, 1);
     expect(round(result)).toEqual([round(Math.sqrt(2)), 0]);
   });
-});
 
-//   describe('Can Rotate a Point', () => {
-//     test('0, 0 by 0 deg', () => {
-//       let transformMatrix = m2.identity();
-//       transformMatrix = m2.rotate(transformMatrix, 0)
-//       expect(m2.transform(transformMatrix, 0, 0)).toEqual([0, 0]);
-//     });
-//     test('1, 0 by 90 deg around 0, 0', () => {
-//       let transformMatrix = m2.identity();
-//       transformMatrix = m2.rotate(transformMatrix, Math.PI/2)
-//       result = m2.transform(transformMatrix, 1, 0)
-//       expect(round(result)).toEqual([0, 1]);
-//     });
-//     test('1, 1 by -45 deg around 0, 0', () => {
-//       let transformMatrix = m2.identity();
-//       transformMatrix = m2.rotate(transformMatrix, -Math.PI/4)
-//       result = m2.transform(transformMatrix, 1, 1)
-//       expect(round(result)).toEqual([round(Math.sqrt(2)), 0]);
-//     });
-//   });
-//   describe('Can Scale a Point', () => {
-//     test('Scale 1, 1 by 1', () => {
-//       let transformMatrix = m2.identity();
-//       transformMatrix = m2.scale(transformMatrix, 1, 1)
-//       expect(m2.transform(transformMatrix, 1, 1)).toEqual([1, 1]);
-      
-//     });
-//     test('Scale 1, 1 by 2', () => {
-//       let transformMatrix = m2.identity();
-//       transformMatrix = m2.scale(transformMatrix, 2, 2)
-//       expect(m2.transform(transformMatrix, 1, 1)).toEqual([2, 2]);
-      
-//     });
-//   });
-//   describe('Can combine rotation, translation and scale', () => {
-//     test('Rotate 2, 0 by 90 deg around 0, 0 then move 1, 0, then scale by 2', () => {
-//       let transformMatrix = m2.identity();
-//       transformMatrix = m2.scale(transformMatrix, 2, 2);
-//       transformMatrix = m2.translate(transformMatrix, 1, 0);
-//       transformMatrix = m2.rotate(transformMatrix, Math.PI/2);
-//       result = m2.transform(transformMatrix, 2, 0);
-//       expect(round(result)).toEqual([2, 4]);
-      
-//     });
-//     test('Rotate 2, 0 by 90 deg around 0, 0 then move 1, 0, then scale by 2 using a point instead of an array', () => {
-//       let transformMatrix = m2.identity();
-//       transformMatrix = m2.scale(transformMatrix, 2, 2);
-//       transformMatrix = m2.translate(transformMatrix, 1, 0);
-//       transformMatrix = m2.rotate(transformMatrix, Math.PI/2);
-//       result = m2.pointTransform(transformMatrix, d2.point(2, 0));
-//       expect(d2.point(round(result.x), round(result.y))).toEqualPoint(d2.point(2, 4));
-      
-//     });
-//   });
-//   describe('Can invert matrices', () => {
-//     test('Inverse I', () => {
-//       let transformMatrix = m2.identity();
-//       expect(m2.inverse(m2.identity())).toEqual(m2.identity());
-      
-//     });
-//     test('Inverse Matrix 1', () => {
-//       let transformMatrix = m2.identity();
-//       expect(round(m2.inverse([3, 0, 2, 2, 0, -2, 0, 1, 1]))).toEqual([0.2,  0.2,  0, -0.2,  0.3,  1, 0.2, -0.3,  0]);
-//     });
-//   });
-//   describe('Can copy a matrix', () => {
-//     test('Copy of A', () => {
-//       expect(m2.copy([1, 2, 3, 4, 5, 6, 7, 8, 9])).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-//     });
-//   });
-// });
+  // Scale a point
+  test('Scale 1, 1 by 1', () => {
+    const transformMatrix = m2.scale(m2.identity(), 1, 1);
+    expect(m2.transform(transformMatrix, 1, 1)).toEqual([1, 1]);
+  });
+  test('Scale 1, 1 by 2', () => {
+    const transformMatrix = m2.scale(m2.identity(), 2, 2);
+    expect(m2.transform(transformMatrix, 1, 1)).toEqual([2, 2]);
+  });
+
+  // Combine rotation, tranlsation and scale
+  test('Rotate 2, 0 by 90 deg around 0, 0 then move 1, 0, then scale by 2', () => {
+    let transformMatrix = m2.identity();
+    transformMatrix = m2.scale(transformMatrix, 2, 2);
+    transformMatrix = m2.translate(transformMatrix, 1, 0);
+    transformMatrix = m2.rotate(transformMatrix, Math.PI / 2);
+    const result = m2.transform(transformMatrix, 2, 0);
+    expect(round(result)).toEqual([2, 4]);
+  });
+  // test('Rotate 2, 0 by 90 deg around 0, 0 then move 1, 0,
+  // then scale by 2 using a point instead of an array', () => {
+  //   let transformMatrix = m2.identity();
+  //   transformMatrix = m2.scale(transformMatrix, 2, 2);
+  //   transformMatrix = m2.translate(transformMatrix, 1, 0);
+  //   transformMatrix = m2.rotate(transformMatrix, Math.PI / 2);
+  //   const result = m2.pointTransform(transformMatrix, d2.point(2, 0));
+  //   expect(d2.point(round(result.x), round(result.y))).toEqualPoint(d2.point(2, 4));
+  // });
+
+  // Matrix inversion
+  test('Inverse I', () => {
+    // let transformMatrix = m2.identity();
+    expect(m2.inverse(m2.identity())).toEqual(m2.identity());
+  });
+  test('Inverse Matrix 1', () => {
+    expect(round(m2.inverse([3, 0, 2, 2, 0, -2, 0, 1, 1])))
+      .toEqual([0.2, 0.2, 0, -0.2, 0.3, 1, 0.2, -0.3, 0]);
+  });
+
+  // Copy
+  test('Copy of A', () => {
+    expect(m2.copy([1, 2, 3, 4, 5, 6, 7, 8, 9]))
+      .toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  });
+});
