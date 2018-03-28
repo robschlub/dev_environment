@@ -1,0 +1,27 @@
+{
+  "name": "dev_environment",
+  "version": "1.0.0",
+  "description": "Basic dev environment for python/javascript apps.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robschlub/dev_environment.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robschlub/dev_environment/issues"
+  },
+  "homepage": "https://github.com/robschlub/dev_environment#readme",
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-test-renderer": "^16.2.0"
+  }
+}

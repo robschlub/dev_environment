@@ -1,17 +1,37 @@
 {
-    "extends": ["plugin:flowtype/recommended", "plugin:jest/recommended","airbnb-base"],
+    "extends": ["plugin:flowtype/recommended", 
+                "plugin:jest/recommended",
+                "plugin:react/recommended",
+                "airbnb-base"],
     "rules": {
         "no-console": "error"
         // "quotes": ["error", "double"]
       },
     "plugins": [
       "flowtype",
-      "jest"],
+      "jest",
+      "react"],
 
     "settings": {
       "flowtype": {
         "onlyFilesWithFlowAnnotation": true
-      }
+      },
+      "import/resolver": {
+        "node": {
+          "extensions": [".js",".jsx"]
+        }
+      },
+      "react": {
+        "createClass": "createReactClass", // Regex for Component Factory to use,
+                                           // default to "createReactClass"
+        "pragma": "React",  // Pragma to use, default to "React"
+        "version": "16.2", // React version, default to the latest React stable release
+        "flowVersion": "0.67.1" // Flow version
+      },
+      "propWrapperFunctions": [ "forbidExtraProps" ] // The names of any functions used to wrap the
+                                                     // propTypes object, e.g. `forbidExtraProps`.
+                                                     // If this isn't set, any propTypes wrapped in
+                                                     // a function will be skipped.
     },
 
     "env": {

@@ -12,6 +12,7 @@ WORKDIR /opt/app
 # This is the folder that will be shared with the docker host machine
 RUN mkdir app
 RUN mkdir tests
+RUN mkdir src
 
 
 
@@ -19,24 +20,40 @@ RUN mkdir tests
 
 # Node packages
 ADD containers/dev/package.json .
+
+RUN npm install --save 		 react@16.2.0 \
+    											 react-dom@16.2.0
+
 RUN npm install --save-dev eslint@4.18.2 \
 													 eslint-plugin-import@2.9.0 \
 													 eslint-config-airbnb-base@12.1.0 \
 													 eslint-plugin-flowtype@2.46.1 \
+													 eslint-plugin-react@7.7.0 \
 													 webpack@4.1.1 \
 													 webpack-cli@2.0.11 \
 													 babel-preset-env@1.6.1 \
 													 babel-loader@7.1.4 \
 													 babel-core@6.26.0 \
 													 babel-preset-flow@6.23.0 \
-													 flow-bin@0.67.1 \
+													 babel-preset-react@6.24.1 \
+													 flow-bin@0.68.0 \
 													 uglifyjs-webpack-plugin@1.2.3 \
 													 babel-eslint@8.2.2 \
 													 jest@22.4.2 \
 													 babel-jest@22.4.1 \
     											 regenerator-runtime@0.11.1 \
     											 eslint-plugin-jest@21.14.1 \
-    											 clean-webpack-plugin@0.1.19
+    											 clean-webpack-plugin@0.1.19 \ 		
+    											 mini-css-extract-plugin@0.2.0 \	
+    											 css-loader@0.28.11 \							
+    											 sass-loader@6.0.7 \							
+    											 node-sass@4.7.2 \								
+												   postcss-loader@2.1.3 \						
+												   autoprefixer@8.2.0 \
+													 react-test-renderer@16.2.0 \
+													 whatwg-fetch@2.0.3 \
+													 babel-polyfill@6.26.0
+
 
 # Linting
 ADD .eslintrc.json .
@@ -60,10 +77,14 @@ RUN pip install -r requirements.txt
 
 # Python linting
 ADD .flake8 .
+ADD containers/dev/pytest.ini .
 
 # Environment variable for flask
 ENV FLASK_APP app/my_app.py
 ENV FLASK_DEBUG 1
+
+# Dev server script
+ADD containers/dev/dev-server.sh .
 
 # Use this is you want to load straight into flask
 # CMD ["flask", "run", "--host=0.0.0.0"]
