@@ -158,26 +158,26 @@ function pointinRect(q: Point, p1: Point, p2: Point, precision?: number) {
   return false;
 }
 
-function distance(p1, p2) {
+function distance(p1: Point, p2: Point) {
   return Math.sqrt(((p2.x - p1.x) ** 2) + ((p2.y - p1.y) ** 2));
 }
-// function deg(angle) {
-//   return angle * 180 / Math.PI;
-// }
-// function minAngleDiff(angle1, angle2) {
-//   return Math.atan2(Math.sin(angle1-angle2), Math.cos(angle1-angle2));
-// }
+function deg(angle: number) {
+  return angle * 180 / Math.PI;
+}
+function minAngleDiff(angle1: number, angle2: number) {
+  return Math.atan2(Math.sin(angle1 - angle2), Math.cos(angle1 - angle2));
+}
 
-// function normAngle (angle) {
-//   let newAngle = angle;
-//   while (newAngle >= Math.PI*2.0) {
-//     newAngle -= Math.PI*2.0;
-//   }
-//   while (newAngle < 0) {
-//     newAngle += Math.PI*2.0;
-//   }
-//   return newAngle;
-// }
+function normAngle(angle: number) {
+  let newAngle = angle;
+  while (newAngle >= Math.PI * 2.0) {
+    newAngle -= Math.PI * 2.0;
+  }
+  while (newAngle < 0) {
+    newAngle += Math.PI * 2.0;
+  }
+  return newAngle;
+}
 
 function Line(p1: Point, p2: Point) {
   this.p1 = p1.copy();
@@ -456,7 +456,7 @@ function line(p1: Point, p2: Point) {
 }
 
 
-export { point, Point, line, Line };
+export { point, Point, line, Line, minAngleDiff, deg, normAngle };
 
 // export {
 //   point,
