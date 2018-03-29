@@ -46,7 +46,8 @@ Point.prototype.rotate = function pointRotate(angle, center?: Point) {
 Point.prototype.isEqualTo = function pointIsEqualTo(q: Point, precision?: number) {
   let pr = this;
   let qr = q;
-  if (precision) {
+
+  if (typeof precision === 'number') {
     pr = this.round(precision);
     qr = qr.round(precision);
   }
@@ -241,7 +242,7 @@ Line.prototype.hasPointOn = function linehasPointOn(p: Point, precision?: number
 Line.prototype.isEqualTo = function lineisEqualTo(line2: Line, precision?: number) {
   let l1 = this;
   let l2 = line2;
-  if (precision instanceof Number) {
+  if (typeof precision === 'number') {
     l1 = l1.round(precision);
     l2 = l2.round(precision);
     l1.p1 = l1.p1.round(precision);
@@ -440,6 +441,7 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     }
 
     let i;
+
     if (midLine instanceof Line) {
       i = midLine.midpoint();
     }

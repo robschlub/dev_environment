@@ -122,6 +122,11 @@ describe('d2 tests', () => {
         const q = g2.point(1, 0);
         expect(p.isNotEqualTo(q)).toEqual(true);
       });
+      test('(0, 0) == (0.1, 0) with precision of 0', () => {
+        const p = g2.point(0, 0);
+        const q = g2.point(0.1, 0);
+        expect(p.isEqualTo(q, 0)).toEqual(true);
+      });
     });
 
     describe('Points can be on a line', () => {
@@ -293,9 +298,21 @@ describe('d2 tests', () => {
         expect(result1).toEqual(true);
       });
       test('Line 1 is not same as Line 2', () => {
-        const l1 = g2.line(g2.point(0, 0), g2.point(2, 0));
-        const l2 = g2.line(g2.point(0, 0), g2.point(4, 0));
+        const l1 = g2.line(g2.point(0, 0.01), g2.point(2, 0));
+        const l2 = g2.line(g2.point(0, 0), g2.point(2, 0));
         const result = l1.isEqualTo(l2);
+        expect(result).not.toEqual(true);
+      });
+      test('Line 1 is same as Line 2 with 0 precision', () => {
+        const l1 = g2.line(g2.point(0, 0.1), g2.point(2, 0));
+        const l2 = g2.line(g2.point(0, 0), g2.point(4, 0));
+        const result = l1.isEqualTo(l2, 0);
+        expect(result).not.toEqual(true);
+      });
+      test('Line 1 is same as Line 2 with 1 precision', () => {
+        const l1 = g2.line(g2.point(0, 0.01), g2.point(2, 0));
+        const l2 = g2.line(g2.point(0, 0), g2.point(4, 0));
+        const result = l1.isEqualTo(l2, 1);
         expect(result).not.toEqual(true);
       });
       test('Line 1 is on the same line as Line 2', () => {
