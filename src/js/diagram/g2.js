@@ -1,5 +1,11 @@
 // @flow
 
+// 2D geometry functions including:
+//  - Point
+//  - Line
+//  - minAngleDiff
+//  - normAngle
+
 import { roundNum } from './mathtools';
 import { Console } from '../tools/tools';
 
