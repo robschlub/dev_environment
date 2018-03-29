@@ -9,6 +9,21 @@ import Navbar from './../components/navbar';
 import Content from './../components/content';
 
 const introPage = () => {
+
+  const globalVars = GlobalVariables.getInstance();
+  // let lesson;
+  let nextButton = document.getElementById("next_link");
+  let prevButton = document.getElementById("prev_link");
+  let selectButton = document.getElementById("select_link");
+  
+  const lesson = new Lesson2();  
+  lesson.director.updateState();
+  nextButton.onclick = lesson.director.next.bind(lesson.director);  
+  prevButton.onclick = lesson.director.prev.bind(lesson.director);
+  selectButton.onclick = lesson.director.select.bind(lesson.director);
+  globalVars.animateNextFrame();
+
+
   const introId:HTMLElement | null = document.getElementById('intro');
 
   if (introId instanceof HTMLElement) {
