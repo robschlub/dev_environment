@@ -1,0 +1,42 @@
+
+$color-stick:              rgb(  0,  0,255);
+$color-start_stick:        rgb( 30, 30,255);
+$color-arc:                rgb(255,  0,  0);
+$color-rotation:           rgb(255,  0,  0);
+$color-hint_arrow:         rgb(255,  0,  0);
+$color-corners:            rgb( 50,200, 50);
+$color-shapes:             rgb(  0,  0,255);
+$color-axes:               rgb(230,230,230);
+$color-portions:           rgb(125,125,125);
+$color-anchor:             rgb(235,235,  0);
+$color-anchor_text:        rgb(210,210,  0);
+$color-corners_more_sharp: rgba(144, 85,180, 1);
+$color-corners_less_sharp: rgba(200, 50, 50, 1);
+$color-angle:              rgb(255,220,255);
+$color-angle_text:         rgb(177,105,223);
+$color-latin:              rgb(200,  0,200);
+$color-greek:              rgb(  0,  0,200);
+$color-english:            rgb(200,  0,  0);
+
+:export {
+  colorStick: $color-stick;
+  colorStart_stick: $color-start_stick;
+  colorArc: $color-arc;
+  colorRotation: $color-rotation;
+  colorHintArrow: $color-hint_arrow;
+  colorCorners: $color-corners;
+  colorShapes: $color-shapes;
+  colorAxes: $color-axes;
+  colorPortions: $color-portions;
+  colorAnchor: $color-anchor;
+  colorAnchorText: $color-anchor_text;
+  colorCornersMoreSharp: $color-corners_more_sharp;
+  colorCornersLessSharp: $color-corners_less_sharp;
+  colorAngle: $color-angle;
+  colorAngleText: $color-angle_text;
+  colorLatin: $color-latin;
+  colorGreek: $color-greek;
+  colorEnglish: $color-english;
+}
+
+
