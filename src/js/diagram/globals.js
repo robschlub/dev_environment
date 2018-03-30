@@ -1,24 +1,27 @@
 // @flow
 
+// Import colors from project scss files
 import getColors from './colors';
 
+// Singleton class that contains projects global variables
 class GlobalVariables {
-  animationId: AnimationFrameID;
-  drawScene: () => mixed;
-  canvas: HTMLElement | null;
-  isTouchDevice: boolean;
-  colors: {};
-  animateNextFrameFlag: boolean;
+  // Method for requesting the next animation frame
   requestNextAnimationFrame: (()=>mixed) => AnimationFrameID;
-  colors: Object;
-  canvasRect: ClientRect | null;
-  canvasWidth: number;
-  canvasHeight: number;
+  animationId: AnimationFrameID;    // used to cancel animation frames
+  drawScene: () => mixed;           // method passed to animate next frame
+  canvas: HTMLElement | null;       // canvas html element to draw to
+  isTouchDevice: boolean;           // whether the device is PC or not
+  animateNextFrameFlag: boolean;    // whether a frame is queued for animation
+  colors: Object;                   // colors from the scss project files
+  canvasRect: ClientRect | null;    // canvas rectangle
+  canvasWidth: number;              // canvas scroll width
+  canvasHeight: number;             // canvas scroll height
   static instance: Object;
 
   constructor() {
+    // If the instance alread exists, then don't create a new instance.
+    // If it doesn't, then setup some default values.
     if (!GlobalVariables.instance) {
-      // this.animationId = 0;
       this.drawScene = () => {};
       this.updateCanvas(null);
       this.isTouchDevice = (
@@ -35,20 +38,22 @@ class GlobalVariables {
       this.animateNextFrameFlag = false;
       GlobalVariables.instance = this;
     }
-
     return GlobalVariables.instance;
   }
 
+  // Set a new draw method used by animation frames
   setDrawMethod(drawMethod: () => mixed) {
     this.drawScene = drawMethod;
   }
 
+  // Queue up an animation frame
   animateNextFrame() {
     cancelAnimationFrame(this.animationId);
     const nextFrame = this.requestNextAnimationFrame(this.drawScene);
     this.animationId = nextFrame;
   }
 
+  // Update the canvas with an HTML element
   updateCanvas(canvas: HTMLElement | null) {
     this.canvas = canvas;
     if (canvas instanceof HTMLElement) {
@@ -61,13 +66,11 @@ class GlobalVariables {
       this.canvasHeight = 0;
     }
   }
-
-  // getColors() {
-  //   this.colors = getColors();
-  // }
 }
 
-// const globalvars: Object = new GlobalVariables();
-// Object.freeze(globalvars);
+// Do not automatically create and instance and return it otherwise can't
+// mock elements in jest
+// // const globalvars: Object = new GlobalVariables();
+// // Object.freeze(globalvars);
 
 export default GlobalVariables;
