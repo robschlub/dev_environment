@@ -2,20 +2,23 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import testgl from './testwebgl';
 
 type Props = {
-  id: string;
+  id?: string;
+  didMountFn?: () => mixed;
 };
 
 export default class Canvas extends React.Component
                                     <Props> {
   componentDidMount() {
-    testgl();
+    if (this.props.didMountFn) {
+      this.props.didMountFn();
+    }
   }
 
   render() {
-    return <canvas id={this.props.id}>
+    const id = this.props.id || '';
+    return <canvas id={id}>
     </canvas>;
   }
 }

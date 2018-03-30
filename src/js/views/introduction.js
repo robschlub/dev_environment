@@ -10,7 +10,8 @@ import Content from './../components/content';
 // import styles from '../../css/diagram.scss';
 // import getColors from '../diagram/colors';
 // import testgl from '../diagram/testgl';
-import Canvas from '../diagram/canvas';
+import Canvas from '../components/canvas';
+import testgl from '../diagram/testwebgl';
 
 const introPage = () => {
   // const globalVars = GlobalVariables.getInstance();
@@ -91,7 +92,7 @@ const introPage = () => {
 
       </Jumbotron>
       <Content />
-      <Canvas id="my_Canvas" />
+      <Canvas id="my_Canvas" didMountFn={testgl}/>
       </div>,
       introId,
     );
