@@ -3,125 +3,141 @@ import * as m2 from './m2';
 
 class VertexObject {
   constructor(webgl) {
-  this.gl = webgl.gl;
-  this.glLocations = webgl.locations;
-  this.glPrimative = webgl.gl.TRIANGLES;
-  this.points = [];
-  this.border = [[]];
-}
-setupBuffer(numPoints = 0) {
-  if (numPoints == 0)
-    this.numPoints = this.points.length/2.0;
-  else 
-    this.numPoints = numPoints;
-  // this.buffer = createBuffer(this.gl, this.vertices);
-  this.buffer = this.gl.createBuffer();
-  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
-  this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
-}
-draw(translation, rotation, scale, count, color) {
-  let transformation = m2.identity();
+    this.gl = webgl.gl;
+    this.glLocations = webgl.locations;
+    this.glPrimative = webgl.gl.TRIANGLES;
+    this.points = [];
+    this.border = [[]];
+  }
+  setupBuffer(numPoints = 0) {
+    if (numPoints === 0) {
+      this.numPoints = this.points.length / 2.0;
+    } else {
+      this.numPoints = numPoints;
+    }
+    // this.buffer = createBuffer(this.gl, this.vertices);
+    this.buffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
+  }
+  draw(translation, rotation, scale, count, color) {
+    let transformation = m2.identity();
     transformation = m2.translate(transformation, translation.x, translation.y);
     transformation = m2.rotate(transformation, rotation);
     transformation = m2.scale(transformation, scale.x, scale.y);
     this.drawTransform(m2.t(transformation), count, color);
-}
-drawWithTransformMatrix(transformMatrix, count, color){
-  // let scale2 = scale;
-  // if (typeof scale2 != "object") {
-  //   scale2 = point(scale, scale);
-  // } 
+  }
+  drawWithTransformMatrix(transformMatrix, count, color) {
+    // let scale2 = scale;
+    // if (typeof scale2 != "object") {
+    //   scale2 = point(scale, scale);
+    // }
 
-  let size = 2;         // 2 components per iteration
-  let type = this.gl.FLOAT;   // the data is 32bit floats
-  let normalize = false;    // don't normalize the data
-  let stride = 0;       // 0 = move forward size * sizeof(type) each iteration to get the next position
-  let offset = 0;       // start at the beginning of the buffer
+    const size = 2;         // 2 components per iteration
+    const type = this.gl.FLOAT;   // the data is 32bit floats
+    const normalize = false;    // don't normalize the data
+    // 0 = move forward size * sizeof(type) each iteration to get
+    // the next position
+    const stride = 0;
+    const offset = 0;       // start at the beginning of the buffer
 
-  this.gl.enableVertexAttribArray(this.glLocations["a_position"]);     // Turn on the attribute
-  this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);   // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-  this.gl.vertexAttribPointer(this.glLocations["a_position"], 
-    size, type, normalize, stride, offset);  // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+    // Turn on the attribute
+    this.gl.enableVertexAttribArray(this.glLocations['a_position']);
 
-  // let matrix = g2.identity();
-  // // matrix = g2.translate(matrix, this.bias_offset.x, this.bias_offset.y);
-  // // matrix = g2.scale(matrix, this.bias_scale.x, this.bias_scale.y);
-  // matrix = g2.translate(matrix, translation.x, translation.y);
-  // matrix = g2.rotate(matrix,rotation);
-  // matrix = g2.scale(matrix,scale.x ,scale.y);
+    // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+    this.gl.vertexAttribPointer(
+      this.glLocations['a_position'],
+      size, type, normalize, stride, offset,
+    );
 
-  this.gl.uniformMatrix3fv(this.glLocations["u_matrix"], false, m2.t(transformMatrix));  // Translate
-  this.gl.uniform4f(this.glLocations["u_color"], color[0],color[1],color[2],color[3]);  // Translate   
+    // let matrix = g2.identity();
+    // // matrix = g2.translate(matrix, this.bias_offset.x, this.bias_offset.y);
+    // // matrix = g2.scale(matrix, this.bias_scale.x, this.bias_scale.y);
+    // matrix = g2.translate(matrix, translation.x, translation.y);
+    // matrix = g2.rotate(matrix,rotation);
+    // matrix = g2.scale(matrix,scale.x ,scale.y);
 
-  this.gl.drawArrays(this.glPrimative, offset, count);
-}
+    this.gl.uniformMatrix3fv(this.glLocations['u_matrix'], false, m2.t(transformMatrix));  // Translate
+
+    this.gl.uniform4f(this.glLocations['u_color'],
+      color[0], color[1], color[2], color[3],
+    );  // Translate
+
+    this.gl.drawArrays(this.glPrimative, offset, count);
+  }
 }
 
 class Polygon extends VertexObject {
-  constructor(webgl, radius, numSides, numSidesToDraw, thickness, rotation, center){
+  constructor(webgl, radius, numSides, numSidesToDraw, thickness, rotation, center) {
     super(webgl);
-  // VertexObject.call(this, webgl);
+    this.glPrimative = webgl.gl.TRIANGLE_STRIP;
+    this.radius = radius;
 
-  this.glPrimative = webgl.gl.TRIANGLE_STRIP;
-  this.radius = radius;
-  
-  let inRad = radius-thickness;
-  let outRad = radius + thickness;
-  this.outRad = outRad;
-  this.inRad = inRad;
-  this.center = center;
-  if (numSides < 3) {
-    this.dAngle = Math.PI/numSides;
-  }
-  else {
-    this.dAngle = Math.PI*2.0/numSides;
-  }
-  let i;
-  let j=0;
-  for (i = 0; i<=numSidesToDraw; i++) {
-    this.points[j] = center.x + inRad * Math.cos(i*this.dAngle+rotation);
-    this.points[j+1] = center.y + inRad * Math.sin(i*this.dAngle+rotation);
-    this.points[j+2] = center.x + outRad * Math.cos(i*this.dAngle+rotation);
-    this.points[j+3] = center.y + outRad * Math.sin(i*this.dAngle+rotation);
-    j=j+4;
-  }
+    const inRad = radius - thickness;
+    const outRad = radius + thickness;
+    this.outRad = outRad;
+    this.inRad = inRad;
+    this.center = center;
+    if (numSides < 3) {
+      this.dAngle = Math.PI / numSides;
+    } else {
+      this.dAngle = Math.PI * 2.0 / numSides;
+    }
+    let i;
+    let j = 0;
+    for (i = 0; i <= numSidesToDraw; i += 1) {
+      this.points[j] = center.x + inRad * Math.cos(i * this.dAngle + rotation);
+      this.points[j + 1] =
+        center.y + inRad * Math.sin(i * this.dAngle + rotation);
+      this.points[j + 2] =
+        center.x + outRad * Math.cos(i * this.dAngle + rotation);
+      this.points[j + 3] =
+        center.y + outRad * Math.sin(i * this.dAngle + rotation);
+      j += 4;
+    }
 
-  // Make the encapsulating border
-  if (numSidesToDraw < numSides) {
-    for (i=0; i<=numSidesToDraw; ++i) {
-      this.border[0].push(g2.point(center.x + outRad * Math.cos(i*this.dAngle+rotation),
-                    center.y + outRad * Math.sin(i*this.dAngle+rotation)));
+    // Make the encapsulating border
+    if (numSidesToDraw < numSides) {
+      for (i = 0; i <= numSidesToDraw; i += 1) {
+        this.border[0].push(g2.point(
+          center.x + outRad * Math.cos(i * this.dAngle + rotation),
+          center.y + outRad * Math.sin(i * this.dAngle + rotation),
+        ));
+      }
+      for (i = numSidesToDraw; i >= 0; i -= 1) {
+        this.border[0].push(g2.point(
+          center.x + inRad * Math.cos(i * this.dAngle + rotation),
+          center.y + inRad * Math.sin(i * this.dAngle + rotation),
+        ));
+      }
+      this.border[0].push(this.border[0][0].copy());
+    } else {
+      for (i = 0; i <= numSidesToDraw; i += 1) {
+        this.border[0].push(g2.point(
+          center.x + outRad * Math.cos(i * this.dAngle + rotation),
+          center.y + outRad * Math.sin(i * this.dAngle + rotation),
+        ));
+      }
     }
-    for(i=numSidesToDraw;i>=0;--i) {
-      this.border[0].push(g2.point(center.x + inRad * Math.cos(i*this.dAngle+rotation),
-                    center.y + inRad * Math.sin(i*this.dAngle+rotation)));
+    this.setupBuffer();
+  }
+  // Polygon.prototype = Object.create(VertexObject.prototype);
+  drawToAngle(offset, rotate, scale, drawAngle, color) {
+    let count = Math.floor(drawAngle / this.dAngle) * 2.0 + 2;
+    if (drawAngle >= Math.PI * 2.0) {
+      count = this.numPoints;
     }
-    this.border[0].push(this.border[0][0].copy());
-  } 
-  else {
-    for(i=0; i<=numSidesToDraw; ++i) {
-      this.border[0].push(g2.point(center.x + outRad * Math.cos(i*this.dAngle+rotation),
-                    center.y + outRad * Math.sin(i*this.dAngle+rotation)));
+    this.draw(this, offset, rotate, scale, count, color);
+  }
+  getPointCountForAngle(drawAngle) {
+    let count = Math.floor(drawAngle / this.dAngle) * 2.0 + 2;
+    if (drawAngle >= Math.PI * 2.0) {
+      count = this.numPoints;
     }
+    return count;
   }
-  
-  this.setupBuffer();
-}
-// Polygon.prototype = Object.create(VertexObject.prototype);
-drawToAngle(offset, rotate, scale, drawAngle, color) {
-  let count = Math.floor(drawAngle / this.dAngle)*2.0 + 2;
-  if (drawAngle >= Math.PI*2.0) {
-    count = this.numPoints;
-  }
-  this.draw(this,offset, rotate, scale, count, color);
-}
-getPointCountForAngle(drawAngle) {
-  let count = Math.floor(drawAngle / this.dAngle)*2.0 + 2;
-  if (drawAngle >= Math.PI*2.0) {
-    count = this.numPoints;
-  }
-  return count;
-}
 }
 /* eslint-disable */
   // function PolygonFilled(webgl, radius, numSides, numSidesToDraw, rotation, center) {
