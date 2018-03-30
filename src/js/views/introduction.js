@@ -8,7 +8,9 @@ import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
 import Content from './../components/content';
 // import styles from '../../css/diagram.scss';
-import getColors from '../diagram/colors';
+// import getColors from '../diagram/colors';
+// import testgl from '../diagram/testgl';
+import Canvas from '../diagram/canvas';
 
 const introPage = () => {
   // const globalVars = GlobalVariables.getInstance();
@@ -27,7 +29,7 @@ const introPage = () => {
   // console.log(styles.colorStick);
   // console.log(styles.colorGreek);
   // console.log(styles);
-  getColors();
+  // getColors();
 
   const introId:HTMLElement | null = document.getElementById('intro');
 
@@ -89,6 +91,7 @@ const introPage = () => {
 
       </Jumbotron>
       <Content />
+      <Canvas id="my_Canvas" />
       </div>,
       introId,
     );
