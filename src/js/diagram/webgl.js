@@ -130,7 +130,7 @@ function WebGLInstance(
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.disable(gl.DEPTH_TEST);
     // gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
-    gl.enable(gl.BLEND);
+    // gl.enable(gl.BLEND);
     gl.useProgram(program);
 
     // window.addEventListener('resize', autoResize.bind(this, event));

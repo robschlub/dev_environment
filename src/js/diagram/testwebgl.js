@@ -1,5 +1,8 @@
 // @flow
 import WebGLInstance from './webgl';
+import vertices from './vertexObject';
+import * as g2 from './g2';
+import * as m2 from './m2';
 
 function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
@@ -22,35 +25,36 @@ function testgl(id: string) {
     const { gl } = webgl;
 
     if (gl instanceof WebGLRenderingContext) {
+      const polygon = new vertices.Polygon(webgl, 0.5, 5, 5, 0.01, 0, new g2.Point(0, 0));
       /* Step2: Define the geometry and store it in buffer objects */
-      const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
+      // const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
 
-      // Create a new buffer object
-      const vertexBuffer = gl.createBuffer();
+      // // Create a new buffer object
+      // const vertexBuffer = gl.createBuffer();
 
-      // Bind an empty array buffer to it
-      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+      // // Bind an empty array buffer to it
+      // gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-      // Pass the vertices data to the buffer
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+      // // Pass the vertices data to the buffer
+      // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
-      // Unbind the buffer
-      gl.bindBuffer(gl.ARRAY_BUFFER, null);
+      // // Unbind the buffer
+      // gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 
-      /* Step 4: Associate the shader programs to buffer objects */
+      //  Step 4: Associate the shader programs to buffer objects 
 
-      // Bind vertex buffer object
-      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+      // // Bind vertex buffer object
+      // gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-      // Get the attribute location
-      // const coord = gl.getAttribLocation(shaderProgram, 'coordinates');
+      // // Get the attribute location
+      // // const coord = gl.getAttribLocation(shaderProgram, 'coordinates');
 
-      // point an attribute to the currently bound VBO
-      gl.vertexAttribPointer(webgl.locations[varName], 2, gl.FLOAT, false, 0, 0);
+      // // point an attribute to the currently bound VBO
+      // gl.vertexAttribPointer(webgl.locations[varName], 2, gl.FLOAT, false, 0, 0);
 
-      // Enable the attribute
-      gl.enableVertexAttribArray(webgl.locations[varName]);
+      // // Enable the attribute
+      // gl.enableVertexAttribArray(webgl.locations[varName]);
 
       /* Step5: Drawing the required object (triangle) */
 
@@ -67,7 +71,8 @@ function testgl(id: string) {
       // gl.viewport(0, 0, canvas.width, canvas.height);
 
       // Draw the triangle
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      // gl.drawArrays(gl.TRIANGLES, 0, 3);
+      polygon.drawWithTransformMatrix(m2.identity(), 10, [1, 0, 0, 1]);
     }
   }
 }
