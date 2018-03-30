@@ -1,8 +1,7 @@
 // @flow
 
-// import styles from '../../css/diagram.scss';
-import colorNames from './colorNames';
-import cssColors from './cssColors';
+import colorNames from './colorNames';  // official css color names
+import cssColors from './cssColors';    // color definitions used in project
 
 // Function that converts any rgb or rgba string to an array of rgba numbers
 // between 0 and 1
@@ -36,8 +35,8 @@ function HexToArray(color: string): Array<number> {
 }
 
 
-// Gets the css color definitions from the scss files, converts them to
-// rbga color arrays, and returns a dictionary of colors and values.
+// Gets the css color definitions from the project's scss files, converts them
+// to rbga color arrays, and returns a dictionary of colors and values.
 //
 // Returns an dictionary of:
 //    key: color name defined in css
