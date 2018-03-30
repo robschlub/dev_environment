@@ -54,29 +54,31 @@ const getColors = () => {
   // Go through each color from the css, and convert it to the four number
   // rgba array
   Object.keys(styles).forEach((key) => {
-    let color: string = styles[key];
-    // If the color is an official name, then replace it with the hex rgb
-    // equivalent
-    if (color in oNames) {
-      color = oNames[color];
-    }
+    if (key.startsWith('color')) {
+      let color: string = styles[key];
+      // If the color is an official name, then replace it with the hex rgb
+      // equivalent
+      if (color in oNames) {
+        color = oNames[color];
+      }
 
-    // colorValue is the rgba array of colors between 0 and 1
-    let colorValue: Array<number> = [];
+      // colorValue is the rgba array of colors between 0 and 1
+      let colorValue: Array<number> = [];
 
-    // If color string starts with 'rgb' (and therefore also 'rgba')
-    if (color.toLowerCase().startsWith('rgb')) {
-      colorValue = RGBtoArray(color);
+      // If color string starts with 'rgb' (and therefore also 'rgba')
+      if (color.toLowerCase().startsWith('rgb')) {
+        colorValue = RGBtoArray(color);
 
-    // If color string starts with '#' it is hex
-    } else if (color.startsWith('#')) {
-      colorValue = HexToArray(color);
-    }
+      // If color string starts with '#' it is hex
+      } else if (color.startsWith('#')) {
+        colorValue = HexToArray(color);
+      }
 
-    // If the color value array is defined, then add it to the final
-    // dictionary
-    if (colorValue.length > 0) {
-      colors[key] = colorValue;
+      // If the color value array is defined, then add it to the final
+      // dictionary
+      if (colorValue.length > 0) {
+        colors[key] = colorValue;
+      }
     }
   });
   return colors;

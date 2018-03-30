@@ -7,7 +7,7 @@ import Button from './../components/button';
 import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
 import Content from './../components/content';
-import styles from '../../css/diagram.scss';
+// import styles from '../../css/diagram.scss';
 import getColors from '../diagram/colors';
 
 const introPage = () => {
