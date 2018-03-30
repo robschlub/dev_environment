@@ -52,20 +52,19 @@ function testgl(id: string) {
       // Enable the attribute
       gl.enableVertexAttribArray(webgl.locations[varName]);
 
-
       /* Step5: Drawing the required object (triangle) */
 
-      // Clear the canvas
-      gl.clearColor(0.5, 0.5, 0.5, 0.9);
+      // // Clear the canvas
+      // gl.clearColor(0.5, 0.5, 0.5, 0.9);
 
-      // Enable the depth test
-      gl.enable(gl.DEPTH_TEST);
+      // // Enable the depth test
+      // gl.enable(gl.DEPTH_TEST);
 
-      // Clear the color buffer bit
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      // // Clear the color buffer bit
+      // gl.clear(gl.COLOR_BUFFER_BIT);
 
-      // Set the view port
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      // // Set the view port
+      // gl.viewport(0, 0, canvas.width, canvas.height);
 
       // Draw the triangle
       gl.drawArrays(gl.TRIANGLES, 0, 3);
