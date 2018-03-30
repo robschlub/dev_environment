@@ -4,15 +4,19 @@
 import colorDefs from './colorDefs';
 import cssColors from './cssColors';
 
-// function RGBAtoArray (color: string): Array<number> {
-//   // const value: Array<number> = [0, 0, 0, 1];
-  
-//   // let colstring:string = string;
-//   // colString = colString.replace(/.*\(/i,'');
-//   // colString = colString.replace(/\)/i,'');
-//   // colString = colString.split(",");
-//   // return value;
-// }
+function RGBtoArray(color: string): Array<number> {
+  let colString: string = color;
+  colString = colString.replace(/.*\(/i, '');
+  colString = colString.replace(/\)/i, '');
+  const strArray = colString.split(', ');
+
+  const value: Array<number> = strArray.map(x => parseInt(x, 10) / 255.0);
+
+  if (value.length === 3) {
+    value.push(1);
+  }
+  return value;
+}
 
 function HexToArray(color: string): Array<number> {
   const col: Array<number> = [
@@ -29,16 +33,14 @@ const getColors = () => {
   const defs = colorDefs();
 
   const colorOutput: Object = {};
-  console.log('Styles:', styles);
-
   Object.keys(styles).forEach((key) => {
     let color: string = styles[key];
     if (color in defs) {
       color = defs[color];
     }
     let colorValue: Array<number> = [];
-    if (color.startsWith('rgba')) {
-      // colorValue = RGBAtoArray(color);
+    if (color.toLowerCase().startsWith('rgb')) {
+      colorValue = RGBtoArray(color);
     } else if (color.startsWith('#')) {
       colorValue = HexToArray(color);
     }
