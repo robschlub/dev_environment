@@ -1,6 +1,6 @@
 // @ flow
 
-function colorDefs() {
+function colorNames() {
   return {
     aliceblue: '#f0f8ff',
     antiquewhite: '#faebd7',
@@ -156,4 +156,4 @@ function colorDefs() {
 // function a(input) {
 //   console.log(input);
 // }
-export default colorDefs;
+export default colorNames;
