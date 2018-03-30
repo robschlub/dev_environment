@@ -9,7 +9,7 @@ class GlobalVariables {
   requestNextAnimationFrame: (()=>mixed) => AnimationFrameID;
   animationId: AnimationFrameID;    // used to cancel animation frames
   drawScene: () => mixed;           // method passed to animate next frame
-  canvas: HTMLElement | null;       // canvas html element to draw to
+  canvas: HTMLCanvasElement | null;       // canvas html element to draw to
   isTouchDevice: boolean;           // whether the device is PC or not
   animateNextFrameFlag: boolean;    // whether a frame is queued for animation
   colors: Object;                   // colors from the scss project files
@@ -54,7 +54,7 @@ class GlobalVariables {
   }
 
   // Update the canvas with an HTML element
-  updateCanvas(canvas: HTMLElement | null) {
+  updateCanvas(canvas: HTMLCanvasElement | null) {
     this.canvas = canvas;
     if (canvas instanceof HTMLElement) {
       this.canvasRect = canvas.getBoundingClientRect();
