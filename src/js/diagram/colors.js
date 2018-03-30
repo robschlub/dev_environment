@@ -25,13 +25,11 @@ function HexToArray(color: string): Array<number> {
 }
 
 const getColors = () => {
-  // const colors = [];
-  // const colorArray: Array<Array<number>> = [];
   const styles = cssColors();
   const defs = colorDefs();
 
   const colorOutput: Object = {};
-  console.log("Styles:", styles);
+  console.log('Styles:', styles);
 
   Object.keys(styles).forEach((key) => {
     let color: string = styles[key];
@@ -47,11 +45,7 @@ const getColors = () => {
     if (colorValue.length > 0) {
       colorOutput[key] = colorValue;
     }
-    // color=
-    // console.log('after: ', key, color);
   });
-  // const colors = styles.map(color => )
-  // console.log(styles);
   return colorOutput;
 };
 
