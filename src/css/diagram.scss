@@ -11,12 +11,12 @@ $color-portions:           rgb(125,125,125);
 $color-anchor:             rgb(235,235,  0);
 $color-anchor_text:        rgb(210,210,  0);
 $color-corners_more_sharp: rgba(144, 85,180, 1);
-$color-corners_less_sharp: rgba(200, 50, 50, 1);
+$color-corners_less_sharp: rgba(200, 50, 50, 0.5);
 $color-angle:              rgb(255,220,255);
 $color-angle_text:         rgb(177,105,223);
 $color-latin:              rgb(200,  0,200);
 $color-greek:              rgb(  0,  0,200);
-$color-english:            rgb(200,  0,  0);
+$color-english:            rgb(47, 79, 79);
 
 :export {
   colorStick: $color-stick;

@@ -8,6 +8,7 @@ import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
 import Content from './../components/content';
 import styles from '../../css/diagram.scss';
+import getColors from '../diagram/colors';
 
 const introPage = () => {
   // const globalVars = GlobalVariables.getInstance();
@@ -22,9 +23,11 @@ const introPage = () => {
   // prevButton.onclick = lesson.director.prev.bind(lesson.director);
   // selectButton.onclick = lesson.director.select.bind(lesson.director);
   // globalVars.animateNextFrame();
-  console.log(styles.colorCornersMoreSharp);
-  console.log(styles.colorStick);
-  console.log(styles.colorGreek);
+  // console.log(styles.colorCornersMoreSharp);
+  // console.log(styles.colorStick);
+  // console.log(styles.colorGreek);
+  // console.log(styles);
+  getColors();
 
   const introId:HTMLElement | null = document.getElementById('intro');
 
