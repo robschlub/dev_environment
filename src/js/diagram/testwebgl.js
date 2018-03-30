@@ -1,6 +1,6 @@
 // @flow
 import WebGLInstance from './webgl';
-import vertices from './vertexObject';
+import Polygon from './vertexObject';
 import * as g2 from './g2';
 import * as m2 from './m2';
 
@@ -25,7 +25,7 @@ function testgl(id: string) {
     const { gl } = webgl;
 
     if (gl instanceof WebGLRenderingContext) {
-      const polygon = new vertices.Polygon(webgl, 0.5, 5, 5, 0.01, 0, new g2.Point(0, 0));
+      const polygon = new Polygon(webgl, 0.5, 5, 5, 0.01, 0, new g2.Point(0, 0));
       /* Step2: Define the geometry and store it in buffer objects */
       // const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
 
@@ -72,7 +72,7 @@ function testgl(id: string) {
 
       // Draw the triangle
       // gl.drawArrays(gl.TRIANGLES, 0, 3);
-      polygon.drawWithTransformMatrix(m2.identity(), 10, [1, 0, 0, 1]);
+      polygon.drawWithTransformMatrix(m2.identity(), 12, [1, 0, 0, 1]);
     }
   }
 }

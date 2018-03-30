@@ -1,17 +1,15 @@
 import * as g2 from './g2';
 import * as m2 from './m2';
-const vertices = (function() {
-//***************************************************************
-// Base class of all vertex objects
-//***************************************************************
-function VertexObject(webgl) {
+
+class VertexObject {
+  constructor(webgl) {
   this.gl = webgl.gl;
   this.glLocations = webgl.locations;
   this.glPrimative = webgl.gl.TRIANGLES;
   this.points = [];
   this.border = [[]];
 }
-VertexObject.prototype.setupBuffer = function(numPoints = 0) {
+setupBuffer(numPoints = 0) {
   if (numPoints == 0)
     this.numPoints = this.points.length/2.0;
   else 
@@ -21,14 +19,14 @@ VertexObject.prototype.setupBuffer = function(numPoints = 0) {
   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
 }
-VertexObject.prototype.draw = function(translation, rotation, scale, count, color) {
+draw(translation, rotation, scale, count, color) {
   let transformation = m2.identity();
     transformation = m2.translate(transformation, translation.x, translation.y);
     transformation = m2.rotate(transformation, rotation);
     transformation = m2.scale(transformation, scale.x, scale.y);
     this.drawTransform(m2.t(transformation), count, color);
 }
-VertexObject.prototype.drawWithTransformMatrix = function(transformMatrix, count, color){
+drawWithTransformMatrix(transformMatrix, count, color){
   // let scale2 = scale;
   // if (typeof scale2 != "object") {
   //   scale2 = point(scale, scale);
@@ -57,9 +55,12 @@ VertexObject.prototype.drawWithTransformMatrix = function(transformMatrix, count
 
   this.gl.drawArrays(this.glPrimative, offset, count);
 }
+}
 
-function Polygon(webgl, radius, numSides, numSidesToDraw, thickness, rotation, center) {
-  VertexObject.call(this, webgl);
+class Polygon extends VertexObject {
+  constructor(webgl, radius, numSides, numSidesToDraw, thickness, rotation, center){
+    super(webgl);
+  // VertexObject.call(this, webgl);
 
   this.glPrimative = webgl.gl.TRIANGLE_STRIP;
   this.radius = radius;
@@ -106,22 +107,22 @@ function Polygon(webgl, radius, numSides, numSidesToDraw, thickness, rotation, c
   
   this.setupBuffer();
 }
-Polygon.prototype = Object.create(VertexObject.prototype);
-Polygon.prototype.drawToAngle = function(offset, rotate, scale, drawAngle, color) {
+// Polygon.prototype = Object.create(VertexObject.prototype);
+drawToAngle(offset, rotate, scale, drawAngle, color) {
   let count = Math.floor(drawAngle / this.dAngle)*2.0 + 2;
   if (drawAngle >= Math.PI*2.0) {
     count = this.numPoints;
   }
   this.draw(this,offset, rotate, scale, count, color);
 }
-Polygon.prototype.getPointCountForAngle = function(drawAngle) {
+getPointCountForAngle(drawAngle) {
   let count = Math.floor(drawAngle / this.dAngle)*2.0 + 2;
   if (drawAngle >= Math.PI*2.0) {
     count = this.numPoints;
   }
   return count;
 }
-
+}
 /* eslint-disable */
   // function PolygonFilled(webgl, radius, numSides, numSidesToDraw, rotation, center) {
   //   VertexObject.call(this, webgl);
@@ -465,8 +466,7 @@ Polygon.prototype.getPointCountForAngle = function(drawAngle) {
 //   ArrowHeadTriangle: ArrowHeadTriangle,
 //   RadialLines: RadialLines,
 // }
-return {Polygon}
-})();
- export default vertices;
+
+export default Polygon;
 
 // exports.tools = tools;
