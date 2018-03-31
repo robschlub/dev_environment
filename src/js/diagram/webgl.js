@@ -116,7 +116,8 @@ class WebGLInstance {
     const gl = canvas.getContext('webgl', { antialias: true });
     // let program = null;
     // let locations = {};
-
+    console.log("GL: ", typeof gl)
+    console.log(gl)
     if (gl instanceof WebGLRenderingContext) {
       this.gl = gl;
       this.program = createProgramFromScripts(

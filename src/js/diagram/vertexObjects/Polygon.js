@@ -26,8 +26,8 @@ class Polygon extends VertexObject {
     this.glPrimative = webgl.gl.TRIANGLE_STRIP;
     this.radius = radius;
 
-    const inRad = radius - thickness;
-    const outRad = radius + thickness;
+    const inRad = radius - thickness / 2.0;
+    const outRad = radius + thickness / 2.0;
     this.outRad = outRad;
     this.inRad = inRad;
     this.center = center;
