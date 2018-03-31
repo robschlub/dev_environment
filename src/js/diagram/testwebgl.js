@@ -1,6 +1,6 @@
 // @flow
 import WebGLInstance from './webgl';
-import Polygon from './vertexObject';
+import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 import * as m2 from './m2';
 

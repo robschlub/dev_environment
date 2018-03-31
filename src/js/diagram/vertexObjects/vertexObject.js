@@ -1,22 +1,31 @@
 // @flow
 
-import * as g2 from './g2';
-import * as m2 from './m2';
-import WebGLInstance from './webgl';
+// import * as g2 from '../g2';
+import * as m2 from '../m2';
+import WebGLInstance from '../webgl';
+import * as g2 from '../g2';
 
+// Base clase of all objects made from verteces for webgl.
+// The job of a VertexObject is to:
+//  - Havve the points of a object/shape
+//  - Have the shape's border (used to determine whether a location is
+//    within the shape)
+//  - Setup the webgl buffer:
+//      - Load vertices into a webgl buffer
+//      - draw
 class VertexObject {
-  gl: WebGLRenderingContext;
-  glLocations: Object;
-  glPrimative: number;
-  buffer: WebGLBuffer;
+  gl: WebGLRenderingContext;    // shortcut for the webgl context
+  webgl: WebGLInstance;         // webgl instance for a html canvas
+  glPrimative: number;          // primitive tyle (e.g. TRIANGLE_STRIP)
+  buffer: WebGLBuffer;          // Vertex buffer
 
-  points: Array<number>;
-  numPoints: number;
-  border: Array<Array<Object>>;
+  points: Array<number>;        // Primative vertices of shape
+  numPoints: number;            // Number of primative vertices
+  border: Array<Array<g2.Point>>; // Border vertices
 
   constructor(webgl: WebGLInstance) {
     this.gl = webgl.gl;
-    this.glLocations = webgl.locations;
+    this.webgl = webgl;
     this.glPrimative = webgl.gl.TRIANGLES;
     this.points = [];
     this.border = [[]];
@@ -33,9 +42,9 @@ class VertexObject {
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
   }
   draw(
-    translation: Object,
+    translation: g2.Point,
     rotation: number,
-    scale: Object,
+    scale: g2.Point,
     count: number,
     color: Array<number>,
   ) {
@@ -64,13 +73,13 @@ class VertexObject {
     const offset = 0;       // start at the beginning of the buffer
 
     // Turn on the attribute
-    this.gl.enableVertexAttribArray(this.glLocations.a_position);
+    this.gl.enableVertexAttribArray(this.webgl.locations.a_position);
 
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
     // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     this.gl.vertexAttribPointer(
-      this.glLocations.a_position,
+      this.webgl.locations.a_position,
       size, type, normalize, stride, offset,
     );
 
@@ -81,10 +90,14 @@ class VertexObject {
     // matrix = g2.rotate(matrix,rotation);
     // matrix = g2.scale(matrix,scale.x ,scale.y);
 
-    this.gl.uniformMatrix3fv(this.glLocations.u_matrix, false, m2.t(transformMatrix));  // Translate
+    this.gl.uniformMatrix3fv(
+      this.webgl.locations.u_matrix,
+      false,
+      m2.t(transformMatrix),
+    );  // Translate
 
     this.gl.uniform4f(
-      this.glLocations.u_color,
+      this.webgl.locations.u_color,
       color[0], color[1], color[2], color[3],
     );  // Translate
 
@@ -92,97 +105,6 @@ class VertexObject {
   }
 }
 
-class Polygon extends VertexObject {
-  radius: number;
-  glPrimitive: number;
-  outRad: number;
-  inRad: number;
-  center: Object;
-  dAngle: number;
-
-  constructor(
-    webgl: WebGLInstance,
-    radius: number,
-    numSides: number,
-    numSidesToDraw: number,
-    thickness: number,
-    rotation: number,
-    center: Object,
-  ) {
-    super(webgl);
-    this.glPrimative = webgl.gl.TRIANGLE_STRIP;
-    this.radius = radius;
-
-    const inRad = radius - thickness;
-    const outRad = radius + thickness;
-    this.outRad = outRad;
-    this.inRad = inRad;
-    this.center = center;
-    if (numSides < 3) {
-      this.dAngle = Math.PI / numSides;
-    } else {
-      this.dAngle = Math.PI * 2.0 / numSides;
-    }
-    let i;
-    let j = 0;
-    for (i = 0; i <= numSidesToDraw; i += 1) {
-      this.points[j] = center.x + inRad * Math.cos(i * this.dAngle + rotation);
-      this.points[j + 1] =
-        center.y + inRad * Math.sin(i * this.dAngle + rotation);
-      this.points[j + 2] =
-        center.x + outRad * Math.cos(i * this.dAngle + rotation);
-      this.points[j + 3] =
-        center.y + outRad * Math.sin(i * this.dAngle + rotation);
-      j += 4;
-    }
-
-    // Make the encapsulating border
-    if (numSidesToDraw < numSides) {
-      for (i = 0; i <= numSidesToDraw; i += 1) {
-        this.border[0].push(g2.point(
-          center.x + outRad * Math.cos(i * this.dAngle + rotation),
-          center.y + outRad * Math.sin(i * this.dAngle + rotation),
-        ));
-      }
-      for (i = numSidesToDraw; i >= 0; i -= 1) {
-        this.border[0].push(g2.point(
-          center.x + inRad * Math.cos(i * this.dAngle + rotation),
-          center.y + inRad * Math.sin(i * this.dAngle + rotation),
-        ));
-      }
-      this.border[0].push(this.border[0][0].copy());
-    } else {
-      for (i = 0; i <= numSidesToDraw; i += 1) {
-        this.border[0].push(g2.point(
-          center.x + outRad * Math.cos(i * this.dAngle + rotation),
-          center.y + outRad * Math.sin(i * this.dAngle + rotation),
-        ));
-      }
-    }
-    this.setupBuffer();
-  }
-  // Polygon.prototype = Object.create(VertexObject.prototype);
-  drawToAngle(
-    offset: Object,
-    rotate: number,
-    scale: Object,
-    drawAngle: number,
-    color: Array<number>,
-  ) {
-    let count = Math.floor(drawAngle / this.dAngle) * 2.0 + 2;
-    if (drawAngle >= Math.PI * 2.0) {
-      count = this.numPoints;
-    }
-    this.draw(offset, rotate, scale, count, color);
-  }
-  getPointCountForAngle(drawAngle: number) {
-    let count = Math.floor(drawAngle / this.dAngle) * 2.0 + 2;
-    if (drawAngle >= Math.PI * 2.0) {
-      count = this.numPoints;
-    }
-    return count;
-  }
-}
 /* eslint-disable */
   // function PolygonFilled(webgl, radius, numSides, numSidesToDraw, rotation, center) {
   //   VertexObject.call(this, webgl);
@@ -527,6 +449,6 @@ class Polygon extends VertexObject {
 //   RadialLines: RadialLines,
 // }
 
-export default Polygon;
+export default VertexObject;
 
 // exports.tools = tools;

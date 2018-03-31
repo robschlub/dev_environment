@@ -9,139 +9,165 @@
 import { roundNum } from './mathtools';
 import { Console } from '../tools/tools';
 
+// export type PointType = {
+//   x: number;
+//   y: number;
+//   copy(): PointType;
+//   // sub(): PointType;
+//   // add(): PointType;
+//   // distance(): number;
+//   // round(): PointType;
+//   // rotate(): PointType;
+//   // isEqualTo: boolean;
+//   // isNotEqualTo: boolean;
+//   // isOnLine: boolean;
+//   // isOnUnboundLine: boolean;
+//   // console: void;
+//   // isInPolygon: boolean;
+//   // isOnPolygon: boolean;
+// };
+
 /* eslint-disable comma-dangle */
-function Point(x: number, y: number) {
-  this.x = x;
-  this.y = y;
-}
-Point.prototype.copy = function pointCopy() {
-  return new Point(this.x, this.y);
-};
-Point.prototype.sub = function pointSub(q: Point) {
-  return new Point(this.x - q.x, this.y - q.y);
-};
-Point.prototype.add = function pointAdd(q: Point) {
-  return new Point(this.x + q.x, this.y + q.y);
-};
-Point.prototype.distance = function pointDistance() {
-  return Math.sqrt(this.x * this.x + this.y * this.y);
-};
+class Point {
+  x: number;
+  y: number;
 
-Point.prototype.round = function pointRound(precision: number = 8) {
-  return new Point(roundNum(this.x, precision), roundNum(this.y, precision));
-};
-Point.prototype.rotate = function pointRotate(angle, center?: Point) {
-  const c = Math.cos(angle);
-  const s = Math.sin(angle);
-  const matrix = [c, -s,
-                  s, c]; // eslint-disable-line indent
-  const centerPoint = center || new Point(0, 0);
-  const pt = this.sub(centerPoint);
-  return new Point(
-    matrix[0] * pt.x + matrix[1] * pt.y + centerPoint.x,
-    matrix[2] * pt.x + matrix[3] * pt.y + centerPoint.y
-  );
-};
-/* eslint-enable comma-dangle */
-Point.prototype.isEqualTo = function pointIsEqualTo(q: Point, precision?: number) {
-  let pr = this;
-  let qr = q;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+  copy() {
+    return new Point(this.x, this.y);
+  }
+  sub(q: Point) {
+    return new Point(this.x - q.x, this.y - q.y);
+  }
+  add(q: Point) {
+    return new Point(this.x + q.x, this.y + q.y);
+  }
+  distance() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
 
-  if (typeof precision === 'number') {
-    pr = this.round(precision);
-    qr = qr.round(precision);
+  round(precision: number = 8) {
+    return new Point(roundNum(this.x, precision), roundNum(this.y, precision));
   }
-  if (pr.x === qr.x && pr.y === qr.y) {
-    return true;
+
+  rotate(angle: number, center?: Point) {
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    const matrix = [c, -s,
+                    s, c]; // eslint-disable-line indent
+    const centerPoint = center || new Point(0, 0);
+    const pt = this.sub(centerPoint);
+    return new Point(
+      matrix[0] * pt.x + matrix[1] * pt.y + centerPoint.x,
+      matrix[2] * pt.x + matrix[3] * pt.y + centerPoint.y
+    );
   }
-  return false;
-};
-Point.prototype.isNotEqualTo = function pointIsNotEqualTo(q: Point, precision?: number) {
-  return !this.isEqualTo(q, precision);
-};
-/* eslint-disable no-use-before-define */
-Point.prototype.isOnLine = function pointIsOnLine(l: Line, precision?: number) {
-  return l.hasPointOn(this, precision);
-};
-Point.prototype.isOnUnboundLine = function pointIsOnUnboundLine(l: Line, precision?: number) {
-  return l.hasPointAlong(this, precision);
-};
-/* eslint-enable no-use-before-define */
-Point.prototype.console = function console(text?: string) {
-  Console(`${text || ''} + ${this.x}, ${this.y}`);
-};
-function isLeft(p0: Point, p1: Point, p2: Point) {
-  return (
-    (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y)
-  );
-}
-Point.prototype.isInPolygon = function pointIsInPolygon(polygonVertices: Array<Point>) {
-  let windingNumber = 0;
-  let n = polygonVertices.length - 1;
-  const v = polygonVertices.slice();
-  const p = this;
-  let popLastPoint = false;
-  // polygonVertices needs to have the last vertex the same as the first vertex
-  if (v[0].isNotEqualTo(v[n])) {
-    v.push(v[0]);
-    popLastPoint = true;
-    n += 1;
-  }
-  for (let i = 0; i < n; i += 1) {
-    if (v[i].y <= p.y) {
-      if (v[i + 1].y > p.y) {                // an upward crossing
-        if (isLeft(v[i], v[i + 1], p) > 0) { // P left of  edge
-          windingNumber += 1;                // have  a valid up intersect
-        }
-      }
-    } else if (v[i + 1].y <= p.y) {           // start y > P.y (no test needed)
-      // a downward crossing
-      if (isLeft(v[i], v[i + 1], p) < 0) {    // P right of  edge
-        windingNumber -= 1;      // have  a valid down intersect
-      }
+  /* eslint-enable comma-dangle */
+  isEqualTo(q: Point, precision?: number) {
+    let pr = this;
+    let qr = q;
+
+    if (typeof precision === 'number') {
+      pr = this.round(precision);
+      qr = qr.round(precision);
     }
-  }
-  if (popLastPoint) {
-    v.pop();
-  }
-  if (windingNumber === 0) {
-    return false;
-  }
-  return true;
-};
-
-Point.prototype.isOnPolygon = function pointIsOnPolygon(polygonVertices: Array<Point>) {
-  let popLastPoint = false;
-  const p = this;
-  let n = polygonVertices.length - 1;   // Number of sides
-  const v = polygonVertices.slice();
-
-  // polygonVertices needs to have the last vertex the same as the first vertex
-  if (v[0].isNotEqualTo(v[n])) {
-    v.push(v[0]);
-    popLastPoint = true;
-    n += 1;
-  }
-
-  for (let i = 0; i < n; i += 1) {
-    // if(p.isEqualTo(v[i])) {
-    //   return true;
-    // }
-    /* eslint-disable-next-line  no-use-before-define */
-    const l = line(v[i], v[i + 1]);
-    if (p.isOnLine(l)) {
+    if (pr.x === qr.x && pr.y === qr.y) {
       return true;
     }
+    return false;
   }
-  if (p.isInPolygon(polygonVertices)) {
+  isNotEqualTo(q: Point, precision?: number) {
+    return !this.isEqualTo(q, precision);
+  }
+  /* eslint-disable no-use-before-define */
+  isOnLine(l: Line, precision?: number) {
+    return l.hasPointOn(this, precision);
+  }
+  isOnUnboundLine(l: Line, precision?: number) {
+    return l.hasPointAlong(this, precision);
+  }
+  /* eslint-enable no-use-before-define */
+  console(text?: string) {
+    Console(`${text || ''} + ${this.x}, ${this.y}`);
+  }
+
+  static isLeft(p0: Point, p1: Point, p2: Point) {
+    return (
+      (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y)
+    );
+  }
+
+  isInPolygon(polygonVertices: Array<Point>) {
+    let windingNumber = 0;
+    let n = polygonVertices.length - 1;
+    const v = polygonVertices.slice();
+    const p = this;
+    let popLastPoint = false;
+    // polygonVertices needs to have the last vertex the same as the first vertex
+    if (v[0].isNotEqualTo(v[n])) {
+      v.push(v[0]);
+      popLastPoint = true;
+      n += 1;
+    }
+    for (let i = 0; i < n; i += 1) {
+      if (v[i].y <= p.y) {
+        if (v[i + 1].y > p.y) {                // an upward crossing
+          if (Point.isLeft(v[i], v[i + 1], p) > 0) { // P left of  edge
+            windingNumber += 1;                // have  a valid up intersect
+          }
+        }
+      } else if (v[i + 1].y <= p.y) {           // start y > P.y (no test needed)
+        // a downward crossing
+        if (Point.isLeft(v[i], v[i + 1], p) < 0) {    // P right of  edge
+          windingNumber -= 1;      // have  a valid down intersect
+        }
+      }
+    }
+    if (popLastPoint) {
+      v.pop();
+    }
+    if (windingNumber === 0) {
+      return false;
+    }
     return true;
   }
 
-  if (popLastPoint) {
-    v.pop();
+  isOnPolygon(polygonVertices: Array<Point>) {
+    let popLastPoint = false;
+    const p = this;
+    let n = polygonVertices.length - 1;   // Number of sides
+    const v = polygonVertices.slice();
+
+    // polygonVertices needs to have the last vertex the same as the first vertex
+    if (v[0].isNotEqualTo(v[n])) {
+      v.push(v[0]);
+      popLastPoint = true;
+      n += 1;
+    }
+
+    for (let i = 0; i < n; i += 1) {
+      // if(p.isEqualTo(v[i])) {
+      //   return true;
+      // }
+      /* eslint-disable-next-line  no-use-before-define */
+      const l = line(v[i], v[i + 1]);
+      if (p.isOnLine(l)) {
+        return true;
+      }
+    }
+    if (p.isInPolygon(polygonVertices)) {
+      return true;
+    }
+
+    if (popLastPoint) {
+      v.pop();
+    }
+    return false;
   }
-  return false;
-};
+}
 
 function point(x: number, y: number) {
   return new Point(x, y);
@@ -465,7 +491,6 @@ function line(p1: Point, p2: Point) {
 
 
 export { point, Point, line, Line, minAngleDiff, deg, normAngle };
-
 // export {
 //   point,
 //   // line,
