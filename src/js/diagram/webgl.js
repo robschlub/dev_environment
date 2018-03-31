@@ -77,8 +77,8 @@ function resizeCanvasToDisplaySize(canvas) {
   const height = canvas.clientHeight * mul || 0;
 
   if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width;     // eslint-disable-line no-param-reassign
+    canvas.height = height;   // eslint-disable-line no-param-reassign
     return true;
   }
   return false;
@@ -100,46 +100,56 @@ function autoResize(event) {
   // // console.log(document.getElementById('Diagram').left);
 }
 
-function WebGLInstance(
+
+class WebGLInstance {
+  gl: WebGLRenderingContext;
+  program: WebGLProgram;
+  locations: Object;
+
+  constructor(
   canvas: HTMLCanvasElement,
   vertexSource: string,
   fragmentSource: string,
   shaderLocations: Array<string>,
 ) {
-  console.log(canvas.getContext('webgl', { antialias: true }))
-  const gl = canvas.getContext('webgl', { antialias: true });
-  let program = null;
-  let locations = {};
+    // console.log(canvas.getContext('webgl', { antialias: true }))
+    const gl = canvas.getContext('webgl', { antialias: true });
+    // let program = null;
+    // let locations = {};
 
-  if (gl instanceof WebGLRenderingContext) {
-    program = createProgramFromScripts(gl, vertexSource, fragmentSource);
+    if (gl instanceof WebGLRenderingContext) {
+      this.gl = gl;
+      this.program = createProgramFromScripts(
+        this.gl,
+        vertexSource,
+        fragmentSource,
+      );
 
+      this.locations = getGLLocations(this.gl, this.program, shaderLocations);
 
-    locations = getGLLocations(gl, program, shaderLocations);
+      // Prep canvas
+      resizeCanvasToDisplaySize(this.gl.canvas);
 
-    // Prep canvas
-    resizeCanvasToDisplaySize(gl.canvas);
+      // Tell WebGL how to convert from clip space to pixels
+      this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 
-    // Tell WebGL how to convert from clip space to pixels
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+      // this.gl.viewport(0, 500, 500, 500);   // Tell WebGL how to convert from clip space to pixels
 
-    // this.gl.viewport(0, 500, 500, 500);   // Tell WebGL how to convert from clip space to pixels
+      // Clear the canvas
+      this.gl.clearColor(0, 0, 0, 0);
+      this.gl.clear(gl.COLOR_BUFFER_BIT);
+      this.gl.disable(this.gl.DEPTH_TEST);
+      // gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
+      // gl.enable(gl.BLEND);
+      this.gl.useProgram(this.program);
 
-    // Clear the canvas
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.disable(gl.DEPTH_TEST);
-    // gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
-    // gl.enable(gl.BLEND);
-    gl.useProgram(program);
-
-    // window.addEventListener('resize', autoResize.bind(this, event));
+      // window.addEventListener('resize', autoResize.bind(this, event));
   }
 
-  return {
-    gl:  gl,
-    program: program,
-    locations: locations,
+  // return {
+  //   gl:  gl,
+  //   program: program,
+  //   locations: locations,
     // resizeCanvasToDisplaySize: resizeCanvasToDisplaySize,
   }
 }

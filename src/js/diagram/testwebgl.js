@@ -16,7 +16,7 @@ function testgl(id: string) {
     const fragmentShaderSource = 'void main(void) {gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);}';
 
     const varName = 'coordinates';
-    const webgl = WebGLInstance(
+    const webgl = new WebGLInstance(
       canvas,
       vertexShaderSource,
       fragmentShaderSource,
@@ -42,7 +42,7 @@ function testgl(id: string) {
       // gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 
-      //  Step 4: Associate the shader programs to buffer objects 
+      //  Step 4: Associate the shader programs to buffer objects
 
       // // Bind vertex buffer object
       // gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
