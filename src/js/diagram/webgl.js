@@ -72,17 +72,17 @@ function getGLLocations(gl, program, locationsList) {
 
 function resizeCanvasToDisplaySize(canvas) {
   // const mul = multiplier || 1;
-  const mul = window.devicePixelRatio * 2;
+  const mul = window.devicePixelRatio || 1;
   const width = canvas.clientWidth * mul || 0;
   const height = canvas.clientHeight * mul || 0;
-  console.log(canvas.clientWidth, canvas.clientHeight);
-  console.log(canvas.width, canvas.height);
-  console.log(width, height);
+
+  // console.log(canvas.clientWidth, canvas.clientHeight);
+  // console.log(canvas.width, canvas.height);
+  // console.log(width, height);
 
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;     // eslint-disable-line no-param-reassign
     canvas.height = height;   // eslint-disable-line no-param-reassign
-    // console.log(canvas.width, canvas.height);
     return true;
   }
   return false;

@@ -44,6 +44,7 @@ function testgl(id: string) {
 
     if (gl instanceof WebGLRenderingContext) {
       const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
+      const polygon2 = new Polygon(webgl, 0.2, 12, 12, 0.001, 0, new g2.Point(0.5, 0.5));
       /* Step2: Define the geometry and store it in buffer objects */
       // const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
 
@@ -91,6 +92,7 @@ function testgl(id: string) {
       // Draw the triangle
       // gl.drawArrays(gl.TRIANGLES, 0, 3);
       polygon.drawWithTransformMatrix(m2.identity(), polygon.numPoints, [1, 0, 0, 1]);
+      polygon2.drawWithTransformMatrix(m2.identity(), polygon2.numPoints, [1, 0, 0, 1]);
     }
   }
 }
