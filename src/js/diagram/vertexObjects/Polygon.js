@@ -1,44 +1,55 @@
 // @flow
 
-import * as g2 from '../g2';
+import { Point } from '../g2';
 import WebGLInstance from '../webgl';
 import VertexObject from './vertexObject';
-// import type { PointType } from '../g2';
 
 class Polygon extends VertexObject {
-  radius: number;
-  glPrimitive: number;
-  outRad: number;
-  inRad: number;
-  center: g2.Point;
-  dAngle: number;
+  radius: number;       // radius from center to middle polygon vertex
+  glPrimitive: number;  // WebGL primitive used
+  outRad: number;       // radius from center to polygon vertex + 1/2 linewidth
+  inRad: number;        // radius from center to polygon vertex - 1/2 linewidth
+  center: Point;     // center point
+  dAngle: number;       // angle between adjacent verteces to center lines
 
   constructor(
     webgl: WebGLInstance,
     radius: number,
-    numSides: number,
-    numSidesToDraw: number,
-    thickness: number,
+    numSides: number,       // Must be 3 or greater (def: 3 if smaller)
+    numSidesToDraw: number, // Must be <= numSides (def: numSides if greater)
+    lineWidth: number,
     rotation: number,
-    center: g2.Point,
+    center: Point,
   ) {
+    // setup webgl stuff
     super(webgl);
     this.glPrimative = webgl.gl.TRIANGLE_STRIP;
-    this.radius = radius;
 
-    const inRad = radius - thickness / 2.0;
-    const outRad = radius + thickness / 2.0;
+    // Check potential errors in constructor input
+    let sides = numSides;
+    let sidesToDraw = numSidesToDraw;
+    if (sides < 3) {
+      sides = 3;
+    }
+
+    if (sidesToDraw < 0) {
+      sidesToDraw = 0;
+    } else if (sidesToDraw > sides) {
+      sidesToDraw = sides;
+    }
+    // setup shape geometry
+    this.radius = radius;
+    const inRad = radius - lineWidth / 2.0;
+    const outRad = radius + lineWidth / 2.0;
     this.outRad = outRad;
     this.inRad = inRad;
     this.center = center;
-    if (numSides < 3) {
-      this.dAngle = Math.PI / numSides;
-    } else {
-      this.dAngle = Math.PI * 2.0 / numSides;
-    }
+    this.dAngle = Math.PI * 2.0 / sides;
+
+    // Setup shape primative vertices
     let i;
     let j = 0;
-    for (i = 0; i <= numSidesToDraw; i += 1) {
+    for (i = 0; i <= sidesToDraw; i += 1) {
       this.points[j] = center.x + inRad * Math.cos(i * this.dAngle + rotation);
       this.points[j + 1] =
         center.y + inRad * Math.sin(i * this.dAngle + rotation);
@@ -50,29 +61,30 @@ class Polygon extends VertexObject {
     }
 
     // Make the encapsulating border
-    if (numSidesToDraw < numSides) {
-      for (i = 0; i <= numSidesToDraw; i += 1) {
-        this.border[0].push(new g2.Point(
+    if (sidesToDraw < sides) {
+      for (i = 0; i <= sidesToDraw; i += 1) {
+        this.border[0].push(new Point(
           center.x + outRad * Math.cos(i * this.dAngle + rotation),
           center.y + outRad * Math.sin(i * this.dAngle + rotation),
         ));
       }
-      for (i = numSidesToDraw; i >= 0; i -= 1) {
-        this.border[0].push(g2.point(
+      for (i = sidesToDraw; i >= 0; i -= 1) {
+        this.border[0].push(new Point(
           center.x + inRad * Math.cos(i * this.dAngle + rotation),
           center.y + inRad * Math.sin(i * this.dAngle + rotation),
         ));
       }
       this.border[0].push(this.border[0][0].copy());
     } else {
-      for (i = 0; i <= numSidesToDraw; i += 1) {
-        this.border[0].push(g2.point(
+      for (i = 0; i <= sidesToDraw; i += 1) {
+        this.border[0].push(new Point(
           center.x + outRad * Math.cos(i * this.dAngle + rotation),
           center.y + outRad * Math.sin(i * this.dAngle + rotation),
         ));
       }
     }
     this.setupBuffer();
+    // console.log(this.numPoints);
   }
   // Polygon.prototype = Object.create(VertexObject.prototype);
   drawToAngle(

@@ -92,7 +92,12 @@ const introPage = () => {
 
       </Jumbotron>
       <Content />
-      <Canvas id="my_Canvas" didMountFn={testgl}/>
+      <div className='container'>
+        <div className='row'>
+          <div className='col-2'></div>
+          <Canvas id="my_Canvas" didMountFn={testgl}/>
+        </div>
+      </div>
       </div>,
       introId,
     );

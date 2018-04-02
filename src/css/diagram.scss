@@ -39,4 +39,11 @@ $color-english:            rgb(47, 79, 79);
   colorEnglish: $color-english;
 }
 
-
+#my_Canvas {
+  width: 1000px;
+  height: 1000px;
+  border-style: solid;
+  border-width: 0;
+  margin: 0;
+  padding: 0;
+}

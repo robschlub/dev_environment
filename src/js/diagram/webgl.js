@@ -75,10 +75,14 @@ function resizeCanvasToDisplaySize(canvas) {
   const mul = window.devicePixelRatio * 2;
   const width = canvas.clientWidth * mul || 0;
   const height = canvas.clientHeight * mul || 0;
+  console.log(canvas.clientWidth, canvas.clientHeight);
+  console.log(canvas.width, canvas.height);
+  console.log(width, height);
 
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;     // eslint-disable-line no-param-reassign
     canvas.height = height;   // eslint-disable-line no-param-reassign
+    // console.log(canvas.width, canvas.height);
     return true;
   }
   return false;
@@ -132,12 +136,13 @@ class WebGLInstance {
       resizeCanvasToDisplaySize(this.gl.canvas);
 
       // Tell WebGL how to convert from clip space to pixels
-      this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+      // this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
       // this.gl.viewport(0, 500, 500, 500);   // Tell WebGL how to convert from clip space to pixels
 
       // Clear the canvas
-      this.gl.clearColor(0, 0, 0, 0);
+      this.gl.clearColor(0.5, 0, 0, 0.5);
       this.gl.clear(gl.COLOR_BUFFER_BIT);
       this.gl.disable(this.gl.DEPTH_TEST);
       // gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
@@ -153,6 +158,28 @@ class WebGLInstance {
   //   locations: locations,
     // resizeCanvasToDisplaySize: resizeCanvasToDisplaySize,
   }
+
+  resize() {
+    var width = this.gl.canvas.clientWidth;
+    var height = this.gl.canvas.clientHeight;
+    if (this.gl.canvas.width != width ||
+        this.gl.canvas.height != height) {
+       this.gl.canvas.width = width;
+       this.gl.canvas.height = height;
+       return true;
+    }
+    return false;
+  }
+
+  // var needToRender = true;  // draw at least once
+  // function checkRender() {
+  //    if (resize() || needToRender) {
+  //      needToRender = false;
+  //      drawStuff();
+  //    }
+  //    requestAnimationFrame(checkRender);
+  // }
+  // checkRender();
 }
 
 

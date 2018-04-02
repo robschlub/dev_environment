@@ -3,10 +3,28 @@ import WebGLInstance from './webgl';
 import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 import * as m2 from './m2';
+import { Console } from '../tools/tools';
 
 function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
   const canvas = document.getElementById(id);
+  if (canvas instanceof HTMLCanvasElement) {
+    canvas.onclick = function click(event) {
+      const box = canvas;
+      /* eslint-disable prefer-template */
+      const str = `Screen ${event.screenX}, ${event.screenY}\n` +
+      'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
+      'Client ' + event.clientX + ', ' + event.clientY + '\n' +
+      'Page ' + event.pageX + ', ' + event.pageY + '\n\n' +
+      'Box:\n' +
+      'Scroll L/T/W/H ' + box.scrollLeft + ', ' + box.scrollTop + ', ' + box.scrollWidth + ', ' + box.scrollHeight + '\n' +
+      'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
+      'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight;
+      /* eslint-enable prefer-template */
+      Console(str);
+      Console(event);
+    };
+  }
 
   if (canvas instanceof HTMLCanvasElement) {
     // const gl = canvas.getContext('webgl', { antialias: true });
@@ -25,7 +43,7 @@ function testgl(id: string) {
     const { gl } = webgl;
 
     if (gl instanceof WebGLRenderingContext) {
-      const polygon = new Polygon(webgl, 0.5, 5, 5, 0.01, 0, new g2.Point(0, 0));
+      const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
       /* Step2: Define the geometry and store it in buffer objects */
       // const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
 
@@ -72,7 +90,7 @@ function testgl(id: string) {
 
       // Draw the triangle
       // gl.drawArrays(gl.TRIANGLES, 0, 3);
-      polygon.drawWithTransformMatrix(m2.identity(), 12, [1, 0, 0, 1]);
+      polygon.drawWithTransformMatrix(m2.identity(), polygon.numPoints, [1, 0, 0, 1]);
     }
   }
 }
