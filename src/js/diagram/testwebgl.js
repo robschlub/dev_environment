@@ -4,6 +4,18 @@ import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 import * as m2 from './m2';
 import { Console } from '../tools/tools';
+import { GeometryCollection, GeometryObject } from './GeometryObject';
+
+function shapesCollection(webgl, translation, rotation, scale) {
+  GeometryCollection.call(this, translation, rotation, scale);
+
+  const square = new Polygon(webgl, 0.5, 4, 4, 0.005, 0, new g2.Point(0, 0));
+  const triangle = new Polygon(webgl, 0.2, 3, 3, 0.001, 0, new g2.Point(0.5, 0.5));
+
+  this.add('square', new GeometryObject(square, g2.point(0, 0), 0, g2.point(1, 1), [0, 0, 1, 1]));
+  this.add('triangle', new GeometryObject(triangle, g2.point(0, 0), 0, g2.point(1, 1), [0, 1, 0, 1]));
+}
+shapesCollection.prototype = Object.create(GeometryCollection.prototype);
 
 function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
@@ -43,8 +55,9 @@ function testgl(id: string) {
     const { gl } = webgl;
 
     if (gl instanceof WebGLRenderingContext) {
-      const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
-      const polygon2 = new Polygon(webgl, 0.2, 12, 12, 0.001, 0, new g2.Point(0.5, 0.5));
+      // const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
+      // const polygon2 = new Polygon(webgl, 0.2, 12, 12, 0.001, 0, new g2.Point(0.5, 0.5));
+      const shapes = shapesCollection(webgl, g2.Point.zero, 0, g2.Point.zero);
       /* Step2: Define the geometry and store it in buffer objects */
       // const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
 
@@ -91,8 +104,9 @@ function testgl(id: string) {
 
       // Draw the triangle
       // gl.drawArrays(gl.TRIANGLES, 0, 3);
-      polygon.drawWithTransformMatrix(m2.identity(), polygon.numPoints, [1, 0, 0, 1]);
-      polygon2.drawWithTransformMatrix(m2.identity(), polygon2.numPoints, [1, 0, 0, 1]);
+      // polygon.drawWithTransformMatrix(m2.identity(), polygon.numPoints, [1, 0, 0, 1]);
+      // polygon2.drawWithTransformMatrix(m2.identity(), polygon2.numPoints, [1, 0, 0, 1]);
+      shapes.draw(false, 0);
     }
   }
 }

@@ -32,6 +32,10 @@ class Point {
   x: number;
   y: number;
 
+  static zero() {
+    return new Point(0, 0);
+  }
+
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
@@ -197,7 +201,11 @@ function distance(p1: Point, p2: Point) {
 function deg(angle: number) {
   return angle * 180 / Math.PI;
 }
+
 function minAngleDiff(angle1: number, angle2: number) {
+  if (angle1 === angle2) {
+    return 0;
+  }
   return Math.atan2(Math.sin(angle1 - angle2), Math.cos(angle1 - angle2));
 }
 
@@ -489,8 +497,61 @@ function line(p1: Point, p2: Point) {
   return new Line(p1, p2);
 }
 
+// function TransformCopy(transform) {
+//     return new _transform(new point(transform.translation.x, transform.translation.y),
+//                           transform.rotation,
+//                           new point(transform.scale.x, transform.scale.y));
+//     // return new _transformCopy (transform);
+// }
+// function Transform(translation = {x:0,y:0}, rotation = 0, scale = {x:0,y:0}) {
+//     return new _transform(translation, rotation, scale);
+// }
+// function TransformZero() {
+//     return new _transform(d2.point(0,0), 0, d2.point(1,1));
+// }
+// function _transformCopy (transform) {
+//     return {
+//         translation: new point(transform.translation.x, transform.translation.y),
+//         rotation: transform.rotation,
+//         scale: new point(transform.scale.x, transform.scale.y),
+//     }
+// }
+class Transform {
+  translation: Point;
+  rotation: number;
+  scale: Point;
+  static zero() {
+    return new Transform(Point.zero(), 0, Point.zero());
+  }
 
-export { point, Point, line, Line, minAngleDiff, deg, normAngle };
+  constructor(
+    translation: Point = Point.zero(),
+    rotation: number = 0,
+    scale: Point = Point.zero(),
+  ) {
+    this.translation = new Point(translation.x, translation.y);
+    this.rotation = rotation;
+    this.scale = new Point(scale.x, scale.y);
+  }
+
+  sub(transformToSubtract: Transform = Transform.zero()) {
+    return new Transform(
+      this.translation.sub(transformToSubtract.translation),
+      minAngleDiff(this.rotation, transformToSubtract.rotation),
+      this.scale.sub(transformToSubtract.scale),
+    );
+  }
+
+  copy() {
+    return new Transform(
+      new Point(this.translation.x, this.translation.y),
+      this.rotation,
+      new Point(this.scale.x, this.scale.y),
+    );
+  }
+}
+
+export { point, Point, line, Line, minAngleDiff, deg, normAngle, Transform };
 // export {
 //   point,
 //   // line,
