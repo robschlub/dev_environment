@@ -7,7 +7,7 @@ import * as m2 from './m2';
 
 
 function GeometryObjectOrCollection(translation, rotation, scale, name) {
-        this.transform = tools.Transform(translation, rotation, scale);
+        this.transform = new g2.Transform(translation, rotation, scale);
         this.setTransformCallback = false;
         this.show = false;
         this.globals = GlobalVariables.getInstance();
@@ -28,8 +28,8 @@ function GeometryObjectOrCollection(translation, rotation, scale, name) {
                 elapsedTime:    0,
                 startTime:     -1,
                 deltaTime:      0, 
-                initialTransform: new tools.Transform(),
-                deltaTransform:   new tools.Transform(),
+                initialTransform: new g2.Transform(),
+                deltaTransform:   new g2.Transform(),
                 style:          tools.easeout,
                 callback:       false,
                 index:          0,
@@ -50,11 +50,11 @@ function GeometryObjectOrCollection(translation, rotation, scale, name) {
                         previousTime: -1,
                         stopTime:      1,
                         time:          0,
-                        deceleration: tools.Transform(g2.point(1,1),1,g2.point(1,1)),
-                        previous: tools.Transform(),
-                        velocity: tools.Transform(),
-                        maxVelocity: tools.Transform(),
-                        stopMovingVelocity: tools.Transform(),
+                        deceleration: new g2.Transform(g2.point(1,1),1,g2.point(1,1)),
+                        previous: new g2.Transform(),
+                        velocity: new g2.Transform(),
+                        maxVelocity: new g2.Transform(),
+                        stopMovingVelocity: new g2.Transform(),
         }
         
     }
@@ -81,7 +81,7 @@ GeometryObjectOrCollection.prototype.isBeingTouched = function(location, canvas)
     }
 GeometryObjectOrCollection.prototype.calcNextAnimationTransform= function(deltaTime) {
         let progress = this.animationState.style(deltaTime/this.animationState.deltaTime);
-        let nextTransform = tools.Transform();
+        let nextTransform = new g2.Transform();
         nextTransform.translation.x = this.animationState.initialTransform.translation.x + progress*this.animationState.deltaTransform.translation.x;
         nextTransform.translation.y = this.animationState.initialTransform.translation.y + progress*this.animationState.deltaTransform.translation.y;
         nextTransform.scale.x = this.animationState.initialTransform.scale.x + progress*this.animationState.deltaTransform.scale.x;
@@ -105,7 +105,7 @@ GeometryObjectOrCollection.prototype.setNextTransform = function(now) {
     this.setTransform(nextTransform);
 }
 GeometryObjectOrCollection.prototype.setTransform = function(transform) {
-    this.transform = tools.TransformCopy(transform);
+    this.transform = transform.copy();
     if (this.setTransformCallback) {
         this.setTransformCallback(this.transform);
     }
@@ -141,7 +141,7 @@ GeometryObjectOrCollection.prototype.getNextTransform = function (now) {
                 this.move.previousTime = now;
                 this.move.velocity = this.changeVelocity(deltaTime);
                 if(this.isVelocityZero(this.move.velocity)) {
-                    this.move.velocity = tools.Transform();
+                    this.move.velocity = new g2.Transform();
                     this.stopMovingFreely();
                     return this.transform.copy();
                 }
@@ -149,10 +149,10 @@ GeometryObjectOrCollection.prototype.getNextTransform = function (now) {
                 return nextTransform;
             } 
         }
-        return tools.Transform();
+        return new g2.Transform();
     }
 GeometryObjectOrCollection.prototype.isVelocityZero=function(transform) {
-    let threshold = tools.Transform(g2.point(0.001, 0.001), 0.001, g2.point(0.001, 0.001));
+    let threshold = new g2.Transform(g2.point(0.001, 0.001), 0.001, g2.point(0.001, 0.001));
     if (Math.abs(transform.rotation) > threshold.rotation) {
         return false;
     }
@@ -201,7 +201,7 @@ GeometryObjectOrCollection.prototype.getTransformMatrix = function(transformMatr
     }
 // Planned Animation
 GeometryObjectOrCollection.prototype.animationPhase = function(transform, time, rotDirection=0, animationStyle = tools.easeinout) {
-        let copy = tools.TransformCopy(transform);
+        let copy = transform.copy()
         return {
             transform: copy,
             time: time,
@@ -226,7 +226,7 @@ GeometryObjectOrCollection.prototype.animatePhase = function(phase) {
         let rotDirection = phase.rotDirection;
         let animationStyle = phase.animationStyle;
 
-        this.animationState.initialTransform =  tools.TransformCopy(this.transform);
+        this.animationState.initialTransform =  this.transform.copy();
         let translationDiff = targetTransform.translation.sub(this.transform.translation);
         let scaleDiff = targetTransform.scale.sub(this.transform.scale);
         let rotDiff = tools.minAngleDiff(targetTransform.rotation, this.transform.rotation);
@@ -235,7 +235,7 @@ GeometryObjectOrCollection.prototype.animatePhase = function(phase) {
             rotDiff = rotDirection * Math.PI*2.0 + rotDiff;
         }
         
-        this.animationState.deltaTransform = tools.Transform(translationDiff, rotDiff, scaleDiff);
+        this.animationState.deltaTransform = new g2.Transform(translationDiff, rotDiff, scaleDiff);
         this.animationState.deltaTime = time;
         this.animationState.style = animationStyle;
         this.stopMoving(false);
@@ -247,19 +247,19 @@ GeometryObjectOrCollection.prototype.animateTo = function(transform, time=1, rot
     this.animatePlan([phase], callback);
 }
 GeometryObjectOrCollection.prototype.animateTranslationTo = function(translation, time=1, easeFunction = tools.easeinout, callback = false) {
-    let transform = tools.TransformCopy(this.transform);
+    let transform = this.transform.copy();
     transform.translation = translation.copy();
     let phase = tools.animationPhase(transform,time,0,easeFunction);
     this.animatePlan([phase], callback);
 }
 GeometryObjectOrCollection.prototype.animateRotationTo = function(rotation, rotDirection, time=1, easeFunction = tools.easeinout, callback = false) {
-    let transform = tools.TransformCopy(this.transform);
+    let transform = this.transform.copy();
     transform.rotation = rotation;
     let phase = tools.animationPhase(transform,time,rotDirection,easeFunction);
     this.animatePlan([phase], callback);
 }
 GeometryObjectOrCollection.prototype.animateTranslationAndRotationTo = function(translation, rotation, rotDirection, time=1, easeFunction = tools.easeinout, callback = false) {
-    let transform = tools.TransformCopy(this.transform);
+    let transform = this.transform.copy();
     transform.rotation = rotation;
     transform.translation = translation.copy();
     let phase = tools.animationPhase(transform,time,rotDirection,easeFunction);
@@ -278,7 +278,7 @@ GeometryObjectOrCollection.prototype.stopAnimating = function(result) {
 GeometryObjectOrCollection.prototype.startMoving= function() {
     this.stopAnimating();
     this.stopMovingFreely();
-    this.move.velocity = tools.Transform();
+    this.move.velocity = new g2.Transform();
     this.move.previous = this.transform.copy();
     this.move.previousTime = Date.now()/1000;
     this.isBeingMoved = true;
@@ -352,7 +352,7 @@ GeometryObjectOrCollection.prototype.pulseNow = function() {
         this.pulse.startTime = -1;
     }
 GeometryObjectOrCollection.prototype.getPulseTransform = function(scale) {
-    return tools.Transform(g2.point(0,0),0,g2.point(scale,scale));
+    return new g2.Transform(g2.point(0,0),0,g2.point(scale,scale));
 }
 
 //***************************************************************
@@ -476,7 +476,7 @@ GeometryCollection.prototype.hideOnly = function(listToHide) {
     }
 
 GeometryCollection.prototype.updateBias = function(scale, offset) {
-    this.bias_transform = tools.transformToMatrix(tools.Transform(offset, 0, scale));
+    this.bias_transform = (new g2.Transform(offset, 0, scale)).matrix();
 }
 GeometryCollection.prototype.isBeingTouched = function(location, canvas) {
     for (let i=0,j=this.order.length; i<j;++i) {

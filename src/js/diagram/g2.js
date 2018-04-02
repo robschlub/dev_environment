@@ -8,6 +8,7 @@
 
 import { roundNum } from './mathtools';
 import { Console } from '../tools/tools';
+import * as m2 from './m2';
 
 // export type PointType = {
 //   x: number;
@@ -520,8 +521,11 @@ class Transform {
   translation: Point;
   rotation: number;
   scale: Point;
-  static zero() {
-    return new Transform(Point.zero(), 0, Point.zero());
+  static Zero() {
+    return new Transform(Point.zero(), 0, new Point(0, 0));
+  }
+  static Unity() {
+    return new Transform(Point.zero(), 0, new Point(1, 1));
   }
 
   constructor(
@@ -534,7 +538,7 @@ class Transform {
     this.scale = new Point(scale.x, scale.y);
   }
 
-  sub(transformToSubtract: Transform = Transform.zero()) {
+  sub(transformToSubtract: Transform = Transform.Zero()) {
     return new Transform(
       this.translation.sub(transformToSubtract.translation),
       minAngleDiff(this.rotation, transformToSubtract.rotation),
@@ -548,6 +552,14 @@ class Transform {
       this.rotation,
       new Point(this.scale.x, this.scale.y),
     );
+  }
+
+  matrix() {
+    let transformMatrix = m2.identity();
+    transformMatrix = m2.translate(transformMatrix, this.translation.x, this.translation.y);
+    transformMatrix = m2.rotate(transformMatrix, this.rotation);
+    transformMatrix = m2.scale(transformMatrix, this.scale.x, this.scale.y);
+    return transformMatrix;
   }
 }
 

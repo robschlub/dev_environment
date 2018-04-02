@@ -530,6 +530,18 @@ describe('g2 tests', () => {
       expect(t.rotation).toBe(3);
       expect(t.scale).toEqual(new g2.Point(4, 5));
     });
+    test('Zero', () => {
+      const t = new g2.Transform.Zero();
+      expect(t.translation).toEqual(new g2.Point(0, 0));
+      expect(t.rotation).toBe(0);
+      expect(t.scale).toEqual(new g2.Point(0, 0));
+    });
+    test('Unity', () => {
+      const t = new g2.Transform.Unity();
+      expect(t.translation).toEqual(new g2.Point(0, 0));
+      expect(t.rotation).toBe(0);
+      expect(t.scale).toEqual(new g2.Point(1, 1));
+    });
     test('Copy', () => {
       const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
       const c = t.copy();
@@ -552,6 +564,18 @@ describe('g2 tests', () => {
         0,
         new g2.Point(0.75, 0.75),
       ));
+    });
+    describe('Matrix', () => {
+      test('Unity', () => {
+        const t = g2.Transform.Unity();
+        const m = t.matrix();
+        expect(m).toEqual([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+      });
+      test('Zero', () => {
+        const t = g2.Transform.Zero();
+        const m = t.matrix();
+        expect(m).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 1]);
+      });
     });
   });
 });
