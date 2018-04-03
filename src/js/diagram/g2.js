@@ -517,6 +517,48 @@ function line(p1: Point, p2: Point) {
 //         scale: new point(transform.scale.x, transform.scale.y),
 //     }
 // }
+
+// function normVelocityValue(velocity: number, max: number, min: number) {
+//   let result = velocity;
+//   if (velocity > -min && velocity < min) {
+//     result = 0;
+//   }
+//   if (velocity > max) {
+//     result = max;
+//   }
+//   if (velocity < -max) {
+//     result = -max;
+//   }
+//   return result;
+// }
+
+// Clip a value to either max velocity, or 0 once under the minimum
+// threashold.
+//  * velocity: can be positive or negative
+//  * maxVelocity: should be positive only. Will clip velocity to:
+//      - maxVelocity if velocity > 0
+//      - -maxVelocity if velcity < 0
+//  * zeroThreshold: should be positive only.
+//                   Will clip velocity to 0 if velocity is larger than
+//                   -zeroThreshold and smaller than zeroThreshold.
+function clipValue(
+  value: number,
+  zeroThreshold: number,
+  maxValue: number,
+) {
+  let result = value;
+  if (value > -zeroThreshold && value < zeroThreshold) {
+    result = 0;
+  }
+  if (value > maxValue) {
+    result = maxValue;
+  }
+  if (value < -maxValue) {
+    result = -maxValue;
+  }
+  return result;
+}
+
 class Transform {
   translation: Point;
   rotation: number;
@@ -561,14 +603,47 @@ class Transform {
     transformMatrix = m2.scale(transformMatrix, this.scale.x, this.scale.y);
     return transformMatrix;
   }
+
+  clip(zeroThresholdTransform: Transform, maxTransform: Transform) {
+    const mt = maxTransform;
+    const ztt = zeroThresholdTransform;
+    const result = new Transform();
+    result.translation.x =
+      clipValue(this.translation.x, ztt.translation.x, mt.translation.x);
+    result.translation.y =
+      clipValue(this.translation.y, ztt.translation.y, mt.translation.y);
+    result.rotation = clipValue(this.rotation, ztt.rotation, mt.rotation);
+    result.scale.x =
+      clipValue(this.scale.x, ztt.scale.x, mt.scale.x);
+    result.scale.y =
+      clipValue(this.scale.y, ztt.scale.y, mt.scale.y);
+    return result;
+  }
+
+  velocity(
+    oldTransform: Transform,
+    deltaTime: number,
+    zeroThreshold: Transform,
+    maxTransform: Transform,
+  ) {
+    const deltaTransform = this.sub(oldTransform);
+    deltaTransform.translation.x /= deltaTime;
+    deltaTransform.translation.y /= deltaTime;
+    deltaTransform.scale.x /= deltaTime;
+    deltaTransform.scale.y /= deltaTime;
+    deltaTransform.rotation /= deltaTime;
+    return deltaTransform.clip(zeroThreshold, maxTransform);
+  }
 }
 
-export { point, Point, line, Line, minAngleDiff, deg, normAngle, Transform };
-// export {
-//   point,
-//   // line,
-//   // distance,
-//   // minAngleDiff,
-//   // deg,
-//   // normAngle,
-// };
+export {
+  point,
+  Point,
+  line,
+  Line,
+  minAngleDiff,
+  deg,
+  normAngle,
+  Transform,
+  clipValue,
+};

@@ -577,5 +577,155 @@ describe('g2 tests', () => {
         expect(m).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 1]);
       });
     });
+    describe('Clip', () => {
+      let max;
+      let zt;
+      beforeEach(() => {
+        max = new g2.Transform(new g2.Point(2, 2), 2, new g2.Point(2, 2));
+        zt = new g2.Transform(
+          new g2.Point(0.1, 0.1),
+          0.1,
+          new g2.Point(0.1, 0.1),
+        );
+      });
+      test('No clipping positive', () => {
+        const t = new g2.Transform(
+          new g2.Point(1, 1),
+          1,
+          new g2.Point(1, 1),
+        );
+        expect(t.clip(zt, max)).toEqual(t);
+      });
+      test('Clipping', () => {
+        const t = new g2.Transform(
+          new g2.Point(3, 0.1),
+          0.09,
+          new g2.Point(-3, -0.09),
+        );
+        const expectation = new g2.Transform(
+          new g2.Point(2, 0.1),
+          0,
+          new g2.Point(-2, 0),
+        );
+        expect(t.clip(zt, max)).toEqual(expectation);
+      });
+    });
+    describe('Velocity', () => {
+      let maxVelocity;
+      let zeroThreshold;
+      beforeEach(() => {
+        maxVelocity = new g2.Transform(new g2.Point(2, 2), 2, new g2.Point(2, 2));
+        zeroThreshold = new g2.Transform(new g2.Point(0.1, 0.1), 0.1, new g2.Point(0.1, 0.1));
+      });
+      test('No change', () => {
+        const curr = new g2.Transform(
+          new g2.Point(1, 1),
+          1,
+          new g2.Point(1, 1),
+        );
+        const old = new g2.Transform(
+          new g2.Point(1, 1),
+          1,
+          new g2.Point(1, 1),
+        );
+        const deltaTime = 1; // s
+        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+        expect(v).toEqual(g2.Transform.Zero());
+      });
+      test('Positive Velocity', () => {
+        const old = new g2.Transform(
+          new g2.Point(0.1, 0.1),
+          0.1,
+          new g2.Point(0.1, 0.1),
+        );
+        const curr = new g2.Transform(
+          new g2.Point(0.9, 0.9),
+          0.9,
+          new g2.Point(0.9, 0.9),
+        );
+        const deltaTime = 1; // s
+        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+        const expectation = new g2.Transform(
+          new g2.Point(0.8, 0.8),
+          0.8,
+          new g2.Point(0.8, 0.8),
+        );
+        expect(v).toEqual(expectation);
+      });
+      test('Negative Velocity', () => {
+        const curr = new g2.Transform(
+          new g2.Point(0.1, 0.1),
+          0.1,
+          new g2.Point(0.1, 0.1),
+        );
+        const old = new g2.Transform(
+          new g2.Point(0.2, 0.2),
+          0.2,
+          new g2.Point(0.2, 0.2),
+        );
+        const deltaTime = 0.1; // s
+        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+        const expectation = new g2.Transform(
+          new g2.Point(-1, -1),
+          -1,
+          new g2.Point(-1, -1),
+        );
+        expect(v).toEqual(expectation);
+      });
+      test('Clipped Velocity', () => {
+        const curr = new g2.Transform(
+          new g2.Point(0.1, -0.1),
+          0.1,
+          new g2.Point(0.9, -0.9),
+        );
+        const old = new g2.Transform(
+          new g2.Point(0.9, -0.9),
+          0.1,
+          new g2.Point(0.9001, -0.9001),
+        );
+        const deltaTime = 0.1; // s
+        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+        const expectation = new g2.Transform(
+          new g2.Point(-maxVelocity.translation.x, maxVelocity.translation.y),
+          0,
+          new g2.Point(0, 0),
+        );
+        expect(v).toEqual(expectation);
+      });
+    });
+  });
+  describe('Clip Velocity', () => {
+    test('No clipping positive velocity', () => {
+      expect(g2.clipValue(1, 0.1, 2)).toBe(1);
+    });
+    test('No clipping negative velocity', () => {
+      expect(g2.clipValue(-1, 0.1, 2)).toBe(-1);
+    });
+    test('Max clipping positive velocity', () => {
+      expect(g2.clipValue(3, 0.1, 2)).toBe(2);
+    });
+    test('Max clipping negative velocity', () => {
+      expect(g2.clipValue(-3, 0.1, 2)).toBe(-2);
+    });
+    test('Min clipping positive velocity', () => {
+      expect(g2.clipValue(0.05, 0.1, 2)).toBe(0);
+    });
+    test('Min clipping negative velocity', () => {
+      expect(g2.clipValue(-0.05, 0.1, 2)).toBe(0);
+    });
+
+    // Corner cases
+    test('On max clipping positive velocity', () => {
+      expect(g2.clipValue(2, 0.1, 2)).toBe(2);
+    });
+    test('On max clipping negative velocity', () => {
+      expect(g2.clipValue(-2, 0.1, 2)).toBe(-2);
+    });
+    test('On min clipping positive velocity', () => {
+      expect(g2.clipValue(0.1, 0.1, 2)).toBe(0.1);
+    });
+    test('On min clipping negative velocity', () => {
+      expect(g2.clipValue(-0.1, 0.1, 2)).toBe(-0.1);
+    });
   });
 });
