@@ -100,7 +100,7 @@ class Polygon extends VertexObject {
     }
     this.draw(offset, rotate, scale, count, color);
   }
-  getPointCountForAngle(drawAngle: number) {
+  getPointCountForAngle(drawAngle: number = Math.PI * 2) {
     let count = Math.floor(drawAngle / this.dAngle) * 2.0 + 2;
     if (drawAngle >= Math.PI * 2.0) {
       count = this.numPoints;

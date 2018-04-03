@@ -4,6 +4,7 @@ import * as g2 from './g2';
 import * as m2 from './m2';
 import * as tools from './mathtools';
 import GlobalVariables from './globals';
+import VertexObject from './vertexObjects/vertexObject';
 
 // Planned Animation
 class AnimationPhase {
@@ -50,7 +51,7 @@ class DiagramElement {
   presetTransforms: Object;       // Convenience dict of transform presets
   setTransformCallback: (g2.Transform) => void; // Called when setting Transform
   globals: GlobalVariables;       // Link to global variables
-  lastDrawTransformMatrix: g2.Transform; // Transform matrix used in last draw
+  lastDrawTransformMatrix: Array<number>; // Transform matrix used in last draw
   show: boolean;                  // True if should be shown in diagram
   name: string;                   // Used to reference element in a collection
 
@@ -69,16 +70,16 @@ class DiagramElement {
   pulse: Object;                  // Pulse animation state
 
   constructor(
-    translation: g2.Point,
-    rotation: number,
-    scale: g2.Point,
-    name: string,
+    translation: g2.Point = g2.Point.zero(),
+    rotation: number = 0,
+    scale: g2.Point = g2.Point.Unity(),
+    name: string = '',
   ) {
     this.transform = new g2.Transform(translation, rotation, scale);
     this.setTransformCallback = () => {};
     this.show = false;
     this.globals = new GlobalVariables();
-    this.lastDrawTransformMatrix = g2.Transform.Unity();
+    this.lastDrawTransformMatrix = m2.identity();
     this.name = name;
 
     this.isBeingMoved = false;
@@ -125,29 +126,21 @@ class DiagramElement {
     };
   }
 
-  vertexToScreen(vertex, canvas) {
+  vertexToScreen(vertex: g2.Point, canvas: HTMLCanvasElement): g2.Point {
     const canvasRect = canvas.getBoundingClientRect();
     const canvasWidth = canvas.scrollWidth;
     const canvasHeight = canvas.scrollHeight;
-    const transformedVertex = m2.pointTransform(this.lastDraw, vertex);
+    const transformedVertex = vertex.transformBy(this.lastDrawTransformMatrix);
+    // const transformedVertex = m2.pointTransform(this.lastDraw, vertex);
     return g2.point(
       (transformedVertex.x + 1.0) * canvasWidth / 2.0 + canvasRect.left,
       (-transformedVertex.y + 1.0) * canvasHeight / 2.0 + canvasRect.top,
     );
   }
-  isBeingTouched(location, canvas) {
-    for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-      const border = [];
-      for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-        border[i] = this.vertexToScreen(this.vertices.border[m][i], canvas);
-      }
-      if (location.isInPolygon(border)) {
-        return true;
-      }
-    }
+  static isBeingTouched(): boolean {
     return false;
   }
-  calcNextAnimationTransform(deltaTime) {
+  calcNextAnimationTransform(deltaTime: number): g2.Transform {
     const progress = this.animationState.style(deltaTime / this.animationState.deltaTime);
     const nextTransform = new g2.Transform();
     nextTransform.translation.x =
@@ -171,7 +164,7 @@ class DiagramElement {
     return nextTransform;
   }
 
-  calcNextMovementTransform(deltaTime, velocity) {
+  calcNextMovementTransform(deltaTime, velocity): g2.Transform {
     const nextTransform = this.transform.copy();
     nextTransform.rotation += deltaTime * velocity.rotation;
     nextTransform.translation.x += deltaTime * velocity.translation.x;
@@ -181,19 +174,19 @@ class DiagramElement {
     return nextTransform;
   }
 
-  setNextTransform(now) {
+  setNextTransform(now: number): void {
     const nextTransform = this.getNextTransform(now);
     this.setTransform(nextTransform);
   }
 
-  setTransform(transform) {
+  setTransform(transform: g2.Transform): void {
     this.transform = transform.copy();
     if (this.setTransformCallback) {
       this.setTransformCallback(this.transform);
     }
   }
 
-  getNextTransform(now) {
+  getNextTransform(now: number): g2.Transform {
     if (this.isAnimating) {
       if (this.animationState.startTime < 0) {
         this.animationState.startTime = now;
@@ -223,7 +216,7 @@ class DiagramElement {
       const deltaTime = now - this.moveState.previousTime;
       this.moveState.previousTime = now;
       this.moveState.velocity = this.changeVelocity(deltaTime);
-      if (this.isVelocityZero(this.moveState.velocity)) {
+      if (DiagramElement.isVelocityZero(this.moveState.velocity)) {
         this.moveState.velocity = new g2.Transform();
         this.stopMovingFreely();
         return this.transform.copy();
@@ -234,7 +227,7 @@ class DiagramElement {
     return new g2.Transform();
   }
 
-  static isVelocityZero(transform) {
+  static isVelocityZero(transform: g2.Transform): boolean {
     const threshold = new g2.Transform(g2.point(0.001, 0.001), 0.001, g2.point(0.001, 0.001));
     if (Math.abs(transform.rotation) > threshold.rotation) {
       return false;
@@ -254,7 +247,7 @@ class DiagramElement {
     return true;
   }
 
-  changeVelocity(deltaTime) {
+  changeVelocity(deltaTime: number): g2.Transform {
     const velocity = this.moveState.velocity.copy();
     // let deceleration = 0.5;
     const slowdown = 0.8;
@@ -272,7 +265,7 @@ class DiagramElement {
     return velocity;
   }
 
-  getTransformMatrix(transformMatrix = m2.identity(), now) {
+  getTransformMatrix(transformMatrix: Array<number> = m2.identity(), now: number): Array<number> {
     // if (transformMatrix === false) {
     //   transformMatrix = m2.identity();
     // }
@@ -293,7 +286,7 @@ class DiagramElement {
     return matrix;
   }
 
-  animatePlan(phases, callback = false) {
+  animatePlan(phases: Array<AnimationPhase>, callback: () => void = () => {}): void {
     this.animationPlan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
       this.animationPlan.push(phases[i]);
@@ -304,7 +297,7 @@ class DiagramElement {
       this.animatePhase(this.animationPlan[this.animationState.index]);
     }
   }
-  animatePhase(phase) {
+  animatePhase(phase: AnimationPhase): void {
     const targetTransform = phase.transform;
     const { time, rotDirection, animationStyle } = phase;
     // const { rotDirection } = phase;
@@ -313,7 +306,7 @@ class DiagramElement {
     this.animationState.initialTransform = this.transform.copy();
     const translationDiff = targetTransform.translation.sub(this.transform.translation);
     const scaleDiff = targetTransform.scale.sub(this.transform.scale);
-    let rotDiff = tools.minAngleDiff(targetTransform.rotation, this.transform.rotation);
+    let rotDiff = g2.minAngleDiff(targetTransform.rotation, this.transform.rotation);
 
     if (rotDiff * rotDirection < 0) {
       rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
@@ -322,44 +315,50 @@ class DiagramElement {
     this.animationState.deltaTransform = new g2.Transform(translationDiff, rotDiff, scaleDiff);
     this.animationState.deltaTime = time;
     this.animationState.style = animationStyle;
-    this.stopMoving(false);
+    this.stopMoving();
     this.isAnimating = true;
     this.animationState.startTime = -1;
   }
 
   animateTo(
-    transform,
-    time = 1,
-    rotDirection = 0,
-    easeFunction = tools.easeinout,
-    callback = false,
-  ) {
-    const phase = this.animationPhase(transform, time, rotDirection, easeFunction);
-    this.animatePlan([phase], callback);
+    transform: g2.Transform,
+    time: number = 1,
+    rotDirection: number = 0,
+    easeFunction: (number) => number = tools.easeinout,
+    callback: (mixed) => void = () => {},
+  ): void {
+    const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    if (phase instanceof AnimationPhase) {
+      this.animatePlan([phase], callback);
+    }
   }
 
   animateTranslationTo(
-    translation,
-    time = 1,
-    easeFunction = tools.easeinout,
-    callback = false,
-  ) {
+    translation: g2.Point,
+    time: number = 1,
+    easeFunction: (number) => number = tools.easeinout,
+    callback: (mixed) => void = () => {},
+  ): void {
     const transform = this.transform.copy();
     transform.translation = translation.copy();
-    const phase = this.animationPhase(transform, time, 0, easeFunction);
-    this.animatePlan([phase], callback);
+    const phase = new AnimationPhase(transform, time, 0, easeFunction);
+    if (phase instanceof AnimationPhase) {
+      this.animatePlan([phase], callback);
+    }
   }
   animateRotationTo(
     rotation,
     rotDirection,
     time = 1,
     easeFunction = tools.easeinout,
-    callback = false,
-  ) {
+    callback: (mixed) => void = () => {},
+  ): void {
     const transform = this.transform.copy();
     transform.rotation = rotation;
-    const phase = this.animationPhase(transform, time, rotDirection, easeFunction);
-    this.animatePlan([phase], callback);
+    const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    if (phase instanceof AnimationPhase) {
+      this.animatePlan([phase], callback);
+    }
   }
 
   animateTranslationAndRotationTo(
@@ -368,25 +367,31 @@ class DiagramElement {
     rotDirection,
     time = 1,
     easeFunction = tools.easeinout,
-    callback = false,
-  ) {
+    callback: (mixed) => void = () => {},
+  ): void {
     const transform = this.transform.copy();
     transform.rotation = rotation;
     transform.translation = translation.copy();
-    const phase = this.animationPhase(transform, time, rotDirection, easeFunction);
-    this.animatePlan([phase], callback);
+    const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    if (phase instanceof AnimationPhase) {
+      this.animatePlan([phase], callback);
+    }
   }
 
-  stopAnimating(result) {
+  stopAnimating(result?: mixed): void {
     this.isAnimating = false;
     this.animationPlan = [];
     if (this.animationState.callback) {
-      this.animationState.callback(result);
+      if (result) {
+        this.animationState.callback(result);
+      } else {
+        this.animationState.callback();
+      }
     }
     this.animationState.callback = false;
   }
   // Movement
-  startMoving() {
+  startMoving(): void {
     this.stopAnimating();
     this.stopMovingFreely();
     this.moveState.velocity = g2.Transform.Zero();
@@ -394,26 +399,26 @@ class DiagramElement {
     this.moveState.previousTime = Date.now() / 1000;
     this.isBeingMoved = true;
   }
-  moved(newTransform) {
+  moved(newTransform: g2.Transform): void {
     this.calcVelocity(newTransform);
     // console.log(this.moveStatevelocity.rotation)
   }
-  startMovingFreely() {
+  startMovingFreely(): void {
     this.isBeingMoved = false;
     this.isMovingFreely = true;
     this.moveState.previousTime = -1;
     // console.log(this.moveState.velocity.rotation);
   }
-  stopMovingFreely() {
+  stopMovingFreely(): void {
     this.isMovingFreely = false;
     this.moveState.previousTime = -1;
   }
-  stopMoving() {
+  stopMoving(): void {
     this.isBeingMoved = false;
     this.moveState.previousTime = -1;
   }
 
-  calcVelocity(newTransform) {
+  calcVelocity(newTransform: g2.Transform): void {
     const currentTime = Date.now() / 1000;
     if (this.moveState.previousTime < 0) {
       this.moveState.previousTime = currentTime;
@@ -437,7 +442,7 @@ class DiagramElement {
     this.moveState.previousTime = currentTime;
   }
 
-  transformWithPulse(now, transformMatrix) {
+  transformWithPulse(now: number, transformMatrix: Array<number>): Array<number> {
     let pulseTransformMatrix = m2.copy(transformMatrix);
     if (this.pulse.pulsing) {
       if (this.pulse.startTime === -1) {
@@ -453,7 +458,7 @@ class DiagramElement {
         this.pulse.B,
         this.pulse.C,
       );
-      const pulseTransform = this.getPulseTransform(scale);
+      const pulseTransform = DiagramElement.getPulseTransform(scale);
       pulseTransformMatrix = m2.translate(
         pulseTransformMatrix,
         pulseTransform.translation.x,
@@ -491,7 +496,18 @@ class DiagramElement {
 // Geometry Object
 // ***************************************************************
 class GeometryObject extends DiagramElement {
-  constructor(vertexObject, translation, rotation, scale, color) {
+  vertices: VertexObject;
+  color: Array<number>;
+  pointsToDraw: number;
+  angleToDraw: number;
+
+  constructor(
+    vertexObject: VertexObject,
+    translation: g2.Point = g2.Point.zero(),
+    rotation: number = 0,
+    scale: g2.Point = new g2.Point.Unity(),
+    color: Array<number> = [0.5, 0.5, 0.5, 1],
+  ) {
     super(translation, rotation, scale);
     this.vertices = vertexObject;
     this.color = color;
@@ -499,7 +515,20 @@ class GeometryObject extends DiagramElement {
     this.angleToDraw = -1;
   }
 
-  draw(transformMatrix = false, now) {
+  isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement): boolean {
+    for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
+      const border = [];
+      for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
+        border[i] = this.vertexToScreen(this.vertices.border[m][i], canvas);
+      }
+      if (location.isInPolygon(border)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
       // console.log(this.name)
       // if (transformMatrix == false) {
@@ -528,7 +557,12 @@ class GeometryObject extends DiagramElement {
     }
   }
 
-  drawCustom(translation, rotation, scale, color) {
+  drawCustom(
+    translation: g2.Point,
+    rotation: number,
+    scale: g2.Point,
+    color: Array<number>,
+  ): void {
     if (this.show) {
       let transformMatrix = m2.identity();
       transformMatrix = m2.translate(transformMatrix, translation.x, translation.y);
@@ -543,19 +577,28 @@ class GeometryObject extends DiagramElement {
 // Collection of Geometry Objects or Collections
 // ***************************************************************
 class GeometryCollection extends DiagramElement {
-  constructor(translation, rotation, scale) {
+  elements: Object;
+  order: Array<string>;
+  biasTransform: Array<number>;
+
+  constructor(
+    translation: g2.Point = g2.Point.zero(),
+    rotation: number = 0,
+    scale: g2.Point = g2.Point.Unity(),
+  ): void {
     super(translation, rotation, scale);
     this.elements = {};
     this.order = [];
   }
 
-  add(name, geoObject) {
+  add(name: string, geoObject: GeometryObject) {
     this.elements[name] = geoObject;
     this.elements[name].name = name;
+    // $FlowFixMe
     this[`_${name}`] = this.elements[name];
     this.order.push(name);
   }
-  draw(transformMatrix = false, now) {
+  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
       // if (transformMatrix == false) {
       //   transformMatrix = m2.identity();
@@ -579,7 +622,7 @@ class GeometryCollection extends DiagramElement {
       }
     }
   }
-  showAll() {
+  showAll(): void {
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       element.show = true;
@@ -588,7 +631,7 @@ class GeometryCollection extends DiagramElement {
       }
     }
   }
-  hideAll() {
+  hideAll(): void {
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       element.show = false;
@@ -599,7 +642,7 @@ class GeometryCollection extends DiagramElement {
     }
   }
 
-  showOnly(listToShow) {
+  showOnly(listToShow: Array<GeometryObject | GeometryCollection>): void {
     this.hideAll();
     for (let i = 0, j = listToShow.length; i < j; i += 1) {
       const element = listToShow[i];
@@ -607,7 +650,7 @@ class GeometryCollection extends DiagramElement {
     }
   }
 
-  hideOnly(listToHide) {
+  hideOnly(listToHide: Array<GeometryObject | GeometryCollection>): void {
     this.showAll();
     for (let i = 0, j = listToHide.length; i < j; i += 1) {
       const element = listToHide[i];
@@ -615,10 +658,11 @@ class GeometryCollection extends DiagramElement {
     }
   }
 
-  updateBias(scale, offset) {
-    this.bias_transform = (new g2.Transform(offset, 0, scale)).matrix();
+  updateBias(scale: g2.Point, offset: g2.Point): void {
+    this.biasTransform = (new g2.Transform(offset, 0, scale)).matrix();
   }
-  isBeingTouched(location, canvas) {
+
+  isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement) {
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.show === true) {

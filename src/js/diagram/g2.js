@@ -36,7 +36,9 @@ class Point {
   static zero() {
     return new Point(0, 0);
   }
-
+  static Unity() {
+    return new Point(1, 1);
+  }
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
@@ -56,6 +58,11 @@ class Point {
 
   round(precision: number = 8) {
     return new Point(roundNum(this.x, precision), roundNum(this.y, precision));
+  }
+
+  transformBy(matrix: Array<number>) {
+    const transformedPoint = m2.transform(matrix, this.x, this.y);
+    return new Point(transformedPoint[0], transformedPoint[1]);
   }
 
   rotate(angle: number, center?: Point) {

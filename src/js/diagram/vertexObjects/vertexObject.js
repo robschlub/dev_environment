@@ -41,6 +41,10 @@ class VertexObject {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
   }
+  // Abstract method - should be reimplemented for any vertexObjects that
+  getPointCountForAngle(drawAngle: number = Math.PI * 2) {
+    return this.numPoints * drawAngle / (Math.PI * 2);
+  }
   draw(
     translation: g2.Point,
     rotation: number,

@@ -109,7 +109,7 @@ function testgl(id: string) {
       // gl.drawArrays(gl.TRIANGLES, 0, 3);
       // polygon.drawWithTransformMatrix(m2.identity(), polygon.numPoints, [1, 0, 0, 1]);
       // polygon2.drawWithTransformMatrix(m2.identity(), polygon2.numPoints, [1, 0, 0, 1]);
-      shapes.draw(false, 0);
+      shapes.draw();
     }
   }
 }
