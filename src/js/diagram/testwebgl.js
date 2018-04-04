@@ -6,6 +6,7 @@ import * as m2 from './m2';
 import { Console } from '../tools/tools';
 import { GeometryCollection, GeometryObject } from './GeometryObject';
 import GlobalVariables from './globals';
+import getShaders from './webgl/shaders';
 
 class ShapesCollection extends GeometryCollection {
   constructor(webgl, translation, rotation, scale) {
@@ -13,7 +14,7 @@ class ShapesCollection extends GeometryCollection {
     // GeometryCollection.call(this, translation, rotation, scale);
 
     const square = new Polygon(webgl, 0.5, 4, 4, 0.005, 0, new g2.Point(0, 0));
-    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.001, 0, new g2.Point(0.5, 0.5));
+    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.01, 0, new g2.Point(0.5, 0.5));
 
     this.add('square', new GeometryObject(square, g2.point(0, 0), 0, g2.point(1, 1), [0, 0, 1, 1]));
     this.add('triangle', new GeometryObject(triangle, g2.point(0, 0), 0, g2.point(1, 1), [0, 1, 0, 1]));
@@ -44,29 +45,13 @@ function testgl(id: string) {
   }
 
   if (canvas instanceof HTMLCanvasElement) {
-    // const gl = canvas.getContext('webgl', { antialias: true });
+    const shaders = getShaders('simple', 'simple');
 
-    const vertexShaderSource =
-      'attribute vec2 a_position;' +
-      'attribute vec2 a_texCoord;' +
-      'uniform mat3 u_matrix;' +
-      'void main() {' +
-        'gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);' +
-      '}';
-
-    const fragmentShaderSource =
-      'precision mediump float;' +
-      'uniform vec4 u_color;' +
-      'void main() {' +
-        'gl_FragColor = u_color;' +
-      '}';
-
-    const varName = ['a_position', 'u_matrix', 'u_color'];
     const webgl = new WebGLInstance(
       canvas,
-      vertexShaderSource,
-      fragmentShaderSource,
-      varName,
+      shaders.vertexSource,
+      shaders.fragmentSource,
+      shaders.varNames,
     );
     const { gl } = webgl;
 
