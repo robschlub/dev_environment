@@ -63,6 +63,7 @@ function testgl(id: string) {
       shapes.showAll();
       const globals = new GlobalVariables();
       shapes.animateRotationTo(1, -1, 10);
+      shapes._square.animateTranslationTo(new g2.Point(0.2, 0.2), 2);
       // console.log(shapes.transform.scale)
       const draw = (now: number) => {
         const nowSeconds = now * 0.001;
