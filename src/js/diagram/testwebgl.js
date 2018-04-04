@@ -46,33 +46,47 @@ function testgl(id: string) {
   if (canvas instanceof HTMLCanvasElement) {
     // const gl = canvas.getContext('webgl', { antialias: true });
 
-    const vertexShaderSource = 'attribute vec2 coordinates;' +
-        'void main(void) {gl_Position = vec4(coordinates,0.0, 1.0);}';
-    const fragmentShaderSource = 'void main(void) {gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);}';
+    const vertexShaderSource =
+      'attribute vec2 a_position;' +
+      'attribute vec2 a_texCoord;' +
+      'uniform mat3 u_matrix;' +
+      'void main() {' +
+        'gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);' +
+      '}';
 
-    const varName = 'coordinates';
+    const fragmentShaderSource =
+      'precision mediump float;' +
+      'uniform vec4 u_color;' +
+      'void main() {' +
+        'gl_FragColor = u_color;' +
+      '}';
+
+    const varName = ['a_position', 'u_matrix', 'u_color'];
     const webgl = new WebGLInstance(
       canvas,
       vertexShaderSource,
       fragmentShaderSource,
-      [varName],
+      varName,
     );
     const { gl } = webgl;
 
     if (gl instanceof WebGLRenderingContext) {
       // const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
       // const polygon2 = new Polygon(webgl, 0.2, 12, 12, 0.001, 0, new g2.Point(0.5, 0.5));
-      const shapes = new ShapesCollection(webgl, g2.Point.zero(), 1, g2.Point.zero());
+      const shapes = new ShapesCollection(webgl, g2.Point.zero(), 0, g2.Point.Unity());
       shapes.show = true;
       shapes.showAll();
       const globals = new GlobalVariables();
-      shapes.animateRotationTo(1, 1, 1);
+      shapes.animateRotationTo(1, -1, 10);
+      // console.log(shapes.transform.scale)
       const draw = (now) => {
+        const nowSeconds = now * 0.001;
         shapes._square.vertices.gl.clearColor(0.5, 0, 0, 0.5);
         shapes._square.vertices.gl.clear(shapes._square.vertices.gl.COLOR_BUFFER_BIT);
-        shapes.setNextTransform(now);
-        shapes.draw(m2.identity(), now);
-        console.log(now)
+        // shapes.setNextTransform(nowSeconds);
+        // console.log(shapes.lastDrawTransformMatrix)
+        shapes.draw(m2.unity(), nowSeconds);
+        // console.log("animating:", shapes.isAnimating)
         if (shapes.isAnimating) {
           globals.animateNextFrame();
         }

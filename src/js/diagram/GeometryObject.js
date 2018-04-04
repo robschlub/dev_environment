@@ -78,7 +78,7 @@ class DiagramElement {
     this.setTransformCallback = () => {};
     this.show = false;
     this.globals = new GlobalVariables();
-    this.lastDrawTransformMatrix = m2.identity();
+    this.lastDrawTransformMatrix = m2.unity();
     this.name = name;
 
     this.isBeingMoved = false;
@@ -175,6 +175,7 @@ class DiagramElement {
 
   setNextTransform(now: number): void {
     const nextTransform = this.getNextTransform(now);
+    // console.log(nextTransform)
     this.setTransform(nextTransform);
   }
 
@@ -187,11 +188,13 @@ class DiagramElement {
 
   getNextTransform(now: number): g2.Transform {
     if (this.isAnimating) {
+      // console.log(this.animationState)
       if (this.animationState.startTime < 0) {
         this.animationState.startTime = now;
         return this.transform;
       }
       const deltaTime = now - this.animationState.startTime;
+
       if (deltaTime > this.animationState.deltaTime) {
         if (this.animationState.index < this.animationPlan.length - 1) {
           this.animationState.index += 1;
@@ -264,7 +267,7 @@ class DiagramElement {
     return velocity;
   }
 
-  getTransformMatrix(transformMatrix: Array<number> = m2.identity(), now: number): Array<number> {
+  getTransformMatrix(transformMatrix: Array<number> = m2.unity(), now: number): Array<number> {
     // if (transformMatrix === false) {
     //   transformMatrix = m2.identity();
     // }
@@ -274,14 +277,18 @@ class DiagramElement {
       this.setTransform(this.getNextTransform(now));
       this.globals.animateNextFrameFlag = true;
     }
+
     matrix = m2.translate(
       matrix,
       this.transform.translation.x,
       this.transform.translation.y,
     );
     matrix = m2.rotate(matrix, this.transform.rotation);
+    // console.log(matrix)
     matrix = m2.scale(matrix, this.transform.scale.x, this.transform.scale.y);
+    // console.log(this.transform.scale)
     this.lastDrawTransformMatrix = matrix;
+
     return matrix;
   }
 
@@ -527,7 +534,7 @@ class GeometryObject extends DiagramElement {
     return false;
   }
 
-  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
+  draw(transformMatrix: Array<number> = m2.unity(), now: number = 0) {
     if (this.show) {
       // console.log(this.name)
       // if (transformMatrix == false) {
@@ -563,7 +570,7 @@ class GeometryObject extends DiagramElement {
     color: Array<number>,
   ): void {
     if (this.show) {
-      let transformMatrix = m2.identity();
+      let transformMatrix = m2.unity();
       transformMatrix = m2.translate(transformMatrix, translation.x, translation.y);
       transformMatrix = m2.rotate(transformMatrix, rotation);
       transformMatrix = m2.scale(transformMatrix, scale.x, scale.y);
@@ -597,7 +604,7 @@ class GeometryCollection extends DiagramElement {
     this[`_${name}`] = this.elements[name];
     this.order.push(name);
   }
-  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
+  draw(transformMatrix: Array<number> = m2.unity(), now: number = 0) {
     if (this.show) {
       // if (transformMatrix == false) {
       //   transformMatrix = m2.identity();
@@ -612,8 +619,10 @@ class GeometryCollection extends DiagramElement {
       // eslint-disable-next-line max-len
       // transformMatrix = m2.scale(transformMatrix, this.transform.scale.x, this.transform.scale.y);
       // this.lastDrawTransformMatrix = m2.copy(transformMatrix);
-
+      // console.log("start")
       let matrix = this.getTransformMatrix(transformMatrix, now);
+      // console.log("stop")
+
       matrix = this.transformWithPulse(now, matrix);
       for (let i = 0, j = this.order.length; i < j; i += 1) {
         // const element = this.elements[this.order[i]];
