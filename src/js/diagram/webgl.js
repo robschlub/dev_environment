@@ -14,7 +14,6 @@ function createProgram(
     return program;
   }
 
-  // console.log(gl.getProgramInfoLog(_program));
   gl.deleteProgram(program);
   return null;
 }
@@ -29,7 +28,6 @@ function createShader(gl: WebGLRenderingContext, type, source) {
     return shader;
   }
 
-  // console.log(gl.getShaderInfoLog(shader));
   gl.deleteShader(shader);
   return null;
 }
@@ -76,10 +74,6 @@ function resizeCanvasToDisplaySize(canvas) {
   const width = canvas.clientWidth * mul || 0;
   const height = canvas.clientHeight * mul || 0;
 
-  // console.log(canvas.clientWidth, canvas.clientHeight);
-  // console.log(canvas.width, canvas.height);
-  // console.log(width, height);
-
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;     // eslint-disable-line no-param-reassign
     canvas.height = height;   // eslint-disable-line no-param-reassign
@@ -116,10 +110,7 @@ class WebGLInstance {
   fragmentSource: string,
   shaderLocations: Array<string>,
 ) {
-    // console.log(canvas.getContext('webgl', { antialias: true }))
     const gl = canvas.getContext('webgl', { antialias: true });
-    // let program = null;
-    // let locations = {};
     console.log("GL: ", typeof gl)
     console.log(gl)
     if (gl instanceof WebGLRenderingContext) {
@@ -150,13 +141,7 @@ class WebGLInstance {
       this.gl.useProgram(this.program);
 
       // window.addEventListener('resize', autoResize.bind(this, event));
-  }
-
-  // return {
-  //   gl:  gl,
-  //   program: program,
-  //   locations: locations,
-    // resizeCanvasToDisplaySize: resizeCanvasToDisplaySize,
+    }
   }
 
   resize() {

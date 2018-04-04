@@ -64,13 +64,14 @@ function testgl(id: string) {
       const globals = new GlobalVariables();
       shapes.animateRotationTo(1, -1, 10);
       // console.log(shapes.transform.scale)
-      const draw = (now) => {
+      const draw = (now: number) => {
         const nowSeconds = now * 0.001;
+        // const square = '_square';
         shapes._square.vertices.gl.clearColor(0.5, 0, 0, 0.5);
         shapes._square.vertices.gl.clear(shapes._square.vertices.gl.COLOR_BUFFER_BIT);
         // shapes.setNextTransform(nowSeconds);
         // console.log(shapes.lastDrawTransformMatrix)
-        shapes.draw(m2.unity(), nowSeconds);
+        shapes.draw(m2.identity(), nowSeconds);
         // console.log("animating:", shapes.isAnimating)
         if (shapes.isAnimating) {
           globals.animateNextFrame();

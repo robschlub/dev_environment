@@ -29,13 +29,6 @@ function identity() {
     0, 0, 1,
   ];
 }
-function unity() {
-  return [
-    1, 0, 0,
-    0, 1, 0,
-    0, 0, 1,
-  ];
-}
 function copy(a: Array<number>) {
   return [
     a[0], a[1], a[2],
@@ -139,6 +132,5 @@ export {
   transform,
   scale,
   inverse,
-  unity,
   // pointTransform,
 };

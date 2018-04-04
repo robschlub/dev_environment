@@ -78,7 +78,7 @@ class DiagramElement {
     this.setTransformCallback = () => {};
     this.show = false;
     this.globals = new GlobalVariables();
-    this.lastDrawTransformMatrix = m2.unity();
+    this.lastDrawTransformMatrix = m2.identity();
     this.name = name;
 
     this.isBeingMoved = false;
@@ -267,7 +267,7 @@ class DiagramElement {
     return velocity;
   }
 
-  getTransformMatrix(transformMatrix: Array<number> = m2.unity(), now: number): Array<number> {
+  getTransformMatrix(transformMatrix: Array<number> = m2.identity(), now: number): Array<number> {
     // if (transformMatrix === false) {
     //   transformMatrix = m2.identity();
     // }
@@ -534,7 +534,7 @@ class GeometryObject extends DiagramElement {
     return false;
   }
 
-  draw(transformMatrix: Array<number> = m2.unity(), now: number = 0) {
+  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
       // console.log(this.name)
       // if (transformMatrix == false) {
@@ -570,7 +570,7 @@ class GeometryObject extends DiagramElement {
     color: Array<number>,
   ): void {
     if (this.show) {
-      let transformMatrix = m2.unity();
+      let transformMatrix = m2.identity();
       transformMatrix = m2.translate(transformMatrix, translation.x, translation.y);
       transformMatrix = m2.rotate(transformMatrix, rotation);
       transformMatrix = m2.scale(transformMatrix, scale.x, scale.y);
@@ -604,7 +604,7 @@ class GeometryCollection extends DiagramElement {
     this[`_${name}`] = this.elements[name];
     this.order.push(name);
   }
-  draw(transformMatrix: Array<number> = m2.unity(), now: number = 0) {
+  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
       // if (transformMatrix == false) {
       //   transformMatrix = m2.identity();

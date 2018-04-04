@@ -8,7 +8,7 @@ class GlobalVariables {
   // Method for requesting the next animation frame
   requestNextAnimationFrame: (()=>mixed) => AnimationFrameID;
   animationId: AnimationFrameID;    // used to cancel animation frames
-  drawScene: () => mixed;           // method passed to animate next frame
+  drawScene: (number) => void;      // method passed to animate next frame
   canvas: HTMLCanvasElement | null;       // canvas html element to draw to
   isTouchDevice: boolean;           // whether the device is PC or not
   animateNextFrameFlag: boolean;    // whether a frame is queued for animation
@@ -42,13 +42,14 @@ class GlobalVariables {
   }
 
   // Set a new draw method used by animation frames
-  setDrawMethod(drawMethod: () => mixed) {
+  setDrawMethod(drawMethod: (number) => void) {
     this.drawScene = drawMethod;
   }
 
   // Queue up an animation frame
   animateNextFrame() {
     cancelAnimationFrame(this.animationId);
+    // $FlowFixMe
     const nextFrame = this.requestNextAnimationFrame.call(window, this.drawScene);
     this.animationId = nextFrame;
   }
