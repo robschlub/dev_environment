@@ -1,14 +1,15 @@
 // @flow
-import WebGLInstance from './webgl';
 import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 import * as m2 from './m2';
 import { Console } from '../tools/tools';
-import { GeometryCollection, GeometryObject } from './GeometryObject';
+import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalVariables from './globals';
-import getShaders from './webgl/shaders';
+import Diagram from './Diagram';
 
-class ShapesCollection extends GeometryCollection {
+class ShapesCollection extends DiagramElementCollection {
+  _square: DiagramElementPrimative;
+
   constructor(webgl, translation, rotation, scale) {
     super(translation, rotation, scale);
     // GeometryCollection.call(this, translation, rotation, scale);
@@ -16,12 +17,39 @@ class ShapesCollection extends GeometryCollection {
     const square = new Polygon(webgl, 0.5, 4, 4, 0.005, 0, new g2.Point(0, 0));
     const triangle = new Polygon(webgl, 0.2, 3, 3, 0.01, 0, new g2.Point(0.5, 0.5));
 
-    this.add('square', new GeometryObject(square, g2.point(0, 0), 0, g2.point(1, 1), [0, 0, 1, 1]));
-    this.add('triangle', new GeometryObject(triangle, g2.point(0, 0), 0, g2.point(1, 1), [0, 1, 0, 1]));
+    this.add('square', new DiagramElementPrimative(square, g2.point(0, 0), 0, g2.point(1, 1), [0, 0, 1, 1]));
+    this.add('triangle', new DiagramElementPrimative(triangle, g2.point(0, 0), 0, g2.point(1, 1), [0, 1, 0, 1]));
   }
 }
 // shapesCollection.prototype = Object.create(GeometryCollection.prototype);
 
+class Diagram1 extends Diagram {
+  // constructor(lesson, canvas) {
+  //   console.log("Asdf");
+  //   super(lesson, canvas);
+  // }
+  elements: ShapesCollection | DiagramElementPrimative | DiagramElementCollection;
+
+  createDiagramElements() {
+    return new ShapesCollection(this.webgl, g2.Point.zero(), 0, g2.Point.Unity());
+  }
+
+  draw(now: number): void {
+    this.webgl.gl.clearColor(0.5, 0, 0, 0.5);
+    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
+
+    const nowSeconds = now * 0.001;
+    this.elements.draw(m2.identity(), nowSeconds);
+    if (this.elements.isAnimating) {
+      const globals = new GlobalVariables();
+      globals.animateNextFrame();
+    }
+  }
+
+  isAnimating(): boolean {
+    return this.elements.isAnimating;
+  }
+}
 
 function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
@@ -45,41 +73,45 @@ function testgl(id: string) {
   }
 
   if (canvas instanceof HTMLCanvasElement) {
-    const shaders = getShaders('simple', 'simple');
+    // const shaders = getShaders('simple', 'simple');
 
-    const webgl = new WebGLInstance(
-      canvas,
-      shaders.vertexSource,
-      shaders.fragmentSource,
-      shaders.varNames,
-    );
-    const { gl } = webgl;
+    // const webgl = new WebGLInstance(
+    //   canvas,
+    //   shaders.vertexSource,
+    //   shaders.fragmentSource,
+    //   shaders.varNames,
+    // );
+    // const { gl } = webgl;
 
-    if (gl instanceof WebGLRenderingContext) {
+    const diagram = new Diagram1({}, canvas);
+    diagram.elements.animateRotationTo(1, -1, 10);
+    diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
+
+    if (diagram) {
       // const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
       // const polygon2 = new Polygon(webgl, 0.2, 12, 12, 0.001, 0, new g2.Point(0.5, 0.5));
-      const shapes = new ShapesCollection(webgl, g2.Point.zero(), 0, g2.Point.Unity());
-      shapes.show = true;
-      shapes.showAll();
-      const globals = new GlobalVariables();
-      shapes.animateRotationTo(1, -1, 10);
-      shapes._square.animateTranslationTo(new g2.Point(0.2, 0.2), 2);
-      // console.log(shapes.transform.scale)
-      const draw = (now: number) => {
-        const nowSeconds = now * 0.001;
-        // const square = '_square';
-        shapes._square.vertices.gl.clearColor(0.5, 0, 0, 0.5);
-        shapes._square.vertices.gl.clear(shapes._square.vertices.gl.COLOR_BUFFER_BIT);
-        // shapes.setNextTransform(nowSeconds);
-        // console.log(shapes.lastDrawTransformMatrix)
-        shapes.draw(m2.identity(), nowSeconds);
-        // console.log("animating:", shapes.isAnimating)
-        if (shapes.isAnimating) {
-          globals.animateNextFrame();
-        }
-      };
+      // const shapes = new ShapesCollection(webgl, g2.Point.zero(), 0, g2.Point.Unity());
+      // shapes.show = true;
+      // shapes.showAll();
 
-      globals.setDrawMethod(draw);
+      const globals = new GlobalVariables();
+      // shapes.animateRotationTo(1, -1, 10);
+      // shapes._square.animateTranslationTo(new g2.Point(0.2, 0.2), 2);
+      // // console.log(shapes.transform.scale)
+      // const draw = (now: number) => {
+      //   const nowSeconds = now * 0.001;
+
+      //   shapes._square.vertices.gl.clearColor(0.5, 0, 0, 0.5);
+      //   shapes._square.vertices.gl.clear(shapes._square.vertices.gl.COLOR_BUFFER_BIT);
+
+      //   shapes.draw(m2.identity(), nowSeconds);
+
+      //   if (shapes.isAnimating) {
+      //     globals.animateNextFrame();
+      //   }
+      // };
+
+      globals.setDrawMethod(diagram.draw.bind(diagram));
       globals.animateNextFrame();
 
       /* Step2: Define the geometry and store it in buffer objects */

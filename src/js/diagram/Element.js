@@ -29,9 +29,8 @@ class AnimationPhase {
 // A diagram is composed of multiple diagram elements.
 //
 // A diagram element can either be a:
-//  - Geometry Object: a object that has the webGL vertices, color
-//  - Geometry Collection: a group of Geometry objects and/or other
-//                         Geometry Collections
+//  - Primative: a basic element that has the webGL vertices, color
+//  - Collection: a group of elements (either primatives or collections)
 //
 // A diagram element can be:
 //  - transformed (resized, offset, rotated)
@@ -76,7 +75,7 @@ class DiagramElement {
   ) {
     this.transform = new g2.Transform(translation, rotation, scale);
     this.setTransformCallback = () => {};
-    this.show = false;
+    this.show = true;
     this.globals = new GlobalVariables();
     this.lastDrawTransformMatrix = m2.identity();
     this.name = name;
@@ -501,7 +500,7 @@ class DiagramElement {
 // ***************************************************************
 // Geometry Object
 // ***************************************************************
-class GeometryObject extends DiagramElement {
+class DiagramElementPrimative extends DiagramElement {
   vertices: VertexObject;
   color: Array<number>;
   pointsToDraw: number;
@@ -536,20 +535,6 @@ class GeometryObject extends DiagramElement {
 
   draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
-      // console.log(this.name)
-      // if (transformMatrix == false) {
-      //   transformMatrix = m2.identity();
-      // }
-      // if (this.isAnimating) {
-      //   this.setTransform(this.getNextTransform(now));
-      //   this.globals.animateNextFrameFlag = true;
-      // }
-      // eslint-disable-next-line max-len
-      // transformMatrix = m2.translate(transformMatrix, this.transform.translation.x, this.transform.translation.y);
-      // transformMatrix = m2.rotate(transformMatrix, this.transform.rotation);
-      // eslint-disable-next-line max-len
-      // transformMatrix = m2.scale(transformMatrix, this.transform.scale.x, this.transform.scale.y);
-      // this.lastDrawTransformMatrix = m2.copy(transformMatrix);
       let matrix = this.getTransformMatrix(transformMatrix, now);
       matrix = this.transformWithPulse(now, matrix);
       let pointCount = this.vertices.numPoints;
@@ -563,26 +548,26 @@ class GeometryObject extends DiagramElement {
     }
   }
 
-  drawCustom(
-    translation: g2.Point,
-    rotation: number,
-    scale: g2.Point,
-    color: Array<number>,
-  ): void {
-    if (this.show) {
-      let transformMatrix = m2.identity();
-      transformMatrix = m2.translate(transformMatrix, translation.x, translation.y);
-      transformMatrix = m2.rotate(transformMatrix, rotation);
-      transformMatrix = m2.scale(transformMatrix, scale.x, scale.y);
-      this.vertices.drawWithTransformMatrix(transformMatrix, this.vertices.numPoints, color);
-    }
-  }
+  // drawCustom(
+  //   translation: g2.Point,
+  //   rotation: number,
+  //   scale: g2.Point,
+  //   color: Array<number>,
+  // ): void {
+  //   if (this.show) {
+  //     let transformMatrix = m2.identity();
+  //     transformMatrix = m2.translate(transformMatrix, translation.x, translation.y);
+  //     transformMatrix = m2.rotate(transformMatrix, rotation);
+  //     transformMatrix = m2.scale(transformMatrix, scale.x, scale.y);
+  //     this.vertices.drawWithTransformMatrix(transformMatrix, this.vertices.numPoints, color);
+  //   }
+  // }
 }
 
 // ***************************************************************
 // Collection of Geometry Objects or Collections
 // ***************************************************************
-class GeometryCollection extends DiagramElement {
+class DiagramElementCollection extends DiagramElement {
   elements: Object;
   order: Array<string>;
   biasTransform: Array<number>;
@@ -597,7 +582,7 @@ class GeometryCollection extends DiagramElement {
     this.order = [];
   }
 
-  add(name: string, geoObject: GeometryObject) {
+  add(name: string, geoObject: DiagramElementPrimative) {
     this.elements[name] = geoObject;
     this.elements[name].name = name;
     // $FlowFixMe
@@ -634,7 +619,7 @@ class GeometryCollection extends DiagramElement {
     }
   }
 
-  showOnly(listToShow: Array<GeometryObject | GeometryCollection>): void {
+  showOnly(listToShow: Array<DiagramElementPrimative | DiagramElementCollection>): void {
     this.hideAll();
     for (let i = 0, j = listToShow.length; i < j; i += 1) {
       const element = listToShow[i];
@@ -642,7 +627,7 @@ class GeometryCollection extends DiagramElement {
     }
   }
 
-  hideOnly(listToHide: Array<GeometryObject | GeometryCollection>): void {
+  hideOnly(listToHide: Array<DiagramElementPrimative | DiagramElementCollection>): void {
     this.showAll();
     for (let i = 0, j = listToHide.length; i < j; i += 1) {
       const element = listToHide[i];
@@ -666,4 +651,4 @@ class GeometryCollection extends DiagramElement {
     return false;
   }
 }
-export { GeometryObject, GeometryCollection };
+export { DiagramElementPrimative, DiagramElementCollection };

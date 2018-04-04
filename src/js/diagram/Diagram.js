@@ -2,19 +2,20 @@
 
 import WebGLInstance from './webgl';
 import getShaders from './webgl/shaders';
-// import GlobalVariables from './globals';
-import { GeometryCollection, GeometryObject } from './GeometryObject';
+import Polygon from './vertexObjects/Polygon';
+import * as g2 from './g2';
+import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 
 class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
-  elements: GeometryObject | GeometryCollection;
-  activeElementsList: Array<GeometryObject | GeometryCollection>;
+  elements: DiagramElementPrimative | DiagramElementCollection;
+  activeElementsList: Array<DiagramElementPrimative | DiagramElementCollection>;
   lesson: Object;
 
   constructor(
     lesson: Object,
-    // DiagramElements: GeometryObject | GeometryCollection,
+    // DiagramElements: DiagramElementPrimative | DiagramElementCollection,
     canvas: HTMLCanvasElement,
   ) {
     this.canvas = canvas;
@@ -36,6 +37,7 @@ class Diagram {
     // this.globals = new GlobalVariables();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
     // this.devicePixelRatio = window.devicePixelRatio;
+    this.elements = this.createDiagramElements();
   }
 
   stopAnimating() {
@@ -69,7 +71,10 @@ class Diagram {
   }
 
   createDiagramElements() {
-    this.elements = new GeometryCollection();
+    const square = new Polygon(this.webgl, 1, 4, 4, 0.01, 0, g2.Point.zero());
+    const collection = new DiagramElementCollection();
+    collection.add('square', new DiagramElementPrimative(square));
+    return collection;
   }
 
   /* eslint-disable */
