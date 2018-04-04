@@ -606,26 +606,10 @@ class GeometryCollection extends DiagramElement {
   }
   draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
-      // if (transformMatrix == false) {
-      //   transformMatrix = m2.identity();
-      // }
-      // if (this.isAnimating) {
-      //   this.setTransform(this.getNextTransform(now));
-      //   this.globals.animateNextFrameFlag = true;
-      // }
-      // eslint-disable-next-line max-len
-      // transformMatrix = m2.translate(transformMatrix, this.transform.translation.x, this.transform.translation.y);
-      // transformMatrix = m2.rotate(transformMatrix, this.transform.rotation);
-      // eslint-disable-next-line max-len
-      // transformMatrix = m2.scale(transformMatrix, this.transform.scale.x, this.transform.scale.y);
-      // this.lastDrawTransformMatrix = m2.copy(transformMatrix);
-      // console.log("start")
       let matrix = this.getTransformMatrix(transformMatrix, now);
-      // console.log("stop")
 
       matrix = this.transformWithPulse(now, matrix);
       for (let i = 0, j = this.order.length; i < j; i += 1) {
-        // const element = this.elements[this.order[i]];
         this.elements[this.order[i]].draw(matrix, now);
       }
     }
