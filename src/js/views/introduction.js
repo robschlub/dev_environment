@@ -101,6 +101,9 @@ const introPage = () => {
       </div>,
       introId,
     );
+    //
+    // console.log("Asdf");
+    // testgl('my_Canvas');
   }
 };
 

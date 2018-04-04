@@ -49,7 +49,7 @@ class GlobalVariables {
   // Queue up an animation frame
   animateNextFrame() {
     cancelAnimationFrame(this.animationId);
-    const nextFrame = this.requestNextAnimationFrame(this.drawScene);
+    const nextFrame = this.requestNextAnimationFrame.call(window, this.drawScene);
     this.animationId = nextFrame;
   }
 

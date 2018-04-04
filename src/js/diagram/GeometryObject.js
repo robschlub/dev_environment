@@ -11,20 +11,18 @@ class AnimationPhase {
   transform: g2.Transform;
   time: number;
   rotDirection: number;
-  animationStyle: () => mixed;
+  animationStyle: (number) => number;
 
   constructor(
-    transform = g2.Transform.Unity(),
-    time = 1,
-    rotDirection = 0,
-    animationStyle = tools.easeinout,
+    transform: g2.Transform = g2.Transform.Unity(),
+    time: number = 1,
+    rotDirection: number = 0,
+    animationStyle: (number) => number = tools.easeinout,
   ) {
-    return {
-      transform: transform.copy(),
-      time,
-      rotDirection,
-      animationStyle,
-    };
+    this.transform = transform.copy();
+    this.time = time;
+    this.rotDirection = rotDirection;
+    this.animationStyle = animationStyle;
   }
 }
 
@@ -32,13 +30,14 @@ class AnimationPhase {
 //
 // A diagram element can either be a:
 //  - Geometry Object: a object that has the webGL vertices, color
-//  - Geometry Collection: a group of Geometry objects or other
-//                         Geometry Collection
+//  - Geometry Collection: a group of Geometry objects and/or other
+//                         Geometry Collections
 //
-// A diagram element can be transformed (resized, offset, rotated),
-// animated (planned transform over time), moved (controlled movement
-// like dragging) or moving freely (dragged then let go with an initial
-// velocity).
+// A diagram element can be:
+//  - transformed (resized, offset, rotated)
+//  - animated (planned transform over time)
+//  - moved with control (like dragging)
+//  - moving freely (dragged then let go with an initial velocity)
 //
 // This class manages:
 //  - The diagram element

@@ -143,7 +143,7 @@ class WebGLInstance {
 
       // Clear the canvas
       this.gl.clearColor(0.5, 0, 0, 0.5);
-      this.gl.clear(gl.COLOR_BUFFER_BIT);
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT);
       this.gl.disable(this.gl.DEPTH_TEST);
       // gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
       // gl.enable(gl.BLEND);

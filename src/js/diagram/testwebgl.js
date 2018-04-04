@@ -5,6 +5,7 @@ import * as g2 from './g2';
 import * as m2 from './m2';
 import { Console } from '../tools/tools';
 import { GeometryCollection, GeometryObject } from './GeometryObject';
+import GlobalVariables from './globals';
 
 class ShapesCollection extends GeometryCollection {
   constructor(webgl, translation, rotation, scale) {
@@ -19,6 +20,7 @@ class ShapesCollection extends GeometryCollection {
   }
 }
 // shapesCollection.prototype = Object.create(GeometryCollection.prototype);
+
 
 function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
@@ -60,9 +62,25 @@ function testgl(id: string) {
     if (gl instanceof WebGLRenderingContext) {
       // const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
       // const polygon2 = new Polygon(webgl, 0.2, 12, 12, 0.001, 0, new g2.Point(0.5, 0.5));
-      const shapes = new ShapesCollection(webgl, g2.Point.zero(), 0, g2.Point.zero());
+      const shapes = new ShapesCollection(webgl, g2.Point.zero(), 1, g2.Point.zero());
       shapes.show = true;
       shapes.showAll();
+      const globals = new GlobalVariables();
+      shapes.animateRotationTo(1, 1, 1);
+      const draw = (now) => {
+        shapes._square.vertices.gl.clearColor(0.5, 0, 0, 0.5);
+        shapes._square.vertices.gl.clear(shapes._square.vertices.gl.COLOR_BUFFER_BIT);
+        shapes.setNextTransform(now);
+        shapes.draw(m2.identity(), now);
+        console.log(now)
+        if (shapes.isAnimating) {
+          globals.animateNextFrame();
+        }
+      };
+
+      globals.setDrawMethod(draw);
+      globals.animateNextFrame();
+
       /* Step2: Define the geometry and store it in buffer objects */
       // const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
 
@@ -111,7 +129,7 @@ function testgl(id: string) {
       // gl.drawArrays(gl.TRIANGLES, 0, 3);
       // polygon.drawWithTransformMatrix(m2.identity(), polygon.numPoints, [1, 0, 0, 1]);
       // polygon2.drawWithTransformMatrix(m2.identity(), polygon2.numPoints, [1, 0, 0, 1]);
-      shapes.draw(m2.identity(), 0);
+      // shapes.draw(m2.identity(), 0);
     }
   }
 }
