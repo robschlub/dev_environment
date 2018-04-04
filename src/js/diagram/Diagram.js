@@ -4,7 +4,9 @@ import WebGLInstance from './webgl';
 import getShaders from './webgl/shaders';
 import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
+import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
+import GlobalVariables from './globals';
 
 class Diagram {
   canvas: HTMLCanvasElement;
@@ -12,6 +14,7 @@ class Diagram {
   elements: DiagramElementPrimative | DiagramElementCollection;
   activeElementsList: Array<DiagramElementPrimative | DiagramElementCollection>;
   lesson: Object;
+  globals: GlobalVariables;
 
   constructor(
     lesson: Object,
@@ -34,7 +37,7 @@ class Diagram {
     // this.elements = new DiagramElements(this.webgl);
 
     this.activeElementsList = [];
-    // this.globals = new GlobalVariables();
+    this.globals = new GlobalVariables();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
     // this.devicePixelRatio = window.devicePixelRatio;
     this.elements = this.createDiagramElements();
@@ -75,6 +78,24 @@ class Diagram {
     const collection = new DiagramElementCollection();
     collection.add('square', new DiagramElementPrimative(square));
     return collection;
+  }
+
+  clearContext() {
+    this.webgl.gl.clearColor(0.5, 0, 0, 0.5);
+    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
+  }
+
+  draw(now: number): void {
+    this.clearContext();
+    const nowSeconds = now * 0.001;
+    this.elements.draw(m2.identity(), nowSeconds);
+    if (this.elements.isAnimating) {
+      this.globals.animateNextFrame();
+    }
+  }
+
+  isAnimating(): boolean {
+    return this.elements.isAnimating;
   }
 
   /* eslint-disable */

@@ -1,7 +1,7 @@
 // @flow
 import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
-import * as m2 from './m2';
+// import * as m2 from './m2';
 import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalVariables from './globals';
@@ -24,30 +24,10 @@ class ShapesCollection extends DiagramElementCollection {
 // shapesCollection.prototype = Object.create(GeometryCollection.prototype);
 
 class Diagram1 extends Diagram {
-  // constructor(lesson, canvas) {
-  //   console.log("Asdf");
-  //   super(lesson, canvas);
-  // }
   elements: ShapesCollection | DiagramElementPrimative | DiagramElementCollection;
 
   createDiagramElements() {
     return new ShapesCollection(this.webgl, g2.Point.zero(), 0, g2.Point.Unity());
-  }
-
-  draw(now: number): void {
-    this.webgl.gl.clearColor(0.5, 0, 0, 0.5);
-    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
-
-    const nowSeconds = now * 0.001;
-    this.elements.draw(m2.identity(), nowSeconds);
-    if (this.elements.isAnimating) {
-      const globals = new GlobalVariables();
-      globals.animateNextFrame();
-    }
-  }
-
-  isAnimating(): boolean {
-    return this.elements.isAnimating;
   }
 }
 
