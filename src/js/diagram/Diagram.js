@@ -6,7 +6,8 @@ import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
-import GlobalVariables from './globals';
+// import GlobalVariables from './globals';
+import DiagramGlobals from './webgl/diagramGlobals';
 
 class Diagram {
   canvas: HTMLCanvasElement;
@@ -14,7 +15,7 @@ class Diagram {
   elements: DiagramElementPrimative | DiagramElementCollection;
   activeElementsList: Array<DiagramElementPrimative | DiagramElementCollection>;
   lesson: Object;
-  globals: GlobalVariables;
+  globals: DiagramGlobals;
 
   constructor(
     lesson: Object,
@@ -37,10 +38,11 @@ class Diagram {
     // this.elements = new DiagramElements(this.webgl);
 
     this.activeElementsList = [];
-    this.globals = new GlobalVariables();
+    this.globals = new DiagramGlobals();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
     // this.devicePixelRatio = window.devicePixelRatio;
     this.elements = this.createDiagramElements();
+    // this.counter=0;
   }
 
   stopAnimating() {
@@ -86,12 +88,20 @@ class Diagram {
   }
 
   draw(now: number): void {
+    // this.counter += 1;
     this.clearContext();
-    const nowSeconds = now * 0.001;
-    this.elements.draw(m2.identity(), nowSeconds);
+    // console.log(now)
+    // console.log(this.elements.animationState.startTime)
+    this.elements.draw(m2.identity(), now);
+    // console.log(this.elements.animationState.startTime)
     if (this.elements.isAnimating) {
-      this.globals.animateNextFrame();
+      this.animateNextFrame();
+      // console.log(this.elements.animationState.elapsedTime)
     }
+  }
+
+  animateNextFrame() {
+    this.globals.queueNextFrame(this.draw.bind(this));
   }
 
   isAnimating(): boolean {

@@ -73,8 +73,8 @@ function testgl(id: string) {
       // const shapes = new ShapesCollection(webgl, g2.Point.zero(), 0, g2.Point.Unity());
       // shapes.show = true;
       // shapes.showAll();
-
-      const globals = new GlobalVariables();
+      diagram.animateNextFrame();
+      // const globals = new GlobalVariables();
       // shapes.animateRotationTo(1, -1, 10);
       // shapes._square.animateTranslationTo(new g2.Point(0.2, 0.2), 2);
       // // console.log(shapes.transform.scale)
@@ -91,8 +91,8 @@ function testgl(id: string) {
       //   }
       // };
 
-      globals.setDrawMethod(diagram.draw.bind(diagram));
-      globals.animateNextFrame();
+      // globals.setDrawMethod(diagram.draw.bind(diagram));
+      // globals.animateNextFrame();
 
       /* Step2: Define the geometry and store it in buffer objects */
       // const vertices = [-0.5, 0.5, -0.5, -0.5, 0.0, -0.5];
