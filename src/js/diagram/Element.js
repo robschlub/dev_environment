@@ -116,7 +116,7 @@ class DiagramElement {
 
     // this.isFollowing = false;
 
-    this.isAnimating = false;
+    // this.isAnimating = false;
 
     this.animationPlan = {
       phases: [],
@@ -130,14 +130,6 @@ class DiagramElement {
       },
     };
 
-    // this.animationProgress = {
-    //   phaseIndex: 0,                       // Animation phase index in Plan
-    //   phase: false,                    // Current animation phase
-    //   startTime: -1,                       // Time at start of phase
-    //   startTransform: new g2.Transform(),  // Transform at start of phase
-    //   deltaTransform: new g2.Transform(),  // Transform delta from start of phase
-    //   callback: false,                     // Execute when Plan is complete
-    // };
     this.presetTransforms = {};
 
     this.pulse = {
@@ -229,7 +221,7 @@ class DiagramElement {
   }
 
   getNextTransform(now: number): g2.Transform {
-    if (this.isAnimating) {
+    if (this.state.isAnimating) {
       // console.log(this.animationState)
       if (this.state.animation.currentPhase.startTime < 0) {
         this.state.animation.currentPhase.startTime = now;
@@ -315,7 +307,7 @@ class DiagramElement {
     // }
     let matrix = m2.copy(transformMatrix);
 
-    if (this.isAnimating) {
+    if (this.state.isAnimating) {
       this.setTransform(this.getNextTransform(now));
       this.globals.animateNextFrameFlag = true;
     }
@@ -352,7 +344,7 @@ class DiagramElement {
     this.state.animation.currentPhase = phase;
     this.state.animation.currentPhase.start(this.transform.copy());
     this.stopMoving();
-    this.isAnimating = true;
+    this.state.isAnimating = true;
   }
 
   // Helper functions
@@ -415,7 +407,7 @@ class DiagramElement {
   }
 
   stopAnimating(result?: mixed): void {
-    this.isAnimating = false;
+    this.state.isAnimating = false;
     this.animationPlan = { phases: [], callback: () => {} };
     if (this.animationPlan.callback) {
       if (result) {
@@ -580,7 +572,7 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   isMoving(): boolean {
-    if (this.isAnimating || this.isMovingFreely || this.isBeingMoved) {
+    if (this.state.isAnimating || this.isMovingFreely || this.isBeingMoved) {
       return true;
     }
     return false;
@@ -606,7 +598,7 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   isMoving(): boolean {
-    if (this.isAnimating || this.isMovingFreely || this.isBeingMoved) {
+    if (this.state.isAnimating || this.isMovingFreely || this.isBeingMoved) {
       return true;
     }
     for (let i = 0; i < this.order.length; i += 1) {

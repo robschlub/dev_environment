@@ -33,7 +33,7 @@ describe('DiagramElementPrimative', () => {
     });
     describe('Rotation', () => {
       test('Rotate 1 radian, for 1 second, with linear movement', () => {
-        expect(element.isAnimating).toBe(false);
+        expect(element.state.isAnimating).toBe(false);
         expect(element.isMoving()).toBe(false);
 
         element.animateRotationTo(1, 1, 1, tools.linear);
@@ -42,7 +42,7 @@ describe('DiagramElementPrimative', () => {
 
         const phase = element.state.animation.currentPhase;
 
-        expect(element.isAnimating).toBe(true);
+        expect(element.state.isAnimating).toBe(true);
         expect(element.isMoving()).toBe(true);
         expect(phase.startTime).toBe(-1);
 
@@ -59,13 +59,13 @@ describe('DiagramElementPrimative', () => {
         element.draw(m2.identity(), 11);
         expect(phase.time).toBe(1);
         expect(element.transform.rotation).toBe(1);
-        expect(element.isAnimating).toBe(true);
+        expect(element.state.isAnimating).toBe(true);
         expect(element.isMoving()).toBe(true);
 
         element.draw(m2.identity(), 11.01);
         expect(phase.time).toBe(1);
         expect(element.transform.rotation).toBe(1);
-        expect(element.isAnimating).toBe(false);
+        expect(element.state.isAnimating).toBe(false);
         expect(element.isMoving()).toBe(false);
       });
     });
