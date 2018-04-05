@@ -3,9 +3,10 @@ import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 // import * as m2 from './m2';
 import { Console } from '../tools/tools';
-import { DiagramElementCollection, DiagramElementPrimative } from './Element';
+import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
 // import GlobalVariables from './globals';
 import Diagram from './Diagram';
+import * as tools from './mathtools';
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
@@ -60,7 +61,18 @@ function testgl(id: string) {
 
   if (canvas instanceof HTMLCanvasElement) {
     const diagram = new Diagram1({}, canvas);
-    diagram.elements.animateRotationTo(1, -1, 10);
+
+    const phase1 = new AnimationPhase(
+      new g2.Transform(g2.Point.zero(), 1, g2.Point.Unity()),
+      5, -1, tools.easeinout,
+    );
+    const phase2 = new AnimationPhase(
+      new g2.Transform(g2.Point.zero(), 0, g2.Point.Unity()),
+      5, 1, tools.easeinout,
+    );
+
+    diagram.elements.animatePlan([phase1, phase2]);
+    // diagram.elements.animateRotationTo(1, -1, 10);
 
     diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
 

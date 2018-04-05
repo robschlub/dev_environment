@@ -1,8 +1,8 @@
-import { DiagramElementPrimative } from './Element';
+import { DiagramElementPrimative, AnimationPhase } from './Element';
 import { Point, Transform } from './g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import Polygon from './vertexObjects/Polygon';
-import * as tools from './mathtools';
+import { linear, round } from './mathtools';
 import * as m2 from './m2';
 
 describe('DiagramElementPrimative', () => {
@@ -21,6 +21,7 @@ describe('DiagramElementPrimative', () => {
   });
   describe('Animation', () => {
     let element;
+    let identity;
     beforeEach(() => {
       const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
       element = new DiagramElementPrimative(
@@ -30,13 +31,14 @@ describe('DiagramElementPrimative', () => {
         Point.Unity(),
         [0, 0, 1, 1],
       );
+      identity = m2.identity();
     });
     describe('Rotation', () => {
       test('Rotate 1 radian, for 1 second, with linear movement', () => {
         expect(element.state.isAnimating).toBe(false);
         expect(element.isMoving()).toBe(false);
 
-        element.animateRotationTo(1, 1, 1, tools.linear);
+        element.animateRotationTo(1, 1, 1, linear);
         const t = element.transform;
         expect(t).toEqual(new Transform(Point.zero(), 0, Point.Unity()));
 
@@ -73,7 +75,7 @@ describe('DiagramElementPrimative', () => {
         expect(element.isMoving()).toBe(false);
 
         // Setup the animation
-        element.animateTranslationTo(new Point(1, 0), 1, tools.linear);
+        element.animateTranslationTo(new Point(1, 0), 1, linear);
         const t = element.transform;
         expect(t).toEqual(new Transform(Point.zero(), 0, Point.Unity()));
         const phase = element.state.animation.currentPhase;
@@ -106,13 +108,67 @@ describe('DiagramElementPrimative', () => {
       test('Stop animating during animation', () => {
         const callback = jest.fn();         // Callback mock
         // Setup the animation
-        element.animateRotationTo(1, 1, 1, tools.linear, callback);
+        element.animateRotationTo(1, 1, 1, linear, callback);
         element.draw(m2.identity(), 0);     // Initial draw setting start time
         element.draw(m2.identity(), 0.5);   // Draw half way through
         element.stopAnimating();            // Stop animating
 
         expect(element.state.isAnimating).toBe(false);
         expect(callback.mock.calls).toHaveLength(1);
+      });
+      test('Three phase animation plan', () => {
+        // Phase 1 rotates to 1 radian in 1 second
+        const phase1 = new AnimationPhase(
+          new Transform(Point.zero(), 1, Point.Unity()),
+          1, 1, linear,
+        );
+        // Phase 2 rotates back to 0 radians in 1 second
+        const phase2 = new AnimationPhase(
+          new Transform(Point.zero(), 0, Point.Unity()),
+          1, -1, linear,
+        );
+        // Phase 3 rotates to -1 radians in 1 second
+        const phase3 = new AnimationPhase(
+          new Transform(Point.zero(), -1, Point.Unity()),
+          1, -1, linear,
+        );
+        const callback = jest.fn();         // Callback mock
+        element.animatePlan([phase1, phase2, phase3], callback);
+        element.draw(identity, 0);          // Give animation an initial time
+
+        // Check initial values
+        expect(element.state.isAnimating).toBe(true);
+        expect(element.state.animation.currentPhaseIndex).toBe(0);
+
+        // Half way through first phase
+        element.draw(identity, 0.5);
+        expect(element.state.animation.currentPhaseIndex).toBe(0);
+        expect(element.transform.rotation).toBe(0.5);
+        expect(callback.mock.calls).toHaveLength(0);
+
+        // End of first phase
+        element.draw(identity, 1.0);
+        expect(element.state.animation.currentPhaseIndex).toBe(0);
+        expect(element.transform.rotation).toBe(1.0);
+        expect(callback.mock.calls).toHaveLength(0);
+
+        // Start of next phase
+        element.draw(identity, 1.1);
+        expect(element.state.animation.currentPhaseIndex).toBe(1);
+        expect(round(element.transform.rotation)).toBe(0.9);
+        expect(callback.mock.calls).toHaveLength(0);
+
+        // Skip to into third phase
+        element.draw(identity, 2.1);
+        expect(element.state.animation.currentPhaseIndex).toBe(2);
+        expect(round(element.transform.rotation)).toBe(-0.1);
+        expect(callback.mock.calls).toHaveLength(0);
+
+        // Time after End
+        element.draw(identity, 3.1);
+        expect(round(element.transform.rotation)).toBe(-1);
+        expect(callback.mock.calls).toHaveLength(1);
+        expect(element.state.isAnimating).toBe(false);
       });
     });
   });

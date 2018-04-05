@@ -78,15 +78,14 @@ class DiagramElement {
   isMovingFreely: boolean;        // Element is moving freely
   moveState: Object;              // Movement state
   isTouchable: boolean;           // Element can be touched
-  // isFollowing: boolean;           //
 
   // Animation
   animationPlan: {
     phases: Array<AnimationPhase>,
     callback: (mixed) => void
-  }; // Animation plan
-  isAnimating: boolean;           // If element is currently animating
-  animationProgress: Object;         // Animation state
+  };
+  // isAnimating: boolean;           // If element is currently animating
+  // animationProgress: Object;         // Animation state
   pulse: Object;                  // Pulse animation state
   state: {
     isAnimating: boolean,
@@ -164,6 +163,8 @@ class DiagramElement {
   static isBeingTouched(): boolean {
     return false;
   }
+
+  // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): g2.Transform {
     const next = new g2.Transform();
     const phase = this.state.animation.currentPhase;
@@ -171,7 +172,6 @@ class DiagramElement {
     const delta = phase.deltaTransform;
     const percentTime = elapsedTime / phase.time;
     const percentComplete = phase.animationStyle(percentTime);
-
     next.translation.x = start.translation.x + percentComplete * delta.translation.x;
     next.translation.y = start.translation.y + percentComplete * delta.translation.y;
     next.scale.x = start.scale.x + percentComplete * delta.scale.x;
@@ -181,6 +181,7 @@ class DiagramElement {
     return next;
   }
 
+  // Calculate the next transform due to a progessing free movement
   calcNextMovementTransform(deltaTime, velocity): g2.Transform {
     const nextTransform = this.transform.copy();
     nextTransform.rotation += deltaTime * velocity.rotation;
@@ -191,12 +192,16 @@ class DiagramElement {
     return nextTransform;
   }
 
+  // Set the transform
   setNextTransform(now: number): void {
-    const nextTransform = this.getNextTransform(now);
-    // console.log(nextTransform)
-    this.setTransform(nextTransform);
+    if (this.state.isAnimating || this.isMovingFreely) {
+      const nextTransform = this.getNextTransform(now);
+      this.setTransform(nextTransform);
+    }
   }
 
+  // Use this method to set the objects transform incase a callback has been
+  // connected that is tied to an update of the transform.
   setTransform(transform: g2.Transform): void {
     this.transform = transform.copy();
     if (this.setTransformCallback) {
@@ -204,28 +209,55 @@ class DiagramElement {
     }
   }
 
+  // Get the transform for the next animation frame. This transform will
+  // be different to this.transform if currently animating or moving freely
+  // and some time has elapsed from the last transform.
   getNextTransform(now: number): g2.Transform {
+    // If animation is happening
     if (this.state.isAnimating) {
       const phase = this.state.animation.currentPhase;
-      // console.log(this.animationState)
+
+      // If an animation hasn't yet started, the start time will be -1.
+      // If this is so, then set the start time to the current time and
+      // return the current transform.
       if (phase.startTime < 0) {
         phase.startTime = now;
         return this.transform;
       }
+
+      // If we have got here, that means the animation has already started,
+      // so calculate the time delta between now and the startTime
       const deltaTime = now - phase.startTime;
 
+      // If this time delta is larger than the phase's planned time, then
+      // either progress to the next animation phase, or end animation.
       if (deltaTime > phase.time) {
+        // If there are more animation phases in the plan:
+        //   - set the current transform to be the end of the current phase
+        //   - start the next phase
         if (this.state.animation.currentPhaseIndex < this.animationPlan.phases.length - 1) {
+          // Set current transform to the end of the current phase
+          this.setTransform(this.calcNextAnimationTransform(phase.time));
+
+          // Get the amount of time that has elapsed in the next phase
+          const nextPhaseDeltaTime = deltaTime - phase.time;
+
+          // Start the next animation phase
           this.state.animation.currentPhaseIndex += 1;
           this.animatePhase(this.animationPlan.phases[this.state.animation.currentPhaseIndex]);
-          return this.calcNextAnimationTransform(0);
+          this.state.animation.currentPhase.startTime =
+            now - nextPhaseDeltaTime;
+          return this.getNextTransform(now);
         }
-        // This needs to go before StopAnimating, incase stopAnimating calls a callback that
-        // changes the animation properties
-        const returnPos = this.calcNextAnimationTransform(phase.time);
+        // This needs to go before StopAnimating, as stopAnimating clears
+        // the animation plan (incase a callback is used to start another
+        // animation)
+        const endTransform = this.calcNextAnimationTransform(phase.time);
         this.stopAnimating(true);
-        return returnPos;
+        return endTransform;
       }
+      // If we are here, that means the time elapsed is not more than the
+      // current animation phase plan time, so calculate the next transform.
       return this.calcNextAnimationTransform(deltaTime);
     }
     if (this.isMovingFreely) {
@@ -245,7 +277,7 @@ class DiagramElement {
       const nextTransform = this.calcNextMovementTransform(deltaTime, this.moveState.velocity);
       return nextTransform;
     }
-    return new g2.Transform();
+    return this.transform;
   }
 
   static isVelocityZero(transform: g2.Transform): boolean {
@@ -286,31 +318,7 @@ class DiagramElement {
     return velocity;
   }
 
-  getTransformMatrix(transformMatrix: Array<number> = m2.identity(), now: number): Array<number> {
-    // if (transformMatrix === false) {
-    //   transformMatrix = m2.identity();
-    // }
-    let matrix = m2.copy(transformMatrix);
-
-    if (this.state.isAnimating) {
-      this.setTransform(this.getNextTransform(now));
-      // this.globals.animateNextFrameFlag = true;
-    }
-
-    matrix = m2.translate(
-      matrix,
-      this.transform.translation.x,
-      this.transform.translation.y,
-    );
-    matrix = m2.rotate(matrix, this.transform.rotation);
-    // console.log(matrix)
-    matrix = m2.scale(matrix, this.transform.scale.x, this.transform.scale.y);
-    // console.log(this.transform.scale)
-    this.lastDrawTransformMatrix = matrix;
-
-    return matrix;
-  }
-
+  // Start an animation plan of phases ending in a callback
   animatePlan(phases: Array<AnimationPhase>, callback: (mixed) => void = () => {}): void {
     this.animationPlan = {
       phases: [],
@@ -332,7 +340,23 @@ class DiagramElement {
     this.state.isAnimating = true;
   }
 
-  // Helper functions
+  stopAnimating(result?: mixed): void {
+    const { callback } = this.animationPlan;
+    this.animationPlan = { phases: [], callback: () => {} };
+    this.state.isAnimating = false;
+
+    if (callback) {
+      if (result) {
+        callback(result);
+      } else {
+        callback();
+      }
+    }
+  }
+
+  // **************************************************************
+  // **************************************************************
+  // Helper functions for quicker animation plans
   animateTo(
     transform: g2.Transform,
     time: number = 1,
@@ -390,20 +414,9 @@ class DiagramElement {
       this.animatePlan([phase], callback);
     }
   }
+  // **************************************************************
+  // **************************************************************
 
-  stopAnimating(result?: mixed): void {
-    const { callback } = this.animationPlan;
-    this.animationPlan = { phases: [], callback: () => {} };
-    this.state.isAnimating = false;
-
-    if (callback) {
-      if (result) {
-        callback(result);
-      } else {
-        callback();
-      }
-    }
-  }
 
   // Movement
   startMoving(): void {
@@ -447,13 +460,6 @@ class DiagramElement {
       this.moveState.stopMovingVelocity,
       this.moveState.maxVelocity,
     );
-    // this.moveState.velocity = tools.clipValue(
-    //   newTransform,
-    //   this.transform,
-    //   deltaTime,
-    //   this.moveState.maxVelocity,
-    //   this.moveState.stopMovingVelocity,
-    // );
     this.moveState.previousTime = currentTime;
   }
 
@@ -545,8 +551,11 @@ class DiagramElementPrimative extends DiagramElement {
 
   draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
-      let matrix = this.getTransformMatrix(transformMatrix, now);
+      this.setNextTransform(now);
+      let matrix = m2.mul(transformMatrix, this.transform.matrix());
+      this.lastDrawTransformMatrix = matrix;
       matrix = this.transformWithPulse(now, matrix);
+
       let pointCount = this.vertices.numPoints;
       if (this.angleToDraw !== -1) {
         pointCount = this.vertices.getPointCountForAngle(this.angleToDraw);
@@ -610,7 +619,9 @@ class DiagramElementCollection extends DiagramElement {
   }
   draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
-      let matrix = this.getTransformMatrix(transformMatrix, now);
+      this.setNextTransform(now);
+      let matrix = m2.mul(transformMatrix, this.transform.matrix());
+      this.lastDrawTransformMatrix = matrix;
 
       matrix = this.transformWithPulse(now, matrix);
       for (let i = 0, j = this.order.length; i < j; i += 1) {
@@ -670,4 +681,4 @@ class DiagramElementCollection extends DiagramElement {
     return false;
   }
 }
-export { DiagramElementPrimative, DiagramElementCollection };
+export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };
