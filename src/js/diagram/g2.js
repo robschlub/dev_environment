@@ -46,6 +46,9 @@ class Point {
   copy() {
     return new Point(this.x, this.y);
   }
+  scale(scalar: number) {
+    return new Point(this.x * scalar, this.y * scalar);
+  }
   sub(q: Point) {
     return new Point(this.x - q.x, this.y - q.y);
   }
@@ -585,6 +588,14 @@ class Transform {
     this.translation = new Point(translation.x, translation.y);
     this.rotation = rotation;
     this.scale = new Point(scale.x, scale.y);
+  }
+
+  add(transformToAdd: Transform = Transform.Zero()) {
+    return new Transform(
+      this.translation.add(transformToAdd.translation),
+      this.rotation + transformToAdd.rotation,
+      this.scale.add(transformToAdd.scale),
+    );
   }
 
   sub(transformToSubtract: Transform = Transform.Zero()) {

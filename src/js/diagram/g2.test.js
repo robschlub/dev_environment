@@ -62,6 +62,19 @@ describe('g2 tests', () => {
       });
     });
 
+    describe('Points can be scaled', () => {
+      test('(0, 0) * 2 = (0, 0)', () => {
+        const p = new g2.Point(0, 0);
+        const s = p.scale(2);
+        expect(s).toEqual(p);
+      });
+      test('(1, -1) * 2 = (2, -2)', () => {
+        const p = g2.point(1, -1);
+        const s = p.scale(2);
+        expect(s).toEqual(g2.point(2, -2));
+      });
+    });
+
     describe('Points can be rotated around 0, 0', () => {
       test('Rotate (1, 0) by 90 deg = (0, 1)', () => {
         const p = g2.point(1, 0);
@@ -563,6 +576,23 @@ describe('g2 tests', () => {
         new g2.Point(-1, -1),
         0,
         new g2.Point(0.75, 0.75),
+      ));
+    });
+    test('Add', () => {
+      const t1 = new g2.Transform(
+        new g2.Point(0, 0),
+        1,
+        new g2.Point(1, 1),
+      );
+      const t2 = new g2.Transform(
+        new g2.Point(1, 1),
+        1,
+        new g2.Point(-2, -2),
+      );
+      expect(t1.add(t2)).toEqual(new g2.Transform(
+        new g2.Point(1, 1),
+        2,
+        new g2.Point(-1, -1),
       ));
     });
     describe('Matrix', () => {

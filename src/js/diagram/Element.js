@@ -114,10 +114,6 @@ class DiagramElement {
     this.isMovingFreely = false;
     this.isTouchable = false;
 
-    // this.isFollowing = false;
-
-    // this.isAnimating = false;
-
     this.animationPlan = {
       phases: [],
       callback: () => {},
@@ -169,32 +165,20 @@ class DiagramElement {
     return false;
   }
   calcNextAnimationTransform(elapsedTime: number): g2.Transform {
-    const nextTransform = new g2.Transform();
-    if (this.state.animation.currentPhase instanceof AnimationPhase) {
-      const percentTime = elapsedTime / this.state.animation.currentPhase.time;
-      const percentComplete =
-        this.state.animation.currentPhase.animationStyle(percentTime);
+    const next = new g2.Transform();
+    const phase = this.state.animation.currentPhase;
+    const start = phase.startTransform;
+    const delta = phase.deltaTransform;
+    const percentTime = elapsedTime / phase.time;
+    const percentComplete = phase.animationStyle(percentTime);
 
-      nextTransform.translation.x =
-        this.state.animation.currentPhase.startTransform.translation.x +
-        percentComplete * this.state.animation.currentPhase.deltaTransform.translation.x;
+    next.translation.x = start.translation.x + percentComplete * delta.translation.x;
+    next.translation.y = start.translation.y + percentComplete * delta.translation.y;
+    next.scale.x = start.scale.x + percentComplete * delta.scale.x;
+    next.scale.y = start.scale.y + percentComplete * delta.scale.y;
 
-      nextTransform.translation.y =
-        this.state.animation.currentPhase.startTransform.translation.y +
-        percentComplete * this.state.animation.currentPhase.deltaTransform.translation.y;
-
-      nextTransform.scale.x =
-        this.state.animation.currentPhase.startTransform.scale.x +
-        percentComplete * this.state.animation.currentPhase.deltaTransform.scale.x;
-      nextTransform.scale.y =
-        this.state.animation.currentPhase.startTransform.scale.y +
-        percentComplete * this.state.animation.currentPhase.deltaTransform.scale.y;
-
-      nextTransform.rotation =
-        this.state.animation.currentPhase.startTransform.rotation +
-        percentComplete * this.state.animation.currentPhase.deltaTransform.rotation;
-    }
-    return nextTransform;
+    next.rotation = start.rotation + percentComplete * delta.rotation;
+    return next;
   }
 
   calcNextMovementTransform(deltaTime, velocity): g2.Transform {
@@ -222,14 +206,15 @@ class DiagramElement {
 
   getNextTransform(now: number): g2.Transform {
     if (this.state.isAnimating) {
+      const phase = this.state.animation.currentPhase;
       // console.log(this.animationState)
-      if (this.state.animation.currentPhase.startTime < 0) {
-        this.state.animation.currentPhase.startTime = now;
+      if (phase.startTime < 0) {
+        phase.startTime = now;
         return this.transform;
       }
-      const deltaTime = now - this.state.animation.currentPhase.startTime;
+      const deltaTime = now - phase.startTime;
 
-      if (deltaTime > this.state.animation.currentPhase.time) {
+      if (deltaTime > phase.time) {
         if (this.state.animation.currentPhaseIndex < this.animationPlan.phases.length - 1) {
           this.state.animation.currentPhaseIndex += 1;
           this.animatePhase(this.animationPlan.phases[this.state.animation.currentPhaseIndex]);
@@ -237,7 +222,7 @@ class DiagramElement {
         }
         // This needs to go before StopAnimating, incase stopAnimating calls a callback that
         // changes the animation properties
-        const returnPos = this.calcNextAnimationTransform(this.state.animation.currentPhase.time);
+        const returnPos = this.calcNextAnimationTransform(phase.time);
         this.stopAnimating(true);
         return returnPos;
       }
