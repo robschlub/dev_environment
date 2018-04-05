@@ -31,6 +31,7 @@ class Diagram1 extends Diagram {
   }
 }
 
+
 function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
   const canvas = document.getElementById(id);
@@ -66,6 +67,8 @@ function testgl(id: string) {
     const diagram = new Diagram1({}, canvas);
     diagram.elements.animateRotationTo(1, -1, 10);
     diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
+
+    // const diagram2 = new Diagram1({}, canvas2)
 
     if (diagram) {
       // const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
