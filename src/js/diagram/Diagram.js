@@ -51,19 +51,19 @@ class Diagram {
     }
   }
 
-  getAllActiveObjectsNextFrame(now: number) {
-    let currentlyAnimating = false;
-    for (let i = 0, j = this.activeElementsList.length; i < j; i += 1) {
-      const activeObject = this.activeElementsList[i];
-      if (activeObject.show) {
-        if (activeObject.isAnimating || activeObject.isMovingFreely) {
-          activeObject.setNextTransform(now);
-          currentlyAnimating = true;
-        }
-      }
-    }
-    return currentlyAnimating;
-  }
+  // getAllActiveObjectsNextFrame(now: number) {
+  //   let currentlyAnimating = false;
+  //   for (let i = 0, j = this.activeElementsList.length; i < j; i += 1) {
+  //     const activeObject = this.activeElementsList[i];
+  //     if (activeObject.show) {
+  //       if (activeObject.isAnimating || activeObject.isMovingFreely) {
+  //         activeObject.setNextTransform(now);
+  //         currentlyAnimating = true;
+  //       }
+  //     }
+  //   }
+  //   return currentlyAnimating;
+  // }
 
   getTargetRect() {
     return {
@@ -90,7 +90,7 @@ class Diagram {
   draw(now: number): void {
     this.clearContext();
     this.elements.draw(m2.identity(), now);
-    if (this.elements.isAnimating) {
+    if (this.elements.isMoving()) {
       this.animateNextFrame();
     }
   }

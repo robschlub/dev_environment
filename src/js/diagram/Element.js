@@ -548,6 +548,13 @@ class DiagramElementPrimative extends DiagramElement {
     }
   }
 
+  isMoving(): boolean {
+    if (this.isAnimating || this.isMovingFreely || this.isBeingMoved) {
+      return true;
+    }
+    return false;
+  }
+
   // drawCustom(
   //   translation: g2.Point,
   //   rotation: number,
@@ -580,6 +587,23 @@ class DiagramElementCollection extends DiagramElement {
     super(translation, rotation, scale);
     this.elements = {};
     this.order = [];
+  }
+
+  isMoving(): boolean {
+    if (this.isAnimating || this.isMovingFreely || this.isBeingMoved) {
+      return true;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        if (element.isMoving()) {
+          return true;
+        }
+      } else if (element.isMoving) {
+        return true;
+      }
+    }
+    return false;
   }
 
   add(name: string, geoObject: DiagramElementPrimative) {
