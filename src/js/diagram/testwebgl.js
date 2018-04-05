@@ -21,13 +21,17 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('triangle', new DiagramElementPrimative(triangle, g2.point(0, 0), 0, g2.point(1, 1), [0, 1, 0, 1]));
   }
 }
-// shapesCollection.prototype = Object.create(GeometryCollection.prototype);
 
 class Diagram1 extends Diagram {
   elements: ShapesCollection | DiagramElementPrimative | DiagramElementCollection;
 
   createDiagramElements() {
-    return new ShapesCollection(this.webgl, g2.Point.zero(), 0, new g2.Point(1,1));
+    return new ShapesCollection(
+      this.webgl,
+      g2.Point.zero(),
+      0,
+      new g2.Point(1, 1),
+    );
   }
 }
 

@@ -19,7 +19,6 @@ class Diagram {
 
   constructor(
     lesson: Object,
-    // DiagramElements: DiagramElementPrimative | DiagramElementCollection,
     canvas: HTMLCanvasElement,
   ) {
     this.canvas = canvas;
@@ -51,20 +50,6 @@ class Diagram {
     }
   }
 
-  // getAllActiveObjectsNextFrame(now: number) {
-  //   let currentlyAnimating = false;
-  //   for (let i = 0, j = this.activeElementsList.length; i < j; i += 1) {
-  //     const activeObject = this.activeElementsList[i];
-  //     if (activeObject.show) {
-  //       if (activeObject.isAnimating || activeObject.isMovingFreely) {
-  //         activeObject.setNextTransform(now);
-  //         currentlyAnimating = true;
-  //       }
-  //     }
-  //   }
-  //   return currentlyAnimating;
-  // }
-
   getTargetRect() {
     return {
       left: 0,
@@ -75,6 +60,7 @@ class Diagram {
     };
   }
 
+  // This should be overridden as it is the custom elements of a diagram
   createDiagramElements() {
     const square = new Polygon(this.webgl, 1, 4, 4, 0.01, 0, g2.Point.zero());
     const collection = new DiagramElementCollection();

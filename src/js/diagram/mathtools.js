@@ -31,6 +31,8 @@ const decelerate = (velocity: number, deceleration: number, time: number) => {
   return newVelocity;
 };
 
+const linear = (percentTime: number) => percentTime;
+
 const easeinout = (percentTime: number) => {
   const x = percentTime;
   const percentDistance = (x ** 2) / ((x ** 2) + ((1 - x) ** 2));
@@ -76,5 +78,6 @@ export {
   easeout,
   easein,
   sinusoid,
+  linear,
 };
 

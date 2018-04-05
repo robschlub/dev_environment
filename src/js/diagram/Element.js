@@ -64,7 +64,7 @@ class DiagramElement {
   // Animation
   animationPlan: Array<AnimationPhase>; // Animation plan
   isAnimating: boolean;           // If element is currently animating
-  animationState: Object;         // Animation state
+  animationProgress: Object;         // Animation state
   pulse: Object;                  // Pulse animation state
 
   constructor(
@@ -87,18 +87,33 @@ class DiagramElement {
 
     // this.isFollowing = false;
 
-    // this.isAnimatingPlan = false;
-    this.animationPlan = [];
     this.isAnimating = false;
-    this.animationState = {
-      elapsedTime: 0,
-      startTime: -1,
-      deltaTime: 0,
-      initialTransform: new g2.Transform(),
-      deltaTransform: new g2.Transform(),
-      style: tools.easeout,
-      callback: false,
-      index: 0,
+    this.animationPlan = [];
+    // this.animationPlan = {
+    //   phases:
+    //   callback:
+    // }
+    // this.animationProgress = {
+    //   phaseIndex: 0,
+    //   phase: false,
+    //   phaseProgress: {
+    //     startTime: -1,
+    //     startTransform: new g2.Transform(),
+    //     deltaTransform: new g2.Transform(),
+    //   }
+    // }
+    // this.currentPhase = {
+    //   startTime: -1,
+    //   startTransform: new g2.Transform(),
+    //   deltaTransform: new g2.Transform(),
+    // }
+    this.animationProgress = {
+      phaseIndex: 0,                       // Animation phase index in Plan
+      phase: false,                    // Current animation phase
+      startTime: -1,                       // Time at start of phase
+      startTransform: new g2.Transform(),  // Transform at start of phase
+      deltaTransform: new g2.Transform(),  // Transform delta from start of phase
+      callback: false,                     // Execute when Plan is complete
     };
     this.presetTransforms = {};
 
@@ -138,27 +153,30 @@ class DiagramElement {
   static isBeingTouched(): boolean {
     return false;
   }
-  calcNextAnimationTransform(deltaTime: number): g2.Transform {
-    const progress = this.animationState.style(deltaTime / this.animationState.deltaTime);
+  calcNextAnimationTransform(elapsedTime: number): g2.Transform {
+    const percentTime = elapsedTime / this.animationProgress.phase.time;
+    const percentComplete =
+      this.animationProgress.phase.animationStyle(percentTime);
     const nextTransform = new g2.Transform();
+
     nextTransform.translation.x =
-      this.animationState.initialTransform.translation.x +
-      progress * this.animationState.deltaTransform.translation.x;
+      this.animationProgress.startTransform.translation.x +
+      percentComplete * this.animationProgress.deltaTransform.translation.x;
 
     nextTransform.translation.y =
-      this.animationState.initialTransform.translation.y +
-      progress * this.animationState.deltaTransform.translation.y;
+      this.animationProgress.startTransform.translation.y +
+      percentComplete * this.animationProgress.deltaTransform.translation.y;
 
     nextTransform.scale.x =
-      this.animationState.initialTransform.scale.x +
-      progress * this.animationState.deltaTransform.scale.x;
+      this.animationProgress.startTransform.scale.x +
+      percentComplete * this.animationProgress.deltaTransform.scale.x;
     nextTransform.scale.y =
-      this.animationState.initialTransform.scale.y +
-      progress * this.animationState.deltaTransform.scale.y;
+      this.animationProgress.startTransform.scale.y +
+      percentComplete * this.animationProgress.deltaTransform.scale.y;
 
     nextTransform.rotation =
-      this.animationState.initialTransform.rotation +
-      progress * this.animationState.deltaTransform.rotation;
+      this.animationProgress.startTransform.rotation +
+      percentComplete * this.animationProgress.deltaTransform.rotation;
     return nextTransform;
   }
 
@@ -188,21 +206,21 @@ class DiagramElement {
   getNextTransform(now: number): g2.Transform {
     if (this.isAnimating) {
       // console.log(this.animationState)
-      if (this.animationState.startTime < 0) {
-        this.animationState.startTime = now;
+      if (this.animationProgress.startTime < 0) {
+        this.animationProgress.startTime = now;
         return this.transform;
       }
-      const deltaTime = now - this.animationState.startTime;
+      const deltaTime = now - this.animationProgress.startTime;
 
-      if (deltaTime > this.animationState.deltaTime) {
-        if (this.animationState.index < this.animationPlan.length - 1) {
-          this.animationState.index += 1;
-          this.animatePhase(this.animationPlan[this.animationState.index]);
+      if (deltaTime > this.animationProgress.phase.time) {
+        if (this.animationProgress.phaseIndex < this.animationPlan.length - 1) {
+          this.animationProgress.phaseIndex += 1;
+          this.animatePhase(this.animationPlan[this.animationProgress.phaseIndex]);
           return this.calcNextAnimationTransform(0);
         }
         // This needs to go before StopAnimating, incase stopAnimating calls a callback that
         // changes the animation properties
-        const returnPos = this.calcNextAnimationTransform(this.animationState.deltaTime);
+        const returnPos = this.calcNextAnimationTransform(this.animationProgress.phase.time);
         this.stopAnimating(true);
         return returnPos;
       }
@@ -297,18 +315,18 @@ class DiagramElement {
       this.animationPlan.push(phases[i]);
     }
     if (this.animationPlan.length > 0) {
-      this.animationState.callback = callback;
-      this.animationState.index = 0;
-      this.animatePhase(this.animationPlan[this.animationState.index]);
+      this.animationProgress.callback = callback;
+      this.animationProgress.phaseIndex = 0;
+      this.animatePhase(this.animationPlan[this.animationProgress.phaseIndex]);
     }
   }
   animatePhase(phase: AnimationPhase): void {
     const targetTransform = phase.transform;
-    const { time, rotDirection, animationStyle } = phase;
+    const { rotDirection } = phase;
     // const { rotDirection } = phase;
     // const { animationStyle } = phase;
 
-    this.animationState.initialTransform = this.transform.copy();
+    this.animationProgress.startTransform = this.transform.copy();
     const translationDiff = targetTransform.translation.sub(this.transform.translation);
     const scaleDiff = targetTransform.scale.sub(this.transform.scale);
     let rotDiff = g2.minAngleDiff(targetTransform.rotation, this.transform.rotation);
@@ -317,14 +335,20 @@ class DiagramElement {
       rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
     }
 
-    this.animationState.deltaTransform = new g2.Transform(translationDiff, rotDiff, scaleDiff);
-    this.animationState.deltaTime = time;
-    this.animationState.style = animationStyle;
+    this.animationProgress.deltaTransform = new g2.Transform(translationDiff, rotDiff, scaleDiff);
+
     this.stopMoving();
+    this.animationProgress.phase = phase;
+    // this.animationProgress.phase.time = time;
+    // this.animationProgress.style = animationStyle;
     this.isAnimating = true;
-    this.animationState.startTime = -1;
+    this.animationProgress.startTime = -1;
+
+    
+    // console.log("qwer", this.animationProgress.phase);
   }
 
+  // Helper functions
   animateTo(
     transform: g2.Transform,
     time: number = 1,
@@ -386,14 +410,14 @@ class DiagramElement {
   stopAnimating(result?: mixed): void {
     this.isAnimating = false;
     this.animationPlan = [];
-    if (this.animationState.callback) {
+    if (this.animationProgress.callback) {
       if (result) {
-        this.animationState.callback(result);
+        this.animationProgress.callback(result);
       } else {
-        this.animationState.callback();
+        this.animationProgress.callback();
       }
     }
-    this.animationState.callback = false;
+    this.animationProgress.callback = false;
   }
   // Movement
   startMoving(): void {
@@ -554,21 +578,6 @@ class DiagramElementPrimative extends DiagramElement {
     }
     return false;
   }
-
-  // drawCustom(
-  //   translation: g2.Point,
-  //   rotation: number,
-  //   scale: g2.Point,
-  //   color: Array<number>,
-  // ): void {
-  //   if (this.show) {
-  //     let transformMatrix = m2.identity();
-  //     transformMatrix = m2.translate(transformMatrix, translation.x, translation.y);
-  //     transformMatrix = m2.rotate(transformMatrix, rotation);
-  //     transformMatrix = m2.scale(transformMatrix, scale.x, scale.y);
-  //     this.vertices.drawWithTransformMatrix(transformMatrix, this.vertices.numPoints, color);
-  //   }
-  // }
 }
 
 // ***************************************************************
