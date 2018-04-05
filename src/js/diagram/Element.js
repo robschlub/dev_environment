@@ -8,10 +8,14 @@ import VertexObject from './vertexObjects/vertexObject';
 
 // Planned Animation
 class AnimationPhase {
-  transform: g2.Transform;
-  time: number;
-  rotDirection: number;
-  animationStyle: (number) => number;
+  targetTransform: g2.Transform;            // The target transform to animate to
+  time: number;                       // animation time
+  rotDirection: number;               // Direction of rotation
+  animationStyle: (number) => number; // Animation style
+
+  startTime: number;                 // Time when phase started
+  startTransform: g2.Transform;       // Transform at start of phase
+  deltaTransform: g2.Transform;       // Transform delta from start to target
 
   constructor(
     transform: g2.Transform = g2.Transform.Unity(),
@@ -19,10 +23,25 @@ class AnimationPhase {
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
   ) {
-    this.transform = transform.copy();
+    this.targetTransform = transform.copy();
     this.time = time;
     this.rotDirection = rotDirection;
     this.animationStyle = animationStyle;
+
+    this.startTime = -1;
+    this.startTransform = g2.Transform.Zero();
+    this.deltaTransform = g2.Transform.Zero();
+  }
+
+  start(currentTransform: g2.Transform) {
+    this.startTransform = currentTransform.copy();
+    this.deltaTransform = this.targetTransform.sub(this.startTransform);
+    let rotDiff = this.deltaTransform.rotation;
+    if (rotDiff * this.rotDirection < 0) {
+      rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
+    }
+    this.deltaTransform.rotation = rotDiff;
+    this.startTime = -1;
   }
 }
 
@@ -62,10 +81,20 @@ class DiagramElement {
   // isFollowing: boolean;           //
 
   // Animation
-  animationPlan: Array<AnimationPhase>; // Animation plan
+  animationPlan: {
+    phases: Array<AnimationPhase>,
+    callback: (mixed) => void
+  }; // Animation plan
   isAnimating: boolean;           // If element is currently animating
   animationProgress: Object;         // Animation state
   pulse: Object;                  // Pulse animation state
+  state: {
+    isAnimating: boolean,
+    animation: {
+      currentPhaseIndex: number,
+      currentPhase: AnimationPhase,
+    }
+  };
 
   constructor(
     translation: g2.Point = g2.Point.zero(),
@@ -88,33 +117,27 @@ class DiagramElement {
     // this.isFollowing = false;
 
     this.isAnimating = false;
-    this.animationPlan = [];
-    // this.animationPlan = {
-    //   phases:
-    //   callback:
-    // }
-    // this.animationProgress = {
-    //   phaseIndex: 0,
-    //   phase: false,
-    //   phaseProgress: {
-    //     startTime: -1,
-    //     startTransform: new g2.Transform(),
-    //     deltaTransform: new g2.Transform(),
-    //   }
-    // }
-    // this.currentPhase = {
-    //   startTime: -1,
-    //   startTransform: new g2.Transform(),
-    //   deltaTransform: new g2.Transform(),
-    // }
-    this.animationProgress = {
-      phaseIndex: 0,                       // Animation phase index in Plan
-      phase: false,                    // Current animation phase
-      startTime: -1,                       // Time at start of phase
-      startTransform: new g2.Transform(),  // Transform at start of phase
-      deltaTransform: new g2.Transform(),  // Transform delta from start of phase
-      callback: false,                     // Execute when Plan is complete
+
+    this.animationPlan = {
+      phases: [],
+      callback: () => {},
     };
+    this.state = {
+      isAnimating: false,
+      animation: {
+        currentPhaseIndex: 0,         // current animation phase index in plan
+        currentPhase: new AnimationPhase(),  // current animation phase
+      },
+    };
+
+    // this.animationProgress = {
+    //   phaseIndex: 0,                       // Animation phase index in Plan
+    //   phase: false,                    // Current animation phase
+    //   startTime: -1,                       // Time at start of phase
+    //   startTransform: new g2.Transform(),  // Transform at start of phase
+    //   deltaTransform: new g2.Transform(),  // Transform delta from start of phase
+    //   callback: false,                     // Execute when Plan is complete
+    // };
     this.presetTransforms = {};
 
     this.pulse = {
@@ -154,29 +177,31 @@ class DiagramElement {
     return false;
   }
   calcNextAnimationTransform(elapsedTime: number): g2.Transform {
-    const percentTime = elapsedTime / this.animationProgress.phase.time;
-    const percentComplete =
-      this.animationProgress.phase.animationStyle(percentTime);
     const nextTransform = new g2.Transform();
+    if (this.state.animation.currentPhase instanceof AnimationPhase) {
+      const percentTime = elapsedTime / this.state.animation.currentPhase.time;
+      const percentComplete =
+        this.state.animation.currentPhase.animationStyle(percentTime);
 
-    nextTransform.translation.x =
-      this.animationProgress.startTransform.translation.x +
-      percentComplete * this.animationProgress.deltaTransform.translation.x;
+      nextTransform.translation.x =
+        this.state.animation.currentPhase.startTransform.translation.x +
+        percentComplete * this.state.animation.currentPhase.deltaTransform.translation.x;
 
-    nextTransform.translation.y =
-      this.animationProgress.startTransform.translation.y +
-      percentComplete * this.animationProgress.deltaTransform.translation.y;
+      nextTransform.translation.y =
+        this.state.animation.currentPhase.startTransform.translation.y +
+        percentComplete * this.state.animation.currentPhase.deltaTransform.translation.y;
 
-    nextTransform.scale.x =
-      this.animationProgress.startTransform.scale.x +
-      percentComplete * this.animationProgress.deltaTransform.scale.x;
-    nextTransform.scale.y =
-      this.animationProgress.startTransform.scale.y +
-      percentComplete * this.animationProgress.deltaTransform.scale.y;
+      nextTransform.scale.x =
+        this.state.animation.currentPhase.startTransform.scale.x +
+        percentComplete * this.state.animation.currentPhase.deltaTransform.scale.x;
+      nextTransform.scale.y =
+        this.state.animation.currentPhase.startTransform.scale.y +
+        percentComplete * this.state.animation.currentPhase.deltaTransform.scale.y;
 
-    nextTransform.rotation =
-      this.animationProgress.startTransform.rotation +
-      percentComplete * this.animationProgress.deltaTransform.rotation;
+      nextTransform.rotation =
+        this.state.animation.currentPhase.startTransform.rotation +
+        percentComplete * this.state.animation.currentPhase.deltaTransform.rotation;
+    }
     return nextTransform;
   }
 
@@ -206,21 +231,21 @@ class DiagramElement {
   getNextTransform(now: number): g2.Transform {
     if (this.isAnimating) {
       // console.log(this.animationState)
-      if (this.animationProgress.startTime < 0) {
-        this.animationProgress.startTime = now;
+      if (this.state.animation.currentPhase.startTime < 0) {
+        this.state.animation.currentPhase.startTime = now;
         return this.transform;
       }
-      const deltaTime = now - this.animationProgress.startTime;
+      const deltaTime = now - this.state.animation.currentPhase.startTime;
 
-      if (deltaTime > this.animationProgress.phase.time) {
-        if (this.animationProgress.phaseIndex < this.animationPlan.length - 1) {
-          this.animationProgress.phaseIndex += 1;
-          this.animatePhase(this.animationPlan[this.animationProgress.phaseIndex]);
+      if (deltaTime > this.state.animation.currentPhase.time) {
+        if (this.state.animation.currentPhaseIndex < this.animationPlan.phases.length - 1) {
+          this.state.animation.currentPhaseIndex += 1;
+          this.animatePhase(this.animationPlan.phases[this.state.animation.currentPhaseIndex]);
           return this.calcNextAnimationTransform(0);
         }
         // This needs to go before StopAnimating, incase stopAnimating calls a callback that
         // changes the animation properties
-        const returnPos = this.calcNextAnimationTransform(this.animationProgress.phase.time);
+        const returnPos = this.calcNextAnimationTransform(this.state.animation.currentPhase.time);
         this.stopAnimating(true);
         return returnPos;
       }
@@ -310,42 +335,24 @@ class DiagramElement {
   }
 
   animatePlan(phases: Array<AnimationPhase>, callback: () => void = () => {}): void {
-    this.animationPlan = [];
+    this.animationPlan = {
+      phases: [],
+      callback: () => {},
+    };
     for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.animationPlan.push(phases[i]);
+      this.animationPlan.phases.push(phases[i]);
     }
-    if (this.animationPlan.length > 0) {
-      this.animationProgress.callback = callback;
-      this.animationProgress.phaseIndex = 0;
-      this.animatePhase(this.animationPlan[this.animationProgress.phaseIndex]);
+    if (this.animationPlan.phases.length > 0) {
+      this.animationPlan.callback = callback;
+      this.state.animation.currentPhaseIndex = 0;
+      this.animatePhase(this.animationPlan.phases[this.state.animation.currentPhaseIndex]);
     }
   }
   animatePhase(phase: AnimationPhase): void {
-    const targetTransform = phase.transform;
-    const { rotDirection } = phase;
-    // const { rotDirection } = phase;
-    // const { animationStyle } = phase;
-
-    this.animationProgress.startTransform = this.transform.copy();
-    const translationDiff = targetTransform.translation.sub(this.transform.translation);
-    const scaleDiff = targetTransform.scale.sub(this.transform.scale);
-    let rotDiff = g2.minAngleDiff(targetTransform.rotation, this.transform.rotation);
-
-    if (rotDiff * rotDirection < 0) {
-      rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
-    }
-
-    this.animationProgress.deltaTransform = new g2.Transform(translationDiff, rotDiff, scaleDiff);
-
+    this.state.animation.currentPhase = phase;
+    this.state.animation.currentPhase.start(this.transform.copy());
     this.stopMoving();
-    this.animationProgress.phase = phase;
-    // this.animationProgress.phase.time = time;
-    // this.animationProgress.style = animationStyle;
     this.isAnimating = true;
-    this.animationProgress.startTime = -1;
-
-    
-    // console.log("qwer", this.animationProgress.phase);
   }
 
   // Helper functions
@@ -409,15 +416,15 @@ class DiagramElement {
 
   stopAnimating(result?: mixed): void {
     this.isAnimating = false;
-    this.animationPlan = [];
-    if (this.animationProgress.callback) {
+    this.animationPlan = { phases: [], callback: () => {} };
+    if (this.animationPlan.callback) {
       if (result) {
-        this.animationProgress.callback(result);
+        this.animationPlan.callback(result);
       } else {
-        this.animationProgress.callback();
+        this.animationPlan.callback();
       }
     }
-    this.animationProgress.callback = false;
+    this.animationPlan.callback = () => {};
   }
   // Movement
   startMoving(): void {

@@ -40,28 +40,30 @@ describe('DiagramElementPrimative', () => {
         const t = element.transform;
         expect(t).toEqual(new Transform(Point.zero(), 0, Point.Unity()));
 
+        const phase = element.state.animation.currentPhase;
+
         expect(element.isAnimating).toBe(true);
         expect(element.isMoving()).toBe(true);
-        expect(element.animationProgress.startTime).toBe(-1);
+        expect(phase.startTime).toBe(-1);
 
         element.draw(m2.identity(), 10);
-        expect(element.animationProgress.startTime).toBe(10);
-        expect(element.animationProgress.phase.time).toBe(1);
+        expect(phase.startTime).toBe(10);
+        expect(phase.time).toBe(1);
         expect(t.rotation).toBe(0);
 
         element.draw(m2.identity(), 10.5);
-        expect(element.animationProgress.startTime).toBe(10);
-        expect(element.animationProgress.phase.time).toBe(1);
+        expect(phase.startTime).toBe(10);
+        expect(phase.time).toBe(1);
         expect(element.transform.rotation).toBe(0.5);
 
         element.draw(m2.identity(), 11);
-        expect(element.animationProgress.phase.time).toBe(1);
+        expect(phase.time).toBe(1);
         expect(element.transform.rotation).toBe(1);
         expect(element.isAnimating).toBe(true);
         expect(element.isMoving()).toBe(true);
 
         element.draw(m2.identity(), 11.01);
-        expect(element.animationProgress.phase.time).toBe(1);
+        expect(phase.time).toBe(1);
         expect(element.transform.rotation).toBe(1);
         expect(element.isAnimating).toBe(false);
         expect(element.isMoving()).toBe(false);
