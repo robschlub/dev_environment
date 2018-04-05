@@ -68,6 +68,41 @@ describe('DiagramElementPrimative', () => {
         expect(element.state.isAnimating).toBe(false);
         expect(element.isMoving()).toBe(false);
       });
+      test('translate (0, 0) to (1, 0), 1 second, linear movement', () => {
+        expect(element.state.isAnimating).toBe(false);
+        expect(element.isMoving()).toBe(false);
+
+        // Setup the animation
+        element.animateTranslationTo(new Point(1, 0), 1, tools.linear);
+        const t = element.transform;
+        expect(t).toEqual(new Transform(Point.zero(), 0, Point.Unity()));
+        const phase = element.state.animation.currentPhase;
+        expect(element.state.isAnimating).toBe(true);
+        expect(element.isMoving()).toBe(true);
+        expect(phase.startTime).toBe(-1);
+
+        // Initial draw setting start time
+        element.draw(m2.identity(), 0);
+        expect(phase.startTime).toBe(0);
+        expect(phase.time).toBe(1);
+        expect(t.rotation).toBe(0);
+
+        // Draw half way through
+        element.draw(m2.identity(), 0.5);
+        expect(element.transform.translation).toEqual(new Point(0.5, 0));
+
+        // Draw at last time
+        element.draw(m2.identity(), 1);
+        expect(element.transform.translation).toEqual(new Point(1.0, 0));
+        expect(element.state.isAnimating).toBe(true);
+        expect(element.isMoving()).toBe(true);
+
+        // Draw after time elapsed
+        element.draw(m2.identity(), 1.01);
+        expect(element.transform.translation).toEqual(new Point(1.0, 0));
+        expect(element.state.isAnimating).toBe(false);
+        expect(element.isMoving()).toBe(false);
+      });
     });
   });
 });
