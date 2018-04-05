@@ -61,6 +61,7 @@ function testgl(id: string) {
   if (canvas instanceof HTMLCanvasElement) {
     const diagram = new Diagram1({}, canvas);
     diagram.elements.animateRotationTo(1, -1, 10);
+
     diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
 
     if (diagram) {

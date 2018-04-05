@@ -95,7 +95,7 @@ const introPage = () => {
       <div className='container'>
         <div className='row'>
           <div className='col-2'></div>
-          <Canvas id="my_Canvas"  didMountFn={testgl}/>
+          <Canvas id="my_Canvas" didMountFn={testgl}/>
           <div className='col-2'></div>
           <Canvas id="my_Canvas1" didMountFn={testgl}/>
         </div>

@@ -3,7 +3,7 @@
 import * as g2 from './g2';
 import * as m2 from './m2';
 import * as tools from './mathtools';
-import GlobalVariables from './globals';
+// import GlobalVariables from './globals';
 import VertexObject from './vertexObjects/vertexObject';
 
 // Planned Animation
@@ -67,7 +67,7 @@ class DiagramElement {
   transform: g2.Transform;        // Transform of diagram element
   presetTransforms: Object;       // Convenience dict of transform presets
   setTransformCallback: (g2.Transform) => void; // Called when setting Transform
-  globals: GlobalVariables;       // Link to global variables
+  // globals: GlobalVariables;       // Link to global variables
   lastDrawTransformMatrix: Array<number>; // Transform matrix used in last draw
   show: boolean;                  // True if should be shown in diagram
   name: string;                   // Used to reference element in a collection
@@ -105,7 +105,7 @@ class DiagramElement {
     this.transform = new g2.Transform(translation, rotation, scale);
     this.setTransformCallback = () => {};
     this.show = true;
-    this.globals = new GlobalVariables();
+    // this.globals = new GlobalVariables();
     this.lastDrawTransformMatrix = m2.identity();
     this.name = name;
 
@@ -294,7 +294,7 @@ class DiagramElement {
 
     if (this.state.isAnimating) {
       this.setTransform(this.getNextTransform(now));
-      this.globals.animateNextFrameFlag = true;
+      // this.globals.animateNextFrameFlag = true;
     }
 
     matrix = m2.translate(
@@ -311,7 +311,7 @@ class DiagramElement {
     return matrix;
   }
 
-  animatePlan(phases: Array<AnimationPhase>, callback: () => void = () => {}): void {
+  animatePlan(phases: Array<AnimationPhase>, callback: (mixed) => void = () => {}): void {
     this.animationPlan = {
       phases: [],
       callback: () => {},
@@ -392,17 +392,19 @@ class DiagramElement {
   }
 
   stopAnimating(result?: mixed): void {
-    this.state.isAnimating = false;
+    const { callback } = this.animationPlan;
     this.animationPlan = { phases: [], callback: () => {} };
-    if (this.animationPlan.callback) {
+    this.state.isAnimating = false;
+
+    if (callback) {
       if (result) {
-        this.animationPlan.callback(result);
+        callback(result);
       } else {
-        this.animationPlan.callback();
+        callback();
       }
     }
-    this.animationPlan.callback = () => {};
   }
+
   // Movement
   startMoving(): void {
     this.stopAnimating();
@@ -490,7 +492,7 @@ class DiagramElement {
       if (deltaTime > this.pulse.time && this.pulse.time !== 0) {
         this.pulse.pulsing = false;
       }
-      this.globals.animateNextFrame();
+      // this.globals.animateNextFrame();
     }
 
     this.lastDrawTransformMatrix = m2.copy(pulseTransformMatrix);

@@ -103,6 +103,17 @@ describe('DiagramElementPrimative', () => {
         expect(element.state.isAnimating).toBe(false);
         expect(element.isMoving()).toBe(false);
       });
+      test('Stop animating during animation', () => {
+        const callback = jest.fn();         // Callback mock
+        // Setup the animation
+        element.animateRotationTo(1, 1, 1, tools.linear, callback);
+        element.draw(m2.identity(), 0);     // Initial draw setting start time
+        element.draw(m2.identity(), 0.5);   // Draw half way through
+        element.stopAnimating();            // Stop animating
+
+        expect(element.state.isAnimating).toBe(false);
+        expect(callback.mock.calls).toHaveLength(1);
+      });
     });
   });
 });
