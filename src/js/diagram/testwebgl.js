@@ -4,7 +4,7 @@ import * as g2 from './g2';
 // import * as m2 from './m2';
 import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
-import GlobalVariables from './globals';
+// import GlobalVariables from './globals';
 import Diagram from './Diagram';
 
 class ShapesCollection extends DiagramElementCollection {
@@ -14,8 +14,8 @@ class ShapesCollection extends DiagramElementCollection {
     super(translation, rotation, scale);
     // GeometryCollection.call(this, translation, rotation, scale);
 
-    const square = new Polygon(webgl, 0.5, 4, 4, 0.005, 0, new g2.Point(0, 0));
-    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.01, 0, new g2.Point(0.5, 0.5));
+    const square = new Polygon(webgl, 0.5, 4, 4, 0.05, 0, new g2.Point(0, 0));
+    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.05, 0, new g2.Point(0.5, 0.5));
 
     this.add('square', new DiagramElementPrimative(square, g2.point(0, 0), 0, g2.point(1, 1), [0, 0, 1, 1]));
     this.add('triangle', new DiagramElementPrimative(triangle, g2.point(0, 0), 0, g2.point(1, 1), [0, 1, 0, 1]));
@@ -27,7 +27,7 @@ class Diagram1 extends Diagram {
   elements: ShapesCollection | DiagramElementPrimative | DiagramElementCollection;
 
   createDiagramElements() {
-    return new ShapesCollection(this.webgl, g2.Point.zero(), 0, g2.Point.Unity());
+    return new ShapesCollection(this.webgl, g2.Point.zero(), 0, new g2.Point(1,1));
   }
 }
 
@@ -35,6 +35,7 @@ class Diagram1 extends Diagram {
 function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
   const canvas = document.getElementById(id);
+
   if (canvas instanceof HTMLCanvasElement) {
     canvas.onclick = function click(event) {
       const box = canvas;
@@ -54,28 +55,11 @@ function testgl(id: string) {
   }
 
   if (canvas instanceof HTMLCanvasElement) {
-    // const shaders = getShaders('simple', 'simple');
-
-    // const webgl = new WebGLInstance(
-    //   canvas,
-    //   shaders.vertexSource,
-    //   shaders.fragmentSource,
-    //   shaders.varNames,
-    // );
-    // const { gl } = webgl;
-
     const diagram = new Diagram1({}, canvas);
     diagram.elements.animateRotationTo(1, -1, 10);
     diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
 
-    // const diagram2 = new Diagram1({}, canvas2)
-
     if (diagram) {
-      // const polygon = new Polygon(webgl, 1.0, 12, 12, 0.01, 0, new g2.Point(0, 0));
-      // const polygon2 = new Polygon(webgl, 0.2, 12, 12, 0.001, 0, new g2.Point(0.5, 0.5));
-      // const shapes = new ShapesCollection(webgl, g2.Point.zero(), 0, g2.Point.Unity());
-      // shapes.show = true;
-      // shapes.showAll();
       diagram.animateNextFrame();
       // const globals = new GlobalVariables();
       // shapes.animateRotationTo(1, -1, 10);

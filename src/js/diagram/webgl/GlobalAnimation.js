@@ -1,7 +1,7 @@
 // @flow
 
 // Singleton class that contains projects global variables
-class DiagramGlobals {
+class GlobalAnimation {
   // Method for requesting the next animation frame
   requestNextAnimationFrame: (()=>mixed) => AnimationFrameID;
   animationId: AnimationFrameID;    // used to cancel animation frames
@@ -12,19 +12,19 @@ class DiagramGlobals {
   constructor() {
     // If the instance alread exists, then don't create a new instance.
     // If it doesn't, then setup some default values.
-    if (!DiagramGlobals.instance) {
+    if (!GlobalAnimation.instance) {
       this.requestNextAnimationFrame = (
         window.requestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.msRequestAnimationFrame
       );
-      DiagramGlobals.instance = this;
+      GlobalAnimation.instance = this;
       this.drawQueue = [];
       this.nextDrawQueue = [];
       // this.drawScene = this.draw.bind(this);
     }
-    return DiagramGlobals.instance;
+    return GlobalAnimation.instance;
   }
 
   draw(now: number) {
@@ -58,4 +58,4 @@ class DiagramGlobals {
 // // const globalvars: Object = new GlobalVariables();
 // // Object.freeze(globalvars);
 
-export default DiagramGlobals;
+export default GlobalAnimation;
