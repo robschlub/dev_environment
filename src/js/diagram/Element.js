@@ -301,7 +301,9 @@ class DiagramElement {
       return this.calcNextAnimationTransform(deltaTime);
     }
 
-    // If the element is moving freely, then calc it's next transform
+    // If the element is moving freely, then calc it's next velocity and
+    // transform. Save the new velocity into state.movement and return the
+    // transform.
     if (this.state.isMovingFreely) {
       // If this is the first frame of moving freely, then record the current
       // time so can calculate velocity on next frame
@@ -312,21 +314,19 @@ class DiagramElement {
       // If got here, then we are now after the first frame, so calculate
       // the delta time from this frame to the previous
       const deltaTime = now - this.state.movement.previousTime;
+
+      // Calculate the new velocity and position
+      const next = this.decelerate(deltaTime);
+      this.state.movement.velocity = next.velocity;
       this.state.movement.previousTime = now;
-      this.state.movement.velocity = this.decelerate(deltaTime);
 
       // If the velocity is 0, then stop moving freely and return the current
       // transform
       if (DiagramElement.isVelocityZero(this.state.movement.velocity)) {
-        this.state.movement.velocity = new g2.Transform();
+        this.state.movement.velocity = g2.Transform.Zero();
         this.stopMovingFreely();
-        return this.transform.copy();
       }
-
-      // If got here, the velocity isn't 0, so calculate the next transform
-      // based on the current velocity
-      const nextTransform = this.calcNextMovementTransform(deltaTime, this.state.movement.velocity);
-      return nextTransform;
+      return next.transform;
     }
     return this.transform;
   }
@@ -350,80 +350,69 @@ class DiagramElement {
     return true;
   }
 
-  // Calculate new trasform from deceleration
-  getFreeMoveTransform(deltaTime: number, nextVel: g2.Transform) {
-    const s = (s0, v, a, time, nextV, zeroThreshold) => {
-      let t = time;
-      if (v === 0) {
-        return s0;
-      }
-      // If the next velocity is 0 (but the current isn't), then calculate
-      // the time it would take to cross the 0 velocity threashold
-      // vf = vi + at
-      // Therefore, if vf = zeroT: t = (zeroT - vi)/a
-      if (nextV === 0) {
-        t = (zeroThreshold - v) / a;
-      }
-      return s0 + v * t + 1 / 2 * a * t * t;
-    };
-
-    const nextT = this.transform.copy();
-    const v = this.state.movement.velocity;
-    const d = this.moveFreelyProperties.deceleration;
-    const t = deltaTime;
-    const T = this.transform;
-    const nv = nextVel;
-    const z = this.moveFreelyProperties.zeroVelocityThreshold;
-    nextT.translation.x =
-      s(T.translation.x, v.translation.x, -d.translation.x, t, nv.translation.x, z.translation.x);
-    nextT.translation.y =
-      s(T.translation.y, v.translation.y, -d.translation.y, t, nv.translation.y, z.translation.y);
-    nextT.scale.x =
-      s(T.scale.x, v.scale.x, -d.scale.x, t, nv.scale.x, z.scale.x);
-    nextT.scale.y =
-      s(T.scale.y, v.scale.y, -d.scale.y, t, nv.scale.y, z.scale.y);
-    nextT.rotation =
-      s(T.rotation, v.rotation, -d.rotation, t, nv.rotation, z.rotation);
-    return nextT;
-  }
-
-  // Reduce the current velocity by some deceleration over time
-  decelerate(deltaTime: number): g2.Transform {
+  // Decelerate over some time during movement to get a new element transform
+  // and movement velocity
+  decelerate(deltaTime: number): Object {
     const velocity = this.state.movement.velocity.copy();
+    let result;
+    const v = new g2.Transform.Zero();
+    const t = new g2.Transform.Zero();
 
-    velocity.rotation = tools.decelerate(
+    result = tools.decelerate(
+      this.transform.rotation,
       velocity.rotation,
       this.moveFreelyProperties.deceleration.rotation,
       deltaTime,
+      this.moveFreelyProperties.zeroVelocityThreshold.rotation,
     );
+    v.rotation = result.v;
+    t.rotation = result.p;
 
-    velocity.translation.x = tools.decelerate(
+
+    result = tools.decelerate(
+      this.transform.translation.x,
       velocity.translation.x,
       this.moveFreelyProperties.deceleration.translation.x,
       deltaTime,
+      this.moveFreelyProperties.zeroVelocityThreshold.translation.x,
     );
+    v.translation.x = result.v;
+    t.translation.x = result.p;
 
-    velocity.translation.y = tools.decelerate(
+    result = tools.decelerate(
+      this.transform.translation.y,
       velocity.translation.y,
       this.moveFreelyProperties.deceleration.translation.y,
       deltaTime,
+      this.moveFreelyProperties.zeroVelocityThreshold.translation.y,
     );
+    v.translation.y = result.v;
+    t.translation.y = result.p;
 
-    velocity.scale.x = tools.decelerate(
+    result = tools.decelerate(
+      this.transform.scale.x,
       velocity.scale.x,
       this.moveFreelyProperties.deceleration.scale.x,
       deltaTime,
+      this.moveFreelyProperties.zeroVelocityThreshold.scale.x,
     );
-    velocity.scale.y = tools.decelerate(
+    v.scale.x = result.v;
+    t.scale.x = result.p;
+
+    result = tools.decelerate(
+      this.transform.scale.y,
       velocity.scale.y,
       this.moveFreelyProperties.deceleration.scale.y,
       deltaTime,
+      this.moveFreelyProperties.zeroVelocityThreshold.scale.y,
     );
+    v.scale.y = result.v;
+    t.scale.y = result.p;
 
-    return velocity.clip(
-      this.moveFreelyProperties.zeroVelocityThreshold,
-      this.moveFreelyProperties.maxVelocity,
-    );
+    return {
+      velocity: v,
+      transform: t,
+    };
   }
 
   // Start an animation plan of phases ending in a callback

@@ -55,46 +55,54 @@ function clipValue(
   return result;
 }
 
-// const dec = function(
-//   position: number,
-//   velocity: number,
-//   magDeceleration: number,
-//   time: number,
-//   zeroThreshold: number = 0,
-// ) {
-//   // If the velocity is currently 0, then no further deceleration can occur, so
-//   // return the current velocity and position
-//   if (velocity == 0 || clipValue(velocity, zeroThreshold, velocity))
-//     return {
-//       p: position,
-//       v: 0,
-//     }
-
-//   // If there is some initial velocity, then calc its sign and 
-//   const sign = velocity / Math.abs(velocity);
-//   let newVelocity = velocity - sign * magDeceleration * time;
-//   newVelocity = clipValue(newVelocity, zeroThreshold, newVelocity);
-
-//   const newPosition = 
-//     position + velocity * time - sign * 0.5 * magDeceleration * time * time;
-
-//   const newSign = newVelocity / Math.abs(newVelocity);
-//   if (newSign !== sign) {
-//     return 0;
-//   }
-//   return newVelocity;
-// };
-// }
-// Decelerate a velocity by some deceleration over time
-const decelerate = (velocity: number, deceleration: number, time: number) => {
-  const sign = velocity / Math.abs(velocity);
-  const newVelocity = velocity - sign * deceleration * time;
-  const newSign = newVelocity / Math.abs(newVelocity);
-  if (newSign !== sign) {
-    return 0;
+const decelerate = function getPositionVelocityFromDecAndTime(
+  position: number,
+  velocity: number,
+  magDeceleration: number,
+  time: number,
+  zeroThreshold: number = 0,
+) {
+  // If the velocity is currently 0, then no further deceleration can occur, so
+  // return the current velocity and position
+  const v = clipValue(velocity, zeroThreshold, velocity);
+  if (v === 0) {
+    return {
+      p: position,
+      v: 0,
+    };
   }
-  return newVelocity;
+
+  let d = magDeceleration;
+  if (magDeceleration < 0) {
+    d = -d;
+  }
+  // If there is some initial velocity, then calc its sign and
+  const sign = velocity / Math.abs(velocity);
+  let newVelocity = velocity - sign * d * time;
+  newVelocity = clipValue(newVelocity, zeroThreshold, newVelocity);
+
+  // If the new velocity is clipped, then we need to use the time to where the
+  // velocity crosses the clipping point.
+  // v_new = v_init + a*t
+  // Therefore, if v_new = zeroT: t = (zeroT - vi)/a
+  let t = time;
+  if (newVelocity === 0) {
+    let z = zeroThreshold;
+    const zSign = z / Math.abs(z);
+    if (zSign !== sign) {
+      z = -z;
+    }
+    t = Math.abs((z - velocity) / d);
+  }
+  // Now can calculate the new position
+  const newPosition = position + velocity * t - sign * 0.5 * d * t * t;
+
+  return {
+    p: newPosition,
+    v: newVelocity,
+  };
 };
+
 
 const linear = (percentTime: number) => percentTime;
 

@@ -28,41 +28,88 @@ describe('Math tools testing', () => {
   });
 
   describe('decelerate', () => {
-    test('dec 1m/s/s for 1s', () => {
+    test('initial: 0m, 10m/s - dec 1m/s/s for 1s', () => {
+      const p1 = 0;           // m
       const v1 = 10;          // m/s
       const time = 1;         // s
       const dec = 1;          // m/s/s
-      const v2 = decelerate(v1, dec, time);
-      expect(v2).toBe(9);
+      const zT = 0.1;         // m/s
+      const v2 = 9;
+      const p2 = 9.5;
+      let r = decelerate(p1, v1, dec, time, zT);
+      expect(r).toEqual({ v: v2, p: p2 });
+
+      r = decelerate(p1, v1, -dec, time, zT);
+      expect(r).toEqual({ v: v2, p: p2 });
+
+      r = decelerate(p1, -v1, -dec, time, zT);
+      expect(r).toEqual({ v: -v2, p: -p2 });
     });
-    test('dec 1m/s/s for 2s', () => {
-      const v1 = 10;   // m/s
+    test('initial: 0m, 10m/s - dec 1m/s/s for 2s', () => {
+      const p1 = 0;           // m
+      const v1 = 10;          // m/s
       const time = 2;         // s
       const dec = 1;          // m/s/s
-      const v2 = decelerate(v1, dec, time);
-      expect(v2).toBe(8);
+      const zT = 0.1;         // m/s
+      const v2 = 8;
+      const p2 = 18;
+      const r = decelerate(p1, v1, dec, time, zT);
+      expect(r).toEqual({ v: v2, p: p2 });
     });
-    test('dec 1m/s/s for 8s', () => {
-      const v1 = 10;   // m/s
-      const time = 8;         // s
+    test('initial: 0m, 10m/s - dec 1m/s/s for two lots of 1s', () => {
+      const p1 = 0;           // m
+      const v1 = 10;          // m/s
+      const time = 1;         // s
       const dec = 1;          // m/s/s
-      const v2 = decelerate(v1, dec, time);
-      expect(v2).toBe(2);
+      const zT = 0.1;         // m/s
+      const v2 = 9;
+      const p2 = 9.5;
+      const v3 = 8;
+      const p3 = 18;
+      let r = decelerate(p1, v1, dec, time, zT);
+      expect(r).toEqual({ v: v2, p: p2 });
+      r = decelerate(p2, v2, dec, time, zT);
+      expect(r).toEqual({ v: v3, p: p3 });
     });
-    test('dec 1m/s/s for 8s in two lots of 4', () => {
-      const v1 = 10;   // m/s
-      const time = 4;         // s
-      const dec = 1;          // m/s/s
-      const v2 = decelerate(v1, dec, time);
-      const v3 = decelerate(v2, dec, time);
-      expect(v3).toBe(2);
-    });
-    test('dec 1m/s/s for 11s', () => {
-      const v1 = 10;   // m/s
-      const time = 11;         // s
-      const dec = 1;          // m/s/s
-      const v2 = decelerate(v1, dec, time);
-      expect(v2).toBe(0);
+    describe('zero threshold', () => {
+      let p1;
+      let v1;
+      let dec;
+      let zT;
+      beforeEach(() => {
+        p1 = 0;           // m
+        v1 = 10;          // m/s
+        dec = 1;          // m/s/s
+        zT = 5;           // m/s
+      });
+      test('Within Threshold', () => {
+        const r = decelerate(p1, v1, dec, 1, zT);
+        expect(r).toEqual({ v: 9, p: 9.5 });
+      });
+      test('Threshold boundary', () => {
+        const r = decelerate(p1, v1, dec, 5, zT);
+        expect(r).toEqual({ v: 5, p: 37.5 });
+      });
+      test('Threshold boundary, negative v', () => {
+        const r = decelerate(p1, -v1, dec, 5, zT);
+        expect(r).toEqual({ v: -5, p: -37.5 });
+      });
+      test('Beyond Threshold', () => {
+        const r = decelerate(p1, v1, dec, 10, zT);
+        expect(r).toEqual({ v: 0, p: 37.5 });
+      });
+      test('Beyond Threshold, negative threshold', () => {
+        const r = decelerate(p1, v1, dec, 10, -zT);
+        expect(r).toEqual({ v: 0, p: 37.5 });
+      });
+      test('Beyond Threshold, negative dec and threshold', () => {
+        const r = decelerate(p1, v1, -dec, 10, -zT);
+        expect(r).toEqual({ v: 0, p: 37.5 });
+      });
+      test('Beyond Threshold, negative v, dec and threshold', () => {
+        const r = decelerate(p1, -v1, -dec, 10, -zT);
+        expect(r).toEqual({ v: 0, p: -37.5 });
+      });
     });
   });
   describe('easeinout', () => {

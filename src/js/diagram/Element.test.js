@@ -210,10 +210,10 @@ describe('Animationa and Movement', () => {
         expect(vel.translation).toEqual(new Point(9, 18));
         expect(vel.scale).toEqual(new Point(-1, 0));
         expect(vel.rotation).toBe(0);
-        expect(element.transform).toEqual(new Transform(
-          new Point(9, 18),
+        expect(element.transform.round()).toEqual(new Transform(
+          new Point(9.5, 19),
           0,
-          new Point(0, 1),
+          new Point(-0.5, 1.5),
         ));
 
         element.draw(identity, 2);
@@ -260,33 +260,33 @@ describe('Animationa and Movement', () => {
         expect(vel.rotation).toBe(0);
         expect(element.state.isMovingFreely).toBe(false);
       });
-      describe('Free move transform calculation', () => {
-        let decel;
-        let zero;
-        let max;
-        let initialV;
-        beforeEach(() => {
-          initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
-          decel = new Transform(new Point(1, 1), 1, new Point(1, 1));
-          zero = new Transform(new Point(5, 5), 5, new Point(15, 15));
-          max = new Transform(new Point(20, 20), 20, new Point(20, 20));
-          element.state.movement.velocity = initialV;
-          element.moveFreelyProperties.deceleration = decel;
-          element.moveFreelyProperties.zeroVelocityThreshold = zero;
-          element.moveFreelyProperties.maxVelocity = max;
-          element.startMovingFreely();
-        });
-        test('simple', () => {
-          const time = 1;
-          const nextV = element.decelerate(time);
-          const result = element.getFreeMoveTransform(1, nextV);
-          expect(result).toEqual(new Transform(
-            new Point(9.5, -9.5),
-            9.5,
-            new Point(19.5, -19.5),
-          ));
-        });
-      });
+      // describe('Free move transform calculation', () => {
+      //   let decel;
+      //   let zero;
+      //   let max;
+      //   let initialV;
+      //   beforeEach(() => {
+      //     initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
+      //     decel = new Transform(new Point(1, 1), 1, new Point(1, 1));
+      //     zero = new Transform(new Point(5, 5), 5, new Point(15, 15));
+      //     max = new Transform(new Point(20, 20), 20, new Point(20, 20));
+      //     element.state.movement.velocity = initialV;
+      //     element.moveFreelyProperties.deceleration = decel;
+      //     element.moveFreelyProperties.zeroVelocityThreshold = zero;
+      //     element.moveFreelyProperties.maxVelocity = max;
+      //     element.startMovingFreely();
+      //   });
+      //   test('simple', () => {
+      //     const time = 1;
+      //     const nextV = element.decelerate(time);
+      //     const result = element.getFreeMoveTransform(1, nextV);
+      //     expect(result).toEqual(new Transform(
+      //       new Point(9.5, -9.5),
+      //       9.5,
+      //       new Point(19.5, -19.5),
+      //     ));
+      //   });
+      // });
       // test('Deceleration steps', () => {
       //   const initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
       //   const initialT = element.transform.copy();
@@ -404,13 +404,17 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
 
+      // Move translation to (0.5, 0)
       collection.animateTranslationTo(new Point(1, 0), 1, linear);
       expect(collection.state.isAnimating).toBe(true);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
       collection.draw(m2.identity(), 0);
       collection.draw(m2.identity(), 0.5);
-      expect(collection.transform).toEqual(new Transform(new Point(0.5, 0), 0, new Point(1, 1)));
+      expect(collection.transform.round()).toEqual(new Transform(
+        new Point(0.5, 0),
+        0, new Point(1, 1),
+      ));
 
       Date.now = () => 0;
       collection.startBeingMoved();
@@ -418,9 +422,14 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isBeingMoved).toBe(true);
       expect(collection.state.isMovingFreely).toBe(false);
 
+      // Over 1 s, rotation = 0.1;
       Date.now = () => 1000;
       collection.moved(new Transform(new Point(0.5, 0), 0.1, Point.Unity()));
-      expect(collection.transform).toEqual(new Transform(new Point(0.5, 0), 0.1, new Point(1, 1)));
+      expect(collection.transform.round()).toEqual(new Transform(
+        new Point(0.5, 0),
+        0.1,
+        new Point(1, 1),
+      ));
       const velocity = new Transform(Point.zero(), 0.1, Point.zero());
       expect(collection.state.movement.velocity).toEqual(velocity);
 
@@ -430,6 +439,7 @@ describe('Animationa and Movement', () => {
       moveFreeProps.zeroVelocityThreshold =
         new Transform(new Point(0.1, 0.1), 0.05, new Point(0.1, 0.1));
 
+      // Now at (0.5, 0), 0.1 and rotating with velocity 0.1 rads/s
       collection.startMovingFreely();
       expect(collection.state.isAnimating).toBe(false);
       expect(collection.state.isBeingMoved).toBe(false);
@@ -437,28 +447,35 @@ describe('Animationa and Movement', () => {
 
       collection.draw(m2.identity(), 10);
       expect(collection.state.movement.velocity).toEqual(velocity);
+
+      // After one second, should have rotated to:
+      //  rotation: 0.1 + 0.1*1 - 0.5*0.01*1*1
+      //  with velocity: 0.1 - 0.01*1*1
       collection.draw(m2.identity(), 11);
       expect(collection.state.movement.velocity.round()).toEqual(new Transform(
         Point.zero(),
         0.09,
         Point.zero(),
       ));
-      expect(collection.transform).toEqual(new Transform(
+      expect(collection.transform.round()).toEqual(new Transform(
         new Point(0.5, 0),
-        0.19,
+        0.195,
         Point.Unity(),
       ));
 
+      // At 5 seconds, velocity becomes 0, so rotation is
+      //  rotation: 0.1 + 0.1*5 - 0.5*0.01*5*5
+      //  with velocity: 0.1 - 0.01*1*1
       collection.draw(m2.identity(), 15.1);
       expect(collection.state.isAnimating).toBe(false);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
       expect(collection.state.movement.velocity).toEqual(Transform.Zero());
-      // expect(collection.transform).toEqual(new Transform(
-      //   new Point(0.5, 0),
-      //   0.45,
-      //   Point.Unity(),
-      // ));
+      expect(collection.transform.round()).toEqual(new Transform(
+        new Point(0.5, 0),
+        0.475,
+        Point.Unity(),
+      ));
     });
   });
 });
