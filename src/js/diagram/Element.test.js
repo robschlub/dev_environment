@@ -250,7 +250,7 @@ describe('Animationa and Movement', () => {
         element.state.movement.velocity = initialV;
         element.moveFreelyProperties.deceleration = decel;
         element.moveFreelyProperties.zeroVelocityThreshold = zero;
-        element.moveFreelyProperties.maxVelocity = max;
+        element.maxVelocity = max;
 
         expect(element.state.isMovingFreely).toBe(false);
 

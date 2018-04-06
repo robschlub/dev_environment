@@ -66,28 +66,30 @@ class AnimationPhase {
 class DiagramElement {
   transform: g2.Transform;        // Transform of diagram element
   presetTransforms: Object;       // Convenience dict of transform presets
-  setTransformCallback: (g2.Transform) => void; // Called when setting Transform
-  // globals: GlobalVariables;       // Link to global variables
   lastDrawTransformMatrix: Array<number>; // Transform matrix used in last draw
+
   show: boolean;                  // True if should be shown in diagram
   name: string;                   // Used to reference element in a collection
 
-
-  // Animation and movement
   isMovable: boolean;             // Element is able to be moved
   isTouchable: boolean;           // Element can be touched
 
-  callback: ?(?mixed) => void;
-  // Animation
-  animationPlan: Array<AnimationPhase>;
+  // Callbacks
+  callback: ?(?mixed) => void;             // ending animation or moving freely
+  setTransformCallback: (g2.Transform) => void; // element.transform is updated
 
-  // Moving Freely
-  moveFreelyProperties: {
-    maxVelocity: g2.Transform,
-    zeroVelocityThreshold: g2.Transform,
-    deceleration: g2.Transform,
+  animationPlan: Array<AnimationPhase>;    // Animation plan
+
+  maxVelocity: g2.Transform;            // Maximum velocity allowed
+
+  // When moving freely, the velocity decelerates until it reaches a threshold,
+  // then it is considered 0 - at which point moving freely ends.
+  moveFreelyProperties: {                 // Moving Freely properties
+    zeroVelocityThreshold: g2.Transform,  // Velocity considered 0
+    deceleration: g2.Transform,           // Deceleration
   }
 
+  // Current animation/movement state of element
   state: {
     isAnimating: boolean,
     animation: {
@@ -99,7 +101,9 @@ class DiagramElement {
     movement: {
       previousTime: number,
       previousTransform: g2.Transform,
-      velocity: g2.Transform,
+      velocity: g2.Transform,           // current velocity - will be clipped
+                                        // at max if element is being moved
+                                        // faster than max.
     },
   };
 
@@ -114,7 +118,6 @@ class DiagramElement {
     this.transform = new g2.Transform(translation, rotation, scale);
     this.setTransformCallback = () => {};
     this.show = true;
-    // this.globals = new GlobalVariables();
     this.lastDrawTransformMatrix = m2.identity();
     this.name = name;
 
@@ -123,12 +126,12 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
+    this.maxVelocity = new g2.Transform(
+      g2.point(1000, 1000),
+      1000,
+      g2.point(1000, 1000),
+    );
     this.moveFreelyProperties = {
-      maxVelocity: new g2.Transform(
-        g2.point(1000, 1000),
-        1000,
-        g2.point(1000, 1000),
-      ),
       zeroVelocityThreshold: new g2.Transform(
         g2.point(0.0001, 0.0001),
         0.0001,
@@ -521,7 +524,7 @@ class DiagramElement {
     this.state.movement.previousTime = -1;
     this.state.movement.velocity = this.state.movement.velocity.clip(
       this.moveFreelyProperties.zeroVelocityThreshold,
-      this.moveFreelyProperties.maxVelocity,
+      this.maxVelocity,
     );
   }
 
@@ -551,7 +554,7 @@ class DiagramElement {
       this.transform,
       deltaTime,
       this.moveFreelyProperties.zeroVelocityThreshold,
-      this.moveFreelyProperties.maxVelocity,
+      this.maxVelocity,
     );
     this.state.movement.previousTime = currentTime;
   }
