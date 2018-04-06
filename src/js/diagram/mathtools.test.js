@@ -29,7 +29,7 @@ describe('Math tools testing', () => {
 
   describe('decelerate', () => {
     test('dec 1m/s/s for 1s', () => {
-      const v1 = 10;   // m/s
+      const v1 = 10;          // m/s
       const time = 1;         // s
       const dec = 1;          // m/s/s
       const v2 = decelerate(v1, dec, time);

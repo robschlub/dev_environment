@@ -21,6 +21,7 @@ const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
   return result;
 };
 
+// Decelerate a velocity by some deceleration over time
 const decelerate = (velocity: number, deceleration: number, time: number) => {
   const sign = velocity / Math.abs(velocity);
   const newVelocity = velocity - sign * deceleration * time;
@@ -30,7 +31,7 @@ const decelerate = (velocity: number, deceleration: number, time: number) => {
   }
   return newVelocity;
 };
-
+ 
 const linear = (percentTime: number) => percentTime;
 
 const easeinout = (percentTime: number) => {

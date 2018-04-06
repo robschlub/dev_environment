@@ -62,7 +62,7 @@ class AnimationPhase {
 //  - Its current transformation
 //  - Its animation plan, animation control and animation state
 //  - Its movement state
-
+//
 class DiagramElement {
   transform: g2.Transform;        // Transform of diagram element
   presetTransforms: Object;       // Convenience dict of transform presets
@@ -122,6 +122,10 @@ class DiagramElement {
       animation: {
         currentPhaseIndex: 0,         // current animation phase index in plan
         currentPhase: new AnimationPhase(),  // current animation phase
+      // movement: {
+      //   previousTime: -1,
+      //   velocity: 0,
+      // }
       },
     };
 
@@ -149,6 +153,7 @@ class DiagramElement {
     };
   }
 
+  // Remove?
   vertexToScreen(vertex: g2.Point, canvas: HTMLCanvasElement): g2.Point {
     const canvasRect = canvas.getBoundingClientRect();
     const canvasWidth = canvas.scrollWidth;
@@ -269,6 +274,7 @@ class DiagramElement {
       const deltaTime = now - this.moveState.previousTime;
       this.moveState.previousTime = now;
       this.moveState.velocity = this.changeVelocity(deltaTime);
+      console.log(this.moveState.velocity.translation.x);
       if (DiagramElement.isVelocityZero(this.moveState.velocity)) {
         this.moveState.velocity = new g2.Transform();
         this.stopMovingFreely();
@@ -419,7 +425,7 @@ class DiagramElement {
 
 
   // Movement
-  startMoving(): void {
+  startBeingMoved(): void {
     this.stopAnimating();
     this.stopMovingFreely();
     this.moveState.velocity = g2.Transform.Zero();

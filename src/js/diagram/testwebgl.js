@@ -71,14 +71,25 @@ function testgl(id: string) {
       5, 1, tools.easeinout,
     );
 
-    diagram.elements.animatePlan([phase1, phase2]);
+    // diagram.elements.animatePlan([phase1, phase2]);
     diagram.elements.pulse.frequency = 1;
     diagram.elements.pulse.A = 1;
     diagram.elements.pulse.B = 0.1;
     diagram.elements.pulse.C = 0;
     diagram.elements.pulse.time = 2;
-    diagram.elements.pulseNow();
-    // diagram.elements.animateRotationTo(1, -1, 10);
+    // diagram.elements.pulseNow();
+
+    diagram.elements.moveState.velocity = new g2.Transform(new g2.Point(5, 0), 0, g2.Point.zero());
+    diagram.elements.moveState.previous = diagram.elements.transform;
+    diagram.elements.moveState.deceleration = new g2.Transform(
+      new g2.Point(0.001, 0.1),
+      0,
+      g2.Point.zero()
+    );
+    diagram.elements.startMovingFreely();
+
+
+        // diagram.elements.animateRotationTo(1, -1, 10);
 
     diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
 
