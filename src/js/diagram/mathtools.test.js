@@ -1,4 +1,4 @@
-import { round, decelerate, easeinout } from './mathtools';
+import { round, decelerate, easeinout, clipValue } from './mathtools';
 
 describe('Math tools testing', () => {
   // Rounding a value
@@ -49,6 +49,14 @@ describe('Math tools testing', () => {
       const v2 = decelerate(v1, dec, time);
       expect(v2).toBe(2);
     });
+    test('dec 1m/s/s for 8s in two lots of 4', () => {
+      const v1 = 10;   // m/s
+      const time = 4;         // s
+      const dec = 1;          // m/s/s
+      const v2 = decelerate(v1, dec, time);
+      const v3 = decelerate(v2, dec, time);
+      expect(v3).toBe(2);
+    });
     test('dec 1m/s/s for 11s', () => {
       const v1 = 10;   // m/s
       const time = 11;         // s
@@ -72,6 +80,50 @@ describe('Math tools testing', () => {
     });
     test('0.75', () => {
       expect(easeinout(0.75)).toBe(0.9);
+    });
+  });
+  describe('Clip Value', () => {
+    test('No clipping positive', () => {
+      expect(clipValue(1, 0.1, 2)).toBe(1);
+      expect(clipValue(1, -0.1, -2)).toBe(1);
+    });
+    test('No clipping negative', () => {
+      expect(clipValue(-1, 0.1, 2)).toBe(-1);
+      expect(clipValue(-1, -0.1, -2)).toBe(-1);
+    });
+    test('Max clipping positive', () => {
+      expect(clipValue(3, 0.1, 2)).toBe(2);
+      expect(clipValue(3, -0.1, -2)).toBe(2);
+    });
+    test('Max clipping negative', () => {
+      expect(clipValue(-3, 0.1, 2)).toBe(-2);
+      expect(clipValue(-3, -0.1, -2)).toBe(-2);
+    });
+    test('Min clipping positive', () => {
+      expect(clipValue(0.05, 0.1, 2)).toBe(0);
+      expect(clipValue(0.05, -0.1, -2)).toBe(0);
+    });
+    test('Min clipping negative', () => {
+      expect(clipValue(-0.05, 0.1, 2)).toBe(0);
+      expect(clipValue(-0.05, -0.1, -2)).toBe(0);
+    });
+
+    // Corner cases
+    test('On max clipping positive', () => {
+      expect(clipValue(2, 0.1, 2)).toBe(2);
+      expect(clipValue(2, -0.1, -2)).toBe(2);
+    });
+    test('On max clipping negative', () => {
+      expect(clipValue(-2, 0.1, 2)).toBe(-2);
+      expect(clipValue(-2, -0.1, -2)).toBe(-2);
+    });
+    test('On min clipping positive', () => {
+      expect(clipValue(0.1, 0.1, 2)).toBe(0.1);
+      expect(clipValue(0.1, -0.1, -2)).toBe(0.1);
+    });
+    test('On min clipping negative', () => {
+      expect(clipValue(-0.1, 0.1, 2)).toBe(-0.1);
+      expect(clipValue(-0.1, -0.1, -2)).toBe(-0.1);
     });
   });
 });

@@ -573,6 +573,12 @@ class Transform {
   translation: Point;
   rotation: number;
   scale: Point;
+  // tx: number;
+  // ty: number;
+  // r: number;
+  // sx: number;
+  // sy: number;
+
   static Zero() {
     return new Transform(Point.zero(), 0, new Point(0, 0));
   }
@@ -588,6 +594,11 @@ class Transform {
     this.translation = new Point(translation.x, translation.y);
     this.rotation = rotation;
     this.scale = new Point(scale.x, scale.y);
+    // this.tx = this.translation.x;
+    // this.ty = this.translation.y;
+    // this.sx = this.scale.x;
+    // this.sy = this.scale.y;
+    // this.r = this.rotation;
   }
 
   add(transformToAdd: Transform = Transform.Zero()) {
@@ -660,6 +671,13 @@ class Transform {
     result.rotation = func(this.rotation);
     result.scale.x = func(this.scale.x);
     result.scale.y = func(this.scale.y);
+    return result;
+  }
+  round(precision: number = 8) {
+    const result = this.copy();
+    result.translation = result.translation.round(precision);
+    result.scale = result.scale.round(precision);
+    result.rotation = roundNum(result.rotation, precision);
     return result;
   }
 }

@@ -21,6 +21,70 @@ const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
   return result;
 };
 
+
+// clipValue clips a value to either 0 if it's small enough, or to a max value
+// Value, and maxValue are sign independent. e.g.
+//    * value, maxValue = 2, 1 => clips to 1
+//    * value, maxValue = -2, -1 => clips to -1
+//    * value, maxValue = -2, 1 => clips to -1
+//    * value, maxValue = 2, -1 => clips to 1
+function clipValue(
+  value: number,
+  zeroThreshold: number,
+  maxValue: number = 0,
+) {
+  let result = value;
+  let zero = zeroThreshold;
+  if (zero < 0) {
+    zero = -zero;
+  }
+  if (value > -zero && value < zero) {
+    return 0;
+  }
+  let max = maxValue;
+  if (max < 0) {
+    max = -max;
+  }
+
+  if (value > max) {
+    result = max;
+  }
+  if (value < -max) {
+    result = -max;
+  }
+  return result;
+}
+
+// const dec = function(
+//   position: number,
+//   velocity: number,
+//   magDeceleration: number,
+//   time: number,
+//   zeroThreshold: number = 0,
+// ) {
+//   // If the velocity is currently 0, then no further deceleration can occur, so
+//   // return the current velocity and position
+//   if (velocity == 0 || clipValue(velocity, zeroThreshold, velocity))
+//     return {
+//       p: position,
+//       v: 0,
+//     }
+
+//   // If there is some initial velocity, then calc its sign and 
+//   const sign = velocity / Math.abs(velocity);
+//   let newVelocity = velocity - sign * magDeceleration * time;
+//   newVelocity = clipValue(newVelocity, zeroThreshold, newVelocity);
+
+//   const newPosition = 
+//     position + velocity * time - sign * 0.5 * magDeceleration * time * time;
+
+//   const newSign = newVelocity / Math.abs(newVelocity);
+//   if (newSign !== sign) {
+//     return 0;
+//   }
+//   return newVelocity;
+// };
+// }
 // Decelerate a velocity by some deceleration over time
 const decelerate = (velocity: number, deceleration: number, time: number) => {
   const sign = velocity / Math.abs(velocity);
@@ -80,5 +144,6 @@ export {
   easein,
   sinusoid,
   linear,
+  clipValue,
 };
 

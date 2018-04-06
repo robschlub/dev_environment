@@ -350,6 +350,43 @@ class DiagramElement {
     return true;
   }
 
+  // Calculate new trasform from deceleration
+  getFreeMoveTransform(deltaTime: number, nextVel: g2.Transform) {
+    const s = (s0, v, a, time, nextV, zeroThreshold) => {
+      let t = time;
+      if (v === 0) {
+        return s0;
+      }
+      // If the next velocity is 0 (but the current isn't), then calculate
+      // the time it would take to cross the 0 velocity threashold
+      // vf = vi + at
+      // Therefore, if vf = zeroT: t = (zeroT - vi)/a
+      if (nextV === 0) {
+        t = (zeroThreshold - v) / a;
+      }
+      return s0 + v * t + 1 / 2 * a * t * t;
+    };
+
+    const nextT = this.transform.copy();
+    const v = this.state.movement.velocity;
+    const d = this.moveFreelyProperties.deceleration;
+    const t = deltaTime;
+    const T = this.transform;
+    const nv = nextVel;
+    const z = this.moveFreelyProperties.zeroVelocityThreshold;
+    nextT.translation.x =
+      s(T.translation.x, v.translation.x, -d.translation.x, t, nv.translation.x, z.translation.x);
+    nextT.translation.y =
+      s(T.translation.y, v.translation.y, -d.translation.y, t, nv.translation.y, z.translation.y);
+    nextT.scale.x =
+      s(T.scale.x, v.scale.x, -d.scale.x, t, nv.scale.x, z.scale.x);
+    nextT.scale.y =
+      s(T.scale.y, v.scale.y, -d.scale.y, t, nv.scale.y, z.scale.y);
+    nextT.rotation =
+      s(T.rotation, v.rotation, -d.rotation, t, nv.rotation, z.rotation);
+    return nextT;
+  }
+
   // Reduce the current velocity by some deceleration over time
   decelerate(deltaTime: number): g2.Transform {
     const velocity = this.state.movement.velocity.copy();
@@ -502,6 +539,7 @@ class DiagramElement {
 
   moved(newTransform: g2.Transform): void {
     this.calcVelocity(newTransform);
+    this.transform = newTransform.copy();
     // console.log(this.state.movementvelocity.rotation)
   }
 
@@ -514,7 +552,6 @@ class DiagramElement {
   startMovingFreely(): void {
     this.stopAnimating();
     this.stopBeingMoved();
-    this.state.isBeingMoved = false;
     this.state.isMovingFreely = true;
     this.state.movement.previousTime = -1;
     this.state.movement.velocity = this.state.movement.velocity.clip(
