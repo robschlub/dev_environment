@@ -407,7 +407,8 @@ class DiagramElement {
   animatePhase(phase: AnimationPhase): void {
     this.state.animation.currentPhase = phase;
     this.state.animation.currentPhase.start(this.transform.copy());
-    this.stopMoving();
+    this.stopBeingMoved();
+    this.stopMovingFreely();
     this.state.isAnimating = true;
   }
 
@@ -489,7 +490,7 @@ class DiagramElement {
   // **************************************************************
 
 
-  // Movement
+  // Being Moved
   startBeingMoved(): void {
     this.stopAnimating();
     this.stopMovingFreely();
@@ -498,11 +499,21 @@ class DiagramElement {
     this.state.movement.previousTime = Date.now() / 1000;
     this.state.isBeingMoved = true;
   }
+
   moved(newTransform: g2.Transform): void {
     this.calcVelocity(newTransform);
     // console.log(this.state.movementvelocity.rotation)
   }
+
+  stopBeingMoved(): void {
+    this.state.isBeingMoved = false;
+    this.state.movement.previousTime = -1;
+  }
+
+  // Moving Freely
   startMovingFreely(): void {
+    this.stopAnimating();
+    this.stopBeingMoved();
     this.state.isBeingMoved = false;
     this.state.isMovingFreely = true;
     this.state.movement.previousTime = -1;
@@ -510,14 +521,10 @@ class DiagramElement {
       this.moveFreelyProperties.zeroVelocityThreshold,
       this.moveFreelyProperties.maxVelocity,
     );
-    // console.log(this.state.movement.velocity.rotation);
   }
+
   stopMovingFreely(): void {
     this.state.isMovingFreely = false;
-    this.state.movement.previousTime = -1;
-  }
-  stopMoving(): void {
-    this.state.isBeingMoved = false;
     this.state.movement.previousTime = -1;
   }
 
