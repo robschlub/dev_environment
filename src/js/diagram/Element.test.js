@@ -189,19 +189,19 @@ describe('DiagramElementPrimative', () => {
     test('Deceleration', () => {
       const initialV = new Transform(new Point(10, 20), 0, new Point(-2, 1));
       const decel = new Transform(new Point(1, 2), 2, new Point(1, 1));
-      element.moveState.velocity = initialV;
-      element.moveState.deceleration = decel;
+      element.state.movement.velocity = initialV;
+      element.moveFreelyProperties.deceleration = decel;
 
-      expect(element.isMovingFreely).toBe(false);
+      expect(element.state.isMovingFreely).toBe(false);
 
       element.startMovingFreely();
-      expect(element.isMovingFreely).toBe(true);
+      expect(element.state.isMovingFreely).toBe(true);
       element.draw(identity, 0);
-      expect(element.moveState.velocity).toEqual(initialV);
+      expect(element.state.movement.velocity).toEqual(initialV);
 
       element.draw(identity, 1);
-      expect(element.isMovingFreely).toBe(true);
-      let vel = element.moveState.velocity;
+      expect(element.state.isMovingFreely).toBe(true);
+      let vel = element.state.movement.velocity;
       expect(vel.translation).toEqual(new Point(9, 18));
       expect(vel.scale).toEqual(new Point(-1, 0));
       expect(vel.rotation).toBe(0);
@@ -212,7 +212,7 @@ describe('DiagramElementPrimative', () => {
       ));
 
       element.draw(identity, 2);
-      vel = element.moveState.velocity;
+      vel = element.state.movement.velocity;
       expect(vel.translation).toEqual(new Point(8, 16));
       expect(vel.scale).toEqual(new Point(0, 0));
       expect(vel.rotation).toBe(0);
@@ -222,15 +222,15 @@ describe('DiagramElementPrimative', () => {
       const decel = new Transform(new Point(1, 1), 1, new Point(1, 1));
       const zero = new Transform(new Point(5, 5), 5, new Point(15, 15));
       const max = new Transform(new Point(20, 20), 20, new Point(20, 20));
-      element.moveState.velocity = initialV;
-      element.moveState.deceleration = decel;
-      element.moveState.stopMovingVelocity = zero;
-      element.moveState.maxVelocity = max;
+      element.state.movement.velocity = initialV;
+      element.moveFreelyProperties.deceleration = decel;
+      element.moveFreelyProperties.zeroVelocityThreshold = zero;
+      element.moveFreelyProperties.maxVelocity = max;
 
-      expect(element.isMovingFreely).toBe(false);
+      expect(element.state.isMovingFreely).toBe(false);
 
       element.startMovingFreely();
-      let vel = element.moveState.velocity;
+      let vel = element.state.movement.velocity;
 
       expect(vel.translation).toEqual(new Point(10, -10));
       expect(vel.scale).toEqual(new Point(20, -20));
@@ -238,22 +238,22 @@ describe('DiagramElementPrimative', () => {
 
       element.draw(identity, 0);
 
-      expect(element.isMovingFreely).toBe(true);
+      expect(element.state.isMovingFreely).toBe(true);
 
       element.draw(identity, 5);
-      vel = element.moveState.velocity;
+      vel = element.state.movement.velocity;
 
       expect(vel.translation).toEqual(new Point(5, -5));
       expect(vel.scale).toEqual(new Point(15, -15));
       expect(vel.rotation).toBe(5);
 
       element.draw(identity, 5.1);
-      vel = element.moveState.velocity;
+      vel = element.state.movement.velocity;
 
       expect(vel.translation).toEqual(new Point(0, 0));
       expect(vel.scale).toEqual(new Point(0, 0));
       expect(vel.rotation).toBe(0);
-      expect(element.isMovingFreely).toBe(false);
+      expect(element.state.isMovingFreely).toBe(false);
     });
   });
 });

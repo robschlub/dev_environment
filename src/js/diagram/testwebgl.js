@@ -79,9 +79,9 @@ function testgl(id: string) {
     diagram.elements.pulse.time = 2;
     // diagram.elements.pulseNow();
 
-    diagram.elements.moveState.velocity = new g2.Transform(new g2.Point(1, 0), 0, g2.Point.zero());
+    diagram.elements.state.movement.velocity = new g2.Transform(new g2.Point(1, 0), 0, g2.Point.zero());
     // diagram.elements.moveState.previous = diagram.elements.transform;
-    diagram.elements.moveState.deceleration = new g2.Transform(
+    diagram.elements.moveFreelyProperties.deceleration = new g2.Transform(
       new g2.Point(1, 0.1),
       0,
       g2.Point.zero(),

@@ -72,11 +72,9 @@ class DiagramElement {
   show: boolean;                  // True if should be shown in diagram
   name: string;                   // Used to reference element in a collection
 
-  // Being Moved
-  isBeingMoved: boolean;          // Element is currently being moved
+
+  // Animation and movement
   isMovable: boolean;             // Element is able to be moved
-  isMovingFreely: boolean;        // Element is moving freely
-  moveState: Object;              // Movement state
   isTouchable: boolean;           // Element can be touched
 
   // Animation
@@ -84,16 +82,30 @@ class DiagramElement {
     phases: Array<AnimationPhase>,
     callback: (mixed) => void
   };
-  // isAnimating: boolean;           // If element is currently animating
-  // animationProgress: Object;         // Animation state
-  pulse: Object;                  // Pulse animation state
+
+  // Moving Freely
+  moveFreelyProperties: {
+    maxVelocity: g2.Transform,
+    zeroVelocityThreshold: g2.Transform,
+    deceleration: g2.Transform,
+  }
+
   state: {
     isAnimating: boolean,
     animation: {
       currentPhaseIndex: number,
       currentPhase: AnimationPhase,
-    }
+    },
+    isBeingMoved: boolean,
+    isMovingFreely: boolean,
+    movement: {
+      previousTime: number,
+      previousTransform: g2.Transform,
+      velocity: g2.Transform,
+    },
   };
+
+  pulse: Object;                  // Pulse animation state
 
   constructor(
     translation: g2.Point = g2.Point.zero(),
@@ -108,24 +120,39 @@ class DiagramElement {
     this.lastDrawTransformMatrix = m2.identity();
     this.name = name;
 
-    this.isBeingMoved = false;
     this.isMovable = false;
-    this.isMovingFreely = false;
     this.isTouchable = false;
 
     this.animationPlan = {
       phases: [],
       callback: () => {},
     };
+    this.moveFreelyProperties = {
+      maxVelocity: new g2.Transform(
+        g2.point(1000, 1000),
+        1000,
+        g2.point(1000, 1000),
+      ),
+      zeroVelocityThreshold: new g2.Transform(
+        g2.point(0.0001, 0.0001),
+        0.0001,
+        g2.point(0.0001, 0.0001),
+      ),
+      deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
+    };
     this.state = {
       isAnimating: false,
       animation: {
         currentPhaseIndex: 0,         // current animation phase index in plan
         currentPhase: new AnimationPhase(),  // current animation phase
-      // movement: {
-      //   previousTime: -1,
-      //   velocity: 0,
-      // }
+      },
+
+      isBeingMoved: false,
+      isMovingFreely: false,
+      movement: {
+        previousTime: -1,
+        previousTransform: new g2.Transform(),
+        velocity: new g2.Transform.Zero(),
       },
     };
 
@@ -141,24 +168,24 @@ class DiagramElement {
       C: 0,       // Time/Phase offset for sinusoid
       pulsePattern: tools.sinusoid,
     };
-    this.moveState = {
-      previousTime: -1,
-      stopTime: 1,
-      time: 0,
-      deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
-      previous: new g2.Transform(),
-      velocity: new g2.Transform.Zero(),
-      maxVelocity: new g2.Transform(
-        g2.point(1000, 1000),
-        1000,
-        g2.point(1000, 1000),
-      ),
-      stopMovingVelocity: new g2.Transform(
-        g2.point(0.0001, 0.0001),
-        0.0001,
-        g2.point(0.0001, 0.0001),
-      ),
-    };
+    // this.state.movement = {
+    //   previousTime: -1,
+    //   // stopTime: 1,
+    //   // time: 0,
+    //   deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
+    //   previous: new g2.Transform(),
+    //   velocity: new g2.Transform.Zero(),
+    //   maxVelocity: new g2.Transform(
+    //     g2.point(1000, 1000),
+    //     1000,
+    //     g2.point(1000, 1000),
+    //   ),
+    //   stopMovingVelocity: new g2.Transform(
+    //     g2.point(0.0001, 0.0001),
+    //     0.0001,
+    //     g2.point(0.0001, 0.0001),
+    //   ),
+    // };
   }
 
   // Remove?
@@ -207,7 +234,7 @@ class DiagramElement {
 
   // Set the transform
   setNextTransform(now: number): void {
-    if (this.state.isAnimating || this.isMovingFreely) {
+    if (this.state.isAnimating || this.state.isMovingFreely) {
       const nextTransform = this.getNextTransform(now);
       this.setTransform(nextTransform);
     }
@@ -273,86 +300,93 @@ class DiagramElement {
       // current animation phase plan time, so calculate the next transform.
       return this.calcNextAnimationTransform(deltaTime);
     }
-    if (this.isMovingFreely) {
-      if (this.moveState.previousTime < 0) {
-        this.moveState.previousTime = now;
+
+    // If the element is moving freely, then calc it's next transform
+    if (this.state.isMovingFreely) {
+      // If this is the first frame of moving freely, then record the current
+      // time so can calculate velocity on next frame
+      if (this.state.movement.previousTime < 0) {
+        this.state.movement.previousTime = now;
         return this.transform.copy();
       }
+      // If got here, then we are now after the first frame, so calculate
+      // the delta time from this frame to the previous
+      const deltaTime = now - this.state.movement.previousTime;
+      this.state.movement.previousTime = now;
+      this.state.movement.velocity = this.decelerate(deltaTime);
 
-      const deltaTime = now - this.moveState.previousTime;
-      this.moveState.previousTime = now;
-      this.moveState.velocity = this.changeVelocity(deltaTime);
-      // console.log("Asdf",this.moveState.velocity.translation.x);
-      if (DiagramElement.isVelocityZero(this.moveState.velocity)) {
-        this.moveState.velocity = new g2.Transform();
+      // If the velocity is 0, then stop moving freely and return the current
+      // transform
+      if (DiagramElement.isVelocityZero(this.state.movement.velocity)) {
+        this.state.movement.velocity = new g2.Transform();
         this.stopMovingFreely();
         return this.transform.copy();
       }
-      const nextTransform = this.calcNextMovementTransform(deltaTime, this.moveState.velocity);
+
+      // If got here, the velocity isn't 0, so calculate the next transform
+      // based on the current velocity
+      const nextTransform = this.calcNextMovementTransform(deltaTime, this.state.movement.velocity);
       return nextTransform;
     }
     return this.transform;
   }
 
   static isVelocityZero(transform: g2.Transform): boolean {
-    const threshold = new g2.Transform(g2.point(0.001, 0.001), 0.001, g2.point(0.001, 0.001));
-    if (Math.abs(transform.rotation) > threshold.rotation) {
+    if (transform.rotation !== 0) {
       return false;
     }
-    if (Math.abs(transform.translation.x) > threshold.translation.x) {
+    if (transform.translation.x !== 0) {
       return false;
     }
-    if (Math.abs(transform.translation.y) > threshold.translation.y) {
+    if (transform.translation.y !== 0) {
       return false;
     }
-    if (Math.abs(transform.scale.x) > threshold.scale.x) {
+    if (transform.scale.x !== 0) {
       return false;
     }
-    if (Math.abs(transform.scale.y) > threshold.scale.y) {
+    if (transform.scale.y !== 0) {
       return false;
     }
     return true;
   }
 
-  changeVelocity(deltaTime: number): g2.Transform {
-    const velocity = this.moveState.velocity.copy();
-    // let deceleration = 0.5;
-    const slowdown = 0.8;
-    // console.log(this.moveState.velocity);
-    // velocity.rotation += -(velocity.rotation/Math.abs(velocity.rotation))*deceleration*deltaTime;
+  // Reduce the current velocity by some deceleration over time
+  decelerate(deltaTime: number): g2.Transform {
+    const velocity = this.state.movement.velocity.copy();
+
     velocity.rotation = tools.decelerate(
       velocity.rotation,
-      this.moveState.deceleration.rotation,
+      this.moveFreelyProperties.deceleration.rotation,
       deltaTime,
     );
 
     velocity.translation.x = tools.decelerate(
       velocity.translation.x,
-      this.moveState.deceleration.translation.x,
+      this.moveFreelyProperties.deceleration.translation.x,
       deltaTime,
     );
 
     velocity.translation.y = tools.decelerate(
       velocity.translation.y,
-      this.moveState.deceleration.translation.y,
+      this.moveFreelyProperties.deceleration.translation.y,
       deltaTime,
     );
 
     velocity.scale.x = tools.decelerate(
       velocity.scale.x,
-      this.moveState.deceleration.scale.x,
+      this.moveFreelyProperties.deceleration.scale.x,
       deltaTime,
     );
     velocity.scale.y = tools.decelerate(
       velocity.scale.y,
-      this.moveState.deceleration.scale.y,
+      this.moveFreelyProperties.deceleration.scale.y,
       deltaTime,
     );
-    // velocity.translation.x *= slowdown;
-    // velocity.translation.y *= slowdown;
-    // velocity.scale.x *= slowdown;
-    // velocity.scale.y *= slowdown;
-    return velocity.clip(this.moveState.stopMovingVelocity, this.moveState.maxVelocity);
+
+    return velocity.clip(
+      this.moveFreelyProperties.zeroVelocityThreshold,
+      this.moveFreelyProperties.maxVelocity,
+    );
   }
 
   // Start an animation plan of phases ending in a callback
@@ -459,50 +493,50 @@ class DiagramElement {
   startBeingMoved(): void {
     this.stopAnimating();
     this.stopMovingFreely();
-    this.moveState.velocity = g2.Transform.Zero();
-    this.moveState.previous = this.transform.copy();
-    this.moveState.previousTime = Date.now() / 1000;
-    this.isBeingMoved = true;
+    this.state.movement.velocity = g2.Transform.Zero();
+    this.state.movement.previousTransform = this.transform.copy();
+    this.state.movement.previousTime = Date.now() / 1000;
+    this.state.isBeingMoved = true;
   }
   moved(newTransform: g2.Transform): void {
     this.calcVelocity(newTransform);
-    // console.log(this.moveStatevelocity.rotation)
+    // console.log(this.state.movementvelocity.rotation)
   }
   startMovingFreely(): void {
-    this.isBeingMoved = false;
-    this.isMovingFreely = true;
-    this.moveState.previousTime = -1;
-    this.moveState.velocity = this.moveState.velocity.clip(
-      this.moveState.stopMovingVelocity,
-      this.moveState.maxVelocity,
+    this.state.isBeingMoved = false;
+    this.state.isMovingFreely = true;
+    this.state.movement.previousTime = -1;
+    this.state.movement.velocity = this.state.movement.velocity.clip(
+      this.moveFreelyProperties.zeroVelocityThreshold,
+      this.moveFreelyProperties.maxVelocity,
     );
-    // console.log(this.moveState.velocity.rotation);
+    // console.log(this.state.movement.velocity.rotation);
   }
   stopMovingFreely(): void {
-    this.isMovingFreely = false;
-    this.moveState.previousTime = -1;
+    this.state.isMovingFreely = false;
+    this.state.movement.previousTime = -1;
   }
   stopMoving(): void {
-    this.isBeingMoved = false;
-    this.moveState.previousTime = -1;
+    this.state.isBeingMoved = false;
+    this.state.movement.previousTime = -1;
   }
 
   calcVelocity(newTransform: g2.Transform): void {
     const currentTime = Date.now() / 1000;
-    if (this.moveState.previousTime < 0) {
-      this.moveState.previousTime = currentTime;
+    if (this.state.movement.previousTime < 0) {
+      this.state.movement.previousTime = currentTime;
       return;
     }
-    const deltaTime = currentTime - this.moveState.previousTime;
+    const deltaTime = currentTime - this.state.movement.previousTime;
     // console.log("time: " + deltaTime)
 
-    this.moveState.velocity = this.transform.velocity(
+    this.state.movement.velocity = this.transform.velocity(
       newTransform,
       deltaTime,
-      this.moveState.stopMovingVelocity,
-      this.moveState.maxVelocity,
+      this.moveFreelyProperties.zeroVelocityThreshold,
+      this.moveFreelyProperties.maxVelocity,
     );
-    this.moveState.previousTime = currentTime;
+    this.state.movement.previousTime = currentTime;
   }
 
   transformWithPulse(now: number, transformMatrix: Array<number>): Array<number> {
@@ -610,7 +644,7 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   isMoving(): boolean {
-    if (this.state.isAnimating || this.isMovingFreely || this.isBeingMoved) {
+    if (this.state.isAnimating || this.state.isMovingFreely || this.state.isBeingMoved) {
       return true;
     }
     return false;
@@ -636,7 +670,7 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   isMoving(): boolean {
-    if (this.state.isAnimating || this.isMovingFreely || this.isBeingMoved) {
+    if (this.state.isAnimating || this.state.isMovingFreely || this.state.isBeingMoved) {
       return true;
     }
     for (let i = 0; i < this.order.length; i += 1) {
