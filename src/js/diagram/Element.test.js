@@ -110,6 +110,17 @@ describe('Animationa and Movement', () => {
           expect(element.state.isAnimating).toBe(false);
           expect(element.isMoving()).toBe(false);
         });
+        test('Callback', () => {
+          const callback = jest.fn();         // Callback mock
+          // Setup the animation
+          element.animateRotationTo(1, 1, 1, linear, callback);
+          element.draw(m2.identity(), 0);     // Initial draw setting start time
+          element.draw(m2.identity(), 2);   // Draw half way through
+          element.stopAnimating();            // Stop animating
+
+          expect(element.state.isAnimating).toBe(false);
+          expect(callback.mock.calls).toHaveLength(1);
+        });
         test('Stop animating during animation', () => {
           const callback = jest.fn();         // Callback mock
           // Setup the animation
@@ -138,7 +149,9 @@ describe('Animationa and Movement', () => {
             1, -1, linear,
           );
           const callback = jest.fn();         // Callback mock
+          expect(callback.mock.calls).toHaveLength(0);
           element.animatePlan([phase1, phase2, phase3], callback);
+          expect(callback.mock.calls).toHaveLength(0);
           element.draw(identity, 0);          // Give animation an initial time
 
           // Check initial values
@@ -192,6 +205,7 @@ describe('Animationa and Movement', () => {
         identity = m2.identity();
       });
       test('Deceleration', () => {
+        const callback = jest.fn();
         const initialV = new Transform(new Point(10, 20), 0, new Point(-2, 1));
         const decel = new Transform(new Point(1, 2), 2, new Point(1, 1));
         element.state.movement.velocity = initialV;
@@ -199,7 +213,7 @@ describe('Animationa and Movement', () => {
 
         expect(element.state.isMovingFreely).toBe(false);
 
-        element.startMovingFreely();
+        element.startMovingFreely(callback);
         expect(element.state.isMovingFreely).toBe(true);
         element.draw(identity, 0);
         expect(element.state.movement.velocity).toEqual(initialV);
@@ -221,6 +235,12 @@ describe('Animationa and Movement', () => {
         expect(vel.translation).toEqual(new Point(8, 16));
         expect(vel.scale).toEqual(new Point(0, 0));
         expect(vel.rotation).toBe(0);
+        expect(callback.mock.calls).toHaveLength(0);
+
+        element.draw(identity, 12);
+        vel = element.state.movement.velocity;
+        expect(vel).toEqual(Transform.Zero());
+        expect(callback.mock.calls).toHaveLength(1);
       });
       test('Zero and Max Threshold', () => {
         const initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
@@ -260,64 +280,6 @@ describe('Animationa and Movement', () => {
         expect(vel.rotation).toBe(0);
         expect(element.state.isMovingFreely).toBe(false);
       });
-      // describe('Free move transform calculation', () => {
-      //   let decel;
-      //   let zero;
-      //   let max;
-      //   let initialV;
-      //   beforeEach(() => {
-      //     initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
-      //     decel = new Transform(new Point(1, 1), 1, new Point(1, 1));
-      //     zero = new Transform(new Point(5, 5), 5, new Point(15, 15));
-      //     max = new Transform(new Point(20, 20), 20, new Point(20, 20));
-      //     element.state.movement.velocity = initialV;
-      //     element.moveFreelyProperties.deceleration = decel;
-      //     element.moveFreelyProperties.zeroVelocityThreshold = zero;
-      //     element.moveFreelyProperties.maxVelocity = max;
-      //     element.startMovingFreely();
-      //   });
-      //   test('simple', () => {
-      //     const time = 1;
-      //     const nextV = element.decelerate(time);
-      //     const result = element.getFreeMoveTransform(1, nextV);
-      //     expect(result).toEqual(new Transform(
-      //       new Point(9.5, -9.5),
-      //       9.5,
-      //       new Point(19.5, -19.5),
-      //     ));
-      //   });
-      // });
-      // test('Deceleration steps', () => {
-      //   const initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
-      //   const initialT = element.transform.copy();
-      //   const decel = new Transform(new Point(1, 1), 1, new Point(1, 1));
-      //   const zero = new Transform(new Point(5, 5), 5, new Point(15, 15));
-      //   const max = new Transform(new Point(20, 20), 20, new Point(20, 20));
-      //   const clipV = new Transform(new Point(10, -10), 10, new Point(20, -20));
-      //   element.state.movement.velocity = initialV;
-      //   element.moveFreelyProperties.deceleration = decel;
-      //   element.moveFreelyProperties.zeroVelocityThreshold = zero;
-      //   element.moveFreelyProperties.maxVelocity = max;
-
-      //   element.startMovingFreely();
-      //   element.draw(identity, 0);
-      //   expect(element.state.movement.velocity).toEqual(clipV);
-      //   expect(element.transform).toEqual(initialT);
-
-      //   element.draw(identity, 6);
-      //   const s = (s0, u, a, t) => s0 + u * t + 1 / 2 * a * t * t;
-      //   expect(element.transform).toEqual(new Transform(
-      //     new Point(
-      //       s(initialT.translation.x, clipV.translation.x, -decel.translation.x, 5),
-      //       s(initialT.translation.y, clipV.translation.y, -decel.translation.y, 5),
-      //     ),
-      //     s(initialT.rotation, clipV.rotation, -decel.rotation, 5),
-      //     new Point(
-      //       s(initialT.scale.x, clipV.scale.x, -decel.scale.x, 5),
-      //       s(initialT.scale.y, clipV.scale.y, -decel.scale.y, 5),
-      //     ),
-      //   ));
-      // });
     });
     describe('Being Moved', () => {
       let element;
@@ -396,6 +358,8 @@ describe('Animationa and Movement', () => {
       Date.now = RealDate;
     });
     test('Combination of animation and movement with a collection', () => {
+      const callbackAnim = jest.fn();
+      const callbackMoveFree = jest.fn();
       const draw = jest.fn();
       webgl.gl.drawArrays = draw;
       collection.draw(identity, 0);
@@ -405,7 +369,7 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isMovingFreely).toBe(false);
 
       // Move translation to (0.5, 0)
-      collection.animateTranslationTo(new Point(1, 0), 1, linear);
+      collection.animateTranslationTo(new Point(1, 0), 1, linear, callbackAnim);
       expect(collection.state.isAnimating).toBe(true);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
@@ -440,7 +404,7 @@ describe('Animationa and Movement', () => {
         new Transform(new Point(0.1, 0.1), 0.05, new Point(0.1, 0.1));
 
       // Now at (0.5, 0), 0.1 and rotating with velocity 0.1 rads/s
-      collection.startMovingFreely();
+      collection.startMovingFreely(callbackMoveFree);
       expect(collection.state.isAnimating).toBe(false);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(true);
@@ -476,6 +440,10 @@ describe('Animationa and Movement', () => {
         0.475,
         Point.Unity(),
       ));
+
+      // Check all the callbacks were called once
+      expect(callbackAnim.mock.calls).toHaveLength(1);
+      expect(callbackMoveFree.mock.calls).toHaveLength(1);
     });
   });
 });

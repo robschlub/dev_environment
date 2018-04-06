@@ -86,7 +86,7 @@ class Diagram {
   }
 
   isAnimating(): boolean {
-    return this.elements.isAnimating;
+    return this.elements.state.isAnimating;
   }
 
   /* eslint-disable */

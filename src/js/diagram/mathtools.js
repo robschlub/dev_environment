@@ -79,7 +79,16 @@ const decelerate = function getPositionVelocityFromDecAndTime(
   // If there is some initial velocity, then calc its sign and
   const sign = velocity / Math.abs(velocity);
   let newVelocity = velocity - sign * d * time;
-  newVelocity = clipValue(newVelocity, zeroThreshold, newVelocity);
+
+  // if the new velocity changes sign, then it should go to 0. If it doesn't
+  // change sign, then clip incase it should go to 0 because it is below
+  // the zero velocity threshold.
+  const newSign = newVelocity / Math.abs(newVelocity);
+  if (newSign !== sign) {
+    newVelocity = 0;
+  } else {
+    newVelocity = clipValue(newVelocity, zeroThreshold, newVelocity);
+  }
 
   // If the new velocity is clipped, then we need to use the time to where the
   // velocity crosses the clipping point.

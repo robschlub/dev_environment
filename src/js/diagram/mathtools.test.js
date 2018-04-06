@@ -56,6 +56,17 @@ describe('Math tools testing', () => {
       const r = decelerate(p1, v1, dec, time, zT);
       expect(r).toEqual({ v: v2, p: p2 });
     });
+    test('initial: 0m, 10m/s - dec 1m/s/s for 11s', () => {
+      const p1 = 0;           // m
+      const v1 = 10;          // m/s
+      const time = 11;         // s
+      const dec = 1;          // m/s/s
+      const zT = 0.0001;         // m/s
+      const v2 = 0;
+      const p2 = 50;
+      const r = decelerate(p1, v1, dec, time, zT);
+      expect({ v: round(r.v), p: round(r.p) }).toEqual({ v: v2, p: p2 });
+    });
     test('initial: 0m, 10m/s - dec 1m/s/s for two lots of 1s', () => {
       const p1 = 0;           // m
       const v1 = 10;          // m/s

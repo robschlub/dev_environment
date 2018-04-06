@@ -77,11 +77,9 @@ class DiagramElement {
   isMovable: boolean;             // Element is able to be moved
   isTouchable: boolean;           // Element can be touched
 
+  callback: ?(?mixed) => void;
   // Animation
-  animationPlan: {
-    phases: Array<AnimationPhase>,
-    callback: (mixed) => void
-  };
+  animationPlan: Array<AnimationPhase>;
 
   // Moving Freely
   moveFreelyProperties: {
@@ -123,10 +121,8 @@ class DiagramElement {
     this.isMovable = false;
     this.isTouchable = false;
 
-    this.animationPlan = {
-      phases: [],
-      callback: () => {},
-    };
+    this.callback = null;
+    this.animationPlan = [];
     this.moveFreelyProperties = {
       maxVelocity: new g2.Transform(
         g2.point(1000, 1000),
@@ -204,17 +200,6 @@ class DiagramElement {
     return next;
   }
 
-  // Calculate the next transform due to a progessing free movement
-  calcNextMovementTransform(deltaTime, velocity): g2.Transform {
-    const nextTransform = this.transform.copy();
-    nextTransform.rotation += deltaTime * velocity.rotation;
-    nextTransform.translation.x += deltaTime * velocity.translation.x;
-    nextTransform.translation.y += deltaTime * velocity.translation.y;
-    nextTransform.scale.x += deltaTime * velocity.scale.x;
-    nextTransform.scale.y += deltaTime * velocity.scale.y;
-    return nextTransform;
-  }
-
   // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
   setTransform(transform: g2.Transform): void {
@@ -260,7 +245,7 @@ class DiagramElement {
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
-        if (this.state.animation.currentPhaseIndex < this.animationPlan.phases.length - 1) {
+        if (this.state.animation.currentPhaseIndex < this.animationPlan.length - 1) {
           // Set current transform to the end of the current phase
           this.setTransform(this.calcNextAnimationTransform(phase.time));
 
@@ -269,7 +254,7 @@ class DiagramElement {
 
           // Start the next animation phase
           this.state.animation.currentPhaseIndex += 1;
-          this.animatePhase(this.animationPlan.phases[this.state.animation.currentPhaseIndex]);
+          this.animatePhase(this.state.animation.currentPhaseIndex);
           this.state.animation.currentPhase.startTime =
             now - nextPhaseDeltaTime;
           this.setNextTransform(now);
@@ -302,7 +287,6 @@ class DiagramElement {
       // If got here, then we are now after the first frame, so calculate
       // the delta time from this frame to the previous
       const deltaTime = now - this.state.movement.previousTime;
-
       // Calculate the new velocity and position
       const next = this.decelerate(deltaTime);
       this.state.movement.velocity = next.velocity;
@@ -337,14 +321,13 @@ class DiagramElement {
     return true;
   }
 
-  // Decelerate over some time during movement to get a new element transform
-  // and movement velocity
+  // Decelerate over some time when moving freely to get a new element
+  // transform and movement velocity
   decelerate(deltaTime: number): Object {
     const velocity = this.state.movement.velocity.copy();
     let result;
     const v = new g2.Transform.Zero();
     const t = new g2.Transform.Zero();
-
     result = tools.decelerate(
       this.transform.rotation,
       velocity.rotation,
@@ -354,7 +337,6 @@ class DiagramElement {
     );
     v.rotation = result.v;
     t.rotation = result.p;
-
 
     result = tools.decelerate(
       this.transform.translation.x,
@@ -403,39 +385,45 @@ class DiagramElement {
   }
 
   // Start an animation plan of phases ending in a callback
-  animatePlan(phases: Array<AnimationPhase>, callback: (mixed) => void = () => {}): void {
-    this.animationPlan = {
-      phases: [],
-      callback: () => {},
-    };
-    for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.animationPlan.phases.push(phases[i]);
-    }
-    if (this.animationPlan.phases.length > 0) {
-      this.animationPlan.callback = callback;
-      this.state.animation.currentPhaseIndex = 0;
-      this.animatePhase(this.animationPlan.phases[this.state.animation.currentPhaseIndex]);
-    }
-  }
-  animatePhase(phase: AnimationPhase): void {
-    this.state.animation.currentPhase = phase;
-    this.state.animation.currentPhase.start(this.transform.copy());
-    this.stopBeingMoved();
+  animatePlan(
+    phases: Array<AnimationPhase>,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    this.stopAnimating();
     this.stopMovingFreely();
-    this.state.isAnimating = true;
+    this.stopBeingMoved();
+    this.animationPlan = [];
+    for (let i = 0, j = phases.length; i < j; i += 1) {
+      this.animationPlan.push(phases[i]);
+    }
+    if (this.animationPlan.length > 0) {
+      this.callback = callback;
+      this.state.isAnimating = true;
+      this.state.animation.currentPhaseIndex = 0;
+      this.animatePhase(this.state.animation.currentPhaseIndex);
+    }
   }
 
-  stopAnimating(result?: mixed): void {
-    const { callback } = this.animationPlan;
-    this.animationPlan = { phases: [], callback: () => {} };
+  // Start the animation of a phase - this should only be called by methods
+  // internal to this class.
+  animatePhase(index: number): void {
+    this.state.animation.currentPhase = this.animationPlan[index];
+    this.state.animation.currentPhase.start(this.transform.copy());
+  }
+
+  // When animation is stopped, any callback associated with the animation
+  // needs to be called, with whatever is passed to stopAnimating.
+  stopAnimating(result: ?mixed): void {
+    this.animationPlan = [];
     this.state.isAnimating = false;
 
-    if (callback) {
+    if (this.callback) {
       if (result) {
-        callback(result);
+        this.callback(result);
       } else {
-        callback();
+        this.callback();
       }
+      this.callback = null;
     }
   }
 
@@ -447,7 +435,7 @@ class DiagramElement {
     time: number = 1,
     rotDirection: number = 0,
     easeFunction: (number) => number = tools.easeinout,
-    callback: (mixed) => void = () => {},
+    callback: ?(?mixed) => void = null,
   ): void {
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
@@ -459,7 +447,7 @@ class DiagramElement {
     translation: g2.Point,
     time: number = 1,
     easeFunction: (number) => number = tools.easeinout,
-    callback: (mixed) => void = () => {},
+    callback: ?(?mixed) => void = null,
   ): void {
     const transform = this.transform.copy();
     transform.translation = translation.copy();
@@ -473,7 +461,7 @@ class DiagramElement {
     rotDirection,
     time = 1,
     easeFunction = tools.easeinout,
-    callback: (mixed) => void = () => {},
+    callback: ?(?mixed) => void = null,
   ): void {
     const transform = this.transform.copy();
     transform.rotation = rotation;
@@ -489,7 +477,7 @@ class DiagramElement {
     rotDirection,
     time = 1,
     easeFunction = tools.easeinout,
-    callback: (mixed) => void = () => {},
+    callback: ?(?mixed) => void = null,
   ): void {
     const transform = this.transform.copy();
     transform.rotation = rotation;
@@ -525,9 +513,10 @@ class DiagramElement {
   }
 
   // Moving Freely
-  startMovingFreely(): void {
+  startMovingFreely(callback: ?(?mixed) => void = null): void {
     this.stopAnimating();
     this.stopBeingMoved();
+    this.callback = callback;
     this.state.isMovingFreely = true;
     this.state.movement.previousTime = -1;
     this.state.movement.velocity = this.state.movement.velocity.clip(
@@ -536,9 +525,17 @@ class DiagramElement {
     );
   }
 
-  stopMovingFreely(): void {
+  stopMovingFreely(result: ?mixed): void {
     this.state.isMovingFreely = false;
     this.state.movement.previousTime = -1;
+    if (this.callback) {
+      if (result) {
+        this.callback(result);
+      } else {
+        this.callback();
+      }
+      this.callback = null;
+    }
   }
 
   calcVelocity(newTransform: g2.Transform): void {
