@@ -652,6 +652,16 @@ class Transform {
     deltaTransform.rotation /= deltaTime;
     return deltaTransform.clip(zeroThreshold, maxTransform);
   }
+
+  map(func: (number)=> number) {
+    const result = this.copy();
+    result.translation.x = func(this.translation.x);
+    result.translation.y = func(this.translation.y);
+    result.rotation = func(this.rotation);
+    result.scale.x = func(this.scale.x);
+    result.scale.y = func(this.scale.y);
+    return result;
+  }
 }
 
 export {

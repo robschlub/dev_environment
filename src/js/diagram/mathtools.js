@@ -31,7 +31,7 @@ const decelerate = (velocity: number, deceleration: number, time: number) => {
   }
   return newVelocity;
 };
- 
+
 const linear = (percentTime: number) => percentTime;
 
 const easeinout = (percentTime: number) => {

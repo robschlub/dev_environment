@@ -723,6 +723,21 @@ describe('g2 tests', () => {
         expect(v).toEqual(expectation);
       });
     });
+    describe('Map a function to all dimensions of transform', () => {
+      test('Simple mapping', () => {
+        const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
+        const m = t.map(n => n + 1);
+        const c = new g2.Transform(new g2.Point(2, 3), 4, new g2.Point(5, 6));
+        expect(m).toEqual(c);
+      });
+      test('More complex mapping', () => {
+        const func = (value, diff) => value + diff;
+        const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
+        const m = t.map(n => func(n, 1));
+        const c = new g2.Transform(new g2.Point(2, 3), 4, new g2.Point(5, 6));
+        expect(m).toEqual(c);
+      });
+    });
   });
   describe('Clip Velocity', () => {
     test('No clipping positive velocity', () => {
