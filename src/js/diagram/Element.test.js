@@ -172,4 +172,27 @@ describe('DiagramElementPrimative', () => {
       });
     });
   });
+  describe('Moving Freely', () => {
+    let element;
+    let identity;
+    beforeEach(() => {
+      const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+      element = new DiagramElementPrimative(
+        square,
+        Point.zero(),
+        0,
+        Point.Unity(),
+        [0, 0, 1, 1],
+      );
+      identity = m2.identity();
+    });
+    test('Translation', () => {
+      element.moveState.velocity = new Transform(new Point(10, 0), 0, Point.zero());
+      element.moveState.deceleration = new Transform(new Point(1, 0), 0, Point.zero());
+      element.startMovingFreely();
+      element.draw(identity, 0);
+      element.draw(identity, 1);
+      expect(element.moveState.velocity.translation.x).toBe(9);
+    });
+  });
 });

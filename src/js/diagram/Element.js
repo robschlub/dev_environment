@@ -274,7 +274,7 @@ class DiagramElement {
       const deltaTime = now - this.moveState.previousTime;
       this.moveState.previousTime = now;
       this.moveState.velocity = this.changeVelocity(deltaTime);
-      console.log(this.moveState.velocity.translation.x);
+      // console.log("Asdf",this.moveState.velocity.translation.x);
       if (DiagramElement.isVelocityZero(this.moveState.velocity)) {
         this.moveState.velocity = new g2.Transform();
         this.stopMovingFreely();
@@ -317,10 +317,33 @@ class DiagramElement {
       this.moveState.deceleration.rotation,
       deltaTime,
     );
-    velocity.translation.x *= slowdown;
-    velocity.translation.y *= slowdown;
-    velocity.scale.x *= slowdown;
-    velocity.scale.y *= slowdown;
+
+    velocity.translation.x = tools.decelerate(
+      velocity.translation.x,
+      this.moveState.deceleration.translation.x,
+      deltaTime,
+    );
+
+    velocity.translation.y = tools.decelerate(
+      velocity.translation.y,
+      this.moveState.deceleration.translation.y,
+      deltaTime,
+    );
+
+    velocity.scale.x = tools.decelerate(
+      velocity.scale.x,
+      this.moveState.deceleration.scale.x,
+      deltaTime,
+    );
+    velocity.scale.y = tools.decelerate(
+      velocity.scale.y,
+      this.moveState.deceleration.scale.y,
+      deltaTime,
+    );
+    // velocity.translation.x *= slowdown;
+    // velocity.translation.y *= slowdown;
+    // velocity.scale.x *= slowdown;
+    // velocity.scale.y *= slowdown;
     return velocity;
   }
 
