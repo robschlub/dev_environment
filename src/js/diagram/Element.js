@@ -140,6 +140,7 @@ class DiagramElement {
       ),
       deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
     };
+
     this.state = {
       isAnimating: false,
       animation: {
@@ -168,24 +169,6 @@ class DiagramElement {
       C: 0,       // Time/Phase offset for sinusoid
       pulsePattern: tools.sinusoid,
     };
-    // this.state.movement = {
-    //   previousTime: -1,
-    //   // stopTime: 1,
-    //   // time: 0,
-    //   deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
-    //   previous: new g2.Transform(),
-    //   velocity: new g2.Transform.Zero(),
-    //   maxVelocity: new g2.Transform(
-    //     g2.point(1000, 1000),
-    //     1000,
-    //     g2.point(1000, 1000),
-    //   ),
-    //   stopMovingVelocity: new g2.Transform(
-    //     g2.point(0.0001, 0.0001),
-    //     0.0001,
-    //     g2.point(0.0001, 0.0001),
-    //   ),
-    // };
   }
 
   // Remove?
@@ -232,15 +215,7 @@ class DiagramElement {
     return nextTransform;
   }
 
-  // Set the transform
-  setNextTransform(now: number): void {
-    if (this.state.isAnimating || this.state.isMovingFreely) {
-      const nextTransform = this.getNextTransform(now);
-      this.setTransform(nextTransform);
-    }
-  }
-
-  // Use this method to set the objects transform incase a callback has been
+  // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
   setTransform(transform: g2.Transform): void {
     this.transform = transform.copy();
@@ -249,10 +224,20 @@ class DiagramElement {
     }
   }
 
-  // Get the transform for the next animation frame. This transform will
-  // be different to this.transform if currently animating or moving freely
-  // and some time has elapsed from the last transform.
-  getNextTransform(now: number): g2.Transform {
+  // Set the next transform (and velocity if moving freely) for the next
+  // animation frame.
+  //
+  // If animating, this transform will be the next frame determined by
+  // the currently executing animation phase. If time exceeds the current
+  // phase, then either the next phase will be started, or if there are no
+  // more phases, the animation will complete.
+  //
+  // If moving freely, this method will set the next velocity and transform
+  // based on the current velocity, current transform, elapsed time,
+  // deceleration (in moveFreelyProperties) and zeroVelocityThreshold.
+  // Once the velocity goes to zero, this metho will stop the element moving
+  // freely.
+  setNextTransform(now: number): void {
     // If animation is happening
     if (this.state.isAnimating) {
       const phase = this.state.animation.currentPhase;
@@ -262,7 +247,7 @@ class DiagramElement {
       // return the current transform.
       if (phase.startTime < 0) {
         phase.startTime = now;
-        return this.transform;
+        return;
       }
 
       // If we have got here, that means the animation has already started,
@@ -287,18 +272,21 @@ class DiagramElement {
           this.animatePhase(this.animationPlan.phases[this.state.animation.currentPhaseIndex]);
           this.state.animation.currentPhase.startTime =
             now - nextPhaseDeltaTime;
-          return this.getNextTransform(now);
+          this.setNextTransform(now);
+          return;
         }
         // This needs to go before StopAnimating, as stopAnimating clears
         // the animation plan (incase a callback is used to start another
         // animation)
         const endTransform = this.calcNextAnimationTransform(phase.time);
         this.stopAnimating(true);
-        return endTransform;
+        this.setTransform(endTransform);
+        return;
       }
       // If we are here, that means the time elapsed is not more than the
       // current animation phase plan time, so calculate the next transform.
-      return this.calcNextAnimationTransform(deltaTime);
+      this.setTransform(this.calcNextAnimationTransform(deltaTime));
+      return;
     }
 
     // If the element is moving freely, then calc it's next velocity and
@@ -309,7 +297,7 @@ class DiagramElement {
       // time so can calculate velocity on next frame
       if (this.state.movement.previousTime < 0) {
         this.state.movement.previousTime = now;
-        return this.transform.copy();
+        return;
       }
       // If got here, then we are now after the first frame, so calculate
       // the delta time from this frame to the previous
@@ -326,9 +314,8 @@ class DiagramElement {
         this.state.movement.velocity = g2.Transform.Zero();
         this.stopMovingFreely();
       }
-      return next.transform;
+      this.setTransform(next.transform);
     }
-    return this.transform;
   }
 
   static isVelocityZero(transform: g2.Transform): boolean {
