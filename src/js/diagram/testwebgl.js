@@ -72,6 +72,12 @@ function testgl(id: string) {
     );
 
     diagram.elements.animatePlan([phase1, phase2]);
+    diagram.elements.pulse.frequency = 1;
+    diagram.elements.pulse.A = 1;
+    diagram.elements.pulse.B = 0.1;
+    diagram.elements.pulse.C = 0;
+    diagram.elements.pulse.time = 2;
+    diagram.elements.pulseNow();
     // diagram.elements.animateRotationTo(1, -1, 10);
 
     diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
