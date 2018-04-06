@@ -148,8 +148,16 @@ class DiagramElement {
       deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
       previous: new g2.Transform(),
       velocity: new g2.Transform.Zero(),
-      maxVelocity: new g2.Transform(),
-      stopMovingVelocity: new g2.Transform(),
+      maxVelocity: new g2.Transform(
+        g2.point(1000, 1000),
+        1000,
+        g2.point(1000, 1000),
+      ),
+      stopMovingVelocity: new g2.Transform(
+        g2.point(0.0001, 0.0001),
+        0.0001,
+        g2.point(0.0001, 0.0001),
+      ),
     };
   }
 
@@ -344,7 +352,7 @@ class DiagramElement {
     // velocity.translation.y *= slowdown;
     // velocity.scale.x *= slowdown;
     // velocity.scale.y *= slowdown;
-    return velocity;
+    return velocity.clip(this.moveState.stopMovingVelocity, this.moveState.maxVelocity);
   }
 
   // Start an animation plan of phases ending in a callback
@@ -464,6 +472,10 @@ class DiagramElement {
     this.isBeingMoved = false;
     this.isMovingFreely = true;
     this.moveState.previousTime = -1;
+    this.moveState.velocity = this.moveState.velocity.clip(
+      this.moveState.stopMovingVelocity,
+      this.moveState.maxVelocity,
+    );
     // console.log(this.moveState.velocity.rotation);
   }
   stopMovingFreely(): void {
@@ -483,6 +495,7 @@ class DiagramElement {
     }
     const deltaTime = currentTime - this.moveState.previousTime;
     // console.log("time: " + deltaTime)
+
     this.moveState.velocity = this.transform.velocity(
       newTransform,
       deltaTime,

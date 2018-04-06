@@ -84,12 +84,12 @@ function testgl(id: string) {
     diagram.elements.moveState.deceleration = new g2.Transform(
       new g2.Point(1, 0.1),
       0,
-      g2.Point.zero()
+      g2.Point.zero(),
     );
     diagram.elements.startMovingFreely();
 
 
-        diagram.elements.animateRotationTo(1, -1, 10);
+    // diagram.elements.animateRotationTo(1, -1, 10);
 
     // diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
 

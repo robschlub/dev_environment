@@ -186,13 +186,74 @@ describe('DiagramElementPrimative', () => {
       );
       identity = m2.identity();
     });
-    test('Translation', () => {
-      element.moveState.velocity = new Transform(new Point(10, 0), 0, Point.zero());
-      element.moveState.deceleration = new Transform(new Point(1, 0), 0, Point.zero());
+    test('Deceleration', () => {
+      const initialV = new Transform(new Point(10, 20), 0, new Point(-2, 1));
+      const decel = new Transform(new Point(1, 2), 2, new Point(1, 1));
+      element.moveState.velocity = initialV;
+      element.moveState.deceleration = decel;
+
+      expect(element.isMovingFreely).toBe(false);
+
       element.startMovingFreely();
+      expect(element.isMovingFreely).toBe(true);
       element.draw(identity, 0);
+      expect(element.moveState.velocity).toEqual(initialV);
+
       element.draw(identity, 1);
-      expect(element.moveState.velocity.translation.x).toBe(9);
+      expect(element.isMovingFreely).toBe(true);
+      let vel = element.moveState.velocity;
+      expect(vel.translation).toEqual(new Point(9, 18));
+      expect(vel.scale).toEqual(new Point(-1, 0));
+      expect(vel.rotation).toBe(0);
+      expect(element.transform).toEqual(new Transform(
+        new Point(9, 18),
+        0,
+        new Point(0, 1),
+      ));
+
+      element.draw(identity, 2);
+      vel = element.moveState.velocity;
+      expect(vel.translation).toEqual(new Point(8, 16));
+      expect(vel.scale).toEqual(new Point(0, 0));
+      expect(vel.rotation).toBe(0);
+    });
+    test('Zero and Max Threshold', () => {
+      const initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
+      const decel = new Transform(new Point(1, 1), 1, new Point(1, 1));
+      const zero = new Transform(new Point(5, 5), 5, new Point(15, 15));
+      const max = new Transform(new Point(20, 20), 20, new Point(20, 20));
+      element.moveState.velocity = initialV;
+      element.moveState.deceleration = decel;
+      element.moveState.stopMovingVelocity = zero;
+      element.moveState.maxVelocity = max;
+
+      expect(element.isMovingFreely).toBe(false);
+
+      element.startMovingFreely();
+      let vel = element.moveState.velocity;
+
+      expect(vel.translation).toEqual(new Point(10, -10));
+      expect(vel.scale).toEqual(new Point(20, -20));
+      expect(vel.rotation).toBe(10);
+
+      element.draw(identity, 0);
+
+      expect(element.isMovingFreely).toBe(true);
+
+      element.draw(identity, 5);
+      vel = element.moveState.velocity;
+
+      expect(vel.translation).toEqual(new Point(5, -5));
+      expect(vel.scale).toEqual(new Point(15, -15));
+      expect(vel.rotation).toBe(5);
+
+      element.draw(identity, 5.1);
+      vel = element.moveState.velocity;
+
+      expect(vel.translation).toEqual(new Point(0, 0));
+      expect(vel.scale).toEqual(new Point(0, 0));
+      expect(vel.rotation).toBe(0);
+      expect(element.isMovingFreely).toBe(false);
     });
   });
 });
