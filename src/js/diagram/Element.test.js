@@ -256,4 +256,39 @@ describe('DiagramElementPrimative', () => {
       expect(element.state.isMovingFreely).toBe(false);
     });
   });
+  describe('Being Moved', () => {
+    let element;
+    const RealDate = Date.now;
+    beforeEach(() => {
+      const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+      element = new DiagramElementPrimative(
+        square,
+        Point.zero(),
+        0,
+        Point.Unity(),
+        [0, 0, 1, 1],
+      );
+    });
+    afterEach(() => {
+      Date.now = RealDate;
+    });
+    describe('Move', () => {
+      test('Move', () => {
+        Date.now = () => 0;
+        element.startBeingMoved();
+        expect(element.state.isBeingMoved).toBe(true);
+        Date.now = () => 1000;
+        element.moved(new Transform(
+          new Point(1, -1),
+          1,
+          new Point(1, 1),
+        ));
+        expect(element.state.movement.velocity).toEqual(new Transform(
+          new Point(1, -1),
+          1,
+          new Point(0, 0),
+        ));
+      });
+    });
+  });
 });

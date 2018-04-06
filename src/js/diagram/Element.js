@@ -537,8 +537,8 @@ class DiagramElement {
     const deltaTime = currentTime - this.state.movement.previousTime;
     // console.log("time: " + deltaTime)
 
-    this.state.movement.velocity = this.transform.velocity(
-      newTransform,
+    this.state.movement.velocity = newTransform.velocity(
+      this.transform,
       deltaTime,
       this.moveFreelyProperties.zeroVelocityThreshold,
       this.moveFreelyProperties.maxVelocity,
