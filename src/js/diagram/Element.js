@@ -596,43 +596,45 @@ class DiagramElement {
   //    * pulse scale
   //    * pulse 3 copy - 1 scale up, 1 stay same, 1 scale down
   transformWithPulse(now: number, transformMatrix: Array<number>): Array<Array<number>> {
-    let pulseTransformMatrix = [m2.copy(transformMatrix)];
+    const pulseTransformMatrix = [];
     if (this.state.isPulsing) {
-      let pMatrix = pulseTransformMatrix[0];
       if (this.state.pulse.startTime === -1) {
         this.state.pulse.startTime = now;
       }
-
       const deltaTime = now - this.state.pulse.startTime;
-
-      const scale = this.pulse.style(
-        deltaTime,
-        this.pulse.frequency,
-        this.pulse.A,
-        this.pulse.B,
-        this.pulse.C,
-      );
-      const pulseTransform = DiagramElement.getPulseTransform(scale);
-      pMatrix = m2.translate(
-        pMatrix,
-        pulseTransform.translation.x,
-        pulseTransform.translation.y,
-      );
-      pMatrix = m2.rotate(
-        pMatrix,
-        pulseTransform.rotation,
-      );
-      pMatrix = m2.scale(
-        pMatrix,
-        pulseTransform.scale.x,
-        pulseTransform.scale.y,
-      );
-
+      for (let i = 0; i < this.pulse.num; i += 1) {
+        let pMatrix = m2.copy(transformMatrix);
+        const b = this.pulse.B instanceof Array ? this.pulse.B[i] : this.pulse.B;
+        const scale = this.pulse.style(
+          deltaTime,
+          this.pulse.frequency,
+          this.pulse.A,
+          b,
+          this.pulse.C,
+        );
+        console.log(i, scale)
+        const pulseTransform = DiagramElement.getPulseTransform(scale);
+        pMatrix = m2.translate(
+          pMatrix,
+          pulseTransform.translation.x,
+          pulseTransform.translation.y,
+        );
+        pMatrix = m2.rotate(
+          pMatrix,
+          pulseTransform.rotation,
+        );
+        pMatrix = m2.scale(
+          pMatrix,
+          pulseTransform.scale.x,
+          pulseTransform.scale.y,
+        );
+        pulseTransformMatrix.push(pMatrix);
+      }
       if (deltaTime > this.pulse.time && this.pulse.time !== 0) {
         this.state.isPulsing = false;
       }
-      // this.globals.animateNextFrame();
-      pulseTransformMatrix = [pMatrix];
+    } else {
+      pulseTransformMatrix.push(m2.copy(transformMatrix));
     }
 
     // this.lastDrawTransformMatrix = m2.copy(pulseTransformMatrix);
@@ -648,6 +650,29 @@ class DiagramElement {
     this.state.isPulsing = true;
     this.state.pulse.startTime = -1;
   }
+  pulseMultiNow(time: number, scale: number, num: number) {
+    let bArray = [scale];
+    this.pulse.num = num;
+    if (this.pulse.num > 1) {
+      const b = Math.abs(1 - scale);
+      const bMax = b;
+      const bMin = -b;
+      const range = bMax - bMin;
+      const bStep = range / (this.pulse.num - 1);
+      bArray = [];
+      for (let i = 0; i < this.pulse.num; i += 1) {
+        bArray.push(bMax - i * bStep);
+      }
+    }
+    this.pulse.time = time;
+    this.pulse.frequency = 1 / (time * 2);
+    this.pulse.A = 1;
+    this.pulse.B = bArray;
+    this.pulse.C = 0;
+    this.state.isPulsing = true;
+    this.state.pulse.startTime = -1;
+  }
+
   pulseNow() {
     this.state.isPulsing = true;
     this.state.pulse.startTime = -1;
