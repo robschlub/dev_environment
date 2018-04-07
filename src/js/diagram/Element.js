@@ -56,12 +56,28 @@ class AnimationPhase {
 //  - animated (planned transform over time)
 //  - moved with control (like dragging)
 //  - moving freely (dragged then let go with an initial velocity)
+//  - Pulsed
 //
 // This class manages:
 //  - The diagram element
 //  - Its current transformation
 //  - Its animation plan, animation control and animation state
 //  - Its movement state
+//  - Its pulsing parameters
+//
+// A diagram element has an associated persistant transform that describes how
+// to draw it. The transform includes any translation, rotation and/or scaling
+// the element should be transformed by before drawing.
+//
+// If the diagram element is a collection of elements, then this transform is
+// applied to all the child elements. Each child element will have it's own
+// transform as well, and it will be multiplied by the parent transform.
+//
+// Whenever an element animated or moved, it's persistant transform is updated.
+//
+// Pulsing does not update an element's persistant transform, but does alter
+// the element's current transform used for drawing itself and any children
+// elements it has.
 //
 class DiagramElement {
   transform: g2.Transform;        // Transform of diagram element
@@ -191,19 +207,7 @@ class DiagramElement {
       },
     };
 
-
     this.presetTransforms = {};
-
-    // this.pulse = {
-    //   pulsing: false,
-    //   time: 1,
-    //   frequency: 0.5,
-    //   startTime: -1,
-    //   A: 1,       // Magnitude base (bias) for sinusoid
-    //   B: 0,       // Magnitude delta (mag) for sinusoid
-    //   C: 0,       // Time/Phase offset for sinusoid
-    //   pulsePattern: tools.sinusoid,
-    // };
   }
 
   vertexToClip(vertex: g2.Point) {
@@ -211,20 +215,20 @@ class DiagramElement {
   }
 
   // Remove?
-  vertexToScreen(vertex: g2.Point, canvas: HTMLCanvasElement): g2.Point {
-    const canvasRect = canvas.getBoundingClientRect();
-    const canvasWidth = canvas.scrollWidth;
-    const canvasHeight = canvas.scrollHeight;
-    const transformedVertex = vertex.transformBy(this.lastDrawTransformMatrix);
-    // const transformedVertex = m2.pointTransform(this.lastDraw, vertex);
-    return g2.point(
-      (transformedVertex.x + 1.0) * canvasWidth / 2.0 + canvasRect.left,
-      (-transformedVertex.y + 1.0) * canvasHeight / 2.0 + canvasRect.top,
-    );
-  }
-  static isBeingTouched(): boolean {
-    return false;
-  }
+  // vertexToScreen(vertex: g2.Point, canvas: HTMLCanvasElement): g2.Point {
+  //   const canvasRect = canvas.getBoundingClientRect();
+  //   const canvasWidth = canvas.scrollWidth;
+  //   const canvasHeight = canvas.scrollHeight;
+  //   const transformedVertex = vertex.transformBy(this.lastDrawTransformMatrix);
+  //   // const transformedVertex = m2.pointTransform(this.lastDraw, vertex);
+  //   return g2.point(
+  //     (transformedVertex.x + 1.0) * canvasWidth / 2.0 + canvasRect.left,
+  //     (-transformedVertex.y + 1.0) * canvasHeight / 2.0 + canvasRect.top,
+  //   );
+  // }
+  // static isBeingTouched(): boolean {
+  //   return false;
+  // }
 
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): g2.Transform {
