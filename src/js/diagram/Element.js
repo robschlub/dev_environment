@@ -96,6 +96,7 @@ class DiagramElement {
     B: number,
     C: number,
     style: (number) => number,
+    num: number,
   };
 
   // Current animation/movement state of element
@@ -160,6 +161,7 @@ class DiagramElement {
       B: 0,
       C: 0,
       style: tools.sinusoid,
+      num: 1,
     };
 
     this.state = {
@@ -593,9 +595,10 @@ class DiagramElement {
   // There are several ways to pulse an object:
   //    * pulse scale
   //    * pulse 3 copy - 1 scale up, 1 stay same, 1 scale down
-  transformWithPulse(now: number, transformMatrix: Array<number>): Array<number> {
-    let pulseTransformMatrix = m2.copy(transformMatrix);
+  transformWithPulse(now: number, transformMatrix: Array<number>): Array<Array<number>> {
+    let pulseTransformMatrix = [m2.copy(transformMatrix)];
     if (this.state.isPulsing) {
+      let pMatrix = pulseTransformMatrix[0];
       if (this.state.pulse.startTime === -1) {
         this.state.pulse.startTime = now;
       }
@@ -610,17 +613,17 @@ class DiagramElement {
         this.pulse.C,
       );
       const pulseTransform = DiagramElement.getPulseTransform(scale);
-      pulseTransformMatrix = m2.translate(
-        pulseTransformMatrix,
+      pMatrix = m2.translate(
+        pMatrix,
         pulseTransform.translation.x,
         pulseTransform.translation.y,
       );
-      pulseTransformMatrix = m2.rotate(
-        pulseTransformMatrix,
+      pMatrix = m2.rotate(
+        pMatrix,
         pulseTransform.rotation,
       );
-      pulseTransformMatrix = m2.scale(
-        pulseTransformMatrix,
+      pMatrix = m2.scale(
+        pMatrix,
         pulseTransform.scale.x,
         pulseTransform.scale.y,
       );
@@ -629,6 +632,7 @@ class DiagramElement {
         this.state.isPulsing = false;
       }
       // this.globals.animateNextFrame();
+      pulseTransformMatrix = [pMatrix];
     }
 
     // this.lastDrawTransformMatrix = m2.copy(pulseTransformMatrix);
@@ -640,6 +644,7 @@ class DiagramElement {
     this.pulse.A = 1;
     this.pulse.B = scale - 1;
     this.pulse.C = 0;
+    this.pulse.num = 1;
     this.state.isPulsing = true;
     this.state.pulse.startTime = -1;
   }
@@ -706,7 +711,7 @@ class DiagramElementPrimative extends DiagramElement {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
       matrix = this.transformWithPulse(now, matrix);
-      this.lastDrawTransformMatrix = matrix;
+      this.lastDrawTransformMatrix = matrix[0];
 
       let pointCount = this.vertices.numPoints;
       if (this.angleToDraw !== -1) {
@@ -715,7 +720,9 @@ class DiagramElementPrimative extends DiagramElement {
       if (this.pointsToDraw !== -1) {
         pointCount = this.pointsToDraw;
       }
-      this.vertices.drawWithTransformMatrix(matrix, pointCount, this.color);
+      for (let i = 0; i < matrix.length; i += 1) {
+        this.vertices.drawWithTransformMatrix(matrix[i], pointCount, this.color);
+      }
     }
   }
 
@@ -774,10 +781,12 @@ class DiagramElementCollection extends DiagramElement {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
       matrix = this.transformWithPulse(now, matrix);
-      this.lastDrawTransformMatrix = matrix;
+      this.lastDrawTransformMatrix = matrix[0];
 
-      for (let i = 0, j = this.order.length; i < j; i += 1) {
-        this.elements[this.order[i]].draw(matrix, now);
+      for (let k = 0; k < matrix.length; k += 1) {
+        for (let i = 0, j = this.order.length; i < j; i += 1) {
+          this.elements[this.order[i]].draw(matrix[k], now);
+        }
       }
     }
   }
