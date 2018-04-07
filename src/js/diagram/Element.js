@@ -170,6 +170,10 @@ class DiagramElement {
     };
   }
 
+  vertexToClip(vertex: g2.Point) {
+    return vertex.transformBy(this.lastDrawTransformMatrix);
+  }
+
   // Remove?
   vertexToScreen(vertex: g2.Point, canvas: HTMLCanvasElement): g2.Point {
     const canvasRect = canvas.getBoundingClientRect();
@@ -507,12 +511,29 @@ class DiagramElement {
   moved(newTransform: g2.Transform): void {
     this.calcVelocity(newTransform);
     this.transform = newTransform.copy();
-    // console.log(this.state.movementvelocity.rotation)
   }
 
   stopBeingMoved(): void {
     this.state.isBeingMoved = false;
     this.state.movement.previousTime = -1;
+  }
+
+  calcVelocity(newTransform: g2.Transform): void {
+    const currentTime = Date.now() / 1000;
+    if (this.state.movement.previousTime < 0) {
+      this.state.movement.previousTime = currentTime;
+      return;
+    }
+    const deltaTime = currentTime - this.state.movement.previousTime;
+    // console.log("time: " + deltaTime)
+
+    this.state.movement.velocity = newTransform.velocity(
+      this.transform,
+      deltaTime,
+      this.moveFreelyProperties.zeroVelocityThreshold,
+      this.maxVelocity,
+    );
+    this.state.movement.previousTime = currentTime;
   }
 
   // Moving Freely
@@ -539,24 +560,6 @@ class DiagramElement {
       }
       this.callback = null;
     }
-  }
-
-  calcVelocity(newTransform: g2.Transform): void {
-    const currentTime = Date.now() / 1000;
-    if (this.state.movement.previousTime < 0) {
-      this.state.movement.previousTime = currentTime;
-      return;
-    }
-    const deltaTime = currentTime - this.state.movement.previousTime;
-    // console.log("time: " + deltaTime)
-
-    this.state.movement.velocity = newTransform.velocity(
-      this.transform,
-      deltaTime,
-      this.moveFreelyProperties.zeroVelocityThreshold,
-      this.maxVelocity,
-    );
-    this.state.movement.previousTime = currentTime;
   }
 
   transformWithPulse(now: number, transformMatrix: Array<number>): Array<number> {
@@ -632,18 +635,31 @@ class DiagramElementPrimative extends DiagramElement {
     this.angleToDraw = -1;
   }
 
-  isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement): boolean {
+  isBeingTouched(clipLocation: g2.Point): boolean {
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       const border = [];
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-        border[i] = this.vertexToScreen(this.vertices.border[m][i], canvas);
+        border.push(this.vertexToClip(this.vertices.border[m][i]));
       }
-      if (location.isInPolygon(border)) {
+      if (clipLocation.isInPolygon(border)) {
         return true;
       }
     }
     return false;
   }
+
+  // isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement): boolean {
+  //   for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
+  //     const border = [];
+  //     for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
+  //       border[i] = this.vertexToScreen(this.vertices.border[m][i], canvas);
+  //     }
+  //     if (location.isInPolygon(border)) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
@@ -677,7 +693,7 @@ class DiagramElementPrimative extends DiagramElement {
 class DiagramElementCollection extends DiagramElement {
   elements: Object;
   order: Array<string>;
-  biasTransform: Array<number>;
+  // biasTransform: Array<number>;
 
   constructor(
     translation: g2.Point = g2.Point.zero(),
@@ -761,9 +777,9 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
-  updateBias(scale: g2.Point, offset: g2.Point): void {
-    this.biasTransform = (new g2.Transform(offset, 0, scale)).matrix();
-  }
+  // updateBias(scale: g2.Point, offset: g2.Point): void {
+  //   this.biasTransform = (new g2.Transform(offset, 0, scale)).matrix();
+  // }
 
   isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement) {
     for (let i = 0, j = this.order.length; i < j; i += 1) {

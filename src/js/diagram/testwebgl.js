@@ -41,23 +41,7 @@ function testgl(id: string) {
   /* Step1: Prepare the canvas and get WebGL context */
   const canvas = document.getElementById(id);
 
-  if (canvas instanceof HTMLCanvasElement) {
-    canvas.onclick = function click(event) {
-      const box = canvas;
-      /* eslint-disable prefer-template */
-      const str = `Screen ${event.screenX}, ${event.screenY}\n` +
-      'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
-      'Client ' + event.clientX + ', ' + event.clientY + '\n' +
-      'Page ' + event.pageX + ', ' + event.pageY + '\n\n' +
-      'Box:\n' +
-      'Scroll L/T/W/H ' + box.scrollLeft + ', ' + box.scrollTop + ', ' + box.scrollWidth + ', ' + box.scrollHeight + '\n' +
-      'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
-      'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight;
-      /* eslint-enable prefer-template */
-      Console(str);
-      Console(event);
-    };
-  }
+  // if (canvas instanceof HTMLCanvasElement) {
 
   if (canvas instanceof HTMLCanvasElement) {
     const diagram = new Diagram1({}, canvas);
@@ -95,6 +79,26 @@ function testgl(id: string) {
 
     if (diagram) {
       diagram.animateNextFrame();
+
+      canvas.onclick = function click(event) {
+        const box = canvas;
+        /* eslint-disable prefer-template */
+        const clip = diagram.screenToClip(new g2.Point(event.pageX, event.pageY));
+        const str = `Screen ${event.screenX}, ${event.screenY}\n` +
+        'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
+        'Client ' + event.clientX + ', ' + event.clientY + '\n' +
+        'Page ' + event.pageX + ', ' + event.pageY + '\n\n' +
+        'Box:\n' +
+        'Scroll L/T/W/H ' + box.scrollLeft + ', ' + box.scrollTop + ', ' + box.scrollWidth + ', ' + box.scrollHeight + '\n' +
+        'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
+        'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
+        'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
+        'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
+        'collection touch: ' + diagram.elements.isBeingTouched(clip);
+        /* eslint-enable prefer-template */
+        Console(str);
+        Console(event);
+      };
       // const globals = new GlobalVariables();
       // shapes.animateRotationTo(1, -1, 10);
       // shapes._square.animateTranslationTo(new g2.Point(0.2, 0.2), 2);

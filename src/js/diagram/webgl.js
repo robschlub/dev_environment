@@ -111,8 +111,6 @@ class WebGLInstance {
   shaderLocations: Array<string>,
 ) {
     const gl = canvas.getContext('webgl', { antialias: true });
-    console.log("GL: ", typeof gl)
-    console.log(gl)
     if (gl instanceof WebGLRenderingContext) {
       this.gl = gl;
       this.program = createProgramFromScripts(

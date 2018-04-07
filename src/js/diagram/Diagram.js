@@ -89,6 +89,26 @@ class Diagram {
     return this.elements.state.isAnimating;
   }
 
+  screenToClip(pageLocation: g2.Point): g2.Point {
+    const canvasCenterOnPage = new g2.Point(
+      this.canvas.offsetLeft + this.canvas.offsetWidth / 2,
+      this.canvas.offsetTop + this.canvas.offsetHeight / 2,
+    );
+
+    const pageLocationRelativeToCanvasCenter = new g2.Point(
+      pageLocation.x - canvasCenterOnPage.x,
+      -(pageLocation.y - canvasCenterOnPage.y),
+    );
+
+    const screenPixelToClipRatio = new g2.Point(
+      2 / this.canvas.offsetWidth,
+      2 / this.canvas.offsetHeight,
+    );
+    const r = screenPixelToClipRatio;
+    const l = pageLocationRelativeToCanvasCenter;
+    return new g2.Point(r.x * l.x, r.y * l.y);
+  }
+
   /* eslint-disable */
   // autoResize() {
   //   this.canvas.width = this.canvas.clientWidth * this.devicePixelRatio;
