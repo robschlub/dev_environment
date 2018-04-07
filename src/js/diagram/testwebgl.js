@@ -56,12 +56,13 @@ function testgl(id: string) {
     );
 
     // diagram.elements.animatePlan([phase1, phase2]);
-    diagram.elements.pulse.frequency = 1;
+    diagram.elements.pulse.frequency = 0.25;
     diagram.elements.pulse.A = 1;
-    diagram.elements.pulse.B = 0.1;
+    diagram.elements.pulse.B = 0.5;
     diagram.elements.pulse.C = 0;
-    diagram.elements.pulse.time = 2;
+    diagram.elements.pulse.time = 4;
     // diagram.elements.pulseNow();
+    diagram.elements.pulseScaleNow(2, 1.2);
 
     diagram.elements.state.movement.velocity = new g2.Transform(new g2.Point(1, 0), 0, g2.Point.zero());
     // diagram.elements.moveState.previous = diagram.elements.transform;
@@ -70,7 +71,7 @@ function testgl(id: string) {
       0,
       g2.Point.zero(),
     );
-    diagram.elements.startMovingFreely();
+    // diagram.elements.startMovingFreely();
 
 
     // diagram.elements.animateRotationTo(1, -1, 10);

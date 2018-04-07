@@ -89,6 +89,15 @@ class DiagramElement {
     deceleration: g2.Transform,           // Deceleration
   }
 
+  pulse: {
+    time: number,
+    frequency: number,
+    A: number,
+    B: number,
+    C: number,
+    style: (number) => number,
+  };
+
   // Current animation/movement state of element
   state: {
     isAnimating: boolean,
@@ -104,6 +113,10 @@ class DiagramElement {
       velocity: g2.Transform,           // current velocity - will be clipped
                                         // at max if element is being moved
                                         // faster than max.
+    },
+    isPulsing: boolean,
+    pulse: {
+      startTime: number,
     },
   };
 
@@ -140,6 +153,15 @@ class DiagramElement {
       deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
     };
 
+    this.pulse = {
+      time: 1,
+      frequency: 0.5,
+      A: 1,
+      B: 0,
+      C: 0,
+      style: tools.sinusoid,
+    };
+
     this.state = {
       isAnimating: false,
       animation: {
@@ -154,20 +176,26 @@ class DiagramElement {
         previousTransform: new g2.Transform(),
         velocity: new g2.Transform.Zero(),
       },
+
+      isPulsing: false,
+      pulse: {
+        startTime: -1,
+      },
     };
+
 
     this.presetTransforms = {};
 
-    this.pulse = {
-      pulsing: false,
-      time: 1,
-      frequency: 0.5,
-      startTime: -1,
-      A: 1,       // Magnitude base (bias) for sinusoid
-      B: 0,       // Magnitude delta (mag) for sinusoid
-      C: 0,       // Time/Phase offset for sinusoid
-      pulsePattern: tools.sinusoid,
-    };
+    // this.pulse = {
+    //   pulsing: false,
+    //   time: 1,
+    //   frequency: 0.5,
+    //   startTime: -1,
+    //   A: 1,       // Magnitude base (bias) for sinusoid
+    //   B: 0,       // Magnitude delta (mag) for sinusoid
+    //   C: 0,       // Time/Phase offset for sinusoid
+    //   pulsePattern: tools.sinusoid,
+    // };
   }
 
   vertexToClip(vertex: g2.Point) {
@@ -464,10 +492,10 @@ class DiagramElement {
     }
   }
   animateRotationTo(
-    rotation,
-    rotDirection,
-    time = 1,
-    easeFunction = tools.easeinout,
+    rotation: number,
+    rotDirection: number,
+    time: number = 1,
+    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
   ): void {
     const transform = this.transform.copy();
@@ -562,16 +590,19 @@ class DiagramElement {
     }
   }
 
+  // There are several ways to pulse an object:
+  //    * pulse scale
+  //    * pulse 3 copy - 1 scale up, 1 stay same, 1 scale down
   transformWithPulse(now: number, transformMatrix: Array<number>): Array<number> {
     let pulseTransformMatrix = m2.copy(transformMatrix);
-    if (this.pulse.pulsing) {
-      if (this.pulse.startTime === -1) {
-        this.pulse.startTime = now;
+    if (this.state.isPulsing) {
+      if (this.state.pulse.startTime === -1) {
+        this.state.pulse.startTime = now;
       }
 
-      const deltaTime = now - this.pulse.startTime;
+      const deltaTime = now - this.state.pulse.startTime;
 
-      const scale = this.pulse.pulsePattern(
+      const scale = this.pulse.style(
         deltaTime,
         this.pulse.frequency,
         this.pulse.A,
@@ -595,17 +626,26 @@ class DiagramElement {
       );
 
       if (deltaTime > this.pulse.time && this.pulse.time !== 0) {
-        this.pulse.pulsing = false;
+        this.state.isPulsing = false;
       }
       // this.globals.animateNextFrame();
     }
 
-    this.lastDrawTransformMatrix = m2.copy(pulseTransformMatrix);
+    // this.lastDrawTransformMatrix = m2.copy(pulseTransformMatrix);
     return pulseTransformMatrix;
   }
+  pulseScaleNow(time: number, scale: number) {
+    this.pulse.time = time;
+    this.pulse.frequency = 1 / (time * 2);
+    this.pulse.A = 1;
+    this.pulse.B = scale - 1;
+    this.pulse.C = 0;
+    this.state.isPulsing = true;
+    this.state.pulse.startTime = -1;
+  }
   pulseNow() {
-    this.pulse.pulsing = true;
-    this.pulse.startTime = -1;
+    this.state.isPulsing = true;
+    this.state.pulse.startTime = -1;
   }
   static getPulseTransform(scale) {
     return new g2.Transform(g2.point(0, 0), 0, g2.point(scale, scale));
@@ -665,8 +705,8 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.show) {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
-      this.lastDrawTransformMatrix = matrix;
       matrix = this.transformWithPulse(now, matrix);
+      this.lastDrawTransformMatrix = matrix;
 
       let pointCount = this.vertices.numPoints;
       if (this.angleToDraw !== -1) {
@@ -733,9 +773,9 @@ class DiagramElementCollection extends DiagramElement {
     if (this.show) {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
+      matrix = this.transformWithPulse(now, matrix);
       this.lastDrawTransformMatrix = matrix;
 
-      matrix = this.transformWithPulse(now, matrix);
       for (let i = 0, j = this.order.length; i < j; i += 1) {
         this.elements[this.order[i]].draw(matrix, now);
       }
