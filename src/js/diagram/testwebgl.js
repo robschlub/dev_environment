@@ -62,7 +62,7 @@ function testgl(id: string) {
     diagram.elements.pulse.C = 0;
     diagram.elements.pulse.time = 4;
     // diagram.elements.pulseNow();
-    diagram.elements.pulseMultiNow(2, 1.2, 7);
+    diagram.elements._square.pulseThickNow(5, 1.2, 7);
 
     diagram.elements.state.movement.velocity = new g2.Transform(new g2.Point(1, 0), 0, g2.Point.zero());
     // diagram.elements.moveState.previous = diagram.elements.transform;

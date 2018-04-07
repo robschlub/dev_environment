@@ -97,6 +97,7 @@ class DiagramElement {
     C: number,
     style: (number) => number,
     num: number,
+    transformMethod: (number) => g2.Transform,
   };
 
   // Current animation/movement state of element
@@ -162,6 +163,11 @@ class DiagramElement {
       C: 0,
       style: tools.sinusoid,
       num: 1,
+      transformMethod: s => new g2.Transform(
+        g2.Point.zero(),
+        0,
+        new g2.Point(s, s),
+      ),
     };
 
     this.state = {
@@ -592,52 +598,63 @@ class DiagramElement {
     }
   }
 
-  // There are several ways to pulse an object:
-  //    * pulse scale
-  //    * pulse 3 copy - 1 scale up, 1 stay same, 1 scale down
+  // Take an input transform matrix, and output a list of transform matrices
+  // that have been transformed by a pulse. The first matrix in the list
+  // will be the largest, so when saving lastDrawTransformMatrix it can be
+  // used to determine if a touch has occured in the object.
+  //
+  // When an object is animated or moved, it's new transform is saved as the
+  // new transform of the object. In contrast, pulsing is not saved as the
+  // current transform of the object, and is used only in the current draw
+  // of the element.
   transformWithPulse(now: number, transformMatrix: Array<number>): Array<Array<number>> {
-    const pulseTransformMatrix = [];
+    const pulseTransformMatrix = [];    // To output list of transform matrices
+
+    // If the diagram element is currently pulsing, the calculate the current
+    // pulse magnitude, and transform the input matrix by the pulse
     if (this.state.isPulsing) {
+      // If this is the first pulse frame, then set the startTime
       if (this.state.pulse.startTime === -1) {
         this.state.pulse.startTime = now;
       }
-      const deltaTime = now - this.state.pulse.startTime;
-      for (let i = 0; i < this.pulse.num; i += 1) {
-        let pMatrix = m2.copy(transformMatrix);
-        const b = this.pulse.B instanceof Array ? this.pulse.B[i] : this.pulse.B;
-        const scale = this.pulse.style(
-          deltaTime,
-          this.pulse.frequency,
-          this.pulse.A,
-          b,
-          this.pulse.C,
-        );
-        console.log(i, scale)
-        const pulseTransform = DiagramElement.getPulseTransform(scale);
-        pMatrix = m2.translate(
-          pMatrix,
-          pulseTransform.translation.x,
-          pulseTransform.translation.y,
-        );
-        pMatrix = m2.rotate(
-          pMatrix,
-          pulseTransform.rotation,
-        );
-        pMatrix = m2.scale(
-          pMatrix,
-          pulseTransform.scale.x,
-          pulseTransform.scale.y,
-        );
-        pulseTransformMatrix.push(pMatrix);
-      }
+      // Calculate how much time has elapsed between this frame and the first
+      // pulse frame
+      let deltaTime = now - this.state.pulse.startTime;
+
+      // If the elapsed time is larger than the planned pulse time, then
+      // clip the elapsed time to the pulse time, and end pulsing (after this
+      // draw). If the pulse time is 0, that means pulsing will loop 
+      // indefinitely.
       if (deltaTime > this.pulse.time && this.pulse.time !== 0) {
         this.state.isPulsing = false;
+        deltaTime = this.pulse.time;
       }
+
+      // Go through each pulse matrix planned, and transform the input matrix
+      // with the pulse.
+      for (let i = 0; i < this.pulse.num; i += 1) {
+        // Get the current pulse magnitude
+        const pulseMag = this.pulse.style(
+          deltaTime,
+          this.pulse.frequency,
+          this.pulse.A instanceof Array ? this.pulse.A[i] : this.pulse.A,
+          this.pulse.B instanceof Array ? this.pulse.B[i] : this.pulse.B,
+          this.pulse.C instanceof Array ? this.pulse.C[i] : this.pulse.C,
+        );
+
+        // Use the pulse magnitude to get the current pulse transform
+        const pTransform = this.pulse.transformMethod(pulseMag);
+
+        // Transform the current transformMatrix by the pulse transform matrix
+        const pMatrix = m2.mul(m2.copy(transformMatrix), pTransform.matrix());
+
+        // Push the pulse transformed matrix to the array of pulse matrices
+        pulseTransformMatrix.push(pMatrix);
+      }
+    // If not pulsing, then make no changes to the transformMatrix.
     } else {
       pulseTransformMatrix.push(m2.copy(transformMatrix));
     }
-
-    // this.lastDrawTransformMatrix = m2.copy(pulseTransformMatrix);
     return pulseTransformMatrix;
   }
   pulseScaleNow(time: number, scale: number) {
@@ -650,7 +667,7 @@ class DiagramElement {
     this.state.isPulsing = true;
     this.state.pulse.startTime = -1;
   }
-  pulseMultiNow(time: number, scale: number, num: number) {
+  pulseThickNow(time: number, scale: number, num: number) {
     let bArray = [scale];
     this.pulse.num = num;
     if (this.pulse.num > 1) {
@@ -677,8 +694,9 @@ class DiagramElement {
     this.state.isPulsing = true;
     this.state.pulse.startTime = -1;
   }
-  static getPulseTransform(scale) {
-    return new g2.Transform(g2.point(0, 0), 0, g2.point(scale, scale));
+
+  stopPulsing() {
+    this.state.isPulsing = false;
   }
 }
 
@@ -718,24 +736,13 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  // isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement): boolean {
-  //   for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-  //     const border = [];
-  //     for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-  //       border[i] = this.vertexToScreen(this.vertices.border[m][i], canvas);
-  //     }
-  //     if (location.isInPolygon(border)) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
   draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
       matrix = this.transformWithPulse(now, matrix);
+
+      // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransformMatrix = matrix[0];
 
       let pointCount = this.vertices.numPoints;
@@ -806,6 +813,8 @@ class DiagramElementCollection extends DiagramElement {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
       matrix = this.transformWithPulse(now, matrix);
+
+      // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransformMatrix = matrix[0];
 
       for (let k = 0; k < matrix.length; k += 1) {
