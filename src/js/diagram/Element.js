@@ -684,7 +684,6 @@ class DiagramElement {
         bArray.push(bMax - i * bStep);
       }
     }
-    console.log(bArray);
     this.pulse.time = time;
     this.pulse.frequency = 1 / (time * 2);
     this.pulse.A = 1;
@@ -732,6 +731,7 @@ class DiagramElementPrimative extends DiagramElement {
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
         border.push(this.vertexToClip(this.vertices.border[m][i]));
       }
+      console.log(border);
       if (clipLocation.isInPolygon(border)) {
         return true;
       }
@@ -744,6 +744,7 @@ class DiagramElementPrimative extends DiagramElement {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
       matrix = this.transformWithPulse(now, matrix);
+
       // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransformMatrix = matrix[0];
 
@@ -827,6 +828,7 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
   showAll(): void {
+    this.show = true;
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       element.show = true;
@@ -836,6 +838,7 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
   hideAll(): void {
+    this.show = false;
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       element.show = false;
@@ -848,6 +851,7 @@ class DiagramElementCollection extends DiagramElement {
 
   showOnly(listToShow: Array<DiagramElementPrimative | DiagramElementCollection>): void {
     this.hideAll();
+    this.show = true;
     for (let i = 0, j = listToShow.length; i < j; i += 1) {
       const element = listToShow[i];
       element.show = true;

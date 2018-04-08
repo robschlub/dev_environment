@@ -499,5 +499,57 @@ describe('Animationa and Movement', () => {
       expect(callbackAnim.mock.calls).toHaveLength(1);
       expect(callbackMoveFree.mock.calls).toHaveLength(1);
     });
+    describe('Show and hide', () => {
+      let square;
+      let tri;
+      beforeEach(() => {
+        /* eslint-disable no-underscore-dangle */
+        square = collection._square;
+        tri = collection._tri;
+        /* eslint-enable no-underscore-dangle */
+      });
+      test('Show and Hide all', () => {
+        expect(square.show).toBe(true);
+        expect(tri.show).toBe(true);
+        expect(collection.show).toBe(true);
+
+        collection.hideAll();
+        expect(square.show).toBe(false);
+        expect(tri.show).toBe(false);
+        expect(collection.show).toBe(false);
+
+        collection.showAll();
+        expect(square.show).toBe(true);
+        expect(tri.show).toBe(true);
+        expect(collection.show).toBe(true);
+      });
+      test('Show and Hide only', () => {
+        expect(square.show).toBe(true);
+        expect(tri.show).toBe(true);
+        expect(collection.show).toBe(true);
+
+        collection.hideOnly([square]);
+        expect(square.show).toBe(false);
+        expect(tri.show).toBe(true);
+        expect(collection.show).toBe(true);
+
+        collection.hideAll();
+        collection.showOnly([tri]);
+        expect(square.show).toBe(false);
+        expect(tri.show).toBe(true);
+        expect(collection.show).toBe(true);
+      });
+    });
+    describe('is being touched', () => {
+      // Triangle was: rad: 0.1, thickness: 0.01 at 0,0
+      // Then moved to 0.1, 0
+      // Then rotated 90 degrees
+      // So top outside vertex should be 0.1, 0.205
+      test.only('Triangle as is', () => {
+        collection.draw(identity, 0);
+        const tri = collection._tri;
+        expect(tri.isBeingTouched(new Point(0, 0))).toBe(true);
+      });
+    });
   });
 });

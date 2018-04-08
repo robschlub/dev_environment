@@ -606,6 +606,26 @@ describe('g2 tests', () => {
         const m = t.matrix();
         expect(m).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 1]);
       });
+      test('Transform point with scale, then rotation, then translation', () => {
+        // Expect transform order to be:
+        //  1. scale
+        //  2. rotation (around 0, 0)
+        //  3. translation
+        const t = new g2.Transform(new g2.Point(1, 0), Math.PI / 2, new g2.Point(2, 2));
+        const p = new g2.Point(2, 0);
+        const pT = p.transformBy(t.matrix());
+        expect(pT.round()).toEqual(new g2.Point(1, 4));
+      });
+      // test('Transform point with translation then rotation around (0, 0)', () => {
+        // Expect transform order to be:
+        // //  1. scale
+        // //  2. rotation (around 0, 0)
+        // //  3. translation
+        // const t = new g2.Transform(new g2.Point(1, 0), Math.PI / 2, new g2.Point(2, 2));
+        // const p = new g2.Point(2, 0);
+        // const pT = p.transformBy(t.matrix());
+        // expect(pT.round()).toEqual(new g2.Point(1, 4));
+      // });
     });
     describe('Clip', () => {
       let max;
