@@ -627,7 +627,7 @@ class DiagramElement {
 
       // If the elapsed time is larger than the planned pulse time, then
       // clip the elapsed time to the pulse time, and end pulsing (after this
-      // draw). If the pulse time is 0, that means pulsing will loop 
+      // draw). If the pulse time is 0, that means pulsing will loop
       // indefinitely.
       if (deltaTime > this.pulse.time && this.pulse.time !== 0) {
         this.state.isPulsing = false;

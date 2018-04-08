@@ -316,6 +316,67 @@ describe('Animationa and Movement', () => {
         });
       });
     });
+    describe('Pulse', () => {
+      let element;
+      let identity;
+      beforeEach(() => {
+        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        element = new DiagramElementPrimative(
+          square,
+          Point.zero(),
+          0,
+          Point.Unity(),
+          [0, 0, 1, 1],
+        );
+        identity = m2.identity();
+      });
+      test('pulse scale now', () => {
+        let pulseTransform;
+        let expectM;
+        element.pulseScaleNow(1, 1.1);
+        element.draw(identity, 0);
+        expect(element.state.pulse.startTime).toBe(0);
+        expect(element.lastDrawTransformMatrix).toEqual(element.transform.matrix());
+
+        element.draw(identity, 0.5);
+        pulseTransform = new Transform(Point.zero(), 0, new Point(1.1, 1.1));
+        expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
+        expect(element.lastDrawTransformMatrix).toEqual(expectM);
+
+        element.draw(identity, 1.0);
+        pulseTransform = new Transform(Point.zero(), 0, new Point(1, 1));
+        expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
+        expect(element.lastDrawTransformMatrix).toEqual(expectM);
+        expect(element.state.isPulsing).toBe(true);
+
+        element.draw(identity, 1.1);
+        expect(element.lastDrawTransformMatrix).toEqual(expectM);
+        expect(element.state.isPulsing).toBe(false);
+      });
+      // test('pulse thick', () => {
+      //   let pulseTransform;
+      //   let expectM;
+      //   element.pulseThickNow(1, 1.1);
+      //   element.draw(identity, 0);
+      //   expect(element.state.pulse.startTime).toBe(0);
+      //   expect(element.lastDrawTransformMatrix).toEqual(element.transform.matrix());
+
+      //   element.draw(identity, 0.5);
+      //   pulseTransform = new Transform(Point.zero(), 0, new Point(1.1, 1.1));
+      //   expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
+      //   expect(element.lastDrawTransformMatrix).toEqual(expectM);
+
+      //   element.draw(identity, 1.0);
+      //   pulseTransform = new Transform(Point.zero(), 0, new Point(1, 1));
+      //   expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
+      //   expect(element.lastDrawTransformMatrix).toEqual(expectM);
+      //   expect(element.state.isPulsing).toBe(true);
+
+      //   element.draw(identity, 1.1);
+      //   expect(element.lastDrawTransformMatrix).toEqual(expectM);
+      //   expect(element.state.isPulsing).toBe(false);
+      // });
+    });
   });
   describe('DiagramElementCollection', () => {
     let squareElement;

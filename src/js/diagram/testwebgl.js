@@ -83,7 +83,7 @@ function testgl(id: string) {
 
       canvas.onclick = function click(event) {
         const box = canvas;
-        /* eslint-disable prefer-template */
+        /* eslint-disable */
         const clip = diagram.screenToClip(new g2.Point(event.pageX, event.pageY));
         const str = `Screen ${event.screenX}, ${event.screenY}\n` +
         'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
@@ -96,7 +96,7 @@ function testgl(id: string) {
         'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
         'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
         'collection touch: ' + diagram.elements.isBeingTouched(clip);
-        /* eslint-enable prefer-template */
+        /* eslint-enable */
         Console(str);
         Console(event);
       };
