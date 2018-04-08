@@ -353,29 +353,22 @@ describe('Animationa and Movement', () => {
         expect(element.lastDrawTransformMatrix).toEqual(expectM);
         expect(element.state.isPulsing).toBe(false);
       });
-      // test('pulse thick', () => {
-      //   let pulseTransform;
-      //   let expectM;
-      //   element.pulseThickNow(1, 1.1);
-      //   element.draw(identity, 0);
-      //   expect(element.state.pulse.startTime).toBe(0);
-      //   expect(element.lastDrawTransformMatrix).toEqual(element.transform.matrix());
+      test('pulse thick', () => {
+        const draw = jest.fn();
+        element.vertices.drawWithTransformMatrix = draw;
+        element.pulseThickNow(1, 1.2, 5);
+        element.draw(identity, 0.0);
+        element.draw(identity, 0.5);
+        expect(draw.mock.calls).toHaveLength(10);
 
-      //   element.draw(identity, 0.5);
-      //   pulseTransform = new Transform(Point.zero(), 0, new Point(1.1, 1.1));
-      //   expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
-      //   expect(element.lastDrawTransformMatrix).toEqual(expectM);
+        const maxPulseTransform = new Transform(Point.zero(), 0, new Point(1.2, 1.2));
+        const maxM = m2.mul(element.transform.matrix(), maxPulseTransform.matrix());
+        expect(draw.mock.calls[5][0]).toEqual(maxM);
 
-      //   element.draw(identity, 1.0);
-      //   pulseTransform = new Transform(Point.zero(), 0, new Point(1, 1));
-      //   expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
-      //   expect(element.lastDrawTransformMatrix).toEqual(expectM);
-      //   expect(element.state.isPulsing).toBe(true);
-
-      //   element.draw(identity, 1.1);
-      //   expect(element.lastDrawTransformMatrix).toEqual(expectM);
-      //   expect(element.state.isPulsing).toBe(false);
-      // });
+        const minPulseTransform = new Transform(Point.zero(), 0, new Point(0.8, 0.8));
+        const minM = m2.mul(element.transform.matrix(), minPulseTransform.matrix());
+        expect(draw.mock.calls[9][0]).toEqual(minM);
+      });
     });
   });
   describe('DiagramElementCollection', () => {

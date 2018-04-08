@@ -668,8 +668,7 @@ class DiagramElement {
     this.pulse.B = scale - 1;
     this.pulse.C = 0;
     this.pulse.num = 1;
-    this.state.isPulsing = true;
-    this.state.pulse.startTime = -1;
+    this.pulseNow();
   }
   pulseThickNow(time: number, scale: number, num: number) {
     let bArray = [scale];
@@ -685,13 +684,13 @@ class DiagramElement {
         bArray.push(bMax - i * bStep);
       }
     }
+    console.log(bArray);
     this.pulse.time = time;
     this.pulse.frequency = 1 / (time * 2);
     this.pulse.A = 1;
     this.pulse.B = bArray;
     this.pulse.C = 0;
-    this.state.isPulsing = true;
-    this.state.pulse.startTime = -1;
+    this.pulseNow();
   }
 
   pulseNow() {
@@ -745,7 +744,6 @@ class DiagramElementPrimative extends DiagramElement {
       this.setNextTransform(now);
       let matrix = m2.mul(transformMatrix, this.transform.matrix());
       matrix = this.transformWithPulse(now, matrix);
-
       // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransformMatrix = matrix[0];
 
