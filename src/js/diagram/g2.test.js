@@ -1079,5 +1079,64 @@ describe('g2 tests', () => {
       expect(v.t(1)).toEqual(new g2.Point(0, 0));
       expect(v.t(2)).toEqual(new g2.Point(-20, 20));
     });
+    describe('Velocity - Sad case', () => {
+      let deltaTime;
+      let zero;
+      let max;
+      let t0;
+      let t1;
+      beforeEach(() => {
+        deltaTime = 1;
+        zero = new g2.Trans1()
+          .scale(0.2, 0.2)
+          .rotate(0.2)
+          .translate(0.2, 0.2);
+        max = new g2.Trans1()
+          .scale(20, 20)
+          .rotate(20)
+          .translate(20, 20);
+        t0 = new g2.Trans1()
+          .scale(0, 0)
+          .rotate(0)
+          .translate(0, 0);
+        t1 = new g2.Trans1()
+          .scale(1, 1)
+          .rotate(1)
+          .translate(1, 1);
+      });
+      test('t0 not similar to t1', () => {
+        t1 = new g2.Trans1().rotate(1).scale(1, 1).translate(1, 1);
+        const v = t1.velocity(t0, deltaTime, zero, max);
+        expect(v.s()).toEqual(new g2.Point(0, 0));
+        expect(v.r()).toEqual(0);
+        expect(v.t()).toEqual(new g2.Point(0, 0));
+      });
+      // If a transform element is missing from the transform, then a default
+      // value of 0.0001 will be used.
+      test('zero missing a transform element', () => {
+        zero = new g2.Trans1().rotate(0.2).scale(0.2, 0.2);
+        t1 = new g2.Trans1()
+          .scale(0.2, -0.00001)
+          .rotate(0.00001)
+          .translate(0.2, 0.00001);
+        const v = t1.velocity(t0, deltaTime, zero, max);
+        expect(v.s()).toEqual(new g2.Point(0, 0));    // This should work
+        expect(v.r()).toEqual(0);                     // This should work
+        expect(v.t()).toEqual(new g2.Point(0.2, 0));  // This should default
+      });
+      // If a transform element is missing from the transform, then a default
+      // value of 10000 will be used.
+      test('max missing a transform element', () => {
+        max = new g2.Trans1().rotate(20).scale(20, 20);
+        t1 = new g2.Trans1()
+          .scale(30, -100001)
+          .rotate(100001)
+          .translate(30, 100001);
+        const v = t1.velocity(t0, deltaTime, zero, max);
+        expect(v.s()).toEqual(new g2.Point(20, -20));    // This should work
+        expect(v.r()).toEqual(20);                       // This should work
+        expect(v.t().round()).toEqual(new g2.Point(30, 100000));  // This should default
+      });
+    });
   });
 });

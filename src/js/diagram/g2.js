@@ -831,6 +831,9 @@ class Trans1 {
     return true;
   }
 
+  // Subtract a transform from the current one.
+  // If the two transforms have different order types, then just return
+  // the current transform.
   sub(transformToSubtract: Trans1 = new Trans1()) {
     if (!this.isSimilarTo(transformToSubtract)) {
       return new Trans1(this.order);
@@ -881,6 +884,25 @@ class Trans1 {
     return new Trans1(order);
   }
 
+  zero() {
+    const order = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Translation) {
+        order.push(new Translation(0, 0));
+      } else if (t instanceof Rotation) {
+        order.push(new Rotation(0));
+      } else if (t instanceof Scale) {
+        order.push(new Scale(0, 0));
+      }
+    }
+    return new Trans1(order);
+  }
+
+  // Return the velocity of each element in the transform
+  // If the current and previous transforms are inconsistent in type order,
+  // then a transform of value 0, but with the same type order as "this" will
+  // be returned.
   velocity(
     previousTransform: Trans1,
     deltaTime: number,
@@ -888,8 +910,10 @@ class Trans1 {
     maxTransform: Trans1,
   ) {
     const order = [];
+    if (!this.isSimilarTo(previousTransform)) {
+      return this.zero();
+    }
     const deltaTransform = this.sub(previousTransform);
-    // const deltaTransform = this.sub(oldTransform);
     for (let i = 0; i < deltaTransform.order.length; i += 1) {
       const t = deltaTransform.order[i];
       if (t instanceof Translation) {
@@ -900,9 +924,6 @@ class Trans1 {
         order.push(new Scale(t.x / deltaTime, t.y / deltaTime));
       }
     }
-    console.log(zeroThreshold)
-    console.log(order)
-
     return (new Trans1(order)).clip(zeroThreshold, maxTransform);
   }
 }
