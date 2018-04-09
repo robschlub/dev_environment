@@ -46,7 +46,7 @@ function translationMatrix(tx: number, ty: number) {
 function translate(m: Array<number>, tx: number, ty: number) {
   return mul(m, translationMatrix(tx, ty));
 }
-function rotationMatrix(angle) {
+function rotationMatrix(angle: number) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
   return [
@@ -59,7 +59,7 @@ function rotate(m: Array<number>, angle: number) {
   return mul(m, rotationMatrix(angle));
 }
 
-function scaleMatrix(sx, sy) {
+function scaleMatrix(sx: number, sy: number) {
   return [
     sx, 0, 0,
     0, sy, 0,
@@ -132,5 +132,8 @@ export {
   transform,
   scale,
   inverse,
+  rotationMatrix,
+  translationMatrix,
+  scaleMatrix,
   // pointTransform,
 };

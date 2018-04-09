@@ -569,6 +569,218 @@ function clipValue(
   return result;
 }
 
+class Rotation {
+  r: number;
+  constructor(angle) {
+    this.r = angle;
+  }
+  matrix() {
+    return m2.rotationMatrix(this.r);
+  }
+}
+
+class Translation {
+  x: number;
+  y: number;
+
+  constructor(tx: Point | number, ty: number) {
+    if (tx instanceof Point) {
+      this.x = tx.x;
+      this.y = tx.y;
+    } else {
+      this.x = tx;
+      this.y = ty;
+    }
+  }
+  matrix() {
+    return m2.translationMatrix(this.x, this.y);
+  }
+}
+
+class Scale {
+  x: number;
+  y: number;
+
+  constructor(sx: Point | number, sy: number) {
+    if (sx instanceof Point) {
+      this.x = sx.x;
+      this.y = sx.y;
+    } else {
+      this.x = sx;
+      this.y = sy;
+    }
+  }
+  matrix() {
+    return m2.scaleMatrix(this.x, this.y);
+  }
+}
+
+class Trans1 {
+  order: Array<Translation | Rotation | Scale>;
+  matrix: Array<number>;
+  index: number;
+
+  constructor(order: Array<Translation | Rotation | Scale> = []) {
+    this.order = order;
+    this.index = this.order.length;
+    this.calcMatrix();
+  }
+
+  translate(x: number, y: number) {
+    const translation = new Translation(x, y);
+    const order = this.order.slice();
+
+    if (this.index === this.order.length) {
+      order.push(translation);
+    } else {
+      this.order[this.index] = translation;
+      this.index += 1;
+      this.calcMatrix();
+      return this;
+    }
+    return new Trans1(order);
+  }
+
+  rotate(r: number) {
+    const rotation = new Rotation(r);
+    const order = this.order.slice();
+    if (this.index === this.order.length) {
+      order.push(rotation);
+    } else {
+      this.order[this.index] = rotation;
+      this.index += 1;
+      this.calcMatrix();
+      return this;
+    }
+    // this.order.push(new Rotation(r));
+    // this.calcMatrix();
+    return new Trans1(order);
+  }
+
+  scale(x: number, y: number) {
+    const scale = new Scale(x, y);
+    const order = this.order.slice();
+
+    if (this.index === this.order.length) {
+      order.push(scale);
+    } else {
+      this.order[this.index] = scale;
+      this.index += 1;
+      this.calcMatrix();
+      return this;
+    }
+    return new Trans1(order);
+  }
+
+  calcMatrix() {
+    let m = m2.identity();
+    for (let i = this.order.length - 1; i >= 0; i -= 1) {
+      m = m2.mul(m, this.order[i].matrix());
+    }
+    this.matrix = m2.copy(m);
+    return m;
+  }
+
+  update(index: number) {
+    if (index < this.order.length) {
+      this.index = index;
+    }
+    return this;
+  }
+
+  t(index: number = 0): ?Point {
+    let count = 0;
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Translation) {
+        if (count === index) {
+          return new Point(t.x, t.y);
+        }
+        count += 1;
+      }
+    }
+    return null;
+  }
+
+  updateTranslation(x: number, yOrIndex: number = 0, index: number = 0) {
+    let count = 0;
+    let actualIndex = index;
+    if (x instanceof Point) {
+      actualIndex = yOrIndex;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Translation) {
+        if (count === actualIndex) {
+          this.order[i] = new Translation(x, yOrIndex);
+          return;
+        }
+        count += 1;
+      }
+    }
+  }
+
+  s(index: number = 0): ?Point {
+    let count = 0;
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Scale) {
+        if (count === index) {
+          return new Point(t.x, t.y);
+        }
+        count += 1;
+      }
+    }
+    return null;
+  }
+
+  updateScale(x: number, yOrIndex: number = 0, index: number = 0) {
+    let count = 0;
+    let actualIndex = index;
+    if (x instanceof Point) {
+      actualIndex = yOrIndex;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Scale) {
+        if (count === actualIndex) {
+          this.order[i] = new Scale(x, yOrIndex);
+          return;
+        }
+        count += 1;
+      }
+    }
+  }
+
+  r(index: number = 0): ?number {
+    let count = 0;
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Rotation) {
+        if (count === index) {
+          return t.r;
+        }
+        count += 1;
+      }
+    }
+    return null;
+  }
+
+  updateRotation(r: number, index: number = 0) {
+    let count = 0;
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Rotation) {
+        if (count === index) {
+          this.order[i] = new Rotation(r);
+          return;
+        }
+        count += 1;
+      }
+    }
+  }
+}
+
 class Transform {
   translation: Point;
   rotation: number;
@@ -692,4 +904,5 @@ export {
   normAngle,
   Transform,
   clipValue,
+  Trans1
 };

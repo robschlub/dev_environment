@@ -793,4 +793,143 @@ describe('g2 tests', () => {
       expect(g2.clipValue(-0.1, 0.1, 2)).toBe(-0.1);
     });
   });
+  describe('Trans1', () => {
+    test('Create rotation', () => {
+      const t = new g2.Trans1().rotate(Math.PI / 2);
+      const p0 = new g2.Point(1, 0);
+      const p1 = p0.transformBy(t.matrix);
+      expect(p1.round()).toEqual(new g2.Point(0, 1));
+    });
+    test('Create translation', () => {
+      const t = new g2.Trans1().translate(1, 1);
+      const p0 = new g2.Point(1, 0);
+      const p1 = p0.transformBy(t.matrix);
+      expect(p1.round()).toEqual(new g2.Point(2, 1));
+    });
+    test('Create scale', () => {
+      const t = new g2.Trans1().scale(2, 2);
+      const p0 = new g2.Point(1, 0.5);
+      const p1 = p0.transformBy(t.matrix);
+      expect(p1.round()).toEqual(new g2.Point(2, 1));
+    });
+    test('Create R, T', () => {
+      const t = new g2.Trans1().rotate(Math.PI / 2).translate(1, 1);
+      const p0 = new g2.Point(2, 0);
+      const p1 = p0.transformBy(t.matrix);
+      expect(p1.round()).toEqual(new g2.Point(1, 3));
+    });
+    test('Create S, R, T', () => {
+      const t = new g2.Trans1().scale(2, 2).rotate(Math.PI / 2).translate(1, 1);
+      const p0 = new g2.Point(1, 0);
+      const p1 = p0.transformBy(t.matrix);
+      expect(p1.round()).toEqual(new g2.Point(1, 3));
+    });
+    test('Create S, R, then T', () => {
+      const t1 = new g2.Trans1().scale(2, 2).rotate(Math.PI / 2);
+      const t2 = t1.translate(1, 1);
+      const p0 = new g2.Point(1, 0);
+      const p1 = p0.transformBy(t2.matrix);
+      expect(p1.round()).toEqual(new g2.Point(1, 3));
+    });
+    test('Create S, R, T, T, S', () => {
+      let t1 = new g2.Trans1().scale(2, 2).rotate(Math.PI / 2);
+      t1 = t1.translate(1, 1).translate(-5, 0).scale(2, 1);
+      const p0 = new g2.Point(1, 0);
+      const p1 = p0.transformBy(t1.matrix);
+      expect(p1.round()).toEqual(new g2.Point(-8, 3));
+    });
+    test('Update R in S, R, T', () => {
+      const t = new g2.Trans1().scale(2, 2).rotate(Math.PI).translate(1, 1);
+      t.update(1).rotate(Math.PI / 2);
+      const p0 = new g2.Point(1, 0);
+      const p1 = p0.transformBy(t.matrix);
+      expect(p1.round()).toEqual(new g2.Point(1, 3));
+    });
+    test('Get rotation', () => {
+      const t = new g2.Trans1().scale(2, 2).rotate(1).translate(1, 1)
+        .rotate(2);
+      expect(t.r()).toBe(1);
+      expect(t.r(0)).toBe(1);
+      expect(t.r(1)).toBe(2);
+      expect(t.r(2)).toBe(null);
+    });
+    test('Update rotation', () => {
+      const t = new g2.Trans1().scale(2, 2).rotate(1).translate(1, 1)
+        .rotate(2);
+      t.updateRotation(4);
+      expect(t.r()).toBe(4);
+
+      t.updateRotation(5, 0);
+      expect(t.r(0)).toBe(5);
+
+      t.updateRotation(6, 1);
+      expect(t.r(1)).toBe(6);
+
+      t.updateRotation(7, 2);
+      expect(t.r(0)).toBe(5);
+      expect(t.r(1)).toBe(6);
+    });
+    test('Get translation', () => {
+      const t = new g2.Trans1()
+        .translate(0, 0).scale(2, 2).rotate(1)
+        .translate(1, 1)
+        .rotate(2);
+      expect(t.t()).toEqual({ x: 0, y: 0 });
+      expect(t.t(0)).toEqual({ x: 0, y: 0 });
+      expect(t.t(1)).toEqual({ x: 1, y: 1 });
+      expect(t.t(2)).toEqual(null);
+    });
+    test('Update translation', () => {
+      const t = new g2.Trans1()
+        .translate(0, 0).scale(2, 2).rotate(1)
+        .translate(1, 1)
+        .rotate(2);
+      t.updateTranslation(new g2.Point(2, 2));
+      expect(t.t()).toEqual({ x: 2, y: 2 });
+
+      t.updateTranslation(3, 3);
+      expect(t.t()).toEqual({ x: 3, y: 3 });
+
+      t.updateTranslation(4, 4, 0);
+      expect(t.t()).toEqual({ x: 4, y: 4 });
+
+      t.updateTranslation(5, 5, 1);
+      expect(t.t(1)).toEqual({ x: 5, y: 5 });
+
+      t.updateTranslation(5, 5, 2);
+      expect(t.t(0)).toEqual({ x: 4, y: 4 });
+      expect(t.t(1)).toEqual({ x: 5, y: 5 });
+    });
+    test('Get Scale', () => {
+      const t = new g2.Trans1()
+        .scale(0, 0).translate(2, 2).rotate(1)
+        .scale(1, 1)
+        .rotate(2);
+      expect(t.s()).toEqual({ x: 0, y: 0 });
+      expect(t.s(0)).toEqual({ x: 0, y: 0 });
+      expect(t.s(1)).toEqual({ x: 1, y: 1 });
+      expect(t.s(2)).toEqual(null);
+    });
+    test('Update scale', () => {
+      const t = new g2.Trans1()
+        .scale(0, 0).translate(2, 2).rotate(1)
+        .scale(1, 1)
+        .rotate(2);
+      t.updateScale(new g2.Point(2, 2));
+      expect(t.s()).toEqual({ x: 2, y: 2 });
+
+      t.updateScale(3, 3);
+      expect(t.s()).toEqual({ x: 3, y: 3 });
+
+      t.updateScale(4, 4, 0);
+      expect(t.s()).toEqual({ x: 4, y: 4 });
+
+      t.updateScale(5, 5, 1);
+      expect(t.s(1)).toEqual({ x: 5, y: 5 });
+
+      t.updateScale(5, 5, 2);
+      expect(t.s(0)).toEqual({ x: 4, y: 4 });
+      expect(t.s(1)).toEqual({ x: 5, y: 5 });
+    });
+  });
 });
