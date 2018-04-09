@@ -850,6 +850,36 @@ class Trans1 {
     }
     return new Trans1(order);
   }
+
+  clip(zeroThresholdTransform: Trans1, maxTransform: Trans1) {
+    const min = 0.00001;
+    const max = 1 / min;
+    const zeroS = zeroThresholdTransform.s() || new Point(min, min);
+    const zeroR = zeroThresholdTransform.r() || min;
+    const zeroT = zeroThresholdTransform.t() || new Point(min, min);
+    const maxS = maxTransform.s() || new Point(max, max);
+    const maxR = maxTransform.r() || max;
+    const maxT = maxTransform.t() || new Point(max, max);
+
+    const order = [];
+
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Translation) {
+        const x = clipValue(t.x, zeroT.x, maxT.x);
+        const y = clipValue(t.y, zeroT.y, maxT.y);
+        order.push(new Translation(x, y));
+      } else if (t instanceof Rotation) {
+        const r = clipValue(t.r, zeroR, maxR);
+        order.push(new Rotation(r));
+      } else if (t instanceof Scale) {
+        const x = clipValue(t.x, zeroS.x, maxS.x);
+        const y = clipValue(t.y, zeroS.y, maxS.y);
+        order.push(new Scale(x, y));
+      }
+    }
+    return new Trans1(order);
+  }
 }
 
 class Transform {

@@ -1009,5 +1009,27 @@ describe('g2 tests', () => {
       expect(tr.r()).toEqual(1);
       expect(tr.t()).toEqual(new g2.Point(1, 1));
     });
+    test('Clipping', () => {
+      const t1 = new g2.Trans1()
+        .scale(21, 20)
+        .scale(0.1, 0.05)
+        .rotate(21)
+        .rotate(20)
+        .rotate(0.1)
+        .rotate(0.05)
+        .translate(21, 20)
+        .translate(0.1, 0.05);
+      const clipZero = new g2.Trans1().scale(0.1, 0.1).rotate(0.1).translate(0.1, 0.1);
+      const clipMax = new g2.Trans1().scale(20, 20).rotate(20).translate(20, 20);
+      const tc = t1.clip(clipZero, clipMax);
+      expect(tc.s(0)).toEqual(new g2.Point(20, 20));
+      expect(tc.s(1)).toEqual(new g2.Point(0.1, 0));
+      expect(tc.r(0)).toBe(20)
+      expect(tc.r(1)).toBe(20)
+      expect(tc.r(2)).toBe(0.1)
+      expect(tc.r(3)).toBe(0)
+      expect(tc.t(0)).toEqual(new g2.Point(20, 20));
+      expect(tc.t(1)).toEqual(new g2.Point(0.1, 0));
+    });
   });
 });
