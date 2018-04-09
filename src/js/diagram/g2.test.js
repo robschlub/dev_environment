@@ -803,7 +803,7 @@ describe('g2 tests', () => {
     test('Create translation', () => {
       const t = new g2.Trans1().translate(1, 1);
       const p0 = new g2.Point(1, 0);
-      const p1 = p0.transformBy(t.matrix);
+      const p1 = p0.transformBy(t.m());
       expect(p1.round()).toEqual(new g2.Point(2, 1));
     });
     test('Create scale', () => {

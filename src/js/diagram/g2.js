@@ -779,6 +779,10 @@ class Trans1 {
       }
     }
   }
+
+  m() {
+    return this.matrix;
+  }
 }
 
 class Transform {
