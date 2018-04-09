@@ -653,7 +653,7 @@ describe('g2 tests', () => {
           new g2.Point(-3, -0.09),
         );
         const expectation = new g2.Transform(
-          new g2.Point(2, 0.1),
+          new g2.Point(2, 0),
           0,
           new g2.Point(-2, 0),
         );
@@ -787,10 +787,10 @@ describe('g2 tests', () => {
       expect(g2.clipValue(-2, 0.1, 2)).toBe(-2);
     });
     test('On min clipping positive velocity', () => {
-      expect(g2.clipValue(0.1, 0.1, 2)).toBe(0.1);
+      expect(g2.clipValue(0.1, 0.1, 2)).toBe(0);
     });
     test('On min clipping negative velocity', () => {
-      expect(g2.clipValue(-0.1, 0.1, 2)).toBe(-0.1);
+      expect(g2.clipValue(-0.1, 0.1, 2)).toBe(0);
     });
   });
   describe('Trans1', () => {
@@ -1019,17 +1019,65 @@ describe('g2 tests', () => {
         .rotate(0.05)
         .translate(21, 20)
         .translate(0.1, 0.05);
-      const clipZero = new g2.Trans1().scale(0.1, 0.1).rotate(0.1).translate(0.1, 0.1);
-      const clipMax = new g2.Trans1().scale(20, 20).rotate(20).translate(20, 20);
+      const clipZero = new g2.Trans1()
+        .scale(0.1, 0.1)
+        .rotate(0.1)
+        .translate(0.1, 0.1);
+      const clipMax = new g2.Trans1()
+        .scale(20, 20)
+        .rotate(20)
+        .translate(20, 20);
       const tc = t1.clip(clipZero, clipMax);
       expect(tc.s(0)).toEqual(new g2.Point(20, 20));
-      expect(tc.s(1)).toEqual(new g2.Point(0.1, 0));
-      expect(tc.r(0)).toBe(20)
-      expect(tc.r(1)).toBe(20)
-      expect(tc.r(2)).toBe(0.1)
-      expect(tc.r(3)).toBe(0)
+      expect(tc.s(1)).toEqual(new g2.Point(0, 0));
+      expect(tc.r(0)).toBe(20);
+      expect(tc.r(1)).toBe(20);
+      expect(tc.r(2)).toBe(0);
+      expect(tc.r(3)).toBe(0);
       expect(tc.t(0)).toEqual(new g2.Point(20, 20));
-      expect(tc.t(1)).toEqual(new g2.Point(0.1, 0));
+      expect(tc.t(1)).toEqual(new g2.Point(0, 0));
+    });
+    test('Velocity - Happy case', () => {
+      const deltaTime = 1;
+      const zero = new g2.Trans1()
+        .scale(0.2, 0.2)
+        .rotate(0.2)
+        .translate(0.2, 0.2);
+      const max = new g2.Trans1()
+        .scale(20, 20)
+        .rotate(20)
+        .translate(20, 20);
+      const t0 = new g2.Trans1()
+        .scale(0, 0)          // to test velocity
+        .scale(-1, -40)       // to test zero
+        .scale(40, 1)         // to test max
+        .rotate(0)            // to test velocity
+        .rotate(1)            // to test zero
+        .rotate(-1)           // to test max
+        .translate(0, 0)      // to test velocity
+        .translate(-1, -40)   // to test zero
+        .translate(40, 1);    // to test max
+      const t1 = new g2.Trans1()
+        .scale(-1, 1)             // should be -1, 1
+        .scale(-1.2, -40.1)       // should be 0, 0
+        .scale(20, 40)            // should be -20, 20
+        .rotate(-1)               // should be -1
+        .rotate(1.1)              // should be 0
+        .rotate(40)               // should be 20
+        .translate(-1, 1)         // should be -1, 1
+        .translate(-1.2, -40.1)   // should be 0, 0
+        .translate(20, 40);       // should be -20, 20
+      const v = t1.velocity(t0, deltaTime, zero, max);
+
+      expect(v.s(0)).toEqual(new g2.Point(-1, 1));
+      expect(v.s(1)).toEqual(new g2.Point(0, 0));
+      expect(v.s(2)).toEqual(new g2.Point(-20, 20));
+      expect(v.r(0)).toBe(-1);
+      expect(v.r(1)).toBe(0);
+      expect(v.r(2)).toBe(20);
+      expect(v.t(0)).toEqual(new g2.Point(-1, 1));
+      expect(v.t(1)).toEqual(new g2.Point(0, 0));
+      expect(v.t(2)).toEqual(new g2.Point(-20, 20));
     });
   });
 });

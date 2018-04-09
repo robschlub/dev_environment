@@ -557,7 +557,7 @@ function clipValue(
   maxValue: number,
 ) {
   let result = value;
-  if (value > -zeroThreshold && value < zeroThreshold) {
+  if (value >= -zeroThreshold && value <= zeroThreshold) {
     result = 0;
   }
   if (value > maxValue) {
@@ -879,6 +879,31 @@ class Trans1 {
       }
     }
     return new Trans1(order);
+  }
+
+  velocity(
+    previousTransform: Trans1,
+    deltaTime: number,
+    zeroThreshold: Trans1,
+    maxTransform: Trans1,
+  ) {
+    const order = [];
+    const deltaTransform = this.sub(previousTransform);
+    // const deltaTransform = this.sub(oldTransform);
+    for (let i = 0; i < deltaTransform.order.length; i += 1) {
+      const t = deltaTransform.order[i];
+      if (t instanceof Translation) {
+        order.push(new Translation(t.x / deltaTime, t.y / deltaTime));
+      } else if (t instanceof Rotation) {
+        order.push(new Rotation(t.r / deltaTime));
+      } else if (t instanceof Scale) {
+        order.push(new Scale(t.x / deltaTime, t.y / deltaTime));
+      }
+    }
+    console.log(zeroThreshold)
+    console.log(order)
+
+    return (new Trans1(order)).clip(zeroThreshold, maxTransform);
   }
 }
 
