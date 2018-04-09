@@ -574,8 +574,15 @@ class Rotation {
   constructor(angle) {
     this.r = angle;
   }
-  matrix() {
+  matrix(): Array<number> {
     return m2.rotationMatrix(this.r);
+  }
+  sub(rotToSub: Rotation = new Rotation(0)): Rotation {
+    return new Rotation(this.r - rotToSub.r);
+  }
+
+  round(precision: number = 8): Rotation {
+    return new Rotation(roundNum(this.r, precision));
   }
 }
 
@@ -592,8 +599,22 @@ class Translation {
       this.y = ty;
     }
   }
-  matrix() {
+  matrix(): Array<number> {
     return m2.translationMatrix(this.x, this.y);
+  }
+
+  sub(translationToSub: Translation = new Translation(0, 0)): Translation {
+    return new Translation(
+      this.x - translationToSub.x,
+      this.y - translationToSub.y,
+    );
+  }
+
+  round(precision: number = 8): Translation {
+    return new Translation(
+      roundNum(this.x, precision),
+      roundNum(this.y, precision),
+    );
   }
 }
 
@@ -610,8 +631,21 @@ class Scale {
       this.y = sy;
     }
   }
-  matrix() {
+  matrix(): Array<number> {
     return m2.scaleMatrix(this.x, this.y);
+  }
+  sub(scaleToSub: Scale = new Scale(0, 0)): Scale {
+    return new Scale(
+      this.x - scaleToSub.x,
+      this.y - scaleToSub.y,
+    );
+  }
+
+  round(precision: number = 8): Scale {
+    return new Scale(
+      roundNum(this.x, precision),
+      roundNum(this.y, precision),
+    );
   }
 }
 
@@ -796,9 +830,26 @@ class Trans1 {
     }
     return true;
   }
-  // sub(transformToSubtract: Trans1 = new Trans1) {
 
-  // }
+  sub(transformToSubtract: Trans1 = new Trans1()) {
+    if (!this.isSimilarTo(transformToSubtract)) {
+      return new Trans1(this.order);
+    }
+    const order = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      // $FlowFixMe (this is already fixed in isSimilarTo check above)
+      order.push(this.order[i].sub(transformToSubtract.order[i]));
+    }
+    return new Trans1(order);
+  }
+
+  round(precision: number = 8) {
+    const order = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      order.push(this.order[i].round(precision));
+    }
+    return new Trans1(order);
+  }
 }
 
 class Transform {

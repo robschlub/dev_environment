@@ -966,5 +966,48 @@ describe('g2 tests', () => {
       expect(t1.isSimilarTo(t5)).toBe(false);
       expect(t1.isSimilarTo(t6)).toBe(false);
     });
+    test('Subtraction happy case', () => {
+      const t1 = new g2.Trans1().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Trans1().scale(0, 1).rotate(2).translate(3, 4);
+      const ts = t1.sub(t2);
+      expect(ts.s()).toEqual(new g2.Point(1, 1));
+      expect(ts.r()).toEqual(1);
+      expect(ts.t()).toEqual(new g2.Point(1, 1));
+    });
+    test('Subtraction sad case', () => {
+      // Sad cases should just return the initial transform
+      const t1 = new g2.Trans1().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Trans1().rotate(0, 1).rotate(2).translate(3, 4);
+      const t3 = new g2.Trans1().scale(0, 1).rotate(2);
+      let ts = t1.sub(t2);
+      expect(ts.s()).toEqual(t1.s());
+      expect(ts.r()).toEqual(t1.r());
+      expect(ts.t()).toEqual(t1.t());
+
+      ts = t1.sub(t3);
+      expect(ts.s()).toEqual(t1.s());
+      expect(ts.r()).toEqual(t1.r());
+      expect(ts.t()).toEqual(t1.t());
+    });
+    test('Rounding', () => {
+      const t1 = new g2.Trans1()
+        .scale(1.123456789, 1.12345678)
+        .rotate(1.123456789)
+        .translate(1.123456789, 1.12345678);
+      let tr = t1.round();
+      expect(tr.s()).toEqual(new g2.Point(1.12345679, 1.12345678));
+      expect(tr.r()).toEqual(1.12345679);
+      expect(tr.t()).toEqual(new g2.Point(1.12345679, 1.12345678));
+
+      tr = t1.round(2);
+      expect(tr.s()).toEqual(new g2.Point(1.12, 1.12));
+      expect(tr.r()).toEqual(1.12);
+      expect(tr.t()).toEqual(new g2.Point(1.12, 1.12));
+
+      tr = t1.round(0);
+      expect(tr.s()).toEqual(new g2.Point(1, 1));
+      expect(tr.r()).toEqual(1);
+      expect(tr.t()).toEqual(new g2.Point(1, 1));
+    });
   });
 });
