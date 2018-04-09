@@ -1037,6 +1037,12 @@ describe('g2 tests', () => {
       expect(tc.t(0)).toEqual(new g2.Point(20, 20));
       expect(tc.t(1)).toEqual(new g2.Point(0, 0));
     });
+    test('Copy', () => {
+      const t = new g2.Trans1().scale(1, 1).rotate(1).translate(1, 1);
+      const b = t.copy();
+      expect(t).toEqual(b);
+      expect(t).not.toBe(b);
+    });
     test('Velocity - Happy case', () => {
       const deltaTime = 1;
       const zero = new g2.Trans1()

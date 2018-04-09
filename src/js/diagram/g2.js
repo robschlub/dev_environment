@@ -899,6 +899,10 @@ class Trans1 {
     return new Trans1(order);
   }
 
+  copy() {
+    return new Trans1(this.order);
+  }
+
   // Return the velocity of each element in the transform
   // If the current and previous transforms are inconsistent in type order,
   // then a transform of value 0, but with the same type order as "this" will
