@@ -931,5 +931,40 @@ describe('g2 tests', () => {
       expect(t.s(0)).toEqual({ x: 4, y: 4 });
       expect(t.s(1)).toEqual({ x: 5, y: 5 });
     });
+    test('is Similar to - single transform in order', () => {
+      const t1 = new g2.Trans1().scale(1, 1);
+      const t2 = new g2.Trans1().scale(2, 2);
+      const t3 = new g2.Trans1().translate(1, 1);
+      const t4 = new g2.Trans1().rotate(1);
+      expect(t1.isSimilarTo(t2)).toBe(true);
+      expect(t1.isSimilarTo(t3)).toBe(false);
+      expect(t1.isSimilarTo(t4)).toBe(false);
+    });
+    test('is Similar to - two transforms in order', () => {
+      const t1 = new g2.Trans1().scale(1, 1).rotate(2);
+      const t2 = new g2.Trans1().scale(2, 2).rotate(4);
+      const t3 = new g2.Trans1().translate(1, 1).rotate(1);
+      const t4 = new g2.Trans1().rotate(1);
+      const t5 = new g2.Trans1().scale(1, 1).rotate(2).rotate(3);
+      const t6 = new g2.Trans1().scale(1, 1).scale(2, 2);
+      expect(t1.isSimilarTo(t2)).toBe(true);
+      expect(t1.isSimilarTo(t3)).toBe(false);
+      expect(t1.isSimilarTo(t4)).toBe(false);
+      expect(t1.isSimilarTo(t5)).toBe(false);
+      expect(t1.isSimilarTo(t6)).toBe(false);
+    });
+    test('is Similar to - three transforms in order', () => {
+      const t1 = new g2.Trans1().scale(1, 1).rotate(2).translate(1, 1);
+      const t2 = new g2.Trans1().scale(2, 2).rotate(4).translate(2, 2);
+      const t3 = new g2.Trans1().translate(1, 1).rotate(1).scale(1, 1);
+      const t4 = new g2.Trans1().rotate(1);
+      const t5 = new g2.Trans1().scale(1, 1).rotate(2).rotate(3);
+      const t6 = new g2.Trans1().scale(1, 1).scale(2, 2);
+      expect(t1.isSimilarTo(t2)).toBe(true);
+      expect(t1.isSimilarTo(t3)).toBe(false);
+      expect(t1.isSimilarTo(t4)).toBe(false);
+      expect(t1.isSimilarTo(t5)).toBe(false);
+      expect(t1.isSimilarTo(t6)).toBe(false);
+    });
   });
 });

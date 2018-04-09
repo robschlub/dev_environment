@@ -783,6 +783,22 @@ class Trans1 {
   m() {
     return this.matrix;
   }
+
+  isSimilarTo(transformToCompare: Trans1) {
+    if (transformToCompare.order.length !== this.order.length) {
+      return false;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      if (this.order[i].constructor.name !==
+          transformToCompare.order[i].constructor.name) {
+        return false;
+      }
+    }
+    return true;
+  }
+  // sub(transformToSubtract: Trans1 = new Trans1) {
+
+  // }
 }
 
 class Transform {

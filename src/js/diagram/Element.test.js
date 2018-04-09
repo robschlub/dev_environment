@@ -540,16 +540,16 @@ describe('Animationa and Movement', () => {
         expect(collection.show).toBe(true);
       });
     });
-    describe('is being touched', () => {
-      // Triangle was: rad: 0.1, thickness: 0.01 at 0,0
-      // Then moved to 0.1, 0
-      // Then rotated 90 degrees
-      // So top outside vertex should be 0.1, 0.205
-      test.only('Triangle as is', () => {
-        collection.draw(identity, 0);
-        const tri = collection._tri;
-        expect(tri.isBeingTouched(new Point(0, 0))).toBe(true);
-      });
-    });
+    // describe('is being touched', () => {
+    //   // Triangle was: rad: 0.1, thickness: 0.01 at 0,0
+    //   // Then moved to 0.1, 0
+    //   // Then rotated 90 degrees
+    //   // So top outside vertex should be 0.1, 0.205
+    //   test.only('Triangle as is', () => {
+    //     collection.draw(identity, 0);
+    //     const tri = collection._tri;
+    //     expect(tri.isBeingTouched(new Point(0, 0))).toBe(true);
+    //   });
+    // });
   });
 });
