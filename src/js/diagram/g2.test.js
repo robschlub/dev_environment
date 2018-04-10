@@ -536,229 +536,229 @@ describe('g2 tests', () => {
     });
   });
 
-  describe('Transforms', () => {
-    test('Creation', () => {
-      const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
-      expect(t.translation).toEqual(new g2.Point(1, 2));
-      expect(t.rotation).toBe(3);
-      expect(t.scale).toEqual(new g2.Point(4, 5));
-    });
-    test('Zero', () => {
-      const t = new g2.Transform.Zero();
-      expect(t.translation).toEqual(new g2.Point(0, 0));
-      expect(t.rotation).toBe(0);
-      expect(t.scale).toEqual(new g2.Point(0, 0));
-    });
-    test('Unity', () => {
-      const t = new g2.Transform.Unity();
-      expect(t.translation).toEqual(new g2.Point(0, 0));
-      expect(t.rotation).toBe(0);
-      expect(t.scale).toEqual(new g2.Point(1, 1));
-    });
-    test('Copy', () => {
-      const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
-      const c = t.copy();
-      expect(t).toEqual(c);
-      expect(t).not.toBe(c);
-    });
-    test('Subtraction', () => {
-      const t1 = new g2.Transform(
-        new g2.Point(0, 0),
-        Math.PI / 4,
-        new g2.Point(1, 1),
-      );
-      const t2 = new g2.Transform(
-        new g2.Point(1, 1),
-        Math.PI / 4,
-        new g2.Point(0.25, 0.25),
-      );
-      expect(t1.sub(t2)).toEqual(new g2.Transform(
-        new g2.Point(-1, -1),
-        0,
-        new g2.Point(0.75, 0.75),
-      ));
-    });
-    test('Add', () => {
-      const t1 = new g2.Transform(
-        new g2.Point(0, 0),
-        1,
-        new g2.Point(1, 1),
-      );
-      const t2 = new g2.Transform(
-        new g2.Point(1, 1),
-        1,
-        new g2.Point(-2, -2),
-      );
-      expect(t1.add(t2)).toEqual(new g2.Transform(
-        new g2.Point(1, 1),
-        2,
-        new g2.Point(-1, -1),
-      ));
-    });
-    describe('Matrix', () => {
-      test('Unity', () => {
-        const t = g2.Transform.Unity();
-        const m = t.matrix();
-        expect(m).toEqual([1, 0, 0, 0, 1, 0, 0, 0, 1]);
-      });
-      test('Zero', () => {
-        const t = g2.Transform.Zero();
-        const m = t.matrix();
-        expect(m).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 1]);
-      });
-      test('Transform point with scale, then rotation, then translation', () => {
-        // Expect transform order to be:
-        //  1. scale
-        //  2. rotation (around 0, 0)
-        //  3. translation
-        const t = new g2.Transform(new g2.Point(1, 0), Math.PI / 2, new g2.Point(2, 2));
-        const p = new g2.Point(2, 0);
-        const pT = p.transformBy(t.matrix());
-        expect(pT.round()).toEqual(new g2.Point(1, 4));
-      });
-      // test('Transform point with translation then rotation around (0, 0)', () => {
-        // Expect transform order to be:
-        // //  1. scale
-        // //  2. rotation (around 0, 0)
-        // //  3. translation
-        // const t = new g2.Transform(new g2.Point(1, 0), Math.PI / 2, new g2.Point(2, 2));
-        // const p = new g2.Point(2, 0);
-        // const pT = p.transformBy(t.matrix());
-        // expect(pT.round()).toEqual(new g2.Point(1, 4));
-      // });
-    });
-    describe('Clip', () => {
-      let max;
-      let zt;
-      beforeEach(() => {
-        max = new g2.Transform(new g2.Point(2, 2), 2, new g2.Point(2, 2));
-        zt = new g2.Transform(
-          new g2.Point(0.1, 0.1),
-          0.1,
-          new g2.Point(0.1, 0.1),
-        );
-      });
-      test('No clipping positive', () => {
-        const t = new g2.Transform(
-          new g2.Point(1, 1),
-          1,
-          new g2.Point(1, 1),
-        );
-        expect(t.clip(zt, max)).toEqual(t);
-      });
-      test('Clipping', () => {
-        const t = new g2.Transform(
-          new g2.Point(3, 0.1),
-          0.09,
-          new g2.Point(-3, -0.09),
-        );
-        const expectation = new g2.Transform(
-          new g2.Point(2, 0),
-          0,
-          new g2.Point(-2, 0),
-        );
-        expect(t.clip(zt, max)).toEqual(expectation);
-      });
-    });
-    describe('Velocity', () => {
-      let maxVelocity;
-      let zeroThreshold;
-      beforeEach(() => {
-        maxVelocity = new g2.Transform(new g2.Point(2, 2), 2, new g2.Point(2, 2));
-        zeroThreshold = new g2.Transform(new g2.Point(0.1, 0.1), 0.1, new g2.Point(0.1, 0.1));
-      });
-      test('No change', () => {
-        const curr = new g2.Transform(
-          new g2.Point(1, 1),
-          1,
-          new g2.Point(1, 1),
-        );
-        const old = new g2.Transform(
-          new g2.Point(1, 1),
-          1,
-          new g2.Point(1, 1),
-        );
-        const deltaTime = 1; // s
-        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
-        expect(v).toEqual(g2.Transform.Zero());
-      });
-      test('Positive Velocity', () => {
-        const old = new g2.Transform(
-          new g2.Point(0.1, 0.1),
-          0.1,
-          new g2.Point(0.1, 0.1),
-        );
-        const curr = new g2.Transform(
-          new g2.Point(0.9, 0.9),
-          0.9,
-          new g2.Point(0.9, 0.9),
-        );
-        const deltaTime = 1; // s
-        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
-        const expectation = new g2.Transform(
-          new g2.Point(0.8, 0.8),
-          0.8,
-          new g2.Point(0.8, 0.8),
-        );
-        expect(v).toEqual(expectation);
-      });
-      test('Negative Velocity', () => {
-        const curr = new g2.Transform(
-          new g2.Point(0.1, 0.1),
-          0.1,
-          new g2.Point(0.1, 0.1),
-        );
-        const old = new g2.Transform(
-          new g2.Point(0.2, 0.2),
-          0.2,
-          new g2.Point(0.2, 0.2),
-        );
-        const deltaTime = 0.1; // s
-        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
-        const expectation = new g2.Transform(
-          new g2.Point(-1, -1),
-          -1,
-          new g2.Point(-1, -1),
-        );
-        expect(v).toEqual(expectation);
-      });
-      test('Clipped Velocity', () => {
-        const curr = new g2.Transform(
-          new g2.Point(0.1, -0.1),
-          0.1,
-          new g2.Point(0.9, -0.9),
-        );
-        const old = new g2.Transform(
-          new g2.Point(0.9, -0.9),
-          0.1,
-          new g2.Point(0.9001, -0.9001),
-        );
-        const deltaTime = 0.1; // s
-        const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
-        const expectation = new g2.Transform(
-          new g2.Point(-maxVelocity.translation.x, maxVelocity.translation.y),
-          0,
-          new g2.Point(0, 0),
-        );
-        expect(v).toEqual(expectation);
-      });
-    });
-    describe('Map a function to all dimensions of transform', () => {
-      test('Simple mapping', () => {
-        const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
-        const m = t.map(n => n + 1);
-        const c = new g2.Transform(new g2.Point(2, 3), 4, new g2.Point(5, 6));
-        expect(m).toEqual(c);
-      });
-      test('More complex mapping', () => {
-        const func = (value, diff) => value + diff;
-        const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
-        const m = t.map(n => func(n, 1));
-        const c = new g2.Transform(new g2.Point(2, 3), 4, new g2.Point(5, 6));
-        expect(m).toEqual(c);
-      });
-    });
-  });
+  // describe('Transforms', () => {
+  //   test('Creation', () => {
+  //     const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
+  //     expect(t.translation).toEqual(new g2.Point(1, 2));
+  //     expect(t.rotation).toBe(3);
+  //     expect(t.scale).toEqual(new g2.Point(4, 5));
+  //   });
+  //   test('Zero', () => {
+  //     const t = new g2.Transform.Zero();
+  //     expect(t.translation).toEqual(new g2.Point(0, 0));
+  //     expect(t.rotation).toBe(0);
+  //     expect(t.scale).toEqual(new g2.Point(0, 0));
+  //   });
+  //   test('Unity', () => {
+  //     const t = new g2.Transform.Unity();
+  //     expect(t.translation).toEqual(new g2.Point(0, 0));
+  //     expect(t.rotation).toBe(0);
+  //     expect(t.scale).toEqual(new g2.Point(1, 1));
+  //   });
+  //   test('Copy', () => {
+  //     const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
+  //     const c = t.copy();
+  //     expect(t).toEqual(c);
+  //     expect(t).not.toBe(c);
+  //   });
+  //   test('Subtraction', () => {
+  //     const t1 = new g2.Transform(
+  //       new g2.Point(0, 0),
+  //       Math.PI / 4,
+  //       new g2.Point(1, 1),
+  //     );
+  //     const t2 = new g2.Transform(
+  //       new g2.Point(1, 1),
+  //       Math.PI / 4,
+  //       new g2.Point(0.25, 0.25),
+  //     );
+  //     expect(t1.sub(t2)).toEqual(new g2.Transform(
+  //       new g2.Point(-1, -1),
+  //       0,
+  //       new g2.Point(0.75, 0.75),
+  //     ));
+  //   });
+  //   test('Add', () => {
+  //     const t1 = new g2.Transform(
+  //       new g2.Point(0, 0),
+  //       1,
+  //       new g2.Point(1, 1),
+  //     );
+  //     const t2 = new g2.Transform(
+  //       new g2.Point(1, 1),
+  //       1,
+  //       new g2.Point(-2, -2),
+  //     );
+  //     expect(t1.add(t2)).toEqual(new g2.Transform(
+  //       new g2.Point(1, 1),
+  //       2,
+  //       new g2.Point(-1, -1),
+  //     ));
+  //   });
+  //   describe('Matrix', () => {
+  //     test('Unity', () => {
+  //       const t = g2.Transform.Unity();
+  //       const m = t.matrix();
+  //       expect(m).toEqual([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+  //     });
+  //     test('Zero', () => {
+  //       const t = g2.Transform.Zero();
+  //       const m = t.matrix();
+  //       expect(m).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 1]);
+  //     });
+  //     test('Transform point with scale, then rotation, then translation', () => {
+  //       // Expect transform order to be:
+  //       //  1. scale
+  //       //  2. rotation (around 0, 0)
+  //       //  3. translation
+  //       const t = new g2.Transform(new g2.Point(1, 0), Math.PI / 2, new g2.Point(2, 2));
+  //       const p = new g2.Point(2, 0);
+  //       const pT = p.transformBy(t.matrix());
+  //       expect(pT.round()).toEqual(new g2.Point(1, 4));
+  //     });
+  //     // test('Transform point with translation then rotation around (0, 0)', () => {
+  //       // Expect transform order to be:
+  //       // //  1. scale
+  //       // //  2. rotation (around 0, 0)
+  //       // //  3. translation
+  //       // const t = new g2.Transform(new g2.Point(1, 0), Math.PI / 2, new g2.Point(2, 2));
+  //       // const p = new g2.Point(2, 0);
+  //       // const pT = p.transformBy(t.matrix());
+  //       // expect(pT.round()).toEqual(new g2.Point(1, 4));
+  //     // });
+  //   });
+  //   describe('Clip', () => {
+  //     let max;
+  //     let zt;
+  //     beforeEach(() => {
+  //       max = new g2.Transform(new g2.Point(2, 2), 2, new g2.Point(2, 2));
+  //       zt = new g2.Transform(
+  //         new g2.Point(0.1, 0.1),
+  //         0.1,
+  //         new g2.Point(0.1, 0.1),
+  //       );
+  //     });
+  //     test('No clipping positive', () => {
+  //       const t = new g2.Transform(
+  //         new g2.Point(1, 1),
+  //         1,
+  //         new g2.Point(1, 1),
+  //       );
+  //       expect(t.clip(zt, max)).toEqual(t);
+  //     });
+  //     test('Clipping', () => {
+  //       const t = new g2.Transform(
+  //         new g2.Point(3, 0.1),
+  //         0.09,
+  //         new g2.Point(-3, -0.09),
+  //       );
+  //       const expectation = new g2.Transform(
+  //         new g2.Point(2, 0),
+  //         0,
+  //         new g2.Point(-2, 0),
+  //       );
+  //       expect(t.clip(zt, max)).toEqual(expectation);
+  //     });
+  //   });
+  //   describe('Velocity', () => {
+  //     let maxVelocity;
+  //     let zeroThreshold;
+  //     beforeEach(() => {
+  //       maxVelocity = new g2.Transform(new g2.Point(2, 2), 2, new g2.Point(2, 2));
+  //       zeroThreshold = new g2.Transform(new g2.Point(0.1, 0.1), 0.1, new g2.Point(0.1, 0.1));
+  //     });
+  //     test('No change', () => {
+  //       const curr = new g2.Transform(
+  //         new g2.Point(1, 1),
+  //         1,
+  //         new g2.Point(1, 1),
+  //       );
+  //       const old = new g2.Transform(
+  //         new g2.Point(1, 1),
+  //         1,
+  //         new g2.Point(1, 1),
+  //       );
+  //       const deltaTime = 1; // s
+  //       const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+  //       expect(v).toEqual(g2.Transform.Zero());
+  //     });
+  //     test('Positive Velocity', () => {
+  //       const old = new g2.Transform(
+  //         new g2.Point(0.1, 0.1),
+  //         0.1,
+  //         new g2.Point(0.1, 0.1),
+  //       );
+  //       const curr = new g2.Transform(
+  //         new g2.Point(0.9, 0.9),
+  //         0.9,
+  //         new g2.Point(0.9, 0.9),
+  //       );
+  //       const deltaTime = 1; // s
+  //       const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+  //       const expectation = new g2.Transform(
+  //         new g2.Point(0.8, 0.8),
+  //         0.8,
+  //         new g2.Point(0.8, 0.8),
+  //       );
+  //       expect(v).toEqual(expectation);
+  //     });
+  //     test('Negative Velocity', () => {
+  //       const curr = new g2.Transform(
+  //         new g2.Point(0.1, 0.1),
+  //         0.1,
+  //         new g2.Point(0.1, 0.1),
+  //       );
+  //       const old = new g2.Transform(
+  //         new g2.Point(0.2, 0.2),
+  //         0.2,
+  //         new g2.Point(0.2, 0.2),
+  //       );
+  //       const deltaTime = 0.1; // s
+  //       const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+  //       const expectation = new g2.Transform(
+  //         new g2.Point(-1, -1),
+  //         -1,
+  //         new g2.Point(-1, -1),
+  //       );
+  //       expect(v).toEqual(expectation);
+  //     });
+  //     test('Clipped Velocity', () => {
+  //       const curr = new g2.Transform(
+  //         new g2.Point(0.1, -0.1),
+  //         0.1,
+  //         new g2.Point(0.9, -0.9),
+  //       );
+  //       const old = new g2.Transform(
+  //         new g2.Point(0.9, -0.9),
+  //         0.1,
+  //         new g2.Point(0.9001, -0.9001),
+  //       );
+  //       const deltaTime = 0.1; // s
+  //       const v = curr.velocity(old, deltaTime, zeroThreshold, maxVelocity);
+  //       const expectation = new g2.Transform(
+  //         new g2.Point(-maxVelocity.translation.x, maxVelocity.translation.y),
+  //         0,
+  //         new g2.Point(0, 0),
+  //       );
+  //       expect(v).toEqual(expectation);
+  //     });
+  //   });
+  //   describe('Map a function to all dimensions of transform', () => {
+  //     test('Simple mapping', () => {
+  //       const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
+  //       const m = t.map(n => n + 1);
+  //       const c = new g2.Transform(new g2.Point(2, 3), 4, new g2.Point(5, 6));
+  //       expect(m).toEqual(c);
+  //     });
+  //     test('More complex mapping', () => {
+  //       const func = (value, diff) => value + diff;
+  //       const t = new g2.Transform(new g2.Point(1, 2), 3, new g2.Point(4, 5));
+  //       const m = t.map(n => func(n, 1));
+  //       const c = new g2.Transform(new g2.Point(2, 3), 4, new g2.Point(5, 6));
+  //       expect(m).toEqual(c);
+  //     });
+  //   });
+  // });
   describe('Clip Velocity', () => {
     test('No clipping positive velocity', () => {
       expect(g2.clipValue(1, 0.1, 2)).toBe(1);
@@ -793,60 +793,60 @@ describe('g2 tests', () => {
       expect(g2.clipValue(-0.1, 0.1, 2)).toBe(0);
     });
   });
-  describe('Trans1', () => {
+  describe('Transform', () => {
     test('Create rotation', () => {
-      const t = new g2.Trans1().rotate(Math.PI / 2);
+      const t = new g2.Transform().rotate(Math.PI / 2);
       const p0 = new g2.Point(1, 0);
       const p1 = p0.transformBy(t.matrix);
       expect(p1.round()).toEqual(new g2.Point(0, 1));
     });
     test('Create translation', () => {
-      const t = new g2.Trans1().translate(1, 1);
+      const t = new g2.Transform().translate(1, 1);
       const p0 = new g2.Point(1, 0);
       const p1 = p0.transformBy(t.m());
       expect(p1.round()).toEqual(new g2.Point(2, 1));
     });
     test('Create scale', () => {
-      const t = new g2.Trans1().scale(2, 2);
+      const t = new g2.Transform().scale(2, 2);
       const p0 = new g2.Point(1, 0.5);
       const p1 = p0.transformBy(t.matrix);
       expect(p1.round()).toEqual(new g2.Point(2, 1));
     });
     test('Create R, T', () => {
-      const t = new g2.Trans1().rotate(Math.PI / 2).translate(1, 1);
+      const t = new g2.Transform().rotate(Math.PI / 2).translate(1, 1);
       const p0 = new g2.Point(2, 0);
       const p1 = p0.transformBy(t.matrix);
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Create S, R, T', () => {
-      const t = new g2.Trans1().scale(2, 2).rotate(Math.PI / 2).translate(1, 1);
+      const t = new g2.Transform().scale(2, 2).rotate(Math.PI / 2).translate(1, 1);
       const p0 = new g2.Point(1, 0);
       const p1 = p0.transformBy(t.matrix);
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Create S, R, then T', () => {
-      const t1 = new g2.Trans1().scale(2, 2).rotate(Math.PI / 2);
+      const t1 = new g2.Transform().scale(2, 2).rotate(Math.PI / 2);
       const t2 = t1.translate(1, 1);
       const p0 = new g2.Point(1, 0);
       const p1 = p0.transformBy(t2.matrix);
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Create S, R, T, T, S', () => {
-      let t1 = new g2.Trans1().scale(2, 2).rotate(Math.PI / 2);
+      let t1 = new g2.Transform().scale(2, 2).rotate(Math.PI / 2);
       t1 = t1.translate(1, 1).translate(-5, 0).scale(2, 1);
       const p0 = new g2.Point(1, 0);
       const p1 = p0.transformBy(t1.matrix);
       expect(p1.round()).toEqual(new g2.Point(-8, 3));
     });
     test('Update R in S, R, T', () => {
-      const t = new g2.Trans1().scale(2, 2).rotate(Math.PI).translate(1, 1);
+      const t = new g2.Transform().scale(2, 2).rotate(Math.PI).translate(1, 1);
       t.update(1).rotate(Math.PI / 2);
       const p0 = new g2.Point(1, 0);
       const p1 = p0.transformBy(t.matrix);
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Get rotation', () => {
-      const t = new g2.Trans1().scale(2, 2).rotate(1).translate(1, 1)
+      const t = new g2.Transform().scale(2, 2).rotate(1).translate(1, 1)
         .rotate(2);
       expect(t.r()).toBe(1);
       expect(t.r(0)).toBe(1);
@@ -854,7 +854,10 @@ describe('g2 tests', () => {
       expect(t.r(2)).toBe(null);
     });
     test('Update rotation', () => {
-      const t = new g2.Trans1().scale(2, 2).rotate(1).translate(1, 1)
+      const t = new g2.Transform()
+        .scale(2, 2)
+        .rotate(1)
+        .translate(1, 1)
         .rotate(2);
       t.updateRotation(4);
       expect(t.r()).toBe(4);
@@ -869,8 +872,29 @@ describe('g2 tests', () => {
       expect(t.r(0)).toBe(5);
       expect(t.r(1)).toBe(6);
     });
+    test('Update rotation checking matrix', () => {
+      const t = new g2.Transform().rotate(0);
+      const matrix = t.m();
+      t.updateRotation(1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().rotate(1).m());
+    });
+    test('Update translation checking matrix', () => {
+      const t = new g2.Transform().translate(0, 0);
+      const matrix = t.m();
+      t.updateTranslation(1, 1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().translate(1, 1).m());
+    });
+    test('Update scale checking matrix', () => {
+      const t = new g2.Transform().scale(0, 0);
+      const matrix = t.m();
+      t.updateScale(1, 1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().scale(1, 1).m());
+    });
     test('Get translation', () => {
-      const t = new g2.Trans1()
+      const t = new g2.Transform()
         .translate(0, 0).scale(2, 2).rotate(1)
         .translate(1, 1)
         .rotate(2);
@@ -880,7 +904,7 @@ describe('g2 tests', () => {
       expect(t.t(2)).toEqual(null);
     });
     test('Update translation', () => {
-      const t = new g2.Trans1()
+      const t = new g2.Transform()
         .translate(0, 0).scale(2, 2).rotate(1)
         .translate(1, 1)
         .rotate(2);
@@ -901,7 +925,7 @@ describe('g2 tests', () => {
       expect(t.t(1)).toEqual({ x: 5, y: 5 });
     });
     test('Get Scale', () => {
-      const t = new g2.Trans1()
+      const t = new g2.Transform()
         .scale(0, 0).translate(2, 2).rotate(1)
         .scale(1, 1)
         .rotate(2);
@@ -911,7 +935,7 @@ describe('g2 tests', () => {
       expect(t.s(2)).toEqual(null);
     });
     test('Update scale', () => {
-      const t = new g2.Trans1()
+      const t = new g2.Transform()
         .scale(0, 0).translate(2, 2).rotate(1)
         .scale(1, 1)
         .rotate(2);
@@ -932,21 +956,21 @@ describe('g2 tests', () => {
       expect(t.s(1)).toEqual({ x: 5, y: 5 });
     });
     test('is Similar to - single transform in order', () => {
-      const t1 = new g2.Trans1().scale(1, 1);
-      const t2 = new g2.Trans1().scale(2, 2);
-      const t3 = new g2.Trans1().translate(1, 1);
-      const t4 = new g2.Trans1().rotate(1);
+      const t1 = new g2.Transform().scale(1, 1);
+      const t2 = new g2.Transform().scale(2, 2);
+      const t3 = new g2.Transform().translate(1, 1);
+      const t4 = new g2.Transform().rotate(1);
       expect(t1.isSimilarTo(t2)).toBe(true);
       expect(t1.isSimilarTo(t3)).toBe(false);
       expect(t1.isSimilarTo(t4)).toBe(false);
     });
     test('is Similar to - two transforms in order', () => {
-      const t1 = new g2.Trans1().scale(1, 1).rotate(2);
-      const t2 = new g2.Trans1().scale(2, 2).rotate(4);
-      const t3 = new g2.Trans1().translate(1, 1).rotate(1);
-      const t4 = new g2.Trans1().rotate(1);
-      const t5 = new g2.Trans1().scale(1, 1).rotate(2).rotate(3);
-      const t6 = new g2.Trans1().scale(1, 1).scale(2, 2);
+      const t1 = new g2.Transform().scale(1, 1).rotate(2);
+      const t2 = new g2.Transform().scale(2, 2).rotate(4);
+      const t3 = new g2.Transform().translate(1, 1).rotate(1);
+      const t4 = new g2.Transform().rotate(1);
+      const t5 = new g2.Transform().scale(1, 1).rotate(2).rotate(3);
+      const t6 = new g2.Transform().scale(1, 1).scale(2, 2);
       expect(t1.isSimilarTo(t2)).toBe(true);
       expect(t1.isSimilarTo(t3)).toBe(false);
       expect(t1.isSimilarTo(t4)).toBe(false);
@@ -954,12 +978,12 @@ describe('g2 tests', () => {
       expect(t1.isSimilarTo(t6)).toBe(false);
     });
     test('is Similar to - three transforms in order', () => {
-      const t1 = new g2.Trans1().scale(1, 1).rotate(2).translate(1, 1);
-      const t2 = new g2.Trans1().scale(2, 2).rotate(4).translate(2, 2);
-      const t3 = new g2.Trans1().translate(1, 1).rotate(1).scale(1, 1);
-      const t4 = new g2.Trans1().rotate(1);
-      const t5 = new g2.Trans1().scale(1, 1).rotate(2).rotate(3);
-      const t6 = new g2.Trans1().scale(1, 1).scale(2, 2);
+      const t1 = new g2.Transform().scale(1, 1).rotate(2).translate(1, 1);
+      const t2 = new g2.Transform().scale(2, 2).rotate(4).translate(2, 2);
+      const t3 = new g2.Transform().translate(1, 1).rotate(1).scale(1, 1);
+      const t4 = new g2.Transform().rotate(1);
+      const t5 = new g2.Transform().scale(1, 1).rotate(2).rotate(3);
+      const t6 = new g2.Transform().scale(1, 1).scale(2, 2);
       expect(t1.isSimilarTo(t2)).toBe(true);
       expect(t1.isSimilarTo(t3)).toBe(false);
       expect(t1.isSimilarTo(t4)).toBe(false);
@@ -967,8 +991,8 @@ describe('g2 tests', () => {
       expect(t1.isSimilarTo(t6)).toBe(false);
     });
     test('Subtraction happy case', () => {
-      const t1 = new g2.Trans1().scale(1, 2).rotate(3).translate(4, 5);
-      const t2 = new g2.Trans1().scale(0, 1).rotate(2).translate(3, 4);
+      const t1 = new g2.Transform().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Transform().scale(0, 1).rotate(2).translate(3, 4);
       const ts = t1.sub(t2);
       expect(ts.s()).toEqual(new g2.Point(1, 1));
       expect(ts.r()).toEqual(1);
@@ -976,9 +1000,9 @@ describe('g2 tests', () => {
     });
     test('Subtraction sad case', () => {
       // Sad cases should just return the initial transform
-      const t1 = new g2.Trans1().scale(1, 2).rotate(3).translate(4, 5);
-      const t2 = new g2.Trans1().rotate(0, 1).rotate(2).translate(3, 4);
-      const t3 = new g2.Trans1().scale(0, 1).rotate(2);
+      const t1 = new g2.Transform().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Transform().rotate(0, 1).rotate(2).translate(3, 4);
+      const t3 = new g2.Transform().scale(0, 1).rotate(2);
       let ts = t1.sub(t2);
       expect(ts.s()).toEqual(t1.s());
       expect(ts.r()).toEqual(t1.r());
@@ -989,8 +1013,67 @@ describe('g2 tests', () => {
       expect(ts.r()).toEqual(t1.r());
       expect(ts.t()).toEqual(t1.t());
     });
+    test('Addition happy case', () => {
+      const t1 = new g2.Transform().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Transform().scale(0, 1).rotate(2).translate(3, 4);
+      const ts = t1.add(t2);
+      expect(ts.s()).toEqual(new g2.Point(1, 3));
+      expect(ts.r()).toEqual(5);
+      expect(ts.t()).toEqual(new g2.Point(7, 9));
+    });
+    test('Addition sad case', () => {
+      // Sad cases should just return the initial transform
+      const t1 = new g2.Transform().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Transform().rotate(0, 1).rotate(2).translate(3, 4);
+      const t3 = new g2.Transform().scale(0, 1).rotate(2);
+      let ts = t1.add(t2);
+      expect(ts.s()).toEqual(t1.s());
+      expect(ts.r()).toEqual(t1.r());
+      expect(ts.t()).toEqual(t1.t());
+
+      ts = t1.add(t3);
+      expect(ts.s()).toEqual(t1.s());
+      expect(ts.r()).toEqual(t1.r());
+      expect(ts.t()).toEqual(t1.t());
+    });
+    test('Multiply happy case', () => {
+      const t1 = new g2.Transform().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Transform().scale(0, 1).rotate(2).translate(3, 4);
+      const ts = t1.mul(t2);
+      expect(ts.s()).toEqual(new g2.Point(0, 2));
+      expect(ts.r()).toEqual(6);
+      expect(ts.t()).toEqual(new g2.Point(12, 20));
+    });
+    test('Multiply sad case', () => {
+      // Sad cases should just return the initial transform
+      const t1 = new g2.Transform().scale(1, 2).rotate(3).translate(4, 5);
+      const t2 = new g2.Transform().rotate(0, 1).rotate(2).translate(3, 4);
+      const t3 = new g2.Transform().scale(0, 1).rotate(2);
+      let ts = t1.mul(t2);
+      expect(ts.s()).toEqual(t1.s());
+      expect(ts.r()).toEqual(t1.r());
+      expect(ts.t()).toEqual(t1.t());
+
+      ts = t1.mul(t3);
+      expect(ts.s()).toEqual(t1.s());
+      expect(ts.r()).toEqual(t1.r());
+      expect(ts.t()).toEqual(t1.t());
+    });
+    test('Zero', () => {
+      const t1 = new g2.Transform().scale(1, 1).rotate(1).translate(1, 1);
+      const t2 = t1.zero();
+      expect(t2).toEqual(t1.sub(t1));
+    });
+    test('isZero', () => {
+      const t1 = new g2.Transform().scale(1, 1).rotate(1).translate(1, 1);
+      expect(t1.isZero()).toBe(false);
+      const t2 = t1.zero();
+      expect(t2.isZero()).toBe(true);
+      const t3 = new g2.Transform().scale(0, 0).rotate(0).scale(1, 0);
+      expect(t3.isZero()).toBe(false);
+    });
     test('Rounding', () => {
-      const t1 = new g2.Trans1()
+      const t1 = new g2.Transform()
         .scale(1.123456789, 1.12345678)
         .rotate(1.123456789)
         .translate(1.123456789, 1.12345678);
@@ -1010,7 +1093,7 @@ describe('g2 tests', () => {
       expect(tr.t()).toEqual(new g2.Point(1, 1));
     });
     test('Clipping', () => {
-      const t1 = new g2.Trans1()
+      const t1 = new g2.Transform()
         .scale(21, 20)
         .scale(0.1, 0.05)
         .rotate(21)
@@ -1019,11 +1102,11 @@ describe('g2 tests', () => {
         .rotate(0.05)
         .translate(21, 20)
         .translate(0.1, 0.05);
-      const clipZero = new g2.Trans1()
+      const clipZero = new g2.Transform()
         .scale(0.1, 0.1)
         .rotate(0.1)
         .translate(0.1, 0.1);
-      const clipMax = new g2.Trans1()
+      const clipMax = new g2.Transform()
         .scale(20, 20)
         .rotate(20)
         .translate(20, 20);
@@ -1038,22 +1121,22 @@ describe('g2 tests', () => {
       expect(tc.t(1)).toEqual(new g2.Point(0, 0));
     });
     test('Copy', () => {
-      const t = new g2.Trans1().scale(1, 1).rotate(1).translate(1, 1);
+      const t = new g2.Transform().scale(1, 1).rotate(1).translate(1, 1);
       const b = t.copy();
       expect(t).toEqual(b);
       expect(t).not.toBe(b);
     });
     test('Velocity - Happy case', () => {
       const deltaTime = 1;
-      const zero = new g2.Trans1()
+      const zero = new g2.Transform()
         .scale(0.2, 0.2)
         .rotate(0.2)
         .translate(0.2, 0.2);
-      const max = new g2.Trans1()
+      const max = new g2.Transform()
         .scale(20, 20)
         .rotate(20)
         .translate(20, 20);
-      const t0 = new g2.Trans1()
+      const t0 = new g2.Transform()
         .scale(0, 0)          // to test velocity
         .scale(-1, -40)       // to test zero
         .scale(40, 1)         // to test max
@@ -1063,7 +1146,7 @@ describe('g2 tests', () => {
         .translate(0, 0)      // to test velocity
         .translate(-1, -40)   // to test zero
         .translate(40, 1);    // to test max
-      const t1 = new g2.Trans1()
+      const t1 = new g2.Transform()
         .scale(-1, 1)             // should be -1, 1
         .scale(-1.2, -40.1)       // should be 0, 0
         .scale(20, 40)            // should be -20, 20
@@ -1093,25 +1176,25 @@ describe('g2 tests', () => {
       let t1;
       beforeEach(() => {
         deltaTime = 1;
-        zero = new g2.Trans1()
+        zero = new g2.Transform()
           .scale(0.2, 0.2)
           .rotate(0.2)
           .translate(0.2, 0.2);
-        max = new g2.Trans1()
+        max = new g2.Transform()
           .scale(20, 20)
           .rotate(20)
           .translate(20, 20);
-        t0 = new g2.Trans1()
+        t0 = new g2.Transform()
           .scale(0, 0)
           .rotate(0)
           .translate(0, 0);
-        t1 = new g2.Trans1()
+        t1 = new g2.Transform()
           .scale(1, 1)
           .rotate(1)
           .translate(1, 1);
       });
       test('t0 not similar to t1', () => {
-        t1 = new g2.Trans1().rotate(1).scale(1, 1).translate(1, 1);
+        t1 = new g2.Transform().rotate(1).scale(1, 1).translate(1, 1);
         const v = t1.velocity(t0, deltaTime, zero, max);
         expect(v.s()).toEqual(new g2.Point(0, 0));
         expect(v.r()).toEqual(0);
@@ -1120,8 +1203,8 @@ describe('g2 tests', () => {
       // If a transform element is missing from the transform, then a default
       // value of 0.0001 will be used.
       test('zero missing a transform element', () => {
-        zero = new g2.Trans1().rotate(0.2).scale(0.2, 0.2);
-        t1 = new g2.Trans1()
+        zero = new g2.Transform().rotate(0.2).scale(0.2, 0.2);
+        t1 = new g2.Transform()
           .scale(0.2, -0.00001)
           .rotate(0.00001)
           .translate(0.2, 0.00001);
@@ -1133,8 +1216,8 @@ describe('g2 tests', () => {
       // If a transform element is missing from the transform, then a default
       // value of 10000 will be used.
       test('max missing a transform element', () => {
-        max = new g2.Trans1().rotate(20).scale(20, 20);
-        t1 = new g2.Trans1()
+        max = new g2.Transform().rotate(20).scale(20, 20);
+        t1 = new g2.Transform()
           .scale(30, -100001)
           .rotate(100001)
           .translate(30, 100001);
@@ -1142,6 +1225,44 @@ describe('g2 tests', () => {
         expect(v.s()).toEqual(new g2.Point(20, -20));    // This should work
         expect(v.r()).toEqual(20);                       // This should work
         expect(v.t().round()).toEqual(new g2.Point(30, 100000));  // This should default
+      });
+    });
+    describe('Deceleration', () => {
+      let d;
+      let t;
+      let v;
+      let z;
+      beforeEach(() => {
+        d = new g2.Transform().scale(1, 1).rotate(1).translate(1, 1);
+        v = new g2.Transform().scale(10, 10).rotate(10).translate(10, 10);
+        t = new g2.Transform().scale(0, 0).rotate(0).translate(0, 0);
+        z = new g2.Transform().scale(5, 5).rotate(5).translate(5, 5);
+      });
+      test('Simple deceleration', () => {
+        const n = t.decelerate(v, d, 1, z);     // next v and t
+        expect(n.v).toEqual(new g2.Transform()
+          .scale(9, 9).rotate(9).translate(9, 9));
+        expect(n.t).toEqual(new g2.Transform()
+          .scale(9.5, 9.5).rotate(9.5).translate(9.5, 9.5));
+      });
+      test('Negatives in deceleration and velocity', () => {
+        d = new g2.Transform().scale(-1, 1).rotate(1).translate(-1, 1);
+        v = new g2.Transform().scale(10, -10).rotate(-10).translate(10, -10);
+        const n = t.decelerate(v, d, 1, z);     // next v and t
+        expect(n.v).toEqual(new g2.Transform()
+          .scale(9, -9).rotate(-9).translate(9, -9));
+        expect(n.t).toEqual(new g2.Transform()
+          .scale(9.5, -9.5).rotate(-9.5).translate(9.5, -9.5));
+      });
+      test('Zero thresholds', () => {
+        d = new g2.Transform().scale(-1, 1).rotate(1).translate(-1, 1);
+        v = new g2.Transform().scale(10, -10).rotate(-10).translate(10, -10);
+        z = new g2.Transform().scale(1, -5).rotate(5).translate(-1, 5);
+        const n = t.decelerate(v, d, 6, z);     // next v and t
+        expect(n.v).toEqual(new g2.Transform()
+          .scale(4, 0).rotate(0).translate(4, 0));
+        expect(n.t).toEqual(new g2.Transform()
+          .scale(42, -37.5).rotate(-37.5).translate(42, -37.5));
       });
     });
   });

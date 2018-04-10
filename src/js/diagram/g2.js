@@ -6,7 +6,7 @@
 //  - minAngleDiff
 //  - normAngle
 
-import { roundNum } from './mathtools';
+import { roundNum, decelerate } from './mathtools';
 import { Console } from '../tools/tools';
 import * as m2 from './m2';
 
@@ -514,7 +514,7 @@ function line(p1: Point, p2: Point) {
 //                           new point(transform.scale.x, transform.scale.y));
 //     // return new _transformCopy (transform);
 // }
-// function Transform(translation = {x:0,y:0}, rotation = 0, scale = {x:0,y:0}) {
+// function OldTransform(translation = {x:0,y:0}, rotation = 0, scale = {x:0,y:0}) {
 //     return new _transform(translation, rotation, scale);
 // }
 // function TransformZero() {
@@ -584,6 +584,14 @@ class Rotation {
   round(precision: number = 8): Rotation {
     return new Rotation(roundNum(this.r, precision));
   }
+
+  add(rotToAdd: Rotation = new Rotation(0)): Rotation {
+    return new Rotation(this.r + rotToAdd.r);
+  }
+
+  mul(rotToMul: Rotation = new Rotation(1)): Rotation {
+    return new Rotation(this.r * rotToMul.r);
+  }
 }
 
 class Translation {
@@ -607,6 +615,20 @@ class Translation {
     return new Translation(
       this.x - translationToSub.x,
       this.y - translationToSub.y,
+    );
+  }
+
+  add(translationToAdd: Translation = new Translation(0, 0)): Translation {
+    return new Translation(
+      this.x + translationToAdd.x,
+      this.y + translationToAdd.y,
+    );
+  }
+
+  mul(translationToMul: Translation = new Translation(1, 1)): Translation {
+    return new Translation(
+      this.x * translationToMul.x,
+      this.y * translationToMul.y,
     );
   }
 
@@ -647,9 +669,23 @@ class Scale {
       roundNum(this.y, precision),
     );
   }
+
+  add(scaleToAdd: Scale = new Scale(0, 0)): Scale {
+    return new Scale(
+      this.x + scaleToAdd.x,
+      this.y + scaleToAdd.y,
+    );
+  }
+
+  mul(scaleToMul: Scale = new Scale(1, 1)): Scale {
+    return new Scale(
+      this.x * scaleToMul.x,
+      this.y * scaleToMul.y,
+    );
+  }
 }
 
-class Trans1 {
+class Transform {
   order: Array<Translation | Rotation | Scale>;
   matrix: Array<number>;
   index: number;
@@ -672,7 +708,7 @@ class Trans1 {
       this.calcMatrix();
       return this;
     }
-    return new Trans1(order);
+    return new Transform(order);
   }
 
   rotate(r: number) {
@@ -688,7 +724,7 @@ class Trans1 {
     }
     // this.order.push(new Rotation(r));
     // this.calcMatrix();
-    return new Trans1(order);
+    return new Transform(order);
   }
 
   scale(x: number, y: number) {
@@ -703,7 +739,7 @@ class Trans1 {
       this.calcMatrix();
       return this;
     }
-    return new Trans1(order);
+    return new Transform(order);
   }
 
   calcMatrix() {
@@ -747,11 +783,13 @@ class Trans1 {
       if (t instanceof Translation) {
         if (count === actualIndex) {
           this.order[i] = new Translation(x, yOrIndex);
+          this.calcMatrix();
           return;
         }
         count += 1;
       }
     }
+    this.calcMatrix();
   }
 
   s(index: number = 0): ?Point {
@@ -779,6 +817,7 @@ class Trans1 {
       if (t instanceof Scale) {
         if (count === actualIndex) {
           this.order[i] = new Scale(x, yOrIndex);
+          this.calcMatrix();
           return;
         }
         count += 1;
@@ -807,6 +846,7 @@ class Trans1 {
       if (t instanceof Rotation) {
         if (count === index) {
           this.order[i] = new Rotation(r);
+          this.calcMatrix();
           return;
         }
         count += 1;
@@ -818,7 +858,7 @@ class Trans1 {
     return this.matrix;
   }
 
-  isSimilarTo(transformToCompare: Trans1) {
+  isSimilarTo(transformToCompare: Transform) {
     if (transformToCompare.order.length !== this.order.length) {
       return false;
     }
@@ -834,27 +874,58 @@ class Trans1 {
   // Subtract a transform from the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
-  sub(transformToSubtract: Trans1 = new Trans1()) {
+  sub(transformToSubtract: Transform = new Transform()) {
     if (!this.isSimilarTo(transformToSubtract)) {
-      return new Trans1(this.order);
+      return new Transform(this.order);
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       // $FlowFixMe (this is already fixed in isSimilarTo check above)
       order.push(this.order[i].sub(transformToSubtract.order[i]));
     }
-    return new Trans1(order);
+    return new Transform(order);
   }
+
+  // Add a transform to the current one.
+  // If the two transforms have different order types, then just return
+  // the current transform.
+  add(transformToAdd: Transform = new Transform()) {
+    if (!this.isSimilarTo(transformToAdd)) {
+      return new Transform(this.order);
+    }
+    const order = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      // $FlowFixMe (this is already fixed in isSimilarTo check above)
+      order.push(this.order[i].add(transformToAdd.order[i]));
+    }
+    return new Transform(order);
+  }
+
+  // Add a transform to the current one.
+  // If the two transforms have different order types, then just return
+  // the current transform.
+  mul(transformToMul: Transform = new Transform()) {
+    if (!this.isSimilarTo(transformToMul)) {
+      return new Transform(this.order);
+    }
+    const order = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      // $FlowFixMe (this is already fixed in isSimilarTo check above)
+      order.push(this.order[i].mul(transformToMul.order[i]));
+    }
+    return new Transform(order);
+  }
+
 
   round(precision: number = 8) {
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       order.push(this.order[i].round(precision));
     }
-    return new Trans1(order);
+    return new Transform(order);
   }
 
-  clip(zeroThresholdTransform: Trans1, maxTransform: Trans1) {
+  clip(zeroThresholdTransform: Transform, maxTransform: Transform) {
     const min = 0.00001;
     const max = 1 / min;
     const zeroS = zeroThresholdTransform.s() || new Point(min, min);
@@ -881,7 +952,7 @@ class Trans1 {
         order.push(new Scale(x, y));
       }
     }
-    return new Trans1(order);
+    return new Transform(order);
   }
 
   zero() {
@@ -896,11 +967,63 @@ class Trans1 {
         order.push(new Scale(0, 0));
       }
     }
-    return new Trans1(order);
+    return new Transform(order);
   }
 
+  isZero() {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      if (t instanceof Translation || t instanceof Scale) {
+        if (t.x !== 0 || t.y !== 0) {
+          return false;
+        }
+      } else if (t instanceof Rotation) {
+        if (t.r !== 0) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
   copy() {
-    return new Trans1(this.order);
+    return new Transform(this.order);
+  }
+
+  decelerate(
+    velocity: Transform,
+    deceleration: Transform,
+    deltaTime: number,
+    zeroThreshold: Transform,
+  ) {
+    let nextV = new Transform();
+    let nextT = new Transform();
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      const v = velocity.order[i];
+      const z = zeroThreshold.order[i];
+      const d = deceleration.order[i];
+      if (t instanceof Translation && v instanceof Translation &&
+          d instanceof Translation && z instanceof Translation) {
+        const x = decelerate(t.x, v.x, d.x, deltaTime, z.x);
+        const y = decelerate(t.y, v.y, d.y, deltaTime, z.y);
+        nextV = nextV.translate(x.v, y.v);
+        nextT = nextT.translate(x.p, y.p);
+      } else if (t instanceof Rotation && v instanceof Rotation &&
+                 d instanceof Rotation && z instanceof Rotation) {
+        const r = decelerate(t.r, v.r, d.r, deltaTime, z.r);
+        nextV = nextV.rotate(r.v);
+        nextT = nextT.rotate(r.p);
+      } else if (t instanceof Scale && v instanceof Scale &&
+                 d instanceof Scale && z instanceof Scale) {
+        const x = decelerate(t.x, v.x, d.x, deltaTime, z.x);
+        const y = decelerate(t.y, v.y, d.y, deltaTime, z.y);
+        nextV = nextV.scale(x.v, y.v);
+        nextT = nextT.scale(x.p, y.p);
+      } else {
+        return { v: new Transform(), t: new Transform() };
+      }
+    }
+    return { v: nextV, t: nextT };
   }
 
   // Return the velocity of each element in the transform
@@ -908,10 +1031,10 @@ class Trans1 {
   // then a transform of value 0, but with the same type order as "this" will
   // be returned.
   velocity(
-    previousTransform: Trans1,
+    previousTransform: Transform,
     deltaTime: number,
-    zeroThreshold: Trans1,
-    maxTransform: Trans1,
+    zeroThreshold: Transform,
+    maxTransform: Transform,
   ) {
     const order = [];
     if (!this.isSimilarTo(previousTransform)) {
@@ -928,11 +1051,11 @@ class Trans1 {
         order.push(new Scale(t.x / deltaTime, t.y / deltaTime));
       }
     }
-    return (new Trans1(order)).clip(zeroThreshold, maxTransform);
+    return (new Transform(order)).clip(zeroThreshold, maxTransform);
   }
 }
 
-class Transform {
+class OldTransform {
   translation: Point;
   rotation: number;
   scale: Point;
@@ -943,10 +1066,10 @@ class Transform {
   // sy: number;
 
   static Zero() {
-    return new Transform(Point.zero(), 0, new Point(0, 0));
+    return new OldTransform(Point.zero(), 0, new Point(0, 0));
   }
   static Unity() {
-    return new Transform(Point.zero(), 0, new Point(1, 1));
+    return new OldTransform(Point.zero(), 0, new Point(1, 1));
   }
 
   constructor(
@@ -964,16 +1087,16 @@ class Transform {
     // this.r = this.rotation;
   }
 
-  add(transformToAdd: Transform = Transform.Zero()) {
-    return new Transform(
+  add(transformToAdd: OldTransform = OldTransform.Zero()) {
+    return new OldTransform(
       this.translation.add(transformToAdd.translation),
       this.rotation + transformToAdd.rotation,
       this.scale.add(transformToAdd.scale),
     );
   }
 
-  sub(transformToSubtract: Transform = Transform.Zero()) {
-    return new Transform(
+  sub(transformToSubtract: OldTransform = OldTransform.Zero()) {
+    return new OldTransform(
       this.translation.sub(transformToSubtract.translation),
       minAngleDiff(this.rotation, transformToSubtract.rotation),
       this.scale.sub(transformToSubtract.scale),
@@ -981,7 +1104,7 @@ class Transform {
   }
 
   copy() {
-    return new Transform(
+    return new OldTransform(
       new Point(this.translation.x, this.translation.y),
       this.rotation,
       new Point(this.scale.x, this.scale.y),
@@ -996,10 +1119,10 @@ class Transform {
     return transformMatrix;
   }
 
-  clip(zeroThresholdTransform: Transform, maxTransform: Transform) {
+  clip(zeroThresholdTransform: OldTransform, maxTransform: OldTransform) {
     const mt = maxTransform;
     const ztt = zeroThresholdTransform;
-    const result = new Transform();
+    const result = new OldTransform();
     result.translation.x =
       clipValue(this.translation.x, ztt.translation.x, mt.translation.x);
     result.translation.y =
@@ -1013,10 +1136,10 @@ class Transform {
   }
 
   velocity(
-    oldTransform: Transform,
+    oldTransform: OldTransform,
     deltaTime: number,
-    zeroThreshold: Transform,
-    maxTransform: Transform,
+    zeroThreshold: OldTransform,
+    maxTransform: OldTransform,
   ) {
     const deltaTransform = this.sub(oldTransform);
     deltaTransform.translation.x /= deltaTime;
@@ -1053,7 +1176,7 @@ export {
   minAngleDiff,
   deg,
   normAngle,
-  Transform,
+  OldTransform,
   clipValue,
-  Trans1
+  Transform,
 };

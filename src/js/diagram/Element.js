@@ -18,7 +18,7 @@ class AnimationPhase {
   deltaTransform: g2.Transform;       // Transform delta from start to target
 
   constructor(
-    transform: g2.Transform = g2.Transform.Unity(),
+    transform: g2.Transform = new g2.Transform(),
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
@@ -29,18 +29,18 @@ class AnimationPhase {
     this.animationStyle = animationStyle;
 
     this.startTime = -1;
-    this.startTransform = g2.Transform.Zero();
-    this.deltaTransform = g2.Transform.Zero();
+    this.startTransform = new g2.Transform();
+    this.deltaTransform = new g2.Transform();
   }
 
   start(currentTransform: g2.Transform) {
     this.startTransform = currentTransform.copy();
     this.deltaTransform = this.targetTransform.sub(this.startTransform);
-    let rotDiff = this.deltaTransform.rotation;
+    let rotDiff = this.deltaTransform.r() || 0;
     if (rotDiff * this.rotDirection < 0) {
       rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
     }
-    this.deltaTransform.rotation = rotDiff;
+    this.deltaTransform.updateRotation(rotDiff);
     this.startTime = -1;
   }
 }
@@ -141,12 +141,13 @@ class DiagramElement {
   pulse: Object;                  // Pulse animation state
 
   constructor(
-    translation: g2.Point = g2.Point.zero(),
-    rotation: number = 0,
-    scale: g2.Point = g2.Point.Unity(),
+    // translation: g2.Point = g2.Point.zero(),
+    // rotation: number = 0,
+    // scale: g2.Point = g2.Point.Unity(),
+    transform: g2.Transform = new g2.Transform(),
     name: string = '',
   ) {
-    this.transform = new g2.Transform(translation, rotation, scale);
+    this.transform = transform.copy();
     this.setTransformCallback = () => {};
     this.show = true;
     this.lastDrawTransformMatrix = m2.identity();
@@ -157,18 +158,19 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
-    this.maxVelocity = new g2.Transform(
-      g2.point(1000, 1000),
-      1000,
-      g2.point(1000, 1000),
-    );
+    this.maxVelocity = new g2.Transform()
+      .scale(1000, 1000)
+      .rotate(1000)
+      .translate(1000, 1000);
     this.moveFreelyProperties = {
-      zeroVelocityThreshold: new g2.Transform(
-        g2.point(0.0001, 0.0001),
-        0.0001,
-        g2.point(0.0001, 0.0001),
-      ),
-      deceleration: new g2.Transform(g2.point(1, 1), 1, g2.point(1, 1)),
+      zeroVelocityThreshold: new g2.Transform()
+        .scale(0.0001, 0.0001)
+        .rotate(0.0001)
+        .translate(0.0001, 0.0001),
+      deceleration: new g2.Transform()
+        .scale(1, 1)
+        .rotate(1)
+        .translate(1, 1),
     };
 
     this.pulse = {
@@ -179,11 +181,7 @@ class DiagramElement {
       C: 0,
       style: tools.sinusoid,
       num: 1,
-      transformMethod: s => new g2.Transform(
-        g2.Point.zero(),
-        0,
-        new g2.Point(s, s),
-      ),
+      transformMethod: s => new g2.Transform().scale(s, s),
     };
 
     this.state = {
@@ -198,7 +196,7 @@ class DiagramElement {
       movement: {
         previousTime: -1,
         previousTransform: new g2.Transform(),
-        velocity: new g2.Transform.Zero(),
+        velocity: new g2.Transform(),
       },
 
       isPulsing: false,
@@ -232,18 +230,21 @@ class DiagramElement {
 
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): g2.Transform {
-    const next = new g2.Transform();
     const phase = this.state.animation.currentPhase;
     const start = phase.startTransform;
     const delta = phase.deltaTransform;
     const percentTime = elapsedTime / phase.time;
     const percentComplete = phase.animationStyle(percentTime);
-    next.translation.x = start.translation.x + percentComplete * delta.translation.x;
-    next.translation.y = start.translation.y + percentComplete * delta.translation.y;
-    next.scale.x = start.scale.x + percentComplete * delta.scale.x;
-    next.scale.y = start.scale.y + percentComplete * delta.scale.y;
 
-    next.rotation = start.rotation + percentComplete * delta.rotation;
+    const p = percentComplete;
+    let next = new g2.Transform();
+    next = start.add(delta.mul(next.scale(p, p).rotate(p).translate(p, p)));
+    // next.translation.x = start.translation.x + percentComplete * delta.translation.x;
+    // next.translation.y = start.translation.y + percentComplete * delta.translation.y;
+    // next.scale.x = start.scale.x + percentComplete * delta.scale.x;
+    // next.scale.y = start.scale.y + percentComplete * delta.scale.y;
+
+    // next.rotation = start.rotation + percentComplete * delta.rotation;
     return next;
   }
 
@@ -341,40 +342,40 @@ class DiagramElement {
 
       // If the velocity is 0, then stop moving freely and return the current
       // transform
-      if (DiagramElement.isVelocityZero(this.state.movement.velocity)) {
-        this.state.movement.velocity = g2.Transform.Zero();
+      if (this.state.movement.velocity.isZero()) {
+        this.state.movement.velocity = this.state.movement.velocity.zero();
         this.stopMovingFreely();
       }
       this.setTransform(next.transform);
     }
   }
 
-  static isVelocityZero(transform: g2.Transform): boolean {
-    if (transform.rotation !== 0) {
-      return false;
-    }
-    if (transform.translation.x !== 0) {
-      return false;
-    }
-    if (transform.translation.y !== 0) {
-      return false;
-    }
-    if (transform.scale.x !== 0) {
-      return false;
-    }
-    if (transform.scale.y !== 0) {
-      return false;
-    }
-    return true;
-  }
+  // static isVelocityZero(transform: g2.Transform): boolean {
+  //   if (transform.rotation !== 0) {
+  //     return false;
+  //   }
+  //   if (transform.translation.x !== 0) {
+  //     return false;
+  //   }
+  //   if (transform.translation.y !== 0) {
+  //     return false;
+  //   }
+  //   if (transform.scale.x !== 0) {
+  //     return false;
+  //   }
+  //   if (transform.scale.y !== 0) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   // Decelerate over some time when moving freely to get a new element
   // transform and movement velocity
   decelerate(deltaTime: number): Object {
     const velocity = this.state.movement.velocity.copy();
     let result;
-    const v = new g2.Transform.Zero();
-    const t = new g2.Transform.Zero();
+    const v = new g2.Transform();
+    const t = new g2.Transform();
     result = tools.decelerate(
       this.transform.rotation,
       velocity.rotation,
@@ -713,12 +714,13 @@ class DiagramElementPrimative extends DiagramElement {
 
   constructor(
     vertexObject: VertexObject,
-    translation: g2.Point = g2.Point.zero(),
-    rotation: number = 0,
-    scale: g2.Point = new g2.Point.Unity(),
+    // translation: g2.Point = g2.Point.zero(),
+    // rotation: number = 0,
+    // scale: g2.Point = new g2.Point.Unity(),
+    transform: g2.Transform = new g2.Transform(),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
   ) {
-    super(translation, rotation, scale);
+    super(transform);
     this.vertices = vertexObject;
     this.color = color;
     this.pointsToDraw = -1;
@@ -778,11 +780,12 @@ class DiagramElementCollection extends DiagramElement {
   // biasTransform: Array<number>;
 
   constructor(
-    translation: g2.Point = g2.Point.zero(),
-    rotation: number = 0,
-    scale: g2.Point = g2.Point.Unity(),
+    // translation: g2.Point = g2.Point.zero(),
+    // rotation: number = 0,
+    // scale: g2.Point = g2.Point.Unity(),
+    transform: g2.Transform = new g2.Transform(),
   ): void {
-    super(translation, rotation, scale);
+    super(transform);
     this.elements = {};
     this.order = [];
   }
