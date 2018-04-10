@@ -870,7 +870,10 @@ class DiagramElementCollection extends DiagramElement {
   // updateBias(scale: g2.Point, offset: g2.Point): void {
   //   this.biasTransform = (new g2.Transform(offset, 0, scale)).matrix();
   // }
-
+  // This will only search elements within the collection for a touch
+  // if the collection is touchable. Note, the elements can be queried
+  // directly still, and will return if they are touched if they themselves
+  // are touchable.
   isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement) {
     if (!this.isTouchable) {
       return false;
