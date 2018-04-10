@@ -15,22 +15,25 @@ class ShapesCollection extends DiagramElementCollection {
     super(transform, name);
     // GeometryCollection.call(this, translation, rotation, scale);
 
+    // $FlowFixMe
     const square = new Polygon(webgl, 0.5, 4, 4, 0.05, 0, new g2.Point(0, 0), 'square');
-    
+
+    // $FlowFixMe
     const triangle = new Polygon(webgl, 0.2, 3, 3, 0.05, 0, new g2.Point(0.5, 0.5), 'tri');
-    
 
     this.add('square', new DiagramElementPrimative(
       square,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
       [0, 0, 1, 1],
     ));
+    // $FlowFixMe
     this._square.isTouchable = true;
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
       [0, 1, 0, 1],
     ));
+    // $FlowFixMe
     this._triangle.isTouchable = true;
     this.isTouchable = true;
   }
@@ -58,10 +61,12 @@ function testgl(id: string) {
   if (canvas instanceof HTMLCanvasElement) {
     const diagram = new Diagram1({}, canvas);
 
+    // eslint-disable-next-line
     const phase1 = new AnimationPhase(
       new g2.Transform().scale(1, 1).rotate(1).translate(0, 0),
       5, -1, tools.easeinout,
     );
+    // eslint-disable-next-line
     const phase2 = new AnimationPhase(
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
       5, 1, tools.easeinout,
@@ -89,7 +94,8 @@ function testgl(id: string) {
     diagram.elements.startMovingFreely();
     diagram.elements.animateRotationTo(1, -1, 10);
 
-    diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
+    // $FlowFixMe
+    diagram.elements._square.animateTranslationTo(new g2.Point(0.2, 0.2), 4);
 
     if (diagram) {
       diagram.animateNextFrame();
@@ -107,6 +113,7 @@ function testgl(id: string) {
         'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
         'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
         'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
+        // $FlowFixMe
         'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
         'collection touch: ' + diagram.elements.isBeingTouched(clip);
         /* eslint-enable */

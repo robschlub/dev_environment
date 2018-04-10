@@ -6,6 +6,7 @@
     "rules": {
         "no-console": "error",
         // "quotes": ["error", "double"]
+        "no-underscore-dangle": 0,
         "no-mixed-operators": [
           "error",
           {

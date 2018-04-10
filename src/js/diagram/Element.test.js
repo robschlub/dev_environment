@@ -371,7 +371,7 @@ describe('Animationa and Movement', () => {
           new Transform().rotate(Math.PI / 4),
           [0, 0, 1, 1],
         );
-        square.isTouchable = true
+        square.isTouchable = true;
       });
       test('Inside square and border', () => {
         expect(square.isBeingTouched(new Point(0, 0))).toBe(true);

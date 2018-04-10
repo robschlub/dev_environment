@@ -53,6 +53,7 @@ class Diagram {
     const clipPoint = this.screenToClip(pagePoint);
     const touchedElements = this.elements.getTouched(clipPoint);
     for (let i = 0; i < touchedElements.length; i += 1) {
+      // eslint-disable-next-line
       console.log("Touched: ", touchedElements[i].name);
     }
   }
