@@ -28,6 +28,8 @@ class ShapesCollection extends DiagramElementCollection {
     ));
     // $FlowFixMe
     this._square.isTouchable = true;
+    // $FlowFixMe
+    this._square.isMovable = true;
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -35,6 +37,8 @@ class ShapesCollection extends DiagramElementCollection {
     ));
     // $FlowFixMe
     this._triangle.isTouchable = true;
+    // $FlowFixMe
+    this._triangle.isMovable = true;
     this.isTouchable = true;
   }
 }
@@ -91,8 +95,8 @@ function testgl(id: string) {
     // or
     // diagram.elements._square.pulseThickNow(5, 1.2, 7);
     // or
-    diagram.elements.startMovingFreely();
-    diagram.elements.animateRotationTo(1, -1, 10);
+    // diagram.elements.startMovingFreely();
+    // diagram.elements.animateRotationTo(1, -1, 10);
 
     // $FlowFixMe
     diagram.elements._square.animateTranslationTo(new g2.Point(0.2, 0.2), 4);
@@ -115,6 +119,7 @@ function testgl(id: string) {
         'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
         // $FlowFixMe
         'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
+        'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
         'collection touch: ' + diagram.elements.isBeingTouched(clip);
         /* eslint-enable */
         Console(str);

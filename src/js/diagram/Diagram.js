@@ -18,6 +18,7 @@ class Diagram {
   lesson: Object;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
+  beingMovedElements: Array<DiagramElementPrimative | DiagramElementCollection>
 
   constructor(
     lesson: Object,
@@ -52,10 +53,67 @@ class Diagram {
   touchDownHandler(pagePoint: g2.Point) {
     const clipPoint = this.screenToClip(pagePoint);
     const touchedElements = this.elements.getTouched(clipPoint);
+    // let outstr = '';
+    this.beingMovedElements = [];
     for (let i = 0; i < touchedElements.length; i += 1) {
       // eslint-disable-next-line
-      console.log("Touched: ", touchedElements[i].name);
+      // outstr = `${outstr}${touchedElements[i].name}, `;
+      const element = touchedElements[i];
+      if (element.isMovable) {
+        this.beingMovedElements.push(element);
+        element.startBeingMoved();
+        console.log(element.name)
+      }
+      // console.log("Touched: ", touchedElements[i].name);
     }
+    // if (touchedElements.length > 1) {
+    //   // eslint-disable-next-line
+    //   alert(outstr);
+    // }
+  }
+
+  // eslint-disable-next-line
+  touchUpHandler(lastPagePoint: g2.Point) {
+    for (let i = 0; i < this.beingMovedElements.length; i += 1) {
+      const element = this.beingMovedElements[i];
+      element.stopBeingMoved();
+    }
+    this.beingMovedElements = [];
+    // const clipPoint = this.screenToClip(lastPagePoint);
+    // const touchedElements = this.elements.getTouched(clipPoint);
+    // let outstr = '';
+    // for (let i = 0; i < touchedElements.length; i += 1) {
+    //   // eslint-disable-next-line
+    //   outstr = `${outstr}${touchedElements[i].name}, `;
+    //   // console.log("Touched: ", touchedElements[i].name);
+    // }
+
+    // if (touchedElements.length > 1) {
+    //   // eslint-disable-next-line
+    //   alert(outstr);
+    // }
+  }
+
+  touchMoveHandler(previousPagePoint: g2.Point, currentPagePoint: g2.Point) {
+    if (this.beingMovedElements.length === 0) {
+      return false;
+    }
+    const previousClipPoint = this.screenToClip(previousPagePoint);
+    const currentClipPoint = this.screenToClip(currentPagePoint);
+    const delta = currentClipPoint.sub(previousClipPoint);
+
+    for (let i = 0; i < this.beingMovedElements.length; i += 1) {
+      const element = this.beingMovedElements[i];
+      const currentTransform = element.transform.copy();
+      const currentTranslation = currentTransform.t();
+      if (currentTranslation) {
+        const newTranslation = currentTranslation.add(delta);
+        currentTransform.updateTranslation(newTranslation);
+        element.moved(currentTransform);
+      }
+    }
+    this.globalAnimation.animateNextFrame();
+    return true;
   }
 
   stopAnimating() {
