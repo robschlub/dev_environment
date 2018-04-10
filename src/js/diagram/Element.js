@@ -720,8 +720,9 @@ class DiagramElementPrimative extends DiagramElement {
     // scale: g2.Point = new g2.Point.Unity(),
     transform: g2.Transform = new g2.Transform(),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
+    name: string = '',
   ) {
-    super(transform);
+    super(transform, name);
     this.vertices = vertexObject;
     this.color = color;
     this.pointsToDraw = -1;
@@ -793,8 +794,11 @@ class DiagramElementCollection extends DiagramElement {
   order: Array<string>;
   // biasTransform: Array<number>;
 
-  constructor(transform: g2.Transform = new g2.Transform()): void {
-    super(transform);
+  constructor(
+    transform: g2.Transform = new g2.Transform(),
+    name: string = '',
+  ): void {
+    super(transform, name);
     this.elements = {};
     this.order = [];
   }

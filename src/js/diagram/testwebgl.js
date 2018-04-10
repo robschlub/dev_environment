@@ -11,23 +11,28 @@ import * as tools from './mathtools';
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
 
-  constructor(webgl, transform) {
-    super(transform);
+  constructor(webgl, transform, name) {
+    super(transform, name);
     // GeometryCollection.call(this, translation, rotation, scale);
 
-    const square = new Polygon(webgl, 0.5, 4, 4, 0.05, 0, new g2.Point(0, 0));
-    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.05, 0, new g2.Point(0.5, 0.5));
+    const square = new Polygon(webgl, 0.5, 4, 4, 0.05, 0, new g2.Point(0, 0), 'square');
+    
+    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.05, 0, new g2.Point(0.5, 0.5), 'tri');
+    
 
     this.add('square', new DiagramElementPrimative(
       square,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
       [0, 0, 1, 1],
     ));
+    this._square.isTouchable = true;
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
       [0, 1, 0, 1],
     ));
+    this._triangle.isTouchable = true;
+    this.isTouchable = true;
   }
 }
 
@@ -38,6 +43,7 @@ class Diagram1 extends Diagram {
     return new ShapesCollection(
       this.webgl,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
+      'collection',
     );
   }
 }

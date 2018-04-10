@@ -598,11 +598,20 @@ describe('Animationa and Movement', () => {
           new Transform().translate(0.5, 0),
         );
         collection.add('square2', squareElement2);
-        const touched = collection.getTouched(new Point(0, 0));
+        let touched = collection.getTouched(new Point(0, 0));
         expect(touched).toHaveLength(2);
         expect(touched.includes(collection)).toBe(true);
         expect(touched.includes(squareElement)).toBe(true);
         expect(touched.includes(squareElement2)).toBe(false);
+
+        squareElement.show = false;
+        touched = collection.getTouched(new Point(0, 0));
+        expect(touched).toHaveLength(0);
+
+        squareElement.show = true;
+        squareElement.isTouchable = false;
+        touched = collection.getTouched(new Point(0, 0));
+        expect(touched).toHaveLength(0);
       });
     });
   });

@@ -49,8 +49,12 @@ class Diagram {
     // this.counter=0;
   }
 
-  touchDownHandler(offsetLocation) {
-
+  touchDownHandler(pagePoint: g2.Point) {
+    const clipPoint = this.screenToClip(pagePoint);
+    const touchedElements = this.elements.getTouched(clipPoint);
+    for (let i = 0; i < touchedElements.length; i += 1) {
+      console.log("Touched: ", touchedElements[i].name);
+    }
   }
 
   stopAnimating() {
