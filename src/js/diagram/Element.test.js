@@ -362,6 +362,35 @@ describe('Animationa and Movement', () => {
         expect(draw.mock.calls[9][0]).toEqual(minM);
       });
     });
+    describe('Is being touched', () => {
+      let square;
+      beforeEach(() => {
+        const sq = new Polygon(webgl, Math.sqrt(2), 4, 4, Math.sqrt(2) * 0.1, 0, Point.zero());
+        square = new DiagramElementPrimative(
+          sq,
+          new Transform().rotate(Math.PI / 4),
+          [0, 0, 1, 1],
+        );
+      });
+      test('Inside square and border', () => {
+        expect(square.isBeingTouched(new Point(0, 0))).toBe(true);
+        expect(square.isBeingTouched(new Point(1.0499, 0))).toBe(true);
+        expect(square.isBeingTouched(new Point(0, 1.0499))).toBe(true);
+        expect(square.isBeingTouched(new Point(1.0499, 1.0499))).toBe(true);
+        expect(square.isBeingTouched(new Point(-1.0499, -1.0499))).toBe(true);
+        expect(square.isBeingTouched(new Point(0, -1.0499))).toBe(true);
+        expect(square.isBeingTouched(new Point(-1.0499, 0))).toBe(true);
+      });
+      test('Outside of border', () => {
+        expect(square.isBeingTouched(new Point(1.05001, 0))).toBe(false);
+        expect(square.isBeingTouched(new Point(0, 1.05001))).toBe(false);
+        expect(square.isBeingTouched(new Point(1.05001, 1.05001))).toBe(false);
+        expect(square.isBeingTouched(new Point(-1.05001, -1.05001))).toBe(false);
+        expect(square.isBeingTouched(new Point(0, -1.05001))).toBe(false);
+        expect(square.isBeingTouched(new Point(-1.05001, 0))).toBe(false);
+        expect(square.isBeingTouched(new Point(100, 100))).toBe(false);
+      });
+    });
   });
   describe('DiagramElementCollection', () => {
     let squareElement;

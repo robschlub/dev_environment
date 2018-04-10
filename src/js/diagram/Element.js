@@ -150,7 +150,7 @@ class DiagramElement {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
     this.show = true;
-    this.lastDrawTransformMatrix = m2.identity();
+    this.lastDrawTransformMatrix = this.transform.matrix();
     this.name = name;
 
     this.isMovable = false;
