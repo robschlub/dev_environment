@@ -744,6 +744,17 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
+  getTouched(clipLocation: g2.Point): Array<DiagramElementPrimative> {
+    if (!this.isTouchable) {
+      return [];
+    }
+
+    if (this.isBeingTouched(clipLocation)) {
+      return [this];
+    }
+    return [];
+  }
+
   draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
     if (this.show) {
       this.setNextTransform(now);
@@ -874,19 +885,38 @@ class DiagramElementCollection extends DiagramElement {
   // if the collection is touchable. Note, the elements can be queried
   // directly still, and will return if they are touched if they themselves
   // are touchable.
-  isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement) {
+  isBeingTouched(clipLocation: g2.Point) {
     if (!this.isTouchable) {
       return false;
     }
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.show === true) {
-        if (element.isBeingTouched(location, canvas)) {
+        if (element.isBeingTouched(clipLocation)) {
           return true;
         }
       }
     }
     return false;
+  }
+
+  getTouched(clipLocation: g2.Point): Array<DiagramElementPrimative | DiagramElementCollection> {
+    if (!this.isTouchable) {
+      return [];
+    }
+    let touched = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element.show === true) {
+        touched = touched.concat(element.getTouched(clipLocation));
+      }
+    }
+    // If there is an element that is touched, then this collection should
+    // also be touched.
+    if (touched.length > 0) {
+      touched = [this].concat(touched);
+    }
+    return touched;
   }
 }
 export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };

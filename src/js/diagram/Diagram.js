@@ -8,6 +8,7 @@ import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 // import GlobalVariables from './globals';
 import GlobalAnimation from './webgl/GlobalAnimation';
+import Gesture from './Gesture';
 
 class Diagram {
   canvas: HTMLCanvasElement;
@@ -16,12 +17,16 @@ class Diagram {
   activeElementsList: Array<DiagramElementPrimative | DiagramElementCollection>;
   lesson: Object;
   globalAnimation: GlobalAnimation;
+  gesture: Gesture;
 
   constructor(
     lesson: Object,
     canvas: HTMLCanvasElement,
   ) {
     this.canvas = canvas;
+    if (this instanceof Diagram) {
+      this.gesture = new Gesture(this);
+    }
 
     const shaders = getShaders('simple', 'simple');
     const webgl = new WebGLInstance(
@@ -42,6 +47,10 @@ class Diagram {
     // this.devicePixelRatio = window.devicePixelRatio;
     this.elements = this.createDiagramElements();
     // this.counter=0;
+  }
+
+  touchDownHandler(offsetLocation) {
+
   }
 
   stopAnimating() {

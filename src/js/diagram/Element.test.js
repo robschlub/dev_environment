@@ -362,7 +362,7 @@ describe('Animationa and Movement', () => {
         expect(draw.mock.calls[9][0]).toEqual(minM);
       });
     });
-    describe('Is being touched', () => {
+    describe('Get and Is being touched', () => {
       let square;
       beforeEach(() => {
         const sq = new Polygon(webgl, Math.sqrt(2), 4, 4, Math.sqrt(2) * 0.1, 0, Point.zero());
@@ -390,6 +390,11 @@ describe('Animationa and Movement', () => {
         expect(square.isBeingTouched(new Point(0, -1.05001))).toBe(false);
         expect(square.isBeingTouched(new Point(-1.05001, 0))).toBe(false);
         expect(square.isBeingTouched(new Point(100, 100))).toBe(false);
+      });
+      test('Get being touched', () => {
+        expect(square.getTouched(new Point(0, 0))).toEqual([square]);
+        expect(square.getTouched(new Point(1, 1))).toEqual([square]);
+        expect(square.getTouched(new Point(2, 2))).toEqual([]);
       });
     });
   });
@@ -543,10 +548,14 @@ describe('Animationa and Movement', () => {
         expect(collection.show).toBe(true);
       });
     });
-    describe('is being touched', () => {
+    describe('Get and Is being touched', () => {
+      let square;
+      // let squareElement2;
+      // let squareElement3;
+      // let collection2;
       beforeEach(() => {
         identity = m2.identity();
-        const square = new Polygon(
+        square = new Polygon(
           webgl,
           Math.sqrt(2) * 1,
           4,
@@ -582,6 +591,18 @@ describe('Animationa and Movement', () => {
         squareElement.isTouchable = true;
         expect(squareElement.isBeingTouched(new Point(0, 0))).toBe(true);
         expect(collection.isBeingTouched(new Point(0, 0))).toBe(false);
+      });
+      test('Get being touched', () => {
+        const squareElement2 = new DiagramElementPrimative(
+          square,
+          new Transform().translate(0.5, 0),
+        );
+        collection.add('square2', squareElement2);
+        const touched = collection.getTouched(new Point(0, 0));
+        expect(touched).toHaveLength(2);
+        expect(touched.includes(collection)).toBe(true);
+        expect(touched.includes(squareElement)).toBe(true);
+        expect(touched.includes(squareElement2)).toBe(false);
       });
     });
   });
