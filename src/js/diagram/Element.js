@@ -729,6 +729,9 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   isBeingTouched(clipLocation: g2.Point): boolean {
+    if (!this.isTouchable) {
+      return false;
+    }
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       const border = [];
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
@@ -869,6 +872,9 @@ class DiagramElementCollection extends DiagramElement {
   // }
 
   isBeingTouched(location: g2.Point, canvas: HTMLCanvasElement) {
+    if (!this.isTouchable) {
+      return false;
+    }
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.show === true) {

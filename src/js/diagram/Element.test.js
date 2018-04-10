@@ -371,6 +371,7 @@ describe('Animationa and Movement', () => {
           new Transform().rotate(Math.PI / 4),
           [0, 0, 1, 1],
         );
+        square.isTouchable = true
       });
       test('Inside square and border', () => {
         expect(square.isBeingTouched(new Point(0, 0))).toBe(true);
@@ -557,6 +558,8 @@ describe('Animationa and Movement', () => {
         squareElement = new DiagramElementPrimative(square);
         collection = new DiagramElementCollection();
         collection.add('square', squareElement);
+        collection.isTouchable = true;
+        squareElement.isTouchable = true;
       });
       test('Simple', () => {
         expect(squareElement.isBeingTouched(new Point(0, 0))).toBe(true);
@@ -573,6 +576,12 @@ describe('Animationa and Movement', () => {
         expect(collection.isBeingTouched(new Point(1.049, 11.049))).toBe(true);
         expect(collection.isBeingTouched(new Point(1.051, 11.049))).toBe(false);
         expect(collection.isBeingTouched(new Point(1.049, 11.051))).toBe(false);
+      });
+      test('Collection not touchable', () => {
+        collection.isTouchable = false;
+        squareElement.isTouchable = true;
+        expect(squareElement.isBeingTouched(new Point(0, 0))).toBe(true);
+        expect(collection.isBeingTouched(new Point(0, 0))).toBe(false);
       });
     });
   });
