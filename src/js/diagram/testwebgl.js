@@ -11,15 +11,25 @@ import * as tools from './mathtools';
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
 
-  constructor(webgl, translation, rotation, scale) {
-    super(translation, rotation, scale);
+  constructor(webgl, transform) {
+    super(transform);
     // GeometryCollection.call(this, translation, rotation, scale);
 
     const square = new Polygon(webgl, 0.5, 4, 4, 0.05, 0, new g2.Point(0, 0));
     const triangle = new Polygon(webgl, 0.2, 3, 3, 0.05, 0, new g2.Point(0.5, 0.5));
 
-    this.add('square', new DiagramElementPrimative(square, g2.point(0, 0), 0, g2.point(1, 1), [0, 0, 1, 1]));
-    this.add('triangle', new DiagramElementPrimative(triangle, g2.point(0, 0), 0, g2.point(1, 1), [0, 1, 0, 1]));
+    this.add('square', new DiagramElementPrimative(
+      square,
+      new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
+      // g2.point(0, 0), 0, g2.point(1, 1),
+      [0, 0, 1, 1],
+    ));
+    this.add('triangle', new DiagramElementPrimative(
+      triangle,
+      new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
+      // g2.point(0, 0), 0, g2.point(1, 1),
+      [0, 1, 0, 1],
+    ));
   }
 }
 
@@ -29,9 +39,10 @@ class Diagram1 extends Diagram {
   createDiagramElements() {
     return new ShapesCollection(
       this.webgl,
-      g2.Point.zero(),
-      0,
-      new g2.Point(1, 1),
+      new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
+      // g2.Point.zero(),
+      // 0,
+      // new g2.Point(1, 1),
     );
   }
 }
@@ -47,36 +58,44 @@ function testgl(id: string) {
     const diagram = new Diagram1({}, canvas);
 
     const phase1 = new AnimationPhase(
-      new g2.Transform(g2.Point.zero(), 1, g2.Point.Unity()),
+      new g2.Transform().scale(1, 1).rotate(1).translate(0, 0),
+      // g2.Point.zero(), 1, g2.Point.Unity()),
       5, -1, tools.easeinout,
     );
     const phase2 = new AnimationPhase(
-      new g2.Transform(g2.Point.zero(), 0, g2.Point.Unity()),
+      new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
+      // g2.Point.zero(), 0, g2.Point.Unity()),
       5, 1, tools.easeinout,
     );
 
-    // diagram.elements.animatePlan([phase1, phase2]);
     diagram.elements.pulse.frequency = 0.25;
     diagram.elements.pulse.A = 1;
     diagram.elements.pulse.B = 0.5;
     diagram.elements.pulse.C = 0;
     diagram.elements.pulse.time = 4;
-    // diagram.elements.pulseNow();
-    diagram.elements._square.pulseThickNow(5, 1.2, 7);
+    
 
-    diagram.elements.state.movement.velocity = new g2.Transform(new g2.Point(1, 0), 0, g2.Point.zero());
+    diagram.elements.state.movement.velocity = new g2.Transform()
+      .scale(0, 0).rotate(0).translate(1, 0);
+    // new g2.Point(1, 0), 0, g2.Point.zero());
     // diagram.elements.moveState.previous = diagram.elements.transform;
-    diagram.elements.moveFreelyProperties.deceleration = new g2.Transform(
-      new g2.Point(1, 0.1),
-      0,
-      g2.Point.zero(),
-    );
-    // diagram.elements.startMovingFreely();
+    diagram.elements.moveFreelyProperties.deceleration = new g2.Transform()
+      .scale(0, 0).rotate(0).translate(1, 0.1);
+    //   new g2.Point(1, 0.1),
+    //   0,
+    //   g2.Point.zero(),
+    // );
 
+    // diagram.elements.animatePlan([phase1, phase2]);
+    // or
+    // diagram.elements.pulseNow();
+    // or
+    // diagram.elements._square.pulseThickNow(5, 1.2, 7);
+    // or
+    diagram.elements.startMovingFreely();
+    diagram.elements.animateRotationTo(1, -1, 10);
 
-    // diagram.elements.animateRotationTo(1, -1, 10);
-
-    // diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
+    diagram.elements['_square'].animateTranslationTo(new g2.Point(0.2, 0.2), 4);
 
     if (diagram) {
       diagram.animateNextFrame();
