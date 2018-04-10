@@ -78,12 +78,6 @@ function transform(m: Array<number>, px: number, py: number) {
   ];
 }
 
-// TODO reimplement when point is defined
-// function pointTransform(m: Array<number>, p) {
-//   const result = transform(m, p.x, p.y);
-//   return d2.point(result[0], result[1]);
-// }
-
 function inverse(m: Array<number>) {
   const det = (m[0] * ((m[4] * m[8]) - (m[7] * m[5]))) - // eslint-disable-line
               (m[1] * ((m[3] * m[8]) - (m[5] * m[6]))) + // eslint-disable-line
@@ -107,21 +101,6 @@ function inverse(m: Array<number>) {
   ];
 }
 
-
-//   return {
-//     mul,
-//     identity,
-//     t,
-//     copy,
-//     translate,
-//     rotate,
-//     transform,
-//     scale,
-//     inverse,
-//     pointTransform,
-//   };
-// };
-
 export {
   mul,
   identity,
@@ -135,5 +114,4 @@ export {
   rotationMatrix,
   translationMatrix,
   scaleMatrix,
-  // pointTransform,
 };

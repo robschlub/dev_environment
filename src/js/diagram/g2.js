@@ -508,40 +508,6 @@ function line(p1: Point, p2: Point) {
   return new Line(p1, p2);
 }
 
-// function TransformCopy(transform) {
-//     return new _transform(new point(transform.translation.x, transform.translation.y),
-//                           transform.rotation,
-//                           new point(transform.scale.x, transform.scale.y));
-//     // return new _transformCopy (transform);
-// }
-// function OldTransform(translation = {x:0,y:0}, rotation = 0, scale = {x:0,y:0}) {
-//     return new _transform(translation, rotation, scale);
-// }
-// function TransformZero() {
-//     return new _transform(d2.point(0,0), 0, d2.point(1,1));
-// }
-// function _transformCopy (transform) {
-//     return {
-//         translation: new point(transform.translation.x, transform.translation.y),
-//         rotation: transform.rotation,
-//         scale: new point(transform.scale.x, transform.scale.y),
-//     }
-// }
-
-// function normVelocityValue(velocity: number, max: number, min: number) {
-//   let result = velocity;
-//   if (velocity > -min && velocity < min) {
-//     result = 0;
-//   }
-//   if (velocity > max) {
-//     result = max;
-//   }
-//   if (velocity < -max) {
-//     result = -max;
-//   }
-//   return result;
-// }
-
 // Clip a value to either max velocity, or 0 once under the minimum
 // threashold.
 //  * velocity: can be positive or negative
@@ -1093,119 +1059,6 @@ class Transform {
   }
 }
 
-class OldTransform {
-  translation: Point;
-  rotation: number;
-  scale: Point;
-  // tx: number;
-  // ty: number;
-  // r: number;
-  // sx: number;
-  // sy: number;
-
-  static Zero() {
-    return new OldTransform(Point.zero(), 0, new Point(0, 0));
-  }
-  static Unity() {
-    return new OldTransform(Point.zero(), 0, new Point(1, 1));
-  }
-
-  constructor(
-    translation: Point = Point.zero(),
-    rotation: number = 0,
-    scale: Point = Point.zero(),
-  ) {
-    this.translation = new Point(translation.x, translation.y);
-    this.rotation = rotation;
-    this.scale = new Point(scale.x, scale.y);
-    // this.tx = this.translation.x;
-    // this.ty = this.translation.y;
-    // this.sx = this.scale.x;
-    // this.sy = this.scale.y;
-    // this.r = this.rotation;
-  }
-
-  add(transformToAdd: OldTransform = OldTransform.Zero()) {
-    return new OldTransform(
-      this.translation.add(transformToAdd.translation),
-      this.rotation + transformToAdd.rotation,
-      this.scale.add(transformToAdd.scale),
-    );
-  }
-
-  sub(transformToSubtract: OldTransform = OldTransform.Zero()) {
-    return new OldTransform(
-      this.translation.sub(transformToSubtract.translation),
-      minAngleDiff(this.rotation, transformToSubtract.rotation),
-      this.scale.sub(transformToSubtract.scale),
-    );
-  }
-
-  copy() {
-    return new OldTransform(
-      new Point(this.translation.x, this.translation.y),
-      this.rotation,
-      new Point(this.scale.x, this.scale.y),
-    );
-  }
-
-  matrix() {
-    let transformMatrix = m2.identity();
-    transformMatrix = m2.translate(transformMatrix, this.translation.x, this.translation.y);
-    transformMatrix = m2.rotate(transformMatrix, this.rotation);
-    transformMatrix = m2.scale(transformMatrix, this.scale.x, this.scale.y);
-    return transformMatrix;
-  }
-
-  clip(zeroThresholdTransform: OldTransform, maxTransform: OldTransform) {
-    const mt = maxTransform;
-    const ztt = zeroThresholdTransform;
-    const result = new OldTransform();
-    result.translation.x =
-      clipValue(this.translation.x, ztt.translation.x, mt.translation.x);
-    result.translation.y =
-      clipValue(this.translation.y, ztt.translation.y, mt.translation.y);
-    result.rotation = clipValue(this.rotation, ztt.rotation, mt.rotation);
-    result.scale.x =
-      clipValue(this.scale.x, ztt.scale.x, mt.scale.x);
-    result.scale.y =
-      clipValue(this.scale.y, ztt.scale.y, mt.scale.y);
-    return result;
-  }
-
-  velocity(
-    oldTransform: OldTransform,
-    deltaTime: number,
-    zeroThreshold: OldTransform,
-    maxTransform: OldTransform,
-  ) {
-    const deltaTransform = this.sub(oldTransform);
-    deltaTransform.translation.x /= deltaTime;
-    deltaTransform.translation.y /= deltaTime;
-    deltaTransform.scale.x /= deltaTime;
-    deltaTransform.scale.y /= deltaTime;
-    deltaTransform.rotation /= deltaTime;
-    return deltaTransform.clip(zeroThreshold, maxTransform);
-  }
-
-  map(func: (number)=> number) {
-    const result = this.copy();
-    result.translation.x = func(this.translation.x);
-    result.translation.y = func(this.translation.y);
-    result.rotation = func(this.rotation);
-    result.scale.x = func(this.scale.x);
-    result.scale.y = func(this.scale.y);
-    return result;
-  }
-  round(precision: number = 8) {
-    const result = this.copy();
-    result.translation = result.translation.round(precision);
-    result.scale = result.scale.round(precision);
-    result.rotation = roundNum(result.rotation, precision);
-    return result;
-  }
-}
-
 export {
   point,
   Point,
@@ -1214,7 +1067,6 @@ export {
   minAngleDiff,
   deg,
   normAngle,
-  OldTransform,
   clipValue,
   Transform,
 };
