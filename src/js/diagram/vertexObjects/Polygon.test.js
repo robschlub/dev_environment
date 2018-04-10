@@ -92,6 +92,39 @@ describe('Polygon', () => {
     const squareBorder = square.border[0].map(p => p.round());
     expect(squareBorder).toEqual(targetBorder);
   });
+  test('Square: corner radius 2, thickness 1, rotated by 45 degrees', () => {
+    const square = new Polygon(
+      webgl,
+      Math.sqrt(2) * 2,
+      4,
+      4,
+      Math.sqrt(2) * 1.0,
+      Math.PI / 4,
+      g2.point(0,0),
+    );
+    const targetSquare = [
+      1.5,  1.5,
+      2.5,  2.5,
+      -1.5,  1.5,
+      -2.5,  2.5,
+      -1.5, -1.5,
+      -2.5, -2.5,
+      1.5 , -1.5,
+      2.5 , -2.5,
+      1.5,  1.5,
+      2.5,  2.5,
+    ];
+    const targetBorder = [
+      g2.point(2.5,  2.5),
+      g2.point(-2.5, 2.5),
+      g2.point(-2.5, -2.5),
+      g2.point(2.5 , -2.5),
+      g2.point(2.5,  2.5),
+    ];
+    expect(round(square.points)).toEqual(round(targetSquare));
+    const squareBorder = square.border[0].map(p => p.round());
+    expect(squareBorder).toEqual(targetBorder);
+  });
 });
 
 /* eslint-enable indent */

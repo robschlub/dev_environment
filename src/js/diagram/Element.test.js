@@ -542,16 +542,38 @@ describe('Animationa and Movement', () => {
         expect(collection.show).toBe(true);
       });
     });
-    // describe('is being touched', () => {
-    //   // Triangle was: rad: 0.1, thickness: 0.01 at 0,0
-    //   // Then moved to 0.1, 0
-    //   // Then rotated 90 degrees
-    //   // So top outside vertex should be 0.1, 0.205
-    //   test.only('Triangle as is', () => {
-    //     collection.draw(identity, 0);
-    //     const tri = collection._tri;
-    //     expect(tri.isBeingTouched(new Point(0, 0))).toBe(true);
-    //   });
-    // });
+    describe('is being touched', () => {
+      beforeEach(() => {
+        identity = m2.identity();
+        const square = new Polygon(
+          webgl,
+          Math.sqrt(2) * 1,
+          4,
+          4,
+          Math.sqrt(2) * 0.1,
+          Math.PI / 4,
+          Point.zero(),
+        );
+        squareElement = new DiagramElementPrimative(square);
+        collection = new DiagramElementCollection();
+        collection.add('square', squareElement);
+      });
+      test('Simple', () => {
+        expect(squareElement.isBeingTouched(new Point(0, 0))).toBe(true);
+        expect(squareElement.isBeingTouched(new Point(1.049, 1.049))).toBe(true);
+        expect(collection.isBeingTouched(new Point(0, 0))).toBe(true);
+        expect(collection.isBeingTouched(new Point(1.049, 1.049))).toBe(true);
+      });
+      test('Collection Transform', () => {
+        collection.setTransform(new Transform()
+          .translate(new Point(10, 0))
+          .rotate(Math.PI / 2));
+        collection.draw(identity, 0);
+        expect(collection.isBeingTouched(new Point(0, 10))).toBe(true);
+        expect(collection.isBeingTouched(new Point(1.049, 11.049))).toBe(true);
+        expect(collection.isBeingTouched(new Point(1.051, 11.049))).toBe(false);
+        expect(collection.isBeingTouched(new Point(1.049, 11.051))).toBe(false);
+      });
+    });
   });
 });

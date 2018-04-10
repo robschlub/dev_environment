@@ -21,13 +21,11 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('square', new DiagramElementPrimative(
       square,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
-      // g2.point(0, 0), 0, g2.point(1, 1),
       [0, 0, 1, 1],
     ));
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
-      // g2.point(0, 0), 0, g2.point(1, 1),
       [0, 1, 0, 1],
     ));
   }
@@ -40,9 +38,6 @@ class Diagram1 extends Diagram {
     return new ShapesCollection(
       this.webgl,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
-      // g2.Point.zero(),
-      // 0,
-      // new g2.Point(1, 1),
     );
   }
 }
@@ -59,12 +54,10 @@ function testgl(id: string) {
 
     const phase1 = new AnimationPhase(
       new g2.Transform().scale(1, 1).rotate(1).translate(0, 0),
-      // g2.Point.zero(), 1, g2.Point.Unity()),
       5, -1, tools.easeinout,
     );
     const phase2 = new AnimationPhase(
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
-      // g2.Point.zero(), 0, g2.Point.Unity()),
       5, 1, tools.easeinout,
     );
 
@@ -73,18 +66,13 @@ function testgl(id: string) {
     diagram.elements.pulse.B = 0.5;
     diagram.elements.pulse.C = 0;
     diagram.elements.pulse.time = 4;
-    
 
     diagram.elements.state.movement.velocity = new g2.Transform()
       .scale(0, 0).rotate(0).translate(1, 0);
-    // new g2.Point(1, 0), 0, g2.Point.zero());
     // diagram.elements.moveState.previous = diagram.elements.transform;
     diagram.elements.moveFreelyProperties.deceleration = new g2.Transform()
       .scale(0, 0).rotate(0).translate(1, 0.1);
-    //   new g2.Point(1, 0.1),
-    //   0,
-    //   g2.Point.zero(),
-    // );
+
 
     // diagram.elements.animatePlan([phase1, phase2]);
     // or
