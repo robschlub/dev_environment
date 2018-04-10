@@ -158,19 +158,10 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
-    this.maxVelocity = new g2.Transform()
-      .scale(1000, 1000)
-      .rotate(1000)
-      .translate(1000, 1000);
+    this.maxVelocity = this.transform.constant(100);
     this.moveFreelyProperties = {
-      zeroVelocityThreshold: new g2.Transform()
-        .scale(0.0001, 0.0001)
-        .rotate(0.0001)
-        .translate(0.0001, 0.0001),
-      deceleration: new g2.Transform()
-        .scale(1, 1)
-        .rotate(1)
-        .translate(1, 1),
+      zeroVelocityThreshold: this.transform.constant(0.001),
+      deceleration: this.transform.constant(1),
     };
 
     this.pulse = {
@@ -195,8 +186,8 @@ class DiagramElement {
       isMovingFreely: false,
       movement: {
         previousTime: -1,
-        previousTransform: new g2.Transform(),
-        velocity: new g2.Transform(),
+        previousTransform: this.transform.copy(),
+        velocity: this.transform.zero(),
       },
 
       isPulsing: false,
@@ -372,63 +363,69 @@ class DiagramElement {
   // Decelerate over some time when moving freely to get a new element
   // transform and movement velocity
   decelerate(deltaTime: number): Object {
-    const velocity = this.state.movement.velocity.copy();
-    let result;
-    const v = new g2.Transform();
-    const t = new g2.Transform();
-    result = tools.decelerate(
-      this.transform.rotation,
-      velocity.rotation,
-      this.moveFreelyProperties.deceleration.rotation,
+    const next = this.transform.decelerate(
+      this.state.movement.velocity,
+      this.moveFreelyProperties.deceleration,
       deltaTime,
-      this.moveFreelyProperties.zeroVelocityThreshold.rotation,
+      this.moveFreelyProperties.zeroVelocityThreshold,
     );
-    v.rotation = result.v;
-    t.rotation = result.p;
+    // const velocity = this.state.movement.velocity.copy();
+    // let result;
+    // const v = new g2.Transform();
+    // const t = new g2.Transform();
+    // result = tools.decelerate(
+    //   this.transform.rotation,
+    //   velocity.rotation,
+    //   this.moveFreelyProperties.deceleration.rotation,
+    //   deltaTime,
+    //   this.moveFreelyProperties.zeroVelocityThreshold.rotation,
+    // );
+    // v.rotation = result.v;
+    // t.rotation = result.p;
 
-    result = tools.decelerate(
-      this.transform.translation.x,
-      velocity.translation.x,
-      this.moveFreelyProperties.deceleration.translation.x,
-      deltaTime,
-      this.moveFreelyProperties.zeroVelocityThreshold.translation.x,
-    );
-    v.translation.x = result.v;
-    t.translation.x = result.p;
+    // result = tools.decelerate(
+    //   this.transform.translation.x,
+    //   velocity.translation.x,
+    //   this.moveFreelyProperties.deceleration.translation.x,
+    //   deltaTime,
+    //   this.moveFreelyProperties.zeroVelocityThreshold.translation.x,
+    // );
+    // v.translation.x = result.v;
+    // t.translation.x = result.p;
 
-    result = tools.decelerate(
-      this.transform.translation.y,
-      velocity.translation.y,
-      this.moveFreelyProperties.deceleration.translation.y,
-      deltaTime,
-      this.moveFreelyProperties.zeroVelocityThreshold.translation.y,
-    );
-    v.translation.y = result.v;
-    t.translation.y = result.p;
+    // result = tools.decelerate(
+    //   this.transform.translation.y,
+    //   velocity.translation.y,
+    //   this.moveFreelyProperties.deceleration.translation.y,
+    //   deltaTime,
+    //   this.moveFreelyProperties.zeroVelocityThreshold.translation.y,
+    // );
+    // v.translation.y = result.v;
+    // t.translation.y = result.p;
 
-    result = tools.decelerate(
-      this.transform.scale.x,
-      velocity.scale.x,
-      this.moveFreelyProperties.deceleration.scale.x,
-      deltaTime,
-      this.moveFreelyProperties.zeroVelocityThreshold.scale.x,
-    );
-    v.scale.x = result.v;
-    t.scale.x = result.p;
+    // result = tools.decelerate(
+    //   this.transform.scale.x,
+    //   velocity.scale.x,
+    //   this.moveFreelyProperties.deceleration.scale.x,
+    //   deltaTime,
+    //   this.moveFreelyProperties.zeroVelocityThreshold.scale.x,
+    // );
+    // v.scale.x = result.v;
+    // t.scale.x = result.p;
 
-    result = tools.decelerate(
-      this.transform.scale.y,
-      velocity.scale.y,
-      this.moveFreelyProperties.deceleration.scale.y,
-      deltaTime,
-      this.moveFreelyProperties.zeroVelocityThreshold.scale.y,
-    );
-    v.scale.y = result.v;
-    t.scale.y = result.p;
+    // result = tools.decelerate(
+    //   this.transform.scale.y,
+    //   velocity.scale.y,
+    //   this.moveFreelyProperties.deceleration.scale.y,
+    //   deltaTime,
+    //   this.moveFreelyProperties.zeroVelocityThreshold.scale.y,
+    // );
+    // v.scale.y = result.v;
+    // t.scale.y = result.p;
 
     return {
-      velocity: v,
-      transform: t,
+      velocity: next.v,
+      transform: next.t,
     };
   }
 
@@ -491,6 +488,7 @@ class DiagramElement {
     }
   }
 
+  // With update only first instace of translation in the transform order
   animateTranslationTo(
     translation: g2.Point,
     time: number = 1,
@@ -498,12 +496,15 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     const transform = this.transform.copy();
-    transform.translation = translation.copy();
+    transform.updateTranslation(translation);
+    // transform.translation = translation.copy();
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], callback);
     }
   }
+
+  // With update only first instace of rotation in the transform order
   animateRotationTo(
     rotation: number,
     rotDirection: number,
@@ -512,24 +513,25 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     const transform = this.transform.copy();
-    transform.rotation = rotation;
+    transform.updateRotation(rotation);
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], callback);
     }
   }
 
+  // With update only first instace of rotation in the transform order
   animateTranslationAndRotationTo(
-    translation,
-    rotation,
-    rotDirection,
-    time = 1,
-    easeFunction = tools.easeinout,
+    translation: g2.Point,
+    rotation: number,
+    rotDirection: number,
+    time: number = 1,
+    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
   ): void {
     const transform = this.transform.copy();
-    transform.rotation = rotation;
-    transform.translation = translation.copy();
+    transform.updateRotation(rotation);
+    transform.updateTranslation(translation.copy());
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], callback);
@@ -543,7 +545,7 @@ class DiagramElement {
   startBeingMoved(): void {
     this.stopAnimating();
     this.stopMovingFreely();
-    this.state.movement.velocity = g2.Transform.Zero();
+    this.state.movement.velocity = this.transform.zero();
     this.state.movement.previousTransform = this.transform.copy();
     this.state.movement.previousTime = Date.now() / 1000;
     this.state.isBeingMoved = true;
@@ -566,7 +568,6 @@ class DiagramElement {
       return;
     }
     const deltaTime = currentTime - this.state.movement.previousTime;
-    // console.log("time: " + deltaTime)
 
     this.state.movement.velocity = newTransform.velocity(
       this.transform,
@@ -733,7 +734,6 @@ class DiagramElementPrimative extends DiagramElement {
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
         border.push(this.vertexToClip(this.vertices.border[m][i]));
       }
-      console.log(border);
       if (clipLocation.isInPolygon(border)) {
         return true;
       }
@@ -779,12 +779,7 @@ class DiagramElementCollection extends DiagramElement {
   order: Array<string>;
   // biasTransform: Array<number>;
 
-  constructor(
-    // translation: g2.Point = g2.Point.zero(),
-    // rotation: number = 0,
-    // scale: g2.Point = g2.Point.Unity(),
-    transform: g2.Transform = new g2.Transform(),
-  ): void {
+  constructor(transform: g2.Transform = new g2.Transform()): void {
     super(transform);
     this.elements = {};
     this.order = [];

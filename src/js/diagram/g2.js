@@ -545,26 +545,35 @@ function line(p1: Point, p2: Point) {
 // Clip a value to either max velocity, or 0 once under the minimum
 // threashold.
 //  * velocity: can be positive or negative
-//  * maxVelocity: should be positive only. Will clip velocity to:
-//      - maxVelocity if velocity > 0
-//      - -maxVelocity if velcity < 0
-//  * zeroThreshold: should be positive only.
-//                   Will clip velocity to 0 if velocity is larger than
-//                   -zeroThreshold and smaller than zeroThreshold.
+//  * maxVelocity will clip velocity to:
+//      * |maxVelocity| if velocity > 0
+//      * -|maxVelocity| if velcity < 0
+//  * zeroThreshold will clip velocity to:
+//       * 0 if velocity is larger than -|zeroThreshold| and smaller than
+//         |zeroThreshold|.
 function clipValue(
   value: number,
   zeroThreshold: number,
   maxValue: number,
 ) {
   let result = value;
-  if (value >= -zeroThreshold && value <= zeroThreshold) {
+  let zeroT = zeroThreshold;
+  let maxV = maxValue;
+
+  if (zeroT < 0) {
+    zeroT = -zeroT;
+  }
+  if (maxV < 0) {
+    maxV = -maxV;
+  }
+  if (value >= -zeroT && value <= zeroT) {
     result = 0;
   }
-  if (value > maxValue) {
-    result = maxValue;
+  if (value > maxV) {
+    result = maxV;
   }
-  if (value < -maxValue) {
-    result = -maxValue;
+  if (value < -maxV) {
+    result = -maxV;
   }
   return result;
 }
@@ -687,11 +696,11 @@ class Scale {
 
 class Transform {
   order: Array<Translation | Rotation | Scale>;
-  matrix: Array<number>;
+  mat: Array<number>;
   index: number;
 
   constructor(order: Array<Translation | Rotation | Scale> = []) {
-    this.order = order;
+    this.order = order.slice();
     this.index = this.order.length;
     this.calcMatrix();
   }
@@ -747,7 +756,7 @@ class Transform {
     for (let i = this.order.length - 1; i >= 0; i -= 1) {
       m = m2.mul(m, this.order[i].matrix());
     }
-    this.matrix = m2.copy(m);
+    this.mat = m2.copy(m);
     return m;
   }
 
@@ -772,7 +781,7 @@ class Transform {
     return null;
   }
 
-  updateTranslation(x: number, yOrIndex: number = 0, index: number = 0) {
+  updateTranslation(x: number | Point, yOrIndex: number = 0, index: number = 0) {
     let count = 0;
     let actualIndex = index;
     if (x instanceof Point) {
@@ -789,7 +798,6 @@ class Transform {
         count += 1;
       }
     }
-    this.calcMatrix();
   }
 
   s(index: number = 0): ?Point {
@@ -806,7 +814,7 @@ class Transform {
     return null;
   }
 
-  updateScale(x: number, yOrIndex: number = 0, index: number = 0) {
+  updateScale(x: number | Point, yOrIndex: number = 0, index: number = 0) {
     let count = 0;
     let actualIndex = index;
     if (x instanceof Point) {
@@ -839,7 +847,7 @@ class Transform {
     return null;
   }
 
-  updateRotation(r: number, index: number = 0) {
+  updateRotation(r: number, index: number = 0): void {
     let count = 0;
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
@@ -854,11 +862,15 @@ class Transform {
     }
   }
 
-  m() {
-    return this.matrix;
+  m(): Array<number> {
+    return this.mat;
   }
 
-  isSimilarTo(transformToCompare: Transform) {
+  matrix(): Array<number> {
+    return this.mat;
+  }
+
+  isSimilarTo(transformToCompare: Transform): boolean {
     if (transformToCompare.order.length !== this.order.length) {
       return false;
     }
@@ -874,7 +886,7 @@ class Transform {
   // Subtract a transform from the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
-  sub(transformToSubtract: Transform = new Transform()) {
+  sub(transformToSubtract: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToSubtract)) {
       return new Transform(this.order);
     }
@@ -889,7 +901,7 @@ class Transform {
   // Add a transform to the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
-  add(transformToAdd: Transform = new Transform()) {
+  add(transformToAdd: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToAdd)) {
       return new Transform(this.order);
     }
@@ -904,7 +916,7 @@ class Transform {
   // Add a transform to the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
-  mul(transformToMul: Transform = new Transform()) {
+  mul(transformToMul: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToMul)) {
       return new Transform(this.order);
     }
@@ -917,7 +929,7 @@ class Transform {
   }
 
 
-  round(precision: number = 8) {
+  round(precision: number = 8): Transform {
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       order.push(this.order[i].round(precision));
@@ -925,52 +937,67 @@ class Transform {
     return new Transform(order);
   }
 
-  clip(zeroThresholdTransform: Transform, maxTransform: Transform) {
-    const min = 0.00001;
-    const max = 1 / min;
-    const zeroS = zeroThresholdTransform.s() || new Point(min, min);
-    const zeroR = zeroThresholdTransform.r() || min;
-    const zeroT = zeroThresholdTransform.t() || new Point(min, min);
-    const maxS = maxTransform.s() || new Point(max, max);
-    const maxR = maxTransform.r() || max;
-    const maxT = maxTransform.t() || new Point(max, max);
-
+  clip(zeroThresholdTransform: Transform, maxTransform: Transform): Transform {
+    // const min = 0.00001;
+    // const max = 1 / min;
+    // const zeroS = zeroThresholdTransform.s() || new Point(min, min);
+    // const zeroR = zeroThresholdTransform.r() || min;
+    // const zeroT = zeroThresholdTransform.t() || new Point(min, min);
+    // const maxS = maxTransform.s() || new Point(max, max);
+    // const maxR = maxTransform.r() || max;
+    // const maxT = maxTransform.t() || new Point(max, max);
+    // if (!this.isSimilarTo(zeroThresholdTransform) ||
+    //     !this.isSimilarTo(maxTransform)) {
+    //   return new Transform(this.order);
+    // }
     const order = [];
 
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
-      if (t instanceof Translation) {
-        const x = clipValue(t.x, zeroT.x, maxT.x);
-        const y = clipValue(t.y, zeroT.y, maxT.y);
+      const z = zeroThresholdTransform.order[i];
+      const max = maxTransform.order[i];
+      if (t instanceof Translation &&
+          z instanceof Translation &&
+          max instanceof Translation) {
+        const x = clipValue(t.x, z.x, max.x);
+        const y = clipValue(t.y, z.y, max.y);
         order.push(new Translation(x, y));
-      } else if (t instanceof Rotation) {
-        const r = clipValue(t.r, zeroR, maxR);
+      } else if (t instanceof Rotation &&
+                 z instanceof Rotation &&
+                 max instanceof Rotation) {
+        const r = clipValue(t.r, z.r, max.r);
         order.push(new Rotation(r));
-      } else if (t instanceof Scale) {
-        const x = clipValue(t.x, zeroS.x, maxS.x);
-        const y = clipValue(t.y, zeroS.y, maxS.y);
+      } else if (t instanceof Scale &&
+                 z instanceof Scale &&
+                 max instanceof Scale) {
+        const x = clipValue(t.x, z.x, max.x);
+        const y = clipValue(t.y, z.y, max.y);
         order.push(new Scale(x, y));
       }
     }
     return new Transform(order);
   }
 
-  zero() {
+  constant(constant: number = 0): Transform {
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
       if (t instanceof Translation) {
-        order.push(new Translation(0, 0));
+        order.push(new Translation(constant, constant));
       } else if (t instanceof Rotation) {
-        order.push(new Rotation(0));
+        order.push(new Rotation(constant));
       } else if (t instanceof Scale) {
-        order.push(new Scale(0, 0));
+        order.push(new Scale(constant, constant));
       }
     }
     return new Transform(order);
   }
 
-  isZero() {
+  zero(): Transform {
+    return this.constant(0);
+  }
+
+  isZero(): boolean {
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
       if (t instanceof Translation || t instanceof Scale) {
@@ -985,7 +1012,7 @@ class Transform {
     }
     return true;
   }
-  copy() {
+  copy(): Transform {
     return new Transform(this.order);
   }
 
@@ -994,7 +1021,7 @@ class Transform {
     deceleration: Transform,
     deltaTime: number,
     zeroThreshold: Transform,
-  ) {
+  ): { v: Transform, t: Transform } {
     let nextV = new Transform();
     let nextT = new Transform();
     for (let i = 0; i < this.order.length; i += 1) {
@@ -1035,11 +1062,12 @@ class Transform {
     deltaTime: number,
     zeroThreshold: Transform,
     maxTransform: Transform,
-  ) {
+  ): Transform {
     const order = [];
     if (!this.isSimilarTo(previousTransform)) {
       return this.zero();
     }
+
     const deltaTransform = this.sub(previousTransform);
     for (let i = 0; i < deltaTransform.order.length; i += 1) {
       const t = deltaTransform.order[i];
@@ -1051,7 +1079,17 @@ class Transform {
         order.push(new Scale(t.x / deltaTime, t.y / deltaTime));
       }
     }
-    return (new Transform(order)).clip(zeroThreshold, maxTransform);
+    const v = new Transform(order);
+
+    let z = zeroThreshold;
+    let m = maxTransform;
+    if (!this.isSimilarTo(zeroThreshold)) {
+      z = this.constant(0);
+    }
+    if (!this.isSimilarTo(maxTransform)) {
+      m = v.copy();
+    }
+    return v.clip(z, m);
   }
 }
 

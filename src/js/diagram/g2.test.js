@@ -797,7 +797,7 @@ describe('g2 tests', () => {
     test('Create rotation', () => {
       const t = new g2.Transform().rotate(Math.PI / 2);
       const p0 = new g2.Point(1, 0);
-      const p1 = p0.transformBy(t.matrix);
+      const p1 = p0.transformBy(t.matrix());
       expect(p1.round()).toEqual(new g2.Point(0, 1));
     });
     test('Create translation', () => {
@@ -809,40 +809,40 @@ describe('g2 tests', () => {
     test('Create scale', () => {
       const t = new g2.Transform().scale(2, 2);
       const p0 = new g2.Point(1, 0.5);
-      const p1 = p0.transformBy(t.matrix);
+      const p1 = p0.transformBy(t.matrix());
       expect(p1.round()).toEqual(new g2.Point(2, 1));
     });
     test('Create R, T', () => {
       const t = new g2.Transform().rotate(Math.PI / 2).translate(1, 1);
       const p0 = new g2.Point(2, 0);
-      const p1 = p0.transformBy(t.matrix);
+      const p1 = p0.transformBy(t.matrix());
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Create S, R, T', () => {
       const t = new g2.Transform().scale(2, 2).rotate(Math.PI / 2).translate(1, 1);
       const p0 = new g2.Point(1, 0);
-      const p1 = p0.transformBy(t.matrix);
+      const p1 = p0.transformBy(t.matrix());
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Create S, R, then T', () => {
       const t1 = new g2.Transform().scale(2, 2).rotate(Math.PI / 2);
       const t2 = t1.translate(1, 1);
       const p0 = new g2.Point(1, 0);
-      const p1 = p0.transformBy(t2.matrix);
+      const p1 = p0.transformBy(t2.matrix());
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Create S, R, T, T, S', () => {
       let t1 = new g2.Transform().scale(2, 2).rotate(Math.PI / 2);
       t1 = t1.translate(1, 1).translate(-5, 0).scale(2, 1);
       const p0 = new g2.Point(1, 0);
-      const p1 = p0.transformBy(t1.matrix);
+      const p1 = p0.transformBy(t1.matrix());
       expect(p1.round()).toEqual(new g2.Point(-8, 3));
     });
     test('Update R in S, R, T', () => {
       const t = new g2.Transform().scale(2, 2).rotate(Math.PI).translate(1, 1);
       t.update(1).rotate(Math.PI / 2);
       const p0 = new g2.Point(1, 0);
-      const p1 = p0.transformBy(t.matrix);
+      const p1 = p0.transformBy(t.matrix());
       expect(p1.round()).toEqual(new g2.Point(1, 3));
     });
     test('Get rotation', () => {
@@ -879,6 +879,13 @@ describe('g2 tests', () => {
       expect(t.m()).not.toEqual(matrix);
       expect(t.m()).toEqual(new g2.Transform().rotate(1).m());
     });
+    test('Update rotation at index matrix', () => {
+      const t = new g2.Transform().rotate(0).rotate(1);
+      const matrix = t.m();
+      t.updateRotation(2, 1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().rotate(2).m());
+    });
     test('Update translation checking matrix', () => {
       const t = new g2.Transform().translate(0, 0);
       const matrix = t.m();
@@ -886,10 +893,52 @@ describe('g2 tests', () => {
       expect(t.m()).not.toEqual(matrix);
       expect(t.m()).toEqual(new g2.Transform().translate(1, 1).m());
     });
+    test('Update translation with point checking matrix', () => {
+      const t = new g2.Transform().translate(0, 0);
+      const matrix = t.m();
+      t.updateTranslation(new g2.Point(1, 1));
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().translate(1, 1).m());
+    });
+    test('Update translation at index', () => {
+      const t = new g2.Transform().translate(1, 1).translate(-1, 1);
+      const matrix = t.m();
+      t.updateTranslation(1, 1, 1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().translate(2, 2).m());
+    });
+    test('Update translation at index with Point', () => {
+      const t = new g2.Transform().translate(1, 1).translate(-1, 1);
+      const matrix = t.m();
+      t.updateTranslation(new g2.Point(1, 1), 1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().translate(2, 2).m());
+    });
     test('Update scale checking matrix', () => {
       const t = new g2.Transform().scale(0, 0);
       const matrix = t.m();
       t.updateScale(1, 1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().scale(1, 1).m());
+    });
+    test('Update scale with point checking matrix', () => {
+      const t = new g2.Transform().scale(0, 0);
+      const matrix = t.m();
+      t.updateScale(new g2.Point(1, 1));
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().scale(1, 1).m());
+    });
+    test('Update scale at index', () => {
+      const t = new g2.Transform().scale(1, 1).scale(-1, 1);
+      const matrix = t.m();
+      t.updateScale(1, 1, 1);
+      expect(t.m()).not.toEqual(matrix);
+      expect(t.m()).toEqual(new g2.Transform().scale(1, 1).m());
+    });
+    test('Update scale at index with Point', () => {
+      const t = new g2.Transform().scale(1, 1).scale(-1, 1);
+      const matrix = t.m();
+      t.updateScale(new g2.Point(1, 1), 1);
       expect(t.m()).not.toEqual(matrix);
       expect(t.m()).toEqual(new g2.Transform().scale(1, 1).m());
     });
@@ -1072,6 +1121,11 @@ describe('g2 tests', () => {
       const t3 = new g2.Transform().scale(0, 0).rotate(0).scale(1, 0);
       expect(t3.isZero()).toBe(false);
     });
+    test('Constant', () => {
+      const t1 = new g2.Transform().scale(1, 1).rotate(1).translate(1, 1);
+      const t2 = t1.constant(2);
+      expect(t2).toEqual(t1.add(t1));
+    });
     test('Rounding', () => {
       const t1 = new g2.Transform()
         .scale(1.123456789, 1.12345678)
@@ -1102,14 +1156,8 @@ describe('g2 tests', () => {
         .rotate(0.05)
         .translate(21, 20)
         .translate(0.1, 0.05);
-      const clipZero = new g2.Transform()
-        .scale(0.1, 0.1)
-        .rotate(0.1)
-        .translate(0.1, 0.1);
-      const clipMax = new g2.Transform()
-        .scale(20, 20)
-        .rotate(20)
-        .translate(20, 20);
+      const clipZero = t1.constant(0.1);
+      const clipMax = t1.constant(20);
       const tc = t1.clip(clipZero, clipMax);
       expect(tc.s(0)).toEqual(new g2.Point(20, 20));
       expect(tc.s(1)).toEqual(new g2.Point(0, 0));
@@ -1125,17 +1173,10 @@ describe('g2 tests', () => {
       const b = t.copy();
       expect(t).toEqual(b);
       expect(t).not.toBe(b);
+      expect(t.order).not.toBe(b.order);
     });
     test('Velocity - Happy case', () => {
       const deltaTime = 1;
-      const zero = new g2.Transform()
-        .scale(0.2, 0.2)
-        .rotate(0.2)
-        .translate(0.2, 0.2);
-      const max = new g2.Transform()
-        .scale(20, 20)
-        .rotate(20)
-        .translate(20, 20);
       const t0 = new g2.Transform()
         .scale(0, 0)          // to test velocity
         .scale(-1, -40)       // to test zero
@@ -1156,6 +1197,8 @@ describe('g2 tests', () => {
         .translate(-1, 1)         // should be -1, 1
         .translate(-1.2, -40.1)   // should be 0, 0
         .translate(20, 40);       // should be -20, 20
+      const zero = t0.constant(0.2);
+      const max = t0.constant(20);
       const v = t1.velocity(t0, deltaTime, zero, max);
 
       expect(v.s(0)).toEqual(new g2.Point(-1, 1));
@@ -1200,8 +1243,8 @@ describe('g2 tests', () => {
         expect(v.r()).toEqual(0);
         expect(v.t()).toEqual(new g2.Point(0, 0));
       });
-      // If a transform element is missing from the transform, then a default
-      // value of 0.0001 will be used.
+      // If a transform element is missing from the zero transform, then no
+      // minimum will be applied
       test('zero missing a transform element', () => {
         zero = new g2.Transform().rotate(0.2).scale(0.2, 0.2);
         t1 = new g2.Transform()
@@ -1209,22 +1252,28 @@ describe('g2 tests', () => {
           .rotate(0.00001)
           .translate(0.2, 0.00001);
         const v = t1.velocity(t0, deltaTime, zero, max);
-        expect(v.s()).toEqual(new g2.Point(0, 0));    // This should work
-        expect(v.r()).toEqual(0);                     // This should work
-        expect(v.t()).toEqual(new g2.Point(0.2, 0));  // This should default
+        expect(v).toEqual(t1);
       });
-      // If a transform element is missing from the transform, then a default
-      // value of 10000 will be used.
+      // If a transform element is missing from the max transform, then
+      // no maximum will be applied.
       test('max missing a transform element', () => {
         max = new g2.Transform().rotate(20).scale(20, 20);
         t1 = new g2.Transform()
           .scale(30, -100001)
           .rotate(100001)
           .translate(30, 100001);
-        const v = t1.velocity(t0, deltaTime, zero, max);
-        expect(v.s()).toEqual(new g2.Point(20, -20));    // This should work
-        expect(v.r()).toEqual(20);                       // This should work
-        expect(v.t().round()).toEqual(new g2.Point(30, 100000));  // This should default
+        let v = t1.velocity(t0, deltaTime, zero, max);
+        expect(v).toEqual(t1);
+
+        // Test missing max when zero threshold is enforced.
+        t1 = new g2.Transform()
+          .scale(30, -100001)
+          .rotate(100001)
+          .translate(0.1, 100001);
+        v = t1.velocity(t0, deltaTime, zero, max);
+        const vExpected = t1.copy();
+        vExpected.updateTranslation(0, 100001);
+        expect(v).toEqual(vExpected);
       });
     });
     describe('Deceleration', () => {

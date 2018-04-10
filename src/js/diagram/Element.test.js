@@ -16,9 +16,7 @@ describe('Animationa and Movement', () => {
         const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
         const element = new DiagramElementPrimative(
           square,
-          Point.zero(),
-          0,
-          Point.Unity(),
+          new Transform(),
           [0, 0, 1, 1],
         );
         expect(element instanceof DiagramElementPrimative).toBe(true);
@@ -31,9 +29,7 @@ describe('Animationa and Movement', () => {
         const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
-          Point.zero(),
-          0,
-          Point.Unity(),
+          new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
         identity = m2.identity();
@@ -45,7 +41,7 @@ describe('Animationa and Movement', () => {
 
           element.animateRotationTo(1, 1, 1, linear);
           const t = element.transform;
-          expect(t).toEqual(new Transform(Point.zero(), 0, Point.Unity()));
+          expect(t).toEqual(new Transform().scale(1, 1).rotate(0).translate(0, 0));
 
           const phase = element.state.animation.currentPhase;
 
@@ -56,22 +52,22 @@ describe('Animationa and Movement', () => {
           element.draw(m2.identity(), 10);
           expect(phase.startTime).toBe(10);
           expect(phase.time).toBe(1);
-          expect(t.rotation).toBe(0);
+          expect(t.r()).toBe(0);
 
           element.draw(m2.identity(), 10.5);
           expect(phase.startTime).toBe(10);
           expect(phase.time).toBe(1);
-          expect(element.transform.rotation).toBe(0.5);
+          expect(element.transform.r()).toBe(0.5);
 
           element.draw(m2.identity(), 11);
           expect(phase.time).toBe(1);
-          expect(element.transform.rotation).toBe(1);
+          expect(element.transform.r()).toBe(1);
           expect(element.state.isAnimating).toBe(true);
           expect(element.isMoving()).toBe(true);
 
           element.draw(m2.identity(), 11.01);
           expect(phase.time).toBe(1);
-          expect(element.transform.rotation).toBe(1);
+          expect(element.transform.r()).toBe(1);
           expect(element.state.isAnimating).toBe(false);
           expect(element.isMoving()).toBe(false);
         });
@@ -82,7 +78,7 @@ describe('Animationa and Movement', () => {
           // Setup the animation
           element.animateTranslationTo(new Point(1, 0), 1, linear);
           const t = element.transform;
-          expect(t).toEqual(new Transform(Point.zero(), 0, Point.Unity()));
+          expect(t).toEqual(new Transform().scale(1, 1).rotate(0).translate(0, 0));
           const phase = element.state.animation.currentPhase;
           expect(element.state.isAnimating).toBe(true);
           expect(element.isMoving()).toBe(true);
@@ -92,21 +88,21 @@ describe('Animationa and Movement', () => {
           element.draw(m2.identity(), 0);
           expect(phase.startTime).toBe(0);
           expect(phase.time).toBe(1);
-          expect(t.rotation).toBe(0);
+          expect(t.r()).toBe(0);
 
           // Draw half way through
           element.draw(m2.identity(), 0.5);
-          expect(element.transform.translation).toEqual(new Point(0.5, 0));
+          expect(element.transform.t()).toEqual(new Point(0.5, 0));
 
           // Draw at last time
           element.draw(m2.identity(), 1);
-          expect(element.transform.translation).toEqual(new Point(1.0, 0));
+          expect(element.transform.t()).toEqual(new Point(1.0, 0));
           expect(element.state.isAnimating).toBe(true);
           expect(element.isMoving()).toBe(true);
 
           // Draw after time elapsed
           element.draw(m2.identity(), 1.01);
-          expect(element.transform.translation).toEqual(new Point(1.0, 0));
+          expect(element.transform.t()).toEqual(new Point(1.0, 0));
           expect(element.state.isAnimating).toBe(false);
           expect(element.isMoving()).toBe(false);
         });
@@ -135,17 +131,17 @@ describe('Animationa and Movement', () => {
         test('Three phase animation plan', () => {
           // Phase 1 rotates to 1 radian in 1 second
           const phase1 = new AnimationPhase(
-            new Transform(Point.zero(), 1, Point.Unity()),
+            new Transform().scale(1, 1).rotate(1).translate(0, 0),
             1, 1, linear,
           );
           // Phase 2 rotates back to 0 radians in 1 second
           const phase2 = new AnimationPhase(
-            new Transform(Point.zero(), 0, Point.Unity()),
+            new Transform().scale(1, 1).rotate(0).translate(0, 0),
             1, -1, linear,
           );
           // Phase 3 rotates to -1 radians in 1 second
           const phase3 = new AnimationPhase(
-            new Transform(Point.zero(), -1, Point.Unity()),
+            new Transform().scale(1, 1).rotate(-1).translate(0, 0),
             1, -1, linear,
           );
           const callback = jest.fn();         // Callback mock
@@ -161,30 +157,30 @@ describe('Animationa and Movement', () => {
           // Half way through first phase
           element.draw(identity, 0.5);
           expect(element.state.animation.currentPhaseIndex).toBe(0);
-          expect(element.transform.rotation).toBe(0.5);
+          expect(element.transform.r()).toBe(0.5);
           expect(callback.mock.calls).toHaveLength(0);
 
           // End of first phase
           element.draw(identity, 1.0);
           expect(element.state.animation.currentPhaseIndex).toBe(0);
-          expect(element.transform.rotation).toBe(1.0);
+          expect(element.transform.r()).toBe(1.0);
           expect(callback.mock.calls).toHaveLength(0);
 
           // Start of next phase
           element.draw(identity, 1.1);
           expect(element.state.animation.currentPhaseIndex).toBe(1);
-          expect(round(element.transform.rotation)).toBe(0.9);
+          expect(round(element.transform.r())).toBe(0.9);
           expect(callback.mock.calls).toHaveLength(0);
 
           // Skip to into third phase
           element.draw(identity, 2.1);
           expect(element.state.animation.currentPhaseIndex).toBe(2);
-          expect(round(element.transform.rotation)).toBe(-0.1);
+          expect(round(element.transform.r())).toBe(-0.1);
           expect(callback.mock.calls).toHaveLength(0);
 
           // Time after End
           element.draw(identity, 3.1);
-          expect(round(element.transform.rotation)).toBe(-1);
+          expect(round(element.transform.r())).toBe(-1);
           expect(callback.mock.calls).toHaveLength(1);
           expect(element.state.isAnimating).toBe(false);
         });
@@ -197,17 +193,17 @@ describe('Animationa and Movement', () => {
         const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
-          Point.zero(),
-          0,
-          Point.Unity(),
+          new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
         identity = m2.identity();
       });
       test('Deceleration', () => {
         const callback = jest.fn();
-        const initialV = new Transform(new Point(10, 20), 0, new Point(-2, 1));
-        const decel = new Transform(new Point(1, 2), 2, new Point(1, 1));
+        const initialV = new Transform().scale(-2, 1).rotate(0).translate(10, 20);
+        // const initialV = new Transform(new Point(10, 20), 0, new Point(-2, 1));
+        const decel = new Transform().scale(1, 1).rotate(2).translate(1, 2);
+        // const decel = new Transform(new Point(1, 2), 2, new Point(1, 1));
         element.state.movement.velocity = initialV;
         element.moveFreelyProperties.deceleration = decel;
 
@@ -221,32 +217,32 @@ describe('Animationa and Movement', () => {
         element.draw(identity, 1);
         expect(element.state.isMovingFreely).toBe(true);
         let vel = element.state.movement.velocity;
-        expect(vel.translation).toEqual(new Point(9, 18));
-        expect(vel.scale).toEqual(new Point(-1, 0));
-        expect(vel.rotation).toBe(0);
-        expect(element.transform.round()).toEqual(new Transform(
-          new Point(9.5, 19),
-          0,
-          new Point(-0.5, 1.5),
-        ));
+        expect(vel.t()).toEqual(new Point(9, 18));
+        expect(vel.s()).toEqual(new Point(-1, 0));
+        expect(vel.r()).toBe(0);
+        expect(element.transform.round(2)).toEqual(new Transform()
+          .scale(-0.5, 1.5).rotate(0).translate(9.5, 19));
 
         element.draw(identity, 2);
         vel = element.state.movement.velocity;
-        expect(vel.translation).toEqual(new Point(8, 16));
-        expect(vel.scale).toEqual(new Point(0, 0));
-        expect(vel.rotation).toBe(0);
+        expect(vel.t()).toEqual(new Point(8, 16));
+        expect(vel.s()).toEqual(new Point(0, 0));
+        expect(vel.r()).toBe(0);
         expect(callback.mock.calls).toHaveLength(0);
 
         element.draw(identity, 12);
         vel = element.state.movement.velocity;
-        expect(vel).toEqual(Transform.Zero());
+        expect(vel).toEqual(vel.zero());
         expect(callback.mock.calls).toHaveLength(1);
       });
       test('Zero and Max Threshold', () => {
-        const initialV = new Transform(new Point(10, -10), 10, new Point(30, -30));
-        const decel = new Transform(new Point(1, 1), 1, new Point(1, 1));
-        const zero = new Transform(new Point(5, 5), 5, new Point(15, 15));
-        const max = new Transform(new Point(20, 20), 20, new Point(20, 20));
+        const initialV = new Transform()
+          .scale(30, -30).rotate(10).translate(10, -10);
+        const decel = new Transform()
+          .scale(1, 1).rotate(1).translate(1, 1);
+        const zero = new Transform()
+          .scale(15, 15).rotate(5).translate(5, 5);
+        const max = zero.constant(20);
         element.state.movement.velocity = initialV;
         element.moveFreelyProperties.deceleration = decel;
         element.moveFreelyProperties.zeroVelocityThreshold = zero;
@@ -257,9 +253,9 @@ describe('Animationa and Movement', () => {
         element.startMovingFreely();
         let vel = element.state.movement.velocity;
 
-        expect(vel.translation).toEqual(new Point(10, -10));
-        expect(vel.scale).toEqual(new Point(20, -20));
-        expect(vel.rotation).toBe(10);
+        expect(vel.t()).toEqual(new Point(10, -10));
+        expect(vel.s()).toEqual(new Point(20, -20));
+        expect(vel.r()).toBe(10);
 
         element.draw(identity, 0);
 
@@ -268,16 +264,16 @@ describe('Animationa and Movement', () => {
         element.draw(identity, 5);
         vel = element.state.movement.velocity;
 
-        expect(vel.translation).toEqual(new Point(5, -5));
-        expect(vel.scale).toEqual(new Point(15, -15));
-        expect(vel.rotation).toBe(5);
+        expect(vel.t()).toEqual(new Point(5, -5));
+        expect(vel.s()).toEqual(new Point(15, -15));
+        expect(vel.r()).toBe(5);
 
         element.draw(identity, 5.1);
         vel = element.state.movement.velocity;
 
-        expect(vel.translation).toEqual(new Point(0, 0));
-        expect(vel.scale).toEqual(new Point(0, 0));
-        expect(vel.rotation).toBe(0);
+        expect(vel.t()).toEqual(new Point(0, 0));
+        expect(vel.s()).toEqual(new Point(0, 0));
+        expect(vel.r()).toBe(0);
         expect(element.state.isMovingFreely).toBe(false);
       });
     });
@@ -288,9 +284,7 @@ describe('Animationa and Movement', () => {
         const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
-          Point.zero(),
-          0,
-          Point.Unity(),
+          new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
       });
@@ -303,16 +297,10 @@ describe('Animationa and Movement', () => {
           element.startBeingMoved();
           expect(element.state.isBeingMoved).toBe(true);
           Date.now = () => 1000;
-          element.moved(new Transform(
-            new Point(1, -1),
-            1,
-            new Point(1, 1),
-          ));
-          expect(element.state.movement.velocity).toEqual(new Transform(
-            new Point(1, -1),
-            1,
-            new Point(0, 0),
-          ));
+          element.moved(new Transform()
+            .scale(1, 1).rotate(1).translate(1, -1));
+          expect(element.state.movement.velocity).toEqual(new Transform()
+            .scale(0, 0).rotate(1).translate(1, -1));
         });
       });
     });
@@ -323,9 +311,7 @@ describe('Animationa and Movement', () => {
         const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
-          Point.zero(),
-          0,
-          Point.Unity(),
+          new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
         identity = m2.identity();
@@ -339,12 +325,14 @@ describe('Animationa and Movement', () => {
         expect(element.lastDrawTransformMatrix).toEqual(element.transform.matrix());
 
         element.draw(identity, 0.5);
-        pulseTransform = new Transform(Point.zero(), 0, new Point(1.1, 1.1));
+        pulseTransform = new Transform()
+          .scale(1.1, 1.1).rotate(0).translate(0, 0);
         expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
         expect(element.lastDrawTransformMatrix).toEqual(expectM);
 
         element.draw(identity, 1.0);
-        pulseTransform = new Transform(Point.zero(), 0, new Point(1, 1));
+        pulseTransform = new Transform()
+          .scale(1, 1).rotate(0).translate(0, 0);
         expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
         expect(element.lastDrawTransformMatrix).toEqual(expectM);
         expect(element.state.isPulsing).toBe(true);
@@ -361,11 +349,15 @@ describe('Animationa and Movement', () => {
         element.draw(identity, 0.5);
         expect(draw.mock.calls).toHaveLength(10);
 
-        const maxPulseTransform = new Transform(Point.zero(), 0, new Point(1.2, 1.2));
+        const maxPulseTransform = new Transform()
+          .scale(1.2, 1.2).rotate(0).translate(0, 0);
+        // (Point.zero(), 0, new Point(1.2, 1.2));
         const maxM = m2.mul(element.transform.matrix(), maxPulseTransform.matrix());
         expect(draw.mock.calls[5][0]).toEqual(maxM);
 
-        const minPulseTransform = new Transform(Point.zero(), 0, new Point(0.8, 0.8));
+        const minPulseTransform = new Transform()
+          .scale(0.8, 0.8).rotate(0).translate(0, 0);
+        // Point.zero(), 0, new Point(0.8, 0.8));
         const minM = m2.mul(element.transform.matrix(), minPulseTransform.matrix());
         expect(draw.mock.calls[9][0]).toEqual(minM);
       });
@@ -383,9 +375,7 @@ describe('Animationa and Movement', () => {
       const tri = new Polygon(webgl, 0.1, 3, 3, 0.01, 0, new Point(0.1, 0.1));
       squareElement = new DiagramElementPrimative(
         square,
-        Point.zero(),
-        0,
-        Point.Unity(),
+        new Transform().scale(1, 1).rotate(0).translate(0, 0),
         [0, 0, 1, 1],
       );
       // Transform the triangle by 0.1 in x, rotate by 90 deg, scale by 2
@@ -395,16 +385,11 @@ describe('Animationa and Movement', () => {
       //    - scale by 2: (0, 0.41)
       triElement = new DiagramElementPrimative(
         tri,
-        new Point(0.1, 0),
-        Math.PI / 2,
-        new Point(2, 2),
+        new Transform().scale(2, 2).rotate(Math.PI / 2).translate(0.1, 0),
         [0, 0, 1, 1],
       );
-      collection = new DiagramElementCollection(
-        new Point(0, 0),
-        0,
-        new Point(1, 1),
-      );
+      collection = new DiagramElementCollection(new Transform()
+        .scale(1, 1).rotate(0).translate(0, 0));
       collection.add('square', squareElement);
       collection.add('tri', triElement);
     });
@@ -429,10 +414,8 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isMovingFreely).toBe(false);
       collection.draw(m2.identity(), 0);
       collection.draw(m2.identity(), 0.5);
-      expect(collection.transform.round()).toEqual(new Transform(
-        new Point(0.5, 0),
-        0, new Point(1, 1),
-      ));
+      expect(collection.transform.round()).toEqual(new Transform()
+        .scale(1, 1).rotate(0).translate(0.5, 0));
 
       Date.now = () => 0;
       collection.startBeingMoved();
@@ -442,20 +425,19 @@ describe('Animationa and Movement', () => {
 
       // Over 1 s, rotation = 0.1;
       Date.now = () => 1000;
-      collection.moved(new Transform(new Point(0.5, 0), 0.1, Point.Unity()));
-      expect(collection.transform.round()).toEqual(new Transform(
-        new Point(0.5, 0),
-        0.1,
-        new Point(1, 1),
-      ));
-      const velocity = new Transform(Point.zero(), 0.1, Point.zero());
+      collection.moved(new Transform()
+        .scale(1, 1).rotate(0.1).translate(0.5, 0));
+      // new Point(0.5, 0), 0.1, Point.Unity()));
+      expect(collection.transform.round()).toEqual(new Transform()
+        .scale(1, 1).rotate(0.1).translate(0.5, 0));
+      const velocity = new Transform().scale(0, 0).rotate(0.1).translate(0, 0);
       expect(collection.state.movement.velocity).toEqual(velocity);
 
       const moveFreeProps = collection.moveFreelyProperties;
       moveFreeProps.deceleration =
-        new Transform(new Point(1, 1), 0.01, new Point(1, 1));
+        new Transform().scale(1, 1).rotate(0.01).translate(1, 1);
       moveFreeProps.zeroVelocityThreshold =
-        new Transform(new Point(0.1, 0.1), 0.05, new Point(0.1, 0.1));
+        new Transform().scale(0.1, 0.1).rotate(0.05).translate(0.1, 0.1);
 
       // Now at (0.5, 0), 0.1 and rotating with velocity 0.1 rads/s
       collection.startMovingFreely(callbackMoveFree);
@@ -470,16 +452,10 @@ describe('Animationa and Movement', () => {
       //  rotation: 0.1 + 0.1*1 - 0.5*0.01*1*1
       //  with velocity: 0.1 - 0.01*1*1
       collection.draw(m2.identity(), 11);
-      expect(collection.state.movement.velocity.round()).toEqual(new Transform(
-        Point.zero(),
-        0.09,
-        Point.zero(),
-      ));
-      expect(collection.transform.round()).toEqual(new Transform(
-        new Point(0.5, 0),
-        0.195,
-        Point.Unity(),
-      ));
+      expect(collection.state.movement.velocity.round()).toEqual(new Transform()
+        .scale(0, 0).rotate(0.09).translate(0, 0));
+      expect(collection.transform.round()).toEqual(new Transform()
+        .scale(1, 1).rotate(0.195).translate(0.5, 0));
 
       // At 5 seconds, velocity becomes 0, so rotation is
       //  rotation: 0.1 + 0.1*5 - 0.5*0.01*5*5
@@ -488,12 +464,9 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isAnimating).toBe(false);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
-      expect(collection.state.movement.velocity).toEqual(Transform.Zero());
-      expect(collection.transform.round()).toEqual(new Transform(
-        new Point(0.5, 0),
-        0.475,
-        Point.Unity(),
-      ));
+      expect(collection.state.movement.velocity).toEqual(collection.state.movement.velocity.zero());
+      expect(collection.transform.round()).toEqual(new Transform()
+        .scale(1, 1).rotate(0.475).translate(0.5, 0));
 
       // Check all the callbacks were called once
       expect(callbackAnim.mock.calls).toHaveLength(1);
