@@ -30,7 +30,7 @@ class ShapesCollection extends DiagramElementCollection {
     this._square.isTouchable = true;
     // $FlowFixMe
     this._square.isMovable = true;
-    this._square.maxVelocity = new g2.Transform().scale(0, 0).rotate(0).translate(0.5, 0.5);
+    this._square.maxVelocity = new g2.TransformLimit(0.5);
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -86,8 +86,7 @@ function testgl(id: string) {
     diagram.elements.state.movement.velocity = new g2.Transform()
       .scale(0, 0).rotate(0).translate(1, 0);
     // diagram.elements.moveState.previous = diagram.elements.transform;
-    diagram.elements.moveFreelyProperties.deceleration = new g2.Transform()
-      .scale(0, 0).rotate(0).translate(1, 0.1);
+    diagram.elements.moveFreelyProperties.deceleration = new g2.TransformLimit(0.1);
 
 
     // diagram.elements.animatePlan([phase1, phase2]);
