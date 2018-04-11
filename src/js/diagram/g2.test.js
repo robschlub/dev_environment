@@ -1071,42 +1071,56 @@ describe('g2 tests', () => {
       //   expect(v).toEqual(vExpected);
       // });
     });
+    // Calculation for deceleration:
+    // s = function(sx, sy, vx, vy, d, t) {
+    //   vel = sqrt(vx*vx+vy*vy);
+    //   vNext = vel-d*t;
+    //   angle = atan2(vy, vx);
+    //   vx = vNext * cos(angle);
+    //   vy = vNext * sin(angle);
+    //   dist = vel*t - 0.5*d*t*t;
+    //   x = sx + dist*cos(angle);
+    //   y = sy + dist*sin(angle);
+    //   return {vx, vy, x, y}
+    // }
     describe('Deceleration', () => {
       let d;
       let t;
       let v;
       let z;
       beforeEach(() => {
-        d = new g2.Transform().scale(1, 1).rotate(1).translate(1, 1);
+        d = new g2.TransformLimit(Math.sqrt(2), 1, Math.sqrt(2));
+        // Transform().scale(1, 1).rotate(1).translate(1, 1);
         v = new g2.Transform().scale(10, 10).rotate(10).translate(10, 10);
         t = new g2.Transform().scale(0, 0).rotate(0).translate(0, 0);
-        z = new g2.Transform().scale(5, 5).rotate(5).translate(5, 5);
+        z = new g2.TransformLimit(5, 5, 5);
+        // Transform().scale(5, 5).rotate(5).translate(5, 5);
       });
       test('Simple deceleration', () => {
         const n = t.decelerate(v, d, 1, z);     // next v and t
-        expect(n.v).toEqual(new g2.Transform()
+        expect(n.v.round()).toEqual(new g2.Transform()
           .scale(9, 9).rotate(9).translate(9, 9));
         expect(n.t).toEqual(new g2.Transform()
           .scale(9.5, 9.5).rotate(9.5).translate(9.5, 9.5));
       });
       test('Negatives in deceleration and velocity', () => {
-        d = new g2.Transform().scale(-1, 1).rotate(1).translate(-1, 1);
+        d = new g2.TransformLimit(Math.sqrt(2), 1, Math.sqrt(2));
         v = new g2.Transform().scale(10, -10).rotate(-10).translate(10, -10);
         const n = t.decelerate(v, d, 1, z);     // next v and t
-        expect(n.v).toEqual(new g2.Transform()
+        expect(n.v.round()).toEqual(new g2.Transform()
           .scale(9, -9).rotate(-9).translate(9, -9));
-        expect(n.t).toEqual(new g2.Transform()
+        expect(n.t.round()).toEqual(new g2.Transform()
           .scale(9.5, -9.5).rotate(-9.5).translate(9.5, -9.5));
       });
-      test('Zero thresholds', () => {
-        d = new g2.Transform().scale(-1, 1).rotate(1).translate(-1, 1);
+      test.only('Zero thresholds', () => {
+        d = new g2.TransformLimit(Math.sqrt(2), 1, Math.sqrt(2));
         v = new g2.Transform().scale(10, -10).rotate(-10).translate(10, -10);
-        z = new g2.Transform().scale(1, -5).rotate(5).translate(-1, 5);
-        const n = t.decelerate(v, d, 6, z);     // next v and t
-        expect(n.v).toEqual(new g2.Transform()
-          .scale(4, 0).rotate(0).translate(4, 0));
-        expect(n.t).toEqual(new g2.Transform()
-          .scale(42, -37.5).rotate(-37.5).translate(42, -37.5));
+        z = new g2.TransformLimit(5, 5, 5);
+        const n = t.decelerate(v, d, 10, z);     // next v and t
+        expect(n.v.round()).toEqual(new g2.Transform()
+          .scale(0, 0).rotate(0).translate(0, 0));
+        expect(n.t.round()).toEqual(new g2.Transform()
+          .scale(43.75, -43.75).rotate(-37.5).translate(43.75, -43.75));
       });
     });
   });

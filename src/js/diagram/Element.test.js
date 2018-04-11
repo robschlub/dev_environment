@@ -3,7 +3,7 @@ import {
   DiagramElementCollection,
   AnimationPhase,
 } from './Element';
-import { Point, Transform } from './g2';
+import { Point, Transform, TransformLimit } from './g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import Polygon from './vertexObjects/Polygon';
 import { linear, round } from './mathtools';
@@ -196,41 +196,42 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
+        element.maxVelocity = new TransformLimit(100);
+        element.moveFreelyProperties.zeroVelocityThreshold =
+          new TransformLimit(0.01);
         identity = m2.identity();
       });
       test('Deceleration', () => {
         const callback = jest.fn();
         const initialV = new Transform().scale(-2, 1).rotate(0).translate(10, 20);
-        // const initialV = new Transform(new Point(10, 20), 0, new Point(-2, 1));
-        const decel = new Transform().scale(1, 1).rotate(2).translate(1, 2);
-        // const decel = new Transform(new Point(1, 2), 2, new Point(1, 1));
+        const decel = new TransformLimit(1, 2, 1);
+
         element.state.movement.velocity = initialV;
         element.moveFreelyProperties.deceleration = decel;
 
         expect(element.state.isMovingFreely).toBe(false);
-
         element.startMovingFreely(callback);
         expect(element.state.isMovingFreely).toBe(true);
         element.draw(identity, 0);
-        expect(element.state.movement.velocity).toEqual(initialV);
+        expect(element.state.movement.velocity.round()).toEqual(initialV);
 
         element.draw(identity, 1);
         expect(element.state.isMovingFreely).toBe(true);
         let vel = element.state.movement.velocity;
-        expect(vel.t()).toEqual(new Point(9, 18));
-        expect(vel.s()).toEqual(new Point(-1, 0));
+        expect(vel.t().round(2)).toEqual(new Point(9.55, 19.11));
+        expect(vel.s().round(2)).toEqual(new Point(-1.11, 0.55));
         expect(vel.r()).toBe(0);
         expect(element.transform.round(2)).toEqual(new Transform()
-          .scale(-0.5, 1.5).rotate(0).translate(9.5, 19));
+          .scale(-0.55, 1.78).rotate(0).translate(9.78, 19.55));
 
         element.draw(identity, 2);
         vel = element.state.movement.velocity;
-        expect(vel.t()).toEqual(new Point(8, 16));
-        expect(vel.s()).toEqual(new Point(0, 0));
+        expect(vel.t().round(2)).toEqual(new Point(9.11, 18.21));
+        expect(vel.s().round(2)).toEqual(new Point(-0.21, 0.11));
         expect(vel.r()).toBe(0);
         expect(callback.mock.calls).toHaveLength(0);
 
-        element.draw(identity, 12);
+        element.draw(identity, 23);
         vel = element.state.movement.velocity;
         expect(vel).toEqual(vel.zero());
         expect(callback.mock.calls).toHaveLength(1);
@@ -238,11 +239,9 @@ describe('Animationa and Movement', () => {
       test('Zero and Max Threshold', () => {
         const initialV = new Transform()
           .scale(30, -30).rotate(10).translate(10, -10);
-        const decel = new Transform()
-          .scale(1, 1).rotate(1).translate(1, 1);
-        const zero = new Transform()
-          .scale(15, 15).rotate(5).translate(5, 5);
-        const max = zero.constant(20);
+        const decel = new TransformLimit(1);
+        const zero = new TransformLimit(15, 5, 5);
+        const max = new TransformLimit(20);
         element.state.movement.velocity = initialV;
         element.moveFreelyProperties.deceleration = decel;
         element.moveFreelyProperties.zeroVelocityThreshold = zero;
@@ -253,8 +252,8 @@ describe('Animationa and Movement', () => {
         element.startMovingFreely();
         let vel = element.state.movement.velocity;
 
-        expect(vel.t()).toEqual(new Point(10, -10));
-        expect(vel.s()).toEqual(new Point(20, -20));
+        expect(vel.t().round(2)).toEqual(new Point(10, -10));
+        expect(vel.s().round(2)).toEqual(new Point(14.14, -14.14));
         expect(vel.r()).toBe(10);
 
         element.draw(identity, 0);
@@ -264,16 +263,25 @@ describe('Animationa and Movement', () => {
         element.draw(identity, 5);
         vel = element.state.movement.velocity;
 
-        expect(vel.t()).toEqual(new Point(5, -5));
-        expect(vel.s()).toEqual(new Point(15, -15));
+        expect(vel.t().round(2)).toEqual(new Point(6.46, -6.46));
+        expect(vel.s().round(2)).toEqual(new Point(10.61, -10.61));
         expect(vel.r()).toBe(5);
 
         element.draw(identity, 5.1);
         vel = element.state.movement.velocity;
 
-        expect(vel.t()).toEqual(new Point(0, 0));
-        expect(vel.s()).toEqual(new Point(0, 0));
+        expect(vel.t().round(2)).toEqual(new Point(6.39, -6.39));
+        expect(vel.s().round(2)).toEqual(new Point(0, 0));
         expect(vel.r()).toBe(0);
+
+        element.draw(identity, 9.13);
+        vel = element.state.movement.velocity;
+        expect(vel.t().round(2)).toEqual(new Point(3.54, -3.54));
+
+        element.draw(identity, 9.15);
+        vel = element.state.movement.velocity;
+        expect(vel.t().round(2)).toEqual(new Point(0, 0));
+
         expect(element.state.isMovingFreely).toBe(false);
       });
     });
@@ -285,8 +293,10 @@ describe('Animationa and Movement', () => {
         element = new DiagramElementPrimative(
           square,
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
-          [0, 0, 1, 1],
+          [0, 0, 1, 1],        
         );
+        element.moveFreelyProperties.zeroVelocityThreshold = new TransformLimit(0.0001);
+        element.maxVelocity = new TransformLimit(100);
       });
       afterEach(() => {
         Date.now = RealDate;
@@ -299,7 +309,7 @@ describe('Animationa and Movement', () => {
           Date.now = () => 1000;
           element.moved(new Transform()
             .scale(1, 1).rotate(1).translate(1, -1));
-          expect(element.state.movement.velocity).toEqual(new Transform()
+          expect(element.state.movement.velocity.round()).toEqual(new Transform()
             .scale(0, 0).rotate(1).translate(1, -1));
         });
       });
@@ -469,10 +479,8 @@ describe('Animationa and Movement', () => {
       expect(collection.state.movement.velocity).toEqual(velocity);
 
       const moveFreeProps = collection.moveFreelyProperties;
-      moveFreeProps.deceleration =
-        new Transform().scale(1, 1).rotate(0.01).translate(1, 1);
-      moveFreeProps.zeroVelocityThreshold =
-        new Transform().scale(0.1, 0.1).rotate(0.05).translate(0.1, 0.1);
+      moveFreeProps.deceleration = new TransformLimit(1, 0.01, 1);
+      moveFreeProps.zeroVelocityThreshold = new TransformLimit(0.1, 0.05, 0.1);
 
       // Now at (0.5, 0), 0.1 and rotating with velocity 0.1 rads/s
       collection.startMovingFreely(callbackMoveFree);

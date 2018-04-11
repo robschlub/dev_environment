@@ -677,8 +677,8 @@ class TransformLimit {
   scale: number;
   constructor(
     scale: number = 0,
-    rotation: number = 0,
-    translation: number = 0,
+    rotation: number = scale,
+    translation: number = scale,
   ) {
     this.scale = scale;
     this.rotation = rotation;
@@ -1038,31 +1038,20 @@ class Transform {
       const t = this.order[i];
       const v = velocity.order[i];
       // const z = zeroThreshold.order[i];
-      if (t instanceof Translation && v instanceof Translation &&
-          d instanceof Translation && z instanceof Translation) {
+      if (t instanceof Translation && v instanceof Translation) {
         const { mag, angle } = v.toPolar();
-        const next = decelerate(0, mag, d.x, deltaTime, z.x);
-        // const nextV = next.v;
+        const next = decelerate(0, mag, d.translation, deltaTime, z.translation);
         nextV = nextV.translate(next.v * Math.cos(angle), next.v * Math.sin(angle));
-        // const nextDistance = next.p;
         nextT = nextT.translate(t.x + next.p * Math.cos(angle), t.y + next.p * Math.sin(angle));
-        // console.log(vel, nextV.t(), velAngle)
-
-        // const x = decelerate(t.x, v.x, d.x, deltaTime, z.x);
-        // const y = decelerate(t.y, v.y, d.y, deltaTime, z.y);
-        // nextV = nextV.translate(x.v, y.v);
-        // nextT = nextT.translate(x.p, y.p);
-      } else if (t instanceof Rotation && v instanceof Rotation &&
-                 d instanceof Rotation && z instanceof Rotation) {
-        const r = decelerate(t.r, v.r, d.r, deltaTime, z.r);
+      } else if (t instanceof Rotation && v instanceof Rotation) {
+        const r = decelerate(t.r, v.r, d.rotation, deltaTime, z.rotation);
         nextV = nextV.rotate(r.v);
         nextT = nextT.rotate(r.p);
-      } else if (t instanceof Scale && v instanceof Scale &&
-                 d instanceof Scale && z instanceof Scale) {
-        const x = decelerate(t.x, v.x, d.x, deltaTime, z.x);
-        const y = decelerate(t.y, v.y, d.y, deltaTime, z.y);
-        nextV = nextV.scale(x.v, y.v);
-        nextT = nextT.scale(x.p, y.p);
+      } else if (t instanceof Scale && v instanceof Scale) {
+        const { mag, angle } = v.toPolar();
+        const next = decelerate(0, mag, d.scale, deltaTime, z.scale);
+        nextV = nextV.scale(next.v * Math.cos(angle), next.v * Math.sin(angle));
+        nextT = nextT.scale(t.x + next.p * Math.cos(angle), t.y + next.p * Math.sin(angle));
       } else {
         return { v: new Transform(), t: new Transform() };
       }

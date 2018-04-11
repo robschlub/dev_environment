@@ -96,13 +96,13 @@ class DiagramElement {
 
   animationPlan: Array<AnimationPhase>;    // Animation plan
 
-  maxVelocity: g2.Transform;            // Maximum velocity allowed
+  maxVelocity: g2.TransformLimit;            // Maximum velocity allowed
 
   // When moving freely, the velocity decelerates until it reaches a threshold,
   // then it is considered 0 - at which point moving freely ends.
   moveFreelyProperties: {                 // Moving Freely properties
-    zeroVelocityThreshold: g2.Transform,  // Velocity considered 0
-    deceleration: g2.Transform,           // Deceleration
+    zeroVelocityThreshold: g2.TransformLimit,  // Velocity considered 0
+    deceleration: g2.TransformLimit,           // Deceleration
   }
 
   pulse: {
@@ -158,10 +158,11 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
-    this.maxVelocity = this.transform.constant(100);
+    // this.maxVelocity = this.transform.constant(100);
+    this.maxVelocity = new g2.TransformLimit(100, 100, 100);
     this.moveFreelyProperties = {
-      zeroVelocityThreshold: this.transform.constant(0.001),
-      deceleration: this.transform.constant(1),
+      zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
+      deceleration: new g2.TransformLimit(1, 1, 1),
     };
 
     this.pulse = {
