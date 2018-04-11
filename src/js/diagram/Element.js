@@ -163,12 +163,12 @@ class DiagramElement {
     this.animationPlan = [];
 
     this.move = {
-      maxTransform: this.transform.constant(100000),
-      minTransform: this.transform.constant(-100000),
-      maxVelocity: new g2.TransformLimit(100, 100, 100),
+      maxTransform: this.transform.constant(1),
+      minTransform: this.transform.constant(-1),
+      maxVelocity: new g2.TransformLimit(5, 5, 5),
       freely: {
         zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
-        deceleration: new g2.TransformLimit(1, 1, 1),
+        deceleration: new g2.TransformLimit(5, 5, 5),
       },
     };
     // this.move.freely = {
