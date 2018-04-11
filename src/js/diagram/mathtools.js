@@ -92,25 +92,24 @@ function clipMag(
   return result;
 }
 
-
-// function clipValue(
-//   value: number,
-//   minValue: ?number,
-//   maxValue: ?number,
-// ): number {
-//   let clipped = value;
-//   if (minValue) {
-//     if (value < minValue) {
-//       clipped = minValue;
-//     }
-//   }
-//   if (maxValue) {
-//     if (value > maxValue) {
-//       clipped = maxValue;
-//     }
-//   }
-//   return clipped;
-// }
+function clipValue(
+  value: number,
+  minValue: ?number,
+  maxValue: ?number,
+): number {
+  let clipped = value;
+  if (minValue) {
+    if (value < minValue) {
+      clipped = minValue;
+    }
+  }
+  if (maxValue) {
+    if (value > maxValue) {
+      clipped = maxValue;
+    }
+  }
+  return clipped;
+}
 
 const decelerate = function getPositionVelocityFromDecAndTime(
   position: number,
@@ -219,5 +218,6 @@ export {
   sinusoid,
   linear,
   clipMag,
+  clipValue,
 };
 
