@@ -62,7 +62,7 @@ class Diagram {
       if (element.isMovable) {
         this.beingMovedElements.push(element);
         element.startBeingMoved();
-        console.log(element.name)
+        // console.log(element.name)
       }
       // console.log("Touched: ", touchedElements[i].name);
     }

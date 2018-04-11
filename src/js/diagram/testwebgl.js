@@ -119,6 +119,7 @@ function testgl(id: string) {
         'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
         // $FlowFixMe
         'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
+        // $FlowFixMe
         'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
         'collection touch: ' + diagram.elements.isBeingTouched(clip);
         /* eslint-enable */

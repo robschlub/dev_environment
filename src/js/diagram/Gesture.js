@@ -13,8 +13,11 @@ class Gesture {
     this.diagram.canvas.onmousedown = this.mouseDownHandler.bind(this);
     this.diagram.canvas.onmouseup = this.mouseUpHandler.bind(this);
     this.diagram.canvas.onmousemove = this.mouseMoveHandler.bind(this);
-    // this.diagram.canvas.touchstart = this.touchDownHandler.bind(this);
-    // this.diagram.canvas.addEventListener('touchstart', this.touchStartHandler.bind(this), false);
+    // this.diagram.canvas.ontouchmove = this.touchMoveHandler.bind(this);
+    // this.diagram.canvas.touchstart = this.touchStartHandler.bind(this);
+    this.diagram.canvas.addEventListener('touchstart', this.touchStartHandler.bind(this), false);
+    this.diagram.canvas.addEventListener('touchend', this.touchStartHandler.bind(this), false);
+    this.diagram.canvas.addEventListener('touchmove', this.touchMoveHandler.bind(this), false);
 
     // document.ontouchend   = this.touch_end_handler.bind(this);
     // document.onmouseup    = this.mouse_up_handler.bind(this);
@@ -32,10 +35,10 @@ class Gesture {
     this.previousPoint = point;
     this.diagram.touchDownHandler(point);
   }
-  // touchStartHandler(event: TouchEvent) {
-  //   const touch = event.touches[0];
-  //   this.startHandler(new Point(touch.pageX, touch.pageY));
-  // }
+  touchStartHandler(event: TouchEvent) {
+    const touch = event.touches[0];
+    this.startHandler(new Point(touch.pageX, touch.pageY));
+  }
   mouseDownHandler(event: MouseEvent) {
     this.startHandler(new Point(event.pageX, event.pageY));
   }
@@ -48,10 +51,16 @@ class Gesture {
   mouseUpHandler() {
     this.endHandler();
   }
+  touchEndHandler() {
+    this.endHandler();
+  }
 
-
-  moveHandler(event: MouseEvent, point: Point) {
+  moveHandler(event: MouseEvent | TouchEvent, point: Point) {
+    // eslint-disable
+    // $FlowFixMe
+    // eslint-enable
     if (this.mouseDown) {
+      // console.log(`${this.mouseDown}, ${this.previousPoint}, ${point}`);
       const disableEvent = this.diagram.touchMoveHandler(this.previousPoint, point);
       if (disableEvent) {
         event.preventDefault();
@@ -59,10 +68,12 @@ class Gesture {
       this.previousPoint = point;
     }
   }
-  // touchMoveHandler(event: MouseEvent) {
-  //   let touch = event.touches[0];
-  //   this.moveHandler(event, new Point(touch.pageX, touch.pageY));
-  // }
+
+  touchMoveHandler(event: TouchEvent) {
+    const touch = event.touches[0];
+    // alert(touch.pageX);
+    this.moveHandler(event, new Point(touch.pageX, touch.pageY));
+  }
 
   mouseMoveHandler(event: MouseEvent) {
     this.moveHandler(event, new Point(event.pageX, event.pageY));
