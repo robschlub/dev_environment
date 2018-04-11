@@ -6,7 +6,7 @@
 //  - minAngleDiff
 //  - normAngle
 
-import { roundNum, decelerate } from './mathtools';
+import { roundNum, decelerate, clipMag } from './mathtools';
 import { Console } from '../tools/tools';
 import * as m2 from './m2';
 
@@ -515,42 +515,6 @@ function line(p1: Point, p2: Point) {
   return new Line(p1, p2);
 }
 
-// Clip a value to either max velocity, or 0 once under the minimum
-// threashold.
-//  * velocity: can be positive or negative
-//  * maxVelocity will clip velocity to:
-//      * |maxVelocity| if velocity > 0
-//      * -|maxVelocity| if velcity < 0
-//  * zeroThreshold will clip velocity to:
-//       * 0 if velocity is larger than -|zeroThreshold| and smaller than
-//         |zeroThreshold|.
-function clipValue(
-  value: number,
-  zeroThreshold: number,
-  maxValue: number,
-) {
-  let result = value;
-  let zeroT = zeroThreshold;
-  let maxV = maxValue;
-
-  if (zeroT < 0) {
-    zeroT = -zeroT;
-  }
-  if (maxV < 0) {
-    maxV = -maxV;
-  }
-  if (value >= -zeroT && value <= zeroT) {
-    result = 0;
-  }
-  if (value > maxV) {
-    result = maxV;
-  }
-  if (value < -maxV) {
-    result = -maxV;
-  }
-  return result;
-}
-
 class Rotation {
   r: number;
   constructor(angle) {
@@ -929,7 +893,7 @@ class Transform {
     return new Transform(order);
   }
 
-  clip(
+  clipMag(
     zeroThresholdTransform: TransformLimit,
     maxTransform: TransformLimit,
     vector: boolean = true,
@@ -955,30 +919,30 @@ class Transform {
       if (t instanceof Translation) {
         if (vector) {
           const { mag, angle } = t.toPolar();
-          const clipMag = clipValue(mag, z.translation, max.translation);
+          const clipM = clipMag(mag, z.translation, max.translation);
           order.push(new Translation(
-            clipMag * Math.cos(angle),
-            clipMag * Math.sin(angle),
+            clipM * Math.cos(angle),
+            clipM * Math.sin(angle),
           ));
         } else {
-          const x = clipValue(t.x, z.translation, max.translation);
-          const y = clipValue(t.y, z.translation, max.translation);
+          const x = clipMag(t.x, z.translation, max.translation);
+          const y = clipMag(t.y, z.translation, max.translation);
           order.push(new Translation(x, y));
         }
       } else if (t instanceof Rotation) {
-        const r = clipValue(t.r, z.rotation, max.rotation);
+        const r = clipMag(t.r, z.rotation, max.rotation);
         order.push(new Rotation(r));
       } else if (t instanceof Scale) {
         if (vector) {
           const { mag, angle } = t.toPolar();
-          const clipMag = clipValue(mag, z.scale, max.scale);
+          const clipM = clipMag(mag, z.scale, max.scale);
           order.push(new Scale(
-            clipMag * Math.cos(angle),
-            clipMag * Math.sin(angle),
+            clipM * Math.cos(angle),
+            clipM * Math.sin(angle),
           ));
         } else {
-          const x = clipValue(t.x, z.scale, max.scale);
-          const y = clipValue(t.y, z.scale, max.scale);
+          const x = clipMag(t.x, z.scale, max.scale);
+          const y = clipMag(t.y, z.scale, max.scale);
           order.push(new Scale(x, y));
         }
       }
@@ -1095,7 +1059,7 @@ class Transform {
     // if (!this.isSimilarTo(maxTransform)) {
     //   m = v.copy();
     // }
-    return v.clip(zeroThreshold, maxTransform);
+    return v.clipMag(zeroThreshold, maxTransform);
   }
 }
 
@@ -1108,7 +1072,6 @@ export {
   minAngleDiff,
   deg,
   normAngle,
-  clipValue,
   Transform,
   TransformLimit,
 };

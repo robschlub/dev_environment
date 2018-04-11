@@ -260,17 +260,17 @@ describe('Animationa and Movement', () => {
 
         expect(element.state.isMovingFreely).toBe(true);
 
-        element.draw(identity, 5);
+        element.draw(identity, 4.999);
+        vel = element.state.movement.velocity;
+
+        expect(vel.t().round(2)).toEqual(new Point(6.47, -6.47));
+        expect(vel.s().round(2)).toEqual(new Point(10.61, -10.61));
+        expect(vel.r()).toBe(5.001);
+
+        element.draw(identity, 5.001);
         vel = element.state.movement.velocity;
 
         expect(vel.t().round(2)).toEqual(new Point(6.46, -6.46));
-        expect(vel.s().round(2)).toEqual(new Point(10.61, -10.61));
-        expect(vel.r()).toBe(5);
-
-        element.draw(identity, 5.1);
-        vel = element.state.movement.velocity;
-
-        expect(vel.t().round(2)).toEqual(new Point(6.39, -6.39));
         expect(vel.s().round(2)).toEqual(new Point(0, 0));
         expect(vel.r()).toBe(0);
 

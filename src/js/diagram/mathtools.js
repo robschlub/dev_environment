@@ -22,38 +22,95 @@ const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
 };
 
 
-// clipValue clips a value to either 0 if it's small enough, or to a max value
-// Value, and maxValue are sign independent. e.g.
-//    * value, maxValue = 2, 1 => clips to 1
-//    * value, maxValue = -2, -1 => clips to -1
-//    * value, maxValue = -2, 1 => clips to -1
-//    * value, maxValue = 2, -1 => clips to 1
-function clipValue(
+// // clipValue clips a value to either 0 if it's small enough, or to a max value
+// // Value, and maxValue are sign independent. e.g.
+// //    * value, maxValue = 2, 1 => clips to 1
+// //    * value, maxValue = -2, -1 => clips to -1
+// //    * value, maxValue = -2, 1 => clips to -1
+// //    * value, maxValue = 2, -1 => clips to 1
+// function clipValue(
+//   value: number,
+//   zeroThreshold: number,
+//   maxValue: number = 0,
+// ) {
+//   let result = value;
+//   let zero = zeroThreshold;
+//   if (zero < 0) {
+//     zero = -zero;
+//   }
+//   if (value > -zero && value < zero) {
+//     return 0;
+//   }
+//   let max = maxValue;
+//   if (max < 0) {
+//     max = -max;
+//   }
+
+//   if (value > max) {
+//     result = max;
+//   }
+//   if (value < -max) {
+//     result = -max;
+//   }
+//   return result;
+// }
+
+
+// Clip a value to either max velocity, or 0 once under the minimum
+// threashold.
+//  * velocity: can be positive or negative
+//  * maxVelocity will clip velocity to:
+//      * |maxVelocity| if velocity > 0
+//      * -|maxVelocity| if velcity < 0
+//  * zeroThreshold will clip velocity to:
+//       * 0 if velocity is larger than -|zeroThreshold| and smaller than
+//         |zeroThreshold|.
+function clipMag(
   value: number,
   zeroThreshold: number,
-  maxValue: number = 0,
-) {
+  maxValue: number,
+): number {
   let result = value;
-  let zero = zeroThreshold;
-  if (zero < 0) {
-    zero = -zero;
-  }
-  if (value > -zero && value < zero) {
-    return 0;
-  }
-  let max = maxValue;
-  if (max < 0) {
-    max = -max;
-  }
+  let zeroT = zeroThreshold;
+  let maxV = maxValue;
 
-  if (value > max) {
-    result = max;
+  if (zeroT < 0) {
+    zeroT = -zeroT;
   }
-  if (value < -max) {
-    result = -max;
+  if (maxV < 0) {
+    maxV = -maxV;
+  }
+  if (value >= -zeroT && value <= zeroT) {
+    result = 0;
+  }
+  if (value > maxV) {
+    result = maxV;
+  }
+  if (value < -maxV) {
+    result = -maxV;
   }
   return result;
 }
+
+
+// function clipValue(
+//   value: number,
+//   minValue: ?number,
+//   maxValue: ?number,
+// ): number {
+//   let clipped = value;
+//   if (minValue) {
+//     if (value < minValue) {
+//       clipped = minValue;
+//     }
+//   }
+//   if (maxValue) {
+//     if (value > maxValue) {
+//       clipped = maxValue;
+//     }
+//   }
+//   return clipped;
+// }
 
 const decelerate = function getPositionVelocityFromDecAndTime(
   position: number,
@@ -64,7 +121,7 @@ const decelerate = function getPositionVelocityFromDecAndTime(
 ) {
   // If the velocity is currently 0, then no further deceleration can occur, so
   // return the current velocity and position
-  const v = clipValue(velocity, zeroThreshold, velocity);
+  const v = clipMag(velocity, zeroThreshold, velocity);
   if (v === 0) {
     return {
       p: position,
@@ -87,7 +144,7 @@ const decelerate = function getPositionVelocityFromDecAndTime(
   if (newSign !== sign) {
     newVelocity = 0;
   } else {
-    newVelocity = clipValue(newVelocity, zeroThreshold, newVelocity);
+    newVelocity = clipMag(newVelocity, zeroThreshold, newVelocity);
   }
 
   // If the new velocity is clipped, then we need to use the time to where the
@@ -161,6 +218,6 @@ export {
   easein,
   sinusoid,
   linear,
-  clipValue,
+  clipMag,
 };
 

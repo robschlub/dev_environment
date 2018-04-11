@@ -535,40 +535,6 @@ describe('g2 tests', () => {
       expect(round(res, 8)).toEqual(round(0 * Math.PI / 180, 8));
     });
   });
-  describe('Clip Velocity', () => {
-    test('No clipping positive velocity', () => {
-      expect(g2.clipValue(1, 0.1, 2)).toBe(1);
-    });
-    test('No clipping negative velocity', () => {
-      expect(g2.clipValue(-1, 0.1, 2)).toBe(-1);
-    });
-    test('Max clipping positive velocity', () => {
-      expect(g2.clipValue(3, 0.1, 2)).toBe(2);
-    });
-    test('Max clipping negative velocity', () => {
-      expect(g2.clipValue(-3, 0.1, 2)).toBe(-2);
-    });
-    test('Min clipping positive velocity', () => {
-      expect(g2.clipValue(0.05, 0.1, 2)).toBe(0);
-    });
-    test('Min clipping negative velocity', () => {
-      expect(g2.clipValue(-0.05, 0.1, 2)).toBe(0);
-    });
-
-    // Corner cases
-    test('On max clipping positive velocity', () => {
-      expect(g2.clipValue(2, 0.1, 2)).toBe(2);
-    });
-    test('On max clipping negative velocity', () => {
-      expect(g2.clipValue(-2, 0.1, 2)).toBe(-2);
-    });
-    test('On min clipping positive velocity', () => {
-      expect(g2.clipValue(0.1, 0.1, 2)).toBe(0);
-    });
-    test('On min clipping negative velocity', () => {
-      expect(g2.clipValue(-0.1, 0.1, 2)).toBe(0);
-    });
-  });
   describe('Transform', () => {
     test('Create rotation', () => {
       const t = new g2.Transform().rotate(Math.PI / 2);
@@ -937,7 +903,7 @@ describe('g2 tests', () => {
         .translate(0, 21);
       const clipZero = new g2.TransformLimit(0.1, 0.1, 0.1);
       const clipMax = new g2.TransformLimit(20, 20, 20);
-      let tc = t1.clip(clipZero, clipMax, false);
+      let tc = t1.clipMag(clipZero, clipMax, false);
       expect(tc.s(0)).toEqual(new g2.Point(20, 20));
       expect(tc.s(1)).toEqual(new g2.Point(0, 0));
       expect(tc.s(2)).toEqual(new g2.Point(20, 0));
@@ -951,7 +917,7 @@ describe('g2 tests', () => {
       expect(tc.t(3)).toEqual(new g2.Point(0, 20));
 
       // vector clipping
-      tc = t1.clip(clipZero, clipMax);
+      tc = t1.clipMag(clipZero, clipMax);
       expect(tc.s(0).round(2)).toEqual(new g2.Point(14.48, 13.79));
       expect(tc.s(1).round(2)).toEqual(new g2.Point(0.1, 0.05));
       expect(tc.s(2).round(2)).toEqual(new g2.Point(20, 0));

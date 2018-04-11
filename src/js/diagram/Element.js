@@ -97,6 +97,18 @@ class DiagramElement {
   animationPlan: Array<AnimationPhase>;    // Animation plan
 
   maxVelocity: g2.TransformLimit;            // Maximum velocity allowed
+  // moveProperties: {
+  //   max: {
+  //     translation: g2.Point | null,
+  //     rotation: number | null,
+  //     scale: g2.Point | null,
+  //   },
+  //   min: {
+  //     translation: g2.Point | null,
+  //     rotation: number | null,
+  //     scale: g2.Point | null,
+  //   },
+  // };
 
   // When moving freely, the velocity decelerates until it reaches a threshold,
   // then it is considered 0 - at which point moving freely ends.
@@ -158,8 +170,20 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
-    // this.maxVelocity = this.transform.constant(100);
+
     this.maxVelocity = new g2.TransformLimit(100, 100, 100);
+    // this.moveProperties = {
+    //   maxTransform: {
+    //     translation: new g2.Point(1, 1),
+    //     rotation: null,
+    //     scale: new g2.Point(1000, 1000),
+    //   },
+    //   minTransform: {
+    //     translation: new g2.Point(-1, -1),
+    //     rotation: null,
+    //     scale: new g2.Point(0, 0),
+    //   },
+    // };
     this.moveFreelyProperties = {
       zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
       deceleration: new g2.TransformLimit(1, 1, 1),
@@ -586,7 +610,7 @@ class DiagramElement {
     this.callback = callback;
     this.state.isMovingFreely = true;
     this.state.movement.previousTime = -1;
-    this.state.movement.velocity = this.state.movement.velocity.clip(
+    this.state.movement.velocity = this.state.movement.velocity.clipMag(
       this.moveFreelyProperties.zeroVelocityThreshold,
       this.maxVelocity,
     );

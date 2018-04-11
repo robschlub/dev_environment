@@ -1,4 +1,4 @@
-import { round, decelerate, easeinout, clipValue } from './mathtools';
+import { round, decelerate, easeinout, clipMag } from './mathtools';
 
 describe('Math tools testing', () => {
   // Rounding a value
@@ -26,7 +26,40 @@ describe('Math tools testing', () => {
   test('Round 1 element array', () => {
     expect(round([0.2])).toEqual([0.2]);
   });
+  describe('Clip Mag', () => {
+    test('No clipping positive value', () => {
+      expect(clipMag(1, 0.1, 2)).toBe(1);
+    });
+    test('No clipping negative value', () => {
+      expect(clipMag(-1, 0.1, 2)).toBe(-1);
+    });
+    test('Max clipping positive value', () => {
+      expect(clipMag(3, 0.1, 2)).toBe(2);
+    });
+    test('Max clipping negative value', () => {
+      expect(clipMag(-3, 0.1, 2)).toBe(-2);
+    });
+    test('Min clipping positive value', () => {
+      expect(clipMag(0.05, 0.1, 2)).toBe(0);
+    });
+    test('Min clipping negative value', () => {
+      expect(clipMag(-0.05, 0.1, 2)).toBe(0);
+    });
 
+    // Corner cases
+    test('On max clipping positive velocity', () => {
+      expect(clipMag(2, 0.1, 2)).toBe(2);
+    });
+    test('On max clipping negative velocity', () => {
+      expect(clipMag(-2, 0.1, 2)).toBe(-2);
+    });
+    test('On min clipping positive velocity', () => {
+      expect(clipMag(0.1, 0.1, 2)).toBe(0);
+    });
+    test('On min clipping negative velocity', () => {
+      expect(clipMag(-0.1, 0.1, 2)).toBe(0);
+    });
+  });
   describe('decelerate', () => {
     test('initial: 0m, 10m/s - dec 1m/s/s for 1s', () => {
       const p1 = 0;           // m
@@ -99,11 +132,11 @@ describe('Math tools testing', () => {
       });
       test('Threshold boundary', () => {
         const r = decelerate(p1, v1, dec, 5, zT);
-        expect(r).toEqual({ v: 5, p: 37.5 });
+        expect(r).toEqual({ v: 0, p: 37.5 });
       });
       test('Threshold boundary, negative v', () => {
         const r = decelerate(p1, -v1, dec, 5, zT);
-        expect(r).toEqual({ v: -5, p: -37.5 });
+        expect(r).toEqual({ v: 0, p: -37.5 });
       });
       test('Beyond Threshold', () => {
         const r = decelerate(p1, v1, dec, 10, zT);
@@ -142,46 +175,46 @@ describe('Math tools testing', () => {
   });
   describe('Clip Value', () => {
     test('No clipping positive', () => {
-      expect(clipValue(1, 0.1, 2)).toBe(1);
-      expect(clipValue(1, -0.1, -2)).toBe(1);
+      expect(clipMag(1, 0.1, 2)).toBe(1);
+      expect(clipMag(1, -0.1, -2)).toBe(1);
     });
     test('No clipping negative', () => {
-      expect(clipValue(-1, 0.1, 2)).toBe(-1);
-      expect(clipValue(-1, -0.1, -2)).toBe(-1);
+      expect(clipMag(-1, 0.1, 2)).toBe(-1);
+      expect(clipMag(-1, -0.1, -2)).toBe(-1);
     });
     test('Max clipping positive', () => {
-      expect(clipValue(3, 0.1, 2)).toBe(2);
-      expect(clipValue(3, -0.1, -2)).toBe(2);
+      expect(clipMag(3, 0.1, 2)).toBe(2);
+      expect(clipMag(3, -0.1, -2)).toBe(2);
     });
     test('Max clipping negative', () => {
-      expect(clipValue(-3, 0.1, 2)).toBe(-2);
-      expect(clipValue(-3, -0.1, -2)).toBe(-2);
+      expect(clipMag(-3, 0.1, 2)).toBe(-2);
+      expect(clipMag(-3, -0.1, -2)).toBe(-2);
     });
     test('Min clipping positive', () => {
-      expect(clipValue(0.05, 0.1, 2)).toBe(0);
-      expect(clipValue(0.05, -0.1, -2)).toBe(0);
+      expect(clipMag(0.05, 0.1, 2)).toBe(0);
+      expect(clipMag(0.05, -0.1, -2)).toBe(0);
     });
     test('Min clipping negative', () => {
-      expect(clipValue(-0.05, 0.1, 2)).toBe(0);
-      expect(clipValue(-0.05, -0.1, -2)).toBe(0);
+      expect(clipMag(-0.05, 0.1, 2)).toBe(0);
+      expect(clipMag(-0.05, -0.1, -2)).toBe(0);
     });
 
     // Corner cases
     test('On max clipping positive', () => {
-      expect(clipValue(2, 0.1, 2)).toBe(2);
-      expect(clipValue(2, -0.1, -2)).toBe(2);
+      expect(clipMag(2, 0.1, 2)).toBe(2);
+      expect(clipMag(2, -0.1, -2)).toBe(2);
     });
     test('On max clipping negative', () => {
-      expect(clipValue(-2, 0.1, 2)).toBe(-2);
-      expect(clipValue(-2, -0.1, -2)).toBe(-2);
+      expect(clipMag(-2, 0.1, 2)).toBe(-2);
+      expect(clipMag(-2, -0.1, -2)).toBe(-2);
     });
     test('On min clipping positive', () => {
-      expect(clipValue(0.1, 0.1, 2)).toBe(0.1);
-      expect(clipValue(0.1, -0.1, -2)).toBe(0.1);
+      expect(clipMag(0.1, 0.1, 2)).toBe(0);
+      expect(clipMag(0.1, -0.1, -2)).toBe(0);
     });
     test('On min clipping negative', () => {
-      expect(clipValue(-0.1, 0.1, 2)).toBe(-0.1);
-      expect(clipValue(-0.1, -0.1, -2)).toBe(-0.1);
+      expect(clipMag(-0.1, 0.1, 2)).toBe(0);
+      expect(clipMag(-0.1, -0.1, -2)).toBe(0);
     });
   });
 });
