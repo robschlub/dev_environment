@@ -568,10 +568,19 @@ class DiagramElement {
 
   moved(newTransform: g2.Transform): void {
     this.calcVelocity(newTransform);
-    this.transform = newTransform.copy();
+    this.setTransform(newTransform.copy());
+    // this.transform = newTransform.copy()
   }
 
   stopBeingMoved(): void {
+    const currentTime = Date.now() / 1000;
+    // Check wether last movement was a long time ago, if it was, then make
+    // velocity 0 as the user has stopped moving before releasing touch/click
+    if (this.state.movement.previousTime !== -1) {
+      if ((currentTime - this.state.movement.previousTime) > 0.05) {
+        this.state.movement.velocity = this.transform.zero();
+      }
+    }
     this.state.isBeingMoved = false;
     this.state.movement.previousTime = -1;
   }

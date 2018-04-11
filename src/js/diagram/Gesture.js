@@ -45,7 +45,7 @@ class Gesture {
 
   endHandler() {
     this.mouseDown = false;
-    this.diagram.touchUpHandler(this.previousPoint);
+    this.diagram.touchUpHandler();
   }
 
   mouseUpHandler() {

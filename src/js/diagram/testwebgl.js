@@ -19,7 +19,7 @@ class ShapesCollection extends DiagramElementCollection {
     const square = new Polygon(webgl, 0.5, 4, 4, 0.05, 0, new g2.Point(0, 0), 'square');
 
     // $FlowFixMe
-    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.05, 0, new g2.Point(0.5, 0.5), 'tri');
+    const triangle = new Polygon(webgl, 0.2, 3, 3, 0.05, 0, new g2.Point(0, 0), 'tri');
 
     this.add('square', new DiagramElementPrimative(
       square,
@@ -30,7 +30,7 @@ class ShapesCollection extends DiagramElementCollection {
     this._square.isTouchable = true;
     // $FlowFixMe
     this._square.isMovable = true;
-    this._square.maxVelocity = new g2.TransformLimit(0.5);
+    this._square.maxVelocity = new g2.TransformLimit(0.5, 0.5, 0.5);
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -40,6 +40,12 @@ class ShapesCollection extends DiagramElementCollection {
     this._triangle.isTouchable = true;
     // $FlowFixMe
     this._triangle.isMovable = true;
+    // $FlowFixMe
+    this._triangle.moveProperties.minTransform =
+      new g2.Transform().scale(0, 0).rotate(-10000).translate(-0.5, -0.5);
+    // $FlowFixMe
+    this._triangle.moveProperties.maxTransform =
+      new g2.Transform().scale(10, 10).rotate(-10000).translate(0.5, 0.5);
     this.isTouchable = true;
   }
 }

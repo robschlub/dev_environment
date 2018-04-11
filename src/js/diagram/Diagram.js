@@ -72,8 +72,7 @@ class Diagram {
     // }
   }
 
-  // eslint-disable-next-line
-  touchUpHandler(lastPagePoint: g2.Point) {
+  touchUpHandler() {
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       element.stopBeingMoved();
@@ -102,17 +101,29 @@ class Diagram {
     const previousClipPoint = this.screenToClip(previousPagePoint);
     const currentClipPoint = this.screenToClip(currentPagePoint);
     const delta = currentClipPoint.sub(previousClipPoint);
-
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       const currentTransform = element.transform.copy();
       const currentTranslation = currentTransform.t();
-      if (currentTranslation) {
+      if (currentTranslation && element.isBeingTouched(currentClipPoint)) {
         const newTranslation = currentTranslation.add(delta);
         currentTransform.updateTranslation(newTranslation);
         element.moved(currentTransform);
       }
     }
+    // this.moveElements(previousClipPoint, currentClipPoint);
+    // const delta = currentClipPoint.sub(previousClipPoint);
+
+    // for (let i = 0; i < this.beingMovedElements.length; i += 1) {
+    //   const element = this.beingMovedElements[i];
+    //   const currentTransform = element.transform.copy();
+    //   const currentTranslation = currentTransform.t();
+    //   if (currentTranslation && element.isBeingTouched(currentClipPoint)) {
+    //     const newTranslation = currentTranslation.add(delta);
+    //     currentTransform.updateTranslation(newTranslation);
+    //     element.moved(currentTransform);
+    //   }
+    // }
     this.globalAnimation.animateNextFrame();
     return true;
   }
