@@ -196,7 +196,7 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
-        element.maxVelocity = new TransformLimit(100, 100, 100);
+        element.move.maxVelocity = new TransformLimit(100, 100, 100);
         element.move.freely.zeroVelocityThreshold =
           new TransformLimit(0.01, 0.01, 0.01);
         identity = m2.identity();
@@ -245,7 +245,7 @@ describe('Animationa and Movement', () => {
         element.state.movement.velocity = initialV;
         element.move.freely.deceleration = decel;
         element.move.freely.zeroVelocityThreshold = zero;
-        element.maxVelocity = max;
+        element.move.maxVelocity = max;
 
         expect(element.state.isMovingFreely).toBe(false);
 
@@ -297,7 +297,7 @@ describe('Animationa and Movement', () => {
         );
         element.move.freely.zeroVelocityThreshold =
           new TransformLimit(0.0001, 0.0001, 0.0001);
-        element.maxVelocity = new TransformLimit(100, 100, 100);
+        element.move.maxVelocity = new TransformLimit(100, 100, 100);
       });
       afterEach(() => {
         Date.now = RealDate;

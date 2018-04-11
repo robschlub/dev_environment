@@ -30,13 +30,13 @@ class ShapesCollection extends DiagramElementCollection {
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
-    sq.maxVelocity = new g2.TransformLimit(0.5, 0.5, 0.5);
+    sq.move.maxVelocity = new g2.TransformLimit(0.5, 0.5, 0.5);
     sq.move.minTransform =
       new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
     sq.move.maxTransform =
       new g2.Transform().scale(10, 10).rotate(10000).translate(0.9, 0.9);
-    sq.maxVelocity = new g2.TransformLimit(5, 5, 5);
-    sq.deceleration = new g2.TransformLimit(2, 2, 2);
+    sq.move.maxVelocity = new g2.TransformLimit(5, 5, 5);
+    sq.move.freely.deceleration = new g2.TransformLimit(5, 5, 5);
 
     this.add('triangle', new DiagramElementPrimative(
       triangle,
@@ -51,8 +51,8 @@ class ShapesCollection extends DiagramElementCollection {
       new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
     tri.move.maxTransform =
       new g2.Transform().scale(10, 10).rotate(10000).translate(0.9, 0.9);
-    tri.maxVelocity = new g2.TransformLimit(5, 5, 5);
-    tri.deceleration = new g2.TransformLimit(2, 2, 2);
+    tri.move.maxVelocity = new g2.TransformLimit(5, 5, 5);
+    tri.move.freely.deceleration = new g2.TransformLimit(5, 5, 5);
 
     this.isTouchable = true;
   }
