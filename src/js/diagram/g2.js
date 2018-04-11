@@ -1102,11 +1102,6 @@ class Transform {
       return this.zero();
     }
 
-    if (deltaTime === 0) {
-      console.log("Ack!!!!!!!")
-      return this.copy();
-    }
-
     const deltaTransform = this.sub(previousTransform);
     for (let i = 0; i < deltaTransform.order.length; i += 1) {
       const t = deltaTransform.order[i];

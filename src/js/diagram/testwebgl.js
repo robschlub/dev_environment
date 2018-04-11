@@ -31,9 +31,9 @@ class ShapesCollection extends DiagramElementCollection {
     sq.isTouchable = true;
     sq.isMovable = true;
     sq.maxVelocity = new g2.TransformLimit(0.5, 0.5, 0.5);
-    sq.moveProperties.minTransform =
+    sq.move.minTransform =
       new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
-    sq.moveProperties.maxTransform =
+    sq.move.maxTransform =
       new g2.Transform().scale(10, 10).rotate(10000).translate(0.9, 0.9);
     sq.maxVelocity = new g2.TransformLimit(5, 5, 5);
     sq.deceleration = new g2.TransformLimit(2, 2, 2);
@@ -47,9 +47,9 @@ class ShapesCollection extends DiagramElementCollection {
     const tri = this._triangle;
     tri.isTouchable = true;
     tri.isMovable = true;
-    tri.moveProperties.minTransform =
+    tri.move.minTransform =
       new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
-    tri.moveProperties.maxTransform =
+    tri.move.maxTransform =
       new g2.Transform().scale(10, 10).rotate(10000).translate(0.9, 0.9);
     tri.maxVelocity = new g2.TransformLimit(5, 5, 5);
     tri.deceleration = new g2.TransformLimit(2, 2, 2);
@@ -100,7 +100,7 @@ function testgl(id: string) {
     diagram.elements.state.movement.velocity = new g2.Transform()
       .scale(0, 0).rotate(0).translate(1, 0);
     // diagram.elements.moveState.previous = diagram.elements.transform;
-    diagram.elements.moveProperties.moveFreely.deceleration = new g2.TransformLimit(0.1, 0.1, 0.1);
+    diagram.elements.move.freely.deceleration = new g2.TransformLimit(0.1, 0.1, 0.1);
 
 
     // diagram.elements.animatePlan([phase1, phase2]);

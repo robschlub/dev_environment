@@ -97,12 +97,12 @@ class DiagramElement {
   animationPlan: Array<AnimationPhase>;    // Animation plan
 
   maxVelocity: g2.TransformLimit;            // Maximum velocity allowed
-  moveProperties: {
+  move: {
     maxTransform: g2.Transform,
     minTransform: g2.Transform,
     // When moving freely, the velocity decelerates until it reaches a threshold,
   // then it is considered 0 - at which point moving freely ends.
-    moveFreely: {                 // Moving Freely properties
+    freely: {                 // Moving Freely properties
       zeroVelocityThreshold: g2.TransformLimit,  // Velocity considered 0
       deceleration: g2.TransformLimit,           // Deceleration
     }
@@ -163,15 +163,15 @@ class DiagramElement {
     this.animationPlan = [];
 
     this.maxVelocity = new g2.TransformLimit(100, 100, 100);
-    this.moveProperties = {
+    this.move = {
       maxTransform: this.transform.constant(100000),
       minTransform: this.transform.constant(-100000),
-      moveFreely: {
+      freely: {
         zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
         deceleration: new g2.TransformLimit(1, 1, 1),
       },
     };
-    // this.moveProperties.moveFreely = {
+    // this.move.freely = {
     //   zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
     //   deceleration: new g2.TransformLimit(1, 1, 1),
     // };
@@ -255,8 +255,8 @@ class DiagramElement {
   // connected that is tied to an update of the transform.
   setTransform(transform: g2.Transform): void {
     this.transform = transform.copy().clip(
-      this.moveProperties.minTransform,
-      this.moveProperties.maxTransform,
+      this.move.minTransform,
+      this.move.maxTransform,
     );
     if (this.setTransformCallback) {
       this.setTransformCallback(this.transform);
@@ -273,7 +273,7 @@ class DiagramElement {
   //
   // If moving freely, this method will set the next velocity and transform
   // based on the current velocity, current transform, elapsed time,
-  // deceleration (in moveFreelyProperties) and zeroVelocityThreshold.
+  // deceleration (in freelyProperties) and zeroVelocityThreshold.
   // Once the velocity goes to zero, this metho will stop the element moving
   // freely.
   setNextTransform(now: number): void {
@@ -380,9 +380,9 @@ class DiagramElement {
   decelerate(deltaTime: number): Object {
     const next = this.transform.decelerate(
       this.state.movement.velocity,
-      this.moveProperties.moveFreely.deceleration,
+      this.move.freely.deceleration,
       deltaTime,
-      this.moveProperties.moveFreely.zeroVelocityThreshold,
+      this.move.freely.zeroVelocityThreshold,
     );
     // const velocity = this.state.movement.velocity.copy();
     // let result;
@@ -391,9 +391,9 @@ class DiagramElement {
     // result = tools.decelerate(
     //   this.transform.rotation,
     //   velocity.rotation,
-    //   this.moveProperties.moveFreely.deceleration.rotation,
+    //   this.move.freely.deceleration.rotation,
     //   deltaTime,
-    //   this.moveProperties.moveFreely.zeroVelocityThreshold.rotation,
+    //   this.move.freely.zeroVelocityThreshold.rotation,
     // );
     // v.rotation = result.v;
     // t.rotation = result.p;
@@ -401,9 +401,9 @@ class DiagramElement {
     // result = tools.decelerate(
     //   this.transform.translation.x,
     //   velocity.translation.x,
-    //   this.moveProperties.moveFreely.deceleration.translation.x,
+    //   this.move.freely.deceleration.translation.x,
     //   deltaTime,
-    //   this.moveProperties.moveFreely.zeroVelocityThreshold.translation.x,
+    //   this.move.freely.zeroVelocityThreshold.translation.x,
     // );
     // v.translation.x = result.v;
     // t.translation.x = result.p;
@@ -411,9 +411,9 @@ class DiagramElement {
     // result = tools.decelerate(
     //   this.transform.translation.y,
     //   velocity.translation.y,
-    //   this.moveProperties.moveFreely.deceleration.translation.y,
+    //   this.move.freely.deceleration.translation.y,
     //   deltaTime,
-    //   this.moveProperties.moveFreely.zeroVelocityThreshold.translation.y,
+    //   this.move.freely.zeroVelocityThreshold.translation.y,
     // );
     // v.translation.y = result.v;
     // t.translation.y = result.p;
@@ -421,9 +421,9 @@ class DiagramElement {
     // result = tools.decelerate(
     //   this.transform.scale.x,
     //   velocity.scale.x,
-    //   this.moveProperties.moveFreely.deceleration.scale.x,
+    //   this.move.freely.deceleration.scale.x,
     //   deltaTime,
-    //   this.moveProperties.moveFreely.zeroVelocityThreshold.scale.x,
+    //   this.move.freely.zeroVelocityThreshold.scale.x,
     // );
     // v.scale.x = result.v;
     // t.scale.x = result.p;
@@ -431,9 +431,9 @@ class DiagramElement {
     // result = tools.decelerate(
     //   this.transform.scale.y,
     //   velocity.scale.y,
-    //   this.moveProperties.moveFreely.deceleration.scale.y,
+    //   this.move.freely.deceleration.scale.y,
     //   deltaTime,
-    //   this.moveProperties.moveFreely.zeroVelocityThreshold.scale.y,
+    //   this.move.freely.zeroVelocityThreshold.scale.y,
     // );
     // v.scale.y = result.v;
     // t.scale.y = result.p;
@@ -600,7 +600,7 @@ class DiagramElement {
     this.state.movement.velocity = newTransform.velocity(
       this.transform,
       deltaTime,
-      this.moveProperties.moveFreely.zeroVelocityThreshold,
+      this.move.freely.zeroVelocityThreshold,
       this.maxVelocity,
     );
     this.state.movement.previousTime = currentTime;
@@ -614,7 +614,7 @@ class DiagramElement {
     this.state.isMovingFreely = true;
     this.state.movement.previousTime = -1;
     this.state.movement.velocity = this.state.movement.velocity.clipMag(
-      this.moveProperties.moveFreely.zeroVelocityThreshold,
+      this.move.freely.zeroVelocityThreshold,
       this.maxVelocity,
     );
   }
