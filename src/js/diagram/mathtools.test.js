@@ -148,8 +148,8 @@ describe('Math tools testing', () => {
       expect(clipValue(-1, -1.5, -0.5)).toBe(-1);
     });
     test('Clipping', () => {
-      expect(clipValue( 1, 0.5, 0.6)).toBe(0.6);
-      expect(clipValue( 1, -0.5, 0.6)).toBe(0.6);
+      expect(clipValue(1, 0.5, 0.6)).toBe(0.6);
+      expect(clipValue(1, -0.5, 0.6)).toBe(0.6);
       expect(clipValue(-1, 0.5, 1.5)).toBe(0.5);
       expect(clipValue(-1, -0.5, 1.5)).toBe(-0.5);
       expect(clipValue(1, -1, 0)).toBe(0);

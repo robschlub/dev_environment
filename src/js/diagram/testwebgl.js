@@ -2,7 +2,7 @@
 import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 // import * as m2 from './m2';
-import { Console } from '../tools/tools';
+// import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
 // import GlobalVariables from './globals';
 import Diagram from './Diagram';

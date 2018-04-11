@@ -10,12 +10,12 @@ import { roundNum, decelerate, clipMag, clipValue } from './mathtools';
 import { Console } from '../tools/tools';
 import * as m2 from './m2';
 
-function nullDefaultNum(input: number | null, defaultValue: number): number {
-  if (input === null) {
-    return defaultValue;
-  }
-  return input;
-}
+// function nullDefaultNum(input: number | null, defaultValue: number): number {
+//   if (input === null) {
+//     return defaultValue;
+//   }
+//   return input;
+// }
 
 // export type PointType = {
 //   x: number;
