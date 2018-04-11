@@ -196,9 +196,9 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
-        element.maxVelocity = new TransformLimit(100);
+        element.maxVelocity = new TransformLimit(100, 100, 100);
         element.moveFreelyProperties.zeroVelocityThreshold =
-          new TransformLimit(0.01);
+          new TransformLimit(0.01, 0.01, 0.01);
         identity = m2.identity();
       });
       test('Deceleration', () => {
@@ -239,9 +239,9 @@ describe('Animationa and Movement', () => {
       test('Zero and Max Threshold', () => {
         const initialV = new Transform()
           .scale(30, -30).rotate(10).translate(10, -10);
-        const decel = new TransformLimit(1);
+        const decel = new TransformLimit(1, 1, 1);
         const zero = new TransformLimit(15, 5, 5);
-        const max = new TransformLimit(20);
+        const max = new TransformLimit(20, 20, 20);
         element.state.movement.velocity = initialV;
         element.moveFreelyProperties.deceleration = decel;
         element.moveFreelyProperties.zeroVelocityThreshold = zero;
@@ -293,10 +293,11 @@ describe('Animationa and Movement', () => {
         element = new DiagramElementPrimative(
           square,
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
-          [0, 0, 1, 1],        
+          [0, 0, 1, 1],
         );
-        element.moveFreelyProperties.zeroVelocityThreshold = new TransformLimit(0.0001);
-        element.maxVelocity = new TransformLimit(100);
+        element.moveFreelyProperties.zeroVelocityThreshold =
+          new TransformLimit(0.0001, 0.0001, 0.0001);
+        element.maxVelocity = new TransformLimit(100, 100, 100);
       });
       afterEach(() => {
         Date.now = RealDate;

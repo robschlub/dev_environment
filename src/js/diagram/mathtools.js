@@ -67,15 +67,21 @@ const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
 //         |zeroThreshold|.
 function clipMag(
   value: number,
-  zeroThreshold: number,
-  maxValue: number,
+  zeroThreshold: number | null,
+  maxValue: number | null,
 ): number {
   let result = value;
   let zeroT = zeroThreshold;
   let maxV = maxValue;
 
+  if (zeroT === null) {
+    zeroT = 0;
+  }
   if (zeroT < 0) {
     zeroT = -zeroT;
+  }
+  if (maxV === null) {
+    return result;
   }
   if (maxV < 0) {
     maxV = -maxV;
@@ -115,13 +121,21 @@ function clipValue(
 const decelerate = function getPositionVelocityFromDecAndTime(
   position: number,
   velocity: number,
-  magDeceleration: number,
+  magDeceleration: number | null,
   time: number,
-  zeroThreshold: number = 0,
+  zeroThreshold: number | null,
 ) {
+  let zeroT: number = 0;
+  if (zeroThreshold !== null) {
+    zeroT = zeroThreshold;
+  }
+  let decel: number = 0;
+  if (magDeceleration !== null) {
+    decel = magDeceleration;
+  }
   // If the velocity is currently 0, then no further deceleration can occur, so
   // return the current velocity and position
-  const v = clipMag(velocity, zeroThreshold, velocity);
+  const v = clipMag(velocity, zeroT, velocity);
   if (v === 0) {
     return {
       p: position,
@@ -129,8 +143,8 @@ const decelerate = function getPositionVelocityFromDecAndTime(
     };
   }
 
-  let d = magDeceleration;
-  if (magDeceleration < 0) {
+  let d = decel;
+  if (decel < 0) {
     d = -d;
   }
   // If there is some initial velocity, then calc its sign and
@@ -144,7 +158,7 @@ const decelerate = function getPositionVelocityFromDecAndTime(
   if (newSign !== sign) {
     newVelocity = 0;
   } else {
-    newVelocity = clipMag(newVelocity, zeroThreshold, newVelocity);
+    newVelocity = clipMag(newVelocity, zeroT, newVelocity);
   }
 
   // If the new velocity is clipped, then we need to use the time to where the
@@ -153,7 +167,7 @@ const decelerate = function getPositionVelocityFromDecAndTime(
   // Therefore, if v_new = zeroT: t = (zeroT - vi)/a
   let t = time;
   if (newVelocity === 0) {
-    let z = zeroThreshold;
+    let z = zeroT;
     const zSign = z / Math.abs(z);
     if (zSign !== sign) {
       z = -z;

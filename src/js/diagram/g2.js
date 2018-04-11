@@ -10,6 +10,13 @@ import { roundNum, decelerate, clipMag, clipValue } from './mathtools';
 import { Console } from '../tools/tools';
 import * as m2 from './m2';
 
+function nullDefaultNum(input: number | null, defaultValue: number): number {
+  if (input === null) {
+    return defaultValue;
+  }
+  return input;
+}
+
 // export type PointType = {
 //   x: number;
 //   y: number;
@@ -644,7 +651,7 @@ class Scale extends Point {
     );
   }
 
-  add(scaleToAdd: Scale | Point= new Scale(0, 0)): Scale {
+  add(scaleToAdd: Scale | Point = new Scale(0, 0)): Scale {
     return new Scale(
       this.x + scaleToAdd.x,
       this.y + scaleToAdd.y,
@@ -660,13 +667,13 @@ class Scale extends Point {
 }
 
 class TransformLimit {
-  rotation: number;
-  translation: number;
-  scale: number;
+  rotation: number | null;
+  translation: number | null;
+  scale: number | null;
   constructor(
-    scale: number = 0,
-    rotation: number = scale,
-    translation: number = scale,
+    scale: number | null,
+    rotation: number | null,
+    translation: number | null,
   ) {
     this.scale = scale;
     this.rotation = rotation;
@@ -916,6 +923,13 @@ class Transform {
     }
     return new Transform(order);
   }
+
+  // clip(
+  //   minTransform: TransformLimit,
+  //   maxTransform: TransformLimit,
+  // ) {
+
+  // }
 
   clipMag(
     zeroThresholdTransform: TransformLimit,
