@@ -924,12 +924,38 @@ class Transform {
     return new Transform(order);
   }
 
-  // clip(
-  //   minTransform: TransformLimit,
-  //   maxTransform: TransformLimit,
-  // ) {
-
-  // }
+  clip(
+    minTransform: Transform,
+    maxTransform: Transform,
+  ) {
+    if (!this.isSimilarTo(minTransform) || !this.isSimilarTo(maxTransform)) {
+      return this.copy();
+    }
+    const order = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const t = this.order[i];
+      const min = minTransform.order[i];
+      const max = maxTransform.order[i];
+      if (t instanceof Translation &&
+          min instanceof Translation &&
+          max instanceof Translation) {
+        const x = clipValue(t.x, min.x, max.x);
+        const y = clipValue(t.y, min.y, max.y);
+        order.push(new Translation(x, y));
+      } else if (t instanceof Rotation &&
+                 min instanceof Rotation &&
+                 max instanceof Rotation) {
+        order.push(new Rotation(clipValue(t.r, min.r, max.r)));
+      } else if (t instanceof Scale &&
+                 min instanceof Scale &&
+                 max instanceof Scale) {
+        const x = clipValue(t.x, min.x, max.x);
+        const y = clipValue(t.y, min.y, max.y);
+        order.push(new Scale(x, y));
+      }
+    }
+    return new Transform(order);
+  }
 
   clipMag(
     zeroThresholdTransform: TransformLimit,

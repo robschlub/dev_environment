@@ -1166,5 +1166,45 @@ describe('g2 tests', () => {
           .scale(43.75, -43.75).rotate(-37.5).translate(43.75, -43.75));
       });
     });
+    describe('Clipping', () => {
+      test('Not clipped', () => {
+        let min;
+        let max;
+        let t0;
+        t0 = new Transform().scale(1, 1).rotate(1).translate(1, 1);
+        min = new Transform().scale(0, 0).rotate(0).translate(-2, -2);
+        max = new Transform().scale(2, 2).rotate(2).translate(2, 2);
+        expect(t0.clip(min, max)).toEqual(t0);
+
+        t0 = new Transform().scale(-1, -1).rotate(-1).translate(-1, -1);
+        min = new Transform().scale(-2, -2).rotate(-2).translate(-2, -2);
+        max = new Transform().scale(0, 2).rotate(2).translate(0, 2);
+        expect(t0.clip(min, max)).toEqual(t0);
+
+        t0 = new Transform().scale(-1, 1).rotate(-1).translate(-1, 1);
+        min = new Transform().scale(-1, -2).rotate(-1).translate(-1, -2);
+        max = new Transform().scale(0, 1).rotate(2).translate(0, 1);
+        expect(t0.clip(min, max)).toEqual(t0);
+      });
+      test('Clipped', () => {
+        let min;
+        let max;
+        let t0;
+        let t1;
+        // Clip max
+        t0 = new Transform().scale(1, 1).rotate(1).translate(1, 1);
+        min = new Transform().scale(-1, 0).rotate(0).translate(-2, -2);
+        max = new Transform().scale(0, 0.5).rotate(0.5).translate(0, -1.5);
+        t1 = new Transform().scale(0, 0.5).rotate(0.5).translate(0, -1.5);
+        expect(t0.clip(min, max)).toEqual(t1);
+
+        // Clip min
+        t0 = new Transform().scale(1, -1).rotate(1).translate(1, -1);
+        min = new Transform().scale(1.5, 0).rotate(2).translate(1.5, 0);
+        max = new Transform().scale(2, 0.5).rotate(3).translate(2, 0.5);
+        t1 = new Transform().scale(1.5, 0).rotate(2).translate(1.5, 0);
+        expect(t0.clip(min, max)).toEqual(t1);
+      });
+    });
   });
 });
