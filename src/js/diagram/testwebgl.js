@@ -27,25 +27,33 @@ class ShapesCollection extends DiagramElementCollection {
       [0, 0, 1, 1],
     ));
     // $FlowFixMe
-    this._square.isTouchable = true;
-    // $FlowFixMe
-    this._square.isMovable = true;
-    this._square.maxVelocity = new g2.TransformLimit(0.5, 0.5, 0.5);
+    const sq = this._square;
+    sq.isTouchable = true;
+    sq.isMovable = true;
+    sq.maxVelocity = new g2.TransformLimit(0.5, 0.5, 0.5);
+    sq.moveProperties.minTransform =
+      new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
+    sq.moveProperties.maxTransform =
+      new g2.Transform().scale(10, 10).rotate(10000).translate(0.9, 0.9);
+    sq.maxVelocity = new g2.TransformLimit(5, 5, 5);
+    sq.deceleration = new g2.TransformLimit(2, 2, 2);
+
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
       [0, 1, 0, 1],
     ));
     // $FlowFixMe
-    this._triangle.isTouchable = true;
-    // $FlowFixMe
-    this._triangle.isMovable = true;
-    // $FlowFixMe
-    this._triangle.moveProperties.minTransform =
-      new g2.Transform().scale(0, 0).rotate(-10000).translate(-0.5, -0.5);
-    // $FlowFixMe
-    this._triangle.moveProperties.maxTransform =
-      new g2.Transform().scale(10, 10).rotate(-10000).translate(0.5, 0.5);
+    const tri = this._triangle;
+    tri.isTouchable = true;
+    tri.isMovable = true;
+    tri.moveProperties.minTransform =
+      new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
+    tri.moveProperties.maxTransform =
+      new g2.Transform().scale(10, 10).rotate(10000).translate(0.9, 0.9);
+    tri.maxVelocity = new g2.TransformLimit(5, 5, 5);
+    tri.deceleration = new g2.TransformLimit(2, 2, 2);
+
     this.isTouchable = true;
   }
 }
@@ -129,8 +137,8 @@ function testgl(id: string) {
         'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
         'collection touch: ' + diagram.elements.isBeingTouched(clip);
         /* eslint-enable */
-        Console(str);
-        Console(event);
+        // Console(str);
+        // Console(event);
       };
       // const globals = new GlobalVariables();
       // shapes.animateRotationTo(1, -1, 10);

@@ -53,23 +53,14 @@ class Diagram {
   touchDownHandler(pagePoint: g2.Point) {
     const clipPoint = this.screenToClip(pagePoint);
     const touchedElements = this.elements.getTouched(clipPoint);
-    // let outstr = '';
     this.beingMovedElements = [];
     for (let i = 0; i < touchedElements.length; i += 1) {
-      // eslint-disable-next-line
-      // outstr = `${outstr}${touchedElements[i].name}, `;
       const element = touchedElements[i];
       if (element.isMovable) {
         this.beingMovedElements.push(element);
         element.startBeingMoved();
-        // console.log(element.name)
       }
-      // console.log("Touched: ", touchedElements[i].name);
     }
-    // if (touchedElements.length > 1) {
-    //   // eslint-disable-next-line
-    //   alert(outstr);
-    // }
   }
 
   touchUpHandler() {
@@ -79,19 +70,6 @@ class Diagram {
       element.startMovingFreely();
     }
     this.beingMovedElements = [];
-    // const clipPoint = this.screenToClip(lastPagePoint);
-    // const touchedElements = this.elements.getTouched(clipPoint);
-    // let outstr = '';
-    // for (let i = 0; i < touchedElements.length; i += 1) {
-    //   // eslint-disable-next-line
-    //   outstr = `${outstr}${touchedElements[i].name}, `;
-    //   // console.log("Touched: ", touchedElements[i].name);
-    // }
-
-    // if (touchedElements.length > 1) {
-    //   // eslint-disable-next-line
-    //   alert(outstr);
-    // }
   }
 
   touchMoveHandler(previousPagePoint: g2.Point, currentPagePoint: g2.Point) {
@@ -105,25 +83,12 @@ class Diagram {
       const element = this.beingMovedElements[i];
       const currentTransform = element.transform.copy();
       const currentTranslation = currentTransform.t();
-      if (currentTranslation && element.isBeingTouched(currentClipPoint)) {
+      if (currentTranslation && element.isBeingTouched(previousClipPoint)) {
         const newTranslation = currentTranslation.add(delta);
         currentTransform.updateTranslation(newTranslation);
         element.moved(currentTransform);
       }
     }
-    // this.moveElements(previousClipPoint, currentClipPoint);
-    // const delta = currentClipPoint.sub(previousClipPoint);
-
-    // for (let i = 0; i < this.beingMovedElements.length; i += 1) {
-    //   const element = this.beingMovedElements[i];
-    //   const currentTransform = element.transform.copy();
-    //   const currentTranslation = currentTransform.t();
-    //   if (currentTranslation && element.isBeingTouched(currentClipPoint)) {
-    //     const newTranslation = currentTranslation.add(delta);
-    //     currentTransform.updateTranslation(newTranslation);
-    //     element.moved(currentTransform);
-    //   }
-    // }
     this.globalAnimation.animateNextFrame();
     return true;
   }

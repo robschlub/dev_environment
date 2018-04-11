@@ -593,6 +593,10 @@ class DiagramElement {
     }
     const deltaTime = currentTime - this.state.movement.previousTime;
 
+    // If the time is too small, weird calculations may happen
+    if (deltaTime < 0.0001) {
+      return;
+    }
     this.state.movement.velocity = newTransform.velocity(
       this.transform,
       deltaTime,
