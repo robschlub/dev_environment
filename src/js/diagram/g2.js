@@ -6,7 +6,7 @@
 //  - minAngleDiff
 //  - normAngle
 
-import { roundNum, decelerate, clipMag } from './mathtools';
+import { roundNum, decelerate, clipMag, clipValue } from './mathtools';
 import { Console } from '../tools/tools';
 import * as m2 from './m2';
 
@@ -61,6 +61,30 @@ class Point {
 
   round(precision: number = 8) {
     return new Point(roundNum(this.x, precision), roundNum(this.y, precision));
+  }
+
+  clip(min: Point | number | null, max: Point | number | null): Point {
+    let minX;
+    let minY;
+    let maxX;
+    let maxY;
+    if (min instanceof Point) {
+      minX = min.x;
+      minY = min.y;
+    } else {
+      minX = min;
+      minY = min;
+    }
+    if (max instanceof Point) {
+      maxX = max.x;
+      maxY = max.y;
+    } else {
+      maxX = max;
+      maxY = max;
+    }
+    const x = clipValue(this.x, minX, maxX);
+    const y = clipValue(this.y, minY, maxY);
+    return new Point(x, y);
   }
 
   transformBy(matrix: Array<number>) {

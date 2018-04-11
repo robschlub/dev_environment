@@ -94,16 +94,17 @@ function clipMag(
 
 function clipValue(
   value: number,
-  minValue: ?number,
-  maxValue: ?number,
+  minValue: number | null,
+  maxValue: number | null,
 ): number {
   let clipped = value;
-  if (minValue) {
+  if (minValue !== null) {
     if (value < minValue) {
       clipped = minValue;
     }
   }
-  if (maxValue) {
+
+  if (maxValue !== null) {
     if (value > maxValue) {
       clipped = maxValue;
     }
