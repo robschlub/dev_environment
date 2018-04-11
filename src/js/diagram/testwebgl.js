@@ -86,7 +86,7 @@ function testgl(id: string) {
     diagram.elements.state.movement.velocity = new g2.Transform()
       .scale(0, 0).rotate(0).translate(1, 0);
     // diagram.elements.moveState.previous = diagram.elements.transform;
-    diagram.elements.moveFreelyProperties.deceleration = new g2.TransformLimit(0.1);
+    diagram.elements.moveProperties.moveFreely.deceleration = new g2.TransformLimit(0.1, 0.1, 0.1);
 
 
     // diagram.elements.animatePlan([phase1, phase2]);

@@ -197,7 +197,7 @@ describe('Animationa and Movement', () => {
           [0, 0, 1, 1],
         );
         element.maxVelocity = new TransformLimit(100, 100, 100);
-        element.moveFreelyProperties.zeroVelocityThreshold =
+        element.moveProperties.moveFreely.zeroVelocityThreshold =
           new TransformLimit(0.01, 0.01, 0.01);
         identity = m2.identity();
       });
@@ -207,7 +207,7 @@ describe('Animationa and Movement', () => {
         const decel = new TransformLimit(1, 2, 1);
 
         element.state.movement.velocity = initialV;
-        element.moveFreelyProperties.deceleration = decel;
+        element.moveProperties.moveFreely.deceleration = decel;
 
         expect(element.state.isMovingFreely).toBe(false);
         element.startMovingFreely(callback);
@@ -243,8 +243,8 @@ describe('Animationa and Movement', () => {
         const zero = new TransformLimit(15, 5, 5);
         const max = new TransformLimit(20, 20, 20);
         element.state.movement.velocity = initialV;
-        element.moveFreelyProperties.deceleration = decel;
-        element.moveFreelyProperties.zeroVelocityThreshold = zero;
+        element.moveProperties.moveFreely.deceleration = decel;
+        element.moveProperties.moveFreely.zeroVelocityThreshold = zero;
         element.maxVelocity = max;
 
         expect(element.state.isMovingFreely).toBe(false);
@@ -295,7 +295,7 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
-        element.moveFreelyProperties.zeroVelocityThreshold =
+        element.moveProperties.moveFreely.zeroVelocityThreshold =
           new TransformLimit(0.0001, 0.0001, 0.0001);
         element.maxVelocity = new TransformLimit(100, 100, 100);
       });
@@ -479,7 +479,7 @@ describe('Animationa and Movement', () => {
       const velocity = new Transform().scale(0, 0).rotate(0.1).translate(0, 0);
       expect(collection.state.movement.velocity).toEqual(velocity);
 
-      const moveFreeProps = collection.moveFreelyProperties;
+      const moveFreeProps = collection.moveProperties.moveFreely;
       moveFreeProps.deceleration = new TransformLimit(1, 0.01, 1);
       moveFreeProps.zeroVelocityThreshold = new TransformLimit(0.1, 0.05, 0.1);
 
