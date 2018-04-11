@@ -926,23 +926,43 @@ describe('g2 tests', () => {
       const t1 = new g2.Transform()
         .scale(21, 20)
         .scale(0.1, 0.05)
+        .scale(20, 0)
         .rotate(21)
         .rotate(20)
         .rotate(0.1)
         .rotate(0.05)
         .translate(21, 20)
-        .translate(0.1, 0.05);
-      const clipZero = t1.constant(0.1);
-      const clipMax = t1.constant(20);
-      const tc = t1.clip(clipZero, clipMax);
+        .translate(0.1, 0.05)
+        .translate(0, 20)
+        .translate(0, 21);
+      const clipZero = new g2.TransformLimit(0.1, 0.1, 0.1);
+      const clipMax = new g2.TransformLimit(20, 20, 20);
+      let tc = t1.clip(clipZero, clipMax, false);
       expect(tc.s(0)).toEqual(new g2.Point(20, 20));
       expect(tc.s(1)).toEqual(new g2.Point(0, 0));
+      expect(tc.s(2)).toEqual(new g2.Point(20, 0));
       expect(tc.r(0)).toBe(20);
       expect(tc.r(1)).toBe(20);
       expect(tc.r(2)).toBe(0);
       expect(tc.r(3)).toBe(0);
       expect(tc.t(0)).toEqual(new g2.Point(20, 20));
       expect(tc.t(1)).toEqual(new g2.Point(0, 0));
+      expect(tc.t(2)).toEqual(new g2.Point(0, 20));
+      expect(tc.t(3)).toEqual(new g2.Point(0, 20));
+
+      // vector clipping
+      tc = t1.clip(clipZero, clipMax);
+      expect(tc.s(0).round(2)).toEqual(new g2.Point(14.48, 13.79));
+      expect(tc.s(1).round(2)).toEqual(new g2.Point(0.1, 0.05));
+      expect(tc.s(2).round(2)).toEqual(new g2.Point(20, 0));
+      expect(tc.r(0)).toBe(20);
+      expect(tc.r(1)).toBe(20);
+      expect(tc.r(2)).toBe(0);
+      expect(tc.r(3)).toBe(0);
+      expect(tc.t(0).round(2)).toEqual(new g2.Point(14.48, 13.79));
+      expect(tc.t(1).round(2)).toEqual(new g2.Point(0.1, 0.05));
+      expect(tc.t(2).round(2)).toEqual(new g2.Point(0, 20));
+      expect(tc.t(3).round(2)).toEqual(new g2.Point(0, 20));
     });
     test('Copy', () => {
       const t = new g2.Transform().scale(1, 1).rotate(1).translate(1, 1);
@@ -956,36 +976,41 @@ describe('g2 tests', () => {
       const t0 = new g2.Transform()
         .scale(0, 0)          // to test velocity
         .scale(-1, -40)       // to test zero
-        .scale(40, 1)         // to test max
+        .scale(0, 0)         // to test max
+        .scale(0, 0)         // to test max
         .rotate(0)            // to test velocity
         .rotate(1)            // to test zero
         .rotate(-1)           // to test max
         .translate(0, 0)      // to test velocity
         .translate(-1, -40)   // to test zero
-        .translate(40, 1);    // to test max
+        .translate(0, 0)     // to test max
+        .translate(0, 0);    // to test max
       const t1 = new g2.Transform()
-        .scale(-1, 1)             // should be -1, 1
-        .scale(-1.2, -40.1)       // should be 0, 0
-        .scale(20, 40)            // should be -20, 20
-        .rotate(-1)               // should be -1
-        .rotate(1.1)              // should be 0
-        .rotate(40)               // should be 20
-        .translate(-1, 1)         // should be -1, 1
-        .translate(-1.2, -40.1)   // should be 0, 0
-        .translate(20, 40);       // should be -20, 20
-      const zero = t0.constant(0.2);
-      const max = t0.constant(20);
+        .scale(-1, 1)
+        .scale(-1.1414, -40.1414)
+        .scale(14.1422, 14.1422)
+        .scale(-14.1422, -14.1422)
+        .rotate(-1)
+        .rotate(1.1)
+        .rotate(40)
+        .translate(-1, 1)
+        .translate(-1.1414, -40.1414)
+        .translate(14.1422, 14.1422)
+        .translate(-14.1422, -14.1422);
+      const zero = new g2.TransformLimit(0.2, 0.2, 0.2);
+      const max = new g2.TransformLimit(20, 20, 20);
       const v = t1.velocity(t0, deltaTime, zero, max);
 
-      expect(v.s(0)).toEqual(new g2.Point(-1, 1));
-      expect(v.s(1)).toEqual(new g2.Point(0, 0));
-      expect(v.s(2)).toEqual(new g2.Point(-20, 20));
+      expect(v.s(0).round()).toEqual(new g2.Point(-1, 1));
+      expect(v.s(1).round()).toEqual(new g2.Point(0, 0));
+      expect(v.s(2).round(4)).toEqual(new g2.Point(14.1421, 14.1421));
+      expect(v.s(3).round(4)).toEqual(new g2.Point(-14.1421, -14.1421));
       expect(v.r(0)).toBe(-1);
       expect(v.r(1)).toBe(0);
       expect(v.r(2)).toBe(20);
-      expect(v.t(0)).toEqual(new g2.Point(-1, 1));
-      expect(v.t(1)).toEqual(new g2.Point(0, 0));
-      expect(v.t(2)).toEqual(new g2.Point(-20, 20));
+      expect(v.t(0).round()).toEqual(new g2.Point(-1, 1));
+      expect(v.t(1).round()).toEqual(new g2.Point(0, 0));
+      expect(v.t(2).round(4)).toEqual(new g2.Point(14.1421, 14.1421));
     });
     describe('Velocity - Sad case', () => {
       let deltaTime;
@@ -995,14 +1020,8 @@ describe('g2 tests', () => {
       let t1;
       beforeEach(() => {
         deltaTime = 1;
-        zero = new g2.Transform()
-          .scale(0.2, 0.2)
-          .rotate(0.2)
-          .translate(0.2, 0.2);
-        max = new g2.Transform()
-          .scale(20, 20)
-          .rotate(20)
-          .translate(20, 20);
+        zero = new g2.TransformLimit(0.2, 0.2, 0.2);
+        max = new g2.TransformLimit(20, 20, 20);
         t0 = new g2.Transform()
           .scale(0, 0)
           .rotate(0)
@@ -1019,38 +1038,38 @@ describe('g2 tests', () => {
         expect(v.r()).toEqual(0);
         expect(v.t()).toEqual(new g2.Point(0, 0));
       });
-      // If a transform element is missing from the zero transform, then no
-      // minimum will be applied
-      test('zero missing a transform element', () => {
-        zero = new g2.Transform().rotate(0.2).scale(0.2, 0.2);
-        t1 = new g2.Transform()
-          .scale(0.2, -0.00001)
-          .rotate(0.00001)
-          .translate(0.2, 0.00001);
-        const v = t1.velocity(t0, deltaTime, zero, max);
-        expect(v).toEqual(t1);
-      });
-      // If a transform element is missing from the max transform, then
-      // no maximum will be applied.
-      test('max missing a transform element', () => {
-        max = new g2.Transform().rotate(20).scale(20, 20);
-        t1 = new g2.Transform()
-          .scale(30, -100001)
-          .rotate(100001)
-          .translate(30, 100001);
-        let v = t1.velocity(t0, deltaTime, zero, max);
-        expect(v).toEqual(t1);
+      // // If a transform element is missing from the zero transform, then no
+      // // minimum will be applied
+      // test('zero missing a transform element', () => {
+      //   zero = new g2.Transform().rotate(0.2).scale(0.2, 0.2);
+      //   t1 = new g2.Transform()
+      //     .scale(0.2, -0.00001)
+      //     .rotate(0.00001)
+      //     .translate(0.2, 0.00001);
+      //   const v = t1.velocity(t0, deltaTime, zero, max);
+      //   expect(v).toEqual(t1);
+      // });
+      // // If a transform element is missing from the max transform, then
+      // // no maximum will be applied.
+      // test('max missing a transform element', () => {
+      //   max = new g2.Transform().rotate(20).scale(20, 20);
+      //   t1 = new g2.Transform()
+      //     .scale(30, -100001)
+      //     .rotate(100001)
+      //     .translate(30, 100001);
+      //   let v = t1.velocity(t0, deltaTime, zero, max);
+      //   expect(v).toEqual(t1);
 
-        // Test missing max when zero threshold is enforced.
-        t1 = new g2.Transform()
-          .scale(30, -100001)
-          .rotate(100001)
-          .translate(0.1, 100001);
-        v = t1.velocity(t0, deltaTime, zero, max);
-        const vExpected = t1.copy();
-        vExpected.updateTranslation(0, 100001);
-        expect(v).toEqual(vExpected);
-      });
+      //   // Test missing max when zero threshold is enforced.
+      //   t1 = new g2.Transform()
+      //     .scale(30, -100001)
+      //     .rotate(100001)
+      //     .translate(0.1, 100001);
+      //   v = t1.velocity(t0, deltaTime, zero, max);
+      //   const vExpected = t1.copy();
+      //   vExpected.updateTranslation(0, 100001);
+      //   expect(v).toEqual(vExpected);
+      // });
     });
     describe('Deceleration', () => {
       let d;

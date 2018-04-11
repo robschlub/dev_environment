@@ -182,6 +182,13 @@ class Point {
     }
     return false;
   }
+
+  toPolar() {
+    return {
+      mag: Math.sqrt(this.x ** 2 + this.y ** 2),
+      angle: Math.atan2(this.y, this.x),
+    };
+  }
 }
 
 function point(x: number, y: number) {
@@ -569,31 +576,33 @@ class Rotation {
   }
 }
 
-class Translation {
+class Translation extends Point {
   x: number;
   y: number;
 
   constructor(tx: Point | number, ty: number) {
     if (tx instanceof Point) {
-      this.x = tx.x;
-      this.y = tx.y;
+      super(tx.x, tx.y);
+      // this.x = tx.x;
+      // this.y = tx.y;
     } else {
-      this.x = tx;
-      this.y = ty;
+      super(tx, ty);
+      // this.x = tx;
+      // this.y = ty;
     }
   }
   matrix(): Array<number> {
     return m2.translationMatrix(this.x, this.y);
   }
 
-  sub(translationToSub: Translation = new Translation(0, 0)): Translation {
+  sub(translationToSub: Translation | Point = new Translation(0, 0)): Translation {
     return new Translation(
       this.x - translationToSub.x,
       this.y - translationToSub.y,
     );
   }
 
-  add(translationToAdd: Translation = new Translation(0, 0)): Translation {
+  add(translationToAdd: Translation | Point = new Translation(0, 0)): Translation {
     return new Translation(
       this.x + translationToAdd.x,
       this.y + translationToAdd.y,
@@ -615,23 +624,25 @@ class Translation {
   }
 }
 
-class Scale {
+class Scale extends Point {
   x: number;
   y: number;
 
   constructor(sx: Point | number, sy: number) {
     if (sx instanceof Point) {
-      this.x = sx.x;
-      this.y = sx.y;
+      super(sx.x, sx.y);
+      // this.x = sx.x;
+      // this.y = sx.y;
     } else {
-      this.x = sx;
-      this.y = sy;
+      super(sx, sy);
+      // this.x = sx;
+      // this.y = sy;
     }
   }
   matrix(): Array<number> {
     return m2.scaleMatrix(this.x, this.y);
   }
-  sub(scaleToSub: Scale = new Scale(0, 0)): Scale {
+  sub(scaleToSub: Scale | Point = new Scale(0, 0)): Scale {
     return new Scale(
       this.x - scaleToSub.x,
       this.y - scaleToSub.y,
@@ -645,7 +656,7 @@ class Scale {
     );
   }
 
-  add(scaleToAdd: Scale = new Scale(0, 0)): Scale {
+  add(scaleToAdd: Scale | Point= new Scale(0, 0)): Scale {
     return new Scale(
       this.x + scaleToAdd.x,
       this.y + scaleToAdd.y,
@@ -657,6 +668,21 @@ class Scale {
       this.x * scaleToMul.x,
       this.y * scaleToMul.y,
     );
+  }
+}
+
+class TransformLimit {
+  rotation: number;
+  translation: number;
+  scale: number;
+  constructor(
+    scale: number = 0,
+    rotation: number = 0,
+    translation: number = 0,
+  ) {
+    this.scale = scale;
+    this.rotation = rotation;
+    this.translation = translation;
   }
 }
 
@@ -903,7 +929,11 @@ class Transform {
     return new Transform(order);
   }
 
-  clip(zeroThresholdTransform: Transform, maxTransform: Transform): Transform {
+  clip(
+    zeroThresholdTransform: TransformLimit,
+    maxTransform: TransformLimit,
+    vector: boolean = true,
+  ): Transform {
     // const min = 0.00001;
     // const max = 1 / min;
     // const zeroS = zeroThresholdTransform.s() || new Point(min, min);
@@ -917,28 +947,40 @@ class Transform {
     //   return new Transform(this.order);
     // }
     const order = [];
+    const z = zeroThresholdTransform;
+    const max = maxTransform;
 
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
-      const z = zeroThresholdTransform.order[i];
-      const max = maxTransform.order[i];
-      if (t instanceof Translation &&
-          z instanceof Translation &&
-          max instanceof Translation) {
-        const x = clipValue(t.x, z.x, max.x);
-        const y = clipValue(t.y, z.y, max.y);
-        order.push(new Translation(x, y));
-      } else if (t instanceof Rotation &&
-                 z instanceof Rotation &&
-                 max instanceof Rotation) {
-        const r = clipValue(t.r, z.r, max.r);
+      if (t instanceof Translation) {
+        if (vector) {
+          const { mag, angle } = t.toPolar();
+          const clipMag = clipValue(mag, z.translation, max.translation);
+          order.push(new Translation(
+            clipMag * Math.cos(angle),
+            clipMag * Math.sin(angle),
+          ));
+        } else {
+          const x = clipValue(t.x, z.translation, max.translation);
+          const y = clipValue(t.y, z.translation, max.translation);
+          order.push(new Translation(x, y));
+        }
+      } else if (t instanceof Rotation) {
+        const r = clipValue(t.r, z.rotation, max.rotation);
         order.push(new Rotation(r));
-      } else if (t instanceof Scale &&
-                 z instanceof Scale &&
-                 max instanceof Scale) {
-        const x = clipValue(t.x, z.x, max.x);
-        const y = clipValue(t.y, z.y, max.y);
-        order.push(new Scale(x, y));
+      } else if (t instanceof Scale) {
+        if (vector) {
+          const { mag, angle } = t.toPolar();
+          const clipMag = clipValue(mag, z.scale, max.scale);
+          order.push(new Scale(
+            clipMag * Math.cos(angle),
+            clipMag * Math.sin(angle),
+          ));
+        } else {
+          const x = clipValue(t.x, z.scale, max.scale);
+          const y = clipValue(t.y, z.scale, max.scale);
+          order.push(new Scale(x, y));
+        }
       }
     }
     return new Transform(order);
@@ -984,23 +1026,32 @@ class Transform {
 
   decelerate(
     velocity: Transform,
-    deceleration: Transform,
+    deceleration: TransformLimit,
     deltaTime: number,
-    zeroThreshold: Transform,
+    zeroThreshold: TransformLimit,
   ): { v: Transform, t: Transform } {
     let nextV = new Transform();
     let nextT = new Transform();
+    const z = zeroThreshold;
+    const d = deceleration;
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
       const v = velocity.order[i];
-      const z = zeroThreshold.order[i];
-      const d = deceleration.order[i];
+      // const z = zeroThreshold.order[i];
       if (t instanceof Translation && v instanceof Translation &&
           d instanceof Translation && z instanceof Translation) {
-        const x = decelerate(t.x, v.x, d.x, deltaTime, z.x);
-        const y = decelerate(t.y, v.y, d.y, deltaTime, z.y);
-        nextV = nextV.translate(x.v, y.v);
-        nextT = nextT.translate(x.p, y.p);
+        const { mag, angle } = v.toPolar();
+        const next = decelerate(0, mag, d.x, deltaTime, z.x);
+        // const nextV = next.v;
+        nextV = nextV.translate(next.v * Math.cos(angle), next.v * Math.sin(angle));
+        // const nextDistance = next.p;
+        nextT = nextT.translate(t.x + next.p * Math.cos(angle), t.y + next.p * Math.sin(angle));
+        // console.log(vel, nextV.t(), velAngle)
+
+        // const x = decelerate(t.x, v.x, d.x, deltaTime, z.x);
+        // const y = decelerate(t.y, v.y, d.y, deltaTime, z.y);
+        // nextV = nextV.translate(x.v, y.v);
+        // nextT = nextT.translate(x.p, y.p);
       } else if (t instanceof Rotation && v instanceof Rotation &&
                  d instanceof Rotation && z instanceof Rotation) {
         const r = decelerate(t.r, v.r, d.r, deltaTime, z.r);
@@ -1026,8 +1077,8 @@ class Transform {
   velocity(
     previousTransform: Transform,
     deltaTime: number,
-    zeroThreshold: Transform,
-    maxTransform: Transform,
+    zeroThreshold: TransformLimit,
+    maxTransform: TransformLimit,
   ): Transform {
     const order = [];
     if (!this.isSimilarTo(previousTransform)) {
@@ -1047,17 +1098,18 @@ class Transform {
     }
     const v = new Transform(order);
 
-    let z = zeroThreshold;
-    let m = maxTransform;
-    if (!this.isSimilarTo(zeroThreshold)) {
-      z = this.constant(0);
-    }
-    if (!this.isSimilarTo(maxTransform)) {
-      m = v.copy();
-    }
-    return v.clip(z, m);
+    // let z = zeroThreshold;
+    // let m = maxTransform;
+    // if (!this.isSimilarTo(zeroThreshold)) {
+    //   z = this.constant(0);
+    // }
+    // if (!this.isSimilarTo(maxTransform)) {
+    //   m = v.copy();
+    // }
+    return v.clip(zeroThreshold, maxTransform);
   }
 }
+
 
 export {
   point,
@@ -1069,4 +1121,5 @@ export {
   normAngle,
   clipValue,
   Transform,
+  TransformLimit,
 };
