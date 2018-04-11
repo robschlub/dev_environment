@@ -77,6 +77,7 @@ class Diagram {
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       element.stopBeingMoved();
+      element.startMovingFreely();
     }
     this.beingMovedElements = [];
     // const clipPoint = this.screenToClip(lastPagePoint);

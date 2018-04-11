@@ -16,7 +16,7 @@ class Gesture {
     // this.diagram.canvas.ontouchmove = this.touchMoveHandler.bind(this);
     // this.diagram.canvas.touchstart = this.touchStartHandler.bind(this);
     this.diagram.canvas.addEventListener('touchstart', this.touchStartHandler.bind(this), false);
-    this.diagram.canvas.addEventListener('touchend', this.touchStartHandler.bind(this), false);
+    this.diagram.canvas.addEventListener('touchend', this.touchEndHandler.bind(this), false);
     this.diagram.canvas.addEventListener('touchmove', this.touchMoveHandler.bind(this), false);
 
     // document.ontouchend   = this.touch_end_handler.bind(this);
