@@ -922,7 +922,7 @@ class DiagramElementCollection extends DiagramElement {
         if (element.isMoving()) {
           return true;
         }
-      } else if (element.isMoving) {
+      } else if (element.isMoving()) {
         return true;
       }
     }

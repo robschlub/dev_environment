@@ -76,6 +76,9 @@ class Diagram {
         element.startBeingMoved();
       }
     }
+    if (this.beingMovedElements.length > 0) {
+      this.animateNextFrame();
+    }
   }
 
   // Handle touch up, or mouse click up events in the canvas. When an UP even
@@ -151,11 +154,18 @@ class Diagram {
 
   draw(now: number): void {
     this.clearContext();
+    // const clipTransform = new g2.Transform()
+    //   .scale(2 / this.clipRect.width, 2 / this.clipRect.height);
+      // .translate(-1 - this.clipRect.left, 1 - this.clipRect.top);
+    // console.log(clipTransform.order)
+    // console.log("Asdf");
     this.elements.draw(
+      // clipTransform.matrix(),
       m2.scaleMatrix(2 / this.clipRect.width, 2 / this.clipRect.height),
       // m2.identity(),
       now,
     );
+    // this.animateNextFrame();
     if (this.elements.isMoving()) {
       this.animateNextFrame();
     }

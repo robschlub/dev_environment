@@ -111,7 +111,7 @@ function testgl(id: string) {
     // diagram.elements.animateRotationTo(1, -1, 10);
 
     // $FlowFixMe
-    diagram.elements._square.animateTranslationTo(new g2.Point(1.5, 0.5), 1);
+    // diagram.elements._square.animateTranslationTo(new g2.Point(1.5, 0.5), 1);
 
     if (diagram) {
       diagram.animateNextFrame();
