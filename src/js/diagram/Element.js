@@ -795,14 +795,14 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  getBoundingBox() {
+  getBoundingBox(): {min: g2.Point, max: g2.Point} {
     let { max, min } = this.getVerticesBoundingBox();
     max = max.transformBy(this.transform.matrix());
     min = min.transformBy(this.transform.matrix());
     return { min, max };
   }
 
-  getVerticesBoundingBox() {
+  getVerticesBoundingBox(): {min: g2.Point, max: g2.Point} {
     const min = new g2.Point(0, 0);
     const max = new g2.Point(0, 0);
     let firstTime = true;
@@ -983,6 +983,32 @@ class DiagramElementCollection extends DiagramElement {
       }
     }
     return false;
+  }
+
+  getBoundingBox() {
+    let min = new g2.Point(0, 0);
+    let max = new g2.Point(0, 0);
+    let firstTime = true;
+    for (let i = 0, j = this.order.length; i < j; i += 1) {
+      const element = this.elements[this.order[i]];
+      const result = element.getBoundingBox();
+      const mn = result.min;
+      const mx = result.max;
+      if (firstTime) {
+        min = mn.copy();
+        max = mx.copy();
+        firstTime = false;
+      } else {
+        min.x = mn.x < min.x ? mn.x : min.x;
+        min.y = mn.y < min.y ? mn.y : min.y;
+        max.x = mx.x > max.x ? mx.x : max.x;
+        max.y = mx.y > max.y ? mx.y : max.y;
+      }
+    }
+    console.log(this.transform)
+    max = max.transformBy(this.transform.matrix());
+    min = min.transformBy(this.transform.matrix());
+    return { min, max };
   }
 
   getTouched(clipLocation: g2.Point): Array<DiagramElementPrimative | DiagramElementCollection> {
