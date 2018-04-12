@@ -14,11 +14,13 @@ class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
   elements: DiagramElementPrimative | DiagramElementCollection;
-  activeElementsList: Array<DiagramElementPrimative | DiagramElementCollection>;
+  // activeElementsList: Array<DiagramElementPrimative |
+  //                     DiagramElementCollection>;
   lesson: Object;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
-  beingMovedElements: Array<DiagramElementPrimative | DiagramElementCollection>
+  beingMovedElements: Array<DiagramElementPrimative |
+                      DiagramElementCollection>;
 
   constructor(
     lesson: Object,
@@ -41,8 +43,8 @@ class Diagram {
 
     this.lesson = lesson;
     // this.elements = new DiagramElements(this.webgl);
-
-    this.activeElementsList = [];
+    this.beingMovedElements = [];
+    // this.activeElementsList = [];
     this.globalAnimation = new GlobalAnimation();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
     // this.devicePixelRatio = window.devicePixelRatio;
@@ -50,9 +52,20 @@ class Diagram {
     // this.counter=0;
   }
 
+  // Handle touch down, or mouse click events within the canvas.
+  // The default behavior is to be able to move objects that are touched
+  // and dragged, then when they are released, for them to move freely before
+  // coming to a stop.
   touchDownHandler(pagePoint: g2.Point) {
+    // Get the touched point in clip space
     const clipPoint = this.screenToClip(pagePoint);
+
+    // Get all the diagram elements that were touched at this point (element
+    // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(clipPoint);
+
+    // Make a list of, and start moving elements that are being moved
+    // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
     for (let i = 0; i < touchedElements.length; i += 1) {
       const element = touchedElements[i];
@@ -63,6 +76,9 @@ class Diagram {
     }
   }
 
+  // Handle touch up, or mouse click up events in the canvas. When an UP even
+  // happens, the default behavior is to let any elements being moved to move
+  // freely until they decelerate to 0.
   touchUpHandler() {
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
@@ -72,13 +88,24 @@ class Diagram {
     this.beingMovedElements = [];
   }
 
-  touchMoveHandler(previousPagePoint: g2.Point, currentPagePoint: g2.Point) {
+  // Handle touch/mouse move events in the canvas. These events will only be
+  // sent if the initial touch down happened in the canvas.
+  // The default behavior is to drag (move) any objects that were touched in
+  // the down event to the new location.
+  // This function should return true if the move event should NOT be processed
+  // by the system. For example, on a touch device, a touch and drag would
+  // normally scroll the screen. Typically, you would want to move the diagram
+  // element and not the screen, so a true would be returned.
+  touchMoveHandler(previousPagePoint: g2.Point, currentPagePoint: g2.Point): boolean {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
+    // Get the previous, current and delta between touch points in clip space
     const previousClipPoint = this.screenToClip(previousPagePoint);
     const currentClipPoint = this.screenToClip(currentPagePoint);
     const delta = currentClipPoint.sub(previousClipPoint);
+
+    // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       const currentTransform = element.transform.copy();
@@ -93,10 +120,8 @@ class Diagram {
     return true;
   }
 
-  stopAnimating() {
-    for (let i = 0; i < this.activeElementsList.length; i += 1) {
-      this.activeElementsList[i].stopAnimating();
-    }
+  stop() {
+    this.elements.stop();
   }
 
   getTargetRect() {

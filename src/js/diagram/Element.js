@@ -711,6 +711,13 @@ class DiagramElement {
   stopPulsing() {
     this.state.isPulsing = false;
   }
+
+  stop() {
+    this.stopAnimating();
+    this.stopMovingFreely();
+    this.stopBeingMoved();
+    this.stopPulsing();
+  }
 }
 
 // ***************************************************************
@@ -1027,6 +1034,14 @@ class DiagramElementCollection extends DiagramElement {
       touched = [this].concat(touched);
     }
     return touched;
+  }
+
+  stop() {
+    super.stop();
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.stop();
+    }
   }
 }
 export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };
