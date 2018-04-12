@@ -1005,7 +1005,6 @@ class DiagramElementCollection extends DiagramElement {
         max.y = mx.y > max.y ? mx.y : max.y;
       }
     }
-    console.log(this.transform)
     max = max.transformBy(this.transform.matrix());
     min = min.transformBy(this.transform.matrix());
     return { min, max };
