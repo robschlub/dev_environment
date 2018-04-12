@@ -119,6 +119,11 @@ class DiagramElement {
     transformMethod: (number) => g2.Transform,
   };
 
+  clipLimits: {
+    min: g2.Point,
+    max: g2.Point,
+  };
+
   // Current animation/movement state of element
   state: {
     isAnimating: boolean,
@@ -161,6 +166,10 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
+    this.clipLimits = {
+      min: new g2.Point(-1, -1),
+      max: new g2.Point(1, 1),
+    };
 
     this.move = {
       maxTransform: this.transform.constant(1),
@@ -212,7 +221,11 @@ class DiagramElement {
   }
 
   vertexToClip(vertex: g2.Point) {
-    return vertex.transformBy(this.lastDrawTransformMatrix).transformBy(m2.scaleMatrix(2, 1));
+    const clipX = (this.clipLimits.max.x - this.clipLimits.min.x) / 2;
+    const clipY = (this.clipLimits.max.y - this.clipLimits.min.y) / 2;
+    // console.log(clipX, clipY);
+    return vertex.transformBy(this.lastDrawTransformMatrix)
+      .transformBy(m2.scaleMatrix(clipX, clipY));
   }
 
   // Remove?

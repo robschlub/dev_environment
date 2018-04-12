@@ -36,6 +36,7 @@ class ShapesCollection extends DiagramElementCollection {
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
+    sq.clipLimits = { max: new g2.Point(2, 1), min: new g2.Point(-2, -1) };
     sq.updateMoveTranslationBoundary([-2, -1, 2, 1], new g2.Point(1.0, 1));
     console.log(sq.getBoundingBox());
 
