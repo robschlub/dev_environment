@@ -28,8 +28,6 @@ class Diagram {
     clipYTop: number,
     clipWidth: number,
     clipHeight: number,
-    // clipWidth: number = 2,
-    // clipHeight: number = 2,
   ) {
     this.canvas = canvas;
     if (this instanceof Diagram) {
@@ -156,11 +154,13 @@ class Diagram {
     this.clearContext();
     // This transform converts standard gl clip space, to diagram clip space
     // defined in clipRect.
+    const normWidth = 2 / this.clipRect.width;
+    const normHeight = 2 / this.clipRect.height;
     const clipTransform = new g2.Transform()
-      .scale(2 / this.clipRect.width, 2 / this.clipRect.height)
+      .scale(normWidth, normHeight)
       .translate(
-        -this.clipRect.width / 2 - this.clipRect.left,
-        this.clipRect.height / 2 - this.clipRect.top,
+        (-this.clipRect.width / 2 - this.clipRect.left) * normWidth,
+        (this.clipRect.height / 2 - this.clipRect.top) * normHeight,
       );
     this.elements.draw(
       clipTransform.matrix(),
