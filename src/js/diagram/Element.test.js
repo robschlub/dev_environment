@@ -464,6 +464,40 @@ describe('Animationa and Movement', () => {
         expect(box.min.round()).toEqual(new Point(-0.105 * 2 + 0.5 * 2, -0.105 * 2));
       });
     });
+    describe('Default move max/min transforms', () => {
+      test('updateMoveTranslationBoundary no transform', () => {
+        const sq = new Polygon(
+          webgl,
+          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          Math.PI / 4, new Point(0, 0),
+        );
+        const square = new DiagramElementPrimative(
+          sq,
+          new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        );
+        expect(square.move.maxTransform.t()).toEqual(new Point(0.895, 0.895));
+        expect(square.move.minTransform.t()).toEqual(new Point(-0.895, -0.895));
+        square.updateMoveTranslationBoundary([-2, -1, 2, 1]);
+        expect(square.move.maxTransform.t()).toEqual(new Point(1.895, 0.895));
+        expect(square.move.minTransform.t()).toEqual(new Point(-1.895, -0.895));
+      });
+      test('updateMoveTranslationBoundary with transform', () => {
+        const sq = new Polygon(
+          webgl,
+          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          Math.PI / 4, new Point(0, 0),
+        );
+        const square = new DiagramElementPrimative(
+          sq,
+          new Transform().scale(2, 2).rotate(0).translate(0, 0),
+        );
+        expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 0.79));
+        expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -0.79));
+        square.updateMoveTranslationBoundary([-1, -2, 1, 2]);
+        expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 1.79));
+        expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -1.79));
+      });
+    });
   });
   describe('DiagramElementCollection', () => {
     let squareElement;
