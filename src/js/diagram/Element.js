@@ -795,6 +795,37 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
+  getBoundingBox() {
+    let { max, min } = this.getVerticesBoundingBox();
+    max = max.transformBy(this.transform.matrix());
+    min = min.transformBy(this.transform.matrix());
+    return { min, max };
+  }
+
+  getVerticesBoundingBox() {
+    const min = new g2.Point(0, 0);
+    const max = new g2.Point(0, 0);
+    let firstTime = true;
+    for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
+      for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
+        const vertex = this.vertices.border[m][i];
+        if (firstTime) {
+          min.x = vertex.x;
+          min.y = vertex.y;
+          max.x = vertex.x;
+          max.y = vertex.y;
+          firstTime = false;
+        } else {
+          min.x = vertex.x < min.x ? vertex.x : min.x;
+          min.y = vertex.y < min.y ? vertex.y : min.y;
+          max.x = vertex.x > max.x ? vertex.x : max.x;
+          max.y = vertex.y > max.y ? vertex.y : max.y;
+        }
+      }
+    }
+    return { min, max };
+  }
+
   updateMoveTranslationBoundary(scale: g2.Point = new g2.Point(1, 1)) {
     const min = { x: 0, y: 0 };
     const max = { x: 0, y: 0 };
