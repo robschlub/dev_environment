@@ -29,7 +29,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('square', new DiagramElementPrimative(
       square,
-      new g2.Transform().scale(0.5, 0.5).rotate(0).translate(-1, 0),
+      new g2.Transform().scale(1.0, 1.0).rotate(Math.PI / 4).translate(1, 0),
       [0, 0, 1, 1], 'square', clipRect,
     ));
     // $FlowFixMe

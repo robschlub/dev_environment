@@ -817,13 +817,14 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   getBoundingBox(): {min: g2.Point, max: g2.Point} {
-    let { max, min } = this.getVerticesBoundingBox();
-    max = max.transformBy(this.transform.matrix());
-    min = min.transformBy(this.transform.matrix());
+    const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
+    // max = max.transformBy(this.transform.matrix());
+    // min = min.transformBy(this.transform.matrix());
     return { min, max };
   }
 
   getRelativeBoundingBox(): {min: g2.Point, max: g2.Point} {
+    const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
     let { max, min } = this.getVerticesBoundingBox();
     const transform = this.transform.copy();
     transform.updateTranslation(0, 0);
@@ -833,13 +834,13 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
 
-  getVerticesBoundingBox(): {min: g2.Point, max: g2.Point} {
+  getVerticesBoundingBox(transformMatrix: Array<number> = m2.identity()): {min: g2.Point, max: g2.Point} {
     const min = new g2.Point(0, 0);
     const max = new g2.Point(0, 0);
     let firstTime = true;
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-        const vertex = this.vertices.border[m][i];
+        const vertex = this.vertices.border[m][i].transformBy(transformMatrix);
         if (firstTime) {
           min.x = vertex.x;
           min.y = vertex.y;
@@ -886,8 +887,8 @@ class DiagramElementPrimative extends DiagramElement {
     //   }
     // }
     const { min, max } = this.getBoundingBox();
-    // console.log("bounds", bounday)
-    // console.log("box", min, max)
+    console.log("bounds", bounday)
+    console.log("box", min, max)
     const currentTranslation = this.transform.t();
     let biasX = 0;
     let biasY = 0;
