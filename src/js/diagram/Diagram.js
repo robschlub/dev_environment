@@ -4,7 +4,7 @@ import WebGLInstance from './webgl';
 import getShaders from './webgl/shaders';
 import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
-import * as m2 from './m2';
+// import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
