@@ -356,25 +356,6 @@ class DiagramElement {
     }
   }
 
-  // static isVelocityZero(transform: g2.Transform): boolean {
-  //   if (transform.rotation !== 0) {
-  //     return false;
-  //   }
-  //   if (transform.translation.x !== 0) {
-  //     return false;
-  //   }
-  //   if (transform.translation.y !== 0) {
-  //     return false;
-  //   }
-  //   if (transform.scale.x !== 0) {
-  //     return false;
-  //   }
-  //   if (transform.scale.y !== 0) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
   // Decelerate over some time when moving freely to get a new element
   // transform and movement velocity
   decelerate(deltaTime: number): Object {
@@ -755,6 +736,7 @@ class DiagramElementPrimative extends DiagramElement {
     this.color = color;
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
+    this.updateMoveTranslationBoundary(this.transform.s() || new g2.Point(1, 1));
   }
 
   isBeingTouched(clipLocation: g2.Point): boolean {
@@ -811,6 +793,46 @@ class DiagramElementPrimative extends DiagramElement {
       return true;
     }
     return false;
+  }
+
+  updateMoveTranslationBoundary(scale: g2.Point = new g2.Point(1, 1)) {
+    const min = { x: 0, y: 0 };
+    const max = { x: 0, y: 0 };
+    let firstTime = true;
+    for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
+      for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
+        const vertex = this.vertices.border[m][i];
+        if (firstTime) {
+          min.x = vertex.x;
+          min.y = vertex.y;
+          max.x = vertex.x;
+          max.y = vertex.y;
+          firstTime = false;
+        } else {
+          min.x = vertex.x < min.x ? vertex.x : min.x;
+          min.y = vertex.y < min.y ? vertex.y : min.y; // $FlowFixMe
+          max.x = vertex.x > max.x ? vertex.x : max.x; // $FlowFixMe
+          max.y = vertex.y > max.y ? vertex.y : max.y;
+        }
+      }
+    }
+    max.x = 1 - max.x * scale.x;
+    max.y = 1 - max.y * scale.y;
+    min.x = -1 - min.x * scale.x;
+    min.y = -1 - min.y * scale.y;
+
+    this.move.maxTransform.updateTranslation(
+      max.x,
+      max.y,
+      // 1 - max.x * scale.x,
+      // 1 - max.y * scale.y,
+    );
+    this.move.minTransform.updateTranslation(
+      min.x,
+      min.y,
+      // -1 - min.x * scale.x,
+      // -1 - min.y * scale.y,
+    );
   }
 }
 

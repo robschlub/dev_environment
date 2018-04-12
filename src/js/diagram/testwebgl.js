@@ -15,43 +15,37 @@ class ShapesCollection extends DiagramElementCollection {
     super(transform, name);
     // GeometryCollection.call(this, translation, rotation, scale);
 
-    // $FlowFixMe
-    const square = new Polygon(webgl, 0.5, 4, 4, 0.05, 0, new g2.Point(0, 0), 'square');
+    const square = new Polygon(
+      webgl,
+      0.5, 4, 4, 0.05,
+      Math.PI / 4, new g2.Point(0, 0),
+    );
 
-    // $FlowFixMe
-    const triangle = new Polygon(webgl, 0.2, 8, 8, 0.05, 0, new g2.Point(0, 0), 'tri');
+    const triangle = new Polygon(
+      webgl,
+      0.2, 3, 3, 0.05,
+      0, new g2.Point(0, 0),
+    );
 
     this.add('square', new DiagramElementPrimative(
       square,
-      new g2.Transform().scale(0.5, 0.5).rotate(Math.PI / 4).translate(0, 0),
-      [0, 0, 1, 1],
+      new g2.Transform().scale(1.0, 1.0).rotate(0).translate(0, 0),
+      [0, 0, 1, 1], 'square',
     ));
     // $FlowFixMe
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
-    // sq.move.minTransform =
-    //   new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
-    // sq.move.maxTransform =
-    //   new g2.Transform().scale(10, 10).rotate(10000).translate(1.0, 1.0);
-    // sq.move.maxVelocity = new g2.TransformLimit(5, 5, 5);
-    // sq.move.freely.deceleration = new g2.TransformLimit(5, 5, 5);
 
     this.add('triangle', new DiagramElementPrimative(
       triangle,
-      new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
+      new g2.Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
       [0, 1, 0, 1],
     ));
     // $FlowFixMe
     const tri = this._triangle;
     tri.isTouchable = true;
     tri.isMovable = true;
-    // tri.move.minTransform =
-    //   new g2.Transform().scale(0, 0).rotate(-10000).translate(-1.0, -1.0);
-    // tri.move.maxTransform =
-    //   new g2.Transform().scale(10, 10).rotate(10000).translate(1.0, 1.0);
-    // tri.move.maxVelocity = new g2.TransformLimit(5, 5, 5);
-    // tri.move.freely.deceleration = new g2.TransformLimit(5, 5, 5);
 
     this.isTouchable = true;
   }
