@@ -754,7 +754,9 @@ class DiagramElementPrimative extends DiagramElement {
     this.color = color;
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
+    // console.log("before:", this.move.maxTransform.t())
     this.updateMoveTranslationBoundary();
+    // console.log("after:", this.move.maxTransform.t())
   }
 
   isBeingTouched(clipLocation: g2.Point): boolean {
@@ -821,6 +823,16 @@ class DiagramElementPrimative extends DiagramElement {
     return { min, max };
   }
 
+  getRelativeBoundingBox(): {min: g2.Point, max: g2.Point} {
+    let { max, min } = this.getVerticesBoundingBox();
+    const transform = this.transform.copy();
+    transform.updateTranslation(0, 0);
+    max = max.transformBy(transform.matrix());
+    min = min.transformBy(transform.matrix());
+    return { min, max };
+  }
+
+
   getVerticesBoundingBox(): {min: g2.Point, max: g2.Point} {
     const min = new g2.Point(0, 0);
     const max = new g2.Point(0, 0);
@@ -874,11 +886,20 @@ class DiagramElementPrimative extends DiagramElement {
     //   }
     // }
     const { min, max } = this.getBoundingBox();
-    max.x = bounday[2] - max.x * scale.x;
-    max.y = bounday[3] - max.y * scale.y;
-    min.x = bounday[0] - min.x * scale.x;
-    min.y = bounday[1] - min.y * scale.y;
-
+    // console.log("bounds", bounday)
+    // console.log("box", min, max)
+    const currentTranslation = this.transform.t();
+    let biasX = 0;
+    let biasY = 0;
+    if (currentTranslation) {
+      biasX = currentTranslation.x;
+      biasY = currentTranslation.y;
+    }
+    max.x = bounday[2] - max.x * scale.x + biasX;
+    max.y = bounday[3] - max.y * scale.y + biasY;
+    min.x = bounday[0] - min.x * scale.x + biasX;
+    min.y = bounday[1] - min.y * scale.y + biasY;
+    // console.log(max, min)
     this.move.maxTransform.updateTranslation(
       max.x,
       max.y,

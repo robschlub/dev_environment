@@ -29,7 +29,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('square', new DiagramElementPrimative(
       square,
-      new g2.Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
+      new g2.Transform().scale(0.5, 0.5).rotate(0).translate(-1, 0),
       [0, 0, 1, 1], 'square', clipRect,
     ));
     // $FlowFixMe
@@ -76,7 +76,7 @@ function testgl(id: string) {
   // if (canvas instanceof HTMLCanvasElement) {
 
   if (canvas instanceof HTMLCanvasElement) {
-    const diagram = new Diagram1({}, canvas, -2, 1, 4, 2);
+    const diagram = new Diagram1({}, canvas, -4, 2, 8, 4);
 
     // eslint-disable-next-line
     const phase1 = new AnimationPhase(

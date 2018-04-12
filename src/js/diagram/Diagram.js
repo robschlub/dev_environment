@@ -154,18 +154,19 @@ class Diagram {
 
   draw(now: number): void {
     this.clearContext();
-    // const clipTransform = new g2.Transform()
-    //   .scale(2 / this.clipRect.width, 2 / this.clipRect.height);
-      // .translate(-1 - this.clipRect.left, 1 - this.clipRect.top);
-    // console.log(clipTransform.order)
-    // console.log("Asdf");
+    // This transform converts standard gl clip space, to diagram clip space
+    // defined in clipRect.
+    const clipTransform = new g2.Transform()
+      .scale(2 / this.clipRect.width, 2 / this.clipRect.height)
+      .translate(
+        -this.clipRect.width / 2 - this.clipRect.left,
+        this.clipRect.height / 2 - this.clipRect.top,
+      );
     this.elements.draw(
-      // clipTransform.matrix(),
-      m2.scaleMatrix(2 / this.clipRect.width, 2 / this.clipRect.height),
-      // m2.identity(),
+      clipTransform.matrix(),
       now,
     );
-    // this.animateNextFrame();
+
     if (this.elements.isMoving()) {
       this.animateNextFrame();
     }
