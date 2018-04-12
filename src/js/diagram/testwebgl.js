@@ -2,7 +2,7 @@
 import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 // import * as m2 from './m2';
-// import { Console } from '../tools/tools';
+import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
 // import GlobalVariables from './globals';
 import Diagram from './Diagram';
@@ -17,7 +17,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     const square = new Polygon(
       webgl,
-      0.5, 4, 4, 0.05,
+      0.475 * Math.sqrt(2), 4, 4, 0.05 * Math.sqrt(2),
       Math.PI / 4, new g2.Point(0, 0),
     );
 
@@ -29,23 +29,26 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('square', new DiagramElementPrimative(
       square,
-      new g2.Transform().scale(1.0, 1.0).rotate(0).translate(0, 0),
+      new g2.Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
       [0, 0, 1, 1], 'square',
     ));
     // $FlowFixMe
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
+    sq.updateMoveTranslationBoundary([-2, -1, 2, 1], new g2.Point(1.0, 1));
+    console.log(sq.getBoundingBox());
 
-    this.add('triangle', new DiagramElementPrimative(
-      triangle,
-      new g2.Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
-      [0, 1, 0, 1],
-    ));
-    // $FlowFixMe
-    const tri = this._triangle;
-    tri.isTouchable = true;
-    tri.isMovable = true;
+    // this.add('triangle', new DiagramElementPrimative(
+    //   triangle,
+    //   new g2.Transform().scale(1.0, 1.0).rotate(0).translate(0, 0),
+    //   [0, 1, 0, 1],
+    // ));
+    // // $FlowFixMe
+    // const tri = this._triangle;
+    // tri.isTouchable = true;
+    // tri.isMovable = true;
+    // // tri.updateMoveTranslationBoundary([-1, -1, 1, 1], new g2.Point(1.0, 1));
 
     this.isTouchable = true;
   }
@@ -71,7 +74,7 @@ function testgl(id: string) {
   // if (canvas instanceof HTMLCanvasElement) {
 
   if (canvas instanceof HTMLCanvasElement) {
-    const diagram = new Diagram1({}, canvas);
+    const diagram = new Diagram1({}, canvas, 4, 2);
 
     // eslint-disable-next-line
     const phase1 = new AnimationPhase(
@@ -111,28 +114,28 @@ function testgl(id: string) {
     if (diagram) {
       diagram.animateNextFrame();
 
-      canvas.onclick = function click(event) {
-        const box = canvas;
-        /* eslint-disable */
-        const clip = diagram.screenToClip(new g2.Point(event.pageX, event.pageY));
-        const str = `Screen ${event.screenX}, ${event.screenY}\n` +
-        'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
-        'Client ' + event.clientX + ', ' + event.clientY + '\n' +
-        'Page ' + event.pageX + ', ' + event.pageY + '\n\n' +
-        'Box:\n' +
-        'Scroll L/T/W/H ' + box.scrollLeft + ', ' + box.scrollTop + ', ' + box.scrollWidth + ', ' + box.scrollHeight + '\n' +
-        'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
-        'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
-        'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
-        // $FlowFixMe
-        'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
-        // $FlowFixMe
-        'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
-        'collection touch: ' + diagram.elements.isBeingTouched(clip);
-        /* eslint-enable */
-        // Console(str);
-        // Console(event);
-      };
+      // canvas.onclick = function click(event) {
+      //   const box = canvas;
+      //   /* eslint-disable */
+      //   const clip = diagram.screenToClip(new g2.Point(event.pageX, event.pageY));
+      //   const str = `Screen ${event.screenX}, ${event.screenY}\n` +
+      //   'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
+      //   'Client ' + event.clientX + ', ' + event.clientY + '\n' +
+      //   'Page ' + event.pageX + ', ' + event.pageY + '\n\n' +
+      //   'Box:\n' +
+      //   'Scroll L/T/W/H ' + box.scrollLeft + ', ' + box.scrollTop + ', ' + box.scrollWidth + ', ' + box.scrollHeight + '\n' +
+      //   'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
+      //   'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
+      //   'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
+      //   // $FlowFixMe
+      //   'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
+      //   // $FlowFixMe
+      //   'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
+      //   'collection touch: ' + diagram.elements.isBeingTouched(clip);
+      //   /* eslint-enable */
+      //   // Console(str);
+      //   // Console(event);
+      // };
       // const globals = new GlobalVariables();
       // shapes.animateRotationTo(1, -1, 10);
       // shapes._square.animateTranslationTo(new g2.Point(0.2, 0.2), 2);

@@ -6,7 +6,6 @@ import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
-// import GlobalVariables from './globals';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
 
@@ -14,17 +13,20 @@ class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
   elements: DiagramElementPrimative | DiagramElementCollection;
-  // activeElementsList: Array<DiagramElementPrimative |
-  //                     DiagramElementCollection>;
   lesson: Object;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
+  // aspectRatio: g2.Point;
+  clipWidth: number;
+  clipHeight: number;
 
   constructor(
     lesson: Object,
     canvas: HTMLCanvasElement,
+    clipWidth: number = 2,
+    clipHeight: number = 2,
   ) {
     this.canvas = canvas;
     if (this instanceof Diagram) {
@@ -38,18 +40,17 @@ class Diagram {
       shaders.fragmentSource,
       shaders.varNames,
     );
+    // this.aspectRatio = new g2.Point(0.5, 1);
+    this.clipWidth = clipWidth;
+    this.clipHeight = clipHeight;
 
     this.webgl = webgl;
-
     this.lesson = lesson;
-    // this.elements = new DiagramElements(this.webgl);
     this.beingMovedElements = [];
-    // this.activeElementsList = [];
     this.globalAnimation = new GlobalAnimation();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
     // this.devicePixelRatio = window.devicePixelRatio;
     this.elements = this.createDiagramElements();
-    // this.counter=0;
   }
 
   // Handle touch down, or mouse click events within the canvas.
@@ -62,6 +63,9 @@ class Diagram {
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
+    // console.log(clipPoint);
+    const { max, min } = this.elements._square.getBoundingBox()
+    // console.log( min.x, min.y, max.x, max.y);
     const touchedElements = this.elements.getTouched(clipPoint);
 
     // Make a list of, and start moving elements that are being moved
@@ -104,6 +108,8 @@ class Diagram {
     const previousClipPoint = this.screenToClip(previousPagePoint);
     const currentClipPoint = this.screenToClip(currentPagePoint);
     const delta = currentClipPoint.sub(previousClipPoint);
+    // delta.x *= this.clipWidth / 2;
+    // delta.y *= this.clipHeight / 2;
 
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
@@ -149,7 +155,11 @@ class Diagram {
 
   draw(now: number): void {
     this.clearContext();
-    this.elements.draw(m2.identity(), now);
+    this.elements.draw(
+      m2.scaleMatrix(2 / this.clipWidth, 2 / this.clipHeight),
+      // m2.identity(),
+      now,
+    );
     if (this.elements.isMoving()) {
       this.animateNextFrame();
     }
@@ -180,7 +190,10 @@ class Diagram {
     );
     const r = screenPixelToClipRatio;
     const l = pageLocationRelativeToCanvasCenter;
-    return new g2.Point(r.x * l.x, r.y * l.y);
+    return new g2.Point(
+      r.x * l.x * this.clipWidth / 2,
+      r.y * l.y * this.clipHeight / 2,
+    );
   }
 
   /* eslint-disable */

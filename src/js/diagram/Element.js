@@ -212,7 +212,7 @@ class DiagramElement {
   }
 
   vertexToClip(vertex: g2.Point) {
-    return vertex.transformBy(this.lastDrawTransformMatrix);
+    return vertex.transformBy(this.lastDrawTransformMatrix).transformBy(m2.scaleMatrix(2, 1));
   }
 
   // Remove?
@@ -755,6 +755,7 @@ class DiagramElementPrimative extends DiagramElement {
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
         border.push(this.vertexToClip(this.vertices.border[m][i]));
       }
+      // console.log(border);
       if (clipLocation.isInPolygon(border)) {
         return true;
       }
