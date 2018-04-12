@@ -138,10 +138,11 @@ class Diagram {
   }
 
   // This should be overridden as it is the custom elements of a diagram
+  // eslint-disable-next-line class-methods-use-this
   createDiagramElements() {
-    const square = new Polygon(this.webgl, 1, 4, 4, 0.01, 0, g2.Point.zero());
+    // const square = new Polygon(this.webgl, 1, 4, 4, 0.01, 0, g2.Point.zero());
     const collection = new DiagramElementCollection();
-    collection.add('square', new DiagramElementPrimative(square));
+    // collection.add('square', new DiagramElementPrimative(square));
     return collection;
   }
 
