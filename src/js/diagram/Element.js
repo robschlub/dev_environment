@@ -170,8 +170,8 @@ class DiagramElement {
     // }
 
     this.move = {
-      maxTransform: this.transform.constant(1),
-      minTransform: this.transform.constant(-1),
+      maxTransform: this.transform.constant(1000),
+      minTransform: this.transform.constant(-1000),
       maxVelocity: new g2.TransformLimit(5, 5, 5),
       freely: {
         zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
@@ -560,7 +560,6 @@ class DiagramElement {
   moved(newTransform: g2.Transform): void {
     this.calcVelocity(newTransform);
     this.setTransform(newTransform.copy());
-    // this.transform = newTransform.copy()
   }
 
   stopBeingMoved(): void {
@@ -1044,7 +1043,6 @@ class DiagramElementCollection extends DiagramElement {
       element.stop();
     }
   }
-
 }
 
 export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };
