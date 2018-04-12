@@ -13,7 +13,6 @@ class ShapesCollection extends DiagramElementCollection {
 
   constructor(webgl, transform, name, clipRect) {
     super(transform, name);
-    // GeometryCollection.call(this, translation, rotation, scale);
 
     const square = new Polygon(
       webgl,
@@ -29,16 +28,13 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('square', new DiagramElementPrimative(
       square,
-      new g2.Transform().scale(1.0, 1.0).rotate(Math.PI / 4).translate(1, 0),
+      new g2.Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 0),
       [0, 0, 1, 1], 'square', clipRect,
     ));
     // $FlowFixMe
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
-    // sq.clipLimits = { max: new g2.Point(2, 1), min: new g2.Point(-2, -1) };
-    // sq.updateMoveTranslationBoundary([-2, -1, 2, 1], new g2.Point(1.0, 1));
-    // console.log(sq.getBoundingBox());
 
     this.add('triangle', new DiagramElementPrimative(
       triangle,
@@ -49,7 +45,6 @@ class ShapesCollection extends DiagramElementCollection {
     const tri = this._triangle;
     tri.isTouchable = true;
     tri.isMovable = true;
-    // // tri.updateMoveTranslationBoundary([-1, -1, 1, 1], new g2.Point(1.0, 1));
 
     this.isTouchable = true;
   }

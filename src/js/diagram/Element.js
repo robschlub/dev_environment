@@ -741,9 +741,6 @@ class DiagramElementPrimative extends DiagramElement {
 
   constructor(
     vertexObject: VertexObject,
-    // translation: g2.Point = g2.Point.zero(),
-    // rotation: number = 0,
-    // scale: g2.Point = new g2.Point.Unity(),
     transform: g2.Transform = new g2.Transform(),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     name: string = '',
@@ -754,9 +751,7 @@ class DiagramElementPrimative extends DiagramElement {
     this.color = color;
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
-    // console.log("before:", this.move.maxTransform.t())
     this.updateMoveTranslationBoundary();
-    // console.log("after:", this.move.maxTransform.t())
   }
 
   isBeingTouched(clipLocation: g2.Point): boolean {
@@ -768,7 +763,6 @@ class DiagramElementPrimative extends DiagramElement {
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
         border.push(this.vertexToClip(this.vertices.border[m][i]));
       }
-      // console.log(border);
       if (clipLocation.isInPolygon(border)) {
         return true;
       }
@@ -818,23 +812,20 @@ class DiagramElementPrimative extends DiagramElement {
 
   getBoundingBox(): {min: g2.Point, max: g2.Point} {
     const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
-    // max = max.transformBy(this.transform.matrix());
-    // min = min.transformBy(this.transform.matrix());
     return { min, max };
   }
 
   getRelativeBoundingBox(): {min: g2.Point, max: g2.Point} {
-    const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
-    let { max, min } = this.getVerticesBoundingBox();
-    const transform = this.transform.copy();
-    transform.updateTranslation(0, 0);
-    max = max.transformBy(transform.matrix());
-    min = min.transformBy(transform.matrix());
+    const newTransform = this.transform.copy();
+    newTransform.updateTranslation(0, 0);
+    const { min, max } = this.getVerticesBoundingBox(newTransform.matrix());
     return { min, max };
   }
 
 
-  getVerticesBoundingBox(transformMatrix: Array<number> = m2.identity()): {min: g2.Point, max: g2.Point} {
+  getVerticesBoundingBox(transformMatrix: Array<number> = m2.identity()): {
+    min: g2.Point, max: g2.Point
+  } {
     const min = new g2.Point(0, 0);
     const max = new g2.Point(0, 0);
     let firstTime = true;
@@ -866,52 +857,20 @@ class DiagramElementPrimative extends DiagramElement {
       this.clipRect.top],
     scale: g2.Point = new g2.Point(1, 1),
   ): void {
-    // const min = { x: 0, y: 0 };
-    // const max = { x: 0, y: 0 };
-    // let firstTime = true;
-    // for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-    //   for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-    //     const vertex = this.vertices.border[m][i];
-    //     if (firstTime) {
-    //       min.x = vertex.x;
-    //       min.y = vertex.y;
-    //       max.x = vertex.x;
-    //       max.y = vertex.y;
-    //       firstTime = false;
-    //     } else {
-    //       min.x = vertex.x < min.x ? vertex.x : min.x;
-    //       min.y = vertex.y < min.y ? vertex.y : min.y; // $FlowFixMe
-    //       max.x = vertex.x > max.x ? vertex.x : max.x; // $FlowFixMe
-    //       max.y = vertex.y > max.y ? vertex.y : max.y;
-    //     }
-    //   }
-    // }
-    const { min, max } = this.getBoundingBox();
-    console.log("bounds", bounday)
-    console.log("box", min, max)
-    const currentTranslation = this.transform.t();
-    let biasX = 0;
-    let biasY = 0;
-    if (currentTranslation) {
-      biasX = currentTranslation.x;
-      biasY = currentTranslation.y;
-    }
-    max.x = bounday[2] - max.x * scale.x + biasX;
-    max.y = bounday[3] - max.y * scale.y + biasY;
-    min.x = bounday[0] - min.x * scale.x + biasX;
-    min.y = bounday[1] - min.y * scale.y + biasY;
-    // console.log(max, min)
+    const { min, max } = this.getRelativeBoundingBox();
+
+    max.x = bounday[2] - max.x * scale.x;
+    max.y = bounday[3] - max.y * scale.y;
+    min.x = bounday[0] - min.x * scale.x;
+    min.y = bounday[1] - min.y * scale.y;
+
     this.move.maxTransform.updateTranslation(
       max.x,
       max.y,
-      // 1 - max.x * scale.x,
-      // 1 - max.y * scale.y,
     );
     this.move.minTransform.updateTranslation(
       min.x,
       min.y,
-      // -1 - min.x * scale.x,
-      // -1 - min.y * scale.y,
     );
   }
 }
@@ -989,7 +948,6 @@ class DiagramElementCollection extends DiagramElement {
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       element.show = false;
-      // console.log(element.name)
       if (typeof element.hideAll === 'function') {
         element.hideAll();
       }
