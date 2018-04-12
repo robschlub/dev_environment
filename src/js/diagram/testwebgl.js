@@ -11,7 +11,7 @@ import * as tools from './mathtools';
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
 
-  constructor(webgl, transform, name) {
+  constructor(webgl, transform, name, clipRect) {
     super(transform, name);
     // GeometryCollection.call(this, translation, rotation, scale);
 
@@ -30,25 +30,25 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('square', new DiagramElementPrimative(
       square,
       new g2.Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
-      [0, 0, 1, 1], 'square',
+      [0, 0, 1, 1], 'square', clipRect,
     ));
     // $FlowFixMe
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
-    sq.clipLimits = { max: new g2.Point(2, 1), min: new g2.Point(-2, -1) };
-    sq.updateMoveTranslationBoundary([-2, -1, 2, 1], new g2.Point(1.0, 1));
-    console.log(sq.getBoundingBox());
+    // sq.clipLimits = { max: new g2.Point(2, 1), min: new g2.Point(-2, -1) };
+    // sq.updateMoveTranslationBoundary([-2, -1, 2, 1], new g2.Point(1.0, 1));
+    // console.log(sq.getBoundingBox());
 
-    // this.add('triangle', new DiagramElementPrimative(
-    //   triangle,
-    //   new g2.Transform().scale(1.0, 1.0).rotate(0).translate(0, 0),
-    //   [0, 1, 0, 1],
-    // ));
-    // // $FlowFixMe
-    // const tri = this._triangle;
-    // tri.isTouchable = true;
-    // tri.isMovable = true;
+    this.add('triangle', new DiagramElementPrimative(
+      triangle,
+      new g2.Transform().scale(1.0, 1.0).rotate(0).translate(0, 0),
+      [0, 1, 0, 1], 'tirangle', clipRect,
+    ));
+    // $FlowFixMe
+    const tri = this._triangle;
+    tri.isTouchable = true;
+    tri.isMovable = true;
     // // tri.updateMoveTranslationBoundary([-1, -1, 1, 1], new g2.Point(1.0, 1));
 
     this.isTouchable = true;
@@ -63,6 +63,7 @@ class Diagram1 extends Diagram {
       this.webgl,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),
       'collection',
+      this.clipRect,
     );
   }
 }
@@ -75,7 +76,7 @@ function testgl(id: string) {
   // if (canvas instanceof HTMLCanvasElement) {
 
   if (canvas instanceof HTMLCanvasElement) {
-    const diagram = new Diagram1({}, canvas, 4, 2);
+    const diagram = new Diagram1({}, canvas, -2, 1, 4, 2);
 
     // eslint-disable-next-line
     const phase1 = new AnimationPhase(
@@ -110,7 +111,7 @@ function testgl(id: string) {
     // diagram.elements.animateRotationTo(1, -1, 10);
 
     // $FlowFixMe
-    diagram.elements._square.animateTranslationTo(new g2.Point(0.2, 0.2), 4);
+    diagram.elements._square.animateTranslationTo(new g2.Point(1.5, 0.5), 1);
 
     if (diagram) {
       diagram.animateNextFrame();

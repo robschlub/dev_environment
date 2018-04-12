@@ -19,14 +19,17 @@ class Diagram {
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
   // aspectRatio: g2.Point;
-  clipWidth: number;
-  clipHeight: number;
+  clipRect: g2.Rect;
 
   constructor(
     lesson: Object,
     canvas: HTMLCanvasElement,
-    clipWidth: number = 2,
-    clipHeight: number = 2,
+    clipXLeft: number,
+    clipYTop: number,
+    clipWidth: number,
+    clipHeight: number,
+    // clipWidth: number = 2,
+    // clipHeight: number = 2,
   ) {
     this.canvas = canvas;
     if (this instanceof Diagram) {
@@ -40,9 +43,7 @@ class Diagram {
       shaders.fragmentSource,
       shaders.varNames,
     );
-    // this.aspectRatio = new g2.Point(0.5, 1);
-    this.clipWidth = clipWidth;
-    this.clipHeight = clipHeight;
+    this.clipRect = new g2.Rect(clipXLeft, clipYTop, clipWidth, clipHeight);
 
     this.webgl = webgl;
     this.lesson = lesson;
@@ -63,9 +64,6 @@ class Diagram {
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
-    // console.log(clipPoint);
-    const { max, min } = this.elements._square.getBoundingBox()
-    // console.log( min.x, min.y, max.x, max.y);
     const touchedElements = this.elements.getTouched(clipPoint);
 
     // Make a list of, and start moving elements that are being moved
@@ -108,8 +106,6 @@ class Diagram {
     const previousClipPoint = this.screenToClip(previousPagePoint);
     const currentClipPoint = this.screenToClip(currentPagePoint);
     const delta = currentClipPoint.sub(previousClipPoint);
-    // delta.x *= this.clipWidth / 2;
-    // delta.y *= this.clipHeight / 2;
 
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
@@ -156,7 +152,7 @@ class Diagram {
   draw(now: number): void {
     this.clearContext();
     this.elements.draw(
-      m2.scaleMatrix(2 / this.clipWidth, 2 / this.clipHeight),
+      m2.scaleMatrix(2 / this.clipRect.width, 2 / this.clipRect.height),
       // m2.identity(),
       now,
     );
@@ -191,8 +187,8 @@ class Diagram {
     const r = screenPixelToClipRatio;
     const l = pageLocationRelativeToCanvasCenter;
     return new g2.Point(
-      r.x * l.x * this.clipWidth / 2,
-      r.y * l.y * this.clipHeight / 2,
+      r.x * l.x * this.clipRect.width / 2,
+      r.y * l.y * this.clipRect.height / 2,
     );
   }
 

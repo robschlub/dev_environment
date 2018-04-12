@@ -119,10 +119,7 @@ class DiagramElement {
     transformMethod: (number) => g2.Transform,
   };
 
-  clipLimits: {
-    min: g2.Point,
-    max: g2.Point,
-  };
+  clipRect: g2.Rect;
 
   // Current animation/movement state of element
   state: {
@@ -154,6 +151,7 @@ class DiagramElement {
     // scale: g2.Point = g2.Point.Unity(),
     transform: g2.Transform = new g2.Transform(),
     name: string = '',
+    clipRect: g2.Rect = new g2.Rect(-1, 1, 2, 2),
   ) {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
@@ -166,10 +164,10 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
-    this.clipLimits = {
-      min: new g2.Point(-1, -1),
-      max: new g2.Point(1, 1),
-    };
+    this.clipRect = clipRect;
+    //   min: new g2.Point(-1, -1),
+    //   max: new g2.Point(1, 1),
+    // }
 
     this.move = {
       maxTransform: this.transform.constant(1),
@@ -221,9 +219,8 @@ class DiagramElement {
   }
 
   vertexToClip(vertex: g2.Point) {
-    const clipX = (this.clipLimits.max.x - this.clipLimits.min.x) / 2;
-    const clipY = (this.clipLimits.max.y - this.clipLimits.min.y) / 2;
-    // console.log(clipX, clipY);
+    const clipX = this.clipRect.width / 2;
+    const clipY = this.clipRect.height / 2;
     return vertex.transformBy(this.lastDrawTransformMatrix)
       .transformBy(m2.scaleMatrix(clipX, clipY));
   }
@@ -750,8 +747,9 @@ class DiagramElementPrimative extends DiagramElement {
     transform: g2.Transform = new g2.Transform(),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     name: string = '',
+    clipRect: g2.Rect = new g2.Rect(-1, 1, 2, 2),
   ) {
-    super(transform, name);
+    super(transform, name, clipRect);
     this.vertices = vertexObject;
     this.color = color;
     this.pointsToDraw = -1;
@@ -848,7 +846,11 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   updateMoveTranslationBoundary(
-    bounday: Array<number> = [-1, -1, 1, 1],
+    bounday: Array<number> = [
+      this.clipRect.left,
+      this.clipRect.top - this.clipRect.height,
+      this.clipRect.left + this.clipRect.width,
+      this.clipRect.top],
     scale: g2.Point = new g2.Point(1, 1),
   ): void {
     // const min = { x: 0, y: 0 };
@@ -903,8 +905,9 @@ class DiagramElementCollection extends DiagramElement {
   constructor(
     transform: g2.Transform = new g2.Transform(),
     name: string = '',
+    clipRect: g2.Rect = new g2.Rect(-1, 1, 2, 2),
   ): void {
-    super(transform, name);
+    super(transform, name, clipRect);
     this.elements = {};
     this.order = [];
   }
@@ -1061,5 +1064,7 @@ class DiagramElementCollection extends DiagramElement {
       element.stop();
     }
   }
+
 }
+
 export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };

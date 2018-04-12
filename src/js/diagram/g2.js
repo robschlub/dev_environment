@@ -34,7 +34,19 @@ import * as m2 from './m2';
 //   // isInPolygon: boolean;
 //   // isOnPolygon: boolean;
 // };
+class Rect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
 
+  constructor(left: number, top: number, width: number, height: number) {
+    this.left = left;
+    this.top = top;
+    this.width = width;
+    this.height = height;
+  }
+}
 /* eslint-disable comma-dangle */
 class Point {
   x: number;
@@ -1138,4 +1150,5 @@ export {
   normAngle,
   Transform,
   TransformLimit,
+  Rect,
 };
