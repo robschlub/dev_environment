@@ -127,15 +127,15 @@ class Diagram {
     this.elements.stop();
   }
 
-  getTargetRect() {
-    return {
-      left: 0,
-      top: 0,
-      width:
-      this.canvas.width,
-      height: this.canvas.height,
-    };
-  }
+  // getTargetRect() {
+  //   return {
+  //     left: 0,
+  //     top: 0,
+  //     width:
+  //     this.canvas.width,
+  //     height: this.canvas.height,
+  //   };
+  // }
 
   // This should be overridden as it is the custom elements of a diagram
   // eslint-disable-next-line class-methods-use-this
