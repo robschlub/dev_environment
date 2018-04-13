@@ -2,7 +2,7 @@
 
 import WebGLInstance from './webgl';
 import getShaders from './webgl/shaders';
-import Polygon from './vertexObjects/Polygon';
+// import Polygon from './vertexObjects/Polygon';
 import * as g2 from './g2';
 // import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
@@ -181,14 +181,16 @@ class Diagram {
   }
 
   // clipToPage = function(x,y) { return {
-  //     x: canvasL + canvasW*(x - clipL)/clipW, 
+  //     x: canvasL + canvasW*(x - clipL)/clipW,
   //     y: canvasT + canvasH*(clipT - y)/clipH,
   // }}
   clipToPage(clip: g2.Point): g2.Point {
     return new g2.Point(
-      this.canvas.offsetLeft + this.canvas.offsetWidth * (clip.x - this.clipRect.left)/this.clipRect.width,
-      this.canvas.offsetTop + this.canvas.offsetHeight* (this.clipRect.top - clip.y)/this.clipRect.height,
-      )
+      this.canvas.offsetLeft + this.canvas.offsetWidth *
+        (clip.x - this.clipRect.left) / this.clipRect.width,
+      this.canvas.offsetTop + this.canvas.offsetHeight *
+        (this.clipRect.top - clip.y) / this.clipRect.height,
+    );
   }
 
   // pageToClip = function(x, y) { return {
@@ -197,8 +199,10 @@ class Diagram {
   // }}
   pageToClip(pageLocation: g2.Point): g2.Point {
     return new g2.Point(
-      (pageLocation.x - this.canvas.offsetLeft)/this.canvas.offsetWidth * this.clipRect.width + this.clipRect.left,
-      this.clipRect.top - (pageLocation.y - this.canvas.offsetTop)/this.canvas.offsetHeight * this.clipRect.height,
+      (pageLocation.x - this.canvas.offsetLeft) / this.canvas.offsetWidth *
+        this.clipRect.width + this.clipRect.left,
+      this.clipRect.top - (pageLocation.y - this.canvas.offsetTop) /
+        this.canvas.offsetHeight * this.clipRect.height,
     );
   }
 
