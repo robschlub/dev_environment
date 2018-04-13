@@ -560,6 +560,16 @@ describe('Animationa and Movement', () => {
         e.clipRect = new Rect(0, 2, 4, 2);
         e.transform = new Transform().scale(2, 0.5).translate(1, 1);
         e.draw();
+        // 1. scale point by 2, 0.5
+        // 2. offset point by 1, 1
+        // 3. Squish/stretch point into diagram space
+        //
+        // e.g. (1, 1)
+        //  1. (2, 0.5)
+        //  2. (3, 1.5)
+        //  3. <(-1, -1), (1, 1)> goes to <(0, 0), (4, 2)>
+        //     scale x by 2, scale y by 1: (6, 1.5)
+        //     offset x by +2, y by +1: (8, 2.5)
         expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
         expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(8, 2.5));
         expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 1.5));
