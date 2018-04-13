@@ -3,7 +3,7 @@ import {
   DiagramElementCollection,
   AnimationPhase,
 } from './Element';
-import { Point, Transform, TransformLimit } from './g2';
+import { Point, Transform, TransformLimit, Rect } from './g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import Polygon from './vertexObjects/Polygon';
 import { linear, round } from './mathtools';
@@ -496,6 +496,73 @@ describe('Animationa and Movement', () => {
         square.updateMoveTranslationBoundary([-1, -2, 1, 2]);
         expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 1.79));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -1.79));
+      });
+    });
+    describe('vertexToClip', () => {
+      let e;
+      beforeEach(() => {
+        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        const element = new DiagramElementPrimative(
+          square,
+          new Transform(),
+          [0, 0, 1, 1], '',
+          new Rect(-1, 1, 2, 2),
+        );
+        element.draw();
+        e = element;
+      });
+      test('No transform', () => {
+        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
+        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(1, 1));
+        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-1, -1));
+      });
+      test('Scaling up tranform', () => {
+        e.transform = new Transform().scale(2, 2);
+        e.draw();
+        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
+        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
+        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-2, -2));
+      });
+      test('Scaling down tranform', () => {
+        e.transform = new Transform().scale(0.5, 0.5);
+        e.draw();
+        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
+        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(0.5, 0.5));
+        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-0.5, -0.5));
+      });
+      test('Translation tranform', () => {
+        e.transform = new Transform().translate(1, 1);
+        e.draw();
+        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(1, 1));
+        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
+        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
+      });
+      test('Landscape', () => {
+        // First perform transform in element space, then squish element
+        // space to diagram space.
+        e.clipRect = new Rect(0, 2, 4, 2);
+        e.draw();
+        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(2, 1));
+        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(4, 2));
+        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
+      });
+      test('Landscape with offset', () => {
+        // First perform transform in element space, then squish element
+        // space to diagram space.
+        e.clipRect = new Rect(0, 2, 4, 2);
+        e.transform = new Transform().translate(1, 1);
+        e.draw();
+        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
+        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(6, 3));
+        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(2, 1));
+      });
+      test('Landscape with scale and offset', () => {
+        e.clipRect = new Rect(0, 2, 4, 2);
+        e.transform = new Transform().scale(2, 0.5).translate(1, 1);
+        e.draw();
+        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
+        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(8, 2.5));
+        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 1.5));
       });
     });
   });

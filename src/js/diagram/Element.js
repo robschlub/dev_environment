@@ -218,31 +218,50 @@ class DiagramElement {
     this.presetTransforms = {};
   }
 
+  // A diagram element primative vertex object lives in GL SPACE.
+  //
+  // A diagram element has its own DIAGRAM ELEMENT SPACE, which is
+  // the GL space transformed by `this.transform`.
+  //
+  // A diagram element is drawn in the DIAGRAM SPACE, by transforming
+  // the DIAGRAM ELEMENT SPACE by an incoming transformation matrix in the draw
+  // method. This incoming transformation matrix originates in the diagram
+  // and waterfalls through each parent diagram collection element to the
+  // current diagram element.
+  //
+  // this.lastDrawTransformationMatrix captures how a vertex was drawn in
+  // the last frame, in DIAGRAM space as:
+  //   vertex
+  //     transformed by: DIAGRAM ELEMENT SPACE
+  //     transfromed by: DIAGRAM SPACE transform
+  //
+  // By default, webgl clip space is a unit space from (-1, 1) to (1, 1)
+  // independent of the aspect ratio of the canvas it is drawn on.
+  //
+  // A diagram object can have its own clip space with arbitrary limits. e.g.:
+  //    * (-1, -1) to (1, 1)    similar to gl clip space
+  //    * (0, 0) to (2, 2)      similar to gl clip space but offset
+  //    * (0, 0) to (4, 2)      for rectangular aspect ratio diagram
+  //
+  // The diagram object clip space definition is stored in this.clipRect.
+  //
+  // To therefore transform a vertex (from GL SPACE) to DIAGRAM CLIP SPACE:
+  //   * Take the vertex
+  //   * Transform it to DIAGRAM SPACE (by transforming it with the
+  //     lastDrawTransformMatrix)
+  //   * Transform it to DIAGRAM CLIP SPACE by scaling and offsetting it
+  //     to the clip space.
+  //
+  // Each diagram element holds a DIAGRAM ELMENT CLIP space
   vertexToClip(vertex: g2.Point) {
-    const clipX = this.clipRect.width / 2;
-    const clipY = this.clipRect.height / 2;
+    const scaleX = this.clipRect.width / 2;
+    const scaleY = this.clipRect.height / 2;
     const biasX = -(-this.clipRect.width / 2 - this.clipRect.left);
     const biasY = -(this.clipRect.height / 2 - this.clipRect.top);
-    const transform = new g2.Transform().scale(clipX, clipY).translate(biasX, biasY);
+    const transform = new g2.Transform().scale(scaleX, scaleY).translate(biasX, biasY);
     return vertex.transformBy(this.lastDrawTransformMatrix)
       .transformBy(transform.matrix());
   }
-
-  // Remove?
-  // vertexToScreen(vertex: g2.Point, canvas: HTMLCanvasElement): g2.Point {
-  //   const canvasRect = canvas.getBoundingClientRect();
-  //   const canvasWidth = canvas.scrollWidth;
-  //   const canvasHeight = canvas.scrollHeight;
-  //   const transformedVertex = vertex.transformBy(this.lastDrawTransformMatrix);
-  //   // const transformedVertex = m2.pointTransform(this.lastDraw, vertex);
-  //   return g2.point(
-  //     (transformedVertex.x + 1.0) * canvasWidth / 2.0 + canvasRect.left,
-  //     (-transformedVertex.y + 1.0) * canvasHeight / 2.0 + canvasRect.top,
-  //   );
-  // }
-  // static isBeingTouched(): boolean {
-  //   return false;
-  // }
 
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): g2.Transform {
@@ -255,12 +274,6 @@ class DiagramElement {
     const p = percentComplete;
     let next = new g2.Transform();
     next = start.add(delta.mul(next.scale(p, p).rotate(p).translate(p, p)));
-    // next.translation.x = start.translation.x + percentComplete * delta.translation.x;
-    // next.translation.y = start.translation.y + percentComplete * delta.translation.y;
-    // next.scale.x = start.scale.x + percentComplete * delta.scale.x;
-    // next.scale.y = start.scale.y + percentComplete * delta.scale.y;
-
-    // next.rotation = start.rotation + percentComplete * delta.rotation;
     return next;
   }
 
