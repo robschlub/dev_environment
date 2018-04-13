@@ -12,22 +12,19 @@ import Gesture from './Gesture';
 class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
-  elements: DiagramElementPrimative | DiagramElementCollection;
-  lesson: Object;
+  elements: DiagramElementCollection;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
-  // aspectRatio: g2.Point;
   limits: g2.Rect;
 
   constructor(
-    lesson: Object,
     canvas: HTMLCanvasElement,
-    limitsOrxMin: number | g2.Rect,
-    yMin: number,
-    width: number,
-    height: number,
+    limitsOrxMin: number | g2.Rect = new g2.Rect(-1, -1, 2, 2),
+    yMin: number = -1,
+    width: number = 2,
+    height: number = 2,
   ) {
     this.canvas = canvas;
     if (this instanceof Diagram) {
@@ -49,7 +46,6 @@ class Diagram {
     }
 
     this.webgl = webgl;
-    this.lesson = lesson;
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
@@ -131,22 +127,19 @@ class Diagram {
     this.elements.stop();
   }
 
-  // getTargetRect() {
-  //   return {
-  //     left: 0,
-  //     top: 0,
-  //     width:
-  //     this.canvas.width,
-  //     height: this.canvas.height,
-  //   };
-  // }
-
-  // This should be overridden as it is the custom elements of a diagram
-  // eslint-disable-next-line class-methods-use-this
+  // To add elements to a diagram, either this method can be overridden,
+  // or the `add` method can be used.
   createDiagramElements() {
     this.elements = new DiagramElementCollection();
+    this.elements.diagramLimits = this.limits;
   }
 
+  add(
+    name: string,
+    diagramElement: DiagramElementPrimative | DiagramElementCollection,
+  ) {
+    this.elements.add(name, diagramElement);
+  }
   clearContext() {
     this.webgl.gl.clearColor(0.5, 0, 0, 0.5);
     this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);

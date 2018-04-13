@@ -91,7 +91,7 @@ describe('Diagram', () => {
         offsetHeight: definition.height,
       };
       const { limits } = definition;
-      const diagram = new Diagram({}, canvas, limits);
+      const diagram = new Diagram(canvas, limits);
       diagram.webgl = webgl;
       diagram.canvas = canvasMock;
 
@@ -123,6 +123,22 @@ describe('Diagram', () => {
     const d = diagrams.landscapeCenter;
     expect(d.elements.order).toHaveLength(3);
     expect(d.limits).toEqual(new Rect(-1, -1, 2, 2));
+  });
+  describe('Diagram API', () => {
+    const d = new Diagram(canvas, 0, 0, 4, 4);
+    d.webgl = webgl;      // needed for mocking only
+    const squareVertices = new Polygon(
+      d.webgl,            // gl instance
+      1,                  // radius to center of corner
+      4,                  // number of sides in polygon
+      4,                  // number of sides to draw
+      0.05,               // thickness of polygon border
+      Math.PI / 4,        // rotation
+      new Point(0, 0),    // offset
+    );
+    const square = new DiagramElementPrimative(squareVertices);
+    d.add('square', square);
+    expect(d.elements.order).toHaveLength(1);
   });
   describe('pageToClip', () => {
     test('Landscape center at origin', () => {

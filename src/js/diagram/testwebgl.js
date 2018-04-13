@@ -51,7 +51,7 @@ class ShapesCollection extends DiagramElementCollection {
 }
 
 class Diagram1 extends Diagram {
-  elements: ShapesCollection | DiagramElementPrimative | DiagramElementCollection;
+  elements: ShapesCollection | DiagramElementCollection;
 
   createDiagramElements() {
     this.elements = new ShapesCollection(
@@ -70,7 +70,7 @@ function testgl(id: string) {
   // if (canvas instanceof HTMLCanvasElement) {
 
   if (canvas instanceof HTMLCanvasElement) {
-    const diagram = new Diagram1({}, canvas, 0, 0, 8, 4);
+    const diagram = new Diagram1(canvas, 0, 0, 8, 4);
 
     // eslint-disable-next-line
     const phase1 = new AnimationPhase(
