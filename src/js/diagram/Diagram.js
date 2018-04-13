@@ -180,28 +180,50 @@ class Diagram {
     return this.elements.state.isAnimating;
   }
 
-  screenToClip(pageLocation: g2.Point): g2.Point {
-    const canvasCenterOnPage = new g2.Point(
-      this.canvas.offsetLeft + this.canvas.offsetWidth / 2,
-      this.canvas.offsetTop + this.canvas.offsetHeight / 2,
-    );
-
-    const pageLocationRelativeToCanvasCenter = new g2.Point(
-      pageLocation.x - canvasCenterOnPage.x,
-      -(pageLocation.y - canvasCenterOnPage.y),
-    );
-
-    const screenPixelToClipRatio = new g2.Point(
-      2 / this.canvas.offsetWidth,
-      2 / this.canvas.offsetHeight,
-    );
-    const r = screenPixelToClipRatio;
-    const l = pageLocationRelativeToCanvasCenter;
+  // clipToPage = function(x,y) { return {
+  //     x: canvasL + canvasW*(x - clipL)/clipW, 
+  //     y: canvasT + canvasH*(clipT - y)/clipH,
+  // }}
+  clipToPage(clip: g2.Point): g2.Point {
     return new g2.Point(
-      r.x * l.x * this.clipRect.width / 2 - (-this.clipRect.width / 2 - this.clipRect.left),
-      r.y * l.y * this.clipRect.height / 2 - (this.clipRect.height / 2 - this.clipRect.top),
+      this.canvas.offsetLeft + this.canvas.offsetWidth * (clip.x - this.clipRect.left)/this.clipRect.width,
+      this.canvas.offsetTop + this.canvas.offsetHeight* (this.clipRect.top - clip.y)/this.clipRect.height,
+      )
+  }
+
+  // pageToClip = function(x, y) { return {
+  //    x: (x - canvasL)/canvasW * clipW + clipL,
+  //    y: clipT - (y - canvasT)/canvasH * clipH,
+  // }}
+  screenToClip(pageLocation: g2.Point): g2.Point {
+    return new g2.Point(
+      (pageLocation.x - this.canvas.offsetLeft)/this.canvas.offsetWidth * this.clipRect.width + this.clipRect.left,
+      this.clipRect.top - (pageLocation.y - this.canvas.offsetTop)/this.canvas.offsetHeight * this.clipRect.height,
     );
   }
+
+  // screenToClip1(pageLocation: g2.Point): g2.Point {
+  //   const canvasCenterOnPage = new g2.Point(
+  //     this.canvas.offsetLeft + this.canvas.offsetWidth / 2,
+  //     this.canvas.offsetTop + this.canvas.offsetHeight / 2,
+  //   );
+
+  //   const pageLocationRelativeToCanvasCenter = new g2.Point(
+  //     pageLocation.x - canvasCenterOnPage.x,
+  //     -(pageLocation.y - canvasCenterOnPage.y),
+  //   );
+
+  //   const screenPixelToClipRatio = new g2.Point(
+  //     2 / this.canvas.offsetWidth,
+  //     2 / this.canvas.offsetHeight,
+  //   );
+  //   const r = screenPixelToClipRatio;
+  //   const l = pageLocationRelativeToCanvasCenter;
+  //   return new g2.Point(
+  //     r.x * l.x * this.clipRect.width / 2 - (-this.clipRect.width / 2 - this.clipRect.left),
+  //     r.y * l.y * this.clipRect.height / 2 - (this.clipRect.height / 2 - this.clipRect.top),
+  //   );
+  // }
 
   /* eslint-disable */
   // autoResize() {

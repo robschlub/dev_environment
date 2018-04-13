@@ -181,7 +181,24 @@ describe('Diagram', () => {
     // Square A should be from (-0.25, -0.25) to (0.25, 0.25)
     // Square B should be from (0, 0) to (1, 1)
     // Square C should be from (0.75, 0.75) to (1.25, 1.25)
+    // pageLeft + canvasWidth*(clip - clipRect.left)/clipRect.width
+    // pageHeight + canvasHeight*(clipRect.Top - clip)/clipRect.Height
+    // clipToPage = function(x,y)
+    //   {
+    //     return 
+    //       {
+    //         x: 100 + canvasW*(x - clipL)/clipW, 
+    //         y: 200 + canvasH*(clipT - y)/clipH,
+    //       }
+    //     }
+    // pageToClip = function(x, y) {
+    //      return {
+    //        x: (x - 100)/canvasW * clipW + clipL,
+    //        y: clipT - (y - 200)/canvasH * clipH,
+    //      } 
+    //   }
     test('A Landscape Origin', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const a = d.elements._a;
@@ -191,6 +208,7 @@ describe('Diagram', () => {
       expect(a.isBeingTouched(new Point(0.251, 0.251))).toBe(false);
     });
     test('B Landscape Origin', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const b = d.elements._b;
@@ -200,6 +218,7 @@ describe('Diagram', () => {
       expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
     });
     test('C Landscape Origin', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const c = d.elements._c;
@@ -209,6 +228,7 @@ describe('Diagram', () => {
       expect(c.isBeingTouched(new Point(1.01, 1.01))).toBe(false);
     });
     test('B Landscape Offset', () => {
+      // canvasW=1000, canvasH=500, clipL=0, clipW=4, clipT=2, clipH=2
       const d = diagrams.landscapeOffset;
       d.draw(0);
       const b = d.elements._b;
@@ -265,27 +285,30 @@ describe('Diagram', () => {
   });
   describe('Touch down', () => {
     test('Touch on A square only', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       expect(d.beingMovedElements).toHaveLength(0);
-      d.touchDownHandler(new Point(599, 451));   // Touch middle of canvas
+      d.touchDownHandler(new Point(599, 451));          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(1);
       expect(d.beingMovedElements[0]).toBe(d.elements._a);
     });
     test('Touch on A and C square', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       expect(d.beingMovedElements).toHaveLength(0);
-      d.touchDownHandler(new Point(601, 449));   // Touch middle of canvas
+      d.touchDownHandler(new Point(601, 449));          // Touch 0.01, 0.01
       expect(d.beingMovedElements).toHaveLength(2);
       expect(d.beingMovedElements[0]).toBe(d.elements._a);
       expect(d.beingMovedElements[1]).toBe(d.elements._c);
     });
     test('Touch on B and C square', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       expect(d.beingMovedElements).toHaveLength(0);
-      d.touchDownHandler(new Point(1099, 201));   // Touch middle of canvas
+      d.touchDownHandler(new Point(1099, 201));         // Touch 0.99, 0.99
       expect(d.beingMovedElements).toHaveLength(2);
       expect(d.beingMovedElements[0]).toBe(d.elements._b);
       expect(d.beingMovedElements[1]).toBe(d.elements._c);
@@ -294,16 +317,32 @@ describe('Diagram', () => {
       const d = diagrams.landscapeOffset;
       d.draw(0);
       expect(d.beingMovedElements).toHaveLength(0);
-      d.touchDownHandler(new Point(349, 451));   // Touch and 0.99, 0.99
+      d.touchDownHandler(new Point(349, 451));           // Touch 0.99, 0.99
       expect(d.beingMovedElements).toHaveLength(2);
       expect(d.beingMovedElements[0]).toBe(d.elements._b);
       expect(d.beingMovedElements[1]).toBe(d.elements._c);
     });
   });
-  // describe('Touch Move', () => {
-  //   test('Move just A', () => {
-  //     const d = diagrams.landscapeCenter;
+  describe('Touch Move', () => {
+    test('Move just A', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+      d.touchDownHandler(new Point(599, 451));          // Touch -0.01, -0.01
+      expect(d.beingMovedElements).toHaveLength(1);
+      expect(d.beingMovedElements[0]).toBe(d.elements._a);
+      
+      // Move to 0.25, 0.25
+      d.touchMoveHandler(new Point(599, 451), new Point(725, 387.5));
+      expect(d.beingMovedElements).toHaveLength(1);
+      expect(d.beingMovedElements[0]).toBe(d.elements._a);
+      expect(d.elements._a.transform.t().round(2)).toEqual(new Point(0.25, 0.25));
 
-  //   })
-  // })
+      // Move beyond border - should stop at 0.75 as side length is 0.5
+      d.touchMoveHandler(new Point(725, 387.5), new Point(1600, 387.5));
+      expect(d.beingMovedElements).toHaveLength(1);
+      expect(d.beingMovedElements[0]).toBe(d.elements._a);
+      expect(d.elements._a.transform.t().round(2)).toEqual(new Point(0.75, 0.25));
+    })
+  })
 });
