@@ -19,15 +19,15 @@ class Diagram {
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
   // aspectRatio: g2.Point;
-  clipRect: g2.Rect;
+  limits: g2.Rect;
 
   constructor(
     lesson: Object,
     canvas: HTMLCanvasElement,
-    clipXLeft: number,
-    clipYBottom: number,
-    clipWidth: number,
-    clipHeight: number,
+    xMin: number,
+    yMin: number,
+    width: number,
+    height: number,
   ) {
     this.canvas = canvas;
     if (this instanceof Diagram) {
@@ -41,7 +41,7 @@ class Diagram {
       shaders.fragmentSource,
       shaders.varNames,
     );
-    this.clipRect = new g2.Rect(clipXLeft, clipYBottom, clipWidth, clipHeight);
+    this.limits = new g2.Rect(xMin, yMin, width, height);
 
     this.webgl = webgl;
     this.lesson = lesson;
@@ -153,14 +153,14 @@ class Diagram {
   draw(now: number): void {
     this.clearContext();
     // This transform converts standard gl clip space, to diagram clip space
-    // defined in clipRect.
-    const normWidth = 2 / this.clipRect.width;
-    const normHeight = 2 / this.clipRect.height;
+    // defined in limits.
+    const normWidth = 2 / this.limits.width;
+    const normHeight = 2 / this.limits.height;
     const clipTransform = new g2.Transform()
       .scale(normWidth, normHeight)
       .translate(
-        (-this.clipRect.width / 2 - this.clipRect.left) * normWidth,
-        (this.clipRect.height / 2 - this.clipRect.top) * normHeight,
+        (-this.limits.width / 2 - this.limits.left) * normWidth,
+        (this.limits.height / 2 - this.limits.top) * normHeight,
       );
     this.elements.draw(
       clipTransform.matrix(),
@@ -187,9 +187,9 @@ class Diagram {
   clipToPage(clip: g2.Point): g2.Point {
     return new g2.Point(
       this.canvas.offsetLeft + this.canvas.offsetWidth *
-        (clip.x - this.clipRect.left) / this.clipRect.width,
+        (clip.x - this.limits.left) / this.limits.width,
       this.canvas.offsetTop + this.canvas.offsetHeight *
-        (this.clipRect.top - clip.y) / this.clipRect.height,
+        (this.limits.top - clip.y) / this.limits.height,
     );
   }
 
@@ -200,9 +200,9 @@ class Diagram {
   pageToClip(pageLocation: g2.Point): g2.Point {
     return new g2.Point(
       (pageLocation.x - this.canvas.offsetLeft) / this.canvas.offsetWidth *
-        this.clipRect.width + this.clipRect.left,
-      this.clipRect.top - (pageLocation.y - this.canvas.offsetTop) /
-        this.canvas.offsetHeight * this.clipRect.height,
+        this.limits.width + this.limits.left,
+      this.limits.top - (pageLocation.y - this.canvas.offsetTop) /
+        this.canvas.offsetHeight * this.limits.height,
     );
   }
 
@@ -224,8 +224,8 @@ class Diagram {
   //   const r = screenPixelToClipRatio;
   //   const l = pageLocationRelativeToCanvasCenter;
   //   return new g2.Point(
-  //     r.x * l.x * this.clipRect.width / 2 - (-this.clipRect.width / 2 - this.clipRect.left),
-  //     r.y * l.y * this.clipRect.height / 2 - (this.clipRect.height / 2 - this.clipRect.top),
+  //     r.x * l.x * this.limits.width / 2 - (-this.limits.width / 2 - this.limits.left),
+  //     r.y * l.y * this.limits.height / 2 - (this.limits.height / 2 - this.limits.top),
   //   );
   // }
 

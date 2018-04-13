@@ -119,7 +119,7 @@ class DiagramElement {
     transformMethod: (number) => g2.Transform,
   };
 
-  clipRect: g2.Rect;
+  diagramLimits: g2.Rect;
 
   // Current animation/movement state of element
   state: {
@@ -151,7 +151,7 @@ class DiagramElement {
     // scale: g2.Point = g2.Point.Unity(),
     transform: g2.Transform = new g2.Transform(),
     name: string = '',
-    clipRect: g2.Rect = new g2.Rect(-1, -1, 2, 2),
+    diagramLimits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
   ) {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
@@ -164,7 +164,7 @@ class DiagramElement {
 
     this.callback = null;
     this.animationPlan = [];
-    this.clipRect = clipRect;
+    this.diagramLimits = diagramLimits;
     //   min: new g2.Point(-1, -1),
     //   max: new g2.Point(1, 1),
     // }
@@ -243,7 +243,7 @@ class DiagramElement {
   //    * (0, 0) to (2, 2)      similar to gl clip space but offset
   //    * (0, 0) to (4, 2)      for rectangular aspect ratio diagram
   //
-  // The diagram object clip space definition is stored in this.clipRect.
+  // The diagram object clip space definition is stored in this.diagramLimits.
   //
   // To therefore transform a vertex (from GL SPACE) to DIAGRAM CLIP SPACE:
   //   * Take the vertex
@@ -254,10 +254,10 @@ class DiagramElement {
   //
   // Each diagram element holds a DIAGRAM ELMENT CLIP space
   vertexToClip(vertex: g2.Point) {
-    const scaleX = this.clipRect.width / 2;
-    const scaleY = this.clipRect.height / 2;
-    const biasX = -(-this.clipRect.width / 2 - this.clipRect.left);
-    const biasY = -(this.clipRect.height / 2 - this.clipRect.top);
+    const scaleX = this.diagramLimits.width / 2;
+    const scaleY = this.diagramLimits.height / 2;
+    const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
+    const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
     const transform = new g2.Transform().scale(scaleX, scaleY).translate(biasX, biasY);
     return vertex.transformBy(this.lastDrawTransformMatrix)
       .transformBy(transform.matrix());
@@ -759,9 +759,9 @@ class DiagramElementPrimative extends DiagramElement {
     transform: g2.Transform = new g2.Transform(),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     name: string = '',
-    clipRect: g2.Rect = new g2.Rect(-1, -1, 2, 2),
+    diagramLimits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
   ) {
-    super(transform, name, clipRect);
+    super(transform, name, diagramLimits);
     this.vertices = vertexObject;
     this.color = color;
     this.pointsToDraw = -1;
@@ -866,10 +866,10 @@ class DiagramElementPrimative extends DiagramElement {
 
   updateMoveTranslationBoundary(
     bounday: Array<number> = [
-      this.clipRect.left,
-      this.clipRect.top - this.clipRect.height,
-      this.clipRect.left + this.clipRect.width,
-      this.clipRect.top],
+      this.diagramLimits.left,
+      this.diagramLimits.top - this.diagramLimits.height,
+      this.diagramLimits.left + this.diagramLimits.width,
+      this.diagramLimits.top],
     scale: g2.Point = new g2.Point(1, 1),
   ): void {
     const { min, max } = this.getRelativeBoundingBox();
@@ -901,9 +901,9 @@ class DiagramElementCollection extends DiagramElement {
   constructor(
     transform: g2.Transform = new g2.Transform(),
     name: string = '',
-    clipRect: g2.Rect = new g2.Rect(-1, 1, 2, 2),
+    diagramLimits: g2.Rect = new g2.Rect(-1, 1, 2, 2),
   ): void {
-    super(transform, name, clipRect);
+    super(transform, name, diagramLimits);
     this.elements = {};
     this.order = [];
   }

@@ -97,7 +97,7 @@ describe('Diagram', () => {
 
       // create squares:
       const squares = {};
-      const collection = new DiagramElementCollection(new Transform().scale(1, 1).rotate(0).translate(0, 0), 'c', diagram.clipRect);
+      const collection = new DiagramElementCollection(new Transform().scale(1, 1).rotate(0).translate(0, 0), 'c', diagram.limits);
       Object.keys(squareDefinitions).forEach((sKey) => {
         const def = squareDefinitions[sKey];
         const square = new Polygon(
@@ -107,7 +107,7 @@ describe('Diagram', () => {
         );
         const squareElement = new DiagramElementPrimative(
           square, def.transform,
-          [0, 0, 1, 1], '', diagram.clipRect,
+          [0, 0, 1, 1], '', diagram.limits,
         );
         squareElement.isMovable = true;
         squareElement.isTouchable = true;
@@ -122,7 +122,7 @@ describe('Diagram', () => {
   test('Diagram instantiation', () => {
     const d = diagrams.landscapeCenter;
     expect(d.elements.order).toHaveLength(3);
-    expect(d.clipRect).toEqual(new Rect(-1, -1, 2, 2));
+    expect(d.limits).toEqual(new Rect(-1, -1, 2, 2));
   });
   describe('pageToClip', () => {
     test('Landscape center at origin', () => {

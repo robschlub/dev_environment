@@ -58,7 +58,7 @@ class Diagram1 extends Diagram {
       this.webgl,
       new Transform().scale(1, 1).rotate(0).translate(0, 0),
       'collection',
-      this.clipRect,
+      this.limits,
     );
   }
 }
