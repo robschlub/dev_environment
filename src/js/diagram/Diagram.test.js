@@ -175,11 +175,13 @@ describe('Diagram', () => {
       expect(d.screenToClip((new Point(600, 700))).round()).toEqual(new Point(2, 2));
     });
   });
+  // Show all squares are at the same clip location independent of canvas
+  // and diagram offsets
   describe('Test square locations', () => {
     // Square A should be from (-0.25, -0.25) to (0.25, 0.25)
     // Square B should be from (0, 0) to (1, 1)
     // Square C should be from (0.75, 0.75) to (1.25, 1.25)
-    test('A', () => {
+    test('A Landscape Origin', () => {
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const a = d.elements._a;
@@ -188,7 +190,7 @@ describe('Diagram', () => {
       expect(a.isBeingTouched(new Point(-0.251, -0.251))).toBe(false);
       expect(a.isBeingTouched(new Point(0.251, 0.251))).toBe(false);
     });
-    test('B', () => {
+    test('B Landscape Origin', () => {
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const b = d.elements._b;
@@ -197,7 +199,7 @@ describe('Diagram', () => {
       expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
       expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
     });
-    test('C', () => {
+    test('C Landscape Origin', () => {
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const c = d.elements._c;
@@ -205,6 +207,60 @@ describe('Diagram', () => {
       expect(c.isBeingTouched(new Point(0.99, 0.99))).toBe(true);
       expect(c.isBeingTouched(new Point(-0.001, -0.001))).toBe(false);
       expect(c.isBeingTouched(new Point(1.01, 1.01))).toBe(false);
+    });
+    test('B Landscape Offset', () => {
+      const d = diagrams.landscapeOffset;
+      d.draw(0);
+      const b = d.elements._b;
+      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+    });
+    test('C Landscape Offset', () => {
+      const d = diagrams.landscapeOffset;
+      d.draw(0);
+      const c = d.elements._c;
+      expect(c.isBeingTouched(new Point(0.001, 0.001))).toBe(true);
+      expect(c.isBeingTouched(new Point(0.99, 0.99))).toBe(true);
+      expect(c.isBeingTouched(new Point(-0.001, -0.001))).toBe(false);
+      expect(c.isBeingTouched(new Point(1.01, 1.01))).toBe(false);
+    });
+    test('B Portrait Origin', () => {
+      const d = diagrams.portraitOffset;
+      d.draw(0);
+      const b = d.elements._b;
+      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+    });
+    test('B Portrait Offset', () => {
+      const d = diagrams.portraitOffset;
+      d.draw(0);
+      const b = d.elements._b;
+      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+    });
+    test('B Square Origin', () => {
+      const d = diagrams.squareOffset;
+      d.draw(0);
+      const b = d.elements._b;
+      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+    });
+    test('B Square Offset', () => {
+      const d = diagrams.squareOffset;
+      d.draw(0);
+      const b = d.elements._b;
+      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
     });
   });
   describe('Touch down', () => {
@@ -234,5 +290,20 @@ describe('Diagram', () => {
       expect(d.beingMovedElements[0]).toBe(d.elements._b);
       expect(d.beingMovedElements[1]).toBe(d.elements._c);
     });
+    test('Touch on B and C square LandscapeOffset', () => {
+      const d = diagrams.landscapeOffset;
+      d.draw(0);
+      expect(d.beingMovedElements).toHaveLength(0);
+      d.touchDownHandler(new Point(349, 451));   // Touch and 0.99, 0.99
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.beingMovedElements[0]).toBe(d.elements._b);
+      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+    });
   });
+  // describe('Touch Move', () => {
+  //   test('Move just A', () => {
+  //     const d = diagrams.landscapeCenter;
+
+  //   })
+  // })
 });
