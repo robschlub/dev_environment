@@ -505,7 +505,7 @@ describe('Animationa and Movement', () => {
         const element = new DiagramElementPrimative(
           square,
           new Transform(),
-          [0, 0, 1, 1], '',
+          [0, 0, 1, 1],
           new Rect(-1, -1, 2, 2),
         );
         element.draw();

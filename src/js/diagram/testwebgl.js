@@ -11,8 +11,8 @@ import * as tools from './mathtools';
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
 
-  constructor(webgl, transform, name, diagramLimits) {
-    super(transform, name);
+  constructor(webgl, transform, diagramLimits) {
+    super(transform);
 
     const square = new Polygon(
       webgl,
@@ -29,7 +29,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('square', new DiagramElementPrimative(
       square,
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
-      [0, 0, 1, 1], 'square', diagramLimits,
+      [0, 0, 1, 1], diagramLimits,
     ));
     // $FlowFixMe
     const sq = this._square;
@@ -39,7 +39,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new Transform().scale(1.5, 1.5).rotate(0).translate(2, 1),
-      [0, 1, 0, 1], 'triangle', diagramLimits,
+      [0, 1, 0, 1], diagramLimits,
     ));
     // $FlowFixMe
     const tri = this._triangle;
@@ -54,10 +54,9 @@ class Diagram1 extends Diagram {
   elements: ShapesCollection | DiagramElementPrimative | DiagramElementCollection;
 
   createDiagramElements() {
-    return new ShapesCollection(
+    this.elements = new ShapesCollection(
       this.webgl,
       new Transform().scale(1, 1).rotate(0).translate(0, 0),
-      'collection',
       this.limits,
     );
   }

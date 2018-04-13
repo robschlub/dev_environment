@@ -30,32 +30,32 @@ describe('Diagram', () => {
       landscapeCenter: {
         width: 1000,
         height: 500,
-        limits: [-1, -1, 2, 2],
+        limits: new Rect(-1, -1, 2, 2),
       },
       landscapeOffset: {
         width: 1000,
         height: 500,
-        limits: [0, 0, 4, 2],
+        limits: new Rect(0, 0, 4, 2),
       },
       portraitCenter: {
         width: 500,
         height: 1000,
-        limits: [-1, -1, 2, 2],
+        limits: new Rect(-1, -1, 2, 2),
       },
       portraitOffset: {
         width: 500,
         height: 1000,
-        limits: [0, 0, 2, 4],
+        limits: new Rect(0, 0, 2, 4),
       },
       squareCenter: {
         width: 1000,
         height: 1000,
-        limits: [-1, -1, 2, 2],
+        limits: new Rect(-1, -1, 2, 2),
       },
       squareOffset: {
         width: 1000,
         height: 1000,
-        limits: [0, 0, 4, 4],
+        limits: new Rect(0, 0, 4, 4),
       },
     };
     const squareDefinitions = {
@@ -91,7 +91,7 @@ describe('Diagram', () => {
         offsetHeight: definition.height,
       };
       const { limits } = definition;
-      const diagram = new Diagram({}, canvas, limits[0], limits[1], limits[2], limits[3]);
+      const diagram = new Diagram({}, canvas, limits);
       diagram.webgl = webgl;
       diagram.canvas = canvasMock;
 
@@ -107,7 +107,7 @@ describe('Diagram', () => {
         );
         const squareElement = new DiagramElementPrimative(
           square, def.transform,
-          [0, 0, 1, 1], '', diagram.limits,
+          [0, 0, 1, 1], diagram.limits,
         );
         squareElement.isMovable = true;
         squareElement.isTouchable = true;

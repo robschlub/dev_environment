@@ -24,7 +24,7 @@ class Diagram {
   constructor(
     lesson: Object,
     canvas: HTMLCanvasElement,
-    xMin: number,
+    limitsOrxMin: number | g2.Rect,
     yMin: number,
     width: number,
     height: number,
@@ -41,7 +41,12 @@ class Diagram {
       shaders.fragmentSource,
       shaders.varNames,
     );
-    this.limits = new g2.Rect(xMin, yMin, width, height);
+    if (limitsOrxMin instanceof g2.Rect) {
+      const r = limitsOrxMin;
+      this.limits = new g2.Rect(r.left, r.bottom, r.width, r.height);
+    } else {
+      this.limits = new g2.Rect(limitsOrxMin, yMin, width, height);
+    }
 
     this.webgl = webgl;
     this.lesson = lesson;
@@ -49,7 +54,7 @@ class Diagram {
     this.globalAnimation = new GlobalAnimation();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
     // this.devicePixelRatio = window.devicePixelRatio;
-    this.elements = this.createDiagramElements();
+    this.createDiagramElements();
   }
 
   // Handle touch down, or mouse click events within the canvas.
@@ -139,10 +144,7 @@ class Diagram {
   // This should be overridden as it is the custom elements of a diagram
   // eslint-disable-next-line class-methods-use-this
   createDiagramElements() {
-    // const square = new Polygon(this.webgl, 1, 4, 4, 0.01, 0, g2.Point.zero());
-    const collection = new DiagramElementCollection();
-    // collection.add('square', new DiagramElementPrimative(square));
-    return collection;
+    this.elements = new DiagramElementCollection();
   }
 
   clearContext() {

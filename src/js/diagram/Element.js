@@ -18,7 +18,10 @@ class AnimationPhase {
   deltaTransform: g2.Transform;       // Transform delta from start to target
 
   constructor(
-    transform: g2.Transform = new g2.Transform(),
+    transform: g2.Transform = new g2.Transform()
+      .scale(1, 1)
+      .rotate(0)
+      .translate(0, 0),
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
@@ -149,16 +152,17 @@ class DiagramElement {
     // translation: g2.Point = g2.Point.zero(),
     // rotation: number = 0,
     // scale: g2.Point = g2.Point.Unity(),
-    transform: g2.Transform = new g2.Transform(),
-    name: string = '',
+    transform: g2.Transform = new g2.Transform()
+      .scale(1, 1)
+      .rotate(0)
+      .translate(0, 0),
     diagramLimits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
   ) {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
     this.show = true;
     this.lastDrawTransformMatrix = this.transform.matrix();
-    this.name = name;
-
+    this.name = ''; // This is updated when an element is added to a collection
     this.isMovable = false;
     this.isTouchable = false;
 
@@ -756,12 +760,14 @@ class DiagramElementPrimative extends DiagramElement {
 
   constructor(
     vertexObject: VertexObject,
-    transform: g2.Transform = new g2.Transform(),
+    transform: g2.Transform = new g2.Transform()
+      .scale(1, 1)
+      .rotate(0)
+      .translate(0, 0),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
-    name: string = '',
     diagramLimits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
   ) {
-    super(transform, name, diagramLimits);
+    super(transform, diagramLimits);
     this.vertices = vertexObject;
     this.color = color;
     this.pointsToDraw = -1;
@@ -899,11 +905,13 @@ class DiagramElementCollection extends DiagramElement {
   // biasTransform: Array<number>;
 
   constructor(
-    transform: g2.Transform = new g2.Transform(),
-    name: string = '',
+    transform: g2.Transform = new g2.Transform()
+      .scale(1, 1)
+      .rotate(0)
+      .translate(0, 0),
     diagramLimits: g2.Rect = new g2.Rect(-1, 1, 2, 2),
   ): void {
-    super(transform, name, diagramLimits);
+    super(transform, diagramLimits);
     this.elements = {};
     this.order = [];
   }
@@ -925,8 +933,8 @@ class DiagramElementCollection extends DiagramElement {
     return false;
   }
 
-  add(name: string, geoObject: DiagramElementPrimative) {
-    this.elements[name] = geoObject;
+  add(name: string, diagramElement: DiagramElementPrimative | DiagramElementCollection) {
+    this.elements[name] = diagramElement;
     this.elements[name].name = name;
     // $FlowFixMe
     this[`_${name}`] = this.elements[name];
