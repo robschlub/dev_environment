@@ -175,6 +175,47 @@ describe('Diagram', () => {
       expect(d.pageToClip((new Point(600, 700))).round()).toEqual(new Point(2, 2));
     });
   });
+  describe('clipToPage', () => {
+    test('Landscape center at origin', () => {
+      const d = diagrams.landscapeCenter;
+      // top left of canvas of diagram1 should be -1, 1
+      expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
+      // bottom right
+      expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(1100, 700));
+      // middle
+      expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(600, 450));
+    });
+    test('Landscape all positive', () => {
+      const d = diagrams.landscapeOffset;
+      expect(d.clipToPage(new Point(0, 2))).toEqual(new Point(100, 200));
+      expect(d.clipToPage(new Point(4, 0))).toEqual(new Point(1100, 700));
+      expect(d.clipToPage((new Point(2, 1))).round()).toEqual(new Point(600, 450));
+    });
+    test('Portrait center at origin', () => {
+      const d = diagrams.portraitCenter;
+      expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
+      expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(600, 1200));
+      expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(350, 700));
+    });
+    test('Landscape center at positive', () => {
+      const d = diagrams.portraitOffset;
+      expect(d.clipToPage(new Point(0, 4))).toEqual(new Point(100, 200));
+      expect(d.clipToPage(new Point(2, 0))).toEqual(new Point(600, 1200));
+      expect(d.clipToPage((new Point(1, 2))).round()).toEqual(new Point(350, 700));
+    });
+    test('Square center at origin', () => {
+      const d = diagrams.squareCenter;
+      expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
+      expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(1100, 1200));
+      expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(600, 700));
+    });
+    test('Square center at positive', () => {
+      const d = diagrams.squareOffset;
+      expect(d.clipToPage(new Point(0, 4))).toEqual(new Point(100, 200));
+      expect(d.clipToPage(new Point(4, 0))).toEqual(new Point(1100, 1200));
+      expect(d.clipToPage((new Point(2, 2))).round()).toEqual(new Point(600, 700));
+    });
+  });
   // Show all squares are at the same clip location independent of canvas
   // and diagram offsets
   describe('Test square locations', () => {
@@ -323,26 +364,136 @@ describe('Diagram', () => {
       expect(d.beingMovedElements[1]).toBe(d.elements._c);
     });
   });
-  describe('Touch Move', () => {
-    test('Move just A', () => {
+  describe('Touch move', () => {
+    test('Move just A on Landscape Center', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
-      d.touchDownHandler(new Point(599, 451));          // Touch -0.01, -0.01
+
+      // Touch A
+      const t1 = d.clipToPage(new Point(-0.001, -0.001)); 
+
+      // Move to 0.25, 0.25
+      const t2 = d.clipToPage(new Point(0.25, 0.25)); 
+      // A center will move to 0.25, 0.25
+      const a2 = new Point(0.25, 0.25);
+
+      // Move to 2, 0.25
+      const t3 = d.clipToPage(new Point(2, 0.25)); 
+      // A center will move to 0.75, 0.25 as will be clipped by canvas
+      const a3 = new Point(0.75, 0.25);
+
+      d.touchDownHandler(t1);          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(1);
       expect(d.beingMovedElements[0]).toBe(d.elements._a);
       
       // Move to 0.25, 0.25
-      d.touchMoveHandler(new Point(599, 451), new Point(725, 387.5));
+      d.touchMoveHandler(t1, t2);
       expect(d.beingMovedElements).toHaveLength(1);
       expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.elements._a.transform.t().round(2)).toEqual(new Point(0.25, 0.25));
+      expect(d.elements._a.transform.t().round(2)).toEqual(a2);
 
       // Move beyond border - should stop at 0.75 as side length is 0.5
-      d.touchMoveHandler(new Point(725, 387.5), new Point(1600, 387.5));
+      d.touchMoveHandler(t2, t3);
       expect(d.beingMovedElements).toHaveLength(1);
       expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.elements._a.transform.t().round(2)).toEqual(new Point(0.75, 0.25));
+      expect(d.elements._a.transform.t().round(2)).toEqual(a3);
     })
-  })
+    test('Move A and C on Landscape Center', () => {
+      // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+
+      // Touch A and C
+      const t1 = d.clipToPage(new Point(0.001, 0.001)); 
+
+      // Move to 0.25, 0.25
+      const t2 = d.clipToPage(new Point(-0.25, -0.25)); 
+      // A center will move to -0.25, -0.25
+      const a2 = new Point(-0.25, -0.25);
+      // C corner will move to (-0.25, -0.25), and center to (0.25, 0.25)
+      const c2 = new Point(0.25, 0.25);
+
+      // Move to -2, -2
+      const t3 = d.clipToPage(new Point(-2, -2)); 
+      // A will get stuck at -0.75, -0.75
+      const a3 = new Point(-0.75, -0.75)
+      // C will get stuck at -0.5, -0.5
+      const c3 = new Point(-0.5, -0.5)
+
+      d.touchDownHandler(t1);          // Touch -0.01, -0.01
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.beingMovedElements[0]).toBe(d.elements._a);
+      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      d.draw(1);
+      
+      // Move to 0.25, 0.25
+      d.touchMoveHandler(t1, t2);
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.elements._a.transform.t().round(2)).toEqual(a2);
+      expect(d.elements._c.transform.t().round(2)).toEqual(c2);
+      d.draw(2);
+
+      // Move beyond border - should stop at 0.75 as side length is 0.5
+      d.touchMoveHandler(t2, t3);
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.elements._a.transform.t().round(2)).toEqual(a3);
+      expect(d.elements._c.transform.t().round(2)).toEqual(c3);
+    });
+    test('Move A and C on Landscape Offset', () => {
+      // canvasW=1000, canvasH=500, clipL=0, clipW=4, clipT=2, clipH=2
+      const d = diagrams.landscapeOffset;
+      d.draw(0);
+
+      // Touch A and C
+      const t0 = d.clipToPage(new Point(0.001, 0.001));
+      const a0 = new Point(0, 0);
+      const c0 = new Point(0.5, 0.5);
+
+      // Very small movement, will clip A back to in border, and touch
+      // will now be in corner and not center of A
+      const t1 = d.clipToPage(new Point(0.002, 0.002));
+      const a1 = new Point(0.25, 0.25);
+      const c1 = new Point(0.5, 0.5);
+
+      // Move to 0.25, 0.25
+      const t2 = d.clipToPage(new Point(0.25, 0.25)); 
+      // A corner will move to (0.25, 0.25) and center to (0.5, 0.5)
+      const a2 = new Point(0.5, 0.5);
+      // C corner will move to (0.25, 0.25), and center to (0.75, 0.75)
+      const c2 = new Point(0.75, 0.75);
+
+      // Move to 4, 4
+      const t3 = d.clipToPage(new Point(4, 4)); 
+      // A will get stuck at 3.75, 1.75
+      const a3 = new Point(3.75, 1.75)
+      // C will get stuck at 3.5, 1.5
+      const c3 = new Point(3.5, 1.5)
+
+      d.touchDownHandler(t0);          // Touch -0.01, -0.01
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.beingMovedElements[0]).toBe(d.elements._a);
+      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      d.draw(0.1);
+      
+      d.touchMoveHandler(t0, t1);
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.elements._a.transform.t().round(2)).toEqual(a1);
+      expect(d.elements._c.transform.t().round(2)).toEqual(c1);
+      d.draw(1);
+
+      // Move to 0.25, 0.25
+      d.touchMoveHandler(t1, t2);
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.elements._a.transform.t().round(2)).toEqual(a2);
+      expect(d.elements._c.transform.t().round(2)).toEqual(c2);
+      d.draw(2);
+
+      // Move beyond border - should stop at 0.75 as side length is 0.5
+      d.touchMoveHandler(t2, t3);
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.elements._a.transform.t().round(2)).toEqual(a3);
+      expect(d.elements._c.transform.t().round(2)).toEqual(c3);
+    });
+  });
 });
