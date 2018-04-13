@@ -62,20 +62,20 @@ describe('Diagram', () => {
       a: {
         center: new Point(0, 0),
         sideLength: 0.5,
-        rotation: 0,
+        rotation: Math.PI / 4,
         transform: new Transform().scale(1, 1).rotate(0).translate(0, 0),
       },
       b: {
         center: new Point(1, 1),
         sideLength: 0.5,
-        rotation: 0,
+        rotation: Math.PI / 4,
         transform: new Transform().scale(1, 1).rotate(0).translate(0, 0),
       },
       c: {
-        center: new Point(1, 1),
+        center: new Point(0, 0),
         sideLength: 0.5,
-        rotation: 0,
-        transform: new Transform().scale(2, 2).rotate(0).translate(-0.5, -0.5),
+        rotation: Math.PI / 4,
+        transform: new Transform().scale(2, 2).rotate(0).translate(0.5, 0.5),
       },
     };
     diagrams = {};
@@ -102,15 +102,18 @@ describe('Diagram', () => {
         const def = squareDefinitions[sKey];
         const square = new Polygon(
           diagram.webgl,
-          (def.sideLength - 0.025) * Math.sqrt(2), 4, 4, 0.05 * Math.sqrt(2),
+          (def.sideLength / 2 - 0.025) * Math.sqrt(2), 4, 4, 0.05 * Math.sqrt(2),
           def.rotation, def.center,
         );
         const squareElement = new DiagramElementPrimative(
           square, def.transform,
           [0, 0, 1, 1], '', diagram.clipRect,
         );
+        squareElement.isMovable = true;
+        squareElement.isTouchable = true;
         squares[sKey] = squareElement;
         collection.add(sKey, squareElement);
+        collection.isTouchable = true;
       });
       diagram.elements = collection;
       diagrams[key] = diagram;
@@ -172,7 +175,64 @@ describe('Diagram', () => {
       expect(d.screenToClip((new Point(600, 700))).round()).toEqual(new Point(2, 2));
     });
   });
+  describe('Test square locations', () => {
+    // Square A should be from (-0.25, -0.25) to (0.25, 0.25)
+    // Square B should be from (0, 0) to (1, 1)
+    // Square C should be from (0.75, 0.75) to (1.25, 1.25)
+    test('A', () => {
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+      const a = d.elements._a;
+      expect(a.isBeingTouched(new Point(-0.249, -0.249))).toBe(true);
+      expect(a.isBeingTouched(new Point(0.249, 0.249))).toBe(true);
+      expect(a.isBeingTouched(new Point(-0.251, -0.251))).toBe(false);
+      expect(a.isBeingTouched(new Point(0.251, 0.251))).toBe(false);
+    });
+    test('B', () => {
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+      const b = d.elements._b;
+      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+    });
+    test('C', () => {
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+      const c = d.elements._c;
+      expect(c.isBeingTouched(new Point(0.001, 0.001))).toBe(true);
+      expect(c.isBeingTouched(new Point(0.99, 0.99))).toBe(true);
+      expect(c.isBeingTouched(new Point(-0.001, -0.001))).toBe(false);
+      expect(c.isBeingTouched(new Point(1.01, 1.01))).toBe(false);
+    });
+  });
   describe('Touch down', () => {
-    
+    test('Touch on A square only', () => {
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+      expect(d.beingMovedElements).toHaveLength(0);
+      d.touchDownHandler(new Point(599, 451));   // Touch middle of canvas
+      expect(d.beingMovedElements).toHaveLength(1);
+      expect(d.beingMovedElements[0]).toBe(d.elements._a);
+    });
+    test('Touch on A and C square', () => {
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+      expect(d.beingMovedElements).toHaveLength(0);
+      d.touchDownHandler(new Point(601, 449));   // Touch middle of canvas
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.beingMovedElements[0]).toBe(d.elements._a);
+      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+    });
+    test('Touch on B and C square', () => {
+      const d = diagrams.landscapeCenter;
+      d.draw(0);
+      expect(d.beingMovedElements).toHaveLength(0);
+      d.touchDownHandler(new Point(1099, 201));   // Touch middle of canvas
+      expect(d.beingMovedElements).toHaveLength(2);
+      expect(d.beingMovedElements[0]).toBe(d.elements._b);
+      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+    });
   });
 });

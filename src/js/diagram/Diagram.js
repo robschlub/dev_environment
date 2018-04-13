@@ -63,7 +63,6 @@ class Diagram {
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(clipPoint);
-
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];

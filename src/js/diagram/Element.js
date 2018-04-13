@@ -765,6 +765,7 @@ class DiagramElementPrimative extends DiagramElement {
       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
         border.push(this.vertexToClip(this.vertices.border[m][i]));
       }
+      // console.log(border)
       if (clipLocation.isInPolygon(border)) {
         return true;
       }
@@ -776,7 +777,6 @@ class DiagramElementPrimative extends DiagramElement {
     if (!this.isTouchable) {
       return [];
     }
-
     if (this.isBeingTouched(clipLocation)) {
       return [this];
     }
