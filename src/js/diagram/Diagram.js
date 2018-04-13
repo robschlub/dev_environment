@@ -199,8 +199,8 @@ class Diagram {
     const r = screenPixelToClipRatio;
     const l = pageLocationRelativeToCanvasCenter;
     return new g2.Point(
-      r.x * l.x * this.clipRect.width / 2,
-      r.y * l.y * this.clipRect.height / 2,
+      r.x * l.x * this.clipRect.width / 2 - (-this.clipRect.width / 2 - this.clipRect.left),
+      r.y * l.y * this.clipRect.height / 2 - (this.clipRect.height / 2 - this.clipRect.top),
     );
   }
 

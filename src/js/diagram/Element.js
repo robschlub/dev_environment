@@ -221,8 +221,11 @@ class DiagramElement {
   vertexToClip(vertex: g2.Point) {
     const clipX = this.clipRect.width / 2;
     const clipY = this.clipRect.height / 2;
+    const biasX = -(-this.clipRect.width / 2 - this.clipRect.left);
+    const biasY = -(this.clipRect.height / 2 - this.clipRect.top);
+    const transform = new g2.Transform().scale(clipX, clipY).translate(biasX, biasY);
     return vertex.transformBy(this.lastDrawTransformMatrix)
-      .transformBy(m2.scaleMatrix(clipX, clipY));
+      .transformBy(transform.matrix());
   }
 
   // Remove?
