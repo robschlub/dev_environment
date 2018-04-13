@@ -151,7 +151,7 @@ class DiagramElement {
     // scale: g2.Point = g2.Point.Unity(),
     transform: g2.Transform = new g2.Transform(),
     name: string = '',
-    clipRect: g2.Rect = new g2.Rect(-1, 1, 2, 2),
+    clipRect: g2.Rect = new g2.Rect(-1, -1, 2, 2),
   ) {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
@@ -759,7 +759,7 @@ class DiagramElementPrimative extends DiagramElement {
     transform: g2.Transform = new g2.Transform(),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     name: string = '',
-    clipRect: g2.Rect = new g2.Rect(-1, 1, 2, 2),
+    clipRect: g2.Rect = new g2.Rect(-1, -1, 2, 2),
   ) {
     super(transform, name, clipRect);
     this.vertices = vertexObject;

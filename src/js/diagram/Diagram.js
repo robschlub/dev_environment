@@ -25,7 +25,7 @@ class Diagram {
     lesson: Object,
     canvas: HTMLCanvasElement,
     clipXLeft: number,
-    clipYTop: number,
+    clipYBottom: number,
     clipWidth: number,
     clipHeight: number,
   ) {
@@ -41,7 +41,7 @@ class Diagram {
       shaders.fragmentSource,
       shaders.varNames,
     );
-    this.clipRect = new g2.Rect(clipXLeft, clipYTop, clipWidth, clipHeight);
+    this.clipRect = new g2.Rect(clipXLeft, clipYBottom, clipWidth, clipHeight);
 
     this.webgl = webgl;
     this.lesson = lesson;

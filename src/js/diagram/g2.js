@@ -39,12 +39,16 @@ class Rect {
   top: number;
   width: number;
   height: number;
+  bottom: number;
+  right: number;
 
-  constructor(left: number, top: number, width: number, height: number) {
+  constructor(left: number, bottom: number, width: number, height: number) {
     this.left = left;
-    this.top = top;
     this.width = width;
     this.height = height;
+    this.bottom = bottom;
+    this.top = bottom + height;
+    this.right = left + width;
   }
 }
 /* eslint-disable comma-dangle */

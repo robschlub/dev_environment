@@ -506,7 +506,7 @@ describe('Animationa and Movement', () => {
           square,
           new Transform(),
           [0, 0, 1, 1], '',
-          new Rect(-1, 1, 2, 2),
+          new Rect(-1, -1, 2, 2),
         );
         element.draw();
         e = element;
@@ -540,7 +540,7 @@ describe('Animationa and Movement', () => {
       test('Landscape', () => {
         // First perform transform in element space, then squish element
         // space to diagram space.
-        e.clipRect = new Rect(0, 2, 4, 2);
+        e.clipRect = new Rect(0, 0, 4, 2);
         e.draw();
         expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(2, 1));
         expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(4, 2));
@@ -549,7 +549,7 @@ describe('Animationa and Movement', () => {
       test('Landscape with offset', () => {
         // First perform transform in element space, then squish element
         // space to diagram space.
-        e.clipRect = new Rect(0, 2, 4, 2);
+        e.clipRect = new Rect(0, 0, 4, 2);
         e.transform = new Transform().translate(1, 1);
         e.draw();
         expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
@@ -557,7 +557,7 @@ describe('Animationa and Movement', () => {
         expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(2, 1));
       });
       test('Landscape with scale and offset', () => {
-        e.clipRect = new Rect(0, 2, 4, 2);
+        e.clipRect = new Rect(0, 0, 4, 2);
         e.transform = new Transform().scale(2, 0.5).translate(1, 1);
         e.draw();
         // 1. scale point by 2, 0.5

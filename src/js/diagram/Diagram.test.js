@@ -30,32 +30,32 @@ describe('Diagram', () => {
       landscapeCenter: {
         width: 1000,
         height: 500,
-        limits: [-1, 1, 2, 2],
+        limits: [-1, -1, 2, 2],
       },
       landscapeOffset: {
         width: 1000,
         height: 500,
-        limits: [0, 2, 4, 2],
+        limits: [0, 0, 4, 2],
       },
       portraitCenter: {
         width: 500,
         height: 1000,
-        limits: [-1, 1, 2, 2],
+        limits: [-1, -1, 2, 2],
       },
       portraitOffset: {
         width: 500,
         height: 1000,
-        limits: [0, 4, 2, 4],
+        limits: [0, 0, 2, 4],
       },
       squareCenter: {
         width: 1000,
         height: 1000,
-        limits: [-1, 1, 2, 2],
+        limits: [-1, -1, 2, 2],
       },
       squareOffset: {
         width: 1000,
         height: 1000,
-        limits: [0, 4, 4, 4],
+        limits: [0, 0, 4, 4],
       },
     };
     const squareDefinitions = {
@@ -122,7 +122,7 @@ describe('Diagram', () => {
   test('Diagram instantiation', () => {
     const d = diagrams.landscapeCenter;
     expect(d.elements.order).toHaveLength(3);
-    expect(d.clipRect).toEqual(new Rect(-1, 1, 2, 2));
+    expect(d.clipRect).toEqual(new Rect(-1, -1, 2, 2));
   });
   describe('pageToClip', () => {
     test('Landscape center at origin', () => {
