@@ -134,45 +134,45 @@ describe('Diagram', () => {
     expect(d.elements.order).toHaveLength(3);
     expect(d.clipRect).toEqual(new Rect(-1, 1, 2, 2));
   });
-  describe('screenToClip', () => {
+  describe('pageToClip', () => {
     test('Landscape center at origin', () => {
       const d = diagrams.landscapeCenter;
       // top left of canvas of diagram1 should be -1, 1
-      expect(d.screenToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
+      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
       // bottom right
-      expect(d.screenToClip(new Point(1100, 700))).toEqual(new Point(1, -1));
+      expect(d.pageToClip(new Point(1100, 700))).toEqual(new Point(1, -1));
       // middle
-      expect(d.screenToClip((new Point(600, 450))).round()).toEqual(new Point(0, 0));
+      expect(d.pageToClip((new Point(600, 450))).round()).toEqual(new Point(0, 0));
     });
     test('Landscape all positive', () => {
       const d = diagrams.landscapeOffset;
-      expect(d.screenToClip(new Point(100, 200))).toEqual(new Point(0, 2));
-      expect(d.screenToClip(new Point(1100, 700))).toEqual(new Point(4, 0));
-      expect(d.screenToClip((new Point(600, 450))).round()).toEqual(new Point(2, 1));
+      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 2));
+      expect(d.pageToClip(new Point(1100, 700))).toEqual(new Point(4, 0));
+      expect(d.pageToClip((new Point(600, 450))).round()).toEqual(new Point(2, 1));
     });
     test('Portrait center at origin', () => {
       const d = diagrams.portraitCenter;
-      expect(d.screenToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
-      expect(d.screenToClip(new Point(600, 1200))).toEqual(new Point(1, -1));
-      expect(d.screenToClip((new Point(350, 700))).round()).toEqual(new Point(0, 0));
+      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
+      expect(d.pageToClip(new Point(600, 1200))).toEqual(new Point(1, -1));
+      expect(d.pageToClip((new Point(350, 700))).round()).toEqual(new Point(0, 0));
     });
     test('Landscape center at positive', () => {
       const d = diagrams.portraitOffset;
-      expect(d.screenToClip(new Point(100, 200))).toEqual(new Point(0, 4));
-      expect(d.screenToClip(new Point(600, 1200))).toEqual(new Point(2, 0));
-      expect(d.screenToClip((new Point(350, 700))).round()).toEqual(new Point(1, 2));
+      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 4));
+      expect(d.pageToClip(new Point(600, 1200))).toEqual(new Point(2, 0));
+      expect(d.pageToClip((new Point(350, 700))).round()).toEqual(new Point(1, 2));
     });
     test('Square center at origin', () => {
       const d = diagrams.squareCenter;
-      expect(d.screenToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
-      expect(d.screenToClip(new Point(1100, 1200))).toEqual(new Point(1, -1));
-      expect(d.screenToClip((new Point(600, 700))).round()).toEqual(new Point(0, 0));
+      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
+      expect(d.pageToClip(new Point(1100, 1200))).toEqual(new Point(1, -1));
+      expect(d.pageToClip((new Point(600, 700))).round()).toEqual(new Point(0, 0));
     });
     test('Square center at positive', () => {
       const d = diagrams.squareOffset;
-      expect(d.screenToClip(new Point(100, 200))).toEqual(new Point(0, 4));
-      expect(d.screenToClip(new Point(1100, 1200))).toEqual(new Point(4, 0));
-      expect(d.screenToClip((new Point(600, 700))).round()).toEqual(new Point(2, 2));
+      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 4));
+      expect(d.pageToClip(new Point(1100, 1200))).toEqual(new Point(4, 0));
+      expect(d.pageToClip((new Point(600, 700))).round()).toEqual(new Point(2, 2));
     });
   });
   // Show all squares are at the same clip location independent of canvas

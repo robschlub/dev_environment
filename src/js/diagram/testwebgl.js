@@ -112,26 +112,26 @@ function testgl(id: string) {
       diagram.animateNextFrame();
 
       /* eslint-disable */
-      canvas.onclick = function click(event) {
-        const box = canvas;
-        const clip = diagram.screenToClip(new Point(event.pageX, event.pageY));
-        const str = `Screen ${event.screenX}, ${event.screenY}\n` +
-        'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
-        'Client ' + event.clientX + ', ' + event.clientY + '\n' +
-        'Page ' + event.pageX + ', ' + event.pageY + '\n\n' +
-        'Box:\n' +
-        'Scroll L/T/W/H ' + box.scrollLeft + ', ' + box.scrollTop + ', ' + box.scrollWidth + ', ' + box.scrollHeight + '\n' +
-        'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
-        'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
-        'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
-        // $FlowFixMe
-        'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
-        // $FlowFixMe
-        'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
-        'collection touch: ' + diagram.elements.isBeingTouched(clip);
-        Console(str);
-        // Console(event);
-      };
+      // canvas.onclick = function click(event) {
+      //   const box = canvas;
+      //   const clip = diagram.pageToClip(new Point(event.pageX, event.pageY));
+      //   const str = `Screen ${event.screenX}, ${event.screenY}\n` +
+      //   'Offset ' + event.offsetX + ', ' + event.offsetY + '\n' +
+      //   'Client ' + event.clientX + ', ' + event.clientY + '\n' +
+      //   'Page ' + event.pageX + ', ' + event.pageY + '\n\n' +
+      //   'Box:\n' +
+      //   'Scroll L/T/W/H ' + box.scrollLeft + ', ' + box.scrollTop + ', ' + box.scrollWidth + ', ' + box.scrollHeight + '\n' +
+      //   'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
+      //   'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
+      //   'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
+      //   // $FlowFixMe
+      //   'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
+      //   // $FlowFixMe
+      //   'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
+      //   'collection touch: ' + diagram.elements.isBeingTouched(clip);
+      //   Console(str);
+      //   // Console(event);
+      // };
       /* eslint-enable */
 
       // const globals = new GlobalVariables();

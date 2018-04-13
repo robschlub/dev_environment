@@ -58,7 +58,7 @@ class Diagram {
   // coming to a stop.
   touchDownHandler(pagePoint: g2.Point) {
     // Get the touched point in clip space
-    const clipPoint = this.screenToClip(pagePoint);
+    const clipPoint = this.pageToClip(pagePoint);
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
@@ -103,8 +103,8 @@ class Diagram {
       return false;
     }
     // Get the previous, current and delta between touch points in clip space
-    const previousClipPoint = this.screenToClip(previousPagePoint);
-    const currentClipPoint = this.screenToClip(currentPagePoint);
+    const previousClipPoint = this.pageToClip(previousPagePoint);
+    const currentClipPoint = this.pageToClip(currentPagePoint);
     const delta = currentClipPoint.sub(previousClipPoint);
 
     // Go through each element being moved, get the current translation
@@ -195,7 +195,7 @@ class Diagram {
   //    x: (x - canvasL)/canvasW * clipW + clipL,
   //    y: clipT - (y - canvasT)/canvasH * clipH,
   // }}
-  screenToClip(pageLocation: g2.Point): g2.Point {
+  pageToClip(pageLocation: g2.Point): g2.Point {
     return new g2.Point(
       (pageLocation.x - this.canvas.offsetLeft)/this.canvas.offsetWidth * this.clipRect.width + this.clipRect.left,
       this.clipRect.top - (pageLocation.y - this.canvas.offsetTop)/this.canvas.offsetHeight * this.clipRect.height,
