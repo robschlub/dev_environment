@@ -21,33 +21,43 @@ class PolygonFilled extends VertexObject {
     super(webgl);
     this.glPrimative = webgl.gl.TRIANGLE_FAN;
 
+    // Check potential errors in constructor input
+    let sides = numSides;
+    let sidesToDraw = numSidesToDraw;
+    if (sides < 3) {
+      sides = 3;
+    }
+
+    if (numSidesToDraw < 0) {
+      sidesToDraw = 0;
+    } else if (numSidesToDraw > sides) {
+      sidesToDraw = sides;
+    }
+
     this.points = [center.x, center.y];
     this.dAngle = 0;
     this.radius = radius;
     this.center = center;
 
-    if (numSides < 3) {
-      this.dAngle = Math.PI / numSides;
-    } else {
-      this.dAngle = Math.PI * 2.0 / numSides;
-    }
+    this.dAngle = Math.PI * 2.0 / sides;
+
     let i;
     let j = 2;
     // let b = 0;
 
     // Make the encapsulating border
-    if (numSidesToDraw < numSides) {
+    if (sidesToDraw < sides) {
       this.border[0].push(center.copy());
       // b = 1;
     }
-    for (i = 0; i < numSidesToDraw + 1; i += 1) {
+    for (i = 0; i < sidesToDraw + 1; i += 1) {
       this.points[j] = center.x + radius * Math.cos(i * this.dAngle + rotation);
       this.points[j + 1] = center.y + radius * Math.sin(i * this.dAngle + rotation);
       this.border[0].push(new Point(this.points[j], this.points[j + 1]));
       // b += 1;
       j += 2;
     }
-    if (numSidesToDraw < numSides) {
+    if (sidesToDraw < sides) {
       this.border[0].push(center.copy());
     }
 
