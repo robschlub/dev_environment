@@ -1,5 +1,6 @@
 // @flow
 import Polygon from './vertexObjects/Polygon';
+import PolygonFilled from './vertexObjects/PolygonFilled';
 import { Transform, Point, TransformLimit } from './g2';
 // import * as m2 from './m2';
 // import { Console } from '../tools/tools';
@@ -21,10 +22,10 @@ class ShapesCollection extends DiagramElementCollection {
       Math.PI / 4, new Point(0, 0),
     );
 
-    const triangle = new Polygon(
+    const triangle = new PolygonFilled(
       webgl,
       3,
-      0.2, 0.05,
+      0.2,
       0, new Point(0, 0),
     );
 

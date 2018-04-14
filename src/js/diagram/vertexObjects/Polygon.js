@@ -5,7 +5,7 @@ import WebGLInstance from '../webgl';
 import VertexObject from './vertexObject';
 
 class Polygon extends VertexObject {
-  radius: number;       // radius from center to middle polygon vertex
+  radius: number;       // radius from center to outside of polygon
   glPrimitive: number;  // WebGL primitive used
   // outRad: number;       // radius from center to polygon vertex + 1/2 linewidth
   // inRad: number;        // radius from center to polygon vertex - 1/2 linewidth
