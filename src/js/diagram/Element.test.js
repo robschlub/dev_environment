@@ -13,7 +13,7 @@ describe('Animationa and Movement', () => {
   describe('DiagramElementPrimative', () => {
     describe('Setup', () => {
       test('Instantiation', () => {
-        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        const square = new Polygon(webgl, 4, 1, 0.01, 0, Point.zero());
         const element = new DiagramElementPrimative(
           square,
           new Transform(),
@@ -26,7 +26,7 @@ describe('Animationa and Movement', () => {
       let element;
       let identity;
       beforeEach(() => {
-        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        const square = new Polygon(webgl, 4, 1, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -192,7 +192,7 @@ describe('Animationa and Movement', () => {
       let element;
       let identity;
       beforeEach(() => {
-        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        const square = new Polygon(webgl, 4, 1, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -293,7 +293,7 @@ describe('Animationa and Movement', () => {
       let element;
       const RealDate = Date.now;
       beforeEach(() => {
-        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        const square = new Polygon(webgl, 4, 1, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -323,7 +323,7 @@ describe('Animationa and Movement', () => {
       let element;
       let identity;
       beforeEach(() => {
-        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        const square = new Polygon(webgl, 4, 1, 0.01, 0, Point.zero());
         element = new DiagramElementPrimative(
           square,
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -380,7 +380,7 @@ describe('Animationa and Movement', () => {
     describe('Get and Is being touched', () => {
       let square;
       beforeEach(() => {
-        const sq = new Polygon(webgl, Math.sqrt(2), 4, 4, Math.sqrt(2) * 0.1, 0, Point.zero());
+        const sq = new Polygon(webgl, 4, Math.sqrt(2.205), 0.1, 0, Point.zero());
         square = new DiagramElementPrimative(
           sq,
           new Transform().rotate(Math.PI / 4),
@@ -416,7 +416,8 @@ describe('Animationa and Movement', () => {
       test('square centered on origin with scale 1', () => {
         const sq = new Polygon(
           webgl,
-          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          4,
+          Math.sqrt(2) * (0.105), Math.sqrt(2) * 0.01,
           Math.PI / 4, Point.zero(),
         );
         const square = new DiagramElementPrimative(sq);
@@ -427,7 +428,8 @@ describe('Animationa and Movement', () => {
       test('square vertices offset to origin with scale 1', () => {
         const sq = new Polygon(
           webgl,
-          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          4,
+          Math.sqrt(2) * (0.105), Math.sqrt(2) * 0.01,
           Math.PI / 4, new Point(0.5, 0),
         );
         const square = new DiagramElementPrimative(sq);
@@ -438,7 +440,8 @@ describe('Animationa and Movement', () => {
       test('square element offset to origin with scale 1', () => {
         const sq = new Polygon(
           webgl,
-          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          4,
+          Math.sqrt(2) * (0.105), Math.sqrt(2) * 0.01,
           Math.PI / 4, new Point(0, 0),
         );
         const square = new DiagramElementPrimative(
@@ -452,7 +455,8 @@ describe('Animationa and Movement', () => {
       test('square element offset to origin with scale 2', () => {
         const sq = new Polygon(
           webgl,
-          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          4,
+          Math.sqrt(2) * (0.105), Math.sqrt(2) * 0.01,
           Math.PI / 4, new Point(0.5, 0),
         );
         const square = new DiagramElementPrimative(
@@ -468,7 +472,8 @@ describe('Animationa and Movement', () => {
       test('updateMoveTranslationBoundary no transform', () => {
         const sq = new Polygon(
           webgl,
-          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          4,
+          Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
           Math.PI / 4, new Point(0, 0),
         );
         const square = new DiagramElementPrimative(
@@ -484,7 +489,8 @@ describe('Animationa and Movement', () => {
       test('updateMoveTranslationBoundary with transform', () => {
         const sq = new Polygon(
           webgl,
-          Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+          4,
+          Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
           Math.PI / 4, new Point(0, 0),
         );
         const square = new DiagramElementPrimative(
@@ -501,7 +507,7 @@ describe('Animationa and Movement', () => {
     describe('vertexToClip', () => {
       let e;
       beforeEach(() => {
-        const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
+        const square = new Polygon(webgl, 4, 1.01, 0.01, 0, Point.zero());
         const element = new DiagramElementPrimative(
           square,
           new Transform(),
@@ -584,8 +590,8 @@ describe('Animationa and Movement', () => {
     let identity;
     beforeEach(() => {
       identity = m2.identity();
-      const square = new Polygon(webgl, 1, 4, 4, 0.01, 0, Point.zero());
-      const tri = new Polygon(webgl, 0.1, 3, 3, 0.01, 0, new Point(0.1, 0.1));
+      const square = new Polygon(webgl, 4, 1005, 0.01, 0, Point.zero());
+      const tri = new Polygon(webgl, 3, 0.1005, 0.01, 0, new Point(0.1, 0.1));
       squareElement = new DiagramElementPrimative(
         square,
         new Transform().scale(1, 1).rotate(0).translate(0, 0),
@@ -733,9 +739,8 @@ describe('Animationa and Movement', () => {
         identity = m2.identity();
         square = new Polygon(
           webgl,
-          Math.sqrt(2) * 1,
           4,
-          4,
+          Math.sqrt(2) * (1.05),
           Math.sqrt(2) * 0.1,
           Math.PI / 4,
           Point.zero(),
@@ -795,7 +800,8 @@ describe('Animationa and Movement', () => {
     test('square centered on origin with scale 1', () => {
       const sq = new Polygon(
         webgl,
-        Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+        4,
+        Math.sqrt(2) * (0.105), Math.sqrt(2) * 0.01,
         Math.PI / 4, Point.zero(),
       );
       const square = new DiagramElementPrimative(sq);
@@ -808,7 +814,8 @@ describe('Animationa and Movement', () => {
     test('square offset from origin with scale 1, normal colleciton', () => {
       const sq = new Polygon(
         webgl,
-        Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+        4,
+        Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
         Math.PI / 4, Point.zero(),
       );
       const square = new DiagramElementPrimative(sq, new Transform()
@@ -824,7 +831,8 @@ describe('Animationa and Movement', () => {
     test('square on origin with scale 1, colleciton offset', () => {
       const sq = new Polygon(
         webgl,
-        Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+        4,
+        Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
         Math.PI / 4, Point.zero(),
       );
       const square = new DiagramElementPrimative(sq);
@@ -840,7 +848,8 @@ describe('Animationa and Movement', () => {
     test('square element offset and colleciton offset', () => {
       const sq = new Polygon(
         webgl,
-        Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+        4,
+        Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
         Math.PI / 4, Point.zero(),
       );
       const square = new DiagramElementPrimative(sq, new Transform()
@@ -859,7 +868,8 @@ describe('Animationa and Movement', () => {
     test('square element offset and scaled and colleciton offset', () => {
       const sq = new Polygon(
         webgl,
-        Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+        4,
+        Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
         Math.PI / 4, Point.zero(),
       );
       const square = new DiagramElementPrimative(sq, new Transform()
@@ -878,7 +888,8 @@ describe('Animationa and Movement', () => {
     test('two squares', () => {
       const sq = new Polygon(
         webgl,
-        Math.sqrt(2) * 0.1, 4, 4, Math.sqrt(2) * 0.01,
+        4,
+        Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
         Math.PI / 4, Point.zero(),
       );
       const square1 = new DiagramElementPrimative(sq, new Transform()

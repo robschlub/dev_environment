@@ -7,19 +7,19 @@ import VertexObject from './vertexObject';
 class Polygon extends VertexObject {
   radius: number;       // radius from center to middle polygon vertex
   glPrimitive: number;  // WebGL primitive used
-  outRad: number;       // radius from center to polygon vertex + 1/2 linewidth
-  inRad: number;        // radius from center to polygon vertex - 1/2 linewidth
+  // outRad: number;       // radius from center to polygon vertex + 1/2 linewidth
+  // inRad: number;        // radius from center to polygon vertex - 1/2 linewidth
   center: Point;     // center point
   dAngle: number;       // angle between adjacent verteces to center lines
 
   constructor(
     webgl: WebGLInstance,
-    radius: number,
     numSides: number,       // Must be 3 or greater (def: 3 if smaller)
-    numSidesToDraw: number, // Must be <= numSides (def: numSides if greater)
+    radius: number,
     lineWidth: number,
-    rotation: number,
-    center: Point,
+    rotation: number = 0,
+    center: Point = new Point(0, 0),
+    numSidesToDraw: number = numSides, // Must be <= numSides (def: numSides if greater)
   ) {
     // setup webgl stuff
     super(webgl);
@@ -39,10 +39,10 @@ class Polygon extends VertexObject {
     }
     // setup shape geometry
     this.radius = radius;
-    const inRad = radius - lineWidth / 2.0;
-    const outRad = radius + lineWidth / 2.0;
-    this.outRad = outRad;
-    this.inRad = inRad;
+    const inRad = radius - lineWidth;
+    // const outRad = radius + lineWidth / 2.0;
+    // this.outRad = outRad;
+    // this.inRad = inRad;
     this.center = center;
     this.dAngle = Math.PI * 2.0 / sides;
 
@@ -54,9 +54,9 @@ class Polygon extends VertexObject {
       this.points[j + 1] =
         center.y + inRad * Math.sin(i * this.dAngle + rotation);
       this.points[j + 2] =
-        center.x + outRad * Math.cos(i * this.dAngle + rotation);
+        center.x + radius * Math.cos(i * this.dAngle + rotation);
       this.points[j + 3] =
-        center.y + outRad * Math.sin(i * this.dAngle + rotation);
+        center.y + radius * Math.sin(i * this.dAngle + rotation);
       j += 4;
     }
 
@@ -64,8 +64,8 @@ class Polygon extends VertexObject {
     if (sidesToDraw < sides) {
       for (i = 0; i <= sidesToDraw; i += 1) {
         this.border[0].push(new Point(
-          center.x + outRad * Math.cos(i * this.dAngle + rotation),
-          center.y + outRad * Math.sin(i * this.dAngle + rotation),
+          center.x + radius * Math.cos(i * this.dAngle + rotation),
+          center.y + radius * Math.sin(i * this.dAngle + rotation),
         ));
       }
       for (i = sidesToDraw; i >= 0; i -= 1) {
@@ -78,8 +78,8 @@ class Polygon extends VertexObject {
     } else {
       for (i = 0; i <= sidesToDraw; i += 1) {
         this.border[0].push(new Point(
-          center.x + outRad * Math.cos(i * this.dAngle + rotation),
-          center.y + outRad * Math.sin(i * this.dAngle + rotation),
+          center.x + radius * Math.cos(i * this.dAngle + rotation),
+          center.y + radius * Math.sin(i * this.dAngle + rotation),
         ));
       }
     }

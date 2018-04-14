@@ -102,7 +102,8 @@ describe('Diagram', () => {
         const def = squareDefinitions[sKey];
         const square = new Polygon(
           diagram.webgl,
-          (def.sideLength / 2 - 0.025) * Math.sqrt(2), 4, 4, 0.05 * Math.sqrt(2),
+          4,
+          (def.sideLength / 2) * Math.sqrt(2), 0.05 * Math.sqrt(2),
           def.rotation, def.center,
         );
         const squareElement = new DiagramElementPrimative(
@@ -129,12 +130,12 @@ describe('Diagram', () => {
     d.webgl = webgl;      // needed for mocking only
     const squareVertices = new Polygon(
       d.webgl,            // gl instance
-      1,                  // radius to center of corner
       4,                  // number of sides in polygon
-      4,                  // number of sides to draw
+      1,                  // radius to center of corner
       0.05,               // thickness of polygon border
       Math.PI / 4,        // rotation
       new Point(0, 0),    // offset
+      4,                  // number of sides to draw
     );
     const square = new DiagramElementPrimative(squareVertices);
     d.add('square', square);

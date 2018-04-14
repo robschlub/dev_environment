@@ -16,13 +16,15 @@ class ShapesCollection extends DiagramElementCollection {
 
     const square = new Polygon(
       webgl,
-      0.475 * Math.sqrt(2), 4, 4, 0.05 * Math.sqrt(2),
+      4,
+      0.475 * Math.sqrt(2), 0.05 * Math.sqrt(2),
       Math.PI / 4, new Point(0, 0),
     );
 
     const triangle = new Polygon(
       webgl,
-      0.2, 3, 3, 0.05,
+      3,
+      0.2, 0.05,
       0, new Point(0, 0),
     );
 
