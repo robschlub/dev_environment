@@ -1,6 +1,7 @@
 // @flow
 import Polygon from './vertexObjects/Polygon';
 import PolygonFilled from './vertexObjects/PolygonFilled';
+import PolyLineCorners from './vertexObjects/Corner';
 import { Transform, Point, TransformLimit } from './g2';
 // import * as m2 from './m2';
 // import { Console } from '../tools/tools';
@@ -29,6 +30,19 @@ class ShapesCollection extends DiagramElementCollection {
       0, new Point(0, 0),
     );
 
+    const corners = new PolyLineCorners(
+      webgl,
+      [
+        new Point(1, 0),
+        new Point(0, 0),
+        new Point(0, 1),
+        new Point(1, 1),
+      ],
+      true,
+      0.25,
+      0.1,
+    );
+
     this.add('square', new DiagramElementPrimative(
       square,
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
@@ -48,6 +62,16 @@ class ShapesCollection extends DiagramElementCollection {
     const tri = this._triangle;
     tri.isTouchable = true;
     tri.isMovable = true;
+
+    this.add('corners', new DiagramElementPrimative(
+      corners,
+      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      [1, 0, 0, 1], diagramLimits,
+    ));
+    // $FlowFixMe
+    const corn = this._corners;
+    corn.isTouchable = true;
+    corn.isMovable = true;
 
     this.isTouchable = true;
   }

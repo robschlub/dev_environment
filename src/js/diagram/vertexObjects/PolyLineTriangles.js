@@ -1,6 +1,6 @@
 import { Point, Line } from '../g2';
-import WebGLInstance from '../webgl';
-import VertexObject from './vertexObject';
+// import WebGLInstance from '../webgl';
+// import VertexObject from './vertexObject';
 
 
 function simpleIntersect(p1, p2, q1, q2) {
@@ -65,8 +65,8 @@ function polyLineTriangles(coords, close, width) {
   } else {
     // if not closing on itself, then the first point is simply the first
     // point of the offset lines.
-    p = line1Pairs[0][0];
-    q = line2Pairs[0][0];
+    p = line1Pairs[0][0];   // eslint-disable-line prefer-destructuring
+    q = line2Pairs[0][0];   // eslint-disable-line prefer-destructuring
   }
   // The line effectively has two borders (named an inside and outside border)
   // but the inner border isn't necessarily the INSIDE border, it is just a
@@ -123,8 +123,8 @@ function polyLineTriangles(coords, close, width) {
   // In not closing the polyline, the end points are just the last offset
   // line points
   if (!close) {
-    endp = line1Pairs[line1Pairs.length-1][1];
-    endq = line2Pairs[line2Pairs.length-1][1];
+    endp = line1Pairs[line1Pairs.length - 1][1]; // eslint-disable-line prefer-destructuring
+    endq = line2Pairs[line2Pairs.length - 1][1]; // eslint-disable-line prefer-destructuring
   // If closing the polyline, then the end points are the start points
   } else {
     endp = new Point(points[0], points[1]);

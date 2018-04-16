@@ -1,11 +1,11 @@
 import PolyLineTriangles from './PolyLineTriangles';
 import { Point } from '../g2';
-import webgl from '../../__mocks__/WebGLInstanceMock';
+// import webgl from '../../__mocks__/WebGLInstanceMock';
 import { round } from '../mathtools';
 
 describe('PolygonFilled', () => {
   let corner;
-  let triangle;
+  // let triangle;
   let square;
   let square2;
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('PolygonFilled', () => {
       new Point(1, 0),
     ];
     corner = PolyLineTriangles(cornerLine, false, 0.1);
-    triangle = PolyLineTriangles(cornerLine, true, 0.1);
+    // triangle = PolyLineTriangles(cornerLine, true, 0.1);
     square = PolyLineTriangles(squareLine, true, 0.1);
     square2 = PolyLineTriangles(squareLine2, true, 0.1);
   });
