@@ -4,8 +4,27 @@
                 "plugin:react/recommended",
                 "airbnb-base"],
     "rules": {
-        "no-console": "error"
+        "no-console": "error",
         // "quotes": ["error", "double"]
+        "no-underscore-dangle": 0,
+        "no-mixed-operators": [
+          "error",
+          {
+              "groups": [
+                  ["&", "|", "^", "~", "<<", ">>", ">>>"],
+                  ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+                  ["&&", "||"],
+                  ["in", "instanceof"]
+              ],
+              "allowSamePrecedence": true
+          }
+        ],
+        "no-multi-spaces": [
+          "error",
+          {
+            "ignoreEOLComments": true
+          }
+        ]
       },
     "plugins": [
       "flowtype",
