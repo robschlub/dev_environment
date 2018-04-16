@@ -146,6 +146,7 @@ class Diagram {
   }
 
   draw(now: number): void {
+    // const measure = Date.now()
     this.clearContext();
     // This transform converts standard gl clip space, to diagram clip space
     // defined in limits.
@@ -165,6 +166,7 @@ class Diagram {
     if (this.elements.isMoving()) {
       this.animateNextFrame();
     }
+    // console.log(Date.now() - measure)
   }
 
   animateNextFrame() {
@@ -201,6 +203,11 @@ class Diagram {
     );
   }
 
+  clipPerPixel(): g2.Point {
+    const x = this.limits.width / this.canvas.offsetWidth / window.devicePixelRatio;
+    const y = this.limits.height / this.canvas.offsetHeight / window.devicePixelRatio;
+    return new g2.Point(x, y);
+  }
   /* eslint-disable */
   // autoResize() {
   //   this.canvas.width = this.canvas.clientWidth * this.devicePixelRatio;

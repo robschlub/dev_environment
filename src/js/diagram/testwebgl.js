@@ -5,7 +5,9 @@ import PolyLineCorners from './vertexObjects/PolyLineCorners';
 import PolyLine from './vertexObjects/PolyLine';
 import Arrow from './vertexObjects/Arrow';
 import RadialLines from './vertexObjects/RadialLines';
+// import HorizontalLine from './vertexObjects/HorizontalLine';
 import { Transform, Point, TransformLimit } from './g2';
+import GLParallelLines from './vertexObjects/glParallelLines';
 // import * as m2 from './m2';
 // import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
@@ -63,10 +65,14 @@ class ShapesCollection extends DiagramElementCollection {
       webgl,
       0,
       0.5,
-      0.05,
+      0.01,
       Math.PI / 9,
       Math.PI * 2,
     );
+
+    const xTicks = new GLParallelLines(webgl, 50, 1, new Point(0, 0), 2, 0.004, true, false);
+
+    // const xMinorTicks = new GLParallelLines(webgl, 50,)
 
     const arrowVertices = new Arrow(webgl);
 
@@ -130,8 +136,17 @@ class ShapesCollection extends DiagramElementCollection {
     radial.isTouchable = true;
     radial.isMovable = true;
 
-    this.add('tickMarks', new TickMarks(webgl, 10, 0.2, new Point(1, 0.5), 0.1, 0.01, [1, 1, 1, 1], diagramLimits, Math.PI / 2));
+    this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [1, 1, 1, 1], diagramLimits, Math.PI / 2));
+    this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [1, 1, 1, 1], diagramLimits, Math.PI / 2));
+    this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [1, 1, 1, 1], diagramLimits, 0));
+    this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [1, 1, 1, 1], diagramLimits, 0));
 
+    this.add('xAxis', new DiagramElementPrimative(
+      xTicks,
+      new Transform().scale(1, 1).rotate(0).translate(0.2, 0.2),
+      [0.5, 0.5, 0.5, 1],
+      diagramLimits,
+    ));
     this.isTouchable = true;
   }
 }
@@ -157,7 +172,7 @@ function testgl(id: string) {
 
   if (canvas instanceof HTMLCanvasElement) {
     const diagram = new Diagram1(canvas, 0, 0, 8, 4);
-
+    console.log(diagram.clipPerPixel());
     // eslint-disable-next-line
     const phase1 = new AnimationPhase(
       new Transform().scale(1, 1).rotate(1).translate(0, 0),
