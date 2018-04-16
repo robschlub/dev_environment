@@ -1155,4 +1155,5 @@ export {
   Transform,
   TransformLimit,
   Rect,
+  Translation,
 };

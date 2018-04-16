@@ -395,59 +395,27 @@ class DiagramElement {
       deltaTime,
       this.move.freely.zeroVelocityThreshold,
     );
-    // const velocity = this.state.movement.velocity.copy();
-    // let result;
-    // const v = new g2.Transform();
-    // const t = new g2.Transform();
-    // result = tools.decelerate(
-    //   this.transform.rotation,
-    //   velocity.rotation,
-    //   this.move.freely.deceleration.rotation,
-    //   deltaTime,
-    //   this.move.freely.zeroVelocityThreshold.rotation,
-    // );
-    // v.rotation = result.v;
-    // t.rotation = result.p;
 
-    // result = tools.decelerate(
-    //   this.transform.translation.x,
-    //   velocity.translation.x,
-    //   this.move.freely.deceleration.translation.x,
-    //   deltaTime,
-    //   this.move.freely.zeroVelocityThreshold.translation.x,
-    // );
-    // v.translation.x = result.v;
-    // t.translation.x = result.p;
-
-    // result = tools.decelerate(
-    //   this.transform.translation.y,
-    //   velocity.translation.y,
-    //   this.move.freely.deceleration.translation.y,
-    //   deltaTime,
-    //   this.move.freely.zeroVelocityThreshold.translation.y,
-    // );
-    // v.translation.y = result.v;
-    // t.translation.y = result.p;
-
-    // result = tools.decelerate(
-    //   this.transform.scale.x,
-    //   velocity.scale.x,
-    //   this.move.freely.deceleration.scale.x,
-    //   deltaTime,
-    //   this.move.freely.zeroVelocityThreshold.scale.x,
-    // );
-    // v.scale.x = result.v;
-    // t.scale.x = result.p;
-
-    // result = tools.decelerate(
-    //   this.transform.scale.y,
-    //   velocity.scale.y,
-    //   this.move.freely.deceleration.scale.y,
-    //   deltaTime,
-    //   this.move.freely.zeroVelocityThreshold.scale.y,
-    // );
-    // v.scale.y = result.v;
-    // t.scale.y = result.p;
+    for (let i = 0; i < next.t.order.length; i += 1) {
+      const t = next.t.order[i];
+      const min = this.move.minTransform.order[i];
+      const max = this.move.maxTransform.order[i];
+      const v = next.v.order[i];
+      if (t instanceof g2.Translation &&
+          v instanceof g2.Translation &&
+          max instanceof g2.Translation &&
+          min instanceof g2.Translation
+      ) {
+        if (min.x >= t.x || max.x <= t.x) {
+          v.x = -v.x * 0.5;
+        }
+        if (min.y >= t.y || max.y <= t.y) {
+          v.y = -v.y * 0.5;
+        }
+        next.v.order[i] = v;
+      }
+    }
+    next.v.calcMatrix();
 
     return {
       velocity: next.v,
