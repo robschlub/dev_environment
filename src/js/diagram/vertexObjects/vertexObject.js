@@ -110,48 +110,6 @@ class VertexObject {
 }
 
 /* eslint-disable */
-  
-  // function cornerLength(coords, length, forceLength = true) {
-  //   let center = coords[1];
-  //   let ends = [coords[0], coords[2]];
-  //   let angle, delta;
-  //   let points = [];
-  //   for (let i=0;i<2;++i) {
-  //     delta = ends[i].sub(center);//g2.point(ends[i].x-center.x, ends[i].y-center.y);
-  //     angle = Math.atan2(delta.y, delta.x);
-  //     endLength = Math.sqrt(delta.x*delta.x + delta.y*delta.y);
-  //     if (length < endLength || forceLength) {
-  //       endLength = length;
-  //     }
-  //     points.push(g2.point(endLength*Math.cos(angle)+center.x,endLength*Math.sin(angle)+center.y));
-  //   }
-  //   points.push(points[1].copy());
-  //   points[1] = center.copy();
-  //   return points;
-  // }
-  // function Corner(webgl, coords, close, length, width) {
-  //   VertexObject.call(this, webgl);
-  //   // let tempBorder = [];
-  //   let newCoords = coords;
-  //   if (close){
-  //     newCoords.push(coords[0]);
-  //     newCoords.push(coords[1]);
-  //   }
-  //   for (let i=1,j=newCoords.length-1;i<j;++i) {
-  //     let cornerPoints = cornerLength([newCoords[i-1],newCoords[i],newCoords[i+1]],length, true);
-  //     let cornerTriangles = polyLineTriangles(cornerPoints, false, width)
-  //     for (let k=0,m=cornerTriangles.points.length;k<m;++k){
-  //       this.points.push(cornerTriangles.points[k]);
-  //     }
-  //     this.border[i-1] = [];
-  //     for (let k=0,m=cornerTriangles.border.length;k<m;++k){
-  //       this.border[i-1].push(cornerTriangles.border[k]);
-  //     }
-  //   }
-  //   this.setupBuffer()
-  // }
-  // Corner.prototype = Object.create(VertexObject.prototype);
-  
 
   // function PolyLine(webgl, coords, close, width) {
   //   VertexObject.call(this, webgl);

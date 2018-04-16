@@ -1,4 +1,4 @@
-import PolyLineCorners from './Corner';
+import PolyLineCorners from './PolyLineCorners';
 import { Point } from '../g2';
 import webgl from '../../__mocks__/WebGLInstanceMock';
 import { round } from '../mathtools';

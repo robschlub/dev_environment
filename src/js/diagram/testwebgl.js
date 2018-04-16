@@ -1,7 +1,8 @@
 // @flow
 import Polygon from './vertexObjects/Polygon';
 import PolygonFilled from './vertexObjects/PolygonFilled';
-import PolyLineCorners from './vertexObjects/Corner';
+import PolyLineCorners from './vertexObjects/PolyLineCorners';
+import PolyLine from './vertexObjects/PolyLine';
 import { Transform, Point, TransformLimit } from './g2';
 // import * as m2 from './m2';
 // import { Console } from '../tools/tools';
@@ -43,6 +44,18 @@ class ShapesCollection extends DiagramElementCollection {
       0.1,
     );
 
+    const polyLine = new PolyLine(
+      webgl,
+      [
+        new Point(0, 0),
+        new Point(0.5, 0.5),
+        new Point(0.5, 1),
+        new Point(0, 0.75),
+      ],
+      false,
+      0.1,
+    );
+
     this.add('square', new DiagramElementPrimative(
       square,
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
@@ -65,13 +78,23 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('corners', new DiagramElementPrimative(
       corners,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      new Transform().scale(1, 1).rotate(0).translate(0.5, 0.5),
       [1, 0, 0, 1], diagramLimits,
     ));
     // $FlowFixMe
     const corn = this._corners;
     corn.isTouchable = true;
     corn.isMovable = true;
+
+    this.add('pline', new DiagramElementPrimative(
+      polyLine,
+      new Transform().scale(1, 1).rotate(0).translate(1, 2),
+      [1, 1, 0, 1], diagramLimits,
+    ));
+    // $FlowFixMe
+    const pline = this._pline;
+    pline.isTouchable = true;
+    pline.isMovable = true;
 
     this.isTouchable = true;
   }

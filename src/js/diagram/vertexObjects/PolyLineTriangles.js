@@ -1,6 +1,4 @@
 import { Point, Line } from '../g2';
-// import WebGLInstance from '../webgl';
-// import VertexObject from './vertexObject';
 
 
 function simpleIntersect(p1, p2, q1, q2) {
