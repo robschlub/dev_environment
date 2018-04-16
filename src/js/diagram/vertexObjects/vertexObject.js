@@ -111,53 +111,6 @@ class VertexObject {
 
 /* eslint-disable */
 
-  // function ArrowHeadTriangle(webgl, tip, width, height, rotation=0) {
-  //   VertexObject.call(this, webgl);
-  //   // this.glPrimative = this.gl.TRIANGLE_FAN;
-
-  //   this.height = height;
-  //   // let tip = g2.point(0,0);
-  //   this.points = [       0,    0,
-  //              -width/2,  -height,
-  //              +width/2,  -height];
-  //   let i;
-  //   for (i=0;i<this.points.length;i+=2) {
-  //     let point = g2.point(this.points[i],this.points[i+1]);
-  //     point = point.rotate(rotation);
-  //     point = point.add(tip);
-  //     this.points[i]  = point.x;
-  //     this.points[i+1] = point.y;
-  //     this.border[0].push(point);
-  //   }
-  //   this.border[0].push(this.border[0][0].copy());
-  //   this.setupBuffer();
-  // }
-  // ArrowHeadTriangle.prototype = Object.create(VertexObject.prototype);
-
-  // function Arrow(webgl, tip, width, legWidth, height, legHeight) {
-  //   VertexObject.call(this, webgl);
-  //   this.glPrimative = this.gl.TRIANGLE_FAN;
-
-  //   this.height = height;
-  //   let arrowHeight = height-legHeight;
-  //   // let tip = g2.point(0,0);
-  //   this.points = [       0,       0,
-  //              -width/2,  -arrowHeight,
-  //           -legWidth/2.0,  -arrowHeight,
-  //           -legWidth/2.0,     -height,
-  //           +legWidth/2.0,     -height,
-  //           +legWidth/2.0,  -arrowHeight,
-  //              +width/2,  -arrowHeight];
-  //   let i;
-  //   for (i=0;i<this.points.length;i+=2) {
-  //     this.points[i] += tip.x;
-  //     this.points[i+1] += tip.y;
-  //     this.border[0].push(g2.point(this.points[i], this.points[i+1]));
-  //   }
-  //   this.border[0].push(this.border[0][0].copy());
-  //   this.setupBuffer(7);
-  // }
-  // Arrow.prototype = Object.create(VertexObject.prototype);
 
   // function HorizontalLine(webgl, start, length, width) {
   //   VertexObject.call(this, webgl);

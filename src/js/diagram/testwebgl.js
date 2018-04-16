@@ -3,6 +3,7 @@ import Polygon from './vertexObjects/Polygon';
 import PolygonFilled from './vertexObjects/PolygonFilled';
 import PolyLineCorners from './vertexObjects/PolyLineCorners';
 import PolyLine from './vertexObjects/PolyLine';
+import Arrow from './vertexObjects/Arrow';
 import { Transform, Point, TransformLimit } from './g2';
 // import * as m2 from './m2';
 // import { Console } from '../tools/tools';
@@ -56,6 +57,8 @@ class ShapesCollection extends DiagramElementCollection {
       0.1,
     );
 
+    const arrowVertices = new Arrow(webgl);
+
     this.add('square', new DiagramElementPrimative(
       square,
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
@@ -95,6 +98,16 @@ class ShapesCollection extends DiagramElementCollection {
     const pline = this._pline;
     pline.isTouchable = true;
     pline.isMovable = true;
+
+    this.add('arrow', new DiagramElementPrimative(
+      arrowVertices,
+      new Transform().scale(0.7, 0.4).rotate(0).translate(0.5, 1),
+      [1, 1, 0, 1], diagramLimits,
+    ));
+    // $FlowFixMe
+    const arrow = this._arrow;
+    arrow.isTouchable = true;
+    arrow.isMovable = true;
 
     this.isTouchable = true;
   }
