@@ -34,7 +34,7 @@ class Arrow extends VertexObject {
       this.border[0].push(new Point(this.points[i], this.points[i + 1]));
     }
     this.border[0].push(this.border[0][0].copy());
-    this.setupBuffer(7);
+    this.setupBuffer();
   }
 }
 export default Arrow;

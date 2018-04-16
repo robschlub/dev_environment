@@ -112,74 +112,7 @@ class VertexObject {
 /* eslint-disable */
 
 
-  // function HorizontalLine(webgl, start, length, width) {
-  //   VertexObject.call(this, webgl);
-  //   this.glPrimative = this.gl.TRIANGLE_STRIP;
 
-  //   let cx = start.x;
-  //   let cy = start.y-width/2.0;
-  //   this.start = start.copy();
-  //   this.points = [cx, cy,
-  //            cx, cy+width,
-  //            cx+length, cy,
-  //            cx+length, cy+width];
-  //   for(let i=0; i<this.points.length; i+=2) {
-  //     this.border[0].push(g2.point(this.points[i], this.points[i+1]));
-  //   }
-  //   this.border[0].push(this.border[0][0].copy());
-  //   this.setupBuffer(4);
-  // }
-  // HorizontalLine.prototype = Object.create(VertexObject.prototype);
-
-  // function RadialLines(webgl, innerRadius, outerRadius, width, dAngle, maxAngle) {
-  //   VertexObject.call(this, webgl);
-    
-  //   this.innerRadius = innerRadius;
-  //   this.outerRadius = outerRadius;
-  //   this.dAngle = dAngle;
-  //   this.maxAngle = maxAngle;
-  //   let currentAngle = 0;
-  //   let j = 0;
-  //   let b = 0
-  //   let referenceLine = [innerRadius,   -width/2.0,
-  //             outerRadius, -width/2.0,
-  //             outerRadius,  width/2.0,
-  //             innerRadius,    -width/2.0,
-  //             outerRadius,  width/2.0,
-  //             innerRadius,     width/2.0];
-  //   let rot;
-  //   while (currentAngle <= maxAngle) {
-  //     for (i=0;i<6;++i) {
-  //       let newPoint = g2.point(referenceLine[i*2],referenceLine[i*2+1]).rotate(currentAngle);
-  //       // let newPoint = rotate(new coord(referenceLine[i*2],referenceLine[i*2+1]), currentAngle);
-  //       this.points[j++] = newPoint.x;
-  //       this.points[j++] = newPoint.y;
-  //     }
-  //     let radialLineBorder = [g2.point(this.points[j-12], this.points[j-11]),
-  //                 g2.point(this.points[j-10], this.points[j-9]),
-  //                 g2.point(this.points[j-8], this.points[j-7]),
-  //                 g2.point(this.points[j-2], this.points[j-1]),
-  //                 g2.point(this.points[j-12], this.points[j-11])];
-  //     this.border[b++] = radialLineBorder;
-  //     currentAngle += dAngle;
-  //   }
-  //   this.setupBuffer();
-  // }
-  // RadialLines.prototype = Object.create(VertexObject.prototype);
-  // RadialLines.prototype.drawToAngle = function(offset, rotate, scale, drawAngle, color) {
-  //   let count = Math.floor(drawAngle / this.dAngle)*6.0+6.0;
-  //   if (drawAngle >= this.maxAngle) {
-  //     count = this.numPoints;
-  //   }
-  //   this.draw(this,offset, rotate, scale, count, color);
-  // }
-  // RadialLines.prototype.getPointCountForAngle = function(drawAngle) {
-  //   let count = Math.floor(drawAngle / this.dAngle)*6.0 + 6;
-  //   if (drawAngle >= Math.PI*2.0) {
-  //     count = this.numPoints;
-  //   }
-  //   return count;
-  // }
 
   
 
