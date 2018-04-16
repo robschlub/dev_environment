@@ -7,8 +7,31 @@ import Button from './../components/button';
 import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
 import Content from './../components/content';
+// import styles from '../../css/diagram.scss';
+// import getColors from '../diagram/colors';
+// import testgl from '../diagram/testgl';
+import Canvas from '../components/canvas';
+import testgl from '../diagram/testwebgl';
 
 const introPage = () => {
+  // const globalVars = GlobalVariables.getInstance();
+  // // let lesson;
+  // let nextButton = document.getElementById("next_link");
+  // let prevButton = document.getElementById("prev_link");
+  // let selectButton = document.getElementById("select_link");
+
+  // const lesson = new Lesson2();
+  // lesson.director.updateState();
+  // nextButton.onclick = lesson.director.next.bind(lesson.director);
+  // prevButton.onclick = lesson.director.prev.bind(lesson.director);
+  // selectButton.onclick = lesson.director.select.bind(lesson.director);
+  // globalVars.animateNextFrame();
+  // console.log(styles.colorCornersMoreSharp);
+  // console.log(styles.colorStick);
+  // console.log(styles.colorGreek);
+  // console.log(styles);
+  // getColors();
+
   const introId:HTMLElement | null = document.getElementById('intro');
 
   if (introId instanceof HTMLElement) {
@@ -69,9 +92,20 @@ const introPage = () => {
 
       </Jumbotron>
       <Content />
+      <div className='container'>
+        <div className='row'>
+          <div className='col-2'></div>
+          <Canvas id="my_Canvas" didMountFn={testgl}/>
+          <div className='col-2'></div>
+          <Canvas id="my_Canvas1" didMountFn={testgl}/>
+        </div>
+      </div>
       </div>,
       introId,
     );
+    //
+    // console.log("Asdf");
+    // testgl('my_Canvas');
   }
 };
 

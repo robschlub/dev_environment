@@ -1,0 +1,105 @@
+/*#equation2 .numerator{
+    padding-left: 60px;
+    margin-left:auto;
+    margin-right:auto;
+}*/
+.movement_link_container_all {
+    position: absolute;
+    width: var(--dim-diagram-width);
+    left: 5px;
+    top: 5px;
+}
+.movement_link_container {
+    float: left;
+    height: var(--dim-navbar_height);
+    display: table;
+}
+.next-container {
+    float: left;
+}
+.prev-container {
+    float: left;
+}
+.skip-to-container {
+    float: left;
+}
+
+.movement_link_table_cell {
+    display: table-cell;
+    vertical-align: middle;
+    /*border-radius: 5px;*/
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    cursor:pointer;
+    
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    
+
+}
+
+.movement_link {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-width: 40px;
+    text-align: center;
+    background-color: #EEE;
+    
+    font-size: 80%;
+    /*border-radius: 5px;*/
+    font-weight: lighter;
+    /*box-shadow: 0px 0px 3px 2px #AAA;    */
+}
+.movement_link-old {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    min-width: 40px;
+    text-align: center;
+    background-color: #222;
+    color: #FFF;
+    /*border-radius: 5px;*/
+    font-weight: lighter;
+
+    background: rgba(0,0,0,0.8); /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(-90deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6)); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(-90deg, red, yellow); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(-90deg, red, yellow); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(-90deg, rgba(0,0,0,0.6), rgba(0,0,0,0.8)); /* Standard syntax */
+    /*box-shadow: 0px 0px 3px 2px #AAA;    */
+}
+.movement-link-disabled {
+    color: #BBB;
+    cursor: default;
+}
+.movement-link-enabled {
+    cursor: pointer;
+    color: #33F;
+}
+.non_touch_hover:hover {
+    color: #888 ;
+}
+
+.movement-link-enabled:active {
+    color: #888;
+}
+
+#next_link {
+    margin-left:5px;
+}
+#prev_link {
+    margin-right:5px;
+}
+
+.action_word {
+    font-weight: bold;
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+

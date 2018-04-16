@@ -91,3 +91,17 @@ An example contribution work flow is:
 
 # Setting up sublime
 
+
+# Setting up port forwarding:
+forward port external 4000 to local 5000
+`echo "
+rdr pass inet proto tcp from any to any port 4000 -> 127.0.0.1 port 5003
+" | sudo pfctl -ef -`
+
+To stop port forwarding:
+`sudo pfctl -F all -f /etc/pf.conf`
+
+To see all current rules:
+`sudo pfctl -s nat`
+
+
