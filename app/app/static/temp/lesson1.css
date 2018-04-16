@@ -1,0 +1,109 @@
+.Lesson1_circle {
+    color: red;
+    font-weight: bold;
+}
+.Lesson1_circle_alt {
+    color: red;
+    font-style: italic;
+}
+
+.Lesson1_anchor {
+    /*color: rgb(200,200,0);*/
+    color: var(--color-anchor_text);
+    font-weight: bold;
+}
+.Lesson1_stick {
+    color: blue;
+    font-weight: bold;
+}
+.Lesson1_stick_alt {
+    color: blue;
+    font-style: italic;
+}
+.Lesson1_hintArrow {
+    color: red;
+    font-style: italic; 
+}
+
+
+#annotation {
+    position: absolute;
+    left: calc(var(--dim-canvas-width)*1.5);
+    top: calc(var(--dim-canvas-height)*0.9);
+    width: 18em;
+    font-size: 120%;
+}
+#annotation-label {
+    width: 6.5em;
+    float:left;
+    text-align: right;
+}
+
+#annotation-value {
+    width: 11em;
+    float: left;
+}
+#annotation-angle-value {
+    padding-right: 0.3em;
+    text-align: right;
+    float: left;
+    width: 2.5em;
+}
+#annotation-angle-units {
+    text-align: left;
+    float:left;
+    width: 8em;
+    color: rgb(150,150,150);
+}
+
+.angle_list {
+    width: 3em;
+    text-align: right;
+    float:left;
+    padding-right:2em;
+}
+
+
+.L2_col_rotate     { color: green;                           }
+.L2_col_arc        { color: var(--color-arc);                }
+.L2_col_stick      { color: var(--color-stick);              }
+.L2_col_angle      { color: var(--color-angle_text);         }
+.L2_col_more_sharp { color: var(--color-corners_more_sharp); }
+.L2_col_less_sharp { color: var(--color-corners_less_sharp); }
+.L2_col_corners    { color: var(--color-corners);            }
+.L2_col_hint_arrow { color: var(--color-hint_arrow);         }
+.L2_col_anchor     { color: var(--color-anchor_text);        }
+.L2_col_select     { color: rgb( 50,  50,  50);              }
+.L2_col_deselect   { color: rgb(200, 200, 200);              }
+.L2_col_compare    { color: orange;                          }
+
+.L2_angle_list_description {
+    width: 70%;
+    text-align: left;
+}
+.L2_angle_list_degrees {
+    padding: 2em;
+}
+.l2_angle_list_radians {
+    color: red;
+    padding: 2em;
+}
+.L2_angle_list_table {
+    /*border-style: solid;
+    border-style: none;
+    border-width: 1px;
+    border-color: #555;*/
+}
+
+.L2_angle_list_table td:nth-child(2), .L2_angle_list_table td:nth-child(3) {
+ /*   border-style: solid;
+    border-style: none;
+    border-width: 1px;
+    border-color: #555; */
+    padding: 0.3em;
+    text-align: center;
+}
+#inline_equation {
+    display: table;
+    margin: 0 auto;
+}
