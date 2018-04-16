@@ -12,6 +12,7 @@ import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } fro
 // import GlobalVariables from './globals';
 import Diagram from './Diagram';
 import * as tools from './mathtools';
+import TickMarks from './DiagramElements/TickMarks';
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
@@ -128,6 +129,8 @@ class ShapesCollection extends DiagramElementCollection {
     const radial = this._radial;
     radial.isTouchable = true;
     radial.isMovable = true;
+
+    this.add('tickMarks', new TickMarks(webgl, 10, 0.2, new Point(1, 0.5), 0.1, 0.01, [1, 1, 1, 1], diagramLimits, Math.PI / 2));
 
     this.isTouchable = true;
   }
