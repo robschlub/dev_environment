@@ -41,4 +41,23 @@ describe('Horizontal Line', () => {
     expect(round(line.points)).toEqual(points);
     expect(line.border[0].map(x => x.round())).toEqual(border);
   });
+  test('Rotated by 90', () => {
+    const line = new HorizontalLine(webgl, new Point(1, 1), 2, 0.1, Math.PI / 2);
+    const border = [
+      new Point(1.05, 1),
+      new Point(0.95, 1),
+      new Point(1.05, 3),
+      new Point(0.95, 3),
+      new Point(1.05, 1),
+    ];
+    const points = [
+      1.05, 1,
+      0.95, 1,
+      1.05, 3,
+      0.95, 3,
+    ];
+    expect(round(line.points)).toEqual(points);
+    expect(line.border[0].map(x => x.round())).toEqual(border);
+  });
 });
+
