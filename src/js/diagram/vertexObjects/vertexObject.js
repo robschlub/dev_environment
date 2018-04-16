@@ -111,19 +111,6 @@ class VertexObject {
 
 /* eslint-disable */
 
-  // function PolyLine(webgl, coords, close, width) {
-  //   VertexObject.call(this, webgl);
-  //   // console.log(coords);
-
-  //   let lineTriangles = polyLineTriangles(coords, close, width);
-    
-  //   this.points = lineTriangles.points;
-  //   this.border[0] = lineTriangles.border;
-
-  //   this.setupBuffer();
-  // }
-  // PolyLine.prototype = Object.create(VertexObject.prototype);
-
   // function ArrowHeadTriangle(webgl, tip, width, height, rotation=0) {
   //   VertexObject.call(this, webgl);
   //   // this.glPrimative = this.gl.TRIANGLE_FAN;
