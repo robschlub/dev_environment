@@ -109,24 +109,4 @@ class VertexObject {
   }
 }
 
-/* eslint-disable */
-
-
-
-
-  
-
-// return {
-//   Polygon: Polygon,
-//   PolygonFilled: PolygonFilled,
-//   Corner: Corner,
-//   PolyLine: PolyLine,
-//   Arrow: Arrow,
-//   HorizontalLine: HorizontalLine,
-//   ArrowHeadTriangle: ArrowHeadTriangle,
-//   RadialLines: RadialLines,
-// }
-
 export default VertexObject;
-
-// exports.tools = tools;
