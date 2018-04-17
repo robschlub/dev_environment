@@ -191,7 +191,7 @@ class DiagramElement {
       time: 1,
       frequency: 0.5,
       A: 1,
-      B: 0,
+      B: 0.5,
       C: 0,
       style: tools.sinusoid,
       num: 1,
@@ -632,7 +632,6 @@ class DiagramElement {
       // Calculate how much time has elapsed between this frame and the first
       // pulse frame
       let deltaTime = now - this.state.pulse.startTime;
-
       // If the elapsed time is larger than the planned pulse time, then
       // clip the elapsed time to the pulse time, and end pulsing (after this
       // draw). If the pulse time is 0, that means pulsing will loop
@@ -793,7 +792,10 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   isMoving(): boolean {
-    if (this.state.isAnimating || this.state.isMovingFreely || this.state.isBeingMoved) {
+    if (this.state.isAnimating
+      || this.state.isMovingFreely
+      || this.state.isBeingMoved
+      || this.state.isPulsing) {
       return true;
     }
     return false;
@@ -885,7 +887,10 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   isMoving(): boolean {
-    if (this.state.isAnimating || this.state.isMovingFreely || this.state.isBeingMoved) {
+    if (this.state.isAnimating ||
+        this.state.isMovingFreely ||
+        this.state.isBeingMoved ||
+        this.state.isPulsing) {
       return true;
     }
     for (let i = 0; i < this.order.length; i += 1) {

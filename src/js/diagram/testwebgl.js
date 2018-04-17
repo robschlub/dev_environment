@@ -157,7 +157,10 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.majorTickOffset = -xProps.majorTickLength;
     xProps.majorGridLength = 2;
     xProps.minorGridLength = 2;
-    const axis1 = new Axis(webgl, xProps, new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits);
+    const axis1 = new Axis(
+      webgl, xProps,
+      new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
+    );
 
     this.add('xAxis1', axis1);
 
@@ -166,9 +169,13 @@ class ShapesCollection extends DiagramElementCollection {
     yProps.rotation = Math.PI / 2;
     yProps.majorGridLength = -2;
     yProps.minorGridLength = -2;
-    const axis2 = new Axis(webgl, yProps, new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits);
+    const axis2 = new Axis(
+      webgl, yProps,
+      new Transform().scale(1, 1).rotate(0).translate(3, 1),
+      diagramLimits,
+    );
 
-    this.add('xAxis2', axis2);
+    this.add('yAxis1', axis2);
   }
 }
 
@@ -193,7 +200,7 @@ function testgl(id: string) {
 
   if (canvas instanceof HTMLCanvasElement) {
     const diagram = new Diagram1(canvas, 0, 0, 8, 4);
-    console.log(diagram.clipPerPixel());
+    // console.log(diagram.clipPerPixel());
     // eslint-disable-next-line
     const phase1 = new AnimationPhase(
       new Transform().scale(1, 1).rotate(1).translate(0, 0),
@@ -220,6 +227,7 @@ function testgl(id: string) {
     // diagram.elements.animatePlan([phase1, phase2]);
     // or
     // diagram.elements.pulseNow();
+    // diagram.elements._xAxis1._majorTicks.pulseScaleNow(2, 1.4)
     // or
     // diagram.elements._square.pulseThickNow(5, 1.2, 7);
     // or
