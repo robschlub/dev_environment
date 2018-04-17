@@ -107,6 +107,22 @@ class VertexObject {
 
     this.gl.drawArrays(this.glPrimative, offset, count);
   }
+
+  transform(transformMatrix: Array<number>) {
+    for (let i = 0; i < this.points.length; i += 2) {
+      let p = new g2.Point(this.points[i], this.points[i + 1]);
+      p = p.transformBy(transformMatrix);
+      this.points[i] = p.x;
+      this.points[i + 1] = p.y;
+    }
+    for (let b = 0; b < this.border.length; b += 1) {
+      for (let p = 0; p < this.border[b].length; p += 1) {
+        this.border[b][p] = this.border[b][p].transformBy(transformMatrix);
+      }
+    }
+    // this.border.map(b => {
+    // }) //b.map(p => p.transformBy(transformMatrix)));
+  }
 }
 
 export default VertexObject;

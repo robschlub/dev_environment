@@ -15,6 +15,8 @@ import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } fro
 import Diagram from './Diagram';
 import * as tools from './mathtools';
 import TickMarks from './DiagramElements/TickMarks';
+import Axis from './DiagramElements/Plot/Axis';
+import AxisProperties from './DiagramElements/Plot/AxisProperties';
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
@@ -70,7 +72,7 @@ class ShapesCollection extends DiagramElementCollection {
       Math.PI * 2,
     );
 
-    const xTicks = new GLParallelLines(webgl, 50, 1, new Point(0, 0), 2, 0.004, true, false);
+    const xTicks = new GLParallelLines(webgl, 20, 1, new Point(0, 0), 2, 0.004, true, false);
 
     // const xMinorTicks = new GLParallelLines(webgl, 50,)
 
@@ -136,10 +138,10 @@ class ShapesCollection extends DiagramElementCollection {
     radial.isTouchable = true;
     radial.isMovable = true;
 
-    this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [1, 1, 1, 1], diagramLimits, Math.PI / 2));
-    this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [1, 1, 1, 1], diagramLimits, Math.PI / 2));
-    this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [1, 1, 1, 1], diagramLimits, 0));
-    this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [1, 1, 1, 1], diagramLimits, 0));
+    this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
+    this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
+    this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
+    this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
 
     this.add('xAxis', new DiagramElementPrimative(
       xTicks,
@@ -148,6 +150,25 @@ class ShapesCollection extends DiagramElementCollection {
       diagramLimits,
     ));
     this.isTouchable = true;
+
+    const xProps = new AxisProperties();
+    xProps.length = 2;
+    xProps.rotation = 0;
+    xProps.majorTickOffset = -xProps.majorTickLength;
+    xProps.majorGridLength = 2;
+    xProps.minorGridLength = 2;
+    const axis1 = new Axis(webgl, xProps, new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits);
+
+    this.add('xAxis1', axis1);
+
+    const yProps = new AxisProperties();
+    yProps.length = 2;
+    yProps.rotation = Math.PI / 2;
+    yProps.majorGridLength = -2;
+    yProps.minorGridLength = -2;
+    const axis2 = new Axis(webgl, yProps, new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits);
+
+    this.add('xAxis2', axis2);
   }
 }
 
