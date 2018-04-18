@@ -20,9 +20,12 @@ class DrawContext2D {
               /* $FlowFixMe */
               this.ctx.backingStorePixelRatio || 1;
 
-    const dpr = window.devicePixelRatio || 1;
+    let dpr = window.devicePixelRatio || 1;
+    if (dpr === 1) {
+      dpr = 2;
+    }
 
-    this.ratio = dpr / bsr * 3;
+    this.ratio = dpr / bsr;
 
     this.canvas.width = this.canvas.offsetWidth * this.ratio;
     this.canvas.height = this.canvas.offsetHeight * this.ratio;
