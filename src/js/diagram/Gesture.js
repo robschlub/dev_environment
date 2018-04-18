@@ -64,18 +64,18 @@ class Gesture {
 
   touchStartHandler(event: TouchEvent) {
     const touch = event.touches[0];
-    this.startHandler(new Point(touch.pageX, touch.pageY));
+    this.startHandler(new Point(touch.clientX, touch.clientY));
   }
   mouseDownHandler(event: MouseEvent) {
-    this.startHandler(new Point(event.pageX, event.pageY));
+    this.startHandler(new Point(event.clientX, event.clientY));
   }
 
   touchMoveHandler(event: TouchEvent) {
     const touch = event.touches[0];
-    this.moveHandler(event, new Point(touch.pageX, touch.pageY));
+    this.moveHandler(event, new Point(touch.clientX, touch.clientY));
   }
   mouseMoveHandler(event: MouseEvent) {
-    this.moveHandler(event, new Point(event.pageX, event.pageY));
+    this.moveHandler(event, new Point(event.clientX, event.clientY));
   }
 
   mouseUpHandler() {

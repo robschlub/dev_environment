@@ -39,8 +39,8 @@ class Diagram {
         }
       }
     }
-    console.log(this.canvas)
-    console.log(this.canvas instanceof HTMLCanvasElement)
+    // console.log(this.canvas)
+    // console.log(this.canvas instanceof HTMLCanvasElement)
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }
@@ -86,9 +86,9 @@ class Diagram {
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
   // coming to a stop.
-  touchDownHandler(pagePoint: g2.Point) {
+  touchDownHandler(clientPoint: g2.Point) {
     // Get the touched point in clip space
-    const clipPoint = this.pageToClip(pagePoint);
+    const clipPoint = this.clientToClip(clientPoint);
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
@@ -128,13 +128,13 @@ class Diagram {
   // by the system. For example, on a touch device, a touch and drag would
   // normally scroll the screen. Typically, you would want to move the diagram
   // element and not the screen, so a true would be returned.
-  touchMoveHandler(previousPagePoint: g2.Point, currentPagePoint: g2.Point): boolean {
+  touchMoveHandler(previousClientPoint: g2.Point, currentClientPoint: g2.Point): boolean {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
     // Get the previous, current and delta between touch points in clip space
-    const previousClipPoint = this.pageToClip(previousPagePoint);
-    const currentClipPoint = this.pageToClip(currentPagePoint);
+    const previousClipPoint = this.clientToClip(previousClientPoint);
+    const currentClipPoint = this.clientToClip(currentClientPoint);
     const delta = currentClipPoint.sub(previousClipPoint);
 
     // Go through each element being moved, get the current translation
@@ -210,12 +210,35 @@ class Diagram {
   //     x: canvasL + canvasW*(x - clipL)/clipW,
   //     y: canvasT + canvasH*(clipT - y)/clipH,
   // }}
-  clipToPage(clip: g2.Point): g2.Point {
+  clipToClient(clip: g2.Point): g2.Point {
+    const canvas = this.canvas.getBoundingClientRect();
     return new g2.Point(
-      this.canvas.offsetLeft + this.canvas.offsetWidth *
+      canvas.left + canvas.width *
         (clip.x - this.limits.left) / this.limits.width,
-      this.canvas.offsetTop + this.canvas.offsetHeight *
+      canvas.top + canvas.height *
         (this.limits.top - clip.y) / this.limits.height,
+    );
+  }
+
+  clipToPage(clip: g2.Point): g2.Point {
+    const canvas = this.canvas.getBoundingClientRect();
+    const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
+    const scrollTop = window.pageYOffset || this.canvas.scrollTop;
+    const canvasPage = {
+      top: canvas.top + scrollTop,
+      left: canvas.left + scrollLeft,
+    };
+
+    return new g2.Point(
+      canvasPage.left + canvas.width *
+        (clip.x - this.limits.left) / this.limits.width,
+      canvasPage.top + canvas.height *
+        (this.limits.top - clip.y) / this.limits.height,
+
+      // (pageLocation.x - canvasPage.left) / this.canvas.offsetWidth *
+      //   this.limits.width + this.limits.left,
+      // this.limits.top - (pageLocation.y - canvasPage.top) /
+      //   this.canvas.offsetHeight * this.limits.height,
     );
   }
 
@@ -223,11 +246,28 @@ class Diagram {
   //    x: (x - canvasL)/canvasW * clipW + clipL,
   //    y: clipT - (y - canvasT)/canvasH * clipH,
   // }}
-  pageToClip(pageLocation: g2.Point): g2.Point {
+  clientToClip(clientLocation: g2.Point): g2.Point {
+    const canvas = this.canvas.getBoundingClientRect();
     return new g2.Point(
-      (pageLocation.x - this.canvas.offsetLeft) / this.canvas.offsetWidth *
+      (clientLocation.x - canvas.left) / canvas.width *
         this.limits.width + this.limits.left,
-      this.limits.top - (pageLocation.y - this.canvas.offsetTop) /
+      this.limits.top - (clientLocation.y - canvas.top) /
+        canvas.height * this.limits.height,
+    );
+  }
+
+  pageToClip(pageLocation: g2.Point): g2.Point {
+    const canvas = this.canvas.getBoundingClientRect();
+    const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
+    const scrollTop = window.pageYOffset || this.canvas.scrollTop;
+    const canvasPage = {
+      top: canvas.top + scrollTop,
+      left: canvas.left + scrollLeft,
+    };
+    return new g2.Point(
+      (pageLocation.x - canvasPage.left) / this.canvas.offsetWidth *
+        this.limits.width + this.limits.left,
+      this.limits.top - (pageLocation.y - canvasPage.top) /
         this.canvas.offsetHeight * this.limits.height,
     );
   }

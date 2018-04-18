@@ -85,10 +85,25 @@ describe('Diagram', () => {
       const canvasMock = {
         width: definition.width,
         height: definition.height,
-        offsetLeft: 100,
-        offsetTop: 200,
+        // offsetLeft: 100,
+        left: 100,
+        // offsetTop: 200,
+        top: 200,
+        // width: definition.width,
+        // height: definition.height,
         offsetWidth: definition.width,
         offsetHeight: definition.height,
+        scrollLeft: 0,
+        scrollTop: 0,
+        // eslint-disable-next-line arrow-body-style
+        getBoundingClientRect: () => {
+          return {
+            left: 100,
+            top: 200,
+            width: definition.width,
+            height: definition.height,
+          };
+        },
       };
       const { limits } = definition;
       const diagram = new Diagram(canvas, limits);
