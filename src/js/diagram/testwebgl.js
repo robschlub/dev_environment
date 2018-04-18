@@ -223,7 +223,20 @@ function testgl(id: string) {
     // diagram.elements.moveState.previous = diagram.elements.transform;
     diagram.elements.move.freely.deceleration = new TransformLimit(0.1, 0.1, 0.1);
 
-
+    const overlay = document.getElementById(`${id}_overlay`);
+    if (overlay instanceof HTMLElement) {
+      overlay.innerHTML = `<span id=${id}_text>qwerty</span>`;
+      const text = document.getElementById(`${id}_text`);
+      if (text instanceof HTMLElement) {
+        text.style.position = 'absolute';
+        let p = new Point(3, 1);
+        p = diagram.clipToPage(p);
+        const x = p.x - text.offsetWidth;
+        text.style.left = `${x}px`;
+        text.style.top = `${p.y}px`;
+        console.log(text.offsetWidth, text.offsetHeight)
+      }
+    }
     // diagram.elements.animatePlan([phase1, phase2]);
     // or
     // diagram.elements.pulseNow();

@@ -20,7 +20,11 @@ export default class Canvas extends React.Component
 
   render() {
     const id = this.props.id || '';
-    return <canvas id={id}>
-    </canvas>;
+    return <div id={`${id}_container`}>
+        <canvas id={id}>
+        </canvas>
+        <div id={`${id}_overlay`}>
+        </div>
+      </div>;
   }
 }

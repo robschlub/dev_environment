@@ -39,6 +39,10 @@ $color-english:            rgb(47, 79, 79);
   colorEnglish: $color-english;
 }
 
+#my_Canvas_container {
+  position: relative;
+}
+
 #my_Canvas, #my_Canvas1 {
   width:  1000px;
   height: 500px;
@@ -47,4 +51,11 @@ $color-english:            rgb(47, 79, 79);
   margin: 0;
   padding: 0;
   background-color: white;
+}
+#my_Canvas_overlay {
+  position: absolute;
+  width:  1000px;
+  height: 500px;
+  left: 0px;
+  top: 0px;
 }
