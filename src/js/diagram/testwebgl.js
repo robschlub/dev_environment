@@ -185,7 +185,7 @@ class Diagram1 extends Diagram {
   createDiagramElements() {
     this.elements = new ShapesCollection(
       this.webgl,
-      this.draw2D.ctx,
+      this.draw2D,
       new Transform().scale(1, 1).rotate(0).translate(0, 0),
       this.limits,
     );
@@ -244,12 +244,13 @@ function testgl(id: string) {
   // diagram.elements.animatePlan([phase1, phase2]);
   // or
   // diagram.elements.pulseNow();
+  // diagram.elements._xAxis1.pulseNow(2, 1.5);
   // diagram.elements._xAxis1._majorTicks.pulseScaleNow(2, 1.4)
   // or
   // diagram.elements._square.pulseThickNow(5, 1.2, 7);
   // or
   // diagram.elements.startMovingFreely();
-  // diagram.elements.animateRotationTo(1, -1, 10);
+  diagram.elements.animateRotationTo(1, -1, 10);
 
   // $FlowFixMe
   // diagram.elements._square.animateTranslationTo(new Point(1.5, 0.5), 1);

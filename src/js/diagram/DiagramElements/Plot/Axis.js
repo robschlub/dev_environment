@@ -8,12 +8,13 @@ import VAxis from './VertexObjects/VAxis';
 import VTickMarks from './VertexObjects/VTickMarks';
 import AxisProperties from './AxisProperties';
 import TextObject from '../../TextObject';
+import DrawContext2D from '../../DrawContext2D';
 
 class Axis extends DiagramElementCollection {
   props: AxisProperties;
   constructor(
     webgl: WebGLInstance,
-    drawContext2D: ctx,
+    drawContext2D: DrawContext2D,
     axisProperties: AxisProperties = new AxisProperties(),
     transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits: Rect = new Rect(-1, 1, 2, 2),
@@ -97,7 +98,7 @@ class Axis extends DiagramElementCollection {
       diagramLimits,
     ));
 
-    const label = new TextObject(drawContext2D, 'This is a test', new Point(100, 100));
+    const label = new TextObject(drawContext2D, 'This is a test', new Point(0, 0));
     this.add('label', new DiagramElementPrimative(
       label,
       new Transform().scale(1, 1).rotate(0).translate(0, 0),

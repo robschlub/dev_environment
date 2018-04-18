@@ -4,6 +4,7 @@
 import * as m2 from './m2';
 import * as g2 from './g2';
 import DrawingObject from './DrawingObject';
+import DrawContext2D from './DrawContext2D';
 
 // Base clase of all objects made from verteces for webgl.
 // The job of a VertexObject is to:
@@ -14,19 +15,19 @@ import DrawingObject from './DrawingObject';
 //      - Load vertices into a webgl buffer
 //      - draw
 class TextObject extends DrawingObject {
-  ctx: CanvasRenderingContext2D;
+  drawContext2D: DrawContext2D;
   text: string;
   border: Array<Array<g2.Point>>;
   numPoints: number;
   location: g2.Point;
 
   constructor(
-    ctx: CanvasRenderingContext2D,
+    drawContext2D: DrawContext2D,
     text: string,
     location: g2.Point = new g2.Point(0, 0),
   ) {
     super();
-    this.ctx = ctx;
+    this.drawContext2D = drawContext2D;
     this.text = text;
     this.location = location;
   }
@@ -43,21 +44,31 @@ class TextObject extends DrawingObject {
     transformation = m2.scale(transformation, scale.x, scale.y);
     this.drawWithTransformMatrix(m2.t(transformation), count, color);
   }
+  clipToElementPixels(clipPoint: g2.Point) {
+    // transforming -1 to 1 to canvas width
+    const px = (clipPoint.x + 1) / 2 * this.drawContext2D.canvas.width / this.drawContext2D.ratio;
+    const py = -(clipPoint.y - 1) / 2 * this.drawContext2D.canvas.height / this.drawContext2D.ratio;
+    return new g2.Point(px, py);
+  }
   drawWithTransformMatrix(
     transformMatrix: Array<number>,
     count: number,
     color: Array<number>,
   ) {
     const transformedLocation = this.location.transformBy(transformMatrix);
-    this.ctx.font = '200 16px Helvetica Neue';
-    this.ctx.fillStyle = `rgba(${color[0] * 255},${color[1] * 255},${color[2] * 255},${color[3] * 255})`;
-    this.ctx.save();
-    const t = transformMatrix;
-    // this.ctx.setTransform(t[0], t[1], t[2], t[3], t[4], t[5]);
+    this.drawContext2D.ctx.font = '200 16px Helvetica Neue';
+    this.drawContext2D.ctx.fillStyle = `rgba(${color[0] * 255},${color[1] * 255},${color[2] * 255},${color[3] * 255})`;
+    this.drawContext2D.ctx.save();
+    const p = this.clipToElementPixels(transformedLocation);
+    // const t = transformMatrix;
+    // this.drawContext2D.ctx.rotate(Math.PI / 2);
+    // this.drawContext2D.ctx.setTransform(t[0], t[1], 0, t[3], t[4], 0);
     // console.log(t)
-    this.ctx.fillText(this.text, transformedLocation.x, transformedLocation.y);
-    this.ctx.restore();
+    this.drawContext2D.ctx.fillText(this.text, p.x, p.y);
+    this.drawContext2D.ctx.restore();
   }
 }
 
 export default TextObject;
+
+// Transform -1 to 1 space to 0 to width/height space
