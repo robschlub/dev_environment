@@ -8,6 +8,7 @@ import * as g2 from './g2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
+import DrawContext2D from './DrawContext2D';
 
 class Diagram {
   canvas: HTMLCanvasElement;
@@ -18,8 +19,9 @@ class Diagram {
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
   limits: g2.Rect;
-  ctx: CanvasRenderingContext2D;
+  draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
+  htmlCanvas: HTMLElement;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -39,8 +41,12 @@ class Diagram {
           this.canvas = child;
         }
         if (child instanceof HTMLCanvasElement
-          && child.classList.contains('diagram_html')) {
+          && child.classList.contains('diagram_text')) {
           this.textCanvas = child;
+        }
+        if (child.classList.contains('diagram_html')
+        ) {
+          this.htmlCanvas = child;
         }
       }
     }
@@ -62,27 +68,17 @@ class Diagram {
     } else {
       this.limits = new g2.Rect(limitsOrxMin, yMin, width, height);
     }
-
     this.webgl = webgl;
+
+    if (this.textCanvas instanceof HTMLCanvasElement) {
+      this.draw2D = new DrawContext2D(this.textCanvas);
+    }
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
-    // this.devicePixelRatio = window.devicePixelRatio * 2;
-    // this.devicePixelRatio = window.devicePixelRatio;
 
-    // const { id } = canvas;
-    // const parent = canvas.parentElement;
-    // if (parent instanceof HTMLElement) {
-    //   const textId = `${id}_text`;
-    // }
-    // const { children } = parent;
-    // for (let i = 0; i < children.length; i += 1) {
-    //   const child = children[i];
-    //   if (child.id === id) {
-    //     console.log("Found!")
-    //   }
-    // }
-    // const { id } = canvas;
-    // this.ctx = 
+    if (this.htmlCanvas instanceof HTMLElement) {
+      this.htmlCanvas.innerHTML = 'hello';
+    }
 
     this.createDiagramElements();
   }
@@ -177,6 +173,12 @@ class Diagram {
   clearContext() {
     this.webgl.gl.clearColor(0, 0, 0, 0);
     this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
+
+    if (this.draw2D) {
+      this.draw2D.ctx.clearRect(0, 0, this.draw2D.ctx.canvas.width, this.draw2D.ctx.canvas.height);
+      this.draw2D.ctx.font = '200 16px Helvetica Neue';
+      this.draw2D.ctx.fillText('hello', 50, 17);
+    }
   }
 
   draw(now: number): void {

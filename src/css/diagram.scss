@@ -54,6 +54,7 @@ $color-english:            rgb(47, 79, 79);
 }
 .diagram_html {
   position: absolute;
+  pointer-events:none;
   width:  1000px;
   height: 500px;
   left: 0px;
@@ -66,5 +67,6 @@ $color-english:            rgb(47, 79, 79);
   height: 500px;
   left: 0px;
   top: 0px;
-  z-index: 10;
+  // background-color: red;
+  // z-index: 10;
 }

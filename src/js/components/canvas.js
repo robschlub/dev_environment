@@ -22,9 +22,9 @@ export default class Canvas extends React.Component
     const id = this.props.id || '';
     return <div id={`${id}_container`}>
         <canvas className='diagram_gl'>
-        </canvas> { /*
+        </canvas>
         <div className='diagram_html'>
-        </div> */}
+        </div>
         <canvas className='diagram_text'>
         </canvas>
       </div>;

@@ -1,7 +1,7 @@
 // @flow
 
 import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
-import { Point, Rect, Transform } from '../../g2';
+import { Rect, Transform } from '../../g2';
 import WebGLInstance from '../../webgl';
 
 import VAxis from './VertexObjects/VAxis';
