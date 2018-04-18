@@ -13,6 +13,7 @@ class Gesture {
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
+    // console.log(diagram.canvas.offsetWidth)
     this.diagram.canvas.onmousedown = this.mouseDownHandler.bind(this);
     this.diagram.canvas.onmouseup = this.mouseUpHandler.bind(this);
     this.diagram.canvas.onmousemove = this.mouseMoveHandler.bind(this);

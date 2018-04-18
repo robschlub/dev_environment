@@ -18,19 +18,32 @@ class Diagram {
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
   limits: g2.Rect;
+  ctx: CanvasRenderingContext2D;
 
   constructor(
-    canvas: HTMLCanvasElement,
+    // canvas: HTMLCanvasElement,
+    containerId: string = 'DiagramContainer',
     limitsOrxMin: number | g2.Rect = new g2.Rect(-1, -1, 2, 2),
     yMin: number = -1,
     width: number = 2,
     height: number = 2,
   ) {
-    this.canvas = canvas;
+    const container = document.getElementById(containerId);
+    if (container instanceof HTMLElement) {
+      const { children } = container;
+      for (let i = 0; i < children.length; i += 1) {
+        const child = children[i];
+        if (child instanceof HTMLCanvasElement
+          && child.classList.contains('diagram_gl')) {
+          this.canvas = child;
+        }
+      }
+    }
+    console.log(this.canvas)
+    console.log(this.canvas instanceof HTMLCanvasElement)
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }
-
     const shaders = getShaders('simple', 'simple');
     const webgl = new WebGLInstance(
       this.canvas,
@@ -50,6 +63,22 @@ class Diagram {
     this.globalAnimation = new GlobalAnimation();
     // this.devicePixelRatio = window.devicePixelRatio * 2;
     // this.devicePixelRatio = window.devicePixelRatio;
+
+    // const { id } = canvas;
+    // const parent = canvas.parentElement;
+    // if (parent instanceof HTMLElement) {
+    //   const textId = `${id}_text`;
+    // }
+    // const { children } = parent;
+    // for (let i = 0; i < children.length; i += 1) {
+    //   const child = children[i];
+    //   if (child.id === id) {
+    //     console.log("Found!")
+    //   }
+    // }
+    // const { id } = canvas;
+    // this.ctx = 
+
     this.createDiagramElements();
   }
 
