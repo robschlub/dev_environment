@@ -5,6 +5,7 @@ import * as m2 from './m2';
 import * as tools from './mathtools';
 // import GlobalVariables from './globals';
 import VertexObject from './vertexObjects/vertexObject';
+import DrawingObject from './DrawingObject';
 
 // Planned Animation
 class AnimationPhase {
@@ -720,13 +721,13 @@ class DiagramElement {
 // Geometry Object
 // ***************************************************************
 class DiagramElementPrimative extends DiagramElement {
-  vertices: VertexObject;
+  vertices: DrawingObject;
   color: Array<number>;
   pointsToDraw: number;
   angleToDraw: number;
 
   constructor(
-    vertexObject: VertexObject,
+    vertexObject: DrawingObject,
     transform: g2.Transform = new g2.Transform()
       .scale(1, 1)
       .rotate(0)

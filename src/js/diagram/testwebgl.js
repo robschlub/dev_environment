@@ -21,7 +21,7 @@ import AxisProperties from './DiagramElements/Plot/AxisProperties';
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
 
-  constructor(webgl, transform, diagramLimits) {
+  constructor(webgl, ctx, transform, diagramLimits) {
     super(transform);
 
     const square = new Polygon(
@@ -158,7 +158,7 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.majorGridLength = 2;
     xProps.minorGridLength = 2;
     const axis1 = new Axis(
-      webgl, xProps,
+      webgl, ctx, xProps,
       new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
     );
 
@@ -170,7 +170,7 @@ class ShapesCollection extends DiagramElementCollection {
     yProps.majorGridLength = -2;
     yProps.minorGridLength = -2;
     const axis2 = new Axis(
-      webgl, yProps,
+      webgl, ctx, yProps,
       new Transform().scale(1, 1).rotate(0).translate(3, 1),
       diagramLimits,
     );
@@ -185,6 +185,7 @@ class Diagram1 extends Diagram {
   createDiagramElements() {
     this.elements = new ShapesCollection(
       this.webgl,
+      this.draw2D.ctx,
       new Transform().scale(1, 1).rotate(0).translate(0, 0),
       this.limits,
     );

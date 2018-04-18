@@ -4,6 +4,7 @@
 import * as m2 from '../m2';
 import WebGLInstance from '../webgl';
 import * as g2 from '../g2';
+import DrawingObject from '../DrawingObject';
 
 // Base clase of all objects made from verteces for webgl.
 // The job of a VertexObject is to:
@@ -13,7 +14,7 @@ import * as g2 from '../g2';
 //  - Setup the webgl buffer:
 //      - Load vertices into a webgl buffer
 //      - draw
-class VertexObject {
+class VertexObject extends DrawingObject {
   gl: WebGLRenderingContext;    // shortcut for the webgl context
   webgl: WebGLInstance;         // webgl instance for a html canvas
   glPrimative: number;          // primitive tyle (e.g. TRIANGLE_STRIP)
@@ -24,11 +25,12 @@ class VertexObject {
   border: Array<Array<g2.Point>>; // Border vertices
 
   constructor(webgl: WebGLInstance) {
+    super();
     this.gl = webgl.gl;
     this.webgl = webgl;
     this.glPrimative = webgl.gl.TRIANGLES;
     this.points = [];
-    this.border = [[]];
+    // this.border = [[]];
   }
   setupBuffer(numPoints: number = 0) {
     if (numPoints === 0) {

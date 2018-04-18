@@ -1,17 +1,19 @@
 // @flow
 
 import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
-import { Rect, Transform } from '../../g2';
+import { Rect, Transform, Point } from '../../g2';
 import WebGLInstance from '../../webgl';
 
 import VAxis from './VertexObjects/VAxis';
 import VTickMarks from './VertexObjects/VTickMarks';
 import AxisProperties from './AxisProperties';
+import TextObject from '../../TextObject';
 
 class Axis extends DiagramElementCollection {
   props: AxisProperties;
   constructor(
     webgl: WebGLInstance,
+    drawContext2D: ctx,
     axisProperties: AxisProperties = new AxisProperties(),
     transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits: Rect = new Rect(-1, 1, 2, 2),
@@ -92,6 +94,14 @@ class Axis extends DiagramElementCollection {
       minorGrid,
       new Transform().scale(1, 1).rotate(0).translate(0, 0),
       axisProperties.minorGridColor,
+      diagramLimits,
+    ));
+
+    const label = new TextObject(drawContext2D, 'This is a test', new Point(100, 100));
+    this.add('label', new DiagramElementPrimative(
+      label,
+      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      [1, 0, 0, 1],
       diagramLimits,
     ));
   }
