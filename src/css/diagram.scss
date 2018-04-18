@@ -61,6 +61,7 @@ $color-english:            rgb(47, 79, 79);
 }
 .diagram_text {
   position: absolute;
+  pointer-events:none;
   width:  1000px;
   height: 500px;
   left: 0px;

@@ -24,9 +24,9 @@ export default class Canvas extends React.Component
         <canvas className='diagram_gl'>
         </canvas> { /*
         <div className='diagram_html'>
-        </div>
+        </div> */}
         <canvas className='diagram_text'>
-        </canvas> */}
+        </canvas>
       </div>;
   }
 }

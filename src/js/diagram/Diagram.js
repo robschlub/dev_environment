@@ -19,6 +19,7 @@ class Diagram {
                       DiagramElementCollection>;
   limits: g2.Rect;
   ctx: CanvasRenderingContext2D;
+  textCanvas: HTMLCanvasElement;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -36,6 +37,10 @@ class Diagram {
         if (child instanceof HTMLCanvasElement
           && child.classList.contains('diagram_gl')) {
           this.canvas = child;
+        }
+        if (child instanceof HTMLCanvasElement
+          && child.classList.contains('diagram_html')) {
+          this.textCanvas = child;
         }
       }
     }
@@ -234,11 +239,6 @@ class Diagram {
         (clip.x - this.limits.left) / this.limits.width,
       canvasPage.top + canvas.height *
         (this.limits.top - clip.y) / this.limits.height,
-
-      // (pageLocation.x - canvasPage.left) / this.canvas.offsetWidth *
-      //   this.limits.width + this.limits.left,
-      // this.limits.top - (pageLocation.y - canvasPage.top) /
-      //   this.canvas.offsetHeight * this.limits.height,
     );
   }
 
