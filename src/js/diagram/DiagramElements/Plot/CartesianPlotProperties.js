@@ -3,58 +3,63 @@
 import { Point } from '../../g2';
 
 class CartesianPlotProperties {
+  // Clip Space
   start: Point;
   xLength: number;
   yLength: number;
+
+
+  // Plot Space
   limits: {min: Point, max: Point};
 
-  xMajorTicks: 'on' | 'off' | 'auto';
-  xMajorTickSpacing: number;
-  xMajorTickStart: number;
-  xMajorTickLength: number;
-  xMajorTickWidth: number;
-  xMajorTickColor: Array<number>;
-  xMajorTickLabels: Array<string>;
+  
+  // xMajorTicks: 'on' | 'off' | 'auto';
+  // xMajorTickSpacing: number;
+  // xMajorTickStart: number;
+  // xMajorTickLength: number;
+  // xMajorTickWidth: number;
+  // xMajorTickColor: Array<number>;
+  // xMajorTickLabels: Array<string>;
 
-  yMajorTicks: 'on' | 'off' | 'auto';
-  yMajorTickSpacing: number;
-  yMajorTickStart: number;
-  yMajorTickLength: number;
-  yMajorTickWidth: number;
-  yMajorTickColor: Array<number>;
-  yMajorTickLabels: Array<string>;
+  // yMajorTicks: 'on' | 'off' | 'auto';
+  // yMajorTickSpacing: number;
+  // yMajorTickStart: number;
+  // yMajorTickLength: number;
+  // yMajorTickWidth: number;
+  // yMajorTickColor: Array<number>;
+  // yMajorTickLabels: Array<string>;
 
-  xMinorTicks: 'on' | 'off' | 'auto';
-  xMinorTickSpacing: number;
-  xMinorTickStart: number;
-  xMinorTickLength: number;
-  xMinorTickWidth: number;
-  xMinorTickColor: Array<number>;
+  // xMinorTicks: 'on' | 'off' | 'auto';
+  // xMinorTickSpacing: number;
+  // xMinorTickStart: number;
+  // xMinorTickLength: number;
+  // xMinorTickWidth: number;
+  // xMinorTickColor: Array<number>;
 
-  yMinorTicks: 'on' | 'off' | 'auto';
-  yMinorTickSpacing: number;
-  yMinorTickStart: number;
-  yMinorTickLength: number;
-  yMinorTickWidth: number;
-  yMinorTickColor: Array<number>;
+  // yMinorTicks: 'on' | 'off' | 'auto';
+  // yMinorTickSpacing: number;
+  // yMinorTickStart: number;
+  // yMinorTickLength: number;
+  // yMinorTickWidth: number;
+  // yMinorTickColor: Array<number>;
 
-  xMajorGrid: 'on' | 'off';
-  xMajorGridWidth: number;
-  xMajorGridColor: Array<number>;
+  // xMajorGrid: 'on' | 'off';
+  // xMajorGridWidth: number;
+  // xMajorGridColor: Array<number>;
 
-  yMajorGrid: 'on' | 'off';
-  yMajorGridWidth: number;
-  yMajorGridColor: Array<number>;
+  // yMajorGrid: 'on' | 'off';
+  // yMajorGridWidth: number;
+  // yMajorGridColor: Array<number>;
 
-  xMinorGrid: 'on' | 'off';
-  xMinorGridWidth: number;
-  xMinorGridColor: Array<number>;
+  // xMinorGrid: 'on' | 'off';
+  // xMinorGridWidth: number;
+  // xMinorGridColor: Array<number>;
 
-  yMinorGrid: 'on' | 'off';
-  yMinorGridWidth: number;
-  yMinorGridColor: Array<number>;
+  // yMinorGrid: 'on' | 'off';
+  // yMinorGridWidth: number;
+  // yMinorGridColor: Array<number>;
 
-  labelOffset: Point;
+  // labelOffset: Point;
 
   constructor() {
     const color = [0.7, 0.7, 0.7, 1];

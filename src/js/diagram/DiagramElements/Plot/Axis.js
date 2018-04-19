@@ -21,11 +21,16 @@ class Axis extends DiagramElementCollection {
   ) {
     super(transform, diagramLimits);
     this.props = axisProperties;
+    const {
+      minorTicks, majorTicks,
+      minorGrid, majorGrid,
+    } = this.props;
+
     const xRatio = 2 / diagramLimits.width;
     // const yRatio = 2 / diagramLimits.height;
 
-    const cMajorTicksStart = this.locationToClip(this.props.majorTicksStart);
-    const cMinorTicksStart = this.locationToClip(this.props.minorTicksStart);
+    const cMajorTicksStart = this.locationToClip(majorTicks.start);
+    const cMinorTicksStart = this.locationToClip(minorTicks.start);
     const majorTicksNum =
       Math.floor((this.props.limits.max - this.props.majorTicksStart) /
           this.props.majorTickSpacing) + 1;
