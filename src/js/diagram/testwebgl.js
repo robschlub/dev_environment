@@ -15,8 +15,10 @@ import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } fro
 import Diagram from './Diagram';
 import * as tools from './mathtools';
 import TickMarks from './DiagramElements/TickMarks';
-import Axis from './DiagramElements/Plot/Axis';
+// import Axis from './DiagramElements/Plot/Axis';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
+import CartesianPlotProperties from './DiagramElements/Plot/CartesianPlotProperties';
+import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
@@ -151,9 +153,8 @@ class ShapesCollection extends DiagramElementCollection {
     ));
     this.isTouchable = true;
 
-    const xProps = new AxisProperties();
+    const xProps = new AxisProperties('x', 0);
     xProps.length = 4;
-    xProps.rotation = 0;
     xProps.limits = { min: 0, max: 100 };
     xProps.majorTicks.start = 0;
     xProps.minorTicks.start = 0;
@@ -177,16 +178,15 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.minorTicks.fontSize = '10px';
     xProps.majorGrid.width = 0.008;
     xProps.minorGrid.width = 0.004;
-    const axis1 = new Axis(
-      webgl, ctx, xProps,
-      new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
-    );
+    // const axis1 = new Axis(
+    //   webgl, ctx, xProps,
+    //   new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
+    // );
 
-    this.add('xAxis1', axis1);
+    // this.add('xAxis1', axis1);
 
-    const yProps = new AxisProperties();
+    const yProps = new AxisProperties('y', Math.PI / 2);
     yProps.length = 2;
-    yProps.rotation = Math.PI / 2;
     yProps.limits = { min: 0, max: 25 };
     yProps.majorTicks.start = 0;
     yProps.minorTicks.start = 0;
@@ -203,13 +203,21 @@ class ShapesCollection extends DiagramElementCollection {
     yProps.majorTicks.labelsVAlign = 'middle';
     yProps.majorGrid.width = xProps.majorGrid.width;
     yProps.minorGrid.width = xProps.minorGrid.width;
-    const axis2 = new Axis(
-      webgl, ctx, yProps,
+    // const axis2 = new Axis(
+    //   webgl, ctx, yProps,
+    //   new Transform().scale(1, 1).rotate(0).translate(3, 1),
+    //   diagramLimits,
+    // );
+
+    // this.add('yAxis1', axis2);
+    const plotProps = new CartesianPlotProperties();
+    plotProps.axes = [xProps, yProps];
+    const plot = new CartesianPlot(
+      webgl, ctx, plotProps,
       new Transform().scale(1, 1).rotate(0).translate(3, 1),
       diagramLimits,
     );
-
-    this.add('yAxis1', axis2);
+    this.add('plot', plot);
   }
 }
 

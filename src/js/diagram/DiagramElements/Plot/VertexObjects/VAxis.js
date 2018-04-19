@@ -1,7 +1,7 @@
 // @flow
 
 import TRIHorizontalLine from '../../../vertexObjects/Triangles/TRIHoriztonalLine';
-import AxisProperties from '../AxisProperties';
+import { AxisProperties } from '../AxisProperties';
 import { Point, Transform } from '../../../g2';
 import WebGLInstance from '../../../webgl';
 import VertexObject from '../../../vertexObjects/vertexObject';
