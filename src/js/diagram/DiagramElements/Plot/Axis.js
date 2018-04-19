@@ -30,73 +30,80 @@ class Axis extends DiagramElementCollection {
       diagramLimits,
     ));
 
-    const majorTicks = new VTickMarks(
-      webgl,
-      this.props.start,
-      this.props.rotation,
-      Math.floor(this.props.length / this.props.majorTickSpacing),
-      this.props.majorTickSpacing,
-      this.props.majorTickLength,
-      this.props.majorTickWidth,
-      this.props.majorTickOffset,
-    );
-    this.add('majorTicks', new DiagramElementPrimative(
-      majorTicks,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
-      axisProperties.majorTickColor,
-      diagramLimits,
-    ));
+    if (this.props.minorGrid) {
+      const minorGrid = new VTickMarks(
+        webgl,
+        this.props.start,
+        this.props.rotation,
+        Math.floor(this.props.length / this.props.minorTickSpacing) + 1,
+        this.props.minorTickSpacing,
+        this.props.minorGridLength,
+        this.props.minorGridWidth,
+        0,
+      );
+      this.add('minorGrid', new DiagramElementPrimative(
+        minorGrid,
+        new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        axisProperties.minorGridColor,
+        diagramLimits,
+      ));
+    }
+    if (this.props.majorGrid) {
+      const majorGrid = new VTickMarks(
+        webgl,
+        this.props.start,
+        this.props.rotation,
+        Math.floor(this.props.length / this.props.majorTickSpacing) + 1,
+        this.props.majorTickSpacing,
+        this.props.majorGridLength,
+        this.props.majorGridWidth,
+        0,
+      );
+      this.add('majorGrid', new DiagramElementPrimative(
+        majorGrid,
+        new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        axisProperties.majorGridColor,
+        diagramLimits,
+      ));
+    }
 
-    const minorTicks = new VTickMarks(
-      webgl,
-      this.props.start,
-      this.props.rotation,
-      Math.floor(this.props.length / this.props.minorTickSpacing),
-      this.props.minorTickSpacing,
-      this.props.minorTickLength,
-      this.props.minorTickWidth,
-      this.props.minorTickOffset,
-    );
-    this.add('minorTicks', new DiagramElementPrimative(
-      minorTicks,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
-      axisProperties.majorTickColor,
-      diagramLimits,
-    ));
+    if (this.props.minorTicks) {
+      const minorTicks = new VTickMarks(
+        webgl,
+        this.props.start,
+        this.props.rotation,
+        Math.floor(this.props.length / this.props.minorTickSpacing) + 1,
+        this.props.minorTickSpacing,
+        this.props.minorTickLength,
+        this.props.minorTickWidth,
+        this.props.minorTickOffset,
+      );
+      this.add('minorTicks', new DiagramElementPrimative(
+        minorTicks,
+        new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        axisProperties.majorTickColor,
+        diagramLimits,
+      ));
+    }
 
-    const majorGrid = new VTickMarks(
-      webgl,
-      this.props.start,
-      this.props.rotation,
-      Math.floor(this.props.length / this.props.majorTickSpacing),
-      this.props.majorTickSpacing,
-      this.props.majorGridLength,
-      this.props.majorGridWidth,
-      0,
-    );
-    this.add('majorGrid', new DiagramElementPrimative(
-      majorGrid,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
-      axisProperties.majorGridColor,
-      diagramLimits,
-    ));
-
-    const minorGrid = new VTickMarks(
-      webgl,
-      this.props.start,
-      this.props.rotation,
-      Math.floor(this.props.length / this.props.minorTickSpacing),
-      this.props.minorTickSpacing,
-      this.props.minorGridLength,
-      this.props.minorGridWidth,
-      0,
-    );
-    this.add('minorGrid', new DiagramElementPrimative(
-      minorGrid,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
-      axisProperties.minorGridColor,
-      diagramLimits,
-    ));
+    if (this.props.majorTicks) {
+      const majorTicks = new VTickMarks(
+        webgl,
+        this.props.start,
+        this.props.rotation,
+        Math.floor(this.props.length / this.props.majorTickSpacing) + 1,
+        this.props.majorTickSpacing,
+        this.props.majorTickLength,
+        this.props.majorTickWidth,
+        this.props.majorTickOffset,
+      );
+      this.add('majorTicks', new DiagramElementPrimative(
+        majorTicks,
+        new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        axisProperties.majorTickColor,
+        diagramLimits,
+      ));
+    }
 
     // const labels = [];
     for (let i = 0; i < axisProperties.majorTickLabels.length; i += 1) {
