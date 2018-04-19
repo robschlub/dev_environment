@@ -28,99 +28,100 @@ class Axis extends DiagramElementCollection {
 
     const xRatio = 2 / diagramLimits.width;
     // const yRatio = 2 / diagramLimits.height;
+    const cMajorTicksStart = this.props.valueToClip(majorTicks.start);
+    const cMinorTicksStart = this.props.valueToClip(minorTicks.start);
+    // const cMajorTicksStart = this.locationToClip(majorTicks.start);
+    // const cMinorTicksStart = this.locationToClip(minorTicks.start);
+    const majorTicksNum = this.props.getMajorNum();
+    // Math.floor((this.props.limits.max - majorTicks.start) /
+    //     majorTicks.step) + 1;
+    const minorTicksNum = this.props.getMinorNum();
+    // Math.floor((this.props.limits.max - minorTicks.start) /
+    //     minorTicks.step) + 1;
 
-    const cMajorTicksStart = this.locationToClip(majorTicks.start);
-    const cMinorTicksStart = this.locationToClip(minorTicks.start);
-    const majorTicksNum =
-      Math.floor((this.props.limits.max - this.props.majorTicksStart) /
-          this.props.majorTickSpacing) + 1;
-    const minorTicksNum =
-      Math.floor((this.props.limits.max - this.props.minorTicksStart) /
-          this.props.minorTickSpacing) + 1;
-
-    if (this.props.minorGrid) {
-      const minorGrid = new VTickMarks(
+    if (minorGrid.mode === 'on') {
+      const grid = new VTickMarks(
         webgl,
         new Point(
-          cMinorTicksStart - this.props.minorGridWidth / 2 * xRatio,
+          cMinorTicksStart - minorGrid.width / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
         minorTicksNum,
-        this.toClip(this.props.minorTickSpacing),
-        this.props.minorGridLength,
-        this.props.minorGridWidth,
-        0,
+        this.toClip(minorTicks.step),
+        minorGrid.length,
+        minorGrid.width,
+        minorGrid.offset,
       );
       this.add('minorGrid', new DiagramElementPrimative(
-        minorGrid,
+        grid,
         new Transform().scale(1, 1).rotate(0).translate(0, 0),
-        axisProperties.minorGridColor,
+        minorGrid.color,
         diagramLimits,
       ));
     }
-    if (this.props.majorGrid) {
-      const majorGrid = new VTickMarks(
+    if (majorGrid.mode === 'on') {
+      const grid = new VTickMarks(
         webgl,
         new Point(
-          cMajorTicksStart - this.props.majorGridWidth / 2 * xRatio,
+          cMajorTicksStart - majorGrid.width / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
         majorTicksNum,
-        this.toClip(this.props.majorTickSpacing),
-        this.props.majorGridLength,
-        this.props.majorGridWidth,
-        0,
+        this.toClip(majorTicks.step),
+        majorGrid.length,
+        majorGrid.width,
+        majorGrid.offset,
       );
       this.add('majorGrid', new DiagramElementPrimative(
-        majorGrid,
+        grid,
         new Transform().scale(1, 1).rotate(0).translate(0, 0),
-        axisProperties.majorGridColor,
+        majorGrid.color,
         diagramLimits,
       ));
     }
 
-    if (this.props.minorTicks) {
-      const minorTicks = new VTickMarks(
+    if (minorTicks.mode !== 'off') {
+      const ticks = new VTickMarks(
         webgl,
         new Point(
-          cMinorTicksStart - this.props.minorTickWidth / 2 * xRatio,
+          cMinorTicksStart - minorTicks.width / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
         minorTicksNum,
-        this.toClip(this.props.minorTickSpacing),
-        this.props.minorTickLength,
-        this.props.minorTickWidth,
-        this.props.minorTickOffset,
+        this.toClip(minorTicks.step),
+        minorTicks.length,
+        minorTicks.width,
+        minorTicks.offset,
       );
       this.add('minorTicks', new DiagramElementPrimative(
-        minorTicks,
+        ticks,
         new Transform().scale(1, 1).rotate(0).translate(0, 0),
-        axisProperties.majorTickColor,
+        majorTicks.color,
         diagramLimits,
       ));
     }
 
-    if (this.props.majorTicks) {
-      const majorTicks = new VTickMarks(
+    if (majorTicks.mode !== 'off') {
+      const ticks = new VTickMarks(
         webgl,
         new Point(
-          cMajorTicksStart - this.props.majorTickWidth / 2 * xRatio,
+          cMajorTicksStart - majorTicks.width / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
         majorTicksNum,
-        this.toClip(this.props.majorTickSpacing),
-        this.props.majorTickLength,
-        this.props.majorTickWidth,
-        this.props.majorTickOffset,
+        this.toClip(majorTicks.step),
+        majorTicks.length,
+        majorTicks.width,
+        majorTicks.offset,
       );
       this.add('majorTicks', new DiagramElementPrimative(
-        majorTicks,
+        ticks,
         new Transform().scale(1, 1).rotate(0).translate(0, 0),
-        axisProperties.majorTickColor,
+        majorTicks.color,
         diagramLimits,
       ));
     }
@@ -133,16 +134,16 @@ class Axis extends DiagramElementCollection {
       diagramLimits,
     ));
 
-    for (let i = 0; i < axisProperties.majorTickLabels.length; i += 1) {
+    for (let i = 0; i < majorTicks.labels.length; i += 1) {
       const label = new TextObject(
         drawContext2D,
-        axisProperties.majorTickLabels[i],
+        majorTicks.labels[i],
         new Point(
-          this.locationToClip(this.props.majorTicksStart + i * this.props.majorTickSpacing),
+          this.valueToClip(majorTicks.start + i * majorTicks.step),
           0,
         ).transformBy(new Transform().rotate(this.props.rotation).matrix()),
-        [this.props.labelHAlign, this.props.labelVAlign],
-        this.props.labelOffset,
+        [majorTicks.labelsHAlign, majorTicks.labelsVAlign],
+        majorTicks.labelOffset,
       );
       this.add(`label_${i}`, new DiagramElementPrimative(
         label,
@@ -152,12 +153,16 @@ class Axis extends DiagramElementCollection {
       ));
     }
   }
+  // toClip(value: number) {
+  //   const ratio = this.props.length / (this.props.limits.max - this.props.limits.min);
+  //   return value * ratio;
+  // }
   toClip(value: number) {
-    const ratio = this.props.length / (this.props.limits.max - this.props.limits.min);
-    return value * ratio;
+    return this.props.toClip(value);
   }
-  locationToClip(value: number) {
-    return this.toClip(value - this.props.limits.min) + this.props.start.x;
+  valueToClip(value: number) {
+    return this.props.valueToClip(value);
+    // return this.toClip(value - this.props.limits.min) + this.props.start.x;
   }
 }
 

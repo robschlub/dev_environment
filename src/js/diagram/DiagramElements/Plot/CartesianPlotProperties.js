@@ -1,18 +1,20 @@
 // @flow
 
 import { Point } from '../../g2';
+import { AxisProperties } from './AxisProperties';
 
 class CartesianPlotProperties {
   // Clip Space
   start: Point;
-  xLength: number;
-  yLength: number;
+  length: number;
+  width: number;
 
+  // // Plot Space
+  // limits: {min: Point, max: Point};
 
-  // Plot Space
-  limits: {min: Point, max: Point};
+  axes: Array<AxisProperties>;
 
-  
+  // traces: Array<TraceProperties>;
   // xMajorTicks: 'on' | 'off' | 'auto';
   // xMajorTickSpacing: number;
   // xMajorTickStart: number;
@@ -62,51 +64,55 @@ class CartesianPlotProperties {
   // labelOffset: Point;
 
   constructor() {
-    const color = [0.7, 0.7, 0.7, 1];
     this.start = new Point(0, 0);
-    this.xLength = 1;
-    this.yLength = 1;
-    this.limits = { min: new Point(0, 0), max: new Point(1, 1) };
+    this.length = 1;
+    this.width = 1;
 
-    this.xMajorTicks = 'auto';
-    this.xMajorTickSpacing = 0.1;
-    this.xMajorTickStart = 0;
-    this.xMajorTickLength = 0.05;
-    this.xMajorTickWidth = 0.003;
-    this.xMajorTickColor = color;
-    this.xMajorTickLabels = [];
+    this.axes = [
+      new AxisProperties('x', 0),
+      new AxisProperties('y', Math.PI / 2),
+    ];
+    // this.limits = { min: new Point(0, 0), max: new Point(1, 1) };
 
-    this.yMajorTicks = this.xMajorTicks;
-    this.yMajorTickSpacing = this.xMajorTickSpacing;
-    this.yMajorTickStart = this.xMajorTickStart;
-    this.yMajorTickLength = this.xMajorTickLength;
-    this.yMajorTickWidth = this.xMajorTickWidth;
-    this.yMajorTickColor = this.xMajorTickColor;
-    this.yMajorTickLabels = this.xMajorTickLabels;
+    // this.xMajorTicks = 'auto';
+    // this.xMajorTickSpacing = 0.1;
+    // this.xMajorTickStart = 0;
+    // this.xMajorTickLength = 0.05;
+    // this.xMajorTickWidth = 0.003;
+    // this.xMajorTickColor = color;
+    // this.xMajorTickLabels = [];
 
-    this.xMinorTicks = 'auto';
-    this.xMinorTickSpacing = 0.02;
-    this.xMinorTickStart = 0;
-    this.xMinorTickLength = 0.03;
-    this.xMinorTickWidth = 0.001;
-    this.xMinorTickColor = color;
+    // this.yMajorTicks = this.xMajorTicks;
+    // this.yMajorTickSpacing = this.xMajorTickSpacing;
+    // this.yMajorTickStart = this.xMajorTickStart;
+    // this.yMajorTickLength = this.xMajorTickLength;
+    // this.yMajorTickWidth = this.xMajorTickWidth;
+    // this.yMajorTickColor = this.xMajorTickColor;
+    // this.yMajorTickLabels = this.xMajorTickLabels;
 
-    this.yMinorTicks = this.xMinorTicks;
-    this.yMinorTickSpacing = this.xMinorTickSpacing;
-    this.yMinorTickStart = this.xMinorTickStart;
-    this.yMinorTickLength = this.xMinorTickLength;
-    this.yMinorTickWidth = this.xMinorTickWidth;
-    this.yMinorTickColor = this.xMinorTickColor;
+    // this.xMinorTicks = 'auto';
+    // this.xMinorTickSpacing = 0.02;
+    // this.xMinorTickStart = 0;
+    // this.xMinorTickLength = 0.03;
+    // this.xMinorTickWidth = 0.001;
+    // this.xMinorTickColor = color;
 
-    this.xMajorGrid = 'on';
-    this.xMajorGridWidth = 0.002;
-    this.xMajorGridColor = color;
+    // this.yMinorTicks = this.xMinorTicks;
+    // this.yMinorTickSpacing = this.xMinorTickSpacing;
+    // this.yMinorTickStart = this.xMinorTickStart;
+    // this.yMinorTickLength = this.xMinorTickLength;
+    // this.yMinorTickWidth = this.xMinorTickWidth;
+    // this.yMinorTickColor = this.xMinorTickColor;
 
-    this.xMinorGrid = this.xMajorGrid;
-    this.xMinorGridWidth = this.xMajorGridWidth;
-    this.xMinorGridColor = this.xMajorGridColor;
+    // this.xMajorGrid = 'on';
+    // this.xMajorGridWidth = 0.002;
+    // this.xMajorGridColor = color;
 
-    this.labelOffset = new Point(0, 0);
+    // this.xMinorGrid = this.xMajorGrid;
+    // this.xMinorGridWidth = this.xMajorGridWidth;
+    // this.xMinorGridColor = this.xMajorGridColor;
+
+    // this.labelOffset = new Point(0, 0);
   }
 }
 

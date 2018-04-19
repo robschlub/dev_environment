@@ -115,4 +115,24 @@ describe('Axis Properties', () => {
       check(1, 2, { min: -1, max: 1 }, 1, 3);
     });
   });
+  describe('Labels', () => {
+    let check;
+    beforeEach(() => {
+      check = (limits, start, step, labels) => {
+        const props = new AxisProperties();
+        props.limits = limits;
+        props.majorTicks.start = start;
+        props.majorTicks.step = step;
+        props.minorTicks.start = start;
+        props.minorTicks.step = step;
+        expect(props.getMajorLabels()).toEqual(labels);
+      };
+    });
+    test('Simple', () => {
+      check({ min: 0, max: 1 }, 0, 0.5, ['0', '0.5', '1']);
+    });
+    test('Negative', () => {
+      check({ min: -1, max: 1 }, -1, 0.5, ['-1', '-0.5', '0', '0.5', '1']);
+    });
+  });
 });

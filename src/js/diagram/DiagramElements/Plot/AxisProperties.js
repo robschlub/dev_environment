@@ -8,6 +8,7 @@ class GridProperties {
   // Clip Space
   length: number;
   width: number;
+  offset: number;
 
   // General
   color: Array<number>;
@@ -18,6 +19,7 @@ class GridProperties {
     this.width = 0.01;
     this.color = defaultColor;
     this.mode = 'on';
+    this.offset = 0;
   }
 }
 class TickProperties {
@@ -29,7 +31,7 @@ class TickProperties {
   length: number;
   width: number;
   offset: number;
-  labelOffset: number;
+  labelOffset: Point;
 
   // General
   color: Array<number>;
@@ -45,7 +47,7 @@ class TickProperties {
     this.length = 0.05;
     this.width = 0.01;
     this.offset = 0;
-    this.labelOffset = 0;
+    this.labelOffset = new Point(0, 0);
 
     this.color = defaultColor;
     this.labels = [];
@@ -56,6 +58,7 @@ class TickProperties {
 }
 
 class AxisProperties {
+  name: string;
   start: Point;
   length: number;
   width: number;
@@ -99,12 +102,14 @@ class AxisProperties {
   // labelOffset: Point;
 
 
-  constructor() {
+  constructor(name: string = '', rotation: number = 0) {
+    this.name = name;
+
     // Clip Space
     this.start = new Point(0, 0);
     this.length = 1;
     this.width = 0.01;
-    this.rotation = 0;
+    this.rotation = rotation;
 
 
     this.color = [0.5, 0.5, 0.5, 1];
@@ -192,6 +197,14 @@ class AxisProperties {
   }
   valueToClip(value: number) {
     return this.toClip(value - this.limits.min) + this.start.x;
+  }
+  getMajorLabels() {
+    const labels = [];
+    for (let i = 0, j = this.getMajorNum(); i < j; i += 1) {
+      const value = this.majorTicks.start + i * this.majorTicks.step;
+      labels.push(value.toString());
+    }
+    return labels;
   }
 }
 
