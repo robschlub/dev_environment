@@ -152,7 +152,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.isTouchable = true;
 
     const xProps = new AxisProperties();
-    xProps.length = 2;
+    xProps.length = 4;
     xProps.rotation = 0;
     xProps.limits = { min: 0, max: 100 };
     xProps.majorTicksStart = 0;
@@ -165,7 +165,7 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.minorTickOffset = -xProps.minorTickLength;
     xProps.majorGridLength = 2;
     xProps.minorGridLength = 2;
-    xProps.majorTickWidth = 0.1;
+    xProps.majorTickWidth = 0.01;
     xProps.majorTickLabels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     xProps.labelOffset = new Point(0, -0.05);
     xProps.labelHAlign = 'center';
@@ -182,7 +182,7 @@ class ShapesCollection extends DiagramElementCollection {
     const yProps = new AxisProperties();
     yProps.length = 2;
     yProps.rotation = Math.PI / 2;
-    yProps.limits = { min: 0, max: 20 };
+    yProps.limits = { min: 0, max: 25 };
     yProps.majorTicksStart = 0;
     yProps.minorTicksStart = 0;
     yProps.majorTickSpacing = 5;
@@ -191,8 +191,8 @@ class ShapesCollection extends DiagramElementCollection {
     yProps.minorGridLength = -xProps.length;
     yProps.majorTickLength = xProps.majorTickLength;
     yProps.minorTickLength = xProps.minorTickLength;
-    yProps.majorTickWidth = 0.1;
-    yProps.majorTickLabels = ['0', '5', '10', '15', '20'];
+    yProps.majorTickWidth = 0.01;
+    yProps.majorTickLabels = ['0', '5', '10', '15', '20', '25'];
     yProps.labelOffset = new Point(-0.025, 0);
     yProps.labelHAlign = 'right';
     yProps.labelVAlign = 'middle';

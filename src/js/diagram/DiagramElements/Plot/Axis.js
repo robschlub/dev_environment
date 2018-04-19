@@ -22,7 +22,7 @@ class Axis extends DiagramElementCollection {
     super(transform, diagramLimits);
     this.props = axisProperties;
     const xRatio = 2 / diagramLimits.width;
-    const yRatio = 2 / diagramLimits.height;
+    // const yRatio = 2 / diagramLimits.height;
 
     const cMajorTicksStart = this.locationToClip(this.props.majorTicksStart);
     const cMinorTicksStart = this.locationToClip(this.props.minorTicksStart);
@@ -37,7 +37,7 @@ class Axis extends DiagramElementCollection {
       const minorGrid = new VTickMarks(
         webgl,
         new Point(
-          cMinorTicksStart - this.props.minorGridWidth / 2,
+          cMinorTicksStart - this.props.minorGridWidth / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
@@ -58,7 +58,7 @@ class Axis extends DiagramElementCollection {
       const majorGrid = new VTickMarks(
         webgl,
         new Point(
-          cMajorTicksStart - this.props.majorGridWidth / 2,
+          cMajorTicksStart - this.props.majorGridWidth / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
@@ -80,7 +80,7 @@ class Axis extends DiagramElementCollection {
       const minorTicks = new VTickMarks(
         webgl,
         new Point(
-          cMinorTicksStart - this.props.minorTickWidth / 2,
+          cMinorTicksStart - this.props.minorTickWidth / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
@@ -102,7 +102,7 @@ class Axis extends DiagramElementCollection {
       const majorTicks = new VTickMarks(
         webgl,
         new Point(
-          cMajorTicksStart - this.props.majorTickWidth / 2,
+          cMajorTicksStart - this.props.majorTickWidth / 2 * xRatio,
           this.props.start.y,
         ),
         this.props.rotation,
