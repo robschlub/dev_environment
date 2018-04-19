@@ -154,9 +154,9 @@ class ShapesCollection extends DiagramElementCollection {
     const xProps = new AxisProperties();
     xProps.length = 2;
     xProps.rotation = 0;
-    xProps.limits = {min: 6, max: 100};
-    xProps.majorTicksStart = 10;
-    xProps.minorTicksStart = 6;
+    xProps.limits = { min: 0, max: 100 };
+    xProps.majorTicksStart = 0;
+    xProps.minorTicksStart = 0;
     xProps.minorTickSpacing = 2;
     xProps.majorTickSpacing = 10;
     xProps.minorTickLength = 0.02;
@@ -165,11 +165,13 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.minorTickOffset = -xProps.minorTickLength;
     xProps.majorGridLength = 2;
     xProps.minorGridLength = 2;
+    xProps.majorTickWidth = 0.1;
     xProps.majorTickLabels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     xProps.labelOffset = new Point(0, -0.05);
     xProps.labelHAlign = 'center';
     xProps.labelVAlign = 'top';
-    xProps.majorGridWidth = 0.016;
+    xProps.majorGridWidth = 0.008;
+    xProps.minorGridWidth = 0.004;
     const axis1 = new Axis(
       webgl, ctx, xProps,
       new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
@@ -177,25 +179,32 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('xAxis1', axis1);
 
-    // const yProps = new AxisProperties();
-    // yProps.length = 2;
-    // yProps.rotation = Math.PI / 2;
-    // yProps.majorGridLength = -xProps.length;
-    // yProps.minorGridLength = -xProps.length;
-    // yProps.majorTickLength = xProps.majorTickLength;
-    // yProps.minorTickLength = xProps.minorTickLength;
-    // yProps.majorTickLabels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    // yProps.labelOffset = new Point(-0.025, 0);
-    // yProps.labelHAlign = 'right';
-    // yProps.labelVAlign = 'middle';
-    // yProps.majorGridWidth = xProps.majorGridWidth;
-    // const axis2 = new Axis(
-    //   webgl, ctx, yProps,
-    //   new Transform().scale(1, 1).rotate(0).translate(3, 1),
-    //   diagramLimits,
-    // );
+    const yProps = new AxisProperties();
+    yProps.length = 2;
+    yProps.rotation = Math.PI / 2;
+    yProps.limits = { min: 0, max: 20 };
+    yProps.majorTicksStart = 0;
+    yProps.minorTicksStart = 0;
+    yProps.majorTickSpacing = 5;
+    yProps.minorTickSpacing = 1;
+    yProps.majorGridLength = -xProps.length;
+    yProps.minorGridLength = -xProps.length;
+    yProps.majorTickLength = xProps.majorTickLength;
+    yProps.minorTickLength = xProps.minorTickLength;
+    yProps.majorTickWidth = 0.1;
+    yProps.majorTickLabels = ['0', '5', '10', '15', '20'];
+    yProps.labelOffset = new Point(-0.025, 0);
+    yProps.labelHAlign = 'right';
+    yProps.labelVAlign = 'middle';
+    yProps.majorGridWidth = xProps.majorGridWidth;
+    yProps.minorGridWidth = xProps.minorGridWidth;
+    const axis2 = new Axis(
+      webgl, ctx, yProps,
+      new Transform().scale(1, 1).rotate(0).translate(3, 1),
+      diagramLimits,
+    );
 
-    // this.add('yAxis1', axis2);
+    this.add('yAxis1', axis2);
   }
 }
 

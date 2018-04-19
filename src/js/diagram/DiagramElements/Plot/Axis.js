@@ -21,20 +21,28 @@ class Axis extends DiagramElementCollection {
   ) {
     super(transform, diagramLimits);
     this.props = axisProperties;
+    const xRatio = 2 / diagramLimits.width;
+    const yRatio = 2 / diagramLimits.height;
 
-    const axisRange = this.props.limits.max - this.props.limits.min;
-    const axisLengthToLimit = this.props.length / axisRange;
+    const cMajorTicksStart = this.locationToClip(this.props.majorTicksStart);
+    const cMinorTicksStart = this.locationToClip(this.props.minorTicksStart);
+    const majorTicksNum =
+      Math.floor((this.props.limits.max - this.props.majorTicksStart) /
+          this.props.majorTickSpacing) + 1;
+    const minorTicksNum =
+      Math.floor((this.props.limits.max - this.props.minorTicksStart) /
+          this.props.minorTickSpacing) + 1;
 
     if (this.props.minorGrid) {
       const minorGrid = new VTickMarks(
         webgl,
         new Point(
-          (this.props.start.x - this.props.minorTicksStart) * axisLengthToLimit,
+          cMinorTicksStart - this.props.minorGridWidth / 2,
           this.props.start.y,
         ),
         this.props.rotation,
-        Math.floor(this.props.length / this.props.minorTickSpacing) + 1,
-        this.props.minorTickSpacing * axisLengthToLimit,
+        minorTicksNum,
+        this.toClip(this.props.minorTickSpacing),
         this.props.minorGridLength,
         this.props.minorGridWidth,
         0,
@@ -50,12 +58,12 @@ class Axis extends DiagramElementCollection {
       const majorGrid = new VTickMarks(
         webgl,
         new Point(
-          (this.props.start.x - this.props.majorTicksStart) * axisLengthToLimit,
+          cMajorTicksStart - this.props.majorGridWidth / 2,
           this.props.start.y,
         ),
         this.props.rotation,
-        Math.floor(this.props.length / this.props.majorTickSpacing) + 1,
-        this.props.majorTickSpacing,
+        majorTicksNum,
+        this.toClip(this.props.majorTickSpacing),
         this.props.majorGridLength,
         this.props.majorGridWidth,
         0,
@@ -72,12 +80,11 @@ class Axis extends DiagramElementCollection {
       const minorTicks = new VTickMarks(
         webgl,
         new Point(
-          this.locationToClip(this.props.minorTicksStart)  - this.props.minorTickWidth / 2,
+          cMinorTicksStart - this.props.minorTickWidth / 2,
           this.props.start.y,
         ),
         this.props.rotation,
-        Math.floor((this.props.limits.max - this.props.minorTicksStart) /
-          this.props.minorTickSpacing) + 1,
+        minorTicksNum,
         this.toClip(this.props.minorTickSpacing),
         this.props.minorTickLength,
         this.props.minorTickWidth,
@@ -95,12 +102,11 @@ class Axis extends DiagramElementCollection {
       const majorTicks = new VTickMarks(
         webgl,
         new Point(
-          this.locationToClip(this.props.majorTicksStart) - this.props.majorTickWidth / 2,
+          cMajorTicksStart - this.props.majorTickWidth / 2,
           this.props.start.y,
         ),
         this.props.rotation,
-        Math.floor((this.props.limits.max - this.props.majorTicksStart) /
-          this.props.majorTickSpacing) + 1,
+        majorTicksNum,
         this.toClip(this.props.majorTickSpacing),
         this.props.majorTickLength,
         this.props.majorTickWidth,
@@ -140,13 +146,6 @@ class Axis extends DiagramElementCollection {
         diagramLimits,
       ));
     }
-    // const label = new TextObject(drawContext2D, 'This is a test', new Point(0, 0));
-    // this.add('label', new DiagramElementPrimative(
-    //   label,
-    //   new Transform().scale(1, 1).rotate(0).translate(0, 0),
-    //   [1, 0, 0, 1],
-    //   diagramLimits,
-    // ));
   }
   toClip(value: number) {
     const ratio = this.props.length / (this.props.limits.max - this.props.limits.min);
