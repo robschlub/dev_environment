@@ -42,6 +42,10 @@ class TickProperties extends GridProperties {
   labelsVAlign: 'top' | 'middle' | 'bottom';
   mode: 'on' | 'off' | 'auto';
 
+  fontFamily: string;
+  fontWeight: string;
+  fontSize: string;
+
   constructor() {
     super();
     this.start = 0;
@@ -58,6 +62,9 @@ class TickProperties extends GridProperties {
     this.labelsHAlign = 'center';
     this.labelsVAlign = 'middle';
     this.mode = 'on';
+    this.fontFamily = 'Helvetica Neue';
+    this.fontWeight = '200';
+    this.fontSize = '14px';
   }
 }
 
@@ -123,6 +130,7 @@ class AxisProperties {
 
     this.majorTicks = new TickProperties();
     this.minorTicks = new TickProperties();
+    this.minorTicks.labelMode = 'off';
     this.majorGrid = new GridProperties();
     this.minorGrid = new GridProperties();
     // this.majorTicks =

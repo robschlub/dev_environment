@@ -22,6 +22,9 @@ class TextObject extends DrawingObject {
   location: g2.Point;
   align: Array<string>;
   offset: g2.Point;
+  fontFamily: string;
+  fontWeight: string;
+  fontSize: string;
 
   constructor(
     drawContext2D: DrawContext2D,
@@ -36,6 +39,9 @@ class TextObject extends DrawingObject {
     this.location = location;
     this.align = align;
     this.offset = offset;
+    this.fontFamily = 'Helvetica Neue';
+    this.fontWeight = '200';
+    this.fontSize = '14px';
   }
   draw(
     translation: g2.Point,
@@ -64,7 +70,8 @@ class TextObject extends DrawingObject {
     const transformedLocation = this.location.transformBy(transformMatrix);
     const { ctx } = this.drawContext2D;
 
-    ctx.font = '200 12px Helvetica Neue';
+    ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
+    console.log(`${this.fontWeight} ${this.fontSize} ${this.fontFamily}`)
     ctx.textAlign = this.align[0];    // eslint-disable-line
     ctx.textBaseline = this.align[1]; // eslint-disable-line
 

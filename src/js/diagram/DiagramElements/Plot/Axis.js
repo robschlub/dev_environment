@@ -142,6 +142,10 @@ class Axis extends DiagramElementCollection {
         [ticks.labelsHAlign, ticks.labelsVAlign],
         ticks.labelOffset,
       );
+      label.fontSize = ticks.fontSize;
+      label.fontFamily = ticks.fontFamily;
+      label.fontWeight = ticks.fontWeight;
+
       this.add(`label_${name}_${i}`, new DiagramElementPrimative(
         label,
         new Transform().scale(1, 1).rotate(0).translate(0, 0),
