@@ -1,4 +1,4 @@
-import AxisProperties from './AxisProperties';
+import { AxisProperties } from './AxisProperties';
 import { Point } from '../../g2';
 
 describe('Axis Properties', () => {
@@ -43,8 +43,8 @@ describe('Axis Properties', () => {
       check = (limits, expectedStart, expectedStep) => {
         const props = new AxisProperties();
         props.limits = limits;
-        props.generateAutoMajorNum(10);
-        props.generateAutoMinorNum(10);
+        props.generateAutoMajorTicks(10);
+        props.generateAutoMinorTicks(10);
         expect(props.majorTicks.start).toBe(expectedStart);
         expect(props.majorTicks.step).toBe(expectedStep);
         expect(props.minorTicks.start).toBe(expectedStart);
@@ -126,6 +126,10 @@ describe('Axis Properties', () => {
         props.minorTicks.start = start;
         props.minorTicks.step = step;
         expect(props.getMajorLabels()).toEqual(labels);
+        props.generateMajorLabels();
+        props.generateMinorLabels();
+        expect(props.majorTicks.labels).toEqual(labels);
+        expect(props.minorTicks.labels).toEqual(labels);
       };
     });
     test('Simple', () => {

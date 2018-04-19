@@ -2,6 +2,7 @@
 
 import { Point } from '../../g2';
 import { roundNum } from '../../mathtools';
+
 const defaultColor = [0.7, 0.7, 0.7, 1];
 
 class GridProperties {
@@ -12,7 +13,7 @@ class GridProperties {
 
   // General
   color: Array<number>;
-  mode: 'on' | 'off';
+  mode: 'on' | 'off' | 'auto';
 
   constructor() {
     this.length = 1;
@@ -22,7 +23,7 @@ class GridProperties {
     this.offset = 0;
   }
 }
-class TickProperties {
+class TickProperties extends GridProperties {
   // Axis Space
   start: number;
   step: number;
@@ -35,12 +36,14 @@ class TickProperties {
 
   // General
   color: Array<number>;
+  labelMode: 'on' | 'off' | 'auto';
   labels: Array<string>;
   labelsHAlign: 'start' | 'end' | 'left' | 'center' | 'right';
   labelsVAlign: 'top' | 'middle' | 'bottom';
   mode: 'on' | 'off' | 'auto';
 
   constructor() {
+    super();
     this.start = 0;
     this.step = 0.1;
 
@@ -51,6 +54,7 @@ class TickProperties {
 
     this.color = defaultColor;
     this.labels = [];
+    this.labelMode = 'auto';
     this.labelsHAlign = 'center';
     this.labelsVAlign = 'middle';
     this.mode = 'on';
@@ -181,12 +185,12 @@ class AxisProperties {
     }
     return { start, step };
   }
-  generateAutoMajorNum(approximateNum: number = 10) {
+  generateAutoMajorTicks(approximateNum: number = 10) {
     const { start, step } = this.generateAuto(approximateNum);
     this.majorTicks.start = start;
     this.majorTicks.step = step;
   }
-  generateAutoMinorNum(approximateNum: number = 50) {
+  generateAutoMinorTicks(approximateNum: number = 50) {
     const { start, step } = this.generateAuto(approximateNum);
     this.minorTicks.start = start;
     this.minorTicks.step = step;
@@ -206,6 +210,20 @@ class AxisProperties {
     }
     return labels;
   }
+  generateMajorLabels() {
+    this.majorTicks.labels = this.getMajorLabels();
+  }
+  getMinorLabels() {
+    const labels = [];
+    for (let i = 0, j = this.getMinorNum(); i < j; i += 1) {
+      const value = this.minorTicks.start + i * this.minorTicks.step;
+      labels.push(value.toString());
+    }
+    return labels;
+  }
+  generateMinorLabels() {
+    this.minorTicks.labels = this.getMinorLabels();
+  }
 }
 
-export default AxisProperties;
+export { AxisProperties, GridProperties, TickProperties };

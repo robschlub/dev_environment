@@ -16,7 +16,7 @@ import Diagram from './Diagram';
 import * as tools from './mathtools';
 import TickMarks from './DiagramElements/TickMarks';
 import Axis from './DiagramElements/Plot/Axis';
-import AxisProperties from './DiagramElements/Plot/AxisProperties';
+import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
@@ -166,10 +166,14 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.majorGrid.length = 2;
     xProps.minorGrid.length = 2;
     xProps.majorTicks.width = 0.01;
-    xProps.majorTicks.labels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    xProps.majorTicks.labelMode = 'auto';
+    xProps.majorTicks.labels = ['0', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     xProps.majorTicks.labelOffset = new Point(0, -0.05);
     xProps.majorTicks.labelsHAlign = 'center';
     xProps.majorTicks.labelsVAlign = 'top';
+    xProps.minorTicks.labelOffset = new Point(0, -0.1);
+    xProps.minorTicks.labelsHAlign = 'center';
+    xProps.minorTicks.labelsVAlign = 'top';
     xProps.majorGrid.width = 0.008;
     xProps.minorGrid.width = 0.004;
     const axis1 = new Axis(
@@ -192,7 +196,7 @@ class ShapesCollection extends DiagramElementCollection {
     yProps.majorTicks.length = xProps.majorTicks.length;
     yProps.minorTicks.length = xProps.minorTicks.length;
     yProps.majorTicks.width = 0.01;
-    yProps.majorTicks.labels = ['0', '5', '10', '15', '20', '25'];
+    yProps.majorTicks.labels = ['0', 'A', '10', '15', '20', '25'];
     yProps.majorTicks.labelOffset = new Point(-0.025, 0);
     yProps.majorTicks.labelsHAlign = 'right';
     yProps.majorTicks.labelsVAlign = 'middle';
