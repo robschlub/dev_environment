@@ -25,6 +25,7 @@ function TRIParallelLines(
     } else {
       cx = start.x + spacing * i;
     }
+    cx -= width / 2;
     points.push(cx, sign * cy);
     points.push(cx + width, sign * cy);
     points.push(cx + width, sign * (cy + length));

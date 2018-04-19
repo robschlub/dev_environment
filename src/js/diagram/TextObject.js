@@ -20,16 +20,22 @@ class TextObject extends DrawingObject {
   border: Array<Array<g2.Point>>;
   numPoints: number;
   location: g2.Point;
+  align: Array<string>;
+  offset: g2.Point;
 
   constructor(
     drawContext2D: DrawContext2D,
     text: string,
     location: g2.Point = new g2.Point(0, 0),
+    align: Array<string> = ['top', 'middle'],
+    offset: g2.Point = new g2.Point(0, 0),
   ) {
     super();
     this.drawContext2D = drawContext2D;
     this.text = text;
     this.location = location;
+    this.align = align;
+    this.offset = offset;
   }
   draw(
     translation: g2.Point,
@@ -56,16 +62,30 @@ class TextObject extends DrawingObject {
     color: Array<number>,
   ) {
     const transformedLocation = this.location.transformBy(transformMatrix);
-    this.drawContext2D.ctx.font = '200 16px Helvetica Neue';
+    const { ctx } = this.drawContext2D;
+
+    ctx.font = '200 12px Helvetica Neue';
+    ctx.textAlign = this.align[0];    // eslint-disable-line
+    ctx.textBaseline = this.align[1]; // eslint-disable-line
+
     this.drawContext2D.ctx.fillStyle = `rgba(${color[0] * 255},${color[1] * 255},${color[2] * 255},${color[3] * 255})`;
-    this.drawContext2D.ctx.save();
-    const p = this.clipToElementPixels(transformedLocation);
+    // this.drawContext2D.ctx.save();
+    const p = this.clipToElementPixels(transformedLocation.add(this.offset));
     // const t = transformMatrix;
-    // this.drawContext2D.ctx.rotate(Math.PI / 2);
+    // const translation = this.clipToElementPixels(new g2.Point(t[2], t[5]));
+
+    // this.drawContext2D.ctx.translate(translation.x, translation.y)
+    // this.drawContext2D.ctx.rotate(Math.asin(-t[3]));
+    // this.drawContext2D.ctx.translate(p.x, p.y)
     // this.drawContext2D.ctx.setTransform(t[0], t[1], 0, t[3], t[4], 0);
     // console.log(t)
+    // p = p.add(new g2.Point(
+    //   -this.drawContext2D.ctx.measureText(this.text).width / 2,
+    //   16,
+    // ));
+    // p = p.add(this.offset);
     this.drawContext2D.ctx.fillText(this.text, p.x, p.y);
-    this.drawContext2D.ctx.restore();
+    // this.drawContext2D.ctx.restore();
   }
 }
 

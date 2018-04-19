@@ -42,6 +42,10 @@ class AxisProperties {
   minorGridLength: number;
   minorGridWidth: number;
   minorGridColor: Array<number>;
+  labelHAlign: string;
+  labelVAlign: string;
+  labelOffset: Point;
+
 
   constructor() {
     this.start = new Point(0, 0);
@@ -74,6 +78,9 @@ class AxisProperties {
     this.minorGridLength = 1;
     this.minorGridWidth = 0.008;
     this.minorGridColor = [0.9, 0.9, 0.9, 1];
+    this.labelHAlign = 'center';
+    this.labelVAlign = 'top';
+    this.labelOffset = new Point(0, -0.05);
   }
 }
 

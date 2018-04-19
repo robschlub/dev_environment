@@ -157,6 +157,10 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.majorTickOffset = -xProps.majorTickLength;
     xProps.majorGridLength = 2;
     xProps.minorGridLength = 2;
+    xProps.majorTickLabels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    xProps.labelOffset = new Point(0, -0.05);
+    xProps.labelHAlign = 'center';
+    xProps.labelVAlign = 'top';
     const axis1 = new Axis(
       webgl, ctx, xProps,
       new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
@@ -169,6 +173,10 @@ class ShapesCollection extends DiagramElementCollection {
     yProps.rotation = Math.PI / 2;
     yProps.majorGridLength = -2;
     yProps.minorGridLength = -2;
+    yProps.majorTickLabels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    yProps.labelOffset = new Point(-0.05, 0);
+    yProps.labelHAlign = 'right';
+    yProps.labelVAlign = 'middle';
     const axis2 = new Axis(
       webgl, ctx, yProps,
       new Transform().scale(1, 1).rotate(0).translate(3, 1),
@@ -250,7 +258,7 @@ function testgl(id: string) {
   // diagram.elements._square.pulseThickNow(5, 1.2, 7);
   // or
   // diagram.elements.startMovingFreely();
-  diagram.elements.animateRotationTo(1, -1, 10);
+  // diagram.elements.animateRotationTo(1, -1, 10);
 
   // $FlowFixMe
   // diagram.elements._square.animateTranslationTo(new Point(1.5, 0.5), 1);

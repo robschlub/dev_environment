@@ -98,13 +98,29 @@ class Axis extends DiagramElementCollection {
       diagramLimits,
     ));
 
-    const label = new TextObject(drawContext2D, 'This is a test', new Point(0, 0));
-    this.add('label', new DiagramElementPrimative(
-      label,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
-      [1, 0, 0, 1],
-      diagramLimits,
-    ));
+    // const labels = [];
+    for (let i = 0; i < axisProperties.majorTickLabels.length; i += 1) {
+      const label = new TextObject(
+        drawContext2D,
+        axisProperties.majorTickLabels[i],
+        this.props.start.add(new Point(i * axisProperties.majorTickSpacing, 0)).transformBy(new Transform().rotate(this.props.rotation).matrix()),
+        [this.props.labelHAlign, this.props.labelVAlign],
+        this.props.labelOffset,
+      );
+      this.add(`label_${i}`, new DiagramElementPrimative(
+        label,
+        new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        [0.5, 0.5, 0.5, 1],
+        diagramLimits,
+      ));
+    }
+    // const label = new TextObject(drawContext2D, 'This is a test', new Point(0, 0));
+    // this.add('label', new DiagramElementPrimative(
+    //   label,
+    //   new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    //   [1, 0, 0, 1],
+    //   diagramLimits,
+    // ));
   }
 }
 
