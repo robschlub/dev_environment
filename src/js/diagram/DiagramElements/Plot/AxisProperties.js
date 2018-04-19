@@ -19,7 +19,9 @@ class AxisProperties {
   color: Array<number>;
   label: string;
   logarithmic: boolean;
+  limits: { max: number, min: number };
   majorTicks: boolean;
+  majorTicksStart: number
   majorTickSpacing: number;
   majorTickLength: number;
   majorTickWidth: number;
@@ -32,6 +34,7 @@ class AxisProperties {
   majorGridWidth: number;
   majorGridColor: Array<number>;
   minorTicks: boolean;
+  minorTicksStart: number;
   minorTickSpacing: number;
   minorTickLength: number;
   minorTickWidth: number;
@@ -55,8 +58,10 @@ class AxisProperties {
     this.rotation = 0;
     this.color = [0.5, 0.5, 0.5, 1];
     this.label = '';
+    this.limits = { min: 0, max: 1 };
     this.logarithmic = false;
     this.majorTicks = true;
+    this.majorTicksStart = 0;
     this.majorTickSpacing = 0.2;
     this.majorTickLength = 0.05;
     this.majorTickWidth = 0.016;
@@ -69,6 +74,7 @@ class AxisProperties {
     this.majorGridWidth = 0.008;
     this.majorGridColor = [0.7, 0.7, 0.7, 1];
     this.minorTicks = true;
+    this.minorTicksStart = 0;
     this.minorTickSpacing = 0.04;
     this.minorTickLength = 0.02;
     this.minorTickWidth = 0.008;

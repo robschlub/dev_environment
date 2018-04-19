@@ -154,6 +154,11 @@ class ShapesCollection extends DiagramElementCollection {
     const xProps = new AxisProperties();
     xProps.length = 2;
     xProps.rotation = 0;
+    xProps.limits = {min: 6, max: 100};
+    xProps.majorTicksStart = 10;
+    xProps.minorTicksStart = 6;
+    xProps.minorTickSpacing = 2;
+    xProps.majorTickSpacing = 10;
     xProps.minorTickLength = 0.02;
     xProps.majorTickLength = 0.05;
     xProps.majorTickOffset = -xProps.majorTickLength;
@@ -172,25 +177,25 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('xAxis1', axis1);
 
-    const yProps = new AxisProperties();
-    yProps.length = 2;
-    yProps.rotation = Math.PI / 2;
-    yProps.majorGridLength = -xProps.length;
-    yProps.minorGridLength = -xProps.length;
-    yProps.majorTickLength = xProps.majorTickLength;
-    yProps.minorTickLength = xProps.minorTickLength;
-    yProps.majorTickLabels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-    yProps.labelOffset = new Point(-0.025, 0);
-    yProps.labelHAlign = 'right';
-    yProps.labelVAlign = 'middle';
-    yProps.majorGridWidth = xProps.majorGridWidth;
-    const axis2 = new Axis(
-      webgl, ctx, yProps,
-      new Transform().scale(1, 1).rotate(0).translate(3, 1),
-      diagramLimits,
-    );
+    // const yProps = new AxisProperties();
+    // yProps.length = 2;
+    // yProps.rotation = Math.PI / 2;
+    // yProps.majorGridLength = -xProps.length;
+    // yProps.minorGridLength = -xProps.length;
+    // yProps.majorTickLength = xProps.majorTickLength;
+    // yProps.minorTickLength = xProps.minorTickLength;
+    // yProps.majorTickLabels = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    // yProps.labelOffset = new Point(-0.025, 0);
+    // yProps.labelHAlign = 'right';
+    // yProps.labelVAlign = 'middle';
+    // yProps.majorGridWidth = xProps.majorGridWidth;
+    // const axis2 = new Axis(
+    //   webgl, ctx, yProps,
+    //   new Transform().scale(1, 1).rotate(0).translate(3, 1),
+    //   diagramLimits,
+    // );
 
-    this.add('yAxis1', axis2);
+    // this.add('yAxis1', axis2);
   }
 }
 
