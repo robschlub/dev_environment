@@ -231,18 +231,18 @@ class ShapesCollection extends DiagramElementCollection {
     const plotProps = new CartesianPlotProperties();
     plotProps.axes = [xProps, yProps];
     plotProps.traces = [trace];
-    // const plot = new CartesianPlot(
-    //   webgl, ctx, plotProps,
-    //   new Transform().scale(1, 1).rotate(0).translate(3, 1),
-    //   diagramLimits,
-    // );
-    // // $FlowFixMe
+    const plot = new CartesianPlot(
+      webgl, ctx, plotProps,
+      new Transform().scale(1, 1).rotate(0).translate(3, 1),
+      diagramLimits,
+    );
+    // $FlowFixMe
     // plot._trace1.isTouchable = true;
-    // // $FlowFixMe
+    // $FlowFixMe
     // plot._trace1.isMovable = true;
     // plot.isTouchable = true;
     // plot.isMovable = true;
-    // this.add('plot', plot);
+    this.add('plot', plot);
   }
 }
 
