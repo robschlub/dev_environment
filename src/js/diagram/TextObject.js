@@ -20,6 +20,10 @@ class TextObject extends DrawingObject {
   numPoints: number;
   location: Point;
   align: Array<string>;
+
+  // Text clip space (-1 to 1) without any upstream trasnform
+  // Meaning if the diagram clip space is 0, 4, then the offset will be
+  // doubled.
   offset: Point;
   fontFamily: string;
   fontWeight: string;
