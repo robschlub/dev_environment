@@ -848,45 +848,16 @@ class DiagramElementPrimative extends DiagramElement {
     const min = new g2.Point(0, 0);
     const max = new g2.Point(0, 0);
     let firstTime = true;
-    // const border = [];
-    // if (this.vertices instanceof TextObject) {
-    //   const text = this.vertices;
-    //   const { ctx, ratio } = text.drawContext2D;
-    //   const location = text.lastDrawPoint;
-    //   const size = text.pixelSize;
-    //   const border = [];
-    //   const pixelToClip = (pixel) => {
-    //     const x = pixel / ctx.canvas.width * ratio *
-    //       this.diagramLimits.width + this.diagramLimits.left;
-    //     const y = -(pixel / ctx.canvas.height * ratio *
-    //       this.diagramLimits.height - this.diagramLimits.top);
-    //     return new g2.Point(x, y);
-    //   };
-    //   border.push(pixelToClip(location
-    //     .add(new g2.Point(-size.left, -size.top))));
-    //   border.push(pixelToClip(location
-    //     .add(new g2.Point(size.right, -size.top))));
-    //   border.push(pixelToClip(location
-    //     .add(new g2.Point(size.right, size.bottom))));
-    //   border.push(pixelToClip(location
-    //     .add(new g2.Point(-size.left, size.bottom))));
-    //   border.push(pixelToClip(location
-    //     .add(new g2.Point(-size.left, -size.top))));
 
-    // const xPixel = (clipLocation.x - this.diagramLimits.left) /
-    //   this.diagramLimits.width * ctx.canvas.width / ratio;
-    // const yPixel = (this.diagramLimits.top - clipLocation.y) /
-    //   this.diagramLimits.height * ctx.canvas.height / ratio;
-    // if (new g2.Point(xPixel, yPixel).isInPolygon(border)) {
-    //   return true;
-    // }
-    // } else {
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
+      // first generate the border
       const border = [];
       if (this.vertices instanceof TextObject) {
         const text = this.vertices;
         const { ctx, ratio } = text.drawContext2D;
         const size = text.pixelSize;
+        const location = text.location.transformBy(transformMatrix);
+        // location = location.transformBy(transformMatrix);
         const pixelToClip = (pixel) => {
           const x = pixel.x / ctx.canvas.width * ratio *
             this.diagramLimits.width;
@@ -894,16 +865,17 @@ class DiagramElementPrimative extends DiagramElement {
             this.diagramLimits.height);
           return new g2.Point(x, y);
         };
-        border.push(pixelToClip(new g2.Point(-size.left, -size.top)));
-        border.push(pixelToClip(new g2.Point(size.right, -size.top)));
-        border.push(pixelToClip(new g2.Point(size.right, size.bottom)));
-        border.push(pixelToClip(new g2.Point(-size.left, size.bottom)));
-        border.push(pixelToClip(new g2.Point(-size.left, -size.top)));
+        border.push(pixelToClip(new g2.Point(-size.left, -size.top)).add(location));
+        border.push(pixelToClip(new g2.Point(size.right, -size.top)).add(location));
+        border.push(pixelToClip(new g2.Point(size.right, size.bottom)).add(location));
+        border.push(pixelToClip(new g2.Point(-size.left, size.bottom)).add(location));
+        border.push(pixelToClip(new g2.Point(-size.left, -size.top)).add(location));
       } else {
         for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
           border.push(this.vertices.border[m][i].transformBy(transformMatrix));
         }
       }
+      // Go through the border and find the max/min rectangle bounding box
       for (let i = 0, j = border.length; i < j; i += 1) {
         const vertex = border[i];
         if (firstTime) {

@@ -81,7 +81,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     const arrowVertices = new Arrow(webgl);
 
-    const textObject = new TextObject(ctx, 'Hello World!');
+    const textObject = new TextObject(ctx, 'Hello World!', new Point(1, 1));
 
     this.add('helloText', new DiagramElementPrimative(
       textObject,
