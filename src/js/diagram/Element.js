@@ -4,7 +4,7 @@ import * as g2 from './g2';
 import * as m2 from './m2';
 import * as tools from './mathtools';
 // import GlobalVariables from './globals';
-import VertexObject from './vertexObjects/vertexObject';
+// import VertexObject from './vertexObjects/vertexObject';
 import DrawingObject from './DrawingObject';
 
 // Planned Animation
@@ -727,7 +727,7 @@ class DiagramElementPrimative extends DiagramElement {
   angleToDraw: number;
 
   constructor(
-    vertexObject: DrawingObject,
+    drawingObject: DrawingObject,
     transform: g2.Transform = new g2.Transform()
       .scale(1, 1)
       .rotate(0)
@@ -736,7 +736,7 @@ class DiagramElementPrimative extends DiagramElement {
     diagramLimits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
   ) {
     super(transform, diagramLimits);
-    this.vertices = vertexObject;
+    this.vertices = drawingObject;
     this.color = color;
     this.pointsToDraw = -1;
     this.angleToDraw = -1;

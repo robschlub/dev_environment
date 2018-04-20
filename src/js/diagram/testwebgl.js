@@ -223,6 +223,12 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().scale(1, 1).rotate(0).translate(3, 1),
       diagramLimits,
     );
+    // $FlowFixMe
+    plot._trace1.isTouchable = true;
+    // $FlowFixMe
+    plot._trace1.isMovable = true;
+    plot.isTouchable = true;
+    plot.isMovable = true;
     this.add('plot', plot);
   }
 }
@@ -295,7 +301,8 @@ function testgl(id: string) {
   // diagram.elements._xAxis1.pulseNow(2, 1.5);
   // diagram.elements._xAxis1._majorTicks.pulseScaleNow(2, 1.4)
   // or
-  // diagram.elements._square.pulseThickNow(5, 1.2, 7);
+  // diagram.elements._plot._trace1.pulseThickNow(5, 1.2, 7);
+  // diagram.elements._plot._trace1.pulseNow(2, 1.5);
   // or
   // diagram.elements.startMovingFreely();
   // diagram.elements.animateRotationTo(1, -1, 10);

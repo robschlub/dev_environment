@@ -25,7 +25,6 @@ class Axis extends DiagramElementCollection {
       minorTicks, majorTicks,
       minorGrid, majorGrid,
     } = this.props;
-
     if (majorTicks.mode === 'auto') {
       this.props.generateAutoMajorTicks();
     }

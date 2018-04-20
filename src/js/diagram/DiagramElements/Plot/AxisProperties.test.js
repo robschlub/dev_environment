@@ -1,5 +1,5 @@
 import { AxisProperties } from './AxisProperties';
-import { Point } from '../../g2';
+// import { Point } from '../../g2';
 
 describe('Axis Properties', () => {
   describe('Get major and minor num', () => {

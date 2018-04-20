@@ -71,7 +71,7 @@ class TextObject extends DrawingObject {
     const { ctx } = this.drawContext2D;
 
     ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
-    console.log(`${this.fontWeight} ${this.fontSize} ${this.fontFamily}`)
+    // console.log(`${this.fontWeight} ${this.fontSize} ${this.fontFamily}`)
     ctx.textAlign = this.align[0];    // eslint-disable-line
     ctx.textBaseline = this.align[1]; // eslint-disable-line
 
@@ -97,5 +97,4 @@ class TextObject extends DrawingObject {
 }
 
 export default TextObject;
-
 // Transform -1 to 1 space to 0 to width/height space

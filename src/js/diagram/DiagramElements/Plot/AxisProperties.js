@@ -82,35 +82,6 @@ class AxisProperties {
   minorTicks: TickProperties;
   majorGrid: GridProperties;
   minorGrid: GridProperties;
-  // majorTicks: boolean;
-  // majorTicksStart: number
-  // majorTickSpacing: number;
-  // majorTickLength: number;
-  // majorTickWidth: number;
-  // majorTickColor: Array<number>;
-  // majorTickLabels: Array<string>;
-  // majorTickOffset: number;
-  // majorTickLabelOffset: number;
-  // majorGrid: boolean;
-  // majorGridLength: number;
-  // majorGridWidth: number;
-  // majorGridColor: Array<number>;
-  // minorTicks: boolean;
-  // minorTicksStart: number;
-  // minorTickSpacing: number;
-  // minorTickLength: number;
-  // minorTickWidth: number;
-  // minorTickColor: Array<number>;
-  // minorTickLabels: Array<string>;
-  // minorTickOffset: number;
-  // minorTickLabelOffset: number;
-  // minorGrid: boolean;
-  // minorGridLength: number;
-  // minorGridWidth: number;
-  // minorGridColor: Array<number>;
-  // labelHAlign: string;
-  // labelVAlign: string;
-  // labelOffset: Point;
 
 
   constructor(name: string = '', rotation: number = 0) {
@@ -133,36 +104,6 @@ class AxisProperties {
     this.minorTicks.labelMode = 'off';
     this.majorGrid = new GridProperties();
     this.minorGrid = new GridProperties();
-    // this.majorTicks =
-    // this.majorTicks = true;
-    // this.majorTicksStart = 0;
-    // this.majorTickSpacing = 0.2;
-    // this.majorTickLength = 0.05;
-    // this.majorTickWidth = 0.016;
-    // this.majorTickColor = [0.5, 0.5, 0.5, 1];
-    // this.majorTickLabels = [];
-    // this.majorTickOffset = 0;
-    // this.majorTickLabelOffset = -0.5;
-    // this.majorGrid = true;
-    // this.majorGridLength = 1;
-    // this.majorGridWidth = 0.008;
-    // this.majorGridColor = [0.7, 0.7, 0.7, 1];
-    // this.minorTicks = true;
-    // this.minorTicksStart = 0;
-    // this.minorTickSpacing = 0.04;
-    // this.minorTickLength = 0.02;
-    // this.minorTickWidth = 0.008;
-    // this.minorTickColor = [0.5, 0.5, 0.5, 1];
-    // this.minorTickLabels = [];
-    // this.minorTickOffset = 0;
-    // this.minorTickLabelOffset = -0.5;
-    // this.minorGrid = true;
-    // this.minorGridLength = 1;
-    // this.minorGridWidth = 0.008;
-    // this.minorGridColor = [0.9, 0.9, 0.9, 1];
-    // this.labelHAlign = 'center';
-    // this.labelVAlign = 'top';
-    // this.labelOffset = new Point(0, -0.05);
   }
   getNum(start: number, step: number) {
     return Math.floor((this.limits.max - start) /
@@ -170,13 +111,9 @@ class AxisProperties {
   }
   getMajorNum() {
     return this.getNum(this.majorTicks.start, this.majorTicks.step);
-    // return Math.floor((this.limits.max - this.majorTicks.start) /
-    //       this.majorTicks.step) + 1;
   }
   getMinorNum() {
     return this.getNum(this.minorTicks.start, this.minorTicks.step);
-    // return Math.floor((this.limits.max - this.minorTicks.start) /
-    //       this.minorTicks.step) + 1;
   }
   generateAuto(approximateNum: number = 10) {
     // const approximateNum = 10;
