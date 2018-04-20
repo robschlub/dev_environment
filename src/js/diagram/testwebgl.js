@@ -240,8 +240,8 @@ class ShapesCollection extends DiagramElementCollection {
     // plot._trace1.isTouchable = true;
     // $FlowFixMe
     // plot._trace1.isMovable = true;
-    // plot.isTouchable = true;
-    // plot.isMovable = true;
+    plot.isTouchable = true;
+    plot.isMovable = true;
     this.add('plot', plot);
   }
 }

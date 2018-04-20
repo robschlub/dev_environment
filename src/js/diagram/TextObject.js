@@ -5,6 +5,7 @@ import * as m2 from './m2';
 import { Point } from './g2';
 import DrawingObject from './DrawingObject';
 import DrawContext2D from './DrawContext2D';
+// import { roundNum } from './mathtools';
 
 // Base clase of all objects made from verteces for webgl.
 // The job of a VertexObject is to:
@@ -113,11 +114,16 @@ class TextObject extends DrawingObject {
     ctx.textAlign = this.align[0];    // eslint-disable-line
     ctx.textBaseline = this.align[1]; // eslint-disable-line
 
-    this.drawContext2D.ctx.fillStyle = `rgba(${color[0] * 255},${color[1] * 255},${color[2] * 255},${color[3] * 255})`;
+    ctx.fillStyle = `rgba(
+      ${Math.floor(color[0] * 255)},
+      ${Math.floor(color[1] * 255)},
+      ${Math.floor(color[2] * 255)},
+      ${Math.floor(color[3] * 255)})`;
     // this.drawContext2D.ctx.save();
     const p = this.clipToElementPixels(transformedLocation.add(this.offset));
     this.lastDrawPoint = p;
-    this.drawContext2D.ctx.fillText(this.text, p.x, p.y);
+    // ctx.fillStyle = 'rgb(0, 0, 0)'
+    ctx.fillText(this.text, p.x, p.y);
   }
   calcPixelSize() {
     const { ctx } = this.drawContext2D;
