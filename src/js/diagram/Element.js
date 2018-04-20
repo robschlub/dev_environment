@@ -4,7 +4,8 @@ import * as g2 from './g2';
 import * as m2 from './m2';
 import * as tools from './mathtools';
 // import GlobalVariables from './globals';
-// import VertexObject from './vertexObjects/vertexObject';
+import VertexObject from './vertexObjects/vertexObject';
+import TextObject from './TextObject';
 import DrawingObject from './DrawingObject';
 
 // Planned Animation
@@ -266,6 +267,14 @@ class DiagramElement {
     const transform = new g2.Transform().scale(scaleX, scaleY).translate(biasX, biasY);
     return vertex.transformBy(this.lastDrawTransformMatrix)
       .transformBy(transform.matrix());
+  }
+  textVertexToClip(vertex: g2.Point) {
+    const scaleX = this.diagramLimits.width / 2;
+    const scaleY = this.diagramLimits.height / 2;
+    const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
+    const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
+    const transform = new g2.Transform().scale(scaleX, scaleY).translate(biasX, biasY);
+    return vertex.transformBy(transform.matrix());
   }
 
   // Calculate the next transform due to a progressing animation
@@ -749,12 +758,30 @@ class DiagramElementPrimative extends DiagramElement {
     }
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       const border = [];
-      for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-        border.push(this.vertexToClip(this.vertices.border[m][i]));
-      }
-      // console.log(border)
-      if (clipLocation.isInPolygon(border)) {
-        return true;
+      if (this.vertices instanceof TextObject) {
+        const text = this.vertices;
+        const { ctx, ratio } = text.drawContext2D;
+        const location = text.lastDrawPoint;
+        const size = text.pixelSize;
+        border.push(location.add(new g2.Point(-size.left, -size.top)));
+        border.push(location.add(new g2.Point(size.right, -size.top)));
+        border.push(location.add(new g2.Point(size.right, size.bottom)));
+        border.push(location.add(new g2.Point(-size.left, size.bottom)));
+        border.push(location.add(new g2.Point(-size.left, -size.top)));
+        const xPixel = (clipLocation.x - this.diagramLimits.left) /
+          this.diagramLimits.width * ctx.canvas.width / ratio;
+        const yPixel = (this.diagramLimits.top - clipLocation.y) /
+          this.diagramLimits.height * ctx.canvas.height / ratio;
+        if (new g2.Point(xPixel, yPixel).isInPolygon(border)) {
+          return true;
+        }
+      } else {
+        for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
+          border.push(this.vertexToClip(this.vertices.border[m][i]));
+        }
+        if (clipLocation.isInPolygon(border)) {
+          return true;
+        }
       }
     }
     return false;

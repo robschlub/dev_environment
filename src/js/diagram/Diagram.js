@@ -177,7 +177,7 @@ class Diagram {
     if (this.draw2D) {
       this.draw2D.ctx.clearRect(0, 0, this.draw2D.ctx.canvas.width, this.draw2D.ctx.canvas.height);
       this.draw2D.ctx.font = '200 16px Helvetica Neue';
-      this.draw2D.ctx.fillText('hello', 50, 17);
+      this.draw2D.ctx.fillText('hello', 70, 17);
     }
   }
 

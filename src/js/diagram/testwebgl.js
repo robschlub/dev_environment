@@ -5,6 +5,7 @@ import PolyLineCorners from './vertexObjects/PolyLineCorners';
 import PolyLine from './vertexObjects/PolyLine';
 import Arrow from './vertexObjects/Arrow';
 import RadialLines from './vertexObjects/RadialLines';
+import TextObject from './TextObject';
 // import HorizontalLine from './vertexObjects/HorizontalLine';
 import { Transform, Point, TransformLimit } from './g2';
 import GLParallelLines from './vertexObjects/glParallelLines';
@@ -79,6 +80,18 @@ class ShapesCollection extends DiagramElementCollection {
     // const xMinorTicks = new GLParallelLines(webgl, 50,)
 
     const arrowVertices = new Arrow(webgl);
+
+    const textObject = new TextObject(ctx, 'Hello World!');
+
+    this.add('helloText', new DiagramElementPrimative(
+      textObject,
+      new Transform().scale(1.0, 1.0).rotate(0).translate(1, 1),
+      [0, 0, 1, 1], diagramLimits,
+    ));
+    // $FlowFixMe
+    const hw = this._helloText;
+    hw.isTouchable = true;
+    hw.isMovable = true;
 
     this.add('square', new DiagramElementPrimative(
       square,
@@ -218,18 +231,18 @@ class ShapesCollection extends DiagramElementCollection {
     const plotProps = new CartesianPlotProperties();
     plotProps.axes = [xProps, yProps];
     plotProps.traces = [trace];
-    const plot = new CartesianPlot(
-      webgl, ctx, plotProps,
-      new Transform().scale(1, 1).rotate(0).translate(3, 1),
-      diagramLimits,
-    );
-    // $FlowFixMe
-    plot._trace1.isTouchable = true;
-    // $FlowFixMe
-    plot._trace1.isMovable = true;
-    plot.isTouchable = true;
-    plot.isMovable = true;
-    this.add('plot', plot);
+    // const plot = new CartesianPlot(
+    //   webgl, ctx, plotProps,
+    //   new Transform().scale(1, 1).rotate(0).translate(3, 1),
+    //   diagramLimits,
+    // );
+    // // $FlowFixMe
+    // plot._trace1.isTouchable = true;
+    // // $FlowFixMe
+    // plot._trace1.isMovable = true;
+    // plot.isTouchable = true;
+    // plot.isMovable = true;
+    // this.add('plot', plot);
   }
 }
 
