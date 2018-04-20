@@ -119,10 +119,10 @@ class TextObject extends DrawingObject {
       ${Math.floor(color[1] * 255)},
       ${Math.floor(color[2] * 255)},
       ${Math.floor(color[3] * 255)})`;
-    // this.drawContext2D.ctx.save();
+
     const p = this.clipToElementPixels(transformedLocation.add(this.offset));
     this.lastDrawPoint = p;
-    // ctx.fillStyle = 'rgb(0, 0, 0)'
+
     ctx.fillText(this.text, p.x, p.y);
   }
   calcPixelSize() {

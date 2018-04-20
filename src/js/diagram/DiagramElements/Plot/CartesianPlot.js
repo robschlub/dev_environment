@@ -1,7 +1,7 @@
 // @flow
 
 import { DiagramElementCollection, DiagramElementPrimative } from '../../Element';
-import { Rect, Transform, Point } from '../../g2';
+import { Rect, Transform, Point, Translation } from '../../g2';
 import WebGLInstance from '../../webgl';
 
 // import AxisProperties from './AxisProperties';
@@ -12,6 +12,7 @@ import PolyLine from '../../vertexObjects/PolyLine';
 
 class CartesianPlot extends DiagramElementCollection {
   props: CartesianPlotProperties;
+  boundingBox: { min: Point, max: Point };
 
   constructor(
     webgl: WebGLInstance,
@@ -48,14 +49,53 @@ class CartesianPlot extends DiagramElementCollection {
         diagramLimits,
       ));
     }
+
+    this.boundingBox = this.getRelativeBoundingBox();
+    this.updateMoveTranslationBoundary();
   }
 
-  makeBorder() {
-    const borders = [];
-    for (let i = 0; i < this.props.axes.length; i += 1) {
-      const axis = this.props.axes[i];
-      const p1 = new Point()
+  isBeingTouched(clipLocation: Point) {
+    if (!this.isTouchable) {
+      return false;
     }
+    let { min, max } = this.boundingBox;
+    const t = this.transform.t();
+    if (t instanceof Point) {
+      min = min.add(t);
+      max = max.add(t);
+    }
+    if (clipLocation.x <= max.x
+      && clipLocation.x >= min.x
+      && clipLocation.y <= max.y
+      && clipLocation.y >= min.y) {
+      return true;
+    }
+    return false;
+  }
+
+  getTouched(clipLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
+    if (!this.isTouchable) {
+      return [];
+    }
+    let touched = [];
+    if (this.isBeingTouched(clipLocation)) {
+      touched.push(this);
+      const additionalTouched = super.getTouched(clipLocation);
+      touched = touched.concat(additionalTouched);
+      return touched;
+    }
+    // for (let i = 0; i < this.order.length; i += 1) {
+    //   const element = this.elements[this.order[i]];
+    //   if (element.show === true) {
+    //     touched = touched.concat(element.getTouched(clipLocation));
+    //   }
+    // }
+    // // If there is an element that is touched, then this collection should
+    // // also be touched.
+    // if (touched.length > 0) {
+    //   touched = [this].concat(touched);
+    // }
+    return touched;
   }
 }
 

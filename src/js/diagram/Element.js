@@ -724,6 +724,43 @@ class DiagramElement {
     this.stopBeingMoved();
     this.stopPulsing();
   }
+
+  getRelativeBoundingBox() {
+    return {
+      min: new g2.Point(
+        this.diagramLimits.left,
+        this.diagramLimits.top,
+      ),
+      max: new g2.Point(
+        this.diagramLimits.left + this.diagramLimits.width,
+        this.diagramLimits.top - this.diagramLimits.height,
+      ),
+    };
+  }
+  updateMoveTranslationBoundary(
+    bounday: Array<number> = [
+      this.diagramLimits.left,
+      this.diagramLimits.top - this.diagramLimits.height,
+      this.diagramLimits.left + this.diagramLimits.width,
+      this.diagramLimits.top],
+    scale: g2.Point = new g2.Point(1, 1),
+  ): void {
+    const { min, max } = this.getRelativeBoundingBox();
+
+    max.x = bounday[2] - max.x * scale.x;
+    max.y = bounday[3] - max.y * scale.y;
+    min.x = bounday[0] - min.x * scale.x;
+    min.y = bounday[1] - min.y * scale.y;
+
+    this.move.maxTransform.updateTranslation(
+      max.x,
+      max.y,
+    );
+    this.move.minTransform.updateTranslation(
+      min.x,
+      min.y,
+    );
+  }
 }
 
 // ***************************************************************
@@ -904,31 +941,6 @@ class DiagramElementPrimative extends DiagramElement {
     }
     return { min, max };
   }
-
-  updateMoveTranslationBoundary(
-    bounday: Array<number> = [
-      this.diagramLimits.left,
-      this.diagramLimits.top - this.diagramLimits.height,
-      this.diagramLimits.left + this.diagramLimits.width,
-      this.diagramLimits.top],
-    scale: g2.Point = new g2.Point(1, 1),
-  ): void {
-    const { min, max } = this.getRelativeBoundingBox();
-
-    max.x = bounday[2] - max.x * scale.x;
-    max.y = bounday[3] - max.y * scale.y;
-    min.x = bounday[0] - min.x * scale.x;
-    min.y = bounday[1] - min.y * scale.y;
-
-    this.move.maxTransform.updateTranslation(
-      max.x,
-      max.y,
-    );
-    this.move.minTransform.updateTranslation(
-      min.x,
-      min.y,
-    );
-  }
 }
 
 // ***************************************************************
@@ -1054,6 +1066,33 @@ class DiagramElementCollection extends DiagramElement {
     return false;
   }
 
+  getRelativeBoundingBox() {
+    let min = new g2.Point(0, 0);
+    let max = new g2.Point(0, 0);
+    let firstTime = true;
+    for (let i = 0, j = this.order.length; i < j; i += 1) {
+      const element = this.elements[this.order[i]];
+      const result = element.getBoundingBox();
+      const mn = result.min;
+      const mx = result.max;
+      if (firstTime) {
+        min = mn.copy();
+        max = mx.copy();
+        firstTime = false;
+      } else {
+        min.x = mn.x < min.x ? mn.x : min.x;
+        min.y = mn.y < min.y ? mn.y : min.y;
+        max.x = mx.x > max.x ? mx.x : max.x;
+        max.y = mx.y > max.y ? mx.y : max.y;
+      }
+    }
+    const t = this.transform.copy();
+    t.updateTranslation(0, 0);
+    max = max.transformBy(t.matrix());
+    min = min.transformBy(t.matrix());
+    return { min, max };
+  }
+
   getBoundingBox() {
     let min = new g2.Point(0, 0);
     let max = new g2.Point(0, 0);
@@ -1074,6 +1113,7 @@ class DiagramElementCollection extends DiagramElement {
         max.y = mx.y > max.y ? mx.y : max.y;
       }
     }
+
     max = max.transformBy(this.transform.matrix());
     min = min.transformBy(this.transform.matrix());
     return { min, max };
