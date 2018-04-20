@@ -856,20 +856,30 @@ class DiagramElementPrimative extends DiagramElement {
         const text = this.vertices;
         const { ctx, ratio } = text.drawContext2D;
         const size = text.pixelSize;
-        const location = text.location.transformBy(transformMatrix);
-        // location = location.transformBy(transformMatrix);
-        const pixelToClip = (pixel) => {
+        const pixelToClip = (pixel: g2.Point): g2.Point => {
           const x = pixel.x / ctx.canvas.width * ratio *
             this.diagramLimits.width;
           const y = -(pixel.y / ctx.canvas.height * ratio *
             this.diagramLimits.height);
           return new g2.Point(x, y);
         };
-        border.push(pixelToClip(new g2.Point(-size.left, -size.top)).add(location));
-        border.push(pixelToClip(new g2.Point(size.right, -size.top)).add(location));
-        border.push(pixelToClip(new g2.Point(size.right, size.bottom)).add(location));
-        border.push(pixelToClip(new g2.Point(-size.left, size.bottom)).add(location));
-        border.push(pixelToClip(new g2.Point(-size.left, -size.top)).add(location));
+        const textClipToDiagramClip = (clip: g2.Point): g2.Point => {
+          const x = clip.x * this.diagramLimits.width / 2;
+          const y = clip.y * this.diagramLimits.height / 2;
+          return new g2.Point(x, y);
+        };
+        let location = text.location.transformBy(transformMatrix);
+        location = location.add(textClipToDiagramClip(text.offset));
+        border.push(pixelToClip(new g2.Point(-size.left, -size.top))
+          .add(location));
+        border.push(pixelToClip(new g2.Point(size.right, -size.top))
+          .add(location));
+        border.push(pixelToClip(new g2.Point(size.right, size.bottom))
+          .add(location));
+        border.push(pixelToClip(new g2.Point(-size.left, size.bottom))
+          .add(location));
+        border.push(pixelToClip(new g2.Point(-size.left, -size.top))
+          .add(location));
       } else {
         for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
           border.push(this.vertices.border[m][i].transformBy(transformMatrix));
