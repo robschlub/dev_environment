@@ -17,7 +17,7 @@ import * as tools from './mathtools';
 import TickMarks from './DiagramElements/TickMarks';
 // import Axis from './DiagramElements/Plot/Axis';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
-import CartesianPlotProperties from './DiagramElements/Plot/CartesianPlotProperties';
+import { CartesianPlotProperties, TraceProperties } from './DiagramElements/Plot/CartesianPlotProperties';
 import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
 
 class ShapesCollection extends DiagramElementCollection {
@@ -210,8 +210,14 @@ class ShapesCollection extends DiagramElementCollection {
     // );
 
     // this.add('yAxis1', axis2);
+    const trace = new TraceProperties(
+      'trace1',
+      [0, 0, 1, 1],
+      [new Point(0, 0), new Point(10, 5), new Point(50, 10), new Point(80, 20)],
+    );
     const plotProps = new CartesianPlotProperties();
     plotProps.axes = [xProps, yProps];
+    plotProps.traces = [trace];
     const plot = new CartesianPlot(
       webgl, ctx, plotProps,
       new Transform().scale(1, 1).rotate(0).translate(3, 1),

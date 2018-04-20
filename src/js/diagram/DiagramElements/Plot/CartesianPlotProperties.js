@@ -3,6 +3,22 @@
 import { Point } from '../../g2';
 import { AxisProperties } from './AxisProperties';
 
+class TraceProperties {
+  points: Array<Point>;
+  name: string;
+  color: Array<number>;
+
+  constructor(
+    name: string = '',
+    color: Array<number> = [1, 0, 0, 1],
+    points: Array<Point> = [],
+  ) {
+    this.points = points;
+    this.name = name;
+    this.color = color;
+  }
+}
+
 class CartesianPlotProperties {
   // Clip Space
   start: Point;
@@ -14,7 +30,7 @@ class CartesianPlotProperties {
 
   axes: Array<AxisProperties>;
 
-  // traces: Array<TraceProperties>;
+  traces: Array<TraceProperties>;
 
   constructor() {
     this.start = new Point(0, 0);
@@ -25,7 +41,9 @@ class CartesianPlotProperties {
       new AxisProperties('x', 0),
       new AxisProperties('y', Math.PI / 2),
     ];
+    this.traces = [];
   }
 }
 
-export default CartesianPlotProperties;
+export { CartesianPlotProperties, TraceProperties };
+
