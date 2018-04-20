@@ -886,11 +886,7 @@ class DiagramElementPrimative extends DiagramElement {
       if (this.vertices instanceof TextObject) {
         const text = this.vertices;
         const { ctx, ratio } = text.drawContext2D;
-        let location = text.location.transformBy(transformMatrix);
-        location = location.add(text.offset);
-        location = new g2.Point(0, 0);
         const size = text.pixelSize;
-        console.log("size", size)
         const pixelToClip = (pixel) => {
           const x = pixel.x / ctx.canvas.width * ratio *
             this.diagramLimits.width;
@@ -898,12 +894,11 @@ class DiagramElementPrimative extends DiagramElement {
             this.diagramLimits.height);
           return new g2.Point(x, y);
         };
-        border.push(location.add(pixelToClip(new g2.Point(-size.left, -size.top))));
-        border.push(location.add(pixelToClip(new g2.Point(size.right, -size.top))));
-        border.push(location.add(pixelToClip(new g2.Point(size.right, size.bottom))));
-        border.push(location.add(pixelToClip(new g2.Point(-size.left, size.bottom))));
-        border.push(location.add(pixelToClip(new g2.Point(-size.left, -size.top))));
-        console.log(border)
+        border.push(pixelToClip(new g2.Point(-size.left, -size.top)));
+        border.push(pixelToClip(new g2.Point(size.right, -size.top)));
+        border.push(pixelToClip(new g2.Point(size.right, size.bottom)));
+        border.push(pixelToClip(new g2.Point(-size.left, size.bottom)));
+        border.push(pixelToClip(new g2.Point(-size.left, -size.top)));
       } else {
         for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
           border.push(this.vertices.border[m][i].transformBy(transformMatrix));
