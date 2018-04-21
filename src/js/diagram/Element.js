@@ -20,10 +20,7 @@ class AnimationPhase {
   deltaTransform: Transform;       // Transform delta from start to target
 
   constructor(
-    transform: Transform = new Transform()
-      .scale(1, 1)
-      .rotate(0)
-      .translate(0, 0),
+    transform: Transform = new Transform(),
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
@@ -154,10 +151,7 @@ class DiagramElement {
     // translation: Point = Point.zero(),
     // rotation: number = 0,
     // scale: Point = Point.Unity(),
-    transform: Transform = new Transform()
-      .scale(1, 1)
-      .rotate(0)
-      .translate(0, 0),
+    transform: Transform = new Transform(),
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
     this.transform = transform.copy();
@@ -286,8 +280,9 @@ class DiagramElement {
     const percentComplete = phase.animationStyle(percentTime);
 
     const p = percentComplete;
-    let next = new Transform();
-    next = start.add(delta.mul(next.scale(p, p).rotate(p).translate(p, p)));
+    let next = delta.copy().constant(p);
+
+    next = start.add(delta.mul(next));
     return next;
   }
 
@@ -774,10 +769,7 @@ class DiagramElementPrimative extends DiagramElement {
 
   constructor(
     drawingObject: DrawingObject,
-    transform: Transform = new Transform()
-      .scale(1, 1)
-      .rotate(0)
-      .translate(0, 0),
+    transform: Transform = new Transform(),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
@@ -952,10 +944,7 @@ class DiagramElementCollection extends DiagramElement {
   // biasTransform: Array<number>;
 
   constructor(
-    transform: Transform = new Transform()
-      .scale(1, 1)
-      .rotate(0)
-      .translate(0, 0),
+    transform: Transform = new Transform(),
     diagramLimits: Rect = new Rect(-1, 1, 2, 2),
   ): void {
     super(transform, diagramLimits);

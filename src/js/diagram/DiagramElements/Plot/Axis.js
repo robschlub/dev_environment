@@ -16,7 +16,7 @@ class Axis extends DiagramElementCollection {
     webgl: WebGLInstance,
     drawContext2D: DrawContext2D,
     axisProperties: AxisProperties = new AxisProperties(),
-    transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    transform: Transform = new Transform(),
     diagramLimits: Rect = new Rect(-1, 1, 2, 2),
   ) {
     super(transform, diagramLimits);
@@ -64,7 +64,7 @@ class Axis extends DiagramElementCollection {
     const axis = new VAxis(webgl, axisProperties);
     this.add('line', new DiagramElementPrimative(
       axis,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      new Transform(),
       axisProperties.color,
       diagramLimits,
     ));
@@ -85,7 +85,7 @@ class Axis extends DiagramElementCollection {
     title.rotation = this.props.titleRotation;
     this.add('title', new DiagramElementPrimative(
       title,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      new Transform(),
       [0.5, 0.5, 0.5, 1],
       diagramLimits,
     ));

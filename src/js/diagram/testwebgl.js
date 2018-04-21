@@ -85,7 +85,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('helloText', new DiagramElementPrimative(
       textObject,
-      new Transform().scale(1.0, 1.0).rotate(0).translate(1, 1),
+      new Transform().translate(1, 1),
       [0, 0, 1, 1], diagramLimits,
     ));
     // $FlowFixMe
@@ -105,7 +105,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('triangle', new DiagramElementPrimative(
       triangle,
-      new Transform().scale(1.5, 1.5).rotate(0).translate(2, 1),
+      new Transform().scale(1.5, 1.5).translate(2, 1),
       [0, 1, 0, 1], diagramLimits,
     ));
     // $FlowFixMe
@@ -115,7 +115,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('corners', new DiagramElementPrimative(
       corners,
-      new Transform().scale(1, 1).rotate(0).translate(0.5, 0.5),
+      new Transform().translate(0.5, 0.5),
       [1, 0, 0, 1], diagramLimits,
     ));
     // $FlowFixMe
@@ -125,7 +125,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('pline', new DiagramElementPrimative(
       polyLine,
-      new Transform().scale(1, 1).rotate(0).translate(1, 2),
+      new Transform().translate(1, 2),
       [1, 1, 0, 1], diagramLimits,
     ));
     // $FlowFixMe
@@ -135,7 +135,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('arrow', new DiagramElementPrimative(
       arrowVertices,
-      new Transform().scale(0.7, 0.4).rotate(0).translate(0.5, 1),
+      new Transform().scale(0.7, 0.4).translate(0.5, 1),
       [1, 1, 0, 1], diagramLimits,
     ));
     // $FlowFixMe
@@ -145,7 +145,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('radial', new DiagramElementPrimative(
       radialVertices,
-      new Transform().scale(1, 1).rotate(0).translate(2, 1),
+      new Transform().translate(2, 1),
       [1, 1, 0, 1], diagramLimits,
     ));
     // $FlowFixMe
@@ -160,7 +160,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     this.add('xAxis', new DiagramElementPrimative(
       xTicks,
-      new Transform().scale(1, 1).rotate(0).translate(0.2, 0.2),
+      new Transform().translate(0.2, 0.2),
       [0.5, 0.5, 0.5, 1],
       diagramLimits,
     ));
@@ -238,7 +238,7 @@ class ShapesCollection extends DiagramElementCollection {
     plotProps.traces = [trace];
     const plot = new CartesianPlot(
       webgl, ctx, plotProps,
-      new Transform().scale(1, 1).rotate(0).translate(3, 1),
+      new Transform().translate(3, 1),
       diagramLimits,
     );
     // $FlowFixMe
@@ -258,7 +258,7 @@ class Diagram1 extends Diagram {
     this.elements = new ShapesCollection(
       this.webgl,
       this.draw2D,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      new Transform().rotate(0).translate(0, 0),
       this.limits,
     );
   }
@@ -277,12 +277,12 @@ function testgl(id: string) {
   // console.log(diagram.clipPerPixel());
   // eslint-disable-next-line
   const phase1 = new AnimationPhase(
-    new Transform().scale(1, 1).rotate(1).translate(0, 0),
+    new Transform().rotate(1),
     5, -1, tools.easeinout,
   );
   // eslint-disable-next-line
   const phase2 = new AnimationPhase(
-    new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    new Transform().rotate(0),
     5, 1, tools.easeinout,
   );
 
@@ -293,7 +293,7 @@ function testgl(id: string) {
   diagram.elements.pulse.time = 4;
 
   diagram.elements.state.movement.velocity = new Transform()
-    .scale(0, 0).rotate(0).translate(1, 0);
+    .rotate(0).translate(1, 0);
   // diagram.elements.moveState.previous = diagram.elements.transform;
   diagram.elements.move.freely.deceleration = new TransformLimit(0.1, 0.1, 0.1);
 
@@ -319,10 +319,10 @@ function testgl(id: string) {
   // diagram.elements._xAxis1.pulseNow(2, 1.5);
   // diagram.elements._xAxis1._majorTicks.pulseScaleNow(2, 1.4)
   // or
-  // diagram.elements._plot._trace1.pulseThickNow(5, 1.2, 7);
+  // diagram.elements._plot._trace1.pulseThickNow(5, 1.05, 7);
   // diagram.elements._plot._trace1.pulseNow(2, 1.5);
   // or
-  // diagram.elements.startMovingFreely();
+  diagram.elements.startMovingFreely();
   // diagram.elements.animateRotationTo(1, -1, 10);
 
   // $FlowFixMe
