@@ -191,6 +191,8 @@ class ShapesCollection extends DiagramElementCollection {
     xProps.minorTicks.fontSize = '10px';
     xProps.majorGrid.width = 0.008;
     xProps.minorGrid.width = 0.004;
+    xProps.title = 'This is a title';
+    xProps.titleOffset = new Point(0.5, -0.2);
     // const axis1 = new Axis(
     //   webgl, ctx, xProps,
     //   new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
@@ -216,6 +218,9 @@ class ShapesCollection extends DiagramElementCollection {
     yProps.majorTicks.labelsVAlign = 'middle';
     yProps.majorGrid.width = xProps.majorGrid.width;
     yProps.minorGrid.width = xProps.minorGrid.width;
+    yProps.title = 'This is a title';
+    yProps.titleRotation = 3 * Math.PI / 2;
+    yProps.titleOffset = new Point(0.25, 0.2);
     // const axis2 = new Axis(
     //   webgl, ctx, yProps,
     //   new Transform().scale(1, 1).rotate(0).translate(3, 1),

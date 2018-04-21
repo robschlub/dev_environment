@@ -1,7 +1,7 @@
 // @flow
 
 import { DiagramElementCollection, DiagramElementPrimative } from '../../Element';
-import { Rect, Transform, Point, Translation } from '../../g2';
+import { Rect, Transform, Point } from '../../g2';
 import WebGLInstance from '../../webgl';
 
 // import AxisProperties from './AxisProperties';
@@ -60,6 +60,7 @@ class CartesianPlot extends DiagramElementCollection {
     }
     let { min, max } = this.boundingBox;
     const t = this.transform.t();
+
     if (t instanceof Point) {
       min = min.add(t);
       max = max.add(t);

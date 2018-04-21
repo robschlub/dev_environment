@@ -75,13 +75,19 @@ class AxisProperties {
   width: number;
   rotation: number;
   color: Array<number>;
-  label: string;
+  title: string;
+  titleOffset: Point;
+  titleRotation: number;
   logarithmic: boolean;
   limits: { max: number, min: number };
   majorTicks: TickProperties;
   minorTicks: TickProperties;
   majorGrid: GridProperties;
   minorGrid: GridProperties;
+
+  titleFontFamily: string;
+  titleFontWeight: string;
+  titleFontSize: string;
 
 
   constructor(name: string = '', rotation: number = 0) {
@@ -95,7 +101,9 @@ class AxisProperties {
 
 
     this.color = [0.5, 0.5, 0.5, 1];
-    this.label = '';
+    this.title = '';
+    this.titleOffset = new Point(this.length / 2, -0.1);
+    this.titleRotation = 0;
     this.limits = { min: 0, max: 1 };
     this.logarithmic = false;
 
@@ -104,6 +112,10 @@ class AxisProperties {
     this.minorTicks.labelMode = 'off';
     this.majorGrid = new GridProperties();
     this.minorGrid = new GridProperties();
+
+    this.titleFontFamily = 'Helvetica Neue';
+    this.titleFontWeight = '200';
+    this.titleFontSize = '14px';
   }
   getNum(start: number, step: number) {
     return Math.floor((this.limits.max - start) /

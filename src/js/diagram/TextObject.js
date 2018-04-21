@@ -36,6 +36,7 @@ class TextObject extends DrawingObject {
     right: number,
     bottom: number,
   };
+  rotation: number;
 
   constructor(
     drawContext2D: DrawContext2D,
@@ -55,6 +56,7 @@ class TextObject extends DrawingObject {
     this.fontSize = '14px';
     this.calcPixelSize();
     this.lastDrawPoint = this.location.add(this.offset);
+    this.rotation = 0;
   }
   updateFont(
     size: string = '14px',
@@ -120,10 +122,20 @@ class TextObject extends DrawingObject {
       ${Math.floor(color[2] * 255)},
       ${Math.floor(color[3] * 255)})`;
 
-    const p = this.clipToElementPixels(transformedLocation.add(this.offset));
-    this.lastDrawPoint = p;
-
-    ctx.fillText(this.text, p.x, p.y);
+    // let p = this.clipToElementPixels(transformedLocation.add(this.offset));
+    const p = this.clipToElementPixels(transformedLocation);
+    ctx.save();
+    if (this.rotation) {
+      ctx.translate(p.x, p.y);
+      ctx.rotate(this.rotation);
+      ctx.translate(-p.x, -p.y);
+    }
+    const q = this.clipToElementPixels(transformedLocation.add(this.offset));
+    // p = p.add(this.clipToElementPixels(this.offset));
+    // p = p.add(this.offset)
+    this.lastDrawPoint = q;
+    ctx.fillText(this.text, q.x, q.y);
+    ctx.restore();
   }
   calcPixelSize() {
     const { ctx } = this.drawContext2D;
