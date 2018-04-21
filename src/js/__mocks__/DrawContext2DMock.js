@@ -15,7 +15,7 @@ class DrawContext2D {
       font: () => {},
       textAlign: () => {},
       textBaseline: () => {},
-      measureText: () => {
+      measureText: () => {    // eslint-disable-line arrow-body-style
         return {
           actualBoundingBoxLeft: 10,
           actualBoundingBoxAscent: 10,
@@ -28,29 +28,3 @@ class DrawContext2D {
 }
 
 export default DrawContext2D;
-
-//     }
-//   }
-//   canvas: {
-//     width = 
-//   }
-//   locations: {
-//     a_position: '',
-//   },
-//   gl: {
-//     TRIANGLES: 1,
-//     TRIANGLE_STRIP: 2,
-//     createBuffer: () => {},
-//     bindBuffer: () => {},
-//     bufferData: () => {},
-//     enableVertexAttribArray: () => {},
-//     vertexAttribPointer: () => {},
-//     uniformMatrix3fv: () => {},
-//     uniform4f: () => {},
-//     drawArrays: () => {},
-//     clearColor: () => {},
-//     clear: () => {},
-//   },
-// };
-
-// export default webgl;

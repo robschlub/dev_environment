@@ -4,7 +4,7 @@ import * as g2 from './g2';
 import * as m2 from './m2';
 import * as tools from './mathtools';
 // import GlobalVariables from './globals';
-import VertexObject from './vertexObjects/vertexObject';
+// import VertexObject from './vertexObjects/vertexObject';
 import TextObject from './TextObject';
 import DrawingObject from './DrawingObject';
 

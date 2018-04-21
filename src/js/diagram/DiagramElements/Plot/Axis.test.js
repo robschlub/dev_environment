@@ -9,6 +9,26 @@ describe('Axis', () => {
   let axis;
   let props;
   beforeEach(() => {
+    const mockCtx = {
+      ratio: 1,
+      ctx: {
+        font: '',
+        textAlgin: '',
+        textBaseline: '',
+        canvas: {
+          width: 100,
+          height: 100,
+        },
+        measureText: () => {  // eslint-disable-line arrow-body-style
+          return {
+            actualBoundingBoxLeft: 0,
+            actualBoundingBoxRight: 0,
+            actualBoundingBoxAscent: 0,
+            actualBoundingBoxDescent: 0,
+          };
+        },
+      },
+    };
     props = new AxisProperties();
     props.start = new Point(0, 0);
     props.length = 1;
@@ -42,7 +62,7 @@ describe('Axis', () => {
     props.minorGrid.length = 1;
     props.minorGrid.width = 0.008;
     props.minorGrid.color = [0.9, 0.9, 0.9, 1];
-    axis = new Axis(webgl, {}, props);
+    axis = new Axis(webgl, mockCtx, props);
   });
   test('Default', () => {
     // console.log(axis.props)

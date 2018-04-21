@@ -177,7 +177,7 @@ class Axis extends DiagramElementCollection {
 
   // getBorder() {
   //   const length = this.props.length;
-  //   const width = this.props.width + 
+  //   const width = this.props.width +
   // }
 }
 

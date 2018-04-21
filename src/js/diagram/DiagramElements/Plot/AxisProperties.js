@@ -114,8 +114,8 @@ class AxisProperties {
     this.minorGrid = new GridProperties();
 
     this.titleFontFamily = 'Helvetica Neue';
-    this.titleFontWeight = '200';
-    this.titleFontSize = '14px';
+    this.titleFontWeight = '400';
+    this.titleFontSize = '16px';
   }
   getNum(start: number, step: number) {
     return Math.floor((this.limits.max - start) /
