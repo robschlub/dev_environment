@@ -1,19 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Canvas Component No props 1`] = `
-<canvas
-  id=""
-/>
+<div
+  id="_container"
+>
+  <canvas
+    className="diagram_gl"
+  />
+  <div
+    className="diagram_html"
+  />
+  <canvas
+    className="diagram_text"
+  />
+</div>
 `;
 
 exports[`Canvas Component With id 1`] = `
-<canvas
-  id="test_id"
-/>
+<div
+  id="test_id_container"
+>
+  <canvas
+    className="diagram_gl"
+  />
+  <div
+    className="diagram_html"
+  />
+  <canvas
+    className="diagram_text"
+  />
+</div>
 `;
 
 exports[`Canvas Component function is called after render 1`] = `
-<canvas
-  id="test_id"
-/>
+<div
+  id="test_id_container"
+>
+  <canvas
+    className="diagram_gl"
+  />
+  <div
+    className="diagram_html"
+  />
+  <canvas
+    className="diagram_text"
+  />
+</div>
 `;

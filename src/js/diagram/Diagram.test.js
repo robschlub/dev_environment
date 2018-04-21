@@ -4,7 +4,7 @@ import {
   // AnimationPhase,
 } from './Element';
 import Diagram from './Diagram';
-import { Point, Transform, TransformLimit, Rect } from './g2';
+import { Point, Transform, TransformLimit, Rect } from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import Polygon from './vertexObjects/Polygon';
 // import { linear, round } from './mathtools';
@@ -13,7 +13,7 @@ import Polygon from './vertexObjects/Polygon';
 // import * as m2 from './m2';
 
 jest.mock('./Gesture');
-jest.mock('./webgl');
+jest.mock('./webgl/webgl');
 
 describe('Diagram', () => {
   let diagrams;
@@ -85,10 +85,25 @@ describe('Diagram', () => {
       const canvasMock = {
         width: definition.width,
         height: definition.height,
-        offsetLeft: 100,
-        offsetTop: 200,
+        // offsetLeft: 100,
+        left: 100,
+        // offsetTop: 200,
+        top: 200,
+        // width: definition.width,
+        // height: definition.height,
         offsetWidth: definition.width,
         offsetHeight: definition.height,
+        scrollLeft: 0,
+        scrollTop: 0,
+        // eslint-disable-next-line arrow-body-style
+        getBoundingClientRect: () => {
+          return {
+            left: 100,
+            top: 200,
+            width: definition.width,
+            height: definition.height,
+          };
+        },
       };
       const { limits } = definition;
       const diagram = new Diagram(canvas, limits);

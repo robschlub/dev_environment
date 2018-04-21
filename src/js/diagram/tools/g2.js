@@ -7,7 +7,7 @@
 //  - normAngle
 
 import { roundNum, decelerate, clipMag, clipValue } from './mathtools';
-import { Console } from '../tools/tools';
+import { Console } from '../../tools/tools';
 import * as m2 from './m2';
 
 // function nullDefaultNum(input: number | null, defaultValue: number): number {
@@ -1155,4 +1155,5 @@ export {
   Transform,
   TransformLimit,
   Rect,
+  Translation,
 };

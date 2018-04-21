@@ -1,7 +1,7 @@
 import PolyLineTriangles from './PolyLineTriangles';
-import { Point } from '../g2';
+import { Point } from '../tools/g2';
 // import webgl from '../../__mocks__/WebGLInstanceMock';
-import { round } from '../mathtools';
+import { round } from '../tools/mathtools';
 
 describe('PolygonFilled', () => {
   let corner;

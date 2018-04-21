@@ -39,11 +39,34 @@ $color-english:            rgb(47, 79, 79);
   colorEnglish: $color-english;
 }
 
-#my_Canvas, #my_Canvas1 {
+#my_Canvas_container, #my_Canvas1_container {
+  position: relative;
+}
+
+.diagram_gl {
   width:  1000px;
   height: 500px;
   border-style: solid;
   border-width: 0;
   margin: 0;
   padding: 0;
+  background-color: white;
+}
+.diagram_html {
+  position: absolute;
+  pointer-events:none;
+  width:  1000px;
+  height: 500px;
+  left: 0px;
+  top: 0px;
+}
+.diagram_text {
+  position: absolute;
+  pointer-events:none;
+  width:  1000px;
+  height: 500px;
+  left: 0px;
+  top: 0px;
+  // background-color: red;
+  // z-index: 10;
 }
