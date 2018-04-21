@@ -1,10 +1,10 @@
 // @flow
 
-import * as g2 from './g2';
+import { Point } from './tools/g2';
 
 class DrawingObject {
   numPoints: number;            // Number of primative vertices
-  border: Array<Array<g2.Point>>; // Border vertices
+  border: Array<Array<Point>>; // Border vertices
 
   constructor() {
     this.numPoints = 0;

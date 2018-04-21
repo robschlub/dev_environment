@@ -1,7 +1,7 @@
 // @flow
 
-import { Point } from '../../g2';
-import { roundNum } from '../../mathtools';
+import { Point } from '../../tools/g2';
+import { roundNum } from '../../tools/mathtools';
 
 const defaultColor = [0.7, 0.7, 0.7, 1];
 

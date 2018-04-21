@@ -1,9 +1,9 @@
 // @flow
 
-import WebGLInstance from './webgl';
+import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
 // import Polygon from './vertexObjects/Polygon';
-import * as g2 from './g2';
+import { Rect, Point, Transform } from './tools/g2';
 // import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
@@ -18,7 +18,7 @@ class Diagram {
   gesture: Gesture;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
-  limits: g2.Rect;
+  limits: Rect;
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
   htmlCanvas: HTMLElement;
@@ -26,7 +26,7 @@ class Diagram {
   constructor(
     // canvas: HTMLCanvasElement,
     containerId: string = 'DiagramContainer',
-    limitsOrxMin: number | g2.Rect = new g2.Rect(-1, -1, 2, 2),
+    limitsOrxMin: number | Rect = new Rect(-1, -1, 2, 2),
     yMin: number = -1,
     width: number = 2,
     height: number = 2,
@@ -62,11 +62,11 @@ class Diagram {
       shaders.fragmentSource,
       shaders.varNames,
     );
-    if (limitsOrxMin instanceof g2.Rect) {
+    if (limitsOrxMin instanceof Rect) {
       const r = limitsOrxMin;
-      this.limits = new g2.Rect(r.left, r.bottom, r.width, r.height);
+      this.limits = new Rect(r.left, r.bottom, r.width, r.height);
     } else {
-      this.limits = new g2.Rect(limitsOrxMin, yMin, width, height);
+      this.limits = new Rect(limitsOrxMin, yMin, width, height);
     }
     this.webgl = webgl;
 
@@ -87,7 +87,7 @@ class Diagram {
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
   // coming to a stop.
-  touchDownHandler(clientPoint: g2.Point) {
+  touchDownHandler(clientPoint: Point) {
     // Get the touched point in clip space
     const clipPoint = this.clientToClip(clientPoint);
 
@@ -129,7 +129,7 @@ class Diagram {
   // by the system. For example, on a touch device, a touch and drag would
   // normally scroll the screen. Typically, you would want to move the diagram
   // element and not the screen, so a true would be returned.
-  touchMoveHandler(previousClientPoint: g2.Point, currentClientPoint: g2.Point): boolean {
+  touchMoveHandler(previousClientPoint: Point, currentClientPoint: Point): boolean {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
@@ -188,7 +188,7 @@ class Diagram {
     // defined in limits.
     const normWidth = 2 / this.limits.width;
     const normHeight = 2 / this.limits.height;
-    const clipTransform = new g2.Transform()
+    const clipTransform = new Transform()
       .scale(normWidth, normHeight)
       .translate(
         (-this.limits.width / 2 - this.limits.left) * normWidth,
@@ -217,9 +217,9 @@ class Diagram {
   //     x: canvasL + canvasW*(x - clipL)/clipW,
   //     y: canvasT + canvasH*(clipT - y)/clipH,
   // }}
-  clipToClient(clip: g2.Point): g2.Point {
+  clipToClient(clip: Point): Point {
     const canvas = this.canvas.getBoundingClientRect();
-    return new g2.Point(
+    return new Point(
       canvas.left + canvas.width *
         (clip.x - this.limits.left) / this.limits.width,
       canvas.top + canvas.height *
@@ -227,7 +227,7 @@ class Diagram {
     );
   }
 
-  clipToPage(clip: g2.Point): g2.Point {
+  clipToPage(clip: Point): Point {
     const canvas = this.canvas.getBoundingClientRect();
     const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
     const scrollTop = window.pageYOffset || this.canvas.scrollTop;
@@ -236,7 +236,7 @@ class Diagram {
       left: canvas.left + scrollLeft,
     };
 
-    return new g2.Point(
+    return new Point(
       canvasPage.left + canvas.width *
         (clip.x - this.limits.left) / this.limits.width,
       canvasPage.top + canvas.height *
@@ -248,9 +248,9 @@ class Diagram {
   //    x: (x - canvasL)/canvasW * clipW + clipL,
   //    y: clipT - (y - canvasT)/canvasH * clipH,
   // }}
-  clientToClip(clientLocation: g2.Point): g2.Point {
+  clientToClip(clientLocation: Point): Point {
     const canvas = this.canvas.getBoundingClientRect();
-    return new g2.Point(
+    return new Point(
       (clientLocation.x - canvas.left) / canvas.width *
         this.limits.width + this.limits.left,
       this.limits.top - (clientLocation.y - canvas.top) /
@@ -258,7 +258,7 @@ class Diagram {
     );
   }
 
-  pageToClip(pageLocation: g2.Point): g2.Point {
+  pageToClip(pageLocation: Point): Point {
     const canvas = this.canvas.getBoundingClientRect();
     const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
     const scrollTop = window.pageYOffset || this.canvas.scrollTop;
@@ -266,7 +266,7 @@ class Diagram {
       top: canvas.top + scrollTop,
       left: canvas.left + scrollLeft,
     };
-    return new g2.Point(
+    return new Point(
       (pageLocation.x - canvasPage.left) / this.canvas.offsetWidth *
         this.limits.width + this.limits.left,
       this.limits.top - (pageLocation.y - canvasPage.top) /
@@ -274,10 +274,10 @@ class Diagram {
     );
   }
 
-  clipPerPixel(): g2.Point {
+  clipPerPixel(): Point {
     const x = this.limits.width / this.canvas.offsetWidth / window.devicePixelRatio;
     const y = this.limits.height / this.canvas.offsetHeight / window.devicePixelRatio;
-    return new g2.Point(x, y);
+    return new Point(x, y);
   }
   /* eslint-disable */
   // autoResize() {

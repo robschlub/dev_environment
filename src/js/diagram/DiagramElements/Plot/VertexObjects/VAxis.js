@@ -2,8 +2,8 @@
 
 import TRIHorizontalLine from '../../../vertexObjects/Triangles/TRIHoriztonalLine';
 import { AxisProperties } from '../AxisProperties';
-import { Point, Transform } from '../../../g2';
-import WebGLInstance from '../../../webgl';
+import { Point, Transform } from '../../../tools/g2';
+import WebGLInstance from '../../../webgl/webgl';
 import VertexObject from '../../../vertexObjects/vertexObject';
 
 class VAxis extends VertexObject {

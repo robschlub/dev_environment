@@ -1,10 +1,10 @@
 // @flow
 
 // import * as g2 from '../g2';
-import * as m2 from './m2';
-import { Point } from './g2';
-import DrawingObject from './DrawingObject';
-import DrawContext2D from './DrawContext2D';
+import * as m2 from '../tools/m2';
+import { Point } from '../tools/g2';
+import DrawingObject from '../DrawingObject';
+import DrawContext2D from '../DrawContext2D';
 // import { roundNum } from './mathtools';
 
 // Base clase of all objects made from verteces for webgl.

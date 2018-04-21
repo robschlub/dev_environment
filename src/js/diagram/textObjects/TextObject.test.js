@@ -1,9 +1,9 @@
 
 import TextObject from './TextObject';
-import { Point } from './g2';
-import DrawContext2D from '../__mocks__/DrawContext2DMock';
+import { Point } from '../tools/g2';
+import DrawContext2D from '../../__mocks__/DrawContext2DMock';
 
-jest.mock('./Gesture');
+jest.mock('../Gesture');
 
 describe('TextObject', () => {
   let drawContext2D;

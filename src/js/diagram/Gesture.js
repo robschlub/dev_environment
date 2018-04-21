@@ -1,5 +1,5 @@
 // @flow
-import { Point } from './g2';
+import { Point } from './tools/g2';
 import Diagram from './Diagram';
 
 class Gesture {

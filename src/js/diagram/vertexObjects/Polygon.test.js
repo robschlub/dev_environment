@@ -1,7 +1,7 @@
 import Polygon from './Polygon';
-import * as g2 from '../g2';
+import * as g2 from '../tools/g2';
 import webgl from '../../__mocks__/WebGLInstanceMock';
-import { round } from '../mathtools';
+import { round } from '../tools/mathtools';
 
 /* eslint-disable comma-spacing,no-multi-spaces,space-in-parens */
 describe('Polygon', () => {

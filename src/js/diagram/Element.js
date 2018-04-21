@@ -1,26 +1,26 @@
 // @flow
 
-import * as g2 from './g2';
-import * as m2 from './m2';
-import * as tools from './mathtools';
+import { Transform, Point, TransformLimit, Rect, Translation } from './tools/g2';
+import * as m2 from './tools/m2';
+import * as tools from './tools/mathtools';
 // import GlobalVariables from './globals';
 // import VertexObject from './vertexObjects/vertexObject';
-import TextObject from './TextObject';
+import TextObject from './textObjects/TextObject';
 import DrawingObject from './DrawingObject';
 
 // Planned Animation
 class AnimationPhase {
-  targetTransform: g2.Transform;            // The target transform to animate to
+  targetTransform: Transform;            // The target transform to animate to
   time: number;                       // animation time
   rotDirection: number;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
 
   startTime: number;                 // Time when phase started
-  startTransform: g2.Transform;       // Transform at start of phase
-  deltaTransform: g2.Transform;       // Transform delta from start to target
+  startTransform: Transform;       // Transform at start of phase
+  deltaTransform: Transform;       // Transform delta from start to target
 
   constructor(
-    transform: g2.Transform = new g2.Transform()
+    transform: Transform = new Transform()
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0),
@@ -34,11 +34,11 @@ class AnimationPhase {
     this.animationStyle = animationStyle;
 
     this.startTime = -1;
-    this.startTransform = new g2.Transform();
-    this.deltaTransform = new g2.Transform();
+    this.startTransform = new Transform();
+    this.deltaTransform = new Transform();
   }
 
-  start(currentTransform: g2.Transform) {
+  start(currentTransform: Transform) {
     this.startTransform = currentTransform.copy();
     this.deltaTransform = this.targetTransform.sub(this.startTransform);
     let rotDiff = this.deltaTransform.r() || 0;
@@ -85,7 +85,7 @@ class AnimationPhase {
 // elements it has.
 //
 class DiagramElement {
-  transform: g2.Transform;        // Transform of diagram element
+  transform: Transform;        // Transform of diagram element
   presetTransforms: Object;       // Convenience dict of transform presets
   lastDrawTransformMatrix: Array<number>; // Transform matrix used in last draw
 
@@ -97,19 +97,19 @@ class DiagramElement {
 
   // Callbacks
   callback: ?(?mixed) => void;             // ending animation or moving freely
-  setTransformCallback: (g2.Transform) => void; // element.transform is updated
+  setTransformCallback: (Transform) => void; // element.transform is updated
 
   animationPlan: Array<AnimationPhase>;    // Animation plan
 
   move: {
-    maxTransform: g2.Transform,
-    minTransform: g2.Transform,
-    maxVelocity: g2.TransformLimit;            // Maximum velocity allowed
+    maxTransform: Transform,
+    minTransform: Transform,
+    maxVelocity: TransformLimit;            // Maximum velocity allowed
     // When moving freely, the velocity decelerates until it reaches a threshold,
   // then it is considered 0 - at which point moving freely ends.
     freely: {                 // Moving Freely properties
-      zeroVelocityThreshold: g2.TransformLimit,  // Velocity considered 0
-      deceleration: g2.TransformLimit,           // Deceleration
+      zeroVelocityThreshold: TransformLimit,  // Velocity considered 0
+      deceleration: TransformLimit,           // Deceleration
     }
   };
 
@@ -121,10 +121,10 @@ class DiagramElement {
     C: number,
     style: (number) => number,
     num: number,
-    transformMethod: (number) => g2.Transform,
+    transformMethod: (number) => Transform,
   };
 
-  diagramLimits: g2.Rect;
+  diagramLimits: Rect;
 
   // Current animation/movement state of element
   state: {
@@ -137,8 +137,8 @@ class DiagramElement {
     isMovingFreely: boolean,
     movement: {
       previousTime: number,
-      previousTransform: g2.Transform,
-      velocity: g2.Transform,           // current velocity - will be clipped
+      previousTransform: Transform,
+      velocity: Transform,           // current velocity - will be clipped
                                         // at max if element is being moved
                                         // faster than max.
     },
@@ -151,14 +151,14 @@ class DiagramElement {
   pulse: Object;                  // Pulse animation state
 
   constructor(
-    // translation: g2.Point = g2.Point.zero(),
+    // translation: Point = Point.zero(),
     // rotation: number = 0,
-    // scale: g2.Point = g2.Point.Unity(),
-    transform: g2.Transform = new g2.Transform()
+    // scale: Point = Point.Unity(),
+    transform: Transform = new Transform()
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0),
-    diagramLimits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
+    diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
@@ -171,22 +171,22 @@ class DiagramElement {
     this.callback = null;
     this.animationPlan = [];
     this.diagramLimits = diagramLimits;
-    //   min: new g2.Point(-1, -1),
-    //   max: new g2.Point(1, 1),
+    //   min: new Point(-1, -1),
+    //   max: new Point(1, 1),
     // }
 
     this.move = {
       maxTransform: this.transform.constant(1000),
       minTransform: this.transform.constant(-1000),
-      maxVelocity: new g2.TransformLimit(5, 5, 5),
+      maxVelocity: new TransformLimit(5, 5, 5),
       freely: {
-        zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
-        deceleration: new g2.TransformLimit(5, 5, 5),
+        zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
+        deceleration: new TransformLimit(5, 5, 5),
       },
     };
     // this.move.freely = {
-    //   zeroVelocityThreshold: new g2.TransformLimit(0.001, 0.001, 0.001),
-    //   deceleration: new g2.TransformLimit(1, 1, 1),
+    //   zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
+    //   deceleration: new TransformLimit(1, 1, 1),
     // };
 
     this.pulse = {
@@ -197,7 +197,7 @@ class DiagramElement {
       C: 0,
       style: tools.sinusoid,
       num: 1,
-      transformMethod: s => new g2.Transform().scale(s, s),
+      transformMethod: s => new Transform().scale(s, s),
     };
 
     this.state = {
@@ -259,26 +259,26 @@ class DiagramElement {
   //     to the clip space.
   //
   // Each diagram element holds a DIAGRAM ELMENT CLIP space
-  vertexToClip(vertex: g2.Point) {
+  vertexToClip(vertex: Point) {
     const scaleX = this.diagramLimits.width / 2;
     const scaleY = this.diagramLimits.height / 2;
     const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
     const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
-    const transform = new g2.Transform().scale(scaleX, scaleY).translate(biasX, biasY);
+    const transform = new Transform().scale(scaleX, scaleY).translate(biasX, biasY);
     return vertex.transformBy(this.lastDrawTransformMatrix)
       .transformBy(transform.matrix());
   }
-  textVertexToClip(vertex: g2.Point) {
+  textVertexToClip(vertex: Point) {
     const scaleX = this.diagramLimits.width / 2;
     const scaleY = this.diagramLimits.height / 2;
     const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
     const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
-    const transform = new g2.Transform().scale(scaleX, scaleY).translate(biasX, biasY);
+    const transform = new Transform().scale(scaleX, scaleY).translate(biasX, biasY);
     return vertex.transformBy(transform.matrix());
   }
 
   // Calculate the next transform due to a progressing animation
-  calcNextAnimationTransform(elapsedTime: number): g2.Transform {
+  calcNextAnimationTransform(elapsedTime: number): Transform {
     const phase = this.state.animation.currentPhase;
     const start = phase.startTransform;
     const delta = phase.deltaTransform;
@@ -286,14 +286,14 @@ class DiagramElement {
     const percentComplete = phase.animationStyle(percentTime);
 
     const p = percentComplete;
-    let next = new g2.Transform();
+    let next = new Transform();
     next = start.add(delta.mul(next.scale(p, p).rotate(p).translate(p, p)));
     return next;
   }
 
   // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
-  setTransform(transform: g2.Transform): void {
+  setTransform(transform: Transform): void {
     this.transform = transform.copy().clip(
       this.move.minTransform,
       this.move.maxTransform,
@@ -411,10 +411,10 @@ class DiagramElement {
       const min = this.move.minTransform.order[i];
       const max = this.move.maxTransform.order[i];
       const v = next.v.order[i];
-      if (t instanceof g2.Translation &&
-          v instanceof g2.Translation &&
-          max instanceof g2.Translation &&
-          min instanceof g2.Translation
+      if (t instanceof Translation &&
+          v instanceof Translation &&
+          max instanceof Translation &&
+          min instanceof Translation
       ) {
         if (min.x >= t.x || max.x <= t.x) {
           v.x = -v.x * 0.5;
@@ -480,7 +480,7 @@ class DiagramElement {
   // **************************************************************
   // Helper functions for quicker animation plans
   animateTo(
-    transform: g2.Transform,
+    transform: Transform,
     time: number = 1,
     rotDirection: number = 0,
     easeFunction: (number) => number = tools.easeinout,
@@ -494,7 +494,7 @@ class DiagramElement {
 
   // With update only first instace of translation in the transform order
   animateTranslationTo(
-    translation: g2.Point,
+    translation: Point,
     time: number = 1,
     easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
@@ -526,7 +526,7 @@ class DiagramElement {
 
   // With update only first instace of rotation in the transform order
   animateTranslationAndRotationTo(
-    translation: g2.Point,
+    translation: Point,
     rotation: number,
     rotDirection: number,
     time: number = 1,
@@ -555,7 +555,7 @@ class DiagramElement {
     this.state.isBeingMoved = true;
   }
 
-  moved(newTransform: g2.Transform): void {
+  moved(newTransform: Transform): void {
     this.calcVelocity(newTransform);
     this.setTransform(newTransform.copy());
   }
@@ -573,7 +573,7 @@ class DiagramElement {
     this.state.movement.previousTime = -1;
   }
 
-  calcVelocity(newTransform: g2.Transform): void {
+  calcVelocity(newTransform: Transform): void {
     const currentTime = Date.now() / 1000;
     if (this.state.movement.previousTime < 0) {
       this.state.movement.previousTime = currentTime;
@@ -727,11 +727,11 @@ class DiagramElement {
 
   getRelativeBoundingBox() {
     return {
-      min: new g2.Point(
+      min: new Point(
         this.diagramLimits.left,
         this.diagramLimits.top,
       ),
-      max: new g2.Point(
+      max: new Point(
         this.diagramLimits.left + this.diagramLimits.width,
         this.diagramLimits.top - this.diagramLimits.height,
       ),
@@ -743,7 +743,7 @@ class DiagramElement {
       this.diagramLimits.top - this.diagramLimits.height,
       this.diagramLimits.left + this.diagramLimits.width,
       this.diagramLimits.top],
-    scale: g2.Point = new g2.Point(1, 1),
+    scale: Point = new Point(1, 1),
   ): void {
     const { min, max } = this.getRelativeBoundingBox();
 
@@ -774,12 +774,12 @@ class DiagramElementPrimative extends DiagramElement {
 
   constructor(
     drawingObject: DrawingObject,
-    transform: g2.Transform = new g2.Transform()
+    transform: Transform = new Transform()
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0),
     color: Array<number> = [0.5, 0.5, 0.5, 1],
-    diagramLimits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
+    diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
     super(transform, diagramLimits);
     this.vertices = drawingObject;
@@ -789,7 +789,7 @@ class DiagramElementPrimative extends DiagramElement {
     this.updateMoveTranslationBoundary();
   }
 
-  isBeingTouched(clipLocation: g2.Point): boolean {
+  isBeingTouched(clipLocation: Point): boolean {
     if (!this.isTouchable) {
       return false;
     }
@@ -800,16 +800,16 @@ class DiagramElementPrimative extends DiagramElement {
         const { ctx, ratio } = text.drawContext2D;
         const location = text.lastDrawPoint;
         const size = text.pixelSize;
-        border.push(location.add(new g2.Point(-size.left, -size.top)));
-        border.push(location.add(new g2.Point(size.right, -size.top)));
-        border.push(location.add(new g2.Point(size.right, size.bottom)));
-        border.push(location.add(new g2.Point(-size.left, size.bottom)));
-        border.push(location.add(new g2.Point(-size.left, -size.top)));
+        border.push(location.add(new Point(-size.left, -size.top)));
+        border.push(location.add(new Point(size.right, -size.top)));
+        border.push(location.add(new Point(size.right, size.bottom)));
+        border.push(location.add(new Point(-size.left, size.bottom)));
+        border.push(location.add(new Point(-size.left, -size.top)));
         const xPixel = (clipLocation.x - this.diagramLimits.left) /
           this.diagramLimits.width * ctx.canvas.width / ratio;
         const yPixel = (this.diagramLimits.top - clipLocation.y) /
           this.diagramLimits.height * ctx.canvas.height / ratio;
-        if (new g2.Point(xPixel, yPixel).isInPolygon(border)) {
+        if (new Point(xPixel, yPixel).isInPolygon(border)) {
           return true;
         }
       } else {
@@ -824,7 +824,7 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  getTouched(clipLocation: g2.Point): Array<DiagramElementPrimative> {
+  getTouched(clipLocation: Point): Array<DiagramElementPrimative> {
     if (!this.isTouchable) {
       return [];
     }
@@ -866,12 +866,12 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  getBoundingBox(): {min: g2.Point, max: g2.Point} {
+  getBoundingBox(): {min: Point, max: Point} {
     const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
     return { min, max };
   }
 
-  getRelativeBoundingBox(): {min: g2.Point, max: g2.Point} {
+  getRelativeBoundingBox(): {min: Point, max: Point} {
     const newTransform = this.transform.copy();
     newTransform.updateTranslation(0, 0);
     const { min, max } = this.getVerticesBoundingBox(newTransform.matrix());
@@ -880,10 +880,10 @@ class DiagramElementPrimative extends DiagramElement {
 
 
   getVerticesBoundingBox(transformMatrix: Array<number> = m2.identity()): {
-    min: g2.Point, max: g2.Point
+    min: Point, max: Point
   } {
-    const min = new g2.Point(0, 0);
-    const max = new g2.Point(0, 0);
+    const min = new Point(0, 0);
+    const max = new Point(0, 0);
     let firstTime = true;
 
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
@@ -893,29 +893,29 @@ class DiagramElementPrimative extends DiagramElement {
         const text = this.vertices;
         const { ctx, ratio } = text.drawContext2D;
         const size = text.pixelSize;
-        const pixelToClip = (pixel: g2.Point): g2.Point => {
+        const pixelToClip = (pixel: Point): Point => {
           const x = pixel.x / ctx.canvas.width * ratio *
             this.diagramLimits.width;
           const y = -(pixel.y / ctx.canvas.height * ratio *
             this.diagramLimits.height);
-          return new g2.Point(x, y);
+          return new Point(x, y);
         };
-        const textClipToDiagramClip = (clip: g2.Point): g2.Point => {
+        const textClipToDiagramClip = (clip: Point): Point => {
           const x = clip.x * this.diagramLimits.width / 2;
           const y = clip.y * this.diagramLimits.height / 2;
-          return new g2.Point(x, y);
+          return new Point(x, y);
         };
         let location = text.location.transformBy(transformMatrix);
         location = location.add(textClipToDiagramClip(text.offset));
-        border.push(pixelToClip(new g2.Point(-size.left, -size.top))
+        border.push(pixelToClip(new Point(-size.left, -size.top))
           .add(location));
-        border.push(pixelToClip(new g2.Point(size.right, -size.top))
+        border.push(pixelToClip(new Point(size.right, -size.top))
           .add(location));
-        border.push(pixelToClip(new g2.Point(size.right, size.bottom))
+        border.push(pixelToClip(new Point(size.right, size.bottom))
           .add(location));
-        border.push(pixelToClip(new g2.Point(-size.left, size.bottom))
+        border.push(pixelToClip(new Point(-size.left, size.bottom))
           .add(location));
-        border.push(pixelToClip(new g2.Point(-size.left, -size.top))
+        border.push(pixelToClip(new Point(-size.left, -size.top))
           .add(location));
       } else {
         for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
@@ -952,11 +952,11 @@ class DiagramElementCollection extends DiagramElement {
   // biasTransform: Array<number>;
 
   constructor(
-    transform: g2.Transform = new g2.Transform()
+    transform: Transform = new Transform()
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0),
-    diagramLimits: g2.Rect = new g2.Rect(-1, 1, 2, 2),
+    diagramLimits: Rect = new Rect(-1, 1, 2, 2),
   ): void {
     super(transform, diagramLimits);
     this.elements = {};
@@ -1044,14 +1044,14 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
-  // updateBias(scale: g2.Point, offset: g2.Point): void {
-  //   this.biasTransform = (new g2.Transform(offset, 0, scale)).matrix();
+  // updateBias(scale: Point, offset: Point): void {
+  //   this.biasTransform = (new Transform(offset, 0, scale)).matrix();
   // }
   // This will only search elements within the collection for a touch
   // if the collection is touchable. Note, the elements can be queried
   // directly still, and will return if they are touched if they themselves
   // are touchable.
-  isBeingTouched(clipLocation: g2.Point) {
+  isBeingTouched(clipLocation: Point) {
     if (!this.isTouchable) {
       return false;
     }
@@ -1067,8 +1067,8 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   getRelativeBoundingBox() {
-    let min = new g2.Point(0, 0);
-    let max = new g2.Point(0, 0);
+    let min = new Point(0, 0);
+    let max = new Point(0, 0);
     let firstTime = true;
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
@@ -1094,8 +1094,8 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   getBoundingBox() {
-    let min = new g2.Point(0, 0);
-    let max = new g2.Point(0, 0);
+    let min = new Point(0, 0);
+    let max = new Point(0, 0);
     let firstTime = true;
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
@@ -1119,7 +1119,7 @@ class DiagramElementCollection extends DiagramElement {
     return { min, max };
   }
 
-  getTouched(clipLocation: g2.Point): Array<DiagramElementPrimative | DiagramElementCollection> {
+  getTouched(clipLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
     if (!this.isTouchable) {
       return [];
     }

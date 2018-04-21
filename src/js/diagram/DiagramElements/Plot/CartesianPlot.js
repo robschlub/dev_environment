@@ -1,8 +1,8 @@
 // @flow
 
 import { DiagramElementCollection, DiagramElementPrimative } from '../../Element';
-import { Rect, Transform, Point } from '../../g2';
-import WebGLInstance from '../../webgl';
+import { Rect, Transform, Point } from '../../tools/g2';
+import WebGLInstance from '../../webgl/webgl';
 
 // import AxisProperties from './AxisProperties';
 import { CartesianPlotProperties } from './CartesianPlotProperties';

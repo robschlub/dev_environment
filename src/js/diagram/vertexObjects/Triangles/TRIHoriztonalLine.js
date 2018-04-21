@@ -1,6 +1,6 @@
 // @flow
 
-import { Point, Transform } from '../../g2';
+import { Point, Transform } from '../../tools/g2';
 
 function TRIHorizontalLine(
   start: Point = new Point(0, 0),

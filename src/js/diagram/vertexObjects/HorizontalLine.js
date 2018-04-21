@@ -1,7 +1,7 @@
 // @flow
 
-import { Point, Transform } from '../g2';
-import WebGLInstance from '../webgl';
+import { Point, Transform } from '../tools/g2';
+import WebGLInstance from '../webgl/webgl';
 import VertexObject from './vertexObject';
 
 class HorizontalLine extends VertexObject {

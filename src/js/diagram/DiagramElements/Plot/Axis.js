@@ -1,13 +1,13 @@
 // @flow
 
 import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
-import { Rect, Transform, Point } from '../../g2';
-import WebGLInstance from '../../webgl';
+import { Rect, Transform, Point } from '../../tools/g2';
+import WebGLInstance from '../../webgl/webgl';
 
 import VAxis from './VertexObjects/VAxis';
 import VTickMarks from './VertexObjects/VTickMarks';
 import { AxisProperties, GridProperties, TickProperties } from './AxisProperties';
-import TextObject from '../../TextObject';
+import TextObject from '../../textObjects/TextObject';
 import DrawContext2D from '../../DrawContext2D';
 
 class Axis extends DiagramElementCollection {

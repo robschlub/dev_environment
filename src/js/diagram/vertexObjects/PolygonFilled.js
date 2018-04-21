@@ -1,7 +1,7 @@
 // @flow
 
-import { Point } from '../g2';
-import WebGLInstance from '../webgl';
+import { Point } from '../tools/g2';
+import WebGLInstance from '../webgl/webgl';
 import VertexObject from './vertexObject';
 
 class PolygonFilled extends VertexObject {

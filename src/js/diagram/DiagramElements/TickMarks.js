@@ -1,9 +1,9 @@
 // @flow
 
 import { DiagramElementPrimative } from '../Element';
-import * as g2 from '../g2';
-import * as m2 from '../m2';
-import WebGLInstance from '../webgl';
+import * as g2 from '../tools/g2';
+import * as m2 from '../tools/m2';
+import WebGLInstance from '../webgl/webgl';
 import HorizontalLine from '../vertexObjects/HorizontalLine';
 
 class TickMarks extends DiagramElementPrimative {
