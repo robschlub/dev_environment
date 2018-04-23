@@ -29,7 +29,7 @@ RUN npm install --save-dev eslint@4.18.2 \
 													 eslint-config-airbnb-base@12.1.0 \
 													 eslint-plugin-flowtype@2.46.1 \
 													 eslint-plugin-react@7.7.0 \
-													 webpack@4.1.1 \
+													 webpack@4.4.1 \
 													 webpack-cli@2.0.11 \
 													 babel-preset-env@1.6.1 \
 													 babel-loader@7.1.4 \
@@ -44,7 +44,7 @@ RUN npm install --save-dev eslint@4.18.2 \
     											 regenerator-runtime@0.11.1 \
     											 eslint-plugin-jest@21.14.1 \
     											 clean-webpack-plugin@0.1.19 \ 		
-    											 mini-css-extract-plugin@0.2.0 \	
+    											 mini-css-extract-plugin@0.4.0 \	
     											 css-loader@0.28.11 \							
     											 sass-loader@6.0.7 \							
     											 node-sass@4.7.2 \								
