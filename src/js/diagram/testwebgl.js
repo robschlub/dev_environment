@@ -23,6 +23,12 @@ import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
+  _triangle: DiagramElementPrimative;
+  _corners: DiagramElementPrimative;
+  _pline: DiagramElementPrimative;
+  _arrow: DiagramElementPrimative;
+  _radial: DiagramElementPrimative;
+  _helloText: DiagramElementPrimative;
 
   constructor(webgl, ctx, transform, diagramLimits) {
     super(transform);
@@ -88,7 +94,7 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().translate(1, 1),
       [0, 0, 1, 1], diagramLimits,
     ));
-    // $FlowFixMe
+
     const hw = this._helloText;
     hw.isTouchable = true;
     hw.isMovable = true;
@@ -98,7 +104,7 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
       [0, 0, 1, 1], diagramLimits,
     ));
-    // $FlowFixMe
+
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
@@ -108,7 +114,7 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().scale(1.5, 1.5).translate(2, 1),
       [0, 1, 0, 1], diagramLimits,
     ));
-    // $FlowFixMe
+
     const tri = this._triangle;
     tri.isTouchable = true;
     tri.isMovable = true;
@@ -118,7 +124,7 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().translate(0.5, 0.5),
       [1, 0, 0, 1], diagramLimits,
     ));
-    // $FlowFixMe
+
     const corn = this._corners;
     corn.isTouchable = true;
     corn.isMovable = true;
@@ -128,7 +134,7 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().translate(1, 2),
       [1, 1, 0, 1], diagramLimits,
     ));
-    // $FlowFixMe
+
     const pline = this._pline;
     pline.isTouchable = true;
     pline.isMovable = true;
@@ -138,7 +144,7 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().scale(0.7, 0.4).translate(0.5, 1),
       [1, 1, 0, 1], diagramLimits,
     ));
-    // $FlowFixMe
+
     const arrow = this._arrow;
     arrow.isTouchable = true;
     arrow.isMovable = true;
@@ -148,7 +154,7 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().translate(2, 1),
       [1, 1, 0, 1], diagramLimits,
     ));
-    // $FlowFixMe
+
     const radial = this._radial;
     radial.isTouchable = true;
     radial.isMovable = true;
@@ -241,10 +247,9 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().translate(3, 1),
       diagramLimits,
     );
-    // $FlowFixMe
     // plot._trace1.isTouchable = true;
-    // $FlowFixMe
     // plot._trace1.isMovable = true;
+
     plot.isTouchable = true;
     plot.isMovable = true;
     this.add('plot', plot);
@@ -322,10 +327,9 @@ function testgl(id: string) {
   // diagram.elements._plot._trace1.pulseThickNow(5, 1.05, 7);
   // diagram.elements._plot._trace1.pulseNow(2, 1.5);
   // or
-  diagram.elements.startMovingFreely();
+  // diagram.elements.startMovingFreely();
   // diagram.elements.animateRotationTo(1, -1, 10);
 
-  // $FlowFixMe
   // diagram.elements._square.animateTranslationTo(new Point(1.5, 0.5), 1);
 
   if (diagram) {
@@ -344,9 +348,9 @@ function testgl(id: string) {
     //   'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
     //   'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
     //   'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
-    //   // $FlowFixMe
+
     //   'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
-    //   // $FlowFixMe
+
     //   'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
     //   'collection touch: ' + diagram.elements.isBeingTouched(clip);
     //   Console(str);

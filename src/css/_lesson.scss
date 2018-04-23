@@ -1,0 +1,84 @@
+
+.lesson {
+  // background-size: cover;
+  // background-position: center; 
+  background-color: red;
+}
+
+.main_page {
+  margin-top: 40px;
+  background-color: red;
+}
+
+.btn-lesson {
+  margin: 5px;
+}
+
+.lesson-canvas {
+  background-color: red;
+}
+// @include media-breakpoint-up(xs) {
+//   .home {
+//     background-image: $home-image-xs;
+//   }
+// }
+
+// @include media-breakpoint-up(sm) {
+//   .home {
+//     background-image: $home-image-sm;
+//   }
+// }
+
+// @include media-breakpoint-up(md) {
+//   .home {
+//     background-image: $home-image-md;
+//   }
+// }
+
+// @include media-breakpoint-up(lg) {
+//   .home {
+//     background-image: $home-image-lg;
+//   }
+// }
+
+// @include media-breakpoint-up(xl) {
+//   .home {
+//     background-image: $home-image-xl;
+//   }
+// }
+
+
+@include media-breakpoint-up(xs) {
+  .main_page {
+    width:  200px;
+    height: 200px;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .main_page {
+    width:  400px;
+    height: 400px;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .main_page {
+    width:  1000px;
+    height: 500px;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .main_page {
+    width:  1000px;
+    height: 500px;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .main_page {
+    width:  1600px;
+    height: 800px;
+  }
+}

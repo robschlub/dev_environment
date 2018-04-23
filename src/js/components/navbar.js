@@ -16,8 +16,10 @@ export default class Navbar extends React.Component
     const props = Object.assign({}, this.props);
     const nav1 = 'Introduction';
     const nav2 = 'About';
+    const nav3 = 'Lesson';
     const nav1Class = `nav-link ${props.active === nav1 ? 'active' : ''}`;
     const nav2Class = `nav-link ${props.active === nav2 ? 'active' : ''}`;
+    const nav3Class = `nav-link ${props.active === nav3 ? 'active' : ''}`;
 
     delete props.active;
 
@@ -46,6 +48,12 @@ export default class Navbar extends React.Component
               <a className={nav2Class}
                  href={`/${nav2.toLowerCase()}`}>
                   { nav2 }
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className={nav3Class}
+                 href={`/${nav3.toLowerCase()}`}>
+                  { nav3 }
               </a>
             </li>
             <li className="nav-item dropdown">
