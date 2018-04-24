@@ -20,13 +20,11 @@ const lessonPage = () => {
         <Content />
         <div className='container'>
           <div className='main_page'>
-            <div className='canvas_container'>
-              <Canvas id="my_Canvas" didMountFn={testgl} className="lesson-canvas"/>
-              <div className='button_container'>
-                <Button label="Prev" className="-primary -lesson" />
-                <Button label="Go To" className="-primary -lesson" />
-                <Button label="Next" className="-primary -lesson" />
-              </div>
+            <Canvas id="my_Canvas" didMountFn={testgl} className="lesson-canvas"/>
+            <div className='button_container'>
+              <Button label="Prev" className="-primary -lesson" />
+              <Button label="Go To" className="-primary -lesson" />
+              <Button label="Next" className="-primary -lesson" />
             </div>
           </div>
         </div>

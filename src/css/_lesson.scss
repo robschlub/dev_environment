@@ -14,43 +14,6 @@
   width: 100%;
 }
 
-.canvas_container {
-  // position: absolute;
-  top: 0;
-  left: 0;
-  // width: 2000px;
-  background-color: red;
-}
-// @include media-breakpoint-up(xs) {
-//   .home {
-//     background-image: $home-image-xs;
-//   }
-// }
-
-// @include media-breakpoint-up(sm) {
-//   .home {
-//     background-image: $home-image-sm;
-//   }
-// }
-
-// @include media-breakpoint-up(md) {
-//   .home {
-//     background-image: $home-image-md;
-//   }
-// }
-
-// @include media-breakpoint-up(lg) {
-//   .home {
-//     background-image: $home-image-lg;
-//   }
-// }
-
-// @include media-breakpoint-up(xl) {
-//   .home {
-//     background-image: $home-image-xl;
-//   }
-// }
-
 .button_container {
   position: absolute;
   left: 0;
@@ -76,10 +39,20 @@
     width: 1000px;
     height: 500px;
   }
+
+  .diagram_gl {
+    width: 500px;
+    height: 250px;
+  }
 }
 
 @include media-breakpoint-up(lg) {
   .main_page {
+    width: 1000px;
+    height: 500px;
+  }
+
+  .diagram_gl {
     width: 1000px;
     height: 500px;
   }
@@ -90,6 +63,11 @@
     width: 1600px;
     height: 800px;
   }
+
+  .diagram_gl {
+    width: 1600px;
+    height: 800px;
+  }
 }
 
 .main_page {
@@ -97,6 +75,5 @@
   padding-top: 66.66%;
   margin-top: 60px;
   background-color: green;
-  // width: 100%;
   position: relative;
 }
