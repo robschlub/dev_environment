@@ -1,3 +1,4 @@
+// @flow
 
 import homePage from './views/home';
 import aboutPage from './views/about';

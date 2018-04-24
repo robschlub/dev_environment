@@ -1,9 +1,9 @@
 
 
-.nav-responsive {
-}
+// .nav-responsive {
+// }
 
-@include media-breakpoint-up(md){
+@include media-breakpoint-up(md) {
   .nav-responsive {
     position: fixed;
     top: 0;

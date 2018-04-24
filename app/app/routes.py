@@ -22,6 +22,7 @@ def home():
 def introduction():
     return render_template('introduction.html')
 
+
 @app.route('/lesson')
 def lessonTemp():
     return render_template('lesson.html')

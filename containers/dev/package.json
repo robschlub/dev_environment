@@ -9,7 +9,8 @@
     "watch": "webpack --watch",
     "flow": "flow",
     "jest": "jest",
-    "lint": "eslint app tests src"
+    "lint": "eslint app tests src",
+    "css": "stylelint src/css"
   },
   "keywords": [],
   "author": "",

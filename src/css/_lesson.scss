@@ -2,12 +2,7 @@
 .lesson {
   // background-size: cover;
   // background-position: center; 
-  background-color: red;
-}
-
-.main_page {
-  margin-top: 40px;
-  background-color: red;
+  // background-color: blue;
 }
 
 .btn-lesson {
@@ -15,6 +10,15 @@
 }
 
 .lesson-canvas {
+  background-color: red;
+  width: 100%;
+}
+
+.canvas_container {
+  // position: absolute;
+  top: 0;
+  left: 0;
+  // width: 2000px;
   background-color: red;
 }
 // @include media-breakpoint-up(xs) {
@@ -47,38 +51,52 @@
 //   }
 // }
 
+.button_container {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
 
 @include media-breakpoint-up(xs) {
   .main_page {
-    width:  200px;
+    width: 200px;
     height: 200px;
   }
 }
 
 @include media-breakpoint-up(sm) {
   .main_page {
-    width:  400px;
+    width: 400px;
     height: 400px;
   }
 }
 
 @include media-breakpoint-up(md) {
   .main_page {
-    width:  1000px;
+    width: 1000px;
     height: 500px;
   }
 }
 
 @include media-breakpoint-up(lg) {
   .main_page {
-    width:  1000px;
+    width: 1000px;
     height: 500px;
   }
 }
 
 @include media-breakpoint-up(xl) {
   .main_page {
-    width:  1600px;
+    width: 1600px;
     height: 800px;
   }
+}
+
+.main_page {
+  width: 100%;
+  padding-top: 66.66%;
+  margin-top: 60px;
+  background-color: green;
+  // width: 100%;
+  position: relative;
 }

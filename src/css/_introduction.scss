@@ -10,7 +10,6 @@ $intro1-image-sm: $flower2-sm-image;
 $intro1-image-md: $flower2-md-image;
 $intro1-image-lg: $flower2-lg-image;
 
-
 .intro {
   background-size: cover;
   background-position: center;
@@ -18,18 +17,19 @@ $intro1-image-lg: $flower2-lg-image;
 
 .intro1 {
   background-size: cover;
-  background-position: center; 
+  background-position: center;
 }
-
 
 @include media-breakpoint-up(xs) {
   h1 {
     color: red;
   }
+
   .intro {
     background-image: $intro-image-xs;
   }
-  .intro1{
+
+  .intro1 {
     background-image: $intro1-image-sm;
   }
 }
@@ -38,9 +38,11 @@ $intro1-image-lg: $flower2-lg-image;
   h1 {
     color: blue;
   }
+
   .intro {
     background-image: $intro-image-sm;
   }
+
   .intro1 {
     background-image: $intro1-image-sm;
   }
@@ -50,9 +52,11 @@ $intro1-image-lg: $flower2-lg-image;
   h1 {
     color: yellow;
   }
+
   .intro {
     background-image: $intro-image-md;
   }
+
   .intro1 {
     background-image: $intro1-image-md;
   }
@@ -62,9 +66,11 @@ $intro1-image-lg: $flower2-lg-image;
   h1 {
     color: green;
   }
+
   .intro {
     background-image: $intro-image-lg;
   }
+
   .intro1 {
     background-image: $intro1-image-lg;
   }
@@ -74,9 +80,11 @@ $intro1-image-lg: $flower2-lg-image;
   h1 {
     color: cyan;
   }
+
   .intro {
     background-image: $intro-image-xl;
   }
+
   .intro1 {
     background-image: $intro1-image-lg;
   }

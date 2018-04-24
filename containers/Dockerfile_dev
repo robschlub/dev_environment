@@ -52,13 +52,19 @@ RUN npm install --save-dev eslint@4.19.1 \
 												   autoprefixer@8.3.0 \
 													 react-test-renderer@16.3.2 \
 													 whatwg-fetch@2.0.4 \
-													 babel-polyfill@6.26.0
+													 babel-polyfill@6.26.0 \
+													 stylelint-config-standard@18.2.0 \
+													 stylelint@9.2.0 \ 
+													 stylelint-scss@3.0.1 \
+													 postcss@6.0.21
 
 
 # Linting
 ADD .eslintrc.json .
 ADD .eslintignore .
 ADD .flowconfig .
+ADD .stylelintrc .
+ADD .stylelintignore .
 
 # Packaging
 ADD containers/dev/webpack.config.js .

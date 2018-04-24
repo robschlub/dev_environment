@@ -18,19 +18,14 @@ const lessonPage = () => {
       <div>
         <Navbar active='Lesson'/>
         <Content />
-        <div className='container main_page'>
-          <div className='row'>
-            <Button label="Prev" className="-primary -lesson" />
-            <Button label="Go To" className="-primary -lesson" />
-            <Button label="Next" className="-primary -lesson" />
-          </div>
-          <div className = 'row'>
-            <div className='container'>
-              <div className='row'>
-                <div className='col-2'></div>
-                <Canvas id="my_Canvas" didMountFn={testgl} className="lesson-canvas"/>
-                <div className='col-2'></div>
-                <Canvas id="my_Canvas1" didMountFn={testgl}/>
+        <div className='container'>
+          <div className='main_page'>
+            <div className='canvas_container'>
+              <Canvas id="my_Canvas" didMountFn={testgl} className="lesson-canvas"/>
+              <div className='button_container'>
+                <Button label="Prev" className="-primary -lesson" />
+                <Button label="Go To" className="-primary -lesson" />
+                <Button label="Next" className="-primary -lesson" />
               </div>
             </div>
           </div>
