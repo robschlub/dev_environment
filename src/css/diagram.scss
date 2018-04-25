@@ -18,6 +18,13 @@ $color-angle_text:         rgb(177,105,223);
 $color-latin:              rgb(200,  0,200);
 $color-greek:              rgb(  0,  0,200);
 $color-english:            rgb(47, 79, 79);
+
+$color-blue: #5c7fe8;
+$color-red: #ff8079;
+$color-yellow: #e8db48;
+$color-green: #84ff63;
+$color-cyan: #56fff5;
+
 /* stylelint-enable */
 
 /* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
@@ -51,6 +58,8 @@ $color-english:            rgb(47, 79, 79);
 
 .diagram_gl {
   position: absolute;
+  left: 0;
+  top: 0;
   width: 1000px;
   height: 500px;
   // width: 100%;
@@ -118,3 +127,7 @@ $color-english:            rgb(47, 79, 79);
 //     height: 800px;
 //   }
 // }
+
+.btn-primary {
+  background-color: $color-blue;
+}

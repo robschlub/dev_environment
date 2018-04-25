@@ -68,19 +68,19 @@ function getGLLocations(gl, program, locationsList) {
   return newLocations;
 }
 
-function resizeCanvasToDisplaySize(canvas) {
-  // const mul = multiplier || 1;
-  const mul = window.devicePixelRatio || 1;
-  const width = canvas.clientWidth * mul || 0;
-  const height = canvas.clientHeight * mul || 0;
+// function resizeCanvasToDisplaySize(canvas) {
+//   // const mul = multiplier || 1;
+//   const mul = window.devicePixelRatio || 1;
+//   const width = canvas.clientWidth * mul || 0;
+//   const height = canvas.clientHeight * mul || 0;
 
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;     // eslint-disable-line no-param-reassign
-    canvas.height = height;   // eslint-disable-line no-param-reassign
-    return true;
-  }
-  return false;
-}
+//   if (canvas.width !== width || canvas.height !== height) {
+//     canvas.width = width;     // eslint-disable-line no-param-reassign
+//     canvas.height = height;   // eslint-disable-line no-param-reassign
+//     return true;
+//   }
+//   return false;
+// }
 
 /* eslint-disable */
 function autoResize(event) {
@@ -122,11 +122,13 @@ class WebGLInstance {
       this.locations = getGLLocations(this.gl, this.program, shaderLocations);
 
       // Prep canvas
-      resizeCanvasToDisplaySize(this.gl.canvas);
+      // resizeCanvasToDisplaySize(this.gl.canvas);
+      this.resize();
+
 
       // Tell WebGL how to convert from clip space to pixels
       // this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
       // this.gl.viewport(0, 500, 500, 500);   // Tell WebGL how to convert from clip space to pixels
 
@@ -143,16 +145,38 @@ class WebGLInstance {
   }
 
   resize() {
-    var width = this.gl.canvas.clientWidth;
-    var height = this.gl.canvas.clientHeight;
-    if (this.gl.canvas.width != width ||
-        this.gl.canvas.height != height) {
-       this.gl.canvas.width = width;
-       this.gl.canvas.height = height;
-       return true;
+    var realToCSSPixels = window.devicePixelRatio;
+    // console.log("asdf");
+    // Lookup the size the browser is displaying the canvas in CSS pixels
+    // and compute a size needed to make our drawingbuffer match it in
+    // device pixels.
+    var displayWidth  =
+      Math.floor(this.gl.canvas.clientWidth  * realToCSSPixels);
+    var displayHeight =
+      Math.floor(this.gl.canvas.clientHeight * realToCSSPixels);
+
+    // Check if the canvas is not the same size.
+    if (this.gl.canvas.width  !== displayWidth ||
+        this.gl.canvas.height !== displayHeight) {
+
+      // Make the canvas the same size
+      this.gl.canvas.width  = displayWidth;
+      this.gl.canvas.height = displayHeight;
     }
-    return false;
+
+    this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
   }
+  // resize() {
+  //   var width = this.gl.canvas.clientWidth;
+  //   var height = this.gl.canvas.clientHeight;
+  //   if (this.gl.canvas.width != width ||
+  //       this.gl.canvas.height != height) {
+  //      this.gl.canvas.width = width;
+  //      this.gl.canvas.height = height;
+  //      return true;
+  //   }
+  //   return false;
+  // }
 
   // var needToRender = true;  // draw at least once
   // function checkRender() {

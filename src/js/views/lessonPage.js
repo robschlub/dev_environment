@@ -18,7 +18,10 @@ const lessonPage = () => {
       <div>
         <Navbar active='Lesson'/>
         <Content />
-        <div className='container'>
+        <div className='testspan'>
+        asdf
+        </div>
+        {/*<div className='container'>*/}
           <div className='main_page'>
             <Canvas id="my_Canvas" didMountFn={testgl} className="lesson-canvas"/>
             <div className='button_container'>
@@ -27,7 +30,7 @@ const lessonPage = () => {
               <Button label="Next" className="-primary -lesson" />
             </div>
           </div>
-        </div>
+        {/*</div>*/}
       </div>,
       lessonId,
     );

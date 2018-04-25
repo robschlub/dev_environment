@@ -81,8 +81,17 @@ class Diagram {
     }
 
     this.createDiagramElements();
+
+    window.addEventListener('resize', this.resize.bind(this));
   }
 
+  resize() {
+    // this.canvas.height = this.canvas.width * 0.5;
+    console.log(this.canvas.height, this.webgl.gl.canvas.height, this.webgl.gl.drawingBufferHeight)
+    this.webgl.resize();
+
+    this.animateNextFrame();
+  }
   // Handle touch down, or mouse click events within the canvas.
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
