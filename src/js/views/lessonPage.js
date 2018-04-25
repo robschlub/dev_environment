@@ -3,12 +3,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../../css/style.scss';
-import Button from './../components/button';
+// import Button from './../components/button';
 // import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
-import Content from './../components/content';
+// import Content from './../components/content';
 import Canvas from '../components/canvas';
-import testgl from '../diagram/testwebgl';
+// import testgl from '../diagram/testwebgl';
 import shapesDiagram from '../Lesson/shapesDiagram';
 
 const lessonPage = () => {
