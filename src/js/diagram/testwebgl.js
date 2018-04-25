@@ -20,6 +20,9 @@ import TickMarks from './DiagramElements/TickMarks';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import { CartesianPlotProperties, TraceProperties } from './DiagramElements/Plot/CartesianPlotProperties';
 import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
+import getColors from './colors';
+
+const colors = getColors();
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
@@ -92,9 +95,8 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('helloText', new DiagramElementPrimative(
       textObject,
       new Transform().translate(1, 1),
-      [0, 0, 1, 1], diagramLimits,
+      colors.colorBlue, diagramLimits,
     ));
-
     const hw = this._helloText;
     hw.isTouchable = true;
     hw.isMovable = true;
@@ -102,7 +104,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('square', new DiagramElementPrimative(
       square,
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
-      [0, 0, 1, 1], diagramLimits,
+      colors.colorBlue, diagramLimits,
     ));
 
     const sq = this._square;
@@ -112,7 +114,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new Transform().scale(1.5, 1.5).translate(2, 1),
-      [0, 1, 0, 1], diagramLimits,
+      colors.colorGreen, diagramLimits,
     ));
 
     const tri = this._triangle;
@@ -122,7 +124,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('corners', new DiagramElementPrimative(
       corners,
       new Transform().translate(0.5, 0.5),
-      [1, 0, 0, 1], diagramLimits,
+      colors.colorYellow, diagramLimits,
     ));
 
     const corn = this._corners;
@@ -132,7 +134,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('pline', new DiagramElementPrimative(
       polyLine,
       new Transform().translate(1, 2),
-      [1, 1, 0, 1], diagramLimits,
+      colors.colorRed, diagramLimits,
     ));
 
     const pline = this._pline;
@@ -142,7 +144,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('arrow', new DiagramElementPrimative(
       arrowVertices,
       new Transform().scale(0.7, 0.4).translate(0.5, 1),
-      [1, 1, 0, 1], diagramLimits,
+      colors.colorRed, diagramLimits,
     ));
 
     const arrow = this._arrow;
@@ -152,24 +154,24 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('radial', new DiagramElementPrimative(
       radialVertices,
       new Transform().translate(2, 1),
-      [1, 1, 0, 1], diagramLimits,
+      colors.colorBlue, diagramLimits,
     ));
 
     const radial = this._radial;
     radial.isTouchable = true;
     radial.isMovable = true;
 
-    this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
-    this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
-    this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
-    this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
+    // this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
+    // this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
+    // this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
+    // this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
 
-    this.add('xAxis', new DiagramElementPrimative(
-      xTicks,
-      new Transform().translate(0.2, 0.2),
-      [0.5, 0.5, 0.5, 1],
-      diagramLimits,
-    ));
+    // this.add('xAxis', new DiagramElementPrimative(
+    //   xTicks,
+    //   new Transform().translate(0.2, 0.2),
+    //   [0.5, 0.5, 0.5, 1],
+    //   diagramLimits,
+    // ));
     this.isTouchable = true;
 
     const xProps = new AxisProperties('x', 0);
@@ -236,7 +238,7 @@ class ShapesCollection extends DiagramElementCollection {
     // this.add('yAxis1', axis2);
     const trace = new TraceProperties(
       'trace1',
-      [0, 0, 1, 1],
+      colors.colorBlue,
       [new Point(0, 0), new Point(10, 5), new Point(50, 10), new Point(80, 20)],
     );
     const plotProps = new CartesianPlotProperties();
