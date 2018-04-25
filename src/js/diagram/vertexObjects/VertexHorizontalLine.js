@@ -4,7 +4,7 @@ import { Point, Transform } from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 import VertexObject from './vertexObject';
 
-class HorizontalLine extends VertexObject {
+class VertexHorizontalLine extends VertexObject {
   start: Point;
   constructor(
     webgl: WebGLInstance,
@@ -41,4 +41,4 @@ class HorizontalLine extends VertexObject {
   }
 }
 
-export default HorizontalLine;
+export default VertexHorizontalLine;

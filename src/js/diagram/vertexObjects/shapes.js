@@ -5,4 +5,11 @@ import VertexPolyLine from './VertexPolyLine';
 import VertexArrow from './VertexArrow';
 import VertexRadialLines from './VertexRadialLines';
 
-export { VertexPolygon, VertexPolygonFilled, VertexPolyLineCorners, VertexPolyLine, VertexArrow, VertexRadialLines };
+export {
+  VertexPolygon,
+  VertexPolygonFilled,
+  VertexPolyLineCorners,
+  VertexPolyLine,
+  VertexArrow,
+  VertexRadialLines,
+};
