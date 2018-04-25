@@ -1,8 +1,8 @@
 import VertexPolygon from './VertexPolygon';
-import PolygonFilled from './PolygonFilled';
-import PolyLineCorners from './PolyLineCorners';
-import PolyLine from './PolyLine';
+import VertexPolygonFilled from './VertexPolygonFilled';
+import VertexPolyLineCorners from './VertexPolyLineCorners';
+import VertexPolyLine from './VertexPolyLine';
 import VertexArrow from './VertexArrow';
-import RadialLines from './RadialLines';
+import VertexRadialLines from './VertexRadialLines';
 
-export { VertexPolygon, PolygonFilled, PolyLineCorners, PolyLine, VertexArrow, RadialLines };
+export { VertexPolygon, VertexPolygonFilled, VertexPolyLineCorners, VertexPolyLine, VertexArrow, VertexRadialLines };

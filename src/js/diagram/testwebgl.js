@@ -1,10 +1,10 @@
 // @flow
 import VertexPolygon from './vertexObjects/VertexPolygon';
-import PolygonFilled from './vertexObjects/PolygonFilled';
-import PolyLineCorners from './vertexObjects/PolyLineCorners';
-import PolyLine from './vertexObjects/PolyLine';
+import VertexPolygonFilled from './vertexObjects/VertexPolygonFilled';
+import VertexPolyLineCorners from './vertexObjects/VertexPolyLineCorners';
+import VertexPolyLine from './vertexObjects/VertexPolyLine';
 import VertexArrow from './vertexObjects/VertexArrow';
-import RadialLines from './vertexObjects/RadialLines';
+import VertexRadialLines from './vertexObjects/VertexRadialLines';
 import TextObject from './textObjects/TextObject';
 // import HorizontalLine from './vertexObjects/HorizontalLine';
 import { Transform, Point, TransformLimit } from './tools/g2';
@@ -43,14 +43,14 @@ class ShapesCollection extends DiagramElementCollection {
       Math.PI / 4, new Point(0, 0),
     );
 
-    const triangle = new PolygonFilled(
+    const triangle = new VertexPolygonFilled(
       webgl,
       3,
       0.2,
       0, new Point(0, 0),
     );
 
-    const corners = new PolyLineCorners(
+    const corners = new VertexPolyLineCorners(
       webgl,
       [
         new Point(1, 0),
@@ -63,7 +63,7 @@ class ShapesCollection extends DiagramElementCollection {
       0.1,
     );
 
-    const polyLine = new PolyLine(
+    const polyLine = new VertexPolyLine(
       webgl,
       [
         new Point(0, 0),
@@ -75,7 +75,7 @@ class ShapesCollection extends DiagramElementCollection {
       0.1,
     );
 
-    const radialVertices = new RadialLines(
+    const radialVertices = new VertexRadialLines(
       webgl,
       0,
       0.5,

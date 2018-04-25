@@ -51,7 +51,7 @@ const colors = getColors();
 //       0, new Point(0, 0),
 //     );
 
-//     const corners = new PolyLineCorners(
+//     const corners = new VertexPolyLineCorners(
 //       webgl,
 //       [
 //         new Point(1, 0),
@@ -64,7 +64,7 @@ const colors = getColors();
 //       0.1,
 //     );
 
-//     const polyLine = new PolyLine(
+//     const polyLine = new VertexPolyLine(
 //       webgl,
 //       [
 //         new Point(0, 0),
@@ -210,8 +210,8 @@ function shapesDiagram(id: string) {
     new Point(0.5, 0.5),
     new Point(-0.5, 0.5),
   ];
-  const squareLines = new shapes.PolyLine(diagram.webgl, squareVertices, true, 0.02);
-  const squareCorners = new shapes.PolyLineCorners(diagram.webgl, squareVertices, true, 0.25, 0.1);
+  const squareLines = new shapes.VertexPolyLine(diagram.webgl, squareVertices, true, 0.02);
+  const squareCorners = new shapes.VertexPolyLineCorners(diagram.webgl, squareVertices, true, 0.25, 0.1);
 
   const squareElement = new DiagramElementPrimative(
     squareLines, new Transform().translate(3, 0.75), colors.colorBlue,

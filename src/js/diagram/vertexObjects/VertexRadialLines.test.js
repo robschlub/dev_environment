@@ -1,4 +1,4 @@
-import RadialLines from './RadialLines';
+import VertexRadialLines from './VertexRadialLines';
 import { Point } from '../tools/g2';
 import webgl from '../../__mocks__/WebGLInstanceMock';
 import { round } from '../tools/mathtools';
@@ -6,7 +6,7 @@ import { round } from '../tools/mathtools';
 
 describe('Horizontal Line', () => {
   test('Default', () => {
-    const lines = new RadialLines(webgl, 0, 1, 0.01, Math.PI / 2, Math.PI);
+    const lines = new VertexRadialLines(webgl, 0, 1, 0.01, Math.PI / 2, Math.PI);
     const border = [
       [
         new Point(0, -0.005),
