@@ -4,7 +4,7 @@ import { Point } from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 import VertexObject from './vertexObject';
 
-class Arrow extends VertexObject {
+class VertexArrow extends VertexObject {
   height: number;
 
   constructor(
@@ -37,5 +37,5 @@ class Arrow extends VertexObject {
     this.setupBuffer();
   }
 }
-export default Arrow;
+export default VertexArrow;
 

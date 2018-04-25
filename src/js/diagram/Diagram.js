@@ -1,5 +1,5 @@
 // @flow
-
+import * as shapes from './vertexObjects/shapes';
 import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
 // import Polygon from './vertexObjects/Polygon';
@@ -50,6 +50,7 @@ class Diagram {
         }
       }
     }
+    // console.log(containerId)
     // console.log(this.canvas)
     // console.log(this.canvas instanceof HTMLCanvasElement)
     if (this instanceof Diagram) {
@@ -79,6 +80,10 @@ class Diagram {
     this.createDiagramElements();
 
     window.addEventListener('resize', this.resize.bind(this));
+  }
+
+  static shapes() {
+    return shapes;
   }
 
   resize() {

@@ -9,6 +9,7 @@ import Navbar from './../components/navbar';
 import Content from './../components/content';
 import Canvas from '../components/canvas';
 import testgl from '../diagram/testwebgl';
+import shapesDiagram from '../Lesson/shapesDiagram';
 
 const lessonPage = () => {
   const lessonId:HTMLElement | null = document.getElementById('lesson');
@@ -29,7 +30,7 @@ const lessonPage = () => {
                 The sharpness of the corner is a property that can describe a
                 shape. This is a long sentence
               </p>
-              <Canvas id="my_Canvas" didMountFn={testgl} />
+              <Canvas id="shapes" didMountFn={shapesDiagram} />
               {/* 
               <div className='button_container'>
                 <Button label="Prev" className="-primary -lesson" />

@@ -1,9 +1,9 @@
 // @flow
-import Polygon from './vertexObjects/Polygon';
+import VertexPolygon from './vertexObjects/VertexPolygon';
 import PolygonFilled from './vertexObjects/PolygonFilled';
 import PolyLineCorners from './vertexObjects/PolyLineCorners';
 import PolyLine from './vertexObjects/PolyLine';
-import Arrow from './vertexObjects/Arrow';
+import VertexArrow from './vertexObjects/VertexArrow';
 import RadialLines from './vertexObjects/RadialLines';
 import TextObject from './textObjects/TextObject';
 // import HorizontalLine from './vertexObjects/HorizontalLine';
@@ -36,7 +36,7 @@ class ShapesCollection extends DiagramElementCollection {
   constructor(webgl, ctx, transform, diagramLimits) {
     super(transform);
 
-    const square = new Polygon(
+    const square = new VertexPolygon(
       webgl,
       4,
       0.475 * Math.sqrt(2), 0.05 * Math.sqrt(2),
@@ -84,11 +84,11 @@ class ShapesCollection extends DiagramElementCollection {
       Math.PI * 2,
     );
 
-    const xTicks = new GLParallelLines(webgl, 20, 1, new Point(0, 0), 2, 0.004, true, false);
+    // const xTicks = new GLParallelLines(webgl, 20, 1, new Point(0, 0), 2, 0.004, true, false);
 
     // const xMinorTicks = new GLParallelLines(webgl, 50,)
 
-    const arrowVertices = new Arrow(webgl);
+    const arrowVertices = new VertexArrow(webgl);
 
     const textObject = new TextObject(ctx, 'Hello World!', new Point(0.5, 1), ['left', 'top'], new Point(0.5, 0.5));
 

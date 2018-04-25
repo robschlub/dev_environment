@@ -6,7 +6,7 @@ import {
 import Diagram from './Diagram';
 import { Point, Transform, TransformLimit, Rect } from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
-import Polygon from './vertexObjects/Polygon';
+import VertexPolygon from './vertexObjects/VertexPolygon';
 // import { linear, round } from './mathtools';
 // import Gesture from './Gesture';
 // import WebGLInstance from './webgl';
@@ -115,7 +115,7 @@ describe('Diagram', () => {
       const collection = new DiagramElementCollection(new Transform().scale(1, 1).rotate(0).translate(0, 0), 'c', diagram.limits);
       Object.keys(squareDefinitions).forEach((sKey) => {
         const def = squareDefinitions[sKey];
-        const square = new Polygon(
+        const square = new VertexPolygon(
           diagram.webgl,
           4,
           (def.sideLength / 2) * Math.sqrt(2), 0.05 * Math.sqrt(2),
@@ -143,7 +143,7 @@ describe('Diagram', () => {
   describe('Diagram API', () => {
     const d = new Diagram(canvas, 0, 0, 4, 4);
     d.webgl = webgl;      // needed for mocking only
-    const squareVertices = new Polygon(
+    const squareVertices = new VertexPolygon(
       d.webgl,            // gl instance
       4,                  // number of sides in polygon
       1,                  // radius to center of corner

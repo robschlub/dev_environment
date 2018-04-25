@@ -4,7 +4,7 @@ import { Point } from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 import VertexObject from './vertexObject';
 
-class Polygon extends VertexObject {
+class VertexPolygon extends VertexObject {
   radius: number;       // radius from center to outside of polygon
   glPrimitive: number;  // WebGL primitive used
   // outRad: number;       // radius from center to polygon vertex + 1/2 linewidth
@@ -109,4 +109,4 @@ class Polygon extends VertexObject {
   }
 }
 
-export default Polygon;
+export default VertexPolygon;
