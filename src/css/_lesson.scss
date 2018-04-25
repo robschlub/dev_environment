@@ -23,43 +23,55 @@
 
 @include media-breakpoint-up(xs) {
   .main_page {
-    width: 200px;
-    height: 200px;
+    // height: 200px;
+    margin-left: 5%;
+    width: 90%;
+    // margin-right: 5%;
   }
 }
 
 @include media-breakpoint-up(sm) {
   .main_page {
-    width: 400px;
-    height: 200px;
+    // width: 400px;
+    // height: 200px;
   }
 }
 
 @include media-breakpoint-up(md) {
   .main_page {
-    width: 500px;
-    height: 250px;
+    // width: 100%;
+    // height: 250px;
   }
 }
 
 @include media-breakpoint-up(lg) {
   .main_page {
-    width: 1000px;
-    height: 500px;
+    // width: 100%;
+    // height: 500px;
   }
 }
 
 @include media-breakpoint-up(xl) {
   .main_page {
-    width: 100%;
-    padding-top: 50%;
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
 .main_page {
-  margin-top: 60px;
-  background-color: $color-green;
+  margin-top: 80px;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+.lesson_title {
+  font-size: 30px;
+}
+
+.lesson_container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
 }
