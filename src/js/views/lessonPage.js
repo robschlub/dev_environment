@@ -31,7 +31,7 @@ const lessonPage = () => {
                 shape. This is a long sentence
               </p>
               <Canvas id="shapes" didMountFn={shapesDiagram} />
-              {/* 
+              {/*
               <div className='button_container'>
                 <Button label="Prev" className="-primary -lesson" />
                 <Button label="Go To" className="-primary -lesson" />

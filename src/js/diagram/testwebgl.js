@@ -8,14 +8,14 @@ import VertexRadialLines from './vertexObjects/VertexRadialLines';
 import TextObject from './textObjects/TextObject';
 // import HorizontalLine from './vertexObjects/HorizontalLine';
 import { Transform, Point, TransformLimit } from './tools/g2';
-import GLParallelLines from './vertexObjects/glParallelLines';
+// import GLParallelLines from './vertexObjects/glParallelLines';
 // import * as m2 from './m2';
 // import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
 // import GlobalVariables from './globals';
 import Diagram from './Diagram';
 import * as tools from './tools/mathtools';
-import TickMarks from './DiagramElements/TickMarks';
+// import TickMarks from './DiagramElements/TickMarks';
 // import Axis from './DiagramElements/Plot/Axis';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import { CartesianPlotProperties, TraceProperties } from './DiagramElements/Plot/CartesianPlotProperties';
@@ -161,11 +161,12 @@ class ShapesCollection extends DiagramElementCollection {
     radial.isTouchable = true;
     radial.isMovable = true;
 
+    /* eslint-disable */
     // this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
     // this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
     // this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
     // this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
-
+    /* eslint-enable */
     // this.add('xAxis', new DiagramElementPrimative(
     //   xTicks,
     //   new Transform().translate(0.2, 0.2),
