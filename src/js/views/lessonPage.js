@@ -18,9 +18,6 @@ const lessonPage = () => {
       <div>
         <Navbar active='Lesson'/>
         <Content />
-        <div className='testspan'>
-        asdf
-        </div>
         {/*<div className='container'>*/}
           <div className='main_page'>
             <Canvas id="my_Canvas" didMountFn={testgl} className="lesson-canvas"/>

@@ -86,10 +86,7 @@ class Diagram {
   }
 
   resize() {
-    // this.canvas.height = this.canvas.width * 0.5;
-    console.log(this.canvas.height, this.webgl.gl.canvas.height, this.webgl.gl.drawingBufferHeight)
     this.webgl.resize();
-
     this.animateNextFrame();
   }
   // Handle touch down, or mouse click events within the canvas.
