@@ -208,7 +208,7 @@ class Diagram {
     this.elements.add(name, diagramElement);
   }
   clearContext() {
-    this.webgl.gl.clearColor(1, 1, 1, 0);
+    this.webgl.gl.clearColor(1, 1, 1, 1);
     this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
 
     if (this.draw2D) {
