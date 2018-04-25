@@ -31,9 +31,19 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
   ) {
     return PolyLineCorners(webgl, points, close, cornerLength, lineWidth, color, transform, limits);
   }
+  function collection(transformOrPoint: Transform | Point = new Transform()) {
+    let transform = new Transform();
+    if (transformOrPoint instanceof Point) {
+      transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
+    } else {
+      transform = transformOrPoint.copy();
+    }
+    return new DiagramElementCollection(transform, limits);
+  }
   return {
     polyLine,
     polyLineCorners,
+    collection,
   };
 }
 class Diagram {
