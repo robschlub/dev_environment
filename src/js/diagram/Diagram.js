@@ -1,5 +1,5 @@
 // @flow
-import * as shapes from './vertexObjects/shapes';
+// import * as vertexShapes from './vertexObjects/vertexShapes';
 import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
 // import Polygon from './vertexObjects/Polygon';
@@ -9,7 +9,33 @@ import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
+import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
 
+function shapes(webgl: WebGLInstance, limits: Rect) {
+  function polyLine(
+    points: Array<Point>,
+    close: boolean,
+    lineWidth: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return PolyLine(webgl, points, close, lineWidth, color, transform, limits);
+  }
+  function polyLineCorners(
+    points: Array<Point>,
+    close: boolean,
+    cornerLength: number,
+    lineWidth: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return PolyLineCorners(webgl, points, close, cornerLength, lineWidth, color, transform, limits);
+  }
+  return {
+    polyLine,
+    polyLineCorners,
+  };
+}
 class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
@@ -22,6 +48,7 @@ class Diagram {
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
   htmlCanvas: HTMLElement;
+  shapes: Object;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -80,10 +107,13 @@ class Diagram {
     this.createDiagramElements();
 
     window.addEventListener('resize', this.resize.bind(this));
+
+    this.shapes = this.getShapes();
+    this.animateNextFrame();
   }
 
-  static shapes() {
-    return shapes;
+  getShapes() {
+    return shapes(this.webgl, this.limits);
   }
 
   resize() {
@@ -178,7 +208,7 @@ class Diagram {
     this.elements.add(name, diagramElement);
   }
   clearContext() {
-    this.webgl.gl.clearColor(0, 0, 0, 0);
+    this.webgl.gl.clearColor(1, 1, 1, 0);
     this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
 
     if (this.draw2D) {
@@ -284,6 +314,7 @@ class Diagram {
     const y = this.limits.height / this.canvas.offsetHeight / window.devicePixelRatio;
     return new Point(x, y);
   }
+
   /* eslint-disable */
   // autoResize() {
   //   this.canvas.width = this.canvas.clientWidth * this.devicePixelRatio;
