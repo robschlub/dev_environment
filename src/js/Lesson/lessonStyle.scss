@@ -1,0 +1,37 @@
+@import "../../css/style";
+
+$color-lines: $color-blue;
+$color-corners: $color-cyan-medium;
+$color-moreSharp: $color-red;
+$color-lessSharp: $color-green-medium;
+// $shapes-line-width: 0.01;
+// $shapes-corner-width: 0.04;
+// $shapes-corner-line-width-sm: 0.08;
+
+#id_corners,
+#id_more_sharp,
+#id_less_sharp {
+  color: $color-corners;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#id_more_sharp {
+  color: $color-moreSharp;
+}
+
+#id_less_sharp {
+  color: $color-lessSharp;
+}
+
+/* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
+:export {
+  colorLines: $color-lines;
+  colorCorners: $color-corners;
+  colorMoreSharp: $color-moreSharp;
+  colorLessSharp: $color-lessSharp;
+  // shapesLineWidth: $shapes-line-width;
+  // shapesCornerWidth: $shapes-corner-width;
+  // shapresCornerLineWidth: $shapes-corner-line-width-sm;
+}
+/* stylelint-enable */

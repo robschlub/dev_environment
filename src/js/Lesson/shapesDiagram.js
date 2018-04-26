@@ -1,17 +1,19 @@
 // @flow
-import getColors from '../diagram/colors';
+// import getColors from '../diagram/colors';
 import Diagram from '../diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative } from '../diagram/Element';
 import { Point } from '../diagram/tools/g2';
+import styles from './lessonStyle.scss';
+import getSCSSColors from '../tools/css';
 
-const colors = getColors();
-const lineColor = colors.colorBlue;
+const colors = getSCSSColors(styles);
+const lineColor = colors.colorLines;
 const cornerColor = colors.colorCyanMedium;
-const moreSharpColor = colors.colorRed;
-const lessSharpColor = colors.colorGreenMedium;
+const moreSharpColor = colors.colorMoreSharp;
+const lessSharpColor = colors.colorLessSharp;
 const lineWidth = 0.02;
-const cornerWidth = 0.04;
-const cornerLength = 0.1;
+const cornerWidth = 0.06;
+const cornerLength = 0.15;
 
 type typeShape = {
   _lines: DiagramElementPrimative;
@@ -76,7 +78,7 @@ function makePent(shapes: Object, location: Point) {
   const vertices = [
     new Point(-0.5, -0.5),
     new Point(0.5, -0.2),
-    new Point(0.2, 0.2),
+    new Point(0.3, 0.1),
     new Point(0.5, 0.5),
     new Point(-0.2, 0.4),
   ];

@@ -1,3 +1,10 @@
+$color-lines: $color-blue;
+$color-corners: $color-cyan-medium;
+$color-moreSharp: $color-red;
+$color-lessSharp: $color-green-medium;
+// $shapes-line-width: 0.01;
+// $shapes-corner-width: 0.04;
+// $shapes-corner-line-width-sm: 0.08;
 
 .lesson {
   // background-size: cover;
@@ -80,20 +87,3 @@
   width: 300px;
   height: 150px;
 }
-
-#id_corners,
-#id_more_sharp,
-#id_less_sharp {
-  color: $color-cyan-medium;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#id_more_sharp {
-  color: $color-red;
-}
-
-#id_less_sharp {
-  color: $color-green-medium;
-}
-

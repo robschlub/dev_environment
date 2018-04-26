@@ -41,11 +41,14 @@ class Page {
   }
 
   static setState(diagram: ShapesDiagram) {
-    diagram.elements.hideOnly([
-      diagram.elements._square._lessSharpCorners,
-      diagram.elements._triangle._moreSharpCorners,
-      diagram.elements._pent._moreSharpCorners,
-      diagram.elements._pent._lessSharpCorners,
+    diagram.elements.showOnly([
+      diagram.elements,
+      diagram.elements._square,
+      diagram.elements._square._lines,
+      diagram.elements._triangle,
+      diagram.elements._triangle._lines,
+      diagram.elements._pent,
+      diagram.elements._pent._lines,
     ]);
 
     const corners = document.getElementById('id_corners');

@@ -5,6 +5,7 @@ import '../../css/style.scss';
 import ShapesDiagram from '../Lesson/shapesDiagram';
 import Page from '../Lesson/content';
 import Canvas from './canvas';
+import '../Lesson/lessonStyle.scss';
 // import '../../css/diagram.scss';
 
 type Props = {
