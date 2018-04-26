@@ -2,18 +2,23 @@
 /* stylelint-disable function-parentheses-space-inside,
 function-comma-space-after */
 $color-blue: #5c7fe8;
+$color-blue-medium: #4863b5;
 $color-blue-dark: #293968;
 
 $color-red: #ff8079;
+$color-red-medium: #cc6661;
 $color-red-dark: #7f403c;
 
 $color-yellow: #e8db48;
+$color-yellow-medium: #b5ab38;
 $color-yellow-dark: #686320;
 
 $color-green: #84ff63;
+$color-green-medium: #6acc4f;
 $color-green-dark: #427f31;
 
 $color-cyan: #56fff5;
+$color-cyan-medium: #45ccc4;
 $color-cyan-dark: #2b7f7a;
 
 $color-stick:              rgb(  0,  0,255);
@@ -62,6 +67,11 @@ $color-english:            rgb(47, 79, 79);
   colorBlue: $color-blue;
   colorYellow: $color-yellow;
   colorCyan: $color-cyan;
+  colorGreenMedium: $color-green-medium;
+  colorRedMedium: $color-red-medium;
+  colorBlueMedium: $color-blue-medium;
+  colorYellowMedium: $color-yellow-medium;
+  colorCyanMedium: $color-cyan-medium;
   colorGreenDark: $color-green-dark;
   colorRedDark: $color-red-dark;
   colorBlueDark: $color-blue-dark;

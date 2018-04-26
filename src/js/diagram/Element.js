@@ -682,7 +682,7 @@ class DiagramElement {
     this.pulse.num = 1;
     this.pulseNow();
   }
-  pulseThickNow(time: number, scale: number, num: number) {
+  pulseThickNow(time: number, scale: number, num: number=3) {
     let bArray = [scale];
     this.pulse.num = num;
     if (this.pulse.num > 1) {

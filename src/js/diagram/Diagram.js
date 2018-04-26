@@ -46,6 +46,7 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     collection,
   };
 }
+
 class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
@@ -113,12 +114,11 @@ class Diagram {
     }
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
-
+    this.shapes = this.getShapes();
     this.createDiagramElements();
 
     window.addEventListener('resize', this.resize.bind(this));
 
-    this.shapes = this.getShapes();
     this.animateNextFrame();
   }
 

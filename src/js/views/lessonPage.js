@@ -7,9 +7,9 @@ import '../../css/style.scss';
 // import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
 // import Content from './../components/content';
-import Canvas from '../components/canvas';
+import LessonPage from '../components/lessonPage';
 // import testgl from '../diagram/testwebgl';
-import shapesDiagram from '../Lesson/shapesDiagram';
+// import { shapesDiagram } from '../Lesson/shapesDiagram';
 
 const lessonPage = () => {
   const lessonId:HTMLElement | null = document.getElementById('lesson');
@@ -18,28 +18,7 @@ const lessonPage = () => {
     ReactDOM.render(
       <div>
         <Navbar active='Lesson'/>
-          <div className='main_page'>
-            <div className='lesson_container'>
-              <div className='lesson_title'>
-                Shapes and Corners
-              </div>
-              <p className='lesson_text'>
-                Many shapes have corners.
-              </p>
-              <p className='lesson_text'>
-                The sharpness of the corner is a property that can describe a
-                shape. This is a long sentence
-              </p>
-              <Canvas id="shapes" didMountFn={shapesDiagram} />
-              {/*
-              <div className='button_container'>
-                <Button label="Prev" className="-primary -lesson" />
-                <Button label="Go To" className="-primary -lesson" />
-                <Button label="Next" className="-primary -lesson" />
-              </div>
-              */}
-            </div>
-          </div>
+        <LessonPage />
       </div>,
       lessonId,
     );
