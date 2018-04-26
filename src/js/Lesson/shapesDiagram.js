@@ -70,6 +70,9 @@ function makeTriangle(shapes: Object, location: Point) {
 }
 
 function makePent(shapes: Object, location: Point) {
+  function makeCorner(v, color) {
+    return shapes.polyLineCorners(v, false, cornerLength, cornerWidth, color);
+  }
   const vertices = [
     new Point(-0.5, -0.5),
     new Point(0.5, -0.2),
@@ -77,24 +80,33 @@ function makePent(shapes: Object, location: Point) {
     new Point(0.5, 0.5),
     new Point(-0.2, 0.4),
   ];
+
   const lines = shapes.polyLine(vertices, true, lineWidth, lineColor);
   const corners = shapes.polyLineCorners(
     vertices, true, cornerLength,
     cornerWidth, cornerColor,
   );
 
-  // const moreSharpCorners = shapes.collection(location);
-  // const sharpCorner1 = shapes.polyLineCorners(
-  //   [pentVertices[4], pentVertices[0], pentVertices[1]],
-  //   false,
-  //   0.1,
-  //   0.04,
-  //   colors.colorRed
-  // moreSharpCorners.add()
+  const v = vertices;
+  const moreSharpCorners = shapes.collection();
+  const sharpCorner1 = makeCorner([v[4], v[0], v[1]], moreSharpColor);
+  const sharpCorner2 = makeCorner([v[0], v[1], v[2]], moreSharpColor);
+  const sharpCorner3 = makeCorner([v[2], v[3], v[4]], moreSharpColor);
+  moreSharpCorners.add('sharpCorner1', sharpCorner1);
+  moreSharpCorners.add('sharpCorner2', sharpCorner2);
+  moreSharpCorners.add('sharpCorner3', sharpCorner3);
+
+  const lessSharpCorners = shapes.collection();
+  const lessCorner1 = makeCorner([v[1], v[2], v[3]], lessSharpColor);
+  const lessCorner2 = makeCorner([v[3], v[4], v[0]], lessSharpColor);
+  lessSharpCorners.add('lessCorner1', lessCorner1);
+  lessSharpCorners.add('lessCorner2', lessCorner2);
 
   const pent: typeShape = shapes.collection(location);
   pent.add('lines', lines);
   pent.add('corners', corners);
+  pent.add('moreSharpCorners', moreSharpCorners);
+  pent.add('lessSharpCorners', lessSharpCorners);
   return pent;
 }
 
@@ -105,6 +117,7 @@ type typeDiagramCollection = {
   _pent: typeShape,
 } & DiagramElementCollection;
 
+// $FlowFixMe
 class ShapesDiagram extends Diagram {
   elements: typeDiagramCollection;
 
@@ -153,12 +166,16 @@ class ShapesDiagram extends Diagram {
     if (toggle) {
       this.elements._triangle._moreSharpCorners.show =
         !this.elements._triangle._moreSharpCorners.show;
+      this.elements._pent._moreSharpCorners.show =
+        !this.elements._pent._moreSharpCorners.show;
     } else {
       this.elements._triangle._moreSharpCorners.show = show;
+      this.elements._pent._moreSharpCorners.show = show;
     }
 
     if (this.elements._triangle._moreSharpCorners.show) {
       this.elements._triangle._moreSharpCorners.pulseScaleNow(1, 1.08);
+      this.elements._pent._moreSharpCorners.pulseScaleNow(1, 1.08);
       this.toggleCorners(false, false);
       this.toggleLessSharpCorners(false, false);
     }
@@ -169,55 +186,21 @@ class ShapesDiagram extends Diagram {
     if (toggle) {
       this.elements._square._lessSharpCorners.show =
         !this.elements._square._lessSharpCorners.show;
+      this.elements._pent._lessSharpCorners.show =
+        !this.elements._pent._lessSharpCorners.show;
     } else {
       this.elements._square._lessSharpCorners.show = show;
+      this.elements._pent._lessSharpCorners.show = show;
     }
 
     if (this.elements._square._lessSharpCorners.show) {
       this.elements._square._lessSharpCorners.pulseScaleNow(1, 1.08);
+      this.elements._pent._lessSharpCorners.pulseScaleNow(1, 1.08);
       this.toggleCorners(false, false);
       this.toggleMoreSharpCorners(false, false);
     }
     this.animateNextFrame();
   }
-  // toggleCorners() {
-  //   this.elements._square._corners.show = !this.elements._square._corners.show;
-  //   this.elements._triangle._corners.show = !this.elements._triangle._corners.show;
-  //   this.elements._pent._corners.show = !this.elements._pent._corners.show;
-  //   if (this.elements._square._corners.show) {
-  //     this.elements._square._corners.pulseScaleNow(1, 1.08);
-  //     this.elements._triangle._corners.pulseScaleNow(1, 1.08);
-  //     this.elements._pent._corners.pulseScaleNow(1, 1.08);
-  //   }
-  //   this.animateNextFrame();
-  // }
-
-  // toggleMoreSharpCorners() {
-  //   if (this.elements._square._corners.show) {
-  //     this.toggleCorners();
-  //   }
-  //   this.elements._triangle._moreSharpCorners.show =
-  //     !this.elements._triangle._moreSharpCorners.show;
-  //   if (this.elements._triangle._moreSharpCorners.show) {
-  //     this.elements._triangle._moreSharpCorners.pulseScaleNow(1, 1.08);
-  //   }
-  //   this.animateNextFrame();
-  // }
-
-  // toggleLessSharpCorners() {
-  //   if (this.elements._square._corners.show) {
-  //     this.toggleCorners();
-  //   }
-  //   if (this.elements._triangle._moreSharpCorners.show) {
-  //     this.toggleMoreSharpCorners();
-  //   }
-  //   this.elements._square._lessSharpCorners.show =
-  //     !this.elements._square._lessSharpCorners.show;
-  //   if (this.elements._square._lessSharpCorners.show) {
-  //     this.elements._square._lessSharpCorners.pulseScaleNow(1, 1.08);
-  //   }
-  //   this.animateNextFrame();
-  // }
 }
 
 // function shapesDiagram(id: string) {
