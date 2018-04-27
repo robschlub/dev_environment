@@ -10,6 +10,7 @@ import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
+import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
 
 function shapes(webgl: WebGLInstance, limits: Rect) {
   function polyLine(
@@ -31,6 +32,33 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
   ) {
     return PolyLineCorners(webgl, points, close, cornerLength, lineWidth, color, transform, limits);
   }
+  function polygon(
+    numSides: number,
+    radius: number,
+    lineWidth: number,
+    rotation: number,
+    numSidesToDraw: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return Polygon(
+      webgl, numSides, radius, lineWidth,
+      rotation, numSidesToDraw, color, transform, limits,
+    );
+  }
+  function polygonFilled(
+    numSides: number,
+    radius: number,
+    rotation: number,
+    numSidesToDraw: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return PolygonFilled(
+      webgl, numSides, radius,
+      rotation, numSidesToDraw, color, transform, limits,
+    );
+  }
   function collection(transformOrPoint: Transform | Point = new Transform()) {
     let transform = new Transform();
     if (transformOrPoint instanceof Point) {
@@ -43,6 +71,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
   return {
     polyLine,
     polyLineCorners,
+    polygon,
+    polygonFilled,
     collection,
   };
 }

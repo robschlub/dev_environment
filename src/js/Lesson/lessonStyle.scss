@@ -4,6 +4,7 @@ $color-lines: $color-blue;
 $color-corners: $color-cyan-medium;
 $color-moreSharp: $color-red;
 $color-lessSharp: $color-green-medium;
+$color-anchor: $color-yellow;
 
 #id_corners,
 #id_more_sharp,
@@ -21,17 +22,29 @@ $color-lessSharp: $color-green-medium;
   color: $color-lessSharp;
 }
 
-// @include media-breakpoint-up(xs) {
-// }
+@include media-breakpoint-up(xs) {
+  #circle_container {
+    width: 100%;
+    padding-top: 100%;
+  }
+}
 
 // @include media-breakpoint-up(sm) {
 // }
 
-// @include media-breakpoint-up(md) {
-// }
+@include media-breakpoint-up(md) {
+  #circle_container {
+    width: 80%;
+    padding-top: 80%;
+  }
+}
 
-// @include media-breakpoint-up(lg) {
-// }
+@include media-breakpoint-up(lg) {
+  #circle_container {
+    width: 50%;
+    padding-top: 50%;
+  }
+}
 
 // @include media-breakpoint-up(xl) {
 // }
@@ -42,13 +55,22 @@ $color-lessSharp: $color-green-medium;
   colorCorners: $color-corners;
   colorMoreSharp: $color-moreSharp;
   colorLessSharp: $color-lessSharp;
+  colorAnchor: $color-anchor;
 }
 /* stylelint-enable */
 
-.canvas_container {
+#shapes_container {
   position: relative;
   width: 100%;
   padding-top: 40%;
   left: 0;
   top: 0;
+}
+
+#circle_container {
+  position: relative;
+  left: 0;
+  top: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
