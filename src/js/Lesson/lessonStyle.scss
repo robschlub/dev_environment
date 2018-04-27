@@ -5,6 +5,7 @@ $color-corners: $color-cyan-medium;
 $color-moreSharp: $color-red;
 $color-lessSharp: $color-green-medium;
 $color-anchor: $color-yellow;
+$color-radius: $color-blue;
 
 #id_corners,
 #id_more_sharp,
@@ -56,6 +57,7 @@ $color-anchor: $color-yellow;
   colorMoreSharp: $color-moreSharp;
   colorLessSharp: $color-lessSharp;
   colorAnchor: $color-anchor;
+  colorRadius: $color-radius;
 }
 /* stylelint-enable */
 

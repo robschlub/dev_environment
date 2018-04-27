@@ -11,6 +11,7 @@ import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
 import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import HorizontalLine from './DiagramElements/HorizontalLine';
 
 function shapes(webgl: WebGLInstance, limits: Rect) {
   function polyLine(
@@ -59,6 +60,19 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
       rotation, numSidesToDraw, color, transform, limits,
     );
   }
+  function horizontalLine(
+    start: Point,
+    length: number,
+    width: number,
+    rotation: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return HorizontalLine(
+      webgl, start, length, width,
+      rotation, color, transform, limits,
+    );
+  }
   function collection(transformOrPoint: Transform | Point = new Transform()) {
     let transform = new Transform();
     if (transformOrPoint instanceof Point) {
@@ -73,6 +87,7 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     polyLineCorners,
     polygon,
     polygonFilled,
+    horizontalLine,
     collection,
   };
 }
