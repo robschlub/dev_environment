@@ -39,14 +39,14 @@ class Page1 {
 
   // eslint-disable-next-line class-methods-use-this
   setState(diagram: ShapesDiagram) {
-    diagram.elements.showOnly([
-      diagram.elements,
-      diagram.elements._square,
-      diagram.elements._square._lines,
-      diagram.elements._triangle,
-      diagram.elements._triangle._lines,
-      diagram.elements._pent,
-      diagram.elements._pent._lines,
+    diagram.elements.hideOnly([
+      diagram.elements._square._corners,
+      diagram.elements._square._lessSharpCorners,
+      diagram.elements._triangle._moreSharpCorners,
+      diagram.elements._triangle._corners,
+      diagram.elements._pent._corners,
+      diagram.elements._pent._moreSharpCorners,
+      diagram.elements._pent._lessSharpCorners,
     ]);
 
     const corners = document.getElementById('id_corners');
