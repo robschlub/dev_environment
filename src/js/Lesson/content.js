@@ -8,7 +8,7 @@ function actionWord(text, id = '', classes = '') {
   return `<span id="${id}" class="${classes} action_word">${text}</span>`;
 }
 
-class Page {
+class Page1 {
   title: string;
   content: string;
   modifiers: Object;
@@ -17,10 +17,7 @@ class Page {
     this.title = 'Shapes and Corners';
     this.content =
       '<p>Many shapes have |_corners|.</p>' +
-      '<p>Somes corners are |_more_sharp|, while others are |_less_sharp|.</p>' +
-      '<p>The sharpness of the corner is a property that can describe a shape.</p>' +
-      '<p>So how can you measure sharpness?</p>' +
-      '<p>What name do we give to the sharpness?</p>';
+      '<p>Somes corners are |_more_sharp|, while others are |_less_sharp|.</p>';
 
     this.modifiers = {
       _corners:
@@ -40,7 +37,8 @@ class Page {
     });
   }
 
-  static setState(diagram: ShapesDiagram) {
+  // eslint-disable-next-line class-methods-use-this
+  setState(diagram: ShapesDiagram) {
     diagram.elements.showOnly([
       diagram.elements,
       diagram.elements._square,
@@ -68,4 +66,20 @@ class Page {
   }
 }
 
-export default Page;
+class Page2 {
+  title: string;
+  content: string;
+
+  constructor() {
+    this.title = 'Shapes and Corners';
+    this.content =
+      '<p>The sharpness of the corner is a property that can describe a shape.</p>' +
+      '<p>So how can you measure sharpness? What name do we give to the sharpness?</p>';
+  }
+}
+
+const content = [
+  new Page1(),
+  new Page2(),
+];
+export default content;

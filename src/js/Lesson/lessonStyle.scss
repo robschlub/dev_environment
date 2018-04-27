@@ -44,3 +44,11 @@ $color-lessSharp: $color-green-medium;
   colorLessSharp: $color-lessSharp;
 }
 /* stylelint-enable */
+
+.canvas_container {
+  position: relative;
+  width: 100%;
+  padding-top: 40%;
+  left: 0;
+  top: 0;
+}

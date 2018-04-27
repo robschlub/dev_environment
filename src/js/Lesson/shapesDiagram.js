@@ -124,7 +124,7 @@ class ShapesDiagram extends Diagram {
   elements: typeDiagramCollection;
 
   constructor(id: string) {
-    super(`${id}_container`, 0, 0, 4, 2);
+    super(`${id}_container`, 0, 0.1, 4, 4 * 0.4);
   }
   createDiagramElements() {
     const { shapes } = this;
