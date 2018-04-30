@@ -4,12 +4,17 @@ $color-lines: $color-blue;
 $color-corners: $color-cyan-medium;
 $color-moreSharp: $color-red;
 $color-lessSharp: $color-green-medium;
-$color-anchor: $color-yellow;
+$color-anchor: $color-corners;
 $color-radius: $color-blue;
+$color-reference: $color-blue-light;
 
 .action_word {
   font-weight: bold;
   cursor: pointer;
+}
+
+#id_shapes {
+  color: $color-lines;
 }
 
 #id_corners {
@@ -68,6 +73,7 @@ $color-radius: $color-blue;
   colorLessSharp: $color-lessSharp;
   colorAnchor: $color-anchor;
   colorRadius: $color-radius;
+  colorReference: $color-reference;
 }
 /* stylelint-enable */
 

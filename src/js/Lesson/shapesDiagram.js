@@ -203,6 +203,13 @@ class ShapesDiagram extends Diagram {
     }
     this.animateNextFrame();
   }
+
+  pulseShapes() {
+    this.elements._square._lines.pulseThickNow(1, 1.03, 3);
+    this.elements._triangle._lines.pulseThickNow(1, 1.03, 3);
+    this.elements._pent._lines.pulseThickNow(1, 1.03, 3);
+    this.animateNextFrame();
+  }
 }
 
 // function shapesDiagram(id: string) {

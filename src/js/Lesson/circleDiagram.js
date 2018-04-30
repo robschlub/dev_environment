@@ -9,6 +9,7 @@ import getSCSSColors from '../tools/css';
 const colors = getSCSSColors(styles);
 const anchorColor = colors.colorAnchor;
 const radiusColor = colors.colorRadius;
+const referenceColor = colors.colorReference;
 const anchorRadius = 0.03;
 const anchorPoints = 50;
 const circleRadius = 0.8;
@@ -48,15 +49,15 @@ class CircleDiagram extends Diagram {
     this.elements = shapes.collection();
     const origin = new Point(0, 0);
 
-    const radius = makeRadius(shapes, origin);
-    this.add('radius', radius);
-
     const reference = shapes.horizontalLine(
       new Point(0, 0), circleRadius, lineWidth,
-      0, radiusColor, new Point(0, 0),
+      0, referenceColor, new Point(0, 0),
     );
     reference.pulse.transformMethod = s => new Transform().scale(1, s);
     this.add('reference', reference);
+
+    const radius = makeRadius(shapes, origin);
+    this.add('radius', radius);
 
     const anchor = shapes.polygonFilled(
       anchorPoints, anchorRadius, 0,

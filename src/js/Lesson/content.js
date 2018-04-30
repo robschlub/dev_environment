@@ -20,7 +20,8 @@ class Page {
     this.modifyContent();
   }
 
-  setContent() { // eslint-disable-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
+  setContent() {
   }
 
   modifyContent() {
@@ -30,14 +31,16 @@ class Page {
     });
   }
 }
+
 class Page1 extends Page {
   setContent() {
     this.title = 'Shapes and Corners';
     this.content =
-      '<p>Many shapes have |_corners|.</p>' +
+      '<p>Many |_shapes| have |_corners|.</p>' +
       '<p>Somes corners are |_more_sharp|, while others are |_less_sharp|.</p>';
 
     this.modifiers = {
+      _shapes: actionWord('shapes', 'id_shapes'),
       _corners: actionWord('corners', 'id_corners'),
       _more_sharp: actionWord('more sharp', 'id_more_sharp'),
       _less_sharp: actionWord('less sharp', 'id_less_sharp'),
@@ -55,6 +58,11 @@ class Page1 extends Page {
       diagram.elements._pent._moreSharpCorners,
       diagram.elements._pent._lessSharpCorners,
     ]);
+
+    const shapes = document.getElementById('id_shapes');
+    if (shapes) {
+      shapes.onclick = diagram.pulseShapes.bind(diagram);
+    }
 
     const corners = document.getElementById('id_corners');
     if (corners) {
@@ -83,10 +91,9 @@ class Page2 extends Page {
     this.content =
       '<p>The sharpness of the corner is a property that can describe a shape.</p>' +
       '<p>So how can you measure sharpness? What name do we give to the sharpness?</p>' +
-      '<p>Let\'s start with two |_lines| on top of each other, |_anchored| at one end. One |_line| can be rotated around the anchor, and at the anchor the two lines form a corner';
+      '<p>Let\'s start with two lines |_anchored| at one end. One |_line| can be rotated around the anchor. The two lines form a corner at the anchor.';
 
     this.modifiers = {
-      _lines: actionWord('lines', 'id_lines'),
       _line: actionWord('line', 'id_line'),
       _anchored: actionWord('anchored', 'id_anchor'),
     };
@@ -95,11 +102,8 @@ class Page2 extends Page {
   // eslint-disable-next-line class-methods-use-this
   setState(diagram: CircleDiagram) {
     diagram.elements.showAll();
+    diagram.elements._radius.transform.updateRotation(Math.PI / 3);
 
-    const lines = document.getElementById('id_lines');
-    if (lines) {
-      lines.onclick = diagram.pulseLines.bind(diagram);
-    }
     const line = document.getElementById('id_line');
     if (line) {
       line.onclick = diagram.pulseRadius.bind(diagram);
@@ -115,4 +119,5 @@ const content = [
   new Page1(),
   new Page2(),
 ];
+
 export default content;
