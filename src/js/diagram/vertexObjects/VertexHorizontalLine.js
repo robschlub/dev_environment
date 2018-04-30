@@ -33,9 +33,16 @@ class VertexHorizontalLine extends VertexObject {
       this.points[i + 1] = p.y;
     }
 
-    for (let i = 0; i < this.points.length; i += 2) {
-      this.border[0].push(new Point(this.points[i], this.points[i + 1]));
-    }
+    const p = this.points;
+    this.border[0] = [
+      new Point(p[0], p[1]),
+      new Point(p[2], p[3]),
+      new Point(p[6], p[7]),
+      new Point(p[4], p[5]),
+    ];
+    // for (let i = 0; i < this.points.length; i += 2) {
+    //   this.border[0].push(new Point(this.points[i], this.points[i + 1]));
+    // }
     this.border[0].push(this.border[0][0].copy());
     this.setupBuffer();
   }

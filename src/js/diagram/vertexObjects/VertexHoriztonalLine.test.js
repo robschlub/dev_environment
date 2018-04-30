@@ -10,8 +10,8 @@ describe('Horizontal Line', () => {
     const border = [
       new Point(0, -0.05),
       new Point(0, 0.05),
-      new Point(1, -0.05),
       new Point(1, 0.05),
+      new Point(1, -0.05),
       new Point(0, -0.05),
     ];
     const points = [
@@ -28,8 +28,8 @@ describe('Horizontal Line', () => {
     const border = [
       new Point(1, 0.95),
       new Point(1, 1.05),
-      new Point(3, 0.95),
       new Point(3, 1.05),
+      new Point(3, 0.95),
       new Point(1, 0.95),
     ];
     const points = [
@@ -46,8 +46,8 @@ describe('Horizontal Line', () => {
     const border = [
       new Point(1.05, 1),
       new Point(0.95, 1),
-      new Point(1.05, 3),
       new Point(0.95, 3),
+      new Point(1.05, 3),
       new Point(1.05, 1),
     ];
     const points = [
