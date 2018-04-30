@@ -32,6 +32,7 @@ export default class LessonPage extends React.Component
     this.diagram = new ShapesDiagram('shapes');
     this.content[0].setState(this.diagram);
     this.diagramCircle = new CircleDiagram('circle');
+    this.content[1].setState(this.diagramCircle);
   }
 
 

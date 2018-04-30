@@ -7,12 +7,13 @@ $color-lessSharp: $color-green-medium;
 $color-anchor: $color-yellow;
 $color-radius: $color-blue;
 
-#id_corners,
-#id_more_sharp,
-#id_less_sharp {
-  color: $color-corners;
+.action_word {
   font-weight: bold;
   cursor: pointer;
+}
+
+#id_corners {
+  color: $color-corners;
 }
 
 #id_more_sharp {
@@ -21,6 +22,15 @@ $color-radius: $color-blue;
 
 #id_less_sharp {
   color: $color-lessSharp;
+}
+
+#id_lines,
+#id_line {
+  color: $color-radius;
+}
+
+#id_anchor {
+  color: $color-anchor;
 }
 
 @include media-breakpoint-up(xs) {

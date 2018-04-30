@@ -1,5 +1,7 @@
 // import getColors from '../diagram/colors';
 import ShapesDiagram from './shapesDiagram';
+import CircleDiagram from './circleDiagram';
+
 // import { DiagramElementCollection, DiagramElementPrimative } from '../diagram/Element';
 // import { Point } from '../diagram/tools/g2';
 // @flow
@@ -8,26 +10,17 @@ function actionWord(text, id = '', classes = '') {
   return `<span id="${id}" class="${classes} action_word">${text}</span>`;
 }
 
-class Page1 {
+class Page {
   title: string;
   content: string;
   modifiers: Object;
 
   constructor() {
-    this.title = 'Shapes and Corners';
-    this.content =
-      '<p>Many shapes have |_corners|.</p>' +
-      '<p>Somes corners are |_more_sharp|, while others are |_less_sharp|.</p>';
-
-    this.modifiers = {
-      _corners:
-        actionWord('corners', 'id_corners', 'class_corners'),
-      _more_sharp:
-        actionWord('more sharp', 'id_more_sharp', 'L2_col_more_sharp'),
-      _less_sharp:
-        actionWord('less sharp', 'id_less_sharp', 'L2_col_less_sharp'),
-    };
+    this.setContent();
     this.modifyContent();
+  }
+
+  setContent() { // eslint-disable-line class-methods-use-this
   }
 
   modifyContent() {
@@ -35,6 +28,20 @@ class Page1 {
       const expression = new RegExp(`\\|${key}\\|`, 'gi');
       this.content = this.content.replace(expression, this.modifiers[key]);
     });
+  }
+}
+class Page1 extends Page {
+  setContent() {
+    this.title = 'Shapes and Corners';
+    this.content =
+      '<p>Many shapes have |_corners|.</p>' +
+      '<p>Somes corners are |_more_sharp|, while others are |_less_sharp|.</p>';
+
+    this.modifiers = {
+      _corners: actionWord('corners', 'id_corners'),
+      _more_sharp: actionWord('more sharp', 'id_more_sharp'),
+      _less_sharp: actionWord('less sharp', 'id_less_sharp'),
+    };
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -66,15 +73,41 @@ class Page1 {
   }
 }
 
-class Page2 {
+class Page2 extends Page {
   title: string;
   content: string;
+  modifiers: Object;
 
-  constructor() {
+  setContent() {
     this.title = 'Shapes and Corners';
     this.content =
       '<p>The sharpness of the corner is a property that can describe a shape.</p>' +
-      '<p>So how can you measure sharpness? What name do we give to the sharpness?</p>';
+      '<p>So how can you measure sharpness? What name do we give to the sharpness?</p>' +
+      '<p>Let\'s start with two |_lines| on top of each other, |_anchored| at one end. One |_line| can be rotated around the anchor, and at the anchor the two lines form a corner';
+
+    this.modifiers = {
+      _lines: actionWord('lines', 'id_lines'),
+      _line: actionWord('line', 'id_line'),
+      _anchored: actionWord('anchored', 'id_anchor'),
+    };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  setState(diagram: CircleDiagram) {
+    diagram.elements.showAll();
+
+    const lines = document.getElementById('id_lines');
+    if (lines) {
+      lines.onclick = diagram.pulseLines.bind(diagram);
+    }
+    const line = document.getElementById('id_line');
+    if (line) {
+      line.onclick = diagram.pulseRadius.bind(diagram);
+    }
+    const anchor = document.getElementById('id_anchor');
+    if (anchor) {
+      anchor.onclick = diagram.pulseAnchor.bind(diagram);
+    }
   }
 }
 

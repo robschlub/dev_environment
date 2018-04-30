@@ -9,7 +9,7 @@ import getSCSSColors from '../tools/css';
 const colors = getSCSSColors(styles);
 const anchorColor = colors.colorAnchor;
 const radiusColor = colors.colorRadius;
-const anchorRadius = 0.05;
+const anchorRadius = 0.03;
 const anchorPoints = 50;
 const circleRadius = 0.8;
 const lineWidth = 0.02;
@@ -17,6 +17,7 @@ const lineWidth = 0.02;
 type typeCircleDiagramCollection = {
   _anchor: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
+  _reference: DiagramElementPrimative;
 } & DiagramElementCollection ;
 
 function makeRadius(shapes: Object, location: Point) {
@@ -26,6 +27,7 @@ function makeRadius(shapes: Object, location: Point) {
   );
   radius.isTouchable = true;
   radius.isMovable = true;
+  radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
   for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
     radius.vertices.border[0][i].y *= 10;
@@ -48,6 +50,13 @@ class CircleDiagram extends Diagram {
 
     const radius = makeRadius(shapes, origin);
     this.add('radius', radius);
+
+    const reference = shapes.horizontalLine(
+      new Point(0, 0), circleRadius, lineWidth,
+      0, radiusColor, new Point(0, 0),
+    );
+    reference.pulse.transformMethod = s => new Transform().scale(1, s);
+    this.add('reference', reference);
 
     const anchor = shapes.polygonFilled(
       anchorPoints, anchorRadius, 0,
@@ -77,8 +86,28 @@ class CircleDiagram extends Diagram {
       transform.updateRotation(rot - diffAngle);
     }
     this.elements._radius.moved(transform);
-    this.globalAnimation.animateNextFrame();
+    this.animateNextFrame();
     return true;
+  }
+
+  pulseAnchor() {
+    this.elements._anchor.pulseScaleNow(1, 1.5);
+    this.animateNextFrame();
+  }
+
+  pulseRadius() {
+    this.elements._radius.pulseScaleNow(1, 2);
+    this.animateNextFrame();
+  }
+
+  pulseReference() {
+    this.elements._reference.pulseScaleNow(1, 2);
+    this.animateNextFrame();
+  }
+
+  pulseLines() {
+    this.pulseRadius();
+    this.pulseReference();
   }
 }
 
