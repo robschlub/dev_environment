@@ -2,7 +2,7 @@
 
 import Diagram from '../diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative } from '../diagram/Element';
-import { Point } from '../diagram/tools/g2';
+import { Point, Transform, minAngleDiff } from '../diagram/tools/g2';
 import styles from './lessonStyle.scss';
 import getSCSSColors from '../tools/css';
 
@@ -16,12 +16,13 @@ const lineWidth = 0.02;
 
 type typeCircleDiagramCollection = {
   _anchor: DiagramElementPrimative;
+  _radius: DiagramElementPrimative;
 } & DiagramElementCollection ;
 
 function makeRadius(shapes: Object, location: Point) {
   const radius = shapes.horizontalLine(
     new Point(0, 0), circleRadius, lineWidth,
-    0, radiusColor, location,
+    0, radiusColor, new Transform().rotate(0).translate(location.x, location.y),
   );
   radius.isTouchable = true;
   radius.isMovable = true;
@@ -56,6 +57,28 @@ class CircleDiagram extends Diagram {
 
     this.elements.isTouchable = true;
     this.elements.isMovable = true;
+  }
+
+  touchMoveHandler(
+    previousClientPoint: Point,
+    currentClientPoint: Point,
+  ): boolean {
+    if (this.beingMovedElements.length === 0) {
+      return false;
+    }
+    const previousClipPoint = this.clientToClip(previousClientPoint);
+    const currentClipPoint = this.clientToClip(currentClientPoint);
+    const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
+    const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
+    const diffAngle = minAngleDiff(previousAngle, currentAngle);
+    const transform = this.elements._radius.transform.copy();
+    const rot = transform.r();
+    if (rot != null) {
+      transform.updateRotation(rot - diffAngle);
+    }
+    this.elements._radius.moved(transform);
+    this.globalAnimation.animateNextFrame();
+    return true;
   }
 }
 
