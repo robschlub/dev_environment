@@ -785,8 +785,6 @@ class DiagramElementPrimative extends DiagramElement {
     if (!this.isTouchable) {
       return false;
     }
-    console.log(clipLocation)
-    console.log(this.vertices.border[0])
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       const border = [];
       if (this.vertices instanceof TextObject) {
