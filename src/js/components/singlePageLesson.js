@@ -9,7 +9,7 @@ type Props = {
   lesson: Lesson;
 };
 
-export default class LessonPage extends React.Component
+export default class SinglePageLesson extends React.Component
                                     <Props> {
   lesson: Lesson;
   key: number;

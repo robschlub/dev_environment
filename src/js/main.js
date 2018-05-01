@@ -3,10 +3,11 @@
 import homePage from './views/home';
 import aboutPage from './views/about';
 import introPage from './views/introduction';
-import lessonPage from './views/lessonPage';
+import lessonSinglePage from './views/lessonSinglePage';
+import lessonMultiPage from './views/lessonMultiPage';
 
 homePage();
 introPage();
 aboutPage();
-lessonPage();
-
+lessonSinglePage();
+lessonMultiPage();
