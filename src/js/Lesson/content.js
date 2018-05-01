@@ -1,9 +1,8 @@
 // @flow
+
 import { Page, Section, Paragraph, actionWord } from './LessonPage';
 import ShapesDiagram from './shapesDiagram';
 import CircleDiagram from './circleDiagram';
-// import Diagram from '../diagram/Diagram';
-
 
 class Section1 extends Section {
   setTitle() {

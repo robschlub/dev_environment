@@ -2,14 +2,12 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import page1 from '../Lesson/content';
 import { Page } from '../Lesson/LessonPage';
 import Canvas from './canvas';
 import '../Lesson/lessonStyle.scss';
 
 type Props = {
-  id?: string;
-  didMountFn?: (string) => mixed;
+  page: Page;
 };
 
 export default class LessonPage extends React.Component
@@ -19,7 +17,7 @@ export default class LessonPage extends React.Component
 
   constructor(props: Props) {
     super(props);
-    this.page = page1;
+    this.page = props.page;
     this.key = 0;
   }
 
