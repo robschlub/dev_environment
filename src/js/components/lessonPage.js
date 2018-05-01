@@ -2,45 +2,38 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import ShapesDiagram from '../Lesson/shapesDiagram';
-import CircleDiagram from '../Lesson/circleDiagram';
-import page from '../Lesson/content';
+import { page1, Page } from '../Lesson/content';
 import Canvas from './canvas';
 import '../Lesson/lessonStyle.scss';
-// import '../../css/diagram.scss';
 
 type Props = {
   id?: string;
   didMountFn?: (string) => mixed;
 };
 
-// const page = new Page();
-
 export default class LessonPage extends React.Component
                                     <Props> {
-  page: page;
-  diagram: ShapesDiagram;
-  diagramCircle: CircleDiagram;
+  page: Page;
   key: number;
 
   constructor(props: Props) {
     super(props);
-    this.page = page;
+    this.page = page1;
     this.key = 0;
   }
 
   componentDidMount() {
-    for (let i = 0; i < this.page.length; i += 1) {
-      const section = this.page[i];
-      for (let j = 0; j < section.paragraphs.length; j += 1) {
-        const paragraph = section.paragraphs[j];
-        if (typeof paragraph === 'object') {
+    // Instantiate all the diagrams now that the canvas elements have been
+    // created.
+    this.page.sections.forEach((section) => {
+      section.paragraphs.forEach((paragraph) => {
+        if (paragraph.type === 'diagram') {
           const d = paragraph;
-          const diagram = new d.Diagram(d.id);
+          const diagram = new d.DiagramClass(d.id);
           section.setState(diagram);
         }
-      }
-    }
+      })
+    })
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -61,9 +54,11 @@ export default class LessonPage extends React.Component
 
   renderSection(section: Object) {
     let sectionRender = section.paragraphs.map((p) => {
-      if (typeof p === 'string') {
+      if (p.type === 'text') {
         this.key += 1;
-        return this.addParagraph(p, this.key);
+        return this.addParagraph(p.text, this.key);
+      } else if (p.type === 'html') {
+        return p.text;
       }
       this.key += 1;
       return this.addDiagram(p.id, this.key);
@@ -79,7 +74,7 @@ export default class LessonPage extends React.Component
   }
 
   renderPage() {
-    return this.page.map(section => this.renderSection(section));
+    return this.page.sections.map(section => this.renderSection(section));
   }
 
   render() {

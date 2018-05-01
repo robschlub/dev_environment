@@ -1,63 +1,138 @@
+// @flow
+
 // import getColors from '../diagram/colors';
 import ShapesDiagram from './shapesDiagram';
 import CircleDiagram from './circleDiagram';
+import Diagram from '../diagram/Diagram';
 
 // import { DiagramElementCollection, DiagramElementPrimative } from '../diagram/Element';
 // import { Point } from '../diagram/tools/g2';
-// @flow
+
 
 function actionWord(text, id = '', classes = '') {
   return `<span id="${id}" class="${classes} action_word">${text}</span>`;
 }
 
+class Paragraph {
+  type: 'text' | 'diagram' | 'html';
+  id: string;
+  text: string;
+  DiagramClass: Function;
+
+  constructor(
+    type: 'text' | 'diagram' | 'html' = 'html',
+    content: string | Diagram = '',
+    id: string = '',
+  ) {
+    this.type = type;
+    if ((type === 'text' || type === 'html') && typeof content === 'string') {
+      this.text = content;
+    }
+    if (type === 'diagram' && typeof content === 'function') {
+      this.DiagramClass = content;
+    }
+    this.id = id;
+  }
+}
+
 class Section {
   title: string;
-  paragraphs: Array<string | Object>;
-  modifiers: Object;
+  paragraphs: Array<Paragraph>;
 
   constructor() {
-    this.setContent();
-    this.modifyContent();
+    this.makeTitle();
+    // this.makeContent();
+    this.makeContent();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  setContent() {
+  makeTitle() {
+    this.title = this.setTitle();
   }
 
-  modifyContent() {
-    Object.keys(this.modifiers).forEach((key) => {
-      const expression = new RegExp(`\\|${key}\\|`, 'gi');
-      for (let i = 0; i < this.paragraphs.length; i += 1) {
-        const paragraph = this.paragraphs[i];
-        if (typeof paragraph === 'string') {
-          this.paragraphs[i] = paragraph.replace(expression, this.modifiers[key]);
-        }
+  setContent(): Array<Paragraph | string> {
+    return [];
+  }
+  setTitle(): string {
+    return '';
+  }
+  setModifiers(): Object {
+    return {};
+  }
+
+  makeContent(): void {
+    this.paragraphs = []
+    const content = this.setContent();
+    const modifiers = this.setModifiers();
+    content.forEach((paragraphOrText) => {
+      let newParagraph;
+      if (typeof paragraphOrText === 'string') {
+        newParagraph = new Paragraph('text', paragraphOrText)
+      } else {
+        newParagraph = paragraphOrText;
       }
+      if (newParagraph.type === 'text' || newParagraph.type === 'html') {
+        Object.keys(modifiers).forEach((key) => {
+          const expression = new RegExp(`\\|${key}\\|`, 'gi');
+          newParagraph.text =
+            newParagraph.text.replace(expression, modifiers[key])
+        });
+      }
+      this.paragraphs.push(newParagraph);
     });
+    // Object.keys(modifiers).forEach((key) => {
+    //   const expression = new RegExp(`\\|${key}\\|`, 'gi');
+    //   for (let i = 0; i < this.paragraphs.length; i += 1) {
+    //     let paragraph = this.paragraphs[i];
+    //     if (typeof paragraph === 'string') {
+    //       paragraph = new Paragraph('text', paragraph);
+    //     }
+    //     // const paragraph = this.paragraphs[i];
+    //     if (paragraph instanceof Paragraph
+    //       && paragraph.type === 'text'
+    //       && typeof paragraph.content === 'string'
+    //     ) {
+    //       paragraph.content =
+    //         paragraph.content.replace(expression, this.modifiers[key]);
+    //       this.paragraphs[i] = paragraph;
+    //     }
+    //     this.formattedParagraphs.push(paragraph);
+    //   }
+    // });
+  }
+
+  // eslint-disable-next-line
+  setState(diagram: any) {
+  }
+}
+
+class Page {
+  title: string;
+  sections: Array<Section>;
+  constructor() {
+    this.title = '';
+    this.sections = [];
   }
 }
 
 class Section1 extends Section {
+  setTitle() {
+    return 'Shapes and Corners';
+  }
   setContent() {
-    this.title = 'Shapes and Corners';
-    this.paragraphs = [
+    return [
       'Many |_shapes| have |_corners|.',
       'Somes corners are |_more_sharp|, while others are |_less_sharp|.',
-      {
-        Diagram: ShapesDiagram,
-        id: 'shapes',
-      },
+      new Paragraph('diagram', ShapesDiagram, 'shapes'),
     ];
-
-    this.modifiers = {
+  }
+  setModifiers() {
+    return {
       _shapes: actionWord('shapes', 'id_shapes'),
       _corners: actionWord('corners', 'id_corners'),
       _more_sharp: actionWord('more sharp', 'id_more_sharp'),
       _less_sharp: actionWord('less sharp', 'id_less_sharp'),
     };
   }
-
-  // eslint-disable-next-line class-methods-use-this
   setState(diagram: ShapesDiagram) {
     diagram.elements.hideOnly([
       diagram.elements._square._corners,
@@ -92,33 +167,25 @@ class Section1 extends Section {
 }
 
 class Section2 extends Section {
-  title: string;
-  paragraphs: Array<string | Object>;
-  modifiers: Object;
-
   setContent() {
-    this.title = '';
-    this.paragraphs = [
+    return [
       'The sharpness of the corner is a property that can describe a shape.',
       `So how can you measure sharpness? What name do we give to the
       sharpness?`,
       `Let's start with two lines |_anchored| at one end. One |_line| can be
       rotated around the anchor. The two lines form a |_corner| at the
       anchor.`,
-      {
-        Diagram: CircleDiagram,
-        id: 'circle',
-      },
+      new Paragraph('diagram', CircleDiagram, 'circle'),
     ];
-
-    this.modifiers = {
+  }
+  setModifiers() {
+    return {
       _line: actionWord('line', 'id_line'),
       _anchored: actionWord('anchored', 'id_anchor'),
       _corner: actionWord('corner', 'id_corner'),
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this
   setState(diagram: CircleDiagram) {
     diagram.elements.hideOnly([
       diagram.elements._cornerRad,
@@ -127,7 +194,6 @@ class Section2 extends Section {
     const t = diagram.elements._radius.transform.copy();
     t.updateRotation(Math.PI / 3);
     diagram.elements._radius.setTransform(t);
-    // diagram.updateRotation(Math.PI / 3);
 
     const line = document.getElementById('id_line');
     if (line) {
@@ -145,9 +211,11 @@ class Section2 extends Section {
   }
 }
 
-const page = [
+const page1 = new Page();
+page1.title = '';
+page1.sections = [
   new Section1(),
   new Section2(),
 ];
 
-export default page;
+export { Paragraph, Section, Page, page1 };
