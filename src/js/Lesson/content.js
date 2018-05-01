@@ -91,18 +91,25 @@ class Page2 extends Page {
     this.content =
       '<p>The sharpness of the corner is a property that can describe a shape.</p>' +
       '<p>So how can you measure sharpness? What name do we give to the sharpness?</p>' +
-      '<p>Let\'s start with two lines |_anchored| at one end. One |_line| can be rotated around the anchor. The two lines form a corner at the anchor.';
+      '<p>Let\'s start with two lines |_anchored| at one end. One |_line| can be rotated around the anchor. The two lines form a |_corner| at the anchor.';
 
     this.modifiers = {
       _line: actionWord('line', 'id_line'),
       _anchored: actionWord('anchored', 'id_anchor'),
+      _corner: actionWord('corner', 'id_corner'),
     };
   }
 
   // eslint-disable-next-line class-methods-use-this
   setState(diagram: CircleDiagram) {
-    diagram.elements.showAll();
-    diagram.elements._radius.transform.updateRotation(Math.PI / 3);
+    diagram.elements.hideOnly([
+      diagram.elements._cornerRad,
+      diagram.elements._cornerRef,
+    ]);
+    const t = diagram.elements._radius.transform.copy();
+    t.updateRotation(Math.PI / 3);
+    diagram.elements._radius.setTransform(t);
+    // diagram.updateRotation(Math.PI / 3);
 
     const line = document.getElementById('id_line');
     if (line) {
@@ -111,6 +118,11 @@ class Page2 extends Page {
     const anchor = document.getElementById('id_anchor');
     if (anchor) {
       anchor.onclick = diagram.pulseAnchor.bind(diagram);
+    }
+
+    const corner = document.getElementById('id_corner');
+    if (corner) {
+      corner.onclick = diagram.toggleCorners.bind(diagram);
     }
   }
 }

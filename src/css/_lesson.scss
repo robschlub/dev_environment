@@ -6,10 +6,8 @@ $color-lessSharp: $color-green-medium;
 // $shapes-corner-width: 0.04;
 // $shapes-corner-line-width-sm: 0.08;
 
-.lesson {
-  // background-size: cover;
-  // background-position: center; 
-  // background-color: blue;
+.lesson_text p {
+  font-size: 16px;
 }
 
 .btn-lesson {
@@ -48,8 +46,10 @@ $color-lessSharp: $color-green-medium;
 @include media-breakpoint-up(md) {
   .main_page {
     margin-top: 80px;
-    // width: 100%;
-    // height: 250px;
+  }
+
+  .lesson_text p {
+    font-size: 22px;
   }
 }
 

@@ -205,9 +205,12 @@ class ShapesDiagram extends Diagram {
   }
 
   pulseShapes() {
-    this.elements._square._lines.pulseThickNow(1, 1.03, 3);
-    this.elements._triangle._lines.pulseThickNow(1, 1.03, 3);
-    this.elements._pent._lines.pulseThickNow(1, 1.03, 3);
+    const mag = 1.05;
+    const lines = 5;
+    const time = 1;
+    this.elements._square._lines.pulseThickNow(time, mag, lines);
+    this.elements._triangle._lines.pulseThickNow(time, mag, lines);
+    this.elements._pent._lines.pulseThickNow(time, mag, lines);
     this.animateNextFrame();
   }
 }

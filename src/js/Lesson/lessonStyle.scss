@@ -4,7 +4,7 @@ $color-lines: $color-blue;
 $color-corners: $color-cyan-medium;
 $color-moreSharp: $color-red;
 $color-lessSharp: $color-green-medium;
-$color-anchor: $color-corners;
+$color-anchor: $color-yellow;
 $color-radius: $color-blue;
 $color-reference: $color-blue-light;
 
@@ -36,6 +36,10 @@ $color-reference: $color-blue-light;
 
 #id_anchor {
   color: $color-anchor;
+}
+
+#id_corner {
+  color: $color-corners;
 }
 
 @include media-breakpoint-up(xs) {
