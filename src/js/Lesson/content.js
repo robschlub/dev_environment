@@ -1,103 +1,9 @@
 // @flow
-
-// import getColors from '../diagram/colors';
+import { Page, Section, Paragraph, actionWord } from './LessonPage';
 import ShapesDiagram from './shapesDiagram';
 import CircleDiagram from './circleDiagram';
-import Diagram from '../diagram/Diagram';
+// import Diagram from '../diagram/Diagram';
 
-// import { DiagramElementCollection, DiagramElementPrimative } from '../diagram/Element';
-// import { Point } from '../diagram/tools/g2';
-
-
-function actionWord(text, id = '', classes = '') {
-  return `<span id="${id}" class="${classes} action_word">${text}</span>`;
-}
-
-class Paragraph {
-  type: 'text' | 'diagram' | 'html';
-  id: string;
-  text: string;
-  DiagramClass: Function;
-
-  constructor(
-    type: 'text' | 'diagram' | 'html' = 'html',
-    content: string | Diagram = '',
-    id: string = '',
-  ) {
-    this.type = type;
-    if ((type === 'text' || type === 'html') && typeof content === 'string') {
-      this.text = content;
-    }
-    if (type === 'diagram' && typeof content === 'function') {
-      this.DiagramClass = content;
-    }
-    this.id = id;
-  }
-}
-
-class Section {
-  title: string;
-  paragraphs: Array<Paragraph>;
-
-  constructor() {
-    this.makeTitle();
-    // this.makeContent();
-    this.makeContent();
-  }
-
-  makeTitle() {
-    this.title = this.setTitle();
-  }
-
-  setContent(): Array<Paragraph | string> {
-    return [];
-  }
-  setTitle(): string {
-    return '';
-  }
-  setModifiers(): Object {
-    return {};
-  }
-
-  makeContent(): void {
-    this.paragraphs = []
-    const content = this.setContent();
-    const modifiers = this.setModifiers();
-    content.forEach((paragraphOrText) => {
-      let newParagraph;
-      if (typeof paragraphOrText === 'string') {
-        if (paragraphOrText[0] === '<') {
-          newParagraph = new Paragraph('html', paragraphOrText);
-        } else {
-          newParagraph = new Paragraph('text', `<p>${paragraphOrText}</p>`)
-        }
-      } else {
-        newParagraph = paragraphOrText;
-      }
-      if (newParagraph.type === 'text' || newParagraph.type === 'html') {
-        Object.keys(modifiers).forEach((key) => {
-          const expression = new RegExp(`\\|${key}\\|`, 'gi');
-          newParagraph.text =
-            newParagraph.text.replace(expression, modifiers[key])
-        });
-      }
-      this.paragraphs.push(newParagraph);
-    });
-  }
-
-  // eslint-disable-next-line
-  setState(diagram: any) {
-  }
-}
-
-class Page {
-  title: string;
-  sections: Array<Section>;
-  constructor() {
-    this.title = '';
-    this.sections = [];
-  }
-}
 
 class Section1 extends Section {
   setTitle() {
@@ -203,4 +109,4 @@ page1.sections = [
   new Section2(),
 ];
 
-export { Paragraph, Section, Page, page1 };
+export default page1;

@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import { page1, Page } from '../Lesson/content';
+import page1 from '../Lesson/content';
+import { Page } from '../Lesson/LessonPage';
 import Canvas from './canvas';
 import '../Lesson/lessonStyle.scss';
 
@@ -32,8 +33,8 @@ export default class LessonPage extends React.Component
           const diagram = new d.DiagramClass(d.id);
           section.setState(diagram);
         }
-      })
-    })
+      });
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
