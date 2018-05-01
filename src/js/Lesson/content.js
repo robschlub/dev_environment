@@ -66,7 +66,11 @@ class Section {
     content.forEach((paragraphOrText) => {
       let newParagraph;
       if (typeof paragraphOrText === 'string') {
-        newParagraph = new Paragraph('text', paragraphOrText)
+        if (paragraphOrText[0] === '<') {
+          newParagraph = new Paragraph('html', paragraphOrText);
+        } else {
+          newParagraph = new Paragraph('text', `<p>${paragraphOrText}</p>`)
+        }
       } else {
         newParagraph = paragraphOrText;
       }
@@ -79,25 +83,6 @@ class Section {
       }
       this.paragraphs.push(newParagraph);
     });
-    // Object.keys(modifiers).forEach((key) => {
-    //   const expression = new RegExp(`\\|${key}\\|`, 'gi');
-    //   for (let i = 0; i < this.paragraphs.length; i += 1) {
-    //     let paragraph = this.paragraphs[i];
-    //     if (typeof paragraph === 'string') {
-    //       paragraph = new Paragraph('text', paragraph);
-    //     }
-    //     // const paragraph = this.paragraphs[i];
-    //     if (paragraph instanceof Paragraph
-    //       && paragraph.type === 'text'
-    //       && typeof paragraph.content === 'string'
-    //     ) {
-    //       paragraph.content =
-    //         paragraph.content.replace(expression, this.modifiers[key]);
-    //       this.paragraphs[i] = paragraph;
-    //     }
-    //     this.formattedParagraphs.push(paragraph);
-    //   }
-    // });
   }
 
   // eslint-disable-next-line

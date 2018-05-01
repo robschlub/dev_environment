@@ -10,6 +10,10 @@ $color-lessSharp: $color-green-medium;
   font-size: 16px;
 }
 
+.lesson_title {
+  font-size: 30px;
+}
+
 .btn-lesson {
   margin: 5px;
 }
@@ -49,7 +53,12 @@ $color-lessSharp: $color-green-medium;
   }
 
   .lesson_text p {
-    font-size: 22px;
+    font-size: 20px;
+  }
+
+  .lesson_title {
+    font-size: 34px;
+    padding-bottom: 20px;
   }
 }
 
@@ -69,9 +78,7 @@ $color-lessSharp: $color-green-medium;
   position: relative;
 }
 
-.lesson_title {
-  font-size: 30px;
-}
+
 
 .lesson_container {
   position: absolute;

@@ -37,12 +37,11 @@ export default class LessonPage extends React.Component
   }
 
   // eslint-disable-next-line class-methods-use-this
-  addParagraph(text: string, i: number) {
+  addText(text: string, i: number) {
     return <div
-      className="lesson_text"
       key={i}
       dangerouslySetInnerHTML={ {
-        __html: `<p>${text}`,
+        __html: `${text}`,
       } }
     />;
   }
@@ -54,9 +53,9 @@ export default class LessonPage extends React.Component
 
   renderSection(section: Object) {
     let sectionRender = section.paragraphs.map((p) => {
-      if (p.type === 'text') {
+      if (p.type === 'text' || p.type === 'html') {
         this.key += 1;
-        return this.addParagraph(p.text, this.key);
+        return this.addText(p.text, this.key);
       } else if (p.type === 'html') {
         return p.text;
       }
@@ -79,7 +78,7 @@ export default class LessonPage extends React.Component
 
   render() {
     return <div className='main_page'>
-      <div className='lesson_container'>
+      <div className='lesson_container lesson_text'>
         {this.renderPage()}
       </div>
     </div>;
