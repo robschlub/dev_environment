@@ -12,7 +12,7 @@ function actionWord(text, id = '', classes = '') {
 
 class Page {
   title: string;
-  content: string;
+  content: Array<string | Object>;
   modifiers: Object;
 
   constructor() {
@@ -27,7 +27,12 @@ class Page {
   modifyContent() {
     Object.keys(this.modifiers).forEach((key) => {
       const expression = new RegExp(`\\|${key}\\|`, 'gi');
-      this.content = this.content.replace(expression, this.modifiers[key]);
+      for (let i = 0; i < this.content.length; i += 1) {
+        const content = this.content[i];
+        if (typeof content === 'string') {
+          this.content[i] = content.replace(expression, this.modifiers[key]);
+        }
+      }
     });
   }
 }
@@ -35,9 +40,11 @@ class Page {
 class Page1 extends Page {
   setContent() {
     this.title = 'Shapes and Corners';
-    this.content =
-      '<p>Many |_shapes| have |_corners|.</p>' +
-      '<p>Somes corners are |_more_sharp|, while others are |_less_sharp|.</p>';
+    this.content = [
+      'Many |_shapes| have |_corners|.',
+      'Somes corners are |_more_sharp|, while others are |_less_sharp|.',
+      { canvasId: 'shapes' },
+    ];
 
     this.modifiers = {
       _shapes: actionWord('shapes', 'id_shapes'),
@@ -83,15 +90,20 @@ class Page1 extends Page {
 
 class Page2 extends Page {
   title: string;
-  content: string;
+  content: Array<string | Object>;
   modifiers: Object;
 
   setContent() {
     this.title = 'Shapes and Corners';
-    this.content =
-      '<p>The sharpness of the corner is a property that can describe a shape.</p>' +
-      '<p>So how can you measure sharpness? What name do we give to the sharpness?</p>' +
-      '<p>Let\'s start with two lines |_anchored| at one end. One |_line| can be rotated around the anchor. The two lines form a |_corner| at the anchor.';
+    this.content = [
+      'The sharpness of the corner is a property that can describe a shape.',
+      `So how can you measure sharpness? What name do we give to the
+      sharpness?`,
+      `Let's start with two lines |_anchored| at one end. One |_line| can be
+      rotated around the anchor. The two lines form a |_corner| at the
+      anchor.`,
+      { canvasId: 'circle' },
+    ];
 
     this.modifiers = {
       _line: actionWord('line', 'id_line'),
