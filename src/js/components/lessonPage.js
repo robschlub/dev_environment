@@ -57,7 +57,7 @@ export default class LessonPage extends React.Component
     return <Canvas id={id} key={i}/>;
   }
 
-  renderContent(section: Object) {
+  renderSection(section: Object) {
     return section.paragraphs.map((p, i) => {
       if (typeof p === 'string') {
         return this.addParagraph(p, i);
@@ -66,11 +66,14 @@ export default class LessonPage extends React.Component
     });
   }
 
+  renderPage() {
+    return this.page.map(section => this.renderSection(section));
+  }
+
   render() {
     return <div className='main_page'>
       <div className='lesson_container'>
-        {this.renderContent(this.page[0])}
-        {this.renderContent(this.page[1])}
+        {this.renderPage()}
       </div>
     </div>;
   }
