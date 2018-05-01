@@ -119,6 +119,7 @@ class DiagramElement {
     style: (number) => number,
     num: number,
     transformMethod: (number) => Transform,
+    callback: (boolean) => void;
   };
 
   diagramLimits: Rect;
@@ -192,6 +193,7 @@ class DiagramElement {
       style: tools.sinusoid,
       num: 1,
       transformMethod: s => new Transform().scale(s, s),
+      callback: () => {},
     };
 
     this.state = {
@@ -642,7 +644,8 @@ class DiagramElement {
       // draw). If the pulse time is 0, that means pulsing will loop
       // indefinitely.
       if (deltaTime > this.pulse.time && this.pulse.time !== 0) {
-        this.state.isPulsing = false;
+        // this.state.isPulsing = false;
+        this.stopPulsing();
         deltaTime = this.pulse.time;
       }
 
@@ -709,8 +712,11 @@ class DiagramElement {
     this.state.pulse.startTime = -1;
   }
 
-  stopPulsing() {
+  stopPulsing(result: boolean = true) {
     this.state.isPulsing = false;
+    if (this.pulse.callback) {
+      this.pulse.callback(result);
+    }
   }
 
   stop() {

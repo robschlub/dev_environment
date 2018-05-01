@@ -166,6 +166,19 @@ class CircleDiagram extends Diagram {
   }
 
   toggleCorners() {
+    // this.elements._cornerRad.show = true;
+    // this.elements._cornerRef.show = true;
+
+    // this.elements._cornerRef.pulse.callback = () => {
+    //   this.elements._cornerRef.show = false;
+    //   this.elements._cornerRad.show = false;
+    //   this.animateNextFrame();
+    // };
+
+    // this.elements._cornerRad.pulseScaleNow(1, 2);
+    // this.elements._cornerRef.pulseScaleNow(1, 2);
+
+    // this.animateNextFrame();
     if (this.elements._cornerRad.show) {
       this.elements._cornerRad.show = false;
       this.elements._cornerRef.show = false;
