@@ -10,4 +10,4 @@ homePage();
 introPage();
 aboutPage();
 lessonSinglePage();
-lessonMultiPage();
+lessonMultiPage(0);
