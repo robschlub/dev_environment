@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import '../../css/style.scss';
 import Navbar from './../components/navbar';
 import LessonPage from '../components/lessonPage';
-import page from '../Lesson/content';
+import lesson from '../../Lessons/shapesAndCorners/shapesAndCorners';
 
 const lessonPage = () => {
   const lessonId:HTMLElement | null = document.getElementById('lesson');
@@ -14,7 +14,7 @@ const lessonPage = () => {
     ReactDOM.render(
       <div>
         <Navbar active='Lesson'/>
-        <LessonPage page={page}/>
+        <LessonPage lesson={lesson}/>
       </div>,
       lessonId,
     );

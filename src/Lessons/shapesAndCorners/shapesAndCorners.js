@@ -1,8 +1,8 @@
 // @flow
 
-import { Page, Section, Paragraph, actionWord } from './LessonPage';
-import ShapesDiagram from './shapesDiagram';
-import CircleDiagram from './circleDiagram';
+import { Lesson, Section, Paragraph, actionWord } from '../../js/Lesson/LessonBase';
+import ShapesDiagram from './diagramShapes';
+import CircleDiagram from './diagramCircle';
 
 class Section1 extends Section {
   setTitle() {
@@ -101,11 +101,11 @@ class Section2 extends Section {
   }
 }
 
-const page1 = new Page();
-page1.title = '';
-page1.sections = [
+const lesson = new Lesson();
+lesson.title = '';
+lesson.sections = [
   new Section1(),
   new Section2(),
 ];
 
-export default page1;
+export default lesson;

@@ -2,29 +2,28 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import { Page } from '../Lesson/LessonPage';
+import { Lesson } from '../Lesson/LessonBase';
 import Canvas from './canvas';
-import '../Lesson/lessonStyle.scss';
 
 type Props = {
-  page: Page;
+  lesson: Lesson;
 };
 
 export default class LessonPage extends React.Component
                                     <Props> {
-  page: Page;
+  lesson: Lesson;
   key: number;
 
   constructor(props: Props) {
     super(props);
-    this.page = props.page;
+    this.lesson = props.lesson;
     this.key = 0;
   }
 
   componentDidMount() {
     // Instantiate all the diagrams now that the canvas elements have been
     // created.
-    this.page.sections.forEach((section) => {
+    this.lesson.sections.forEach((section) => {
       section.paragraphs.forEach((paragraph) => {
         if (paragraph.type === 'diagram') {
           const d = paragraph;
@@ -72,7 +71,7 @@ export default class LessonPage extends React.Component
   }
 
   renderPage() {
-    return this.page.sections.map(section => this.renderSection(section));
+    return this.lesson.sections.map(section => this.renderSection(section));
   }
 
   render() {

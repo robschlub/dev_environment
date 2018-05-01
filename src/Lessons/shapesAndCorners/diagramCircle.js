@@ -1,10 +1,11 @@
 // @flow
 
-import Diagram from '../diagram/Diagram';
-import { DiagramElementCollection, DiagramElementPrimative } from '../diagram/Element';
-import { Point, Transform, minAngleDiff } from '../diagram/tools/g2';
-import styles from './lessonStyle.scss';
-import getSCSSColors from '../tools/css';
+import Diagram from '../../js/diagram/Diagram';
+import { DiagramElementCollection, DiagramElementPrimative }
+  from '../../js/diagram/Element';
+import { Point, Transform, minAngleDiff } from '../../js/diagram/tools/g2';
+import getSCSSColors from '../../js/tools/css';
+import styles from './style.scss';
 
 const colors = getSCSSColors(styles);
 const anchorColor = colors.colorAnchor;
@@ -47,10 +48,6 @@ function makeRadius(shapes: Object, location: Point) {
     shapes, location, circleRadius, lineWidth,
     radiusColor, new Transform().rotate(0).translate(location.x, location.y),
   );
-  // const radius = shapes.horizontalLine(
-  //   new Point(0, 0), circleRadius, lineWidth,
-  //   0, radiusColor, new Transform().rotate(0).translate(location.x, location.y),
-  // );
   radius.isTouchable = true;
   radius.isMovable = true;
   radius.pulse.transformMethod = s => new Transform().scale(1, s);

@@ -83,7 +83,7 @@ class Section {
   }
 }
 
-class Page {
+class Lesson {
   title: string;
   sections: Array<Section>;
   constructor() {
@@ -92,4 +92,4 @@ class Page {
   }
 }
 
-export { Paragraph, Section, Page, actionWord };
+export { Paragraph, Section, Lesson, actionWord };

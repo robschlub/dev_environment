@@ -1,10 +1,10 @@
 // @flow
-// import getColors from '../diagram/colors';
-import Diagram from '../diagram/Diagram';
-import { DiagramElementCollection, DiagramElementPrimative } from '../diagram/Element';
-import { Point } from '../diagram/tools/g2';
-import styles from './lessonStyle.scss';
-import getSCSSColors from '../tools/css';
+import Diagram from '../../js/diagram/Diagram';
+import { DiagramElementCollection, DiagramElementPrimative }
+  from '../../js/diagram/Element';
+import { Point } from '../../js/diagram/tools/g2';
+import getSCSSColors from '../../js/tools/css';
+import styles from './style.scss';
 
 const colors = getSCSSColors(styles);
 const lineColor = colors.colorLines;
