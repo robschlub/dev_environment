@@ -10,9 +10,9 @@ function actionWord(text, id = '', classes = '') {
   return `<span id="${id}" class="${classes} action_word">${text}</span>`;
 }
 
-class Page {
+class Section {
   title: string;
-  content: Array<string | Object>;
+  paragraphs: Array<string | Object>;
   modifiers: Object;
 
   constructor() {
@@ -27,23 +27,26 @@ class Page {
   modifyContent() {
     Object.keys(this.modifiers).forEach((key) => {
       const expression = new RegExp(`\\|${key}\\|`, 'gi');
-      for (let i = 0; i < this.content.length; i += 1) {
-        const content = this.content[i];
-        if (typeof content === 'string') {
-          this.content[i] = content.replace(expression, this.modifiers[key]);
+      for (let i = 0; i < this.paragraphs.length; i += 1) {
+        const paragraph = this.paragraphs[i];
+        if (typeof paragraph === 'string') {
+          this.paragraphs[i] = paragraph.replace(expression, this.modifiers[key]);
         }
       }
     });
   }
 }
 
-class Page1 extends Page {
+class Section1 extends Section {
   setContent() {
     this.title = 'Shapes and Corners';
-    this.content = [
+    this.paragraphs = [
       'Many |_shapes| have |_corners|.',
       'Somes corners are |_more_sharp|, while others are |_less_sharp|.',
-      { canvasId: 'shapes' },
+      {
+        Diagram: ShapesDiagram,
+        id: 'shapes',
+      },
     ];
 
     this.modifiers = {
@@ -88,21 +91,24 @@ class Page1 extends Page {
   }
 }
 
-class Page2 extends Page {
+class Section2 extends Section {
   title: string;
-  content: Array<string | Object>;
+  paragraphs: Array<string | Object>;
   modifiers: Object;
 
   setContent() {
     this.title = 'Shapes and Corners';
-    this.content = [
+    this.paragraphs = [
       'The sharpness of the corner is a property that can describe a shape.',
       `So how can you measure sharpness? What name do we give to the
       sharpness?`,
       `Let's start with two lines |_anchored| at one end. One |_line| can be
       rotated around the anchor. The two lines form a |_corner| at the
       anchor.`,
-      { canvasId: 'circle' },
+      {
+        Diagram: CircleDiagram,
+        id: 'circle',
+      },
     ];
 
     this.modifiers = {
@@ -139,9 +145,9 @@ class Page2 extends Page {
   }
 }
 
-const content = [
-  new Page1(),
-  new Page2(),
+const page = [
+  new Section1(),
+  new Section2(),
 ];
 
-export default content;
+export default page;

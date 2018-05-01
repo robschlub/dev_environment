@@ -4,7 +4,7 @@ import * as React from 'react';
 import '../../css/style.scss';
 import ShapesDiagram from '../Lesson/shapesDiagram';
 import CircleDiagram from '../Lesson/circleDiagram';
-import content from '../Lesson/content';
+import page from '../Lesson/content';
 import Canvas from './canvas';
 import '../Lesson/lessonStyle.scss';
 // import '../../css/diagram.scss';
@@ -18,21 +18,27 @@ type Props = {
 
 export default class LessonPage extends React.Component
                                     <Props> {
-  content: content;
+  page: page;
   diagram: ShapesDiagram;
   diagramCircle: CircleDiagram;
 
   constructor(props: Props) {
     super(props);
-    this.content = content;
+    this.page = page;
   }
 
   componentDidMount() {
-    // const id = this.props.id || '';
-    this.diagram = new ShapesDiagram('shapes');
-    this.content[0].setState(this.diagram);
-    this.diagramCircle = new CircleDiagram('circle');
-    this.content[1].setState(this.diagramCircle);
+    for (let i = 0; i < this.page.length; i += 1) {
+      const section = this.page[i];
+      for (let j = 0; j < section.paragraphs.length; j += 1) {
+        const paragraph = section.paragraphs[j];
+        if (typeof paragraph === 'object') {
+          const d = paragraph;
+          const diagram = new d.Diagram(d.id);
+          section.setState(diagram);
+        }
+      }
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -51,20 +57,20 @@ export default class LessonPage extends React.Component
     return <Canvas id={id} key={i}/>;
   }
 
-  renderContent(page: Object) {
-    return page.content.map((c, i) => {
-      if (typeof c === 'string') {
-        return this.addParagraph(c, i);
+  renderContent(section: Object) {
+    return section.paragraphs.map((p, i) => {
+      if (typeof p === 'string') {
+        return this.addParagraph(p, i);
       }
-      return this.addDiagram(c.canvasId, i);
+      return this.addDiagram(p.id, i);
     });
   }
 
   render() {
     return <div className='main_page'>
       <div className='lesson_container'>
-        {this.renderContent(this.content[0])}
-        {this.renderContent(this.content[1])}
+        {this.renderContent(this.page[0])}
+        {this.renderContent(this.page[1])}
       </div>
     </div>;
   }
