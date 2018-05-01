@@ -21,10 +21,12 @@ export default class LessonPage extends React.Component
   page: page;
   diagram: ShapesDiagram;
   diagramCircle: CircleDiagram;
+  key: number;
 
   constructor(props: Props) {
     super(props);
     this.page = page;
+    this.key = 0;
   }
 
   componentDidMount() {
@@ -58,12 +60,22 @@ export default class LessonPage extends React.Component
   }
 
   renderSection(section: Object) {
-    return section.paragraphs.map((p, i) => {
+    let sectionRender = section.paragraphs.map((p) => {
       if (typeof p === 'string') {
-        return this.addParagraph(p, i);
+        this.key += 1;
+        return this.addParagraph(p, this.key);
       }
-      return this.addDiagram(p.id, i);
+      this.key += 1;
+      return this.addDiagram(p.id, this.key);
     });
+    if (section.title) {
+      this.key += 1;
+      const title = <div className='lesson_title' key={this.key}>
+        {section.title}
+      </div>;
+      sectionRender = [title].concat(sectionRender);
+    }
+    return sectionRender;
   }
 
   renderPage() {

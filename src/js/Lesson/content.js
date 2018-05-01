@@ -97,7 +97,7 @@ class Section2 extends Section {
   modifiers: Object;
 
   setContent() {
-    this.title = 'Shapes and Corners';
+    this.title = '';
     this.paragraphs = [
       'The sharpness of the corner is a property that can describe a shape.',
       `So how can you measure sharpness? What name do we give to the
