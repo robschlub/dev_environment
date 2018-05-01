@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../../css/style.scss';
+import '../../css/multipagelesson.scss';
 import Navbar from './../components/navbar';
 import MultiPageLesson from '../components/multiPageLesson';
 import lesson from '../../Lessons/shapesAndCorners/shapesAndCorners';
