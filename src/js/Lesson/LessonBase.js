@@ -91,6 +91,9 @@ class Section {
     }
   }
 
+  // makeContent generates the html content for the section.
+  // HTML content with diagram canvases, and without are created.
+  // Additionally, a list of diagrams is created
   makeContent(): void {
     let content = this.setContent();
     if (typeof content === 'string') {

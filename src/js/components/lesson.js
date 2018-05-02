@@ -75,23 +75,18 @@ export default class LessonComponent extends React.Component
     }
     const allDiagrams = {};
     sections.forEach((section) => {
-      // const sectionDiagrams = [];
-      // Can only create diagrams if single page primary section, or when in
-      // a multi page lesson
-      // if (this.type === 'multi' || section.isSinglePagePrimary) {
       section.diagrams.forEach((d) => {
+        // only add diagram if it doesn't already exist
         if (!(d.id in allDiagrams)) {
           allDiagrams[d.id] = new d.DiagramClass(d.id);
         }
       });
-      // }
       section.setState(allDiagrams);
-      // Can only run multi only state if single page primary section, or when
-      // in a multi page lesson
+      // Can only run some state setups if lesson is a multi page lesson,
+      // of if the section is a primary section for a single page lesson.
       if (this.type === 'multi' || section.isSinglePagePrimary) {
         section.setStateMultiOnly(allDiagrams);
       }
-      // allDiagrams.push(...sectionDiagrams);
     });
     this.diagrams = allDiagrams;
   }
