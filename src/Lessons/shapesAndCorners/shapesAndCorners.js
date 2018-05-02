@@ -65,9 +65,11 @@ class Section2 extends Section {
       `So how can you measure sharpness? What name do we give to the
       sharpness?`,
       `Let's start with two lines |_anchored| at one end. One |_line| can be
-      rotated around the anchor. The two lines form a |_corner| at the
-      anchor.`,
+      rotated around the anchor.`,
       new Paragraph('diagram', CircleDiagram, 'circle'),
+      'The two lines form a |_corner| at the anchor.',
+      '|_Small_rotation| results in a |_sharper_corner|.',
+      '|_Large_rotation| results in a |_less_sharp_corner|.',
     ];
   }
   setModifiers() {
@@ -75,6 +77,10 @@ class Section2 extends Section {
       _line: actionWord('line', 'id_line'),
       _anchored: actionWord('anchored', 'id_anchor'),
       _corner: actionWord('corner', 'id_corner'),
+      _Small_rotation: actionWord('Small Rotation', 'id_small_rotation'),
+      _Large_rotation: actionWord('Large Rotation', 'id_large_rotation'),
+      _sharper_corner: actionWord('sharper corner', 'id_more_sharp_cornern'),
+      _less_sharp_corner: actionWord('less sharp corner', 'id_less_sharp_corner'),
     };
   }
   getState(diagrams: Array<CircleDiagram>) {
@@ -111,6 +117,16 @@ class Section2 extends Section {
     const corner = document.getElementById('id_corner');
     if (corner) {
       corner.onclick = diagram.toggleCorners.bind(diagram);
+    }
+
+    const smallRotation = document.getElementById('id_small_rotation');
+    if (smallRotation) {
+      smallRotation.onclick = diagram.rotateTo.bind(diagram, Math.PI / 6, 0, 1);
+    }
+
+    const largeRotation = document.getElementById('id_large_rotation');
+    if (largeRotation) {
+      largeRotation.onclick = diagram.rotateTo.bind(diagram, 5 * Math.PI / 6, 0, 1);
     }
   }
 }

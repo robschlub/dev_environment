@@ -42,6 +42,16 @@ $color-reference: $color-blue-light;
   color: $color-corners;
 }
 
+#id_small_rotation,
+#id_more_sharp_cornern {
+  color: $color-moreSharp;
+}
+
+#id_large_rotation,
+#id_less_sharp_corner {
+  color: $color-lessSharp;
+}
+
 @include media-breakpoint-up(xs) {
   #circle_container {
     width: 100%;

@@ -3,7 +3,7 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff } from '../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
 import getSCSSColors from '../../js/tools/css';
 import styles from './style.scss';
 
@@ -116,7 +116,9 @@ class CircleDiagram extends Diagram {
   updateRotation() {
     const rotation = this.elements._radius.transform.r();
     if (rotation) {
-      this.elements._cornerRad.transform.updateRotation(rotation);
+      const r = normAngle(rotation);
+      this.elements._radius.transform.updateRotation(r);
+      this.elements._cornerRad.transform.updateRotation(r);
     }
   }
 
@@ -160,6 +162,20 @@ class CircleDiagram extends Diagram {
   pulseLines() {
     this.pulseRadius();
     this.pulseReference();
+  }
+
+  rotateTo(angle: number, direction: number, time: number) {
+    let d = direction;
+    if (d === 0) {
+      const r = this.elements._radius.transform.r();
+      d = 1;
+      if (r) {
+        const delta = minAngleDiff(angle, r);
+        d = delta / Math.abs(delta);
+      }
+    }
+    this.elements._radius.animateRotationTo(angle, d, time);
+    this.animateNextFrame();
   }
 
   toggleCorners() {
