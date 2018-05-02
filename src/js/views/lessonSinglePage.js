@@ -4,7 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import '../../css/style.scss';
 import Navbar from './../components/navbar';
-import SinglePageLesson from '../components/singlePageLesson';
+// import SinglePageLesson from '../components/singlePageLesson';
+import LessonComponent from '../components/lesson';
 import lesson from '../../Lessons/shapesAndCorners/shapesAndCorners';
 
 const lessonSinglePage = () => {
@@ -14,7 +15,7 @@ const lessonSinglePage = () => {
     ReactDOM.render(
       <div>
         <Navbar active='Single Page Lesson'/>
-        <SinglePageLesson lesson={lesson}/>
+        <LessonComponent type="single" lesson={lesson}/>
       </div>,
       lessonId,
     );

@@ -87,7 +87,6 @@ class Section2 extends Section {
   setState(diagrams: Array<CircleDiagram>) {
     const diagram = diagrams[0];
     const t = diagram.elements._radius.transform.copy();
-
     if ('angle' in this.lesson.state) {
       t.updateRotation(this.lesson.state.angle);
     } else {
