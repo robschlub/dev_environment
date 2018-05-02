@@ -62,9 +62,19 @@ exports[`Navbar Make "About" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/lesson"
+            href="/singlepagelesson"
           >
-            Lesson
+            Single Page Lesson
+          </a>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link "
+            href="/multipagelesson"
+          >
+            Multi Page Lesson
           </a>
         </li>
         <li
@@ -198,9 +208,19 @@ exports[`Navbar Make "Introduction" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/lesson"
+            href="/singlepagelesson"
           >
-            Lesson
+            Single Page Lesson
+          </a>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link "
+            href="/multipagelesson"
+          >
+            Multi Page Lesson
           </a>
         </li>
         <li
@@ -334,9 +354,19 @@ exports[`Navbar No props 1`] = `
         >
           <a
             className="nav-link "
-            href="/lesson"
+            href="/singlepagelesson"
           >
-            Lesson
+            Single Page Lesson
+          </a>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link "
+            href="/multipagelesson"
+          >
+            Multi Page Lesson
           </a>
         </li>
         <li

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import { Lesson } from '../Lesson/LessonBase';
+import { Lesson, Paragraph, Section } from '../Lesson/LessonBase';
 import Canvas from './canvas';
 
 type Props = {
@@ -23,14 +23,37 @@ export default class SinglePageLesson extends React.Component
   componentDidMount() {
     // Instantiate all the diagrams now that the canvas elements have been
     // created.
+    this.makeDiagrams();
+    // this.lesson.sections.forEach((section) => {
+    //   section.paragraphs.forEach((paragraph) => {
+    //     if (paragraph.type === 'diagram') {
+    //       const d = paragraph;
+    //       const diagram = new d.DiagramClass(d.id);
+    //       section.setState(diagram);
+    //     }
+    //   });
+    // });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getDiagrams(section: Section): Array<Paragraph> {
+    const diagrams = [];
+    section.paragraphs.forEach((paragraph) => {
+      if (paragraph.type === 'diagram') {
+        diagrams.push(paragraph);
+      }
+    });
+    return diagrams;
+  }
+
+  makeDiagrams() {
     this.lesson.sections.forEach((section) => {
-      section.paragraphs.forEach((paragraph) => {
-        if (paragraph.type === 'diagram') {
-          const d = paragraph;
-          const diagram = new d.DiagramClass(d.id);
-          section.setState(diagram);
-        }
+      const diagramIds = this.getDiagrams(section);
+      const diagrams = [];
+      diagramIds.forEach((d) => {
+        diagrams.push(new d.DiagramClass(d.id));
       });
+      section.setState(diagrams);
     });
   }
 

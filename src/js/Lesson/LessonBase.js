@@ -99,7 +99,7 @@ class Section {
 
   // eslint-disable-next-line no-unused-vars
   getState(diagram: Array<any>) {
-    this.state = {};
+    this.lesson.state = {};
   }
 }
 
