@@ -28,14 +28,29 @@ class Paragraph {
   }
 }
 
+class Lesson {
+  title: string;
+  sections: Array<Section>;
+  state: Object;
+
+  constructor() {
+    this.title = '';
+    this.sections = [];
+    this.state = {};
+  }
+}
+
 class Section {
   title: string;
   paragraphs: Array<Paragraph>;
+  lesson: Lesson;
 
-  constructor() {
+  constructor(lesson: Lesson) {
     this.makeTitle();
     // this.makeContent();
     this.makeContent();
+    this.lesson = lesson;
+    // this.state = {};
   }
 
   makeTitle() {
@@ -78,18 +93,15 @@ class Section {
     });
   }
 
-  // eslint-disable-next-line
-  setState(diagram: any) {
+  // eslint-disable-next-line no-unused-vars
+  setState(diagram: Array<any>) {
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  getState(diagram: Array<any>) {
+    this.state = {};
   }
 }
 
-class Lesson {
-  title: string;
-  sections: Array<Section>;
-  constructor() {
-    this.title = '';
-    this.sections = [];
-  }
-}
 
 export { Paragraph, Section, Lesson, actionWord };

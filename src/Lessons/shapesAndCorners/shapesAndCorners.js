@@ -23,7 +23,9 @@ class Section1 extends Section {
       _less_sharp: actionWord('less sharp', 'id_less_sharp'),
     };
   }
-  setState(diagram: ShapesDiagram) {
+
+  setState(diagrams: Array<ShapesDiagram>) {
+    const diagram = diagrams[0];
     diagram.elements.hideOnly([
       diagram.elements._square._corners,
       diagram.elements._square._lessSharpCorners,
@@ -75,15 +77,28 @@ class Section2 extends Section {
       _corner: actionWord('corner', 'id_corner'),
     };
   }
+  getState(diagrams: Array<CircleDiagram>) {
+    const diagram = diagrams[0];
+    const angle = diagram.elements._radius.transform.r();
+    this.lesson.state = {
+      angle,
+    };
+  }
+  setState(diagrams: Array<CircleDiagram>) {
+    const diagram = diagrams[0];
+    const t = diagram.elements._radius.transform.copy();
 
-  setState(diagram: CircleDiagram) {
+    if ('angle' in this.lesson.state) {
+      t.updateRotation(this.lesson.state.angle);
+    } else {
+      t.updateRotation(Math.PI / 3);
+    }
+    diagram.elements._radius.setTransform(t);
+
     diagram.elements.hideOnly([
       diagram.elements._cornerRad,
       diagram.elements._cornerRef,
     ]);
-    const t = diagram.elements._radius.transform.copy();
-    t.updateRotation(Math.PI / 3);
-    diagram.elements._radius.setTransform(t);
 
     const line = document.getElementById('id_line');
     if (line) {
@@ -104,8 +119,8 @@ class Section2 extends Section {
 const lesson = new Lesson();
 lesson.title = '';
 lesson.sections = [
-  new Section1(),
-  new Section2(),
+  new Section1(lesson),
+  new Section2(lesson),
 ];
 
 export default lesson;

@@ -14,7 +14,8 @@
               "setContent",
               "setTitle",
               "setModifiers",
-              "setState"
+              "setState",
+              "getState"
             ]
           }
         ],

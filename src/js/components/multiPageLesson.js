@@ -21,6 +21,7 @@ export default class MultiPageLesson extends React.Component
   lesson: Lesson;
   key: number;
   state: State;
+  diagrams: Array<Object>;
 
   constructor(props: Props) {
     super(props);
@@ -29,10 +30,12 @@ export default class MultiPageLesson extends React.Component
     };
     this.lesson = props.lesson;
     this.key = 0;
+    this.diagrams = [];
   }
 
   goToNext() {
     if (this.state.section < this.lesson.sections.length - 1) {
+      this.lesson.sections[this.state.section].getState(this.diagrams);
       this.setState({
         section: this.state.section + 1,
       });
@@ -42,6 +45,7 @@ export default class MultiPageLesson extends React.Component
 
   goToPrevious() {
     if (this.state.section > 0) {
+      this.lesson.sections[this.state.section].getState(this.diagrams);
       this.setState({
         section: this.state.section - 1,
       });
@@ -62,24 +66,19 @@ export default class MultiPageLesson extends React.Component
 
   makeDiagrams() {
     const section = this.lesson.sections[this.state.section];
-    const diagrams = this.getDiagrams();
-    diagrams.forEach((diagram) => {
-      const d = new diagram.DiagramClass(diagram.id);
-      section.setState(d);
+    const diagramIds = this.getDiagrams();
+    const diagrams = [];
+    diagramIds.forEach((d) => {
+      diagrams.push(new d.DiagramClass(d.id));
     });
+    this.diagrams = diagrams;
+    section.setState(diagrams);
   }
 
   componentDidMount() {
     // Instantiate all the diagrams now that the canvas elements have been
     // created.
     this.makeDiagrams();
-    // section.paragraphs.forEach((paragraph) => {
-    //   if (paragraph.type === 'diagram') {
-    //     const d = paragraph;
-    //     const diagram = new d.DiagramClass(d.id);
-    //     section.setState(diagram);
-    //   }
-    // });
     const nextButton = document.getElementById('button-next');
     if (nextButton instanceof HTMLElement) {
       nextButton.onclick = this.goToNext.bind(this);
