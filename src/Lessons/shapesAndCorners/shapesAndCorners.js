@@ -10,9 +10,10 @@ class Section1 extends Section {
   }
   setContent() {
     return [
-      'Many |_shapes| have |_corners|.',
-      'Somes corners are |_more_sharp|, while others are |_less_sharp|.',
-      // new Paragraph('diagram', ShapesDiagram, 'shapes'),
+      '<p>Many |_shapes| have |_corners|.</p>',
+      `<p>
+        Somes corners are |_more_sharp|, while others are |_less_sharp|.
+      </p>`,
       '|_shapes_diagram|',
     ];
   }
@@ -47,22 +48,26 @@ class Section1 extends Section {
 
 class Section2 extends Section {
   setContent() {
-    return [
-      'The sharpness of the corner is a property that can describe a shape.',
-      `So how can you measure sharpness? What name do we give to the
-      sharpness?`,
-      `Let's start with two lines |_anchored| at one end. One |_line| can be
-      rotated around the anchor.`,
-      // divStart('circle-diagram-and-text-container'),
-      // new Paragraph('diagram', CircleDiagram, 'circle'),
-      // divStart('circle-diagram-text-container'),
-      '|_circle_diagram|',
-      'The two lines form a |_corner| at the anchor.',
-      '|_Small_rotation| results in a |_sharper_corner|.',
-      '|_Large_rotation| results in a |_less_sharp_corner|.',
-      // divEnd(),
-      // divEnd(),
-    ];
+    return `
+      <p>
+        The sharpness of the corner is a property that can describe a shape.
+      </p>
+      <p>
+        So how can you measure sharpness? What name do we give to the 
+        sharpness?
+      <p>
+      <p>
+        Let's start with two lines |_anchored| at one end. One |_line| can be
+        rotated around the anchor.
+      </p>
+      |_circle_diagram|
+      <p>
+        The two lines form a |_corner| at the anchor.
+      </p><p>
+        |_Small_rotation| results in a |_sharper_corner|.
+      </p><p>
+        |_Large_rotation| results in a |_less_sharp_corner|.
+      </p>`;
   }
   setModifiers() {
     return {

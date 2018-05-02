@@ -53,7 +53,7 @@ class Section {
     this.title = this.setTitle();
   }
 
-  setContent(): Array<string> {
+  setContent(): Array<string> | string {
     return [];
   }
   setTitle(): string {
@@ -87,7 +87,10 @@ class Section {
   }
 
   makeContent(): void {
-    const content = this.setContent();
+    let content = this.setContent();
+    if (typeof content === 'string') {
+      content = [content];
+    }
     const modifiers = this.setModifiers();
     let htmlText = '';
     content.forEach((element) => {
