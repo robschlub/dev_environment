@@ -30,6 +30,10 @@ export default class LessonComponent extends React.Component
       this.state = {
         section: props.section,
       };
+    } else {
+      this.state = {
+        section: 0,
+      };
     }
     this.type = props.type;
     this.lesson = props.lesson;
