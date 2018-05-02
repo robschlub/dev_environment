@@ -27,8 +27,8 @@ class Section1 extends Section {
     };
   }
 
-  setState(diagrams: Array<ShapesDiagram>) {
-    const diagram = diagrams[0];
+  setState(diagrams: Object) {
+    const diagram = diagrams.shapes_container;
     diagram.elements.hideOnly([
       diagram.elements._square._corners,
       diagram.elements._square._lessSharpCorners,
@@ -74,16 +74,16 @@ class Section2 extends Section {
     return true;
   }
 
-  getState(diagrams: Array<CircleDiagram>) {
-    const diagram = diagrams[0];
+  getState(diagrams: Object) {
+    const diagram = diagrams.circle_container;
     const angle = diagram.elements._radius.transform.r();
     this.lesson.state = {
       angle,
     };
   }
 
-  setState(diagrams: Array<CircleDiagram>) {
-    const diagram = diagrams[0];
+  setState(diagrams: Object) {
+    const diagram = diagrams.circle_container;
     const t = diagram.elements._radius.transform.copy();
     if ('angle' in this.lesson.state) {
       t.updateRotation(this.lesson.state.angle);
@@ -129,16 +129,16 @@ class Section3 extends Section {
     return false;
   }
 
-  getState(diagrams: Array<CircleDiagram>) {
-    const diagram = diagrams[0];
+  getState(diagrams: Object) {
+    const diagram = diagrams.circle_container;
     const angle = diagram.elements._radius.transform.r();
     this.lesson.state = {
       angle,
     };
   }
 
-  setStateMultiOnly(diagrams: Array<CircleDiagram>) {
-    const diagram = diagrams[0];
+  setStateMultiOnly(diagrams: Object) {
+    const diagram = diagrams.circle_container;
     const t = diagram.elements._radius.transform.copy();
     if ('angle' in this.lesson.state) {
       t.updateRotation(this.lesson.state.angle);
@@ -153,8 +153,8 @@ class Section3 extends Section {
     ]);
   }
 
-  setState(diagrams: Array<CircleDiagram>) {
-    const diagram = diagrams[0];
+  setState(diagrams: Object) {
+    const diagram = diagrams.circle_container;
     this.onClickId('id_corner', diagram.toggleCorners, [diagram]);
     const smallRotation = [diagram, Math.PI / 6, 0, 1];
     const largeRotation = [diagram, 5 * Math.PI / 6, 0, 1];

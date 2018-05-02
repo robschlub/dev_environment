@@ -125,15 +125,15 @@ class Section {
   }
 
   // eslint-disable-next-line no-unused-vars
-  setState(diagrams: Array<any>) {
+  setState(diagrams: Object) {
   }
 
   // eslint-disable-next-line no-unused-vars
-  setStateMultiOnly(diagrams: Array<any>) {
+  setStateMultiOnly(diagrams: Object) {
   }
 
   // eslint-disable-next-line no-unused-vars
-  getState(diagrams: Array<any>) {
+  getState(diagrams: Object) {
     // this.lesson.state = {};
   }
 }

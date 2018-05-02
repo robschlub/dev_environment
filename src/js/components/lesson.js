@@ -22,7 +22,7 @@ export default class LessonComponent extends React.Component
   key: number;
   type: string;
   state: State;
-  diagrams: Array<Object>;
+  diagrams: Object;
 
   constructor(props: Props) {
     super(props);
@@ -38,7 +38,7 @@ export default class LessonComponent extends React.Component
     this.type = props.type;
     this.lesson = props.lesson;
     this.key = 0;
-    this.diagrams = [];
+    this.diagrams = {};
   }
 
   goToNext() {
@@ -73,23 +73,25 @@ export default class LessonComponent extends React.Component
       // eslint-disable-next-line prefer-destructuring
       sections = this.lesson.sections;
     }
-    const allDiagrams = [];
+    const allDiagrams = {};
     sections.forEach((section) => {
-      const sectionDiagrams = [];
+      // const sectionDiagrams = [];
       // Can only create diagrams if single page primary section, or when in
       // a multi page lesson
-      if (this.type === 'multi' || section.isSinglePagePrimary) {
-        section.diagrams.forEach((d) => {
-          sectionDiagrams.push(new d.DiagramClass(d.id));
-        });
-      }
-      section.setState(sectionDiagrams);
+      // if (this.type === 'multi' || section.isSinglePagePrimary) {
+      section.diagrams.forEach((d) => {
+        if (!(d.id in allDiagrams)) {
+          allDiagrams[d.id] = new d.DiagramClass(d.id);
+        }
+      });
+      // }
+      section.setState(allDiagrams);
       // Can only run multi only state if single page primary section, or when
       // in a multi page lesson
       if (this.type === 'multi' || section.isSinglePagePrimary) {
-        section.setStateMultiOnly(sectionDiagrams);
+        section.setStateMultiOnly(allDiagrams);
       }
-      allDiagrams.push(...sectionDiagrams);
+      // allDiagrams.push(...sectionDiagrams);
     });
     this.diagrams = allDiagrams;
   }
