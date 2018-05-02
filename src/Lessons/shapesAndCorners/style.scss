@@ -71,6 +71,10 @@ $color-reference: $color-blue-light;
     width: 100%;
     padding-top: 100%;
   }
+
+  .text_container {
+    //
+  }
 }
 
 // @include media-breakpoint-up(sm) {
@@ -85,10 +89,15 @@ $color-reference: $color-blue-light;
     height: 400px;
     padding-top: 0;
     // padding-top: 50%;
-    // float: right;
-    margin-left: auto;
-    margin-right: 0;
-    // display: table-cell;
+
+    float: right;
+    // margin-left: auto;
+    // margin-right: 0;
+  }
+
+  .text_container {
+    float: left;
+    width: 50%;
   }
 
   .circle-diagram-text-container {

@@ -133,9 +133,6 @@ class Diagram {
         }
       }
     }
-    // console.log(containerId)
-    // console.log(this.canvas)
-    // console.log(this.canvas instanceof HTMLCanvasElement)
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }

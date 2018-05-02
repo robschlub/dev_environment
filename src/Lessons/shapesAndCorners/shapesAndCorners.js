@@ -49,6 +49,7 @@ class Section1 extends Section {
 class Section2 extends Section {
   setContent() {
     return `
+      <div class="text_container">
       <p>
         The sharpness of the corner is a property that can describe a shape.
       </p>
@@ -60,6 +61,7 @@ class Section2 extends Section {
         Let's start with two lines |_anchored| at one end. One |_line| can be
         rotated around the anchor.
       </p>
+      </div>
       |_circle_diagram|`;
   }
   setModifiers() {
@@ -105,14 +107,16 @@ class Section2 extends Section {
 class Section3 extends Section {
   setContent() {
     return `
-      |_circle_diagram|
+    <div class="text_container">
       <p>
         The two lines form a |_corner| at the anchor.
       </p><p>
         |_Small_rotation| results in a |_sharper_corner|.
       </p><p>
         |_Large_rotation| results in a |_less_sharp_corner|.
-      </p>`;
+      </p>
+    </div>
+      |_circle_diagram|`;
   }
   setModifiers() {
     return {
