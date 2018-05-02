@@ -1,43 +1,25 @@
 // @flow
 
-import Diagram from '../diagram/Diagram';
+// import Diagram from '../diagram/Diagram';
 
 function actionWord(text: string, id: string = '', classes: string = '') {
-  return `<span id="${id}" class="${classes} action_word">${text}</span>`;
+  return {
+    replacementText: `<span id="${id}" class="${classes} action_word">${text}</span>`,
+    type: 'html',
+  };
 }
 
-class Paragraph {
-  type: 'text' | 'diagram' | 'html' | 'divStart' | 'divEnd';
-  id: string;
-  text: string;
-  DiagramClass: Function;
-  className: string;
-
-  constructor(
-    type: 'text' | 'diagram' | 'html' | 'divStart' | 'divEnd' = 'text',
-    content: string | Diagram = '',
-    id: string = '',
-    className: string = '',
-  ) {
-    this.type = type;
-    if ((type === 'text' || type === 'html') && typeof content === 'string') {
-      this.text = content;
-    }
-    if (type === 'diagram' && typeof content === 'function') {
-      this.DiagramClass = content;
-    }
-    this.id = id;
-    if (type === 'divStart') {
-      this.className = className;
-    }
-  }
-}
-
-function divStart(id: string, className: string = '') {
-  return new Paragraph('divStart', '', id, className);
-}
-function divEnd() {
-  return new Paragraph('divEnd');
+function diagramCanvas(id: string, DiagramClass: Object, classes: string = '') {
+  return {
+    replacementText: `<div id="${id}" class="canvas_container ${classes}">
+        <canvas class="diagram_gl"></canvas>
+        <div class="diagram_html"></div>
+        <canvas class="diagram_text"></canvas>
+      </div>`,
+    type: 'diagram',
+    DiagramClass,
+    id,
+  };
 }
 
 class Lesson {
@@ -54,22 +36,24 @@ class Lesson {
 
 class Section {
   title: string;
-  paragraphs: Array<Paragraph>;
+  // paragraphs: Array<Paragraph>;
   lesson: Lesson;
+  htmlContent: string;
+  diagrams: Array<Object>;
 
   constructor(lesson: Lesson) {
+    this.diagrams = [];
+
     this.makeTitle();
-    // this.makeContent();
     this.makeContent();
     this.lesson = lesson;
-    // this.state = {};
   }
 
   makeTitle() {
     this.title = this.setTitle();
   }
 
-  setContent(): Array<Paragraph | string> {
+  setContent(): Array<string> {
     return [];
   }
   setTitle(): string {
@@ -102,54 +86,52 @@ class Section {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  cleanDivs(content: Array<Paragraph | string>): Array<Paragraph | string> {
-    let divCount = 0;
-    const newContent = content.slice();
-    content.forEach((element) => {
-      if (element.type === 'divStart') {
-        divCount += 1;
-      }
-      if (element.type === 'divEnd') {
-        divCount -= 1;
-      }
-    });
-
-    // If divCount > 0, then need to add divEnds to clean it up
-    for (let i = 0; i < divCount; i += 1) {
-      newContent.push(divEnd());
-    }
-
-    // If divCount < 0, then need to remove divEnds to clean it up
-    return newContent;
-  }
-
   makeContent(): void {
-    this.paragraphs = [];
-    let content = this.setContent();
-    content = this.cleanDivs(content);
+    const content = this.setContent();
     const modifiers = this.setModifiers();
-    content.forEach((paragraphOrText) => {
-      let newParagraph;
-      if (typeof paragraphOrText === 'string') {
-        if (paragraphOrText[0] === '<') {
-          newParagraph = new Paragraph('html', paragraphOrText);
-        } else {
-          newParagraph = new Paragraph('text', `${paragraphOrText}`);
-        }
-      } else {
-        newParagraph = paragraphOrText;
-      }
-      if (newParagraph.type === 'text' || newParagraph.type === 'html') {
-        Object.keys(modifiers).forEach((key) => {
-          const expression = new RegExp(`\\|${key}\\|`, 'gi');
-          newParagraph.text =
-            newParagraph.text.replace(expression, modifiers[key]);
+    let htmlText = '';
+    content.forEach((element) => {
+      htmlText = `${htmlText}${element}\n\n`;
+    });
+    Object.keys(modifiers).forEach((key) => {
+      const expression = new RegExp(`\\|${key}\\|`, 'gi');
+      htmlText = htmlText.replace(expression, modifiers[key].replacementText);
+      if (modifiers[key].type === 'diagram') {
+        this.diagrams.push({
+          id: modifiers[key].id,
+          DiagramClass: modifiers[key].DiagramClass,
         });
       }
-      this.paragraphs.push(newParagraph);
     });
+    this.htmlContent = htmlText;
   }
+
+  // makeContent(): void {
+  //   this.paragraphs = [];
+  //   let content = this.setContent();
+  //   content = this.cleanDivs(content);
+  //   const modifiers = this.setModifiers();
+  //   content.forEach((paragraphOrText) => {
+  //     let newParagraph;
+  //     if (typeof paragraphOrText === 'string') {
+  //       if (paragraphOrText[0] === '<') {
+  //         newParagraph = new Paragraph('html', paragraphOrText);
+  //       } else {
+  //         newParagraph = new Paragraph('text', `${paragraphOrText}`);
+  //       }
+  //     } else {
+  //       newParagraph = paragraphOrText;
+  //     }
+  //     if (newParagraph.type === 'text' || newParagraph.type === 'html') {
+  //       Object.keys(modifiers).forEach((key) => {
+  //         const expression = new RegExp(`\\|${key}\\|`, 'gi');
+  //         newParagraph.text =
+  //           newParagraph.text.replace(expression, modifiers[key]);
+  //       });
+  //     }
+  //     this.paragraphs.push(newParagraph);
+  //   });
+  // }
 
   // eslint-disable-next-line no-unused-vars
   setState(diagram: Array<any>) {
@@ -161,5 +143,4 @@ class Section {
   }
 }
 
-
-export { Paragraph, Section, Lesson, actionWord, divStart, divEnd };
+export { Section, Lesson, actionWord, diagramCanvas };

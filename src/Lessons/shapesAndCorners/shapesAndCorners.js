@@ -1,6 +1,6 @@
 // @flow
 
-import { Lesson, Section, Paragraph, actionWord, divStart, divEnd } from '../../js/Lesson/LessonBase';
+import { Lesson, Section, actionWord, diagramCanvas } from '../../js/Lesson/LessonBase';
 import ShapesDiagram from './diagramShapes';
 import CircleDiagram from './diagramCircle';
 
@@ -12,7 +12,8 @@ class Section1 extends Section {
     return [
       'Many |_shapes| have |_corners|.',
       'Somes corners are |_more_sharp|, while others are |_less_sharp|.',
-      new Paragraph('diagram', ShapesDiagram, 'shapes'),
+      // new Paragraph('diagram', ShapesDiagram, 'shapes'),
+      '|_shapes_diagram|',
     ];
   }
   setModifiers() {
@@ -21,6 +22,7 @@ class Section1 extends Section {
       _corners: actionWord('corners', 'id_corners'),
       _more_sharp: actionWord('more sharp', 'id_more_sharp'),
       _less_sharp: actionWord('less sharp', 'id_less_sharp'),
+      _shapes_diagram: diagramCanvas('shapes_container', ShapesDiagram),
     };
   }
 
@@ -51,14 +53,15 @@ class Section2 extends Section {
       sharpness?`,
       `Let's start with two lines |_anchored| at one end. One |_line| can be
       rotated around the anchor.`,
-      divStart('circle-diagram-and-text-container'),
-      new Paragraph('diagram', CircleDiagram, 'circle'),
-      divStart('circle-diagram-text-container'),
+      // divStart('circle-diagram-and-text-container'),
+      // new Paragraph('diagram', CircleDiagram, 'circle'),
+      // divStart('circle-diagram-text-container'),
+      '|_circle_diagram|',
       'The two lines form a |_corner| at the anchor.',
       '|_Small_rotation| results in a |_sharper_corner|.',
       '|_Large_rotation| results in a |_less_sharp_corner|.',
-      divEnd(),
-      divEnd(),
+      // divEnd(),
+      // divEnd(),
     ];
   }
   setModifiers() {
@@ -70,6 +73,7 @@ class Section2 extends Section {
       _Large_rotation: actionWord('Large Rotation', 'id_large_rotation'),
       _sharper_corner: actionWord('sharper corner', 'id_more_sharp_cornern'),
       _less_sharp_corner: actionWord('less sharp corner', 'id_less_sharp_corner'),
+      _circle_diagram: diagramCanvas('circle_container', CircleDiagram),
     };
   }
   getState(diagrams: Array<CircleDiagram>) {

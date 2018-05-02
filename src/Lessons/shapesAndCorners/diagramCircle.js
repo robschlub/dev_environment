@@ -84,7 +84,7 @@ class CircleDiagram extends Diagram {
   elements: typeCircleDiagramCollection;
 
   constructor(id: string) {
-    super(`${id}_container`, -1, -1, 2, 2);
+    super(`${id}`, -1, -1, 2, 2);
   }
 
   createDiagramElements() {
