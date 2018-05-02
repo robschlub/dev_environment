@@ -36,25 +36,10 @@ class Section1 extends Section {
       diagram.elements._pent._lessSharpCorners,
     ]);
 
-    const shapes = document.getElementById('id_shapes');
-    if (shapes) {
-      shapes.onclick = diagram.pulseShapes.bind(diagram);
-    }
-
-    const corners = document.getElementById('id_corners');
-    if (corners) {
-      corners.onclick = diagram.toggleCorners.bind(diagram);
-    }
-
-    const moreSharp = document.getElementById('id_more_sharp');
-    if (moreSharp) {
-      moreSharp.onclick = diagram.toggleMoreSharpCorners.bind(diagram);
-    }
-
-    const lessSharp = document.getElementById('id_less_sharp');
-    if (lessSharp) {
-      lessSharp.onclick = diagram.toggleLessSharpCorners.bind(diagram);
-    }
+    this.onClickId('id_shapes', diagram.pulseShapes, [diagram]);
+    this.onClickId('id_corners', diagram.toggleCorners, [diagram]);
+    this.onClickId('id_more_sharp', diagram.toggleMoreSharpCorners, [diagram]);
+    this.onClickId('id_less_sharp', diagram.toggleLessSharpCorners, [diagram]);
   }
 }
 
@@ -90,6 +75,7 @@ class Section2 extends Section {
       angle,
     };
   }
+
   setState(diagrams: Array<CircleDiagram>) {
     const diagram = diagrams[0];
     const t = diagram.elements._radius.transform.copy();
@@ -105,29 +91,15 @@ class Section2 extends Section {
       diagram.elements._cornerRef,
     ]);
 
-    const line = document.getElementById('id_line');
-    if (line) {
-      line.onclick = diagram.pulseRadius.bind(diagram);
-    }
-    const anchor = document.getElementById('id_anchor');
-    if (anchor) {
-      anchor.onclick = diagram.pulseAnchor.bind(diagram);
-    }
-
-    const corner = document.getElementById('id_corner');
-    if (corner) {
-      corner.onclick = diagram.toggleCorners.bind(diagram);
-    }
-
-    const smallRotation = document.getElementById('id_small_rotation');
-    if (smallRotation) {
-      smallRotation.onclick = diagram.rotateTo.bind(diagram, Math.PI / 6, 0, 1);
-    }
-
-    const largeRotation = document.getElementById('id_large_rotation');
-    if (largeRotation) {
-      largeRotation.onclick = diagram.rotateTo.bind(diagram, 5 * Math.PI / 6, 0, 1);
-    }
+    this.onClickId('id_line', diagram.pulseRadius, [diagram]);
+    this.onClickId('id_anchor', diagram.pulseAnchor, [diagram]);
+    this.onClickId('id_corner', diagram.toggleCorners, [diagram]);
+    const smallRotation = [diagram, Math.PI / 6, 0, 1];
+    const largeRotation = [diagram, 5 * Math.PI / 6, 0, 1];
+    this.onClickId('id_small_rotation', diagram.rotateTo, smallRotation);
+    this.onClickId('id_large_rotation', diagram.rotateTo, largeRotation);
+    this.onClickId('id_more_sharp_cornern', diagram.rotateTo, smallRotation);
+    this.onClickId('id_less_sharp_corner', diagram.rotateTo, largeRotation);
   }
 }
 

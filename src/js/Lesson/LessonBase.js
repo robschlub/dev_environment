@@ -67,6 +67,29 @@ class Section {
     return {};
   }
 
+    // eslint-disable-next-line class-methods-use-this
+  onClickId(
+    id: string,
+    action: Function,
+    bind: Array<mixed>,
+  ) {
+    const element = document.getElementById(id);
+    if (element) {
+      if (bind.length === 1) {
+        element.onclick = action.bind(bind[0]);
+      }
+      if (bind.length === 2) {
+        element.onclick = action.bind(bind[0], bind[1]);
+      }
+      if (bind.length === 3) {
+        element.onclick = action.bind(bind[0], bind[1], bind[2]);
+      }
+      if (bind.length === 4) {
+        element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
+      }
+    }
+  }
+
   makeContent(): void {
     this.paragraphs = [];
     const content = this.setContent();
