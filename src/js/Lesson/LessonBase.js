@@ -39,11 +39,13 @@ class Section {
   // paragraphs: Array<Paragraph>;
   lesson: Lesson;
   htmlContent: string;
+  htmlContentNoDiagrams: string;
   diagrams: Array<Object>;
+  isSinglePagePrimary: boolean;
 
   constructor(lesson: Lesson) {
     this.diagrams = [];
-
+    this.isSinglePagePrimary = this.setSinglePagePrimary();
     this.makeTitle();
     this.makeContent();
     this.lesson = lesson;
@@ -63,6 +65,9 @@ class Section {
     return {};
   }
 
+  setSinglePagePrimary() {
+    return true;
+  }
   // eslint-disable-next-line class-methods-use-this
   onClickId(
     id: string,
@@ -93,28 +98,42 @@ class Section {
     }
     const modifiers = this.setModifiers();
     let htmlText = '';
+    let htmlTextNoDiagrams = '';
     content.forEach((element) => {
       htmlText = `${htmlText}${element}\n\n`;
     });
+    htmlTextNoDiagrams = htmlText;
     Object.keys(modifiers).forEach((key) => {
+      const modifier = modifiers[key];
       const expression = new RegExp(`\\|${key}\\|`, 'gi');
-      htmlText = htmlText.replace(expression, modifiers[key].replacementText);
+      if (modifiers[key].type === 'html') {
+        htmlText = htmlText.replace(expression, modifier.replacementText);
+        htmlTextNoDiagrams =
+          htmlTextNoDiagrams.replace(expression, modifier.replacementText);
+      }
       if (modifiers[key].type === 'diagram') {
         this.diagrams.push({
           id: modifiers[key].id,
           DiagramClass: modifiers[key].DiagramClass,
         });
+        htmlText = htmlText.replace(expression, modifier.replacementText);
+        htmlTextNoDiagrams = htmlTextNoDiagrams.replace(expression, '');
       }
     });
     this.htmlContent = htmlText;
+    this.htmlContentNoDiagrams = htmlTextNoDiagrams;
   }
 
   // eslint-disable-next-line no-unused-vars
-  setState(diagram: Array<any>) {
+  setState(diagrams: Array<any>) {
   }
 
   // eslint-disable-next-line no-unused-vars
-  getState(diagram: Array<any>) {
+  setStateMultiOnly(diagrams: Array<any>) {
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  getState(diagrams: Array<any>) {
     // this.lesson.state = {};
   }
 }

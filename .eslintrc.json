@@ -15,7 +15,9 @@
               "setTitle",
               "setModifiers",
               "setState",
-              "getState"
+              "getState",
+              "setStateMultiOnly",
+              "setSinglePagePrimary"
             ]
           }
         ],
