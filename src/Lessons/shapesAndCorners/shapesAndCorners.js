@@ -1,6 +1,6 @@
 // @flow
 
-import { Lesson, Section, Paragraph, actionWord } from '../../js/Lesson/LessonBase';
+import { Lesson, Section, Paragraph, actionWord, divStart, divEnd } from '../../js/Lesson/LessonBase';
 import ShapesDiagram from './diagramShapes';
 import CircleDiagram from './diagramCircle';
 
@@ -51,10 +51,14 @@ class Section2 extends Section {
       sharpness?`,
       `Let's start with two lines |_anchored| at one end. One |_line| can be
       rotated around the anchor.`,
+      divStart('circle-diagram-and-text-container'),
       new Paragraph('diagram', CircleDiagram, 'circle'),
+      divStart('circle-diagram-text-container'),
       'The two lines form a |_corner| at the anchor.',
       '|_Small_rotation| results in a |_sharper_corner|.',
       '|_Large_rotation| results in a |_less_sharp_corner|.',
+      divEnd(),
+      divEnd(),
     ];
   }
   setModifiers() {

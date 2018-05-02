@@ -7,15 +7,17 @@ function actionWord(text: string, id: string = '', classes: string = '') {
 }
 
 class Paragraph {
-  type: 'text' | 'diagram' | 'html';
+  type: 'text' | 'diagram' | 'html' | 'divStart' | 'divEnd';
   id: string;
   text: string;
   DiagramClass: Function;
+  className: string;
 
   constructor(
-    type: 'text' | 'diagram' | 'html' = 'html',
+    type: 'text' | 'diagram' | 'html' | 'divStart' | 'divEnd' = 'text',
     content: string | Diagram = '',
     id: string = '',
+    className: string = '',
   ) {
     this.type = type;
     if ((type === 'text' || type === 'html') && typeof content === 'string') {
@@ -25,7 +27,17 @@ class Paragraph {
       this.DiagramClass = content;
     }
     this.id = id;
+    if (type === 'divStart') {
+      this.className = className;
+    }
   }
+}
+
+function divStart(id: string, className: string = '') {
+  return new Paragraph('divStart', '', id, className);
+}
+function divEnd() {
+  return new Paragraph('divEnd');
 }
 
 class Lesson {
@@ -67,7 +79,7 @@ class Section {
     return {};
   }
 
-    // eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
   onClickId(
     id: string,
     action: Function,
@@ -90,9 +102,32 @@ class Section {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  cleanDivs(content: Array<Paragraph | string>): Array<Paragraph | string> {
+    let divCount = 0;
+    const newContent = content.slice();
+    content.forEach((element) => {
+      if (element.type === 'divStart') {
+        divCount += 1;
+      }
+      if (element.type === 'divEnd') {
+        divCount -= 1;
+      }
+    });
+
+    // If divCount > 0, then need to add divEnds to clean it up
+    for (let i = 0; i < divCount; i += 1) {
+      newContent.push(divEnd());
+    }
+
+    // If divCount < 0, then need to remove divEnds to clean it up
+    return newContent;
+  }
+
   makeContent(): void {
     this.paragraphs = [];
-    const content = this.setContent();
+    let content = this.setContent();
+    content = this.cleanDivs(content);
     const modifiers = this.setModifiers();
     content.forEach((paragraphOrText) => {
       let newParagraph;
@@ -100,7 +135,7 @@ class Section {
         if (paragraphOrText[0] === '<') {
           newParagraph = new Paragraph('html', paragraphOrText);
         } else {
-          newParagraph = new Paragraph('text', `<p>${paragraphOrText}</p>`);
+          newParagraph = new Paragraph('text', `${paragraphOrText}`);
         }
       } else {
         newParagraph = paragraphOrText;
@@ -127,4 +162,4 @@ class Section {
 }
 
 
-export { Paragraph, Section, Lesson, actionWord };
+export { Paragraph, Section, Lesson, actionWord, divStart, divEnd };

@@ -52,6 +52,19 @@ $color-reference: $color-blue-light;
   color: $color-lessSharp;
 }
 
+#circle_container {
+  position: relative;
+  left: 0;
+  top: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.circle-diagram-and-text-container {
+  //
+  // display: table;
+}
+
 @include media-breakpoint-up(xs) {
   #circle_container {
     width: 100%;
@@ -64,16 +77,27 @@ $color-reference: $color-blue-light;
 
 @include media-breakpoint-up(md) {
   #circle_container {
-    width: 80%;
-    padding-top: 80%;
+    // width: 400px;
+    // padding-top: 400px;
+    // height: 200px;
+    width: 50%;
+    padding-top: 50%;
+    // float: right;
+  }
+
+  .circle-diagram-text-container {
+    // margin-top: 100px;
+    // display: table-cell;
+    // vertical-align: middle;
+    // width: 200px;
   }
 }
 
 @include media-breakpoint-up(lg) {
-  #circle_container {
-    width: 50%;
-    padding-top: 50%;
-  }
+  // #circle_container {
+  //   width: 50%;
+  //   padding-top: 50%;
+  // }
 }
 
 // @include media-breakpoint-up(xl) {
@@ -99,10 +123,3 @@ $color-reference: $color-blue-light;
   top: 0;
 }
 
-#circle_container {
-  position: relative;
-  left: 0;
-  top: 0;
-  margin-left: auto;
-  margin-right: auto;
-}

@@ -23,6 +23,7 @@ export default class LessonComponent extends React.Component
   type: string;
   state: State;
   diagrams: Array<Object>;
+  subSectionIndex: number;
 
   constructor(props: Props) {
     super(props);
@@ -115,9 +116,20 @@ export default class LessonComponent extends React.Component
   }
 
   // eslint-disable-next-line class-methods-use-this
-  addText(text: string, i: number) {
+  addText(text: string) {
+    this.key += 1;
+    return <p
+      key={this.key}
+      dangerouslySetInnerHTML={ {
+        __html: `${text}`,
+      } }
+    />;
+  }
+
+  addHTML(text: string) {
+    this.key += 1;
     return <div
-      key={i}
+      key={this.key}
       dangerouslySetInnerHTML={ {
         __html: `${text}`,
       } }
@@ -129,25 +141,53 @@ export default class LessonComponent extends React.Component
     return <Canvas id={id} key={i}/>;
   }
 
-  renderSection(section: Object) {
-    let sectionRender = section.paragraphs.map((p) => {
-      if (p.type === 'text' || p.type === 'html') {
+  renderSubSections(section: Object) {
+    const rendered = [];
+    // let index = i;
+    while (this.subSectionIndex < section.paragraphs.length) {
+      const index = this.subSectionIndex;
+      const subSection = section.paragraphs[index];
+      const { type } = subSection;
+      if (type === 'divStart') {
+        const div = section.paragraphs[index];
+        this.subSectionIndex += 1;
+        const divSubSections = this.renderSubSections(section);
         this.key += 1;
-        return this.addText(p.text, this.key);
-      } else if (p.type === 'html') {
-        return p.text;
+        rendered.push(<div id={div.id} className={div.className} key={this.key}>
+            {divSubSections}
+          </div>);
       }
-      this.key += 1;
-      return this.addDiagram(p.id, this.key);
-    });
+      if (type === 'divEnd') {
+        this.subSectionIndex += 1;
+        return rendered;
+      }
+      if (type === 'text') {
+        rendered.push(this.addText(subSection.text));
+      }
+      if (type === 'html') {
+        rendered.push(this.addHTML(subSection.text));
+      }
+      if (type === 'diagram') {
+        this.key += 1;
+        rendered.push(this.addDiagram(subSection.id, this.key));
+      }
+      this.subSectionIndex += 1;
+    }
+    return rendered;
+  }
+
+  renderSection(section: Object) {
+    this.subSectionIndex = 0;
+    const rendered = [];
     if (section.title) {
       this.key += 1;
       const title = <div className='lesson_title' key={this.key}>
         {section.title}
       </div>;
-      sectionRender = [title].concat(sectionRender);
+      rendered.push(title);
     }
-    return sectionRender;
+    rendered.push(...this.renderSubSections(section));
+    return rendered;
   }
 
   addButtons() {
@@ -168,7 +208,6 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='main_page'>
-        
         <div className='lesson_container lesson_text'>
           {this.renderPage()}
         </div>
