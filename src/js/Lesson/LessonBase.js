@@ -109,33 +109,6 @@ class Section {
     this.htmlContent = htmlText;
   }
 
-  // makeContent(): void {
-  //   this.paragraphs = [];
-  //   let content = this.setContent();
-  //   content = this.cleanDivs(content);
-  //   const modifiers = this.setModifiers();
-  //   content.forEach((paragraphOrText) => {
-  //     let newParagraph;
-  //     if (typeof paragraphOrText === 'string') {
-  //       if (paragraphOrText[0] === '<') {
-  //         newParagraph = new Paragraph('html', paragraphOrText);
-  //       } else {
-  //         newParagraph = new Paragraph('text', `${paragraphOrText}`);
-  //       }
-  //     } else {
-  //       newParagraph = paragraphOrText;
-  //     }
-  //     if (newParagraph.type === 'text' || newParagraph.type === 'html') {
-  //       Object.keys(modifiers).forEach((key) => {
-  //         const expression = new RegExp(`\\|${key}\\|`, 'gi');
-  //         newParagraph.text =
-  //           newParagraph.text.replace(expression, modifiers[key]);
-  //       });
-  //     }
-  //     this.paragraphs.push(newParagraph);
-  //   });
-  // }
-
   // eslint-disable-next-line no-unused-vars
   setState(diagram: Array<any>) {
   }

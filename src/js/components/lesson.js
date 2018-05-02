@@ -23,7 +23,6 @@ export default class LessonComponent extends React.Component
   type: string;
   state: State;
   diagrams: Array<Object>;
-  // subSectionIndex: number;
 
   constructor(props: Props) {
     super(props);
@@ -66,17 +65,6 @@ export default class LessonComponent extends React.Component
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  // getDiagrams(section: Section): Array<Object> {
-  //   const diagrams = [];
-  //   section.diagrams.forEach((d) => {
-  //     if (d.type === 'diagram') {
-  //       diagrams.push(paragraph);
-  //     }
-  //   });
-  //   return diagrams;
-  // }
-
   makeDiagrams() {
     let sections = [];
     if (this.type === 'multi') {
@@ -93,13 +81,6 @@ export default class LessonComponent extends React.Component
       });
       section.setState(sectionDiagrams);
       allDiagrams.push(...sectionDiagrams);
-      // const diagramIds = this.getDiagrams(section);
-      // const diagrams = [];
-      // diagramIds.forEach((d) => {
-      //   diagrams.push(new d.DiagramClass(d.id));
-      //   section.setState(diagrams);
-      //   allDiagrams = allDiagrams.concat(diagrams);
-      // });
     });
     this.diagrams = allDiagrams;
   }
@@ -120,67 +101,6 @@ export default class LessonComponent extends React.Component
       }
     }
   }
-
-  // eslint-disable-next-line class-methods-use-this
-  // addText(text: string) {
-  //   this.key += 1;
-  //   return <p
-  //     key={this.key}
-  //     dangerouslySetInnerHTML={ {
-  //       __html: `${text}`,
-  //     } }
-  //   />;
-  // }
-
-  // addHTML(text: string) {
-  //   this.key += 1;
-  //   return <div
-  //     key={this.key}
-  //     dangerouslySetInnerHTML={ {
-  //       __html: `${text}`,
-  //     } }
-  //   />;
-  // }
-
-  // eslint-disable-next-line class-methods-use-this
-  // addDiagram(id: string, i: number) {
-  //   return <Canvas id={id} key={i}/>;
-  // }
-
-  // renderSubSections(section: Object) {
-  //   const rendered = [];
-  //   // let index = i;
-  //   while (this.subSectionIndex < section.paragraphs.length) {
-  //     const index = this.subSectionIndex;
-  //     const subSection = section.paragraphs[index];
-  //     const { type } = subSection;
-  //     if (type === 'divStart') {
-  //       const div = section.paragraphs[index];
-  //       this.subSectionIndex += 1;
-  //       const divSubSections = this.renderSubSections(section);
-  //       this.key += 1;
-  //       rendered.push(<div id={div.id} className={div.className} key={this.key}>
-  //           {divSubSections}
-  //         </div>);
-  //     }
-  //     if (type === 'divEnd') {
-  //       this.subSectionIndex += 1;
-  //       return rendered;
-  //     }
-  //     if (type === 'text') {
-  //       rendered.push(this.addText(subSection.text));
-  //     }
-  //     if (type === 'html') {
-  //       rendered.push(this.addHTML(subSection.text));
-  //     }
-  //     if (type === 'diagram') {
-  //       this.key += 1;
-  //       rendered.push(this.addDiagram(subSection.id, this.key));
-  //     }
-  //     this.subSectionIndex += 1;
-  //   }
-  //   return rendered;
-  // }
 
   renderSection(section: Section) {
     const output = [];
