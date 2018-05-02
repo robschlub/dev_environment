@@ -168,10 +168,11 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='main_page'>
-        {this.addButtons()}
+        
         <div className='lesson_container lesson_text'>
           {this.renderPage()}
         </div>
+        {this.addButtons()}
       </div>
     </div>;
   }
