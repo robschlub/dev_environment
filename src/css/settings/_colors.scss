@@ -1,0 +1,38 @@
+
+$color-blue: #5c7fe8;
+$color-blue-medium: #4863b5;
+$color-blue-dark: #293968;
+$color-blue-light: #a4b6ec;
+
+$color-red: #ff8079;
+$color-red-medium: #cc6661;
+$color-red-dark: #7f403c;
+$color-red-light: #ffc9c5;
+
+$color-yellow: #e8db48;
+$color-yellow-medium: #b5ab38;
+$color-yellow-dark: #686320;
+$color-yellow-light: #ece490;
+
+$color-green: #84ff63;
+$color-green-medium: #6acc4f;
+$color-green-dark: #427f31;
+$color-green-light: #c0ffaf;
+
+$color-cyan: #56fff5;
+$color-cyan-medium: #45ccc4;
+$color-cyan-dark: #2b7f7a;
+$color-cyan-light: #a2fffa;
+
+$color-theme: $color-theme_dark;
+
+$color_primary:       map-get($color-theme, primary);
+$color_secondary:     map-get($color-theme, secondary);
+$color_danger:        map-get($color-theme, danger);
+$color_safe:          map-get($color-theme, safe);
+$color_passive:       map-get($color-theme, passive);
+$color_highlight:     map-get($color-theme, highlight);
+$color_background:    map-get($color-theme, background);
+$color_navbar:        map-get($color-theme, navbar);
+$color_text:          map-get($color-theme, text);
+$color_negative-text: map-get($color-theme, negative-text);

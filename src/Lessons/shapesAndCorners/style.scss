@@ -1,12 +1,12 @@
 @import "../../css/style";
 
-$color-lines: $color-blue;
-$color-corners: $color-cyan-medium;
-$color-moreSharp: $color-red;
-$color-lessSharp: $color-green-medium;
-$color-anchor: $color-yellow;
-$color-radius: $color-blue;
-$color-reference: $color-blue-light;
+$color-lines: $color_primary;
+$color-corners: $color_secondary;
+$color-moreSharp: $color_highlight;
+$color-lessSharp: $color_safe;
+$color-anchor: $color_passive;
+$color-radius: $color_primary;
+$color-reference: $color_secondary;
 
 .action_word {
   font-weight: bold;

@@ -1,0 +1,14 @@
+$color-palette: $color-palette_standard;
+
+$color-theme_dark: (
+  primary:                  map-get($color-palette, blue-light),
+  secondary:                map-get($color-palette, blue),
+  danger:                   map-get($color-palette, red-light),
+  safe:                     map-get($color-palette, green-light),
+  passive:                  map-get($color-palette, yellow-light),
+  highlight:                map-get($color-palette, red-light),
+  background:               map-get($color-palette, black),
+  navbar:                   map-get($color-palette, grey-light),
+  text:                     map-get($color-palette, grey-light),
+  negative-text:            map-get($color-palette, grey-dark),
+);

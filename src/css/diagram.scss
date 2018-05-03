@@ -1,94 +1,94 @@
 
 /* stylelint-disable function-parentheses-space-inside,
 function-comma-space-after */
-$color-blue: #5c7fe8;
-$color-blue-medium: #4863b5;
-$color-blue-dark: #293968;
-$color-blue-light: #a4b6ec;
+// $color-blue: #5c7fe8;
+// $color-blue-medium: #4863b5;
+// $color-blue-dark: #293968;
+// $color-blue-light: #a4b6ec;
 
-$color-red: #ff8079;
-$color-red-medium: #cc6661;
-$color-red-dark: #7f403c;
-$color-red-light: #ffc9c5;
+// $color-red: #ff8079;
+// $color-red-medium: #cc6661;
+// $color-red-dark: #7f403c;
+// $color-red-light: #ffc9c5;
 
-$color-yellow: #e8db48;
-$color-yellow-medium: #b5ab38;
-$color-yellow-dark: #686320;
-$color-yellow-light: #ece490;
+// $color-yellow: #e8db48;
+// $color-yellow-medium: #b5ab38;
+// $color-yellow-dark: #686320;
+// $color-yellow-light: #ece490;
 
-$color-green: #84ff63;
-$color-green-medium: #6acc4f;
-$color-green-dark: #427f31;
-$color-green-light: #c0ffaf;
+// $color-green: #84ff63;
+// $color-green-medium: #6acc4f;
+// $color-green-dark: #427f31;
+// $color-green-light: #c0ffaf;
 
-$color-cyan: #56fff5;
-$color-cyan-medium: #45ccc4;
-$color-cyan-dark: #2b7f7a;
-$color-cyan-light: #a2fffa;
+// $color-cyan: #56fff5;
+// $color-cyan-medium: #45ccc4;
+// $color-cyan-dark: #2b7f7a;
+// $color-cyan-light: #a2fffa;
 
-$color-stick:              rgb(  0,  0,255);
-$color-start_stick:        rgb( 30, 30,255);
-$color-arc:                rgb(255,  0,  0);
-$color-rotation:           rgb(255,  0,  0);
-$color-hint_arrow:         rgb(255,  0,  0);
-$color-corners:            rgb( 50,200, 50);
-$color-shapes:             rgb(  0,  0,255);
-$color-axes:               rgb(230,230,230);
-$color-portions:           rgb(125,125,125);
-$color-anchor:             rgb(235,235,  0);
-$color-anchor_text:        rgb(210,210,  0);
-$color-corners_more_sharp: rgba(144, 85,180, 1);
-$color-corners_less_sharp: rgba(200, 50, 50, 0.5);
-$color-angle:              rgb(255,220,255);
-$color-angle_text:         rgb(177,105,223);
-$color-latin:              rgb(200,  0,200);
-$color-greek:              rgb(  0,  0,200);
-$color-english:            rgb(47, 79, 79);
+// $color-stick:              rgb(  0,  0,255);
+// $color-start_stick:        rgb( 30, 30,255);
+// $color-arc:                rgb(255,  0,  0);
+// $color-rotation:           rgb(255,  0,  0);
+// $color-hint_arrow:         rgb(255,  0,  0);
+// $color-corners:            rgb( 50,200, 50);
+// $color-shapes:             rgb(  0,  0,255);
+// $color-axes:               rgb(230,230,230);
+// $color-portions:           rgb(125,125,125);
+// $color-anchor:             rgb(235,235,  0);
+// $color-anchor_text:        rgb(210,210,  0);
+// $color-corners_more_sharp: rgba(144, 85,180, 1);
+// $color-corners_less_sharp: rgba(200, 50, 50, 0.5);
+// $color-angle:              rgb(255,220,255);
+// $color-angle_text:         rgb(177,105,223);
+// $color-latin:              rgb(200,  0,200);
+// $color-greek:              rgb(  0,  0,200);
+// $color-english:            rgb(47, 79, 79);
 
-/* stylelint-enable */
+// /* stylelint-enable */
 
-/* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
-:export {
-  colorStick: $color-stick;
-  colorStart_stick: $color-start_stick;
-  colorArc: $color-arc;
-  colorRotation: $color-rotation;
-  colorHintArrow: $color-hint_arrow;
-  colorCorners: $color-corners;
-  colorShapes: $color-shapes;
-  colorAxes: $color-axes;
-  colorPortions: $color-portions;
-  colorAnchor: $color-anchor;
-  colorAnchorText: $color-anchor_text;
-  colorCornersMoreSharp: $color-corners_more_sharp;
-  colorCornersLessSharp: $color-corners_less_sharp;
-  colorAngle: $color-angle;
-  colorAngleText: $color-angle_text;
-  colorLatin: $color-latin;
-  colorGreek: $color-greek;
-  colorEnglish: $color-english;
-  colorGreen: $color-green;
-  colorRed: $color-red;
-  colorBlue: $color-blue;
-  colorYellow: $color-yellow;
-  colorCyan: $color-cyan;
-  colorGreenMedium: $color-green-medium;
-  colorRedMedium: $color-red-medium;
-  colorBlueMedium: $color-blue-medium;
-  colorYellowMedium: $color-yellow-medium;
-  colorCyanMedium: $color-cyan-medium;
-  colorGreenDark: $color-green-dark;
-  colorRedDark: $color-red-dark;
-  colorBlueDark: $color-blue-dark;
-  colorYellowDark: $color-yellow-dark;
-  colorCyanDark: $color-cyan-dark;
-  colorGreenLight: $color-green-light;
-  colorRedLight: $color-red-light;
-  colorBlueLight: $color-blue-light;
-  colorYellowLight: $color-yellow-light;
-  colorCyanLight: $color-cyan-light;
-}
-/* stylelint-enable */
+// stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown
+// :export {
+//   colorStick: $color-stick;
+//   colorStart_stick: $color-start_stick;
+//   colorArc: $color-arc;
+//   colorRotation: $color-rotation;
+//   colorHintArrow: $color-hint_arrow;
+//   colorCorners: $color-corners;
+//   colorShapes: $color-shapes;
+//   colorAxes: $color-axes;
+//   colorPortions: $color-portions;
+//   colorAnchor: $color-anchor;
+//   colorAnchorText: $color-anchor_text;
+//   colorCornersMoreSharp: $color-corners_more_sharp;
+//   colorCornersLessSharp: $color-corners_less_sharp;
+//   colorAngle: $color-angle;
+//   colorAngleText: $color-angle_text;
+//   colorLatin: $color-latin;
+//   colorGreek: $color-greek;
+//   colorEnglish: $color-english;
+//   colorGreen: $color-green;
+//   colorRed: $color-red;
+//   colorBlue: $color-blue;
+//   colorYellow: $color-yellow;
+//   colorCyan: $color-cyan;
+//   colorGreenMedium: $color-green-medium;
+//   colorRedMedium: $color-red-medium;
+//   colorBlueMedium: $color-blue-medium;
+//   colorYellowMedium: $color-yellow-medium;
+//   colorCyanMedium: $color-cyan-medium;
+//   colorGreenDark: $color-green-dark;
+//   colorRedDark: $color-red-dark;
+//   colorBlueDark: $color-blue-dark;
+//   colorYellowDark: $color-yellow-dark;
+//   colorCyanDark: $color-cyan-dark;
+//   colorGreenLight: $color-green-light;
+//   colorRedLight: $color-red-light;
+//   colorBlueLight: $color-blue-light;
+//   colorYellowLight: $color-yellow-light;
+//   colorCyanLight: $color-cyan-light;
+// }
+// /* stylelint-enable */
 
 .canvas_container {
   // position: relative;
@@ -131,6 +131,6 @@ $color-english:            rgb(47, 79, 79);
   pointer-events: none;
 }
 
-.btn-primary {
-  background-color: $color-blue;
-}
+// .btn-primary {
+//   background-color: $color_primary;
+// }

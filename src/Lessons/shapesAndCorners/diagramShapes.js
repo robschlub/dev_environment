@@ -8,7 +8,7 @@ import styles from './style.scss';
 
 const colors = getSCSSColors(styles);
 const lineColor = colors.colorLines;
-const cornerColor = colors.colorCyanMedium;
+const cornerColor = colors.colorCorners;
 const moreSharpColor = colors.colorMoreSharp;
 const lessSharpColor = colors.colorLessSharp;
 const lineWidth = 0.02;

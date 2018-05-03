@@ -1,0 +1,40 @@
+$color-palette_standard_blue:                          #89A2E8;
+$color-palette_standard_red:                           #FFA9A7;
+$color-palette_standard_yellow:                        #E8DD8A;
+$color-palette_standard_green:                         #ABFF9A;
+$color-palette_standard_cyan:                          #9AFFEA;
+
+$color-palette_pastel: (
+  blue:                 $color-palette_standard_blue,
+  blue-light:           lighten($color-palette_standard_blue, 20),
+  blue-medium:          darken($color-palette_standard_blue, 20),
+  blue-dark:            darken($color-palette_standard_blue, 40),
+  //
+  red:                  $color-palette_standard_red,
+  red-light:            lighten($color-palette_standard_red, 20),
+  red-medium:           darken($color-palette_standard_red, 20),
+  red-dark:             darken($color-palette_standard_red, 40),
+  //
+  yellow:               $color-palette_standard_yellow,
+  yellow-light:         lighten($color-palette_standard_yellow, 20),
+  yellow-medium:        darken($color-palette_standard_yellow, 20),
+  yellow-dark:          darken($color-palette_standard_yellow, 40),
+  //
+  green:               $color-palette_standard_green,
+  green-light:         lighten($color-palette_standard_green, 20),
+  green-medium:        darken($color-palette_standard_green, 20),
+  green-dark:          darken($color-palette_standard_green, 40),
+  //
+  cyan:               $color-palette_standard_cyan,
+  cyan-light:         lighten($color-palette_standard_cyan, 20),
+  cyan-medium:        darken($color-palette_standard_cyan, 20),
+  cyan-dark:          darken($color-palette_standard_cyan, 40),
+  //
+  white:                #FFF,
+  black:                #000,
+  //
+  grey:                 #727F8C,
+  grey-light:           #B0C4D9,
+  grey-medium:          #2E4359,
+  grey-dark:            #343A40,
+);
