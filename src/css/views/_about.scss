@@ -8,37 +8,37 @@ $about-image-md: $flower-md-image;
 $about-image-lg: $flower-lg-image;
 $about-image-xl: $flower-lg-image;
 
-.about {
+.views-about {
   background-size: cover;
   background-position: center;
 }
 
 @include media-breakpoint-up(xs) {
-  .about {
+  .views-about {
     background-image: $about-image-xs;
   }
 }
 
 @include media-breakpoint-up(sm) {
-  .about {
+  .views-about {
     background-image: $about-image-sm;
   }
 }
 
 @include media-breakpoint-up(md) {
-  .about {
+  .views-about {
     background-image: $about-image-md;
   }
 }
 
 @include media-breakpoint-up(lg) {
-  .about {
+  .views-about {
     background-image: $about-image-lg;
   }
 }
 
 @include media-breakpoint-up(xl) {
-  .about {
+  .views-about {
     background-image: $about-image-xl;
   }
 }

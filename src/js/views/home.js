@@ -15,7 +15,7 @@ const homePage = () => {
       <div>
         <Navbar active=''/>
 
-        <Jumbotron className="jumbotron -fluid home"
+        <Jumbotron className="jumbotron -fluid views-home"
                     containerFluid={false}
                     >
           <div className="col-6">

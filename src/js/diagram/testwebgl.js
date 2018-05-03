@@ -20,9 +20,12 @@ import * as tools from './tools/mathtools';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import { CartesianPlotProperties, TraceProperties } from './DiagramElements/Plot/CartesianPlotProperties';
 import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
-import getColors from './colors';
+// import getColors from './colors';
+import getScssColors from '../tools/getScssColors';
+import styles from '../../css/style.scss';
 
-const colors = getColors();
+
+const colors = getScssColors(styles);
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;

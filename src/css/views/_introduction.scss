@@ -10,12 +10,12 @@ $intro1-image-sm: $flower2-sm-image;
 $intro1-image-md: $flower2-md-image;
 $intro1-image-lg: $flower2-lg-image;
 
-.intro {
+.views-intro {
   background-size: cover;
   background-position: center;
 }
 
-.intro1 {
+.views-intro1 {
   background-size: cover;
   background-position: center;
 }
@@ -25,11 +25,11 @@ $intro1-image-lg: $flower2-lg-image;
     color: red;
   }
 
-  .intro {
+  .views-intro {
     background-image: $intro-image-xs;
   }
 
-  .intro1 {
+  .views-intro1 {
     background-image: $intro1-image-sm;
   }
 }
@@ -39,11 +39,11 @@ $intro1-image-lg: $flower2-lg-image;
     color: blue;
   }
 
-  .intro {
+  .views-intro {
     background-image: $intro-image-sm;
   }
 
-  .intro1 {
+  .views-intro1 {
     background-image: $intro1-image-sm;
   }
 }
@@ -53,11 +53,11 @@ $intro1-image-lg: $flower2-lg-image;
     color: yellow;
   }
 
-  .intro {
+  .views-intro {
     background-image: $intro-image-md;
   }
 
-  .intro1 {
+  .views-intro1 {
     background-image: $intro1-image-md;
   }
 }
@@ -67,11 +67,11 @@ $intro1-image-lg: $flower2-lg-image;
     color: green;
   }
 
-  .intro {
+  .views-intro {
     background-image: $intro-image-lg;
   }
 
-  .intro1 {
+  .views-intro1 {
     background-image: $intro1-image-lg;
   }
 }
@@ -81,11 +81,11 @@ $intro1-image-lg: $flower2-lg-image;
     color: cyan;
   }
 
-  .intro {
+  .views-intro {
     background-image: $intro-image-xl;
   }
 
-  .intro1 {
+  .views-intro1 {
     background-image: $intro1-image-lg;
   }
 }

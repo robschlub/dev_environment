@@ -1,27 +1,21 @@
-// @import 'redefines';
-
 @import "libraries/bootstrap/bootstrap";
-// @import "libraries/bootstrap/mixins";
-// @import "libraries/bootstrap/mixins/breakpoints";
-
 //
+@import "settings/breakpoints";
+@import "settings/variables";
 @import 'settings/color-palettes/color-palette_pastel';
 @import 'settings/color-palettes/color-palette_standard';
 @import 'settings/color-themes/color-theme_standard';
 @import 'settings/color-themes/color-theme_dark';
 @import 'settings/colors';
-@import "settings/variables";
-@import "settings/breakpoints";
 //
-@import "nav";
+@import 'assets/images';
+//
 @import "base";
-@import "diagram";
-@import "home";
-@import "about";
-@import "lesson";
-@import "introduction";
-
-// p {
-//   background-color: $color_background;
-//   color: $color_text;
-// }
+//
+@import "blocks/nav";
+@import "blocks/diagram";
+@import "blocks/lesson";
+//
+@import "views/home";
+@import "views/about";
+@import "views/introduction";

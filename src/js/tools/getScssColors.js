@@ -45,7 +45,7 @@ function HexToArray(color: string): Array<number> {
 // Returns an dictionary of:
 //    key: color name defined in css
 //    value: rgba color array with each element between 0 and 1
-const getSCSSColors = (styles: Object) => {
+const getScssColors = (styles: Object) => {
   const oNames = colorNames();               // Official css color names
   const colors: Object = {};                 // Object of colors and values
 
@@ -87,4 +87,4 @@ const getSCSSColors = (styles: Object) => {
   return colors;
 };
 
-export default getSCSSColors;
+export default getScssColors;

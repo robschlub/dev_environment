@@ -112,7 +112,7 @@ export default class LessonComponent extends React.Component
     const output = [];
     if (section.title) {
       this.key += 1;
-      const title = <div className='lesson_title' key={this.key}>
+      const title = <div className='lesson__title' key={this.key}>
         {section.title}
       </div>;
       output.push(title);
@@ -135,7 +135,7 @@ export default class LessonComponent extends React.Component
 
   addButtons() {
     if (this.type === 'multi') {
-      return <div className = "button_container fixed-bottom">
+      return <div className = "lesson__button-container fixed-bottom">
           <Button label="Previous" id="button-previous" className="-primary -multi-page-lesson"/>
           <Button label="Next" id="button-next" className="-primary -multi-page-lesson"/>
         </div>;
@@ -153,7 +153,7 @@ export default class LessonComponent extends React.Component
       <div className='main_page'>
         <div className="container">
           <div className="row align-items-center">
-            <div className='lesson_container lesson_text'>
+            <div className='lesson_container lesson__text'>
               {this.renderPage()}
             </div>
           </div>

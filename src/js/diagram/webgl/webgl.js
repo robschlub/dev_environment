@@ -135,7 +135,6 @@ class WebGLInstance {
 
       // Clear the canvas
       const bc = backgroundColor;
-      console.log(bc)
       this.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
       this.gl.disable(this.gl.DEPTH_TEST);

@@ -4,10 +4,10 @@ import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
 import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
-import getSCSSColors from '../../js/tools/css';
+import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
-const colors = getSCSSColors(styles);
+const colors = getScssColors(styles);
 const anchorColor = colors.colorAnchor;
 const radiusColor = colors.colorRadius;
 const cornerColor = colors.colorCorners;

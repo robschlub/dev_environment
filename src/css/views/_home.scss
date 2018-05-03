@@ -6,37 +6,37 @@ $home-image-md: $bark-md-image;
 $home-image-lg: $bark-lg-image;
 $home-image-xl: $bark-lg-image;
 
-.home {
+.views-home {
   background-size: cover;
   background-position: center;
 }
 
 @include media-breakpoint-up(xs) {
-  .home {
+  .views-home {
     background-image: $home-image-xs;
   }
 }
 
 @include media-breakpoint-up(sm) {
-  .home {
+  .views-home {
     background-image: $home-image-sm;
   }
 }
 
 @include media-breakpoint-up(md) {
-  .home {
+  .views-home {
     background-image: $home-image-md;
   }
 }
 
 @include media-breakpoint-up(lg) {
-  .home {
+  .views-home {
     background-image: $home-image-lg;
   }
 }
 
 @include media-breakpoint-up(xl) {
-  .home {
+  .views-home {
     background-image: $home-image-xl;
   }
 }

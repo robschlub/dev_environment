@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-// import '../../css/diagram.scss';
 
 type Props = {
   id?: string;

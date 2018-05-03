@@ -15,7 +15,7 @@ const aboutPage = () => {
       <div>
         <Navbar active='About'/>
 
-        <Jumbotron className="jumbotron -fluid about"
+        <Jumbotron className="jumbotron -fluid views-about"
                     containerFluid={false}
                     >
           <div className="col-8 col-lg-7">

@@ -1,21 +1,18 @@
-// $color-lines: $color-blue;
-// $color-corners: $color-cyan-medium;
-// $color-moreSharp: $color-red;
-// $color-lessSharp: $color-green-medium;
-
-.lesson_text p {
+.lesson__text p {
   font-size: 16px;
+  color: $color_text;
 }
 
-.lesson_title {
+.lesson__title {
   font-size: 30px;
+  color: $color_text;
 }
 
-.btn-lesson {
-  margin: 5px;
-}
+// .btn-lesson {
+//   margin: 5px;
+// }
 
-.button_container {
+.lesson__button-container {
   position: relative;
   padding-bottom: 20px;
 }

@@ -7,9 +7,6 @@ import Button from './../components/button';
 import Jumbotron from './../jumbotron';
 import Navbar from './../components/navbar';
 import Content from './../components/content';
-// import styles from '../../css/diagram.scss';
-// import getColors from '../diagram/colors';
-// import testgl from '../diagram/testgl';
 import Canvas from '../components/canvas';
 import testgl from '../diagram/testwebgl';
 
@@ -43,7 +40,7 @@ const introPage = () => {
       <div>
         <Navbar active='Introduction'/>
 
-        <Jumbotron className="jumbotron -fluid intro"
+        <Jumbotron className="jumbotron -fluid views-intro"
                     containerFluid={false}
                     >
           <div className="col-6">
@@ -58,7 +55,7 @@ const introPage = () => {
             </p>
           </div>
       </Jumbotron>
-      <Jumbotron className="jumbotron -fluid text-center intro1"
+      <Jumbotron className="jumbotron -fluid text-center views-intro1"
                   containerFluid={false}
                   >
           <h1>This is a title</h1>
