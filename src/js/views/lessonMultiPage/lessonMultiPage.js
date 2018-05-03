@@ -2,12 +2,16 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../css/style.scss';
-import '../../css/multipagelesson.scss';
-import Navbar from './../components/navbar';
-// import MultiPageLesson from '../components/multiPageLesson';
-import LessonComponent from '../components/lesson';
-import lesson from '../../Lessons/shapesAndCorners/shapesAndCorners';
+
+// Styles
+// import '../../../css/style.scss';
+import './lessonMultiPage.scss';
+
+// Components
+import Navbar from '../../components/navbar';
+import LessonComponent from '../../components/lesson';
+import lesson from '../../../Lessons/shapesAndCorners/shapesAndCorners';
+
 
 const lessonMultiPage = (section: number) => {
   const lessonId:HTMLElement | null = document.getElementById('multi-page-lesson');

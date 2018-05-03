@@ -2,10 +2,10 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../css/style.scss';
-import Button from './../components/button';
-import Jumbotron from './../jumbotron';
-import Navbar from './../components/navbar';
+import './home.scss';
+import Button from '../../components/button';
+import Jumbotron from '../../jumbotron';
+import Navbar from '../../components/navbar';
 
 const homePage = () => {
   const id:HTMLElement | null = document.getElementById('home');
