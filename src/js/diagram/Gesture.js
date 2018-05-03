@@ -1,5 +1,5 @@
 // @flow
-import { Point } from './g2';
+import { Point } from './tools/g2';
 import Diagram from './Diagram';
 
 class Gesture {
@@ -13,6 +13,7 @@ class Gesture {
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
+    // console.log(diagram.canvas.offsetWidth)
     this.diagram.canvas.onmousedown = this.mouseDownHandler.bind(this);
     this.diagram.canvas.onmouseup = this.mouseUpHandler.bind(this);
     this.diagram.canvas.onmousemove = this.mouseMoveHandler.bind(this);
@@ -63,18 +64,18 @@ class Gesture {
 
   touchStartHandler(event: TouchEvent) {
     const touch = event.touches[0];
-    this.startHandler(new Point(touch.pageX, touch.pageY));
+    this.startHandler(new Point(touch.clientX, touch.clientY));
   }
   mouseDownHandler(event: MouseEvent) {
-    this.startHandler(new Point(event.pageX, event.pageY));
+    this.startHandler(new Point(event.clientX, event.clientY));
   }
 
   touchMoveHandler(event: TouchEvent) {
     const touch = event.touches[0];
-    this.moveHandler(event, new Point(touch.pageX, touch.pageY));
+    this.moveHandler(event, new Point(touch.clientX, touch.clientY));
   }
   mouseMoveHandler(event: MouseEvent) {
-    this.moveHandler(event, new Point(event.pageX, event.pageY));
+    this.moveHandler(event, new Point(event.clientX, event.clientY));
   }
 
   mouseUpHandler() {

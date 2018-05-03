@@ -112,6 +112,7 @@ FAIL=0
 # Lint and type check
 echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
 docker_run "JS Linting" npm run lint
+docker_run "CSS and SCSS Linting" npm run css
 docker_run "Flow" npm run flow
 docker_run "Python Linting" flake8
 check_status "Linting and Type Checking"

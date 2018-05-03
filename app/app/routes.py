@@ -23,6 +23,16 @@ def introduction():
     return render_template('introduction.html')
 
 
+@app.route('/singlepagelesson')
+def single_page_lesson():
+    return render_template('singlepagelesson.html')
+
+
+@app.route('/multipagelesson')
+def multi_page_lesson():
+    return render_template('multipagelesson.html')
+
+
 @app.route('/about')
 def about():
     return render_template('about.html')

@@ -7,4 +7,4 @@ app/app/static/build
 app/app/static/dist
 node_modules/
 package-lock.json
-
+dev_environment.sublime*

@@ -8,162 +8,20 @@
     
     <link rel="stylesheet" type="text/css" href="/static/dist/main.css">
 
-    <title>Hello, world!</title>
-
-    <!-- TO DELETE -->
-    <!-- Shaders -->
-    <script id="2d-vertex-shader" type="notjs">
-      attribute vec2 a_position;
-      attribute vec2 a_texCoord;
-      uniform mat3 u_matrix;
-      // varying vec2 v_texCoord;
-      void main() {
-        gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
-        // v_texCoord = a_texCoord;
-      }
-    </script>
-
-    <script id="2d-fragment-shader" type="notjs">
-      // fragment shaders don't have a default precision so we need
-      // to pick one. mediump is a good default
-      precision mediump float;
-      uniform vec4 u_color;
-      // uniform sampler2D u_image;
-      // uniform vec2 u_textureSize;
-      // varying vec2 v_texCoord;
-      void main() {
-        // vec2 onePixel = vec2(1.0, 1.0) / u_textureSize * 50.0;
-
-        // gl_FragColor = texture2D(u_image, v_texCoord);
-        // gl_FragColor = vec4(0,0,1,1);
-        gl_FragColor = u_color;
-      }
-    </script>
-
-    <link rel="stylesheet" href="static/temp/general/stylesheet.css">
-    <link rel="stylesheet" href="static/temp/general/equations.css">
-    <link rel="stylesheet" href="static/temp/doc.css">
-    <link rel="stylesheet" href="static/temp/lesson1.css">
-    <script src="static/temp/general/d2.js"></script>
-    <script src="static/temp/general/m2.js"></script>
-    <script src="static/temp/general/tools.js"></script>
-    <script src="static/temp/general/Diagram/VertexObject.js"></script>
-    <script src="static/temp/general/Diagram/GeometryObject.js"></script>
-    <script src="static/temp/general/Diagram/Diagram.js"></script>
-    <script src="static/temp/general/equations/equation_builder.js"></script>
-    <script src="static/temp/general/webgl/webgl.js"></script>
-    <script src="static/temp/general/Gesture.js"></script>
   </head>
 
 <body>
   {% block content %}{% endblock %}
-<!--   <div id="learning_text_container">
-    <canvas id="c" class="element"></canvas>
-  </div> -->
-<div id="headerbar" class="element">
-    <div class="container-table element">
-      <div class="vertical-middle-container element">
-        <p> This is the header </p>
-      </div>
-    </div>
-  </div>
-  <div id="headerbar-spacer" class="element">
-  </div>
-  <div id="container" class="element" >
-    <canvas id="c" class="element"></canvas>
-    <!-- <canvas id="d" class="element"></canvas> -->
-    <div id="title" class="element lesson-title">
-      Circles
-    </div>
-    <div id="sub-title" class="element lesson-sub-title">
-        You can move the stick to see the circle.
-      </div>
-    
-    <!-- <canvas id="c" class="element"></canvas> -->
-    <!-- <div id="nav_bar" class="element">
-    </div> -->
-    
-    <div id="diagram" class="element">
-      <div id="diagram-background" class="element">
-      </div>
-      <div class="movement_link_container_all element">
-        <div class="movement_link_container prev-container element">
-          <div class="movement_link_table_cell element">
-            <div id="prev_link" class="movement_link non_touch_hover movement-link-enabled element">
-              Prev
-            </div>
-          </div>
-        </div>
-       
-        <div class="movement_link_container skip-to-container element">
-          <div class="movement_link_table_cell element">
-            <div id="select_link" class="movement_link non_touch_hover movement-link-enabled element">
-              Skip To
-            </div>
-          </div>
-        </div>
-         <div class="movement_link_container next-container element">
-          <div class="movement_link_table_cell element">
-            <div id="next_link" class="movement_link non_touch_hover movement-link-enabled element">
-              Next
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="nav_box">
-      </div>
-      <div id="learning_text_container" class="element">
-        <div class="learning_text element">
-          <div id="lt1" class ="learning_text_scrollable">
-            Start with a straight line.
-          </div>
-        </div>
-      </div>
 
-      <div id="annotation" class="element">
-        <!-- <p class="center large"> -->
-        <div id="annotation-label" class="element">
-          <span id="annotation-label-text" class="action_word L2_col_angle">Angle</span> =
-        </div>
-        <div id="annotation-value" class="element">
-          <div id="annotation-angle-value" class="element">0</div><div id="annotation-angle-units" class="element">&deg;</div>
-        </div>
-      </div>
-      
-    </div>
-
-  </div> 
-  <div id="basebar" class="element">
-    <div class="container-table element">
-      <div class="vertical-middle-container element">
-        <p> This is the basebar </p>
-      </div>
-    </div>
-  </div>
-
-  <script src="static/temp/globals.js"></script>
-  <script src="static/temp/general/Lesson/Lesson_Base.js"></script>
-  <script src="static/temp/general/Lesson/LessonDirector.js"></script>
-  <script src="static/temp/general/Lesson/LessonContent.js"></script>
-
-  <script src="static/temp/Lessons/Lesson1/lesson.js"></script>
-  <script src="static/temp/Lessons/Lesson1/diagram.js"></script>
-  <script src="static/temp/Lessons/Lesson1/gesture.js"></script>
-  <script src="static/temp/Lessons/Lesson1/geometry.js"></script>
-  <script src="static/temp/Lessons/Lesson1/content.js"></script>
-
-  <script src="static/temp/Lessons/Lesson2/lesson.js"></script>
-  <script src="static/temp/Lessons/Lesson2/diagram.js"></script>
-  <script src="static/temp/Lessons/Lesson2/gesture.js"></script>
-  <script src="static/temp/Lessons/Lesson2/geometry.js"></script>
-  <script src="static/temp/Lessons/Lesson2/content.js"></script>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+ -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+ -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ -->
+<script src="/static/jquery-3.2.1.slim.min.js"></script> 
+<script src="/static/popper.min.js"></script>
+<script src="/static/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="/static/dist/vendors.bundle.js"></script>
 <script type="text/javascript" src="/static/dist/tools.bundle.js"></script>

@@ -1,6 +1,6 @@
 import cssColors from './cssColors';
 import getColors from './colors';
-import { round } from './mathtools';
+import { round } from './tools/mathtools';
 
 jest.mock('./cssColors');
 

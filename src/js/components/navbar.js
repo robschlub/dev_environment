@@ -16,8 +16,12 @@ export default class Navbar extends React.Component
     const props = Object.assign({}, this.props);
     const nav1 = 'Introduction';
     const nav2 = 'About';
+    const nav3 = 'Single Page Lesson';
+    const nav4 = 'Multi Page Lesson';
     const nav1Class = `nav-link ${props.active === nav1 ? 'active' : ''}`;
     const nav2Class = `nav-link ${props.active === nav2 ? 'active' : ''}`;
+    const nav3Class = `nav-link ${props.active === nav3 ? 'active' : ''}`;
+    const nav4Class = `nav-link ${props.active === nav4 ? 'active' : ''}`;
 
     delete props.active;
 
@@ -38,14 +42,26 @@ export default class Navbar extends React.Component
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
               <a className={nav1Class}
-                 href={`/${nav1.toLowerCase()}`}>
+                 href={`/${nav1.toLowerCase().replace(/ /g, '')}`}>
                   { nav1 }
               </a>
             </li>
             <li className="nav-item">
               <a className={nav2Class}
-                 href={`/${nav2.toLowerCase()}`}>
+                 href={`/${nav2.toLowerCase().replace(/ /g, '')}`}>
                   { nav2 }
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className={nav3Class}
+                 href={`/${nav3.toLowerCase().replace(/ /g, '')}`}>
+                  { nav3 }
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className={nav4Class}
+                 href={`/${nav4.toLowerCase().replace(/ /g, '')}`}>
+                  { nav4 }
               </a>
             </li>
             <li className="nav-item dropdown">

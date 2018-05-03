@@ -7,6 +7,20 @@
         "no-console": "error",
         // "quotes": ["error", "double"]
         "no-underscore-dangle": 0,
+        "class-methods-use-this": [
+          "error",
+          { 
+            "exceptMethods": [
+              "setContent",
+              "setTitle",
+              "setModifiers",
+              "setState",
+              "getState",
+              "setStateMultiOnly",
+              "setSinglePagePrimary"
+            ]
+          }
+        ],
         "no-mixed-operators": [
           "error",
           {

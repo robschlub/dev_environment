@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import '../../css/diagram.scss';
+// import '../../css/diagram.scss';
 
 type Props = {
   id?: string;
@@ -20,7 +20,13 @@ export default class Canvas extends React.Component
 
   render() {
     const id = this.props.id || '';
-    return <canvas id={id}>
-    </canvas>;
+    return <div id={`${id}_container`} className="canvas_container">
+        <canvas className='diagram_gl'>
+        </canvas>
+        <div className='diagram_html'>
+        </div>
+        <canvas className='diagram_text'>
+        </canvas>
+      </div>;
   }
 }

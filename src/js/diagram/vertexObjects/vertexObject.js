@@ -1,9 +1,10 @@
 // @flow
 
 // import * as g2 from '../g2';
-import * as m2 from '../m2';
-import WebGLInstance from '../webgl';
-import * as g2 from '../g2';
+import * as m2 from '../tools/m2';
+import WebGLInstance from '../webgl/webgl';
+import * as g2 from '../tools/g2';
+import DrawingObject from '../DrawingObject';
 
 // Base clase of all objects made from verteces for webgl.
 // The job of a VertexObject is to:
@@ -13,7 +14,7 @@ import * as g2 from '../g2';
 //  - Setup the webgl buffer:
 //      - Load vertices into a webgl buffer
 //      - draw
-class VertexObject {
+class VertexObject extends DrawingObject {
   gl: WebGLRenderingContext;    // shortcut for the webgl context
   webgl: WebGLInstance;         // webgl instance for a html canvas
   glPrimative: number;          // primitive tyle (e.g. TRIANGLE_STRIP)
@@ -24,11 +25,12 @@ class VertexObject {
   border: Array<Array<g2.Point>>; // Border vertices
 
   constructor(webgl: WebGLInstance) {
+    super();
     this.gl = webgl.gl;
     this.webgl = webgl;
     this.glPrimative = webgl.gl.TRIANGLES;
     this.points = [];
-    this.border = [[]];
+    // this.border = [[]];
   }
   setupBuffer(numPoints: number = 0) {
     if (numPoints === 0) {
@@ -106,6 +108,22 @@ class VertexObject {
     );  // Translate
 
     this.gl.drawArrays(this.glPrimative, offset, count);
+  }
+
+  transform(transformMatrix: Array<number>) {
+    for (let i = 0; i < this.points.length; i += 2) {
+      let p = new g2.Point(this.points[i], this.points[i + 1]);
+      p = p.transformBy(transformMatrix);
+      this.points[i] = p.x;
+      this.points[i + 1] = p.y;
+    }
+    for (let b = 0; b < this.border.length; b += 1) {
+      for (let p = 0; p < this.border[b].length; p += 1) {
+        this.border[b][p] = this.border[b][p].transformBy(transformMatrix);
+      }
+    }
+    // this.border.map(b => {
+    // }) //b.map(p => p.transformBy(transformMatrix)));
   }
 }
 
