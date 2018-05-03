@@ -1,15 +1,15 @@
-import PolyLine from './PolyLine';
+import VertexPolyLine from './VertexPolyLine';
 import { Point } from '../tools/g2';
 import webgl from '../../__mocks__/WebGLInstanceMock';
 import { round } from '../tools/mathtools';
 
-describe('PolyLine', () => {
+describe('VertexPolyLine', () => {
   test('Corner at origin', () => {
     const cornerCoords = [
       new Point(1, 0), new Point(0, 0),
       new Point(0, 1),
     ];
-    const corner = new PolyLine(webgl, cornerCoords, false, 0.1);
+    const corner = new VertexPolyLine(webgl, cornerCoords, false, 0.1);
 
     const border = [
       new Point(1, -0.05),
@@ -44,7 +44,7 @@ describe('PolyLine', () => {
       new Point(1, 1),
       new Point(1, 0),
     ];
-    const square = new PolyLine(webgl, coords, true, 0.1);
+    const square = new VertexPolyLine(webgl, coords, true, 0.1);
 
     const border = [
       new Point(-0.05, -0.05),

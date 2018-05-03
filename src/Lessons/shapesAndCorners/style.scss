@@ -1,0 +1,129 @@
+@import "../../css/style";
+
+$color-lines: $color-blue;
+$color-corners: $color-cyan-medium;
+$color-moreSharp: $color-red;
+$color-lessSharp: $color-green-medium;
+$color-anchor: $color-yellow;
+$color-radius: $color-blue;
+$color-reference: $color-blue-light;
+
+.action_word {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#id_shapes {
+  color: $color-lines;
+}
+
+#id_corners {
+  color: $color-corners;
+}
+
+#id_more_sharp {
+  color: $color-moreSharp;
+}
+
+#id_less_sharp {
+  color: $color-lessSharp;
+}
+
+#id_lines,
+#id_line {
+  color: $color-radius;
+}
+
+#id_anchor {
+  color: $color-anchor;
+}
+
+#id_corner {
+  color: $color-corners;
+}
+
+#id_small_rotation,
+#id_more_sharp_cornern {
+  color: $color-moreSharp;
+}
+
+#id_large_rotation,
+#id_less_sharp_corner {
+  color: $color-lessSharp;
+}
+
+#circle_container {
+  position: relative;
+  left: 0;
+  top: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.circle-diagram-and-text-container {
+  //
+  // display: table;
+  height: 600px;
+}
+
+@include media-breakpoint-up(xs) {
+  #circle_container {
+    width: 100%;
+    padding-top: 100%;
+  }
+}
+
+// @include media-breakpoint-up(sm) {
+// }
+
+@include media-breakpoint-up(md) {
+  #circle_container {
+    // width: 400px;
+    // padding-top: 400px;
+    // height: 200px;
+    width: 50%;
+    // height: 400px;
+    // padding-top: 0;
+    padding-top: 50%;
+    // float: right;
+    // margin-left: auto;
+    // margin-right: 0;
+  }
+
+  .circle-diagram-text-container {
+    // margin-top: 100px;
+    // display: table-cell;
+    // vertical-align: middle;
+    // width: 200px;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  // #circle_container {
+  //   width: 50%;
+  //   padding-top: 50%;
+  // }
+}
+
+// @include media-breakpoint-up(xl) {
+// }
+
+/* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
+:export {
+  colorLines: $color-lines;
+  colorCorners: $color-corners;
+  colorMoreSharp: $color-moreSharp;
+  colorLessSharp: $color-lessSharp;
+  colorAnchor: $color-anchor;
+  colorRadius: $color-radius;
+  colorReference: $color-reference;
+}
+/* stylelint-enable */
+
+#shapes_container {
+  position: relative;
+  width: 100%;
+  padding-top: 40%;
+  left: 0;
+  top: 0;
+}

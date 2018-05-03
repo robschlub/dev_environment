@@ -6,7 +6,7 @@ import VertexObject from './vertexObject';
 import polyLineTriangles from './PolyLineTriangles';
 
 
-class PolyLine extends VertexObject {
+class VertexPolyLine extends VertexObject {
   constructor(
     webgl: WebGLInstance,
     coords: Array<Point>,
@@ -23,4 +23,4 @@ class PolyLine extends VertexObject {
   }
 }
 
-export default PolyLine;
+export default VertexPolyLine;

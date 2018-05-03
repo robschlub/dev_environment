@@ -1,4 +1,31 @@
 
+/* stylelint-disable function-parentheses-space-inside,
+function-comma-space-after */
+$color-blue: #5c7fe8;
+$color-blue-medium: #4863b5;
+$color-blue-dark: #293968;
+$color-blue-light: #a4b6ec;
+
+$color-red: #ff8079;
+$color-red-medium: #cc6661;
+$color-red-dark: #7f403c;
+$color-red-light: #ffc9c5;
+
+$color-yellow: #e8db48;
+$color-yellow-medium: #b5ab38;
+$color-yellow-dark: #686320;
+$color-yellow-light: #ece490;
+
+$color-green: #84ff63;
+$color-green-medium: #6acc4f;
+$color-green-dark: #427f31;
+$color-green-light: #c0ffaf;
+
+$color-cyan: #56fff5;
+$color-cyan-medium: #45ccc4;
+$color-cyan-dark: #2b7f7a;
+$color-cyan-light: #a2fffa;
+
 $color-stick:              rgb(  0,  0,255);
 $color-start_stick:        rgb( 30, 30,255);
 $color-arc:                rgb(255,  0,  0);
@@ -18,6 +45,9 @@ $color-latin:              rgb(200,  0,200);
 $color-greek:              rgb(  0,  0,200);
 $color-english:            rgb(47, 79, 79);
 
+/* stylelint-enable */
+
+/* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
 :export {
   colorStick: $color-stick;
   colorStart_stick: $color-start_stick;
@@ -37,36 +67,70 @@ $color-english:            rgb(47, 79, 79);
   colorLatin: $color-latin;
   colorGreek: $color-greek;
   colorEnglish: $color-english;
+  colorGreen: $color-green;
+  colorRed: $color-red;
+  colorBlue: $color-blue;
+  colorYellow: $color-yellow;
+  colorCyan: $color-cyan;
+  colorGreenMedium: $color-green-medium;
+  colorRedMedium: $color-red-medium;
+  colorBlueMedium: $color-blue-medium;
+  colorYellowMedium: $color-yellow-medium;
+  colorCyanMedium: $color-cyan-medium;
+  colorGreenDark: $color-green-dark;
+  colorRedDark: $color-red-dark;
+  colorBlueDark: $color-blue-dark;
+  colorYellowDark: $color-yellow-dark;
+  colorCyanDark: $color-cyan-dark;
+  colorGreenLight: $color-green-light;
+  colorRedLight: $color-red-light;
+  colorBlueLight: $color-blue-light;
+  colorYellowLight: $color-yellow-light;
+  colorCyanLight: $color-cyan-light;
 }
+/* stylelint-enable */
 
-#my_Canvas_container, #my_Canvas1_container {
-  position: relative;
+.canvas_container {
+  // position: relative;
+  // width: 100%;
+  // padding-top: 50%;
+  // left: 0;
+  // top: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .diagram_gl {
-  width:  1000px;
-  height: 500px;
-  border-style: solid;
-  border-width: 0;
-  margin: 0;
-  padding: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
   background-color: white;
 }
+
 .diagram_html {
   position: absolute;
-  pointer-events:none;
-  width:  1000px;
-  height: 500px;
-  left: 0px;
-  top: 0px;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: none;
 }
+
 .diagram_text {
   position: absolute;
-  pointer-events:none;
-  width:  1000px;
-  height: 500px;
-  left: 0px;
-  top: 0px;
-  // background-color: red;
-  // z-index: 10;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.btn-primary {
+  background-color: $color-blue;
 }

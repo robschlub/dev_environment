@@ -8,7 +8,7 @@ $home-image-xl: $bark-lg-image;
 
 .home {
   background-size: cover;
-  background-position: center; 
+  background-position: center;
 }
 
 @include media-breakpoint-up(xs) {

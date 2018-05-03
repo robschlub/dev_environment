@@ -1,11 +1,11 @@
-import Arrow from './Arrow';
+import VertexArrow from './VertexArrow';
 import { Point } from '../tools/g2';
 import webgl from '../../__mocks__/WebGLInstanceMock';
 import { round } from '../tools/mathtools';
 
 describe('Arrow', () => {
   test('Default', () => {
-    const arrow = new Arrow(webgl);
+    const arrow = new VertexArrow(webgl);
     const border = [
       new Point(0, 0), new Point(-0.5, -0.5),
       new Point(-0.25, -0.5), new Point(-0.25, -1),
@@ -25,7 +25,7 @@ describe('Arrow', () => {
     expect(arrow.border[0].map(x => x.round())).toEqual(border);
   });
   test('Custom', () => {
-    const arrow = new Arrow(webgl, 2, 1, 4, 2, new Point(1, -1));
+    const arrow = new VertexArrow(webgl, 2, 1, 4, 2, new Point(1, -1));
     const border = [
       new Point(1, -1),
       new Point(0, -3),

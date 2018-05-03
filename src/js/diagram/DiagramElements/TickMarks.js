@@ -4,7 +4,7 @@ import { DiagramElementPrimative } from '../Element';
 import * as g2 from '../tools/g2';
 import * as m2 from '../tools/m2';
 import WebGLInstance from '../webgl/webgl';
-import HorizontalLine from '../vertexObjects/HorizontalLine';
+import VertexHorizontalLine from '../vertexObjects/VertexHorizontalLine';
 
 class TickMarks extends DiagramElementPrimative {
   num: number;
@@ -23,7 +23,12 @@ class TickMarks extends DiagramElementPrimative {
     limits: g2.Rect = new g2.Rect(-1, -1, 2, 2),
     rotation: number = 0,
   ) {
-    const vertexObject = new HorizontalLine(webgl, new g2.Point(0, 0), length, width, Math.PI / 2);
+    const vertexObject = new VertexHorizontalLine(
+      webgl,
+      new g2.Point(0, 0),
+      length, width,
+      Math.PI / 2,
+    );
     super(
       vertexObject,
       new g2.Transform().scale(1, 1).rotate(0).translate(0, 0),

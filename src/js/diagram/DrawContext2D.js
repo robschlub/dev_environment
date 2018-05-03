@@ -26,12 +26,19 @@ class DrawContext2D {
     }
 
     this.ratio = dpr / bsr;
-
-    this.canvas.width = this.canvas.offsetWidth * this.ratio;
-    this.canvas.height = this.canvas.offsetHeight * this.ratio;
-    this.canvas.style.width = `${this.canvas.offsetWidth}px`;
-    this.canvas.style.height = `${this.canvas.offsetHeight}px`;
+    // this.canvas.width = this.canvas.offsetWidth * this.ratio;
+    // this.canvas.height = this.canvas.offsetHeight * this.ratio;
+    // this.canvas.style.width = `${this.canvas.offsetWidth}px`;
+    // this.canvas.style.height = `${this.canvas.offsetHeight}px`;
+    this.resize(this.canvas.offsetWidth, this.canvas.offsetHeight);
     this.ctx.scale(this.ratio, this.ratio);
+  }
+
+  resize(width: number, height: number) {
+    this.canvas.width = width * this.ratio;
+    this.canvas.height = height * this.ratio;
+    // this.canvas.style.width = `${width}px`;
+    // this.canvas.style.height = `${height}px`;
   }
 }
 

@@ -8,7 +8,7 @@ import WebGLInstance from '../../webgl/webgl';
 import { CartesianPlotProperties } from './CartesianPlotProperties';
 import DrawContext2D from '../../DrawContext2D';
 import Axis from './Axis';
-import PolyLine from '../../vertexObjects/PolyLine';
+import VertexPolyLine from '../../vertexObjects/VertexPolyLine';
 
 class CartesianPlot extends DiagramElementCollection {
   props: CartesianPlotProperties;
@@ -41,7 +41,7 @@ class CartesianPlot extends DiagramElementCollection {
           this.props.axes[1].valueToClip(trace.points[j].y),
         ));
       }
-      const polyLine = new PolyLine(webgl, line, false, 0.01);
+      const polyLine = new VertexPolyLine(webgl, line, false, 0.01);
       this.add(trace.name, new DiagramElementPrimative(
         polyLine,
         new Transform().scale(1, 1).rotate(0).translate(0, 0),

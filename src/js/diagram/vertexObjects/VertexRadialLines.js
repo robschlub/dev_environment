@@ -4,7 +4,7 @@ import { Point } from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 import VertexObject from './vertexObject';
 
-class RadialLines extends VertexObject {
+class VertexRadialLines extends VertexObject {
   innerRadius: number;
   outerRadius: number;
   dAngle: number;
@@ -81,4 +81,4 @@ class RadialLines extends VertexObject {
   }
 }
 
-export default RadialLines;
+export default VertexRadialLines;

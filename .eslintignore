@@ -1,5 +1,1 @@
-app/app/static/build/*
-app/app/static/dist/*
-app/app/static/.webassets-cache/*
-app/app/static/vendors/*
-app/app/static/temp/*
+app/app/static/*

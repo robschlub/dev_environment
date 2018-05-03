@@ -1,5 +1,5 @@
 // @flow
-
+// import * as vertexShapes from './vertexObjects/vertexShapes';
 import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
 // import Polygon from './vertexObjects/Polygon';
@@ -9,6 +9,88 @@ import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
+import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
+import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import HorizontalLine from './DiagramElements/HorizontalLine';
+
+function shapes(webgl: WebGLInstance, limits: Rect) {
+  function polyLine(
+    points: Array<Point>,
+    close: boolean,
+    lineWidth: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return PolyLine(webgl, points, close, lineWidth, color, transform, limits);
+  }
+  function polyLineCorners(
+    points: Array<Point>,
+    close: boolean,
+    cornerLength: number,
+    lineWidth: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return PolyLineCorners(webgl, points, close, cornerLength, lineWidth, color, transform, limits);
+  }
+  function polygon(
+    numSides: number,
+    radius: number,
+    lineWidth: number,
+    rotation: number,
+    numSidesToDraw: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return Polygon(
+      webgl, numSides, radius, lineWidth,
+      rotation, numSidesToDraw, color, transform, limits,
+    );
+  }
+  function polygonFilled(
+    numSides: number,
+    radius: number,
+    rotation: number,
+    numSidesToDraw: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return PolygonFilled(
+      webgl, numSides, radius,
+      rotation, numSidesToDraw, color, transform, limits,
+    );
+  }
+  function horizontalLine(
+    start: Point,
+    length: number,
+    width: number,
+    rotation: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return HorizontalLine(
+      webgl, start, length, width,
+      rotation, color, transform, limits,
+    );
+  }
+  function collection(transformOrPoint: Transform | Point = new Transform()) {
+    let transform = new Transform();
+    if (transformOrPoint instanceof Point) {
+      transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
+    } else {
+      transform = transformOrPoint.copy();
+    }
+    return new DiagramElementCollection(transform, limits);
+  }
+  return {
+    polyLine,
+    polyLineCorners,
+    polygon,
+    polygonFilled,
+    horizontalLine,
+    collection,
+  };
+}
 
 class Diagram {
   canvas: HTMLCanvasElement;
@@ -22,6 +104,7 @@ class Diagram {
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
   htmlCanvas: HTMLElement;
+  shapes: Object;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -50,8 +133,6 @@ class Diagram {
         }
       }
     }
-    // console.log(this.canvas)
-    // console.log(this.canvas instanceof HTMLCanvasElement)
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }
@@ -75,14 +156,22 @@ class Diagram {
     }
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
-
-    if (this.htmlCanvas instanceof HTMLElement) {
-      this.htmlCanvas.innerHTML = 'hello';
-    }
-
+    this.shapes = this.getShapes();
     this.createDiagramElements();
+
+    window.addEventListener('resize', this.resize.bind(this));
+
+    this.animateNextFrame();
   }
 
+  getShapes() {
+    return shapes(this.webgl, this.limits);
+  }
+
+  resize() {
+    this.webgl.resize();
+    this.animateNextFrame();
+  }
   // Handle touch down, or mouse click events within the canvas.
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
@@ -171,13 +260,11 @@ class Diagram {
     this.elements.add(name, diagramElement);
   }
   clearContext() {
-    this.webgl.gl.clearColor(0, 0, 0, 0);
+    this.webgl.gl.clearColor(1, 1, 1, 1);
     this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
 
     if (this.draw2D) {
       this.draw2D.ctx.clearRect(0, 0, this.draw2D.ctx.canvas.width, this.draw2D.ctx.canvas.height);
-      this.draw2D.ctx.font = '200 16px Helvetica Neue';
-      this.draw2D.ctx.fillText('hello', 70, 17);
     }
   }
 
@@ -279,6 +366,7 @@ class Diagram {
     const y = this.limits.height / this.canvas.offsetHeight / window.devicePixelRatio;
     return new Point(x, y);
   }
+
   /* eslint-disable */
   // autoResize() {
   //   this.canvas.width = this.canvas.clientWidth * this.devicePixelRatio;

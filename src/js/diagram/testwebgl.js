@@ -1,47 +1,56 @@
 // @flow
-import Polygon from './vertexObjects/Polygon';
-import PolygonFilled from './vertexObjects/PolygonFilled';
-import PolyLineCorners from './vertexObjects/PolyLineCorners';
-import PolyLine from './vertexObjects/PolyLine';
-import Arrow from './vertexObjects/Arrow';
-import RadialLines from './vertexObjects/RadialLines';
+import VertexPolygon from './vertexObjects/VertexPolygon';
+import VertexPolygonFilled from './vertexObjects/VertexPolygonFilled';
+import VertexPolyLineCorners from './vertexObjects/VertexPolyLineCorners';
+import VertexPolyLine from './vertexObjects/VertexPolyLine';
+import VertexArrow from './vertexObjects/VertexArrow';
+import VertexRadialLines from './vertexObjects/VertexRadialLines';
 import TextObject from './textObjects/TextObject';
 // import HorizontalLine from './vertexObjects/HorizontalLine';
 import { Transform, Point, TransformLimit } from './tools/g2';
-import GLParallelLines from './vertexObjects/glParallelLines';
+// import GLParallelLines from './vertexObjects/glParallelLines';
 // import * as m2 from './m2';
 // import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
 // import GlobalVariables from './globals';
 import Diagram from './Diagram';
 import * as tools from './tools/mathtools';
-import TickMarks from './DiagramElements/TickMarks';
+// import TickMarks from './DiagramElements/TickMarks';
 // import Axis from './DiagramElements/Plot/Axis';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import { CartesianPlotProperties, TraceProperties } from './DiagramElements/Plot/CartesianPlotProperties';
 import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
+import getColors from './colors';
+
+const colors = getColors();
 
 class ShapesCollection extends DiagramElementCollection {
   _square: DiagramElementPrimative;
+  _triangle: DiagramElementPrimative;
+  _corners: DiagramElementPrimative;
+  _pline: DiagramElementPrimative;
+  _arrow: DiagramElementPrimative;
+  _radial: DiagramElementPrimative;
+  _helloText: DiagramElementPrimative;
 
   constructor(webgl, ctx, transform, diagramLimits) {
     super(transform);
 
-    const square = new Polygon(
+    const square = new VertexPolygon(
       webgl,
       4,
       0.475 * Math.sqrt(2), 0.05 * Math.sqrt(2),
       Math.PI / 4, new Point(0, 0),
     );
 
-    const triangle = new PolygonFilled(
+    const triangle = new VertexPolygonFilled(
       webgl,
       3,
       0.2,
       0, new Point(0, 0),
     );
 
-    const corners = new PolyLineCorners(
+    const corners = new VertexPolyLineCorners(
       webgl,
       [
         new Point(1, 0),
@@ -54,7 +63,7 @@ class ShapesCollection extends DiagramElementCollection {
       0.1,
     );
 
-    const polyLine = new PolyLine(
+    const polyLine = new VertexPolyLine(
       webgl,
       [
         new Point(0, 0),
@@ -66,7 +75,7 @@ class ShapesCollection extends DiagramElementCollection {
       0.1,
     );
 
-    const radialVertices = new RadialLines(
+    const radialVertices = new VertexRadialLines(
       webgl,
       0,
       0.5,
@@ -75,20 +84,19 @@ class ShapesCollection extends DiagramElementCollection {
       Math.PI * 2,
     );
 
-    const xTicks = new GLParallelLines(webgl, 20, 1, new Point(0, 0), 2, 0.004, true, false);
+    // const xTicks = new GLParallelLines(webgl, 20, 1, new Point(0, 0), 2, 0.004, true, false);
 
     // const xMinorTicks = new GLParallelLines(webgl, 50,)
 
-    const arrowVertices = new Arrow(webgl);
+    const arrowVertices = new VertexArrow(webgl);
 
     const textObject = new TextObject(ctx, 'Hello World!', new Point(0.5, 1), ['left', 'top'], new Point(0.5, 0.5));
 
     this.add('helloText', new DiagramElementPrimative(
       textObject,
       new Transform().translate(1, 1),
-      [0, 0, 1, 1], diagramLimits,
+      colors.colorBlue, diagramLimits,
     ));
-    // $FlowFixMe
     const hw = this._helloText;
     hw.isTouchable = true;
     hw.isMovable = true;
@@ -96,9 +104,9 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('square', new DiagramElementPrimative(
       square,
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
-      [0, 0, 1, 1], diagramLimits,
+      colors.colorBlue, diagramLimits,
     ));
-    // $FlowFixMe
+
     const sq = this._square;
     sq.isTouchable = true;
     sq.isMovable = true;
@@ -106,9 +114,9 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new Transform().scale(1.5, 1.5).translate(2, 1),
-      [0, 1, 0, 1], diagramLimits,
+      colors.colorGreen, diagramLimits,
     ));
-    // $FlowFixMe
+
     const tri = this._triangle;
     tri.isTouchable = true;
     tri.isMovable = true;
@@ -116,9 +124,9 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('corners', new DiagramElementPrimative(
       corners,
       new Transform().translate(0.5, 0.5),
-      [1, 0, 0, 1], diagramLimits,
+      colors.colorYellow, diagramLimits,
     ));
-    // $FlowFixMe
+
     const corn = this._corners;
     corn.isTouchable = true;
     corn.isMovable = true;
@@ -126,9 +134,9 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('pline', new DiagramElementPrimative(
       polyLine,
       new Transform().translate(1, 2),
-      [1, 1, 0, 1], diagramLimits,
+      colors.colorRed, diagramLimits,
     ));
-    // $FlowFixMe
+
     const pline = this._pline;
     pline.isTouchable = true;
     pline.isMovable = true;
@@ -136,9 +144,9 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('arrow', new DiagramElementPrimative(
       arrowVertices,
       new Transform().scale(0.7, 0.4).translate(0.5, 1),
-      [1, 1, 0, 1], diagramLimits,
+      colors.colorRed, diagramLimits,
     ));
-    // $FlowFixMe
+
     const arrow = this._arrow;
     arrow.isTouchable = true;
     arrow.isMovable = true;
@@ -146,24 +154,25 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('radial', new DiagramElementPrimative(
       radialVertices,
       new Transform().translate(2, 1),
-      [1, 1, 0, 1], diagramLimits,
+      colors.colorBlue, diagramLimits,
     ));
-    // $FlowFixMe
+
     const radial = this._radial;
     radial.isTouchable = true;
     radial.isMovable = true;
 
-    this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
-    this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
-    this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
-    this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
-
-    this.add('xAxis', new DiagramElementPrimative(
-      xTicks,
-      new Transform().translate(0.2, 0.2),
-      [0.5, 0.5, 0.5, 1],
-      diagramLimits,
-    ));
+    /* eslint-disable */
+    // this.add('tickMarksY', new TickMarks(webgl, 10, 0.2, new Point(1.0, 0.5), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
+    // this.add('minorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.5), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, Math.PI / 2));
+    // this.add('tickMarksX', new TickMarks(webgl, 10, 0.2, new Point(1, 0.4), 0.1, 0.01, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
+    // this.add('majorTickMarksY', new TickMarks(webgl, 50, 0.2 / 5, new Point(1.0, 0.46), 0.04, 0.007, [0.8, 0.8, 0.8, 1], diagramLimits, 0));
+    /* eslint-enable */
+    // this.add('xAxis', new DiagramElementPrimative(
+    //   xTicks,
+    //   new Transform().translate(0.2, 0.2),
+    //   [0.5, 0.5, 0.5, 1],
+    //   diagramLimits,
+    // ));
     this.isTouchable = true;
 
     const xProps = new AxisProperties('x', 0);
@@ -230,7 +239,7 @@ class ShapesCollection extends DiagramElementCollection {
     // this.add('yAxis1', axis2);
     const trace = new TraceProperties(
       'trace1',
-      [0, 0, 1, 1],
+      colors.colorBlue,
       [new Point(0, 0), new Point(10, 5), new Point(50, 10), new Point(80, 20)],
     );
     const plotProps = new CartesianPlotProperties();
@@ -241,10 +250,9 @@ class ShapesCollection extends DiagramElementCollection {
       new Transform().translate(3, 1),
       diagramLimits,
     );
-    // $FlowFixMe
     // plot._trace1.isTouchable = true;
-    // $FlowFixMe
     // plot._trace1.isMovable = true;
+
     plot.isTouchable = true;
     plot.isMovable = true;
     this.add('plot', plot);
@@ -322,10 +330,9 @@ function testgl(id: string) {
   // diagram.elements._plot._trace1.pulseThickNow(5, 1.05, 7);
   // diagram.elements._plot._trace1.pulseNow(2, 1.5);
   // or
-  diagram.elements.startMovingFreely();
+  // diagram.elements.startMovingFreely();
   // diagram.elements.animateRotationTo(1, -1, 10);
 
-  // $FlowFixMe
   // diagram.elements._square.animateTranslationTo(new Point(1.5, 0.5), 1);
 
   if (diagram) {
@@ -344,9 +351,9 @@ function testgl(id: string) {
     //   'Client L/T/W/H ' + box.clientLeft + ', ' + box.clientTop + ', ' + box.clientWidth + ', ' + box.clientHeight + '\n' +
     //   'Offset L/T/W/H ' + box.offsetLeft + ', ' + box.offsetTop + ', ' + box.offsetWidth + ', ' + box.offsetHeight + '\n\n' +
     //   'Clip x/y ' + clip.x + ', ' + clip.y + '\n\n' +
-    //   // $FlowFixMe
+
     //   'square touch: ' + diagram.elements._square.isBeingTouched(clip) + '\n' +
-    //   // $FlowFixMe
+
     //   'tri touch: ' + diagram.elements._triangle.isBeingTouched(clip) + '\n' +
     //   'collection touch: ' + diagram.elements.isBeingTouched(clip);
     //   Console(str);
