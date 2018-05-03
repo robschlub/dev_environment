@@ -15,6 +15,13 @@ class Section1 extends Section {
         Somes corners are |_more_sharp|, while others are |_less_sharp|.
       </p>`,
       '|_shapes_diagram|',
+      `<p>
+        The sharpness of the corner is a property that can describe a shape.
+      </p>
+      <p>
+        So how can you measure sharpness? What name do we give to the 
+        sharpness?
+      <p>`,
     ];
   }
   setModifiers() {
@@ -49,20 +56,12 @@ class Section1 extends Section {
 class Section2 extends Section {
   setContent() {
     return `
-      <div class="text_container">
-      <p>
-        The sharpness of the corner is a property that can describe a shape.
-      </p>
-      <p>
-        So how can you measure sharpness? What name do we give to the 
-        sharpness?
-      <p>
+      |_circle_diagram|
       <p>
         Let's start with two lines |_anchored| at one end. One |_line| can be
         rotated around the anchor.
       </p>
-      </div>
-      |_circle_diagram|`;
+      `;
   }
   setModifiers() {
     return {
@@ -107,16 +106,16 @@ class Section2 extends Section {
 class Section3 extends Section {
   setContent() {
     return `
-    <div class="text_container">
+    
+    |_circle_diagram|
       <p>
         The two lines form a |_corner| at the anchor.
       </p><p>
         |_Small_rotation| results in a |_sharper_corner|.
       </p><p>
-        |_Large_rotation| results in a |_less_sharp_corner|.
+        |_Large_rotation| results in a |_less_sharp_corner|. Lets see how far this goes
       </p>
-    </div>
-      |_circle_diagram|`;
+      `;
   }
   setModifiers() {
     return {

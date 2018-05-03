@@ -135,7 +135,7 @@ export default class LessonComponent extends React.Component
 
   addButtons() {
     if (this.type === 'multi') {
-      return <div className = "button_container">
+      return <div className = "button_container fixed-bottom">
           <Button label="Previous" id="button-previous" className="-primary -multi-page-lesson"/>
           <Button label="Next" id="button-next" className="-primary -multi-page-lesson"/>
         </div>;
@@ -151,10 +151,16 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='main_page'>
-        <div className='lesson_container lesson_text'>
-          {this.renderPage()}
+        <div className="container">
+          <div className="row align-items-center">
+            <div className='lesson_container lesson_text'>
+              {this.renderPage()}
+            </div>
+          </div>
         </div>
+        <div className = "row>">
         {this.addButtons()}
+        </div>
       </div>
     </div>;
   }
