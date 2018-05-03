@@ -8,7 +8,7 @@ $_color-theme_dark: (
   passive:                  map-get($_color-palette, yellow-light),
   highlight:                map-get($_color-palette, red-light),
   background:               map-get($_color-palette, black),
-  diagram-background:       map-get($_color-palette, grey-dark),
+  diagram-background:       map-get($_color-palette, black),
   navbar:                   map-get($_color-palette, grey-light),
   text:                     map-get($_color-palette, grey-light),
   negative-text:            map-get($_color-palette, grey-dark),

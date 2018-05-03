@@ -24,10 +24,15 @@ function RGBtoArray(color: string): Array<number> {
 // Function that converts any hex color string to an array of rgba numbers
 // between 0 and 1 (where alpha is always 1)
 function HexToArray(color: string): Array<number> {
+  let colHex: string = color.slice(1);
+  if (colHex.length < 6) {
+    colHex =
+      `${colHex[0]}${colHex[0]}${colHex[1]}${colHex[1]}${colHex[2]}${colHex[2]}`;
+  }
   const col: Array<number> = [
-    parseInt(color.slice(1, 3), 16) / 255.0,
-    parseInt(color.slice(3, 5), 16) / 255.0,
-    parseInt(color.slice(5, 7), 16) / 255.0,
+    parseInt(colHex.slice(0, 2), 16) / 255.0,
+    parseInt(colHex.slice(2, 4), 16) / 255.0,
+    parseInt(colHex.slice(4, 6), 16) / 255.0,
     1,
   ];
   return col;

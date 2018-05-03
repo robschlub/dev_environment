@@ -19,6 +19,13 @@ describe('Get colors from scss', () => {
       const exp = round([77, 120, 161, 255].map(x => x / 255.0), 5);
       expect(result).toEqual(exp);
     });
+
+    test('#AF0 = [170/255, 255/255, 0/255, 1]', () => {
+      cssColors.mockReturnValue({ colorRed: '#AF0' });
+      const result = round(getColors().colorRed, 5);
+      const exp = round([170, 255, 0, 255].map(x => x / 255.0), 5);
+      expect(result).toEqual(exp);
+    });
   });
 
   describe('RGB values', () => {
