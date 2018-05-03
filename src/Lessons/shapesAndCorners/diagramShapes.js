@@ -14,6 +14,7 @@ const lessSharpColor = colors.colorLessSharp;
 const lineWidth = 0.02;
 const cornerWidth = 0.06;
 const cornerLength = 0.15;
+const backgroundColor = colors.colorBackground;
 
 type typeShape = {
   _lines: DiagramElementPrimative;
@@ -124,7 +125,7 @@ class ShapesDiagram extends Diagram {
   elements: typeDiagramCollection;
 
   constructor(id: string) {
-    super(`${id}`, 0, 0.1, 4, 4 * 0.4);
+    super(`${id}`, 0, 0.1, 4, 4 * 0.4, backgroundColor);
   }
   createDiagramElements() {
     const { shapes } = this;

@@ -7,6 +7,7 @@ $color-lessSharp: $color_safe;
 $color-anchor: $color_passive;
 $color-radius: $color_primary;
 $color-reference: $color_secondary;
+$color-background: $color_diagram;
 
 .action_word {
   font-weight: bold;
@@ -117,6 +118,7 @@ $color-reference: $color_secondary;
   colorAnchor: $color-anchor;
   colorRadius: $color-radius;
   colorReference: $color-reference;
+  colorBackground: $color-background;
 }
 /* stylelint-enable */
 

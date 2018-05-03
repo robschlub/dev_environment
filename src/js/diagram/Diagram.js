@@ -105,6 +105,7 @@ class Diagram {
   textCanvas: HTMLCanvasElement;
   htmlCanvas: HTMLElement;
   shapes: Object;
+  backgroundColor: Array<number>;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -113,6 +114,7 @@ class Diagram {
     yMin: number = -1,
     width: number = 2,
     height: number = 2,
+    backgroundColor: Array<number> = [1, 1, 1, 1],
   ) {
     const container = document.getElementById(containerId);
     if (container instanceof HTMLElement) {
@@ -136,12 +138,14 @@ class Diagram {
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }
+    this.backgroundColor = backgroundColor;
     const shaders = getShaders('simple', 'simple');
     const webgl = new WebGLInstance(
       this.canvas,
       shaders.vertexSource,
       shaders.fragmentSource,
       shaders.varNames,
+      this.backgroundColor,
     );
     if (limitsOrxMin instanceof Rect) {
       const r = limitsOrxMin;
@@ -260,7 +264,8 @@ class Diagram {
     this.elements.add(name, diagramElement);
   }
   clearContext() {
-    this.webgl.gl.clearColor(1, 1, 1, 1);
+    const bc = this.backgroundColor;
+    this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
     this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
 
     if (this.draw2D) {

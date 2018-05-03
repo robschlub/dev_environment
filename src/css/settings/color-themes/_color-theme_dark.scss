@@ -1,14 +1,15 @@
-$color-palette: $color-palette_standard;
+$_color-palette: $_color-palette_standard;
 
-$color-theme_dark: (
-  primary:                  map-get($color-palette, blue-light),
-  secondary:                map-get($color-palette, blue),
-  danger:                   map-get($color-palette, red-light),
-  safe:                     map-get($color-palette, green-light),
-  passive:                  map-get($color-palette, yellow-light),
-  highlight:                map-get($color-palette, red-light),
-  background:               map-get($color-palette, black),
-  navbar:                   map-get($color-palette, grey-light),
-  text:                     map-get($color-palette, grey-light),
-  negative-text:            map-get($color-palette, grey-dark),
+$_color-theme_dark: (
+  primary:                  map-get($_color-palette, blue-light),
+  secondary:                map-get($_color-palette, blue),
+  danger:                   map-get($_color-palette, red-light),
+  safe:                     map-get($_color-palette, green-light),
+  passive:                  map-get($_color-palette, yellow-light),
+  highlight:                map-get($_color-palette, red-light),
+  background:               map-get($_color-palette, black),
+  diagram-background:       map-get($_color-palette, grey-dark),
+  navbar:                   map-get($_color-palette, grey-light),
+  text:                     map-get($_color-palette, grey-light),
+  negative-text:            map-get($_color-palette, grey-dark),
 );

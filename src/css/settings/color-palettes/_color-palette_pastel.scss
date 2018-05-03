@@ -1,34 +1,34 @@
-$color-palette_standard_blue:                          #89A2E8;
-$color-palette_standard_red:                           #FFA9A7;
-$color-palette_standard_yellow:                        #E8DD8A;
-$color-palette_standard_green:                         #ABFF9A;
-$color-palette_standard_cyan:                          #9AFFEA;
+$_color-palette_pastel_blue:                          #89A2E8;
+$_color-palette_pastel_red:                           #FFA9A7;
+$_color-palette_pastel_yellow:                        #E8DD8A;
+$_color-palette_pastel_green:                         #ABFF9A;
+$_color-palette_pastel_cyan:                          #9AFFEA;
 
-$color-palette_pastel: (
-  blue:                 $color-palette_standard_blue,
-  blue-light:           lighten($color-palette_standard_blue, 20),
-  blue-medium:          darken($color-palette_standard_blue, 20),
-  blue-dark:            darken($color-palette_standard_blue, 40),
+$_color-palette_pastel: (
+  blue:                 $_color-palette_pastel_blue,
+  blue-light:           lighten($_color-palette_pastel_blue, 20),
+  blue-medium:          darken($_color-palette_pastel_blue, 20),
+  blue-dark:            darken($_color-palette_pastel_blue, 40),
   //
-  red:                  $color-palette_standard_red,
-  red-light:            lighten($color-palette_standard_red, 20),
-  red-medium:           darken($color-palette_standard_red, 20),
-  red-dark:             darken($color-palette_standard_red, 40),
+  red:                  $_color-palette_pastel_red,
+  red-light:            lighten($_color-palette_pastel_red, 20),
+  red-medium:           darken($_color-palette_pastel_red, 20),
+  red-dark:             darken($_color-palette_pastel_red, 40),
   //
-  yellow:               $color-palette_standard_yellow,
-  yellow-light:         lighten($color-palette_standard_yellow, 20),
-  yellow-medium:        darken($color-palette_standard_yellow, 20),
-  yellow-dark:          darken($color-palette_standard_yellow, 40),
+  yellow:               $_color-palette_pastel_yellow,
+  yellow-light:         lighten($_color-palette_pastel_yellow, 20),
+  yellow-medium:        darken($_color-palette_pastel_yellow, 20),
+  yellow-dark:          darken($_color-palette_pastel_yellow, 40),
   //
-  green:               $color-palette_standard_green,
-  green-light:         lighten($color-palette_standard_green, 20),
-  green-medium:        darken($color-palette_standard_green, 20),
-  green-dark:          darken($color-palette_standard_green, 40),
+  green:               $_color-palette_pastel_green,
+  green-light:         lighten($_color-palette_pastel_green, 20),
+  green-medium:        darken($_color-palette_pastel_green, 20),
+  green-dark:          darken($_color-palette_pastel_green, 40),
   //
-  cyan:               $color-palette_standard_cyan,
-  cyan-light:         lighten($color-palette_standard_cyan, 20),
-  cyan-medium:        darken($color-palette_standard_cyan, 20),
-  cyan-dark:          darken($color-palette_standard_cyan, 40),
+  cyan:               $_color-palette_pastel_cyan,
+  cyan-light:         lighten($_color-palette_pastel_cyan, 20),
+  cyan-medium:        darken($_color-palette_pastel_cyan, 20),
+  cyan-dark:          darken($_color-palette_pastel_cyan, 40),
   //
   white:                #FFF,
   black:                #000,

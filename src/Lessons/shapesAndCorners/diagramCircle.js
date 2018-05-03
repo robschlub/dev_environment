@@ -18,6 +18,7 @@ const circleRadius = 0.8;
 const lineWidth = 0.02;
 const cornerWidth = 0.04;
 const cornerLength = 0.2;
+const backgroundColor = colors.colorBackground;
 
 type typeCircleDiagramCollection = {
   _anchor: DiagramElementPrimative;
@@ -84,7 +85,7 @@ class CircleDiagram extends Diagram {
   elements: typeCircleDiagramCollection;
 
   constructor(id: string) {
-    super(`${id}`, -1, -1, 2, 2);
+    super(`${id}`, -1, -1, 2, 2, backgroundColor);
   }
 
   createDiagramElements() {
