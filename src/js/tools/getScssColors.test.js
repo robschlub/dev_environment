@@ -11,18 +11,18 @@ describe('Get colors from scss', () => {
   describe('Hex values', () => {
     test('#FF00FF = [1, 0, 1, 1]', () => {
       const cols = getColors('#ff00ff');
-      expect(cols.colorRed).toEqual([1, 0, 1, 1]);
+      expect(cols.red).toEqual([1, 0, 1, 1]);
       expect(Object.keys(cols)).toHaveLength(1);
     });
 
     test('#4d78a1 = [77/255, 120/255, 161/255, 1]', () => {
-      const result = round(getColors('#4d78a1').colorRed, 5);
+      const result = round(getColors('#4d78a1').red, 5);
       const exp = round([77, 120, 161, 255].map(x => x / 255.0), 5);
       expect(result).toEqual(exp);
     });
 
     test('#AF0 = [170/255, 255/255, 0/255, 1]', () => {
-      const result = round(getColors('#AF0').colorRed, 5);
+      const result = round(getColors('#AF0').red, 5);
       const exp = round([170, 255, 0, 255].map(x => x / 255.0), 5);
       expect(result).toEqual(exp);
     });
@@ -31,35 +31,35 @@ describe('Get colors from scss', () => {
   describe('RGB values', () => {
     test('Normal rgb', () => {
       const cols = getColors('rgb(255, 0, 255)');
-      expect(cols.colorRed).toEqual([1, 0, 1, 1]);
+      expect(cols.red).toEqual([1, 0, 1, 1]);
     });
 
     test('rgb with random spaces', () => {
-      const result = round(getColors('rgb( 77,  120 , 161 )').colorRed, 5);
+      const result = round(getColors('rgb( 77,  120 , 161 )').red, 5);
       const exp = round([77, 120, 161, 255].map(x => x / 255.0), 5);
       expect(result).toEqual(exp);
     });
 
     test('rgb in upper case', () => {
       const cols = getColors('RGB(255, 0, 255)');
-      expect(cols.colorRed).toEqual([1, 0, 1, 1]);
+      expect(cols.red).toEqual([1, 0, 1, 1]);
     });
 
     test('rgba', () => {
-      const result = round(getColors('rgb( 77,  120 , 161 , 12)').colorRed, 5);
+      const result = round(getColors('rgb( 77,  120 , 161 , 12)').red, 5);
       const exp = round([77, 120, 161, 12].map(x => x / 255.0), 5);
       expect(result).toEqual(exp);
     });
   });
 
   describe('Predefined css colors', () => {
-    test('colorRed', () => {
+    test('red', () => {
       const cols = getColors('red');
-      expect(cols.colorRed).toEqual([1, 0, 0, 1]);
+      expect(cols.red).toEqual([1, 0, 0, 1]);
     });
 
     test('navy', () => {
-      const cols = round(getColors('navy').colorRed, 5);
+      const cols = round(getColors('navy').red, 5);
       expect(cols).toEqual([0, 0, 0.50196, 1]);
     });
   });

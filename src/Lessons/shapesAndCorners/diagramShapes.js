@@ -7,14 +7,14 @@ import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
 const colors = getScssColors(styles);
-const lineColor = colors.colorLines;
-const cornerColor = colors.colorCorners;
-const moreSharpColor = colors.colorMoreSharp;
-const lessSharpColor = colors.colorLessSharp;
+const lineColor = colors.lines;
+const cornerColor = colors.corners;
+const moreSharpColor = colors.moreSharp;
+const lessSharpColor = colors.lessSharp;
 const lineWidth = 0.02;
 const cornerWidth = 0.06;
 const cornerLength = 0.15;
-const backgroundColor = colors.colorBackground;
+const backgroundColor = colors.background;
 
 type typeShape = {
   _lines: DiagramElementPrimative;

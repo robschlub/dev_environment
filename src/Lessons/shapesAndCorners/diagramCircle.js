@@ -8,17 +8,17 @@ import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
 const colors = getScssColors(styles);
-const anchorColor = colors.colorAnchor;
-const radiusColor = colors.colorRadius;
-const cornerColor = colors.colorCorners;
-const referenceColor = colors.colorReference;
+const anchorColor = colors.anchor;
+const radiusColor = colors.radius;
+const cornerColor = colors.corners;
+const referenceColor = colors.reference;
 const anchorRadius = 0.03;
 const anchorPoints = 50;
 const circleRadius = 0.8;
 const lineWidth = 0.02;
 const cornerWidth = 0.04;
 const cornerLength = 0.2;
-const backgroundColor = colors.colorBackground;
+const backgroundColor = colors.background;
 
 type typeCircleDiagramCollection = {
   _anchor: DiagramElementPrimative;

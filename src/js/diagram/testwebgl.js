@@ -24,7 +24,6 @@ import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
 import getScssColors from '../tools/getScssColors';
 import styles from '../../css/style.scss';
 
-
 const colors = getScssColors(styles);
 
 class ShapesCollection extends DiagramElementCollection {
@@ -98,7 +97,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('helloText', new DiagramElementPrimative(
       textObject,
       new Transform().translate(1, 1),
-      colors.colorBlue, diagramLimits,
+      colors.primary, diagramLimits,
     ));
     const hw = this._helloText;
     hw.isTouchable = true;
@@ -107,7 +106,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('square', new DiagramElementPrimative(
       square,
       new Transform().scale(0.5, 0.5).rotate(0.1).translate(1, 1),
-      colors.colorBlue, diagramLimits,
+      colors.primary, diagramLimits,
     ));
 
     const sq = this._square;
@@ -117,7 +116,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('triangle', new DiagramElementPrimative(
       triangle,
       new Transform().scale(1.5, 1.5).translate(2, 1),
-      colors.colorGreen, diagramLimits,
+      colors.safe, diagramLimits,
     ));
 
     const tri = this._triangle;
@@ -127,7 +126,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('corners', new DiagramElementPrimative(
       corners,
       new Transform().translate(0.5, 0.5),
-      colors.colorYellow, diagramLimits,
+      colors.passive, diagramLimits,
     ));
 
     const corn = this._corners;
@@ -137,7 +136,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('pline', new DiagramElementPrimative(
       polyLine,
       new Transform().translate(1, 2),
-      colors.colorRed, diagramLimits,
+      colors.danger, diagramLimits,
     ));
 
     const pline = this._pline;
@@ -147,7 +146,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('arrow', new DiagramElementPrimative(
       arrowVertices,
       new Transform().scale(0.7, 0.4).translate(0.5, 1),
-      colors.colorRed, diagramLimits,
+      colors.danger, diagramLimits,
     ));
 
     const arrow = this._arrow;
@@ -157,7 +156,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('radial', new DiagramElementPrimative(
       radialVertices,
       new Transform().translate(2, 1),
-      colors.colorBlue, diagramLimits,
+      colors.primary, diagramLimits,
     ));
 
     const radial = this._radial;

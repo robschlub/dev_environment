@@ -80,7 +80,12 @@ const getScssColors = (styles: Object) => {
       // If the color value array is defined, then add it to the final
       // dictionary
       if (colorValue.length > 0) {
-        colors[key] = colorValue;
+        let newKey = key.slice(5);
+        // newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
+        if (newKey.length > 0) {
+          newKey = newKey.charAt(0).toLowerCase() + newKey.slice(1);
+        }
+        colors[newKey] = colorValue;
       }
     }
   });
