@@ -1,8 +1,4 @@
-.lesson__page {
-  position: relative;
-}
-
-.lesson__content {
+.lesson__container {
   position: relative;
   width: 100%;
   height: 100%;
@@ -28,7 +24,7 @@
 }
 
 @include media-breakpoint-up(xs) {
-  .lesson__page {
+  .lesson__container {
     margin-top: 40px;
     margin-left: 5%;
     width: 90%;
@@ -36,18 +32,15 @@
 }
 
 @include media-breakpoint-up(sm) {
-  .lesson__page {
+  .lesson__container {
     // width: 400px;
     // height: 200px;
   }
 }
 
 @include media-breakpoint-up(md) {
-  .lesson__page {
+  .lesson__container {
     margin-top: 80px;
-  }
-
-  .lesson__text p {
     font-size: 20px;
   }
 
@@ -62,13 +55,12 @@
 }
 
 @include media-breakpoint-up(xl) {
-  .lesson__page {
-    width: 1200px;
+  .lesson__container {
+    width: 1100px;
     margin-left: auto;
     margin-right: auto;
   }
 }
-
 
 .lesson-clear-floats {
   clear: both;

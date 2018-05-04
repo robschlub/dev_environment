@@ -124,7 +124,7 @@ class Section3 extends Section {
       _Large_rotation: actionWord('Large Rotation', 'id_large_rotation'),
       _sharper_corner: actionWord('sharper corner', 'id_more_sharp_cornern'),
       _less_sharp_corner: actionWord('less sharp corner', 'id_less_sharp_corner'),
-      _circle_diagram: diagramCanvas('circle_container', CircleDiagram),
+      _circle_diagram: diagramCanvas('circle_container', CircleDiagram, '', 'multiPage'),
     };
   }
 
@@ -140,31 +140,32 @@ class Section3 extends Section {
     };
   }
 
-  setStateMultiOnly(diagrams: Object) {
+  setState(diagrams: Object, lessonType: 'multiPage' | 'singlePage') {
     const diagram = diagrams.circle_container;
-    const t = diagram.elements._radius.transform.copy();
-    if ('angle' in this.lesson.state) {
-      t.updateRotation(this.lesson.state.angle);
-    } else {
-      t.updateRotation(Math.PI / 3);
+    if (diagram) {
+      if (lessonType === 'multiPage') {
+        const t = diagram.elements._radius.transform.copy();
+        if ('angle' in this.lesson.state) {
+          t.updateRotation(this.lesson.state.angle);
+        } else {
+          t.updateRotation(Math.PI / 3);
+        }
+        diagram.elements._radius.setTransform(t);
+
+        diagram.elements.hideOnly([
+          diagram.elements._cornerRad,
+          diagram.elements._cornerRef,
+        ]);
+      }
+      // const diagram = diagrams.circle_container;
+      this.onClickId('id_corner', diagram.toggleCorners, [diagram]);
+      const smallRotation = [diagram, Math.PI / 6, 0, 1];
+      const largeRotation = [diagram, 5 * Math.PI / 6, 0, 1];
+      this.onClickId('id_small_rotation', diagram.rotateTo, smallRotation);
+      this.onClickId('id_large_rotation', diagram.rotateTo, largeRotation);
+      this.onClickId('id_more_sharp_cornern', diagram.rotateTo, smallRotation);
+      this.onClickId('id_less_sharp_corner', diagram.rotateTo, largeRotation);
     }
-    diagram.elements._radius.setTransform(t);
-
-    diagram.elements.hideOnly([
-      diagram.elements._cornerRad,
-      diagram.elements._cornerRef,
-    ]);
-  }
-
-  setState(diagrams: Object) {
-    const diagram = diagrams.circle_container;
-    this.onClickId('id_corner', diagram.toggleCorners, [diagram]);
-    const smallRotation = [diagram, Math.PI / 6, 0, 1];
-    const largeRotation = [diagram, 5 * Math.PI / 6, 0, 1];
-    this.onClickId('id_small_rotation', diagram.rotateTo, smallRotation);
-    this.onClickId('id_large_rotation', diagram.rotateTo, largeRotation);
-    this.onClickId('id_more_sharp_cornern', diagram.rotateTo, smallRotation);
-    this.onClickId('id_less_sharp_corner', diagram.rotateTo, largeRotation);
   }
 }
 

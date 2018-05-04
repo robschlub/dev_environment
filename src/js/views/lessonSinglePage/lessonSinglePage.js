@@ -18,7 +18,7 @@ const lessonSinglePage = () => {
             <Navbar active='Single Page Lesson'/>
           </div>
           <div className="row">
-            <LessonComponent type="single" lesson={lesson}/>
+            <LessonComponent type="singlePage" lesson={lesson}/>
           </div>
         </div>
       </div>,

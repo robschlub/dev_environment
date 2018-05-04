@@ -9,7 +9,7 @@ import Button from './button';
 type Props = {
   lesson: Lesson;
   section?: number;
-  type: 'single' | 'multi';
+  type: 'singlePage' | 'multiPage';
 };
 
 type State = {
@@ -20,7 +20,7 @@ export default class LessonComponent extends React.Component
                                     <Props, State> {
   lesson: Lesson;
   key: number;
-  type: string;
+  type: 'multiPage' | 'singlePage';
   state: State;
   diagrams: Object;
 
@@ -42,7 +42,7 @@ export default class LessonComponent extends React.Component
   }
 
   goToNext() {
-    if (this.type === 'multi') {
+    if (this.type === 'multiPage') {
       if (this.state.section < this.lesson.sections.length - 1) {
         this.lesson.sections[this.state.section].getState(this.diagrams);
         this.setState({
@@ -54,7 +54,7 @@ export default class LessonComponent extends React.Component
   }
 
   goToPrevious() {
-    if (this.type === 'multi') {
+    if (this.type === 'multiPage') {
       if (this.state.section > 0) {
         this.lesson.sections[this.state.section].getState(this.diagrams);
         this.setState({
@@ -66,29 +66,25 @@ export default class LessonComponent extends React.Component
   }
 
   makeDiagrams() {
+    this.diagrams = {};
     let sections = [];
-    if (this.type === 'multi') {
+    if (this.type === 'multiPage') {
       sections.push(this.lesson.sections[this.state.section]);
-    } else if (this.type === 'single') {
+    } else if (this.type === 'singlePage') {
       // eslint-disable-next-line prefer-destructuring
       sections = this.lesson.sections;
     }
-    const allDiagrams = {};
+
     sections.forEach((section) => {
-      section.diagrams.forEach((d) => {
-        // only add diagram if it doesn't already exist
-        if (!(d.id in allDiagrams)) {
-          allDiagrams[d.id] = new d.DiagramClass(d.id);
+      const diagrams = section.getDiagramList(this.type);
+      diagrams.forEach((d) => {
+        // only create a diagram if it doesn't already exist
+        if (!(d.id in this.diagrams)) {
+          this.diagrams[d.id] = new d.DiagramClass(d.id);
         }
       });
-      section.setState(allDiagrams);
-      // Can only run some state setups if lesson is a multi page lesson,
-      // of if the section is a primary section for a single page lesson.
-      if (this.type === 'multi' || section.isSinglePagePrimary) {
-        section.setStateMultiOnly(allDiagrams);
-      }
+      section.setState(this.diagrams, this.type);
     });
-    this.diagrams = allDiagrams;
   }
 
   componentDidMount() {
@@ -96,7 +92,7 @@ export default class LessonComponent extends React.Component
     // created.
     this.makeDiagrams();
 
-    if (this.type === 'multi') {
+    if (this.type === 'multiPage') {
       const nextButton = document.getElementById('lesson__button-next');
       if (nextButton instanceof HTMLElement) {
         nextButton.onclick = this.goToNext.bind(this);
@@ -108,33 +104,36 @@ export default class LessonComponent extends React.Component
     }
   }
 
-  renderSection(section: Section) {
-    const output = [];
-    if (section.title) {
-      this.key += 1;
-      const title = <div className='lesson__title' key={this.key}>
-        {section.title}
-      </div>;
-      output.push(title);
-    }
+  renderTitle(title: string) {
     this.key += 1;
-    let content;
-    if (this.type === 'multi' || section.isSinglePagePrimary) {
-      content = section.htmlContent;
-    } else {
-      content = section.htmlContentNoDiagrams;
-    }
-    const sectionContent = <div key={this.key}
+    return <div className='lesson__title' key={this.key}>
+        {title}
+      </div>;
+  }
+
+  renderContent(content: string) {
+    this.key += 1;
+    return <div key={this.key} className='lesson__text'
       dangerouslySetInnerHTML={ {
         __html: `${content}`,
       } }
       />;
-    output.push(sectionContent);
+  }
+
+  renderSection(section: Section) {
+    const output = [];
+    if (section.title) {
+      output.push(this.renderTitle(section.title));
+    }
+    const content = section.getContent(this.type);
+    if (content) {
+      output.push(this.renderContent(content));
+    }
     return output;
   }
 
   addButtons() {
-    if (this.type === 'multi') {
+    if (this.type === 'multiPage') {
       return <div className = "lesson__button-container fixed-bottom">
           <Button label="Previous" id="lesson__button-previous" className="-primary -multi-page-lesson"/>
           <Button label="Next" id="lesson__button-next" className="-primary -multi-page-lesson"/>
@@ -143,24 +142,18 @@ export default class LessonComponent extends React.Component
     return <div />;
   }
   renderPage() {
-    if (this.type === 'single') {
+    if (this.type === 'singlePage') {
       return this.lesson.sections.map(section => this.renderSection(section));
     }
     return this.renderSection(this.lesson.sections[this.state.section]);
   }
   render() {
     return <div>
-      <div className='lesson__page'>
-        <div className="container">
-          <div className="row align-items-center">
-            <div className='lesson__content lesson__text'>
-              {this.renderPage()}
-            </div>
-          </div>
-        </div>
-        <div className = "row>">
+      <div className="lesson__container">
+        {this.renderPage()}
+      </div>
+      <div className = "row">
         {this.addButtons()}
-        </div>
       </div>
     </div>;
   }
