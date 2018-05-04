@@ -3,7 +3,7 @@
 exports[`Navbar Make "About" item active 1`] = `
 <div>
   <nav
-    className="navbar navbar-expand-md nav-responsive navbar-dark bg-dark"
+    className="navbar navbar-expand-md nav-responsive navbar-color"
   >
     <a
       className="navbar-brand"
@@ -11,7 +11,7 @@ exports[`Navbar Make "About" item active 1`] = `
     >
       <img
         alt=""
-        className="d-inline-block align-top homeicon"
+        className="d-inline-block align-top nav__home-icon"
         height="30"
         src="/static/icon-lg.png"
         width="30"
@@ -149,7 +149,7 @@ exports[`Navbar Make "About" item active 1`] = `
 exports[`Navbar Make "Introduction" item active 1`] = `
 <div>
   <nav
-    className="navbar navbar-expand-md nav-responsive navbar-dark bg-dark"
+    className="navbar navbar-expand-md nav-responsive navbar-color"
   >
     <a
       className="navbar-brand"
@@ -157,7 +157,7 @@ exports[`Navbar Make "Introduction" item active 1`] = `
     >
       <img
         alt=""
-        className="d-inline-block align-top homeicon"
+        className="d-inline-block align-top nav__home-icon"
         height="30"
         src="/static/icon-lg.png"
         width="30"
@@ -295,7 +295,7 @@ exports[`Navbar Make "Introduction" item active 1`] = `
 exports[`Navbar No props 1`] = `
 <div>
   <nav
-    className="navbar navbar-expand-md nav-responsive navbar-dark bg-dark"
+    className="navbar navbar-expand-md nav-responsive navbar-color"
   >
     <a
       className="navbar-brand"
@@ -303,7 +303,7 @@ exports[`Navbar No props 1`] = `
     >
       <img
         alt=""
-        className="d-inline-block align-top homeicon"
+        className="d-inline-block align-top nav__home-icon"
         height="30"
         src="/static/icon-lg.png"
         width="30"

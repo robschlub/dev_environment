@@ -42,52 +42,26 @@ function modifyText(
   lessonType: 'any' | 'multiPage' | 'singlePage',
 ): string {
   let outText = '';
+  const expression = new RegExp(`\\|${key}\\|`, 'gi');
+  let replacement = '';
   if (mod.lessonType === lessonType || mod.lessonType === 'any') {
-    const expression = new RegExp(`\\|${key}\\|`, 'gi');
-    if (mod.type === 'html') {
-      outText = text.replace(expression, mod.replacementText);
-    }
-    if (mod.type === 'diagram') {
-      if (mod.lessonType === lessonType
-        || mod.lessonType === 'any'
-      ) {
-        outText = text.replace(expression, mod.replacementText);
-      } else {
-        outText = text.replace(expression, '');
-      }
-    }
+    replacement = mod.replacementText;
   }
+  outText = text.replace(expression, replacement);
   return outText;
-}
-
-class Lesson {
-  title: string;
-  sections: Array<Section>;
-  state: Object;
-  // modifiers: Object;
-
-  constructor() {
-    this.title = '';
-    this.sections = [];
-    this.state = {};
-  }
 }
 
 class Section {
   title: string;
-  // paragraphs: Array<Paragraph>;
-  lesson: Lesson;
   modifiers: Object;
-  // htmlContent: string;
   diagrams: Array<Object>;
-  isSinglePagePrimary: boolean;
+  // isSinglePagePrimary: boolean;
 
-  constructor(lesson: Lesson) {
+  constructor() {
     this.diagrams = [];
-    this.isSinglePagePrimary = this.setSinglePagePrimary();
+    // this.isSinglePagePrimary = this.setSinglePagePrimary();
     this.makeTitle();
     this.modifiers = this.setModifiers();
-    this.lesson = lesson;
   }
 
   makeTitle() {
@@ -104,9 +78,9 @@ class Section {
     return {};
   }
 
-  setSinglePagePrimary() {
-    return true;
-  }
+  // setSinglePagePrimary() {
+  //   return true;
+  // }
   // eslint-disable-next-line class-methods-use-this
   onClickId(
     id: string,
@@ -153,8 +127,9 @@ class Section {
       content = [content];
     }
     content.forEach((element) => {
-      htmlText = `${htmlText}${element}\n\n`;
+      htmlText = `${htmlText}${element}\n`;
     });
+    htmlText += '\n';
     Object.keys(this.modifiers).forEach((key) => {
       const mod = this.modifiers[key];
       htmlText = modifyText(htmlText, key, mod, lessonType);
@@ -167,13 +142,18 @@ class Section {
   }
 
   // eslint-disable-next-line no-unused-vars
-  // setStateMultiOnly(diagrams: Object) {
-  // }
-
-  // eslint-disable-next-line no-unused-vars
   getState(diagrams: Object) {
-    // this.lesson.state = {};
   }
 }
 
-export { Section, Lesson, actionWord, diagramCanvas };
+class Content {
+  title: string;
+  sections: Array<Section>;
+  // questions
+  constructor(title: string, sections: Array<Section>) {
+    this.title = title;
+    this.sections = sections;
+  }
+}
+
+export { Section, Content, actionWord, diagramCanvas };

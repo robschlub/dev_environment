@@ -2,51 +2,51 @@
 
 exports[`Canvas Component No props 1`] = `
 <div
-  className="canvas_container"
+  className="diagram__container"
   id="_container"
 >
   <canvas
-    className="diagram_gl"
+    className="diagram__gl"
   />
   <div
-    className="diagram_html"
+    className="diagram__html"
   />
   <canvas
-    className="diagram_text"
+    className="diagram__text"
   />
 </div>
 `;
 
 exports[`Canvas Component With id 1`] = `
 <div
-  className="canvas_container"
+  className="diagram__container"
   id="test_id_container"
 >
   <canvas
-    className="diagram_gl"
+    className="diagram__gl"
   />
   <div
-    className="diagram_html"
+    className="diagram__html"
   />
   <canvas
-    className="diagram_text"
+    className="diagram__text"
   />
 </div>
 `;
 
 exports[`Canvas Component function is called after render 1`] = `
 <div
-  className="canvas_container"
+  className="diagram__container"
   id="test_id_container"
 >
   <canvas
-    className="diagram_gl"
+    className="diagram__gl"
   />
   <div
-    className="diagram_html"
+    className="diagram__html"
   />
   <canvas
-    className="diagram_text"
+    className="diagram__text"
   />
 </div>
 `;
