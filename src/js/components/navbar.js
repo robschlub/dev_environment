@@ -26,10 +26,10 @@ export default class Navbar extends React.Component
     delete props.active;
 
     const body =
-      <nav className="navbar navbar-expand-md nav-responsive navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-md nav-responsive navbar-color">
 
         <a className="navbar-brand" href="/">
-          <img src="/static/icon-lg.png" width="30" height="30" className="d-inline-block align-top homeicon" alt=""/>
+          <img src="/static/icon-lg.png" width="30" height="30" className="d-inline-block align-top nav__home-icon" alt=""/>
         </a>
 
         {/* Hidden button for when navbar collapses */}

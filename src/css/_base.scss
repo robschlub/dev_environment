@@ -1,20 +1,4 @@
 
-$font-stack:    Helvetica, sans-serif;
-$primary-color: #009;
-
-.test {
-  font: 100% $font-stack;
-  color: $primary-color;
-}
-
-h1 {
-  color: white;
-}
-
-.homeicon {
-  margin-right: 5px;
-}
-
 body {
   background-color: $color_background;
   color: $color_text;
