@@ -60,120 +60,120 @@ function modifyText(
   return outText;
 }
 
-class Lesson {
-  title: string;
-  sections: Array<Section>;
-  state: Object;
-  // modifiers: Object;
+// class Lesson {
+//   title: string;
+//   sections: Array<Section>;
+//   state: Object;
+//   // modifiers: Object;
 
-  constructor() {
-    this.title = '';
-    this.sections = [];
-    this.state = {};
-  }
-}
+//   constructor() {
+//     this.title = '';
+//     this.sections = [];
+//     this.state = {};
+//   }
+// }
 
-class Section {
-  title: string;
-  // paragraphs: Array<Paragraph>;
-  lesson: Lesson;
-  modifiers: Object;
-  // htmlContent: string;
-  diagrams: Array<Object>;
-  isSinglePagePrimary: boolean;
+// class Section {
+//   title: string;
+//   // paragraphs: Array<Paragraph>;
+//   lesson: Lesson;
+//   modifiers: Object;
+//   // htmlContent: string;
+//   diagrams: Array<Object>;
+//   isSinglePagePrimary: boolean;
 
-  constructor(lesson: Lesson) {
-    this.diagrams = [];
-    this.isSinglePagePrimary = this.setSinglePagePrimary();
-    this.makeTitle();
-    this.modifiers = this.setModifiers();
-    this.lesson = lesson;
-  }
+//   constructor(lesson: Lesson) {
+//     this.diagrams = [];
+//     this.isSinglePagePrimary = this.setSinglePagePrimary();
+//     this.makeTitle();
+//     this.modifiers = this.setModifiers();
+//     this.lesson = lesson;
+//   }
 
-  makeTitle() {
-    this.title = this.setTitle();
-  }
+//   makeTitle() {
+//     this.title = this.setTitle();
+//   }
 
-  setContent(): Array<string> | string {
-    return [];
-  }
-  setTitle(): string {
-    return '';
-  }
-  setModifiers(): Object {
-    return {};
-  }
+//   setContent(): Array<string> | string {
+//     return [];
+//   }
+//   setTitle(): string {
+//     return '';
+//   }
+//   setModifiers(): Object {
+//     return {};
+//   }
 
-  setSinglePagePrimary() {
-    return true;
-  }
-  // eslint-disable-next-line class-methods-use-this
-  onClickId(
-    id: string,
-    action: Function,
-    bind: Array<mixed>,
-  ) {
-    const element = document.getElementById(id);
-    if (element) {
-      if (bind.length === 1) {
-        element.onclick = action.bind(bind[0]);
-      }
-      if (bind.length === 2) {
-        element.onclick = action.bind(bind[0], bind[1]);
-      }
-      if (bind.length === 3) {
-        element.onclick = action.bind(bind[0], bind[1], bind[2]);
-      }
-      if (bind.length === 4) {
-        element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
-      }
-    }
-  }
+//   setSinglePagePrimary() {
+//     return true;
+//   }
+//   // eslint-disable-next-line class-methods-use-this
+//   onClickId(
+//     id: string,
+//     action: Function,
+//     bind: Array<mixed>,
+//   ) {
+//     const element = document.getElementById(id);
+//     if (element) {
+//       if (bind.length === 1) {
+//         element.onclick = action.bind(bind[0]);
+//       }
+//       if (bind.length === 2) {
+//         element.onclick = action.bind(bind[0], bind[1]);
+//       }
+//       if (bind.length === 3) {
+//         element.onclick = action.bind(bind[0], bind[1], bind[2]);
+//       }
+//       if (bind.length === 4) {
+//         element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
+//       }
+//     }
+//   }
 
-  getDiagramList(lessonType: 'multiPage' | 'singlePage'): Array<Object> {
-    const diagrams = [];
-    Object.keys(this.modifiers).forEach((key) => {
-      const modifier = this.modifiers[key];
-      if (modifier.type === 'diagram'
-        && (lessonType === modifier.lessonType || modifier.lessonType === 'any')
-      ) {
-        diagrams.push({
-          id: modifier.id,
-          DiagramClass: modifier.DiagramClass,
-        });
-      }
-    });
-    return diagrams;
-  }
+//   getDiagramList(lessonType: 'multiPage' | 'singlePage'): Array<Object> {
+//     const diagrams = [];
+//     Object.keys(this.modifiers).forEach((key) => {
+//       const modifier = this.modifiers[key];
+//       if (modifier.type === 'diagram'
+//         && (lessonType === modifier.lessonType || modifier.lessonType === 'any')
+//       ) {
+//         diagrams.push({
+//           id: modifier.id,
+//           DiagramClass: modifier.DiagramClass,
+//         });
+//       }
+//     });
+//     return diagrams;
+//   }
 
-  getContent(lessonType: 'multiPage' | 'singlePage'): string {
-    let htmlText = '';
-    let content = this.setContent();
-    if (typeof content === 'string') {
-      content = [content];
-    }
-    content.forEach((element) => {
-      htmlText = `${htmlText}${element}\n\n`;
-    });
-    Object.keys(this.modifiers).forEach((key) => {
-      const mod = this.modifiers[key];
-      htmlText = modifyText(htmlText, key, mod, lessonType);
-    });
-    return htmlText;
-  }
+//   getContent(lessonType: 'multiPage' | 'singlePage'): string {
+//     let htmlText = '';
+//     let content = this.setContent();
+//     if (typeof content === 'string') {
+//       content = [content];
+//     }
+//     content.forEach((element) => {
+//       htmlText = `${htmlText}${element}\n\n`;
+//     });
+//     Object.keys(this.modifiers).forEach((key) => {
+//       const mod = this.modifiers[key];
+//       htmlText = modifyText(htmlText, key, mod, lessonType);
+//     });
+//     return htmlText;
+//   }
 
-  // eslint-disable-next-line no-unused-vars
-  setState(diagrams: Object, lessonType: 'multiPage' | 'singlePage') {
-  }
+//   // eslint-disable-next-line no-unused-vars
+//   setState(diagrams: Object, lessonType: 'multiPage' | 'singlePage') {
+//   }
 
-  // eslint-disable-next-line no-unused-vars
-  // setStateMultiOnly(diagrams: Object) {
-  // }
+//   // eslint-disable-next-line no-unused-vars
+//   // setStateMultiOnly(diagrams: Object) {
+//   // }
 
-  // eslint-disable-next-line no-unused-vars
-  getState(diagrams: Object) {
-    // this.lesson.state = {};
-  }
-}
+//   // eslint-disable-next-line no-unused-vars
+//   getState(diagrams: Object) {
+//     // this.lesson.state = {};
+//   }
+// }
 
-export { Section, Lesson, actionWord, diagramCanvas };
+// export { Section, Lesson, actionWord, diagramCanvas };

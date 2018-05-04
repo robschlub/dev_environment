@@ -1,6 +1,7 @@
 // @flow
 
-import { Lesson, Section, actionWord, diagramCanvas } from '../../js/Lesson/LessonBase';
+// import { Lesson } from '../../js/Lesson/Lesson';
+import { Content, Section, actionWord, diagramCanvas } from '../../js/Lesson/LessonContent';
 import ShapesDiagram from './diagramShapes';
 import CircleDiagram from './diagramCircle';
 
@@ -75,19 +76,23 @@ class Section2 extends Section {
     return true;
   }
 
-  getState(diagrams: Object) {
+  getState(diagrams: Object): Object {
     const diagram = diagrams.circle_container;
     const angle = diagram.elements._radius.transform.r();
-    this.lesson.state = {
+    return {
       angle,
     };
   }
 
-  setState(diagrams: Object) {
+  setState(
+    diagrams: Object,
+    previousState: Object,
+    lessonType: 'multiPage' | 'singlePage',
+  ) {
     const diagram = diagrams.circle_container;
     const t = diagram.elements._radius.transform.copy();
-    if ('angle' in this.lesson.state) {
-      t.updateRotation(this.lesson.state.angle);
+    if ('angle' in previousState) {
+      t.updateRotation(previousState.angle);
     } else {
       t.updateRotation(Math.PI / 3);
     }
@@ -132,21 +137,25 @@ class Section3 extends Section {
     return false;
   }
 
-  getState(diagrams: Object) {
+  getState(diagrams: Object): Object {
     const diagram = diagrams.circle_container;
     const angle = diagram.elements._radius.transform.r();
-    this.lesson.state = {
+    return {
       angle,
     };
   }
 
-  setState(diagrams: Object, lessonType: 'multiPage' | 'singlePage') {
+  setState(
+    diagrams: Object,
+    previousState: Object,
+    lessonType: 'multiPage' | 'singlePage',
+  ) {
     const diagram = diagrams.circle_container;
     if (diagram) {
       if (lessonType === 'multiPage') {
         const t = diagram.elements._radius.transform.copy();
-        if ('angle' in this.lesson.state) {
-          t.updateRotation(this.lesson.state.angle);
+        if ('angle' in previousState) {
+          t.updateRotation(previousState.angle);
         } else {
           t.updateRotation(Math.PI / 3);
         }
@@ -169,12 +178,13 @@ class Section3 extends Section {
   }
 }
 
-const lesson = new Lesson();
-lesson.title = '';
-lesson.sections = [
-  new Section1(lesson),
-  new Section2(lesson),
-  new Section3(lesson),
-];
+const content = new Content(
+  'Shapes and Corners',
+  [
+    new Section1(),
+    new Section2(),
+    new Section3(),
+  ],
+);
 
-export default lesson;
+export default content;

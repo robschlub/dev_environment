@@ -10,11 +10,14 @@ import './lessonMultiPage.scss';
 // Components
 import Navbar from '../../components/navbar';
 import LessonComponent from '../../components/lesson';
-import lesson from '../../../Lessons/shapesAndCorners/shapesAndCorners';
+import content from '../../../Lessons/shapesAndCorners/shapesAndCorners';
+import Lesson from '../../Lesson/Lesson';
 
 
 const lessonMultiPage = (section: number) => {
   const lessonId:HTMLElement | null = document.getElementById('multi-page-lesson');
+
+  const lesson = new Lesson(content, 'multiPage');
 
   if (lessonId instanceof HTMLElement) {
     ReactDOM.render(

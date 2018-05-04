@@ -137,13 +137,18 @@ class Section {
     return htmlText;
   }
 
-  // eslint-disable-next-line no-unused-vars
-  setState(diagrams: Object, lessonType: 'multiPage' | 'singlePage') {
+  /* eslint-disable no-unused-vars */
+  setState(
+    diagrams: Object,
+    previousState: Object,
+    lessonType: 'multiPage' | 'singlePage',
+  ) {
   }
 
-  // eslint-disable-next-line no-unused-vars
-  getState(diagrams: Object) {
+  getState(diagrams: Object): Object {
+    return {}
   }
+  /* eslint-enable no-unused-vars */
 }
 
 class Content {

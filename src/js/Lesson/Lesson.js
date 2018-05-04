@@ -8,13 +8,15 @@ class Lesson {
   type: LessonType;
 
   currentSectionIndex: number;
+  currentDiagrams: Object;
   state: Object;
 
   constructor(content: Content, lessonType: LessonType) {
     this.content = content;
     this.type = lessonType;
-
+    this.currentDiagrams = {};
     this.currentSectionIndex = 0;
+    this.state = {};
   }
 
   getContentHtml(): string {
@@ -31,19 +33,38 @@ class Lesson {
   }
 
   goToSection(sectionIndex: number) {
-    this.currentSectionIndex = sectionIndex;
+    if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
+      this.saveState();
+      this.currentSectionIndex = sectionIndex;
+      this.createDiagramsAndSetState();
+    }
+  }
+
+  currentSection() {
+    return this.content.sections[this.currentSectionIndex];
+  }
+
+  saveState() {
+    if (this.type === 'multiPage') {
+      this.state = this.currentSection().getState(this.currentDiagrams);
+    }
   }
 
   nextSection() {
     if (this.currentSectionIndex < this.content.sections.length - 1) {
+      this.saveState();
       this.currentSectionIndex += 1;
+      this.createDiagramsAndSetState();
     }
   }
   prevSection() {
     if (this.currentSectionIndex > 0) {
+      this.saveState();
       this.currentSectionIndex -= 1;
+      this.createDiagramsAndSetState();
     }
   }
+
   createDiagramsAndSetState() {
     const allDiagrams = {};
     let { sections } = this.content;
@@ -59,8 +80,9 @@ class Lesson {
           allDiagrams[d.id] = new d.DiagramClass(d.id);
         }
       });
-      section.setState(allDiagrams, this.type);
+      section.setState(allDiagrams, this.state, this.type);
     });
+    this.currentDiagrams = allDiagrams;
   }
 }
 

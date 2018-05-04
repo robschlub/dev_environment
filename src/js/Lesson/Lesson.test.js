@@ -1,12 +1,13 @@
 /* eslint-disable prefer-destructuring */
 
 import Lesson from './Lesson';
-import { Content, Section, actionWord, diagramCanvas } from './LessonContent';
+import { Content, Section, diagramCanvas } from './LessonContent';
 
 describe('Lesson', () => {
   let lessonMulti;
   let lessonSingle;
   let mockSetState;
+  let mockGetState;
 
   beforeEach(() => {
     class Diagram {
@@ -15,6 +16,11 @@ describe('Lesson', () => {
       }
     }
     mockSetState = jest.fn();
+    mockGetState = jest.fn();
+    mockGetState
+      .mockReturnValueOnce({ angle: 1 })
+      .mockReturnValueOnce({ angle: 2 })
+      .mockReturnValueOnce({ angle: 3 });
     class Section1 extends Section {
       setTitle() {
         return 'S1 Title';
@@ -22,8 +28,11 @@ describe('Lesson', () => {
       setContent() {
         return 'S1 Content';
       }
-      setState(diagrams, type) {
-        mockSetState(diagrams, type);
+      setState(diagrams, state, type) {
+        mockSetState(diagrams, state, type);
+      }
+      getState(diagrams) {
+        return mockGetState(diagrams);
       }
     }
     class Section2 extends Section {
@@ -42,8 +51,11 @@ describe('Lesson', () => {
           Diagram_1: diagramCanvas('d1_id', Diagram),
         };
       }
-      setState(diagrams, type) {
-        mockSetState(diagrams, type);
+      getState(diagrams) {
+        return mockGetState(diagrams);
+      }
+      setState(diagrams, state, type) {
+        mockSetState(diagrams, state, type);
       }
     }
     class Section3 extends Section {
@@ -59,8 +71,11 @@ describe('Lesson', () => {
           Diagram_2: diagramCanvas('d2_id', Diagram),
         };
       }
-      setState(diagrams, type) {
-        mockSetState(diagrams, type);
+      setState(diagrams, state, type) {
+        mockSetState(diagrams, state, type);
+      }
+      getState(diagrams) {
+        return mockGetState(diagrams);
       }
     }
     const content = new Content(
@@ -101,11 +116,11 @@ describe('Lesson', () => {
       };
       const expectedType = 'singlePage';
       expect(mockSetState.mock.calls[0][0]).toEqual(expectedDiagrams);
-      expect(mockSetState.mock.calls[0][1]).toEqual(expectedType);
+      expect(mockSetState.mock.calls[0][2]).toEqual(expectedType);
       expect(mockSetState.mock.calls[1][0]).toEqual(expectedDiagrams);
-      expect(mockSetState.mock.calls[1][1]).toEqual(expectedType);
+      expect(mockSetState.mock.calls[1][2]).toEqual(expectedType);
       expect(mockSetState.mock.calls[2][0]).toEqual(expectedDiagrams);
-      expect(mockSetState.mock.calls[2][1]).toEqual(expectedType);
+      expect(mockSetState.mock.calls[2][2]).toEqual(expectedType);
     });
   });
   describe('Multi Page', () => {
@@ -121,10 +136,68 @@ describe('Lesson', () => {
       expect(count1).toBe(1);
       expect(count2).toBe(1);
     });
+    test('Save State', () => {
+      lesson.createDiagramsAndSetState();
+      expect(mockGetState.mock.calls).toHaveLength(0);
+      expect(lesson.state).toEqual({});
+
+      lesson.saveState();
+      expect(lesson.state).toEqual({ angle: 1 });
+      expect(mockGetState.mock.calls).toHaveLength(1);
+      expect(mockGetState.mock.calls[0][0]).toEqual({});
+      lesson.currentSectionIndex = 2;
+      lesson.createDiagramsAndSetState();
+
+      lesson.saveState();
+      expect(lesson.state).toEqual({ angle: 2 });
+      expect(mockGetState.mock.calls).toHaveLength(2);
+      expect(mockGetState.mock.calls[1][0]).toEqual({
+        d1_id: { id: 'd1_id' },
+        d2_id: { id: 'd2_id' },
+      });
+    });
     test('NextPage', () => {
+      expect(lesson.state).toEqual({});
       expect(lesson.currentSectionIndex).toBe(0);
+      expect(mockGetState.mock.calls).toHaveLength(0);
+
       lesson.nextSection();
       expect(lesson.currentSectionIndex).toBe(1);
+      expect(lesson.state).toEqual({ angle: 1 });
+      expect(mockGetState.mock.calls).toHaveLength(1);
+
+      lesson.nextSection();
+      expect(lesson.currentSectionIndex).toBe(2);
+      expect(lesson.state).toEqual({ angle: 2 });
+      expect(mockGetState.mock.calls).toHaveLength(2);
+
+      // This is out of bounds, so nothing should change
+      lesson.nextSection();
+      expect(lesson.currentSectionIndex).toBe(2);
+      expect(lesson.state).toEqual({ angle: 2 });
+      expect(mockGetState.mock.calls).toHaveLength(2);
+    });
+    test('PrevPage', () => {
+      expect(lesson.state).toEqual({});
+      expect(mockGetState.mock.calls).toHaveLength(0);
+      lesson.currentSectionIndex = 2;
+      expect(lesson.currentSectionIndex).toBe(2);
+
+      lesson.prevSection();
+      expect(lesson.currentSectionIndex).toBe(1);
+      expect(lesson.state).toEqual({ angle: 1 });
+      expect(mockGetState.mock.calls).toHaveLength(1);
+
+      lesson.prevSection();
+      expect(lesson.currentSectionIndex).toBe(0);
+      expect(lesson.state).toEqual({ angle: 2 });
+      expect(mockGetState.mock.calls).toHaveLength(2);
+
+      // This is out of bounds, so nothing should change
+      lesson.prevSection();
+      expect(lesson.currentSectionIndex).toBe(0);
+      expect(lesson.state).toEqual({ angle: 2 });
+      expect(mockGetState.mock.calls).toHaveLength(2);
     });
     test('createDiagramsAndSetState', () => {
       let diagrams;
@@ -132,21 +205,19 @@ describe('Lesson', () => {
       expect(mockSetState.mock.calls).toHaveLength(0);
       lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[0][0];
-      type = mockSetState.mock.calls[0][1];
+      type = mockSetState.mock.calls[0][2];
       expect(diagrams).toEqual({});
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
-      lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[1][0];
-      type = mockSetState.mock.calls[1][1];
+      type = mockSetState.mock.calls[1][2];
       expect(diagrams).toEqual({ d1_id: { id: 'd1_id' } });
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
-      lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[2][0];
-      type = mockSetState.mock.calls[2][1];
+      type = mockSetState.mock.calls[2][2];
       expect(diagrams).toEqual({
         d1_id: { id: 'd1_id' },
         d2_id: { id: 'd2_id' },
