@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import { Lesson, Section } from '../Lesson/LessonBase';
+// import { Lesson, Section } from '../Lesson/LessonBase';
+import Lesson from '../Lesson/Lesson';
 // import Canvas from './canvas';
 import Button from './button';
 
@@ -38,59 +39,29 @@ export default class LessonComponent extends React.Component
     this.type = props.type;
     this.lesson = props.lesson;
     this.key = 0;
-    this.diagrams = {};
   }
 
   goToNext() {
-    if (this.type === 'multiPage') {
-      if (this.state.section < this.lesson.sections.length - 1) {
-        this.lesson.sections[this.state.section].getState(this.diagrams);
-        this.setState({
-          section: this.state.section + 1,
-        });
-        this.makeDiagrams();
-      }
+    const changed = this.lesson.nextSection();
+    if (changed) {
+      this.setState(this.state);
+      this.lesson.createDiagramsAndSetState();
     }
   }
 
   goToPrevious() {
-    if (this.type === 'multiPage') {
-      if (this.state.section > 0) {
-        this.lesson.sections[this.state.section].getState(this.diagrams);
-        this.setState({
-          section: this.state.section - 1,
-        });
-        this.makeDiagrams();
-      }
+    const changed = this.lesson.prevSection();
+    if (changed) {
+      this.setState(this.state);
+      this.lesson.createDiagramsAndSetState();
     }
-  }
-
-  makeDiagrams() {
-    this.diagrams = {};
-    let sections = [];
-    if (this.type === 'multiPage') {
-      sections.push(this.lesson.sections[this.state.section]);
-    } else if (this.type === 'singlePage') {
-      // eslint-disable-next-line prefer-destructuring
-      sections = this.lesson.sections;
-    }
-
-    sections.forEach((section) => {
-      const diagrams = section.getDiagramList(this.type);
-      diagrams.forEach((d) => {
-        // only create a diagram if it doesn't already exist
-        if (!(d.id in this.diagrams)) {
-          this.diagrams[d.id] = new d.DiagramClass(d.id);
-        }
-      });
-      section.setState(this.diagrams, this.type);
-    });
   }
 
   componentDidMount() {
     // Instantiate all the diagrams now that the canvas elements have been
     // created.
-    this.makeDiagrams();
+    // this.makeDiagrams();
+    this.lesson.createDiagramsAndSetState();
 
     if (this.type === 'multiPage') {
       const nextButton = document.getElementById('lesson__button-next');
@@ -120,18 +91,6 @@ export default class LessonComponent extends React.Component
       />;
   }
 
-  renderSection(section: Section) {
-    const output = [];
-    if (section.title) {
-      output.push(this.renderTitle(section.title));
-    }
-    const content = section.getContent(this.type);
-    if (content) {
-      output.push(this.renderContent(content));
-    }
-    return output;
-  }
-
   addButtons() {
     if (this.type === 'multiPage') {
       return <div className = "lesson__button-container fixed-bottom">
@@ -141,16 +100,11 @@ export default class LessonComponent extends React.Component
     }
     return <div />;
   }
-  renderPage() {
-    if (this.type === 'singlePage') {
-      return this.lesson.sections.map(section => this.renderSection(section));
-    }
-    return this.renderSection(this.lesson.sections[this.state.section]);
-  }
+
   render() {
     return <div>
       <div className="lesson__container">
-        {this.renderPage()}
+        {this.renderContent(this.lesson.getContentHtml())}
       </div>
       <div className = "row">
         {this.addButtons()}

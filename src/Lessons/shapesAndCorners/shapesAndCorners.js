@@ -87,7 +87,6 @@ class Section2 extends Section {
   setState(
     diagrams: Object,
     previousState: Object,
-    lessonType: 'multiPage' | 'singlePage',
   ) {
     const diagram = diagrams.circle_container;
     const t = diagram.elements._radius.transform.copy();

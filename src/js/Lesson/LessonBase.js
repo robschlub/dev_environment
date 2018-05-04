@@ -2,63 +2,63 @@
 
 // import Diagram from '../diagram/Diagram';
 
-function actionWord(
-  text: string,
-  id: string = '',
-  classes: string = '',
-  lessonType: 'any' | 'singlePage' | 'multiPage' = 'any',
-): Object {
-  return {
-    replacementText: `<span id="${id}" class="${classes} action_word">${text}</span>`,
-    type: 'html',
-    id,
-    lessonType,
-  };
-}
+// function actionWord(
+//   text: string,
+//   id: string = '',
+//   classes: string = '',
+//   lessonType: 'any' | 'singlePage' | 'multiPage' = 'any',
+// ): Object {
+//   return {
+//     replacementText: `<span id="${id}" class="${classes} action_word">${text}</span>`,
+//     type: 'html',
+//     id,
+//     lessonType,
+//   };
+// }
 
-function diagramCanvas(
-  id: string,
-  DiagramClass: Object,
-  classes: string = '',
-  lessonType: 'any' | 'singlePage' | 'multiPage' = 'any',
-): Object {
-  return {
-    replacementText: `<div id="${id}" class="canvas_container ${classes}">
-        <canvas class="diagram__gl"></canvas>
-        <div class="diagram__html"></div>
-        <canvas class="diagram__text"></canvas>
-      </div>`,
-    type: 'diagram',
-    DiagramClass,
-    id,
-    lessonType,
-  };
-}
+// function diagramCanvas(
+//   id: string,
+//   DiagramClass: Object,
+//   classes: string = '',
+//   lessonType: 'any' | 'singlePage' | 'multiPage' = 'any',
+// ): Object {
+//   return {
+//     replacementText: `<div id="${id}" class="canvas_container ${classes}">
+//         <canvas class="diagram__gl"></canvas>
+//         <div class="diagram__html"></div>
+//         <canvas class="diagram__text"></canvas>
+//       </div>`,
+//     type: 'diagram',
+//     DiagramClass,
+//     id,
+//     lessonType,
+//   };
+// }
 
-function modifyText(
-  text: string,
-  key: string,
-  mod: Object,
-  lessonType: 'any' | 'multiPage' | 'singlePage',
-): string {
-  let outText = '';
-  if (mod.lessonType === lessonType || mod.lessonType === 'any') {
-    const expression = new RegExp(`\\|${key}\\|`, 'gi');
-    if (mod.type === 'html') {
-      outText = text.replace(expression, mod.replacementText);
-    }
-    if (mod.type === 'diagram') {
-      if (mod.lessonType === lessonType
-        || mod.lessonType === 'any'
-      ) {
-        outText = text.replace(expression, mod.replacementText);
-      } else {
-        outText = text.replace(expression, '');
-      }
-    }
-  }
-  return outText;
-}
+// function modifyText(
+//   text: string,
+//   key: string,
+//   mod: Object,
+//   lessonType: 'any' | 'multiPage' | 'singlePage',
+// ): string {
+//   let outText = '';
+//   if (mod.lessonType === lessonType || mod.lessonType === 'any') {
+//     const expression = new RegExp(`\\|${key}\\|`, 'gi');
+//     if (mod.type === 'html') {
+//       outText = text.replace(expression, mod.replacementText);
+//     }
+//     if (mod.type === 'diagram') {
+//       if (mod.lessonType === lessonType
+//         || mod.lessonType === 'any'
+//       ) {
+//         outText = text.replace(expression, mod.replacementText);
+//       } else {
+//         outText = text.replace(expression, '');
+//       }
+//     }
+//   }
+//   return outText;
+// }
 
 // class Lesson {
 //   title: string;

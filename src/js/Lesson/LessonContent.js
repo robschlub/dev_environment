@@ -146,7 +146,7 @@ class Section {
   }
 
   getState(diagrams: Object): Object {
-    return {}
+    return {};
   }
   /* eslint-enable no-unused-vars */
 }

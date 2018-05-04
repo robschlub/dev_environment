@@ -32,12 +32,14 @@ class Lesson {
     return htmlText;
   }
 
-  goToSection(sectionIndex: number) {
+  goToSection(sectionIndex: number): boolean {
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       this.saveState();
       this.currentSectionIndex = sectionIndex;
       this.createDiagramsAndSetState();
+      return true;
     }
+    return false;
   }
 
   currentSection() {
@@ -50,19 +52,23 @@ class Lesson {
     }
   }
 
-  nextSection() {
+  nextSection(): boolean {
     if (this.currentSectionIndex < this.content.sections.length - 1) {
       this.saveState();
       this.currentSectionIndex += 1;
-      this.createDiagramsAndSetState();
+      // this.createDiagramsAndSetState();
+      return true;
     }
+    return false;
   }
-  prevSection() {
+  prevSection(): boolean {
     if (this.currentSectionIndex > 0) {
       this.saveState();
       this.currentSectionIndex -= 1;
-      this.createDiagramsAndSetState();
+      // this.createDiagramsAndSetState();
+      return true;
     }
+    return false;
   }
 
   createDiagramsAndSetState() {

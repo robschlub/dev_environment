@@ -157,47 +157,55 @@ describe('Lesson', () => {
       });
     });
     test('NextPage', () => {
+      let result;
       expect(lesson.state).toEqual({});
       expect(lesson.currentSectionIndex).toBe(0);
       expect(mockGetState.mock.calls).toHaveLength(0);
 
-      lesson.nextSection();
+      result = lesson.nextSection();
       expect(lesson.currentSectionIndex).toBe(1);
       expect(lesson.state).toEqual({ angle: 1 });
       expect(mockGetState.mock.calls).toHaveLength(1);
+      expect(result).toBe(true);
 
-      lesson.nextSection();
+      result = lesson.nextSection();
       expect(lesson.currentSectionIndex).toBe(2);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
+      expect(result).toBe(true);
 
       // This is out of bounds, so nothing should change
-      lesson.nextSection();
+      result = lesson.nextSection();
       expect(lesson.currentSectionIndex).toBe(2);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
+      expect(result).toBe(false);
     });
     test('PrevPage', () => {
+      let result;
       expect(lesson.state).toEqual({});
       expect(mockGetState.mock.calls).toHaveLength(0);
       lesson.currentSectionIndex = 2;
       expect(lesson.currentSectionIndex).toBe(2);
 
-      lesson.prevSection();
+      result = lesson.prevSection();
       expect(lesson.currentSectionIndex).toBe(1);
       expect(lesson.state).toEqual({ angle: 1 });
       expect(mockGetState.mock.calls).toHaveLength(1);
+      expect(result).toBe(true);
 
-      lesson.prevSection();
+      result = lesson.prevSection();
       expect(lesson.currentSectionIndex).toBe(0);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
+      expect(result).toBe(true);
 
       // This is out of bounds, so nothing should change
-      lesson.prevSection();
+      result = lesson.prevSection();
       expect(lesson.currentSectionIndex).toBe(0);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
+      expect(result).toBe(false);
     });
     test('createDiagramsAndSetState', () => {
       let diagrams;
