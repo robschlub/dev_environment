@@ -12,9 +12,9 @@ function actionWord(text: string, id: string = '', classes: string = '') {
 function diagramCanvas(id: string, DiagramClass: Object, classes: string = '') {
   return {
     replacementText: `<div id="${id}" class="canvas_container ${classes}">
-        <canvas class="diagram_gl"></canvas>
-        <div class="diagram_html"></div>
-        <canvas class="diagram_text"></canvas>
+        <canvas class="diagram__gl"></canvas>
+        <div class="diagram__html"></div>
+        <canvas class="diagram__text"></canvas>
       </div>`,
     type: 'diagram',
     DiagramClass,

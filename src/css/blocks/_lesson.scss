@@ -1,3 +1,13 @@
+.lesson__page {
+  position: relative;
+}
+
+.lesson__content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .lesson__text p {
   font-size: 16px;
   color: $color_text;
@@ -8,21 +18,17 @@
   color: $color_text;
 }
 
-// .btn-lesson {
-//   margin: 5px;
-// }
-
 .lesson__button-container {
   position: relative;
   padding-bottom: 20px;
 }
 
-#button-next {
+#lesson__button-next {
   right: 0;
 }
 
 @include media-breakpoint-up(xs) {
-  .main_page {
+  .lesson__page {
     margin-top: 40px;
     margin-left: 5%;
     width: 90%;
@@ -30,22 +36,22 @@
 }
 
 @include media-breakpoint-up(sm) {
-  .main_page {
+  .lesson__page {
     // width: 400px;
     // height: 200px;
   }
 }
 
 @include media-breakpoint-up(md) {
-  .main_page {
+  .lesson__page {
     margin-top: 80px;
   }
 
-  .lesson_text p {
+  .lesson__text p {
     font-size: 20px;
   }
 
-  .lesson_title {
+  .lesson__title {
     font-size: 34px;
     padding-bottom: 20px;
   }
@@ -56,27 +62,13 @@
 }
 
 @include media-breakpoint-up(xl) {
-  .main_page {
+  .lesson__page {
     width: 1200px;
     margin-left: auto;
     margin-right: auto;
   }
 }
 
-.main_page {
-  position: relative;
-}
-
-.lesson_container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-#diagram_shapes {
-  width: 300px;
-  height: 150px;
-}
 
 .lesson-clear-floats {
   clear: both;

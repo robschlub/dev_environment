@@ -97,11 +97,11 @@ export default class LessonComponent extends React.Component
     this.makeDiagrams();
 
     if (this.type === 'multi') {
-      const nextButton = document.getElementById('button-next');
+      const nextButton = document.getElementById('lesson__button-next');
       if (nextButton instanceof HTMLElement) {
         nextButton.onclick = this.goToNext.bind(this);
       }
-      const prevButton = document.getElementById('button-previous');
+      const prevButton = document.getElementById('lesson__button-previous');
       if (prevButton instanceof HTMLElement) {
         prevButton.onclick = this.goToPrevious.bind(this);
       }
@@ -136,8 +136,8 @@ export default class LessonComponent extends React.Component
   addButtons() {
     if (this.type === 'multi') {
       return <div className = "lesson__button-container fixed-bottom">
-          <Button label="Previous" id="button-previous" className="-primary -multi-page-lesson"/>
-          <Button label="Next" id="button-next" className="-primary -multi-page-lesson"/>
+          <Button label="Previous" id="lesson__button-previous" className="-primary -multi-page-lesson"/>
+          <Button label="Next" id="lesson__button-next" className="-primary -multi-page-lesson"/>
         </div>;
     }
     return <div />;
@@ -150,10 +150,10 @@ export default class LessonComponent extends React.Component
   }
   render() {
     return <div>
-      <div className='main_page'>
+      <div className='lesson__page'>
         <div className="container">
           <div className="row align-items-center">
-            <div className='lesson_container lesson__text'>
+            <div className='lesson__content lesson__text'>
               {this.renderPage()}
             </div>
           </div>

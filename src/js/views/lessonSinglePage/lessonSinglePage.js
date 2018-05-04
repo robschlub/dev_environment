@@ -13,8 +13,14 @@ const lessonSinglePage = () => {
   if (lessonId instanceof HTMLElement) {
     ReactDOM.render(
       <div>
-        <Navbar active='Single Page Lesson'/>
-        <LessonComponent type="single" lesson={lesson}/>
+        <div className="container">
+          <div className="row align-items-center">
+            <Navbar active='Single Page Lesson'/>
+          </div>
+          <div className="row">
+            <LessonComponent type="single" lesson={lesson}/>
+          </div>
+        </div>
       </div>,
       lessonId,
     );

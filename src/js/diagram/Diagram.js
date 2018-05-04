@@ -122,14 +122,14 @@ class Diagram {
       for (let i = 0; i < children.length; i += 1) {
         const child = children[i];
         if (child instanceof HTMLCanvasElement
-          && child.classList.contains('diagram_gl')) {
+          && child.classList.contains('diagram__gl')) {
           this.canvas = child;
         }
         if (child instanceof HTMLCanvasElement
-          && child.classList.contains('diagram_text')) {
+          && child.classList.contains('diagram__text')) {
           this.textCanvas = child;
         }
-        if (child.classList.contains('diagram_html')
+        if (child.classList.contains('diagram__html')
         ) {
           this.htmlCanvas = child;
         }
