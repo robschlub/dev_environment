@@ -218,12 +218,14 @@ describe('Lesson', () => {
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
+      lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[1][0];
       type = mockSetState.mock.calls[1][2];
       expect(diagrams).toEqual({ d1_id: { id: 'd1_id' } });
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
+      lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[2][0];
       type = mockSetState.mock.calls[2][2];
       expect(diagrams).toEqual({
