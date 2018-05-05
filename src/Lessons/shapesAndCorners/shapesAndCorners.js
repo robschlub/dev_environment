@@ -182,6 +182,13 @@ class Section3 extends Section {
       this.onClickId('id_less_sharp_corner', diagram.rotateTo, largeRotation);
     }
   }
+
+  transitionPrev(diagrams: Object, done: () => void) {
+    const diagram = diagrams.circle_container;
+    if (diagram) {
+      diagram.rotateTo(1, 0, 1, done);
+    }
+  }
 }
 
 const content = new Content(

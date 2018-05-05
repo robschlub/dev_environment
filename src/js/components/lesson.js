@@ -47,18 +47,10 @@ export default class LessonComponent extends React.Component
   }
   goToNext() {
     this.lesson.nextSection();
-    // if (changed) {
-    //   this.setState(this.state);
-    //   this.lesson.createDiagramsAndSetState();
-    // }
   }
 
   goToPrevious() {
     this.lesson.prevSection();
-    // if (changed) {
-    //   this.setState(this.state);
-    //   this.lesson.createDiagramsAndSetState();
-    // }
   }
 
   componentDidMount() {

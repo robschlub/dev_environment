@@ -74,13 +74,15 @@ class Lesson {
         this.currentDiagrams,
         this.finishTransNext.bind(this),
       );
-      return true;
     }
-    return false;
   }
 
   finishTransNext() {
     this.goToSection(this.currentSectionIndex + 1);
+  }
+
+  finishTransPrev() {
+    this.goToSection(this.currentSectionIndex - 1);
   }
 
   refreshView() {
@@ -98,12 +100,20 @@ class Lesson {
   // }
   prevSection() {
     if (this.currentSectionIndex > 0) {
-      this.saveState();
-      this.currentSectionIndex -= 1;
-      // this.createDiagramsAndSetState();
-      return true;
+      // this.saveState();
+      // this.currentSectionIndex -= 1;
+      // // this.createDiagramsAndSetState();
+      // return true;
+      if (this.inTransition) {
+        this.stopDiagrams();
+      }
+      this.inTransition = true;
+      this.currentSection().transitionPrev(
+        this.currentDiagrams,
+        this.finishTransPrev.bind(this),
+      );
     }
-    return false;
+    // return false;
   }
 
   createDiagramsAndSetState() {
@@ -117,6 +127,9 @@ class Lesson {
       const sectionDiagrams = section.getDiagramList(this.type);
       sectionDiagrams.forEach((d) => {
         // only create a diagram if it doesn't already exist
+        if (d.id in this.currentDiagrams) {
+          allDiagrams[d.id] = this.currentDiagrams[d.id];
+        }
         if (!(d.id in allDiagrams)) {
           allDiagrams[d.id] = new d.DiagramClass(d.id);
         }
