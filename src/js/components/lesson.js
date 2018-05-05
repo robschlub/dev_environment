@@ -103,6 +103,11 @@ export default class LessonComponent extends React.Component
 
   render() {
     return <div>
+      <div className="row">
+        <div className="col text-center">
+          {this.renderTitle(this.lesson.content.title)}
+        </div>
+      </div>
       {this.addButtons()}
       <div className="row">
         <div className="col">
@@ -111,7 +116,6 @@ export default class LessonComponent extends React.Component
           </div>
         </div>
       </div>
-      
     </div>;
   }
 }

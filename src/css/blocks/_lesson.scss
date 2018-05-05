@@ -12,6 +12,7 @@
 .lesson__title {
   font-size: 30px;
   color: $color_text;
+  margin-bottom: 20px;
 }
 
 .lesson__button-container {
@@ -25,15 +26,19 @@
 
 @include media-breakpoint-up(xs) {
   .lesson__container {
-    margin-top: 40px;
+    margin-top: 0;
     margin-left: 5%;
     width: 90%;
   }
 
   .lesson__button-container {
-    margin-top: 40px;
+    margin-top: 0;
     margin-left: 5%;
     width: 90%;
+  }
+
+  .lesson__title {
+    margin-top: 20px;
   }
 }
 
@@ -46,15 +51,16 @@
 
 @include media-breakpoint-up(md) {
   .lesson__container {
-    margin-top: 80px;
+    margin-top: 0;
     font-size: 20px;
   }
 
   .lesson__button-container {
-    margin-top: 80px;
+    margin-top: 0;
   }
 
   .lesson__title {
+    margin-top: 80px;
     font-size: 34px;
     padding-bottom: 20px;
   }
