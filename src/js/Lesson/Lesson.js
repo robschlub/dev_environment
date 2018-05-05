@@ -10,6 +10,9 @@ class Lesson {
   currentSectionIndex: number;
   currentDiagrams: Object;
   state: Object;
+  inTransition: boolean;
+
+  refresh: () => void;
 
   constructor(content: Content, lessonType: LessonType) {
     this.content = content;
@@ -17,6 +20,8 @@ class Lesson {
     this.currentDiagrams = {};
     this.currentSectionIndex = 0;
     this.state = {};
+    this.inTransition = false;
+    this.refresh = function () {}; // eslint-disable-line func-names
   }
 
   getContentHtml(): string {
@@ -32,14 +37,14 @@ class Lesson {
     return htmlText;
   }
 
-  goToSection(sectionIndex: number): boolean {
+  goToSection(sectionIndex: number) {
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       this.saveState();
       this.currentSectionIndex = sectionIndex;
-      this.createDiagramsAndSetState();
-      return true;
+      // this.createDiagramsAndSetState();
+      this.refreshView();
     }
-    return false;
+    // return false;
   }
 
   currentSection() {
@@ -52,16 +57,46 @@ class Lesson {
     }
   }
 
-  nextSection(): boolean {
+  stopDiagrams() {
+    Object.keys(this.currentDiagrams).forEach((key) => {
+      const diagram = this.currentDiagrams[key];
+      diagram.stop();
+    });
+  }
+
+  nextSection() {
     if (this.currentSectionIndex < this.content.sections.length - 1) {
-      this.saveState();
-      this.currentSectionIndex += 1;
-      // this.createDiagramsAndSetState();
+      if (this.inTransition) {
+        this.stopDiagrams();
+      }
+      this.inTransition = true;
+      this.currentSection().transitionNext(
+        this.currentDiagrams,
+        this.finishTransNext.bind(this),
+      );
       return true;
     }
     return false;
   }
-  prevSection(): boolean {
+
+  finishTransNext() {
+    this.goToSection(this.currentSectionIndex + 1);
+  }
+
+  refreshView() {
+    this.refresh();
+    this.createDiagramsAndSetState();
+  }
+  // nextSection(): boolean {
+  //   if (this.currentSectionIndex < this.content.sections.length - 1) {
+  //     this.saveState();
+  //     this.currentSectionIndex += 1;
+  //     // this.createDiagramsAndSetState();
+  //     return true;
+  //   }
+  //   return false;
+  // }
+  prevSection() {
     if (this.currentSectionIndex > 0) {
       this.saveState();
       this.currentSectionIndex -= 1;

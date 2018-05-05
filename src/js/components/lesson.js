@@ -39,22 +39,26 @@ export default class LessonComponent extends React.Component
     this.type = props.type;
     this.lesson = props.lesson;
     this.key = 0;
+    this.lesson.refresh = this.refresh.bind(this);
   }
 
+  refresh() {
+    this.setState(this.state);
+  }
   goToNext() {
-    const changed = this.lesson.nextSection();
-    if (changed) {
-      this.setState(this.state);
-      this.lesson.createDiagramsAndSetState();
-    }
+    this.lesson.nextSection();
+    // if (changed) {
+    //   this.setState(this.state);
+    //   this.lesson.createDiagramsAndSetState();
+    // }
   }
 
   goToPrevious() {
-    const changed = this.lesson.prevSection();
-    if (changed) {
-      this.setState(this.state);
-      this.lesson.createDiagramsAndSetState();
-    }
+    this.lesson.prevSection();
+    // if (changed) {
+    //   this.setState(this.state);
+    //   this.lesson.createDiagramsAndSetState();
+    // }
   }
 
   componentDidMount() {

@@ -1,6 +1,7 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
+import * as tools from '../../js/diagram/tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
 import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
@@ -165,7 +166,12 @@ class CircleDiagram extends Diagram {
     this.pulseReference();
   }
 
-  rotateTo(angle: number, direction: number, time: number) {
+  rotateTo(
+    angle: number,
+    direction: number,
+    time: number,
+    callback: () => void = function temp() { },
+  ) {
     let d = direction;
     if (d === 0) {
       const r = this.elements._radius.transform.r();
@@ -175,7 +181,7 @@ class CircleDiagram extends Diagram {
         d = delta / Math.abs(delta);
       }
     }
-    this.elements._radius.animateRotationTo(angle, d, time);
+    this.elements._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
     this.animateNextFrame();
   }
 

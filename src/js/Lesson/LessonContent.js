@@ -148,6 +148,13 @@ class Section {
   getState(diagrams: Object): Object {
     return {};
   }
+
+  transitionNext(diagrams: Object, done: () => void = function temp() {}) {
+    done();
+  }
+  transitionPrev(diagrams: Object, done: () => void = function temp() {}) {
+    done();
+  }
   /* eslint-enable no-unused-vars */
 }
 

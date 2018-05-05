@@ -8,13 +8,16 @@ describe('Lesson', () => {
   let lessonSingle;
   let mockSetState;
   let mockGetState;
+  let DiagramClass;
 
   beforeEach(() => {
     class Diagram {
       constructor(id) {
         this.id = id;
+        this.stop = () => {};
       }
     }
+    DiagramClass = Diagram;
     mockSetState = jest.fn();
     mockGetState = jest.fn();
     mockGetState
@@ -110,16 +113,16 @@ describe('Lesson', () => {
       lesson.createDiagramsAndSetState();
       expect(mockSetState.mock.calls).toHaveLength(3);
 
-      const expectedDiagrams = {
-        d1_id: { id: 'd1_id' },
-        d2_id: { id: 'd2_id' },
-      };
+      const expectedDiagrams = JSON.stringify({
+        d1_id: new DiagramClass('d1_id'),
+        d2_id: new DiagramClass('d2_id'),
+      });
       const expectedType = 'singlePage';
-      expect(mockSetState.mock.calls[0][0]).toEqual(expectedDiagrams);
+      expect(JSON.stringify(mockSetState.mock.calls[0][0])).toEqual(expectedDiagrams);
       expect(mockSetState.mock.calls[0][2]).toEqual(expectedType);
-      expect(mockSetState.mock.calls[1][0]).toEqual(expectedDiagrams);
+      expect(JSON.stringify(mockSetState.mock.calls[1][0])).toEqual(expectedDiagrams);
       expect(mockSetState.mock.calls[1][2]).toEqual(expectedType);
-      expect(mockSetState.mock.calls[2][0]).toEqual(expectedDiagrams);
+      expect(JSON.stringify(mockSetState.mock.calls[2][0])).toEqual(expectedDiagrams);
       expect(mockSetState.mock.calls[2][2]).toEqual(expectedType);
     });
   });
@@ -151,10 +154,10 @@ describe('Lesson', () => {
       lesson.saveState();
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
-      expect(mockGetState.mock.calls[1][0]).toEqual({
-        d1_id: { id: 'd1_id' },
-        d2_id: { id: 'd2_id' },
-      });
+      expect(JSON.stringify(mockGetState.mock.calls[1][0])).toEqual(JSON.stringify({
+        d1_id: new DiagramClass('d1_id'),
+        d2_id: new DiagramClass('d2_id'),
+      }));
     });
     test('NextPage', () => {
       let result;
@@ -221,17 +224,17 @@ describe('Lesson', () => {
       lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[1][0];
       type = mockSetState.mock.calls[1][2];
-      expect(diagrams).toEqual({ d1_id: { id: 'd1_id' } });
+      expect(JSON.stringify(diagrams)).toEqual(JSON.stringify({ d1_id: new DiagramClass('d1_id') }));
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
       lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[2][0];
       type = mockSetState.mock.calls[2][2];
-      expect(diagrams).toEqual({
-        d1_id: { id: 'd1_id' },
-        d2_id: { id: 'd2_id' },
-      });
+      expect(JSON.stringify(diagrams)).toEqual(JSON.stringify({
+        d1_id: new DiagramClass('d1_id'),
+        d2_id: new DiagramClass('d2_id'),
+      }));
       expect(type).toEqual('multiPage');
       expect(mockSetState.mock.calls).toHaveLength(3);
     });

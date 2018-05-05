@@ -84,6 +84,13 @@ class Section2 extends Section {
     };
   }
 
+  transitionNext(diagrams: Object, done: () => void) {
+    const diagram = diagrams.circle_container;
+    if (diagram) {
+      diagram.rotateTo(3, 0, 1, done);
+    }
+  }
+
   setState(
     diagrams: Object,
     previousState: Object,
