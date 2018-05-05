@@ -29,6 +29,12 @@
     margin-left: 5%;
     width: 90%;
   }
+
+  .lesson__button-container {
+    margin-top: 40px;
+    margin-left: 5%;
+    width: 90%;
+  }
 }
 
 @include media-breakpoint-up(sm) {
@@ -44,6 +50,10 @@
     font-size: 20px;
   }
 
+  .lesson__button-container {
+    margin-top: 80px;
+  }
+
   .lesson__title {
     font-size: 34px;
     padding-bottom: 20px;
@@ -56,6 +66,12 @@
 
 @include media-breakpoint-up(xl) {
   .lesson__container {
+    width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .lesson__button-container {
     width: 1100px;
     margin-left: auto;
     margin-right: auto;

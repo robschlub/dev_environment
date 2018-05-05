@@ -93,7 +93,7 @@ export default class LessonComponent extends React.Component
 
   addButtons() {
     if (this.type === 'multiPage') {
-      return <div className = "lesson__button-container fixed-bottom">
+      return <div className = "row justify-content-between lesson__button-container">
           <Button label="Previous" id="lesson__button-previous" className="-primary -multi-page-lesson"/>
           <Button label="Next" id="lesson__button-next" className="-primary -multi-page-lesson"/>
         </div>;
@@ -103,12 +103,15 @@ export default class LessonComponent extends React.Component
 
   render() {
     return <div>
-      <div className="lesson__container">
-        {this.renderContent(this.lesson.getContentHtml())}
+      {this.addButtons()}
+      <div className="row">
+        <div className="col">
+          <div className="lesson__container">
+            {this.renderContent(this.lesson.getContentHtml())}
+          </div>
+        </div>
       </div>
-      <div className = "row">
-        {this.addButtons()}
-      </div>
+      
     </div>;
   }
 }
