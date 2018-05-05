@@ -108,7 +108,6 @@ export default class LessonComponent extends React.Component
           {this.renderTitle(this.lesson.content.title)}
         </div>
       </div>
-      {this.addButtons()}
       <div className="row">
         <div className="col">
           <div className="lesson__container">
@@ -116,6 +115,7 @@ export default class LessonComponent extends React.Component
           </div>
         </div>
       </div>
+      {this.addButtons()}
     </div>;
   }
 }
