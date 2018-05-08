@@ -20,14 +20,6 @@ const lineWidth = 0.02;
 const cornerWidth = 0.04;
 const cornerLength = 0.2;
 
-type typeCircleDiagramCollection = {
-  _anchor: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _reference: DiagramElementPrimative;
-  _cornerRef: DiagramElementPrimative;
-  _cornerRad: DiagramElementPrimative;
-} & DiagramElementCollection ;
-
 function makeLine(
   shapes: Object,
   location: Point,
@@ -82,7 +74,12 @@ function makeCorner(shapes: Object, pointOrTransform: Point | Transform) {
 
 // $FlowFixMe
 class CircleCollection extends DiagramElementCollection {
-  elements: typeCircleDiagramCollection;
+  // elements: typeCircleDiagramCollection;
+  _anchor: DiagramElementPrimative;
+  _radius: DiagramElementPrimative;
+  _reference: DiagramElementPrimative;
+  _cornerRef: DiagramElementPrimative;
+  _cornerRad: DiagramElementPrimative;
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
@@ -122,27 +119,27 @@ class CircleCollection extends DiagramElementCollection {
     }
   }
 
-  touchMoveHandler(
-    previousClientPoint: Point,
-    currentClientPoint: Point,
-  ): boolean {
-    if (this.beingMovedElements.length === 0) {
-      return false;
-    }
-    const previousClipPoint = this.clientToClip(previousClientPoint);
-    const currentClipPoint = this.clientToClip(currentClientPoint);
-    const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
-    const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
-    const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = this._radius.transform.copy();
-    const rot = transform.r();
-    if (rot != null) {
-      transform.updateRotation(rot - diffAngle);
-      this._radius.moved(transform);
-    }
-    this.diagram.animateNextFrame();
-    return true;
-  }
+  // touchMoveHandler(
+  //   previousClientPoint: Point,
+  //   currentClientPoint: Point,
+  // ): boolean {
+  //   if (this.beingMovedElements.length === 0) {
+  //     return false;
+  //   }
+  //   const previousClipPoint = this.clientToClip(previousClientPoint);
+  //   const currentClipPoint = this.clientToClip(currentClientPoint);
+  //   const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
+  //   const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
+  //   const diffAngle = minAngleDiff(previousAngle, currentAngle);
+  //   const transform = this._radius.transform.copy();
+  //   const rot = transform.r();
+  //   if (rot != null) {
+  //     transform.updateRotation(rot - diffAngle);
+  //     this._radius.moved(transform);
+  //   }
+  //   this.diagram.animateNextFrame();
+  //   return true;
+  // }
 
   pulseAnchor() {
     this._anchor.pulseScaleNow(1, 2);
