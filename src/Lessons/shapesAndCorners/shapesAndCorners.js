@@ -180,8 +180,8 @@ class Section3 extends Section {
       }
       // const diagram = diagrams.circle_container;
       this.onClickId('id_corner', collection.toggleCorners, [collection]);
-      const smallRotation = [collection, Math.PI / 6, 0, 1];
-      const largeRotation = [collection, 5 * Math.PI / 6, 0, 1];
+      const smallRotation = [collection, Math.PI / 6, 0, 1, () => {}];
+      const largeRotation = [collection, 5 * Math.PI / 6, 0, 1, () => {}];
       this.onClickId('id_small_rotation', collection.rotateTo, smallRotation);
       this.onClickId('id_large_rotation', collection.rotateTo, largeRotation);
       this.onClickId('id_more_sharp_cornern', collection.rotateTo, smallRotation);

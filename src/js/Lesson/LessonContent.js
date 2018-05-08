@@ -101,6 +101,9 @@ class Section {
       if (bind.length === 4) {
         element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
       }
+      if (bind.length === 5) {
+        element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
+      }
     }
   }
 

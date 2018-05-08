@@ -165,7 +165,7 @@ class CircleCollection extends DiagramElementCollection {
     angle: number,
     direction: number,
     time: number,
-    callback: () => void = function temp() { },
+    callback: () => void = () => {},
   ) {
     let d = direction;
     if (d === 0) {
