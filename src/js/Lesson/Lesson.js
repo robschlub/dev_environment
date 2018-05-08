@@ -97,7 +97,7 @@ class Lesson {
     this.refresh(this.getContentHtml());
     this.setState();
   }
-  
+
   prevSection() {
     if (this.currentSectionIndex > 0) {
       if (this.inTransition) {

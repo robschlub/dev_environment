@@ -1,4 +1,5 @@
 // @flow
+
 import { Point } from './tools/g2';
 import Diagram from './Diagram';
 
@@ -46,7 +47,7 @@ class Gesture {
   }
 
   addEvent(event: string, method, flag: boolean) {
-    this.diagram.canvas.addEventListener(
+    this.diagram.htmlCanvas.addEventListener(
       event,
       method.bind(this),
       flag,
@@ -54,7 +55,7 @@ class Gesture {
   }
 
   removeEvent(event: string, method, flag: boolean) {
-    this.diagram.canvas.removeEventListener(
+    this.diagram.htmlCanvas.removeEventListener(
       event,
       method.bind(this),
       flag,
