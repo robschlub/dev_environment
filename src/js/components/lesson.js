@@ -112,7 +112,6 @@ export default class LessonComponent extends React.Component
       </div>
       <div className="row">
         <div className="col">
-          
           <div className="lesson__container">
           {this.renderMultiPageCanvas()}
               {this.renderContent(this.lesson.getContentHtml())}

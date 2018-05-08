@@ -76,9 +76,15 @@ class Lesson {
         this.currentDiagrams,
         this.finishTransNext.bind(this),
       );
+      // this.renderDiagrams();
     }
   }
 
+  renderDiagrams() {
+    Object.keys(this.currentDiagrams).forEach((key) => {
+      this.currentDiagrams[key].animateNextFrame();
+    });
+  }
   finishTransNext() {
     this.goToSection(this.currentSectionIndex + 1);
   }
@@ -91,21 +97,9 @@ class Lesson {
     this.refresh(this.getContentHtml());
     this.setState();
   }
-  // nextSection(): boolean {
-  //   if (this.currentSectionIndex < this.content.sections.length - 1) {
-  //     this.saveState();
-  //     this.currentSectionIndex += 1;
-  //     // this.createDiagramsAndSetState();
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  
   prevSection() {
     if (this.currentSectionIndex > 0) {
-      // this.saveState();
-      // this.currentSectionIndex -= 1;
-      // // this.createDiagramsAndSetState();
-      // return true;
       if (this.inTransition) {
         this.stopDiagrams();
       }
@@ -115,7 +109,6 @@ class Lesson {
         this.finishTransPrev.bind(this),
       );
     }
-    // return false;
   }
 
   closeDiagrams() {
@@ -126,20 +119,6 @@ class Lesson {
     this.currentDiagrams = {};
   }
 
-  // createDiagrams() {
-  //   this.closeDiagrams();
-  //   this.currentDiagrams = {};
-  //   if (this.type === 'multiPage') {
-  //     const shaders = getShaders('simple', 'simple');
-  //     const webgl = new WebGLInstance(
-  //       this.canvas,
-  //       shaders.vertexSource,
-  //       shaders.fragmentSource,
-  //       shaders.varNames,
-  //       this.backgroundColor,
-  //     );
-  //   }
-  // }
   setState() {
     let { sections } = this.content;
     if (this.type === 'multiPage') {
@@ -149,6 +128,7 @@ class Lesson {
     sections.forEach((section) => {
       section.setState(this.currentDiagrams, this.state, this.type);
     });
+    this.renderDiagrams();
   }
 
   createDiagrams() {
@@ -172,30 +152,6 @@ class Lesson {
       });
     }
   }
-
-  // createDiagramsAndSetState() {
-  //   const allDiagrams = {};
-  //   this.closeDiagrams();
-  //   let { sections } = this.content;
-  //   if (this.type === 'multiPage') {
-  //     sections = [this.content.sections[this.currentSectionIndex]];
-  //   }
-
-  //   sections.forEach((section) => {
-  //     const sectionDiagrams = section.getDiagramList(this.type);
-  //     sectionDiagrams.forEach((d) => {
-  //       // only create a diagram if it doesn't already exist
-  //       if (d.id in this.currentDiagrams) {
-  //         allDiagrams[d.id] = this.currentDiagrams[d.id];
-  //       }
-  //       if (!(d.id in allDiagrams)) {
-  //         allDiagrams[d.id] = new d.DiagramClass(d.id);
-  //       }
-  //     });
-  //     section.setState(allDiagrams, this.state, this.type);
-  //   });
-  //   this.currentDiagrams = allDiagrams;
-  // }
 }
 
 export default Lesson;
