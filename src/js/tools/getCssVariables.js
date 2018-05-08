@@ -13,7 +13,8 @@ export default function getCSSVariables(
       console.log(style)
       varNames.forEach((varName) => {
         const fullName = prefix + varName;
-        output[varName] = parseInt(style.getPropertyValue(fullName), 10);
+        // output[varName] = parseInt(style.getPropertyValue(fullName), 10);
+        output[varName] = style.getPropertyValue(fullName);
       });
     }
   }

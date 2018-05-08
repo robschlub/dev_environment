@@ -13,7 +13,7 @@ $color-background: $color_diagram;
 $_lesson_vars: (
   test: 5,
   // 1:1 ratio
-  sm: (
+  xs: (
     x-min:     -2,
     x-max:      2,
     y-min:     -2,
@@ -41,46 +41,118 @@ $_lesson_vars: (
 );
 $test1: 4;
 
-$test2: map-get(map-get($_lesson_vars, sm), x-min);
-
-@function map2-get($name, $level1, $level2: null) {
-  @return map-get(map-get($name, $level1), $level2);
-}
-
-@function get-lesson-vars($level1, $level2: null, $level3: null) {
-  @if ($level3 != null) {
-    @return map-get(map-get(map-get($_lesson_vars, $level1), $level2), $level3);
-  }
-
-  @if ($level2 != null) {
-    @return map-get(map-get($_lesson_vars, $level1), $level2);
-  }
-
-  @return map-get($_lesson_vars, $level1);
-}
-
+// $test2: map-get(map-get($_lesson_vars, sm), x-min);
 #lesson__container_name {
-  // --lessonvars-x-min: #{get-lesson-vars(sm, x-min)};
-  // --lessonvars-x-max: #{get-lesson-vars(test)};
-  // --lessonvars-y-min: #{$test2};
-  // --lessonvars-y-max: #{map2-get($_lesson_vars, sm, x-min)};
-
   @each $var, $value in $_lesson_vars {
     @if type-of($value) == "map" {
       @each $subvar, $subvalue in $value {
-        --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        @if type-of($subvalue) == "map" {
+          @each $subsubvar, $subsubvalue in $subvalue {
+            --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+          }
+        }
+
+        @else {
+          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        }
       }
     }
 
-    @elseif type-of($value) == "number" {
-      --lessonvars-#{$var}: #{$value};
-    }
-
-    @elseif type-of($size) == "string" {
+    @else {
       --lessonvars-#{$var}: #{$value};
     }
   }
 }
+
+// @function get-lesson-vars($level1, $level2: null, $level3: null) {
+//   @if ($level3 != null) {
+//     @return map-get(map-get(map-get($_lesson_vars, $level1), $level2), $level3);
+//   }
+
+//   @if ($level2 != null) {
+//     @return map-get(map-get($_lesson_vars, $level1), $level2);
+//   }
+
+//   @return map-get($_lesson_vars, $level1);
+// }
+
+@include media-breakpoint-up(xs) {
+  $size: xs;
+
+  #lesson__container_name {
+    // @each $var, $value in map-get($_lesson_vars, $size) {
+    //   @if type-of($value) == "map" {
+    //     @each $subvar, $subvalue in $value {
+    //       @if type-of($subvalue) == "map" {
+    //         @each $subsubvar, $subsubvalue in $subvalue {
+    //           --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+    //         }
+    //       }
+
+    //       @else {
+    //         --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+    //       }
+    //     }
+    //   }
+
+    //   @else {
+    //     --lessonvars-#{$var}: #{$value};
+    //   }
+    // }
+    @each $var, $value in map-get($_lesson_vars, $size) {
+      @if type-of($value) == "map" {
+        @each $subvar, $subvalue in $value {
+          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+
+      @else {
+        --lessonvars-#{$var}: #{$value};
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  $size: md;
+
+  #lesson__container_name {
+    @each $var, $value in map-get($_lesson_vars, $size) {
+      @if type-of($value) == "map" {
+        @each $subvar, $subvalue in $value {
+          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+
+      @else {
+        --lessonvars-#{$var}: #{$value};
+      }
+    }
+  }
+}
+
+// #lesson__container_name {
+//   // --lessonvars-x-min: #{get-lesson-vars(sm, x-min)};
+//   // --lessonvars-x-max: #{get-lesson-vars(test)};
+//   // --lessonvars-y-min: #{$test2};
+//   // --lessonvars-y-max: #{map2-get($_lesson_vars, sm, x-min)};
+//   @include get-sizes(md);
+//   // @each $var, $value in map-get($_lesson_vars, md) {
+//   //   @if type-of($value) == "map" {
+//   //     @each $subvar, $subvalue in $value {
+//   //       --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+//   //     }
+//   //   }
+
+//   //   @elseif type-of($value) == "number" {
+//   //     --lessonvars-#{$var}: #{$value};
+//   //   }
+
+//   //   @elseif type-of($size) == "string" {
+//   //     --lessonvars-#{$var}: #{$value};
+//   //   }
+//   // }
+// }
 
 .action_word {
   font-weight: bold;

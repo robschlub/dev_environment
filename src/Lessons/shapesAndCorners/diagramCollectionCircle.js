@@ -114,9 +114,10 @@ class CircleCollection extends DiagramElementCollection {
     const lessonVars = getCssVariables(
       'lesson__container_name',
       [
-        'md-x-min',
-        'md-x-max',
-        'md-y-min',
+        'x-min',
+        'x-max',
+        'y-min',
+        'y-max',
         'md-y-max',
       ],
       '--lessonvars-',
