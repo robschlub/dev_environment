@@ -14,9 +14,9 @@ $_lesson_vars: (
   test: 5,
   // 1:1 ratio
   xs: (
-    x-min:     -2,
+    x-min:     -1,
     x-max:      2,
-    y-min:     -2,
+    y-min:     -1,
     y-max:      2,
     ratio:      1,
     square: (
@@ -27,8 +27,8 @@ $_lesson_vars: (
   ),
   // 1:2 ratio
   md: (
-    x-min:    -4,
-    x-max:     4,
+    x-min:    -6,
+    x-max:     6,
     y-min:    -2,
     y-max:     2,
     ratio:     2,
@@ -75,41 +75,25 @@ $test1: 4;
 
 //   @return map-get($_lesson_vars, $level1);
 // }
+@mixin lesson-breakpoint-vars($size) {
+  @each $var, $value in map-get($_lesson_vars, $size) {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+      }
+    }
+
+    @else {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
+}
 
 @include media-breakpoint-up(xs) {
   $size: xs;
 
   #lesson__container_name {
-    // @each $var, $value in map-get($_lesson_vars, $size) {
-    //   @if type-of($value) == "map" {
-    //     @each $subvar, $subvalue in $value {
-    //       @if type-of($subvalue) == "map" {
-    //         @each $subsubvar, $subsubvalue in $subvalue {
-    //           --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
-    //         }
-    //       }
-
-    //       @else {
-    //         --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
-    //       }
-    //     }
-    //   }
-
-    //   @else {
-    //     --lessonvars-#{$var}: #{$value};
-    //   }
-    // }
-    @each $var, $value in map-get($_lesson_vars, $size) {
-      @if type-of($value) == "map" {
-        @each $subvar, $subvalue in $value {
-          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
-        }
-      }
-
-      @else {
-        --lessonvars-#{$var}: #{$value};
-      }
-    }
+    @include lesson-breakpoint-vars($size);
   }
 }
 
@@ -117,42 +101,9 @@ $test1: 4;
   $size: md;
 
   #lesson__container_name {
-    @each $var, $value in map-get($_lesson_vars, $size) {
-      @if type-of($value) == "map" {
-        @each $subvar, $subvalue in $value {
-          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
-        }
-      }
-
-      @else {
-        --lessonvars-#{$var}: #{$value};
-      }
-    }
+    @include lesson-breakpoint-vars($size);
   }
 }
-
-// #lesson__container_name {
-//   // --lessonvars-x-min: #{get-lesson-vars(sm, x-min)};
-//   // --lessonvars-x-max: #{get-lesson-vars(test)};
-//   // --lessonvars-y-min: #{$test2};
-//   // --lessonvars-y-max: #{map2-get($_lesson_vars, sm, x-min)};
-//   @include get-sizes(md);
-//   // @each $var, $value in map-get($_lesson_vars, md) {
-//   //   @if type-of($value) == "map" {
-//   //     @each $subvar, $subvalue in $value {
-//   //       --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
-//   //     }
-//   //   }
-
-//   //   @elseif type-of($value) == "number" {
-//   //     --lessonvars-#{$var}: #{$value};
-//   //   }
-
-//   //   @elseif type-of($size) == "string" {
-//   //     --lessonvars-#{$var}: #{$value};
-//   //   }
-//   // }
-// }
 
 .action_word {
   font-weight: bold;
