@@ -1,3 +1,4 @@
+// https://codepen.io/jakealbaugh/post/css4-variables-and-sass
 @import "../../css/style";
 
 $color-lines: $color_primary;
@@ -8,6 +9,35 @@ $color-anchor: $color_passive;
 $color-radius: $color_primary;
 $color-reference: $color_secondary;
 $color-background: $color_diagram;
+
+$_lesson_vars: (
+  test: 5,
+  sm: (
+    x-min:    -2,
+    x-max:   4,
+    y-min:    -1,
+    y-max:  2,
+  ),
+  md: (
+    x-min:    -4,
+    x-max:   8,
+    y-min:    -2,
+    y-max:  4,
+  ),
+);
+$test1: 3;
+$test2: map-get(map-get($_lesson_vars, sm), x-min);
+
+@function map2-get($name, $level1, $level2: null) {
+  @return map-get(map-get($name, $level1), $level2);
+}
+
+#lesson__container_name {
+  --lessonvars-x-min: map-get(map-get($_lesson_vars, sm), x-min);
+  --lessonvars-x-max: 3;
+  --lessonvars-y-min: #{$test2};
+  --lessonvars-y-max: #{map2-get($_lesson_vars, sm, x-min)};
+}
 
 .action_word {
   font-weight: bold;
@@ -106,6 +136,12 @@ $color-background: $color_diagram;
   //   width: 50%;
   //   padding-top: 50%;
   // }
+  // #lesson__container_name {
+  //   --lessonvars-x-min: $_lesson_vars.md.x-min;
+  //   --lessonvars-x-max: $_lesson_vars.md.x-max;
+  //   --lessonvars-y-min: $_lesson_vars.md.y-min;
+  //   --lessonvars-y-max: $_lesson_vars.md.y-max;
+  // }
 }
 
 // @include media-breakpoint-up(xl) {
@@ -131,3 +167,25 @@ $color-background: $color_diagram;
   left: 0;
   top: 0;
 }
+
+// #lesson__container_name {
+//   // @each $var, $value in $_lesson_variables {
+//   //   @if type-of($value) == "map" {
+//   //     @each $subvar, $subvalue in $value {
+//   //       --lessonvar-#{$var}-#{$subvar}: #{$subvalue};
+//   //     }
+//   //   }
+
+//   //   @elseif type-of($value) == "number" {
+//   //     --lessonvar-#{$var}: #{$value};
+//   //   }
+
+//   //   @elseif type-of($size) == "string" {
+//   //     --lessonvar-#{$var}: #{$value};
+//   //   }
+//   // }
+//   --lessonvars-x-min: 4;
+//   --lessonvars-x-max: 4;
+//   --lessonvars-y-min: 4;
+//   --lessonvars-ymax: 4;
+// }

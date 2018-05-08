@@ -69,19 +69,7 @@ export default class LessonComponent extends React.Component
         prevButton.onclick = this.goToPrevious.bind(this);
       }
     }
-
-    // const element = document.getElementById('dd');
-    // if (element) {
-    //   // console.log("asdf");
-    //   element.addEventListener('mousedown', (event) => { console.log(document.elementFromPoint(event.clientX, event.clientY)); return true;}, false);
-    //   element.addEventListener('mousemove', () => true, false);
-    //   element.addEventListener('mouseup', () => true, false);
-    // }
   }
-
-  // downHandler(event: TouchEvent | MouseEvent) {
-  //   this.
-  // }
 
   renderTitle(title: string) {
     this.key += 1;
@@ -124,7 +112,7 @@ export default class LessonComponent extends React.Component
       </div>
       <div className="row">
         <div className="col">
-          <div className="lesson__container">
+          <div id="lesson__container_name" className="lesson__container">
             <div id="multipage_diagram" className="diagram__container">
               <canvas className='diagram__gl'>
               </canvas>

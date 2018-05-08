@@ -19,3 +19,7 @@
 // @import "views/home";
 // @import "views/about";
 // @import "views/introduction";
+
+@function asdf($name, $level1, $level2) {
+  @return map-get(map-get($name, $level1), $level2);
+}
