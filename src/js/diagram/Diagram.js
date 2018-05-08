@@ -109,55 +109,58 @@ class Diagram {
 
   constructor(
     // canvas: HTMLCanvasElement,
-    containerId: string = 'DiagramContainer',
+    containerIdOrWebGLContext: string | WebGLInstance = 'DiagramContainer',
     limitsOrxMin: number | Rect = new Rect(-1, -1, 2, 2),
     yMin: number = -1,
     width: number = 2,
     height: number = 2,
     backgroundColor: Array<number> = [1, 1, 1, 1],
   ) {
-    const container = document.getElementById(containerId);
-    if (container instanceof HTMLElement) {
-      const { children } = container;
-      for (let i = 0; i < children.length; i += 1) {
-        const child = children[i];
-        if (child instanceof HTMLCanvasElement
-          && child.classList.contains('diagram__gl')) {
-          this.canvas = child;
+    if (typeof containerIdOrWebGLContext === 'string') {
+      const container = document.getElementById(containerIdOrWebGLContext);
+      if (container instanceof HTMLElement) {
+        const { children } = container;
+        for (let i = 0; i < children.length; i += 1) {
+          const child = children[i];
+          if (child instanceof HTMLCanvasElement
+            && child.classList.contains('diagram__gl')) {
+            this.canvas = child;
+          }
+          if (child instanceof HTMLCanvasElement
+            && child.classList.contains('diagram__text')) {
+            this.textCanvas = child;
+          }
+          if (child.classList.contains('diagram__html')
+          ) {
+            this.htmlCanvas = child;
+          }
         }
-        if (child instanceof HTMLCanvasElement
-          && child.classList.contains('diagram__text')) {
-          this.textCanvas = child;
-        }
-        if (child.classList.contains('diagram__html')
-        ) {
-          this.htmlCanvas = child;
-        }
+        this.backgroundColor = backgroundColor;
+        const shaders = getShaders('simple', 'simple');
+        const webgl = new WebGLInstance(
+          this.canvas,
+          shaders.vertexSource,
+          shaders.fragmentSource,
+          shaders.varNames,
+          this.backgroundColor,
+        );
+        this.webgl = webgl;
       }
+    }
+    if (containerIdOrWebGLContext instanceof WebGLInstance) {
+      this.webgl = containerIdOrWebGLContext;
     }
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }
-    this.backgroundColor = backgroundColor;
-    const shaders = getShaders('simple', 'simple');
-    const webgl = new WebGLInstance(
-      this.canvas,
-      shaders.vertexSource,
-      shaders.fragmentSource,
-      shaders.varNames,
-      this.backgroundColor,
-    );
+
     if (limitsOrxMin instanceof Rect) {
       const r = limitsOrxMin;
       this.limits = new Rect(r.left, r.bottom, r.width, r.height);
     } else {
       this.limits = new Rect(limitsOrxMin, yMin, width, height);
     }
-    this.webgl = webgl;
 
-    if (this.textCanvas instanceof HTMLCanvasElement) {
-      this.draw2D = new DrawContext2D(this.textCanvas);
-    }
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
@@ -172,6 +175,10 @@ class Diagram {
     return shapes(this.webgl, this.limits);
   }
 
+  destroy() {
+    this.gesture.destroy();
+    this.webgl.gl.getExtension('WEBGL_lose_context').loseContext();
+  }
   resize() {
     this.webgl.resize();
     this.animateNextFrame();

@@ -19,7 +19,6 @@ const circleRadius = 0.9;
 const lineWidth = 0.02;
 const cornerWidth = 0.04;
 const cornerLength = 0.2;
-const backgroundColor = colors.background;
 
 type typeCircleDiagramCollection = {
   _anchor: DiagramElementPrimative;
@@ -82,18 +81,14 @@ function makeCorner(shapes: Object, pointOrTransform: Point | Transform) {
 }
 
 // $FlowFixMe
-class CircleDiagram extends Diagram {
+class CircleCollection extends DiagramElementCollection {
   elements: typeCircleDiagramCollection;
 
-  constructor(id: string) {
-    super(`${id}`, -1, -1, 2, 2, backgroundColor);
-  }
+  constructor(diagram: Diagram, transform: Transform = new Transform()) {
+    super(transform, diagram.limits);
+    this.diagram = diagram;
 
-  createDiagramElements() {
-    const { shapes } = this;
-    this.elements = shapes.collection();
-    this.elements.isTouchable = true;
-    this.elements.isMovable = true;
+    const { shapes } = diagram;
 
     const origin = new Point(0, 0);
 
@@ -107,20 +102,23 @@ class CircleDiagram extends Diagram {
     const cornerRef = makeCorner(shapes, origin);
     this.add('cornerRef', cornerRef);
 
-    const transform = new Transform().rotate(0).translate(origin.x, origin.y);
-    const cornerRad = makeCorner(shapes, transform);
+    const t = new Transform().rotate(0).translate(origin.x, origin.y);
+    const cornerRad = makeCorner(shapes, t);
     this.add('cornerRad', cornerRad);
 
     const anchor = makeAnchor(shapes, origin);
     this.add('anchor', anchor);
+
+    this.isTouchable = true;
+    this.isMovable = true;
   }
 
   updateRotation() {
-    const rotation = this.elements._radius.transform.r();
+    const rotation = this._radius.transform.r();
     if (rotation) {
       const r = normAngle(rotation);
-      this.elements._radius.transform.updateRotation(r);
-      this.elements._cornerRad.transform.updateRotation(r);
+      this._radius.transform.updateRotation(r);
+      this._cornerRad.transform.updateRotation(r);
     }
   }
 
@@ -136,29 +134,29 @@ class CircleDiagram extends Diagram {
     const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
     const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
     const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = this.elements._radius.transform.copy();
+    const transform = this._radius.transform.copy();
     const rot = transform.r();
     if (rot != null) {
       transform.updateRotation(rot - diffAngle);
-      this.elements._radius.moved(transform);
+      this._radius.moved(transform);
     }
-    this.animateNextFrame();
+    this.diagram.animateNextFrame();
     return true;
   }
 
   pulseAnchor() {
-    this.elements._anchor.pulseScaleNow(1, 2);
-    this.animateNextFrame();
+    this._anchor.pulseScaleNow(1, 2);
+    this.diagram.animateNextFrame();
   }
 
   pulseRadius() {
-    this.elements._radius.pulseScaleNow(1, 2.5);
-    this.animateNextFrame();
+    this._radius.pulseScaleNow(1, 2.5);
+    this.diagram.animateNextFrame();
   }
 
   pulseReference() {
-    this.elements._reference.pulseScaleNow(1, 2);
-    this.animateNextFrame();
+    this._reference.pulseScaleNow(1, 2);
+    this.diagram.animateNextFrame();
   }
 
   pulseLines() {
@@ -174,42 +172,29 @@ class CircleDiagram extends Diagram {
   ) {
     let d = direction;
     if (d === 0) {
-      const r = this.elements._radius.transform.r();
+      const r = this._radius.transform.r();
       d = 1;
       if (r) {
         const delta = minAngleDiff(angle, r);
         d = delta / Math.abs(delta);
       }
     }
-    this.elements._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
-    this.animateNextFrame();
+    this._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
+    this.diagram.animateNextFrame();
   }
 
   toggleCorners() {
-    // this.elements._cornerRad.show = true;
-    // this.elements._cornerRef.show = true;
-
-    // this.elements._cornerRef.pulse.callback = () => {
-    //   this.elements._cornerRef.show = false;
-    //   this.elements._cornerRad.show = false;
-    //   this.animateNextFrame();
-    // };
-
-    // this.elements._cornerRad.pulseScaleNow(1, 2);
-    // this.elements._cornerRef.pulseScaleNow(1, 2);
-
-    // this.animateNextFrame();
-    if (this.elements._cornerRad.show) {
-      this.elements._cornerRad.show = false;
-      this.elements._cornerRef.show = false;
+    if (this._cornerRad.show) {
+      this._cornerRad.show = false;
+      this._cornerRef.show = false;
     } else {
-      this.elements._cornerRad.show = true;
-      this.elements._cornerRef.show = true;
-      this.elements._cornerRad.pulseScaleNow(1, 2);
-      this.elements._cornerRef.pulseScaleNow(1, 2);
+      this._cornerRad.show = true;
+      this._cornerRef.show = true;
+      this._cornerRad.pulseScaleNow(1, 2);
+      this._cornerRef.pulseScaleNow(1, 2);
     }
-    this.animateNextFrame();
+    this.diagram.animateNextFrame();
   }
 }
 
-export default CircleDiagram;
+export default CircleCollection;

@@ -29,6 +29,14 @@
   background-color: $color_navbar-background;
 }
 
+// #multipage_diagram {
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+//   // width: 100%;
+//   // height: 100%;
+// }
+
 @include media-breakpoint-up(xs) {
   .lesson__container {
     margin-top: 0;
@@ -79,6 +87,14 @@
     margin-right: auto;
     min-height: 550px;
   }
+
+  // #multipage_lesson {
+  //   position: absolute;
+  //   width: 800px;
+  //   margin-left: auto;
+  //   margin-right: auto;
+  //   min-height: 550px;
+  // }
 
   .lesson__button-container {
     width: 800px;

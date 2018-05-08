@@ -4,7 +4,7 @@ import * as React from 'react';
 import '../../css/style.scss';
 // import { Lesson, Section } from '../Lesson/LessonBase';
 import Lesson from '../Lesson/Lesson';
-// import Canvas from './canvas';
+import Canvas from './canvas';
 import Button from './button';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 };
 
 type State = {
-  section: number,
+  htmlText: string,
 };
 
 export default class LessonComponent extends React.Component
@@ -27,23 +27,23 @@ export default class LessonComponent extends React.Component
 
   constructor(props: Props) {
     super(props);
-    if (props.section) {
-      this.state = {
-        section: props.section,
-      };
-    } else {
-      this.state = {
-        section: 0,
-      };
-    }
+    // if (props.section) {
+    //   this.state = {
+    //     section: props.section,
+    //   };
+    // } else {
+    this.state = {
+      htmlText: '',
+    };
+    // }
     this.type = props.type;
     this.lesson = props.lesson;
     this.key = 0;
     this.lesson.refresh = this.refresh.bind(this);
   }
 
-  refresh() {
-    this.setState(this.state);
+  refresh(htmlText: string) {
+    this.setState({ htmlText });
   }
   goToNext() {
     this.lesson.nextSection();
@@ -56,8 +56,8 @@ export default class LessonComponent extends React.Component
   componentDidMount() {
     // Instantiate all the diagrams now that the canvas elements have been
     // created.
-    // this.makeDiagrams();
-    this.lesson.createDiagramsAndSetState();
+    this.lesson.createDiagrams();
+    this.lesson.setState();
 
     if (this.type === 'multiPage') {
       const nextButton = document.getElementById('lesson__button-next');
@@ -97,6 +97,12 @@ export default class LessonComponent extends React.Component
     return <div />;
   }
 
+  renderMultiPageCanvas() {
+    if (this.type === 'multiPage') {
+      return <Canvas id="multipage_diagram"/>;
+    }
+    return <div />;
+  }
   render() {
     return <div>
       <div className="row">
@@ -106,9 +112,13 @@ export default class LessonComponent extends React.Component
       </div>
       <div className="row">
         <div className="col">
+          
           <div className="lesson__container">
-            {this.renderContent(this.lesson.getContentHtml())}
+          {this.renderMultiPageCanvas()}
+              {this.renderContent(this.lesson.getContentHtml())}
+
           </div>
+
         </div>
       </div>
       {this.addButtons()}

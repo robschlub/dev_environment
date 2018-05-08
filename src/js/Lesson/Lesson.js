@@ -1,5 +1,7 @@
 // @flow
 import { Content } from './LessonContent';
+// import WebGLInstance from './webgl/webgl';
+// import getShaders from './webgl/shaders';
 
 type LessonType = 'multiPage' | 'singlePage';
 
@@ -12,7 +14,7 @@ class Lesson {
   state: Object;
   inTransition: boolean;
 
-  refresh: () => void;
+  refresh: (string) => void;
 
   constructor(content: Content, lessonType: LessonType) {
     this.content = content;
@@ -86,8 +88,8 @@ class Lesson {
   }
 
   refreshView() {
-    this.refresh();
-    this.createDiagramsAndSetState();
+    this.refresh(this.getContentHtml());
+    this.setState();
   }
   // nextSection(): boolean {
   //   if (this.currentSectionIndex < this.content.sections.length - 1) {
@@ -116,28 +118,84 @@ class Lesson {
     // return false;
   }
 
-  createDiagramsAndSetState() {
-    const allDiagrams = {};
+  closeDiagrams() {
+    Object.keys(this.currentDiagrams).forEach((key) => {
+      const diagram = this.currentDiagrams[key];
+      diagram.destroy();
+    });
+    this.currentDiagrams = {};
+  }
+
+  // createDiagrams() {
+  //   this.closeDiagrams();
+  //   this.currentDiagrams = {};
+  //   if (this.type === 'multiPage') {
+  //     const shaders = getShaders('simple', 'simple');
+  //     const webgl = new WebGLInstance(
+  //       this.canvas,
+  //       shaders.vertexSource,
+  //       shaders.fragmentSource,
+  //       shaders.varNames,
+  //       this.backgroundColor,
+  //     );
+  //   }
+  // }
+  setState() {
     let { sections } = this.content;
     if (this.type === 'multiPage') {
       sections = [this.content.sections[this.currentSectionIndex]];
     }
 
     sections.forEach((section) => {
-      const sectionDiagrams = section.getDiagramList(this.type);
-      sectionDiagrams.forEach((d) => {
-        // only create a diagram if it doesn't already exist
-        if (d.id in this.currentDiagrams) {
-          allDiagrams[d.id] = this.currentDiagrams[d.id];
-        }
-        if (!(d.id in allDiagrams)) {
-          allDiagrams[d.id] = new d.DiagramClass(d.id);
-        }
-      });
-      section.setState(allDiagrams, this.state, this.type);
+      section.setState(this.currentDiagrams, this.state, this.type);
     });
-    this.currentDiagrams = allDiagrams;
   }
+
+  createDiagrams() {
+    this.closeDiagrams();
+    let { sections } = this.content;
+    // If multi page, only going to create one diagram
+    if (this.type === 'multiPage') {
+      sections = [this.content.sections[this.currentSectionIndex]];
+      const id = 'multipage_diagram';
+      this.currentDiagrams[id] = new this.content.DiagramClass(id);
+    }
+    if (this.type === 'singlePage') {
+      // If single page, may create many diagrams
+      sections.forEach((section) => {
+        const sectionDiagrams = section.getDiagramList(this.type);
+        sectionDiagrams.forEach((d) => {
+          if (!(d.id in this.currentDiagrams)) {
+            this.currentDiagrams[d.id] = new d.DiagramClass(d.id);
+          }
+        });
+      });
+    }
+  }
+
+  // createDiagramsAndSetState() {
+  //   const allDiagrams = {};
+  //   this.closeDiagrams();
+  //   let { sections } = this.content;
+  //   if (this.type === 'multiPage') {
+  //     sections = [this.content.sections[this.currentSectionIndex]];
+  //   }
+
+  //   sections.forEach((section) => {
+  //     const sectionDiagrams = section.getDiagramList(this.type);
+  //     sectionDiagrams.forEach((d) => {
+  //       // only create a diagram if it doesn't already exist
+  //       if (d.id in this.currentDiagrams) {
+  //         allDiagrams[d.id] = this.currentDiagrams[d.id];
+  //       }
+  //       if (!(d.id in allDiagrams)) {
+  //         allDiagrams[d.id] = new d.DiagramClass(d.id);
+  //       }
+  //     });
+  //     section.setState(allDiagrams, this.state, this.type);
+  //   });
+  //   this.currentDiagrams = allDiagrams;
+  // }
 }
 
 export default Lesson;

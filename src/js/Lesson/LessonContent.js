@@ -20,7 +20,7 @@ function diagramCanvas(
   id: string,
   DiagramClass: Object,
   classes: string = '',
-  lessonType: 'any' | 'singlePage' | 'multiPage' = 'any',
+  lessonType: 'any' | 'singlePage' | 'multiPage' = 'singlePage',
 ): Object {
   return {
     replacementText: `<div id="${id}" class="canvas_container ${classes}">
@@ -161,10 +161,17 @@ class Section {
 class Content {
   title: string;
   sections: Array<Section>;
+  DiagramClass: Object;
   // questions
-  constructor(title: string, sections: Array<Section>) {
+
+  constructor(
+    title: string,
+    sections: Array<Section>,
+    multiPageDiagramClass: Object,
+  ) {
     this.title = title;
     this.sections = sections;
+    this.DiagramClass = multiPageDiagramClass;
   }
 }
 

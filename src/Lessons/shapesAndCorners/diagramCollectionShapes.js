@@ -2,7 +2,7 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point } from '../../js/diagram/tools/g2';
+import { Point, Transform } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
@@ -14,7 +14,6 @@ const lessSharpColor = colors.lessSharp;
 const lineWidth = 0.02;
 const cornerWidth = 0.06;
 const cornerLength = 0.15;
-const backgroundColor = colors.background;
 
 type typeShape = {
   _lines: DiagramElementPrimative;
@@ -114,107 +113,107 @@ function makePent(shapes: Object, location: Point) {
 }
 
 
-type typeDiagramCollection = {
-  _square: typeShape,
-  _triangle: typeShape,
-  _pent: typeShape,
-} & DiagramElementCollection;
+// type typeDiagramCollection = {
+//   _square: typeShape,
+//   _triangle: typeShape,
+//   _pent: typeShape,
+// } & DiagramElementCollection;
 
-// $FlowFixMe
-class ShapesDiagram extends Diagram {
-  elements: typeDiagramCollection;
+class ShapesCollection extends DiagramElementCollection {
+  _square: typeShape;
+  _triangle: typeShape;
+  _pent: typeShape;
+  diagram: Diagram;
 
-  constructor(id: string) {
-    super(`${id}`, 0, 0.1, 4, 4 * 0.4, backgroundColor);
-  }
-  createDiagramElements() {
-    const { shapes } = this;
-    this.elements = shapes.collection();
-
-    const square = makeSquare(shapes, new Point(0.65, 1));
+  constructor(diagram: Diagram, transform: Transform = new Transform()) {
+    super(transform, diagram.limits);
+    this.diagram = diagram;
+    const { shapes } = diagram;
+    const square = makeSquare(shapes, new Point(0.65 - 2, 0));
     this.add('square', square);
 
-    const triangle = makeTriangle(shapes, new Point(2, 0.9));
+    const triangle = makeTriangle(shapes, new Point(2 - 2, -0.1));
     this.add('triangle', triangle);
 
-    const pent = makePent(shapes, new Point(3.2, 1));
+    const pent = makePent(shapes, new Point(3.2 - 2, 0));
     this.add('pent', pent);
   }
 
   toggleCorners(toggle: boolean = true, show: boolean = true) {
     if (toggle) {
-      this.elements._square._corners.show =
-        !this.elements._square._corners.show;
-      this.elements._triangle._corners.show =
-        !this.elements._triangle._corners.show;
-      this.elements._pent._corners.show =
-        !this.elements._pent._corners.show;
+      this._square._corners.show =
+        !this._square._corners.show;
+      this._triangle._corners.show =
+        !this._triangle._corners.show;
+      this._pent._corners.show =
+        !this._pent._corners.show;
     } else {
-      this.elements._square._corners.show = show;
-      this.elements._triangle._corners.show = show;
-      this.elements._pent._corners.show = show;
+      this._square._corners.show = show;
+      this._triangle._corners.show = show;
+      this._pent._corners.show = show;
     }
 
-    if (this.elements._square._corners.show) {
-      this.elements._square._corners.pulseScaleNow(1, 1.08);
-      this.elements._triangle._corners.pulseScaleNow(1, 1.08);
-      this.elements._pent._corners.pulseScaleNow(1, 1.08);
+    if (this._square._corners.show) {
+      this._square._corners.pulseScaleNow(1, 1.08);
+      this._triangle._corners.pulseScaleNow(1, 1.08);
+      this._pent._corners.pulseScaleNow(1, 1.08);
       this.toggleMoreSharpCorners(false, false);
       this.toggleLessSharpCorners(false, false);
     }
-    this.animateNextFrame();
+    this.diagram.animateNextFrame();
   }
 
   toggleMoreSharpCorners(toggle: boolean = true, show: boolean = true) {
     if (toggle) {
-      this.elements._triangle._moreSharpCorners.show =
-        !this.elements._triangle._moreSharpCorners.show;
-      this.elements._pent._moreSharpCorners.show =
-        !this.elements._pent._moreSharpCorners.show;
+      this._triangle._moreSharpCorners.show =
+        !this._triangle._moreSharpCorners.show;
+      this._pent._moreSharpCorners.show =
+        !this._pent._moreSharpCorners.show;
     } else {
-      this.elements._triangle._moreSharpCorners.show = show;
-      this.elements._pent._moreSharpCorners.show = show;
+      this._triangle._moreSharpCorners.show = show;
+      this._pent._moreSharpCorners.show = show;
     }
 
-    if (this.elements._triangle._moreSharpCorners.show) {
-      this.elements._triangle._moreSharpCorners.pulseScaleNow(1, 1.08);
-      this.elements._pent._moreSharpCorners.pulseScaleNow(1, 1.08);
+    if (this._triangle._moreSharpCorners.show) {
+      this._triangle._moreSharpCorners.pulseScaleNow(1, 1.08);
+      this._pent._moreSharpCorners.pulseScaleNow(1, 1.08);
       this.toggleCorners(false, false);
       this.toggleLessSharpCorners(false, false);
     }
-    this.animateNextFrame();
+    this.diagram.animateNextFrame();
   }
 
   toggleLessSharpCorners(toggle: boolean = true, show: boolean = true) {
     if (toggle) {
-      this.elements._square._lessSharpCorners.show =
-        !this.elements._square._lessSharpCorners.show;
-      this.elements._pent._lessSharpCorners.show =
-        !this.elements._pent._lessSharpCorners.show;
+      this._square._lessSharpCorners.show =
+        !this._square._lessSharpCorners.show;
+      this._pent._lessSharpCorners.show =
+        !this._pent._lessSharpCorners.show;
     } else {
-      this.elements._square._lessSharpCorners.show = show;
-      this.elements._pent._lessSharpCorners.show = show;
+      this._square._lessSharpCorners.show = show;
+      this._pent._lessSharpCorners.show = show;
     }
 
-    if (this.elements._square._lessSharpCorners.show) {
-      this.elements._square._lessSharpCorners.pulseScaleNow(1, 1.08);
-      this.elements._pent._lessSharpCorners.pulseScaleNow(1, 1.08);
+    if (this._square._lessSharpCorners.show) {
+      this._square._lessSharpCorners.pulseScaleNow(1, 1.08);
+      this._pent._lessSharpCorners.pulseScaleNow(1, 1.08);
       this.toggleCorners(false, false);
       this.toggleMoreSharpCorners(false, false);
     }
-    this.animateNextFrame();
+    this.diagram.animateNextFrame();
   }
 
   pulseShapes() {
     const mag = 1.05;
     const lines = 5;
     const time = 1;
-    this.elements._square._lines.pulseThickNow(time, mag, lines);
-    this.elements._triangle._lines.pulseThickNow(time, mag, lines);
-    this.elements._pent._lines.pulseThickNow(time, mag, lines);
-    this.animateNextFrame();
+    this._square._lines.pulseThickNow(time, mag, lines);
+    this._triangle._lines.pulseThickNow(time, mag, lines);
+    this._pent._lines.pulseThickNow(time, mag, lines);
+    this.diagram.animateNextFrame();
   }
 }
+
 
 // function shapesDiagram(id: string) {
 //   // const diagram = new Diagram(`${id}_container`, 0, 0, 4, 2);
@@ -232,4 +231,4 @@ class ShapesDiagram extends Diagram {
 //   return diagram;
 // }
 
-export default ShapesDiagram;
+export default ShapesCollection;
