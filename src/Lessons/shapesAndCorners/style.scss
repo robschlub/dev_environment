@@ -25,16 +25,29 @@ $_lesson_vars: (
     y-max:  4,
   ),
 );
-$test1: 3;
+$test1: 4;
+
 $test2: map-get(map-get($_lesson_vars, sm), x-min);
 
 @function map2-get($name, $level1, $level2: null) {
   @return map-get(map-get($name, $level1), $level2);
 }
 
+@function get-lesson-vars($level1, $level2: null, $level3: null) {
+  @if ($level3 != null) {
+    @return map-get(map-get(map-get($_lesson_vars, $level1), $level2), $level3);
+  }
+
+  @if ($level2 != null) {
+    @return map-get(map-get($_lesson_vars, $level1), $level2);
+  }
+
+  @return map-get($_lesson_vars, $level1);
+}
+
 #lesson__container_name {
-  --lessonvars-x-min: map-get(map-get($_lesson_vars, sm), x-min);
-  --lessonvars-x-max: 3;
+  --lessonvars-x-min: #{get-lesson-vars(sm, x-min)};
+  --lessonvars-x-max: #{get-lesson-vars(test)};
   --lessonvars-y-min: #{$test2};
   --lessonvars-y-max: #{map2-get($_lesson_vars, sm, x-min)};
 }
