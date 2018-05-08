@@ -12,17 +12,31 @@ $color-background: $color_diagram;
 
 $_lesson_vars: (
   test: 5,
+  // 1:1 ratio
   sm: (
-    x-min:    -2,
-    x-max:   4,
-    y-min:    -1,
-    y-max:  2,
+    x-min:     -2,
+    x-max:      2,
+    y-min:     -2,
+    y-max:      2,
+    ratio:      1,
+    square: (
+      center-x:  -1,
+      center-y:   0,
+      side:     0.5,
+    ),
   ),
+  // 1:2 ratio
   md: (
     x-min:    -4,
-    x-max:   8,
+    x-max:     4,
     y-min:    -2,
-    y-max:  4,
+    y-max:     2,
+    ratio:     2,
+    square: (
+      center-x:  -3,
+      center-y:   1,
+      side:       1,
+    ),
   ),
 );
 $test1: 4;
@@ -46,10 +60,26 @@ $test2: map-get(map-get($_lesson_vars, sm), x-min);
 }
 
 #lesson__container_name {
-  --lessonvars-x-min: #{get-lesson-vars(sm, x-min)};
-  --lessonvars-x-max: #{get-lesson-vars(test)};
-  --lessonvars-y-min: #{$test2};
-  --lessonvars-y-max: #{map2-get($_lesson_vars, sm, x-min)};
+  // --lessonvars-x-min: #{get-lesson-vars(sm, x-min)};
+  // --lessonvars-x-max: #{get-lesson-vars(test)};
+  // --lessonvars-y-min: #{$test2};
+  // --lessonvars-y-max: #{map2-get($_lesson_vars, sm, x-min)};
+
+  @each $var, $value in $_lesson_vars {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+      }
+    }
+
+    @elseif type-of($value) == "number" {
+      --lessonvars-#{$var}: #{$value};
+    }
+
+    @elseif type-of($size) == "string" {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
 }
 
 .action_word {

@@ -10,6 +10,7 @@ export default function getCSSVariables(
   if (elem) {
     const style = window.getComputedStyle(elem);
     if (style) {
+      console.log(style)
       varNames.forEach((varName) => {
         const fullName = prefix + varName;
         output[varName] = parseInt(style.getPropertyValue(fullName), 10);
