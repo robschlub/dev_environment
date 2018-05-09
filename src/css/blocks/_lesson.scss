@@ -74,9 +74,9 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
 }
 
 @media (min-aspect-ratio: 1/1) {
-  $content-height: calc(90vh - #{$title-height});
-  $content-width: calc($content-height * #{$aspect_ratio-landscape});
-  $container-height: 90vh;
+  $content-height: calc(70vh - #{$title-height});
+  $content-width: calc(#{$content-height} * #{$aspect_ratio-landscape});
+  $container-height: 70vh;
   $container-width: calc(#{$content-width} + #{$np_button-width} * 2 + #{$np_button-hspace} * 2);
 
   .lesson__container {
@@ -102,7 +102,7 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
   }
 }
 
-@media (min-aspect-ratio: 2/1) {
+@media (min-aspect-ratio: 3/2) {
   $content-width: calc($content-height * #{$aspect_ratio-landscape_wide});
   $container-width: calc(#{$content-width} + #{$np_button-width} * 2 + #{$np_button-hspace} * 2);
 

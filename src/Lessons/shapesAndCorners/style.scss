@@ -45,7 +45,7 @@ $_lesson_vars: (
   aspect-2-1: (
     x-min:   -4, x-max:   4,
     y-min:   -2, y-max:   2,
-    square: (center-x:  -2, center-y:   0),
+    square: (center-x:  -2, center-y: 1.5),
     tri:    (center-x:   0, center-y:   0),
     pent:   (center-x:   2, center-y:   0),
     circle: (center-x:   2, center-y:   0),
@@ -143,7 +143,7 @@ $_lesson_vars: (
   }
 }
 
-@media (min-aspect-ratio: 1.5/1) {
+@media (min-aspect-ratio: 3/2) {
   #lesson__container_name {
     @include lesson-breakpoint-vars(aspect-2-1);
   }

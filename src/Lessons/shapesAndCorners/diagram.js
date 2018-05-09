@@ -19,11 +19,11 @@ type typeShape = {
   _moreSharpCorners: DiagramElementPrimative;
 } & DiagramElementCollection ;
 
-type typeShapesDiagramCollection = {
-  _square: typeShape,
-  _triangle: typeShape,
-  _pent: typeShape,
-} & DiagramElementCollection;
+// type typeShapesDiagramCollection = {
+//   _square: typeShape,
+//   _triangle: typeShape,
+//   _pent: typeShape,
+// } & DiagramElementCollection;
 
 
 type typeElements = {
