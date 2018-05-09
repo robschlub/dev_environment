@@ -15,7 +15,7 @@ $_lesson_vars: (
   linewidth: 0.03,
   radius: 1.8,
   // <1/2
-  portrait-narrow: (
+  aspect-1-2: (
     x-min: -2, x-max: 2,
     y-min: -3, y-max: 3,
     square: (center-x:  -1, center-y:   1),
@@ -24,7 +24,7 @@ $_lesson_vars: (
     circle: (center-x:   0, center-y:   0),
   ),
   // 1/2 -> 1/1
-  portrait: (
+  aspect-2-3: (
     x-min: -2, x-max: 2,
     y-min: -2.5, y-max: 2.5,
     square: (center-x:  -1, center-y:  -1),
@@ -33,7 +33,7 @@ $_lesson_vars: (
     circle: (center-x:   0, center-y:  -0.5),
   ),
   // 1/1 -> 2/1
-  landscape: (
+  aspect-3-2: (
     x-min:   -3, x-max:   3,
     y-min:   -2, y-max:   2,
     square: (center-x:  -2, center-y:   0),
@@ -42,7 +42,7 @@ $_lesson_vars: (
     circle: (center-x:   0, center-y:   0),
   ),
   // >2/1
-  landscape-wide: (
+  aspect-2-1: (
     x-min:   -4, x-max:   4,
     y-min:   -2, y-max:   2,
     square: (center-x:  -2, center-y:   0),
@@ -127,25 +127,25 @@ $_lesson_vars: (
 
 @media (min-aspect-ratio: 1/100) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(portrait-narrow);
+    @include lesson-breakpoint-vars(aspect-1-2);
   }
 }
 
 @media (min-aspect-ratio: 1/2) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(portrait);
+    @include lesson-breakpoint-vars(aspect-2-3);
   }
 }
 
 @media (min-aspect-ratio: 1/1) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(landscape);
+    @include lesson-breakpoint-vars(aspect-3-2);
   }
 }
 
 @media (min-aspect-ratio: 1.5/1) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(landscape-wide);
+    @include lesson-breakpoint-vars(aspect-2-1);
   }
 }
 

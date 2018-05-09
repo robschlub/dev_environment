@@ -87,12 +87,24 @@ export default class LessonComponent extends React.Component
       />;
   }
 
-  addButtons() {
+  // addButtons() {
+  //   if (this.type === 'multiPage') {
+  //     return <div className = "row justify-content-between lesson__button-container">
+  //         <Button label="Previous" id="lesson__button-previous" className="-primary -multi-page-lesson"/>
+  //         <Button label="Next" id="lesson__button-next" className="-primary -multi-page-lesson"/>
+  //       </div>;
+  //   }
+  //   return <div />;
+  // }
+  addPrevButton() {
     if (this.type === 'multiPage') {
-      return <div className = "row justify-content-between lesson__button-container">
-          <Button label="Previous" id="lesson__button-previous" className="-primary -multi-page-lesson"/>
-          <Button label="Next" id="lesson__button-next" className="-primary -multi-page-lesson"/>
-        </div>;
+      return <Button label="<" id="lesson__button-previous" className=" -multi-page-lesson"/>;
+    }
+    return <div />;
+  }
+  addNextButton() {
+    if (this.type === 'multiPage') {
+      return <Button label=">" id="lesson__button-next" className=" -multi-page-lesson"/>;
     }
     return <div />;
   }
@@ -105,14 +117,13 @@ export default class LessonComponent extends React.Component
   }
   render() {
     return <div>
-      <div className="row">
-        <div className="col text-center">
-          {this.renderTitle(this.lesson.content.title)}
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <div id="lesson__container_name" className="lesson__container">
+      <div id="lesson__container_name" className="lesson__container">
+        <div className="row">
+          <div className="col text-center">
+            {this.renderTitle(this.lesson.content.title)}
+          </div>
+          <div className="col">
+            {this.addPrevButton()}
             <div id="multipage_diagram" className="diagram__container">
               <canvas className='diagram__gl'>
               </canvas>
@@ -122,10 +133,10 @@ export default class LessonComponent extends React.Component
               <canvas className='diagram__text'>
               </canvas>
             </div>
+            {this.addNextButton()}
           </div>
         </div>
       </div>
-      {this.addButtons()}
     </div>;
   }
 }
