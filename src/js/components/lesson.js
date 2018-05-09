@@ -118,11 +118,10 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div id="lesson__container_name" className="lesson__container">
-        <div className="row">
-          <div className="col text-center">
+        
             {this.renderTitle(this.lesson.content.title)}
-          </div>
-          <div className="col">
+        
+        
             {this.addPrevButton()}
             <div id="multipage_diagram" className="diagram__container">
               <canvas className='diagram__gl'>
@@ -134,8 +133,8 @@ export default class LessonComponent extends React.Component
               </canvas>
             </div>
             {this.addNextButton()}
-          </div>
-        </div>
+        
+        
       </div>
     </div>;
   }
