@@ -38,7 +38,7 @@
 // }
 
 $diagram-portrait-narrow-aspect-ratio: 0.667;
-$diagram-portrait-aspect-ratio: 1;
+$diagram-portrait-aspect-ratio: 0.8;
 $diagram-landscape-aspect-ratio: 1.5;
 $diagram-landscape-wide-aspect-ratio: 2;
 $test123: 1/100;
@@ -66,17 +66,17 @@ $test234: 1/1;
   .lesson__container {
     margin-left: auto;
     margin-right: auto;
-    height: 80vh;
-    width: calc(80vh * #{$diagram-landscape-aspect-ratio});
+    height: 70vh;
+    width: calc(70vh * #{$diagram-landscape-aspect-ratio});
   }
 }
 
-@media (min-aspect-ratio: 2/1) {
+@media (min-aspect-ratio: 1.5/1) {
   .lesson__container {
     margin-left: auto;
     margin-right: auto;
-    height: 80vh;
-    width: calc(80vh * #{$diagram-landscape-wide-aspect-ratio});
+    height: 70vh;
+    width: calc(70vh * #{$diagram-landscape-wide-aspect-ratio});
   }
 }
 
