@@ -13,65 +13,41 @@ $color-background: $color_diagram;
 $_lesson_vars: (
   test: 5,
   lineWidth: 0.01,
-  xs-portrait: (
-    x-min:       -2,
-    x-max:        2,
-    y-min:       -2,
-    y-max:        2,
-    ratio:        1,
-    square: (
-      center-x:  -1,
-      center-y:   0,
-    ),
-    tri: (
-      center-x:  -1,
-      center-y:   0,
-    ),
-    pent: (
-      center-x:  -1,
-      center-y:   0,
-    ),
+  // <1/2
+  portrait-narrow: (
+    x-min: -2, x-max: 2,
+    y-min: -3, y-max: 3,
+    ratio:  1,
+    square: (center-x:  -1, center-y:   1),
+    tri:    (center-x:   0, center-y:   0),
+    pent:   (center-x:   1, center-y:  -1),
   ),
-  xs-landscape: (
-    x-min:       -3,
-    x-max:        3,
-    y-min:       -1,
-    y-max:        1,
-    ratio:        3,
-    square: (
-      center-x:  -1,
-      center-y:   0,
-    ),
-    tri: (
-      center-x:  -1,
-      center-y:   0,
-    ),
-    pent: (
-      center-x:  -1,
-      center-y:   0,
-    ),
+  // 1/2 -> 1/1
+  portrait: (
+    x-min: -2, x-max: 2,
+    y-min: -2, y-max: 2,
+    ratio:  1,
+    square: (center-x:  -1, center-y:  -1),
+    tri:    (center-x:   0, center-y:   0),
+    pent:   (center-x:   1, center-y:   1),
   ),
-  md: (
-    x-min:      -3,
-    x-max:       3,
-    y-min:      -2.1,
-    y-max:       2.1,
-    ratio:       2,
-    square: (
-      center-x:  -3,
-      center-y:   1,
-    ),
+  // 1/1 -> 2/1
+  landscape: (
+    x-min:   -3, x-max:   3,
+    y-min:   -2, y-max:   2,
+    ratio:    1,
+    square: (center-x:  -2, center-y:   0),
+    tri:    (center-x:   0, center-y:   0),
+    pent:   (center-x:   2, center-y:   0),
   ),
-  lg: (
-    x-min:      -3,
-    x-max:       3,
-    y-min:      -2.1,
-    y-max:       2.1,
-    ratio:       2,
-    square: (
-      center-x:  -3,
-      center-y:   1,
-    ),
+  // >2/1
+  landscape-wide: (
+    x-min:   -4, x-max:   4,
+    y-min:   -2, y-max:   2,
+    ratio:    1,
+    square: (center-x:  -3, center-y:   0),
+    tri:    (center-x:   0, center-y:   0),
+    pent:   (center-x:   3, center-y:   0),
   ),
 );
 
@@ -122,17 +98,25 @@ $_lesson_vars: (
   }
 }
 
-@media screen and (min-width: 0) and (orientation: portrait) {
-  #lesson__container_name {
-    @include lesson-breakpoint-vars(xs-portrait);
-  }
-}
+// @media screen and (min-width: 0) and (orientation: portrait) {
+//   #lesson__container_name {
+//     @include lesson-breakpoint-vars(xs-portrait);
+//   }
 
-@media screen and (min-width: 0) and (orientation: landscape) {
-  #lesson__container_name {
-    @include lesson-breakpoint-vars(xs-landscape);
-  }
-}
+//   #id_shapes {
+//     color: red;
+//   }
+// }
+
+// @media screen and (min-width: 0) and (orientation: landscape) {
+//   #lesson__container_name {
+//     @include lesson-breakpoint-vars(xs-landscape);
+//   }
+
+//   #id_shapes {
+//     color: blue;
+//   }
+// }
 
 // @media screen and (min-width: $small-tablet) and (orientation: landscape) {
 //   #lesson__container_name {
@@ -140,17 +124,61 @@ $_lesson_vars: (
 //   }
 // }
 
-@media screen and (min-width: $mobile) and (orientation: landscape) {
+@media (min-aspect-ratio: 1/100) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(md);
+    @include lesson-breakpoint-vars(portrait-narrow);
   }
 }
 
-@media screen and (min-width: $desktop) and (orientation: landscape) {
+@media (min-aspect-ratio: 1/2) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(lg);
+    @include lesson-breakpoint-vars(portrait);
   }
 }
+
+@media (min-aspect-ratio: 1/1) {
+  #lesson__container_name {
+    @include lesson-breakpoint-vars(landscape);
+  }
+}
+
+@media (min-aspect-ratio: 2/1) {
+  #lesson__container_name {
+    @include lesson-breakpoint-vars(landscape-wide);
+  }
+}
+
+// @media (min-width: 0) {
+//   #id_shapes {
+//     color: cyan;
+//   }
+// }
+
+// @media (min-aspect-ratio: 1/10) {
+//   #lesson__container_name {
+//     @include lesson-breakpoint-vars(md);
+//   }
+
+//   #id_shapes {
+//     color: green;
+//   }
+// }
+
+// @media (min-aspect-ratio: 2/1) {
+//   #id_shapes {
+//     color: purple;
+//   }
+// }
+
+// @media (min-width: $desktop) {
+//   #lesson__container_name {
+//     @include lesson-breakpoint-vars(lg);
+//   }
+
+//   #id_shapes {
+//     color: yellow;
+//   }
+// }
 // @include media-breakpoint-up(xs) {
 //   $size: xs;
 
@@ -172,9 +200,9 @@ $_lesson_vars: (
   cursor: pointer;
 }
 
-#id_shapes {
-  color: $color-lines;
-}
+// #id_shapes {
+//   color: $color-lines;
+// }
 
 #id_corners {
   color: $color-corners;

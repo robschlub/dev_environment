@@ -113,7 +113,7 @@ function makePent(shapes: Object, location: Point) {
 }
 
 
-// type typeDiagramCollection = {
+// type typeShapesDiagramCollection = {
 //   _square: typeShape,
 //   _triangle: typeShape,
 //   _pent: typeShape,
@@ -125,18 +125,34 @@ class ShapesCollection extends DiagramElementCollection {
   _pent: typeShape;
   diagram: Diagram;
 
-  constructor(diagram: Diagram, transform: Transform = new Transform()) {
+  constructor(diagram: Diagram, locations: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     const { shapes } = diagram;
-    const square = makeSquare(shapes, new Point(0.65 - 2, 0));
+    console.log(locations)
+    const square = makeSquare(shapes, locations.square.center);
     this.add('square', square);
 
-    const triangle = makeTriangle(shapes, new Point(2 - 2, -0.1));
+    const triangle = makeTriangle(shapes, locations.tri.center);
     this.add('triangle', triangle);
 
-    const pent = makePent(shapes, new Point(3.2 - 2, 0));
+    const pent = makePent(shapes, locations.pent.center);
     this.add('pent', pent);
+  }
+
+  resize(locations: Object) {
+    this._square.transform.updateTranslation(
+      locations.square.center.x,
+      locations.square.center.y,
+    );
+    this._triangle.transform.updateTranslation(
+      locations.tri.center.x,
+      locations.tri.center.y,
+    );
+    this._pent.transform.updateTranslation(
+      locations.pent.center.x,
+      locations.pent.center.y,
+    );
   }
 
   toggleCorners(toggle: boolean = true, show: boolean = true) {

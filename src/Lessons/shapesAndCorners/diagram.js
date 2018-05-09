@@ -20,22 +20,59 @@ type typeCircleDiagramCollection = {
   _cornerRad: DiagramElementPrimative;
 } & DiagramElementCollection ;
 
+type typeShape = {
+  _lines: DiagramElementPrimative;
+  _corners: DiagramElementPrimative;
+  _lessSharpCorners: DiagramElementPrimative;
+  _moreSharpCorners: DiagramElementPrimative;
+} & DiagramElementCollection ;
+
+type typeShapesDiagramCollection = {
+  _square: typeShape,
+  _triangle: typeShape,
+  _pent: typeShape,
+} & DiagramElementCollection;
+
+
 type typeElements = {
   _circle: typeCircleDiagramCollection;
-  _shapes: DiagramElementCollection;
+  _shapes: typeShapesDiagramCollection;
 } & DiagramElementCollection ;
 
 function getLessonVars() {
-  return getCssVariables(
+  const v = getCssVariables(
     'lesson__container_name',
     [
       'x-min',
       'x-max',
       'y-min',
       'y-max',
+      'square-center-x',
+      'square-center-y',
+      'tri-center-x',
+      'tri-center-y',
+      'pent-center-x',
+      'pent-center-y',
     ],
     '--lessonvars-',
   );
+  return {
+    limits: new Rect(
+      v['x-min'],
+      v['y-min'],
+      v['x-max'] - v['x-min'],
+      v['y-max'] - v['y-min'],
+    ),
+    square: {
+      center: new Point(v['square-center-x'], v['square-center-y']),
+    },
+    tri: {
+      center: new Point(v['tri-center-x'], v['tri-center-y']),
+    },
+    pent: {
+      center: new Point(v['pent-center-x'], v['pent-center-y']),
+    },
+  };
 }
 
 // $FlowFixMe
@@ -43,14 +80,14 @@ class LessonDiagram extends Diagram {
   elements: typeElements;
 
   constructor(id: string) {
-    const limits = getLessonVars();
-    console.log(limits);
+    const { limits } = getLessonVars();
+    // console.log(limits);
     super(
       `${id}`,
-      limits['x-min'],
-      limits['y-min'],
-      limits['x-max'] - limits['x-min'],
-      limits['y-max'] - limits['y-min'],
+      limits.left,
+      limits.bottom,
+      limits.width,
+      limits.height,
       backgroundColor,
     );
   }
@@ -58,7 +95,8 @@ class LessonDiagram extends Diagram {
     const { shapes } = this;
     this.elements = shapes.collection();
 
-    const shapesCollection = new ShapesCollection(this);
+    const layout = getLessonVars();
+    const shapesCollection = new ShapesCollection(this, layout);
     this.add('shapes', shapesCollection);
 
     const circleCollection = new CircleCollection(this);
@@ -69,22 +107,11 @@ class LessonDiagram extends Diagram {
   }
 
   resize() {
-    const limits = getLessonVars();
-    const newLimits = new Rect(
-      limits['x-min'],
-      limits['y-min'],
-      limits['x-max'] - limits['x-min'],
-      limits['y-max'] - limits['y-min'],
-    );
-    // this.elements.updateLimits(new Rect(
-    //   limits['x-min'],
-    //   limits['y-min'],
-    //   limits['x-max'] - limits['x-min'],
-    //   limits['y-max'] - limits['y-min'],
-    // ));
-    // console.log(limits)
-    this.limits = newLimits;
-    this.elements.updateLimits(newLimits);
+    const layout = getLessonVars();
+    const { limits } = layout;
+    this.limits = limits;
+    this.elements.updateLimits(limits);
+    this.elements._shapes.resize(layout);
     super.resize();
   }
 

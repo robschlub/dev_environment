@@ -37,18 +37,63 @@
 //   // height: 100%;
 // }
 
+$diagram-portrait-narrow-aspect-ratio: 0.667;
+$diagram-portrait-aspect-ratio: 1;
+$diagram-landscape-aspect-ratio: 1.5;
+$diagram-landscape-wide-aspect-ratio: 2;
+
+@media (min-aspect-ratio: 1/100) {
+  .lesson__container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90vw;
+    height: calc(90vw / #{$diagram-portrait-narrow-aspect-ratio});
+  }
+}
+
+@media (min-aspect-ratio: 1/2) {
+  .lesson__container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90vw;
+    height: calc(90vw / #{$diagram-portrait-aspect-ratio});
+    // height: 90vw;
+  }
+}
+
+@media (min-aspect-ratio: 1/1) {
+  .lesson__container {
+    margin-left: auto;
+    margin-right: auto;
+    height: 80vh;
+    width: calc(80vh * #{$diagram-landscape-aspect-ratio});
+  }
+}
+
+@media (min-aspect-ratio: 2/1) {
+  .lesson__container {
+    margin-left: auto;
+    margin-right: auto;
+    height: 80vh;
+    width: calc(80vh * #{$diagram-landscape-wide-aspect-ratio});
+  }
+}
+
+// @media (min-width: $desktop) {
+//   .lesson__container {}
+// }
 
 // @include media-breakpoint-up(xs) {
 @media screen and (min-width: 0) and (orientation: portrait) {
-  .lesson__container {
-    margin-top: 80px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90vmin;
-    min-height: 90vmin;
-    background-color: red;
-    color: red;
-  }
+  // .lesson__container {
+  //   margin-top: 80px;
+  //   margin-left: auto;
+  //   margin-right: auto;
+  //   width: 90vmin;
+  //   min-height: 90vmin;
+  //   background-color: red;
+  //   color: red;
+  // }
 
   .lesson__button-container {
     margin-top: 0;
@@ -62,15 +107,15 @@
 }
 
 @media screen and (min-width: 0) and (orientation: landscape) {
-  .lesson__container {
-    margin-top: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: 150vmin;
-    min-height: 50vmin;
-    background-color: blue;
-    color: blue;
-  }
+  // .lesson__container {
+  //   margin-top: 0;
+  //   margin-left: auto;
+  //   margin-right: auto;
+  //   width: 150vmin;
+  //   min-height: 50vmin;
+  //   background-color: blue;
+  //   color: blue;
+  // }
 
   .lesson__button-container {
     margin-top: 0;
@@ -83,12 +128,12 @@
   }
 }
 
-@include media-breakpoint-up(sm) {
-  .lesson__container {
-    // width: 400px;
-    // height: 200px;
-  }
-}
+// @include media-breakpoint-up(sm) {
+//   .lesson__container {
+//     // width: 400px;
+//     // height: 200px;
+//   }
+// }
 
 @include media-breakpoint-up(md) {
   .lesson__container {
@@ -108,12 +153,12 @@
 }
 
 @include media-breakpoint-up(md) {
-  .lesson__container {
-    width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    min-height: 550px;
-  }
+  // .lesson__container {
+  //   width: 800px;
+  //   margin-left: auto;
+  //   margin-right: auto;
+  //   min-height: 550px;
+  // }
 
   // #multipage_lesson {
   //   position: absolute;
