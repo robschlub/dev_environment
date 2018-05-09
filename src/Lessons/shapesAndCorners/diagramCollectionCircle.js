@@ -14,12 +14,12 @@ const anchorColor = colors.anchor;
 const radiusColor = colors.radius;
 const cornerColor = colors.corners;
 const referenceColor = colors.reference;
-const anchorRadius = 0.03;
+// const anchorRadius = 0.03;
 const anchorPoints = 50;
-const circleRadius = 0.9;
-const lineWidth = 0.02;
-const cornerWidth = 0.04;
-const cornerLength = 0.2;
+// const circleRadius = 0.9;
+// const lineWidth = 0.02;
+// const cornerWidth = 0.04;
+// const cornerLength = 0.2;
 
 function makeLine(
   shapes: Object,
@@ -37,10 +37,13 @@ function makeLine(
   return line;
 }
 
-function makeRadius(shapes: Object, location: Point) {
+function makeRadius(shapes: Object, layout: Object) {
   const radius = makeLine(
-    shapes, location, circleRadius, lineWidth,
-    radiusColor, new Transform().rotate(0).translate(location.x, location.y),
+    shapes, new Point(0, 0), layout.radius, layout.linewidth,
+    radiusColor, new Transform().rotate(0).translate(
+      0,
+      0,
+    ),
   );
   radius.isTouchable = true;
   radius.isMovable = true;
@@ -52,23 +55,23 @@ function makeRadius(shapes: Object, location: Point) {
   return radius;
 }
 
-function makeAnchor(shapes: Object, location: Point) {
+function makeAnchor(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
-    anchorPoints, anchorRadius, 0,
-    anchorPoints, anchorColor, location,
+    anchorPoints, layout.linewidth * 3, 0,
+    anchorPoints, anchorColor, new Point(0, 0),
   );
 }
 
-function makeReference(shapes: Object, location: Point) {
+function makeReference(shapes: Object, layout: Object) {
   return makeLine(
-    shapes, new Point(0, 0), circleRadius, lineWidth,
-    referenceColor, location,
+    shapes, new Point(0, 0), layout.radius, layout.linewidth,
+    referenceColor, new Point(0, 0),
   );
 }
 
-function makeCorner(shapes: Object, pointOrTransform: Point | Transform) {
+function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout: Object) {
   return makeLine(
-    shapes, new Point(0, 0), cornerLength, cornerWidth,
+    shapes, new Point(0, 0), layout.radius * 0.1, layout.linewidth * 3,
     cornerColor, pointOrTransform,
   );
 }
@@ -82,7 +85,7 @@ class CircleCollection extends DiagramElementCollection {
   _cornerRef: DiagramElementPrimative;
   _cornerRad: DiagramElementPrimative;
 
-  constructor(diagram: Diagram, transform: Transform = new Transform()) {
+  constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
 
@@ -90,33 +93,35 @@ class CircleCollection extends DiagramElementCollection {
 
     const origin = new Point(0, 0);
 
-    const reference = makeReference(shapes, origin);
+    const reference = makeReference(shapes, layout);
     this.add('reference', reference);
 
-    const radius = makeRadius(shapes, origin);
+    const radius = makeRadius(shapes, layout);
     radius.setTransformCallback = this.updateRotation.bind(this);
     this.add('radius', radius);
 
-    const cornerRef = makeCorner(shapes, origin);
+    const cornerRef = makeCorner(shapes, origin, layout);
     this.add('cornerRef', cornerRef);
 
-    const t = new Transform().rotate(0).translate(origin.x, origin.y);
-    const cornerRad = makeCorner(shapes, t);
+    const t = new Transform().rotate(0).translate(
+      0,
+      0,
+    );
+    const cornerRad = makeCorner(shapes, t, layout);
     this.add('cornerRad', cornerRad);
 
-    const anchor = makeAnchor(shapes, origin);
+    const anchor = makeAnchor(shapes, layout);
     this.add('anchor', anchor);
 
     this.isTouchable = true;
     this.isMovable = true;
-    
-    // const elem = document.getElementById('lesson__container_name');
-    // console.log(elem);
-    // const style = window.getComputedStyle(elem);
-    // console.log(style.getPropertyValue('--lessonvar-sm-x-min'))
-    // console.log(style.getPropertyValue('--lessonvar-md-x-min'))
-    // console.log(style.getPropertyValue('--lessonvar-test'))
-    // console.log(style)
+  }
+
+  resize(locations: Object) {
+    this.transform.updateTranslation(
+      locations.circle.center.x,
+      locations.circle.center.y,
+    );
   }
 
   updateRotation() {

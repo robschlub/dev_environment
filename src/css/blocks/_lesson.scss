@@ -41,7 +41,8 @@ $diagram-portrait-narrow-aspect-ratio: 0.667;
 $diagram-portrait-aspect-ratio: 1;
 $diagram-landscape-aspect-ratio: 1.5;
 $diagram-landscape-wide-aspect-ratio: 2;
-
+$test123: 1/100;
+$test234: 1/1;
 @media (min-aspect-ratio: 1/100) {
   .lesson__container {
     margin-left: auto;

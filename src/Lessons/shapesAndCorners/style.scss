@@ -12,7 +12,8 @@ $color-background: $color_diagram;
 
 $_lesson_vars: (
   test: 5,
-  lineWidth: 0.01,
+  linewidth: 0.03,
+  radius: 1.8,
   // <1/2
   portrait-narrow: (
     x-min: -2, x-max: 2,
@@ -21,6 +22,7 @@ $_lesson_vars: (
     square: (center-x:  -1, center-y:   1),
     tri:    (center-x:   0, center-y:   0),
     pent:   (center-x:   1, center-y:  -1),
+    circle: (center-x:   0, center-y:   0),
   ),
   // 1/2 -> 1/1
   portrait: (
@@ -30,6 +32,7 @@ $_lesson_vars: (
     square: (center-x:  -1, center-y:  -1),
     tri:    (center-x:   0, center-y:   0),
     pent:   (center-x:   1, center-y:   1),
+    circle: (center-x:   0, center-y:   0),
   ),
   // 1/1 -> 2/1
   landscape: (
@@ -39,6 +42,7 @@ $_lesson_vars: (
     square: (center-x:  -2, center-y:   0),
     tri:    (center-x:   0, center-y:   0),
     pent:   (center-x:   2, center-y:   0),
+    circle: (center-x:   0, center-y:   0),
   ),
   // >2/1
   landscape-wide: (
@@ -48,6 +52,7 @@ $_lesson_vars: (
     square: (center-x:  -3, center-y:   0),
     tri:    (center-x:   0, center-y:   0),
     pent:   (center-x:   3, center-y:   0),
+    circle: (center-x:   2, center-y:   0),
   ),
 );
 
