@@ -1,4 +1,5 @@
-$title-height: 30px;
+$title-height: 50px;
+$title-font-size: 30px;
 $aspect_ratio-portrait_narrow: 0.667;
 $aspect_ratio-portrait: 0.8;
 $aspect_ratio-landscape: 1.5;
@@ -15,7 +16,7 @@ $container-width: $content-width;
 $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-height} + #{$np_button-vspace});
 
 .lesson__container {
-  margin-top: 50px;
+  margin-top: 70px;
   position: relative;
   margin-left: auto;
   margin-right: auto;
@@ -34,10 +35,10 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
 }
 
 .lesson__title {
-  font-size: 30px;
+  font-size: $title-font-size;
   color: $color_text;
-  margin-bottom: 20px;
   height: $title-height;      //Check this is working
+  text-align: center;
 }
 
 .btn-multi-page-lesson {
@@ -48,15 +49,16 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
   color: $color_primary;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 3px;
-  top: calc(100% - #{$np_button-height})
+  top: calc(100% - #{$np_button-height});
 }
 
-#lesson__button_previous {
+#lesson__button-previous {
   left: 0;
 }
 
-#lesson__button_right {
+#lesson__button-next {
   right: 0;
+  // left: calc(#{$container-width} - #{$np_button-width});
 }
 
 // @media (min-aspect-ratio: 1/100) {
