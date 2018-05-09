@@ -58,44 +58,26 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
 
 #lesson__button-next {
   right: 0;
-  // left: calc(#{$container-width} - #{$np_button-width});
 }
 
-// @media (min-aspect-ratio: 1/100) {
-//   .lesson__container {
-//     margin-left: auto;
-//     margin-right: auto;
-//     width: 90vw;
-//     height: calc(90vw / #{$diagram-portrait-narrow-aspect-ratio});
-//   }
+@media (min-aspect-ratio: 1/2) {
+  $content-height: calc(90vw / #{$aspect_ratio-portrait});
+  $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-height} + #{$np_button-vspace});
 
-//   #multipage_diagram {
-//     width: 90vw;
-//     height: calc(90vw / #{$diagram-portrait-narrow-aspect-ratio});
-//   }
+  .lesson__container {
+    height: $container-height;
+  }
 
-//   .btn-multi-page-lesson {
-//     position: absolute;
-//     top: 100%;
-//   }
-// }
-
-// @media (min-aspect-ratio: 1/2) {
-//   .lesson__container {
-//     margin-left: auto;
-//     margin-right: auto;
-//     width: 90vw;
-//     height: calc(90vw / #{$diagram-portrait-aspect-ratio});
-//     // height: 90vw;
-//   }
-// }
+  #multipage_diagram {
+    height: $content-height;
+  }
+}
 
 @media (min-aspect-ratio: 1/1) {
-  $content-width: 90vh;
-  $content-height: calc(90vh * #{$aspect_ratio-portrait_narrow});
+  $content-height: calc(90vh - #{$title-height});
+  $content-width: calc($content-height * #{$aspect_ratio-landscape});
+  $container-height: 90vh;
   $container-width: calc(#{$content-width} + #{$np_button-width} * 2 + #{$np_button-hspace} * 2);
-
-  $container-height: calc(#{$content-height} + #{$title-height});
 
   .lesson__container {
     width: $container-width;
@@ -118,14 +100,19 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
     height: $content-height;
     width: $np_button-width;
   }
+}
 
-  // #lesson__button_previous {
-  //   padding-right: $np_button-hspace;
-  // }
+@media (min-aspect-ratio: 2/1) {
+  $content-width: calc($content-height * #{$aspect_ratio-landscape_wide});
+  $container-width: calc(#{$content-width} + #{$np_button-width} * 2 + #{$np_button-hspace} * 2);
 
-  // #lesson__button_next {
-  //   margin-left: $np_button-hspace;
-  // }
+  .lesson__container {
+    width: $container-width;
+  }
+
+  #multipage_diagram {
+    width: $content-width;
+  }
 }
 
 // @media (min-aspect-ratio: 1.5/1) {
