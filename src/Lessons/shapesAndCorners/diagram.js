@@ -5,7 +5,7 @@ import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
-import { Point, minAngleDiff } from '../../js/diagram/tools/g2';
+import { Point, minAngleDiff, Rect } from '../../js/diagram/tools/g2';
 import getCssVariables from '../../js/tools/getCssVariables';
 
 const colors = getScssColors(styles);
@@ -66,6 +66,26 @@ class LessonDiagram extends Diagram {
 
     this.elements.isTouchable = true;
     this.elements.isMovable = true;
+  }
+
+  resize() {
+    const limits = getLessonVars();
+    const newLimits = new Rect(
+      limits['x-min'],
+      limits['y-min'],
+      limits['x-max'] - limits['x-min'],
+      limits['y-max'] - limits['y-min'],
+    );
+    // this.elements.updateLimits(new Rect(
+    //   limits['x-min'],
+    //   limits['y-min'],
+    //   limits['x-max'] - limits['x-min'],
+    //   limits['y-max'] - limits['y-min'],
+    // ));
+    // console.log(limits)
+    this.limits = newLimits;
+    this.elements.updateLimits(newLimits);
+    super.resize();
   }
 
   touchMoveHandler(

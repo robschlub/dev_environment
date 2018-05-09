@@ -52,10 +52,21 @@ $_lesson_vars: (
     ),
   ),
   md: (
-    x-min:      -6,
-    x-max:       6,
-    y-min:      -2,
-    y-max:       2,
+    x-min:      -3,
+    x-max:       3,
+    y-min:      -2.1,
+    y-max:       2.1,
+    ratio:       2,
+    square: (
+      center-x:  -3,
+      center-y:   1,
+    ),
+  ),
+  lg: (
+    x-min:      -3,
+    x-max:       3,
+    y-min:      -2.1,
+    y-max:       2.1,
     ratio:       2,
     square: (
       center-x:  -3,
@@ -122,9 +133,22 @@ $_lesson_vars: (
     @include lesson-breakpoint-vars(xs-landscape);
   }
 }
-@media screen and (min-width: $small-tablet) and (orientation: landscape) {
+
+// @media screen and (min-width: $small-tablet) and (orientation: landscape) {
+//   #lesson__container_name {
+//     @include lesson-breakpoint-vars(xs-landscape);
+//   }
+// }
+
+@media screen and (min-width: $mobile) and (orientation: landscape) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(xs-landscape);
+    @include lesson-breakpoint-vars(md);
+  }
+}
+
+@media screen and (min-width: $desktop) and (orientation: landscape) {
+  #lesson__container_name {
+    @include lesson-breakpoint-vars(lg);
   }
 }
 // @include media-breakpoint-up(xs) {
