@@ -37,12 +37,39 @@
 //   // height: 100%;
 // }
 
-@include media-breakpoint-up(xs) {
+
+// @include media-breakpoint-up(xs) {
+@media screen and (min-width: 0) and (orientation: portrait) {
   .lesson__container {
+    margin-top: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90vmin;
+    min-height: 90vmin;
+    background-color: red;
+    color: red;
+  }
+
+  .lesson__button-container {
     margin-top: 0;
     margin-left: 5%;
     width: 90%;
-    min-height: 70vh;
+  }
+
+  .lesson__title {
+    margin-top: 20px;
+  }
+}
+
+@media screen and (min-width: 0) and (orientation: landscape) {
+  .lesson__container {
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 150vmin;
+    min-height: 50vmin;
+    background-color: blue;
+    color: blue;
   }
 
   .lesson__button-container {
@@ -80,7 +107,7 @@
   }
 }
 
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(md) {
   .lesson__container {
     width: 800px;
     margin-left: auto;

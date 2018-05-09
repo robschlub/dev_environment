@@ -2,7 +2,6 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import * as tools from '../../js/diagram/tools/mathtools';
-import getCssVariables from '../../js/tools/getCssVariables';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
@@ -110,19 +109,7 @@ class CircleCollection extends DiagramElementCollection {
 
     this.isTouchable = true;
     this.isMovable = true;
-
-    const lessonVars = getCssVariables(
-      'lesson__container_name',
-      [
-        'x-min',
-        'x-max',
-        'y-min',
-        'y-max',
-        'md-y-max',
-      ],
-      '--lessonvars-',
-    );
-    console.log(lessonVars);
+    
     // const elem = document.getElementById('lesson__container_name');
     // console.log(elem);
     // const style = window.getComputedStyle(elem);

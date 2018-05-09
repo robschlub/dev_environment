@@ -6,6 +6,7 @@ import CircleCollection from './diagramCollectionCircle';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 import { Point, minAngleDiff } from '../../js/diagram/tools/g2';
+import getCssVariables from '../../js/tools/getCssVariables';
 
 const colors = getScssColors(styles);
 
@@ -24,12 +25,34 @@ type typeElements = {
   _shapes: DiagramElementCollection;
 } & DiagramElementCollection ;
 
+function getLessonVars() {
+  return getCssVariables(
+    'lesson__container_name',
+    [
+      'x-min',
+      'x-max',
+      'y-min',
+      'y-max',
+    ],
+    '--lessonvars-',
+  );
+}
+
 // $FlowFixMe
 class LessonDiagram extends Diagram {
   elements: typeElements;
 
   constructor(id: string) {
-    super(`${id}`, -2, -1.5, 4, 3, backgroundColor);
+    const limits = getLessonVars();
+    console.log(limits);
+    super(
+      `${id}`,
+      limits['x-min'],
+      limits['y-min'],
+      limits['x-max'] - limits['x-min'],
+      limits['y-max'] - limits['y-min'],
+      backgroundColor,
+    );
   }
   createDiagramElements() {
     const { shapes } = this;

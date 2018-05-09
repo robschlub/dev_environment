@@ -12,16 +12,43 @@ $color-background: $color_diagram;
 
 $_lesson_vars: (
   test: 5,
-  xs: (
-    x-min:       -1,
+  lineWidth: 0.01,
+  xs-portrait: (
+    x-min:       -2,
     x-max:        2,
-    y-min:       -1,
+    y-min:       -2,
     y-max:        2,
     ratio:        1,
     square: (
       center-x:  -1,
       center-y:   0,
-      side:     0.5,
+    ),
+    tri: (
+      center-x:  -1,
+      center-y:   0,
+    ),
+    pent: (
+      center-x:  -1,
+      center-y:   0,
+    ),
+  ),
+  xs-landscape: (
+    x-min:       -3,
+    x-max:        3,
+    y-min:       -1,
+    y-max:        1,
+    ratio:        3,
+    square: (
+      center-x:  -1,
+      center-y:   0,
+    ),
+    tri: (
+      center-x:  -1,
+      center-y:   0,
+    ),
+    pent: (
+      center-x:  -1,
+      center-y:   0,
     ),
   ),
   md: (
@@ -33,7 +60,6 @@ $_lesson_vars: (
     square: (
       center-x:  -3,
       center-y:   1,
-      side:       2,
     ),
   ),
 );
@@ -85,21 +111,37 @@ $_lesson_vars: (
   }
 }
 
-@include media-breakpoint-up(xs) {
-  $size: xs;
-
+@media screen and (min-width: 0) and (orientation: portrait) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars($size);
+    @include lesson-breakpoint-vars(xs-portrait);
   }
 }
 
-@include media-breakpoint-up(md) {
-  $size: md;
-
+@media screen and (min-width: 0) and (orientation: landscape) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars($size);
+    @include lesson-breakpoint-vars(xs-landscape);
   }
 }
+@media screen and (min-width: $small-tablet) and (orientation: landscape) {
+  #lesson__container_name {
+    @include lesson-breakpoint-vars(xs-landscape);
+  }
+}
+// @include media-breakpoint-up(xs) {
+//   $size: xs;
+
+//   #lesson__container_name {
+//     @include lesson-breakpoint-vars($size);
+//   }
+// }
+
+// @include media-breakpoint-up(md) {
+//   $size: md;
+
+//   #lesson__container_name {
+//     @include lesson-breakpoint-vars($size);
+//   }
+// }
 
 .action_word {
   font-weight: bold;

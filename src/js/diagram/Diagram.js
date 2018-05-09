@@ -160,7 +160,7 @@ class Diagram {
     } else {
       this.limits = new Rect(limitsOrxMin, yMin, width, height);
     }
-
+    console.log(this.limits)
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
