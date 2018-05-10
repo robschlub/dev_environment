@@ -118,7 +118,9 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div id="lesson__container_name" className="lesson__container">
-            {this.renderTitle(this.lesson.content.title)}
+            <div className='lesson__title'>
+              {this.lesson.content.title}
+            </div>
             {this.addPrevButton()}
             <div id="multipage_diagram" className="diagram__container">
               <canvas className='diagram__gl'>
