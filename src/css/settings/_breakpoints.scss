@@ -5,6 +5,12 @@ $tablet:          768px;
 $desktop:         992px;
 $large-desktop:   1200px;
 
+$xs: $mobile;
+$sm: $small-tablet;
+$md: $tablet;
+$lg: $desktop;
+$xl: $large-desktop;
+
 $portrait-narrow: 1/100;
 $portrait:        1/2;
 $landscape:       1/1;

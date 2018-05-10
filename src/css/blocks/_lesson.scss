@@ -1,34 +1,102 @@
 $title-height: 50px;
 $title-font-size: 30px;
-$aspect_ratio-portrait_narrow: 0.667;
-$aspect_ratio-portrait: 0.8;
+$aspect_ratio-portrait_narrow: 0.555;
+$aspect_ratio-portrait: 0.75;
 $aspect_ratio-landscape: 1.5;
 $aspect_ratio-landscape_wide: 2;
-$np_button-width: 40px;
+// $np_button-width: 40px;
+$np_button-width: calc(#{$title-height} * 0.8);
 $np_button-height: 40px;
 $np_button-vspace: 5px;
-$np_button-hspace: 30px;
+$np_button-hspace: calc(#{$title-height} * 0.2);
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
+$side-margin: 10px;
 
-//Assume 1:2 portrait to start width
-$content-width: 90vw;
-$content-height: calc(90vw / #{$aspect_ratio-portrait_narrow});
-$container-width: $content-width;
-$container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-height} + #{$np_button-vspace});
+@media (min-aspect-ratio: 1/100) {
+  :root {
+    --lesson__ratio: #{$aspect_ratio-portrait-narrow};
+  }
+}
+
+@media (min-aspect-ratio: 1/2) {
+  :root {
+    --lesson__ratio: #{$aspect_ratio-portrait};
+  }
+}
+
+@media (min-aspect-ratio: 1/1) {
+  :root {
+    --lesson__ratio: #{$aspect_ratio-landscape};
+  }
+}
+
+@media (min-aspect-ratio: 3/2) {
+  :root {
+    --lesson__ratio: #{$aspect_ratio-landscape_wide};
+  }
+}
+
+@media (min-width: #{$xs}) {
+  :root {
+    --lesson__container-width: calc(340px - #{$side-margin} * 2);
+  }
+}
+
+@media (min-width: #{$sm}) {
+  :root {
+    --lesson__container-width: calc(#{$sm} - #{$side-margin} * 2);
+  }
+}
+
+@media (min-width: #{$md}) {
+  :root {
+    --lesson__container-width: calc(#{$md} - #{$side-margin} * 2);
+  }
+}
+
+@media (min-width: #{$lg}) {
+  :root {
+    --lesson__container-width: calc(#{$lg} - #{$side-margin} * 2);
+  }
+}
+
+@media (min-width: calc(#{$lg} + 1px)) {
+  :root {
+    --lesson__container-width: calc(#{$xl} - #{$side-margin} * 2);
+  }
+}
+
+:root {
+  // Desired Dimensions
+  --lesson__content-width: var(--lesson__container-width);
+  --lesson__content-height: calc(var(--lesson__content-width) / var(--lesson__ratio));
+  --lesson__container-height: calc(var(--lesson__content-height) + #{$title-height} + #{$np_button_vspace} + #{$np_button_height});
+  //
+  // Max Dimensions
+  --lesson__max_container-height: 85vh;
+  --lesson__max_content-height: calc(var(--lesson__max_container-height) - #{$title-height} - #{$np_button_vspace} - #{$np_button_height});
+  --lesson__max_content-width: calc(var(--lesson__max_content-height) * var(--lesson__ratio));
+  --lesson__max_container-width: var(--lesson__max_content-width);
+}
 
 .lesson__container {
   margin-top: $top_margin-no_navbar;
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  width: $container-width;
-  height: $container-height;
+  width: var(--lesson__container-width);
+  height: var(--lesson__container-height);
+  max-height: var(--lesson__max_container-height);
+  max-width: var(--lesson__max_container-width);
 }
 
 #multipage_diagram {
-  width: $content-width;
-  height: $content-height;
+  width: var(--lesson__content-width);
+  height: var(--lesson__content-height);
+  max-height: var(--lesson__max_content-height);
+  max-width: var(--lesson__max_content-width);
+  margin: auto;
 }
 
 .lesson__text p {
@@ -62,18 +130,18 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
   right: 0;
 }
 
-@media (min-aspect-ratio: 1/2) {
-  $content-height: calc(90vw / #{$aspect_ratio-portrait});
-  $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-height} + #{$np_button-vspace});
+// @media (min-aspect-ratio: 1/2) {
+//   $content-height: calc(90vw / #{$aspect_ratio-portrait});
+//   $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-height} + #{$np_button-vspace});
 
-  .lesson__container {
-    height: $container-height;
-  }
+//   .lesson__container {
+//     height: $container-height;
+//   }
 
-  #multipage_diagram {
-    height: $content-height;
-  }
-}
+//   #multipage_diagram {
+//     height: $content-height;
+//   }
+// }
 
 @media (min-aspect-ratio: 1/1) {
   $content-height: calc(80vh - #{$title-height});
