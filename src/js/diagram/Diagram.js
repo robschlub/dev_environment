@@ -106,6 +106,7 @@ class Diagram {
   htmlCanvas: HTMLElement;
   shapes: Object;
   backgroundColor: Array<number>;
+  fontScale: number;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -154,6 +155,7 @@ class Diagram {
       this.gesture = new Gesture(this);
     }
 
+    this.fontScale = 1 / 30;
     if (limitsOrxMin instanceof Rect) {
       const r = limitsOrxMin;
       this.limits = new Rect(r.left, r.bottom, r.width, r.height);
@@ -181,6 +183,7 @@ class Diagram {
   }
   resize() {
     this.webgl.resize();
+    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * this.fontScale}px`;
     this.animateNextFrame();
   }
   // Handle touch down, or mouse click events within the canvas.

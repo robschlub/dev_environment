@@ -101,13 +101,13 @@ $_lesson_vars: (
 
 @media (min-aspect-ratio: 1/100) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(aspect-1-2);
+    @include lesson-breakpoint-vars(aspect-3-2);
   }
 }
 
 @media (min-aspect-ratio: 1/2) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(aspect-2-3);
+    @include lesson-breakpoint-vars(aspect-3-2);
   }
 }
 
@@ -119,7 +119,7 @@ $_lesson_vars: (
 
 @media (min-aspect-ratio: 3/2) {
   #lesson__container_name {
-    @include lesson-breakpoint-vars(aspect-2-1);
+    @include lesson-breakpoint-vars(aspect-3-2);
   }
 }
 

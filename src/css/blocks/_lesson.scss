@@ -1,10 +1,5 @@
 $title-height: 50px;
 $title-font-size: 30px;
-$aspect_ratio-portrait_narrow: 0.555;
-$aspect_ratio-portrait: 0.75;
-$aspect_ratio-landscape: 1.5;
-$aspect_ratio-landscape_wide: 2;
-// $np_button-width: 40px;
 $np_button-width: calc(#{$title-height} * 0.8);
 $np_button-height: 40px;
 $np_button-vspace: 5px;
@@ -14,70 +9,35 @@ $top_margin-with_navbar: 70px;
 $bottom_margin: 50px;
 $side-margin: 50px;
 
+$diagram_ratio: 1.5;
+
 @media (min-aspect-ratio: 1/100) {
   :root {
-    --lesson__ratio: #{$aspect_ratio-portrait-narrow};
-  }
-}
-
-@media (min-aspect-ratio: 1/2) {
-  :root {
-    --lesson__ratio: #{$aspect_ratio-portrait};
+    --lesson__container-width: 90vw;
   }
 }
 
 @media (min-aspect-ratio: 1/1) {
   :root {
-    --lesson__ratio: #{$aspect_ratio-landscape};
+    --lesson__container-width: calc(90vw - #{$side-margin} * 2);
   }
 }
 
-@media (min-aspect-ratio: 3/2) {
-  :root {
-    --lesson__ratio: #{$aspect_ratio-landscape_wide};
-  }
-}
-
-@media (min-width: #{$xs}) {
-  :root {
-    --lesson__container-width: calc(340px - #{$side-margin} * 2);
-    --lesson__font_size: 15px;
-  }
-}
-
-@media (min-width: #{$sm}) {
-  :root {
-    --lesson__container-width: calc(#{$sm} - #{$side-margin} * 2);
-    --lesson__font_size: 20px;
-  }
-}
-
-@media (min-width: #{$md}) {
-  :root {
-    --lesson__container-width: calc(#{$md} - #{$side-margin} * 2);
-    --lesson__font_size: 25px;
-  }
-}
-
-@media (min-width: #{$lg}) {
-  :root {
-    --lesson__container-width: calc(#{$lg} - #{$side-margin} * 2);
-    --lesson__font_size: 30px;
-  }
-}
-
-@media (min-width: calc(#{$lg} + 1px)) {
+@media (min-width: calc(#{$xl})) {
   :root {
     --lesson__container-width: calc(#{$xl} - #{$side-margin} * 2);
-    --lesson__font_size: 30px;
   }
 }
 
 :root {
-  // Desired Dimensions
   --lesson__content-width: var(--lesson__container-width);
-  --lesson__content-height: calc(var(--lesson__content-width) / var(--lesson__ratio));
-  --lesson__container-height: calc(var(--lesson__content-height) + #{$title-height} + #{$np_button-vspace} + #{$np_button-height});
+  --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
+  --lesson__container-height: calc(var(--lesson__content-height) + #{$title-height} + #{$title-height} + #{$np_button-vspace} + #{$np_button-height});
+  //
+  --lesson__max_container-height: 90vh;
+  --lesson__max_content-height: calc(var(--lesson__max_container-height) - #{$title-height} - #{$np_button_vspace} - #{$np_button_height});
+  --lesson__max_content-width: calc(var(--lesson__max_content-height) * #{$diagram_ratio});
+  --lesson__max_container-width: var(--lesson__max_content-width);
 }
 
 .lesson__container {
@@ -96,7 +56,6 @@ $side-margin: 50px;
 }
 
 .lesson__text p {
-  font-size: var(--lesson__font_size);
   color: $color_text;
 }
 
@@ -129,13 +88,20 @@ $side-margin: 50px;
 @media (min-aspect-ratio: 1/1) {
   :root {
     --lesson__content-width: calc(var(--lesson__container-width) - 2 * #{$title-height});
-    --lesson__content-height: calc(var(--lesson__content-width) / var(--lesson__ratio));
+    --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
     --lesson__container-height: calc(var(--lesson__content-height) + #{$title-height});
+    //
+    // --lesson__max_container-height: 50vh;
+    // --lesson__max_content-height: calc(var(--lesson__max_container-height) - #{$title-height});
+    // --lesson__max_content-width: calc(var(--lesson__max_content-height) * #{$diagram_ratio});
+    // --lesson__max_container-width: var(--lesson__max_content-width);
   }
 
   .lesson__container {
     width: var(--lesson__container-width);
     height: var(--lesson__container-height);
+    // max-height: var(--lesson__max_container-height);
+    // max-width: var(--lesson__max_container-width);
   }
 
   #multipage_diagram {
@@ -146,6 +112,8 @@ $side-margin: 50px;
     height: var(--lesson__content-height);
     margin-left: $np_button-hspace;
     margin-right: $np_button-hspace;
+    // max-height: var(--lesson__max_content-height);
+    // max-width: var(--lesson__max_content-width);
   }
 
   .btn-multi-page-lesson {
@@ -161,150 +129,6 @@ $side-margin: 50px;
     color: red;
   }
 }
-
-// @media (min-aspect-ratio: 3/2) {
-//   $content-height: calc(80vh - #{$title-height});
-//   $content-width: calc(#{$content-height} * #{$aspect_ratio-landscape_wide});
-//   $container-height: 80vh;
-//   $container-width: calc(#{$content-width} + #{$np_button-width} * 2 + #{$np_button-hspace} * 2);
-
-//   .lesson__container {
-//     width: $container-width;
-//     height: $container-height;
-//   }
-
-//   #multipage_diagram {
-//     width: $content-width;
-//     height: $content-height;
-//   }
-// }
-
-// @include media-breakpoint-up(sm) {
-//   .lesson__text p {
-//     font-size: 20px;
-//   }
-// }
-
-// @include media-breakpoint-up(md) {
-//   .lesson__container {
-//     margin-top: $top_margin-with_navbar;
-//   }
-// }
-
-// @include media-breakpoint-up(lg) {
-//   .lesson__text p {
-//     font-size: 24px;
-//   }
-// }
-// @media (min-aspect-ratio: 1.5/1) {
-//   .lesson__container {
-//     margin-left: auto;
-//     margin-right: auto;
-//     height: 70vh;
-//     width: calc(70vh * #{$diagram-landscape-wide-aspect-ratio});
-//   }
-// }
-
-// // @media (min-width: $desktop) {
-// //   .lesson__container {}
-// // }
-
-// // @include media-breakpoint-up(xs) {
-// @media screen and (min-width: 0) and (orientation: portrait) {
-//   // .lesson__container {
-//   //   margin-top: 80px;
-//   //   margin-left: auto;
-//   //   margin-right: auto;
-//   //   width: 90vmin;
-//   //   min-height: 90vmin;
-//   //   background-color: red;
-//   //   color: red;
-//   // }
-
-//   .lesson__button-container {
-//     margin-top: 0;
-//     margin-left: 5%;
-//     width: 90%;
-//   }
-
-//   .lesson__title {
-//     margin-top: 20px;
-//   }
-// }
-
-// @media screen and (min-width: 0) and (orientation: landscape) {
-//   // .lesson__container {
-//   //   margin-top: 0;
-//   //   margin-left: auto;
-//   //   margin-right: auto;
-//   //   width: 150vmin;
-//   //   min-height: 50vmin;
-//   //   background-color: blue;
-//   //   color: blue;
-//   // }
-
-//   .lesson__button-container {
-//     margin-top: 0;
-//     margin-left: 5%;
-//     width: 90%;
-//   }
-
-//   .lesson__title {
-//     margin-top: 20px;
-//   }
-// }
-
-// // @include media-breakpoint-up(sm) {
-// //   .lesson__container {
-// //     // width: 400px;
-// //     // height: 200px;
-// //   }
-// // }
-
-// @include media-breakpoint-up(md) {
-//   .lesson__container {
-//     margin-top: 0;
-//     font-size: 20px;
-//   }
-
-//   .lesson__button-container {
-//     margin-top: 0;
-//   }
-
-//   .lesson__title {
-//     margin-top: 80px;
-//     font-size: 34px;
-//     padding-bottom: 20px;
-//   }
-// }
-
-// @include media-breakpoint-up(md) {
-//   // .lesson__container {
-//   //   width: 800px;
-//   //   margin-left: auto;
-//   //   margin-right: auto;
-//   //   min-height: 550px;
-//   // }
-
-//   // #multipage_lesson {
-//   //   position: absolute;
-//   //   width: 800px;
-//   //   margin-left: auto;
-//   //   margin-right: auto;
-//   //   min-height: 550px;
-//   // }
-
-//   .lesson__button-container {
-//     width: 800px;
-//     margin-left: auto;
-//     margin-right: auto;
-//   }
-//   //
-// }
-
-// @include media-breakpoint-up(xl) {
-//   //
-// }
 
 .lesson-clear-floats {
   clear: both;
