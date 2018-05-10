@@ -11,7 +11,8 @@ $np_button-vspace: 5px;
 $np_button-hspace: calc(#{$title-height} * 0.2);
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
-$side-margin: 10px;
+$bottom_margin: 50px;
+$side-margin: 50px;
 
 @media (min-aspect-ratio: 1/100) {
   :root {
@@ -40,30 +41,35 @@ $side-margin: 10px;
 @media (min-width: #{$xs}) {
   :root {
     --lesson__container-width: calc(340px - #{$side-margin} * 2);
+    --lesson__font_size: 15px;
   }
 }
 
 @media (min-width: #{$sm}) {
   :root {
     --lesson__container-width: calc(#{$sm} - #{$side-margin} * 2);
+    --lesson__font_size: 20px;
   }
 }
 
 @media (min-width: #{$md}) {
   :root {
     --lesson__container-width: calc(#{$md} - #{$side-margin} * 2);
+    --lesson__font_size: 25px;
   }
 }
 
 @media (min-width: #{$lg}) {
   :root {
     --lesson__container-width: calc(#{$lg} - #{$side-margin} * 2);
+    --lesson__font_size: 30px;
   }
 }
 
 @media (min-width: calc(#{$lg} + 1px)) {
   :root {
     --lesson__container-width: calc(#{$xl} - #{$side-margin} * 2);
+    --lesson__font_size: 30px;
   }
 }
 
@@ -74,10 +80,10 @@ $side-margin: 10px;
   --lesson__container-height: calc(var(--lesson__content-height) + #{$title-height} + #{$np_button_vspace} + #{$np_button_height});
   //
   // Max Dimensions
-  --lesson__max_container-height: 85vh;
-  --lesson__max_content-height: calc(var(--lesson__max_container-height) - #{$title-height} - #{$np_button_vspace} - #{$np_button_height});
-  --lesson__max_content-width: calc(var(--lesson__max_content-height) * var(--lesson__ratio));
-  --lesson__max_container-width: var(--lesson__max_content-width);
+  // --lesson__max_container-height: 85vh;
+  // --lesson__max_content-height: calc(var(--lesson__max_container-height) - #{$title-height} - #{$np_button_vspace} - #{$np_button_height});
+  // --lesson__max_content-width: calc(var(--lesson__max_content-height) * var(--lesson__ratio));
+  // --lesson__max_container-width: var(--lesson__max_content-width);
 }
 
 .lesson__container {
@@ -87,20 +93,21 @@ $side-margin: 10px;
   margin-right: auto;
   width: var(--lesson__container-width);
   height: var(--lesson__container-height);
-  max-height: var(--lesson__max_container-height);
-  max-width: var(--lesson__max_container-width);
+  margin-bottom: $bottom_margin;
+  // max-height: var(--lesson__max_container-height);
+  // max-width: var(--lesson__max_container-width);
 }
 
 #multipage_diagram {
   width: var(--lesson__content-width);
   height: var(--lesson__content-height);
-  max-height: var(--lesson__max_content-height);
-  max-width: var(--lesson__max_content-width);
-  margin: auto;
+  // max-height: var(--lesson__max_content-height);
+  // max-width: var(--lesson__max_content-width);
+  // margin: auto;
 }
 
 .lesson__text p {
-  font-size: 16px;
+  font-size: var(--lesson__font_size);
   color: $color_text;
 }
 
@@ -189,23 +196,23 @@ $side-margin: 10px;
   }
 }
 
-@include media-breakpoint-up(sm) {
-  .lesson__text p {
-    font-size: 20px;
-  }
-}
+// @include media-breakpoint-up(sm) {
+//   .lesson__text p {
+//     font-size: 20px;
+//   }
+// }
 
-@include media-breakpoint-up(md) {
-  .lesson__container {
-    margin-top: $top_margin-with_navbar;
-  }
-}
+// @include media-breakpoint-up(md) {
+//   .lesson__container {
+//     margin-top: $top_margin-with_navbar;
+//   }
+// }
 
-@include media-breakpoint-up(lg) {
-  .lesson__text p {
-    font-size: 24px;
-  }
-}
+// @include media-breakpoint-up(lg) {
+//   .lesson__text p {
+//     font-size: 24px;
+//   }
+// }
 // @media (min-aspect-ratio: 1.5/1) {
 //   .lesson__container {
 //     margin-left: auto;

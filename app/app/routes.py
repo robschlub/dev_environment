@@ -23,12 +23,12 @@ def introduction():
     return render_template('introduction.html')
 
 
-@app.route('/singlepagelesson')
+@app.route('/single')
 def single_page_lesson():
     return render_template('singlepagelesson.html')
 
 
-@app.route('/multipagelesson')
+@app.route('/multi')
 def multi_page_lesson():
     return render_template('multipagelesson.html')
 
