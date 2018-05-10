@@ -16,8 +16,8 @@ export default class Navbar extends React.Component
     const props = Object.assign({}, this.props);
     const nav1 = 'Introduction';
     const nav2 = 'About';
-    const nav3 = 'Single Page Lesson';
-    const nav4 = 'Multi Page Lesson';
+    const nav3 = 'Single';
+    const nav4 = 'Multi';
     const nav1Class = `nav-link ${props.active === nav1 ? 'active' : ''}`;
     const nav2Class = `nav-link ${props.active === nav2 ? 'active' : ''}`;
     const nav3Class = `nav-link ${props.active === nav3 ? 'active' : ''}`;

@@ -99,32 +99,6 @@ $_lesson_vars: (
   }
 }
 
-// @media screen and (min-width: 0) and (orientation: portrait) {
-//   #lesson__container_name {
-//     @include lesson-breakpoint-vars(xs-portrait);
-//   }
-
-//   #id_shapes {
-//     color: red;
-//   }
-// }
-
-// @media screen and (min-width: 0) and (orientation: landscape) {
-//   #lesson__container_name {
-//     @include lesson-breakpoint-vars(xs-landscape);
-//   }
-
-//   #id_shapes {
-//     color: blue;
-//   }
-// }
-
-// @media screen and (min-width: $small-tablet) and (orientation: landscape) {
-//   #lesson__container_name {
-//     @include lesson-breakpoint-vars(xs-landscape);
-//   }
-// }
-
 @media (min-aspect-ratio: 1/100) {
   #lesson__container_name {
     @include lesson-breakpoint-vars(aspect-1-2);
@@ -149,61 +123,10 @@ $_lesson_vars: (
   }
 }
 
-// @media (min-width: 0) {
-//   #id_shapes {
-//     color: cyan;
-//   }
-// }
-
-// @media (min-aspect-ratio: 1/10) {
-//   #lesson__container_name {
-//     @include lesson-breakpoint-vars(md);
-//   }
-
-//   #id_shapes {
-//     color: green;
-//   }
-// }
-
-// @media (min-aspect-ratio: 2/1) {
-//   #id_shapes {
-//     color: purple;
-//   }
-// }
-
-// @media (min-width: $desktop) {
-//   #lesson__container_name {
-//     @include lesson-breakpoint-vars(lg);
-//   }
-
-//   #id_shapes {
-//     color: yellow;
-//   }
-// }
-// @include media-breakpoint-up(xs) {
-//   $size: xs;
-
-//   #lesson__container_name {
-//     @include lesson-breakpoint-vars($size);
-//   }
-// }
-
-// @include media-breakpoint-up(md) {
-//   $size: md;
-
-//   #lesson__container_name {
-//     @include lesson-breakpoint-vars($size);
-//   }
-// }
-
 .action_word {
   font-weight: bold;
   cursor: pointer;
 }
-
-// #id_shapes {
-//   color: $color-lines;
-// }
 
 #id_corners {
   color: $color-corners;
@@ -240,68 +163,18 @@ $_lesson_vars: (
   color: $color-lessSharp;
 }
 
-#circle_container {
-  position: relative;
-  left: 0;
-  top: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.circle-diagram-and-text-container {
-  //
-  // display: table;
-  height: 600px;
-}
-
-@include media-breakpoint-up(xs) {
-  #circle_container {
-    width: 80vmin;
-    height: 80vmin;
-    // padding-top: 100%;
-  }
-}
-
-// @include media-breakpoint-up(sm) {
+// #circle_container {
+//   position: relative;
+//   left: 0;
+//   top: 0;
+//   margin-left: auto;
+//   margin-right: auto;
 // }
 
-@include media-breakpoint-up(md) {
-  #circle_container {
-    // width: 400px;
-    // padding-top: 400px;
-    // height: 200px;
-    width: 50vmin;
-    height: 50vmin;
-    // height: 400px;
-    // padding-top: 0;
-    // padding-top: 50%;
-    // float: right;
-    // margin-left: auto;
-    // margin-right: 0;
-  }
-
-  .circle-diagram-text-container {
-    // margin-top: 100px;
-    // display: table-cell;
-    // vertical-align: middle;
-    // width: 200px;
-  }
-}
-
-@include media-breakpoint-up(lg) {
-  // #circle_container {
-  //   width: 50%;
-  //   padding-top: 50%;
-  // }
-  // #lesson__container_name {
-  //   --lessonvars-x-min: $_lesson_vars.md.x-min;
-  //   --lessonvars-x-max: $_lesson_vars.md.x-max;
-  //   --lessonvars-y-min: $_lesson_vars.md.y-min;
-  //   --lessonvars-y-max: $_lesson_vars.md.y-max;
-  // }
-}
-
-// @include media-breakpoint-up(xl) {
+// .circle-diagram-and-text-container {
+//   //
+//   // display: table;
+//   height: 600px;
 // }
 
 /* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
@@ -325,24 +198,3 @@ $_lesson_vars: (
   top: 0;
 }
 
-// #lesson__container_name {
-//   // @each $var, $value in $_lesson_variables {
-//   //   @if type-of($value) == "map" {
-//   //     @each $subvar, $subvalue in $value {
-//   //       --lessonvar-#{$var}-#{$subvar}: #{$subvalue};
-//   //     }
-//   //   }
-
-//   //   @elseif type-of($value) == "number" {
-//   //     --lessonvar-#{$var}: #{$value};
-//   //   }
-
-//   //   @elseif type-of($size) == "string" {
-//   //     --lessonvar-#{$var}: #{$value};
-//   //   }
-//   // }
-//   --lessonvars-x-min: 4;
-//   --lessonvars-x-max: 4;
-//   --lessonvars-y-min: 4;
-//   --lessonvars-ymax: 4;
-// }

@@ -7,7 +7,9 @@ $aspect_ratio-landscape_wide: 2;
 $np_button-width: 40px;
 $np_button-height: 40px;
 $np_button-vspace: 5px;
-$np_button-hspace: 50px;
+$np_button-hspace: 30px;
+$top_margin-no_navbar: 20px;
+$top_margin-with_navbar: 70px;
 
 //Assume 1:2 portrait to start width
 $content-width: 90vw;
@@ -16,7 +18,7 @@ $container-width: $content-width;
 $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-height} + #{$np_button-vspace});
 
 .lesson__container {
-  margin-top: 70px;
+  margin-top: $top_margin-no_navbar;
   position: relative;
   margin-left: auto;
   margin-right: auto;
@@ -74,9 +76,9 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
 }
 
 @media (min-aspect-ratio: 1/1) {
-  $content-height: calc(70vh - #{$title-height});
+  $content-height: calc(80vh - #{$title-height});
   $content-width: calc(#{$content-height} * #{$aspect_ratio-landscape});
-  $container-height: 70vh;
+  $container-height: 80vh;
   $container-width: calc(#{$content-width} + #{$np_button-width} * 2 + #{$np_button-hspace} * 2);
 
   .lesson__container {
@@ -103,9 +105,9 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
 }
 
 @media (min-aspect-ratio: 3/2) {
-  $content-height: calc(70vh - #{$title-height});
+  $content-height: calc(80vh - #{$title-height});
   $content-width: calc(#{$content-height} * #{$aspect_ratio-landscape_wide});
-  $container-height: 70vh;
+  $container-height: 80vh;
   $container-width: calc(#{$content-width} + #{$np_button-width} * 2 + #{$np_button-hspace} * 2);
 
   .lesson__container {
@@ -119,6 +121,23 @@ $container-height: calc(#{$content-height} + #{$title-height} + #{$np_button-hei
   }
 }
 
+@include media-breakpoint-up(sm) {
+  .lesson__text p {
+    font-size: 20px;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .lesson__container {
+    margin-top: $top_margin-with_navbar;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .lesson__text p {
+    font-size: 24px;
+  }
+}
 // @media (min-aspect-ratio: 1.5/1) {
 //   .lesson__container {
 //     margin-left: auto;
