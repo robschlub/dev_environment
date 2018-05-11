@@ -1,17 +1,15 @@
 $title-height: 7;
-// $title-max-height: 85px;
 $title-font-size: 3;
-// $title-max-font-size: 47px;
-
 $np_button-width: 5;
 $np_button-height-portrait: 8;
-$np_button-height-landscape: 15;
+$np_button-height-landscape: 12;
 $np_button-vspace: 4;
-$np_button-hspace: 5;
+$np_button-hspace: 4;
 $text-margin: 4;
-$goto_button-width: 12;
+$goto_button-width: 8;
+// $goto_button-min-width: 50px;
 $goto_button-height: 6;
-$goto_button-font-size: 1.7;
+$goto_button-font-size: 1.5;
 
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
@@ -30,7 +28,7 @@ $diagram_ratio: 1.5;
     --lesson__np_button-vspace: calc(#{$np_button-vspace} * 1vw);
     --lesson__np_button-hspace: calc(#{$np_button-hspace} * 1vw);
     --lesson__text-margin: calc(#{$text-margin} * 1vw);
-    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw);
+    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 2);
     --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw);
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} * 1vw);
   }
@@ -40,6 +38,7 @@ $diagram_ratio: 1.5;
   :root {
     --lesson__container-width: calc(90vw - #{$side-margin} * 2);
     --lesson__np_button-height: calc(#{$np_button-height-landscape} * 1vw);
+    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw);
   }
 }
 
@@ -62,7 +61,14 @@ $diagram_ratio: 1.5;
     --lesson__goto_button-width: calc(#{$goto_button-width} / 100 * #{$xl});
     --lesson__goto_button-height: calc(#{$goto_button-height} / 100 * #{$xl});
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} / 100 * #{$xl});
-    // --lesson__page_number-height: calc(#{$page_number-height} / 100 * #{$xl});
+  }
+}
+
+@media (min-aspect-ratio: 2/1) and (max-height: 500px){
+  :root {
+    --lesson__goto_button-height: 10vh;
+    --lesson__np_button-height: 20vh;
+    --lesson__goto_button-font-size: 3vh;
   }
 }
 
@@ -145,8 +151,6 @@ $diagram_ratio: 1.5;
   height: var(--lesson__goto_button-height);
   width: var(--lesson__goto_button-width);
   font-size: var(--lesson__goto_button-font-size);
-  // min-width: $goto_button-min-width;
-  // min-height: $goto_button-min-height;
 }
 
 #lesson__page_number {
@@ -167,6 +171,11 @@ $diagram_ratio: 1.5;
     --lesson__max_content-height: var(--lesson__max_container-height);
     --lesson__max_content-width: calc(var(--lesson__max_content-height) * #{$diagram_ratio});
     --lesson__max_container-width: calc(var(--lesson__max_content-width) + 2 * var(--lesson__np_button-width) + 2 * var(--lesson__np_button-hspace));
+    // //
+    // --lesson__max_goto_button-width: calc(var(--lesson__max_content-height) * 0.4);
+    // --lesson__max_goto_button-height: calc(var(--lesson__max_content-height) * 0.3);
+    // --lesson__max_np_button-width: calc(var(--lesson__max_content-height) * 0.4);
+    // --lesson__max_np_button-height: calc(var(--lesson__max_content-height) * 0.2);
   }
 
   .lesson__container {
@@ -204,8 +213,9 @@ $diagram_ratio: 1.5;
 
   #lesson__page_number {
     width: var(--lesson__goto_button-width);
+    text-align: left;
     left: calc(100% - var(--lesson__np_button-width));
-    top: calc(100% - var(--lesson__goto_button-height) * 2);
+    top: calc(100% - var(--lesson__goto_button-height) - var(--lesson__goto_button-font-size) * 3);
   }
 }
 
