@@ -155,7 +155,7 @@ class Diagram {
       this.gesture = new Gesture(this);
     }
 
-    this.fontScale = 1 / 30;
+    this.fontScale = 1;
     if (limitsOrxMin instanceof Rect) {
       const r = limitsOrxMin;
       this.limits = new Rect(r.left, r.bottom, r.width, r.height);
@@ -177,7 +177,8 @@ class Diagram {
     return shapes(this.webgl, this.limits);
   }
   sizeHtmlText() {
-    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * this.fontScale}px`;
+    const scale = this.fontScale * 1/50;
+    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale}px`;
   }
   destroy() {
     this.gesture.destroy();

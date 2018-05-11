@@ -94,8 +94,8 @@ class Lesson {
   }
 
   refreshView() {
-    this.setState();
     this.refresh(this.getContentHtml());
+    this.setState();
   }
 
   prevSection() {

@@ -106,6 +106,7 @@ class LessonDiagram extends Diagram {
 
     this.elements.isTouchable = true;
     this.elements.isMovable = true;
+    this.fontScale = 1.2;
   }
 
   resize() {
