@@ -1,4 +1,5 @@
 // @flow
+
 import { Point } from './tools/g2';
 import Diagram from './Diagram';
 
@@ -14,22 +15,29 @@ class Gesture {
   constructor(diagram: Diagram) {
     this.diagram = diagram;
     // console.log(diagram.canvas.offsetWidth)
-    this.diagram.canvas.onmousedown = this.mouseDownHandler.bind(this);
-    this.diagram.canvas.onmouseup = this.mouseUpHandler.bind(this);
-    this.diagram.canvas.onmousemove = this.mouseMoveHandler.bind(this);
+    // this.diagram.canvas.onmousedown = this.mouseDownHandler.bind(this);
+    // this.diagram.canvas.onmouseup = this.mouseUpHandler.bind(this);
+    // this.diagram.canvas.onmousemove = this.mouseMoveHandler.bind(this);
 
-    this.diagram.canvas.addEventListener(
-      'touchstart',
-      this.touchStartHandler.bind(this), false,
-    );
-    this.diagram.canvas.addEventListener(
-      'touchend',
-      this.touchEndHandler.bind(this), false,
-    );
-    this.diagram.canvas.addEventListener(
-      'touchmove',
-      this.touchMoveHandler.bind(this), false,
-    );
+    this.addEvent('mousedown', this.mouseDownHandler, false);
+    this.addEvent('mouseup', this.mouseUpHandler, false);
+    this.addEvent('mousemove', this.mouseMoveHandler, false);
+    this.addEvent('touchstart', this.touchStartHandler, false);
+    this.addEvent('touchend', this.touchEndHandler, false);
+    this.addEvent('touchmove', this.touchMoveHandler, false);
+
+    // this.diagram.canvas.addEventListener(
+    //   'touchstart',
+    //   this.touchStartHandler.bind(this), false,
+    // );
+    // this.diagram.canvas.addEventListener(
+    //   'touchend',
+    //   this.touchEndHandler.bind(this), false,
+    // );
+    // this.diagram.canvas.addEventListener(
+    //   'touchmove',
+    //   this.touchMoveHandler.bind(this), false,
+    // );
     this.enable = true;
 
     // Override these if you want to use your own touch handlers
@@ -38,6 +46,21 @@ class Gesture {
     this.move = this.diagram.touchMoveHandler.bind(this.diagram);
   }
 
+  addEvent(event: string, method: Object, flag: boolean) {
+    this.diagram.htmlCanvas.addEventListener(
+      event,
+      method.bind(this),
+      flag,
+    );
+  }
+
+  removeEvent(event: string, method: Object, flag: boolean) {
+    this.diagram.htmlCanvas.removeEventListener(
+      event,
+      method.bind(this),
+      flag,
+    );
+  }
 
   startHandler(point: Point) {
     if (this.enable) {
@@ -83,6 +106,15 @@ class Gesture {
   }
   touchEndHandler() {
     this.endHandler();
+  }
+
+  destroy() {
+    this.removeEvent('mousedown', this.mouseDownHandler, false);
+    this.removeEvent('mouseup', this.mouseUpHandler, false);
+    this.removeEvent('mousemove', this.mouseMoveHandler, false);
+    this.removeEvent('touchstart', this.touchStartHandler, false);
+    this.removeEvent('touchend', this.touchEndHandler, false);
+    this.removeEvent('touchmove', this.touchMoveHandler, false);
   }
 }
 

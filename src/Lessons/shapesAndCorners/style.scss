@@ -1,20 +1,97 @@
+// https://codepen.io/jakealbaugh/post/css4-variables-and-sass
 @import "../../css/style";
 
-$color-lines: $color-blue;
-$color-corners: $color-cyan-medium;
-$color-moreSharp: $color-red;
-$color-lessSharp: $color-green-medium;
-$color-anchor: $color-yellow;
-$color-radius: $color-blue;
-$color-reference: $color-blue-light;
+$color-lines: $color_primary;
+$color-corners: $color_secondary;
+$color-moreSharp: $color_highlight;
+$color-lessSharp: $color_safe;
+$color-anchor: $color_passive;
+$color-radius: $color_primary;
+$color-reference: $color_secondary;
+$color-background: $color_diagram;
+
+$_lesson_vars: (
+  linewidth: 0.03,
+  radius: 1.5,
+  corner-length: 0.5,
+  // <1/2
+  // aspect-1-2: (
+  //   x-min: -2, x-max: 2,
+  //   y-min: -3.6, y-max: 3.6,
+  //   square: (center-x:  -1, center-y:   1),
+  //   tri:    (center-x:   0, center-y:   0),
+  //   pent:   (center-x:   1, center-y:  -1),
+  //   circle: (center-x:   0, center-y:   0),
+  // ),
+  // 1/2 -> 1/1
+  // aspect-2-3: (
+  //   x-min: -2, x-max: 2,
+  //   y-min: -2.666, y-max: 2.666,
+  //   square: (center-x:  -1, center-y:  -1),
+  //   tri:    (center-x:   0, center-y:   0),
+  //   pent:   (center-x:   1, center-y:   1),
+  //   circle: (center-x:   0, center-y:  -0.5),
+  // ),
+  // 1/1 -> 2/1
+  aspect-3-2: (
+    x-min:   -3, x-max:   3,
+    y-min:   -2, y-max:   2,
+    square: (center-x:  -2, center-y:   -1),
+    tri:    (center-x:   0, center-y:   -1),
+    pent:   (center-x:   2, center-y:   -1),
+    circle: (center-x:   0, center-y:   -0.3),
+  ),
+  // >2/1
+  // aspect-2-1: (
+  //   x-min:   -4, x-max:   4,
+  //   y-min:   -2, y-max:   2,
+  //   square: (center-x:  -2, center-y: 1.5),
+  //   tri:    (center-x:   0, center-y:   0),
+  //   pent:   (center-x:   2, center-y:   0),
+  //   circle: (center-x:   2, center-y:   0),
+  // ),
+);
+
+@mixin lesson-breakpoint-vars($size) {
+  @each $var, $value in map-get($_lesson_vars, $size) {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+      }
+    }
+
+    @else {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
+}
+
+#lesson__container_name {
+  @each $var, $value in $_lesson_vars {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        @if type-of($subvalue) == "map" {
+          @each $subsubvar, $subsubvalue in $subvalue {
+            --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+          }
+        }
+
+        @else {
+          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+    }
+
+    @else {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
+  @include lesson-breakpoint-vars(aspect-3-2);
+}
 
 .action_word {
   font-weight: bold;
   cursor: pointer;
-}
-
-#id_shapes {
-  color: $color-lines;
 }
 
 #id_corners {
@@ -23,6 +100,10 @@ $color-reference: $color-blue-light;
 
 #id_more_sharp {
   color: $color-moreSharp;
+}
+
+#id_shapes {
+  color: $color-lines;
 }
 
 #id_less_sharp {
@@ -52,62 +133,6 @@ $color-reference: $color-blue-light;
   color: $color-lessSharp;
 }
 
-#circle_container {
-  position: relative;
-  left: 0;
-  top: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.circle-diagram-and-text-container {
-  //
-  // display: table;
-  height: 600px;
-}
-
-@include media-breakpoint-up(xs) {
-  #circle_container {
-    width: 100%;
-    padding-top: 100%;
-  }
-}
-
-// @include media-breakpoint-up(sm) {
-// }
-
-@include media-breakpoint-up(md) {
-  #circle_container {
-    // width: 400px;
-    // padding-top: 400px;
-    // height: 200px;
-    width: 50%;
-    // height: 400px;
-    // padding-top: 0;
-    padding-top: 50%;
-    // float: right;
-    // margin-left: auto;
-    // margin-right: 0;
-  }
-
-  .circle-diagram-text-container {
-    // margin-top: 100px;
-    // display: table-cell;
-    // vertical-align: middle;
-    // width: 200px;
-  }
-}
-
-@include media-breakpoint-up(lg) {
-  // #circle_container {
-  //   width: 50%;
-  //   padding-top: 50%;
-  // }
-}
-
-// @include media-breakpoint-up(xl) {
-// }
-
 /* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
 :export {
   colorLines: $color-lines;
@@ -117,13 +142,15 @@ $color-reference: $color-blue-light;
   colorAnchor: $color-anchor;
   colorRadius: $color-radius;
   colorReference: $color-reference;
+  colorBackground: $color-background;
 }
 /* stylelint-enable */
 
-#shapes_container {
-  position: relative;
-  width: 100%;
-  padding-top: 40%;
-  left: 0;
-  top: 0;
-}
+// #shapes_container {
+//   position: relative;
+//   width: 100%;
+//   padding-top: 67%;
+//   left: 0;
+//   top: 0;
+// }
+

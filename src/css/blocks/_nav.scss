@@ -1,0 +1,84 @@
+
+.nav__home-icon {
+  margin-right: 5px;
+}
+
+@include media-breakpoint-up(md) {
+  .nav-responsive {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: $zindex-fixed;
+  }
+}
+
+// Navbar themes
+//
+// Styles for switching between navbars with light or dark background.
+
+// Dark links against a light background
+$navbar-color:                 $color_navbar;
+$navbar-hover-color:           $color_navbar;
+$navbar-active-color:          $color_navbar-active;
+$navbar-disabled-color:        $color_navbar-disabled;
+$navbar-toggler-border-color:  $color_navbar-toggler-border;
+
+// .navbar-default {
+//   background-color: #F00;
+//   background-image: none;
+// }
+
+.navbar-color {
+  background-color: $color_navbar-background;
+
+  .navbar-brand {
+    color: $navbar-active-color;
+
+    @include hover-focus {
+      color: $navbar-active-color;
+    }
+  }
+
+  .navbar-nav {
+    .nav-link {
+      color: $navbar-color;
+
+      @include hover-focus {
+        color: $navbar-hover-color;
+      }
+
+      &.disabled {
+        color: $navbar-disabled-color;
+      }
+    }
+
+    .show > .nav-link,
+    .active > .nav-link,
+    .nav-link.show,
+    .nav-link.active {
+      color: $navbar-active-color;
+    }
+  }
+
+  .navbar-toggler {
+    color: $navbar-color;
+    border-color: $navbar-toggler-border-color;
+  }
+
+  .navbar-toggler-icon {
+    background-image: $icon_navbar-toggler;
+  }
+
+  .navbar-text {
+    color: $navbar-color;
+
+    a {
+      color: $navbar-active-color;
+
+      @include hover-focus {
+        color: $navbar-active-color;
+      }
+    }
+  }
+}

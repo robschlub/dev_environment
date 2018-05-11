@@ -2,165 +2,127 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-import { Lesson, Section } from '../Lesson/LessonBase';
-// import Canvas from './canvas';
+// import { Lesson, Section } from '../Lesson/LessonBase';
+import Lesson from '../Lesson/Lesson';
+import Canvas from './canvas';
 import Button from './button';
 
 type Props = {
   lesson: Lesson;
   section?: number;
-  type: 'single' | 'multi';
+  type: 'singlePage' | 'multiPage';
 };
 
 type State = {
-  section: number,
+  htmlText: string,
 };
 
 export default class LessonComponent extends React.Component
                                     <Props, State> {
   lesson: Lesson;
   key: number;
-  type: string;
+  type: 'multiPage' | 'singlePage';
   state: State;
   diagrams: Object;
 
   constructor(props: Props) {
     super(props);
-    if (props.section) {
-      this.state = {
-        section: props.section,
-      };
-    } else {
-      this.state = {
-        section: 0,
-      };
-    }
+    // if (props.section) {
+    //   this.state = {
+    //     section: props.section,
+    //   };
+    // } else {
+    this.state = {
+      htmlText: '',
+    };
+    // }
     this.type = props.type;
     this.lesson = props.lesson;
     this.key = 0;
-    this.diagrams = {};
+    this.lesson.refresh = this.refresh.bind(this);
   }
 
+  refresh(htmlText: string) {
+    this.setState({ htmlText });
+  }
   goToNext() {
-    if (this.type === 'multi') {
-      if (this.state.section < this.lesson.sections.length - 1) {
-        this.lesson.sections[this.state.section].getState(this.diagrams);
-        this.setState({
-          section: this.state.section + 1,
-        });
-        this.makeDiagrams();
-      }
-    }
+    this.lesson.nextSection();
   }
 
   goToPrevious() {
-    if (this.type === 'multi') {
-      if (this.state.section > 0) {
-        this.lesson.sections[this.state.section].getState(this.diagrams);
-        this.setState({
-          section: this.state.section - 1,
-        });
-        this.makeDiagrams();
-      }
-    }
-  }
-
-  makeDiagrams() {
-    let sections = [];
-    if (this.type === 'multi') {
-      sections.push(this.lesson.sections[this.state.section]);
-    } else if (this.type === 'single') {
-      // eslint-disable-next-line prefer-destructuring
-      sections = this.lesson.sections;
-    }
-    const allDiagrams = {};
-    sections.forEach((section) => {
-      section.diagrams.forEach((d) => {
-        // only add diagram if it doesn't already exist
-        if (!(d.id in allDiagrams)) {
-          allDiagrams[d.id] = new d.DiagramClass(d.id);
-        }
-      });
-      section.setState(allDiagrams);
-      // Can only run some state setups if lesson is a multi page lesson,
-      // of if the section is a primary section for a single page lesson.
-      if (this.type === 'multi' || section.isSinglePagePrimary) {
-        section.setStateMultiOnly(allDiagrams);
-      }
-    });
-    this.diagrams = allDiagrams;
+    this.lesson.prevSection();
   }
 
   componentDidMount() {
     // Instantiate all the diagrams now that the canvas elements have been
     // created.
-    this.makeDiagrams();
+    this.lesson.createDiagrams();
+    this.lesson.setState();
 
-    if (this.type === 'multi') {
-      const nextButton = document.getElementById('button-next');
+    if (this.type === 'multiPage') {
+      const nextButton = document.getElementById('lesson__button-next');
       if (nextButton instanceof HTMLElement) {
         nextButton.onclick = this.goToNext.bind(this);
       }
-      const prevButton = document.getElementById('button-previous');
+      const prevButton = document.getElementById('lesson__button-previous');
       if (prevButton instanceof HTMLElement) {
         prevButton.onclick = this.goToPrevious.bind(this);
       }
     }
   }
 
-  renderSection(section: Section) {
-    const output = [];
-    if (section.title) {
-      this.key += 1;
-      const title = <div className='lesson_title' key={this.key}>
-        {section.title}
-      </div>;
-      output.push(title);
-    }
+  renderTitle(title: string) {
     this.key += 1;
-    let content;
-    if (this.type === 'multi' || section.isSinglePagePrimary) {
-      content = section.htmlContent;
-    } else {
-      content = section.htmlContentNoDiagrams;
-    }
-    const sectionContent = <div key={this.key}
+    return <div className='lesson__title' key={this.key}>
+        {title}
+      </div>;
+  }
+
+  renderContent(content: string) {
+    this.key += 1;
+    return <div key={this.key} className='lesson__text'
       dangerouslySetInnerHTML={ {
         __html: `${content}`,
       } }
       />;
-    output.push(sectionContent);
-    return output;
   }
 
-  addButtons() {
-    if (this.type === 'multi') {
-      return <div className = "button_container fixed-bottom">
-          <Button label="Previous" id="button-previous" className="-primary -multi-page-lesson"/>
-          <Button label="Next" id="button-next" className="-primary -multi-page-lesson"/>
-        </div>;
+  addPrevButton() {
+    if (this.type === 'multiPage') {
+      return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson"/>;
     }
     return <div />;
   }
-  renderPage() {
-    if (this.type === 'single') {
-      return this.lesson.sections.map(section => this.renderSection(section));
+  addNextButton() {
+    if (this.type === 'multiPage') {
+      return <Button label="" id="lesson__button-next" className=" -multi-page-lesson"/>;
     }
-    return this.renderSection(this.lesson.sections[this.state.section]);
+    return <div />;
+  }
+
+  renderMultiPageCanvas() {
+    if (this.type === 'multiPage') {
+      return <Canvas id="multipage_diagram"/>;
+    }
+    return <div />;
   }
   render() {
     return <div>
-      <div className='main_page'>
-        <div className="container">
-          <div className="row align-items-center">
-            <div className='lesson_container lesson_text'>
-              {this.renderPage()}
+      <div className='lesson__title'>
+              {this.lesson.content.title}
+      </div>
+      <div id="lesson__container_name" className="lesson__container">
+            {this.addPrevButton()}
+            <div id="multipage_diagram" className="diagram__container">
+              <canvas className='diagram__gl'>
+              </canvas>
+              <div id="dd" className='diagram__html'>
+                {this.renderContent(this.lesson.getContentHtml())}
+              </div>
+              <canvas className='diagram__text'>
+              </canvas>
             </div>
-          </div>
-        </div>
-        <div className = "row>">
-        {this.addButtons()}
-        </div>
+            {this.addNextButton()}
       </div>
     </div>;
   }
