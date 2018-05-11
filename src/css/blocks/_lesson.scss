@@ -1,4 +1,4 @@
-$title-height: 6;
+$title-height: 7;
 // $title-max-height: 85px;
 $title-font-size: 3;
 // $title-max-font-size: 47px;
@@ -51,9 +51,9 @@ $diagram_ratio: 1.5;
 
 @media (min-width: #{$xl}) {
   :root {
-    --lesson__container-width: calc(#{$xl} - #{$side-margin} * 2);
-    --lesson__title-font-size: calc(#{$title-font-size} / 100 * #{$xl} * 1.1);
-    --lesson__title-height: calc(#{$title-height} / 100 * #{xl});
+    --lesson__container-width: calc(#{$xl} * 0.9);
+    --lesson__title-font-size: calc(#{$title-font-size} / 100 * #{$xl} * 1.2);
+    --lesson__title-height: calc(#{$title-height} / 100 * #{$xl});
     --lesson__np_button-width: calc(#{$np_button-width} / 100 * #{$xl});
     --lesson__np_button-height: calc(#{$np_button-height-landscape} / 100 * #{$xl});
     --lesson__np_button-vspace: calc(#{$np_button-vspace} / 100 * #{$xl});
