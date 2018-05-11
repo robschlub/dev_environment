@@ -221,6 +221,7 @@ describe('Lesson', () => {
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
+      lesson.setState();
       // lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[1][0];
       type = mockSetState.mock.calls[1][2];
@@ -230,6 +231,7 @@ describe('Lesson', () => {
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
+      lesson.setState();
       // lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[2][0];
       type = mockSetState.mock.calls[2][2];

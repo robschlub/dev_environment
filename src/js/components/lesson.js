@@ -192,7 +192,6 @@ export default class LessonComponent extends React.Component
             </div>
             {this.addPageNumber()}
             {this.addGoToButton()}
-            {/*this.addSectionTable()*/}
             {this.addNextButton()}
       </div>
     </div>;
