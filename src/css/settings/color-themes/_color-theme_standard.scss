@@ -1,0 +1,23 @@
+$_color-palette: $_color-palette_standard;
+
+$_color-theme_standard: (
+  primary:                      map-get($_color-palette, blue),
+  secondary:                    map-get($_color-palette, blue-light),
+  danger:                       map-get($_color-palette, red),
+  safe:                         map-get($_color-palette, green-medium),
+  passive:                      map-get($_color-palette, yellow),
+  highlight:                    map-get($_color-palette, red),
+  background:                   map-get($_color-palette, white),
+  diagram-background:           map-get($_color-palette, white),
+  navbar:                       map-get($_color-palette, grey-dark),
+  text:                         map-get($_color-palette, grey-dark),
+  negative-text:                map-get($_color-palette, grey-light),
+  navigation-buttons:           map-get($_color-palette, grey-dark),
+  navbar-background-color:      map-get($_color-palette, grey-dark),
+  navbar-color:                 rgba(map-get($_color-palette, white), 0.5),
+  navbar-hover-color:           rgba(map-get($_color-palette, white), 0.75),
+  navbar-active-color:          map-get($_color-palette, white),
+  navbar-disabled-color:        rgba(map-get($_color-palette, white), 0.25),
+  navbar-toggler-border-color:  rgba(map-get($_color-palette, white), 0.1),
+  navbar-toggler-icon:          $navbar-dark-toggler-icon-bg,
+);

@@ -762,6 +762,10 @@ class DiagramElement {
       min.y,
     );
   }
+
+  updateLimits(limits: Rect) {
+    this.diagramLimits = limits;
+  }
 }
 
 // ***************************************************************
@@ -1059,6 +1063,14 @@ class DiagramElementCollection extends DiagramElement {
       }
     }
     return false;
+  }
+
+  updateLimits(limits: Rect) {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.updateLimits(limits);
+    }
+    this.diagramLimits = limits;
   }
 
   getRelativeBoundingBox() {

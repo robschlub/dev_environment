@@ -1,0 +1,40 @@
+$_color-palette_pastel_blue:                          #89A2E8;
+$_color-palette_pastel_red:                           #FFA9A7;
+$_color-palette_pastel_yellow:                        #E8DD8A;
+$_color-palette_pastel_green:                         #ABFF9A;
+$_color-palette_pastel_cyan:                          #9AFFEA;
+
+$_color-palette_pastel: (
+  blue:                 $_color-palette_pastel_blue,
+  blue-light:           lighten($_color-palette_pastel_blue, 20),
+  blue-medium:          darken($_color-palette_pastel_blue, 20),
+  blue-dark:            darken($_color-palette_pastel_blue, 40),
+  //
+  red:                  $_color-palette_pastel_red,
+  red-light:            lighten($_color-palette_pastel_red, 20),
+  red-medium:           darken($_color-palette_pastel_red, 20),
+  red-dark:             darken($_color-palette_pastel_red, 40),
+  //
+  yellow:               $_color-palette_pastel_yellow,
+  yellow-light:         lighten($_color-palette_pastel_yellow, 20),
+  yellow-medium:        darken($_color-palette_pastel_yellow, 20),
+  yellow-dark:          darken($_color-palette_pastel_yellow, 40),
+  //
+  green:               $_color-palette_pastel_green,
+  green-light:         lighten($_color-palette_pastel_green, 20),
+  green-medium:        darken($_color-palette_pastel_green, 20),
+  green-dark:          darken($_color-palette_pastel_green, 40),
+  //
+  cyan:               $_color-palette_pastel_cyan,
+  cyan-light:         lighten($_color-palette_pastel_cyan, 20),
+  cyan-medium:        darken($_color-palette_pastel_cyan, 20),
+  cyan-dark:          darken($_color-palette_pastel_cyan, 40),
+  //
+  white:                #FFF,
+  black:                #000,
+  //
+  grey:                 #727F8C,
+  grey-light:           #B0C4D9,
+  grey-medium:          #2E4359,
+  grey-dark:            #343A40,
+);

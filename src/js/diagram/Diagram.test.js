@@ -17,15 +17,18 @@ jest.mock('./webgl/webgl');
 
 describe('Diagram', () => {
   let diagrams;
-  let canvas;
 
   beforeEach(() => {
     document.body.innerHTML =
-      '<div>' +
-      '  <canvas id="c">' +
+      '<div id="c">' +
+      '  <canvas class="diagram__gl">' +
       '  </canvas>' +
+      '  <canvas class="diagram__text">' +
+      '  </canvas>' +
+      '  <div class="diagram__html">' +
+      '  </div>' +
       '</div>';
-    canvas = document.getElementById('c');
+    // canvas = document.getElementById('c');
     const diagramDefinitions = {
       landscapeCenter: {
         width: 1000,
@@ -105,10 +108,17 @@ describe('Diagram', () => {
           };
         },
       };
+      const htmlCanvasMock = {
+        style: {
+          fontsize: 1,
+        },
+        offsetWidth: 100,
+      };
       const { limits } = definition;
-      const diagram = new Diagram(canvas, limits);
+      const diagram = new Diagram('c', limits);
       diagram.webgl = webgl;
       diagram.canvas = canvasMock;
+      diagram.htmlCanvas = htmlCanvasMock;
 
       // create squares:
       const squares = {};
@@ -140,8 +150,8 @@ describe('Diagram', () => {
     expect(d.elements.order).toHaveLength(3);
     expect(d.limits).toEqual(new Rect(-1, -1, 2, 2));
   });
-  describe('Diagram API', () => {
-    const d = new Diagram(canvas, 0, 0, 4, 4);
+  test('Diagram API', () => {
+    const d = new Diagram('c', 0, 0, 4, 4);
     d.webgl = webgl;      // needed for mocking only
     const squareVertices = new VertexPolygon(
       d.webgl,            // gl instance

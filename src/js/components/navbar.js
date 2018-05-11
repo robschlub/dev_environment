@@ -16,8 +16,8 @@ export default class Navbar extends React.Component
     const props = Object.assign({}, this.props);
     const nav1 = 'Introduction';
     const nav2 = 'About';
-    const nav3 = 'Single Page Lesson';
-    const nav4 = 'Multi Page Lesson';
+    const nav3 = 'Single';
+    const nav4 = 'Multi';
     const nav1Class = `nav-link ${props.active === nav1 ? 'active' : ''}`;
     const nav2Class = `nav-link ${props.active === nav2 ? 'active' : ''}`;
     const nav3Class = `nav-link ${props.active === nav3 ? 'active' : ''}`;
@@ -26,10 +26,10 @@ export default class Navbar extends React.Component
     delete props.active;
 
     const body =
-      <nav className="navbar navbar-expand-md nav-responsive navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-md nav-responsive navbar-color">
 
         <a className="navbar-brand" href="/">
-          <img src="/static/icon-lg.png" width="30" height="30" className="d-inline-block align-top homeicon" alt=""/>
+          <img src="/static/icon-lg.png" width="30" height="30" className="d-inline-block align-top nav__home-icon" alt=""/>
         </a>
 
         {/* Hidden button for when navbar collapses */}
@@ -80,7 +80,6 @@ export default class Navbar extends React.Component
 
           <form className="form-inline">
             <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
-            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
       </nav>;

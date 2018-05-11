@@ -54,6 +54,12 @@ class CartesianPlot extends DiagramElementCollection {
     this.updateMoveTranslationBoundary();
   }
 
+  updateLimits(limits: Rect) {
+    super.updateLimits(limits);
+    this.boundingBox = this.getRelativeBoundingBox();
+    this.updateMoveTranslationBoundary();
+  }
+
   isBeingTouched(clipLocation: Point) {
     if (!this.isTouchable) {
       return false;
