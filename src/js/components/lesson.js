@@ -98,13 +98,13 @@ export default class LessonComponent extends React.Component
   // }
   addPrevButton() {
     if (this.type === 'multiPage') {
-      return <Button label="<" id="lesson__button-previous" className=" -multi-page-lesson"/>;
+      return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson"/>;
     }
     return <div />;
   }
   addNextButton() {
     if (this.type === 'multiPage') {
-      return <Button label=">" id="lesson__button-next" className=" -multi-page-lesson"/>;
+      return <Button label="" id="lesson__button-next" className=" -multi-page-lesson"/>;
     }
     return <div />;
   }
@@ -121,7 +121,6 @@ export default class LessonComponent extends React.Component
               {this.lesson.content.title}
       </div>
       <div id="lesson__container_name" className="lesson__container">
-            
             {this.addPrevButton()}
             <div id="multipage_diagram" className="diagram__container">
               <canvas className='diagram__gl'>

@@ -16,7 +16,7 @@ export default class Button extends React.Component
   render() {
     const props = Object.assign({}, this.props);
     const Tag = props.href ? 'a' : 'button';
-    const label = props.label || props.children || 'Button';
+    const label = props.label || props.children || '';
     const className = classify('btn', props.className || '');
     delete props.label;
 
