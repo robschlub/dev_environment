@@ -102,7 +102,7 @@ export default class LessonComponent extends React.Component
 
   addGoToButton() {
     if (this.type === 'multiPage') {
-      return <div className="dropup lesson__button-goto_container">
+      return <div className="dropdown lesson__button-goto_container">
         <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Go to
         </button>
