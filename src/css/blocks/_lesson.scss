@@ -143,14 +143,23 @@ $diagram_ratio: 1.5;
   border-right: var(--lesson__np_button-width) solid lighten($color_navigation-buttons, 10);
 }
 
-#lesson__button-goto {
+.lesson__button-goto_container {
   position: absolute;
   border: 0;
   left: calc(50% - var(--lesson__goto_button-width) / 2);
   top: calc(100% - var(--lesson__np_button-height) / 2 - var(--lesson__goto_button-height) / 2);
-  background-color: $color_navigation-buttons;
   height: var(--lesson__goto_button-height);
   width: var(--lesson__goto_button-width);
+}
+
+.lesson__button-goto {
+  position: absolute;
+  border: 0;
+  // left: calc(50% - var(--lesson__goto_button-width) / 2);
+  // top: calc(100% - var(--lesson__np_button-height) / 2 - var(--lesson__goto_button-height) / 2);
+  background-color: $color_navigation-buttons;
+  // height: var(--lesson__goto_button-height);
+  // width: var(--lesson__goto_button-width);
   font-size: var(--lesson__goto_button-font-size);
   color: $color_text;
 }
@@ -208,7 +217,7 @@ $diagram_ratio: 1.5;
     border-bottom: calc(var(--lesson__np_button-height) / 2) solid transparent;
   }
 
-  #lesson__button-goto {
+  .lesson__button-goto_container {
     left: calc(100% - var(--lesson__np_button-width));
     top: calc(100% - var(--lesson__goto_button-height));
   }

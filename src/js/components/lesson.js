@@ -102,39 +102,53 @@ export default class LessonComponent extends React.Component
 
   addGoToButton() {
     if (this.type === 'multiPage') {
-      // return <Button label="Go to" id="lesson__button-goto"/>;
-      return <Button label="Go to" id="lesson__button-goto" data-toggle="modal" data-target="#exampleModalCenter"/>;
+      return <div className="dropup lesson__button-goto_container">
+        <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Go to
+        </button>
+        <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        {this.addListOfSections()}
+        </div>
+      </div>;
     }
     return <div />;
   }
 
-  addSectionTable() {
-    if (this.type === 'multiPage') {
-      return <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalCenterTitle">Go to Section:</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="list-group">
-                  <a href="#" className="list-group-item list-group-item-action active">
-                    Cras justo odio
-                  </a>
-                  <a href="#" className="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-                  <a href="#" className="list-group-item list-group-item-action">Morbi leo risus</a>
-                  <a href="#" className="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-                  <a href="#" className="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>;
+  belongsTo(index: number) {
+    let i = index;
+    while (i > 0) {
+      const { title } = this.lesson.content.sections[i];
+      if (title) {
+        break;
+      }
+      i -= 1;
     }
-    return <div />;
+    return i;
+  }
+
+  clickList(index: number) {
+    this.lesson.goToSection(index);
+  }
+
+  addListOfSections() {
+    const output = [];
+    const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
+    this.lesson.content.sections.forEach((section, index) => {
+      if (section.title) {
+        let classNames = 'dropdown-item';
+        if (index === activeSection) {
+          classNames += ' active';
+        }
+        this.key += 1;
+        output.push(<div
+          className={classNames}
+          onClick={this.clickList.bind(this, index)}
+          key={this.key}>
+            {section.title}
+          </div>);
+      }
+    });
+    return output;
   }
 
   addPageNumber() {
@@ -170,7 +184,7 @@ export default class LessonComponent extends React.Component
             </div>
             {this.addPageNumber()}
             {this.addGoToButton()}
-            {this.addSectionTable()}
+            {/*this.addSectionTable()*/}
             {this.addNextButton()}
       </div>
     </div>;
