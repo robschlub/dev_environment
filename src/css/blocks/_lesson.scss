@@ -8,7 +8,7 @@ $np_button-hspace: 4;
 $text-margin: 4;
 $goto_button-width: 8;
 // $goto_button-min-width: 50px;
-$goto_button-height: 6;
+$goto_button-height: 4;
 $goto_button-font-size: 1.4;
 
 $top_margin-no_navbar: 20px;
@@ -29,7 +29,7 @@ $diagram_ratio: 1.5;
     --lesson__np_button-hspace: calc(#{$np_button-hspace} * 1vw);
     --lesson__text-margin: calc(#{$text-margin} * 1vw);
     --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1.5);
-    --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw);
+    --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw * 1.5);
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} * 1vw);
   }
 }
@@ -39,6 +39,7 @@ $diagram_ratio: 1.5;
     --lesson__container-width: calc(90vw - #{$side-margin} * 2);
     --lesson__np_button-height: calc(#{$np_button-height-landscape} * 1vw);
     --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw);
+    --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw);
   }
 }
 
@@ -67,6 +68,7 @@ $diagram_ratio: 1.5;
 @media (min-aspect-ratio: 2/1) and (max-height: 500px){
   :root {
     --lesson__goto_button-height: 10vh;
+    --lesson__goto_button-width: 20vh;
     --lesson__np_button-height: 20vh;
     --lesson__goto_button-font-size: 3vh;
   }
