@@ -100,6 +100,22 @@ export default class LessonComponent extends React.Component
     return <div />;
   }
 
+  addGoToButton() {
+    if (this.type === 'multiPage') {
+      return <Button label="Go to" id="lesson__button-goto"/>;
+    }
+    return <div />;
+  }
+
+  addPageNumber() {
+    if (this.type === 'multiPage') {
+      return <div id="lesson__page_number">
+      {`${this.lesson.currentSectionIndex + 1} / ${this.lesson.content.sections.length}`}
+      </div>;
+    }
+    return <div />;
+  }
+
   renderMultiPageCanvas() {
     if (this.type === 'multiPage') {
       return <Canvas id="multipage_diagram"/>;
@@ -122,6 +138,8 @@ export default class LessonComponent extends React.Component
               <canvas className='diagram__text'>
               </canvas>
             </div>
+            {this.addPageNumber()}
+            {this.addGoToButton()}
             {this.addNextButton()}
       </div>
     </div>;
