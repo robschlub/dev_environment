@@ -1,9 +1,11 @@
-$title-height: 50px;
-$title-font-size: 30px;
+$title-height: 7vw;
+$title-max-height: 85px;
+$title-font-size: 3.5vw;
+$title-max-font-size: 55px;
 $np_button-width: 40px;
-$np_button-height-portrait: 60px;
-$np_button-height-landscape: 100px;
-$np_button-vspace: 5px;
+$np_button-height-portrait: 40px;
+$np_button-height-landscape: 150px;
+$np_button-vspace: 10px;
 $np_button-hspace: 30px;
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
@@ -16,7 +18,9 @@ $diagram_ratio: 1.5;
 @media (min-aspect-ratio: 1/100) {
   :root {
     --lesson__container-width: 90vw;
-    --lesson__top-margin: 20px  
+    --lesson__top-margin: 20px;
+    --lesson__title-font-size: #{$title-font-size}; 
+    --lesson__title-height: #{$title-height};
   }
 }
 
@@ -31,9 +35,11 @@ $diagram_ratio: 1.5;
     --lesson__top-margin: 70px;
   }
 }
-@media (min-width: calc(#{$xl})) {
+@media (min-width: #{$xl}) {
   :root {
     --lesson__container-width: calc(#{$xl} - #{$side-margin} * 2);
+    --lesson__title-font-size: #{$title-max-font-size};
+    --lesson__title-height: #{$title-max-height};
   }
 }
 
@@ -68,9 +74,10 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__title {
-  font-size: $title-font-size;
+  font-size: var(--lesson__title-font-size);
+  // max-font-size: 50px;
   color: $color_text;
-  height: $title-height;
+  height: var(--lesson__title-height);
   text-align: center;
   margin-top: var(--lesson__top-margin);
 }
