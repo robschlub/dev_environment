@@ -102,7 +102,37 @@ export default class LessonComponent extends React.Component
 
   addGoToButton() {
     if (this.type === 'multiPage') {
-      return <Button label="Go to" id="lesson__button-goto"/>;
+      // return <Button label="Go to" id="lesson__button-goto"/>;
+      return <Button label="Go to" id="lesson__button-goto" data-toggle="modal" data-target="#exampleModalCenter"/>;
+    }
+    return <div />;
+  }
+
+  addSectionTable() {
+    if (this.type === 'multiPage') {
+      return <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalCenterTitle">Go to Section:</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="list-group">
+                  <a href="#" className="list-group-item list-group-item-action active">
+                    Cras justo odio
+                  </a>
+                  <a href="#" className="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+                  <a href="#" className="list-group-item list-group-item-action">Morbi leo risus</a>
+                  <a href="#" className="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+                  <a href="#" className="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>;
     }
     return <div />;
   }
@@ -140,6 +170,7 @@ export default class LessonComponent extends React.Component
             </div>
             {this.addPageNumber()}
             {this.addGoToButton()}
+            {this.addSectionTable()}
             {this.addNextButton()}
       </div>
     </div>;

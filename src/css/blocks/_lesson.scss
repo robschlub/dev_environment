@@ -145,6 +145,7 @@ $diagram_ratio: 1.5;
 
 #lesson__button-goto {
   position: absolute;
+  border: 0;
   left: calc(50% - var(--lesson__goto_button-width) / 2);
   top: calc(100% - var(--lesson__np_button-height) / 2 - var(--lesson__goto_button-height) / 2);
   background-color: $color_navigation-buttons;
