@@ -24,6 +24,7 @@ export default class LessonComponent extends React.Component
   type: 'multiPage' | 'singlePage';
   state: State;
   diagrams: Object;
+  setStateOnNextRefresh: boolean;
 
   constructor(props: Props) {
     super(props);
@@ -40,9 +41,16 @@ export default class LessonComponent extends React.Component
     this.lesson = props.lesson;
     this.key = 0;
     this.lesson.refresh = this.refresh.bind(this);
+    this.setStateOnNextRefresh = false;
   }
 
+  componentDidUpdate() {
+    if (this.setStateOnNextRefresh) {
+      this.lesson.setState();
+    }
+  }
   refresh(htmlText: string) {
+    this.setStateOnNextRefresh = true;
     this.setState({ htmlText });
   }
   goToNext() {
