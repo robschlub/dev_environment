@@ -2,9 +2,10 @@ $title-height: 7vw;
 $title-max-height: 85px;
 $title-font-size: 3vw;
 $title-max-font-size: 47px;
-$np_button-width: 40px;
-$np_button-height-portrait: 40px;
-$np_button-height-landscape: 150px;
+
+$np_button-width: 5;
+$np_button-height-portrait: 7;
+$np_button-height-landscape: 15;
 $np_button-vspace: 25px;
 $np_button-hspace: 30px;
 $top_margin-no_navbar: 20px;
@@ -25,12 +26,15 @@ $diagram_ratio: 1.5;
     --lesson__top-margin: 20px;
     --lesson__title-font-size: #{$title-font-size};
     --lesson__title-height: #{$title-height};
+    --lesson__np_button-width: calc(#{$np_button-width} * 1vw);
+    --lesson__np_button-height: calc(#{$np_button-height-portrait} * 1vw);
   }
 }
 
 @media (min-aspect-ratio: 1/1) {
   :root {
     --lesson__container-width: calc(90vw - #{$side-margin} * 2);
+    --lesson__np_button-height: calc(#{$np_button-height-landscape} * 1vw);
   }
 }
 
@@ -45,13 +49,15 @@ $diagram_ratio: 1.5;
     --lesson__container-width: calc(#{$xl} - #{$side-margin} * 2);
     --lesson__title-font-size: #{$title-max-font-size};
     --lesson__title-height: #{$title-max-height};
+    --lesson__np_button-width: calc(#{$np_button-width} / 100 * #{$xl});
+    --lesson__np_button-height: calc(var(--lesson__np_button-height) / 100 * #{$xl});
   }
 }
 
 :root {
   --lesson__content-width: var(--lesson__container-width);
   --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
-  --lesson__container-height: calc(var(--lesson__content-height) + #{$np_button-vspace} + #{$np_button-height-portrait});
+  --lesson__container-height: calc(var(--lesson__content-height) + #{$np_button-vspace} + var(--lesson__np_button-height));
 }
 
 .lesson__container {
@@ -94,35 +100,35 @@ $diagram_ratio: 1.5;
   border: 0;
   padding: 0;
   background-color: $color_background;
-  top: calc(100% - #{$np_button-height-portrait});
+  top: calc(100% - var(--lesson__np_button-height));
   width: 0;
   height: 0;
-  border-top: calc(#{$np_button-height-portrait} / 2) solid transparent;
-  border-bottom: calc(#{$np_button-height-portrait} / 2) solid transparent;
+  border-top: calc(var(--lesson__np_button-height) / 2) solid transparent;
+  border-bottom: calc(var(--lesson__np_button-height) / 2) solid transparent;
 }
 
 #lesson__button-previous {
   left: 0;
-  border-right: $np_button-width solid $color_navigation-buttons;
+  border-right: var(--lesson__np_button-width) solid $color_navigation-buttons;
 }
 
 #lesson__button-next {
   right: 0;
-  border-left: $np_button-width solid $color_navigation-buttons;
+  border-left: var(--lesson__np_button-width) solid $color_navigation-buttons;
 }
 
 #lesson__button-next:hover {
-  border-left: $np_button-width solid lighten($color_navigation-buttons, 10);
+  border-left: var(--lesson__np_button-width) solid lighten($color_navigation-buttons, 10);
 }
 
 #lesson__button-previous:hover {
-  border-right: $np_button-width solid lighten($color_navigation-buttons, 10);
+  border-right: var(--lesson__np_button-width) solid lighten($color_navigation-buttons, 10);
 }
 
 #lesson__button-goto {
   position: absolute;
   left: calc(50% - #{$goto_button-width} / 2);
-  top: calc(100% - #{$np_button-height-portrait} / 2 - #{$goto_button-height} / 2);
+  top: calc(100% - var(--lesson__np_button-height) / 2 - #{$goto_button-height} / 2);
   background-color: $color_navigation-buttons;
   height: $goto_button-height;
   width: $goto_button-width;
@@ -132,21 +138,21 @@ $diagram_ratio: 1.5;
 #lesson__page_number {
   position: absolute;
   width: 100%;
-  top: calc(100% - #{$np_button-height-portrait} - #{$np_button-vspace} / 2 - #{$goto_button-font-size} / 2);
+  top: calc(100% - var(--lesson__np_button-height) - #{$np_button-vspace} / 2 - #{$goto_button-font-size} / 2);
   font-size: $goto_button-font-size;
   text-align: center;
 }
 
 @media (min-aspect-ratio: 1/1) {
   :root {
-    --lesson__content-width: calc(var(--lesson__container-width) - 2 * #{$np_button-width} - 2 * #{$np_button-hspace});
+    --lesson__content-width: calc(var(--lesson__container-width) - 2 * var(--lesson__np_button-width) - 2 * #{$np_button-hspace});
     --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
     --lesson__container-height: var(--lesson__content-height);
     //
     --lesson__max_container-height: 90vh;
     --lesson__max_content-height: var(--lesson__max_container-height);
     --lesson__max_content-width: calc(var(--lesson__max_content-height) * #{$diagram_ratio});
-    --lesson__max_container-width: calc(var(--lesson__max_content-width) + 2 * #{$np_button-width} + 2 * #{$np_button-hspace});
+    --lesson__max_container-width: calc(var(--lesson__max_content-width) + 2 * var(--lesson__np_button-width) + 2 * #{$np_button-hspace});
   }
 
   .lesson__container {
@@ -170,21 +176,21 @@ $diagram_ratio: 1.5;
 
   .btn-multi-page-lesson {
     position: relative;
-    top: calc(50% - #{$np_button-height-landscape} / 2);
+    top: calc(50% - var(--lesson__np_button-height) / 2);
     display: inline-block;
     vertical-align: top;
-    border-top: calc(#{$np_button-height-landscape} / 2) solid transparent;
-    border-bottom: calc(#{$np_button-height-landscape} / 2) solid transparent;
+    border-top: calc(var(--lesson__np_button-height) / 2) solid transparent;
+    border-bottom: calc(var(--lesson__np_button-height) / 2) solid transparent;
   }
 
   #lesson__button-goto {
-    left: calc(100% - #{$np_button-width});
+    left: calc(100% - var(--lesson__np_button-width));
     top: calc(100% - #{$goto_button-height});
   }
 
   #lesson__page_number {
     width: $goto_button-width;
-    left: calc(100% - #{$np_button-width});
+    left: calc(100% - var(--lesson__np_button-width));
     top: calc(100% - #{$goto_button-height} * 2);
   }
 }
