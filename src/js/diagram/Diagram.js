@@ -177,7 +177,7 @@ class Diagram {
     return shapes(this.webgl, this.limits);
   }
   sizeHtmlText() {
-    const scale = this.fontScale * 1/50;
+    const scale = this.fontScale * 1 / 50;
     this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale}px`;
   }
   destroy() {

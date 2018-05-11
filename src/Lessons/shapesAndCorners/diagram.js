@@ -1,6 +1,6 @@
 // @flow
 import Diagram from '../../js/diagram/Diagram';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../js/diagram/Element';
+import { DiagramElementCollection } from '../../js/diagram/Element';
 import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
 import getScssColors from '../../js/tools/getScssColors';
@@ -12,12 +12,12 @@ const colors = getScssColors(styles);
 
 const backgroundColor = colors.background;
 
-type typeShape = {
-  _lines: DiagramElementPrimative;
-  _corners: DiagramElementPrimative;
-  _lessSharpCorners: DiagramElementPrimative;
-  _moreSharpCorners: DiagramElementPrimative;
-} & DiagramElementCollection ;
+// type typeShape = {
+//   _lines: DiagramElementPrimative;
+//   _corners: DiagramElementPrimative;
+//   _lessSharpCorners: DiagramElementPrimative;
+//   _moreSharpCorners: DiagramElementPrimative;
+// } & DiagramElementCollection ;
 
 // type typeShapesDiagramCollection = {
 //   _square: typeShape,
@@ -49,7 +49,7 @@ function getLessonVars() {
       'linewidth',
       'circle-center-x',
       'circle-center-y',
-      'corner-length'
+      'corner-length',
     ],
     '--lessonvars-',
   );

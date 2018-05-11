@@ -87,7 +87,7 @@ class Section2 extends Section {
     };
   }
 
-  transitionNext(diagrams: Object, done: () => void) {
+  transitionNext(diagrams, done) {
     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
     const collection = diagram.elements._circle;
     if (diagram) {
@@ -189,7 +189,7 @@ class Section3 extends Section {
     }
   }
 
-  transitionPrev(diagrams: Object, done: () => void) {
+  transitionPrev(diagrams, done) {
     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
     const collection = diagram.elements._circle;
     if (diagram) {

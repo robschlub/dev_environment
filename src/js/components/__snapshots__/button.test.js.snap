@@ -44,7 +44,7 @@ exports[`Button No props 1`] = `
 <button
   className="btn"
 >
-  Button
+  
 </button>
 `;
 

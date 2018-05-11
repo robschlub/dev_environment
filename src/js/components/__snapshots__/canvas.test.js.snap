@@ -3,7 +3,7 @@
 exports[`Canvas Component No props 1`] = `
 <div
   className="diagram__container"
-  id="_container"
+  id=""
 >
   <canvas
     className="diagram__gl"
@@ -20,7 +20,7 @@ exports[`Canvas Component No props 1`] = `
 exports[`Canvas Component With id 1`] = `
 <div
   className="diagram__container"
-  id="test_id_container"
+  id="test_id"
 >
   <canvas
     className="diagram__gl"
@@ -37,7 +37,7 @@ exports[`Canvas Component With id 1`] = `
 exports[`Canvas Component function is called after render 1`] = `
 <div
   className="diagram__container"
-  id="test_id_container"
+  id="test_id"
 >
   <canvas
     className="diagram__gl"

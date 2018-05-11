@@ -152,7 +152,10 @@ class Section {
     return {};
   }
 
-  transitionNext(diagrams: Object, done: () => void = function temp() {}) {
+  transitionNext(
+    diagrams: Object,
+    done: () => void = function temp() {},
+  ): void {
     done();
   }
   transitionPrev(diagrams: Object, done: () => void = function temp() {}) {
@@ -161,6 +164,8 @@ class Section {
   /* eslint-enable no-unused-vars */
 }
 
+class diagramClass {
+}
 class Content {
   title: string;
   sections: Array<Section>;
@@ -170,7 +175,7 @@ class Content {
   constructor(
     title: string,
     sections: Array<Section>,
-    multiPageDiagramClass: Object,
+    multiPageDiagramClass: Object = diagramClass,
   ) {
     this.title = title;
     this.sections = sections;

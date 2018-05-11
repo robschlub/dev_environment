@@ -129,7 +129,6 @@ class ShapesCollection extends DiagramElementCollection {
     super(transform, diagram.limits);
     this.diagram = diagram;
     const { shapes } = diagram;
-    console.log(locations)
     const square = makeSquare(shapes, locations.square.center);
     this.add('square', square);
 

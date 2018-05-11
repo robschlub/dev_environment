@@ -19,7 +19,7 @@ $diagram_ratio: 1.5;
   :root {
     --lesson__container-width: 90vw;
     --lesson__top-margin: 20px;
-    --lesson__title-font-size: #{$title-font-size}; 
+    --lesson__title-font-size: #{$title-font-size};
     --lesson__title-height: #{$title-height};
   }
 }
@@ -35,6 +35,7 @@ $diagram_ratio: 1.5;
     --lesson__top-margin: 70px;
   }
 }
+
 @media (min-width: #{$xl}) {
   :root {
     --lesson__container-width: calc(#{$xl} - #{$side-margin} * 2);

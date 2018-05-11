@@ -15,6 +15,7 @@ describe('Lesson', () => {
       constructor(id) {
         this.id = id;
         this.stop = () => {};
+        this.animateNextFrame = () => {};
       }
     }
     DiagramClass = Diagram;
@@ -88,6 +89,7 @@ describe('Lesson', () => {
         new Section2(),
         new Section3(),
       ],
+      Diagram,
     );
     lessonMulti = new Lesson(content, 'multiPage');
     lessonSingle = new Lesson(content, 'singlePage');
@@ -110,7 +112,8 @@ describe('Lesson', () => {
     });
     test('createDiagramsAndSetState', () => {
       expect(mockSetState.mock.calls).toHaveLength(0);
-      lesson.createDiagramsAndSetState();
+      lesson.createDiagrams();
+      lesson.setState();
       expect(mockSetState.mock.calls).toHaveLength(3);
 
       const expectedDiagrams = JSON.stringify({
@@ -135,105 +138,103 @@ describe('Lesson', () => {
       lesson.goToSection(2);
       const html = lesson.getContentHtml();
       const count1 = (html.match(/d1_id/g) || []).length;
-      const count2 = (html.match(/d2_id/g) || []).length;
       expect(count1).toBe(1);
-      expect(count2).toBe(1);
     });
     test('Save State', () => {
-      lesson.createDiagramsAndSetState();
+      lesson.createDiagrams();
+      lesson.setState();
       expect(mockGetState.mock.calls).toHaveLength(0);
       expect(lesson.state).toEqual({});
 
       lesson.saveState();
       expect(lesson.state).toEqual({ angle: 1 });
       expect(mockGetState.mock.calls).toHaveLength(1);
-      expect(mockGetState.mock.calls[0][0]).toEqual({});
+      expect(JSON.stringify(mockGetState.mock.calls[0][0])).toEqual(JSON.stringify({
+        multipage_diagram: new DiagramClass('multipage_diagram'),
+      }));
       lesson.currentSectionIndex = 2;
-      lesson.createDiagramsAndSetState();
+
+      lesson.setState();
 
       lesson.saveState();
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
       expect(JSON.stringify(mockGetState.mock.calls[1][0])).toEqual(JSON.stringify({
-        d1_id: new DiagramClass('d1_id'),
-        d2_id: new DiagramClass('d2_id'),
+        multipage_diagram: new DiagramClass('multipage_diagram'),
       }));
     });
     test('NextPage', () => {
-      let result;
       expect(lesson.state).toEqual({});
       expect(lesson.currentSectionIndex).toBe(0);
       expect(mockGetState.mock.calls).toHaveLength(0);
 
-      result = lesson.nextSection();
+      lesson.nextSection();
       expect(lesson.currentSectionIndex).toBe(1);
       expect(lesson.state).toEqual({ angle: 1 });
       expect(mockGetState.mock.calls).toHaveLength(1);
-      expect(result).toBe(true);
-
-      result = lesson.nextSection();
+      // expect(result).toBe(true);
+      lesson.nextSection();
       expect(lesson.currentSectionIndex).toBe(2);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
-      expect(result).toBe(true);
 
       // This is out of bounds, so nothing should change
-      result = lesson.nextSection();
+      lesson.nextSection();
       expect(lesson.currentSectionIndex).toBe(2);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
-      expect(result).toBe(false);
     });
     test('PrevPage', () => {
-      let result;
       expect(lesson.state).toEqual({});
       expect(mockGetState.mock.calls).toHaveLength(0);
       lesson.currentSectionIndex = 2;
       expect(lesson.currentSectionIndex).toBe(2);
 
-      result = lesson.prevSection();
+      lesson.prevSection();
       expect(lesson.currentSectionIndex).toBe(1);
       expect(lesson.state).toEqual({ angle: 1 });
       expect(mockGetState.mock.calls).toHaveLength(1);
-      expect(result).toBe(true);
 
-      result = lesson.prevSection();
+      lesson.prevSection();
       expect(lesson.currentSectionIndex).toBe(0);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
-      expect(result).toBe(true);
 
       // This is out of bounds, so nothing should change
-      result = lesson.prevSection();
+      lesson.prevSection();
       expect(lesson.currentSectionIndex).toBe(0);
       expect(lesson.state).toEqual({ angle: 2 });
       expect(mockGetState.mock.calls).toHaveLength(2);
-      expect(result).toBe(false);
     });
     test('createDiagramsAndSetState', () => {
       let diagrams;
       let type;
       expect(mockSetState.mock.calls).toHaveLength(0);
-      lesson.createDiagramsAndSetState();
+      lesson.createDiagrams();
+      lesson.setState();
       diagrams = mockSetState.mock.calls[0][0];
       type = mockSetState.mock.calls[0][2];
-      expect(diagrams).toEqual({});
+      // expect(diagrams).toEqual({});
+      expect(JSON.stringify(diagrams)).toEqual(JSON.stringify({
+        multipage_diagram: new DiagramClass('multipage_diagram'),
+      }));
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
-      lesson.createDiagramsAndSetState();
+      // lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[1][0];
       type = mockSetState.mock.calls[1][2];
-      expect(JSON.stringify(diagrams)).toEqual(JSON.stringify({ d1_id: new DiagramClass('d1_id') }));
+      expect(JSON.stringify(diagrams)).toEqual(JSON.stringify({
+        multipage_diagram: new DiagramClass('multipage_diagram'),
+      }));
       expect(type).toEqual('multiPage');
 
       lesson.nextSection();
-      lesson.createDiagramsAndSetState();
+      // lesson.createDiagramsAndSetState();
       diagrams = mockSetState.mock.calls[2][0];
       type = mockSetState.mock.calls[2][2];
       expect(JSON.stringify(diagrams)).toEqual(JSON.stringify({
-        d1_id: new DiagramClass('d1_id'),
-        d2_id: new DiagramClass('d2_id'),
+        multipage_diagram: new DiagramClass('multipage_diagram'),
       }));
       expect(type).toEqual('multiPage');
       expect(mockSetState.mock.calls).toHaveLength(3);

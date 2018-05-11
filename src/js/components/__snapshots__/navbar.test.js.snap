@@ -62,9 +62,9 @@ exports[`Navbar Make "About" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/singlepagelesson"
+            href="/single"
           >
-            Single Page Lesson
+            Single
           </a>
         </li>
         <li
@@ -72,9 +72,9 @@ exports[`Navbar Make "About" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/multipagelesson"
+            href="/multi"
           >
-            Multi Page Lesson
+            Multi
           </a>
         </li>
         <li
@@ -134,12 +134,6 @@ exports[`Navbar Make "About" item active 1`] = `
           placeholder="Search"
           type="search"
         />
-        <button
-          className="btn btn-outline-success my-2 my-sm-0"
-          type="submit"
-        >
-          Search
-        </button>
       </form>
     </div>
   </nav>
@@ -208,9 +202,9 @@ exports[`Navbar Make "Introduction" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/singlepagelesson"
+            href="/single"
           >
-            Single Page Lesson
+            Single
           </a>
         </li>
         <li
@@ -218,9 +212,9 @@ exports[`Navbar Make "Introduction" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/multipagelesson"
+            href="/multi"
           >
-            Multi Page Lesson
+            Multi
           </a>
         </li>
         <li
@@ -280,12 +274,6 @@ exports[`Navbar Make "Introduction" item active 1`] = `
           placeholder="Search"
           type="search"
         />
-        <button
-          className="btn btn-outline-success my-2 my-sm-0"
-          type="submit"
-        >
-          Search
-        </button>
       </form>
     </div>
   </nav>
@@ -354,9 +342,9 @@ exports[`Navbar No props 1`] = `
         >
           <a
             className="nav-link "
-            href="/singlepagelesson"
+            href="/single"
           >
-            Single Page Lesson
+            Single
           </a>
         </li>
         <li
@@ -364,9 +352,9 @@ exports[`Navbar No props 1`] = `
         >
           <a
             className="nav-link "
-            href="/multipagelesson"
+            href="/multi"
           >
-            Multi Page Lesson
+            Multi
           </a>
         </li>
         <li
@@ -426,12 +414,6 @@ exports[`Navbar No props 1`] = `
           placeholder="Search"
           type="search"
         />
-        <button
-          className="btn btn-outline-success my-2 my-sm-0"
-          type="submit"
-        >
-          Search
-        </button>
       </form>
     </div>
   </nav>

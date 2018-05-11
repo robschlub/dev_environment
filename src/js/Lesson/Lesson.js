@@ -85,6 +85,7 @@ class Lesson {
       this.currentDiagrams[key].animateNextFrame();
     });
   }
+
   finishTransNext() {
     this.goToSection(this.currentSectionIndex + 1);
   }
@@ -138,6 +139,7 @@ class Lesson {
     if (this.type === 'multiPage') {
       sections = [this.content.sections[this.currentSectionIndex]];
       const id = 'multipage_diagram';
+      // $FlowFixMe
       this.currentDiagrams[id] = new this.content.DiagramClass(id);
     }
     if (this.type === 'singlePage') {
