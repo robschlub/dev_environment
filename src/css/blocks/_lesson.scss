@@ -5,13 +5,17 @@ $title-max-font-size: 47px;
 $np_button-width: 40px;
 $np_button-height-portrait: 40px;
 $np_button-height-landscape: 150px;
-$np_button-vspace: 10px;
+$np_button-vspace: 25px;
 $np_button-hspace: 30px;
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
 $bottom_margin: 50px;
 $side-margin: 10px;
 $text-margin: 4vw;
+$goto_button-width: 50px;
+$goto_button-height: 30px;
+$page_number-height: 20px;
+$goto_button-font-size: 10px;
 
 $diagram_ratio: 1.5;
 
@@ -115,6 +119,24 @@ $diagram_ratio: 1.5;
   border-right: $np_button-width solid lighten($color_navigation-buttons, 10);
 }
 
+#lesson__button-goto {
+  position: absolute;
+  left: calc(50% - #{$goto_button-width} / 2);
+  top: calc(100% - #{$np_button-height-portrait} / 2 - #{$goto_button-height} / 2);
+  background-color: $color_navigation-buttons;
+  height: $goto_button-height;
+  width: $goto_button-width;
+  font-size: $goto_button-font-size;
+}
+
+#lesson__page_number {
+  position: absolute;
+  width: 100%;
+  top: calc(100% - #{$np_button-height-portrait} - #{$np_button-vspace} / 2 - #{$goto_button-font-size} / 2);
+  font-size: $goto_button-font-size;
+  text-align: center;
+}
+
 @media (min-aspect-ratio: 1/1) {
   :root {
     --lesson__content-width: calc(var(--lesson__container-width) - 2 * #{$np_button-width} - 2 * #{$np_button-hspace});
@@ -153,6 +175,17 @@ $diagram_ratio: 1.5;
     vertical-align: top;
     border-top: calc(#{$np_button-height-landscape} / 2) solid transparent;
     border-bottom: calc(#{$np_button-height-landscape} / 2) solid transparent;
+  }
+
+  #lesson__button-goto {
+    left: calc(100% - #{$np_button-width});
+    top: calc(100% - #{$goto_button-height});
+  }
+
+  #lesson__page_number {
+    width: $goto_button-width;
+    left: calc(100% - #{$np_button-width});
+    top: calc(100% - #{$goto_button-height} * 2);
   }
 }
 
