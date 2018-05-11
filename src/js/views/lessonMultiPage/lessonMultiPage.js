@@ -22,7 +22,9 @@ const lessonMultiPage = (section: number) => {
   if (lessonId instanceof HTMLElement) {
     ReactDOM.render(
       <div>
-        <Navbar active='Multi Page Lesson'/>
+        <div className="container-fluid">
+          <Navbar active='Multi Page Lesson'/>
+        </div>
         <div className="container-fluid">
           <div className="row">
             <div className="col">
