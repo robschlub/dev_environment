@@ -11,6 +11,7 @@ $_color-theme_standard2: (
   diagram-background:           map-get($_color-palette, white),
   navbar:                       map-get($_color-palette, grey-dark),
   text:                         map-get($_color-palette, grey-dark),
+  diagram-text:                 map-get($_color-palette, grey-dark),
   navigation-buttons:           map-get($_color-palette, grey),
   negative-text:                map-get($_color-palette, grey-light),
   navbar-background-color:      map-get($_color-palette, grey-dark),

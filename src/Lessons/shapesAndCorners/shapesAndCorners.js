@@ -7,7 +7,7 @@ import LessonDiagram from './diagram';
 
 class Section1 extends Section {
   setTitle() {
-    return 'Shapes and Corners';
+    return 'Corners';
   }
   setContent() {
     return [
@@ -121,6 +121,9 @@ class Section2 extends Section {
 }
 
 class Section3 extends Section {
+  setTitle() {
+    return 'Make a corner';
+  }
   setContent() {
     return `
       <p>

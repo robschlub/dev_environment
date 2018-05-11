@@ -41,10 +41,12 @@ class Lesson {
 
   goToSection(sectionIndex: number) {
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
+      if (this.inTransition) {
+        this.stopDiagrams();
+      }
       this.saveState();
       this.currentSectionIndex = sectionIndex;
-      // this.createDiagramsAndSetState();
-      this.refreshView();
+      this.refresh(this.getContentHtml());
     }
     // return false;
   }
@@ -87,16 +89,13 @@ class Lesson {
   }
 
   finishTransNext() {
+    this.inTransition = false;
     this.goToSection(this.currentSectionIndex + 1);
   }
 
   finishTransPrev() {
+    this.inTransition = false;
     this.goToSection(this.currentSectionIndex - 1);
-  }
-
-  refreshView() {
-    this.refresh(this.getContentHtml());
-    this.setState();
   }
 
   prevSection() {

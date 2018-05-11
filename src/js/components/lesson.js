@@ -24,6 +24,7 @@ export default class LessonComponent extends React.Component
   type: 'multiPage' | 'singlePage';
   state: State;
   diagrams: Object;
+  setStateOnNextRefresh: boolean;
 
   constructor(props: Props) {
     super(props);
@@ -40,9 +41,16 @@ export default class LessonComponent extends React.Component
     this.lesson = props.lesson;
     this.key = 0;
     this.lesson.refresh = this.refresh.bind(this);
+    this.setStateOnNextRefresh = false;
   }
 
+  componentDidUpdate() {
+    if (this.setStateOnNextRefresh) {
+      this.lesson.setState();
+    }
+  }
   refresh(htmlText: string) {
+    this.setStateOnNextRefresh = true;
     this.setState({ htmlText });
   }
   goToNext() {
@@ -100,6 +108,66 @@ export default class LessonComponent extends React.Component
     return <div />;
   }
 
+  addGoToButton() {
+    if (this.type === 'multiPage') {
+      return <div className="dropdown lesson__button-goto_container">
+        <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Go to
+        </button>
+        <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        {this.addListOfSections()}
+        </div>
+      </div>;
+    }
+    return <div />;
+  }
+
+  belongsTo(index: number) {
+    let i = index;
+    while (i > 0) {
+      const { title } = this.lesson.content.sections[i];
+      if (title) {
+        break;
+      }
+      i -= 1;
+    }
+    return i;
+  }
+
+  clickList(index: number) {
+    this.lesson.goToSection(index);
+  }
+
+  addListOfSections() {
+    const output = [];
+    const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
+    this.lesson.content.sections.forEach((section, index) => {
+      if (section.title) {
+        let classNames = 'dropdown-item';
+        if (index === activeSection) {
+          classNames += ' active';
+        }
+        this.key += 1;
+        output.push(<div
+          className={classNames}
+          onClick={this.clickList.bind(this, index)}
+          key={this.key}>
+            {section.title}
+          </div>);
+      }
+    });
+    return output;
+  }
+
+  addPageNumber() {
+    if (this.type === 'multiPage') {
+      return <div id="lesson__page_number">
+      {`${this.lesson.currentSectionIndex + 1} / ${this.lesson.content.sections.length}`}
+      </div>;
+    }
+    return <div />;
+  }
+
   renderMultiPageCanvas() {
     if (this.type === 'multiPage') {
       return <Canvas id="multipage_diagram"/>;
@@ -122,6 +190,8 @@ export default class LessonComponent extends React.Component
               <canvas className='diagram__text'>
               </canvas>
             </div>
+            {this.addPageNumber()}
+            {this.addGoToButton()}
             {this.addNextButton()}
       </div>
     </div>;

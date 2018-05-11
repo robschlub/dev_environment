@@ -11,6 +11,7 @@ $color_highlight:              map-get($_color-theme, highlight);
 $color_background:             map-get($_color-theme, background);
 $color_navbar:                 map-get($_color-theme, navbar);
 $color_text:                   map-get($_color-theme, text);
+$color_diagram-text:           map-get($_color-theme, diagram-text);
 $color_negative-text:          map-get($_color-theme, negative-text);
 $color_navigation-buttons:     map-get($_color-theme, navigation-buttons);
 $color_diagram:                map-get($_color-theme, diagram-background);
