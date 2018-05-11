@@ -169,21 +169,23 @@ class Diagram {
     this.createDiagramElements();
 
     window.addEventListener('resize', this.resize.bind(this));
-
+    this.sizeHtmlText();
     this.animateNextFrame();
   }
 
   getShapes() {
     return shapes(this.webgl, this.limits);
   }
-
+  sizeHtmlText() {
+    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * this.fontScale}px`;
+  }
   destroy() {
     this.gesture.destroy();
     this.webgl.gl.getExtension('WEBGL_lose_context').loseContext();
   }
   resize() {
     this.webgl.resize();
-    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * this.fontScale}px`;
+    this.sizeHtmlText();
     this.animateNextFrame();
   }
   // Handle touch down, or mouse click events within the canvas.
