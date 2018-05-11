@@ -1,6 +1,6 @@
 
 // Set the color theme here
-$_color-theme: $_color-theme_dark2;
+$_color-theme: $_color-theme_standard2;
 
 $color_primary:                map-get($_color-theme, primary);
 $color_secondary:              map-get($_color-theme, secondary);
