@@ -71,7 +71,7 @@ function makeReference(shapes: Object, layout: Object) {
 
 function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout: Object) {
   return makeLine(
-    shapes, new Point(0, 0), layout.radius * 0.1, layout.linewidth * 3,
+    shapes, new Point(0, 0), layout.cornerLength, layout.linewidth * 3,
     cornerColor, pointOrTransform,
   );
 }

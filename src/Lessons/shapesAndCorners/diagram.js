@@ -49,6 +49,7 @@ function getLessonVars() {
       'linewidth',
       'circle-center-x',
       'circle-center-y',
+      'corner-length'
     ],
     '--lessonvars-',
   );
@@ -73,6 +74,7 @@ function getLessonVars() {
     pent: {
       center: new Point(v['pent-center-x'], v['pent-center-y']),
     },
+    cornerLength: v['corner-length'],
   };
 }
 
