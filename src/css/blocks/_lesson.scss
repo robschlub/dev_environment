@@ -1,7 +1,7 @@
 $title-height: 7vw;
 $title-max-height: 85px;
-$title-font-size: 3.5vw;
-$title-max-font-size: 55px;
+$title-font-size: 3vw;
+$title-max-font-size: 47px;
 $np_button-width: 40px;
 $np_button-height-portrait: 40px;
 $np_button-height-landscape: 150px;
@@ -80,6 +80,7 @@ $diagram_ratio: 1.5;
   height: var(--lesson__title-height);
   text-align: center;
   margin-top: var(--lesson__top-margin);
+  // font-weight: bold;
 }
 
 .btn-multi-page-lesson {
