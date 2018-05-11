@@ -1,18 +1,18 @@
-$_color-palette: $_color-palette_standard;
+$_color-palette: $_color-palette_n;
 
-$_color-theme_standard: (
+$_color-theme_dark2: (
   primary:                      map-get($_color-palette, blue),
   secondary:                    map-get($_color-palette, blue-light),
   danger:                       map-get($_color-palette, red),
-  safe:                         map-get($_color-palette, green-medium),
+  safe:                         map-get($_color-palette, green),
   passive:                      map-get($_color-palette, yellow),
   highlight:                    map-get($_color-palette, red),
-  background:                   map-get($_color-palette, white),
-  diagram-background:           map-get($_color-palette, white),
+  background:                   map-get($_color-palette, grey-medium),
+  diagram-background:           map-get($_color-palette, black),
   navbar:                       map-get($_color-palette, grey-dark),
-  text:                         map-get($_color-palette, grey-dark),
-  negative-text:                map-get($_color-palette, grey-light),
-  navigation-buttons:           map-get($_color-palette, grey-dark),
+  text:                         map-get($_color-palette, yellow-light),
+  navigation-buttons:           map-get($_color-palette, grey-light),
+  negative-text:                map-get($_color-palette, grey-dark),
   navbar-background-color:      map-get($_color-palette, grey-dark),
   navbar-color:                 rgba(map-get($_color-palette, white), 0.5),
   navbar-hover-color:           rgba(map-get($_color-palette, white), 0.75),

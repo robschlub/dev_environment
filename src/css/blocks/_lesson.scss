@@ -1,13 +1,15 @@
 $title-height: 50px;
 $title-font-size: 30px;
 $np_button-width: 40px;
-$np_button-height: 60px;
+$np_button-height-portrait: 60px;
+$np_button-height-landscape: 100px;
 $np_button-vspace: 5px;
 $np_button-hspace: 30px;
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
 $bottom_margin: 50px;
 $side-margin: 10px;
+$text-margin: 4vw;
 
 $diagram_ratio: 1.5;
 
@@ -32,7 +34,7 @@ $diagram_ratio: 1.5;
 :root {
   --lesson__content-width: var(--lesson__container-width);
   --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
-  --lesson__container-height: calc(var(--lesson__content-height) + #{$np_button-vspace} + #{$np_button-height});
+  --lesson__container-height: calc(var(--lesson__content-height) + #{$np_button-vspace} + #{$np_button-height-portrait});
 }
 
 .lesson__container {
@@ -51,6 +53,8 @@ $diagram_ratio: 1.5;
 
 .lesson__text p {
   color: $color_text;
+  margin-left: $text-margin;
+  margin-right: $text-margin;
 }
 
 .lesson__title {
@@ -71,29 +75,29 @@ $diagram_ratio: 1.5;
   // color: $color_background;
   background-color: $color_background;
   // border-radius: 3px;
-  top: calc(100% - #{$np_button-height});
+  top: calc(100% - #{$np_button-height-portrait});
   width: 0;
   height: 0;
-  border-top: calc(#{$np_button-height} / 2) solid transparent;
-  border-bottom: calc(#{$np_button-height} / 2) solid transparent;
+  border-top: calc(#{$np_button-height-portrait} / 2) solid transparent;
+  border-bottom: calc(#{$np_button-height-portrait} / 2) solid transparent;
 }
 
 #lesson__button-previous {
   left: 0;
-  border-right: $np_button-width solid $color_primary;
+  border-right: $np_button-width solid $color_navigation-buttons;
 }
 
 #lesson__button-next {
   right: 0;
-  border-left: $np_button-width solid $color_primary;
+  border-left: $np_button-width solid $color_navigation-buttons;
 }
 
 #lesson__button-next:hover {
-  border-left: $np_button-width solid lighten($color_primary, 10);
+  border-left: $np_button-width solid lighten($color_navigation-buttons, 10);
 }
 
 #lesson__button-previous:hover {
-  border-right: $np_button-width solid lighten($color_primary, 10);
+  border-right: $np_button-width solid lighten($color_navigation-buttons, 10);
 }
 
 @media (min-aspect-ratio: 1/1) {
@@ -129,16 +133,14 @@ $diagram_ratio: 1.5;
 
   .btn-multi-page-lesson {
     position: relative;
-    top: calc(50% - #{$np_button-height} / 2);
+    top: calc(50% - #{$np_button-height-landscape} / 2);
     display: inline-block;
     vertical-align: top;
     // height: var(--lesson__content-height);
     // max-height: var(--lesson__max_content-height);
     // width: $np_button-width;
-  }
-
-  .lesson__text p {
-    color: red;
+    border-top: calc(#{$np_button-height-landscape} / 2) solid transparent;
+    border-bottom: calc(#{$np_button-height-landscape} / 2) solid transparent;
   }
 }
 

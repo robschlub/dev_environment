@@ -1,6 +1,6 @@
 
 // Set the color theme here
-$_color-theme: $_color-theme_standard;
+$_color-theme: $_color-theme_dark2;
 
 $color_primary:                map-get($_color-theme, primary);
 $color_secondary:              map-get($_color-theme, secondary);
@@ -12,6 +12,7 @@ $color_background:             map-get($_color-theme, background);
 $color_navbar:                 map-get($_color-theme, navbar);
 $color_text:                   map-get($_color-theme, text);
 $color_negative-text:          map-get($_color-theme, negative-text);
+$color_navigation-buttons:     map-get($_color-theme, navigation-buttons);
 $color_diagram:                map-get($_color-theme, diagram-background);
 $color_navbar-background:      map-get($_color-theme, navbar-background-color);
 $color_navbar:                 map-get($_color-theme, navbar-color);

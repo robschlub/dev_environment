@@ -12,6 +12,7 @@ $_color-theme_dark: (
   navbar:                       map-get($_color-palette, grey-light),
   text:                         map-get($_color-palette, grey-dark),
   negative-text:                map-get($_color-palette, grey-dark),
+  navigation-buttons:           map-get($_color-palette, grey-light),
   navbar-background-color:      map-get($_color-palette, grey-dark),
   navbar-color:                 rgba(map-get($_color-palette, white), 0.5),
   navbar-hover-color:           rgba(map-get($_color-palette, white), 0.75),
