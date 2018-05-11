@@ -57,24 +57,24 @@ $diagram_ratio: 1.5;
   margin-right: $text-margin;
 }
 
+.lesson__text:first-child {
+  margin-top: $text-margin;
+}
+
 .lesson__title {
   font-size: $title-font-size;
   color: $color_text;
-  height: $title-height;      //Check this is working
+  height: $title-height;
   text-align: center;
   margin-top: $top_margin-no_navbar;
 }
 
 .btn-multi-page-lesson {
   position: absolute;
-  // width: $np_button-width;
-  // height: $np_button-height;
   border-style: none;
   border: 0;
   padding: 0;
-  // color: $color_background;
   background-color: $color_background;
-  // border-radius: 3px;
   top: calc(100% - #{$np_button-height-portrait});
   width: 0;
   height: 0;
@@ -136,9 +136,6 @@ $diagram_ratio: 1.5;
     top: calc(50% - #{$np_button-height-landscape} / 2);
     display: inline-block;
     vertical-align: top;
-    // height: var(--lesson__content-height);
-    // max-height: var(--lesson__max_content-height);
-    // width: $np_button-width;
     border-top: calc(#{$np_button-height-landscape} / 2) solid transparent;
     border-bottom: calc(#{$np_button-height-landscape} / 2) solid transparent;
   }
