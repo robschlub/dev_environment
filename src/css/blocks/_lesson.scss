@@ -9,7 +9,7 @@ $text-margin: 4;
 $goto_button-width: 8;
 // $goto_button-min-width: 50px;
 $goto_button-height: 6;
-$goto_button-font-size: 1.5;
+$goto_button-font-size: 1.4;
 
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
@@ -28,7 +28,7 @@ $diagram_ratio: 1.5;
     --lesson__np_button-vspace: calc(#{$np_button-vspace} * 1vw);
     --lesson__np_button-hspace: calc(#{$np_button-hspace} * 1vw);
     --lesson__text-margin: calc(#{$text-margin} * 1vw);
-    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 2);
+    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1.5);
     --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw);
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} * 1vw);
   }
@@ -93,7 +93,7 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__text p {
-  color: $color_text;
+  color: $color_diagram-text;
   margin-left: var(--lesson__text-margin);
   margin-right: var(--lesson__text-margin);
 }
@@ -104,12 +104,10 @@ $diagram_ratio: 1.5;
 
 .lesson__title {
   font-size: var(--lesson__title-font-size);
-  // max-font-size: 50px;
   color: $color_text;
   height: var(--lesson__title-height);
   text-align: center;
   margin-top: var(--lesson__top-margin);
-  // font-weight: bold;
 }
 
 .btn-multi-page-lesson {
@@ -151,6 +149,11 @@ $diagram_ratio: 1.5;
   height: var(--lesson__goto_button-height);
   width: var(--lesson__goto_button-width);
   font-size: var(--lesson__goto_button-font-size);
+  color: $color_text;
+}
+
+#lesson__button-goto:hover {
+  background-color: lighten($color_navigation-buttons, 10);
 }
 
 #lesson__page_number {
@@ -159,6 +162,7 @@ $diagram_ratio: 1.5;
   top: calc(100% - var(--lesson__np_button-height) - var(--lesson__np_button-vspace) / 2 - var(--lesson__goto_button-font-size) / 2);
   font-size: var(--lesson__goto_button-font-size);
   text-align: center;
+  color: $color_text;
 }
 
 @media (min-aspect-ratio: 1/1) {
@@ -171,11 +175,6 @@ $diagram_ratio: 1.5;
     --lesson__max_content-height: var(--lesson__max_container-height);
     --lesson__max_content-width: calc(var(--lesson__max_content-height) * #{$diagram_ratio});
     --lesson__max_container-width: calc(var(--lesson__max_content-width) + 2 * var(--lesson__np_button-width) + 2 * var(--lesson__np_button-hspace));
-    // //
-    // --lesson__max_goto_button-width: calc(var(--lesson__max_content-height) * 0.4);
-    // --lesson__max_goto_button-height: calc(var(--lesson__max_content-height) * 0.3);
-    // --lesson__max_np_button-width: calc(var(--lesson__max_content-height) * 0.4);
-    // --lesson__max_np_button-height: calc(var(--lesson__max_content-height) * 0.2);
   }
 
   .lesson__container {

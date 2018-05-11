@@ -34,6 +34,7 @@ $_color-palette_n: (
   black:                #000,
   //
   grey:                 #929292,
+  grey-vlight:          lighten(#929292, 30),
   grey-light:           lighten(#929292, 20),
   grey-medium:          #5E5E5E,
   grey-dark:            #494949,
