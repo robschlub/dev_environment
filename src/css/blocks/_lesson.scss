@@ -1,13 +1,13 @@
 $title-height: 50px;
 $title-font-size: 30px;
-$np_button-width: calc(#{$title-height} * 0.8);
+$np_button-width: 50px;
 $np_button-height: 40px;
 $np_button-vspace: 5px;
-$np_button-hspace: calc(#{$title-height} * 0.2);
+$np_button-hspace: 30px;
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
 $bottom_margin: 50px;
-$side-margin: 50px;
+$side-margin: 10px;
 
 $diagram_ratio: 1.5;
 
@@ -32,16 +32,10 @@ $diagram_ratio: 1.5;
 :root {
   --lesson__content-width: var(--lesson__container-width);
   --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
-  --lesson__container-height: calc(var(--lesson__content-height) + #{$title-height} + #{$title-height} + #{$np_button-vspace} + #{$np_button-height});
-  //
-  --lesson__max_container-height: 90vh;
-  --lesson__max_content-height: calc(var(--lesson__max_container-height) - #{$title-height} - #{$np_button_vspace} - #{$np_button_height});
-  --lesson__max_content-width: calc(var(--lesson__max_content-height) * #{$diagram_ratio});
-  --lesson__max_container-width: var(--lesson__max_content-width);
+  --lesson__container-height: calc(var(--lesson__content-height) + #{$np_button-vspace} + #{$np_button-height});
 }
 
 .lesson__container {
-  margin-top: $top_margin-no_navbar;
   position: relative;
   margin-left: auto;
   margin-right: auto;
@@ -64,6 +58,7 @@ $diagram_ratio: 1.5;
   color: $color_text;
   height: $title-height;      //Check this is working
   text-align: center;
+  margin-top: $top_margin-no_navbar;
 }
 
 .btn-multi-page-lesson {
@@ -87,14 +82,14 @@ $diagram_ratio: 1.5;
 
 @media (min-aspect-ratio: 1/1) {
   :root {
-    --lesson__content-width: calc(var(--lesson__container-width) - 2 * #{$title-height});
+    --lesson__content-width: calc(var(--lesson__container-width) - 2 * #{$np_button-width} - 2 * #{$np_button-hspace});
     --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
-    --lesson__container-height: calc(var(--lesson__content-height) + #{$title-height});
+    --lesson__container-height: var(--lesson__content-height);
     //
-    --lesson__max_container-height: 50vh;
-    --lesson__max_content-height: calc(var(--lesson__max_container-height) - #{$title-height});
+    --lesson__max_container-height: 90vh;
+    --lesson__max_content-height: var(--lesson__max_container-height);
     --lesson__max_content-width: calc(var(--lesson__max_content-height) * #{$diagram_ratio});
-    --lesson__max_container-width: calc(var(--lesson__max_content-width) + 2 * #{$title-height});
+    --lesson__max_container-width: calc(var(--lesson__max_content-width) + 2 * #{$np_button-width} + 2 * #{$np_button-hspace});
   }
 
   .lesson__container {
@@ -102,8 +97,8 @@ $diagram_ratio: 1.5;
     height: var(--lesson__container-height);
     margin-left: auto;
     margin-right: auto;
-    // max-height: var(--lesson__max_container-height);
-    // max-width: var(--lesson__max_container-width);
+    max-height: var(--lesson__max_container-height);
+    max-width: var(--lesson__max_container-width);
   }
 
   #multipage_diagram {
