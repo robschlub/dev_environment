@@ -10,16 +10,7 @@ import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
 const colors = getScssColors(styles);
-const anchorColor = colors.anchor;
-const radiusColor = colors.radius;
-const cornerColor = colors.corners;
-const referenceColor = colors.reference;
-// const anchorRadius = 0.03;
 const anchorPoints = 50;
-// const circleRadius = 0.9;
-// const lineWidth = 0.02;
-// const cornerWidth = 0.04;
-// const cornerLength = 0.2;
 
 function makeLine(
   shapes: Object,
@@ -40,7 +31,7 @@ function makeLine(
 function makeRadius(shapes: Object, layout: Object) {
   const radius = makeLine(
     shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    radiusColor, new Transform().rotate(0).translate(
+    colors.radius, new Transform().rotate(0).translate(
       0,
       0,
     ),
@@ -58,21 +49,21 @@ function makeRadius(shapes: Object, layout: Object) {
 function makeAnchor(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anchorPoints, layout.linewidth * 3, 0,
-    anchorPoints, anchorColor, new Point(0, 0),
+    anchorPoints, colors.anchor, new Point(0, 0),
   );
 }
 
 function makeReference(shapes: Object, layout: Object) {
   return makeLine(
     shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    referenceColor, new Point(0, 0),
+    colors.reference, new Point(0, 0),
   );
 }
 
 function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout: Object) {
   return makeLine(
     shapes, new Point(0, 0), layout.cornerLength, layout.linewidth * 3,
-    cornerColor, pointOrTransform,
+    colors.corners, pointOrTransform,
   );
 }
 
