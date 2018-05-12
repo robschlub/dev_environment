@@ -131,9 +131,9 @@ class Section {
       content = [content];
     }
     content.forEach((element) => {
-      htmlText = `${htmlText}${element}\n`;
+      htmlText = `${htmlText}${element}`;
     });
-    htmlText += '\n';
+    // htmlText += '\n';
     Object.keys(this.modifiers).forEach((key) => {
       const mod = this.modifiers[key];
       htmlText = modifyText(htmlText, key, mod, lessonType);
