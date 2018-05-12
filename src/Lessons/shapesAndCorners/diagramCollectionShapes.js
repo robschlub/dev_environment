@@ -113,7 +113,7 @@ function makePent(shapes: Object, location: Point) {
 }
 
 function makeGrid(shapes: Object) {
-  return shapes.grid(new Rect(-10, -10, 20, 20), 0.2, 0.2, colors.lines, new Transform().rotate(0));
+  return shapes.grid(new Rect(-10, -10, 20, 20), 0.2, 0.2, colors.grid, new Transform().rotate(0));
 }
 
 // type typeShapesDiagramCollection = {
@@ -132,6 +132,11 @@ class ShapesCollection extends DiagramElementCollection {
     super(transform, diagram.limits);
     this.diagram = diagram;
     const { shapes } = diagram;
+
+    const grid = makeGrid(shapes);
+    this.add('grid', grid);
+    grid.pulseScaleNow(0, 1.05, 0.4);
+
     const square = makeSquare(shapes, locations.square.center);
     this.add('square', square);
 
@@ -140,10 +145,6 @@ class ShapesCollection extends DiagramElementCollection {
 
     const pent = makePent(shapes, locations.pent.center);
     this.add('pent', pent);
-
-    const grid = makeGrid(shapes);
-    this.add('grid', grid);
-    grid.pulseScaleNow(0, 1.05, 0.4);
   }
 
   resize(locations: Object) {

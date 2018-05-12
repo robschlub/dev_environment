@@ -5,7 +5,7 @@ import * as tools from '../../js/diagram/tools/mathtools';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
@@ -67,6 +67,10 @@ function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout:
   );
 }
 
+function makeGrid(shapes: Object) {
+  return shapes.grid(new Rect(-10, -10, 20, 20), 0.2, 0.2, colors.grid, new Transform().rotate(0));
+}
+
 // $FlowFixMe
 class CircleCollection extends DiagramElementCollection {
   // elements: typeCircleDiagramCollection;
@@ -83,6 +87,10 @@ class CircleCollection extends DiagramElementCollection {
     const { shapes } = diagram;
 
     const origin = new Point(0, 0);
+
+    const grid = makeGrid(shapes);
+    this.add('grid', grid);
+    grid.pulseScaleNow(0, 1.05, 0.4);
 
     const reference = makeReference(shapes, layout);
     this.add('reference', reference);
@@ -121,6 +129,7 @@ class CircleCollection extends DiagramElementCollection {
       const r = normAngle(rotation);
       this._radius.transform.updateRotation(r);
       this._cornerRad.transform.updateRotation(r);
+      this._grid.transform.updateRotation(r);
     }
   }
 
