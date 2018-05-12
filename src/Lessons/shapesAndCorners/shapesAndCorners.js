@@ -11,11 +11,14 @@ class Section1 extends Section {
   }
   setContent() {
     return [
+      '<div id="section1__upper">',
       '<p>Many |_shapes| have |_corners|.</p>',
       `<p>
         Somes corners are |_more_sharp|, while others are |_less_sharp|.
       </p>`,
+      '</div>',
       '|_shapes_diagram|',
+      '<div id="section1__lower">',
       `<p>
         The sharpness of the corner is a property that can describe a shape.
       </p>
@@ -23,6 +26,7 @@ class Section1 extends Section {
         So how can you measure sharpness? What name do we give to the 
         sharpness?
       <p>`,
+      '</div>',
     ];
   }
   setModifiers() {
@@ -176,6 +180,7 @@ class Section3 extends Section {
           collection._cornerRad,
           collection._cornerRef,
           diagram.elements._shapes,
+          collection._grid,
         ]);
       }
       // const diagram = diagrams.circle_container;

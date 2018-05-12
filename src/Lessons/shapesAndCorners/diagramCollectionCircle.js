@@ -48,7 +48,7 @@ function makeRadius(shapes: Object, layout: Object) {
 
 function makeAnchor(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
-    anchorPoints, layout.linewidth * 3, 0,
+    anchorPoints, layout.linewidth * 2, 0,
     anchorPoints, colors.anchor, new Point(0, 0),
   );
 }
