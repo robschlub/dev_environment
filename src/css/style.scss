@@ -1,11 +1,24 @@
-// @import 'redefines';
-
-@import "bootstrap/bootstrap";
-@import "variables";
-@import "nav";
+@import "libraries/bootstrap/bootstrap";
+//
+@import "settings/breakpoints";
+@import "settings/variables";
+@import 'settings/color-palettes/color-palette_pastel';
+@import 'settings/color-palettes/color-palette_standard';
+@import 'settings/color-palettes/color-palette_n';
+@import 'settings/color-themes/color-theme_standard';
+@import 'settings/color-themes/color-theme_dark';
+@import 'settings/color-themes/color-theme_dark2';
+@import 'settings/color-themes/color-theme_standard2';
+@import 'settings/colors';
+//
+@import 'assets/images';
+//
 @import "base";
-@import "diagram";
-@import "home";
-@import "about";
-@import "lesson";
-@import "introduction";
+//
+@import "blocks/nav";
+@import "blocks/diagram";
+@import "blocks/lesson";
+//
+// @import "views/home";
+// @import "views/about";
+// @import "views/introduction";

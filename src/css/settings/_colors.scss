@@ -1,0 +1,24 @@
+
+// Set the color theme here
+$_color-theme: $_color-theme_dark2;
+
+$color_primary:                map-get($_color-theme, primary);
+$color_secondary:              map-get($_color-theme, secondary);
+$color_danger:                 map-get($_color-theme, danger);
+$color_safe:                   map-get($_color-theme, safe);
+$color_passive:                map-get($_color-theme, passive);
+$color_highlight:              map-get($_color-theme, highlight);
+$color_background:             map-get($_color-theme, background);
+$color_navbar:                 map-get($_color-theme, navbar);
+$color_text:                   map-get($_color-theme, text);
+$color_diagram-text:           map-get($_color-theme, diagram-text);
+$color_negative-text:          map-get($_color-theme, negative-text);
+$color_navigation-buttons:     map-get($_color-theme, navigation-buttons);
+$color_diagram:                map-get($_color-theme, diagram-background);
+$color_navbar-background:      map-get($_color-theme, navbar-background-color);
+$color_navbar:                 map-get($_color-theme, navbar-color);
+$color_navbar-hover:           map-get($_color-theme, navbar-hover-color);
+$color_navbar-active:          map-get($_color-theme, navbar-active-color);
+$color_navbar-disabled:        map-get($_color-theme, navbar-disabled-color);
+$color_navbar-toggler-border:  map-get($_color-theme, navbar-toggler-border-color);
+$icon_navbar-toggler:          map-get($_color-theme, navbar-toggler-icon);
