@@ -685,10 +685,9 @@ class DiagramElement {
       this.pulse.frequency = frequency;
     }
     if (time !== 0 && frequency === 0) {
-      this.pulse.frequency = 1 / (time * 2); 
+      this.pulse.frequency = 1 / (time * 2);
     }
 
-    console.log(this.pulse.frequency)
     this.pulse.A = 1;
     this.pulse.B = scale - 1;
     this.pulse.C = 0;

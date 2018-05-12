@@ -88,7 +88,7 @@ export default class LessonComponent extends React.Component
 
   renderContent(content: string) {
     this.key += 1;
-    console.log(`"${content}"`)
+
     return <div key={this.key} className='lesson__text'
       dangerouslySetInnerHTML={ {
         __html: content,
