@@ -49,9 +49,9 @@ function makeSquare(shapes: Object, location: Point) {
 
 function makeTriangle(shapes: Object, location: Point) {
   const vertices = [
-    new Point(0, 0.5),
-    new Point(0, 0.5).rotate(2 * Math.PI / 3),
-    new Point(0, 0.5).rotate(4 * Math.PI / 3),
+    new Point(0, 0.65),
+    new Point(0, 0.65).rotate(2 * Math.PI / 3),
+    new Point(0, 0.65).rotate(4 * Math.PI / 3),
   ];
   const lines = shapes.polyLine(vertices, true, lineWidth, lineColor);
   const corners = shapes.polyLineCorners(
