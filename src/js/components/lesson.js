@@ -88,12 +88,9 @@ export default class LessonComponent extends React.Component
 
   renderContent(content: string) {
     this.key += 1;
-    console.log("<" + content + ">")
-
-    const a = "asdf"
     return <div key={this.key} className='lesson__text'
       dangerouslySetInnerHTML={ {
-        __html: content.slice(0,content.length-1),
+        __html: content.slice(0, content.length - 1),
         // __html:`<p>asdf</p>`
       } }
       />;
