@@ -86,6 +86,7 @@ $_lesson_vars: (
       --lessonvars-#{$var}: #{$value};
     }
   }
+
   @include lesson-breakpoint-vars(aspect-3-2);
 }
 
@@ -133,6 +134,10 @@ $_lesson_vars: (
   color: $color-lessSharp;
 }
 
+// .lesson__text p {
+//   background-color: rgba(0, 0, 0, 0.5);
+// }
+
 /* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
 :export {
   colorLines: $color-lines;
@@ -145,12 +150,4 @@ $_lesson_vars: (
   colorBackground: $color-background;
 }
 /* stylelint-enable */
-
-// #shapes_container {
-//   position: relative;
-//   width: 100%;
-//   padding-top: 67%;
-//   left: 0;
-//   top: 0;
-// }
 

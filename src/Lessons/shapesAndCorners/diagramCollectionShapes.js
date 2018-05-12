@@ -2,7 +2,7 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point, Transform } from '../../js/diagram/tools/g2';
+import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
@@ -112,6 +112,9 @@ function makePent(shapes: Object, location: Point) {
   return pent;
 }
 
+function makeGrid(shapes: Object) {
+  return shapes.grid(new Rect(-10, -10, 20, 20), 0.2, 0.2, colors.lines, new Transform().rotate(0));
+}
 
 // type typeShapesDiagramCollection = {
 //   _square: typeShape,
@@ -137,6 +140,10 @@ class ShapesCollection extends DiagramElementCollection {
 
     const pent = makePent(shapes, locations.pent.center);
     this.add('pent', pent);
+
+    const grid = makeGrid(shapes);
+    this.add('grid', grid);
+    grid.pulseScaleNow(0, 1.05, 0.4);
   }
 
   resize(locations: Object) {

@@ -12,6 +12,7 @@ import DrawContext2D from './DrawContext2D';
 import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
 import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
 import HorizontalLine from './DiagramElements/HorizontalLine';
+import Lines from './DiagramElements/Lines';
 
 function shapes(webgl: WebGLInstance, limits: Rect) {
   function polyLine(
@@ -23,6 +24,30 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
   ) {
     return PolyLine(webgl, points, close, lineWidth, color, transform, limits);
   }
+  function lines(
+    linePairs: Array<Array<Point>>,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return Lines(webgl, linePairs, color, transform, limits);
+  }
+  function grid(
+    bounds: Rect,
+    xStep: number,
+    yStep: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    const linePairs = [];
+    for (let x = bounds.left; x < bounds.right + xStep; x += xStep) {
+      linePairs.push([new Point(x, bounds.top), new Point(x, bounds.bottom)]);
+    }
+    for (let y = bounds.bottom; y < bounds.top + yStep; y += yStep) {
+      linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
+    }
+    return lines(linePairs, color, transform);
+  }
+
   function polyLineCorners(
     points: Array<Point>,
     close: boolean,
@@ -89,6 +114,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     polygonFilled,
     horizontalLine,
     collection,
+    lines,
+    grid,
   };
 }
 

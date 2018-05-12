@@ -676,9 +676,18 @@ class DiagramElement {
     }
     return pulseTransformMatrix;
   }
-  pulseScaleNow(time: number, scale: number) {
+  pulseScaleNow(time: number, scale: number, frequency: number = 0) {
     this.pulse.time = time;
-    this.pulse.frequency = 1 / (time * 2);
+    if (frequency === 0 && time === 0) {
+      this.pulse.frequency = 1;
+    }
+    if (frequency !== 0) {
+      this.pulse.frequency = frequency;
+    }
+    if (time !== 0 && frequency === 0) {
+      this.pulse.frequency = 1 / (time * 2);
+    }
+
     this.pulse.A = 1;
     this.pulse.B = scale - 1;
     this.pulse.C = 0;
