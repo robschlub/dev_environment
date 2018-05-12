@@ -12,7 +12,7 @@ $color-background: $color_diagram;
 
 $_lesson_vars: (
   linewidth: 0.03,
-  radius: 1.5,
+  radius: 1.3,
   corner-length: 0.5,
   // <1/2
   // aspect-1-2: (
@@ -36,10 +36,10 @@ $_lesson_vars: (
   aspect-3-2: (
     x-min:   -3, x-max:   3,
     y-min:   -2, y-max:   2,
-    square: (center-x:  -2, center-y:   -1),
-    tri:    (center-x:   0, center-y:   -1),
-    pent:   (center-x:   2, center-y:   -1),
-    circle: (center-x:   0, center-y:   -0.3),
+    square: (center-x:  -2, center-y:   -0.8 + 0.8),
+    tri:    (center-x:   0, center-y:   -0.98 + 0.8),
+    pent:   (center-x:   2, center-y:   -0.8 + 0.8),
+    circle: (center-x:   0, center-y:   -0.5),
   ),
   // >2/1
   // aspect-2-1: (
@@ -148,6 +148,15 @@ $_lesson_vars: (
   colorRadius: $color-radius;
   colorReference: $color-reference;
   colorBackground: $color-background;
+  colorGrid: $color_navbar-background;
 }
 /* stylelint-enable */
 
+#section1__upper {
+  background-color: rgba($color_diagram, 0.4);
+}
+
+#section1__lower {
+  background-color: rgba($color_diagram, 0.4);
+  margin-top: calc(var(--lesson__content-height) * 0.5);
+}
