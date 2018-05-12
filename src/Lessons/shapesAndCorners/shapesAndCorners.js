@@ -11,11 +11,14 @@ class Section1 extends Section {
   }
   setContent() {
     return [
+      '<div id="section1__upper">',
       '<p>Many |_shapes| have |_corners|.</p>',
       `<p>
         Somes corners are |_more_sharp|, while others are |_less_sharp|.
       </p>`,
+      '</div>',
       '|_shapes_diagram|',
+      '<div id="section1__lower">',
       `<p>
         The sharpness of the corner is a property that can describe a shape.
       </p>
@@ -23,6 +26,7 @@ class Section1 extends Section {
         So how can you measure sharpness? What name do we give to the 
         sharpness?
       <p>`,
+      '</div>',
     ];
   }
   setModifiers() {
@@ -129,19 +133,16 @@ class Section3 extends Section {
       <p>
         The two lines form a |_corner| at the anchor.
       </p><p>
-        |_Small_rotation| results in a |_sharper_corner|.
-      </p><p>
-        |_Large_rotation| results in a |_less_sharp_corner|. Lets see how far this goes
-      </p>
-      `;
+        |_Small_rotation| results in a |_sharper_corner| corner. |_Large_rotation| results in a |_less_sharp_corner| corner.
+      </p>`;
   }
   setModifiers() {
     return {
       _corner: actionWord('corner', 'id_corner'),
       _Small_rotation: actionWord('Small Rotation', 'id_small_rotation'),
       _Large_rotation: actionWord('Large Rotation', 'id_large_rotation'),
-      _sharper_corner: actionWord('sharper corner', 'id_more_sharp_cornern'),
-      _less_sharp_corner: actionWord('less sharp corner', 'id_less_sharp_corner'),
+      _sharper_corner: actionWord('sharper', 'id_more_sharp_cornern'),
+      _less_sharp_corner: actionWord('less sharp', 'id_less_sharp_corner'),
     };
   }
 
@@ -179,6 +180,7 @@ class Section3 extends Section {
           collection._cornerRad,
           collection._cornerRef,
           diagram.elements._shapes,
+          collection._grid,
         ]);
       }
       // const diagram = diagrams.circle_container;
