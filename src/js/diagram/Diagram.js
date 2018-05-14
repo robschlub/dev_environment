@@ -218,6 +218,7 @@ class Diagram {
   }
   resize() {
     this.webgl.resize();
+    this.draw2D.resize();
     this.sizeHtmlText();
     this.animateNextFrame();
   }

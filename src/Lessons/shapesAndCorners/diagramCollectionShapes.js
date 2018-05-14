@@ -136,7 +136,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     const grid = makeGrid(shapes);
     this.add('grid', grid);
-    grid.pulseScaleNow(0, 1.05, 0.4);
+    // grid.pulseScaleNow(0, 1.05, 0.4);
 
     const square = makeSquare(shapes, locations.square.center);
     this.add('square', square);
@@ -149,7 +149,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     const to = new TextObjectSimple(this.diagram.draw2D, 'test', new Point(0, 0), ['center', 'middle'], this.diagram.limits);
 
-    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI / 2).translate(1, 1), [1, 0, 0, 1], this.diagram.limits);
+    const text = new DiagramElementPrimative(to, new Transform().rotate(0).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
     this.add('text', text);
   }
 

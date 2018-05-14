@@ -112,9 +112,10 @@ class TextObjectSimple extends DrawingObject {
   ) {
     // const transformedLocation = this.location.transformBy(transformMatrix);
     const { ctx } = this.drawContext2D;
-
+    const fontSize = 0.5;
+    const scalingFactor = 100;
     // ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
-    ctx.font = `${this.fontWeight} 10px ${this.fontFamily}`;
+    ctx.font = `${this.fontWeight} ${fontSize * scalingFactor}px ${this.fontFamily}`;
     ctx.textAlign = this.align[0];    // eslint-disable-line
     ctx.textBaseline = this.align[1]; // eslint-disable-line
 
@@ -143,15 +144,15 @@ class TextObjectSimple extends DrawingObject {
     const t = transformMatrix;
 
     ctx.translate(
-      this.drawContext2D.canvas.clientWidth / 2,
-      this.drawContext2D.canvas.clientHeight / 2,
+      this.drawContext2D.canvas.offsetWidth / 2,
+      this.drawContext2D.canvas.offsetHeight / 2,
     );
     ctx.scale(
-      this.drawContext2D.canvas.clientWidth / 2 / 100,
-      this.drawContext2D.canvas.clientHeight / 2 / 100,
+      this.drawContext2D.canvas.offsetWidth / 2 / scalingFactor,
+      this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor,
     );
 
-    ctx.transform(t[0], t[3], t[1], t[4], t[2] * 100, -t[5] * 100);
+    ctx.transform(t[0], t[3], t[1], t[4], t[2] * scalingFactor, -t[5] * scalingFactor);
     // ctx.translate(1, 0);
     // ctx.transform(t[0], t[1], t[3], t[4], t[6], t[7]);
     // console.log(t)
