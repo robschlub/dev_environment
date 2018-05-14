@@ -113,7 +113,8 @@ class TextObjectSimple extends DrawingObject {
     // const transformedLocation = this.location.transformBy(transformMatrix);
     const { ctx } = this.drawContext2D;
 
-    ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
+    // ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
+    ctx.font = `${this.fontWeight} 10px ${this.fontFamily}`;
     ctx.textAlign = this.align[0];    // eslint-disable-line
     ctx.textBaseline = this.align[1]; // eslint-disable-line
 
@@ -126,34 +127,68 @@ class TextObjectSimple extends DrawingObject {
     // let p = this.clipToElementPixels(transformedLocation.add(this.offset));
     // const p = this.clipToElementPixels(transformedLocation);
     ctx.save();
-    for (let i = 0; i < this.transform.order.length; i += 1) {
-      const t = this.transform.order[i];
-      if (t instanceof Translation) {
-        ctx.translate(t.x, t.y);
-      }
-      if (t instanceof Rotation) {
-        ctx.rotate(t.r);
-      }
-      if (t instanceof Scale) {
-        ctx.scale(t.x, t.y);
-      }
-    }
-    // Now transform the pixel space to clip space
-    const scaleX = this.drawContext2D.canvas.width / this.diagramLimits.width;
-    const scaleY = this.drawContext2D.canvas.height / this.diagramLimits.height;
-    ctx.scale(
-      scaleX,
-      scaleY,
-    );
+    // for (let i = 0; i < this.transform.order.length; i += 1) {
+    //   const t = this.transform.order[i];
+    //   if (t instanceof Translation) {
+    //     ctx.translate(t.x, t.y);
+    //   }
+    //   if (t instanceof Rotation) {
+    //     ctx.rotate(t.r);
+    //   }
+    //   if (t instanceof Scale) {
+    //     ctx.scale(t.x, t.y);
+    //   }
+    // }
+    // // Now transform the pixel space to clip space
+    const t = transformMatrix;
+
     ctx.translate(
-      -this.diagramLimits.left * scaleX,
-      -this.diagramLimits.bottom * scaleY,
+      this.drawContext2D.canvas.clientWidth / 2,
+      this.drawContext2D.canvas.clientHeight / 2,
     );
+    ctx.scale(
+      this.drawContext2D.canvas.clientWidth / 2 / 100,
+      this.drawContext2D.canvas.clientHeight / 2 / 100,
+    );
+
+    ctx.transform(t[0], t[3], t[1], t[4], t[2] * 100, -t[5] * 100);
+    // ctx.translate(1, 0);
+    // ctx.transform(t[0], t[1], t[3], t[4], t[6], t[7]);
+    // console.log(t)
+    // const scaleX = this.drawContext2D.canvas.clientWidth / this.diagramLimits.width;
+    // const scaleY = this.drawContext2D.canvas.clientHeight / this.diagramLimits.height;
+    // ctx.scale(
+    //   scaleX,
+    //   scaleY,
+    // );
+    // ctx.translate(
+    //   -this.diagramLimits.left * scaleX,
+    //   -this.diagramLimits.bottom * scaleY,
+    // );
+    // console.log(this.drawContext2D.canvas.width)
+    // console.log(this.drawContext2D.canvas.height)
+    // console.log(-this.diagramLimits.left, scaleX)
+    // ctx.translate(-this.diagramLimits.left * scaleX, 100)
+    // console.log(this.drawContext2D.canvas.width, this.drawContext2D.canvas.offsetWidth);
+    // console.log(this.diagramLimits)
+
+    // ctx.translate(
+    //   -this.diagramLimits.left / this.diagramLimits.width * this.drawContext2D.canvas.clientWidth,
+    //   this.diagramLimits.top / this.diagramLimits.height * this.drawContext2D.canvas.clientHeight,
+    // );
+
+    // ctx.translate(
+    //   1 / 2 * this.drawContext2D.canvas.clientWidth,
+    //   1 / 2 * this.drawContext2D.canvas.clientHeight,
+    // );
+
+
+    // ctx.translate(1478 / 4, 986/4);
     // const q = this.clipToElementPixels(transformedLocation.add(this.offset));
     // p = p.add(this.clipToElementPixels(this.offset));
     // p = p.add(this.offset)
     // this.lastDrawPoint = q;
-    ctx.fillText(this.text, 0, 0);
+    ctx.fillText(this.text, this.location.x, this.location.y);
     ctx.restore();
   }
   calcPixelSize() {

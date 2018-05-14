@@ -180,6 +180,9 @@ class Diagram {
     if (containerIdOrWebGLContext instanceof WebGLInstance) {
       this.webgl = containerIdOrWebGLContext;
     }
+    if (this.textCanvas instanceof HTMLCanvasElement) {
+      this.draw2D = new DrawContext2D(this.textCanvas);
+    }
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }

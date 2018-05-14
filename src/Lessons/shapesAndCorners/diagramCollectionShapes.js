@@ -149,7 +149,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     const to = new TextObjectSimple(this.diagram.draw2D, 'test', new Point(0, 0), ['center', 'middle'], this.diagram.limits);
 
-    const text = new DiagramElementPrimative(to, new Transform(), [1, 0, 0, 1], this.diagram.limits);
+    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI / 2).translate(1, 1), [1, 0, 0, 1], this.diagram.limits);
     this.add('text', text);
   }
 
