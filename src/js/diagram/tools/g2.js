@@ -1156,4 +1156,6 @@ export {
   TransformLimit,
   Rect,
   Translation,
+  Scale,
+  Rotation,
 };

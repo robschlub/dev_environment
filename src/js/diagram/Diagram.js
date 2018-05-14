@@ -173,6 +173,8 @@ class Diagram {
           this.backgroundColor,
         );
         this.webgl = webgl;
+        const draw2D = this.textCanvas.getContext('2d');
+        this.draw2D = draw2D;
       }
     }
     if (containerIdOrWebGLContext instanceof WebGLInstance) {
