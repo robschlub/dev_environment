@@ -2,7 +2,7 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import TextObjectSimple from '../../js/diagram/textObjects/TextObjectSimple';
+import { TextObjectSimple, DiagramText } from '../../js/diagram/textObjects/TextObjectSimple';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
@@ -147,9 +147,20 @@ class ShapesCollection extends DiagramElementCollection {
     const pent = makePent(shapes, locations.pent.center);
     this.add('pent', pent);
 
-    const to = new TextObjectSimple(this.diagram.draw2D, 'test', new Point(0, 0), ['center', 'middle'], this.diagram.limits);
+    const dText = [
+      new DiagramText(new Point(-1, 0), '-1'),
+      new DiagramText(new Point(0, 0), '0'),
+      new DiagramText(new Point(1, 0), '1'),
+      new DiagramText(new Point(0, 1), 'i'),
+      new DiagramText(new Point(0, -1), '-i'),
+    ];
 
-    const text = new DiagramElementPrimative(to, new Transform().rotate(0).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
+    const to = new TextObjectSimple(this.diagram.draw2D, dText, new Point(0, 0), ['center', 'middle'], this.diagram.limits);
+    to.fontFamily = 'Times New Roman';
+    to.fontStyle = 'italic';
+    to.fontSize = 0.2;
+
+    const text = new DiagramElementPrimative(to, new Transform().rotate(0.1).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
     this.add('text', text);
   }
 

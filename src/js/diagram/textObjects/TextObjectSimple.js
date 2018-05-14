@@ -7,6 +7,15 @@ import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../DrawContext2D';
 // import { roundNum } from './mathtools';
 
+class DiagramText {
+  location: Point;
+  text: string;
+
+  constructor(location = new Point(0, 0), text = '') {
+    this.location = location;
+    this.text = text;
+  }
+}
 // Base clase of all objects made from verteces for webgl.
 // The job of a VertexObject is to:
 //  - Havve the points of a object/shape
@@ -17,7 +26,7 @@ import DrawContext2D from '../DrawContext2D';
 //      - draw
 class TextObjectSimple extends DrawingObject {
   drawContext2D: DrawContext2D;
-  text: string;
+  text: Array<DiagramText>;
   numPoints: number;
   location: Point;
   align: Array<string>;
@@ -27,7 +36,8 @@ class TextObjectSimple extends DrawingObject {
   // doubled.
   fontFamily: string;
   fontWeight: string;
-  fontSize: string;
+  fontSize: number;
+  fontStyle: string;
   lastDrawPoint: Point;
   pixelSize: {
     left: number,
@@ -41,7 +51,8 @@ class TextObjectSimple extends DrawingObject {
 
   constructor(
     drawContext2D: DrawContext2D,
-    text: string,
+    text: Array<DiagramText>,
+    // text: string,
     location: Point = new Point(0, 0),
     align: Array<string> = ['center', 'middle'],
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
@@ -53,7 +64,8 @@ class TextObjectSimple extends DrawingObject {
     this.align = align;
     this.fontFamily = 'Helvetica Neue';
     this.fontWeight = '200';
-    this.fontSize = '14px';
+    this.fontSize = 0.5;
+    this.fontStyle = '';
     this.calcPixelSize();
     this.lastDrawPoint = this.location;
     this.transform = new Transform();
@@ -110,12 +122,9 @@ class TextObjectSimple extends DrawingObject {
     count: number,
     color: Array<number>,
   ) {
-    // const transformedLocation = this.location.transformBy(transformMatrix);
     const { ctx } = this.drawContext2D;
-    const fontSize = 0.5;
-    const scalingFactor = 100;
-    // ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
-    ctx.font = `${this.fontWeight} ${fontSize * scalingFactor}px ${this.fontFamily}`;
+    const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.fontSize;
+    ctx.font = `${this.fontStyle} ${this.fontWeight} ${this.fontSize * scalingFactor}px ${this.fontFamily}`;
     ctx.textAlign = this.align[0];    // eslint-disable-line
     ctx.textBaseline = this.align[1]; // eslint-disable-line
 
@@ -125,71 +134,35 @@ class TextObjectSimple extends DrawingObject {
       ${Math.floor(color[2] * 255)},
       ${Math.floor(color[3] * 255)})`;
 
-    // let p = this.clipToElementPixels(transformedLocation.add(this.offset));
-    // const p = this.clipToElementPixels(transformedLocation);
     ctx.save();
-    // for (let i = 0; i < this.transform.order.length; i += 1) {
-    //   const t = this.transform.order[i];
-    //   if (t instanceof Translation) {
-    //     ctx.translate(t.x, t.y);
-    //   }
-    //   if (t instanceof Rotation) {
-    //     ctx.rotate(t.r);
-    //   }
-    //   if (t instanceof Scale) {
-    //     ctx.scale(t.x, t.y);
-    //   }
-    // }
-    // // Now transform the pixel space to clip space
-    const t = transformMatrix;
 
-    ctx.translate(
-      this.drawContext2D.canvas.offsetWidth / 2,
-      this.drawContext2D.canvas.offsetHeight / 2,
-    );
-    ctx.scale(
-      this.drawContext2D.canvas.offsetWidth / 2 / scalingFactor,
-      this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor,
-    );
-
-    ctx.transform(t[0], t[3], t[1], t[4], t[2] * scalingFactor, -t[5] * scalingFactor);
-    // ctx.translate(1, 0);
-    // ctx.transform(t[0], t[1], t[3], t[4], t[6], t[7]);
-    // console.log(t)
-    // const scaleX = this.drawContext2D.canvas.clientWidth / this.diagramLimits.width;
-    // const scaleY = this.drawContext2D.canvas.clientHeight / this.diagramLimits.height;
+    // First convert pixel space to gl clip space (-1 to 1 for x, y)
+    const sx = this.drawContext2D.canvas.offsetWidth / 2 / scalingFactor;
+    const sy = this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor;
+    const tx = this.drawContext2D.canvas.offsetWidth / 2;
+    const ty = this.drawContext2D.canvas.offsetHeight / 2;
+    ctx.transform(sx, 0, 0, sy, tx, ty);
+    // ctx.translate(
+    //   this.drawContext2D.canvas.offsetWidth / 2,
+    //   this.drawContext2D.canvas.offsetHeight / 2,
+    // );
     // ctx.scale(
-    //   scaleX,
-    //   scaleY,
-    // );
-    // ctx.translate(
-    //   -this.diagramLimits.left * scaleX,
-    //   -this.diagramLimits.bottom * scaleY,
-    // );
-    // console.log(this.drawContext2D.canvas.width)
-    // console.log(this.drawContext2D.canvas.height)
-    // console.log(-this.diagramLimits.left, scaleX)
-    // ctx.translate(-this.diagramLimits.left * scaleX, 100)
-    // console.log(this.drawContext2D.canvas.width, this.drawContext2D.canvas.offsetWidth);
-    // console.log(this.diagramLimits)
-
-    // ctx.translate(
-    //   -this.diagramLimits.left / this.diagramLimits.width * this.drawContext2D.canvas.clientWidth,
-    //   this.diagramLimits.top / this.diagramLimits.height * this.drawContext2D.canvas.clientHeight,
+    //   this.drawContext2D.canvas.offsetWidth / 2 / scalingFactor,
+    //   this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor,
     // );
 
-    // ctx.translate(
-    //   1 / 2 * this.drawContext2D.canvas.clientWidth,
-    //   1 / 2 * this.drawContext2D.canvas.clientHeight,
-    // );
+    // Transform clip space to diagram space
+    const t = transformMatrix;
+    ctx.transform(t[0], t[3], t[1], t[4], t[2] * scalingFactor, -t[5] * scalingFactor);
 
-
-    // ctx.translate(1478 / 4, 986/4);
-    // const q = this.clipToElementPixels(transformedLocation.add(this.offset));
-    // p = p.add(this.clipToElementPixels(this.offset));
-    // p = p.add(this.offset)
-    // this.lastDrawPoint = q;
-    ctx.fillText(this.text, this.location.x, this.location.y);
+    // Fill in all the text
+    this.text.forEach((diagramText) => {
+      ctx.fillText(
+        diagramText.text,
+        diagramText.location.x * scalingFactor,
+        diagramText.location.y * scalingFactor,
+      );
+    });
     ctx.restore();
   }
   calcPixelSize() {
@@ -248,5 +221,5 @@ class TextObjectSimple extends DrawingObject {
   // }
 }
 
-export default TextObjectSimple;
+export { TextObjectSimple, DiagramText };
 // Transform -1 to 1 space to 0 to width/height space
