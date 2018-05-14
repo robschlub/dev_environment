@@ -871,7 +871,8 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.state.isAnimating
       || this.state.isMovingFreely
       || this.state.isBeingMoved
-      || this.state.isPulsing) {
+      || this.state.isPulsing
+    ) {
       return true;
     }
     return false;
@@ -972,6 +973,9 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   isMoving(): boolean {
+    if (this.show === false) {
+      return false;
+    }
     if (this.state.isAnimating ||
         this.state.isMovingFreely ||
         this.state.isBeingMoved ||
@@ -984,7 +988,7 @@ class DiagramElementCollection extends DiagramElement {
         if (element.isMoving()) {
           return true;
         }
-      } else if (element.isMoving()) {
+      } else if (element.show && element.isMoving()) {
         return true;
       }
     }
