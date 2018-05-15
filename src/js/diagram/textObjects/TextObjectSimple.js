@@ -48,6 +48,7 @@ class TextObjectSimple extends DrawingObject {
   rotation: number;
   transform: Transform;
   diagramLimits: Rect;
+  lastDrawTransformMatrix: Array<number>;
 
   constructor(
     drawContext2D: DrawContext2D,
@@ -70,9 +71,10 @@ class TextObjectSimple extends DrawingObject {
     this.lastDrawPoint = this.location;
     this.transform = new Transform();
     this.diagramLimits = diagramLimits;
+    this.lastDrawTransformMatrix = new Transform().matrix();
   }
   updateFont(
-    size: string = '14px',
+    size: number = 14,
     weight: string = '200',
     family: string = 'Helvetica Neue',
   ) {
@@ -124,9 +126,10 @@ class TextObjectSimple extends DrawingObject {
   ) {
     const { ctx } = this.drawContext2D;
     const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.fontSize;
-    ctx.font = `${this.fontStyle} ${this.fontWeight} ${this.fontSize * scalingFactor}px ${this.fontFamily}`;
-    ctx.textAlign = this.align[0];    // eslint-disable-line
-    ctx.textBaseline = this.align[1]; // eslint-disable-line
+    // ctx.font = `${this.fontStyle} ${this.fontWeight} ${this.fontSize * scalingFactor}px ${this.fontFamily}`;
+    // ctx.textAlign = this.align[0];    // eslint-disable-line
+    // ctx.textBaseline = this.align[1]; // eslint-disable-line
+    this.setFont(scalingFactor);
 
     ctx.fillStyle = `rgba(
       ${Math.floor(color[0] * 255)},
@@ -153,6 +156,7 @@ class TextObjectSimple extends DrawingObject {
 
     // Transform clip space to diagram space
     const t = transformMatrix;
+    this.lastDrawTransformMatrix = t;
     ctx.transform(t[0], t[3], t[1], t[4], t[2] * scalingFactor, -t[5] * scalingFactor);
 
     // Fill in all the text
@@ -165,6 +169,86 @@ class TextObjectSimple extends DrawingObject {
     });
     ctx.restore();
   }
+
+  pixelToClip(p: Point) {
+    const x = p.x / this.drawContext2D.canvas.offsetWidth *
+              this.diagramLimits.width + this.diagramLimits.left;
+    const y = p.y / this.drawContext2D.canvas.offsetHeight *
+              this.diagramLimits.height + this.diagramLimits.bottom;
+    return new Point(x, y);
+  }
+
+  scalePixelToClip(p: Point) {
+    const x = p.x / this.drawContext2D.canvas.offsetWidth *
+              this.diagramLimits.width;
+    const y = p.y / this.drawContext2D.canvas.offsetHeight *
+              this.diagramLimits.height;
+    return new Point(x, y);
+  }
+
+  
+
+  vertexToClip(vertex: Point) {
+    const scaleX = this.diagramLimits.width / 2;
+    const scaleY = this.diagramLimits.height / 2;
+    const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
+    const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
+    const transform = new Transform().scale(scaleX, scaleY).translate(biasX, biasY);
+    return vertex.transformBy(this.lastDrawTransformMatrix)
+      .transformBy(transform.matrix());
+  }
+
+  setFont(scalingFactor: number = 1) {
+    const { ctx } = this.drawContext2D;
+    ctx.font = `${this.fontStyle} ${this.fontWeight} ${this.fontSize * scalingFactor}px ${this.fontFamily}`;
+    ctx.textAlign = this.align[0];    // eslint-disable-line
+    ctx.textBaseline = this.align[1]; // eslint-disable-line
+  }
+
+  calcBorder(text: DiagramText) {
+    // const { ctx } = this.drawContext2D;
+    // const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.fontSize;
+    const scalingFactor = 100;
+    this.setFont(scalingFactor);
+
+    // get the text measurement
+    const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+    const leftTop = (new Point(
+      textMetrics.actualBoundingBoxLeft,
+      textMetrics.actualBoundingBoxAscent,
+    ));
+    const rightBottom = (new Point(
+      textMetrics.actualBoundingBoxRight,
+      textMetrics.actualBoundingBoxDescent,
+    ));
+    const left = leftTop.x;
+    const top = leftTop.y;
+    const right = rightBottom.x;
+    const bottom = rightBottom.y;
+
+    const clipLeftTop = this.scalePixelToClip(leftTop);
+    const clipRightBottom = this.scalePixelToClip(rightBottom);
+    const clipTextPoint = this.vertexToClip(text.location);
+    const width = clipLeftTop.x + clipRightBottom.x;
+    const height = clipLeftTop.y + clipRightBottom.y;
+
+    const border = [];
+    border.push(clipTextPoint.sub(clipLeftTop));
+    border.push(border[0].add(new Point(width, 0)));
+    border.push(border[1].add(new Point(0, height)));
+    border.push(border[2].add(new Point(-width, 0)));
+    border.push(border[0]);
+
+    console.log(border)
+    console.log(scalingFactor)
+    console.log(left, top, right, bottom);
+    console.log(`${this.fontStyle} ${this.fontWeight} ${this.fontSize * scalingFactor}px ${this.fontFamily}`)
+    console.log(textMetrics)
+    console.log(leftTop)
+    console.log(clipLeftTop)
+    console.log(clipTextPoint)
+  }
+
   calcPixelSize() {
     const { ctx } = this.drawContext2D;
     ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;

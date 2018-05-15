@@ -149,18 +149,18 @@ class ShapesCollection extends DiagramElementCollection {
 
     const dText = [
       new DiagramText(new Point(-1, 0), '-1'),
-      new DiagramText(new Point(0, 0), '0'),
+      new DiagramText(new Point(0, 0), '0 this is a test'),
       new DiagramText(new Point(1, 0), '1'),
       new DiagramText(new Point(0, 1), 'i'),
       new DiagramText(new Point(0, -1), '-i'),
     ];
 
-    const to = new TextObjectSimple(this.diagram.draw2D, dText, new Point(0, 0), ['center', 'middle'], this.diagram.limits);
+    const to = new TextObjectSimple(this.diagram.draw2D, dText, new Point(0, 0), ['left', 'middle'], this.diagram.limits);
     to.fontFamily = 'Times New Roman';
-    to.fontStyle = 'italic';
+    to.fontStyle = '';
     to.fontSize = 0.2;
 
-    const text = new DiagramElementPrimative(to, new Transform().rotate(0.1).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
+    const text = new DiagramElementPrimative(to, new Transform().rotate(0).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
     this.add('text', text);
   }
 
@@ -201,6 +201,7 @@ class ShapesCollection extends DiagramElementCollection {
       this.toggleLessSharpCorners(false, false);
     }
     this.diagram.animateNextFrame();
+    this._text.vertices.calcBorder(this._text.vertices.text[1])
   }
 
   toggleMoreSharpCorners(toggle: boolean = true, show: boolean = true) {
