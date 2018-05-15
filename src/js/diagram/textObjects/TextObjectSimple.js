@@ -199,7 +199,7 @@ class TextObjectSimple extends DrawingObject {
     // Translate so limits become -1 to 1
     const tx = this.drawContext2D.canvas.offsetWidth / 2;
     const ty = this.drawContext2D.canvas.offsetHeight / 2;
-    ctx.transform(sx, 0, 0, sy, tx, ty);
+    // ctx.transform(sx, 0, 0, sy, tx, ty);
     // ctx.translate(
     //   this.drawContext2D.canvas.offsetWidth / 2,
     //   this.drawContext2D.canvas.offsetHeight / 2,
@@ -212,7 +212,12 @@ class TextObjectSimple extends DrawingObject {
     // Transform clip space to diagram space
     const t = transformMatrix;
     this.lastDrawTransformMatrix = t;
-    ctx.transform(t[0], t[3], t[1], t[4], t[2] * scalingFactor, -t[5] * scalingFactor);
+    t[5] *= -scalingFactor;
+    t[2] *= scalingFactor;
+    // ctx.transform(t[0], t[3], t[1], t[4], t[2] * scalingFactor, -t[5] * scalingFactor);
+
+    const totalT = m2.mul([sx, 0, tx, 0, sy, ty, 0, 0, 1], t);
+    ctx.transform(totalT[0], totalT[3], totalT[1], totalT[4], totalT[2], totalT[5])
 
     // Fill in all the text
     this.text.forEach((diagramText) => {
@@ -277,43 +282,55 @@ class TextObjectSimple extends DrawingObject {
     const box = [
       new Point(
         -textMetrics.actualBoundingBoxLeft,
-        -textMetrics.actualBoundingBoxAscent,
+        textMetrics.actualBoundingBoxAscent,
       ),
       new Point(
         textMetrics.actualBoundingBoxRight,
-        -textMetrics.actualBoundingBoxAscent,
+        textMetrics.actualBoundingBoxAscent,
       ),
       new Point(
         textMetrics.actualBoundingBoxRight,
-        textMetrics.actualBoundingBoxDescent,
+        -textMetrics.actualBoundingBoxDescent,
       ),
       new Point(
         -textMetrics.actualBoundingBoxLeft,
-        textMetrics.actualBoundingBoxDescent,
+        -textMetrics.actualBoundingBoxDescent,
       ),
     ];
     // First convert pixel space to gl clip space (-1 to 1 for x, y)
     // Zoom in so limits betcome 0 to 2:
     const sx = this.drawContext2D.canvas.offsetWidth / 2 / scalingFactor;
-    const sy = -this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor;
+    const sy = this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor;
+    // const tx = this.drawContext2D.canvas.offsetWidth / 2;
+    // const ty = this.drawContext2D.canvas.offsetHeight / 2;
+    const tx = 0;
+    const ty = 0;
+    const t1 = [sx, 0, tx, 0, sy, ty, 0, 0, 1];
+    const t2 = this.lastDrawTransformMatrix;
 
-    const t = this.lastDrawTransformMatrix;
-    t[0] *= sx;
-    t[4] *= sy;
-    // t[2] *= scalingFactor;
-    // t[5] *= -scalingFactor;
-    t[2] = 0;
-    t[5] = 0;
-    console.log(t)
-    
+    // t[0] *= sx;
+    // t[4] *= sy;
+    t2[1] *= -1;
+    t2[3] *= -1;
+    // t2[2] *= scalingFactor;
+    // t2[5] *= -scalingFactor;
+    t2[5] *= -1;
+    // t[2] = tx;
+    // t[5] = ty;
+    // console.log(t)
+    const totalT = m2.mul(t1, t2);
+
     box.forEach((p, index) => {
       // console.log(p)
-      console.log("pixel", p.transformBy(t))
-      console.log(this.scalePixelToClip(p.transformBy(t)));
-      box[index] = this.scalePixelToClip(p.transformBy(t)).add(new Point(
-        text.location.x * scalingFactor,
-        text.location.y * scalingFactor,
+      // console.log("pixel", p.transformBy(t1))
+      // console.log("pixel", p.transformBy(t2))
+      // console.log(this.scalePixelToClip(p.transformBy(t1)));
+      const newP = this.scalePixelToClip(p.transformBy(totalT)).add(new Point(
+        text.location.x,
+        text.location.y,
       ));
+
+      box[index] = new Point(newP.x, newP.y);
       console.log("box corner", box[index])
     });
     // console.log("box", box);

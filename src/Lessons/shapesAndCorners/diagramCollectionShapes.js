@@ -160,7 +160,7 @@ class ShapesCollection extends DiagramElementCollection {
     to.fontStyle = '';
     to.fontSize = 0.2;
 
-    const text = new DiagramElementPrimative(to, new Transform().rotate(0.05).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
+    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI/2).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
     this.add('text', text);
   }
 
