@@ -27,8 +27,6 @@ class DiagramText {
 class TextObjectSimple extends DrawingObject {
   drawContext2D: DrawContext2D;
   text: Array<DiagramText>;
-  numPoints: number;
-  // location: Point;
   align: Array<string>;
 
   // Text clip space (-1 to 1) without any upstream trasnform
@@ -38,38 +36,23 @@ class TextObjectSimple extends DrawingObject {
   fontWeight: string;
   fontSize: number;
   fontStyle: string;
-  // lastDrawPoint: Point;
-  pixelSize: {
-    left: number,
-    top: number,
-    right: number,
-    bottom: number,
-  };
-  rotation: number;
-  transform: Transform;
   diagramLimits: Rect;
   lastDrawTransformMatrix: Array<number>;
 
   constructor(
     drawContext2D: DrawContext2D,
     text: Array<DiagramText>,
-    // text: string,
-    location: Point = new Point(0, 0),
     align: Array<string> = ['center', 'middle'],
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
     super();
     this.drawContext2D = drawContext2D;
     this.text = text;
-    // this.location = location;
     this.align = align;
     this.fontFamily = 'Helvetica Neue';
     this.fontWeight = '200';
     this.fontSize = 0.5;
     this.fontStyle = '';
-    this.calcPixelSize();
-    // this.lastDrawPoint = this.location;
-    this.transform = new Transform();
     this.diagramLimits = diagramLimits;
     this.lastDrawTransformMatrix = new Transform().matrix();
   }
@@ -81,7 +64,6 @@ class TextObjectSimple extends DrawingObject {
     this.fontFamily = family;
     this.fontWeight = weight;
     this.fontSize = size;
-    this.calcPixelSize();
   }
   draw(
     translation: Point,
@@ -116,6 +98,7 @@ class TextObjectSimple extends DrawingObject {
     );
   }
 
+  // Get the font size defined in Element Space in pixels
   getFontSizeInPixels() {
     const onePixelInGLSpace = this.scalePixelToGLClip(new Point(1, 1));
     const onePixelInElementSpace = this.scaleGLClipToElementSpaces(onePixelInGLSpace);
@@ -135,8 +118,8 @@ class TextObjectSimple extends DrawingObject {
   // OR
   //  - take one pixel, convert it => gl clip space => diagram space
   //  - see the scale difference in diagram space and apply it to pixel space
-  // 
-  // However, the 
+  //
+  // However, the
   drawWithTransformMatrix(
     transformMatrix: Array<number>,
     count: number,
@@ -144,7 +127,7 @@ class TextObjectSimple extends DrawingObject {
   ) {
     const { ctx } = this.drawContext2D;
     const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.fontSize;
-    
+
     // ctx.font = `${this.fontStyle} ${this.fontWeight} 29.4px ${this.fontFamily}`;
     // ctx.textAlign = this.align[0];    // eslint-disable-line
     // ctx.textBaseline = this.align[1]; // eslint-disable-line
@@ -290,31 +273,31 @@ class TextObjectSimple extends DrawingObject {
     });
   }
 
-  calcPixelSize() {
-    const { ctx } = this.drawContext2D;
-    ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
-    ctx.textAlign = this.align[0];    // eslint-disable-line
-    ctx.textBaseline = this.align[1]; // eslint-disable-line
+  // calcPixelSize() {
+  //   const { ctx } = this.drawContext2D;
+  //   ctx.font = `${this.fontWeight} ${this.fontSize} ${this.fontFamily}`;
+  //   ctx.textAlign = this.align[0];    // eslint-disable-line
+  //   ctx.textBaseline = this.align[1]; // eslint-disable-line
 
-    // get the text measurement
-    const textMetrics = this.drawContext2D.ctx.measureText(this.text);
-    const leftTop = (new Point(
-      textMetrics.actualBoundingBoxLeft,
-      textMetrics.actualBoundingBoxAscent,
-    ));
-    const rightBottom = (new Point(
-      textMetrics.actualBoundingBoxRight,
-      textMetrics.actualBoundingBoxDescent,
-    ));
-    const left = leftTop.x;
-    const top = leftTop.y;
-    const right = rightBottom.x;
-    const bottom = rightBottom.y;
+  //   // get the text measurement
+  //   const textMetrics = this.drawContext2D.ctx.measureText(this.text);
+  //   const leftTop = (new Point(
+  //     textMetrics.actualBoundingBoxLeft,
+  //     textMetrics.actualBoundingBoxAscent,
+  //   ));
+  //   const rightBottom = (new Point(
+  //     textMetrics.actualBoundingBoxRight,
+  //     textMetrics.actualBoundingBoxDescent,
+  //   ));
+  //   const left = leftTop.x;
+  //   const top = leftTop.y;
+  //   const right = rightBottom.x;
+  //   const bottom = rightBottom.y;
 
-    this.pixelSize = {
-      left, top, right, bottom,
-    };
-  }
+  //   this.pixelSize = {
+  //     left, top, right, bottom,
+  //   };
+  // }
   // calcBorder() {
   //   // first setup the text
   //   const { ctx } = this.drawContext2D;

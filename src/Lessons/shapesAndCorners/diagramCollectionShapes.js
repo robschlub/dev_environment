@@ -155,12 +155,12 @@ class ShapesCollection extends DiagramElementCollection {
       new DiagramText(new Point(0, -1), '-i'),
     ];
 
-    const to = new TextObjectSimple(this.diagram.draw2D, dText, new Point(0, 0), ['center', 'middle'], this.diagram.limits);
+    const to = new TextObjectSimple(this.diagram.draw2D, dText, ['center', 'middle'], this.diagram.limits);
     to.fontFamily = 'Times New Roman';
     to.fontStyle = '';
     to.fontSize = 0.2;
 
-    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI/2).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
+    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI/2*0).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
     this.add('text', text);
   }
 
