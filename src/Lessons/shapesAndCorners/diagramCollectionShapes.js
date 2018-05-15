@@ -169,7 +169,7 @@ class ShapesCollection extends DiagramElementCollection {
     // to.fontStyle = '';
     // to.fontSize = 0.2;
 
-    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI/2 * 0.5).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
+    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI/ 2 *0.5 ).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
     this.add('text', text);
   }
 
@@ -210,7 +210,7 @@ class ShapesCollection extends DiagramElementCollection {
       this.toggleLessSharpCorners(false, false);
     }
     this.diagram.animateNextFrame();
-    this._text.vertices.calcBorder(this._text.vertices.text[1])
+    this._text.vertices.calcBorder()
   }
 
   toggleMoreSharpCorners(toggle: boolean = true, show: boolean = true) {
