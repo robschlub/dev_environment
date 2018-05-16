@@ -5,7 +5,7 @@ import * as m2 from './tools/m2';
 import * as tools from './tools/mathtools';
 // import GlobalVariables from './globals';
 // import VertexObject from './vertexObjects/vertexObject';
-import TextObject from './textObjects/TextObject';
+import { TextObject } from './textObjects/TextObjectSimple';
 import DrawingObject from './DrawingObject';
 
 // Planned Animation
@@ -805,31 +805,36 @@ class DiagramElementPrimative extends DiagramElement {
       return false;
     }
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-      const border = [];
+      let border = [];
       if (this.vertices instanceof TextObject) {
-        const text = this.vertices;
-        const { ctx, ratio } = text.drawContext2D;
-        const location = text.lastDrawPoint;
-        const size = text.pixelSize;
-        border.push(location.add(new Point(-size.left, -size.top)));
-        border.push(location.add(new Point(size.right, -size.top)));
-        border.push(location.add(new Point(size.right, size.bottom)));
-        border.push(location.add(new Point(-size.left, size.bottom)));
-        border.push(location.add(new Point(-size.left, -size.top)));
-        const xPixel = (clipLocation.x - this.diagramLimits.left) /
-          this.diagramLimits.width * ctx.canvas.width / ratio;
-        const yPixel = (this.diagramLimits.top - clipLocation.y) /
-          this.diagramLimits.height * ctx.canvas.height / ratio;
-        if (new Point(xPixel, yPixel).isInPolygon(border)) {
-          return true;
-        }
+        // this.vertices.border.forEach((b) => {
+        //   border.push(b);
+        // });
+        border = this.vertices.border[m];
+        // if (clipLocation.isInPolygon(this.vertices.border)
+        // // const text = this.vertices;
+        // const { ctx, ratio } = text.drawContext2D;
+        // const location = text.lastDrawPoint;
+        // const size = text.pixelSize;
+        // border.push(location.add(new Point(-size.left, -size.top)));
+        // border.push(location.add(new Point(size.right, -size.top)));
+        // border.push(location.add(new Point(size.right, size.bottom)));
+        // border.push(location.add(new Point(-size.left, size.bottom)));
+        // border.push(location.add(new Point(-size.left, -size.top)));
+        // const xPixel = (clipLocation.x - this.diagramLimits.left) /
+        //   this.diagramLimits.width * ctx.canvas.width / ratio;
+        // const yPixel = (this.diagramLimits.top - clipLocation.y) /
+        //   this.diagramLimits.height * ctx.canvas.height / ratio;
+        // if (new Point(xPixel, yPixel).isInPolygon(border)) {
+        //   return true;
+        // }
       } else {
         for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
           border.push(this.vertexToClip(this.vertices.border[m][i]));
         }
-        if (clipLocation.isInPolygon(border)) {
-          return true;
-        }
+      }
+      if (clipLocation.isInPolygon(border)) {
+        return true;
       }
     }
     return false;
@@ -900,35 +905,36 @@ class DiagramElementPrimative extends DiagramElement {
 
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       // first generate the border
-      const border = [];
+      let border = [];
       if (this.vertices instanceof TextObject) {
-        const text = this.vertices;
-        const { ctx, ratio } = text.drawContext2D;
-        const size = text.pixelSize;
-        const pixelToClip = (pixel: Point): Point => {
-          const x = pixel.x / ctx.canvas.width * ratio *
-            this.diagramLimits.width;
-          const y = -(pixel.y / ctx.canvas.height * ratio *
-            this.diagramLimits.height);
-          return new Point(x, y);
-        };
-        const textClipToDiagramClip = (clip: Point): Point => {
-          const x = clip.x * this.diagramLimits.width / 2;
-          const y = clip.y * this.diagramLimits.height / 2;
-          return new Point(x, y);
-        };
-        let location = text.location.transformBy(transformMatrix);
-        location = location.add(textClipToDiagramClip(text.offset));
-        border.push(pixelToClip(new Point(-size.left, -size.top))
-          .add(location));
-        border.push(pixelToClip(new Point(size.right, -size.top))
-          .add(location));
-        border.push(pixelToClip(new Point(size.right, size.bottom))
-          .add(location));
-        border.push(pixelToClip(new Point(-size.left, size.bottom))
-          .add(location));
-        border.push(pixelToClip(new Point(-size.left, -size.top))
-          .add(location));
+        border = this.vertices.border[m];
+        // const text = this.vertices;
+        // const { ctx, ratio } = text.drawContext2D;
+        // const size = text.pixelSize;
+        // const pixelToClip = (pixel: Point): Point => {
+        //   const x = pixel.x / ctx.canvas.width * ratio *
+        //     this.diagramLimits.width;
+        //   const y = -(pixel.y / ctx.canvas.height * ratio *
+        //     this.diagramLimits.height);
+        //   return new Point(x, y);
+        // };
+        // const textClipToDiagramClip = (clip: Point): Point => {
+        //   const x = clip.x * this.diagramLimits.width / 2;
+        //   const y = clip.y * this.diagramLimits.height / 2;
+        //   return new Point(x, y);
+        // };
+        // let location = text.location.transformBy(transformMatrix);
+        // location = location.add(textClipToDiagramClip(text.offset));
+        // border.push(pixelToClip(new Point(-size.left, -size.top))
+        //   .add(location));
+        // border.push(pixelToClip(new Point(size.right, -size.top))
+        //   .add(location));
+        // border.push(pixelToClip(new Point(size.right, size.bottom))
+        //   .add(location));
+        // border.push(pixelToClip(new Point(-size.left, size.bottom))
+        //   .add(location));
+        // border.push(pixelToClip(new Point(-size.left, -size.top))
+        //   .add(location));
       } else {
         for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
           border.push(this.vertices.border[m][i].transformBy(transformMatrix));

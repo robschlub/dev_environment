@@ -70,7 +70,7 @@ class DiagramText {
 //  - Setup the webgl buffer:
 //      - Load vertices into a webgl buffer
 //      - draw
-class TextObjectSimple extends DrawingObject {
+class TextObject extends DrawingObject {
   drawContext2D: DrawContext2D;
   border: Array<Array<Point>>;
   text: Array<DiagramText>;
@@ -233,14 +233,14 @@ class TextObjectSimple extends DrawingObject {
     this.border = [];
     this.text.forEach((t) => {
       this.border.push(this.calcBorderOfText(t));
-      console.log(t.text, this.calcBorderOfText(t));
     });
   }
 
   calcBorderOfText(text: DiagramText) {
     // Calculate the scaling factor
-    const scalingFactor = this.drawContext2D.canvas.offsetHeight /
-                          (this.diagramLimits.height / 1000);
+    // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
+    //                       (this.diagramLimits.height / 1000);
+    const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.text[0].font.size;
 
     // Measure the text
     text.font.set(this.drawContext2D.ctx, scalingFactor);
@@ -279,25 +279,22 @@ class TextObjectSimple extends DrawingObject {
     // transform matrix)
     // Note, rotations and y are negative in GL/Element space compared to pixel
     // space
-    const t2 = this.lastDrawTransformMatrix;
-    t2[1] *= -1;  // Rotation
-    t2[3] *= -1;  // Rotation
-    t2[5] *= -1;  // Y translation in GL space is -ve of pixel space
+    const lt = this.lastDrawTransformMatrix;
+    const t2 = [lt[0], lt[1] * -1, lt[2], lt[3] * -1, lt[4], lt[5] * -1, 0, 0, 1];
 
     // Final transform incorporating
     const totalT = m2.mul(t1, t2);
-
-    box.forEach((p, index) => {
+    const newBox = [];
+    box.forEach((p) => {
       const newP = this.scalePixelToClip(p.transformBy(totalT)).add(new Point(
         text.location.x,
         text.location.y,
       ));
-      box[index] = new Point(newP.x, newP.y);
-      // console.log("box corner", box[index])
+      newBox.push(new Point(newP.x, newP.y));
     });
-    return box;
+    return newBox;
   }
 }
 
-export { TextObjectSimple, DiagramText, DiagramFont };
+export { TextObject, DiagramText, DiagramFont };
 // Transform -1 to 1 space to 0 to width/height space

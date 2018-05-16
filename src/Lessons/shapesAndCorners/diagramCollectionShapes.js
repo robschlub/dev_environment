@@ -2,7 +2,7 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { TextObjectSimple, DiagramText, DiagramFont } from '../../js/diagram/textObjects/TextObjectSimple';
+import { TextObject, DiagramText, DiagramFont } from '../../js/diagram/textObjects/TextObjectSimple';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
@@ -164,7 +164,7 @@ class ShapesCollection extends DiagramElementCollection {
       new DiagramText(new Point(0, -1), '-i', font),
     ];
 
-    const to = new TextObjectSimple(this.diagram.draw2D, dText, this.diagram.limits);
+    const to = new TextObject(this.diagram.draw2D, dText, this.diagram.limits);
     // to.fontFamily = 'Times New Roman';
     // to.fontStyle = '';
     // to.fontSize = 0.2;
