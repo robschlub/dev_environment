@@ -206,6 +206,10 @@ class TextObject extends DrawingObject {
     // Fill in all the text
     this.text.forEach((diagramText) => {
       diagramText.font.set(ctx, scalingFactor);
+      // const location = diagramText.location.transformBy(transformMatrix);
+      // console.log("old", diagramText.location)
+      // console.log("new", location)
+      // const location = diagramText.location;
 
       if (diagramText.font.color) {
         ctx.fillStyle = diagramText.font.color;
@@ -238,6 +242,11 @@ class TextObject extends DrawingObject {
     });
   }
 
+  diagramToPixel(p: Point) {
+    const x = (p.x - this.diagramLimits.left) / this.diagramLimits.width * this.drawContext2D.canvas.offsetWidth;
+    const y = (this.diagramLimits.top - p.y) / this.diagramLimits.height * this.drawContext2D.canvas.offsetHeight;
+    return new Point(x, y);
+  }
   calcBorderOfText(text: DiagramText, lastDrawTransformMatrix: Array<number>) {
     // Calculate the scaling factor
     // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
@@ -268,21 +277,56 @@ class TextObject extends DrawingObject {
       ),
     ];
 
-    // First scale pixel space to gl clip space (-1 to 1 for x, y)
+        // First scale pixel space to gl clip space (-1 to 1 for x, y)
     //  - Scale only (and no translation) as box is relative to (0, 0)
     //  - Pixel Space Y axis stays inverted compared to GL space
     const sx = this.drawContext2D.canvas.offsetWidth / 2 / scalingFactor;
     const sy = this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor;
     const tx = 0;
     const ty = 0;
+    // const tx = this.drawContext2D.canvas.offsetWidth / 2;
+    // const ty = this.drawContext2D.canvas.offsetHeight / 2;
     const t1 = [sx, 0, tx, 0, sy, ty, 0, 0, 1];
 
-    // Convert to Element Space (Diagram Space is included in the last draw
-    // transform matrix)
+
+    // console.log(box)
+    // // TextMetrics should now be in diagram space
+    // const actualBox = [];
+    // box.forEach((p) => {
+    //   actualBox.push(p.add(text.location));
+    // });
+    // console.log(actualBox)
+
+    // const normWidth = 2 / this.diagramLimits.width;
+    // const normHeight = 2 / this.diagramLimits.height;
+    // const transform = new Transform()
+    //   .translate(
+    //     -(-this.diagramLimits.width / 2 - this.diagramLimits.left) * normWidth,
+    //     -(this.diagramLimits.height / 2 - this.diagramLimits.top) * normHeight,
+    //   )
+    //   .scale(1/normWidth, 1/normHeight)
+      
+
+    // const diagramToGlTransform = new Transform()
+    //   .translate(
+    //     -this.diagramLimits.left - this.diagramLimits.width / 2,
+    //     -this.diagramLimits.bottom - this.diagramLimits.height / 2,
+    //   )
+    //   .scale(
+    //     2 / this.diagramLimits.width,
+    //     2 / this.diagramLimits.height,
+    //   );
+
+    // const glBox = [];
+    // actualBox.forEach((p) => {
+    //   glBox.push(p.transformBy(transform.matrix()));
+    // });
+    // console.log(glBox)
+
     const lt = lastDrawTransformMatrix;
     const t2 = [
-      lt[0], lt[1], lt[2] * scalingFactor,
-      lt[3], lt[4], lt[5] * scalingFactor,
+      lt[0], -lt[1], lt[2] * scalingFactor,
+      -lt[3], lt[4], lt[5] * scalingFactor,
       0, 0, 1,
     ];
 
@@ -298,6 +342,63 @@ class TextObject extends DrawingObject {
     });
     console.log(newBox)
     return newBox;
+
+    // // First scale pixel space to gl clip space (-1 to 1 for x, y)
+    // //  - Scale only (and no translation) as box is relative to (0, 0)
+    // //  - Pixel Space Y axis is inverted to GL space
+    // // First convert pixel space to gl clip space (-1 to 1 for x, y)
+    // // Zoom in so limits betcome 0 to 2:
+    // const sx = 2 / this.diagramLimits.width;
+    // const sy = 2 / this.diagramLimits.height;
+    // // Translate so limits become -1 to 1
+    // // const tx = this.drawContext2D.canvas.offsetWidth / 2;
+    // // const ty = this.drawContext2D.canvas.offsetHeight / 2;
+
+    // const tx = 0;
+    // const ty = 0;
+    // const t1 = [sx, 0, tx, 0, -sy, ty, 0, 0, 1];
+    // // console.log(t1)
+    // const scaledBox = [];
+    // const glLocation = new Point(
+    //   (text.location.x - this.diagramLimits.left) / this.diagramLimits.width * 2 + -1,
+    //   (text.location.y - this.diagramLimits.bottom) / this.diagramLimits.height * 2 + -1,
+    //   );
+    // console.log(text.location)
+    // console.log(glLocation)
+    // console.log(t1)
+    // box.forEach((p) => {
+    //   console.log(p)
+    //   scaledBox.push(p.transformBy(t1).add(glLocation));
+    //   console.log(scaledBox[scaledBox.length - 1])
+    // });
+
+    // // const tx = this.drawContext2D.canvas.offsetWidth / 2;
+    // // const ty = this.drawContext2D.canvas.offsetHeight / 2;
+
+
+    // // Convert to Element Space (Diagram Space is included in the last draw
+    // // transform matrix)
+    // const lt = lastDrawTransformMatrix;
+    // // const location = text.location;
+    // const t2 = [
+    //   lt[0], -lt[1], lt[2],
+    //   -lt[3], lt[4], lt[5],
+    //   0, 0, 1,
+    // ];
+    // // const location = text.location.transformBy(lt);
+
+    // // console.log("old", text.location)
+    // // console.log("new", location);
+    // // Final transform incorporating
+    // // const totalT = m2.mul(t1, t2);
+    // const newBox = [];
+    // scaledBox.forEach((p) => {
+    //   // newBox.push(this.scalePixelToClip(p.transformBy(t2)));
+    //   newBox.push(p.transformBy(t2));
+    // });
+    // console.log(newBox)
+    // return newBox;
+  // }
   }
 }
 
