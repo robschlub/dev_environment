@@ -168,7 +168,7 @@ class ShapesCollection extends DiagramElementCollection {
 
     const text = new DiagramElementPrimative(
       to,
-      new Transform().scale(0.5, 0.5).rotate(Math.PI / 2 * 0.5)
+      new Transform().rotate(Math.PI / 2 * 0.5)
         .translate(0, 0),
       [1, 0, 0, 1],
       this.diagram.limits,

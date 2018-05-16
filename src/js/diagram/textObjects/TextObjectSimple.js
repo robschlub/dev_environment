@@ -298,7 +298,6 @@ class TextObject extends DrawingObject {
     box.forEach((p) => {
       newBox.push(p.transformBy(t2).transformBy(inverseD.matrix()));
     });
-    console.log(newBox)
     return newBox;
     // // First scale pixel space to gl clip space (-1 to 1 for x, y)
     // //  - Scale only (and no translation) as box is relative to (0, 0)
