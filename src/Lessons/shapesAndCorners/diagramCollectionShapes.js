@@ -157,18 +157,18 @@ class ShapesCollection extends DiagramElementCollection {
       [0, 1, 0, 1],
     );
     const dText = [
-      // new DiagramText(new Point(-1, 0), '-1', font),
-      // new DiagramText(new Point(0, 0), '0 this is a test', font),
-      // new DiagramText(new Point(1, 0), '1', font),
+      new DiagramText(new Point(-1, 0), '-1', font),
+      new DiagramText(new Point(0, 0), '0 this is a test', font),
+      new DiagramText(new Point(1, 0), '1', font),
       new DiagramText(new Point(0, 1), 'i', font),
-      // new DiagramText(new Point(0, -1), '-i', font),
+      new DiagramText(new Point(0, -1), '-i', font),
     ];
 
     const to = new TextObject(this.diagram.draw2D, dText, this.diagram.limits);
 
     const text = new DiagramElementPrimative(
       to,
-      new Transform().rotate(Math.PI / 2 * 0.5)
+      new Transform().scale(0.5, 0.5).rotate(Math.PI / 2 * 0.5)
         .translate(0, 0),
       [1, 0, 0, 1],
       this.diagram.limits,
