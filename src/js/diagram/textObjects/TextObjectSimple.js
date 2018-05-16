@@ -2,7 +2,7 @@
 
 // import * as g2 from '../g2';
 import * as m2 from '../tools/m2';
-import { Point, Transform, Translation, Rect, Scale, Rotation } from '../tools/g2';
+import { Point, Transform, Rect } from '../tools/g2';
 import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../DrawContext2D';
 // import { roundNum } from './mathtools';
@@ -87,7 +87,7 @@ class TextObject extends DrawingObject {
     this.text = text;
     this.diagramLimits = diagramLimits;
     this.lastDrawTransformMatrix = new Transform().matrix();
-    this.calcBorder();
+    // this.calcBorder();
   }
 
   draw(
@@ -192,10 +192,12 @@ class TextObject extends DrawingObject {
     const ty = this.drawContext2D.canvas.offsetHeight / 2;
 
     // Transform clip space to diagram space
-    const t = transformMatrix;
-    this.lastDrawTransformMatrix = t;
-    t[5] *= -scalingFactor;
-    t[2] *= scalingFactor;
+    const tm = transformMatrix;
+    const t = [
+      tm[0], -tm[1], tm[2] * scalingFactor,
+      -tm[3], tm[4], tm[5] * -scalingFactor,
+      0, 0, 1,
+    ];
 
     // Calculate and apply the combined transforms
     const totalT = m2.mul([sx, 0, tx, 0, sy, ty, 0, 0, 1], t);
@@ -214,7 +216,7 @@ class TextObject extends DrawingObject {
       ctx.fillText(
         diagramText.text,
         diagramText.location.x * scalingFactor,
-        diagramText.location.y * scalingFactor,
+        diagramText.location.y * -scalingFactor,
       );
     });
     ctx.restore();
@@ -229,14 +231,14 @@ class TextObject extends DrawingObject {
     return new Point(x, y);
   }
 
-  calcBorder() {
+  calcBorder(lastDrawTransformMatrix: Array<number>) {
     this.border = [];
     this.text.forEach((t) => {
-      this.border.push(this.calcBorderOfText(t));
+      this.border.push(this.calcBorderOfText(t, lastDrawTransformMatrix));
     });
   }
 
-  calcBorderOfText(text: DiagramText) {
+  calcBorderOfText(text: DiagramText, lastDrawTransformMatrix: Array<number>) {
     // Calculate the scaling factor
     // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
     //                       (this.diagramLimits.height / 1000);
@@ -277,10 +279,12 @@ class TextObject extends DrawingObject {
 
     // Convert to Element Space (Diagram Space is included in the last draw
     // transform matrix)
-    // Note, rotations and y are negative in GL/Element space compared to pixel
-    // space
-    const lt = this.lastDrawTransformMatrix;
-    const t2 = [lt[0], lt[1] * -1, lt[2], lt[3] * -1, lt[4], lt[5] * -1, 0, 0, 1];
+    const lt = lastDrawTransformMatrix;
+    const t2 = [
+      lt[0], lt[1], lt[2] * scalingFactor,
+      lt[3], lt[4], lt[5] * scalingFactor,
+      0, 0, 1,
+    ];
 
     // Final transform incorporating
     const totalT = m2.mul(t1, t2);
@@ -292,6 +296,7 @@ class TextObject extends DrawingObject {
       ));
       newBox.push(new Point(newP.x, newP.y));
     });
+    console.log(newBox)
     return newBox;
   }
 }

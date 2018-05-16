@@ -157,20 +157,27 @@ class ShapesCollection extends DiagramElementCollection {
       [0, 1, 0, 1],
     );
     const dText = [
-      new DiagramText(new Point(-1, 0), '-1', font),
-      new DiagramText(new Point(0, 0), '0 this is a test', font),
-      new DiagramText(new Point(1, 0), '1', font),
+      // new DiagramText(new Point(-1, 0), '-1', font),
+      // new DiagramText(new Point(0, 0), '0 this is a test', font),
+      // new DiagramText(new Point(1, 0), '1', font),
       new DiagramText(new Point(0, 1), 'i', font),
-      new DiagramText(new Point(0, -1), '-i', font),
+      // new DiagramText(new Point(0, -1), '-i', font),
     ];
 
     const to = new TextObject(this.diagram.draw2D, dText, this.diagram.limits);
-    // to.fontFamily = 'Times New Roman';
-    // to.fontStyle = '';
-    // to.fontSize = 0.2;
 
-    const text = new DiagramElementPrimative(to, new Transform().rotate(Math.PI/ 2 *0.5 ).translate(0, 0), [1, 0, 0, 1], this.diagram.limits);
+    const text = new DiagramElementPrimative(
+      to,
+      new Transform().rotate(Math.PI / 2 * 0.5)
+        .translate(0, 0),
+      [1, 0, 0, 1],
+      this.diagram.limits,
+    );
+    text.isMovable = true;
+    text.isTouchable = true;
     this.add('text', text);
+    this.isTouchable = true;
+    this.isMovable = true;
   }
 
   resize(locations: Object) {
@@ -210,7 +217,7 @@ class ShapesCollection extends DiagramElementCollection {
       this.toggleLessSharpCorners(false, false);
     }
     this.diagram.animateNextFrame();
-    this._text.vertices.calcBorder()
+    // this._text.vertices.calcBorder()
   }
 
   toggleMoreSharpCorners(toggle: boolean = true, show: boolean = true) {

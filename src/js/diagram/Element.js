@@ -264,14 +264,14 @@ class DiagramElement {
     return vertex.transformBy(this.lastDrawTransformMatrix)
       .transformBy(transform.matrix());
   }
-  textVertexToClip(vertex: Point) {
-    const scaleX = this.diagramLimits.width / 2;
-    const scaleY = this.diagramLimits.height / 2;
-    const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
-    const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
-    const transform = new Transform().scale(scaleX, scaleY).translate(biasX, biasY);
-    return vertex.transformBy(transform.matrix());
-  }
+  // textVertexToClip(vertex: Point) {
+  //   const scaleX = this.diagramLimits.width / 2;
+  //   const scaleY = this.diagramLimits.height / 2;
+  //   const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
+  //   const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
+  //   const transform = new Transform().scale(scaleX, scaleY).translate(biasX, biasY);
+  //   return vertex.transformBy(transform.matrix());
+  // }
 
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): Transform {
@@ -777,6 +777,7 @@ class DiagramElement {
   }
 }
 
+
 // ***************************************************************
 // Geometry Object
 // ***************************************************************
@@ -804,6 +805,10 @@ class DiagramElementPrimative extends DiagramElement {
     if (!this.isTouchable) {
       return false;
     }
+    if (this.vertices instanceof TextObject) {
+      this.vertices.calcBorder(this.lastDrawTransformMatrix);
+    }
+    // console.log(this.transform.matrix())
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       let border = [];
       if (this.vertices instanceof TextObject) {
@@ -811,6 +816,7 @@ class DiagramElementPrimative extends DiagramElement {
         //   border.push(b);
         // });
         border = this.vertices.border[m];
+        // console.log(border)
         // if (clipLocation.isInPolygon(this.vertices.border)
         // // const text = this.vertices;
         // const { ctx, ratio } = text.drawContext2D;
@@ -834,9 +840,11 @@ class DiagramElementPrimative extends DiagramElement {
         }
       }
       if (clipLocation.isInPolygon(border)) {
+        // console.log(true)
         return true;
       }
     }
+    // console.log(false)
     return false;
   }
 
@@ -870,6 +878,16 @@ class DiagramElementPrimative extends DiagramElement {
         this.vertices.drawWithTransformMatrix(matrix[i], pointCount, this.color);
       }
     }
+  }
+
+  setFirstTransform(transformMatrix: Array<number> = new Transform().matrix()) {
+    const matrix = m2.mul(transformMatrix, this.transform.matrix());
+    this.lastDrawTransformMatrix = matrix;
+
+    if (this.vertices instanceof TextObject) {
+      this.vertices.calcBorder(matrix);
+    }
+    this.updateMoveTranslationBoundary();
   }
 
   isMoving(): boolean {
@@ -1084,6 +1102,15 @@ class DiagramElementCollection extends DiagramElement {
     return false;
   }
 
+  setFirstTransform(transformMatrix: Array<number> = new Transform().matrix()) {
+    const matrix = m2.mul(transformMatrix, this.transform.matrix());
+    this.lastDrawTransformMatrix = matrix;
+
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.setFirstTransform(matrix);
+    }
+  }
   updateLimits(limits: Rect) {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];

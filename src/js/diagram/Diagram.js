@@ -135,6 +135,8 @@ class Diagram {
   backgroundColor: Array<number>;
   fontScale: number;
 
+  glToDiagramSpaceTransform: Transform;
+
   constructor(
     // canvas: HTMLCanvasElement,
     containerIdOrWebGLContext: string | WebGLInstance = 'DiagramContainer',
@@ -194,11 +196,14 @@ class Diagram {
     } else {
       this.limits = new Rect(limitsOrxMin, yMin, width, height);
     }
+    this.setGlToDiagramSpaceTransform();
+
     // console.log(this.limits)
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
     this.createDiagramElements();
+    this.initialize();
 
     window.addEventListener('resize', this.resize.bind(this));
     this.sizeHtmlText();
@@ -216,7 +221,26 @@ class Diagram {
     this.gesture.destroy();
     this.webgl.gl.getExtension('WEBGL_lose_context').loseContext();
   }
+
+  setGlToDiagramSpaceTransform() {
+    const normWidth = 2 / this.limits.width;
+    const normHeight = 2 / this.limits.height;
+    const transform = new Transform()
+      .scale(normWidth, normHeight)
+      .translate(
+        (-this.limits.width / 2 - this.limits.left) * normWidth,
+        (this.limits.height / 2 - this.limits.top) * normHeight,
+      );
+    this.glToDiagramSpaceTransform = transform;
+  }
+
+  initialize() {
+    this.setGlToDiagramSpaceTransform();
+    this.elements.setFirstTransform(this.glToDiagramSpaceTransform.matrix());
+  }
+
   resize() {
+    this.setGlToDiagramSpaceTransform();
     this.webgl.resize();
     this.draw2D.resize();
     this.sizeHtmlText();
@@ -324,16 +348,16 @@ class Diagram {
     this.clearContext();
     // This transform converts standard gl clip space, to diagram clip space
     // defined in limits.
-    const normWidth = 2 / this.limits.width;
-    const normHeight = 2 / this.limits.height;
-    const clipTransform = new Transform()
-      .scale(normWidth, normHeight)
-      .translate(
-        (-this.limits.width / 2 - this.limits.left) * normWidth,
-        (this.limits.height / 2 - this.limits.top) * normHeight,
-      );
+    // const normWidth = 2 / this.limits.width;
+    // const normHeight = 2 / this.limits.height;
+    // const clipTransform = new Transform()
+    //   .scale(normWidth, normHeight)
+    //   .translate(
+    //     (-this.limits.width / 2 - this.limits.left) * normWidth,
+    //     (this.limits.height / 2 - this.limits.top) * normHeight,
+    //   );
     this.elements.draw(
-      clipTransform.matrix(),
+      this.glToDiagramSpaceTransform.matrix(),
       now,
     );
 

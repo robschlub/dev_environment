@@ -129,7 +129,8 @@ class LessonDiagram extends Diagram {
       return false;
     }
     if (!this.elements._circle.show) {
-      return false;
+      return super.touchMoveHandler(previousClientPoint, currentClientPoint);
+      // return false;
     }
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
