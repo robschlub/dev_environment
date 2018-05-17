@@ -809,10 +809,13 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.vertices instanceof TextObject) {
       this.vertices.calcBorder(this.lastDrawTransformMatrix);
     }
+    if (this.vertices instanceof HTMLObject) {
+      this.vertices.calcBorder(this.diagramLimits);
+    }
     // console.log(this.transform.matrix())
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       let border = [];
-      if (this.vertices instanceof TextObject) {
+      if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
         // this.vertices.border.forEach((b) => {
         //   border.push(b);
         // });
@@ -841,7 +844,6 @@ class DiagramElementPrimative extends DiagramElement {
         }
       }
       if (clipLocation.isInPolygon(border)) {
-        // console.log(true)
         return true;
       }
     }
@@ -888,6 +890,10 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.vertices instanceof TextObject) {
       this.vertices.calcBorder(matrix);
     }
+    if (this.vertices instanceof HTMLObject) {
+      this.vertices.transformHtml(transformMatrix);
+      this.vertices.calcBorder(this.diagramLimits);
+    }
     this.updateMoveTranslationBoundary();
   }
 
@@ -925,7 +931,7 @@ class DiagramElementPrimative extends DiagramElement {
     for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
       // first generate the border
       let border = [];
-      if (this.vertices instanceof TextObject) {
+      if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
         border = this.vertices.border[m];
         // const text = this.vertices;
         // const { ctx, ratio } = text.drawContext2D;
