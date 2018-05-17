@@ -3,6 +3,7 @@ import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
 import { TextObject, DiagramText, DiagramFont } from '../../js/diagram/textObjects/TextObjectSimple';
+import HTMLObject from '../../js/diagram/textObjects/HtmlObject';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
@@ -178,6 +179,23 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('text', text);
     this.isTouchable = true;
     this.isMovable = true;
+
+    const element = document.createElement('div');
+    const inside = document.createTextNode('Hi there');
+    element.appendChild(inside);
+    element.style = 'position:absolute; left:200px; top:200px';
+    element.setAttribute('id', 'html_test_element');
+    this.diagram.htmlCanvas.appendChild(element);
+    const h = new HTMLObject(this.diagram.htmlCanvas, 'html_test_element', new Point(0, 0), 'middle', 'center');
+    const hp = new DiagramElementPrimative(
+      h,
+      new Transform().translate(1, 0).rotate(Math.PI / 2).scale(0.5, 0.5),
+      [1, 0, 0, 1],
+      this.diagram.limits,
+    );
+    hp.isTouchable = true;
+    hp.isMovable = true;
+    this.add('html', hp);
   }
 
   resize(locations: Object) {

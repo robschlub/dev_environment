@@ -6,6 +6,7 @@ import * as tools from './tools/mathtools';
 // import GlobalVariables from './globals';
 // import VertexObject from './vertexObjects/vertexObject';
 import { TextObject } from './textObjects/TextObjectSimple';
+import HTMLObject from './textObjects/HtmlObject';
 import DrawingObject from './DrawingObject';
 
 // Planned Animation
