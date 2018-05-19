@@ -62,7 +62,6 @@ class HTMLObject extends DrawingObject {
         limits,
         new Point(rect.left, rect.bottom),
       ));
-      console.log(elementClient.left - parentClient.left, this.border[0][0].x)
     }
   
   }
