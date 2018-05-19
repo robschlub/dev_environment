@@ -189,7 +189,7 @@ class ShapesCollection extends DiagramElementCollection {
     const h = new HTMLObject(this.diagram.htmlCanvas, 'html_test_element', new Point(0, 0), 'middle', 'center');
     const hp = new DiagramElementPrimative(
       h,
-      new Transform().translate(0, 0).rotate(Math.PI / 2*0).scale(1, 1),
+      new Transform().rotate(Math.PI / 2*0).translate(0, 0),
       [1, 0, 0, 1],
       this.diagram.limits,
     );

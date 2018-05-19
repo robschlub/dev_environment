@@ -41,9 +41,9 @@ class HTMLObject extends DrawingObject {
 
       // const rect = this.element.getBoundingClientRect();
       const rect = new Rect(
-        this.element.offsetLeft,
+        elementClient.left - parentClient.left,
         elementClient.top - parentClient.top,
-        elementClient.width * 1.15,
+        elementClient.width * 1.01,
         elementClient.height,
       );
       this.border[0].push(this.pixelToDiagramSpace(
@@ -62,21 +62,14 @@ class HTMLObject extends DrawingObject {
         limits,
         new Point(rect.left, rect.bottom),
       ));
+      console.log(elementClient.left - parentClient.left, this.border[0][0].x)
     }
-    console.log(this.border)
+  
   }
-  // pixelToGlSpace(p: Point) {
-  //   const x = p.x * 2 / this.parentDiv.offsetWidth - 1;
-  //   const y = 1 - p.y * 2 / this.parentDiv.offsetHeight;
-  //   return new Point(x, y);
-  // }
+
   pixelToDiagramSpace(limits: Rect, p: Point) {
-    // console.log(p)
     const x = p.x / this.parentDiv.offsetWidth * limits.width + limits.left;
     const y = limits.top - p.y / this.parentDiv.offsetWidth * limits.width;
-    // console.log(x, y)
-    // const x = p.x * limits.width / this.parentDiv.offsetWidth + limits.left;
-    // const y = limits.top - p.y * limits.height / this.parentDiv.offsetHeight;
     return new Point(x, y);
   }
 
@@ -105,8 +98,6 @@ class HTMLObject extends DrawingObject {
     }
     const x = pixelLocation.x + left;
     const y = pixelLocation.y + top;
-    // console.log(x, y)
-    // console.log(this.parentDiv.offsetWidth, this.parentDiv.offsetHeight)
     this.element.style = `position:absolute; left:${x}px; top:${y}px;`;
   }
   drawWithTransformMatrix(
@@ -114,27 +105,6 @@ class HTMLObject extends DrawingObject {
     count: number,
     color: Array<number>,
   ) {
-    // const glLocation = this.location.transformBy(transformMatrix);
-    // const pixelLocation = this.glToPixelSpace(glLocation);
-    // const w = this.element.offsetWidth;
-    // const h = this.element.offsetHeight;
-    // let left = 0;
-    // let top = 0;
-    // if (this.alignH === 'center') {
-    //   left = -w / 2;
-    // } else if (this.alignH === 'right') {
-    //   left = -w;
-    // }
-    // if (this.alignV === 'middle') {
-    //   top = -h / 2;
-    // } else if (this.alignV === 'bottom') {
-    //   top = -h;
-    // }
-    // const x = pixelLocation.x + left;
-    // const y = pixelLocation.y + top;
-    // // console.log(x, y)
-    // // console.log(this.parentDiv.offsetWidth, this.parentDiv.offsetHeight)
-    // this.element.style = `position:absolute; left:${x}px; top:${y}px;`;
     this.transformHtml(transformMatrix);
   }
 }

@@ -203,10 +203,11 @@ class Diagram {
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
     this.createDiagramElements();
-    this.initialize();
+    
 
     window.addEventListener('resize', this.resize.bind(this));
     this.sizeHtmlText();
+    this.initialize();
     this.animateNextFrame();
   }
 

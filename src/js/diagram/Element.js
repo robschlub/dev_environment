@@ -891,7 +891,7 @@ class DiagramElementPrimative extends DiagramElement {
       this.vertices.calcBorder(matrix);
     }
     if (this.vertices instanceof HTMLObject) {
-      this.vertices.transformHtml(transformMatrix);
+      this.vertices.transformHtml(matrix);
       this.vertices.calcBorder(this.diagramLimits);
     }
     this.updateMoveTranslationBoundary();
