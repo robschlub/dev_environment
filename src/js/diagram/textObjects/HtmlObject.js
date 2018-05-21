@@ -97,7 +97,10 @@ class HTMLObject extends DrawingObject {
     }
     const x = pixelLocation.x + left;
     const y = pixelLocation.y + top;
-    this.element.style = `position:absolute; left:${x}px; top:${y}px;`;
+    this.element.style.position = 'absolute';
+    this.element.style.left = `${x}px`;
+    this.element.style.top = `${y}px`;
+    // this.element.style = `position:absolute; left:${x}px; top:${y}px;`;
   }
   drawWithTransformMatrix(
     transformMatrix: Array<number>,

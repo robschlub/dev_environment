@@ -221,6 +221,13 @@ class DiagramElement {
     this.presetTransforms = {};
   }
 
+  // Space definition:
+  //   * Pixel space: css pixels
+  //   * GL Space: x,y = -1 to 1
+  //   * Diagram Space: x,y = diagram limits
+  //   * Element space: Combination of element transform and its
+  //     parent transform's
+
   // A diagram element primative vertex object lives in GL SPACE.
   //
   // A diagram element has its own DIAGRAM ELEMENT SPACE, which is

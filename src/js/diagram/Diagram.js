@@ -14,6 +14,22 @@ import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
 
+// There are several coordinate spaces that need to be considered for a
+// diagram.
+//
+// In the simplest diagram, there will be in heirarchy:
+//  - GL Canvas
+//    - Diagram
+//      - Element Collection
+//        - Element Primative
+//          - Drawing Object (e.g. shape, text) from primative vertices
+// 
+// A shape is defined in Drawing Object space.
+// It is then transformed by the element primative
+// It is then transformed by the element colleciton
+// It is then transformed by the diagram
+// it is then transformed into GL Space
+
 function shapes(webgl: WebGLInstance, limits: Rect) {
   function polyLine(
     points: Array<Point>,

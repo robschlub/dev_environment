@@ -564,7 +564,7 @@ function line(p1: Point, p2: Point) {
 
 class Rotation {
   r: number;
-  constructor(angle) {
+  constructor(angle: number) {
     this.r = angle;
   }
   matrix(): Array<number> {
