@@ -1,4 +1,5 @@
-import { Point, Transform, Line, minAngleDiff, normAngle, TransformLimit, spaceToSpaceTransformMatrix } from './g2';
+import { Point, Transform, Line, minAngleDiff, normAngle } from './g2';
+import { TransformLimit, spaceToSpaceTransformMatrix, Rect } from './g2';
 import { round } from './mathtools';
 
 describe('g2 tests', () => {
@@ -1289,5 +1290,33 @@ describe('g2 tests', () => {
         expect(d.transformBy(t)).toEqual(new Point(0, 0));
       })
     })
+  });
+  describe("Rect", () => {
+    describe("Creation", () => {
+      test("(0,0) (4,2)", () => {
+        const r = new Rect(0, 0, 4, 2);
+        expect(r.left).toBe(0);
+        expect(r.bottom).toBe(0);
+        expect(r.width).toBe(4);
+        expect(r.height).toBe(2);
+        expect(r.right).toBe(4);
+        expect(r.top).toBe(2);
+      });
+      test("(-1,-1) (4,2)", () => {
+        const r = new Rect(-1, -1, 4, 2);
+        expect(r.left).toBe(-1);
+        expect(r.bottom).toBe(-1);
+        expect(r.width).toBe(4);
+        expect(r.height).toBe(2);
+        expect(r.right).toBe(3);
+        expect(r.top).toBe(1);
+      });
+    });
+    test("copy", () => {
+      const r = new Rect(0, 0, 4, 2);
+      const c = r.copy();
+      expect(r).toEqual(c);
+      expect(r).not.toBe(c);
+    });
   });
 });
