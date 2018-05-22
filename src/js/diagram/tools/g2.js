@@ -764,8 +764,9 @@ class Transform {
     for (let i = this.order.length - 1; i >= 0; i -= 1) {
       m = m2.mul(m, this.order[i].matrix());
     }
-    this.mat = m2.copy(m);
-    return m;
+    // this.mat = m2.copy(m);
+    // return m;
+    this.mat = m;
   }
 
   update(index: number) {
@@ -921,9 +922,7 @@ class Transform {
     return new Transform(order);
   }
 
-  // Add a transform to the current one.
-  // If the two transforms have different order types, then just return
-  // the current transform.
+  // transform step wise multiplication
   mul(transformToMul: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToMul)) {
       return new Transform(this.order);
@@ -936,6 +935,19 @@ class Transform {
     return new Transform(order);
   }
 
+  transform(transform: Transform) {
+    const t = new Transform();
+    t.order = transform.order.concat(this.order);
+    t.mat = m2.mul(this.matrix(), transform.matrix());
+    return t;
+  }
+
+  transformBy(transform: Transform): Transform {
+    const t = new Transform();
+    t.order = this.order.concat(transform.order);
+    t.mat = m2.mul(transform.matrix(), this.matrix());
+    return t;
+  }
 
   round(precision: number = 8): Transform {
     const order = [];
@@ -1148,7 +1160,7 @@ class Transform {
   }
 }
 
-function spaceToSpaceTransformMatrix(
+function spaceToSpaceTransform(
   s1: {
     x: {bottomLeft: number, width: number},
     y: {bottomLeft: number, height: number}
@@ -1166,9 +1178,21 @@ function spaceToSpaceTransformMatrix(
       s2.x.bottomLeft - s1.x.bottomLeft * xScale,
       s2.y.bottomLeft - s1.y.bottomLeft * yScale,
     );
-  return t.matrix();
+  return t;
 }
 
+function spaceToSpaceTransformMatrix(
+  s1: {
+    x: {bottomLeft: number, width: number},
+    y: {bottomLeft: number, height: number}
+  },
+  s2: {
+    x: {bottomLeft: number, width: number},
+    y: {bottomLeft: number, height: number}
+  },
+) {
+  return spaceToSpaceTransform(s1, s2).matrix();
+}
 
 export {
   point,
@@ -1184,5 +1208,6 @@ export {
   Translation,
   Scale,
   Rotation,
+  spaceToSpaceTransform,
   spaceToSpaceTransformMatrix,
 };

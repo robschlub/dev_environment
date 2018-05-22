@@ -5,7 +5,7 @@ import getShaders from './webgl/shaders';
 // import Polygon from './vertexObjects/Polygon';
 import {
   Rect, Point, Transform,
-  spaceToSpaceTransformMatrix,
+  spaceToSpaceTransform,
 } from './tools/g2';
 // import { spaceToSpaceTransformMatrix } from './tools/g2';
 // import * as m2 from './m2';
@@ -155,12 +155,12 @@ class Diagram {
   backgroundColor: Array<number>;
   fontScale: number;
 
-  glToDiagramSpaceTransformMatrix: Array<number>;
-  diagramToGLSpaceTransformMatrix: Array<number>;
-  pixelToDiagramSpaceTransformMatrix: Array<number>;
-  diagramToPixelSpaceTransformMatrix: Array<number>;
-  pixelToGLSpaceTransformMatrix: Array<number>;
-  glToPixelSpaceTransformMatrix: Array<number>;
+  glToDiagramSpaceTransform: Transform;
+  diagramToGLSpaceTransform: Transform;
+  pixelToDiagramSpaceTransform: Transform;
+  diagramToPixelSpaceTransform: Transform;
+  pixelToGLSpaceTransform: Transform;
+  glToPixelSpaceTransform: Transform;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -282,28 +282,28 @@ class Diagram {
       y: { bottomLeft: canvasRect.height, height: -canvasRect.height },
     };
 
-    this.diagramToGLSpaceTransformMatrix =
-      spaceToSpaceTransformMatrix(diagramSpace, glSpace);
+    this.diagramToGLSpaceTransform =
+      spaceToSpaceTransform(diagramSpace, glSpace);
 
-    this.glToDiagramSpaceTransformMatrix =
-      spaceToSpaceTransformMatrix(glSpace, diagramSpace);
+    this.glToDiagramSpaceTransform =
+      spaceToSpaceTransform(glSpace, diagramSpace);
 
-    this.pixelToDiagramSpaceTransformMatrix =
-      spaceToSpaceTransformMatrix(pixelSpace, diagramSpace);
+    this.pixelToDiagramSpaceTransform =
+      spaceToSpaceTransform(pixelSpace, diagramSpace);
 
-    this.diagramToPixelSpaceTransformMatrix =
-      spaceToSpaceTransformMatrix(diagramSpace, pixelSpace);
+    this.diagramToPixelSpaceTransform =
+      spaceToSpaceTransform(diagramSpace, pixelSpace);
 
-    this.pixelToGLSpaceTransformMatrix =
-      spaceToSpaceTransformMatrix(pixelSpace, glSpace);
+    this.pixelToGLSpaceTransform =
+      spaceToSpaceTransform(pixelSpace, glSpace);
 
-    this.glToPixelSpaceTransformMatrix =
-      spaceToSpaceTransformMatrix(glSpace, pixelSpace);
+    this.glToPixelSpaceTransform =
+      spaceToSpaceTransform(glSpace, pixelSpace);
   }
 
   initialize() {
     // this.setSpaceTransforms();
-    this.elements.setFirstTransform(this.diagramToGLSpaceTransformMatrix);
+    this.elements.setFirstTransform(this.diagramToGLSpaceTransform);
   }
 
   updateLimits(limits: Rect) {
@@ -325,7 +325,7 @@ class Diagram {
   touchDownHandler(clientPoint: Point) {
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
-    const glPoint = pixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
+    const glPoint = pixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
     // const clipPoint = this.clientToClip(clientPoint);
 
     // Get all the diagram elements that were touched at this point (element
@@ -375,14 +375,14 @@ class Diagram {
     const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
     const previousGLPoint =
-      previousPixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
+      previousPixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
     // const currentGLPoint =
     //   currentPixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
 
     const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
     const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
 
 
     // const previousClipPoint = this.clientToClip(previousClientPoint);
@@ -445,7 +445,7 @@ class Diagram {
     //     (this.limits.height / 2 - this.limits.top) * normHeight,
     //   );
     this.elements.draw(
-      this.diagramToGLSpaceTransformMatrix,
+      this.diagramToGLSpaceTransform,
       now,
     );
 

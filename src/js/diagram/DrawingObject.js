@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from './tools/g2';
+import { Point, Rect } from './tools/g2';
 
 // A Drawing object can be:
 //  - GL primitive vertices
@@ -46,6 +46,31 @@ class DrawingObject {
   ) {
   }
   /* eslint-enable */
+
+  getGLBoundingRect(lastDrawTransformMatrix: Array<number>): Rect {
+    const boundaries = this.getGLBoundaries(lastDrawTransformMatrix);
+    const min = new Point(0, 0);
+    const max = new Point(0, 0);
+    let firstPoint = true;
+
+    boundaries.forEach((boundary) => {
+      boundary.forEach((point) => {
+        if (firstPoint) {
+          min.x = point.x;
+          min.y = point.y;
+          max.x = point.x;
+          max.y = point.y;
+          firstPoint = false;
+        } else {
+          min.x = point.x < min.x ? point.x : min.x;
+          min.y = point.y < min.y ? point.y : min.y;
+          max.x = point.x > max.x ? point.x : max.x;
+          max.y = point.y > max.y ? point.y : max.y;
+        }
+      });
+    });
+    return new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+  }
 }
 
 export default DrawingObject;

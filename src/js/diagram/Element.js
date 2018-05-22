@@ -86,7 +86,7 @@ class AnimationPhase {
 class DiagramElement {
   transform: Transform;        // Transform of diagram element
   presetTransforms: Object;       // Convenience dict of transform presets
-  lastDrawTransformMatrix: Array<number>; // Transform matrix used in last draw
+  lastDrawTransform: Transform; // Transform matrix used in last draw
 
   show: boolean;                  // True if should be shown in diagram
   name: string;                   // Used to reference element in a collection
@@ -160,7 +160,7 @@ class DiagramElement {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
     this.show = true;
-    this.lastDrawTransformMatrix = this.transform.matrix();
+    this.lastDrawTransform = this.transform.copy();
     this.name = ''; // This is updated when an element is added to a collection
     this.isMovable = false;
     this.isTouchable = false;
@@ -264,15 +264,16 @@ class DiagramElement {
   //     to the clip space.
   //
   // Each diagram element holds a DIAGRAM ELMENT CLIP space
-  vertexToClip(vertex: Point) {
-    const scaleX = this.diagramLimits.width / 2;
-    const scaleY = this.diagramLimits.height / 2;
-    const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
-    const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
-    const transform = new Transform().scale(scaleX, scaleY).translate(biasX, biasY);
-    return vertex.transformBy(this.lastDrawTransformMatrix)
-      .transformBy(transform.matrix());
-  }
+
+  // vertexToClip(vertex: Point) {
+  //   const scaleX = this.diagramLimits.width / 2;
+  //   const scaleY = this.diagramLimits.height / 2;
+  //   const biasX = -(-this.diagramLimits.width / 2 - this.diagramLimits.left);
+  //   const biasY = -(this.diagramLimits.height / 2 - this.diagramLimits.top);
+  //   const transform = new Transform().scale(scaleX, scaleY).translate(biasX, biasY);
+  //   return vertex.transformBy(this.lastDrawTransformMatrix)
+  //     .transformBy(transform.matrix());
+  // }
   // textVertexToClip(vertex: Point) {
   //   const scaleX = this.diagramLimits.width / 2;
   //   const scaleY = this.diagramLimits.height / 2;
@@ -635,8 +636,8 @@ class DiagramElement {
   // new transform of the object. In contrast, pulsing is not saved as the
   // current transform of the object, and is used only in the current draw
   // of the element.
-  transformWithPulse(now: number, transformMatrix: Array<number>): Array<Array<number>> {
-    const pulseTransformMatrix = [];    // To output list of transform matrices
+  transformWithPulse(now: number, transform: Transform): Array<Transform> {
+    const pulseTransforms = [];    // To output list of transform matrices
 
     // If the diagram element is currently pulsing, the calculate the current
     // pulse magnitude, and transform the input matrix by the pulse
@@ -674,16 +675,17 @@ class DiagramElement {
         const pTransform = this.pulse.transformMethod(pulseMag);
 
         // Transform the current transformMatrix by the pulse transform matrix
-        const pMatrix = m2.mul(m2.copy(transformMatrix), pTransform.matrix());
+        // const pMatrix = m2.mul(m2.copy(transform), pTransform.matrix());
 
         // Push the pulse transformed matrix to the array of pulse matrices
-        pulseTransformMatrix.push(pMatrix);
+        pulseTransforms.push(transform.transformBy(pTransform));
       }
     // If not pulsing, then make no changes to the transformMatrix.
     } else {
-      pulseTransformMatrix.push(m2.copy(transformMatrix));
+      // pulseTransformMatrix.push(m2.copy(transformMatrix));
+      pulseTransforms.push(transform.copy());
     }
-    return pulseTransformMatrix;
+    return pulseTransforms;
   }
   pulseScaleNow(time: number, scale: number, frequency: number = 0) {
     this.pulse.time = time;
@@ -744,18 +746,18 @@ class DiagramElement {
     this.stopPulsing();
   }
 
-  getRelativeBoundingBox() {
-    return {
-      min: new Point(
-        this.diagramLimits.left,
-        this.diagramLimits.top,
-      ),
-      max: new Point(
-        this.diagramLimits.left + this.diagramLimits.width,
-        this.diagramLimits.top - this.diagramLimits.height,
-      ),
-    };
-  }
+  // getRelativeBoundingBox() {
+  //   return {
+  //     min: new Point(
+  //       this.diagramLimits.left,
+  //       this.diagramLimits.top,
+  //     ),
+  //     max: new Point(
+  //       this.diagramLimits.left + this.diagramLimits.width,
+  //       this.diagramLimits.top - this.diagramLimits.height,
+  //     ),
+  //   };
+  // }
 
   // Update the translation move boundary for the element's transform.
   // This will limit the first translation part of the transform to only
@@ -768,21 +770,22 @@ class DiagramElement {
       this.diagramLimits.top],
     scale: Point = new Point(1, 1),
   ): void {
-    const { min, max } = this.getRelativeBoundingBox();
+    // const glBoundingRect = this.vertices.getGLBoundingRect(this.lastDrawTransformMatrix);
 
-    max.x = bounday[2] - max.x * scale.x;
-    max.y = bounday[3] - max.y * scale.y;
-    min.x = bounday[0] - min.x * scale.x;
-    min.y = bounday[1] - min.y * scale.y;
+    // const { min, max } = this.getRelativeBoundingBox();
+    // min.x = bounday[0] - min.x * scale.x;
+    // min.y = bounday[1] - min.y * scale.y;
+    // max.x = bounday[2] - max.x * scale.x;
+    // max.y = bounday[3] - max.y * scale.y; 
 
-    this.move.maxTransform.updateTranslation(
-      max.x,
-      max.y,
-    );
-    this.move.minTransform.updateTranslation(
-      min.x,
-      min.y,
-    );
+    // this.move.maxTransform.updateTranslation(
+    //   max.x,
+    //   max.y,
+    // );
+    // this.move.minTransform.updateTranslation(
+    //   min.x,
+    //   min.y,
+    // );
   }
 
   updateLimits(limits: Rect) {
@@ -819,9 +822,8 @@ class DiagramElementPrimative extends DiagramElement {
       return false;
     }
     const boundaries =
-      this.vertices.getGLBoundaries(this.lastDrawTransformMatrix);
+      this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
 
-    console.log(this.name, glLocation, boundaries)
     for (let i = 0; i < boundaries.length; i += 1) {
       const boundary = boundaries[i];
       if (glLocation.isInPolygon(boundary)) {
@@ -862,14 +864,17 @@ class DiagramElementPrimative extends DiagramElement {
     return [];
   }
 
-  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
+  draw(parentTransform: Transform = new Transform(), now: number = 0) {
     if (this.show) {
       this.setNextTransform(now);
-      let matrix = m2.mul(transformMatrix, this.transform.matrix());
-      matrix = this.transformWithPulse(now, matrix);
+      const newTransform = parentTransform.transform(this.transform);
+      const pulseTransforms = this.transformWithPulse(now, newTransform);
+
+      // let matrix = m2.mul(transformMatrix, this.transform.matrix());
+      // matrix = this.transformWithPulse(now, matrix);
 
       // eslint-disable-next-line prefer-destructuring
-      this.lastDrawTransformMatrix = matrix[0];
+      this.lastDrawTransform = pulseTransforms[0];
 
       let pointCount = -1;
       if (this.vertices instanceof VertexObject) {
@@ -881,21 +886,22 @@ class DiagramElementPrimative extends DiagramElement {
           pointCount = this.pointsToDraw;
         }
       }
-      matrix.forEach((m) => {
-        this.vertices.drawWithTransformMatrix(m, this.color, pointCount);
+      pulseTransforms.forEach((t) => {
+        this.vertices.drawWithTransformMatrix(t.matrix(), this.color, pointCount);
       });
     }
   }
 
-  setFirstTransform(transformMatrix: Array<number> = new Transform().matrix()) {
-    const matrix = m2.mul(transformMatrix, this.transform.matrix());
-    this.lastDrawTransformMatrix = matrix;
+  setFirstTransform(parentTransform: Transform = new Transform()) {
+    const firstTransform = parentTransform.transform(this.transform);
+    // const matrix = m2.mul(transformMatrix, this.transform.matrix());
+    this.lastDrawTransform = firstTransform;
 
     // if (this.vertices instanceof TextObject) {
     //   this.vertices.calcBorder(matrix);
     // }
     if (this.vertices instanceof HTMLObject) {
-      this.vertices.transformHtml(matrix);
+      this.vertices.transformHtml(firstTransform.matrix());
       // this.vertices.calcBorder(this.diagramLimits);
     }
     this.updateMoveTranslationBoundary();
@@ -912,55 +918,55 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  getBoundingBox(): {min: Point, max: Point} {
-    const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
-    return { min, max };
-  }
+  // getBoundingBox(): {min: Point, max: Point} {
+  //   const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
+  //   return { min, max };
+  // }
 
-  getRelativeBoundingBox(): {min: Point, max: Point} {
-    const newTransform = this.transform.copy();
-    newTransform.updateTranslation(0, 0);
-    const { min, max } = this.getVerticesBoundingBox(newTransform.matrix());
-    return { min, max };
-  }
+  // getRelativeBoundingBox(): {min: Point, max: Point} {
+  //   const newTransform = this.transform.copy();
+  //   newTransform.updateTranslation(0, 0);
+  //   const { min, max } = this.getVerticesBoundingBox(newTransform.matrix());
+  //   return { min, max };
+  // }
 
 
-  getVerticesBoundingBox(transformMatrix: Array<number> = m2.identity()): {
-    min: Point, max: Point
-  } {
-    const min = new Point(0, 0);
-    const max = new Point(0, 0);
-    let firstTime = true;
+  // getVerticesBoundingBox(transformMatrix: Array<number> = m2.identity()): {
+  //   min: Point, max: Point
+  // } {
+  //   const min = new Point(0, 0);
+  //   const max = new Point(0, 0);
+  //   let firstTime = true;
 
-    for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-      // first generate the border
-      let border = [];
-      if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
-        border = this.vertices.border[m];
-      } else {
-        for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-          border.push(this.vertices.border[m][i].transformBy(transformMatrix));
-        }
-      }
-      // Go through the border and find the max/min rectangle bounding box
-      for (let i = 0, j = border.length; i < j; i += 1) {
-        const vertex = border[i];
-        if (firstTime) {
-          min.x = vertex.x;
-          min.y = vertex.y;
-          max.x = vertex.x;
-          max.y = vertex.y;
-          firstTime = false;
-        } else {
-          min.x = vertex.x < min.x ? vertex.x : min.x;
-          min.y = vertex.y < min.y ? vertex.y : min.y;
-          max.x = vertex.x > max.x ? vertex.x : max.x;
-          max.y = vertex.y > max.y ? vertex.y : max.y;
-        }
-      }
-    }
-    return { min, max };
-  }
+  //   for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
+  //     // first generate the border
+  //     let border = [];
+  //     if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
+  //       border = this.vertices.border[m];
+  //     } else {
+  //       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
+  //         border.push(this.vertices.border[m][i].transformBy(transformMatrix));
+  //       }
+  //     }
+  //     // Go through the border and find the max/min rectangle bounding box
+  //     for (let i = 0, j = border.length; i < j; i += 1) {
+  //       const vertex = border[i];
+  //       if (firstTime) {
+  //         min.x = vertex.x;
+  //         min.y = vertex.y;
+  //         max.x = vertex.x;
+  //         max.y = vertex.y;
+  //         firstTime = false;
+  //       } else {
+  //         min.x = vertex.x < min.x ? vertex.x : min.x;
+  //         min.y = vertex.y < min.y ? vertex.y : min.y;
+  //         max.x = vertex.x > max.x ? vertex.x : max.x;
+  //         max.y = vertex.y > max.y ? vertex.y : max.y;
+  //       }
+  //     }
+  //   }
+  //   return { min, max };
+  // }
 }
 
 // ***************************************************************
@@ -1010,18 +1016,20 @@ class DiagramElementCollection extends DiagramElement {
     this[`_${name}`] = this.elements[name];
     this.order.push(name);
   }
-  draw(transformMatrix: Array<number> = m2.identity(), now: number = 0) {
+
+  draw(parentTransform: Transform = new Transform(), now: number = 0) {
     if (this.show) {
       this.setNextTransform(now);
-      let matrix = m2.mul(transformMatrix, this.transform.matrix());
-      matrix = this.transformWithPulse(now, matrix);
+
+      const newTransform = parentTransform.transform(this.transform);
+      const pulseTransforms = this.transformWithPulse(now, newTransform);
 
       // eslint-disable-next-line prefer-destructuring
-      this.lastDrawTransformMatrix = matrix[0];
+      this.lastDrawTransform = pulseTransforms[0];
 
-      for (let k = 0; k < matrix.length; k += 1) {
+      for (let k = 0; k < pulseTransforms.length; k += 1) {
         for (let i = 0, j = this.order.length; i < j; i += 1) {
-          this.elements[this.order[i]].draw(matrix[k], now);
+          this.elements[this.order[i]].draw(pulseTransforms[k], now);
         }
       }
     }
@@ -1086,15 +1094,16 @@ class DiagramElementCollection extends DiagramElement {
     return false;
   }
 
-  setFirstTransform(transformMatrix: Array<number> = new Transform().matrix()) {
-    const matrix = m2.mul(transformMatrix, this.transform.matrix());
-    this.lastDrawTransformMatrix = matrix;
+  setFirstTransform(parentTransform: Transform = new Transform()) {
+    const firstTransform = parentTransform.transform(this.transform);
+    this.lastDrawTransform = firstTransform;
 
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      element.setFirstTransform(matrix);
+      element.setFirstTransform(firstTransform);
     }
   }
+
   updateLimits(limits: Rect) {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
@@ -1103,58 +1112,58 @@ class DiagramElementCollection extends DiagramElement {
     this.diagramLimits = limits;
   }
 
-  getRelativeBoundingBox() {
-    let min = new Point(0, 0);
-    let max = new Point(0, 0);
-    let firstTime = true;
-    for (let i = 0, j = this.order.length; i < j; i += 1) {
-      const element = this.elements[this.order[i]];
-      const result = element.getBoundingBox();
-      const mn = result.min;
-      const mx = result.max;
-      if (firstTime) {
-        min = mn.copy();
-        max = mx.copy();
-        firstTime = false;
-      } else {
-        min.x = mn.x < min.x ? mn.x : min.x;
-        min.y = mn.y < min.y ? mn.y : min.y;
-        max.x = mx.x > max.x ? mx.x : max.x;
-        max.y = mx.y > max.y ? mx.y : max.y;
-      }
-    }
-    const t = this.transform.copy();
-    t.updateTranslation(0, 0);
-    max = max.transformBy(t.matrix());
-    min = min.transformBy(t.matrix());
-    return { min, max };
-  }
+  // getRelativeBoundingBox() {
+  //   let min = new Point(0, 0);
+  //   let max = new Point(0, 0);
+  //   let firstTime = true;
+  //   for (let i = 0, j = this.order.length; i < j; i += 1) {
+  //     const element = this.elements[this.order[i]];
+  //     const result = element.getBoundingBox();
+  //     const mn = result.min;
+  //     const mx = result.max;
+  //     if (firstTime) {
+  //       min = mn.copy();
+  //       max = mx.copy();
+  //       firstTime = false;
+  //     } else {
+  //       min.x = mn.x < min.x ? mn.x : min.x;
+  //       min.y = mn.y < min.y ? mn.y : min.y;
+  //       max.x = mx.x > max.x ? mx.x : max.x;
+  //       max.y = mx.y > max.y ? mx.y : max.y;
+  //     }
+  //   }
+  //   const t = this.transform.copy();
+  //   t.updateTranslation(0, 0);
+  //   max = max.transformBy(t.matrix());
+  //   min = min.transformBy(t.matrix());
+  //   return { min, max };
+  // }
 
-  getBoundingBox() {
-    let min = new Point(0, 0);
-    let max = new Point(0, 0);
-    let firstTime = true;
-    for (let i = 0, j = this.order.length; i < j; i += 1) {
-      const element = this.elements[this.order[i]];
-      const result = element.getBoundingBox();
-      const mn = result.min;
-      const mx = result.max;
-      if (firstTime) {
-        min = mn.copy();
-        max = mx.copy();
-        firstTime = false;
-      } else {
-        min.x = mn.x < min.x ? mn.x : min.x;
-        min.y = mn.y < min.y ? mn.y : min.y;
-        max.x = mx.x > max.x ? mx.x : max.x;
-        max.y = mx.y > max.y ? mx.y : max.y;
-      }
-    }
+  // getBoundingBox() {
+  //   let min = new Point(0, 0);
+  //   let max = new Point(0, 0);
+  //   let firstTime = true;
+  //   for (let i = 0, j = this.order.length; i < j; i += 1) {
+  //     const element = this.elements[this.order[i]];
+  //     const result = element.getBoundingBox();
+  //     const mn = result.min;
+  //     const mx = result.max;
+  //     if (firstTime) {
+  //       min = mn.copy();
+  //       max = mx.copy();
+  //       firstTime = false;
+  //     } else {
+  //       min.x = mn.x < min.x ? mn.x : min.x;
+  //       min.y = mn.y < min.y ? mn.y : min.y;
+  //       max.x = mx.x > max.x ? mx.x : max.x;
+  //       max.y = mx.y > max.y ? mx.y : max.y;
+  //     }
+  //   }
 
-    max = max.transformBy(this.transform.matrix());
-    min = min.transformBy(this.transform.matrix());
-    return { min, max };
-  }
+  //   max = max.transformBy(this.transform.matrix());
+  //   min = min.transformBy(this.transform.matrix());
+  //   return { min, max };
+  // }
 
   getTouched(glLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
     if (!this.isTouchable) {

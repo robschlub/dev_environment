@@ -930,6 +930,20 @@ describe('g2 tests', () => {
       expect(ts.r()).toEqual(t1.r());
       expect(ts.t()).toEqual(t1.t());
     });
+    test('Transform', () => {
+      const t1 = new Transform().translate(1, 0);
+      const t2 = new Transform().rotate(Math.PI / 2);
+      const t = round(t2.transform(t1).matrix(), 5);
+      const expected = new Transform().translate(1, 0).rotate(Math.PI / 2);
+      expect(t).toEqual(round(expected.matrix(), 5));
+    });
+    test('Transform By', () => {
+      const t1 = new Transform().translate(1, 0);
+      const t2 = new Transform().rotate(Math.PI / 2);
+      const t = round(t1.transformBy(t2).matrix(), 5);
+      const expected = new Transform().translate(1, 0).rotate(Math.PI / 2);
+      expect(t).toEqual(round(expected.matrix(), 5));
+    });
     test('Zero', () => {
       const t1 = new Transform().scale(1, 1).rotate(1).translate(1, 1);
       const t2 = t1.zero();
