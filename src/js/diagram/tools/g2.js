@@ -1181,17 +1181,64 @@ function spaceToSpaceTransform(
   return t;
 }
 
-function spaceToSpaceTransformMatrix(
-  s1: {
-    x: {bottomLeft: number, width: number},
-    y: {bottomLeft: number, height: number}
-  },
-  s2: {
-    x: {bottomLeft: number, width: number},
-    y: {bottomLeft: number, height: number}
-  },
+// function spaceToSpaceTransformMatrix(
+//   s1: {
+//     x: {bottomLeft: number, width: number},
+//     y: {bottomLeft: number, height: number}
+//   },
+//   s2: {
+//     x: {bottomLeft: number, width: number},
+//     y: {bottomLeft: number, height: number}
+//   },
+// ) {
+//   return spaceToSpaceTransform(s1, s2).matrix();
+// }
+
+
+function comparePoints(
+  p: Point,
+  currentMin: Point,
+  currentMax: Point,
+  firstPoint: boolean,
 ) {
-  return spaceToSpaceTransform(s1, s2).matrix();
+  const min = new Point(0, 0);
+  const max = new Point(0, 0);
+  if (firstPoint) {
+    min.x = p.x;
+    min.y = p.y;
+    max.x = p.x;
+    max.y = p.y;
+  } else {
+    min.x = p.x < currentMin.x ? p.x : currentMin.x;
+    min.y = p.y < currentMin.y ? p.y : currentMin.y;
+    max.x = p.x > currentMax.x ? p.x : currentMax.x;
+    max.y = p.y > currentMax.y ? p.y : currentMax.y;
+  }
+  return { min, max };
+}
+
+function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
+  let firstPoint = true;
+  let result = { min: new Point(0, 0), max: new Point(0, 0) };
+
+  pointArrays.forEach((pointOrArray) => {
+    if (Array.isArray(pointOrArray)) {
+      pointOrArray.forEach((p) => {
+        result = comparePoints(p, result.min, result.max, firstPoint);
+        firstPoint = false;
+      });
+    } else {
+      result = comparePoints(pointOrArray, result.min, result.max, firstPoint);
+    }
+
+    firstPoint = false;
+  });
+  return new Rect(
+    result.min.x,
+    result.min.y,
+    result.max.x - result.min.x,
+    result.max.y - result.min.y,
+  );
 }
 
 export {
@@ -1209,5 +1256,5 @@ export {
   Scale,
   Rotation,
   spaceToSpaceTransform,
-  spaceToSpaceTransformMatrix,
+  getBoundingRect,
 };

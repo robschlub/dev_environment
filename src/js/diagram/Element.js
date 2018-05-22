@@ -2,7 +2,7 @@
 
 import {
   Transform, Point, TransformLimit, Rect,
-  Translation, spaceToSpaceTransform,
+  Translation, spaceToSpaceTransform, getBoundingRect,
 } from './tools/g2';
 // import * as m2 from './tools/m2';
 import * as tools from './tools/mathtools';
@@ -681,11 +681,10 @@ class DiagramElement {
         // const pMatrix = m2.mul(m2.copy(transform), pTransform.matrix());
 
         // Push the pulse transformed matrix to the array of pulse matrices
-        pulseTransforms.push(transform.transformBy(pTransform));
+        pulseTransforms.push(transform.transform(pTransform));
       }
     // If not pulsing, then make no changes to the transformMatrix.
     } else {
-      // pulseTransformMatrix.push(m2.copy(transformMatrix));
       pulseTransforms.push(transform.copy());
     }
     return pulseTransforms;
@@ -749,21 +748,64 @@ class DiagramElement {
     this.stopPulsing();
   }
 
-  // getRelativeBoundingBox() {
-  //   return {
-  //     min: new Point(
-  //       this.diagramLimits.left,
-  //       this.diagramLimits.top,
-  //     ),
-  //     max: new Point(
-  //       this.diagramLimits.left + this.diagramLimits.width,
-  //       this.diagramLimits.top - this.diagramLimits.height,
-  //     ),
-  //   };
-  // }
-
   updateLimits(limits: Rect) {
     this.diagramLimits = limits;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getRelativeGLBoundingRect() {
+    return new Rect(0, 0, 1, 1);
+  }
+
+  updateMoveTranslationBoundary(
+    bounday: Array<number> = [
+      this.diagramLimits.left,
+      this.diagramLimits.top - this.diagramLimits.height,
+      this.diagramLimits.left + this.diagramLimits.width,
+      this.diagramLimits.top],
+    scale: Point = new Point(1, 1),
+  ): void {
+    if (!this.isMovable) {
+      return;
+    }
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const diagramSpace = {
+      x: {
+        bottomLeft: this.diagramLimits.left,
+        width: this.diagramLimits.width,
+      },
+      y: {
+        bottomLeft: this.diagramLimits.bottom,
+        height: this.diagramLimits.height,
+      },
+    };
+
+    const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
+
+    const rect = this.getRelativeGLBoundingRect();
+
+    const minPoint = new Point(rect.left, rect.bottom).transformBy(glToDiagramSpace.matrix());
+    const maxPoint = new Point(rect.right, rect.top).transformBy(glToDiagramSpace.matrix());
+
+    const min = new Point(0, 0);
+    const max = new Point(0, 0);
+
+    min.x = bounday[0] - minPoint.x * scale.x;
+    min.y = bounday[1] - minPoint.y * scale.y;
+    max.x = bounday[2] - maxPoint.x * scale.x;
+    max.y = bounday[3] - maxPoint.y * scale.y;
+
+    this.move.maxTransform.updateTranslation(
+      max.x,
+      max.y,
+    );
+    this.move.minTransform.updateTranslation(
+      min.x,
+      min.y,
+    );
   }
 }
 
@@ -805,27 +847,6 @@ class DiagramElementPrimative extends DiagramElement {
       }
     }
     return false;
-
-    // if (this.vertices instanceof TextObject) {
-    //   this.vertices.calcBorder(this.lastDrawTransformMatrix);
-    // }
-    // if (this.vertices instanceof HTMLObject) {
-    //   this.vertices.calcBorder(this.diagramLimits);
-    // }
-    // for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-    //   let border = [];
-    //   if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
-    //     border = this.vertices.border[m];
-    //   } else {
-    //     for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-    //       border.push(this.vertexToClip(this.vertices.border[m][i]));
-    //     }
-    //   }
-    //   if (clipLocation.isInPolygon(border)) {
-    //     return true;
-    //   }
-    // }
-    // return false;
   }
 
   getTouched(glLocation: Point): Array<DiagramElementPrimative> {
@@ -868,15 +889,10 @@ class DiagramElementPrimative extends DiagramElement {
 
   setFirstTransform(parentTransform: Transform = new Transform()) {
     const firstTransform = parentTransform.transform(this.transform);
-    // const matrix = m2.mul(transformMatrix, this.transform.matrix());
     this.lastDrawTransform = firstTransform;
 
-    // if (this.vertices instanceof TextObject) {
-    //   this.vertices.calcBorder(matrix);
-    // }
     if (this.vertices instanceof HTMLObject) {
       this.vertices.transformHtml(firstTransform.matrix());
-      // this.vertices.calcBorder(this.diagramLimits);
     }
     this.updateMoveTranslationBoundary();
   }
@@ -892,106 +908,69 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  // Update the translation move boundary for the element's transform.
-  // This will limit the first translation part of the transform to only
-  // translations within the max/min limit.
-  updateMoveTranslationBoundary(
-    bounday: Array<number> = [
-      this.diagramLimits.left,
-      this.diagramLimits.top - this.diagramLimits.height,
-      this.diagramLimits.left + this.diagramLimits.width,
-      this.diagramLimits.top],
-    scale: Point = new Point(1, 1),
-  ): void {
-    const glSpace = {
-      x: { bottomLeft: -1, width: 2 },
-      y: { bottomLeft: -1, height: 2 },
-    };
-    const diagramSpace = {
-      x: {
-        bottomLeft: this.diagramLimits.left,
-        width: this.diagramLimits.width,
-      },
-      y: {
-        bottomLeft: this.diagramLimits.bottom,
-        height: this.diagramLimits.height,
-      },
-    };
+  // // Update the translation move boundary for the element's transform.
+  // // This will limit the first translation part of the transform to only
+  // // translations within the max/min limit.
+  // updateMoveTranslationBoundary(
+  //   bounday: Array<number> = [
+  //     this.diagramLimits.left,
+  //     this.diagramLimits.top - this.diagramLimits.height,
+  //     this.diagramLimits.left + this.diagramLimits.width,
+  //     this.diagramLimits.top],
+  //   scale: Point = new Point(1, 1),
+  // ): void {
+  //   const glSpace = {
+  //     x: { bottomLeft: -1, width: 2 },
+  //     y: { bottomLeft: -1, height: 2 },
+  //   };
+  //   const diagramSpace = {
+  //     x: {
+  //       bottomLeft: this.diagramLimits.left,
+  //       width: this.diagramLimits.width,
+  //     },
+  //     y: {
+  //       bottomLeft: this.diagramLimits.bottom,
+  //       height: this.diagramLimits.height,
+  //     },
+  //   };
 
-    const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
+  //   const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
 
-    const rect = this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+  //   const rect = this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
 
-    const minPoint = new Point(rect.left, rect.bottom).transformBy(glToDiagramSpace.matrix());
-    const maxPoint = new Point(rect.right, rect.top).transformBy(glToDiagramSpace.matrix());
+  //   const minPoint = new Point(rect.left, rect.bottom).transformBy(glToDiagramSpace.matrix());
+  //   const maxPoint = new Point(rect.right, rect.top).transformBy(glToDiagramSpace.matrix());
 
-    const min = new Point(0, 0);
-    const max = new Point(0, 0);
-
-    min.x = bounday[0] - minPoint.x * scale.x;
-    min.y = bounday[1] - minPoint.y * scale.y;
-    max.x = bounday[2] - maxPoint.x * scale.x;
-    max.y = bounday[3] - maxPoint.y * scale.y;
-
-    this.move.maxTransform.updateTranslation(
-      max.x,
-      max.y,
-    );
-    this.move.minTransform.updateTranslation(
-      min.x,
-      min.y,
-    );
-  }
-
-  // getBoundingBox(): {min: Point, max: Point} {
-  //   const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
-  //   return { min, max };
-  // }
-
-  // getRelativeBoundingBox(): {min: Point, max: Point} {
-  //   const newTransform = this.transform.copy();
-  //   newTransform.updateTranslation(0, 0);
-  //   const { min, max } = this.getVerticesBoundingBox(newTransform.matrix());
-  //   return { min, max };
-  // }
-
-
-  // getVerticesBoundingBox(transformMatrix: Array<number> = m2.identity()): {
-  //   min: Point, max: Point
-  // } {
   //   const min = new Point(0, 0);
   //   const max = new Point(0, 0);
-  //   let firstTime = true;
 
-  //   for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-  //     // first generate the border
-  //     let border = [];
-  //     if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
-  //       border = this.vertices.border[m];
-  //     } else {
-  //       for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-  //         border.push(this.vertices.border[m][i].transformBy(transformMatrix));
-  //       }
-  //     }
-  //     // Go through the border and find the max/min rectangle bounding box
-  //     for (let i = 0, j = border.length; i < j; i += 1) {
-  //       const vertex = border[i];
-  //       if (firstTime) {
-  //         min.x = vertex.x;
-  //         min.y = vertex.y;
-  //         max.x = vertex.x;f
-  //         max.y = vertex.y;
-  //         firstTime = false;
-  //       } else {
-  //         min.x = vertex.x < min.x ? vertex.x : min.x;
-  //         min.y = vertex.y < min.y ? vertex.y : min.y;
-  //         max.x = vertex.x > max.x ? vertex.x : max.x;
-  //         max.y = vertex.y > max.y ? vertex.y : max.y;
-  //       }
-  //     }
-  //   }
-  //   return { min, max };
+  //   min.x = bounday[0] - minPoint.x * scale.x;
+  //   min.y = bounday[1] - minPoint.y * scale.y;
+  //   max.x = bounday[2] - maxPoint.x * scale.x;
+  //   max.y = bounday[3] - maxPoint.y * scale.y;
+
+  //   this.move.maxTransform.updateTranslation(
+  //     max.x,
+  //     max.y,
+  //   );
+  //   this.move.minTransform.updateTranslation(
+  //     min.x,
+  //     min.y,
+  //   );
   // }
+
+  getGLBoundaries() {
+    return this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
+  }
+  getRelativeGLBoundingRect(): Rect {
+    return this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+    // const relativeBoundingRect =
+    //    this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+    // let location = this.transform.t();
+    // if (location === null) {
+    //   return relativeBoundingRect;
+    // }
+  }
 }
 
 // ***************************************************************
@@ -1097,9 +1076,6 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
-  // updateBias(scale: Point, offset: Point): void {
-  //   this.biasTransform = (new Transform(offset, 0, scale)).matrix();
-  // }
   // This will only search elements within the collection for a touch
   // if the collection is touchable. Note, the elements can be queried
   // directly still, and will return if they are touched if they themselves
@@ -1127,6 +1103,30 @@ class DiagramElementCollection extends DiagramElement {
       const element = this.elements[this.order[i]];
       element.setFirstTransform(firstTransform);
     }
+    this.updateMoveTranslationBoundary();
+  }
+
+  getGLBoundaries() {
+    let boundaries = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      const elementBoundaries = element.getGLBoundaries();
+      boundaries = boundaries.concat(elementBoundaries);
+    }
+    return boundaries;
+  }
+
+  getRelativeGLBoundingRect() {
+    const glAbsoluteBoundaries = this.getGLBoundaries();
+    const boundingRect = getBoundingRect(glAbsoluteBoundaries);
+    const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
+
+    return new Rect(
+      boundingRect.left - location.x,
+      boundingRect.bottom - location.y,
+      boundingRect.width,
+      boundingRect.height,
+    );
   }
 
   updateLimits(limits: Rect) {
@@ -1136,59 +1136,6 @@ class DiagramElementCollection extends DiagramElement {
     }
     this.diagramLimits = limits;
   }
-
-  // getRelativeBoundingBox() {
-  //   let min = new Point(0, 0);
-  //   let max = new Point(0, 0);
-  //   let firstTime = true;
-  //   for (let i = 0, j = this.order.length; i < j; i += 1) {
-  //     const element = this.elements[this.order[i]];
-  //     const result = element.getBoundingBox();
-  //     const mn = result.min;
-  //     const mx = result.max;
-  //     if (firstTime) {
-  //       min = mn.copy();
-  //       max = mx.copy();
-  //       firstTime = false;
-  //     } else {
-  //       min.x = mn.x < min.x ? mn.x : min.x;
-  //       min.y = mn.y < min.y ? mn.y : min.y;
-  //       max.x = mx.x > max.x ? mx.x : max.x;
-  //       max.y = mx.y > max.y ? mx.y : max.y;
-  //     }
-  //   }
-  //   const t = this.transform.copy();
-  //   t.updateTranslation(0, 0);
-  //   max = max.transformBy(t.matrix());
-  //   min = min.transformBy(t.matrix());
-  //   return { min, max };
-  // }
-
-  // getBoundingBox() {
-  //   let min = new Point(0, 0);
-  //   let max = new Point(0, 0);
-  //   let firstTime = true;
-  //   for (let i = 0, j = this.order.length; i < j; i += 1) {
-  //     const element = this.elements[this.order[i]];
-  //     const result = element.getBoundingBox();
-  //     const mn = result.min;
-  //     const mx = result.max;
-  //     if (firstTime) {
-  //       min = mn.copy();
-  //       max = mx.copy();
-  //       firstTime = false;
-  //     } else {
-  //       min.x = mn.x < min.x ? mn.x : min.x;
-  //       min.y = mn.y < min.y ? mn.y : min.y;
-  //       max.x = mx.x > max.x ? mx.x : max.x;
-  //       max.y = mx.y > max.y ? mx.y : max.y;
-  //     }
-  //   }
-
-  //   max = max.transformBy(this.transform.matrix());
-  //   min = min.transformBy(this.transform.matrix());
-  //   return { min, max };
-  // }
 
   getTouched(glLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
     if (!this.isTouchable) {

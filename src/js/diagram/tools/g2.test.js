@@ -1,6 +1,7 @@
 import {
   Point, Transform, Line, minAngleDiff, normAngle,
-  TransformLimit, spaceToSpaceTransformMatrix, Rect,
+  TransformLimit, spaceToSpaceTransform, Rect,
+  getBoundingRect,
 } from './g2';
 import { round } from './mathtools';
 
@@ -1240,7 +1241,7 @@ describe('g2 tests', () => {
     };
     describe('Pixel to GL', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(pixelSpace, glSpace);
+        t = spaceToSpaceTransform(pixelSpace, glSpace).matrix();
       });
       test('pixel 0, 0', () => {
         const p = new Point(0, 0);
@@ -1257,7 +1258,7 @@ describe('g2 tests', () => {
     });
     describe('GL to Pixel', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(glSpace, pixelSpace);
+        t = spaceToSpaceTransform(glSpace, pixelSpace).matrix();
       });
       test('gl 0, 0', () => {
         const p = new Point(0, 0);
@@ -1274,7 +1275,7 @@ describe('g2 tests', () => {
     });
     describe('d1 to gl', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(d1Space, glSpace);
+        t = spaceToSpaceTransform(d1Space, glSpace).matrix();
       });
       test('0, 0 to -1, -1', () => {
         const d = new Point(0, 0);
@@ -1291,7 +1292,7 @@ describe('g2 tests', () => {
     });
     describe('gl to d1', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(glSpace, d1Space);
+        t = spaceToSpaceTransform(glSpace, d1Space).matrix();
       });
       test('0, 0 to 2, 1', () => {
         const d = new Point(0, 0);
@@ -1333,6 +1334,43 @@ describe('g2 tests', () => {
       const c = r.copy();
       expect(r).toEqual(c);
       expect(r).not.toBe(c);
+    });
+  });
+  describe('getMinMaxPoints', () => {
+    test('Array', () => {
+      const points = [
+        new Point(0, 0),
+        new Point(2, 1),
+        new Point(-1, 3),
+        new Point(0.5, -3),
+      ];
+      const result = getBoundingRect(points);
+      expect(result.left).toEqual(-1);
+      expect(result.bottom).toEqual(-3);
+      expect(result.right).toEqual(2);
+      expect(result.top).toEqual(3);
+    });
+    test('Array of Array', () => {
+      const points = [
+        [
+          new Point(0, 0),
+          new Point(2, 1),
+          new Point(-1, 3),
+          new Point(0.5, -3),
+        ],
+        [
+          new Point(1, 0),
+          new Point(2, 1),
+          new Point(4, 3),
+          new Point(0.5, -3),
+        ],
+      ];
+      const result = getBoundingRect(points);
+      expect(result.left).toEqual(-1);
+      expect(result.bottom).toEqual(-3);
+      expect(result.right).toEqual(4);
+      expect(result.top).toEqual(3);
+      // expect(result.max).toEqual(new Point(4, 3));
     });
   });
 });

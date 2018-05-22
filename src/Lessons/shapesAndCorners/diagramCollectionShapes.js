@@ -156,6 +156,17 @@ class ShapesCollection extends DiagramElementCollection {
     anchor.isMovable = true;
     this.add('anchor', anchor);
 
+    const s1 = shapes.polygonFilled(8, 0.3, 0, 8, lineColor, new Point(0, 0));
+    const s2 = shapes.polygonFilled(8, 0.2, 0, 8, lineColor, new Point(0.4, 0.4));
+    s1.isTouchable = true;
+    s2.isTouchable = true;
+    const c = shapes.collection(new Point(-1, -1));
+    c.add('s1', s1);
+    c.add('s2', s2);
+    c.isTouchable = true;
+    c.isMovable = true;
+    this.add('c', c);
+
     const font = new DiagramFont(
       'Helvetica',
       'italic',

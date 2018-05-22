@@ -1,7 +1,7 @@
 // @flow
 
 // import * as m2 from '../tools/m2';
-import { Point, spaceToSpaceTransformMatrix } from '../tools/g2';
+import { Point, spaceToSpaceTransform } from '../tools/g2';
 import DrawingObject from '../DrawingObject';
 
 
@@ -43,7 +43,7 @@ class HTMLObject extends DrawingObject {
       x: { bottomLeft: 0, width: parentRect.width },
       y: { bottomLeft: parentRect.height, height: -parentRect.height },
     };
-    const pixelToGLMatrix = spaceToSpaceTransformMatrix(pixelSpace, glSpace);
+    const pixelToGLTransform = spaceToSpaceTransform(pixelSpace, glSpace);
 
     const elementRect = this.element.getBoundingClientRect();
     const left = elementRect.left - parentRect.left;
@@ -57,46 +57,8 @@ class HTMLObject extends DrawingObject {
     boundary.push(new Point(right, bottom));
     boundary.push(new Point(left, bottom));
 
-    return [boundary.map(p => p.transformBy(pixelToGLMatrix))];
+    return [boundary.map(p => p.transformBy(pixelToGLTransform.matrix()))];
   }
-
-  // calcBorder(limits: Rect) {
-  //   if (this.element) {
-  //     this.border = [[]];
-  //     const parentClient = this.parentDiv.getBoundingClientRect();
-  //     const elementClient = this.element.getBoundingClientRect();
-
-  //     // const rect = this.element.getBoundingClientRect();
-  //     const rect = new Rect(
-  //       elementClient.left - parentClient.left,
-  //       elementClient.top - parentClient.top,
-  //       elementClient.width * 1.01,
-  //       elementClient.height,
-  //     );
-  //     this.border[0].push(this.pixelToDiagramSpace(
-  //       limits,
-  //       new Point(rect.left, rect.top),
-  //     ));
-  //     this.border[0].push(this.pixelToDiagramSpace(
-  //       limits,
-  //       new Point(rect.right, rect.top),
-  //     ));
-  //     this.border[0].push(this.pixelToDiagramSpace(
-  //       limits,
-  //       new Point(rect.right, rect.bottom),
-  //     ));
-  //     this.border[0].push(this.pixelToDiagramSpace(
-  //       limits,
-  //       new Point(rect.left, rect.bottom),
-  //     ));
-  //   }
-  // }
-
-  // pixelToDiagramSpace(limits: Rect, p: Point) {
-  //   const x = p.x / this.parentDiv.offsetWidth * limits.width + limits.left;
-  //   const y = limits.top - p.y / this.parentDiv.offsetWidth * limits.width;
-  //   return new Point(x, y);
-  // }
 
   glToPixelSpace(p: Point) {
     const x = (p.x - -1) / 2 * this.parentDiv.offsetWidth;
