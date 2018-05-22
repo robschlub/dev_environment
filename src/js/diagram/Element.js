@@ -1,11 +1,14 @@
 // @flow
 
-import { Transform, Point, TransformLimit, Rect, Translation } from './tools/g2';
-import * as m2 from './tools/m2';
+import {
+  Transform, Point, TransformLimit, Rect,
+  Translation, spaceToSpaceTransform,
+} from './tools/g2';
+// import * as m2 from './tools/m2';
 import * as tools from './tools/mathtools';
 // import GlobalVariables from './globals';
 // import VertexObject from './vertexObjects/vertexObject';
-import { TextObject } from './textObjects/TextObjectSimple';
+// import { TextObject } from './textObjects/TextObjectSimple';
 import HTMLObject from './textObjects/HtmlObject';
 import DrawingObject from './DrawingObject';
 import VertexObject from './vertexObjects/vertexObject';
@@ -759,35 +762,6 @@ class DiagramElement {
   //   };
   // }
 
-  // Update the translation move boundary for the element's transform.
-  // This will limit the first translation part of the transform to only
-  // translations within the max/min limit.
-  updateMoveTranslationBoundary(
-    bounday: Array<number> = [
-      this.diagramLimits.left,
-      this.diagramLimits.top - this.diagramLimits.height,
-      this.diagramLimits.left + this.diagramLimits.width,
-      this.diagramLimits.top],
-    scale: Point = new Point(1, 1),
-  ): void {
-    // const glBoundingRect = this.vertices.getGLBoundingRect(this.lastDrawTransformMatrix);
-
-    // const { min, max } = this.getRelativeBoundingBox();
-    // min.x = bounday[0] - min.x * scale.x;
-    // min.y = bounday[1] - min.y * scale.y;
-    // max.x = bounday[2] - max.x * scale.x;
-    // max.y = bounday[3] - max.y * scale.y; 
-
-    // this.move.maxTransform.updateTranslation(
-    //   max.x,
-    //   max.y,
-    // );
-    // this.move.minTransform.updateTranslation(
-    //   min.x,
-    //   min.y,
-    // );
-  }
-
   updateLimits(limits: Rect) {
     this.diagramLimits = limits;
   }
@@ -918,6 +892,57 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
+  // Update the translation move boundary for the element's transform.
+  // This will limit the first translation part of the transform to only
+  // translations within the max/min limit.
+  updateMoveTranslationBoundary(
+    bounday: Array<number> = [
+      this.diagramLimits.left,
+      this.diagramLimits.top - this.diagramLimits.height,
+      this.diagramLimits.left + this.diagramLimits.width,
+      this.diagramLimits.top],
+    scale: Point = new Point(1, 1),
+  ): void {
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const diagramSpace = {
+      x: {
+        bottomLeft: this.diagramLimits.left,
+        width: this.diagramLimits.width,
+      },
+      y: {
+        bottomLeft: this.diagramLimits.bottom,
+        height: this.diagramLimits.height,
+      },
+    };
+
+    const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
+
+    const rect = this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+
+    const minPoint = new Point(rect.left, rect.bottom).transformBy(glToDiagramSpace.matrix());
+    const maxPoint = new Point(rect.right, rect.top).transformBy(glToDiagramSpace.matrix());
+
+    const min = new Point(0, 0);
+    const max = new Point(0, 0);
+
+    min.x = bounday[0] - minPoint.x * scale.x;
+    min.y = bounday[1] - minPoint.y * scale.y;
+    max.x = bounday[2] - maxPoint.x * scale.x;
+    max.y = bounday[3] - maxPoint.y * scale.y;
+
+    this.move.maxTransform.updateTranslation(
+      max.x,
+      max.y,
+    );
+    this.move.minTransform.updateTranslation(
+      min.x,
+      min.y,
+    );
+  }
+
   // getBoundingBox(): {min: Point, max: Point} {
   //   const { min, max } = this.getVerticesBoundingBox(this.transform.matrix());
   //   return { min, max };
@@ -954,7 +979,7 @@ class DiagramElementPrimative extends DiagramElement {
   //       if (firstTime) {
   //         min.x = vertex.x;
   //         min.y = vertex.y;
-  //         max.x = vertex.x;
+  //         max.x = vertex.x;f
   //         max.y = vertex.y;
   //         firstTime = false;
   //       } else {

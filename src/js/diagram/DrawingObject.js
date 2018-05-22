@@ -17,9 +17,11 @@ import { Point, Rect } from './tools/g2';
 class DrawingObject {
   // numPoints: number;           // Number of primative vertices
   border: Array<Array<Point>>; // Border vertices
+  location: Point;
 
   constructor() {
     // this.numPoints = 0;
+    this.location = new Point(0, 0);
     this.border = [[]];
   }
 
@@ -70,6 +72,28 @@ class DrawingObject {
       });
     });
     return new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+  }
+
+  getLocation(): Point {
+    return this.location;
+  }
+  // eslint-disable-next-line class-methods-use-this
+  getGLLocation(lastDrawTransformMatrix: Array<number>): Point {
+    return this.getLocation().transformBy(lastDrawTransformMatrix);
+  }
+
+  getRelativeGLBoundingRect(lastDrawTransformMatrix: Array<number>): Rect {
+    const glLocation = this.getGLLocation(lastDrawTransformMatrix);
+    const glAbsoluteBoundaries =
+      this.getGLBoundingRect(lastDrawTransformMatrix);
+
+    const glRelativeBoundaries = new Rect(
+      glAbsoluteBoundaries.left - glLocation.x,
+      glAbsoluteBoundaries.bottom - glLocation.y,
+      glAbsoluteBoundaries.width,
+      glAbsoluteBoundaries.height,
+    );
+    return glRelativeBoundaries;
   }
 }
 

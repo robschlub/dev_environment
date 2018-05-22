@@ -148,6 +148,14 @@ class ShapesCollection extends DiagramElementCollection {
     const pent = makePent(shapes, locations.pent.center);
     this.add('pent', pent);
 
+    const anchor = shapes.polygonFilled(
+      12, 0.5, 0,
+      12, cornerColor, new Point(0, 0),
+    );
+    anchor.isTouchable = true;
+    anchor.isMovable = true;
+    this.add('anchor', anchor);
+
     const font = new DiagramFont(
       'Helvetica',
       'italic',
