@@ -49,7 +49,7 @@ class HTMLObject extends DrawingObject {
     const left = elementRect.left - parentRect.left;
     const right = left + elementRect.width;
     const top = elementRect.top - parentRect.top;
-    const bottom = elementRect.top + elementRect.height;
+    const bottom = top + elementRect.height;
 
     const boundary = [];
     boundary.push(new Point(left, top));
