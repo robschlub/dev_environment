@@ -50,7 +50,12 @@ class Rect {
     this.top = bottom + height;
     this.right = left + width;
   }
+
+  copy() {
+    return new Rect(this.left, this.bottom, this.width, this.height);
+  }
 }
+
 /* eslint-disable comma-dangle */
 class Point {
   x: number;
@@ -1143,6 +1148,27 @@ class Transform {
   }
 }
 
+function spaceToSpaceTransformMatrix(
+  s1: {
+    x: {bottomLeft: number, width:number},
+    y: {bottomLeft: number, width:number}
+  },
+  s2: {
+    x: {bottomLeft: number, height:number},
+    y: {bottomLeft: number, height:number}
+  },
+) {
+  const xScale = s2.x.width / s1.x.width;
+  const yScale = s2.y.height / s1.y.height;
+  const t = new Transform()
+    .scale(xScale, yScale)
+    .translate(
+      s2.x.bottomLeft - s1.x.bottomLeft * xScale,
+      s2.y.bottomLeft - s1.y.bottomLeft * yScale,
+    );
+  return t.matrix();
+}
+
 
 export {
   point,
@@ -1158,4 +1184,5 @@ export {
   Translation,
   Scale,
   Rotation,
+  spaceToSpaceTransformMatrix,
 };

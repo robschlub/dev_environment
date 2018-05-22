@@ -1,4 +1,4 @@
-import { Point, Transform, Line, minAngleDiff, normAngle, TransformLimit } from './g2';
+import { Point, Transform, Line, minAngleDiff, normAngle, TransformLimit, spaceToSpaceTransformMatrix } from './g2';
 import { round } from './mathtools';
 
 describe('g2 tests', () => {
@@ -1206,5 +1206,88 @@ describe('g2 tests', () => {
         expect(t0.clip(min, max)).toEqual(t1);
       });
     });
+  });
+  describe('Space to space transform', () => {
+    let t;
+    const pixelSpace = {
+          x: { bottomLeft: 0, width: 1000 },
+          y: { bottomLeft: 500, height: -500 },
+        };
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const d1Space = {
+      x: { bottomLeft: 0, width: 4 },
+      y: { bottomLeft: 0, height: 2 },
+    };
+    describe('Pixel to GL', () => {
+      beforeEach(() => {
+        t = spaceToSpaceTransformMatrix(pixelSpace, glSpace)
+      });
+      test('pixel 0, 0', () => {
+        const p = new Point(0, 0);
+        expect(p.transformBy(t)).toEqual(new Point(-1, 1));
+      })
+      test('pixel 1000, 500', () => {
+        const p = new Point(1000, 500);
+        expect(p.transformBy(t)).toEqual(new Point(1, -1));
+      })
+      test('pixel 500, 250', () => {
+        const p = new Point(500, 250);
+        expect(p.transformBy(t)).toEqual(new Point(0, 0));
+      })
+    })
+    describe('GL to Pixel', () => {
+      beforeEach(() => {
+        t = spaceToSpaceTransformMatrix(glSpace, pixelSpace)
+      });
+      test('gl 0, 0', () => {
+        const p = new Point(0, 0);
+        expect(p.transformBy(t)).toEqual(new Point(500, 250));
+      })
+      test('gl 1, -1', () => {
+        const p = new Point(1, -1);
+        expect(p.transformBy(t)).toEqual(new Point(1000, 500));
+      })
+      test('gl -1, 1', () => {
+        const p = new Point(-1, 1);
+        expect(p.transformBy(t)).toEqual(new Point(0, 0));
+      })
+    })
+    describe('d1 to gl', () => {
+      beforeEach(() => {
+        t = spaceToSpaceTransformMatrix(d1Space, glSpace)
+      });
+      test('0, 0 to -1, -1', () => {
+        const d = new Point(0, 0);
+        expect(d.transformBy(t)).toEqual(new Point(-1, -1));
+      })
+      test('4, 2 to 1, 1', () => {
+        const d = new Point(4, 2);
+        expect(d.transformBy(t)).toEqual(new Point(1, 1));
+      })
+      test('2, 1 to 0, 0', () => {
+        const d = new Point(2, 1);
+        expect(d.transformBy(t)).toEqual(new Point(0, 0));
+      })
+    })
+    describe('gl to d1', () => {
+      beforeEach(() => {
+        t = spaceToSpaceTransformMatrix(glSpace, d1Space)
+      });
+      test('0, 0 to 2, 1', () => {
+        const d = new Point(0, 0);
+        expect(d.transformBy(t)).toEqual(new Point(2, 1));
+      })
+      test('1, 1 to 4, 2', () => {
+        const d = new Point(1, 1);
+        expect(d.transformBy(t)).toEqual(new Point(4, 2));
+      })
+      test('-1, -1 to 0, 0', () => {
+        const d = new Point(-1, -1);
+        expect(d.transformBy(t)).toEqual(new Point(0, 0));
+      })
+    })
   });
 });
