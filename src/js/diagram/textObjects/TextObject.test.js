@@ -1,5 +1,5 @@
 
-import TextObject from './TextObject';
+import TextObject from './TextObjectSimple';
 import { Point } from '../tools/g2';
 import DrawContext2D from '../../__mocks__/DrawContext2DMock';
 

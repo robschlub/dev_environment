@@ -2,7 +2,7 @@
 
 // import * as g2 from '../g2';
 import * as m2 from '../tools/m2';
-import { Point, Transform, Rect } from '../tools/g2';
+import { Point, Rect } from '../tools/g2';
 import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../DrawContext2D';
 // import { roundNum } from './mathtools';
@@ -98,7 +98,7 @@ class TextObject extends DrawingObject {
     transformation = m2.translate(transformation, translation.x, translation.y);
     transformation = m2.rotate(transformation, rotation);
     transformation = m2.scale(transformation, scale.x, scale.y);
-    this.drawWithTransformMatrix(m2.t(transformation), count, color);
+    this.drawWithTransformMatrix(m2.t(transformation), color);
   }
 
   // scalePixelToGLClip(p: Point) {
@@ -162,7 +162,6 @@ class TextObject extends DrawingObject {
   // enough to show text that is 1000th the height of the screen.
   drawWithTransformMatrix(
     transformMatrix: Array<number>,
-    count: number,
     color: Array<number>,
   ) {
     const { ctx } = this.drawContext2D;
@@ -220,31 +219,45 @@ class TextObject extends DrawingObject {
   }
 
 
-  scalePixelToClip(p: Point) {
-    const x = p.x / this.drawContext2D.canvas.offsetWidth *
-              this.diagramLimits.width;
-    const y = p.y / this.drawContext2D.canvas.offsetHeight *
-              this.diagramLimits.height;
-    return new Point(x, y);
-  }
+  // scalePixelToClip(p: Point) {
+  //   const x = p.x / this.drawContext2D.canvas.offsetWidth *
+  //             this.diagramLimits.width;
+  //   const y = p.y / this.drawContext2D.canvas.offsetHeight *
+  //             this.diagramLimits.height;
+  //   return new Point(x, y);
+  // }
 
-  calcBorder(lastDrawTransformMatrix: Array<number>) {
-    this.border = [];
+  // calcBorder(lastDrawTransformMatrix: Array<number>) {
+  //   this.border = [];
+  //   this.text.forEach((t) => {
+  //     this.border.push(this.calcBorderOfText(t, lastDrawTransformMatrix));
+  //   });
+  // }
+
+  // diagramToPixel(p: Point) {
+  //   const x = (p.x - this.diagramLimits.left) /
+  //             this.diagramLimits.width *
+  //             this.drawContext2D.canvas.offsetWidth;
+  //   const y = (this.diagramLimits.top - p.y) /
+  //             this.diagramLimits.height *
+  //             this.drawContext2D.canvas.offsetHeight;
+  //   return new Point(x, y);
+  // }
+
+  getGLBoundaries(lastDrawTransformMatrix: Array<number>): Array<Array<Point>> {
+    const glBoundaries = [];
     this.text.forEach((t) => {
-      this.border.push(this.calcBorderOfText(t, lastDrawTransformMatrix));
+      glBoundaries.push(this.getGLBoundaryOfText(t, lastDrawTransformMatrix));
     });
+    return glBoundaries;
   }
 
-  diagramToPixel(p: Point) {
-    const x = (p.x - this.diagramLimits.left) /
-              this.diagramLimits.width *
-              this.drawContext2D.canvas.offsetWidth;
-    const y = (this.diagramLimits.top - p.y) /
-              this.diagramLimits.height *
-              this.drawContext2D.canvas.offsetHeight;
-    return new Point(x, y);
-  }
-  calcBorderOfText(text: DiagramText, lastDrawTransformMatrix: Array<number>) {
+  getGLBoundaryOfText(
+    text: DiagramText,
+    lastDrawTransformMatrix: Array<number>,
+  ): Array<Point> {
+    const glBoundary = [];
+
     // Calculate the scaling factor
     // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
     //                       (this.diagramLimits.height / 1000);
@@ -275,28 +288,87 @@ class TextObject extends DrawingObject {
       ).add(location),
     ];
 
-    const lt = lastDrawTransformMatrix;
-    const t2 = [
-      lt[0], lt[1], lt[2],
-      lt[3], lt[4], lt[5],
-      0, 0, 1,
-    ];
-    const normWidth = 2 / this.diagramLimits.width;
-    const normHeight = 2 / this.diagramLimits.height;
-    const inverseD = new Transform()
-      .translate(
-        -(-this.diagramLimits.width / 2 - this.diagramLimits.left) * normWidth,
-        -(this.diagramLimits.height / 2 - this.diagramLimits.top) * normHeight,
-      )
-      .scale(1 / normWidth, 1 / normHeight);
+    // const lt = lastDrawTransformMatrix;
+    // const t2 = [
+    //   lt[0], lt[1], lt[2],
+    //   lt[3], lt[4], lt[5],
+    //   0, 0, 1,
+    // ];
 
-
-    const newBox = [];
     box.forEach((p) => {
-      newBox.push(p.transformBy(t2).transformBy(inverseD.matrix()));
+      glBoundary.push(p.transformBy(lastDrawTransformMatrix));
     });
-    return newBox;
+    // const normWidth = 2 / this.diagramLimits.width;
+    // const normHeight = 2 / this.diagramLimits.height;
+    // const inverseD = new Transform()
+    //   .translate(
+    //     -(-this.diagramLimits.width / 2 - this.diagramLimits.left) * normWidth,
+    //     -(this.diagramLimits.height / 2 - this.diagramLimits.top) * normHeight,
+    //   )
+    //   .scale(1 / normWidth, 1 / normHeight);
+
+
+    // const newBox = [];
+    // box.forEach((p) => {
+    //   newBox.push(p.transformBy(t2).transformBy(inverseD.matrix()));
+    // });
+    // return newBox;
+    return glBoundary;
   }
+
+  // calcBorderOfText(text: DiagramText, lastDrawTransformMatrix: Array<number>) {
+  //   // Calculate the scaling factor
+  //   // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
+  //   //                       (this.diagramLimits.height / 1000);
+  //   const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.text[0].font.size;
+
+  //   // Measure the text
+  //   text.font.set(this.drawContext2D.ctx, scalingFactor);
+  //   const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+
+  //   // Create a box around the text
+  //   const { location } = text;
+  //   const box = [
+  //     new Point(
+  //       -textMetrics.actualBoundingBoxLeft / scalingFactor,
+  //       textMetrics.actualBoundingBoxAscent / scalingFactor,
+  //     ).add(location),
+  //     new Point(
+  //       textMetrics.actualBoundingBoxRight / scalingFactor,
+  //       textMetrics.actualBoundingBoxAscent / scalingFactor,
+  //     ).add(location),
+  //     new Point(
+  //       textMetrics.actualBoundingBoxRight / scalingFactor,
+  //       -textMetrics.actualBoundingBoxDescent / scalingFactor,
+  //     ).add(location),
+  //     new Point(
+  //       -textMetrics.actualBoundingBoxLeft / scalingFactor,
+  //       -textMetrics.actualBoundingBoxDescent / scalingFactor,
+  //     ).add(location),
+  //   ];
+
+  //   const lt = lastDrawTransformMatrix;
+  //   const t2 = [
+  //     lt[0], lt[1], lt[2],
+  //     lt[3], lt[4], lt[5],
+  //     0, 0, 1,
+  //   ];
+  //   const normWidth = 2 / this.diagramLimits.width;
+  //   const normHeight = 2 / this.diagramLimits.height;
+  //   const inverseD = new Transform()
+  //     .translate(
+  //       -(-this.diagramLimits.width / 2 - this.diagramLimits.left) * normWidth,
+  //       -(this.diagramLimits.height / 2 - this.diagramLimits.top) * normHeight,
+  //     )
+  //     .scale(1 / normWidth, 1 / normHeight);
+
+
+  //   const newBox = [];
+  //   box.forEach((p) => {
+  //     newBox.push(p.transformBy(t2).transformBy(inverseD.matrix()));
+  //   });
+  //   return newBox;
+  // }
 }
 
 export { TextObject, DiagramText, DiagramFont };

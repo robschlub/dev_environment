@@ -6,14 +6,13 @@ import WebGLInstance from '../webgl/webgl';
 import * as g2 from '../tools/g2';
 import DrawingObject from '../DrawingObject';
 
-// Base clase of all objects made from verteces for webgl.
+// Base clase of all shape objects made from verteces for webgl.
 // The job of a VertexObject is to:
-//  - Havve the points of a object/shape
+//  - Have the points of a object/shape
 //  - Have the shape's border (used to determine whether a location is
 //    within the shape)
-//  - Setup the webgl buffer:
-//      - Load vertices into a webgl buffer
-//      - draw
+//  - Setup the webgl buffer
+//  - Draw the shape
 class VertexObject extends DrawingObject {
   gl: WebGLRenderingContext;    // shortcut for the webgl context
   webgl: WebGLInstance;         // webgl instance for a html canvas
@@ -26,12 +25,13 @@ class VertexObject extends DrawingObject {
 
   constructor(webgl: WebGLInstance) {
     super();
+    this.numPoints = 0;
     this.gl = webgl.gl;
     this.webgl = webgl;
     this.glPrimative = webgl.gl.TRIANGLES;
     this.points = [];
-    // this.border = [[]];
   }
+
   setupBuffer(numPoints: number = 0) {
     if (numPoints === 0) {
       this.numPoints = this.points.length / 2.0;
@@ -43,10 +43,12 @@ class VertexObject extends DrawingObject {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
   }
+
   // Abstract method - should be reimplemented for any vertexObjects that
   getPointCountForAngle(drawAngle: number = Math.PI * 2) {
     return this.numPoints * drawAngle / (Math.PI * 2);
   }
+
   draw(
     translation: g2.Point,
     rotation: number,
@@ -58,12 +60,13 @@ class VertexObject extends DrawingObject {
     transformation = m2.translate(transformation, translation.x, translation.y);
     transformation = m2.rotate(transformation, rotation);
     transformation = m2.scale(transformation, scale.x, scale.y);
-    this.drawWithTransformMatrix(m2.t(transformation), count, color);
+    this.drawWithTransformMatrix(m2.t(transformation), color, count);
   }
+
   drawWithTransformMatrix(
     transformMatrix: Array<number>,
-    count: number,
     color: Array<number>,
+    count: number,
   ) {
     // let scale2 = scale;
     // if (typeof scale2 != "object") {
@@ -88,13 +91,6 @@ class VertexObject extends DrawingObject {
       this.webgl.locations.a_position,
       size, type, normalize, stride, offset,
     );
-
-    // let matrix = g2.identity();
-    // // matrix = g2.translate(matrix, this.bias_offset.x, this.bias_offset.y);
-    // // matrix = g2.scale(matrix, this.bias_scale.x, this.bias_scale.y);
-    // matrix = g2.translate(matrix, translation.x, translation.y);
-    // matrix = g2.rotate(matrix,rotation);
-    // matrix = g2.scale(matrix,scale.x ,scale.y);
 
     this.gl.uniformMatrix3fv(
       this.webgl.locations.u_matrix,
@@ -122,9 +118,19 @@ class VertexObject extends DrawingObject {
         this.border[b][p] = this.border[b][p].transformBy(transformMatrix);
       }
     }
-    // this.border.map(b => {
-    // }) //b.map(p => p.transformBy(transformMatrix)));
   }
+
+  // calcBorder(lastDrawTransformMatrix: Array<number>) {
+  //   const glBorders = [];
+  //   this.border.forEach(border => {
+  //     const glBorder = [];
+  //     border.forEach(p => {
+  //       glBorder.push(p.transformBy(lastDrawTransformMatrix));
+  //     })
+  //     glBorders.push(glBorder);
+  //   });
+  //   return glBorders;
+  // }
 }
 
 export default VertexObject;

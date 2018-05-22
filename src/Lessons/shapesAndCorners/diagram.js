@@ -136,15 +136,21 @@ class LessonDiagram extends Diagram {
     if (center === null || center === undefined) {
       center = new Point(0, 0);
     }
-    const previousClipPoint = this.clientToClip(previousClientPoint);
-    const currentClipPoint = this.clientToClip(currentClientPoint);
+    const previousPixelPoint = this.clientToPixel(previousClientPoint);
+    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+    const previousDiagramPoint =
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
+    const currentDiagramPoint =
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
+
     const currentAngle = Math.atan2(
-      currentClipPoint.y - center.y,
-      currentClipPoint.x - center.x,
+      currentDiagramPoint.y - center.y,
+      currentDiagramPoint.x - center.x,
     );
     const previousAngle = Math.atan2(
-      previousClipPoint.y - center.y,
-      previousClipPoint.x - center.x,
+      previousDiagramPoint.y - center.y,
+      previousDiagramPoint.x - center.x,
     );
     const diffAngle = minAngleDiff(previousAngle, currentAngle);
     const transform = this.elements._circle._radius.transform.copy();

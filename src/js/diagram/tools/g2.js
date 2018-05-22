@@ -1150,12 +1150,12 @@ class Transform {
 
 function spaceToSpaceTransformMatrix(
   s1: {
-    x: {bottomLeft: number, width:number},
-    y: {bottomLeft: number, width:number}
+    x: {bottomLeft: number, width: number},
+    y: {bottomLeft: number, height: number}
   },
   s2: {
-    x: {bottomLeft: number, height:number},
-    y: {bottomLeft: number, height:number}
+    x: {bottomLeft: number, width: number},
+    y: {bottomLeft: number, height: number}
   },
 ) {
   const xScale = s2.x.width / s1.x.width;

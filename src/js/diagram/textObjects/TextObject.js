@@ -79,7 +79,7 @@ class TextObject extends DrawingObject {
     transformation = m2.translate(transformation, translation.x, translation.y);
     transformation = m2.rotate(transformation, rotation);
     transformation = m2.scale(transformation, scale.x, scale.y);
-    this.drawWithTransformMatrix(m2.t(transformation), count, color);
+    this.drawWithTransformMatrix(m2.t(transformation), color);
   }
   clipToElementPixels(clipPoint: Point) {
     // transforming -1 to 1 to canvas width
@@ -106,7 +106,6 @@ class TextObject extends DrawingObject {
   // }
   drawWithTransformMatrix(
     transformMatrix: Array<number>,
-    count: number,
     color: Array<number>,
   ) {
     const transformedLocation = this.location.transformBy(transformMatrix);

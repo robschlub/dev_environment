@@ -182,13 +182,15 @@ class ShapesCollection extends DiagramElementCollection {
     const element = document.createElement('div');
     const inside = document.createTextNode('Hi there');
     element.appendChild(inside);
-    element.style = 'position:absolute; left:200px; top:200px';
+    element.style.position = 'absolute';
+    element.style.left = '200px';
+    element.style.top = '200px';
     element.setAttribute('id', 'html_test_element');
     this.diagram.htmlCanvas.appendChild(element);
     const h = new HTMLObject(this.diagram.htmlCanvas, 'html_test_element', new Point(0, 0), 'middle', 'center');
     const hp = new DiagramElementPrimative(
       h,
-      new Transform().rotate(Math.PI / 2*0).translate(0, 0),
+      new Transform().rotate(Math.PI / 2 * 0).translate(0, 0),
       [1, 0, 0, 1],
       this.diagram.limits,
     );

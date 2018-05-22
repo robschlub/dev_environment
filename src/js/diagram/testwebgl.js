@@ -5,7 +5,7 @@ import VertexPolyLineCorners from './vertexObjects/VertexPolyLineCorners';
 import VertexPolyLine from './vertexObjects/VertexPolyLine';
 import VertexArrow from './vertexObjects/VertexArrow';
 import VertexRadialLines from './vertexObjects/VertexRadialLines';
-import TextObject from './textObjects/TextObject';
+// import { TextObject } from './textObjects/TextObjectSimple';
 // import HorizontalLine from './vertexObjects/HorizontalLine';
 import { Transform, Point, TransformLimit } from './tools/g2';
 // import GLParallelLines from './vertexObjects/glParallelLines';
@@ -92,16 +92,17 @@ class ShapesCollection extends DiagramElementCollection {
 
     const arrowVertices = new VertexArrow(webgl);
 
-    const textObject = new TextObject(ctx, 'Hello World!', new Point(0.5, 1), ['left', 'top'], new Point(0.5, 0.5));
+    // const textObject = new TextObject(ctx,
+    //   'Hello World!', new Point(0.5, 1), ['left', 'top'], new Point(0.5, 0.5));
 
-    this.add('helloText', new DiagramElementPrimative(
-      textObject,
-      new Transform().translate(1, 1),
-      colors.primary, diagramLimits,
-    ));
-    const hw = this._helloText;
-    hw.isTouchable = true;
-    hw.isMovable = true;
+    // this.add('helloText', new DiagramElementPrimative(
+    //   textObject,
+    //   new Transform().translate(1, 1),
+    //   colors.primary, diagramLimits,
+    // ));
+    // const hw = this._helloText;
+    // hw.isTouchable = true;
+    // hw.isMovable = true;
 
     this.add('square', new DiagramElementPrimative(
       square,

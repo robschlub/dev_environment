@@ -3,7 +3,11 @@
 import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
 // import Polygon from './vertexObjects/Polygon';
-import { Rect, Point, Transform } from './tools/g2';
+import {
+  Rect, Point, Transform,
+  spaceToSpaceTransformMatrix,
+} from './tools/g2';
+// import { spaceToSpaceTransformMatrix } from './tools/g2';
 // import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
@@ -17,13 +21,13 @@ import Lines from './DiagramElements/Lines';
 // There are several coordinate spaces that need to be considered for a
 // diagram.
 //
-// In the simplest diagram, there will be in heirarchy:
+// In the simplest diagram, there will be in hierarchy:
 //  - GL Canvas
 //    - Diagram
 //      - Element Collection
 //        - Element Primative
 //          - Drawing Object (e.g. shape, text) from primative vertices
-// 
+//
 // A shape is defined in Drawing Object space.
 // It is then transformed by the element primative
 // It is then transformed by the element colleciton
@@ -151,7 +155,12 @@ class Diagram {
   backgroundColor: Array<number>;
   fontScale: number;
 
-  glToDiagramSpaceTransform: Transform;
+  glToDiagramSpaceTransformMatrix: Array<number>;
+  diagramToGLSpaceTransformMatrix: Array<number>;
+  pixelToDiagramSpaceTransformMatrix: Array<number>;
+  diagramToPixelSpaceTransformMatrix: Array<number>;
+  pixelToGLSpaceTransformMatrix: Array<number>;
+  glToPixelSpaceTransformMatrix: Array<number>;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -191,8 +200,8 @@ class Diagram {
           this.backgroundColor,
         );
         this.webgl = webgl;
-        const draw2D = this.textCanvas.getContext('2d');
-        this.draw2D = draw2D;
+        // const draw2D = this.textCanvas.getContext('2d');
+        this.draw2D = new DrawContext2D(this.textCanvas);
       }
     }
     if (containerIdOrWebGLContext instanceof WebGLInstance) {
@@ -206,20 +215,20 @@ class Diagram {
     }
 
     this.fontScale = 1;
+    let limits;
     if (limitsOrxMin instanceof Rect) {
       const r = limitsOrxMin;
-      this.limits = new Rect(r.left, r.bottom, r.width, r.height);
+      limits = new Rect(r.left, r.bottom, r.width, r.height);
     } else {
-      this.limits = new Rect(limitsOrxMin, yMin, width, height);
+      limits = new Rect(limitsOrxMin, yMin, width, height);
     }
-    this.setGlToDiagramSpaceTransform();
+    this.updateLimits(limits);
 
     // console.log(this.limits)
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
     this.createDiagramElements();
-    
 
     window.addEventListener('resize', this.resize.bind(this));
     this.sizeHtmlText();
@@ -230,36 +239,82 @@ class Diagram {
   getShapes() {
     return shapes(this.webgl, this.limits);
   }
+
   sizeHtmlText() {
     const scale = this.fontScale * 1 / 50;
     this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale}px`;
   }
+
   destroy() {
     this.gesture.destroy();
     this.webgl.gl.getExtension('WEBGL_lose_context').loseContext();
   }
 
-  setGlToDiagramSpaceTransform() {
-    const normWidth = 2 / this.limits.width;
-    const normHeight = 2 / this.limits.height;
-    const transform = new Transform()
-      .scale(normWidth, normHeight)
-      .translate(
-        (-this.limits.width / 2 - this.limits.left) * normWidth,
-        (this.limits.height / 2 - this.limits.top) * normHeight,
-      );
-    this.glToDiagramSpaceTransform = transform;
+  // setGLDiagramSpaceTransforms() {
+  //   const glSpace = {
+  //     x: { bottomLeft: -1, width: 2 },
+  //     y: { bottomLeft: -1, height: 2 },
+  //   };
+  //   const diagramSpace = {
+  //     x: { bottomLeft: this.limits.left, width: this.limits.width },
+  //     y: { bottomLeft: this.limits.bottom, height: this.limits.height },
+  //   };
+
+  //   this.diagramToGLSpaceTransformMatrix =
+  //     spaceToSpaceTransformMatrix(glSpace, diagramSpace);
+  //   this.glToDiagramSpaceTransformMatrix =
+  //     spaceToSpaceTransformMatrix(diagramSpace, glSpace);
+  // }
+
+  setSpaceTransforms() {
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const diagramSpace = {
+      x: { bottomLeft: this.limits.left, width: this.limits.width },
+      y: { bottomLeft: this.limits.bottom, height: this.limits.height },
+    };
+
+    const canvasRect = this.canvas.getBoundingClientRect();
+    const pixelSpace = {
+      x: { bottomLeft: 0, width: canvasRect.width },
+      y: { bottomLeft: canvasRect.height, height: -canvasRect.height },
+    };
+
+    this.diagramToGLSpaceTransformMatrix =
+      spaceToSpaceTransformMatrix(diagramSpace, glSpace);
+
+    this.glToDiagramSpaceTransformMatrix =
+      spaceToSpaceTransformMatrix(glSpace, diagramSpace);
+
+    this.pixelToDiagramSpaceTransformMatrix =
+      spaceToSpaceTransformMatrix(pixelSpace, diagramSpace);
+
+    this.diagramToPixelSpaceTransformMatrix =
+      spaceToSpaceTransformMatrix(diagramSpace, pixelSpace);
+
+    this.pixelToGLSpaceTransformMatrix =
+      spaceToSpaceTransformMatrix(pixelSpace, glSpace);
+
+    this.glToPixelSpaceTransformMatrix =
+      spaceToSpaceTransformMatrix(glSpace, pixelSpace);
   }
 
   initialize() {
-    this.setGlToDiagramSpaceTransform();
-    this.elements.setFirstTransform(this.glToDiagramSpaceTransform.matrix());
+    // this.setSpaceTransforms();
+    this.elements.setFirstTransform(this.diagramToGLSpaceTransformMatrix);
+  }
+
+  updateLimits(limits: Rect) {
+    this.limits = limits.copy();
+    this.setSpaceTransforms();
   }
 
   resize() {
-    this.setGlToDiagramSpaceTransform();
     this.webgl.resize();
     this.draw2D.resize();
+    this.setSpaceTransforms();
     this.sizeHtmlText();
     this.animateNextFrame();
   }
@@ -269,11 +324,13 @@ class Diagram {
   // coming to a stop.
   touchDownHandler(clientPoint: Point) {
     // Get the touched point in clip space
-    const clipPoint = this.clientToClip(clientPoint);
+    const pixelPoint = this.clientToPixel(clientPoint);
+    const glPoint = pixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
+    // const clipPoint = this.clientToClip(clientPoint);
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
-    const touchedElements = this.elements.getTouched(clipPoint);
+    const touchedElements = this.elements.getTouched(glPoint);
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
@@ -314,16 +371,30 @@ class Diagram {
       return false;
     }
     // Get the previous, current and delta between touch points in clip space
-    const previousClipPoint = this.clientToClip(previousClientPoint);
-    const currentClipPoint = this.clientToClip(currentClientPoint);
-    const delta = currentClipPoint.sub(previousClipPoint);
+    const previousPixelPoint = this.clientToPixel(previousClientPoint);
+    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+    const previousGLPoint =
+      previousPixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
+    // const currentGLPoint =
+    //   currentPixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
+
+    const previousDiagramPoint =
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
+    const currentDiagramPoint =
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
+
+
+    // const previousClipPoint = this.clientToClip(previousClientPoint);
+    // const currentClipPoint = this.clientToClip(currentClientPoint);
+    const delta = currentDiagramPoint.sub(previousDiagramPoint);
 
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       const currentTransform = element.transform.copy();
       const currentTranslation = currentTransform.t();
-      if (currentTranslation && element.isBeingTouched(previousClipPoint)) {
+      if (currentTranslation && element.isBeingTouched(previousGLPoint)) {
         const newTranslation = currentTranslation.add(delta);
         currentTransform.updateTranslation(newTranslation);
         element.moved(currentTransform);
@@ -374,7 +445,7 @@ class Diagram {
     //     (this.limits.height / 2 - this.limits.top) * normHeight,
     //   );
     this.elements.draw(
-      this.glToDiagramSpaceTransform.matrix(),
+      this.diagramToGLSpaceTransformMatrix,
       now,
     );
 
@@ -392,72 +463,80 @@ class Diagram {
     return this.elements.state.isAnimating;
   }
 
-  // clipToPage = function(x,y) { return {
-  //     x: canvasL + canvasW*(x - clipL)/clipW,
-  //     y: canvasT + canvasH*(clipT - y)/clipH,
-  // }}
-  clipToClient(clip: Point): Point {
-    const canvas = this.canvas.getBoundingClientRect();
-    return new Point(
-      canvas.left + canvas.width *
-        (clip.x - this.limits.left) / this.limits.width,
-      canvas.top + canvas.height *
-        (this.limits.top - clip.y) / this.limits.height,
-    );
-  }
+  // // clipToPage = function(x,y) { return {
+  // //     x: canvasL + canvasW*(x - clipL)/clipW,
+  // //     y: canvasT + canvasH*(clipT - y)/clipH,
+  // // }}
+  // clipToClient(clip: Point): Point {
+  //   const canvas = this.canvas.getBoundingClientRect();
+  //   return new Point(
+  //     canvas.left + canvas.width *
+  //       (clip.x - this.limits.left) / this.limits.width,
+  //     canvas.top + canvas.height *
+  //       (this.limits.top - clip.y) / this.limits.height,
+  //   );
+  // }
 
-  clipToPage(clip: Point): Point {
-    const canvas = this.canvas.getBoundingClientRect();
-    const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
-    const scrollTop = window.pageYOffset || this.canvas.scrollTop;
-    const canvasPage = {
-      top: canvas.top + scrollTop,
-      left: canvas.left + scrollLeft,
-    };
+  // clipToPage(clip: Point): Point {
+  //   const canvas = this.canvas.getBoundingClientRect();
+  //   const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
+  //   const scrollTop = window.pageYOffset || this.canvas.scrollTop;
+  //   const canvasPage = {
+  //     top: canvas.top + scrollTop,
+  //     left: canvas.left + scrollLeft,
+  //   };
 
-    return new Point(
-      canvasPage.left + canvas.width *
-        (clip.x - this.limits.left) / this.limits.width,
-      canvasPage.top + canvas.height *
-        (this.limits.top - clip.y) / this.limits.height,
-    );
-  }
+  //   return new Point(
+  //     canvasPage.left + canvas.width *
+  //       (clip.x - this.limits.left) / this.limits.width,
+  //     canvasPage.top + canvas.height *
+  //       (this.limits.top - clip.y) / this.limits.height,
+  //   );
+  // }
 
   // pageToClip = function(x, y) { return {
   //    x: (x - canvasL)/canvasW * clipW + clipL,
   //    y: clipT - (y - canvasT)/canvasH * clipH,
   // }}
-  clientToClip(clientLocation: Point): Point {
+  clientToPixel(clientLocation: Point): Point {
     const canvas = this.canvas.getBoundingClientRect();
     return new Point(
-      (clientLocation.x - canvas.left) / canvas.width *
-        this.limits.width + this.limits.left,
-      this.limits.top - (clientLocation.y - canvas.top) /
-        canvas.height * this.limits.height,
+      clientLocation.x - canvas.left,
+      clientLocation.y - canvas.top,
     );
   }
 
-  pageToClip(pageLocation: Point): Point {
-    const canvas = this.canvas.getBoundingClientRect();
-    const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
-    const scrollTop = window.pageYOffset || this.canvas.scrollTop;
-    const canvasPage = {
-      top: canvas.top + scrollTop,
-      left: canvas.left + scrollLeft,
-    };
-    return new Point(
-      (pageLocation.x - canvasPage.left) / this.canvas.offsetWidth *
-        this.limits.width + this.limits.left,
-      this.limits.top - (pageLocation.y - canvasPage.top) /
-        this.canvas.offsetHeight * this.limits.height,
-    );
-  }
+  // clientToClip(clientLocation: Point): Point {
+  //   const canvas = this.canvas.getBoundingClientRect();
+  //   return new Point(
+  //     (clientLocation.x - canvas.left) / canvas.width *
+  //       this.limits.width + this.limits.left,
+  //     this.limits.top - (clientLocation.y - canvas.top) /
+  //       canvas.height * this.limits.height,
+  //   );
+  // }
 
-  clipPerPixel(): Point {
-    const x = this.limits.width / this.canvas.offsetWidth / window.devicePixelRatio;
-    const y = this.limits.height / this.canvas.offsetHeight / window.devicePixelRatio;
-    return new Point(x, y);
-  }
+  // pageToClip(pageLocation: Point): Point {
+  //   const canvas = this.canvas.getBoundingClientRect();
+  //   const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
+  //   const scrollTop = window.pageYOffset || this.canvas.scrollTop;
+  //   const canvasPage = {
+  //     top: canvas.top + scrollTop,
+  //     left: canvas.left + scrollLeft,
+  //   };
+  //   return new Point(
+  //     (pageLocation.x - canvasPage.left) / this.canvas.offsetWidth *
+  //       this.limits.width + this.limits.left,
+  //     this.limits.top - (pageLocation.y - canvasPage.top) /
+  //       this.canvas.offsetHeight * this.limits.height,
+  //   );
+  // }
+
+  // clipPerPixel(): Point {
+  //   const x = this.limits.width / this.canvas.offsetWidth / window.devicePixelRatio;
+  //   const y = this.limits.height / this.canvas.offsetHeight / window.devicePixelRatio;
+  //   return new Point(x, y);
+  // }
 
   /* eslint-disable */
   // autoResize() {

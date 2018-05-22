@@ -8,6 +8,7 @@ import * as tools from './tools/mathtools';
 import { TextObject } from './textObjects/TextObjectSimple';
 import HTMLObject from './textObjects/HtmlObject';
 import DrawingObject from './DrawingObject';
+import VertexObject from './vertexObjects/vertexObject';
 
 // Planned Animation
 class AnimationPhase {
@@ -755,6 +756,10 @@ class DiagramElement {
       ),
     };
   }
+
+  // Update the translation move boundary for the element's transform.
+  // This will limit the first translation part of the transform to only
+  // translations within the max/min limit.
   updateMoveTranslationBoundary(
     bounday: Array<number> = [
       this.diagramLimits.left,
@@ -809,37 +814,49 @@ class DiagramElementPrimative extends DiagramElement {
     this.updateMoveTranslationBoundary();
   }
 
-  isBeingTouched(clipLocation: Point): boolean {
+  isBeingTouched(glLocation: Point): boolean {
     if (!this.isTouchable) {
       return false;
     }
-    if (this.vertices instanceof TextObject) {
-      this.vertices.calcBorder(this.lastDrawTransformMatrix);
-    }
-    if (this.vertices instanceof HTMLObject) {
-      this.vertices.calcBorder(this.diagramLimits);
-    }
-    for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
-      let border = [];
-      if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
-        border = this.vertices.border[m];
-      } else {
-        for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
-          border.push(this.vertexToClip(this.vertices.border[m][i]));
-        }
-      }
-      if (clipLocation.isInPolygon(border)) {
+    const boundaries =
+      this.vertices.getGLBoundaries(this.lastDrawTransformMatrix);
+
+    console.log(this.name, glLocation, boundaries)
+    for (let i = 0; i < boundaries.length; i += 1) {
+      const boundary = boundaries[i];
+      if (glLocation.isInPolygon(boundary)) {
         return true;
       }
     }
     return false;
+
+    // if (this.vertices instanceof TextObject) {
+    //   this.vertices.calcBorder(this.lastDrawTransformMatrix);
+    // }
+    // if (this.vertices instanceof HTMLObject) {
+    //   this.vertices.calcBorder(this.diagramLimits);
+    // }
+    // for (let m = 0, n = this.vertices.border.length; m < n; m += 1) {
+    //   let border = [];
+    //   if (this.vertices instanceof TextObject || this.vertices instanceof HTMLObject) {
+    //     border = this.vertices.border[m];
+    //   } else {
+    //     for (let i = 0, j = this.vertices.border[m].length; i < j; i += 1) {
+    //       border.push(this.vertexToClip(this.vertices.border[m][i]));
+    //     }
+    //   }
+    //   if (clipLocation.isInPolygon(border)) {
+    //     return true;
+    //   }
+    // }
+    // return false;
   }
 
-  getTouched(clipLocation: Point): Array<DiagramElementPrimative> {
+  getTouched(glLocation: Point): Array<DiagramElementPrimative> {
     if (!this.isTouchable) {
       return [];
     }
-    if (this.isBeingTouched(clipLocation)) {
+    if (this.isBeingTouched(glLocation)) {
       return [this];
     }
     return [];
@@ -854,16 +871,19 @@ class DiagramElementPrimative extends DiagramElement {
       // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransformMatrix = matrix[0];
 
-      let pointCount = this.vertices.numPoints;
-      if (this.angleToDraw !== -1) {
-        pointCount = this.vertices.getPointCountForAngle(this.angleToDraw);
+      let pointCount = -1;
+      if (this.vertices instanceof VertexObject) {
+        pointCount = this.vertices.numPoints;
+        if (this.angleToDraw !== -1) {
+          pointCount = this.vertices.getPointCountForAngle(this.angleToDraw);
+        }
+        if (this.pointsToDraw !== -1) {
+          pointCount = this.pointsToDraw;
+        }
       }
-      if (this.pointsToDraw !== -1) {
-        pointCount = this.pointsToDraw;
-      }
-      for (let i = 0; i < matrix.length; i += 1) {
-        this.vertices.drawWithTransformMatrix(matrix[i], pointCount, this.color);
-      }
+      matrix.forEach((m) => {
+        this.vertices.drawWithTransformMatrix(m, this.color, pointCount);
+      });
     }
   }
 
@@ -871,12 +891,12 @@ class DiagramElementPrimative extends DiagramElement {
     const matrix = m2.mul(transformMatrix, this.transform.matrix());
     this.lastDrawTransformMatrix = matrix;
 
-    if (this.vertices instanceof TextObject) {
-      this.vertices.calcBorder(matrix);
-    }
+    // if (this.vertices instanceof TextObject) {
+    //   this.vertices.calcBorder(matrix);
+    // }
     if (this.vertices instanceof HTMLObject) {
       this.vertices.transformHtml(matrix);
-      this.vertices.calcBorder(this.diagramLimits);
+      // this.vertices.calcBorder(this.diagramLimits);
     }
     this.updateMoveTranslationBoundary();
   }
@@ -1051,14 +1071,14 @@ class DiagramElementCollection extends DiagramElement {
   // if the collection is touchable. Note, the elements can be queried
   // directly still, and will return if they are touched if they themselves
   // are touchable.
-  isBeingTouched(clipLocation: Point) {
+  isBeingTouched(glLocation: Point) {
     if (!this.isTouchable) {
       return false;
     }
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.show === true) {
-        if (element.isBeingTouched(clipLocation)) {
+        if (element.isBeingTouched(glLocation)) {
           return true;
         }
       }
@@ -1136,7 +1156,7 @@ class DiagramElementCollection extends DiagramElement {
     return { min, max };
   }
 
-  getTouched(clipLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
+  getTouched(glLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
     if (!this.isTouchable) {
       return [];
     }
@@ -1144,7 +1164,7 @@ class DiagramElementCollection extends DiagramElement {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.show === true) {
-        touched = touched.concat(element.getTouched(clipLocation));
+        touched = touched.concat(element.getTouched(glLocation));
       }
     }
     // If there is an element that is touched, then this collection should

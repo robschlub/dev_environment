@@ -1,5 +1,7 @@
-import { Point, Transform, Line, minAngleDiff, normAngle } from './g2';
-import { TransformLimit, spaceToSpaceTransformMatrix, Rect } from './g2';
+import {
+  Point, Transform, Line, minAngleDiff, normAngle,
+  TransformLimit, spaceToSpaceTransformMatrix, Rect,
+} from './g2';
 import { round } from './mathtools';
 
 describe('g2 tests', () => {
@@ -1211,9 +1213,9 @@ describe('g2 tests', () => {
   describe('Space to space transform', () => {
     let t;
     const pixelSpace = {
-          x: { bottomLeft: 0, width: 1000 },
-          y: { bottomLeft: 500, height: -500 },
-        };
+      x: { bottomLeft: 0, width: 1000 },
+      y: { bottomLeft: 500, height: -500 },
+    };
     const glSpace = {
       x: { bottomLeft: -1, width: 2 },
       y: { bottomLeft: -1, height: 2 },
@@ -1224,76 +1226,76 @@ describe('g2 tests', () => {
     };
     describe('Pixel to GL', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(pixelSpace, glSpace)
+        t = spaceToSpaceTransformMatrix(pixelSpace, glSpace);
       });
       test('pixel 0, 0', () => {
         const p = new Point(0, 0);
         expect(p.transformBy(t)).toEqual(new Point(-1, 1));
-      })
+      });
       test('pixel 1000, 500', () => {
         const p = new Point(1000, 500);
         expect(p.transformBy(t)).toEqual(new Point(1, -1));
-      })
+      });
       test('pixel 500, 250', () => {
         const p = new Point(500, 250);
         expect(p.transformBy(t)).toEqual(new Point(0, 0));
-      })
-    })
+      });
+    });
     describe('GL to Pixel', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(glSpace, pixelSpace)
+        t = spaceToSpaceTransformMatrix(glSpace, pixelSpace);
       });
       test('gl 0, 0', () => {
         const p = new Point(0, 0);
         expect(p.transformBy(t)).toEqual(new Point(500, 250));
-      })
+      });
       test('gl 1, -1', () => {
         const p = new Point(1, -1);
         expect(p.transformBy(t)).toEqual(new Point(1000, 500));
-      })
+      });
       test('gl -1, 1', () => {
         const p = new Point(-1, 1);
         expect(p.transformBy(t)).toEqual(new Point(0, 0));
-      })
-    })
+      });
+    });
     describe('d1 to gl', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(d1Space, glSpace)
+        t = spaceToSpaceTransformMatrix(d1Space, glSpace);
       });
       test('0, 0 to -1, -1', () => {
         const d = new Point(0, 0);
         expect(d.transformBy(t)).toEqual(new Point(-1, -1));
-      })
+      });
       test('4, 2 to 1, 1', () => {
         const d = new Point(4, 2);
         expect(d.transformBy(t)).toEqual(new Point(1, 1));
-      })
+      });
       test('2, 1 to 0, 0', () => {
         const d = new Point(2, 1);
         expect(d.transformBy(t)).toEqual(new Point(0, 0));
-      })
-    })
+      });
+    });
     describe('gl to d1', () => {
       beforeEach(() => {
-        t = spaceToSpaceTransformMatrix(glSpace, d1Space)
+        t = spaceToSpaceTransformMatrix(glSpace, d1Space);
       });
       test('0, 0 to 2, 1', () => {
         const d = new Point(0, 0);
         expect(d.transformBy(t)).toEqual(new Point(2, 1));
-      })
+      });
       test('1, 1 to 4, 2', () => {
         const d = new Point(1, 1);
         expect(d.transformBy(t)).toEqual(new Point(4, 2));
-      })
+      });
       test('-1, -1 to 0, 0', () => {
         const d = new Point(-1, -1);
         expect(d.transformBy(t)).toEqual(new Point(0, 0));
-      })
-    })
+      });
+    });
   });
-  describe("Rect", () => {
-    describe("Creation", () => {
-      test("(0,0) (4,2)", () => {
+  describe('Rect', () => {
+    describe('Creation', () => {
+      test('(0,0) (4,2)', () => {
         const r = new Rect(0, 0, 4, 2);
         expect(r.left).toBe(0);
         expect(r.bottom).toBe(0);
@@ -1302,7 +1304,7 @@ describe('g2 tests', () => {
         expect(r.right).toBe(4);
         expect(r.top).toBe(2);
       });
-      test("(-1,-1) (4,2)", () => {
+      test('(-1,-1) (4,2)', () => {
         const r = new Rect(-1, -1, 4, 2);
         expect(r.left).toBe(-1);
         expect(r.bottom).toBe(-1);
@@ -1312,7 +1314,7 @@ describe('g2 tests', () => {
         expect(r.top).toBe(1);
       });
     });
-    test("copy", () => {
+    test('copy', () => {
       const r = new Rect(0, 0, 4, 2);
       const c = r.copy();
       expect(r).toEqual(c);
