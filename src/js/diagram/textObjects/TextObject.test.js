@@ -4,9 +4,6 @@ import { Point, Transform } from '../tools/g2';
 import * as m2 from '../tools/m2';
 import { round } from '../tools/mathtools';
 import DrawContext2D from '../../__mocks__/DrawContext2DMock';
-// import DrawContext2D from '../DrawContext2D';
-
-// jest.mock('../Gesture');
 
 describe('Diagram Text Object', () => {
   let font;
@@ -180,7 +177,8 @@ describe('Diagram Text Object', () => {
         expect(draw2D.ctx.filledText)
           .toEqual({
             text: 'test2',
-            x: 1, y: -1,
+            x: 1,
+            y: -1,
             count: 2,
           });
       });
@@ -205,16 +203,3 @@ describe('Diagram Text Object', () => {
     });
   });
 });
-// describe('TextObject', () => {
-//   let drawContext2D;
-
-//   beforeEach(() => {
-//     drawContext2D = new DrawContext2D(1000, 500);
-//   });
-//   test('Simple', () => {
-//     const t = new TextObject(drawContext2D, 'test', new Point(0, 0), ['left', 'bottom'], new Point(0, 0));
-//     // const border = t.getBorder();
-//     expect(t).not.toBe(null);
-//     // expect(border).toHaveLength(5);
-//   });
-// });

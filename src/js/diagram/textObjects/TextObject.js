@@ -1,12 +1,11 @@
 // @flow
 
-// import * as g2 from '../g2';
 import * as m2 from '../tools/m2';
-import { Point, Rect } from '../tools/g2';
+import { Point } from '../tools/g2';
 import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../DrawContext2D';
-// import { roundNum } from './mathtools';
 
+// DiagramFont defines the font properties to be used in a TextObject
 class DiagramFont {
   size: number;
   weight: string;
@@ -59,6 +58,8 @@ class DiagramFont {
   }
 }
 
+// DiagramText is a single text element of the diagram that is drawn at
+// once and referenced to the same location
 class DiagramText {
   location: Point;
   text: string;
@@ -75,7 +76,8 @@ class DiagramText {
   }
 }
 
-
+// TextObject is the DrawingObject used in the DiagramElementPrimative.
+// TextObject will draw an array of DiagramText objects.
 class TextObject extends DrawingObject {
   drawContext2D: DrawContext2D;
   border: Array<Array<Point>>;
@@ -121,24 +123,14 @@ class TextObject extends DrawingObject {
     this.drawWithTransformMatrix(m2.t(transformation), color);
   }
 
-  // // Get the font size defined in Element Space in pixels
-  // getFontSizeInPixels(text: DiagramText) {
-  //   const onePixelInGLSpace = this.scalePixelToGLClip(new Point(1, 1));
-  //   const onePixelInElementSpace = this.scaleGLClipToElementSpaces(onePixelInGLSpace);
-  //   const elementSpaceFontSize = text.font.size;
-  //   const pixelSpaceFontSize = elementSpaceFontSize / onePixelInElementSpace.y;
-  //   return pixelSpaceFontSize;
-  // }
-
-  // Text is drawn in pixel space which is 0, 0 in the left hand corner on
+  // Text is drawn in pixel space which is 0, 0 in the left hand top corner on
   // a canvas of size canvas.offsetWidth x canvas.offsetHeight.
   //
   // Font size and text location is therefore defined in pixels.
   //
   // However, in a Diagram, the text canvas is overlaid on the diagram GL
-  // canvas and we want to think about all dimensions with respect to the
-  // diagram limits (Diagram Space) or Element Space (if the element has a
-  // specific transform).
+  // canvas and we want to think about the size and location of text in
+  // Diagram Space or Element Space (if the element has a specific transform).
   //
   // For example, if we have a diagram with limits: min: (0, 0), max(2, 1)
   // with a canvas of 1000 x 500 then:
@@ -163,10 +155,8 @@ class TextObject extends DrawingObject {
   // this scaling factor.
   //
   // The scaling factor can be number that is large enough to make it so the
-  // font size is >>1. Therefore, a scaling factor of:
-  //   diagram space height / 1000
-  // has been selected with the assumption that the screen will not be big
-  // enough to show text that is 1000th the height of the screen.
+  // font size is >>1. In the TextObject constructor, the scaling factor is
+  // designed to ensure drawn text always is >20px.
   drawWithTransformMatrix(
     transformMatrix: Array<number>,
     color: Array<number> = [1, 1, 1, 1],
@@ -188,7 +178,10 @@ class TextObject extends DrawingObject {
 
     ctx.save();
 
-    // First convert pixel space to gl clip space (-1 to 1 for x, y)
+    // First convert pixel space to a zoomed in pixel space with the same
+    // dimensions as gl clip space (-1 to 1 for x, y), but inverted y
+    // like to pixel space.
+    // When zoomed: 1 pixel = 1 GL unit.
     // Zoom in so limits betcome 0 to 2:
     const sx = this.drawContext2D.canvas.offsetWidth / 2 / scalingFactor;
     const sy = this.drawContext2D.canvas.offsetHeight / 2 / scalingFactor;
@@ -196,7 +189,11 @@ class TextObject extends DrawingObject {
     const tx = this.drawContext2D.canvas.offsetWidth / 2;
     const ty = this.drawContext2D.canvas.offsetHeight / 2;
 
-    // Transform clip space to diagram space
+    // Modify the incoming transformMatrix to be compatible with zoomed
+    // pixel space
+    //   - Scale by the scaling factor
+    //   - Flip the y translation
+    //   - Reverse rotation
     const tm = transformMatrix;
     const t = [
       tm[0], -tm[1], tm[2] * scalingFactor,
@@ -204,7 +201,8 @@ class TextObject extends DrawingObject {
       0, 0, 1,
     ];
 
-    // Calculate and apply the combined transforms
+    // Combine the zoomed pixel space with the incoming transform matrix
+    // and apply it to the drawing context.
     const totalT = m2.mul([sx, 0, tx, 0, sy, ty, 0, 0, 1], t);
     ctx.transform(totalT[0], totalT[3], totalT[1], totalT[4], totalT[2], totalT[5]);
 
