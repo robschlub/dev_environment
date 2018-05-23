@@ -1,9 +1,10 @@
 
 import { TextObject, DiagramFont, DiagramText } from './TextObject';
-import { Point, Rect } from '../tools/g2';
+import { Point, Transform } from '../tools/g2';
 import * as m2 from '../tools/m2';
-// import DrawContext2D from '../../__mocks__/DrawContext2DMock';
-import DrawContext2D from '../DrawContext2D';
+import { round } from '../tools/mathtools';
+import DrawContext2D from '../../__mocks__/DrawContext2DMock';
+// import DrawContext2D from '../DrawContext2D';
 
 // jest.mock('../Gesture');
 
@@ -37,12 +38,20 @@ describe('Diagram Text Object', () => {
     test('Color', () => {
       expect(font.color).toBe('rgba(255,255,255,255)');
     });
-    test('set', () => {
+    test('Set', () => {
       const ctx = {};
       font.set(ctx, 2);
       expect(ctx.font).toBe(' 200 2px Helvetica Neue');
       expect(ctx.textAlign).toBe('center');
       expect(ctx.textBaseline).toBe('middle');
+    });
+    test('Copy', () => {
+      const f2 = font.copy();
+      expect(font).not.toBe(f2);
+      expect(font).toEqual(f2);
+      const oldSize = font.size;
+      font.size = 100;
+      expect(f2.size).toBe(oldSize);
     });
   });
 
@@ -55,37 +64,96 @@ describe('Diagram Text Object', () => {
         text,
         font,
       );
-      expect(dt.location).toBe(location);
-      expect(dt.font).toBe(font);
+      expect(dt.location).not.toBe(location);
+      expect(dt.location).toEqual(location);
+      expect(dt.font).not.toBe(font);
+      expect(dt.font).toEqual(font);
       expect(dt.text).toBe(text);
     });
   });
 
   describe('Text Object', () => {
+    let draw2D;
+    let textArray;
+    beforeEach(() => {
+      font.size = 20;
+      draw2D = new DrawContext2D(1000, 500);
+      textArray = [
+        new DiagramText(new Point(0, 0), 'test1', font),
+        new DiagramText(new Point(1, 1), 'test2', font),
+      ];
+    });
     test('Instantiation Default', () => {
       const to = new TextObject();
       expect(to.drawContext2D).toBe(undefined);
       expect(to.text).toEqual([]);
     });
-    test.only('text size', () => {
-      const dt = [
-        new DiagramText(new Point(-1, 0), '-1', font),
-        new DiagramText(new Point(0, 0), '0 this is a test', font),
-        new DiagramText(new Point(1, 0), '1', font),
-        new DiagramText(new Point(0, 1), 'i', font),
-        new DiagramText(new Point(0, -1), '-i', font),
-      ];
-      const { body } = document;
-      const canvas = document.createElement('canvas');
-      canvas.style.width = '1000px';
-      canvas.style.height = '500px';
-      canvas.setAttribute('id', 'id_canvas');
-      body.appendChild(canvas);
-      const draw2D = new DrawContext2D(canvas);
-      const to = new TextObject(draw2D, dt);
-      console.log(to.getGLBoundaries(m2.identity()))
-      expect(true);
-    })
+    describe('Scaling factor', () => {
+      test('Greater than 20', () => {
+        textArray[0].font.size = 30;
+        textArray[1].font.size = 30;
+        const to = new TextObject(draw2D, textArray);
+        expect(to.scalingFactor).toBe(1);
+      });
+      test('At threshold (20)', () => {
+        textArray[0].font.size = 20;
+        textArray[1].font.size = 20;
+        const to = new TextObject(draw2D, textArray);
+        expect(to.scalingFactor).toBe(1);
+      });
+      test('< 20', () => {
+        textArray[0].font.size = 19;
+        textArray[1].font.size = 19;
+        const to = new TextObject(draw2D, textArray);
+        expect(to.scalingFactor).toBe(19 * 50);
+      });
+      test('1', () => {
+        textArray[0].font.size = 1;
+        textArray[1].font.size = 1;
+        const to = new TextObject(draw2D, textArray);
+        expect(to.scalingFactor).toBe(1 * 50);
+      });
+
+      test('<1', () => {
+        textArray[0].font.size = 0.1;
+        textArray[1].font.size = 0.1;
+        const to = new TextObject(draw2D, textArray);
+        expect(round(to.scalingFactor, 5)).toBe(round(10 ** (1 + 2), 5));
+      });
+      test('variable sizes - but min < 1', () => {
+        textArray[0].font.size = 10;
+        textArray[1].font.size = 0.1;
+        const to = new TextObject(draw2D, textArray);
+        expect(round(to.scalingFactor, 5)).toBe(round(10 ** (1 + 2), 5));
+      });
+    });
+    describe('GL Boundaries', () => {
+      test('Text Boundary for 0,0 location, no scaling, no transformation', () => {
+        const to = new TextObject(draw2D, textArray);
+        const b = to.getGLBoundaryOfText(textArray[0], m2.identity());
+        expect(b).toEqual([
+          new Point(-10, 10),
+          new Point(10, 10),
+          new Point(10, -10),
+          new Point(-10, -10),
+        ]);
+      });
+      test('Text Boundary for 1, 1 location, no scaling, 0.5 transformation sacle', () => {
+        const to = new TextObject(draw2D, textArray);
+        const b = to.getGLBoundaryOfText(textArray[1], new Transform().scale(0.5, 0.5).matrix());
+        expect(b).toEqual([
+          new Point(-4.5, 5.5),
+          new Point(5.5, 5.5),
+          new Point(5.5, -4.5),
+          new Point(-4.5, -4.5),
+        ]);
+      });
+    });
+    // test.only('text size', () => {
+    //   const to = new TextObject(draw2D, dt);
+    //   console.log(to.getGLBoundaryOfText(dt[0], m2.identity()));
+    //   expect(true);
+    // });
   });
 });
 // describe('TextObject', () => {

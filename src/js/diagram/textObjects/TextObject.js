@@ -23,7 +23,7 @@ class DiagramFont {
     weight: string = '200',
     alignH: 'left' | 'center' | 'right' = 'center',
     alignV: 'top' | 'bottom' | 'middle' = 'middle',
-    color: Array<number> | null = null,
+    color: Array<number> | null | string = null,
   ) {
     this.family = family;
     this.style = style;
@@ -31,18 +31,31 @@ class DiagramFont {
     this.weight = weight;
     this.alignH = alignH;
     this.alignV = alignV;
-    if (color !== null) {
+    if (Array.isArray(color)) {
       this.color = `rgba(${
         Math.floor(color[0] * 255)},${
         Math.floor(color[1] * 255)},${
         Math.floor(color[2] * 255)},${
         Math.floor(color[3] * 255)})`;
+    } else {
+      this.color = color;
     }
   }
   set(ctx: CanvasRenderingContext2D, scalingFactor: number = 1) {
     ctx.font = `${this.style} ${this.weight} ${this.size * scalingFactor}px ${this.family}`;
     ctx.textAlign = this.alignH;
     ctx.textBaseline = this.alignV;
+  }
+  copy() {
+    return new DiagramFont(
+      this.family,
+      this.style,
+      this.size,
+      this.weight,
+      this.alignH,
+      this.alignV,
+      this.color,
+    );
   }
 }
 
@@ -56,9 +69,9 @@ class DiagramText {
     text: string = '',
     font: DiagramFont = new DiagramFont(),
   ) {
-    this.location = location;
+    this.location = location.copy();
     this.text = text;
-    this.font = font;
+    this.font = font.copy();
   }
 }
 

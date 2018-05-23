@@ -11,6 +11,8 @@ class DrawContext2D {
       },
     };
     this.ctx = {
+      save: () => {},
+      restore: () => {},
       scale: () => {},
       font: () => {},
       textAlign: () => {},
