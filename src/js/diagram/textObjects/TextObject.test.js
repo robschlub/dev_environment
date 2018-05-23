@@ -18,7 +18,7 @@ describe('Diagram Text Object', () => {
       '200',
       'center',
       'middle',
-      [1, 1, 1, 1],
+      [1, 0, 0, 1],
     );
   });
   describe('DiagramFont', () => {
@@ -36,7 +36,7 @@ describe('Diagram Text Object', () => {
       expect(df).toEqual(expected);
     });
     test('Color', () => {
-      expect(font.color).toBe('rgba(255,255,255,255)');
+      expect(font.color).toBe('rgba(255,0,0,255)');
     });
     test('Set', () => {
       const ctx = {};
@@ -140,7 +140,10 @@ describe('Diagram Text Object', () => {
       });
       test('Text Boundary for 1, 1 location, no scaling, 0.5 transformation sacle', () => {
         const to = new TextObject(draw2D, textArray);
-        const b = to.getGLBoundaryOfText(textArray[1], new Transform().scale(0.5, 0.5).matrix());
+        const b = to.getGLBoundaryOfText(
+          textArray[1],
+          new Transform().scale(0.5, 0.5).matrix(),
+        );
         expect(b).toEqual([
           new Point(-4.5, 5.5),
           new Point(5.5, 5.5),
@@ -148,12 +151,58 @@ describe('Diagram Text Object', () => {
           new Point(-4.5, -4.5),
         ]);
       });
+      test('All Text Boundaries', () => {
+        const to = new TextObject(draw2D, textArray);
+        const b = to.getGLBoundaries(new Transform().scale(0.5, 0.5).translate(1, 1).matrix());
+        expect(b).toEqual([
+          [
+            new Point(-4, 6),
+            new Point(6, 6),
+            new Point(6, -4),
+            new Point(-4, -4),
+          ],
+          [
+            new Point(-3.5, 6.5),
+            new Point(6.5, 6.5),
+            new Point(6.5, -3.5),
+            new Point(-3.5, -3.5),
+          ],
+        ]);
+      });
     });
-    // test.only('text size', () => {
-    //   const to = new TextObject(draw2D, dt);
-    //   console.log(to.getGLBoundaryOfText(dt[0], m2.identity()));
-    //   expect(true);
-    // });
+    describe('Drawing', () => {
+      test('Draw with Identity Transform Matrix', () => {
+        const to = new TextObject(draw2D, textArray);
+        to.drawWithTransformMatrix(m2.identity());
+        expect(draw2D.ctx.transformMatrix)
+          .toEqual([500, 0, 0, 250, 500, 250]);
+        expect(draw2D.ctx.fillStyle).toBe('rgba(255,0,0,255)');
+        expect(draw2D.ctx.filledText)
+          .toEqual({
+            text: 'test2',
+            x: 1, y: -1,
+            count: 2,
+          });
+      });
+      test('Draw with Real Transform Matrix, location and font size', () => {
+        textArray[0].font.size = 0.5;
+        textArray[1].font.size = 0.5;
+        textArray[1].location.x = -3;
+        const to = new TextObject(draw2D, textArray);
+        to.drawWithTransformMatrix(new Transform()
+          .scale(0.5, 0.5)
+          .rotate(1)
+          .translate(1, -2)
+          .matrix());
+        expect(draw2D.ctx.filledText.count).toBe(2);
+        expect(round(draw2D.ctx.transformMatrix, 2))
+          .toEqual([0.68, -0.53, 1.05, 0.34, 1000, 750]);
+        expect(draw2D.ctx.fillStyle).toBe('rgba(255,0,0,255)');
+        expect(draw2D.ctx.filledText.text).toBe('test2');
+        expect(round(draw2D.ctx.filledText.x, 2)).toBe(-600);
+        expect(round(draw2D.ctx.filledText.y, 2)).toBe(-200);
+      });
+    });
   });
 });
 // describe('TextObject', () => {

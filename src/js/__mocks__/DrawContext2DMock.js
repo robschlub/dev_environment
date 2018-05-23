@@ -5,6 +5,8 @@ class DrawContext2D {
     this.canvas = {
       width: width * this.ratio,
       height: height * this.ratio,
+      offsetWidth: width,
+      offsetHeight: height,
       style: {
         width: `${width}px`,
         height: `${height}px`,
@@ -17,6 +19,19 @@ class DrawContext2D {
       font: () => {},
       textAlign: () => {},
       textBaseline: () => {},
+      filledText: {
+        text: '',
+        x: null,
+        y: null,
+        count: 0,
+      },
+      fillText: (text, x, y) => {
+        this.ctx.filledText.text = text;
+        this.ctx.filledText.x = x;
+        this.ctx.filledText.y = y;
+        this.ctx.filledText.count += 1;
+      },
+      transformMatrix: [0],
       measureText: () => {    // eslint-disable-line arrow-body-style
         return {
           actualBoundingBoxLeft: 10,
@@ -24,6 +39,9 @@ class DrawContext2D {
           actualBoundingBoxRight: 10,
           actualBoundingBoxDescent: 10,
         };
+      },
+      transform: (a, b, c, d, e, f) => {
+        this.ctx.transformMatrix = [a, b, c, d, e, f];
       },
     };
   }
