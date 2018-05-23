@@ -90,20 +90,7 @@ class Axis extends DiagramElementCollection {
       titleText,
       diagramLimits,
     );
-    // const title = new TextObject(
-    //   drawContext2D,
-    //   this.props.title,
-    //   new Point(
-    //     0,
-    //     0,
-    //   ).transformBy(new Transform().rotate(this.props.rotation).matrix()),
-    //   ['center', 'middle'],
-    //   this.props.titleOffset,
-    // );
-    // title.fontSize = this.props.titleFontSize;
-    // title.fontFamily = this.props.titleFontFamily;
-    // title.fontWeight = this.props.titleFontWeight;
-    // title.rotation = this.props.titleRotation;
+
     this.add('title', new DiagramElementPrimative(
       title,
       new Transform()
