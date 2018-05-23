@@ -753,6 +753,11 @@ class DiagramElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  getGLBoundingRect() {
+    return new Rect(0, 0, 1, 1);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   getRelativeGLBoundingRect() {
     return new Rect(0, 0, 1, 1);
   }
@@ -962,14 +967,11 @@ class DiagramElementPrimative extends DiagramElement {
   getGLBoundaries() {
     return this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
   }
+  getGLBoundingRect() {
+    return this.vertices.getGLBoundingRect(this.lastDrawTransform.matrix());
+  }
   getRelativeGLBoundingRect(): Rect {
     return this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
-    // const relativeBoundingRect =
-    //    this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
-    // let location = this.transform.t();
-    // if (location === null) {
-    //   return relativeBoundingRect;
-    // }
   }
 }
 
@@ -1116,9 +1118,15 @@ class DiagramElementCollection extends DiagramElement {
     return boundaries;
   }
 
-  getRelativeGLBoundingRect() {
+  getGLBoundingRect() {
     const glAbsoluteBoundaries = this.getGLBoundaries();
-    const boundingRect = getBoundingRect(glAbsoluteBoundaries);
+    return getBoundingRect(glAbsoluteBoundaries);
+  }
+
+  getRelativeGLBoundingRect() {
+    // const glAbsoluteBoundaries = this.getGLBoundaries();
+    // const boundingRect = getBoundingRect(glAbsoluteBoundaries);
+    const boundingRect = this.getGLBoundingRect();
     const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
 
     return new Rect(

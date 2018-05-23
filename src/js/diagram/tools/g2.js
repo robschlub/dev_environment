@@ -1181,20 +1181,6 @@ function spaceToSpaceTransform(
   return t;
 }
 
-// function spaceToSpaceTransformMatrix(
-//   s1: {
-//     x: {bottomLeft: number, width: number},
-//     y: {bottomLeft: number, height: number}
-//   },
-//   s2: {
-//     x: {bottomLeft: number, width: number},
-//     y: {bottomLeft: number, height: number}
-//   },
-// ) {
-//   return spaceToSpaceTransform(s1, s2).matrix();
-// }
-
-
 function comparePoints(
   p: Point,
   currentMin: Point,
@@ -1217,6 +1203,7 @@ function comparePoints(
   return { min, max };
 }
 
+// $FlowFixMe
 function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   let firstPoint = true;
   let result = { min: new Point(0, 0), max: new Point(0, 0) };

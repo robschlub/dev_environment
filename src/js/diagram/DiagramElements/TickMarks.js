@@ -2,7 +2,7 @@
 
 import { DiagramElementPrimative } from '../Element';
 import * as g2 from '../tools/g2';
-import * as m2 from '../tools/m2';
+// import * as m2 from '../tools/m2';
 import WebGLInstance from '../webgl/webgl';
 import VertexHorizontalLine from '../vertexObjects/VertexHorizontalLine';
 

@@ -12,7 +12,7 @@ import VertexPolyLine from '../../vertexObjects/VertexPolyLine';
 
 class CartesianPlot extends DiagramElementCollection {
   props: CartesianPlotProperties;
-  boundingBox: { min: Point, max: Point };
+  glBoundingRect: Rect;
 
   constructor(
     webgl: WebGLInstance,
@@ -50,31 +50,31 @@ class CartesianPlot extends DiagramElementCollection {
       ));
     }
 
-    this.boundingBox = this.getRelativeBoundingBox();
+    this.glBoundingRect = this.getGLBoundingRect();
     this.updateMoveTranslationBoundary();
   }
 
   updateLimits(limits: Rect) {
     super.updateLimits(limits);
-    this.boundingBox = this.getRelativeBoundingBox();
+    this.glBoundingRect = this.getGLBoundingRect();
     this.updateMoveTranslationBoundary();
   }
 
-  isBeingTouched(clipLocation: Point) {
+  isBeingTouched(glLocation: Point) {
     if (!this.isTouchable) {
       return false;
     }
-    let { min, max } = this.boundingBox;
-    const t = this.transform.t();
+    // let { min, max } = this.glBoundingRect;
+    // const t = this.transform.t();
 
-    if (t instanceof Point) {
-      min = min.add(t);
-      max = max.add(t);
-    }
-    if (clipLocation.x <= max.x
-      && clipLocation.x >= min.x
-      && clipLocation.y <= max.y
-      && clipLocation.y >= min.y) {
+    // if (t instanceof Point) {
+    //   min = min.add(t);
+    //   max = max.add(t);
+    // }
+    if (glLocation.x <= this.glBoundingRect.right
+      && glLocation.x >= this.glBoundingRect.left
+      && glLocation.y <= this.glBoundingRect.top
+      && glLocation.y >= this.glBoundingRect.bottom) {
       return true;
     }
     return false;
