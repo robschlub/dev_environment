@@ -1,9 +1,11 @@
 
 import { TextObject, DiagramFont, DiagramText } from './TextObject';
 import { Point, Rect } from '../tools/g2';
-import DrawContext2D from '../../__mocks__/DrawContext2DMock';
+import * as m2 from '../tools/m2';
+// import DrawContext2D from '../../__mocks__/DrawContext2DMock';
+import DrawContext2D from '../DrawContext2D';
 
-jest.mock('../Gesture');
+// jest.mock('../Gesture');
 
 describe('Diagram Text Object', () => {
   let font;
@@ -64,8 +66,26 @@ describe('Diagram Text Object', () => {
       const to = new TextObject();
       expect(to.drawContext2D).toBe(undefined);
       expect(to.text).toEqual([]);
-      expect(to.diagramLimits).toEqual(new Rect(-1, -1, 2, 2));
     });
+    test.only('text size', () => {
+      const dt = [
+        new DiagramText(new Point(-1, 0), '-1', font),
+        new DiagramText(new Point(0, 0), '0 this is a test', font),
+        new DiagramText(new Point(1, 0), '1', font),
+        new DiagramText(new Point(0, 1), 'i', font),
+        new DiagramText(new Point(0, -1), '-i', font),
+      ];
+      const { body } = document;
+      const canvas = document.createElement('canvas');
+      canvas.style.width = '1000px';
+      canvas.style.height = '500px';
+      canvas.setAttribute('id', 'id_canvas');
+      body.appendChild(canvas);
+      const draw2D = new DrawContext2D(canvas);
+      const to = new TextObject(draw2D, dt);
+      console.log(to.getGLBoundaries(m2.identity()))
+      expect(true);
+    })
   });
 });
 // describe('TextObject', () => {

@@ -88,7 +88,6 @@ class Axis extends DiagramElementCollection {
     const title = new TextObject(
       drawContext2D,
       titleText,
-      diagramLimits,
     );
 
     this.add('title', new DiagramElementPrimative(
@@ -191,7 +190,6 @@ class Axis extends DiagramElementCollection {
     const axisLabels = new TextObject(
       drawContext2D,
       dText,
-      diagramLimits,
     );
 
     this.add(`label_${name}`, new DiagramElementPrimative(

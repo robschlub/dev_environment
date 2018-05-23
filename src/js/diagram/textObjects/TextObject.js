@@ -74,17 +74,34 @@ class TextObject extends DrawingObject {
   drawContext2D: DrawContext2D;
   border: Array<Array<Point>>;
   text: Array<DiagramText>;
-  diagramLimits: Rect;
+  // diagramLimits: Rect;
+  scalingFactor: number;
 
   constructor(
     drawContext2D: DrawContext2D,
     text: Array<DiagramText> = [],
-    diagramLimits: Rect = new Rect(-1, -1, 2, 2),
+    // diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
     super();
     this.drawContext2D = drawContext2D;
     this.text = text;
-    this.diagramLimits = diagramLimits;
+    // this.diagramLimits = diagramLimits;
+    this.scalingFactor = 1;
+    if (text.length > 0) {
+      let minSize = this.text[0].font.size;
+      this.text.forEach((t) => {
+        if (t.font.size > 0 && t.font.size < minSize) {
+          minSize = t.font.size;
+        }
+      });
+      if (minSize < 20) {
+        this.scalingFactor = minSize * 50;
+      }
+      if (minSize < 1) {
+        const power = -Math.log10(minSize) + 2;
+        this.scalingFactor = 10 ** power;
+      }
+    }
   }
 
   draw(
@@ -167,8 +184,10 @@ class TextObject extends DrawingObject {
     const { ctx } = this.drawContext2D;
 
     // Arbitrary scaling factor used to ensure font size is >> 1 pixel
-    const scalingFactor = this.drawContext2D.canvas.offsetHeight /
-                          (this.diagramLimits.height / 1000);
+    // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
+    //                       (this.diagramLimits.height / 1000);
+
+    const { scalingFactor } = this;
 
     // Color used if color is not defined in each DiagramText element
     const parentColor = `rgba(
@@ -261,7 +280,8 @@ class TextObject extends DrawingObject {
     // Calculate the scaling factor
     // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
     //                       (this.diagramLimits.height / 1000);
-    const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.text[0].font.size;
+    // const scalingFactor = this.drawContext2D.canvas.offsetWidth / this.text[0].font.size;
+    const { scalingFactor } = this;
 
     // Measure the text
     text.font.set(this.drawContext2D.ctx, scalingFactor);
@@ -287,7 +307,6 @@ class TextObject extends DrawingObject {
         -textMetrics.actualBoundingBoxDescent / scalingFactor,
       ).add(location),
     ];
-
     // const lt = lastDrawTransformMatrix;
     // const t2 = [
     //   lt[0], lt[1], lt[2],

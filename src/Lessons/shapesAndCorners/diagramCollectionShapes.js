@@ -270,7 +270,7 @@ class ShapesCollection extends DiagramElementCollection {
       new DiagramText(new Point(0, -1), '-i', font),
     ];
 
-    const to = new TextObject(this.diagram.draw2D, dText, this.diagram.limits);
+    const to = new TextObject(this.diagram.draw2D, dText);
 
     const text = new DiagramElementPrimative(
       to,
