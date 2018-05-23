@@ -8,7 +8,7 @@ import VAxis from './VertexObjects/VAxis';
 import VTickMarks from './VertexObjects/VTickMarks';
 import { AxisProperties, GridProperties, TickProperties } from './AxisProperties';
 // import TextObject from '../../textObjects/TextObject';
-import { TextObject, DiagramText, DiagramFont } from '../../textObjects/TextObjectSimple';
+import { TextObject, DiagramText, DiagramFont } from '../../textObjects/TextObject';
 import DrawContext2D from '../../DrawContext2D';
 
 class Axis extends DiagramElementCollection {

@@ -4,11 +4,7 @@ import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
 } from './tools/g2';
-// import * as m2 from './tools/m2';
 import * as tools from './tools/mathtools';
-// import GlobalVariables from './globals';
-// import VertexObject from './vertexObjects/vertexObject';
-// import { TextObject } from './textObjects/TextObjectSimple';
 import HTMLObject from './textObjects/HtmlObject';
 import DrawingObject from './DrawingObject';
 import VertexObject from './vertexObjects/vertexObject';
