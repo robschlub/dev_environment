@@ -759,7 +759,7 @@ class DiagramElement {
   }
 
   updateMoveTranslationBoundary(
-    bounday: Array<number> = [
+    boundary: Array<number> = [
       this.diagramLimits.left,
       this.diagramLimits.top - this.diagramLimits.height,
       this.diagramLimits.left + this.diagramLimits.width,
@@ -783,7 +783,6 @@ class DiagramElement {
         height: this.diagramLimits.height,
       },
     };
-
     const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
 
     const rect = this.getRelativeGLBoundingRect();
@@ -794,10 +793,10 @@ class DiagramElement {
     const min = new Point(0, 0);
     const max = new Point(0, 0);
 
-    min.x = bounday[0] - minPoint.x * scale.x;
-    min.y = bounday[1] - minPoint.y * scale.y;
-    max.x = bounday[2] - maxPoint.x * scale.x;
-    max.y = bounday[3] - maxPoint.y * scale.y;
+    min.x = boundary[0] - minPoint.x * scale.x;
+    min.y = boundary[1] - minPoint.y * scale.y;
+    max.x = boundary[2] - maxPoint.x * scale.x;
+    max.y = boundary[3] - maxPoint.y * scale.y;
 
     this.move.maxTransform.updateTranslation(
       max.x,

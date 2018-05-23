@@ -32,7 +32,7 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
-        identity = m2.identity();
+        identity = new Transform();
         element.move.maxTransform = element.transform.constant(100);
         element.move.minTransform = element.transform.constant(-100);
       });
@@ -51,23 +51,23 @@ describe('Animationa and Movement', () => {
           expect(element.isMoving()).toBe(true);
           expect(phase.startTime).toBe(-1);
 
-          element.draw(m2.identity(), 10);
+          element.draw(new Transform(), 10);
           expect(phase.startTime).toBe(10);
           expect(phase.time).toBe(1);
           expect(t.r()).toBe(0);
 
-          element.draw(m2.identity(), 10.5);
+          element.draw(new Transform(), 10.5);
           expect(phase.startTime).toBe(10);
           expect(phase.time).toBe(1);
           expect(element.transform.r()).toBe(0.5);
 
-          element.draw(m2.identity(), 11);
+          element.draw(new Transform(), 11);
           expect(phase.time).toBe(1);
           expect(element.transform.r()).toBe(1);
           expect(element.state.isAnimating).toBe(true);
           expect(element.isMoving()).toBe(true);
 
-          element.draw(m2.identity(), 11.01);
+          element.draw(new Transform(), 11.01);
           expect(phase.time).toBe(1);
           expect(element.transform.r()).toBe(1);
           expect(element.state.isAnimating).toBe(false);
@@ -87,23 +87,23 @@ describe('Animationa and Movement', () => {
           expect(phase.startTime).toBe(-1);
 
           // Initial draw setting start time
-          element.draw(m2.identity(), 0);
+          element.draw(new Transform(), 0);
           expect(phase.startTime).toBe(0);
           expect(phase.time).toBe(1);
           expect(t.r()).toBe(0);
 
           // Draw half way through
-          element.draw(m2.identity(), 0.5);
+          element.draw(new Transform(), 0.5);
           expect(element.transform.t()).toEqual(new Point(0.5, 0));
 
           // Draw at last time
-          element.draw(m2.identity(), 1);
+          element.draw(new Transform(), 1);
           expect(element.transform.t()).toEqual(new Point(1.0, 0));
           expect(element.state.isAnimating).toBe(true);
           expect(element.isMoving()).toBe(true);
 
           // Draw after time elapsed
-          element.draw(m2.identity(), 1.01);
+          element.draw(new Transform(), 1.01);
           expect(element.transform.t()).toEqual(new Point(1.0, 0));
           expect(element.state.isAnimating).toBe(false);
           expect(element.isMoving()).toBe(false);
@@ -112,8 +112,8 @@ describe('Animationa and Movement', () => {
           const callback = jest.fn();         // Callback mock
           // Setup the animation
           element.animateRotationTo(1, 1, 1, linear, callback);
-          element.draw(m2.identity(), 0);     // Initial draw setting start time
-          element.draw(m2.identity(), 2);   // Draw half way through
+          element.draw(new Transform(), 0);     // Initial draw setting start time
+          element.draw(new Transform(), 2);   // Draw half way through
           element.stopAnimating();            // Stop animating
 
           expect(element.state.isAnimating).toBe(false);
@@ -123,8 +123,8 @@ describe('Animationa and Movement', () => {
           const callback = jest.fn();         // Callback mock
           // Setup the animation
           element.animateRotationTo(1, 1, 1, linear, callback);
-          element.draw(m2.identity(), 0);     // Initial draw setting start time
-          element.draw(m2.identity(), 0.5);   // Draw half way through
+          element.draw(new Transform(), 0);     // Initial draw setting start time
+          element.draw(new Transform(), 0.5);   // Draw half way through
           element.stopAnimating();            // Stop animating
 
           expect(element.state.isAnimating).toBe(false);
@@ -201,7 +201,7 @@ describe('Animationa and Movement', () => {
         element.move.maxVelocity = new TransformLimit(100, 100, 100);
         element.move.freely.zeroVelocityThreshold =
           new TransformLimit(0.01, 0.01, 0.01);
-        identity = m2.identity();
+        identity = new Transform();
         element.move.maxTransform = element.transform.constant(100);
         element.move.minTransform = element.transform.constant(-100);
       });
@@ -329,7 +329,7 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
           [0, 0, 1, 1],
         );
-        identity = m2.identity();
+        identity = new Transform();
       });
       test('pulse scale now', () => {
         let pulseTransform;
@@ -337,23 +337,23 @@ describe('Animationa and Movement', () => {
         element.pulseScaleNow(1, 1.1);
         element.draw(identity, 0);
         expect(element.state.pulse.startTime).toBe(0);
-        expect(element.lastDrawTransformMatrix).toEqual(element.transform.matrix());
+        expect(element.lastDrawTransform.matrix()).toEqual(element.transform.matrix());
 
         element.draw(identity, 0.5);
         pulseTransform = new Transform()
           .scale(1.1, 1.1).rotate(0).translate(0, 0);
         expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
-        expect(element.lastDrawTransformMatrix).toEqual(expectM);
+        expect(element.lastDrawTransform.matrix()).toEqual(expectM);
 
         element.draw(identity, 1.0);
         pulseTransform = new Transform()
           .scale(1, 1).rotate(0).translate(0, 0);
         expectM = m2.mul(element.transform.matrix(), pulseTransform.matrix());
-        expect(element.lastDrawTransformMatrix).toEqual(expectM);
+        expect(element.lastDrawTransform.matrix()).toEqual(expectM);
         expect(element.state.isPulsing).toBe(true);
 
         element.draw(identity, 1.1);
-        expect(element.lastDrawTransformMatrix).toEqual(expectM);
+        expect(element.lastDrawTransform.matrix()).toEqual(expectM);
         expect(element.state.isPulsing).toBe(false);
       });
       test('pulse thick', () => {
@@ -421,9 +421,11 @@ describe('Animationa and Movement', () => {
           Math.PI / 4, Point.zero(),
         );
         const square = new DiagramElementPrimative(sq);
-        const box = square.getBoundingBox();
-        expect(box.max.round()).toEqual(new Point(0.105, 0.105));
-        expect(box.min.round()).toEqual(new Point(-0.105, -0.105));
+        const box = square.getGLBoundingRect();
+        expect(round(box.left, 3)).toEqual(-0.105);
+        expect(round(box.bottom, 3)).toEqual(-0.105);
+        expect(round(box.right, 3)).toEqual(0.105);
+        expect(round(box.top, 3)).toEqual(0.105);
       });
       test('square vertices offset to origin with scale 1', () => {
         const sq = new VertexPolygon(
@@ -433,9 +435,11 @@ describe('Animationa and Movement', () => {
           Math.PI / 4, new Point(0.5, 0),
         );
         const square = new DiagramElementPrimative(sq);
-        const box = square.getBoundingBox();
-        expect(box.max.round()).toEqual(new Point(0.105 + 0.5, 0.105));
-        expect(box.min.round()).toEqual(new Point(-0.105 + 0.5, -0.105));
+        const box = square.getGLBoundingRect();
+        expect(round(box.left, 3)).toEqual(-0.105 + 0.5);
+        expect(round(box.bottom, 3)).toEqual(-0.105);
+        expect(round(box.right, 3)).toEqual(0.105 + 0.5);
+        expect(round(box.top, 3)).toEqual(0.105);
       });
       test('square element offset to origin with scale 1', () => {
         const sq = new VertexPolygon(
@@ -448,9 +452,12 @@ describe('Animationa and Movement', () => {
           sq,
           new Transform().scale(1, 1).rotate(0).translate(0.5, 0),
         );
-        const box = square.getBoundingBox();
-        expect(box.max.round()).toEqual(new Point(0.105 + 0.5, 0.105));
-        expect(box.min.round()).toEqual(new Point(-0.105 + 0.5, -0.105));
+        square.setFirstTransform();
+        const box = square.getGLBoundingRect();
+        expect(round(box.left, 3)).toEqual(-0.105 + 0.5);
+        expect(round(box.bottom, 3)).toEqual(-0.105);
+        expect(round(box.right, 3)).toEqual(0.105 + 0.5);
+        expect(round(box.top, 3)).toEqual(0.105);
       });
       test('square element offset to origin with scale 2', () => {
         const sq = new VertexPolygon(
@@ -463,9 +470,12 @@ describe('Animationa and Movement', () => {
           sq,
           new Transform().scale(2, 2).rotate(0).translate(0, 0),
         );
-        const box = square.getBoundingBox();
-        expect(box.max.round()).toEqual(new Point(0.105 * 2 + 0.5 * 2, 0.105 * 2));
-        expect(box.min.round()).toEqual(new Point(-0.105 * 2 + 0.5 * 2, -0.105 * 2));
+        square.setFirstTransform();
+        const box = square.getGLBoundingRect();
+        expect(round(box.left, 3)).toEqual(-0.105 * 2 + 0.5 * 2);
+        expect(round(box.bottom, 3)).toEqual(-0.105 * 2);
+        expect(round(box.right, 3)).toEqual(0.105 * 2 + 0.5 * 2);
+        expect(round(box.top, 3)).toEqual(0.105 * 2);
       });
     });
     describe('Default move max/min transforms', () => {
@@ -480,6 +490,9 @@ describe('Animationa and Movement', () => {
           sq,
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
         );
+        square.isMovable = true;
+
+        square.updateMoveTranslationBoundary();
         expect(square.move.maxTransform.t()).toEqual(new Point(0.895, 0.895));
         expect(square.move.minTransform.t()).toEqual(new Point(-0.895, -0.895));
         square.updateMoveTranslationBoundary([-2, -1, 2, 1]);
@@ -497,90 +510,97 @@ describe('Animationa and Movement', () => {
           sq,
           new Transform().scale(2, 2).rotate(0).translate(0, 0),
         );
+        square.isMovable = true;
+
+        expect(square.move.maxTransform.t().round()).toEqual(new Point(1000, 1000));
+        expect(square.move.minTransform.t().round()).toEqual(new Point(-1000, -1000));
+
+        square.updateMoveTranslationBoundary();
         expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 0.79));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -0.79));
+
         square.updateMoveTranslationBoundary([-1, -2, 1, 2]);
         expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 1.79));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -1.79));
       });
     });
-    describe('vertexToClip', () => {
-      let e;
-      beforeEach(() => {
-        const square = new VertexPolygon(webgl, 4, 1.01, 0.01, 0, Point.zero());
-        const element = new DiagramElementPrimative(
-          square,
-          new Transform(),
-          [0, 0, 1, 1],
-          new Rect(-1, -1, 2, 2),
-        );
-        element.draw();
-        e = element;
-      });
-      test('No transform', () => {
-        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(1, 1));
-        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-1, -1));
-      });
-      test('Scaling up tranform', () => {
-        e.transform = new Transform().scale(2, 2);
-        e.draw();
-        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
-        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-2, -2));
-      });
-      test('Scaling down tranform', () => {
-        e.transform = new Transform().scale(0.5, 0.5);
-        e.draw();
-        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(0.5, 0.5));
-        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-0.5, -0.5));
-      });
-      test('Translation tranform', () => {
-        e.transform = new Transform().translate(1, 1);
-        e.draw();
-        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(1, 1));
-        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
-        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
-      });
-      test('Landscape', () => {
-        // First perform transform in element space, then squish element
-        // space to diagram space.
-        e.diagramLimits = new Rect(0, 0, 4, 2);
-        e.draw();
-        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(2, 1));
-        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(4, 2));
-        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
-      });
-      test('Landscape with offset', () => {
-        // First perform transform in element space, then squish element
-        // space to diagram space.
-        e.diagramLimits = new Rect(0, 0, 4, 2);
-        e.transform = new Transform().translate(1, 1);
-        e.draw();
-        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
-        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(6, 3));
-        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(2, 1));
-      });
-      test('Landscape with scale and offset', () => {
-        e.diagramLimits = new Rect(0, 0, 4, 2);
-        e.transform = new Transform().scale(2, 0.5).translate(1, 1);
-        e.draw();
-        // 1. scale point by 2, 0.5
-        // 2. offset point by 1, 1
-        // 3. Squish/stretch point into diagram space
-        //
-        // e.g. (1, 1)
-        //  1. (2, 0.5)
-        //  2. (3, 1.5)
-        //  3. <(-1, -1), (1, 1)> goes to <(0, 0), (4, 2)>
-        //     scale x by 2, scale y by 1: (6, 1.5)
-        //     offset x by +2, y by +1: (8, 2.5)
-        expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
-        expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(8, 2.5));
-        expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 1.5));
-      });
-    });
+    // describe('vertexToClip', () => {
+    //   let e;
+    //   beforeEach(() => {
+    //     const square = new VertexPolygon(webgl, 4, 1.01, 0.01, 0, Point.zero());
+    //     const element = new DiagramElementPrimative(
+    //       square,
+    //       new Transform(),
+    //       [0, 0, 1, 1],
+    //       new Rect(-1, -1, 2, 2),
+    //     );
+    //     element.draw();
+    //     e = element;
+    //   });
+    //   test('No transform', () => {
+    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
+    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(1, 1));
+    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-1, -1));
+    //   });
+    //   test('Scaling up tranform', () => {
+    //     e.transform = new Transform().scale(2, 2);
+    //     e.draw();
+    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
+    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
+    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-2, -2));
+    //   });
+    //   test('Scaling down tranform', () => {
+    //     e.transform = new Transform().scale(0.5, 0.5);
+    //     e.draw();
+    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
+    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(0.5, 0.5));
+    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-0.5, -0.5));
+    //   });
+    //   test('Translation tranform', () => {
+    //     e.transform = new Transform().translate(1, 1);
+    //     e.draw();
+    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(1, 1));
+    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
+    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
+    //   });
+    //   test('Landscape', () => {
+    //     // First perform transform in element space, then squish element
+    //     // space to diagram space.
+    //     e.diagramLimits = new Rect(0, 0, 4, 2);
+    //     e.draw();
+    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(2, 1));
+    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(4, 2));
+    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
+    //   });
+    //   test('Landscape with offset', () => {
+    //     // First perform transform in element space, then squish element
+    //     // space to diagram space.
+    //     e.diagramLimits = new Rect(0, 0, 4, 2);
+    //     e.transform = new Transform().translate(1, 1);
+    //     e.draw();
+    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
+    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(6, 3));
+    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(2, 1));
+    //   });
+    //   test('Landscape with scale and offset', () => {
+    //     e.diagramLimits = new Rect(0, 0, 4, 2);
+    //     e.transform = new Transform().scale(2, 0.5).translate(1, 1);
+    //     e.draw();
+    //     // 1. scale point by 2, 0.5
+    //     // 2. offset point by 1, 1
+    //     // 3. Squish/stretch point into diagram space
+    //     //
+    //     // e.g. (1, 1)
+    //     //  1. (2, 0.5)
+    //     //  2. (3, 1.5)
+    //     //  3. <(-1, -1), (1, 1)> goes to <(0, 0), (4, 2)>
+    //     //     scale x by 2, scale y by 1: (6, 1.5)
+    //     //     offset x by +2, y by +1: (8, 2.5)
+    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
+    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(8, 2.5));
+    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 1.5));
+    //   });
+    // });
   });
   describe('DiagramElementCollection', () => {
     let squareElement;
@@ -589,7 +609,7 @@ describe('Animationa and Movement', () => {
     const RealDate = Date.now;
     let identity;
     beforeEach(() => {
-      identity = m2.identity();
+      identity = new Transform();
       const square = new VertexPolygon(webgl, 4, 1005, 0.01, 0, Point.zero());
       const tri = new VertexPolygon(webgl, 3, 0.1005, 0.01, 0, new Point(0.1, 0.1));
       squareElement = new DiagramElementPrimative(
@@ -631,8 +651,8 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isAnimating).toBe(true);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
-      collection.draw(m2.identity(), 0);
-      collection.draw(m2.identity(), 0.5);
+      collection.draw(new Transform(), 0);
+      collection.draw(new Transform(), 0.5);
       expect(collection.transform.round()).toEqual(new Transform()
         .scale(1, 1).rotate(0).translate(0.5, 0));
 
@@ -662,13 +682,13 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(true);
 
-      collection.draw(m2.identity(), 10);
+      collection.draw(new Transform(), 10);
       expect(collection.state.movement.velocity).toEqual(velocity);
 
       // After one second, should have rotated to:
       //  rotation: 0.1 + 0.1*1 - 0.5*0.01*1*1
       //  with velocity: 0.1 - 0.01*1*1
-      collection.draw(m2.identity(), 11);
+      collection.draw(new Transform(), 11);
       expect(collection.state.movement.velocity.round()).toEqual(new Transform()
         .scale(0, 0).rotate(0.09).translate(0, 0));
       expect(collection.transform.round()).toEqual(new Transform()
@@ -677,7 +697,7 @@ describe('Animationa and Movement', () => {
       // At 5 seconds, velocity becomes 0, so rotation is
       //  rotation: 0.1 + 0.1*5 - 0.5*0.01*5*5
       //  with velocity: 0.1 - 0.01*1*1
-      collection.draw(m2.identity(), 15.1);
+      collection.draw(new Transform(), 15.1);
       expect(collection.state.isAnimating).toBe(false);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
@@ -736,7 +756,7 @@ describe('Animationa and Movement', () => {
       // let squareElement3;
       // let collection2;
       beforeEach(() => {
-        identity = m2.identity();
+        identity = new Transform();
         square = new VertexPolygon(
           webgl,
           4,
@@ -807,11 +827,15 @@ describe('Animationa and Movement', () => {
       const square = new DiagramElementPrimative(sq);
       const collection = new DiagramElementCollection();
       collection.add('square', square);
-      const box = collection.getBoundingBox();
-      expect(box.max.round()).toEqual(new Point(0.105, 0.105));
-      expect(box.min.round()).toEqual(new Point(-0.105, -0.105));
+      collection.setFirstTransform(new Transform());
+
+      const box = collection.getGLBoundingRect();
+      expect(round(box.left, 3)).toEqual(-0.105);
+      expect(round(box.bottom, 3)).toEqual(-0.105);
+      expect(round(box.right, 3)).toEqual(0.105);
+      expect(round(box.top, 3)).toEqual(0.105);
     });
-    test('square offset from origin with scale 1, normal colleciton', () => {
+    test('square offset from origin with scale 1, normal collection', () => {
       const sq = new VertexPolygon(
         webgl,
         4,
@@ -824,11 +848,15 @@ describe('Animationa and Movement', () => {
         .translate(0.5, 0));
       const collection = new DiagramElementCollection();
       collection.add('square', square);
-      const box = collection.getBoundingBox();
-      expect(box.max.round()).toEqual(new Point(0.105 + 0.5, 0.105));
-      expect(box.min.round()).toEqual(new Point(-0.105 + 0.5, -0.105));
+      collection.setFirstTransform(new Transform());
+
+      const box = collection.getGLBoundingRect();
+      expect(round(box.left, 3)).toEqual(-0.105 + 0.5);
+      expect(round(box.bottom, 3)).toEqual(-0.105);
+      expect(round(box.right, 3)).toEqual(0.105 + 0.5);
+      expect(round(box.top, 3)).toEqual(0.105);
     });
-    test('square on origin with scale 1, colleciton offset', () => {
+    test('square on origin with scale 1, collection offset', () => {
       const sq = new VertexPolygon(
         webgl,
         4,
@@ -841,9 +869,13 @@ describe('Animationa and Movement', () => {
         .rotate(0)
         .translate(0.5, 0));
       collection.add('square', square);
-      const box = collection.getBoundingBox();
-      expect(box.max.round()).toEqual(new Point(0.105 + 0.5, 0.105));
-      expect(box.min.round()).toEqual(new Point(-0.105 + 0.5, -0.105));
+      collection.setFirstTransform(new Transform());
+      
+      const box = collection.getGLBoundingRect();
+      expect(round(box.left, 3)).toEqual(-0.105 + 0.5);
+      expect(round(box.bottom, 3)).toEqual(-0.105);
+      expect(round(box.right, 3)).toEqual(0.105 + 0.5);
+      expect(round(box.top, 3)).toEqual(0.105);
     });
     test('square element offset and colleciton offset', () => {
       const sq = new VertexPolygon(
@@ -861,9 +893,13 @@ describe('Animationa and Movement', () => {
         .rotate(0)
         .translate(0.5, 0));
       collection.add('square', square);
-      const box = collection.getBoundingBox();
-      expect(box.max.round()).toEqual(new Point(0.105 + 1.0, 0.105));
-      expect(box.min.round()).toEqual(new Point(-0.105 + 1.0, -0.105));
+      collection.setFirstTransform(new Transform());
+
+      const box = collection.getGLBoundingRect();
+      expect(round(box.left, 3)).toEqual(-0.105 + 1.0);
+      expect(round(box.bottom, 3)).toEqual(-0.105);
+      expect(round(box.right, 3)).toEqual(0.105 + 1.0);
+      expect(round(box.top, 3)).toEqual(0.105);
     });
     test('square element offset and scaled and colleciton offset', () => {
       const sq = new VertexPolygon(
@@ -881,9 +917,13 @@ describe('Animationa and Movement', () => {
         .rotate(0)
         .translate(0.5, 0));
       collection.add('square', square);
-      const box = collection.getBoundingBox();
-      expect(box.max.round()).toEqual(new Point((0.105 + 0.5) * 2 + 0.5, 0.105 * 2));
-      expect(box.min.round()).toEqual(new Point((-0.105 + 0.5) * 2 + 0.5, -0.105 * 2));
+      collection.setFirstTransform(new Transform());
+
+      const box = collection.getGLBoundingRect();
+      expect(round(box.left, 3)).toEqual((-0.105 + 0.5) * 2 + 0.5);
+      expect(round(box.bottom, 3)).toEqual(-0.105 * 2);
+      expect(round(box.right, 3)).toEqual((0.105 + 0.5) * 2 + 0.5);
+      expect(round(box.top, 3)).toEqual(0.105 * 2);
     });
     test('two squares', () => {
       const sq = new VertexPolygon(
@@ -906,11 +946,13 @@ describe('Animationa and Movement', () => {
         .translate(0.5, 0.5));
       collection.add('square1', square1);
       collection.add('square2', square2);
-      const box = collection.getBoundingBox();
-      expect(box.max.round())
-        .toEqual(new Point((0.105 + 0.5) * 2 + 0.5, 0.105 * 2 + 0.5).round());
-      expect(box.min.round())
-        .toEqual(new Point(-0.105 * 2 + 0.5, (-0.105 - 0.5) * 2 + 0.5).round());
+      collection.setFirstTransform(new Transform());
+
+      const box = collection.getGLBoundingRect();
+      expect(round(box.left, 3)).toEqual(round(-0.105 * 2 + 0.5, 3));
+      expect(round(box.bottom, 3)).toEqual((-0.105 - 0.5) * 2 + 0.5);
+      expect(round(box.right, 3)).toEqual((0.105 + 0.5) * 2 + 0.5);
+      expect(round(box.top, 3)).toEqual(0.105 * 2 + 0.5);
     });
     // test('square vertices offset to origin with scale 1', () => {
     //   const sq = new VertexPolygon(
@@ -919,7 +961,7 @@ describe('Animationa and Movement', () => {
     //     Math.PI / 4, new Point(0.5, 0),
     //   );
     //   const square = new DiagramElementPrimative(sq);
-    //   const box = square.getBoundingBox();
+    //   const box = square.getGLBoundingRect();
     //   expect(box.max.round()).toEqual(new Point(0.105 + 0.5, 0.105));
     //   expect(box.min.round()).toEqual(new Point(-0.105 + 0.5, -0.105));
     // });
@@ -933,7 +975,7 @@ describe('Animationa and Movement', () => {
     //     sq,
     //     new Transform().scale(1, 1).rotate(0).translate(0.5, 0),
     //   );
-    //   const box = square.getBoundingBox();
+    //   const box = square.getGLBoundingRect();
     //   expect(box.max.round()).toEqual(new Point(0.105 + 0.5, 0.105));
     //   expect(box.min.round()).toEqual(new Point(-0.105 + 0.5, -0.105));
     // });
@@ -947,7 +989,7 @@ describe('Animationa and Movement', () => {
     //     sq,
     //     new Transform().scale(2, 2).rotate(0).translate(0, 0),
     //   );
-    //   const box = square.getBoundingBox();
+    //   const box = square.getGLBoundingRect();
     //   expect(box.max.round()).toEqual(new Point(0.105 * 2 + 0.5 * 2, 0.105 * 2));
     //   expect(box.min.round()).toEqual(new Point(-0.105 * 2 + 0.5 * 2, -0.105 * 2));
     // });
