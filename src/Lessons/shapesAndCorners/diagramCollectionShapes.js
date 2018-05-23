@@ -4,6 +4,9 @@ import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
 import { TextObject, DiagramText, DiagramFont } from '../../js/diagram/textObjects/TextObjectSimple';
 import HTMLObject from '../../js/diagram/textObjects/HtmlObject';
+import { AxisProperties } from '../../js/diagram/DiagramElements/Plot/AxisProperties';
+import { CartesianPlotProperties, TraceProperties } from '../../js/diagram/DiagramElements/Plot/CartesianPlotProperties';
+import CartesianPlot from '../../js/diagram/DiagramElements/Plot/CartesianPlot';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
@@ -24,6 +27,89 @@ type typeShape = {
   _moreSharpCorners: DiagramElementPrimative;
 } & DiagramElementCollection ;
 
+function makePlot(diagram: Diagram) {
+  const xProps = new AxisProperties('x', 0);
+  xProps.length = 4;
+  xProps.limits = { min: 0, max: 100 };
+  xProps.majorTicks.start = 0;
+  xProps.minorTicks.start = 0;
+  xProps.minorTicks.step = 2;
+  xProps.majorTicks.step = 10;
+  xProps.minorTicks.length = 0.02;
+  xProps.majorTicks.length = 0.05;
+  xProps.majorTicks.offset = -xProps.majorTicks.length;
+  xProps.minorTicks.offset = -xProps.minorTicks.length;
+  xProps.majorGrid.length = 2;
+  xProps.minorGrid.length = 2;
+  xProps.majorTicks.width = 0.01;
+  xProps.majorTicks.labelMode = 'auto';
+  xProps.majorTicks.labels = ['0', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  xProps.majorTicks.labelOffset = new Point(0, -0.05);
+  xProps.majorTicks.labelsHAlign = 'center';
+  xProps.majorTicks.labelsVAlign = 'top';
+  xProps.minorTicks.labelOffset = new Point(0, -0.1);
+  xProps.minorTicks.labelsHAlign = 'center';
+  xProps.minorTicks.labelsVAlign = 'top';
+  xProps.minorTicks.fontSize = '10px';
+  xProps.majorGrid.width = 0.008;
+  xProps.minorGrid.width = 0.004;
+  xProps.title = 'This is a title that is really long';
+  xProps.titleOffset = new Point(2, -0.3);
+  // const axis1 = new Axis(
+  //   webgl, ctx, xProps,
+  //   new Transform().scale(1, 1).rotate(0).translate(3, 1), diagramLimits,
+  // );
+
+  // this.add('xAxis1', axis1);
+
+  const yProps = new AxisProperties('y', Math.PI / 2);
+  yProps.length = 2;
+  yProps.limits = { min: 0, max: 25 };
+  yProps.majorTicks.start = 0;
+  yProps.minorTicks.start = 0;
+  yProps.majorTicks.step = 5;
+  yProps.minorTicks.step = 1;
+  yProps.majorGrid.length = -xProps.length;
+  yProps.minorGrid.length = -xProps.length;
+  yProps.majorTicks.length = xProps.majorTicks.length;
+  yProps.minorTicks.length = xProps.minorTicks.length;
+  yProps.majorTicks.width = 0.01;
+  yProps.majorTicks.labels = ['0', 'A', '10', '15', '20', '25'];
+  yProps.majorTicks.labelOffset = new Point(-0.07, 0);
+  yProps.majorTicks.labelsHAlign = 'right';
+  yProps.majorTicks.labelsVAlign = 'middle';
+  yProps.majorGrid.width = xProps.majorGrid.width;
+  yProps.minorGrid.width = xProps.minorGrid.width;
+  yProps.title = 'This is a title\nThat is two lines';
+  yProps.titleRotation = 3 * Math.PI / 2;
+  yProps.titleOffset = new Point(-0.3, 1);
+  // const axis2 = new Axis(
+  //   webgl, ctx, yProps,
+  //   new Transform().scale(1, 1).rotate(0).translate(3, 1),
+  //   diagramLimits,
+  // );
+
+  // this.add('yAxis1', axis2);
+  const trace = new TraceProperties(
+    'trace1',
+    colors.colorBlue,
+    [new Point(0, 0), new Point(10, 5), new Point(50, 10), new Point(80, 20)],
+  );
+  const plotProps = new CartesianPlotProperties();
+  plotProps.axes = [xProps, yProps];
+  plotProps.traces = [trace];
+  const plot = new CartesianPlot(
+    diagram.webgl, diagram.draw2D, plotProps,
+    new Transform().translate(-1.5, -1),
+    diagram.limits,
+  );
+  // plot._trace1.isTouchable = true;
+  // plot._trace1.isMovable = true;
+
+  plot.isTouchable = true;
+  plot.isMovable = true;
+  return plot;
+}
 function makeSquare(shapes: Object, location: Point) {
   const vertices = [
     new Point(-0.5, -0.5),
@@ -216,6 +302,9 @@ class ShapesCollection extends DiagramElementCollection {
     hp.isTouchable = true;
     hp.isMovable = true;
     this.add('html', hp);
+
+    const plot = makePlot(this.diagram);
+    this.add('plot', plot);
   }
 
   resize(locations: Object) {

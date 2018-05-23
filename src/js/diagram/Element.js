@@ -981,6 +981,7 @@ class DiagramElementPrimative extends DiagramElement {
 class DiagramElementCollection extends DiagramElement {
   elements: Object;
   order: Array<string>;
+  touchInBoundingRect: boolean;
   // biasTransform: Array<number>;
 
   constructor(
@@ -990,6 +991,7 @@ class DiagramElementCollection extends DiagramElement {
     super(transform, diagramLimits);
     this.elements = {};
     this.order = [];
+    this.touchInBoundingRect = false;
   }
 
   isMoving(): boolean {
@@ -1086,6 +1088,16 @@ class DiagramElementCollection extends DiagramElement {
     if (!this.isTouchable) {
       return false;
     }
+    if (this.touchInBoundingRect) {
+      const boundingRect = this.getGLBoundingRect();
+      if (glLocation.x >= boundingRect.left
+        && glLocation.x <= boundingRect.right
+        && glLocation.y <= boundingRect.top
+        && glLocation.y >= boundingRect.bottom
+      ) {
+        return true;
+      }
+    }
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.show === true) {
@@ -1150,16 +1162,23 @@ class DiagramElementCollection extends DiagramElement {
       return [];
     }
     let touched = [];
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
-      if (element.show === true) {
-        touched = touched.concat(element.getTouched(glLocation));
+    if (this.touchInBoundingRect) {
+      if (this.isBeingTouched(glLocation)) {
+        touched.push(this);
       }
-    }
-    // If there is an element that is touched, then this collection should
-    // also be touched.
-    if (touched.length > 0) {
-      touched = [this].concat(touched);
+    } else {
+      for (let i = 0; i < this.order.length; i += 1) {
+        const element = this.elements[this.order[i]];
+        if (element.show === true) {
+          touched = touched.concat(element.getTouched(glLocation));
+        }
+      }
+
+      // If there is an element that is touched, then this collection should
+      // also be touched.
+      if (touched.length > 0) {
+        touched = [this].concat(touched);
+      }
     }
     return touched;
   }
