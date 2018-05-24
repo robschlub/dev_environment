@@ -1,26 +1,17 @@
 // @flow
-import VertexPolygon from './vertexObjects/VertexPolygon';
-import VertexPolygonFilled from './vertexObjects/VertexPolygonFilled';
-import VertexPolyLineCorners from './vertexObjects/VertexPolyLineCorners';
-import VertexPolyLine from './vertexObjects/VertexPolyLine';
-import VertexArrow from './vertexObjects/VertexArrow';
-import VertexRadialLines from './vertexObjects/VertexRadialLines';
-import TextObject from './textObjects/TextObject';
-// import HorizontalLine from './vertexObjects/HorizontalLine';
+import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
+import VertexPolygonFilled from './DrawingObjects/VertexObject/VertexPolygonFilled';
+import VertexPolyLineCorners from './DrawingObjects/VertexObject/VertexPolyLineCorners';
+import VertexPolyLine from './DrawingObjects/VertexObject/VertexPolyLine';
+import VertexArrow from './DrawingObjects/VertexObject/VertexArrow';
+import VertexRadialLines from './DrawingObjects/VertexObject/VertexRadialLines';
 import { Transform, Point, TransformLimit } from './tools/g2';
-// import GLParallelLines from './vertexObjects/glParallelLines';
-// import * as m2 from './m2';
-// import { Console } from '../tools/tools';
 import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
-// import GlobalVariables from './globals';
 import Diagram from './Diagram';
 import * as tools from './tools/mathtools';
-// import TickMarks from './DiagramElements/TickMarks';
-// import Axis from './DiagramElements/Plot/Axis';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import { CartesianPlotProperties, TraceProperties } from './DiagramElements/Plot/CartesianPlotProperties';
 import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
-// import getColors from './colors';
 import getScssColors from '../tools/getScssColors';
 import styles from '../../css/style.scss';
 
@@ -92,16 +83,17 @@ class ShapesCollection extends DiagramElementCollection {
 
     const arrowVertices = new VertexArrow(webgl);
 
-    const textObject = new TextObject(ctx, 'Hello World!', new Point(0.5, 1), ['left', 'top'], new Point(0.5, 0.5));
+    // const textObject = new TextObject(ctx,
+    //   'Hello World!', new Point(0.5, 1), ['left', 'top'], new Point(0.5, 0.5));
 
-    this.add('helloText', new DiagramElementPrimative(
-      textObject,
-      new Transform().translate(1, 1),
-      colors.primary, diagramLimits,
-    ));
-    const hw = this._helloText;
-    hw.isTouchable = true;
-    hw.isMovable = true;
+    // this.add('helloText', new DiagramElementPrimative(
+    //   textObject,
+    //   new Transform().translate(1, 1),
+    //   colors.primary, diagramLimits,
+    // ));
+    // const hw = this._helloText;
+    // hw.isTouchable = true;
+    // hw.isMovable = true;
 
     this.add('square', new DiagramElementPrimative(
       square,

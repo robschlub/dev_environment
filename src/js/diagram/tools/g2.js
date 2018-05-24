@@ -50,7 +50,12 @@ class Rect {
     this.top = bottom + height;
     this.right = left + width;
   }
+
+  copy() {
+    return new Rect(this.left, this.bottom, this.width, this.height);
+  }
 }
+
 /* eslint-disable comma-dangle */
 class Point {
   x: number;
@@ -564,7 +569,7 @@ function line(p1: Point, p2: Point) {
 
 class Rotation {
   r: number;
-  constructor(angle) {
+  constructor(angle: number) {
     this.r = angle;
   }
   matrix(): Array<number> {
@@ -759,8 +764,9 @@ class Transform {
     for (let i = this.order.length - 1; i >= 0; i -= 1) {
       m = m2.mul(m, this.order[i].matrix());
     }
-    this.mat = m2.copy(m);
-    return m;
+    // this.mat = m2.copy(m);
+    // return m;
+    this.mat = m;
   }
 
   update(index: number) {
@@ -916,9 +922,7 @@ class Transform {
     return new Transform(order);
   }
 
-  // Add a transform to the current one.
-  // If the two transforms have different order types, then just return
-  // the current transform.
+  // transform step wise multiplication
   mul(transformToMul: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToMul)) {
       return new Transform(this.order);
@@ -931,6 +935,19 @@ class Transform {
     return new Transform(order);
   }
 
+  transform(transform: Transform) {
+    const t = new Transform();
+    t.order = transform.order.concat(this.order);
+    t.mat = m2.mul(this.matrix(), transform.matrix());
+    return t;
+  }
+
+  transformBy(transform: Transform): Transform {
+    const t = new Transform();
+    t.order = this.order.concat(transform.order);
+    t.mat = m2.mul(transform.matrix(), this.matrix());
+    return t;
+  }
 
   round(precision: number = 8): Transform {
     const order = [];
@@ -1143,6 +1160,73 @@ class Transform {
   }
 }
 
+function spaceToSpaceTransform(
+  s1: {
+    x: {bottomLeft: number, width: number},
+    y: {bottomLeft: number, height: number}
+  },
+  s2: {
+    x: {bottomLeft: number, width: number},
+    y: {bottomLeft: number, height: number}
+  },
+) {
+  const xScale = s2.x.width / s1.x.width;
+  const yScale = s2.y.height / s1.y.height;
+  const t = new Transform()
+    .scale(xScale, yScale)
+    .translate(
+      s2.x.bottomLeft - s1.x.bottomLeft * xScale,
+      s2.y.bottomLeft - s1.y.bottomLeft * yScale,
+    );
+  return t;
+}
+
+function comparePoints(
+  p: Point,
+  currentMin: Point,
+  currentMax: Point,
+  firstPoint: boolean,
+) {
+  const min = new Point(0, 0);
+  const max = new Point(0, 0);
+  if (firstPoint) {
+    min.x = p.x;
+    min.y = p.y;
+    max.x = p.x;
+    max.y = p.y;
+  } else {
+    min.x = p.x < currentMin.x ? p.x : currentMin.x;
+    min.y = p.y < currentMin.y ? p.y : currentMin.y;
+    max.x = p.x > currentMax.x ? p.x : currentMax.x;
+    max.y = p.y > currentMax.y ? p.y : currentMax.y;
+  }
+  return { min, max };
+}
+
+// $FlowFixMe
+function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
+  let firstPoint = true;
+  let result = { min: new Point(0, 0), max: new Point(0, 0) };
+
+  pointArrays.forEach((pointOrArray) => {
+    if (Array.isArray(pointOrArray)) {
+      pointOrArray.forEach((p) => {
+        result = comparePoints(p, result.min, result.max, firstPoint);
+        firstPoint = false;
+      });
+    } else {
+      result = comparePoints(pointOrArray, result.min, result.max, firstPoint);
+    }
+
+    firstPoint = false;
+  });
+  return new Rect(
+    result.min.x,
+    result.min.y,
+    result.max.x - result.min.x,
+    result.max.y - result.min.y,
+  );
+}
 
 export {
   point,
@@ -1158,4 +1242,6 @@ export {
   Translation,
   Scale,
   Rotation,
+  spaceToSpaceTransform,
+  getBoundingRect,
 };

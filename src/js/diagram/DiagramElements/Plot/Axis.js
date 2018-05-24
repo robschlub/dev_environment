@@ -7,7 +7,8 @@ import WebGLInstance from '../../webgl/webgl';
 import VAxis from './VertexObjects/VAxis';
 import VTickMarks from './VertexObjects/VTickMarks';
 import { AxisProperties, GridProperties, TickProperties } from './AxisProperties';
-import TextObject from '../../textObjects/TextObject';
+// import TextObject from '../../textObjects/TextObject';
+import { TextObject, DiagramText, DiagramFont } from '../../DrawingObjects/TextObject/TextObject';
 import DrawContext2D from '../../DrawContext2D';
 
 class Axis extends DiagramElementCollection {
@@ -69,23 +70,31 @@ class Axis extends DiagramElementCollection {
       diagramLimits,
     ));
 
+    const font = new DiagramFont(
+      'Helvetica',
+      'normal',
+      0.13,
+      '500',
+      'center',
+      'middle',
+      [0, 1, 0, 1],
+    );
+    const titleText = [new DiagramText(
+      new Point(0, 0).transformBy(new Transform()
+        .rotate(this.props.rotation).matrix()),
+      this.props.title,
+      font,
+    )];
     const title = new TextObject(
       drawContext2D,
-      this.props.title,
-      new Point(
-        0,
-        0,
-      ).transformBy(new Transform().rotate(this.props.rotation).matrix()),
-      ['center', 'middle'],
-      this.props.titleOffset,
+      titleText,
     );
-    title.fontSize = this.props.titleFontSize;
-    title.fontFamily = this.props.titleFontFamily;
-    title.fontWeight = this.props.titleFontWeight;
-    title.rotation = this.props.titleRotation;
+
     this.add('title', new DiagramElementPrimative(
       title,
-      new Transform(),
+      new Transform()
+        .rotate(this.props.rotation)
+        .translate(this.props.titleOffset.x, this.props.titleOffset.y),
       [0.5, 0.5, 0.5, 1],
       diagramLimits,
     ));
@@ -94,10 +103,12 @@ class Axis extends DiagramElementCollection {
     this.addTickLabels(
       'major', drawContext2D, majorTicks,
       this.props.generateMajorLabels.bind(this.props), diagramLimits,
+      this.props.majorTicks.labelOffset,
     );
     this.addTickLabels(
       'minor', drawContext2D, minorTicks,
       this.props.generateMinorLabels.bind(this.props), diagramLimits,
+      this.props.minorTicks.labelOffset,
     );
   }
 
@@ -147,38 +158,67 @@ class Axis extends DiagramElementCollection {
     ticks: TickProperties,
     labelGenerator: () => void,
     diagramLimits: Rect,
+    offset: Point,
   ) {
     if (ticks.labelMode === 'auto') {
       labelGenerator();
     }
+    const font = new DiagramFont(
+      'Helvetica',
+      'normal',
+      0.1,
+      '200',
+      'center',
+      'top',
+      [0, 1, 0, 1],
+    );
+    if (this.props.rotation > Math.PI / 2 * 0.95) {
+      font.alignV = 'middle';
+      font.alignH = 'right';
+    }
+    const dText = [];
     for (let i = 0; i < ticks.labels.length; i += 1) {
-      const label = new TextObject(
-        drawContext2D,
-        ticks.labels[i],
+      dText.push(new DiagramText(
         new Point(
           this.valueToClip(ticks.start + i * ticks.step),
           0,
         ).transformBy(new Transform().rotate(this.props.rotation).matrix()),
-        [ticks.labelsHAlign, ticks.labelsVAlign],
-        ticks.labelOffset,
-      );
-      label.fontSize = ticks.fontSize;
-      label.fontFamily = ticks.fontFamily;
-      label.fontWeight = ticks.fontWeight;
-
-      this.add(`label_${name}_${i}`, new DiagramElementPrimative(
-        label,
-        new Transform().scale(1, 1).rotate(0).translate(0, 0),
-        [0.5, 0.5, 0.5, 1],
-        diagramLimits,
+        ticks.labels[i],
+        font,
       ));
     }
-  }
+    const axisLabels = new TextObject(
+      drawContext2D,
+      dText,
+    );
 
-  // getBorder() {
-  //   const length = this.props.length;
-  //   const width = this.props.width +
-  // }
+    this.add(`label_${name}`, new DiagramElementPrimative(
+      axisLabels,
+      new Transform().scale(1, 1).rotate(0).translate(offset.x, offset.y),
+      [0.5, 0.5, 0.5, 1],
+      diagramLimits,
+    ));
+    // const label = new TextObject(
+    //   drawContext2D,
+    //   ticks.labels[i],
+    //   new Point(
+    //     this.valueToClip(ticks.start + i * ticks.step),
+    //     0,
+    //   ).transformBy(new Transform().rotate(this.props.rotation).matrix()),
+    //   [ticks.labelsHAlign, ticks.labelsVAlign],
+    //   ticks.labelOffset,
+    // );
+    // label.fontSize = ticks.fontSize;
+    // label.fontFamily = ticks.fontFamily;
+    // label.fontWeight = ticks.fontWeight;
+
+    // this.add(`label_${name}_${i}`, new DiagramElementPrimative(
+    //   label,
+    //   new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    //   [0.5, 0.5, 0.5, 1],
+    //   diagramLimits,
+    // ));
+  }
 }
 
 export default Axis;
