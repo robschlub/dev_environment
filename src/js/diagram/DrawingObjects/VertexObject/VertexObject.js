@@ -1,10 +1,10 @@
 // @flow
 
 // import * as g2 from '../g2';
-import * as m2 from '../tools/m2';
-import WebGLInstance from '../webgl/webgl';
-import * as g2 from '../tools/g2';
-import DrawingObject from '../DrawingObjects/DrawingObject';
+import * as m2 from '../../tools/m2';
+import WebGLInstance from '../../webgl/webgl';
+import * as g2 from '../../tools/g2';
+import DrawingObject from '../../DrawingObjects/DrawingObject';
 
 // Base clase of all shape objects made from verteces for webgl.
 // The job of a VertexObject is to:

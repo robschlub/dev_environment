@@ -1,10 +1,10 @@
 // @flow
-import VertexPolygon from './vertexObjects/VertexPolygon';
-import VertexPolygonFilled from './vertexObjects/VertexPolygonFilled';
-import VertexPolyLineCorners from './vertexObjects/VertexPolyLineCorners';
-import VertexPolyLine from './vertexObjects/VertexPolyLine';
-import VertexArrow from './vertexObjects/VertexArrow';
-import VertexRadialLines from './vertexObjects/VertexRadialLines';
+import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
+import VertexPolygonFilled from './DrawingObjects/VertexObject/VertexPolygonFilled';
+import VertexPolyLineCorners from './DrawingObjects/VertexObject/VertexPolyLineCorners';
+import VertexPolyLine from './DrawingObjects/VertexObject/VertexPolyLine';
+import VertexArrow from './DrawingObjects/VertexObject/VertexArrow';
+import VertexRadialLines from './DrawingObjects/VertexObject/VertexRadialLines';
 import { Transform, Point, TransformLimit } from './tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
 import Diagram from './Diagram';

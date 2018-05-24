@@ -1,8 +1,8 @@
 // @flow
 
-import { Point } from '../tools/g2';
-import WebGLInstance from '../webgl/webgl';
-import VertexObject from './vertexObject';
+import { Point } from '../../tools/g2';
+import WebGLInstance from '../../webgl/webgl';
+import VertexObject from './VertexObject';
 
 // Isosceles triangle defined from `tip` point, down `height` with base `width`
 class IsoTriangle extends VertexObject {

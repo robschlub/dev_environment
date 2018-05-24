@@ -1,9 +1,9 @@
 
 // @flow
 
-import { Point } from '../tools/g2';
-import WebGLInstance from '../webgl/webgl';
-import VertexObject from './vertexObject';
+import { Point } from '../../tools/g2';
+import WebGLInstance from '../../webgl/webgl';
+import VertexObject from './VertexObject';
 import polyLineTriangles from './PolyLineTriangles';
 
 function cornerLength(coords, length, forceLength = true) {

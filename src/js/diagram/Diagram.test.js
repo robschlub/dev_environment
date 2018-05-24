@@ -7,7 +7,7 @@ import Diagram from './Diagram';
 import { Point, Transform, TransformLimit, Rect } from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import DrawContext2D from '../__mocks__/DrawContext2DMock';
-import VertexPolygon from './vertexObjects/VertexPolygon';
+import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
 // import { linear, round } from './mathtools';
 // import Gesture from './Gesture';
 // import WebGLInstance from './webgl';

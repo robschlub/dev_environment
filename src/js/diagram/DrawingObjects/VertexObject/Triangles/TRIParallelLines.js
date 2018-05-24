@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../tools/g2';
+import { Point } from '../../../tools/g2';
 
 function TRIParallelLines(
   num: number = 10,

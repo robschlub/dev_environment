@@ -1,7 +1,7 @@
 import VertexPolyLineCorners from './VertexPolyLineCorners';
-import { Point } from '../tools/g2';
-import webgl from '../../__mocks__/WebGLInstanceMock';
-import { round } from '../tools/mathtools';
+import { Point } from '../../tools/g2';
+import webgl from '../../../__mocks__/WebGLInstanceMock';
+import { round } from '../../tools/mathtools';
 
 /* eslint-disable comma-spacing,no-multi-spaces,space-in-parens */
 describe('Corners', () => {

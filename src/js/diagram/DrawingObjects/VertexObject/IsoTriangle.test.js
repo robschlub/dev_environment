@@ -1,7 +1,7 @@
 import IsoTriangle from './IsoTriangle';
-import { Point } from '../tools/g2';
-import webgl from '../../__mocks__/WebGLInstanceMock';
-import { round } from '../tools/mathtools';
+import { Point } from '../../tools/g2';
+import webgl from '../../../__mocks__/WebGLInstanceMock';
+import { round } from '../../tools/mathtools';
 
 describe('Isosceles Triangle', () => {
   test('Tip at 0, 0', () => {

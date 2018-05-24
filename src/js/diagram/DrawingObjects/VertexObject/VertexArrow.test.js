@@ -1,7 +1,7 @@
 import VertexArrow from './VertexArrow';
-import { Point } from '../tools/g2';
-import webgl from '../../__mocks__/WebGLInstanceMock';
-import { round } from '../tools/mathtools';
+import { Point } from '../../tools/g2';
+import webgl from '../../../__mocks__/WebGLInstanceMock';
+import { round } from '../../tools/mathtools';
 
 describe('Arrow', () => {
   test('Default', () => {

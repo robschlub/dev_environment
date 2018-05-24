@@ -1,7 +1,7 @@
 import VertexPolygon from './VertexPolygon';
-import * as g2 from '../tools/g2';
-import webgl from '../../__mocks__/WebGLInstanceMock';
-import { round } from '../tools/mathtools';
+import * as g2 from '../../tools/g2';
+import webgl from '../../../__mocks__/WebGLInstanceMock';
+import { round } from '../../tools/mathtools';
 
 /* eslint-disable comma-spacing,no-multi-spaces,space-in-parens */
 describe('Polygon', () => {

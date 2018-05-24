@@ -1,7 +1,7 @@
 // @flow
 
-import VertexPolygon from '../vertexObjects/VertexPolygon';
-import VertexPolygonFilled from '../vertexObjects/VertexPolygonFilled';
+import VertexPolygon from '../DrawingObjects/VertexObject/VertexPolygon';
+import VertexPolygonFilled from '../DrawingObjects/VertexObject/VertexPolygonFilled';
 import { DiagramElementPrimative } from '../Element';
 import { Point, Transform, Rect } from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';

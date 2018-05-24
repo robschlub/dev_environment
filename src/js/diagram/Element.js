@@ -7,7 +7,7 @@ import {
 import * as tools from './tools/mathtools';
 import HTMLObject from './textObjects/HtmlObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
-import VertexObject from './vertexObjects/vertexObject';
+import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 
 // Planned Animation
 class AnimationPhase {

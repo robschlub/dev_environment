@@ -1,8 +1,8 @@
 // @flow
-// import * as vertexShapes from './vertexObjects/vertexShapes';
+// import * as vertexShapes from './DrawingObjects/VertexObject/vertexShapes';
 import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
-// import Polygon from './vertexObjects/Polygon';
+// import Polygon from './DrawingObjects/VertexObject/Polygon';
 import {
   Rect, Point, Transform,
   spaceToSpaceTransform,

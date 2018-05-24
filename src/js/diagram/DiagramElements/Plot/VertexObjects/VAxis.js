@@ -1,10 +1,10 @@
 // @flow
 
-import TRIHorizontalLine from '../../../vertexObjects/Triangles/TRIHoriztonalLine';
+import TRIHorizontalLine from '../../../DrawingObjects/VertexObject/Triangles/TRIHoriztonalLine';
 import { AxisProperties } from '../AxisProperties';
 import { Point, Transform } from '../../../tools/g2';
 import WebGLInstance from '../../../webgl/webgl';
-import VertexObject from '../../../vertexObjects/vertexObject';
+import VertexObject from '../../../DrawingObjects/VertexObject/VertexObject';
 
 class VAxis extends VertexObject {
   constructor(
