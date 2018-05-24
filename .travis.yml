@@ -15,4 +15,5 @@ python:
 
 script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - export IN_TRAVIS=1
   - ./build.sh prod deploy  

@@ -122,7 +122,10 @@ echo "${bold}${cyan}===================== Testing ======================${reset}
 docker_run "JS Testing" npm run jest
 docker_run "Python Testing" pytest
 check_status "Tests"
-sudo rm -rf tests/__pycache__
+if [ $IN_TRAVIS ];
+  then
+  sudo rm -rf tests/__pycache__
+fi
 
 # Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
