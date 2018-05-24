@@ -6,6 +6,7 @@ import {
 import Diagram from './Diagram';
 import { Point, Transform, TransformLimit, Rect } from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
+import DrawContext2D from '../__mocks__/DrawContext2DMock';
 import VertexPolygon from './vertexObjects/VertexPolygon';
 // import { linear, round } from './mathtools';
 // import Gesture from './Gesture';
@@ -14,6 +15,7 @@ import VertexPolygon from './vertexObjects/VertexPolygon';
 
 jest.mock('./Gesture');
 jest.mock('./webgl/webgl');
+jest.mock('./DrawContext2D');
 
 describe('Diagram', () => {
   let diagrams;
@@ -119,7 +121,8 @@ describe('Diagram', () => {
       diagram.webgl = webgl;
       diagram.canvas = canvasMock;
       diagram.htmlCanvas = htmlCanvasMock;
-
+      diagram.draw2D = new DrawContext2D(definition.width, definition.height);
+      diagram.setSpaceTransforms();
       // create squares:
       const squares = {};
       const collection = new DiagramElementCollection(new Transform().scale(1, 1).rotate(0).translate(0, 0), 'c', diagram.limits);
@@ -142,6 +145,15 @@ describe('Diagram', () => {
         collection.isTouchable = true;
       });
       diagram.elements = collection;
+      diagram.dToGL = (x, y) => new Point(x, y)
+        .transformBy(diagram.diagramToGLSpaceTransform.matrix());
+      // diagram.dToP = (x, y) => new Point(x, y)
+      //   .transformBy(diagram.diagramToPixelSpaceTransform.matrix());
+      diagram.dToP = (p) => {
+        const pixel = p
+          .transformBy(diagram.diagramToPixelSpaceTransform.matrix());
+        return pixel.add(new Point(diagram.canvas.left, diagram.canvas.top));
+      };
       diagrams[key] = diagram;
     });
   });
@@ -166,88 +178,88 @@ describe('Diagram', () => {
     d.add('square', square);
     expect(d.elements.order).toHaveLength(1);
   });
-  describe('pageToClip', () => {
-    test('Landscape center at origin', () => {
-      const d = diagrams.landscapeCenter;
-      // top left of canvas of diagram1 should be -1, 1
-      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
-      // bottom right
-      expect(d.pageToClip(new Point(1100, 700))).toEqual(new Point(1, -1));
-      // middle
-      expect(d.pageToClip((new Point(600, 450))).round()).toEqual(new Point(0, 0));
-    });
-    test('Landscape all positive', () => {
-      const d = diagrams.landscapeOffset;
-      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 2));
-      expect(d.pageToClip(new Point(1100, 700))).toEqual(new Point(4, 0));
-      expect(d.pageToClip((new Point(600, 450))).round()).toEqual(new Point(2, 1));
-    });
-    test('Portrait center at origin', () => {
-      const d = diagrams.portraitCenter;
-      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
-      expect(d.pageToClip(new Point(600, 1200))).toEqual(new Point(1, -1));
-      expect(d.pageToClip((new Point(350, 700))).round()).toEqual(new Point(0, 0));
-    });
-    test('Landscape center at positive', () => {
-      const d = diagrams.portraitOffset;
-      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 4));
-      expect(d.pageToClip(new Point(600, 1200))).toEqual(new Point(2, 0));
-      expect(d.pageToClip((new Point(350, 700))).round()).toEqual(new Point(1, 2));
-    });
-    test('Square center at origin', () => {
-      const d = diagrams.squareCenter;
-      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
-      expect(d.pageToClip(new Point(1100, 1200))).toEqual(new Point(1, -1));
-      expect(d.pageToClip((new Point(600, 700))).round()).toEqual(new Point(0, 0));
-    });
-    test('Square center at positive', () => {
-      const d = diagrams.squareOffset;
-      expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 4));
-      expect(d.pageToClip(new Point(1100, 1200))).toEqual(new Point(4, 0));
-      expect(d.pageToClip((new Point(600, 700))).round()).toEqual(new Point(2, 2));
-    });
-  });
-  describe('clipToPage', () => {
-    test('Landscape center at origin', () => {
-      const d = diagrams.landscapeCenter;
-      // top left of canvas of diagram1 should be -1, 1
-      expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
-      // bottom right
-      expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(1100, 700));
-      // middle
-      expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(600, 450));
-    });
-    test('Landscape all positive', () => {
-      const d = diagrams.landscapeOffset;
-      expect(d.clipToPage(new Point(0, 2))).toEqual(new Point(100, 200));
-      expect(d.clipToPage(new Point(4, 0))).toEqual(new Point(1100, 700));
-      expect(d.clipToPage((new Point(2, 1))).round()).toEqual(new Point(600, 450));
-    });
-    test('Portrait center at origin', () => {
-      const d = diagrams.portraitCenter;
-      expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
-      expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(600, 1200));
-      expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(350, 700));
-    });
-    test('Landscape center at positive', () => {
-      const d = diagrams.portraitOffset;
-      expect(d.clipToPage(new Point(0, 4))).toEqual(new Point(100, 200));
-      expect(d.clipToPage(new Point(2, 0))).toEqual(new Point(600, 1200));
-      expect(d.clipToPage((new Point(1, 2))).round()).toEqual(new Point(350, 700));
-    });
-    test('Square center at origin', () => {
-      const d = diagrams.squareCenter;
-      expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
-      expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(1100, 1200));
-      expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(600, 700));
-    });
-    test('Square center at positive', () => {
-      const d = diagrams.squareOffset;
-      expect(d.clipToPage(new Point(0, 4))).toEqual(new Point(100, 200));
-      expect(d.clipToPage(new Point(4, 0))).toEqual(new Point(1100, 1200));
-      expect(d.clipToPage((new Point(2, 2))).round()).toEqual(new Point(600, 700));
-    });
-  });
+  // describe('pageToClip', () => {
+  //   test.only('Landscape center at origin', () => {
+  //     const d = diagrams.landscapeCenter;
+  //     // top left of canvas of diagram1 should be -1, 1
+  //     expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
+  //     // bottom right
+  //     expect(d.pageToClip(new Point(1100, 700))).toEqual(new Point(1, -1));
+  //     // middle
+  //     expect(d.pageToClip((new Point(600, 450))).round()).toEqual(new Point(0, 0));
+  //   });
+  //   test('Landscape all positive', () => {
+  //     const d = diagrams.landscapeOffset;
+  //     expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 2));
+  //     expect(d.pageToClip(new Point(1100, 700))).toEqual(new Point(4, 0));
+  //     expect(d.pageToClip((new Point(600, 450))).round()).toEqual(new Point(2, 1));
+  //   });
+  //   test('Portrait center at origin', () => {
+  //     const d = diagrams.portraitCenter;
+  //     expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
+  //     expect(d.pageToClip(new Point(600, 1200))).toEqual(new Point(1, -1));
+  //     expect(d.pageToClip((new Point(350, 700))).round()).toEqual(new Point(0, 0));
+  //   });
+  //   test('Landscape center at positive', () => {
+  //     const d = diagrams.portraitOffset;
+  //     expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 4));
+  //     expect(d.pageToClip(new Point(600, 1200))).toEqual(new Point(2, 0));
+  //     expect(d.pageToClip((new Point(350, 700))).round()).toEqual(new Point(1, 2));
+  //   });
+  //   test('Square center at origin', () => {
+  //     const d = diagrams.squareCenter;
+  //     expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(-1, 1));
+  //     expect(d.pageToClip(new Point(1100, 1200))).toEqual(new Point(1, -1));
+  //     expect(d.pageToClip((new Point(600, 700))).round()).toEqual(new Point(0, 0));
+  //   });
+  //   test('Square center at positive', () => {
+  //     const d = diagrams.squareOffset;
+  //     expect(d.pageToClip(new Point(100, 200))).toEqual(new Point(0, 4));
+  //     expect(d.pageToClip(new Point(1100, 1200))).toEqual(new Point(4, 0));
+  //     expect(d.pageToClip((new Point(600, 700))).round()).toEqual(new Point(2, 2));
+  //   });
+  // });
+  // describe('clipToPage', () => {
+  //   test('Landscape center at origin', () => {
+  //     const d = diagrams.landscapeCenter;
+  //     // top left of canvas of diagram1 should be -1, 1
+  //     expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
+  //     // bottom right
+  //     expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(1100, 700));
+  //     // middle
+  //     expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(600, 450));
+  //   });
+  //   test('Landscape all positive', () => {
+  //     const d = diagrams.landscapeOffset;
+  //     expect(d.clipToPage(new Point(0, 2))).toEqual(new Point(100, 200));
+  //     expect(d.clipToPage(new Point(4, 0))).toEqual(new Point(1100, 700));
+  //     expect(d.clipToPage((new Point(2, 1))).round()).toEqual(new Point(600, 450));
+  //   });
+  //   test('Portrait center at origin', () => {
+  //     const d = diagrams.portraitCenter;
+  //     expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
+  //     expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(600, 1200));
+  //     expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(350, 700));
+  //   });
+  //   test('Landscape center at positive', () => {
+  //     const d = diagrams.portraitOffset;
+  //     expect(d.clipToPage(new Point(0, 4))).toEqual(new Point(100, 200));
+  //     expect(d.clipToPage(new Point(2, 0))).toEqual(new Point(600, 1200));
+  //     expect(d.clipToPage((new Point(1, 2))).round()).toEqual(new Point(350, 700));
+  //   });
+  //   test('Square center at origin', () => {
+  //     const d = diagrams.squareCenter;
+  //     expect(d.clipToPage(new Point(-1, 1))).toEqual(new Point(100, 200));
+  //     expect(d.clipToPage(new Point(1, -1))).toEqual(new Point(1100, 1200));
+  //     expect(d.clipToPage((new Point(0, 0))).round()).toEqual(new Point(600, 700));
+  //   });
+  //   test('Square center at positive', () => {
+  //     const d = diagrams.squareOffset;
+  //     expect(d.clipToPage(new Point(0, 4))).toEqual(new Point(100, 200));
+  //     expect(d.clipToPage(new Point(4, 0))).toEqual(new Point(1100, 1200));
+  //     expect(d.clipToPage((new Point(2, 2))).round()).toEqual(new Point(600, 700));
+  //   });
+  // });
   describe('Test square locations', () => {
     // Show all squares are at the same clip location independent of canvas
     // and diagram offsets
@@ -276,88 +288,89 @@ describe('Diagram', () => {
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const a = d.elements._a;
-      expect(a.isBeingTouched(new Point(-0.249, -0.249))).toBe(true);
-      expect(a.isBeingTouched(new Point(0.249, 0.249))).toBe(true);
-      expect(a.isBeingTouched(new Point(-0.251, -0.251))).toBe(false);
-      expect(a.isBeingTouched(new Point(0.251, 0.251))).toBe(false);
+      expect(a.isBeingTouched(d.dToGL(-0.249, -0.249))).toBe(true);
+      expect(a.isBeingTouched(d.dToGL(0.249, 0.249))).toBe(true);
+      expect(a.isBeingTouched(d.dToGL(-0.251, -0.251))).toBe(false);
+      expect(a.isBeingTouched(d.dToGL(0.251, 0.251))).toBe(false);
     });
     test('B Landscape Origin', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const b = d.elements._b;
-      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
-      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
-      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
-      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(1.26, 1.26))).toBe(false);
     });
     test('C Landscape Origin', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
       d.draw(0);
       const c = d.elements._c;
-      expect(c.isBeingTouched(new Point(0.001, 0.001))).toBe(true);
-      expect(c.isBeingTouched(new Point(0.99, 0.99))).toBe(true);
-      expect(c.isBeingTouched(new Point(-0.001, -0.001))).toBe(false);
-      expect(c.isBeingTouched(new Point(1.01, 1.01))).toBe(false);
+      expect(c.isBeingTouched(d.dToGL(0.001, 0.001))).toBe(true);
+      expect(c.isBeingTouched(d.dToGL(0.99, 0.99))).toBe(true);
+      expect(c.isBeingTouched(d.dToGL(-0.001, -0.001))).toBe(false);
+      expect(c.isBeingTouched(d.dToGL(1.01, 1.01))).toBe(false);
     });
     test('B Landscape Offset', () => {
       // canvasW=1000, canvasH=500, clipL=0, clipW=4, clipT=2, clipH=2
+      // b: square, center=(1, 1), sideLength=0.5
       const d = diagrams.landscapeOffset;
       d.draw(0);
       const b = d.elements._b;
-      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
-      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
-      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
-      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(1.26, 1.26))).toBe(false);
     });
     test('C Landscape Offset', () => {
       // canvasW=1000, canvasH=500, clipL=0, clipW=4, clipT=2, clipH=2
       const d = diagrams.landscapeOffset;
       d.draw(0);
       const c = d.elements._c;
-      expect(c.isBeingTouched(new Point(0.001, 0.001))).toBe(true);
-      expect(c.isBeingTouched(new Point(0.99, 0.99))).toBe(true);
-      expect(c.isBeingTouched(new Point(-0.001, -0.001))).toBe(false);
-      expect(c.isBeingTouched(new Point(1.01, 1.01))).toBe(false);
+      expect(c.isBeingTouched(d.dToGL(0.001, 0.001))).toBe(true);
+      expect(c.isBeingTouched(d.dToGL(0.99, 0.99))).toBe(true);
+      expect(c.isBeingTouched(d.dToGL(-0.001, -0.001))).toBe(false);
+      expect(c.isBeingTouched(d.dToGL(1.01, 1.01))).toBe(false);
     });
     test('B Portrait Origin', () => {
       // canvasW=500, canvasH=1000, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.portraitOffset;
       d.draw(0);
       const b = d.elements._b;
-      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
-      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
-      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
-      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(1.26, 1.26))).toBe(false);
     });
     test('B Portrait Offset', () => {
       // canvasW=500, canvasH=1000, clipL=0, clipW=2, clipT=4, clipH=4
       const d = diagrams.portraitOffset;
       d.draw(0);
       const b = d.elements._b;
-      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
-      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
-      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
-      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(1.26, 1.26))).toBe(false);
     });
     test('B Square Origin', () => {
       const d = diagrams.squareOffset;
       d.draw(0);
       const b = d.elements._b;
-      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
-      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
-      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
-      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(1.26, 1.26))).toBe(false);
     });
     test('B Square Offset', () => {
       const d = diagrams.squareOffset;
       d.draw(0);
       const b = d.elements._b;
-      expect(b.isBeingTouched(new Point(0.76, 0.76))).toBe(true);
-      expect(b.isBeingTouched(new Point(1.24, 1.24))).toBe(true);
-      expect(b.isBeingTouched(new Point(0.74, 0.74))).toBe(false);
-      expect(b.isBeingTouched(new Point(1.26, 1.26))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(0.76, 0.76))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(1.24, 1.24))).toBe(true);
+      expect(b.isBeingTouched(d.dToGL(0.74, 0.74))).toBe(false);
+      expect(b.isBeingTouched(d.dToGL(1.26, 1.26))).toBe(false);
     });
   });
   describe('Touch down', () => {
@@ -404,18 +417,20 @@ describe('Diagram', () => {
     test('Move just A on Landscape Center', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
+      d.initialize()
       d.draw(0);
 
       // Touch A
-      const t1 = d.clipToPage(new Point(-0.001, -0.001));
-
+      const t1 = d.dToP(new Point(-0.001, -0.001));
+      // console.log(new Point(-0.001, -0.001).transformBy(d.diagramToPixelSpaceTransform.matrix()))
+      // console.log(t1)
       // Move to 0.25, 0.25
-      const t2 = d.clipToPage(new Point(0.25, 0.25));
+      const t2 = d.dToP(new Point(0.25, 0.25));
       // A center will move to 0.25, 0.25
       const a2 = new Point(0.25, 0.25);
 
       // Move to 2, 0.25
-      const t3 = d.clipToPage(new Point(2, 0.25));
+      const t3 = d.dToP(new Point(2, 0.25));
       // A center will move to 0.75, 0.25 as will be clipped by canvas
       const a3 = new Point(0.75, 0.25);
 
@@ -438,20 +453,21 @@ describe('Diagram', () => {
     test('Move A and C on Landscape Center', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
+      d.initialize()
       d.draw(0);
 
       // Touch A and C
-      const t1 = d.clipToPage(new Point(0.001, 0.001));
+      const t1 = d.dToP(new Point(0.001, 0.001));
 
       // Move to 0.25, 0.25
-      const t2 = d.clipToPage(new Point(-0.25, -0.25));
+      const t2 = d.dToP(new Point(-0.25, -0.25));
       // A center will move to -0.25, -0.25
       const a2 = new Point(-0.25, -0.25);
       // C corner will move to (-0.25, -0.25), and center to (0.25, 0.25)
       const c2 = new Point(0.25, 0.25);
 
       // Move to -2, -2
-      const t3 = d.clipToPage(new Point(-2, -2));
+      const t3 = d.dToP(new Point(-2, -2));
       // A will get stuck at -0.75, -0.75
       const a3 = new Point(-0.75, -0.75);
       // C will get stuck at -0.5, -0.5
@@ -479,28 +495,29 @@ describe('Diagram', () => {
     test('Move A and C on Landscape Offset', () => {
       // canvasW=1000, canvasH=500, clipL=0, clipW=4, clipT=2, clipH=2
       const d = diagrams.landscapeOffset;
+      d.initialize();
       d.draw(0);
 
       // Touch A and C
-      const t0 = d.clipToPage(new Point(0.001, 0.001));
+      const t0 = d.dToP(new Point(0.001, 0.001));
       const a0 = new Point(0, 0);
       const c0 = new Point(0.5, 0.5);
 
       // Very small movement, will clip A back to in border, and touch
       // will now be in corner and not center of A
-      const t1 = d.clipToPage(new Point(0.002, 0.002));
+      const t1 = d.dToP(new Point(0.002, 0.002));
       const a1 = new Point(0.25, 0.25);
       const c1 = new Point(0.5, 0.5);
 
       // Move to 0.25, 0.25
-      const t2 = d.clipToPage(new Point(0.25, 0.25));
+      const t2 = d.dToP(new Point(0.25, 0.25));
       // A corner will move to (0.25, 0.25) and center to (0.5, 0.5)
       const a2 = new Point(0.5, 0.5);
       // C corner will move to (0.25, 0.25), and center to (0.75, 0.75)
       const c2 = new Point(0.75, 0.75);
 
       // Move to 4, 4
-      const t3 = d.clipToPage(new Point(4, 4));
+      const t3 = d.dToP(new Point(4, 4));
       // A will get stuck at 3.75, 1.75
       const a3 = new Point(3.75, 1.75);
       // C will get stuck at 3.5, 1.5
@@ -536,28 +553,29 @@ describe('Diagram', () => {
     test('Move A and C on Portrait Offset', () => {
       // canvasW=500, canvasH=1000, clipL=0, clipW=2, clipT=4, clipH=4
       const d = diagrams.portraitOffset;
+      d.initialize();
       d.draw(0);
 
       // Touch A and C
-      const t0 = d.clipToPage(new Point(0.001, 0.001));
+      const t0 = d.dToP(new Point(0.001, 0.001));
       const a0 = new Point(0, 0);
       const c0 = new Point(0.5, 0.5);
 
       // Very small movement, will clip A back to in border, and touch
       // will now be in corner and not center of A
-      const t1 = d.clipToPage(new Point(0.002, 0.002));
+      const t1 = d.dToP(new Point(0.002, 0.002));
       const a1 = new Point(0.25, 0.25);
       const c1 = new Point(0.5, 0.5);
 
       // Move to 0.25, 0.25
-      const t2 = d.clipToPage(new Point(0.25, 0.25));
+      const t2 = d.dToP(new Point(0.25, 0.25));
       // A corner will move to (0.25, 0.25) and center to (0.5, 0.5)
       const a2 = new Point(0.5, 0.5);
       // C corner will move to (0.25, 0.25), and center to (0.75, 0.75)
       const c2 = new Point(0.75, 0.75);
 
       // Move to 4, 4
-      const t3 = d.clipToPage(new Point(4, 4));
+      const t3 = d.dToP(new Point(4, 4));
       // A will get stuck at 1.75, 3.75
       const a3 = new Point(1.75, 3.75);
       // C will get stuck at 1.5, 3.5
@@ -596,17 +614,18 @@ describe('Diagram', () => {
       const RealDate = Date.now;
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
+      d.initialize();
       const a = d.elements._a;
       const decel = new TransformLimit(1, 1, 0.5);
       a.move.freely.deceleration = decel;
 
       // Touch A
-      const t0 = d.clipToPage(new Point(-0.001, -0.001));
-      const t1 = d.clipToPage(new Point(0, 0));
+      const t0 = d.dToP(new Point(-0.001, -0.001));
+      const t1 = d.dToP(new Point(0, 0));
 
       // Move to 0.07, 0.07 in 0.1s - so velocity should be 0.7 clip unit / s
       // for each component, which is 0.989
-      const t2 = d.clipToPage(new Point(0.07, 0.07));
+      const t2 = d.dToP(new Point(0.07, 0.07));
       // A center will move to 0.07, 0.07
       const a2 = new Point(0.07, 0.07);
       const v2 = new Point(0.7, 0.7);

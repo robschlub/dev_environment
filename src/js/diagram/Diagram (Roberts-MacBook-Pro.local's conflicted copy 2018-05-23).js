@@ -299,6 +299,7 @@ class Diagram {
 
     this.glToPixelSpaceTransform =
       spaceToSpaceTransform(glSpace, pixelSpace);
+    console.log("pixel transform", this.glToPixelSpaceTransform)
   }
 
   initialize() {
@@ -325,9 +326,9 @@ class Diagram {
   touchDownHandler(clientPoint: Point) {
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
-    // console.log(pixelPoint)
+    console.log(pixelPoint)
     const glPoint = pixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
-    // console.log(glPoint.transformBy(this.glToDiagramSpaceTransform.matrix()))
+    console.log(glPoint)
     // const clipPoint = this.clientToClip(clientPoint);
 
     // Get all the diagram elements that were touched at this point (element

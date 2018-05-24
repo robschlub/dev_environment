@@ -787,8 +787,13 @@ class DiagramElement {
 
     const rect = this.getRelativeGLBoundingRect();
 
-    const minPoint = new Point(rect.left, rect.bottom).transformBy(glToDiagramSpace.matrix());
-    const maxPoint = new Point(rect.right, rect.top).transformBy(glToDiagramSpace.matrix());
+    const glToDiagramScaleMatrix = [
+      glToDiagramSpace.matrix()[0], 0, 0,
+      0, glToDiagramSpace.matrix()[4], 0,
+      0, 0, 1];
+
+    const minPoint = new Point(rect.left, rect.bottom).transformBy(glToDiagramScaleMatrix);
+    const maxPoint = new Point(rect.right, rect.top).transformBy(glToDiagramScaleMatrix);
 
     const min = new Point(0, 0);
     const max = new Point(0, 0);

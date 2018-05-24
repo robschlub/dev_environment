@@ -19,6 +19,11 @@ class DrawContext2D {
       font: () => {},
       textAlign: () => {},
       textBaseline: () => {},
+      clearRect: () => {},
+      canvas: {
+        width,
+        height,
+      },
       filledText: {
         text: '',
         x: null,
