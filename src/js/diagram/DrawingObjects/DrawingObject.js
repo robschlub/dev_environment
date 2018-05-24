@@ -1,6 +1,6 @@
 // @flow
 
-import { Point, Rect, getBoundingRect } from './tools/g2';
+import { Point, Rect, getBoundingRect } from '../tools/g2';
 
 // A Drawing object can be:
 //  - GL primitive vertices

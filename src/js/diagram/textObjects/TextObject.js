@@ -2,7 +2,7 @@
 
 import * as m2 from '../tools/m2';
 import { Point } from '../tools/g2';
-import DrawingObject from '../DrawingObject';
+import DrawingObject from '../DrawingObjects/DrawingObject';
 import DrawContext2D from '../DrawContext2D';
 
 // DiagramFont defines the font properties to be used in a TextObject

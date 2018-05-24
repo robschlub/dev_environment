@@ -2,7 +2,7 @@
 
 // import * as m2 from '../tools/m2';
 import { Point, spaceToSpaceTransform } from '../tools/g2';
-import DrawingObject from '../DrawingObject';
+import DrawingObject from '../DrawingObjects/DrawingObject';
 
 
 class HTMLObject extends DrawingObject {

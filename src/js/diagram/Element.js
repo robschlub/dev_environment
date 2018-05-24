@@ -6,7 +6,7 @@ import {
 } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './textObjects/HtmlObject';
-import DrawingObject from './DrawingObject';
+import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './vertexObjects/vertexObject';
 
 // Planned Animation
