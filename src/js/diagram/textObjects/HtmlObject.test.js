@@ -1,6 +1,5 @@
 import HTMLObject from './HtmlObject';
 import { Point, Transform, Rect } from '../tools/g2';
-import { round } from '../tools/mathtools';
 
 describe('Diagram HTML Object', () => {
   let parentDiv;
