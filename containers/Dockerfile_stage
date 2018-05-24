@@ -5,7 +5,7 @@
 # 
 # Is build on python base image (instead of nodepy like in dev) 
 
-FROM python:3.6.4-slim
+FROM python:3.6.5-slim
 
 WORKDIR /opt/app
 
