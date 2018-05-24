@@ -417,7 +417,7 @@ describe('Diagram', () => {
     test('Move just A on Landscape Center', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
-      d.initialize()
+      d.initialize();
       d.draw(0);
 
       // Touch A
@@ -453,7 +453,7 @@ describe('Diagram', () => {
     test('Move A and C on Landscape Center', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
       const d = diagrams.landscapeCenter;
-      d.initialize()
+      d.initialize();
       d.draw(0);
 
       // Touch A and C

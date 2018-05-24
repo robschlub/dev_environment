@@ -3,7 +3,7 @@ import {
   DiagramElementCollection,
   AnimationPhase,
 } from './Element';
-import { Point, Transform, TransformLimit, Rect } from './tools/g2';
+import { Point, Transform, TransformLimit } from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import VertexPolygon from './vertexObjects/VertexPolygon';
 import { linear, round } from './tools/mathtools';
@@ -870,7 +870,7 @@ describe('Animationa and Movement', () => {
         .translate(0.5, 0));
       collection.add('square', square);
       collection.setFirstTransform(new Transform());
-      
+
       const box = collection.getGLBoundingRect();
       expect(round(box.left, 3)).toEqual(-0.105 + 0.5);
       expect(round(box.bottom, 3)).toEqual(-0.105);
