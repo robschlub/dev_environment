@@ -158,5 +158,6 @@ $_lesson_vars: (
 
 #section1__lower {
   background-color: rgba($color_diagram, 0.4);
-  margin-top: calc(var(--lesson__content-height) * 0.5);
+  // margin-top: calc(var(--lesson__content-height) * 0.5);
+  margin-top: 35%;
 }
