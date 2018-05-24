@@ -7,7 +7,7 @@ describe('HTML Equation', () => {
   test('EquationText', () => {
     const t = new EquationText('test', 'id1', 'c1');
     const rendered = t.render();
-    const expected = '<div id="id1" class="equation_text c1">\n  test\n</div>';
+    const expected = '<div id="id1" class="equation_text equation_element c1">\n  test\n</div>';
     expect(rendered).toBe(expected);
   });
   test('EquationElement', () => {
@@ -17,13 +17,13 @@ describe('HTML Equation', () => {
 
     const expected =
 `<div id="id_e1" class="equation_element class_e1">
-  <div id="id1" class="equation_text c1">
+  <div id="id1" class="equation_text equation_element c1">
     a+b
   </div>
-  <div id="id2" class="equation_text c2">
+  <div id="id2" class="equation_text equation_element c2">
     =
   </div>
-  <div id="id3" class="equation_text c3">
+  <div id="id3" class="equation_text equation_element c3">
     c
   </div>
 </div>`;
@@ -56,7 +56,7 @@ describe('HTML Equation', () => {
 `<div id="id_f1" class="fraction equation_element class_f1">
   <div class="numerator element">
     <div id="id_n1" class="equation_element class_n1">
-      <div  class="equation_text ">
+      <div  class="equation_text equation_element ">
         a + b
       </div>
     </div>
@@ -64,7 +64,7 @@ describe('HTML Equation', () => {
   <div class="fraction_line"> </div>
   <div class="denominator element">
     <div id="id_d1" class="equation_element class_d1">
-      <div  class="equation_text ">
+      <div  class="equation_text equation_element ">
         c
       </div>
     </div>
@@ -77,7 +77,7 @@ describe('HTML Equation', () => {
       const e = new Equation('e1').text('a + b = c');
       const expected =
 `<div id="e1" class="equation ">
-  <div  class="equation_text ">
+  <div  class="equation_text equation_element ">
     a + b = c
   </div>
 </div>`;

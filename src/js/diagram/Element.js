@@ -769,6 +769,7 @@ class DiagramElement {
     if (!this.isMovable) {
       return;
     }
+
     const glSpace = {
       x: { bottomLeft: -1, width: 2 },
       y: { bottomLeft: -1, height: 2 },
@@ -786,7 +787,6 @@ class DiagramElement {
     const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
 
     const rect = this.getRelativeGLBoundingRect();
-
     const glToDiagramScaleMatrix = [
       glToDiagramSpace.matrix()[0], 0, 0,
       0, glToDiagramSpace.matrix()[4], 0,

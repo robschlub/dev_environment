@@ -310,10 +310,10 @@ class ShapesCollection extends DiagramElementCollection {
     const n = new EquationText('a + b');
     const d = new EquationText('c');
     const f = new EquationFraction(n, d);
-    const ee = new EquationElement([f, new EquationText('='),new EquationText('c') ])
+    const ee = new EquationElement([f, new EquationText('='),new EquationText('c') ]);
     const e = new Equation('eq1', [ee]);
     this.diagram.htmlCanvas.appendChild(e.htmlElement());
-    const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(-0.5, -0.5), 'middle', 'center');
+    const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
     const ehp = new DiagramElementPrimative(
       eh,
       new Transform().translate(0, 0),
