@@ -95,5 +95,4 @@ ADD containers/dev/dev-server.sh .
 # Use this is you want to load straight into flask
 # CMD ["flask", "run", "--host=0.0.0.0"]
 
-
 ENTRYPOINT ["bash"]

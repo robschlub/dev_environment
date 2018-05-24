@@ -12,7 +12,7 @@ import VertexPolyLine from '../../vertexObjects/VertexPolyLine';
 
 class CartesianPlot extends DiagramElementCollection {
   props: CartesianPlotProperties;
-  boundingBox: { min: Point, max: Point };
+  glBoundingRect: Rect;
 
   constructor(
     webgl: WebGLInstance,
@@ -49,61 +49,63 @@ class CartesianPlot extends DiagramElementCollection {
         diagramLimits,
       ));
     }
+    this.touchInBoundingRect = true;
 
-    this.boundingBox = this.getRelativeBoundingBox();
-    this.updateMoveTranslationBoundary();
+    // this.glBoundingRect = this.getGLBoundingRect();
+    // this.updateMoveTranslationBoundary();
   }
 
-  updateLimits(limits: Rect) {
-    super.updateLimits(limits);
-    this.boundingBox = this.getRelativeBoundingBox();
-    this.updateMoveTranslationBoundary();
-  }
+  // updateLimits(limits: Rect) {
+  //   super.updateLimits(limits);
+  //   this.glBoundingRect = this.getGLBoundingRect();
+  //   this.updateMoveTranslationBoundary();
+  // }
 
-  isBeingTouched(clipLocation: Point) {
-    if (!this.isTouchable) {
-      return false;
-    }
-    let { min, max } = this.boundingBox;
-    const t = this.transform.t();
+  // isBeingTouched(glLocation: Point) {
+  //   if (!this.isTouchable) {
+  //     return false;
+  //   }
+  //   // let { min, max } = this.glBoundingRect;
+  //   // const t = this.transform.t();
 
-    if (t instanceof Point) {
-      min = min.add(t);
-      max = max.add(t);
-    }
-    if (clipLocation.x <= max.x
-      && clipLocation.x >= min.x
-      && clipLocation.y <= max.y
-      && clipLocation.y >= min.y) {
-      return true;
-    }
-    return false;
-  }
+  //   // if (t instanceof Point) {
+  //   //   min = min.add(t);
+  //   //   max = max.add(t);
+  //   // }
+  //   console.log(this.glBoundingRect)
+  //   if (glLocation.x <= this.glBoundingRect.right
+  //     && glLocation.x >= this.glBoundingRect.left
+  //     && glLocation.y <= this.glBoundingRect.top
+  //     && glLocation.y >= this.glBoundingRect.bottom) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  getTouched(clipLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
-    if (!this.isTouchable) {
-      return [];
-    }
-    let touched = [];
-    if (this.isBeingTouched(clipLocation)) {
-      touched.push(this);
-      const additionalTouched = super.getTouched(clipLocation);
-      touched = touched.concat(additionalTouched);
-      return touched;
-    }
-    // for (let i = 0; i < this.order.length; i += 1) {
-    //   const element = this.elements[this.order[i]];
-    //   if (element.show === true) {
-    //     touched = touched.concat(element.getTouched(clipLocation));
-    //   }
-    // }
-    // // If there is an element that is touched, then this collection should
-    // // also be touched.
-    // if (touched.length > 0) {
-    //   touched = [this].concat(touched);
-    // }
-    return touched;
-  }
+  // getTouched(glLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
+  //   if (!this.isTouchable) {
+  //     return [];
+  //   }
+  //   let touched = [];
+  //   if (this.isBeingTouched(glLocation)) {
+  //     touched.push(this);
+  //     const additionalTouched = super.getTouched(glLocation);
+  //     touched = touched.concat(additionalTouched);
+  //     return touched;
+  //   }
+  //   // for (let i = 0; i < this.order.length; i += 1) {
+  //   //   const element = this.elements[this.order[i]];
+  //   //   if (element.show === true) {
+  //   //     touched = touched.concat(element.getTouched(clipLocation));
+  //   //   }
+  //   // }
+  //   // // If there is an element that is touched, then this collection should
+  //   // // also be touched.
+  //   // if (touched.length > 0) {
+  //   //   touched = [this].concat(touched);
+  //   // }
+  //   return touched;
+  // }
 }
 
 export default CartesianPlot;
