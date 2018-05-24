@@ -122,7 +122,10 @@ echo "${bold}${cyan}===================== Testing ======================${reset}
 docker_run "JS Testing" npm run jest
 docker_run "Python Testing" pytest
 check_status "Tests"
-sudo rm -rf tests/__pycache__
+if [ $IN_TRAVIS ];
+  then
+  sudo rm -rf tests/__pycache__
+fi
 
 # Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
@@ -148,10 +151,13 @@ if [ $2 ];
       APP_NAME=$HEROKU_DEV_APP_NAME
       TITLE_STRING='================= Deploying to Dev ================='
     fi
-    if [ $3 = "test" ];
+    if [ $3 ];
       then
-      APP_NAME=$HEROKU_TEST_APP_NAME;
-      TITLE_STRING='================= Deploying to Test ================='
+      if [ $3 = "test" ];
+        then
+        APP_NAME=$HEROKU_TEST_APP_NAME;
+        TITLE_STRING='================= Deploying to Test ================='
+      fi
     fi
     if [ $APP_NAME ];
       then
