@@ -12,8 +12,9 @@ function makeDiv(
   indent: number = 0,
 ) {
   const indentStr = ' '.repeat(indent);
-  const idStr = id ? `id="${id}"` : '';
-  let out = `${indentStr}<div ${idStr} class="${specialClass} ${classes}">\n`;
+  const idStr = id ? ` id="${id}"` : '';
+  const classString = classes ? ` ${classes}` : '';
+  let out = `${indentStr}<div${idStr} class="${specialClass}${classString}">\n`;
   out += `${text}\n`;
   out += `${indentStr}</div>`;
   return out;
@@ -137,17 +138,13 @@ class Equation {
     const element = document.createElement('div');
     element.setAttribute('id', this.id);
     element.innerHTML = this.elements.map(c => c.render()).join('\n');
-    // const inside = document.createTextNode("Asdf");
-    // element.appendChild(inside);
     element.classList.add('equation');
     const classes = this.classes.split(' ');
     classes.forEach((c) => {
-      // console.log(c)
       if (c) {
         element.classList.add(c);
       }
     });
-    // element.classList.add(this.classes);
     return element;
   }
 
