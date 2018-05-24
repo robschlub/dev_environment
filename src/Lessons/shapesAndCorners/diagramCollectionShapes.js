@@ -2,7 +2,7 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { TextObject, DiagramText, DiagramFont } from '../../js/diagram/textObjects/TextObject';
+import { TextObject, DiagramText, DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 import { AxisProperties } from '../../js/diagram/DiagramElements/Plot/AxisProperties';
 import { CartesianPlotProperties, TraceProperties } from '../../js/diagram/DiagramElements/Plot/CartesianPlotProperties';
