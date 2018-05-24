@@ -151,10 +151,13 @@ if [ $2 ];
       APP_NAME=$HEROKU_DEV_APP_NAME
       TITLE_STRING='================= Deploying to Dev ================='
     fi
-    if [ $3 = "test" ];
+    if [ $3 ];
       then
-      APP_NAME=$HEROKU_TEST_APP_NAME;
-      TITLE_STRING='================= Deploying to Test ================='
+      if [ $3 = "test" ];
+        then
+        APP_NAME=$HEROKU_TEST_APP_NAME;
+        TITLE_STRING='================= Deploying to Test ================='
+      fi
     fi
     if [ $APP_NAME ];
       then
