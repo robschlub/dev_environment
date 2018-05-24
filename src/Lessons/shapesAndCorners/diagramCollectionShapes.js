@@ -10,6 +10,7 @@ import CartesianPlot from '../../js/diagram/DiagramElements/Plot/CartesianPlot';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
+import { Equation, EquationText, EquationElement, EquationFraction } from '../../js/diagram/Equation';
 
 const colors = getScssColors(styles);
 const lineColor = colors.lines;
@@ -305,6 +306,23 @@ class ShapesCollection extends DiagramElementCollection {
 
     const plot = makePlot(this.diagram);
     this.add('plot', plot);
+
+    const n = new EquationText('a + b');
+    const d = new EquationText('c');
+    const f = new EquationFraction(n, d);
+    const ee = new EquationElement([f, new EquationText('='),new EquationText('c') ])
+    const e = new Equation('eq1', [ee]);
+    this.diagram.htmlCanvas.appendChild(e.htmlElement());
+    const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(-0.5, -0.5), 'middle', 'center');
+    const ehp = new DiagramElementPrimative(
+      eh,
+      new Transform().translate(0, 0),
+      [1, 0, 0, 1],
+      this.diagram.limits,
+    );
+    ehp.isTouchable = true;
+    ehp.isMovable = true;
+    this.add('equation', ehp);
   }
 
   resize(locations: Object) {
