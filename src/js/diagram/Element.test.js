@@ -5,7 +5,7 @@ import {
 } from './Element';
 import { Point, Transform, TransformLimit } from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
-import VertexPolygon from './vertexObjects/VertexPolygon';
+import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
 import { linear, round } from './tools/mathtools';
 import * as m2 from './tools/m2';
 

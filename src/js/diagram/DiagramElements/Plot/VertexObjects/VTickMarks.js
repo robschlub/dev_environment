@@ -1,9 +1,9 @@
 // @flow
 
-import TRIParallelLines from '../../../vertexObjects/Triangles/TRIParallelLines';
+import TRIParallelLines from '../../../DrawingObjects/VertexObject/Triangles/TRIParallelLines';
 import { Point, Transform } from '../../../tools/g2';
 import WebGLInstance from '../../../webgl/webgl';
-import VertexObject from '../../../vertexObjects/vertexObject';
+import VertexObject from '../../../DrawingObjects/VertexObject/VertexObject';
 
 class VTickMarks extends VertexObject {
   constructor(

@@ -5,9 +5,9 @@ import {
   Translation, spaceToSpaceTransform, getBoundingRect,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
-import HTMLObject from './textObjects/HtmlObject';
-import DrawingObject from './DrawingObject';
-import VertexObject from './vertexObjects/vertexObject';
+import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
+import DrawingObject from './DrawingObjects/DrawingObject';
+import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 
 // Planned Animation
 class AnimationPhase {

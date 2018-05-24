@@ -8,7 +8,7 @@ import WebGLInstance from '../../webgl/webgl';
 import { CartesianPlotProperties } from './CartesianPlotProperties';
 import DrawContext2D from '../../DrawContext2D';
 import Axis from './Axis';
-import VertexPolyLine from '../../vertexObjects/VertexPolyLine';
+import VertexPolyLine from '../../DrawingObjects/VertexObject/VertexPolyLine';
 
 class CartesianPlot extends DiagramElementCollection {
   props: CartesianPlotProperties;
