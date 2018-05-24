@@ -32,10 +32,6 @@ ENV PATH="/opt/app/node_modules/.bin:${PATH}"
 
 # ## Python ##
 
-# Python packages
-ADD containers/dev/requirements_dev.txt requirements.txt
-RUN pip install -r requirements.txt
-
 # Python linting
 ADD .flake8 .
 ADD containers/dev/pytest.ini .
