@@ -122,6 +122,7 @@ echo "${bold}${cyan}===================== Testing ======================${reset}
 docker_run "JS Testing" npm run jest
 docker_run "Python Testing" pytest
 check_status "Tests"
+rm -rf tests/__pytest__
 
 # Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
