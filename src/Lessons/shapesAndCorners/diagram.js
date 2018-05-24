@@ -132,6 +132,7 @@ class LessonDiagram extends Diagram {
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);
       // return false;
     }
+
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
       center = new Point(0, 0);
@@ -140,10 +141,9 @@ class LessonDiagram extends Diagram {
     const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
     const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
     const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransformMatrix);
-
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
     const currentAngle = Math.atan2(
       currentDiagramPoint.y - center.y,
       currentDiagramPoint.x - center.x,
