@@ -65,6 +65,7 @@ class Line extends Element {
     id: string = '',
     classes: string | Array<string> = [],
   ) {
+    // eslint-disable-next-line no-use-before-define
     const t = new Text(text, id, classes);
     this.content.push(t);
     return this;
@@ -76,6 +77,7 @@ class Line extends Element {
     id: string = '',
     classes: string = '',
   ) {
+    // eslint-disable-next-line no-use-before-define
     const f = new Fraction(numerator, denominator, id, classes);
     this.content.push(f);
     return this;
@@ -86,10 +88,14 @@ class Line extends Element {
     id: string = '',
     classes: string | Array<string> = [],
   ) {
-    let c = content;
+    let c;
     if (typeof content === 'string') {
+      // eslint-disable-next-line no-use-before-define
       c = [new Text(content, '', ['superscript_text'])];
+    } else {
+      c = content;
     }
+    // eslint-disable-next-line no-use-before-define
     const line = new Superscript(c, id, classes);
     this.content.push(line);
     return this;
@@ -146,12 +152,12 @@ class Subscript extends Line {
 }
 
 class SuperAndSubscript extends Element {
-  sup: Superscript;
-  sub: Subscript;
+  sup: Superscript | Line;
+  sub: Subscript | Line;
 
   constructor(
-    sup: Superscript,
-    sub: Subscript,
+    sup: Superscript | Line,
+    sub: Subscript | Line,
     id: string = '',
     classes: string | Array<string> = '',
   ) {
@@ -232,33 +238,6 @@ class Equation extends Line {
     });
     return element;
   }
-
-  // text(text: string = '', id: string = '', classes: string = '') {
-  //   const t = new Text(text, id, classes);
-  //   this.content.push(t);
-  //   return this;
-  // }
-
-  // frac(
-  //   numerator: Line,
-  //   denominator: Line,
-  //   id: string = '',
-  //   classes: string = '',
-  // ) {
-  //   const f = new Fraction(numerator, denominator, id, classes);
-  //   this.content.push(f);
-  //   return this;
-  // }
-
-  // line(
-  //   content: Array<Element>,
-  //   id: string,
-  //   classes: string = '',
-  // ) {
-  //   const e = new line(content, id, classes);
-  //   this.content.push(e);
-  //   return this;
-  // }
 }
 
 export { Text, Line, Fraction, Equation, Superscript, Subscript, SuperAndSubscript };
@@ -268,63 +247,6 @@ export { Text, Line, Fraction, Equation, Superscript, Subscript, SuperAndSubscri
 //   tree: Object;
 //   constructor(){
 //     self.tree = {}
-//   }
-
-
-// let equ = (function() {
-
-//   function make(equation, id='', classes = ''){
-//     let out_str = '<div '+ makeIdText(id) + ' class="equation ' + classes + ' element">';
-//     out_str += equation;
-//     out_str += '</div>';
-//     return out_str;
-//   }
-
-//   function text(inputText, id='', classes = '') {
-//     let out_str = '<div '+makeIdText(id)+' class="equation_text ' + classes + ' element">';
-//     out_str += inputText;
-//     out_str += '</div>';
-//     return out_str;
-//   }
-
-//   function elem(inputText, id='', classes = '') {
-//     let out_str = '<div '+ makeIdText(id) + ' class="equation_element ' + classes + ' element">\n'
-//     out_str += text(inputText);
-//     out_str += '</div>\n'
-//     return out_str;
-//   }
-
-//   function frac(numerator, denominator, id='', classes = '') {
-//     let out_str = '<div '+ makeIdText(id) + ' class="equation_element ' + classes + ' element">\n';
-//     out_str += '<div class="fraction element">\n'
-//     out_str += '<div class="numerator element">\n';
-//     out_str += numerator;
-//     out_str += '</div>\n';
-//     out_str += '<div class="fraction_line"> </div>';
-//     out_str += '<div class="denominator element">\n';
-//     out_str += denominator;
-//     out_str += '</div>\n';
-//     out_str += '</div>\n';
-//     out_str += '</div>\n';
-//     return out_str;
-//   }
-
-//   function makeIdText(id) {
-//     return id ? 'id="'+id+'"' : '';
-//   }
-
-//   function sup(superText, id='', classes = '') {
-//     let out_str = '<div '+makeIdText(id)+' class="superscript ' + classes + ' element">';
-//     out_str += superText;
-//     out_str += '</div>';
-//     return out_str;
-//   }
-
-//   function sub(subText, id='', classes = '') {
-//     let out_str = '<div '+ makeIdText(id) + ' class="subscript ' + classes + ' element">';
-//     out_str += subText;
-//     out_str += '</div>';
-//     return out_str;
 //   }
 
 //   function sqrt(text, id='', classes = '') {

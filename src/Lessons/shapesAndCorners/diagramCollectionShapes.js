@@ -312,10 +312,10 @@ class ShapesCollection extends DiagramElementCollection {
     const sup = new equation.Superscript().text('2', '', ['superscript_text']);
     const sub = new equation.Subscript().text('2', '', ['subscript_text']);
     const ss = new equation.SuperAndSubscript(sup, sub);
-    const n = new equation.Line().text('&int;').inc([sub, sup]).text('xdx');
+    const n = new equation.Line().text('&int;').inc(ss).text('x dx');
     // n.content.push(sub);
     // n.content.push(sup);
-    
+
     const d = new equation.Line().text('c');
     d.content.push(ss);
     const e = new equation.Equation('eq1')
