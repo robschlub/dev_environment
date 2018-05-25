@@ -146,4 +146,21 @@
   // top: 0.9em;
 }
 
+.super_sub {
+  display: table-cell;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.super_sub_super {
+  display: table-row;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.super_sub_sub {
+  display: table-row;
+  padding-left: 0;
+  margin-left: 0;
+}
 

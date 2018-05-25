@@ -307,12 +307,17 @@ class ShapesCollection extends DiagramElementCollection {
     const plot = makePlot(this.diagram);
     this.add('plot', plot);
 
+    // const supText = new equation.Line.text('2', '', ['superscript_text']);
+    // const subText = new equation.Line.text('2', '', ['subscript_text']);
     const sup = new equation.Superscript().text('2', '', ['superscript_text']);
     const sub = new equation.Subscript().text('2', '', ['subscript_text']);
-    const n = new equation.Line().text('a + b');
-    n.content.push(sup);
-    n.content.push(sub);
+    const ss = new equation.SuperAndSubscript(sup, sub);
+    const n = new equation.Line().text('&int;').inc([sub, sup]).text('xdx');
+    // n.content.push(sub);
+    // n.content.push(sup);
+    
     const d = new equation.Line().text('c');
+    d.content.push(ss);
     const e = new equation.Equation('eq1')
       .frac(n, d)
       .text('=')

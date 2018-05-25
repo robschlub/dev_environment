@@ -13,7 +13,7 @@ function makeDiv(
   const indentStr = ' '.repeat(indent);
   const idStr = id ? ` id="${id}"` : '';
   const classString = classes ? ` ${classes.join(' ')}` : '';
-  let out = `${indentStr}<div${idStr} class="equation_element${classString}">\n`;
+  let out = `${indentStr}<div${idStr} class="equation_element element${classString}">\n`;
   out += `${text}\n`;
   out += `${indentStr}</div>`;
   return out;
@@ -94,6 +94,15 @@ class Line extends Element {
     this.content.push(line);
     return this;
   }
+
+  inc(content: Element | Array<Element>) {
+    if (Array.isArray(content)) {
+      this.content = this.content.concat(content);
+    } else {
+      this.content.push(content);
+    }
+    return this;
+  }
 }
 
 class Text extends Element {
@@ -133,6 +142,35 @@ class Subscript extends Line {
   ) {
     super(content, id, classes);
     this.classes.push('subscript');
+  }
+}
+
+class SuperAndSubscript extends Element {
+  sup: Superscript;
+  sub: Subscript;
+
+  constructor(
+    sup: Superscript,
+    sub: Subscript,
+    id: string = '',
+    classes: string | Array<string> = '',
+  ) {
+    super(id, classes);
+    this.classes.push('super_sub');
+    this.sup = sup;
+    this.sub = sub;
+  }
+
+  render(indent: number = 0) {
+    const s = ' '.repeat(indent + 2);
+    let out = '';
+    out += `${s}<div class="super_sub_super element">\n`;
+    out += this.sup.render(indent + 4);
+    out += `\n${s}</div>\n`;
+    out += `${s}<div class="super_sub_sub element">\n`;
+    out += this.sup.render(indent + 4);
+    out += `\n${s}</div>`;
+    return super.render(indent, out);
   }
 }
 
@@ -223,7 +261,7 @@ class Equation extends Line {
   // }
 }
 
-export { Text, Line, Fraction, Equation, Superscript, Subscript };
+export { Text, Line, Fraction, Equation, Superscript, Subscript, SuperAndSubscript };
 
 
 // class Equation {
