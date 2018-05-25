@@ -1,5 +1,5 @@
 // @flow
-
+import { Point } from './tools/g2';
 // function makeIdText(id) {
 //   return id ? `id="${id}"` : '';
 // }
@@ -22,6 +22,10 @@ function makeDiv(
 class Element {
   id: string;
   classes: Array<string>;
+  ascent: number;
+  descent: number;
+  width: number;
+  location: Point;
 
   constructor(id: string = '', classes: string | Array<string> = '') {
     this.id = id;
@@ -42,6 +46,17 @@ class Element {
       indent,
     );
   }
+
+  // eslint-disable-next-line no-unused-vars
+  calcSize(ctx: CanvasRenderingContext2D, loc: Point) {
+    this.ascent = 0;
+    this.descent = 0;
+    this.width = 0;
+  }
+
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  draw(ctx: CanvasRenderingContext2D) {
+  }
 }
 
 
@@ -61,12 +76,30 @@ class Text extends Element {
   render(indent: number = 0) {
     return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
   }
+
+  calcSize(ctx: CanvasRenderingContext2D, loc: Point) {
+    ctx.font = 'italic 20px Times New Roman';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    const m = ctx.measureText(this.text);
+    this.width = m.actualBoundingBoxRight + m.actualBoundingBoxLeft;
+    this.descent = m.actualBoundingBoxDescent;
+    this.ascent = m.actualBoundingBoxAscent;
+    this.location = loc.copy();
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.fillText(this.text, this.location.x, this.location.y);
+  }
 }
 
 
 class Fraction extends Element {
   numerator: E;
   denominator: E;
+  vSpace: number;
+  lineWidth: number;
+  lineVAboveBaseline: number;
 
   constructor(
     numerator: E,     // eslint-disable-line no-use-before-define
@@ -78,6 +111,10 @@ class Fraction extends Element {
     this.classes.push('fraction');
     this.numerator = numerator;
     this.denominator = denominator;
+
+    this.vSpace = 5;
+    this.lineVAboveBaseline = 7;
+    this.lineWidth = 1;
   }
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
@@ -90,6 +127,44 @@ class Fraction extends Element {
     out += this.denominator.render(indent + 4);
     out += `\n${s}</div>`;
     return super.render(indent, out);
+  }
+
+  calcSize(ctx: CanvasRenderingContext2D, location: Point) {
+    this.location = location.copy();
+    const loc = location.copy();
+    this.numerator.calcSize(ctx, loc);
+
+    this.denominator.calcSize(ctx, loc);
+    this.width = Math.max(this.numerator.width, this.denominator.width);
+    const xNumerator = (this.width - this.numerator.width) / 2;
+    const xDenominator = (this.width - this.denominator.width) / 2;
+    const yNumerator = this.numerator.descent +
+                       this.vSpace + this.lineVAboveBaseline;
+    const yDenominator = this.denominator.ascent +
+                         this.vSpace - this.lineVAboveBaseline;
+    this.numerator.calcSize(ctx, new Point(loc.x + xNumerator, loc.y - yNumerator));
+    this.denominator.calcSize(ctx, new Point(loc.x + xDenominator, loc.y + yDenominator));
+
+    this.descent = this.vSpace + this.lineWidth / 2 - this.lineVAboveBaseline +
+                   this.denominator.ascent + this.denominator.descent;
+    this.ascent = this.vSpace + this.lineWidth / 2 + this.lineVAboveBaseline +
+                   this.numerator.ascent + this.numerator.descent;
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    this.numerator.draw(ctx);
+    this.denominator.draw(ctx);
+    ctx.fillStyle = 'red';
+    ctx.fillRect(
+      this.location.x,
+      this.location.y - Math.floor(this.lineWidth / 2) -
+        this.lineVAboveBaseline,
+      this.width, this.lineWidth,
+    );
+    // ctx.beginPath();
+    // ctx.moveTo(this.location.x, this.location.y + this.lineVAboveBaseline);
+    // ctx.lineTo(this.width, this.location.y + this.lineVAboveBaseline);
+    // ctx.stroke();
   }
 }
 
@@ -140,6 +215,34 @@ class E extends Element {
   render(indent: number = 0) {
     return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
   }
+
+  calcSize(ctx: CanvasRenderingContext2D, location: Point) {
+    ctx.font = 'italic 20px Times New Roman';
+    let descent = 0;
+    let ascent = 0;
+    const loc = location.copy();
+    this.content.forEach((element) => {
+      element.calcSize(ctx, loc);
+      // console.log(loc)
+      loc.x += element.width;
+      if (element.descent > descent) {
+        descent = element.descent;
+      }
+      if (element.ascent > ascent) {
+        ascent = element.ascent;
+      }
+    });
+    this.width = loc.x - location.x;
+    this.ascent = ascent;
+    this.descent = descent;
+    this.location = location.copy();
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    this.content.forEach((element) => {
+      element.draw(ctx);
+    });
+  }
 }
 
 function contentToE(content: string | E): E {
@@ -178,123 +281,123 @@ function sqrt(
 }
 
 
-class Line extends Element {
-  content: Array<Element>;
+// class Line extends Element {
+//   content: Array<Element>;
 
-  constructor(
-    content: Array<Element> = [],
-    id: string = '',
-    classes: string | Array<string> = [],
-  ) {
-    super(id, classes);
-    this.content = content;
-  }
+//   constructor(
+//     content: Array<Element> = [],
+//     id: string = '',
+//     classes: string | Array<string> = [],
+//   ) {
+//     super(id, classes);
+//     this.content = content;
+//   }
 
-  render(indent: number = 0) {
-    return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
-  }
+//   render(indent: number = 0) {
+//     return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
+//   }
 
-  text(
-    text: string = '',
-    id: string = '',
-    classes: string | Array<string> = [],
-  ) {
-    // eslint-disable-next-line no-use-before-define
-    const t = new Text(text, id, classes);
-    this.content.push(t);
-    return this;
-  }
+//   text(
+//     text: string = '',
+//     id: string = '',
+//     classes: string | Array<string> = [],
+//   ) {
+//     // eslint-disable-next-line no-use-before-define
+//     const t = new Text(text, id, classes);
+//     this.content.push(t);
+//     return this;
+//   }
 
-  frac(
-    numerator: Line,
-    denominator: Line,
-    id: string = '',
-    classes: string = '',
-  ) {
-    // eslint-disable-next-line no-use-before-define
-    const f = new Fraction(numerator, denominator, id, classes);
-    this.content.push(f);
-    return this;
-  }
+//   frac(
+//     numerator: Line,
+//     denominator: Line,
+//     id: string = '',
+//     classes: string = '',
+//   ) {
+//     // eslint-disable-next-line no-use-before-define
+//     const f = new Fraction(numerator, denominator, id, classes);
+//     this.content.push(f);
+//     return this;
+//   }
 
-  sup(
-    content: string | Array<Element> = [],
-    id: string = '',
-    classes: string | Array<string> = [],
-  ) {
-    let c;
-    if (typeof content === 'string') {
-      // eslint-disable-next-line no-use-before-define
-      c = [new Text(content, '', ['superscript_text'])];
-    } else {
-      c = content;
-    }
-    // eslint-disable-next-line no-use-before-define
-    const line = new Superscript(c, id, classes);
-    this.content.push(line);
-    return this;
-  }
+//   sup(
+//     content: string | Array<Element> = [],
+//     id: string = '',
+//     classes: string | Array<string> = [],
+//   ) {
+//     let c;
+//     if (typeof content === 'string') {
+//       // eslint-disable-next-line no-use-before-define
+//       c = [new Text(content, '', ['superscript_text'])];
+//     } else {
+//       c = content;
+//     }
+//     // eslint-disable-next-line no-use-before-define
+//     const line = new Superscript(c, id, classes);
+//     this.content.push(line);
+//     return this;
+//   }
 
-  inc(content: Element | Array<Element>) {
-    if (Array.isArray(content)) {
-      this.content = this.content.concat(content);
-    } else {
-      this.content.push(content);
-    }
-    return this;
-  }
-}
+//   inc(content: Element | Array<Element>) {
+//     if (Array.isArray(content)) {
+//       this.content = this.content.concat(content);
+//     } else {
+//       this.content.push(content);
+//     }
+//     return this;
+//   }
+// }
 
-class Superscript extends Line {
-  constructor(
-    content: Array<Element> = [],
-    id: string = '',
-    classes: string | Array<string> = '',
-  ) {
-    super(content, id, classes);
-    this.classes.push('superscript');
-  }
-}
+// class Superscript extends Line {
+//   constructor(
+//     content: Array<Element> = [],
+//     id: string = '',
+//     classes: string | Array<string> = '',
+//   ) {
+//     super(content, id, classes);
+//     this.classes.push('superscript');
+//   }
+// }
 
-class Subscript extends Line {
-  constructor(
-    content: Array<Element> = [],
-    id: string = '',
-    classes: string | Array<string> = '',
-  ) {
-    super(content, id, classes);
-    this.classes.push('subscript');
-  }
-}
+// class Subscript extends Line {
+//   constructor(
+//     content: Array<Element> = [],
+//     id: string = '',
+//     classes: string | Array<string> = '',
+//   ) {
+//     super(content, id, classes);
+//     this.classes.push('subscript');
+//   }
+// }
 
-class SuperAndSubscript extends Element {
-  sup: Superscript | Line;
-  sub: Subscript | Line;
+// class SuperAndSubscript extends Element {
+//   sup: Superscript | Line;
+//   sub: Subscript | Line;
 
-  constructor(
-    sup: Superscript | Line,
-    sub: Subscript | Line,
-    id: string = '',
-    classes: string | Array<string> = '',
-  ) {
-    super(id, classes);
-    this.classes.push('super_sub');
-    this.sup = sup;
-    this.sub = sub;
-  }
+//   constructor(
+//     sup: Superscript | Line,
+//     sub: Subscript | Line,
+//     id: string = '',
+//     classes: string | Array<string> = '',
+//   ) {
+//     super(id, classes);
+//     this.classes.push('super_sub');
+//     this.sup = sup;
+//     this.sub = sub;
+//   }
 
-  render(indent: number = 0) {
-    const s = ' '.repeat(indent + 2);
-    let out = '';
-    out += `${s}<div class="super_sub_super element">\n`;
-    out += this.sup.render(indent + 4);
-    out += `\n${s}</div>\n`;
-    out += `${s}<div class="super_sub_sub element">\n`;
-    out += this.sup.render(indent + 4);
-    out += `\n${s}</div>`;
-    return super.render(indent, out);
-  }
-}
+//   render(indent: number = 0) {
+//     const s = ' '.repeat(indent + 2);
+//     let out = '';
+//     out += `${s}<div class="super_sub_super element">\n`;
+//     out += this.sup.render(indent + 4);
+//     out += `\n${s}</div>\n`;
+//     out += `${s}<div class="super_sub_sub element">\n`;
+//     out += this.sup.render(indent + 4);
+//     out += `\n${s}</div>`;
+//     return super.render(indent, out);
+//   }
+// }
 
 class Equation extends Element {
   content: E;
@@ -328,40 +431,24 @@ class Equation extends Element {
     });
     return element;
   }
-}
-class Equation1 extends Line {
-  // line: Line;
 
-  constructor(
-    id: string = '',
-    content: Array<Element> = [],
-    classes: string | Array<string> = '',
-  ) {
-    super(content, id, classes);
-    this.classes.push('equation');
+  calcSize(ctx: CanvasRenderingContext2D, location: Point) {
+    this.location = location.copy();
+    this.content.calcSize(ctx, location.copy());
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  render(indent: number = 0) {
-    return super.render(indent);
-    // return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
-    // return super.render(indent, this.line.render(indent + 2));
-  }
-
-  htmlElement() {
-    const element = document.createElement('div');
-    element.setAttribute('id', this.id);
-    element.innerHTML = this.content.map(c => c.render()).join('');
-    this.classes.forEach((c) => {
-      if (c) {
-        element.classList.add(c);
-      }
-    });
-    return element;
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    ctx.font = '20px';
+    ctx.fillStyle = 'rgba(255,0,0,255)';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    this.content.draw(ctx);
+    ctx.restore();
   }
 }
 
-export { Text, Line, Fraction, Equation, Superscript, Subscript, SuperAndSubscript, e, frac, sqrt };
+export { Text, Fraction, Equation, e, frac, sqrt };
 
 
 // class Equation {

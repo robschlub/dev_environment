@@ -309,9 +309,9 @@ class ShapesCollection extends DiagramElementCollection {
 
     // const supText = new equation.Line.text('2', '', ['superscript_text']);
     // const subText = new equation.Line.text('2', '', ['subscript_text']);
-    const sup = new e.Superscript().text('2', '', ['superscript_text']);
-    const sub = new e.Subscript().text('2', '', ['subscript_text']);
-    const ss = new e.SuperAndSubscript(sup, sub);
+    // const sup = new e.Superscript().text('2', '', ['superscript_text']);
+    // const sub = new e.Subscript().text('2', '', ['subscript_text']);
+    // const ss = new e.SuperAndSubscript(sup, sub);
     // const n = new e.Line().text('&int;').inc(ss).text('x dx');
     // n.content.push(sub);
     // n.content.push(sup);
@@ -323,10 +323,11 @@ class ShapesCollection extends DiagramElementCollection {
     //   .text('=')
     //   .text('c');
     // const n = e.e([e.e('b');
-    const d = e.e('2');
+    const d = e.e('2AC');
     // const eq = new e.Equation(e.frac(n, d), 'eq1');
-    const n = e.e([e.e('b'), e.e('&#177;'), e.sqrt('4ac')]);
+    const n = e.e([e.e('b2'), e.e('4AC')]);
     const eq = new e.Equation([e.frac(n, d), e.e('='), e.e('0')], 'eq1');
+    this.eq = eq;
     console.log(eq)
     console.log(eq.htmlElement())
     this.diagram.htmlCanvas.appendChild(eq.htmlElement());
@@ -379,7 +380,6 @@ class ShapesCollection extends DiagramElementCollection {
       this.toggleLessSharpCorners(false, false);
     }
     this.diagram.animateNextFrame();
-    // this._text.vertices.calcBorder()
   }
 
   toggleMoreSharpCorners(toggle: boolean = true, show: boolean = true) {
