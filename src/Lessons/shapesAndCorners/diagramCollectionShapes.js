@@ -307,8 +307,10 @@ class ShapesCollection extends DiagramElementCollection {
     const plot = makePlot(this.diagram);
     this.add('plot', plot);
 
-    const n = new equation.Line([new equation.Text('a + b')]);
-    const d = new equation.Line([new equation.Text('c')]);
+    // const n = new equation.Line([new equation.Text('a + b')]);
+    const n = new equation.Line().text('a + b');
+    // const d = new equation.Line([new equation.Text('c')]);
+    const d = new equation.Line().text('c');
     const f = new equation.Fraction(n, d);
     const ee = new equation.Line([
       f,

@@ -48,7 +48,7 @@ class Line extends Element {
   content: Array<Element>;
 
   constructor(
-    content: Array<Element>,
+    content: Array<Element> = [],
     id: string = '',
     classes: string | Array<string> = [],
   ) {
@@ -60,11 +60,15 @@ class Line extends Element {
     return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
   }
 
-  // text(text: string = '', id: string = '', classes: string = []) {
-  //   const t = new Text(text, id, classes);
-  //   this.content.push(t);
-  //   return this;
-  // }
+  text(
+    text: string = '',
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    const t = new Text(text, id, classes);
+    this.content.push(t);
+    return this;
+  }
 }
 
 class Text extends Element {
