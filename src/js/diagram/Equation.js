@@ -1,5 +1,6 @@
 // @flow
 import { Point } from './tools/g2';
+import { DiagramElementPrimative, DiagramElementCollection } from './Element';
 // function makeIdText(id) {
 //   return id ? `id="${id}"` : '';
 // }
@@ -48,7 +49,7 @@ class Element {
   }
 
   // eslint-disable-next-line no-unused-vars
-  calcSize(ctx: CanvasRenderingContext2D, loc: Point) {
+  calcSize(loc: Point, ctx: CanvasRenderingContext2D) {
     this.ascent = 0;
     this.descent = 0;
     this.width = 0;
@@ -62,22 +63,28 @@ class Element {
 
 class Text extends Element {
   text: string;
+  textObject: DiagramElementPrimative | DiagramElementCollection;
 
   constructor(
-    text: string = '',
+    text: string | DiagramElementPrimative | DiagramElementCollection = '',
     id: string = '',
     classes: string | Array<string> = [],
   ) {
     super(id, classes);
     this.classes.push('equation_text');
-    this.text = text;
+    this.text = '';
+    if (typeof text === 'string') {
+      this.text = text;
+    } else {
+      this.textObject = text;
+    }
   }
 
   render(indent: number = 0) {
     return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
   }
 
-  calcSize(ctx: CanvasRenderingContext2D, loc: Point) {
+  calcSize(loc: Point, ctx: CanvasRenderingContext2D) {
     ctx.font = 'italic 20px Times New Roman';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
@@ -129,12 +136,12 @@ class Fraction extends Element {
     return super.render(indent, out);
   }
 
-  calcSize(ctx: CanvasRenderingContext2D, location: Point) {
+  calcSize(location: Point, ctx: CanvasRenderingContext2D) {
     this.location = location.copy();
     const loc = location.copy();
-    this.numerator.calcSize(ctx, loc);
+    this.numerator.calcSize(loc, ctx);
 
-    this.denominator.calcSize(ctx, loc);
+    this.denominator.calcSize(loc, ctx);
     this.width = Math.max(this.numerator.width, this.denominator.width);
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
@@ -142,8 +149,8 @@ class Fraction extends Element {
                        this.vSpace + this.lineVAboveBaseline;
     const yDenominator = this.denominator.ascent +
                          this.vSpace - this.lineVAboveBaseline;
-    this.numerator.calcSize(ctx, new Point(loc.x + xNumerator, loc.y - yNumerator));
-    this.denominator.calcSize(ctx, new Point(loc.x + xDenominator, loc.y + yDenominator));
+    this.numerator.calcSize(new Point(loc.x + xNumerator, loc.y - yNumerator), ctx);
+    this.denominator.calcSize(new Point(loc.x + xDenominator, loc.y + yDenominator), ctx);
 
     this.descent = this.vSpace + this.lineWidth / 2 - this.lineVAboveBaseline +
                    this.denominator.ascent + this.denominator.descent;
@@ -216,13 +223,13 @@ class E extends Element {
     return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
   }
 
-  calcSize(ctx: CanvasRenderingContext2D, location: Point) {
+  calcSize(location: Point, ctx: CanvasRenderingContext2D) {
     ctx.font = 'italic 20px Times New Roman';
     let descent = 0;
     let ascent = 0;
     const loc = location.copy();
     this.content.forEach((element) => {
-      element.calcSize(ctx, loc);
+      element.calcSize(loc, ctx);
       // console.log(loc)
       loc.x += element.width;
       if (element.descent > descent) {
@@ -432,9 +439,9 @@ class Equation extends Element {
     return element;
   }
 
-  calcSize(ctx: CanvasRenderingContext2D, location: Point) {
+  calcSize(location: Point, ctx: CanvasRenderingContext2D) {
     this.location = location.copy();
-    this.content.calcSize(ctx, location.copy());
+    this.content.calcSize(location.copy(), ctx);
   }
 
   draw(ctx: CanvasRenderingContext2D) {

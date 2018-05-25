@@ -111,6 +111,44 @@ function makePlot(diagram: Diagram) {
   plot.isMovable = true;
   return plot;
 }
+
+function makeEq(diagram: Diagram, shapes: Object, location: Point) {
+  const font = new DiagramFont(
+    'Times New Roman',
+    'italic',
+    0.2,
+    '200',
+    'left',
+    'alphabetic',
+    [0, 1, 1, 1],
+  );
+  const limits = diagram.limits;
+  const t = new Transform();
+  const c = [1, 0, 0, 1];
+
+  const dt_2x = [new DiagramText(new Point(0, 0), '2x', font)];
+  const dt_a = [new DiagramText(new Point(0, 0), 'a', font)];
+  const dt_b = [new DiagramText(new Point(0, 0), 'b', font)];
+  const dt_c = [new DiagramText(new Point(0, 0), 'c', font)];
+
+  const to_2x = new TextObject(diagram.draw2D, dt_2x);
+  const to_a = new TextObject(diagram.draw2D, dt_a);
+  const to_b = new TextObject(diagram.draw2D, dt_b);
+  const to_c = new TextObject(diagram.draw2D, dt_c);
+
+  const t_2x = new DiagramElementPrimative(to_2x, t, c, limits);
+  const t_a = new DiagramElementPrimative(to_a, t, c, limits);
+  const t_b = new DiagramElementPrimative(to_b, t, c, limits);
+  const t_c = new DiagramElementPrimative(to_c, t, c, limits);
+
+  const eq = shapes.collection(location);
+  eq.add('2x', t_2x);
+  eq.add('a', t_a);
+  eq.add('b', t_b);
+  eq.add('c', t_c);
+
+  return eq;
+}
 function makeSquare(shapes: Object, location: Point) {
   const vertices = [
     new Point(-0.5, -0.5),
@@ -341,6 +379,8 @@ class ShapesCollection extends DiagramElementCollection {
     ehp.isTouchable = true;
     ehp.isMovable = true;
     this.add('equation', ehp);
+    const newEq = makeEq(this.diagram, shapes, new Point(0, 0));
+    this.add('newEq', newEq);
   }
 
   resize(locations: Object) {

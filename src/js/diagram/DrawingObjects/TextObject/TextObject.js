@@ -12,7 +12,7 @@ class DiagramFont {
   style: string;
   family: string;
   alignH: 'left' | 'center' | 'right';
-  alignV: 'top' | 'bottom' | 'middle';
+  alignV: 'top' | 'bottom' | 'middle' | 'alphabetic';
   color: string | null;
 
   constructor(
@@ -21,7 +21,7 @@ class DiagramFont {
     size: number = 1,
     weight: string = '200',
     alignH: 'left' | 'center' | 'right' = 'center',
-    alignV: 'top' | 'bottom' | 'middle' = 'middle',
+    alignV: 'top' | 'bottom' | 'middle' | 'alphabetic' = 'middle',
     color: Array<number> | null | string = null,
   ) {
     this.family = family;

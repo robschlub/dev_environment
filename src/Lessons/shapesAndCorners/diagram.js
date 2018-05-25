@@ -123,7 +123,7 @@ class LessonDiagram extends Diagram {
 
   draw(now: number): void {
     super.draw(now);
-    this.elements._shapes.eq.calcSize(this.draw2D.ctx, new Point(100, 100));
+    this.elements._shapes.eq.calcSize(new Point(100, 100), this.draw2D.ctx);
     this.elements._shapes.eq.draw(this.draw2D.ctx);
   }
   touchMoveHandler(
