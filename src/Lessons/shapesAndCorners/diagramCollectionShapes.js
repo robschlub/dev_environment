@@ -10,7 +10,7 @@ import CartesianPlot from '../../js/diagram/DiagramElements/Plot/CartesianPlot';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
-import { Equation, EquationText, EquationElement, EquationFraction } from '../../js/diagram/Equation';
+import * as equation from '../../js/diagram/Equation';
 
 const colors = getScssColors(styles);
 const lineColor = colors.lines;
@@ -307,11 +307,15 @@ class ShapesCollection extends DiagramElementCollection {
     const plot = makePlot(this.diagram);
     this.add('plot', plot);
 
-    const n = new EquationText('a + b');
-    const d = new EquationText('c');
-    const f = new EquationFraction(n, d);
-    const ee = new EquationElement([f, new EquationText('='),new EquationText('c') ]);
-    const e = new Equation('eq1', [ee]);
+    const n = new equation.Line([new equation.Text('a + b')]);
+    const d = new equation.Line([new equation.Text('c')]);
+    const f = new equation.Fraction(n, d);
+    const ee = new equation.Line([
+      f,
+      new equation.Text('='),
+      new equation.Text('c'),
+    ]);
+    const e = new equation.Equation('eq1', [ee]);
     this.diagram.htmlCanvas.appendChild(e.htmlElement());
     const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
     const ehp = new DiagramElementPrimative(

@@ -6,86 +6,108 @@
 
 function makeDiv(
   id: string,
-  classes: string,
-  specialClass: string,
+  classes: Array<string>,
   text: string,
   indent: number = 0,
 ) {
   const indentStr = ' '.repeat(indent);
   const idStr = id ? ` id="${id}"` : '';
-  const classString = classes ? ` ${classes}` : '';
-  let out = `${indentStr}<div${idStr} class="${specialClass}${classString}">\n`;
+  const classString = classes ? ` ${classes.join(' ')}` : '';
+  let out = `${indentStr}<div${idStr} class="equation_element${classString}">\n`;
   out += `${text}\n`;
   out += `${indentStr}</div>`;
   return out;
 }
 
-
-class EquationElement {
-  content: Array<EquationElement>;
+class Element {
   id: string;
-  classes: string;
+  classes: Array<string>;
+
+  constructor(id: string = '', classes: string | Array<string> = '') {
+    this.id = id;
+    if (Array.isArray(classes)) {
+      this.classes = classes;
+    } else if (classes.length > 0) {
+      this.classes = classes.split(' ');
+    } else {
+      this.classes = [];
+    }
+  }
+
+  render(indent: number = 0, text: string = '') {
+    return makeDiv(
+      this.id,
+      this.classes,
+      text,
+      indent,
+    );
+  }
+}
+
+class Line extends Element {
+  content: Array<Element>;
 
   constructor(
-    content: Array<EquationElement>,
+    content: Array<Element>,
     id: string = '',
-    classes: string = '',
+    classes: string | Array<string> = [],
   ) {
+    super(id, classes);
     this.content = content;
-    this.id = id;
-    this.classes = classes;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   render(indent: number = 0) {
-    return makeDiv(
-      this.id,
-      this.classes,
-      'equation_element',
-      this.content.map(c => c.render(indent + 2)).join('\n'),
-      indent,
-    );
+    return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
   }
+
+  // text(text: string = '', id: string = '', classes: string = []) {
+  //   const t = new Text(text, id, classes);
+  //   this.content.push(t);
+  //   return this;
+  // }
 }
 
-class EquationText {
+class Text extends Element {
   text: string;
-  id: string;
-  classes: string;
-
-  constructor(text: string = '', id: string = '', classes: string = '') {
-    this.text = text;
-    this.id = id;
-    this.classes = classes;
-  }
-
-  render(indent: number = 0) {
-    return makeDiv(
-      this.id,
-      this.classes,
-      'equation_text equation_element',
-      `${' '.repeat(indent + 2)}${this.text}`,
-      indent,
-    );
-  }
-}
-
-class EquationFraction {
-  numerator: EquationElement;
-  denominator: EquationElement;
-  id: string;
-  classes: string;
 
   constructor(
-    numerator: EquationElement,
-    denominator: EquationElement,
+    text: string = '',
     id: string = '',
-    classes: string = '',
+    classes: string | Array<string> = [],
   ) {
+    super(id, classes);
+    this.classes.push('equation_text');
+    this.text = text;
+  }
+
+  render(indent: number = 0) {
+    return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
+  }
+  // render(indent: number = 0) {
+  //   return makeDiv(
+  //     this.id,
+  //     this.classes,
+  //     'equation_text equation_element',
+  //     `${' '.repeat(indent + 2)}${this.text}`,
+  //     indent,
+  //   );
+  // }
+}
+
+class Fraction extends Element {
+  numerator: Line;
+  denominator: Line;
+
+  constructor(
+    numerator: Line,
+    denominator: Line,
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    super(id, classes);
+    this.classes.push('fraction');
     this.numerator = numerator;
     this.denominator = denominator;
-    this.id = id;
-    this.classes = classes;
   }
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
@@ -97,50 +119,33 @@ class EquationFraction {
     out += `${s}<div class="denominator element">\n`;
     out += this.denominator.render(indent + 4);
     out += `\n${s}</div>`;
-
-    return makeDiv(
-      this.id,
-      this.classes,
-      'fraction equation_element',
-      out,
-      indent,
-    );
+    return super.render(indent, out);
   }
 }
 
-class Equation {
-  elements: Array<Object>;
-  id: string;
-  classes: string;
+class Equation extends Line {
+  // line: Line;
 
   constructor(
-    id: string = '',
-    elements: Array<Object> = [],
-    classes: string = '',
+    id: string,
+    content: Array<Element>,
+    classes: string | Array<string> = '',
   ) {
-    this.elements = elements;
-    this.id = id;
-    this.classes = classes;
+    super(content, id, classes);
+    this.classes.push('equation');
   }
 
   // eslint-disable-next-line class-methods-use-this
   render(indent: number = 0) {
-    return makeDiv(
-      this.id,
-      this.classes,
-      'equation',
-      this.elements.map(c => c.render(indent + 2)).join('\n'),
-      indent,
-    );
+    return super.render(indent);
+    // return super.render(indent, this.line.render(indent + 2));
   }
 
   htmlElement() {
     const element = document.createElement('div');
     element.setAttribute('id', this.id);
-    element.innerHTML = this.elements.map(c => c.render()).join('\n');
-    element.classList.add('equation');
-    const classes = this.classes.split(' ');
-    classes.forEach((c) => {
+    element.innerHTML = this.content.map(c => c.render()).join('');
+    this.classes.forEach((c) => {
       if (c) {
         element.classList.add(c);
       }
@@ -148,35 +153,35 @@ class Equation {
     return element;
   }
 
-  text(text: string = '', id: string = '', classes: string = '') {
-    const t = new EquationText(text, id, classes);
-    this.elements.push(t);
-    return this;
-  }
+  // text(text: string = '', id: string = '', classes: string = '') {
+  //   const t = new Text(text, id, classes);
+  //   this.content.push(t);
+  //   return this;
+  // }
 
-  frac(
-    numerator: EquationElement,
-    denominator: EquationElement,
-    id: string = '',
-    classes: string = '',
-  ) {
-    const f = new EquationFraction(numerator, denominator, id, classes);
-    this.elements.push(f);
-    return this;
-  }
+  // frac(
+  //   numerator: Line,
+  //   denominator: Line,
+  //   id: string = '',
+  //   classes: string = '',
+  // ) {
+  //   const f = new Fraction(numerator, denominator, id, classes);
+  //   this.content.push(f);
+  //   return this;
+  // }
 
-  elem(
-    content: Array<EquationElement>,
-    id: string,
-    classes: string = '',
-  ) {
-    const e = new EquationElement(content, id, classes);
-    this.elements.push(e);
-    return this;
-  }
+  // line(
+  //   content: Array<Element>,
+  //   id: string,
+  //   classes: string = '',
+  // ) {
+  //   const e = new line(content, id, classes);
+  //   this.content.push(e);
+  //   return this;
+  // }
 }
 
-export { EquationText, EquationElement, EquationFraction, Equation };
+export { Text, Line, Fraction, Equation };
 
 
 // class Equation {
