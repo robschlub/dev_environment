@@ -4,7 +4,7 @@ describe('HTML Equation', () => {
   test('Text', () => {
     const t = new e.Text('test', 'id1', 'c1');
     const rendered = t.render();
-    const expected = '<div id="id1" class="equation_element c1 equation_text">\n  test\n</div>';
+    const expected = '<div id="id1" class="equation_element element c1 equation_text">\n  test\n</div>';
     expect(rendered).toBe(expected);
   });
   test('Line', () => {
@@ -13,14 +13,14 @@ describe('HTML Equation', () => {
     const t3 = new e.Text('c', 'id3', 'c3');
 
     const expected =
-`<div id="id_e1" class="equation_element class_e1">
-  <div id="id1" class="equation_element c1 equation_text">
+`<div id="id_e1" class="equation_element element class_e1">
+  <div id="id1" class="equation_element element c1 equation_text">
     a+b
   </div>
-  <div id="id2" class="equation_element c2 equation_text">
+  <div id="id2" class="equation_element element c2 equation_text">
     =
   </div>
-  <div id="id3" class="equation_element c3 equation_text">
+  <div id="id3" class="equation_element element c3 equation_text">
     c
   </div>
 </div>`;
@@ -50,18 +50,18 @@ describe('HTML Equation', () => {
       'class_f1',
     );
     const expected =
-`<div id="id_f1" class="equation_element class_f1 fraction">
+`<div id="id_f1" class="equation_element element class_f1 fraction">
   <div class="numerator element">
-    <div id="id_n1" class="equation_element class_n1">
-      <div class="equation_element equation_text">
+    <div id="id_n1" class="equation_element element class_n1">
+      <div class="equation_element element equation_text">
         a + b
       </div>
     </div>
   </div>
   <div class="fraction_line"> </div>
   <div class="denominator element">
-    <div id="id_d1" class="equation_element class_d1">
-      <div class="equation_element equation_text">
+    <div id="id_d1" class="equation_element element class_d1">
+      <div class="equation_element element equation_text">
         c
       </div>
     </div>
@@ -74,8 +74,8 @@ describe('HTML Equation', () => {
       // const line = new e.Line();
       const eq = new e.Equation('e1', [new e.Text('a + b = c')]);
       const expected =
-`<div id="e1" class="equation_element equation">
-  <div class="equation_element equation_text">
+`<div id="e1" class="equation_element element equation">
+  <div class="equation_element element equation_text">
     a + b = c
   </div>
 </div>`;
