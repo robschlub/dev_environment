@@ -69,6 +69,31 @@ class Line extends Element {
     this.content.push(t);
     return this;
   }
+
+  frac(
+    numerator: Line,
+    denominator: Line,
+    id: string = '',
+    classes: string = '',
+  ) {
+    const f = new Fraction(numerator, denominator, id, classes);
+    this.content.push(f);
+    return this;
+  }
+
+  sup(
+    content: string | Array<Element> = [],
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    let c = content;
+    if (typeof content === 'string') {
+      c = [new Text(content, '', ['superscript_text'])];
+    }
+    const line = new Superscript(c, id, classes);
+    this.content.push(line);
+    return this;
+  }
 }
 
 class Text extends Element {
@@ -87,15 +112,28 @@ class Text extends Element {
   render(indent: number = 0) {
     return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
   }
-  // render(indent: number = 0) {
-  //   return makeDiv(
-  //     this.id,
-  //     this.classes,
-  //     'equation_text equation_element',
-  //     `${' '.repeat(indent + 2)}${this.text}`,
-  //     indent,
-  //   );
-  // }
+}
+
+class Superscript extends Line {
+  constructor(
+    content: Array<Element> = [],
+    id: string = '',
+    classes: string | Array<string> = '',
+  ) {
+    super(content, id, classes);
+    this.classes.push('superscript');
+  }
+}
+
+class Subscript extends Line {
+  constructor(
+    content: Array<Element> = [],
+    id: string = '',
+    classes: string | Array<string> = '',
+  ) {
+    super(content, id, classes);
+    this.classes.push('subscript');
+  }
 }
 
 class Fraction extends Element {
@@ -131,8 +169,8 @@ class Equation extends Line {
   // line: Line;
 
   constructor(
-    id: string,
-    content: Array<Element>,
+    id: string = '',
+    content: Array<Element> = [],
     classes: string | Array<string> = '',
   ) {
     super(content, id, classes);
@@ -185,7 +223,7 @@ class Equation extends Line {
   // }
 }
 
-export { Text, Line, Fraction, Equation };
+export { Text, Line, Fraction, Equation, Superscript, Subscript };
 
 
 // class Equation {

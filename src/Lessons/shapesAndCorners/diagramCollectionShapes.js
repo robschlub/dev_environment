@@ -307,22 +307,21 @@ class ShapesCollection extends DiagramElementCollection {
     const plot = makePlot(this.diagram);
     this.add('plot', plot);
 
-    // const n = new equation.Line([new equation.Text('a + b')]);
+    const sup = new equation.Superscript().text('2', '', ['superscript_text']);
+    const sub = new equation.Subscript().text('2', '', ['subscript_text']);
     const n = new equation.Line().text('a + b');
-    // const d = new equation.Line([new equation.Text('c')]);
+    n.content.push(sup);
+    n.content.push(sub);
     const d = new equation.Line().text('c');
-    const f = new equation.Fraction(n, d);
-    const ee = new equation.Line([
-      f,
-      new equation.Text('='),
-      new equation.Text('c'),
-    ]);
-    const e = new equation.Equation('eq1', [ee]);
+    const e = new equation.Equation('eq1')
+      .frac(n, d)
+      .text('=')
+      .text('c');
     this.diagram.htmlCanvas.appendChild(e.htmlElement());
     const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
     const ehp = new DiagramElementPrimative(
       eh,
-      new Transform().translate(0, 0),
+      new Transform().translate(0, -1.7),
       [1, 0, 0, 1],
       this.diagram.limits,
     );
