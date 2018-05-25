@@ -10,7 +10,7 @@ import CartesianPlot from '../../js/diagram/DiagramElements/Plot/CartesianPlot';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
-import * as equation from '../../js/diagram/Equation';
+import * as e from '../../js/diagram/Equation';
 
 const colors = getScssColors(styles);
 const lineColor = colors.lines;
@@ -309,20 +309,27 @@ class ShapesCollection extends DiagramElementCollection {
 
     // const supText = new equation.Line.text('2', '', ['superscript_text']);
     // const subText = new equation.Line.text('2', '', ['subscript_text']);
-    const sup = new equation.Superscript().text('2', '', ['superscript_text']);
-    const sub = new equation.Subscript().text('2', '', ['subscript_text']);
-    const ss = new equation.SuperAndSubscript(sup, sub);
-    const n = new equation.Line().text('&int;').inc(ss).text('x dx');
+    const sup = new e.Superscript().text('2', '', ['superscript_text']);
+    const sub = new e.Subscript().text('2', '', ['subscript_text']);
+    const ss = new e.SuperAndSubscript(sup, sub);
+    // const n = new e.Line().text('&int;').inc(ss).text('x dx');
     // n.content.push(sub);
     // n.content.push(sup);
 
-    const d = new equation.Line().text('c');
-    d.content.push(ss);
-    const e = new equation.Equation('eq1')
-      .frac(n, d)
-      .text('=')
-      .text('c');
-    this.diagram.htmlCanvas.appendChild(e.htmlElement());
+    // const d = e.sqrt('c');
+    // d.content.push(ss);
+    // const eq = new e.Equation('eq1')
+    //   .frac(n, d)
+    //   .text('=')
+    //   .text('c');
+    // const n = e.e([e.e('b');
+    const d = e.e('2');
+    // const eq = new e.Equation(e.frac(n, d), 'eq1');
+    const n = e.e([e.e('b'), e.e('&#177;'), e.sqrt('4ac')]);
+    const eq = new e.Equation([e.frac(n, d), e.e('='), e.e('0')], 'eq1');
+    console.log(eq)
+    console.log(eq.htmlElement())
+    this.diagram.htmlCanvas.appendChild(eq.htmlElement());
     const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
     const ehp = new DiagramElementPrimative(
       eh,

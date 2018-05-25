@@ -13,7 +13,7 @@ function makeDiv(
   const indentStr = ' '.repeat(indent);
   const idStr = id ? ` id="${id}"` : '';
   const classString = classes ? ` ${classes.join(' ')}` : '';
-  let out = `${indentStr}<div${idStr} class="equation_element element${classString}">\n`;
+  let out = `${indentStr}<div${idStr} class="equation_element${classString}">\n`;
   out += `${text}\n`;
   out += `${indentStr}</div>`;
   return out;
@@ -43,6 +43,140 @@ class Element {
     );
   }
 }
+
+
+class Text extends Element {
+  text: string;
+
+  constructor(
+    text: string = '',
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    super(id, classes);
+    this.classes.push('equation_text');
+    this.text = text;
+  }
+
+  render(indent: number = 0) {
+    return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
+  }
+}
+
+
+class Fraction extends Element {
+  numerator: E;
+  denominator: E;
+
+  constructor(
+    numerator: E,     // eslint-disable-line no-use-before-define
+    denominator: E,   // eslint-disable-line no-use-before-define
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    super(id, classes);
+    this.classes.push('fraction');
+    this.numerator = numerator;
+    this.denominator = denominator;
+  }
+  render(indent: number = 0) {
+    const s = ' '.repeat(indent + 2);
+    let out = '';
+    out += `${s}<div class="numerator">\n`;
+    out += this.numerator.render(indent + 4);
+    out += `\n${s}</div>\n`;
+    out += `${s}<div class="fraction_line"> </div>\n`;
+    out += `${s}<div class="denominator">\n`;
+    out += this.denominator.render(indent + 4);
+    out += `\n${s}</div>`;
+    return super.render(indent, out);
+  }
+}
+
+class Root extends Element {
+  content: E;
+
+  constructor(
+    content: E,     // eslint-disable-line no-use-before-define
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    super(id, classes);
+    this.content = content;
+  }
+  render(indent: number = 0) {
+    const s = ' '.repeat(indent + 2);
+    let out = '';
+    out += `${s}<div class="square_root element">\n`;
+    out += `${s}  <div class="equation_element radical element">\n`;
+    out += `${s}    &radic;\n`;
+    out += `${s}  </div>\n`;
+    out += this.content.render(indent + 4);
+    out += `\n${s}</div>`;
+    return super.render(indent, out);
+  }
+}
+
+class E extends Element {
+  content: Array<Element>;
+
+  constructor(
+    content: string | Array<Element>,
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    super(id, classes);
+    this.applyContent(content);
+  }
+
+  applyContent(content: string | Array<Element>) {
+    if (Array.isArray(content)) {
+      this.content = content;
+    } else if (typeof content === 'string') {
+      this.content = [new Text(content)];
+    }
+  }
+
+  render(indent: number = 0) {
+    return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
+  }
+}
+
+function contentToE(content: string | E): E {
+  let c;
+  if (typeof content === 'string') {
+    c = new E(content);
+  } else {
+    c = content;
+  }
+  return c;
+}
+
+function e(
+  content: string | Array<Element>,
+  id: string = '',
+  classes: string | Array<string> = [],
+) {
+  return new E(content, id, classes);
+}
+
+function frac(
+  numerator: E | string,     // eslint-disable-line no-use-before-define
+  denominator: E | string,   // eslint-disable-line no-use-before-define
+  id: string = '',
+  classes: string | Array<string> = [],
+) {
+  return new Fraction(contentToE(numerator), contentToE(denominator), id, classes);
+}
+
+function sqrt(
+  content: E | string,     // eslint-disable-line no-use-before-define
+  id: string = '',
+  classes: string | Array<string> = [],
+) {
+  return new Root(contentToE(content), id, classes);
+}
+
 
 class Line extends Element {
   content: Array<Element>;
@@ -111,24 +245,6 @@ class Line extends Element {
   }
 }
 
-class Text extends Element {
-  text: string;
-
-  constructor(
-    text: string = '',
-    id: string = '',
-    classes: string | Array<string> = [],
-  ) {
-    super(id, classes);
-    this.classes.push('equation_text');
-    this.text = text;
-  }
-
-  render(indent: number = 0) {
-    return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
-  }
-}
-
 class Superscript extends Line {
   constructor(
     content: Array<Element> = [],
@@ -180,36 +296,40 @@ class SuperAndSubscript extends Element {
   }
 }
 
-class Fraction extends Element {
-  numerator: Line;
-  denominator: Line;
+class Equation extends Element {
+  content: E;
 
   constructor(
-    numerator: Line,
-    denominator: Line,
+    content: E | Array<Element>,
     id: string = '',
     classes: string | Array<string> = [],
   ) {
     super(id, classes);
-    this.classes.push('fraction');
-    this.numerator = numerator;
-    this.denominator = denominator;
+    if (Array.isArray(content)) {
+      this.content = new E(content);
+    } else {
+      this.content = content;
+    }
+    this.classes.push('equation');
   }
+
   render(indent: number = 0) {
-    const s = ' '.repeat(indent + 2);
-    let out = '';
-    out += `${s}<div class="numerator element">\n`;
-    out += this.numerator.render(indent + 4);
-    out += `\n${s}</div>\n`;
-    out += `${s}<div class="fraction_line"> </div>\n`;
-    out += `${s}<div class="denominator element">\n`;
-    out += this.denominator.render(indent + 4);
-    out += `\n${s}</div>`;
-    return super.render(indent, out);
+    return super.render(indent, this.content.render(indent + 2));
+  }
+
+  htmlElement() {
+    const element = document.createElement('div');
+    element.setAttribute('id', this.id);
+    element.innerHTML = this.content.render();
+    this.classes.forEach((c) => {
+      if (c) {
+        element.classList.add(c);
+      }
+    });
+    return element;
   }
 }
-
-class Equation extends Line {
+class Equation1 extends Line {
   // line: Line;
 
   constructor(
@@ -224,6 +344,7 @@ class Equation extends Line {
   // eslint-disable-next-line class-methods-use-this
   render(indent: number = 0) {
     return super.render(indent);
+    // return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
     // return super.render(indent, this.line.render(indent + 2));
   }
 
@@ -240,7 +361,7 @@ class Equation extends Line {
   }
 }
 
-export { Text, Line, Fraction, Equation, Superscript, Subscript, SuperAndSubscript };
+export { Text, Line, Fraction, Equation, Superscript, Subscript, SuperAndSubscript, e, frac, sqrt };
 
 
 // class Equation {
