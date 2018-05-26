@@ -116,7 +116,7 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
   const font = new DiagramFont(
     'Times New Roman',
     'italic',
-    0.15,
+    0.4,
     '200',
     'left',
     'alphabetic',
@@ -144,8 +144,8 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
   const t_c = new DiagramElementPrimative(to_c, t, c, limits);
   const t_equals = new DiagramElementPrimative(to_equals, t, c, limits);
 
-  const vinculum1 = shapes.horizontalLine(new Point(0, 0), 1, 0.005, 0, [0, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
-  const vinculum2 = shapes.horizontalLine(new Point(0, 0), 1, 0.005, 0, [0, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
+  const vinculum1 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [0, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
+  const vinculum2 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [0, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
 
   const eq = shapes.collection(location);
   eq.add('2x', t_2x);
@@ -155,6 +155,9 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
   eq.add('equals', t_equals);
   eq.add('v1', vinculum1);
   eq.add('v2', vinculum2);
+  t_2x.isTouchable = true;
+  eq.isTouchable = true;
+  eq.isMovable = true;
 
   return eq;
 }
@@ -393,7 +396,7 @@ class ShapesCollection extends DiagramElementCollection {
     const d2 = e.e(newEq._c);
     const equals = e.e(newEq._equals);
     eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
-    console.log(eq1)
+    // console.log(eq1)
     this.eq1 = eq1;
     this.add('newEq', newEq);
   }

@@ -49,7 +49,7 @@ class Element {
   }
 
   // eslint-disable-next-line no-unused-vars
-  calcSize(loc: Point, ctx: CanvasRenderingContext2D) {
+  calcSize(loc: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
     this.ascent = 0;
     this.descent = 0;
     this.width = 0;
@@ -84,7 +84,7 @@ class Text extends Element {
     return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
   }
 
-  calcSize(loc: Point, ctx: CanvasRenderingContext2D) {
+  calcSize(loc: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
     if (this.text) {
       ctx.font = 'italic 20px Times New Roman';
       ctx.textAlign = 'left';
@@ -101,8 +101,8 @@ class Text extends Element {
       this.ascent = m.top;
       this.location = loc.copy();
       this.textElement.transform.updateTranslation(loc.x, loc.y);
-      console.log(this.textElement.name, this.textElement.transform.t())
-      console.log(this.textElement.name, this.textElement.getRelativeGLBoundingRect());
+      // console.log(this.textElement.name, this.textElement.transform.t())
+      // console.log(this.textElement.name, this.textElement.getRelativeGLBoundingRect());
     }
   }
 
@@ -116,7 +116,7 @@ class Fraction extends Element {
   numerator: E;
   denominator: E;
   vSpaceNum: number;
-  vSpaceDenon: number;
+  vSpaceDenom: number;
   lineWidth: number;
   lineVAboveBaseline: number;
   vinculum: DiagramElementPrimative;
@@ -139,10 +139,10 @@ class Fraction extends Element {
     this.numerator = numerator;
     this.denominator = denominator;
 
-    this.vSpaceNum = 0.03;
-    this.vSpaceDenon = -0.03;
-    this.lineVAboveBaseline = 0.05;
-    this.lineWidth = 0.005;
+    this.vSpaceNum = 0;
+    this.vSpaceDenom = 0;
+    this.lineVAboveBaseline = 0;
+    this.lineWidth = 0;
   }
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
@@ -157,12 +157,17 @@ class Fraction extends Element {
     return super.render(indent, out);
   }
 
-  calcSize(location: Point, ctx: CanvasRenderingContext2D) {
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
+    this.vSpaceNum = fontSize * 0.2;
+    this.vSpaceDenom = fontSize * 0;
+    this.lineVAboveBaseline = fontSize * 0.35;
+    this.lineWidth = fontSize * 0.05;
+
     this.location = location.copy();
     const loc = location.copy();
-    this.numerator.calcSize(loc, ctx);
+    this.numerator.calcSize(loc, fontSize, ctx);
 
-    this.denominator.calcSize(loc, ctx);
+    this.denominator.calcSize(loc, fontSize, ctx);
     this.width = Math.max(this.numerator.width, this.denominator.width);
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
@@ -170,22 +175,33 @@ class Fraction extends Element {
                         this.vSpaceNum + this.lineVAboveBaseline;
 
     const yDenominator = this.denominator.ascent +
-                         this.vSpaceDenon - this.lineVAboveBaseline;
+                         this.vSpaceDenom - this.lineVAboveBaseline;
 
     let yScale = 1;
     if (ctx) {
       yScale = -1;
     }
-    this.numerator.calcSize(new Point(loc.x + xNumerator, loc.y + yScale * yNumerator), ctx);
-    this.denominator.calcSize(new Point(loc.x + xDenominator, loc.y - yScale * yDenominator), ctx);
+    this.numerator.calcSize(
+      new Point(loc.x + xNumerator, loc.y + yScale * yNumerator),
+      fontSize,
+      ctx,
+    );
+    this.denominator.calcSize(
+      new Point(loc.x + xDenominator, loc.y - yScale * yDenominator),
+      fontSize,
+      ctx,
+    );
 
     this.descent = this.vSpaceNum + this.lineWidth / 2 - this.lineVAboveBaseline +
                    this.denominator.ascent + this.denominator.descent;
     this.ascent = this.vSpaceNum + this.lineWidth / 2 + this.lineVAboveBaseline +
                    this.numerator.ascent + this.numerator.descent;
     if (this.vinculum) {
-      this.vinculum.transform.updateScale(this.width, 1);
-      this.vinculum.transform.updateTranslation(this.location.x, this.location.y + this.lineVAboveBaseline);
+      this.vinculum.transform.updateScale(this.width, this.lineWidth);
+      this.vinculum.transform.updateTranslation(
+        this.location.x,
+        this.location.y + this.lineVAboveBaseline,
+      );
     }
   }
 
@@ -256,13 +272,13 @@ class E extends Element {
     return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
   }
 
-  calcSize(location: Point, ctx: CanvasRenderingContext2D) {
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
     // ctx.font = 'italic 20px Times New Roman';
     let descent = 0;
     let ascent = 0;
     const loc = location.copy();
     this.content.forEach((element) => {
-      element.calcSize(loc, ctx);
+      element.calcSize(loc, fontSize, ctx);
       // console.log(loc)
       loc.x += element.width;
       if (element.descent > descent) {
@@ -472,9 +488,9 @@ class Equation extends Element {
     return element;
   }
 
-  calcSize(location: Point, ctx: CanvasRenderingContext2D) {
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
     this.location = location.copy();
-    this.content.calcSize(location.copy(), ctx);
+    this.content.calcSize(location.copy(), fontSize, ctx);
   }
 
   draw(ctx: CanvasRenderingContext2D) {
