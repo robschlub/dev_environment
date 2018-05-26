@@ -115,24 +115,34 @@ class Text extends Element {
 class Fraction extends Element {
   numerator: E;
   denominator: E;
-  vSpace: number;
+  vSpaceNum: number;
+  vSpaceDenon: number;
   lineWidth: number;
   lineVAboveBaseline: number;
+  vinculum: DiagramElementPrimative;
 
   constructor(
     numerator: E,     // eslint-disable-line no-use-before-define
     denominator: E,   // eslint-disable-line no-use-before-define
-    id: string = '',
+    vinculmOrId: string | DiagramElementPrimative = '',
     classes: string | Array<string> = [],
   ) {
+    let id = '';
+    if (typeof vinculmOrId === 'string') {
+      id = vinculmOrId;
+    }
     super(id, classes);
+    if (vinculmOrId instanceof DiagramElementPrimative) {
+      this.vinculum = vinculmOrId;
+    }
     this.classes.push('fraction');
     this.numerator = numerator;
     this.denominator = denominator;
 
-    this.vSpace = 0.2;
-    this.lineVAboveBaseline = 0.01;
-    this.lineWidth = 0.01;
+    this.vSpaceNum = 0.03;
+    this.vSpaceDenon = -0.03;
+    this.lineVAboveBaseline = 0.05;
+    this.lineWidth = 0.005;
   }
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
@@ -157,16 +167,26 @@ class Fraction extends Element {
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
     const yNumerator = this.numerator.descent +
-                       this.vSpace + this.lineVAboveBaseline;
-    const yDenominator = this.denominator.ascent +
-                         this.vSpace - this.lineVAboveBaseline;
-    this.numerator.calcSize(new Point(loc.x + xNumerator, loc.y - yNumerator), ctx);
-    this.denominator.calcSize(new Point(loc.x + xDenominator, loc.y + yDenominator), ctx);
+                        this.vSpaceNum + this.lineVAboveBaseline;
 
-    this.descent = this.vSpace + this.lineWidth / 2 - this.lineVAboveBaseline +
+    const yDenominator = this.denominator.ascent +
+                         this.vSpaceDenon - this.lineVAboveBaseline;
+
+    let yScale = 1;
+    if (ctx) {
+      yScale = -1;
+    }
+    this.numerator.calcSize(new Point(loc.x + xNumerator, loc.y + yScale * yNumerator), ctx);
+    this.denominator.calcSize(new Point(loc.x + xDenominator, loc.y - yScale * yDenominator), ctx);
+
+    this.descent = this.vSpaceNum + this.lineWidth / 2 - this.lineVAboveBaseline +
                    this.denominator.ascent + this.denominator.descent;
-    this.ascent = this.vSpace + this.lineWidth / 2 + this.lineVAboveBaseline +
+    this.ascent = this.vSpaceNum + this.lineWidth / 2 + this.lineVAboveBaseline +
                    this.numerator.ascent + this.numerator.descent;
+    if (this.vinculum) {
+      this.vinculum.transform.updateScale(this.width, 1);
+      this.vinculum.transform.updateTranslation(this.location.x, this.location.y + this.lineVAboveBaseline);
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -286,10 +306,10 @@ function e(
 function frac(
   numerator: E | string,     // eslint-disable-line no-use-before-define
   denominator: E | string,   // eslint-disable-line no-use-before-define
-  id: string = '',
+  vinculumOrid: string | DiagramElementPrimative = '',
   classes: string | Array<string> = [],
 ) {
-  return new Fraction(contentToE(numerator), contentToE(denominator), id, classes);
+  return new Fraction(contentToE(numerator), contentToE(denominator), vinculumOrid, classes);
 }
 
 function sqrt(

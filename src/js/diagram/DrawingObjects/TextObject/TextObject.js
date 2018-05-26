@@ -250,19 +250,19 @@ class TextObject extends DrawingObject {
     const box = [
       new Point(
         -textMetrics.actualBoundingBoxLeft / scalingFactor,
-        textMetrics.actualBoundingBoxAscent / scalingFactor,
+        textMetrics.fontBoundingBoxAscent / scalingFactor,
       ).add(location),
       new Point(
         textMetrics.actualBoundingBoxRight / scalingFactor,
-        textMetrics.actualBoundingBoxAscent / scalingFactor,
+        textMetrics.fontBoundingBoxAscent / scalingFactor,
       ).add(location),
       new Point(
         textMetrics.actualBoundingBoxRight / scalingFactor,
-        -textMetrics.actualBoundingBoxDescent / scalingFactor,
+        -textMetrics.fontBoundingBoxDescent / scalingFactor,
       ).add(location),
       new Point(
         -textMetrics.actualBoundingBoxLeft / scalingFactor,
-        -textMetrics.actualBoundingBoxDescent / scalingFactor,
+        -textMetrics.fontBoundingBoxDescent / scalingFactor,
       ).add(location),
     ];
 
