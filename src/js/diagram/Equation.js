@@ -111,6 +111,52 @@ class Text extends Element {
   }
 }
 
+class Subscript extends Element {
+  content: E;
+
+  constructor(
+    content: E,       // eslint-disable-line no-use-before-define
+    id: string = '',
+    classes: string | Array<string> = '',
+  ) {
+    super(id, classes);
+    this.classes.push('subscript');
+    this.content = content;
+  }
+
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
+    this.location = location.copy();
+    this.location.y -= fontSize / 4;
+    this.content.calcSize(this.location.copy(), fontSize / 2, ctx);
+    this.width = this.content.width;
+    this.ascent = this.content.ascent;
+    this.descent = this.content.descent;
+  }
+}
+
+class Superscript extends Element {
+  content: E;
+
+  constructor(
+    content: E,       // eslint-disable-line no-use-before-define
+    id: string = '',
+    classes: string | Array<string> = '',
+  ) {
+    super(id, classes);
+    this.classes.push('subscript');
+    this.content = content;
+  }
+
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
+    this.location = location.copy();
+    this.location.y += 2 * fontSize / 4;
+    this.content.calcSize(this.location.copy(), fontSize / 2, ctx);
+    this.width = this.content.width;
+    this.ascent = this.content.ascent;
+    this.descent = this.content.descent;
+  }
+}
+
 
 class Fraction extends Element {
   numerator: E;
@@ -311,6 +357,23 @@ function contentToE(content: string | E): E {
   return c;
 }
 
+function sub(
+  content: E | string,
+  id: string,
+  classes: string | Array<string>,
+) {
+  return new Subscript(contentToE(content), id, classes);
+}
+
+function sup(
+  content: E | string,
+  id: string,
+  classes: string | Array<string>,
+) {
+  return new Superscript(contentToE(content), id, classes);
+}
+
+
 function e(
   content: string | Array<Element>,
   id: string = '',
@@ -415,16 +478,6 @@ function sqrt(
 //   }
 // }
 
-// class Subscript extends Line {
-//   constructor(
-//     content: Array<Element> = [],
-//     id: string = '',
-//     classes: string | Array<string> = '',
-//   ) {
-//     super(content, id, classes);
-//     this.classes.push('subscript');
-//   }
-// }
 
 // class SuperAndSubscript extends Element {
 //   sup: Superscript | Line;
@@ -504,7 +557,7 @@ class Equation extends Element {
   }
 }
 
-export { Text, Fraction, Equation, e, frac, sqrt };
+export { Text, Fraction, Equation, e, frac, sqrt, sub, sup };
 
 
 // class Equation {

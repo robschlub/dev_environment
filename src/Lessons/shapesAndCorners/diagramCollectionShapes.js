@@ -126,19 +126,23 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
   const t = new Transform().translate(0, 0);
   const c = [1, 0, 0, 1];
 
-  const dt_2x = [new DiagramText(new Point(0, 0), '2xy', font)];
+  const dt_2x = [new DiagramText(new Point(0, 0), '2xyA', font)];
+  const dt_p2 = [new DiagramText(new Point(0, 0), '2', font)];
   const dt_a = [new DiagramText(new Point(0, 0), 'att', font)];
   const dt_b = [new DiagramText(new Point(0, 0), 'b', font)];
   const dt_c = [new DiagramText(new Point(0, 0), 'cg', font)];
   const dt_equals = [new DiagramText(new Point(0, 0), '=', font)];
+  dt_p2[0].font.size /= 2;
 
   const to_2x = new TextObject(diagram.draw2D, dt_2x);
+  const to_p2 = new TextObject(diagram.draw2D, dt_p2);
   const to_a = new TextObject(diagram.draw2D, dt_a);
   const to_b = new TextObject(diagram.draw2D, dt_b);
   const to_c = new TextObject(diagram.draw2D, dt_c);
   const to_equals = new TextObject(diagram.draw2D, dt_equals);
 
   const t_2x = new DiagramElementPrimative(to_2x, t, c, limits);
+  const t_p2 = new DiagramElementPrimative(to_p2, t, c, limits);
   const t_a = new DiagramElementPrimative(to_a, t, c, limits);
   const t_b = new DiagramElementPrimative(to_b, t, c, limits);
   const t_c = new DiagramElementPrimative(to_c, t, c, limits);
@@ -149,6 +153,7 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
 
   const eq = shapes.collection(location);
   eq.add('2x', t_2x);
+  eq.add('p2', t_p2);
   eq.add('a', t_a);
   eq.add('b', t_b);
   eq.add('c', t_c);
@@ -390,10 +395,11 @@ class ShapesCollection extends DiagramElementCollection {
     ehp.isMovable = true;
     this.add('equation', ehp);
     const newEq = makeEq(this.diagram, shapes, new Point(0, 0));
-    const n1 = e.e(newEq._2x);
+    const n1 = e.e([e.e(newEq._2x), e.sup(e.e(newEq._p2))]);
     const n2 = e.e(newEq._b);
     const d1 = e.e(newEq._a);
     const d2 = e.e(newEq._c);
+    const p2 = e.e(newEq._p2);
     const equals = e.e(newEq._equals);
     eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
     // console.log(eq1)
