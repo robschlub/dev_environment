@@ -116,36 +116,40 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
   const font = new DiagramFont(
     'Times New Roman',
     'italic',
-    0.2,
+    0.15,
     '200',
     'left',
     'alphabetic',
     [0, 1, 1, 1],
   );
   const limits = diagram.limits;
-  const t = new Transform();
+  const t = new Transform().translate(0, 0);
   const c = [1, 0, 0, 1];
 
-  const dt_2x = [new DiagramText(new Point(0, 0), '2x', font)];
-  const dt_a = [new DiagramText(new Point(0, 0), 'a', font)];
+  const dt_2x = [new DiagramText(new Point(0, 0), '2xy', font)];
+  const dt_a = [new DiagramText(new Point(0, 0), 'att', font)];
   const dt_b = [new DiagramText(new Point(0, 0), 'b', font)];
-  const dt_c = [new DiagramText(new Point(0, 0), 'c', font)];
+  const dt_c = [new DiagramText(new Point(0, 0), 'cg', font)];
+  const dt_equals = [new DiagramText(new Point(0, 0), '=', font)];
 
   const to_2x = new TextObject(diagram.draw2D, dt_2x);
   const to_a = new TextObject(diagram.draw2D, dt_a);
   const to_b = new TextObject(diagram.draw2D, dt_b);
   const to_c = new TextObject(diagram.draw2D, dt_c);
+  const to_equals = new TextObject(diagram.draw2D, dt_equals);
 
   const t_2x = new DiagramElementPrimative(to_2x, t, c, limits);
   const t_a = new DiagramElementPrimative(to_a, t, c, limits);
   const t_b = new DiagramElementPrimative(to_b, t, c, limits);
   const t_c = new DiagramElementPrimative(to_c, t, c, limits);
+  const t_equals = new DiagramElementPrimative(to_equals, t, c, limits);
 
   const eq = shapes.collection(location);
   eq.add('2x', t_2x);
   eq.add('a', t_a);
   eq.add('b', t_b);
   eq.add('c', t_c);
+  eq.add('equals', t_equals);
 
   return eq;
 }
@@ -366,8 +370,6 @@ class ShapesCollection extends DiagramElementCollection {
     const n = e.e([e.e('b2'), e.e('4AC')]);
     const eq = new e.Equation([e.frac(n, d), e.e('='), e.e('0')], 'eq1');
     this.eq = eq;
-    console.log(eq)
-    console.log(eq.htmlElement())
     this.diagram.htmlCanvas.appendChild(eq.htmlElement());
     const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
     const ehp = new DiagramElementPrimative(
@@ -380,6 +382,14 @@ class ShapesCollection extends DiagramElementCollection {
     ehp.isMovable = true;
     this.add('equation', ehp);
     const newEq = makeEq(this.diagram, shapes, new Point(0, 0));
+    const n1 = e.e(newEq._2x);
+    const n2 = e.e(newEq._b);
+    const d1 = e.e(newEq._a);
+    const d2 = e.e(newEq._c);
+    const equals = e.e(newEq._equals);
+    eq1 = new e.Equation([e.frac(n1, d1), equals, e.frac(n2, d2)]);
+    console.log(eq1)
+    this.eq1 = eq1;
     this.add('newEq', newEq);
   }
 

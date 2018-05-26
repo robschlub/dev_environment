@@ -63,7 +63,7 @@ class Element {
 
 class Text extends Element {
   text: string;
-  textObject: DiagramElementPrimative | DiagramElementCollection;
+  textElement: DiagramElementPrimative | DiagramElementCollection;
 
   constructor(
     text: string | DiagramElementPrimative | DiagramElementCollection = '',
@@ -76,7 +76,7 @@ class Text extends Element {
     if (typeof text === 'string') {
       this.text = text;
     } else {
-      this.textObject = text;
+      this.textElement = text;
     }
   }
 
@@ -85,14 +85,25 @@ class Text extends Element {
   }
 
   calcSize(loc: Point, ctx: CanvasRenderingContext2D) {
-    ctx.font = 'italic 20px Times New Roman';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
-    const m = ctx.measureText(this.text);
-    this.width = m.actualBoundingBoxRight + m.actualBoundingBoxLeft;
-    this.descent = m.actualBoundingBoxDescent;
-    this.ascent = m.actualBoundingBoxAscent;
-    this.location = loc.copy();
+    if (this.text) {
+      ctx.font = 'italic 20px Times New Roman';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      const m = ctx.measureText(this.text);
+      this.width = m.actualBoundingBoxRight + m.actualBoundingBoxLeft;
+      this.descent = m.actualBoundingBoxDescent;
+      this.ascent = m.actualBoundingBoxAscent;
+      this.location = loc.copy();
+    } else {
+      const m = this.textElement.getRelativeDiagramBoundingRect();
+      this.width = m.width;
+      this.descent = -m.bottom;
+      this.ascent = m.top;
+      this.location = loc.copy();
+      this.textElement.transform.updateTranslation(loc.x, loc.y);
+      console.log(this.textElement.name, this.textElement.transform.t())
+      console.log(this.textElement.name, this.textElement.getRelativeGLBoundingRect());
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -119,9 +130,9 @@ class Fraction extends Element {
     this.numerator = numerator;
     this.denominator = denominator;
 
-    this.vSpace = 5;
-    this.lineVAboveBaseline = 7;
-    this.lineWidth = 1;
+    this.vSpace = 0.2;
+    this.lineVAboveBaseline = 0.01;
+    this.lineWidth = 0.01;
   }
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
@@ -203,7 +214,7 @@ class E extends Element {
   content: Array<Element>;
 
   constructor(
-    content: string | Array<Element>,
+    content: string | Array<Element> | DiagramElementCollection | DiagramElementPrimative,
     id: string = '',
     classes: string | Array<string> = [],
   ) {
@@ -211,10 +222,12 @@ class E extends Element {
     this.applyContent(content);
   }
 
-  applyContent(content: string | Array<Element>) {
+  applyContent(content: string | Array<Element> | DiagramElementCollection | DiagramElementPrimative) {
     if (Array.isArray(content)) {
       this.content = content;
     } else if (typeof content === 'string') {
+      this.content = [new Text(content)];
+    } else {
       this.content = [new Text(content)];
     }
   }
@@ -224,7 +237,7 @@ class E extends Element {
   }
 
   calcSize(location: Point, ctx: CanvasRenderingContext2D) {
-    ctx.font = 'italic 20px Times New Roman';
+    // ctx.font = 'italic 20px Times New Roman';
     let descent = 0;
     let ascent = 0;
     const loc = location.copy();
