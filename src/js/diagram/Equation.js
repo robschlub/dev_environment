@@ -168,7 +168,7 @@ class Fraction extends Element {
     this.numerator.calcSize(loc, fontSize, ctx);
 
     this.denominator.calcSize(loc, fontSize, ctx);
-    this.width = Math.max(this.numerator.width, this.denominator.width);
+    this.width = Math.max(this.numerator.width, this.denominator.width) + fontSize * 0.5;
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
     const yNumerator = this.numerator.descent +
