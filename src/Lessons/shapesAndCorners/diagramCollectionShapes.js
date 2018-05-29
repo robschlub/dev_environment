@@ -407,7 +407,7 @@ class ShapesCollection extends DiagramElementCollection {
     const d2 = e.e(newEq._c);
     const p2 = e.e(newEq._p2);
     const equals = e.e(newEq._equals);
-    eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
+    const eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
     // console.log(eq1)
     this.eq1 = eq1;
     this.add('newEq', newEq);

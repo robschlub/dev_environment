@@ -239,6 +239,58 @@ class TextObject extends DrawingObject {
     return glBoundaries;
   }
 
+  // This method is used instead of the actual ctx.measureText because
+  // Firefox and Chrome don't yet support it's advanced features.
+  // Estimates are made for height based on width.
+  // eslint-disable-next-line class-methods-use-this
+  measureText(ctx: CanvasRenderingContext2D, text: DiagramText) {
+    const aWidth = ctx.measureText('a').width;
+
+    // Estimations of FONT ascent and descent for a baseline of "alphabetic"
+    const ascent = aWidth * 1.9;
+    const descent = aWidth * 0.5;
+    const height = ascent + descent;
+
+    const { width } = ctx.measureText(text.text);
+
+    let asc = 0;
+    let des = 0;
+    let left = 0;
+    let right = 0;
+
+    if (text.font.alignH === 'left') {
+      right = width;
+    }
+    if (text.font.alignH === 'center') {
+      left = width / 2;
+      right = width / 2;
+    }
+    if (text.font.alignH === 'right') {
+      left = width;
+    }
+    if (text.font.alignV === 'alphabetic') {
+      asc = ascent;
+      des = descent;
+    }
+    if (text.font.alignV === 'top') {
+      asc = 0;
+      des = height;
+    }
+    if (text.font.alignV === 'bottom') {
+      asc = height;
+      des = 0;
+    }
+    if (text.font.alignV === 'middle') {
+      asc = height / 2;
+      des = height / 2;
+    }
+    return {
+      actualBoundingBoxLeft: left,
+      actualBoundingBoxRight: right,
+      fontBoundingBoxAscent: asc,
+      fontBoundingBoxDescent: des,
+    };
+  }
   getGLBoundaryOfText(
     text: DiagramText,
     lastDrawTransformMatrix: Array<number>,
@@ -249,7 +301,8 @@ class TextObject extends DrawingObject {
 
     // Measure the text
     text.font.set(this.drawContext2D.ctx, scalingFactor);
-    const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+    // const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+    const textMetrics = this.measureText(this.drawContext2D.ctx, text);
 
     // Create a box around the text
     const { location } = text;

@@ -102,6 +102,7 @@ class Text extends Element {
     } else {
       this.setFont(fontSize);
       const m = this.textElement.getRelativeDiagramBoundingRect();
+
       this.width = m.width;
       this.descent = -m.bottom;
       this.ascent = m.top;
