@@ -6,7 +6,7 @@ import VertexObject from '../../DrawingObjects/VertexObject/VertexObject';
 
 function range(start: number, stop: number, step: number) {
   const out = [];
-  for (let i = start; i <= stop; i += step) {
+  for (let i = start; i <= stop + step * 0.5; i += step) {
     out.push(i);
   }
   return out;
@@ -22,9 +22,13 @@ class VertexIntegral extends VertexObject {
   ) {
     super(webgl);
     this.glPrimative = this.gl.TRIANGLE_STRIP;
-    let mul = 0.6;
-    if (lineHeight === 1) {
-      mul = 1;
+    // let mul = 0.5;
+    // if (lineHeight === 1) {
+    //   mul = 1;
+    // }
+    let mul = 0.3;
+    if (lineHeight < 5) {
+      mul = 1 - Math.log(lineHeight) / 2;
     }
     const k = 20;
     const L = 1;
@@ -38,9 +42,8 @@ class VertexIntegral extends VertexObject {
       Math.exp(-(x ** 2) / (2 * sigma ** 2)));
     const xLeft = xArray.map((x, index) => x - normDist[index] - bias);
     const xRight = xArray.map((x, index) => x + normDist[index] + bias);
-
     const serifRadius = 0.03 * mul;
-    const serifPoints = 31;
+    const serifPoints = 30;
 
     // calculate upper serif properites
     const num = xLeft.length;

@@ -412,7 +412,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.eq1 = eq1;
     this.add('newEq', newEq);
 
-    const integral = new Integral(this.diagram.webgl, [1, 0, 0, 1], new Transform().scale(0.7, 0.7).translate(2, 0), this.diagram.limits);
+    const integral = new Integral(this.diagram.webgl, [1, 0, 0, 1], new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
     integral.isTouchable = true;
     integral.isMovable = true;
     this.add('integral', integral);
