@@ -22,16 +22,16 @@ class VertexIntegral extends VertexObject {
   ) {
     super(webgl);
     this.glPrimative = this.gl.TRIANGLE_STRIP;
-    let mul = 1;
+    let mul = 0.6;
     if (lineHeight === 1) {
-      mul = 1.5;
+      mul = 1;
     }
     const k = 20;
-    const L = 1.5;
+    const L = 1;
     const sigma = 0.07;
     const a = 0.003 * mul;
     const bias = 0.01 * mul;
-    const xArray = range(-0.15, 0.15, 0.01);
+    const xArray = range(-0.18, 0.18, 0.01);
     const yArray = xArray.map(x => L / (1 + Math.exp(-k * x)));
     const normDist = xArray.map(x => a /
       Math.sqrt(2 * Math.PI * sigma ** 2) *

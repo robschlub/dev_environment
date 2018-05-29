@@ -14,7 +14,7 @@ export default function Integral(
 ) {
   // const serifSides = 30;
   // const serifRadius = 0.05;
-  const vertices = new VertexIntegral(webgl, 2, true);
+  const vertices = new VertexIntegral(webgl, 1, true);
   // const serif = new VertexPolygonFilled(
   //   webgl,
   //   serifSides,
