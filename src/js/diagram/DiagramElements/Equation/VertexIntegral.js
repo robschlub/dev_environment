@@ -15,16 +15,23 @@ function range(start: number, stop: number, step: number) {
 class VertexIntegral extends VertexObject {
   height: number;
 
-  constructor(webgl: WebGLInstance) {
+  constructor(
+    webgl: WebGLInstance,
+    lineHeight: number = 1,
+    serif: boolean = true,
+  ) {
     super(webgl);
     this.glPrimative = this.gl.TRIANGLE_STRIP;
-
+    let mul = 1;
+    if (lineHeight === 1) {
+      mul = 1.5;
+    }
     const k = 20;
     const L = 1.5;
     const sigma = 0.07;
-    const a = 0.003;
-    const bias = 0.01;
-    const xArray = range(-0.2, 0.2, 0.01);
+    const a = 0.003 * mul;
+    const bias = 0.01 * mul;
+    const xArray = range(-0.15, 0.15, 0.01);
     const yArray = xArray.map(x => L / (1 + Math.exp(-k * x)));
     const normDist = xArray.map(x => a /
       Math.sqrt(2 * Math.PI * sigma ** 2) *
@@ -32,7 +39,7 @@ class VertexIntegral extends VertexObject {
     const xLeft = xArray.map((x, index) => x - normDist[index] - bias);
     const xRight = xArray.map((x, index) => x + normDist[index] + bias);
 
-    const serifRadius = 0.03;
+    const serifRadius = 0.03 * mul;
     const serifPoints = 31;
 
     // calculate upper serif properites
@@ -41,7 +48,7 @@ class VertexIntegral extends VertexObject {
     const gradient = k * yArray[num - 1] * (L - yArray[num - 1]);
     const theta = Math.atan(gradient);
     const alpha = Math.PI / 2 - theta;
-    console.log(yArray)
+
     const center = upperSerifPoint.add(new Point(
       serifRadius * Math.cos(alpha),
       -serifRadius * Math.sin(alpha),
@@ -53,21 +60,22 @@ class VertexIntegral extends VertexObject {
     const lowerSerifCenter = new Point(-center.x, L - center.y);
     const lowerSerifStartAngle = -alpha;
 
-    this.border.push([]);
-    this.border.push([]);
-
     // lower serif
-    for (let i = 0; i < serifPoints; i += 1) {
-      this.points.push(lowerSerifCenter.x);
-      this.points.push(lowerSerifCenter.y);
-      const angle = lowerSerifStartAngle + dAngle * i;
-      const perimeterPoint = new Point(
-        lowerSerifCenter.x + serifRadius * Math.cos(angle),
-        lowerSerifCenter.y + serifRadius * Math.sin(angle),
-      );
-      this.points.push(perimeterPoint.x);
-      this.points.push(perimeterPoint.y);
-      this.border[1].push(perimeterPoint);
+    if (serif) {
+      this.border.push([]);
+      this.border.push([]);
+      for (let i = 0; i < serifPoints; i += 1) {
+        this.points.push(lowerSerifCenter.x);
+        this.points.push(lowerSerifCenter.y);
+        const angle = lowerSerifStartAngle + dAngle * i;
+        const perimeterPoint = new Point(
+          lowerSerifCenter.x + serifRadius * Math.cos(angle),
+          lowerSerifCenter.y + serifRadius * Math.sin(angle),
+        );
+        this.points.push(perimeterPoint.x);
+        this.points.push(perimeterPoint.y);
+        this.border[1].push(perimeterPoint);
+      }
     }
 
     const borderLeft = [];
@@ -86,17 +94,19 @@ class VertexIntegral extends VertexObject {
     });
 
     // upper serif
-    for (let i = 0; i < serifPoints; i += 1) {
-      this.points.push(center.x);
-      this.points.push(center.y);
-      const angle = startAngle + dAngle * i;
-      const perimeterPoint = new Point(
-        center.x + serifRadius * Math.cos(angle),
-        center.y + serifRadius * Math.sin(angle),
-      );
-      this.points.push(perimeterPoint.x);
-      this.points.push(perimeterPoint.y);
-      this.border[2].push(perimeterPoint);
+    if (serif) {
+      for (let i = 0; i < serifPoints; i += 1) {
+        this.points.push(center.x);
+        this.points.push(center.y);
+        const angle = startAngle + dAngle * i;
+        const perimeterPoint = new Point(
+          center.x + serifRadius * Math.cos(angle),
+          center.y + serifRadius * Math.sin(angle),
+        );
+        this.points.push(perimeterPoint.x);
+        this.points.push(perimeterPoint.y);
+        this.border[2].push(perimeterPoint);
+      }
     }
     this.border[0] = borderLeft.concat(borderRight.reverse());
     this.border[0].push(this.border[0][0].copy());
