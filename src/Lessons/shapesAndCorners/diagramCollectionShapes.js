@@ -11,6 +11,7 @@ import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 import * as e from '../../js/diagram/Equation';
+import Integral from '../../js/diagram/DiagramElements/Equation/Integral';
 
 const colors = getScssColors(styles);
 const lineColor = colors.lines;
@@ -410,6 +411,11 @@ class ShapesCollection extends DiagramElementCollection {
     // console.log(eq1)
     this.eq1 = eq1;
     this.add('newEq', newEq);
+
+    const integral = new Integral(this.diagram.webgl, [1, 0, 0, 1], new Point(2, 0), this.diagram.limits);
+    integral.isTouchable = true;
+    integral.isMovable = true;
+    this.add('integral', integral);
   }
 
   resize(locations: Object) {

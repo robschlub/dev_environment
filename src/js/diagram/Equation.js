@@ -271,30 +271,6 @@ class Superscript extends SuperSub {
   }
 }
 
-// class Superscript extends Element {
-//   content: E;
-
-//   constructor(
-//     content: E,       // eslint-disable-line no-use-before-define
-//     id: string = '',
-//     classes: string | Array<string> = '',
-//   ) {
-//     super(id, classes);
-//     this.classes.push('subscript');
-//     this.content = content;
-//   }
-
-//   calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
-//     this.location = location.copy();
-//     this.location.y += 2 * fontSize / 4;
-//     this.content.calcSize(this.location.copy(), fontSize / 2, ctx);
-//     this.width = this.content.width;
-//     this.ascent = this.content.ascent;
-//     this.descent = this.content.descent;
-//   }
-// }
-
-
 class Fraction extends Element {
   numerator: E;
   denominator: E;
