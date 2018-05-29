@@ -134,8 +134,8 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
   const dt_b = [new DiagramText(new Point(0, 0), 'b', font)];
   const dt_c = [new DiagramText(new Point(0, 0), 'cg', font)];
   const dt_equals = [new DiagramText(new Point(0, 0), '=', font)];
-  dt_p2[0].font.size /= 2;
-  dt_p3[0].font.size /= 2;
+  // dt_p2[0].font.size /= 2;
+  // dt_p3[0].font.size /= 2;
 
   const to_2x = new TextObject(diagram.draw2D, dt_2x);
   const to_p2 = new TextObject(diagram.draw2D, dt_p2);

@@ -109,6 +109,12 @@ class TextObject extends DrawingObject {
     }
   }
 
+  setFont(fontSize: number) {
+    for (let i = 0; i < this.text.length; i += 1) {
+      this.text[i].font.size = fontSize;
+    }
+  }
+
   draw(
     translation: Point,
     rotation: number,

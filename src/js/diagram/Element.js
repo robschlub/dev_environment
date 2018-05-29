@@ -8,6 +8,7 @@ import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './DrawingObjects/VertexObject/VertexObject';
+import { TextObject } from './DrawingObjects/TextObject/TextObject';
 
 // Planned Animation
 class AnimationPhase {
@@ -878,6 +879,12 @@ class DiagramElementPrimative extends DiagramElement {
     return [];
   }
 
+  setFont(fontSize: number) {
+    if (this.vertices instanceof TextObject) {
+      this.vertices.setFont(fontSize);
+    }
+  }
+
   draw(parentTransform: Transform = new Transform(), now: number = 0) {
     if (this.show) {
       this.setNextTransform(now);
@@ -1202,6 +1209,13 @@ class DiagramElementCollection extends DiagramElement {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
       element.stop();
+    }
+  }
+
+  setFont(fontSize: number) {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.setFont(fontSize);
     }
   }
 }

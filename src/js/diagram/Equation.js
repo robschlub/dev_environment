@@ -84,6 +84,11 @@ class Text extends Element {
     return super.render(indent, `${' '.repeat(indent + 2)}${this.text}`);
   }
 
+  setFont(fontSize: number) {
+    if (this.textElement) {
+      this.textElement.setFont(fontSize);
+    }
+  }
   calcSize(loc: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
     if (this.text) {
       ctx.font = 'italic 20px Times New Roman';
@@ -95,6 +100,7 @@ class Text extends Element {
       this.ascent = m.actualBoundingBoxAscent;
       this.location = loc.copy();
     } else {
+      this.setFont(fontSize);
       const m = this.textElement.getRelativeDiagramBoundingRect();
       this.width = m.width;
       this.descent = -m.bottom;
