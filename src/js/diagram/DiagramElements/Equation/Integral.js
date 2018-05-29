@@ -9,12 +9,13 @@ import WebGLInstance from '../../webgl/webgl';
 export default function Integral(
   webgl: WebGLInstance,
   color: Array<number>,
+  numLines: number,
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
 ) {
   // const serifSides = 30;
   // const serifRadius = 0.05;
-  const vertices = new VertexIntegral(webgl, 1, true);
+  const vertices = new VertexIntegral(webgl, numLines, true);
   // const serif = new VertexPolygonFilled(
   //   webgl,
   //   serifSides,
@@ -29,5 +30,6 @@ export default function Integral(
   } else {
     transform = transformOrLocation.copy();
   }
+  console.log(numLines)
   return new DiagramElementPrimative(vertices, transform, color, diagramLimits);
 }

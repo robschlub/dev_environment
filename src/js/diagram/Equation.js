@@ -147,23 +147,23 @@ class E extends Element {
 
   calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
     // ctx.font = 'italic 20px Times New Roman';
-    let descent = 0;
-    let ascent = 0;
+    let des = 0;
+    let asc = 0;
     const loc = location.copy();
     this.content.forEach((element) => {
       element.calcSize(loc, fontSize, ctx);
       // console.log(loc)
       loc.x += element.width;
-      if (element.descent > descent) {
-        descent = element.descent;
+      if (element.descent > des) {
+        des = element.descent;
       }
-      if (element.ascent > ascent) {
-        ascent = element.ascent;
+      if (element.ascent > asc) {
+        asc = element.ascent;
       }
     });
     this.width = loc.x - location.x;
-    this.ascent = ascent;
-    this.descent = descent;
+    this.ascent = asc;
+    this.descent = des;
     this.location = location.copy();
   }
 
@@ -177,17 +177,20 @@ class E extends Element {
 class SuperSub extends Element {
   superscript: E | null;
   subscript: E | null;
+  subscriptXBias: number;
 
   constructor(
     superscript: E | null,       // eslint-disable-line no-use-before-define
     subscript: E | null,       // eslint-disable-line no-use-before-define
     id: string = '',
     classes: string | Array<string> = '',
+    subscriptXBias: number = 0.02,
   ) {
     super(id, classes);
     this.classes.push('supersub');
     this.superscript = superscript;
     this.subscript = subscript;
+    this.subscriptXBias = subscriptXBias;
     // console.log(this.subscript.content)
   }
 
@@ -218,7 +221,7 @@ class SuperSub extends Element {
 
     if (this.subscript !== null) {
       const subLoc = new Point(
-        this.location.x,
+        this.location.x - this.subscriptXBias,
         this.location.y - fontSize / 4,
       );
       this.subscript.calcSize(subLoc, fontSize / 2, ctx);

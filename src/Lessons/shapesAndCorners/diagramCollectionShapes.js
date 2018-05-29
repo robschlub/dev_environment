@@ -123,50 +123,65 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
     'alphabetic',
     [0, 1, 1, 1],
   );
-  const limits = diagram.limits;
-  const t = new Transform().translate(0, 0);
-  const c = [1, 0, 0, 1];
 
-  const dt_2x = [new DiagramText(new Point(0, 0), '2xyA', font)];
-  const dt_p2 = [new DiagramText(new Point(0, 0), '2', font)];
-  const dt_p3 = [new DiagramText(new Point(0, 0), '3', font)];
-  const dt_a = [new DiagramText(new Point(0, 0), 'att', font)];
-  const dt_b = [new DiagramText(new Point(0, 0), 'b', font)];
-  const dt_c = [new DiagramText(new Point(0, 0), 'cg', font)];
-  const dt_equals = [new DiagramText(new Point(0, 0), '=', font)];
-  // dt_p2[0].font.size /= 2;
-  // dt_p3[0].font.size /= 2;
+  // const limits = diagram.limits;
+  // const t = new Transform().translate(0, 0);
+  // const c = [1, 0, 0, 1];
 
-  const to_2x = new TextObject(diagram.draw2D, dt_2x);
-  const to_p2 = new TextObject(diagram.draw2D, dt_p2);
-  const to_p3 = new TextObject(diagram.draw2D, dt_p3);
-  const to_a = new TextObject(diagram.draw2D, dt_a);
-  const to_b = new TextObject(diagram.draw2D, dt_b);
-  const to_c = new TextObject(diagram.draw2D, dt_c);
-  const to_equals = new TextObject(diagram.draw2D, dt_equals);
+  // const dt_2x = [new DiagramText(new Point(0, 0), '2xyA', font)];
+  // const dt_p2 = [new DiagramText(new Point(0, 0), '2', font)];
+  // const dt_p3 = [new DiagramText(new Point(0, 0), '3', font)];
+  // const dt_a = [new DiagramText(new Point(0, 0), 'att', font)];
+  // const dt_b = [new DiagramText(new Point(0, 0), 'b', font)];
+  // const dt_c = [new DiagramText(new Point(0, 0), 'cg', font)];
+  // const dt_equals = [new DiagramText(new Point(0, 0), '=', font)];
+  // // dt_p2[0].font.size /= 2;
+  // // dt_p3[0].font.size /= 2;
 
-  const t_2x = new DiagramElementPrimative(to_2x, t, c, limits);
-  const t_p2 = new DiagramElementPrimative(to_p2, t, c, limits);
-  const t_p3 = new DiagramElementPrimative(to_p3, t, c, limits);
-  const t_a = new DiagramElementPrimative(to_a, t, c, limits);
-  const t_b = new DiagramElementPrimative(to_b, t, c, limits);
-  const t_c = new DiagramElementPrimative(to_c, t, c, limits);
-  const t_equals = new DiagramElementPrimative(to_equals, t, c, limits);
+  // const to_2x = new TextObject(diagram.draw2D, dt_2x);
+  // const to_p2 = new TextObject(diagram.draw2D, dt_p2);
+  // const to_p3 = new TextObject(diagram.draw2D, dt_p3);
+  // const to_a = new TextObject(diagram.draw2D, dt_a);
+  // const to_b = new TextObject(diagram.draw2D, dt_b);
+  // const to_c = new TextObject(diagram.draw2D, dt_c);
+  // const to_equals = new TextObject(diagram.draw2D, dt_equals);
 
-  const vinculum1 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [0, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
-  const vinculum2 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [0, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
+  // const t_2x = new DiagramElementPrimative(to_2x, t, c, limits);
+  // const t_p2 = new DiagramElementPrimative(to_p2, t, c, limits);
+  // const t_p3 = new DiagramElementPrimative(to_p3, t, c, limits);
+  // const t_a = new DiagramElementPrimative(to_a, t, c, limits);
+  // const t_b = new DiagramElementPrimative(to_b, t, c, limits);
+  // const t_c = new DiagramElementPrimative(to_c, t, c, limits);
+  // const t_equals = new DiagramElementPrimative(to_equals, t, c, limits);
 
-  const eq = shapes.collection(location);
-  eq.add('2x', t_2x);
-  eq.add('p2', t_p2);
-  eq.add('p3', t_p3);
-  eq.add('a', t_a);
-  eq.add('b', t_b);
-  eq.add('c', t_c);
-  eq.add('equals', t_equals);
-  eq.add('v1', vinculum1);
-  eq.add('v2', vinculum2);
-  t_2x.isTouchable = true;
+  // const vinculum1 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [1, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
+  // const vinculum2 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [1, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
+
+  // const eq = shapes.collection(location);
+  // eq.add('2x', t_2x);
+  // eq.add('p2', t_p2);
+  // eq.add('p3', t_p3);
+  // eq.add('a', t_a);
+  // eq.add('b', t_b);
+  // eq.add('c', t_c);
+  // eq.add('equals', t_equals);
+  // eq.add('v1', vinculum1);
+  // eq.add('v2', vinculum2);
+  // t_2x.isTouchable = true;
+  const eq = diagram.equation.elements({
+    '2x': '2x',
+    p2: '2',
+    p3: '3',
+    a: 'att',
+    b: 'b',
+    c: 'cg',
+    equals: '=',
+    v1: diagram.equation.vinculum(),
+    v2: diagram.equation.vinculum(),
+  });
+  // console.log(eq)
+  eq._2x.isTouchable = true;
+  eq._c.isTouchable = true;
   eq.isTouchable = true;
   eq.isMovable = true;
 
@@ -412,10 +427,23 @@ class ShapesCollection extends DiagramElementCollection {
     this.eq1 = eq1;
     this.add('newEq', newEq);
 
-    const integral = new Integral(this.diagram.webgl, [1, 0, 0, 1], new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
+    const integral = new Integral(this.diagram.webgl, [1, 0, 0, 1], 2, new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
     integral.isTouchable = true;
     integral.isMovable = true;
     this.add('integral', integral);
+
+    // diagram.equation.elements(
+    //   ['2AC', '2AC']
+    //   ['b', 'b'] 
+    //   ['2', '2']
+    //   ['4ac', '4ac'],
+    // );
+    // diagram.equation.elements({
+    //   _2AC: '2AC',
+
+    // })
+    // '|2AC|b|2A^5
+    // e(e.frac('b', '+', '2AC')(e.sqrt('2', '4ac')), 
   }
 
   resize(locations: Object) {
