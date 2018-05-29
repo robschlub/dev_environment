@@ -20,9 +20,9 @@ class VertexIntegral extends VertexObject {
     this.glPrimative = this.gl.TRIANGLE_STRIP;
 
     const k = 20;
-    const L = 1;
-    const sigma = 0.06;
-    const a = 0.005;
+    const L = 1.5;
+    const sigma = 0.07;
+    const a = 0.003;
     const bias = 0.01;
     const xArray = range(-0.2, 0.2, 0.01);
     const yArray = xArray.map(x => L / (1 + Math.exp(-k * x)));
@@ -32,25 +32,77 @@ class VertexIntegral extends VertexObject {
     const xLeft = xArray.map((x, index) => x - normDist[index] - bias);
     const xRight = xArray.map((x, index) => x + normDist[index] + bias);
 
+    const serifRadius = 0.03;
+    const serifPoints = 31;
+
+    // calculate upper serif properites
+    const num = xLeft.length;
+    const upperSerifPoint = new Point(xLeft[num - 1], yArray[num - 1]);
+    const gradient = k * yArray[num - 1] * (L - yArray[num - 1]);
+    const theta = Math.atan(gradient);
+    const alpha = Math.PI / 2 - theta;
+    console.log(yArray)
+    const center = upperSerifPoint.add(new Point(
+      serifRadius * Math.cos(alpha),
+      -serifRadius * Math.sin(alpha),
+    ));
+    const dAngle = Math.PI * 2 / (serifPoints - 1);
+    const startAngle = Math.PI / 2 + theta;
+
+    // calculate lower serif properties
+    const lowerSerifCenter = new Point(-center.x, L - center.y);
+    const lowerSerifStartAngle = -alpha;
+
+    this.border.push([]);
+    this.border.push([]);
+
+    // lower serif
+    for (let i = 0; i < serifPoints; i += 1) {
+      this.points.push(lowerSerifCenter.x);
+      this.points.push(lowerSerifCenter.y);
+      const angle = lowerSerifStartAngle + dAngle * i;
+      const perimeterPoint = new Point(
+        lowerSerifCenter.x + serifRadius * Math.cos(angle),
+        lowerSerifCenter.y + serifRadius * Math.sin(angle),
+      );
+      this.points.push(perimeterPoint.x);
+      this.points.push(perimeterPoint.y);
+      this.border[1].push(perimeterPoint);
+    }
+
     const borderLeft = [];
     const borderRight = [];
     yArray.map((y, index) => {
       const pLeft = new Point(xLeft[index], y);
       const pRight = new Point(xRight[index], y);
 
-      this.points.push(pLeft.x);
-      this.points.push(pLeft.y);
       this.points.push(pRight.x);
       this.points.push(pRight.y);
+      this.points.push(pLeft.x);
+      this.points.push(pLeft.y);
       borderLeft.push(pLeft.copy());
       borderRight.push(pRight.copy());
       return undefined;
     });
+
+    // upper serif
+    for (let i = 0; i < serifPoints; i += 1) {
+      this.points.push(center.x);
+      this.points.push(center.y);
+      const angle = startAngle + dAngle * i;
+      const perimeterPoint = new Point(
+        center.x + serifRadius * Math.cos(angle),
+        center.y + serifRadius * Math.sin(angle),
+      );
+      this.points.push(perimeterPoint.x);
+      this.points.push(perimeterPoint.y);
+      this.border[2].push(perimeterPoint);
+    }
     this.border[0] = borderLeft.concat(borderRight.reverse());
     this.border[0].push(this.border[0][0].copy());
-    this.points[0] = new Point(0, 0);
-    this.points[1] = new Point(0, 0.5);
-    this.points[2] = new Point(0.5, 0.5);
+    // this.points[0] = new Point(0, 0);
+    // this.points[1] = new Point(0, 0.5);
+    // this.points[2] = new Point(0.5, 0.5);
     this.setupBuffer();
   }
 }
