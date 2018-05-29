@@ -111,51 +111,188 @@ class Text extends Element {
   }
 }
 
-class Subscript extends Element {
-  content: E;
+class E extends Element {
+  content: Array<Element>;
 
+  constructor(
+    content: string | Array<Element> | DiagramElementCollection | DiagramElementPrimative,
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    super(id, classes);
+    this.applyContent(content);
+  }
+
+  applyContent(content: string | Array<Element> |
+               DiagramElementCollection | DiagramElementPrimative) {
+    if (Array.isArray(content)) {
+      this.content = content;
+    } else if (typeof content === 'string') {
+      this.content = [new Text(content)];
+    } else {
+      this.content = [new Text(content)];
+    }
+  }
+
+  render(indent: number = 0) {
+    return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
+  }
+
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
+    // ctx.font = 'italic 20px Times New Roman';
+    let descent = 0;
+    let ascent = 0;
+    const loc = location.copy();
+    this.content.forEach((element) => {
+      element.calcSize(loc, fontSize, ctx);
+      // console.log(loc)
+      loc.x += element.width;
+      if (element.descent > descent) {
+        descent = element.descent;
+      }
+      if (element.ascent > ascent) {
+        ascent = element.ascent;
+      }
+    });
+    this.width = loc.x - location.x;
+    this.ascent = ascent;
+    this.descent = descent;
+    this.location = location.copy();
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    this.content.forEach((element) => {
+      element.draw(ctx);
+    });
+  }
+}
+
+class SuperSub extends Element {
+  superscript: E | null;
+  subscript: E | null;
+
+  constructor(
+    superscript: E | null,       // eslint-disable-line no-use-before-define
+    subscript: E | null,       // eslint-disable-line no-use-before-define
+    id: string = '',
+    classes: string | Array<string> = '',
+  ) {
+    super(id, classes);
+    this.classes.push('supersub');
+    this.superscript = superscript;
+    this.subscript = subscript;
+    // console.log(this.subscript.content)
+  }
+
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
+    this.location = location.copy();
+    let w = 0;
+    let asc = 0;
+    let des = 0;
+    if (this.superscript !== null) {
+      const superLoc = new Point(
+        this.location.x,
+        this.location.y + fontSize / 2,
+      );
+      this.superscript.calcSize(superLoc, fontSize / 2, ctx);
+      w = Math.max(
+        w,
+        this.superscript.width,
+      );
+      asc = Math.max(
+        asc,
+        this.superscript.ascent + superLoc.y - this.location.y,
+      );
+      des = Math.max(
+        des,
+        this.location.y - (superLoc.y - this.superscript.descent),
+      );
+    }
+
+    if (this.subscript !== null) {
+      const subLoc = new Point(
+        this.location.x,
+        this.location.y - fontSize / 4,
+      );
+      this.subscript.calcSize(subLoc, fontSize / 2, ctx);
+      w = Math.min(w, this.subscript.width);
+      asc = Math.max(asc, this.subscript.ascent + subLoc.y - this.location.y);
+      des = Math.max(des, this.subscript.descent + (this.location.y - subLoc.y));
+    }
+    this.width = w;
+    this.ascent = asc;
+    this.descent = des;
+  }
+
+  render(indent: number = 0) {
+    const s = ' '.repeat(indent + 2);
+    let out = '';
+    out += `${s}<div class="super_sub_super superscript element">\n`;
+    if (this.superscript !== null) {
+      out += this.superscript.render(indent + 4);
+    }
+    out += `\n${s}</div>\n`;
+    out += `${s}<div class="super_sub_sub subscript element">\n`;
+    if (this.subscript !== null) {
+      out += this.subscript.render(indent + 4);
+    }
+    out += `\n${s}</div>`;
+    return super.render(indent, out);
+  }
+}
+
+class Subscript extends SuperSub {
   constructor(
     content: E,       // eslint-disable-line no-use-before-define
     id: string = '',
     classes: string | Array<string> = '',
   ) {
-    super(id, classes);
+    super(null, content, id, classes);
+    const index = this.classes.indexOf('supersub');
+    if (index > -1) {
+      this.classes.splice(index, 1);
+    }
     this.classes.push('subscript');
-    this.content = content;
-  }
-
-  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
-    this.location = location.copy();
-    this.location.y -= fontSize / 4;
-    this.content.calcSize(this.location.copy(), fontSize / 2, ctx);
-    this.width = this.content.width;
-    this.ascent = this.content.ascent;
-    this.descent = this.content.descent;
   }
 }
 
-class Superscript extends Element {
-  content: E;
-
+class Superscript extends SuperSub {
   constructor(
     content: E,       // eslint-disable-line no-use-before-define
     id: string = '',
     classes: string | Array<string> = '',
   ) {
-    super(id, classes);
-    this.classes.push('subscript');
-    this.content = content;
-  }
-
-  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
-    this.location = location.copy();
-    this.location.y += 2 * fontSize / 4;
-    this.content.calcSize(this.location.copy(), fontSize / 2, ctx);
-    this.width = this.content.width;
-    this.ascent = this.content.ascent;
-    this.descent = this.content.descent;
+    super(content, null, id, classes);
+    const index = this.classes.indexOf('supersub');
+    if (index > -1) {
+      this.classes.splice(index, 1);
+    }
+    this.classes.push('superscript');
   }
 }
+
+// class Superscript extends Element {
+//   content: E;
+
+//   constructor(
+//     content: E,       // eslint-disable-line no-use-before-define
+//     id: string = '',
+//     classes: string | Array<string> = '',
+//   ) {
+//     super(id, classes);
+//     this.classes.push('subscript');
+//     this.content = content;
+//   }
+
+//   calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
+//     this.location = location.copy();
+//     this.location.y += 2 * fontSize / 4;
+//     this.content.calcSize(this.location.copy(), fontSize / 2, ctx);
+//     this.width = this.content.width;
+//     this.ascent = this.content.ascent;
+//     this.descent = this.content.descent;
+//   }
+// }
 
 
 class Fraction extends Element {
@@ -292,60 +429,7 @@ class Root extends Element {
   }
 }
 
-class E extends Element {
-  content: Array<Element>;
 
-  constructor(
-    content: string | Array<Element> | DiagramElementCollection | DiagramElementPrimative,
-    id: string = '',
-    classes: string | Array<string> = [],
-  ) {
-    super(id, classes);
-    this.applyContent(content);
-  }
-
-  applyContent(content: string | Array<Element> | DiagramElementCollection | DiagramElementPrimative) {
-    if (Array.isArray(content)) {
-      this.content = content;
-    } else if (typeof content === 'string') {
-      this.content = [new Text(content)];
-    } else {
-      this.content = [new Text(content)];
-    }
-  }
-
-  render(indent: number = 0) {
-    return super.render(indent, this.content.map(c => c.render(indent + 2)).join('\n'));
-  }
-
-  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
-    // ctx.font = 'italic 20px Times New Roman';
-    let descent = 0;
-    let ascent = 0;
-    const loc = location.copy();
-    this.content.forEach((element) => {
-      element.calcSize(loc, fontSize, ctx);
-      // console.log(loc)
-      loc.x += element.width;
-      if (element.descent > descent) {
-        descent = element.descent;
-      }
-      if (element.ascent > ascent) {
-        ascent = element.ascent;
-      }
-    });
-    this.width = loc.x - location.x;
-    this.ascent = ascent;
-    this.descent = descent;
-    this.location = location.copy();
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    this.content.forEach((element) => {
-      element.draw(ctx);
-    });
-  }
-}
 
 function contentToE(content: string | E): E {
   let c;
@@ -357,18 +441,31 @@ function contentToE(content: string | E): E {
   return c;
 }
 
+function supsub(
+  superscript: E | string,
+  subscript: E | string,
+  id: string = '',
+  classes: string | Array<string> = [],
+) {
+  return new SuperSub(
+    contentToE(superscript),
+    contentToE(subscript),
+    id,
+    classes,
+  );
+}
 function sub(
   content: E | string,
-  id: string,
-  classes: string | Array<string>,
+  id: string = '',
+  classes: string | Array<string> = [],
 ) {
   return new Subscript(contentToE(content), id, classes);
 }
 
 function sup(
   content: E | string,
-  id: string,
-  classes: string | Array<string>,
+  id: string = '',
+  classes: string | Array<string> = [],
 ) {
   return new Superscript(contentToE(content), id, classes);
 }
@@ -557,7 +654,7 @@ class Equation extends Element {
   }
 }
 
-export { Text, Fraction, Equation, e, frac, sqrt, sub, sup };
+export { Text, Fraction, Equation, e, frac, sqrt, sub, sup, supsub };
 
 
 // class Equation {
