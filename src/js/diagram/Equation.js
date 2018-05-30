@@ -150,6 +150,7 @@ class E extends Element {
     let des = 0;
     let asc = 0;
     const loc = location.copy();
+    console.log(this.content)
     this.content.forEach((element) => {
       element.calcSize(loc, fontSize, ctx);
       // console.log(loc)
@@ -415,8 +416,6 @@ class Root extends Element {
   }
 }
 
-
-
 function contentToE(content: string | E): E {
   let c;
   if (typeof content === 'string') {
@@ -591,6 +590,69 @@ function sqrt(
 //   }
 // }
 
+class DiagramEquation extends E {
+  // content: Array<Element>;
+  // location: Point;
+  collection: DiagramElementCollection;
+
+  constructor(collection: DiagramElementCollection) {
+    super([], '', '');
+    this.collection = collection;
+  }
+
+  getDiagramElement(name: string) {
+    return this.collection[`_${name}`];
+  }
+
+  createEq(content: Array<E | string>) {
+    const elements = [];
+    content.forEach((c) => {
+      if (typeof c === 'string') {
+        elements.push(new Text(this.getDiagramElement(c)));
+      } else {
+        elements.push(c);
+      }
+      this.content = elements;
+    });
+  }
+
+  contentToElement(content: Array<E | string> | E | string) {
+    if (content instanceof E) {
+      return content;
+    }
+
+    const elementArray: Array<E> = [];
+    if (typeof content === 'string') {
+      elementArray.push(this.getDiagramElement(content));
+    }
+    if (Array.isArray(content)) {
+      content.forEach((c) => {
+        if (typeof c === 'string') {
+          elementArray.push(new Text(this.getDiagramElement(c)));
+        }
+        if (c instanceof E) {
+          elementArray.push(c);
+        }
+      });
+    }
+    return new E(elementArray);
+  }
+
+  frac(
+    numerator: Array<E | string> | E | string,
+    denominator: Array<E | string> | E | string,
+    vinculumOrid: string | DiagramElementPrimative = '',
+    classes: string | Array<string> = [],
+  ) {
+    return new Fraction(
+      this.contentToElement(numerator),
+      this.contentToElement(denominator),
+      this.getDiagramElement(vinculumOrid),
+      classes,
+    );
+  }
+}
+
 class Equation extends Element {
   content: E;
 
@@ -640,7 +702,7 @@ class Equation extends Element {
   }
 }
 
-export { Text, Fraction, Equation, e, frac, sqrt, sub, sup, supsub };
+export { Text, Fraction, Equation, e, frac, sqrt, sub, sup, supsub, DiagramEquation };
 
 
 // class Equation {

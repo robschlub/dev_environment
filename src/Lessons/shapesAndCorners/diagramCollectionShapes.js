@@ -424,7 +424,7 @@ class ShapesCollection extends DiagramElementCollection {
     const equals = e.e(newEq._equals);
     const eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
     // console.log(eq1)
-    this.eq1 = eq1;
+    // this.eq1 = eq1;
     this.add('newEq', newEq);
 
     const integral = new Integral(this.diagram.webgl, [1, 0, 0, 1], 2, new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
@@ -432,6 +432,40 @@ class ShapesCollection extends DiagramElementCollection {
     integral.isMovable = true;
     this.add('integral', integral);
 
+    const eq2 = diagram.equation.make(newEq);
+    eq2.createEq(
+      [
+        eq2.frac(
+          ['2x', 'p2', 'p3'],
+          ['a'],
+          'v1',
+        ),
+        'equals',
+        eq2.frac(
+          ['b'],
+          ['c'],
+          'v2',
+        ),
+      ],
+    );
+    console.log(eq2)
+    this.eq1 = eq2;
+    // const eq1 = diagram.equation.make(
+    //   eq,
+    //   [
+    //     e.frac(
+    //       ['2x', 'a'],
+    //       ['a'],
+    //       'v1',
+    //     ),
+    //     'equals',
+    //     e.frac(
+    //       ['b'],
+    //       'c',
+    //       'v2',
+    //     ),
+    //   ],
+    // );
     // diagram.equation.elements(
     //   ['2AC', '2AC']
     //   ['b', 'b'] 

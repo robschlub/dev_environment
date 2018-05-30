@@ -19,6 +19,7 @@ import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
 import Integral from './DiagramElements/Equation/Integral';
+import { DiagramEquation } from './Equation';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -92,10 +93,16 @@ function equation(diagram: Diagram) {
       diagram.limits,
     );
   }
+  function make(equationCollection: DiagramElementCollection) {
+    console.log(DiagramEquation)
+    return new DiagramEquation(equationCollection);
+  }
+
   return {
     elements,
     vinculum,
     integral,
+    make,
   };
 }
 function shapes(webgl: WebGLInstance, limits: Rect) {
