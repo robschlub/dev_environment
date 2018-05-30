@@ -443,7 +443,7 @@ class ShapesCollection extends DiagramElementCollection {
         'equals',
         eq2.frac(
           ['b'],
-          ['c'],
+          'c',
           'v2',
         ),
       ],

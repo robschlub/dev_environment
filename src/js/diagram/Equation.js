@@ -623,7 +623,7 @@ class DiagramEquation extends E {
 
     const elementArray: Array<E> = [];
     if (typeof content === 'string') {
-      elementArray.push(this.getDiagramElement(content));
+      elementArray.push(new Text(this.getDiagramElement(content)));
     }
     if (Array.isArray(content)) {
       content.forEach((c) => {
