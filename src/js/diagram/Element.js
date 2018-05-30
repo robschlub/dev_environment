@@ -1218,6 +1218,45 @@ class DiagramElementCollection extends DiagramElement {
       element.setFont(fontSize);
     }
   }
+
+  getElementTransforms() {
+    const out = {};
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      out[element.name] = element.transform.copy();
+    }
+    return out;
+  }
+  setElementTransforms(elementTransforms: Object) {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element.name in elementTransforms) {
+        element.transform = elementTransforms[element.name];
+      }
+    }
+  }
+
+  animateToTransforms(
+    elementTransforms: Object,
+    time: number = 1,
+    rotDirection: number = 0,
+    easeFunction: (number) => number = tools.easeinout,
+    callback: ?(?mixed) => void = null,
+  ) {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element.name in elementTransforms) {
+        element.animateTo(
+          elementTransforms[element.name],
+          time,
+          rotDirection,
+          easeFunction,
+          callback,
+        );
+        console.log("animated:", element.name, element.transform.t(), elementTransforms[element.name].t())
+      }
+    }
+  }
 }
 
 export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };

@@ -478,8 +478,27 @@ class ShapesCollection extends DiagramElementCollection {
         'v2',
       ),
     ]);
+    const eq3 = diagram.equation.make(eq2Elements);
+    eq3.createEq([
+      eq3.int(eq3.frac('g', 'n2', 'v3'), 'h', [eq3.sup('x', 'x2'), 'dx'], 'i1'),
+      'e1',
+      eq3.frac(
+        [eq2.sFrac('h1', 'h2', 'v4'), 'a', eq3.supSub('b', 'c', 'd')],
+        ['e'],
+        'v1',
+      ),
+      'e2',
+      eq3.frac(
+        ['2x'],
+        'f',
+        'v2',
+      ),
+    ]);
+    const transforms = eq2Elements.getElementTransforms();
+    eq2Elements.setElementTransforms(transforms);
     // console.log(eq2)
     this.eq1 = eq2;
+    this.eq3 = eq3;
     // const eq1 = diagram.equation.make(
     //   eq,
     //   [

@@ -1,5 +1,5 @@
 // @flow
-import { Point, Rect } from './tools/g2';
+import { Point } from './tools/g2';
 import { roundNum } from './tools/mathtools';
 import { DiagramElementPrimative, DiagramElementCollection } from './Element';
 // function makeIdText(id) {
@@ -762,6 +762,19 @@ class DiagramEquation extends E {
   constructor(collection: DiagramElementCollection) {
     super([], '', '');
     this.collection = collection;
+  }
+
+  animateTo(
+    location: Point,
+    fontSize: number,
+    ctx: CanvasRenderingContext2D,
+    time: number = 1,
+  ) {
+    const currentTransforms = this.collection.getElementTransforms();
+    this.calcSize(location, fontSize, ctx);
+    const animateToTransforms = this.collection.getElementTransforms();
+    this.collection.setElementTransforms(currentTransforms);
+    this.collection.animateToTransforms(animateToTransforms, time);
   }
 
   getDiagramElement(name: string | DiagramElementPrimative) {

@@ -53,7 +53,7 @@ class Section1 extends Section {
       collection._pent._moreSharpCorners,
       collection._pent._lessSharpCorners,
     ]);
-
+    
     diagram.elements._shapes.eq1.calcSize(new Point(-1, -1), 0.2, null);
     diagram.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
 
@@ -125,6 +125,7 @@ class Section2 extends Section {
     diagram.elements._shapes.hideAll();
     diagram.elements._shapes._eq2Elements.showAll();
     diagram.elements._shapes.show = true;
+    diagram.elements._shapes.eq3.animateTo(new Point(-1, -1), 0.2, null, 3);
 
     this.onClickId('id_line', collection.pulseRadius, [collection]);
     this.onClickId('id_anchor', collection.pulseAnchor, [collection]);
