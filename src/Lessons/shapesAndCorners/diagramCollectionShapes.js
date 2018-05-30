@@ -435,7 +435,9 @@ class ShapesCollection extends DiagramElementCollection {
 
     const eq2Elements = this.diagram.equation.elements({
       '2x': '2x',
-      n1: '1',
+      x: 'x',
+      dx: 'dx',
+      x2: '2',
       n2: '2',
       h1: '1',
       h2: '2',
@@ -447,7 +449,8 @@ class ShapesCollection extends DiagramElementCollection {
       f: 'f',
       g: 'g',
       h: 'h',
-      equals: '=',
+      e1: '  =  ',
+      e2: '  =  ',
       v1: this.diagram.equation.vinculum(),
       v2: this.diagram.equation.vinculum(),
       v3: this.diagram.equation.vinculum(),
@@ -461,14 +464,14 @@ class ShapesCollection extends DiagramElementCollection {
     eq2Elements.touchInBoundingRect = true;
     const eq2 = diagram.equation.make(eq2Elements);
     eq2.createEq([
-      eq2.int(eq2.frac('g', 'n2', 'v3'), 'h', 'n1', 'i1'),
-      eq2.sFrac('h1', 'h2', 'v4'),
+      eq2.int(eq2.frac('g', 'n2', 'v3'), 'h', [eq2.sup('x', 'x2'), 'dx'], 'i1'),
+      'e1',
       eq2.frac(
-        ['a', eq2.supSub('b', 'c', 'd')],
+        [eq2.sFrac('h1', 'h2', 'v4'), 'a', eq2.supSub('b', 'c', 'd')],
         ['e'],
         'v1',
       ),
-      'equals',
+      'e2',
       eq2.frac(
         ['f'],
         '2x',

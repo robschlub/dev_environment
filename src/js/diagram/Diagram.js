@@ -75,6 +75,17 @@ function equation(diagram: Diagram) {
     });
     return equationElements;
   }
+  // function equals(color: Array<number> = [1, 1, 1, 1]) {
+  //   const dT = new DiagramText(new Point(0, 0), ' = ', font);
+  //   const to = new TextObject(diagram.draw2D, [dT]);
+  //   const p = new DiagramElementPrimative(
+  //     to,
+  //     new Transform().translate(0, 0),
+  //     [1, 1, 1, 1],
+  //     diagram.limits,
+  //   );
+  //   return 
+  // }
   function vinculum(color: Array<number> = [1, 1, 1, 1]) {
     return diagram.shapes.horizontalLine(
       new Point(0, 0),

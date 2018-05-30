@@ -189,8 +189,8 @@ class SuperSub extends Element {
     subscript: E | null,       // eslint-disable-line no-use-before-define
     id: string = '',
     classes: string | Array<string> = '',
-    bias: number = 0.02,
-    subscriptXBias: number = 0.02,
+    bias: number = 0,
+    subscriptXBias: number = 0,
   ) {
     super(id, classes);
     this.classes.push('supersub');
@@ -213,7 +213,7 @@ class SuperSub extends Element {
     if (this.superscript !== null) {
       const superLoc = new Point(
         this.location.x + this.content.width + this.bias,
-        this.location.y + this.content.ascent - fontSize / 2,
+        this.location.y + this.content.ascent - fontSize / 3,
       );
       this.superscript.calcSize(superLoc, fontSize / 2, ctx);
       w = Math.max(
@@ -477,8 +477,8 @@ class Integral extends Element {
 
     const integralMinHeight =
       contentBounds.ascent + contentBounds.descent +
-      limitMinBounds.ascent + limitMinBounds.descent +
-      limitMaxBounds.ascent + limitMaxBounds.descent;
+      limitMinBounds.height + // limitMinBounds.descent +
+      limitMaxBounds.height; // + limitMaxBounds.ascent;
     const integralSymbolLocation = new Point(
       loc.x,
       loc.y - Math.max(
@@ -488,7 +488,7 @@ class Integral extends Element {
     );
     const numLines = roundNum(integralMinHeight / fontSize, 0);
     if (this.integralSymbol) {
-      const height = numLines * fontSize * 1.5;
+      const height = numLines * fontSize * 1.3;
       this.integralSymbol.transform.updateScale(
         height,
         height,
@@ -518,9 +518,9 @@ class Integral extends Element {
 
     const contentLocation = new Point(
       Math.max(
-        this.location.x + integralSymbolBounds.width,
-        maxLimitLocation.x + limitMaxBounds.width,
-        minLimitLocation.x + limitMinBounds.width,
+        this.location.x + integralSymbolBounds.width * 0.8,
+        // maxLimitLocation.x + limitMaxBounds.width,
+        // minLimitLocation.x + limitMinBounds.width,
       ),
       this.location.y,
     );
