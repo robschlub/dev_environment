@@ -172,6 +172,7 @@ function makeEq(diagram: Diagram, shapes: Object, location: Point) {
     '2x': '2x',
     p2: '2',
     p3: '3',
+    p4: '4',
     a: 'att',
     b: 'b',
     c: 'cg',
@@ -401,7 +402,7 @@ class ShapesCollection extends DiagramElementCollection {
     // const n = e.e([e.e('b');
     const d = e.e('2AC');
     // const eq = new e.Equation(e.frac(n, d), 'eq1');
-    const n = e.e([e.e('b'), e.supsub(e.e('b'), e.e('2')), e.e('4AC')]);
+    const n = e.e([e.e('b'), e.e('b'), e.e('2'), e.e('4AC')]);
     const eq = new e.Equation([e.frac(n, d), e.e('='), e.e('0')], 'eq1');
     this.eq = eq;
     this.diagram.htmlCanvas.appendChild(eq.htmlElement());
@@ -416,7 +417,7 @@ class ShapesCollection extends DiagramElementCollection {
     ehp.isMovable = true;
     this.add('equation', ehp);
     const newEq = makeEq(this.diagram, shapes, new Point(0, 0));
-    const n1 = e.e([e.e(newEq._2x), e.supsub(e.e(newEq._p3), e.e(newEq._p2))]);
+    const n1 = e.e([e.e(newEq._2x), e.e(newEq._p3, e.e(newEq._p2))]);
     const n2 = e.e(newEq._b);
     const d1 = e.e(newEq._a);
     const d2 = e.e(newEq._c);
@@ -433,21 +434,19 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('integral', integral);
 
     const eq2 = diagram.equation.make(newEq);
-    eq2.createEq(
-      [
-        eq2.frac(
-          ['2x', 'p2', 'p3'],
-          ['a'],
-          'v1',
-        ),
-        'equals',
-        eq2.frac(
-          ['b'],
-          'c',
-          'v2',
-        ),
-      ],
-    );
+    eq2.createEq([
+      eq2.frac(
+        ['p2', eq2.supSub('c', 'p3', 'p4')],
+        ['a'],
+        'v1',
+      ),
+      'equals',
+      eq2.frac(
+        ['b'],
+        '2x',
+        'v2',
+      ),
+    ]);
     console.log(eq2)
     this.eq1 = eq2;
     // const eq1 = diagram.equation.make(

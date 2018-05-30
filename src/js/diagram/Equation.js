@@ -150,7 +150,7 @@ class E extends Element {
     let des = 0;
     let asc = 0;
     const loc = location.copy();
-    console.log(this.content)
+    // console.log(this.content)
     this.content.forEach((element) => {
       element.calcSize(loc, fontSize, ctx);
       // console.log(loc)
@@ -179,12 +179,16 @@ class SuperSub extends Element {
   superscript: E | null;
   subscript: E | null;
   subscriptXBias: number;
+  content: E;
+  bias: number;
 
   constructor(
+    content: E,
     superscript: E | null,       // eslint-disable-line no-use-before-define
     subscript: E | null,       // eslint-disable-line no-use-before-define
     id: string = '',
     classes: string | Array<string> = '',
+    bias: number = 0.02,
     subscriptXBias: number = 0.02,
   ) {
     super(id, classes);
@@ -192,23 +196,28 @@ class SuperSub extends Element {
     this.superscript = superscript;
     this.subscript = subscript;
     this.subscriptXBias = subscriptXBias;
+    this.content = content;
+    this.bias = bias;
     // console.log(this.subscript.content)
   }
 
   calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
     this.location = location.copy();
-    let w = 0;
-    let asc = 0;
-    let des = 0;
+    const loc = location.copy();
+    this.content.calcSize(loc, fontSize, ctx);
+    let w = this.content.width;
+    let asc = this.content.ascent;
+    let des = this.content.descent;
+
     if (this.superscript !== null) {
       const superLoc = new Point(
-        this.location.x,
-        this.location.y + fontSize / 2,
+        this.location.x + this.content.width + this.bias,
+        this.location.y + this.content.ascent - fontSize / 2,
       );
       this.superscript.calcSize(superLoc, fontSize / 2, ctx);
       w = Math.max(
         w,
-        this.superscript.width,
+        superLoc.x - this.location.x + this.superscript.width,
       );
       asc = Math.max(
         asc,
@@ -222,11 +231,14 @@ class SuperSub extends Element {
 
     if (this.subscript !== null) {
       const subLoc = new Point(
-        this.location.x - this.subscriptXBias,
-        this.location.y - fontSize / 4,
+        this.location.x + this.content.width - this.subscriptXBias + this.bias,
+        this.location.y - this.content.descent,
       );
       this.subscript.calcSize(subLoc, fontSize / 2, ctx);
-      w = Math.min(w, this.subscript.width);
+      w = Math.min(
+        w,
+        subLoc.x - this.location.x + this.subscript.width,
+      );
       asc = Math.max(asc, this.subscript.ascent + subLoc.y - this.location.y);
       des = Math.max(des, this.subscript.descent + (this.location.y - subLoc.y));
     }
@@ -255,10 +267,11 @@ class SuperSub extends Element {
 class Subscript extends SuperSub {
   constructor(
     content: E,       // eslint-disable-line no-use-before-define
+    subscript: E,
     id: string = '',
     classes: string | Array<string> = '',
   ) {
-    super(null, content, id, classes);
+    super(content, null, subscript, id, classes);
     const index = this.classes.indexOf('supersub');
     if (index > -1) {
       this.classes.splice(index, 1);
@@ -270,10 +283,11 @@ class Subscript extends SuperSub {
 class Superscript extends SuperSub {
   constructor(
     content: E,       // eslint-disable-line no-use-before-define
+    superscript: E,
     id: string = '',
     classes: string | Array<string> = '',
   ) {
-    super(content, null, id, classes);
+    super(content, superscript, null, id, classes);
     const index = this.classes.indexOf('supersub');
     if (index > -1) {
       this.classes.splice(index, 1);
@@ -356,6 +370,7 @@ class Fraction extends Element {
       fontSize,
       ctx,
     );
+
     this.denominator.calcSize(
       new Point(loc.x + xDenominator, loc.y - yScale * yDenominator),
       fontSize,
@@ -629,8 +644,7 @@ class DiagramEquation extends E {
       content.forEach((c) => {
         if (typeof c === 'string') {
           elementArray.push(new Text(this.getDiagramElement(c)));
-        }
-        if (c instanceof E) {
+        } else {
           elementArray.push(c);
         }
       });
@@ -648,6 +662,50 @@ class DiagramEquation extends E {
       this.contentToElement(numerator),
       this.contentToElement(denominator),
       this.getDiagramElement(vinculumOrid),
+      classes,
+    );
+  }
+
+  sub(
+    content: Array<E | string> | E | string,
+    subscript: Array<E | string> | E | string,
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    return new Subscript(
+      this.contentToElement(content),
+      this.contentToElement(subscript),
+      id,
+      classes,
+    );
+  }
+
+  supSub(
+    content: Array<E | string> | E | string,
+    superscript: Array<E | string> | E | string,
+    subscript: Array<E | string> | E | string,
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    return new SuperSub(
+      this.contentToElement(content),
+      this.contentToElement(superscript),
+      this.contentToElement(subscript),
+      id,
+      classes,
+    );
+  }
+
+  sup(
+    content: Array<E | string> | E | string,
+    superscript: Array<E | string> | E | string,
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    return new Superscript(
+      this.contentToElement(content),
+      this.contentToElement(superscript),
+      id,
       classes,
     );
   }
