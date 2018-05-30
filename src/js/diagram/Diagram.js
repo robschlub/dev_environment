@@ -42,7 +42,7 @@ function equation(diagram: Diagram) {
   function elements(elems: Object) {
     const font = new DiagramFont(
       'Times New Roman',
-      'italic',
+      'normal',
       0.4,
       '200',
       'left',
@@ -84,7 +84,10 @@ function equation(diagram: Diagram) {
     );
   }
 
-  function integral(color: Array<number> = [1, 1, 1, 1], numLines: number = 1) {
+  function integral(
+    numLines: number = 1,
+    color: Array<number> = [1, 1, 1, 1],
+  ) {
     return new Integral(
       diagram.webgl,
       color,

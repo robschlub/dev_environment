@@ -305,6 +305,7 @@ class Fraction extends Element {
   lineWidth: number;
   lineVAboveBaseline: number;
   vinculum: DiagramElementPrimative;
+  fontScaleFactor: number;
 
   constructor(
     numerator: E,     // eslint-disable-line no-use-before-define
@@ -328,6 +329,7 @@ class Fraction extends Element {
     this.vSpaceDenom = 0;
     this.lineVAboveBaseline = 0;
     this.lineWidth = 0;
+    this.fontScaleFactor = 1;
   }
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
@@ -342,10 +344,11 @@ class Fraction extends Element {
     return super.render(indent, out);
   }
 
-  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
-    this.vSpaceNum = fontSize * 0.2;
-    this.vSpaceDenom = fontSize * 0;
-    this.lineVAboveBaseline = fontSize * 0.35;
+  calcSize(location: Point, inFontSize: number, ctx: CanvasRenderingContext2D) {
+    const fontSize = inFontSize * this.fontScaleFactor;
+    this.vSpaceNum = fontSize * 0.15;
+    this.vSpaceDenom = fontSize * 0.1;
+    this.lineVAboveBaseline = inFontSize * 0.35;
     this.lineWidth = fontSize * 0.05;
 
     this.location = location.copy();
@@ -805,6 +808,16 @@ class DiagramEquation extends E {
     return new E(elementArray);
   }
 
+  sFrac(
+    numerator: Array<E | string> | E | string,
+    denominator: Array<E | string> | E | string,
+    vinculumOrid: string | DiagramElementPrimative = '',
+    classes: string | Array<string> = [],
+  ) {
+    const f = this.frac(numerator, denominator, vinculumOrid, classes);
+    f.fontScaleFactor = 0.4;
+    return f;
+  }
   frac(
     numerator: Array<E | string> | E | string,
     denominator: Array<E | string> | E | string,

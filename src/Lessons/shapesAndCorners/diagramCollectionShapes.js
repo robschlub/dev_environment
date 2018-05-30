@@ -428,7 +428,7 @@ class ShapesCollection extends DiagramElementCollection {
     // this.eq1 = eq1;
     // this.add('newEq', newEq);
 
-    const integral = new Integral(this.diagram.webgl, [1, 1, 1, 1], 2, new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
+    // const integral = new Integral(this.diagram.webgl, [1, 1, 1, 1], 2, new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
     // integral.isTouchable = true;
     // integral.isMovable = true;
     // this.add('integral', integral);
@@ -437,8 +437,8 @@ class ShapesCollection extends DiagramElementCollection {
       '2x': '2x',
       n1: '1',
       n2: '2',
-      // n3: '3',
-      // n4: '4',
+      h1: '1',
+      h2: '2',
       a: 'a',
       b: 'b',
       c: 'c',
@@ -451,7 +451,8 @@ class ShapesCollection extends DiagramElementCollection {
       v1: this.diagram.equation.vinculum(),
       v2: this.diagram.equation.vinculum(),
       v3: this.diagram.equation.vinculum(),
-      i1: integral,
+      v4: this.diagram.equation.vinculum(),
+      i1: this.diagram.equation.integral(2),
     });
     this.add('eq2Elements', eq2Elements);
 
@@ -461,6 +462,7 @@ class ShapesCollection extends DiagramElementCollection {
     const eq2 = diagram.equation.make(eq2Elements);
     eq2.createEq([
       eq2.int(eq2.frac('g', 'n2', 'v3'), 'h', 'n1', 'i1'),
+      eq2.sFrac('h1', 'h2', 'v4'),
       eq2.frac(
         ['a', eq2.supSub('b', 'c', 'd')],
         ['e'],
