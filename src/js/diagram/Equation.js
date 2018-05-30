@@ -1,5 +1,6 @@
 // @flow
-import { Point } from './tools/g2';
+import { Point, Rect } from './tools/g2';
+import { roundNum } from './tools/mathtools';
 import { DiagramElementPrimative, DiagramElementCollection } from './Element';
 // function makeIdText(id) {
 //   return id ? `id="${id}"` : '';
@@ -407,6 +408,151 @@ class Fraction extends Element {
   }
 }
 
+class Integral extends Element {
+  limitMin: E | null;
+  limitMax: E | null;
+  content: E | null;
+  integralSymbol: DiagramElementPrimative;
+
+  constructor(
+    limitMin: E | null,
+    limitMax: E | null,
+    content: E | null,
+    integralSymbolOrId: string | DiagramElementPrimative = '',
+    classes: Array<string> = [],
+  ) {
+    let id = '';
+    if (typeof integralSymbolOrId === 'string') {
+      id = integralSymbolOrId;
+    }
+    super(id, classes);
+    if (integralSymbolOrId instanceof DiagramElementPrimative) {
+      this.integralSymbol = integralSymbolOrId;
+    }
+    this.classes.push('integral');
+    this.limitMin = limitMin;
+    this.limitMax = limitMax;
+    this.content = content;
+    console.log(limitMin)
+  }
+
+  calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
+    this.location = location.copy();
+    const loc = location.copy();
+    let contentBounds = { width: 0, height: 0, ascent: 0, descent: 0 };
+    let limitMinBounds = { width: 0, height: 0, ascent: 0, descent: 0 };
+    let limitMaxBounds = { width: 0, height: 0, ascent: 0, descent: 0 };
+    let integralSymbolBounds = { width: 0, height: 0, ascent: 0, descent: 0 };
+
+    if (this.content instanceof E) {
+      this.content.calcSize(loc.copy(), fontSize, ctx);
+      contentBounds = {
+        width: this.content.width,
+        height: this.content.ascent + this.content.descent,
+        ascent: this.content.ascent,
+        descent: this.content.descent,
+      };
+    }
+    if (this.limitMax instanceof E) {
+      this.limitMax.calcSize(loc.copy(), fontSize / 2, ctx);
+      limitMaxBounds = {
+        width: this.limitMax.width,
+        height: this.limitMax.ascent + this.limitMax.descent,
+        ascent: this.limitMax.ascent,
+        descent: this.limitMax.descent,
+      };
+    }
+    if (this.limitMin instanceof E) {
+      this.limitMin.calcSize(loc.copy(), fontSize / 2, ctx);
+      limitMinBounds = {
+        width: this.limitMin.width,
+        height: this.limitMin.ascent + this.limitMin.descent,
+        ascent: this.limitMin.ascent,
+        descent: this.limitMin.descent,
+      };
+    }
+
+    const integralMinHeight =
+      contentBounds.ascent + contentBounds.descent +
+      limitMinBounds.ascent + limitMinBounds.descent +
+      limitMaxBounds.ascent + limitMaxBounds.descent;
+    const integralSymbolLocation = new Point(
+      loc.x,
+      loc.y - Math.max(
+        limitMinBounds.ascent + contentBounds.height / 2,
+        fontSize / 3,
+      ),
+    );
+    const numLines = roundNum(integralMinHeight / fontSize, 0);
+    if (this.integralSymbol) {
+      const height = numLines * fontSize * 1.5;
+      this.integralSymbol.transform.updateScale(
+        height,
+        height,
+      );
+      this.integralSymbol.transform.updateTranslation(
+        integralSymbolLocation.x,
+        integralSymbolLocation.y,
+      );
+    const bounds = this.integralSymbol.vertices.getRelativeGLBoundingRect(this.integralSymbol.transform.matrix());
+      integralSymbolBounds = {
+        width: bounds.width,
+        height: -bounds.bottom + bounds.top,
+        ascent: bounds.top,
+        descent: -bounds.bottom,
+      };
+    }
+
+    const minLimitLocation = new Point(
+      this.location.x + integralSymbolBounds.width * 0.5,
+      integralSymbolLocation.y,
+    );
+
+    const maxLimitLocation = new Point(
+      this.location.x + integralSymbolBounds.width * 1.2,
+      integralSymbolLocation.y + integralSymbolBounds.height - limitMaxBounds.height / 2,
+    );
+
+    const contentLocation = new Point(
+      Math.max(
+        this.location.x + integralSymbolBounds.width,
+        maxLimitLocation.x + limitMaxBounds.width,
+        minLimitLocation.x + limitMinBounds.width,
+      ),
+      this.location.y,
+    );
+
+    if (this.content instanceof E) {
+      this.content.calcSize(contentLocation, fontSize, ctx);
+    }
+    if (this.limitMin instanceof E) {
+      this.limitMin.calcSize(minLimitLocation, fontSize / 2, ctx);
+    }
+    if (this.limitMax instanceof E) {
+      this.limitMax.calcSize(maxLimitLocation, fontSize / 2, ctx);
+    }
+
+    this.width = Math.max(
+      integralSymbolBounds.width,
+      limitMinBounds.width + minLimitLocation.x - this.location.x,
+      limitMaxBounds.width + maxLimitLocation.x - this.location.x,
+      contentBounds.width + contentLocation.x - this.location.x,
+    );
+    this.ascent = Math.max(
+      integralSymbolBounds.ascent,
+      limitMaxBounds.ascent + maxLimitLocation.y - this.location.y,
+      contentBounds.ascent + contentLocation.y - this.location.y,
+    );
+
+    this.descent = Math.max(
+      integralSymbolBounds.descent,
+      limitMinBounds.descent + this.location.y - minLimitLocation.y,
+      contentBounds.ascent + this.location.y - contentLocation.y,
+    );
+  }
+}
+
+
 class Root extends Element {
   content: E;
 
@@ -615,8 +761,14 @@ class DiagramEquation extends E {
     this.collection = collection;
   }
 
-  getDiagramElement(name: string) {
-    return this.collection[`_${name}`];
+  getDiagramElement(name: string | DiagramElementPrimative) {
+    if (name instanceof DiagramElementPrimative) {
+      return name;
+    }
+    if (this.collection && `_${name}` in this.collection) {
+      return this.collection[`_${name}`];
+    }
+    return name;
   }
 
   createEq(content: Array<E | string>) {
@@ -639,8 +791,7 @@ class DiagramEquation extends E {
     const elementArray: Array<E> = [];
     if (typeof content === 'string') {
       elementArray.push(new Text(this.getDiagramElement(content)));
-    }
-    if (Array.isArray(content)) {
+    } else if (Array.isArray(content)) {
       content.forEach((c) => {
         if (typeof c === 'string') {
           elementArray.push(new Text(this.getDiagramElement(c)));
@@ -648,6 +799,8 @@ class DiagramEquation extends E {
           elementArray.push(c);
         }
       });
+    } else {
+      elementArray.push(content);
     }
     return new E(elementArray);
   }
@@ -706,6 +859,23 @@ class DiagramEquation extends E {
       this.contentToElement(content),
       this.contentToElement(superscript),
       id,
+      classes,
+    );
+  }
+
+  int(
+    limitMin: Array<E | string> | E | string,
+    limitMax: Array<E | string> | E | string,
+    content: Array<E | string> | E | string,
+    integralSymbolOrid: string | DiagramElementPrimative = '',
+    classes: string | Array<string> = [],
+  ) {
+    console.log(this.contentToElement(limitMin))
+    return new Integral(
+      this.contentToElement(limitMin),
+      this.contentToElement(limitMax),
+      this.contentToElement(content),
+      this.getDiagramElement(integralSymbolOrid),
       classes,
     );
   }

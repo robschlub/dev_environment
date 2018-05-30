@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../tools/g2';
+import { Point, Transform } from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from '../../DrawingObjects/VertexObject/VertexObject';
 
@@ -111,8 +111,31 @@ class VertexIntegral extends VertexObject {
         this.border[2].push(perimeterPoint);
       }
     }
+
     this.border[0] = borderLeft.concat(borderRight.reverse());
     this.border[0].push(this.border[0][0].copy());
+
+    // normalize all points to have bottom left corner at 0,0
+    // and height to be 1.
+    const bounds = this.getGLBoundingRect(new Transform().matrix());
+    const t = new Transform()
+      .translate(-bounds.left, -bounds.bottom)
+      .scale(1 / bounds.height, 1 / bounds.height);
+
+    for (let i = 0; i < this.border.length; i += 1) {
+      const border = this.border[i];
+      for (let j = 0; j < border.length; j += 1) {
+        this.border[i][j] = this.border[i][j].transformBy(t.matrix());
+      }
+    }
+
+    for (let i = 0; i < this.points.length; i += 2) {
+      const p = new Point(this.points[i], this.points[i + 1]);
+      const newP = p.transformBy(t.matrix());
+      this.points[i] = newP.x;
+      this.points[i + 1] = newP.y;
+    }
+
     // this.points[0] = new Point(0, 0);
     // this.points[1] = new Point(0, 0.5);
     // this.points[2] = new Point(0.5, 0.5);

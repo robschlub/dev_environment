@@ -114,15 +114,15 @@ function makePlot(diagram: Diagram) {
 }
 
 function makeEq(diagram: Diagram, shapes: Object, location: Point) {
-  const font = new DiagramFont(
-    'Times New Roman',
-    'italic',
-    0.4,
-    '200',
-    'left',
-    'alphabetic',
-    [0, 1, 1, 1],
-  );
+  // const font = new DiagramFont(
+  //   'Times New Roman',
+  //   'italic',
+  //   0.4,
+  //   '200',
+  //   'left',
+  //   'alphabetic',
+  //   [0, 1, 1, 1],
+  // );
 
   // const limits = diagram.limits;
   // const t = new Transform().translate(0, 0);
@@ -426,28 +426,54 @@ class ShapesCollection extends DiagramElementCollection {
     const eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
     // console.log(eq1)
     // this.eq1 = eq1;
-    this.add('newEq', newEq);
+    // this.add('newEq', newEq);
 
-    const integral = new Integral(this.diagram.webgl, [1, 0, 0, 1], 2, new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
-    integral.isTouchable = true;
-    integral.isMovable = true;
-    this.add('integral', integral);
+    const integral = new Integral(this.diagram.webgl, [1, 1, 1, 1], 2, new Transform().scale(0.75, 0.75).translate(2, 0), this.diagram.limits);
+    // integral.isTouchable = true;
+    // integral.isMovable = true;
+    // this.add('integral', integral);
 
-    const eq2 = diagram.equation.make(newEq);
+    const eq2Elements = this.diagram.equation.elements({
+      '2x': '2x',
+      n1: '1',
+      n2: '2',
+      // n3: '3',
+      // n4: '4',
+      a: 'a',
+      b: 'b',
+      c: 'c',
+      d: 'd',
+      e: 'e',
+      f: 'f',
+      g: 'g',
+      h: 'h',
+      equals: '=',
+      v1: this.diagram.equation.vinculum(),
+      v2: this.diagram.equation.vinculum(),
+      v3: this.diagram.equation.vinculum(),
+      i1: integral,
+    });
+    this.add('eq2Elements', eq2Elements);
+
+    eq2Elements.isTouchable = true;
+    eq2Elements.isMovable = true;
+    eq2Elements.touchInBoundingRect = true;
+    const eq2 = diagram.equation.make(eq2Elements);
     eq2.createEq([
+      eq2.int(eq2.frac('g', 'n2', 'v3'), 'h', 'n1', 'i1'),
       eq2.frac(
-        ['p2', eq2.supSub('c', 'p3', 'p4')],
-        ['a'],
+        ['a', eq2.supSub('b', 'c', 'd')],
+        ['e'],
         'v1',
       ),
       'equals',
       eq2.frac(
-        ['b'],
+        ['f'],
         '2x',
         'v2',
       ),
     ]);
-    console.log(eq2)
+    // console.log(eq2)
     this.eq1 = eq2;
     // const eq1 = diagram.equation.make(
     //   eq,
