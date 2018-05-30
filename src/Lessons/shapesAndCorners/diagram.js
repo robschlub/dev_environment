@@ -123,10 +123,10 @@ class LessonDiagram extends Diagram {
 
   draw(now: number): void {
     super.draw(now);
-    this.elements._shapes.eq.calcSize(new Point(100, 100), 20, this.draw2D.ctx);
-    this.elements._shapes.eq.draw(this.draw2D.ctx);
-    this.elements._shapes.eq1.calcSize(new Point(0, 0), 0.2, null);
-    this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    // this.elements._shapes.eq.calcSize(new Point(100, 100), 20, this.draw2D.ctx);
+    // this.elements._shapes.eq.draw(this.draw2D.ctx);
+    // this.elements._shapes.eq1.calcSize(new Point(0, 0), 0.2, null);
+    // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
 
     // this.elements._shapes.eq1.updateMoveTranslationBoundary();
   }
