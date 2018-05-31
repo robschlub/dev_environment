@@ -100,14 +100,12 @@ class FractionNew extends Elements {
   lineWidth: number;
   lineVAboveBaseline: number;
   vinculum: DiagramElementPrimative | null | DiagramElementCollection;
-  // fontScaleFactor: number;
-  baseFontSize: number;
+  mini: boolean;
 
   constructor(
     numerator: Elements,
     denominator: Elements,
     vinculum: DiagramElementPrimative | null | DiagramElementCollection,
-    baseFontSize: number,
   ) {
     if (vinculum) {
       super([numerator, denominator, new Element(vinculum)]);
@@ -117,17 +115,16 @@ class FractionNew extends Elements {
     this.vinculum = vinculum;
     this.numerator = numerator;
     this.denominator = denominator;
-    this.baseFontSize = baseFontSize;
 
     this.vSpaceNum = 0;
     this.vSpaceDenom = 0;
     this.lineVAboveBaseline = 0;
     this.lineWidth = 0;
-    // this.fontScaleFactor = 1;
+    this.mini = false;
   }
 
-  calcSize(location: Point, scale: number) {
-    // const fontSize = inFontSize * this.fontScaleFactor;
+  calcSize(location: Point, incomingScale: number) {
+    const scale = this.mini ? incomingScale * 0.35 : incomingScale;
     this.location = location.copy();
     this.numerator.calcSize(location, scale);
     this.denominator.calcSize(location, scale);
@@ -137,7 +134,7 @@ class FractionNew extends Elements {
 
     this.vSpaceNum = scale * 0.15;
     this.vSpaceDenom = scale * 0.15;
-    this.lineVAboveBaseline = scale * 0.35;
+    this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.35;
     this.lineWidth = scale * 0.05;
 
     const yNumerator = this.numerator.descent +
@@ -176,11 +173,91 @@ class FractionNew extends Elements {
   }
 }
 
+class SuperSubNew extends Elements {
+  superscript: Elements | null;
+  subscript: Elements | null;
+  mainContent: Elements;
+  subscriptXBias: number;
+  xBias: number;
+
+  constructor(
+    content: Elements,
+    superscript: Elements | null,
+    subscript: Elements | null,
+    xBias: number = 0,
+    subscriptXBias: number = 0,
+  ) {
+    if (superscript !== null && subscript !== null) {
+      super([content, superscript, subscript]);
+    } else if (superscript === null && subscript !== null) {
+      super([content, subscript]);
+    } else if (superscript !== null && subscript === null) {
+      super([content, superscript]);
+    } else {
+      super([content]);
+    }
+
+    this.superscript = superscript;
+    this.subscript = subscript;
+    this.subscriptXBias = subscriptXBias;
+    this.mainContent = content;
+    this.xBias = xBias;
+  }
+
+  calcSize(location: Point, scale: number) {
+    this.location = location.copy();
+    const loc = location.copy();
+    this.mainContent.calcSize(loc, scale);
+    let w = this.mainContent.width;
+    let asc = this.mainContent.ascent;
+    let des = this.mainContent.descent;
+
+    const { superscript } = this;
+    if (superscript !== null) {
+      const superLoc = new Point(
+        this.location.x + this.mainContent.width + this.xBias,
+        this.location.y + this.mainContent.ascent - scale / 3,
+      );
+      superscript.calcSize(superLoc, scale / 2);
+      w = Math.max(
+        w,
+        superLoc.x - this.location.x + superscript.width,
+      );
+      asc = Math.max(
+        asc,
+        superscript.ascent + superLoc.y - this.location.y,
+      );
+      des = Math.max(
+        des,
+        this.location.y - (superLoc.y - superscript.descent),
+      );
+    }
+
+    const { subscript } = this;
+    if (subscript !== null) {
+      const subLoc = new Point(
+        this.location.x + this.mainContent.width - this.subscriptXBias + this.xBias,
+        this.location.y - this.mainContent.descent,
+      );
+      subscript.calcSize(subLoc, scale / 2);
+      w = Math.min(
+        w,
+        subLoc.x - this.location.x + subscript.width,
+      );
+      asc = Math.max(asc, subscript.ascent + subLoc.y - this.location.y);
+      des = Math.max(des, subscript.descent + (this.location.y - subLoc.y));
+    }
+    this.width = w;
+    this.ascent = asc;
+    this.descent = des;
+  }
+}
+
+
 type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
 class DiagramEquationNew extends Elements {
   collection: DiagramElementCollection;
-  baseFontSize: number;
 
   constructor(collection: DiagramElementCollection) {
     super([]);
@@ -203,7 +280,7 @@ class DiagramEquationNew extends Elements {
     return name;
   }
 
-  createEq(baseFontSize: number, content: Array<Elements | Element | string>) {
+  createEq(content: Array<Elements | Element | string>) {
     const elements = [];
     content.forEach((c) => {
       if (typeof c === 'string') {
@@ -216,7 +293,6 @@ class DiagramEquationNew extends Elements {
       }
       this.content = elements;
     });
-    this.baseFontSize = baseFontSize;
   }
 
   calcSize(location: Point, scale: number) {
@@ -274,70 +350,60 @@ class DiagramEquationNew extends Elements {
     return new Elements(elementArray);
   }
 
-  sFrac(
+  sfrac(
     numerator: EquationInput,
     denominator: EquationInput,
     vinculum: DiagramElementPrimative | DiagramElementCollection | string,
   ) {
-    return this.frac(numerator, denominator, vinculum, this.baseFontSize * 0.4);
+    const f = this.frac(numerator, denominator, vinculum);
+    f.mini = true;
+    return f;
   }
   frac(
     numerator: EquationInput,
     denominator: EquationInput,
     vinculum: string | DiagramElementPrimative | DiagramElementCollection,
-    baseFontSize: number = this.baseFontSize,
   ) {
     return new FractionNew(
       this.contentToElement(numerator),
       this.contentToElement(denominator),
       this.getDiagramElement(vinculum),
-      baseFontSize,
     );
   }
 
-  // sub(
-  //   content: Array<E | string> | E | string,
-  //   subscript: Array<E | string> | E | string,
-  //   id: string = '',
-  //   classes: string | Array<string> = [],
-  // ) {
-  //   return new Subscript(
-  //     this.contentToElement(content),
-  //     this.contentToElement(subscript),
-  //     id,
-  //     classes,
-  //   );
-  // }
+  sub(
+    content: EquationInput,
+    subscript: EquationInput,
+  ) {
+    return new SuperSubNew(
+      this.contentToElement(content),
+      null,
+      this.contentToElement(subscript),
+    );
+  }
 
-  // supSub(
-  //   content: Array<E | string> | E | string,
-  //   superscript: Array<E | string> | E | string,
-  //   subscript: Array<E | string> | E | string,
-  //   id: string = '',
-  //   classes: string | Array<string> = [],
-  // ) {
-  //   return new SuperSub(
-  //     this.contentToElement(content),
-  //     this.contentToElement(superscript),
-  //     this.contentToElement(subscript),
-  //     id,
-  //     classes,
-  //   );
-  // }
+  sup(
+    content: EquationInput,
+    superscript: EquationInput,
+  ) {
+    return new SuperSubNew(
+      this.contentToElement(content),
+      this.contentToElement(superscript),
+      null,
+    );
+  }
 
-  // sup(
-  //   content: Array<E | string> | E | string,
-  //   superscript: Array<E | string> | E | string,
-  //   id: string = '',
-  //   classes: string | Array<string> = [],
-  // ) {
-  //   return new Superscript(
-  //     this.contentToElement(content),
-  //     this.contentToElement(superscript),
-  //     id,
-  //     classes,
-  //   );
-  // }
+  supsub(
+    content: EquationInput,
+    superscript: EquationInput,
+    subscript: EquationInput,
+  ) {
+    return new SuperSubNew(
+      this.contentToElement(content),
+      this.contentToElement(superscript),
+      this.contentToElement(subscript),
+    );
+  }
 
   // int(
   //   limitMin: Array<E | string> | E | string,
