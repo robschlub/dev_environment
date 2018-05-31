@@ -444,6 +444,22 @@ class DiagramElement {
     };
   }
 
+  updateLastDrawTransform() {
+    const { parentCount } = this.lastDrawElementTransformPosition;
+    const l = this.transform.order.length;
+    const pLength = this.lastDrawTransform.order.length
+    if(this.name === 'a'){
+        console.log("start",this.transform.order[0], this.transform.order[1])
+      }
+    this.transform.order.forEach((t, index) => {
+      if(this.name === 'a'){
+        console.log(index, t, pLength - parentCount - index - 1)
+      }
+      this.lastDrawTransform.order[pLength - parentCount - index - 1] = t.copy();
+    });
+    this.lastDrawTransform.calcMatrix();
+  }
+
   // Start an animation plan of phases ending in a callback
   animatePlan(
     phases: Array<AnimationPhase>,

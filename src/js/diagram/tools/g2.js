@@ -590,6 +590,9 @@ class Rotation {
   mul(rotToMul: Rotation = new Rotation(1)): Rotation {
     return new Rotation(this.r * rotToMul.r);
   }
+  copy() {
+    return new Rotation(this.r);
+  }
 }
 
 class Translation extends Point {
@@ -638,6 +641,10 @@ class Translation extends Point {
       roundNum(this.y, precision),
     );
   }
+
+  copy() {
+    return new Translation(this.x, this.y);
+  }
 }
 
 class Scale extends Point {
@@ -684,6 +691,10 @@ class Scale extends Point {
       this.x * scaleToMul.x,
       this.y * scaleToMul.y,
     );
+  }
+
+  copy() {
+    return new Scale(this.x, this.y);
   }
 }
 
