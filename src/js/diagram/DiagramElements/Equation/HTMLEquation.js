@@ -135,17 +135,21 @@ class SuperSub extends HTMLElementProperties {
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
     let out = '';
+    out += `${s}<div class="supsub_content element">\n`;
     out += this.content.render(indent + 2);
-    out += `${s}<div class="super_sub_super superscript element">\n`;
+    out += `\n${s}</div>\n`;
+    out += `${s}<div class="super_sub element">\n`;
+    out += `${s}<div class="super_sub_super superscript_text element">\n`;
     if (this.superscript !== null) {
       out += this.superscript.render(indent + 4);
     }
     out += `\n${s}</div>\n`;
-    out += `${s}<div class="super_sub_sub subscript element">\n`;
+    out += `${s}<div class="super_sub_sub subscript_text element">\n`;
     if (this.subscript !== null) {
       out += this.subscript.render(indent + 4);
     }
     out += `\n${s}</div>`;
+    out += `\n${s}</div>\n`;
     return super.render(indent, out);
   }
 }

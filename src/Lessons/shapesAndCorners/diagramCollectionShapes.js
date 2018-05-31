@@ -490,12 +490,12 @@ class ShapesCollection extends DiagramElementCollection {
     eqn = diagram.equation.makeHTML();
     eqn.createEq([
       eqn.frac(
-        ['a'],
-        ['pi'],
+        ['a', 'v'],
+        ['&pi;'],
       ),
       ' = ',
       eqn.frac(
-        eqn.sup('c', '2'),
+        eqn.supsub('c', '2', '1'),
         [eqn.sub('d', '4')],
       ),
     ]);
