@@ -11,7 +11,7 @@ import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 import * as e from '../../js/diagram/Equation';
-import Integral from '../../js/diagram/DiagramElements/Equation/Integral';
+// import Integral from '../../js/diagram/DiagramElements/Equation/Integral';
 
 const colors = getScssColors(styles);
 const lineColor = colors.lines;
@@ -384,47 +384,47 @@ class ShapesCollection extends DiagramElementCollection {
     const plot = makePlot(this.diagram);
     this.add('plot', plot);
 
-    // const supText = new equation.Line.text('2', '', ['superscript_text']);
-    // const subText = new equation.Line.text('2', '', ['subscript_text']);
-    // const sup = new e.Superscript().text('2', '', ['superscript_text']);
-    // const sub = new e.Subscript().text('2', '', ['subscript_text']);
-    // const ss = new e.SuperAndSubscript(sup, sub);
-    // const n = new e.Line().text('&int;').inc(ss).text('x dx');
-    // n.content.push(sub);
-    // n.content.push(sup);
+    // // const supText = new equation.Line.text('2', '', ['superscript_text']);
+    // // const subText = new equation.Line.text('2', '', ['subscript_text']);
+    // // const sup = new e.Superscript().text('2', '', ['superscript_text']);
+    // // const sub = new e.Subscript().text('2', '', ['subscript_text']);
+    // // const ss = new e.SuperAndSubscript(sup, sub);
+    // // const n = new e.Line().text('&int;').inc(ss).text('x dx');
+    // // n.content.push(sub);
+    // // n.content.push(sup);
 
-    // const d = e.sqrt('c');
-    // d.content.push(ss);
-    // const eq = new e.Equation('eq1')
-    //   .frac(n, d)
-    //   .text('=')
-    //   .text('c');
-    // const n = e.e([e.e('b');
-    const d = e.e('2AC');
-    // const eq = new e.Equation(e.frac(n, d), 'eq1');
-    const n = e.e([e.e('b'), e.e('b'), e.e('2'), e.e('4AC')]);
-    const eq = new e.Equation([e.frac(n, d), e.e('='), e.e('0')], 'eq1');
-    this.eq = eq;
-    this.diagram.htmlCanvas.appendChild(eq.htmlElement());
-    const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
-    const ehp = new DiagramElementPrimative(
-      eh,
-      new Transform().translate(0, -1.7),
-      [1, 0, 0, 1],
-      this.diagram.limits,
-    );
-    ehp.isTouchable = true;
-    ehp.isMovable = true;
-    this.add('equation', ehp);
-    const newEq = makeEq(this.diagram, shapes, new Point(0, 0));
-    const n1 = e.e([e.e(newEq._2x), e.e(newEq._p3, e.e(newEq._p2))]);
-    const n2 = e.e(newEq._b);
-    const d1 = e.e(newEq._a);
-    const d2 = e.e(newEq._c);
-    const p2 = e.e(newEq._p2);
-    const equals = e.e(newEq._equals);
-    const eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
-    
+    // // const d = e.sqrt('c');
+    // // d.content.push(ss);
+    // // const eq = new e.Equation('eq1')
+    // //   .frac(n, d)
+    // //   .text('=')
+    // //   .text('c');
+    // // const n = e.e([e.e('b');
+    // const d = e.e('2AC');
+    // // const eq = new e.Equation(e.frac(n, d), 'eq1');
+    // const n = e.e([e.e('b'), e.e('b'), e.e('2'), e.e('4AC')]);
+    // const eq = new e.Equation([e.frac(n, d), e.e('='), e.e('0')], 'eq1');
+    // this.eq = eq;
+    // this.diagram.htmlCanvas.appendChild(eq.htmlElement());
+    // const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
+    // const ehp = new DiagramElementPrimative(
+    //   eh,
+    //   new Transform().translate(0, -1.7),
+    //   [1, 0, 0, 1],
+    //   this.diagram.limits,
+    // );
+    // ehp.isTouchable = true;
+    // ehp.isMovable = true;
+    // this.add('equation', ehp);
+    // const newEq = makeEq(this.diagram, shapes, new Point(0, 0));
+    // const n1 = e.e([e.e(newEq._2x), e.e(newEq._p3, e.e(newEq._p2))]);
+    // const n2 = e.e(newEq._b);
+    // const d1 = e.e(newEq._a);
+    // const d2 = e.e(newEq._c);
+    // const p2 = e.e(newEq._p2);
+    // const equals = e.e(newEq._equals);
+    // const eq1 = new e.Equation([e.frac(n1, d1, newEq._v1), equals, e.frac(n2, d2, newEq._v2)]);
+
     const eq5Elements = this.diagram.equation.elements({
       a: 'Ag',
       b: 'b',
@@ -452,7 +452,7 @@ class ShapesCollection extends DiagramElementCollection {
     this.add('eq5Elements', eq5Elements);
     eq5Elements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
 
-    let eqn = diagram.equation.makeNew(eq5Elements);
+    let eqn = diagram.equation.make(eq5Elements);
     eqn.createEq([
       eqn.int('l1', 'l2', 'c1', 'i1'),
       eqn.frac(
@@ -469,7 +469,7 @@ class ShapesCollection extends DiagramElementCollection {
     ]);
     this.eq5 = eqn;
 
-    eqn = diagram.equation.makeNew(eq5Elements);
+    eqn = diagram.equation.make(eq5Elements);
     eqn.createEq([
       eqn.int('l1', 'c1', eqn.frac(
         ['a'],
@@ -485,6 +485,21 @@ class ShapesCollection extends DiagramElementCollection {
       ),
     ]);
     this.eq6 = eqn;
+
+
+    eqn = diagram.equation.makeHTML();
+    eqn.createEq([
+      eqn.frac(
+        ['a'],
+        ['pi'],
+      ),
+      ' = ',
+      eqn.frac(
+        eqn.sup('c', '2'),
+        [eqn.sub('d', '4')],
+      ),
+    ]);
+    this.diagram.htmlCanvas.appendChild(eqn.htmlElement());
   }
 
   resize(locations: Object) {

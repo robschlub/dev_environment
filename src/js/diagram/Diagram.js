@@ -19,7 +19,9 @@ import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
 import Integral from './DiagramElements/Equation/Integral';
-import { DiagramEquation, DiagramEquationNew } from './Equation';
+import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
+import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
+// import { DiagramEquationNew } from './Equation';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -75,17 +77,7 @@ function equation(diagram: Diagram) {
     });
     return equationElements;
   }
-  // function equals(color: Array<number> = [1, 1, 1, 1]) {
-  //   const dT = new DiagramText(new Point(0, 0), ' = ', font);
-  //   const to = new TextObject(diagram.draw2D, [dT]);
-  //   const p = new DiagramElementPrimative(
-  //     to,
-  //     new Transform().translate(0, 0),
-  //     [1, 1, 1, 1],
-  //     diagram.limits,
-  //   );
-  //   return 
-  // }
+
   function vinculum(color: Array<number> = [1, 1, 1, 1]) {
     return diagram.shapes.horizontalLine(
       new Point(0, 0),
@@ -107,21 +99,20 @@ function equation(diagram: Diagram) {
       diagram.limits,
     );
   }
+
   function make(equationCollection: DiagramElementCollection) {
-    // console.log(DiagramEquation)
-    return new DiagramEquation(equationCollection);
+    return new DiagramGLEquation(equationCollection);
   }
 
-  function makeNew(equationCollection: DiagramElementCollection) {
-    return new DiagramEquationNew(equationCollection);
+  function makeHTML(id: string = '', classes: string | Array<string> = []) {
+    return new HTMLEquation(id, classes);
   }
-
   return {
     elements,
     vinculum,
     integral,
     make,
-    makeNew,
+    makeHTML,
   };
 }
 function shapes(webgl: WebGLInstance, limits: Rect) {
