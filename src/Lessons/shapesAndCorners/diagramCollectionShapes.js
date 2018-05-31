@@ -544,6 +544,37 @@ class ShapesCollection extends DiagramElementCollection {
     // })
     // '|2AC|b|2A^5
     // e(e.frac('b', '+', '2AC')(e.sqrt('2', '4ac')), 
+
+    const eq5Elements = this.diagram.equation.elements({
+      a: 'Ag',
+      b: 'b',
+      c: 'c',
+      d: 'd',
+      e: 'e',
+      e1: '  =  ',
+      v1: this.diagram.equation.vinculum(),
+      v2: this.diagram.equation.vinculum(),
+    });
+    this.add('eq5Elements', eq5Elements);
+    eq5Elements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    let eqn = diagram.equation.makeNew(eq5Elements);
+    eqn.createEq(0.2, [
+      eqn.frac(
+        ['a'],
+        'b',
+        'v1',
+      ),
+      'e1',
+      eqn.frac(
+        'c',
+        ['d'],
+        'v2',
+      ),
+    ]);
+    eq5Elements.isTouchable = true;
+    eq5Elements.isMovable = true;
+    eq5Elements.touchInBoundingRect = true;
+    this.eq5 = eqn;
   }
 
   resize(locations: Object) {

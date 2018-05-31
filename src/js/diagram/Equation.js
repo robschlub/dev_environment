@@ -2,9 +2,361 @@
 import { Point } from './tools/g2';
 import { roundNum } from './tools/mathtools';
 import { DiagramElementPrimative, DiagramElementCollection } from './Element';
-// function makeIdText(id) {
-//   return id ? `id="${id}"` : '';
-// }
+// import { TextObject } from './DrawingObjects/TextObject/TextObject';
+// import { HTMLObject } from './DrawingObjects/HTMLObject/HTMLObject';
+
+// Equation is a class that takes a set of drawing objects (TextObjects, DiagramElementPrimatives or DiagramElementCollections and HTML Objects and arranges their size in a )
+
+class Element {
+  content: DiagramElementPrimative | DiagramElementCollection;
+  ascent: number;
+  descent: number;
+  width: number;
+  location: Point;
+  height: number;
+
+  constructor(content: DiagramElementPrimative | DiagramElementCollection) {
+    this.content = content;
+    this.ascent = 0;
+    this.descent = 0;
+    this.width = 0;
+    this.location = new Point(0, 0);
+    this.height = 0;
+  }
+
+  calcSize(location: Point, scale: number) {
+    const { content } = this;
+    if (content instanceof DiagramElementCollection ||
+        content instanceof DiagramElementPrimative) {
+      // Update translation and scale
+      content.transform.updateTranslation(location.x, location.y);
+      content.transform.updateScale(scale, scale);
+      // console.log(content.lastDrawTransform.matrix())
+      // // Update the last draw transform matrix with the new translation
+      // // and scale so calculating relative diagram boundaries is correct
+      // const transformLength = content.transform.order.length;
+      // content.lastDrawTransform.order = content.lastDrawTransform.order
+      //   .slice(0, -transformLength)
+      //   .concat(content.transform.order);
+      // content.lastDrawTransform.calcMatrix();
+      // console.log(content.lastDrawTransform.matrix())
+      // Get the boundaries of element
+      const r = content.getRelativeDiagramBoundingRect();
+      this.ascent = r.top * scale;
+      this.descent = -r.bottom * scale;
+      this.height = r.height * scale;
+      this.width = r.width * scale;
+      content.show = true;
+    }
+  }
+}
+
+class Elements {
+  content: Array<Element | Elements>;
+  ascent: number;
+  descent: number;
+  width: number;
+  location: Point;
+  height: number;
+
+  constructor(content: Array<Element | Elements>) {
+    this.content = content;
+    this.ascent = 0;
+    this.descent = 0;
+    this.width = 0;
+    this.location = new Point(0, 0);
+    this.height = 0;
+  }
+
+  calcSize(location: Point, scale: number) {
+    let des = 0;
+    let asc = 0;
+    const loc = location.copy();
+
+    this.content.forEach((element) => {
+      element.calcSize(loc, scale);
+
+      loc.x += element.width;
+      if (element.descent > des) {
+        des = element.descent;
+      }
+      if (element.ascent > asc) {
+        asc = element.ascent;
+      }
+    });
+    this.width = loc.x - location.x;
+    this.ascent = asc;
+    this.descent = des;
+    this.location = location.copy();
+    this.height = this.descent + this.ascent;
+  }
+}
+
+class FractionNew extends Elements {
+  numerator: Elements;
+  denominator: Elements;
+  vSpaceNum: number;
+  vSpaceDenom: number;
+  lineWidth: number;
+  lineVAboveBaseline: number;
+  vinculum: DiagramElementPrimative | null | DiagramElementCollection;
+  // fontScaleFactor: number;
+  baseFontSize: number;
+
+  constructor(
+    numerator: Elements,
+    denominator: Elements,
+    vinculum: DiagramElementPrimative | null | DiagramElementCollection,
+    baseFontSize: number,
+  ) {
+    if (vinculum) {
+      super([numerator, denominator, new Element(vinculum)]);
+    } else {
+      super([numerator, denominator]);
+    }
+    this.vinculum = vinculum;
+    this.numerator = numerator;
+    this.denominator = denominator;
+    this.baseFontSize = baseFontSize;
+
+    this.vSpaceNum = 0;
+    this.vSpaceDenom = 0;
+    this.lineVAboveBaseline = 0;
+    this.lineWidth = 0;
+    // this.fontScaleFactor = 1;
+  }
+
+  calcSize(location: Point, scale: number) {
+    // const fontSize = inFontSize * this.fontScaleFactor;
+    this.location = location.copy();
+    this.numerator.calcSize(location, scale);
+    this.denominator.calcSize(location, scale);
+    this.width = Math.max(this.numerator.width, this.denominator.width) + scale * 0.4;
+    const xNumerator = (this.width - this.numerator.width) / 2;
+    const xDenominator = (this.width - this.denominator.width) / 2;
+
+    this.vSpaceNum = scale * 0.15;
+    this.vSpaceDenom = scale * 0.15;
+    this.lineVAboveBaseline = scale * 0.35;
+    this.lineWidth = scale * 0.05;
+
+    const yNumerator = this.numerator.descent +
+                        this.vSpaceNum + this.lineVAboveBaseline;
+
+    const yDenominator = this.denominator.ascent +
+                         this.vSpaceDenom - this.lineVAboveBaseline;
+
+    const yScale = 1;
+
+    const loc = this.location;
+    this.numerator.calcSize(
+      new Point(loc.x + xNumerator, loc.y + yScale * yNumerator),
+      scale,
+    );
+
+    this.denominator.calcSize(
+      new Point(loc.x + xDenominator, loc.y - yScale * yDenominator),
+      scale,
+    );
+
+    this.descent = this.vSpaceNum + this.lineWidth / 2 - this.lineVAboveBaseline +
+                   this.denominator.ascent + this.denominator.descent;
+    this.ascent = this.vSpaceNum + this.lineWidth / 2 + this.lineVAboveBaseline +
+                   this.numerator.ascent + this.numerator.descent;
+
+    const { vinculum } = this;
+    if (vinculum) {
+      vinculum.transform.updateScale(this.width, this.lineWidth);
+      vinculum.transform.updateTranslation(
+        this.location.x,
+        this.location.y + this.lineVAboveBaseline,
+      );
+      vinculum.show = true;
+    }
+  }
+}
+
+type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
+
+class DiagramEquationNew extends Elements {
+  collection: DiagramElementCollection;
+  baseFontSize: number;
+
+  constructor(collection: DiagramElementCollection) {
+    super([]);
+    this.collection = collection;
+    this.baseFontSize = 1;
+  }
+
+  // eslint-disable-next-line function-paren-newline
+  getDiagramElement(name: string |
+    DiagramElementPrimative |
+    DiagramElementCollection): DiagramElementPrimative |
+  DiagramElementCollection | null {
+    if (typeof name === 'string') {
+      if (this.collection && `_${name}` in this.collection) {
+      // $FlowFixMe
+        return this.collection[`_${name}`];
+      }
+      return null;
+    }
+    return name;
+  }
+
+  createEq(baseFontSize: number, content: Array<Elements | Element | string>) {
+    const elements = [];
+    content.forEach((c) => {
+      if (typeof c === 'string') {
+        const diagramElement = this.getDiagramElement(c);
+        if (diagramElement) {
+          elements.push(new Element(diagramElement));
+        }
+      } else {
+        elements.push(c);
+      }
+      this.content = elements;
+    });
+    this.baseFontSize = baseFontSize;
+  }
+
+  calcSize(location: Point, scale: number) {
+    this.collection.hideAll();
+    this.collection.show = true;
+    super.calcSize(location, scale);
+  }
+  animateTo(
+    location: Point,
+    scale: number,
+    time: number = 1,
+  ) {
+    const currentTransforms = this.collection.getElementTransforms();
+    this.calcSize(location, scale);
+    const animateToTransforms = this.collection.getElementTransforms();
+    this.collection.setElementTransforms(currentTransforms);
+    this.collection.animateToTransforms(animateToTransforms, time);
+  }
+
+  contentToElement(content: EquationInput): Elements {
+    // If input is alread an Elements object, then return it
+    if (content instanceof Elements) {
+      return content;
+    }
+
+    // If it is not an Elements object, then create an Element(s) array
+    // and create a new Elements Object
+    const elementArray: Array<Elements | Element> = [];
+
+    // If the content is a string, then find the corresponding
+    // DiagramElement associated with the string
+    if (typeof content === 'string') {
+      const diagramElement = this.getDiagramElement(content);
+      if (diagramElement) {
+        elementArray.push(new Element(diagramElement));
+      }
+    // Otherwise, if the input content is an array, then process each element
+    // and add it to the ElementArray
+    } else if (Array.isArray(content)) {
+      content.forEach((c) => {
+        if (typeof c === 'string') {
+          const diagramElement = this.getDiagramElement(c);
+          if (diagramElement) {
+            elementArray.push(new Element(diagramElement));
+          }
+        } else {
+          elementArray.push(c);
+        }
+      });
+    // Otherwise, if the input is an Element or Elements object, so just add
+    // it to the ElementsArray
+    } else {
+      elementArray.push(content);
+    }
+    return new Elements(elementArray);
+  }
+
+  sFrac(
+    numerator: EquationInput,
+    denominator: EquationInput,
+    vinculum: DiagramElementPrimative | DiagramElementCollection | string,
+  ) {
+    return this.frac(numerator, denominator, vinculum, this.baseFontSize * 0.4);
+  }
+  frac(
+    numerator: EquationInput,
+    denominator: EquationInput,
+    vinculum: string | DiagramElementPrimative | DiagramElementCollection,
+    baseFontSize: number = this.baseFontSize,
+  ) {
+    return new FractionNew(
+      this.contentToElement(numerator),
+      this.contentToElement(denominator),
+      this.getDiagramElement(vinculum),
+      baseFontSize,
+    );
+  }
+
+  // sub(
+  //   content: Array<E | string> | E | string,
+  //   subscript: Array<E | string> | E | string,
+  //   id: string = '',
+  //   classes: string | Array<string> = [],
+  // ) {
+  //   return new Subscript(
+  //     this.contentToElement(content),
+  //     this.contentToElement(subscript),
+  //     id,
+  //     classes,
+  //   );
+  // }
+
+  // supSub(
+  //   content: Array<E | string> | E | string,
+  //   superscript: Array<E | string> | E | string,
+  //   subscript: Array<E | string> | E | string,
+  //   id: string = '',
+  //   classes: string | Array<string> = [],
+  // ) {
+  //   return new SuperSub(
+  //     this.contentToElement(content),
+  //     this.contentToElement(superscript),
+  //     this.contentToElement(subscript),
+  //     id,
+  //     classes,
+  //   );
+  // }
+
+  // sup(
+  //   content: Array<E | string> | E | string,
+  //   superscript: Array<E | string> | E | string,
+  //   id: string = '',
+  //   classes: string | Array<string> = [],
+  // ) {
+  //   return new Superscript(
+  //     this.contentToElement(content),
+  //     this.contentToElement(superscript),
+  //     id,
+  //     classes,
+  //   );
+  // }
+
+  // int(
+  //   limitMin: Array<E | string> | E | string,
+  //   limitMax: Array<E | string> | E | string,
+  //   content: Array<E | string> | E | string,
+  //   integralSymbolOrid: string | DiagramElementPrimative = '',
+  //   classes: string | Array<string> = [],
+  // ) {
+  //   console.log(this.contentToElement(limitMin))
+  //   return new Integral(
+  //     this.contentToElement(limitMin),
+  //     this.contentToElement(limitMax),
+  //     this.contentToElement(content),
+  //     this.getDiagramElement(integralSymbolOrid),
+  //     classes,
+  //   );
+  // }
+}
+
 
 function makeDiv(
   id: string,
@@ -21,7 +373,9 @@ function makeDiv(
   return out;
 }
 
-class Element {
+// Most fundamental Equation Element properties includes element size and
+// location, as well as html id and classes.
+class ElementProperties {
   id: string;
   classes: Array<string>;
   ascent: number;
@@ -62,7 +416,7 @@ class Element {
 }
 
 
-class Text extends Element {
+class Text extends ElementProperties {
   text: string;
   textElement: DiagramElementPrimative | DiagramElementCollection;
 
@@ -101,20 +455,13 @@ class Text extends Element {
       this.ascent = m.actualBoundingBoxAscent;
       this.location = loc.copy();
     } else {
-      // const oldFontSize = this.textElement.vertices.text[0].font.size;
       this.setFont(fontSize);
       const m = this.textElement.getRelativeDiagramBoundingRect();
-      // this.setFont(oldFontSize);
       this.width = m.width;
       this.descent = -m.bottom;
       this.ascent = m.top;
       this.location = loc.copy();
       this.textElement.transform.updateTranslation(loc.x, loc.y);
-      // console.log(this.textElement)
-      // this.textElement.transform.updateScale(fontSize / oldFontSize, fontSize / oldFontSize);
-      // this.textElement.transform.updateScale(0.1, 0.1);
-      // console.log(this.textElement.name, this.textElement.transform.t())
-      // console.log(this.textElement.name, this.textElement.getRelativeGLBoundingRect());
     }
   }
 
@@ -123,11 +470,11 @@ class Text extends Element {
   }
 }
 
-class E extends Element {
-  content: Array<Element>;
+class E extends ElementProperties {
+  content: Array<ElementProperties>;
 
   constructor(
-    content: string | Array<Element> | DiagramElementCollection | DiagramElementPrimative,
+    content: string | Array<ElementProperties> | DiagramElementCollection | DiagramElementPrimative,
     id: string = '',
     classes: string | Array<string> = [],
   ) {
@@ -135,7 +482,7 @@ class E extends Element {
     this.applyContent(content);
   }
 
-  applyContent(content: string | Array<Element> |
+  applyContent(content: string | Array<ElementProperties> |
                DiagramElementCollection | DiagramElementPrimative) {
     if (Array.isArray(content)) {
       this.content = content;
@@ -180,7 +527,7 @@ class E extends Element {
   }
 }
 
-class SuperSub extends Element {
+class SuperSub extends ElementProperties {
   superscript: E | null;
   subscript: E | null;
   subscriptXBias: number;
@@ -301,7 +648,7 @@ class Superscript extends SuperSub {
   }
 }
 
-class Fraction extends Element {
+class Fraction extends ElementProperties {
   numerator: E;
   denominator: E;
   vSpaceNum: number;
@@ -415,7 +762,7 @@ class Fraction extends Element {
   }
 }
 
-class Integral extends Element {
+class Integral extends ElementProperties {
   limitMin: E | null;
   limitMax: E | null;
   content: E | null;
@@ -440,7 +787,7 @@ class Integral extends Element {
     this.limitMin = limitMin;
     this.limitMax = limitMax;
     this.content = content;
-    console.log(limitMin)
+    // console.log(limitMin)
   }
 
   calcSize(location: Point, fontSize: number, ctx: CanvasRenderingContext2D) {
@@ -560,7 +907,7 @@ class Integral extends Element {
 }
 
 
-class Root extends Element {
+class Root extends ElementProperties {
   content: E;
 
   constructor(
@@ -625,7 +972,7 @@ function sup(
 
 
 function e(
-  content: string | Array<Element>,
+  content: string | Array<ElementProperties>,
   id: string = '',
   classes: string | Array<string> = [],
 ) {
@@ -900,7 +1247,7 @@ class DiagramEquation extends E {
     integralSymbolOrid: string | DiagramElementPrimative = '',
     classes: string | Array<string> = [],
   ) {
-    console.log(this.contentToElement(limitMin))
+    // console.log(this.contentToElement(limitMin))
     return new Integral(
       this.contentToElement(limitMin),
       this.contentToElement(limitMax),
@@ -911,11 +1258,11 @@ class DiagramEquation extends E {
   }
 }
 
-class Equation extends Element {
+class Equation extends ElementProperties {
   content: E;
 
   constructor(
-    content: E | Array<Element>,
+    content: E | Array<ElementProperties>,
     id: string = '',
     classes: string | Array<string> = [],
   ) {
@@ -960,7 +1307,7 @@ class Equation extends Element {
   }
 }
 
-export { Text, Fraction, Equation, e, frac, sqrt, sub, sup, supsub, DiagramEquation };
+export { Text, Fraction, Equation, e, frac, sqrt, sub, sup, supsub, DiagramEquation, DiagramEquationNew };
 
 
 // class Equation {

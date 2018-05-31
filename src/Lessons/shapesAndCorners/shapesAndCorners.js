@@ -53,8 +53,9 @@ class Section1 extends Section {
       collection._pent._moreSharpCorners,
       collection._pent._lessSharpCorners,
     ]);
-    
+
     diagram.elements._shapes.eq1.calcSize(new Point(-1, -1), 0.2, null);
+    diagram.elements._shapes.eq5.calcSize(new Point(-2, 1), 0.2);
     diagram.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
 
     this.onClickId('id_shapes', collection.pulseShapes, [collection]);

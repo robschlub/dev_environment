@@ -30,6 +30,6 @@ export default function Integral(
   } else {
     transform = transformOrLocation.copy();
   }
-  console.log(numLines)
+
   return new DiagramElementPrimative(vertices, transform, color, diagramLimits);
 }

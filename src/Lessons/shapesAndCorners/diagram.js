@@ -128,7 +128,9 @@ class LessonDiagram extends Diagram {
     // this.elements._shapes.eq1.calcSize(new Point(0, 0), 0.2, null);
     // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
     this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    this.elements._shapes._eq5Elements.updateMoveTranslationBoundary();
     // this.elements._shapes.eq1.updateMoveTranslationBoundary();
+    // console.log(this.elements._shapes._eq5Elements._a);
   }
   touchMoveHandler(
     previousClientPoint: Point,

@@ -19,7 +19,7 @@ import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
 import Integral from './DiagramElements/Equation/Integral';
-import { DiagramEquation } from './Equation';
+import { DiagramEquation, DiagramEquationNew } from './Equation';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -43,7 +43,7 @@ function equation(diagram: Diagram) {
     const font = new DiagramFont(
       'Times New Roman',
       'normal',
-      0.4,
+      1,
       '200',
       'left',
       'alphabetic',
@@ -60,7 +60,7 @@ function equation(diagram: Diagram) {
         const to = new TextObject(diagram.draw2D, [dT]);
         const p = new DiagramElementPrimative(
           to,
-          new Transform().translate(0, 0),
+          new Transform().scale(1, 1).translate(0, 0),
           [1, 1, 1, 1],
           diagram.limits,
         );
@@ -108,8 +108,12 @@ function equation(diagram: Diagram) {
     );
   }
   function make(equationCollection: DiagramElementCollection) {
-    console.log(DiagramEquation)
+    // console.log(DiagramEquation)
     return new DiagramEquation(equationCollection);
+  }
+
+  function makeNew(equationCollection: DiagramElementCollection) {
+    return new DiagramEquationNew(equationCollection);
   }
 
   return {
@@ -117,6 +121,7 @@ function equation(diagram: Diagram) {
     vinculum,
     integral,
     make,
+    makeNew,
   };
 }
 function shapes(webgl: WebGLInstance, limits: Rect) {
