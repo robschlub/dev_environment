@@ -1253,7 +1253,7 @@ class DiagramElementCollection extends DiagramElement {
           easeFunction,
           callback,
         );
-        console.log("animated:", element.name, element.transform.t(), elementTransforms[element.name].t())
+        // console.log("animated:", element.name, element.transform.t(), elementTransforms[element.name].t())
       }
     }
   }

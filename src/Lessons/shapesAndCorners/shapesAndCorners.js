@@ -125,7 +125,7 @@ class Section2 extends Section {
     diagram.elements._shapes.hideAll();
     diagram.elements._shapes._eq2Elements.showAll();
     diagram.elements._shapes.show = true;
-    diagram.elements._shapes.eq3.animateTo(new Point(-1, -1), 0.2, null, 3);
+    diagram.elements._shapes.eq3.animateTo(new Point(-1, -1), 0.2, null, 2);
 
     this.onClickId('id_line', collection.pulseRadius, [collection]);
     this.onClickId('id_anchor', collection.pulseAnchor, [collection]);
@@ -193,6 +193,7 @@ class Section3 extends Section {
         diagram.elements._shapes.hideAll();
         diagram.elements._shapes._eq2Elements.showAll();
         diagram.elements._shapes.show = true;
+        diagram.elements._shapes.eq4.animateTo(new Point(-1, -1), 0.2, null, 2);
       }
       // const diagram = diagrams.circle_container;
       this.onClickId('id_corner', collection.toggleCorners, [collection]);

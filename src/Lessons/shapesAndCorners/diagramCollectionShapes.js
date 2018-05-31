@@ -480,18 +480,34 @@ class ShapesCollection extends DiagramElementCollection {
     ]);
     const eq3 = diagram.equation.make(eq2Elements);
     eq3.createEq([
-      eq3.int(eq3.frac('g', 'n2', 'v3'), 'h', [eq3.sup('x', 'x2'), 'dx'], 'i1'),
+      eq3.int('h', eq3.frac('g', 'n2', 'v3'), [eq3.sup('x', 'x2'), 'dx'], 'i1'),
       'e1',
       eq3.frac(
         [eq2.sFrac('h1', 'h2', 'v4'), 'a', eq3.supSub('b', 'c', 'd')],
-        ['e'],
+        ['f'],
         'v1',
       ),
       'e2',
       eq3.frac(
         ['2x'],
-        'f',
+        'e',
         'v2',
+      ),
+    ]);
+    const eq4 = diagram.equation.make(eq2Elements);
+    eq4.createEq([
+      eq4.int('h', eq4.frac('g', 'n2', 'v3'), [eq4.sup('x', 'x2'), 'dx'], 'i1'),
+      'e1',
+      eq4.frac(
+        ['2x'],
+        'e',
+        'v2',
+      ),
+      'e2',
+      eq4.frac(
+        [eq2.sFrac('h1', 'h2', 'v4'), 'a', eq4.supSub('b', 'c', 'd')],
+        ['f'],
+        'v1',
       ),
     ]);
     const transforms = eq2Elements.getElementTransforms();
@@ -499,6 +515,7 @@ class ShapesCollection extends DiagramElementCollection {
     // console.log(eq2)
     this.eq1 = eq2;
     this.eq3 = eq3;
+    this.eq4 = eq4;
     // const eq1 = diagram.equation.make(
     //   eq,
     //   [

@@ -101,14 +101,18 @@ class Text extends Element {
       this.ascent = m.actualBoundingBoxAscent;
       this.location = loc.copy();
     } else {
+      // const oldFontSize = this.textElement.vertices.text[0].font.size;
       this.setFont(fontSize);
       const m = this.textElement.getRelativeDiagramBoundingRect();
-
+      // this.setFont(oldFontSize);
       this.width = m.width;
       this.descent = -m.bottom;
       this.ascent = m.top;
       this.location = loc.copy();
       this.textElement.transform.updateTranslation(loc.x, loc.y);
+      // console.log(this.textElement)
+      // this.textElement.transform.updateScale(fontSize / oldFontSize, fontSize / oldFontSize);
+      // this.textElement.transform.updateScale(0.1, 0.1);
       // console.log(this.textElement.name, this.textElement.transform.t())
       // console.log(this.textElement.name, this.textElement.getRelativeGLBoundingRect());
     }
