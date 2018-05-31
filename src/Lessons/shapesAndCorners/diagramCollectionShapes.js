@@ -570,7 +570,7 @@ class ShapesCollection extends DiagramElementCollection {
     eq5Elements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     let eqn = diagram.equation.makeNew(eq5Elements);
     eqn.createEq([
-      eqn.int('l1', 'l2', 'c', 'i1'),
+      // eqn.int('l1', 'l2', 'c', 'i1'),
       eqn.frac(
         ['a'],
         [eqn.sfrac('m1', 'm2', 'v3'), 'b'],

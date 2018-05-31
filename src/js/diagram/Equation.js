@@ -29,8 +29,23 @@ class Element {
     if (content instanceof DiagramElementCollection ||
         content instanceof DiagramElementPrimative) {
       // Update translation and scale
+      if (content.name === 'a') {
+        console.log("1", content.lastDrawTransform.order)
+      }
       content.transform.updateTranslation(location.x, location.y);
       content.transform.updateScale(scale, scale);
+      const { parentCount } = content.lastDrawElementTransformPosition;
+      const tPos = content.lastDrawTransform.order.length - parentCount - 1;
+      const sPos = content.lastDrawTransform.order.length - parentCount - 2;
+
+      content.lastDrawTransform.order[sPos].x = scale;
+      content.lastDrawTransform.order[sPos].y = scale;
+      content.lastDrawTransform.order[tPos].x = location.x;
+      content.lastDrawTransform.order[tPos].y = location.y;
+      content.lastDrawTransform.calcMatrix();
+      if (content.name === 'a') {
+        console.log("2", content.lastDrawTransform.order)
+      }
       // console.log(content.lastDrawTransform.matrix())
       // // Update the last draw transform matrix with the new translation
       // // and scale so calculating relative diagram boundaries is correct
@@ -42,10 +57,10 @@ class Element {
       // console.log(content.lastDrawTransform.matrix())
       // Get the boundaries of element
       const r = content.getRelativeDiagramBoundingRect();
-      this.ascent = r.top * scale;
-      this.descent = -r.bottom * scale;
-      this.height = r.height * scale;
-      this.width = r.width * scale;
+      this.ascent = r.top;
+      this.descent = -r.bottom;
+      this.height = r.height;
+      this.width = r.width;
       content.show = true;
     }
   }

@@ -129,6 +129,8 @@ class LessonDiagram extends Diagram {
     // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
     this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
     this.elements._shapes._eq5Elements.updateMoveTranslationBoundary();
+    // console.log(this.elements._shapes.lastDrawTransform.matrix())
+    // console.log(this.elements._shapes._eq5Elements.getRelativeGLBoundingRect())
     // this.elements._shapes.eq1.updateMoveTranslationBoundary();
     // console.log(this.elements._shapes._eq5Elements._a);
   }

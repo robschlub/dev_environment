@@ -87,6 +87,10 @@ class DiagramElement {
   transform: Transform;        // Transform of diagram element
   presetTransforms: Object;       // Convenience dict of transform presets
   lastDrawTransform: Transform; // Transform matrix used in last draw
+  // lastDrawParentTransform: Transform;
+  // lastDrawElementTransform: Transform;
+  // lastDrawPulseTransform: Transform;
+  lastDrawElementTransformPosition: {parentCount: number, elementCount: number};
 
   show: boolean;                  // True if should be shown in diagram
   name: string;                   // Used to reference element in a collection
@@ -747,7 +751,6 @@ class DiagramElement {
 
   updateLimits(limits: Rect) {
     this.diagramLimits = limits;
-
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -888,6 +891,11 @@ class DiagramElementPrimative extends DiagramElement {
   draw(parentTransform: Transform = new Transform(), now: number = 0) {
     if (this.show) {
       this.setNextTransform(now);
+      // this.lastDrawParentTransform = parentTransform.copy();
+      this.lastDrawElementTransformPosition = {
+        parentCount: parentTransform.order.length,
+        elementCount: this.transform.order.length,
+      };
       const newTransform = parentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
@@ -896,6 +904,7 @@ class DiagramElementPrimative extends DiagramElement {
 
       // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransform = pulseTransforms[0];
+      // this.lastDrawPulseTransform = pulseTransforms[0].copy();
 
       let pointCount = -1;
       if (this.vertices instanceof VertexObject) {
@@ -914,6 +923,10 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   setFirstTransform(parentTransform: Transform = new Transform()) {
+    this.lastDrawElementTransformPosition = {
+      parentCount: parentTransform.order.length,
+      elementCount: this.transform.order.length,
+    };
     const firstTransform = parentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
@@ -1049,12 +1062,18 @@ class DiagramElementCollection extends DiagramElement {
   draw(parentTransform: Transform = new Transform(), now: number = 0) {
     if (this.show) {
       this.setNextTransform(now);
-
+      // this.lastDrawParentTransform = parentTransform.copy();
+      // this.lastDrawElementTransform = this.transform.copy();
+      this.lastDrawElementTransformPosition = {
+        parentCount: parentTransform.order.length,
+        elementCount: this.transform.order.length,
+      };
       const newTransform = parentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
       // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransform = pulseTransforms[0];
+      // this.lastDrawPulseTransform = pulseTransforms[0].copy();
 
       for (let k = 0; k < pulseTransforms.length; k += 1) {
         for (let i = 0, j = this.order.length; i < j; i += 1) {
@@ -1145,8 +1164,10 @@ class DiagramElementCollection extends DiagramElement {
     let boundaries = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      const elementBoundaries = element.getGLBoundaries();
-      boundaries = boundaries.concat(elementBoundaries);
+      if (element.show) {
+        const elementBoundaries = element.getGLBoundaries();
+        boundaries = boundaries.concat(elementBoundaries);
+      }
     }
     return boundaries;
   }
@@ -1157,9 +1178,8 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   getRelativeGLBoundingRect() {
-    // const glAbsoluteBoundaries = this.getGLBoundaries();
-    // const boundingRect = getBoundingRect(glAbsoluteBoundaries);
     const boundingRect = this.getGLBoundingRect();
+
     const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
 
     return new Rect(
@@ -1253,7 +1273,6 @@ class DiagramElementCollection extends DiagramElement {
           easeFunction,
           callback,
         );
-        // console.log("animated:", element.name, element.transform.t(), elementTransforms[element.name].t())
       }
     }
   }
