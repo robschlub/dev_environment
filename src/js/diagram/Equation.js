@@ -59,8 +59,14 @@ class Elements {
   location: Point;
   height: number;
 
-  constructor(content: Array<Element | Elements>) {
-    this.content = content;
+  constructor(content: Array<Element | Elements | null>) {
+    const filteredContent = [];
+    content.forEach((c) => {
+      if (c !== null) {
+        filteredContent.push(c);
+      }
+    });
+    this.content = filteredContent;
     this.ascent = 0;
     this.descent = 0;
     this.width = 0;
@@ -187,15 +193,7 @@ class SuperSubNew extends Elements {
     xBias: number = 0,
     subscriptXBias: number = 0,
   ) {
-    if (superscript !== null && subscript !== null) {
-      super([content, superscript, subscript]);
-    } else if (superscript === null && subscript !== null) {
-      super([content, subscript]);
-    } else if (superscript !== null && subscript === null) {
-      super([content, superscript]);
-    } else {
-      super([content]);
-    }
+    super([content, superscript, subscript]);
 
     this.superscript = superscript;
     this.subscript = subscript;
@@ -253,6 +251,152 @@ class SuperSubNew extends Elements {
   }
 }
 
+class Bounds {
+  width: number;
+  height: number;
+  ascent: number;
+  descent: number;
+  constructor() {
+    this.width = 0;
+    this.height = 0;
+    this.ascent = 0;
+    this.descent = 0;
+  }
+}
+class IntegralNew extends Elements {
+  limitMin: Elements | null;
+  limitMax: Elements | null;
+  mainContent: Elements | null;
+  integralGlyph: DiagramElementPrimative | DiagramElementCollection | null;
+
+  constructor(
+    limitMin: Elements | null,
+    limitMax: Elements | null,
+    content: Elements | null,
+    integralGlyph: DiagramElementPrimative | null | DiagramElementCollection,
+  ) {
+    const glyph = integralGlyph !== null ? new Element(integralGlyph) : null;
+    super([glyph, limitMin, limitMax, content]);
+
+    this.limitMin = limitMin;
+    this.limitMax = limitMax;
+    this.mainContent = content;
+    this.integralGlyph = integralGlyph;
+  }
+
+  calcSize(location: Point, scale: number) {
+    this.location = location.copy();
+    const loc = location.copy();
+    const contentBounds = new Bounds();
+    const limitMinBounds = new Bounds();
+    const limitMaxBounds = new Bounds();
+    const integralGlyphBounds = new Bounds();
+
+    const { mainContent } = this;
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(loc.copy(), scale);
+      contentBounds.width = mainContent.width;
+      contentBounds.height = mainContent.ascent + mainContent.descent;
+      contentBounds.ascent = mainContent.ascent;
+      contentBounds.descent = mainContent.descent;
+    }
+
+    const { limitMax } = this;
+    if (limitMax instanceof Elements) {
+      limitMax.calcSize(loc.copy(), scale / 2);
+      limitMaxBounds.width = limitMax.width;
+      limitMaxBounds.height = limitMax.ascent + limitMax.descent;
+      limitMaxBounds.ascent = limitMax.ascent;
+      limitMaxBounds.descent = limitMax.descent;
+    }
+
+    const { limitMin } = this;
+    if (limitMin instanceof Elements) {
+      limitMin.calcSize(loc.copy(), scale / 2);
+      limitMinBounds.width = limitMin.width;
+      limitMinBounds.height = limitMin.ascent + limitMin.descent;
+      limitMinBounds.ascent = limitMin.ascent;
+      limitMinBounds.descent = limitMin.descent;
+    }
+
+    const integralMinHeight =
+      contentBounds.ascent + contentBounds.descent +
+      limitMinBounds.height +
+      limitMaxBounds.height;
+    const integralSymbolLocation = new Point(
+      loc.x,
+      loc.y - Math.max(
+        limitMinBounds.ascent + contentBounds.height / 2,
+        scale / 3,
+      ),
+    );
+    const numLines = roundNum(integralMinHeight / scale, 0);
+
+    const { integralGlyph } = this;
+    if (integralGlyph instanceof DiagramElementPrimative) {
+      integralGlyph.show = true;
+      const height = numLines * scale * 1.5;
+      integralGlyph.transform.updateScale(
+        height,
+        height,
+      );
+      integralGlyph.transform.updateTranslation(
+        integralSymbolLocation.x,
+        integralSymbolLocation.y,
+      );
+      const bounds = integralGlyph.vertices
+        .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
+      integralGlyphBounds.width = bounds.width;
+      integralGlyphBounds.height = -bounds.bottom + bounds.top;
+      integralGlyphBounds.ascent = bounds.top;
+      integralGlyphBounds.descent = -bounds.bottom;
+    }
+
+    const minLimitLocation = new Point(
+      this.location.x + integralGlyphBounds.width * 0.5,
+      integralSymbolLocation.y,
+    );
+
+    const maxLimitLocation = new Point(
+      this.location.x + integralGlyphBounds.width * 1.2,
+      integralSymbolLocation.y + integralGlyphBounds.height - limitMaxBounds.height / 2,
+    );
+
+    const contentLocation = new Point(
+      this.location.x + integralGlyphBounds.width * 0.8,
+      this.location.y,
+    );
+
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(contentLocation, scale);
+    }
+    if (limitMin instanceof Elements) {
+      limitMin.calcSize(minLimitLocation, scale / 2);
+    }
+    if (limitMax instanceof Elements) {
+      limitMax.calcSize(maxLimitLocation, scale / 2);
+    }
+
+    this.width = Math.max(
+      integralGlyphBounds.width,
+      limitMinBounds.width + minLimitLocation.x - this.location.x,
+      limitMaxBounds.width + maxLimitLocation.x - this.location.x,
+      contentBounds.width + contentLocation.x - this.location.x,
+    );
+    this.ascent = Math.max(
+      integralGlyphBounds.ascent,
+      limitMaxBounds.ascent + maxLimitLocation.y - this.location.y,
+      contentBounds.ascent + contentLocation.y - this.location.y,
+    );
+
+    this.descent = Math.max(
+      integralGlyphBounds.descent,
+      limitMinBounds.descent + this.location.y - minLimitLocation.y,
+      contentBounds.ascent + this.location.y - contentLocation.y,
+    );
+  }
+}
+
 
 type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
@@ -262,7 +406,6 @@ class DiagramEquationNew extends Elements {
   constructor(collection: DiagramElementCollection) {
     super([]);
     this.collection = collection;
-    this.baseFontSize = 1;
   }
 
   // eslint-disable-next-line function-paren-newline
@@ -338,13 +481,13 @@ class DiagramEquationNew extends Elements {
           if (diagramElement) {
             elementArray.push(new Element(diagramElement));
           }
-        } else {
+        } else if (c !== null) {
           elementArray.push(c);
         }
       });
     // Otherwise, if the input is an Element or Elements object, so just add
     // it to the ElementsArray
-    } else {
+    } else if (content !== null) {
       elementArray.push(content);
     }
     return new Elements(elementArray);
@@ -405,22 +548,19 @@ class DiagramEquationNew extends Elements {
     );
   }
 
-  // int(
-  //   limitMin: Array<E | string> | E | string,
-  //   limitMax: Array<E | string> | E | string,
-  //   content: Array<E | string> | E | string,
-  //   integralSymbolOrid: string | DiagramElementPrimative = '',
-  //   classes: string | Array<string> = [],
-  // ) {
-  //   console.log(this.contentToElement(limitMin))
-  //   return new Integral(
-  //     this.contentToElement(limitMin),
-  //     this.contentToElement(limitMax),
-  //     this.contentToElement(content),
-  //     this.getDiagramElement(integralSymbolOrid),
-  //     classes,
-  //   );
-  // }
+  int(
+    limitMin: EquationInput,
+    limitMax: EquationInput,
+    content: EquationInput,
+    integralGlyph: DiagramElementPrimative,
+  ) {
+    return new IntegralNew(
+      this.contentToElement(limitMin),
+      this.contentToElement(limitMax),
+      this.contentToElement(content),
+      this.getDiagramElement(integralGlyph),
+    );
+  }
 }
 
 

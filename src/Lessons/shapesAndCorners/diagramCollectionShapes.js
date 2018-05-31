@@ -558,14 +558,19 @@ class ShapesCollection extends DiagramElementCollection {
       s2: '2',
       s3: '3',
       s4: '4',
+      l1: 'ab',
+      l2: 'h',
+      c1: 'xdx',
       v1: this.diagram.equation.vinculum(),
       v2: this.diagram.equation.vinculum(),
       v3: this.diagram.equation.vinculum(),
+      i1: this.diagram.equation.integral(),
     });
     this.add('eq5Elements', eq5Elements);
     eq5Elements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     let eqn = diagram.equation.makeNew(eq5Elements);
     eqn.createEq([
+      eqn.int('l1', 'l2', 'c', 'i1'),
       eqn.frac(
         ['a'],
         [eqn.sfrac('m1', 'm2', 'v3'), 'b'],
@@ -573,8 +578,8 @@ class ShapesCollection extends DiagramElementCollection {
       ),
       'e1',
       eqn.frac(
-        eqn.supsub('c', eqn.sup('s1','s3'), 's2'),
-        [eqn.sub('d','s4')],
+        eqn.supsub('c', eqn.sup('s1', 's3'), 's2'),
+        [eqn.sub('d', 's4')],
         'v2',
       ),
     ]);
