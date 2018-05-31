@@ -491,7 +491,7 @@ class ShapesCollection extends DiagramElementCollection {
     eqn.createEq([
       eqn.frac(
         ['a', 'v'],
-        ['&pi;'],
+        [eqn.sqrt('&pi;')],
       ),
       ' = ',
       eqn.frac(
