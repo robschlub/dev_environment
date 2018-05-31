@@ -28,32 +28,12 @@ class Element {
     const { content } = this;
     if (content instanceof DiagramElementCollection ||
         content instanceof DiagramElementPrimative) {
-      // Update translation and scale
 
+      // Update translation and scale
       content.transform.updateTranslation(location.x, location.y);
       content.transform.updateScale(scale, scale);
       content.updateLastDrawTransform();
-      // const { parentCount } = content.lastDrawElementTransformPosition;
-      // const tPos = content.lastDrawTransform.order.length - parentCount - 1;
-      // const sPos = content.lastDrawTransform.order.length - parentCount - 2;
 
-      // content.lastDrawTransform.order[sPos].x = scale;
-      // content.lastDrawTransform.order[sPos].y = scale;
-      // content.lastDrawTransform.order[tPos].x = location.x;
-      // content.lastDrawTransform.order[tPos].y = location.y;
-      // content.lastDrawTransform.calcMatrix();
-      // if (content.name === 'a') {
-      //   console.log("2", content.lastDrawTransform.order)
-      // }
-      // console.log(content.lastDrawTransform.matrix())
-      // // Update the last draw transform matrix with the new translation
-      // // and scale so calculating relative diagram boundaries is correct
-      // const transformLength = content.transform.order.length;
-      // content.lastDrawTransform.order = content.lastDrawTransform.order
-      //   .slice(0, -transformLength)
-      //   .concat(content.transform.order);
-      // content.lastDrawTransform.calcMatrix();
-      // console.log(content.lastDrawTransform.matrix())
       // Get the boundaries of element
       const r = content.getRelativeDiagramBoundingRect();
       this.ascent = r.top;
@@ -337,19 +317,16 @@ class IntegralNew extends Elements {
       contentBounds.ascent + contentBounds.descent +
       limitMinBounds.height +
       limitMaxBounds.height;
+    const numLines = roundNum(integralMinHeight / scale, 0);
+    const height = numLines * scale * 1.2;
     const integralSymbolLocation = new Point(
       loc.x,
-      loc.y - Math.max(
-        limitMinBounds.ascent + contentBounds.height / 2,
-        scale / 3,
-      ),
+      loc.y - height / 2 + scale * 0.35,
     );
-    const numLines = roundNum(integralMinHeight / scale, 0);
 
     const { integralGlyph } = this;
     if (integralGlyph instanceof DiagramElementPrimative) {
       integralGlyph.show = true;
-      const height = numLines * scale * 1.5;
       integralGlyph.transform.updateScale(
         height,
         height,

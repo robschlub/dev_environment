@@ -564,13 +564,17 @@ class ShapesCollection extends DiagramElementCollection {
       v1: this.diagram.equation.vinculum(),
       v2: this.diagram.equation.vinculum(),
       v3: this.diagram.equation.vinculum(),
-      i1: this.diagram.equation.integral(),
+      i1: this.diagram.equation.integral(1),
     });
+    eq5Elements.isTouchable = true;
+    eq5Elements.isMovable = true;
+    eq5Elements.touchInBoundingRect = true;
     this.add('eq5Elements', eq5Elements);
     eq5Elements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+
     let eqn = diagram.equation.makeNew(eq5Elements);
     eqn.createEq([
-      eqn.int('l1', 'l2', 'c', 'i1'),
+      eqn.int('l1', 'l2', 'c1', 'i1'),
       eqn.frac(
         ['a'],
         [eqn.sfrac('m1', 'm2', 'v3'), 'b'],
@@ -583,10 +587,24 @@ class ShapesCollection extends DiagramElementCollection {
         'v2',
       ),
     ]);
-    eq5Elements.isTouchable = true;
-    eq5Elements.isMovable = true;
-    eq5Elements.touchInBoundingRect = true;
     this.eq5 = eqn;
+
+    eqn = diagram.equation.makeNew(eq5Elements);
+    eqn.createEq([
+      eqn.int('l1', 'c1', eqn.frac(
+        ['a'],
+        [eqn.sfrac('m1', 'm2', 'v3'), 'b'],
+        'v1',
+      ), 'i1'),
+      'l2',
+      'e1',
+      eqn.frac(
+        eqn.supsub('c', eqn.sup('s1', 's3'), 's2'),
+        [eqn.sub('d', 's4')],
+        'v2',
+      ),
+    ]);
+    this.eq6 = eqn;
   }
 
   resize(locations: Object) {
