@@ -5,7 +5,9 @@ import { DiagramElementPrimative, DiagramElementCollection } from './Element';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
 // import { HTMLObject } from './DrawingObjects/HTMLObject/HTMLObject';
 
-// Equation is a class that takes a set of drawing objects (TextObjects, DiagramElementPrimatives or DiagramElementCollections and HTML Objects and arranges their size in a )
+// Equation is a class that takes a set of drawing objects (TextObjects,
+// DiagramElementPrimatives or DiagramElementCollections and HTML Objects
+// and arranges their size in a )
 
 class Element {
   content: DiagramElementPrimative | DiagramElementCollection;
@@ -28,7 +30,6 @@ class Element {
     const { content } = this;
     if (content instanceof DiagramElementCollection ||
         content instanceof DiagramElementPrimative) {
-
       // Update translation and scale
       content.transform.updateTranslation(location.x, location.y);
       content.transform.updateScale(scale, scale);
@@ -321,7 +322,7 @@ class IntegralNew extends Elements {
     const height = numLines * scale * 1.2;
     const integralSymbolLocation = new Point(
       loc.x,
-      loc.y - height / 2 + scale * 0.35,
+      loc.y - height / 2 + scale * 0.45,
     );
 
     const { integralGlyph } = this;

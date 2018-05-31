@@ -54,11 +54,12 @@ class Section1 extends Section {
       collection._pent._lessSharpCorners,
     ]);
 
-    console.log("setState", diagram.elements._shapes.lastDrawTransform.matrix())
-    diagram.elements._shapes.eq1.calcSize(new Point(-1, -1), 0.2, null);
+    // console.log("setState", diagram.elements._shapes.lastDrawTransform.matrix())
+    // diagram.elements._shapes.eq1.calcSize(new Point(-1, -1), 0.2, null);
     diagram.elements._shapes.eq5.calcSize(new Point(-2, 1), 0.2);
     diagram.elements._shapes._eq5Elements.updateMoveTranslationBoundary();
-    diagram.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    diagram.elements._shapes.isTouchable = false;
+    // diagram.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
 
     this.onClickId('id_shapes', collection.pulseShapes, [collection]);
     this.onClickId('id_corners', collection.toggleCorners, [collection]);
@@ -126,9 +127,9 @@ class Section2 extends Section {
       diagram.elements._shapes,
     ]);
     diagram.elements._shapes.hideAll();
-    diagram.elements._shapes._eq2Elements.showAll();
+    // diagram.elements._shapes._eq2Elements.showAll();
     diagram.elements._shapes.show = true;
-    diagram.elements._shapes.eq3.animateTo(new Point(-1, -1), 0.2, null, 2);
+    // diagram.elements._shapes.eq3.animateTo(new Point(-1, -1), 0.2, null, 2);
     diagram.elements._shapes.eq6.animateTo(new Point(-2, 1), 0.2, 2);
 
     this.onClickId('id_line', collection.pulseRadius, [collection]);
@@ -194,10 +195,10 @@ class Section3 extends Section {
           diagram.elements._shapes,
           collection._grid,
         ]);
-        diagram.elements._shapes.hideAll();
-        diagram.elements._shapes._eq2Elements.showAll();
-        diagram.elements._shapes.show = true;
-        diagram.elements._shapes.eq4.animateTo(new Point(-1, -1), 0.2, null, 2);
+        // diagram.elements._shapes.hideAll();
+        // diagram.elements._shapes._eq2Elements.showAll();
+        // diagram.elements._shapes.show = true;
+        // diagram.elements._shapes.eq4.animateTo(new Point(-1, -1), 0.2, null, 2);
       }
       // const diagram = diagrams.circle_container;
       this.onClickId('id_corner', collection.toggleCorners, [collection]);
