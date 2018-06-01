@@ -12,6 +12,20 @@ const colors = getScssColors(styles);
 
 const backgroundColor = colors.background;
 
+// type typeShape = {
+//   _lines: DiagramElementPrimative;
+//   _corners: DiagramElementPrimative;
+//   _lessSharpCorners: DiagramElementPrimative;
+//   _moreSharpCorners: DiagramElementPrimative;
+// } & DiagramElementCollection ;
+
+// type typeShapesDiagramCollection = {
+//   _square: typeShape,
+//   _triangle: typeShape,
+//   _pent: typeShape,
+// } & DiagramElementCollection;
+
+
 type typeElements = {
   _circle: CircleCollection;
   _shapes: ShapesCollection;
@@ -109,8 +123,18 @@ class LessonDiagram extends Diagram {
 
   draw(now: number): void {
     super.draw(now);
+    // this.elements._shapes.eq.calcSize(new Point(100, 100), 20, this.draw2D.ctx);
+    // this.elements._shapes.eq.draw(this.draw2D.ctx);
+    // this.elements._shapes.eq1.calcSize(new Point(0, 0), 0.2, null);
+    // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    // $FlowFixMe
+    this.elements._shapes._eq5Elements.updateMoveTranslationBoundary();
+    // console.log(this.elements._shapes.lastDrawTransform.matrix())
+    // console.log(this.elements._shapes._eq5Elements.getRelativeGLBoundingRect())
+    // this.elements._shapes.eq1.updateMoveTranslationBoundary();
+    // console.log(this.elements._shapes._eq5Elements._a);
   }
-
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
