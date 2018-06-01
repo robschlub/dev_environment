@@ -24,14 +24,4 @@ script:
   - export IN_TRAVIS=1
   - export HEROKU_API_KEY=$HEROKU_TOKEN
   - ./build.sh prod deploy
-  # - /usr/local/heroku/bin/heroku container:release web --app itgetitest
 
-# deploy:
-#   provider: heroku
-#   api_key:
-#     secure: SlbZVCx1wMY7yMV87o3Go/K60kP7KvVSeqsTDdFWTQMLl0TLMXPKXFUDcUj6Vn+1BONiKuXzhZ7TyVMuKp3YksizfvQKqImi9dcpTo+oYEg1Lyb7j7q9BRzv7AFidM66PU7RGW28U1tWONflp7Q2EDzKEegIbTKu1y46TIq0tOqc1NBeJKQabKDK3VFbMGs3IA8/Yqzf0Jx7K3PNMlebIHau6zlz1nYt8g0zCYZwuPBHbUDe3mvfxJ9FtvBYEDF6Kdk5ZMegZTPUDeMi9CwPX1TyIRpaaeDDe1ZYP18HBkpUOsdLNkVYBKFd//pzBep/yG82XbERssDhUISLMhgBol+MV+WKfI91c7fpo4RE8CY6AuhQrL3ykXvGyrL2c4uX8qpIsZkNJTf1FgP6mopuAIBJDqqkQrNwM9pK1R5yLwgJ0OIc/9WwfUXKtq6msalwRpg6mBYumfqeP8xVmLqewghb2NvdEn+aUU067l4QUQNzS7enaWID+VPvgkq8UlvdJ+NwKBVLbKP+CRjTYxci6oSLxGhRw12pLaJe/+XOmxHQvwajdhi2ZmlkTrl1DRn+LoXz3/q+3Ik9tllY1T37Ku/P9A4x5+U0oaVFSbM/1MdxykCIY7RscdI5xbZyleAhnn6MisLAT6ktkEZavd81VZjlTDjreheiIfbYLobvsrg=
-#   run: heroku container:release web --app itgetitest
-#   app:
-#     master: itgeti
-#     release-candidate: itgetidev
-#     travis: itgetitest

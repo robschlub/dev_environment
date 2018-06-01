@@ -366,7 +366,7 @@ class ShapesCollection extends DiagramElementCollection {
       s4: '4',
       l1: 'ab',
       l2: 'h',
-      c1: 'xadx',
+      c1: 'xbdx',
       v1: this.diagram.equation.vinculum(),
       v2: this.diagram.equation.vinculum(),
       v3: this.diagram.equation.vinculum(),
