@@ -102,36 +102,36 @@ check_status() {
   fi
 }
 
-# # Build docker image
-# echo "${bold}${cyan}================= Building Image ===================${reset}"
-# cp containers/Dockerfile_dev Dockerfile
-# docker build -t devbuild .
-# rm Dockerfile
+# Build docker image
+echo "${bold}${cyan}================= Building Image ===================${reset}"
+cp containers/Dockerfile_dev Dockerfile
+docker build -t devbuild .
+rm Dockerfile
 
-# FAIL=0
+FAIL=0
 
-# # Lint and type check
-# echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
-# docker_run "JS Linting" npm run lint
-# docker_run "CSS and SCSS Linting" npm run css
-# docker_run "Flow" npm run flow
-# docker_run "Python Linting" flake8
-# check_status "Linting and Type Checking"
+# Lint and type check
+echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
+docker_run "JS Linting" npm run lint
+docker_run "CSS and SCSS Linting" npm run css
+docker_run "Flow" npm run flow
+docker_run "Python Linting" flake8
+check_status "Linting and Type Checking"
 
-# # Test
-# echo "${bold}${cyan}===================== Testing ======================${reset}"
-# docker_run "JS Testing" npm run jest
-# docker_run "Python Testing" pytest
-# check_status "Tests"
-# if [ $IN_TRAVIS ];
-#   then
-#   sudo rm -rf tests/__pycache__
-# fi
+# Test
+echo "${bold}${cyan}===================== Testing ======================${reset}"
+docker_run "JS Testing" npm run jest
+docker_run "Python Testing" pytest
+check_status "Tests"
+if [ $IN_TRAVIS ];
+  then
+  sudo rm -rf tests/__pycache__
+fi
 
-# Package
-# echo "${bold}${cyan}==================== Packaging =====================${reset}"
-# docker_run "Packaging" npm run webpack -- --env.mode=$MODE
-# check_status "Building"
+Package
+echo "${bold}${cyan}==================== Packaging =====================${reset}"
+docker_run "Packaging" npm run webpack -- --env.mode=$MODE
+check_status "Building"
 
 # Deploy to:
 #   Production if branch is master
@@ -175,10 +175,12 @@ if [ $2 ];
       docker build -t registry.heroku.com/$APP_NAME/web .
       echo "${bold}${cyan}Pushing deployment image${reset}"
       docker push registry.heroku.com/$APP_NAME/web
-      # if [ !$IN_TRAVIS ];
-      #   then
-      #   heroku container:release web --app $APP_NAME
-      # fi
+      if [ $IN_TRAVIS ];
+        then
+          /usr/local/heroku/bin/heroku container:release web --app $APP_NAME
+        else
+          heroku container:release web --app $APP_NAME
+      fi
       if [ $? != 0 ];
         then
         echo "${bold}${cyan}" Deployment "${bold}${red}Failed${reset}"

@@ -22,9 +22,9 @@ script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH;
     else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - export IN_TRAVIS=1
-  - ./build.sh prod deploy
   - export HEROKU_API_KEY=$HEROKU_TOKEN
-  - /usr/local/heroku/bin/heroku container:release web --app itgetitest
+  - ./build.sh prod deploy
+  # - /usr/local/heroku/bin/heroku container:release web --app itgetitest
 
 # deploy:
 #   provider: heroku
