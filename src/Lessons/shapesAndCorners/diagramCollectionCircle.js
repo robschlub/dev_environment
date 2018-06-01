@@ -56,7 +56,7 @@ function makeAnchor(shapes: Object, layout: Object) {
 function makeReference(shapes: Object, layout: Object) {
   return makeLine(
     shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.reference, new Point(0, 0),
+    colors.reference, new Transform().rotate(0).translate(0, 0),
   );
 }
 

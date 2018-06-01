@@ -3,6 +3,7 @@
 // import { Lesson } from '../../js/Lesson/Lesson';
 import { Content, Section, actionWord, diagramCanvas } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
+import { Point, Transform } from '../../js/diagram/tools/g2';
 
 class Section1 extends Section {
   setTitle() {
@@ -56,6 +57,52 @@ class Section1 extends Section {
     this.onClickId('id_corners', collection.toggleCorners, [collection]);
     this.onClickId('id_more_sharp', collection.toggleMoreSharpCorners, [collection]);
     this.onClickId('id_less_sharp', collection.toggleLessSharpCorners, [collection]);
+  }
+}
+
+class Section2a extends Section {
+  setContent() {
+    return `
+      <p style="margin-top:10%">
+        Let's start with two |_lines|.
+      </p>
+      <p style="margin-top:40%">
+        Let's now lay the two lines on top of each other and anchor one end'
+      </p>
+      `;
+  }
+  setModifiers() {
+    return {
+      _lines: actionWord('lines', 'id_line'),
+    };
+  }
+
+  // transitionNext(diagrams, done) {
+  //   const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+  //   const collection = diagram.elements._circle;
+  //   if (diagram) {
+  //     collection._radius.animateTo(new Transform())
+  //   }
+  // }
+
+  setState(diagrams: Object) {
+    const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+    const collection = diagram.elements._circle;
+
+    diagram.elements.showOnly([
+      collection._radius,
+      collection._reference,
+      collection,
+    ]);
+
+
+    collection._radius.transform.updateTranslation(-1, 0);
+    collection._radius.transform.updateRotation(Math.PI / 2);
+
+    collection._reference.transform.updateTranslation(1, 0);
+    collection._reference.transform.updateRotation(Math.PI / 2);
+
+    this.onClickId('id_line', collection.pulseLines, [collection]);
   }
 }
 
@@ -201,6 +248,7 @@ const content = new Content(
   'Shapes and Corners',
   [
     new Section1(),
+    new Section2a(),
     new Section2(),
     new Section3(),
   ],
