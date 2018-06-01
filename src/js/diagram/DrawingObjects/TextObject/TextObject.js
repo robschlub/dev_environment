@@ -12,7 +12,7 @@ class DiagramFont {
   style: string;
   family: string;
   alignH: 'left' | 'center' | 'right';
-  alignV: 'top' | 'bottom' | 'middle';
+  alignV: 'top' | 'bottom' | 'middle' | 'alphabetic';
   color: string | null;
 
   constructor(
@@ -21,7 +21,7 @@ class DiagramFont {
     size: number = 1,
     weight: string = '200',
     alignH: 'left' | 'center' | 'right' = 'center',
-    alignV: 'top' | 'bottom' | 'middle' = 'middle',
+    alignV: 'top' | 'bottom' | 'middle' | 'alphabetic' = 'middle',
     color: Array<number> | null | string = null,
   ) {
     this.family = family;
@@ -106,6 +106,12 @@ class TextObject extends DrawingObject {
         const power = -Math.log10(minSize) + 2;
         this.scalingFactor = 10 ** power;
       }
+    }
+  }
+
+  setFont(fontSize: number) {
+    for (let i = 0; i < this.text.length; i += 1) {
+      this.text[i].font.size = fontSize;
     }
   }
 
@@ -233,6 +239,80 @@ class TextObject extends DrawingObject {
     return glBoundaries;
   }
 
+  // This method is used instead of the actual ctx.measureText because
+  // Firefox and Chrome don't yet support it's advanced features.
+  // Estimates are made for height based on width.
+  // eslint-disable-next-line class-methods-use-this
+  measureText(ctx: CanvasRenderingContext2D, text: DiagramText) {
+    const aWidth = ctx.measureText('a').width;
+
+    // Estimations of FONT ascent and descent for a baseline of "alphabetic"
+    const ascent = aWidth * 1.9;
+    const descent = aWidth * 0.5;
+
+    // Uncomment below and change above consts to lets if more resolution on
+    // actual text boundaries is needed
+
+    // const maxAscentRe =
+    //   /[ABCDEFGHIJKLMNOPRSTUVWXYZ1234567890!#%^&()@$Qbdtfhiklj]/g;
+    // const midAscentRe = /[acemnorsuvwxz*gyqp]/g;
+    // const maxDescentRe = /[gjyqp@$Q]/g;
+
+    // const midAscentMatches = text.text.match(midAscentRe);
+    // if (Array.isArray(midAscentMatches)) {
+    //   if (midAscentMatches.length === text.text.length) {
+    //     ascent = aWidth * 1.2;
+    //   }
+    // }
+    // const maxDescentMatches = text.text.match(maxDescentRe);
+    // if (Array.isArray(maxDescentMatches)) {
+    //   if (maxDescentMatches.length > 0) {
+    //     descent = aWidth * 0.8;
+    //   }
+    // }
+
+    const height = ascent + descent;
+
+    const { width } = ctx.measureText(text.text);
+
+    let asc = 0;
+    let des = 0;
+    let left = 0;
+    let right = 0;
+
+    if (text.font.alignH === 'left') {
+      right = width;
+    }
+    if (text.font.alignH === 'center') {
+      left = width / 2;
+      right = width / 2;
+    }
+    if (text.font.alignH === 'right') {
+      left = width;
+    }
+    if (text.font.alignV === 'alphabetic') {
+      asc = ascent;
+      des = descent;
+    }
+    if (text.font.alignV === 'top') {
+      asc = 0;
+      des = height;
+    }
+    if (text.font.alignV === 'bottom') {
+      asc = height;
+      des = 0;
+    }
+    if (text.font.alignV === 'middle') {
+      asc = height / 2;
+      des = height / 2;
+    }
+    return {
+      actualBoundingBoxLeft: left,
+      actualBoundingBoxRight: right,
+      fontBoundingBoxAscent: asc,
+      fontBoundingBoxDescent: des,
+    };
+  }
   getGLBoundaryOfText(
     text: DiagramText,
     lastDrawTransformMatrix: Array<number>,
@@ -243,26 +323,27 @@ class TextObject extends DrawingObject {
 
     // Measure the text
     text.font.set(this.drawContext2D.ctx, scalingFactor);
-    const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+    // const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+    const textMetrics = this.measureText(this.drawContext2D.ctx, text);
 
     // Create a box around the text
     const { location } = text;
     const box = [
       new Point(
         -textMetrics.actualBoundingBoxLeft / scalingFactor,
-        textMetrics.actualBoundingBoxAscent / scalingFactor,
+        textMetrics.fontBoundingBoxAscent / scalingFactor,
       ).add(location),
       new Point(
         textMetrics.actualBoundingBoxRight / scalingFactor,
-        textMetrics.actualBoundingBoxAscent / scalingFactor,
+        textMetrics.fontBoundingBoxAscent / scalingFactor,
       ).add(location),
       new Point(
         textMetrics.actualBoundingBoxRight / scalingFactor,
-        -textMetrics.actualBoundingBoxDescent / scalingFactor,
+        -textMetrics.fontBoundingBoxDescent / scalingFactor,
       ).add(location),
       new Point(
         -textMetrics.actualBoundingBoxLeft / scalingFactor,
-        -textMetrics.actualBoundingBoxDescent / scalingFactor,
+        -textMetrics.fontBoundingBoxDescent / scalingFactor,
       ).add(location),
     ];
 
