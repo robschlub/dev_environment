@@ -169,7 +169,7 @@ if [ $2 ];
       docker build -t registry.heroku.com/$APP_NAME/web .
       echo "${bold}${cyan}Pushing deployment image${reset}"
       docker push registry.heroku.com/$APP_NAME/web
-
+      heroku container:release web --app $APP_NAME
       if [ $? != 0 ];
         then
         echo "${bold}${cyan}" Deployment "${bold}${red}Failed${reset}"
