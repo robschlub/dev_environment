@@ -128,7 +128,7 @@ if [ $IN_TRAVIS ];
   sudo rm -rf tests/__pycache__
 fi
 
-Package
+# Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
 docker_run "Packaging" npm run webpack -- --env.mode=$MODE
 check_status "Building"
