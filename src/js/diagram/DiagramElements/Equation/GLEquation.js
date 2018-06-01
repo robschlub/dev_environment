@@ -455,7 +455,7 @@ export default class DiagramGLEquation extends Elements {
 
     // If it is not an Elements object, then create an Element(s) array
     // and create a new Elements Object
-    const elementArray: Array<Elements | Element> = [];
+    const elementArray: Array<Elements | Element | null> = [];
 
     // If the content is a string, then find the corresponding
     // DiagramElement associated with the string

@@ -128,6 +128,7 @@ class LessonDiagram extends Diagram {
     // this.elements._shapes.eq1.calcSize(new Point(0, 0), 0.2, null);
     // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
     // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    // $FlowFixMe
     this.elements._shapes._eq5Elements.updateMoveTranslationBoundary();
     // console.log(this.elements._shapes.lastDrawTransform.matrix())
     // console.log(this.elements._shapes._eq5Elements.getRelativeGLBoundingRect())

@@ -10,7 +10,7 @@ import CartesianPlot from '../../js/diagram/DiagramElements/Plot/CartesianPlot';
 import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
-import * as e from '../../js/diagram/Equation';
+// import * as e from '../../js/diagram/Equation';
 // import Integral from '../../js/diagram/DiagramElements/Equation/Integral';
 
 const colors = getScssColors(styles);
@@ -113,81 +113,6 @@ function makePlot(diagram: Diagram) {
   return plot;
 }
 
-function makeEq(diagram: Diagram, shapes: Object, location: Point) {
-  // const font = new DiagramFont(
-  //   'Times New Roman',
-  //   'italic',
-  //   0.4,
-  //   '200',
-  //   'left',
-  //   'alphabetic',
-  //   [0, 1, 1, 1],
-  // );
-
-  // const limits = diagram.limits;
-  // const t = new Transform().translate(0, 0);
-  // const c = [1, 0, 0, 1];
-
-  // const dt_2x = [new DiagramText(new Point(0, 0), '2xyA', font)];
-  // const dt_p2 = [new DiagramText(new Point(0, 0), '2', font)];
-  // const dt_p3 = [new DiagramText(new Point(0, 0), '3', font)];
-  // const dt_a = [new DiagramText(new Point(0, 0), 'att', font)];
-  // const dt_b = [new DiagramText(new Point(0, 0), 'b', font)];
-  // const dt_c = [new DiagramText(new Point(0, 0), 'cg', font)];
-  // const dt_equals = [new DiagramText(new Point(0, 0), '=', font)];
-  // // dt_p2[0].font.size /= 2;
-  // // dt_p3[0].font.size /= 2;
-
-  // const to_2x = new TextObject(diagram.draw2D, dt_2x);
-  // const to_p2 = new TextObject(diagram.draw2D, dt_p2);
-  // const to_p3 = new TextObject(diagram.draw2D, dt_p3);
-  // const to_a = new TextObject(diagram.draw2D, dt_a);
-  // const to_b = new TextObject(diagram.draw2D, dt_b);
-  // const to_c = new TextObject(diagram.draw2D, dt_c);
-  // const to_equals = new TextObject(diagram.draw2D, dt_equals);
-
-  // const t_2x = new DiagramElementPrimative(to_2x, t, c, limits);
-  // const t_p2 = new DiagramElementPrimative(to_p2, t, c, limits);
-  // const t_p3 = new DiagramElementPrimative(to_p3, t, c, limits);
-  // const t_a = new DiagramElementPrimative(to_a, t, c, limits);
-  // const t_b = new DiagramElementPrimative(to_b, t, c, limits);
-  // const t_c = new DiagramElementPrimative(to_c, t, c, limits);
-  // const t_equals = new DiagramElementPrimative(to_equals, t, c, limits);
-
-  // const vinculum1 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [1, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
-  // const vinculum2 = shapes.horizontalLine(new Point(0, 0), 1, 1, 0, [1, 1, 1, 1], new Transform().scale(1, 1).translate(0, 0));
-
-  // const eq = shapes.collection(location);
-  // eq.add('2x', t_2x);
-  // eq.add('p2', t_p2);
-  // eq.add('p3', t_p3);
-  // eq.add('a', t_a);
-  // eq.add('b', t_b);
-  // eq.add('c', t_c);
-  // eq.add('equals', t_equals);
-  // eq.add('v1', vinculum1);
-  // eq.add('v2', vinculum2);
-  // t_2x.isTouchable = true;
-  const eq = diagram.equation.elements({
-    '2x': '2x',
-    p2: '2',
-    p3: '3',
-    p4: '4',
-    a: 'att',
-    b: 'b',
-    c: 'cg',
-    equals: '=',
-    v1: diagram.equation.vinculum(),
-    v2: diagram.equation.vinculum(),
-  });
-  // console.log(eq)
-  eq._2x.isTouchable = true;
-  eq._c.isTouchable = true;
-  eq.isTouchable = true;
-  eq.isMovable = true;
-
-  return eq;
-}
 function makeSquare(shapes: Object, location: Point) {
   const vertices = [
     new Point(-0.5, -0.5),
@@ -406,7 +331,8 @@ class ShapesCollection extends DiagramElementCollection {
     // const eq = new e.Equation([e.frac(n, d), e.e('='), e.e('0')], 'eq1');
     // this.eq = eq;
     // this.diagram.htmlCanvas.appendChild(eq.htmlElement());
-    // const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0), 'middle', 'center');
+    // const eh = new HTMLObject(this.diagram.htmlCanvas, 'eq1', new Point(0, 0),
+    //    'middle', 'center');
     // const ehp = new DiagramElementPrimative(
     //   eh,
     //   new Transform().translate(0, -1.7),
@@ -467,6 +393,7 @@ class ShapesCollection extends DiagramElementCollection {
         'v2',
       ),
     ]);
+    // $FlowFixMe
     this.eq5 = eqn;
 
     eqn = diagram.equation.make(eq5Elements);
@@ -484,6 +411,7 @@ class ShapesCollection extends DiagramElementCollection {
         'v2',
       ),
     ]);
+    // $FlowFixMe
     this.eq6 = eqn;
 
 
