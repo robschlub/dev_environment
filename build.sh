@@ -93,45 +93,45 @@ docker_run() {
   fi
 }
 
-# # Check current build status and exit if in failure state
-# check_status() {
-#   if [ $FAIL != 0 ];
-#     then
-#     echo "${bold}${red}Build failed at${bold}${cyan}" $1 "${reset}"
-#     exit 1    
-#   fi
-# }
+# Check current build status and exit if in failure state
+check_status() {
+  if [ $FAIL != 0 ];
+    then
+    echo "${bold}${red}Build failed at${bold}${cyan}" $1 "${reset}"
+    exit 1    
+  fi
+}
 
-# # Build docker image
-# echo "${bold}${cyan}================= Building Image ===================${reset}"
-# cp containers/Dockerfile_dev Dockerfile
-# docker build -t devbuild .
-# rm Dockerfile
+# Build docker image
+echo "${bold}${cyan}================= Building Image ===================${reset}"
+cp containers/Dockerfile_dev Dockerfile
+docker build -t devbuild .
+rm Dockerfile
 
-# FAIL=0
+FAIL=0
 
-# # Lint and type check
-# echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
-# docker_run "JS Linting" npm run lint
-# docker_run "CSS and SCSS Linting" npm run css
-# docker_run "Flow" npm run flow
-# docker_run "Python Linting" flake8
-# check_status "Linting and Type Checking"
+# Lint and type check
+echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
+docker_run "JS Linting" npm run lint
+docker_run "CSS and SCSS Linting" npm run css
+docker_run "Flow" npm run flow
+docker_run "Python Linting" flake8
+check_status "Linting and Type Checking"
 
-# # Test
-# echo "${bold}${cyan}===================== Testing ======================${reset}"
-# docker_run "JS Testing" npm run jest
-# docker_run "Python Testing" pytest
-# check_status "Tests"
-# if [ $IN_TRAVIS ];
-#   then
-#   sudo rm -rf tests/__pycache__
-# fi
+# Test
+echo "${bold}${cyan}===================== Testing ======================${reset}"
+docker_run "JS Testing" npm run jest
+docker_run "Python Testing" pytest
+check_status "Tests"
+if [ $IN_TRAVIS ];
+  then
+  sudo rm -rf tests/__pycache__
+fi
 
-# Package
-# echo "${bold}${cyan}==================== Packaging =====================${reset}"
-# docker_run "Packaging" npm run webpack -- --env.mode=$MODE
-# check_status "Building"
+Package
+echo "${bold}${cyan}==================== Packaging =====================${reset}"
+docker_run "Packaging" npm run webpack -- --env.mode=$MODE
+check_status "Building"
 
 # Deploy to:
 #   Production if branch is master
