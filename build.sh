@@ -129,9 +129,9 @@ docker_run() {
 # fi
 
 # Package
-echo "${bold}${cyan}==================== Packaging =====================${reset}"
-docker_run "Packaging" npm run webpack -- --env.mode=$MODE
-check_status "Building"
+# echo "${bold}${cyan}==================== Packaging =====================${reset}"
+# docker_run "Packaging" npm run webpack -- --env.mode=$MODE
+# check_status "Building"
 
 # Deploy to:
 #   Production if branch is master
@@ -189,3 +189,4 @@ if [ $2 ];
     fi
   fi
 fi
+echo "Got here"
