@@ -93,22 +93,22 @@ docker_run() {
   fi
 }
 
-# Check current build status and exit if in failure state
-check_status() {
-  if [ $FAIL != 0 ];
-    then
-    echo "${bold}${red}Build failed at${bold}${cyan}" $1 "${reset}"
-    exit 1    
-  fi
-}
+# # Check current build status and exit if in failure state
+# check_status() {
+#   if [ $FAIL != 0 ];
+#     then
+#     echo "${bold}${red}Build failed at${bold}${cyan}" $1 "${reset}"
+#     exit 1    
+#   fi
+# }
 
-# Build docker image
-echo "${bold}${cyan}================= Building Image ===================${reset}"
-cp containers/Dockerfile_dev Dockerfile
-docker build -t devbuild .
-rm Dockerfile
+# # Build docker image
+# echo "${bold}${cyan}================= Building Image ===================${reset}"
+# cp containers/Dockerfile_dev Dockerfile
+# docker build -t devbuild .
+# rm Dockerfile
 
-FAIL=0
+# FAIL=0
 
 # # Lint and type check
 # echo "${bold}${cyan}============ Linting and Type Checking =============${reset}"
