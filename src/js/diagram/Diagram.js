@@ -17,6 +17,11 @@ import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
 import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
+import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
+import Integral from './DiagramElements/Equation/Integral';
+import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
+import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
+// import { DiagramEquationNew } from './Equation';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -34,6 +39,82 @@ import Lines from './DiagramElements/Lines';
 // It is then transformed by the diagram
 // it is then transformed into GL Space
 
+// eslint-disable-next-line no-use-before-define
+function equation(diagram: Diagram) {
+  function elements(elems: Object) {
+    const font = new DiagramFont(
+      'Times New Roman',
+      'normal',
+      1,
+      '200',
+      'left',
+      'alphabetic',
+      [1, 1, 1, 1],
+    );
+
+    const equationElements = new DiagramElementCollection(
+      new Transform().translate(0, 0),
+      diagram.limits,
+    );
+    Object.keys(elems).forEach((key) => {
+      if (typeof elems[key] === 'string') {
+        const dT = new DiagramText(new Point(0, 0), elems[key], font);
+        const to = new TextObject(diagram.draw2D, [dT]);
+        const p = new DiagramElementPrimative(
+          to,
+          new Transform().scale(1, 1).translate(0, 0),
+          [1, 1, 1, 1],
+          diagram.limits,
+        );
+        equationElements.add(key, p);
+      }
+      if (elems[key] instanceof DiagramElementPrimative) {
+        equationElements.add(key, elems[key]);
+      }
+      if (elems[key] instanceof DiagramElementCollection) {
+        equationElements.add(key, elems[key]);
+      }
+    });
+    return equationElements;
+  }
+
+  function vinculum(color: Array<number> = [1, 1, 1, 1]) {
+    return diagram.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform().scale(1, 1).translate(0, 0),
+    );
+  }
+
+  function integral(
+    numLines: number = 1,
+    color: Array<number> = [1, 1, 1, 1],
+  ) {
+    return new Integral(
+      diagram.webgl,
+      color,
+      numLines,
+      new Transform().scale(1, 1).translate(0, 0),
+      diagram.limits,
+    );
+  }
+
+  function make(equationCollection: DiagramElementCollection) {
+    return new DiagramGLEquation(equationCollection);
+  }
+
+  function makeHTML(id: string = '', classes: string | Array<string> = []) {
+    return new HTMLEquation(id, classes);
+  }
+  return {
+    elements,
+    vinculum,
+    integral,
+    make,
+    makeHTML,
+  };
+}
 function shapes(webgl: WebGLInstance, limits: Rect) {
   function polyLine(
     points: Array<Point>,
@@ -152,6 +233,7 @@ class Diagram {
   textCanvas: HTMLCanvasElement;
   htmlCanvas: HTMLElement;
   shapes: Object;
+  equation: Object;
   backgroundColor: Array<number>;
   fontScale: number;
 
@@ -228,6 +310,7 @@ class Diagram {
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
+    this.equation = this.getEquations();
     this.createDiagramElements();
 
     window.addEventListener('resize', this.resize.bind(this));
@@ -238,6 +321,9 @@ class Diagram {
 
   getShapes() {
     return shapes(this.webgl, this.limits);
+  }
+  getEquations() {
+    return equation(this);
   }
 
   sizeHtmlText() {

@@ -43,6 +43,7 @@ class DrawContext2D {
           actualBoundingBoxAscent: 10,
           actualBoundingBoxRight: 10,
           actualBoundingBoxDescent: 10,
+          width: 20,
         };
       },
       transform: (a, b, c, d, e, f) => {
