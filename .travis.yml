@@ -7,6 +7,7 @@ branches:
   only:
     - master
     - release-candidate
+    - travis
 
 language: python
 

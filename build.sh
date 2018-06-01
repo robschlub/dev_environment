@@ -130,7 +130,7 @@ FAIL=0
 # Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
 docker_run "Packaging" npm run webpack -- --env.mode=$MODE
-check_status "Building"
+# check_status "Building"
 
 # Deploy to:
 #   Production if branch is master
