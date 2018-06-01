@@ -15,6 +15,7 @@ HEROKU_DEV_APP_NAME=itgetidev       # Dev app name on Heroku
 HEROKU_TEST_APP_NAME=itgetitest     # Dev app name on Heroku
 DEPLOY_PROD_BRANCH=master           # Branch to test and deploy to prod
 DEPLOY_DEV_BRANCH=release-candidate # Branch to test and deploy to dev
+TRAVIS_DEBUG_BRANCH=travis          # Branch for fast travis debug
 
 # Setup colors and text formatting
 red=`tput setaf 1`
@@ -130,7 +131,7 @@ FAIL=0
 # Package
 echo "${bold}${cyan}==================== Packaging =====================${reset}"
 docker_run "Packaging" npm run webpack -- --env.mode=$MODE
-# check_status "Building"
+check_status "Building"
 
 # Deploy to:
 #   Production if branch is master
@@ -150,6 +151,11 @@ if [ $2 ];
       then
       APP_NAME=$HEROKU_DEV_APP_NAME
       TITLE_STRING='================= Deploying to Dev ================='
+    fi
+    if [ $BRANCH = $TRAVIS_DEBUG_BRANCH ];
+      then
+      APP_NAME=$HEROKU_TEST_APP_NAME
+      TITLE_STRING='================= Deploying to Test ================='
     fi
     if [ $3 ];
       then
