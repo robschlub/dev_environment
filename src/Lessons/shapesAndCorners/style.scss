@@ -9,6 +9,7 @@ $color-anchor: $color_passive;
 $color-radius: $color_primary;
 $color-reference: $color_secondary;
 $color-background: $color_diagram;
+$color-arrow: $color_danger;
 
 $_lesson_vars: (
   linewidth: 0.03,
@@ -149,6 +150,7 @@ $_lesson_vars: (
   colorReference: $color-reference;
   colorBackground: $color-background;
   colorGrid: $color_navbar-background;
+  colorArrow: $color-arrow;
 }
 /* stylelint-enable */
 

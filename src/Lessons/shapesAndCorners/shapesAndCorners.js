@@ -64,19 +64,24 @@ class newContent extends Content {
         const collection = diagram.elements._circle;
 
         diagram.elements.showOnly([
-          collection._radius,
+          collection._fakeRadius,
           collection._reference,
+          collection._arrow,
           collection,
         ]);
 
-        collection._radius.transform.updateTranslation(1, 1);
-        collection._radius.transform.updateRotation(0);
-        collection._radius.animateTo(new Transform()
+        collection._fakeRadius.transform.updateTranslation(-4.5, 1);
+        collection._fakeRadius.transform.updateRotation(0);
+        collection._fakeRadius.animateTo(new Transform()
           .rotate(Math.PI / 2)
-          .translate(-1, 0), 2);
+          .translate(-1, 0), 1, 1);
 
-        collection._reference.transform.updateTranslation(1, 0);
-        collection._reference.transform.updateRotation(Math.PI / 2);
+        collection._reference.transform.updateTranslation(4.5, 1);
+        collection._reference.transform.updateRotation(Math.PI);
+        collection._reference.animateTo(new Transform()
+          .rotate(Math.PI / 2)
+          .translate(1, 0), 1, -1);
+
 
         onClickId('id_line', collection.pulseLines, [collection]);
       },

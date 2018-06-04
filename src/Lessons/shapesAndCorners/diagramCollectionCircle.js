@@ -5,7 +5,7 @@ import * as tools from '../../js/diagram/tools/mathtools';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
@@ -60,6 +60,13 @@ function makeReference(shapes: Object, layout: Object) {
   );
 }
 
+function makeFakeRadius(shapes: Object, layout: Object) {
+  return makeLine(
+    shapes, new Point(0, 0), layout.radius, layout.linewidth,
+    colors.reference, new Transform().rotate(0).translate(0, 0),
+  );
+}
+
 function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout: Object) {
   return makeLine(
     shapes, new Point(0, 0), layout.cornerLength, layout.linewidth * 3,
@@ -67,14 +74,21 @@ function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout:
   );
 }
 
-// $FlowFixMe
+function makeArrow(shapes: Object, layout: Object) {
+  return shapes.arrow(
+    0.1, 0.04, 0.1, 0.04, colors.arrow,
+    new Transform().translate(layout.radius, 0),
+  );
+}
+
 class CircleCollection extends DiagramElementCollection {
-  // elements: typeCircleDiagramCollection;
   _anchor: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
+  _fakeRadius: DiagramElementPrimative;
   _reference: DiagramElementPrimative;
   _cornerRef: DiagramElementPrimative;
   _cornerRad: DiagramElementPrimative;
+  diagram: Diagram;
 
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
@@ -84,8 +98,15 @@ class CircleCollection extends DiagramElementCollection {
 
     const origin = new Point(0, 0);
 
+    const arrow = makeArrow(shapes, layout);
+    arrow.pulseScaleNow(0, 1.2, 0.7);
+    this.add('arrow', arrow);
+
     const reference = makeReference(shapes, layout);
     this.add('reference', reference);
+
+    const fakeRadius = makeFakeRadius(shapes, layout);
+    this.add('fakeRadius', fakeRadius);
 
     const radius = makeRadius(shapes, layout);
     radius.setTransformCallback = this.updateRotation.bind(this);
@@ -124,28 +145,6 @@ class CircleCollection extends DiagramElementCollection {
     }
   }
 
-  // touchMoveHandler(
-  //   previousClientPoint: Point,
-  //   currentClientPoint: Point,
-  // ): boolean {
-  //   if (this.beingMovedElements.length === 0) {
-  //     return false;
-  //   }
-  //   const previousClipPoint = this.clientToClip(previousClientPoint);
-  //   const currentClipPoint = this.clientToClip(currentClientPoint);
-  //   const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
-  //   const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
-  //   const diffAngle = minAngleDiff(previousAngle, currentAngle);
-  //   const transform = this._radius.transform.copy();
-  //   const rot = transform.r();
-  //   if (rot != null) {
-  //     transform.updateRotation(rot - diffAngle);
-  //     this._radius.moved(transform);
-  //   }
-  //   this.diagram.animateNextFrame();
-  //   return true;
-  // }
-
   pulseAnchor() {
     this._anchor.pulseScaleNow(1, 2);
     this.diagram.animateNextFrame();
@@ -161,9 +160,15 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  pulseFakeRadius() {
+    this._fakeRadius.pulseScaleNow(1, 2);
+    this.diagram.animateNextFrame();
+  }
+
   pulseLines() {
     this.pulseRadius();
     this.pulseReference();
+    this.pulseFakeRadius();
   }
 
   rotateTo(
