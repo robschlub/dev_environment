@@ -254,6 +254,7 @@ class ShapesCollection extends DiagramElementCollection {
     c.add('s2', s2);
     c.isTouchable = true;
     c.isMovable = true;
+    c.move.limitToDiagram = true;
     this.add('c', c);
 
     const font = new DiagramFont(
@@ -283,6 +284,7 @@ class ShapesCollection extends DiagramElementCollection {
     );
     text.isMovable = true;
     text.isTouchable = true;
+    text.move.limitToDiagram = true;
     this.add('text', text);
     this.isTouchable = true;
     this.isMovable = true;
@@ -304,6 +306,7 @@ class ShapesCollection extends DiagramElementCollection {
     );
     hp.isTouchable = true;
     hp.isMovable = true;
+    hp.move.limitToDiagram = true;
     this.add('html', hp);
 
     const plot = makePlot(this.diagram);

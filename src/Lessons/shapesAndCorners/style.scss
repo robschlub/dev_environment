@@ -153,11 +153,12 @@ $_lesson_vars: (
 /* stylelint-enable */
 
 #section1__upper {
-  background-color: rgba($color_diagram, 0.4);
+  // background-color: rgba($color_diagram, 0.4);
+  background-color: rgba($color_diagram, 0);
 }
 
 #section1__lower {
-  background-color: rgba($color_diagram, 0.4);
+  // background-color: rgba($color_diagram, 0.1);
   // margin-top: calc(var(--lesson__content-height) * 0.5);
   margin-top: 35%;
 }

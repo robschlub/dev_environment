@@ -51,13 +51,43 @@ function modifyText(
   return outText;
 }
 
+function onClickId(
+  id: string,
+  action: Function,
+  bind: Array<mixed>,
+) {
+  const element = document.getElementById(id);
+
+  if (element) {
+    if (bind.length === 1) {
+      element.onclick = action.bind(bind[0]);
+    }
+    if (bind.length === 2) {
+      element.onclick = action.bind(bind[0], bind[1]);
+    }
+    if (bind.length === 3) {
+      element.onclick = action.bind(bind[0], bind[1], bind[2]);
+    }
+    if (bind.length === 4) {
+      element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
+    }
+    if (bind.length === 5) {
+      element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
+    }
+  }
+}
+
 class Section {
   title: string;
   modifiers: Object;
   diagrams: Array<Object>;
   // isSinglePagePrimary: boolean;
 
-  constructor() {
+  constructor(
+    title: string = '',
+    modifiers: Object = {},
+    diagrams: Array<Object> = [],
+  ) {
     this.diagrams = [];
     // this.isSinglePagePrimary = this.setSinglePagePrimary();
     this.makeTitle();
@@ -82,31 +112,7 @@ class Section {
   //   return true;
   // }
   // eslint-disable-next-line class-methods-use-this
-  onClickId(
-    id: string,
-    action: Function,
-    bind: Array<mixed>,
-  ) {
-    const element = document.getElementById(id);
 
-    if (element) {
-      if (bind.length === 1) {
-        element.onclick = action.bind(bind[0]);
-      }
-      if (bind.length === 2) {
-        element.onclick = action.bind(bind[0], bind[1]);
-      }
-      if (bind.length === 3) {
-        element.onclick = action.bind(bind[0], bind[1], bind[2]);
-      }
-      if (bind.length === 4) {
-        element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
-      }
-      if (bind.length === 5) {
-        element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
-      }
-    }
-  }
 
   getDiagramList(lessonType: 'multiPage' | 'singlePage'): Array<Object> {
     const diagrams = [];
@@ -179,9 +185,22 @@ class Content {
     multiPageDiagramClass: Object = diagramClass,
   ) {
     this.title = title;
-    this.sections = sections;
     this.DiagramClass = multiPageDiagramClass;
+    this.sections = sections;
+    this.addSections();
+  }
+
+  addSections() {
+    // this.sections = [];
+  }
+  addSection(section: Object) {
+    const s = new Section();
+
+    Object.keys(section).forEach((key) => {
+      s[key] = section[key];
+    });
+    this.sections.push(s);
   }
 }
 
-export { Section, Content, actionWord, diagramCanvas };
+export { Section, Content, actionWord, diagramCanvas, onClickId };

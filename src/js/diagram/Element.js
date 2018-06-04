@@ -107,6 +107,7 @@ class DiagramElement {
   move: {
     maxTransform: Transform,
     minTransform: Transform,
+    limitToDiagram: boolean,
     maxVelocity: TransformLimit;            // Maximum velocity allowed
     // When moving freely, the velocity decelerates until it reaches a threshold,
   // then it is considered 0 - at which point moving freely ends.
@@ -179,6 +180,7 @@ class DiagramElement {
     this.move = {
       maxTransform: this.transform.constant(1000),
       minTransform: this.transform.constant(-1000),
+      limitToDiagram: false,
       maxVelocity: new TransformLimit(5, 5, 5),
       freely: {
         zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
@@ -785,7 +787,8 @@ class DiagramElement {
       gl.height * glToDiagramScale.y,
     );
   }
-  updateMoveTranslationBoundary(
+
+  setMoveBoundaryToDiagram(
     boundary: Array<number> = [
       this.diagramLimits.left,
       this.diagramLimits.top - this.diagramLimits.height,
@@ -796,7 +799,9 @@ class DiagramElement {
     if (!this.isMovable) {
       return;
     }
-
+    if (!this.move.limitToDiagram) {
+      return;
+    }
     const glSpace = {
       x: { bottomLeft: -1, width: 2 },
       y: { bottomLeft: -1, height: 2 },
@@ -862,7 +867,7 @@ class DiagramElementPrimative extends DiagramElement {
     this.color = color;
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
-    this.updateMoveTranslationBoundary();
+    // this.setMoveBoundaryToDiagram();
   }
 
   isBeingTouched(glLocation: Point): boolean {
@@ -942,7 +947,7 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.vertices instanceof HTMLObject) {
       this.vertices.transformHtml(firstTransform.matrix());
     }
-    this.updateMoveTranslationBoundary();
+    this.setMoveBoundaryToDiagram();
   }
 
   isMoving(): boolean {
@@ -1166,7 +1171,7 @@ class DiagramElementCollection extends DiagramElement {
       const element = this.elements[this.order[i]];
       element.setFirstTransform(firstTransform);
     }
-    this.updateMoveTranslationBoundary();
+    this.setMoveBoundaryToDiagram();
   }
 
   getGLBoundaries() {
