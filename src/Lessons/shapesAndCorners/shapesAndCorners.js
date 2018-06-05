@@ -85,12 +85,6 @@ class Content extends LessonContent {
         const { diagram } = this;
         const collection = diagram.elements._circle;
 
-        // diagram.elements.showOnly([
-        //   collection._fakeRadius,
-        //   collection._reference,
-        //   collection,
-        // ]);
-
         collection._fakeRadius.transform.updateTranslation(-4.5, 1);
         collection._fakeRadius.transform.updateRotation(0);
         collection._fakeRadius.animateTo(new Transform()
@@ -107,10 +101,34 @@ class Content extends LessonContent {
         onClickId('id_line', collection.pulseLines, [collection]);
       },
 
-      showOnly: [
-        circle,
-        circle._fakeRadius,
-        circle._reference,
+      showOnly: () => {
+        this.diagram.elements.showOnly([
+          circle._fakeRadius,
+          circle._reference,
+          circle,
+        ]);
+      },
+      position: [
+        {
+          element: circle._fakeRadius,
+          position: new Transform().rotate(Math.PI / 2).translate(-1, 0),
+          animation: {
+            fromPrev: {
+              time: 1,
+              position: new Transform().rotate(Math.PI / 2).translate(-4.5, 1),
+            },
+            fromNext: 1,
+            fromGoTo: 0,
+          },
+        },
+        {
+          element: circle._reference,
+          position: new Transform().rotate(Math.PI / 2).translate(1, 0),
+          animationTime: {
+            fromPrev: 1,
+            fromNext: 1,
+          },
+        },
       ],
       // position: {
       //   _circle_reference: true,

@@ -2,6 +2,7 @@
 
 import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
+import { Transform } from '../diagram/tools/g2';
 
 function actionWord(
   text: string,
@@ -70,6 +71,67 @@ function onClickId(
   }
 }
 
+class PositionObject {
+  element: DiagramElementPrimative | DiagramElementCollection;
+  position: Transform | null;
+  animation: {
+    fromPrev: {
+      time: number,
+      position: Transform | null;
+    },
+    fromNext: number | {
+      time: number,
+      position: Transform | null;
+    },
+    toPrev: {
+      time: number,
+      position: Transform | null;
+    },
+    toNext: {
+      time: number,
+      position: Transform | null,
+    },
+    fromGoTo: {
+      time: number,
+      position: Transform | null,
+    }
+  };
+
+  constructor(element: DiagramElementCollection | DiagramElementPrimative) {
+    this.element = element;
+    this.position = null;
+    this.animation = {
+      fromPrev: {
+        time: 0,
+        position: null,
+      },
+      fromNext: {
+        time: 0,
+        position: null,
+      },
+      toPrev: {
+        time: 0,
+        position: null,
+      },
+      toNext: {
+        time: 0,
+        position: null,
+      },
+      fromGoTo: {
+        time: 0,
+        position: null,
+      },
+    };
+  }
+}
+// type PositionObject = {
+//   element: DiagramElementCollection | DiagramElementPrimative;
+//   position: Transform;
+//   animationTime: {
+//     fromPrev: number;
+//     fromNext: number;
+//   }
+// }
 class Section {
   title: string;
   modifiers: Object;
@@ -80,63 +142,18 @@ class Section {
            | () => {};
   show: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
+  position: PositionObject;
   // isSinglePagePrimary: boolean;
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
-    // this.showOnly = [];
-    // this.show = [];
-    // this.hideOnly = [];
   }
-
-  // makeTitle() {
-  //   this.title = this.setTitle();
-  // }
 
   setContent(): Array<string> | string {
     return [];
   }
-  // setTitle(): string {
-  //   return '';
-  // }
-  // setModifiers(): Object {
-  //   return {};
-  // }
-
-  // setState()
-  // animateFromPrev
-  // animateToNext
-  // animateToPrev
-  // animateFromNext
-
-  // positions()
-  // show()
-  // showOnly
-  // hideOnly
-
-  // setSinglePagePrimary() {
-  //   return true;
-  // }
-  // eslint-disable-next-line class-methods-use-this
-
-
-  // getDiagramList(lessonType: 'multiPage' | 'singlePage'): Array<Object> {
-  //   const diagrams = [];
-  //   Object.keys(this.modifiers).forEach((key) => {
-  //     const modifier = this.modifiers[key];
-  //     if (modifier.type === 'diagram'
-  //       && (lessonType === modifier.lessonType || modifier.lessonType === 'any')
-  //     ) {
-  //       diagrams.push({
-  //         id: modifier.id,
-  //         DiagramClass: modifier.DiagramClass,
-  //       });
-  //     }
-  //   });
-  //   return diagrams;
-  // }
 
   getContent(): string {
     let htmlText = '';
@@ -159,6 +176,38 @@ class Section {
   setState(previousState: Object) {
   }
 
+  fillPosition(positionArray: Array<Object>) {
+    const final = [];
+    positionArray.forEach((p) => {
+      const newP = new PositionObject(p.element);
+      if ('position' in p) {
+        newP.position = p.position;
+      }
+      if ('animation' in p) {
+        const { animation } = p;
+        if ('fromPrev' in animation) {
+          const otherState = animation.fromPrev;
+          if ('time' in otherState) {
+            newP.animation.fromPrev.time = otherState.time;
+          }
+          if ('position' in otherState) {
+            newP.animation.fromPrev.position = otherState.position;
+          }
+        }
+        newP.position = p.position;
+      }
+      if ('position' in p) {
+        newP.position = p.position;
+      }
+    });
+    this.position = newP;
+  }
+  setPosition() {
+    if ('position' in this) {
+      const { position } = this;
+
+    }
+  }
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
