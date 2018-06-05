@@ -66,7 +66,6 @@ class newContent extends Content {
         diagram.elements.showOnly([
           collection._fakeRadius,
           collection._reference,
-          collection._arrow,
           collection,
         ]);
 
@@ -81,6 +80,62 @@ class newContent extends Content {
         collection._reference.animateTo(new Transform()
           .rotate(Math.PI / 2)
           .translate(1, 0), 1, -1);
+
+
+        onClickId('id_line', collection.pulseLines, [collection]);
+      },
+      position: {
+        _circle_reference: true
+      }
+      showOnly: {
+        circle: [
+          'reference',
+          'fakeReference',
+        ],
+      },
+      position: {
+        circle: {
+          reference: new Transform().rotate(Math.PI / 2).translate(1, 0),
+          fakeRadius: new Transform().rotate(Math.PI / 2).translate(-1, 0),
+        },
+      },
+      animateFromPrev: {
+        circle: {
+          reference: 1,
+          fakeRadius: 1,
+        },
+      },
+    });
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:10%">
+          Let's now move the two lines on top of each other and anchor one end.
+        </p>
+        `,
+      modifiers: {
+        // _lines: actionWord('lines', 'id_line'),
+      },
+      setState: (diagrams: Object) => {
+        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+        const collection = diagram.elements._circle;
+
+        diagram.elements.showOnly([
+          collection._radius,
+          collection._reference,
+          collection._arrow,
+          collection,
+        ]);
+
+        const t = collection._fakeRadius.transform.t();
+        collection._radius.transform.updateTranslation(t.x, t.y);
+        collection._radius.transform.updateRotation(collection._fakeRadius.transform.r());
+        collection._radius.animateTo(new Transform()
+          .rotate(0)
+          .translate(0, 0), 2);
+
+        collection._reference.animateTo(new Transform()
+          .rotate(0)
+          .translate(0, 0), 1);
 
 
         onClickId('id_line', collection.pulseLines, [collection]);

@@ -108,6 +108,17 @@ class Section {
     return {};
   }
 
+  // setState()
+  // animateFromPrev
+  // animateToNext
+  // animateToPrev
+  // animateFromNext
+
+  // positions()
+  // show()
+  // showOnly
+  // hideOnly
+
   // setSinglePagePrimary() {
   //   return true;
   // }
