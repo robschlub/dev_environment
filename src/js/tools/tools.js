@@ -56,36 +56,37 @@ class ObjectKeyPointer {
 function extractFrom(
   objectToExtractFrom: Object,
   keyValues: Object | Array<any> | string,
+  keyPrefix: string = '',
 ) {
   const out = [];
   if (typeof keyValues === 'string') {
-    if (keyValues in objectToExtractFrom) {
-      return new ObjectKeyPointer(objectToExtractFrom, keyValues);
+    if (keyPrefix + keyValues in objectToExtractFrom) {
+      return new ObjectKeyPointer(objectToExtractFrom, keyPrefix + keyValues);
     }
     const keyHeirarchy = keyValues.split('_');
     const keys = keyHeirarchy.filter(k => k.length > 0);
     if (keys.length > 1) {
-      if (keys[0] in objectToExtractFrom) {
-        return extractFrom(objectToExtractFrom[keys[0]], keys.slice(1).join('_'));
+      if (keyPrefix + keys[0] in objectToExtractFrom) {
+        return extractFrom(objectToExtractFrom[keyPrefix + keys[0]], keys.slice(1).join('_'), keyPrefix);
       }
     } else if (keys.length === 1) {
-      if (keys[0] in objectToExtractFrom) {
-        return new ObjectKeyPointer(objectToExtractFrom, keys[0]);
+      if (keyPrefix + keys[0] in objectToExtractFrom) {
+        return new ObjectKeyPointer(objectToExtractFrom, keyPrefix + keys[0]);
       }
     }
     return undefined;
   } else if (Array.isArray(keyValues)) {
     keyValues.forEach((kv) => {
-      const result = extractFrom(objectToExtractFrom, kv);
+      const result = extractFrom(objectToExtractFrom, kv, keyPrefix);
       if (result !== undefined) {
         out.push(result);
       }
     });
   } else {
     Object.keys(keyValues).forEach((key) => {
-      if (key in objectToExtractFrom) {
+      if (keyPrefix + key in objectToExtractFrom) {
         out.push({
-          obj: new ObjectKeyPointer(objectToExtractFrom, key),
+          obj: new ObjectKeyPointer(objectToExtractFrom, keyPrefix + key),
           value: keyValues[key],
         });
       }
@@ -94,4 +95,13 @@ function extractFrom(
   return out;
 }
 
-export { divide, mulToString, add, Console, classify, extractFrom, ObjectKeyPointer };
+function collectionElement(
+  collection: Object,
+  keyValues: Object | Array<any> | string,
+) {
+  return extractFrom(collection, keyValues, '_');
+}
+export {
+  divide, mulToString, add, Console,
+  classify, extractFrom, ObjectKeyPointer, collectionElement,
+};

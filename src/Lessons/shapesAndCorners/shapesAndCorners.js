@@ -85,8 +85,8 @@ class newContent extends Content {
         onClickId('id_line', collection.pulseLines, [collection]);
       },
       position: {
-        _circle_reference: true
-      }
+        _circle_reference: true,
+      },
       showOnly: {
         circle: [
           'reference',

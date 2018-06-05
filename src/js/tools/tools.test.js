@@ -177,3 +177,55 @@ describe('Extract From Object', () => {
     });
   });
 });
+describe('Extract From Collection', () => {
+  let o;
+  beforeEach(() => {
+    o = {
+      _a: 1,
+      _b: {
+        _b1: 2,
+        _b2: 3,
+        _b3: {
+          _b31: 4,
+          _b32: (i, j) => i + j,
+          _b_33: 5,
+        },
+      },
+      _c: i => i + 1,
+      _d: (i, j) => i + j,
+      _e_1: 6,
+    };
+  });
+  test('string', () => {
+    const p = tools.collectionElement(o, '_a');
+    expect(p.value()).toBe(1);
+  });
+  test('string without dunder', () => {
+    const p = tools.collectionElement(o, 'a');
+    expect(p.value()).toBe(1);
+  });
+  test('3 level string', () => {
+    const p = tools.collectionElement(o, '_b_b3_b_33');
+    expect(p.value()).toBe(5);
+  });
+  test('3 level string without dunder', () => {
+    const p = tools.collectionElement(o, 'b_b3_b_33');
+    expect(p.value()).toBe(5);
+  });
+  test('list extract', () => {
+    const p = tools.collectionElement(
+      o,
+      [
+        'a',
+        '_b',
+        'e_1',
+        'b_b2',
+      ],
+    );
+    // console.log(p)
+    expect(p[0].value()).toBe(1);
+    expect(p[1].value()._b1).toBe(2);
+    expect(p[2].value()).toBe(6);
+    expect(p[3].value()).toBe(3);
+  });
+});
