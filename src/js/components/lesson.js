@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
-// import { Lesson, Section } from '../Lesson/LessonBase';
 import Lesson from '../Lesson/Lesson';
 import Canvas from './canvas';
 import Button from './button';
@@ -10,34 +9,31 @@ import Button from './button';
 type Props = {
   lesson: Lesson;
   section?: number;
-  type: 'singlePage' | 'multiPage';
 };
 
 type State = {
   htmlText: string,
+  numPages: number,
+  page: number,
+  listOfSections: Array<React.Node>,
 };
 
 export default class LessonComponent extends React.Component
                                     <Props, State> {
   lesson: Lesson;
   key: number;
-  type: 'multiPage' | 'singlePage';
   state: State;
   diagrams: Object;
   setStateOnNextRefresh: boolean;
 
   constructor(props: Props) {
     super(props);
-    // if (props.section) {
-    //   this.state = {
-    //     section: props.section,
-    //   };
-    // } else {
     this.state = {
       htmlText: '',
+      numPages: 0,
+      page: 0,
+      listOfSections: [],
     };
-    // }
-    this.type = props.type;
     this.lesson = props.lesson;
     this.key = 0;
     this.lesson.refresh = this.refresh.bind(this);
@@ -49,9 +45,9 @@ export default class LessonComponent extends React.Component
       this.lesson.setState();
     }
   }
-  refresh(htmlText: string) {
+  refresh(htmlText: string, page: number) {
     this.setStateOnNextRefresh = true;
-    this.setState({ htmlText });
+    this.setState({ htmlText, page });
   }
   goToNext() {
     this.lesson.nextSection();
@@ -62,20 +58,22 @@ export default class LessonComponent extends React.Component
   }
 
   componentDidMount() {
-    // Instantiate all the diagrams now that the canvas elements have been
+    // Instantiate diagram now that the canvas elements have been
     // created.
-    this.lesson.createDiagrams();
-    this.lesson.setState();
+    this.lesson.initialize();
+    this.setState({
+      listOfSections: this.addListOfSections(),
+      numPages: this.lesson.content.sections.length,
+    });
+    this.lesson.goToSection(0);
 
-    if (this.type === 'multiPage') {
-      const nextButton = document.getElementById('lesson__button-next');
-      if (nextButton instanceof HTMLElement) {
-        nextButton.onclick = this.goToNext.bind(this);
-      }
-      const prevButton = document.getElementById('lesson__button-previous');
-      if (prevButton instanceof HTMLElement) {
-        prevButton.onclick = this.goToPrevious.bind(this);
-      }
+    const nextButton = document.getElementById('lesson__button-next');
+    if (nextButton instanceof HTMLElement) {
+      nextButton.onclick = this.goToNext.bind(this);
+    }
+    const prevButton = document.getElementById('lesson__button-previous');
+    if (prevButton instanceof HTMLElement) {
+      prevButton.onclick = this.goToPrevious.bind(this);
     }
   }
 
@@ -91,36 +89,29 @@ export default class LessonComponent extends React.Component
     return <div key={this.key} className='lesson__text'
       dangerouslySetInnerHTML={ {
         __html: content.slice(0, content.length - 1),
-        // __html:`<p>asdf</p>`
       } }
       />;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   addPrevButton() {
-    if (this.type === 'multiPage') {
-      return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson"/>;
-    }
-    return <div />;
+    return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson"/>;
   }
+
+  // eslint-disable-next-line class-methods-use-this
   addNextButton() {
-    if (this.type === 'multiPage') {
-      return <Button label="" id="lesson__button-next" className=" -multi-page-lesson"/>;
-    }
-    return <div />;
+    return <Button label="" id="lesson__button-next" className=" -multi-page-lesson"/>;
   }
 
   addGoToButton() {
-    if (this.type === 'multiPage') {
-      return <div className="dropdown lesson__button-goto_container">
-        <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Go to
-        </button>
-        <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-        {this.addListOfSections()}
-        </div>
-      </div>;
-    }
-    return <div />;
+    return <div className="dropdown lesson__button-goto_container">
+      <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Go to
+      </button>
+      <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+      {this.state.listOfSections}
+      </div>
+    </div>;
   }
 
   belongsTo(index: number) {
@@ -161,20 +152,16 @@ export default class LessonComponent extends React.Component
   }
 
   addPageNumber() {
-    if (this.type === 'multiPage') {
-      return <div id="lesson__page_number">
-      {`${this.lesson.currentSectionIndex + 1} / ${this.lesson.content.sections.length}`}
-      </div>;
-    }
-    return <div />;
+    return <div id="lesson__page_number">
+    {`${this.state.page + 1} / ${this.state.numPages}`}
+    </div>;
   }
 
-  renderMultiPageCanvas() {
-    if (this.type === 'multiPage') {
-      return <Canvas id="multipage_diagram"/>;
-    }
-    return <div />;
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // renderMultiPageCanvas() {
+  //   return <Canvas id="multipage_diagram"/>;
+  // }
+
   render() {
     return <div>
       <div className='lesson__title'>
@@ -182,11 +169,11 @@ export default class LessonComponent extends React.Component
       </div>
       <div id="lesson__container_name" className="lesson__container">
             {this.addPrevButton()}
-            <div id="multipage_diagram" className="diagram__container">
+            <div id={this.lesson.content.diagramHtmlId} className="diagram__container multipage_diagram">
               <canvas className='diagram__gl'>
               </canvas>
               <div id="dd" className='diagram__html'>
-                {this.renderContent(this.lesson.getContentHtml())}
+                {this.renderContent(this.state.htmlText)}
               </div>
               <canvas className='diagram__text'>
               </canvas>

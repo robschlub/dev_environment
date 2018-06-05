@@ -1,18 +1,16 @@
 // @flow
 
-// import Diagram from '../diagram/Diagram';
+import Diagram from '../diagram/Diagram';
 
 function actionWord(
   text: string,
   id: string = '',
   classes: string = '',
-  lessonType: 'any' | 'singlePage' | 'multiPage' = 'any',
 ): Object {
   return {
     replacementText: `<span id="${id}" class="${classes} action_word">${text}</span>`,
     type: 'html',
     id,
-    lessonType,
   };
 }
 
@@ -20,7 +18,6 @@ function diagramCanvas(
   id: string,
   DiagramClass: Object,
   classes: string = '',
-  lessonType: 'any' | 'singlePage' | 'multiPage' = 'singlePage',
 ): Object {
   return {
     replacementText: `<div id="${id}" class="canvas_container ${classes}">
@@ -31,7 +28,6 @@ function diagramCanvas(
     type: 'diagram',
     DiagramClass,
     id,
-    lessonType,
   };
 }
 
@@ -39,14 +35,10 @@ function modifyText(
   text: string,
   key: string,
   mod: Object,
-  lessonType: 'any' | 'multiPage' | 'singlePage',
 ): string {
   let outText = '';
   const expression = new RegExp(`\\|${key}\\|`, 'gi');
-  let replacement = '';
-  if (mod.lessonType === lessonType || mod.lessonType === 'any') {
-    replacement = mod.replacementText;
-  }
+  const replacement = mod.replacementText;
   outText = text.replace(expression, replacement);
   return outText;
 }
@@ -80,33 +72,34 @@ function onClickId(
 class Section {
   title: string;
   modifiers: Object;
-  diagrams: Array<Object>;
+  diagram: Diagram;
+  showOnly: Object | string | Array<string>;
+  hideOnly: Object | string | Array<string>;
+  show: Object | string | Array<string>;
   // isSinglePagePrimary: boolean;
 
-  constructor(
-    title: string = '',
-    modifiers: Object = {},
-    diagrams: Array<Object> = [],
-  ) {
-    this.diagrams = [];
-    // this.isSinglePagePrimary = this.setSinglePagePrimary();
-    this.makeTitle();
-    this.modifiers = this.setModifiers();
+  constructor(diagram: Diagram) {
+    this.diagram = diagram;
+    this.title = '';
+    this.modifiers = {};
+    this.showOnly = {};
+    this.show = {};
+    this.hideOnly = {};
   }
 
-  makeTitle() {
-    this.title = this.setTitle();
-  }
+  // makeTitle() {
+  //   this.title = this.setTitle();
+  // }
 
   setContent(): Array<string> | string {
     return [];
   }
-  setTitle(): string {
-    return '';
-  }
-  setModifiers(): Object {
-    return {};
-  }
+  // setTitle(): string {
+  //   return '';
+  // }
+  // setModifiers(): Object {
+  //   return {};
+  // }
 
   // setState()
   // animateFromPrev
@@ -125,23 +118,23 @@ class Section {
   // eslint-disable-next-line class-methods-use-this
 
 
-  getDiagramList(lessonType: 'multiPage' | 'singlePage'): Array<Object> {
-    const diagrams = [];
-    Object.keys(this.modifiers).forEach((key) => {
-      const modifier = this.modifiers[key];
-      if (modifier.type === 'diagram'
-        && (lessonType === modifier.lessonType || modifier.lessonType === 'any')
-      ) {
-        diagrams.push({
-          id: modifier.id,
-          DiagramClass: modifier.DiagramClass,
-        });
-      }
-    });
-    return diagrams;
-  }
+  // getDiagramList(lessonType: 'multiPage' | 'singlePage'): Array<Object> {
+  //   const diagrams = [];
+  //   Object.keys(this.modifiers).forEach((key) => {
+  //     const modifier = this.modifiers[key];
+  //     if (modifier.type === 'diagram'
+  //       && (lessonType === modifier.lessonType || modifier.lessonType === 'any')
+  //     ) {
+  //       diagrams.push({
+  //         id: modifier.id,
+  //         DiagramClass: modifier.DiagramClass,
+  //       });
+  //     }
+  //   });
+  //   return diagrams;
+  // }
 
-  getContent(lessonType: 'multiPage' | 'singlePage'): string {
+  getContent(): string {
     let htmlText = '';
     let content = this.setContent();
     if (typeof content === 'string') {
@@ -153,7 +146,7 @@ class Section {
     // htmlText += '\n';
     Object.keys(this.modifiers).forEach((key) => {
       const mod = this.modifiers[key];
-      htmlText = modifyText(htmlText, key, mod, lessonType);
+      htmlText = modifyText(htmlText, key, mod);
     });
     return htmlText;
   }
@@ -162,50 +155,63 @@ class Section {
   setState(
     diagrams: Object,
     previousState: Object,
-    lessonType: 'multiPage' | 'singlePage',
   ) {
   }
 
-  getState(diagrams: Object): Object {
+  getState(diagram: Diagram): Object {
     return {};
   }
 
   transitionNext(
-    diagrams: Object,
+    diagram: Diagram,
     done: () => void = function temp() {},
   ): void {
     done();
   }
-  transitionPrev(diagrams: Object, done: () => void = function temp() {}) {
+  transitionPrev(diagram: Diagram, done: () => void = function temp() {}) {
     done();
   }
   /* eslint-enable no-unused-vars */
 }
 
-class diagramClass {
-}
-class Content {
+// class diagramClass {
+// }
+
+class LessonContent {
   title: string;
   sections: Array<Section>;
-  DiagramClass: Object;
+  diagram: Object;
+  diagramHtmlId: string;
   // questions
 
-  constructor(
-    title: string,
-    sections: Array<Section>,
-    multiPageDiagramClass: Object = diagramClass,
-  ) {
-    this.title = title;
-    this.DiagramClass = multiPageDiagramClass;
-    this.sections = sections;
-    this.addSections();
+  constructor(htmlId: string) {
+    // this.setTitle();
+    // this.setDiagram(htmlId);
+    // this.sections = [];
+    // this.addSections();
+    this.diagramHtmlId = htmlId;
+    this.sections = [];
+    this.setTitle();
   }
 
-  addSections() {
-    // this.sections = [];
+  initialize() {
+    this.setDiagram(this.diagramHtmlId);
+    this.addSections();
   }
+  setTitle() {
+    this.title = '';
+  }
+
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  setDiagram(htmlId: string = '') {
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  addSections() {
+  }
+
   addSection(section: Object) {
-    const s = new Section();
+    const s = new Section(this.diagram);
 
     Object.keys(section).forEach((key) => {
       s[key] = section[key];
@@ -214,4 +220,4 @@ class Content {
   }
 }
 
-export { Section, Content, actionWord, diagramCanvas, onClickId };
+export { Section, LessonContent, actionWord, diagramCanvas, onClickId };

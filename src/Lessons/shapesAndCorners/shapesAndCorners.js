@@ -1,11 +1,19 @@
 // @flow
 
 // import { Lesson } from '../../js/Lesson/Lesson';
-import { Content, Section, actionWord, diagramCanvas, onClickId } from '../../js/Lesson/LessonContent';
+import { LessonContent, actionWord, onClickId } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Point, Transform } from '../../js/diagram/tools/g2';
+import { Transform } from '../../js/diagram/tools/g2';
 
-class newContent extends Content {
+class Content extends LessonContent {
+  setTitle() {
+    this.title = 'Shapes and Corners';
+  }
+
+  setDiagram(htmlId: string = '') {
+    this.diagram = new LessonDiagram(htmlId);
+  }
+
   addSections() {
     this.addSection({
       title: 'Corners',
@@ -24,10 +32,10 @@ class newContent extends Content {
         _corners: actionWord('corners', 'id_corners'),
         _more_sharp: actionWord('more sharp', 'id_more_sharp'),
         _less_sharp: actionWord('less sharp', 'id_less_sharp'),
-        _shapes_diagram: diagramCanvas('shapes_container', LessonDiagram),
+        // _shapes_diagram: diagramCanvas('shapes_container', LessonDiagram),
       },
-      setState: (diagrams: Object) => {
-        const diagram = diagrams.shapes_container || diagrams.multipage_diagram;
+      setState: () => {
+        const { diagram } = this;
         const collection = diagram.elements._shapes;
         diagram.elements.hideOnly([
           diagram.elements._circle,
@@ -59,8 +67,8 @@ class newContent extends Content {
       modifiers: {
         _lines: actionWord('lines', 'id_line'),
       },
-      setState: (diagrams: Object) => {
-        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+      setState: () => {
+        const { diagram } = this;
         const collection = diagram.elements._circle;
 
         diagram.elements.showOnly([
@@ -84,27 +92,27 @@ class newContent extends Content {
 
         onClickId('id_line', collection.pulseLines, [collection]);
       },
-      position: {
-        _circle_reference: true,
-      },
-      showOnly: {
-        circle: [
-          'reference',
-          'fakeReference',
-        ],
-      },
-      position: {
-        circle: {
-          reference: new Transform().rotate(Math.PI / 2).translate(1, 0),
-          fakeRadius: new Transform().rotate(Math.PI / 2).translate(-1, 0),
-        },
-      },
-      animateFromPrev: {
-        circle: {
-          reference: 1,
-          fakeRadius: 1,
-        },
-      },
+      // position: {
+      //   _circle_reference: true,
+      // },
+      // showOnly: {
+      //   circle: [
+      //     'reference',
+      //     'fakeReference',
+      //   ],
+      // },
+      // position: {
+      //   circle: {
+      //     reference: new Transform().rotate(Math.PI / 2).translate(1, 0),
+      //     fakeRadius: new Transform().rotate(Math.PI / 2).translate(-1, 0),
+      //   },
+      // },
+      // animateFromPrev: {
+      //   circle: {
+      //     reference: 1,
+      //     fakeRadius: 1,
+      //   },
+      // },
     });
     this.addSection({
       setContent: () => `
@@ -115,8 +123,8 @@ class newContent extends Content {
       modifiers: {
         // _lines: actionWord('lines', 'id_line'),
       },
-      setState: (diagrams: Object) => {
-        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+      setState: () => {
+        const { diagram } = this;
         const collection = diagram.elements._circle;
 
         diagram.elements.showOnly([
@@ -153,25 +161,19 @@ class newContent extends Content {
       modifiers: {
         _line: actionWord('line', 'id_line'),
         _anchored: actionWord('anchored', 'id_anchor'),
-        _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
+        // _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
       },
-      getState: (diagrams: Object) => {
-        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-        const collection = diagram.elements._circle;
-        const angle = collection._radius.transform.r();
+      getState: () => {
+        const angle = this.diagram.elements._circle._radius.transform.r();
         return {
           angle,
         };
       },
-      transitionNext: (diagrams, done) => {
-        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-        const collection = diagram.elements._circle;
-        if (diagram) {
-          collection.rotateTo(3, 0, 1, done);
-        }
+      transitionNext: (done) => {
+        this.diagram.elements._circle.rotateTo(3, 0, 1, done);
       },
-      setState: (diagrams: Object, previousState: Object) => {
-        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+      setState: (previousState: Object) => {
+        const { diagram } = this;
         const collection = diagram.elements._circle;
         const t = collection._radius.transform.copy();
         if ('angle' in previousState) {
@@ -192,37 +194,37 @@ class newContent extends Content {
       },
     });
 
-    class Section2 extends Section {
-      setContent() {
-        return 
-      }
-      setModifiers() {
-        return {
-          _line: actionWord('line', 'id_line'),
-          _anchored: actionWord('anchored', 'id_anchor'),
-          _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
-        };
-      }
+    // class Section2 extends Section {
+    //   setContent() {
+    //     return 
+    //   }
+    //   setModifiers() {
+    //     return {
+    //       _line: actionWord('line', 'id_line'),
+    //       _anchored: actionWord('anchored', 'id_anchor'),
+    //       _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
+    //     };
+    //   }
 
-      getState(diagrams: Object): Object {
-        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-        const collection = diagram.elements._circle;
-        const angle = collection._radius.transform.r();
-        return {
-          angle,
-        };
-      }
+    //   getState(diagrams: Object): Object {
+    //     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+    //     const collection = diagram.elements._circle;
+    //     const angle = collection._radius.transform.r();
+    //     return {
+    //       angle,
+    //     };
+    //   }
 
-      transitionNext(diagrams, done) {
-        const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-        const collection = diagram.elements._circle;
-        if (diagram) {
-          collection.rotateTo(3, 0, 1, done);
-        }
-      }
+    //   transitionNext(diagrams, done) {
+    //     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
+    //     const collection = diagram.elements._circle;
+    //     if (diagram) {
+    //       collection.rotateTo(3, 0, 1, done);
+    //     }
+    //   }
 
       
-    }
+    // }
 
     // class Section3 extends Section {
     //   setTitle() {
@@ -304,10 +306,10 @@ class newContent extends Content {
   }
 }
 
-const content = new newContent(
-  'Shapes and Corners',
-  [],
-  LessonDiagram,
-);
+// const content = new newContent(
+//   'Shapes and Corners',
+//   [],
+//   LessonDiagram,
+// );
 
-export default content;
+export default Content;

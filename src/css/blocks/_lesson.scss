@@ -216,7 +216,7 @@ $diagram_ratio: 1.5;
     max-width: var(--lesson__max_container-width);
   }
 
-  #multipage_diagram {
+  .multipage_diagram {
     display: inline-block;
     width: var(--lesson__content-width);
     height: var(--lesson__content-height);

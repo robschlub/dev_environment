@@ -9,15 +9,15 @@ import './introduction.scss';
 
 // Components
 import Navbar from '../../components/navbar';
-import LessonComponent from '../../components/lesson';
-import content from '../../../Lessons/shapesAndCornersTest/shapesAndCorners';
-import Lesson from '../../Lesson/Lesson';
+// import LessonComponent from '../../components/lesson';
+// import content from '../../../Lessons/shapesAndCornersTest/shapesAndCorners';
+// import Lesson from '../../Lesson/Lesson';
 
 
 const introPage = (section: number) => {
   const lessonId:HTMLElement | null = document.getElementById('intro');
 
-  const lesson = new Lesson(content, 'multiPage');
+  // const lesson = new Lesson(content, 'multiPage');
 
   if (lessonId instanceof HTMLElement) {
     ReactDOM.render(
@@ -28,7 +28,7 @@ const introPage = (section: number) => {
         <div className="container-fluid">
           <div className="row">
             <div className="col">
-              <LessonComponent type="multiPage" lesson={lesson} section={section}/>
+              {/* <LessonComponent type="multiPage" lesson={lesson} section={section}/> */}
             </div>
           </div>
         </div>
