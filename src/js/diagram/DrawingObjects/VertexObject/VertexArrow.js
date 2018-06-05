@@ -27,7 +27,7 @@ class VertexArrow extends VertexObject {
       +legWidth / 2.0, -height,
       +legWidth / 2.0, -arrowHeight,
       +width / 2, -arrowHeight];
-    
+
     for (let i = 0; i < this.points.length; i += 2) {
       this.points[i] += tip.x;
       this.points[i + 1] += tip.y;

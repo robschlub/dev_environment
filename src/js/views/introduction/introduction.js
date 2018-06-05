@@ -11,7 +11,6 @@ import './introduction.scss';
 import Navbar from '../../components/navbar';
 import Content from '../../../Lessons/shapesAndCornersTest/shapesAndCorners';
 import LessonComponent from '../../components/lesson';
-// import content from '../../../Lessons/shapesAndCornersTest/shapesAndCorners';
 import Lesson from '../../Lesson/Lesson';
 
 const introPage = (section: number) => {
@@ -40,7 +39,7 @@ const introPage = (section: number) => {
 
 export default introPage;
 
-
+/* eslint-disable */
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 // // import '../../../css/style.scss';
@@ -149,3 +148,5 @@ export default introPage;
 // };
 
 // export default introPage;
+
+/* eslint-enable */

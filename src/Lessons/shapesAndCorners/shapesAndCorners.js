@@ -194,6 +194,7 @@ class Content extends LessonContent {
       },
     });
 
+  /* eslint-disable */
     // class Section2 extends Section {
     //   setContent() {
     //     return 
@@ -303,6 +304,7 @@ class Content extends LessonContent {
     //     }
     //   }
     // }
+    /* eslint-enable */
   }
 }
 

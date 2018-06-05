@@ -214,6 +214,7 @@ class LessonContent {
     const s = new Section(this.diagram);
 
     Object.keys(section).forEach((key) => {
+      // $FlowFixMe
       s[key] = section[key];
     });
     this.sections.push(s);

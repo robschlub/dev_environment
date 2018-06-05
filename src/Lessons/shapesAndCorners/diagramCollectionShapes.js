@@ -2,9 +2,8 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-// import { TextObject, DiagramText, DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
-import { Point, Transform, Rect } from '../../js/diagram/tools/g2';
+import { Point, Transform } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 

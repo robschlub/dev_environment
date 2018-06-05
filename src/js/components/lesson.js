@@ -3,7 +3,7 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
-import Canvas from './canvas';
+// import Canvas from './canvas';
 import Button from './button';
 
 type Props = {
