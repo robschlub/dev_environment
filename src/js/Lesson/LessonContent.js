@@ -86,9 +86,9 @@ class Section {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
-    this.showOnly = [];
-    this.show = [];
-    this.hideOnly = [];
+    // this.showOnly = [];
+    // this.show = [];
+    // this.hideOnly = [];
   }
 
   // makeTitle() {

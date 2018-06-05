@@ -85,11 +85,11 @@ class Content extends LessonContent {
         const { diagram } = this;
         const collection = diagram.elements._circle;
 
-        diagram.elements.showOnly([
-          collection._fakeRadius,
-          collection._reference,
-          collection,
-        ]);
+        // diagram.elements.showOnly([
+        //   collection._fakeRadius,
+        //   collection._reference,
+        //   collection,
+        // ]);
 
         collection._fakeRadius.transform.updateTranslation(-4.5, 1);
         collection._fakeRadius.transform.updateRotation(0);
@@ -107,10 +107,10 @@ class Content extends LessonContent {
         onClickId('id_line', collection.pulseLines, [collection]);
       },
 
-      hideOnly: [
-        this.diagram.elements._circle,
-        this.diagram.elements._circle._fakeRadius,
-        this.diagram.elements._circle._fakeRadius,
+      showOnly: [
+        circle,
+        circle._fakeRadius,
+        circle._reference,
       ],
       // position: {
       //   _circle_reference: true,
