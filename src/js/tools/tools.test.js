@@ -43,9 +43,15 @@ describe('Extract From Object', () => {
       b: {
         b1: 2,
         b2: 3,
+        b3: {
+          b31: 4,
+          b32: (i, j) => i + j,
+          b_33: 5,
+        },
       },
       c: i => i + 1,
       d: (i, j) => i + j,
+      e_1: 6,
     };
   });
   describe('Object Property Pointer', () => {
@@ -98,6 +104,26 @@ describe('Extract From Object', () => {
         const q = tools.extractFrom(o, 'z');
         expect(q).toEqual(undefined);
       });
+      test('2 level string that exists', () => {
+        const q = tools.extractFrom(o, 'b_b1');
+        expect(q.value()).toBe(2);
+      });
+      test('3 level string that exists', () => {
+        const q = tools.extractFrom(o, 'b_b3_b32');
+        expect(q.execute(1, 2)).toBe(3);
+      });
+      test('3 level string that does not exist', () => {
+        const q = tools.extractFrom(o, 'b_b3_z');
+        expect(q).toEqual(undefined);
+      });
+      test('1 level string with underscores', () => {
+        const q = tools.extractFrom(o, 'e_1');
+        expect(q.value()).toBe(6);
+      });
+      test('3 level string with underscores', () => {
+        const q = tools.extractFrom(o, 'b_b3_b_33');
+        expect(q.value()).toBe(5);
+      });
     });
     describe('Array input', () => {
       test('Array all exists', () => {
@@ -110,15 +136,11 @@ describe('Extract From Object', () => {
         const q = tools.extractFrom(o, ['a', 'b', 'z', 'c']);
         expect(q[0]).toEqual(new tools.ObjectKeyPointer(o, 'a'));
         expect(q[1]).toEqual(new tools.ObjectKeyPointer(o, 'b'));
-        expect(q[2]).toBe(undefined);
-        expect(q[3].execute(100)).toBe(101);
+        expect(q[2].execute(100)).toBe(101);
       });
       test('Array - none exist', () => {
         const q = tools.extractFrom(o, ['z', 'x', 'y']);
-        expect(q[0]).toBe(undefined);
-        expect(q[1]).toBe(undefined);
-        expect(q[2]).toBe(undefined);
-        expect(q).toHaveLength(3);
+        expect(q).toHaveLength(0);
       });
     });
     describe('Object Input', () => {

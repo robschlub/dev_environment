@@ -62,6 +62,17 @@ function extractFrom(
     if (keyValues in objectToExtractFrom) {
       return new ObjectKeyPointer(objectToExtractFrom, keyValues);
     }
+    const keyHeirarchy = keyValues.split('_');
+    const keys = keyHeirarchy.filter(k => k.length > 0);
+    if (keys.length > 1) {
+      if (keys[0] in objectToExtractFrom) {
+        return extractFrom(objectToExtractFrom[keys[0]], keys.slice(1).join('_'));
+      }
+    } else if (keys.length === 1) {
+      if (keys[0] in objectToExtractFrom) {
+        return new ObjectKeyPointer(objectToExtractFrom, keys[0]);
+      }
+    }
     return undefined;
   } else if (Array.isArray(keyValues)) {
     keyValues.forEach((kv) => {
