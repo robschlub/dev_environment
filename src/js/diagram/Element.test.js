@@ -479,7 +479,7 @@ describe('Animationa and Movement', () => {
       });
     });
     describe('Default move max/min transforms', () => {
-      test('updateMoveTranslationBoundary no transform', () => {
+      test('setMoveBoundaryToDiagram no transform', () => {
         const sq = new VertexPolygon(
           webgl,
           4,
@@ -491,15 +491,15 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
         );
         square.isMovable = true;
-
-        square.updateMoveTranslationBoundary();
+        square.move.limitToDiagram = true;
+        square.setMoveBoundaryToDiagram();
         expect(square.move.maxTransform.t()).toEqual(new Point(0.895, 0.895));
         expect(square.move.minTransform.t()).toEqual(new Point(-0.895, -0.895));
-        square.updateMoveTranslationBoundary([-2, -1, 2, 1]);
+        square.setMoveBoundaryToDiagram([-2, -1, 2, 1]);
         expect(square.move.maxTransform.t()).toEqual(new Point(1.895, 0.895));
         expect(square.move.minTransform.t()).toEqual(new Point(-1.895, -0.895));
       });
-      test('updateMoveTranslationBoundary with transform', () => {
+      test('setMoveBoundaryToDiagram with transform', () => {
         const sq = new VertexPolygon(
           webgl,
           4,
@@ -511,15 +511,16 @@ describe('Animationa and Movement', () => {
           new Transform().scale(2, 2).rotate(0).translate(0, 0),
         );
         square.isMovable = true;
+        square.move.limitToDiagram = true;
 
         expect(square.move.maxTransform.t().round()).toEqual(new Point(1000, 1000));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-1000, -1000));
 
-        square.updateMoveTranslationBoundary();
+        square.setMoveBoundaryToDiagram();
         expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 0.79));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -0.79));
 
-        square.updateMoveTranslationBoundary([-1, -2, 1, 2]);
+        square.setMoveBoundaryToDiagram([-1, -2, 1, 2]);
         expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 1.79));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -1.79));
       });

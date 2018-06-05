@@ -197,23 +197,23 @@ describe('Extract From Collection', () => {
     };
   });
   test('string', () => {
-    const p = tools.collectionElement(o, '_a');
+    const p = tools.getElement(o, '_a');
     expect(p.value()).toBe(1);
   });
   test('string without dunder', () => {
-    const p = tools.collectionElement(o, 'a');
+    const p = tools.getElement(o, 'a');
     expect(p.value()).toBe(1);
   });
   test('3 level string', () => {
-    const p = tools.collectionElement(o, '_b_b3_b_33');
+    const p = tools.getElement(o, '_b_b3_b_33');
     expect(p.value()).toBe(5);
   });
   test('3 level string without dunder', () => {
-    const p = tools.collectionElement(o, 'b_b3_b_33');
+    const p = tools.getElement(o, 'b_b3_b_33');
     expect(p.value()).toBe(5);
   });
   test('list extract', () => {
-    const p = tools.collectionElement(
+    const p = tools.getElement(
       o,
       [
         'a',
@@ -222,7 +222,6 @@ describe('Extract From Collection', () => {
         'b_b2',
       ],
     );
-    // console.log(p)
     expect(p[0].value()).toBe(1);
     expect(p[1].value()._b1).toBe(2);
     expect(p[2].value()).toBe(6);

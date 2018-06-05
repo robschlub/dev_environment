@@ -87,6 +87,7 @@ function extractFrom(
       if (keyPrefix + key in objectToExtractFrom) {
         out.push({
           obj: new ObjectKeyPointer(objectToExtractFrom, keyPrefix + key),
+          // $FlowFixMe
           value: keyValues[key],
         });
       }
@@ -95,7 +96,7 @@ function extractFrom(
   return out;
 }
 
-function collectionElement(
+function getElement(
   collection: Object,
   keyValues: Object | Array<any> | string,
 ) {
@@ -103,5 +104,5 @@ function collectionElement(
 }
 export {
   divide, mulToString, add, Console,
-  classify, extractFrom, ObjectKeyPointer, collectionElement,
+  classify, extractFrom, ObjectKeyPointer, getElement,
 };
