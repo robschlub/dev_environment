@@ -15,6 +15,9 @@ class Content extends LessonContent {
   }
 
   addSections() {
+    const shapes = this.diagram.elements._shapes;
+    const circle = this.diagram.elements._circle;
+
     this.addSection({
       title: 'Corners',
       setContent: () =>
@@ -37,22 +40,33 @@ class Content extends LessonContent {
       setState: () => {
         const { diagram } = this;
         const collection = diagram.elements._shapes;
-        diagram.elements.hideOnly([
-          diagram.elements._circle,
-          collection._square._corners,
-          collection._square._lessSharpCorners,
-          collection._triangle._moreSharpCorners,
-          collection._triangle._corners,
-          collection._pent._corners,
-          collection._pent._moreSharpCorners,
-          collection._pent._lessSharpCorners,
-        ]);
+        // diagram.elements.hideOnly([
+        //   diagram.elements._circle,
+        //   collection._square._corners,
+        //   collection._square._lessSharpCorners,
+        //   collection._triangle._moreSharpCorners,
+        //   collection._triangle._corners,
+        //   collection._pent._corners,
+        //   collection._pent._moreSharpCorners,
+        //   collection._pent._lessSharpCorners,
+        // ]);
 
         onClickId('id_shapes', collection.pulseShapes, [collection]);
         onClickId('id_corners', collection.toggleCorners, [collection]);
         onClickId('id_more_sharp', collection.toggleMoreSharpCorners, [collection]);
         onClickId('id_less_sharp', collection.toggleLessSharpCorners, [collection]);
       },
+
+      hideOnly: [
+        circle,
+        shapes._square._corners,
+        shapes._square._lessSharpCorners,
+        shapes._triangle._moreSharpCorners,
+        shapes._triangle._corners,
+        shapes._pent._corners,
+        shapes._pent._moreSharpCorners,
+        shapes._pent._lessSharpCorners,
+      ],
     });
 
     this.addSection({
@@ -92,6 +106,12 @@ class Content extends LessonContent {
 
         onClickId('id_line', collection.pulseLines, [collection]);
       },
+
+      hideOnly: [
+        this.diagram.elements._circle,
+        this.diagram.elements._circle._fakeRadius,
+        this.diagram.elements._circle._fakeRadius,
+      ],
       // position: {
       //   _circle_reference: true,
       // },

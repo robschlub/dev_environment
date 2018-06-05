@@ -117,12 +117,11 @@ class Lesson {
   setState() {
     // let { sections } = this.content;
     const { diagram } = this;
-    const sections = [this.content.sections[this.currentSectionIndex]];
+    const section = this.content.sections[this.currentSectionIndex];
 
     if (diagram) {
-      sections.forEach((section) => {
-        section.setState(diagram, this.state);
-      });
+      section.setVisible();
+      section.setState(this.state);
       this.renderDiagrams();
     }
   }

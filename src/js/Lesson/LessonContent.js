@@ -1,6 +1,7 @@
 // @flow
 
 import Diagram from '../diagram/Diagram';
+import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
 
 function actionWord(
   text: string,
@@ -73,18 +74,21 @@ class Section {
   title: string;
   modifiers: Object;
   diagram: Diagram;
-  showOnly: Object | string | Array<string>;
-  hideOnly: Object | string | Array<string>;
-  show: Object | string | Array<string>;
+  showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
+           | () => {};
+  hideOnly: Array<DiagramElementPrimative | DiagramElementCollection>
+           | () => {};
+  show: Array<DiagramElementPrimative | DiagramElementCollection>
+           | () => {};
   // isSinglePagePrimary: boolean;
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
-    this.showOnly = {};
-    this.show = {};
-    this.hideOnly = {};
+    this.showOnly = [];
+    this.show = [];
+    this.hideOnly = [];
   }
 
   // makeTitle() {
@@ -152,10 +156,36 @@ class Section {
   }
 
   /* eslint-disable no-unused-vars */
-  setState(
-    diagrams: Object,
-    previousState: Object,
-  ) {
+  setState(previousState: Object) {
+  }
+
+  setVisible() {
+    if ('showOnly' in this) {
+      const elementsOrMethod = this.showOnly;
+      if (Array.isArray(elementsOrMethod)) {
+        this.diagram.elements.showOnly(elementsOrMethod);
+      } else {
+        elementsOrMethod();
+      }
+    }
+    if ('hideOnly' in this) {
+      const elementsOrMethod = this.hideOnly;
+      if (Array.isArray(elementsOrMethod)) {
+        this.diagram.elements.hideOnly(elementsOrMethod);
+      } else {
+        elementsOrMethod();
+      }
+    }
+    if ('show' in this) {
+      const elementsOrMethod = this.show;
+      if (Array.isArray(elementsOrMethod)) {
+        elementsOrMethod.forEach((element) => {
+          element.show = true;
+        });
+      } else {
+        elementsOrMethod();
+      }
+    }
   }
 
   getState(diagram: Diagram): Object {
