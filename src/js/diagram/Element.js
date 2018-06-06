@@ -681,6 +681,18 @@ class DiagramElement {
     }
   }
 
+  disolveInWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const targetColor = this.color.slice();
+    this.color[3] = 0;
+    const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
+    const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
+    this.animateColorPlan([phase1, phase2], callback);
+  }
+
   disolveOut(
     time: number = 1,
     callback: ?(?mixed) => void = null,
@@ -1138,6 +1150,7 @@ class DiagramElementPrimative extends DiagramElement {
       || this.state.isMovingFreely
       || this.state.isBeingMoved
       || this.state.isPulsing
+      || this.state.isAnimatingColor
     ) {
       return true;
     }

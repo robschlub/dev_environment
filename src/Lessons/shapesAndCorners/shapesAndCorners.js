@@ -146,13 +146,14 @@ class Content extends LessonContent {
         done();
       },
       transitionFromAny: (done) => {
-        circle._anchor.disolveIn(1);
+        
         circle._reference.animateTo(new Transform()
           .rotate(0)
           .translate(0, 0), 1);
         circle._radius.animateTo(new Transform()
           .rotate(0)
-          .translate(0, 0), 1.3, 0, easeinout, done);
+          .translate(0, 0), 1.3);
+        circle._anchor.disolveInWithDelay(1, 0.5, done);
       },
       transitionFromPrev: (done) => {
         circle._radius.transform = circle._fakeRadius.transform.copy();
