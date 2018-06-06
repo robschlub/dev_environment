@@ -114,28 +114,31 @@ class Lesson {
     }
   }
 
-  finishTransitionFromAny(flag: boolean = false) {
+  finishTransitionFromAny(flag: boolean = true) {
     this.transitionStop();
     const section = this.content.sections[this.currentSectionIndex];
+
     if (flag) {
       section.setState(this.state);
     }
     this.renderDiagrams();
   }
-  finishTransFromPrev(flag: boolean = false) {
+  finishTransFromPrev(flag: boolean = true) {
     // if (flag) {
     const section = this.content.sections[this.currentSectionIndex];
-    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
     if (!flag) {
       this.transitionStop();
     }
+    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+    
   }
-  finishTransFromNext(flag: boolean = false) {
+  finishTransFromNext(flag: boolean = true) {
     const section = this.content.sections[this.currentSectionIndex];
-    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
     if (!flag) {
       this.transitionStop();
     }
+    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+    
   }
 
   currentSection() {
@@ -152,17 +155,17 @@ class Lesson {
   stopDiagrams() {
     const { diagram } = this;
     if (diagram) {
-      diagram.stop();
+      diagram.stop(false);
     }
   }
 
 
   transitionStop() {
-    this.inTransition = false;
     const { diagram } = this;
     if (diagram) {
       diagram.inTransition = false;
     }
+    this.inTransition = false;
   }
 
 

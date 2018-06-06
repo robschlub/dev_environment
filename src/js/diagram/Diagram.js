@@ -516,8 +516,8 @@ class Diagram {
     return true;
   }
 
-  stop() {
-    this.elements.stop();
+  stop(flag: ?mixed) {
+    this.elements.stop(flag);
   }
 
   // To add elements to a diagram, either this method can be overridden,

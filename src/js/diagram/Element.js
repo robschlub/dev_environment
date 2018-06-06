@@ -563,8 +563,8 @@ class DiagramElement {
     phases: Array<AnimationPhase>,
     callback: ?(?mixed) => void = null,
   ): void {
-    this.stopAnimating();
-    this.stopMovingFreely();
+    this.stopAnimating(false);
+    this.stopMovingFreely(false);
     this.stopBeingMoved();
     this.animationPlan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
@@ -617,7 +617,7 @@ class DiagramElement {
     this.state.isAnimating = false;
 
     if (this.callback) {
-      if (result) {
+      if (result !== null && result !== undefined) {
         this.callback(result);
       } else {
         this.callback();
@@ -631,7 +631,7 @@ class DiagramElement {
     this.state.isAnimatingColor = false;
 
     if (this.callback) {
-      if (result) {
+      if (result !== null && result !== undefined) {
         this.callback(result);
       } else {
         this.callback();
@@ -660,10 +660,34 @@ class DiagramElement {
   animateColorTo(
     color: Array<number>,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
+    easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
   ): void {
     const phase = new ColorAnimationPhase(color, time, easeFunction);
+    if (phase instanceof ColorAnimationPhase) {
+      this.animateColorPlan([phase], callback);
+    }
+  }
+
+  disolveIn(
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const targetColor = this.color.slice();
+    this.color[3] = 0;
+    const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
+    if (phase instanceof ColorAnimationPhase) {
+      this.animateColorPlan([phase], callback);
+    }
+  }
+
+  disolveOut(
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const targetColor = this.color.slice();
+    targetColor[3] = 0;
+    const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
       this.animateColorPlan([phase], callback);
     }
@@ -724,8 +748,8 @@ class DiagramElement {
 
   // Being Moved
   startBeingMoved(): void {
-    this.stopAnimating();
-    this.stopMovingFreely();
+    this.stopAnimating(false);
+    this.stopMovingFreely(false);
     this.state.movement.velocity = this.transform.zero();
     this.state.movement.previousTransform = this.transform.copy();
     this.state.movement.previousTime = Date.now() / 1000;
@@ -773,7 +797,7 @@ class DiagramElement {
 
   // Moving Freely
   startMovingFreely(callback: ?(?mixed) => void = null): void {
-    this.stopAnimating();
+    this.stopAnimating(false);
     this.stopBeingMoved();
     if (callback) {
       this.callback = callback;
@@ -790,7 +814,7 @@ class DiagramElement {
     this.state.isMovingFreely = false;
     this.state.movement.previousTime = -1;
     if (this.callback) {
-      if (result) {
+      if (result !== null && result !== undefined) {
         this.callback(result);
       } else {
         this.callback();
@@ -827,7 +851,7 @@ class DiagramElement {
       // indefinitely.
       if (deltaTime > this.pulse.time && this.pulse.time !== 0) {
         // this.state.isPulsing = false;
-        this.stopPulsing();
+        this.stopPulsing(true);
         deltaTime = this.pulse.time;
       }
 
@@ -903,19 +927,19 @@ class DiagramElement {
     this.state.pulse.startTime = -1;
   }
 
-  stopPulsing(result: boolean = true) {
+  stopPulsing(result: ?mixed) {
     this.state.isPulsing = false;
     if (this.pulse.callback) {
       this.pulse.callback(result);
     }
   }
 
-  stop() {
-    this.stopAnimating();
-    this.stopAnimatingColor();
-    this.stopMovingFreely();
+  stop(flag: ?mixed) {
+    this.stopAnimating(flag);
+    this.stopAnimatingColor(flag);
+    this.stopMovingFreely(flag);
     this.stopBeingMoved();
-    this.stopPulsing();
+    this.stopPulsing(flag);
   }
 
   updateLimits(limits: Rect) {
@@ -1022,7 +1046,7 @@ class DiagramElementPrimative extends DiagramElement {
   ) {
     super(transform, diagramLimits);
     this.vertices = drawingObject;
-    this.color = color;
+    this.color = color.slice();
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
     // this.setMoveBoundaryToDiagram();
@@ -1398,11 +1422,11 @@ class DiagramElementCollection extends DiagramElement {
     return touched;
   }
 
-  stop() {
-    super.stop();
+  stop(flag: ?mixed) {
+    super.stop(flag);
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      element.stop();
+      element.stop(flag);
     }
   }
 
