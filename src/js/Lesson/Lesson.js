@@ -114,25 +114,28 @@ class Lesson {
     }
   }
 
-  finishTransFromPrev(flag: boolean = false) {
-    // console.log(6, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+  finishTransitionFromAny(flag: boolean = false) {
     this.transitionStop();
-    // this.comingFrom = '';
     const section = this.content.sections[this.currentSectionIndex];
-    // console.log("before", this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
     if (flag) {
       section.setState(this.state);
     }
-    // console.log("after", this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
     this.renderDiagrams();
   }
-  finishTransFromNext(flag: boolean = false) {
-    this.transitionStop();
+  finishTransFromPrev(flag: boolean = false) {
+    // if (flag) {
     const section = this.content.sections[this.currentSectionIndex];
-    if (flag) {
-      section.setState(this.state);
+    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+    if (!flag) {
+      this.transitionStop();
     }
-    this.renderDiagrams();
+  }
+  finishTransFromNext(flag: boolean = false) {
+    const section = this.content.sections[this.currentSectionIndex];
+    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+    if (!flag) {
+      this.transitionStop();
+    }
   }
 
   currentSection() {

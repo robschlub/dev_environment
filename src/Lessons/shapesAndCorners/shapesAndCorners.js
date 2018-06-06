@@ -88,12 +88,7 @@ class Content extends LessonContent {
 
         onClickId('id_line', collection.pulseLines, [collection]);
       },
-      transitionFromPrev: (done) => {
-        // console.log("transitionFromPrev")
-        circle._fakeRadius.transform.updateTranslation(-4.5, 1);
-        circle._fakeRadius.transform.updateRotation(0);
-        circle._reference.transform.updateTranslation(4.5, 1);
-        circle._reference.transform.updateRotation(Math.PI);
+      transitionFromAny: (done) => {
         circle._fakeRadius.animateTo(new Transform()
           .rotate(Math.PI / 2)
           .translate(-1, 0), 1);
@@ -101,21 +96,20 @@ class Content extends LessonContent {
         circle._reference.animateTo(new Transform()
           .rotate(Math.PI / 2)
           .translate(1, 0), 1, 0, easeinout, done);
-        // console.log(circle._fakeRadius.transform.t())
+      },
+      transitionFromPrev: (done) => {
+        circle._fakeRadius.transform.updateTranslation(-4.5, 1);
+        circle._fakeRadius.transform.updateRotation(0);
+        circle._reference.transform.updateTranslation(4.5, 1);
+        circle._reference.transform.updateRotation(Math.PI);
+        done();
       },
       transitionFromNext: (done) => {
         const t = circle._radius.transform.t();
         const r = circle._radius.transform.r();
         circle._fakeRadius.transform.updateTranslation(t.x, t.y);
         circle._fakeRadius.transform.updateRotation(r);
-
-        circle._fakeRadius.animateTo(new Transform()
-          .rotate(Math.PI / 2)
-          .translate(-1, 0), 1);
-
-        circle._reference.animateTo(new Transform()
-          .rotate(Math.PI / 2)
-          .translate(1, 0), 1, 0, easeinout, done);
+        done();
       },
     });
     this.addSection({
@@ -137,20 +131,17 @@ class Content extends LessonContent {
         const { diagram } = this;
         const collection = diagram.elements._circle;
 
-        // console.log("State for 3rd section")
         circle._radius.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._reference.transform.updateTranslation(0, 0);
         onClickId('id_line', collection.pulseLines, [collection]);
-        // TODO - setState is being called early!!
       },
       transitionPrev: (done) => {
         circle._fakeRadius.transform = circle._radius.transform.copy();
         done();
       },
       transitionFromPrev: (done) => {
-        // console.log("Transition for 3rd section")
         const t = circle._fakeRadius.transform.t();
         circle._radius.transform.updateTranslation(t.x, t.y);
         circle._radius.transform.updateRotation(circle._fakeRadius.transform.r());

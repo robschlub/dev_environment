@@ -227,6 +227,9 @@ class Section {
   transitionFromPrev(done: () => void = function temp() {}): void {
     done();
   }
+  transitionFromAny(done: () => void = function temp() {}): void {
+    done();
+  }
   /* eslint-enable no-unused-vars */
 }
 

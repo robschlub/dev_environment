@@ -21,7 +21,8 @@
               "transitionNext",
               "transitionPrev",
               "transitionFromPrev",
-              "transitionFromNext"
+              "transitionFromNext",
+              "transitionFromAny"
             ]
           }
         ],
