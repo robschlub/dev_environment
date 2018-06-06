@@ -77,7 +77,7 @@ function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout:
 function makeArrow(shapes: Object, layout: Object) {
   return shapes.arrow(
     0.1, 0.04, 0.1, 0.04, colors.arrow,
-    new Transform().translate(layout.radius, 0),
+    new Transform().rotate(0).translate(layout.arrow, 0),
   );
 }
 
@@ -89,11 +89,13 @@ class CircleCollection extends DiagramElementCollection {
   _cornerRef: DiagramElementPrimative;
   _cornerRad: DiagramElementPrimative;
   diagram: Diagram;
+  layout: Object;
 
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.colors = colors;
+    this.layout = layout;
 
     const { shapes } = diagram;
 
@@ -139,8 +141,27 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   updateRotation() {
-    const rotation = this._radius.transform.r();
+    let rotation = this._radius.transform.r();
     if (rotation) {
+      if (rotation > Math.PI * 2) {
+        rotation -= Math.PI * 2;
+      }
+      if (rotation < 0) {
+        rotation += Math.PI * 2;
+      }
+      if (this._arrow.show) {
+        const angleToDisappear = 0.35;
+        if (rotation > angleToDisappear) {
+          this._arrow.color[3] = 0;
+        } else {
+          this._arrow.color[3] = (angleToDisappear - rotation) / angleToDisappear;
+          this._arrow.transform.updateRotation(rotation);
+          this._arrow.transform.updateTranslation(
+            this.layout.arrow * Math.cos(rotation),
+            this.layout.arrow * Math.sin(rotation),
+          );
+        }
+      }
       const r = normAngle(rotation);
       this._radius.transform.updateRotation(r);
       this._cornerRad.transform.updateRotation(r);

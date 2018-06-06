@@ -32,6 +32,7 @@ function getLessonVars() {
       'pent-center-x',
       'pent-center-y',
       'radius',
+      'arrow',
       'linewidth',
       'circle-center-x',
       'circle-center-y',
@@ -48,6 +49,7 @@ function getLessonVars() {
     ),
     radius: v.radius,
     linewidth: v.linewidth,
+    arrow: v.arrow,
     circle: {
       center: new Point(v['circle-center-x'], v['circle-center-y']),
     },

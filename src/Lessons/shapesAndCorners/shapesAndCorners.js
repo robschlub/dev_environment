@@ -146,18 +146,15 @@ class Content extends LessonContent {
         done();
       },
       transitionFromAny: (done) => {
-        // circle._anchor.animateColorTo(circle.colors.anchor, 2)
         circle._anchor.disolveIn(1);
         circle._reference.animateTo(new Transform()
           .rotate(0)
           .translate(0, 0), 1);
         circle._radius.animateTo(new Transform()
           .rotate(0)
-          .translate(0, 0), 2, 0, easeinout, done);
+          .translate(0, 0), 1.3, 0, easeinout, done);
       },
       transitionFromPrev: (done) => {
-        // circle._anchor.color = circle.colors.anchor.slice();
-        // circle._anchor.color[3] = 0;
         circle._radius.transform = circle._fakeRadius.transform.copy();
         done();
       },
