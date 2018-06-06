@@ -151,8 +151,7 @@ class Content extends LessonContent {
         circle._reference.transform.updateRotation(0);
         circle._reference.transform.updateTranslation(0, 0);
         circle._anchor.color = circle.colors.anchor.slice();
-        // onClickId('id_line', collection.pulseLines, [collection]);
-        onClickId('id_anchor', collection.pusleAnchor, [collection]);
+        onClickId('id_anchor', collection.pulseAnchor, [collection]);
         onClickId('id_push', collection.pushRadius, [collection]);
         circle._arrow.show = true;
         circle.pulseArrow();
