@@ -104,7 +104,7 @@ class CircleCollection extends DiagramElementCollection {
     const arrow = makeArrow(shapes, layout);
     // arrow.pulseScaleNow(0, 1.2, 0.7);
     this.add('arrow', arrow);
-    this.pulseArrow();
+    // this.pulseArrow();
 
     const reference = makeReference(shapes, layout);
     this.add('reference', reference);
@@ -153,7 +153,9 @@ class CircleCollection extends DiagramElementCollection {
         const angleToDisappear = 0.35;
         if (rotation > angleToDisappear) {
           this._arrow.color[3] = 0;
+          // this._arrow.show = false;
         } else {
+          // this._arrow.show = true;
           this._arrow.color[3] = (angleToDisappear - rotation) / angleToDisappear;
           this._arrow.transform.updateRotation(rotation);
           this._arrow.transform.updateTranslation(

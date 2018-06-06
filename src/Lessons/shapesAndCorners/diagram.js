@@ -110,13 +110,16 @@ class LessonDiagram extends Diagram {
   }
 
   draw(now: number): void {
+    // const t1 = performance.now()
     super.draw(now);
+    // console.log("a", performance.now() - t1)
   }
 
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
   ): boolean {
+    // const t1 = performance.now()
     if (this.beingMovedElements.length === 0) {
       return false;
     }
@@ -125,6 +128,13 @@ class LessonDiagram extends Diagram {
       // return false;
     }
 
+    // if(! ('time' in this)) {
+    //   this.time = performance.now();
+    // }
+    // const t = performance.now();
+    // console.log(t - this.time);
+    // this.time = t;
+    
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
       center = new Point(0, 0);
@@ -151,7 +161,10 @@ class LessonDiagram extends Diagram {
       transform.updateRotation(rot - diffAngle);
       this.elements._circle._radius.moved(transform);
     }
+    
     this.animateNextFrame();
+    // const t2 = performance.now()
+    // console.log(t2-t1)
     return true;
   }
 }

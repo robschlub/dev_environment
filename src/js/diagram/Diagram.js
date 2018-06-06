@@ -261,6 +261,8 @@ class Diagram {
   pixelToGLSpaceTransform: Transform;
   glToPixelSpaceTransform: Transform;
 
+  drawQueued: boolean;
+
   constructor(
     // canvas: HTMLCanvasElement,
     containerIdOrWebGLContext: string | WebGLInstance = 'DiagramContainer',
@@ -322,6 +324,7 @@ class Diagram {
       limits = new Rect(limitsOrxMin, yMin, width, height);
     }
     this.updateLimits(limits);
+    this.drawQueued = false;
     this.inTransition = false;
     // console.log(this.limits)
     this.beingMovedElements = [];
@@ -512,7 +515,7 @@ class Diagram {
         element.moved(currentTransform);
       }
     }
-    this.globalAnimation.animateNextFrame();
+    this.animateNextFrame();
     return true;
   }
 
@@ -544,7 +547,7 @@ class Diagram {
   }
 
   draw(now: number): void {
-    // const measure = Date.now()
+    this.drawQueued = false;
     this.clearContext();
     // This transform converts standard gl clip space, to diagram clip space
     // defined in limits.
@@ -556,6 +559,7 @@ class Diagram {
     //     (-this.limits.width / 2 - this.limits.left) * normWidth,
     //     (this.limits.height / 2 - this.limits.top) * normHeight,
     //   );
+    // const t1 = performance.now();
     this.elements.draw(
       this.diagramToGLSpaceTransform,
       now,
@@ -564,11 +568,15 @@ class Diagram {
     if (this.elements.isMoving()) {
       this.animateNextFrame();
     }
+    // console.log(performance.now() - t1)
     // console.log(Date.now() - measure)
   }
 
   animateNextFrame() {
-    this.globalAnimation.queueNextFrame(this.draw.bind(this));
+    if (!this.drawQueued) {
+      this.drawQueued = true;
+      this.globalAnimation.queueNextFrame(this.draw.bind(this));
+    }
   }
 
   isAnimating(): boolean {

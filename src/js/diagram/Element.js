@@ -1241,7 +1241,7 @@ class DiagramElementCollection extends DiagramElement {
         if (element.isMoving()) {
           return true;
         }
-      } else if (element.show && element.isMoving()) {
+      } else if (element.show && element.color[3] > 0 && element.isMoving()) {
         return true;
       }
     }
