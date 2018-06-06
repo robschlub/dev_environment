@@ -19,7 +19,9 @@
               "setStateMultiOnly",
               "setSinglePagePrimary",
               "transitionNext",
-              "transitionPrev"
+              "transitionPrev",
+              "transitionFromPrev",
+              "transitionFromNext"
             ]
           }
         ],

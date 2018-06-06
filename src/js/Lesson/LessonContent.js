@@ -71,59 +71,25 @@ function onClickId(
   }
 }
 
-class PositionObject {
-  element: DiagramElementPrimative | DiagramElementCollection;
-  position: Transform | null;
-  animation: {
-    fromPrev: {
-      time: number,
-      position: Transform | null;
-    },
-    fromNext: number | {
-      time: number,
-      position: Transform | null;
-    },
-    toPrev: {
-      time: number,
-      position: Transform | null;
-    },
-    toNext: {
-      time: number,
-      position: Transform | null,
-    },
-    fromGoTo: {
-      time: number,
-      position: Transform | null,
-    }
-  };
+// class PositionObject {
+//   element: DiagramElementPrimative | DiagramElementCollection;
+//   position: Transform | null;
+//   animTimeFromPrev: number;
+//   animTimeFromNext: number;
+//   animTimeFromGoTo: number;
+//   animTimeToPrev: number;
+//   animTimeToNext: number;
 
-  constructor(element: DiagramElementCollection | DiagramElementPrimative) {
-    this.element = element;
-    this.position = null;
-    this.animation = {
-      fromPrev: {
-        time: 0,
-        position: null,
-      },
-      fromNext: {
-        time: 0,
-        position: null,
-      },
-      toPrev: {
-        time: 0,
-        position: null,
-      },
-      toNext: {
-        time: 0,
-        position: null,
-      },
-      fromGoTo: {
-        time: 0,
-        position: null,
-      },
-    };
-  }
-}
+//   constructor(element: DiagramElementCollection | DiagramElementPrimative) {
+//     this.element = element;
+//     this.position = null;
+//     this.animTimeFromPrev = 0;
+//     this.animTimeFromNext = 0;
+//     this.animTimeFromGoTo = 0;
+//     this.animTimeToPrev = 0;
+//     this.animTimeToNext = 0;
+//   }
+// }
 // type PositionObject = {
 //   element: DiagramElementCollection | DiagramElementPrimative;
 //   position: Transform;
@@ -142,7 +108,7 @@ class Section {
            | () => {};
   show: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  position: PositionObject;
+  position: Array<PositionObject>;
   // isSinglePagePrimary: boolean;
 
   constructor(diagram: Diagram) {
@@ -183,31 +149,39 @@ class Section {
       if ('position' in p) {
         newP.position = p.position;
       }
-      if ('animation' in p) {
-        const { animation } = p;
-        if ('fromPrev' in animation) {
-          const otherState = animation.fromPrev;
-          if ('time' in otherState) {
-            newP.animation.fromPrev.time = otherState.time;
-          }
-          if ('position' in otherState) {
-            newP.animation.fromPrev.position = otherState.position;
-          }
-        }
-        newP.position = p.position;
+      if ('animTimeFromPrev' in p) {
+        newP.animTimeFromPrev = p.animTimeFromPrev;
       }
-      if ('position' in p) {
-        newP.position = p.position;
+      if ('animTimeFromNext' in p) {
+        newP.animTimeFromNext = p.animTimeFromNext;
       }
+      if ('animTimeFromGoTo' in p) {
+        newP.animTimeFromGoTo = p.animTimeFromGoTo;
+      }
+      if ('animTimeToPrev' in p) {
+        newP.animTimeToPrev = p.animTimeToPrev;
+      }
+      if ('animTimeToNext' in p) {
+        newP.animTimeToNext = p.animTimeToNext;
+      }
+      final.push(newP);
     });
-    this.position = newP;
-  }
-  setPosition() {
-    if ('position' in this) {
-      const { position } = this;
-
+    if (final) {
+      this.position = final;
     }
   }
+
+  // setPositionAndAnimations() {
+  //   if ('position' in this) {
+  //     const { position } = this;
+  //     if (Array.isArray(position)) {
+
+  //     } else {
+  //       position();
+  //     }
+  //   };
+  // }
+
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -241,13 +215,16 @@ class Section {
     return {};
   }
 
-  transitionNext(
-    diagram: Diagram,
-    done: () => void = function temp() {},
-  ): void {
+  transitionNext(done: () => void = function temp() {}): void {
     done();
   }
-  transitionPrev(diagram: Diagram, done: () => void = function temp() {}) {
+  transitionFromNext(done: () => void = function temp() {}): void {
+    done();
+  }
+  transitionPrev(done: () => void = function temp() {}): void {
+    done();
+  }
+  transitionFromPrev(done: () => void = function temp() {}): void {
     done();
   }
   /* eslint-enable no-unused-vars */
@@ -289,6 +266,17 @@ class LessonContent {
   addSections() {
   }
 
+  // cleanSections() {
+  //   this.sections.forEach((section, index) => {
+  //     if ('position' in section) {
+  //       const position = section.position;
+  //       if (Array.isArray(position)) {
+  //         section.
+  //       }
+  //       }
+  //   });
+  // }
+
   addSection(section: Object) {
     const s = new Section(this.diagram);
 
@@ -297,6 +285,7 @@ class LessonContent {
       s[key] = section[key];
     });
     this.sections.push(s);
+    // this.cleanSections();
   }
 }
 

@@ -242,6 +242,7 @@ class Diagram {
   elements: DiagramElementCollection;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
+  inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
   limits: Rect;
@@ -321,7 +322,7 @@ class Diagram {
       limits = new Rect(limitsOrxMin, yMin, width, height);
     }
     this.updateLimits(limits);
-
+    this.inTransition = false;
     // console.log(this.limits)
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
@@ -425,6 +426,10 @@ class Diagram {
   // and dragged, then when they are released, for them to move freely before
   // coming to a stop.
   touchDownHandler(clientPoint: Point) {
+    if (this.inTransition) {
+      return;
+    }
+
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
     // console.log(pixelPoint)
@@ -471,6 +476,9 @@ class Diagram {
   // normally scroll the screen. Typically, you would want to move the diagram
   // element and not the screen, so a true would be returned.
   touchMoveHandler(previousClientPoint: Point, currentClientPoint: Point): boolean {
+    if (this.inTransition) {
+      return false;
+    }
     if (this.beingMovedElements.length === 0) {
       return false;
     }

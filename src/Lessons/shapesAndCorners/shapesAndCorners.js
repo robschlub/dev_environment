@@ -4,6 +4,7 @@
 import { LessonContent, actionWord, onClickId } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Transform } from '../../js/diagram/tools/g2';
+import { easeinout } from '../../js/diagram/tools/mathtools';
 
 class Content extends LessonContent {
   setTitle() {
@@ -35,28 +36,7 @@ class Content extends LessonContent {
         _corners: actionWord('corners', 'id_corners'),
         _more_sharp: actionWord('more sharp', 'id_more_sharp'),
         _less_sharp: actionWord('less sharp', 'id_less_sharp'),
-        // _shapes_diagram: diagramCanvas('shapes_container', LessonDiagram),
       },
-      setState: () => {
-        const { diagram } = this;
-        const collection = diagram.elements._shapes;
-        // diagram.elements.hideOnly([
-        //   diagram.elements._circle,
-        //   collection._square._corners,
-        //   collection._square._lessSharpCorners,
-        //   collection._triangle._moreSharpCorners,
-        //   collection._triangle._corners,
-        //   collection._pent._corners,
-        //   collection._pent._moreSharpCorners,
-        //   collection._pent._lessSharpCorners,
-        // ]);
-
-        onClickId('id_shapes', collection.pulseShapes, [collection]);
-        onClickId('id_corners', collection.toggleCorners, [collection]);
-        onClickId('id_more_sharp', collection.toggleMoreSharpCorners, [collection]);
-        onClickId('id_less_sharp', collection.toggleLessSharpCorners, [collection]);
-      },
-
       hideOnly: [
         circle,
         shapes._square._corners,
@@ -67,6 +47,15 @@ class Content extends LessonContent {
         shapes._pent._moreSharpCorners,
         shapes._pent._lessSharpCorners,
       ],
+      setState: () => {
+        const { diagram } = this;
+        const collection = diagram.elements._shapes;
+
+        onClickId('id_shapes', collection.pulseShapes, [collection]);
+        onClickId('id_corners', collection.toggleCorners, [collection]);
+        onClickId('id_more_sharp', collection.toggleMoreSharpCorners, [collection]);
+        onClickId('id_less_sharp', collection.toggleLessSharpCorners, [collection]);
+      },
     });
 
     this.addSection({
@@ -81,26 +70,6 @@ class Content extends LessonContent {
       modifiers: {
         _lines: actionWord('lines', 'id_line'),
       },
-      setState: () => {
-        const { diagram } = this;
-        const collection = diagram.elements._circle;
-
-        collection._fakeRadius.transform.updateTranslation(-4.5, 1);
-        collection._fakeRadius.transform.updateRotation(0);
-        collection._fakeRadius.animateTo(new Transform()
-          .rotate(Math.PI / 2)
-          .translate(-1, 0), 1, 1);
-
-        collection._reference.transform.updateTranslation(4.5, 1);
-        collection._reference.transform.updateRotation(Math.PI);
-        collection._reference.animateTo(new Transform()
-          .rotate(Math.PI / 2)
-          .translate(1, 0), 1, -1);
-
-
-        onClickId('id_line', collection.pulseLines, [collection]);
-      },
-
       showOnly: () => {
         this.diagram.elements.showOnly([
           circle._fakeRadius,
@@ -108,49 +77,46 @@ class Content extends LessonContent {
           circle,
         ]);
       },
-      position: [
-        {
-          element: circle._fakeRadius,
-          position: new Transform().rotate(Math.PI / 2).translate(-1, 0),
-          animation: {
-            fromPrev: {
-              time: 1,
-              position: new Transform().rotate(Math.PI / 2).translate(-4.5, 1),
-            },
-            fromNext: 1,
-            fromGoTo: 0,
-          },
-        },
-        {
-          element: circle._reference,
-          position: new Transform().rotate(Math.PI / 2).translate(1, 0),
-          animationTime: {
-            fromPrev: 1,
-            fromNext: 1,
-          },
-        },
-      ],
-      // position: {
-      //   _circle_reference: true,
-      // },
-      // showOnly: {
-      //   circle: [
-      //     'reference',
-      //     'fakeReference',
-      //   ],
-      // },
-      // position: {
-      //   circle: {
-      //     reference: new Transform().rotate(Math.PI / 2).translate(1, 0),
-      //     fakeRadius: new Transform().rotate(Math.PI / 2).translate(-1, 0),
-      //   },
-      // },
-      // animateFromPrev: {
-      //   circle: {
-      //     reference: 1,
-      //     fakeRadius: 1,
-      //   },
-      // },
+      setState: () => {
+        const { diagram } = this;
+        const collection = diagram.elements._circle;
+
+        circle._fakeRadius.transform.updateTranslation(-1, 0);
+        circle._fakeRadius.transform.updateRotation(Math.PI / 2);
+        circle._reference.transform.updateTranslation(1, 0);
+        circle._reference.transform.updateRotation(Math.PI / 2);
+
+        onClickId('id_line', collection.pulseLines, [collection]);
+      },
+      transitionFromPrev: (done) => {
+        // console.log("transitionFromPrev")
+        circle._fakeRadius.transform.updateTranslation(-4.5, 1);
+        circle._fakeRadius.transform.updateRotation(0);
+        circle._reference.transform.updateTranslation(4.5, 1);
+        circle._reference.transform.updateRotation(Math.PI);
+        circle._fakeRadius.animateTo(new Transform()
+          .rotate(Math.PI / 2)
+          .translate(-1, 0), 1);
+
+        circle._reference.animateTo(new Transform()
+          .rotate(Math.PI / 2)
+          .translate(1, 0), 1, 0, easeinout, done);
+        // console.log(circle._fakeRadius.transform.t())
+      },
+      transitionFromNext: (done) => {
+        const t = circle._radius.transform.t();
+        const r = circle._radius.transform.r();
+        circle._fakeRadius.transform.updateTranslation(t.x, t.y);
+        circle._fakeRadius.transform.updateRotation(r);
+
+        circle._fakeRadius.animateTo(new Transform()
+          .rotate(Math.PI / 2)
+          .translate(-1, 0), 1);
+
+        circle._reference.animateTo(new Transform()
+          .rotate(Math.PI / 2)
+          .translate(1, 0), 1, 0, easeinout, done);
+      },
     });
     this.addSection({
       setContent: () => `
@@ -161,30 +127,40 @@ class Content extends LessonContent {
       modifiers: {
         // _lines: actionWord('lines', 'id_line'),
       },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arrow,
+      ],
       setState: () => {
         const { diagram } = this;
         const collection = diagram.elements._circle;
 
-        diagram.elements.showOnly([
-          collection._radius,
-          collection._reference,
-          collection._arrow,
-          collection,
-        ]);
+        // console.log("State for 3rd section")
+        circle._radius.transform.updateRotation(0);
+        circle._radius.transform.updateTranslation(0, 0);
+        circle._reference.transform.updateRotation(0);
+        circle._reference.transform.updateTranslation(0, 0);
+        onClickId('id_line', collection.pulseLines, [collection]);
+        // TODO - setState is being called early!!
+      },
+      transitionPrev: (done) => {
+        circle._fakeRadius.transform = circle._radius.transform.copy();
+        done();
+      },
+      transitionFromPrev: (done) => {
+        // console.log("Transition for 3rd section")
+        const t = circle._fakeRadius.transform.t();
+        circle._radius.transform.updateTranslation(t.x, t.y);
+        circle._radius.transform.updateRotation(circle._fakeRadius.transform.r());
 
-        const t = collection._fakeRadius.transform.t();
-        collection._radius.transform.updateTranslation(t.x, t.y);
-        collection._radius.transform.updateRotation(collection._fakeRadius.transform.r());
-        collection._radius.animateTo(new Transform()
-          .rotate(0)
-          .translate(0, 0), 2);
-
-        collection._reference.animateTo(new Transform()
+        circle._reference.animateTo(new Transform()
           .rotate(0)
           .translate(0, 0), 1);
-
-
-        onClickId('id_line', collection.pulseLines, [collection]);
+        circle._radius.animateTo(new Transform()
+          .rotate(0)
+          .translate(0, 0), 2, 0, easeinout, done);
       },
     });
 
@@ -208,8 +184,9 @@ class Content extends LessonContent {
         };
       },
       transitionNext: (done) => {
-        this.diagram.elements._circle.rotateTo(3, 0, 1, done);
+        circle.rotateTo(3, 0, 1, done);
       },
+
       setState: (previousState: Object) => {
         const { diagram } = this;
         const collection = diagram.elements._circle;

@@ -10,7 +10,7 @@ class Lesson {
   diagram: Diagram | null;
   state: Object;
   inTransition: boolean;
-
+  comingFrom: string;
   refresh: (string, number) => void;
 
   constructor(content: Object) {
@@ -21,6 +21,7 @@ class Lesson {
     this.state = {};
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
+    this.comingFrom = '';
   }
 
   getContentHtml(): string {
@@ -30,7 +31,56 @@ class Lesson {
     return htmlText;
   }
 
+  nextSection() {
+    const { diagram } = this;
+    // console.log(1, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+    if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
+      this.transitionStart('next');
+      this.currentSection().transitionNext(this.finishTransNext.bind(this));
+    }
+  }
+  prevSection() {
+    const { diagram } = this;
+    if (this.currentSectionIndex > 0 && diagram) {
+      this.transitionStart('prev');
+      this.currentSection().transitionPrev(this.finishTransPrev.bind(this));
+    }
+  }
+
+  transitionStart(direction: string = '') {
+    // console.log(2, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+    if (this.inTransition) {
+      this.stopDiagrams();
+    }
+    // console.log("2a", this.currentSectionIndex, this.inTransition)
+    this.inTransition = true;
+    if (direction === 'next') {
+      this.comingFrom = 'prev';
+    } else if (direction === 'prev') {
+      this.comingFrom = 'next';
+    } else {
+      this.comingFrom = '';
+    }
+    const { diagram } = this;
+    if (diagram) {
+      diagram.inTransition = true;
+    }
+  }
+
+  finishTransNext() {
+    // console.log(3, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+    // console.log("finishTN", this.comingFrom)
+    this.transitionStop();
+    this.goToSection(this.currentSectionIndex + 1);
+  }
+  finishTransPrev() {
+    this.transitionStop();
+    this.goToSection(this.currentSectionIndex - 1);
+  }
+  
+
   goToSection(sectionIndex: number) {
+    // console.log(4, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       if (this.inTransition) {
         this.stopDiagrams();
@@ -39,6 +89,50 @@ class Lesson {
       this.currentSectionIndex = sectionIndex;
       this.refresh(this.getContentHtml(), this.currentSectionIndex);
     }
+  }
+
+  setState() {
+    // console.log(5, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+    // let { sections } = this.content;
+    const { diagram } = this;
+    const section = this.content.sections[this.currentSectionIndex];
+    if (diagram) {
+      section.setVisible();
+      this.renderDiagrams();
+      if (this.comingFrom === 'next') {
+        this.inTransition = true;
+        section.transitionFromNext(this.finishTransFromNext.bind(this));
+        this.comingFrom = '';
+      } else if (this.comingFrom === 'prev') {
+        this.inTransition = true;
+        section.transitionFromPrev(this.finishTransFromPrev.bind(this));
+        this.comingFrom = '';
+      } else {
+        section.setState(this.state);
+        this.renderDiagrams();
+      }
+    }
+  }
+
+  finishTransFromPrev(flag: boolean = false) {
+    // console.log(6, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+    this.transitionStop();
+    // this.comingFrom = '';
+    const section = this.content.sections[this.currentSectionIndex];
+    // console.log("before", this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+    if (flag) {
+      section.setState(this.state);
+    }
+    // console.log("after", this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
+    this.renderDiagrams();
+  }
+  finishTransFromNext(flag: boolean = false) {
+    this.transitionStop();
+    const section = this.content.sections[this.currentSectionIndex];
+    if (flag) {
+      section.setState(this.state);
+    }
+    this.renderDiagrams();
   }
 
   currentSection() {
@@ -59,21 +153,16 @@ class Lesson {
     }
   }
 
-  nextSection() {
-    const { diagram } = this;
 
-    if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
-      if (this.inTransition) {
-        this.stopDiagrams();
-      }
-      this.inTransition = true;
-      this.currentSection().transitionNext(
-        diagram,
-        this.finishTransNext.bind(this),
-      );
-      // this.renderDiagrams();
+  transitionStop() {
+    this.inTransition = false;
+    const { diagram } = this;
+    if (diagram) {
+      diagram.inTransition = false;
     }
   }
+
+
 
   renderDiagrams() {
     const { diagram } = this;
@@ -82,29 +171,13 @@ class Lesson {
     }
   }
 
-  finishTransNext() {
-    this.inTransition = false;
-    this.goToSection(this.currentSectionIndex + 1);
-  }
 
-  finishTransPrev() {
-    this.inTransition = false;
-    this.goToSection(this.currentSectionIndex - 1);
-  }
 
-  prevSection() {
-    const { diagram } = this;
-    if (this.currentSectionIndex > 0 && diagram) {
-      if (this.inTransition) {
-        this.stopDiagrams();
-      }
-      this.inTransition = true;
-      this.currentSection().transitionPrev(
-        diagram,
-        this.finishTransPrev.bind(this),
-      );
-    }
-  }
+
+
+
+
+
 
   closeDiagram() {
     const { diagram } = this;
@@ -114,25 +187,11 @@ class Lesson {
     this.diagram = null;
   }
 
-  setState() {
-    // let { sections } = this.content;
-    const { diagram } = this;
-    const section = this.content.sections[this.currentSectionIndex];
-
-    if (diagram) {
-      section.setVisible();
-      section.setState(this.state);
-      this.renderDiagrams();
-    }
-  }
-
+  
   initialize() {
     this.closeDiagram();
     this.content.initialize();
     this.diagram = this.content.diagram;
-    // const id = 'multipage_diagram';
-    // const { DiagramClass } = this.content;
-    // this.diagram = new DiagramClass(id);
   }
 }
 
