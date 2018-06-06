@@ -137,6 +137,8 @@ class Content extends LessonContent {
         circle._radius.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._reference.transform.updateTranslation(0, 0);
+        console.log(circle.colors.anchor)
+        circle._anchor.color = circle.colors.anchor;
         onClickId('id_line', collection.pulseLines, [collection]);
       },
       transitionPrev: (done) => {
@@ -144,6 +146,7 @@ class Content extends LessonContent {
         done();
       },
       transitionFromAny: (done) => {
+        circle._anchor.animateColorTo(circle.colors.anchor, 2)
         circle._reference.animateTo(new Transform()
           .rotate(0)
           .translate(0, 0), 1);
@@ -152,6 +155,7 @@ class Content extends LessonContent {
           .translate(0, 0), 2, 0, easeinout, done);
       },
       transitionFromPrev: (done) => {
+        circle._anchor.color = [0, 0, 0, 1];
         circle._radius.transform = circle._fakeRadius.transform.copy();
         done();
       },

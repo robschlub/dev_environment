@@ -93,6 +93,7 @@ class CircleCollection extends DiagramElementCollection {
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
+    this.colors = colors;
 
     const { shapes } = diagram;
 
