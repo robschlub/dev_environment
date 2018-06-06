@@ -105,10 +105,11 @@ class Content extends LessonContent {
         done();
       },
       transitionFromNext: (done) => {
-        const t = circle._radius.transform.t();
-        const r = circle._radius.transform.r();
-        circle._fakeRadius.transform.updateTranslation(t.x, t.y);
-        circle._fakeRadius.transform.updateRotation(r);
+        // const t = circle._radius.transform.t();
+        // const r = circle._radius.transform.r();
+        // circle._fakeRadius.transform.updateTranslation(t.x, t.y);
+        // circle._fakeRadius.transform.updateRotation(r);
+        circle._fakeRadius.transform = circle._radius.transform.copy();
         done();
       },
     });
@@ -126,6 +127,7 @@ class Content extends LessonContent {
         circle._radius,
         circle._reference,
         circle._arrow,
+        circle._anchor,
       ],
       setState: () => {
         const { diagram } = this;
@@ -141,17 +143,17 @@ class Content extends LessonContent {
         circle._fakeRadius.transform = circle._radius.transform.copy();
         done();
       },
-      transitionFromPrev: (done) => {
-        const t = circle._fakeRadius.transform.t();
-        circle._radius.transform.updateTranslation(t.x, t.y);
-        circle._radius.transform.updateRotation(circle._fakeRadius.transform.r());
-
+      transitionFromAny: (done) => {
         circle._reference.animateTo(new Transform()
           .rotate(0)
           .translate(0, 0), 1);
         circle._radius.animateTo(new Transform()
           .rotate(0)
           .translate(0, 0), 2, 0, easeinout, done);
+      },
+      transitionFromPrev: (done) => {
+        circle._radius.transform = circle._fakeRadius.transform.copy();
+        done();
       },
     });
 
