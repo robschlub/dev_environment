@@ -22,6 +22,7 @@ class VertexObject extends DrawingObject {
   points: Array<number>;        // Primative vertices of shape
   numPoints: number;            // Number of primative vertices
   border: Array<Array<g2.Point>>; // Border vertices
+  z: number;
 
   constructor(webgl: WebGLInstance) {
     super();
@@ -30,6 +31,7 @@ class VertexObject extends DrawingObject {
     this.webgl = webgl;
     this.glPrimative = webgl.gl.TRIANGLES;
     this.points = [];
+    this.z = 0;
   }
 
   setupBuffer(numPoints: number = 0) {
@@ -97,6 +99,8 @@ class VertexObject extends DrawingObject {
       false,
       m2.t(transformMatrix),
     );  // Translate
+
+    this.gl.uniform1f(this.webgl.locations.u_z, this.z);
 
     this.gl.uniform4f(
       this.webgl.locations.u_color,

@@ -155,7 +155,8 @@ class Content extends LessonContent {
           .translate(0, 0), 2, 0, easeinout, done);
       },
       transitionFromPrev: (done) => {
-        circle._anchor.color = [0, 0, 0, 1];
+        circle._anchor.color = circle.colors.anchor.slice();
+        circle._anchor.color[3] = 0;
         circle._radius.transform = circle._fakeRadius.transform.copy();
         done();
       },
