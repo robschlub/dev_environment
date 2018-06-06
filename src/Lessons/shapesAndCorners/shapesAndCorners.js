@@ -126,7 +126,6 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._reference,
-        circle._arrow,
         circle._anchor,
       ],
       setState: () => {
@@ -139,6 +138,8 @@ class Content extends LessonContent {
         circle._reference.transform.updateTranslation(0, 0);
         circle._anchor.color = circle.colors.anchor.slice();
         onClickId('id_line', collection.pulseLines, [collection]);
+        circle._arrow.show = true;
+        circle.pulseArrow();
       },
       transitionPrev: (done) => {
         circle._fakeRadius.transform = circle._radius.transform.copy();

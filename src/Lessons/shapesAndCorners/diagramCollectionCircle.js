@@ -100,8 +100,9 @@ class CircleCollection extends DiagramElementCollection {
     const origin = new Point(0, 0);
 
     const arrow = makeArrow(shapes, layout);
-    arrow.pulseScaleNow(0, 1.2, 0.7);
+    // arrow.pulseScaleNow(0, 1.2, 0.7);
     this.add('arrow', arrow);
+    this.pulseArrow();
 
     const reference = makeReference(shapes, layout);
     this.add('reference', reference);
@@ -144,6 +145,11 @@ class CircleCollection extends DiagramElementCollection {
       this._radius.transform.updateRotation(r);
       this._cornerRad.transform.updateRotation(r);
     }
+  }
+
+  pulseArrow() {
+    this._arrow.pulseScaleNow(0, 1.2, 0.7);
+    this.diagram.animateNextFrame();
   }
 
   pulseAnchor() {
