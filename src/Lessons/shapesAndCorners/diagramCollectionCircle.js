@@ -83,6 +83,7 @@ function makeArrow(shapes: Object, layout: Object) {
 
 class CircleCollection extends DiagramElementCollection {
   _anchor: DiagramElementPrimative;
+  _arrow: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
   _fakeRadius: DiagramElementPrimative;
   _reference: DiagramElementPrimative;
@@ -90,6 +91,7 @@ class CircleCollection extends DiagramElementCollection {
   _cornerRad: DiagramElementPrimative;
   diagram: Diagram;
   layout: Object;
+  colors: Object;
 
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
@@ -201,6 +203,15 @@ class CircleCollection extends DiagramElementCollection {
     this.pulseFakeRadius();
   }
 
+  pushRadius() {
+    const angle = this._radius.transform.r();
+    let targetAngle = angle + Math.PI / 6;
+    if (targetAngle > Math.PI * 2) {
+      targetAngle -= Math.PI * 2;
+    }
+    this._radius.animateRotationTo(targetAngle, 1, 1);
+    this.diagram.animateNextFrame();
+  }
   rotateTo(
     angle: number,
     direction: number,

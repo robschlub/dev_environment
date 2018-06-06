@@ -37,10 +37,10 @@ class GlobalAnimation {
     this.drawQueue = [];
   }
 
-  queueNextFrame(func: (number) => void, triggerFrameRequest: boolean = true) {
-    if(!(func in this.nextDrawQueue)) {
-      this.nextDrawQueue.push(func);
-    }
+  queueNextFrame(func: (number) => void) {
+    // if (!(func in this.nextDrawQueue)) {
+    this.nextDrawQueue.push(func);
+    // }
 
     // if (triggerFrameRequest) {
     //   this.animateNextFrame();

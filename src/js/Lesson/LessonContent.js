@@ -2,7 +2,7 @@
 
 import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
-import { Transform } from '../diagram/tools/g2';
+// import { Transform } from '../diagram/tools/g2';
 
 function actionWord(
   text: string,
@@ -15,7 +15,17 @@ function actionWord(
     id,
   };
 }
-
+function highlightWord(
+  text: string,
+  id: string = '',
+  classes: string = '',
+): Object {
+  return {
+    replacementText: `<span id="${id}" class="${classes} highlight_word">${text}</span>`,
+    type: 'html',
+    id,
+  };
+}
 function diagramCanvas(
   id: string,
   DiagramClass: Object,
@@ -108,7 +118,7 @@ class Section {
            | () => {};
   show: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  position: Array<PositionObject>;
+  // position: Array<PositionObject>;
   // isSinglePagePrimary: boolean;
 
   constructor(diagram: Diagram) {
@@ -142,34 +152,34 @@ class Section {
   setState(previousState: Object) {
   }
 
-  fillPosition(positionArray: Array<Object>) {
-    const final = [];
-    positionArray.forEach((p) => {
-      const newP = new PositionObject(p.element);
-      if ('position' in p) {
-        newP.position = p.position;
-      }
-      if ('animTimeFromPrev' in p) {
-        newP.animTimeFromPrev = p.animTimeFromPrev;
-      }
-      if ('animTimeFromNext' in p) {
-        newP.animTimeFromNext = p.animTimeFromNext;
-      }
-      if ('animTimeFromGoTo' in p) {
-        newP.animTimeFromGoTo = p.animTimeFromGoTo;
-      }
-      if ('animTimeToPrev' in p) {
-        newP.animTimeToPrev = p.animTimeToPrev;
-      }
-      if ('animTimeToNext' in p) {
-        newP.animTimeToNext = p.animTimeToNext;
-      }
-      final.push(newP);
-    });
-    if (final) {
-      this.position = final;
-    }
-  }
+  // fillPosition(positionArray: Array<Object>) {
+  //   const final = [];
+  //   positionArray.forEach((p) => {
+  //     const newP = new PositionObject(p.element);
+  //     if ('position' in p) {
+  //       newP.position = p.position;
+  //     }
+  //     if ('animTimeFromPrev' in p) {
+  //       newP.animTimeFromPrev = p.animTimeFromPrev;
+  //     }
+  //     if ('animTimeFromNext' in p) {
+  //       newP.animTimeFromNext = p.animTimeFromNext;
+  //     }
+  //     if ('animTimeFromGoTo' in p) {
+  //       newP.animTimeFromGoTo = p.animTimeFromGoTo;
+  //     }
+  //     if ('animTimeToPrev' in p) {
+  //       newP.animTimeToPrev = p.animTimeToPrev;
+  //     }
+  //     if ('animTimeToNext' in p) {
+  //       newP.animTimeToNext = p.animTimeToNext;
+  //     }
+  //     final.push(newP);
+  //   });
+  //   if (final) {
+  //     this.position = final;
+  //   }
+  // }
 
   // setPositionAndAnimations() {
   //   if ('position' in this) {
@@ -203,6 +213,7 @@ class Section {
       const elementsOrMethod = this.show;
       if (Array.isArray(elementsOrMethod)) {
         elementsOrMethod.forEach((element) => {
+          // eslint-disable-next-line no-param-reassign
           element.show = true;
         });
       } else {
@@ -292,4 +303,7 @@ class LessonContent {
   }
 }
 
-export { Section, LessonContent, actionWord, diagramCanvas, onClickId };
+export {
+  Section, LessonContent, actionWord,
+  diagramCanvas, onClickId, highlightWord,
+};

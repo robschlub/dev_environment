@@ -134,7 +134,7 @@ class LessonDiagram extends Diagram {
     // const t = performance.now();
     // console.log(t - this.time);
     // this.time = t;
-    
+
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
       center = new Point(0, 0);
@@ -161,7 +161,7 @@ class LessonDiagram extends Diagram {
       transform.updateRotation(rot - diffAngle);
       this.elements._circle._radius.moved(transform);
     }
-    
+
     this.animateNextFrame();
     // const t2 = performance.now()
     // console.log(t2-t1)

@@ -126,7 +126,7 @@ class ShapesCollection extends DiagramElementCollection {
     const { shapes } = diagram;
 
     const square = makeSquare(shapes, locations.square.center);
-    square._lines.vertices.z = 0.9;
+    // square._lines.vertices.z = 0.9;
     this.add('square', square);
 
     const triangle = makeTriangle(shapes, locations.tri.center);

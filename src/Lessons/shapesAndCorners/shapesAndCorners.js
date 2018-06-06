@@ -1,7 +1,7 @@
 // @flow
 
 // import { Lesson } from '../../js/Lesson/Lesson';
-import { LessonContent, actionWord, onClickId } from '../../js/Lesson/LessonContent';
+import { LessonContent, actionWord, onClickId, highlightWord } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Transform } from '../../js/diagram/tools/g2';
 import { easeinout } from '../../js/diagram/tools/mathtools';
@@ -26,16 +26,15 @@ class Content extends LessonContent {
           Many |_shapes| have |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
-        </p> <p style="margin-top:35%">
-          The sharpness of the corner is a property that can describe a shape.
-        </p> <p>
-          So how can we <b>measure</b> sharpness? What <b>name</b> do we give to the sharpness?
+        </p><p style="margin-top:35%">
+          The |_sharpness| of the corner is a property that can describe a shape.
         </p>`,
       modifiers: {
         _shapes: actionWord('shapes', 'id_shapes'),
         _corners: actionWord('corners', 'id_corners'),
         _more_sharp: actionWord('more sharp', 'id_more_sharp'),
         _less_sharp: actionWord('less sharp', 'id_less_sharp'),
+        _sharpness: highlightWord('sharpness'),
       },
       hideOnly: [
         circle,
@@ -59,12 +58,23 @@ class Content extends LessonContent {
     });
 
     this.addSection({
+      setContent: () =>
+        `<p style="margin-top:25%; text-align:center;">
+          How can we |_measure| sharpness?
+        </p> <p style="margin-top:10%; text-align:center;">
+          What |_name| do we give to the sharpness?
+        </p>`,
+      showOnly: [],
+      modifiers: {
+        _measure: highlightWord('measure'),
+        _name: highlightWord('name'),
+      },
+    });
+
+    this.addSection({
       setContent: () => `
         <p style="margin-top:10%">
           Let's start with two |_lines|.
-        </p>
-        <p style="margin-top:40%">
-          Let's now move the two lines on top of each other and anchor one end.
         </p>
         `,
       modifiers: {
@@ -116,11 +126,15 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => `
         <p style="margin-top:10%">
-          Let's now move the two lines on top of each other and anchor one end.
+          Let's now move the two lines on top of each other and |_anchor| one end.
+        </p>
+        <p>
+          |_Push| the top line, and a corner is made.
         </p>
         `,
       modifiers: {
-        // _lines: actionWord('lines', 'id_line'),
+        _anchor: actionWord('anchor', 'id_anchor'),
+        _Push: actionWord('Push', 'id_push'),
       },
       showOnly: [
         circle,
@@ -137,7 +151,9 @@ class Content extends LessonContent {
         circle._reference.transform.updateRotation(0);
         circle._reference.transform.updateTranslation(0, 0);
         circle._anchor.color = circle.colors.anchor.slice();
-        onClickId('id_line', collection.pulseLines, [collection]);
+        // onClickId('id_line', collection.pulseLines, [collection]);
+        onClickId('id_anchor', collection.pusleAnchor, [collection]);
+        onClickId('id_push', collection.pushRadius, [collection]);
         circle._arrow.show = true;
         circle.pulseArrow();
       },
@@ -146,7 +162,6 @@ class Content extends LessonContent {
         done();
       },
       transitionFromAny: (done) => {
-        
         circle._reference.animateTo(new Transform()
           .rotate(0)
           .translate(0, 0), 1);

@@ -97,6 +97,10 @@ $_lesson_vars: (
   cursor: pointer;
 }
 
+.highlight_word {
+  color: $color-danger;
+}
+
 #id_corners {
   color: $color-corners;
 }
@@ -116,6 +120,10 @@ $_lesson_vars: (
 #id_lines,
 #id_line {
   color: $color-radius;
+}
+
+#id_push {
+  color: $color-arrow;
 }
 
 #id_anchor {

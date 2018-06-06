@@ -33,7 +33,6 @@ class Lesson {
 
   nextSection() {
     const { diagram } = this;
-    // console.log(1, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
       this.transitionStart('next');
       this.currentSection().transitionNext(this.finishTransNext.bind(this));
@@ -48,7 +47,6 @@ class Lesson {
   }
 
   transitionStart(direction: string = '') {
-    // console.log(2, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
     if (this.inTransition) {
       this.stopDiagrams();
     }
@@ -68,8 +66,6 @@ class Lesson {
   }
 
   finishTransNext() {
-    // console.log(3, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
-    // console.log("finishTN", this.comingFrom)
     this.transitionStop();
     this.goToSection(this.currentSectionIndex + 1);
   }
@@ -77,10 +73,9 @@ class Lesson {
     this.transitionStop();
     this.goToSection(this.currentSectionIndex - 1);
   }
-  
+
 
   goToSection(sectionIndex: number) {
-    // console.log(4, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       if (this.inTransition) {
         this.stopDiagrams();
@@ -92,8 +87,6 @@ class Lesson {
   }
 
   setState() {
-    // console.log(5, this.currentSectionIndex, this.inTransition, this.diagram.elements._circle._fakeRadius.transform.t(), this.diagram.elements._circle._fakeRadius.transform.r()*180/Math.PI)
-    // let { sections } = this.content;
     const { diagram } = this;
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
@@ -130,7 +123,6 @@ class Lesson {
       this.transitionStop();
     }
     section.transitionFromAny(this.finishTransitionFromAny.bind(this));
-    
   }
   finishTransFromNext(flag: boolean = true) {
     const section = this.content.sections[this.currentSectionIndex];
@@ -138,7 +130,6 @@ class Lesson {
       this.transitionStop();
     }
     section.transitionFromAny(this.finishTransitionFromAny.bind(this));
-    
   }
 
   currentSection() {
@@ -168,22 +159,12 @@ class Lesson {
     this.inTransition = false;
   }
 
-
-
   renderDiagrams() {
     const { diagram } = this;
     if (diagram) {
       diagram.animateNextFrame();
     }
   }
-
-
-
-
-
-
-
-
 
   closeDiagram() {
     const { diagram } = this;
@@ -193,7 +174,6 @@ class Lesson {
     this.diagram = null;
   }
 
-  
   initialize() {
     this.closeDiagram();
     this.content.initialize();

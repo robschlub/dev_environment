@@ -134,6 +134,8 @@ class DiagramElement {
   setTransformCallback: (Transform) => void; // element.transform is updated
 
   animationPlan: Array<AnimationPhase>;    // Animation plan
+  colorAnimationPlan: Array<ColorAnimationPhase>;
+  color: Array<number>;           // For the future when collections use color
 
   move: {
     maxTransform: Transform,
@@ -165,9 +167,14 @@ class DiagramElement {
   // Current animation/movement state of element
   state: {
     isAnimating: boolean,
+    isAnimatingColor: boolean,
     animation: {
       currentPhaseIndex: number,
       currentPhase: AnimationPhase,
+    },
+    colorAnimation: {
+      currentPhaseIndex: number,
+      currentPhase: ColorAnimationPhase,
     },
     isBeingMoved: boolean,
     isMovingFreely: boolean,
@@ -200,7 +207,7 @@ class DiagramElement {
     this.name = ''; // This is updated when an element is added to a collection
     this.isMovable = false;
     this.isTouchable = false;
-
+    this.color = [1, 1, 1, 1];
     this.callback = null;
     this.animationPlan = [];
     this.colorAnimationPlan = [];
@@ -350,7 +357,7 @@ class DiagramElement {
 
     const p = percentComplete;
     const next = start.map((c, index) => c + delta[index] * p);
-    
+
     // let next = delta.copy().constant(p);
 
     // next = start.add(delta.mul(next));
@@ -502,13 +509,12 @@ class DiagramElement {
         // animation)
         const endColor = this.calcNextAnimationColor(phase.time);
         this.stopAnimatingColor(true);
-        this.color = endColor
+        this.color = endColor;
         return;
       }
       // If we are here, that means the time elapsed is not more than the
       // current animation phase plan time, so calculate the next transform.
       this.color = this.calcNextAnimationColor(deltaTime);
-      return;
     }
   }
 
@@ -585,7 +591,7 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.stopAnimatingColor();
-    this.coloAnimationPlan = [];
+    this.colorAnimationPlan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
       this.colorAnimationPlan.push(phases[i]);
     }
@@ -604,7 +610,7 @@ class DiagramElement {
     this.state.animation.currentPhase = this.animationPlan[index];
     this.state.animation.currentPhase.start(this.transform.copy());
   }
-  
+
   animateColorPhase(index: number): void {
     this.state.colorAnimation.currentPhase = this.colorAnimationPlan[index];
     this.state.colorAnimation.currentPhase.start(this.color.slice());
