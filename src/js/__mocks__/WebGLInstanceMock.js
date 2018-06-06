@@ -13,6 +13,7 @@ const webgl = {
     vertexAttribPointer: () => {},
     uniformMatrix3fv: () => {},
     uniform4f: () => {},
+    uniform1f: () => {},
     drawArrays: () => {},
     clearColor: () => {},
     clear: () => {},
