@@ -3,7 +3,7 @@
 // import { Lesson } from '../../js/Lesson/Lesson';
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform } from '../../js/diagram/tools/g2';
+import { Transform, Point } from '../../js/diagram/tools/g2';
 import { easeinout } from '../../js/diagram/tools/mathtools';
 
 class Content extends LessonContent {
@@ -47,20 +47,20 @@ class Content extends LessonContent {
         shapes._pent._lessSharpCorners,
       ],
       setState: () => {
-        const { diagram } = this;
-        const collection = diagram.elements._shapes;
+        // const { diagram } = this;
+        // const collection = diagram.elements._shapes;
 
-        onClickId('id_shapes', collection.pulseShapes, [collection]);
-        onClickId('id_corners', collection.toggleCorners, [collection]);
-        onClickId('id_more_sharp', collection.toggleMoreSharpCorners, [collection]);
-        onClickId('id_less_sharp', collection.toggleLessSharpCorners, [collection]);
+        onClickId('id_shapes', shapes.pulseShapes, [shapes]);
+        onClickId('id_corners', shapes.toggleCorners, [shapes]);
+        onClickId('id_more_sharp', shapes.toggleMoreSharpCorners, [shapes]);
+        onClickId('id_less_sharp', shapes.toggleLessSharpCorners, [shapes]);
       },
     });
 
     this.addSection({
       setContent: () =>
         `<p style="margin-top:25%; text-align:center;">
-          How can we |_measure| sharpness?
+          How can we |_measure| corner sharpness?
         </p> <p style="margin-top:10%; text-align:center;">
           What |_name| do we give to the sharpness?
         </p>`,
@@ -78,7 +78,7 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _lines: actionWord('lines', 'id_line'),
+        _lines: actionWord('lines', 'id_reference_lines'),
       },
       showOnly: () => {
         this.diagram.elements.showOnly([
@@ -88,15 +88,13 @@ class Content extends LessonContent {
         ]);
       },
       setState: () => {
-        const { diagram } = this;
-        const collection = diagram.elements._circle;
-
+        // const { diagram } = this;
         circle._fakeRadius.transform.updateTranslation(-1, 0);
         circle._fakeRadius.transform.updateRotation(Math.PI / 2);
         circle._reference.transform.updateTranslation(1, 0);
         circle._reference.transform.updateRotation(Math.PI / 2);
 
-        onClickId('id_line', collection.pulseLines, [collection]);
+        onClickId('id_reference_lines', circle.pulseLines, [circle]);
       },
       transitionFromAny: (done) => {
         circle._fakeRadius.animateTo(new Transform()
@@ -115,10 +113,6 @@ class Content extends LessonContent {
         done();
       },
       transitionFromNext: (done) => {
-        // const t = circle._radius.transform.t();
-        // const r = circle._radius.transform.r();
-        // circle._fakeRadius.transform.updateTranslation(t.x, t.y);
-        // circle._fakeRadius.transform.updateRotation(r);
         circle._fakeRadius.transform = circle._radius.transform.copy();
         done();
       },
@@ -129,12 +123,13 @@ class Content extends LessonContent {
           Let's now move the two lines on top of each other and |_anchor| one end.
         </p>
         <p>
-          |_Push| the top line, and a corner is made.
+          Rotate one line by |_pushing| the free end.
         </p>
         `,
       modifiers: {
         _anchor: actionWord('anchor', 'id_anchor'),
-        _Push: actionWord('Push', 'id_push'),
+        _pushing: actionWord('pushing', 'id_push'),
+        _corner: actionWord('corner', 'id_corner'),
       },
       showOnly: [
         circle,
@@ -143,16 +138,17 @@ class Content extends LessonContent {
         circle._anchor,
       ],
       setState: () => {
-        const { diagram } = this;
-        const collection = diagram.elements._circle;
+        // const { diagram } = this;
+        // const collection = diagram.elements._circle;
 
-        circle._radius.transform.updateRotation(0);
+        circle._radius.transform.updateRotation(0.01);
         circle._radius.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._reference.transform.updateTranslation(0, 0);
         circle._anchor.color = circle.colors.anchor.slice();
-        onClickId('id_anchor', collection.pulseAnchor, [collection]);
-        onClickId('id_push', collection.pushRadius, [collection]);
+        onClickId('id_anchor', circle.pulseAnchor, [circle]);
+        onClickId('id_push', circle.pushRadius, [circle]);
+        // onClickId('id_corner', circle.toggleCorners, [circle]);
         circle._arrow.show = true;
         circle.pulseArrow();
       },
@@ -166,10 +162,15 @@ class Content extends LessonContent {
           .translate(0, 0), 1);
         circle._radius.animateTo(new Transform()
           .rotate(0)
-          .translate(0, 0), 1.3);
-        circle._anchor.disolveInWithDelay(1, 0.5, done);
+          .translate(0, 0), 1.3, 0, easeinout, done);
+
+        if (circle._anchor.color[3] === 0.01) {
+          circle._anchor.color[3] = 1;
+          circle._anchor.disolveInWithDelay(1, 0.3);
+        }
       },
       transitionFromPrev: (done) => {
+        circle._anchor.color[3] = 0.01;
         circle._radius.transform = circle._fakeRadius.transform.copy();
         done();
       },
@@ -177,48 +178,90 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () => `
-        |_circle_diagram|
-        <p>
-          Let's start with two lines |_anchored| at one end. One |_line| can be
-          rotated around the anchor.
-        </p>
+        <p style="margin-top:10%">
+        The two lines form a |_corner|.</p>
+        <p>|_Small_rotation| results in a sharp corner.
+        |_Large_rotation| results in a less sharp corner.</p>
         `,
       modifiers: {
-        _line: actionWord('line', 'id_line'),
-        _anchored: actionWord('anchored', 'id_anchor'),
-        // _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
+        _Small_rotation: actionWord('Small rotation', 'id_small_rotation'),
+        _Large_rotation: actionWord('Large rotation', 'id_large_rotation'),
+        _corner: actionWord('corner', 'id_corner'),
       },
-      getState: () => {
-        const angle = this.diagram.elements._circle._radius.transform.r();
-        return {
-          angle,
-        };
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._anchor,
+      ],
+      setState: () => {
+        const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
+        const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
+        circle._anchor.color = circle.colors.anchor.slice();
+        onClickId('id_small_rotation', circle.rotateTo, smallRotation);
+        onClickId('id_large_rotation', circle.rotateTo, largeRotation);
+        onClickId('id_corner', circle.toggleCorners, [circle]);
+        circle._reference.transform.updateTranslation(0, 0);
+        circle._reference.transform.updateRotation(0);
+        circle._radius.transform.updateTranslation(0, 0);
       },
-      transitionNext: (done) => {
-        circle.rotateTo(3, 0, 1, done);
-      },
-
-      setState: (previousState: Object) => {
-        const { diagram } = this;
-        const collection = diagram.elements._circle;
-        const t = collection._radius.transform.copy();
-        if ('angle' in previousState) {
-          t.updateRotation(previousState.angle);
-        } else {
-          t.updateRotation(Math.PI / 3);
+      transitionFromAny: (done) => {
+        if (circle._radius.transform.r() < Math.PI / 6) {
+          circle._reference.animateTo(new Transform()
+            .rotate(0)
+            .translate(0, 0), Math.PI / 6);
+          circle._radius.animateTo(new Transform()
+            .rotate(0.5)
+            .translate(0, 0), Math.PI / 6, 0, easeinout, done);
         }
-        collection._radius.setTransform(t);
-
-        collection.hideOnly([
-          collection._cornerRad,
-          collection._cornerRef,
-          diagram.elements._shapes,
-        ]);
-
-        onClickId('id_line', collection.pulseRadius, [collection]);
-        onClickId('id_anchor', collection.pulseAnchor, [collection]);
       },
     });
+
+
+    // this.addSection({
+    //   setContent: () => `
+    //     |_circle_diagram|
+    //     <p>
+    //       Let's start with two lines |_anchored| at one end. One |_line| can be
+    //       rotated around the anchor.
+    //     </p>
+    //     `,
+    //   modifiers: {
+    //     _line: actionWord('line', 'id_line'),
+    //     _anchored: actionWord('anchored', 'id_anchor'),
+    //     // _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
+    //   },
+    //   getState: () => {
+    //     const angle = this.diagram.elements._circle._radius.transform.r();
+    //     return {
+    //       angle,
+    //     };
+    //   },
+    //   transitionNext: (done) => {
+    //     circle.rotateTo(3, 0, 1, done);
+    //   },
+
+    //   setState: (previousState: Object) => {
+    //     const { diagram } = this;
+    //     const collection = diagram.elements._circle;
+    //     const t = collection._radius.transform.copy();
+    //     if ('angle' in previousState) {
+    //       t.updateRotation(previousState.angle);
+    //     } else {
+    //       t.updateRotation(Math.PI / 3);
+    //     }
+    //     collection._radius.setTransform(t);
+
+    //     collection.hideOnly([
+    //       collection._cornerRad,
+    //       collection._cornerRef,
+    //       diagram.elements._shapes,
+    //     ]);
+
+    //     onClickId('id_line', collection.pulseRadius, [collection]);
+    //     onClickId('id_anchor', collection.pulseAnchor, [collection]);
+    //   },
+    // });
 
   /* eslint-disable */
     // class Section2 extends Section {
