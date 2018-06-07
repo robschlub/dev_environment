@@ -1,0 +1,202 @@
+// https://codepen.io/jakealbaugh/post/css4-variables-and-sass
+@import "../../css/style";
+
+$color-lines: $color_primary;
+$color-corners: $color_secondary;
+$color-moreSharp: $color_highlight;
+$color-lessSharp: $color_safe;
+$color-anchor: $color_passive;
+$color-radius: $color_primary;
+$color-reference: $color_secondary;
+$color-background: $color_diagram;
+$color-arrow: $color_danger;
+$color-angle: $color_safe;
+$color-latin: $color_secondary;
+$color-arc: $color_danger;
+
+$_lesson_vars: (
+  linewidth: 0.03,
+  radius: 1.3,
+  arrow: 1.1,
+  corner-length: 0.5,
+  angle-radius: 0.5,
+  // <1/2
+  // aspect-1-2: (
+  //   x-min: -2, x-max: 2,
+  //   y-min: -3.6, y-max: 3.6,
+  //   square: (center-x:  -1, center-y:   1),
+  //   tri:    (center-x:   0, center-y:   0),
+  //   pent:   (center-x:   1, center-y:  -1),
+  //   circle: (center-x:   0, center-y:   0),
+  // ),
+  // 1/2 -> 1/1
+  // aspect-2-3: (
+  //   x-min: -2, x-max: 2,
+  //   y-min: -2.666, y-max: 2.666,
+  //   square: (center-x:  -1, center-y:  -1),
+  //   tri:    (center-x:   0, center-y:   0),
+  //   pent:   (center-x:   1, center-y:   1),
+  //   circle: (center-x:   0, center-y:  -0.5),
+  // ),
+  // 1/1 -> 2/1
+  aspect-3-2: (
+    x-min:   -3, x-max:   3,
+    y-min:   -2, y-max:   2,
+    square: (center-x:  -2, center-y:   -0.8 + 0.8),
+    tri:    (center-x:   0, center-y:   -0.98 + 0.8),
+    pent:   (center-x:   2, center-y:   -0.8 + 0.8),
+    circle: (center-x:   0, center-y:   -0.5),
+  ),
+  // >2/1
+  // aspect-2-1: (
+  //   x-min:   -4, x-max:   4,
+  //   y-min:   -2, y-max:   2,
+  //   square: (center-x:  -2, center-y: 1.5),
+  //   tri:    (center-x:   0, center-y:   0),
+  //   pent:   (center-x:   2, center-y:   0),
+  //   circle: (center-x:   2, center-y:   0),
+  // ),
+);
+
+@mixin lesson-breakpoint-vars($size) {
+  @each $var, $value in map-get($_lesson_vars, $size) {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+      }
+    }
+
+    @else {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
+}
+
+#lesson__container_name {
+  @each $var, $value in $_lesson_vars {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        @if type-of($subvalue) == "map" {
+          @each $subsubvar, $subsubvalue in $subvalue {
+            --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+          }
+        }
+
+        @else {
+          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+    }
+
+    @else {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
+
+  @include lesson-breakpoint-vars(aspect-3-2);
+}
+
+.action_word {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.highlight_word {
+  color: $color-danger;
+}
+
+#id_corners {
+  color: $color-corners;
+}
+
+#id_more_sharp {
+  color: $color-moreSharp;
+}
+
+#id_shapes {
+  color: $color-lines;
+}
+
+#id_less_sharp {
+  color: $color-lessSharp;
+}
+
+#id_amount,
+#id_angle {
+  color: $color-angle;
+}
+
+#id_lines,
+#id_line {
+  color: $color-radius;
+}
+
+#id_reference_lines {
+  color: $color-reference;
+}
+
+#id_push {
+  color: $color-arrow;
+}
+
+#id_anchor {
+  color: $color-anchor;
+}
+
+#id_corner {
+  color: $color-corners;
+}
+
+#id_small_rotation,
+#id_more_sharp_cornern {
+  color: $color-moreSharp;
+}
+
+#id_large_rotation,
+#id_less_sharp_corner {
+  color: $color-lessSharp;
+}
+
+.latin {
+  font-style: italic;
+  color: $color-latin;
+  // font-weight: bold;
+}
+
+.english {
+  font-style: italic;
+  color: $color-latin;
+  // font-weight: bold;
+}
+
+// .lesson__text p {
+//   background-color: rgba(0, 0, 0, 0.5);
+// }
+
+/* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
+:export {
+  colorLines: $color-lines;
+  colorCorners: $color-corners;
+  colorMoreSharp: $color-moreSharp;
+  colorLessSharp: $color-lessSharp;
+  colorAnchor: $color-anchor;
+  colorRadius: $color-radius;
+  colorReference: $color-reference;
+  colorBackground: $color-background;
+  colorGrid: $color_navbar-background;
+  colorArrow: $color-arrow;
+  colorAngle: $color-angle;
+  colorArc: $color-arc;
+}
+/* stylelint-enable */
+
+#section1__upper {
+  // background-color: rgba($color_diagram, 0.4);
+  background-color: rgba($color_diagram, 0);
+}
+
+#section1__lower {
+  // background-color: rgba($color_diagram, 0.1);
+  // margin-top: calc(var(--lesson__content-height) * 0.5);
+  margin-top: 35%;
+}

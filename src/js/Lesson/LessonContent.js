@@ -125,6 +125,7 @@ class Section {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
+    this.showOnly = [];
   }
 
   setContent(): Array<string> | string {

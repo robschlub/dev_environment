@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import '../../../css/style.scss';
 import Navbar from '../../components/navbar';
 import LessonComponent from '../../components/lesson';
-import Content from '../../../Lessons/shapesAndCorners/shapesAndCorners';
+import Content from '../../../Lessons/circlesAndAngles/circlesAndAngles';
 import Lesson from '../../Lesson/Lesson';
 
 const lessonSinglePage = () => {
