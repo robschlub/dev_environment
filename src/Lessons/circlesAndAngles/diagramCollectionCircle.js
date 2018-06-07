@@ -2,6 +2,7 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import * as tools from '../../js/diagram/tools/mathtools';
+import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
@@ -53,10 +54,26 @@ function makeArc(shapes: Object, layout: Object) {
     anglePoints, colors.arc, new Point(0, 0),
   );
 }
+
+function makeCircle(shapes: Object, layout: Object) {
+  return shapes.polygon(
+    anglePoints, layout.radius, layout.linewidth, 0,
+    anglePoints, colors.circle, new Point(0, 0),
+  );
+}
+
 function makeAnchor(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anchorPoints, layout.linewidth * 2, 0,
     anchorPoints, colors.anchor, new Point(0, 0),
+  );
+}
+
+function makeWheel(shapes: Object, layout: Object) {
+  return shapes.polygonFilled(
+    anchorPoints, layout.radius * 0.6, 0,
+    anchorPoints, colors.anchor, new Point(0, 0),
+    'static/wheel.png',
   );
 }
 
@@ -125,6 +142,7 @@ class CircleCollection extends DiagramElementCollection {
     this.add('reference', makeReference(shapes, layout));
     this.add('fakeRadius', makeFakeRadius(shapes, layout));
     this.add('arc', makeArc(shapes, layout));
+    this.add('circle', makeCircle(shapes, layout));
 
     const radius = makeRadius(shapes, layout);
     radius.setTransformCallback = this.updateRotation.bind(this);
@@ -133,8 +151,35 @@ class CircleCollection extends DiagramElementCollection {
     this.add('cornerRad', makeCorner(shapes, t, layout));
     this.add('anchor', makeAnchor(shapes, layout));
 
+    this.add('wheel', makeWheel(shapes, layout));
+    console.log(this._wheel.vertices.texturePoints)
+    console.log(this._wheel.vertices.points)
+
     this.isTouchable = true;
     this.isMovable = true;
+
+    const element = document.createElement('div');
+    element.style.position = 'absolute';
+    // element.style.left = '0px';
+    // element.style.top = '0px';
+    element.style.width = '200px';
+    element.style.height = '200px';
+    element.setAttribute('id', 'id_wheel_picture');
+    this.diagram.htmlCanvas.appendChild(element);
+    const h = new HTMLObject(
+      this.diagram.htmlCanvas, 'id_wheel_picture',
+      new Point(0, 0), 'middle', 'center',
+    );
+    const hp = new DiagramElementPrimative(
+      h,
+      new Transform().translate(-2, 0),
+      [1, 0, 0, 1],
+      this.diagram.limits,
+    );
+    hp.isTouchable = true;
+    hp.isMovable = true;
+    hp.move.limitToDiagram = true;
+    this.add('html', hp);
   }
 
   resize(locations: Object) {

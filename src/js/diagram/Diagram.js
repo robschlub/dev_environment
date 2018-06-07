@@ -195,10 +195,11 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     numSidesToDraw: number,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
+    textureLocation: string = '',
   ) {
     return PolygonFilled(
       webgl, numSides, radius,
-      rotation, numSidesToDraw, color, transform, limits,
+      rotation, numSidesToDraw, color, transform, limits, textureLocation,
     );
   }
   function horizontalLine(
@@ -292,7 +293,7 @@ class Diagram {
           }
         }
         this.backgroundColor = backgroundColor;
-        const shaders = getShaders('simple', 'simple');
+        const shaders = getShaders('withTexture', 'withTexture');
         const webgl = new WebGLInstance(
           this.canvas,
           shaders.vertexSource,

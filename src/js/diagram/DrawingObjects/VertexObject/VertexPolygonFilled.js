@@ -17,6 +17,7 @@ class PolygonFilled extends VertexObject {
     rotation: number = 0,
     center: Point = new Point(0, 0),
     numSidesToDraw: number = numSides,
+    textureLocation: string = '',
   ) {
     super(webgl);
     this.glPrimative = webgl.gl.TRIANGLE_FAN;
@@ -60,8 +61,18 @@ class PolygonFilled extends VertexObject {
     if (sidesToDraw < sides) {
       this.border[0].push(center.copy());
     }
+    this.textureLocation = textureLocation;
 
+    console.log('polyfilled')
+    this.createTextureMap(
+      -this.radius + center.x,
+      this.radius + center.x,
+      -this.radius + center.y,
+      this.radius + center.y,
+    );
+    console.log('start')
     this.setupBuffer();
+    console.log('stop')
   }
 
   drawToAngle(

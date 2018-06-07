@@ -32,23 +32,66 @@ class Content extends LessonContent {
         _mathematics_is_a_powerful_tool:
           highlightWord('Mathematics is a powerful tool.', '', 'english'),
       },
+      showOnly: [
+        circle,
+        circle._wheel,
+      ],
     });
     this.addSection({
       setContent: () => `
         <p style="margin-top:23%;">
-          Mathematics reduces an object or phenomenon to a more |_simple|, more |_general| form.
+          Mathematics describes an object or phenomenon in a more |_simple|, and more |_general| way.
         </p>
         <p style="margin-top:5%;">
-          As the form is more |_simple|, it can be more easily studied and understood.
+          Describing something more |_simply|, makes it easier to study and understand.
         </p>
         <p style="margin-top:5%;">
-          As it is |_general| it can be reapplied to other scenarios.
+          Describing something more |_generally|, means the understanding can be reapplied to other scenarios.
         </p>
         `,
       showOnly: [],
       modifiers: {
         _simple: highlightWord('simple', '', 'english'),
         _general: highlightWord('general', '', 'english'),
+        _simply: highlightWord('simply', '', 'english'),
+        _generally: highlightWord('generally', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:27%;">
+          A large area of mathematics is the study of |_shapes|.
+        </p>
+        <p style="margin-top:10%;">
+          |_Shape| are simple generalizations of |_objects| and the |_paths| they travel.
+        </p>
+        `,
+      showOnly: [],
+      modifiers: {
+        _shapes: highlightWord('shapes', '', 'english'),
+        _Shape: highlightWord('Shapes', '', 'english'),
+        _objects: highlightWord('objects', '', 'english'),
+        _paths: highlightWord('paths', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:5%;">
+          For example, a |_wheel| is a physical thing.
+        </p>
+        <p>
+          It is made of different materials, has mass, size, location and a smell.
+        </p>
+        <p>
+        In mathematics, a |_shape| can be used to describe the wheel in a more simple, general way.
+        </p>
+        `,
+      showOnly: [],
+      modifiers: {
+        _wheel: highlightWord('wheel', '', 'english'),
+        _shape: actionWord('shape', 'id_shape'),
       },
     });
 
