@@ -65,7 +65,7 @@ function makeCircle(shapes: Object, layout: Object) {
 function makeAnchor(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anchorPoints, layout.linewidth * 2, 0,
-    anchorPoints, colors.anchor, new Point(0, 0),
+    anchorPoints, colors.anchor, new Point(-3, 2),
   );
 }
 
@@ -120,6 +120,37 @@ function makeArrow(shapes: Object, layout: Object) {
   );
 }
 
+function makeDiameter(shapes: Object, layout: Object) {
+  const center = new Point(0, 0);
+  const diameter = layout.wheelSize * 2;
+  const lineWidth = layout.linewidth / 2;
+  const arrowHeight = lineWidth * 5;
+  const arrowWidth = lineWidth * 4;
+  const line = shapes.horizontalLine(
+    new Point(-diameter / 2 + arrowHeight, 0),
+    diameter - arrowHeight * 2,
+    lineWidth,
+    0,
+    colors.dimensions,
+    new Transform().rotate(0).translate(0, 0),
+  );
+  const arrow1 = shapes.arrow(
+    arrowWidth, 0, arrowHeight, 0,
+    colors.dimensions, new Transform().rotate(-Math.PI / 2).translate(diameter / 2, 0),
+  );
+  const arrow2 = shapes.arrow(
+    arrowWidth, 0, arrowHeight, 0,
+    colors.dimensions, new Transform().rotate(Math.PI / 2).translate(-diameter / 2, 0),
+  );
+  const d = shapes.collection(new Transform()
+    .rotate(Math.PI / 4)
+    .translate(center.x, center.y));
+  d.add('line', line);
+  d.add('arrow1', arrow1);
+  d.add('arrow2', arrow2);
+  return d;
+}
+
 class CircleCollection extends DiagramElementCollection {
   _anchor: DiagramElementPrimative;
   _arrow: DiagramElementPrimative;
@@ -149,6 +180,7 @@ class CircleCollection extends DiagramElementCollection {
 
     this.add('wheel', makeWheel(shapes, layout));
     this.add('wheelShape', makeWheelShape(shapes, layout));
+    this.add('diameter', makeDiameter(shapes, layout));
 
     this.add('arrow', makeArrow(shapes, layout));
     this.add('angle', makeAngle(shapes, layout));
@@ -165,6 +197,7 @@ class CircleCollection extends DiagramElementCollection {
     this.add('anchor', makeAnchor(shapes, layout));
     this.isTouchable = true;
     this.isMovable = true;
+    console.log(colors)
   }
 
   resize(locations: Object) {
@@ -291,8 +324,6 @@ class CircleCollection extends DiagramElementCollection {
       this._wheelShape.animateTranslationToWithDelay(new Point(1, 0), 0.5, 1);
       this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1);
       this._wheelShape.disolveIn(0.5);
-      // this._anchor.show = true;
-      // this._anchor.disolveInWithDelay(1, 1);
     }
     this.diagram.animateNextFrame();
   }

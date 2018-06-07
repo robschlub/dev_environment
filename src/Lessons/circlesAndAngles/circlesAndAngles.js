@@ -87,11 +87,37 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._wheel,
-        // circle._wheelShape,
       ],
       modifiers: {
         _wheel: highlightWord('wheel', '', 'english'),
         _shape: actionWord('shape', 'id_shape'),
+      },
+      setState: () => {
+        circle._wheel.transform.updateTranslation(0, 0);
+        onClickId('id_shape', circle.showWheelShape, [circle]);
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:5%;">
+          The shape can then be studied.
+        </p>
+        <p>
+          |_Properties| can be discovered that describe the shape, and predict
+          other properties.
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._wheelShape,
+        circle._diameter,
+        circle._diameter._line,
+        circle._diameter._arrow1,
+        circle._diameter._arrow2,
+      ],
+      modifiers: {
+        _Properties: highlightWord('Properties', '', 'english'),
       },
       setState: () => {
         circle._wheel.transform.updateTranslation(0, 0);

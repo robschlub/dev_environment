@@ -13,6 +13,8 @@ $color-arrow: $color_danger;
 $color-angle: $color_safe;
 $color-latin: $color_secondary;
 $color-arc: $color_danger;
+$color-circle: $color_danger;
+$color-dimensions: $color_secondary;
 
 $_lesson_vars: (
   linewidth: 0.03,
@@ -105,6 +107,10 @@ $_lesson_vars: (
   color: $color-danger;
 }
 
+#id_shape {
+  color: $color-circle;
+}
+
 #id_corners {
   color: $color-corners;
 }
@@ -187,6 +193,8 @@ $_lesson_vars: (
   colorArrow: $color-arrow;
   colorAngle: $color-angle;
   colorArc: $color-arc;
+  colorCircle: $color-circle;
+  colorDimensions: $color-dimensions;
 }
 /* stylelint-enable */
 
