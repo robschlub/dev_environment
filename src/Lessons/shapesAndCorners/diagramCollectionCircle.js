@@ -11,6 +11,7 @@ import styles from './style.scss';
 
 const colors = getScssColors(styles);
 const anchorPoints = 50;
+const anglePoints = 400;
 
 function makeLine(
   shapes: Object,
@@ -53,6 +54,13 @@ function makeAnchor(shapes: Object, layout: Object) {
   );
 }
 
+function makeAngle(shapes: Object, layout: Object) {
+  return shapes.polygonFilled(
+    anglePoints, layout.angleRadius, 0,
+    anglePoints, colors.angle, new Point(0, 0),
+  );
+}
+
 function makeReference(shapes: Object, layout: Object) {
   return makeLine(
     shapes, new Point(0, 0), layout.radius, layout.linewidth,
@@ -84,6 +92,7 @@ function makeArrow(shapes: Object, layout: Object) {
 class CircleCollection extends DiagramElementCollection {
   _anchor: DiagramElementPrimative;
   _arrow: DiagramElementPrimative;
+  _angle: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
   _fakeRadius: DiagramElementPrimative;
   _reference: DiagramElementPrimative;
@@ -107,6 +116,9 @@ class CircleCollection extends DiagramElementCollection {
     // arrow.pulseScaleNow(0, 1.2, 0.7);
     this.add('arrow', arrow);
     // this.pulseArrow();
+
+    const angle = makeAngle(shapes, layout);
+    this.add('angle', angle);
 
     const reference = makeReference(shapes, layout);
     this.add('reference', reference);
@@ -169,11 +181,17 @@ class CircleCollection extends DiagramElementCollection {
       const r = normAngle(rotation);
       this._radius.transform.updateRotation(r);
       this._cornerRad.transform.updateRotation(r);
+      this._angle.angleToDraw = r * 1.01;
     }
   }
 
   pulseArrow() {
     this._arrow.pulseScaleNow(0, 1.2, 0.7);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseAngle() {
+    this._angle.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
 

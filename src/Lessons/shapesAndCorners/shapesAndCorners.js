@@ -3,7 +3,7 @@
 // import { Lesson } from '../../js/Lesson/Lesson';
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform, Point } from '../../js/diagram/tools/g2';
+import { Transform } from '../../js/diagram/tools/g2';
 import { easeinout } from '../../js/diagram/tools/mathtools';
 
 class Content extends LessonContent {
@@ -34,7 +34,7 @@ class Content extends LessonContent {
         _corners: actionWord('corners', 'id_corners'),
         _more_sharp: actionWord('more sharp', 'id_more_sharp'),
         _less_sharp: actionWord('less sharp', 'id_less_sharp'),
-        _sharpness: highlightWord('sharpness'),
+        _sharpness: highlightWord('sharpness', '', 'english'),
       },
       hideOnly: [
         circle,
@@ -66,8 +66,8 @@ class Content extends LessonContent {
         </p>`,
       showOnly: [],
       modifiers: {
-        _measure: highlightWord('measure'),
-        _name: highlightWord('name'),
+        _measure: highlightWord('measure', '', 'english'),
+        _name: highlightWord('name', '', 'english'),
       },
     });
 
@@ -217,7 +217,59 @@ class Content extends LessonContent {
       },
     });
 
-
+    this.addSection({
+      title: 'Angle',
+      setContent: () => `
+        <p>
+        So the |_amount| of |_rotation| determines the sharpness of the corner.</p>
+        <p>The Latin word for |_corner| is |_angulus|.</p>
+        <p>Our word for |_corner_sharpness| comes from Latin and is |_angle|.</p>
+        `,
+      modifiers: {
+        _amount: actionWord('amount', 'id_amount'),
+        _rotation: actionWord('rotation', 'id_push'),
+        _angle: actionWord('angle', 'id_angle'),
+        _angulus: highlightWord('angulus', '', 'latin'),
+        _corner: highlightWord('corner', '', 'english'),
+        _corner_sharpness: highlightWord('corner sharpness', '', 'english'),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._anchor,
+        circle._angle,
+      ],
+      setState: () => {
+        // circle._angle.angleToDraw = circle._radius.transform.r() * 1.01;
+        // const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
+        // const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
+        // circle._anchor.color = circle.colors.anchor.slice();
+        // onClickId('id_small_rotation', circle.rotateTo, smallRotation);
+        // onClickId('id_large_rotation', circle.rotateTo, largeRotation);
+        onClickId('id_push', circle.pushRadius, [circle]);
+        onClickId('id_amount', circle.pulseAngle, [circle]);
+        onClickId('id_angle', circle.pulseAngle, [circle]);
+        onClickId('id_corner', circle.toggleCorners, [circle]);
+        if (circle._radius.transform.r() < 0.2) {
+          circle._radius.transform.updateRotation(Math.PI / 6);
+        }
+        circle.updateRotation();
+        // circle._reference.transform.updateTranslation(0, 0);
+        // circle._reference.transform.updateRotation(0);
+        // circle._radius.transform.updateTranslation(0, 0);
+      },
+      // transitionFromAny: (done) => {
+      //   if (circle._radius.transform.r() < Math.PI / 6) {
+      //     circle._reference.animateTo(new Transform()
+      //       .rotate(0)
+      //       .translate(0, 0), Math.PI / 6);
+      //     circle._radius.animateTo(new Transform()
+      //       .rotate(0.5)
+      //       .translate(0, 0), Math.PI / 6, 0, easeinout, done);
+      //   }
+      // },
+    });
     // this.addSection({
     //   setContent: () => `
     //     |_circle_diagram|

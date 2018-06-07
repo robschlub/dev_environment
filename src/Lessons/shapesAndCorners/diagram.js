@@ -37,6 +37,7 @@ function getLessonVars() {
       'circle-center-x',
       'circle-center-y',
       'corner-length',
+      'angle-radius',
     ],
     '--lessonvars-',
   );
@@ -50,6 +51,7 @@ function getLessonVars() {
     radius: v.radius,
     linewidth: v.linewidth,
     arrow: v.arrow,
+    angleRadius: v['angle-radius'],
     circle: {
       center: new Point(v['circle-center-x'], v['circle-center-y']),
     },
