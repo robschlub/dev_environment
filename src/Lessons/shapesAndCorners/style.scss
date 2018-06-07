@@ -12,6 +12,7 @@ $color-background: $color_diagram;
 $color-arrow: $color_danger;
 $color-angle: $color_safe;
 $color-latin: $color_secondary;
+$color-arc: $color_danger;
 
 $_lesson_vars: (
   linewidth: 0.03,
@@ -185,6 +186,7 @@ $_lesson_vars: (
   colorGrid: $color_navbar-background;
   colorArrow: $color-arrow;
   colorAngle: $color-angle;
+  colorArc: $color-arc;
 }
 /* stylelint-enable */
 

@@ -47,6 +47,12 @@ function makeRadius(shapes: Object, layout: Object) {
   return radius;
 }
 
+function makeArc(shapes: Object, layout: Object) {
+  return shapes.polygon(
+    anglePoints, layout.radius, layout.linewidth, 0,
+    anglePoints, colors.arc, new Point(0, 0),
+  );
+}
 function makeAnchor(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anchorPoints, layout.linewidth * 2, 0,
@@ -92,6 +98,7 @@ function makeArrow(shapes: Object, layout: Object) {
 class CircleCollection extends DiagramElementCollection {
   _anchor: DiagramElementPrimative;
   _arrow: DiagramElementPrimative;
+  _arc: DiagramElementPrimative;
   _angle: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
   _fakeRadius: DiagramElementPrimative;
@@ -111,37 +118,20 @@ class CircleCollection extends DiagramElementCollection {
     const { shapes } = diagram;
 
     const origin = new Point(0, 0);
+    const t = new Transform().rotate(0).translate(0, 0);
 
-    const arrow = makeArrow(shapes, layout);
-    // arrow.pulseScaleNow(0, 1.2, 0.7);
-    this.add('arrow', arrow);
-    // this.pulseArrow();
-
-    const angle = makeAngle(shapes, layout);
-    this.add('angle', angle);
-
-    const reference = makeReference(shapes, layout);
-    this.add('reference', reference);
-
-    const fakeRadius = makeFakeRadius(shapes, layout);
-    this.add('fakeRadius', fakeRadius);
+    this.add('arrow', makeArrow(shapes, layout));
+    this.add('angle', makeAngle(shapes, layout));
+    this.add('reference', makeReference(shapes, layout));
+    this.add('fakeRadius', makeFakeRadius(shapes, layout));
+    this.add('arc', makeArc(shapes, layout));
 
     const radius = makeRadius(shapes, layout);
     radius.setTransformCallback = this.updateRotation.bind(this);
     this.add('radius', radius);
-
-    const cornerRef = makeCorner(shapes, origin, layout);
-    this.add('cornerRef', cornerRef);
-
-    const t = new Transform().rotate(0).translate(
-      0,
-      0,
-    );
-    const cornerRad = makeCorner(shapes, t, layout);
-    this.add('cornerRad', cornerRad);
-
-    const anchor = makeAnchor(shapes, layout);
-    this.add('anchor', anchor);
+    this.add('cornerRef', makeCorner(shapes, origin, layout));
+    this.add('cornerRad', makeCorner(shapes, t, layout));
+    this.add('anchor', makeAnchor(shapes, layout));
 
     this.isTouchable = true;
     this.isMovable = true;
@@ -181,7 +171,8 @@ class CircleCollection extends DiagramElementCollection {
       const r = normAngle(rotation);
       this._radius.transform.updateRotation(r);
       this._cornerRad.transform.updateRotation(r);
-      this._angle.angleToDraw = r * 1.01;
+      this._angle.angleToDraw = r + 0.01;
+      this._arc.angleToDraw = r + 0.01;
     }
   }
 

@@ -221,17 +221,12 @@ class Content extends LessonContent {
       title: 'Angle',
       setContent: () => `
         <p>
-        So the |_amount| of |_rotation| determines the sharpness of the corner.</p>
-        <p>The Latin word for |_corner| is |_angulus|.</p>
-        <p>Our word for |_corner_sharpness| comes from Latin and is |_angle|.</p>
+        So the |_amount| of |_rotation| determines the sharpness of the corner.
+        </p>
         `,
       modifiers: {
         _amount: actionWord('amount', 'id_amount'),
         _rotation: actionWord('rotation', 'id_push'),
-        _angle: actionWord('angle', 'id_angle'),
-        _angulus: highlightWord('angulus', '', 'latin'),
-        _corner: highlightWord('corner', '', 'english'),
-        _corner_sharpness: highlightWord('corner sharpness', '', 'english'),
       },
       showOnly: [
         circle,
@@ -241,12 +236,6 @@ class Content extends LessonContent {
         circle._angle,
       ],
       setState: () => {
-        // circle._angle.angleToDraw = circle._radius.transform.r() * 1.01;
-        // const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
-        // const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
-        // circle._anchor.color = circle.colors.anchor.slice();
-        // onClickId('id_small_rotation', circle.rotateTo, smallRotation);
-        // onClickId('id_large_rotation', circle.rotateTo, largeRotation);
         onClickId('id_push', circle.pushRadius, [circle]);
         onClickId('id_amount', circle.pulseAngle, [circle]);
         onClickId('id_angle', circle.pulseAngle, [circle]);
@@ -255,184 +244,120 @@ class Content extends LessonContent {
           circle._radius.transform.updateRotation(Math.PI / 6);
         }
         circle.updateRotation();
-        // circle._reference.transform.updateTranslation(0, 0);
-        // circle._reference.transform.updateRotation(0);
-        // circle._radius.transform.updateTranslation(0, 0);
       },
-      // transitionFromAny: (done) => {
-      //   if (circle._radius.transform.r() < Math.PI / 6) {
-      //     circle._reference.animateTo(new Transform()
-      //       .rotate(0)
-      //       .translate(0, 0), Math.PI / 6);
-      //     circle._radius.animateTo(new Transform()
-      //       .rotate(0.5)
-      //       .translate(0, 0), Math.PI / 6, 0, easeinout, done);
-      //   }
-      // },
     });
+
+    this.addSection({
+      setContent: () =>
+        `<p style="margin-top:20%; text-align:center;">
+          What |_name| do we use for corner sharpness?
+        </p> 
+        <p style="margin-top:10%; text-align:center;">
+          Well, the Latin word for |_corner| is |_angulus|.</p>
+        <p style="margin-top:10%; text-align:center;">
+          Our word for |_corner_sharpness| comes from this Latin root and is |_angle|.</p>
+        </p>`,
+      showOnly: [],
+      modifiers: {
+        _angle: highlightWord('angle', '', 'english'),
+        _angulus: highlightWord('angulus', '', 'latin'),
+        _corner: highlightWord('corner', '', 'english'),
+        _corner_sharpness: highlightWord('corner sharpness', '', 'english'),
+        _name: highlightWord('name', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p>
+        So |_angle| is the word that describes how sharp a corner is.
+        </p>
+        <p>
+        A |_larger_angle| is a less sharp corner, and a |_smaller_angle| is a more sharp corner.
+        </p>
+        `,
+      modifiers: {
+        _angle: actionWord('angle', 'id_angle'),
+        _smaller_angle: actionWord('small angle', 'id_small_rotation'),
+        _larger_angle: actionWord('large angle', 'id_large_rotation'),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._angle,
+      ],
+      setState: () => {
+        const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
+        const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
+        circle._anchor.color = circle.colors.anchor.slice();
+        onClickId('id_small_rotation', circle.rotateTo, smallRotation);
+        onClickId('id_large_rotation', circle.rotateTo, largeRotation);
+
+        onClickId('id_angle', circle.pulseAngle, [circle]);
+        if (circle._radius.transform.r() < 0.2) {
+          circle._radius.transform.updateRotation(Math.PI / 6);
+        }
+        circle.updateRotation();
+      },
+    });
+
+    this.addSection({
+      setContent: () =>
+        `<p style="margin-top:25%; text-align:center;">
+          Now, describing the angle as more sharp or less sharp is not that useful.
+        </p> 
+        <p style="margin-top:15%; text-align:center;">
+          So how can we more precisely describe, or |_measure| the angle?
+        `,
+      showOnly: [],
+      modifiers: {
+        _measure: highlightWord('measure', '', 'english'),
+        _angle: highlightWord('angle', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p>
+        First, what happens when we trace the path the line takes as we rotate it?
+        </p>
+        <p>
+          We get a |_circle|!
+        </p>
+        <p>
+          So one way to think of angle, is to also think of it as a portion of a circle.
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._angle,
+        circle._arc,
+      ],
+      modifiers: {
+        _measure: highlightWord('measure', '', 'english'),
+        _angle: highlightWord('angle', '', 'english'),
+      },
+    });
+
+
     // this.addSection({
     //   setContent: () => `
-    //     |_circle_diagram|
     //     <p>
-    //       Let's start with two lines |_anchored| at one end. One |_line| can be
-    //       rotated around the anchor.
+    //     One way is to divide a circle up into portions, and count the number of portions in an |_angle|.
+    //     </p>
+    //     <p>Here, a circle is divided into 12 equal portions (like a clock).
     //     </p>
     //     `,
+    //   showOnly: [],
     //   modifiers: {
-    //     _line: actionWord('line', 'id_line'),
-    //     _anchored: actionWord('anchored', 'id_anchor'),
-    //     // _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
-    //   },
-    //   getState: () => {
-    //     const angle = this.diagram.elements._circle._radius.transform.r();
-    //     return {
-    //       angle,
-    //     };
-    //   },
-    //   transitionNext: (done) => {
-    //     circle.rotateTo(3, 0, 1, done);
-    //   },
-
-    //   setState: (previousState: Object) => {
-    //     const { diagram } = this;
-    //     const collection = diagram.elements._circle;
-    //     const t = collection._radius.transform.copy();
-    //     if ('angle' in previousState) {
-    //       t.updateRotation(previousState.angle);
-    //     } else {
-    //       t.updateRotation(Math.PI / 3);
-    //     }
-    //     collection._radius.setTransform(t);
-
-    //     collection.hideOnly([
-    //       collection._cornerRad,
-    //       collection._cornerRef,
-    //       diagram.elements._shapes,
-    //     ]);
-
-    //     onClickId('id_line', collection.pulseRadius, [collection]);
-    //     onClickId('id_anchor', collection.pulseAnchor, [collection]);
+    //     _measure: highlightWord('measure', '', 'english'),
+    //     _angle: highlightWord('angle', '', 'english'),
     //   },
     // });
-
-  /* eslint-disable */
-    // class Section2 extends Section {
-    //   setContent() {
-    //     return 
-    //   }
-    //   setModifiers() {
-    //     return {
-    //       _line: actionWord('line', 'id_line'),
-    //       _anchored: actionWord('anchored', 'id_anchor'),
-    //       _circle_diagram: diagramCanvas('circle_container', LessonDiagram),
-    //     };
-    //   }
-
-    //   getState(diagrams: Object): Object {
-    //     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-    //     const collection = diagram.elements._circle;
-    //     const angle = collection._radius.transform.r();
-    //     return {
-    //       angle,
-    //     };
-    //   }
-
-    //   transitionNext(diagrams, done) {
-    //     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-    //     const collection = diagram.elements._circle;
-    //     if (diagram) {
-    //       collection.rotateTo(3, 0, 1, done);
-    //     }
-    //   }
-
-      
-    // }
-
-    // class Section3 extends Section {
-    //   setTitle() {
-    //     return 'Make a corner';
-    //   }
-    //   setContent() {
-    //     return `
-    //       <p>
-    //         The two lines form a |_corner| at the anchor.
-    //       </p><p>
-    //         |_Small_rotation| results in a |_sharper_corner| corner. |_Large_rotation| results in a |_less_sharp_corner| corner.
-    //       </p>`;
-    //   }
-    //   setModifiers() {
-    //     return {
-    //       _corner: actionWord('corner', 'id_corner'),
-    //       _Small_rotation: actionWord('Small Rotation', 'id_small_rotation'),
-    //       _Large_rotation: actionWord('Large Rotation', 'id_large_rotation'),
-    //       _sharper_corner: actionWord('sharper', 'id_more_sharp_cornern'),
-    //       _less_sharp_corner: actionWord('less sharp', 'id_less_sharp_corner'),
-    //     };
-    //   }
-
-    //   setSinglePagePrimary() {
-    //     return false;
-    //   }
-
-    //   getState(diagrams: Object): Object {
-    //     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-    //     const collection = diagram.elements._circle;
-    //     const angle = collection._radius.transform.r();
-    //     return {
-    //       angle,
-    //     };
-    //   }
-
-    //   setState(
-    //     diagrams: Object,
-    //     previousState: Object,
-    //     lessonType: 'multiPage' | 'singlePage',
-    //   ) {
-    //     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-    //     const collection = diagram.elements._circle;
-    //     if (diagram) {
-    //       if (lessonType === 'multiPage') {
-    //         const t = collection._radius.transform.copy();
-    //         if ('angle' in previousState) {
-    //           t.updateRotation(previousState.angle);
-    //         } else {
-    //           t.updateRotation(Math.PI / 3);
-    //         }
-    //         collection._radius.setTransform(t);
-
-    //         collection.hideOnly([
-    //           collection._cornerRad,
-    //           collection._cornerRef,
-    //           diagram.elements._shapes,
-    //         ]);
-    //       }
-    //       // const diagram = diagrams.circle_container;
-    //       this.onClickId('id_corner', collection.toggleCorners, [collection]);
-    //       const smallRotation = [collection, Math.PI / 6, 0, 1, () => {}];
-    //       const largeRotation = [collection, 5 * Math.PI / 6, 0, 1, () => {}];
-    //       this.onClickId('id_small_rotation', collection.rotateTo, smallRotation);
-    //       this.onClickId('id_large_rotation', collection.rotateTo, largeRotation);
-    //       this.onClickId('id_more_sharp_cornern', collection.rotateTo, smallRotation);
-    //       this.onClickId('id_less_sharp_corner', collection.rotateTo, largeRotation);
-    //     }
-    //   }
-
-    //   transitionPrev(diagrams, done) {
-    //     const diagram = diagrams.circle_container || diagrams.multipage_diagram;
-    //     const collection = diagram.elements._circle;
-    //     if (diagram) {
-    //       collection.rotateTo(1, 0, 1, done);
-    //     }
-    //   }
-    // }
-    /* eslint-enable */
   }
 }
-
-// const content = new newContent(
-//   'Shapes and Corners',
-//   [],
-//   LessonDiagram,
-// );
 
 export default Content;
