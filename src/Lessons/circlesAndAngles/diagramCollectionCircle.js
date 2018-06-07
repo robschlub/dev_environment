@@ -172,16 +172,16 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     arrow1TipLocation.y,
   );
 
-  const halfCircle1 = shapes.polygon(
-    anglePoints, radius, lineWidth, 0,
-    anglePoints / 2  - arrowCircumferenceLengthInPoints,
-    colors.dimensions, new Transform().rotate(Math.PI / 2 + arrowAngle / 2).translate(0, 0),
-  );
   // const halfCircle1 = shapes.polygon(
   //   anglePoints, radius, lineWidth, 0,
-  //   anglePoints,
-  //   colors.dimensions, new Transform().rotate(0).translate(0, 0),
+  //   anglePoints / 2 - arrowCircumferenceLengthInPoints,
+  //   colors.dimensions, new Transform().rotate(Math.PI / 2 + arrowAngle / 2).translate(0, 0),
   // );
+  const halfCircle1 = shapes.polygon(
+    anglePoints, radius, lineWidth, 0,
+    anglePoints,
+    colors.dimensions, new Transform().rotate(0).translate(0, 0),
+  );
   const halfCircle2 = shapes.polygon(
     anglePoints, radius, lineWidth, 0,
     anglePoints / 2 - arrowCircumferenceLengthInPoints,
@@ -206,11 +206,25 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   circumferenceDimension.add('halfCircle2', halfCircle2);
   circumferenceDimension.add('arrow1', arrow1);
   circumferenceDimension.add('arrow2', arrow2);
-  // circumferenceDimension.plotAngle = (angle: number) => {
-  //   halfCircle1.angleToDraw = angle;
-  //   halfCircle1.transform.updateRotation(Math.PI - angle / 2);
-  // };
-  // circumferenceDimension.plotAngle(Math.PI / 3);
+  circumferenceDimension.plotAngle = (angle: number) => {
+    halfCircle1.angleToDraw = angle;
+    halfCircle1.transform.updateRotation(3 * Math.PI / 2 - angle + 0.03);
+    halfCircle2.angleToDraw = angle;
+    halfCircle2.transform.updateRotation(-Math.PI / 2);
+    const arrow1Tip = new Point(
+      radius * Math.sin(angle + 0.05),
+      -radius * Math.cos(angle + 0.05),
+    );
+    const arrow2Tip = new Point(
+      -arrow1Tip.x,
+      arrow1Tip.y,
+    );
+    arrow1.transform.updateTranslation(arrow1Tip.x, arrow1Tip.y);
+    arrow2.transform.updateTranslation(arrow2Tip.x, arrow2Tip.y);
+    arrow1.transform.updateRotation(-(Math.PI / 2 - angle) - arrowHeightInRadians);
+    arrow2.transform.updateRotation((Math.PI / 2 - angle) + arrowHeightInRadians);
+  };
+  circumferenceDimension.plotAngle(Math.PI / 4);
   return circumferenceDimension;
 }
 
