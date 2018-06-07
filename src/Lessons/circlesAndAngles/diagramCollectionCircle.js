@@ -288,7 +288,11 @@ class CircleCollection extends DiagramElementCollection {
     if (t) {
       this._wheelShape.show = true;
       this._wheelShape.transform.updateTranslation(t.x, t.y);
-      // this._wheelShape.disolveIn(1);
+      this._wheelShape.animateTranslationToWithDelay(new Point(1, 0), 0.5, 1);
+      this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1);
+      this._wheelShape.disolveIn(0.5);
+      // this._anchor.show = true;
+      // this._anchor.disolveInWithDelay(1, 1);
     }
     this.diagram.animateNextFrame();
   }

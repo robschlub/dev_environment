@@ -680,7 +680,7 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     const targetColor = this.color.slice();
-    this.color[3] = 0;
+    this.color[3] = 0.01;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
       this.animateColorPlan([phase], callback);
@@ -693,7 +693,7 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     const targetColor = this.color.slice();
-    this.color[3] = 0;
+    this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
     this.animateColorPlan([phase1, phase2], callback);
@@ -725,6 +725,23 @@ class DiagramElement {
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], callback);
     }
+  }
+
+  animateTranslationToWithDelay(
+    translation: Point,
+    delay: number = 1,
+    time: number = 1,
+    easeFunction: (number) => number = tools.easeinout,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const transform = this.transform.copy();
+    transform.updateTranslation(translation);
+    const phase1 = new AnimationPhase(
+      this.transform.copy(), delay,
+      easeFunction,
+    );
+    const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
+      this.animatePlan([phase1, phase2], callback);
   }
 
   // With update only first instace of rotation in the transform order

@@ -94,6 +94,7 @@ class Content extends LessonContent {
         _shape: actionWord('shape', 'id_shape'),
       },
       setState: () => {
+        circle._wheel.transform.updateTranslation(0, 0);
         onClickId('id_shape', circle.showWheelShape, [circle]);
       },
     });
