@@ -137,6 +137,7 @@ class CircleCollection extends DiagramElementCollection {
     const origin = new Point(0, 0);
     const t = new Transform().rotate(0).translate(0, 0);
 
+    this.add('wheel', makeWheel(shapes, layout));
     this.add('arrow', makeArrow(shapes, layout));
     this.add('angle', makeAngle(shapes, layout));
     this.add('reference', makeReference(shapes, layout));
@@ -150,36 +151,8 @@ class CircleCollection extends DiagramElementCollection {
     this.add('cornerRef', makeCorner(shapes, origin, layout));
     this.add('cornerRad', makeCorner(shapes, t, layout));
     this.add('anchor', makeAnchor(shapes, layout));
-
-    this.add('wheel', makeWheel(shapes, layout));
-    console.log(this._wheel.vertices.texturePoints)
-    console.log(this._wheel.vertices.points)
-
     this.isTouchable = true;
     this.isMovable = true;
-
-    const element = document.createElement('div');
-    element.style.position = 'absolute';
-    // element.style.left = '0px';
-    // element.style.top = '0px';
-    element.style.width = '200px';
-    element.style.height = '200px';
-    element.setAttribute('id', 'id_wheel_picture');
-    this.diagram.htmlCanvas.appendChild(element);
-    const h = new HTMLObject(
-      this.diagram.htmlCanvas, 'id_wheel_picture',
-      new Point(0, 0), 'middle', 'center',
-    );
-    const hp = new DiagramElementPrimative(
-      h,
-      new Transform().translate(-2, 0),
-      [1, 0, 0, 1],
-      this.diagram.limits,
-    );
-    hp.isTouchable = true;
-    hp.isMovable = true;
-    hp.move.limitToDiagram = true;
-    this.add('html', hp);
   }
 
   resize(locations: Object) {

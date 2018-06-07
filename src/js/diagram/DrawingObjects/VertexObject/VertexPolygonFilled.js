@@ -63,16 +63,14 @@ class PolygonFilled extends VertexObject {
     }
     this.textureLocation = textureLocation;
 
-    console.log('polyfilled')
     this.createTextureMap(
-      -this.radius + center.x,
-      this.radius + center.x,
-      -this.radius + center.y,
-      this.radius + center.y,
+      -this.radius * 1.01 + center.x,
+      this.radius * 1.01 + center.x,
+      -this.radius * 1.01 + center.y,
+      this.radius * 1.01 + center.y,
     );
-    console.log('start')
+
     this.setupBuffer();
-    console.log('stop')
   }
 
   drawToAngle(

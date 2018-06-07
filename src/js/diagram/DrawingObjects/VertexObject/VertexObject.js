@@ -18,7 +18,7 @@ class VertexObject extends DrawingObject {
   webgl: WebGLInstance;         // webgl instance for a html canvas
   glPrimative: number;          // primitive tyle (e.g. TRIANGLE_STRIP)
   buffer: WebGLBuffer;          // Vertex buffer
-  textureBuffer: WebGLBuffer;   
+  textureBuffer: WebGLBuffer;
 
   points: Array<number>;        // Primative vertices of shape
   numPoints: number;            // Number of primative vertices
@@ -46,7 +46,7 @@ class VertexObject extends DrawingObject {
       this.numPoints = numPoints;
     }
 
-    if (this.texturePoints.length === 0) {
+    if (this.texturePoints.length === 0 && this.textureLocation) {
       this.createTextureMap();
     }
 
@@ -58,16 +58,15 @@ class VertexObject extends DrawingObject {
       this.gl.STATIC_DRAW,
     );
 
-    // Create a texture.
-    const texture = this.gl.createTexture();
-    this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    // Fill the texture with a 1x1 blue pixel.
-    this.gl.texImage2D(
-      this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0,
-      this.gl.RGBA, this.gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]),
-    );
-
     if (this.textureLocation) {
+      // Create a texture.
+      const texture = this.gl.createTexture();
+      this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+      // Fill the texture with a 1x1 blue pixel.
+      this.gl.texImage2D(
+        this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0,
+        this.gl.RGBA, this.gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]),
+      );
       const image = new Image();
       image.src = this.textureLocation;
       image.addEventListener('load', () => {
@@ -136,11 +135,6 @@ class VertexObject extends DrawingObject {
     color: Array<number>,
     count: number,
   ) {
-    // let scale2 = scale;
-    // if (typeof scale2 != "object") {
-    //   scale2 = point(scale, scale);
-    // }
-
     const size = 2;         // 2 components per iteration
     const type = this.gl.FLOAT;   // the data is 32bit floats
     const normalize = false;    // don't normalize the data
@@ -173,29 +167,29 @@ class VertexObject extends DrawingObject {
       color[0], color[1], color[2], color[3],
     );  // Translate
 
-    // Textures
-    // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    const texSize = 2;          // 2 components per iteration
-    const texType = this.gl.FLOAT;   // the data is 32bit floats
-    const texNormalize = false; // don't normalize the data
-    const texStride = 0;
-    // 0 = move forward size * sizeof(type) each iteration to get
-    // the next position
-    const texOffset = 0;        // start at the beginning of the buffer
+    if (this.textureLocation) {
+      // Textures
+      // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+      const texSize = 2;          // 2 components per iteration
+      const texType = this.gl.FLOAT;   // the data is 32bit floats
+      const texNormalize = false; // don't normalize the data
+      const texStride = 0;
+      // 0 = move forward size * sizeof(type) each iteration to get
+      // the next position
+      const texOffset = 0;        // start at the beginning of the buffer
 
-    this.gl.enableVertexAttribArray(this.webgl.locations.a_texcoord);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureBuffer);
-    this.gl.vertexAttribPointer(
-      this.webgl.locations.a_texcoord, texSize, texType,
-      texNormalize, texStride, texOffset,
-    );
+      this.gl.enableVertexAttribArray(this.webgl.locations.a_texcoord);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureBuffer);
+      this.gl.vertexAttribPointer(
+        this.webgl.locations.a_texcoord, texSize, texType,
+        texNormalize, texStride, texOffset,
+      );
+    }
     if (this.textureLocation) {
       this.gl.uniform1i(this.webgl.locations.u_use_texture, 1);
     } else {
       this.gl.uniform1i(this.webgl.locations.u_use_texture, 0);
     }
-
-
     this.gl.drawArrays(this.glPrimative, offset, count);
   }
 
