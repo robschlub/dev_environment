@@ -2,7 +2,7 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import * as tools from '../../js/diagram/tools/mathtools';
-import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
+// import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
@@ -58,7 +58,7 @@ function makeArc(shapes: Object, layout: Object) {
 function makeCircle(shapes: Object, layout: Object) {
   return shapes.polygon(
     anglePoints, layout.radius, layout.linewidth, 0,
-    anglePoints, colors.circle, new Point(0, 0),
+    anglePoints, colors.arc, new Point(0, 0),
   );
 }
 
@@ -71,11 +71,19 @@ function makeAnchor(shapes: Object, layout: Object) {
 
 function makeWheel(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
-    anchorPoints, layout.radius * 0.6, 0,
-    anchorPoints, colors.anchor, new Point(0, 0),
+    anglePoints, layout.wheelSize, 0,
+    anglePoints, colors.anchor, new Point(0, 0),
     'static/wheel.png',
   );
 }
+
+function makeWheelShape(shapes: Object, layout: Object) {
+  return shapes.polygon(
+    202, layout.wheelSize, layout.linewidth, 0,
+    202, colors.arc, new Point(0, 0),
+  );
+}
+
 
 function makeAngle(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
@@ -122,6 +130,8 @@ class CircleCollection extends DiagramElementCollection {
   _reference: DiagramElementPrimative;
   _cornerRef: DiagramElementPrimative;
   _cornerRad: DiagramElementPrimative;
+  _wheel: DiagramElementPrimative;
+  _wheelShape: DiagramElementPrimative;
   diagram: Diagram;
   layout: Object;
   colors: Object;
@@ -138,6 +148,8 @@ class CircleCollection extends DiagramElementCollection {
     const t = new Transform().rotate(0).translate(0, 0);
 
     this.add('wheel', makeWheel(shapes, layout));
+    this.add('wheelShape', makeWheelShape(shapes, layout));
+
     this.add('arrow', makeArrow(shapes, layout));
     this.add('angle', makeAngle(shapes, layout));
     this.add('reference', makeReference(shapes, layout));
@@ -267,6 +279,16 @@ class CircleCollection extends DiagramElementCollection {
       this._cornerRef.show = true;
       this._cornerRad.pulseScaleNow(1, 2);
       this._cornerRef.pulseScaleNow(1, 2);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  showWheelShape() {
+    const t = this._wheel.transform.t();
+    if (t) {
+      this._wheelShape.show = true;
+      this._wheelShape.transform.updateTranslation(t.x, t.y);
+      // this._wheelShape.disolveIn(1);
     }
     this.diagram.animateNextFrame();
   }

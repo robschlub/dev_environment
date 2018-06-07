@@ -38,6 +38,7 @@ function getLessonVars() {
       'circle-center-y',
       'corner-length',
       'angle-radius',
+      'wheel-size',
     ],
     '--lessonvars-',
   );
@@ -52,6 +53,7 @@ function getLessonVars() {
     linewidth: v.linewidth,
     arrow: v.arrow,
     angleRadius: v['angle-radius'],
+    wheelSize: v['wheel-size'],
     circle: {
       center: new Point(v['circle-center-x'], v['circle-center-y']),
     },

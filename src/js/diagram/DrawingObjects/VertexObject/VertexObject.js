@@ -50,15 +50,14 @@ class VertexObject extends DrawingObject {
       this.createTextureMap();
     }
 
-    this.textureBuffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureBuffer);
-    this.gl.bufferData(
-      this.gl.ARRAY_BUFFER,
-      new Float32Array(this.texturePoints),
-      this.gl.STATIC_DRAW,
-    );
-
     if (this.textureLocation) {
+      this.textureBuffer = this.gl.createBuffer();
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.textureBuffer);
+      this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array(this.texturePoints),
+        this.gl.STATIC_DRAW,
+      );
       // Create a texture.
       const texture = this.gl.createTexture();
       this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
@@ -190,7 +189,12 @@ class VertexObject extends DrawingObject {
     } else {
       this.gl.uniform1i(this.webgl.locations.u_use_texture, 0);
     }
+
     this.gl.drawArrays(this.glPrimative, offset, count);
+
+    if (this.textureLocation) {
+      this.gl.disableVertexAttribArray(this.webgl.locations.a_texcoord);
+    }
   }
 
   transform(transformMatrix: Array<number>) {

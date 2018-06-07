@@ -32,10 +32,6 @@ class Content extends LessonContent {
         _mathematics_is_a_powerful_tool:
           highlightWord('Mathematics is a powerful tool.', '', 'english'),
       },
-      showOnly: [
-        circle,
-        circle._wheel,
-      ],
     });
     this.addSection({
       setContent: () => `
@@ -88,10 +84,17 @@ class Content extends LessonContent {
         In mathematics, a |_shape| can be used to describe the wheel in a more simple, general way.
         </p>
         `,
-      showOnly: [],
+      showOnly: [
+        circle,
+        circle._wheel,
+        // circle._wheelShape,
+      ],
       modifiers: {
         _wheel: highlightWord('wheel', '', 'english'),
         _shape: actionWord('shape', 'id_shape'),
+      },
+      setState: () => {
+        onClickId('id_shape', circle.showWheelShape, [circle]);
       },
     });
 
