@@ -111,15 +111,15 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._wheelShape,
-        circle._diameter,
-        circle._diameter._line,
-        circle._diameter._arrow1,
-        circle._diameter._arrow2,
+        circle._diameterDimension,
+        circle._circumferenceDimension,
       ],
       modifiers: {
         _Properties: highlightWord('Properties', '', 'english'),
       },
       setState: () => {
+        circle._circumferenceDimension.showAll();
+        circle._diameterDimension.showAll();
         circle._wheel.transform.updateTranslation(0, 0);
         onClickId('id_shape', circle.showWheelShape, [circle]);
       },
