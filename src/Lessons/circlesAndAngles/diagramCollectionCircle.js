@@ -148,6 +148,11 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
   d.add('line', line);
   d.add('arrow1', arrow1);
   d.add('arrow2', arrow2);
+  d.appear = (time: number) => {
+    line.disolveIn(time);
+    arrow1.disolveIn(time);
+    arrow2.disolveIn(time);
+  };
   return d;
 }
 
@@ -156,27 +161,8 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   const lineWidth = layout.linewidth / 2;
   const arrowHeight = lineWidth * 5;
   const arrowWidth = lineWidth * 4;
-  const arrowAngle = Math.PI / 2 * 0.7;
-  const circumferenceLengthPerPoint = (radius * Math.PI * 2 / (anglePoints - 1));
-  const arrowCircumferenceLength = arrowAngle * radius / 2;
-  const arrowCircumferenceLengthInPoints =
-    Math.floor(arrowCircumferenceLength / circumferenceLengthPerPoint);
   const arrowHeightInRadians = arrowHeight / radius;
-  // const arrowHeightPoints = Math.floor(arrowHeight / circumferenceLengthPerPoint);
-  const arrow1TipLocation = new Point(
-    -radius * Math.cos(arrowAngle),
-    radius * Math.sin(arrowAngle),
-  );
-  const arrow2TipLocation = new Point(
-    -arrow1TipLocation.x,
-    arrow1TipLocation.y,
-  );
 
-  // const halfCircle1 = shapes.polygon(
-  //   anglePoints, radius, lineWidth, 0,
-  //   anglePoints / 2 - arrowCircumferenceLengthInPoints,
-  //   colors.dimensions, new Transform().rotate(Math.PI / 2 + arrowAngle / 2).translate(0, 0),
-  // );
   const halfCircle1 = shapes.polygon(
     anglePoints, radius, lineWidth, 0,
     anglePoints,
@@ -184,20 +170,16 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   );
   const halfCircle2 = shapes.polygon(
     anglePoints, radius, lineWidth, 0,
-    anglePoints / 2 - arrowCircumferenceLengthInPoints,
-    colors.dimensions, new Transform().rotate(-Math.PI / 2).translate(0, 0),
+    anglePoints,
+    colors.dimensions, new Transform().rotate(0).translate(0, 0),
   );
   const arrow1 = shapes.arrow(
     arrowWidth, 0, arrowHeight, 0,
-    colors.dimensions, new Transform()
-      .rotate(-arrowAngle + arrowHeightInRadians)
-      .translate(arrow1TipLocation.x, arrow1TipLocation.y),
+    colors.dimensions, new Transform().rotate(0).translate(0, 0),
   );
   const arrow2 = shapes.arrow(
     arrowWidth, 0, arrowHeight, 0,
-    colors.dimensions, new Transform()
-      .rotate(arrowAngle - arrowHeightInRadians)
-      .translate(arrow2TipLocation.x, arrow2TipLocation.y),
+    colors.dimensions, new Transform().rotate(0).translate(0, 0),
   );
   const circumferenceDimension = shapes.collection(new Transform()
     .rotate(0).translate(0, 0));
@@ -224,7 +206,14 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     arrow1.transform.updateRotation(-(Math.PI / 2 - angle) - arrowHeightInRadians);
     arrow2.transform.updateRotation((Math.PI / 2 - angle) + arrowHeightInRadians);
   };
-  circumferenceDimension.plotAngle(Math.PI / 4);
+  circumferenceDimension.plotAngle(Math.PI * 0.98);
+  circumferenceDimension.appear = (time: number) => {
+    halfCircle1.disolveIn(time);
+    halfCircle2.disolveIn(time);
+    arrow1.disolveIn(time);
+    arrow2.disolveIn(time);
+  };
+  // console.log(circumferenceDimension)
   return circumferenceDimension;
 }
 

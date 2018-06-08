@@ -122,6 +122,18 @@ class Content extends LessonContent {
         circle._diameterDimension.showAll();
         circle._wheel.transform.updateTranslation(0, 0);
         onClickId('id_shape', circle.showWheelShape, [circle]);
+
+        const t = circle._wheelShape.transform.t();
+        circle._circumferenceDimension.appear(2);
+        circle._diameterDimension.appear(2);
+        circle._circumferenceDimension.transform.updateTranslation(
+          t.x,
+          t.y,
+        );
+        circle._diameterDimension.transform.updateTranslation(
+          t.x,
+          t.y,
+        );
       },
     });
 
