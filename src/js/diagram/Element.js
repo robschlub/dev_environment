@@ -857,8 +857,10 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.show = true;
+    // const targetColor = this.color.slice();
     const targetColor = this.color.slice();
-    this.color[3] = 0.01;
+    this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
+    // this.color[3] = 0.01;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
       this.animateColorPlan([phase], callback);

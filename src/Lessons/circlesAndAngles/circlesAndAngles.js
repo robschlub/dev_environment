@@ -35,7 +35,7 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: () => `
-        <p style="margin-top:23%;">
+        <p style="margin-top:20%;">
           Mathematics describes an object or phenomenon in a more |_simple|, and more |_general| way.
         </p>
         <p style="margin-top:5%;">
@@ -81,8 +81,6 @@ class Content extends LessonContent {
           It is made of different materials, has mass, size, location and smell.
         </p>
         <p>
-        In mathematics, a |_shape| can be used to describe the wheel in a more simple, general way.
-        </p>
         `,
       showOnly: [
         circle,
@@ -94,6 +92,34 @@ class Content extends LessonContent {
       },
       setState: () => {
         circle._wheel.transform.updateTranslation(0, 0);
+      },
+      transitionNext: (done) => {
+        if (circle._wheel.transform.t().x === 0) {
+          circle.showWheelShape(done);
+        } else {
+          done();
+        }
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p>
+        In mathematics, a |_shape| can be used to describe the wheel in a more simple, general way.
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._wheel,
+        circle._wheelShape,
+      ],
+      modifiers: {
+        _wheel: highlightWord('wheel', '', 'english'),
+        _shape: actionWord('shape', 'id_shape'),
+      },
+      setState: () => {
+        circle._wheel.transform.updateTranslation(-1, 0);
+        circle._wheelShape.transform.updateTranslation(1, 0);
         onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
       },
       transitionNext: (done) => {
@@ -111,8 +137,7 @@ class Content extends LessonContent {
           The shape can then be studied.
         </p>
         <p>
-          |_Properties| can be discovered that describe the shape, and predict
-          other properties.
+          |_Properties| can be discovered that describe the shape, and |_predict| other properties.
         </p>
         `,
       showOnly: [
@@ -122,19 +147,21 @@ class Content extends LessonContent {
         circle._circumferenceDimension,
       ],
       modifiers: {
-        _Properties: highlightWord('Properties', '', 'english'),
+        _Properties: actionWord('Properties', 'id_properties'),
+        _predict: actionWord('predict', 'id_predict'),
       },
       transitionFromAny: (done) => {
-        circle._circumferenceDimension.showAll();
-        circle._diameterDimension.showAll();
+        // circle._circumferenceDimension.showAll();
+        // circle._diameterDimension.showAll();
         circle._wheelShape.transform.updateTranslation(1, 0);
-        circle.resetColors();
+        
         const tDiameter = 1;
         // const tCircumference = 1.5;
 
         const t = circle._wheelShape.transform.t();
         circle._circumferenceDimension.transform.updateTranslation(t.x, t.y);
         circle._diameterDimension.transform.updateTranslation(t.x, t.y);
+        circle.resetColors();
         circle._diameterDimension.appear(0.5);
         circle._diameterDimension.animateCustomTo(
           circle._diameterDimension.grow.bind(circle),
@@ -163,7 +190,8 @@ class Content extends LessonContent {
       setState: () => {
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
-        onClickId('id_shape', circle.showWheelShape, [circle]);
+        onClickId('id_properties', circle.pulseProperties, [circle]);
+        onClickId('id_predict', circle.pulseEquation, [circle]);
       },
     });
 

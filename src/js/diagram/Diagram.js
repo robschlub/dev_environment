@@ -62,7 +62,7 @@ function equation(diagram: Diagram) {
     }
 
     const equationElements = new DiagramElementCollection(
-      new Transform().translate(0, 0),
+      new Transform().scale(1, 1).translate(0, 0),
       diagram.limits,
     );
     Object.keys(elems).forEach((key) => {
@@ -148,8 +148,8 @@ function shapes(diagram: Diagram) {
       'italic',
       0.2,
       '200',
-      'left',
-      'alphabetic',
+      'center',
+      'middle',
       color,
     );
     if (fontInput !== null) {

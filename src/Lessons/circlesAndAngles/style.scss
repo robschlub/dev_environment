@@ -111,6 +111,11 @@ $_lesson_vars: (
   color: $color-circle;
 }
 
+#id_properties,
+#id_predict {
+  color: $color-dimensions;
+}
+
 #id_corners {
   color: $color-corners;
 }

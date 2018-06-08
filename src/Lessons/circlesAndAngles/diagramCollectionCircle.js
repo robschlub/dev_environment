@@ -143,7 +143,7 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
     arrowWidth, 0, arrowHeight, 0,
     colors.dimensions, new Transform().rotate(Math.PI / 2).translate(-diameter / 2, 0),
   );
-  const textD = shapes.text('d', new Point(-0.02, 0.05), colors.dimensions);
+  const textD = shapes.text('d', new Point(0, 0.12), colors.dimensions);
   // const textD2 = shapes.text('d', new Point(-0.02, 0.05), colors.dimensions);
   const d = shapes.collection(new Transform()
     .rotate(0)
@@ -208,7 +208,7 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   const circumferenceDimension = shapes.collection(new Transform()
     .rotate(0).translate(0, 0));
 
-  const textC = shapes.text('c', new Point(0, -radius - 0.15), colors.dimensions);
+  const textC = shapes.text('c', new Point(0, -radius - 0.08), colors.dimensions);
   // const textC2 = shapes.text('c', new Point(0, -radius - 0.15), colors.dimensions);
   circumferenceDimension.add('halfCircle1', halfCircle1);
   circumferenceDimension.add('halfCircle2', halfCircle2);
@@ -437,6 +437,17 @@ class CircleCollection extends DiagramElementCollection {
     this.pulseRadius();
     this.pulseReference();
     this.pulseFakeRadius();
+  }
+
+  pulseProperties() {
+    this._diameterDimension._textD.pulseScaleNow(1, 1.5);
+    this._circumferenceDimension._textC.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseEquation() {
+    this._equation.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
   }
 
   pushRadius() {
