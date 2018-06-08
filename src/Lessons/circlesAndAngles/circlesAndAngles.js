@@ -78,7 +78,7 @@ class Content extends LessonContent {
           For example, a |_wheel| is a physical thing.
         </p>
         <p>
-          It is made of different materials, has mass, size, location and a smell.
+          It is made of different materials, has mass, size, location and smell.
         </p>
         <p>
         In mathematics, a |_shape| can be used to describe the wheel in a more simple, general way.

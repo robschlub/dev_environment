@@ -389,8 +389,8 @@ class Diagram {
   }
 
   sizeHtmlText() {
-    const scale = this.fontScale * 1 / 50;
-    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale}px`;
+    const scale = this.fontScale * 1 / 45;
+    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale - 1}px`;
   }
 
   destroy() {
