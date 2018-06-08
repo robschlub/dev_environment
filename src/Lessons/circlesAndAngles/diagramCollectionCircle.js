@@ -142,16 +142,25 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
     arrowWidth, 0, arrowHeight, 0,
     colors.dimensions, new Transform().rotate(Math.PI / 2).translate(-diameter / 2, 0),
   );
+  const textD = shapes.text('d', new Point(-0.02, 0.05), colors.dimensions);
   const d = shapes.collection(new Transform()
-    .rotate(Math.PI / 4)
+    .rotate(0)
     .translate(center.x, center.y));
   d.add('line', line);
   d.add('arrow1', arrow1);
   d.add('arrow2', arrow2);
+  d.add('textD', textD);
   d.appear = (time: number) => {
     line.disolveIn(time);
     arrow1.disolveIn(time);
     arrow2.disolveIn(time);
+    textD.disolveIn(time);
+  };
+  d.appearWithDelay = (delay: number, time: number) => {
+    line.disolveInWithDelay(delay, time);
+    arrow1.disolveInWithDelay(delay, time);
+    arrow2.disolveInWithDelay(delay, time);
+    textD.disolveInWithDelay(delay, time);
   };
 
   d.plotLength = (diam: number) => {
@@ -194,13 +203,11 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   const circumferenceDimension = shapes.collection(new Transform()
     .rotate(0).translate(0, 0));
 
-  const textD = shapes.text('d', new Point(-0.13, 0), colors.dimensions);
   const textC = shapes.text('c', new Point(0, -radius - 0.15), colors.dimensions);
   circumferenceDimension.add('halfCircle1', halfCircle1);
   circumferenceDimension.add('halfCircle2', halfCircle2);
   circumferenceDimension.add('arrow1', arrow1);
   circumferenceDimension.add('arrow2', arrow2);
-  circumferenceDimension.add('textD', textD);
   circumferenceDimension.add('textC', textC);
   circumferenceDimension.plotAngle = (angle: number) => {
     halfCircle1.angleToDraw = angle;
@@ -230,8 +237,15 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     halfCircle2.disolveIn(time);
     arrow1.disolveIn(time);
     arrow2.disolveIn(time);
-    textD.disolveIn(time);
     textC.disolveIn(time);
+  };
+
+  circumferenceDimension.appearWithDelay = (delay: number, time: number) => {
+    halfCircle1.disolveInWithDelay(delay, time);
+    halfCircle2.disolveInWithDelay(delay, time);
+    arrow1.disolveInWithDelay(delay, time);
+    arrow2.disolveInWithDelay(delay, time);
+    textC.disolveInWithDelay(delay, time);
   };
   // console.log(circumferenceDimension)
   return circumferenceDimension;
@@ -402,13 +416,14 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  showWheelShape() {
+  showWheelShape(done: ?(?mixed) => void = () =>{}) {
     const t = this._wheel.transform.t();
     if (t) {
+      console.log(done)
       this._wheelShape.show = true;
       this._wheelShape.transform.updateTranslation(t.x, t.y);
       this._wheelShape.animateTranslationToWithDelay(new Point(1, 0), 0.5, 1);
-      this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1);
+      this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1, tools.easeinout, done);
       this._wheelShape.disolveIn(0.5);
     }
     this.diagram.animateNextFrame();

@@ -61,7 +61,6 @@ function onClickId(
   bind: Array<mixed>,
 ) {
   const element = document.getElementById(id);
-
   if (element) {
     if (bind.length === 1) {
       element.onclick = action.bind(bind[0]);

@@ -512,9 +512,12 @@ class DiagramElement {
 
   setNextCustomAnimation(now: number): void {
     // If animation is happening
+    // if (this.name === 'diameterDimension') {
+    //   console.log("0", this.state.isAnimatingCustom)
+    // }
     if (this.state.isAnimatingCustom) {
       const phase = this.state.customAnimation.currentPhase;
-
+      // console.log("0.5", phase.startTime)
       // If an animation hasn't yet started, the start time will be -1.
       // If this is so, then set the start time to the current time and
       // return the current transform.
@@ -529,6 +532,7 @@ class DiagramElement {
       // If this time delta is larger than the phase's planned time, then
       // either progress to the next animation phase, or end animation.
       if (deltaTime > phase.time) {
+        // console.log("1")
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
@@ -541,7 +545,7 @@ class DiagramElement {
 
           // Start the next animation phase
           this.state.customAnimation.currentPhaseIndex += 1;
-          this.animateCustomPhase(this.state.colorAnimation.currentPhaseIndex);
+          this.animateCustomPhase(this.state.customAnimation.currentPhaseIndex);
           this.state.customAnimation.currentPhase.startTime =
             now - nextPhaseDeltaTime;
           this.setNextCustomAnimation(now);
@@ -553,16 +557,24 @@ class DiagramElement {
         // const endColor = this.calcNextAnimationColor(phase.time);
 
         // this.setColor(endColor);
+        // console.log("2")
         phase.animationCallback(1);
         this.stopAnimatingCustom(true);
+        // console.log("3")
         return;
       }
       // If we are here, that means the time elapsed is not more than the
       // current animation phase plan time, so calculate the next transform.
+      // console.log("4", this.state.isAnimatingCustom)
       const percent = this.calcNextCustomAnimationPercentComplete(deltaTime);
+      // console.log(phase.animationCallback)
       phase.animationCallback(percent);
+      // console.log("5", this.state.isAnimatingCustom)
       // this.setColor(this.calcNextAnimationColor(deltaTime));
     }
+    // if (this.name === 'diameterDimension') {
+    //   console.log("6", this.state.isAnimatingCustom)
+    // }
   }
   setNextColor(now: number): void {
     // If animation is happening
@@ -771,7 +783,6 @@ class DiagramElement {
   stopAnimatingCustom(result: ?mixed): void {
     this.customAnimationPlan = [];
     this.state.isAnimatingCustom = false;
-
     if (this.callback) {
       if (result !== null && result !== undefined) {
         this.callback(result);
@@ -821,6 +832,24 @@ class DiagramElement {
     if (phase instanceof CustomAnimationPhase) {
       this.animateCustomPlan([phase], callback);
     }
+  }
+
+  animateCustomToWithDelay(
+    delay: number,
+    phaseCallback: (number) => {},
+    time: number = 1,
+    easeFunction: (number) => number = tools.linear,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const phase1 = new CustomAnimationPhase(() => ({}), delay, easeFunction);
+    const phase2 = new CustomAnimationPhase(phaseCallback, time, easeFunction);
+    // if (phase instanceof CustomAnimationPhase) {
+    // console.log(phase1.animationCallback)
+    // console.log(phase2.animationCallback)
+    // console.log(phase2)
+    // phase2.animationCallback(0);
+    this.animateCustomPlan([phase1, phase2], callback);
+    // }
   }
 
   disolveIn(
@@ -1426,6 +1455,8 @@ class DiagramElementCollection extends DiagramElement {
       return false;
     }
     if (this.state.isAnimating ||
+        this.state.isAnimatingCustom ||
+        this.state.isAnimatingColor ||
         this.state.isMovingFreely ||
         this.state.isBeingMoved ||
         this.state.isPulsing) {

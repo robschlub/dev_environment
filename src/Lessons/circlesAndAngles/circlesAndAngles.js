@@ -94,7 +94,14 @@ class Content extends LessonContent {
       },
       setState: () => {
         circle._wheel.transform.updateTranslation(0, 0);
-        onClickId('id_shape', circle.showWheelShape, [circle]);
+        onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
+      },
+      transitionNext: (done) => {
+        if (circle._wheel.transform.t().x === 0) {
+          circle.showWheelShape(done);
+        } else {
+          done();
+        }
       },
     });
 
@@ -117,31 +124,33 @@ class Content extends LessonContent {
       modifiers: {
         _Properties: highlightWord('Properties', '', 'english'),
       },
+      transitionFromAny: (done) => {
+        circle._circumferenceDimension.showAll();
+        circle._diameterDimension.showAll();
+        const t = circle._wheelShape.transform.t();
+        circle._circumferenceDimension.transform.updateTranslation(t.x, t.y);
+        circle._diameterDimension.transform.updateTranslation(t.x, t.y);
+        circle._diameterDimension.appear(1);
+        circle._diameterDimension.animateCustomTo(
+          circle._diameterDimension.grow.bind(circle),
+          1.5,
+        );
+
+        // circle._circumferenceDimension.grow(0);
+        circle._circumferenceDimension.appearWithDelay(2, 1);
+        circle._circumferenceDimension.animateCustomToWithDelay(
+          2,
+          circle._circumferenceDimension.grow.bind(circle),
+          1.5,
+          easeinout,
+          done,
+        );
+      },
       setState: () => {
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
-        circle._wheel.transform.updateTranslation(0, 0);
+        // circle._wheel.transform.updateTranslation(0, 0);
         onClickId('id_shape', circle.showWheelShape, [circle]);
-
-        const t = circle._wheelShape.transform.t();
-        circle._circumferenceDimension.appear(2);
-        circle._diameterDimension.appear(2);
-        circle._circumferenceDimension.animateCustomTo(
-          circle._circumferenceDimension.grow.bind(circle),
-          2,
-        );
-        circle._diameterDimension.animateCustomTo(
-          circle._diameterDimension.grow.bind(circle),
-          2,
-        );
-        circle._circumferenceDimension.transform.updateTranslation(
-          t.x,
-          t.y,
-        );
-        circle._diameterDimension.transform.updateTranslation(
-          t.x,
-          t.y,
-        );
       },
     });
 
