@@ -14,6 +14,7 @@ const webgl = {
     uniformMatrix3fv: () => {},
     uniform4f: () => {},
     uniform1f: () => {},
+    uniform1i: () => {},
     drawArrays: () => {},
     clearColor: () => {},
     clear: () => {},
