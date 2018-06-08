@@ -126,6 +126,14 @@ class Content extends LessonContent {
         const t = circle._wheelShape.transform.t();
         circle._circumferenceDimension.appear(2);
         circle._diameterDimension.appear(2);
+        circle._circumferenceDimension.animateCustomTo(
+          circle._circumferenceDimension.grow.bind(circle),
+          2,
+        );
+        circle._diameterDimension.animateCustomTo(
+          circle._diameterDimension.grow.bind(circle),
+          2,
+        );
         circle._circumferenceDimension.transform.updateTranslation(
           t.x,
           t.y,

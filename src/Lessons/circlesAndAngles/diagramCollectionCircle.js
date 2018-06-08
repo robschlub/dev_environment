@@ -127,12 +127,12 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
   const arrowHeight = lineWidth * 5;
   const arrowWidth = lineWidth * 4;
   const line = shapes.horizontalLine(
-    new Point(-diameter / 2 + arrowHeight, 0),
-    diameter - arrowHeight * 2,
+    new Point(-1, 0),
+    2,
     lineWidth,
     0,
     colors.dimensions,
-    new Transform().rotate(0).translate(0, 0),
+    new Transform().scale(1,1).rotate(0).translate(0, 0),
   );
   const arrow1 = shapes.arrow(
     arrowWidth, 0, arrowHeight, 0,
@@ -152,6 +152,16 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
     line.disolveIn(time);
     arrow1.disolveIn(time);
     arrow2.disolveIn(time);
+  };
+
+  d.plotLength = (diam: number) => {
+    // const ratio = diam / (diameter / 2 - arrowHeight);
+    line.transform.updateScale((diam / 2 - arrowHeight), 1);
+    arrow1.transform.updateTranslation(diam / 2, 0);
+    arrow2.transform.updateTranslation(-diam / 2, 0);
+  };
+  d.grow = (percent: number) => {
+    d.plotLength(percent * diameter);
   };
   return d;
 }
@@ -209,6 +219,10 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     arrow2.transform.updateTranslation(arrow2Tip.x, arrow2Tip.y);
     arrow1.transform.updateRotation(-(Math.PI / 2 - angle) - arrowHeightInRadians);
     arrow2.transform.updateRotation((Math.PI / 2 - angle) + arrowHeightInRadians);
+  };
+  circumferenceDimension.grow = (percent: number) => {
+    circumferenceDimension.plotAngle(percent * Math.PI * 0.98);
+    // console.log(percent)
   };
   circumferenceDimension.plotAngle(Math.PI * 0.98);
   circumferenceDimension.appear = (time: number) => {

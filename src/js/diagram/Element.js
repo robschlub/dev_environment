@@ -80,6 +80,30 @@ class ColorAnimationPhase {
   }
 }
 
+// Planned Animation
+class CustomAnimationPhase {
+  time: number;                       // animation time
+  startTime: number;                 // Time when phase started
+  animationCallback: (number) => {};
+  animationStyle: (number) => number;
+
+  constructor(
+    animationCallback: (number) => {},
+    time: number = 1,
+    animationStyle: (number) => number = tools.easeinout,
+  ) {
+    this.time = time;
+    this.animationCallback = animationCallback;
+    this.startTime = -1;
+    this.animationStyle = animationStyle;
+  }
+  start() {
+    // this.startColor = currentColor.slice();
+    // this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
+    this.startTime = -1;
+  }
+}
+
 // A diagram is composed of multiple diagram elements.
 //
 // A diagram element can either be a:
@@ -135,6 +159,7 @@ class DiagramElement {
 
   animationPlan: Array<AnimationPhase>;    // Animation plan
   colorAnimationPlan: Array<ColorAnimationPhase>;
+  customAnimationPlan: Array<CustomAnimationPhase>;
   color: Array<number>;           // For the future when collections use color
 
   move: {
@@ -168,6 +193,7 @@ class DiagramElement {
   state: {
     isAnimating: boolean,
     isAnimatingColor: boolean,
+    isAnimatingCustom: boolean,
     animation: {
       currentPhaseIndex: number,
       currentPhase: AnimationPhase,
@@ -175,6 +201,10 @@ class DiagramElement {
     colorAnimation: {
       currentPhaseIndex: number,
       currentPhase: ColorAnimationPhase,
+    },
+    customAnimation: {
+      currentPhaseIndex: number,
+      currentPhase: CustomAnimationPhase,
     },
     isBeingMoved: boolean,
     isMovingFreely: boolean,
@@ -211,6 +241,7 @@ class DiagramElement {
     this.callback = null;
     this.animationPlan = [];
     this.colorAnimationPlan = [];
+    this.customAnimationPlan = [];
 
     this.diagramLimits = diagramLimits;
     //   min: new Point(-1, -1),
@@ -247,6 +278,7 @@ class DiagramElement {
     this.state = {
       isAnimating: false,
       isAnimatingColor: false,
+      isAnimatingCustom: false,
       animation: {
         currentPhaseIndex: 0,         // current animation phase index in plan
         currentPhase: new AnimationPhase(),  // current animation phase
@@ -254,6 +286,10 @@ class DiagramElement {
       colorAnimation: {
         currentPhaseIndex: 0,         // current animation phase index in plan
         currentPhase: new ColorAnimationPhase(),  // current animation phase
+      },
+      customAnimation: {
+        currentPhaseIndex: 0,         // current animation phase index in plan
+        currentPhase: new CustomAnimationPhase(() => ({})),  // current animation phase
       },
       isBeingMoved: false,
       isMovingFreely: false,
@@ -363,6 +399,13 @@ class DiagramElement {
     // next = start.add(delta.mul(next));
     return next;
   }
+
+  calcNextCustomAnimationPercentComplete(elapsedTime: number): number {
+    const phase = this.state.customAnimation.currentPhase;
+    const percentTime = elapsedTime / phase.time;
+    const percentComplete = phase.animationStyle(percentTime);
+    return percentComplete;
+  }
   // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
   setTransform(transform: Transform): void {
@@ -467,6 +510,60 @@ class DiagramElement {
     }
   }
 
+  setNextCustomAnimation(now: number): void {
+    // If animation is happening
+    if (this.state.isAnimatingCustom) {
+      const phase = this.state.customAnimation.currentPhase;
+
+      // If an animation hasn't yet started, the start time will be -1.
+      // If this is so, then set the start time to the current time and
+      // return the current transform.
+      if (phase.startTime < 0) {
+        phase.startTime = now;
+        return;
+      }
+      // const percent = calcNextCustomAnimationPercentComplete(now);
+      // If we have got here, that means the animation has already started,
+      // so calculate the time delta between now and the startTime
+      const deltaTime = now - phase.startTime;
+      // If this time delta is larger than the phase's planned time, then
+      // either progress to the next animation phase, or end animation.
+      if (deltaTime > phase.time) {
+        // If there are more animation phases in the plan:
+        //   - set the current transform to be the end of the current phase
+        //   - start the next phase
+        if (this.state.customAnimation.currentPhaseIndex < this.customAnimationPlan.length - 1) {
+          // Set current transform to the end of the current phase
+          phase.animationCallback(1);
+
+          // Get the amount of time that has elapsed in the next phase
+          const nextPhaseDeltaTime = deltaTime - phase.time;
+
+          // Start the next animation phase
+          this.state.customAnimation.currentPhaseIndex += 1;
+          this.animateCustomPhase(this.state.colorAnimation.currentPhaseIndex);
+          this.state.customAnimation.currentPhase.startTime =
+            now - nextPhaseDeltaTime;
+          this.setNextCustomAnimation(now);
+          return;
+        }
+        // This needs to go before StopAnimating, as stopAnimating clears
+        // the animation plan (incase a callback is used to start another
+        // animation)
+        // const endColor = this.calcNextAnimationColor(phase.time);
+
+        // this.setColor(endColor);
+        phase.animationCallback(1);
+        this.stopAnimatingCustom(true);
+        return;
+      }
+      // If we are here, that means the time elapsed is not more than the
+      // current animation phase plan time, so calculate the next transform.
+      const percent = this.calcNextCustomAnimationPercentComplete(deltaTime);
+      phase.animationCallback(percent);
+      // this.setColor(this.calcNextAnimationColor(deltaTime));
+    }
+  }
   setNextColor(now: number): void {
     // If animation is happening
     if (this.state.isAnimatingColor) {
@@ -607,6 +704,24 @@ class DiagramElement {
       this.animateColorPhase(this.state.colorAnimation.currentPhaseIndex);
     }
   }
+  animateCustomPlan(
+    phases: Array<CustomAnimationPhase>,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    this.stopAnimatingCustom();
+    this.customAnimationPlan = [];
+    for (let i = 0, j = phases.length; i < j; i += 1) {
+      this.customAnimationPlan.push(phases[i]);
+    }
+    if (this.customAnimationPlan.length > 0) {
+      if (callback) {
+        this.callback = callback;
+      }
+      this.state.isAnimatingCustom = true;
+      this.state.customAnimation.currentPhaseIndex = 0;
+      this.animateCustomPhase(this.state.customAnimation.currentPhaseIndex);
+    }
+  }
   // Start the animation of a phase - this should only be called by methods
   // internal to this class.
   animatePhase(index: number): void {
@@ -617,6 +732,10 @@ class DiagramElement {
   animateColorPhase(index: number): void {
     this.state.colorAnimation.currentPhase = this.colorAnimationPlan[index];
     this.state.colorAnimation.currentPhase.start(this.color.slice());
+  }
+  animateCustomPhase(index: number): void {
+    this.state.customAnimation.currentPhase = this.customAnimationPlan[index];
+    this.state.customAnimation.currentPhase.start();
   }
 
   // When animation is stopped, any callback associated with the animation
@@ -638,6 +757,20 @@ class DiagramElement {
   stopAnimatingColor(result: ?mixed): void {
     this.colorAnimationPlan = [];
     this.state.isAnimatingColor = false;
+
+    if (this.callback) {
+      if (result !== null && result !== undefined) {
+        this.callback(result);
+      } else {
+        this.callback();
+      }
+      this.callback = null;
+    }
+  }
+
+  stopAnimatingCustom(result: ?mixed): void {
+    this.customAnimationPlan = [];
+    this.state.isAnimatingCustom = false;
 
     if (this.callback) {
       if (result !== null && result !== undefined) {
@@ -675,6 +808,18 @@ class DiagramElement {
     const phase = new ColorAnimationPhase(color, time, easeFunction);
     if (phase instanceof ColorAnimationPhase) {
       this.animateColorPlan([phase], callback);
+    }
+  }
+
+  animateCustomTo(
+    phaseCallback: (number) => {},
+    time: number = 1,
+    easeFunction: (number) => number = tools.linear,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const phase = new CustomAnimationPhase(phaseCallback, time, easeFunction);
+    if (phase instanceof CustomAnimationPhase) {
+      this.animateCustomPlan([phase], callback);
     }
   }
 
@@ -740,11 +885,11 @@ class DiagramElement {
     const transform = this.transform.copy();
     transform.updateTranslation(translation);
     const phase1 = new AnimationPhase(
-      this.transform.copy(), delay,
+      this.transform.copy(), delay, 0,
       easeFunction,
     );
     const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
-      this.animatePlan([phase1, phase2], callback);
+    this.animatePlan([phase1, phase2], callback);
   }
 
   // With update only first instace of rotation in the transform order
@@ -975,6 +1120,7 @@ class DiagramElement {
   stop(flag: ?mixed) {
     this.stopAnimating(flag);
     this.stopAnimatingColor(flag);
+    this.stopAnimatingCustom(flag);
     this.stopMovingFreely(flag);
     this.stopBeingMoved();
     this.stopPulsing(flag);
@@ -1135,6 +1281,7 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.show) {
       this.setNextTransform(now);
       this.setNextColor(now);
+      this.setNextCustomAnimation(now);
       // this.lastDrawParentTransform = parentTransform.copy();
       this.lastDrawElementTransformPosition = {
         parentCount: parentTransform.order.length,
@@ -1186,6 +1333,7 @@ class DiagramElementPrimative extends DiagramElement {
       || this.state.isBeingMoved
       || this.state.isPulsing
       || this.state.isAnimatingColor
+      || this.state.isAnimatingCustom
     ) {
       return true;
     }
@@ -1308,6 +1456,7 @@ class DiagramElementCollection extends DiagramElement {
     if (this.show) {
       this.setNextTransform(now);
       this.setNextColor(now);
+      this.setNextCustomAnimation(now);
       // this.lastDrawParentTransform = parentTransform.copy();
       // this.lastDrawElementTransform = this.transform.copy();
       this.lastDrawElementTransformPosition = {
