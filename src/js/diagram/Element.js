@@ -491,12 +491,7 @@ class DiagramElement {
         //   - start the next phase
         if (this.state.colorAnimation.currentPhaseIndex < this.colorAnimationPlan.length - 1) {
           // Set current transform to the end of the current phase
-          this.color = this.calcNextAnimationColor(phase.time);
-          if (this instanceof DiagramElementPrimative) {
-            if (this.vertices instanceof TextObject) {
-              this.vertices.setColor(this.color);
-            }
-          }
+          this.setColor(this.calcNextAnimationColor(phase.time));
 
           // Get the amount of time that has elapsed in the next phase
           const nextPhaseDeltaTime = deltaTime - phase.time;
@@ -514,25 +509,18 @@ class DiagramElement {
         // animation)
         const endColor = this.calcNextAnimationColor(phase.time);
         this.stopAnimatingColor(true);
-        this.color = endColor;
-        if (this instanceof DiagramElementPrimative) {
-          if (this.vertices instanceof TextObject) {
-            this.vertices.setColor(this.color);
-          }
-        }
+        this.setColor(endColor);
         return;
       }
       // If we are here, that means the time elapsed is not more than the
       // current animation phase plan time, so calculate the next transform.
-      this.color = this.calcNextAnimationColor(deltaTime);
-      if (this instanceof DiagramElementPrimative) {
-        if (this.vertices instanceof TextObject) {
-          this.vertices.setColor(this.color);
-        }
-      }
+      this.setColor(this.calcNextAnimationColor(deltaTime));
     }
   }
 
+  setColor(color: Array<number>) {
+    this.color = color.slice();
+  }
   // Decelerate over some time when moving freely to get a new element
   // transform and movement velocity
   decelerate(deltaTime: number): Object {
@@ -1116,6 +1104,15 @@ class DiagramElementPrimative extends DiagramElement {
       }
     }
     return false;
+  }
+
+  setColor(color: Array<number>) {
+    this.color = color.slice();
+    if (this instanceof DiagramElementPrimative) {
+      if (this.vertices instanceof TextObject) {
+        this.vertices.setColor(this.color);
+      }
+    }
   }
 
   getTouched(glLocation: Point): Array<DiagramElementPrimative> {
