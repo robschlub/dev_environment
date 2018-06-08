@@ -116,7 +116,9 @@ function equation(diagram: Diagram) {
     makeHTML,
   };
 }
-function shapes(webgl: WebGLInstance, limits: Rect) {
+
+// eslint-disable-next-line no-use-before-define
+function shapes(diagram: Diagram) {
   function polyLine(
     points: Array<Point>,
     close: boolean,
@@ -124,9 +126,36 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return PolyLine(webgl, points, close, lineWidth, color, transform, limits);
+    return PolyLine(diagram.webgl, points, close, lineWidth, color, transform, diagram.limits);
   }
 
+  function text(
+    textInput: string,
+    location: Point,
+    color: Array<number>,
+    fontInput: DiagramFont | null = null,
+  ) {
+    let font = new DiagramFont(
+      'Times New Roman',
+      'italic',
+      0.2,
+      '200',
+      'left',
+      'alphabetic',
+      color,
+    );
+    if (fontInput !== null) {
+      font = fontInput;
+    }
+    const dT = new DiagramText(new Point(0, 0), textInput, font);
+    const to = new TextObject(diagram.draw2D, [dT]);
+    return new DiagramElementPrimative(
+      to,
+      new Transform().scale(1, 1).translate(location.x, location.y),
+      color,
+      diagram.limits,
+    );
+  }
   function arrow(
     width: number = 1,
     legWidth: number = 0.5,
@@ -136,8 +165,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     transform: Transform | Point = new Transform(),
   ) {
     return Arrow(
-      webgl, width, legWidth, height, legHeight,
-      new Point(0, 0), color, transform, limits,
+      diagram.webgl, width, legWidth, height, legHeight,
+      new Point(0, 0), color, transform, diagram.limits,
     );
   }
   function lines(
@@ -145,7 +174,7 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return Lines(webgl, linePairs, color, transform, limits);
+    return Lines(diagram.webgl, linePairs, color, transform, diagram.limits);
   }
   function grid(
     bounds: Rect,
@@ -172,7 +201,10 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return PolyLineCorners(webgl, points, close, cornerLength, lineWidth, color, transform, limits);
+    return PolyLineCorners(
+      diagram.webgl, points, close,
+      cornerLength, lineWidth, color, transform, diagram.limits,
+    );
   }
   function polygon(
     numSides: number,
@@ -184,8 +216,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     transform: Transform | Point = new Transform(),
   ) {
     return Polygon(
-      webgl, numSides, radius, lineWidth,
-      rotation, numSidesToDraw, color, transform, limits,
+      diagram.webgl, numSides, radius, lineWidth,
+      rotation, numSidesToDraw, color, transform, diagram.limits,
     );
   }
   function polygonFilled(
@@ -198,8 +230,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     textureLocation: string = '',
   ) {
     return PolygonFilled(
-      webgl, numSides, radius,
-      rotation, numSidesToDraw, color, transform, limits, textureLocation,
+      diagram.webgl, numSides, radius,
+      rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation,
     );
   }
   function horizontalLine(
@@ -211,8 +243,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     transform: Transform | Point = new Transform(),
   ) {
     return HorizontalLine(
-      webgl, start, length, width,
-      rotation, color, transform, limits,
+      diagram.webgl, start, length, width,
+      rotation, color, transform, diagram.limits,
     );
   }
   function collection(transformOrPoint: Transform | Point = new Transform()) {
@@ -222,7 +254,7 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     } else {
       transform = transformOrPoint.copy();
     }
-    return new DiagramElementCollection(transform, limits);
+    return new DiagramElementCollection(transform, diagram.limits);
   }
   return {
     polyLine,
@@ -234,6 +266,7 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     collection,
     lines,
     grid,
+    text,
   };
 }
 
@@ -341,7 +374,7 @@ class Diagram {
   }
 
   getShapes() {
-    return shapes(this.webgl, this.limits);
+    return shapes(this);
   }
   getEquations() {
     return equation(this);

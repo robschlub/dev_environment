@@ -184,10 +184,14 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   const circumferenceDimension = shapes.collection(new Transform()
     .rotate(0).translate(0, 0));
 
+  const textD = shapes.text('d', new Point(-0.13, 0), colors.dimensions);
+  const textC = shapes.text('c', new Point(0, -radius - 0.15), colors.dimensions);
   circumferenceDimension.add('halfCircle1', halfCircle1);
   circumferenceDimension.add('halfCircle2', halfCircle2);
   circumferenceDimension.add('arrow1', arrow1);
   circumferenceDimension.add('arrow2', arrow2);
+  circumferenceDimension.add('textD', textD);
+  circumferenceDimension.add('textC', textC);
   circumferenceDimension.plotAngle = (angle: number) => {
     halfCircle1.angleToDraw = angle;
     halfCircle1.transform.updateRotation(3 * Math.PI / 2 - angle + 0.03);
@@ -212,6 +216,8 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     halfCircle2.disolveIn(time);
     arrow1.disolveIn(time);
     arrow2.disolveIn(time);
+    textD.disolveIn(time);
+    textC.disolveIn(time);
   };
   // console.log(circumferenceDimension)
   return circumferenceDimension;

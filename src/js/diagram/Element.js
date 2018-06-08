@@ -492,6 +492,11 @@ class DiagramElement {
         if (this.state.colorAnimation.currentPhaseIndex < this.colorAnimationPlan.length - 1) {
           // Set current transform to the end of the current phase
           this.color = this.calcNextAnimationColor(phase.time);
+          if (this instanceof DiagramElementPrimative) {
+            if (this.vertices instanceof TextObject) {
+              this.vertices.setColor(this.color);
+            }
+          }
 
           // Get the amount of time that has elapsed in the next phase
           const nextPhaseDeltaTime = deltaTime - phase.time;
@@ -510,11 +515,21 @@ class DiagramElement {
         const endColor = this.calcNextAnimationColor(phase.time);
         this.stopAnimatingColor(true);
         this.color = endColor;
+        if (this instanceof DiagramElementPrimative) {
+          if (this.vertices instanceof TextObject) {
+            this.vertices.setColor(this.color);
+          }
+        }
         return;
       }
       // If we are here, that means the time elapsed is not more than the
       // current animation phase plan time, so calculate the next transform.
       this.color = this.calcNextAnimationColor(deltaTime);
+      if (this instanceof DiagramElementPrimative) {
+        if (this.vertices instanceof TextObject) {
+          this.vertices.setColor(this.color);
+        }
+      }
     }
   }
 
