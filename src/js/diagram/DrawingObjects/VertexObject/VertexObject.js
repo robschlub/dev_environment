@@ -77,6 +77,7 @@ class VertexObject extends DrawingObject {
           this.gl.RGBA, this.gl.UNSIGNED_BYTE, image,
         );
         function isPowerOf2(value) {
+          // eslint-disable-next-line no-bitwise
           return (value & (value - 1)) === 0;
         }
         // Check if the image is a power of 2 in both dimensions.

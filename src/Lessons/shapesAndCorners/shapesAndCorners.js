@@ -341,22 +341,6 @@ class Content extends LessonContent {
         _angle: highlightWord('angle', '', 'english'),
       },
     });
-
-
-    // this.addSection({
-    //   setContent: () => `
-    //     <p>
-    //     One way is to divide a circle up into portions, and count the number of portions in an |_angle|.
-    //     </p>
-    //     <p>Here, a circle is divided into 12 equal portions (like a clock).
-    //     </p>
-    //     `,
-    //   showOnly: [],
-    //   modifiers: {
-    //     _measure: highlightWord('measure', '', 'english'),
-    //     _angle: highlightWord('angle', '', 'english'),
-    //   },
-    // });
   }
 }
 

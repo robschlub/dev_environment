@@ -9,7 +9,7 @@ import { DiagramElementCollection, DiagramElementPrimative }
 import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
-import { DiagramGLEquation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import DiagramGLEquation from '../../js/diagram/DiagramElements/Equation/GLEquation';
 
 const colors = getScssColors(styles);
 const anchorPoints = 50;
@@ -133,7 +133,7 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
     lineWidth,
     0,
     colors.dimensions,
-    new Transform().scale(1,1).rotate(0).translate(0, 0),
+    new Transform().scale(1, 1).rotate(0).translate(0, 0),
   );
   const arrow1 = shapes.arrow(
     arrowWidth, 0, arrowHeight, 0,
@@ -260,17 +260,7 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   return circumferenceDimension;
 }
 
-function makeEquation(
-  diagram: Diagram,
-  layout: Object,
-  // c: DiagramElementPrimative,
-  // d: DiagramElementPrimative,
-  // circle: DiagramElementCollection,
-) {
-  // const pi = diagram.shapes.text('&pi;', new Point(0, 0), colors.dimensions);
-  // const equals = diagram.shapes.text('  =  ', new Point(0, 0), colors.dimensions);
-  // circle.add('pi', pi);
-  // circle.add('equals', equals);
+function makeEquation(diagram: Diagram) {
   const equationElements = diagram.equation.elements({
     c: 'c',
     d: 'd',
@@ -278,11 +268,30 @@ function makeEquation(
     equals: ' = ',
   }, colors.dimensions);
   return equationElements;
-  // equationElements.setFirstTransform(diagram.diagramToGLSpaceTransform);
-  // const equation = diagram.equation.make(equationElements);
-  // equation.createEq(['d', 'pi', 'equals', 'c']);
-  // return equation;
 }
+
+
+type DiameterDimensionType = {
+  _textD: DiagramElementPrimative;
+  _line: DiagramElementPrimative;
+  _arrow1: DiagramElementPrimative;
+  _arrow2: DiagramElementPrimative;
+} & DiagramElementCollection ;
+
+type CircumferenceDimensionType = {
+  _textC: DiagramElementPrimative;
+  _halfCircle1: DiagramElementPrimative;
+  _halfCircle2: DiagramElementPrimative;
+  _arrow1: DiagramElementPrimative;
+  _arrow2: DiagramElementPrimative;
+} & DiagramElementCollection ;
+
+type EquationType = {
+  _d: DiagramElementPrimative;
+  _c: DiagramElementPrimative;
+  _pi: DiagramElementPrimative;
+  _equals: DiagramElementPrimative;
+} & DiagramElementCollection ;
 
 class CircleCollection extends DiagramElementCollection {
   _anchor: DiagramElementPrimative;
@@ -296,13 +305,13 @@ class CircleCollection extends DiagramElementCollection {
   _cornerRad: DiagramElementPrimative;
   _wheel: DiagramElementPrimative;
   _wheelShape: DiagramElementPrimative;
-  _circumferenceDimension: DiagramElementCollection;
-  _diameterDimension: DiagramElementCollection;
+  _circumferenceDimension: CircumferenceDimensionType;
+  _diameterDimension: DiameterDimensionType;
   diagram: Diagram;
   layout: Object;
   colors: Object;
   eqn: DiagramGLEquation;
-  _equation: DiagramElementCollection;
+  _equation: EquationType;
 
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
@@ -319,7 +328,7 @@ class CircleCollection extends DiagramElementCollection {
     this.add('wheelShape', makeWheelShape(shapes, layout));
     this.add('diameterDimension', makeDiameterDimension(shapes, layout));
     this.add('circumferenceDimension', makeCircumferenceDimension(shapes, layout));
-    this.add('equation', makeEquation(diagram, layout));
+    this.add('equation', makeEquation(diagram));
     this.eqn = diagram.equation.make(this._equation);
     this.eqn.createEq(['c', 'equals', 'pi', 'd']);
 
@@ -349,10 +358,15 @@ class CircleCollection extends DiagramElementCollection {
 
   equationTextToInitialPositions() {
     // const t = this.transform.t();
-    const td = this._diameterDimension.transform.t();
-    const tdt = this._diameterDimension._textD.transform.t();
-    const tc = this._circumferenceDimension.transform.t();
-    const tct = this._circumferenceDimension._textC.transform.t();
+    let td = this._diameterDimension.transform.t();
+    let tdt = this._diameterDimension._textD.transform.t();
+    let tc = this._circumferenceDimension.transform.t();
+    let tct = this._circumferenceDimension._textC.transform.t();
+    td = td === null || td === undefined ? new Point(0, 0) : td;
+    tdt = tdt === null || tdt === undefined ? new Point(0, 0) : tdt;
+    tc = tc === null || tc === undefined ? new Point(0, 0) : tc;
+    tct = tct === null || tct === undefined ? new Point(0, 0) : tct;
+
     if (tdt !== null && td !== null && tc !== null) {
       this._equation._d.transform.updateTranslation(tdt.x + td.x, tdt.y + td.y);
       this._equation._c.transform.updateTranslation(tct.x + tc.x, tct.y + tc.y);
@@ -466,7 +480,7 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  showWheelShape(done: ?(?mixed) => void = () =>{}) {
+  showWheelShape(done: ?(?mixed) => void = () => {}) {
     const t = this._wheel.transform.t();
     if (t) {
       this._wheelShape.show = true;
