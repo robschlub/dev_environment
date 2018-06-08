@@ -3,7 +3,7 @@
 // import { Lesson } from '../../js/Lesson/Lesson';
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform } from '../../js/diagram/tools/g2';
+import { Transform, Point } from '../../js/diagram/tools/g2';
 import { easeinout } from '../../js/diagram/tools/mathtools';
 
 class Content extends LessonContent {
@@ -127,6 +127,7 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
+
         const t = circle._wheelShape.transform.t();
         circle._circumferenceDimension.transform.updateTranslation(t.x, t.y);
         circle._diameterDimension.transform.updateTranslation(t.x, t.y);
@@ -136,14 +137,23 @@ class Content extends LessonContent {
           1.5,
         );
 
-        // circle._circumferenceDimension.grow(0);
-        circle._circumferenceDimension.appearWithDelay(2, 1);
+        const makeEquation = () => {
+          circle._equation.show = true;
+          circle.equationTextToInitialPositions();
+          circle._equation._d.disolveIn(0.5);
+          circle._equation._c.disolveIn(0.5);
+          circle.eqn.animateTo(new Point(-1, 0), 1, 2);
+          circle._equation._equals.disolveInWithDelay(2, 1);
+          circle._equation._pi.disolveInWithDelay(2, 1, done);
+        };
+
+        circle._circumferenceDimension.appearWithDelay(1.5, 1);
         circle._circumferenceDimension.animateCustomToWithDelay(
-          2,
+          1.5,
           circle._circumferenceDimension.grow.bind(circle),
           1.5,
           easeinout,
-          done,
+          makeEquation.bind(circle),
         );
       },
       setState: () => {

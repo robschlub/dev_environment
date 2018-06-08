@@ -9,6 +9,7 @@ import { DiagramElementCollection, DiagramElementPrimative }
 import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
+import { DiagramGLEquation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 
 const colors = getScssColors(styles);
 const anchorPoints = 50;
@@ -143,6 +144,7 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
     colors.dimensions, new Transform().rotate(Math.PI / 2).translate(-diameter / 2, 0),
   );
   const textD = shapes.text('d', new Point(-0.02, 0.05), colors.dimensions);
+  // const textD2 = shapes.text('d', new Point(-0.02, 0.05), colors.dimensions);
   const d = shapes.collection(new Transform()
     .rotate(0)
     .translate(center.x, center.y));
@@ -150,17 +152,20 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
   d.add('arrow1', arrow1);
   d.add('arrow2', arrow2);
   d.add('textD', textD);
+  // d.add('textD2', textD2);
   d.appear = (time: number) => {
     line.disolveIn(time);
     arrow1.disolveIn(time);
     arrow2.disolveIn(time);
     textD.disolveIn(time);
+    // textD2.disolveIn(time);
   };
   d.appearWithDelay = (delay: number, time: number) => {
     line.disolveInWithDelay(delay, time);
     arrow1.disolveInWithDelay(delay, time);
     arrow2.disolveInWithDelay(delay, time);
     textD.disolveInWithDelay(delay, time);
+    // textD2.disolveInWithDelay(delay, time);
   };
 
   d.plotLength = (diam: number) => {
@@ -204,11 +209,13 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     .rotate(0).translate(0, 0));
 
   const textC = shapes.text('c', new Point(0, -radius - 0.15), colors.dimensions);
+  // const textC2 = shapes.text('c', new Point(0, -radius - 0.15), colors.dimensions);
   circumferenceDimension.add('halfCircle1', halfCircle1);
   circumferenceDimension.add('halfCircle2', halfCircle2);
   circumferenceDimension.add('arrow1', arrow1);
   circumferenceDimension.add('arrow2', arrow2);
   circumferenceDimension.add('textC', textC);
+  // circumferenceDimension.add('textC2', textC2);
   circumferenceDimension.plotAngle = (angle: number) => {
     halfCircle1.angleToDraw = angle;
     halfCircle1.transform.updateRotation(3 * Math.PI / 2 - angle + 0.03);
@@ -238,6 +245,7 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     arrow1.disolveIn(time);
     arrow2.disolveIn(time);
     textC.disolveIn(time);
+    // textC2.disolveIn(time);
   };
 
   circumferenceDimension.appearWithDelay = (delay: number, time: number) => {
@@ -246,9 +254,34 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     arrow1.disolveInWithDelay(delay, time);
     arrow2.disolveInWithDelay(delay, time);
     textC.disolveInWithDelay(delay, time);
+    // textC2.disolveInWithDelay(delay, time);
   };
   // console.log(circumferenceDimension)
   return circumferenceDimension;
+}
+
+function makeEquation(
+  diagram: Diagram,
+  layout: Object,
+  // c: DiagramElementPrimative,
+  // d: DiagramElementPrimative,
+  // circle: DiagramElementCollection,
+) {
+  // const pi = diagram.shapes.text('&pi;', new Point(0, 0), colors.dimensions);
+  // const equals = diagram.shapes.text('  =  ', new Point(0, 0), colors.dimensions);
+  // circle.add('pi', pi);
+  // circle.add('equals', equals);
+  const equationElements = diagram.equation.elements({
+    c: 'c',
+    d: 'd',
+    pi: String.fromCharCode(960),
+    equals: ' = ',
+  }, colors.dimensions);
+  return equationElements;
+  // equationElements.setFirstTransform(diagram.diagramToGLSpaceTransform);
+  // const equation = diagram.equation.make(equationElements);
+  // equation.createEq(['d', 'pi', 'equals', 'c']);
+  // return equation;
 }
 
 class CircleCollection extends DiagramElementCollection {
@@ -263,9 +296,13 @@ class CircleCollection extends DiagramElementCollection {
   _cornerRad: DiagramElementPrimative;
   _wheel: DiagramElementPrimative;
   _wheelShape: DiagramElementPrimative;
+  _circumferenceDimension: DiagramElementCollection;
+  _diameterDimension: DiagramElementCollection;
   diagram: Diagram;
   layout: Object;
   colors: Object;
+  eqn: DiagramGLEquation;
+  _equation: DiagramElementCollection;
 
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
@@ -282,6 +319,9 @@ class CircleCollection extends DiagramElementCollection {
     this.add('wheelShape', makeWheelShape(shapes, layout));
     this.add('diameterDimension', makeDiameterDimension(shapes, layout));
     this.add('circumferenceDimension', makeCircumferenceDimension(shapes, layout));
+    this.add('equation', makeEquation(diagram, layout));
+    this.eqn = diagram.equation.make(this._equation);
+    this.eqn.createEq(['pi', 'd', 'equals', 'c']);
 
     this.add('arrow', makeArrow(shapes, layout));
     this.add('angle', makeAngle(shapes, layout));
@@ -307,6 +347,18 @@ class CircleCollection extends DiagramElementCollection {
     );
   }
 
+  equationTextToInitialPositions() {
+    // const t = this.transform.t();
+    const td = this._diameterDimension.transform.t();
+    const tdt = this._diameterDimension._textD.transform.t();
+    const tc = this._circumferenceDimension.transform.t();
+    const tct = this._circumferenceDimension._textC.transform.t();
+    if (tdt !== null && td !== null && tc !== null) {
+      this._equation._d.transform.updateTranslation(tdt.x + td.x, tdt.y + td.y);
+      this._equation._c.transform.updateTranslation(tct.x + tc.x, tct.y + tc.y);
+    }
+  }
+
   updateRotation() {
     let rotation = this._radius.transform.r();
     if (rotation) {
@@ -320,9 +372,7 @@ class CircleCollection extends DiagramElementCollection {
         const angleToDisappear = 0.35;
         if (rotation > angleToDisappear) {
           this._arrow.color[3] = 0;
-          // this._arrow.show = false;
         } else {
-          // this._arrow.show = true;
           this._arrow.color[3] = (angleToDisappear - rotation) / angleToDisappear;
           this._arrow.transform.updateRotation(rotation);
           this._arrow.transform.updateTranslation(
@@ -419,7 +469,6 @@ class CircleCollection extends DiagramElementCollection {
   showWheelShape(done: ?(?mixed) => void = () =>{}) {
     const t = this._wheel.transform.t();
     if (t) {
-      console.log(done)
       this._wheelShape.show = true;
       this._wheelShape.transform.updateTranslation(t.x, t.y);
       this._wheelShape.animateTranslationToWithDelay(new Point(1, 0), 0.5, 1);

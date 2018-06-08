@@ -42,16 +42,24 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 
 // eslint-disable-next-line no-use-before-define
 function equation(diagram: Diagram) {
-  function elements(elems: Object) {
-    const font = new DiagramFont(
+  function elements(elems: Object, colorOrFont: Array<number> | DiagramFont = []) {
+    let color = [1, 1, 1, 1];
+    if (Array.isArray(colorOrFont)) {
+      color = colorOrFont.slice();
+    }
+    let font = new DiagramFont(
       'Times New Roman',
-      'normal',
-      1,
+      'italic',
+      0.2,
       '200',
       'left',
       'alphabetic',
-      [1, 1, 1, 1],
+      color,
     );
+    if (colorOrFont instanceof DiagramFont) {
+      font = colorOrFont;
+      // color = font.color;
+    }
 
     const equationElements = new DiagramElementCollection(
       new Transform().translate(0, 0),
@@ -64,7 +72,7 @@ function equation(diagram: Diagram) {
         const p = new DiagramElementPrimative(
           to,
           new Transform().scale(1, 1).translate(0, 0),
-          [1, 1, 1, 1],
+          color,
           diagram.limits,
         );
         equationElements.add(key, p);

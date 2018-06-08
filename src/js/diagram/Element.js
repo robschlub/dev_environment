@@ -856,6 +856,7 @@ class DiagramElement {
     time: number = 1,
     callback: ?(?mixed) => void = null,
   ): void {
+    this.show = true;
     const targetColor = this.color.slice();
     this.color[3] = 0.01;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
@@ -869,6 +870,7 @@ class DiagramElement {
     time: number = 1,
     callback: ?(?mixed) => void = null,
   ): void {
+    this.show = true;
     const targetColor = this.color.slice();
     this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
