@@ -446,7 +446,7 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   pulseEquation() {
-    this._equation.pulseScaleNow(1, 1.5);
+    this._equation.pulseScaleNow(1, 1.3);
     this.diagram.animateNextFrame();
   }
 

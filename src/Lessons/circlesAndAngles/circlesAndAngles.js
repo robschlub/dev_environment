@@ -93,13 +93,13 @@ class Content extends LessonContent {
       setState: () => {
         circle._wheel.transform.updateTranslation(0, 0);
       },
-      transitionNext: (done) => {
-        if (circle._wheel.transform.t().x === 0) {
-          circle.showWheelShape(done);
-        } else {
-          done();
-        }
-      },
+      // transitionNext: (done) => {
+      //   if (circle._wheel.transform.t().x === 0) {
+      //     circle.showWheelShape(done);
+      //   } else {
+      //     done();
+      //   }
+      // },
     });
 
     this.addSection({
@@ -122,7 +122,7 @@ class Content extends LessonContent {
         circle._wheelShape.transform.updateTranslation(1, 0);
         onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
       },
-      transitionNext: (done) => {
+      transitionFromAny: (done) => {
         if (circle._wheel.transform.t().x === 0) {
           circle.showWheelShape(done);
         } else {
@@ -154,10 +154,7 @@ class Content extends LessonContent {
         // circle._circumferenceDimension.showAll();
         // circle._diameterDimension.showAll();
         circle._wheelShape.transform.updateTranslation(1, 0);
-        
         const tDiameter = 1;
-        // const tCircumference = 1.5;
-
         const t = circle._wheelShape.transform.t();
         circle._circumferenceDimension.transform.updateTranslation(t.x, t.y);
         circle._diameterDimension.transform.updateTranslation(t.x, t.y);
