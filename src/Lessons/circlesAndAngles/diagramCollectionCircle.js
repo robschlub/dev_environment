@@ -477,6 +477,13 @@ class CircleCollection extends DiagramElementCollection {
     }
     this.diagram.animateNextFrame();
   }
+
+  resetColors() {
+    this._diameterDimension.setColor(this.colors.dimensions);
+    this._circumferenceDimension.setColor(this.colors.dimensions);
+    this._equation.setColor(this.colors.dimensions);
+    this._wheelShape.setColor(this.colors.arc);
+  }
 }
 
 export default CircleCollection;

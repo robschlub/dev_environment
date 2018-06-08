@@ -127,6 +127,8 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
+        circle._wheelShape.transform.updateTranslation(1, 0);
+        circle.resetColors();
         const tDiameter = 1;
         // const tCircumference = 1.5;
 
@@ -145,8 +147,8 @@ class Content extends LessonContent {
           circle.eqn.animateTo(new Point(-1, 0), 1, 2);
           circle._equation._d.disolveIn(1);
           circle._equation._c.disolveIn(1);
-          circle._equation._equals.disolveInWithDelay(2, 1);
-          circle._equation._pi.disolveInWithDelay(2, 1, done);
+          circle._equation._equals.disolveInWithDelay(1.5, 1);
+          circle._equation._pi.disolveInWithDelay(1.5, 1, done);
         };
 
         circle._circumferenceDimension.appearWithDelay(tDiameter, 1);

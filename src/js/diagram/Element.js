@@ -1668,6 +1668,13 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
+  setColor(color: Array<number>) {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.setColor(color);
+    }
+  }
+
   getElementTransforms() {
     const out = {};
     for (let i = 0; i < this.order.length; i += 1) {
