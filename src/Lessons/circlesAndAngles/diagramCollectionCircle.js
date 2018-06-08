@@ -321,7 +321,7 @@ class CircleCollection extends DiagramElementCollection {
     this.add('circumferenceDimension', makeCircumferenceDimension(shapes, layout));
     this.add('equation', makeEquation(diagram, layout));
     this.eqn = diagram.equation.make(this._equation);
-    this.eqn.createEq(['pi', 'd', 'equals', 'c']);
+    this.eqn.createEq(['c', 'equals', 'pi', 'd']);
 
     this.add('arrow', makeArrow(shapes, layout));
     this.add('angle', makeAngle(shapes, layout));

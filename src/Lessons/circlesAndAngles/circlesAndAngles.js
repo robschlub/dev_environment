@@ -127,29 +127,31 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
+        const tDiameter = 1;
+        // const tCircumference = 1.5;
 
         const t = circle._wheelShape.transform.t();
         circle._circumferenceDimension.transform.updateTranslation(t.x, t.y);
         circle._diameterDimension.transform.updateTranslation(t.x, t.y);
-        circle._diameterDimension.appear(1);
+        circle._diameterDimension.appear(0.5);
         circle._diameterDimension.animateCustomTo(
           circle._diameterDimension.grow.bind(circle),
-          1.5,
+          tDiameter,
         );
 
         const makeEquation = () => {
           circle._equation.show = true;
           circle.equationTextToInitialPositions();
-          circle._equation._d.disolveIn(0.5);
-          circle._equation._c.disolveIn(0.5);
           circle.eqn.animateTo(new Point(-1, 0), 1, 2);
+          circle._equation._d.disolveIn(1);
+          circle._equation._c.disolveIn(1);
           circle._equation._equals.disolveInWithDelay(2, 1);
           circle._equation._pi.disolveInWithDelay(2, 1, done);
         };
 
-        circle._circumferenceDimension.appearWithDelay(1.5, 1);
+        circle._circumferenceDimension.appearWithDelay(tDiameter, 1);
         circle._circumferenceDimension.animateCustomToWithDelay(
-          1.5,
+          tDiameter,
           circle._circumferenceDimension.grow.bind(circle),
           1.5,
           easeinout,
@@ -159,7 +161,6 @@ class Content extends LessonContent {
       setState: () => {
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
-        // circle._wheel.transform.updateTranslation(0, 0);
         onClickId('id_shape', circle.showWheelShape, [circle]);
       },
     });

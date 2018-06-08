@@ -872,7 +872,8 @@ class DiagramElement {
   ): void {
     this.show = true;
     const targetColor = this.color.slice();
-    this.color[3] = 0.01;
+    this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
+    // this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
     this.animateColorPlan([phase1, phase2], callback);
