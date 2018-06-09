@@ -289,7 +289,7 @@ class DiagramElement {
       },
       customAnimation: {
         currentPhaseIndex: 0,         // current animation phase index in plan
-        currentPhase: new CustomAnimationPhase(() =>{return}),  // current animation phase
+        currentPhase: new CustomAnimationPhase(() => {}),  // current animation phase
       },
       isBeingMoved: false,
       isMovingFreely: false,
@@ -841,7 +841,7 @@ class DiagramElement {
     easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
   ): void {
-    const phase1 = new CustomAnimationPhase(() => {return}, delay, easeFunction);
+    const phase1 = new CustomAnimationPhase(() => {}, delay, easeFunction);
     const phase2 = new CustomAnimationPhase(phaseCallback, time, easeFunction);
     // if (phase instanceof CustomAnimationPhase) {
     // console.log(phase1.animationCallback)
