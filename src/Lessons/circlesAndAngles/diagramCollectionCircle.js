@@ -565,7 +565,7 @@ class CircleCollection extends DiagramElementCollection {
     this._shade.show = true;
     this._circumferenceDimension.transform.updateTranslation(x, 0);
     this._diameterDimension.transform.updateTranslation(x, 0);
-    this._shade.transform.updateTranslation(x, 0)
+    this._shade.transform.updateTranslation(x, 0);
     this._equation.transform.updateTranslation(x, 0);
     this.resetColors();
     this._diameterDimension.appear(0.5);
