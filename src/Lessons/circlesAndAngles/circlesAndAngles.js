@@ -206,27 +206,64 @@ class Content extends LessonContent {
         circle._clock,
       ],
       modifiers: {
-        // _wheel: highlightWord('wheel', '', 'english'),
-        // _shape: actionWord('shape', 'id_shape'),
         _properties: actionWord('properties', 'id_properties'),
       },
       setState: () => {
-        // circle._wheel.transform.updateTranslation(-1, 0);
-        // circle._wheelShape.transform.updateTranslation(1, 0);
-        // onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
         circle.eqn.calcSize(new Point(0, 0), 1);
         circle._clock.transform.updateTranslation(-1.8, 0);
         circle._ball.transform.updateTranslation(0, 0);
         circle._earth.transform.updateTranslation(1.8, 0);
         onClickId('id_properties', circle.toggleProperties, [circle]);
       },
-      // transitionFromAny: (done) => {
-      //   if (circle._wheel.transform.t().x === 0) {
-      //     circle.showWheelShape(done);
-      //   } else {
-      //     done();
-      //   }
-      // },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:10%;">
+          This is tremendously powerful, and allowed the first |_calculation| of the size of our planet over 2000 years ago!
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._earth,
+      ],
+      setState: () => {
+        circle._earth.transform.updateTranslation(-1, 0);
+        onClickId('id_calculation', circle.calculateEarth, [circle]);
+      },
+      modifiers: {
+        _calculation: actionWord('calculation', 'id_calculation'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:14%;">
+          The mathematics from studying shapes also helps us understand phenonmum we don't see, like |_sound|, |_gravity|, |_electricity|, |_radio_waves| and |_magnetism|.
+        </p>
+        <p style="margin-top:10%">
+          It is the basis of most engineering and science disciplines.
+        </p>
+        <p style="margin-top:10%">
+         But most importantly, it can be used to simply |_better_understand|.
+        </p>
+        `,
+      modifiers: {
+        _sound: highlightWord('sound', '', 'english'),
+        _gravity: highlightWord('gravity', '', 'english'),
+        _electricity: highlightWord('electricity', '', 'english'),
+        _radio_waves: highlightWord('radio waves', '', 'english'),
+        _magnetism: highlightWord('magnetism', '', 'english'),
+        _better_understand: highlightWord('better understand the world we live in', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:35%; ; text-align:center;">
+          All from the study of simple shapes.
+        </p>
+        `,
     });
 
     this.addSection({

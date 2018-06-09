@@ -109,7 +109,6 @@ function makeWheelShape(shapes: Object, layout: Object) {
   );
 }
 
-
 function makeAngle(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anglePoints, layout.angleRadius, 0,
@@ -145,6 +144,23 @@ function makeArrow(shapes: Object, layout: Object) {
   );
 }
 
+function makeShade(shapes: Object, layout: Object) {
+  return shapes.polygonFilled(
+    anglePoints, layout.wheelSize, 0, anglePoints,
+    [0, 0, 0, 0.7], new Transform().rotate(0).translate(0, 0),
+  );
+}
+
+function makeEarthCalculation(shapes: Object) {
+  const calculation = shapes.text('c = 44,100 km', new Point(1, 0), colors.dimensions);
+  const error = shapes.text('Error < 15% only!', new Point(1, -0.4), colors.dimensions);
+  error.transform.updateScale(0.6, 0.6);
+  const collection = shapes.collection(new Transform().scale(1, 1).translate(0, 0));
+  collection.add('calculation', calculation);
+  collection.add('error', error);
+  return collection;
+}
+
 function makeDiameterDimension(shapes: Object, layout: Object) {
   const center = new Point(0, 0);
   const diameter = layout.wheelSize * 2;
@@ -168,10 +184,12 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
     colors.dimensions, new Transform().rotate(Math.PI / 2).translate(-diameter / 2, 0),
   );
   const textD = shapes.text('d', new Point(0, 0.12), colors.dimensions);
+
   // const textD2 = shapes.text('d', new Point(-0.02, 0.05), colors.dimensions);
   const d = shapes.collection(new Transform()
     .rotate(0)
     .translate(center.x, center.y));
+  // d.add('shade', dimensionShade);
   d.add('line', line);
   d.add('arrow1', arrow1);
   d.add('arrow2', arrow2);
@@ -321,6 +339,12 @@ type EquationType = {
   _equals: DiagramElementPrimative;
 } & DiagramElementCollection ;
 
+type EarthCalculationType = {
+  _error: DiagramElementPrimative;
+  _calculation: DiagramElementPrimative;
+} & DiagramElementCollection ;
+
+
 class CircleCollection extends DiagramElementCollection {
   _anchor: DiagramElementPrimative;
   _arrow: DiagramElementPrimative;
@@ -335,11 +359,13 @@ class CircleCollection extends DiagramElementCollection {
   _wheelShape: DiagramElementPrimative;
   _circumferenceDimension: CircumferenceDimensionType;
   _diameterDimension: DiameterDimensionType;
+  _shade: DiameterDimensionType;
   diagram: Diagram;
   layout: Object;
   colors: Object;
   eqn: DiagramGLEquation;
   _equation: EquationType;
+  _earthCalculation: EarthCalculationType;
   propertyLocations: Array<number>;
   propertyLocationIndex: number;
 
@@ -359,9 +385,11 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ball', makeBall(shapes, layout));
     this.add('clock', makeClock(shapes, layout));
     this.add('wheelShape', makeWheelShape(shapes, layout));
+    this.add('shade', makeShade(shapes, layout));
     this.add('diameterDimension', makeDiameterDimension(shapes, layout));
     this.add('circumferenceDimension', makeCircumferenceDimension(shapes, layout));
     this.add('equation', makeEquation(diagram));
+    this.add('earthCalculation', makeEarthCalculation(shapes));
     this.eqn = diagram.equation.make(this._equation);
     this.eqn.createEq(['c', 'equals', 'pi', 'd']);
 
@@ -513,6 +541,20 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  calculateEarth() {
+    this._circumferenceDimension.showAll();
+    this._earthCalculation.showAll();
+    this._earthCalculation._error.pulseScaleNow(1, 1.5);
+    this._circumferenceDimension.transform.updateTranslation(-1, 0);
+    this.resetColors();
+    this._circumferenceDimension.appear(0.5);
+    this._circumferenceDimension.animateCustomTo(
+      this._circumferenceDimension.grow.bind(this),
+      0.5,
+    );
+    this.diagram.animateNextFrame();
+  }
+
   toggleProperties() {
     this.propertyLocationIndex =
       this.propertyLocationIndex < 2 ? this.propertyLocationIndex + 1 : 0;
@@ -520,8 +562,10 @@ class CircleCollection extends DiagramElementCollection {
     this._circumferenceDimension.showAll();
     this._diameterDimension.showAll();
     this._equation.showAll();
+    this._shade.show = true;
     this._circumferenceDimension.transform.updateTranslation(x, 0);
     this._diameterDimension.transform.updateTranslation(x, 0);
+    this._shade.transform.updateTranslation(x, 0)
     this._equation.transform.updateTranslation(x, 0);
     this.resetColors();
     this._diameterDimension.appear(0.5);
