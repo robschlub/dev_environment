@@ -104,15 +104,28 @@ class VertexObject extends DrawingObject {
     return this.numPoints * drawAngle / (Math.PI * 2);
   }
 
-  createTextureMap(xMin: number = -1, xMax: number = 1, yMin: number = -1, yMax: number = 1) {
-    const width = xMax - xMin;
-    const height = yMax - yMin;
+  createTextureMap(
+    xMinGL: number = -1,
+    xMaxGL: number = 1,
+    yMinGL: number = -1,
+    yMaxGL: number = 1,
+    xMinTex: number = 0,
+    xMaxTex: number = 1,
+    yMinTex: number = 0,
+    yMaxTex: number = 1,
+  ) {
+    const glWidth = xMaxGL - xMinGL;
+    const glHeight = yMaxGL - yMinGL;
+    const texWidth = xMaxTex - xMinTex;
+    const texHeight = yMaxTex - yMinTex;
     this.texturePoints = [];
     for (let i = 0; i < this.points.length; i += 2) {
       const x = this.points[i];
       const y = this.points[i + 1];
-      this.texturePoints.push((x - xMin) / width);
-      this.texturePoints.push((y - yMin) / height);
+      const texNormX = (x - xMinGL) / glWidth;
+      const texNormY = (y - yMinGL) / glHeight;
+      this.texturePoints.push(texNormX * texWidth + xMinTex);
+      this.texturePoints.push(texNormY * texHeight + yMinTex);
     }
   }
 

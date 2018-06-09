@@ -45,6 +45,7 @@ function PolygonFilled(
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
   textureLocation: string = '',
+  textureCoords: Rect = new Rect(0, 0, 1, 1),
 ) {
   const vertexLineCorners = new VertexPolygonFilled(
     webgl,
@@ -54,6 +55,7 @@ function PolygonFilled(
     new Point(0, 0),
     numSidesToDraw,
     textureLocation,
+    textureCoords,
   );
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {

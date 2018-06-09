@@ -236,10 +236,11 @@ function shapes(diagram: Diagram) {
     color: Array<number>,
     transform: Transform | Point = new Transform(),
     textureLocation: string = '',
+    textureCoords: Rect = new Rect(0, 0, 1, 1),
   ) {
     return PolygonFilled(
       diagram.webgl, numSides, radius,
-      rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation,
+      rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation, textureCoords,
     );
   }
   function horizontalLine(

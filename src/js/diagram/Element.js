@@ -84,11 +84,11 @@ class ColorAnimationPhase {
 class CustomAnimationPhase {
   time: number;                       // animation time
   startTime: number;                 // Time when phase started
-  animationCallback: (number) => {};
+  animationCallback: (number) => void;
   animationStyle: (number) => number;
 
   constructor(
-    animationCallback: (number) => {},
+    animationCallback: (number) => void,
     time: number = 1,
     animationStyle: (number) => number = tools.easeinout,
   ) {
@@ -823,7 +823,7 @@ class DiagramElement {
   }
 
   animateCustomTo(
-    phaseCallback: (number) => {},
+    phaseCallback: (number) => void,
     time: number = 1,
     easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,

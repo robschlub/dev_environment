@@ -6,7 +6,7 @@ import * as tools from '../../js/diagram/tools/mathtools';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 import DiagramGLEquation from '../../js/diagram/DiagramElements/Equation/GLEquation';
@@ -74,7 +74,31 @@ function makeWheel(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anglePoints, layout.wheelSize, 0,
     anglePoints, colors.anchor, new Point(0, 0),
-    'static/wheel.png',
+    'static/circles.png', new Rect(0.5, 0, 0.5, 0.5),
+  );
+}
+
+function makeBall(shapes: Object, layout: Object) {
+  return shapes.polygonFilled(
+    anglePoints, layout.wheelSize, 0,
+    anglePoints, colors.anchor, new Point(0, 0),
+    'static/circles.png', new Rect(0.5, 0.5, 0.5, 0.5),
+  );
+}
+
+function makeEarth(shapes: Object, layout: Object) {
+  return shapes.polygonFilled(
+    anglePoints, layout.wheelSize, 0,
+    anglePoints, colors.anchor, new Point(0, 0),
+    'static/circles.png', new Rect(0, 0.5, 0.5, 0.5),
+  );
+}
+
+function makeClock(shapes: Object, layout: Object) {
+  return shapes.polygonFilled(
+    anglePoints, layout.wheelSize, 0,
+    anglePoints, colors.anchor, new Point(0, 0),
+    'static/circles.png', new Rect(0, 0, 0.5, 0.5),
   );
 }
 
@@ -276,6 +300,8 @@ type DiameterDimensionType = {
   _line: DiagramElementPrimative;
   _arrow1: DiagramElementPrimative;
   _arrow2: DiagramElementPrimative;
+  appear: (number) => void;
+  grow: (number) => void;
 } & DiagramElementCollection ;
 
 type CircumferenceDimensionType = {
@@ -284,6 +310,8 @@ type CircumferenceDimensionType = {
   _halfCircle2: DiagramElementPrimative;
   _arrow1: DiagramElementPrimative;
   _arrow2: DiagramElementPrimative;
+  appear: (number) => void;
+  grow: (number) => void;
 } & DiagramElementCollection ;
 
 type EquationType = {
@@ -312,6 +340,8 @@ class CircleCollection extends DiagramElementCollection {
   colors: Object;
   eqn: DiagramGLEquation;
   _equation: EquationType;
+  propertyLocations: Array<number>;
+  propertyLocationIndex: number;
 
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
@@ -325,6 +355,9 @@ class CircleCollection extends DiagramElementCollection {
     const t = new Transform().rotate(0).translate(0, 0);
 
     this.add('wheel', makeWheel(shapes, layout));
+    this.add('earth', makeEarth(shapes, layout));
+    this.add('ball', makeBall(shapes, layout));
+    this.add('clock', makeClock(shapes, layout));
     this.add('wheelShape', makeWheelShape(shapes, layout));
     this.add('diameterDimension', makeDiameterDimension(shapes, layout));
     this.add('circumferenceDimension', makeCircumferenceDimension(shapes, layout));
@@ -347,6 +380,8 @@ class CircleCollection extends DiagramElementCollection {
     this.add('anchor', makeAnchor(shapes, layout));
     this.isTouchable = true;
     this.isMovable = true;
+    this.propertyLocations = [-1.8, 0, 1.8];
+    this.propertyLocationIndex = 0;
   }
 
   resize(locations: Object) {
@@ -475,6 +510,37 @@ class CircleCollection extends DiagramElementCollection {
       }
     }
     this._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
+    this.diagram.animateNextFrame();
+  }
+
+  toggleProperties() {
+    this.propertyLocationIndex =
+      this.propertyLocationIndex < 2 ? this.propertyLocationIndex + 1 : 0;
+    const x = this.propertyLocations[this.propertyLocationIndex];
+    this._circumferenceDimension.showAll();
+    this._diameterDimension.showAll();
+    this._equation.showAll();
+    this._circumferenceDimension.transform.updateTranslation(x, 0);
+    this._diameterDimension.transform.updateTranslation(x, 0);
+    this._equation.transform.updateTranslation(x, 0);
+    this.resetColors();
+    this._diameterDimension.appear(0.5);
+    this._diameterDimension.animateCustomTo(
+      this._diameterDimension.grow.bind(this),
+      0.5,
+    );
+
+    this._equation.transform.updateTranslation(x - 0.3, -1.3);
+    this._equation._d.disolveIn(1);
+    this._equation._c.disolveIn(1);
+    this._equation._equals.disolveIn(0.5);
+    this._equation._pi.disolveIn(0.5);
+
+    this._circumferenceDimension.appear(0.5);
+    this._circumferenceDimension.animateCustomTo(
+      this._circumferenceDimension.grow.bind(this),
+      0.5,
+    );
     this.diagram.animateNextFrame();
   }
 

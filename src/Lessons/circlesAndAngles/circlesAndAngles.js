@@ -193,6 +193,42 @@ class Content extends LessonContent {
     });
 
     this.addSection({
+      setContent: () => `
+        <p>
+        The |_properties|, and their relationships can then be applied to all other objects that have that same shape, no matter their location, size or material!
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._ball,
+        circle._earth,
+        circle._clock,
+      ],
+      modifiers: {
+        // _wheel: highlightWord('wheel', '', 'english'),
+        // _shape: actionWord('shape', 'id_shape'),
+        _properties: actionWord('properties', 'id_properties'),
+      },
+      setState: () => {
+        // circle._wheel.transform.updateTranslation(-1, 0);
+        // circle._wheelShape.transform.updateTranslation(1, 0);
+        // onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
+        circle.eqn.calcSize(new Point(0, 0), 1);
+        circle._clock.transform.updateTranslation(-1.8, 0);
+        circle._ball.transform.updateTranslation(0, 0);
+        circle._earth.transform.updateTranslation(1.8, 0);
+        onClickId('id_properties', circle.toggleProperties, [circle]);
+      },
+      // transitionFromAny: (done) => {
+      //   if (circle._wheel.transform.t().x === 0) {
+      //     circle.showWheelShape(done);
+      //   } else {
+      //     done();
+      //   }
+      // },
+    });
+
+    this.addSection({
       title: 'Corners',
       setContent: () =>
         `<p style="margin-top:10%">
