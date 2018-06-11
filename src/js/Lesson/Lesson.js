@@ -1,43 +1,79 @@
 // @flow
-import { Content } from './LessonContent';
-// import WebGLInstance from './webgl/webgl';
-// import getShaders from './webgl/shaders';
-
-type LessonType = 'multiPage' | 'singlePage';
+import { LessonContent } from './LessonContent';
+import Diagram from '../diagram/Diagram';
 
 class Lesson {
-  content: Content;
-  type: LessonType;
+  // ContentClass: Object;
+  content: LessonContent;
 
   currentSectionIndex: number;
-  currentDiagrams: Object;
+  diagram: Diagram | null;
   state: Object;
   inTransition: boolean;
+  comingFrom: string;
+  refresh: (string, number) => void;
 
-  refresh: (string) => void;
-
-  constructor(content: Content, lessonType: LessonType) {
+  constructor(content: Object) {
     this.content = content;
-    this.type = lessonType;
-    this.currentDiagrams = {};
+    // this.content = new Content(this.diagram);
+    this.diagram = null;
     this.currentSectionIndex = 0;
     this.state = {};
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
+    this.comingFrom = '';
   }
 
   getContentHtml(): string {
     let htmlText = '';
-    if (this.type === 'multiPage') {
-      const section = this.content.sections[this.currentSectionIndex];
-      htmlText = section.getContent(this.type);
-    } else {
-      this.content.sections.forEach((section) => {
-        htmlText = `${htmlText}${section.getContent(this.type)}`;
-      });
-    }
+    const section = this.content.sections[this.currentSectionIndex];
+    htmlText = section.getContent();
     return htmlText;
   }
+
+  nextSection() {
+    const { diagram } = this;
+    if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
+      this.transitionStart('next');
+      this.currentSection().transitionNext(this.finishTransNext.bind(this));
+    }
+  }
+  prevSection() {
+    const { diagram } = this;
+    if (this.currentSectionIndex > 0 && diagram) {
+      this.transitionStart('prev');
+      this.currentSection().transitionPrev(this.finishTransPrev.bind(this));
+    }
+  }
+
+  transitionStart(direction: string = '') {
+    if (this.inTransition) {
+      this.stopDiagrams();
+    }
+    // console.log("2a", this.currentSectionIndex, this.inTransition)
+    this.inTransition = true;
+    if (direction === 'next') {
+      this.comingFrom = 'prev';
+    } else if (direction === 'prev') {
+      this.comingFrom = 'next';
+    } else {
+      this.comingFrom = '';
+    }
+    const { diagram } = this;
+    if (diagram) {
+      diagram.inTransition = true;
+    }
+  }
+
+  finishTransNext() {
+    this.transitionStop();
+    this.goToSection(this.currentSectionIndex + 1);
+  }
+  finishTransPrev() {
+    this.transitionStop();
+    this.goToSection(this.currentSectionIndex - 1);
+  }
+
 
   goToSection(sectionIndex: number) {
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
@@ -46,9 +82,54 @@ class Lesson {
       }
       this.saveState();
       this.currentSectionIndex = sectionIndex;
-      this.refresh(this.getContentHtml());
+      this.refresh(this.getContentHtml(), this.currentSectionIndex);
     }
-    // return false;
+  }
+
+  setState() {
+    const { diagram } = this;
+    const section = this.content.sections[this.currentSectionIndex];
+    if (diagram) {
+      section.setVisible();
+      this.renderDiagrams();
+      if (this.comingFrom === 'next') {
+        this.inTransition = true;
+        section.transitionFromNext(this.finishTransFromNext.bind(this));
+        this.comingFrom = '';
+      } else if (this.comingFrom === 'prev') {
+        this.inTransition = true;
+        section.transitionFromPrev(this.finishTransFromPrev.bind(this));
+        this.comingFrom = '';
+      } else {
+        section.setState(this.state);
+        this.renderDiagrams();
+      }
+    }
+  }
+
+  finishTransitionFromAny(flag: boolean = true) {
+    this.transitionStop();
+    const section = this.content.sections[this.currentSectionIndex];
+
+    if (flag) {
+      section.setState(this.state);
+    }
+    this.renderDiagrams();
+  }
+  finishTransFromPrev(flag: boolean = true) {
+    // if (flag) {
+    const section = this.content.sections[this.currentSectionIndex];
+    if (!flag) {
+      this.transitionStop();
+    }
+    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+  }
+  finishTransFromNext(flag: boolean = true) {
+    const section = this.content.sections[this.currentSectionIndex];
+    if (!flag) {
+      this.transitionStop();
+    }
+    section.transitionFromAny(this.finishTransitionFromAny.bind(this));
   }
 
   currentSection() {
@@ -56,102 +137,47 @@ class Lesson {
   }
 
   saveState() {
-    if (this.type === 'multiPage') {
-      this.state = this.currentSection().getState(this.currentDiagrams);
+    const { diagram } = this;
+    if (diagram) {
+      this.state = this.currentSection().getState(diagram);
     }
   }
 
   stopDiagrams() {
-    Object.keys(this.currentDiagrams).forEach((key) => {
-      const diagram = this.currentDiagrams[key];
-      diagram.stop();
-    });
+    const { diagram } = this;
+    if (diagram) {
+      diagram.stop(false);
+    }
   }
 
-  nextSection() {
-    if (this.currentSectionIndex < this.content.sections.length - 1) {
-      if (this.inTransition) {
-        this.stopDiagrams();
-      }
-      this.inTransition = true;
-      this.currentSection().transitionNext(
-        this.currentDiagrams,
-        this.finishTransNext.bind(this),
-      );
-      // this.renderDiagrams();
+
+  transitionStop() {
+    const { diagram } = this;
+    if (diagram) {
+      diagram.inTransition = false;
     }
+    this.inTransition = false;
   }
 
   renderDiagrams() {
-    Object.keys(this.currentDiagrams).forEach((key) => {
-      this.currentDiagrams[key].animateNextFrame();
-    });
-  }
-
-  finishTransNext() {
-    this.inTransition = false;
-    this.goToSection(this.currentSectionIndex + 1);
-  }
-
-  finishTransPrev() {
-    this.inTransition = false;
-    this.goToSection(this.currentSectionIndex - 1);
-  }
-
-  prevSection() {
-    if (this.currentSectionIndex > 0) {
-      if (this.inTransition) {
-        this.stopDiagrams();
-      }
-      this.inTransition = true;
-      this.currentSection().transitionPrev(
-        this.currentDiagrams,
-        this.finishTransPrev.bind(this),
-      );
+    const { diagram } = this;
+    if (diagram) {
+      diagram.animateNextFrame();
     }
   }
 
-  closeDiagrams() {
-    Object.keys(this.currentDiagrams).forEach((key) => {
-      const diagram = this.currentDiagrams[key];
+  closeDiagram() {
+    const { diagram } = this;
+    if (diagram) {
       diagram.destroy();
-    });
-    this.currentDiagrams = {};
+    }
+    this.diagram = null;
   }
 
-  setState() {
-    let { sections } = this.content;
-    if (this.type === 'multiPage') {
-      sections = [this.content.sections[this.currentSectionIndex]];
-    }
-
-    sections.forEach((section) => {
-      section.setState(this.currentDiagrams, this.state, this.type);
-    });
-    this.renderDiagrams();
-  }
-
-  createDiagrams() {
-    this.closeDiagrams();
-    let { sections } = this.content;
-    // If multi page, only going to create one diagram
-    if (this.type === 'multiPage') {
-      sections = [this.content.sections[this.currentSectionIndex]];
-      const id = 'multipage_diagram';
-      // $FlowFixMe
-      this.currentDiagrams[id] = new this.content.DiagramClass(id);
-    }
-    if (this.type === 'singlePage') {
-      // If single page, may create many diagrams
-      sections.forEach((section) => {
-        const sectionDiagrams = section.getDiagramList(this.type);
-        sectionDiagrams.forEach((d) => {
-          if (!(d.id in this.currentDiagrams)) {
-            this.currentDiagrams[d.id] = new d.DiagramClass(d.id);
-          }
-        });
-      });
-    }
+  initialize() {
+    this.closeDiagram();
+    this.content.initialize();
+    this.diagram = this.content.diagram;
   }
 }
 

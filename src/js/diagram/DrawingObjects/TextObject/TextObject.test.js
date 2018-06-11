@@ -33,7 +33,7 @@ describe('Diagram Text Object', () => {
       expect(df).toEqual(expected);
     });
     test('Color', () => {
-      expect(font.color).toBe('rgba(255,0,0,255)');
+      expect(font.color).toBe('rgba(255,0,0,1)');
     });
     test('Set', () => {
       const ctx = {};
@@ -173,7 +173,7 @@ describe('Diagram Text Object', () => {
         to.drawWithTransformMatrix(m2.identity());
         expect(draw2D.ctx.transformMatrix)
           .toEqual([500, 0, 0, 250, 500, 250]);
-        expect(draw2D.ctx.fillStyle).toBe('rgba(255,0,0,255)');
+        expect(draw2D.ctx.fillStyle).toBe('rgba(255,0,0,1)');
         expect(draw2D.ctx.filledText)
           .toEqual({
             text: 'test2',
@@ -195,7 +195,7 @@ describe('Diagram Text Object', () => {
         expect(draw2D.ctx.filledText.count).toBe(2);
         expect(round(draw2D.ctx.transformMatrix, 2))
           .toEqual([0.68, -0.53, 1.05, 0.34, 1000, 750]);
-        expect(draw2D.ctx.fillStyle).toBe('rgba(255,0,0,255)');
+        expect(draw2D.ctx.fillStyle).toBe('rgba(255,0,0,1)');
         expect(draw2D.ctx.filledText.text).toBe('test2');
         expect(round(draw2D.ctx.filledText.x, 2)).toBe(-600);
         expect(round(draw2D.ctx.filledText.y, 2)).toBe(-200);

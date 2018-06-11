@@ -27,7 +27,8 @@ $diagram_ratio: 1.5;
     --lesson__np_button-height: calc(#{$np_button-height-portrait} * 1vw);
     --lesson__np_button-vspace: calc(#{$np_button-vspace} * 1vw);
     --lesson__np_button-hspace: calc(#{$np_button-hspace} * 1vw);
-    --lesson__text-margin: calc(#{$text-margin} * 1vw);
+    // --lesson__text-margin: calc(#{$text-margin} * 1vw);
+    --lesson__text-margin: 2em;
     --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1.5);
     --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw * 1.5);
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} * 1vw);
@@ -58,7 +59,8 @@ $diagram_ratio: 1.5;
     --lesson__np_button-height: calc(#{$np_button-height-landscape} / 100 * #{$xl});
     --lesson__np_button-vspace: calc(#{$np_button-vspace} / 100 * #{$xl});
     --lesson__np_button-hspace: calc(#{$np_button-hspace} / 100 * #{$xl});
-    --lesson__text-margin: calc(#{$text-margin} / 100 * #{$xl});
+    // --lesson__text-margin: calc(#{$text-margin} / 100 * #{$xl});
+    --lesson__text-margin: 2em;
     --lesson__goto_button-width: calc(#{$goto_button-width} / 100 * #{$xl});
     --lesson__goto_button-height: calc(#{$goto_button-height} / 100 * #{$xl});
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} / 100 * #{$xl});
@@ -89,7 +91,7 @@ $diagram_ratio: 1.5;
   margin-bottom: $bottom_margin;
 }
 
-#multipage_diagram {
+.multipage_diagram {
   width: var(--lesson__content-width);
   height: var(--lesson__content-height);
 }
@@ -104,13 +106,14 @@ $diagram_ratio: 1.5;
 
 .lesson__text p {
   // display: inline-block;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
   // clear: both;
   // float: left;
   color: $color_diagram-text;
   margin-left: calc(var(--lesson__text-margin) * 1);
   margin-right: calc(var(--lesson__text-margin) * 1);
+  margin-bottom: 1em;
 }
 
 .lesson__text p:first-child {
@@ -216,7 +219,7 @@ $diagram_ratio: 1.5;
     max-width: var(--lesson__max_container-width);
   }
 
-  #multipage_diagram {
+  .multipage_diagram {
     display: inline-block;
     width: var(--lesson__content-width);
     height: var(--lesson__content-height);

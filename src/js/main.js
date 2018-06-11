@@ -7,7 +7,7 @@ import lessonSinglePage from './views/lessonSinglePage/lessonSinglePage';
 import lessonMultiPage from './views/lessonMultiPage/lessonMultiPage';
 
 homePage();
-introPage();
+introPage(0);
 aboutPage();
 lessonSinglePage();
 lessonMultiPage(0);

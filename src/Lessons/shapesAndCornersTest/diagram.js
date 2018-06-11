@@ -12,6 +12,20 @@ const colors = getScssColors(styles);
 
 const backgroundColor = colors.background;
 
+// type typeShape = {
+//   _lines: DiagramElementPrimative;
+//   _corners: DiagramElementPrimative;
+//   _lessSharpCorners: DiagramElementPrimative;
+//   _moreSharpCorners: DiagramElementPrimative;
+// } & DiagramElementCollection ;
+
+// type typeShapesDiagramCollection = {
+//   _square: typeShape,
+//   _triangle: typeShape,
+//   _pent: typeShape,
+// } & DiagramElementCollection;
+
+
 type typeElements = {
   _circle: CircleCollection;
   _shapes: ShapesCollection;
@@ -32,12 +46,10 @@ function getLessonVars() {
       'pent-center-x',
       'pent-center-y',
       'radius',
-      'arrow',
       'linewidth',
       'circle-center-x',
       'circle-center-y',
       'corner-length',
-      'angle-radius',
     ],
     '--lessonvars-',
   );
@@ -50,8 +62,6 @@ function getLessonVars() {
     ),
     radius: v.radius,
     linewidth: v.linewidth,
-    arrow: v.arrow,
-    angleRadius: v['angle-radius'],
     circle: {
       center: new Point(v['circle-center-x'], v['circle-center-y']),
     },
@@ -112,16 +122,23 @@ class LessonDiagram extends Diagram {
   }
 
   draw(now: number): void {
-    // const t1 = performance.now()
     super.draw(now);
-    // console.log("a", performance.now() - t1)
+    // this.elements._shapes.eq.calcSize(new Point(100, 100), 20, this.draw2D.ctx);
+    // this.elements._shapes.eq.draw(this.draw2D.ctx);
+    // this.elements._shapes.eq1.calcSize(new Point(0, 0), 0.2, null);
+    // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    // this.elements._shapes._eq2Elements.updateMoveTranslationBoundary();
+    // $FlowFixMe
+    this.elements._shapes._eq5Elements.setMoveBoundaryToDiagram();
+    // console.log(this.elements._shapes.lastDrawTransform.matrix())
+    // console.log(this.elements._shapes._eq5Elements.getRelativeGLBoundingRect())
+    // this.elements._shapes.eq1.updateMoveTranslationBoundary();
+    // console.log(this.elements._shapes._eq5Elements._a);
   }
-
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
   ): boolean {
-    // const t1 = performance.now()
     if (this.beingMovedElements.length === 0) {
       return false;
     }
@@ -129,13 +146,6 @@ class LessonDiagram extends Diagram {
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);
       // return false;
     }
-
-    // if(! ('time' in this)) {
-    //   this.time = performance.now();
-    // }
-    // const t = performance.now();
-    // console.log(t - this.time);
-    // this.time = t;
 
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
@@ -163,10 +173,7 @@ class LessonDiagram extends Diagram {
       transform.updateRotation(rot - diffAngle);
       this.elements._circle._radius.moved(transform);
     }
-
     this.animateNextFrame();
-    // const t2 = performance.now()
-    // console.log(t2-t1)
     return true;
   }
 }

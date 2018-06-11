@@ -2,21 +2,22 @@
 // import * as vertexShapes from './DrawingObjects/VertexObject/vertexShapes';
 import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
-// import Polygon from './DrawingObjects/VertexObject/Polygon';
+
 import {
   Rect, Point, Transform,
   spaceToSpaceTransform,
 } from './tools/g2';
-// import { spaceToSpaceTransformMatrix } from './tools/g2';
-// import * as m2 from './m2';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
+
 import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
 import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
+import Arrow from './DiagramElements/Arrow';
+
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
 import Integral from './DiagramElements/Equation/Integral';
 import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
@@ -41,19 +42,27 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 
 // eslint-disable-next-line no-use-before-define
 function equation(diagram: Diagram) {
-  function elements(elems: Object) {
-    const font = new DiagramFont(
+  function elements(elems: Object, colorOrFont: Array<number> | DiagramFont = []) {
+    let color = [1, 1, 1, 1];
+    if (Array.isArray(colorOrFont)) {
+      color = colorOrFont.slice();
+    }
+    let font = new DiagramFont(
       'Times New Roman',
-      'normal',
-      1,
+      'italic',
+      0.2,
       '200',
       'left',
       'alphabetic',
-      [1, 1, 1, 1],
+      color,
     );
+    if (colorOrFont instanceof DiagramFont) {
+      font = colorOrFont;
+      // color = font.color;
+    }
 
     const equationElements = new DiagramElementCollection(
-      new Transform().translate(0, 0),
+      new Transform().scale(1, 1).translate(0, 0),
       diagram.limits,
     );
     Object.keys(elems).forEach((key) => {
@@ -63,7 +72,7 @@ function equation(diagram: Diagram) {
         const p = new DiagramElementPrimative(
           to,
           new Transform().scale(1, 1).translate(0, 0),
-          [1, 1, 1, 1],
+          color,
           diagram.limits,
         );
         equationElements.add(key, p);
@@ -115,7 +124,9 @@ function equation(diagram: Diagram) {
     makeHTML,
   };
 }
-function shapes(webgl: WebGLInstance, limits: Rect) {
+
+// eslint-disable-next-line no-use-before-define
+function shapes(diagram: Diagram) {
   function polyLine(
     points: Array<Point>,
     close: boolean,
@@ -123,14 +134,55 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return PolyLine(webgl, points, close, lineWidth, color, transform, limits);
+    return PolyLine(diagram.webgl, points, close, lineWidth, color, transform, diagram.limits);
+  }
+
+  function text(
+    textInput: string,
+    location: Point,
+    color: Array<number>,
+    fontInput: DiagramFont | null = null,
+  ) {
+    let font = new DiagramFont(
+      'Times New Roman',
+      'italic',
+      0.2,
+      '200',
+      'center',
+      'middle',
+      color,
+    );
+    if (fontInput !== null) {
+      font = fontInput;
+    }
+    const dT = new DiagramText(new Point(0, 0), textInput, font);
+    const to = new TextObject(diagram.draw2D, [dT]);
+    return new DiagramElementPrimative(
+      to,
+      new Transform().scale(1, 1).translate(location.x, location.y),
+      color,
+      diagram.limits,
+    );
+  }
+  function arrow(
+    width: number = 1,
+    legWidth: number = 0.5,
+    height: number = 1,
+    legHeight: number = 0.5,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return Arrow(
+      diagram.webgl, width, legWidth, height, legHeight,
+      new Point(0, 0), color, transform, diagram.limits,
+    );
   }
   function lines(
     linePairs: Array<Array<Point>>,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return Lines(webgl, linePairs, color, transform, limits);
+    return Lines(diagram.webgl, linePairs, color, transform, diagram.limits);
   }
   function grid(
     bounds: Rect,
@@ -157,7 +209,10 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return PolyLineCorners(webgl, points, close, cornerLength, lineWidth, color, transform, limits);
+    return PolyLineCorners(
+      diagram.webgl, points, close,
+      cornerLength, lineWidth, color, transform, diagram.limits,
+    );
   }
   function polygon(
     numSides: number,
@@ -169,8 +224,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     transform: Transform | Point = new Transform(),
   ) {
     return Polygon(
-      webgl, numSides, radius, lineWidth,
-      rotation, numSidesToDraw, color, transform, limits,
+      diagram.webgl, numSides, radius, lineWidth,
+      rotation, numSidesToDraw, color, transform, diagram.limits,
     );
   }
   function polygonFilled(
@@ -180,10 +235,12 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     numSidesToDraw: number,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
+    textureLocation: string = '',
+    textureCoords: Rect = new Rect(0, 0, 1, 1),
   ) {
     return PolygonFilled(
-      webgl, numSides, radius,
-      rotation, numSidesToDraw, color, transform, limits,
+      diagram.webgl, numSides, radius,
+      rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation, textureCoords,
     );
   }
   function horizontalLine(
@@ -195,8 +252,8 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     transform: Transform | Point = new Transform(),
   ) {
     return HorizontalLine(
-      webgl, start, length, width,
-      rotation, color, transform, limits,
+      diagram.webgl, start, length, width,
+      rotation, color, transform, diagram.limits,
     );
   }
   function collection(transformOrPoint: Transform | Point = new Transform()) {
@@ -206,7 +263,7 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     } else {
       transform = transformOrPoint.copy();
     }
-    return new DiagramElementCollection(transform, limits);
+    return new DiagramElementCollection(transform, diagram.limits);
   }
   return {
     polyLine,
@@ -214,9 +271,11 @@ function shapes(webgl: WebGLInstance, limits: Rect) {
     polygon,
     polygonFilled,
     horizontalLine,
+    arrow,
     collection,
     lines,
     grid,
+    text,
   };
 }
 
@@ -226,6 +285,7 @@ class Diagram {
   elements: DiagramElementCollection;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
+  inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
   limits: Rect;
@@ -243,6 +303,8 @@ class Diagram {
   diagramToPixelSpaceTransform: Transform;
   pixelToGLSpaceTransform: Transform;
   glToPixelSpaceTransform: Transform;
+
+  drawQueued: boolean;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -273,7 +335,7 @@ class Diagram {
           }
         }
         this.backgroundColor = backgroundColor;
-        const shaders = getShaders('simple', 'simple');
+        const shaders = getShaders('withTexture', 'withTexture');
         const webgl = new WebGLInstance(
           this.canvas,
           shaders.vertexSource,
@@ -305,7 +367,8 @@ class Diagram {
       limits = new Rect(limitsOrxMin, yMin, width, height);
     }
     this.updateLimits(limits);
-
+    this.drawQueued = false;
+    this.inTransition = false;
     // console.log(this.limits)
     this.beingMovedElements = [];
     this.globalAnimation = new GlobalAnimation();
@@ -320,15 +383,15 @@ class Diagram {
   }
 
   getShapes() {
-    return shapes(this.webgl, this.limits);
+    return shapes(this);
   }
   getEquations() {
     return equation(this);
   }
 
   sizeHtmlText() {
-    const scale = this.fontScale * 1 / 50;
-    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale}px`;
+    const scale = this.fontScale * 1 / 45;
+    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale - 1}px`;
   }
 
   destroy() {
@@ -409,6 +472,10 @@ class Diagram {
   // and dragged, then when they are released, for them to move freely before
   // coming to a stop.
   touchDownHandler(clientPoint: Point) {
+    if (this.inTransition) {
+      return;
+    }
+
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
     // console.log(pixelPoint)
@@ -455,6 +522,9 @@ class Diagram {
   // normally scroll the screen. Typically, you would want to move the diagram
   // element and not the screen, so a true would be returned.
   touchMoveHandler(previousClientPoint: Point, currentClientPoint: Point): boolean {
+    if (this.inTransition) {
+      return false;
+    }
     if (this.beingMovedElements.length === 0) {
       return false;
     }
@@ -488,12 +558,12 @@ class Diagram {
         element.moved(currentTransform);
       }
     }
-    this.globalAnimation.animateNextFrame();
+    this.animateNextFrame();
     return true;
   }
 
-  stop() {
-    this.elements.stop();
+  stop(flag: ?mixed) {
+    this.elements.stop(flag);
   }
 
   // To add elements to a diagram, either this method can be overridden,
@@ -520,7 +590,7 @@ class Diagram {
   }
 
   draw(now: number): void {
-    // const measure = Date.now()
+    this.drawQueued = false;
     this.clearContext();
     // This transform converts standard gl clip space, to diagram clip space
     // defined in limits.
@@ -532,6 +602,7 @@ class Diagram {
     //     (-this.limits.width / 2 - this.limits.left) * normWidth,
     //     (this.limits.height / 2 - this.limits.top) * normHeight,
     //   );
+    // const t1 = performance.now();
     this.elements.draw(
       this.diagramToGLSpaceTransform,
       now,
@@ -540,11 +611,15 @@ class Diagram {
     if (this.elements.isMoving()) {
       this.animateNextFrame();
     }
+    // console.log(performance.now() - t1)
     // console.log(Date.now() - measure)
   }
 
   animateNextFrame() {
-    this.globalAnimation.queueNextFrame(this.draw.bind(this));
+    if (!this.drawQueued) {
+      this.drawQueued = true;
+      this.globalAnimation.queueNextFrame(this.draw.bind(this));
+    }
   }
 
   isAnimating(): boolean {

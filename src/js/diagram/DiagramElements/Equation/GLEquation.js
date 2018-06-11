@@ -41,7 +41,7 @@ class Element {
       this.descent = -r.bottom;
       this.height = r.height;
       this.width = r.width;
-      content.show = true;
+      // content.show = true;
     }
   }
 }
