@@ -5,13 +5,12 @@ import * as tools from '../../js/diagram/tools/mathtools';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../js/diagram/tools/g2';
 import getScssColors from '../../js/tools/getScssColors';
 import styles from './style.scss';
 
 const colors = getScssColors(styles);
 const anchorPoints = 50;
-const anglePoints = 400;
 
 function makeLine(
   shapes: Object,
@@ -47,12 +46,6 @@ function makeRadius(shapes: Object, layout: Object) {
   return radius;
 }
 
-function makeArc(shapes: Object, layout: Object) {
-  return shapes.polygon(
-    anglePoints, layout.radius, layout.linewidth, 0,
-    anglePoints, colors.arc, new Point(0, 0),
-  );
-}
 function makeAnchor(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anchorPoints, layout.linewidth * 2, 0,
@@ -60,24 +53,10 @@ function makeAnchor(shapes: Object, layout: Object) {
   );
 }
 
-function makeAngle(shapes: Object, layout: Object) {
-  return shapes.polygonFilled(
-    anglePoints, layout.angleRadius, 0,
-    anglePoints, colors.angle, new Point(0, 0),
-  );
-}
-
 function makeReference(shapes: Object, layout: Object) {
   return makeLine(
     shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.reference, new Transform().rotate(0).translate(0, 0),
-  );
-}
-
-function makeFakeRadius(shapes: Object, layout: Object) {
-  return makeLine(
-    shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.reference, new Transform().rotate(0).translate(0, 0),
+    colors.reference, new Point(0, 0),
   );
 }
 
@@ -88,50 +67,50 @@ function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout:
   );
 }
 
-function makeArrow(shapes: Object, layout: Object) {
-  return shapes.arrow(
-    0.1, 0.04, 0.1, 0.04, colors.arrow,
-    new Transform().rotate(0).translate(layout.arrow, 0),
-  );
+function makeGrid(shapes: Object) {
+  return shapes.grid(new Rect(-10, -10, 20, 20), 0.2, 0.2, colors.grid, new Transform().rotate(0));
 }
 
+// $FlowFixMe
 class CircleCollection extends DiagramElementCollection {
+  // elements: typeCircleDiagramCollection;
   _anchor: DiagramElementPrimative;
-  _arrow: DiagramElementPrimative;
-  _arc: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
-  _fakeRadius: DiagramElementPrimative;
   _reference: DiagramElementPrimative;
   _cornerRef: DiagramElementPrimative;
   _cornerRad: DiagramElementPrimative;
-  diagram: Diagram;
-  layout: Object;
-  colors: Object;
 
   constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
-    this.colors = colors;
-    this.layout = layout;
 
     const { shapes } = diagram;
 
     const origin = new Point(0, 0);
-    const t = new Transform().rotate(0).translate(0, 0);
 
-    this.add('arrow', makeArrow(shapes, layout));
-    this.add('angle', makeAngle(shapes, layout));
-    this.add('reference', makeReference(shapes, layout));
-    this.add('fakeRadius', makeFakeRadius(shapes, layout));
-    this.add('arc', makeArc(shapes, layout));
+    const grid = makeGrid(shapes);
+    this.add('grid', grid);
+    grid.pulseScaleNow(0, 1.05, 0.4);
+
+    const reference = makeReference(shapes, layout);
+    this.add('reference', reference);
 
     const radius = makeRadius(shapes, layout);
     radius.setTransformCallback = this.updateRotation.bind(this);
     this.add('radius', radius);
-    this.add('cornerRef', makeCorner(shapes, origin, layout));
-    this.add('cornerRad', makeCorner(shapes, t, layout));
-    this.add('anchor', makeAnchor(shapes, layout));
+
+    const cornerRef = makeCorner(shapes, origin, layout);
+    this.add('cornerRef', cornerRef);
+
+    const t = new Transform().rotate(0).translate(
+      0,
+      0,
+    );
+    const cornerRad = makeCorner(shapes, t, layout);
+    this.add('cornerRad', cornerRad);
+
+    const anchor = makeAnchor(shapes, layout);
+    this.add('anchor', anchor);
 
     this.isTouchable = true;
     this.isMovable = true;
@@ -145,46 +124,36 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   updateRotation() {
-    let rotation = this._radius.transform.r();
+    const rotation = this._radius.transform.r();
     if (rotation) {
-      if (rotation > Math.PI * 2) {
-        rotation -= Math.PI * 2;
-      }
-      if (rotation < 0) {
-        rotation += Math.PI * 2;
-      }
-      if (this._arrow.show) {
-        const angleToDisappear = 0.35;
-        if (rotation > angleToDisappear) {
-          this._arrow.color[3] = 0;
-          // this._arrow.show = false;
-        } else {
-          // this._arrow.show = true;
-          this._arrow.color[3] = (angleToDisappear - rotation) / angleToDisappear;
-          this._arrow.transform.updateRotation(rotation);
-          this._arrow.transform.updateTranslation(
-            this.layout.arrow * Math.cos(rotation),
-            this.layout.arrow * Math.sin(rotation),
-          );
-        }
-      }
       const r = normAngle(rotation);
       this._radius.transform.updateRotation(r);
       this._cornerRad.transform.updateRotation(r);
-      this._angle.angleToDraw = r + 0.01;
-      this._arc.angleToDraw = r + 0.01;
+      this._grid.transform.updateRotation(r);
     }
   }
 
-  pulseArrow() {
-    this._arrow.pulseScaleNow(0, 1.2, 0.7);
-    this.diagram.animateNextFrame();
-  }
-
-  pulseAngle() {
-    this._angle.pulseScaleNow(1, 1.5);
-    this.diagram.animateNextFrame();
-  }
+  // touchMoveHandler(
+  //   previousClientPoint: Point,
+  //   currentClientPoint: Point,
+  // ): boolean {
+  //   if (this.beingMovedElements.length === 0) {
+  //     return false;
+  //   }
+  //   const previousClipPoint = this.clientToClip(previousClientPoint);
+  //   const currentClipPoint = this.clientToClip(currentClientPoint);
+  //   const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
+  //   const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
+  //   const diffAngle = minAngleDiff(previousAngle, currentAngle);
+  //   const transform = this._radius.transform.copy();
+  //   const rot = transform.r();
+  //   if (rot != null) {
+  //     transform.updateRotation(rot - diffAngle);
+  //     this._radius.moved(transform);
+  //   }
+  //   this.diagram.animateNextFrame();
+  //   return true;
+  // }
 
   pulseAnchor() {
     this._anchor.pulseScaleNow(1, 2);
@@ -201,26 +170,11 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  pulseFakeRadius() {
-    this._fakeRadius.pulseScaleNow(1, 2);
-    this.diagram.animateNextFrame();
-  }
-
   pulseLines() {
     this.pulseRadius();
     this.pulseReference();
-    this.pulseFakeRadius();
   }
 
-  pushRadius() {
-    const angle = this._radius.transform.r();
-    let targetAngle = angle + Math.PI / 6;
-    if (targetAngle > Math.PI * 2) {
-      targetAngle -= Math.PI * 2;
-    }
-    this._radius.animateRotationTo(targetAngle, 1, 1);
-    this.diagram.animateNextFrame();
-  }
   rotateTo(
     angle: number,
     direction: number,

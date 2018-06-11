@@ -140,6 +140,7 @@ describe('Diagram', () => {
         );
         squareElement.isMovable = true;
         squareElement.isTouchable = true;
+        squareElement.move.limitToDiagram = true;
         squares[sKey] = squareElement;
         collection.add(sKey, squareElement);
         collection.isTouchable = true;

@@ -5,6 +5,13 @@ import { Point } from '../../tools/g2';
 import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../../DrawContext2D';
 
+function colorArrayToString(color: Array<number>) {
+  return `rgba(${
+    Math.floor(color[0] * 255)},${
+    Math.floor(color[1] * 255)},${
+    Math.floor(color[2] * 255)},${
+    color[3]})`;
+}
 // DiagramFont defines the font properties to be used in a TextObject
 class DiagramFont {
   size: number;
@@ -31,11 +38,7 @@ class DiagramFont {
     this.alignH = alignH;
     this.alignV = alignV;
     if (Array.isArray(color)) {
-      this.color = `rgba(${
-        Math.floor(color[0] * 255)},${
-        Math.floor(color[1] * 255)},${
-        Math.floor(color[2] * 255)},${
-        Math.floor(color[3] * 255)})`;
+      this.color = colorArrayToString(color);
     } else {
       this.color = color;
     }
@@ -112,6 +115,14 @@ class TextObject extends DrawingObject {
   setFont(fontSize: number) {
     for (let i = 0; i < this.text.length; i += 1) {
       this.text[i].font.size = fontSize;
+    }
+  }
+
+  setColor(color: Array<number>) {
+    const c = colorArrayToString(color);
+
+    for (let i = 0; i < this.text.length; i += 1) {
+      this.text[i].font.color = c;
     }
   }
 

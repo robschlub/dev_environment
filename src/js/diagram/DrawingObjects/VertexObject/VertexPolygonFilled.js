@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../tools/g2';
+import { Point, Rect } from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from './VertexObject';
 
@@ -17,6 +17,8 @@ class PolygonFilled extends VertexObject {
     rotation: number = 0,
     center: Point = new Point(0, 0),
     numSidesToDraw: number = numSides,
+    textureLocation: string = '',
+    textureCoords: Rect = new Rect(0, 0, 1, 1),
   ) {
     super(webgl);
     this.glPrimative = webgl.gl.TRIANGLE_FAN;
@@ -60,6 +62,16 @@ class PolygonFilled extends VertexObject {
     if (sidesToDraw < sides) {
       this.border[0].push(center.copy());
     }
+    this.textureLocation = textureLocation;
+
+    this.createTextureMap(
+      -this.radius * 1.01 + center.x,
+      this.radius * 1.01 + center.x,
+      -this.radius * 1.01 + center.y,
+      this.radius * 1.01 + center.y,
+      textureCoords.left, textureCoords.right,
+      textureCoords.bottom, textureCoords.top,
+    );
 
     this.setupBuffer();
   }

@@ -138,8 +138,8 @@ class WebGLInstance {
       this.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
       this.gl.disable(this.gl.DEPTH_TEST);
-      // gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
-      // gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+      gl.enable(gl.BLEND);
       this.gl.useProgram(this.program);
 
       // window.addEventListener('resize', autoResize.bind(this, event));

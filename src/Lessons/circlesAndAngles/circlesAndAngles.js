@@ -3,7 +3,7 @@
 // import { Lesson } from '../../js/Lesson/Lesson';
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform } from '../../js/diagram/tools/g2';
+import { Transform, Point } from '../../js/diagram/tools/g2';
 import { easeinout } from '../../js/diagram/tools/mathtools';
 
 class Content extends LessonContent {
@@ -20,10 +20,257 @@ class Content extends LessonContent {
     const circle = this.diagram.elements._circle;
 
     this.addSection({
+      setContent: () =>
+        `<p style="margin-top:27%; text-align:center;">
+          |_mathematics_is_a_powerful_tool|
+        </p> 
+        <p style="margin-top:10%; text-align:center;">
+          We use it to understand and predict the world around us.
+        </p>
+        `,
+      modifiers: {
+        _mathematics_is_a_powerful_tool:
+          highlightWord('Mathematics is a powerful tool.', '', 'english'),
+      },
+    });
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:20%;">
+          Mathematics describes an object or phenomenon in a more |_simple|, and more |_general| way.
+        </p>
+        <p style="margin-top:5%;">
+          Describing something more |_simply|, makes it easier to study and understand.
+        </p>
+        <p style="margin-top:5%;">
+          Describing something more |_generally|, means the understanding can be reapplied to other scenarios.
+        </p>
+        `,
+      showOnly: [],
+      modifiers: {
+        _simple: highlightWord('simple', '', 'english'),
+        _general: highlightWord('general', '', 'english'),
+        _simply: highlightWord('simply', '', 'english'),
+        _generally: highlightWord('generally', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:27%;">
+          A large area of mathematics is the study of |_shapes|.
+        </p>
+        <p style="margin-top:10%;">
+          |_Shape| are simple generalizations of |_objects| and the |_paths| they travel.
+        </p>
+        `,
+      showOnly: [],
+      modifiers: {
+        _shapes: highlightWord('shapes', '', 'english'),
+        _Shape: highlightWord('Shapes', '', 'english'),
+        _objects: highlightWord('objects', '', 'english'),
+        _paths: highlightWord('paths', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:5%;">
+          For example, a |_wheel| is a physical thing.
+        </p>
+        <p>
+          It is made of different materials, has mass, size, location and smell.
+        </p>
+        <p>
+        `,
+      showOnly: [
+        circle,
+        circle._wheel,
+      ],
+      modifiers: {
+        _wheel: highlightWord('wheel', '', 'english'),
+        _shape: actionWord('shape', 'id_shape'),
+      },
+      setState: () => {
+        circle._wheel.transform.updateTranslation(0, 0);
+      },
+      // transitionNext: (done) => {
+      //   if (circle._wheel.transform.t().x === 0) {
+      //     circle.showWheelShape(done);
+      //   } else {
+      //     done();
+      //   }
+      // },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p>
+        In mathematics, a |_shape| can be used to describe the wheel in a more simple, general way.
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._wheel,
+        circle._wheelShape,
+      ],
+      modifiers: {
+        _wheel: highlightWord('wheel', '', 'english'),
+        _shape: actionWord('shape', 'id_shape'),
+      },
+      setState: () => {
+        circle._wheel.transform.updateTranslation(-1, 0);
+        circle._wheelShape.transform.updateTranslation(1, 0);
+        onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
+      },
+      transitionFromAny: (done) => {
+        if (circle._wheel.transform.t().x === 0) {
+          circle.showWheelShape(done);
+        } else {
+          done();
+        }
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:5%;">
+          The shape can then be studied.
+        </p>
+        <p>
+          |_Properties| can be discovered that describe the shape, and |_predict| other properties.
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._wheelShape,
+        circle._diameterDimension,
+        circle._circumferenceDimension,
+      ],
+      modifiers: {
+        _Properties: actionWord('Properties', 'id_properties'),
+        _predict: actionWord('predict', 'id_predict'),
+      },
+      transitionFromAny: (done) => {
+        // circle._circumferenceDimension.showAll();
+        // circle._diameterDimension.showAll();
+        circle._wheelShape.transform.updateTranslation(1, 0);
+        const tDiameter = 1;
+        const t = circle._wheelShape.transform.t();
+        circle._circumferenceDimension.transform.updateTranslation(t.x, t.y);
+        circle._diameterDimension.transform.updateTranslation(t.x, t.y);
+        circle.resetColors();
+        circle._diameterDimension.appear(0.5);
+        circle._diameterDimension.animateCustomTo(
+          circle._diameterDimension.grow.bind(circle),
+          tDiameter,
+        );
+
+        const makeEquation = () => {
+          circle._equation.transform.updateTranslation(0, 0);
+          circle._equation.show = true;
+          circle.equationTextToInitialPositions();
+          circle.eqn.animateTo(new Point(-1, 0), 1, 2);
+          circle._equation._d.disolveIn(1);
+          circle._equation._c.disolveIn(1);
+          circle._equation._equals.disolveInWithDelay(1.5, 1);
+          circle._equation._pi.disolveInWithDelay(1.5, 1, done);
+        };
+
+        circle._circumferenceDimension.appearWithDelay(tDiameter, 1);
+        circle._circumferenceDimension.animateCustomToWithDelay(
+          tDiameter,
+          circle._circumferenceDimension.grow.bind(circle),
+          1.5,
+          easeinout,
+          makeEquation.bind(circle),
+        );
+      },
+      setState: () => {
+        circle._circumferenceDimension.showAll();
+        circle._diameterDimension.showAll();
+        onClickId('id_properties', circle.pulseProperties, [circle]);
+        onClickId('id_predict', circle.pulseEquation, [circle]);
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p>
+        The |_properties|, and their relationships can then be applied to all other objects that have that same shape, no matter their location, size or material!
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._ball,
+        circle._earth,
+        circle._clock,
+      ],
+      modifiers: {
+        _properties: actionWord('properties', 'id_properties'),
+      },
+      setState: () => {
+        circle.eqn.calcSize(new Point(0, 0), 1);
+        circle._clock.transform.updateTranslation(-1.8, 0);
+        circle._ball.transform.updateTranslation(0, 0);
+        circle._earth.transform.updateTranslation(1.8, 0);
+        onClickId('id_properties', circle.toggleProperties, [circle]);
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:10%;">
+          This is tremendously powerful, and allowed the first |_calculation| of the size of our planet over 2000 years ago!
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._earth,
+      ],
+      setState: () => {
+        circle._earth.transform.updateTranslation(-1, 0);
+        onClickId('id_calculation', circle.calculateEarth, [circle]);
+      },
+      modifiers: {
+        _calculation: actionWord('calculation', 'id_calculation'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:14%;">
+          The mathematics from studying shapes also helps us understand phenonmum we don't see, like |_sound|, |_gravity|, |_electricity|, |_radio_waves| and |_magnetism|.
+        </p>
+        <p style="margin-top:10%">
+          It is the basis of most engineering and science disciplines.
+        </p>
+        <p style="margin-top:10%">
+         But most importantly, it can be used to simply |_better_understand|.
+        </p>
+        `,
+      modifiers: {
+        _sound: highlightWord('sound', '', 'english'),
+        _gravity: highlightWord('gravity', '', 'english'),
+        _electricity: highlightWord('electricity', '', 'english'),
+        _radio_waves: highlightWord('radio waves', '', 'english'),
+        _magnetism: highlightWord('magnetism', '', 'english'),
+        _better_understand: highlightWord('better understand the world we live in', '', 'english'),
+      },
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p style="margin-top:35%; ; text-align:center;">
+          All from the study of simple shapes.
+        </p>
+        `,
+    });
+
+    this.addSection({
       title: 'Corners',
       setContent: () =>
         `<p style="margin-top:10%">
-          Many |_shapes| have |_corners|.
+          Many |_shapes| have not |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
         </p><p style="margin-top:35%">
