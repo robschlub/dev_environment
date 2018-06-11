@@ -20,52 +20,19 @@ type typeElements = {
 function getLessonVars() {
   const v = getCssVariables(
     'lesson__container_name',
-    [
-      'x-min',
-      'x-max',
-      'y-min',
-      'y-max',
-      'square-center-x',
-      'square-center-y',
-      'tri-center-x',
-      'tri-center-y',
-      'pent-center-x',
-      'pent-center-y',
-      'radius',
-      'arrow',
-      'linewidth',
-      'circle-center-x',
-      'circle-center-y',
-      'corner-length',
-      'angle-radius',
-    ],
     '--lessonvars-',
   );
-  return {
-    limits: new Rect(
-      v['x-min'],
-      v['y-min'],
-      v['x-max'] - v['x-min'],
-      v['y-max'] - v['y-min'],
-    ),
-    radius: v.radius,
-    linewidth: v.linewidth,
-    arrow: v.arrow,
-    angleRadius: v['angle-radius'],
-    circle: {
-      center: new Point(v['circle-center-x'], v['circle-center-y']),
-    },
-    square: {
-      center: new Point(v['square-center-x'], v['square-center-y']),
-    },
-    tri: {
-      center: new Point(v['tri-center-x'], v['tri-center-y']),
-    },
-    pent: {
-      center: new Point(v['pent-center-x'], v['pent-center-y']),
-    },
-    cornerLength: v['corner-length'],
-  };
+  v.limits = new Rect(
+    v.xMin,
+    v.yMin,
+    v.xMax - v.xMin,
+    v.yMax - v.yMin,
+  );
+  v.circle = { center: new Point(v.circleCenterX, v.circleCenterY) };
+  v.square = { center: new Point(v.squareCenterX, v.squareCenterY) };
+  v.tri = { center: new Point(v.triCenterX, v.triCenterY) };
+  v.pent = { center: new Point(v.pentCenterX, v.pentCenterY) };
+  return v;
 }
 
 // $FlowFixMe
