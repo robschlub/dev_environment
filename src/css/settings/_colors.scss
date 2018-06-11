@@ -9,12 +9,11 @@ $color_safe:                   map-get($_color-theme, safe);
 $color_passive:                map-get($_color-theme, passive);
 $color_highlight:              map-get($_color-theme, highlight);
 $color_background:             map-get($_color-theme, background);
-$color_navbar:                 map-get($_color-theme, navbar);
 $color_text:                   map-get($_color-theme, text);
+$color_diagram:                map-get($_color-theme, diagram-background);
 $color_diagram-text:           map-get($_color-theme, diagram-text);
 $color_negative-text:          map-get($_color-theme, negative-text);
 $color_navigation-buttons:     map-get($_color-theme, navigation-buttons);
-$color_diagram:                map-get($_color-theme, diagram-background);
 $color_navbar-background:      map-get($_color-theme, navbar-background-color);
 $color_navbar:                 map-get($_color-theme, navbar-color);
 $color_navbar-hover:           map-get($_color-theme, navbar-hover-color);
@@ -22,3 +21,51 @@ $color_navbar-active:          map-get($_color-theme, navbar-active-color);
 $color_navbar-disabled:        map-get($_color-theme, navbar-disabled-color);
 $color_navbar-toggler-border:  map-get($_color-theme, navbar-toggler-border-color);
 $icon_navbar-toggler:          map-get($_color-theme, navbar-toggler-icon);
+
+/* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
+$colors: (
+  primary: $color_primary,
+  secondary: $color_secondary,
+  danger: $color_danger,
+  safe: $color_safe,
+  passive: $color_passive,
+  highlight: $color_highlight,
+  background: $color_background,
+  navbar: $color_navbar,
+  text: $color_text,
+  diagramText: $color_diagram-text,
+  negativeText: $color_negative-text,
+  navigationButtons: $color_navigation-buttons,
+  diagram: $color_diagram,
+  navbarBackground: $color_navbar-background,
+  navbarHover: $color_navbar-hover,
+  navbarActive: $color_navbar-active,
+  navbarDisabled: $color_navbar-disabled,
+  navbarTogglerBorder: $color_navbar-toggler-border,
+);
+
+@mixin color_vars() {
+  @each $var, $value in $colors {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        @if type-of($subvalue) == "map" {
+          @each $subsubvar, $subsubvalue in $subvalue {
+            --colors-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+          }
+        }
+
+        @else {
+          --colors-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+    }
+
+    @else {
+      --colors-#{$var}: #{$value};
+    }
+  }
+}
+
+body {
+  @include color_vars();
+}

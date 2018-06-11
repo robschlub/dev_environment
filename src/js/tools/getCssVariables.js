@@ -30,19 +30,23 @@ function toCamelCase(input: string, prefix) {
 }
 
 export default function getCSSVariables(
-  id: string,
+  idOrElement: string | HTMLElement,
   prefix: string = '',
 ): Object {
   const variables = {};
-  const elem = document.getElementById(id);
-  if (elem) {
+  let elem = idOrElement;
+  if (typeof idOrElement === 'string') {
+    elem = document.getElementById(idOrElement);
+  }
+  if (elem instanceof HTMLElement) {
     const style = window.getComputedStyle(elem);
+
     if (style) {
       const numProperties = style.length;
       for (let i = 0; i < numProperties; i += 1) {
         const propertyName = style[i];
         if (prefix === '' || propertyName.startsWith(prefix)) {
-          const value = style.getPropertyValue(propertyName);
+          const value = style.getPropertyValue(propertyName).trim();
           const fValue = parseFloat(value);
           const shortName = toCamelCase(propertyName, prefix);
           if (!Number.isNaN(fValue)) {

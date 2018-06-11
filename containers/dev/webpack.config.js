@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-lin
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
-const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved
+const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
@@ -180,8 +180,8 @@ module.exports = (env) => {
           //   minChunks: 2,
           //   priority: -10,
           //   reuseExistingChunk: true,
-          //   test: /\.(css|scss|sass)$/,
-          //   name: 'common',
+          //   test: /src\/Lessons\/*\.(css|scss|sass)$/,
+          //   name: 'lessons',
           // },
           // bootstrap: {
           //   test: /bootstrap\.css/,
