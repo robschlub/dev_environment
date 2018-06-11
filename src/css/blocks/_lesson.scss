@@ -82,6 +82,28 @@ $diagram_ratio: 1.5;
   --lesson__container-height: calc(var(--lesson__content-height) + var(--lesson__np_button-vspace) + var(--lesson__np_button-height));
 }
 
+@mixin lesson_vars() {
+  @each $var, $value in $_lesson_vars {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        @if type-of($subvalue) == "map" {
+          @each $subsubvar, $subsubvalue in $subvalue {
+            --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+          }
+        }
+
+        @else {
+          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+    }
+
+    @else {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
+}
+
 .lesson__container {
   position: relative;
   margin-left: auto;

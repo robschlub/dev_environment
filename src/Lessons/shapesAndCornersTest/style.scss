@@ -33,14 +33,14 @@ $_lesson_vars: (
   //   circle: (center-x:   0, center-y:  -0.5),
   // ),
   // 1/1 -> 2/1
-  aspect-3-2: (
-    x-min:   -3, x-max:   3,
-    y-min:   -2, y-max:   2,
-    square: (center-x:  -2, center-y:   -0.8 + 0.8),
-    tri:    (center-x:   0, center-y:   -0.98 + 0.8),
-    pent:   (center-x:   2, center-y:   -0.8 + 0.8),
-    circle: (center-x:   0, center-y:   -0.5),
-  ),
+  // aspect-3-2: (
+  x-min:   -3, x-max:   3,
+  y-min:   -2, y-max:   2,
+  square: (center-x:  -1.6, center-y:   -0.8 + 0.8),
+  tri:    (center-x:   0, center-y:   -0.98 + 0.8),
+  pent:   (center-x:   2, center-y:   -0.8 + 0.8),
+  circle: (center-x:   0, center-y:   -0.5),
+  // ),
   // >2/1
   // aspect-2-1: (
   //   x-min:   -4, x-max:   4,

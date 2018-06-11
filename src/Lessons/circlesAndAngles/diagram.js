@@ -32,6 +32,7 @@ function getLessonVars() {
   v.square = { center: new Point(v.squareCenterX, v.squareCenterY) };
   v.tri = { center: new Point(v.triCenterX, v.triCenterY) };
   v.pent = { center: new Point(v.pentCenterX, v.pentCenterY) };
+  console.log(v);
   return v;
 }
 

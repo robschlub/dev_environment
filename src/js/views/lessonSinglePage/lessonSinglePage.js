@@ -7,6 +7,7 @@ import Navbar from '../../components/navbar';
 import LessonComponent from '../../components/lesson';
 import Content from '../../../Lessons/circlesAndAngles/circlesAndAngles';
 import Lesson from '../../Lesson/Lesson';
+import '../../../Lessons/circlesAndAngles/style.scss';
 
 const lessonSinglePage = () => {
   const lessonId:HTMLElement | null = document.getElementById('single-page-lesson');

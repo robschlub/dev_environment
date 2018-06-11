@@ -1,6 +1,9 @@
 // https://codepen.io/jakealbaugh/post/css4-variables-and-sass
 @import "../../css/style";
 
+p {
+  border: solid 1px blue;
+}
 $color-lines: $color_primary;
 $color-corners: $color_secondary;
 $color-moreSharp: $color_highlight;
@@ -22,80 +25,16 @@ $_lesson_vars: (
   arrow: 1.1,
   corner-length: 0.5,
   angle-radius: 0.5,
-  // <1/2
-  // aspect-1-2: (
-  //   x-min: -2, x-max: 2,
-  //   y-min: -3.6, y-max: 3.6,
-  //   square: (center-x:  -1, center-y:   1),
-  //   tri:    (center-x:   0, center-y:   0),
-  //   pent:   (center-x:   1, center-y:  -1),
-  //   circle: (center-x:   0, center-y:   0),
-  // ),
-  // 1/2 -> 1/1
-  // aspect-2-3: (
-  //   x-min: -2, x-max: 2,
-  //   y-min: -2.666, y-max: 2.666,
-  //   square: (center-x:  -1, center-y:  -1),
-  //   tri:    (center-x:   0, center-y:   0),
-  //   pent:   (center-x:   1, center-y:   1),
-  //   circle: (center-x:   0, center-y:  -0.5),
-  // ),
-  // 1/1 -> 2/1
-  // aspect-3-2: (
   x-min:   -3, x-max:   3,
   y-min:   -2, y-max:   2,
-  square: (center-x:  -2, center-y:   -0.8 + 0.8),
+  square: (center-x:  -1.8, center-y:   -0.8 + 0.8),
   tri:    (center-x:   0, center-y:   -0.98 + 0.8),
   pent:   (center-x:   2, center-y:   -0.8 + 0.8),
   circle: (center-x:   0, center-y:   -0.5),
-  // ),
-  // >2/1
-  // aspect-2-1: (
-  //   x-min:   -4, x-max:   4,
-  //   y-min:   -2, y-max:   2,
-  //   square: (center-x:  -2, center-y: 1.5),
-  //   tri:    (center-x:   0, center-y:   0),
-  //   pent:   (center-x:   2, center-y:   0),
-  //   circle: (center-x:   2, center-y:   0),
-  // ),
 );
 
-@mixin lesson-breakpoint-vars($size) {
-  @each $var, $value in map-get($_lesson_vars, $size) {
-    @if type-of($value) == "map" {
-      @each $subvar, $subvalue in $value {
-        --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
-      }
-    }
-
-    @else {
-      --lessonvars-#{$var}: #{$value};
-    }
-  }
-}
-
 #lesson__container_name {
-  @each $var, $value in $_lesson_vars {
-    @if type-of($value) == "map" {
-      @each $subvar, $subvalue in $value {
-        @if type-of($subvalue) == "map" {
-          @each $subsubvar, $subsubvalue in $subvalue {
-            --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
-          }
-        }
-
-        @else {
-          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
-        }
-      }
-    }
-
-    @else {
-      --lessonvars-#{$var}: #{$value};
-    }
-  }
-
-  @include lesson-breakpoint-vars(aspect-3-2);
+  @include lesson_vars();
 }
 
 .action_word {
