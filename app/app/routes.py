@@ -38,6 +38,14 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/Lessons/<subject>/<lesson_id>')
+def get_lesson(subject, lesson_id):
+    path = 'Lessons/' + subject + '/'
+    lesson = path + lesson_id + '.html'
+    # css = path + 'style.css'
+    return render_template(lesson)
+
+
 @app.route('/favicon.ico')
 def icon():
     return app.send_static_file('favicon.ico')
