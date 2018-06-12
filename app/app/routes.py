@@ -37,14 +37,26 @@ def multi_page_lesson():
 def about():
     return render_template('about.html')
 
+# @app.route('/Lessons/', defaults={'path': ''})
+# @app.route('/Lessons/<path:path>')
+# def catch_all(path):
+#     return 'You want path: %s' % path
 
-@app.route('/Lessons/<subject>/<lesson_id>')
-def get_lesson(subject, lesson_id):
-    print(lesson_id)
-    path = f'/static/dist/Lessons/{subject}/{lesson_id}'
+@app.route('/Lessons/', defaults={'path': ''})
+@app.route('/Lessons/<path:path>')
+def get_lesson(path):
+    path = f'/static/dist/Lessons/{path}'
     css = f'{path}/lesson.css'
     js = f'{path}/lesson.js'
     return render_template('lesson.html', css=css, js=js)
+
+# @app.route('/Lessons/<subject>/<lesson_id>')
+# def get_lesson(subject, lesson_id):
+#     print(lesson_id)
+#     path = f'/static/dist/Lessons/{subject}/{lesson_id}'
+#     css = f'{path}/lesson.css'
+#     js = f'{path}/lesson.js'
+#     return render_template('lesson.html', css=css, js=js)
 
 
 @app.route('/favicon.ico')
