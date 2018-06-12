@@ -23,6 +23,7 @@ ADD .stylelintignore .
 
 # Packaging
 ADD containers/dev/webpack.config.js .
+ADD containers/dev/lessons.js .
 ADD .babelrc .
 
 # Update path so eslint can be run from anywhere
