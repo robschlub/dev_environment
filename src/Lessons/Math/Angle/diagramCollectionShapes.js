@@ -8,7 +8,8 @@ import { Point, Transform } from '../../../js/diagram/tools/g2';
 // import styles from './style.scss';
 import lessonLayout from './lessonLayout';
 
-const { colors } = lessonLayout();
+const layout = lessonLayout();
+const { colors } = layout;
 
 const lineColor = colors.lines;
 const cornerColor = colors.corners;
@@ -27,11 +28,12 @@ type typeShape = {
 
 
 function makeSquare(shapes: Object, location: Point) {
+  const { radius } = layout.square;
   const vertices = [
-    new Point(-0.5, -0.5),
-    new Point(0.5, -0.5),
-    new Point(0.5, 0.5),
-    new Point(-0.5, 0.5),
+    new Point(-radius, -radius),
+    new Point(radius, -radius),
+    new Point(radius, radius),
+    new Point(-radius, radius),
   ];
 
   const lines = shapes.polyLine(vertices, true, lineWidth, lineColor);
@@ -52,10 +54,11 @@ function makeSquare(shapes: Object, location: Point) {
 }
 
 function makeTriangle(shapes: Object, location: Point) {
+  const { radius } = layout.tri;
   const vertices = [
-    new Point(0, 0.65),
-    new Point(0, 0.65).rotate(2 * Math.PI / 3),
-    new Point(0, 0.65).rotate(4 * Math.PI / 3),
+    new Point(0, radius),
+    new Point(0, radius).rotate(2 * Math.PI / 3),
+    new Point(0, radius).rotate(4 * Math.PI / 3),
   ];
   const lines = shapes.polyLine(vertices, true, lineWidth, lineColor);
   const corners = shapes.polyLineCorners(
@@ -79,13 +82,7 @@ function makePent(shapes: Object, location: Point) {
   function makeCorner(v, color) {
     return shapes.polyLineCorners(v, false, cornerLength, cornerWidth, color);
   }
-  const vertices = [
-    new Point(-0.5, -0.5),
-    new Point(0.5, -0.2),
-    new Point(0.3, 0.1),
-    new Point(0.5, 0.5),
-    new Point(-0.2, 0.4),
-  ];
+  const vertices = layout.pent.vertices.slice();
 
   const lines = shapes.polyLine(vertices, true, lineWidth, lineColor);
   const corners = shapes.polyLineCorners(
@@ -128,7 +125,6 @@ class ShapesCollection extends DiagramElementCollection {
     const { shapes } = diagram;
 
     const square = makeSquare(shapes, locations.square.center);
-    // square._lines.vertices.z = 0.9;
     this.add('square', square);
 
     const triangle = makeTriangle(shapes, locations.tri.center);

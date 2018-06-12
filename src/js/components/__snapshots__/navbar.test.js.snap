@@ -62,7 +62,7 @@ exports[`Navbar Make "About" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/single"
+            href="/Lessons/Math/Introduction"
           >
             Single
           </a>
@@ -72,7 +72,7 @@ exports[`Navbar Make "About" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/multi"
+            href="/Lessons/Math/ShapesAndCornersTest"
           >
             Multi
           </a>
@@ -202,7 +202,7 @@ exports[`Navbar Make "Introduction" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/single"
+            href="/Lessons/Math/Introduction"
           >
             Single
           </a>
@@ -212,7 +212,7 @@ exports[`Navbar Make "Introduction" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/multi"
+            href="/Lessons/Math/ShapesAndCornersTest"
           >
             Multi
           </a>
@@ -342,7 +342,7 @@ exports[`Navbar No props 1`] = `
         >
           <a
             className="nav-link "
-            href="/single"
+            href="/Lessons/Math/Introduction"
           >
             Single
           </a>
@@ -352,7 +352,7 @@ exports[`Navbar No props 1`] = `
         >
           <a
             className="nav-link "
-            href="/multi"
+            href="/Lessons/Math/ShapesAndCornersTest"
           >
             Multi
           </a>

@@ -6,8 +6,6 @@ import getCssColors from '../../../js/tools/getCssColors';
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
   const colors = getCssColors();
-  // colors.lines = colors.primary;
-  colors.corners = colors.secondary;
 
   return {
     // Diagram
@@ -16,19 +14,46 @@ export default function lessonLayout() {
     // General
     linewidth: 0.03,
 
-    // Circle Diagram
+    // ------ Circle Colleciton --------
     radius: 1.3,
-    arrow: 1.1,
+
+    // Arrow
+    arrow: {
+      x: 1.1,
+      width: 0.1,
+      legWidth: 0.04,
+      height: 0.1,
+      legHeight: 0.04,
+    },
+
     cornerLength: 0.5,
     angleRadius: 0.5,
+    anchorPoints: 50,
+    anglePoints: 400,
 
-    center: new Point(0, 0),
+    circle: {
+      center: new Point(0, -0.5),
+    },
 
-    // Shapes Diagram
-    square: { center: new Point(-1.8, -0.8  + 0.8) },
-    tri: { center:    new Point( 0  , -0.98 + 0.8) },
-    pent: { center:   new Point( 2  , -0.8  + 0.8) },
-    circle: { center: new Point( 0  , -0.5) },
+    // ------ Shapes Collection --------
+    square: {
+      center: new Point(-1.8, -0.8  + 0.8),
+      radius: 0.5,
+    },
+    tri: {
+      center: new Point(0, -0.98 + 0.8),
+      radius: 0.65,
+    },
+    pent: {
+      center: new Point(2, -0.8  + 0.8),
+      vertices: [
+        new Point(-0.5, -0.5),
+        new Point(0.5, -0.2),
+        new Point(0.3, 0.1),
+        new Point(0.5, 0.5),
+        new Point(-0.2, 0.4),
+      ],
+    },
 
     colors,
   };

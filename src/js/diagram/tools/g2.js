@@ -724,7 +724,7 @@ class Transform {
     this.calcMatrix();
   }
 
-  translate(x: number, y: number) {
+  translate(x: number | Point, y: number = 0) {
     const translation = new Translation(x, y);
     const order = this.order.slice();
 
@@ -755,7 +755,7 @@ class Transform {
     return new Transform(order);
   }
 
-  scale(x: number, y: number) {
+  scale(x: number | Point, y: number = 0) {
     const scale = new Scale(x, y);
     const order = this.order.slice();
 

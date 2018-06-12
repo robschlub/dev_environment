@@ -3,12 +3,15 @@
 // import { Lesson } from '../../js/Lesson/Lesson';
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform, Point } from '../../../js/diagram/tools/g2';
+import { Transform } from '../../../js/diagram/tools/g2';
 import { easeinout } from '../../../js/diagram/tools/mathtools';
+// import lessonLayout from './lessonLayout';
+
+// const layout = lessonLayout();
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Shapes and Corners';
+    this.title = 'Angles';
   }
 
   setDiagram(htmlId: string = '') {
@@ -23,7 +26,7 @@ class Content extends LessonContent {
       title: 'Corners',
       setContent: () =>
         `<p style="margin-top:10%">
-          Many |_shapes| have not |_corners|.
+          Many |_shapes| have |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
         </p><p style="margin-top:35%">
@@ -138,9 +141,6 @@ class Content extends LessonContent {
         circle._anchor,
       ],
       setState: () => {
-        // const { diagram } = this;
-        // const collection = diagram.elements._circle;
-
         circle._radius.transform.updateRotation(0.01);
         circle._radius.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
@@ -148,7 +148,6 @@ class Content extends LessonContent {
         circle._anchor.color = circle.colors.anchor.slice();
         onClickId('id_anchor', circle.pulseAnchor, [circle]);
         onClickId('id_push', circle.pushRadius, [circle]);
-        // onClickId('id_corner', circle.toggleCorners, [circle]);
         circle._arrow.show = true;
         circle.pulseArrow();
       },
@@ -236,6 +235,9 @@ class Content extends LessonContent {
         circle._angle,
       ],
       setState: () => {
+        circle._reference.transform.updateTranslation(0, 0);
+        circle._reference.transform.updateRotation(0);
+        circle._radius.transform.updateTranslation(0, 0);
         onClickId('id_push', circle.pushRadius, [circle]);
         onClickId('id_amount', circle.pulseAngle, [circle]);
         onClickId('id_angle', circle.pulseAngle, [circle]);
@@ -288,6 +290,9 @@ class Content extends LessonContent {
         circle._angle,
       ],
       setState: () => {
+        circle._reference.transform.updateTranslation(0, 0);
+        circle._reference.transform.updateRotation(0);
+        circle._radius.transform.updateTranslation(0, 0);
         const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
         const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
         circle._anchor.color = circle.colors.anchor.slice();
@@ -311,31 +316,6 @@ class Content extends LessonContent {
           So how can we more precisely describe, or |_measure| the angle?
         `,
       showOnly: [],
-      modifiers: {
-        _measure: highlightWord('measure', '', 'english'),
-        _angle: highlightWord('angle', '', 'english'),
-      },
-    });
-
-    this.addSection({
-      setContent: () => `
-        <p>
-        First, what happens when we trace the path the line takes as we rotate it?
-        </p>
-        <p>
-          We get a |_circle|!
-        </p>
-        <p>
-          So one way to think of angle, is to also think of it as a portion of a circle.
-        </p>
-        `,
-      showOnly: [
-        circle,
-        circle._radius,
-        circle._reference,
-        circle._angle,
-        circle._arc,
-      ],
       modifiers: {
         _measure: highlightWord('measure', '', 'english'),
         _angle: highlightWord('angle', '', 'english'),
