@@ -49,3 +49,22 @@
   top: 0;
   pointer-events: none;
 }
+
+.action_word {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.highlight_word {
+  color: map-get($defaultColors, 'highlightText');
+}
+
+.latin {
+  font-style: italic;
+  color: map-get($defaultColors, 'latin');
+}
+
+.english {
+  font-style: italic;
+  color: map-get($defaultColors, 'english');
+}

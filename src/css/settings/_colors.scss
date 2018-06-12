@@ -23,7 +23,7 @@ $color_navbar-toggler-border:  map-get($_color-theme, navbar-toggler-border-colo
 $icon_navbar-toggler:          map-get($_color-theme, navbar-toggler-icon);
 
 /* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
-$colors: (
+$defaultColors: (
   primary: $color_primary,
   secondary: $color_secondary,
   danger: $color_danger,
@@ -31,12 +31,20 @@ $colors: (
   passive: $color_passive,
   highlight: $color_highlight,
   background: $color_background,
-  navbar: $color_navbar,
   text: $color_text,
+  //
+  // Diagram
+  diagram: $color_diagram,
   diagramText: $color_diagram-text,
   negativeText: $color_negative-text,
+  latin: $color_secondary,
+  english: $color_secondary,
+  highlightText: $color_secondary,
+  //
   navigationButtons: $color_navigation-buttons,
-  diagram: $color_diagram,
+  //
+  // Navbar
+  navbar: $color_navbar,
   navbarBackground: $color_navbar-background,
   navbarHover: $color_navbar-hover,
   navbarActive: $color_navbar-active,
@@ -44,8 +52,8 @@ $colors: (
   navbarTogglerBorder: $color_navbar-toggler-border,
 );
 
-@mixin color_vars() {
-  @each $var, $value in $colors {
+@mixin color_vars($color-map) {
+  @each $var, $value in $color-map {
     @if type-of($value) == "map" {
       @each $subvar, $subvalue in $value {
         @if type-of($subvalue) == "map" {
@@ -67,5 +75,5 @@ $colors: (
 }
 
 body {
-  @include color_vars();
+  @include color_vars($defaultColors);
 }

@@ -1,0 +1,96 @@
+@import '../../../css/style';
+
+$colors: (
+  lines: $color_primary,
+  corners: $color_secondary,
+  moreSharp: $color_highlight,
+  lessSharp: $color_safe,
+  anchor: $color_passive,
+  radius: $color_primary,
+  reference: $color_secondary,
+  background: $color_diagram,
+  arrow: $color_danger,
+  angle: $color_safe,
+  latin: $color_secondary,
+  arc: $color_danger,
+  circle: $color_danger,
+  dimensions: $color_secondary,
+);
+
+body {
+  @include color_vars($colors);
+}
+
+#id_shape {
+  color: map-get($colors, 'circle');
+}
+
+// #id_properties,
+// #id_predict,
+// #id_calculation {
+//   color: map-get($colors, 'dimensions');
+// }
+
+#id_corners {
+  color: map-get($colors, 'corners');
+}
+
+#id_more_sharp {
+  color: map-get($colors, 'moreSharp');
+}
+
+#id_shapes {
+  // color: $color-lines;
+  color: map-get($colors, 'lines');
+}
+
+#id_less_sharp {
+  color: map-get($colors, 'lessSharp');
+}
+
+#id_amount,
+#id_angle {
+  color: map-get($colors, 'angle');
+}
+
+#id_lines,
+#id_line {
+  color: map-get($colors, 'radius');
+}
+
+#id_reference_lines {
+  color: map-get($colors, 'reference');
+}
+
+#id_push {
+  color: map-get($colors, 'arrow');
+}
+
+#id_anchor {
+  color: map-get($colors, 'anchor');
+}
+
+#id_corner {
+  color: map-get($colors, 'corners');
+}
+
+#id_small_rotation,
+#id_more_sharp_cornern {
+  color: map-get($colors, 'moreSharp');
+}
+
+#id_large_rotation,
+#id_less_sharp_corner {
+  color: map-get($colors, 'lessSharp');
+}
+
+#section1__upper {
+  // background-color: rgba($color_diagram, 0.4);
+  background-color: rgba($color_diagram, 0);
+}
+
+#section1__lower {
+  // background-color: rgba($color_diagram, 0.1);
+  // margin-top: calc(var(--lesson__content-height) * 0.5);
+  margin-top: 35%;
+}
