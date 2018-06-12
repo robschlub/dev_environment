@@ -7,9 +7,8 @@ import introPage from './views/introduction/introduction';
 import lessonMultiPage from './views/lessonMultiPage/lessonMultiPage';
 
 homePage();
-introPage(0);
+// introPage(0);
 aboutPage();
 // lessonSinglePage();
 lessonMultiPage(0);
 
-console.log("Asdf");

@@ -113,7 +113,8 @@ module.exports = (env) => {
       main: ['whatwg-fetch', 'babel-polyfill', './src/js/main.js'],
       // entry2: './src/js/entry2.js',
       // entry3: './src/js/entry3.js',
-      'Lessons/Math/lesson': './src/Lessons/circlesAndAngles/lesson.js',
+      'Lessons/Math/lesson1/lesson': './src/Lessons/circlesAndAngles/lesson.js',
+      'Lessons/Math/test/lesson': './src/Lessons/shapesAndCornersTest/lesson.js',
     },
     output: {
       path: buildPath,
