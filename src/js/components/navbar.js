@@ -66,14 +66,13 @@ export default class Navbar extends React.Component
             </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Go to
+                Lesson
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a className="dropdown-item" href="#">Chapter 1 - shapes</a>
-                <a className="dropdown-item" href="#">Chapter 2 - circles</a>
-                <a className="dropdown-item" href="#">Chapter 3 - abstraction</a>
+                <a className="dropdown-item" href="/Lessons/Math/Introduction">1 - Why study shapes?</a>
+                <a className="dropdown-item" href="/Lessons/Math/Angle">2 - Angles</a>
                 <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#">Glossary</a>
+                <a className="dropdown-item" href="/Lessons/Math/ShapesAndCornersTest">Test</a>
               </div>
             </li>
           </ul>

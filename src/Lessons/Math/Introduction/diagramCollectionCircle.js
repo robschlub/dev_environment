@@ -2,151 +2,59 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import * as tools from '../../../js/diagram/tools/mathtools';
-// import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
-import getScssColors from '../../../js/tools/getScssColors';
-import styles from './style.scss';
+import { Point, Transform, Rect } from '../../../js/diagram/tools/g2';
 import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
-const colors = getScssColors(styles);
-const anchorPoints = 50;
-const anglePoints = 400;
+import lessonLayout from './lessonLayout';
 
-function makeLine(
-  shapes: Object,
-  location: Point,
-  length: number,
-  width: number,
-  color: Array<number>,
-  pointOrTransform: Point | Transform,
-): DiagramElementPrimative {
-  const line = shapes.horizontalLine(
-    location, length, width,
-    0, color, pointOrTransform,
-  );
-  line.pulse.transformMethod = s => new Transform().scale(1, s);
-  return line;
-}
+const layout = lessonLayout();
+const { colors } = layout;
 
-function makeRadius(shapes: Object, layout: Object) {
-  const radius = makeLine(
-    shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.radius, new Transform().rotate(0).translate(
-      0,
-      0,
-    ),
-  );
-  radius.isTouchable = true;
-  radius.isMovable = true;
-  radius.pulse.transformMethod = s => new Transform().scale(1, s);
-
-  for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-    radius.vertices.border[0][i].y *= 10;
-  }
-  return radius;
-}
-
-function makeArc(shapes: Object, layout: Object) {
-  return shapes.polygon(
-    anglePoints, layout.radius, layout.linewidth, 0,
-    anglePoints, colors.arc, new Point(0, 0),
-  );
-}
-
-function makeCircle(shapes: Object, layout: Object) {
-  return shapes.polygon(
-    anglePoints, layout.radius, layout.linewidth, 0,
-    anglePoints, colors.arc, new Point(0, 0),
-  );
-}
-
-function makeAnchor(shapes: Object, layout: Object) {
+function makeWheel(shapes: Object) {
   return shapes.polygonFilled(
-    anchorPoints, layout.linewidth * 2, 0,
-    anchorPoints, colors.anchor, new Point(-3, 2),
-  );
-}
-
-function makeWheel(shapes: Object, layout: Object) {
-  return shapes.polygonFilled(
-    anglePoints, layout.wheelSize, 0,
-    anglePoints, colors.anchor, new Point(0, 0),
+    layout.wheelPoints, layout.wheelSize, 0,
+    layout.wheelPoints, colors.anchor, new Point(0, 0),
     '/static/circles.png', new Rect(0.5, 0, 0.5, 0.5),
   );
 }
 
-function makeBall(shapes: Object, layout: Object) {
+function makeBall(shapes: Object) {
   return shapes.polygonFilled(
-    anglePoints, layout.wheelSize, 0,
-    anglePoints, colors.anchor, new Point(0, 0),
+    layout.wheelPoints, layout.wheelSize, 0,
+    layout.wheelPoints, colors.anchor, new Point(0, 0),
     '/static/circles.png', new Rect(0.5, 0.5, 0.5, 0.5),
   );
 }
 
-function makeEarth(shapes: Object, layout: Object) {
+function makeEarth(shapes: Object) {
   return shapes.polygonFilled(
-    anglePoints, layout.wheelSize, 0,
-    anglePoints, colors.anchor, new Point(0, 0),
+    layout.wheelPoints, layout.wheelSize, 0,
+    layout.wheelPoints, colors.anchor, new Point(0, 0),
     '/static/circles.png', new Rect(0, 0.5, 0.5, 0.5),
   );
 }
 
-function makeClock(shapes: Object, layout: Object) {
+function makeClock(shapes: Object) {
   return shapes.polygonFilled(
-    anglePoints, layout.wheelSize, 0,
-    anglePoints, colors.anchor, new Point(0, 0),
+    layout.wheelPoints, layout.wheelSize, 0,
+    layout.wheelPoints, colors.anchor, new Point(0, 0),
     '/static/circles.png', new Rect(0, 0, 0.5, 0.5),
   );
 }
 
-function makeWheelShape(shapes: Object, layout: Object) {
+function makeWheelShape(shapes: Object) {
   return shapes.polygon(
     202, layout.wheelSize, layout.linewidth, 0,
-    202, colors.arc, new Point(0, 0),
+    202, colors.circle, new Point(0, 0),
   );
 }
 
-function makeAngle(shapes: Object, layout: Object) {
+function makeShade(shapes: Object) {
   return shapes.polygonFilled(
-    anglePoints, layout.angleRadius, 0,
-    anglePoints, colors.angle, new Point(0, 0),
-  );
-}
-
-function makeReference(shapes: Object, layout: Object) {
-  return makeLine(
-    shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.reference, new Transform().rotate(0).translate(0, 0),
-  );
-}
-
-function makeFakeRadius(shapes: Object, layout: Object) {
-  return makeLine(
-    shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.reference, new Transform().rotate(0).translate(0, 0),
-  );
-}
-
-function makeCorner(shapes: Object, pointOrTransform: Point | Transform, layout: Object) {
-  return makeLine(
-    shapes, new Point(0, 0), layout.cornerLength, layout.linewidth * 3,
-    colors.corners, pointOrTransform,
-  );
-}
-
-function makeArrow(shapes: Object, layout: Object) {
-  return shapes.arrow(
-    0.1, 0.04, 0.1, 0.04, colors.arrow,
-    new Transform().rotate(0).translate(layout.arrow, 0),
-  );
-}
-
-function makeShade(shapes: Object, layout: Object) {
-  return shapes.polygonFilled(
-    anglePoints, layout.wheelSize, 0, anglePoints,
+    layout.wheelPoints, layout.wheelSize, 0, layout.wheelPoints,
     [0, 0, 0, 0.7], new Transform().rotate(0).translate(0, 0),
   );
 }
@@ -161,7 +69,7 @@ function makeEarthCalculation(shapes: Object) {
   return collection;
 }
 
-function makeDiameterDimension(shapes: Object, layout: Object) {
+function makeDiameterDimension(shapes: Object) {
   const center = new Point(0, 0);
   const diameter = layout.wheelSize * 2;
   const lineWidth = layout.linewidth / 2;
@@ -222,7 +130,7 @@ function makeDiameterDimension(shapes: Object, layout: Object) {
   return d;
 }
 
-function makeCircumferenceDimension(shapes: Object, layout: Object) {
+function makeCircumferenceDimension(shapes: Object) {
   const radius = layout.wheelSize * 1.2;
   const lineWidth = layout.linewidth / 2;
   const arrowHeight = lineWidth * 5;
@@ -230,13 +138,13 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   const arrowHeightInRadians = arrowHeight / radius;
 
   const halfCircle1 = shapes.polygon(
-    anglePoints, radius, lineWidth, 0,
-    anglePoints,
+    layout.wheelPoints, radius, lineWidth, 0,
+    layout.wheelPoints,
     colors.dimensions, new Transform().rotate(0).translate(0, 0),
   );
   const halfCircle2 = shapes.polygon(
-    anglePoints, radius, lineWidth, 0,
-    anglePoints,
+    layout.wheelPoints, radius, lineWidth, 0,
+    layout.wheelPoints,
     colors.dimensions, new Transform().rotate(0).translate(0, 0),
   );
   const arrow1 = shapes.arrow(
@@ -278,7 +186,6 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
   };
   circumferenceDimension.grow = (percent: number) => {
     circumferenceDimension.plotAngle(percent * Math.PI * 0.98);
-    // console.log(percent)
   };
   circumferenceDimension.plotAngle(Math.PI * 0.98);
   circumferenceDimension.appear = (time: number) => {
@@ -287,7 +194,6 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     arrow1.disolveIn(time);
     arrow2.disolveIn(time);
     textC.disolveIn(time);
-    // textC2.disolveIn(time);
   };
 
   circumferenceDimension.appearWithDelay = (delay: number, time: number) => {
@@ -296,9 +202,7 @@ function makeCircumferenceDimension(shapes: Object, layout: Object) {
     arrow1.disolveInWithDelay(delay, time);
     arrow2.disolveInWithDelay(delay, time);
     textC.disolveInWithDelay(delay, time);
-    // textC2.disolveInWithDelay(delay, time);
   };
-  // console.log(circumferenceDimension)
   return circumferenceDimension;
 }
 
@@ -346,76 +250,45 @@ type EarthCalculationType = {
 
 
 class CircleCollection extends DiagramElementCollection {
-  _anchor: DiagramElementPrimative;
-  _arrow: DiagramElementPrimative;
-  _arc: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _fakeRadius: DiagramElementPrimative;
-  _reference: DiagramElementPrimative;
-  _cornerRef: DiagramElementPrimative;
-  _cornerRad: DiagramElementPrimative;
   _wheel: DiagramElementPrimative;
   _wheelShape: DiagramElementPrimative;
   _circumferenceDimension: CircumferenceDimensionType;
   _diameterDimension: DiameterDimensionType;
   _shade: DiameterDimensionType;
   diagram: Diagram;
-  layout: Object;
-  colors: Object;
   eqn: DiagramGLEquation;
   _equation: EquationType;
   _earthCalculation: EarthCalculationType;
   propertyLocations: Array<number>;
   propertyLocationIndex: number;
 
-  constructor(diagram: Diagram, layout: Object, transform: Transform = new Transform()) {
+  constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
-    this.colors = colors;
-    this.layout = layout;
 
     const { shapes } = diagram;
 
-    const origin = new Point(0, 0);
-    const t = new Transform().rotate(0).translate(0, 0);
-
-    this.add('wheel', makeWheel(shapes, layout));
-    this.add('earth', makeEarth(shapes, layout));
-    this.add('ball', makeBall(shapes, layout));
-    this.add('clock', makeClock(shapes, layout));
-    this.add('wheelShape', makeWheelShape(shapes, layout));
-    this.add('shade', makeShade(shapes, layout));
-    this.add('diameterDimension', makeDiameterDimension(shapes, layout));
-    this.add('circumferenceDimension', makeCircumferenceDimension(shapes, layout));
+    this.add('wheel', makeWheel(shapes));
+    this.add('earth', makeEarth(shapes));
+    this.add('ball', makeBall(shapes));
+    this.add('clock', makeClock(shapes));
+    this.add('wheelShape', makeWheelShape(shapes));
+    this.add('shade', makeShade(shapes));
+    this.add('diameterDimension', makeDiameterDimension(shapes));
+    this.add('circumferenceDimension', makeCircumferenceDimension(shapes));
     this.add('equation', makeEquation(diagram));
     this.add('earthCalculation', makeEarthCalculation(shapes));
     this.eqn = diagram.equation.make(this._equation);
     this.eqn.createEq(['c', 'equals', 'pi', 'd']);
 
-    this.add('arrow', makeArrow(shapes, layout));
-    this.add('angle', makeAngle(shapes, layout));
-    this.add('reference', makeReference(shapes, layout));
-    this.add('fakeRadius', makeFakeRadius(shapes, layout));
-    this.add('arc', makeArc(shapes, layout));
-    this.add('circle', makeCircle(shapes, layout));
-
-    const radius = makeRadius(shapes, layout);
-    radius.setTransformCallback = this.updateRotation.bind(this);
-    this.add('radius', radius);
-    this.add('cornerRef', makeCorner(shapes, origin, layout));
-    this.add('cornerRad', makeCorner(shapes, t, layout));
-    this.add('anchor', makeAnchor(shapes, layout));
-    this.isTouchable = true;
-    this.isMovable = true;
     this.propertyLocations = [-1.8, 0, 1.8];
     this.propertyLocationIndex = 0;
   }
 
-  resize(locations: Object) {
+  resize() {
     this.transform.updateTranslation(
-      locations.circle.center.x,
-      locations.circle.center.y,
+      layout.position.x,
+      layout.position.y,
     );
   }
 
@@ -436,72 +309,6 @@ class CircleCollection extends DiagramElementCollection {
     }
   }
 
-  updateRotation() {
-    let rotation = this._radius.transform.r();
-    if (rotation) {
-      if (rotation > Math.PI * 2) {
-        rotation -= Math.PI * 2;
-      }
-      if (rotation < 0) {
-        rotation += Math.PI * 2;
-      }
-      if (this._arrow.show) {
-        const angleToDisappear = 0.35;
-        if (rotation > angleToDisappear) {
-          this._arrow.color[3] = 0;
-        } else {
-          this._arrow.color[3] = (angleToDisappear - rotation) / angleToDisappear;
-          this._arrow.transform.updateRotation(rotation);
-          this._arrow.transform.updateTranslation(
-            this.layout.arrow * Math.cos(rotation),
-            this.layout.arrow * Math.sin(rotation),
-          );
-        }
-      }
-      const r = normAngle(rotation);
-      this._radius.transform.updateRotation(r);
-      this._cornerRad.transform.updateRotation(r);
-      this._angle.angleToDraw = r + 0.01;
-      this._arc.angleToDraw = r + 0.01;
-    }
-  }
-
-  pulseArrow() {
-    this._arrow.pulseScaleNow(0, 1.2, 0.7);
-    this.diagram.animateNextFrame();
-  }
-
-  pulseAngle() {
-    this._angle.pulseScaleNow(1, 1.5);
-    this.diagram.animateNextFrame();
-  }
-
-  pulseAnchor() {
-    this._anchor.pulseScaleNow(1, 2);
-    this.diagram.animateNextFrame();
-  }
-
-  pulseRadius() {
-    this._radius.pulseScaleNow(1, 2.5);
-    this.diagram.animateNextFrame();
-  }
-
-  pulseReference() {
-    this._reference.pulseScaleNow(1, 2);
-    this.diagram.animateNextFrame();
-  }
-
-  pulseFakeRadius() {
-    this._fakeRadius.pulseScaleNow(1, 2);
-    this.diagram.animateNextFrame();
-  }
-
-  pulseLines() {
-    this.pulseRadius();
-    this.pulseReference();
-    this.pulseFakeRadius();
-  }
-
   pulseProperties() {
     this._diameterDimension._textD.pulseScaleNow(1, 1.5);
     this._circumferenceDimension._textC.pulseScaleNow(1, 1.5);
@@ -510,34 +317,6 @@ class CircleCollection extends DiagramElementCollection {
 
   pulseEquation() {
     this._equation.pulseScaleNow(1, 1.3);
-    this.diagram.animateNextFrame();
-  }
-
-  pushRadius() {
-    const angle = this._radius.transform.r();
-    let targetAngle = angle + Math.PI / 6;
-    if (targetAngle > Math.PI * 2) {
-      targetAngle -= Math.PI * 2;
-    }
-    this._radius.animateRotationTo(targetAngle, 1, 1);
-    this.diagram.animateNextFrame();
-  }
-  rotateTo(
-    angle: number,
-    direction: number,
-    time: number,
-    callback: () => void = () => {},
-  ) {
-    let d = direction;
-    if (d === 0) {
-      const r = this._radius.transform.r();
-      d = 1;
-      if (r) {
-        const delta = minAngleDiff(angle, r);
-        d = delta / Math.abs(delta);
-      }
-    }
-    this._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
     this.diagram.animateNextFrame();
   }
 
@@ -588,19 +367,6 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  toggleCorners() {
-    if (this._cornerRad.show) {
-      this._cornerRad.show = false;
-      this._cornerRef.show = false;
-    } else {
-      this._cornerRad.show = true;
-      this._cornerRef.show = true;
-      this._cornerRad.pulseScaleNow(1, 2);
-      this._cornerRef.pulseScaleNow(1, 2);
-    }
-    this.diagram.animateNextFrame();
-  }
-
   showWheelShape(done: ?(?mixed) => void = () => {}) {
     const t = this._wheel.transform.t();
     if (t) {
@@ -614,10 +380,10 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   resetColors() {
-    this._diameterDimension.setColor(this.colors.dimensions);
-    this._circumferenceDimension.setColor(this.colors.dimensions);
-    this._equation.setColor(this.colors.dimensions);
-    this._wheelShape.setColor(this.colors.arc);
+    this._diameterDimension.setColor(colors.dimensions);
+    this._circumferenceDimension.setColor(colors.dimensions);
+    this._equation.setColor(colors.dimensions);
+    this._wheelShape.setColor(colors.circle);
   }
 }
 
