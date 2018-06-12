@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import '../../../css/style.scss';
 import Navbar from '../../../js/components/navbar';
 import LessonComponent from '../../../js/components/lesson';
-import Content from './circlesAndAngles';
+import Content from './content';
 import Lesson from '../../../js/Lesson/Lesson';
 import './style.scss';
 
