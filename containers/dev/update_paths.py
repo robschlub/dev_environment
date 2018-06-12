@@ -21,7 +21,9 @@ def replace_paths(fileName, depth):
                 path = re.search(f'\'.*\/{path_match}\/', new_line)
                 if path:
                     # print(depth_string)
-                    new_line = re.sub(f'\'.*\/{path_match}\/', f'\'{depth_string}{path_match}/', new_line)
+                    new_line = re.sub(
+                        f'\'.*\/{path_match}\/',
+                        f'\'{depth_string}{path_match}/', new_line)
         new_lines.append(new_line)
     f.close()
     f = open(fileName, 'w')

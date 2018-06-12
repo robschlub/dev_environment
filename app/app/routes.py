@@ -42,6 +42,7 @@ def about():
 # def catch_all(path):
 #     return 'You want path: %s' % path
 
+
 @app.route('/Lessons/', defaults={'path': ''})
 @app.route('/Lessons/<path:path>')
 def get_lesson(path):
