@@ -170,8 +170,24 @@ function cssColorToArray(cssColorString: string): Array<number> | null {
   return null;
 }
 
+function colorArrayToRGBA(color: Array<number>) {
+  return `rgba(${
+    Math.floor(color[0] * 255)},${
+    Math.floor(color[1] * 255)},${
+    Math.floor(color[2] * 255)},${
+    color[3]})`;
+}
+
+function colorArrayToRGB(color: Array<number>) {
+  return `rgb(${
+    Math.floor(color[0] * 255)},${
+    Math.floor(color[1] * 255)},${
+    Math.floor(color[2] * 255)})`;
+}
+
 export {
   divide, mulToString, add, Console,
   classify, extractFrom, ObjectKeyPointer, getElement,
-  RGBToArray, HexToArray, cssColorToArray,
+  RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
+  colorArrayToRGBA,
 };

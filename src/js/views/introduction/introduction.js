@@ -1,43 +1,50 @@
-// // @flow
+// @flow
 
-// import React from 'react';
-// import ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-// // Styles
-// // import '../../../css/style.scss';
-// import './introduction.scss';
+// Components
+import Navbar from '../../components/navbar';
 
-// // Components
-// import Navbar from '../../components/navbar';
-// import Content from '../../../Lessons/shapesAndCornersTest/shapesAndCorners';
-// import LessonComponent from '../../components/lesson';
-// import Lesson from '../../Lesson/Lesson';
+import getCssColors from '../../tools/getCssColors';
+import { colorArrayToRGB } from '../../tools/tools';
 
-// const introPage = (section: number) => {
-//   const lessonId:HTMLElement | null = document.getElementById('intro');
+const introPage = () => {
+  const elem: HTMLElement | null = document.getElementById('intro');
+  const colors = getCssColors();
 
-//   const lesson = new Lesson(new Content('shapes'));
+  if (elem instanceof HTMLElement) {
+    ReactDOM.render(
+      <div>
+        <div className="container-fluid">
+          <Navbar active='Multi Page Lesson'/>
+        </div>
+        <div className="container-fluid">
+          <div className="row" style={ { marginTop: '60px' } }>
+              {
+                Object.keys(colors).map((key, i) => {
+                  const color = colors[key];
+                  const colorSum = color.reduce((acc, val) => acc + val);
+                  let textColor = [1, 1, 1, 1];
+                  if (colorSum > 2) {
+                    textColor = [0, 0, 0, 1];
+                  }
+                  return <div className="col-4" key={i} style={{
+                    backgroundColor: colorArrayToRGB(colors[key]),
+                    color: colorArrayToRGB(textColor),
+                    padding: '20px',
+                  }}>{key}</div>;
+                })
+              }
+          </div>
+        </div>
+      </div>,
+      elem,
+    );
+  }
+};
 
-//   if (lessonId instanceof HTMLElement) {
-//     ReactDOM.render(
-//       <div>
-//         <div className="container-fluid">
-//           <Navbar active='Multi Page Lesson'/>
-//         </div>
-//         <div className="container-fluid">
-//           <div className="row">
-//             <div className="col">
-//               <LessonComponent lesson={lesson} section={section}/>
-//             </div>
-//           </div>
-//         </div>
-//       </div>,
-//       lessonId,
-//     );
-//   }
-// };
-
-// export default introPage;
+export default introPage;
 
 /* eslint-disable */
 // import React from 'react';
