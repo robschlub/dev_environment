@@ -1,13 +1,13 @@
 // @flow
 
-// import { Lesson } from '../../js/Lesson/Lesson';
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Transform } from '../../../js/diagram/tools/g2';
 import { easeinout } from '../../../js/diagram/tools/mathtools';
-// import lessonLayout from './lessonLayout';
+import lessonLayout from './lessonLayout';
 
-// const layout = lessonLayout();
+const layout = lessonLayout();
+const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -33,10 +33,10 @@ class Content extends LessonContent {
           The |_sharpness| of the corner is a property that can describe a shape.
         </p>`,
       modifiers: {
-        _shapes: actionWord('shapes', 'id_shapes'),
-        _corners: actionWord('corners', 'id_corners'),
-        _more_sharp: actionWord('more sharp', 'id_more_sharp'),
-        _less_sharp: actionWord('less sharp', 'id_less_sharp'),
+        _shapes: actionWord('shapes', 'id_shapes', colors.lines),
+        _corners: actionWord('corners', 'id_corners', colors.corners),
+        _more_sharp: actionWord('more sharp', 'id_more_sharp', colors.moreSharp),
+        _less_sharp: actionWord('less sharp', 'id_less_sharp', colors.lessSharp),
         _sharpness: highlightWord('sharpness', '', 'english'),
       },
       hideOnly: [
@@ -81,7 +81,7 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _lines: actionWord('lines', 'id_reference_lines'),
+        _lines: actionWord('lines', 'id_reference_lines', colors.reference),
       },
       showOnly: () => {
         this.diagram.elements.showOnly([
@@ -130,9 +130,9 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _anchor: actionWord('anchor', 'id_anchor'),
-        _pushing: actionWord('pushing', 'id_push'),
-        _corner: actionWord('corner', 'id_corner'),
+        _anchor: actionWord('anchor', 'id_anchor', colors.anchor),
+        _pushing: actionWord('pushing', 'id_push', colors.arrow),
+        _corner: actionWord('corner', 'id_corner', colors.corners),
       },
       showOnly: [
         circle,
@@ -183,9 +183,9 @@ class Content extends LessonContent {
         |_Large_rotation| results in a less sharp corner.</p>
         `,
       modifiers: {
-        _Small_rotation: actionWord('Small rotation', 'id_small_rotation'),
-        _Large_rotation: actionWord('Large rotation', 'id_large_rotation'),
-        _corner: actionWord('corner', 'id_corner'),
+        _Small_rotation: actionWord('Small rotation', 'id_small_rotation', colors.moreSharp),
+        _Large_rotation: actionWord('Large rotation', 'id_large_rotation', colors.lessSharp),
+        _corner: actionWord('corner', 'id_corner', colors.corner),
       },
       showOnly: [
         circle,
@@ -224,8 +224,8 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _amount: actionWord('amount', 'id_amount'),
-        _rotation: actionWord('rotation', 'id_push'),
+        _amount: actionWord('amount', 'id_amount', colors.angle),
+        _rotation: actionWord('rotation', 'id_push', colors.arrow),
       },
       showOnly: [
         circle,
@@ -279,9 +279,9 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _angle: actionWord('angle', 'id_angle'),
-        _smaller_angle: actionWord('small angle', 'id_small_rotation'),
-        _larger_angle: actionWord('large angle', 'id_large_rotation'),
+        _angle: actionWord('angle', 'id_angle', colors.angle),
+        _smaller_angle: actionWord('small angle', 'id_small_rotation', colors.moreSharp),
+        _larger_angle: actionWord('large angle', 'id_large_rotation', colors.lessSharp),
       },
       showOnly: [
         circle,

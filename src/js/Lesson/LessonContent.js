@@ -2,15 +2,27 @@
 
 import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
+import { colorArrayToRGBA } from '../tools/tools';
 // import { Transform } from '../diagram/tools/g2';
 
 function actionWord(
   text: string,
   id: string = '',
-  classes: string = '',
+  classesOrColor: string | Array<number> | null = null,
+  color: Array<number> | null = null,
 ): Object {
+  let classes = '';
+  let colorStyle = '';
+  if (typeof classesOrColor === 'string') {
+    classes = classesOrColor;
+  }
+  if (Array.isArray(classesOrColor)) {
+    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
+  } else if (color) {
+    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
+  }
   return {
-    replacementText: `<span id="${id}" class="${classes} action_word">${text}</span>`,
+    replacementText: `<span id="${id}" class="${classes} action_word"${colorStyle}>${text}</span>`,
     type: 'html',
     id,
   };
@@ -18,10 +30,22 @@ function actionWord(
 function highlightWord(
   text: string,
   id: string = '',
-  classes: string = '',
+  classesOrColor: string | Array<number> | null = null,
+  color: Array<number> | null = null,
 ): Object {
+  let classes = '';
+  let colorStyle = '';
+  if (typeof classesOrColor === 'string') {
+    classes = classesOrColor;
+  }
+  if (Array.isArray(classesOrColor)) {
+    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
+  } else if (color) {
+    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
+  }
+
   return {
-    replacementText: `<span id="${id}" class="${classes} highlight_word">${text}</span>`,
+    replacementText: `<span id="${id}" class="${classes} highlight_word"${colorStyle}>${text}</span>`,
     type: 'html',
     id,
   };

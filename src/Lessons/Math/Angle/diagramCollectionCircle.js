@@ -229,6 +229,7 @@ class CircleCollection extends DiagramElementCollection {
     this._radius.animateRotationTo(targetAngle, 1, 1);
     this.diagram.animateNextFrame();
   }
+
   rotateTo(
     angle: number,
     direction: number,
