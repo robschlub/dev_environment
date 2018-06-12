@@ -1,12 +1,13 @@
 // @flow
-import Diagram from '../../js/diagram/Diagram';
-import { DiagramElementCollection } from '../../js/diagram/Element';
+import Diagram from '../../../js/diagram/Diagram';
+import { DiagramElementCollection } from '../../../js/diagram/Element';
 import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
-import getScssColors from '../../js/tools/getScssColors';
+import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
-import { Point, minAngleDiff, Rect, Transform } from '../../js/diagram/tools/g2';
-import getCssVariables from '../../js/tools/getCssVariables';
+import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
+// import getCssVariables from '../../js/tools/getCssVariables';
+import lessonLayout from './lessonLayout';
 
 const colors = getScssColors(styles);
 
@@ -17,22 +18,23 @@ type typeElements = {
   _shapes: ShapesCollection;
 } & DiagramElementCollection ;
 
-function getLessonVars() {
-  const v = getCssVariables(
-    'lesson__container_name',
-    '--lessonvars-',
-  );
-  v.limits = new Rect(
-    v.xMin,
-    v.yMin,
-    v.xMax - v.xMin,
-    v.yMax - v.yMin,
-  );
-  v.circle = { center: new Point(v.circleCenterX, v.circleCenterY) };
-  v.square = { center: new Point(v.squareCenterX, v.squareCenterY) };
-  v.tri = { center: new Point(v.triCenterX, v.triCenterY) };
-  v.pent = { center: new Point(v.pentCenterX, v.pentCenterY) };
-  return v;
+function getLessonVars(): Object {
+  // const v = getCssVariables(
+  //   'lesson__container_name',
+  //   '--lessonvars-',
+  // );
+  // v.limits = new Rect(
+  //   v.xMin,
+  //   v.yMin,
+  //   v.xMax - v.xMin,
+  //   v.yMax - v.yMin,
+  // );
+  // v.circle = { center: new Point(v.circleCenterX, v.circleCenterY) };
+  // v.square = { center: new Point(v.squareCenterX, v.squareCenterY) };
+  // v.tri = { center: new Point(v.triCenterX, v.triCenterY) };
+  // v.pent = { center: new Point(v.pentCenterX, v.pentCenterY) };
+  // // console.log(v);
+  return lessonLayout();
 }
 
 // $FlowFixMe
@@ -66,6 +68,7 @@ class LessonDiagram extends Diagram {
     this.elements.isTouchable = true;
     this.elements.isMovable = true;
     this.fontScale = 1.2;
+    // console.log(layout)
   }
 
   resize() {

@@ -1,15 +1,15 @@
 // @flow
 
-import Diagram from '../../js/diagram/Diagram';
-import * as tools from '../../js/diagram/tools/mathtools';
+import Diagram from '../../../js/diagram/Diagram';
+import * as tools from '../../../js/diagram/tools/mathtools';
 // import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 
 import { DiagramElementCollection, DiagramElementPrimative }
-  from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../js/diagram/tools/g2';
-import getScssColors from '../../js/tools/getScssColors';
+  from '../../../js/diagram/Element';
+import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
+import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
-import DiagramGLEquation from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 const colors = getScssColors(styles);
 const anchorPoints = 50;

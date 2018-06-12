@@ -1,43 +1,43 @@
-// @flow
+// // @flow
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
 
-// Styles
-// import '../../../css/style.scss';
-import './introduction.scss';
+// // Styles
+// // import '../../../css/style.scss';
+// import './introduction.scss';
 
-// Components
-import Navbar from '../../components/navbar';
-import Content from '../../../Lessons/shapesAndCornersTest/shapesAndCorners';
-import LessonComponent from '../../components/lesson';
-import Lesson from '../../Lesson/Lesson';
+// // Components
+// import Navbar from '../../components/navbar';
+// import Content from '../../../Lessons/shapesAndCornersTest/shapesAndCorners';
+// import LessonComponent from '../../components/lesson';
+// import Lesson from '../../Lesson/Lesson';
 
-const introPage = (section: number) => {
-  const lessonId:HTMLElement | null = document.getElementById('intro');
+// const introPage = (section: number) => {
+//   const lessonId:HTMLElement | null = document.getElementById('intro');
 
-  const lesson = new Lesson(new Content('shapes'));
+//   const lesson = new Lesson(new Content('shapes'));
 
-  if (lessonId instanceof HTMLElement) {
-    ReactDOM.render(
-      <div>
-        <div className="container-fluid">
-          <Navbar active='Multi Page Lesson'/>
-        </div>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col">
-              <LessonComponent lesson={lesson} section={section}/>
-            </div>
-          </div>
-        </div>
-      </div>,
-      lessonId,
-    );
-  }
-};
+//   if (lessonId instanceof HTMLElement) {
+//     ReactDOM.render(
+//       <div>
+//         <div className="container-fluid">
+//           <Navbar active='Multi Page Lesson'/>
+//         </div>
+//         <div className="container-fluid">
+//           <div className="row">
+//             <div className="col">
+//               <LessonComponent lesson={lesson} section={section}/>
+//             </div>
+//           </div>
+//         </div>
+//       </div>,
+//       lessonId,
+//     );
+//   }
+// };
 
-export default introPage;
+// export default introPage;
 
 /* eslint-disable */
 // import React from 'react';

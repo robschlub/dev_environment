@@ -1,5 +1,5 @@
 const path = require('path');
-const entryPoints = require('./lessons.js');
+const entryPoints = require('./getLessons.js');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved

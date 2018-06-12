@@ -2,13 +2,13 @@
 
 import homePage from './views/home/home';
 import aboutPage from './views/about/about';
-import introPage from './views/introduction/introduction';
+// import introPage from './views/introduction/introduction';
 // import lessonSinglePage from './views/lessonSinglePage/lessonSinglePage';
-import lessonMultiPage from './views/lessonMultiPage/lessonMultiPage';
+// import lessonMultiPage from './views/lessonMultiPage/lessonMultiPage';
 
 homePage();
 // introPage(0);
 aboutPage();
 // lessonSinglePage();
-lessonMultiPage(0);
+// lessonMultiPage(0);
 

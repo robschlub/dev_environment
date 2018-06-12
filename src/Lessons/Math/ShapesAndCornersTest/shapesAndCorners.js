@@ -1,9 +1,9 @@
 // @flow
 
-// import { Lesson } from '../../js/Lesson/Lesson';
-import { LessonContent, actionWord, onClickId } from '../../js/Lesson/LessonContent';
+// import { Lesson } from '../../../js/Lesson/Lesson';
+import { LessonContent, actionWord, onClickId } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Point } from '../../js/diagram/tools/g2';
+import { Point } from '../../../js/diagram/tools/g2';
 // import CircleDiagram from './diagramCircle';
 
 class Content extends LessonContent {

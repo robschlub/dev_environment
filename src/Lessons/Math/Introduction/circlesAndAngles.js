@@ -1,10 +1,10 @@
 // @flow
 
 // import { Lesson } from '../../js/Lesson/Lesson';
-import { LessonContent, actionWord, onClickId, highlightWord } from '../../js/Lesson/LessonContent';
+import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform, Point } from '../../js/diagram/tools/g2';
-import { easeinout } from '../../js/diagram/tools/mathtools';
+import { Transform, Point } from '../../../js/diagram/tools/g2';
+import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 class Content extends LessonContent {
   setTitle() {
