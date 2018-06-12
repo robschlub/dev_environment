@@ -54,13 +54,13 @@ export default class Navbar extends React.Component
             </li>
             <li className="nav-item">
               <a className={nav3Class}
-                 href={`/${nav3.toLowerCase().replace(/ /g, '')}`}>
+                 href={'/Lessons/Math/Introduction'}>
                   { nav3 }
               </a>
             </li>
             <li className="nav-item">
               <a className={nav4Class}
-                 href={`/${nav4.toLowerCase().replace(/ /g, '')}`}>
+                 href={'/Lessons/Math/ShapesAndCornersTest'}>
                   { nav4 }
               </a>
             </li>
