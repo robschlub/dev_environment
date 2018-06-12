@@ -41,10 +41,10 @@ def about():
 @app.route('/Lessons/<subject>/<lesson_id>')
 def get_lesson(subject, lesson_id):
     path = 'Lessons/' + subject + '/'
-    # lesson = path + lesson_id + '.html'
-    css = f'/static/{path}style.css'
-    js = f'/static/{path}lesson.js'
-    return render_template('lesson.html', css=css, js=js)
+    css = f'/static/dist/{path}lesson.css'
+    js = f'/static/dist/{path}lesson.js'
+    jsmain = f'/static/dist/{path}lesson~main.js'
+    return render_template('lesson.html', css=css, js=js, jsmain=jsmain)
 
 
 @app.route('/favicon.ico')

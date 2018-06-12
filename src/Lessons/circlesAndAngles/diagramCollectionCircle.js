@@ -74,7 +74,7 @@ function makeWheel(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anglePoints, layout.wheelSize, 0,
     anglePoints, colors.anchor, new Point(0, 0),
-    'static/circles.png', new Rect(0.5, 0, 0.5, 0.5),
+    '/static/circles.png', new Rect(0.5, 0, 0.5, 0.5),
   );
 }
 
@@ -82,7 +82,7 @@ function makeBall(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anglePoints, layout.wheelSize, 0,
     anglePoints, colors.anchor, new Point(0, 0),
-    'static/circles.png', new Rect(0.5, 0.5, 0.5, 0.5),
+    '/static/circles.png', new Rect(0.5, 0.5, 0.5, 0.5),
   );
 }
 
@@ -90,7 +90,7 @@ function makeEarth(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anglePoints, layout.wheelSize, 0,
     anglePoints, colors.anchor, new Point(0, 0),
-    'static/circles.png', new Rect(0, 0.5, 0.5, 0.5),
+    '/static/circles.png', new Rect(0, 0.5, 0.5, 0.5),
   );
 }
 
@@ -98,7 +98,7 @@ function makeClock(shapes: Object, layout: Object) {
   return shapes.polygonFilled(
     anglePoints, layout.wheelSize, 0,
     anglePoints, colors.anchor, new Point(0, 0),
-    'static/circles.png', new Rect(0, 0, 0.5, 0.5),
+    '/static/circles.png', new Rect(0, 0, 0.5, 0.5),
   );
 }
 

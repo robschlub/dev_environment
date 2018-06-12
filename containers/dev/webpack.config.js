@@ -111,12 +111,13 @@ module.exports = (env) => {
   return {
     entry: {
       main: ['whatwg-fetch', 'babel-polyfill', './src/js/main.js'],
-      entry2: './src/js/entry2.js',
-      entry3: './src/js/entry3.js',
+      // entry2: './src/js/entry2.js',
+      // entry3: './src/js/entry3.js',
+      'Lessons/Math/lesson': './src/Lessons/circlesAndAngles/lesson.js',
     },
     output: {
       path: buildPath,
-      filename: '[name].bundle.js',
+      filename: '[name].js',
     },
     module: {
       rules: [
@@ -163,7 +164,7 @@ module.exports = (env) => {
         minSize: 30000,
         cacheGroups: {
           default: {
-            minChunks: 2,
+            minChunks: 2000,
             priority: -20,
             reuseExistingChunk: true,
           },
@@ -172,7 +173,7 @@ module.exports = (env) => {
             minChunks: 2,
             priority: -10,
             reuseExistingChunk: true,
-            test: /js\/tools/,
+            test: /js\/(diagram|Lesson|tools|components)/,
             name: 'tools',
           },
           // commoncss: {
@@ -180,11 +181,11 @@ module.exports = (env) => {
           //   minChunks: 2,
           //   priority: -10,
           //   reuseExistingChunk: true,
-          //   test: /src\/Lessons\/*\.(css|scss|sass)$/,
-          //   name: 'lessons',
-          // },
+          //   test: /css\/*\.(css|scss|sass)$/,
+          //   name: 'commoncss',
+          // // },
           // bootstrap: {
-          //   test: /bootstrap\.css/,
+          //   test: /css\/bootstrap\*.css/,
           //   name: 'bootstrap',
           //   minChunks: 1,
           //   minSize: 10,

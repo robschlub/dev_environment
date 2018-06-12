@@ -3,11 +3,13 @@
 import homePage from './views/home/home';
 import aboutPage from './views/about/about';
 import introPage from './views/introduction/introduction';
-import lessonSinglePage from './views/lessonSinglePage/lessonSinglePage';
+// import lessonSinglePage from './views/lessonSinglePage/lessonSinglePage';
 import lessonMultiPage from './views/lessonMultiPage/lessonMultiPage';
 
 homePage();
 introPage(0);
 aboutPage();
-lessonSinglePage();
+// lessonSinglePage();
 lessonMultiPage(0);
+
+console.log("Asdf");

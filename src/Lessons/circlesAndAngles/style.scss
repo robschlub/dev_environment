@@ -1,9 +1,6 @@
 // https://codepen.io/jakealbaugh/post/css4-variables-and-sass
 @import "../../css/style";
 
-p {
-  border: solid 1px blue;
-}
 $color-lines: $color_primary;
 $color-corners: $color_secondary;
 $color-moreSharp: $color_highlight;

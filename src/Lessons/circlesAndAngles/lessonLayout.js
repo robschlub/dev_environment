@@ -12,13 +12,14 @@ export default function lessonLayout() {
     limits: new Rect(-3, -2, 6, 4),
 
     // General
-    lineWidth: 0.03,
+    linewidth: 0.03,
 
     // Circle Diagram
     radius: 1.3,
     arrow: 1.1,
     cornerLength: 0.5,
     angleRadius: 0.5,
+    wheelSize: 0.8,
 
     // Shapes Diagram
     square: { center: new Point(-1.8, -0.8  + 0.8) },
