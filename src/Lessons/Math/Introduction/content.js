@@ -1,6 +1,5 @@
 // @flow
 
-// import { Lesson } from '../../js/Lesson/Lesson';
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Point } from '../../../js/diagram/tools/g2';

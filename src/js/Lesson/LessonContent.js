@@ -3,7 +3,6 @@
 import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
 import { colorArrayToRGBA } from '../tools/tools';
-// import { Transform } from '../diagram/tools/g2';
 
 function actionWord(
   text: string,
@@ -141,8 +140,6 @@ class Section {
            | () => {};
   show: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  // position: Array<PositionObject>;
-  // isSinglePagePrimary: boolean;
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
@@ -175,46 +172,6 @@ class Section {
   /* eslint-disable no-unused-vars */
   setState(previousState: Object) {
   }
-
-  // fillPosition(positionArray: Array<Object>) {
-  //   const final = [];
-  //   positionArray.forEach((p) => {
-  //     const newP = new PositionObject(p.element);
-  //     if ('position' in p) {
-  //       newP.position = p.position;
-  //     }
-  //     if ('animTimeFromPrev' in p) {
-  //       newP.animTimeFromPrev = p.animTimeFromPrev;
-  //     }
-  //     if ('animTimeFromNext' in p) {
-  //       newP.animTimeFromNext = p.animTimeFromNext;
-  //     }
-  //     if ('animTimeFromGoTo' in p) {
-  //       newP.animTimeFromGoTo = p.animTimeFromGoTo;
-  //     }
-  //     if ('animTimeToPrev' in p) {
-  //       newP.animTimeToPrev = p.animTimeToPrev;
-  //     }
-  //     if ('animTimeToNext' in p) {
-  //       newP.animTimeToNext = p.animTimeToNext;
-  //     }
-  //     final.push(newP);
-  //   });
-  //   if (final) {
-  //     this.position = final;
-  //   }
-  // }
-
-  // setPositionAndAnimations() {
-  //   if ('position' in this) {
-  //     const { position } = this;
-  //     if (Array.isArray(position)) {
-
-  //     } else {
-  //       position();
-  //     }
-  //   };
-  // }
 
   setVisible() {
     if ('showOnly' in this) {
@@ -279,10 +236,6 @@ class LessonContent {
   // questions
 
   constructor(htmlId: string) {
-    // this.setTitle();
-    // this.setDiagram(htmlId);
-    // this.sections = [];
-    // this.addSections();
     this.diagramHtmlId = htmlId;
     this.sections = [];
     this.setTitle();
@@ -304,17 +257,6 @@ class LessonContent {
   addSections() {
   }
 
-  // cleanSections() {
-  //   this.sections.forEach((section, index) => {
-  //     if ('position' in section) {
-  //       const position = section.position;
-  //       if (Array.isArray(position)) {
-  //         section.
-  //       }
-  //       }
-  //   });
-  // }
-
   addSection(section: Object) {
     const s = new Section(this.diagram);
 
@@ -323,7 +265,6 @@ class LessonContent {
       s[key] = section[key];
     });
     this.sections.push(s);
-    // this.cleanSections();
   }
 }
 

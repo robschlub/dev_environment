@@ -4,6 +4,7 @@ import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js
 import LessonDiagram from './diagram';
 import { Transform } from '../../../js/diagram/tools/g2';
 import { easeinout } from '../../../js/diagram/tools/mathtools';
+
 import lessonLayout from './lessonLayout';
 
 const layout = lessonLayout();
@@ -50,9 +51,6 @@ class Content extends LessonContent {
         shapes._pent._lessSharpCorners,
       ],
       setState: () => {
-        // const { diagram } = this;
-        // const collection = diagram.elements._shapes;
-
         onClickId('id_shapes', shapes.pulseShapes, [shapes]);
         onClickId('id_corners', shapes.toggleCorners, [shapes]);
         onClickId('id_more_sharp', shapes.toggleMoreSharpCorners, [shapes]);
@@ -91,7 +89,6 @@ class Content extends LessonContent {
         ]);
       },
       setState: () => {
-        // const { diagram } = this;
         circle._fakeRadius.transform.updateTranslation(-1, 0);
         circle._fakeRadius.transform.updateRotation(Math.PI / 2);
         circle._reference.transform.updateTranslation(1, 0);
