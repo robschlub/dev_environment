@@ -25,28 +25,48 @@ $color_navbar-toggler-border:  map-get($_color-theme, navbar-toggler-border-colo
 $icon_navbar-toggler:          map-get($_color-theme, navbar-toggler-icon);
 
 $color_blue:                   map-get($_color-theme, color-blue);
-$color_blue-light:             map-get($_color-theme, color-blue-light);
-$color_blue-medium:            map-get($_color-theme, color-blue-medium);
-$color_blue-dark:              map-get($_color-theme, color-blue-dark);
+$color_blue-lc:             map-get($_color-theme, color-blue-lc);
+$color_blue-mc:            map-get($_color-theme, color-blue-mc);
+$color_blue-hc:              map-get($_color-theme, color-blue-hc);
 $color_red:                    map-get($_color-theme, color-red);
-$color_red-light:              map-get($_color-theme, color-red-light);
-$color_red-medium:             map-get($_color-theme, color-red-medium);
-$color_red-dark:               map-get($_color-theme, color-red-dark);
+$color_red-lc:              map-get($_color-theme, color-red-lc);
+$color_red-mc:             map-get($_color-theme, color-red-mc);
+$color_red-hc:               map-get($_color-theme, color-red-hc);
 $color_yellow:                 map-get($_color-theme, color-yellow);
-$color_yellow-light:           map-get($_color-theme, color-yellow-light);
-$color_yellow-medium:          map-get($_color-theme, color-yellow-medium);
-$color_yellow-dark:            map-get($_color-theme, color-yellow-dark);
+$color_yellow-lc:           map-get($_color-theme, color-yellow-lc);
+$color_yellow-mc:          map-get($_color-theme, color-yellow-mc);
+$color_yellow-hc:            map-get($_color-theme, color-yellow-hc);
 $color_green:                  map-get($_color-theme, color-green);
-$color_green-light:            map-get($_color-theme, color-green-light);
-$color_green-medium:           map-get($_color-theme, color-green-medium);
-$color_green-dark:             map-get($_color-theme, color-green-dark);
+$color_green-lc:            map-get($_color-theme, color-green-lc);
+$color_green-mc:           map-get($_color-theme, color-green-mc);
+$color_green-hc:             map-get($_color-theme, color-green-hc);
 $color_cyan:                   map-get($_color-theme, color-cyan);
-$color_cyan-light:             map-get($_color-theme, color-cyan-light);
-$color_cyan-medium:            map-get($_color-theme, color-cyan-medium);
-$color_cyan-dark:              map-get($_color-theme, color-cyan-dark);
+$color_cyan-lc:             map-get($_color-theme, color-cyan-lc);
+$color_cyan-mc:            map-get($_color-theme, color-cyan-mc);
+$color_cyan-hc:              map-get($_color-theme, color-cyan-hc);
 $color_white:                  map-get($_color-theme, color-white);
 $color_black:                  map-get($_color-theme, color-black);
 $color_grey:                   map-get($_color-theme, color-grey);
+$color_grey-vlc:            map-get($_color-theme, color-grey-vlc);
+$color_grey-lc:             map-get($_color-theme, color-grey-lc);
+$color_grey-mc:            map-get($_color-theme, color-grey-mc);
+$color_grey-hc:              map-get($_color-theme, color-grey-hc);
+
+$color_blue-light:             map-get($_color-theme, color-blue-light);
+$color_blue-medium:            map-get($_color-theme, color-blue-medium);
+$color_blue-dark:              map-get($_color-theme, color-blue-dark);
+$color_red-light:              map-get($_color-theme, color-red-light);
+$color_red-medium:             map-get($_color-theme, color-red-medium);
+$color_red-dark:               map-get($_color-theme, color-red-dark);
+$color_yellow-light:           map-get($_color-theme, color-yellow-light);
+$color_yellow-medium:          map-get($_color-theme, color-yellow-medium);
+$color_yellow-dark:            map-get($_color-theme, color-yellow-dark);
+$color_green-light:            map-get($_color-theme, color-green-light);
+$color_green-medium:           map-get($_color-theme, color-green-medium);
+$color_green-dark:             map-get($_color-theme, color-green-dark);
+$color_cyan-light:             map-get($_color-theme, color-cyan-light);
+$color_cyan-medium:            map-get($_color-theme, color-cyan-medium);
+$color_cyan-dark:              map-get($_color-theme, color-cyan-dark);
 $color_grey-vlight:            map-get($_color-theme, color-grey-vlight);
 $color_grey-light:             map-get($_color-theme, color-grey-light);
 $color_grey-medium:            map-get($_color-theme, color-grey-medium);
@@ -85,28 +105,48 @@ $defaultColors: (
 );
 $defaultColorPalette: (
   blue:  $color_blue,
-  blueLight:  $color_blue-light,
-  blueMedium:  $color_blue-medium,
-  blueDark:  $color_blue-dark,
+  blueLc:  $color_blue-lc,
+  blueMc:  $color_blue-mc,
+  blueHc:  $color_blue-hc,
   red:  $color_red,
-  redLight:  $color_red-light,
-  redMedium:  $color_red-medium,
-  redDark:  $color_red-dark,
+  redLc:  $color_red-lc,
+  redMc:  $color_red-mc,
+  redHc:  $color_red-hc,
   yellow:  $color_yellow,
-  yellowLight:  $color_yellow-light,
-  yellowMedium:  $color_yellow-medium,
-  yellowDark:  $color_yellow-dark,
+  yellowLc:  $color_yellow-lc,
+  yellowMc:  $color_yellow-mc,
+  yellowHc:  $color_yellow-hc,
   green:  $color_green,
-  greenLight:  $color_green-light,
-  greenMedium:  $color_green-medium,
-  greenDark:  $color_green-dark,
+  greenLc:  $color_green-lc,
+  greenMc:  $color_green-mc,
+  greenHc:  $color_green-hc,
   cyan:  $color_cyan,
-  cyanLight:  $color_cyan-light,
-  cyanMedium:  $color_cyan-medium,
-  cyanDark:  $color_cyan-dark,
+  cyanLc:  $color_cyan-lc,
+  cyanMc:  $color_cyan-mc,
+  cyanHc:  $color_cyan-hc,
   white:  $color_white,
   black:  $color_black,
   grey:  $color_grey,
+  greyVlc:  $color_grey-vlc,
+  greyLc:  $color_grey-lc,
+  greyMc:  $color_grey-mc,
+  greyHc:  $color_grey-hc,
+  //
+  blueLight:  $color_blue-light,
+  blueMedium:  $color_blue-medium,
+  blueDark:  $color_blue-dark,
+  redLight:  $color_red-light,
+  redMedium:  $color_red-medium,
+  redDark:  $color_red-dark,
+  yellowLight:  $color_yellow-light,
+  yellowMedium:  $color_yellow-medium,
+  yellowDark:  $color_yellow-dark,
+  greenLight:  $color_green-light,
+  greenMedium:  $color_green-medium,
+  greenDark:  $color_green-dark,
+  cyanLight:  $color_cyan-light,
+  cyanMedium:  $color_cyan-medium,
+  cyanDark:  $color_cyan-dark,
   greyVLight:  $color_grey-vlight,
   greyLight:  $color_grey-light,
   greyMedium:  $color_grey-medium,

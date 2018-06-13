@@ -1,11 +1,12 @@
 @import '../../../css/style';
 
 $colors: (
-  lines: $color_primary,
+  lines: $color_blue,
   anchor: $color_passive,
-  radius: $color_primary,
-  reference: $color_primary,
-  angle: $color_safe,
+  radius: $color_blue,
+  reference: $color_blue,
+  angle: $color_green-lc,
+  angleText: $color_green,
   latin: $color_secondary,
   circle: $color_danger,
   radialLines: $color_diagram,

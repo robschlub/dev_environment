@@ -33,8 +33,8 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _angle1: actionWord('Angle', 'id_angle1', colors.angle),
-        _angle2: actionWord('Angle', 'id_angle2', colors.angle),
+        _angle1: actionWord('Angle', 'id_angle1', colors.angleText),
+        _angle2: actionWord('Angle', 'id_angle2', colors.angleText),
         _rotation: actionWord('rotation', 'id_rotation', colors.lines),
       },
       showOnly: [
@@ -85,8 +85,8 @@ class Content extends LessonContent {
         circle._angle,
       ],
       modifiers: {
-        _maximum_angle: actionWord('maximum angle', 'id_max_angle', colors.angle),
-        _angle: actionWord('angle', 'id_angle', colors.angle),
+        _maximum_angle: actionWord('maximum angle', 'id_max_angle', colors.angleText),
+        _angle: actionWord('angle', 'id_angle', colors.angleText),
         _split: actionWord('split', 'id_split', colors.radialLinesText),
       },
       setState: () => {
