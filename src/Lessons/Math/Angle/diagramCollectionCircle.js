@@ -5,7 +5,7 @@ import * as tools from '../../../js/diagram/tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/tools/g2';
-import lessonLayout from './lessonLayout';
+import lessonLayout from './layout';
 
 const layout = lessonLayout();
 const { colors } = layout;

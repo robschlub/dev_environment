@@ -4,7 +4,7 @@ import { DiagramElementCollection } from '../../../js/diagram/Element';
 import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
 import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
-import lessonLayout from './lessonLayout';
+import lessonLayout from './layout';
 
 const layout = lessonLayout();
 const { colors } = layout;

@@ -89,7 +89,7 @@ exports[`Navbar Make "About" item active 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Go to
+            Lesson
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -97,30 +97,24 @@ exports[`Navbar Make "About" item active 1`] = `
           >
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Introduction"
             >
-              Chapter 1 - shapes
+              1 - Why study shapes?
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Angle"
             >
-              Chapter 2 - circles
-            </a>
-            <a
-              className="dropdown-item"
-              href="#"
-            >
-              Chapter 3 - abstraction
+              2 - Angles
             </a>
             <div
               className="dropdown-divider"
             />
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/ShapesAndCornersTest"
             >
-              Glossary
+              Test
             </a>
           </div>
         </li>
@@ -229,7 +223,7 @@ exports[`Navbar Make "Introduction" item active 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Go to
+            Lesson
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -237,30 +231,24 @@ exports[`Navbar Make "Introduction" item active 1`] = `
           >
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Introduction"
             >
-              Chapter 1 - shapes
+              1 - Why study shapes?
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Angle"
             >
-              Chapter 2 - circles
-            </a>
-            <a
-              className="dropdown-item"
-              href="#"
-            >
-              Chapter 3 - abstraction
+              2 - Angles
             </a>
             <div
               className="dropdown-divider"
             />
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/ShapesAndCornersTest"
             >
-              Glossary
+              Test
             </a>
           </div>
         </li>
@@ -369,7 +357,7 @@ exports[`Navbar No props 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Go to
+            Lesson
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -377,30 +365,24 @@ exports[`Navbar No props 1`] = `
           >
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Introduction"
             >
-              Chapter 1 - shapes
+              1 - Why study shapes?
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Angle"
             >
-              Chapter 2 - circles
-            </a>
-            <a
-              className="dropdown-item"
-              href="#"
-            >
-              Chapter 3 - abstraction
+              2 - Angles
             </a>
             <div
               className="dropdown-divider"
             />
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/ShapesAndCornersTest"
             >
-              Glossary
+              Test
             </a>
           </div>
         </li>

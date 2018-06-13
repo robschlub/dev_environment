@@ -7,7 +7,7 @@ import CircleCollection from './diagramCollectionCircle';
 // import styles from './style.scss';
 import { Transform } from '../../../js/diagram/tools/g2';
 // import getCssVariables from '../../js/tools/getCssVariables';
-import lessonLayout from './lessonLayout';
+import lessonLayout from './layout';
 
 const layout = lessonLayout();
 const { colors } = layout;

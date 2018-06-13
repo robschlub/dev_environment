@@ -8,7 +8,7 @@ import { DiagramElementCollection, DiagramElementPrimative }
 import { Point, Transform, Rect } from '../../../js/diagram/tools/g2';
 import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
-import lessonLayout from './lessonLayout';
+import lessonLayout from './layout';
 
 const layout = lessonLayout();
 const { colors } = layout;

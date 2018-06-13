@@ -6,7 +6,7 @@ import { DiagramElementCollection, DiagramElementPrimative }
 import { Point, Transform } from '../../../js/diagram/tools/g2';
 // import getScssColors from '../../../js/tools/getScssColors';
 // import styles from './style.scss';
-import lessonLayout from './lessonLayout';
+import lessonLayout from './layout';
 
 const layout = lessonLayout();
 const { colors } = layout;
