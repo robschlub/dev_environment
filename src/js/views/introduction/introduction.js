@@ -12,6 +12,55 @@ import { colorArrayToRGB } from '../../tools/tools';
 const introPage = () => {
   const elem: HTMLElement | null = document.getElementById('intro');
   const colors = getCssColors();
+  const names = ['red', 'blue', 'green', 'cyan', 'yellow', 'grey', 'black', 'white'];
+  const paletteKeys = [];
+  const paletteColors = Object.keys(colors.palette).slice();
+  names.forEach((name, j) => {
+    paletteKeys.push([]);
+    paletteColors.forEach((c) => {
+      if (c.startsWith(name)) {
+        paletteKeys[j].push(c);
+      }
+    });
+    paletteKeys[j].sort();
+  });
+  let reactKey = 0;
+  const paletteLayout = paletteKeys.map((hue) => {
+    reactKey += 1;
+    return <div className="row" key={reactKey}>{
+      hue.map((key) => {
+        reactKey += 1;
+        const color = colors.palette[key];
+        // console.log(color, key)
+        const colorSum = color.reduce((acc, val) => acc + val);
+        let textColor = [1, 1, 1, 1];
+        if (colorSum > 2) {
+          textColor = [0, 0, 0, 1];
+        }
+        return <div className="col-2" key={reactKey} style={{
+          backgroundColor: colorArrayToRGB(colors.palette[key]),
+          color: colorArrayToRGB(textColor),
+          padding: '20px',
+        }}>{key}</div>;
+      })
+    }</div>;
+  });
+  const semanticColorKeys = Object.keys(colors).filter(key => key !== 'palette').sort();
+  const semanticColorLayout = semanticColorKeys.map((key) => {
+    reactKey += 1;
+    const color = colors[key];
+    // console.log(color, key)
+    const colorSum = color.reduce((acc, val) => acc + val);
+    let textColor = [1, 1, 1, 1];
+    if (colorSum > 2) {
+      textColor = [0, 0, 0, 1];
+    }
+    return <div className="col-2" key={reactKey} style={{
+      backgroundColor: colorArrayToRGB(colors[key]),
+      color: colorArrayToRGB(textColor),
+      padding: '20px',
+    }}>{key}</div>;
+  });
 
   if (elem instanceof HTMLElement) {
     ReactDOM.render(
@@ -21,21 +70,10 @@ const introPage = () => {
         </div>
         <div className="container-fluid">
           <div className="row" style={ { marginTop: '60px' } }>
-              {
-                Object.keys(colors).map((key, i) => {
-                  const color = colors[key];
-                  const colorSum = color.reduce((acc, val) => acc + val);
-                  let textColor = [1, 1, 1, 1];
-                  if (colorSum > 2) {
-                    textColor = [0, 0, 0, 1];
-                  }
-                  return <div className="col-4" key={i} style={{
-                    backgroundColor: colorArrayToRGB(colors[key]),
-                    color: colorArrayToRGB(textColor),
-                    padding: '20px',
-                  }}>{key}</div>;
-                })
-              }
+          </div>
+          {paletteLayout}
+          <div className="row">
+            {semanticColorLayout}
           </div>
         </div>
       </div>,

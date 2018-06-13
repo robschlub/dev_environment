@@ -264,7 +264,7 @@ function shapes(diagram: Diagram) {
     dAngle: number = Math.PI / 4,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
-    ) {
+  ) {
     return RadialLines(
       diagram.webgl, innerRadius, outerRadius, width,
       dAngle, color, transform, diagram.limits,

@@ -24,6 +24,34 @@ $color_navbar-disabled:        map-get($_color-theme, navbar-disabled-color);
 $color_navbar-toggler-border:  map-get($_color-theme, navbar-toggler-border-color);
 $icon_navbar-toggler:          map-get($_color-theme, navbar-toggler-icon);
 
+$color_blue:                   map-get($_color-theme, color-blue);
+$color_blue-light:             map-get($_color-theme, color-blue-light);
+$color_blue-medium:            map-get($_color-theme, color-blue-medium);
+$color_blue-dark:              map-get($_color-theme, color-blue-dark);
+$color_red:                    map-get($_color-theme, color-red);
+$color_red-light:              map-get($_color-theme, color-red-light);
+$color_red-medium:             map-get($_color-theme, color-red-medium);
+$color_red-dark:               map-get($_color-theme, color-red-dark);
+$color_yellow:                 map-get($_color-theme, color-yellow);
+$color_yellow-light:           map-get($_color-theme, color-yellow-light);
+$color_yellow-medium:          map-get($_color-theme, color-yellow-medium);
+$color_yellow-dark:            map-get($_color-theme, color-yellow-dark);
+$color_green:                  map-get($_color-theme, color-green);
+$color_green-light:            map-get($_color-theme, color-green-light);
+$color_green-medium:           map-get($_color-theme, color-green-medium);
+$color_green-dark:             map-get($_color-theme, color-green-dark);
+$color_cyan:                   map-get($_color-theme, color-cyan);
+$color_cyan-light:             map-get($_color-theme, color-cyan-light);
+$color_cyan-medium:            map-get($_color-theme, color-cyan-medium);
+$color_cyan-dark:              map-get($_color-theme, color-cyan-dark);
+$color_white:                  map-get($_color-theme, color-white);
+$color_black:                  map-get($_color-theme, color-black);
+$color_grey:                   map-get($_color-theme, color-grey);
+$color_grey-vlight:            map-get($_color-theme, color-grey-vlight);
+$color_grey-light:             map-get($_color-theme, color-grey-light);
+$color_grey-medium:            map-get($_color-theme, color-grey-medium);
+$color_grey-dark:              map-get($_color-theme, color-grey-dark);
+
 /* stylelint-disable property-case, property-no-unknown, selector-pseudo-class-no-unknown */
 $defaultColors: (
   primary: $color_primary,
@@ -55,29 +83,63 @@ $defaultColors: (
   navbarDisabled: $color_navbar-disabled,
   navbarTogglerBorder: $color_navbar-toggler-border,
 );
+$defaultColorPalette: (
+  blue:  $color_blue,
+  blueLight:  $color_blue-light,
+  blueMedium:  $color_blue-medium,
+  blueDark:  $color_blue-dark,
+  red:  $color_red,
+  redLight:  $color_red-light,
+  redMedium:  $color_red-medium,
+  redDark:  $color_red-dark,
+  yellow:  $color_yellow,
+  yellowLight:  $color_yellow-light,
+  yellowMedium:  $color_yellow-medium,
+  yellowDark:  $color_yellow-dark,
+  green:  $color_green,
+  greenLight:  $color_green-light,
+  greenMedium:  $color_green-medium,
+  greenDark:  $color_green-dark,
+  cyan:  $color_cyan,
+  cyanLight:  $color_cyan-light,
+  cyanMedium:  $color_cyan-medium,
+  cyanDark:  $color_cyan-dark,
+  white:  $color_white,
+  black:  $color_black,
+  grey:  $color_grey,
+  greyVLight:  $color_grey-vlight,
+  greyLight:  $color_grey-light,
+  greyMedium:  $color_grey-medium,
+  greyDark:  $color_grey-dark,
+);
 
-@mixin color_vars($color-map) {
+@mixin to_vars($color-map, $prefix) {
   @each $var, $value in $color-map {
     @if type-of($value) == "map" {
       @each $subvar, $subvalue in $value {
         @if type-of($subvalue) == "map" {
           @each $subsubvar, $subsubvalue in $subvalue {
-            --colors-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+            #{$prefix}-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
           }
         }
 
         @else {
-          --colors-#{$var}-#{$subvar}: #{$subvalue};
+          #{$prefix}-#{$var}-#{$subvar}: #{$subvalue};
         }
       }
     }
 
     @else {
-      --colors-#{$var}: #{$value};
+      #{$prefix}-#{$var}: #{$value};
     }
   }
 }
 
+@mixin color_vars($color-map) {
+  @include to_vars($color-map, '--colors');
+}
+// $abc: '--colors';
 body {
   @include color_vars($defaultColors);
+  @include to_vars($defaultColorPalette, '--palette');
 }

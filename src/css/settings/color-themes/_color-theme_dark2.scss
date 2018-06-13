@@ -23,4 +23,38 @@ $_color-theme_dark2: (
   navbar-disabled-color:        rgba(map-get($_color-palette, white), 0.25),
   navbar-toggler-border-color:  rgba(map-get($_color-palette, white), 0.1),
   navbar-toggler-icon:          $navbar-dark-toggler-icon-bg,
+  //
+  color-blue:                   map-get($_color-palette, blue),
+  color-blue-light:             map-get($_color-palette, blue-light),
+  color-blue-medium:            map-get($_color-palette, blue-medium),
+  color-blue-dark:              map-get($_color-palette, blue-dark),
+  //
+  color-red:                    map-get($_color-palette, red),
+  color-red-light:              map-get($_color-palette, red-light),
+  color-red-medium:             map-get($_color-palette, red-medium),
+  color-red-dark:               map-get($_color-palette, red-dark),
+  //
+  color-yellow:                 map-get($_color-palette, yellow),
+  color-yellow-light:           map-get($_color-palette, yellow-light),
+  color-yellow-medium:          map-get($_color-palette, yellow-medium),
+  color-yellow-dark:            map-get($_color-palette, yellow-dark),
+  //
+  color-green:                  map-get($_color-palette, green),
+  color-green-light:            map-get($_color-palette, green-light),
+  color-green-medium:           map-get($_color-palette, green-medium),
+  color-green-dark:             map-get($_color-palette, green-dark),
+  //
+  color-cyan:                   map-get($_color-palette, cyan),
+  color-cyan-light:             map-get($_color-palette, cyan-light),
+  color-cyan-medium:            map-get($_color-palette, cyan-medium),
+  color-cyan-dark:              map-get($_color-palette, cyan-dark),
+  //
+  color-white:                  map-get($_color-palette, white),
+  color-black:                  map-get($_color-palette, black),
+  //
+  color-grey:                   map-get($_color-palette, grey),
+  color-grey-vlight:            map-get($_color-palette, grey-vlight),
+  color-grey-light:             map-get($_color-palette, grey-light),
+  color-grey-medium:            map-get($_color-palette, grey-medium),
+  color-grey-dark:              map-get($_color-palette, grey-dark),
 );

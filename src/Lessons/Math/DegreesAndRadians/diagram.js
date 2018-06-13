@@ -60,10 +60,6 @@ class LessonDiagram extends Diagram {
     super.resize();
   }
 
-  // draw(now: number): void {
-  //   super.draw(now);
-  // }
-
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,

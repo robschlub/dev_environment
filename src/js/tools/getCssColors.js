@@ -15,6 +15,7 @@ import getCSSVariables from './getCssVariables';
 
 export default function getCSSColors(): Object {
   const colors = {};
+  const paletteColors = {};
   const { body } = document;
   if (body) {
     const cssColors = getCSSVariables(body, '--colors-');
@@ -23,6 +24,15 @@ export default function getCSSColors(): Object {
       const value = cssColorToArray(cssColors[key]);
       if (value) {
         colors[key] = value;
+      }
+    });
+
+    const cssPaletteColors = getCSSVariables(body, '--palette-');
+    Object.keys(cssPaletteColors).forEach((key) => {
+      // let value = cssColors[key];
+      const value = cssColorToArray(cssPaletteColors[key]);
+      if (value) {
+        paletteColors[key] = value;
       }
     });
   }
@@ -41,5 +51,6 @@ export default function getCSSColors(): Object {
   //     }
   //   }
   // }
+  colors.palette = paletteColors;
   return colors;
 }

@@ -2,8 +2,8 @@
 
 import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform } from '../../../js/diagram/tools/g2';
-import { easeinout } from '../../../js/diagram/tools/mathtools';
+// import { Transform } from '../../../js/diagram/tools/g2';
+// import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
 
