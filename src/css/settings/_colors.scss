@@ -12,6 +12,8 @@ $color_background:             map-get($_color-theme, background);
 $color_text:                   map-get($_color-theme, text);
 $color_diagram:                map-get($_color-theme, diagram-background);
 $color_diagram-text:           map-get($_color-theme, diagram-text);
+$color_diagram-high-c-grey:    map-get($_color-theme, diagram-high-c-grey);
+$color_diagram-low-c-grey:     map-get($_color-theme, diagram-low-c-grey);
 $color_negative-text:          map-get($_color-theme, negative-text);
 $color_navigation-buttons:     map-get($_color-theme, navigation-buttons);
 $color_navbar-background:      map-get($_color-theme, navbar-background-color);
@@ -40,6 +42,8 @@ $defaultColors: (
   latin: $color_secondary,
   english: $color_secondary,
   highlightText: $color_secondary,
+  highCGrey: $color_diagram-high-c-grey,
+  lowCGrey: $color_diagram-low-c-grey,
   //
   navigationButtons: $color_navigation-buttons,
   //

@@ -9,6 +9,8 @@ $_color-theme_dark2: (
   highlight:                    map-get($_color-palette, red),
   background:                   map-get($_color-palette, grey-medium),
   diagram-background:           map-get($_color-palette, black),
+  diagram-low-c-grey:           map-get($_color-palette, grey-dark),
+  diagram-high-c-grey:          map-get($_color-palette, grey-light),
   navbar:                       map-get($_color-palette, grey-dark),
   text:                         map-get($_color-palette, grey-vlight),
   diagram-text:                 map-get($_color-palette, yellow-light),

@@ -1,0 +1,17 @@
+@import '../../../css/style';
+
+$colors: (
+  lines: $color_primary,
+  anchor: $color_passive,
+  radius: $color_primary,
+  reference: $color_primary,
+  angle: $color_safe,
+  latin: $color_secondary,
+  circle: $color_danger,
+  radialLines: $color_diagram,
+  radialLinesText: $color_secondary,
+);
+
+body {
+  @include color_vars($colors);
+}

@@ -14,6 +14,7 @@ import DrawContext2D from './DrawContext2D';
 
 import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
 import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
@@ -256,6 +257,19 @@ function shapes(diagram: Diagram) {
       rotation, color, transform, diagram.limits,
     );
   }
+  function radialLines(
+    innerRadius: number = 0,
+    outerRadius: number = 1,
+    width: number = 0.05,
+    dAngle: number = Math.PI / 4,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+    ) {
+    return RadialLines(
+      diagram.webgl, innerRadius, outerRadius, width,
+      dAngle, color, transform, diagram.limits,
+    );
+  }
   function collection(transformOrPoint: Transform | Point = new Transform()) {
     let transform = new Transform();
     if (transformOrPoint instanceof Point) {
@@ -276,6 +290,7 @@ function shapes(diagram: Diagram) {
     lines,
     grid,
     text,
+    radialLines,
   };
 }
 
