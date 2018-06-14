@@ -56,15 +56,15 @@
 }
 
 .highlight_word {
-  color: map-get($defaultColors, 'highlightText');
+  color: color(diagram, 'text-keyword');
 }
 
 .latin {
   font-style: italic;
-  color: map-get($defaultColors, 'latin');
+  color: color(diagram, 'text-latin');
 }
 
 .english {
   font-style: italic;
-  color: map-get($defaultColors, 'english');
+  color: color(diagram, 'text-english');
 }
