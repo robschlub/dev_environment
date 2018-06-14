@@ -1,41 +1,72 @@
-$_color-palette_n_blue:                          #1CA4FC;
-$_color-palette_n_red:                           #EB261F;
-$_color-palette_n_yellow:                        #FAE047;
-$_color-palette_n_green:                         #65D643;
-$_color-palette_n_cyan:                          #2FE6CF;
+// $_color-palette_n_blue:                          #1CA4FC;
+// $_color-palette_n_red:                           #EB261F;
+// $_color-palette_n_yellow:                        #FAE047;
+// $_color-palette_n_green:                         #65D643;
+// $_color-palette_n_cyan:                          #2FE6CF;
 
-$_color-palette_n: (
-  blue:                 $_color-palette_n_blue,
-  blue-light:           lighten($_color-palette_n_blue, 20),
-  blue-medium:          darken($_color-palette_n_blue, 20),
-  blue-dark:            darken($_color-palette_n_blue, 40),
-  //
-  red:                  $_color-palette_n_red,
-  red-light:            lighten($_color-palette_n_red, 20),
-  red-medium:           darken($_color-palette_n_red, 20),
-  red-dark:             darken($_color-palette_n_red, 40),
-  //
-  yellow:               $_color-palette_n_yellow,
-  yellow-light:         #FFFBA0,
-  yellow-medium:        darken($_color-palette_n_yellow, 20),
-  yellow-dark:          darken($_color-palette_n_yellow, 40),
-  //
-  green:               $_color-palette_n_green,
-  green-light:         lighten($_color-palette_n_green, 20),
-  green-medium:        darken($_color-palette_n_green, 20),
-  green-dark:          darken($_color-palette_n_green, 40),
-  //
-  cyan:               $_color-palette_n_cyan,
-  cyan-light:         lighten($_color-palette_n_cyan, 20),
-  cyan-medium:        darken($_color-palette_n_cyan, 20),
-  cyan-dark:          darken($_color-palette_n_cyan, 40),
-  //
-  white:                #FFF,
-  black:                #000,
-  //
-  grey:                 #929292,
-  grey-vlight:          lighten(#929292, 30),
-  grey-light:           lighten(#929292, 20),
-  grey-medium:          #5E5E5E,
-  grey-dark:            #494949,
+// $_color-palette_n: (
+//   blue:                 $_color-palette_n_blue,
+//   blue-light:           lighten($_color-palette_n_blue, 20),
+//   blue-medium:          darken($_color-palette_n_blue, 20),
+//   blue-dark:            darken($_color-palette_n_blue, 40),
+//   //
+//   red:                  $_color-palette_n_red,
+//   red-light:            lighten($_color-palette_n_red, 20),
+//   red-medium:           darken($_color-palette_n_red, 20),
+//   red-dark:             darken($_color-palette_n_red, 40),
+//   //
+//   yellow:               $_color-palette_n_yellow,
+//   yellow-light:         #FFFBA0,
+//   yellow-medium:        darken($_color-palette_n_yellow, 20),
+//   yellow-dark:          darken($_color-palette_n_yellow, 40),
+//   //
+//   green:               $_color-palette_n_green,
+//   green-light:         lighten($_color-palette_n_green, 20),
+//   green-medium:        darken($_color-palette_n_green, 20),
+//   green-dark:          darken($_color-palette_n_green, 40),
+//   //
+//   cyan:               $_color-palette_n_cyan,
+//   cyan-light:         lighten($_color-palette_n_cyan, 20),
+//   cyan-medium:        darken($_color-palette_n_cyan, 20),
+//   cyan-dark:          darken($_color-palette_n_cyan, 40),
+//   //
+//   white:                #FFF,
+//   black:                #000,
+//   //
+//   grey:                 #929292,
+//   grey-vlight:          lighten(#929292, 30),
+//   grey-light:           lighten(#929292, 20),
+//   grey-medium:          #5E5E5E,
+//   grey-dark:            #494949,
+// );
+
+$base_colors: (
+  'blue':                          #1CA4FC,
+  'red':                           #EB261F,
+  'yellow':                        #FAE047,
+  'green':                         #65D643,
+  'cyan':                          #2FE6CF,
+  'grey':                          #929292,
+  'white':                         #FFF,
+  'black':                         #000,
 );
+
+$_color-palette_n: ();
+
+@function create_colour_map($color, $lighter, $light, $dark, $darker) {
+  $map: (
+    'base': $color,
+    'lighter': lighten($color, $lighter),
+    'light': lighten($color, $light),
+    'dark': darken($color, $dark),
+    'darker': darken($color, $darker),
+  );
+
+  @return $map;
+}
+
+@each $key, $value in $base_colors {
+  $map: ();
+  $map: map-merge($map, ($key: create_colour_map($value, 30%, 15%, 15%, 30%)));
+  $_color-palette_n: map-merge($_color-palette_n, $map);
+}

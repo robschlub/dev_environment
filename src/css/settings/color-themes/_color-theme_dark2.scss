@@ -1,5 +1,118 @@
 $_color-palette: $_color-palette_n;
 
+@function _palette_color($color, $shade) {
+  @return map-get(map-get($_color-palette, $color), $shade);
+}
+
+// Go into each color, and add a constrast section
+$contrasts: (
+  'higher': 'lighter',
+  'high': 'light',
+  'low': 'dark',
+  'lower': 'darker'
+);
+
+$palette: ();
+
+@each $hue, $hue-map in $_color-palette {
+  $map: ();
+  $map: map-merge(
+    $hue-map,
+    (
+      'lower': palette_color($hue, map-get($contrasts, 'lower')),
+      'low': palette_color($hue, map-get($contrasts, 'low')),
+      'high': palette_color($hue, map-get($contrasts, 'high')),
+      'higher': palette_color($hue, map-get($contrasts, 'higher')),
+    ),
+  );
+  $palette: map-merge($palette, ($hue: $map));
+}
+
+$hues: (
+  'hue1':           'blue',
+  'hue2':           'red',
+  'hue3':           'green',
+  'hue4':           'yellow',
+  'hue5':           'cyan',
+  diagram: (
+    'background':     'black',
+    'primary':        'blue',
+    'warning':        'red',
+    'safe':           'green',
+    'text':           'yellow',
+    'text-keyword':   'blue',
+    'text-latin':     'blue',
+    'text-greek':     'blue',
+  ),
+  lesson: (
+    'background':       'grey',
+    'text-title':       'grey',
+    'text-page-number': 'grey',
+    'navigation':       'grey',
+  ),
+);
+
+@function color($color, $type) {
+  @return map-get(map-get($palette, $color), $type);
+}
+
+@function hue($hue-number, $type) {
+  @return map-get(map-get($palette, map-get($hues, 'hue' + $hue-number)), $type);
+}
+
+@function diagram-hue($name, $type) {
+  @return map-get(map-get($palette, map-get(map-get($hues, diagram), $name)), $type);
+}
+
+@function lesson-hue($name, $type) {
+  @return map-get(map-get($palette, map-get(map-get($hues, lesson), $name)), $type);
+}
+
+@function palette_color($color, $shade) {
+  @return map-get(map-get($_color-palette, $color), $shade);
+}
+
+@debug diagram-hue('primary', 'base');
+@debug lesson-hue('text-title', 'base');
+@debug hue(1, 'base');
+@debug color('blue', 'base');
+// $hueNumber: 'hue1';
+
+// @debug "before";
+// @debug map-get($hues, $hueNumber);
+// @debug map-get($palette, 'blue');
+// @debug map-get(map-get($palette, 'blue'), 'light');
+// $temp: map-get($hues, 'hue' + 2);
+// @debug $temp;
+// @debug map-get($palette, $temp);
+
+// @debug hue(1, 'light');
+
+// $semantic: (
+//   diagram: (
+//     background:                 palette_color('black', 'base'),
+//     primary:                    palette_color('blue', 'base'),
+//     primary-light:              palette_color('black', 'base'),
+//     text:
+//     text-keyword:
+//     text-latin:
+//     text-greek:
+//     warning:
+//     warning-light:
+//     safe:
+//     safe-light:
+//     )
+//   diagram-background: 'black',
+//   primary: ''
+// );
+
+// @debug $hues;
+// @debug "Single Hue";
+// // @debug hue('1', 'lighter');
+// @debug "Palette";
+// @debug $palette;
+
+$_color-palette: $_color-palette_pastel;
 $_color-theme_dark2: (
   primary:                      map-get($_color-palette, blue),
   secondary:                    map-get($_color-palette, blue-light),
