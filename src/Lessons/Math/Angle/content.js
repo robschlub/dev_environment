@@ -182,7 +182,7 @@ class Content extends LessonContent {
       modifiers: {
         _Small_rotation: actionWord('Small rotation', 'id_small_rotation', colors.moreSharp),
         _Large_rotation: actionWord('Large rotation', 'id_large_rotation', colors.lessSharp),
-        _corner: actionWord('corner', 'id_corner', colors.corner),
+        _corner: actionWord('corner', 'id_corner', colors.corners),
       },
       showOnly: [
         circle,
