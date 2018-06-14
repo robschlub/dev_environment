@@ -1,6 +1,6 @@
 // @flow
 
-import { cssColorToArray } from './tools';
+import { cssColorToArray, addToObject } from './tools';
 import getCSSVariables from './getCssVariables';
 
 export default function getCSSColors(): Object {
@@ -18,12 +18,15 @@ export default function getCSSColors(): Object {
       }
     });
 
-    const cssPaletteColors = getCSSVariables(body, '--palette-');
-    Object.keys(cssPaletteColors).forEach((key) => {
-      const value = cssColorToArray(cssPaletteColors[key]);
-      if (value) {
-        paletteColors[key] = value;
-      }
+    const cssPaletteColors = getCSSVariables(body, '--palette-', false);
+    Object.keys(cssPaletteColors).forEach((hue) => {
+      const color = cssPaletteColors[hue];
+      Object.keys(color).forEach((shade) => {
+        const value = cssColorToArray(color[shade]);
+        if (value) {
+          addToObject(paletteColors, `${hue}-${shade}`, value);
+        }
+      });
     });
 
     const cssDiagramColors = getCSSVariables(body, '--diagram-');

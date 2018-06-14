@@ -185,9 +185,29 @@ function colorArrayToRGB(color: Array<number>) {
     Math.floor(color[2] * 255)})`;
 }
 
+function addToObject(
+  obj: Object,
+  nameToAdd: string,
+  valueToAdd: mixed,
+  splitStr: string = '-',
+) {
+  const levels = nameToAdd.split(splitStr);
+  let currentLevel: Object = obj;
+  levels.forEach((level, index) => {
+    if (index === levels.length - 1) {
+      currentLevel[level] = valueToAdd;
+      return;
+    }
+    if (!Object.prototype.hasOwnProperty.call(currentLevel, level)) {
+      currentLevel[level] = {};
+    }
+    currentLevel = currentLevel[level];
+  });
+}
+
 export {
   divide, mulToString, add, Console,
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
-  colorArrayToRGBA,
+  colorArrayToRGBA, addToObject,
 };

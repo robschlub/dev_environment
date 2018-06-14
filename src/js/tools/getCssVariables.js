@@ -1,5 +1,5 @@
 // @flow
-
+import { addToObject } from './tools';
 // export default function getCSSVariables(
 //   id: string,
 //   varNames: Array<string>,
@@ -32,6 +32,7 @@ function toCamelCase(input: string, prefix) {
 export default function getCSSVariables(
   idOrElement: string | HTMLElement,
   prefix: string = '',
+  makeFlat: boolean = true,
 ): Object {
   const variables = {};
   let elem = idOrElement;
@@ -48,11 +49,17 @@ export default function getCSSVariables(
         if (prefix === '' || propertyName.startsWith(prefix)) {
           const value = style.getPropertyValue(propertyName).trim();
           const fValue = parseFloat(value);
-          const shortName = toCamelCase(propertyName, prefix);
+          let valueToAdd = value;
           if (!Number.isNaN(fValue)) {
-            variables[shortName] = fValue;
+            valueToAdd = fValue;
+          }
+          if (makeFlat) {
+            const shortName = toCamelCase(propertyName, prefix);
+            variables[shortName] = valueToAdd;
           } else {
-            variables[shortName] = value;
+            const rePrefix = new RegExp(prefix, 'g');
+            const noPrefix = propertyName.replace(rePrefix, '');
+            addToObject(variables, noPrefix, valueToAdd, '-');
           }
         }
       }
