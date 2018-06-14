@@ -34,60 +34,55 @@
   @return map-get(map-get($palette, $color), $shade);
 }
 
-// Helper function to retrive either the diagram, lesson or main map from
-// theme-colors
-@function hue-map($fromOrName, $name: '') {
+$_color_special_map_names: diagram, lesson, site, navbar;
+
+//
+// Get color function from color_theme
+//  color(1):                       get 'hue1' from root of theme-map
+//  color(1, dark):                 get 'hue1' shade 'dark'
+//  color(diagram, 'text'):         get 'text' default color from diagram
+//  color(diagram, 'text', 'dark'): get 'text' hue with shade 'dark'
+//
+@function color($fromOrName, $nameOrShade: '', $shadeName: '') {
+  // If the color is from a sub-map (like diagram, or lesson)
+  @if index($_color_special_map_names, $fromOrName) {
+    $color-map: map-get(map-get($_color_theme, $fromOrName), $nameOrShade);
+    $color: map-get($color-map, color);
+    $shade: map-get($color-map, shade);
+
+    @if $shadeName != '' {
+      $shade: $shadeName;
+    }
+
+    @return palette-color($color, $shade);
+  }
+
+  // Otherwise it's from the root hue map
+  $color-map: map-get($_color_theme, 'hue' + $fromOrName);
+  $color: map-get($color-map, color);
+  $shade: map-get($color-map, shade);
+
+  @if $nameOrShade != '' {
+    $shade: $nameOrShade;
+  }
+
+  @return palette-color($color, $shade);
+}
+
+// Retrieve hue name from theme-colors
+@function hue($fromOrName, $name: '') {
   $map: ();
 
-  @if $fromOrName == diagram {
-    $map: map-get(map-get($_color_theme, diagram), $name);
-  }
-
-  @else if $fromOrName == lesson {
-    $map: map-get(map-get($_color_theme, lesson), $name);
-  }
-
-  @else if $fromOrName == site {
-    $map: map-get(map-get($_color_theme, site), $name);
-  }
-
-  @else if $fromOrName == navbar {
-    $map: map-get(map-get($_color_theme, navbar), $name);
+  @if index($_color_special_map_names, $fromOrName) {
+    $map: map-get(map-get($_color_theme, $fromOrName), $name);
   }
 
   @else {
     $map: map-get($_color_theme, 'hue' + $fromOrName);
   }
 
-  @return $map;
-}
-
-// Retrieve color from theme-colors
-@function color($fromOrName, $name: '') {
-  $map: hue-map($fromOrName, $name);
-  $col: map-get($map, color);
-  $shade: map-get($map, shade);
-
-  @return palette-color($col, $shade);
-}
-
-// Retrieve hue only from theme-colors
-@function hue($fromOrName, $name: '') {
-  $map: hue-map($fromOrName, $name);
+  // $map: hue-map($fromOrName, $name);
   $col: map-get($map, color);
 
   @return $col;
-}
-
-// Retrieve hue and custom shade from theme-colors
-@function hue-shade($fromOrName, $nameOrShade, $shadeOnly: '') {
-  $map: hue-map($fromOrName, $nameOrShade);
-  $col: map-get($map, color);
-  $shade: $shadeOnly;
-
-  @if $shade == '' {
-    $shade: $nameOrShade;
-  }
-
-  @return palette-color($col, $shade);
 }

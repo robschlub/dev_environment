@@ -16,3 +16,11 @@ $colors: (
 body {
   @include color_vars($colors);
 }
+
+// @debug colord(2);
+// @debug colord(2, 'base');
+// @debug colord(2, 'light');
+// @debug colord(diagram, 'primary');
+// @debug colord(diagram, 'primary', 'base');
+// @debug colord(diagram, 'primary', 'light');
+@debug hue(diagram, 'text');
