@@ -2,12 +2,12 @@
 
 $colors: (
   lines:      color(diagram, 'primary'),
-  corners:    hue-shade(diagram, 'primary', light),
+  corners:    color(diagram, 'primary', light),
   moreSharp:  color(3),
   lessSharp:  color(4),
   anchor:     color(5),
   radius:     color(diagram, 'primary'),
-  reference:  hue-shade(diagram, 'primary', light),
+  reference:  color(diagram, 'primary', light),
   background: color(diagram, 'background'),
   arrow:      color(3),
   angle:      color(4),

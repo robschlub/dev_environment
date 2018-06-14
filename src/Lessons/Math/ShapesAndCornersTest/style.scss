@@ -2,12 +2,12 @@
 @import '../../../css/style';
 
 $color-lines: color(diagram, 'primary');
-$color-corners: hue-shade(diagram, 'primary', light);
+$color-corners: color(diagram, 'primary', light);
 $color-moreSharp: color(3);
 $color-lessSharp: color(4);
 $color-anchor: color(4);
 $color-radius: color(diagram, 'primary');
-$color-reference: hue-shade(diagram, 'primary', light);
+$color-reference: color(diagram, 'primary', light);
 $color-background: color(diagram, 'background'),;
 
 $_lesson_vars: (
