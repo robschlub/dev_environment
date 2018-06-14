@@ -8,6 +8,8 @@ import lessonLayout from './layout';
 const layout = lessonLayout();
 const { colors } = layout;
 const backgroundColor = colors.diagram;
+console.log(colors)
+
 
 type circleCollectionType = {
   _anchor: DiagramElementPrimative;

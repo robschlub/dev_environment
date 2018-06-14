@@ -16,6 +16,8 @@ import getCSSVariables from './getCssVariables';
 export default function getCSSColors(): Object {
   const colors = {};
   const paletteColors = {};
+  const diagramColors = {};
+
   const { body } = document;
   if (body) {
     const cssColors = getCSSVariables(body, '--colors-');
@@ -35,6 +37,15 @@ export default function getCSSColors(): Object {
         paletteColors[key] = value;
       }
     });
+
+    const cssDiagramColors = getCSSVariables(body, '--diagram-');
+    Object.keys(cssDiagramColors).forEach((key) => {
+      // let value = cssColors[key];
+      const value = cssColorToArray(cssDiagramColors[key]);
+      if (value) {
+        diagramColors[key] = value;
+      }
+    });
   }
   // // const style = window.getComputedStyle(document.body);
   // if (style) {
@@ -52,5 +63,6 @@ export default function getCSSColors(): Object {
   //   }
   // }
   colors.palette = paletteColors;
+  colors.diagram = diagramColors;
   return colors;
 }
