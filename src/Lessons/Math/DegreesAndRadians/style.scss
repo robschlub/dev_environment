@@ -2,15 +2,15 @@
 
 $colors: (
   // lines: color(2, 'lighter'),
-  anchor: color(4),
-  radius: color(2),
-  reference: color(2),
-  angle: color(3),
-  angleText: color(3),
-  latin: color(diagram, 'text-latin'),
-  circle: color(3),
-  radialLines: color(0),
-  radialLinesText: color(2),
+  anchor:           color(4),
+  radius:           color(2),
+  reference:        color(2),
+  angle:            color(3),
+  angleText:        color(3),
+  latin:            color(diagram, 'text-latin'),
+  circle:           color(3),
+  radialLines:      color(0),
+  radialLinesText:  color(2),
 );
 
 body {

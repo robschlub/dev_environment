@@ -1,20 +1,20 @@
 @import '../../../css/style';
 
 $colors: (
-  lines: $color_primary,
-  corners: $color_secondary,
-  moreSharp: $color_highlight,
-  lessSharp: $color_safe,
-  anchor: $color_passive,
-  radius: $color_primary,
-  reference: $color_secondary,
-  background: $color_diagram,
-  arrow: $color_danger,
-  angle: $color_safe,
-  latin: $color_secondary,
-  arc: $color_danger,
-  circle: $color_danger,
-  dimensions: $color_secondary,
+  lines:      color(diagram, 'primary'),
+  corners:    hue-shade(diagram, 'primary', light),
+  moreSharp:  color(3),
+  lessSharp:  color(4),
+  anchor:     color(5),
+  radius:     color(diagram, 'primary'),
+  reference:  hue-shade(diagram, 'primary', light),
+  background: color(diagram, 'background'),
+  arrow:      color(3),
+  angle:      color(4),
+  latin:      color(diagram, 'text-latin'),
+  arc:        color(3),
+  circle:     color(3),
+  dimensions: hue-shade(diagram, 'primary', light),
 );
 
 body {

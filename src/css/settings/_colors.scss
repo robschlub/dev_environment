@@ -5,8 +5,8 @@ $_color_palette: map-get($_color_theme, palette);
 
 $_colord-theme: $_color-theme_dark2;
 
-$color_primary:                map-get($_colord-theme, primary);
-$color_primary:                color(diagram, 'primary');
+// $color_primary:                map-get($_colord-theme, primary);
+// $color_primary:                color(diagram, 'primary');
 
 $color_secondary:              map-get($_colord-theme, secondary);
 $color_danger:                 map-get($_colord-theme, danger);
