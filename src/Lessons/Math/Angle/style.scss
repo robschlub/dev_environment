@@ -2,7 +2,7 @@
 
 $colors: (
   lines:      map-get($geometry_colors, lines),
-  corners:    map-get($geometry_colors, corners),
+  corners:    map-get($geometry_colors, radius),
   moreSharp:  map-get($geometry_colors, moreSharp),
   lessSharp:  map-get($geometry_colors, lessSharp),
   anchor:     map-get($geometry_colors, anchor),
