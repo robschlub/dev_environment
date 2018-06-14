@@ -87,7 +87,6 @@ $_color_special_map_names: diagram, lesson, site, navbar;
   @return $col;
 }
 
-
 @function create_colour_map($color, $lighter, $light, $dark, $darker) {
   $map: (
     'base': $color,
@@ -125,7 +124,7 @@ $_color_special_map_names: diagram, lesson, site, navbar;
 
   @each $key, $value in $base_colors {
     $map: ();
-    $map: map-merge($map, ($key: create_colour_map($value, 30%, 15%, 15%, 30%)));
+    $map: map-merge($map, ($key: create_colour_map($value, 20%, 10%, 10%, 20%)));
     $palette: map-merge($palette, $map);
   }
 

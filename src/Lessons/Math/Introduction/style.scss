@@ -1,9 +1,8 @@
-// https://codepen.io/jakealbaugh/post/css4-variables-and-sass
-@import '../../../css/style';
+@import '../geometry';
 
 $colors: (
-  circle: color(diagram, 'warning'),
-  dimensions: color(diagram, 'primary'),
+  circle:       map-get($geometry_colors, circle),
+  dimensions:   map-get($geometry_colors, dimensions),
 );
 
 body {

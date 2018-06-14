@@ -1,25 +1,17 @@
-@import '../../../css/style';
+@import '../geometry';
 
 $colors: (
-  anchor:           color(4),
-  radius:           color(2),
-  reference:        color(2),
-  angle:            color(3),
-  angleText:        color(3),
+  anchor:           map-get($geometry_colors, anchor),
+  radius:           map-get($geometry_colors, reference),
+  reference:        map-get($geometry_colors, reference),
+  angle:            map-get($geometry_colors, angle),
+  angleText:        map-get($geometry_colors, angleText),
   latin:            color(diagram, 'text-latin'),
-  circle:           color(3),
-  radialLines:      color(0),
-  radialLinesText:  color(2),
+  circle:           map-get($geometry_colors, circle),
+  radialLines:      map-get($geometry_colors, radialLines),
+  radialLinesText:  color(diagram, 'text-plot'),
 );
 
 body {
   @include color_vars($colors);
 }
-
-// @debug colord(2);
-// @debug colord(2, 'base');
-// @debug colord(2, 'light');
-// @debug colord(diagram, 'primary');
-// @debug colord(diagram, 'primary', 'base');
-// @debug colord(diagram, 'primary', 'light');
-// @debug hue(diagram, 'text');

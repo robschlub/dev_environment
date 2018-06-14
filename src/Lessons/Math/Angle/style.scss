@@ -1,20 +1,20 @@
-@import '../../../css/style';
+@import '../geometry';
 
 $colors: (
-  lines:      color(diagram, 'primary'),
-  corners:    color(diagram, 'primary', light),
-  moreSharp:  color(3),
-  lessSharp:  color(4),
-  anchor:     color(5),
-  radius:     color(diagram, 'primary'),
-  reference:  color(diagram, 'primary', light),
-  background: color(diagram, 'background'),
-  arrow:      color(3),
-  angle:      color(4),
+  lines:      map-get($geometry_colors, lines),
+  corners:    map-get($geometry_colors, corners),
+  moreSharp:  map-get($geometry_colors, moreSharp),
+  lessSharp:  map-get($geometry_colors, lessSharp),
+  anchor:     map-get($geometry_colors, anchor),
+  radius:     map-get($geometry_colors, radius),
+  reference:  map-get($geometry_colors, reference),
+  background: map-get($geometry_colors, background),
+  arrow:      map-get($geometry_colors, arrow),
+  angle:      map-get($geometry_colors, angle),
   latin:      color(diagram, 'text-latin'),
-  arc:        color(3),
-  circle:     color(3),
-  dimensions: hue-shade(diagram, 'primary', light),
+  arc:        map-get($geometry_colors, arc),
+  circle:     map-get($geometry_colors, circle),
+  dimensions: map-get($geometry_colors, dimensions),
 );
 
 body {

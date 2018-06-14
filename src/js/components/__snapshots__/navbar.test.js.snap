@@ -107,6 +107,12 @@ exports[`Navbar Make "About" item active 1`] = `
             >
               2 - Angles
             </a>
+            <a
+              className="dropdown-item"
+              href="/Lessons/Math/DegreesAndRadians"
+            >
+              3 - Measuring Angles
+            </a>
             <div
               className="dropdown-divider"
             />
@@ -241,6 +247,12 @@ exports[`Navbar Make "Introduction" item active 1`] = `
             >
               2 - Angles
             </a>
+            <a
+              className="dropdown-item"
+              href="/Lessons/Math/DegreesAndRadians"
+            >
+              3 - Measuring Angles
+            </a>
             <div
               className="dropdown-divider"
             />
@@ -374,6 +386,12 @@ exports[`Navbar No props 1`] = `
               href="/Lessons/Math/Angle"
             >
               2 - Angles
+            </a>
+            <a
+              className="dropdown-item"
+              href="/Lessons/Math/DegreesAndRadians"
+            >
+              3 - Measuring Angles
             </a>
             <div
               className="dropdown-divider"
