@@ -7,7 +7,7 @@ $contrasts: (
 );
 
 // Get a final palette with contrasts added
-$standard-dark-theme-palette: add-contrasts-to-palette($_color-palette_n, $contrasts);
+$standard-dark-theme-palette: add-contrasts-to-palette($_color-palette_standard, $contrasts);
 
 // We now have a palette that has colors defined as:
 //  - lighter
