@@ -7,7 +7,7 @@ import lessonLayout from './layout';
 
 const layout = lessonLayout();
 const { colors } = layout;
-const backgroundColor = colors.diagram;
+const backgroundColor = colors.diagram.background;
 console.log(colors)
 
 

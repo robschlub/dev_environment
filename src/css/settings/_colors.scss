@@ -31,14 +31,21 @@ $icon_navbar-toggler:          map-get(map-get($_color_theme, navbar), 'toggler-
   @include to_vars($color-map, '--colors');
 }
 
-// @debug map-get($_color_theme, palette);
+@function convertToColors($theme-map) {
+  $map: ();
+
+  @each $key, $value in $theme-map {
+    $col: palette-color(map-get($value, color), map-get($value, shade));
+    $map: map-merge($map, ($key: $col));
+  }
+
+  @return $map;
+}
+
+$diagram-map: map-get($_color_theme, diagram);
 
 body {
   @include to_vars(map-get($_color_theme, palette), '--palette');
-  @include to_vars(map-get($_color_theme, diagram), '--diagram');
+  @include to_vars(convertToColors($diagram-map), '--diagram');
 }
-// // $abc: '--colors';
-// body {
-//   @include color_vars($defaultColors);
-//   @include to_vars($defaultColorPalette, '--palette');
-// }
+
