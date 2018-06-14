@@ -26,11 +26,12 @@
 
 // Global variables that are needed for below functions:
 //  - $_color_theme:   The map of all colors in a theme
-//  - $_color_palette:        The color palette to get the colors from
 
 // Get the color and shade from a globally defined palette
 @function palette-color($color, $shade) {
-  @return map-get(map-get($_color_palette, $color), $shade);
+  $palette: map-get($_color_theme, palette);
+
+  @return map-get(map-get($palette, $color), $shade);
 }
 
 // Helper function to retrive either the diagram, lesson or main map from
