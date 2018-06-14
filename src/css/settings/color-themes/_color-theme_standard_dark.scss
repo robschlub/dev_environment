@@ -1,5 +1,5 @@
 // Define a contrasts map, mapping the shade of color to a contrast
-$contrasts: (
+$_color_contrasts: (
   'higher': 'lighter',
   'high': 'light',
   'low': 'dark',
@@ -7,7 +7,7 @@ $contrasts: (
 );
 
 // Get a final palette with contrasts added
-$standard-dark-theme-palette: add-contrasts-to-palette($_color-palette_standard, $contrasts);
+$_color_standard-dark-theme-palette: add-contrasts-to-palette($_color-palette_standard, $_color_contrasts);
 
 // We now have a palette that has colors defined as:
 //  - lighter
@@ -21,7 +21,7 @@ $standard-dark-theme-palette: add-contrasts-to-palette($_color-palette_standard,
 //  - higher     (contrast to background)
 
 // Define the theme colors
-$theme-standard-dark: (
+$_color_theme-standard-dark: (
   'hue0':             (color: 'black',  shade: 'base'),
   'hue1':             (color: 'white',  shade: 'base'),
   'hue2':             (color: 'blue',   shade: 'base'),
@@ -29,6 +29,9 @@ $theme-standard-dark: (
   'hue4':             (color: 'green',  shade: 'base'),
   'hue5':             (color: 'yellow', shade: 'base'),
   'hue6':             (color: 'cyan',   shade: 'base'),
+  'hue7':             (color: 'orange', shade: 'base'),
+  'hue8':             (color: 'violet', shade: 'base'),
+  'hue9':             (color: 'brown',  shade: 'base'),
   diagram: (
     'background':     (color: 'black',  shade: 'base'),
     'primary':        (color: 'blue',   shade: 'base'),
@@ -62,5 +65,5 @@ $theme-standard-dark: (
     'toggler-border':   (color: 'white',  shade: 'light'),
     'toggler-icon':     $navbar-dark-toggler-icon-bg
   ),
-  palette: $standard-dark-theme-palette,
+  palette: $_color_standard-dark-theme-palette,
 );

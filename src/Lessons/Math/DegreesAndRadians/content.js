@@ -47,7 +47,7 @@ class Content extends LessonContent {
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
-
+        circle.transform.updateTranslation(layout.circle.center);
         onClickId('id_angle1', elements.pulseAngle, [elements]);
         onClickId('id_angle2', elements.pulseAngle, [elements]);
         onClickId('id_rotation', elements.pushRadius, [elements]);
