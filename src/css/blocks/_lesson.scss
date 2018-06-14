@@ -132,7 +132,7 @@ $diagram_ratio: 1.5;
   padding-right: 0.2em;
   // clear: both;
   // float: left;
-  color: $color_diagram-text;
+  color: color(diagram, 'text');
   margin-left: calc(var(--lesson__text-margin) * 1);
   margin-right: calc(var(--lesson__text-margin) * 1);
   margin-bottom: 1em;
@@ -148,7 +148,7 @@ $diagram_ratio: 1.5;
 
 .lesson__title {
   font-size: var(--lesson__title-font-size);
-  color: $color_text;
+  color: color(lesson, 'text-title');
   height: var(--lesson__title-height);
   text-align: center;
   margin-top: var(--lesson__top-margin);
@@ -159,7 +159,7 @@ $diagram_ratio: 1.5;
   border-style: none;
   border: 0;
   padding: 0;
-  background-color: $color_background;
+  background-color: color(lesson, 'background');
   top: calc(100% - var(--lesson__np_button-height));
   width: 0;
   height: 0;
@@ -203,7 +203,7 @@ $diagram_ratio: 1.5;
   // height: var(--lesson__goto_button-height);
   // width: var(--lesson__goto_button-width);
   font-size: var(--lesson__goto_button-font-size);
-  color: $color_text;
+  color: color(lesson, 'text');
   width: var(--lesson__goto_button-width);
 }
 
@@ -217,7 +217,7 @@ $diagram_ratio: 1.5;
   top: calc(100% - var(--lesson__np_button-height) - var(--lesson__np_button-vspace) / 2 - var(--lesson__goto_button-font-size) / 2);
   font-size: var(--lesson__goto_button-font-size);
   text-align: center;
-  color: $color_text;
+  color: color(lesson, 'text');
 }
 
 @media (min-aspect-ratio: 1/1) {

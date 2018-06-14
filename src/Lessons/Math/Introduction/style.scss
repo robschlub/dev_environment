@@ -2,8 +2,8 @@
 @import '../../../css/style';
 
 $colors: (
-  circle: $color_danger,
-  dimensions: $color_secondary,
+  circle: color(diagram, 'warning'),
+  dimensions: color(diagram, 'primary'),
 );
 
 body {

@@ -43,11 +43,12 @@ $theme-standard-dark: (
   lesson: (
     'background':       (color: 'grey',   shade: 'dark'),
     'text-title':       (color: 'grey',   shade: 'light'),
-    'text-page-number': (color: 'grey',   shade: 'light'),
+    'text':             (color: 'grey',   shade: 'light'),
     'navigation':       (color: 'grey',   shade: 'base'),
   ),
   site: (
     'primary':          (color: 'blue',   shade: 'base'),
+    'text':             (color: 'grey',   shade: 'darker'),
   ),
   navbar: (
     'background':       (color: 'grey',   shade: 'dark'),

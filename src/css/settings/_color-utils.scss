@@ -46,6 +46,14 @@
     $map: map-get(map-get($_color_theme, lesson), $name);
   }
 
+  @else if $fromOrName == site {
+    $map: map-get(map-get($_color_theme, site), $name);
+  }
+
+  @else if $fromOrName == navbar {
+    $map: map-get(map-get($_color_theme, navbar), $name);
+  }
+
   @else {
     $map: map-get($_color_theme, 'hue' + $fromOrName);
   }
