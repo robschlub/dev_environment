@@ -42,10 +42,10 @@ class Content extends LessonContent {
         circle._radius,
         circle._reference,
         circle._angle,
-        elements._angleText,
+        // elements._angleText,
       ],
       setState: () => {
-        elements._angleText.showAll();
+        // elements._angleText.showAll();
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
@@ -85,6 +85,7 @@ class Content extends LessonContent {
         circle._radius,
         circle._reference,
         circle._angle,
+        elements._angleText,
       ],
       modifiers: {
         _maximum_angle: actionWord('maximum angle', 'id_max_angle', colors.angleText),
@@ -92,6 +93,7 @@ class Content extends LessonContent {
         _split: actionWord('split', 'id_split', colors.radialLinesText),
       },
       setState: () => {
+        elements._angleText.showAll();
         elements.toggleRadialLines(2);
         circle.transform.updateTranslation(layout.circle.right);
         onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);

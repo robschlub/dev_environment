@@ -1310,6 +1310,22 @@ class DiagramElementPrimative extends DiagramElement {
     }
   }
 
+  show() {
+    super.show();
+    if (this.vertices instanceof HTMLObject) {
+      this.vertices.show = true;
+      this.vertices.transformHtml(this.lastDrawTransform.matrix());
+    }
+  }
+
+  hide() {
+    super.hide();
+    if (this.vertices instanceof HTMLObject) {
+      this.vertices.show = false;
+      this.vertices.transformHtml(this.lastDrawTransform.matrix());
+    }
+  }
+
   getTouched(glLocation: Point): Array<DiagramElementPrimative> {
     if (!this.isTouchable) {
       return [];
