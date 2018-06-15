@@ -1,6 +1,6 @@
 // @flow
 
-import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
+import { LessonContent, actionWord, onClickId, highlightWord, centerVH, centerV } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Point } from '../../../js/diagram/tools/g2';
 import { easeinout } from '../../../js/diagram/tools/mathtools';
@@ -23,31 +23,34 @@ class Content extends LessonContent {
     const circle = this.diagram.elements._circle;
 
     this.addSection({
+      title: 'Introduction',
       setContent: () =>
-        `<p style="margin-top:27%; text-align:center;">
-          |_mathematics_is_a_powerful_tool|
-        </p> 
-        <p style="margin-top:10%; text-align:center;">
-          We use it to understand and predict the world around us.
-        </p>
-        `,
+        centerVH(`
+          <p>
+            |_mathematics_is_a_powerful_tool|
+          </p> 
+          <p>
+            We use it to understand and predict the world around us.
+          </p>
+        `),
       modifiers: {
         _mathematics_is_a_powerful_tool:
           highlightWord('Mathematics is a powerful tool.', '', 'english'),
       },
     });
     this.addSection({
-      setContent: () => `
-        <p style="margin-top:20%;">
-          Mathematics describes an object or phenomenon in a more |_simple|, and more |_general| way.
-        </p>
-        <p style="margin-top:5%;">
-          Describing something more |_simply|, makes it easier to study and understand.
-        </p>
-        <p style="margin-top:5%;">
-          Describing something more |_generally|, means the understanding can be reapplied to other scenarios.
-        </p>
-        `,
+      setContent: () =>
+        centerV(`
+          <p>
+            Mathematics describes an object or phenomenon in a more |_simple|, and more |_general| way.
+          </p>
+          <p>
+            Describing something more |_simply|, makes it easier to study and understand.
+          </p>
+          <p>
+            Describing something more |_generally|, means the understanding can be reapplied to other scenarios.
+          </p>
+        `),
       showOnly: [],
       modifiers: {
         _simple: highlightWord('simple', '', 'english'),
@@ -58,14 +61,15 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () => `
-        <p style="margin-top:27%;">
-          A large area of mathematics is the study of |_shapes|.
-        </p>
-        <p style="margin-top:10%;">
-          |_Shape| are simple generalizations of |_objects| and the |_paths| they travel.
-        </p>
-        `,
+      setContent: () => 
+        centerV(`
+          <p>
+            A large area of mathematics is the study of |_shapes|.
+          </p>
+          <p>
+            |_Shape| are simple generalizations of |_objects| and the |_paths| they travel.
+          </p>
+        `),
       showOnly: [],
       modifiers: {
         _shapes: highlightWord('shapes', '', 'english'),
@@ -76,6 +80,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
+      title: 'Shape',
       setContent: () => `
         <p style="margin-top:5%;">
           For example, a |_wheel| is a physical thing.
@@ -100,7 +105,7 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () => `
-        <p>
+        <p style="margin-top:10%;">
         In mathematics, a |_shape| can be used to describe the wheel in a more simple, general way.
         </p>
         `,
@@ -128,8 +133,9 @@ class Content extends LessonContent {
     });
 
     this.addSection({
+      title: 'Properties',
       setContent: () => `
-        <p style="margin-top:5%;">
+        <p>
           The shape can then be studied.
         </p>
         <p>
@@ -231,17 +237,18 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () => `
-        <p style="margin-top:14%;">
-          The mathematics from studying shapes also helps us understand phenonmum we don't see, like |_sound|, |_gravity|, |_electricity|, |_radio_waves| and |_magnetism|.
-        </p>
-        <p style="margin-top:10%">
-          It is the basis of most engineering and science disciplines.
-        </p>
-        <p style="margin-top:10%">
-         But most importantly, it can be used to simply |_better_understand|.
-        </p>
-        `,
+      setContent: () => 
+        centerV(`
+          <p>
+            The mathematics from studying shapes also helps us understand phenonmum we don't see, like |_sound|, |_gravity|, |_electricity|, |_radio_waves| and |_magnetism|.
+          </p>
+          <p>
+            It is the basis of most engineering and science disciplines.
+          </p>
+          <p>
+           But most importantly, it can be used to simply |_better_understand|.
+          </p>
+        `),
       modifiers: {
         _sound: highlightWord('sound', '', 'english'),
         _gravity: highlightWord('gravity', '', 'english'),

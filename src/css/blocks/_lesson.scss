@@ -124,6 +124,7 @@ $diagram_ratio: 1.5;
   margin-left: var(--lesson__text-margin);
   margin-right: var(--lesson__text-margin);
   margin-top: var(--lesson__text-margin);
+  height: calc(100% - var(--lesson__text-margin) * 2);
 }
 
 .lesson__text p {
@@ -135,10 +136,12 @@ $diagram_ratio: 1.5;
   color: color(diagram, 'text');
   margin-left: calc(var(--lesson__text-margin) * 1);
   margin-right: calc(var(--lesson__text-margin) * 1);
-  margin-bottom: 1em;
+  margin-top: 6%;
+  // margin-bottom: 1em;
 }
 
 .lesson__text p:first-child {
+  margin-top: 0;
   margin-top: var(--lesson__text-margin);
 }
 

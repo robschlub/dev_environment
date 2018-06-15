@@ -17,7 +17,7 @@ export default function lessonLayout() {
     wheelSize: 0.8,
     wheelPoints: 400,
 
-    position: new Point(0, -0.4),
+    position: new Point(0, -0.6),
 
     colors,
   };

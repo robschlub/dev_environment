@@ -4,6 +4,23 @@ import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
 import { colorArrayToRGBA } from '../tools/tools';
 
+function centerV(text: string = '') {
+  return `<div style="display: table; height: 100%;">
+        <div style="display: table-cell; vertical-align: middle">
+        ${text}</div></div>`;
+}
+
+function centerVH(text: string = '') {
+  return `<div style="display: table; height: 100%; text-align:center;">
+        <div style="display: table-cell; vertical-align: middle">
+        ${text}</div></div>`;
+}
+
+function centerH(text: string = '') {
+  return `<div style="text-align:center;">
+        ${text}</div>`;
+}
+
 function actionWord(
   text: string,
   id: string = '',
@@ -270,5 +287,5 @@ class LessonContent {
 
 export {
   Section, LessonContent, actionWord,
-  diagramCanvas, onClickId, highlightWord,
+  diagramCanvas, onClickId, highlightWord, centerV, centerH , centerVH,
 };

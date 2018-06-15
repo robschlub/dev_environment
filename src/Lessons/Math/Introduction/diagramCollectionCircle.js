@@ -354,8 +354,8 @@ class CircleCollection extends DiagramElementCollection {
     );
 
     this._equation.transform.updateTranslation(x - 0.3, -1.3);
-    this._equation._d.disolveIn(1);
-    this._equation._c.disolveIn(1);
+    this._equation._d.disolveIn(0.5);
+    this._equation._c.disolveIn(0.5);
     this._equation._equals.disolveIn(0.5);
     this._equation._pi.disolveIn(0.5);
 
