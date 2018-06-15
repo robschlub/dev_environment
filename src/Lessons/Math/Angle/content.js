@@ -145,7 +145,7 @@ class Content extends LessonContent {
         circle._anchor.color = circle.colors.anchor.slice();
         onClickId('id_anchor', circle.pulseAnchor, [circle]);
         onClickId('id_push', circle.pushRadius, [circle]);
-        circle._arrow.show = true;
+        circle._arrow.show();
         circle.pulseArrow();
       },
       transitionPrev: (done) => {

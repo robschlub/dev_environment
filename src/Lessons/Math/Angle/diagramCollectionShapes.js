@@ -151,19 +151,20 @@ class ShapesCollection extends DiagramElementCollection {
 
   toggleCorners(toggle: boolean = true, show: boolean = true) {
     if (toggle) {
-      this._square._corners.show =
-        !this._square._corners.show;
-      this._triangle._corners.show =
-        !this._triangle._corners.show;
-      this._pent._corners.show =
-        !this._pent._corners.show;
+      this._square._corners.toggleShow();
+      this._triangle._corners.toggleShow();
+      this._pent._corners.toggleShow();
+    } else if (show) {
+      this._square._corners.show();
+      this._triangle._corners.show();
+      this._pent._corners.show();
     } else {
-      this._square._corners.show = show;
-      this._triangle._corners.show = show;
-      this._pent._corners.show = show;
+      this._square._corners.hide();
+      this._triangle._corners.hide();
+      this._pent._corners.hide();
     }
 
-    if (this._square._corners.show) {
+    if (this._square._corners.isShown) {
       this._square._corners.pulseScaleNow(1, 1.08);
       this._triangle._corners.pulseScaleNow(1, 1.08);
       this._pent._corners.pulseScaleNow(1, 1.08);
@@ -175,16 +176,17 @@ class ShapesCollection extends DiagramElementCollection {
 
   toggleMoreSharpCorners(toggle: boolean = true, show: boolean = true) {
     if (toggle) {
-      this._triangle._moreSharpCorners.show =
-        !this._triangle._moreSharpCorners.show;
-      this._pent._moreSharpCorners.show =
-        !this._pent._moreSharpCorners.show;
+      this._triangle._moreSharpCorners.toggleShow();
+      this._pent._moreSharpCorners.toggleShow();
+    } else if (show) {
+      this._triangle._moreSharpCorners.show();
+      this._pent._moreSharpCorners.show();
     } else {
-      this._triangle._moreSharpCorners.show = show;
-      this._pent._moreSharpCorners.show = show;
+      this._triangle._moreSharpCorners.hide();
+      this._pent._moreSharpCorners.hide();
     }
 
-    if (this._triangle._moreSharpCorners.show) {
+    if (this._triangle._moreSharpCorners.isShown) {
       this._triangle._moreSharpCorners.pulseScaleNow(1, 1.08);
       this._pent._moreSharpCorners.pulseScaleNow(1, 1.08);
       this.toggleCorners(false, false);
@@ -195,16 +197,17 @@ class ShapesCollection extends DiagramElementCollection {
 
   toggleLessSharpCorners(toggle: boolean = true, show: boolean = true) {
     if (toggle) {
-      this._square._lessSharpCorners.show =
-        !this._square._lessSharpCorners.show;
-      this._pent._lessSharpCorners.show =
-        !this._pent._lessSharpCorners.show;
+      this._square._lessSharpCorners.toggleShow();
+      this._pent._lessSharpCorners.toggleShow();
+    } else if (show) {
+      this._square._lessSharpCorners.show();
+      this._pent._lessSharpCorners.show();
     } else {
-      this._square._lessSharpCorners.show = show;
-      this._pent._lessSharpCorners.show = show;
+      this._square._lessSharpCorners.hide();
+      this._pent._lessSharpCorners.hide();
     }
 
-    if (this._square._lessSharpCorners.show) {
+    if (this._square._lessSharpCorners.isShown) {
       this._square._lessSharpCorners.pulseScaleNow(1, 1.08);
       this._pent._lessSharpCorners.pulseScaleNow(1, 1.08);
       this.toggleCorners(false, false);

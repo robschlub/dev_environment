@@ -161,7 +161,7 @@ class Content extends LessonContent {
 
         const makeEquation = () => {
           circle._equation.transform.updateTranslation(0, 0);
-          circle._equation.show = true;
+          circle._equation.show();
           circle.equationTextToInitialPositions();
           circle.eqn.animateTo(new Point(-1, 0), 1, 2);
           circle._equation._d.disolveIn(1);

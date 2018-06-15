@@ -113,7 +113,7 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    if (!this.elements._circle.show) {
+    if (!this.elements._circle.isShown) {
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);
       // return false;
     }

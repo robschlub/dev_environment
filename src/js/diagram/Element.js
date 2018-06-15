@@ -147,7 +147,7 @@ class DiagramElement {
   // lastDrawPulseTransform: Transform;
   lastDrawElementTransformPosition: {parentCount: number, elementCount: number};
 
-  show: boolean;                  // True if should be shown in diagram
+  isShown: boolean;                  // True if should be shown in diagram
   name: string;                   // Used to reference element in a collection
 
   isMovable: boolean;             // Element is able to be moved
@@ -232,7 +232,7 @@ class DiagramElement {
   ) {
     this.transform = transform.copy();
     this.setTransformCallback = () => {};
-    this.show = true;
+    this.isShown = true;
     this.lastDrawTransform = this.transform.copy();
     this.name = ''; // This is updated when an element is added to a collection
     this.isMovable = false;
@@ -856,7 +856,7 @@ class DiagramElement {
     time: number = 1,
     callback: ?(?mixed) => void = null,
   ): void {
-    this.show = true;
+    this.show();
     // const targetColor = this.color.slice();
     const targetColor = this.color.slice();
     this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
@@ -872,7 +872,7 @@ class DiagramElement {
     time: number = 1,
     callback: ?(?mixed) => void = null,
   ): void {
-    this.show = true;
+    this.show();
     const targetColor = this.color.slice();
     this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
     // this.color[3] = 0.01;
@@ -1244,8 +1244,23 @@ class DiagramElement {
       min.y,
     );
   }
-}
 
+  show(): void {
+    this.isShown = true;
+  }
+
+  hide(): void {
+    this.isShown = false;
+  }
+
+  toggleShow(): void {
+    if (this.isShown) {
+      this.hide();
+    } else {
+      this.show();
+    }
+  }
+}
 
 // ***************************************************************
 // Geometry Object
@@ -1312,7 +1327,7 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   draw(parentTransform: Transform = new Transform(), now: number = 0) {
-    if (this.show) {
+    if (this.isShown) {
       this.setNextTransform(now);
       this.setNextColor(now);
       this.setNextCustomAnimation(now);
@@ -1456,7 +1471,7 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   isMoving(): boolean {
-    if (this.show === false) {
+    if (this.isShown === false) {
       return false;
     }
     if (this.state.isAnimating ||
@@ -1473,7 +1488,7 @@ class DiagramElementCollection extends DiagramElement {
         if (element.isMoving()) {
           return true;
         }
-      } else if (element.show && element.color[3] > 0 && element.isMoving()) {
+      } else if (element.isShown && element.color[3] > 0 && element.isMoving()) {
         return true;
       }
     }
@@ -1489,7 +1504,7 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   draw(parentTransform: Transform = new Transform(), now: number = 0) {
-    if (this.show) {
+    if (this.isShown) {
       this.setNextTransform(now);
       this.setNextColor(now);
       this.setNextCustomAnimation(now);
@@ -1513,21 +1528,23 @@ class DiagramElementCollection extends DiagramElement {
       }
     }
   }
+
   showAll(): void {
-    this.show = true;
+    this.show();
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
-      element.show = true;
+      element.show();
       if (typeof element.hideAll === 'function') {
         element.showAll();
       }
     }
   }
+
   hideAll(): void {
-    this.show = false;
+    this.hide();
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
-      element.show = false;
+      element.hide();
       if (typeof element.hideAll === 'function') {
         element.hideAll();
       }
@@ -1536,10 +1553,10 @@ class DiagramElementCollection extends DiagramElement {
 
   showOnly(listToShow: Array<DiagramElementPrimative | DiagramElementCollection>): void {
     this.hideAll();
-    this.show = true;
+    this.show();
     for (let i = 0, j = listToShow.length; i < j; i += 1) {
       const element = listToShow[i];
-      element.show = true;
+      element.show();
     }
   }
 
@@ -1547,7 +1564,7 @@ class DiagramElementCollection extends DiagramElement {
     this.showAll();
     for (let i = 0, j = listToHide.length; i < j; i += 1) {
       const element = listToHide[i];
-      element.show = false;
+      element.hide();
     }
   }
 
@@ -1571,7 +1588,7 @@ class DiagramElementCollection extends DiagramElement {
     }
     for (let i = 0, j = this.order.length; i < j; i += 1) {
       const element = this.elements[this.order[i]];
-      if (element.show === true) {
+      if (element.isShown === true) {
         if (element.isBeingTouched(glLocation)) {
           return true;
         }
@@ -1595,7 +1612,7 @@ class DiagramElementCollection extends DiagramElement {
     let boundaries = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      if (element.show) {
+      if (element.isShown) {
         const elementBoundaries = element.getGLBoundaries();
         boundaries = boundaries.concat(elementBoundaries);
       }
@@ -1641,7 +1658,7 @@ class DiagramElementCollection extends DiagramElement {
     } else {
       for (let i = 0; i < this.order.length; i += 1) {
         const element = this.elements[this.order[i]];
-        if (element.show === true) {
+        if (element.isShown === true) {
           touched = touched.concat(element.getTouched(glLocation));
         }
       }

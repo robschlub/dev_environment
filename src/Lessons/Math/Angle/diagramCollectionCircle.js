@@ -163,7 +163,7 @@ class CircleCollection extends DiagramElementCollection {
       if (rotation < 0) {
         rotation += Math.PI * 2;
       }
-      if (this._arrow.show) {
+      if (this._arrow.isShown) {
         const angleToDisappear = 0.35;
         if (rotation > angleToDisappear) {
           this._arrow.color[3] = 0;
@@ -250,12 +250,12 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   toggleCorners() {
-    if (this._cornerRad.show) {
-      this._cornerRad.show = false;
-      this._cornerRef.show = false;
+    if (this._cornerRad.isShown) {
+      this._cornerRad.hide();
+      this._cornerRef.hide();
     } else {
-      this._cornerRad.show = true;
-      this._cornerRef.show = true;
+      this._cornerRad.show();
+      this._cornerRef.show();
       this._cornerRad.pulseScaleNow(1, 2);
       this._cornerRef.pulseScaleNow(1, 2);
     }

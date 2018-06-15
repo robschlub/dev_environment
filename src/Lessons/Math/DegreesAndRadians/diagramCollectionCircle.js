@@ -272,29 +272,29 @@ class CircleCollection extends DiagramElementCollection {
       this.varState.radialLines = this.numSections[toPosition];
     }
     if (this.varState.radialLines === this.numSections[0]) {
-      this._circle._radialLinesA.show = false;
-      this._circle._radialLinesB.show = true;
+      this._circle._radialLinesA.hide();
+      this._circle._radialLinesB.show();
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[1];
     } else if (this.varState.radialLines === this.numSections[1]) {
-      this._circle._radialLinesB.show = false;
-      this._circle._radialLinesC.show = true;
+      this._circle._radialLinesB.hide();
+      this._circle._radialLinesC.show();
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[2];
     } else if (this.varState.radialLines === this.numSections[2]) {
-      this._circle._radialLinesC.show = false;
-      this._circle._radialLinesA.show = true;
+      this._circle._radialLinesC.hide();
+      this._circle._radialLinesA.show();
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[0];
     } else {
-      this._circle._radialLinesA.show = true;
+      this._circle._radialLinesA.show();
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[0];
     }
-    this._sectionTitle.show = true;
+    this._sectionTitle.show();
     // this._sectionTitle.vertices.text[0].text = `Max = ${this.varState.radialLines} sections`;
 
-    this._angleEqualsText.show = true;
+    this._angleEqualsText.show();
     // this._angleEqualsText.vertices.text[0].text =
     //     `Angle = ${this.varState.angleInSections} sections`;
     this.updateNumSectionsText();

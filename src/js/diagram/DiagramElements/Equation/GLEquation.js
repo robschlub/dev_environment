@@ -41,7 +41,6 @@ class Element {
       this.descent = -r.bottom;
       this.height = r.height;
       this.width = r.width;
-      // content.show = true;
     }
   }
 }
@@ -169,7 +168,7 @@ class Fraction extends Elements {
         this.location.x,
         this.location.y + this.lineVAboveBaseline,
       );
-      vinculum.show = true;
+      vinculum.show();
     }
   }
 }
@@ -327,7 +326,7 @@ class Integral extends Elements {
 
     const { integralGlyph } = this;
     if (integralGlyph instanceof DiagramElementPrimative) {
-      integralGlyph.show = true;
+      integralGlyph.show();
       integralGlyph.transform.updateScale(
         height,
         height,
@@ -432,7 +431,7 @@ export default class DiagramGLEquation extends Elements {
 
   calcSize(location: Point, scale: number) {
     this.collection.hideAll();
-    this.collection.show = true;
+    this.collection.show();
     super.calcSize(location, scale);
   }
   animateTo(

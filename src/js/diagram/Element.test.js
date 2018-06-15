@@ -720,35 +720,35 @@ describe('Animationa and Movement', () => {
         /* eslint-enable no-underscore-dangle */
       });
       test('Show and Hide all', () => {
-        expect(square.show).toBe(true);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(true);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
 
         collection.hideAll();
-        expect(square.show).toBe(false);
-        expect(tri.show).toBe(false);
-        expect(collection.show).toBe(false);
+        expect(square.isShown).toBe(false);
+        expect(tri.isShown).toBe(false);
+        expect(collection.isShown).toBe(false);
 
         collection.showAll();
-        expect(square.show).toBe(true);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(true);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
       });
       test('Show and Hide only', () => {
-        expect(square.show).toBe(true);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(true);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
 
         collection.hideOnly([square]);
-        expect(square.show).toBe(false);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(false);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
 
         collection.hideAll();
         collection.showOnly([tri]);
-        expect(square.show).toBe(false);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(false);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
       });
     });
     describe('Get and Is being touched', () => {
@@ -806,11 +806,11 @@ describe('Animationa and Movement', () => {
         expect(touched.includes(squareElement)).toBe(true);
         expect(touched.includes(squareElement2)).toBe(false);
 
-        squareElement.show = false;
+        squareElement.hide();
         touched = collection.getTouched(new Point(0, 0));
         expect(touched).toHaveLength(0);
 
-        squareElement.show = true;
+        squareElement.show();
         squareElement.isTouchable = false;
         touched = collection.getTouched(new Point(0, 0));
         expect(touched).toHaveLength(0);

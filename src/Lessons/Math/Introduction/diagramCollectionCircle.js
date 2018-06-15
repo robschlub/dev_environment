@@ -341,7 +341,7 @@ class CircleCollection extends DiagramElementCollection {
     this._circumferenceDimension.showAll();
     this._diameterDimension.showAll();
     this._equation.showAll();
-    this._shade.show = true;
+    this._shade.show();
     this._circumferenceDimension.transform.updateTranslation(x, 0);
     this._diameterDimension.transform.updateTranslation(x, 0);
     this._shade.transform.updateTranslation(x, 0);
@@ -370,7 +370,7 @@ class CircleCollection extends DiagramElementCollection {
   showWheelShape(done: ?(?mixed) => void = () => {}) {
     const t = this._wheel.transform.t();
     if (t) {
-      this._wheelShape.show = true;
+      this._wheelShape.show();
       this._wheelShape.transform.updateTranslation(t.x, t.y);
       this._wheelShape.animateTranslationToWithDelay(new Point(1, 0), 0.5, 1);
       this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1, tools.easeinout, done);

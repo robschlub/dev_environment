@@ -195,7 +195,7 @@ class Section {
       if (Array.isArray(elementsOrMethod)) {
         elementsOrMethod.forEach((element) => {
           // eslint-disable-next-line no-param-reassign
-          element.show = true;
+          element.show();
         });
       } else {
         elementsOrMethod();

@@ -106,7 +106,7 @@ class Content extends LessonContent {
         ]);
         diagram.elements._shapes.hideAll();
         // diagram.elements._shapes._eq2Elements.showAll();
-        diagram.elements._shapes.show = true;
+        diagram.elements._shapes.show();
         // diagram.elements._shapes.eq3.animateTo(new Point(-1, -1), 0.2, null, 2);
         diagram.elements._shapes.eq6.animateTo(new Point(-2, 1), 0.2, 2);
 
