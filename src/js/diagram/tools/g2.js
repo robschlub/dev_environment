@@ -77,11 +77,17 @@ class Point {
   scale(scalar: number) {
     return new Point(this.x * scalar, this.y * scalar);
   }
-  sub(q: Point) {
-    return new Point(this.x - q.x, this.y - q.y);
+  sub(qOrX: Point, y: number = 0) {
+    if (qOrX instanceof Point) {
+      return new Point(this.x - qOrX.x, this.y - qOrX.y);
+    }
+    return new Point(this.x - qOrX, this.y - y);
   }
-  add(q: Point) {
-    return new Point(this.x + q.x, this.y + q.y);
+  add(qOrX: Point | number, y: number = 0) {
+    if (qOrX instanceof Point) {
+      return new Point(this.x + qOrX.x, this.y + qOrX.y);
+    }
+    return new Point(this.x + qOrX, this.y + y);
   }
   distance() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -614,17 +620,35 @@ class Translation extends Point {
     return m2.translationMatrix(this.x, this.y);
   }
 
-  sub(translationToSub: Translation | Point = new Translation(0, 0)): Translation {
+  sub(
+    translationToSub: Translation | Point | number = new Translation(0, 0),
+    y: number = 0,
+  ): Translation {
+    let t = new Point(0, 0);
+    if (typeof translationToSub === 'number') {
+      t = new Translation(translationToSub, y);
+    } else {
+      t = translationToSub;
+    }
     return new Translation(
-      this.x - translationToSub.x,
-      this.y - translationToSub.y,
+      this.x - t.x,
+      this.y - t.y,
     );
   }
 
-  add(translationToAdd: Translation | Point = new Translation(0, 0)): Translation {
+  add(
+    translationToAdd: Translation | Point | number = new Translation(0, 0),
+    y: number = 0,
+  ): Translation {
+    let t = new Point(0, 0);
+    if (typeof translationToAdd === 'number') {
+      t = new Translation(translationToAdd, y);
+    } else {
+      t = translationToAdd;
+    }
     return new Translation(
-      this.x + translationToAdd.x,
-      this.y + translationToAdd.y,
+      this.x + t.x,
+      this.y + t.y,
     );
   }
 
@@ -665,10 +689,19 @@ class Scale extends Point {
   matrix(): Array<number> {
     return m2.scaleMatrix(this.x, this.y);
   }
-  sub(scaleToSub: Scale | Point = new Scale(0, 0)): Scale {
+  sub(
+    scaleToSub: Scale | Point | number = new Scale(0, 0),
+    y: number = 0,
+  ): Scale {
+    let s = new Point(0, 0);
+    if (typeof scaleToSub === 'number') {
+      s = new Scale(scaleToSub, y);
+    } else {
+      s = scaleToSub;
+    }
     return new Scale(
-      this.x - scaleToSub.x,
-      this.y - scaleToSub.y,
+      this.x - s.x,
+      this.y - s.y,
     );
   }
 
@@ -679,10 +712,19 @@ class Scale extends Point {
     );
   }
 
-  add(scaleToAdd: Scale | Point = new Scale(0, 0)): Scale {
+  add(
+    scaleToAdd: Scale | Point | number = new Scale(0, 0),
+    y: number = 0,
+  ): Scale {
+    let s = new Point(0, 0);
+    if (typeof scaleToAdd === 'number') {
+      s = new Scale(scaleToAdd, y);
+    } else {
+      s = scaleToAdd;
+    }
     return new Scale(
-      this.x + scaleToAdd.x,
-      this.y + scaleToAdd.y,
+      this.x + s.x,
+      this.y + s.y,
     );
   }
 

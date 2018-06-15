@@ -1,7 +1,7 @@
 // @flow
 import {
   LessonContent, actionWord, onClickId,
-  highlightWord, centerVH, centerV, centerH,
+  highlightWord, centerVH, centerV,
 } from '../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -63,14 +63,14 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () =>
-      centerVH(`
-        <p>
-          How can we |_measure| corner sharpness?
-        </p> 
-        <p>
-          What |_name| do we give to the sharpness?
-        </p>
-      `),
+        centerVH(`
+          <p>
+            How can we |_measure| corner sharpness?
+          </p> 
+          <p>
+            What |_name| do we give to the sharpness?
+          </p>
+        `),
       showOnly: [],
       modifiers: {
         _measure: highlightWord('measure', '', 'english'),
@@ -321,14 +321,14 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () =>
-      centerV(`
-        <p>
-          Now, describing the angle as more sharp or less sharp is not that useful.
-        </p> 
-        <p>
-          So how can we more precisely describe, or |_measure| the angle?
-        </p>
-      `),
+        centerV(`
+          <p>
+            Now, describing the angle as more sharp or less sharp is not that useful.
+          </p> 
+          <p>
+            So how can we more precisely describe, or |_measure| the angle?
+          </p>
+        `),
       showOnly: [],
       modifiers: {
         _measure: highlightWord('measure', '', 'english'),

@@ -92,12 +92,10 @@ class HTMLObject extends DrawingObject {
       this.element.style.position = 'absolute';
       this.element.style.left = `${x}px`;
       this.element.style.top = `${y}px`;
-      console.log('yes')
     } else {
       this.element.style.position = 'absolute';
       this.element.style.left = '-10000px';
       this.element.style.top = '-10000px';
-      console.log('no')
     }
   }
   drawWithTransformMatrix(transformMatrix: Array<number>) {

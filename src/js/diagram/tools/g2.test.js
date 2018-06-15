@@ -31,6 +31,11 @@ describe('g2 tests', () => {
         const s = p.add(q);
         expect(s).toEqual(new Point(1, 1));
       });
+      test('(0, 0) + (1, 1) = (1, 1) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.add(1, 1);
+        expect(s).toEqual(new Point(1, 1));
+      });
       test('(0, 0) + (1, -1) = (1, -1)', () => {
         const p = new Point(0, 0);
         const q = new Point(1, -1);
@@ -43,6 +48,11 @@ describe('g2 tests', () => {
         const s = p.add(q).add(q);
         expect(s).toEqual(new Point(2, 2));
       });
+      test('(0, 0) + (1, 1) = (2, 2) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.add(1, 1).add(1, 1);
+        expect(s).toEqual(new Point(2, 2));
+      });
     });
 
     describe('Points can be subtracted from each other', () => {
@@ -50,6 +60,11 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         const q = new Point(1, 1);
         const s = p.sub(q);
+        expect(s).toEqual(new Point(-1, -1));
+      });
+      test('(0, 0) - (1, 1) = (-1, -1) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.sub(1, 1);
         expect(s).toEqual(new Point(-1, -1));
       });
       test('(0, 0) - (1, -1) = (-1, 1)', () => {
@@ -62,6 +77,11 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         const q = new Point(1, 1);
         const s = p.sub(q).sub(q);
+        expect(s).toEqual(new Point(-2, -2));
+      });
+      test('(0, 0) - (1, 1) - (1, 1) = (-2, -2) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.sub(1, 1).sub(1, 1);
         expect(s).toEqual(new Point(-2, -2));
       });
     });

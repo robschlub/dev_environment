@@ -59,7 +59,6 @@ function highlightWord(
   } else if (color) {
     colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
   }
-  console.log(colorStyle)
   return {
     replacementText: `<span id="${id}" class="${classes} highlight_word"${colorStyle}>${text}</span>`,
     type: 'html',
@@ -287,5 +286,5 @@ class LessonContent {
 
 export {
   Section, LessonContent, actionWord,
-  diagramCanvas, onClickId, highlightWord, centerV, centerH , centerVH,
+  diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH,
 };

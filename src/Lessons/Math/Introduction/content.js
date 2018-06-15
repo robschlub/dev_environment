@@ -64,7 +64,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () => 
+      setContent: () =>
         centerV(`
           <p>
             A large area of mathematics is the study of |_shapes|.
@@ -240,7 +240,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () => 
+      setContent: () =>
         centerV(`
           <p>
             The mathematics from studying shapes also helps us understand phenonmum we don't see, like |_sound|, |_gravity|, |_electricity|, |_radio_waves| and |_magnetism|.

@@ -13,6 +13,7 @@ const cssColorNames = [
   'circle',
   'radialLines',
   'radialLinesText',
+  'rotation',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */

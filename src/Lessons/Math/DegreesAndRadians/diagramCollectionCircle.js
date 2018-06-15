@@ -98,7 +98,7 @@ function makeAngleEqualsText(shapes: Object) {
 }
 
 function makeAngleText(shapes: Object) {
-  const angleText = shapes.collection(layout.angleEqualsText.position);
+  const angleText = shapes.collection(layout.angleEqualsText.position.add(new Point(0, -0.5)));
   angleText.add('text', shapes.htmlText(
     'Angle = ',
     'id_angle_text',

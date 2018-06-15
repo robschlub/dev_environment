@@ -10,6 +10,7 @@ $colors: (
   circle:           map-get($geometry_colors, circle),
   radialLines:      map-get($geometry_colors, radialLines),
   radialLinesText:  color(diagram, 'text-plot'),
+  rotation:         map-get($geometry_colors, rotation),
 );
 
 body {

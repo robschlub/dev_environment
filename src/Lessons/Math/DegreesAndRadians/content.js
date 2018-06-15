@@ -35,7 +35,7 @@ class Content extends LessonContent {
       modifiers: {
         _angle1: actionWord('Angle', 'id_angle1', colors.angleText),
         _angle2: actionWord('Angle', 'id_angle2', colors.angleText),
-        _rotation: actionWord('rotation', 'id_rotation', colors.lines),
+        _rotation: actionWord('rotation', 'id_rotation', colors.rotation),
       },
       showOnly: [
         circle,
@@ -74,10 +74,10 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          One way, is we can take the |_maximum_angle|, and |_split| it up into equal sections.
+          One way, is we can |_split| up the |_maximum_angle| into equal sections.
         </p>
         <p>
-        We can then count the number of sections in the |_angle|.
+          We can then count the number of sections in the |_angle|.
         </p>
         `,
       showOnly: [
