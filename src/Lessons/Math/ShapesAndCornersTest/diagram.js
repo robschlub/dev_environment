@@ -6,7 +6,7 @@ import CircleCollection from './diagramCollectionCircle';
 import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
 import { Point, minAngleDiff, Rect, Transform } from '../../../js/diagram/tools/g2';
-import getCssVariables from '../../../js/tools/getCssVariables';
+import { getCSSVariables } from '../../../js/tools/getCssVariables';
 
 const colors = getScssColors(styles);
 
@@ -32,7 +32,7 @@ type typeElements = {
 } & DiagramElementCollection ;
 
 function getLessonVars() {
-  const v = getCssVariables(
+  const v = getCSSVariables(
     'lesson__container_name',
     '--lessonvars-',
   );

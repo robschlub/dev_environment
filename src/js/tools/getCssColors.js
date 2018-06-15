@@ -1,7 +1,7 @@
 // @flow
 
 import { cssColorToArray } from './tools';
-import { getDefinedCSSVariables, getCSSVariables } from './getCssVariables';
+import { getDefinedCSSVariables } from './getCssVariables';
 
 const baseColors = [
   'blue',

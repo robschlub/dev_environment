@@ -125,4 +125,4 @@ function getCSSVariables(
   return variables;
 }
 
-export { getCSSVariables, getDefinedCSSVariables };
+export { getCSSVariables, getDefinedCSSVariables, searchObject };
