@@ -15,6 +15,7 @@ const cssColorNames = [
   'background',
   'arrow',
   'angle',
+  'angleText',
   'latin',
   'arc',
   'circle',

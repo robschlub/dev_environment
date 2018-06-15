@@ -11,6 +11,7 @@ $colors: (
   background: map-get($geometry_colors, background),
   arrow:      map-get($geometry_colors, arrow),
   angle:      map-get($geometry_colors, angle),
+  angleText:  map-get($geometry_colors, angleText),
   latin:      color(diagram, 'text-latin'),
   arc:        map-get($geometry_colors, arc),
   circle:     map-get($geometry_colors, circle),

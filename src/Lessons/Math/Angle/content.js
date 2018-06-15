@@ -1,6 +1,9 @@
 // @flow
+import {
+  LessonContent, actionWord, onClickId,
+  highlightWord, centerVH, centerV, centerH,
+} from '../../../js/Lesson/LessonContent';
 
-import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Transform } from '../../../js/diagram/tools/g2';
 import { easeinout } from '../../../js/diagram/tools/mathtools';
@@ -26,11 +29,11 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Corners',
       setContent: () =>
-        `<p style="margin-top:10%">
+        `<p>
           Many |_shapes| have |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
-        </p><p style="margin-top:35%">
+        </p><p style="margin-top:30%">
           The |_sharpness| of the corner is a property that can describe a shape.
         </p>`,
       modifiers: {
@@ -60,11 +63,14 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () =>
-        `<p style="margin-top:25%; text-align:center;">
+      centerVH(`
+        <p>
           How can we |_measure| corner sharpness?
-        </p> <p style="margin-top:10%; text-align:center;">
+        </p> 
+        <p>
           What |_name| do we give to the sharpness?
-        </p>`,
+        </p>
+      `),
       showOnly: [],
       modifiers: {
         _measure: highlightWord('measure', '', 'english'),
@@ -74,7 +80,7 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () => `
-        <p style="margin-top:10%">
+        <p>
           Let's start with two |_lines|.
         </p>
         `,
@@ -119,11 +125,11 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: () => `
-        <p style="margin-top:10%">
-          Let's now move the two lines on top of each other and |_anchor| one end.
+        <p>
+          Move the lines on top of each other and |_anchor| one end.
         </p>
         <p>
-          Rotate one line by |_pushing| the free end.
+          Rotate one line by |_pushing| the free end and a |_corner| is formed.
         </p>
         `,
       modifiers: {
@@ -145,6 +151,7 @@ class Content extends LessonContent {
         circle._anchor.color = circle.colors.anchor.slice();
         onClickId('id_anchor', circle.pulseAnchor, [circle]);
         onClickId('id_push', circle.pushRadius, [circle]);
+        onClickId('id_corner', circle.toggleCorners, [circle]);
         circle._arrow.show();
         circle.pulseArrow();
       },
@@ -174,15 +181,18 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () => `
-        <p style="margin-top:10%">
-        The two lines form a |_corner|.</p>
-        <p>|_Small_rotation| results in a sharp corner.
-        |_Large_rotation| results in a less sharp corner.</p>
+        <p>
+          |_small_rotation| results in a |_sharp_corner|.
+        </p>
+        <p>
+          |_large_rotation| results in a |_less_sharp_corner|.
+        </p>
         `,
       modifiers: {
-        _Small_rotation: actionWord('Small rotation', 'id_small_rotation', colors.moreSharp),
-        _Large_rotation: actionWord('Large rotation', 'id_large_rotation', colors.lessSharp),
-        _corner: actionWord('corner', 'id_corner', colors.corners),
+        _small_rotation: actionWord('Small rotation', 'id_small_rotation', colors.moreSharp),
+        _large_rotation: actionWord('Large rotation', 'id_large_rotation', colors.lessSharp),
+        _sharp_corner: actionWord('sharp corner', 'id_sharp_corner', colors.moreSharp),
+        _less_sharp_corner: actionWord('less sharp corner', 'id_less_sharp_corner', colors.lessSharp),
       },
       showOnly: [
         circle,
@@ -196,7 +206,8 @@ class Content extends LessonContent {
         circle._anchor.color = circle.colors.anchor.slice();
         onClickId('id_small_rotation', circle.rotateTo, smallRotation);
         onClickId('id_large_rotation', circle.rotateTo, largeRotation);
-        onClickId('id_corner', circle.toggleCorners, [circle]);
+        onClickId('id_sharp_corner', circle.rotateTo, smallRotation);
+        onClickId('id_less_sharp_corner', circle.rotateTo, largeRotation);
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
@@ -209,6 +220,8 @@ class Content extends LessonContent {
           circle._radius.animateTo(new Transform()
             .rotate(0.5)
             .translate(0, 0), Math.PI / 6, 0, easeinout, done);
+        } else {
+          done();
         }
       },
     });
@@ -221,7 +234,7 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _amount: actionWord('amount', 'id_amount', colors.angle),
+        _amount: actionWord('amount', 'id_amount', colors.angleText),
         _rotation: actionWord('rotation', 'id_push', colors.arrow),
       },
       showOnly: [
@@ -248,17 +261,19 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () =>
-        `<p style="margin-top:20%; text-align:center;">
-          What |_name| do we use for corner sharpness?
-        </p> 
-        <p style="margin-top:10%; text-align:center;">
-          Well, the Latin word for |_corner| is |_angulus|.</p>
-        <p style="margin-top:10%; text-align:center;">
-          Our word for |_corner_sharpness| comes from this Latin root and is |_angle|.</p>
-        </p>`,
+        centerV(`
+          <p>
+            What |_name| do we use for corner sharpness?
+          </p> 
+          <p>
+            The Latin word for |_corner| is |_angulus|.</p>
+          <p>
+            Our word for |_corner_sharpness| comes from this Latin root and is |_angle|.</p>
+          </p>
+        `),
       showOnly: [],
       modifiers: {
-        _angle: highlightWord('angle', '', 'english'),
+        _angle: highlightWord('angle', '', 'latin'),
         _angulus: highlightWord('angulus', '', 'latin'),
         _corner: highlightWord('corner', '', 'english'),
         _corner_sharpness: highlightWord('corner sharpness', '', 'english'),
@@ -276,7 +291,7 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _angle: actionWord('angle', 'id_angle', colors.angle),
+        _angle: actionWord('angle', 'id_angle', colors.angleText),
         _smaller_angle: actionWord('small angle', 'id_small_rotation', colors.moreSharp),
         _larger_angle: actionWord('large angle', 'id_large_rotation', colors.lessSharp),
       },
@@ -306,12 +321,14 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () =>
-        `<p style="margin-top:25%; text-align:center;">
+      centerV(`
+        <p>
           Now, describing the angle as more sharp or less sharp is not that useful.
         </p> 
-        <p style="margin-top:15%; text-align:center;">
+        <p>
           So how can we more precisely describe, or |_measure| the angle?
-        `,
+        </p>
+      `),
       showOnly: [],
       modifiers: {
         _measure: highlightWord('measure', '', 'english'),

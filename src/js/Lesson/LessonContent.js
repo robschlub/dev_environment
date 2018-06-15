@@ -11,7 +11,7 @@ function centerV(text: string = '') {
 }
 
 function centerVH(text: string = '') {
-  return `<div style="display: table; height: 100%; text-align:center;">
+  return `<div style="display: table; height: 100%; text-align:center; width:100%">
         <div style="display: table-cell; vertical-align: middle">
         ${text}</div></div>`;
 }
@@ -59,7 +59,7 @@ function highlightWord(
   } else if (color) {
     colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
   }
-
+  console.log(colorStyle)
   return {
     replacementText: `<span id="${id}" class="${classes} highlight_word"${colorStyle}>${text}</span>`,
     type: 'html',
