@@ -4,8 +4,25 @@ import { Point, Rect } from '../../../js/diagram/tools/g2';
 import getCssColors from '../../../js/tools/getCssColors';
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
+const cssColorNames = [
+  'lines',
+  'corners',
+  'moreSharp',
+  'lessSharp',
+  'anchor',
+  'radius',
+  'reference',
+  'background',
+  'arrow',
+  'angle',
+  'latin',
+  'arc',
+  'circle',
+  'dimensions',
+];
+
 export default function lessonLayout() {
-  const colors = getCssColors();
+  const colors = getCssColors(cssColorNames);
 
   return {
     // Diagram

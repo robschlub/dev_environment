@@ -1,44 +1,84 @@
 // @flow
 
-import { cssColorToArray, addToObject } from './tools';
-import getCSSVariables from './getCssVariables';
+import { cssColorToArray } from './tools';
+import { getDefinedCSSVariables, getCSSVariables } from './getCssVariables';
 
-export default function getCSSColors(): Object {
-  const colors = {};
-  const paletteColors = {};
-  const diagramColors = {};
+const baseColors = [
+  'blue',
+  'red',
+  'yellow',
+  'green',
+  'cyan',
+  'brown',
+  'orange',
+  'violet',
+  'grey',
+  'black',
+  'white',
+];
+
+const shades = [
+  'base',
+  'lighter',
+  'light',
+  'dark',
+  'darker',
+  'higher',
+  'high',
+  'low',
+  'lower',
+];
+
+const paletteColorNames = [];
+baseColors.forEach((color) => {
+  shades.forEach((shade) => {
+    paletteColorNames.push(`--palette-${color}-${shade}`);
+  });
+});
+
+const diagramColorNames = [
+  '--diagram-background',
+  '--diagram-primary',
+  '--diagram-warning',
+  '--diagram-safe',
+  '--diagram-passive',
+  '--diagram-text',
+  '--diagram-text-plot',
+  '--diagram-text-keyword',
+  '--diagram-text-latin',
+  '--diagram-text-greek',
+  '--diagram-text-english',
+];
+
+export default function getCSSColors(customColorNames: Array<string> = []): Object {
+  let colors: Object = {};
+  let paletteColors: Object = {};
+  let diagramColors: Object = {};
+  const colorNames = customColorNames.map(name => `--colors-${name}`);
 
   const { body } = document;
   if (body) {
-    const cssColors = getCSSVariables(body, '--colors-');
-    Object.keys(cssColors).forEach((key) => {
-      const value = cssColorToArray(cssColors[key]);
-      if (value) {
-        colors[key] = value;
-      }
-    });
+    colors = getDefinedCSSVariables(
+      body, colorNames, '--colors-', false,
+      // $FlowFixMe
+      cssColorToArray,
+    );
 
-    const cssPaletteColors = getCSSVariables(body, '--palette-', false);
-    Object.keys(cssPaletteColors).forEach((hue) => {
-      const color = cssPaletteColors[hue];
-      Object.keys(color).forEach((shade) => {
-        const value = cssColorToArray(color[shade]);
-        if (value) {
-          addToObject(paletteColors, `${hue}-${shade}`, value);
-        }
-      });
-    });
+    paletteColors = getDefinedCSSVariables(
+      body, paletteColorNames, '--palette-', false,
+      // $FlowFixMe
+      cssColorToArray,
+    );
 
-    const cssDiagramColors = getCSSVariables(body, '--diagram-');
-    Object.keys(cssDiagramColors).forEach((key) => {
-      const value = cssColorToArray(cssDiagramColors[key]);
-      if (value) {
-        diagramColors[key] = value;
-      }
-    });
+    diagramColors = getDefinedCSSVariables(
+      body, diagramColorNames, '--diagram-', false,
+      // $FlowFixMe
+      cssColorToArray,
+    );
   }
 
   colors.palette = paletteColors;
   colors.diagram = diagramColors;
   return colors;
 }
+

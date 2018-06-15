@@ -5,7 +5,7 @@ import getCssColors from '../../../js/tools/getCssColors';
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
-  const colors = getCssColors();
+  const colors = getCssColors(['circle', 'dimensions']);
 
   return {
     // Diagram

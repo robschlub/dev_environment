@@ -3,9 +3,21 @@
 import { Point, Rect } from '../../../js/diagram/tools/g2';
 import getCssColors from '../../../js/tools/getCssColors';
 
+const cssColorNames = [
+  'anchor',
+  'radius',
+  'reference',
+  'angle',
+  'angleText',
+  'latin',
+  'circle',
+  'radialLines',
+  'radialLinesText',
+];
+
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
-  const colors = getCssColors();
+  const colors = getCssColors(cssColorNames);
 
   return {
     // Diagram

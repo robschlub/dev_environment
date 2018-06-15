@@ -9,7 +9,6 @@ import lessonLayout from './layout';
 const layout = lessonLayout();
 const { colors } = layout;
 const backgroundColor = colors.diagram.background;
-
 type typeElements = {
   _circle: CircleCollection;
   _shapes: ShapesCollection;
