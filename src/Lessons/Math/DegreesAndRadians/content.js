@@ -42,8 +42,10 @@ class Content extends LessonContent {
         circle._radius,
         circle._reference,
         circle._angle,
+        elements._angleText,
       ],
       setState: () => {
+        elements._angleText.showAll();
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);

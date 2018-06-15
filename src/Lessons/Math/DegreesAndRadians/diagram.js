@@ -19,11 +19,12 @@ type circleCollectionType = {
   _radialLinesA: DiagramElementPrimative;
   _radialLinesB: DiagramElementPrimative;
   _radialLinesC: DiagramElementPrimative;
+  // resize: () => void;
 } & DiagramElementCollection;
 
 type typeElements = {
   _circle: circleCollectionType;
-  +resize: () => void;
+  // +resize: () => void;
 } & DiagramElementCollection ;
 
 // $FlowFixMe
@@ -57,7 +58,6 @@ class LessonDiagram extends Diagram {
     const { limits } = layout;
     this.limits = limits;
     this.elements.updateLimits(limits);
-    this.elements.resize();
     super.resize();
   }
 

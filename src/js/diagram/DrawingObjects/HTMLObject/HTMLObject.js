@@ -69,6 +69,7 @@ class HTMLObject extends DrawingObject {
   transformHtml(transformMatrix: Array<number>) {
     const glLocation = this.location.transformBy(transformMatrix);
     const pixelLocation = this.glToPixelSpace(glLocation);
+
     const w = this.element.offsetWidth;
     const h = this.element.offsetHeight;
     let left = 0;
@@ -88,7 +89,6 @@ class HTMLObject extends DrawingObject {
     this.element.style.position = 'absolute';
     this.element.style.left = `${x}px`;
     this.element.style.top = `${y}px`;
-    // this.element.style = `position:absolute; left:${x}px; top:${y}px;`;
   }
   drawWithTransformMatrix(transformMatrix: Array<number>) {
     this.transformHtml(transformMatrix);

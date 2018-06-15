@@ -97,6 +97,29 @@ function makeAngleEqualsText(shapes: Object) {
   return shapes.text('Angle = ', layout.angleEqualsText.position, colors.radialLinesText, font);
 }
 
+function makeAngleText(shapes: Object) {
+  const angleText = shapes.collection(layout.angleEqualsText.position);
+  angleText.add('text', shapes.htmlText(
+    'Angle = ',
+    'id_angle_text',
+    new Point(0, 0),
+    'middle', 'left',
+  ));
+  angleText.add('angle', shapes.htmlText(
+    '0',
+    'id_angle_value',
+    new Point(0.6, 0),
+    'middle', 'left',
+  ));
+  angleText.add('units', shapes.htmlText(
+    'units',
+    'id_angle_units',
+    new Point(1, 0),
+    'middle', 'left',
+  ));
+  return angleText;
+}
+
 type circleCollectionType = {
   _anchor: DiagramElementPrimative;
   _arc: DiagramElementPrimative;
@@ -158,6 +181,7 @@ class CircleCollection extends DiagramElementCollection {
     // this.add('circle', makeCircle(shapes));
     this.add('sectionTitle', makeSectionTitle(shapes));
     this.add('angleEqualsText', makeAngleEqualsText(shapes));
+    this.add('angleText', makeAngleText(shapes));
 
     // const radius = makeRadius(shapes);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
@@ -169,12 +193,12 @@ class CircleCollection extends DiagramElementCollection {
     this._circle.isMovable = true;
   }
 
-  resize() {
-    this.transform.updateTranslation(
-      layout.circle.center.x,
-      layout.circle.center.y,
-    );
-  }
+  // resize() {
+  //   this.transform.updateTranslation(
+  //     layout.circle.center.x,
+  //     layout.circle.center.y,
+  //   );
+  // }
 
   updateRotation() {
     let rotation = this._circle._radius.transform.r();

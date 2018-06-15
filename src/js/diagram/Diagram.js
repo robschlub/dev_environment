@@ -20,6 +20,7 @@ import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
 
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
+import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
 import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
@@ -165,6 +166,33 @@ function shapes(diagram: Diagram) {
       diagram.limits,
     );
   }
+
+  function htmlText(
+    textInput: string,
+    id: string = '',
+    location: Point = new Point(0, 0),
+    alignV: 'top' | 'bottom' | 'middle' = 'middle',
+    alignH: 'left' | 'right' | 'center' = 'center',
+  ) {
+    const element = document.createElement('div');
+    const inside = document.createTextNode(textInput);
+    element.appendChild(inside);
+    element.style.position = 'absolute';
+    // element.style.left = '0px';
+    // element.style.top = '0px';
+    element.setAttribute('id', id);
+    diagram.htmlCanvas.appendChild(element);
+
+    const hT = new HTMLObject(diagram.htmlCanvas, id, new Point(0, 0), alignV, alignH);
+    const diagramElement = new DiagramElementPrimative(
+      hT,
+      new Transform().scale(1, 1).translate(location.x, location.y),
+      [1, 1, 1, 1],
+      diagram.limits,
+    );
+    // diagramElement.setFirstTransform();
+    return diagramElement;
+  }
   function arrow(
     width: number = 1,
     legWidth: number = 0.5,
@@ -291,6 +319,7 @@ function shapes(diagram: Diagram) {
     grid,
     text,
     radialLines,
+    htmlText,
   };
 }
 
@@ -390,6 +419,9 @@ class Diagram {
     this.shapes = this.getShapes();
     this.equation = this.getEquations();
     this.createDiagramElements();
+    if (this.elements.name === '') {
+      this.elements.name = 'diagramRoot';
+    }
 
     window.addEventListener('resize', this.resize.bind(this));
     this.sizeHtmlText();
