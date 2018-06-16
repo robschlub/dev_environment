@@ -1,6 +1,6 @@
 // @flow
 
-import { LessonContent, actionWord, onClickId, highlightWord } from '../../../js/Lesson/LessonContent';
+import { LessonContent, actionWord, onClickId, highlightWord, centerVH } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import { Transform } from '../../../js/diagram/tools/g2';
 // import { easeinout } from '../../../js/diagram/tools/mathtools';
@@ -62,10 +62,11 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: () =>
-        `<p style="margin-top:35%; text-align:center;">
-          How do we |_measure| angle?
-        </p> 
-        `,
+        centerVH(`
+          <p>
+            How do we |_measure| angle?
+          </p> 
+        `),
       modifiers: {
         _measure: highlightWord('measure', '', 'english'),
       },
@@ -94,16 +95,18 @@ class Content extends LessonContent {
       },
       setState: () => {
         elements._angleText.showAll();
+        elements._sectionTitle.show();
         elements.toggleRadialLines(2);
         circle.transform.updateTranslation(layout.circle.right);
         onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
         onClickId('id_angle', elements.rotateToRandom, [elements, 1]);
         onClickId('id_split', elements.toggleRadialLines, [elements]);
+        onClickId('id_angle_text', elements.pulseSectionedAngle, [elements]);
       },
       transitionFromAny: (done) => {
         elements.toggleRadialLines(2);
-        elements._sectionTitle.disolveIn(1);
-        elements._angleEqualsText.disolveIn(1);
+        // elements._sectionTitle.disolveIn(1);
+        // elements._angleEqualsText.disolveIn(1);
         circle.animateTranslationTo(layout.circle.right, 1);
         elements.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
       },

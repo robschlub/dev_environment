@@ -87,37 +87,44 @@ function makeRadialLines(shapes: Object, num: number) {
     colors.radialLines, new Transform().translate(0, 0),
   );
 }
-function makeSectionTitle(shapes: Object) {
-  const font = new DiagramFont('Helvetica', 'normal', 0.15, '200', 'left', 'middle');
-  return shapes.text('sections', layout.sectionText.position, colors.radialLinesText, font);
-}
+// function makeSectionTitle(shapes: Object) {
+//   const font = new DiagramFont('Helvetica', 'normal', 0.15, '200', 'left', 'middle');
+//   return shapes.text('sections', layout.sectionText.position, colors.radialLinesText, font);
+// }
 
-function makeAngleEqualsText(shapes: Object) {
-  const font = new DiagramFont('Helvetica', 'normal', 0.15, '200', 'left', 'middle');
-  return shapes.text('Angle = ', layout.angleEqualsText.position, colors.radialLinesText, font);
-}
+// function makeAngleEqualsText(shapes: Object) {
+//   const font = new DiagramFont('Helvetica', 'normal', 0.15, '200', 'left', 'middle');
+//   return shapes.text('Angle = ', layout.angleEqualsText.position, colors.radialLinesText, font);
+// }
 
 function makeAngleText(shapes: Object) {
-  const angleText = shapes.collection(layout.angleEqualsText.position.add(new Point(0, -0.5)));
+  const angleText = shapes.collection(layout.angleEqualsText.position);
   angleText.add('text', shapes.htmlText(
-    'Angle = ',
-    'id_angle_text',
-    new Point(0, 0),
-    'middle', 'left',
+    'Angle', 'id_angle_text', 'action_word',
+    new Point(0, 0), 'middle', 'left',
+  ));
+  angleText.add('equals', shapes.htmlText(
+    '=', 'id_angle_equals', '',
+    new Point(0.45, 0), 'middle', 'left',
   ));
   angleText.add('angle', shapes.htmlText(
-    '0',
-    'id_angle_value',
-    new Point(0.6, 0),
-    'middle', 'left',
+    '0', 'id_angle_value', '',
+    new Point(0.6, 0), 'middle', 'left',
   ));
   angleText.add('units', shapes.htmlText(
-    'units',
-    'id_angle_units',
-    new Point(1, 0),
-    'middle', 'left',
+    'sections', 'id_angle_units', '',
+    new Point(0.9, 0), 'middle', 'left',
   ));
   return angleText;
+}
+
+function makeSectionTitle(shapes: Object) {
+  // const angleText = shapes.collection(layout.angleEqualsText.position.add(new Point(0, -0.5)));
+  return shapes.htmlText(
+    'Total Sections = 4', 'id_total_sections_text', '',
+    layout.sectionText.position, 'middle', 'left',
+  );
+  // return angleText;
 }
 
 type circleCollectionType = {
@@ -180,7 +187,7 @@ class CircleCollection extends DiagramElementCollection {
     // this.add('arc', makeArc(shapes));
     // this.add('circle', makeCircle(shapes));
     this.add('sectionTitle', makeSectionTitle(shapes));
-    this.add('angleEqualsText', makeAngleEqualsText(shapes));
+    // this.add('angleEqualsText', makeAngleEqualsText(shapes));
     this.add('angleText', makeAngleText(shapes));
 
     // const radius = makeRadius(shapes);
@@ -221,18 +228,29 @@ class CircleCollection extends DiagramElementCollection {
   updateNumSectionsText() {
     const r = this.varState.rotation;
     // $FlowFixMe
-    this._sectionTitle.vertices.text[0].text =
-        `Total sections = ${this.varState.radialLines}`;
-
+    // this._sectionTitle.vertices.text[0].text =
+    //     `Total sections = ${this.varState.radialLines}`;
+    this._sectionTitle.vertices.element.innerHTML = `Total sections = ${this.varState.radialLines}`;
     const angleInSections =
         Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 10)) / 10;
 
     // $FlowFixMe
-    this._angleEqualsText.vertices.text[0].text =
-      `Sections in Angle = ${angleInSections}`;
+    this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
+
+    // this._angleEqualsText.vertices.text[0].text =
+    //   `Sections in Angle = ${angleInSections}`;
   }
   pulseAngle() {
     this._circle._angle.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseSectionedAngle() {
+    const scale = 1.3;
+    this._circle._angle.pulseScaleNow(1, scale);
+    this._circle._radialLinesA.pulseScaleNow(1, scale);
+    this._circle._radialLinesB.pulseScaleNow(1, scale);
+    this._circle._radialLinesC.pulseScaleNow(1, scale);
     this.diagram.animateNextFrame();
   }
 
@@ -291,10 +309,11 @@ class CircleCollection extends DiagramElementCollection {
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[0];
     }
-    this._sectionTitle.show();
+    
     // this._sectionTitle.vertices.text[0].text = `Max = ${this.varState.radialLines} sections`;
 
-    this._angleEqualsText.show();
+    // this._angle
+    // this._angleEqualsText.show();
     // this._angleEqualsText.vertices.text[0].text =
     //     `Angle = ${this.varState.angleInSections} sections`;
     this.updateNumSectionsText();

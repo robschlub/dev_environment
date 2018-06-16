@@ -80,6 +80,7 @@ $diagram_ratio: 1.5;
   --lesson__content-width: var(--lesson__container-width);
   --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
   --lesson__container-height: calc(var(--lesson__content-height) + var(--lesson__np_button-vspace) + var(--lesson__np_button-height));
+  --lesson__diagram-font-size: 1;
 }
 
 @mixin lesson_vars() {

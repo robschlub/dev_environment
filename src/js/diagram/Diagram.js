@@ -170,11 +170,15 @@ function shapes(diagram: Diagram) {
   function htmlText(
     textInput: string,
     id: string = '',
+    classes: string = '',
     location: Point = new Point(0, 0),
     alignV: 'top' | 'bottom' | 'middle' = 'middle',
-    alignH: 'left' | 'right' | 'center' = 'center',
+    alignH: 'left' | 'right' | 'center' = 'left',
   ) {
     const element = document.createElement('div');
+    if (classes && element) {
+      element.classList.add(classes);
+    }
     const inside = document.createTextNode(textInput);
     element.appendChild(inside);
     element.style.position = 'absolute';
@@ -438,7 +442,17 @@ class Diagram {
 
   sizeHtmlText() {
     const scale = this.fontScale * 1 / 35;
-    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale - 1}px`;
+    const size = this.htmlCanvas.offsetWidth * scale - 1;
+    this.htmlCanvas.style.fontSize = `${size}px`;
+
+    const style = window.getComputedStyle(document.documentElement);
+    if (style) {
+      const prop = '--lesson__diagram-font-size';
+      const docElem = document.documentElement;
+      if (docElem) {
+        docElem.style.setProperty(prop, `${size}px`);
+      }
+    }
   }
 
   destroy() {
