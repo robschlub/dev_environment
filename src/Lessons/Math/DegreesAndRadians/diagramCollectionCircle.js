@@ -4,7 +4,7 @@ import Diagram from '../../../js/diagram/Diagram';
 import * as tools from '../../../js/diagram/tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
-import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
+// import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
@@ -83,7 +83,7 @@ function makeReference(shapes: Object) {
 
 function makeRadialLines(shapes: Object, num: number) {
   return shapes.radialLines(
-    0, layout.angleRadius, layout.radialLineWidth, Math.PI * 2 / num,
+    0, layout.radius, layout.radialLineWidth, Math.PI * 2 / num,
     colors.radialLines, new Transform().translate(0, 0),
   );
 }
@@ -157,7 +157,7 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
 class CircleCollection extends DiagramElementCollection {
   _circle: circleCollectionType;
   _sectionTitle: DiagramElementPrimative;
-  _angleEqualsText: DiagramElementPrimative;
+  _angleText: DiagramElementCollection;
   varState: {
     radialLines: number,
     angleInSections: number,
@@ -178,22 +178,11 @@ class CircleCollection extends DiagramElementCollection {
 
     const { shapes } = diagram;
     this.add('circle', makeCircle(this.numSections, shapes));
-    // this.add('angle', makeAngle(shapes));
-    // this.add('radialLines12', makeRadialLines(shapes, 12));
-    // this.add('radialLinesA', makeRadialLines(shapes, this.numSections[0]));
-    // this.add('radialLinesB', makeRadialLines(shapes, this.numSections[1]));
-    // this.add('radialLinesC', makeRadialLines(shapes, this.numSections[2]));
-    // this.add('reference', makeReference(shapes));
-    // this.add('arc', makeArc(shapes));
-    // this.add('circle', makeCircle(shapes));
     this.add('sectionTitle', makeSectionTitle(shapes));
-    // this.add('angleEqualsText', makeAngleEqualsText(shapes));
     this.add('angleText', makeAngleText(shapes));
 
-    // const radius = makeRadius(shapes);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
-    // this._circle.add('radius', radius);
-    // this._circle.add('anchor', makeAnchor(shapes));
+
     this.isTouchable = true;
     this.isMovable = true;
     this._circle.isTouchable = true;
@@ -228,31 +217,26 @@ class CircleCollection extends DiagramElementCollection {
   updateNumSectionsText() {
     const r = this.varState.rotation;
     // $FlowFixMe
-    // this._sectionTitle.vertices.text[0].text =
-    //     `Total sections = ${this.varState.radialLines}`;
     this._sectionTitle.vertices.element.innerHTML = `Total sections = ${this.varState.radialLines}`;
     const angleInSections =
         Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 10)) / 10;
 
     // $FlowFixMe
     this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
-
-    // this._angleEqualsText.vertices.text[0].text =
-    //   `Sections in Angle = ${angleInSections}`;
   }
   pulseAngle() {
-    this._circle._angle.pulseScaleNow(1, 1.5);
+    this._circle._angle.pulseScaleNow(1, 1.3);
     this.diagram.animateNextFrame();
   }
 
-  pulseSectionedAngle() {
-    const scale = 1.3;
-    this._circle._angle.pulseScaleNow(1, scale);
-    this._circle._radialLinesA.pulseScaleNow(1, scale);
-    this._circle._radialLinesB.pulseScaleNow(1, scale);
-    this._circle._radialLinesC.pulseScaleNow(1, scale);
-    this.diagram.animateNextFrame();
-  }
+  // pulseSectionedAngle() {
+  //   const scale = 1.3;
+  //   this._circle._angle.pulseScaleNow(1, scale);
+  //   this._circle._radialLinesA.pulseScaleNow(1, scale);
+  //   this._circle._radialLinesB.pulseScaleNow(1, scale);
+  //   this._circle._radialLinesC.pulseScaleNow(1, scale);
+  //   this.diagram.animateNextFrame();
+  // }
 
   pulseAnchor() {
     this._circle._anchor.pulseScaleNow(1, 2);
@@ -309,7 +293,7 @@ class CircleCollection extends DiagramElementCollection {
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[0];
     }
-    
+
     // this._sectionTitle.vertices.text[0].text = `Max = ${this.varState.radialLines} sections`;
 
     // this._angle
@@ -340,10 +324,10 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  resetColors() {
-    this._sectionTitle.setColor(colors.radialLinesText);
-    this._angleEqualsText.setColor(colors.radialLinesText);
-  }
+  // resetColors() {
+  //   // this._sectionTitle.setColor(colors.radialLinesText);
+  //   // this._angleEqualsText.setColor(colors.radialLinesText);
+  // }
 }
 
 export default CircleCollection;

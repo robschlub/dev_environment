@@ -101,7 +101,7 @@ class Content extends LessonContent {
         onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
         onClickId('id_angle', elements.rotateToRandom, [elements, 1]);
         onClickId('id_split', elements.toggleRadialLines, [elements]);
-        onClickId('id_angle_text', elements.pulseSectionedAngle, [elements]);
+        onClickId('id_angle_text', elements.pulseAngle, [elements]);
       },
       transitionFromAny: (done) => {
         elements.toggleRadialLines(2);
