@@ -81,12 +81,12 @@ function makeReference(shapes: Object) {
   );
 }
 
-function makeRadialLines(shapes: Object, num: number) {
-  return shapes.radialLines(
-    0, layout.radius, layout.radialLineWidth, Math.PI * 2 / num,
-    colors.radialLines, new Transform().translate(0, 0),
-  );
-}
+// function makeRadialLines(shapes: Object, num: number) {
+//   return shapes.radialLines(
+//     0, layout.radius, layout.radialLineWidth, Math.PI * 2 / num,
+//     colors.radialLines, new Transform().translate(0, 0),
+//   );
+// }
 
 function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
   let inner = layout.radialLineMajorInner;
@@ -108,20 +108,11 @@ function makeMajorAndMinRadialMarks(
   minor: number,
 ) {
   const collection = shapes.collection(new Transform().translate(0, 0));
-  collection.add('minor', makeRadialMarks(shapes, 100, true))
-  collection.add('major', makeRadialMarks(shapes, 10, false))
+  collection.add('minor', makeRadialMarks(shapes, major, true));
+  collection.add('major', makeRadialMarks(shapes, minor, false));
 
   return collection;
 }
-// function makeSectionTitle(shapes: Object) {
-//   const font = new DiagramFont('Helvetica', 'normal', 0.15, '200', 'left', 'middle');
-//   return shapes.text('sections', layout.sectionText.position, colors.radialLinesText, font);
-// }
-
-// function makeAngleEqualsText(shapes: Object) {
-//   const font = new DiagramFont('Helvetica', 'normal', 0.15, '200', 'left', 'middle');
-//   return shapes.text('Angle = ', layout.angleEqualsText.position, colors.radialLinesText, font);
-// }
 
 function makeAngleText(shapes: Object) {
   const angleText = shapes.collection(layout.angleEqualsText.position);
@@ -144,15 +135,6 @@ function makeAngleText(shapes: Object) {
   return angleText;
 }
 
-// function makeSectionTitle(shapes: Object) {
-//   // const angleText = shapes.collection(layout.angleEqualsText.position.add(new Point(0, -0.5)));
-//   return shapes.htmlText(
-//     'Total Sections = 4', 'id_total_sections_text', '',
-//     layout.sectionText.position, 'middle', 'left',
-//   );
-//   // return angleText;
-// }
-
 type circleCollectionType = {
   _anchor: DiagramElementPrimative;
   _arc: DiagramElementPrimative;
@@ -160,8 +142,8 @@ type circleCollectionType = {
   _radius: DiagramElementPrimative;
   _reference: DiagramElementPrimative;
   _radialLinesA: DiagramElementPrimative;
-  _radialLinesB: DiagramElementPrimative;
-  _radialLinesC: DiagramElementPrimative;
+  _radialLinesB: DiagramElementCollection
+  // _radialLinesC: DiagramElementPrimative;
 } & DiagramElementCollection;
 
 
@@ -235,8 +217,6 @@ class CircleCollection extends DiagramElementCollection {
 
   updateNumSectionsText() {
     const r = this.varState.rotation;
-    // $FlowFixMe
-    // this._sectionTitle.vertices.element.innerHTML = `Total sections = ${this.varState.radialLines}`;
     const angleInSections =
         Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 10)) / 10;
 
@@ -281,8 +261,9 @@ class CircleCollection extends DiagramElementCollection {
 
   toggleRadialLines(toPosition: number = -1) {
     if (toPosition > 0) {
-      this.varState.radialLines = this.numSections[toPosition-1];
+      this.varState.radialLines = this.numSections[toPosition - 1];
     } else if (toPosition === 0) {
+      // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[1];
     }
     if (this.varState.radialLines === this.numSections[0]) {

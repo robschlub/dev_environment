@@ -144,16 +144,20 @@ class Content extends LessonContent {
           elements.toggleRadialLines(index);
           const elem12 = document.getElementById('id_12p');
           const elem100 = document.getElementById('id_100p');
-          if(index) {
+          if (index && elem12 && elem100) {
             if (elem12.classList.contains('portions_selected')) {
               elem12.classList.remove('portions_selected');
             }
             elem100.classList.add('portions_selected');
           } else {
-            if (elem100.classList.contains('portions_selected')) {
-              elem100.classList.remove('portions_selected');
+            if (elem100) {
+              if (elem100.classList.contains('portions_selected')) {
+                elem100.classList.remove('portions_selected');
+              }
             }
-            elem12.classList.add('portions_selected');
+            if (elem12) {
+              elem12.classList.add('portions_selected');
+            }
           }
         };
         onClickId('id_100p', toggler, [elements, 1]);
