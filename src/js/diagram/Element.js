@@ -755,41 +755,44 @@ class DiagramElement {
   stopAnimating(result: ?mixed): void {
     this.animationPlan = [];
     this.state.isAnimating = false;
-
-    if (this.callback) {
+    const { callback } = this;
+    this.callback = null;
+    if (callback) {
       if (result !== null && result !== undefined) {
-        this.callback(result);
+        callback(result);
       } else {
-        this.callback();
+        callback();
       }
-      this.callback = null;
+      // this.callback = null;
     }
   }
 
   stopAnimatingColor(result: ?mixed): void {
     this.colorAnimationPlan = [];
     this.state.isAnimatingColor = false;
-
-    if (this.callback) {
+    const { callback } = this;
+    this.callback = null;
+    if (callback) {
       if (result !== null && result !== undefined) {
-        this.callback(result);
+        callback(result);
       } else {
-        this.callback();
+        callback();
       }
-      this.callback = null;
     }
   }
 
   stopAnimatingCustom(result: ?mixed): void {
     this.customAnimationPlan = [];
     this.state.isAnimatingCustom = false;
-    if (this.callback) {
+    const { callback } = this;
+    this.callback = null;
+    if (callback) {
       if (result !== null && result !== undefined) {
-        this.callback(result);
+        callback(result);
       } else {
-        this.callback();
+        callback();
       }
-      this.callback = null;
+      // this.callback = null;
     }
   }
 
@@ -891,6 +894,8 @@ class DiagramElement {
     if (phase instanceof ColorAnimationPhase) {
       this.animateColorPlan([phase], callback);
     }
+
+    // console.log("disolve out", targetColor, this.color)
   }
 
   // With update only first instace of translation in the transform order
@@ -955,6 +960,27 @@ class DiagramElement {
     transform.updateRotation(rotation);
     transform.updateTranslation(translation.copy());
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    if (phase instanceof AnimationPhase) {
+      this.animatePlan([phase], callback);
+    }
+  }
+
+  animateTranslationAndScaleTo(
+    translation: Point,
+    scale: Point | number,
+    time: number = 1,
+    easeFunction: (number) => number = tools.easeinout,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const transform = this.transform.copy();
+    if (typeof scale === 'number') {
+      transform.updateScale(scale, scale);
+    } else {
+      transform.updateScale(scale.copy());
+    }
+
+    transform.updateTranslation(translation.copy());
+    const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], callback);
     }
