@@ -266,15 +266,16 @@ class Content extends LessonContent {
             What |_name| do we use for corner sharpness?
           </p> 
           <p>
-            The Latin word for |_corner| is |_angulus|.</p>
+            The |_Latin| word for |_corner| is |_angulus|.</p>
           <p>
             Our word for |_corner_sharpness| comes from this Latin root and is |_angle|.</p>
           </p>
         `),
       showOnly: [],
       modifiers: {
-        _angle: highlightWord('angle', '', 'latin'),
+        _angle: highlightWord('angle', '', 'english'),
         _angulus: highlightWord('angulus', '', 'latin'),
+        _Latin: highlightWord('Latin', '', 'latin'),
         _corner: highlightWord('corner', '', 'english'),
         _corner_sharpness: highlightWord('corner sharpness', '', 'english'),
         _name: highlightWord('name', '', 'english'),
@@ -305,11 +306,10 @@ class Content extends LessonContent {
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
-        const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
-        const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
+        const bindArray = [circle, 1, () => {}];
         circle._anchor.color = circle.colors.anchor.slice();
-        onClickId('id_small_rotation', circle.rotateTo, smallRotation);
-        onClickId('id_large_rotation', circle.rotateTo, largeRotation);
+        onClickId('id_small_rotation', circle.rotateToRandomSmall, bindArray);
+        onClickId('id_large_rotation', circle.rotateToRandomLarge, bindArray);
 
         onClickId('id_angle', circle.pulseAngle, [circle]);
         if (circle._radius.transform.r() < 0.2) {

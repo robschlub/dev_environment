@@ -18,7 +18,7 @@ type circleCollectionType = {
   _reference: DiagramElementPrimative;
   _radialLinesA: DiagramElementPrimative;
   _radialLinesB: DiagramElementCollection;
-  // _radialLinesC: DiagramElementPrimative;
+  _radialLinesDeg: DiagramElementCollection;
   // resize: () => void;
 } & DiagramElementCollection;
 

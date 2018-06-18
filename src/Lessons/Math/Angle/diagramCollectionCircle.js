@@ -230,6 +230,16 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  rotateToRandomSmall(time: number = 1, callback: () => void = () => {}) {
+    const angle = Math.random() * Math.PI / 3;
+    this.rotateTo(angle, 0, time, callback);
+  }
+
+  rotateToRandomLarge(time: number = 1, callback: () => void = () => {}) {
+    const angle = Math.PI - Math.PI / 20 - Math.random() * Math.PI / 3;
+    this.rotateTo(angle, 0, time, callback);
+  }
+
   rotateTo(
     angle: number,
     direction: number,

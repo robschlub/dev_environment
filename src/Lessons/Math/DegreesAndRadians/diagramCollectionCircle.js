@@ -108,14 +108,14 @@ function makeMajorAndMinRadialMarks(
   minor: number,
 ) {
   const collection = shapes.collection(new Transform().translate(0, 0));
-  collection.add('minor', makeRadialMarks(shapes, major, true));
-  collection.add('major', makeRadialMarks(shapes, minor, false));
+  collection.add('minor', makeRadialMarks(shapes, minor, true));
+  collection.add('major', makeRadialMarks(shapes, major, false));
 
   return collection;
 }
 
 function makeAngleText(shapes: Object) {
-  const angleText = shapes.collection(layout.angleEqualsText.position);
+  const angleText = shapes.collection(layout.angleEqualsText.left);
   angleText.add('text', shapes.htmlText(
     'Angle', 'id_angle_text', 'action_word',
     new Point(0, 0), 'middle', 'left',
@@ -142,7 +142,8 @@ type circleCollectionType = {
   _radius: DiagramElementPrimative;
   _reference: DiagramElementPrimative;
   _radialLinesA: DiagramElementPrimative;
-  _radialLinesB: DiagramElementCollection
+  _radialLinesB: DiagramElementCollection;
+  _radialLinesDeg: DiagramElementCollection;
   // _radialLinesC: DiagramElementPrimative;
 } & DiagramElementCollection;
 
@@ -153,6 +154,7 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   // circle.add('radialLines12', makeRadialLines(shapes, 12));
   circle.add('radialLinesA', makeRadialMarks(shapes, numSections[0]));
   circle.add('radialLinesB', makeMajorAndMinRadialMarks(shapes, 10, numSections[1]));
+  circle.add('radialLinesDeg', makeMajorAndMinRadialMarks(shapes, 36, 360));
   // circle.add('radialLinesC', makeRadialLines(shapes, numSections[2]));
   circle.add('reference', makeReference(shapes));
   circle.add('arc', makeArc(shapes));
@@ -217,9 +219,12 @@ class CircleCollection extends DiagramElementCollection {
 
   updateNumSectionsText() {
     const r = this.varState.rotation;
-    const angleInSections =
+    let angleInSections =
         Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 10)) / 10;
 
+    if (this.varState.radialLines === 360) {
+      angleInSections = Math.floor(angleInSections);
+    }
     // $FlowFixMe
     this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
   }
@@ -286,6 +291,13 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  showDegrees() {
+    this._circle._radialLinesDeg.showAll();
+    this._angleText.showAll();
+    this.varState.radialLines = 360;
+    // $FlowFixMe
+    this._angleText._units.vertices.element.innerHTML = 'degrees';
+  }
   rotateTo(
     angle: number,
     direction: number,

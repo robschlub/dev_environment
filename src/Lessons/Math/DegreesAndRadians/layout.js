@@ -48,7 +48,8 @@ export default function lessonLayout() {
       position: new Point(-2.3, -0.3),
     },
     angleEqualsText: {
-      position: new Point(-2.3, -0.6),
+      left: new Point(-2.3, -0.6),
+      top: new Point(0.35, 1),
     },
     splitCircleAngleStart: Math.PI * 1.4,
 
