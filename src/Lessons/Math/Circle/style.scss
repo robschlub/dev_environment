@@ -7,6 +7,7 @@ $colors: (
   latin:            color(diagram, 'text-latin'),
   circle:           map-get($geometry_colors, circle),
   rotation:         map-get($geometry_colors, rotation),
+  disabled:         color(diagram, 'disabled'),
 );
 
 body {

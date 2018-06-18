@@ -10,6 +10,7 @@ const cssColorNames = [
   'latin',
   'circle',
   'rotation',
+  'disabled',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -24,7 +25,7 @@ export default function lessonLayout() {
     linewidth: 0.03,
 
     // ------ Circle Colleciton --------
-    radius: 1.1,
+    radius: 0.9,
     wheelSize: 0.7,
     circlePoints: 400,
     anchorPoints: 100,

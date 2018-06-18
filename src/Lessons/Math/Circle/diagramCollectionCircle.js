@@ -118,10 +118,7 @@ type circleCollectionType = {
   _arc: DiagramElementPrimative;
   _angle: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
-  _reference: DiagramElementPrimative;
-  _radialLinesA: DiagramElementPrimative;
-  _radialLinesB: DiagramElementCollection;
-  _radialLinesDeg: DiagramElementCollection;
+  _circumference: DiagramElementPrimative;
   // _radialLinesC: DiagramElementPrimative;
 } & DiagramElementCollection;
 
@@ -304,12 +301,19 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  // resetColors() {
-  //   this._moonShape.color[3] = 1;
-  //   this._wheelShape.color[3] = 1;
-  //   this._clockShape.color[3] = 1;
-  //   this._ballShape.color[3] = 1;
-  // }
+  resetColors() {
+    this._circle._radius.color = colors.radius.slice();
+    this._circle._anchor.color = colors.anchor.slice();
+    this._circle._arc.color = colors.circle.slice();
+    this._circle._circumference.color = colors.circle.slice();
+  }
+
+  greyColors() {
+    this._circle._radius.color = colors.disabled.slice();
+    this._circle._anchor.color = colors.disabled.slice();
+    this._circle._arc.color = colors.disabled.slice();
+    this._circle._circumference.color = colors.disabled.slice();
+  }
 }
 
 export default CircleCollection;

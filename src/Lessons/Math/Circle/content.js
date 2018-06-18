@@ -61,6 +61,7 @@ class Content extends LessonContent {
         elements._circleShape,
       ],
       setState: () => {
+        elements.resetColors();
         elements.varState.shapeTurn = 0;
         elements._moon.transform.updateTranslation(layout.moon.center);
         elements._wheel.transform.updateTranslation(layout.wheel.center);
@@ -134,6 +135,7 @@ class Content extends LessonContent {
         circle._arc,
       ],
       setState: () => {
+        elements.resetColors();
         circle.transform.updateTranslation(layout.circle.center);
         circle._radius.transform.updateRotation(0.001);
         elements.updateRotation();
@@ -173,8 +175,41 @@ class Content extends LessonContent {
         _location: highlightWord('location', '', 'english'),
       },
       setState: () => {
+        elements.greyColors();
+        circle._anchor.color = colors.anchor;
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
+      },
+      showOnly: [
+        circle,
+        circle._anchor,
+        circle._radius,
+        circle._circumference,
+      ],
+    });
+    this.addSection({
+      title: 'Properties',
+      setContent: () => `
+        <p>
+          Another property is the length of the |_line|, which we call |_radius|. It can describe the circle's size.
+        </p>
+        <p>
+          |_radius2| comes from the |_Latin| word |_radiusLatin| which means the spoke of a chariot wheel. 
+        </p>
+        `,
+      modifiers: {
+        _radius: actionWord('radius', 'id_radius', colors.radius),
+        _radius2: actionWord('Radius', 'id_radius2', colors.radius),
+        _line: actionWord('radius', 'id_line', colors.radius),
+        _radiusLatin: highlightWord('radius', '', 'latin'),
+        _Latin: highlightWord('Latin', '', 'latin'),
+      },
+      setState: () => {
+        elements.greyColors();
+        circle._radius.color = colors.radius;
+        onClickId('id_line', elements.pulseRadius, [elements]);
+        onClickId('id_radius', elements.pulseRadius, [elements]);
+        onClickId('id_radius2', elements.pulseRadius, [elements]);
       },
       showOnly: [
         circle,

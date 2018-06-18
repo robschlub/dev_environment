@@ -42,6 +42,7 @@ const diagramColorNames = [
   '--diagram-warning',
   '--diagram-safe',
   '--diagram-passive',
+  '--diagram-disabled',
   '--diagram-text-base',
   '--diagram-text-plot',
   '--diagram-text-keyword',
