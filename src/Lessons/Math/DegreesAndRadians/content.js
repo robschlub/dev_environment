@@ -241,13 +241,14 @@ class Content extends LessonContent {
           <p>|_So_why_did_they_choose_360|</p>
           <p>It's not known, but one reason might be 360 is an easy number to work with when you don't have a calculator.</p>
           <p>360 has a lot of numbers that can divide into it without a remainder:</p>
-          <p>1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360.
+          <p>|_factors|<p>
         `),
       modifiers: {
         _So_why_did_they_choose_360:
           highlightWord('So why did they choose 360?', '', 'highlight_word'),
         _360_is_an_easy_number_to_work_with:
           highlightWord('360 is an easy number to work with', '', 'highlight_word'),
+        _factors: highlightWord('1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360', '', 'lesson__small_text'),
       },
     });
 
@@ -264,6 +265,7 @@ class Content extends LessonContent {
                 <li>1/8 of a circle is |_45deg|</li>
                 <li>1/9 of a circle is |_40deg|</li>
                 <li>1/10 of a circle is |_36deg|</li>
+                <li>etc</li>
           </ul>
         `,
       modifiers: {

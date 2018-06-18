@@ -126,7 +126,7 @@ function makeAngleText(shapes: Object) {
   ));
   angleText.add('angle', shapes.htmlText(
     '0', 'id_angle_value', '',
-    new Point(0.6, 0), 'middle', 'left',
+    new Point(0.85, 0), 'middle', 'right',
   ));
   angleText.add('units', shapes.htmlText(
     'portions', 'id_angle_units', '',
