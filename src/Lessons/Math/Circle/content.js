@@ -53,13 +53,7 @@ class Content extends LessonContent {
       modifiers: {
         _common_shape: actionWord('common shape', 'id_common', colors.circle),
       },
-      // modifiers: {
-      //   _angle1: actionWord('Angle', 'id_angle1', colors.angleText),
-      //   _angle2: actionWord('Angle', 'id_angle2', colors.angleText),
-      //   _rotation: actionWord('rotation', 'id_rotation', colors.rotation),
-      // },
       showOnly: [
-        // circle,
         elements._moon,
         elements._wheel,
         elements._ball,
@@ -74,17 +68,120 @@ class Content extends LessonContent {
         elements._clock.transform.updateTranslation(layout.clock.center);
         elements._circleShape.transform.updateTranslation(layout.circleShape.center);
         onClickId('id_common', elements.toggleShape, [elements]);
-        // circle._reference.transform.updateRotation(0);
-        // circle._radius.transform.updateTranslation(0, 0);
-        // circle.transform.updateTranslation(layout.circle.center);
-        // onClickId('id_angle1', elements.pulseAngle, [elements]);
-        // onClickId('id_angle2', elements.pulseAngle, [elements]);
-        // onClickId('id_rotation', elements.pushRadius, [elements]);
-        // if (circle._radius.transform.r() < 0.2) {
-        //   circle._radius.transform.updateRotation(Math.PI / 6);
-        // }
-        // elements.updateRotation();
       },
+    });
+    this.addSection({
+      title: 'Name',
+      setContent: () => centerV(`
+        <p>
+          If you were naming this shape today, you might name it after a familiar object. 
+        </p>
+        <p>
+          For example, you might call it a |_moon| shape, or a |_ring|.
+        </p>
+        <p>
+          However, this shape has been studied for thousands of years, and therefore it already has a common name.
+        </p>
+        `),
+      modifiers: {
+        _moon: highlightWord('moon', '', 'english'),
+        _ring: highlightWord('ring', '', 'english'),
+      },
+    });
+    this.addSection({
+      title: 'Name',
+      setContent: () => centerV(`
+        <p>
+          In ancient |_Greek|, the name |_krikos| was used. This was also their word for |_ring|.
+        </p>
+        <p>
+          In |_Latin|, the word for |_ring| was also used, |_circulus|.
+        </p>
+        <p>
+          Today, we use the name |_circle| which comes from the Latin root.
+        </p>
+        `),
+      modifiers: {
+        _Greek: highlightWord('Greek', '', 'greek'),
+        _krikos: highlightWord('krikos', '', 'greek'),
+        _ring: highlightWord('ring', '', 'english'),
+        _Latin: highlightWord('Latin', '', 'latin'),
+        _circulus: highlightWord('circulus', '', 'latin'),
+        _circle: highlightWord('circle', '', 'english'),
+      },
+    });
+    this.addSection({
+      title: 'Create a Circle',
+      setContent: () =>
+        `
+        <p>
+          We can create a circle, by |_anchoring| a |_line| at one end and |_pushing| the other.
+        </p>
+        <p>
+          If we trace the free end, we get a |_circle|.
+        </p>
+        `,
+      modifiers: {
+        _anchoring: actionWord('anchoring', 'id_anchor', colors.anchor),
+        _line: actionWord('line', 'id_line', colors.radius),
+        _pushing: actionWord('pushing', 'id_push', colors.circle),
+        _circle: actionWord('circle', 'id_circle', colors.circle),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._anchor,
+        circle._arc,
+      ],
+      setState: () => {
+        circle.transform.updateTranslation(layout.circle.center);
+        circle._radius.transform.updateRotation(0.001);
+        elements.updateRotation();
+        onClickId('id_anchor', elements.pulseAnchor, [elements]);
+        onClickId('id_line', elements.pulseRadius, [elements]);
+        onClickId('id_push', elements.pushRadius, [elements]);
+        onClickId('id_circle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, elements.pulseArc.bind(elements)]);
+      },
+    });
+    this.addSection({
+      title: 'Name',
+      setContent: () => centerV(`
+        <p>
+          We've now identified a shape, named it, and know how to create it.
+        </p>
+        <p>
+          Next we need to be able to describe it, by identifying some of its |_properties|.
+        </p>
+        `),
+      modifiers: {
+        _properties: highlightWord('properties', '', colors.diagram.text.keyword),
+      },
+    });
+    this.addSection({
+      title: 'Properties',
+      setContent: () => `
+        <p>
+          One property is the |_anchor|, which is normally called the |_center_point|.
+        </p>
+        <p>
+          This property can be used to describe the |_location| of the circle.
+        </p>
+        `,
+      modifiers: {
+        _center_point: actionWord('center point', 'id_center', colors.anchor),
+        _anchor: actionWord('anchor', 'id_anchor', colors.anchor),
+        _location: highlightWord('location', '', 'english'),
+      },
+      setState: () => {
+        onClickId('id_anchor', elements.pulseAnchor, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
+      },
+      showOnly: [
+        circle,
+        circle._anchor,
+        circle._radius,
+        circle._circumference,
+      ],
     });
   }
 }

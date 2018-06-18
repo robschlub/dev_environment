@@ -171,11 +171,11 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ball', makeBall(shapes));
     this.add('moon', makeMoon(shapes));
     this.add('wheel', makeWheel(shapes));
-    this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('wheelShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('moonShape', makeCircleShape(shapes, layout.moon.radius));
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
+    this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
 
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
@@ -211,6 +211,11 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  pulseArc() {
+    this._circle._arc.pulseThickNow(1, 1.01, 3);
+    this.diagram.animateNextFrame();
+  }
+
   pulseReference() {
     this._circle._reference.pulseScaleNow(1, 2);
     this.diagram.animateNextFrame();
@@ -238,6 +243,11 @@ class CircleCollection extends DiagramElementCollection {
     time: number,
     callback: () => void = () => {},
   ) {
+    if (angle === this._circle._radius.transform.r()) {
+      callback();
+      return;
+    }
+
     let d = direction;
     if (d === 0) {
       const r = this._circle._radius.transform.r();
@@ -272,7 +282,7 @@ class CircleCollection extends DiagramElementCollection {
       layout.circleShape.radius / radius,
       2, tools.easeinout,
       shape.disolveOut.bind(
-        shape, 2,
+        shape, 1,
         shape.hide.bind(shape),
       ),
     );

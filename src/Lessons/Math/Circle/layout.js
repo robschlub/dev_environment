@@ -24,14 +24,14 @@ export default function lessonLayout() {
     linewidth: 0.03,
 
     // ------ Circle Colleciton --------
-    radius: 1.3,
+    radius: 1.1,
     wheelSize: 0.7,
     circlePoints: 400,
     anchorPoints: 100,
 
     circle: {
-      center: new Point(0, -0.5),
-      right: new Point(1, -0.5),
+      center: new Point(0, -0.7),
+      right: new Point(1, -0.7),
     },
 
     moon: {
