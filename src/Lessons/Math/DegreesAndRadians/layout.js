@@ -34,6 +34,10 @@ export default function lessonLayout() {
     anchorPoints: 50,
     anglePoints: 400,
     circlePoints: 400,
+    radialLineMajorOuter: 0.7 + 0.4,
+    radialLineMajorInner: 0.55 + 0.4,
+    radialLineMinorOuter: 0.7 + 0.4,
+    radialLineMinorInner: 0.6 + 0.4,
 
     circle: {
       center: new Point(0, -0.5),

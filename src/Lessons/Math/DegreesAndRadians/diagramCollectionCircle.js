@@ -87,6 +87,32 @@ function makeRadialLines(shapes: Object, num: number) {
     colors.radialLines, new Transform().translate(0, 0),
   );
 }
+
+function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
+  let inner = layout.radialLineMajorInner;
+  let outer = layout.radialLineMajorOuter;
+  if (minor) {
+    inner = layout.radialLineMinorInner;
+    outer = layout.radialLineMinorOuter;
+  }
+  return shapes.radialLines(
+    inner, outer,
+    layout.radialLineWidth, Math.PI * 2 / num,
+    colors.palette.grey.light, new Transform().translate(0, 0),
+  );
+}
+
+function makeMajorAndMinRadialMarks(
+  shapes: Object,
+  major: number,
+  minor: number,
+) {
+  const collection = shapes.collection(new Transform().translate(0, 0));
+  collection.add('minor', makeRadialMarks(shapes, 100, true))
+  collection.add('major', makeRadialMarks(shapes, 10, false))
+
+  return collection;
+}
 // function makeSectionTitle(shapes: Object) {
 //   const font = new DiagramFont('Helvetica', 'normal', 0.15, '200', 'left', 'middle');
 //   return shapes.text('sections', layout.sectionText.position, colors.radialLinesText, font);
@@ -112,20 +138,20 @@ function makeAngleText(shapes: Object) {
     new Point(0.6, 0), 'middle', 'left',
   ));
   angleText.add('units', shapes.htmlText(
-    'sections', 'id_angle_units', '',
+    'portions', 'id_angle_units', '',
     new Point(0.9, 0), 'middle', 'left',
   ));
   return angleText;
 }
 
-function makeSectionTitle(shapes: Object) {
-  // const angleText = shapes.collection(layout.angleEqualsText.position.add(new Point(0, -0.5)));
-  return shapes.htmlText(
-    'Total Sections = 4', 'id_total_sections_text', '',
-    layout.sectionText.position, 'middle', 'left',
-  );
-  // return angleText;
-}
+// function makeSectionTitle(shapes: Object) {
+//   // const angleText = shapes.collection(layout.angleEqualsText.position.add(new Point(0, -0.5)));
+//   return shapes.htmlText(
+//     'Total Sections = 4', 'id_total_sections_text', '',
+//     layout.sectionText.position, 'middle', 'left',
+//   );
+//   // return angleText;
+// }
 
 type circleCollectionType = {
   _anchor: DiagramElementPrimative;
@@ -142,10 +168,10 @@ type circleCollectionType = {
 function makeCircle(numSections: Array<number>, shapes: Object) {
   const circle = shapes.collection(new Transform().translate(layout.circle.center));
   circle.add('angle', makeAngle(shapes));
-  circle.add('radialLines12', makeRadialLines(shapes, 12));
-  circle.add('radialLinesA', makeRadialLines(shapes, numSections[0]));
-  circle.add('radialLinesB', makeRadialLines(shapes, numSections[1]));
-  circle.add('radialLinesC', makeRadialLines(shapes, numSections[2]));
+  // circle.add('radialLines12', makeRadialLines(shapes, 12));
+  circle.add('radialLinesA', makeRadialMarks(shapes, numSections[0]));
+  circle.add('radialLinesB', makeMajorAndMinRadialMarks(shapes, 10, numSections[1]));
+  // circle.add('radialLinesC', makeRadialLines(shapes, numSections[2]));
   circle.add('reference', makeReference(shapes));
   circle.add('arc', makeArc(shapes));
   circle.add('circumference', makeCircumference(shapes));
@@ -156,7 +182,7 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
 
 class CircleCollection extends DiagramElementCollection {
   _circle: circleCollectionType;
-  _sectionTitle: DiagramElementPrimative;
+  // _sectionTitle: DiagramElementPrimative;
   _angleText: DiagramElementCollection;
   varState: {
     radialLines: number,
@@ -174,11 +200,11 @@ class CircleCollection extends DiagramElementCollection {
       angleInSections: 0,
       rotation: 0,
     };
-    this.numSections = [4, 8, 12];
+    this.numSections = [12, 100];
 
     const { shapes } = diagram;
     this.add('circle', makeCircle(this.numSections, shapes));
-    this.add('sectionTitle', makeSectionTitle(shapes));
+    // this.add('sectionTitle', makeSectionTitle(shapes));
     this.add('angleText', makeAngleText(shapes));
 
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
@@ -188,13 +214,6 @@ class CircleCollection extends DiagramElementCollection {
     this._circle.isTouchable = true;
     this._circle.isMovable = true;
   }
-
-  // resize() {
-  //   this.transform.updateTranslation(
-  //     layout.circle.center.x,
-  //     layout.circle.center.y,
-  //   );
-  // }
 
   updateRotation() {
     let rotation = this._circle._radius.transform.r();
@@ -217,7 +236,7 @@ class CircleCollection extends DiagramElementCollection {
   updateNumSectionsText() {
     const r = this.varState.rotation;
     // $FlowFixMe
-    this._sectionTitle.vertices.element.innerHTML = `Total sections = ${this.varState.radialLines}`;
+    // this._sectionTitle.vertices.element.innerHTML = `Total sections = ${this.varState.radialLines}`;
     const angleInSections =
         Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 10)) / 10;
 
@@ -228,15 +247,6 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._angle.pulseScaleNow(1, 1.3);
     this.diagram.animateNextFrame();
   }
-
-  // pulseSectionedAngle() {
-  //   const scale = 1.3;
-  //   this._circle._angle.pulseScaleNow(1, scale);
-  //   this._circle._radialLinesA.pulseScaleNow(1, scale);
-  //   this._circle._radialLinesB.pulseScaleNow(1, scale);
-  //   this._circle._radialLinesC.pulseScaleNow(1, scale);
-  //   this.diagram.animateNextFrame();
-  // }
 
   pulseAnchor() {
     this._circle._anchor.pulseScaleNow(1, 2);
@@ -270,21 +280,18 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   toggleRadialLines(toPosition: number = -1) {
-    if (toPosition > -1) {
-      this.varState.radialLines = this.numSections[toPosition];
+    if (toPosition > 0) {
+      this.varState.radialLines = this.numSections[toPosition-1];
+    } else if (toPosition === 0) {
+      this.varState.radialLines = this.numSections[1];
     }
     if (this.varState.radialLines === this.numSections[0]) {
       this._circle._radialLinesA.hide();
-      this._circle._radialLinesB.show();
+      this._circle._radialLinesB.showAll();
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[1];
     } else if (this.varState.radialLines === this.numSections[1]) {
-      this._circle._radialLinesB.hide();
-      this._circle._radialLinesC.show();
-      // eslint-disable-next-line prefer-destructuring
-      this.varState.radialLines = this.numSections[2];
-    } else if (this.varState.radialLines === this.numSections[2]) {
-      this._circle._radialLinesC.hide();
+      this._circle._radialLinesB.hideAll();
       this._circle._radialLinesA.show();
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[0];
@@ -293,13 +300,6 @@ class CircleCollection extends DiagramElementCollection {
       // eslint-disable-next-line prefer-destructuring
       this.varState.radialLines = this.numSections[0];
     }
-
-    // this._sectionTitle.vertices.text[0].text = `Max = ${this.varState.radialLines} sections`;
-
-    // this._angle
-    // this._angleEqualsText.show();
-    // this._angleEqualsText.vertices.text[0].text =
-    //     `Angle = ${this.varState.angleInSections} sections`;
     this.updateNumSectionsText();
 
     this.diagram.animateNextFrame();
@@ -323,11 +323,6 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
     this.diagram.animateNextFrame();
   }
-
-  // resetColors() {
-  //   // this._sectionTitle.setColor(colors.radialLinesText);
-  //   // this._angleEqualsText.setColor(colors.radialLinesText);
-  // }
 }
 
 export default CircleCollection;

@@ -75,10 +75,10 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          One way, is we can |_split| up the |_maximum_angle| into equal sections.
+          One way, is to |_divide| the |_maximum_angle| into portions.
         </p>
         <p>
-          We can then count the number of sections in the |_angle|.
+          For example, here are |_12_equal_portions| (like a clock).
         </p>
         `,
       showOnly: [
@@ -86,29 +86,99 @@ class Content extends LessonContent {
         circle._radius,
         circle._reference,
         circle._angle,
-        elements._angleText,
+        circle._radialLinesA,
       ],
       modifiers: {
         _maximum_angle: actionWord('maximum angle', 'id_max_angle', colors.angleText),
-        _angle: actionWord('angle', 'id_angle', colors.angleText),
-        _split: actionWord('split', 'id_split', colors.radialLinesText),
+        _divide: highlightWord('divide', 'highlight_word'),
+        _12_equal_portions: highlightWord('12 equal portions', 'highlight_word'),
       },
       setState: () => {
-        elements._angleText.showAll();
-        elements._sectionTitle.show();
-        elements.toggleRadialLines(2);
-        circle.transform.updateTranslation(layout.circle.right);
         onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
-        onClickId('id_angle', elements.rotateToRandom, [elements, 1]);
-        onClickId('id_split', elements.toggleRadialLines, [elements]);
-        onClickId('id_angle_text', elements.pulseAngle, [elements]);
       },
       transitionFromAny: (done) => {
         elements.toggleRadialLines(2);
-        // elements._sectionTitle.disolveIn(1);
-        // elements._angleEqualsText.disolveIn(1);
-        circle.animateTranslationTo(layout.circle.right, 1);
-        elements.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
+        if (circle.transform.t().isNotEqualTo(layout.circle.center)) {
+          circle.animateTranslationTo(layout.circle.center, 1);
+          // elements.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
+        } else {
+          done();
+        }
+      },
+    });
+
+    this.addSection({
+      setContent: () =>
+        `
+        <p>
+          Now, as you |_rotate| the stick to change the |_angle|, you can count how many portions there are.
+        </p>
+        <p>Try different portion sizes:
+          <ul>
+            <li>|_12_Portions|</li>
+            <li>|_100_Portions|</li>
+          </ul>
+        </p>
+        `,
+      modifiers: {
+        _rotate: actionWord('rotate', 'id_rotate', colors.rotation),
+        _angle: actionWord('angle', 'id_angle', colors.angleText),
+        _12_Portions: actionWord('12 portions', 'id_12p', 'portions_selected'),
+        _100_Portions: actionWord('100 portions', 'id_100p'),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._angle,
+        elements._angleText,
+      ],
+      setState: () => {
+        elements._angleText.showAll();
+        elements.toggleRadialLines(0);
+        circle.transform.updateTranslation(layout.circle.right);
+        onClickId('id_rotate', elements.rotateToRandom, [elements, 1]);
+        onClickId('id_angle', elements.pulseAngle, [elements]);
+        onClickId('id_angle_text', elements.pulseAngle, [elements]);
+        const toggler = (index) => {
+          elements.toggleRadialLines(index);
+          const elem12 = document.getElementById('id_12p');
+          const elem100 = document.getElementById('id_100p');
+          if(index) {
+            if (elem12.classList.contains('portions_selected')) {
+              elem12.classList.remove('portions_selected');
+            }
+            elem100.classList.add('portions_selected');
+          } else {
+            if (elem100.classList.contains('portions_selected')) {
+              elem100.classList.remove('portions_selected');
+            }
+            elem12.classList.add('portions_selected');
+          }
+        };
+        onClickId('id_100p', toggler, [elements, 1]);
+        onClickId('id_12p', toggler, [elements, 0]);
+      },
+      transitionFromAny: (done) => {
+        elements.toggleRadialLines(0);
+        if (circle.transform.t().isNotEqualTo(layout.circle.right)) {
+          circle.animateTranslationTo(layout.circle.right, 1);
+          elements.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
+        } else {
+          done();
+        }
+      },
+    });
+
+    this.addSection({
+      setContent: () =>
+        centerVH(`
+          <p>
+            How many sections should we choose?
+          </p>
+        `),
+      modifiers: {
+        _measure: highlightWord('measure', '', 'english'),
       },
     });
   }

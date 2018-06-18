@@ -18,7 +18,7 @@ const renderLesson = (content: LessonContent) => {
         <Navbar active='Single Page Lesson'/>
         <div className="container-fluid">
           <div className="row">
-            <div className="col">
+            <div className="col lesson__padding_override">
               <LessonComponent lesson={lesson}/>
             </div>
           </div>

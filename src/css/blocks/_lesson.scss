@@ -2,7 +2,7 @@ $title-height: 7;
 $title-font-size: 3;
 $np_button-width: 3;
 $np_button-height-portrait: 8;
-$np_button-height-landscape: 12;
+$np_button-height-landscape: 8;
 $np_button-vspace: 4;
 $np_button-hspace: 4;
 $text-margin: 4;
@@ -114,6 +114,10 @@ $diagram_ratio: 1.5;
   margin-bottom: $bottom_margin;
 }
 
+.lesson__widescreen_backdrop {
+  background-color: color(diagram, 'background');
+}
+
 .multipage_diagram {
   width: var(--lesson__content-width);
   height: var(--lesson__content-height);
@@ -163,7 +167,7 @@ $diagram_ratio: 1.5;
   border-style: none;
   border: 0;
   padding: 0;
-  background-color: color(lesson, 'background');
+  background-color: color(diagram, 'background');
   top: calc(100% - var(--lesson__np_button-height));
   width: 0;
   height: 0;
@@ -221,7 +225,7 @@ $diagram_ratio: 1.5;
   top: calc(100% - var(--lesson__np_button-height) - var(--lesson__np_button-vspace) / 2 - var(--lesson__goto_button-font-size) / 2);
   font-size: var(--lesson__goto_button-font-size);
   text-align: center;
-  color: color(lesson, 'text');
+  color: color(navbar, 'button');
 }
 
 @media (min-aspect-ratio: 1/1) {
@@ -265,18 +269,18 @@ $diagram_ratio: 1.5;
   }
 
   .lesson__button-goto_container {
-    left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
+    // left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
 
     // left: calc(var(--lesson__np_button-width) - var(--lesson__goto_button-width));
     // left: 0;
-    top: 0;
+    top: 105%;
   }
 
   #lesson__page_number {
-    left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
+    left: calc(50% - var(--lesson__goto_button-width) / 2);
     width: var(--lesson__goto_button-width);
     text-align: center;
-    top: calc(100% - var(--lesson__goto_button-font-size) * 1.5);
+    top: calc(110% + var(--lesson__goto_button-font-size) * 2);
     // bottom: 0;
   }
 }
@@ -291,4 +295,8 @@ $diagram_ratio: 1.5;
   border-top: 60px solid transparent;
   border-bottom: 60px solid transparent;
   border-left: 60px solid green;
+}
+
+.lesson__padding_override {
+  padding: 0;
 }
