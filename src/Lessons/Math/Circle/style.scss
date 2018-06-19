@@ -9,6 +9,7 @@ $colors: (
   rotation:         map-get($geometry_colors, rotation),
   disabled:         color(diagram, 'disabled'),
   grid:             color(diagram, 'disabled', 'darker'),
+  axis:             color(diagram, 'disabled'),
 );
 
 body {

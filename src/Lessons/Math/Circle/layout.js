@@ -12,6 +12,7 @@ const cssColorNames = [
   'rotation',
   'disabled',
   'grid',
+  'axis'
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -64,3 +65,4 @@ export default function lessonLayout() {
     colors,
   };
 }
+

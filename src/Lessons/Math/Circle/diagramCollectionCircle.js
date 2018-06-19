@@ -6,6 +6,8 @@ import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
+import { AxisProperties } from '../../../js/diagram/DiagramElements/Plot/AxisProperties';
+import Axis from '../../../js/diagram/DiagramElements/Plot/AxisNew';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -166,6 +168,74 @@ function makeGrid(shapes: Object) {
   return shapes.grid(new Rect(-3, -2, 6, 4), 0.5, 0.5, colors.grid, new Transform().rotate(0));
 }
 
+function makeGridLabels(diagram: Diagram, shapes: Object) {
+  const xProps = new AxisProperties('x', 0);
+  xProps.length = 5;
+  xProps.limits = { min: -2.5, max: 2.5 };
+  xProps.color = colors.axis;
+  xProps.minorTicks.mode = 'off';
+  xProps.minorGrid.mode = 'off';
+  xProps.majorTicks.start = -2.5;
+  xProps.majorTicks.step = 0.5;
+  xProps.majorTicks.length = 0.05;
+  xProps.majorTicks.offset = -xProps.majorTicks.length;
+  xProps.majorGrid.length = 3;
+  xProps.majorGrid.offset = -1.5;
+  xProps.majorTicks.width = 0.01;
+  xProps.majorTicks.labelMode = 'off';
+  // xProps.majorTicks.labels = ['', ...tools.range(-2.5, 2.5, 0.5), ''];
+  xProps.majorTicks.labels = tools.range(-2.5, 2.5, 0.5).map(v => v.toString());
+  // xProps.majorTicks.labels[6] = '   0';
+  xProps.majorTicks.labelOffset = new Point(0, -0.05);
+  xProps.majorTicks.labelsHAlign = 'center';
+  xProps.majorTicks.labelsVAlign = 'top';
+  xProps.majorGrid.width = 0.004;
+  xProps.title = '';
+  xProps.majorGrid.color = colors.grid;
+  xProps.majorTicks.fontColor = colors.axis;
+
+  const xAxis = new Axis(
+    diagram.webgl, diagram.draw2D, xProps,
+    new Transform().scale(1, 1).rotate(0).translate(-2.5, 0), diagram.limits,
+  );
+
+  const yProps = new AxisProperties('x', 0);
+  yProps.length = 3;
+  yProps.limits = { min: -1.5, max: 1.5 };
+  yProps.color = colors.axis;
+  yProps.minorTicks.mode = 'off';
+  yProps.minorGrid.mode = 'off';
+  yProps.majorTicks.start = -1.5;
+  yProps.majorTicks.step = 0.5;
+  yProps.majorTicks.length = 0.05;
+  yProps.majorTicks.offset = -yProps.majorTicks.length / 2;
+  yProps.majorGrid.length = 5;
+  yProps.majorGrid.offset = 0;
+  yProps.majorTicks.width = 0.01;
+  yProps.majorTicks.labelMode = 'off';
+  // yProps.majorTicks.labels = ['', ...tools.range(-1.5, 1.5, 0.5), ''];
+  yProps.majorTicks.labels = tools.range(-1.5, 1.5, 0.5).map(v => v.toString());
+  // yProps.majorTicks.labels[6] = '   0';
+  yProps.majorTicks.labelOffset = new Point(-0.1, 0);
+  yProps.majorTicks.labelsHAlign = 'center';
+  yProps.majorTicks.labelsVAlign = 'middle';
+  yProps.majorGrid.width = 0.004;
+  yProps.rotation = Math.PI / 2 * 0;
+  yProps.title = '';
+  yProps.majorGrid.color = colors.grid;
+  yProps.majorTicks.fontColor = colors.axis;
+
+  const yAxis = new Axis(
+    diagram.webgl, diagram.draw2D, yProps,
+    new Transform().scale(1, 1).rotate(0).translate(-2.2, -.5), diagram.limits,
+  );
+
+  const grid = shapes.collection(new Transform().translate(0, 0));
+  grid.add('x', xAxis);
+  grid.add('y', yAxis);
+  return grid;
+}
+
 function makeMovingCircle(shapes: Object) {
   const circleSpace = shapes.collection(new Transform().translate(0, 0));
   const circleColor = colors.circle.slice();
@@ -231,7 +301,8 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
-    this.add('grid', makeGrid(shapes));
+    // this.add('grid', makeGrid(shapes));
+    this.add('xAxis', makeGridLabels(diagram, shapes));
     this.add('movingCircle', makeMovingCircle(shapes));
 
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
