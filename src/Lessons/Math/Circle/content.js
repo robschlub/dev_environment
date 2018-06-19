@@ -41,7 +41,6 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      title: 'Angle Measurement',
       setContent: () => `
         <p>
           Their size, mass and what they are made of is very different.
@@ -90,7 +89,6 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      title: 'Name',
       setContent: () => centerV(`
         <p>
           In ancient |_Greek|, the name |_krikos| was used. This was also their word for |_ring|.
@@ -146,7 +144,6 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      title: 'Name',
       setContent: () => centerV(`
         <p>
           We've now identified a shape, named it, and know how to create it.
@@ -213,6 +210,29 @@ class Content extends LessonContent {
         circle._circumference,
       ],
     });
+    this.addSection({
+      setContent: () => `
+        <p>
+          Move the circle around and observe how it's location changes.
+        </p>
+        `,
+      modifiers: {
+        // _center: actionWord('center', 'id_center', colors.anchor),
+        // _location: highlightWord('location', '', 'english'),
+      },
+      setState: () => {
+        elements._movingCircle.showAll();
+        // elements._movingCircle.setMoveBoundaryToDiagram();
+        // circle._anchor.color = colors.anchor;
+        // onClickId('id_anchor', elements.pulseAnchor, [elements]);
+        // onClickId('id_center', elements.pulseAnchor, [elements]);
+      },
+      showOnly: [
+        elements._movingCircle,
+        elements._grid,
+      ],
+    });
+
     this.addSection({
       title: 'Radius',
       setContent: () => `

@@ -117,16 +117,16 @@ function makeArc(shapes: Object) {
   );
 }
 
-function makeCircumference(shapes: Object) {
+function makeCircumference(shapes: Object, radius: number) {
   return shapes.polygon(
-    layout.circlePoints, layout.radius, layout.linewidth, 0,
+    layout.circlePoints, radius, layout.linewidth, 0,
     layout.circlePoints, colors.circle, new Point(0, 0),
   );
 }
 
-function makeAnchor(shapes: Object) {
+function makeAnchor(shapes: Object, radius: number = layout.linewidth * 2) {
   return shapes.polygonFilled(
-    layout.anchorPoints, layout.linewidth * 2, 0,
+    layout.anchorPoints, radius, 0,
     layout.anchorPoints, colors.anchor, new Point(0, 0),
   );
 }
@@ -155,16 +155,41 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   const circle = shapes.collection(new Transform().translate(layout.circle.center));
   // circle.add('reference', makeReference(shapes));
   circle.add('arc', makeArc(shapes));
-  circle.add('circumference', makeCircumference(shapes));
+  circle.add('circumference', makeCircumference(shapes, layout.radius));
   circle.add('radius', makeRadius(shapes));
   circle.add('anchor', makeAnchor(shapes));
   circle.add('diameter', makeDiameter(shapes));
   return circle;
 }
 
+function makeGrid(shapes: Object) {
+  return shapes.grid(new Rect(-3, -2, 6, 4), 0.5, 0.5, colors.grid, new Transform().rotate(0));
+}
+
+function makeMovingCircle(shapes: Object) {
+  const circleSpace = shapes.collection(new Transform().translate(0, 0));
+  const circleColor = colors.circle.slice();
+  circleColor[3] = 0.1;
+  const touchCircle = shapes.polygonFilled(
+    layout.circlePoints, layout.movingCircle.radius + layout.linewidth / 2, 0,
+    layout.circlePoints, circleColor, new Point(0, 0),
+  );
+  const circumference = makeCircumference(shapes, layout.movingCircle.radius);
+  circleSpace.add('touchCircle', touchCircle);
+  circleSpace.add('circumference', circumference);
+  circleSpace.add('center', makeAnchor(shapes, layout.linewidth));
+
+  circleSpace.isTouchable = true;
+  circleSpace.isMovable = true;
+  circleSpace._touchCircle.isTouchable = true;
+  circleSpace.move.limitToDiagram = true;
+
+  // circleSpace._touchCircle.isMovable = true;
+  return circleSpace;
+}
+
 class CircleCollection extends DiagramElementCollection {
   _circle: circleCollectionType;
-  // _sectionTitle: DiagramElementPrimative;
   _ball: DiagramElementPrimative;
   _wheel: DiagramElementPrimative;
   _moon: DiagramElementPrimative;
@@ -174,6 +199,10 @@ class CircleCollection extends DiagramElementCollection {
   _clockShape: DiagramElementPrimative;
   _ballShape: DiagramElementPrimative;
   _circleShape: DiagramElementPrimative;
+  _movingCircle: {
+    _touchCircle: DiagramElementPrimative;
+    _circumference: DiagramElementPrimative;
+  } & DiagramElementCollection
 
   varState: {
     shapeTurn: number,
@@ -202,6 +231,8 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
+    this.add('grid', makeGrid(shapes));
+    this.add('movingCircle', makeMovingCircle(shapes));
 
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 

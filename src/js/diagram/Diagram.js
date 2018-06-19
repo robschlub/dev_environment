@@ -547,6 +547,7 @@ class Diagram {
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(glPoint);
+
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
@@ -611,12 +612,14 @@ class Diagram {
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
-      const currentTransform = element.transform.copy();
-      const currentTranslation = currentTransform.t();
-      if (currentTranslation && element.isBeingTouched(previousGLPoint)) {
-        const newTranslation = currentTranslation.add(delta);
-        currentTransform.updateTranslation(newTranslation);
-        element.moved(currentTransform);
+      if (element !== this.elements) {
+        const currentTransform = element.transform.copy();
+        const currentTranslation = currentTransform.t();
+        if (currentTranslation && element.isBeingTouched(previousGLPoint)) {
+          const newTranslation = currentTranslation.add(delta);
+          currentTransform.updateTranslation(newTranslation);
+          element.moved(currentTransform);
+        }
       }
     }
     this.animateNextFrame();

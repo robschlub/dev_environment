@@ -24,7 +24,10 @@ type circleCollectionType = {
 
 type typeElements = {
   _circle: circleCollectionType;
-  // +resize: () => void;
+  _movingCircle: {
+    _touchCircle: DiagramElementPrimative;
+    _circumference: DiagramElementPrimative;
+  } & DiagramElementCollection
 } & DiagramElementCollection ;
 
 // $FlowFixMe
@@ -49,8 +52,8 @@ class LessonDiagram extends Diagram {
     );
     this.elements = circleCollection;
 
-    this.elements.isTouchable = true;
-    this.elements.isMovable = true;
+    // this.elements.isTouchable = true;
+    // this.elements.isMovable = true;
     this.fontScale = 1.2;
   }
 
@@ -66,6 +69,7 @@ class LessonDiagram extends Diagram {
       this.elements._circle._radius.stopBeingMoved();
       this.elements._circle._radius.startMovingFreely();
     }
+    super.touchUpHandler();
     this.beingMovedElements = [];
   }
 
@@ -75,6 +79,10 @@ class LessonDiagram extends Diagram {
   ): boolean {
     if (this.beingMovedElements.length === 0) {
       return false;
+    }
+    if (this.beingMovedElements.indexOf(this.elements._movingCircle) >= 0) {
+      // console.log(this.beingMovedElements)
+      return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     }
     // if (!this.elements._circle.show) {
     //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
