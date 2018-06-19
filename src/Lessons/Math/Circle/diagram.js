@@ -1,7 +1,7 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import CircleCollection from './diagramCollectionCircle';
+import type { CircleCollectionType } from './diagramCollectionCircle';
 import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
@@ -9,30 +9,9 @@ const layout = lessonLayout();
 const { colors } = layout;
 const backgroundColor = colors.diagram.background;
 
-
-type circleCollectionType = {
-  _anchor: DiagramElementPrimative;
-  _arc: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _circumference: DiagramElementPrimative;
-  _diameter: {
-    _radius2: DiagramElementPrimative;
-    _radius1: DiagramElementPrimative;
-  } & DiagramElementCollection;
-} & DiagramElementCollection;
-
-type typeElements = {
-  _circle: circleCollectionType;
-  _movingCircle: {
-    _touchCircle: DiagramElementPrimative;
-    _circumference: DiagramElementPrimative;
-  } & DiagramElementCollection
-} & DiagramElementCollection ;
-
 // $FlowFixMe
 class LessonDiagram extends Diagram {
-  elements: typeElements;
+  elements: CircleCollectionType;
 
   constructor(id: string) {
     const { limits } = lessonLayout();
@@ -51,9 +30,6 @@ class LessonDiagram extends Diagram {
       new Transform().translate(0, 0),
     );
     this.elements = circleCollection;
-
-    // this.elements.isTouchable = true;
-    // this.elements.isMovable = true;
     this.fontScale = 1.2;
   }
 
@@ -81,12 +57,8 @@ class LessonDiagram extends Diagram {
       return false;
     }
     if (this.beingMovedElements.indexOf(this.elements._movingCircle._circle) >= 0) {
-      // console.log(this.beingMovedElements)
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     }
-    // if (!this.elements._circle.show) {
-    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
-    // }
 
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
@@ -112,15 +84,7 @@ class LessonDiagram extends Diagram {
     const rot = transform.r();
     if (rot != null) {
       transform.updateRotation(rot - diffAngle);
-      // if (this.beingMovedElements.indexOf(this.elements._circle._radius)) {
       this.elements._circle._radius.moved(transform);
-      // } else {
-      //   console.log(this.beingMovedElements);
-      //   transform.updateRotation(rot - diffAngle + Math.PI);
-      //   this.elements._circle._radius.moved(transform);
-      // }
-      // const transform2 = transform.copy().updateRotation(rot - diffAngle + Math.PI);
-      // this.elements._circle._diameter._radius2.moved(transform2);
     }
 
     this.animateNextFrame();

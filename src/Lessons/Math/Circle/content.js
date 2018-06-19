@@ -219,29 +219,18 @@ class Content extends LessonContent {
       modifiers: {
         _move: actionWord('Move', 'id_push', colors.push),
         _location: actionWord('location', 'id_loc', colors.anchor),
-        // _center: actionWord('center', 'id_center', colors.anchor),
-        // _location: highlightWord('location', '', 'english'),
       },
       setState: () => {
         elements._movingCircle.showAll();
-        // elements._grid.showAll();
-        // elements._movingCircle._circle.setMoveBoundaryToDiagram([-2.5, -1.8, 2.5, 1.2]);
-        // elements._locationText.showAll();
         elements._movingCircle._circle.transform.updateTranslation(0, 0);
         elements.updateLocation();
-        // elements._movingCircle.setMoveBoundaryToDiagram();
-        // circle._anchor.color = colors.anchor;
+
         onClickId('id_location_text', elements.pulseMovingCircleAnchor, [elements]);
         onClickId('id_push', elements.pushMovingCircle, [elements]);
         onClickId('id_loc', elements.pulseMovingCircleAnchor, [elements]);
-        // onClickId('id_center', elements.pulseAnchor, [elements]);
       },
       showOnly: [
         elements._movingCircle,
-        // elements._grid,
-        // elements._grid,
-        // elements._locationText,
-        // elements._gridd,
       ],
     });
 
@@ -263,7 +252,7 @@ class Content extends LessonContent {
         _Latin: highlightWord('Latin', '', 'latin'),
       },
       setState: () => {
-        elements.greyColors();
+        // elements.greyColors();
         circle._radius.color = colors.radius;
         onClickId('id_line', elements.pulseRadius, [elements]);
         onClickId('id_radius', elements.pulseRadius, [elements]);
@@ -291,7 +280,7 @@ class Content extends LessonContent {
         _edge: actionWord('edge', 'id_edge', colors.circle),
       },
       setState: () => {
-        elements.greyColors();
+        // elements.greyColors();
         circle._radius.color = colors.radius;
         onClickId('id_radius', elements.pulseRadius, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -324,7 +313,7 @@ class Content extends LessonContent {
         _diameter: actionWord('diameter', 'id_diameter', colors.radius),
       },
       setState: () => {
-        elements.greyColors();
+        // elements.greyColors();
         circle._diameter.showAll();
         // circle._radius.color = colors.radius;
         onClickId('id_diameter', elements.pulseDiameter, [elements]);

@@ -6,8 +6,6 @@ import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
-import { AxisProperties } from '../../../js/diagram/DiagramElements/Plot/AxisProperties';
-import Axis from '../../../js/diagram/DiagramElements/Plot/Axis';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -153,8 +151,8 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   circle.add('arc', makeArc(shapes));
   circle.add('circumference', makeCircumference(shapes, layout.radius));
   circle.add('radius', makeRadius(shapes));
-  circle.add('anchor', makeAnchor(shapes));
   circle.add('diameter', makeDiameter(shapes));
+  circle.add('anchor', makeAnchor(shapes));
   return circle;
 }
 
@@ -166,6 +164,14 @@ function makeGridLabels(shapes: Object) {
   return axes;
 }
 
+
+type locationTextType = {
+  _text: DiagramElementPrimative;
+  _equals: DiagramElementPrimative;
+  _x: DiagramElementPrimative;
+  _y: DiagramElementPrimative;
+  _comma: DiagramElementPrimative;
+} & DiagramElementCollection;
 
 function makeLocationText(shapes: Object) {
   const locationText = shapes.collection(layout.locationText.top);
@@ -195,6 +201,16 @@ function makeLocationText(shapes: Object) {
 }
 
 
+type movingCircleType = {
+  _grid: DiagramElementCollection;
+  _circle: {
+    _touchCircle: DiagramElementPrimative;
+    _circumference: DiagramElementPrimative;
+    _anchor: DiagramElementPrimative;
+  } & DiagramElementCollection;
+  _locationText: locationTextType;
+} & DiagramElementCollection;
+
 function makeMovingCircle(shapes: Object) {
   const circleSpace = shapes.collection(new Transform().translate(
     layout.movingCircle.center.x,
@@ -223,22 +239,27 @@ function makeMovingCircle(shapes: Object) {
     2.5 - layout.movingCircle.radius,
     1.5 - layout.movingCircle.radius,
   );
-  // movingCircle._touchCircle.isTouchable = true;
-  // movingCircle._touchCircle.isMovable = true;
+
   circleSpace.hasTouchableElements = true;
-  // circleSpace.move.limitToDiagram = true;
   circleSpace.add('grid', makeGridLabels(shapes));
   circleSpace.add('circle', movingCircle);
   circleSpace.add('locationText', makeLocationText(shapes));
-
-  // circleSpace.isTouchable = true;
-  // circleSpace.isMovable = true;
-  // circleSpace._touchCircle.isTouchable = true;
-
-  // circleSpace.setMoveBoundaryToDiagram([-2.5, -1.5, 2.5, 1.5]);
-  // circleSpace._touchCircle.isMovable = true;
   return circleSpace;
 }
+
+export type CircleCollectionType = {
+  _circle: circleCollectionType;
+  _ball: DiagramElementPrimative;
+  _wheel: DiagramElementPrimative;
+  _moon: DiagramElementPrimative;
+  _clock: DiagramElementPrimative;
+  _wheelShape: DiagramElementPrimative;
+  _moonShape: DiagramElementPrimative;
+  _clockShape: DiagramElementPrimative;
+  _ballShape: DiagramElementPrimative;
+  _circleShape: DiagramElementPrimative;
+  _movingCircle: movingCircleType;
+ } & DiagramElementCollection;
 
 class CircleCollection extends DiagramElementCollection {
   _circle: circleCollectionType;
@@ -251,10 +272,7 @@ class CircleCollection extends DiagramElementCollection {
   _clockShape: DiagramElementPrimative;
   _ballShape: DiagramElementPrimative;
   _circleShape: DiagramElementPrimative;
-  _movingCircle: {
-    _touchCircle: DiagramElementPrimative;
-    _circumference: DiagramElementPrimative;
-  } & DiagramElementCollection
+  _movingCircle: movingCircleType;
 
   varState: {
     shapeTurn: number,
@@ -283,9 +301,7 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
-    // this.add('grid', makeGridLabels(diagram, shapes));
     this.add('movingCircle', makeMovingCircle(shapes));
-    // this.add('locationText', makeLocationText(shapes));
     this._movingCircle._circle.setTransformCallback = this.updateLocation.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
@@ -313,8 +329,10 @@ class CircleCollection extends DiagramElementCollection {
   updateLocation() {
     const t = this._movingCircle._circle.transform.t();
     if (t) {
+      // $FlowFixMe
       this._movingCircle._locationText._x.vertices.element.innerHTML =
         `${tools.roundNum(t.x, 1).toFixed(1)}`;
+      // $FlowFixMe
       this._movingCircle._locationText._y.vertices.element.innerHTML =
         `${tools.roundNum(t.y - layout.movingCircle.center.y, 1).toFixed(1)}`;
     }
@@ -332,7 +350,6 @@ class CircleCollection extends DiagramElementCollection {
 
   pushMovingCircle() {
     let t = this._movingCircle._circle.transform.t();
-    // console.log(this._movingCircle.state.movement.velocity)
     if (t === null || t === undefined) {
       t = new Point(0.001, 0.001);
     }
@@ -347,7 +364,7 @@ class CircleCollection extends DiagramElementCollection {
       Math.random() * 10 * t.x / Math.abs(t.x) * -1,
       Math.random() * 10 * t.y / Math.abs(t.y) * -1,
     );
-    // console.log(this._movingCircle.state.movement.velocity)
+
     this._movingCircle._circle.startMovingFreely();
     this.diagram.animateNextFrame();
   }
@@ -372,11 +389,6 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._circumference.pulseThickNow(1, 1.02, 5);
     this.diagram.animateNextFrame();
   }
-
-  // pulseReference() {
-  //   this._circle._reference.pulseScaleNow(1, 2);
-  //   this.diagram.animateNextFrame();
-  // }
 
   pushRadius() {
     const angle = this._circle._radius.transform.r();

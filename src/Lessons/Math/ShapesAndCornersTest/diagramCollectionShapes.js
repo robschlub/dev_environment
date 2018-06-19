@@ -52,7 +52,7 @@ function makePlot(diagram: Diagram) {
   xProps.minorTicks.labelOffset = new Point(0, -0.1);
   xProps.minorTicks.labelsHAlign = 'center';
   xProps.minorTicks.labelsVAlign = 'top';
-  xProps.minorTicks.fontSize = '10px';
+  xProps.minorTicks.fontSize = 0.1;
   xProps.majorGrid.width = 0.008;
   xProps.minorGrid.width = 0.004;
   xProps.title = 'This is a title that is really long';
