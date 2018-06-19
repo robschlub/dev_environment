@@ -222,7 +222,8 @@ class Content extends LessonContent {
       },
       setState: () => {
         elements._movingCircle.showAll();
-        elements._xAxis.showAll();
+        elements._grid.showAll();
+        elements._movingCircle.setMoveBoundaryToDiagram([-2.5, -1.8, 2.5, 1.2]);
         // elements._movingCircle.setMoveBoundaryToDiagram();
         // circle._anchor.color = colors.anchor;
         // onClickId('id_anchor', elements.pulseAnchor, [elements]);
@@ -231,7 +232,8 @@ class Content extends LessonContent {
       showOnly: [
         elements._movingCircle,
         // elements._grid,
-        elements._xAxis,
+        elements._grid,
+        // elements._gridd,
       ],
     });
 

@@ -7,7 +7,7 @@ import { DiagramElementCollection, DiagramElementPrimative }
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
 import { AxisProperties } from '../../../js/diagram/DiagramElements/Plot/AxisProperties';
-import Axis from '../../../js/diagram/DiagramElements/Plot/AxisNew';
+import Axis from '../../../js/diagram/DiagramElements/Plot/Axis';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -164,9 +164,9 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   return circle;
 }
 
-function makeGrid(shapes: Object) {
-  return shapes.grid(new Rect(-3, -2, 6, 4), 0.5, 0.5, colors.grid, new Transform().rotate(0));
-}
+// function makeGrid(shapes: Object) {
+//   return shapes.grid(new Rect(-3, -2, 6, 4), 0.5, 0.5, colors.grid, new Transform().rotate(0));
+// }
 
 function makeGridLabels(diagram: Diagram, shapes: Object) {
   const xProps = new AxisProperties('x', 0);
@@ -183,9 +183,8 @@ function makeGridLabels(diagram: Diagram, shapes: Object) {
   xProps.majorGrid.offset = -1.5;
   xProps.majorTicks.width = 0.01;
   xProps.majorTicks.labelMode = 'off';
-  // xProps.majorTicks.labels = ['', ...tools.range(-2.5, 2.5, 0.5), ''];
   xProps.majorTicks.labels = tools.range(-2.5, 2.5, 0.5).map(v => v.toString());
-  // xProps.majorTicks.labels[6] = '   0';
+  xProps.majorTicks.labels[5] = '   0';
   xProps.majorTicks.labelOffset = new Point(0, -0.05);
   xProps.majorTicks.labelsHAlign = 'center';
   xProps.majorTicks.labelsVAlign = 'top';
@@ -202,35 +201,35 @@ function makeGridLabels(diagram: Diagram, shapes: Object) {
   const yProps = new AxisProperties('x', 0);
   yProps.length = 3;
   yProps.limits = { min: -1.5, max: 1.5 };
-  yProps.color = colors.axis;
+  yProps.color = xProps.color;
+  yProps.majorTicks.step = 0.5;
+
   yProps.minorTicks.mode = 'off';
   yProps.minorGrid.mode = 'off';
   yProps.majorTicks.start = -1.5;
-  yProps.majorTicks.step = 0.5;
-  yProps.majorTicks.length = 0.05;
+  yProps.majorTicks.length = xProps.majorTicks.length;
   yProps.majorTicks.offset = -yProps.majorTicks.length / 2;
   yProps.majorGrid.length = 5;
-  yProps.majorGrid.offset = 0;
-  yProps.majorTicks.width = 0.01;
+  yProps.majorGrid.offset = -2.5;
+  yProps.majorGrid.color = xProps.majorGrid.color;
+  yProps.majorTicks.width = xProps.majorTicks.width;
   yProps.majorTicks.labelMode = 'off';
-  // yProps.majorTicks.labels = ['', ...tools.range(-1.5, 1.5, 0.5), ''];
   yProps.majorTicks.labels = tools.range(-1.5, 1.5, 0.5).map(v => v.toString());
-  // yProps.majorTicks.labels[6] = '   0';
+  yProps.majorTicks.labels[3] = '';
   yProps.majorTicks.labelOffset = new Point(-0.1, 0);
-  yProps.majorTicks.labelsHAlign = 'center';
+  yProps.majorTicks.labelsHAlign = 'right';
   yProps.majorTicks.labelsVAlign = 'middle';
-  yProps.majorGrid.width = 0.004;
-  yProps.rotation = Math.PI / 2 * 0;
+  yProps.majorGrid.width = xProps.majorGrid.width;
+  yProps.rotation = Math.PI / 2;
   yProps.title = '';
-  yProps.majorGrid.color = colors.grid;
-  yProps.majorTicks.fontColor = colors.axis;
+  yProps.majorTicks.fontColor = xProps.majorTicks.fontColor;
 
   const yAxis = new Axis(
     diagram.webgl, diagram.draw2D, yProps,
-    new Transform().scale(1, 1).rotate(0).translate(-2.2, -.5), diagram.limits,
+    new Transform().scale(1, 1).rotate(0).translate(0, -1.5), diagram.limits,
   );
 
-  const grid = shapes.collection(new Transform().translate(0, 0));
+  const grid = shapes.collection(new Transform().translate(0, -0.3));
   grid.add('x', xAxis);
   grid.add('y', yAxis);
   return grid;
@@ -253,7 +252,7 @@ function makeMovingCircle(shapes: Object) {
   circleSpace.isMovable = true;
   circleSpace._touchCircle.isTouchable = true;
   circleSpace.move.limitToDiagram = true;
-
+  // circleSpace.setMoveBoundaryToDiagram([-2.5, -1.5, 2.5, 1.5]);
   // circleSpace._touchCircle.isMovable = true;
   return circleSpace;
 }
@@ -301,8 +300,8 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
-    // this.add('grid', makeGrid(shapes));
-    this.add('xAxis', makeGridLabels(diagram, shapes));
+    // this.add('gridd', makeGrid(shapes));
+    this.add('grid', makeGridLabels(diagram, shapes));
     this.add('movingCircle', makeMovingCircle(shapes));
 
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);

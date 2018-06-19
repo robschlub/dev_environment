@@ -33,6 +33,7 @@ class Axis extends DiagramElementCollection {
       this.props.generateAutoMinorTicks();
     }
     const xRatio = 2 / diagramLimits.width;
+    // const xRatio = 1;
     // const yRatio = 2 / diagramLimits.height;
     const cMajorTicksStart = this.props.valueToClip(majorTicks.start);
     const cMinorTicksStart = this.props.valueToClip(minorTicks.start);
@@ -133,7 +134,8 @@ class Axis extends DiagramElementCollection {
       const ticks = new VTickMarks(
         webgl,
         new Point(
-          clipStart - ticksOrGrid.width / 2 * xRatio,
+          // clipStart - ticksOrGrid.width / 2 * xRatio,
+          clipStart,
           this.props.start.y,
         ),
         this.props.rotation,
@@ -149,6 +151,9 @@ class Axis extends DiagramElementCollection {
         ticksOrGrid.color,
         diagramLimits,
       ));
+      // if (name === 'majorTicks') {
+      //   console.log(ticks)
+      // }
     }
   }
 
