@@ -139,5 +139,3 @@ describe('Axis', () => {
     expect(round(axis._minorGrid.vertices.points)).toEqual(round(points));
   });
 });
-
-
