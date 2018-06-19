@@ -294,12 +294,18 @@ function makeStraightCircumference(shapes: Object) {
       centerY,
     );
     rightArc.angleToDraw = (1 - percent) * Math.PI;
+    if (rightArc.angleToDraw === Math.PI) {
+      rightArc.angleToDraw = -1;
+    }
 
     leftArc.transform.updateTranslation(
       -percent * layout.radius * Math.PI,
       centerY,
     );
     leftArc.angleToDraw = (1 - percent) * Math.PI;
+    if (leftArc.angleToDraw === Math.PI) {
+      leftArc.angleToDraw = -1;
+    }
   };
   circumference.bend = (percent: number) => {
     circumference.straighten(1 - percent);
@@ -411,10 +417,10 @@ class CircleCollection extends DiagramElementCollection {
     }
 
     if (!this.varState.straightening) {
-      this.animateCustomTo(this._straightCircumference.straighten, 2);
+      this.animateCustomTo(this._straightCircumference.straighten, 2, currentPercent);
       this.varState.straightening = true;
     } else {
-      this.animateCustomTo(this._straightCircumference.bend, 2);
+      this.animateCustomTo(this._straightCircumference.bend, 2, 1 - currentPercent);
       this.varState.straightening = false;
     }
     this.diagram.animateNextFrame();

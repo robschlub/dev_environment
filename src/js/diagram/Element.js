@@ -84,18 +84,21 @@ class ColorAnimationPhase {
 class CustomAnimationPhase {
   time: number;                       // animation time
   startTime: number;                 // Time when phase started
+  plannedStartTime: number;
   animationCallback: (number) => void;
-  animationStyle: (number) => number;
+  animationStyle: (number) => number;  
 
   constructor(
     animationCallback: (number) => void,
     time: number = 1,
+    startPercent: number = 0,
     animationStyle: (number) => number = tools.easeinout,
   ) {
     this.time = time;
     this.animationCallback = animationCallback;
     this.startTime = -1;
     this.animationStyle = animationStyle;
+    this.plannedStartTime = startPercent * time;
   }
   start() {
     // this.startColor = currentColor.slice();
@@ -525,7 +528,7 @@ class DiagramElement {
       // If this is so, then set the start time to the current time and
       // return the current transform.
       if (phase.startTime < 0) {
-        phase.startTime = now;
+        phase.startTime = now - phase.plannedStartTime;
         return;
       }
       // const percent = calcNextCustomAnimationPercentComplete(now);
@@ -831,10 +834,11 @@ class DiagramElement {
   animateCustomTo(
     phaseCallback: (number) => void,
     time: number = 1,
+    startPercent: number = 0,
     easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
   ): void {
-    const phase = new CustomAnimationPhase(phaseCallback, time, easeFunction);
+    const phase = new CustomAnimationPhase(phaseCallback, time, startPercent, easeFunction);
     if (phase instanceof CustomAnimationPhase) {
       this.animateCustomPlan([phase], callback);
     }
@@ -847,8 +851,8 @@ class DiagramElement {
     easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
   ): void {
-    const phase1 = new CustomAnimationPhase(() => {}, delay, easeFunction);
-    const phase2 = new CustomAnimationPhase(phaseCallback, time, easeFunction);
+    const phase1 = new CustomAnimationPhase(() => {}, delay, 0, easeFunction);
+    const phase2 = new CustomAnimationPhase(phaseCallback, time, 0, easeFunction);
     // if (phase instanceof CustomAnimationPhase) {
     // console.log(phase1.animationCallback)
     // console.log(phase2.animationCallback)
