@@ -7,6 +7,7 @@ import {
   Rect, Point, Transform,
   spaceToSpaceTransform,
 } from './tools/g2';
+import * as tools from './tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
@@ -18,6 +19,8 @@ import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
+import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
+import Axis from './DiagramElements/Plot/Axis';
 
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
@@ -311,6 +314,134 @@ function shapes(diagram: Diagram) {
     }
     return new DiagramElementCollection(transform, diagram.limits);
   }
+  function axes(
+    width: number = 1,
+    height: number = 1,
+    limits: Rect = new Rect(-1, -1, 2, 2),
+    yAxisLocation: number = 0,
+    xAxisLocation: number = 0,
+    stepX: number = 0.1,
+    stepY: number = 0.1,
+    fontSize: number = 0.13,
+    showGrid: boolean = true,
+    color: Array<number> = [1, 1, 1, 0],
+    gridColor: Array<number> = [1, 1, 1, 0],
+    location: Transform | Point = new Transform(),
+  ) {
+    const lineWidth = 0.01;
+    const xProps = new AxisProperties('x', 0);
+
+    xProps.minorTicks.mode = 'off';
+    xProps.minorGrid.mode = 'off';
+    xProps.majorGrid.mode = 'off';
+
+    xProps.length = width;
+    xProps.width = lineWidth;
+    xProps.limits = { min: limits.left, max: limits.right };
+    xProps.color = color.slice();
+    xProps.title = '';
+
+    xProps.majorTicks.start = limits.left;
+    xProps.majorTicks.step = stepX;
+    xProps.majorTicks.length = lineWidth * 5;
+    xProps.majorTicks.offset = -xProps.majorTicks.length / 2;
+    xProps.majorTicks.width = lineWidth * 2;
+    xProps.majorTicks.labelMode = 'off';
+    xProps.majorTicks.labels = tools.range(
+      xProps.limits.min,
+      xProps.limits.max,
+      stepX,
+    ).map(v => v.toString()).map((v) => {
+      if (v === yAxisLocation.toString() && yAxisLocation === xAxisLocation) {
+        return `${v}     `;
+      }
+      return v;
+    });
+
+    // xProps.majorTicks.labels[xProps.majorTicks.labels / 2] = '   0';
+    xProps.majorTicks.labelOffset = new Point(
+      0,
+      xProps.majorTicks.offset - fontSize * 0.1,
+    );
+    xProps.majorTicks.labelsHAlign = 'center';
+    xProps.majorTicks.labelsVAlign = 'top';
+    xProps.majorTicks.fontColor = color.slice();
+    xProps.majorTicks.fontSize = fontSize;
+    xProps.majorTicks.fontWeight = '400';
+
+    const xAxis = new Axis(
+      diagram.webgl, diagram.draw2D, xProps,
+      new Transform().scale(1, 1).rotate(0)
+        .translate(0, xAxisLocation - limits.bottom),
+      diagram.limits,
+    );
+
+    const yProps = new AxisProperties('x', 0);
+    yProps.minorTicks.mode = 'off';
+    yProps.minorGrid.mode = 'off';
+    yProps.majorGrid.mode = 'off';
+
+    yProps.length = height;
+    yProps.width = xProps.width;
+    yProps.limits = { min: limits.bottom, max: limits.top };
+    yProps.color = xProps.color;
+    yProps.title = '';
+    yProps.rotation = Math.PI / 2;
+
+    yProps.majorTicks.step = stepY;
+    yProps.majorTicks.start = limits.bottom;
+    yProps.majorTicks.length = xProps.majorTicks.length;
+    yProps.majorTicks.offset = -yProps.majorTicks.length / 2;
+    yProps.majorTicks.width = xProps.majorTicks.width;
+    yProps.majorTicks.labelMode = 'off';
+    yProps.majorTicks.labels = tools.range(
+      yProps.limits.min,
+      yProps.limits.max,
+      stepY,
+    ).map(v => v.toString()).map((v) => {
+      if (v === xAxisLocation.toString() && yAxisLocation === xAxisLocation) {
+        return '';
+      }
+      return v;
+    });
+
+    // yProps.majorTicks.labels[3] = '';
+    yProps.majorTicks.labelOffset = new Point(
+      yProps.majorTicks.offset - fontSize * 0.2,
+      0,
+    );
+    yProps.majorTicks.labelsHAlign = 'right';
+    yProps.majorTicks.labelsVAlign = 'middle';
+    yProps.majorTicks.fontColor = xProps.majorTicks.fontColor;
+    yProps.majorTicks.fontSize = fontSize;
+    yProps.majorTicks.fontWeight = xProps.majorTicks.fontWeight;
+
+    const yAxis = new Axis(
+      diagram.webgl, diagram.draw2D, yProps,
+      new Transform().scale(1, 1).rotate(0)
+        .translate(yAxisLocation - limits.left, 0),
+      diagram.limits,
+    );
+
+    let transform = new Transform();
+    if (location instanceof Point) {
+      transform = transform.translate(location.x, location.y);
+    } else {
+      transform = location.copy();
+    }
+    const xy = collection(transform);
+    if (showGrid) {
+      const gridLines = grid(
+        new Rect(0, 0, width, height), stepX, stepY,
+        gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      );
+      xy.add('grid', gridLines);
+    }
+    xy.add('y', yAxis);
+    xy.add('x', xAxis);
+    return xy;
+  }
+
   return {
     polyLine,
     polyLineCorners,
@@ -324,6 +455,7 @@ function shapes(diagram: Diagram) {
     text,
     radialLines,
     htmlText,
+    axes,
   };
 }
 

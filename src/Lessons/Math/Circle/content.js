@@ -175,7 +175,7 @@ class Content extends LessonContent {
         _middle: highlightWord('middle', '', 'english'),
       },
       setState: () => {
-        elements.greyColors();
+        // elements.greyColors();
         circle._anchor.color = colors.anchor;
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -183,7 +183,7 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._anchor,
-        circle._radius,
+        // circle._radius,
         circle._circumference,
       ],
     });
@@ -198,7 +198,7 @@ class Content extends LessonContent {
         _location: highlightWord('location', '', 'english'),
       },
       setState: () => {
-        elements.greyColors();
+        // elements.greyColors();
         circle._anchor.color = colors.anchor;
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -206,14 +206,14 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._anchor,
-        circle._radius,
+        // circle._radius,
         circle._circumference,
       ],
     });
     this.addSection({
       setContent: () => `
         <p>
-          |_move| the circle around and observe how it's |_location| changes.
+          |_move| the circle around and observe how it's |_location| follows the center point.
         </p>
         `,
       modifiers: {
