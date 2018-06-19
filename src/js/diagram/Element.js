@@ -152,6 +152,8 @@ class DiagramElement {
 
   isMovable: boolean;             // Element is able to be moved
   isTouchable: boolean;           // Element can be touched
+  hasTouchableElements: boolean;
+  // hasMovableElements: boolean;
 
   // Callbacks
   callback: ?(?mixed) => void;             // ending animation or moving freely
@@ -237,6 +239,7 @@ class DiagramElement {
     this.name = ''; // This is updated when an element is added to a collection
     this.isMovable = false;
     this.isTouchable = false;
+    this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
     this.callback = null;
     this.animationPlan = [];
@@ -1689,11 +1692,11 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   getTouched(glLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
-    if (!this.isTouchable) {
+    if (!this.isTouchable && !this.hasTouchableElements) {
       return [];
     }
     let touched = [];
-    if (this.touchInBoundingRect) {
+    if (this.touchInBoundingRect && this.isTouchable) {
       if (this.isBeingTouched(glLocation)) {
         touched.push(this);
       }
@@ -1707,7 +1710,7 @@ class DiagramElementCollection extends DiagramElement {
 
       // If there is an element that is touched, then this collection should
       // also be touched.
-      if (touched.length > 0) {
+      if (touched.length > 0 && this.isTouchable) {
         touched = [this].concat(touched);
       }
     }

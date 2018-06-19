@@ -133,12 +133,6 @@ function makeAnchor(shapes: Object, radius: number = layout.linewidth * 2) {
   );
 }
 
-// function makeReference(shapes: Object) {
-//   return makeLine(
-//     shapes, new Point(0, 0), layout.radius, layout.linewidth,
-//     colors.reference, new Transform().rotate(0).translate(0, 0),
-//   );
-// }
 
 type circleCollectionType = {
   _anchor: DiagramElementPrimative;
@@ -271,8 +265,7 @@ class CircleCollection extends DiagramElementCollection {
     this._movingCircle.setTransformCallback = this.updateLocation.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
-    this.isTouchable = true;
-    this.isMovable = true;
+    this.hasTouchableElements = true;
     this._circle.isTouchable = true;
     this._circle.isMovable = true;
   }
