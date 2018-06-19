@@ -257,13 +257,13 @@ type StraightCircumferenceType = {
 }
 function makeStraightCircumference(shapes: Object) {
   const color = colors.circle;
-  const centerY = layout.radius - layout.linewidth / 2;
+  const centerY = layout.radius;
   const rightLine = makeLine(
-    shapes, new Point(0, 0), layout.radius * Math.PI, layout.linewidth,
+    shapes, new Point(0, layout.linewidth / 2), layout.radius * Math.PI, layout.linewidth,
     color, new Transform().scale(1, 1).rotate(0).translate(0, 0),
   );
   const leftLine = makeLine(
-    shapes, new Point(0, 0), layout.radius * Math.PI, layout.linewidth,
+    shapes, new Point(0, -layout.linewidth / 2), layout.radius * Math.PI, layout.linewidth,
     color, new Transform().scale(1, 1).rotate(Math.PI).translate(0, 0),
   );
   const leftArc = shapes.polygon(
@@ -280,6 +280,10 @@ function makeStraightCircumference(shapes: Object) {
   );
   const circumference = shapes.collection(new Transform().scale(1, 1)
     .rotate(0).translate(layout.circle.center.x, layout.circle.center.y - layout.radius));
+  const dullCircle = makeCircumference(shapes, layout.radius);
+  dullCircle.transform.updateTranslation(0, centerY);
+  dullCircle.color = colors.grid;
+  circumference.add('dullCircle', dullCircle);
   circumference.add('leftLine', leftLine);
   circumference.add('rightLine', rightLine);
   circumference.add('leftArc', leftArc);

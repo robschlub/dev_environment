@@ -355,33 +355,54 @@ class Content extends LessonContent {
       title: 'Circumference',
       setContent: () => `
         <p>
-          The length of the circle edge is another property.
+          Another property is |_length| of the circle |_edge|.
         </p>
         <p>
           The edge can be |_straightened| out to see the length more easily.
         </p>
         `,
       modifiers: {
-        // _diameter: actionWord('diameter', 'id_diameter', colors.radius),
-        // _center: actionWord('center', 'id_center', colors.anchor),
+        _length: highlightWord('length', '', 'english'),
+        _edge: highlightWord('edge', '', 'english'),
         _straightened: actionWord('straightened', 'id_straight', colors.circle),
       },
       setState: () => {
-        // elements.greyColors();
-        circle._diameter.showAll();
         elements._straightCircumference.showAll();
         elements._straightCircumference.straighten(0);
-        // circle._radius.color = colors.radius;
-        // onClickId('id_diameter', elements.pulseDiameter, [elements]);
-        // onClickId('id_center', elements.pulseAnchor, [elements]);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
       },
       showOnly: [
         circle,
-        circle._anchor,
-        circle._diameter,
-        circle._radius,
-        // circle._circumference,
+        elements._straightCircumference,
+      ],
+    });
+    this.addSection({
+      setContent: () => `
+        <p>
+          In |_Latin|, this property's name came from the words |_circum| (|_carry|) and |_ferre| (|_around|) and was |_circumferentia|.
+        </p>
+        <p>
+          Today, we use this Latin root and call it the |_circumference|.
+        </p>
+        `,
+      modifiers: {
+        _length: highlightWord('length', '', 'english'),
+        _edge: highlightWord('edge', '', 'english'),
+        _circum: highlightWord('circum', '', 'latin'),
+        _ferre: highlightWord('ferre', '', 'latin'),
+        _Latin: highlightWord('Latin', '', 'latin'),
+        _circumferentia: highlightWord('circumferentia', '', 'latin'),
+        _carry: highlightWord('carry', '', 'english'),
+        _around: highlightWord('around', '', 'english'),
+        _circumference: actionWord('circumference', 'id_straight', colors.circle),
+      },
+      setState: () => {
+        elements._straightCircumference.showAll();
+        elements._straightCircumference.straighten(0);
+        onClickId('id_straight', elements.straightenCircumference, [elements]);
+      },
+      showOnly: [
+        circle,
         elements._straightCircumference,
       ],
     });

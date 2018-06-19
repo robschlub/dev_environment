@@ -86,7 +86,7 @@ class CustomAnimationPhase {
   startTime: number;                 // Time when phase started
   plannedStartTime: number;
   animationCallback: (number) => void;
-  animationStyle: (number) => number;  
+  animationStyle: (number) => number;
 
   constructor(
     animationCallback: (number) => void,
