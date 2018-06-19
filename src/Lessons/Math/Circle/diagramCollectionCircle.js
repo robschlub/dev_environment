@@ -158,35 +158,14 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   return circle;
 }
 
-function makeGridLabels(diagram: Diagram, shapes: Object) {
+function makeGridLabels(shapes: Object) {
   const axes = shapes.axes(
     5, 3, new Rect(-2.5, -1.5, 5, 3), 0, 0, 0.5, 0.5,
-    0.1, true, colors.axis, colors.grid, new Point(-2.5, -1.8),
+    0.1, true, colors.axis, colors.grid, new Point(-2.5, -1.5),
   );
   return axes;
 }
 
-function makeMovingCircle(shapes: Object) {
-  const circleSpace = shapes.collection(new Transform().translate(0, 0));
-  const circleColor = colors.circle.slice();
-  circleColor[3] = 0.1;
-  const touchCircle = shapes.polygonFilled(
-    layout.circlePoints, layout.movingCircle.radius + layout.linewidth / 2, 0,
-    layout.circlePoints, circleColor, new Point(0, 0),
-  );
-  const circumference = makeCircumference(shapes, layout.movingCircle.radius);
-  circleSpace.add('touchCircle', touchCircle);
-  circleSpace.add('circumference', circumference);
-  circleSpace.add('anchor', makeAnchor(shapes, layout.linewidth));
-
-  circleSpace.isTouchable = true;
-  circleSpace.isMovable = true;
-  circleSpace._touchCircle.isTouchable = true;
-  circleSpace.move.limitToDiagram = true;
-  // circleSpace.setMoveBoundaryToDiagram([-2.5, -1.5, 2.5, 1.5]);
-  // circleSpace._touchCircle.isMovable = true;
-  return circleSpace;
-}
 
 function makeLocationText(shapes: Object) {
   const locationText = shapes.collection(layout.locationText.top);
@@ -213,6 +192,52 @@ function makeLocationText(shapes: Object) {
     new Point(1.4, 0), 'middle', 'right',
   ));
   return locationText;
+}
+
+
+function makeMovingCircle(shapes: Object) {
+  const circleSpace = shapes.collection(new Transform().translate(
+    layout.movingCircle.center.x,
+    layout.movingCircle.center.y,
+  ));
+  const movingCircle = shapes.collection(new Transform().scale(1, 1).translate(0, 0));
+
+  const circleColor = colors.circle.slice();
+  circleColor[3] = 0.1;
+  const touchCircle = shapes.polygonFilled(
+    layout.circlePoints, layout.movingCircle.radius + layout.linewidth / 2, 0,
+    layout.circlePoints, circleColor, new Point(0, 0),
+  );
+  const circumference = makeCircumference(shapes, layout.movingCircle.radius);
+  movingCircle.add('touchCircle', touchCircle);
+  movingCircle.add('circumference', circumference);
+  movingCircle.add('anchor', makeAnchor(shapes, layout.linewidth));
+  movingCircle.isTouchable = true;
+  movingCircle.isMovable = true;
+  movingCircle.touchInBoundingRect = true;
+  movingCircle.move.minTransform.updateTranslation(
+    -2.5 + layout.movingCircle.radius,
+    -1.5 + layout.movingCircle.radius,
+  );
+  movingCircle.move.maxTransform.updateTranslation(
+    2.5 - layout.movingCircle.radius,
+    1.5 - layout.movingCircle.radius,
+  );
+  // movingCircle._touchCircle.isTouchable = true;
+  // movingCircle._touchCircle.isMovable = true;
+  circleSpace.hasTouchableElements = true;
+  // circleSpace.move.limitToDiagram = true;
+  circleSpace.add('grid', makeGridLabels(shapes));
+  circleSpace.add('circle', movingCircle);
+  circleSpace.add('locationText', makeLocationText(shapes));
+
+  // circleSpace.isTouchable = true;
+  // circleSpace.isMovable = true;
+  // circleSpace._touchCircle.isTouchable = true;
+
+  // circleSpace.setMoveBoundaryToDiagram([-2.5, -1.5, 2.5, 1.5]);
+  // circleSpace._touchCircle.isMovable = true;
+  return circleSpace;
 }
 
 class CircleCollection extends DiagramElementCollection {
@@ -258,10 +283,10 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
-    this.add('grid', makeGridLabels(diagram, shapes));
+    // this.add('grid', makeGridLabels(diagram, shapes));
     this.add('movingCircle', makeMovingCircle(shapes));
-    this.add('locationText', makeLocationText(shapes));
-    this._movingCircle.setTransformCallback = this.updateLocation.bind(this);
+    // this.add('locationText', makeLocationText(shapes));
+    this._movingCircle._circle.setTransformCallback = this.updateLocation.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
     this.hasTouchableElements = true;
@@ -286,11 +311,11 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   updateLocation() {
-    const t = this._movingCircle.transform.t();
+    const t = this._movingCircle._circle.transform.t();
     if (t) {
-      this._locationText._x.vertices.element.innerHTML =
+      this._movingCircle._locationText._x.vertices.element.innerHTML =
         `${tools.roundNum(t.x, 1).toFixed(1)}`;
-      this._locationText._y.vertices.element.innerHTML =
+      this._movingCircle._locationText._y.vertices.element.innerHTML =
         `${tools.roundNum(t.y - layout.movingCircle.center.y, 1).toFixed(1)}`;
     }
   }
@@ -301,12 +326,12 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   pulseMovingCircleAnchor() {
-    this._movingCircle._anchor.pulseScaleNow(1, 2);
+    this._movingCircle._circle._anchor.pulseScaleNow(1, 2);
     this.diagram.animateNextFrame();
   }
 
   pushMovingCircle() {
-    let t = this._movingCircle.transform.t();
+    let t = this._movingCircle._circle.transform.t();
     // console.log(this._movingCircle.state.movement.velocity)
     if (t === null || t === undefined) {
       t = new Point(0.001, 0.001);
@@ -318,12 +343,12 @@ class CircleCollection extends DiagramElementCollection {
       t.y = 0.001;
     }
 
-    this._movingCircle.state.movement.velocity.updateTranslation(
+    this._movingCircle._circle.state.movement.velocity.updateTranslation(
       Math.random() * 10 * t.x / Math.abs(t.x) * -1,
       Math.random() * 10 * t.y / Math.abs(t.y) * -1,
     );
     // console.log(this._movingCircle.state.movement.velocity)
-    this._movingCircle.startMovingFreely();
+    this._movingCircle._circle.startMovingFreely();
     this.diagram.animateNextFrame();
   }
 

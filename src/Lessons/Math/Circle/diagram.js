@@ -80,7 +80,7 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    if (this.beingMovedElements.indexOf(this.elements._movingCircle) >= 0) {
+    if (this.beingMovedElements.indexOf(this.elements._movingCircle._circle) >= 0) {
       // console.log(this.beingMovedElements)
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     }

@@ -34,7 +34,7 @@ export default function lessonLayout() {
     anchorPoints: 100,
 
     locationText: {
-      top: new Point(1, -1.6),
+      top: new Point(1.05, -1.4),
     },
 
     circle: {

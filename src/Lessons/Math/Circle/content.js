@@ -224,10 +224,10 @@ class Content extends LessonContent {
       },
       setState: () => {
         elements._movingCircle.showAll();
-        elements._grid.showAll();
-        elements._movingCircle.setMoveBoundaryToDiagram([-2.5, -1.8, 2.5, 1.2]);
-        elements._locationText.showAll();
-        elements._movingCircle.transform.updateTranslation(layout.movingCircle.center);
+        // elements._grid.showAll();
+        // elements._movingCircle._circle.setMoveBoundaryToDiagram([-2.5, -1.8, 2.5, 1.2]);
+        // elements._locationText.showAll();
+        elements._movingCircle._circle.transform.updateTranslation(0, 0);
         elements.updateLocation();
         // elements._movingCircle.setMoveBoundaryToDiagram();
         // circle._anchor.color = colors.anchor;
@@ -239,8 +239,8 @@ class Content extends LessonContent {
       showOnly: [
         elements._movingCircle,
         // elements._grid,
-        elements._grid,
-        elements._locationText,
+        // elements._grid,
+        // elements._locationText,
         // elements._gridd,
       ],
     });
