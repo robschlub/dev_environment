@@ -30,14 +30,14 @@ class Content extends LessonContent {
       title: 'Angle Measurement',
       setContent: () => centerV(`
         <p>
-          The first shape we will explore is one you see every time you look at the |_moon|, a |_wheel|, a |_ball| and a |_clock|.
+          The first shape we will explore is one you see every time you look at the |_moon|, a |_wheel|, a |_ball| and a |_ring|.
         </p>
         `),
       modifiers: {
         _moon: highlightWord('moon', '', 'english'),
         _wheel: highlightWord('wheel', '', 'english'),
         _ball: highlightWord('ball', '', 'english'),
-        _clock: highlightWord('clock', '', 'english'),
+        _ring: highlightWord('ring', '', 'english'),
       },
     });
     this.addSection({
@@ -56,7 +56,7 @@ class Content extends LessonContent {
         elements._moon,
         elements._wheel,
         elements._ball,
-        elements._clock,
+        elements._ring,
         elements._circleShape,
       ],
       setState: () => {
@@ -65,7 +65,7 @@ class Content extends LessonContent {
         elements._moon.transform.updateTranslation(layout.moon.center);
         elements._wheel.transform.updateTranslation(layout.wheel.center);
         elements._ball.transform.updateTranslation(layout.ball.center);
-        elements._clock.transform.updateTranslation(layout.clock.center);
+        elements._ring.transform.updateTranslation(layout.ring.center);
         elements._circleShape.transform.updateTranslation(layout.circleShape.center);
         onClickId('id_common', elements.toggleShape, [elements]);
       },
@@ -150,6 +150,22 @@ class Content extends LessonContent {
         </p>
         <p>
           Next we need to be able to describe it, by identifying some of its |_properties|.
+        </p>
+        `),
+      modifiers: {
+        _properties: highlightWord('properties', '', colors.diagram.text.keyword),
+      },
+    });
+    this.addSection({
+      setContent: () => centerV(`
+        <p>
+          Again, if we were naming the |_properties| today, their names would likely be more |_intuitive|.
+        </p>
+        <p>
+          In the past, the properties were named after objects or actions that were related to the property.
+        </p>
+        <p>
+          However, our names come from the names in past times, and while they had a more intuitive meaning at the time, today they are often less obj.
         </p>
         `),
       modifiers: {
@@ -383,6 +399,33 @@ class Content extends LessonContent {
         </p>
         <p>
           Today, we use this Latin root and call it the |_circumference|.
+        </p>
+        `,
+      modifiers: {
+        _length: highlightWord('length', '', 'english'),
+        _edge: highlightWord('edge', '', 'english'),
+        _circum: highlightWord('circum', '', 'latin'),
+        _ferre: highlightWord('ferre', '', 'latin'),
+        _Latin: highlightWord('Latin', '', 'latin'),
+        _circumferentia: highlightWord('circumferentia', '', 'latin'),
+        _carry: highlightWord('carry', '', 'english'),
+        _around: highlightWord('around', '', 'english'),
+        _circumference: actionWord('circumference', 'id_straight', colors.circle),
+      },
+      setState: () => {
+        elements._straightCircumference.showAll();
+        elements._straightCircumference.straighten(0);
+        onClickId('id_straight', elements.straightenCircumference, [elements]);
+      },
+      showOnly: [
+        circle,
+        elements._straightCircumference,
+      ],
+    });
+    this.addSection({
+      setContent: () => `
+        <p>
+          So, if we were discovering the circle today, we might have called it a ring, with properties spoke, width, and carry-around.
         </p>
         `,
       modifiers: {

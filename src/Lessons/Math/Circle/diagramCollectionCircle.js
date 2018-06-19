@@ -52,11 +52,11 @@ function makeMoon(shapes: Object) {
   );
 }
 
-function makeClock(shapes: Object) {
+function makeRing(shapes: Object) {
   return shapes.polygonFilled(
-    layout.circlePoints, layout.clock.radius, 0,
+    layout.circlePoints, layout.ring.radius, 0,
     layout.circlePoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0.7222, 0, 0.1481, 0.1481),
+    '/static/circles.png', new Rect(0.7222, 0.1481, 0.1481, 0.1481),
   );
 }
 
@@ -322,10 +322,10 @@ export type CircleCollectionType = {
   _ball: DiagramElementPrimative;
   _wheel: DiagramElementPrimative;
   _moon: DiagramElementPrimative;
-  _clock: DiagramElementPrimative;
+  _ring: DiagramElementPrimative;
   _wheelShape: DiagramElementPrimative;
   _moonShape: DiagramElementPrimative;
-  _clockShape: DiagramElementPrimative;
+  _ringShape: DiagramElementPrimative;
   _ballShape: DiagramElementPrimative;
   _circleShape: DiagramElementPrimative;
   _movingCircle: movingCircleType;
@@ -337,10 +337,10 @@ class CircleCollection extends DiagramElementCollection {
   _ball: DiagramElementPrimative;
   _wheel: DiagramElementPrimative;
   _moon: DiagramElementPrimative;
-  _clock: DiagramElementPrimative;
+  _ring: DiagramElementPrimative;
   _wheelShape: DiagramElementPrimative;
   _moonShape: DiagramElementPrimative;
-  _clockShape: DiagramElementPrimative;
+  _ringShape: DiagramElementPrimative;
   _ballShape: DiagramElementPrimative;
   _circleShape: DiagramElementPrimative;
   _movingCircle: movingCircleType;
@@ -366,14 +366,14 @@ class CircleCollection extends DiagramElementCollection {
 
     const { shapes } = diagram;
     this.add('circle', makeCircle(this.numSections, shapes));
-    this.add('clock', makeClock(shapes));
+    this.add('ring', makeRing(shapes));
     this.add('ball', makeBall(shapes));
     this.add('moon', makeMoon(shapes));
     this.add('wheel', makeWheel(shapes));
     this.add('wheelShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('moonShape', makeCircleShape(shapes, layout.moon.radius));
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
-    this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
+    this.add('ringShape', makeCircleShape(shapes, layout.ring.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('movingCircle', makeMovingCircle(shapes));
     this.add('straightCircumference', makeStraightCircumference(shapes));
@@ -561,7 +561,7 @@ class CircleCollection extends DiagramElementCollection {
     } else if (this.varState.shapeTurn === 2) {
       this.transitionShape(this._ballShape, layout.ball.center, layout.ball.radius);
     } else if (this.varState.shapeTurn === 3) {
-      this.transitionShape(this._clockShape, layout.clock.center, layout.clock.radius);
+      this.transitionShape(this._ringShape, layout.ring.center, layout.ring.radius);
     }
     this.varState.shapeTurn += 1;
     if (this.varState.shapeTurn > 3) {

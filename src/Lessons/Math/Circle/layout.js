@@ -59,7 +59,7 @@ export default function lessonLayout() {
       radius: 0.4,
       center: new Point(0.3 - 0.2, -0.8 + 0.2),
     },
-    clock: {
+    ring: {
       radius: 0.3,
       center: new Point(1.1 - 0.2, -0.8 + 0.2),
     },
