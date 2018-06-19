@@ -15,11 +15,11 @@ type circleCollectionType = {
   _arc: DiagramElementPrimative;
   _angle: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
-  _reference: DiagramElementPrimative;
-  _radialLinesA: DiagramElementPrimative;
-  _radialLinesB: DiagramElementCollection;
-  _radialLinesDeg: DiagramElementCollection;
-  // resize: () => void;
+  _circumference: DiagramElementPrimative;
+  _diameter: {
+    _radius2: DiagramElementPrimative;
+    _radius1: DiagramElementPrimative;
+  } & DiagramElementCollection;
 } & DiagramElementCollection;
 
 type typeElements = {
@@ -61,6 +61,14 @@ class LessonDiagram extends Diagram {
     super.resize();
   }
 
+  touchUpHandler() {
+    if (this.beingMovedElements.indexOf(this.elements._circle._diameter._radius2)) {
+      this.elements._circle._radius.stopBeingMoved();
+      this.elements._circle._radius.startMovingFreely();
+    }
+    this.beingMovedElements = [];
+  }
+
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
@@ -96,7 +104,14 @@ class LessonDiagram extends Diagram {
     const rot = transform.r();
     if (rot != null) {
       transform.updateRotation(rot - diffAngle);
-      this.elements._circle._radius.moved(transform);
+      if (this.beingMovedElements.indexOf(this.elements._circle._radius)) {
+        this.elements._circle._radius.moved(transform);
+      } else {
+        transform.updateRotation(rot - diffAngle + Math.PI);
+        this.elements._circle._radius.moved(transform);
+      }
+      // const transform2 = transform.copy().updateRotation(rot - diffAngle + Math.PI);
+      // this.elements._circle._diameter._radius2.moved(transform2);
     }
 
     this.animateNextFrame();

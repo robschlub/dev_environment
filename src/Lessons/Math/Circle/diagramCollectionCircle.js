@@ -85,6 +85,31 @@ function makeRadius(shapes: Object) {
   return radius;
 }
 
+function makeDiameter(shapes: Object) {
+  const diameter = shapes.collection(new Transform().rotate(0).translate(0, 0));
+  diameter.add(
+    'radius1',
+    makeLine(
+      shapes, new Point(0, 0), layout.radius, layout.linewidth,
+      colors.radius, new Transform().rotate(0).translate(0, 0),
+    ),
+  );
+  diameter.add(
+    'radius2',
+    makeLine(
+      shapes, new Point(0, 0), layout.radius, layout.linewidth,
+      colors.radius, new Transform().rotate(Math.PI).translate(0, 0),
+    ),
+  );
+  diameter.isTouchable = true;
+  diameter.isMovable = true;
+  diameter._radius2.isTouchable = true;
+  diameter._radius2.isMovable = true;
+  for (let i = 0; i < diameter._radius2.vertices.border[0].length; i += 1) {
+    diameter._radius2.vertices.border[0][i].y *= 10;
+  }
+  return diameter;
+}
 function makeArc(shapes: Object) {
   return shapes.polygon(
     layout.circlePoints, layout.radius, layout.linewidth, 0,
@@ -106,12 +131,12 @@ function makeAnchor(shapes: Object) {
   );
 }
 
-function makeReference(shapes: Object) {
-  return makeLine(
-    shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.reference, new Transform().rotate(0).translate(0, 0),
-  );
-}
+// function makeReference(shapes: Object) {
+//   return makeLine(
+//     shapes, new Point(0, 0), layout.radius, layout.linewidth,
+//     colors.reference, new Transform().rotate(0).translate(0, 0),
+//   );
+// }
 
 type circleCollectionType = {
   _anchor: DiagramElementPrimative;
@@ -119,17 +144,21 @@ type circleCollectionType = {
   _angle: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
   _circumference: DiagramElementPrimative;
-  // _radialLinesC: DiagramElementPrimative;
+  _diameter: {
+    _radius2: DiagramElementPrimative;
+    _radius1: DiagramElementPrimative;
+  } & DiagramElementCollection;
 } & DiagramElementCollection;
 
 
 function makeCircle(numSections: Array<number>, shapes: Object) {
   const circle = shapes.collection(new Transform().translate(layout.circle.center));
-  circle.add('reference', makeReference(shapes));
+  // circle.add('reference', makeReference(shapes));
   circle.add('arc', makeArc(shapes));
   circle.add('circumference', makeCircumference(shapes));
   circle.add('radius', makeRadius(shapes));
   circle.add('anchor', makeAnchor(shapes));
+  circle.add('diameter', makeDiameter(shapes));
   return circle;
 }
 
@@ -195,6 +224,7 @@ class CircleCollection extends DiagramElementCollection {
       this.varState.rotation = r;
       this._circle._radius.transform.updateRotation(r);
       this._circle._arc.angleToDraw = r + 0.01;
+      this._circle._diameter.transform.updateRotation(r);
     }
   }
 
@@ -208,15 +238,26 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  pulseDiameter() {
+    this._circle._diameter._radius1.pulseScaleNow(1, 2.5);
+    this._circle._diameter._radius2.pulseScaleNow(1, 2.5);
+    this.diagram.animateNextFrame();
+  }
+
   pulseArc() {
     this._circle._arc.pulseThickNow(1, 1.01, 3);
     this.diagram.animateNextFrame();
   }
 
-  pulseReference() {
-    this._circle._reference.pulseScaleNow(1, 2);
+  pulseCircumference() {
+    this._circle._circumference.pulseThickNow(1, 1.02, 5);
     this.diagram.animateNextFrame();
   }
+
+  // pulseReference() {
+  //   this._circle._reference.pulseScaleNow(1, 2);
+  //   this.diagram.animateNextFrame();
+  // }
 
   pushRadius() {
     const angle = this._circle._radius.transform.r();

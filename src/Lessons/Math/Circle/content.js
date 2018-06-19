@@ -2,7 +2,7 @@
 
 import {
   LessonContent, actionWord, onClickId, highlightWord,
-  centerVH, centerV,
+  centerV,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import { Transform } from '../../../js/diagram/tools/g2';
@@ -160,18 +160,44 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      title: 'Properties',
+      title: 'Center',
       setContent: () => `
         <p>
           One property is the |_anchor|, which is normally called the |_center_point|.
         </p>
         <p>
-          This property can be used to describe the |_location| of the circle.
+          The word |_center| comes from the |_Latin| word |_centrum| which means |_middle|. 
         </p>
         `,
       modifiers: {
         _center_point: actionWord('center point', 'id_center', colors.anchor),
         _anchor: actionWord('anchor', 'id_anchor', colors.anchor),
+        _center: highlightWord('center', '', 'english'),
+        _Latin: highlightWord('Latin', '', 'latin'),
+        _centrum: highlightWord('centrum', '', 'latin'),
+        _middle: highlightWord('middle', '', 'english'),
+      },
+      setState: () => {
+        elements.greyColors();
+        circle._anchor.color = colors.anchor;
+        onClickId('id_anchor', elements.pulseAnchor, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
+      },
+      showOnly: [
+        circle,
+        circle._anchor,
+        circle._radius,
+        circle._circumference,
+      ],
+    });
+    this.addSection({
+      setContent: () => `
+        <p>
+          The |_center| property can be used to describe the |_location| of the circle.
+        </p>
+        `,
+      modifiers: {
+        _center: actionWord('center', 'id_center', colors.anchor),
         _location: highlightWord('location', '', 'english'),
       },
       setState: () => {
@@ -188,10 +214,10 @@ class Content extends LessonContent {
       ],
     });
     this.addSection({
-      title: 'Properties',
+      title: 'Radius',
       setContent: () => `
         <p>
-          Another property is the length of the |_line|, which we call |_radius|. It can describe the circle's size.
+          Another property is the length of the |_line|, which we call |_radius|.
         </p>
         <p>
           |_radius2| comes from the |_Latin| word |_radiusLatin| which means the spoke of a chariot wheel. 
@@ -200,7 +226,7 @@ class Content extends LessonContent {
       modifiers: {
         _radius: actionWord('radius', 'id_radius', colors.radius),
         _radius2: actionWord('Radius', 'id_radius2', colors.radius),
-        _line: actionWord('radius', 'id_line', colors.radius),
+        _line: actionWord('line', 'id_line', colors.radius),
         _radiusLatin: highlightWord('radius', '', 'latin'),
         _Latin: highlightWord('Latin', '', 'latin'),
       },
@@ -214,6 +240,67 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._anchor,
+        circle._radius,
+        circle._circumference,
+      ],
+    });
+    this.addSection({
+      setContent: () => `
+        <p>
+          The |_radius| describes the circle's size and is any line between the |_center| and the |_edge|.
+        </p>
+        <p>
+          The circle's width can be thought of as two radius lengths.
+        </p>
+        `,
+      modifiers: {
+        _radius: actionWord('radius', 'id_radius', colors.radius),
+        _center: actionWord('center', 'id_center', colors.anchor),
+        _edge: actionWord('edge', 'id_edge', colors.circle),
+      },
+      setState: () => {
+        elements.greyColors();
+        circle._radius.color = colors.radius;
+        onClickId('id_radius', elements.pulseRadius, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
+        onClickId('id_edge', elements.pulseCircumference, [elements]);
+      },
+      showOnly: [
+        circle,
+        circle._anchor,
+        circle._radius,
+        circle._circumference,
+      ],
+    });
+    this.addSection({
+      title: 'Diameter',
+      setContent: () => `
+        <p>
+          The ancient Greeks described the |_width| of the circle as |_diametros| - from their words |_dia| (|_across|) and |_metros| (|_measure|).
+        </p>
+        <p>
+          Our word comes from this, and is |_diameter|. 
+        </p>
+        `,
+      modifiers: {
+        _diametros: highlightWord('diametros', '', 'greek'),
+        _dia: highlightWord('dia', '', 'greek'),
+        _metros: highlightWord('metros', '', 'greek'),
+        _across: highlightWord('across', '', 'english'),
+        _width: highlightWord('width', '', 'english'),
+        _measure: highlightWord('measure', '', 'english'),
+        _diameter: actionWord('diameter', 'id_diameter', colors.radius),
+      },
+      setState: () => {
+        elements.greyColors();
+        circle._diameter.showAll();
+        // circle._radius.color = colors.radius;
+        onClickId('id_diameter', elements.pulseDiameter, [elements]);
+      },
+      showOnly: [
+        circle,
+        circle._anchor,
+        circle._diameter,
         circle._radius,
         circle._circumference,
       ],
