@@ -62,7 +62,7 @@ function makeClock(shapes: Object) {
 
 function makeCircleShape(shapes: Object, radius) {
   return shapes.polygon(
-    layout.circlePoints, radius, layout.linewidth, 0,
+    layout.circlePoints, radius, layout.linewidth, 0, 1,
     layout.circlePoints, colors.circle, new Transform().scale(1, 1).translate(0, 0),
   );
 }
@@ -112,14 +112,14 @@ function makeDiameter(shapes: Object) {
 }
 function makeArc(shapes: Object) {
   return shapes.polygon(
-    layout.circlePoints, layout.radius, layout.linewidth, 0,
+    layout.circlePoints, layout.radius, layout.linewidth, 0, 1,
     layout.circlePoints, colors.circle, new Point(0, 0),
   );
 }
 
 function makeCircumference(shapes: Object, radius: number) {
   return shapes.polygon(
-    layout.circlePoints, radius, layout.linewidth, 0,
+    layout.circlePoints, radius, layout.linewidth, 0, 1,
     layout.circlePoints, colors.circle, new Point(0, 0),
   );
 }
@@ -247,6 +247,66 @@ function makeMovingCircle(shapes: Object) {
   return circleSpace;
 }
 
+type StraightCircumferenceType = {
+  _leftLine: DiagramElementPrimative;
+  _rightLine: DiagramElementPrimative;
+  _leftArc: DiagramElementPrimative;
+  _rightArc: DiagramElementPrimative;
+  straighten: (number) => void;
+  bend: (number) => void;
+}
+function makeStraightCircumference(shapes: Object) {
+  const color = colors.circle;
+  const centerY = layout.radius - layout.linewidth / 2;
+  const rightLine = makeLine(
+    shapes, new Point(0, 0), layout.radius * Math.PI, layout.linewidth,
+    color, new Transform().scale(1, 1).rotate(0).translate(0, 0),
+  );
+  const leftLine = makeLine(
+    shapes, new Point(0, 0), layout.radius * Math.PI, layout.linewidth,
+    color, new Transform().scale(1, 1).rotate(Math.PI).translate(0, 0),
+  );
+  const leftArc = shapes.polygon(
+    layout.circlePoints, layout.radius, layout.linewidth, 0, -1,
+    layout.circlePoints / 2, color, new Transform()
+      .scale(1, 1).rotate(-Math.PI / 2)
+      .translate(0, layout.radius),
+  );
+  const rightArc = shapes.polygon(
+    layout.circlePoints, layout.radius, layout.linewidth, 0, 1,
+    layout.circlePoints / 2, color, new Transform()
+      .scale(1, 1).rotate(-Math.PI / 2)
+      .translate(0, layout.radius),
+  );
+  const circumference = shapes.collection(new Transform().scale(1, 1)
+    .rotate(0).translate(layout.circle.center.x, layout.circle.center.y - layout.radius));
+  circumference.add('leftLine', leftLine);
+  circumference.add('rightLine', rightLine);
+  circumference.add('leftArc', leftArc);
+  circumference.add('rightArc', rightArc);
+
+  circumference.straighten = (percent: number) => {
+    rightLine.transform.updateScale(percent, 1);
+    leftLine.transform.updateScale(percent, 1);
+
+    rightArc.transform.updateTranslation(
+      percent * layout.radius * Math.PI,
+      centerY,
+    );
+    rightArc.angleToDraw = (1 - percent) * Math.PI;
+
+    leftArc.transform.updateTranslation(
+      -percent * layout.radius * Math.PI,
+      centerY,
+    );
+    leftArc.angleToDraw = (1 - percent) * Math.PI;
+  };
+  circumference.bend = (percent: number) => {
+    circumference.straighten(1 - percent);
+  };
+  return circumference;
+}
+
 export type CircleCollectionType = {
   _circle: circleCollectionType;
   _ball: DiagramElementPrimative;
@@ -259,6 +319,7 @@ export type CircleCollectionType = {
   _ballShape: DiagramElementPrimative;
   _circleShape: DiagramElementPrimative;
   _movingCircle: movingCircleType;
+  _straightCircumference: StraightCircumferenceType;
  } & DiagramElementCollection;
 
 class CircleCollection extends DiagramElementCollection {
@@ -273,10 +334,12 @@ class CircleCollection extends DiagramElementCollection {
   _ballShape: DiagramElementPrimative;
   _circleShape: DiagramElementPrimative;
   _movingCircle: movingCircleType;
+  _straightCircumference: StraightCircumferenceType;
 
   varState: {
     shapeTurn: number,
     rotation: number,
+    straightening: boolean,
   };
   numSections: Array<number>;
   diagram: Diagram;
@@ -287,6 +350,7 @@ class CircleCollection extends DiagramElementCollection {
     this.varState = {
       shapeTurn: 0,
       rotation: 0,
+      straightening: false,
     };
     this.numSections = [12, 100];
 
@@ -302,6 +366,7 @@ class CircleCollection extends DiagramElementCollection {
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('movingCircle', makeMovingCircle(shapes));
+    this.add('straightCircumference', makeStraightCircumference(shapes));
     this._movingCircle._circle.setTransformCallback = this.updateLocation.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
@@ -336,6 +401,28 @@ class CircleCollection extends DiagramElementCollection {
       this._movingCircle._locationText._y.vertices.element.innerHTML =
         `${tools.roundNum(t.y - layout.movingCircle.center.y, 1).toFixed(1)}`;
     }
+  }
+
+  straightenCircumference() {
+    const s = this._straightCircumference._rightLine.transform.s();
+    let currentPercent = 0;
+    if (s) {
+      currentPercent = s.x;
+    }
+
+    if (!this.varState.straightening) {
+      this.animateCustomTo(this._straightCircumference.straighten, 2);
+      this.varState.straightening = true;
+    } else {
+      this.animateCustomTo(this._straightCircumference.bend, 2);
+      this.varState.straightening = false;
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  bendCircumference() {
+    this.animateCustomTo(this._straightCircumference.bend, 1);
+    this.diagram.animateNextFrame();
   }
 
   pulseAnchor() {

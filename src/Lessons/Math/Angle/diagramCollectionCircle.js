@@ -47,14 +47,14 @@ function makeRadius(shapes: Object) {
 
 function makeArc(shapes: Object) {
   return shapes.polygon(
-    layout.anglePoints, layout.radius, layout.linewidth, 0,
+    layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
     layout.anglePoints, colors.arc, new Point(0, 0),
   );
 }
 
 function makeCircle(shapes: Object) {
   return shapes.polygon(
-    layout.anglePoints, layout.radius, layout.linewidth, 0,
+    layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
     layout.anglePoints, colors.arc, new Point(0, 0),
   );
 }

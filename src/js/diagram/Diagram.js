@@ -255,13 +255,14 @@ function shapes(diagram: Diagram) {
     radius: number,
     lineWidth: number,
     rotation: number,
+    direction: -1 | 1,
     numSidesToDraw: number,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
     return Polygon(
       diagram.webgl, numSides, radius, lineWidth,
-      rotation, numSidesToDraw, color, transform, diagram.limits,
+      rotation, direction, numSidesToDraw, color, transform, diagram.limits,
     );
   }
   function polygonFilled(

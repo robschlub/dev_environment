@@ -47,7 +47,7 @@ function makeClock(shapes: Object) {
 
 function makeWheelShape(shapes: Object) {
   return shapes.polygon(
-    202, layout.wheelSize, layout.linewidth, 0,
+    202, layout.wheelSize, layout.linewidth, 0, 1,
     202, colors.circle, new Point(0, 0),
   );
 }
@@ -138,12 +138,12 @@ function makeCircumferenceDimension(shapes: Object) {
   const arrowHeightInRadians = arrowHeight / radius;
 
   const halfCircle1 = shapes.polygon(
-    layout.wheelPoints, radius, lineWidth, 0,
+    layout.wheelPoints, radius, lineWidth, 0, 1,
     layout.wheelPoints,
     colors.dimensions, new Transform().rotate(0).translate(0, 0),
   );
   const halfCircle2 = shapes.polygon(
-    layout.wheelPoints, radius, lineWidth, 0,
+    layout.wheelPoints, radius, lineWidth, 0, 1,
     layout.wheelPoints,
     colors.dimensions, new Transform().rotate(0).translate(0, 0),
   );

@@ -326,6 +326,65 @@ class Content extends LessonContent {
         circle._circumference,
       ],
     });
+    this.addSection({
+      setContent: () => `
+        <p>
+          The |_diameter| can also be thought of as any line that runs between two points on the circle and through the |_center|.
+        <p>
+        `,
+      modifiers: {
+        _diameter: actionWord('diameter', 'id_diameter', colors.radius),
+        _center: actionWord('center', 'id_center', colors.anchor),
+      },
+      setState: () => {
+        // elements.greyColors();
+        circle._diameter.showAll();
+        // circle._radius.color = colors.radius;
+        onClickId('id_diameter', elements.pulseDiameter, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
+      },
+      showOnly: [
+        circle,
+        circle._anchor,
+        circle._diameter,
+        circle._radius,
+        circle._circumference,
+      ],
+    });
+    this.addSection({
+      title: 'Circumference',
+      setContent: () => `
+        <p>
+          The length of the circle edge is another property.
+        </p>
+        <p>
+          The edge can be |_straightened| out to see the length more easily.
+        </p>
+        `,
+      modifiers: {
+        // _diameter: actionWord('diameter', 'id_diameter', colors.radius),
+        // _center: actionWord('center', 'id_center', colors.anchor),
+        _straightened: actionWord('straightened', 'id_straight', colors.circle),
+      },
+      setState: () => {
+        // elements.greyColors();
+        circle._diameter.showAll();
+        elements._straightCircumference.showAll();
+        elements._straightCircumference.straighten(0);
+        // circle._radius.color = colors.radius;
+        // onClickId('id_diameter', elements.pulseDiameter, [elements]);
+        // onClickId('id_center', elements.pulseAnchor, [elements]);
+        onClickId('id_straight', elements.straightenCircumference, [elements]);
+      },
+      showOnly: [
+        circle,
+        circle._anchor,
+        circle._diameter,
+        circle._radius,
+        // circle._circumference,
+        elements._straightCircumference,
+      ],
+    });
   }
 }
 
