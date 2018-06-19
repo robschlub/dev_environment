@@ -258,7 +258,6 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('clockShape', makeCircleShape(shapes, layout.clock.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
-    // this.add('gridd', makeGrid(shapes));
     this.add('grid', makeGridLabels(diagram, shapes));
     this.add('movingCircle', makeMovingCircle(shapes));
     this.add('locationText', makeLocationText(shapes));
@@ -266,8 +265,7 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
     this.hasTouchableElements = true;
-    this._circle.isTouchable = true;
-    this._circle.isMovable = true;
+    this._circle.hasTouchableElements = true;
   }
 
   updateRotation() {

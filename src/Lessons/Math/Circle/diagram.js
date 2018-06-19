@@ -112,12 +112,13 @@ class LessonDiagram extends Diagram {
     const rot = transform.r();
     if (rot != null) {
       transform.updateRotation(rot - diffAngle);
-      if (this.beingMovedElements.indexOf(this.elements._circle._radius)) {
-        this.elements._circle._radius.moved(transform);
-      } else {
-        transform.updateRotation(rot - diffAngle + Math.PI);
-        this.elements._circle._radius.moved(transform);
-      }
+      // if (this.beingMovedElements.indexOf(this.elements._circle._radius)) {
+      this.elements._circle._radius.moved(transform);
+      // } else {
+      //   console.log(this.beingMovedElements);
+      //   transform.updateRotation(rot - diffAngle + Math.PI);
+      //   this.elements._circle._radius.moved(transform);
+      // }
       // const transform2 = transform.copy().updateRotation(rot - diffAngle + Math.PI);
       // this.elements._circle._diameter._radius2.moved(transform2);
     }
