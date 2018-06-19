@@ -12,7 +12,8 @@ const cssColorNames = [
   'rotation',
   'disabled',
   'grid',
-  'axis'
+  'axis',
+  'push',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -32,13 +33,17 @@ export default function lessonLayout() {
     circlePoints: 400,
     anchorPoints: 100,
 
+    locationText: {
+      top: new Point(1, -1.6),
+    },
+
     circle: {
       center: new Point(0, -0.7),
       right: new Point(1, -0.7),
     },
 
     movingCircle: {
-      center: new Point(0, 0),
+      center: new Point(0, -0.3),
       radius: 0.4,
     },
 
