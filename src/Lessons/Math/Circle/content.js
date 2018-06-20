@@ -467,6 +467,9 @@ class Content extends LessonContent {
         elements._radiusText.showAll();
         elements._diameterText.showAll();
         elements._circumferenceText.showAll();
+        elements._slider.showAll();
+        elements._slider.set(0.5);
+        elements.updateSlider();
         // elements._straightCircumference.showAll();
         // elements._straightCircumference.straighten(0);
         // onClickId('id_straight', elements.straightenCircumference, [elements]);
@@ -476,6 +479,7 @@ class Content extends LessonContent {
         elements._movingCircle,
         elements._diameterText,
         elements._circumferenceText,
+        elements._slider,
       ],
     });
   }

@@ -59,6 +59,9 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.indexOf(this.elements._movingCircle._circle) >= 0) {
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     }
+    if (this.beingMovedElements.indexOf(this.elements._slider._circle) >= 0) {
+      return super.touchMoveHandler(previousClientPoint, currentClientPoint, true);
+    }
 
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {

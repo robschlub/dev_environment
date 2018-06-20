@@ -14,6 +14,7 @@ const cssColorNames = [
   'grid',
   'axis',
   'push',
+  'slider',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -56,6 +57,13 @@ export default function lessonLayout() {
     movingCircle: {
       center: new Point(0, -0.3),
       radius: 0.4,
+    },
+
+    slider: {
+      position: new Point(-2.5, 1.4),
+      length: 1.5,
+      width: 0.05,
+      circleWidth: 0.2,
     },
 
     moon: {

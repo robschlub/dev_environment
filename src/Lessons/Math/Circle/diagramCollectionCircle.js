@@ -212,38 +212,59 @@ type movingCircleType = {
 } & DiagramElementCollection;
 
 function makeMovingCircle(shapes: Object) {
-  const circleSpace = shapes.collection(new Transform().translate(
+  const circleSpace = shapes.collection(new Transform().scale(1, 1).translate(
     layout.movingCircle.center.x,
     layout.movingCircle.center.y,
   ));
-  const movingCircle = shapes.collection(new Transform().scale(1, 1).translate(0, 0));
+
+  const t = new Transform().scale(1, 1).rotate(0).translate(0, 0);
+  const movingCircle = shapes.collection(t.copy());
 
   const circleColor = colors.circle.slice();
   circleColor[3] = 0.1;
   const touchCircle = shapes.polygonFilled(
     layout.circlePoints, layout.movingCircle.radius + layout.linewidth / 2, 0,
-    layout.circlePoints, circleColor, new Point(0, 0),
+    layout.circlePoints, circleColor, t.copy(),
   );
   const circumference = makeCircumference(shapes, layout.movingCircle.radius);
+  circumference.transform = t.copy();
   movingCircle.add('touchCircle', touchCircle);
   movingCircle.add('circumference', circumference);
   movingCircle.add('anchor', makeAnchor(shapes, layout.linewidth));
+  movingCircle._anchor.transform = t.copy();
   movingCircle.isTouchable = true;
   movingCircle.isMovable = true;
   movingCircle.touchInBoundingRect = true;
-  movingCircle.move.minTransform.updateTranslation(
-    -2.5 + layout.movingCircle.radius,
-    -1.5 + layout.movingCircle.radius,
-  );
-  movingCircle.move.maxTransform.updateTranslation(
-    2.5 - layout.movingCircle.radius,
-    1.5 - layout.movingCircle.radius,
-  );
+  // movingCircle.move.minTransform.updateTranslation(
+  //   -2.5 + layout.movingCircle.radius,
+  //   -1.5 + layout.movingCircle.radius,
+  // );
+  // movingCircle.move.maxTransform.updateTranslation(
+  //   2.5 - layout.movingCircle.radius,
+  //   1.5 - layout.movingCircle.radius,
+  // );
 
   circleSpace.hasTouchableElements = true;
   circleSpace.add('grid', makeGridLabels(shapes));
   circleSpace.add('circle', movingCircle);
   circleSpace.add('locationText', makeLocationText(shapes));
+
+  movingCircle.updateBoundaries = () => {
+    const s = movingCircle.transform.s();
+    if (s) {
+      const percent = s.x;
+      movingCircle.move.minTransform.updateTranslation(
+        -2.5 + layout.movingCircle.radius * percent,
+        -1.5 + layout.movingCircle.radius * percent,
+      );
+      movingCircle.move.maxTransform.updateTranslation(
+        2.5 - layout.movingCircle.radius * percent,
+        1.5 - layout.movingCircle.radius * percent,
+      );
+    }
+  };
+  movingCircle.updateBoundaries();
+
   return circleSpace;
 }
 
@@ -317,6 +338,46 @@ function makeStraightCircumference(shapes: Object) {
   return circumference;
 }
 
+function makeSlider(shapes: Object) {
+  const slider = shapes.collection(new Transform()
+    .scale(1, 1).rotate(0).translate(layout.slider.position));
+  const travel = layout.slider.length - layout.slider.circleWidth;
+  const start = layout.slider.circleWidth / 2;
+  slider.travel = travel;
+  slider.start = start;
+
+  // const y = -layout.slide.circleWidth / 2;
+  const value = makeLine(
+    shapes, new Point(0, 0), layout.slider.length, layout.slider.width,
+    colors.slider, new Transform().scale(1, 1).rotate(0).translate(0, 0),
+  );
+
+  const negValue = makeLine(
+    shapes, new Point(0, 0),
+    layout.slider.length, layout.slider.width,
+    colors.disabled, new Transform().rotate(Math.PI).scale(1, 1).translate(layout.slider.length, 0),
+  );
+  const circle = makeAnchor(shapes, layout.slider.circleWidth / 2);
+  circle.isTouchable = true;
+  circle.isMovable = true;
+  circle.move.minTransform.updateTranslation(start, 0);
+  circle.move.maxTransform.updateTranslation(start + travel, 0);
+  circle.move.bounce = false;
+  circle.color = colors.slider.slice();
+  slider.hasTouchableElements = true;
+
+  slider.add('value', value);
+  slider.add('negValue', negValue);
+  slider.add('circle', circle);
+
+  slider.set = (percent: number) => {
+    slider._circle.transform.updateTranslation(percent * travel + start, 0);
+    slider._negValue.transform.updateScale(1 - percent, 1);
+  };
+
+  return slider;
+}
+
 function makeRadiusText(shapes: Object) {
   const text = shapes.collection(layout.radiusText.position);
   text.add('text', shapes.htmlText(
@@ -359,7 +420,7 @@ function makeCircumferenceText(shapes: Object) {
   ));
   text.add('equals', shapes.htmlText(
     '=', 'id_circumference_equals', 'property_text',
-    new Point(1.05, 0), 'middle', 'left',
+    new Point(1.0, 0), 'middle', 'left',
   ));
   text.add('value', shapes.htmlText(
     '0', 'id_circumference_value', 'property_text',
@@ -432,7 +493,9 @@ class CircleCollection extends DiagramElementCollection {
     this.add('radiusText', makeRadiusText(shapes));
     this.add('diameterText', makeDiameterText(shapes));
     this.add('circumferenceText', makeCircumferenceText(shapes));
+    this.add('slider', makeSlider(shapes));
     this._movingCircle._circle.setTransformCallback = this.updateLocation.bind(this);
+    this._slider._circle.setTransformCallback = this.updateSlider.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
     this.hasTouchableElements = true;
@@ -456,6 +519,21 @@ class CircleCollection extends DiagramElementCollection {
     }
   }
 
+  updateSlider() {
+    const t = this._slider._circle.transform.t();
+    if (t) {
+      const position = t.x;
+      const percent = (position - this._slider.start) / this._slider.travel;
+      this._slider.set(percent);
+      this._movingCircle._circle.transform.updateScale(0.5 + percent, 0.5 + percent);
+      this._movingCircle._circle.updateBoundaries();
+      this._movingCircle._circle.setTransform(this._movingCircle._circle.transform);
+      const newRadius = tools.roundNum((0.5 + percent) * layout.movingCircle.radius, 2);
+      this._radiusText._value.vertices.element.innerHTML = `${newRadius.toFixed(2)}`;
+      this._diameterText._value.vertices.element.innerHTML = `${(newRadius * 2).toFixed(2)}`;
+      this._circumferenceText._value.vertices.element.innerHTML = `${(newRadius * Math.PI * 2).toFixed(2)}`;
+    }
+  }
   updateLocation() {
     const t = this._movingCircle._circle.transform.t();
     if (t) {

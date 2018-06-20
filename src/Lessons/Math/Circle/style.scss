@@ -11,6 +11,7 @@ $colors: (
   grid:             color(diagram, 'disabled', 'darker'),
   axis:             color(diagram, 'disabled'),
   push:             color(diagram, 'push'),
+  slider:           map-get($geometry_colors, reference),
 );
 
 body {

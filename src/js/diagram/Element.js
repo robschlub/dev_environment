@@ -177,7 +177,8 @@ class DiagramElement {
     freely: {                 // Moving Freely properties
       zeroVelocityThreshold: TransformLimit,  // Velocity considered 0
       deceleration: TransformLimit,           // Deceleration
-    }
+    };
+    bounce: boolean;
   };
 
   pulse: {
@@ -263,6 +264,7 @@ class DiagramElement {
         zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
         deceleration: new TransformLimit(5, 5, 5),
       },
+      bounce: true,
     };
     // this.move.freely = {
     //   zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
@@ -657,10 +659,18 @@ class DiagramElement {
           min instanceof Translation
       ) {
         if (min.x >= t.x || max.x <= t.x) {
-          v.x = -v.x * 0.5;
+          if (this.move.bounce) {
+            v.x = -v.x * 0.5;
+          } else {
+            v.x = 0;
+          }
         }
         if (min.y >= t.y || max.y <= t.y) {
-          v.y = -v.y * 0.5;
+          if (this.move.bounce) {
+            v.y = -v.y * 0.5;
+          } else {
+            v.y = 0;
+          }
         }
         next.v.order[i] = v;
       }

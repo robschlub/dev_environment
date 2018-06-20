@@ -717,7 +717,7 @@ class Diagram {
   // by the system. For example, on a touch device, a touch and drag would
   // normally scroll the screen. Typically, you would want to move the diagram
   // element and not the screen, so a true would be returned.
-  touchMoveHandler(previousClientPoint: Point, currentClientPoint: Point): boolean {
+  touchMoveHandler(previousClientPoint: Point, currentClientPoint: Point, notTouchingOk: boolean = false): boolean {
     if (this.inTransition) {
       return false;
     }
@@ -748,7 +748,7 @@ class Diagram {
       if (element !== this.elements) {
         const currentTransform = element.transform.copy();
         const currentTranslation = currentTransform.t();
-        if (currentTranslation && element.isBeingTouched(previousGLPoint)) {
+        if (currentTranslation && (element.isBeingTouched(previousGLPoint) || notTouchingOk)) {
           const newTranslation = currentTranslation.add(delta);
           currentTransform.updateTranslation(newTranslation);
           element.moved(currentTransform);
