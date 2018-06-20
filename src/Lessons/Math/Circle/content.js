@@ -246,7 +246,7 @@ class Content extends LessonContent {
         elements._grid._locationText.showAll();
         elements.updateLocation();
 
-        onClickId('id_location_text', elements.pulseMovingCircleAnchor, [elements]);
+        onClickId('id_location_text', elements.pulseAnchor, [elements]);
         onClickId('id_push', elements.pushCircle, [elements]);
         onClickId('id_loc', elements.pulseAnchor, [elements]);
       },
@@ -434,7 +434,7 @@ class Content extends LessonContent {
       setState: () => {
         circle.moveRadius();
         elements._straightCircumference.showAll();
-        elements._straightCircumference.straighten(0);
+        elements.straighten(0);
         elements._straightCircumference.transform.updateScale(1, 1);
         elements._straightCircumference.transform.updateTranslation(layout.circle.center);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
