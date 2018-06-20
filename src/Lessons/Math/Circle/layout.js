@@ -6,6 +6,7 @@ import getCssColors from '../../../js/tools/getCssColors';
 const cssColorNames = [
   'anchor',
   'radius',
+  'diameter',
   'reference',
   'latin',
   'circle',

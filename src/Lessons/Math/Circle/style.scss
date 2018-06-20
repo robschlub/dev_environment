@@ -2,7 +2,8 @@
 
 $colors: (
   anchor:           map-get($geometry_colors, anchor),
-  radius:           map-get($geometry_colors, reference),
+  radius:           map-get($geometry_colors, radius),
+  diameter:         map-get($geometry_colors, diameter),
   reference:        map-get($geometry_colors, reference),
   latin:            color(diagram, 'text-latin'),
   circle:           map-get($geometry_colors, circle),
@@ -11,7 +12,7 @@ $colors: (
   grid:             color(diagram, 'disabled', 'darker'),
   axis:             color(diagram, 'disabled'),
   push:             color(diagram, 'push'),
-  slider:           map-get($geometry_colors, reference),
+  slider:           map-get($geometry_colors, radius),
 );
 
 body {
@@ -37,11 +38,14 @@ body {
 
 #id_radius_text,
 #id_radius_equals,
-#id_radius_value,
+#id_radius_value {
+  color: map-get($colors, radius);
+}
+
 #id_diameter_text,
 #id_diameter_equals,
-#id_diameter_value, {
-  color: map-get($colors, radius);
+#id_diameter_value {
+  color: map-get($colors, diameter);
 }
 
 #id_circumference_text,

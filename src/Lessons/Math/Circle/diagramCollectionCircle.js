@@ -89,14 +89,14 @@ function makeDiameter(shapes: Object) {
     'radius1',
     makeLine(
       shapes, new Point(0, 0), layout.circle.radius, layout.linewidth,
-      colors.radius, new Transform().rotate(0).translate(0, 0),
+      colors.diameter, new Transform().rotate(0).translate(0, 0),
     ),
   );
   diameter.add(
     'radius2',
     makeLine(
       shapes, new Point(0, 0), layout.circle.radius, layout.linewidth,
-      colors.radius, new Transform().rotate(Math.PI).translate(0, 0),
+      colors.diameter, new Transform().rotate(Math.PI).translate(0, 0),
     ),
   );
   diameter.isTouchable = true;
@@ -209,7 +209,7 @@ type StraightCircumferenceType = {
 
 function makeStraightCircumference(shapes: Object) {
   const color = colors.circle;
-  const centerY = layout.circle.radius;
+  // const centerY = layout.circle.radius;
   const rightLine = makeLine(
     shapes, new Point(0, layout.linewidth / 2), layout.circle.radius * Math.PI, layout.linewidth,
     color, new Transform().scale(1, 1).rotate(0).translate(0, -layout.circle.radius),
@@ -789,6 +789,26 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._circumference.color = colors.circle.slice();
   }
 
+  toggleRadius() {
+    if (this._circle._radius.isShown) {
+      this._circle._radius.hide();
+    } else {
+      this._circle._diameter.hideAll();
+      this._circle._radius.show();
+      this.pulseRadius();
+    }
+    this.diagram.animateNextFrame();
+  }
+  toggleDiameter() {
+    if (this._circle._diameter.isShown) {
+      this._circle._diameter.hideAll();
+    } else {
+      this._circle._radius.hide();
+      this._circle._diameter.showAll();
+      this.pulseDiameter();
+    }
+    this.diagram.animateNextFrame();
+  }
   // greyColors() {
   //   this._circle._radius.color = colors.disabled.slice();
   //   this._circle._anchor.color = colors.disabled.slice();

@@ -341,7 +341,7 @@ class Content extends LessonContent {
         _across: highlightWord('across', '', 'english'),
         _width: highlightWord('width', '', 'english'),
         _measure: highlightWord('measure', '', 'english'),
-        _diameter: actionWord('diameter', 'id_diameter', colors.radius),
+        _diameter: actionWord('diameter', 'id_diameter', colors.diameter),
       },
       setState: () => {
         // elements.greyColors();
@@ -365,7 +365,7 @@ class Content extends LessonContent {
         <p>
         `,
       modifiers: {
-        _diameter: actionWord('diameter', 'id_diameter', colors.radius),
+        _diameter: actionWord('diameter', 'id_diameter', colors.diameter),
         _center: actionWord('center', 'id_center', colors.anchor),
       },
       setState: () => {
@@ -492,6 +492,9 @@ class Content extends LessonContent {
         elements._straightCircumference.showAll();
         // elements._straightCircumference.straighten(0);
         onClickId('id_circumference_text', elements.straightenCircumference, [elements]);
+        onClickId('id_radius_text', elements.toggleRadius, [elements]);
+        onClickId('id_diameter_text', elements.toggleDiameter, [elements]);
+        onClickId('id_location_text', elements.pulseAnchor, [elements]);
       },
       showOnly: [
         circle,
