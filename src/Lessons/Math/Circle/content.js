@@ -159,24 +159,25 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => centerV(`
         <p>
-          Again, if we were naming the |_properties| today, their names would likely be more |_intuitive|.
+          Similar to the word circle, when properties were first studied they were given names that used words from every day language.
         </p>
         <p>
-          In the past, the properties were named after objects or actions that were related to the property.
+          Many property names we use today come from their ancient roots.
         </p>
         <p>
-          However, our names come from the names in past times, and while they had a more intuitive meaning at the time, today they are often less obj.
+          However, as language has changed considerably in that time, these property names are less intuitive, and often just have to be remembered.
         </p>
         `),
-      modifiers: {
-        _properties: highlightWord('properties', '', colors.diagram.text.keyword),
-      },
+      // modifiers: {
+      //   _properties: highlightWord('properties', '', colors.diagram.text.keyword),
+      //   _intuitive: highlightWord('intuitive', '', colors.diagram.text.keyword),
+      // },
     });
     this.addSection({
       title: 'Center',
       setContent: () => `
         <p>
-          One property is the |_anchor|, which is normally called the |_center_point|.
+          The first property we will consider is the |_anchor|, which is normally called the |_center_point|.
         </p>
         <p>
           The word |_center| comes from the |_Latin| word |_centrum| which means |_middle|. 
@@ -257,7 +258,7 @@ class Content extends LessonContent {
           Another property is the length of the |_line|, which we call |_radius|.
         </p>
         <p>
-          |_radius2| comes from the |_Latin| word |_radiusLatin| which means the spoke of a chariot wheel. 
+          |_radius2| comes from the |_Latin| word |_radiusLatin| which means the |_spoke_of_a_chariot_wheel|. 
         </p>
         `,
       modifiers: {
@@ -266,6 +267,7 @@ class Content extends LessonContent {
         _line: actionWord('line', 'id_line', colors.radius),
         _radiusLatin: highlightWord('radius', '', 'latin'),
         _Latin: highlightWord('Latin', '', 'latin'),
+        _spoke_of_a_chariot_wheel: highlightWord('spoke of a chariot wheel', '', 'english'),
       },
       setState: () => {
         // elements.greyColors();
@@ -287,13 +289,15 @@ class Content extends LessonContent {
           The |_radius| describes the circle's size and is any line between the |_center| and the |_edge|.
         </p>
         <p>
-          The circle's width can be thought of as two radius lengths.
+          The circle's |_width| can be thought of as |_two_radius_lengths|.
         </p>
         `,
       modifiers: {
         _radius: actionWord('radius', 'id_radius', colors.radius),
         _center: actionWord('center', 'id_center', colors.anchor),
         _edge: actionWord('edge', 'id_edge', colors.circle),
+        _width: highlightWord('width', '', 'english'),
+        _two_radius_lengths: highlightWord('two radius lengths', '', 'english'),
       },
       setState: () => {
         // elements.greyColors();
@@ -313,10 +317,9 @@ class Content extends LessonContent {
       title: 'Diameter',
       setContent: () => `
         <p>
-          The ancient Greeks described the |_width| of the circle as |_diametros| - from their words |_dia| (|_across|) and |_metros| (|_measure|).
-        </p>
+          There is another name for the |_width| of a circle: |_diameter|.
         <p>
-          Our word comes from this, and is |_diameter|. 
+          In ancient Greek word |_diametros| was used, which itself came from their words |_dia| (|_across|) and |_metros| (|_measure|).
         </p>
         `,
       modifiers: {
@@ -423,30 +426,50 @@ class Content extends LessonContent {
       ],
     });
     this.addSection({
+      setContent: () => centerV(`
+        <p>
+          So, if we were discovering the circle today, we might have called it a |_ring|, with properties |_middle|, |_wheel_spoke|, |_width|, and |_carry_around|.
+        </p>
+        <p>
+          This would make it easier for people learning about it today.
+        </p>
+        <p>
+          However, as it was studied a long time ago, it is called a |_circle|, with properties |_center|, |_radius|, |_diameter| and |_circumference|.
+        </p>
+        `),
+      modifiers: {
+        _length: highlightWord('length', '', 'english'),
+        _wheel_spoke: highlightWord('wheel spoke', '', 'english'),
+        _width: highlightWord('width', '', 'english'),
+        _ring: highlightWord('ring', '', 'english'),
+        _carry_around: highlightWord('carry-around', '', 'english'),
+        _middle: highlightWord('middle', '', 'english'),
+        _center: highlightWord('center', '', 'english'),
+        _radius: highlightWord('radius', '', 'english'),
+        _circle: highlightWord('circle', '', 'english'),
+        _diameter: highlightWord('diameter', '', 'english'),
+        _circumference: highlightWord('circumference', '', 'english'),
+      },
+    });
+    this.addSection({
+      title: 'Summary',
       setContent: () => `
         <p>
-          So, if we were discovering the circle today, we might have called it a ring, with properties spoke, width, and carry-around.
+          Change the |_properties| to see how the |_circle| changes.
         </p>
         `,
       modifiers: {
-        _length: highlightWord('length', '', 'english'),
-        _edge: highlightWord('edge', '', 'english'),
-        _circum: highlightWord('circum', '', 'latin'),
-        _ferre: highlightWord('ferre', '', 'latin'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _circumferentia: highlightWord('circumferentia', '', 'latin'),
-        _carry: highlightWord('carry', '', 'english'),
-        _around: highlightWord('around', '', 'english'),
-        _circumference: actionWord('circumference', 'id_straight', colors.circle),
+        _properties: highlightWord('properties', '', 'english'),
+        _circle: highlightWord('circle', '', 'english'),
       },
       setState: () => {
-        elements._straightCircumference.showAll();
-        elements._straightCircumference.straighten(0);
-        onClickId('id_straight', elements.straightenCircumference, [elements]);
+        elements._movingCircle.showAll();
+        // elements._straightCircumference.showAll();
+        // elements._straightCircumference.straighten(0);
+        // onClickId('id_straight', elements.straightenCircumference, [elements]);
       },
       showOnly: [
-        circle,
-        elements._straightCircumference,
+        elements._movingCircle,
       ],
     });
   }

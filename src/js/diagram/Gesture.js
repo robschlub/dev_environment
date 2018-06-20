@@ -83,6 +83,7 @@ class Gesture {
       }
       this.previousPoint = point;
     }
+    event.preventDefault();
   }
 
   touchStartHandler(event: TouchEvent) {

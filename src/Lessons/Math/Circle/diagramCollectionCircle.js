@@ -317,6 +317,11 @@ function makeStraightCircumference(shapes: Object) {
   return circumference;
 }
 
+// makeRadiusText()
+// makePropertyStats(shapes: Object) {
+//    makeRadiusText(shapes)
+// }
+
 export type CircleCollectionType = {
   _circle: circleCollectionType;
   _ball: DiagramElementPrimative;
