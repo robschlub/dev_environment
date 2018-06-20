@@ -35,18 +35,19 @@ export default function lessonLayout() {
     anchorPoints: 100,
 
     locationText: {
-      top: new Point(1.05, -1.4),
+      bottom: new Point(1.05, -1.4),
+      top: new Point(-2.4, 0.8),
     },
 
     radiusText: {
-      position: new Point(1.05, -1.3),
+      position: new Point(-2.4, 1.1),
     },
 
     diameterText: {
-      position: new Point(1.05, -1.5),
+      position: new Point(-2.4, 0.9),
     },
     circumferenceText: {
-      position: new Point(1.05, -1.1),
+      position: new Point(-2.4, 0.7),
     },
 
     circle: {
@@ -60,7 +61,7 @@ export default function lessonLayout() {
     },
 
     slider: {
-      position: new Point(-2.5, 1.4),
+      position: new Point(-2.4, 1.3),
       length: 1.5,
       width: 0.05,
       circleWidth: 0.2,

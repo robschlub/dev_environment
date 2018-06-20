@@ -238,6 +238,7 @@ class Content extends LessonContent {
         _location: actionWord('location', 'id_loc', colors.anchor),
       },
       setState: () => {
+        elements._movingCircle._locationText.transform.updateTranslation(layout.locationText.bottom);
         elements._movingCircle.showAll();
         elements._movingCircle._circle.transform.updateTranslation(0, 0);
         elements.updateLocation();
@@ -388,6 +389,8 @@ class Content extends LessonContent {
       setState: () => {
         elements._straightCircumference.showAll();
         elements._straightCircumference.straighten(0);
+        elements._straightCircumference.transform.updateScale(1, 1);
+        elements._straightCircumference.transform.updateTranslation(layout.circle.center);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
       },
       showOnly: [
@@ -418,6 +421,8 @@ class Content extends LessonContent {
       setState: () => {
         elements._straightCircumference.showAll();
         elements._straightCircumference.straighten(0);
+        elements._straightCircumference.transform.updateScale(1, 1);
+        elements._straightCircumference.transform.updateTranslation(layout.circle.center);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
       },
       showOnly: [
@@ -463,6 +468,7 @@ class Content extends LessonContent {
         _circle: highlightWord('circle', '', 'english'),
       },
       setState: () => {
+        elements._movingCircle._locationText.transform.updateTranslation(layout.locationText.top);
         elements._movingCircle.showAll();
         elements._radiusText.showAll();
         elements._diameterText.showAll();
@@ -470,9 +476,10 @@ class Content extends LessonContent {
         elements._slider.showAll();
         elements._slider.set(0.5);
         elements.updateSlider();
-        // elements._straightCircumference.showAll();
+        elements._straightCircumference.straighten(0);
+        elements._straightCircumference.showAll();
         // elements._straightCircumference.straighten(0);
-        // onClickId('id_straight', elements.straightenCircumference, [elements]);
+        onClickId('id_circumference_text', elements.straightenCircumference, [elements]);
       },
       showOnly: [
         elements._radiusText,
@@ -480,6 +487,7 @@ class Content extends LessonContent {
         elements._diameterText,
         elements._circumferenceText,
         elements._slider,
+        elements._straightCircumference,
       ],
     });
   }

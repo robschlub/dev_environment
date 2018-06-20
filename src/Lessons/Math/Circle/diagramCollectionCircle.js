@@ -158,7 +158,7 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
 
 function makeGridLabels(shapes: Object) {
   const axes = shapes.axes(
-    5, 3, new Rect(-2.5, -1.5, 5, 3), 0, 0, 0.5, 0.5,
+    5, 3, new Rect(0, 0, 5, 3), 0, 0, 0.5, 0.5,
     0.1, true, colors.axis, colors.grid, new Point(-2.5, -1.5),
   );
   return axes;
@@ -174,7 +174,7 @@ type locationTextType = {
 } & DiagramElementCollection;
 
 function makeLocationText(shapes: Object) {
-  const locationText = shapes.collection(layout.locationText.top);
+  const locationText = shapes.collection(layout.locationText.bottom);
   locationText.add('text', shapes.htmlText(
     'Location', 'id_location_text', 'action_word',
     new Point(0, 0), 'middle', 'left',
@@ -223,7 +223,7 @@ function makeMovingCircle(shapes: Object) {
   const circleColor = colors.circle.slice();
   circleColor[3] = 0.1;
   const touchCircle = shapes.polygonFilled(
-    layout.circlePoints, layout.movingCircle.radius + layout.linewidth / 2, 0,
+    layout.circlePoints, layout.movingCircle.radius, 0,
     layout.circlePoints, circleColor, t.copy(),
   );
   const circumference = makeCircumference(shapes, layout.movingCircle.radius);
@@ -463,6 +463,7 @@ class CircleCollection extends DiagramElementCollection {
     shapeTurn: number,
     rotation: number,
     straightening: boolean,
+    scaledRadius: number,
   };
   numSections: Array<number>;
   diagram: Diagram;
@@ -474,6 +475,7 @@ class CircleCollection extends DiagramElementCollection {
       shapeTurn: 0,
       rotation: 0,
       straightening: false,
+      scaledRadius: layout.movingCircle.radius,
     };
     this.numSections = [12, 100];
 
@@ -489,11 +491,11 @@ class CircleCollection extends DiagramElementCollection {
     this.add('ringShape', makeCircleShape(shapes, layout.ring.radius));
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('movingCircle', makeMovingCircle(shapes));
-    this.add('straightCircumference', makeStraightCircumference(shapes));
     this.add('radiusText', makeRadiusText(shapes));
     this.add('diameterText', makeDiameterText(shapes));
     this.add('circumferenceText', makeCircumferenceText(shapes));
     this.add('slider', makeSlider(shapes));
+    this.add('straightCircumference', makeStraightCircumference(shapes));
     this._movingCircle._circle.setTransformCallback = this.updateLocation.bind(this);
     this._slider._circle.setTransformCallback = this.updateSlider.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
@@ -525,13 +527,21 @@ class CircleCollection extends DiagramElementCollection {
       const position = t.x;
       const percent = (position - this._slider.start) / this._slider.travel;
       this._slider.set(percent);
-      this._movingCircle._circle.transform.updateScale(0.5 + percent, 0.5 + percent);
+      const scale = 0.3 + percent * 2.5;
+      this._movingCircle._circle.transform.updateScale(scale, scale);
       this._movingCircle._circle.updateBoundaries();
       this._movingCircle._circle.setTransform(this._movingCircle._circle.transform);
-      const newRadius = tools.roundNum((0.5 + percent) * layout.movingCircle.radius, 2);
+      const newRadius = tools.roundNum(scale * layout.movingCircle.radius, 2);
       this._radiusText._value.vertices.element.innerHTML = `${newRadius.toFixed(2)}`;
       this._diameterText._value.vertices.element.innerHTML = `${(newRadius * 2).toFixed(2)}`;
       this._circumferenceText._value.vertices.element.innerHTML = `${(newRadius * Math.PI * 2).toFixed(2)}`;
+
+      this.varState.scaledRadius = scale * layout.movingCircle.radius;
+      const p = this._movingCircle._circle.transform.t();
+      this._straightCircumference.transform.updateScale(scale * layout.movingCircle.radius / layout.radius, scale * layout.movingCircle.radius / layout.radius);
+      if (p) {
+        this._straightCircumference.transform.updateTranslation(p.x, p.y - this.varState.scaledRadius + layout.movingCircle.center.y);
+      }
     }
   }
   updateLocation() {
@@ -539,10 +549,12 @@ class CircleCollection extends DiagramElementCollection {
     if (t) {
       // $FlowFixMe
       this._movingCircle._locationText._x.vertices.element.innerHTML =
-        `${tools.roundNum(t.x, 1).toFixed(1)}`;
+        `${tools.roundNum(t.x + 2.5, 1).toFixed(1)}`;
       // $FlowFixMe
       this._movingCircle._locationText._y.vertices.element.innerHTML =
-        `${tools.roundNum(t.y - layout.movingCircle.center.y, 1).toFixed(1)}`;
+        `${tools.roundNum(t.y + 1.2 - layout.movingCircle.center.y, 1).toFixed(1)}`;
+
+      this._straightCircumference.transform.updateTranslation(t.x, t.y - this.varState.scaledRadius + layout.movingCircle.center.y);
     }
   }
 
