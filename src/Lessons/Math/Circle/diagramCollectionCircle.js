@@ -212,28 +212,28 @@ function makeStraightCircumference(shapes: Object) {
   const centerY = layout.circle.radius;
   const rightLine = makeLine(
     shapes, new Point(0, layout.linewidth / 2), layout.circle.radius * Math.PI, layout.linewidth,
-    color, new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    color, new Transform().scale(1, 1).rotate(0).translate(0, -layout.circle.radius),
   );
   const leftLine = makeLine(
     shapes, new Point(0, -layout.linewidth / 2), layout.circle.radius * Math.PI, layout.linewidth,
-    color, new Transform().scale(1, 1).rotate(Math.PI).translate(0, 0),
+    color, new Transform().scale(1, 1).rotate(Math.PI).translate(0, -layout.circle.radius),
   );
   const leftArc = shapes.polygon(
     layout.circlePoints, layout.circle.radius, layout.linewidth, 0, -1,
     layout.circlePoints / 2, color, new Transform()
       .scale(1, 1).rotate(-Math.PI / 2)
-      .translate(0, layout.circle.radius),
+      .translate(0, 0),
   );
   const rightArc = shapes.polygon(
     layout.circlePoints, layout.circle.radius, layout.linewidth, 0, 1,
     layout.circlePoints / 2, color, new Transform()
       .scale(1, 1).rotate(-Math.PI / 2)
-      .translate(0, layout.circle.radius),
+      .translate(0, 0),
   );
   const circumference = shapes.collection(new Transform().scale(1, 1)
-    .rotate(0).translate(layout.circle.center.x, layout.circle.center.y - layout.circle.radius));
+    .rotate(0).translate(layout.circle.center.x, layout.circle.center.y));
   const dullCircle = makeCircumference(shapes, layout.circle.radius);
-  dullCircle.transform.updateTranslation(0, centerY);
+  // dullCircle.transform.updateTranslation(0, centerY);
   dullCircle.color = colors.grid;
   circumference.add('dullCircle', dullCircle);
   circumference.add('leftLine', leftLine);
@@ -572,7 +572,7 @@ class CircleCollection extends DiagramElementCollection {
         this._straightCircumference.transform.updateScale(scale, scale);
         this._straightCircumference.transform.updateTranslation(
           p.x,
-          p.y - this.varState.scaledRadius,
+          p.y,
         );
       }
     }
@@ -589,7 +589,7 @@ class CircleCollection extends DiagramElementCollection {
 
       this._straightCircumference.transform.updateTranslation(
         t.x,
-        t.y - this.varState.scaledRadius,
+        t.y,
       );
     }
   }
@@ -616,7 +616,7 @@ class CircleCollection extends DiagramElementCollection {
     const leftLine = this._straightCircumference._leftLine;
     const rightArc = this._straightCircumference._rightArc;
     const leftArc = this._straightCircumference._leftArc;
-    const centerY = layout.circle.radius;
+    const centerY = 0;
 
     rightLine.transform.updateScale(percent, 1);
     leftLine.transform.updateScale(percent, 1);
@@ -804,19 +804,26 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  resetColors() {
-    this._circle._radius.color = colors.radius.slice();
-    this._circle._anchor.color = colors.anchor.slice();
-    this._circle._arc.color = colors.circle.slice();
-    this._circle._circumference.color = colors.circle.slice();
+  resetCircle() {
+    this._circle.transform.updateTranslation(layout.circle.center);
+    this._circle.transform.updateScale(1, 1);
+    this._straightCircumference.transform.updateTranslation(layout.circle.center);
+    this._straightCircumference.transform.updateScale(1, 1);
+    this._circle.moveRadius();
   }
+  // resetColors() {
+  //   this._circle._radius.color = colors.radius.slice();
+  //   this._circle._anchor.color = colors.anchor.slice();
+  //   this._circle._arc.color = colors.circle.slice();
+  //   this._circle._circumference.color = colors.circle.slice();
+  // }
 
-  greyColors() {
-    this._circle._radius.color = colors.disabled.slice();
-    this._circle._anchor.color = colors.disabled.slice();
-    this._circle._arc.color = colors.disabled.slice();
-    this._circle._circumference.color = colors.disabled.slice();
-  }
+  // greyColors() {
+  //   this._circle._radius.color = colors.disabled.slice();
+  //   this._circle._anchor.color = colors.disabled.slice();
+  //   this._circle._arc.color = colors.disabled.slice();
+  //   this._circle._circumference.color = colors.disabled.slice();
+  // }
 }
 
 export default CircleCollection;

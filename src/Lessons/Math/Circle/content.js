@@ -133,7 +133,7 @@ class Content extends LessonContent {
         circle._arc,
       ],
       setState: () => {
-        circle.moveRadius();
+        elements.resetCircle();
         elements.resetColors();
         circle.transform.updateTranslation(layout.circle.center);
         circle._radius.transform.updateRotation(0.001);
@@ -194,7 +194,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
-        circle.moveRadius();
+        elements.resetCircle();
         circle._anchor.color = colors.anchor;
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -218,7 +218,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
-        circle.moveRadius();
+        elements.resetCircle();
         circle._anchor.color = colors.anchor;
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -280,8 +280,9 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
-        circle.moveRadius();
+        elements.resetCircle();
         circle._radius.color = colors.radius;
+
         onClickId('id_line', elements.pulseRadius, [elements]);
         onClickId('id_radius', elements.pulseRadius, [elements]);
         onClickId('id_radius2', elements.pulseRadius, [elements]);
@@ -311,7 +312,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
-        circle.moveRadius();
+        elements.resetCircle();
         circle._radius.color = colors.radius;
         onClickId('id_radius', elements.pulseRadius, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -344,7 +345,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
-        circle.moveRadius();
+        elements.resetCircle();
         circle._diameter.showAll();
         // circle._radius.color = colors.radius;
         onClickId('id_diameter', elements.pulseDiameter, [elements]);
@@ -369,8 +370,9 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
-        circle.moveRadius();
+        elements.resetCircle();
         circle._diameter.showAll();
+        console.log(circle.transform.t())
         // circle._radius.color = colors.radius;
         onClickId('id_diameter', elements.pulseDiameter, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -399,11 +401,11 @@ class Content extends LessonContent {
         _straightened: actionWord('straightened', 'id_straight', colors.circle),
       },
       setState: () => {
-        circle.moveRadius();
+        elements.resetCircle();
         elements._straightCircumference.showAll();
         elements.straighten(0);
-        elements._straightCircumference.transform.updateScale(1, 1);
-        elements._straightCircumference.transform.updateTranslation(layout.circle.center);
+        // elements._straightCircumference.transform.updateScale(1, 1);
+        // elements._straightCircumference.transform.updateTranslation(layout.circle.center);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
       },
       showOnly: [
@@ -432,15 +434,15 @@ class Content extends LessonContent {
         _circumference: actionWord('circumference', 'id_straight', colors.circle),
       },
       setState: () => {
-        circle.moveRadius();
+        elements.resetCircle();
         elements._straightCircumference.showAll();
         elements.straighten(0);
-        elements._straightCircumference.transform.updateScale(1, 1);
-        elements._straightCircumference.transform.updateTranslation(layout.circle.center);
+        // elements._straightCircumference.transform.updateScale(1, 1);
+        // elements._straightCircumference.transform.updateTranslation(layout.circle.center);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
       },
       showOnly: [
-        circle,
+        // circle,
         elements._straightCircumference,
       ],
     });

@@ -51,7 +51,7 @@ export default function lessonLayout() {
     },
 
     circle: {
-      center: new Point(0, -0.7),
+      center: new Point(0, -0.8),
       radius: 0.8,
     },
 
