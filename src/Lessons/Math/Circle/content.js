@@ -486,11 +486,23 @@ class Content extends LessonContent {
         circle.moveLocation();
         elements._grid._locationText.transform.updateTranslation(layout.locationText.top);
         elements._grid.showAll();
-        elements._grid._slider.set(0.5);
+        elements._grid._slider.set(0.8);
         elements.updateSlider();
         elements.straighten(0);
         elements._straightCircumference.showAll();
-        // elements._straightCircumference.straighten(0);
+        circle.showAll();
+
+        if (Math.abs(circle._diameter.transform.r()
+          - circle._radius.transform.r()) < Math.PI / 10) {
+          if (circle._radius.transform.r() > Math.PI) {
+            circle._radius.transform
+              .updateRotation(circle._radius.transform.r() - Math.PI / 3);
+          } else {
+            circle._radius.transform
+              .updateRotation(circle._radius.transform.r() + Math.PI / 3);
+          }
+        }
+
         onClickId('id_circumference_text', elements.straightenCircumference, [elements]);
         onClickId('id_radius_text', elements.toggleRadius, [elements]);
         onClickId('id_diameter_text', elements.toggleDiameter, [elements]);
@@ -498,8 +510,8 @@ class Content extends LessonContent {
       },
       showOnly: [
         circle,
-        circle._anchor,
-        circle._circumference,
+        // circle._anchor,
+        // circle._circumference,
         elements._grid,
         elements._straightCircumference,
       ],

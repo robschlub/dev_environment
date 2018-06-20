@@ -46,12 +46,16 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.indexOf(d) >= 0) {
       this.elements._circle._diameter.stopBeingMoved();
       this.elements._circle._diameter.startMovingFreely();
-    } else if (this.beingMovedElements.indexOf(rad) >= 0) {
+    }
+    if (this.beingMovedElements.indexOf(rad) >= 0) {
       this.elements._circle._radius.stopBeingMoved();
       this.elements._circle._radius.startMovingFreely();
-    } else {
+    }
+
+    if (this.beingMovedElements.indexOf(rad) === -1 && this.beingMovedElements.indexOf(d) === -1) {
       super.touchUpHandler();
     }
+
     this.beingMovedElements = [];
   }
 
@@ -62,11 +66,6 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-
-    // if (this.elements._circle.movable === 'location') {
-    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
-    // }
-
     const rad = this.elements._circle._radius;
     const d = this.elements._circle._diameter;
     if (rad.state.isBeingMoved
@@ -92,9 +91,9 @@ class LessonDiagram extends Diagram {
       );
       const diffAngle = minAngleDiff(previousAngle, currentAngle);
 
-      let transform = this.elements._circle._radius.transform.copy();
-      if (d.state.isBeingMoved) {
-        transform = this.elements._circle._diameter.transform.copy();
+      let transform = this.elements._circle._diameter.transform.copy();
+      if (rad.state.isBeingMoved) {
+        transform = this.elements._circle._radius.transform.copy();
       }
       const rot = transform.r();
       if (rot != null) {
@@ -104,20 +103,6 @@ class LessonDiagram extends Diagram {
         } else {
           this.elements._circle._diameter.moved(transform.copy());
         }
-        // if (rad.state.isBeingMoved) {
-        //   this.elements._circle._radius.moved(transform.copy());
-        // }
-        // if (d.state.isBeingMoved) {
-        //   transform.updateRotation(rot - diffAngle + Math.PI / 2);
-        //   d.moved(transform);
-        // }
-        // if (this.beingMovedElements.indexOf(this.elements._circle._radius) >= 0) {
-        //   transform.updateRotation(rot - diffAngle);
-        //   this.elements._circle._radius.moved(transform.copy());
-        // } else {
-        //   transform.updateRotation(rot - diffAngle + Math.PI / 2);
-        //   this.elements._circle._diameter._radius2.moved(transform);
-        // }
       }
     } else {
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);

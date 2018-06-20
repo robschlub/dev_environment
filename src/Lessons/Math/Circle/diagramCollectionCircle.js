@@ -541,13 +541,14 @@ class CircleCollection extends DiagramElementCollection {
       const dimensionScale = layout.grid.range.width / layout.grid.width;
       const newRadius = tools.roundNum(scale * layout.circle.radius * dimensionScale, 2);
       const radiusText = newRadius.toFixed(2);
+      const diameterText = (newRadius * 2).toFixed(2);
       const circumferenceText = tools.roundNum(newRadius * 2 * Math.PI, 2).toFixed(2);
       // $FlowFixMe
       this._grid._radiusText._value.vertices.element.innerHTML =
         `${radiusText}`;
       // $FlowFixMe
       this._grid._diameterText._value.vertices.element.innerHTML =
-        `${radiusText}`;
+        `${diameterText}`;
       // $FlowFixMe
       this._grid._circumferenceText._value.vertices.element.innerHTML =
         `${circumferenceText}`;
@@ -808,7 +809,7 @@ class CircleCollection extends DiagramElementCollection {
     if (this._circle._radius.isShown) {
       this._circle._radius.hide();
     } else {
-      this._circle._diameter.hideAll();
+      // this._circle._diameter.hideAll();
       this._circle._radius.show();
       this.pulseRadius();
     }
@@ -818,7 +819,7 @@ class CircleCollection extends DiagramElementCollection {
     if (this._circle._diameter.isShown) {
       this._circle._diameter.hideAll();
     } else {
-      this._circle._radius.hide();
+      // this._circle._radius.hide();
       this._circle._diameter.showAll();
       this.pulseDiameter();
     }
