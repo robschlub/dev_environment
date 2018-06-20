@@ -230,48 +230,19 @@ function makeStraightCircumference(shapes: Object) {
       .scale(1, 1).rotate(-Math.PI / 2)
       .translate(0, 0),
   );
+
+  const dullCircle = makeCircumference(shapes, layout.circle.radius);
+  dullCircle.color = colors.grid;
+
   const circumference = shapes.collection(new Transform().scale(1, 1)
     .rotate(0).translate(layout.circle.center.x, layout.circle.center.y));
-  const dullCircle = makeCircumference(shapes, layout.circle.radius);
-  // dullCircle.transform.updateTranslation(0, centerY);
-  dullCircle.color = colors.grid;
+
   circumference.add('dullCircle', dullCircle);
   circumference.add('leftLine', leftLine);
   circumference.add('rightLine', rightLine);
   circumference.add('leftArc', leftArc);
   circumference.add('rightArc', rightArc);
 
-  // circumference.straighten = (percent: number) => {
-  //   rightLine.transform.updateScale(percent, 1);
-  //   leftLine.transform.updateScale(percent, 1);
-
-  //   rightArc.transform.updateTranslation(
-  //     percent * layout.circle.radius * Math.PI,
-  //     centerY,
-  //   );
-  //   rightArc.angleToDraw = (1 - percent) * Math.PI;
-  //   if (rightArc.angleToDraw === Math.PI) {
-  //     rightArc.angleToDraw = -1;
-  //   }
-
-  //   leftArc.transform.updateTranslation(
-  //     -percent * layout.circle.radius * Math.PI,
-  //     centerY,
-  //   );
-  //   leftArc.angleToDraw = (1 - percent) * Math.PI;
-  //   if (leftArc.angleToDraw === Math.PI) {
-  //     leftArc.angleToDraw = -1;
-  //   }
-
-  //   let arcWidth = layout.circle.radius;
-  //   if (percent > 0.5) {
-  //     arcWidth = Math.cos(percent * Math.PI) * layout.circle.radius;
-  //   }
-  //   const width = percent * layout.circle.radius * Math.PI + arcWidth;
-  // };
-  // circumference.bend = (percent: number) => {
-  //   circumference.straighten(1 - percent);
-  // };
   return circumference;
 }
 
@@ -811,12 +782,12 @@ class CircleCollection extends DiagramElementCollection {
     this._straightCircumference.transform.updateScale(1, 1);
     this._circle.moveRadius();
   }
-  // resetColors() {
-  //   this._circle._radius.color = colors.radius.slice();
-  //   this._circle._anchor.color = colors.anchor.slice();
-  //   this._circle._arc.color = colors.circle.slice();
-  //   this._circle._circumference.color = colors.circle.slice();
-  // }
+  resetColors() {
+    this._circle._radius.color = colors.radius.slice();
+    this._circle._anchor.color = colors.anchor.slice();
+    this._circle._arc.color = colors.circle.slice();
+    this._circle._circumference.color = colors.circle.slice();
+  }
 
   // greyColors() {
   //   this._circle._radius.color = colors.disabled.slice();

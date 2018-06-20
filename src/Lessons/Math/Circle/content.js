@@ -372,7 +372,6 @@ class Content extends LessonContent {
         // elements.greyColors();
         elements.resetCircle();
         circle._diameter.showAll();
-        console.log(circle.transform.t())
         // circle._radius.color = colors.radius;
         onClickId('id_diameter', elements.pulseDiameter, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
