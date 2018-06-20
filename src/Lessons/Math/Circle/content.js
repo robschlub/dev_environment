@@ -297,7 +297,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => `
         <p>
-          The |_radius| describes the circle's size and is any line between the |_center| and the |_edge|.
+          The |_radius| describes the circle's size and is |_any_line| between the |_center| and the |_edge|.
         </p>
         <p>
           The circle's |_width| can be thought of as |_two_radius_lengths|.
@@ -309,6 +309,7 @@ class Content extends LessonContent {
         _edge: actionWord('edge', 'id_edge', colors.circle),
         _width: highlightWord('width', '', 'english'),
         _two_radius_lengths: highlightWord('two radius lengths', '', 'english'),
+        _any_line: actionWord('any line', 'id_spin', colors.radius),
       },
       setState: () => {
         // elements.greyColors();
@@ -317,6 +318,7 @@ class Content extends LessonContent {
         onClickId('id_radius', elements.pulseRadius, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
         onClickId('id_edge', elements.pulseCircumference, [elements]);
+        onClickId('id_spin', elements.spinRadius, [elements]);
       },
       showOnly: [
         circle,
@@ -361,12 +363,13 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => `
         <p>
-          The |_diameter| can also be thought of as any line that runs between two points on the circle and through the |_center|.
+          The |_diameter| can also be thought of as |_any_line| that runs between two points on the circle and through the |_center|.
         <p>
         `,
       modifiers: {
         _diameter: actionWord('diameter', 'id_diameter', colors.diameter),
         _center: actionWord('center', 'id_center', colors.anchor),
+        _any_line: actionWord('any line', 'id_spin', colors.diameter),
       },
       setState: () => {
         // elements.greyColors();
@@ -375,6 +378,7 @@ class Content extends LessonContent {
         // circle._radius.color = colors.radius;
         onClickId('id_diameter', elements.pulseDiameter, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
+        onClickId('id_spin', elements.spinDiameter, [elements]);
       },
       showOnly: [
         circle,

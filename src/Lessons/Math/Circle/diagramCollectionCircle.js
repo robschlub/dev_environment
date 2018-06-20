@@ -374,13 +374,10 @@ type locationTextType = {
 function makeLocationText(shapes: Object) {
   const locationText = shapes.collection(layout.locationText.bottom);
   locationText.add('text', shapes.htmlText(
-    'Location', 'id_location_text', 'action_word',
+    'Center', 'id_location_text', 'action_word',
     new Point(0, 0), 'middle', 'left',
   ));
-  // locationText.add('equals', shapes.htmlText(
-  //   '=', 'id_location_equals', '',
-  //   new Point(0.65, 0), 'middle', 'left',
-  // ));
+
   locationText.add('x', shapes.htmlText(
     '0', 'id_location_x', '',
     new Point(1.3, 0), 'middle', 'right',
@@ -745,6 +742,18 @@ class CircleCollection extends DiagramElementCollection {
       }
     }
     this._circle._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
+    this.diagram.animateNextFrame();
+  }
+
+  spinDiameter() {
+    const angle = this._circle._diameter.transform.r() + Math.PI;
+    this._circle._diameter.animateRotationTo(angle, 1, 2, tools.easeinout, () => {});
+    this.diagram.animateNextFrame();
+  }
+
+  spinRadius() {
+    const angle = this._circle._radius.transform.r() + Math.PI * 2;
+    this._circle._radius.animateRotationTo(angle, 1, 4, tools.easeinout, () => {});
     this.diagram.animateNextFrame();
   }
 
