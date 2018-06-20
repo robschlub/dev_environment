@@ -160,19 +160,23 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => centerV(`
         <p>
-          Similar to the word circle, when properties were first studied they were given names that used words from every day language.
+          Similar to the word |_circle|, when properties were first studied they were given names that used words from every day language.
         </p>
         <p>
-          Many property names we use today come from their ancient roots.
+          Many property names we use today come from their |_historical_roots|.
         </p>
         <p>
-          However, as language has changed considerably in that time, these property names are less intuitive, and often just have to be remembered.
+          However, as language has changed considerably in that time, these property names are |_less_intuitive|, and often just have to be |_remembered|.
         </p>
         `),
-      // modifiers: {
+      modifiers: {
+        _circle: highlightWord('circle', '', 'english'),
+        _historical_roots: highlightWord('historical roots', '', 'english'),
+        _less_intuitive: highlightWord('less intuitive', '', 'english'),
+        _remembered: highlightWord('remembered', '', 'english'),
       //   _properties: highlightWord('properties', '', colors.diagram.text.keyword),
       //   _intuitive: highlightWord('intuitive', '', colors.diagram.text.keyword),
-      // },
+      },
     });
     this.addSection({
       title: 'Center',
@@ -211,6 +215,9 @@ class Content extends LessonContent {
         <p>
           The |_center| property can be used to describe the |_location| of the circle.
         </p>
+        <p>
+          It is the only point on the circle that can be identified independent of rotation.
+        </p>
         `,
       modifiers: {
         _center: actionWord('center', 'id_center', colors.anchor),
@@ -241,10 +248,15 @@ class Content extends LessonContent {
         _location: actionWord('location', 'id_loc', colors.anchor),
       },
       setState: () => {
-        circle.moveLocation();
+        circle.isMovable = true;
+        elements._grid._locationText
+          .transform.updateTranslation(layout.locationText.bottom.position);
+        elements._grid._locationText._text
+          .transform.updateTranslation(layout.locationText.bottom.offset, 0);
         elements._grid._linesAndLabels.showAll();
         elements._grid._locationText.showAll();
         elements.updateLocation();
+        circle.updateBoundaries();
 
         onClickId('id_location_text', elements.pulseAnchor, [elements]);
         onClickId('id_push', elements.pushCircle, [elements]);
@@ -487,8 +499,11 @@ class Content extends LessonContent {
         _circle: highlightWord('circle', '', 'english'),
       },
       setState: () => {
-        circle.moveLocation();
-        elements._grid._locationText.transform.updateTranslation(layout.locationText.top);
+        circle.isMovable = true;
+        elements._grid._locationText
+          .transform.updateTranslation(layout.locationText.top.position);
+        elements._grid._locationText._text
+          .transform.updateTranslation(layout.locationText.top.offset, 0);
         elements._grid.showAll();
         elements._grid._slider.set(0.8);
         elements.updateSlider();

@@ -142,9 +142,6 @@ type circleCollectionType = {
   } & DiagramElementCollection;
   updateBoundaries: (?number) => void;
   scaleTo: (number) => void;
-  moveRadius: () => void;
-  movable: 'radius' | 'location';
-  moveLocation: () => void;
 } & DiagramElementCollection;
 
 
@@ -185,15 +182,15 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
     circle.transform.updateScale(number, number);
   };
 
-  circle.moveLocation = () => {
-    circle.movable = 'location';
-  };
+  // circle.moveLocation = () => {
+  //   circle.movable = 'location';
+  // };
 
-  circle.moveRadius = () => {
-    circle.movable = 'radius';
-  };
+  // circle.moveRadius = () => {
+  //   circle.movable = 'radius';
+  // };
 
-  circle.moveRadius();
+  // circle.moveRadius();
 
   return circle;
 }
@@ -305,7 +302,7 @@ type propertyTextType = {
 function makeRadiusText(shapes: Object) {
   const text = shapes.collection(layout.radiusText.position);
   text.add('text', shapes.htmlText(
-    'Radius', 'id_radius_text', 'property_text',
+    'Radius:', 'id_radius_text', 'property_text',
     new Point(0, 0), 'middle', 'left',
   ));
   // text.add('equals', shapes.htmlText(
@@ -322,7 +319,7 @@ function makeRadiusText(shapes: Object) {
 function makeDiameterText(shapes: Object) {
   const text = shapes.collection(layout.diameterText.position);
   text.add('text', shapes.htmlText(
-    'Diameter', 'id_diameter_text', 'property_text',
+    'Diameter:', 'id_diameter_text', 'property_text',
     new Point(0, 0), 'middle', 'left',
   ));
   // text.add('equals', shapes.htmlText(
@@ -339,7 +336,7 @@ function makeDiameterText(shapes: Object) {
 function makeCircumferenceText(shapes: Object) {
   const text = shapes.collection(layout.circumferenceText.position);
   text.add('text', shapes.htmlText(
-    'Circumference', 'id_circumference_text', 'property_text',
+    'Circumference:', 'id_circumference_text', 'property_text',
     new Point(0, 0), 'middle', 'left',
   ));
   // text.add('equals', shapes.htmlText(
@@ -372,9 +369,9 @@ type locationTextType = {
 } & DiagramElementCollection;
 
 function makeLocationText(shapes: Object) {
-  const locationText = shapes.collection(layout.locationText.bottom);
+  const locationText = shapes.collection(layout.locationText.bottom.position);
   locationText.add('text', shapes.htmlText(
-    'Center', 'id_location_text', 'action_word',
+    'Center:', 'id_location_text', 'action_word',
     new Point(0, 0), 'middle', 'left',
   ));
 
@@ -805,7 +802,7 @@ class CircleCollection extends DiagramElementCollection {
     this._circle.transform.updateScale(1, 1);
     this._straightCircumference.transform.updateTranslation(layout.circle.center);
     this._straightCircumference.transform.updateScale(1, 1);
-    this._circle.moveRadius();
+    this._circle.isMovable = false;
   }
   resetColors() {
     this._circle._radius.color = colors.radius.slice();

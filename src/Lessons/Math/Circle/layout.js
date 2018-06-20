@@ -36,8 +36,14 @@ export default function lessonLayout() {
     anchorPoints: 100,
 
     locationText: {
-      bottom: new Point(1.05, -1.4),
-      top: new Point(-2.65, 0.4),
+      bottom: {
+        position: new Point(0.7, -1.5),
+        offset: 0.5,
+      },
+      top: {
+        position: new Point(-2.65, 0.4),
+        offset: 0,
+      },
     },
 
     radiusText: {
@@ -59,9 +65,9 @@ export default function lessonLayout() {
     grid: {
       range: new Rect(0, 0, 11, 6),
       step: 1,
-      width: 5.5,
-      height: 3,
-      position: new Point(-2.75, -1.8),
+      width: 5.5 * 0.95,
+      height: 3 * 0.95,
+      position: new Point(-2.75, -1.8 * 0.95),
     },
 
     slider: {
