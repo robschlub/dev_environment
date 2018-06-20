@@ -140,7 +140,7 @@ type circleCollectionType = {
     _radius2: DiagramElementPrimative;
     _radius1: DiagramElementPrimative;
   } & DiagramElementCollection;
-  updateBoundaries: () => void;
+  updateBoundaries: (?number) => void;
   scaleTo: (number) => void;
   moveRadius: () => void;
   movable: 'radius' | 'location';
@@ -162,17 +162,20 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   circle.touchInBoundingRect = true;
   circle.hasTouchableElements = true;
 
-  circle.updateBoundaries = () => {
+  circle.updateBoundaries = (minWidth: number = 0) => {
     const s = circle.transform.s();
     if (s) {
       const percent = s.x;
       circle.move.minTransform.updateTranslation(
-        layout.circle.bounds.left + layout.circle.radius * percent,
-        layout.circle.bounds.bottom + layout.circle.radius * percent,
+        layout.grid.position.x
+          + Math.max(layout.circle.radius * percent, minWidth),
+        layout.grid.position.y + layout.circle.radius * percent,
       );
       circle.move.maxTransform.updateTranslation(
-        layout.circle.bounds.right - layout.circle.radius * percent,
-        layout.circle.bounds.top - layout.circle.radius * percent,
+        layout.grid.position.x + layout.grid.width
+          - Math.max(layout.circle.radius * percent, minWidth),
+        layout.grid.position.y + layout.grid.height
+          - layout.circle.radius * percent,
       );
     }
   };
@@ -195,74 +198,6 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   return circle;
 }
 
-// type movingCircleType = {
-//   _grid: DiagramElementCollection;
-//   _circle: {
-//     _touchCircle: DiagramElementPrimative;
-//     _circumference: DiagramElementPrimative;
-//     _anchor: DiagramElementPrimative;
-//   } & DiagramElementCollection;
-//   _locationText: locationTextType;
-// } & DiagramElementCollection;
-
-// function makeMovingCircle(shapes: Object) {
-//   const circleSpace = shapes.collection(new Transform().scale(1, 1).translate(
-//     layout.movingCircle.center.x,
-//     layout.movingCircle.center.y,
-//   ));
-
-//   const t = new Transform().scale(1, 1).rotate(0).translate(0, 0);
-//   const movingCircle = shapes.collection(t.copy());
-
-//   const circleColor = colors.circle.slice();
-//   circleColor[3] = 0.1;
-//   const touchCircle = shapes.polygonFilled(
-//     layout.circlePoints, layout.movingCircle.radius, 0,
-//     layout.circlePoints, circleColor, t.copy(),
-//   );
-//   const circumference = makeCircumference(shapes, layout.movingCircle.radius);
-//   circumference.transform = t.copy();
-//   movingCircle.add('touchCircle', touchCircle);
-//   movingCircle.add('circumference', circumference);
-//   movingCircle.add('anchor', makeAnchor(shapes, layout.linewidth));
-//   movingCircle._anchor.transform = t.copy();
-//   movingCircle.isTouchable = true;
-//   movingCircle.isMovable = true;
-//   movingCircle.touchInBoundingRect = true;
-//   // movingCircle.move.minTransform.updateTranslation(
-//   //   -2.5 + layout.movingCircle.radius,
-//   //   -1.5 + layout.movingCircle.radius,
-//   // );
-//   // movingCircle.move.maxTransform.updateTranslation(
-//   //   2.5 - layout.movingCircle.radius,
-//   //   1.5 - layout.movingCircle.radius,
-//   // );
-
-//   circleSpace.hasTouchableElements = true;
-//   circleSpace.add('grid', makeGridLabels(shapes));
-//   circleSpace.add('circle', movingCircle);
-//   circleSpace.add('locationText', makeLocationText(shapes));
-
-//   movingCircle.updateBoundaries = () => {
-//     const s = movingCircle.transform.s();
-//     if (s) {
-//       const percent = s.x;
-//       movingCircle.move.minTransform.updateTranslation(
-//         -2.5 + layout.movingCircle.radius * percent,
-//         -1.5 + layout.movingCircle.radius * percent,
-//       );
-//       movingCircle.move.maxTransform.updateTranslation(
-//         2.5 - layout.movingCircle.radius * percent,
-//         1.5 - layout.movingCircle.radius * percent,
-//       );
-//     }
-//   };
-//   movingCircle.updateBoundaries();
-
-//   return circleSpace;
-// }
-
-
 type StraightCircumferenceType = {
   _leftLine: DiagramElementPrimative;
   _rightLine: DiagramElementPrimative;
@@ -270,7 +205,8 @@ type StraightCircumferenceType = {
   _rightArc: DiagramElementPrimative;
   straighten: (number) => void;
   bend: (number) => void;
-}
+} & DiagramElementCollection;
+
 function makeStraightCircumference(shapes: Object) {
   const color = colors.circle;
   const centerY = layout.circle.radius;
@@ -305,31 +241,37 @@ function makeStraightCircumference(shapes: Object) {
   circumference.add('leftArc', leftArc);
   circumference.add('rightArc', rightArc);
 
-  circumference.straighten = (percent: number) => {
-    rightLine.transform.updateScale(percent, 1);
-    leftLine.transform.updateScale(percent, 1);
+  // circumference.straighten = (percent: number) => {
+  //   rightLine.transform.updateScale(percent, 1);
+  //   leftLine.transform.updateScale(percent, 1);
 
-    rightArc.transform.updateTranslation(
-      percent * layout.circle.radius * Math.PI,
-      centerY,
-    );
-    rightArc.angleToDraw = (1 - percent) * Math.PI;
-    if (rightArc.angleToDraw === Math.PI) {
-      rightArc.angleToDraw = -1;
-    }
+  //   rightArc.transform.updateTranslation(
+  //     percent * layout.circle.radius * Math.PI,
+  //     centerY,
+  //   );
+  //   rightArc.angleToDraw = (1 - percent) * Math.PI;
+  //   if (rightArc.angleToDraw === Math.PI) {
+  //     rightArc.angleToDraw = -1;
+  //   }
 
-    leftArc.transform.updateTranslation(
-      -percent * layout.circle.radius * Math.PI,
-      centerY,
-    );
-    leftArc.angleToDraw = (1 - percent) * Math.PI;
-    if (leftArc.angleToDraw === Math.PI) {
-      leftArc.angleToDraw = -1;
-    }
-  };
-  circumference.bend = (percent: number) => {
-    circumference.straighten(1 - percent);
-  };
+  //   leftArc.transform.updateTranslation(
+  //     -percent * layout.circle.radius * Math.PI,
+  //     centerY,
+  //   );
+  //   leftArc.angleToDraw = (1 - percent) * Math.PI;
+  //   if (leftArc.angleToDraw === Math.PI) {
+  //     leftArc.angleToDraw = -1;
+  //   }
+
+  //   let arcWidth = layout.circle.radius;
+  //   if (percent > 0.5) {
+  //     arcWidth = Math.cos(percent * Math.PI) * layout.circle.radius;
+  //   }
+  //   const width = percent * layout.circle.radius * Math.PI + arcWidth;
+  // };
+  // circumference.bend = (percent: number) => {
+  //   circumference.straighten(1 - percent);
+  // };
   return circumference;
 }
 
@@ -442,8 +384,9 @@ function makeCircumferenceText(shapes: Object) {
 
 function makeGridLinesAndLabels(shapes: Object) {
   const axes = shapes.axes(
-    5, 3, new Rect(0, 0, 5, 3), 0, 0, 0.5, 0.5,
-    0.1, true, colors.axis, colors.grid, new Point(-2.5, -1.5),
+    layout.grid.width, layout.grid.height, layout.grid.range,
+    0, 0, layout.grid.step, layout.grid.step,
+    0.1, true, colors.axis, colors.grid, layout.grid.position,
   );
   return axes;
 }
@@ -540,6 +483,7 @@ class CircleCollection extends DiagramElementCollection {
     rotation: number,
     straightening: boolean,
     scaledRadius: number,
+    percentStraight: number,
   };
   numSections: Array<number>;
   diagram: Diagram;
@@ -551,7 +495,8 @@ class CircleCollection extends DiagramElementCollection {
       shapeTurn: 0,
       rotation: 0,
       straightening: false,
-      scaledRadius: layout.movingCircle.radius,
+      scaledRadius: layout.circle.radius,
+      percentStraight: 0,
     };
     this.numSections = [12, 100];
 
@@ -565,17 +510,17 @@ class CircleCollection extends DiagramElementCollection {
     this.add('moonShape', makeCircleShape(shapes, layout.moon.radius));
     this.add('ballShape', makeCircleShape(shapes, layout.ball.radius));
     this.add('ringShape', makeCircleShape(shapes, layout.ring.radius));
-    this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
+
     // this.add('movingCircle', makeMovingCircle(shapes));
     // this.add('radiusText', makeRadiusText(shapes));
     // this.add('diameterText', makeDiameterText(shapes));
     // this.add('circumferenceText', makeCircumferenceText(shapes));
     this.add('grid', makeGrid(shapes));
+    this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('straightCircumference', makeStraightCircumference(shapes));
     this._circle.setTransformCallback = this.updateLocation.bind(this);
     this._grid._slider._circle.setTransformCallback = this.updateSlider.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
-
     this.hasTouchableElements = true;
     this._circle.hasTouchableElements = true;
   }
@@ -603,20 +548,35 @@ class CircleCollection extends DiagramElementCollection {
       const position = t.x;
       const percent = (position - this._grid._slider.start) / this._grid._slider.travel;
       this._grid._slider.set(percent);
-      const scale = 0.5 + percent * 1;
+      const scale = 0.3 + percent * 0.7;
       this._circle.scaleTo(scale);
-      this._circle.updateBoundaries();
-      this._circle.setTransform(this._circle.transform);
-      const newRadius = tools.roundNum(scale * layout.movingCircle.radius, 2);
-      this._grid._radiusText._value.vertices.element.innerHTML = `${newRadius.toFixed(2)}`;
-      this._grid._diameterText._value.vertices.element.innerHTML = `${(newRadius * 2).toFixed(2)}`;
-      this._grid._circumferenceText._value.vertices.element.innerHTML = `${(newRadius * Math.PI * 2).toFixed(2)}`;
 
-      this.varState.scaledRadius = scale * layout.movingCircle.radius;
+      const width = this.widthOfCircumference();
+      this._circle.updateBoundaries(width);
+      this._circle.setTransform(this._circle.transform);
+
+      const dimensionScale = layout.grid.range.width / layout.grid.width;
+      const newRadius = tools.roundNum(scale * layout.circle.radius * dimensionScale, 2);
+      const radiusText = newRadius.toFixed(2);
+      const circumferenceText = tools.roundNum(newRadius * 2 * Math.PI, 2).toFixed(2);
+      // $FlowFixMe
+      this._grid._radiusText._value.vertices.element.innerHTML =
+        `${radiusText}`;
+      // $FlowFixMe
+      this._grid._diameterText._value.vertices.element.innerHTML =
+        `${radiusText}`;
+      // $FlowFixMe
+      this._grid._circumferenceText._value.vertices.element.innerHTML =
+        `${circumferenceText}`;
+
+      this.varState.scaledRadius = scale * layout.circle.radius;
       const p = this._circle.transform.t();
-      this._straightCircumference.transform.updateScale(scale, scale);
       if (p) {
-        this._straightCircumference.transform.updateTranslation(p.x, p.y - this.varState.scaledRadius + layout.movingCircle.center.y);
+        this._straightCircumference.transform.updateScale(scale, scale);
+        this._straightCircumference.transform.updateTranslation(
+          p.x,
+          p.y - this.varState.scaledRadius,
+        );
       }
     }
   }
@@ -625,12 +585,15 @@ class CircleCollection extends DiagramElementCollection {
     if (t) {
       // $FlowFixMe
       this._grid._locationText._x.vertices.element.innerHTML =
-        `${tools.roundNum(t.x + 2.5, 1).toFixed(1)}`;
+        `${tools.roundNum((t.x - layout.grid.position.x) / layout.grid.width * layout.grid.range.width, 1).toFixed(1)}`;
       // $FlowFixMe
       this._grid._locationText._y.vertices.element.innerHTML =
-        `${tools.roundNum(t.y + 1.2 - layout.movingCircle.center.y, 1).toFixed(1)}`;
+        `${tools.roundNum((t.y - layout.grid.position.y) / layout.grid.height * layout.grid.range.height, 1).toFixed(1)}`;
 
-      this._straightCircumference.transform.updateTranslation(t.x, t.y - this.varState.scaledRadius + layout.movingCircle.center.y);
+      this._straightCircumference.transform.updateTranslation(
+        t.x,
+        t.y - this.varState.scaledRadius,
+      );
     }
   }
 
@@ -642,13 +605,66 @@ class CircleCollection extends DiagramElementCollection {
     }
 
     if (!this.varState.straightening) {
-      this.animateCustomTo(this._straightCircumference.straighten, 2, currentPercent);
+      this.animateCustomTo(this.straighten.bind(this), 2, currentPercent);
       this.varState.straightening = true;
     } else {
-      this.animateCustomTo(this._straightCircumference.bend, 2, 1 - currentPercent);
+      this.animateCustomTo(this.bend.bind(this), 2, 1 - currentPercent);
       this.varState.straightening = false;
     }
     this.diagram.animateNextFrame();
+  }
+
+  straighten(percent: number) {
+    const rightLine = this._straightCircumference._rightLine;
+    const leftLine = this._straightCircumference._leftLine;
+    const rightArc = this._straightCircumference._rightArc;
+    const leftArc = this._straightCircumference._leftArc;
+    const centerY = layout.circle.radius;
+
+    rightLine.transform.updateScale(percent, 1);
+    leftLine.transform.updateScale(percent, 1);
+
+    rightArc.transform.updateTranslation(
+      percent * layout.circle.radius * Math.PI,
+      centerY,
+    );
+    rightArc.angleToDraw = (1 - percent) * Math.PI;
+    if (rightArc.angleToDraw === Math.PI) {
+      rightArc.angleToDraw = -1;
+    }
+
+    leftArc.transform.updateTranslation(
+      -percent * layout.circle.radius * Math.PI,
+      centerY,
+    );
+    leftArc.angleToDraw = (1 - percent) * Math.PI;
+    if (leftArc.angleToDraw === Math.PI) {
+      leftArc.angleToDraw = -1;
+    }
+
+    this.varState.percentStraight = percent;
+
+    const width = this.widthOfCircumference();
+    this._circle.updateBoundaries(width);
+    this._circle.setTransform(this._circle.transform);
+  }
+
+  widthOfCircumference() {
+    const percent = this.varState.percentStraight;
+    let arcWidth = layout.circle.radius;
+    if (percent > 0.5) {
+      arcWidth = Math.sin(percent * Math.PI) * layout.circle.radius;
+    }
+    const scale = this._circle.transform.s();
+    if (scale) {
+      const width = (percent * layout.circle.radius * Math.PI + arcWidth) * scale.x;
+      return width;
+    }
+    return layout.circle.radius;
+  }
+
+  bend(percent: number) {
+    this.straighten(1 - percent);
   }
 
   bendCircumference() {

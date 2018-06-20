@@ -433,7 +433,8 @@ function shapes(diagram: Diagram) {
     const xy = collection(transform);
     if (showGrid) {
       const gridLines = grid(
-        new Rect(0, 0, width, height), stepX, stepY,
+        new Rect(0, 0, width, height),
+        stepX * width / limits.width, stepY * height / limits.height,
         gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
       );
       xy.add('grid', gridLines);

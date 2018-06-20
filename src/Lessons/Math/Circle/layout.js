@@ -36,39 +36,39 @@ export default function lessonLayout() {
 
     locationText: {
       bottom: new Point(1.05, -1.4),
-      top: new Point(-2.4, 0.8),
+      top: new Point(-2.65, 0.4),
     },
 
     radiusText: {
-      position: new Point(-2.4, 1.1),
+      position: new Point(-2.65, 1),
     },
 
     diameterText: {
-      position: new Point(-2.4, 0.9),
+      position: new Point(-2.65, 0.8),
     },
     circumferenceText: {
-      position: new Point(-2.4, 0.7),
+      position: new Point(-2.65, 0.6),
     },
 
     circle: {
       center: new Point(0, -0.7),
-      // right: new Point(1, -0.7),
       radius: 0.8,
-      bounds: new Rect(-2.5, -1.5, 5, 3),
     },
 
-    movingCircle: {
-      center: new Point(0, -0.3),
-      radius: 0.4,
+    grid: {
+      range: new Rect(0, 0, 11, 6),
+      step: 1,
+      width: 5.5,
+      height: 3,
+      position: new Point(-2.75, -1.8),
     },
 
     slider: {
-      position: new Point(-2.4, 1.3),
-      length: 1.5,
+      position: new Point(-1, 1.35),
+      length: 2,
       width: 0.05,
       circleWidth: 0.2,
     },
-
 
     moon: {
       radius: 0.6,
