@@ -29,3 +29,29 @@ body {
 #id_location_text {
   // color: map-get($colors, anchor);
 }
+
+.property_text {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+}
+
+#id_radius_text,
+#id_radius_equals,
+#id_radius_value,
+#id_diameter_text,
+#id_diameter_equals,
+#id_diameter_value, {
+  color: map-get($colors, radius);
+}
+
+#id_circumference_text,
+#id_circumference_equals,
+#id_circumference_value {
+  color: map-get($colors, circle);
+}
+
+#id_radius_text,
+#id_diameter_text,
+#id_circumference_text {
+  font-weight: bold;
+  cursor: pointer;
+}

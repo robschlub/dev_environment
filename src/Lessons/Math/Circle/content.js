@@ -464,12 +464,18 @@ class Content extends LessonContent {
       },
       setState: () => {
         elements._movingCircle.showAll();
+        elements._radiusText.showAll();
+        elements._diameterText.showAll();
+        elements._circumferenceText.showAll();
         // elements._straightCircumference.showAll();
         // elements._straightCircumference.straighten(0);
         // onClickId('id_straight', elements.straightenCircumference, [elements]);
       },
       showOnly: [
+        elements._radiusText,
         elements._movingCircle,
+        elements._diameterText,
+        elements._circumferenceText,
       ],
     });
   }

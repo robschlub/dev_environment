@@ -37,6 +37,17 @@ export default function lessonLayout() {
       top: new Point(1.05, -1.4),
     },
 
+    radiusText: {
+      position: new Point(1.05, -1.3),
+    },
+
+    diameterText: {
+      position: new Point(1.05, -1.5),
+    },
+    circumferenceText: {
+      position: new Point(1.05, -1.1),
+    },
+
     circle: {
       center: new Point(0, -0.7),
       right: new Point(1, -0.7),

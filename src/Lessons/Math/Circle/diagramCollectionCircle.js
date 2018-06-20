@@ -317,10 +317,57 @@ function makeStraightCircumference(shapes: Object) {
   return circumference;
 }
 
-// makeRadiusText()
-// makePropertyStats(shapes: Object) {
-//    makeRadiusText(shapes)
-// }
+function makeRadiusText(shapes: Object) {
+  const text = shapes.collection(layout.radiusText.position);
+  text.add('text', shapes.htmlText(
+    'Radius', 'id_radius_text', 'property_text',
+    new Point(0, 0), 'middle', 'left',
+  ));
+  text.add('equals', shapes.htmlText(
+    '=', 'id_radius_equals', 'property_text',
+    new Point(0.65, 0), 'middle', 'left',
+  ));
+  text.add('value', shapes.htmlText(
+    '0', 'id_radius_value', 'property_text',
+    new Point(1.4, 0), 'middle', 'right',
+  ));
+  return text;
+}
+
+function makeDiameterText(shapes: Object) {
+  const text = shapes.collection(layout.diameterText.position);
+  text.add('text', shapes.htmlText(
+    'Diameter', 'id_diameter_text', 'property_text',
+    new Point(0, 0), 'middle', 'left',
+  ));
+  text.add('equals', shapes.htmlText(
+    '=', 'id_diameter_equals', 'property_text',
+    new Point(0.65, 0), 'middle', 'left',
+  ));
+  text.add('value', shapes.htmlText(
+    '0', 'id_diameter_value', 'property_text',
+    new Point(1.4, 0), 'middle', 'right',
+  ));
+  return text;
+}
+
+function makeCircumferenceText(shapes: Object) {
+  const text = shapes.collection(layout.circumferenceText.position);
+  text.add('text', shapes.htmlText(
+    'Circumference', 'id_circumference_text', 'property_text',
+    new Point(0, 0), 'middle', 'left',
+  ));
+  text.add('equals', shapes.htmlText(
+    '=', 'id_circumference_equals', 'property_text',
+    new Point(1.05, 0), 'middle', 'left',
+  ));
+  text.add('value', shapes.htmlText(
+    '0', 'id_circumference_value', 'property_text',
+    new Point(1.4, 0), 'middle', 'right',
+  ));
+  return text;
+}
+
 
 export type CircleCollectionType = {
   _circle: circleCollectionType;
@@ -382,6 +429,9 @@ class CircleCollection extends DiagramElementCollection {
     this.add('circleShape', makeCircleShape(shapes, layout.wheel.radius));
     this.add('movingCircle', makeMovingCircle(shapes));
     this.add('straightCircumference', makeStraightCircumference(shapes));
+    this.add('radiusText', makeRadiusText(shapes));
+    this.add('diameterText', makeDiameterText(shapes));
+    this.add('circumferenceText', makeCircumferenceText(shapes));
     this._movingCircle._circle.setTransformCallback = this.updateLocation.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
