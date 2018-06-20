@@ -56,13 +56,15 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    // if (this.elements._circle.movable === 'location') {
-    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
-    // }
 
-    // if (this.beingMovedElements.indexOf(this.elements._slider._circle) >= 0) {
+    // if (this.beingMovedElements.indexOf(this.elements._grid._slider._circle) >= 0) {
     //   return super.touchMoveHandler(previousClientPoint, currentClientPoint, true);
     // }
+    if (this.elements._circle.movable === 'location') {
+      return super.touchMoveHandler(previousClientPoint, currentClientPoint);
+    }
+
+
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
       center = new Point(0, 0);

@@ -29,7 +29,7 @@ export default function lessonLayout() {
     linewidth: 0.03,
 
     // ------ Circle Colleciton --------
-    radius: 0.9,
+    // radius: 0.9,
     wheelSize: 0.7,
     circlePoints: 400,
     anchorPoints: 100,
@@ -53,7 +53,7 @@ export default function lessonLayout() {
     circle: {
       center: new Point(0, -0.7),
       // right: new Point(1, -0.7),
-      radius: 0.9,
+      radius: 0.8,
       bounds: new Rect(-2.5, -1.5, 5, 3),
     },
 

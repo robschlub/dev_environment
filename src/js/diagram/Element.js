@@ -179,6 +179,7 @@ class DiagramElement {
       deceleration: TransformLimit,           // Deceleration
     };
     bounce: boolean;
+    canBeMovedAfterLoosingTouch: boolean;
   };
 
   pulse: {
@@ -249,7 +250,6 @@ class DiagramElement {
     this.animationPlan = [];
     this.colorAnimationPlan = [];
     this.customAnimationPlan = [];
-
     this.diagramLimits = diagramLimits;
     //   min: new Point(-1, -1),
     //   max: new Point(1, 1),
@@ -265,6 +265,7 @@ class DiagramElement {
         deceleration: new TransformLimit(5, 5, 5),
       },
       bounce: true,
+      canBeMovedAfterLoosingTouch: false,
     };
     // this.move.freely = {
     //   zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
@@ -1615,7 +1616,12 @@ class DiagramElementCollection extends DiagramElement {
     this.show();
     for (let i = 0, j = listToShow.length; i < j; i += 1) {
       const element = listToShow[i];
-      element.show();
+      if (element) {
+        element.show();
+      } else {
+        console.log("Asdfasdf");
+        throw `element does not exist at position ${i}`;
+      }
     }
   }
 

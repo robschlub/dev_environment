@@ -705,7 +705,6 @@ class Diagram {
     // console.log(this.beingMovedElements)
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
-      console.log(element.name, element.state.movement.velocity)
       element.stopBeingMoved();
       element.startMovingFreely();
     }
@@ -721,7 +720,7 @@ class Diagram {
   // by the system. For example, on a touch device, a touch and drag would
   // normally scroll the screen. Typically, you would want to move the diagram
   // element and not the screen, so a true would be returned.
-  touchMoveHandler(previousClientPoint: Point, currentClientPoint: Point, notTouchingOk: boolean = false): boolean {
+  touchMoveHandler(previousClientPoint: Point, currentClientPoint: Point): boolean {
     if (this.inTransition) {
       return false;
     }
@@ -752,7 +751,9 @@ class Diagram {
       if (element !== this.elements) {
         const currentTransform = element.transform.copy();
         const currentTranslation = currentTransform.t();
-        if (currentTranslation && (element.isBeingTouched(previousGLPoint) || notTouchingOk)) {
+        if (currentTranslation
+          && (element.isBeingTouched(previousGLPoint)
+              || element.move.canBeMovedAfterLoosingTouch)) {
           const newTranslation = currentTranslation.add(delta);
           currentTransform.updateTranslation(newTranslation);
           element.moved(currentTransform);

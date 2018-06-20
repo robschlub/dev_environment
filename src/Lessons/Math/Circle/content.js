@@ -233,7 +233,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => `
         <p>
-          |_move| the circle around and observe how it's |_location| follows the center point.
+          |_move| the circle around and observe how the center point is its |_location|.
         </p>
         `,
       modifiers: {
@@ -242,20 +242,21 @@ class Content extends LessonContent {
       },
       setState: () => {
         circle.moveLocation();
-        elements._movingCircle._locationText.transform.updateTranslation(layout.locationText.bottom);
-        elements._movingCircle.showAll();
-        elements._movingCircle._circle.transform.updateTranslation(0, 0);
+        elements._grid._linesAndLabels.showAll();
+        elements._grid._locationText.showAll();
         elements.updateLocation();
 
         onClickId('id_location_text', elements.pulseMovingCircleAnchor, [elements]);
-        onClickId('id_push', elements.pushMovingCircle, [elements]);
-        onClickId('id_loc', elements.pulseMovingCircleAnchor, [elements]);
+        onClickId('id_push', elements.pushCircle, [elements]);
+        onClickId('id_loc', elements.pulseAnchor, [elements]);
       },
       showOnly: [
-        elements._movingCircle,
         circle,
         circle._anchor,
         circle._circumference,
+        elements._grid,
+        elements._grid._linesAndLabels,
+        elements._grid._locationText,
       ],
     });
 
@@ -279,6 +280,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
+        circle.moveRadius();
         circle._radius.color = colors.radius;
         onClickId('id_line', elements.pulseRadius, [elements]);
         onClickId('id_radius', elements.pulseRadius, [elements]);
@@ -309,6 +311,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
+        circle.moveRadius();
         circle._radius.color = colors.radius;
         onClickId('id_radius', elements.pulseRadius, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -341,6 +344,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
+        circle.moveRadius();
         circle._diameter.showAll();
         // circle._radius.color = colors.radius;
         onClickId('id_diameter', elements.pulseDiameter, [elements]);
@@ -365,6 +369,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
+        circle.moveRadius();
         circle._diameter.showAll();
         // circle._radius.color = colors.radius;
         onClickId('id_diameter', elements.pulseDiameter, [elements]);
@@ -394,6 +399,7 @@ class Content extends LessonContent {
         _straightened: actionWord('straightened', 'id_straight', colors.circle),
       },
       setState: () => {
+        circle.moveRadius();
         elements._straightCircumference.showAll();
         elements._straightCircumference.straighten(0);
         elements._straightCircumference.transform.updateScale(1, 1);
@@ -426,6 +432,7 @@ class Content extends LessonContent {
         _circumference: actionWord('circumference', 'id_straight', colors.circle),
       },
       setState: () => {
+        circle.moveRadius();
         elements._straightCircumference.showAll();
         elements._straightCircumference.straighten(0);
         elements._straightCircumference.transform.updateScale(1, 1);
@@ -475,13 +482,10 @@ class Content extends LessonContent {
         _circle: highlightWord('circle', '', 'english'),
       },
       setState: () => {
-        elements._movingCircle._locationText.transform.updateTranslation(layout.locationText.top);
-        elements._movingCircle.showAll();
-        elements._radiusText.showAll();
-        elements._diameterText.showAll();
-        elements._circumferenceText.showAll();
-        elements._slider.showAll();
-        elements._slider.set(0.5);
+        circle.moveLocation();
+        elements._grid._locationText.transform.updateTranslation(layout.locationText.top);
+        elements._grid.showAll();
+        elements._grid._slider.set(0.5);
         elements.updateSlider();
         elements._straightCircumference.straighten(0);
         elements._straightCircumference.showAll();
@@ -489,11 +493,10 @@ class Content extends LessonContent {
         onClickId('id_circumference_text', elements.straightenCircumference, [elements]);
       },
       showOnly: [
-        elements._radiusText,
-        elements._movingCircle,
-        elements._diameterText,
-        elements._circumferenceText,
-        elements._slider,
+        circle,
+        circle._anchor,
+        circle._circumference,
+        elements._grid,
         elements._straightCircumference,
       ],
     });
