@@ -701,12 +701,16 @@ class Diagram {
   // happens, the default behavior is to let any elements being moved to move
   // freely until they decelerate to 0.
   touchUpHandler() {
+    // console.log("before", this.elements._circle.transform.t())
+    // console.log(this.beingMovedElements)
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
+      console.log(element.name, element.state.movement.velocity)
       element.stopBeingMoved();
       element.startMovingFreely();
     }
     this.beingMovedElements = [];
+    // console.log("after", this.elements._circle.transform.t())
   }
 
   // Handle touch/mouse move events in the canvas. These events will only be

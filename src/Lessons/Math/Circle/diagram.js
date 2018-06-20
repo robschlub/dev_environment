@@ -41,7 +41,7 @@ class LessonDiagram extends Diagram {
   }
 
   touchUpHandler() {
-    if (this.beingMovedElements.indexOf(this.elements._circle._diameter._radius2)) {
+    if (this.beingMovedElements.indexOf(this.elements._circle._diameter._radius2) >= 0 || this.elements._circle.movable === 'radius') {
       this.elements._circle._radius.stopBeingMoved();
       this.elements._circle._radius.startMovingFreely();
     }
@@ -56,13 +56,13 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    if (this.beingMovedElements.indexOf(this.elements._movingCircle._circle) >= 0) {
-      return super.touchMoveHandler(previousClientPoint, currentClientPoint);
-    }
-    if (this.beingMovedElements.indexOf(this.elements._slider._circle) >= 0) {
-      return super.touchMoveHandler(previousClientPoint, currentClientPoint, true);
-    }
+    // if (this.elements._circle.movable === 'location') {
+    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
+    // }
 
+    // if (this.beingMovedElements.indexOf(this.elements._slider._circle) >= 0) {
+    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint, true);
+    // }
     let center = this.elements._circle.transform.t();
     if (center === null || center === undefined) {
       center = new Point(0, 0);

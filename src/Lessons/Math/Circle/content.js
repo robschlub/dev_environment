@@ -133,6 +133,7 @@ class Content extends LessonContent {
         circle._arc,
       ],
       setState: () => {
+        circle.moveRadius();
         elements.resetColors();
         circle.transform.updateTranslation(layout.circle.center);
         circle._radius.transform.updateRotation(0.001);
@@ -193,6 +194,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
+        circle.moveRadius();
         circle._anchor.color = colors.anchor;
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -216,6 +218,7 @@ class Content extends LessonContent {
       },
       setState: () => {
         // elements.greyColors();
+        circle.moveRadius();
         circle._anchor.color = colors.anchor;
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
@@ -238,6 +241,7 @@ class Content extends LessonContent {
         _location: actionWord('location', 'id_loc', colors.anchor),
       },
       setState: () => {
+        circle.moveLocation();
         elements._movingCircle._locationText.transform.updateTranslation(layout.locationText.bottom);
         elements._movingCircle.showAll();
         elements._movingCircle._circle.transform.updateTranslation(0, 0);
@@ -249,6 +253,9 @@ class Content extends LessonContent {
       },
       showOnly: [
         elements._movingCircle,
+        circle,
+        circle._anchor,
+        circle._circumference,
       ],
     });
 

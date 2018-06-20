@@ -52,7 +52,9 @@ export default function lessonLayout() {
 
     circle: {
       center: new Point(0, -0.7),
-      right: new Point(1, -0.7),
+      // right: new Point(1, -0.7),
+      radius: 0.9,
+      bounds: new Rect(-2.5, -1.5, 5, 3),
     },
 
     movingCircle: {
@@ -66,6 +68,7 @@ export default function lessonLayout() {
       width: 0.05,
       circleWidth: 0.2,
     },
+
 
     moon: {
       radius: 0.6,
