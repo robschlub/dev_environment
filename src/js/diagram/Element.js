@@ -1715,24 +1715,25 @@ class DiagramElementCollection extends DiagramElement {
     if (!this.isTouchable && !this.hasTouchableElements) {
       return [];
     }
+    // console.log(this.name, 1)
     let touched = [];
     if (this.touchInBoundingRect && this.isTouchable) {
+      // console.log(this.name, 2)
       if (this.isBeingTouched(glLocation)) {
         touched.push(this);
       }
-    } else {
-      for (let i = 0; i < this.order.length; i += 1) {
-        const element = this.elements[this.order[i]];
-        if (element.isShown === true) {
-          touched = touched.concat(element.getTouched(glLocation));
-        }
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element.isShown === true) {
+        touched = touched.concat(element.getTouched(glLocation));
       }
 
       // If there is an element that is touched, then this collection should
       // also be touched.
-      if (touched.length > 0 && this.isTouchable) {
-        touched = [this].concat(touched);
-      }
+      // if (touched.length > 0 && this.isTouchable) {
+      //   touched = [this].concat(touched);
+      // }
     }
     return touched;
   }

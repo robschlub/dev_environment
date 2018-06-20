@@ -354,7 +354,7 @@ class Content extends LessonContent {
         circle,
         circle._anchor,
         circle._diameter,
-        circle._radius,
+        // circle._radius,
         circle._circumference,
       ],
     });
@@ -380,7 +380,7 @@ class Content extends LessonContent {
         circle,
         circle._anchor,
         circle._diameter,
-        circle._radius,
+        // circle._radius,
         circle._circumference,
       ],
     });

@@ -685,7 +685,6 @@ class Diagram {
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
-
     for (let i = 0; i < touchedElements.length; i += 1) {
       const element = touchedElements[i];
       if (element.isMovable) {

@@ -101,9 +101,9 @@ function makeDiameter(shapes: Object) {
   );
   diameter.isTouchable = true;
   diameter.isMovable = true;
-  diameter._radius2.isTouchable = true;
-  diameter._radius2.isMovable = true;
+  diameter.touchInBoundingRect = true;
   for (let i = 0; i < diameter._radius2.vertices.border[0].length; i += 1) {
+    diameter._radius1.vertices.border[0][i].y *= 10;
     diameter._radius2.vertices.border[0][i].y *= 10;
   }
   return diameter;
@@ -489,6 +489,7 @@ class CircleCollection extends DiagramElementCollection {
     this._circle.setTransformCallback = this.updateLocation.bind(this);
     this._grid._slider._circle.setTransformCallback = this.updateSlider.bind(this);
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
+    this._circle._diameter.setTransformCallback = this.updateDiameterRotation.bind(this);
     this.hasTouchableElements = true;
     this._circle.hasTouchableElements = true;
   }
@@ -506,6 +507,20 @@ class CircleCollection extends DiagramElementCollection {
       this.varState.rotation = r;
       this._circle._radius.transform.updateRotation(r);
       this._circle._arc.angleToDraw = r + 0.01;
+    }
+  }
+
+  updateDiameterRotation() {
+    let rotation = this._circle._diameter.transform.r();
+    if (rotation) {
+      if (rotation > Math.PI * 2) {
+        rotation -= Math.PI * 2;
+      }
+      if (rotation < 0) {
+        rotation += Math.PI * 2;
+      }
+      const r = normAngle(rotation);
+      this.varState.rotation = r;
       this._circle._diameter.transform.updateRotation(r);
     }
   }

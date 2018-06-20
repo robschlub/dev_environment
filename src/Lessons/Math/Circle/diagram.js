@@ -41,11 +41,17 @@ class LessonDiagram extends Diagram {
   }
 
   touchUpHandler() {
-    if (this.beingMovedElements.indexOf(this.elements._circle._diameter._radius2) >= 0 || this.elements._circle.movable === 'radius') {
+    const rad = this.elements._circle._radius;
+    const d = this.elements._circle._diameter;
+    if (this.beingMovedElements.indexOf(d) >= 0) {
+      this.elements._circle._diameter.stopBeingMoved();
+      this.elements._circle._diameter.startMovingFreely();
+    } else if (this.beingMovedElements.indexOf(rad) >= 0) {
       this.elements._circle._radius.stopBeingMoved();
       this.elements._circle._radius.startMovingFreely();
+    } else {
+      super.touchUpHandler();
     }
-    super.touchUpHandler();
     this.beingMovedElements = [];
   }
 
@@ -57,41 +63,65 @@ class LessonDiagram extends Diagram {
       return false;
     }
 
-    // if (this.beingMovedElements.indexOf(this.elements._grid._slider._circle) >= 0) {
-    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint, true);
+    // if (this.elements._circle.movable === 'location') {
+    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     // }
-    if (this.elements._circle.movable === 'location') {
+
+    const rad = this.elements._circle._radius;
+    const d = this.elements._circle._diameter;
+    if (rad.state.isBeingMoved
+      || d.state.isBeingMoved) {
+      let center = this.elements._circle.transform.t();
+      if (center === null || center === undefined) {
+        center = new Point(0, 0);
+      }
+      const previousPixelPoint = this.clientToPixel(previousClientPoint);
+      const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+      const previousDiagramPoint =
+        previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+      const currentDiagramPoint =
+        currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+      const currentAngle = Math.atan2(
+        currentDiagramPoint.y - center.y,
+        currentDiagramPoint.x - center.x,
+      );
+      const previousAngle = Math.atan2(
+        previousDiagramPoint.y - center.y,
+        previousDiagramPoint.x - center.x,
+      );
+      const diffAngle = minAngleDiff(previousAngle, currentAngle);
+
+      let transform = this.elements._circle._radius.transform.copy();
+      if (d.state.isBeingMoved) {
+        transform = this.elements._circle._diameter.transform.copy();
+      }
+      const rot = transform.r();
+      if (rot != null) {
+        transform.updateRotation(rot - diffAngle);
+        if (rad.state.isBeingMoved) {
+          this.elements._circle._radius.moved(transform.copy());
+        } else {
+          this.elements._circle._diameter.moved(transform.copy());
+        }
+        // if (rad.state.isBeingMoved) {
+        //   this.elements._circle._radius.moved(transform.copy());
+        // }
+        // if (d.state.isBeingMoved) {
+        //   transform.updateRotation(rot - diffAngle + Math.PI / 2);
+        //   d.moved(transform);
+        // }
+        // if (this.beingMovedElements.indexOf(this.elements._circle._radius) >= 0) {
+        //   transform.updateRotation(rot - diffAngle);
+        //   this.elements._circle._radius.moved(transform.copy());
+        // } else {
+        //   transform.updateRotation(rot - diffAngle + Math.PI / 2);
+        //   this.elements._circle._diameter._radius2.moved(transform);
+        // }
+      }
+    } else {
       return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     }
-
-
-    let center = this.elements._circle.transform.t();
-    if (center === null || center === undefined) {
-      center = new Point(0, 0);
-    }
-    const previousPixelPoint = this.clientToPixel(previousClientPoint);
-    const currentPixelPoint = this.clientToPixel(currentClientPoint);
-
-    const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentAngle = Math.atan2(
-      currentDiagramPoint.y - center.y,
-      currentDiagramPoint.x - center.x,
-    );
-    const previousAngle = Math.atan2(
-      previousDiagramPoint.y - center.y,
-      previousDiagramPoint.x - center.x,
-    );
-    const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = this.elements._circle._radius.transform.copy();
-    const rot = transform.r();
-    if (rot != null) {
-      transform.updateRotation(rot - diffAngle);
-      this.elements._circle._radius.moved(transform);
-    }
-
     this.animateNextFrame();
     return true;
   }
