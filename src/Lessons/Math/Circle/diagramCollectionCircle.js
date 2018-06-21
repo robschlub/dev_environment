@@ -302,7 +302,7 @@ type propertyTextType = {
 function makeRadiusText(shapes: Object) {
   const text = shapes.collection(layout.radiusText.position);
   text.add('text', shapes.htmlText(
-    'Radius:', 'id_radius_text', 'property_text',
+    'Radius:', 'id_radius_text', 'property_text, action_word',
     new Point(0, 0), 'middle', 'left',
   ));
   // text.add('equals', shapes.htmlText(
@@ -319,7 +319,7 @@ function makeRadiusText(shapes: Object) {
 function makeDiameterText(shapes: Object) {
   const text = shapes.collection(layout.diameterText.position);
   text.add('text', shapes.htmlText(
-    'Diameter:', 'id_diameter_text', 'property_text',
+    'Diameter:', 'id_diameter_text', 'property_text, action_word',
     new Point(0, 0), 'middle', 'left',
   ));
   // text.add('equals', shapes.htmlText(
@@ -336,7 +336,7 @@ function makeDiameterText(shapes: Object) {
 function makeCircumferenceText(shapes: Object) {
   const text = shapes.collection(layout.circumferenceText.position);
   text.add('text', shapes.htmlText(
-    'Circumference:', 'id_circumference_text', 'property_text',
+    'Circumference:', 'id_circumference_text', 'property_text, action_word',
     new Point(0, 0), 'middle', 'left',
   ));
   // text.add('equals', shapes.htmlText(
@@ -797,10 +797,10 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  resetCircle() {
-    this._circle.transform.updateTranslation(layout.circle.center);
+  resetCircle(position: string = 'center') {
+    this._circle.transform.updateTranslation(layout.circle[position]);
     this._circle.transform.updateScale(1, 1);
-    this._straightCircumference.transform.updateTranslation(layout.circle.center);
+    this._straightCircumference.transform.updateTranslation(layout.circle[position]);
     this._straightCircumference.transform.updateScale(1, 1);
     this._circle.isMovable = false;
   }

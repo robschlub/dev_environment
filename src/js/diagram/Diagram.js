@@ -180,7 +180,8 @@ function shapes(diagram: Diagram) {
   ) {
     const element = document.createElement('div');
     if (classes && element) {
-      element.classList.add(classes);
+      const classArray = classes.split(',');
+      classArray.forEach(c => element.classList.add(c.trim()));
     }
     const inside = document.createTextNode(textInput);
     element.appendChild(inside);

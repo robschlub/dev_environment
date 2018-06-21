@@ -174,23 +174,29 @@ class Content extends LessonContent {
         _historical_roots: highlightWord('historical roots', '', 'english'),
         _less_intuitive: highlightWord('less intuitive', '', 'english'),
         _remembered: highlightWord('remembered', '', 'english'),
-      //   _properties: highlightWord('properties', '', colors.diagram.text.keyword),
-      //   _intuitive: highlightWord('intuitive', '', colors.diagram.text.keyword),
       },
     });
     this.addSection({
       title: 'Center',
       setContent: () => `
+        <div class="lesson__sub_title">Property:</div>
         <p>
-          The first property we will consider is the |_anchor|, which is normally called the |_center_point|.
+          |_center_point|
         </p>
+        <div class="lesson__sub_title">Word Origin:</div>
         <p>
-          The word |_center| comes from the |_Latin| word |_centrum| which means |_middle|. 
+          |_Latin| word |_centrum| which means |_middle|. 
+        </p>
+        <div class="lesson__sub_title">Description:</div>
+        <p>
+          The middle of the circle.
         </p>
         `,
       modifiers: {
-        _center_point: actionWord('center point', 'id_center', colors.anchor),
-        _anchor: actionWord('anchor', 'id_anchor', colors.anchor),
+        // _Property: highlightWord('Property', '', colors.disabled),
+        _Word_origin: highlightWord('Word origin', '', colors.disabled),
+        _center_point: actionWord('Center point', 'id_center', colors.anchor),
+        // _anchor: actionWord('anchor', 'id_anchor', colors.anchor),
         _center: highlightWord('center', '', 'english'),
         _Latin: highlightWord('Latin', '', 'latin'),
         _centrum: highlightWord('centrum', '', 'latin'),
@@ -213,14 +219,14 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => `
         <p>
-          The |_center| property can be used to describe the |_location| of the circle.
+          The |_center_point| can be used to describe the |_location| of the circle.
         </p>
         <p>
           It is the only point on the circle that can be identified independent of rotation.
         </p>
         `,
       modifiers: {
-        _center: actionWord('center', 'id_center', colors.anchor),
+        _center_point: actionWord('center point', 'id_center', colors.anchor),
         _location: highlightWord('location', '', 'english'),
       },
       setState: () => {
@@ -248,6 +254,7 @@ class Content extends LessonContent {
         _location: actionWord('location', 'id_loc', colors.anchor),
       },
       setState: () => {
+        elements.resetCircle('forMoving');
         circle.isMovable = true;
         elements._grid._locationText
           .transform.updateTranslation(layout.locationText.bottom.position);
@@ -275,17 +282,24 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Radius',
       setContent: () => `
+        <div class="lesson__sub_title">Property:</div>
         <p>
-          Another property is the length of the |_line|, which we call |_radius|.
+        |_radius|
         </p>
+        <div class="lesson__sub_title">Word Origin:</div>
         <p>
-          |_radius2| comes from the |_Latin| word |_radiusLatin| which means the |_spoke_of_a_chariot_wheel|. 
+          |_Latin| word |_radiusLatin| which means the |_spoke_of_a_chariot_wheel|. 
         </p>
+        <div class="lesson__sub_title">Description:</div>
+        <p>
+          Length from center point to edge.
+        </p>
+        
         `,
       modifiers: {
-        _radius: actionWord('radius', 'id_radius', colors.radius),
-        _radius2: actionWord('Radius', 'id_radius2', colors.radius),
-        _line: actionWord('line', 'id_line', colors.radius),
+        _radius: actionWord('Radius', 'id_radius', colors.radius),
+        // _radius2: actionWord('Radius', 'id_radius2', colors.radius),
+        // _line: actionWord('line', 'id_line', colors.radius),
         _radiusLatin: highlightWord('radius', '', 'latin'),
         _Latin: highlightWord('Latin', '', 'latin'),
         _spoke_of_a_chariot_wheel: highlightWord('spoke of a chariot wheel', '', 'english'),
@@ -295,9 +309,9 @@ class Content extends LessonContent {
         elements.resetCircle();
         circle._radius.color = colors.radius;
 
-        onClickId('id_line', elements.pulseRadius, [elements]);
+        // onClickId('id_line', elements.pulseRadius, [elements]);
         onClickId('id_radius', elements.pulseRadius, [elements]);
-        onClickId('id_radius2', elements.pulseRadius, [elements]);
+        // onClickId('id_radius2', elements.pulseRadius, [elements]);
       },
       showOnly: [
         circle,
@@ -312,7 +326,7 @@ class Content extends LessonContent {
           The |_radius| describes the circle's size and is |_any_line| between the |_center| and the |_edge|.
         </p>
         <p>
-          The circle's |_width| can be thought of as |_two_radius_lengths|.
+          The |_radius2| is half the circle |_width|.
         </p>
         `,
       modifiers: {
@@ -320,7 +334,7 @@ class Content extends LessonContent {
         _center: actionWord('center', 'id_center', colors.anchor),
         _edge: actionWord('edge', 'id_edge', colors.circle),
         _width: highlightWord('width', '', 'english'),
-        _two_radius_lengths: highlightWord('two radius lengths', '', 'english'),
+        _radius2: highlightWord('radius', '', 'english'),
         _any_line: actionWord('any line', 'id_spin', colors.radius),
       },
       setState: () => {
@@ -342,10 +356,17 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Diameter',
       setContent: () => `
+        <div class="lesson__sub_title">Property:</div>
         <p>
-          There is another name for the |_width| of a circle: |_diameter|.
+          |_diameter|
+        </p>
+        <div class="lesson__sub_title">Word Origin:</div>
         <p>
-          In ancient Greek word |_diametros| was used, which itself came from their words |_dia| (|_across|) and |_metros| (|_measure|).
+          Ancient Greek word |_diametros|, which itself came from the words |_dia| (|_across|) and |_metros| (|_measure|).
+        </p>
+        <div class="lesson__sub_title">Description:</div>
+        <p>
+          The circle |_width|.
         </p>
         `,
       modifiers: {
@@ -355,7 +376,7 @@ class Content extends LessonContent {
         _across: highlightWord('across', '', 'english'),
         _width: highlightWord('width', '', 'english'),
         _measure: highlightWord('measure', '', 'english'),
-        _diameter: actionWord('diameter', 'id_diameter', colors.diameter),
+        _diameter: actionWord('Diameter', 'id_diameter', colors.diameter),
       },
       setState: () => {
         // elements.greyColors();
@@ -375,13 +396,17 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => `
         <p>
-          The |_diameter| can also be thought of as |_any_line| that runs between two points on the circle and through the |_center|.
+          The |_diameter| is |_any_line| that runs between two points on the circle's |_edge| and through the |_center|.
+        <p>
+        <p>
+          Historically diameter was used instead of radius as it was easier to measure, but today radius is often more useful.
         <p>
         `,
       modifiers: {
         _diameter: actionWord('diameter', 'id_diameter', colors.diameter),
         _center: actionWord('center', 'id_center', colors.anchor),
         _any_line: actionWord('any line', 'id_spin', colors.diameter),
+        _edge: actionWord('edge', 'id_edge', colors.circle),
       },
       setState: () => {
         // elements.greyColors();
@@ -391,6 +416,7 @@ class Content extends LessonContent {
         onClickId('id_diameter', elements.pulseDiameter, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
         onClickId('id_spin', elements.spinDiameter, [elements]);
+        onClickId('id_edge', elements.pulseCircumference, [elements]);
       },
       showOnly: [
         circle,
@@ -403,35 +429,48 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Circumference',
       setContent: () => `
+        <div class="lesson__sub_title">Property:</div>
         <p>
-          Another property is |_length| of the circle |_edge|.
+          |_circumference|
         </p>
+        <div class="lesson__sub_title">Word Origin:</div>
         <p>
-          The edge can be |_straightened| out to see the length more easily.
+          The |_Latin| word |_circumferentia| which comes from the words |_circum| (|_carry|) and |_ferre| (|_around|).
+        </p>
+        <div class="lesson__sub_title">Description:</div>
+        <p>
+          Length of Circle's |_edge|.
         </p>
         `,
       modifiers: {
-        _length: highlightWord('length', '', 'english'),
-        _edge: highlightWord('edge', '', 'english'),
-        _straightened: actionWord('straightened', 'id_straight', colors.circle),
+        // _length: highlightWord('length', '', 'english'),
+        _edge: actionWord('edge', 'id_edge', colors.circle),
+        _circumference: actionWord('Circumference', 'id_circum', colors.circle),
+        // _Length: highlightWord('Length', '', 'english'),
+        _circum: highlightWord('circum', '', 'latin'),
+        _ferre: highlightWord('ferre', '', 'latin'),
+        _Latin: highlightWord('Latin', '', 'latin'),
+        _circumferentia: highlightWord('circumferentia', '', 'latin'),
+        _carry: highlightWord('carry', '', 'english'),
+        _around: highlightWord('around', '', 'english'),
       },
       setState: () => {
-        elements.resetCircle();
-        elements._straightCircumference.showAll();
-        elements.straighten(0);
-        // elements._straightCircumference.transform.updateScale(1, 1);
-        // elements._straightCircumference.transform.updateTranslation(layout.circle.center);
-        onClickId('id_straight', elements.straightenCircumference, [elements]);
+        elements.resetCircle('right');
+        // elements._straightCircumference.showAll();
+        // elements.straighten(0);
+        onClickId('id_edge', elements.pulseCircumference, [elements]);
+        onClickId('id_circum', elements.pulseCircumference, [elements]);
       },
       showOnly: [
         circle,
-        elements._straightCircumference,
+        // elements._straightCircumference,
+        circle._circumference,
       ],
     });
     this.addSection({
       setContent: () => `
         <p>
-          In |_Latin|, this property's name came from the words |_circum| (|_carry|) and |_ferre| (|_around|) and was |_circumferentia|.
+          The |_length| of the edge can be seen more easily if it is |_straightened| out.
         </p>
         <p>
           Today, we use this Latin root and call it the |_circumference|.
@@ -439,17 +478,17 @@ class Content extends LessonContent {
         `,
       modifiers: {
         _length: highlightWord('length', '', 'english'),
-        _edge: highlightWord('edge', '', 'english'),
-        _circum: highlightWord('circum', '', 'latin'),
-        _ferre: highlightWord('ferre', '', 'latin'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _circumferentia: highlightWord('circumferentia', '', 'latin'),
-        _carry: highlightWord('carry', '', 'english'),
-        _around: highlightWord('around', '', 'english'),
-        _circumference: actionWord('circumference', 'id_straight', colors.circle),
+        _straightened: actionWord('straightened', 'id_straight', colors.circle),
+        // _circum: highlightWord('circum', '', 'latin'),
+        // _ferre: highlightWord('ferre', '', 'latin'),
+        // _Latin: highlightWord('Latin', '', 'latin'),
+        // _circumferentia: highlightWord('circumferentia', '', 'latin'),
+        // _carry: highlightWord('carry', '', 'english'),
+        // _around: highlightWord('around', '', 'english'),
+        // _circumference: actionWord('circumference', 'id_straight', colors.circle),
       },
       setState: () => {
-        elements.resetCircle();
+        elements.resetCircle('right');
         elements._straightCircumference.showAll();
         elements.straighten(0);
         // elements._straightCircumference.transform.updateScale(1, 1);
@@ -499,6 +538,7 @@ class Content extends LessonContent {
         _circle: highlightWord('circle', '', 'english'),
       },
       setState: () => {
+        elements.resetCircle('forMoving');
         circle.isMovable = true;
         elements._grid._locationText
           .transform.updateTranslation(layout.locationText.top.position);

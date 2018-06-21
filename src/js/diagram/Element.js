@@ -1619,8 +1619,7 @@ class DiagramElementCollection extends DiagramElement {
       if (element) {
         element.show();
       } else {
-        console.log("Asdfasdf");
-        throw `element does not exist at position ${i}`;
+        throw Error(`Diagram Element Error: Element does not exist at position ${i}`);
       }
     }
   }
