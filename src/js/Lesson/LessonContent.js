@@ -2,15 +2,43 @@
 
 import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
-// import { Transform } from '../diagram/tools/g2';
+import { colorArrayToRGBA } from '../tools/tools';
+
+function centerV(text: string = '') {
+  return `<div style="display: table; height: 100%;">
+        <div style="display: table-cell; vertical-align: middle">
+        ${text}</div></div>`;
+}
+
+function centerVH(text: string = '') {
+  return `<div style="display: table; height: 100%; text-align:center; width:100%">
+        <div style="display: table-cell; vertical-align: middle">
+        ${text}</div></div>`;
+}
+
+function centerH(text: string = '') {
+  return `<div style="text-align:center;">
+        ${text}</div>`;
+}
 
 function actionWord(
   text: string,
   id: string = '',
-  classes: string = '',
+  classesOrColor: string | Array<number> | null = null,
+  color: Array<number> | null = null,
 ): Object {
+  let classes = '';
+  let colorStyle = '';
+  if (typeof classesOrColor === 'string') {
+    classes = classesOrColor;
+  }
+  if (Array.isArray(classesOrColor)) {
+    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
+  } else if (color) {
+    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
+  }
   return {
-    replacementText: `<span id="${id}" class="${classes} action_word">${text}</span>`,
+    replacementText: `<span id="${id}" class="${classes} action_word"${colorStyle}>${text}</span>`,
     type: 'html',
     id,
   };
@@ -18,10 +46,21 @@ function actionWord(
 function highlightWord(
   text: string,
   id: string = '',
-  classes: string = '',
+  classesOrColor: string | Array<number> | null = null,
+  color: Array<number> | null = null,
 ): Object {
+  let classes = '';
+  let colorStyle = '';
+  if (typeof classesOrColor === 'string') {
+    classes = classesOrColor;
+  }
+  if (Array.isArray(classesOrColor)) {
+    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
+  } else if (color) {
+    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
+  }
   return {
-    replacementText: `<span id="${id}" class="${classes} highlight_word">${text}</span>`,
+    replacementText: `<span id="${id}" class="${classes} highlight_word"${colorStyle}>${text}</span>`,
     type: 'html',
     id,
   };
@@ -117,8 +156,6 @@ class Section {
            | () => {};
   show: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  // position: Array<PositionObject>;
-  // isSinglePagePrimary: boolean;
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
@@ -152,46 +189,6 @@ class Section {
   setState(previousState: Object) {
   }
 
-  // fillPosition(positionArray: Array<Object>) {
-  //   const final = [];
-  //   positionArray.forEach((p) => {
-  //     const newP = new PositionObject(p.element);
-  //     if ('position' in p) {
-  //       newP.position = p.position;
-  //     }
-  //     if ('animTimeFromPrev' in p) {
-  //       newP.animTimeFromPrev = p.animTimeFromPrev;
-  //     }
-  //     if ('animTimeFromNext' in p) {
-  //       newP.animTimeFromNext = p.animTimeFromNext;
-  //     }
-  //     if ('animTimeFromGoTo' in p) {
-  //       newP.animTimeFromGoTo = p.animTimeFromGoTo;
-  //     }
-  //     if ('animTimeToPrev' in p) {
-  //       newP.animTimeToPrev = p.animTimeToPrev;
-  //     }
-  //     if ('animTimeToNext' in p) {
-  //       newP.animTimeToNext = p.animTimeToNext;
-  //     }
-  //     final.push(newP);
-  //   });
-  //   if (final) {
-  //     this.position = final;
-  //   }
-  // }
-
-  // setPositionAndAnimations() {
-  //   if ('position' in this) {
-  //     const { position } = this;
-  //     if (Array.isArray(position)) {
-
-  //     } else {
-  //       position();
-  //     }
-  //   };
-  // }
-
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -214,7 +211,7 @@ class Section {
       if (Array.isArray(elementsOrMethod)) {
         elementsOrMethod.forEach((element) => {
           // eslint-disable-next-line no-param-reassign
-          element.show = true;
+          element.show();
         });
       } else {
         elementsOrMethod();
@@ -255,10 +252,6 @@ class LessonContent {
   // questions
 
   constructor(htmlId: string) {
-    // this.setTitle();
-    // this.setDiagram(htmlId);
-    // this.sections = [];
-    // this.addSections();
     this.diagramHtmlId = htmlId;
     this.sections = [];
     this.setTitle();
@@ -280,17 +273,6 @@ class LessonContent {
   addSections() {
   }
 
-  // cleanSections() {
-  //   this.sections.forEach((section, index) => {
-  //     if ('position' in section) {
-  //       const position = section.position;
-  //       if (Array.isArray(position)) {
-  //         section.
-  //       }
-  //       }
-  //   });
-  // }
-
   addSection(section: Object) {
     const s = new Section(this.diagram);
 
@@ -299,11 +281,10 @@ class LessonContent {
       s[key] = section[key];
     });
     this.sections.push(s);
-    // this.cleanSections();
   }
 }
 
 export {
   Section, LessonContent, actionWord,
-  diagramCanvas, onClickId, highlightWord,
+  diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH,
 };

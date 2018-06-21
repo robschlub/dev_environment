@@ -167,6 +167,7 @@ export default class LessonComponent extends React.Component
       <div className='lesson__title'>
               {this.lesson.content.title}
       </div>
+      <div className="lesson__widescreen_backdrop">
       <div id="lesson__container_name" className="lesson__container">
             {this.addPrevButton()}
             <div id={this.lesson.content.diagramHtmlId} className="diagram__container multipage_diagram">
@@ -181,6 +182,7 @@ export default class LessonComponent extends React.Component
             {this.addPageNumber()}
             {this.addGoToButton()}
             {this.addNextButton()}
+      </div>
       </div>
     </div>;
   }

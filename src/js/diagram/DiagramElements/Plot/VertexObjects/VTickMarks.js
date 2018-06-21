@@ -18,12 +18,12 @@ class VTickMarks extends VertexObject {
   ): void {
     super(webgl);
 
-    const t = new Transform().rotate(rotation).translate(start.x, start.y + offset).matrix();
+    const t = new Transform().rotate(rotation).translate(0, 0).matrix();
 
     const result = TRIParallelLines(
       num,
       spacing,
-      new Point(0, 0),
+      new Point(start.x, start.y + offset),
       length,
       width,
       false,
