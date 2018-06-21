@@ -195,7 +195,11 @@ class Section {
   }
 
   /* eslint-disable no-unused-vars */
-  setInitialState(previousState: Object) {
+  setEnterState(previousState: Object) {
+  }
+
+  /* eslint-disable no-unused-vars */
+  setLeaveState() {
   }
 
   // setInitialPositions() {

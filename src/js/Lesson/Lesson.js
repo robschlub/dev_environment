@@ -2,11 +2,10 @@
 import { LessonContent } from './LessonContent';
 import Diagram from '../diagram/Diagram';
 
-
 // Flow:
 //
 //  Coming from any section
-//    - initialState                Guaranteed
+//    - setEnterState               Guaranteed
 //    - showOnly                    Guaranteed
 //    - hideOnly                    Guaranteed
 //    - show                        Guaranteed
@@ -14,13 +13,14 @@ import Diagram from '../diagram/Diagram';
 //    - transitionFromPrev/Next     Can be cancelled
 //    - transitionFromAny           Can be cancelled / skipped
 //    - setPlannedPositions?        Can be cancelled / skipped
-//    - finalState                  Can be skipped
+//    - setSteadyState              Can be skipped
 //
 //  Go to next, prev or goTo
-//    - leaveState                  Guaranteed
+//    - setLeaveState                  Guaranteed
 //    - saveState                   Guaranteed
-//    - transitionToPrev            Can be cancelled / skipped
+//    - transitionToPrev/Next       Can be cancelled / skipped
 //    - transitionToAny             Can be cancelled / skipped
+//
 
 class Lesson {
   // ContentClass: Object;
@@ -57,7 +57,8 @@ class Lesson {
     const { diagram } = this;
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
       this.stopDiagrams();
-      // this.currentSection().saveState();
+      this.currentSection().setLeaveState();
+      this.saveState();
       this.transitionStart('next');
       this.currentSection().transitionNext(this.finishTransNext.bind(this));
     }
@@ -66,7 +67,8 @@ class Lesson {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
       this.stopDiagrams();
-      // this.currentSection().saveState();
+      this.currentSection().setLeaveState();
+      this.saveState();
       this.transitionStart('prev');
       this.currentSection().transitionPrev(this.finishTransPrev.bind(this));
     }
@@ -106,13 +108,17 @@ class Lesson {
       if (this.inTransition) {
         this.stopDiagrams();
       }
+      if (this.comingFrom === '') {
+        this.currentSection().setLeaveState();
+        this.saveState();
+      }
       this.goToSectionIndex = sectionIndex;
       this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
     }
   }
 
   finishTransToAny() {
-    this.saveState();
+    // this.saveState();
     this.currentSectionIndex = this.goToSectionIndex;
     this.refresh(this.getContentHtml(), this.currentSectionIndex);
   }
@@ -121,7 +127,7 @@ class Lesson {
     const { diagram } = this;
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
-      section.setInitialState(this.state);
+      section.setEnterState(this.state);
       section.setVisible();
       this.renderDiagrams();
       if (this.comingFrom === 'next') {

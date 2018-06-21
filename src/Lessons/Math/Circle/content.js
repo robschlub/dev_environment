@@ -268,10 +268,6 @@ class Content extends LessonContent {
       setState: () => {
         elements.resetCircle('forMoving');
         circle.isMovable = true;
-        // elements._grid._locationText
-        //   .transform.updateTranslation(layout.locationText.bottom.position);
-        // elements._grid._locationText._text
-        //   .transform.updateTranslation(layout.locationText.bottom.offset, 0);
         elements._grid._linesAndLabels.showAll();
         elements._grid._locationText.showAll();
         elements.updateLocation();
