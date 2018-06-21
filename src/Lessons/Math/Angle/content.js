@@ -53,7 +53,7 @@ class Content extends LessonContent {
         shapes._pent._moreSharpCorners,
         shapes._pent._lessSharpCorners,
       ],
-      setState: () => {
+      setSteadyState: () => {
         onClickId('id_shapes', shapes.pulseShapes, [shapes]);
         onClickId('id_corners', shapes.toggleCorners, [shapes]);
         onClickId('id_more_sharp', shapes.toggleMoreSharpCorners, [shapes]);
@@ -94,7 +94,7 @@ class Content extends LessonContent {
           circle,
         ]);
       },
-      setState: () => {
+      setSteadyState: () => {
         circle._fakeRadius.transform.updateTranslation(-1, 0);
         circle._fakeRadius.transform.updateRotation(Math.PI / 2);
         circle._reference.transform.updateTranslation(1, 0);
@@ -143,7 +143,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._anchor,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._radius.transform.updateRotation(0.01);
         circle._radius.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
@@ -200,7 +200,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._anchor,
       ],
-      setState: () => {
+      setSteadyState: () => {
         const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
         const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
         circle._anchor.color = circle.colors.anchor.slice();
@@ -244,7 +244,7 @@ class Content extends LessonContent {
         circle._anchor,
         circle._angle,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
@@ -302,7 +302,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._angle,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);

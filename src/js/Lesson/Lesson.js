@@ -150,7 +150,7 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
 
     if (flag) {
-      section.setState(this.state);
+      section.setSteadyState(this.state);
     }
     this.renderDiagrams();
   }

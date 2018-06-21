@@ -191,7 +191,7 @@ class Section {
   }
 
   /* eslint-disable no-unused-vars */
-  setState(previousState: Object) {
+  setSteadyState(previousState: Object) {
   }
 
   /* eslint-disable no-unused-vars */

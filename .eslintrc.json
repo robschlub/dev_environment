@@ -14,7 +14,7 @@
               "setContent",
               "setTitle",
               "setModifiers",
-              "setState",
+              "setSteadyState",
               "setEnterState",
               "setLeaveState",
               "getState",

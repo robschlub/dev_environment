@@ -101,7 +101,7 @@ class Content extends LessonContent {
         _wheel: highlightWord('wheel', '', 'english'),
         _shape: actionWord('shape', 'id_shape', colors.circle),
       },
-      setState: () => {
+      setSteadyState: () => {
         circle._wheel.transform.updateTranslation(0, 0);
       },
     });
@@ -121,7 +121,7 @@ class Content extends LessonContent {
         _wheel: highlightWord('wheel', '', 'english'),
         _shape: actionWord('shape', 'id_shape', colors.circle),
       },
-      setState: () => {
+      setSteadyState: () => {
         circle._wheel.transform.updateTranslation(-1, 0);
         circle._wheelShape.transform.updateTranslation(1, 0);
         onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
@@ -188,7 +188,7 @@ class Content extends LessonContent {
           makeEquation.bind(circle),
         );
       },
-      setState: () => {
+      setSteadyState: () => {
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
         onClickId('id_properties', circle.pulseProperties, [circle]);
@@ -211,7 +211,7 @@ class Content extends LessonContent {
       modifiers: {
         _properties: actionWord('properties', 'id_properties', colors.dimensions),
       },
-      setState: () => {
+      setSteadyState: () => {
         circle.eqn.calcSize(new Point(0, 0), 1);
         circle._clock.transform.updateTranslation(-1.8, 0);
         circle._ball.transform.updateTranslation(0, 0);
@@ -230,7 +230,7 @@ class Content extends LessonContent {
         circle,
         circle._earth,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._earth.transform.updateTranslation(-1, 0);
         onClickId('id_calculation', circle.calculateEarth, [circle]);
       },

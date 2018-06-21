@@ -5,7 +5,7 @@ import {
   centerV,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Transform, Point } from '../../../js/diagram/tools/g2';
+// import { Transform, Point } from '../../../js/diagram/tools/g2';
 // import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
@@ -60,7 +60,7 @@ class Content extends LessonContent {
         elements._ring,
         elements._circleShape,
       ],
-      setState: () => {
+      setSteadyState: () => {
         elements.resetColors();
         elements.varState.shapeTurn = 0;
         elements._moon.transform.updateTranslation(layout.moon.center);
@@ -134,7 +134,7 @@ class Content extends LessonContent {
         circle._anchor,
         circle._arc,
       ],
-      setState: () => {
+      setSteadyState: () => {
         elements.resetCircle();
         elements.resetColors();
         circle.transform.updateTranslation(layout.circle.center);
@@ -204,7 +204,7 @@ class Content extends LessonContent {
         _centrum: highlightWord('centrum', '', 'latin'),
         _middle: highlightWord('middle', '', 'english'),
       },
-      setState: () => {
+      setSteadyState: () => {
         // elements.greyColors();
         elements.resetCircle();
         circle._anchor.color = colors.anchor;
@@ -231,7 +231,7 @@ class Content extends LessonContent {
         _center_point: actionWord('center point', 'id_center', colors.anchor),
         _location: highlightWord('location', '', 'english'),
       },
-      setState: () => {
+      setSteadyState: () => {
         // elements.greyColors();
         elements.resetCircle();
         circle._anchor.color = colors.anchor;
@@ -265,7 +265,7 @@ class Content extends LessonContent {
           .transform.updateTranslation(layout.locationText.bottom.offset, 0);
         grid._locationText.setFirstTransform(grid.lastDrawTransform);
       },
-      setState: () => {
+      setSteadyState: () => {
         elements.resetCircle('forMoving');
         circle.isMovable = true;
         elements._grid._linesAndLabels.showAll();
@@ -315,7 +315,7 @@ class Content extends LessonContent {
         _Latin: highlightWord('Latin', '', 'latin'),
         _spoke_of_a_chariot_wheel: highlightWord('spoke of a chariot wheel', '', 'english'),
       },
-      setState: () => {
+      setSteadyState: () => {
         // elements.greyColors();
         elements.resetCircle();
         circle._radius.color = colors.radius;
@@ -351,7 +351,7 @@ class Content extends LessonContent {
         _radius2: highlightWord('radius', '', 'english'),
         _any_line: actionWord('any line', 'id_spin', colors.radius),
       },
-      setState: () => {
+      setSteadyState: () => {
         // elements.greyColors();
         elements.resetCircle();
         circle._radius.color = colors.radius;
@@ -395,7 +395,7 @@ class Content extends LessonContent {
         _measure: highlightWord('measure', '', 'english'),
         _diameter: actionWord('Diameter', 'id_diameter', colors.diameter),
       },
-      setState: () => {
+      setSteadyState: () => {
         // elements.greyColors();
         elements.resetCircle();
         circle._diameter.showAll();
@@ -428,7 +428,7 @@ class Content extends LessonContent {
         _any_line: actionWord('any line', 'id_spin', colors.diameter),
         _edge: actionWord('edge', 'id_edge', colors.circle),
       },
-      setState: () => {
+      setSteadyState: () => {
         // elements.greyColors();
         elements.resetCircle();
         circle._diameter.showAll();
@@ -477,7 +477,7 @@ class Content extends LessonContent {
         _carry: highlightWord('carry', '', 'english'),
         _around: highlightWord('around', '', 'english'),
       },
-      setState: () => {
+      setSteadyState: () => {
         elements.resetCircle('right');
         elements._straightCircumference.showAll();
         elements.straighten(0);
@@ -522,7 +522,7 @@ class Content extends LessonContent {
         // elements._straightCircumference.showAll();
         elements.transitionCircle(done, 'right');
       },
-      setState: () => {
+      setSteadyState: () => {
         // elements.resetCircle('right');
         // elements._straightCircumference.showAll();
         // elements.straighten(0);
@@ -567,7 +567,7 @@ class Content extends LessonContent {
         _properties: highlightWord('properties', '', 'english'),
         _circle: highlightWord('circle', '', 'english'),
       },
-      setState: () => {
+      setSteadyState: () => {
         elements.resetCircle('forMoving');
         circle.isMovable = true;
         if (Math.abs(circle._diameter.transform.r()

@@ -47,7 +47,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._angle,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
@@ -95,7 +95,7 @@ class Content extends LessonContent {
         _divide: highlightWord('divide', 'highlight_word'),
         _12_equal_portions: highlightWord('12 equal portions', 'highlight_word'),
       },
-      setState: () => {
+      setSteadyState: () => {
         onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
       },
       transitionFromAny: (done) => {
@@ -135,7 +135,7 @@ class Content extends LessonContent {
         circle._angle,
         elements._angleText,
       ],
-      setState: () => {
+      setSteadyState: () => {
         elements._angleText.showAll();
         elements.toggleRadialLines(0);
         elements._angleText._units.vertices.element.innerHTML = 'portions';
@@ -288,7 +288,7 @@ class Content extends LessonContent {
         // elements._angleText,
         // circle.radialLinesDeg,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle.transform.updateTranslation(layout.circle.right);
         elements._angleText.transform.updateTranslation(layout.angleEqualsText.top);
         elements.showDegrees();
