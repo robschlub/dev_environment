@@ -57,9 +57,6 @@ class Lesson {
   nextSection() {
     const { diagram } = this;
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
-      // Stop any ongoing animations on diagram
-      this.stopDiagrams();
-
       // If in transition, then cancel the transition.
       if (this.inTransition) {
         const { comingFrom } = this;
@@ -67,6 +64,9 @@ class Lesson {
         if (comingFrom === 'prev') {
           return;
         }
+      } else {
+        // Stop diagrams if not in transition to stop any animations.
+        this.stopDiagrams();
       }
       this.transitionStart('prev');
       this.goToSectionIndex = this.currentSectionIndex + 1;
@@ -76,13 +76,14 @@ class Lesson {
   prevSection() {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
-      this.stopDiagrams();
       if (this.inTransition) {
         const { comingFrom } = this;
         this.stopTransition();
         if (comingFrom === 'next') {
           return;
         }
+      } else {
+        this.stopDiagrams();
       }
       this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
@@ -92,9 +93,10 @@ class Lesson {
 
   goToSection(sectionIndex: number) {
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
-      this.stopDiagrams();
       if (this.inTransition) {
         this.stopTransition();
+      } else {
+        this.stopDiagrams();
       }
       this.transitionStart('goto');
       this.goToSectionIndex = sectionIndex;
@@ -177,10 +179,8 @@ class Lesson {
   }
 
   finishTransitionFromAny() {
-    // this.transitionStop();
     const section = this.content.sections[this.currentSectionIndex];
     section.setSteadyState(this.state);
-    // this.stopTransition();
     this.inTransition = false;
     const { diagram } = this;
     if (diagram) {

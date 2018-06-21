@@ -50,22 +50,22 @@ $diagram_ratio: 1.5;
   }
 }
 
-@media (min-width: #{$xl}) {
-  :root {
-    --lesson__container-width: calc(#{$xl} * 0.9);
-    --lesson__title-font-size: calc(#{$title-font-size} / 100 * #{$xl} * 1.2);
-    --lesson__title-height: calc(#{$title-height} / 100 * #{$xl});
-    --lesson__np_button-width: calc(#{$np_button-width} / 100 * #{$xl});
-    --lesson__np_button-height: calc(#{$np_button-height-landscape} / 100 * #{$xl});
-    --lesson__np_button-vspace: calc(#{$np_button-vspace} / 100 * #{$xl});
-    --lesson__np_button-hspace: calc(#{$np_button-hspace} / 100 * #{$xl});
-    // --lesson__text-margin: calc(#{$text-margin} / 100 * #{$xl});
-    --lesson__text-margin: 1em;
-    --lesson__goto_button-width: calc(#{$goto_button-width} / 100 * #{$xl});
-    --lesson__goto_button-height: calc(#{$goto_button-height} / 100 * #{$xl});
-    --lesson__goto_button-font-size: calc(#{$goto_button-font-size} / 100 * #{$xl});
-  }
-}
+// @media (min-width: #{$xxl}) {
+//   :root {
+//     --lesson__container-width: calc(#{$xxl} * 0.9);
+//     --lesson__title-font-size: calc(#{$title-font-size} / 100 * #{$xxl} * 1.2);
+//     --lesson__title-height: calc(#{$title-height} / 100 * #{$xxl});
+//     --lesson__np_button-width: calc(#{$np_button-width} / 100 * #{$xxl});
+//     --lesson__np_button-height: calc(#{$np_button-height-landscape} / 100 * #{$xxl});
+//     --lesson__np_button-vspace: calc(#{$np_button-vspace} / 100 * #{$xxl});
+//     --lesson__np_button-hspace: calc(#{$np_button-hspace} / 100 * #{$xxl});
+//     // --lesson__text-margin: calc(#{$text-margin} / 100 * #{$xxl});
+//     --lesson__text-margin: 1em;
+//     --lesson__goto_button-width: calc(#{$goto_button-width} / 100 * #{$xxl});
+//     --lesson__goto_button-height: calc(#{$goto_button-height} / 100 * #{$xxl});
+//     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} / 100 * #{$xxl});
+//   }
+// }
 
 @media (min-aspect-ratio: 2/1) and (max-height: 500px) {
   :root {
@@ -193,20 +193,50 @@ $diagram_ratio: 1.5;
 
 #lesson__button-previous {
   left: 0;
-  border-right: var(--lesson__np_button-width) solid color(navbar, 'button');
+  // border-right: var(--lesson__np_button-width) solid color(navbar, 'button');
 }
 
 #lesson__button-next {
   right: 0;
+  // border-left: var(--lesson__np_button-width) solid color(navbar, 'button');
+}
+
+// #lesson__button-next:hover {
+//   border-left: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
+// }
+
+// #lesson__button-previous:hover {
+//   border-right: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
+// }
+
+
+.lesson__button-next-enabled {
   border-left: var(--lesson__np_button-width) solid color(navbar, 'button');
 }
 
-#lesson__button-next:hover {
-  border-left: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 10);
+.lesson__button-next-enabled:hover {
+  border-left: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
 }
 
-#lesson__button-previous:hover {
-  border-right: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 10);
+.lesson__button-next-disabled {
+  border-left: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
+}
+.lesson__button-next-disabled:hover {
+  border-left: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
+}
+
+.lesson__button-prev-enabled {
+  border-right: var(--lesson__np_button-width) solid color(navbar, 'button');
+}
+.lesson__button-prev-enabled:hover {
+  border-right: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
+}
+
+.lesson__button-prev-disabled {
+  border-right: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
+}
+.lesson__button-prev-disabled:hover {
+  border-right: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
 }
 
 .lesson__button-goto_container {

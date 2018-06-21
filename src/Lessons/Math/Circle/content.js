@@ -244,7 +244,7 @@ class Content extends LessonContent {
         elements.transitionCircle(done);
       },
       setSteadyState: () => {
-        // elements.resetCircle();
+        elements.resetCircle();
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_center', elements.pulseAnchor, [elements]);
       },
@@ -323,8 +323,7 @@ class Content extends LessonContent {
         elements.transitionCircle(done, 'right');
       },
       setSteadyState: () => {
-        // elements.resetCircle('right');
-        // circle._radius.color = colors.radius;
+        elements.resetCircle('right');
         onClickId('id_radius', elements.pulseRadius, [elements]);
       },
     });
@@ -510,7 +509,7 @@ class Content extends LessonContent {
         elements.transitionCircle(done, 'right');
       },
       setSteadyState: () => {
-        // elements.resetCircle('right');
+        elements.resetCircle('right');
         // elements._straightCircumference.showAll();
         // elements.straighten(0);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
@@ -563,17 +562,17 @@ class Content extends LessonContent {
         elements.straighten(0);
         grid._slider.set(0.8);
         elements.updateSlider();
+        elements.resetCircle('forMoving');
       },
       show: [
         circle,
         elements._grid,
         elements._straightCircumference,
       ],
-      transitionFromAny: (done) => {
-        elements.transitionCircle(done, 'forMoving', elements.percentToScale(0.8));
-      },
+      // transitionFromAny: (done) => {
+      //   elements.transitionCircle(done, 'forMoving', elements.percentToScale(0.8));
+      // },
       setSteadyState: () => {
-        elements.resetCircle('forMoving');
         circle.isMovable = true;
         if (Math.abs(circle._diameter.transform.r()
           - circle._radius.transform.r()) < Math.PI / 10) {

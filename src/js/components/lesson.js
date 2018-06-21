@@ -48,6 +48,47 @@ export default class LessonComponent extends React.Component
   refresh(htmlText: string, page: number) {
     this.setStateOnNextRefresh = true;
     this.setState({ htmlText, page });
+
+    const nextButton = document.getElementById('lesson__button-next');
+    if (nextButton) {
+      if (this.lesson.currentSectionIndex ===
+        this.lesson.content.sections.length - 1) {
+        nextButton.classList.add('lesson__button-next-disabled');
+      } else {
+        nextButton.classList.remove('lesson__button-next-disabled');
+      }
+    }
+    const prevButton = document.getElementById('lesson__button-previous');
+    if (prevButton) {
+      if (this.lesson.currentSectionIndex === 0) {
+        prevButton.classList.add('lesson__button-prev-disabled');
+      } else {
+        prevButton.classList.remove('lesson__button-prev-disabled');
+      }
+    }
+    // if (this.lesson.currentSectionIndex ===
+    //     this.lesson.content.sections.length - 1) {
+    //   const nextButton = document.getElementById('lesson__button-next');
+    //   if (nextButton) {
+    //     nextButton.classList.add('lesson__button-next-disabled');
+    //   }
+    // }
+    // if (this.lesson.currentSectionIndex === 0) {
+    //   const prevButton = document.getElementById('lesson__button-previous');
+    //   if (prevButton) {
+    //     prevButton.classList.add('lesson__button-prev-disabled');
+    //   }
+    // }
+    //  {
+    //   const nextButton = document.getElementById('lesson__button-next');
+    //   const prevButton = document.getElementById('lesson__button-previous');
+    //   if (prevButton) {
+    //     prevButton.classList.remove('lesson__button-prev-disabled');
+    //   }
+    //   if (nextButton) {
+    //     nextButton.classList.remove('lesson__button-next-disabled');
+    //   }
+    // }
   }
   goToNext() {
     this.lesson.nextSection();
@@ -95,12 +136,12 @@ export default class LessonComponent extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   addPrevButton() {
-    return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson"/>;
+    return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson lesson__button-prev-enabled"/>;
   }
 
   // eslint-disable-next-line class-methods-use-this
   addNextButton() {
-    return <Button label="" id="lesson__button-next" className=" -multi-page-lesson"/>;
+    return <Button label="" id="lesson__button-next" className=" -multi-page-lesson lesson__button-next-enabled"/>;
   }
 
   addGoToButton() {
