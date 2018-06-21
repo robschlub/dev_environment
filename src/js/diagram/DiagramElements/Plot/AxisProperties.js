@@ -38,13 +38,14 @@ class TickProperties extends GridProperties {
   color: Array<number>;
   labelMode: 'on' | 'off' | 'auto';
   labels: Array<string>;
-  labelsHAlign: 'start' | 'end' | 'left' | 'center' | 'right';
+  labelsHAlign: 'left' | 'center' | 'right';
   labelsVAlign: 'top' | 'middle' | 'bottom';
   mode: 'on' | 'off' | 'auto';
 
   fontFamily: string;
   fontWeight: string;
-  fontSize: string;
+  fontSize: number;
+  fontColor: Array<number>
 
   constructor() {
     super();
@@ -63,8 +64,9 @@ class TickProperties extends GridProperties {
     this.labelsVAlign = 'middle';
     this.mode = 'on';
     this.fontFamily = 'Helvetica Neue';
-    this.fontWeight = '200';
-    this.fontSize = '14px';
+    this.fontWeight = '400';
+    this.fontSize = 0.1;
+    this.fontColor = defaultColor;
   }
 }
 
@@ -87,7 +89,8 @@ class AxisProperties {
 
   titleFontFamily: string;
   titleFontWeight: string;
-  titleFontSize: string;
+  titleFontSize: number;
+  titleFontColor: Array<number>;
 
 
   constructor(name: string = '', rotation: number = 0) {
@@ -115,7 +118,8 @@ class AxisProperties {
 
     this.titleFontFamily = 'Helvetica Neue';
     this.titleFontWeight = '400';
-    this.titleFontSize = '16px';
+    this.titleFontSize = 0.13;
+    this.titleFontColor = defaultColor;
   }
   getNum(start: number, step: number) {
     return Math.floor((this.limits.max - start) /

@@ -227,4 +227,21 @@ describe('Extract From Collection', () => {
     expect(p[2].value()).toBe(6);
     expect(p[3].value()).toBe(3);
   });
+  describe('add to object', () => {
+    test('simple from scrach', () => {
+      const obj = {};
+      tools.addToObject(obj, 'a-b-c', 1, '-');
+      expect(obj.a.b.c).toBe(1);
+    });
+    test('simple adding', () => {
+      const obj = { a: { d: 3 } };
+      tools.addToObject(obj, 'a-b-c', 1, '-');
+      expect(obj.a.b.c).toBe(1);
+    });
+    test('simple adding 2', () => {
+      const obj = { c: { d: 3 } };
+      tools.addToObject(obj, 'a-b-c', 1, '-');
+      expect(obj.a.b.c).toBe(1);
+    });
+  });
 });

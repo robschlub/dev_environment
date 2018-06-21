@@ -12,6 +12,7 @@ function Polygon(
   radius: number,
   lineWidth: number,
   rotation: number,
+  direction: -1 | 1,
   numSidesToDraw: number,
   color: Array<number>,
   transformOrLocation: Transform | Point,
@@ -25,6 +26,7 @@ function Polygon(
     rotation,
     new Point(0, 0),
     numSidesToDraw,
+    direction,
   );
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {

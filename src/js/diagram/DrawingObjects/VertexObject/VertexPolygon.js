@@ -20,6 +20,7 @@ class VertexPolygon extends VertexObject {
     rotation: number = 0,
     center: Point = new Point(0, 0),
     numSidesToDraw: number = numSides, // Must be <= numSides (def: numSides if greater)
+    direction: -1 | 1 = 1,
   ) {
     // setup webgl stuff
     super(webgl);
@@ -50,13 +51,14 @@ class VertexPolygon extends VertexObject {
     let i;
     let j = 0;
     for (i = 0; i <= sidesToDraw; i += 1) {
-      this.points[j] = center.x + inRad * Math.cos(i * this.dAngle + rotation);
+      this.points[j] =
+        center.x + inRad * Math.cos(i * this.dAngle * direction + rotation * direction);
       this.points[j + 1] =
-        center.y + inRad * Math.sin(i * this.dAngle + rotation);
+        center.y + inRad * Math.sin(i * this.dAngle * direction + rotation * direction);
       this.points[j + 2] =
-        center.x + radius * Math.cos(i * this.dAngle + rotation);
+        center.x + radius * Math.cos(i * this.dAngle * direction + rotation * direction);
       this.points[j + 3] =
-        center.y + radius * Math.sin(i * this.dAngle + rotation);
+        center.y + radius * Math.sin(i * this.dAngle * direction + rotation * direction);
       j += 4;
     }
 
@@ -64,22 +66,22 @@ class VertexPolygon extends VertexObject {
     if (sidesToDraw < sides) {
       for (i = 0; i <= sidesToDraw; i += 1) {
         this.border[0].push(new Point(
-          center.x + radius * Math.cos(i * this.dAngle + rotation),
-          center.y + radius * Math.sin(i * this.dAngle + rotation),
+          center.x + radius * Math.cos(i * this.dAngle * direction + rotation * direction),
+          center.y + radius * Math.sin(i * this.dAngle * direction + rotation * direction),
         ));
       }
       for (i = sidesToDraw; i >= 0; i -= 1) {
         this.border[0].push(new Point(
-          center.x + inRad * Math.cos(i * this.dAngle + rotation),
-          center.y + inRad * Math.sin(i * this.dAngle + rotation),
+          center.x + inRad * Math.cos(i * this.dAngle * direction + rotation * direction),
+          center.y + inRad * Math.sin(i * this.dAngle * direction + rotation * direction),
         ));
       }
       this.border[0].push(this.border[0][0].copy());
     } else {
       for (i = 0; i <= sidesToDraw; i += 1) {
         this.border[0].push(new Point(
-          center.x + radius * Math.cos(i * this.dAngle + rotation),
-          center.y + radius * Math.sin(i * this.dAngle + rotation),
+          center.x + radius * Math.cos(i * this.dAngle * direction + rotation * direction),
+          center.y + radius * Math.sin(i * this.dAngle * direction + rotation * direction),
         ));
       }
     }

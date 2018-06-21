@@ -18,11 +18,11 @@
 // Styles for switching between navbars with light or dark background.
 
 // Dark links against a light background
-$navbar-color:                 $color_navbar;
-$navbar-hover-color:           $color_navbar;
-$navbar-active-color:          $color_navbar-active;
-$navbar-disabled-color:        $color_navbar-disabled;
-$navbar-toggler-border-color:  $color_navbar-toggler-border;
+$navbar-color:                 color(navbar, 'base');
+$navbar-hover-color:           color(navbar, 'hover');
+$navbar-active-color:          color(navbar, 'active');
+$navbar-disabled-color:        color(navbar, 'disabled');
+$navbar-toggler-border-color:  color(navbar, 'toggler-border');
 
 // .navbar-default {
 //   background-color: #F00;
@@ -30,7 +30,7 @@ $navbar-toggler-border-color:  $color_navbar-toggler-border;
 // }
 
 .navbar-color {
-  background-color: $color_navbar-background;
+  background-color: color(navbar, 'background');
 
   .navbar-brand {
     color: $navbar-active-color;

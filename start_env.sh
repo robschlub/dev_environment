@@ -64,6 +64,8 @@ else
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/app:/opt/app/app \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/src:/opt/app/src \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/webpack.config.js:/opt/app/webpack.config.js \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/lessons.js:/opt/app/lessons.js \
+    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/update_paths.py:/opt/app/update_paths.py \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.eslintrc.json:/opt/app/.eslintrc.json \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.flake8:/opt/app/.flake8 \
     -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/jest.config.js:/opt/app/jest.config.js \

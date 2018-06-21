@@ -1,0 +1,21 @@
+@import '../../css/style';
+
+$geometry_colors: (
+  lines:        color(diagram, 'primary'),
+  corners:      color(diagram, 'primary', 'light'),
+  moreSharp:    color(diagram, 'warning', 'light'),
+  lessSharp:    color(diagram, 'safe', 'light'),
+  anchor:       color(diagram, 'passive'),
+  radius:       color(diagram, 'primary'),
+  diameter:     color(diagram, 'safe'),
+  reference:    color(diagram, 'primary', 'light'),
+  background:   color(diagram, 'background'),
+  arrow:        color(diagram, 'warning'),
+  angle:        color(diagram, 'safe', 'lighter'),
+  angleText:    color(diagram, 'safe', 'light'),
+  dimensions:   color(diagram, 'primary', 'light'),
+  radialLines:  color(diagram, 'background'),
+  circle:       color(diagram, 'warning'),
+  arc:          color(diagram, 'warning'),
+  rotation:     color(diagram, 'warning'),
+);

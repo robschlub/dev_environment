@@ -223,6 +223,15 @@ function sinusoid(
 //     }
 // }
 
+function range(start: number, stop: number, step: number) {
+  const out = [];
+  for (let i = start; i <= stop + step * 0.5; i += step) {
+    out.push(i);
+  }
+  return out;
+}
+
+
 export {
   round,
   roundNum,
@@ -234,5 +243,6 @@ export {
   linear,
   clipMag,
   clipValue,
+  range,
 };
 

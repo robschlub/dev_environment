@@ -7,6 +7,7 @@ import {
   Rect, Point, Transform,
   spaceToSpaceTransform,
 } from './tools/g2';
+import * as tools from './tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
@@ -14,11 +15,15 @@ import DrawContext2D from './DrawContext2D';
 
 import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
 import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
+import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
+import Axis from './DiagramElements/Plot/Axis';
 
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
+import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
 import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
@@ -164,6 +169,38 @@ function shapes(diagram: Diagram) {
       diagram.limits,
     );
   }
+
+  function htmlText(
+    textInput: string,
+    id: string = '',
+    classes: string = '',
+    location: Point = new Point(0, 0),
+    alignV: 'top' | 'bottom' | 'middle' = 'middle',
+    alignH: 'left' | 'right' | 'center' = 'left',
+  ) {
+    const element = document.createElement('div');
+    if (classes && element) {
+      const classArray = classes.split(',');
+      classArray.forEach(c => element.classList.add(c.trim()));
+    }
+    const inside = document.createTextNode(textInput);
+    element.appendChild(inside);
+    element.style.position = 'absolute';
+    // element.style.left = '0px';
+    // element.style.top = '0px';
+    element.setAttribute('id', id);
+    diagram.htmlCanvas.appendChild(element);
+
+    const hT = new HTMLObject(diagram.htmlCanvas, id, new Point(0, 0), alignV, alignH);
+    const diagramElement = new DiagramElementPrimative(
+      hT,
+      new Transform().scale(1, 1).translate(location.x, location.y),
+      [1, 1, 1, 1],
+      diagram.limits,
+    );
+    // diagramElement.setFirstTransform();
+    return diagramElement;
+  }
   function arrow(
     width: number = 1,
     legWidth: number = 0.5,
@@ -219,13 +256,14 @@ function shapes(diagram: Diagram) {
     radius: number,
     lineWidth: number,
     rotation: number,
+    direction: -1 | 1,
     numSidesToDraw: number,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
     return Polygon(
       diagram.webgl, numSides, radius, lineWidth,
-      rotation, numSidesToDraw, color, transform, diagram.limits,
+      rotation, direction, numSidesToDraw, color, transform, diagram.limits,
     );
   }
   function polygonFilled(
@@ -256,6 +294,19 @@ function shapes(diagram: Diagram) {
       rotation, color, transform, diagram.limits,
     );
   }
+  function radialLines(
+    innerRadius: number = 0,
+    outerRadius: number = 1,
+    width: number = 0.05,
+    dAngle: number = Math.PI / 4,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return RadialLines(
+      diagram.webgl, innerRadius, outerRadius, width,
+      dAngle, color, transform, diagram.limits,
+    );
+  }
   function collection(transformOrPoint: Transform | Point = new Transform()) {
     let transform = new Transform();
     if (transformOrPoint instanceof Point) {
@@ -265,6 +316,135 @@ function shapes(diagram: Diagram) {
     }
     return new DiagramElementCollection(transform, diagram.limits);
   }
+  function axes(
+    width: number = 1,
+    height: number = 1,
+    limits: Rect = new Rect(-1, -1, 2, 2),
+    yAxisLocation: number = 0,
+    xAxisLocation: number = 0,
+    stepX: number = 0.1,
+    stepY: number = 0.1,
+    fontSize: number = 0.13,
+    showGrid: boolean = true,
+    color: Array<number> = [1, 1, 1, 0],
+    gridColor: Array<number> = [1, 1, 1, 0],
+    location: Transform | Point = new Transform(),
+  ) {
+    const lineWidth = 0.01;
+    const xProps = new AxisProperties('x', 0);
+
+    xProps.minorTicks.mode = 'off';
+    xProps.minorGrid.mode = 'off';
+    xProps.majorGrid.mode = 'off';
+
+    xProps.length = width;
+    xProps.width = lineWidth;
+    xProps.limits = { min: limits.left, max: limits.right };
+    xProps.color = color.slice();
+    xProps.title = '';
+
+    xProps.majorTicks.start = limits.left;
+    xProps.majorTicks.step = stepX;
+    xProps.majorTicks.length = lineWidth * 5;
+    xProps.majorTicks.offset = -xProps.majorTicks.length / 2;
+    xProps.majorTicks.width = lineWidth * 2;
+    xProps.majorTicks.labelMode = 'off';
+    xProps.majorTicks.labels = tools.range(
+      xProps.limits.min,
+      xProps.limits.max,
+      stepX,
+    ).map(v => v.toString()).map((v) => {
+      if (v === yAxisLocation.toString() && yAxisLocation === xAxisLocation) {
+        return `${v}     `;
+      }
+      return v;
+    });
+
+    // xProps.majorTicks.labels[xProps.majorTicks.labels / 2] = '   0';
+    xProps.majorTicks.labelOffset = new Point(
+      0,
+      xProps.majorTicks.offset - fontSize * 0.1,
+    );
+    xProps.majorTicks.labelsHAlign = 'center';
+    xProps.majorTicks.labelsVAlign = 'top';
+    xProps.majorTicks.fontColor = color.slice();
+    xProps.majorTicks.fontSize = fontSize;
+    xProps.majorTicks.fontWeight = '400';
+
+    const xAxis = new Axis(
+      diagram.webgl, diagram.draw2D, xProps,
+      new Transform().scale(1, 1).rotate(0)
+        .translate(0, xAxisLocation - limits.bottom),
+      diagram.limits,
+    );
+
+    const yProps = new AxisProperties('x', 0);
+    yProps.minorTicks.mode = 'off';
+    yProps.minorGrid.mode = 'off';
+    yProps.majorGrid.mode = 'off';
+
+    yProps.length = height;
+    yProps.width = xProps.width;
+    yProps.limits = { min: limits.bottom, max: limits.top };
+    yProps.color = xProps.color;
+    yProps.title = '';
+    yProps.rotation = Math.PI / 2;
+
+    yProps.majorTicks.step = stepY;
+    yProps.majorTicks.start = limits.bottom;
+    yProps.majorTicks.length = xProps.majorTicks.length;
+    yProps.majorTicks.offset = -yProps.majorTicks.length / 2;
+    yProps.majorTicks.width = xProps.majorTicks.width;
+    yProps.majorTicks.labelMode = 'off';
+    yProps.majorTicks.labels = tools.range(
+      yProps.limits.min,
+      yProps.limits.max,
+      stepY,
+    ).map(v => v.toString()).map((v) => {
+      if (v === xAxisLocation.toString() && yAxisLocation === xAxisLocation) {
+        return '';
+      }
+      return v;
+    });
+
+    // yProps.majorTicks.labels[3] = '';
+    yProps.majorTicks.labelOffset = new Point(
+      yProps.majorTicks.offset - fontSize * 0.2,
+      0,
+    );
+    yProps.majorTicks.labelsHAlign = 'right';
+    yProps.majorTicks.labelsVAlign = 'middle';
+    yProps.majorTicks.fontColor = xProps.majorTicks.fontColor;
+    yProps.majorTicks.fontSize = fontSize;
+    yProps.majorTicks.fontWeight = xProps.majorTicks.fontWeight;
+
+    const yAxis = new Axis(
+      diagram.webgl, diagram.draw2D, yProps,
+      new Transform().scale(1, 1).rotate(0)
+        .translate(yAxisLocation - limits.left, 0),
+      diagram.limits,
+    );
+
+    let transform = new Transform();
+    if (location instanceof Point) {
+      transform = transform.translate(location.x, location.y);
+    } else {
+      transform = location.copy();
+    }
+    const xy = collection(transform);
+    if (showGrid) {
+      const gridLines = grid(
+        new Rect(0, 0, width, height),
+        stepX * width / limits.width, stepY * height / limits.height,
+        gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      );
+      xy.add('grid', gridLines);
+    }
+    xy.add('y', yAxis);
+    xy.add('x', xAxis);
+    return xy;
+  }
+
   return {
     polyLine,
     polyLineCorners,
@@ -276,6 +456,9 @@ function shapes(diagram: Diagram) {
     lines,
     grid,
     text,
+    radialLines,
+    htmlText,
+    axes,
   };
 }
 
@@ -375,6 +558,9 @@ class Diagram {
     this.shapes = this.getShapes();
     this.equation = this.getEquations();
     this.createDiagramElements();
+    if (this.elements.name === '') {
+      this.elements.name = 'diagramRoot';
+    }
 
     window.addEventListener('resize', this.resize.bind(this));
     this.sizeHtmlText();
@@ -390,8 +576,18 @@ class Diagram {
   }
 
   sizeHtmlText() {
-    const scale = this.fontScale * 1 / 45;
-    this.htmlCanvas.style.fontSize = `${this.htmlCanvas.offsetWidth * scale - 1}px`;
+    const scale = this.fontScale * 1 / 35;
+    const size = this.htmlCanvas.offsetWidth * scale - 1;
+    this.htmlCanvas.style.fontSize = `${size}px`;
+
+    const style = window.getComputedStyle(document.documentElement);
+    if (style) {
+      const prop = '--lesson__diagram-font-size';
+      const docElem = document.documentElement;
+      if (docElem) {
+        docElem.style.setProperty(prop, `${size}px`);
+      }
+    }
   }
 
   destroy() {
@@ -486,6 +682,7 @@ class Diagram {
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(glPoint);
+    // console.log(touchedElements)
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
@@ -505,12 +702,15 @@ class Diagram {
   // happens, the default behavior is to let any elements being moved to move
   // freely until they decelerate to 0.
   touchUpHandler() {
+    // console.log("before", this.elements._circle.transform.t())
+    // console.log(this.beingMovedElements)
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       element.stopBeingMoved();
       element.startMovingFreely();
     }
     this.beingMovedElements = [];
+    // console.log("after", this.elements._circle.transform.t())
   }
 
   // Handle touch/mouse move events in the canvas. These events will only be
@@ -542,7 +742,6 @@ class Diagram {
     const currentDiagramPoint =
       currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
 
-
     // const previousClipPoint = this.clientToClip(previousClientPoint);
     // const currentClipPoint = this.clientToClip(currentClientPoint);
     const delta = currentDiagramPoint.sub(previousDiagramPoint);
@@ -550,12 +749,16 @@ class Diagram {
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
-      const currentTransform = element.transform.copy();
-      const currentTranslation = currentTransform.t();
-      if (currentTranslation && element.isBeingTouched(previousGLPoint)) {
-        const newTranslation = currentTranslation.add(delta);
-        currentTransform.updateTranslation(newTranslation);
-        element.moved(currentTransform);
+      if (element !== this.elements) {
+        const currentTransform = element.transform.copy();
+        const currentTranslation = currentTransform.t();
+        if (currentTranslation
+          && (element.isBeingTouched(previousGLPoint)
+              || element.move.canBeMovedAfterLoosingTouch)) {
+          const newTranslation = currentTranslation.add(delta);
+          currentTransform.updateTranslation(newTranslation);
+          element.moved(currentTransform);
+        }
       }
     }
     this.animateNextFrame();

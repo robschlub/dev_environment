@@ -2,7 +2,7 @@ $title-height: 7;
 $title-font-size: 3;
 $np_button-width: 3;
 $np_button-height-portrait: 8;
-$np_button-height-landscape: 12;
+$np_button-height-landscape: 8;
 $np_button-vspace: 4;
 $np_button-hspace: 4;
 $text-margin: 4;
@@ -28,7 +28,7 @@ $diagram_ratio: 1.5;
     --lesson__np_button-vspace: calc(#{$np_button-vspace} * 1vw);
     --lesson__np_button-hspace: calc(#{$np_button-hspace} * 1vw);
     // --lesson__text-margin: calc(#{$text-margin} * 1vw);
-    --lesson__text-margin: 2em;
+    --lesson__text-margin: 1em;
     --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1.5);
     --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw * 1.5);
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} * 1vw);
@@ -60,7 +60,7 @@ $diagram_ratio: 1.5;
     --lesson__np_button-vspace: calc(#{$np_button-vspace} / 100 * #{$xl});
     --lesson__np_button-hspace: calc(#{$np_button-hspace} / 100 * #{$xl});
     // --lesson__text-margin: calc(#{$text-margin} / 100 * #{$xl});
-    --lesson__text-margin: 2em;
+    --lesson__text-margin: 1em;
     --lesson__goto_button-width: calc(#{$goto_button-width} / 100 * #{$xl});
     --lesson__goto_button-height: calc(#{$goto_button-height} / 100 * #{$xl});
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} / 100 * #{$xl});
@@ -80,6 +80,29 @@ $diagram_ratio: 1.5;
   --lesson__content-width: var(--lesson__container-width);
   --lesson__content-height: calc(var(--lesson__content-width) / #{$diagram_ratio});
   --lesson__container-height: calc(var(--lesson__content-height) + var(--lesson__np_button-vspace) + var(--lesson__np_button-height));
+  --lesson__diagram-font-size: 1;
+}
+
+@mixin lesson_vars() {
+  @each $var, $value in $_lesson_vars {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        @if type-of($subvalue) == "map" {
+          @each $subsubvar, $subsubvalue in $subvalue {
+            --lessonvars-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+          }
+        }
+
+        @else {
+          --lessonvars-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+    }
+
+    @else {
+      --lessonvars-#{$var}: #{$value};
+    }
+  }
 }
 
 .lesson__container {
@@ -89,6 +112,10 @@ $diagram_ratio: 1.5;
   width: var(--lesson__container-width);
   height: var(--lesson__container-height);
   margin-bottom: $bottom_margin;
+}
+
+.lesson__widescreen_backdrop {
+  background-color: color(diagram, 'background');
 }
 
 .multipage_diagram {
@@ -101,7 +128,20 @@ $diagram_ratio: 1.5;
   // background-color: rgba($color_diagram, 0.4);
   margin-left: var(--lesson__text-margin);
   margin-right: var(--lesson__text-margin);
+  // margin-bottom: var(--lesson__text-margin);
   margin-top: var(--lesson__text-margin);
+  height: calc(100% - var(--lesson__text-margin) * 2);
+}
+
+.lesson__text ul {
+  margin-left: calc(var(--lesson__text-margin) * 1);
+  margin-right: calc(var(--lesson__text-margin) * 1);
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+.lesson__small_text {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
 }
 
 .lesson__text p {
@@ -110,23 +150,27 @@ $diagram_ratio: 1.5;
   padding-right: 0.2em;
   // clear: both;
   // float: left;
-  color: $color_diagram-text;
+  color: color(diagram, 'text-base');
   margin-left: calc(var(--lesson__text-margin) * 1);
   margin-right: calc(var(--lesson__text-margin) * 1);
-  margin-bottom: 1em;
+  // margin-top: 6%;
+  // margin-bottom: 1em;
+  margin-bottom: 4%;
+  margin-top: 0;
 }
 
 .lesson__text p:first-child {
+  margin-top: 0;
   margin-top: var(--lesson__text-margin);
 }
 
 .lesson__text p:last-child {
-  margin-bottom: var(--lesson__text-margin);
+  // margin-bottom: var(--lesson__text-margin);
 }
 
 .lesson__title {
   font-size: var(--lesson__title-font-size);
-  color: $color_text;
+  color: color(lesson, 'text-title');
   height: var(--lesson__title-height);
   text-align: center;
   margin-top: var(--lesson__top-margin);
@@ -137,7 +181,7 @@ $diagram_ratio: 1.5;
   border-style: none;
   border: 0;
   padding: 0;
-  background-color: $color_background;
+  background-color: color(diagram, 'background');
   top: calc(100% - var(--lesson__np_button-height));
   width: 0;
   height: 0;
@@ -147,20 +191,20 @@ $diagram_ratio: 1.5;
 
 #lesson__button-previous {
   left: 0;
-  border-right: var(--lesson__np_button-width) solid $color_navigation-buttons;
+  border-right: var(--lesson__np_button-width) solid color(navbar, 'button');
 }
 
 #lesson__button-next {
   right: 0;
-  border-left: var(--lesson__np_button-width) solid $color_navigation-buttons;
+  border-left: var(--lesson__np_button-width) solid color(navbar, 'button');
 }
 
 #lesson__button-next:hover {
-  border-left: var(--lesson__np_button-width) solid lighten($color_navigation-buttons, 10);
+  border-left: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 10);
 }
 
 #lesson__button-previous:hover {
-  border-right: var(--lesson__np_button-width) solid lighten($color_navigation-buttons, 10);
+  border-right: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 10);
 }
 
 .lesson__button-goto_container {
@@ -177,16 +221,16 @@ $diagram_ratio: 1.5;
   border: 0;
   // left: calc(50% - var(--lesson__goto_button-width) / 2);
   // top: calc(100% - var(--lesson__np_button-height) / 2 - var(--lesson__goto_button-height) / 2);
-  background-color: $color_navigation-buttons;
+  background-color: color(navbar, 'button');
   // height: var(--lesson__goto_button-height);
   // width: var(--lesson__goto_button-width);
   font-size: var(--lesson__goto_button-font-size);
-  color: $color_text;
+  color: color(lesson, 'text');
   width: var(--lesson__goto_button-width);
 }
 
 #lesson__button-goto:hover {
-  background-color: lighten($color_navigation-buttons, 10);
+  background-color: lighten(color(navbar, 'button'), 10);
 }
 
 #lesson__page_number {
@@ -195,7 +239,7 @@ $diagram_ratio: 1.5;
   top: calc(100% - var(--lesson__np_button-height) - var(--lesson__np_button-vspace) / 2 - var(--lesson__goto_button-font-size) / 2);
   font-size: var(--lesson__goto_button-font-size);
   text-align: center;
-  color: $color_text;
+  color: color(navbar, 'button');
 }
 
 @media (min-aspect-ratio: 1/1) {
@@ -239,18 +283,18 @@ $diagram_ratio: 1.5;
   }
 
   .lesson__button-goto_container {
-    left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
+    // left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
 
     // left: calc(var(--lesson__np_button-width) - var(--lesson__goto_button-width));
     // left: 0;
-    top: 0;
+    top: 105%;
   }
 
   #lesson__page_number {
-    left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
+    left: calc(50% - var(--lesson__goto_button-width) / 2);
     width: var(--lesson__goto_button-width);
     text-align: center;
-    top: calc(100% - var(--lesson__goto_button-font-size) * 1.5);
+    top: calc(110% + var(--lesson__goto_button-font-size) * 2);
     // bottom: 0;
   }
 }
@@ -265,4 +309,40 @@ $diagram_ratio: 1.5;
   border-top: 60px solid transparent;
   border-bottom: 60px solid transparent;
   border-left: 60px solid green;
+}
+
+.lesson__padding_override {
+  padding: 0;
+}
+
+.highlight_word {
+  color: color(diagram, 'text-keyword');
+  font-style: italic;
+}
+
+.latin {
+  font-style: italic;
+  color: color(diagram, 'text-latin');
+}
+
+.greek {
+  font-style: italic;
+  color: color(diagram, 'text-greek');
+}
+
+.english {
+  font-style: italic;
+  color: color(diagram, 'text-english');
+}
+
+.lesson__sub_title {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 0.2em;
+  margin-left: calc(var(--lesson__text-margin) * 1);
+  color: color(diagram, 'disabled');
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  font-style: italic;
 }

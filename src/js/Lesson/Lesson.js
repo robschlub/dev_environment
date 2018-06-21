@@ -101,8 +101,10 @@ class Lesson {
         section.transitionFromPrev(this.finishTransFromPrev.bind(this));
         this.comingFrom = '';
       } else {
-        section.setState(this.state);
-        this.renderDiagrams();
+        section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+        this.comingFrom = '';
+        // section.setState(this.state);
+        // this.renderDiagrams();
       }
     }
   }
