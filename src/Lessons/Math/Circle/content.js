@@ -5,7 +5,7 @@ import {
   centerV,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-// import { Transform } from '../../../js/diagram/tools/g2';
+import { Transform, Point } from '../../../js/diagram/tools/g2';
 // import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
@@ -23,8 +23,9 @@ class Content extends LessonContent {
   }
 
   addSections() {
-    const circle = this.diagram.elements._circle;
     const { elements } = this.diagram;
+    const circle = elements._circle;
+    const grid = elements._grid;
 
     this.addSection({
       title: 'Angle Measurement',
@@ -257,13 +258,20 @@ class Content extends LessonContent {
         _move: actionWord('Move', 'id_push', colors.push),
         _location: actionWord('location', 'id_loc', colors.anchor),
       },
+      setInitialState: () => {
+        grid._locationText
+          .transform.updateTranslation(layout.locationText.bottom.position);
+        grid._locationText._text
+          .transform.updateTranslation(layout.locationText.bottom.offset, 0);
+        grid._locationText.setFirstTransform(grid.lastDrawTransform);
+      },
       setState: () => {
         elements.resetCircle('forMoving');
         circle.isMovable = true;
-        elements._grid._locationText
-          .transform.updateTranslation(layout.locationText.bottom.position);
-        elements._grid._locationText._text
-          .transform.updateTranslation(layout.locationText.bottom.offset, 0);
+        // elements._grid._locationText
+        //   .transform.updateTranslation(layout.locationText.bottom.position);
+        // elements._grid._locationText._text
+        //   .transform.updateTranslation(layout.locationText.bottom.offset, 0);
         elements._grid._linesAndLabels.showAll();
         elements._grid._locationText.showAll();
         elements.updateLocation();
@@ -277,9 +285,9 @@ class Content extends LessonContent {
         circle,
         circle._anchor,
         circle._circumference,
-        elements._grid,
-        elements._grid._linesAndLabels,
-        elements._grid._locationText,
+        grid,
+        grid._linesAndLabels,
+        grid._locationText,
       ],
       transitionFromAny: (done) => {
         elements.transitionCircle(done);
@@ -503,12 +511,9 @@ class Content extends LessonContent {
         _straightened: actionWord('straightened', 'id_straight', colors.circle),
         _circumference: actionWord('circumference', 'id_circum', colors.circle),
       },
-      setState: () => {
+      setInitialState: () => {
         elements.resetCircle('right');
-        elements._straightCircumference.showAll();
         elements.straighten(0);
-        onClickId('id_straight', elements.straightenCircumference, [elements]);
-        onClickId('id_circum', elements.straightenCircumference, [elements]);
       },
       showOnly: [
         circle,
@@ -516,10 +521,17 @@ class Content extends LessonContent {
         elements._straightCircumference,
       ],
       transitionFromAny: (done) => {
-        elements.straighten(0);
+        // elements.straighten(0);
         elements._straightCircumference.showAll();
-        elements._straightCircumference.showAll();
+        // elements._straightCircumference.showAll();
         elements.transitionCircle(done, 'right');
+      },
+      setState: () => {
+        // elements.resetCircle('right');
+        // elements._straightCircumference.showAll();
+        // elements.straighten(0);
+        onClickId('id_straight', elements.straightenCircumference, [elements]);
+        onClickId('id_circum', elements.straightenCircumference, [elements]);
       },
     });
     this.addSection({
@@ -578,19 +590,22 @@ class Content extends LessonContent {
         onClickId('id_diameter_text', elements.toggleDiameter, [elements]);
         onClickId('id_location_text', elements.pulseAnchor, [elements]);
       },
+      setInitialState: () => {
+        grid._locationText
+          .transform.updateTranslation(layout.locationText.top.position);
+        grid._locationText._text
+          .transform.updateTranslation(layout.locationText.top.offset, 0);
+        grid._locationText.setFirstTransform(grid.lastDrawTransform);
+        elements.straighten(0);
+        grid._slider.set(0.8);
+        elements.updateSlider();
+      },
       show: [
         circle,
         elements._grid,
         elements._straightCircumference,
       ],
       transitionFromAny: (done) => {
-        elements._grid._locationText
-          .transform.updateTranslation(layout.locationText.top.position);
-        elements._grid._locationText._text
-          .transform.updateTranslation(layout.locationText.top.offset, 0);
-        elements.straighten(0);
-        elements._grid._slider.set(0.8);
-        elements.updateSlider();
         elements.transitionCircle(done, 'forMoving', elements.percentToScale(0.8));
       },
       transitionToAny: (done) => {
@@ -602,3 +617,17 @@ class Content extends LessonContent {
 }
 
 export default Content;
+
+// plannedPositions
+
+// initialState
+// showOnly
+// hideOnly
+// show
+// hide
+// transitionFromAny
+// transitionFromPrev/Next
+// setPlannedPositions?
+// finalState
+// transitionToPrev/Next
+// transitionToAny

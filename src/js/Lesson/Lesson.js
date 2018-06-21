@@ -2,6 +2,26 @@
 import { LessonContent } from './LessonContent';
 import Diagram from '../diagram/Diagram';
 
+
+// Flow:
+//
+//  Coming from any section
+//    - initialState                Guaranteed
+//    - showOnly                    Guaranteed
+//    - hideOnly                    Guaranteed
+//    - show                        Guaranteed
+//    - hide                        Guaranteed
+//    - transitionFromPrev/Next     Can be cancelled
+//    - transitionFromAny           Can be cancelled / skipped
+//    - setPlannedPositions?        Can be cancelled / skipped
+//    - finalState                  Can be skipped
+//
+//  Go to next, prev or goTo
+//    - leaveState                  Guaranteed
+//    - saveState                   Guaranteed
+//    - transitionToPrev            Can be cancelled / skipped
+//    - transitionToAny             Can be cancelled / skipped
+
 class Lesson {
   // ContentClass: Object;
   content: LessonContent;
@@ -37,6 +57,7 @@ class Lesson {
     const { diagram } = this;
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
       this.stopDiagrams();
+      // this.currentSection().saveState();
       this.transitionStart('next');
       this.currentSection().transitionNext(this.finishTransNext.bind(this));
     }
@@ -45,6 +66,7 @@ class Lesson {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
       this.stopDiagrams();
+      // this.currentSection().saveState();
       this.transitionStart('prev');
       this.currentSection().transitionPrev(this.finishTransPrev.bind(this));
     }
@@ -99,6 +121,7 @@ class Lesson {
     const { diagram } = this;
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
+      section.setInitialState(this.state);
       section.setVisible();
       this.renderDiagrams();
       if (this.comingFrom === 'next') {
@@ -112,8 +135,6 @@ class Lesson {
       } else {
         section.transitionFromAny(this.finishTransitionFromAny.bind(this));
         this.comingFrom = '';
-        // section.setState(this.state);
-        // this.renderDiagrams();
       }
     }
   }

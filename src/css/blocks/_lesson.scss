@@ -322,6 +322,15 @@ $diagram_ratio: 1.5;
   font-style: italic;
 }
 
+.action_word {
+  font-weight: bold;
+}
+
+.action_word_enabled {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .latin {
   font-style: italic;
   color: color(diagram, 'text-latin');

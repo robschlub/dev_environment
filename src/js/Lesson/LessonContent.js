@@ -3,6 +3,7 @@
 import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
 import { colorArrayToRGBA } from '../tools/tools';
+// import { Transform, Point } from '../diagram/tools/g2';
 
 function centerV(text: string = '') {
   return `<div style="display: table; height: 100%;">
@@ -101,6 +102,7 @@ function onClickId(
 ) {
   const element = document.getElementById(id);
   if (element) {
+    element.classList.add('action_word_enabled');
     if (bind.length === 1) {
       element.onclick = action.bind(bind[0]);
     }
@@ -156,6 +158,9 @@ class Section {
            | () => {};
   show: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
+  hide: Array<DiagramElementPrimative | DiagramElementCollection>
+           | () => {};
+  initialPositions: Object | () => {};
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
@@ -189,6 +194,32 @@ class Section {
   setState(previousState: Object) {
   }
 
+  /* eslint-disable no-unused-vars */
+  setInitialState(previousState: Object) {
+  }
+
+  // setInitialPositions() {
+  //   if ('initialPositions' in this) {
+  //     const elementsOrMethod = this.initialPositions;
+  //     if (typeof elementsOrMethod === 'function') {
+  //       elementsOrMethod();
+  //     }
+  //     if (Array.isArray(elementsOrMethod)) {
+  //       for (let i = 0; i < elementsOrMethod.length; i += 2) {
+  //         const element = elementsOrMethod[i];
+  //         const transformPointOrNumber = elementsOrMethod[i + 1];
+  //         if (transformPointOrNumber instanceof Transform) {
+  //           element.transform = transformPointOrNumber.copy();
+  //         } else if (transformPointOrNumber instanceof Point) {
+  //           element.transform.updateTranslation(transformPointOrNumber);
+  //         } else if (typeof transformPointOrNumber === 'number') {
+  //           element.transform.updateRotation(transformPointOrNumber);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -214,6 +245,20 @@ class Section {
             element.showAll();
           } else {
             element.show();
+          }
+        });
+      } else {
+        elementsOrMethod();
+      }
+    }
+    if ('hide' in this) {
+      const elementsOrMethod = this.hide;
+      if (Array.isArray(elementsOrMethod)) {
+        elementsOrMethod.forEach((element) => {
+          if (element instanceof DiagramElementCollection) {
+            element.hideAll();
+          } else {
+            element.hide();
           }
         });
       } else {
