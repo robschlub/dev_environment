@@ -30,7 +30,7 @@ class Content extends LessonContent {
       title: 'Angle Measurement',
       setContent: () => centerV(`
         <p>
-          The first shape we will explore is one you see every time you look at the |_moon|, a |_wheel|, a |_ball| and a |_ring|.
+          The first shape we will explore is one you see every time you look at the |_moon|, a |_wheel|, a |_ball| or a |_ring|.
         </p>
         `),
       modifiers: {
@@ -43,7 +43,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => `
         <p>
-          Their size, mass and what they are made of is very different.
+          Their size, mass and material is very different.
         </p>
         <p>
           But they all have a |_common_shape|.
@@ -91,13 +91,13 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () => centerV(`
         <p>
-          In ancient |_Greek|, the name |_krikos| was used. This was also their word for |_ring|.
+          In ancient |_Greek|, this shape was named |_krikos|, which was their word for |_ring|.
         </p>
         <p>
-          In |_Latin|, the word for |_ring| was also used, |_circulus|.
+          Similary |_Latin| also used the word for |_ring|, with |_circulus|.
         </p>
         <p>
-          Today, we use the name |_circle| which comes from the Latin root.
+          Today, our name comes from the Latin root and is |_circle|.
         </p>
         `),
       modifiers: {
@@ -439,7 +439,7 @@ class Content extends LessonContent {
         </p>
         <div class="lesson__sub_title">Description:</div>
         <p>
-          Length of Circle's |_edge|.
+          Length of circle |_edge|.
         </p>
         `,
       modifiers: {
@@ -456,44 +456,31 @@ class Content extends LessonContent {
       },
       setState: () => {
         elements.resetCircle('right');
-        // elements._straightCircumference.showAll();
-        // elements.straighten(0);
         onClickId('id_edge', elements.pulseCircumference, [elements]);
         onClickId('id_circum', elements.pulseCircumference, [elements]);
       },
       showOnly: [
         circle,
-        // elements._straightCircumference,
         circle._circumference,
       ],
     });
     this.addSection({
       setContent: () => `
         <p>
-          The |_length| of the edge can be seen more easily if it is |_straightened| out.
-        </p>
-        <p>
-          Today, we use this Latin root and call it the |_circumference|.
+          The |_length| of the edge can be seen more easily when it is |_straightened| out.
         </p>
         `,
       modifiers: {
         _length: highlightWord('length', '', 'english'),
         _straightened: actionWord('straightened', 'id_straight', colors.circle),
-        // _circum: highlightWord('circum', '', 'latin'),
-        // _ferre: highlightWord('ferre', '', 'latin'),
-        // _Latin: highlightWord('Latin', '', 'latin'),
-        // _circumferentia: highlightWord('circumferentia', '', 'latin'),
-        // _carry: highlightWord('carry', '', 'english'),
-        // _around: highlightWord('around', '', 'english'),
-        // _circumference: actionWord('circumference', 'id_straight', colors.circle),
+        _circumference: actionWord('circumference', 'id_circum', colors.circle),
       },
       setState: () => {
         elements.resetCircle('right');
         elements._straightCircumference.showAll();
         elements.straighten(0);
-        // elements._straightCircumference.transform.updateScale(1, 1);
-        // elements._straightCircumference.transform.updateTranslation(layout.circle.center);
         onClickId('id_straight', elements.straightenCircumference, [elements]);
+        onClickId('id_circum', elements.straightenCircumference, [elements]);
       },
       showOnly: [
         // circle,
