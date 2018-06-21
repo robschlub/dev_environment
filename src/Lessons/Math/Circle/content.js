@@ -243,6 +243,9 @@ class Content extends LessonContent {
         // circle._radius,
         circle._circumference,
       ],
+      transitionFromAny: (done) => {
+        elements.transitionCircle(done);
+      },
     });
     this.addSection({
       setContent: () => `
@@ -278,6 +281,9 @@ class Content extends LessonContent {
         elements._grid._linesAndLabels,
         elements._grid._locationText,
       ],
+      transitionFromAny: (done) => {
+        elements.transitionCircle(done);
+      },
     });
 
     this.addSection({
@@ -320,6 +326,9 @@ class Content extends LessonContent {
         circle._radius,
         circle._circumference,
       ],
+      transitionFromAny: (done) => {
+        elements.transitionCircle(done);
+      },
     });
     this.addSection({
       setContent: () => `
@@ -353,6 +362,9 @@ class Content extends LessonContent {
         circle._radius,
         circle._circumference,
       ],
+      transitionFromAny: (done) => {
+        elements.transitionCircle(done);
+      },
     });
     this.addSection({
       title: 'Diameter',
@@ -393,6 +405,9 @@ class Content extends LessonContent {
         // circle._radius,
         circle._circumference,
       ],
+      transitionFromAny: (done) => {
+        elements.transitionCircle(done);
+      },
     });
     this.addSection({
       setContent: () => `
@@ -426,6 +441,9 @@ class Content extends LessonContent {
         // circle._radius,
         circle._circumference,
       ],
+      transitionFromAny: (done) => {
+        elements.transitionCircle(done);
+      },
     });
     this.addSection({
       title: 'Circumference',
@@ -457,13 +475,22 @@ class Content extends LessonContent {
       },
       setState: () => {
         elements.resetCircle('right');
+        elements._straightCircumference.showAll();
+        elements.straighten(0);
         onClickId('id_edge', elements.pulseCircumference, [elements]);
         onClickId('id_circum', elements.pulseCircumference, [elements]);
       },
       showOnly: [
         circle,
         circle._circumference,
+        elements._straightCircumference,
       ],
+      transitionFromAny: (done) => {
+        elements.straighten(0);
+        elements._straightCircumference.showAll();
+        elements._straightCircumference.showAll();
+        elements.transitionCircle(done, 'right');
+      },
     });
     this.addSection({
       setContent: () => `
@@ -484,9 +511,16 @@ class Content extends LessonContent {
         onClickId('id_circum', elements.straightenCircumference, [elements]);
       },
       showOnly: [
-        // circle,
+        circle,
+        circle._circumference,
         elements._straightCircumference,
       ],
+      transitionFromAny: (done) => {
+        elements.straighten(0);
+        elements._straightCircumference.showAll();
+        elements._straightCircumference.showAll();
+        elements.transitionCircle(done, 'right');
+      },
     });
     this.addSection({
       setContent: () => centerV(`
@@ -528,17 +562,6 @@ class Content extends LessonContent {
       setState: () => {
         elements.resetCircle('forMoving');
         circle.isMovable = true;
-        elements._grid._locationText
-          .transform.updateTranslation(layout.locationText.top.position);
-        elements._grid._locationText._text
-          .transform.updateTranslation(layout.locationText.top.offset, 0);
-        elements._grid.showAll();
-        elements._grid._slider.set(0.8);
-        elements.updateSlider();
-        elements.straighten(0);
-        elements._straightCircumference.showAll();
-        circle.showAll();
-
         if (Math.abs(circle._diameter.transform.r()
           - circle._radius.transform.r()) < Math.PI / 10) {
           if (circle._radius.transform.r() > Math.PI) {
@@ -555,13 +578,25 @@ class Content extends LessonContent {
         onClickId('id_diameter_text', elements.toggleDiameter, [elements]);
         onClickId('id_location_text', elements.pulseAnchor, [elements]);
       },
-      showOnly: [
+      show: [
         circle,
-        // circle._anchor,
-        // circle._circumference,
         elements._grid,
         elements._straightCircumference,
       ],
+      transitionFromAny: (done) => {
+        elements._grid._locationText
+          .transform.updateTranslation(layout.locationText.top.position);
+        elements._grid._locationText._text
+          .transform.updateTranslation(layout.locationText.top.offset, 0);
+        elements.straighten(0);
+        elements._grid._slider.set(0.8);
+        elements.updateSlider();
+        elements.transitionCircle(done, 'forMoving', elements.percentToScale(0.8));
+      },
+      transitionToAny: (done) => {
+        elements.resetCircle();
+        done();
+      },
     });
   }
 }

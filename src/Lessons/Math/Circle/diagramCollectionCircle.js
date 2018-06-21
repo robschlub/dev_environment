@@ -519,13 +519,18 @@ class CircleCollection extends DiagramElementCollection {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  percentToScale(percent: number) {
+    return 0.3 + percent * 0.7;
+  }
+
   updateSlider() {
     const t = this._grid._slider._circle.transform.t();
     if (t) {
       const position = t.x;
       const percent = (position - this._grid._slider.start) / this._grid._slider.travel;
       this._grid._slider.set(percent);
-      const scale = 0.3 + percent * 0.7;
+      const scale = this.percentToScale(percent);
       this._circle.scaleTo(scale);
 
       const width = this.widthOfCircumference();
@@ -560,6 +565,7 @@ class CircleCollection extends DiagramElementCollection {
   }
   updateLocation() {
     const t = this._circle.transform.t();
+    const s = this._circle.transform.s();
     if (t) {
       // $FlowFixMe
       this._grid._locationText._x.vertices.element.innerHTML =
@@ -573,6 +579,9 @@ class CircleCollection extends DiagramElementCollection {
         t.y,
       );
     }
+    if (s) {
+      this._straightCircumference.transform.updateScale(s);
+    }
   }
 
   straightenCircumference() {
@@ -582,7 +591,7 @@ class CircleCollection extends DiagramElementCollection {
       currentPercent = s.x;
     }
 
-    if (!this.varState.straightening) {
+    if (!this.varState.straightening || this.varState.percentStraight === 0) {
       this.animateCustomTo(this.straighten.bind(this), 2, currentPercent);
       this.varState.straightening = true;
     } else {
@@ -804,6 +813,26 @@ class CircleCollection extends DiagramElementCollection {
     this._straightCircumference.transform.updateScale(1, 1);
     this._circle.isMovable = false;
   }
+
+  transitionCircle(done: () => void, toPosition: string = 'center', scale: number = 1) {
+    this._circle.isMovable = false;
+    const t = this._circle.transform.t();
+    const s = this._circle.transform.s();
+    if (s && t) {
+      if (t.isNotEqualTo(layout.circle[toPosition]) || s.x !== scale) {
+        this._circle.animateTranslationAndScaleTo(
+          layout.circle[toPosition],
+          scale,
+          1,
+          tools.easeinout,
+          done,
+        );
+        return;
+      }
+    }
+    done();
+  }
+
   resetColors() {
     this._circle._radius.color = colors.radius.slice();
     this._circle._anchor.color = colors.anchor.slice();

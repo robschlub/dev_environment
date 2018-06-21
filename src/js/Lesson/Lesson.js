@@ -12,6 +12,7 @@ class Lesson {
   inTransition: boolean;
   comingFrom: string;
   refresh: (string, number) => void;
+  goToSectionIndex: number;
 
   constructor(content: Object) {
     this.content = content;
@@ -22,6 +23,7 @@ class Lesson {
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
     this.comingFrom = '';
+    this.goToSectionIndex = 0;
   }
 
   getContentHtml(): string {
@@ -34,6 +36,7 @@ class Lesson {
   nextSection() {
     const { diagram } = this;
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
+      this.stopDiagrams();
       this.transitionStart('next');
       this.currentSection().transitionNext(this.finishTransNext.bind(this));
     }
@@ -41,6 +44,7 @@ class Lesson {
   prevSection() {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
+      this.stopDiagrams();
       this.transitionStart('prev');
       this.currentSection().transitionPrev(this.finishTransPrev.bind(this));
     }
@@ -80,10 +84,15 @@ class Lesson {
       if (this.inTransition) {
         this.stopDiagrams();
       }
-      this.saveState();
-      this.currentSectionIndex = sectionIndex;
-      this.refresh(this.getContentHtml(), this.currentSectionIndex);
+      this.goToSectionIndex = sectionIndex;
+      this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
     }
+  }
+
+  finishTransToAny() {
+    this.saveState();
+    this.currentSectionIndex = this.goToSectionIndex;
+    this.refresh(this.getContentHtml(), this.currentSectionIndex);
   }
 
   setState() {

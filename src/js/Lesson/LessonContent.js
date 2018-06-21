@@ -210,8 +210,11 @@ class Section {
       const elementsOrMethod = this.show;
       if (Array.isArray(elementsOrMethod)) {
         elementsOrMethod.forEach((element) => {
-          // eslint-disable-next-line no-param-reassign
-          element.show();
+          if (element instanceof DiagramElementCollection) {
+            element.showAll();
+          } else {
+            element.show();
+          }
         });
       } else {
         elementsOrMethod();
@@ -236,6 +239,9 @@ class Section {
     done();
   }
   transitionFromAny(done: () => void = function temp() {}): void {
+    done();
+  }
+  transitionToAny(done: () => void = function temp() {}): void {
     done();
   }
   /* eslint-enable no-unused-vars */
