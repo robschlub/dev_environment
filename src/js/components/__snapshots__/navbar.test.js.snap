@@ -42,39 +42,9 @@ exports[`Navbar Make "About" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/introduction"
+            href=""
           >
-            Introduction
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link active"
-            href="/about"
-          >
-            About
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/Lessons/Math/Introduction"
-          >
-            Single
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/Lessons/Math/ShapesAndCornersTest"
-          >
-            Multi
+            Login
           </a>
         </li>
         <li
@@ -89,7 +59,7 @@ exports[`Navbar Make "About" item active 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Lesson
+            Learn
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -187,40 +157,10 @@ exports[`Navbar Make "Introduction" item active 1`] = `
           className="nav-item"
         >
           <a
-            className="nav-link active"
-            href="/introduction"
-          >
-            Introduction
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
             className="nav-link "
-            href="/about"
+            href=""
           >
-            About
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/Lessons/Math/Introduction"
-          >
-            Single
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/Lessons/Math/ShapesAndCornersTest"
-          >
-            Multi
+            Login
           </a>
         </li>
         <li
@@ -235,7 +175,7 @@ exports[`Navbar Make "Introduction" item active 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Lesson
+            Learn
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -334,39 +274,9 @@ exports[`Navbar No props 1`] = `
         >
           <a
             className="nav-link "
-            href="/introduction"
+            href=""
           >
-            Introduction
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/about"
-          >
-            About
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/Lessons/Math/Introduction"
-          >
-            Single
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/Lessons/Math/ShapesAndCornersTest"
-          >
-            Multi
+            Login
           </a>
         </li>
         <li
@@ -381,7 +291,7 @@ exports[`Navbar No props 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Lesson
+            Learn
           </a>
           <div
             aria-labelledby="navbarDropdown"

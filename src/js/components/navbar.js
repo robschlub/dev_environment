@@ -42,7 +42,7 @@ export default class Navbar extends React.Component
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
               <a className={nav1Class}
-                 href={""/*`/${nav1.toLowerCase().replace(/ /g, '')*/}>
+                 href={''/* `/${nav1.toLowerCase().replace(/ /g, '') */}>
                   { nav1 }
               </a>
             </li>
