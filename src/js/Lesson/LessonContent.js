@@ -199,7 +199,7 @@ class Section {
   }
 
   /* eslint-disable no-unused-vars */
-  setLeaveState() {
+  setLeaveState(): ?Object {
   }
 
   // setInitialPositions() {
@@ -275,13 +275,13 @@ class Section {
     return {};
   }
 
-  transitionNext(done: () => void = function temp() {}): void {
+  transitionToNext(done: () => void = function temp() {}): void {
     done();
   }
   transitionFromNext(done: () => void = function temp() {}): void {
     done();
   }
-  transitionPrev(done: () => void = function temp() {}): void {
+  transitionToPrev(done: () => void = function temp() {}): void {
     done();
   }
   transitionFromPrev(done: () => void = function temp() {}): void {

@@ -53,6 +53,15 @@ class Content extends LessonContent {
       modifiers: {
         _common_shape: actionWord('common shape', 'id_common', colors.circle),
       },
+      setEnterState: () => {
+        elements.resetColors();
+        elements.varState.shapeTurn = 0;
+        elements._moon.transform.updateTranslation(layout.moon.center);
+        elements._wheel.transform.updateTranslation(layout.wheel.center);
+        elements._ball.transform.updateTranslation(layout.ball.center);
+        elements._ring.transform.updateTranslation(layout.ring.center);
+        elements._circleShape.transform.updateTranslation(layout.circleShape.center);
+      },
       showOnly: [
         elements._moon,
         elements._wheel,
@@ -61,13 +70,6 @@ class Content extends LessonContent {
         elements._circleShape,
       ],
       setSteadyState: () => {
-        elements.resetColors();
-        elements.varState.shapeTurn = 0;
-        elements._moon.transform.updateTranslation(layout.moon.center);
-        elements._wheel.transform.updateTranslation(layout.wheel.center);
-        elements._ball.transform.updateTranslation(layout.ball.center);
-        elements._ring.transform.updateTranslation(layout.ring.center);
-        elements._circleShape.transform.updateTranslation(layout.circleShape.center);
         onClickId('id_common', elements.toggleShape, [elements]);
       },
     });
@@ -128,6 +130,13 @@ class Content extends LessonContent {
         _pushing: actionWord('pushing', 'id_push', colors.circle),
         _circle: actionWord('circle', 'id_circle', colors.circle),
       },
+      setEnterState: () => {
+        elements.resetCircle();
+        elements.resetColors();
+        circle.transform.updateTranslation(layout.circle.center);
+        circle._radius.transform.updateRotation(0.001);
+        elements.updateRotation();
+      },
       showOnly: [
         circle,
         circle._radius,
@@ -135,11 +144,6 @@ class Content extends LessonContent {
         circle._arc,
       ],
       setSteadyState: () => {
-        elements.resetCircle();
-        elements.resetColors();
-        circle.transform.updateTranslation(layout.circle.center);
-        circle._radius.transform.updateRotation(0.001);
-        elements.updateRotation();
         onClickId('id_anchor', elements.pulseAnchor, [elements]);
         onClickId('id_line', elements.pulseRadius, [elements]);
         onClickId('id_push', elements.pushRadius, [elements]);
@@ -204,19 +208,19 @@ class Content extends LessonContent {
         _centrum: highlightWord('centrum', '', 'latin'),
         _middle: highlightWord('middle', '', 'english'),
       },
-      setSteadyState: () => {
-        // elements.greyColors();
+      setEnterState: () => {
         elements.resetCircle();
-        circle._anchor.color = colors.anchor;
-        onClickId('id_anchor', elements.pulseAnchor, [elements]);
-        onClickId('id_center', elements.pulseAnchor, [elements]);
+        // circle._anchor.color = colors.anchor;
       },
       showOnly: [
         circle,
         circle._anchor,
-        // circle._radius,
         circle._circumference,
       ],
+      setSteadyState: () => {
+        onClickId('id_anchor', elements.pulseAnchor, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
+      },
     });
     this.addSection({
       setContent: () => `
@@ -231,21 +235,18 @@ class Content extends LessonContent {
         _center_point: actionWord('center point', 'id_center', colors.anchor),
         _location: highlightWord('location', '', 'english'),
       },
-      setSteadyState: () => {
-        // elements.greyColors();
-        elements.resetCircle();
-        circle._anchor.color = colors.anchor;
-        onClickId('id_anchor', elements.pulseAnchor, [elements]);
-        onClickId('id_center', elements.pulseAnchor, [elements]);
-      },
       showOnly: [
         circle,
         circle._anchor,
-        // circle._radius,
         circle._circumference,
       ],
       transitionFromAny: (done) => {
         elements.transitionCircle(done);
+      },
+      setSteadyState: () => {
+        // elements.resetCircle();
+        onClickId('id_anchor', elements.pulseAnchor, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
       },
     });
     this.addSection({
@@ -258,24 +259,12 @@ class Content extends LessonContent {
         _move: actionWord('Move', 'id_push', colors.push),
         _location: actionWord('location', 'id_loc', colors.anchor),
       },
-      setInitialState: () => {
+      setEnterState: () => {
         grid._locationText
           .transform.updateTranslation(layout.locationText.bottom.position);
         grid._locationText._text
           .transform.updateTranslation(layout.locationText.bottom.offset, 0);
         grid._locationText.setFirstTransform(grid.lastDrawTransform);
-      },
-      setSteadyState: () => {
-        elements.resetCircle('forMoving');
-        circle.isMovable = true;
-        elements._grid._linesAndLabels.showAll();
-        elements._grid._locationText.showAll();
-        elements.updateLocation();
-        circle.updateBoundaries();
-
-        onClickId('id_location_text', elements.pulseAnchor, [elements]);
-        onClickId('id_push', elements.pushCircle, [elements]);
-        onClickId('id_loc', elements.pulseAnchor, [elements]);
       },
       showOnly: [
         circle,
@@ -287,6 +276,17 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         elements.transitionCircle(done);
+      },
+      setSteadyState: () => {
+        elements.resetCircle('forMoving');
+        circle.isMovable = true;
+        elements._grid._linesAndLabels.showAll();
+        elements._grid._locationText.showAll();
+        elements.updateLocation();
+        circle.updateBoundaries();
+        onClickId('id_location_text', elements.pulseAnchor, [elements]);
+        onClickId('id_push', elements.pushCircle, [elements]);
+        onClickId('id_loc', elements.pulseAnchor, [elements]);
       },
     });
 
@@ -309,20 +309,9 @@ class Content extends LessonContent {
         `,
       modifiers: {
         _radius: actionWord('Radius', 'id_radius', colors.radius),
-        // _radius2: actionWord('Radius', 'id_radius2', colors.radius),
-        // _line: actionWord('line', 'id_line', colors.radius),
         _radiusLatin: highlightWord('radius', '', 'latin'),
         _Latin: highlightWord('Latin', '', 'latin'),
         _spoke_of_a_chariot_wheel: highlightWord('spoke of a chariot wheel', '', 'english'),
-      },
-      setSteadyState: () => {
-        // elements.greyColors();
-        elements.resetCircle();
-        circle._radius.color = colors.radius;
-
-        // onClickId('id_line', elements.pulseRadius, [elements]);
-        onClickId('id_radius', elements.pulseRadius, [elements]);
-        // onClickId('id_radius2', elements.pulseRadius, [elements]);
       },
       showOnly: [
         circle,
@@ -332,6 +321,11 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         elements.transitionCircle(done);
+      },
+      setSteadyState: () => {
+        elements.resetCircle();
+        // circle._radius.color = colors.radius;
+        onClickId('id_radius', elements.pulseRadius, [elements]);
       },
     });
     this.addSection({
@@ -351,15 +345,6 @@ class Content extends LessonContent {
         _radius2: highlightWord('radius', '', 'english'),
         _any_line: actionWord('any line', 'id_spin', colors.radius),
       },
-      setSteadyState: () => {
-        // elements.greyColors();
-        elements.resetCircle();
-        circle._radius.color = colors.radius;
-        onClickId('id_radius', elements.pulseRadius, [elements]);
-        onClickId('id_center', elements.pulseAnchor, [elements]);
-        onClickId('id_edge', elements.pulseCircumference, [elements]);
-        onClickId('id_spin', elements.spinRadius, [elements]);
-      },
       showOnly: [
         circle,
         circle._anchor,
@@ -368,6 +353,14 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         elements.transitionCircle(done);
+      },
+      setSteadyState: () => {
+        elements.resetCircle();
+        // circle._radius.color = colors.radius;
+        onClickId('id_radius', elements.pulseRadius, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
+        onClickId('id_edge', elements.pulseCircumference, [elements]);
+        onClickId('id_spin', elements.spinRadius, [elements]);
       },
     });
     this.addSection({
@@ -395,22 +388,18 @@ class Content extends LessonContent {
         _measure: highlightWord('measure', '', 'english'),
         _diameter: actionWord('Diameter', 'id_diameter', colors.diameter),
       },
-      setSteadyState: () => {
-        // elements.greyColors();
-        elements.resetCircle();
-        circle._diameter.showAll();
-        // circle._radius.color = colors.radius;
-        onClickId('id_diameter', elements.pulseDiameter, [elements]);
-      },
       showOnly: [
         circle,
         circle._anchor,
-        circle._diameter,
-        // circle._radius,
         circle._circumference,
       ],
       transitionFromAny: (done) => {
         elements.transitionCircle(done);
+      },
+      setSteadyState: () => {
+        elements.resetCircle();
+        circle._diameter.showAll();
+        onClickId('id_diameter', elements.pulseDiameter, [elements]);
       },
     });
     this.addSection({
@@ -428,25 +417,22 @@ class Content extends LessonContent {
         _any_line: actionWord('any line', 'id_spin', colors.diameter),
         _edge: actionWord('edge', 'id_edge', colors.circle),
       },
-      setSteadyState: () => {
-        // elements.greyColors();
-        elements.resetCircle();
-        circle._diameter.showAll();
-        // circle._radius.color = colors.radius;
-        onClickId('id_diameter', elements.pulseDiameter, [elements]);
-        onClickId('id_center', elements.pulseAnchor, [elements]);
-        onClickId('id_spin', elements.spinDiameter, [elements]);
-        onClickId('id_edge', elements.pulseCircumference, [elements]);
-      },
       showOnly: [
         circle,
         circle._anchor,
         circle._diameter,
-        // circle._radius,
         circle._circumference,
       ],
       transitionFromAny: (done) => {
         elements.transitionCircle(done);
+      },
+      setSteadyState: () => {
+        elements.resetCircle();
+        circle._diameter.showAll();
+        onClickId('id_diameter', elements.pulseDiameter, [elements]);
+        onClickId('id_center', elements.pulseAnchor, [elements]);
+        onClickId('id_spin', elements.spinDiameter, [elements]);
+        onClickId('id_edge', elements.pulseCircumference, [elements]);
       },
     });
     this.addSection({
@@ -466,10 +452,8 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        // _length: highlightWord('length', '', 'english'),
         _edge: actionWord('edge', 'id_edge', colors.circle),
         _circumference: actionWord('Circumference', 'id_circum', colors.circle),
-        // _Length: highlightWord('Length', '', 'english'),
         _circum: highlightWord('circum', '', 'latin'),
         _ferre: highlightWord('ferre', '', 'latin'),
         _Latin: highlightWord('Latin', '', 'latin'),
@@ -477,23 +461,26 @@ class Content extends LessonContent {
         _carry: highlightWord('carry', '', 'english'),
         _around: highlightWord('around', '', 'english'),
       },
-      setSteadyState: () => {
+      setEnterState: () => {
         elements.resetCircle('right');
-        elements._straightCircumference.showAll();
         elements.straighten(0);
-        onClickId('id_edge', elements.pulseCircumference, [elements]);
-        onClickId('id_circum', elements.pulseCircumference, [elements]);
       },
       showOnly: [
         circle,
         circle._circumference,
+      ],
+      show: [
         elements._straightCircumference,
       ],
       transitionFromAny: (done) => {
-        elements.straighten(0);
-        elements._straightCircumference.showAll();
-        elements._straightCircumference.showAll();
         elements.transitionCircle(done, 'right');
+      },
+      setSteadyState: () => {
+        // elements.resetCircle('right');
+        // elements._straightCircumference.showAll();
+        // elements.straighten(0);
+        onClickId('id_edge', elements.pulseCircumference, [elements]);
+        onClickId('id_circum', elements.pulseCircumference, [elements]);
       },
     });
     this.addSection({
@@ -507,7 +494,7 @@ class Content extends LessonContent {
         _straightened: actionWord('straightened', 'id_straight', colors.circle),
         _circumference: actionWord('circumference', 'id_circum', colors.circle),
       },
-      setInitialState: () => {
+      setEnterState: () => {
         elements.resetCircle('right');
         elements.straighten(0);
       },
@@ -567,7 +554,28 @@ class Content extends LessonContent {
         _properties: highlightWord('properties', '', 'english'),
         _circle: highlightWord('circle', '', 'english'),
       },
+      setEnterState: () => {
+        grid._locationText
+          .transform.updateTranslation(layout.locationText.top.position);
+        grid._locationText._text
+          .transform.updateTranslation(layout.locationText.top.offset, 0);
+        grid._locationText.setFirstTransform(grid.lastDrawTransform);
+        elements.straighten(0);
+        grid._slider.set(0.8);
+        elements.updateSlider();
+        console.log("enter state");
+      },
+      show: [
+        circle,
+        elements._grid,
+        elements._straightCircumference,
+      ],
+      transitionFromAny: (done) => {
+        console.log("transition from any");
+        elements.transitionCircle(done, 'forMoving', elements.percentToScale(0.8));
+      },
       setSteadyState: () => {
+        console.log("steady state");
         elements.resetCircle('forMoving');
         circle.isMovable = true;
         if (Math.abs(circle._diameter.transform.r()
@@ -586,25 +594,11 @@ class Content extends LessonContent {
         onClickId('id_diameter_text', elements.toggleDiameter, [elements]);
         onClickId('id_location_text', elements.pulseAnchor, [elements]);
       },
-      setInitialState: () => {
-        grid._locationText
-          .transform.updateTranslation(layout.locationText.top.position);
-        grid._locationText._text
-          .transform.updateTranslation(layout.locationText.top.offset, 0);
-        grid._locationText.setFirstTransform(grid.lastDrawTransform);
-        elements.straighten(0);
-        grid._slider.set(0.8);
-        elements.updateSlider();
-      },
-      show: [
-        circle,
-        elements._grid,
-        elements._straightCircumference,
-      ],
-      transitionFromAny: (done) => {
-        elements.transitionCircle(done, 'forMoving', elements.percentToScale(0.8));
+      setLeaveState: () => {
+        console.log("Leave State");
       },
       transitionToAny: (done) => {
+        console.log('transition to any')
         elements.resetCircle();
         done();
       },
