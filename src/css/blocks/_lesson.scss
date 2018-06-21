@@ -136,8 +136,8 @@ $diagram_ratio: 1.5;
 .lesson__text ul {
   margin-left: calc(var(--lesson__text-margin) * 1);
   margin-right: calc(var(--lesson__text-margin) * 1);
-  padding-left: 3em;
-  padding-right: 3em;
+  padding-left: calc(var(--lesson__diagram-font-size) * 0.8);
+  padding-right: calc(var(--lesson__diagram-font-size) * 0.8);
 }
 
 .lesson__small_text {
@@ -146,8 +146,8 @@ $diagram_ratio: 1.5;
 
 .lesson__text p {
   // display: inline-block;
-  padding-left: 0.2em;
-  padding-right: 0.2em;
+  // padding-left: calc(var(--lesson__diagram-font-size) * 0.2);
+  // padding-right: calc(var(--lesson__diagram-font-size) * 0.2);
   // clear: both;
   // float: left;
   color: color(diagram, 'text-base');
@@ -351,7 +351,7 @@ $diagram_ratio: 1.5;
   padding-bottom: 0;
   margin-bottom: 0;
   margin-top: 0;
-  padding-left: 0.2em;
+  padding-left: calc(var(--lesson__text-margin) * 0.2);
   margin-left: calc(var(--lesson__text-margin) * 1);
   color: color(diagram, 'disabled');
   font-size: calc(var(--lesson__diagram-font-size) * 0.6);

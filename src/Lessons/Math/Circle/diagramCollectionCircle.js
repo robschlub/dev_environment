@@ -78,7 +78,7 @@ function makeRadius(shapes: Object) {
   radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
   for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-    radius.vertices.border[0][i].y *= 10;
+    radius.vertices.border[0][i].y *= 20;
   }
   return radius;
 }
@@ -707,7 +707,7 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   pulseCircumference() {
-    this._circle._circumference.pulseThickNow(1, 1.02, 5);
+    this._circle._circumference.pulseThickNow(1, 1.04, 5);
     this.diagram.animateNextFrame();
   }
 

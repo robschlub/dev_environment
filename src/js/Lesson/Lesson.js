@@ -57,6 +57,10 @@ class Lesson {
   nextSection() {
     const { diagram } = this;
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
+      // Stop any ongoing animations on diagram
+      this.stopDiagrams();
+
+      // If in transition, then cancel the transition.
       if (this.inTransition) {
         const { comingFrom } = this;
         this.stopTransition();
@@ -72,6 +76,7 @@ class Lesson {
   prevSection() {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
+      this.stopDiagrams();
       if (this.inTransition) {
         const { comingFrom } = this;
         this.stopTransition();
@@ -87,6 +92,7 @@ class Lesson {
 
   goToSection(sectionIndex: number) {
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
+      this.stopDiagrams();
       if (this.inTransition) {
         this.stopTransition();
       }
@@ -176,6 +182,10 @@ class Lesson {
     section.setSteadyState(this.state);
     // this.stopTransition();
     this.inTransition = false;
+    const { diagram } = this;
+    if (diagram) {
+      diagram.inTransition = false;
+    }
     this.comingFrom = '';
     this.transitionCancelled = false;
     this.renderDiagrams();
@@ -192,12 +202,12 @@ class Lesson {
   //   }
   // }
 
-  // stopDiagrams() {
-  //   const { diagram } = this;
-  //   if (diagram) {
-  //     diagram.stop(false);
-  //   }
-  // }
+  stopDiagrams() {
+    const { diagram } = this;
+    if (diagram) {
+      diagram.stop(false);
+    }
+  }
 
 
   stopTransition() {

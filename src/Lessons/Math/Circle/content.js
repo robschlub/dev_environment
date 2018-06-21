@@ -299,7 +299,7 @@ class Content extends LessonContent {
         </p>
         <div class="lesson__sub_title">Word Origin:</div>
         <p>
-          |_Latin| word |_radiusLatin| which means the |_spoke_of_a_chariot_wheel|. 
+          |_Latin| word |_radiusLatin| which means |_spoke_of_a_chariot_wheel|. 
         </p>
         <div class="lesson__sub_title">Description:</div>
         <p>
@@ -320,10 +320,10 @@ class Content extends LessonContent {
         circle._circumference,
       ],
       transitionFromAny: (done) => {
-        elements.transitionCircle(done);
+        elements.transitionCircle(done, 'right');
       },
       setSteadyState: () => {
-        elements.resetCircle();
+        // elements.resetCircle('right');
         // circle._radius.color = colors.radius;
         onClickId('id_radius', elements.pulseRadius, [elements]);
       },
@@ -462,7 +462,7 @@ class Content extends LessonContent {
         _around: highlightWord('around', '', 'english'),
       },
       setEnterState: () => {
-        elements.resetCircle('right');
+        // elements.resetCircle('right');
         elements.straighten(0);
       },
       showOnly: [
@@ -476,7 +476,7 @@ class Content extends LessonContent {
         elements.transitionCircle(done, 'right');
       },
       setSteadyState: () => {
-        // elements.resetCircle('right');
+        elements.resetCircle('right');
         // elements._straightCircumference.showAll();
         // elements.straighten(0);
         onClickId('id_edge', elements.pulseCircumference, [elements]);
