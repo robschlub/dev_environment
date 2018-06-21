@@ -563,7 +563,6 @@ class Content extends LessonContent {
         elements.straighten(0);
         grid._slider.set(0.8);
         elements.updateSlider();
-        console.log("enter state");
       },
       show: [
         circle,
@@ -571,11 +570,9 @@ class Content extends LessonContent {
         elements._straightCircumference,
       ],
       transitionFromAny: (done) => {
-        console.log("transition from any");
         elements.transitionCircle(done, 'forMoving', elements.percentToScale(0.8));
       },
       setSteadyState: () => {
-        console.log("steady state");
         elements.resetCircle('forMoving');
         circle.isMovable = true;
         if (Math.abs(circle._diameter.transform.r()
@@ -594,11 +591,7 @@ class Content extends LessonContent {
         onClickId('id_diameter_text', elements.toggleDiameter, [elements]);
         onClickId('id_location_text', elements.pulseAnchor, [elements]);
       },
-      setLeaveState: () => {
-        console.log("Leave State");
-      },
       transitionToAny: (done) => {
-        console.log('transition to any')
         elements.resetCircle();
         done();
       },

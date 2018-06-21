@@ -58,10 +58,13 @@ class Lesson {
     const { diagram } = this;
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
       if (this.inTransition) {
+        const { comingFrom } = this;
         this.stopTransition();
-        return;
+        if (comingFrom === 'prev') {
+          return;
+        }
       }
-      this.transitionStart('next');
+      this.transitionStart('prev');
       this.goToSectionIndex = this.currentSectionIndex + 1;
       this.currentSection().transitionToNext(this.finishTransToNextOrPrev.bind(this));
     }
@@ -70,10 +73,13 @@ class Lesson {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
       if (this.inTransition) {
+        const { comingFrom } = this;
         this.stopTransition();
-        return;
+        if (comingFrom === 'next') {
+          return;
+        }
       }
-      this.transitionStart('prev');
+      this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
     }
@@ -83,7 +89,6 @@ class Lesson {
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       if (this.inTransition) {
         this.stopTransition();
-        return;
       }
       this.transitionStart('goto');
       this.goToSectionIndex = sectionIndex;
@@ -93,13 +98,14 @@ class Lesson {
 
   transitionStart(direction: string = '') {
     this.inTransition = true;
-    if (direction === 'next') {
-      this.comingFrom = 'prev';
-    } else if (direction === 'prev') {
-      this.comingFrom = 'next';
-    } else {
-      this.comingFrom = 'goto';
-    }
+    this.comingFrom = direction;
+    // if (direction === 'next') {
+    //   this.comingFrom = 'prev';
+    // } else if (direction === 'prev') {
+    //   this.comingFrom = 'next';
+    // } else {
+    //   this.comingFrom = 'goto';
+    // }
     const { diagram } = this;
     if (diagram) {
       diagram.inTransition = true;
@@ -140,16 +146,16 @@ class Lesson {
         this.finishTransitionFromAny();
       }
       if (this.comingFrom === 'next') {
-        this.inTransition = true;
+        // this.inTransition = true;
         section.transitionFromNext(this.finishTransFromNextOrPrev.bind(this));
-        this.comingFrom = '';
+        // this.comingFrom = '';
       } else if (this.comingFrom === 'prev') {
-        this.inTransition = true;
+        // this.inTransition = true;
         section.transitionFromPrev(this.finishTransFromNextOrPrev.bind(this));
-        this.comingFrom = '';
+        // this.comingFrom = '';
       } else {
         section.transitionFromAny(this.finishTransitionFromAny.bind(this));
-        this.comingFrom = '';
+        // this.comingFrom = '';
       }
     }
   }
@@ -168,7 +174,9 @@ class Lesson {
     // this.transitionStop();
     const section = this.content.sections[this.currentSectionIndex];
     section.setSteadyState(this.state);
-    this.stopTransition();
+    // this.stopTransition();
+    this.inTransition = false;
+    this.comingFrom = '';
     this.transitionCancelled = false;
     this.renderDiagrams();
   }
