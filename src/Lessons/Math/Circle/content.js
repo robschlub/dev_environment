@@ -74,7 +74,7 @@ class Content extends LessonContent {
       title: 'Name',
       setContent: () => centerV(`
         <p>
-          If you were naming this shape today, you might name it after a familiar object. 
+          If you were naming this shape today, you might name it after a |_familiar_object|. 
         </p>
         <p>
           For example, you might call it a |_moon| shape, or a |_ring|.
@@ -84,6 +84,7 @@ class Content extends LessonContent {
         </p>
         `),
       modifiers: {
+        _familiar_object: highlightWord('familiar object', '', 'english'),
         _moon: highlightWord('moon', '', 'english'),
         _ring: highlightWord('ring', '', 'english'),
       },

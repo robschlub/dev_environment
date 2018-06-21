@@ -14,14 +14,14 @@ export default class Navbar extends React.Component
                                     <Props> {
   render() {
     const props = Object.assign({}, this.props);
-    const nav1 = 'Introduction';
-    const nav2 = 'About';
-    const nav3 = 'Single';
-    const nav4 = 'Multi';
+    const nav1 = 'Login';
+    // const nav2 = 'Lea';
+    // const nav3 = 'Single';
+    // const nav4 = 'Multi';
     const nav1Class = `nav-link ${props.active === nav1 ? 'active' : ''}`;
-    const nav2Class = `nav-link ${props.active === nav2 ? 'active' : ''}`;
-    const nav3Class = `nav-link ${props.active === nav3 ? 'active' : ''}`;
-    const nav4Class = `nav-link ${props.active === nav4 ? 'active' : ''}`;
+    // const nav2Class = `nav-link ${props.active === nav2 ? 'active' : ''}`;
+    // const nav3Class = `nav-link ${props.active === nav3 ? 'active' : ''}`;
+    // const nav4Class = `nav-link ${props.active === nav4 ? 'active' : ''}`;
 
     delete props.active;
 
@@ -42,10 +42,11 @@ export default class Navbar extends React.Component
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">
               <a className={nav1Class}
-                 href={`/${nav1.toLowerCase().replace(/ /g, '')}`}>
+                 href={""/*`/${nav1.toLowerCase().replace(/ /g, '')*/}>
                   { nav1 }
               </a>
             </li>
+            {/*
             <li className="nav-item">
               <a className={nav2Class}
                  href={`/${nav2.toLowerCase().replace(/ /g, '')}`}>
@@ -64,9 +65,10 @@ export default class Navbar extends React.Component
                   { nav4 }
               </a>
             </li>
+            */}
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Lesson
+                Learn
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a className="dropdown-item" href="/Lessons/Math/Introduction">1 - Why study shapes?</a>
