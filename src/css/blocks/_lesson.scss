@@ -210,7 +210,6 @@ $diagram_ratio: 1.5;
 //   border-right: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
 // }
 
-
 .lesson__button-next-enabled {
   border-left: var(--lesson__np_button-width) solid color(navbar, 'button');
 }
@@ -222,6 +221,7 @@ $diagram_ratio: 1.5;
 .lesson__button-next-disabled {
   border-left: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
 }
+
 .lesson__button-next-disabled:hover {
   border-left: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
 }
@@ -229,6 +229,7 @@ $diagram_ratio: 1.5;
 .lesson__button-prev-enabled {
   border-right: var(--lesson__np_button-width) solid color(navbar, 'button');
 }
+
 .lesson__button-prev-enabled:hover {
   border-right: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
 }
@@ -236,6 +237,7 @@ $diagram_ratio: 1.5;
 .lesson__button-prev-disabled {
   border-right: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
 }
+
 .lesson__button-prev-disabled:hover {
   border-right: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
 }
