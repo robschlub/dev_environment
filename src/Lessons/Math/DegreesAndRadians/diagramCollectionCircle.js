@@ -98,7 +98,7 @@ function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
   return shapes.radialLines(
     inner, outer,
     layout.radialLineWidth, Math.PI * 2 / num,
-    colors.palette.grey.light, new Transform().translate(0, 0),
+    colors.radialLines, new Transform().translate(0, 0),
   );
 }
 
@@ -245,6 +245,11 @@ class CircleCollection extends DiagramElementCollection {
 
   pulseReference() {
     this._circle._reference.pulseScaleNow(1, 2);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseRadialLines() {
+    this._circle._radialLinesA.pulseScaleNow(1, 1.2);
     this.diagram.animateNextFrame();
   }
 

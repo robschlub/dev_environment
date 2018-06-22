@@ -61,7 +61,7 @@ function action(
     colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
   }
   return {
-    replacementText: (text: string) => `<span id="${id}" class="${classes} action_word"${colorStyle}>${text}</span>`,
+    replacementText: (text: string) => `<span id="${id}" class="${classes} action_word"${colorStyle}>${text.replace(RegExp(/_/, 'gi'), ' ').trim()}</span>`,
     type: 'html',
     id,
   };

@@ -14,7 +14,7 @@ $geometry_colors: (
   angle:        color(diagram, 'safe', 'lighter'),
   angleText:    color(diagram, 'safe', 'light'),
   dimensions:   color(diagram, 'primary', 'light'),
-  radialLines:  color(diagram, 'background'),
+  radialLines:  color(diagram, 'disabled', 'light'),
   circle:       color(diagram, 'warning'),
   arc:          color(diagram, 'warning'),
   rotation:     color(diagram, 'warning'),

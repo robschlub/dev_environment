@@ -6,7 +6,7 @@ import {
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import { Transform } from '../../../js/diagram/tools/g2';
-// import { easeinout } from '../../../js/diagram/tools/mathtools';
+import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
 
@@ -47,7 +47,7 @@ class Content extends LessonContent {
         onClickId('id_angle2', elements.pulseAngle, [elements]);
         onClickId('id_rotation', elements.pushRadius, [elements]);
         if (circle._radius.transform.r() < 0.2) {
-          circle._radius.transform.updateRotation(Math.PI / 6);
+          circle._radius.transform.updateRotation(Math.PI / 5);
         }
         elements.updateRotation();
       },
@@ -97,12 +97,16 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          One way, is to |divide| the |_maximum_angle| into portions.
+          One way, is to |divide| the |maximum_angle| into |portions|.
         </p>
         <p>
           For example, here are |12 equal portions| (like a clock).
         </p>
         `,
+      modifiers: {
+        maximum_angle: action('id_max_angle', colors.angleText),
+        portions: action('id_portions', colors.radialLines),
+      },
       showOnly: [
         circle,
         circle._radius,
@@ -110,22 +114,18 @@ class Content extends LessonContent {
         circle._angle,
         circle._radialLinesA,
       ],
-      modifiers: {
-        _maximum_angle: actionWord('maximum angle', 'id_max_angle', colors.angleText),
-        // _divide: highlightWord('divide', 'english'),
-        // _12_equal_portions: highlightWord('12 equal portions', 'english'),
-      },
-      setSteadyState: () => {
-        onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
-      },
       transitionFromAny: (done) => {
         elements.toggleRadialLines(2);
         if (circle.transform.t().isNotEqualTo(layout.circle.center)) {
-          circle.animateTranslationTo(layout.circle.center, 1);
-          // elements.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
+          circle.animateTranslationTo(layout.circle.center, 1, easeinout, done);
         } else {
           done();
         }
+      },
+      setSteadyState: () => {
+        circle.setPosition(layout.circle.center);
+        onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
+        onClickId('id_portions', elements.pulseRadialLines, [elements]);
       },
     });
 

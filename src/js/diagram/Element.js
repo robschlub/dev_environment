@@ -425,6 +425,7 @@ class DiagramElement {
     currentTransform.updateTranslation(position);
     this.setTransform(currentTransform);
   }
+
   // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
   setTransform(transform: Transform): void {
