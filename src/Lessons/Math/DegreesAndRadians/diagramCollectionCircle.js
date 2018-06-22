@@ -165,7 +165,7 @@ function makeAngleText(shapes: Object) {
   return angleText;
 }
 
-type circleCollectionType = {
+export type circleCollectionType = {
   _anchor: DiagramElementPrimative;
   _arc: DiagramElementPrimative;
   _angle: lineAngleType;
@@ -176,7 +176,6 @@ type circleCollectionType = {
   _radialLinesB: DiagramElementCollection;
   _radialLinesDeg: DiagramElementCollection;
   _radialLinesRad: DiagramElementCollection;
-  // _radialLinesC: DiagramElementPrimative;
 } & DiagramElementCollection;
 
 
@@ -233,7 +232,7 @@ class CircleCollection extends DiagramElementCollection {
 
   updateRotation() {
     let rotation = this._circle._radius.transform.r();
-    if (rotation) {
+    if (rotation !== null && rotation !== undefined) {
       if (rotation > Math.PI * 2) {
         rotation -= Math.PI * 2;
       }
@@ -296,6 +295,11 @@ class CircleCollection extends DiagramElementCollection {
 
   pulseRadialLines() {
     this._circle._radialLinesA.pulseScaleNow(1, 1.2);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseArc() {
+    this._circle._arc.pulseThickNow(1, 1.04, 7);
     this.diagram.animateNextFrame();
   }
 
@@ -408,8 +412,9 @@ class CircleCollection extends DiagramElementCollection {
 
   transitionCircle(done: () => void, toPosition: string = 'center', toAngle: number = layout.circle.angle.small) {
     const t = this._circle.transform.t();
-    if (t) {
-      if (t.isNotEqualTo(layout.circle[toPosition])) {
+    const r = this._circle._radius.transform.r();
+    if (t && r !== null && r !== undefined) {
+      if (t.isNotEqualTo(layout.circle[toPosition]) || r !== toAngle) {
         this.rotateTo(toAngle, 2, 1);
         this._circle.animateTranslationTo(
           layout.circle[toPosition],

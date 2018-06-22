@@ -1,7 +1,8 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
+import { DiagramElementCollection } from '../../../js/diagram/Element';
 import CircleCollection from './diagramCollectionCircle';
+import type { circleCollectionType } from './diagramCollectionCircle';
 import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
@@ -10,17 +11,17 @@ const { colors } = layout;
 const backgroundColor = colors.diagram.background;
 
 
-type circleCollectionType = {
-  _anchor: DiagramElementPrimative;
-  _arc: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _reference: DiagramElementPrimative;
-  _radialLinesA: DiagramElementPrimative;
-  _radialLinesB: DiagramElementCollection;
-  _radialLinesDeg: DiagramElementCollection;
-  // resize: () => void;
-} & DiagramElementCollection;
+// type circleCollectionType = {
+//   _anchor: DiagramElementPrimative;
+//   _arc: DiagramElementPrimative;
+//   _angle: DiagramElementPrimative;
+//   _radius: DiagramElementPrimative;
+//   _reference: DiagramElementPrimative;
+//   _radialLinesA: DiagramElementPrimative;
+//   _radialLinesB: DiagramElementCollection;
+//   _radialLinesDeg: DiagramElementCollection;
+//   // resize: () => void;
+// } & DiagramElementCollection;
 
 type typeElements = {
   _circle: circleCollectionType;

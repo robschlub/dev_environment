@@ -41,7 +41,7 @@ function toHTML(
     colorStr = ` style="color:${colorArrayToRGBA(color)};"`;
   }
   return {
-    replacementText: `<span${idStr}${classStr}"${colorStr}>${text}</span>`,
+    replacementText: `<span${idStr}${classStr}"${colorStr}>${text.replace(RegExp(/_/, 'gi'), ' ').trim()}</span>`,
   };
 }
 

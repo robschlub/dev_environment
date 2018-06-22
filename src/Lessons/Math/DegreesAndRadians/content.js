@@ -43,8 +43,11 @@ class Content extends LessonContent {
         fixed: click(diag.pulseAnchor, [diag], colors.anchor),
       },
       setEnterState: () => {
-        circle.setPosition(layout.circle.center);
+        diag.resetCircle('center');
         diag.setRotation(0.001);
+      },
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center', Math.PI * 1.999);
       },
       showOnly: [
         circle,
@@ -66,8 +69,12 @@ class Content extends LessonContent {
         line: click(diag.pulseRadius, [diag], colors.radius),
       },
       setEnterState: () => {
-        circle.setPosition(layout.circle.center);
+        diag.resetCircle('center');
+        diag.setRotation(0.001);
         diag.updateRotation();
+      },
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center', Math.PI / 3);
       },
       showOnly: [
         circle,
@@ -82,23 +89,27 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          To form a |circle|, the |line| must therefore be |rotated| to have a maximum |angle|.
+          To form a |circle|, the |line| must therefore be |rotated| to the |maximum| |angle|.
         </p>
       `,
       modifiers: {
-        circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 1], colors.circle),
+        maximum: click(diag.rotateTo, [diag, Math.PI * 1.999, 1], colors.action),
+        circle: click(diag.pulseArc, [diag], colors.circle),
         angle: click(diag.pulseAngle, [diag], colors.angleText),
         rotated: click(diag.pushRadius, [diag], colors.action),
         line: click(diag.pulseRadius, [diag], colors.radius),
       },
       setEnterState: () => {
-        circle.setPosition(layout.circle.center);
+        diag.resetCircle('center');
+        diag.setRotation(0.001);
+      },
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center', Math.PI * 1.999);
       },
       showOnly: [
         circle,
         circle._radius,
         circle._arc,
-        // circle._anchor,
         circle._reference,
       ],
       show: [
@@ -107,65 +118,107 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      title: 'Introduction',
-      setContent: () => `
+      setContent: `
         <p>
-        Two |lines| connected at a point for a corner. The sharpness of the corner is described by the word |angle|.
+          |Any| |angle| less than maximum, will only form a portion of a |circle|.
         </p>
-        <p>
-          |Rotate| the |line| to change the angle.
-        </p>
-        `,
+      `,
       modifiers: {
+        Any: click(diag.rotateToRandom, [diag], colors.action),
+        circle: click(diag.pulseArc, [diag], colors.circle),
         angle: click(diag.pulseAngle, [diag], colors.angleText),
-        line: click(diag.pulseRadius, [diag], colors.radius),
-        lines: click(diag.pulseLines, [diag], colors.radius),
-        // angle: actionWord('Angle', 'id_angle1', colors.angleText),
-        // Angle2: actionWord('Angle', 'id_angle2', colors.angleText),
-        Rotate: click(diag.pushRadius, [diag], colors.rotation),
       },
-      setSteadyState: () => {
-        circle.setPosition(layout.circle.center);
-        diag.setRotation(layout.circle.angle.small);
-        onClickId('id_angle1', diag.pulseAngle, [diag]);
-        onClickId('id_angle2', diag.pulseAngle, [diag]);
-        if (circle._radius.transform.r() < 0.2) {
-          circle._radius.transform.updateRotation(Math.PI / 5);
-        }
-        diag.updateRotation();
+      setEnterState: () => {
+        diag.resetCircle('center');
+        diag.setRotation(0.001);
+      },
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center', Math.PI / 3);
       },
       showOnly: [
         circle,
         circle._radius,
+        circle._arc,
         circle._reference,
+      ],
+      show: [
         circle._angle,
       ],
     });
+    // this.addSection({
+    //   title: 'Introduction',
+    //   setContent: () => `
+    //     <p>
+    //     Two |lines| connected at a point for a corner. 
+    //     The sharpness of the corner is described by the word |angle|.
+    //     </p>
+    //     <p>
+    //       |Rotate| the |line| to change the angle.
+    //     </p>
+    //     `,
+    //   modifiers: {
+    //     angle: click(diag.pulseAngle, [diag], colors.angleText),
+    //     line: click(diag.pulseRadius, [diag], colors.radius),
+    //     lines: click(diag.pulseLines, [diag], colors.radius),
+    //     // angle: actionWord('Angle', 'id_angle1', colors.angleText),
+    //     // Angle2: actionWord('Angle', 'id_angle2', colors.angleText),
+    //     Rotate: click(diag.pushRadius, [diag], colors.rotation),
+    //   },
+    //   setSteadyState: () => {
+    //     circle.setPosition(layout.circle.center);
+    //     diag.setRotation(layout.circle.angle.small);
+    //     onClickId('id_angle1', diag.pulseAngle, [diag]);
+    //     onClickId('id_angle2', diag.pulseAngle, [diag]);
+    //     if (circle._radius.transform.r() < 0.2) {
+    //       circle._radius.transform.updateRotation(Math.PI / 5);
+    //     }
+    //     diag.updateRotation();
+    //   },
+    //   showOnly: [
+    //     circle,
+    //     circle._radius,
+    //     circle._reference,
+    //     circle._angle,
+    //   ],
+    // });
 
+    // this.addSection({
+    //   setContent: () => `
+    //     <p>
+    //     A corner can have a |minimum| angle of 0.
+    //     </p>
+    //     <p>
+    //     A corner's |maximum| angle, is when the rotation is a |full circle|.
+    //     </p>
+    //     `,
+    //   modifiers: {
+    //     minimum: click(diag.rotateTo, [diag, 0, -1], colors.angleText),
+    //     maximum: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.angleText),
+    //   },
+    //   showOnly: [
+    //     circle,
+    //     circle._radius,
+    //     circle._reference,
+    //     circle._angle,
+    //   ],
+    //   setSteadyState: () => {
+    //     circle.setPosition(layout.circle.center);
+    //   },
+    // });
     this.addSection({
-      setContent: () => `
-        <p>
-        A corner can have a |minimum| angle of 0.
-        </p>
-        <p>
-        A corner's |maximum| angle, is when the rotation is a |full circle|.
-        </p>
-        `,
-      modifiers: {
-        minimum: click(diag.rotateTo, [diag, 0, -1], colors.angleText),
-        maximum: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.angleText),
-      },
-      showOnly: [
-        circle,
-        circle._radius,
-        circle._reference,
-        circle._angle,
-      ],
-      setSteadyState: () => {
-        circle.setPosition(layout.circle.center);
-      },
+      setContent: () =>
+        centerV(`
+          <p>
+            So |angle| describes the sharpness of a corner, and the amount of a circle that is drawn.
+          </p>
+          <p>
+            A |small angle| results in a sharp corner, and smaller portion of a circle.
+          </p>
+          <p>
+            A |large angle| results in a less sharp corner, and larger portion of a circle.
+          </p>
+        `),
     });
-
     this.addSection({
       title: 'How to Measure?',
       setContent: () =>
@@ -179,34 +232,33 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          One way, is to |divide| the |maximum| angle into |portions|.
+          One way, is to |divide| the circle into |portions|.
         </p>
         <p>
           For example, here are |12 equal portions| (like a clock).
         </p>
         `,
       modifiers: {
-        maximum: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.angleText),
         portions: click(diag.pulseRadialLines, [diag], colors.radialLines),
       },
-      // setEnterState: () => {
-      //   if (circle._radius.transform.r() < Math.PI / 50
-      //       || circle._radius.transform.r() > Math.PI * 1.99) {
-      //     diag.setRotation(Math.PI / 5);
-      //   }
-      // },
+      setEnterState: () => {
+        diag.updateRotation();
+      },
       showOnly: [
         circle,
         circle._radius,
         circle._reference,
-        circle._angle,
         circle._radialLinesA,
       ],
+      show: [
+        circle._angle,
+      ],
+
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'center');
       },
       setSteadyState: () => {
-        circle.setPosition(layout.circle.center);
+        diag.resetCircle('center');
       },
     });
 
@@ -231,14 +283,17 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag.toggleRadialLines(0);
+        diag.updateRotation();
       },
       showOnly: [
         circle,
         circle._radius,
         circle._reference,
-        circle._angle,
         diag._angleText,
         circle._radialLinesA,
+      ],
+      show: [
+        circle._angle,
       ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'right', layout.circle.angle.large);
@@ -320,7 +375,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () =>
         `
-          <p>This means it's easy to work with portions of a circle. For example:</p>
+          <p>This means it's easy to work with fractions of a circle. For example:</p>
           <ul>
                 <li>1/2 of a circle is |_180deg|</li>
                 <li>1/3 of a circle is |_120deg|</li>
@@ -343,10 +398,16 @@ class Content extends LessonContent {
         _40deg: actionWord('40&deg;', 'id_40', colors.diagram.text.keyword),
         _36deg: actionWord('36&deg;', 'id_36', colors.diagram.text.keyword),
       },
+      setEnterState: () => {
+        diag.updateRotation();
+      },
       showOnly: [
         circle,
         circle._radius,
         circle._reference,
+        circle._arc,
+      ],
+      show: [
         circle._angle,
       ],
       setSteadyState: () => {
