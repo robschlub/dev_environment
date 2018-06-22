@@ -10,6 +10,14 @@ import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import { TextObject } from './DrawingObjects/TextObject/TextObject';
 
+function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
+  let callbackToUse = () => {};
+  if (typeof callback === 'function') {
+    callbackToUse = callback;
+  }
+  return callbackToUse;
+}
+
 // Planned Animation
 class AnimationPhase {
   targetTransform: Transform;            // The target transform to animate to
@@ -837,7 +845,7 @@ class DiagramElement {
   ): void {
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
@@ -849,7 +857,7 @@ class DiagramElement {
   ): void {
     const phase = new ColorAnimationPhase(color, time, easeFunction);
     if (phase instanceof ColorAnimationPhase) {
-      this.animateColorPlan([phase], callback);
+      this.animateColorPlan([phase], checkCallback(callback));
     }
   }
 
@@ -862,7 +870,7 @@ class DiagramElement {
   ): void {
     const phase = new CustomAnimationPhase(phaseCallback, time, startPercent, easeFunction);
     if (phase instanceof CustomAnimationPhase) {
-      this.animateCustomPlan([phase], callback);
+      this.animateCustomPlan([phase], checkCallback(callback));
     }
   }
 
@@ -880,7 +888,7 @@ class DiagramElement {
     // console.log(phase2.animationCallback)
     // console.log(phase2)
     // phase2.animationCallback(0);
-    this.animateCustomPlan([phase1, phase2], callback);
+    this.animateCustomPlan([phase1, phase2], checkCallback(callback));
     // }
   }
 
@@ -895,7 +903,7 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.animateColorPlan([phase], callback);
+      this.animateColorPlan([phase], checkCallback(callback));
     }
   }
 
@@ -910,7 +918,7 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
-    this.animateColorPlan([phase1, phase2], callback);
+    this.animateColorPlan([phase1, phase2], checkCallback(callback));
   }
 
   disolveOut(
@@ -921,7 +929,7 @@ class DiagramElement {
     targetColor[3] = 0;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.animateColorPlan([phase], callback);
+      this.animateColorPlan([phase], checkCallback(callback));
     }
 
     // console.log("disolve out", targetColor, this.color)
@@ -939,7 +947,7 @@ class DiagramElement {
     // transform.translation = translation.copy();
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
@@ -957,7 +965,7 @@ class DiagramElement {
       easeFunction,
     );
     const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
-    this.animatePlan([phase1, phase2], callback);
+    this.animatePlan([phase1, phase2], checkCallback(callback));
   }
 
   // With update only first instace of rotation in the transform order
@@ -972,7 +980,7 @@ class DiagramElement {
     transform.updateRotation(rotation);
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
@@ -990,7 +998,7 @@ class DiagramElement {
     transform.updateTranslation(translation.copy());
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
@@ -1011,7 +1019,7 @@ class DiagramElement {
     transform.updateTranslation(translation.copy());
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
   // **************************************************************

@@ -1,12 +1,10 @@
 // @flow
 
 import {
-  LessonContent, actionWord, onClickId, highlightWord, action,
+  LessonContent, actionWord, onClickId, highlightWord, highlight, click,
   centerVH, centerV,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-// import { Transform } from '../../../js/diagram/tools/g2';
-import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
 
@@ -24,32 +22,32 @@ class Content extends LessonContent {
 
   addSections() {
     const circle = this.diagram.elements._circle;
-    const { elements } = this.diagram;
+    // const { elements } = this.diagram;
+    const diag = this.diagram.elements;
 
     this.addSection({
       title: 'Angle Measurement',
       setContent: () => `
         <p>
-        |_angle1| is the word that describes how large a corner is. 
+        |Angle1| is the word that describes how large a corner is. 
         </p>
         <p>
-        |_angle2| describes how much |rotation| there is between two connected lines.
+        |Angle2| describes how much |rotation| there is between two connected lines.
         </p>
         `,
       modifiers: {
-        _angle1: actionWord('Angle', 'id_angle1', colors.angleText),
-        _angle2: actionWord('Angle', 'id_angle2', colors.angleText),
-        rotation: action('id_rotation', colors.rotation),
+        Angle1: actionWord('Angle', 'id_angle1', colors.angleText),
+        Angle2: actionWord('Angle', 'id_angle2', colors.angleText),
+        rotation: click(diag.pushRadius, [diag], colors.rotation),
       },
       setSteadyState: () => {
         circle.setPosition(layout.circle.center);
-        onClickId('id_angle1', elements.pulseAngle, [elements]);
-        onClickId('id_angle2', elements.pulseAngle, [elements]);
-        onClickId('id_rotation', elements.pushRadius, [elements]);
+        onClickId('id_angle1', diag.pulseAngle, [diag]);
+        onClickId('id_angle2', diag.pulseAngle, [diag]);
         if (circle._radius.transform.r() < 0.2) {
           circle._radius.transform.updateRotation(Math.PI / 5);
         }
-        elements.updateRotation();
+        diag.updateRotation();
       },
       showOnly: [
         circle,
@@ -69,8 +67,8 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        minimum: action('id_minimum', colors.angleText),
-        maximum: action('id_maximum', colors.angleText),
+        minimum: click(diag.rotateTo, [diag, 0, -1], colors.angleText),
+        maximum: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.angleText),
       },
       showOnly: [
         circle,
@@ -80,8 +78,6 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         circle.setPosition(layout.circle.center);
-        onClickId('id_minimum', elements.rotateTo, [elements, 0, -1, 1, null]);
-        onClickId('id_maximum', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, null]);
       },
     });
 
@@ -97,15 +93,21 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          One way, is to |divide| the |maximum_angle| into |portions|.
+          One way, is to |divide| the |maximum| angle into |portions|.
         </p>
         <p>
           For example, here are |12 equal portions| (like a clock).
         </p>
         `,
       modifiers: {
-        maximum_angle: action('id_max_angle', colors.angleText),
-        portions: action('id_portions', colors.radialLines),
+        maximum: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.angleText),
+        portions: click(diag.pulseRadialLines, [diag], colors.radialLines),
+      },
+      setEnterState: () => {
+        if (circle._radius.transform.r() < Math.PI / 50
+            || circle._radius.transform.r() > Math.PI * 1.99) {
+          diag.setRotation(Math.PI / 5);
+        }
       },
       showOnly: [
         circle,
@@ -115,7 +117,7 @@ class Content extends LessonContent {
         circle._radialLinesA,
       ],
       transitionFromAny: (done) => {
-        elements.toggleRadialLines(2);
+        diag.toggleRadialLines(2);
         if (circle.transform.t().isNotEqualTo(layout.circle.center)) {
           circle.animateTranslationTo(layout.circle.center, 1, done);
         } else {
@@ -124,8 +126,6 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         circle.setPosition(layout.circle.center);
-        onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
-        onClickId('id_portions', elements.pulseRadialLines, [elements]);
       },
     });
 
@@ -133,7 +133,7 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          Now, as you |_rotate| the line to change the |_angle|, you can count how many portions there are.
+          Now, as you |rotate| the line to change the |angle|, you can count how many portions there are.
         </p>
         <p>Try different portion sizes:
           <ul>
@@ -143,58 +143,35 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _rotate: actionWord('rotate', 'id_rotate', colors.rotation),
-        _angle: actionWord('angle', 'id_angle', colors.angleText),
-        _12_Portions: actionWord('12 portions', 'id_12p', 'portions_selected'),
-        _100_Portions: actionWord('100 portions', 'id_100p'),
+        rotate: click(diag.rotateToRandom, [diag, 1], colors.rotation),
+        angle: click(diag.pulseAngle, [diag], colors.angleText),
+        _12_Portions: click(diag.toggler, [diag, 0], 'portions_selected'),
+        _100_Portions: click(diag.toggler, [diag, 1]),
       },
       showOnly: [
         circle,
         circle._radius,
         circle._reference,
         circle._angle,
-        elements._angleText,
+        diag._angleText,
       ],
-      setSteadyState: () => {
-        elements._angleText.showAll();
-        elements.toggleRadialLines(0);
-        elements._angleText._units.vertices.element.innerHTML = 'portions';
-        elements._angleText.transform.updateTranslation(layout.angleEqualsText.left);
-        circle.transform.updateTranslation(layout.circle.right);
-        onClickId('id_rotate', elements.rotateToRandom, [elements, 1]);
-        onClickId('id_angle', elements.pulseAngle, [elements]);
-        onClickId('id_angle_text', elements.pulseAngle, [elements]);
-        const toggler = (index) => {
-          elements.toggleRadialLines(index);
-          const elem12 = document.getElementById('id_12p');
-          const elem100 = document.getElementById('id_100p');
-          if (index && elem12 && elem100) {
-            if (elem12.classList.contains('portions_selected')) {
-              elem12.classList.remove('portions_selected');
-            }
-            elem100.classList.add('portions_selected');
-          } else {
-            if (elem100) {
-              if (elem100.classList.contains('portions_selected')) {
-                elem100.classList.remove('portions_selected');
-              }
-            }
-            if (elem12) {
-              elem12.classList.add('portions_selected');
-            }
-          }
-        };
-        onClickId('id_100p', toggler, [elements, 1]);
-        onClickId('id_12p', toggler, [elements, 0]);
-      },
       transitionFromAny: (done) => {
-        elements.toggleRadialLines(0);
+        diag.toggleRadialLines(0);
         if (circle.transform.t().isNotEqualTo(layout.circle.right)) {
           circle.animateTranslationTo(layout.circle.right, 1);
-          elements.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
+          diag.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
         } else {
           done();
         }
+      },
+      setSteadyState: () => {
+        circle.setPosition(layout.circle.right);
+        diag._angleText.showAll();
+        diag.toggleRadialLines(0);
+        diag._angleText._units.vertices.element.innerHTML = 'portions';
+        diag._angleText.transform.updateTranslation(layout.angleEqualsText.left);
+        // circle.transform.updateTranslation(layout.circle.right);
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
     });
 
@@ -206,71 +183,58 @@ class Content extends LessonContent {
             So how many portions should we use?
           </p>
           <p>
-            There are two common practices. The first is dividing into |_360| portions.
+            There are two common practices. The first is dividing into |360| portions.
           </p>
           <p>
-            Each portion is usually called a |_degree| and is represented by the symbol |_deg|.
+            Each portion is usually called a |degree| and is represented by the symbol |&deg;|.
           </p>
         `),
-      modifiers: {
-        _360: highlightWord('360', 'english'),
-        _degree: highlightWord('degree', 'english'),
-        _deg: highlightWord('&deg;', 'english'),
-      },
     });
 
     this.addSection({
       setContent: () =>
         centerV(`
           <p>
-            The word |_degree| comes from |_Latin|:
+            The word |degree| comes from |Latin|:
           </p>
           <ul>
-            <li>|_de|: |_down|</li>
-            <li>|_gradus|: |_step|</li>
+            <li>|de|: |down|</li>
+            <li>|gradus|: |step|</li>
           </ul>
           <p>
             So 360 degrees (360&deg;) is the same as saying there are 360 smaller steps or pieces.
           </p>
         `),
       modifiers: {
-        _degree: highlightWord('degree', 'english'),
-        _Latin: highlightWord('Latin', 'latin'),
-        _de: highlightWord('de', 'latin'),
-        _down: highlightWord('down', 'english'),
-        _gradus: highlightWord('gradus', 'latin'),
-        _step: highlightWord('step', 'english'),
+        degree: highlight('english'),
+        Latin: highlight('latin'),
+        de: highlight('latin'),
+        down: highlight('english'),
+        gradus: highlight('latin'),
+        step: highlight('english'),
       },
     });
 
     this.addSection({
       setContent: () =>
         centerV(`
-          <p>|_Why_choose_360| </p>
+          <p>|Why choose 360?| </p>
           <p>If you were defining it today, you could choose anything!</p>
           <p>But angle is a concept people have worked on and understood for thousands of years.</p>
-          <p>For instance, Babylonians divided a circle into 360 portions |_over_3000_years_ago|.</p>
+          <p>For instance, Babylonians divided a circle into 360 portions |over 3000 years ago|.</p>
         `),
-      modifiers: {
-        _Why_choose_360: highlightWord('Why choose 360?', 'highlight_word'),
-        _over_3000_years_ago: highlightWord('over 3000 years ago', 'highlight_word'),
-      },
     });
 
     this.addSection({
       setContent: () =>
         centerV(`
-          <p>|_So_why_did_they_choose_360|</p>
-          <p>It's not known, but one reason might be 360 is an easy number to work with when you don't have a calculator.</p>
+          <p>So |why did they| choose 360?</p>
+          <p>It's not known, but one reason might be |360 is an easy number to work with| when you don't have a calculator.</p>
           <p>360 has a lot of numbers that can divide into it without a remainder:</p>
           <p>|_factors|<p>
         `),
       modifiers: {
-        _So_why_did_they_choose_360:
-          highlightWord('So why did they choose 360?', 'highlight_word'),
-        _360_is_an_easy_number_to_work_with:
-          highlightWord('360 is an easy number to work with', 'highlight_word'),
-        _factors: highlightWord('1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360', '', 'lesson__small_text'),
+        _factors: highlightWord('1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360', 'lesson__small_text'),
       },
     });
 
@@ -305,29 +269,27 @@ class Content extends LessonContent {
         circle._radius,
         circle._reference,
         circle._angle,
-        // elements._angleText,
-        // circle.radialLinesDeg,
       ],
       setSteadyState: () => {
         circle.transform.updateTranslation(layout.circle.right);
-        elements._angleText.transform.updateTranslation(layout.angleEqualsText.top);
-        elements.showDegrees();
-        const bindArray = deg => [elements, deg / 180 * Math.PI, 0, 1, () => {}];
-        onClickId('id_angle', elements.pulseAngle, [elements]);
-        onClickId('id_angle_text', elements.pulseAngle, [elements]);
-        onClickId('id_180', elements.rotateTo, bindArray(180));
-        onClickId('id_120', elements.rotateTo, bindArray(120));
-        onClickId('id_90', elements.rotateTo, bindArray(90));
-        onClickId('id_72', elements.rotateTo, bindArray(72));
-        onClickId('id_60', elements.rotateTo, bindArray(60));
-        onClickId('id_45', elements.rotateTo, bindArray(45));
-        onClickId('id_40', elements.rotateTo, bindArray(40));
-        onClickId('id_36', elements.rotateTo, bindArray(36));
+        diag._angleText.transform.updateTranslation(layout.angleEqualsText.top);
+        diag.showDegrees();
+        const bindArray = deg => [diag, deg / 180 * Math.PI, 0, 1, () => {}];
+        onClickId('id_angle', diag.pulseAngle, [diag]);
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        onClickId('id_180', diag.rotateTo, bindArray(180));
+        onClickId('id_120', diag.rotateTo, bindArray(120));
+        onClickId('id_90', diag.rotateTo, bindArray(90));
+        onClickId('id_72', diag.rotateTo, bindArray(72));
+        onClickId('id_60', diag.rotateTo, bindArray(60));
+        onClickId('id_45', diag.rotateTo, bindArray(45));
+        onClickId('id_40', diag.rotateTo, bindArray(40));
+        onClickId('id_36', diag.rotateTo, bindArray(36));
       },
       transitionFromAny: (done) => {
         if (circle.transform.t().isNotEqualTo(layout.circle.right)) {
           circle.animateTranslationTo(layout.circle.right, 1);
-          elements.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
+          diag.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
         } else {
           done();
         }

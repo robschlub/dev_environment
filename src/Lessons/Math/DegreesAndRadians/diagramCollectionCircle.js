@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import * as tools from '../../../js/diagram/tools/mathtools';
+// import * as tools from '../../../js/diagram/tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
@@ -263,6 +263,11 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  setRotation(angle: number) {
+    this._circle._radius.transform.updateRotation(angle);
+    this.updateRotation();
+  }
+
   rotateToRandom(time: number) {
     const angle = Math.random() * Math.PI * 2;
     this.rotateTo(angle, 1, time, () => {});
@@ -309,17 +314,45 @@ class CircleCollection extends DiagramElementCollection {
     time: number,
     callback: () => void = () => {},
   ) {
-    let d = direction;
-    if (d === 0) {
-      const r = this._circle._radius.transform.r();
-      d = 1;
-      if (r) {
-        const delta = minAngleDiff(angle, r);
-        d = delta / Math.abs(delta);
+    let d = 1;
+    if (typeof direction === 'number') {
+      d = direction;
+      if (d === 0) {
+        const r = this._circle._radius.transform.r();
+        d = 1;
+        if (r) {
+          const delta = minAngleDiff(angle, r);
+          d = delta / Math.abs(delta);
+        }
       }
     }
-    this._circle._radius.animateRotationTo(angle, d, time, callback);
+    let t = 1;
+    if (typeof time === 'number') {
+      t = time;
+    }
+    this._circle._radius.animateRotationTo(angle, d, t, callback);
     this.diagram.animateNextFrame();
+  }
+
+  toggler(index: number) {
+    this.toggleRadialLines(index);
+    const elem12 = document.getElementById('id_12p');
+    const elem100 = document.getElementById('id_100p');
+    if (index && elem12 && elem100) {
+      if (elem12.classList.contains('portions_selected')) {
+        elem12.classList.remove('portions_selected');
+      }
+      elem100.classList.add('portions_selected');
+    } else {
+      if (elem100) {
+        if (elem100.classList.contains('portions_selected')) {
+          elem100.classList.remove('portions_selected');
+        }
+      }
+      if (elem12) {
+        elem12.classList.add('portions_selected');
+      }
+    }
   }
 }
 

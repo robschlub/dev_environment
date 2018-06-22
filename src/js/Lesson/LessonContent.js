@@ -22,88 +22,98 @@ function centerH(text: string = '') {
         ${text}</div>`;
 }
 
+function toHTML(
+  text: string = '',
+  id: string = '',
+  classes: string = '',
+  color: Array<number> | null = null,
+) {
+  let idStr = '';
+  if (id) {
+    idStr = ` id="${id}"`;
+  }
+  let classStr = '';
+  if (classes) {
+    classStr = ` class="${classes}"`;
+  }
+  let colorStr = '';
+  if (color) {
+    colorStr = ` style="color:${colorArrayToRGBA(color)};"`;
+  }
+  return {
+    replacementText: `<span${idStr}${classStr}"${colorStr}>${text}</span>`,
+  };
+}
+
+function highlight(classes: string = '') {
+  const classStr = `${classes} highlight_word`;
+  return {
+    replacementText: (text: string) => toHTML(text, '', classStr),
+  };
+}
+
+function highlightWord(text: string, classes: string = '') {
+  const classStr = `${classes} highlight_word`;
+  return {
+    replacementText: toHTML(text, '', classStr).replacementText,
+  };
+}
+
+function addClass(classes: string = '') {
+  return {
+    replacementText: (text: string) => toHTML(text, '', classes),
+    // id: '',
+  };
+}
+
+function addId(id: string = '') {
+  return {
+    replacementText: (text: string) => toHTML(text, id),
+    // id: '',
+  };
+}
+
+
+function click(
+  actionMethod: Function,
+  bind: Array<mixed>,
+  classesOrColor: string | Array<number> | null = null,
+) {
+  let classStr = 'action_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
+  const idToUse = (text: string) => `lesson__id_${text}`;
+  return {
+    replacementText: (text: string) => toHTML(text, idToUse(text), classStr, color),
+    id: idToUse,
+    actionMethod,
+    bind,
+  };
+}
+
 function actionWord(
   text: string,
   id: string = '',
   classesOrColor: string | Array<number> | null = null,
-  color: Array<number> | null = null,
-): Object {
-  let classes = '';
-  let colorStyle = '';
+) {
+  let classStr = 'action_word';
   if (typeof classesOrColor === 'string') {
-    classes = classesOrColor;
+    classStr = `${classesOrColor} ${classStr}`;
   }
+  let color = null;
   if (Array.isArray(classesOrColor)) {
-    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
-  } else if (color) {
-    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
+    color = classesOrColor;
   }
   return {
-    replacementText: () => `<span id="${id}" class="${classes} action_word"${colorStyle}>${text}</span>`,
-    type: 'html',
+    replacementText: toHTML(text, id, classStr, color).replacementText,
     id,
   };
 }
-
-function action(
-  id: string = '',
-  classesOrColor: string | Array<number> | null = null,
-  color: Array<number> | null = null,
-): Object {
-  let classes = '';
-  let colorStyle = '';
-  if (typeof classesOrColor === 'string') {
-    classes = classesOrColor;
-  }
-  if (Array.isArray(classesOrColor)) {
-    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
-  } else if (color) {
-    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
-  }
-  return {
-    replacementText: (text: string) => `<span id="${id}" class="${classes} action_word"${colorStyle}>${text.replace(RegExp(/_/, 'gi'), ' ').trim()}</span>`,
-    type: 'html',
-    id,
-  };
-}
-
-function highlightWord(
-  text: string = '',
-  classesOrColor: string | Array<number> | null = null,
-  idOrColor: string | Array<number> | null = null,
-  color: Array<number> | null = null,
-): Object {
-  let classes = '';
-  let colorStyle = '';
-  if (typeof classesOrColor === 'string') {
-    classes = classesOrColor;
-  }
-  let id = '';
-  if (typeof idOrColor === 'string') {
-    id = idOrColor;
-  }
-  if (Array.isArray(classesOrColor)) {
-    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
-  } else if (Array.isArray(idOrColor)) {
-    colorStyle = ` style="color:${colorArrayToRGBA(idOrColor)};"`;
-  } else if (color) {
-    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
-  }
-
-  return {
-    replacementText: () => `<span id="${id}" class="${classes} highlight_word"${colorStyle}>${text}</span>`,
-    type: 'html',
-    id,
-  };
-}
-
-// function highlight() {
-//   return {
-//     replacementText: (text: string) => `<span class="highlight_word">${text.replace(RegExp(/_/, 'gi'), ' ').trim()}</span>`,
-//     type: 'html',
-//     id: '',
-//   };
-// }
 
 function diagramCanvas(
   id: string,
@@ -129,33 +139,39 @@ function modifyText(
 ): string {
   let outText = '';
   const expression = new RegExp(`\\|${key}\\|`, 'gi');
-  const replacement = mod.replacementText(key);
+  let replacement = '';
+  if (typeof mod.replacementText === 'string') {
+    replacement = mod.replacementText;
+  } else {
+    replacement = mod.replacementText(key).replacementText;
+    // console.log(replacement)
+  }
   outText = text.replace(expression, replacement);
   return outText;
 }
 
 function onClickId(
   id: string,
-  action: Function,
+  actionMethod: Function,
   bind: Array<mixed>,
 ) {
   const element = document.getElementById(id);
   if (element) {
     element.classList.add('action_word_enabled');
     if (bind.length === 1) {
-      element.onclick = action.bind(bind[0]);
+      element.onclick = actionMethod.bind(bind[0]);
     }
     if (bind.length === 2) {
-      element.onclick = action.bind(bind[0], bind[1]);
+      element.onclick = actionMethod.bind(bind[0], bind[1]);
     }
     if (bind.length === 3) {
-      element.onclick = action.bind(bind[0], bind[1], bind[2]);
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2]);
     }
     if (bind.length === 4) {
-      element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3]);
     }
     if (bind.length === 5) {
-      element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
     }
   }
 }
@@ -212,6 +228,14 @@ class Section {
     return [];
   }
 
+  setOnClicks() {
+    Object.keys(this.modifiers).forEach((key) => {
+      const mod = this.modifiers[key];
+      if ('actionMethod' in mod) {
+        onClickId(mod.id(key), mod.actionMethod, mod.bind);
+      }
+    });
+  }
   getContent(): string {
     let htmlText = '';
     let content = this.setContent();
@@ -383,6 +407,6 @@ class LessonContent {
 }
 
 export {
-  Section, LessonContent, actionWord, action,
+  Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH,
 };

@@ -6,7 +6,7 @@ import {
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Point } from '../../../js/diagram/tools/g2';
-import { easeinout } from '../../../js/diagram/tools/mathtools';
+// import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
 
