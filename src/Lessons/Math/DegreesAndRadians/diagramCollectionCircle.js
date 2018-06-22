@@ -46,9 +46,9 @@ function makeRadius(shapes: Object) {
   return radius;
 }
 
-function makeArc(shapes: Object) {
+function makeArc(shapes: Object, radius: number) {
   return shapes.polygon(
-    layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
+    layout.anglePoints, radius, layout.linewidth, 0, 1,
     layout.circlePoints, colors.circle, new Point(0, 0),
   );
 }
@@ -72,6 +72,43 @@ function makeAngle(shapes: Object) {
     layout.anglePoints, layout.angleRadius, 0,
     layout.anglePoints, colors.angle, new Point(0, 0),
   );
+}
+
+type lineAngleType = {
+  _arc: DiagramElementPrimative;
+  _arrow: DiagramElementPrimative;
+  updateRotation: (number) => {};
+};
+
+function makeAngleLine(shapes: Object) {
+  const angle = shapes.collection(new Transform().translate(0, 0));
+  const arc = makeArc(shapes, layout.angle.radius);
+  arc.color = colors.angle.slice();
+  const arrow = shapes.arrow(
+    layout.angle.arrow.width, 0, layout.angle.arrow.height, 0,
+    colors.angle, new Transform().rotate(0).translate(0, 0),
+  );
+  angle.add('arc', arc);
+  angle.add('arrow', arrow);
+  const arrowAngleAtArc =
+    Math.asin(layout.angle.arrow.height / layout.angle.radius);
+
+  angle.updateRotation = (r) => {
+    if (r < arrowAngleAtArc) {
+      arc.angleToDraw = r;
+      arrow.color[3] = 0;
+    } else {
+      arc.angleToDraw = r - arrowAngleAtArc * 0.9;
+      arrow.color[3] = 1;
+    }
+    const arrowTip = new Point(
+      (layout.angle.radius - layout.linewidth / 4) * Math.cos(r),
+      (layout.angle.radius - layout.linewidth / 4) * Math.sin(r),
+    );
+    arrow.transform.updateTranslation(arrowTip);
+    arrow.transform.updateRotation(r - arrowAngleAtArc);
+  };
+  return angle;
 }
 
 function makeReference(shapes: Object) {
@@ -131,7 +168,8 @@ function makeAngleText(shapes: Object) {
 type circleCollectionType = {
   _anchor: DiagramElementPrimative;
   _arc: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
+  _angle: lineAngleType;
+  _angleFill: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
   _reference: DiagramElementPrimative;
   _radialLinesA: DiagramElementPrimative;
@@ -144,13 +182,14 @@ type circleCollectionType = {
 
 function makeCircle(numSections: Array<number>, shapes: Object) {
   const circle = shapes.collection(new Transform().translate(layout.circle.center));
-  circle.add('angle', makeAngle(shapes));
+  circle.add('angleFill', makeAngle(shapes));
+  circle.add('angle', makeAngleLine(shapes));
   circle.add('radialLinesA', makeRadialMarks(shapes, numSections[0]));
   circle.add('radialLinesB', makeMajorAndMinRadialMarks(shapes, 10, numSections[1]));
   circle.add('radialLinesDeg', makeMajorAndMinRadialMarks(shapes, 36, 360));
   circle.add('radialLinesRad', makeRadialMarks(shapes, Math.PI * 2));
   circle.add('reference', makeReference(shapes));
-  circle.add('arc', makeArc(shapes));
+  circle.add('arc', makeArc(shapes, layout.radius));
   circle.add('circumference', makeCircumference(shapes));
   circle.add('radius', makeRadius(shapes));
   circle.add('anchor', makeAnchor(shapes));
@@ -204,8 +243,9 @@ class CircleCollection extends DiagramElementCollection {
       const r = normAngle(rotation);
       this.varState.rotation = r;
       this._circle._radius.transform.updateRotation(r);
-      this._circle._angle.angleToDraw = r + 0.01;
+      this._circle._angleFill.angleToDraw = r + 0.01;
       this._circle._arc.angleToDraw = r + 0.01;
+      this._circle._angle.updateRotation(r);
       this.updateNumSectionsText();
     }
   }
@@ -221,8 +261,15 @@ class CircleCollection extends DiagramElementCollection {
     // $FlowFixMe
     this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
   }
+
+  pulseAngleFill() {
+    this._circle._angleFill.pulseScaleNow(1, 1.3);
+    this.diagram.animateNextFrame();
+  }
+
   pulseAngle() {
-    this._circle._angle.pulseScaleNow(1, 1.3);
+    this._circle._angle._arc.pulseThickNow(1, 1.04, 7);
+    this._circle._angle._arrow.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
 
@@ -237,7 +284,13 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   pulseReference() {
-    this._circle._reference.pulseScaleNow(1, 2);
+    this._circle._reference.pulseScaleNow(1, 2.5);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseLines() {
+    this._circle._radius.pulseScaleNow(1, 2.5);
+    this._circle._reference.pulseScaleNow(1, 2.5);
     this.diagram.animateNextFrame();
   }
 

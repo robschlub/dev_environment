@@ -238,7 +238,13 @@ class Section {
   }
   getContent(): string {
     let htmlText = '';
-    let content = this.setContent();
+    let content = '';
+    if (typeof this.setContent === 'string'
+        || Array.isArray(this.setContent)) {
+      content = this.setContent;
+    } else {
+      content = this.setContent();
+    }
     if (typeof content === 'string') {
       content = [content];
     }

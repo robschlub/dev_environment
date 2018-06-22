@@ -14,6 +14,7 @@ const cssColorNames = [
   'radialLines',
   'radialLinesText',
   'rotation',
+  'action',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -29,7 +30,14 @@ export default function lessonLayout() {
     radialLineWidth: 0.01,
 
     // ------ Circle Colleciton --------
-    radius: 1.3,
+    radius: 1.2,
+    angle: {
+      radius: 0.5,
+      arrow: {
+        width: 0.1,
+        height: 0.1,
+      },
+    },
     angleRadius: 0.5,
     anchorPoints: 50,
     anglePoints: 400,

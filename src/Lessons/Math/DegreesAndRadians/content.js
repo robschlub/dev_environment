@@ -23,21 +23,106 @@ class Content extends LessonContent {
   addSections() {
     const circle = this.diagram.elements._circle;
     const diag = this.diagram.elements;
+    this.addSection({
+      title: 'Introduction',
+      setContent: centerVH(`
+        <p>
+          |Circles| and |Angles| are closely related.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: `
+        <p>
+          A |circle| is formed by |rotating| a line around a |fixed| end.
+        </p>
+      `,
+      modifiers: {
+        circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 1], colors.circle),
+        rotating: click(diag.pushRadius, [diag], colors.action),
+        fixed: click(diag.pulseAnchor, [diag], colors.anchor),
+      },
+      setEnterState: () => {
+        circle.setPosition(layout.circle.center);
+        diag.setRotation(0.001);
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._arc,
+        circle._anchor,
+      ],
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          An |corner| is formed by |rotating| one |line| relative to another. The |angle| is the amount of rotation.
+        </p>
+      `,
+      modifiers: {
+        angle: click(diag.pulseAngle, [diag], colors.angleText),
+        rotating: click(diag.pushRadius, [diag], colors.action),
+        line: click(diag.pulseRadius, [diag], colors.radius),
+      },
+      setEnterState: () => {
+        circle.setPosition(layout.circle.center);
+        diag.updateRotation();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+      ],
+      show: [
+        circle._angle,
+      ],
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          To form a |circle|, the |line| must therefore be |rotated| to have a maximum |angle|.
+        </p>
+      `,
+      modifiers: {
+        circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 1], colors.circle),
+        angle: click(diag.pulseAngle, [diag], colors.angleText),
+        rotated: click(diag.pushRadius, [diag], colors.action),
+        line: click(diag.pulseRadius, [diag], colors.radius),
+      },
+      setEnterState: () => {
+        circle.setPosition(layout.circle.center);
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._arc,
+        // circle._anchor,
+        circle._reference,
+      ],
+      show: [
+        circle._angle,
+      ],
+    });
 
     this.addSection({
       title: 'Introduction',
       setContent: () => `
         <p>
-        |Angle1| is the word that describes how large a corner is. 
+        Two |lines| connected at a point for a corner. The sharpness of the corner is described by the word |angle|.
         </p>
         <p>
-        |Angle2| describes how much |rotation| there is between two connected lines.
+          |Rotate| the |line| to change the angle.
         </p>
         `,
       modifiers: {
-        Angle1: actionWord('Angle', 'id_angle1', colors.angleText),
-        Angle2: actionWord('Angle', 'id_angle2', colors.angleText),
-        rotation: click(diag.pushRadius, [diag], colors.rotation),
+        angle: click(diag.pulseAngle, [diag], colors.angleText),
+        line: click(diag.pulseRadius, [diag], colors.radius),
+        lines: click(diag.pulseLines, [diag], colors.radius),
+        // angle: actionWord('Angle', 'id_angle1', colors.angleText),
+        // Angle2: actionWord('Angle', 'id_angle2', colors.angleText),
+        Rotate: click(diag.pushRadius, [diag], colors.rotation),
       },
       setSteadyState: () => {
         circle.setPosition(layout.circle.center);
