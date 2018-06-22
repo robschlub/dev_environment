@@ -41,7 +41,7 @@ class Content extends LessonContent {
         _corners: actionWord('corners', 'id_corners', colors.corners),
         _more_sharp: actionWord('more sharp', 'id_more_sharp', colors.moreSharp),
         _less_sharp: actionWord('less sharp', 'id_less_sharp', colors.lessSharp),
-        _sharpness: highlightWord('sharpness', '', 'english'),
+        _sharpness: highlightWord('sharpness', 'english'),
       },
       hideOnly: [
         circle,
@@ -73,8 +73,8 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _measure: highlightWord('measure', '', 'english'),
-        _name: highlightWord('name', '', 'english'),
+        _measure: highlightWord('measure', 'english'),
+        _name: highlightWord('name', 'english'),
       },
     });
 
@@ -273,12 +273,12 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _angle: highlightWord('angle', '', 'english'),
-        _angulus: highlightWord('angulus', '', 'latin'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _corner: highlightWord('corner', '', 'english'),
-        _corner_sharpness: highlightWord('corner sharpness', '', 'english'),
-        _name: highlightWord('name', '', 'english'),
+        _angle: highlightWord('angle', 'english'),
+        _angulus: highlightWord('angulus', 'latin'),
+        _Latin: highlightWord('Latin', 'latin'),
+        _corner: highlightWord('corner', 'english'),
+        _corner_sharpness: highlightWord('corner sharpness', 'english'),
+        _name: highlightWord('name', 'english'),
       },
     });
 
@@ -331,8 +331,8 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _measure: highlightWord('measure', '', 'english'),
-        _angle: highlightWord('angle', '', 'english'),
+        _measure: highlightWord('measure', 'english'),
+        _angle: highlightWord('angle', 'english'),
       },
     });
   }

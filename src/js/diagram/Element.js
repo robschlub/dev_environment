@@ -415,6 +415,16 @@ class DiagramElement {
     const percentComplete = phase.animationStyle(percentTime);
     return percentComplete;
   }
+
+  setPosition(pointOrX: Point, y: number = 0) {
+    let position = pointOrX;
+    if (typeof pointOrX === 'number') {
+      position = new Point(pointOrX, y);
+    }
+    const currentTransform = this.transform.copy();
+    currentTransform.updateTranslation(position);
+    this.setTransform(currentTransform);
+  }
   // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
   setTransform(transform: Transform): void {

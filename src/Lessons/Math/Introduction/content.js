@@ -38,7 +38,7 @@ class Content extends LessonContent {
         `),
       modifiers: {
         _mathematics_is_a_powerful_tool:
-          highlightWord('Mathematics is a powerful tool.', '', 'english'),
+          highlightWord('Mathematics is a powerful tool.', 'english'),
       },
     });
     this.addSection({
@@ -56,10 +56,10 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _simple: highlightWord('simple', '', 'english'),
-        _general: highlightWord('general', '', 'english'),
-        _simply: highlightWord('simply', '', 'english'),
-        _generally: highlightWord('generally', '', 'english'),
+        _simple: highlightWord('simple', 'english'),
+        _general: highlightWord('general', 'english'),
+        _simply: highlightWord('simply', 'english'),
+        _generally: highlightWord('generally', 'english'),
       },
     });
 
@@ -75,10 +75,10 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _shapes: highlightWord('shapes', '', 'english'),
-        _Shape: highlightWord('Shapes', '', 'english'),
-        _objects: highlightWord('objects', '', 'english'),
-        _paths: highlightWord('paths', '', 'english'),
+        _shapes: highlightWord('shapes', 'english'),
+        _Shape: highlightWord('Shapes', 'english'),
+        _objects: highlightWord('objects', 'english'),
+        _paths: highlightWord('paths', 'english'),
       },
     });
 
@@ -98,7 +98,7 @@ class Content extends LessonContent {
         circle._wheel,
       ],
       modifiers: {
-        _wheel: highlightWord('wheel', '', 'english'),
+        _wheel: highlightWord('wheel', 'english'),
         _shape: actionWord('shape', 'id_shape', colors.circle),
       },
       setSteadyState: () => {
@@ -118,7 +118,7 @@ class Content extends LessonContent {
         circle._wheelShape,
       ],
       modifiers: {
-        _wheel: highlightWord('wheel', '', 'english'),
+        _wheel: highlightWord('wheel', 'english'),
         _shape: actionWord('shape', 'id_shape', colors.circle),
       },
       transitionFromAny: (done) => {
@@ -261,12 +261,12 @@ class Content extends LessonContent {
           </p>
         `),
       modifiers: {
-        _sound: highlightWord('sound', '', 'english'),
-        _gravity: highlightWord('gravity', '', 'english'),
-        _electricity: highlightWord('electricity', '', 'english'),
-        _radio_waves: highlightWord('radio waves', '', 'english'),
-        _magnetism: highlightWord('magnetism', '', 'english'),
-        _better_understand: highlightWord('better understand the world we live in', '', 'english'),
+        _sound: highlightWord('sound', 'english'),
+        _gravity: highlightWord('gravity', 'english'),
+        _electricity: highlightWord('electricity', 'english'),
+        _radio_waves: highlightWord('radio waves', 'english'),
+        _magnetism: highlightWord('magnetism', 'english'),
+        _better_understand: highlightWord('better understand the world we live in', 'english'),
       },
     });
 

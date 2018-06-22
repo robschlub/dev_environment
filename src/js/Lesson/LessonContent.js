@@ -39,13 +39,13 @@ function actionWord(
     colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
   }
   return {
-    replacementText: `<span id="${id}" class="${classes} action_word"${colorStyle}>${text}</span>`,
+    replacementText: () => `<span id="${id}" class="${classes} action_word"${colorStyle}>${text}</span>`,
     type: 'html',
     id,
   };
 }
-function highlightWord(
-  text: string,
+
+function action(
   id: string = '',
   classesOrColor: string | Array<number> | null = null,
   color: Array<number> | null = null,
@@ -61,18 +61,57 @@ function highlightWord(
     colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
   }
   return {
-    replacementText: `<span id="${id}" class="${classes} highlight_word"${colorStyle}>${text}</span>`,
+    replacementText: (text: string) => `<span id="${id}" class="${classes} action_word"${colorStyle}>${text}</span>`,
     type: 'html',
     id,
   };
 }
+
+function highlightWord(
+  text: string = '',
+  classesOrColor: string | Array<number> | null = null,
+  idOrColor: string | Array<number> | null = null,
+  color: Array<number> | null = null,
+): Object {
+  let classes = '';
+  let colorStyle = '';
+  if (typeof classesOrColor === 'string') {
+    classes = classesOrColor;
+  }
+  let id = '';
+  if (typeof idOrColor === 'string') {
+    id = idOrColor;
+  }
+  if (Array.isArray(classesOrColor)) {
+    colorStyle = ` style="color:${colorArrayToRGBA(classesOrColor)};"`;
+  } else if (Array.isArray(idOrColor)) {
+    colorStyle = ` style="color:${colorArrayToRGBA(idOrColor)};"`;
+  } else if (color) {
+    colorStyle = ` style="color:${colorArrayToRGBA(color)};"`;
+  }
+
+  return {
+    replacementText: () => `<span id="${id}" class="${classes} highlight_word"${colorStyle}>${text}</span>`,
+    type: 'html',
+    id,
+  };
+}
+
+// function highlight() {
+//   return {
+//     replacementText: (text: string) => `<span class="highlight_word">${text.replace(RegExp(/_/, 'gi'), ' ').trim()}</span>`,
+//     type: 'html',
+//     id: '',
+//   };
+// }
+
 function diagramCanvas(
   id: string,
   DiagramClass: Object,
   classes: string = '',
 ): Object {
   return {
-    replacementText: `<div id="${id}" class="canvas_container ${classes}">
+    replacementText: () => `<div id="${id}" class="canvas_container ${classes}">
         <canvas class="diagram__gl"></canvas>
         <div class="diagram__html"></div>
         <canvas class="diagram__text"></canvas>
@@ -90,7 +129,7 @@ function modifyText(
 ): string {
   let outText = '';
   const expression = new RegExp(`\\|${key}\\|`, 'gi');
-  const replacement = mod.replacementText;
+  const replacement = mod.replacementText(key);
   outText = text.replace(expression, replacement);
   return outText;
 }
@@ -187,7 +226,11 @@ class Section {
       const mod = this.modifiers[key];
       htmlText = modifyText(htmlText, key, mod);
     });
-    return htmlText;
+
+    // Go through all text, and replace all characters between | | with
+    // with default keywords
+    const r = RegExp(/\|([^|]*)\|/, 'gi');
+    return htmlText.replace(r, '<span class="highlight_word">$1</span>');
   }
 
   /* eslint-disable no-unused-vars */
@@ -340,6 +383,6 @@ class LessonContent {
 }
 
 export {
-  Section, LessonContent, actionWord,
+  Section, LessonContent, actionWord, action,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH,
 };

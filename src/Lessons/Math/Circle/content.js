@@ -35,10 +35,10 @@ class Content extends LessonContent {
         </p>
         `),
       modifiers: {
-        _moon: highlightWord('moon', '', 'english'),
-        _wheel: highlightWord('wheel', '', 'english'),
-        _ball: highlightWord('ball', '', 'english'),
-        _ring: highlightWord('ring', '', 'english'),
+        _moon: highlightWord('moon', 'english'),
+        _wheel: highlightWord('wheel', 'english'),
+        _ball: highlightWord('ball', 'english'),
+        _ring: highlightWord('ring', 'english'),
       },
     });
     this.addSection({
@@ -87,9 +87,9 @@ class Content extends LessonContent {
         </p>
         `),
       modifiers: {
-        _familiar_object: highlightWord('familiar object', '', 'english'),
-        _moon: highlightWord('moon', '', 'english'),
-        _ring: highlightWord('ring', '', 'english'),
+        _familiar_object: highlightWord('familiar object', 'english'),
+        _moon: highlightWord('moon', 'english'),
+        _ring: highlightWord('ring', 'english'),
       },
     });
     this.addSection({
@@ -105,12 +105,12 @@ class Content extends LessonContent {
         </p>
         `),
       modifiers: {
-        _Greek: highlightWord('Greek', '', 'greek'),
-        _krikos: highlightWord('krikos', '', 'greek'),
-        _ring: highlightWord('ring', '', 'english'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _circulus: highlightWord('circulus', '', 'latin'),
-        _circle: highlightWord('circle', '', 'english'),
+        _Greek: highlightWord('Greek', 'greek'),
+        _krikos: highlightWord('krikos', 'greek'),
+        _ring: highlightWord('ring', 'english'),
+        _Latin: highlightWord('Latin', 'latin'),
+        _circulus: highlightWord('circulus', 'latin'),
+        _circle: highlightWord('circle', 'english'),
       },
     });
     this.addSection({
@@ -160,7 +160,7 @@ class Content extends LessonContent {
         </p>
         `),
       modifiers: {
-        _properties: highlightWord('properties', '', colors.diagram.text.keyword),
+        _properties: highlightWord('properties', colors.diagram.text.keyword),
       },
     });
     this.addSection({
@@ -176,10 +176,10 @@ class Content extends LessonContent {
         </p>
         `),
       modifiers: {
-        _circle: highlightWord('circle', '', 'english'),
-        _historical_roots: highlightWord('historical roots', '', 'english'),
-        _less_intuitive: highlightWord('less intuitive', '', 'english'),
-        _remembered: highlightWord('remembered', '', 'english'),
+        _circle: highlightWord('circle', 'english'),
+        _historical_roots: highlightWord('historical roots', 'english'),
+        _less_intuitive: highlightWord('less intuitive', 'english'),
+        _remembered: highlightWord('remembered', 'english'),
       },
     });
     this.addSection({
@@ -199,14 +199,14 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        // _Property: highlightWord('Property', '', colors.disabled),
-        _Word_origin: highlightWord('Word origin', '', colors.disabled),
+        // _Property: highlightWord('Property', colors.disabled),
+        _Word_origin: highlightWord('Word origin', colors.disabled),
         _center_point: actionWord('Center point', 'id_center', colors.anchor),
         // _anchor: actionWord('anchor', 'id_anchor', colors.anchor),
-        _center: highlightWord('center', '', 'english'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _centrum: highlightWord('centrum', '', 'latin'),
-        _middle: highlightWord('middle', '', 'english'),
+        _center: highlightWord('center', 'english'),
+        _Latin: highlightWord('Latin', 'latin'),
+        _centrum: highlightWord('centrum', 'latin'),
+        _middle: highlightWord('middle', 'english'),
       },
       setEnterState: () => {
         elements.resetCircle();
@@ -233,7 +233,7 @@ class Content extends LessonContent {
         `,
       modifiers: {
         _center_point: actionWord('center point', 'id_center', colors.anchor),
-        _location: highlightWord('location', '', 'english'),
+        _location: highlightWord('location', 'english'),
       },
       showOnly: [
         circle,
@@ -309,9 +309,9 @@ class Content extends LessonContent {
         `,
       modifiers: {
         _radius: actionWord('Radius', 'id_radius', colors.radius),
-        _radiusLatin: highlightWord('radius', '', 'latin'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _spoke_of_a_chariot_wheel: highlightWord('spoke of a chariot wheel', '', 'english'),
+        _radiusLatin: highlightWord('radius', 'latin'),
+        _Latin: highlightWord('Latin', 'latin'),
+        _spoke_of_a_chariot_wheel: highlightWord('spoke of a chariot wheel', 'english'),
       },
       showOnly: [
         circle,
@@ -340,8 +340,8 @@ class Content extends LessonContent {
         _radius: actionWord('radius', 'id_radius', colors.radius),
         _center: actionWord('center', 'id_center', colors.anchor),
         _edge: actionWord('edge', 'id_edge', colors.circle),
-        _width: highlightWord('width', '', 'english'),
-        _radius2: highlightWord('radius', '', 'english'),
+        _width: highlightWord('width', 'english'),
+        _radius2: highlightWord('radius', 'english'),
         _any_line: actionWord('any line', 'id_spin', colors.radius),
       },
       showOnly: [
@@ -379,12 +379,12 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _diametros: highlightWord('diametros', '', 'greek'),
-        _dia: highlightWord('dia', '', 'greek'),
-        _metros: highlightWord('metros', '', 'greek'),
-        _across: highlightWord('across', '', 'english'),
-        _width: highlightWord('width', '', 'english'),
-        _measure: highlightWord('measure', '', 'english'),
+        _diametros: highlightWord('diametros', 'greek'),
+        _dia: highlightWord('dia', 'greek'),
+        _metros: highlightWord('metros', 'greek'),
+        _across: highlightWord('across', 'english'),
+        _width: highlightWord('width', 'english'),
+        _measure: highlightWord('measure', 'english'),
         _diameter: actionWord('Diameter', 'id_diameter', colors.diameter),
       },
       showOnly: [
@@ -453,12 +453,12 @@ class Content extends LessonContent {
       modifiers: {
         _edge: actionWord('edge', 'id_edge', colors.circle),
         _circumference: actionWord('Circumference', 'id_circum', colors.circle),
-        _circum: highlightWord('circum', '', 'latin'),
-        _ferre: highlightWord('ferre', '', 'latin'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _circumferentia: highlightWord('circumferentia', '', 'latin'),
-        _carry: highlightWord('carry', '', 'english'),
-        _around: highlightWord('around', '', 'english'),
+        _circum: highlightWord('circum', 'latin'),
+        _ferre: highlightWord('ferre', 'latin'),
+        _Latin: highlightWord('Latin', 'latin'),
+        _circumferentia: highlightWord('circumferentia', 'latin'),
+        _carry: highlightWord('carry', 'english'),
+        _around: highlightWord('around', 'english'),
       },
       setEnterState: () => {
         // elements.resetCircle('right');
@@ -489,7 +489,7 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _length: highlightWord('length', '', 'english'),
+        _length: highlightWord('length', 'english'),
         _straightened: actionWord('straightened', 'id_straight', colors.circle),
         _circumference: actionWord('circumference', 'id_circum', colors.circle),
       },
@@ -529,17 +529,17 @@ class Content extends LessonContent {
         </p>
         `),
       modifiers: {
-        _length: highlightWord('length', '', 'english'),
-        _wheel_spoke: highlightWord('wheel spoke', '', 'english'),
-        _width: highlightWord('width', '', 'english'),
-        _ring: highlightWord('ring', '', 'english'),
-        _carry_around: highlightWord('carry-around', '', 'english'),
-        _middle: highlightWord('middle', '', 'english'),
-        _center: highlightWord('center', '', 'english'),
-        _radius: highlightWord('radius', '', 'english'),
-        _circle: highlightWord('circle', '', 'english'),
-        _diameter: highlightWord('diameter', '', 'english'),
-        _circumference: highlightWord('circumference', '', 'english'),
+        _length: highlightWord('length', 'english'),
+        _wheel_spoke: highlightWord('wheel spoke', 'english'),
+        _width: highlightWord('width', 'english'),
+        _ring: highlightWord('ring', 'english'),
+        _carry_around: highlightWord('carry-around', 'english'),
+        _middle: highlightWord('middle', 'english'),
+        _center: highlightWord('center', 'english'),
+        _radius: highlightWord('radius', 'english'),
+        _circle: highlightWord('circle', 'english'),
+        _diameter: highlightWord('diameter', 'english'),
+        _circumference: highlightWord('circumference', 'english'),
       },
     });
     this.addSection({
@@ -550,8 +550,8 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        _properties: highlightWord('properties', '', 'english'),
-        _circle: highlightWord('circle', '', 'english'),
+        _properties: highlightWord('properties', 'english'),
+        _circle: highlightWord('circle', 'english'),
       },
       setEnterState: () => {
         grid._locationText

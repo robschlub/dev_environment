@@ -1,7 +1,7 @@
 // @flow
 
 import {
-  LessonContent, actionWord, onClickId, highlightWord,
+  LessonContent, actionWord, onClickId, highlightWord, action,
   centerVH, centerV,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
@@ -30,28 +30,19 @@ class Content extends LessonContent {
       title: 'Angle Measurement',
       setContent: () => `
         <p>
-        |_angle1| is the word that describes how large a corner is.
+        |_angle1| is the word that describes how large a corner is. 
         </p>
         <p>
-        |_angle2| describes how much |_rotation| there is between two connected lines.
+        |_angle2| describes how much |rotation| there is between two connected lines.
         </p>
         `,
       modifiers: {
         _angle1: actionWord('Angle', 'id_angle1', colors.angleText),
         _angle2: actionWord('Angle', 'id_angle2', colors.angleText),
-        _rotation: actionWord('rotation', 'id_rotation', colors.rotation),
+        rotation: action('id_rotation', colors.rotation),
       },
-      showOnly: [
-        circle,
-        circle._radius,
-        circle._reference,
-        circle._angle,
-      ],
       setSteadyState: () => {
-        circle._reference.transform.updateTranslation(0, 0);
-        circle._reference.transform.updateRotation(0);
-        circle._radius.transform.updateTranslation(0, 0);
-        circle.transform.updateTranslation(layout.circle.center);
+        circle.setPosition(layout.circle.center);
         onClickId('id_angle1', elements.pulseAngle, [elements]);
         onClickId('id_angle2', elements.pulseAngle, [elements]);
         onClickId('id_rotation', elements.pushRadius, [elements]);
@@ -60,27 +51,56 @@ class Content extends LessonContent {
         }
         elements.updateRotation();
       },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._angle,
+      ],
+    });
+
+    this.addSection({
+      setContent: () => `
+        <p>
+        A corner can have a |minimum| angle of 0.
+        </p>
+        <p>
+        A corner's |maximum| angle, is when the rotation is a |full circle|.
+        </p>
+        `,
+      modifiers: {
+        minimum: action('id_minimum', colors.angleText),
+        maximum: action('id_maximum', colors.angleText),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._angle,
+      ],
+      setSteadyState: () => {
+        circle.setPosition(layout.circle.center);
+        onClickId('id_minimum', elements.rotateTo, [elements, 0, -1, 1, null]);
+        onClickId('id_maximum', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, null]);
+      },
     });
 
     this.addSection({
       setContent: () =>
         centerVH(`
           <p>
-            How do we |_measure| angle?
+            How do we |measure| angle?
           </p> 
         `),
-      modifiers: {
-        _measure: highlightWord('measure', '', 'english'),
-      },
     });
     this.addSection({
       setContent: () =>
         `
         <p>
-          One way, is to |_divide| the |_maximum_angle| into portions.
+          One way, is to |divide| the |_maximum_angle| into portions.
         </p>
         <p>
-          For example, here are |_12_equal_portions| (like a clock).
+          For example, here are |12 equal portions| (like a clock).
         </p>
         `,
       showOnly: [
@@ -92,8 +112,8 @@ class Content extends LessonContent {
       ],
       modifiers: {
         _maximum_angle: actionWord('maximum angle', 'id_max_angle', colors.angleText),
-        _divide: highlightWord('divide', 'highlight_word'),
-        _12_equal_portions: highlightWord('12 equal portions', 'highlight_word'),
+        // _divide: highlightWord('divide', 'english'),
+        // _12_equal_portions: highlightWord('12 equal portions', 'english'),
       },
       setSteadyState: () => {
         onClickId('id_max_angle', elements.rotateTo, [elements, Math.PI * 1.999, 1, 1, () => {}]);
@@ -113,7 +133,7 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          Now, as you |_rotate| the stick to change the |_angle|, you can count how many portions there are.
+          Now, as you |_rotate| the line to change the |_angle|, you can count how many portions there are.
         </p>
         <p>Try different portion sizes:
           <ul>
@@ -193,9 +213,9 @@ class Content extends LessonContent {
           </p>
         `),
       modifiers: {
-        _360: highlightWord('360', '', 'english'),
-        _degree: highlightWord('degree', '', 'english'),
-        _deg: highlightWord('&deg;', '', 'english'),
+        _360: highlightWord('360', 'english'),
+        _degree: highlightWord('degree', 'english'),
+        _deg: highlightWord('&deg;', 'english'),
       },
     });
 
@@ -214,12 +234,12 @@ class Content extends LessonContent {
           </p>
         `),
       modifiers: {
-        _degree: highlightWord('degree', '', 'english'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _de: highlightWord('de', '', 'latin'),
-        _down: highlightWord('down', '', 'english'),
-        _gradus: highlightWord('gradus', '', 'latin'),
-        _step: highlightWord('step', '', 'english'),
+        _degree: highlightWord('degree', 'english'),
+        _Latin: highlightWord('Latin', 'latin'),
+        _de: highlightWord('de', 'latin'),
+        _down: highlightWord('down', 'english'),
+        _gradus: highlightWord('gradus', 'latin'),
+        _step: highlightWord('step', 'english'),
       },
     });
 
@@ -232,8 +252,8 @@ class Content extends LessonContent {
           <p>For instance, Babylonians divided a circle into 360 portions |_over_3000_years_ago|.</p>
         `),
       modifiers: {
-        _Why_choose_360: highlightWord('Why choose 360?', '', 'highlight_word'),
-        _over_3000_years_ago: highlightWord('over 3000 years ago', '', 'highlight_word'),
+        _Why_choose_360: highlightWord('Why choose 360?', 'highlight_word'),
+        _over_3000_years_ago: highlightWord('over 3000 years ago', 'highlight_word'),
       },
     });
 
@@ -247,9 +267,9 @@ class Content extends LessonContent {
         `),
       modifiers: {
         _So_why_did_they_choose_360:
-          highlightWord('So why did they choose 360?', '', 'highlight_word'),
+          highlightWord('So why did they choose 360?', 'highlight_word'),
         _360_is_an_easy_number_to_work_with:
-          highlightWord('360 is an easy number to work with', '', 'highlight_word'),
+          highlightWord('360 is an easy number to work with', 'highlight_word'),
         _factors: highlightWord('1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360', '', 'lesson__small_text'),
       },
     });

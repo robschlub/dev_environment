@@ -32,7 +32,7 @@ body {
   font-weight: bold;
 }
 
-ul {
+.lesson__text ul {
   color: color(diagram, 'text-base');
   font-size: calc(var(--lesson__diagram-font-size) * 0.8);
 }
@@ -40,8 +40,3 @@ ul {
 .portions_selected {
   color: color(diagram, 'text-plot');
 }
-// .list_selected {
-
-// .lesson__small_text {
-//   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
-// }
