@@ -121,17 +121,18 @@ class Content extends LessonContent {
         _wheel: highlightWord('wheel', '', 'english'),
         _shape: actionWord('shape', 'id_shape', colors.circle),
       },
-      setSteadyState: () => {
-        circle._wheel.transform.updateTranslation(-1, 0);
-        circle._wheelShape.transform.updateTranslation(1, 0);
-        onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
-      },
       transitionFromAny: (done) => {
         if (circle._wheel.transform.t().x === 0) {
           circle.showWheelShape(done);
         } else {
           done();
         }
+      },
+      setSteadyState: () => {
+        circle._wheel.transform.updateTranslation(-1, 0);
+        circle.resetColors();
+        circle._wheelShape.transform.updateTranslation(1, 0);
+        onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
       },
     });
 
@@ -189,6 +190,13 @@ class Content extends LessonContent {
         );
       },
       setSteadyState: () => {
+        circle.resetColors();
+        circle.eqn.calcSize(new Point(-1, 0), 1);
+        circle._equation.showAll();
+        circle._diameterDimension.grow(1);
+        circle._circumferenceDimension.grow(1);
+
+
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
         onClickId('id_properties', circle.pulseProperties, [circle]);
