@@ -185,7 +185,6 @@ class Content extends LessonContent {
           tDiameter,
           circle._circumferenceDimension.grow.bind(circle),
           1.5,
-          easeinout,
           makeEquation.bind(circle),
         );
       },

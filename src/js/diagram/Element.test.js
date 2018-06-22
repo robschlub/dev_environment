@@ -41,7 +41,7 @@ describe('Animationa and Movement', () => {
           expect(element.state.isAnimating).toBe(false);
           expect(element.isMoving()).toBe(false);
 
-          element.animateRotationTo(1, 1, 1, linear);
+          element.animateRotationTo(1, 1, 1, null, linear);
           const t = element.transform;
           expect(t).toEqual(new Transform().scale(1, 1).rotate(0).translate(0, 0));
 
@@ -78,7 +78,7 @@ describe('Animationa and Movement', () => {
           expect(element.isMoving()).toBe(false);
 
           // Setup the animation
-          element.animateTranslationTo(new Point(1, 0), 1, linear);
+          element.animateTranslationTo(new Point(1, 0), 1, null, linear);
           const t = element.transform;
           expect(t).toEqual(new Transform().scale(1, 1).rotate(0).translate(0, 0));
           const phase = element.state.animation.currentPhase;
@@ -111,7 +111,7 @@ describe('Animationa and Movement', () => {
         test('Callback', () => {
           const callback = jest.fn();         // Callback mock
           // Setup the animation
-          element.animateRotationTo(1, 1, 1, linear, callback);
+          element.animateRotationTo(1, 1, 1, callback, linear);
           element.draw(new Transform(), 0);     // Initial draw setting start time
           element.draw(new Transform(), 2);   // Draw half way through
           element.stopAnimating();            // Stop animating
@@ -122,7 +122,7 @@ describe('Animationa and Movement', () => {
         test('Stop animating during animation', () => {
           const callback = jest.fn();         // Callback mock
           // Setup the animation
-          element.animateRotationTo(1, 1, 1, linear, callback);
+          element.animateRotationTo(1, 1, 1, callback, linear);
           element.draw(new Transform(), 0);     // Initial draw setting start time
           element.draw(new Transform(), 0.5);   // Draw half way through
           element.stopAnimating();            // Stop animating
@@ -648,7 +648,7 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isMovingFreely).toBe(false);
 
       // Move translation to (0.5, 0)
-      collection.animateTranslationTo(new Point(1, 0), 1, linear, callbackAnim);
+      collection.animateTranslationTo(new Point(1, 0), 1, callbackAnim, linear);
       expect(collection.state.isAnimating).toBe(true);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);

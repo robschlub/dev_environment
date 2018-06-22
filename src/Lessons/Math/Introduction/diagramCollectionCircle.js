@@ -373,7 +373,7 @@ class CircleCollection extends DiagramElementCollection {
       this._wheelShape.show();
       this._wheelShape.transform.updateTranslation(t.x, t.y);
       this._wheelShape.animateTranslationToWithDelay(new Point(1, 0), 0.5, 1);
-      this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1, tools.easeinout, done);
+      this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1, done);
       this._wheelShape.disolveIn(0.5);
     }
     this.diagram.animateNextFrame();

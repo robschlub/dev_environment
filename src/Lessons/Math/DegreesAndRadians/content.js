@@ -117,7 +117,7 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         elements.toggleRadialLines(2);
         if (circle.transform.t().isNotEqualTo(layout.circle.center)) {
-          circle.animateTranslationTo(layout.circle.center, 1, easeinout, done);
+          circle.animateTranslationTo(layout.circle.center, 1, done);
         } else {
           done();
         }

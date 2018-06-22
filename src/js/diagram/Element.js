@@ -832,8 +832,8 @@ class DiagramElement {
     transform: Transform,
     time: number = 1,
     rotDirection: number = 0,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
@@ -844,8 +844,8 @@ class DiagramElement {
   animateColorTo(
     color: Array<number>,
     time: number = 1,
-    easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.linear,
   ): void {
     const phase = new ColorAnimationPhase(color, time, easeFunction);
     if (phase instanceof ColorAnimationPhase) {
@@ -857,8 +857,8 @@ class DiagramElement {
     phaseCallback: (number) => void,
     time: number = 1,
     startPercent: number = 0,
-    easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.linear,
   ): void {
     const phase = new CustomAnimationPhase(phaseCallback, time, startPercent, easeFunction);
     if (phase instanceof CustomAnimationPhase) {
@@ -870,8 +870,8 @@ class DiagramElement {
     delay: number,
     phaseCallback: (number) => void,
     time: number = 1,
-    easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const phase1 = new CustomAnimationPhase(() => {}, delay, 0, easeFunction);
     const phase2 = new CustomAnimationPhase(phaseCallback, time, 0, easeFunction);
@@ -931,8 +931,8 @@ class DiagramElement {
   animateTranslationTo(
     translation: Point,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateTranslation(translation);
@@ -947,8 +947,8 @@ class DiagramElement {
     translation: Point,
     delay: number = 1,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateTranslation(translation);
@@ -965,8 +965,8 @@ class DiagramElement {
     rotation: number,
     rotDirection: number,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateRotation(rotation);
@@ -982,8 +982,8 @@ class DiagramElement {
     rotation: number,
     rotDirection: number,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateRotation(rotation);
@@ -998,8 +998,8 @@ class DiagramElement {
     translation: Point,
     scale: Point | number,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     if (typeof scale === 'number') {
@@ -1791,8 +1791,8 @@ class DiagramElementCollection extends DiagramElement {
     elementTransforms: Object,
     time: number = 1,
     rotDirection: number = 0,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ) {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
@@ -1801,8 +1801,8 @@ class DiagramElementCollection extends DiagramElement {
           elementTransforms[element.name],
           time,
           rotDirection,
-          easeFunction,
           callback,
+          easeFunction,
         );
       }
     }

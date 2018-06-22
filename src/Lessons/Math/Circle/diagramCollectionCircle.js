@@ -747,19 +747,19 @@ class CircleCollection extends DiagramElementCollection {
         d = delta / Math.abs(delta);
       }
     }
-    this._circle._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
+    this._circle._radius.animateRotationTo(angle, d, time, callback);
     this.diagram.animateNextFrame();
   }
 
   spinDiameter() {
     const angle = this._circle._diameter.transform.r() + Math.PI;
-    this._circle._diameter.animateRotationTo(angle, 1, 2, tools.easeinout, () => {});
+    this._circle._diameter.animateRotationTo(angle, 1, 2, null);
     this.diagram.animateNextFrame();
   }
 
   spinRadius() {
     const angle = this._circle._radius.transform.r() + Math.PI * 2;
-    this._circle._radius.animateRotationTo(angle, 1, 4, tools.easeinout, () => {});
+    this._circle._radius.animateRotationTo(angle, 1, 4, null);
     this.diagram.animateNextFrame();
   }
 
@@ -782,7 +782,7 @@ class CircleCollection extends DiagramElementCollection {
     shape.animateTranslationAndScaleTo(
       layout.circleShape.center,
       layout.circleShape.radius / radius,
-      2, tools.easeinout,
+      2,
       shape.disolveOut.bind(
         shape, 1,
         shape.hide.bind(shape),
@@ -824,7 +824,6 @@ class CircleCollection extends DiagramElementCollection {
           layout.circle[toPosition],
           scale,
           1,
-          tools.easeinout,
           done,
         );
         return;

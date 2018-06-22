@@ -318,7 +318,7 @@ class CircleCollection extends DiagramElementCollection {
         d = delta / Math.abs(delta);
       }
     }
-    this._circle._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
+    this._circle._radius.animateRotationTo(angle, d, time, callback);
     this.diagram.animateNextFrame();
   }
 }
