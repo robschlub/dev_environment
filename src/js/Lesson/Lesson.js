@@ -66,7 +66,7 @@ class Lesson {
         }
       } else {
         // Stop diagrams if not in transition to stop any animations.
-        this.stopDiagrams();
+        // this.stopDiagrams();
       }
       this.transitionStart('prev');
       this.goToSectionIndex = this.currentSectionIndex + 1;
@@ -212,12 +212,12 @@ class Lesson {
 
   stopTransition() {
     const { diagram } = this;
+    this.transitionCancelled = true;
     if (diagram) {
       diagram.inTransition = false;
       diagram.stop(false);
     }
     this.inTransition = false;
-    this.transitionCancelled = true;
   }
 
   renderDiagrams() {
