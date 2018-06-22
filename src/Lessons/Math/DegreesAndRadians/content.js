@@ -22,11 +22,10 @@ class Content extends LessonContent {
 
   addSections() {
     const circle = this.diagram.elements._circle;
-    // const { elements } = this.diagram;
     const diag = this.diagram.elements;
 
     this.addSection({
-      title: 'Angle Measurement',
+      title: 'Introduction',
       setContent: () => `
         <p>
         |Angle1| is the word that describes how large a corner is. 
@@ -42,6 +41,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         circle.setPosition(layout.circle.center);
+        diag.setRotation(layout.circle.angle.small);
         onClickId('id_angle1', diag.pulseAngle, [diag]);
         onClickId('id_angle2', diag.pulseAngle, [diag]);
         if (circle._radius.transform.r() < 0.2) {
@@ -82,6 +82,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
+      title: 'How to Measure?',
       setContent: () =>
         centerVH(`
           <p>
@@ -103,12 +104,12 @@ class Content extends LessonContent {
         maximum: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.angleText),
         portions: click(diag.pulseRadialLines, [diag], colors.radialLines),
       },
-      setEnterState: () => {
-        if (circle._radius.transform.r() < Math.PI / 50
-            || circle._radius.transform.r() > Math.PI * 1.99) {
-          diag.setRotation(Math.PI / 5);
-        }
-      },
+      // setEnterState: () => {
+      //   if (circle._radius.transform.r() < Math.PI / 50
+      //       || circle._radius.transform.r() > Math.PI * 1.99) {
+      //     diag.setRotation(Math.PI / 5);
+      //   }
+      // },
       showOnly: [
         circle,
         circle._radius,
@@ -117,12 +118,7 @@ class Content extends LessonContent {
         circle._radialLinesA,
       ],
       transitionFromAny: (done) => {
-        diag.toggleRadialLines(2);
-        if (circle.transform.t().isNotEqualTo(layout.circle.center)) {
-          circle.animateTranslationTo(layout.circle.center, 1, done);
-        } else {
-          done();
-        }
+        diag.transitionCircle(done, 'center');
       },
       setSteadyState: () => {
         circle.setPosition(layout.circle.center);
@@ -148,26 +144,24 @@ class Content extends LessonContent {
         _12_Portions: click(diag.toggler, [diag, 0], 'portions_selected'),
         _100_Portions: click(diag.toggler, [diag, 1]),
       },
+      setEnterState: () => {
+        diag.toggleRadialLines(0);
+      },
       showOnly: [
         circle,
         circle._radius,
         circle._reference,
         circle._angle,
         diag._angleText,
+        circle._radialLinesA,
       ],
       transitionFromAny: (done) => {
-        diag.toggleRadialLines(0);
-        if (circle.transform.t().isNotEqualTo(layout.circle.right)) {
-          circle.animateTranslationTo(layout.circle.right, 1);
-          diag.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
-        } else {
-          done();
-        }
+        diag.transitionCircle(done, 'right', layout.circle.angle.large);
       },
       setSteadyState: () => {
         circle.setPosition(layout.circle.right);
         diag._angleText.showAll();
-        diag.toggleRadialLines(0);
+        // diag.toggleRadialLines(0);
         diag._angleText._units.vertices.element.innerHTML = 'portions';
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.left);
         // circle.transform.updateTranslation(layout.circle.right);
@@ -176,7 +170,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      title: 'Degree',
+      title: 'Degrees',
       setContent: () =>
         centerV(`
           <p>
@@ -271,7 +265,8 @@ class Content extends LessonContent {
         circle._angle,
       ],
       setSteadyState: () => {
-        circle.transform.updateTranslation(layout.circle.right);
+        diag.resetCircle('right');
+        // circle.transform.updateTranslation(layout.circle.right);
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.top);
         diag.showDegrees();
         const bindArray = deg => [diag, deg / 180 * Math.PI, 0, 1, () => {}];
@@ -287,13 +282,34 @@ class Content extends LessonContent {
         onClickId('id_36', diag.rotateTo, bindArray(36));
       },
       transitionFromAny: (done) => {
-        if (circle.transform.t().isNotEqualTo(layout.circle.right)) {
-          circle.animateTranslationTo(layout.circle.right, 1);
-          diag.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
-        } else {
-          done();
-        }
+        diag.transitionCircle(done, 'right');
+        // if (circle.transform.t().isNotEqualTo(layout.circle.right)) {
+        //   circle.animateTranslationTo(layout.circle.right, 1);
+        //   diag.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
+        // } else {
+        //   done();
+        // }
       },
+    });
+
+    this.addSection({
+      title: 'Radians',
+      setContent: () =>
+        `
+        <p>
+          The second common way to define an |angle| is to |relate| it to a circle.
+        </p>
+        <p>
+          If we trace the end of the line we are rotating to change angle, a circle is formed at the maximum angle.
+        </p>
+        `,
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+
     });
   }
 }

@@ -42,6 +42,10 @@ export default function lessonLayout() {
     circle: {
       center: new Point(0, -0.5),
       right: new Point(1, -0.5),
+      angle: {
+        small: 1,
+        large: Math.PI * 1.4,
+      },
     },
 
     sectionText: {
@@ -51,7 +55,7 @@ export default function lessonLayout() {
       left: new Point(-2.3, -0.6),
       top: new Point(0.35, 1),
     },
-    splitCircleAngleStart: Math.PI * 1.4,
+    // splitCircleAngleStart: Math.PI * 1.4,
 
     colors,
   };

@@ -48,8 +48,22 @@ class AnimationPhase {
   start(currentTransform: Transform) {
     this.startTransform = currentTransform.copy();
     this.deltaTransform = this.targetTransform.sub(this.startTransform);
+    // Rotation direction can be:
+    //   - 0: shortest possible direction
+    //   1:   clockwise
+    //   -1:  anti-clockwise
+    //   2:   not through zero or 2pi
     let rotDiff = this.deltaTransform.r() || 0;
-    if (rotDiff * this.rotDirection < 0) {
+    if (this.rotDirection === 2) {
+      const rStart = this.startTransform.r();
+      if (rStart) {
+        if (rStart + rotDiff < 0) {
+          rotDiff = Math.PI * 2 + rotDiff;
+        } else if (rStart + rotDiff > Math.PI * 2) {
+          rotDiff = -(Math.PI * 2 - rotDiff);
+        }
+      }
+    } else if (rotDiff * this.rotDirection < 0) {
       rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
     }
     this.deltaTransform.updateRotation(rotDiff);

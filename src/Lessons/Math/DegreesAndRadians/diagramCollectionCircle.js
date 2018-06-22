@@ -81,13 +81,6 @@ function makeReference(shapes: Object) {
   );
 }
 
-// function makeRadialLines(shapes: Object, num: number) {
-//   return shapes.radialLines(
-//     0, layout.radius, layout.radialLineWidth, Math.PI * 2 / num,
-//     colors.radialLines, new Transform().translate(0, 0),
-//   );
-// }
-
 function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
   let inner = layout.radialLineMajorInner;
   let outer = layout.radialLineMajorOuter;
@@ -130,7 +123,7 @@ function makeAngleText(shapes: Object) {
   ));
   angleText.add('units', shapes.htmlText(
     'portions', 'id_angle_units', '',
-    new Point(0.9, 0), 'middle', 'left',
+    new Point(0.87, 0), 'middle', 'left',
   ));
   return angleText;
 }
@@ -144,6 +137,7 @@ type circleCollectionType = {
   _radialLinesA: DiagramElementPrimative;
   _radialLinesB: DiagramElementCollection;
   _radialLinesDeg: DiagramElementCollection;
+  _radialLinesRad: DiagramElementCollection;
   // _radialLinesC: DiagramElementPrimative;
 } & DiagramElementCollection;
 
@@ -151,11 +145,10 @@ type circleCollectionType = {
 function makeCircle(numSections: Array<number>, shapes: Object) {
   const circle = shapes.collection(new Transform().translate(layout.circle.center));
   circle.add('angle', makeAngle(shapes));
-  // circle.add('radialLines12', makeRadialLines(shapes, 12));
   circle.add('radialLinesA', makeRadialMarks(shapes, numSections[0]));
   circle.add('radialLinesB', makeMajorAndMinRadialMarks(shapes, 10, numSections[1]));
   circle.add('radialLinesDeg', makeMajorAndMinRadialMarks(shapes, 36, 360));
-  // circle.add('radialLinesC', makeRadialLines(shapes, numSections[2]));
+  circle.add('radialLinesRad', makeRadialMarks(shapes, Math.PI * 2));
   circle.add('reference', makeReference(shapes));
   circle.add('arc', makeArc(shapes));
   circle.add('circumference', makeCircumference(shapes));
@@ -306,7 +299,7 @@ class CircleCollection extends DiagramElementCollection {
     this._angleText.showAll();
     this.varState.radialLines = 360;
     // $FlowFixMe
-    this._angleText._units.vertices.element.innerHTML = 'degrees';
+    this._angleText._units.vertices.element.innerHTML = '&deg;';
   }
   rotateTo(
     angle: number,
@@ -353,6 +346,27 @@ class CircleCollection extends DiagramElementCollection {
         elem12.classList.add('portions_selected');
       }
     }
+  }
+
+  resetCircle(position: string = 'center') {
+    this._circle.transform.updateTranslation(layout.circle[position]);
+    this._circle.transform.updateScale(1, 1);
+  }
+
+  transitionCircle(done: () => void, toPosition: string = 'center', toAngle: number = layout.circle.angle.small) {
+    const t = this._circle.transform.t();
+    if (t) {
+      if (t.isNotEqualTo(layout.circle[toPosition])) {
+        this.rotateTo(toAngle, 2, 1);
+        this._circle.animateTranslationTo(
+          layout.circle[toPosition],
+          1,
+          done,
+        );
+        return;
+      }
+    }
+    done();
   }
 }
 
