@@ -107,13 +107,6 @@ class Lesson {
   transitionStart(direction: string = '') {
     this.inTransition = true;
     this.comingFrom = direction;
-    // if (direction === 'next') {
-    //   this.comingFrom = 'prev';
-    // } else if (direction === 'prev') {
-    //   this.comingFrom = 'next';
-    // } else {
-    //   this.comingFrom = 'goto';
-    // }
     const { diagram } = this;
     if (diagram) {
       diagram.inTransition = true;
@@ -146,7 +139,6 @@ class Lesson {
     const { diagram } = this;
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
-      // this.inTransition = false;
       section.setEnterState(this.state);
       section.setVisible();
       this.renderDiagrams();
@@ -154,22 +146,16 @@ class Lesson {
         this.finishTransitionFromAny();
       }
       if (this.comingFrom === 'next') {
-        // this.inTransition = true;
         section.transitionFromNext(this.finishTransFromNextOrPrev.bind(this));
-        // this.comingFrom = '';
       } else if (this.comingFrom === 'prev') {
-        // this.inTransition = true;
         section.transitionFromPrev(this.finishTransFromNextOrPrev.bind(this));
-        // this.comingFrom = '';
       } else {
         section.transitionFromAny(this.finishTransitionFromAny.bind(this));
-        // this.comingFrom = '';
       }
     }
   }
 
   finishTransFromNextOrPrev(flag: boolean = true) {
-    // if (flag) {
     if (flag === false) {
       this.finishTransitionFromAny();
     } else {
@@ -194,13 +180,6 @@ class Lesson {
   currentSection() {
     return this.content.sections[this.currentSectionIndex];
   }
-
-  // saveState() {
-  //   const { diagram } = this;
-  //   if (diagram) {
-  //     this.state = this.currentSection().getState(diagram);
-  //   }
-  // }
 
   stopDiagrams() {
     const { diagram } = this;
