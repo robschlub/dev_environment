@@ -67,7 +67,7 @@ export default function lessonLayout() {
       center: new Point(0, -0.5),
       right: new Point(1, -0.5),
       angle: {
-        small: 1,
+        small: 0.8,
         large: Math.PI * 1.4,
       },
     },

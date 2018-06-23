@@ -352,6 +352,11 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  pulseSlider() {
+    this._slider._circle.pulseScaleNow(1, 1.5);
+    this.diagram.animateNextFrame();
+  }
+
   pushRadius() {
     const angle = this._circle._radius.transform.r();
     let targetAngle = angle + Math.PI / 6;
