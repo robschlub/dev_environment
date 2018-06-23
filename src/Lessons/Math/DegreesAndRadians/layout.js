@@ -49,13 +49,18 @@ export default function lessonLayout() {
     radialLineMinorInner: 0.6 + 0.4,
 
     slider: {
-      position: new Point(0, -1.8),
-      length: 1.2,
+      position: new Point(0.6 - 0.05 / 2, -0.5),
+      length: 0.6 + 0.05,
       width: 0.03,
       circleWidth: 0.05,
       colorPos: colors.radius,
-      colorNeg: colors.disabled,
+      colorNeg: colors.diagram.background,
       circleSides: 50,
+    },
+
+    compare: {
+      radiusOffset: 0.2,
+      arcOffset: 0.3,
     },
 
     circle: {

@@ -558,6 +558,7 @@ class Content extends LessonContent {
         diag.rotateTo(1);
         diag.straighten(0);
         diag.updateRotation();
+        diag._slider.setValue(1.0);
       },
       showOnly: [
         circle,
@@ -576,6 +577,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         diag.resetCircle('center');
+        diag.showDegrees();
       },
       setLeaveState: () => {
         diag.straighten(0);

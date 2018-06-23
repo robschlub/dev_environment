@@ -55,6 +55,11 @@ function makeArc(shapes: Object, radius: number) {
   );
 }
 
+type straightArcType = {
+  _arc: DiagramElementPrimative;
+  _line: DiagramElementPrimative;
+} & DiagramElementCollection;
+
 function makeStraightArc(shapes: Object) {
   const straightArc = shapes.collection(new Transform().rotate(0).translate(0, 0));
   const arc = makeArc(shapes, layout.radius);
@@ -194,6 +199,8 @@ export type circleCollectionType = {
   _radialLinesB: DiagramElementCollection;
   _radialLinesDeg: DiagramElementCollection;
   _radialLinesRad: DiagramElementCollection;
+  _compareRadius: DiagramElementPrimative;
+  _straightArc: straightArcType;
 } & DiagramElementCollection;
 
 
@@ -210,7 +217,7 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   circle.add('straightArc', makeStraightArc(shapes));
   circle.add('circumference', makeCircumference(shapes));
   circle.add('radius', makeRadius(shapes));
-  circle.add('compareRadius', makeRadius(shapes));
+  circle.add('compareRadius', makeReference(shapes));
   circle.add('anchor', makeAnchor(shapes));
   return circle;
 }
@@ -259,10 +266,13 @@ class CircleCollection extends DiagramElementCollection {
 
   updateSlider() {
     const percent = 0.5 + this._slider.getValue() * 0.5;
-    console.log(percent)
     // this._circle._radius.transform.updateScale(percent, 1);
     // this._circle._arc.transform.updateScale(percent, percent);
     this._circle.transform.updateScale(percent, percent);
+    this._slider._value.transform.updateScale(1, percent);
+    if (this._circle._straightArc.isShown) {
+      this.straighten(this.varState.percentStraight);
+    }
     this.diagram.animateNextFrame();
   }
   updateRotation() {
@@ -408,6 +418,7 @@ class CircleCollection extends DiagramElementCollection {
 
   straighten(percent: number) {
     const r = this._circle._radius.transform.r();
+    // const s = this._circle.transform.s();
     const sArc = this._circle._straightArc;
     if (r !== null && r !== undefined) {
       const scale = percent * r / (Math.PI * 2);
@@ -418,8 +429,12 @@ class CircleCollection extends DiagramElementCollection {
         scale * layout.radius * Math.PI * 2,
       );
 
-      this._circle._compareRadius.transform.updateRotation( r + percent * (Math.PI / 2 - r));
-      this._circle._compareRadius.transform.updateTranslation(percent * (layout.radius + layout.linewidth * 2), 0);
+      this._circle._compareRadius.transform
+        .updateRotation(r + percent * (Math.PI / 2 - r));
+      this._circle._compareRadius.transform.updateTranslation(
+        percent * (layout.radius + layout.compare.radiusOffset),
+        0,
+      );
       // const totalRot = percent * Math.PI / 2;
       // sArc.transform.updateRotation(totalRot);
       // sArc.transform.updateTranslation(
@@ -427,7 +442,7 @@ class CircleCollection extends DiagramElementCollection {
       //   - layout.radius * Math.sin(totalRot),
       // );
       sArc.transform.updateTranslation(
-        layout.linewidth * 5 * percent,
+        layout.compare.arcOffset * percent,
         0,
       );
       this.varState.percentStraight = percent;

@@ -12,7 +12,7 @@ export type sliderType = {
   start: number;
   setValue: (number) => void;
   getValue: () => number;
-  setCallback: ((Object) => {}) => void;
+  setCallback: (mixed => mixed) => void;
 } & DiagramElementCollection;
 
 export type sliderOptions = {
