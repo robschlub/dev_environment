@@ -539,6 +539,48 @@ class Content extends LessonContent {
         diag.straighten(0);
       },
     });
+
+    this.addSection({
+      setContent: () =>
+        `
+        <p>
+          The angle where the radius and arc length are equal, is the same no matter the size of the circle. You can |check_it|.
+        </p>
+        `,
+      modifiers: {
+        // angle: click(diag.pulseAngle, [diag], colors.angle),
+        radius: click(diag.pulseRadius, [diag], colors.radius),
+        arc_length: click(diag.pulseArc, [diag], colors.circle),
+        check_it: click(diag.straightenArc, [diag], colors.action),
+        same: click(diag.rotateTo, [diag, 1, 2], colors.action),
+      },
+      setEnterState: () => {
+        diag.rotateTo(1);
+        diag.straighten(0);
+        diag.updateRotation();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+        circle._compareRadius,
+      ],
+      show: [
+        circle._angle,
+        circle._straightArc,
+        diag._slider,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('center');
+      },
+      setLeaveState: () => {
+        diag.straighten(0);
+      },
+    });
   }
 }
 

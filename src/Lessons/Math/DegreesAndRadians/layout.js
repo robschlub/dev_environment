@@ -48,6 +48,16 @@ export default function lessonLayout() {
     radialLineMinorOuter: 0.7 + 0.4,
     radialLineMinorInner: 0.6 + 0.4,
 
+    slider: {
+      position: new Point(0, -1.8),
+      length: 1.2,
+      width: 0.03,
+      circleWidth: 0.05,
+      colorPos: colors.radius,
+      colorNeg: colors.disabled,
+      circleSides: 50,
+    },
+
     circle: {
       center: new Point(0, -0.5),
       right: new Point(1, -0.5),

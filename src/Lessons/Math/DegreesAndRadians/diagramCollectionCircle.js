@@ -7,6 +7,8 @@ import { DiagramElementCollection, DiagramElementPrimative }
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
+import makeSlider from '../../../LessonsCommon/slider';
+import type { sliderType } from '../../../LessonsCommon/slider';
 
 const layout = lessonLayout();
 const { colors } = layout;
@@ -196,7 +198,7 @@ export type circleCollectionType = {
 
 
 function makeCircle(numSections: Array<number>, shapes: Object) {
-  const circle = shapes.collection(new Transform().translate(layout.circle.center));
+  const circle = shapes.collection(new Transform().scale(1, 1).translate(layout.circle.center));
   circle.add('angleFill', makeAngle(shapes));
   circle.add('angle', makeAngleLine(shapes));
   circle.add('radialLinesA', makeRadialMarks(shapes, numSections[0]));
@@ -217,6 +219,7 @@ class CircleCollection extends DiagramElementCollection {
   _circle: circleCollectionType;
   // _sectionTitle: DiagramElementPrimative;
   _angleText: DiagramElementCollection;
+  _slider: sliderType;
   varState: {
     radialLines: number,
     angleInSections: number,
@@ -243,6 +246,8 @@ class CircleCollection extends DiagramElementCollection {
     this.add('circle', makeCircle(this.numSections, shapes));
     // this.add('sectionTitle', makeSectionTitle(shapes));
     this.add('angleText', makeAngleText(shapes));
+    this.add('slider', makeSlider(shapes, layout.slider));
+    this._slider.setCallback(this.updateSlider.bind(this));
 
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
@@ -252,6 +257,14 @@ class CircleCollection extends DiagramElementCollection {
     this._circle.isMovable = true;
   }
 
+  updateSlider() {
+    const percent = 0.5 + this._slider.getValue() * 0.5;
+    console.log(percent)
+    // this._circle._radius.transform.updateScale(percent, 1);
+    // this._circle._arc.transform.updateScale(percent, percent);
+    this._circle.transform.updateScale(percent, percent);
+    this.diagram.animateNextFrame();
+  }
   updateRotation() {
     let rotation = this._circle._radius.transform.r();
     if (rotation !== null && rotation !== undefined) {

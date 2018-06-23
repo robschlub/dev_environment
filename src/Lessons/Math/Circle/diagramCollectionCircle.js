@@ -250,7 +250,7 @@ type sliderType = {
   travel: number;
   start: number;
   set: (number) => void;
-}
+} & DiagramElementCollection;
 
 function makeSlider(shapes: Object) {
   const slider = shapes.collection(new Transform()
