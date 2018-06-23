@@ -19,4 +19,5 @@ $geometry_colors: (
   arc:          color(diagram, 'warning'),
   rotation:     color(diagram, 'warning'),
   action:       color(8, 'lighter'),
+  disabled:     color(diagram, 'disabled', 'dark'),
 );

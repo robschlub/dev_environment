@@ -12,6 +12,7 @@ $colors: (
   radialLinesText:  color(diagram, 'text-plot'),
   rotation:         map-get($geometry_colors, rotation),
   action:           map-get($geometry_colors, action),
+  disabled:         map-get($geometry_colors, disabled),
 );
 
 body {

@@ -53,6 +53,22 @@ function makeArc(shapes: Object, radius: number) {
   );
 }
 
+function makeStraightArc(shapes: Object) {
+  const straightArc = shapes.collection(new Transform().rotate(0).translate(0, 0));
+  const arc = makeArc(shapes, layout.radius);
+  const line = makeLine(
+    shapes, new Point(0, 0),
+    layout.radius * 2 * Math.PI, layout.linewidth, colors.circle,
+    new Transform().scale(1, 1).rotate(Math.PI / 2)
+      .translate(layout.radius - layout.linewidth / 2, 0),
+  );
+  arc.angleToDraw = 0;
+  straightArc.add('arc', arc);
+  straightArc.add('line', line);
+
+  return straightArc;
+}
+
 function makeCircumference(shapes: Object) {
   return shapes.polygon(
     layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
@@ -189,8 +205,10 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   circle.add('radialLinesRad', makeRadialMarks(shapes, Math.PI * 2));
   circle.add('reference', makeReference(shapes));
   circle.add('arc', makeArc(shapes, layout.radius));
+  circle.add('straightArc', makeStraightArc(shapes));
   circle.add('circumference', makeCircumference(shapes));
   circle.add('radius', makeRadius(shapes));
+  circle.add('compareRadius', makeRadius(shapes));
   circle.add('anchor', makeAnchor(shapes));
   return circle;
 }
@@ -203,6 +221,8 @@ class CircleCollection extends DiagramElementCollection {
     radialLines: number,
     angleInSections: number,
     rotation: number,
+    percentStraight: number,
+    straightening: boolean,
   };
   numSections: Array<number>;
   diagram: Diagram;
@@ -214,6 +234,8 @@ class CircleCollection extends DiagramElementCollection {
       radialLines: 4,
       angleInSections: 0,
       rotation: 0,
+      percentStraight: 0,
+      straightening: false,
     };
     this.numSections = [12, 100];
 
@@ -246,6 +268,10 @@ class CircleCollection extends DiagramElementCollection {
       this._circle._arc.angleToDraw = r + 0.01;
       this._circle._angle.updateRotation(r);
       this.updateNumSectionsText();
+      if (this._circle._straightArc.isShown) {
+        this.straighten(this.varState.percentStraight);
+        // this._circle._compareRadius.transform.updateRotation(r);
+      }
     }
   }
 
@@ -349,6 +375,60 @@ class CircleCollection extends DiagramElementCollection {
     this.updateNumSectionsText();
 
     this.diagram.animateNextFrame();
+  }
+
+  straightenArc() {
+    const currentPercent = this.varState.percentStraight;
+    if (!this.varState.straightening || currentPercent === 0) {
+      this.animateCustomTo(this.straighten.bind(this), 1, currentPercent);
+      this.varState.straightening = true;
+    } else {
+      this.animateCustomTo(this.bend.bind(this), 1, 1 - currentPercent);
+      this.varState.straightening = false;
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  bend(percent: number) {
+    this.straighten(1 - percent);
+  }
+
+  straighten(percent: number) {
+    const r = this._circle._radius.transform.r();
+    const sArc = this._circle._straightArc;
+    if (r !== null && r !== undefined) {
+      const scale = percent * r / (Math.PI * 2);
+      sArc._line.transform.updateScale(scale, 1);
+      sArc._arc.angleToDraw = (1 - percent) * r;
+      sArc._arc.transform.updateTranslation(
+        0,
+        scale * layout.radius * Math.PI * 2,
+      );
+
+      this._circle._compareRadius.transform.updateRotation( r + percent * (Math.PI / 2 - r));
+      this._circle._compareRadius.transform.updateTranslation(percent * (layout.radius + layout.linewidth * 2), 0);
+      // const totalRot = percent * Math.PI / 2;
+      // sArc.transform.updateRotation(totalRot);
+      // sArc.transform.updateTranslation(
+      //   1 - layout.radius * Math.cos(totalRot),
+      //   - layout.radius * Math.sin(totalRot),
+      // );
+      sArc.transform.updateTranslation(
+        layout.linewidth * 5 * percent,
+        0,
+      );
+      this.varState.percentStraight = percent;
+    }
+    if (percent === 0) {
+      this.resetColors();
+    } else {
+      this._circle._radius.color = colors.disabled.slice();
+      this._circle._arc.color = colors.disabled.slice();
+    }
+  }
+  resetColors() {
+    this._circle._radius.color = colors.radius.slice();
+    this._circle._arc.color = colors.circle.slice();
   }
 
   showDegrees() {

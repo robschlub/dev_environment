@@ -126,6 +126,7 @@ class Lesson {
   }
 
   setLeaveStateAndMoveToNextSection() {
+    // console.log("asdf")
     const possibleState = this.currentSection().setLeaveState();
     if (possibleState !== null && possibleState !== undefined) {
       this.state = possibleState;

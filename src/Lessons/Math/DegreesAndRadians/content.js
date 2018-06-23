@@ -429,12 +429,6 @@ class Content extends LessonContent {
       },
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'right');
-        // if (circle.transform.t().isNotEqualTo(layout.circle.right)) {
-        //   circle.animateTranslationTo(layout.circle.right, 1);
-        //   diag.rotateTo(layout.splitCircleAngleStart, 1, 1, done);
-        // } else {
-        //   done();
-        // }
       },
     });
 
@@ -443,19 +437,107 @@ class Content extends LessonContent {
       setContent: () =>
         `
         <p>
-          The second common way to define an |angle| is to |relate| it to a circle.
-        </p>
-        <p>
-          If we trace the end of the line we are rotating to change angle, a circle is formed at the maximum angle.
+          The second common way to define an |angle| is to |relate| it to a circle's properties |radius| and |arc_length|.
         </p>
         `,
+      modifiers: {
+        angle: click(diag.pulseAngle, [diag], colors.angle),
+        radius: click(diag.pulseRadius, [diag], colors.radius),
+        arc_length: click(diag.pulseArc, [diag], colors.circle),
+      },
+      setEnterState: () => {
+        diag.updateRotation();
+      },
       showOnly: [
         circle,
         circle._radius,
         circle._reference,
         circle._arc,
       ],
+      show: [
+        circle._angle,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('center');
+      },
+    });
 
+    this.addSection({
+      setContent: () =>
+        `
+        <p>
+          If we relate |angle|, |radius| and |arc_length|, then we only need to know or measure two and then we can |calculate the third|.
+        </p>
+        `,
+      modifiers: {
+        angle: click(diag.pulseAngle, [diag], colors.angle),
+        radius: click(diag.pulseRadius, [diag], colors.radius),
+        arc_length: click(diag.pulseArc, [diag], colors.circle),
+      },
+      setEnterState: () => {
+        diag.updateRotation();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+      show: [
+        circle._angle,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('center');
+      },
+    });
+    this.addSection({
+      setContent: () =>
+        `
+        <p>
+          Rotate the stick till the |arc_length| is the |same| length as the |radius|.
+        </p>
+        <p>
+          |Straighten| the arc to check.
+        </p>
+        `,
+      modifiers: {
+        // angle: click(diag.pulseAngle, [diag], colors.angle),
+        radius: click(diag.pulseRadius, [diag], colors.radius),
+        arc_length: click(diag.pulseArc, [diag], colors.circle),
+        Straighten: click(diag.straightenArc, [diag], colors.action),
+        same: click(diag.rotateTo, [diag, 1, 2], colors.action),
+      },
+      setEnterState: () => {
+        diag.rotateTo(1);
+        diag.straighten(0);
+        diag.updateRotation();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+        circle._compareRadius,
+      ],
+      show: [
+        circle._angle,
+        circle._straightArc,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'center');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('center');
+      },
+      setLeaveState: () => {
+        diag.straighten(0);
+      },
     });
   }
 }
