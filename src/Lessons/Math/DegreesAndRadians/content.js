@@ -447,7 +447,7 @@ class Content extends LessonContent {
       |Radius|, |angle| and |arc_length| are related.
       </p>
       <p>
-        |Change| the radius and angle and the arc length will change. |Straighten| the arc for comparison.
+        |Change| the radius and angle and the arc length will change.
       </p>
       `,
       modifiers: {
@@ -469,6 +469,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._arc,
         circle._compareRadius,
+        diag._compareText,
       ],
       show: [
         circle._angle,
@@ -486,6 +487,7 @@ class Content extends LessonContent {
         if (this.comingFrom !== 'next') {
           diag.resetCircle('center');
         }
+        onClickId('id_compare_text', diag.straightenArc, [diag]);
       },
       setLeaveState: () => {
         if (this.goingTo !== 'next') {
@@ -500,7 +502,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
       <p>
-      The |arc_length| increases with either an increase in |radius|, or |angle|. |Compare|
+      The |arc_length| increases with either an increase in |radius|, or |angle|.
       </p>
       `,
       modifiers: {
@@ -522,6 +524,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._arc,
         circle._compareRadius,
+        diag._compareText,
       ],
       show: [
         circle._angle,
@@ -539,6 +542,7 @@ class Content extends LessonContent {
         if (this.comingFrom !== 'prev') {
           diag.resetCircle('center');
         }
+        onClickId('id_compare_text', diag.straightenArc, [diag]);
       },
       setLeaveState: () => {
         if (this.goingTo !== 'prev') {

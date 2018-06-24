@@ -6,11 +6,14 @@ import getCssColors from '../../../js/tools/getCssColors';
 const cssColorNames = [
   'anchor',
   'radius',
+  'radiusLight',
   'reference',
   'angle',
   'angleText',
   'latin',
   'circle',
+  'arc',
+  'arcLight',
   'radialLines',
   'radialLinesText',
   'rotation',
@@ -61,6 +64,7 @@ export default function lessonLayout() {
     compare: {
       radiusOffset: 0.2,
       arcOffset: 0.3,
+      textPosition: new Point(2.0, -0.2),
     },
 
     circle: {

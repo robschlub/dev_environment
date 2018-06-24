@@ -51,7 +51,7 @@ function makeRadius(shapes: Object) {
 function makeArc(shapes: Object, radius: number) {
   return shapes.polygon(
     layout.anglePoints, radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Point(0, 0),
+    layout.circlePoints, colors.arc, new Point(0, 0),
   );
 }
 
@@ -65,15 +65,23 @@ function makeStraightArc(shapes: Object) {
   const arc = makeArc(shapes, layout.radius);
   const line = makeLine(
     shapes, new Point(0, 0),
-    layout.radius * 2 * Math.PI, layout.linewidth, colors.circle,
+    layout.radius * 2 * Math.PI, layout.linewidth, colors.arc,
     new Transform().scale(1, 1).rotate(Math.PI / 2)
       .translate(layout.radius - layout.linewidth / 2, 0),
   );
+
   arc.angleToDraw = 0;
   straightArc.add('arc', arc);
   straightArc.add('line', line);
 
   return straightArc;
+}
+
+function makeCompareText(shapes: Object) {
+  return shapes.htmlText(
+    'Compare', 'id_compare_text', '',
+    layout.compare.textPosition, 'middle', 'left',
+  );
 }
 
 function makeCircumference(shapes: Object) {
@@ -250,6 +258,7 @@ class CircleCollection extends DiagramElementCollection {
     this.numSections = [12, 100];
 
     const { shapes } = diagram;
+    this.add('compareText', makeCompareText(shapes));
     this.add('circle', makeCircle(this.numSections, shapes));
     // this.add('sectionTitle', makeSectionTitle(shapes));
     this.add('angleText', makeAngleText(shapes));
@@ -458,13 +467,13 @@ class CircleCollection extends DiagramElementCollection {
     if (percent === 0) {
       this.resetColors();
     } else {
-      this._circle._radius.color = colors.disabled.slice();
-      this._circle._arc.color = colors.disabled.slice();
+      this._circle._radius.color = colors.radiusLight.slice();
+      this._circle._arc.color = colors.arcLight.slice();
     }
   }
   resetColors() {
     this._circle._radius.color = colors.radius.slice();
-    this._circle._arc.color = colors.circle.slice();
+    this._circle._arc.color = colors.arc.slice();
   }
 
   showDegrees() {

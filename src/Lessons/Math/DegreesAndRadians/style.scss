@@ -13,6 +13,9 @@ $colors: (
   rotation:         map-get($geometry_colors, rotation),
   action:           map-get($geometry_colors, action),
   disabled:         map-get($geometry_colors, disabled),
+  radiusLight:      map-get($geometry_colors, radiusLight),
+  arc:              map-get($geometry_colors, arc),
+  arcLight:         map-get($geometry_colors, arcLight),
 );
 
 body {
@@ -41,4 +44,9 @@ body {
 
 .portions_selected {
   color: color(diagram, 'text-plot');
+}
+
+#id_compare_text {
+  color: map-get($geometry_colors, action);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
 }

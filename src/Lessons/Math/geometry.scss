@@ -9,6 +9,7 @@ $geometry_colors: (
   radius:       color(diagram, 'primary'),
   diameter:     color(diagram, 'safe'),
   reference:    color(diagram, 'primary', 'light'),
+  radiusLight:  color(diagram, 'primary', 'lighter'),
   background:   color(diagram, 'background'),
   arrow:        color(diagram, 'warning'),
   angle:        color(diagram, 'safe', 'lighter'),
@@ -17,7 +18,8 @@ $geometry_colors: (
   radialLines:  color(diagram, 'disabled', 'light'),
   circle:       color(diagram, 'warning'),
   arc:          color(diagram, 'warning'),
+  arcLight:     color(diagram, 'warning', 'lighter'),
   rotation:     color(diagram, 'warning'),
-  action:       color(8, 'lighter'),
+  action:       color(diagram, 'action'),
   disabled:     color(diagram, 'disabled', 'dark'),
 );
