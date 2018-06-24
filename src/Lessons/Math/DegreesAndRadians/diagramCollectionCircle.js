@@ -295,6 +295,9 @@ class CircleCollection extends DiagramElementCollection {
         this.straighten(this.varState.percentStraight);
         // this._circle._compareRadius.transform.updateRotation(r);
       }
+      // if (this._slider.isShown) {
+      //   this._slider.transform.updateRotation(r);
+      // }
     }
   }
 
@@ -471,6 +474,7 @@ class CircleCollection extends DiagramElementCollection {
     // $FlowFixMe
     this._angleText._units.vertices.element.innerHTML = '&deg;';
   }
+
   rotateTo(
     angle: number,
     direction: number,

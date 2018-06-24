@@ -207,6 +207,8 @@ class Section {
   title: string;
   modifiers: Object;
   diagram: Diagram;
+  // comingFrom: 'next' | 'prev' | 'goto';
+  // goingTo: 'next' | 'prev' | 'goto';
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
   hideOnly: Array<DiagramElementPrimative | DiagramElementCollection>
@@ -377,6 +379,8 @@ class LessonContent {
   sections: Array<Section>;
   diagram: Object;
   diagramHtmlId: string;
+  goingTo: 'next' | 'prev' | 'goto';
+  comingFrom: 'next' | 'prev' | 'goto';
   // questions
 
   constructor(htmlId: string) {

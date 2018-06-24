@@ -30,7 +30,8 @@ class Lesson {
   state: Object;
   inTransition: boolean;
   transitionCancelled: boolean;
-  comingFrom: string;
+  comingFrom: 'next' | 'prev' | 'goto' | '' ;
+  goingTo: 'next' | 'prev' | 'goto' | '' ;
   refresh: (string, number) => void;
   goToSectionIndex: number;
 
@@ -68,6 +69,8 @@ class Lesson {
         // Stop diagrams if not in transition to stop any animations.
         // this.stopDiagrams();
       }
+      // this.currentSection().goingTo = 'next';
+      // this.sections.[this.currentSectionIndex + 1].comingFrom = 'prev';
       this.transitionStart('prev');
       this.goToSectionIndex = this.currentSectionIndex + 1;
       this.currentSection().transitionToNext(this.finishTransToNextOrPrev.bind(this));
@@ -85,6 +88,8 @@ class Lesson {
       } else {
         this.stopDiagrams();
       }
+      // this.currentSection().goingTo = 'prev';
+      // this.sections.[this.currentSectionIndex + 1].comingFrom = 'next';
       this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
@@ -98,15 +103,27 @@ class Lesson {
       } else {
         this.stopDiagrams();
       }
+      // this.currentSection().goingTo = 'goto';
+      // this.sections.[this.currentSectionIndex + 1].comingFrom = 'goto';
       this.transitionStart('goto');
       this.goToSectionIndex = sectionIndex;
       this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
     }
   }
 
-  transitionStart(direction: string = '') {
+  transitionStart(direction: 'next' | 'prev' | 'goto' | '' = '') {
     this.inTransition = true;
     this.comingFrom = direction;
+    if (direction === 'prev') {
+      this.content.goingTo = 'next';
+      this.content.comingFrom = 'prev';
+    } else if (direction === 'next') {
+      this.content.goingTo = 'prev';
+      this.content.comingFrom = 'next';
+    } else {
+      this.content.goingTo = 'goto';
+      this.content.comingFrom = 'goto';
+    }
     const { diagram } = this;
     if (diagram) {
       diagram.inTransition = true;
