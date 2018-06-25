@@ -250,15 +250,19 @@ type equationType = {
 
 function makeArcEquation(diagram: Diagram) {
   const equationElements = diagram.equation.elements({
-    a: 'arc',
-    r: 'radius',
+    arc: 'arc length',
+    radius: 'radius',
     angle: 'angle',
     times: ` ${String.fromCharCode(215)} `,
     equals: ' = ',
   }, colors.diagram.text.base);
-  equationElements._a.vertices.setColor(colors.arc);
-  equationElements._r.vertices.setColor(colors.radius);
-  equationElements._angle.vertices.setColor(colors.angle);  
+  equationElements._arc.vertices.setColor(colors.arc);
+  equationElements._arc.isTouchable = true;
+  equationElements._radius.vertices.setColor(colors.radius);
+  equationElements._radius.isTouchable = true;
+  equationElements._angle.vertices.setColor(colors.angle);
+  equationElements._angle.isTouchable = true;
+  equationElements.hasTouchableElements = true;
   return equationElements;
 }
 
@@ -386,7 +390,7 @@ class CircleCollection extends DiagramElementCollection {
     this.add('arcEquation', makeArcEquation(diagram));
 
     this.arcEqn = diagram.equation.make(this._arcEquation);
-    this.arcEqn.createEq(['a', 'equals', 'angle', 'times', 'r']);
+    this.arcEqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
 
     this._slider.setCallback(this.updateSlider.bind(this));
 

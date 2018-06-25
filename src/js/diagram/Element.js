@@ -181,6 +181,7 @@ class DiagramElement {
   // hasMovableElements: boolean;
 
   // Callbacks
+  onClick: ?(?mixed) => void;
   callback: ?(?mixed) => void;             // ending animation or moving freely
   setTransformCallback: (Transform) => void; // element.transform is updated
 
@@ -270,6 +271,7 @@ class DiagramElement {
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
     this.callback = null;
+    this.onClick = null;
     this.animationPlan = [];
     this.colorAnimationPlan = [];
     this.customAnimationPlan = [];
@@ -1354,6 +1356,12 @@ class DiagramElement {
       this.hide();
     } else {
       this.show();
+    }
+  }
+
+  click(): void {
+    if (this.onClick !== null && this.onClick !== undefined) {
+      this.onClick(this);
     }
   }
 }
