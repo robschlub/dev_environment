@@ -452,7 +452,6 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      title: 'Radians',
       setContent: `
         <p>
         Instead of thinking of angle as |portions_of_a_circle|, we can think of it as how many |radius_lengths_are_on_the_arc|.
@@ -584,7 +583,7 @@ class Content extends LessonContent {
         diag.transitionCircle(done, 'farRight');
       },
       setSteadyState: () => {
-        diag.resetCircle('right');
+        diag.resetCircle('farRight');
         onClickId('id_1_rad', diag.rotateTo, [diag, 1, 2, 2]);
         onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
         onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
@@ -593,22 +592,32 @@ class Content extends LessonContent {
         diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
       },
     });
+    // this.addSection({
+    //   setContent: `
+    //     <p>
+    //       Increasing the angle by 1 radian, increases the arc length by 1 radius length.
+    //     </p>
+    //     <p>
+    //       So, when you have a radius of 1 meter, and an angle of 2 radians, then the arc length will be 2 meters.
+    //     </p>
+    //     <p>
+    //       In other words:
+    //         arc length = angle * radius
+    //     </p>
+    //     <p>
+    //       Note, this only works when the angle is in radians. It does not work if the angle is in degrees!
+    //     </p>
+    //   `,
+    // });
     this.addSection({
-      setContent: `
+      setContent: centerVH(`
         <p>
-          Increasing the angle by 1 radian, increases the arc length by 1 radius length.
+          |Note|: This is |only| the case when the angle is expressed in |radians|.
         </p>
         <p>
-          So, when you have a radius of 1 meter, and an angle of 2 radians, then the arc length will be 2 meters.
+          This is |not| the case for |other units|, such as degrees.
         </p>
-        <p>
-          In other words:
-            arc length = angle * radius
-        </p>
-        <p>
-          Note, this only works when the angle is in radians. It does not work if the angle is in degrees!
-        </p>
-      `,
+      `),
     });
     this.addSection({
       setContent: `
