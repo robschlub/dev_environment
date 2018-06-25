@@ -67,7 +67,7 @@ class Lesson {
         }
       } else {
         // Stop diagrams if not in transition to stop any animations.
-        // this.stopDiagrams();
+        this.stopDiagrams();
       }
       // this.currentSection().goingTo = 'next';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'prev';
