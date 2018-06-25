@@ -86,6 +86,10 @@ export default function lessonLayout() {
     angleEqualsText: {
       left: new Point(-2.3, -0.6),
       top: new Point(0.35, 1),
+      units: {
+        deg: 0.87,
+        text: 0.90,
+      },
     },
     // splitCircleAngleStart: Math.PI * 1.4,
 

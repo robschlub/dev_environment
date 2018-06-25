@@ -120,13 +120,20 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          |Any| |angle| less than maximum, will only form a portion of a |circle|.
+          |Any| |angle| less than maximum, will only form a part of a circle, called an |arc|.
+        </p>
+        <p>
+          The word comes from the |Latin| word |arcus| and means a |bow| or |arch|.
         </p>
       `,
       modifiers: {
         Any: click(diag.rotateToRandom, [diag], colors.action),
-        circle: click(diag.pulseArc, [diag], colors.circle),
+        arc: click(diag.pulseArc, [diag], colors.circle),
         angle: click(diag.pulseAngle, [diag], colors.angleText),
+        Latin: highlight('latin'),
+        arcus: highlight('latin'),
+        bow: highlight('english'),
+        arch: highlight('english'),
       },
       setEnterState: () => {
         diag.resetCircle('center');
@@ -445,11 +452,15 @@ class Content extends LessonContent {
       title: 'Radians',
       setContent: `
         <p>
-        Instead of thinking of angle as portions of a circle, we can think of it as how |many| |radius lengths are in the arc length|.
+        Instead of thinking of angle as |portions_of_a_circle|, we can think of it as how many |radius_lengths_are_on_the_arc|.
         </p>
       `,
       modifiers: {
-        many: click(diag.stepInRadiusOnArc, [diag], colors.action),
+        portions_of_a_circle: click(diag.toggleDegreesRadians, [diag, 'deg'], colors.action),
+        radius_lengths_are_on_the_arc: click(diag.toggleDegreesRadians, [diag, 'rad'], colors.action),
+      },
+      setEnterState: () => {
+        // circle._radiusToArc.toArc(1);
       },
       showOnly: [
         circle,
@@ -459,8 +470,15 @@ class Content extends LessonContent {
       ],
       show: [
         circle._angle,
-        circle._radiusOnArc,
+        // circle._radiusOnArc,
+        // circle._radiusToArc,
       ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'right');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('right');
+      },
     });
 
     this.addSection({

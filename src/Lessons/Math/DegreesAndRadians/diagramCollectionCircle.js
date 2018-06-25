@@ -142,6 +142,54 @@ function makeAngleLine(shapes: Object) {
   return angle;
 }
 
+type radiusToArcType = {
+  _arc: DiagramElementPrimative;
+  _line: DiagramElementPrimative;
+  toArc: (number) => void;
+} & DiagramElementCollection;
+function makeRadiusToArc(shapes: Object) {
+  const radiusToArc = shapes.collection(new Transform()
+    .scale(1, 1).rotate(0).translate(layout.radiusArc.radius - layout.linewidth / 2, 0));
+
+  const arc = shapes.polygon(
+    layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
+    Math.floor(layout.anglePoints / Math.PI / 2),
+    colors.radiusLight, new Point(-layout.radiusArc.radius + layout.linewidth / 2, 0),
+  );
+
+  const line = makeLine(
+    shapes, new Point(0, 0),
+    layout.radiusArc.radius, layout.linewidth, colors.radiusLight,
+    new Transform().scale(1, 1).rotate(Math.PI / 2)
+      .translate(0, 0),
+  );
+
+  arc.angleToDraw = 0;
+  radiusToArc.add('arc', arc);
+  radiusToArc.add('line', line);
+
+  radiusToArc.toArc = (percent: number) => {
+    radiusToArc._line.transform.updateScale(1 - percent, 1);
+    radiusToArc._arc.angleToDraw = percent;
+    radiusToArc._arc.transform.updateTranslation(
+      -layout.radiusArc.radius + layout.linewidth / 2,
+      (1 - percent) * layout.radiusArc.radius,
+    );
+  };
+
+  return radiusToArc;
+}
+
+type radiusOnArcType = {
+  _r1: DiagramElementPrimative;
+  _r2: DiagramElementPrimative;
+  _r3: DiagramElementPrimative;
+  _r4: DiagramElementPrimative;
+  _r5: DiagramElementPrimative;
+  _r6: DiagramElementPrimative;
+  stepIn: (number) => void;
+} & DiagramElementCollection;
+
 function makeRadiusOnArc(shapes: Object) {
   const radiusArc = shapes.collection(new Transform().translate(0, 0));
   const r1 = shapes.polygon(
@@ -161,11 +209,11 @@ function makeRadiusOnArc(shapes: Object) {
     radiusArc.hideAll();
     radiusArc.show();
     radiusArc._r1.show();
-    radiusArc._r2.disolveInWithDelay(timePerSegment, timePerSegment);
-    radiusArc._r3.disolveInWithDelay(timePerSegment * 2, timePerSegment);
-    radiusArc._r4.disolveInWithDelay(timePerSegment * 3, timePerSegment);
-    radiusArc._r5.disolveInWithDelay(timePerSegment * 4, timePerSegment);
-    radiusArc._r6.disolveInWithDelay(timePerSegment * 5, timePerSegment);
+    radiusArc._r2.disolveInWithDelay(timePerSegment * 0.01, timePerSegment);
+    radiusArc._r3.disolveInWithDelay(timePerSegment * 1, timePerSegment);
+    radiusArc._r4.disolveInWithDelay(timePerSegment * 2, timePerSegment);
+    radiusArc._r5.disolveInWithDelay(timePerSegment * 3, timePerSegment);
+    radiusArc._r6.disolveInWithDelay(timePerSegment * 4, timePerSegment);
   };
 
   return radiusArc;
@@ -204,6 +252,13 @@ function makeMajorAndMinRadialMarks(
   return collection;
 }
 
+type angleTextType = {
+  text: DiagramElementPrimative;
+  equals: DiagramElementPrimative;
+  angle: DiagramElementPrimative;
+  units: DiagramElementPrimative;
+  setUnits: (string) => void;
+} & DiagramElementCollection;
 function makeAngleText(shapes: Object) {
   const angleText = shapes.collection(layout.angleEqualsText.left);
   angleText.add('text', shapes.htmlText(
@@ -222,6 +277,14 @@ function makeAngleText(shapes: Object) {
     'portions', 'id_angle_units', '',
     new Point(0.87, 0), 'middle', 'left',
   ));
+  angleText.setUnits = (units: string) => {
+    if (units === '&deg;') {
+      angleText._units.transform.updateTranslation(layout.angleEqualsText.units.deg, 0);
+    } else {
+      angleText._units.transform.updateTranslation(layout.angleEqualsText.units.text, 0);
+    }
+    angleText._units.vertices.element.innerHTML = units;
+  };
   return angleText;
 }
 
@@ -238,6 +301,8 @@ export type circleCollectionType = {
   _radialLinesRad: DiagramElementCollection;
   _compareRadius: DiagramElementPrimative;
   _straightArc: straightArcType;
+  _radiusOnArc: radiusOnArcType;
+  _radiusToArc: radiusToArcType;
 } & DiagramElementCollection;
 
 
@@ -257,13 +322,14 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   circle.add('compareRadius', makeReference(shapes));
   circle.add('anchor', makeAnchor(shapes));
   circle.add('radiusOnArc', makeRadiusOnArc(shapes));
+  circle.add('radiusToArc', makeRadiusToArc(shapes));
   return circle;
 }
 
 class CircleCollection extends DiagramElementCollection {
   _circle: circleCollectionType;
   // _sectionTitle: DiagramElementPrimative;
-  _angleText: DiagramElementCollection;
+  _angleText: angleTextType;
   _slider: sliderType;
   varState: {
     radialLines: number,
@@ -339,6 +405,40 @@ class CircleCollection extends DiagramElementCollection {
       // }
     }
   }
+
+  hideDegrees() {
+    this._circle._radialLinesDeg.hideAll();
+  }
+  showDegrees() {
+    this._circle._radialLinesDeg.showAll();
+    this._angleText.showAll();
+    this.varState.radialLines = 360;
+    // this.setAngleUnits('&deg;');
+    this._angleText.setUnits('&deg;');
+    // this._angleText._units.vertices.element.innerHTML = ;
+  }
+
+
+  toggleDegreesRadians(show: 'deg' | 'rad') {
+    if (show === 'deg') {
+      this._circle._radiusOnArc.hideAll();
+      this._circle._radiusToArc.hideAll();
+      this.showDegrees();
+    } else {
+      this.hideDegrees();
+      this._angleText.showAll();
+      this._angleText.setUnits('radius lengths');
+      this.varState.radialLines = Math.PI * 2;
+      this.arcRadius();
+    }
+    this.updateNumSectionsText()
+    this.diagram.animateNextFrame();
+  }
+
+  // setAngleUnits(units: string) {
+  //   // $FlowFixMe
+  //   this._angleText._units.vertices.element.innerHTML = units;
+  // }
 
   updateNumSectionsText() {
     const r = this.varState.rotation;
@@ -451,6 +551,25 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  arcRadius() {
+    const r = this._circle._radius.transform.r();
+    if (r !== null && r !== undefined) {
+      this._circle._radiusOnArc.hideAll();
+      this._circle._radiusToArc.stop();
+      this._circle._radiusOnArc.stop();
+      this._circle._radiusToArc.toArc(0);
+      this._circle._radiusToArc.showAll();
+      this._circle._radiusToArc.transform.updateRotation(Math.PI / 2);
+      this._circle._radiusToArc.animateRotationTo(0, 0, 1.5, this.stepInRadiusOnArc.bind(this));
+      this.animateCustomTo(this.bendRadius.bind(this), 1, 0);
+      this.diagram.animateNextFrame();
+    }
+  }
+  bendRadius(percent: number) {
+    this._circle._radiusToArc.toArc(percent);
+  }
+
+
   straightenArc() {
     const currentPercent = this.varState.percentStraight;
     if (!this.varState.straightening || currentPercent === 0) {
@@ -510,13 +629,8 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._arc.color = colors.arc.slice();
   }
 
-  showDegrees() {
-    this._circle._radialLinesDeg.showAll();
-    this._angleText.showAll();
-    this.varState.radialLines = 360;
-    // $FlowFixMe
-    this._angleText._units.vertices.element.innerHTML = '&deg;';
-  }
+
+
 
   rotateTo(
     angle: number,
