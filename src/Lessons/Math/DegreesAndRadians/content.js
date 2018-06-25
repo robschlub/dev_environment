@@ -463,7 +463,7 @@ class Content extends LessonContent {
         radius_lengths_are_on_the_arc: click(diag.toggleDegreesRadians, [diag, 'rad'], colors.action),
       },
       setEnterState: () => {
-        diag._angleText.transform.updateTranslation(layout.angleEqualsText.left);
+        diag._angleText.transform.updateTranslation(layout.angleEqualsText.leftCenter);
       },
       showOnly: [
         circle,
@@ -481,6 +481,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         diag.resetCircle('right');
+        diag.showDegrees();
       },
     });
 
@@ -492,7 +493,8 @@ class Content extends LessonContent {
         <p>
           This |angle| is called a |radian|.
         </p>
-        <p> 
+      `,
+      /* <p> 
           Observe some examples:
           <ul>
             <li>|one_radian|</li>
@@ -501,18 +503,58 @@ class Content extends LessonContent {
             <li>|five_radians|</li>
           </ul>
         <p>
-      `,
+      */
       modifiers: {
         line: click(diag.pulseRadius, [diag], colors.radius),
         arc_length: click(diag.pulseArc, [diag], colors.arc),
         same: click(diag.rotateTo, [diag, 1, 2, 2], colors.action),
         radius_length: click(diag.pulseRadiusOnArc, [diag], colors.radiusLight),
         angle: click(diag.pulseAngle, [diag], colors.angle),
+        // one_radian: toHTML('1 radian', 'id_1_rad', '', colors.radiusLight),
+        // two_radians: toHTML('2 radians', 'id_2_rad', '', colors.radiusLight),
+        // threeP5_radians: toHTML('3.5 radians', 'id_3p5_rad', '', colors.radiusLight),
+        // five_radians: toHTML('5 radians', 'id_5_rad', '', colors.radiusLight),
+
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+      show: [
+        circle._angle,
+        circle._radiusOnArc,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'right');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('right');
+        // onClickId('id_1_rad', diag.rotateTo, [diag, 1, 2, 2]);
+        // onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
+        // onClickId('id_3p5_rad', diag.rotateTo, [diag, 3.5, 2, 2]);
+        // onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
+      },
+    });
+    this.addSection({
+      setContent: `
+        <p>
+          So we can see:
+          <ul>
+            <li>At |one_radian|: arc length = |1| radius length</li>
+            <li>At |two_radians|: arc length = |2| radius lengths.</li>
+            <li>At |five_radians|: arc length = |5| radius lengths.</li>
+          </ul>
+        </p>
+        <p>
+          Which can be generalized:
+        </p>
+      `,
+      modifiers: {
         one_radian: toHTML('1 radian', 'id_1_rad', '', colors.radiusLight),
         two_radians: toHTML('2 radians', 'id_2_rad', '', colors.radiusLight),
-        threeP5_radians: toHTML('3.5 radians', 'id_3p5_rad', '', colors.radiusLight),
         five_radians: toHTML('5 radians', 'id_5_rad', '', colors.radiusLight),
-
       },
       showOnly: [
         circle,
@@ -531,10 +573,9 @@ class Content extends LessonContent {
         diag.resetCircle('right');
         onClickId('id_1_rad', diag.rotateTo, [diag, 1, 2, 2]);
         onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
-        onClickId('id_3p5_rad', diag.rotateTo, [diag, 3.5, 2, 2]);
         onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
       },
-    });
+    })
     this.addSection({
       setContent: `
         <p>

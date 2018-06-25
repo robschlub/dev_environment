@@ -73,7 +73,7 @@ export default function lessonLayout() {
 
     circle: {
       center: new Point(0, -0.5),
-      right: new Point(1, -0.5),
+      right: new Point(1.1, -0.5),
       angle: {
         small: 0.8,
         large: Math.PI * 1.4,
@@ -84,6 +84,7 @@ export default function lessonLayout() {
       position: new Point(-2.3, -0.3),
     },
     angleEqualsText: {
+      leftCenter: new Point( -2.1, -0.4),
       left: new Point(-2.3, -0.6),
       top: new Point(0.35, 1),
       units: {

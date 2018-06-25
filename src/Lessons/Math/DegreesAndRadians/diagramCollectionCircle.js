@@ -690,16 +690,47 @@ class CircleCollection extends DiagramElementCollection {
     done: () => void,
     toPosition: string = 'center',
     toAngle: number = layout.circle.angle.small,
-    time: number = 1,
+    time: number = 5,
   ) {
     const t = this._circle.transform.t();
     const r = this._circle._radius.transform.r();
+    // The time is the time it takes to rotate 360 degrees, or move laterally
+    // from (0, 0) to the side edge of the screen
+    // Therefore calculate the rotation and translation fractions of these
+    // maximums and scale the time accordingly.
+    let rTime = time;
+    let tTime = time;
+    if (t) {
+      const tDelta = layout.circle[toPosition].sub(t);
+      const { mag } = tDelta.toPolar();
+      tTime *= mag / this.diagramLimits.width * 2;
+    }
+    if (tTime === 0) {
+      tTime = 0.001;
+    }
+    if (r !== null && r !== undefined) {
+      const rStart = r;
+
+      let rotDiff = toAngle - r;
+      if (rStart + rotDiff < 0) {
+        rotDiff = Math.PI * 2 + rotDiff;
+      } else if (rStart + rotDiff > Math.PI * 2) {
+        rotDiff = -(Math.PI * 2 - rotDiff);
+      }
+
+      rTime *= Math.abs(rotDiff / Math.PI / 2);
+      // console.log(rStart, rotDiff, rTime)
+    }
+    if (rTime === 0) {
+      rTime = 0.001;
+    }
+
     if (t && r !== null && r !== undefined) {
       if (t.isNotEqualTo(layout.circle[toPosition]) || r !== toAngle) {
-        this.rotateTo(toAngle, 2, time);
+        this.rotateTo(toAngle, 2, rTime);
         this._circle.animateTranslationTo(
           layout.circle[toPosition],
-          time,
+          tTime,
           done,
         );
         return;
