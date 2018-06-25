@@ -1378,6 +1378,18 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
+  copy(
+    transform: Transform = this.transform.copy(),
+    color: Array<number> = this.color.slice(),
+  ) {
+    return new DiagramElementPrimative(
+      this.vertices,
+      transform,
+      color,
+      this.diagramLimits.copy(),
+    );
+  }
+
   setColor(color: Array<number>) {
     this.color = color.slice();
     if (this instanceof DiagramElementPrimative) {

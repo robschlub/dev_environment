@@ -49,7 +49,7 @@ export default function lessonLayout() {
     radialLineMajorOuter: 1.3,
     radialLineMajorInner: 1.05,
     radialLineMinorOuter: 1.3 ,
-    radialLineMinorInner: 1.1,
+    radialLineMinorInner: 1.2,
 
     slider: {
       position: new Point(0.6 - 0.05 / 2, -0.5),
@@ -61,10 +61,14 @@ export default function lessonLayout() {
       circleSides: 50,
     },
 
+    radiusArc: {
+      radius: 1.25,
+    },
+
     compare: {
       radiusOffset: 0.2,
       arcOffset: 0.3,
-      textPosition: new Point(2.0, -0.2),
+      textPosition: new Point(2.0, -0.42),
     },
 
     circle: {

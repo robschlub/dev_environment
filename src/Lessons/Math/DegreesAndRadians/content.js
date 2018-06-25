@@ -442,6 +442,168 @@ class Content extends LessonContent {
     });
 
     this.addSection({
+      title: 'Radians',
+      setContent: `
+        <p>
+        Instead of thinking of angle as portions of a circle, we can think of it as how |many| |radius lengths are in the arc length|.
+        </p>
+      `,
+      modifiers: {
+        many: click(diag.stepInRadiusOnArc, [diag], colors.action),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+      show: [
+        circle._angle,
+        circle._radiusOnArc,
+      ],
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          Rotate the |line|, till the |arc_length| is the |same| as the radius length
+        </p>
+        <p>
+          This angle is called a |radian|.
+        </p>
+      `,
+    });
+    this.addSection({
+      setContent: `
+        <p>
+          Increasing the angle by 1 radian, increases the arc length by 1 radius length.
+        </p>
+        <p>
+          So, when you have a radius of 1 meter, and an angle of 2 radians, then the arc length will be 2 meters.
+        </p>
+        <p>
+          In other words:
+            arc length = angle * radius
+        </p>
+        <p>
+          Note, this only works when the angle is in radians. It does not work if the angle is in degrees!
+        </p>
+      `,
+    });
+    this.addSection({
+      setContent: `
+        <p>
+          How many radians are there in a half circle and full circle?
+        </p>
+        <p>A |_half_circle| has about 3.14 radians.</p>
+        <p>A |_full_circle| has about 6.28 radians.</p>
+        <p>
+          We will often say there are 3.14 radians in a half circle. But this is a rough approximation.
+        </p>
+        <p>
+          A more accurate approximation is 3.141592653589793.
+        </p>
+      `,
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          At first glance, splitting a circle up into 6.28 portions isn't as convenient as splitting it up into 360.
+        </p>
+        <p>
+          A radian is a big portion, and there are plenty of applications that will require a |fraction of a radian|.
+        </p>
+        <p>
+          For example, if you want to use a quarter circle, instead of a simple calculation in degrees:
+        </p>
+        <p>360/4 = 90</p>
+        <p>you need to whip out the calculator for radians:</p>
+        <p>6.28/4 = 1.57.</p>
+        <p>
+          Also, a radian doesn't even go into a circle without a remainder. 6 radians go into a circle, but we are left with 0.28 radians remaining.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          But as radians relate |angle|, |radius| and |arc length|, it means you can calculate one property from the other two.
+        </p>
+        <p>
+          You no longer need to measure all three properties of the circle, you only need to measure the two easiest. 
+        </p>
+        <p>
+          This is very powerful. So powerful that people deal with this weird
+          angular size because the advantages outweigh the disadvantages.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          One way they deal with it, is instead of writing out the approximate value 3.14159... each time, they just substite the value with the greek letter |&pi;|
+        </p>
+        <p>
+          Instead of saying there are 3.14159 radians in a half circle, you can simply say there are |&pi; radians|
+        </p>
+        <p>
+          Instead of saying there are 6.28319 radians in a circle, you say there are |2&pi; radians|.
+        </p>
+        <p>
+          We can then substitude the number back in when we need to do the final calculation.
+        </p>
+      `),
+    });
+
+
+
+
+//     '<p>Rotate the stick, till the |_arc_length| is the |_same| as the stick length (|_radius|).</p>' +
+//             '<p>|_Compare| the |_arc_length1| to the |_radius1| length at different angles.<p>' +
+//             '<p>We can define the angle as how many radius lengths the arc length is.</p>'
+
+
+//      '<p>The |_angle| formed when |_arc_length| equals |_radius_length| is called a |_radian|.</p>' +
+//             '<p>The word radian comes from the word radius.</p>' +
+//             '<p>Increasing the angle by 1 radian, increases the arc length by a radius length.</p>' +
+//             '<p>So, if you have an angle of |_2_radians|, and the radius is 1 meter, then the arc length will be 2 meters.</p>' +
+//             '<p>In other words:</p>' +
+//             '   <dim id="inline_equation"></dim>' +
+//             '<p>Note, you can only use this equation when the angle is in radians! It does not work if the angle is measured in degrees.</p>' +
+
+//     '<p>How many radians are there in a half circle and full circle?</p>' +
+//             '<p>A |_half_circle| has 3.14 radians.</p>' +
+//             '<p>A |_full_circle| has 6.28 radians.</p>' +
+//             '<p>We will often say there are 3.14 radians in a circle. But this is an approximation.</p>'+
+//             '<p>A more accurate approximation is 3.141592653589793.</p>'+
+//             '';
+
+// '<p>At first glance, splitting a circle up into 6.28 slices isn\'t as convenient as splitting it up into 360 slices.</p>'+
+//             '<p>A radian is a big slice, and there are plenty of applications that will require a portion of a radian.</p>'+
+//             '<p>For example, if you want to use a quarter circle, instead of a simple calculation in degrees:</p>'+
+//             '<p>360/4 = 90</p>'+
+//             '<p>you need to whip out the calculator for radians:</p>'+
+//             '<p>6.28/4 = 1.57.</p>'+
+//             '<p>Also, a radian doesn\'t even go into a circle without a remainder. 6 radians go into a circle, but we are left with 0.28 radians remaining.</p>'+
+//             ''
+
+//     '<p>But, because we |_related| the |_angle| unit to the |_radius| and |_arc_length|, we only need two ' +
+//                 'of the properties to find the third - which is very very powerful. So powerful, that people deal '+
+//                 'with this weird angular size because the advantages outweigh the disadvantages.</p>'+
+//             '<p>One way they deal with it, is instead of writing out the approximate value 3.14159... each time, '+
+//                 'they just substite the value with the greek letter |_pi|.</p>'+
+//             '<p>So instead of saying there are 3.14159 radians in a half circle, you can simply say there are |_pi_radians|.</p>'+
+//             '<p>Instead of saying there are 6.2832 radians in a circle, you say there are |_2pi_radians|.</p>'+
+//             '';
+   
+//     '<p>Let\'s use what we\'ve learned about radians to calculate the |_circumference| of any circle that we know the radius of.</p>' +
+//             '<p>When using radians, angle and radius is related to arc length by:</p>' +
+//             '   <dim id="inline_equation1"></dim>' +
+//             '<p>Now, a complete circle has an angle of 6.28, or 2&pi; radians.</p>' +
+//             '<p>Therefore, we can calculate the circumference of any circle just by knowing the radius:<p>'+
+//             '   <dim id="inline_equation2"></dim>' +
+
+    this.addSection({
       setContent: `
       <p>
       |Radius|, |angle| and |arc_length| are related.
@@ -455,6 +617,7 @@ class Content extends LessonContent {
         Radius: click(diag.pulseRadius, [diag], colors.radius),
         arc_length: click(diag.pulseArc, [diag], colors.circle),
         Straighten: click(diag.straightenArc, [diag], colors.action),
+        Change: click(diag.pulseSlider, [diag], colors.action),
       },
       setEnterState: () => {
         if (this.comingFrom !== 'next') {
@@ -492,6 +655,7 @@ class Content extends LessonContent {
       setLeaveState: () => {
         if (this.goingTo !== 'next') {
           diag.straighten(0);
+          diag.varState.straightening = false;
         } else if (diag.varState.straightening) {
           diag.straighten(1);
         } else {
@@ -499,6 +663,7 @@ class Content extends LessonContent {
         }
       },
     });
+
     this.addSection({
       setContent: `
       <p>
@@ -547,6 +712,7 @@ class Content extends LessonContent {
       setLeaveState: () => {
         if (this.goingTo !== 'prev') {
           diag.straighten(0);
+          diag.varState.straightening = false;
         } else if (diag.varState.straightening) {
           diag.straighten(1);
         } else {
@@ -554,6 +720,11 @@ class Content extends LessonContent {
         }
       },
     });
+
+
+
+
+
     this.addSection({
       setContent: `
       <p>

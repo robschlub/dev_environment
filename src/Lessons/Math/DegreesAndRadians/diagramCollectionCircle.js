@@ -142,6 +142,35 @@ function makeAngleLine(shapes: Object) {
   return angle;
 }
 
+function makeRadiusOnArc(shapes: Object) {
+  const radiusArc = shapes.collection(new Transform().translate(0, 0));
+  const r1 = shapes.polygon(
+    layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
+    Math.floor(layout.anglePoints / Math.PI / 2) - 1, colors.radiusLight,
+    new Transform().rotate(0),
+  );
+  radiusArc.add('r1', r1);
+  radiusArc.add('r2', r1.copy(new Transform().rotate(1)));
+  radiusArc.add('r3', r1.copy(new Transform().rotate(2)));
+  radiusArc.add('r4', r1.copy(new Transform().rotate(3)));
+  radiusArc.add('r5', r1.copy(new Transform().rotate(4)));
+  radiusArc.add('r6', r1.copy(new Transform().rotate(5)));
+
+  radiusArc.stepIn = (time: number) => {
+    const timePerSegment = time / 6;
+    radiusArc.hideAll();
+    radiusArc.show();
+    radiusArc._r1.show();
+    radiusArc._r2.disolveInWithDelay(timePerSegment, timePerSegment);
+    radiusArc._r3.disolveInWithDelay(timePerSegment * 2, timePerSegment);
+    radiusArc._r4.disolveInWithDelay(timePerSegment * 3, timePerSegment);
+    radiusArc._r5.disolveInWithDelay(timePerSegment * 4, timePerSegment);
+    radiusArc._r6.disolveInWithDelay(timePerSegment * 5, timePerSegment);
+  };
+
+  return radiusArc;
+}
+
 function makeReference(shapes: Object) {
   return makeLine(
     shapes, new Point(0, 0), layout.radius, layout.linewidth,
@@ -227,6 +256,7 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   circle.add('radius', makeRadius(shapes));
   circle.add('compareRadius', makeReference(shapes));
   circle.add('anchor', makeAnchor(shapes));
+  circle.add('radiusOnArc', makeRadiusOnArc(shapes));
   return circle;
 }
 
@@ -322,6 +352,10 @@ class CircleCollection extends DiagramElementCollection {
     this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
   }
 
+  stepInRadiusOnArc() {
+    this._circle._radiusOnArc.stepIn(3);
+    this.diagram.animateNextFrame();
+  }
   pulseAngleFill() {
     this._circle._angleFill.pulseScaleNow(1, 1.3);
     this.diagram.animateNextFrame();
