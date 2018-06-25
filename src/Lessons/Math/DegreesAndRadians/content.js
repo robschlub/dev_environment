@@ -2,7 +2,7 @@
 
 import {
   LessonContent, actionWord, onClickId, highlightWord, highlight, click,
-  centerVH, centerV,
+  centerVH, centerV, toHTML,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 
@@ -38,7 +38,7 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 1], colors.circle),
+        circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 2], colors.circle),
         rotating: click(diag.pushRadius, [diag], colors.action),
         fixed: click(diag.pulseAnchor, [diag], colors.anchor),
       },
@@ -47,7 +47,7 @@ class Content extends LessonContent {
         diag.setRotation(0.001);
       },
       transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'center', Math.PI * 1.999);
+        diag.transitionCircle(done, 'center', Math.PI * 1.999, 3);
       },
       showOnly: [
         circle,
@@ -60,13 +60,14 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          An |corner| is formed by |rotating| one |line| relative to another. The |angle| is the amount of rotation.
+          An |corner| is formed by |rotating| one |line| relative to |another|. The |angle| is the amount of rotation.
         </p>
       `,
       modifiers: {
         angle: click(diag.pulseAngle, [diag], colors.angleText),
         rotating: click(diag.pushRadius, [diag], colors.action),
         line: click(diag.pulseRadius, [diag], colors.radius),
+        another: click(diag.pulseReference, [diag], colors.radius),
       },
       setEnterState: () => {
         diag.resetCircle('center');
@@ -216,13 +217,13 @@ class Content extends LessonContent {
       setContent: () =>
         centerV(`
           <p>
-            So |angle| describes the sharpness of a corner, and the amount of a circle that is drawn.
+            So |angle| describes the sharpness of a corner, and the amount of a circle, or |arc| that is drawn.
           </p>
           <p>
-            A |small angle| results in a sharp corner, and smaller portion of a circle.
+            A |small angle| results in a sharp corner, and short arc.
           </p>
           <p>
-            A |large angle| results in a less sharp corner, and larger portion of a circle.
+            A |large angle| results in a less sharp corner, and long arc.
           </p>
         `),
     });
@@ -283,10 +284,10 @@ class Content extends LessonContent {
         </p>
         `,
       modifiers: {
-        rotate: click(diag.rotateToRandom, [diag, 1], colors.rotation),
+        rotate: click(diag.rotateToRandom, [diag, 1], colors.action),
         angle: click(diag.pulseAngle, [diag], colors.angleText),
-        _12_Portions: click(diag.toggler, [diag, 0], 'portions_selected'),
-        _100_Portions: click(diag.toggler, [diag, 1]),
+        _12_Portions: toHTML('12 Portions', 'id_12p', 'portions_selected'),
+        _100_Portions: toHTML('100 Portions', 'id_100p'),
       },
       setEnterState: () => {
         diag.toggleRadialLines(0);
@@ -313,6 +314,8 @@ class Content extends LessonContent {
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.left);
         // circle.transform.updateTranslation(layout.circle.right);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        onClickId('id_12p', diag.toggler, [diag, 0]);
+        onClickId('id_100p', diag.toggler, [diag, 1]);
       },
     });
 
@@ -460,7 +463,7 @@ class Content extends LessonContent {
         radius_lengths_are_on_the_arc: click(diag.toggleDegreesRadians, [diag, 'rad'], colors.action),
       },
       setEnterState: () => {
-        // circle._radiusToArc.toArc(1);
+        diag._angleText.transform.updateTranslation(layout.angleEqualsText.left);
       },
       showOnly: [
         circle,
@@ -484,12 +487,53 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          Rotate the |line|, till the |arc_length| is the |same| as the radius length
+          Rotate the |line|, till the |arc_length| is the |same| as the |radius_length|.
         </p>
         <p>
-          This angle is called a |radian|.
+          This |angle| is called a |radian|.
         </p>
+        <p> 
+          Observe some examples:
+          <ul>
+            <li>|one_radian|</li>
+            <li>|two_radians|</li>
+            <li>|threeP5_radians|</li>
+            <li>|five_radians|</li>
+          </ul>
+        <p>
       `,
+      modifiers: {
+        line: click(diag.pulseRadius, [diag], colors.radius),
+        arc_length: click(diag.pulseArc, [diag], colors.arc),
+        same: click(diag.rotateTo, [diag, 1, 2, 2], colors.action),
+        radius_length: click(diag.pulseRadiusOnArc, [diag], colors.radiusLight),
+        angle: click(diag.pulseAngle, [diag], colors.angle),
+        one_radian: toHTML('1 radian', 'id_1_rad', '', colors.radiusLight),
+        two_radians: toHTML('2 radians', 'id_2_rad', '', colors.radiusLight),
+        threeP5_radians: toHTML('3.5 radians', 'id_3p5_rad', '', colors.radiusLight),
+        five_radians: toHTML('5 radians', 'id_5_rad', '', colors.radiusLight),
+
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+      show: [
+        circle._angle,
+        circle._radiusOnArc,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'right');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('right');
+        onClickId('id_1_rad', diag.rotateTo, [diag, 1, 2, 2]);
+        onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
+        onClickId('id_3p5_rad', diag.rotateTo, [diag, 3.5, 2, 2]);
+        onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
+      },
     });
     this.addSection({
       setContent: `

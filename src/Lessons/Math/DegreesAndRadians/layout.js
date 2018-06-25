@@ -47,9 +47,9 @@ export default function lessonLayout() {
     anglePoints: 400,
     circlePoints: 400,
     radialLineMajorOuter: 1.3,
-    radialLineMajorInner: 1.05,
+    radialLineMajorInner: 1.1,
     radialLineMinorOuter: 1.3 ,
-    radialLineMinorInner: 1.2,
+    radialLineMinorInner: 1.25,
 
     slider: {
       position: new Point(0.6 - 0.05 / 2, -0.5),

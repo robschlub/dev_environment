@@ -418,5 +418,5 @@ class LessonContent {
 
 export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
-  diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH,
+  diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
 };

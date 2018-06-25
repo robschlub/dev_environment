@@ -431,7 +431,7 @@ class CircleCollection extends DiagramElementCollection {
       this.varState.radialLines = Math.PI * 2;
       this.arcRadius();
     }
-    this.updateNumSectionsText()
+    this.updateNumSectionsText();
     this.diagram.animateNextFrame();
   }
 
@@ -466,7 +466,10 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._angle._arrow.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
-
+  pulseRadiusOnArc() {
+    this._circle._radiusOnArc._r1.pulseThickNow(1, 1.04, 7);
+    this.diagram.animateNextFrame();
+  }
   pulseAnchor() {
     this._circle._anchor.pulseScaleNow(1, 2);
     this.diagram.animateNextFrame();
@@ -629,9 +632,6 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._arc.color = colors.arc.slice();
   }
 
-
-
-
   rotateTo(
     angle: number,
     direction: number,
@@ -662,10 +662,12 @@ class CircleCollection extends DiagramElementCollection {
     this.toggleRadialLines(index);
     const elem12 = document.getElementById('id_12p');
     const elem100 = document.getElementById('id_100p');
+
     if (index && elem12 && elem100) {
       if (elem12.classList.contains('portions_selected')) {
         elem12.classList.remove('portions_selected');
       }
+
       elem100.classList.add('portions_selected');
     } else {
       if (elem100) {
@@ -684,15 +686,20 @@ class CircleCollection extends DiagramElementCollection {
     this._circle.transform.updateScale(1, 1);
   }
 
-  transitionCircle(done: () => void, toPosition: string = 'center', toAngle: number = layout.circle.angle.small) {
+  transitionCircle(
+    done: () => void,
+    toPosition: string = 'center',
+    toAngle: number = layout.circle.angle.small,
+    time: number = 1,
+  ) {
     const t = this._circle.transform.t();
     const r = this._circle._radius.transform.r();
     if (t && r !== null && r !== undefined) {
       if (t.isNotEqualTo(layout.circle[toPosition]) || r !== toAngle) {
-        this.rotateTo(toAngle, 2, 1);
+        this.rotateTo(toAngle, 2, time);
         this._circle.animateTranslationTo(
           layout.circle[toPosition],
-          1,
+          time,
           done,
         );
         return;
