@@ -552,9 +552,13 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        one_radian: toHTML('1 radian', 'id_1_rad', '', colors.radiusLight),
-        two_radians: toHTML('2 radians', 'id_2_rad', '', colors.radiusLight),
-        five_radians: toHTML('5 radians', 'id_5_rad', '', colors.radiusLight),
+        one_radian: toHTML('1 radian', 'id_1_rad', '', colors.angle),
+        two_radians: toHTML('2 radians', 'id_2_rad', '', colors.angle),
+        five_radians: toHTML('5 radians', 'id_5_rad', '', colors.angle),
+      },
+      setEnterState: () => {
+        // diag._arcEquation.setPosition(layout.arcEquation.left);
+        diag.arcEqn.calcSize(layout.arcEquation.left, 1);
       },
       showOnly: [
         circle,
@@ -565,6 +569,7 @@ class Content extends LessonContent {
       show: [
         circle._angle,
         circle._radiusOnArc,
+        diag._arcEquation,
       ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'right');
@@ -575,7 +580,7 @@ class Content extends LessonContent {
         onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
         onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
       },
-    })
+    });
     this.addSection({
       setContent: `
         <p>

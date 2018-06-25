@@ -9,6 +9,7 @@ import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/t
 import lessonLayout from './layout';
 import makeSlider from '../../../LessonsCommon/slider';
 import type { sliderType } from '../../../LessonsCommon/slider';
+import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 const layout = lessonLayout();
 const { colors } = layout;
@@ -240,6 +241,27 @@ function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
   );
 }
 
+type equationType = {
+  _a: DiagramElementPrimative;
+  _equals: DiagramElementPrimative;
+  _r: DiagramElementPrimative;
+  _angle: DiagramElementPrimative
+} & DiagramElementCollection;
+
+function makeArcEquation(diagram: Diagram) {
+  const equationElements = diagram.equation.elements({
+    a: 'arc',
+    r: 'radius',
+    angle: 'angle',
+    times: ` ${String.fromCharCode(215)} `,
+    equals: ' = ',
+  }, colors.diagram.text.base);
+  equationElements._a.vertices.setColor(colors.arc);
+  equationElements._r.vertices.setColor(colors.radius);
+  equationElements._angle.vertices.setColor(colors.angle);  
+  return equationElements;
+}
+
 function makeMajorAndMinRadialMarks(
   shapes: Object,
   major: number,
@@ -331,6 +353,8 @@ class CircleCollection extends DiagramElementCollection {
   // _sectionTitle: DiagramElementPrimative;
   _angleText: angleTextType;
   _slider: sliderType;
+  _arcEquation: equationType;
+  arcEqn: DiagramGLEquation
   varState: {
     radialLines: number,
     angleInSections: number,
@@ -359,6 +383,11 @@ class CircleCollection extends DiagramElementCollection {
     // this.add('sectionTitle', makeSectionTitle(shapes));
     this.add('angleText', makeAngleText(shapes));
     this.add('slider', makeSlider(shapes, layout.slider));
+    this.add('arcEquation', makeArcEquation(diagram));
+
+    this.arcEqn = diagram.equation.make(this._arcEquation);
+    this.arcEqn.createEq(['a', 'equals', 'angle', 'times', 'r']);
+
     this._slider.setCallback(this.updateSlider.bind(this));
 
     this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
