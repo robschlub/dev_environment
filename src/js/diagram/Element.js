@@ -1871,6 +1871,19 @@ class DiagramElementCollection extends DiagramElement {
       }
     }
   }
+
+  getAllElements() {
+    let elements = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        elements = [...elements, ...element.getAllElements()];
+      } else {
+        elements.push(element);
+      }
+    }
+    return elements;
+  }
 }
 
 export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };

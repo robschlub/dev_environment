@@ -84,6 +84,7 @@ export default function lessonLayout() {
     arcEquation: {
       left: new Point(-2.3, -0.7),
       centerTop: new Point(-1.0, 0.7),
+      centerBottom: new Point(-1.0, -0.5),
     },
     sectionText: {
       position: new Point(-2.3, -0.3),

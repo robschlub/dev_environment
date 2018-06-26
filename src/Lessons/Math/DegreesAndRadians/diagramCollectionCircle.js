@@ -245,7 +245,10 @@ type equationType = {
   _a: DiagramElementPrimative;
   _equals: DiagramElementPrimative;
   _r: DiagramElementPrimative;
-  _angle: DiagramElementPrimative
+  _angle: DiagramElementPrimative;
+  showArc: () => void;
+  showRadius: () => void;
+  showAngle: () => void;
 } & DiagramElementCollection;
 
 function makeArcEquation(diagram: Diagram) {
@@ -255,6 +258,7 @@ function makeArcEquation(diagram: Diagram) {
     angle: 'angle',
     times: ` ${String.fromCharCode(215)} `,
     equals: ' = ',
+    v: diagram.equation.vinculum(colors.diagram.text.base),
   }, colors.diagram.text.base);
   equationElements._arc.vertices.setColor(colors.arc);
   equationElements._arc.isTouchable = true;
@@ -263,6 +267,37 @@ function makeArcEquation(diagram: Diagram) {
   equationElements._angle.vertices.setColor(colors.angle);
   equationElements._angle.isTouchable = true;
   equationElements.hasTouchableElements = true;
+
+  equationElements.showArc = () => {
+    equationElements.show();
+    equationElements._arc.show();
+    equationElements._radius.show();
+    equationElements._angle.show();
+    equationElements._equals.show();
+    equationElements._v.hide();
+    equationElements._times.show();
+  };
+
+  equationElements.showRadius = () => {
+    equationElements.show();
+    equationElements._arc.show();
+    equationElements._radius.show();
+    equationElements._angle.show();
+    equationElements._equals.show();
+    equationElements._v.show();
+    equationElements._times.hide();
+  };
+
+  equationElements.showAngle = () => {
+    equationElements.show();
+    equationElements._arc.show();
+    equationElements._radius.show();
+    equationElements._angle.show();
+    equationElements._equals.show();
+    equationElements._v.show();
+    equationElements._times.hide();
+  };
+
   return equationElements;
 }
 
@@ -680,6 +715,27 @@ class CircleCollection extends DiagramElementCollection {
   resetColors() {
     this._circle._radius.color = colors.radius.slice();
     this._circle._arc.color = colors.arc.slice();
+  }
+
+  animateEquation(leftSide: 'arc' | 'radius' | 'angle') {
+    if (leftSide === 'arc') {
+      const eqn = this.diagram.equation.make(this._arcEquation);
+      eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
+      eqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
+      // this._arcEquation.showArc();
+    } else if (leftSide === 'radius') {
+      const eqn = this.diagram.equation.make(this._arcEquation);
+      eqn.createEq(['radius', 'equals', eqn.frac('arc', 'angle', 'v')]);
+
+      eqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
+      // this._arcEquation.showRadius();
+    } else if (leftSide === 'angle') {
+      const eqn = this.diagram.equation.make(this._arcEquation);
+      eqn.createEq(['angle', 'equals', eqn.frac('arc', 'radius', 'v')]);
+      eqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
+      // this._arcEquation.showAngle();
+    }
+    this.diagram.animateNextFrame();
   }
 
   rotateTo(

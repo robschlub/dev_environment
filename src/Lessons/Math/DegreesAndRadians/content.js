@@ -30,6 +30,9 @@ class Content extends LessonContent {
           |Circles| and |Angles| are closely related.
         </p>
       `),
+      // setSteadyState: () => {
+      //   console.log(diag.getAllElements())
+      // }
     });
     this.addSection({
       setContent: `
@@ -692,7 +695,7 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      setContent: `
+      setContent: centerV(`
         <p>
           Saying a half circle has |3.14| radians is a |rough approximation|.
         </p>
@@ -702,7 +705,7 @@ class Content extends LessonContent {
         <p>
           A more accurate |approximation| is |3.141593...|.
         </p>
-      `,
+      `),
     });
     this.addSection({
       setContent: centerV(`
@@ -716,37 +719,55 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: centerV(`
-          For example, if you want to use a quarter circle, instead of a simple calculation in degrees:
+        <p>
+          For example, if you want to use the angle of a |quarter circle|, instead of a simple calculation in degrees:
         </p>
-        <p>360 / 4 = 90</p>
+        <p style="text-align: center">|360 ${String.fromCharCode(247)} 4 = 90|</p>
         <p>you need to whip out the calculator for radians:</p>
-        <p>6.283185... / 4 = 1.570796...</p>
-        <p>
-          Also, a radian doesn't even go into a circle without a remainder. 6 radians go into a circle, but we are left with 0.283185... radians remaining.
-        </p>
+        <p style="text-align: center">|6.283185... ${String.fromCharCode(247)} 4 = 1.570796...|</p>
       `),
     });
     this.addSection({
       setContent: centerV(`
         <p>
-          In addition, a radian doesn't even go into a circle without a remainder. 
+          In addition, a circle cannot be divided |evenly| in radians without a remainder. 
         </p>
         <p>
-          6 radians go into a circle, but we are left with 0.283185... radians remaining.
+          6 radians go into a circle, but we are left with |0.283185... radians remaining|.
         </p>
       `),
     });
     this.addSection({
-      setContent: centerV(`
+      title: 'eqn',
+      setContent: `
         <p>
           But as radians relate |angle|, |radius| and |arc length|, it means you can calculate one property from the other two.
         </p>
         <p>
           You no longer need to measure all three properties of the circle, you only need to measure the two easiest. 
         </p>
+      `,
+      setEnterState: () => {
+        diag.arcEqn.calcSize(layout.arcEquation.centerBottom, 1);
+      },
+      // show: [
+      //   diag._arcEquation,
+      // ],
+      setSteadyState: () => {
+        diag._arcEquation.showArc();
+        diag._arcEquation._angle.onClick =
+          diag.animateEquation.bind(diag, 'angle');
+        diag._arcEquation._radius.onClick =
+          diag.animateEquation.bind(diag, 'radius');
+        diag._arcEquation._arc.onClick =
+          diag.animateEquation.bind(diag, 'arc');
+      },
+    });
+    this.addSection({
+      setContent: centerV(`
         <p>
-          This is very powerful. So powerful that people deal with this weird
-          angular size because the advantages outweigh the disadvantages.
+          This is |very powerful|. So powerful that people deal with this weird
+          angular size because the |advantages outweigh the disadvantages|.
         </p>
       `),
     });
@@ -756,10 +777,10 @@ class Content extends LessonContent {
           One way they deal with it, is instead of writing out the approximate value 3.14159... each time, they just substite the value with the greek letter |&pi;|
         </p>
         <p>
-          Instead of saying there are 3.14159 radians in a half circle, you can simply say there are |&pi; radians|
+          Instead of saying there are 3.14159... radians in a half circle, you can simply say there are |&pi; radians|
         </p>
         <p>
-          Instead of saying there are 6.28319 radians in a circle, you say there are |2&pi; radians|.
+          Instead of saying there are 6.28319... radians in a circle, you say there are |2&pi; radians|.
         </p>
         <p>
           We can then substitude the number back in when we need to do the final calculation.

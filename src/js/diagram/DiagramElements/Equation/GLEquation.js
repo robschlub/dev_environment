@@ -54,13 +54,13 @@ class Elements {
   height: number;
 
   constructor(content: Array<Element | Elements | null>) {
-    const filteredContent = [];
+    const nonNullContent = [];
     content.forEach((c) => {
       if (c !== null) {
-        filteredContent.push(c);
+        nonNullContent.push(c);
       }
     });
-    this.content = filteredContent;
+    this.content = nonNullContent;
     this.ascent = 0;
     this.descent = 0;
     this.width = 0;
@@ -135,7 +135,7 @@ class Fraction extends Elements {
     this.vSpaceNum = scale * 0.15;
     this.vSpaceDenom = scale * 0.15;
     this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.35;
-    this.lineWidth = scale * 0.05;
+    this.lineWidth = scale * 0.02;
 
     const yNumerator = this.numerator.descent +
                         this.vSpaceNum + this.lineVAboveBaseline;
@@ -430,9 +430,12 @@ export default class DiagramGLEquation extends Elements {
   }
 
   calcSize(location: Point, scale: number) {
+    const elementsShowing = this.collection.getAllElements()
+      .filter(e => e.isShown);
     this.collection.hideAll();
     this.collection.show();
     super.calcSize(location, scale);
+    this.collection.showOnly(elementsShowing);
   }
   animateTo(
     location: Point,
