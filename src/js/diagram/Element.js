@@ -810,7 +810,6 @@ class DiagramElement {
     this.animationPlan = [];
     this.state.isAnimating = false;
     const { callback } = this;
-    // console.log("stopping", this.name, callback)
     this.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {

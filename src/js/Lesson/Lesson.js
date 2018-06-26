@@ -33,6 +33,7 @@ class Lesson {
   comingFrom: 'next' | 'prev' | 'goto' | '' ;
   goingTo: 'next' | 'prev' | 'goto' | '' ;
   refresh: (string, number) => void;
+  refreshPageOnly: (number) => void;
   goToSectionIndex: number;
 
   constructor(content: Object) {
@@ -43,6 +44,7 @@ class Lesson {
     this.state = {};
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
+    this.refreshPageOnly = function () {}; // eslint-disable-line func-names
     this.comingFrom = '';
     this.transitionCancelled = false;
     this.goToSectionIndex = 0;
@@ -153,7 +155,7 @@ class Lesson {
     }
 
     this.currentSectionIndex = this.goToSectionIndex;
-    this.refresh(this.getContentHtml(), this.currentSectionIndex);
+    this.refreshPageOnly(this.currentSectionIndex);
   }
 
   setState() {
@@ -175,7 +177,6 @@ class Lesson {
         section.transitionFromAny(this.finishTransitionFromAny.bind(this));
       }
     }
-    // this.renderDiagrams();
   }
 
   finishTransFromNextOrPrev(flag: boolean = true) {
@@ -188,6 +189,7 @@ class Lesson {
   }
 
   finishTransitionFromAny() {
+    this.refresh(this.getContentHtml(), this.currentSectionIndex);
     const section = this.content.sections[this.currentSectionIndex];
     section.setSteadyState(this.state);
     this.inTransition = false;

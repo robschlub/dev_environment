@@ -37,16 +37,25 @@ export default class LessonComponent extends React.Component
     this.lesson = props.lesson;
     this.key = 0;
     this.lesson.refresh = this.refresh.bind(this);
+    this.lesson.refreshPageOnly = this.refreshPageOnly.bind(this);
     this.setStateOnNextRefresh = false;
   }
 
   componentDidUpdate() {
     if (this.setStateOnNextRefresh) {
       this.lesson.setState();
+      this.setStateOnNextRefresh = false;
     }
   }
-  refresh(htmlText: string, page: number) {
+
+
+  refreshPageOnly(page: number) {
     this.setStateOnNextRefresh = true;
+    this.setState({ htmlText: '', page });
+  }
+
+  refresh(htmlText: string, page: number) {
+    // this.setStateOnNextRefresh = true;
     this.setState({ htmlText, page });
 
     const nextButton = document.getElementById('lesson__button-next');
@@ -91,10 +100,12 @@ export default class LessonComponent extends React.Component
     // }
   }
   goToNext() {
+    this.setState({ htmlText: '' });
     this.lesson.nextSection();
   }
 
   goToPrevious() {
+    this.setState({ htmlText: '' });
     this.lesson.prevSection();
   }
 

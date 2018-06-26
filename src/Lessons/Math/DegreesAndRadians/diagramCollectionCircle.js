@@ -757,13 +757,14 @@ class CircleCollection extends DiagramElementCollection {
     if (rTime === 0) {
       rTime = 0.001;
     }
+    const maxTime = Math.max(rTime, tTime);
 
     if (t && r !== null && r !== undefined) {
       if (t.isNotEqualTo(layout.circle[toPosition]) || r !== toAngle) {
-        this.rotateTo(toAngle, 2, rTime);
+        this.rotateTo(toAngle, 2, maxTime);
         this._circle.animateTranslationTo(
           layout.circle[toPosition],
-          tTime,
+          maxTime,
           done,
         );
         return;
