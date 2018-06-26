@@ -600,11 +600,13 @@ class Content extends LessonContent {
         diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
         diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
       },
+      blank: [
+        'toNext',
+      ],
       transitionToNext: (done) => {
         circle.hideAll();
         diag.arcEqn.animateTo(layout.arcEquation.centerTop, 1, 2, done);
         diag._arcEquation.showAll();
-        // this.diagram.animateNextFrame();
       },
     });
     // this.addSection({
@@ -638,6 +640,9 @@ class Content extends LessonContent {
         diag.arcEqn.calcSize(layout.arcEquation.centerTop, 1);
         // }
       },
+      blank: [
+        'fromPrev',
+      ],
       show: [
         diag._arcEquation,
       ],

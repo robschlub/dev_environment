@@ -206,6 +206,7 @@ function onClickId(
 class Section {
   title: string;
   modifiers: Object;
+  blank: Array<string>;
   diagram: Diagram;
   // comingFrom: 'next' | 'prev' | 'goto';
   // goingTo: 'next' | 'prev' | 'goto';
@@ -218,7 +219,7 @@ class Section {
   hide: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
   initialPositions: Object | () => {};
-  blank: {
+  blankTransition: {
     toNext: boolean;
     toPrev: boolean;
     fromNext: boolean;
@@ -232,7 +233,8 @@ class Section {
     this.title = '';
     this.modifiers = {};
     this.showOnly = [];
-    this.blank = {
+    this.blank = [];
+    this.blankTransition = {
       toNext: false,
       toPrev: false,
       fromNext: false,
@@ -315,6 +317,18 @@ class Section {
   //   }
   // }
 
+  setBlanks() {
+    this.blank.forEach((element) => {
+      if (element in this.blankTransition) {
+        this.blankTransition[element] = true;
+      }
+    });
+    // if ('blank' in this) {
+    //   Object.keys(this.blank).forEach((key) => {
+    //     this.blankTransition[key] = this.blank[key];
+    //   });
+    // }
+  }
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;

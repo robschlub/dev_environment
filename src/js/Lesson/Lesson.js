@@ -73,7 +73,7 @@ class Lesson {
         // Stop diagrams if not in transition to stop any animations.
         this.stopDiagrams();
       }
-      if (this.currentSection().blank.toNext) {
+      if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
       // this.currentSection().goingTo = 'next';
@@ -97,7 +97,7 @@ class Lesson {
         this.stopDiagrams();
       }
 
-      if (this.currentSection().blank.toNext) {
+      if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
       // this.currentSection().goingTo = 'prev';
@@ -118,7 +118,7 @@ class Lesson {
       }
       // this.currentSection().goingTo = 'goto';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'goto';
-      if (this.currentSection().blank.toGoto) {
+      if (this.currentSection().blankTransition.toGoto) {
         this.refresh('', this.currentSectionIndex);
       }
       this.transitionStart('goto');
@@ -166,12 +166,12 @@ class Lesson {
     }
 
     this.currentSectionIndex = this.goToSectionIndex;
-    // this.currentSection().setBlanks();
+    this.currentSection().setBlanks();
 
     let contentHTML = this.getContentHtml();
-    if ((this.comingFrom === 'prev' && this.currentSection().blank.fromPrev)
-     || (this.comingFrom === 'next' && this.currentSection().blank.fromNext)
-     || (this.comingFrom === 'goto' && this.currentSection().blank.fromGoto)) {
+    if ((this.comingFrom === 'prev' && this.currentSection().blankTransition.fromPrev)
+     || (this.comingFrom === 'next' && this.currentSection().blankTransition.fromNext)
+     || (this.comingFrom === 'goto' && this.currentSection().blankTransition.fromGoto)) {
       contentHTML = '';
     }
 
