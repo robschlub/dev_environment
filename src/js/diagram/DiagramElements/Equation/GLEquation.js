@@ -487,7 +487,7 @@ export default class DiagramGLEquation extends Elements {
     });
   }
 
-  calcSize(location: Point, scale: number) {
+  calcSize(location: Point = new Point(0, 0), scale: number = 1) {
     const elementsShowing = this.collection.getAllElements()
       .filter(e => e.isShown);
     this.collection.hideAll();
@@ -504,6 +504,11 @@ export default class DiagramGLEquation extends Elements {
     callback: ?(?mixed) => void = null,
   ) {
     let callbackToUse = callback;
+    if (elements.length === 0) {
+      if (callback) {
+        callback();
+      }
+    }
     elements.forEach((e) => {
       if (appear) {
         e.disolveIn(time, callbackToUse);
@@ -523,7 +528,6 @@ export default class DiagramGLEquation extends Elements {
     callback: ?(?mixed) => void = null,
   ) {
     const allElements = this.collection.getAllElements();
-    // console.log("all", allElements)
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsShownTarget = this.getAllElements();
     const elementsToHide =
@@ -531,14 +535,15 @@ export default class DiagramGLEquation extends Elements {
     const elementsToShow =
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
     const currentTransforms = this.collection.getElementTransforms();
+
     this.calcSize(location, scale);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    // console.log("to Show", elementsToShow[0].name, elementsToShow[0].color[3]);
-    this.dissolveElements(elementsToHide, false, 1, null);
-    this.collection.animateToTransforms(animateToTransforms, time, 0, callback);
-    // console.log(elementsToShow)
-    this.dissolveElements(elementsToShow, true, time, null);
+    this.dissolveElements(elementsToHide, false, 0.5, null);
+    this.collection.animateToTransforms(
+      animateToTransforms, time, 0,
+      this.dissolveElements.bind(this, elementsToShow, true, 0.5, callback),
+    );
   }
 
   contentToElement(content: EquationInput): Elements {

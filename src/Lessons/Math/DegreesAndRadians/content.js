@@ -748,11 +748,10 @@ class Content extends LessonContent {
         </p>
       `,
       setEnterState: () => {
-        diag.arcEqn.calcSize(layout.arcEquation.centerBottom, 1);
+        diag.radiusEqn.calcSize(layout.arcEquation.centerBottom);
+        diag.angleEqn.calcSize(layout.arcEquation.centerBottom);
+        diag.arcEqn.calcSize(layout.arcEquation.centerBottom);
       },
-      // show: [
-      //   diag._arcEquation,
-      // ],
       setSteadyState: () => {
         diag._arcEquation.showArc();
         diag._arcEquation._angle.onClick =

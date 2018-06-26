@@ -393,7 +393,9 @@ class CircleCollection extends DiagramElementCollection {
   _angleText: angleTextType;
   _slider: sliderType;
   _arcEquation: equationType;
-  arcEqn: DiagramGLEquation
+  arcEqn: DiagramGLEquation;
+  radiusEqn: DiagramGLEquation;
+  angleEqn: DiagramGLEquation;
   varState: {
     radialLines: number,
     angleInSections: number,
@@ -424,8 +426,19 @@ class CircleCollection extends DiagramElementCollection {
     this.add('slider', makeSlider(shapes, layout.slider));
     this.add('arcEquation', makeArcEquation(diagram));
 
-    this.arcEqn = diagram.equation.make(this._arcEquation);
-    this.arcEqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
+    let eqn;
+    eqn = diagram.equation.make(this._arcEquation);
+    eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
+    // eqn.calcSize();
+    this.arcEqn = eqn;
+    eqn = this.diagram.equation.make(this._arcEquation);
+    eqn.createEq(['radius', 'equals', eqn.frac('arc', 'angle', 'v')]);
+    // eqn.calcSize();
+    this.radiusEqn = eqn;
+    eqn = this.diagram.equation.make(this._arcEquation);
+    eqn.createEq(['angle', 'equals', eqn.frac('arc', 'radius', 'v')]);
+    // eqn.calcSize();
+    this.angleEqn = eqn;
 
     this._slider.setCallback(this.updateSlider.bind(this));
 
@@ -719,21 +732,11 @@ class CircleCollection extends DiagramElementCollection {
 
   animateEquation(leftSide: 'arc' | 'radius' | 'angle') {
     if (leftSide === 'arc') {
-      const eqn = this.diagram.equation.make(this._arcEquation);
-      eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
-      eqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
-      // this._arcEquation.showArc();
+      this.arcEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
     } else if (leftSide === 'radius') {
-      const eqn = this.diagram.equation.make(this._arcEquation);
-      eqn.createEq(['radius', 'equals', eqn.frac('arc', 'angle', 'v')]);
-
-      eqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
-      // this._arcEquation.showRadius();
+      this.radiusEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
     } else if (leftSide === 'angle') {
-      const eqn = this.diagram.equation.make(this._arcEquation);
-      eqn.createEq(['angle', 'equals', eqn.frac('arc', 'radius', 'v')]);
-      eqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
-      // this._arcEquation.showAngle();
+      this.angleEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
     }
     this.diagram.animateNextFrame();
   }

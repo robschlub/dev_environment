@@ -1875,7 +1875,7 @@ class DiagramElementCollection extends DiagramElement {
     let callbackMethod = callback;
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      if (element.name in elementTransforms) {
+      if (element.name in elementTransforms && element.isShown) {
         element.animateTo(
           elementTransforms[element.name],
           time,
