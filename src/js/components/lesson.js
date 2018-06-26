@@ -24,7 +24,8 @@ export default class LessonComponent extends React.Component
   key: number;
   state: State;
   diagrams: Object;
-  setStateOnNextRefresh: boolean;
+  // setStateOnNextRefresh: boolean;
+  componentUpdateCallback: ?() => void;
 
   constructor(props: Props) {
     super(props);
@@ -36,27 +37,32 @@ export default class LessonComponent extends React.Component
     };
     this.lesson = props.lesson;
     this.key = 0;
-    this.lesson.refresh = this.refresh.bind(this);
-    this.lesson.refreshPageOnly = this.refreshPageOnly.bind(this);
-    this.setStateOnNextRefresh = false;
+    this.lesson.refresh = this.refreshText.bind(this);
+    // this.lesson.refreshPageOnly = this.refreshPageOnly.bind(this);
+    // this.lesson.blank = this.blank.bind(this);
+    // this.setStateOnNextRefresh = false;
+    this.componentUpdateCallback = null;
   }
 
   componentDidUpdate() {
-    if (this.setStateOnNextRefresh) {
-      this.lesson.setState();
-      this.setStateOnNextRefresh = false;
+    // if (this.setStateOnNextRefresh) {
+    //   this.lesson.setState();
+    //   this.setStateOnNextRefresh = false;
+    // }
+    if (this.componentUpdateCallback) {
+      const callback = this.componentUpdateCallback;
+      this.componentUpdateCallback = null;
+      callback();
     }
   }
 
-
-  refreshPageOnly(page: number) {
-    this.setStateOnNextRefresh = true;
-    this.setState({ htmlText: '', page });
-  }
-
-  refresh(htmlText: string, page: number) {
-    // this.setStateOnNextRefresh = true;
-    this.setState({ htmlText, page });
+  refreshText(htmlText: string, page: number, callback: ?() => void = null) {
+    if (htmlText !== this.state.htmlText || page !== this.state.page) {
+      this.componentUpdateCallback = callback;
+      this.setState({ htmlText, page });
+    } else if (callback) {
+      callback();
+    }
 
     const nextButton = document.getElementById('lesson__button-next');
     if (nextButton) {
@@ -75,37 +81,67 @@ export default class LessonComponent extends React.Component
         prevButton.classList.remove('lesson__button-prev-disabled');
       }
     }
-    // if (this.lesson.currentSectionIndex ===
-    //     this.lesson.content.sections.length - 1) {
-    //   const nextButton = document.getElementById('lesson__button-next');
-    //   if (nextButton) {
-    //     nextButton.classList.add('lesson__button-next-disabled');
-    //   }
-    // }
-    // if (this.lesson.currentSectionIndex === 0) {
-    //   const prevButton = document.getElementById('lesson__button-previous');
-    //   if (prevButton) {
-    //     prevButton.classList.add('lesson__button-prev-disabled');
-    //   }
-    // }
-    //  {
-    //   const nextButton = document.getElementById('lesson__button-next');
-    //   const prevButton = document.getElementById('lesson__button-previous');
-    //   if (prevButton) {
-    //     prevButton.classList.remove('lesson__button-prev-disabled');
-    //   }
-    //   if (nextButton) {
-    //     nextButton.classList.remove('lesson__button-next-disabled');
-    //   }
-    // }
   }
+
+  // blank() {
+  //   this.setState({ htmlText: '' });
+  // }
+
+  // refreshPageOnly(page: number) {
+  //   this.setStateOnNextRefresh = true;
+  //   this.setState({ htmlText: '', page });
+  // }
+
+  // refresh(htmlText: string, page: number) {
+  //   // this.setStateOnNextRefresh = true;
+  //   this.setState({ htmlText, page });
+
+  //   const nextButton = document.getElementById('lesson__button-next');
+  //   if (nextButton) {
+  //     if (this.lesson.currentSectionIndex ===
+  //       this.lesson.content.sections.length - 1) {
+  //       nextButton.classList.add('lesson__button-next-disabled');
+  //     } else {
+  //       nextButton.classList.remove('lesson__button-next-disabled');
+  //     }
+  //   }
+  //   const prevButton = document.getElementById('lesson__button-previous');
+  //   if (prevButton) {
+  //     if (this.lesson.currentSectionIndex === 0) {
+  //       prevButton.classList.add('lesson__button-prev-disabled');
+  //     } else {
+  //       prevButton.classList.remove('lesson__button-prev-disabled');
+  //     }
+  //   }
+  //   // if (this.lesson.currentSectionIndex ===
+  //   //     this.lesson.content.sections.length - 1) {
+  //   //   const nextButton = document.getElementById('lesson__button-next');
+  //   //   if (nextButton) {
+  //   //     nextButton.classList.add('lesson__button-next-disabled');
+  //   //   }
+  //   // }
+  //   // if (this.lesson.currentSectionIndex === 0) {
+  //   //   const prevButton = document.getElementById('lesson__button-previous');
+  //   //   if (prevButton) {
+  //   //     prevButton.classList.add('lesson__button-prev-disabled');
+  //   //   }
+  //   // }
+  //   //  {
+  //   //   const nextButton = document.getElementById('lesson__button-next');
+  //   //   const prevButton = document.getElementById('lesson__button-previous');
+  //   //   if (prevButton) {
+  //   //     prevButton.classList.remove('lesson__button-prev-disabled');
+  //   //   }
+  //   //   if (nextButton) {
+  //   //     nextButton.classList.remove('lesson__button-next-disabled');
+  //   //   }
+  //   // }
+  // }
   goToNext() {
-    this.setState({ htmlText: '' });
     this.lesson.nextSection();
   }
 
   goToPrevious() {
-    this.setState({ htmlText: '' });
     this.lesson.prevSection();
   }
 

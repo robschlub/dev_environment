@@ -32,8 +32,9 @@ class Lesson {
   transitionCancelled: boolean;
   comingFrom: 'next' | 'prev' | 'goto' | '' ;
   goingTo: 'next' | 'prev' | 'goto' | '' ;
-  refresh: (string, number) => void;
-  refreshPageOnly: (number) => void;
+  refresh: (string, number, ?() => void) => void;
+  // refreshPageOnly: (number) => void;
+  // blank: () => void;
   goToSectionIndex: number;
 
   constructor(content: Object) {
@@ -44,7 +45,8 @@ class Lesson {
     this.state = {};
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
-    this.refreshPageOnly = function () {}; // eslint-disable-line func-names
+    // this.refreshPageOnly = function () {}; // eslint-disable-line func-names
+    // this.blank = () => {};
     this.comingFrom = '';
     this.transitionCancelled = false;
     this.goToSectionIndex = 0;
@@ -71,6 +73,9 @@ class Lesson {
         // Stop diagrams if not in transition to stop any animations.
         this.stopDiagrams();
       }
+      if (this.currentSection().blank.toNext) {
+        this.refresh('', this.currentSectionIndex);
+      }
       // this.currentSection().goingTo = 'next';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'prev';
       this.transitionStart('prev');
@@ -91,6 +96,10 @@ class Lesson {
       } else {
         this.stopDiagrams();
       }
+
+      if (this.currentSection().blank.toNext) {
+        this.refresh('', this.currentSectionIndex);
+      }
       // this.currentSection().goingTo = 'prev';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'next';
       this.transitionStart('next');
@@ -109,6 +118,9 @@ class Lesson {
       }
       // this.currentSection().goingTo = 'goto';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'goto';
+      if (this.currentSection().blank.toGoto) {
+        this.refresh('', this.currentSectionIndex);
+      }
       this.transitionStart('goto');
       this.goToSectionIndex = sectionIndex;
       this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
@@ -148,14 +160,25 @@ class Lesson {
   }
 
   setLeaveStateAndMoveToNextSection() {
-    // console.log("asdf")
     const possibleState = this.currentSection().setLeaveState();
     if (possibleState !== null && possibleState !== undefined) {
       this.state = possibleState;
     }
 
     this.currentSectionIndex = this.goToSectionIndex;
-    this.refreshPageOnly(this.currentSectionIndex);
+    // this.currentSection().setBlanks();
+
+    let contentHTML = this.getContentHtml();
+    if ((this.comingFrom === 'prev' && this.currentSection().blank.fromPrev)
+     || (this.comingFrom === 'next' && this.currentSection().blank.fromNext)
+     || (this.comingFrom === 'goto' && this.currentSection().blank.fromGoto)) {
+      contentHTML = '';
+    }
+
+    this.refresh(
+      contentHTML, this.currentSectionIndex,
+      this.setState.bind(this),
+    );
   }
 
   setState() {
@@ -163,7 +186,6 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
       section.setEnterState(this.state);
-      section.setOnClicks();
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {
@@ -189,8 +211,16 @@ class Lesson {
   }
 
   finishTransitionFromAny() {
-    this.refresh(this.getContentHtml(), this.currentSectionIndex);
+    this.refresh(
+      this.getContentHtml(),
+      this.currentSectionIndex,
+      this.componentUpdateComplete.bind(this),
+    );
+  }
+
+  componentUpdateComplete() {
     const section = this.content.sections[this.currentSectionIndex];
+    section.setOnClicks();
     section.setSteadyState(this.state);
     this.inTransition = false;
     const { diagram } = this;

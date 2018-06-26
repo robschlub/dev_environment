@@ -69,6 +69,14 @@ class Content extends LessonContent {
         line: click(diag.pulseRadius, [diag], colors.radius),
         another: click(diag.pulseReference, [diag], colors.radius),
       },
+      blank: {
+        toNext: false,
+        toPrev: false,
+        fromNext: true,
+        fromPrev: true,
+        toGoto: false,
+        fromGoto: false,
+      },
       setEnterState: () => {
         diag.resetCircle('center');
         diag.setRotation(0.001);

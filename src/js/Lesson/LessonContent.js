@@ -218,12 +218,28 @@ class Section {
   hide: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
   initialPositions: Object | () => {};
+  blank: {
+    toNext: boolean;
+    toPrev: boolean;
+    fromNext: boolean;
+    fromPrev: boolean;
+    toGoto: boolean;
+    fromGoto: boolean;
+  }
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
     this.showOnly = [];
+    this.blank = {
+      toNext: false,
+      toPrev: false,
+      fromNext: false,
+      fromPrev: false,
+      toGoto: false,
+      fromGoto: false,
+    };
   }
 
   setContent(): Array<string> | string {
