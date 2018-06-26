@@ -43,6 +43,9 @@ class Element {
       this.width = r.width;
     }
   }
+  getAllElements() {
+    return [this.content];
+  }
 }
 
 class Elements {
@@ -52,6 +55,7 @@ class Elements {
   width: number;
   location: Point;
   height: number;
+  +getAllElements: () => Array<DiagramElementPrimative | DiagramElementCollection>;
 
   constructor(content: Array<Element | Elements | null>) {
     const nonNullContent = [];
@@ -89,6 +93,17 @@ class Elements {
     this.descent = des;
     this.location = location.copy();
     this.height = this.descent + this.ascent;
+  }
+  getAllElements() {
+    let elements = [];
+    this.content.forEach((e) => {
+      if (e instanceof Element) {
+        elements.push(e.content);
+      } else {
+        elements = [...elements, ...e.getAllElements()];
+      }
+    });
+    return elements;
   }
 }
 
@@ -171,6 +186,19 @@ class Fraction extends Elements {
       vinculum.show();
     }
   }
+  getAllElements() {
+    let elements = [];
+    if (this.numerator) {
+      elements = [...elements, ...this.numerator.getAllElements()];
+    }
+    if (this.denominator) {
+      elements = [...elements, ...this.denominator.getAllElements()];
+    }
+    if (this.vinculum) {
+      elements = [...elements, this.vinculum];
+    }
+    return elements;
+  }
 }
 
 class SuperSub extends Elements {
@@ -243,6 +271,19 @@ class SuperSub extends Elements {
     this.ascent = asc;
     this.descent = des;
   }
+  getAllElements() {
+    let elements = [];
+    if (this.superscript) {
+      elements = [...elements, ...this.superscript.getAllElements()];
+    }
+    if (this.subscript) {
+      elements = [...elements, ...this.subscript.getAllElements()];
+    }
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    return elements;
+  }
 }
 
 class Bounds {
@@ -276,6 +317,23 @@ class Integral extends Elements {
     this.limitMax = limitMax;
     this.mainContent = content;
     this.integralGlyph = integralGlyph;
+  }
+
+  getAllElements() {
+    let elements = [];
+    if (this.limitMin) {
+      elements = [...elements, ...this.limitMin.getAllElements()];
+    }
+    if (this.limitMax) {
+      elements = [...elements, ...this.limitMax.getAllElements()];
+    }
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    if (this.integralGlyph) {
+      elements = [...elements, this.integralGlyph];
+    }
+    return elements;
   }
 
   calcSize(location: Point, scale: number) {
@@ -437,17 +495,50 @@ export default class DiagramGLEquation extends Elements {
     super.calcSize(location, scale);
     this.collection.showOnly(elementsShowing);
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  dissolveElements(
+    elements: Array<DiagramElementPrimative | DiagramElementCollection>,
+    appear: boolean = true,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ) {
+    let callbackToUse = callback;
+    elements.forEach((e) => {
+      if (appear) {
+        e.disolveIn(time, callbackToUse);
+        callbackToUse = null;
+      } else {
+        e.disolveOut(time, callbackToUse);
+        callbackToUse = null;
+      }
+    });
+  }
+
+
   animateTo(
     location: Point,
     scale: number,
     time: number = 1,
     callback: ?(?mixed) => void = null,
   ) {
+    const allElements = this.collection.getAllElements();
+    // console.log("all", allElements)
+    const elementsShown = allElements.filter(e => e.isShown);
+    const elementsShownTarget = this.getAllElements();
+    const elementsToHide =
+      elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
+    const elementsToShow =
+      elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
     const currentTransforms = this.collection.getElementTransforms();
     this.calcSize(location, scale);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
+    // console.log("to Show", elementsToShow[0].name, elementsToShow[0].color[3]);
+    this.dissolveElements(elementsToHide, false, 1, null);
     this.collection.animateToTransforms(animateToTransforms, time, 0, callback);
+    // console.log(elementsToShow)
+    this.dissolveElements(elementsToShow, true, time, null);
   }
 
   contentToElement(content: EquationInput): Elements {

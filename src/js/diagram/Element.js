@@ -183,13 +183,15 @@ class DiagramElement {
   // Callbacks
   onClick: ?(?mixed) => void;
   callback: ?(?mixed) => void;             // ending animation or moving freely
+  colorAnimationCallback: ?(?mixed) => void;
+  customAnimationCallback: ?(?mixed) => void;
   setTransformCallback: (Transform) => void; // element.transform is updated
 
   animationPlan: Array<AnimationPhase>;    // Animation plan
   colorAnimationPlan: Array<ColorAnimationPhase>;
   customAnimationPlan: Array<CustomAnimationPhase>;
   color: Array<number>;           // For the future when collections use color
-
+  toDisolve: '' | 'in' | 'out';
   move: {
     maxTransform: Transform,
     minTransform: Transform,
@@ -276,6 +278,7 @@ class DiagramElement {
     this.colorAnimationPlan = [];
     this.customAnimationPlan = [];
     this.diagramLimits = diagramLimits;
+    this.toDisolve = '';
     //   min: new Point(-1, -1),
     //   max: new Point(1, 1),
     // }
@@ -663,13 +666,16 @@ class DiagramElement {
         // the animation plan (incase a callback is used to start another
         // animation)
         const endColor = this.calcNextAnimationColor(phase.time);
-        this.stopAnimatingColor(true);
         this.setColor(endColor);
+        this.stopAnimatingColor(true);
         return;
       }
       // If we are here, that means the time elapsed is not more than the
       // current animation phase plan time, so calculate the next transform.
       this.setColor(this.calcNextAnimationColor(deltaTime));
+      // if(this.name === 'times') {
+      //   console.log(now, this.color[3])
+      // }
     }
   }
 
@@ -763,8 +769,10 @@ class DiagramElement {
     }
     if (this.colorAnimationPlan.length > 0) {
       if (callback) {
-        this.callback = callback;
+        this.colorAnimationCallback = callback;
       }
+      this.state.disolving = this.toDisolve;
+      this.toDisolve = '';
       this.state.isAnimatingColor = true;
       this.state.colorAnimation.currentPhaseIndex = 0;
       this.animateColorPhase(this.state.colorAnimation.currentPhaseIndex);
@@ -781,7 +789,7 @@ class DiagramElement {
     }
     if (this.customAnimationPlan.length > 0) {
       if (callback) {
-        this.callback = callback;
+        this.customAnimationCallback = callback;
       }
       this.state.isAnimatingCustom = true;
       this.state.customAnimation.currentPhaseIndex = 0;
@@ -825,11 +833,11 @@ class DiagramElement {
     this.state.isAnimatingColor = false;
     if (this.colorAnimationPlan.length) {
       if (this.state.disolving === 'in') {
-        this.color = this.colorAnimationPlan.slice(-1)[0].targetColor.slice();
+        this.setColor(this.colorAnimationPlan.slice(-1)[0].targetColor.slice());
         this.state.disolving = '';
       } else if (this.state.disolving === 'out') {
-        this.color = this.colorAnimationPlan.slice(-1)[0].startColor.slice();
         this.hide();
+        this.setColor(this.colorAnimationPlan.slice(-1)[0].startColor.slice());
         // Do not move this reset out of the if statement as stopAnimatingColor
         // is called at the start of an new animation and therefore the
         // disolving state will be lost.
@@ -837,9 +845,8 @@ class DiagramElement {
       }
     }
     this.colorAnimationPlan = [];
-
-    const { callback } = this;
-    this.callback = null;
+    const callback = this.colorAnimationCallback;
+    this.colorAnimationCallback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
@@ -852,8 +859,8 @@ class DiagramElement {
   stopAnimatingCustom(result: ?mixed): void {
     this.customAnimationPlan = [];
     this.state.isAnimatingCustom = false;
-    const { callback } = this;
-    this.callback = null;
+    const callback = this.customAnimationCallback;
+    this.customAnimationCallback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
@@ -935,7 +942,8 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.state.disolving = 'in';
+      this.toDisolve = 'in';
+      // this.state.disolving = 'in';
       this.animateColorPlan([phase], checkCallback(callback));
     }
   }
@@ -951,7 +959,8 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
-    this.state.disolving = 'in';
+    this.toDisolve = 'in';
+    // this.state.disolving = 'in';
     this.animateColorPlan([phase1, phase2], checkCallback(callback));
   }
 
@@ -963,10 +972,10 @@ class DiagramElement {
     targetColor[3] = 0;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.state.disolving = 'out';
+      this.toDisolve = 'out';
+      // this.state.disolving = 'out';
       this.animateColorPlan([phase], checkCallback(callback));
     }
-
     // console.log("disolve out", targetColor, this.color)
   }
 
@@ -1462,6 +1471,10 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.isShown) {
       this.setNextTransform(now);
       this.setNextColor(now);
+      // set next color can end up hiding an element when disolving out
+      if (!this.isShown) {
+        return;
+      }
       this.setNextCustomAnimation(now);
       // this.lastDrawParentTransform = parentTransform.copy();
       this.lastDrawElementTransformPosition = {
@@ -1639,6 +1652,10 @@ class DiagramElementCollection extends DiagramElement {
     if (this.isShown) {
       this.setNextTransform(now);
       this.setNextColor(now);
+      // set next color can end up hiding an element when disolving out
+      if (!this.isShown) {
+        return;
+      }
       this.setNextCustomAnimation(now);
       // this.lastDrawParentTransform = parentTransform.copy();
       // this.lastDrawElementTransform = this.transform.copy();
