@@ -499,8 +499,12 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._angle._arrow.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
-  pulseRadiusOnArc() {
-    this._circle._radiusOnArc._r1.pulseThickNow(1, 1.04, 7);
+  pulseRadiusOnArc(numToPulse: number = 1) {
+    for (let i = 1; i <= numToPulse; i += 1) {
+      const key = `_r${i}`;
+      this._circle._radiusOnArc[key].pulseThickNow(2, 1.04, 7);
+    }
+    // this._circle._radiusOnArc._r1.pulseThickNow(1, 1.04, 7);
     this.diagram.animateNextFrame();
   }
   pulseAnchor() {

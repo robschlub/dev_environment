@@ -593,9 +593,15 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         diag.resetCircle('farRight');
-        onClickId('id_1_rad', diag.rotateTo, [diag, 1, 2, 2]);
-        onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
-        onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
+        function rotateToAndPulse(angle: number, num: number) {
+          diag.rotateTo(angle, 2, 1.5, diag.pulseRadiusOnArc.bind(diag, num));
+        }
+        onClickId('id_1_rad', rotateToAndPulse, [this, 1, 1]);
+        onClickId('id_2_rad', rotateToAndPulse, [this, 2, 2]);
+        onClickId('id_5_rad', rotateToAndPulse, [this, 5, 5]);
+        // onClickId('id_1_rad', diag.rotateTo, [diag, 1, 2, 2]);
+        // onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
+        // onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
         diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
         diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
         diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
