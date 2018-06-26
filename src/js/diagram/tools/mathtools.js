@@ -215,6 +215,7 @@ function sinusoid(
 ) {
   return bias + mag * Math.sin(deltaTime * frequency * 2.0 * Math.PI + phaseOffset);
 }
+
 // const animationPhase = (transform, time, rotDirection = 0, animationStyle = easeinout) => {
 //     return {
 //         transform: transform.copy(),

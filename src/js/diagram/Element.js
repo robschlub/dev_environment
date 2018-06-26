@@ -2,7 +2,7 @@
 
 import {
   Transform, Point, TransformLimit, Rect,
-  Translation, spaceToSpaceTransform, getBoundingRect,
+  Translation, spaceToSpaceTransform, getBoundingRect, linearPath,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
@@ -24,6 +24,8 @@ class AnimationPhase {
   time: number;                       // animation time
   rotDirection: number;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
+  animationPath: (number) => number;
+  translationPath: (Point, Point, number) => Point;
 
   startTime: number;                 // Time when phase started
   startTransform: Transform;       // Transform at start of phase
@@ -34,11 +36,13 @@ class AnimationPhase {
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
+    translationPath: (Point, Point, number) => Point = linearPath,
   ) {
     this.targetTransform = transform.copy();
     this.time = time;
     this.rotDirection = rotDirection;
     this.animationStyle = animationStyle;
+    this.translationPath = translationPath;
 
     this.startTime = -1;
     this.startTransform = new Transform();
@@ -419,6 +423,7 @@ class DiagramElement {
     let next = delta.copy().constant(p);
 
     next = start.add(delta.mul(next));
+    // const next = start.toDelta(delta, p, phase.translationPath);
     return next;
   }
 

@@ -605,7 +605,7 @@ class Translation extends Point {
   x: number;
   y: number;
 
-  constructor(tx: Point | number, ty: number) {
+  constructor(tx: Point | number, ty: number = 0) {
     if (tx instanceof Point) {
       super(tx.x, tx.y);
       // this.x = tx.x;
@@ -728,10 +728,16 @@ class Scale extends Point {
     );
   }
 
-  mul(scaleToMul: Scale = new Scale(1, 1)): Scale {
+  mul(scaleToMul: Scale | Point | number = new Scale(1, 1)): Scale {
+    if (scaleToMul instanceof Scale || scaleToMul instanceof Point) {
+      return new Scale(
+        this.x * scaleToMul.x,
+        this.y * scaleToMul.y,
+      );
+    }
     return new Scale(
-      this.x * scaleToMul.x,
-      this.y * scaleToMul.y,
+      this.x * scaleToMul,
+      this.y * scaleToMul,
     );
   }
 
@@ -874,6 +880,28 @@ class Transform {
       }
     }
     return null;
+  }
+
+  toDelta(
+    delta: Transform,
+    percent: number,
+    translationPath: (Point, Point, number) => Point,
+  ) {
+    const calcTransform = this.copy();
+    for (let i = 0; i < this.order.length; i += 1) {
+      const stepStart = this.order[i];
+      const stepDelta = delta.order[i];
+      if (stepStart instanceof Scale && stepDelta instanceof Scale) {
+        calcTransform.order[i] = stepStart.add(stepDelta.mul(percent));
+      }
+      if (stepStart instanceof Rotation && stepDelta instanceof Rotation) {
+        calcTransform.order[i] = new Rotation(stepStart.r + stepDelta.r * percent);
+      }
+      if (stepStart instanceof Translation && stepDelta instanceof Translation) {
+        calcTransform.order[i] = new Translation(translationPath(stepStart, stepDelta, percent));
+      }
+    }
+    return calcTransform;
   }
 
   updateScale(x: number | Point, yOrIndex: number = 0, index: number = 0) {
@@ -1213,6 +1241,14 @@ class Transform {
   }
 }
 
+function linearPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+) {
+  return start.add(delta.x * percent, delta.y * percent);
+}
+
 function spaceToSpaceTransform(
   s1: {
     x: {bottomLeft: number, width: number},
@@ -1297,4 +1333,5 @@ export {
   Rotation,
   spaceToSpaceTransform,
   getBoundingRect,
+  linearPath,
 };
