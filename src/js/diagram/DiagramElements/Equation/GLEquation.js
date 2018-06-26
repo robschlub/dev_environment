@@ -513,7 +513,7 @@ export default class DiagramGLEquation extends Elements {
       if (appear) {
         e.disolveIn(time, callbackToUse);
         callbackToUse = null;
-      } else if (e.isShown) {
+      } else {
         e.disolveOut(time, callbackToUse);
         callbackToUse = null;
       }
