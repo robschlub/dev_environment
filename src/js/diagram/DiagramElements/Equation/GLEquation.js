@@ -513,7 +513,7 @@ export default class DiagramGLEquation extends Elements {
       if (appear) {
         e.disolveIn(time, callbackToUse);
         callbackToUse = null;
-      } else {
+      } else if (e.isShown) {
         e.disolveOut(time, callbackToUse);
         callbackToUse = null;
       }
@@ -528,12 +528,14 @@ export default class DiagramGLEquation extends Elements {
     callback: ?(?mixed) => void = null,
   ) {
     const allElements = this.collection.getAllElements();
+    this.collection.stop();
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsShownTarget = this.getAllElements();
     const elementsToHide =
       elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
     const elementsToShow =
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
+
     const currentTransforms = this.collection.getElementTransforms();
 
     this.calcSize(location, scale);

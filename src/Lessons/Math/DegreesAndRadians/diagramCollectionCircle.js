@@ -257,7 +257,7 @@ function makeArcEquation(diagram: Diagram) {
     radius: 'radius',
     angle: 'angle',
     times: ` ${String.fromCharCode(215)} `,
-    equals: ' = ',
+    equals: '  =  ',
     v: diagram.equation.vinculum(colors.diagram.text.base),
   }, colors.diagram.text.base);
   equationElements._arc.vertices.setColor(colors.arc);
