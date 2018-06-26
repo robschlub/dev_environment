@@ -170,6 +170,27 @@ $diagram_ratio: 1.5;
   // margin-bottom: var(--lesson__text-margin);
 }
 
+.lesson__p_width_50 {
+  width: 50%;
+}
+
+.lesson__p_width_45 {
+  width: 45%;
+}
+.lesson__p_width_40 {
+  width: 40%;
+}
+.lesson__p_width_55 {
+  width: 55%;
+}
+.lesson__p_width_60 {
+  width: 60%;
+}
+
+.lesson__p_right {
+  float: right;
+}
+
 .lesson__title {
   font-size: var(--lesson__title-font-size);
   color: color(lesson, 'text-title');

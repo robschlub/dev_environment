@@ -451,6 +451,15 @@ class CircleCollection extends DiagramElementCollection {
     // this._angleText._units.vertices.element.innerHTML = ;
   }
 
+  showRadians() {
+    // this._circle._radialLinesRad.showAll();
+    this._angleText.showAll();
+    this.varState.radialLines = Math.PI * 2;
+    // this.setAngleUnits('&deg;');
+    this._angleText.setUnits('radians');
+    // this._angleText._units.vertices.element.innerHTML = ;
+  }
+
 
   toggleDegreesRadians(show: 'deg' | 'rad') {
     if (show === 'deg') {
@@ -476,10 +485,14 @@ class CircleCollection extends DiagramElementCollection {
   updateNumSectionsText() {
     const r = this.varState.rotation;
     let angleInSections =
-        Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 10)) / 10;
+        Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 100)) / 100;
 
     if (this.varState.radialLines === 360) {
       angleInSections = Math.floor(angleInSections);
+    } else if (this.varState.radialLines === Math.PI * 2) {
+      angleInSections = angleInSections.toFixed(2);
+    } else {
+      angleInSections = angleInSections.toFixed(1);
     }
     // $FlowFixMe
     this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
@@ -502,7 +515,7 @@ class CircleCollection extends DiagramElementCollection {
   pulseRadiusOnArc(numToPulse: number = 1) {
     for (let i = 1; i <= numToPulse; i += 1) {
       const key = `_r${i}`;
-      this._circle._radiusOnArc[key].pulseThickNow(2, 1.04, 7);
+      this._circle._radiusOnArc[key].pulseThickNow(1, 1.04, 7);
     }
     // this._circle._radiusOnArc._r1.pulseThickNow(1, 1.04, 7);
     this.diagram.animateNextFrame();

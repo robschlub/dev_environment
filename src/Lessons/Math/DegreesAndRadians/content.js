@@ -490,6 +490,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag.resetCircle('right');
         diag.showDegrees();
+        diag.updateRotation();
       },
     });
 
@@ -544,17 +545,20 @@ class Content extends LessonContent {
         // onClickId('id_3p5_rad', diag.rotateTo, [diag, 3.5, 2, 2]);
         // onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
       },
+      // blank: [
+      //   'toNext',
+      // ],
     });
     this.addSection({
       setContent: `
         <p>
-          So we can see:
+          So we can see when the angle is:
           <ul>
-            <li>At |one_radian|: </li>
+            <li>|one_radian|: </li>
             <li class="lesson__li_indent">|arc_length| = |one| |radius_ length|</li>
-            <li>At |two_radians|: </li>
+            <li>|two_radians|: </li>
             <li class="lesson__li_indent">|arc_length| = |two| |radius_lengths|.</li>
-            <li>At |five_radians|: </li>
+            <li>|five_radians|: </li>
             <li class="lesson__li_indent">|arc_length| = |five| |radius_lengths|.</li>
           </ul>
         </p>
@@ -577,6 +581,10 @@ class Content extends LessonContent {
         // diag._arcEquation.setPosition(layout.arcEquation.left);
         diag.arcEqn.calcSize(layout.arcEquation.left, 1);
       },
+      blank: [
+        'fromPrev',
+        'toNext',
+      ],
       showOnly: [
         circle,
         circle._radius,
@@ -586,12 +594,13 @@ class Content extends LessonContent {
       show: [
         circle._angle,
         circle._radiusOnArc,
-        diag._arcEquation,
+        // diag._arcEquation,
       ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'farRight');
       },
       setSteadyState: () => {
+        diag._arcEquation.showAll();
         diag.resetCircle('farRight');
         function rotateToAndPulse(angle: number, num: number) {
           diag.rotateTo(angle, 2, 1.5, diag.pulseRadiusOnArc.bind(diag, num));
@@ -606,9 +615,6 @@ class Content extends LessonContent {
         diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
         diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
       },
-      blank: [
-        'toNext',
-      ],
       transitionToNext: (done) => {
         circle.hideAll();
         diag.arcEqn.animateTo(layout.arcEquation.centerTop, 1, 2, done);
@@ -660,32 +666,73 @@ class Content extends LessonContent {
         <p>
           How many radians are there in a half circle and full circle?
         </p>
-        <p>A |_half_circle| has about 3.14 radians.</p>
-        <p>A |_full_circle| has about 6.28 radians.</p>
+        <p>A |half_circle| has about 3.14 radians.</p>
+        <p>A |full_circle| has about 6.28 radians.</p>
+      `,
+      modifiers: {
+        half_circle: click(diag.rotateTo, [diag, Math.PI], colors.action),
+        full_circle: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.action),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+      show: [
+        circle._angle,
+        circle._radiusOnArc,
+      ],
+      setSteadyState: () => {
+        diag.resetCircle('farRight');
+        diag._angleText.setPosition(layout.angleEqualsText.leftCenter);
+        diag.showRadians();
+        diag.updateRotation();
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+    });
+    this.addSection({
+      setContent: `
         <p>
-          We will often say there are 3.14 radians in a half circle. But this is a rough approximation.
+          Saying a half circle has |3.14| radians is a |rough approximation|.
         </p>
         <p>
-          A more accurate approximation is 3.141592653589793.
+          Actually, the digits after the 3 go on forever.
+        </p>
+        <p>
+          A more accurate |approximation| is |3.141593...|.
         </p>
       `,
     });
     this.addSection({
       setContent: centerV(`
         <p>
-          At first glance, splitting a circle up into 6.28 portions isn't as convenient as splitting it up into 360.
+          At first glance, dividing a circle into |6.283185...| portions isn't as convenient as dividing it into 360.
         </p>
         <p>
           A radian is a big portion, and there are plenty of applications that will require a |fraction of a radian|.
         </p>
-        <p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
           For example, if you want to use a quarter circle, instead of a simple calculation in degrees:
         </p>
-        <p>360/4 = 90</p>
+        <p>360 / 4 = 90</p>
         <p>you need to whip out the calculator for radians:</p>
-        <p>6.28/4 = 1.57.</p>
+        <p>6.283185... / 4 = 1.570796...</p>
         <p>
-          Also, a radian doesn't even go into a circle without a remainder. 6 radians go into a circle, but we are left with 0.28 radians remaining.
+          Also, a radian doesn't even go into a circle without a remainder. 6 radians go into a circle, but we are left with 0.283185... radians remaining.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          In addition, a radian doesn't even go into a circle without a remainder. 
+        </p>
+        <p>
+          6 radians go into a circle, but we are left with 0.283185... radians remaining.
         </p>
       `),
     });
