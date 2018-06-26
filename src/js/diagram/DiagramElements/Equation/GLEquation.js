@@ -147,9 +147,9 @@ class Fraction extends Elements {
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
 
-    this.vSpaceNum = scale * 0.15;
-    this.vSpaceDenom = scale * 0.15;
-    this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.35;
+    this.vSpaceNum = scale * 0.05;
+    this.vSpaceDenom = scale * 0.02;
+    this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.07;
     this.lineWidth = scale * 0.02;
 
     const yNumerator = this.numerator.descent +
