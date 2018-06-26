@@ -810,6 +810,7 @@ class DiagramElement {
     this.animationPlan = [];
     this.state.isAnimating = false;
     const { callback } = this;
+    // console.log("stopping", this.name, callback)
     this.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
@@ -1855,6 +1856,7 @@ class DiagramElementCollection extends DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ) {
+    let callbackMethod = callback;
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.name in elementTransforms) {
@@ -1862,9 +1864,11 @@ class DiagramElementCollection extends DiagramElement {
           elementTransforms[element.name],
           time,
           rotDirection,
-          callback,
+          callbackMethod,
           easeFunction,
         );
+        // only want to send callback once
+        callbackMethod = null;
       }
     }
   }

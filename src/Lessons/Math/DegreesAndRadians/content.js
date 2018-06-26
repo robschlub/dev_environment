@@ -462,6 +462,7 @@ class Content extends LessonContent {
         radius_lengths_are_on_the_arc: click(diag.toggleDegreesRadians, [diag, 'rad'], colors.action),
       },
       setEnterState: () => {
+        diag.updateRotation();
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.leftCenter);
       },
       showOnly: [
@@ -591,6 +592,12 @@ class Content extends LessonContent {
         diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
         diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
       },
+      transitionToNext: (done) => {
+        circle.hideAll();
+        diag.arcEqn.animateTo(layout.arcEquation.centerTop, 1, 2, done);
+        diag._arcEquation.showAll();
+        // this.diagram.animateNextFrame();
+      },
     });
     // this.addSection({
     //   setContent: `
@@ -612,12 +619,22 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerVH(`
         <p>
-          |Note|: This is |only| the case when the angle is expressed in |radians|.
+          This is |only| true when angle is expressed in |radians|.
         </p>
         <p>
-          This is |not| the case for |other units|, such as degrees.
+          This is |not| true for |other units|, such as degrees.
         </p>
       `),
+      setEnterState: () => {
+        // if (!(this.comingFrom === 'prev')) {
+        diag.arcEqn.calcSize(layout.arcEquation.centerTop, 1);
+        // }
+      },
+      show: [
+        diag._arcEquation,
+      ],
+      // setSteadyState: () => {
+      // },
     });
     this.addSection({
       setContent: `

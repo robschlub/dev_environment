@@ -75,6 +75,7 @@ class Lesson {
       this.goToSectionIndex = this.currentSectionIndex + 1;
       this.currentSection().transitionToNext(this.finishTransToNextOrPrev.bind(this));
     }
+    this.renderDiagrams();
   }
   prevSection() {
     const { diagram } = this;
@@ -94,6 +95,7 @@ class Lesson {
       this.goToSectionIndex = this.currentSectionIndex - 1;
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
     }
+    this.renderDiagrams();
   }
 
   goToSection(sectionIndex: number) {
@@ -109,6 +111,7 @@ class Lesson {
       this.goToSectionIndex = sectionIndex;
       this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
     }
+    this.renderDiagrams();
   }
 
   transitionStart(direction: 'next' | 'prev' | 'goto' | '' = '') {
@@ -172,6 +175,7 @@ class Lesson {
         section.transitionFromAny(this.finishTransitionFromAny.bind(this));
       }
     }
+    // this.renderDiagrams();
   }
 
   finishTransFromNextOrPrev(flag: boolean = true) {

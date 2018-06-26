@@ -438,12 +438,13 @@ export default class DiagramGLEquation extends Elements {
     location: Point,
     scale: number,
     time: number = 1,
+    callback: ?(?mixed) => void = null,
   ) {
     const currentTransforms = this.collection.getElementTransforms();
     this.calcSize(location, scale);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.collection.animateToTransforms(animateToTransforms, time);
+    this.collection.animateToTransforms(animateToTransforms, time, 0, callback);
   }
 
   contentToElement(content: EquationInput): Elements {
