@@ -12,7 +12,7 @@ function centerV(text: string = '') {
 }
 
 function centerVH(text: string = '') {
-  return `<div style="display: table; height: 100%; text-align:center; width:100%">
+  return `<div style="display: table; height: 100%; text-align:center; width:100%" class="lesson__p_top_margin_2">
         <div style="display: table-cell; vertical-align: middle">
         ${text}</div></div>`;
 }

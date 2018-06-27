@@ -92,7 +92,7 @@ export default function lessonLayout() {
     angleEqualsText: {
       leftCenter: new Point( -2.1, -0.4),
       left: new Point(-2.3, -0.6),
-      top: new Point(0.35, 1),
+      top: new Point(0.7, 1),
       bottomRight: new Point(1.0, -1.8),
       units: {
         deg: 0.87,

@@ -322,7 +322,9 @@ class Content extends LessonContent {
           <p>So |why did they| choose 360?</p>
           <p>It's not known, but one reason might be |360 is an easy number to work with| when you don't have a calculator.</p>
           <p>360 has a lot of numbers that can divide into it without a remainder:</p>
-          <p>|_factors|<p>
+          <ul>
+            <li>|_factors|</li>
+          </ul>
         `),
       modifiers: {
         _factors: highlightWord('1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360', 'lesson__small_text'),
@@ -332,28 +334,28 @@ class Content extends LessonContent {
     this.addSection({
       setContent: () =>
         `
-          <p>This means it's easy to work with fractions of a circle. For example:</p>
-          <ul>
-                <li>1/2 of a circle is |_180deg|</li>
-                <li>1/3 of a circle is |_120deg|</li>
-                <li>1/4 of a circle is |_90deg|</li>
-                <li>1/5 of a circle is |_72deg|</li>
-                <li>1/6 of a circle is |_60deg|</li>
-                <li>1/8 of a circle is |_45deg|</li>
-                <li>1/9 of a circle is |_40deg|</li>
-                <li>1/10 of a circle is |_36deg|</li>
-                <li>etc</li>
+          <p>This means it's easy to work with fractions of a circle.</p>
+          <ul style="margin-top:10%">
+                <li>${String.fromCharCode(190)} circle =   |_270deg|</li>
+                <li>${String.fromCharCode(8532)} circle = |_240deg|</li>
+                <li>${String.fromCharCode(189)} circle = |_180deg|</li>
+                <li>${String.fromCharCode(8531)} circle = |_120deg|</li>
+                <li>${String.fromCharCode(188)} circle = |_90deg|</li>
+                <li>${String.fromCharCode(8533)} circle = |_72deg|</li>
+                <li>${String.fromCharCode(8537)} circle = |_60deg|</li>
           </ul>
         `,
       modifiers: {
+        _270deg: actionWord('270&deg;', 'id_270', colors.diagram.text.keyword),
+        _240deg: actionWord('240&deg;', 'id_240', colors.diagram.text.keyword),
         _180deg: actionWord('180&deg;', 'id_180', colors.diagram.text.keyword),
         _120deg: actionWord('120&deg;', 'id_120', colors.diagram.text.keyword),
         _90deg: actionWord('90&deg;', 'id_90', colors.diagram.text.keyword),
         _72deg: actionWord('72&deg;', 'id_72', colors.diagram.text.keyword),
         _60deg: actionWord('60&deg;', 'id_60', colors.diagram.text.keyword),
-        _45deg: actionWord('45&deg;', 'id_45', colors.diagram.text.keyword),
-        _40deg: actionWord('40&deg;', 'id_40', colors.diagram.text.keyword),
-        _36deg: actionWord('36&deg;', 'id_36', colors.diagram.text.keyword),
+        // _45deg: actionWord('45&deg;', 'id_45', colors.diagram.text.keyword),
+        // _40deg: actionWord('40&deg;', 'id_40', colors.diagram.text.keyword),
+        // _36deg: actionWord('36&deg;', 'id_36', colors.diagram.text.keyword),
       },
       setEnterState: () => {
         diag.updateRotation();
@@ -372,20 +374,18 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         diag.resetCircle('right');
-        // circle.transform.updateTranslation(layout.circle.right);
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.top);
         diag.showDegrees();
         const bindArray = deg => [diag, deg / 180 * Math.PI, 0, 1, () => {}];
         onClickId('id_angle', diag.pulseAngle, [diag]);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        onClickId('id_270', diag.rotateTo, bindArray(270));
+        onClickId('id_240', diag.rotateTo, bindArray(240));
         onClickId('id_180', diag.rotateTo, bindArray(180));
         onClickId('id_120', diag.rotateTo, bindArray(120));
         onClickId('id_90', diag.rotateTo, bindArray(90));
         onClickId('id_72', diag.rotateTo, bindArray(72));
         onClickId('id_60', diag.rotateTo, bindArray(60));
-        onClickId('id_45', diag.rotateTo, bindArray(45));
-        onClickId('id_40', diag.rotateTo, bindArray(40));
-        onClickId('id_36', diag.rotateTo, bindArray(36));
       },
     });
 
