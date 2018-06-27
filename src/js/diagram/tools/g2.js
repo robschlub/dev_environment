@@ -769,10 +769,11 @@ type linearPathOptionsType = {
 };
 type curvedPathOptionsType = {
   // path: '(Point, Point, number) => Point';
-  direction: number;
+  rot: number;
   magnitude: number;
   offset: number;
   controlPoint: Point | null;
+  direction: '' | 'up' | 'left' | 'down' | 'right';
 };
 export type pathOptionsType = curvedPathOptionsType & linearPathOptionsType;
 
@@ -786,10 +787,35 @@ function curvedPath(
   const angle = Math.atan2(delta.y, delta.x);
   const midPoint = start.add(new Point(delta.x * o.offset, delta.y * o.offset));
   const dist = delta.toPolar().mag * o.magnitude;
-  const controlPoint = new Point(
-    midPoint.x + dist * Math.cos(angle + o.direction * Math.PI / 2),
-    midPoint.y + dist * Math.sin(angle + o.direction * Math.PI / 2),
-  );
+  let { controlPoint } = options;
+  if (controlPoint == null) {
+    const { direction } = options;
+    let xDelta = Math.cos(angle + o.rot * Math.PI / 2);
+    let yDelta = Math.sin(angle + o.rot * Math.PI / 2);
+    if (direction === 'up') {
+      if (yDelta < 0) {
+        yDelta = Math.sin(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'down') {
+      if (yDelta > 0) {
+        yDelta = Math.sin(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'left') {
+      if (xDelta > 0) {
+        xDelta = Math.cos(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'right') {
+      if (xDelta < 0) {
+        xDelta = Math.cos(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    }
+
+    controlPoint = new Point(
+      midPoint.x + dist * xDelta,
+      midPoint.y + dist * yDelta,
+    );
+  }
+
   const p0 = start;
   const p1 = controlPoint;
   const p2 = start.add(delta);

@@ -5,7 +5,7 @@ import Diagram from '../../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
-import { Point, Transform, minAngleDiff, normAngle, curvedPath } from '../../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 import makeSlider from '../../../LessonsCommon/slider';
 import type { sliderType } from '../../../LessonsCommon/slider';
@@ -742,21 +742,28 @@ class CircleCollection extends DiagramElementCollection {
       this._arcEquation._radius.animate.transform.translation.options;
     const angleOptions =
       this._arcEquation._angle.animate.transform.translation.options;
+    radiusOptions.direction = 'down';
+    angleOptions.direction = 'down';
+    angleOptions.magnitude = 0.3;
+    radiusOptions.magnitude = 0.7;
 
     if (leftSide === 'arc') {
-      arcOptions.direction = -1;
-      radiusOptions.direction = -1;
-      angleOptions.direction = -1;
+      arcOptions.rot = -1;
+      // arcOptions.controlPoint = new Point(2, 2);
+      // radiusOptions.rot = -1;
+      // angleOptions.rot = -1;
       this.arcEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'radius') {
-      arcOptions.direction = 1;
-      radiusOptions.direction = 1;
-      angleOptions.direction = 1;
+      arcOptions.rot = 1;
+      // radiusOptions.rot = 1;
+      // radiusOptions.direction = 'down';
+      // angleOptions.rot = 1;
+      // angleOptions.direction = 'down';
       this.radiusEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'angle') {
-      arcOptions.direction = 1;
-      radiusOptions.direction = 1;
-      angleOptions.direction = 1;
+      arcOptions.rot = 1;
+      // radiusOptions.rot = 1;
+      // angleOptions.rot = 1;
       this.angleEqn.animateTo(1, 2, this._arcEquation._equals);
     }
     this.diagram.animateNextFrame();

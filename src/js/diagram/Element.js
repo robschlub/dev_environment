@@ -47,10 +47,11 @@ class AnimationPhase {
     animationStyle: (number) => number = tools.easeinout,
     translationStyle: 'linear' | 'curved' = 'linear',
     translationOptions: pathOptionsType = {
-      direction: 1,
+      rot: 1,
       magnitude: 0.5,
       offset: 0.5,
       controlPoint: null,
+      direction: '',
     },
   ) {
     this.targetTransform = transform.copy();
@@ -321,10 +322,11 @@ class DiagramElement {
         translation: {
           style: 'linear',
           options: {
-            direction: 1,
+            rot: 1,
             magnitude: 0.5,
             offset: 0.5,
             controlPoint: null,
+            direction: '',
           },
         },
         callback: null,
