@@ -69,3 +69,20 @@ body {
 .angle_text {
   color: map-get($colors, angle);
 }
+
+.lesson__common_angles_table {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.55;
+  width: 40%;
+}
+
+.lesson__common_angles_table td:first-child {
+  width: 60%;
+}
+
+.lesson__common_angles_table td:last-child {
+  text-align: center;
+}
+
+// .lesson__common_angles_table td {
+//   height: 14.28%;
+// }

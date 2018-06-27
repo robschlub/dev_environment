@@ -5,6 +5,7 @@ import {
   centerVH, centerV, toHTML, clickWord,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
+import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 
 import lessonLayout from './layout';
 
@@ -755,6 +756,96 @@ class Content extends LessonContent {
           The number is only used when a calculation needs to be done.
         </p>
       `),
+    });
+    this.addSection({
+      title: 'Common Angles',
+      setContent: () => {
+        const fraction = (id: string, numerator: string, denominator: string) => {
+          const eqn = new HTMLEquation(`${id}_${numerator}_${denominator}`);
+          eqn.createEq([eqn.frac(numerator, denominator)]);
+          return eqn.render();
+        };
+        const _2pi = '2&pi;';
+        const _pi = '&pi;';
+        const _3piOn2 = fraction('id', '3&pi;', '2');
+        const _4piOn3 = fraction('id', '4&pi;', '3');
+        const _2piOn3 = fraction('id', '2&pi;', '3');
+        const _piOn2 = fraction('id', '&pi;', '2');
+        const _piOn3 = fraction('id', '&pi;', '3');
+        // const _piOn4 = fraction('id', '&pi;', '4');
+        // const eqn = new HTMLEquation('id_eqn');
+        // eqn.createEq([eqn.frac('1', '2')]);
+        return `
+          <p>
+            Let's look at some angles in degrees and radians
+          </p>
+          <p style="margin-top: 4%">
+          <table class="lesson__table lesson__common_angles_table">
+            <tr>
+              <td>Full circle</td><td>|_360deg|</td><td>${_2pi}</td>
+            </tr>
+            <tr>
+              <td>Three quarter circle</td><td>|_270deg|</td><td>${_3piOn2}</td>
+            </tr>
+            <tr>
+              <td>Two third circle</td><td>|_240deg|</td><td>${_4piOn3}</td>
+            </tr>
+            <tr>
+              <td>Half circle</td><td>|_180deg|</td><td>${_pi}</td>
+            </tr>
+            <tr>
+              <td>One third circle</td><td>|_120deg|</td><td>${_2piOn3}</td>
+            </tr>
+            <tr>
+              <td>One quarter circle</td><td>|_90deg|</td><td>${_piOn2}</td>
+            </tr>
+            <tr>
+              <td>One sixth circle</td><td>|_60deg|</td><td>${_piOn3}</td>
+            </tr>
+          </table>
+          </p>
+        `;
+      }, 
+      modifiers: {
+        _360deg: actionWord('360&deg;', 'id_360', colors.diagram.text.keyword),
+        _270deg: actionWord('270&deg;', 'id_270', colors.diagram.text.keyword),
+        _240deg: actionWord('240&deg;', 'id_240', colors.diagram.text.keyword),
+        _180deg: actionWord('180&deg;', 'id_180', colors.diagram.text.keyword),
+        _120deg: actionWord('120&deg;', 'id_120', colors.diagram.text.keyword),
+        _90deg: actionWord('90&deg;', 'id_90', colors.diagram.text.keyword),
+        _60deg: actionWord('60&deg;', 'id_60', colors.diagram.text.keyword),
+      },
+      setEnterState: () => {
+        diag.updateRotation();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+      show: [
+        circle._angle,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'right');
+      },
+      setSteadyState: () => {
+        diag.resetCircle('right');
+        diag._angleText.transform.updateTranslation(layout.angleEqualsText.top);
+        diag.showDegrees();
+        const bindArray = deg => [diag, deg / 180 * Math.PI, 0, 1, () => {}];
+        onClickId('id_angle', diag.pulseAngle, [diag]);
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        onClickId('id_360', diag.rotateTo, bindArray(359.99));
+        onClickId('id_270', diag.rotateTo, bindArray(270));
+        onClickId('id_240', diag.rotateTo, bindArray(240));
+        onClickId('id_180', diag.rotateTo, bindArray(180));
+        onClickId('id_120', diag.rotateTo, bindArray(120));
+        onClickId('id_90', diag.rotateTo, bindArray(90));
+        onClickId('id_72', diag.rotateTo, bindArray(72));
+        onClickId('id_60', diag.rotateTo, bindArray(60));
+      },
     });
 
 
