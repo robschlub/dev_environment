@@ -187,15 +187,36 @@ class DiagramElement {
   // Callbacks
   onClick: ?(?mixed) => void;
   callback: ?(?mixed) => void;             // ending animation or moving freely
-  colorAnimationCallback: ?(?mixed) => void;
+  // colorAnimationCallback: ?(?mixed) => void;
   customAnimationCallback: ?(?mixed) => void;
   setTransformCallback: (Transform) => void; // element.transform is updated
 
   animationPlan: Array<AnimationPhase>;    // Animation plan
-  colorAnimationPlan: Array<ColorAnimationPhase>;
+  // colorAnimationPlan: Array<ColorAnimationPhase>;
   customAnimationPlan: Array<CustomAnimationPhase>;
   color: Array<number>;           // For the future when collections use color
-  toDisolve: '' | 'in' | 'out';
+  // toDisolve: '' | 'in' | 'out';
+  animate: {
+    transform: {
+      plan: Array<AnimationPhase>;
+      translation: {
+        path: (Point, Point, number) => Point;
+        direction: 'positive' | 'negative';
+        magnitude: number;
+        offset: number;
+      };
+      callback: ?(?mixed) => void;
+    };
+    custom: {
+      plan: Array<CustomAnimationPhase>;
+      callback: ?(?mixed) => void;
+    };
+    color: {
+      toDisolve: '' | 'in' | 'out';
+      plan: Array<ColorAnimationPhase>;
+      callback: ?(?mixed) => void;
+    };
+  }
   move: {
     maxTransform: Transform,
     minTransform: Transform,
@@ -279,10 +300,30 @@ class DiagramElement {
     this.callback = null;
     this.onClick = null;
     this.animationPlan = [];
-    this.colorAnimationPlan = [];
+    this.animate = {
+      color: {
+        plan: [],
+        toDisolve: '',
+        callback: null,
+      },
+      transform: {
+        plan: [],
+        translation: {
+          path: linearPath,
+          direction: 'positive',
+          magnitude: 0.5,
+          offset: 0.5,
+        },
+        callback: null,
+      },
+      custom: {
+        plan: [],
+        callback: null,
+      },
+    };
     this.customAnimationPlan = [];
     this.diagramLimits = diagramLimits;
-    this.toDisolve = '';
+    // this.animate.color.toDisolve = '';
     //   min: new Point(-1, -1),
     //   max: new Point(1, 1),
     // }
@@ -652,7 +693,7 @@ class DiagramElement {
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
-        if (this.state.colorAnimation.currentPhaseIndex < this.colorAnimationPlan.length - 1) {
+        if (this.state.colorAnimation.currentPhaseIndex < this.animate.color.plan.length - 1) {
           // Set current transform to the end of the current phase
           this.setColor(this.calcNextAnimationColor(phase.time));
 
@@ -768,16 +809,16 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.stopAnimatingColor();
-    this.colorAnimationPlan = [];
+    this.animate.color.plan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.colorAnimationPlan.push(phases[i]);
+      this.animate.color.plan.push(phases[i]);
     }
-    if (this.colorAnimationPlan.length > 0) {
+    if (this.animate.color.plan.length > 0) {
       if (callback) {
-        this.colorAnimationCallback = callback;
+        this.animate.color.callback = callback;
       }
-      this.state.disolving = this.toDisolve;
-      this.toDisolve = '';
+      this.state.disolving = this.animate.color.toDisolve;
+      this.animate.color.toDisolve = '';
       this.state.isAnimatingColor = true;
       this.state.colorAnimation.currentPhaseIndex = 0;
       this.animateColorPhase(this.state.colorAnimation.currentPhaseIndex);
@@ -809,7 +850,7 @@ class DiagramElement {
   }
 
   animateColorPhase(index: number): void {
-    this.state.colorAnimation.currentPhase = this.colorAnimationPlan[index];
+    this.state.colorAnimation.currentPhase = this.animate.color.plan[index];
     this.state.colorAnimation.currentPhase.start(this.color.slice());
   }
   animateCustomPhase(index: number): void {
@@ -836,22 +877,22 @@ class DiagramElement {
 
   stopAnimatingColor(result: ?mixed): void {
     this.state.isAnimatingColor = false;
-    if (this.colorAnimationPlan.length) {
+    if (this.animate.color.plan.length) {
       if (this.state.disolving === 'in') {
-        this.setColor(this.colorAnimationPlan.slice(-1)[0].targetColor.slice());
+        this.setColor(this.animate.color.plan.slice(-1)[0].targetColor.slice());
         this.state.disolving = '';
       } else if (this.state.disolving === 'out') {
         this.hide();
-        this.setColor(this.colorAnimationPlan.slice(-1)[0].startColor.slice());
+        this.setColor(this.animate.color.plan.slice(-1)[0].startColor.slice());
         // Do not move this reset out of the if statement as stopAnimatingColor
         // is called at the start of an new animation and therefore the
         // disolving state will be lost.
         this.state.disolving = '';
       }
     }
-    this.colorAnimationPlan = [];
-    const callback = this.colorAnimationCallback;
-    this.colorAnimationCallback = null;
+    this.animate.color.plan = [];
+    const { callback } = this.animate.color;
+    this.animate.color.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
@@ -951,7 +992,7 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.toDisolve = 'in';
+      this.animate.color.toDisolve = 'in';
       // this.state.disolving = 'in';
       this.animateColorPlan([phase], checkCallback(callback));
     }
@@ -968,7 +1009,7 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
-    this.toDisolve = 'in';
+    this.animate.color.toDisolve = 'in';
     // this.state.disolving = 'in';
     this.animateColorPlan([phase1, phase2], checkCallback(callback));
   }
@@ -981,7 +1022,7 @@ class DiagramElement {
     targetColor[3] = 0;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.toDisolve = 'out';
+      this.animate.color.toDisolve = 'out';
       // this.state.disolving = 'out';
       this.animateColorPlan([phase], checkCallback(callback));
     }
