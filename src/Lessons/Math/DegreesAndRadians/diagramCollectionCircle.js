@@ -199,11 +199,11 @@ function makeRadiusOnArc(shapes: Object) {
     new Transform().rotate(0),
   );
   radiusArc.add('r1', r1);
-  radiusArc.add('r2', r1.copy(new Transform().rotate(1)));
-  radiusArc.add('r3', r1.copy(new Transform().rotate(2)));
-  radiusArc.add('r4', r1.copy(new Transform().rotate(3)));
-  radiusArc.add('r5', r1.copy(new Transform().rotate(4)));
-  radiusArc.add('r6', r1.copy(new Transform().rotate(5)));
+  radiusArc.add('r2', r1.copy(new Transform().rotate(1.02)));
+  radiusArc.add('r3', r1.copy(new Transform().rotate(2.02)));
+  radiusArc.add('r4', r1.copy(new Transform().rotate(3.02)));
+  radiusArc.add('r5', r1.copy(new Transform().rotate(4.02)));
+  radiusArc.add('r6', r1.copy(new Transform().rotate(5.02)));
 
   radiusArc.stepIn = (time: number) => {
     const timePerSegment = time / 6;
@@ -749,12 +749,14 @@ class CircleCollection extends DiagramElementCollection {
     radiusOptions.magnitude = 0.7;
     arcOptions.direction = 'up';
 
+    const { scale } = layout.arcEquation;
+
     if (leftSide === 'arc') {
-      this.arcEqn.animateTo(1, 2, this._arcEquation._equals);
+      this.arcEqn.animateTo(scale, 2, this._arcEquation._equals);
     } else if (leftSide === 'radius') {
-      this.radiusEqn.animateTo(1, 2, this._arcEquation._equals);
+      this.radiusEqn.animateTo(scale, 2, this._arcEquation._equals);
     } else if (leftSide === 'angle') {
-      this.angleEqn.animateTo(1, 2, this._arcEquation._equals);
+      this.angleEqn.animateTo(scale, 2, this._arcEquation._equals);
     }
     this.diagram.animateNextFrame();
   }
@@ -808,17 +810,19 @@ class CircleCollection extends DiagramElementCollection {
     }
   }
 
-  resetCircle(position: string = 'center') {
+  resetCircle(position: string = 'center', angle: ?number) {
     this._circle.transform.updateTranslation(layout.circle[position]);
     this._circle.transform.updateScale(1, 1);
     const r = this._circle._radius.transform.r();
-    if (r != null) {
-      let angle = r;
+    if (r != null && angle == null) {
+      let newAngle = r;
       if (r < layout.circle.angle.small) {
-        angle = layout.circle.angle.small;
+        newAngle = layout.circle.angle.small;
       } else if (r > layout.circle.angle.large) {
-        angle = layout.circle.angle.large;
+        newAngle = layout.circle.angle.large;
       }
+      this.setRotation(newAngle);
+    } else if (angle != null) {
       this.setRotation(angle);
     }
   }

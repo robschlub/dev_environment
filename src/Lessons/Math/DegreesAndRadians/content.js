@@ -36,7 +36,7 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: `
-        <p>
+        <p style="text-align:center;margin-top:8%">
           A |circle| is formed by |rotating| a line around a |fixed| end.
         </p>
       `,
@@ -58,12 +58,15 @@ class Content extends LessonContent {
         circle._arc,
         circle._anchor,
       ],
+      setSteadyState: () => {
+        diag.setRotation(Math.PI * 1.999);
+      },
     });
 
     this.addSection({
       setContent: `
         <p>
-          An |corner| is formed by |rotating| one |line| relative to |another|. The |angle| is the amount of rotation.
+          A |corner| is formed by |rotating| one |line| relative to |another|. The amount of rotation is called |angle|.
         </p>
       `,
       modifiers: {
@@ -78,11 +81,13 @@ class Content extends LessonContent {
       // ],
       setEnterState: () => {
         diag.resetCircle('center');
-        // diag.setRotation(0.001);
         diag.updateRotation();
       },
-      transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'center');
+      transitionFromPrev: (done) => {
+        diag.transitionCircle(done, 'center', Math.PI / 3);
+      },
+      setSteadyState: () => {
+        diag.setRotation(Math.PI / 3);
       },
       showOnly: [
         circle,
@@ -120,20 +125,23 @@ class Content extends LessonContent {
         circle._angle,
       ],
       setSteadyState: () => {
-        diag.resetCircle('center');
+        diag.resetCircle('center', Math.PI * 1.999);
       },
     });
     this.addSection({
       setContent: centerV(`
         <p class="lesson__p_width_50">
-          |Any| |angle| less than maximum, will only form part of a circle, called an |arc|.
+          |Rotating| the line any |angle| less than maximum, will only form part of a circle.
+        </p>
+        <p>
+          This part is named an |arc|.
         </p>
         <p class="lesson__p_width_50">
           The name |arc1| comes from the |Latin| word |arcus| and means a |bow| or |arch|.
         </p>
       `),
       modifiers: {
-        Any: click(diag.rotateToRandom, [diag], colors.action),
+        Rotating: click(diag.rotateToRandom, [diag], colors.action),
         arc: click(diag.pulseArc, [diag], colors.circle),
         arc1: clickWord('arc', 'id_arc', diag.pulseArc, [diag], colors.circle),
         angle: click(diag.pulseAngle, [diag], colors.angleText),
@@ -209,7 +217,7 @@ class Content extends LessonContent {
         circle._angle,
       ],
 
-      transitionFromAny: (done) => {
+      transitionFromNext: (done) => {
         diag.transitionCircle(done, 'center');
       },
       setSteadyState: () => {
@@ -335,7 +343,7 @@ class Content extends LessonContent {
       setContent: () =>
         `
           <p>This means it's easy to work with fractions of a circle.</p>
-          <ul style="margin-top:10%">
+          <ul style="margin-top:15%;margin-left:15%">
                 <li>${String.fromCharCode(190)} circle =   |_270deg|</li>
                 <li>${String.fromCharCode(8532)} circle = |_240deg|</li>
                 <li>${String.fromCharCode(189)} circle = |_180deg|</li>
@@ -353,9 +361,6 @@ class Content extends LessonContent {
         _90deg: actionWord('90&deg;', 'id_90', colors.diagram.text.keyword),
         _72deg: actionWord('72&deg;', 'id_72', colors.diagram.text.keyword),
         _60deg: actionWord('60&deg;', 'id_60', colors.diagram.text.keyword),
-        // _45deg: actionWord('45&deg;', 'id_45', colors.diagram.text.keyword),
-        // _40deg: actionWord('40&deg;', 'id_40', colors.diagram.text.keyword),
-        // _36deg: actionWord('36&deg;', 'id_36', colors.diagram.text.keyword),
       },
       setEnterState: () => {
         diag.updateRotation();
@@ -490,7 +495,7 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: `
-        <p>
+        <p style="margin-top:10%">
           So we can see when the angle is:
           <ul>
             <li>|one_radian|: </li>
@@ -501,7 +506,7 @@ class Content extends LessonContent {
             <li class="lesson__li_indent">|arc_length| = |five| |radius_lengths|.</li>
           </ul>
         </p>
-        <p>
+        <p style="margin-top:7%">
           Or in general:
         </p>
       `,
@@ -539,12 +544,12 @@ class Content extends LessonContent {
       //   diag._arcEquation._v,
       // ],
       transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'mostRight');
+        diag.transitionCircle(done, 'middleMostRight');
       },
       setSteadyState: () => {
         diag._arcEquation.showAll();
         diag._arcEquation.hideOnly([diag._arcEquation._v]);
-        diag.resetCircle('mostRight');
+        diag.resetCircle('middleMostRight');
         function rotateToAndPulse(angle: number, num: number) {
           diag.rotateTo(angle, 2, 1.5, diag.pulseRadiusOnArc.bind(diag, num));
         }
@@ -612,11 +617,13 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: `
-        <p>
+        <p style="margin-top: 5%;text-align:center">
           How many radians are there in a half circle and full circle?
         </p>
-        <p>A |half_circle| has about 3.14 radians.</p>
-        <p>A |full_circle| has about 6.28 radians.</p>
+        <ul style="margin-top: 23%">
+        <li>A |half_circle| has about 3.14 radians.</li>
+        <li>A |full_circle| has about 6.28 radians.</li>
+        </ul>
       `,
       modifiers: {
         half_circle: click(diag.rotateTo, [diag, Math.PI], colors.action),
@@ -633,8 +640,8 @@ class Content extends LessonContent {
         circle._radiusOnArc,
       ],
       setSteadyState: () => {
-        diag.resetCircle('mostRight');
-        diag._angleText.setPosition(layout.angleEqualsText.leftCenter);
+        diag.resetCircle('middleMostRight');
+        diag._angleText.setPosition(layout.angleEqualsText.bottomMostRight);
         diag.showRadians();
         diag.updateRotation();
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
@@ -653,6 +660,9 @@ class Content extends LessonContent {
         </p>
       `),
     });
+
+    // TODO include how to calculate this number here
+
     this.addSection({
       setContent: centerV(`
         <p>
@@ -686,11 +696,11 @@ class Content extends LessonContent {
     this.addSection({
       title: 'eqn',
       setContent: `
-        <p>
+        <p style="margin-top: 15%">
           But as radians relate |angle|, |radius| and |arc_length|, it means you can calculate one property from the other two.
         </p>
         <p>
-          You no longer need to measure all three properties of the circle, you only need to measure the two easiest. 
+          You only need to |measure the two easiest properties|, to have all three.
         </p>
       `,
       modifiers: {
@@ -699,9 +709,10 @@ class Content extends LessonContent {
         arc_length: click(diag.animateEquation, [diag, 'arc'], colors.arc),
       },
       setEnterState: () => {
-        diag.radiusEqn.arrange(1, diag._arcEquation._equals);
-        diag.angleEqn.arrange(1, diag._arcEquation._equals);
-        diag.arcEqn.arrange(1, diag._arcEquation._equals);
+        const { scale } = layout.arcEquation;
+        diag.radiusEqn.arrange(scale, diag._arcEquation._equals);
+        diag.angleEqn.arrange(scale, diag._arcEquation._equals);
+        diag.arcEqn.arrange(scale, diag._arcEquation._equals);
         diag._arcEquation.setPosition(layout.arcEquation.centerBottom);
       },
       setSteadyState: () => {
@@ -716,19 +727,19 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: centerV(`
-        <p>
+        <p style="text-align:center">
           This is |very powerful|. 
         </p>
         <p>
-          So powerful that people deal with this weird
-          angular size because the |advantages outweigh the disadvantages|.
+          So powerful that people work with this weird
+          angular size because its |advantages outweigh the disadvantages|.
         </p>
       `),
     });
     this.addSection({
       setContent: centerV(`
         <p>
-          One way they deal with it, is instead of writing out the approximate value |3.14159...| each time, they just substite the value with the greek letter |&pi;|.
+          One way they work with it, is instead of writing out the approximate value |3.14159...| each time, they substitute the value with the greek letter |&pi;| (prounounced |pi|).
         </p>
         `),
     });
@@ -745,6 +756,7 @@ class Content extends LessonContent {
         </p>
       `),
     });
+
 
 /* eslint-disable */
 //     '<p>Rotate the stick, till the |_arc_length| is the |_same| as the stick length (|_radius|).</p>' +
