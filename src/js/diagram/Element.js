@@ -186,12 +186,12 @@ class DiagramElement {
 
   // Callbacks
   onClick: ?(?mixed) => void;
-  callback: ?(?mixed) => void;             // ending animation or moving freely
+  // callback: ?(?mixed) => void;             // ending animation or moving freely
   // colorAnimationCallback: ?(?mixed) => void;
   // customAnimationCallback: ?(?mixed) => void;
   setTransformCallback: (Transform) => void; // element.transform is updated
 
-  animationPlan: Array<AnimationPhase>;    // Animation plan
+  // animationPlan: Array<AnimationPhase>;    // Animation plan
   // colorAnimationPlan: Array<ColorAnimationPhase>;
   // customAnimationPlan: Array<CustomAnimationPhase>;
   color: Array<number>;           // For the future when collections use color
@@ -297,9 +297,9 @@ class DiagramElement {
     this.isTouchable = false;
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
-    this.callback = null;
+    // this.callback = null;
     this.onClick = null;
-    this.animationPlan = [];
+    // this.animationPlan = [];
     this.animate = {
       color: {
         plan: [],
@@ -548,7 +548,7 @@ class DiagramElement {
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
-        if (this.state.animation.currentPhaseIndex < this.animationPlan.length - 1) {
+        if (this.state.animation.currentPhaseIndex < this.animate.transform.plan.length - 1) {
           // Set current transform to the end of the current phase
           this.setTransform(this.calcNextAnimationTransform(phase.time));
 
@@ -790,13 +790,13 @@ class DiagramElement {
     this.stopAnimating(false);
     this.stopMovingFreely(false);
     this.stopBeingMoved();
-    this.animationPlan = [];
+    this.animate.transform.plan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.animationPlan.push(phases[i]);
+      this.animate.transform.plan.push(phases[i]);
     }
-    if (this.animationPlan.length > 0) {
+    if (this.animate.transform.plan.length > 0) {
       if (callback) {
-        this.callback = callback;
+        this.animate.transform.callback = callback;
       }
       this.state.isAnimating = true;
       this.state.animation.currentPhaseIndex = 0;
@@ -845,7 +845,7 @@ class DiagramElement {
   // Start the animation of a phase - this should only be called by methods
   // internal to this class.
   animatePhase(index: number): void {
-    this.state.animation.currentPhase = this.animationPlan[index];
+    this.state.animation.currentPhase = this.animate.transform.plan[index];
     this.state.animation.currentPhase.start(this.transform.copy());
   }
 
@@ -861,10 +861,10 @@ class DiagramElement {
   // When animation is stopped, any callback associated with the animation
   // needs to be called, with whatever is passed to stopAnimating.
   stopAnimating(result: ?mixed): void {
-    this.animationPlan = [];
+    this.animate.transform.plan = [];
     this.state.isAnimating = false;
-    const { callback } = this;
-    this.callback = null;
+    const { callback } = this.animate.transform;
+    this.animate.transform.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
@@ -1174,7 +1174,7 @@ class DiagramElement {
     this.stopAnimating(false);
     this.stopBeingMoved();
     if (callback) {
-      this.callback = callback;
+      this.animate.transform.callback = callback;
     }
     this.state.isMovingFreely = true;
     this.state.movement.previousTime = -1;
@@ -1187,13 +1187,13 @@ class DiagramElement {
   stopMovingFreely(result: ?mixed): void {
     this.state.isMovingFreely = false;
     this.state.movement.previousTime = -1;
-    if (this.callback) {
+    if (this.animate.transform.callback) {
       if (result !== null && result !== undefined) {
-        this.callback(result);
+        this.animate.transform.callback(result);
       } else {
-        this.callback();
+        this.animate.transform.callback();
       }
-      this.callback = null;
+      this.animate.transform.callback = null;
     }
   }
 
