@@ -34,6 +34,10 @@ import * as m2 from './m2';
 //   // isInPolygon: boolean;
 //   // isOnPolygon: boolean;
 // };
+function quadraticBezier(P0: number, P1: number, P2: number, t: number) {
+  return (1 - t) * ((1 - t) * P0 + t * P1) + t * ((1 - t) * P1 + t * P2);
+}
+
 class Rect {
   left: number;
   top: number;
@@ -124,6 +128,12 @@ class Point {
   transformBy(matrix: Array<number>) {
     const transformedPoint = m2.transform(matrix, this.x, this.y);
     return new Point(transformedPoint[0], transformedPoint[1]);
+  }
+
+  quadraticBezier(p1: Point, p2: Point, t: number) {
+    const bx = quadraticBezier(this.x, p1.x, p2.x, t);
+    const by = quadraticBezier(this.y, p1.y, p2.y, t);
+    return new Point(bx, by);
   }
 
   rotate(angle: number, center?: Point) {
@@ -1249,6 +1259,28 @@ function linearPath(
   return start.add(delta.x * percent, delta.y * percent);
 }
 
+function curvedPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+) {
+  // console.log("here");
+  const angle = Math.atan2(delta.y, delta.x);
+  const midPoint = start.add(new Point(delta.x / 2, delta.y / 2));
+  const dist = delta.toPolar().mag;
+  const controlPoint = new Point(
+    midPoint.x + dist / 2 * Math.cos(angle + Math.PI / 2),
+    midPoint.y + dist / 2 * Math.sin(angle + Math.PI / 2),
+  );
+  const p0 = start;
+  const p1 = controlPoint;
+  const p2 = start.add(delta);
+  const t = percent;
+  const bx = quadraticBezier(p0.x, p1.x, p2.x, t);
+  const by = quadraticBezier(p0.y, p1.y, p2.y, t);
+  return new Point(bx, by);
+}
+
 function spaceToSpaceTransform(
   s1: {
     x: {bottomLeft: number, width: number},
@@ -1334,4 +1366,6 @@ export {
   spaceToSpaceTransform,
   getBoundingRect,
   linearPath,
+  curvedPath,
+  quadraticBezier,
 };

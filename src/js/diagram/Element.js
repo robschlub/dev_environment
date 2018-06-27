@@ -2,7 +2,7 @@
 
 import {
   Transform, Point, TransformLimit, Rect,
-  Translation, spaceToSpaceTransform, getBoundingRect, linearPath,
+  Translation, spaceToSpaceTransform, getBoundingRect, linearPath, curvedPath,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
@@ -36,7 +36,7 @@ class AnimationPhase {
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
-    translationPath: (Point, Point, number) => Point = linearPath,
+    translationPath: (Point, Point, number) => Point = curvedPath,
   ) {
     this.targetTransform = transform.copy();
     this.time = time;
@@ -414,16 +414,16 @@ class DiagramElement {
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): Transform {
     const phase = this.state.animation.currentPhase;
-    const start = phase.startTransform;
-    const delta = phase.deltaTransform;
+    const start = phase.startTransform.copy();
+    const delta = phase.deltaTransform.copy();
     const percentTime = elapsedTime / phase.time;
     const percentComplete = phase.animationStyle(percentTime);
 
     const p = percentComplete;
-    let next = delta.copy().constant(p);
+    // let next = delta.copy().constant(p);
 
-    next = start.add(delta.mul(next));
-    // const next = start.toDelta(delta, p, phase.translationPath);
+    // next = start.add(delta.mul(next));
+    const next = start.toDelta(delta, p, phase.translationPath);
     return next;
   }
 
