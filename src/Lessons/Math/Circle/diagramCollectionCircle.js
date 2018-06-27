@@ -770,7 +770,7 @@ class CircleCollection extends DiagramElementCollection {
     radius: number,
   ) {
     // eslint-disable-next-line no-param-reassign
-    shape.callback = null;
+    shape.animate.transform.callback = null;
     shape.stopAnimating(false);
     shape.stopAnimatingColor(false);
     // eslint-disable-next-line no-param-reassign
