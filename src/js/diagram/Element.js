@@ -1318,7 +1318,9 @@ class DiagramElement {
   stopPulsing(result: ?mixed) {
     this.state.isPulsing = false;
     if (this.pulse.callback) {
-      this.pulse.callback(result);
+      const { callback } = this.pulse;
+      this.pulse.callback = null;
+      callback(result);
     }
   }
 

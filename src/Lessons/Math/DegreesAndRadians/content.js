@@ -679,7 +679,7 @@ class Content extends LessonContent {
           For example, if you want to use the angle of a |quarter circle|, instead of a simple calculation in degrees:
         </p>
         <p style="text-align: center">|360 ${String.fromCharCode(247)} 4 = 90|</p>
-        <p>you need to whip out the calculator for radians:</p>
+        <p>you might need to use a calculator for radians:</p>
         <p style="text-align: center">|6.283185... ${String.fromCharCode(247)} 4 = 1.570796...|</p>
       `),
     });

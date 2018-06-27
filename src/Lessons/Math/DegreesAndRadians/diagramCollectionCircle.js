@@ -195,15 +195,20 @@ function makeRadiusOnArc(shapes: Object) {
   const radiusArc = shapes.collection(new Transform().translate(0, 0));
   const r1 = shapes.polygon(
     layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
-    Math.floor(layout.anglePoints / Math.PI / 2) - 1, colors.radiusLight,
+    Math.floor(layout.anglePoints / Math.PI / 2) , colors.radiusLight,
     new Transform().rotate(0),
   );
+  const r2 = shapes.polygon(
+    layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
+    Math.floor(layout.anglePoints / Math.PI / 2) - 1, colors.radiusLight,
+    new Transform().rotate(1.02),
+  );
   radiusArc.add('r1', r1);
-  radiusArc.add('r2', r1.copy(new Transform().rotate(1.02)));
-  radiusArc.add('r3', r1.copy(new Transform().rotate(2.02)));
-  radiusArc.add('r4', r1.copy(new Transform().rotate(3.02)));
-  radiusArc.add('r5', r1.copy(new Transform().rotate(4.02)));
-  radiusArc.add('r6', r1.copy(new Transform().rotate(5.02)));
+  radiusArc.add('r2', r2);
+  radiusArc.add('r3', r2.copy(new Transform().rotate(2.02)));
+  radiusArc.add('r4', r2.copy(new Transform().rotate(3.02)));
+  radiusArc.add('r5', r2.copy(new Transform().rotate(4.02)));
+  radiusArc.add('r6', r2.copy(new Transform().rotate(5.02)));
 
   radiusArc.stepIn = (time: number) => {
     const timePerSegment = time / 6;
@@ -660,9 +665,10 @@ class CircleCollection extends DiagramElementCollection {
   arcRadius() {
     const r = this._circle._radius.transform.r();
     if (r !== null && r !== undefined) {
-      this._circle._radiusOnArc.hideAll();
+      // need two stops here to stop
       this._circle._radiusToArc.stop();
       this._circle._radiusOnArc.stop();
+      this._circle._radiusOnArc.hideAll();
       this._circle._radiusToArc.toArc(0);
       this._circle._radiusToArc.showAll();
       this._circle._radiusToArc.transform.updateRotation(Math.PI / 2);
