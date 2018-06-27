@@ -669,7 +669,7 @@ class Diagram {
   // coming to a stop.
   touchDownHandler(clientPoint: Point) {
     if (this.inTransition) {
-      return;
+      return false;
     }
 
     // Get the touched point in clip space
@@ -697,6 +697,10 @@ class Diagram {
     if (this.beingMovedElements.length > 0) {
       this.animateNextFrame();
     }
+    if (touchedElements.length > 0) {
+      return true;
+    }
+    return false;
   }
 
   // Handle touch up, or mouse click up events in the canvas. When an UP even

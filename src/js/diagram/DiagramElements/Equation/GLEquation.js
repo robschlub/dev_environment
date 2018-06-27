@@ -500,6 +500,7 @@ export default class DiagramGLEquation extends Elements {
   dissolveElements(
     elements: Array<DiagramElementPrimative | DiagramElementCollection>,
     appear: boolean = true,
+    delay: number = 0.01,
     time: number = 1,
     callback: ?(?mixed) => void = null,
   ) {
@@ -511,7 +512,7 @@ export default class DiagramGLEquation extends Elements {
     }
     elements.forEach((e) => {
       if (appear) {
-        e.disolveIn(time, callbackToUse);
+        e.disolveInWithDelay(delay, time, callbackToUse);
         callbackToUse = null;
       } else {
         e.disolveOut(time, callbackToUse);
@@ -541,12 +542,9 @@ export default class DiagramGLEquation extends Elements {
     this.calcSize(location, scale);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.dissolveElements(elementsToHide, false, 0.5, null);
-    this.collection.animateToTransforms(
-      animateToTransforms, time, 0,
-      this.dissolveElements.bind(this, elementsToShow, true, 0.5, callback),
-      easeinout,
-    );
+    this.dissolveElements(elementsToHide, false, 0.01, 0.5, null);
+    this.collection.animateToTransforms(animateToTransforms, time, 0);
+    this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
 
   contentToElement(content: EquationInput): Elements {

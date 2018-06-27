@@ -516,7 +516,7 @@ class Content extends LessonContent {
         line: click(diag.pulseRadius, [diag], colors.radius),
         arc_length: click(diag.pulseArc, [diag], colors.arc),
         same: click(diag.rotateTo, [diag, 1, 2, 2], colors.action),
-        radius_length: click(diag.pulseRadiusOnArc, [diag], colors.radiusLight),
+        radius_length: click(diag.pulseRadiusOnArc, [diag, 1], colors.radiusLight),
         angle: click(diag.pulseAngle, [diag], colors.angle),
         // one_radian: toHTML('1 radian', 'id_1_rad', '', colors.radiusLight),
         // two_radians: toHTML('2 radians', 'id_2_rad', '', colors.radiusLight),

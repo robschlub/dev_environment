@@ -866,7 +866,6 @@ class DiagramElement {
       } else {
         callback();
       }
-      // this.callback = null;
     }
   }
 
