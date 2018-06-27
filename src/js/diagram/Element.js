@@ -186,16 +186,10 @@ class DiagramElement {
 
   // Callbacks
   onClick: ?(?mixed) => void;
-  // callback: ?(?mixed) => void;             // ending animation or moving freely
-  // colorAnimationCallback: ?(?mixed) => void;
-  // customAnimationCallback: ?(?mixed) => void;
   setTransformCallback: (Transform) => void; // element.transform is updated
 
-  // animationPlan: Array<AnimationPhase>;    // Animation plan
-  // colorAnimationPlan: Array<ColorAnimationPhase>;
-  // customAnimationPlan: Array<CustomAnimationPhase>;
   color: Array<number>;           // For the future when collections use color
-  // toDisolve: '' | 'in' | 'out';
+
   animate: {
     transform: {
       plan: Array<AnimationPhase>;
@@ -297,9 +291,7 @@ class DiagramElement {
     this.isTouchable = false;
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
-    // this.callback = null;
     this.onClick = null;
-    // this.animationPlan = [];
     this.animate = {
       color: {
         plan: [],
@@ -321,12 +313,7 @@ class DiagramElement {
         callback: null,
       },
     };
-    // this.customAnimationPlan = [];
     this.diagramLimits = diagramLimits;
-    // this.animate.color.toDisolve = '';
-    //   min: new Point(-1, -1),
-    //   max: new Point(1, 1),
-    // }
 
     this.move = {
       maxTransform: this.transform.constant(1000),
@@ -340,10 +327,6 @@ class DiagramElement {
       bounce: true,
       canBeMovedAfterLoosingTouch: false,
     };
-    // this.move.freely = {
-    //   zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
-    //   deceleration: new TransformLimit(1, 1, 1),
-    // };
 
     this.pulse = {
       time: 1,
