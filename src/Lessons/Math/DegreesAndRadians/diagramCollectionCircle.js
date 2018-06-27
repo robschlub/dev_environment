@@ -740,17 +740,17 @@ class CircleCollection extends DiagramElementCollection {
       this._arcEquation._arc.animate.transform.translation.direction = -1;
       this._arcEquation._radius.animate.transform.translation.direction = -1;
       this._arcEquation._angle.animate.transform.translation.direction = -1;
-      this.arcEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
+      this.arcEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'radius') {
       this._arcEquation._arc.animate.transform.translation.direction = 1;
       this._arcEquation._radius.animate.transform.translation.direction = 1;
       this._arcEquation._angle.animate.transform.translation.direction = 1;
-      this.radiusEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
+      this.radiusEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'angle') {
       this._arcEquation._arc.animate.transform.translation.direction = 1;
       this._arcEquation._radius.animate.transform.translation.direction = 1;
       this._arcEquation._angle.animate.transform.translation.direction = 1;
-      this.angleEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
+      this.angleEqn.animateTo(1, 2, this._arcEquation._equals);
     }
     this.diagram.animateNextFrame();
   }

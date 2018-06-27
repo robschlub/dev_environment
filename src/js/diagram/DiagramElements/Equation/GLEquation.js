@@ -487,13 +487,31 @@ export default class DiagramGLEquation extends Elements {
     });
   }
 
-  calcSize(location: Point = new Point(0, 0), scale: number = 1) {
-    const elementsShowing = this.collection.getAllElements()
-      .filter(e => e.isShown);
+  arrange(
+    // location: Point = new Point(0, 0),
+    scale: number = 1,
+    fixElement: DiagramElementPrimative | DiagramElementCollection | null = null,
+  ) {
+    const elementsInEqn = this.getAllElements();
+    const elementsInCollection = this.collection.getAllElements();
+    const elementsCurrentlyShowing = elementsInCollection.filter(e => e.isShown);
     this.collection.hideAll();
     this.collection.show();
-    super.calcSize(location, scale);
-    this.collection.showOnly(elementsShowing);
+    super.calcSize(new Point(0, 0), scale);
+    if (fixElement != null) {
+      const t = fixElement.transform.t();
+      if (t != null) {
+        const delta = new Point(0, 0).sub(t);
+        elementsInEqn.forEach((e) => {
+          const et = e.transform.t();
+          if (et != null) {
+            const etNew = et.add(delta);
+            e.transform.updateTranslation(etNew);
+          }
+        });
+      }
+    }
+    this.collection.showOnly(elementsCurrentlyShowing);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -523,9 +541,10 @@ export default class DiagramGLEquation extends Elements {
 
 
   animateTo(
-    location: Point,
+    // location: Point,
     scale: number,
     time: number = 1,
+    fixElement: DiagramElementPrimative | DiagramElementCollection | null = null,
     callback: ?(?mixed) => void = null,
   ) {
     const allElements = this.collection.getAllElements();
@@ -539,7 +558,7 @@ export default class DiagramGLEquation extends Elements {
 
     const currentTransforms = this.collection.getElementTransforms();
 
-    this.calcSize(location, scale);
+    this.arrange(scale, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
     this.dissolveElements(elementsToHide, false, 0.01, 0.5, null);
