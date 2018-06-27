@@ -188,12 +188,12 @@ class DiagramElement {
   onClick: ?(?mixed) => void;
   callback: ?(?mixed) => void;             // ending animation or moving freely
   // colorAnimationCallback: ?(?mixed) => void;
-  customAnimationCallback: ?(?mixed) => void;
+  // customAnimationCallback: ?(?mixed) => void;
   setTransformCallback: (Transform) => void; // element.transform is updated
 
   animationPlan: Array<AnimationPhase>;    // Animation plan
   // colorAnimationPlan: Array<ColorAnimationPhase>;
-  customAnimationPlan: Array<CustomAnimationPhase>;
+  // customAnimationPlan: Array<CustomAnimationPhase>;
   color: Array<number>;           // For the future when collections use color
   // toDisolve: '' | 'in' | 'out';
   animate: {
@@ -321,7 +321,7 @@ class DiagramElement {
         callback: null,
       },
     };
-    this.customAnimationPlan = [];
+    // this.customAnimationPlan = [];
     this.diagramLimits = diagramLimits;
     // this.animate.color.toDisolve = '';
     //   min: new Point(-1, -1),
@@ -631,7 +631,7 @@ class DiagramElement {
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
-        if (this.state.customAnimation.currentPhaseIndex < this.customAnimationPlan.length - 1) {
+        if (this.state.customAnimation.currentPhaseIndex < this.animate.custom.plan.length - 1) {
           // Set current transform to the end of the current phase
           phase.animationCallback(1);
 
@@ -829,13 +829,13 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.stopAnimatingCustom();
-    this.customAnimationPlan = [];
+    this.animate.custom.plan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.customAnimationPlan.push(phases[i]);
+      this.animate.custom.plan.push(phases[i]);
     }
-    if (this.customAnimationPlan.length > 0) {
+    if (this.animate.custom.plan.length > 0) {
       if (callback) {
-        this.customAnimationCallback = callback;
+        this.animate.custom.callback = callback;
       }
       this.state.isAnimatingCustom = true;
       this.state.customAnimation.currentPhaseIndex = 0;
@@ -854,7 +854,7 @@ class DiagramElement {
     this.state.colorAnimation.currentPhase.start(this.color.slice());
   }
   animateCustomPhase(index: number): void {
-    this.state.customAnimation.currentPhase = this.customAnimationPlan[index];
+    this.state.customAnimation.currentPhase = this.animate.custom.plan[index];
     this.state.customAnimation.currentPhase.start();
   }
 
@@ -903,10 +903,10 @@ class DiagramElement {
   }
 
   stopAnimatingCustom(result: ?mixed): void {
-    this.customAnimationPlan = [];
+    this.animate.custom.plan = [];
     this.state.isAnimatingCustom = false;
-    const callback = this.customAnimationCallback;
-    this.customAnimationCallback = null;
+    const { callback } = this.animate.custom;
+    this.animate.custom.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
