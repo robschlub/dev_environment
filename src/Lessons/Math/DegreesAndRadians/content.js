@@ -2,7 +2,7 @@
 
 import {
   LessonContent, actionWord, onClickId, highlightWord, highlight, click,
-  centerVH, centerV, toHTML,
+  centerVH, centerV, toHTML, clickWord,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 
@@ -107,10 +107,6 @@ class Content extends LessonContent {
         rotated: click(diag.pushRadius, [diag], colors.action),
         line: click(diag.pulseRadius, [diag], colors.radius),
       },
-      setEnterState: () => {
-        diag.resetCircle('center');
-        // diag.setRotation(0.001);
-      },
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'center', Math.PI * 1.999);
       },
@@ -123,33 +119,33 @@ class Content extends LessonContent {
       show: [
         circle._angle,
       ],
+      setSteadyState: () => {
+        diag.resetCircle('center');
+      },
     });
-
     this.addSection({
-      setContent: `
-        <p>
-          |Any| |angle| less than maximum, will only form a part of a circle, called an |arc|.
+      setContent: centerV(`
+        <p class="lesson__p_width_50">
+          |Any| |angle| less than maximum, will only form part of a circle, called an |arc|.
         </p>
-        <p>
-          The word comes from the |Latin| word |arcus| and means a |bow| or |arch|.
+        <p class="lesson__p_width_50">
+          The name |arc1| comes from the |Latin| word |arcus| and means a |bow| or |arch|.
         </p>
-      `,
+      `),
       modifiers: {
         Any: click(diag.rotateToRandom, [diag], colors.action),
         arc: click(diag.pulseArc, [diag], colors.circle),
+        arc1: clickWord('arc', 'id_arc', diag.pulseArc, [diag], colors.circle),
         angle: click(diag.pulseAngle, [diag], colors.angleText),
         Latin: highlight('latin'),
         arcus: highlight('latin'),
         bow: highlight('english'),
         arch: highlight('english'),
       },
-      setEnterState: () => {
-        diag.resetCircle('center');
-        // diag.setRotation(0.001);
+      transitionFromPrev: (done) => {
+        diag.transitionCircle(done, 'mostRight');
       },
-      transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'center', Math.PI / 3);
-      },
+      blank: ['fromPrev'],
       showOnly: [
         circle,
         circle._radius,
@@ -159,67 +155,11 @@ class Content extends LessonContent {
       show: [
         circle._angle,
       ],
+      setSteadyState: () => {
+        diag.resetCircle('mostRight');
+      },
     });
-    // this.addSection({
-    //   title: 'Introduction',
-    //   setContent: () => `
-    //     <p>
-    //     Two |lines| connected at a point for a corner.
-    //     The sharpness of the corner is described by the word |angle|.
-    //     </p>
-    //     <p>
-    //       |Rotate| the |line| to change the angle.
-    //     </p>
-    //     `,
-    //   modifiers: {
-    //     angle: click(diag.pulseAngle, [diag], colors.angleText),
-    //     line: click(diag.pulseRadius, [diag], colors.radius),
-    //     lines: click(diag.pulseLines, [diag], colors.radius),
-    //     // angle: actionWord('Angle', 'id_angle1', colors.angleText),
-    //     // Angle2: actionWord('Angle', 'id_angle2', colors.angleText),
-    //     Rotate: click(diag.pushRadius, [diag], colors.rotation),
-    //   },
-    //   setSteadyState: () => {
-    //     circle.setPosition(layout.circle.center);
-    //     diag.setRotation(layout.circle.angle.small);
-    //     onClickId('id_angle1', diag.pulseAngle, [diag]);
-    //     onClickId('id_angle2', diag.pulseAngle, [diag]);
-    //     if (circle._radius.transform.r() < 0.2) {
-    //       circle._radius.transform.updateRotation(Math.PI / 5);
-    //     }
-    //     diag.updateRotation();
-    //   },
-    //   showOnly: [
-    //     circle,
-    //     circle._radius,
-    //     circle._reference,
-    //     circle._angle,
-    //   ],
-    // });
 
-    // this.addSection({
-    //   setContent: () => `
-    //     <p>
-    //     A corner can have a |minimum| angle of 0.
-    //     </p>
-    //     <p>
-    //     A corner's |maximum| angle, is when the rotation is a |full circle|.
-    //     </p>
-    //     `,
-    //   modifiers: {
-    //     minimum: click(diag.rotateTo, [diag, 0, -1], colors.angleText),
-    //     maximum: click(diag.rotateTo, [diag, Math.PI * 1.999], colors.angleText),
-    //   },
-    //   showOnly: [
-    //     circle,
-    //     circle._radius,
-    //     circle._reference,
-    //     circle._angle,
-    //   ],
-    //   setSteadyState: () => {
-    //     circle.setPosition(layout.circle.center);
-    //   },
-    // });
     this.addSection({
       setContent: () =>
         centerV(`
@@ -599,12 +539,12 @@ class Content extends LessonContent {
       //   diag._arcEquation._v,
       // ],
       transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'farRight');
+        diag.transitionCircle(done, 'mostRight');
       },
       setSteadyState: () => {
         diag._arcEquation.showAll();
         diag._arcEquation.hideOnly([diag._arcEquation._v]);
-        diag.resetCircle('farRight');
+        diag.resetCircle('mostRight');
         function rotateToAndPulse(angle: number, num: number) {
           diag.rotateTo(angle, 2, 1.5, diag.pulseRadiusOnArc.bind(diag, num));
         }
@@ -693,7 +633,7 @@ class Content extends LessonContent {
         circle._radiusOnArc,
       ],
       setSteadyState: () => {
-        diag.resetCircle('farRight');
+        diag.resetCircle('mostRight');
         diag._angleText.setPosition(layout.angleEqualsText.leftCenter);
         diag.showRadians();
         diag.updateRotation();
@@ -747,12 +687,17 @@ class Content extends LessonContent {
       title: 'eqn',
       setContent: `
         <p>
-          But as radians relate |angle|, |radius| and |arc length|, it means you can calculate one property from the other two.
+          But as radians relate |angle|, |radius| and |arc_length|, it means you can calculate one property from the other two.
         </p>
         <p>
           You no longer need to measure all three properties of the circle, you only need to measure the two easiest. 
         </p>
       `,
+      modifiers: {
+        angle: click(diag.animateEquation, [diag, 'angle'], colors.angle),
+        radius: click(diag.animateEquation, [diag, 'radius'], colors.radius),
+        arc_length: click(diag.animateEquation, [diag, 'arc'], colors.arc),
+      },
       setEnterState: () => {
         diag.radiusEqn.arrange(1, diag._arcEquation._equals);
         diag.angleEqn.arrange(1, diag._arcEquation._equals);
@@ -772,7 +717,10 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p>
-          This is |very powerful|. So powerful that people deal with this weird
+          This is |very powerful|. 
+        </p>
+        <p>
+          So powerful that people deal with this weird
           angular size because the |advantages outweigh the disadvantages|.
         </p>
       `),
@@ -780,16 +728,20 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p>
-          One way they deal with it, is instead of writing out the approximate value 3.14159... each time, they just substite the value with the greek letter |&pi;|
+          One way they deal with it, is instead of writing out the approximate value |3.14159...| each time, they just substite the value with the greek letter |&pi;|.
+        </p>
+        `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          Instead of saying there are |3.14159... radians| in a |half circle|, you can simply say there are |&pi; radians|.
         </p>
         <p>
-          Instead of saying there are 3.14159... radians in a half circle, you can simply say there are |&pi; radians|
+          Instead of saying there are |6.28319... radians| in a |circle|, you say there are |2&pi; radians|.
         </p>
         <p>
-          Instead of saying there are 6.28319... radians in a circle, you say there are |2&pi; radians|.
-        </p>
-        <p>
-          We can then substitude the number back in when we need to do the final calculation.
+          The number is only used when a calculation needs to be done.
         </p>
       `),
     });

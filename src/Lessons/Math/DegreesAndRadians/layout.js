@@ -74,7 +74,7 @@ export default function lessonLayout() {
     circle: {
       center: new Point(0, -0.5),
       right: new Point(1.1, -0.5),
-      farRight: new Point(1.6, -0.3),
+      mostRight: new Point(1.6, -0.3),
       angle: {
         small: 0.8,
         large: Math.PI * 1.4,
@@ -84,7 +84,7 @@ export default function lessonLayout() {
     arcEquation: {
       left: new Point(-2.3, -0.7),
       centerTop: new Point(-1.0, 0.7),
-      centerBottom: new Point(-1.0, -0.5),
+      centerBottom: new Point(-0.5, -0.5),
     },
     sectionText: {
       position: new Point(-2.3, -0.3),

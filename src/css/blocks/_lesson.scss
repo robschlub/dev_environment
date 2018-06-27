@@ -170,6 +170,10 @@ $diagram_ratio: 1.5;
   // margin-bottom: var(--lesson__text-margin);
 }
 
+.lesson__p_top_margin_0 {
+  margin-top: 0;
+}
+
 .lesson__p_width_50 {
   width: 50%;
 }
@@ -409,7 +413,7 @@ $diagram_ratio: 1.5;
   padding-top: 0;
   padding-bottom: 0;
   margin-bottom: 0;
-  margin-top: 0;
+  margin-top: var(--lesson__text-p-spacing);
   padding-left: calc(var(--lesson__text-margin) * 0.2);
   margin-left: calc(var(--lesson__text-margin) * 1);
   color: color(diagram, 'disabled');

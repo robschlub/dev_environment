@@ -74,6 +74,32 @@ function addId(id: string = '') {
 }
 
 
+function clickWord(
+  textToUse: string,
+  id: string,
+  actionMethod: Function,
+  bind: Array<mixed>,
+  classesOrColor: string | Array<number> | null = null,
+) {
+  let classStr = 'action_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
+  const idToUse = () => id;
+  // const id = `lesson__id_${textToUse}`;
+  return {
+    replacementText: () => toHTML(textToUse, idToUse(), classStr, color),
+    id: idToUse,
+    actionMethod,
+    bind,
+  };
+}
+
+
 function click(
   actionMethod: Function,
   bind: Array<mixed>,
@@ -449,4 +475,5 @@ class LessonContent {
 export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
+  clickWord,
 };

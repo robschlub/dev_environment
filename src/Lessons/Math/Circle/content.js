@@ -185,16 +185,16 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Center',
       setContent: () => `
-        <div class="lesson__sub_title">Property:</div>
-        <p>
+        <div class="lesson__sub_title">Property Name:</div>
+        <p style="margin-top:0">
           |_center_point|
         </p>
-        <div class="lesson__sub_title">Word Origin:</div>
-        <p>
+        <div class="lesson__sub_title">Name Origin:</div>
+        <p style="margin-top:0">
           |_Latin| word |_centrum| which means |_middle|. 
         </p>
         <div class="lesson__sub_title">Description:</div>
-        <p>
+        <p style="margin-top:0">
           The middle of the circle.
         </p>
         `,
@@ -293,16 +293,16 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Radius',
       setContent: () => `
-        <div class="lesson__sub_title">Property:</div>
-        <p>
+        <div class="lesson__sub_title">Property Name:</div>
+        <p style="margin-top:0">
         |_radius|
         </p>
-        <div class="lesson__sub_title">Word Origin:</div>
-        <p>
+        <div class="lesson__sub_title">Name Origin:</div>
+        <p style="margin-top:0">
           |_Latin| word |_radiusLatin| which means |_spoke_of_a_chariot_wheel|. 
         </p>
         <div class="lesson__sub_title">Description:</div>
-        <p>
+        <p style="margin-top:0">
           Length from center point to edge.
         </p>
         
@@ -365,16 +365,16 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Diameter',
       setContent: () => `
-        <div class="lesson__sub_title">Property:</div>
-        <p>
+        <div class="lesson__sub_title">Property Name:</div>
+        <p style="margin-top:0">
           |_diameter|
         </p>
-        <div class="lesson__sub_title">Word Origin:</div>
-        <p>
+        <div class="lesson__sub_title">Name Origin:</div>
+        <p style="margin-top:0">
           Ancient Greek word |_diametros|, which itself came from the words |_dia| (|_across|) and |_metros| (|_measure|).
         </p>
         <div class="lesson__sub_title">Description:</div>
-        <p>
+        <p style="margin-top:0">
           The circle |_width|.
         </p>
         `,
@@ -437,16 +437,16 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Circumference',
       setContent: () => `
-        <div class="lesson__sub_title">Property:</div>
-        <p>
+        <div class="lesson__sub_title">Property Name:</div>
+        <p style="margin-top:0">
           |_circumference|
         </p>
-        <div class="lesson__sub_title">Word Origin:</div>
-        <p>
+        <div class="lesson__sub_title">Name Origin:</div>
+        <p style="margin-top:0">
           The |_Latin| word |_circumferentia| which comes from the words |_circum| (|_carry|) and |_ferre| (|_around|).
         </p>
         <div class="lesson__sub_title">Description:</div>
-        <p>
+        <p style="margin-top:0">
           Length of circle |_edge|.
         </p>
         `,

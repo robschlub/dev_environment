@@ -811,6 +811,16 @@ class CircleCollection extends DiagramElementCollection {
   resetCircle(position: string = 'center') {
     this._circle.transform.updateTranslation(layout.circle[position]);
     this._circle.transform.updateScale(1, 1);
+    const r = this._circle._radius.transform.r();
+    if (r != null) {
+      let angle = r;
+      if (r < layout.circle.angle.small) {
+        angle = layout.circle.angle.small;
+      } else if (r > layout.circle.angle.large) {
+        angle = layout.circle.angle.large;
+      }
+      this.setRotation(angle);
+    }
   }
 
   transitionCircle(
