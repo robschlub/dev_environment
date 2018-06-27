@@ -1,7 +1,7 @@
 import {
   Point, Transform, Line, minAngleDiff, normAngle,
   TransformLimit, spaceToSpaceTransform, Rect,
-  getBoundingRect, quadraticBezier,
+  getBoundingRect,
 } from './g2';
 import { round } from './mathtools';
 

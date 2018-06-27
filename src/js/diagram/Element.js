@@ -2,7 +2,7 @@
 
 import {
   Transform, Point, TransformLimit, Rect,
-  Translation, spaceToSpaceTransform, getBoundingRect, linearPath, curvedPath,
+  Translation, spaceToSpaceTransform, getBoundingRect, linearPath,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';

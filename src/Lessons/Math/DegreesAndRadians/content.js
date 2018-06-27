@@ -164,7 +164,7 @@ class Content extends LessonContent {
     //   title: 'Introduction',
     //   setContent: () => `
     //     <p>
-    //     Two |lines| connected at a point for a corner. 
+    //     Two |lines| connected at a point for a corner.
     //     The sharpness of the corner is described by the word |angle|.
     //     </p>
     //     <p>
@@ -502,7 +502,7 @@ class Content extends LessonContent {
           This |angle| is called a |radian|.
         </p>
       `,
-      /* <p> 
+      /* <p>
           Observe some examples:
           <ul>
             <li>|one_radian|</li>
@@ -626,14 +626,16 @@ class Content extends LessonContent {
     //       Increasing the angle by 1 radian, increases the arc length by 1 radius length.
     //     </p>
     //     <p>
-    //       So, when you have a radius of 1 meter, and an angle of 2 radians, then the arc length will be 2 meters.
+    //       So, when you have a radius of 1 meter, and an angle of 2
+    //       radians, then the arc length will be 2 meters.
     //     </p>
     //     <p>
     //       In other words:
     //         arc length = angle * radius
     //     </p>
     //     <p>
-    //       Note, this only works when the angle is in radians. It does not work if the angle is in degrees!
+    //       Note, this only works when the angle is in radians.
+    //       It does not work if the angle is in degrees!
     //     </p>
     //   `,
     // });
@@ -783,9 +785,7 @@ class Content extends LessonContent {
       `),
     });
 
-
-
-
+/* eslint-disable */
 //     '<p>Rotate the stick, till the |_arc_length| is the |_same| as the stick length (|_radius|).</p>' +
 //             '<p>|_Compare| the |_arc_length1| to the |_radius1| length at different angles.<p>' +
 //             '<p>We can define the angle as how many radius lengths the arc length is.</p>'
@@ -830,7 +830,7 @@ class Content extends LessonContent {
 //             '<p>Now, a complete circle has an angle of 6.28, or 2&pi; radians.</p>' +
 //             '<p>Therefore, we can calculate the circumference of any circle just by knowing the radius:<p>'+
 //             '   <dim id="inline_equation2"></dim>' +
-
+    /* eslint-enable */
     this.addSection({
       setContent: `
       <p>
@@ -949,10 +949,6 @@ class Content extends LessonContent {
       },
     });
 
-
-
-
-
     this.addSection({
       setContent: `
       <p>
@@ -1036,7 +1032,8 @@ class Content extends LessonContent {
     //   setContent: () =>
     //     `
     //     <p>
-    //       If we relate |angle|, |radius| and |arc_length|, then we only need to know or measure two and then we can |calculate the third|.
+    //       If we relate |angle|, |radius| and |arc_length|, then we
+    //    only need to know or measure two and then we can |calculate the third|.
     //     </p>
     //     `,
     //   modifiers: {
@@ -1073,7 +1070,7 @@ class Content extends LessonContent {
           To do this, |rotate| the line and |straighten| the arc.
         </p>
         `,
-    })
+    });
     this.addSection({
       setContent: () =>
         `
@@ -1120,7 +1117,7 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      setContent: () => 
+      setContent: () =>
         `
         <p>
           We can then use this angle as the portion size.
