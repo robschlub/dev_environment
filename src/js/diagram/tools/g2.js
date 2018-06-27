@@ -756,6 +756,66 @@ class Scale extends Point {
   }
 }
 
+
+function linearPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+) {
+  return start.add(delta.x * percent, delta.y * percent);
+}
+
+type linearPathOptionsType = {
+};
+type curvedPathOptionsType = {
+  // path: '(Point, Point, number) => Point';
+  direction: number;
+  magnitude: number;
+  offset: number;
+  controlPoint: Point | null;
+};
+export type pathOptionsType = curvedPathOptionsType & linearPathOptionsType;
+
+function curvedPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+  options: pathOptionsType,
+) {
+  const o = options;
+  const angle = Math.atan2(delta.y, delta.x);
+  const midPoint = start.add(new Point(delta.x * o.offset, delta.y * o.offset));
+  const dist = delta.toPolar().mag * o.magnitude;
+  const controlPoint = new Point(
+    midPoint.x + dist * Math.cos(angle + o.direction * Math.PI / 2),
+    midPoint.y + dist * Math.sin(angle + o.direction * Math.PI / 2),
+  );
+  const p0 = start;
+  const p1 = controlPoint;
+  const p2 = start.add(delta);
+  const t = percent;
+  const bx = quadraticBezier(p0.x, p1.x, p2.x, t);
+  const by = quadraticBezier(p0.y, p1.y, p2.y, t);
+  return new Point(bx, by);
+}
+
+
+function translationPath(
+  pathType: 'linear' | 'curved' = 'linear',
+  start: Point,
+  delta: Point,
+  percent: number,
+  options: pathOptionsType,
+) {
+  if (pathType === 'linear') {
+    return linearPath(start, delta, percent);
+  } else if (pathType === 'curved') {
+    return curvedPath(start, delta, percent, options);
+  }
+  return new Point(0, 0);
+}
+
+
 class TransformLimit {
   rotation: number | null;
   translation: number | null;
@@ -895,7 +955,8 @@ class Transform {
   toDelta(
     delta: Transform,
     percent: number,
-    translationOptions: Object,
+    translationStyle: 'linear' | 'curved',
+    translationOptions: pathOptionsType,
     // translationPath: (Point, Point, number, ?number, ?number) => Point,
     // direction: number = 1,
     // mag: number = 0.5,
@@ -913,9 +974,10 @@ class Transform {
       }
       if (stepStart instanceof Translation && stepDelta instanceof Translation) {
         calcTransform.order[i] =
-          new Translation(translationOptions.path(
-            stepStart, stepDelta,
-            percent, translationOptions,
+          new Translation(translationPath(
+            translationStyle,
+            stepStart, stepDelta, percent,
+            translationOptions,
           ));
       }
     }
@@ -1259,45 +1321,6 @@ class Transform {
   }
 }
 
-function linearPath(
-  start: Point,
-  delta: Point,
-  percent: number,
-) {
-  return start.add(delta.x * percent, delta.y * percent);
-}
-
-type curvedPathOptionsType = {
-  path: (Point, Point, number) => Point;
-  direction: number;
-  magnitude: number;
-  offset: number;
-};
-
-function curvedPath(
-  start: Point,
-  delta: Point,
-  percent: number,
-  options: curvedPathOptionsType,
-) {
-  // console.log("here");
-  const o = options;
-  const angle = Math.atan2(delta.y, delta.x);
-  const midPoint = start.add(new Point(delta.x * o.offset, delta.y * o.offset));
-  const dist = delta.toPolar().mag * o.magnitude;
-  const controlPoint = new Point(
-    midPoint.x + dist * Math.cos(angle + o.direction * Math.PI / 2),
-    midPoint.y + dist * Math.sin(angle + o.direction * Math.PI / 2),
-  );
-  const p0 = start;
-  const p1 = controlPoint;
-  const p2 = start.add(delta);
-  const t = percent;
-  const bx = quadraticBezier(p0.x, p1.x, p2.x, t);
-  const by = quadraticBezier(p0.y, p1.y, p2.y, t);
-  return new Point(bx, by);
-}
-
 function spaceToSpaceTransform(
   s1: {
     x: {bottomLeft: number, width: number},
@@ -1385,4 +1408,5 @@ export {
   linearPath,
   curvedPath,
   quadraticBezier,
+  translationPath,
 };

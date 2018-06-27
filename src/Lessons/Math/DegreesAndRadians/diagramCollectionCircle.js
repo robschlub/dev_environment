@@ -262,15 +262,15 @@ function makeArcEquation(diagram: Diagram) {
   }, colors.diagram.text.base);
   equationElements._arc.vertices.setColor(colors.arc);
   equationElements._arc.isTouchable = true;
-  equationElements._arc.animate.transform.translation.path = curvedPath;
+  equationElements._arc.animate.transform.translation.style = 'curved';
   equationElements._radius.vertices.setColor(colors.radius);
   equationElements._radius.isTouchable = true;
-  equationElements._radius.animate.transform.translation.path = curvedPath;
-  equationElements._radius.animate.transform.translation.direction = 1;
+  equationElements._radius.animate.transform.translation.style = 'curved';
+  equationElements._radius.animate.transform.translation.options.direction = 1;
   equationElements._angle.vertices.setColor(colors.angle);
   equationElements._angle.isTouchable = true;
-  equationElements._angle.animate.transform.translation.path = curvedPath;
-  equationElements._angle.animate.transform.translation.direction = 1;
+  equationElements._angle.animate.transform.translation.style = 'curved';
+  equationElements._angle.animate.transform.translation.options.direction = 1;
   equationElements.hasTouchableElements = true;
 
   equationElements.showArc = () => {
@@ -736,20 +736,27 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   animateEquation(leftSide: 'arc' | 'radius' | 'angle') {
+    const arcOptions =
+      this._arcEquation._arc.animate.transform.translation.options;
+    const radiusOptions =
+      this._arcEquation._radius.animate.transform.translation.options;
+    const angleOptions =
+      this._arcEquation._angle.animate.transform.translation.options;
+
     if (leftSide === 'arc') {
-      this._arcEquation._arc.animate.transform.translation.direction = -1;
-      this._arcEquation._radius.animate.transform.translation.direction = -1;
-      this._arcEquation._angle.animate.transform.translation.direction = -1;
+      arcOptions.direction = -1;
+      radiusOptions.direction = -1;
+      angleOptions.direction = -1;
       this.arcEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'radius') {
-      this._arcEquation._arc.animate.transform.translation.direction = 1;
-      this._arcEquation._radius.animate.transform.translation.direction = 1;
-      this._arcEquation._angle.animate.transform.translation.direction = 1;
+      arcOptions.direction = 1;
+      radiusOptions.direction = 1;
+      angleOptions.direction = 1;
       this.radiusEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'angle') {
-      this._arcEquation._arc.animate.transform.translation.direction = 1;
-      this._arcEquation._radius.animate.transform.translation.direction = 1;
-      this._arcEquation._angle.animate.transform.translation.direction = 1;
+      arcOptions.direction = 1;
+      radiusOptions.direction = 1;
+      angleOptions.direction = 1;
       this.angleEqn.animateTo(1, 2, this._arcEquation._equals);
     }
     this.diagram.animateNextFrame();

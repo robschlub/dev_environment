@@ -2,8 +2,9 @@
 
 import {
   Transform, Point, TransformLimit, Rect,
-  Translation, spaceToSpaceTransform, getBoundingRect, linearPath,
+  Translation, spaceToSpaceTransform, getBoundingRect,
 } from './tools/g2';
+import type { pathOptionsType } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
@@ -18,12 +19,12 @@ function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
   return callbackToUse;
 }
 
-type translationOptionsType = {
-  path: (Point, Point, number) => Point;
-  direction: number;
-  magnitude: number;
-  offset: number;
-};
+// type translationOptionsType = {
+//   path: (Point, Point, number) => Point;
+//   direction: number;
+//   magnitude: number;
+//   offset: number;
+// };
 
 // Planned Animation
 class AnimationPhase {
@@ -32,7 +33,8 @@ class AnimationPhase {
   rotDirection: number;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
   animationPath: (number) => number;
-  translationOptions: translationOptionsType;
+  translationStyle: 'linear' | 'curved';
+  translationOptions: pathOptionsType;
 
   startTime: number;                 // Time when phase started
   startTransform: Transform;       // Transform at start of phase
@@ -43,17 +45,19 @@ class AnimationPhase {
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
-    translationOptions: translationOptionsType = {
-      path: linearPath,
+    translationStyle: 'linear' | 'curved' = 'linear',
+    translationOptions: pathOptionsType = {
       direction: 1,
       magnitude: 0.5,
       offset: 0.5,
+      controlPoint: null,
     },
   ) {
     this.targetTransform = transform.copy();
     this.time = time;
     this.rotDirection = rotDirection;
     this.animationStyle = animationStyle;
+    this.translationStyle = translationStyle;
     this.translationOptions = translationOptions;
 
     this.startTime = -1;
@@ -206,10 +210,12 @@ class DiagramElement {
     transform: {
       plan: Array<AnimationPhase>;
       translation: {
-        path: (Point, Point, number) => Point;
-        direction: number;
-        magnitude: number;
-        offset: number;
+        style: 'linear' | 'curved';
+        options: pathOptionsType;
+        // path: (Point, Point, number) => Point;
+        // direction: number;
+        // magnitude: number;
+        // offset: number;
       };
       callback: ?(?mixed) => void;
     };
@@ -313,10 +319,13 @@ class DiagramElement {
       transform: {
         plan: [],
         translation: {
-          path: linearPath,
-          direction: 1,
-          magnitude: 0.5,
-          offset: 0.5,
+          style: 'linear',
+          options: {
+            direction: 1,
+            magnitude: 0.5,
+            offset: 0.5,
+            controlPoint: null,
+          },
         },
         callback: null,
       },
@@ -459,7 +468,11 @@ class DiagramElement {
     // let next = delta.copy().constant(p);
 
     // next = start.add(delta.mul(next));
-    const next = start.toDelta(delta, p, phase.translationOptions);
+    const next = start.toDelta(
+      delta, p,
+      phase.translationStyle,
+      phase.translationOptions,
+    );
     return next;
   }
 
@@ -929,7 +942,8 @@ class DiagramElement {
     // }
     const phase = new AnimationPhase(
       transform, time, rotDirection,
-      easeFunction, this.animate.transform.translation,
+      easeFunction, this.animate.transform.translation.style,
+      this.animate.transform.translation.options,
     );
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
