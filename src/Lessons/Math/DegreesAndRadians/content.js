@@ -72,17 +72,17 @@ class Content extends LessonContent {
         line: click(diag.pulseRadius, [diag], colors.radius),
         another: click(diag.pulseReference, [diag], colors.radius),
       },
-      blank: [
-        'fromNext',
-        'fromPrev',
-      ],
+      // blank: [
+      //   'fromNext',
+      //   'fromPrev',
+      // ],
       setEnterState: () => {
         diag.resetCircle('center');
-        diag.setRotation(0.001);
+        // diag.setRotation(0.001);
         diag.updateRotation();
       },
       transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'center', Math.PI / 3);
+        diag.transitionCircle(done, 'center');
       },
       showOnly: [
         circle,
@@ -109,7 +109,7 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag.resetCircle('center');
-        diag.setRotation(0.001);
+        // diag.setRotation(0.001);
       },
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'center', Math.PI * 1.999);
@@ -145,7 +145,7 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag.resetCircle('center');
-        diag.setRotation(0.001);
+        // diag.setRotation(0.001);
       },
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'center', Math.PI / 3);
@@ -427,6 +427,9 @@ class Content extends LessonContent {
       show: [
         circle._angle,
       ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'right');
+      },
       setSteadyState: () => {
         diag.resetCircle('right');
         // circle.transform.updateTranslation(layout.circle.right);
@@ -443,9 +446,6 @@ class Content extends LessonContent {
         onClickId('id_45', diag.rotateTo, bindArray(45));
         onClickId('id_40', diag.rotateTo, bindArray(40));
         onClickId('id_36', diag.rotateTo, bindArray(36));
-      },
-      transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'right');
       },
     });
 
@@ -599,7 +599,8 @@ class Content extends LessonContent {
         diag.transitionCircle(done, 'farRight');
       },
       setSteadyState: () => {
-        diag._arcEquation.showAll();
+        // diag._arcEquation.showAll();
+        diag._arcEquation.hideOnly([diag._arcEquation._v]);
         diag.resetCircle('farRight');
         function rotateToAndPulse(angle: number, num: number) {
           diag.rotateTo(angle, 2, 1.5, diag.pulseRadiusOnArc.bind(diag, num));
@@ -617,7 +618,7 @@ class Content extends LessonContent {
       transitionToNext: (done) => {
         circle.hideAll();
         diag.arcEqn.animateTo(layout.arcEquation.centerTop, 1, 2, done);
-        diag._arcEquation.showAll();
+        diag._arcEquation.hideOnly([diag._arcEquation._v]);
       },
     });
     // this.addSection({
@@ -658,6 +659,9 @@ class Content extends LessonContent {
       ],
       show: [
         diag._arcEquation,
+      ],
+      hide: [
+        diag._arcEquation._v,
       ],
       // setSteadyState: () => {
       // },

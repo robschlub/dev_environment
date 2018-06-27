@@ -798,7 +798,7 @@ class CircleCollection extends DiagramElementCollection {
   transitionCircle(
     done: () => void,
     toPosition: string = 'center',
-    toAngle: number = layout.circle.angle.small,
+    toAngle: number | null = null,
     time: number = 5,
   ) {
     const t = this._circle.transform.t();
@@ -817,10 +817,25 @@ class CircleCollection extends DiagramElementCollection {
     if (tTime === 0) {
       tTime = 0.001;
     }
+
+    let angle = layout.circle.angle.small;
+    if (r != null && r !== undefined) {
+      if (toAngle === null) {
+        if (r < layout.circle.angle.small) {
+          angle = layout.circle.angle.small;
+        } else if (r > layout.circle.angle.large) {
+          angle = layout.circle.angle.large;
+        } else {
+          angle = r;
+        }
+      } else {
+        angle = toAngle;
+      }
+    }
+
     if (r !== null && r !== undefined) {
       const rStart = r;
-
-      let rotDiff = toAngle - r;
+      let rotDiff = angle - r;
       if (rStart + rotDiff < 0) {
         rotDiff = Math.PI * 2 + rotDiff;
       } else if (rStart + rotDiff > Math.PI * 2) {
@@ -836,8 +851,8 @@ class CircleCollection extends DiagramElementCollection {
     const maxTime = Math.max(rTime, tTime);
 
     if (t && r !== null && r !== undefined) {
-      if (t.isNotEqualTo(layout.circle[toPosition]) || r !== toAngle) {
-        this.rotateTo(toAngle, 2, maxTime);
+      if (t.isNotEqualTo(layout.circle[toPosition]) || r !== angle) {
+        this.rotateTo(angle, 2, maxTime);
         this._circle.animateTranslationTo(
           layout.circle[toPosition],
           maxTime,
