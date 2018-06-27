@@ -737,16 +737,19 @@ class CircleCollection extends DiagramElementCollection {
 
   animateEquation(leftSide: 'arc' | 'radius' | 'angle') {
     if (leftSide === 'arc') {
+      console.log(this._arcEquation._equals.transform.t())
       this._arcEquation._arc.animate.transform.translation.direction = -1;
       this._arcEquation._radius.animate.transform.translation.direction = -1;
       this._arcEquation._angle.animate.transform.translation.direction = -1;
       this.arcEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'radius') {
+      console.log(this._arcEquation._equals.transform.t())
       this._arcEquation._arc.animate.transform.translation.direction = 1;
       this._arcEquation._radius.animate.transform.translation.direction = 1;
       this._arcEquation._angle.animate.transform.translation.direction = 1;
       this.radiusEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'angle') {
+      console.log(this._arcEquation._equals.transform.t())
       this._arcEquation._arc.animate.transform.translation.direction = 1;
       this._arcEquation._radius.animate.transform.translation.direction = 1;
       this._arcEquation._angle.animate.transform.translation.direction = 1;

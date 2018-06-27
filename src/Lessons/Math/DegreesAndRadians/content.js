@@ -750,9 +750,9 @@ class Content extends LessonContent {
         </p>
       `,
       setEnterState: () => {
-        diag.radiusEqn.arrange();
-        diag.angleEqn.arrange();
-        diag.arcEqn.arrange();
+        diag.radiusEqn.arrange(1, diag._arcEquation._equals);
+        diag.angleEqn.arrange(1, diag._arcEquation._equals);
+        diag.arcEqn.arrange(1, diag._arcEquation._equals);
         diag._arcEquation.setPosition(layout.arcEquation.centerBottom);
       },
       setSteadyState: () => {

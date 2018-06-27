@@ -542,7 +542,7 @@ export default class DiagramGLEquation extends Elements {
 
   animateTo(
     // location: Point,
-    scale: number,
+    scale: number = 1,
     time: number = 1,
     fixElement: DiagramElementPrimative | DiagramElementCollection | null = null,
     callback: ?(?mixed) => void = null,
