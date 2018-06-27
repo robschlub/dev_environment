@@ -5,7 +5,7 @@ import Diagram from '../../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
-import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle, curvedPath } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 import makeSlider from '../../../LessonsCommon/slider';
 import type { sliderType } from '../../../LessonsCommon/slider';
@@ -242,9 +242,9 @@ function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
 }
 
 type equationType = {
-  _a: DiagramElementPrimative;
+  _arc: DiagramElementPrimative;
   _equals: DiagramElementPrimative;
-  _r: DiagramElementPrimative;
+  _radius: DiagramElementPrimative;
   _angle: DiagramElementPrimative;
   showArc: () => void;
   showRadius: () => void;
@@ -262,10 +262,15 @@ function makeArcEquation(diagram: Diagram) {
   }, colors.diagram.text.base);
   equationElements._arc.vertices.setColor(colors.arc);
   equationElements._arc.isTouchable = true;
+  equationElements._arc.animate.transform.translation.path = curvedPath;
   equationElements._radius.vertices.setColor(colors.radius);
   equationElements._radius.isTouchable = true;
+  equationElements._radius.animate.transform.translation.path = curvedPath;
+  equationElements._radius.animate.transform.translation.direction = 1;
   equationElements._angle.vertices.setColor(colors.angle);
   equationElements._angle.isTouchable = true;
+  equationElements._angle.animate.transform.translation.path = curvedPath;
+  equationElements._angle.animate.transform.translation.direction = 1;
   equationElements.hasTouchableElements = true;
 
   equationElements.showArc = () => {
@@ -732,10 +737,19 @@ class CircleCollection extends DiagramElementCollection {
 
   animateEquation(leftSide: 'arc' | 'radius' | 'angle') {
     if (leftSide === 'arc') {
+      this._arcEquation._arc.animate.transform.translation.direction = -1;
+      this._arcEquation._radius.animate.transform.translation.direction = -1;
+      this._arcEquation._angle.animate.transform.translation.direction = -1;
       this.arcEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
     } else if (leftSide === 'radius') {
+      this._arcEquation._arc.animate.transform.translation.direction = 1;
+      this._arcEquation._radius.animate.transform.translation.direction = 1;
+      this._arcEquation._angle.animate.transform.translation.direction = 1;
       this.radiusEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
     } else if (leftSide === 'angle') {
+      this._arcEquation._arc.animate.transform.translation.direction = 1;
+      this._arcEquation._radius.animate.transform.translation.direction = 1;
+      this._arcEquation._angle.animate.transform.translation.direction = 1;
       this.angleEqn.animateTo(layout.arcEquation.centerBottom, 1, 2);
     }
     this.diagram.animateNextFrame();

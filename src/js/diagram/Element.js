@@ -207,7 +207,7 @@ class DiagramElement {
       plan: Array<AnimationPhase>;
       translation: {
         path: (Point, Point, number) => Point;
-        direction: 'positive' | 'negative';
+        direction: number;
         magnitude: number;
         offset: number;
       };
@@ -314,7 +314,7 @@ class DiagramElement {
         plan: [],
         translation: {
           path: linearPath,
-          direction: 'positive',
+          direction: 1,
           magnitude: 0.5,
           offset: 0.5,
         },
@@ -930,7 +930,7 @@ class DiagramElement {
     // }
     const phase = new AnimationPhase(
       transform, time, rotDirection,
-      easeFunction, this.animate.transform.tranlsation,
+      easeFunction, this.animate.transform.translation,
     );
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
@@ -1932,7 +1932,6 @@ class DiagramElementCollection extends DiagramElement {
           rotDirection,
           callbackMethod,
           easeFunction,
-          element.animate.transform.translation,
         );
         // only want to send callback once
         callbackMethod = null;
