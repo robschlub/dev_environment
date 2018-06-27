@@ -577,8 +577,8 @@ class Content extends LessonContent {
         five_radians: toHTML('5 radians', 'id_5_rad', '', colors.angle),
       },
       setEnterState: () => {
-        // diag._arcEquation.setPosition(layout.arcEquation.left);
-        diag.arcEqn.calcSize(layout.arcEquation.left, 1);
+        diag._arcEquation.setPosition(layout.arcEquation.left);
+        diag.arcEqn.arrange();
       },
       blank: [
         'fromPrev',
@@ -595,11 +595,14 @@ class Content extends LessonContent {
         circle._radiusOnArc,
         // diag._arcEquation,
       ],
+      // hide: [
+      //   diag._arcEquation._v,
+      // ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'farRight');
       },
       setSteadyState: () => {
-        // diag._arcEquation.showAll();
+        diag._arcEquation.showAll();
         diag._arcEquation.hideOnly([diag._arcEquation._v]);
         diag.resetCircle('farRight');
         function rotateToAndPulse(angle: number, num: number) {
@@ -617,8 +620,9 @@ class Content extends LessonContent {
       },
       transitionToNext: (done) => {
         circle.hideAll();
-        diag.arcEqn.animateTo(layout.arcEquation.centerTop, 1, 2, done);
-        diag._arcEquation.hideOnly([diag._arcEquation._v]);
+        diag._arcEquation.animateTranslationTo(layout.arcEquation.centerTop, 1.5, done);
+        // diag.arcEqn.animateTo(layout.arcEquation.centerTop, 1, 2, done);
+        // diag._arcEquation.hideOnly([diag._arcEquation._v]);
       },
     });
     // this.addSection({
@@ -650,8 +654,8 @@ class Content extends LessonContent {
         </p>
       `),
       setEnterState: () => {
-        // if (!(this.comingFrom === 'prev')) {
-        diag.arcEqn.calcSize(layout.arcEquation.centerTop, 1);
+        diag._arcEquation.setPosition(layout.arcEquation.centerTop);
+        diag.arcEqn.arrange();
         // }
       },
       blank: [
