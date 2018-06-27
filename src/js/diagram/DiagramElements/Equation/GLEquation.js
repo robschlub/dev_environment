@@ -1,6 +1,6 @@
 // @flow
 import { Point } from '../../tools/g2';
-import { roundNum, easeinout } from '../../tools/mathtools';
+import { roundNum } from '../../tools/mathtools';
 import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
 // import { HTMLObject } from './DrawingObjects/HTMLObject/HTMLObject';

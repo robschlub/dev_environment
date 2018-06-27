@@ -742,28 +742,18 @@ class CircleCollection extends DiagramElementCollection {
       this._arcEquation._radius.animate.transform.translation.options;
     const angleOptions =
       this._arcEquation._angle.animate.transform.translation.options;
+
     radiusOptions.direction = 'down';
     angleOptions.direction = 'down';
     angleOptions.magnitude = 0.3;
     radiusOptions.magnitude = 0.7;
+    arcOptions.direction = 'up';
 
     if (leftSide === 'arc') {
-      arcOptions.rot = -1;
-      // arcOptions.controlPoint = new Point(2, 2);
-      // radiusOptions.rot = -1;
-      // angleOptions.rot = -1;
       this.arcEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'radius') {
-      arcOptions.rot = 1;
-      // radiusOptions.rot = 1;
-      // radiusOptions.direction = 'down';
-      // angleOptions.rot = 1;
-      // angleOptions.direction = 'down';
       this.radiusEqn.animateTo(1, 2, this._arcEquation._equals);
     } else if (leftSide === 'angle') {
-      arcOptions.rot = 1;
-      // radiusOptions.rot = 1;
-      // angleOptions.rot = 1;
       this.angleEqn.animateTo(1, 2, this._arcEquation._equals);
     }
     this.diagram.animateNextFrame();
