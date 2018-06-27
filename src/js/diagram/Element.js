@@ -36,7 +36,7 @@ class AnimationPhase {
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
-    translationPath: (Point, Point, number) => Point = curvedPath,
+    translationPath: (Point, Point, number) => Point = linearPath,
   ) {
     this.targetTransform = transform.copy();
     this.time = time;
@@ -886,8 +886,12 @@ class DiagramElement {
     rotDirection: number = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
+    translationPath: (Point, Point, number) => Point = linearPath,
   ): void {
-    const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    const phase = new AnimationPhase(
+      transform, time, rotDirection,
+      easeFunction, translationPath,
+    );
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
     }
@@ -1876,6 +1880,7 @@ class DiagramElementCollection extends DiagramElement {
     rotDirection: number = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
+    translationPath: (Point, Point, number) => Point = linearPath,
   ) {
     let callbackMethod = callback;
     for (let i = 0; i < this.order.length; i += 1) {
@@ -1887,6 +1892,7 @@ class DiagramElementCollection extends DiagramElement {
           rotDirection,
           callbackMethod,
           easeFunction,
+          translationPath,
         );
         // only want to send callback once
         callbackMethod = null;

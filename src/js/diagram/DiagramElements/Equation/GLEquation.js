@@ -1,6 +1,6 @@
 // @flow
-import { Point } from '../../tools/g2';
-import { roundNum } from '../../tools/mathtools';
+import { Point, curvedPath } from '../../tools/g2';
+import { roundNum, easeinout } from '../../tools/mathtools';
 import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
 // import { HTMLObject } from './DrawingObjects/HTMLObject/HTMLObject';
@@ -545,6 +545,7 @@ export default class DiagramGLEquation extends Elements {
     this.collection.animateToTransforms(
       animateToTransforms, time, 0,
       this.dissolveElements.bind(this, elementsToShow, true, 0.5, callback),
+      easeinout, curvedPath,
     );
   }
 
