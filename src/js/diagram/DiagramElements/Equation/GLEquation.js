@@ -545,7 +545,7 @@ export default class DiagramGLEquation extends Elements {
     this.collection.animateToTransforms(
       animateToTransforms, time, 0,
       this.dissolveElements.bind(this, elementsToShow, true, 0.5, callback),
-      easeinout, curvedPath,
+      easeinout,
     );
   }
 

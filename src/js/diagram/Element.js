@@ -18,6 +18,13 @@ function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
   return callbackToUse;
 }
 
+type translationOptionsType = {
+  path: (Point, Point, number) => Point;
+  direction: number;
+  magnitude: number;
+  offset: number;
+};
+
 // Planned Animation
 class AnimationPhase {
   targetTransform: Transform;            // The target transform to animate to
@@ -25,7 +32,7 @@ class AnimationPhase {
   rotDirection: number;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
   animationPath: (number) => number;
-  translationPath: (Point, Point, number) => Point;
+  translationOptions: translationOptionsType;
 
   startTime: number;                 // Time when phase started
   startTransform: Transform;       // Transform at start of phase
@@ -36,13 +43,18 @@ class AnimationPhase {
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
-    translationPath: (Point, Point, number) => Point = linearPath,
+    translationOptions: translationOptionsType = {
+      path: linearPath,
+      direction: 1,
+      magnitude: 0.5,
+      offset: 0.5,
+    },
   ) {
     this.targetTransform = transform.copy();
     this.time = time;
     this.rotDirection = rotDirection;
     this.animationStyle = animationStyle;
-    this.translationPath = translationPath;
+    this.translationOptions = translationOptions;
 
     this.startTime = -1;
     this.startTransform = new Transform();
@@ -447,7 +459,7 @@ class DiagramElement {
     // let next = delta.copy().constant(p);
 
     // next = start.add(delta.mul(next));
-    const next = start.toDelta(delta, p, phase.translationPath);
+    const next = start.toDelta(delta, p, phase.translationOptions);
     return next;
   }
 
@@ -910,11 +922,15 @@ class DiagramElement {
     rotDirection: number = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
-    translationPath: (Point, Point, number) => Point = linearPath,
+    // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
+    // let translationPathMethod = this.animate.transform.translation.path;
+    // if (translationPath !== null && translationPath !== undefined) {
+    //   translationPathMethod = translationPath;
+    // }
     const phase = new AnimationPhase(
       transform, time, rotDirection,
-      easeFunction, translationPath,
+      easeFunction, this.animate.transform.tranlsation,
     );
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
@@ -1904,7 +1920,7 @@ class DiagramElementCollection extends DiagramElement {
     rotDirection: number = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
-    translationPath: (Point, Point, number) => Point = linearPath,
+    // translationPath: (Point, Point, number) => Point = linearPath,
   ) {
     let callbackMethod = callback;
     for (let i = 0; i < this.order.length; i += 1) {
@@ -1916,7 +1932,7 @@ class DiagramElementCollection extends DiagramElement {
           rotDirection,
           callbackMethod,
           easeFunction,
-          translationPath,
+          element.animate.transform.translation,
         );
         // only want to send callback once
         callbackMethod = null;

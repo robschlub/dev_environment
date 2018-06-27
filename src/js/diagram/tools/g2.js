@@ -895,7 +895,11 @@ class Transform {
   toDelta(
     delta: Transform,
     percent: number,
-    translationPath: (Point, Point, number) => Point,
+    translationOptions: Object,
+    // translationPath: (Point, Point, number, ?number, ?number) => Point,
+    // direction: number = 1,
+    // mag: number = 0.5,
+    // offset: number = 0.5,
   ) {
     const calcTransform = this.copy();
     for (let i = 0; i < this.order.length; i += 1) {
@@ -908,7 +912,11 @@ class Transform {
         calcTransform.order[i] = new Rotation(stepStart.r + stepDelta.r * percent);
       }
       if (stepStart instanceof Translation && stepDelta instanceof Translation) {
-        calcTransform.order[i] = new Translation(translationPath(stepStart, stepDelta, percent));
+        calcTransform.order[i] =
+          new Translation(translationOptions.path(
+            stepStart, stepDelta,
+            percent, translationOptions,
+          ));
       }
     }
     return calcTransform;
@@ -1259,18 +1267,27 @@ function linearPath(
   return start.add(delta.x * percent, delta.y * percent);
 }
 
+type curvedPathOptionsType = {
+  path: (Point, Point, number) => Point;
+  direction: number;
+  magnitude: number;
+  offset: number;
+};
+
 function curvedPath(
   start: Point,
   delta: Point,
   percent: number,
+  options: curvedPathOptionsType,
 ) {
   // console.log("here");
+  const o = options;
   const angle = Math.atan2(delta.y, delta.x);
-  const midPoint = start.add(new Point(delta.x / 2, delta.y / 2));
-  const dist = delta.toPolar().mag;
+  const midPoint = start.add(new Point(delta.x * o.offset, delta.y * o.offset));
+  const dist = delta.toPolar().mag * o.magnitude;
   const controlPoint = new Point(
-    midPoint.x + dist / 2 * Math.cos(angle + Math.PI / 2),
-    midPoint.y + dist / 2 * Math.sin(angle + Math.PI / 2),
+    midPoint.x + dist * Math.cos(angle + o.direction * Math.PI / 2),
+    midPoint.y + dist * Math.sin(angle + o.direction * Math.PI / 2),
   );
   const p0 = start;
   const p1 = controlPoint;
