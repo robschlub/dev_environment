@@ -195,7 +195,7 @@ function makeRadiusOnArc(shapes: Object) {
   const radiusArc = shapes.collection(new Transform().translate(0, 0));
   const r1 = shapes.polygon(
     layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
-    Math.floor(layout.anglePoints / Math.PI / 2) , colors.radiusLight,
+    Math.floor(layout.anglePoints / Math.PI / 2), colors.radiusLight,
     new Transform().rotate(0),
   );
   const r2 = shapes.polygon(
