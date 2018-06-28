@@ -565,7 +565,6 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._radialLinesDeg.hideAll();
   }
   showDegrees() {
-    this._circle._radialLinesRad.hide();
     this._circle._radialLinesDeg.showAll();
     this._angleText.showAll();
     this.varState.radialLines = 360;
@@ -576,7 +575,7 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   showRadians() {
-    this._circle._radialLinesDeg.hideAll();
+    
     this._circle._radialLinesRad.show();
     this._angleText.showAll();
     this.varState.radialLines = Math.PI * 2;
@@ -602,6 +601,35 @@ class CircleCollection extends DiagramElementCollection {
     this.updateNumSectionsText();
     this.diagram.animateNextFrame();
   }
+
+  summaryShowRadiusAsArc() {
+    this.hideDegrees();
+    this.showRadians();
+    this.arcRadius();
+    this.diagram.animateNextFrame();
+    this.rotateTo(1, 2, 1);
+  }
+  summaryShowRadians() {
+    this._circle._radialLinesDeg.hideAll();
+    this._circle._radiusToArc.hideAll();
+    this._circle._radiusOnArc.hideAll();
+    this.showRadians();
+  }
+  summaryShowDegrees() {
+    this._circle._radialLinesRad.hide();
+    this._circle._radiusToArc.hideAll();
+    this._circle._radiusOnArc.hideAll();
+    this.showDegrees();
+  }
+  summaryRotateToDeg(angle: number) {
+    this.summaryShowDegrees();
+    this.rotateTo(angle, 1, 1);
+  }
+  summaryRotateToRad(angle: number) {
+    this.summaryShowRadians();
+    this.rotateTo(angle, 1, 1);
+  }
+
 
   toggleCircEquations(callback: ?(?mixed) => void = null) {
     let callbackToUse = null;
@@ -649,7 +677,7 @@ class CircleCollection extends DiagramElementCollection {
         Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 100)) / 100;
 
     if (this.varState.radialLines === 360) {
-      angleInSections = Math.floor(angleInSections);
+      angleInSections = Math.round(angleInSections);
     } else if (this.varState.radialLines === Math.PI * 2) {
       angleInSections = angleInSections.toFixed(2);
     } else {

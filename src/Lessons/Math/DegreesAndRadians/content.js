@@ -986,7 +986,7 @@ class Content extends LessonContent {
           There are |_2pi_radians| in a full circle.
         </p>
         <p class="lesson__p_width_50 lesson__font_0p8">
-          The arc of one radian has a length equal to the radius.
+          The arc of one radian has a length |equal| to the radius.
         </p>
         <p class="lesson__p_width_55 lesson__font_0p8">
           When using radians:
@@ -996,10 +996,11 @@ class Content extends LessonContent {
         angle: click(diag.pulseAngle, [diag], colors.angle),
         radius: click(diag.pulseRadius, [diag], colors.radius),
         arc_length: click(diag.pulseArc, [diag], colors.arc),
-        degrees: click(diag.showDegrees, [diag], colors.degrees),
-        radians: click(diag.showRadians, [diag], colors.radians),
+        degrees: click(diag.summaryShowDegrees, [diag], colors.degrees),
+        radians: click(diag.summaryShowRadians, [diag], colors.radians),
         _360_degrees: toHTML('360&deg;', 'id_360_deg', '', colors.degrees),
         _2pi_radians: toHTML('2&pi; radians', 'id_2pi_rad', '', colors.radians),
+        equal: click(diag.summaryShowRadiusAsArc, [diag, 'rad'], colors.action),
         // _360_degrees: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 1], colors.degrees),
         // _2pi_radians: clickWord('2&pi; radians', 'id_2pi_radians', diag.rotateTo, [diag, Math.PI * 1.999, 2, 1], colors.radians),
       },
@@ -1026,17 +1027,17 @@ class Content extends LessonContent {
         diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
         diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
         diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
-        const rotateToCircleAndDeg = () => {
-          diag.showDegrees();
-          diag.rotateTo(Math.PI * 1.999, 1, 1);
-        };
-        const rotateToCircleAndRad = () => {
-          diag.showRadians();
-          diag.rotateTo(Math.PI * 1.999, 1, 1);
-        };
+        // const rotateToCircleAndDeg = () => {
+        //   diag.showDegrees();
+        //   diag.rotateTo(Math.PI * 1.999, 1, 1);
+        // };
+        // const rotateToCircleAndRad = () => {
+        //   diag.showRadians();
+        //   diag.rotateTo(Math.PI * 1.999, 1, 1);
+        // };
 
-        onClickId('id_360_deg', rotateToCircleAndDeg, [diag]);
-        onClickId('id_2pi_rad', rotateToCircleAndRad, [diag]);
+        onClickId('id_360_deg', diag.summaryRotateToDeg, [diag, Math.PI * 1.999]);
+        onClickId('id_2pi_rad', diag.summaryRotateToRad, [diag, Math.PI * 1.999]);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
     });
