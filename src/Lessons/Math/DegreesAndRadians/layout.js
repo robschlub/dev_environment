@@ -83,6 +83,9 @@ export default function lessonLayout() {
       },
     },
 
+    circEquation: {
+      leftBottom: new Point(-1.6, -1.1),
+    },
     arcEquation: {
       left: new Point(-2.3, -1.2),
       leftMiddle: new Point(-2.5, -1.1),

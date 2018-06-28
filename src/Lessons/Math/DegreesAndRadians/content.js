@@ -911,13 +911,18 @@ class Content extends LessonContent {
       `,
       modifiers: {
         circle: click(diag.rotateTo, [diag, 1.999 * Math.PI, 1, 2], colors.arc),
+        circumference: click(diag.toggleCircEquations, [diag], colors.arc),
         // angle: click(diag.pulseAngle, [diag], colors.angle),
         // radius: click(diag.pulseRadius, [diag], colors.radius),
         // arc_length: click(diag.pulseArc, [diag], colors.arc),
       },
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.arcEquation.leftMiddle);
-        diag.arcEqn.arrange();
+        // diag._arcEquation.setPosition(layout.arcEquation.leftMiddle);
+        // diag.arcEqn.arrange(1.2, diag._arcEquation._equals);
+        diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
+        diag.circEqnShort.arrange(1, diag._circumferenceEquation._equals);
+        diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
+        diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
       },
       showOnly: [
         circle,
@@ -925,14 +930,20 @@ class Content extends LessonContent {
         circle._circumference,
         circle._arc,
         circle._reference,
+        diag._circumferenceEquation,
+        diag._circumferenceEquation._arc,
+        diag._circumferenceEquation._equals,
+        diag._circumferenceEquation._angle,
+        diag._circumferenceEquation._radius,
       ],
       show: [
         circle._angle,
-        diag._arcEquation,
+        // diag._arcEquation,
+        // diag._circumferenceEquation,
       ],
-      hide: [
-        diag._arcEquation._v,
-      ],
+      // hide: [
+        // diag._arcEquation._v,
+      // ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
         diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);

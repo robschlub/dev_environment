@@ -246,6 +246,40 @@ function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
   );
 }
 
+type circumferenceEquationType = {
+  _circumference: DiagramElementPrimative;
+  _radius: DiagramElementPrimative;
+  _twoPi: DiagramElementPrimative;
+  _times: DiagramElementPrimative;
+  _equals: DiagramElementPrimative;
+  _r: DiagramElementPrimative;
+  _c: DiagramElementPrimative;
+  _arcLength: DiagramElementPrimative;
+  _angle: DiagramElementPrimative;
+};
+
+function makeCircumferenceEquation(diagram: Diagram) {
+  const equationElements = diagram.equation.elements({
+    circumference: 'circumference',
+    radius: 'radius',
+    twoPi: `2${String.fromCharCode(960)} `,
+    times: ` ${String.fromCharCode(215)} `,
+    equals: '  =  ',
+    r: 'r',
+    c: 'c',
+    arc: 'arc length',
+    angle: 'angle',
+  }, colors.diagram.text.base);
+  equationElements._arc.setColor(colors.arc);
+  equationElements._circumference.setColor(colors.arc);
+  equationElements._c.setColor(colors.arc);
+  equationElements._r.setColor(colors.radius);
+  equationElements._radius.setColor(colors.radius);
+  equationElements._twoPi.setColor(colors.angle);
+  equationElements._angle.setColor(colors.angle);
+  return equationElements;
+}
+
 type equationType = {
   _arc: DiagramElementPrimative;
   _equals: DiagramElementPrimative;
@@ -404,9 +438,13 @@ class CircleCollection extends DiagramElementCollection {
   _angleText: angleTextType;
   _slider: sliderType;
   _arcEquation: equationType;
+  _circumferenceEquation: circumferenceEquationType;
   arcEqn: DiagramGLEquation;
   radiusEqn: DiagramGLEquation;
   angleEqn: DiagramGLEquation;
+  circEqn: DiagramGLEquation;
+  circEqnShort: DiagramGLEquation;
+  circEqnGeneral: DiagramGLEquation;
   varState: {
     radialLines: number,
     angleInSections: number,
@@ -436,20 +474,33 @@ class CircleCollection extends DiagramElementCollection {
     this.add('angleText', makeAngleText(shapes));
     this.add('slider', makeSlider(shapes, layout.slider));
     this.add('arcEquation', makeArcEquation(diagram));
+    this.add('circumferenceEquation', makeCircumferenceEquation(diagram));
 
     let eqn;
     eqn = diagram.equation.make(this._arcEquation);
     eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
-    // eqn.calcSize();
+
     this.arcEqn = eqn;
     eqn = this.diagram.equation.make(this._arcEquation);
     eqn.createEq(['radius', 'equals', eqn.frac('arc', 'angle', 'v')]);
-    // eqn.calcSize();
+
     this.radiusEqn = eqn;
     eqn = this.diagram.equation.make(this._arcEquation);
     eqn.createEq(['angle', 'equals', eqn.frac('arc', 'radius', 'v')]);
-    // eqn.calcSize();
+
     this.angleEqn = eqn;
+
+    eqn = this.diagram.equation.make(this._circumferenceEquation);
+    eqn.createEq(['circumference', 'equals', 'twoPi', 'times', 'radius']);
+    this.circEqn = eqn;
+
+    eqn = this.diagram.equation.make(this._circumferenceEquation);
+    eqn.createEq(['c', 'equals', 'twoPi', 'r']);
+    this.circEqnShort = eqn;
+
+    eqn = this.diagram.equation.make(this._circumferenceEquation);
+    eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
+    this.circEqnGeneral = eqn;
 
     this._slider.setCallback(this.updateSlider.bind(this));
 
@@ -536,6 +587,16 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  toggleCircEquations() {
+    if (this._circumferenceEquation._angle.isShown) {
+      this.circEqn.animateTo(1, 0.2, this._circumferenceEquation._equals);
+    } else if (this._circumferenceEquation._radius.isShown) {
+      this.circEqnShort.animateTo(1, 0.2, this._circumferenceEquation._equals);
+    } else if (this._circumferenceEquation._r.isShown) {
+      this.circEqnGeneral.animateTo(1, 0.2, this._circumferenceEquation._equals);
+    }
+    this.diagram.animateNextFrame();
+  }
   // setAngleUnits(units: string) {
   //   // $FlowFixMe
   //   this._angleText._units.vertices.element.innerHTML = units;
