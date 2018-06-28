@@ -79,6 +79,7 @@ export default function lessonLayout() {
       // topRight: new Point(1.1, -0.2),
       mostRight: new Point(1.6, -0.3),
       middleMostRight: new Point(1.6, -0.2),
+      summary: new Point(1.6, 0),
       angle: {
         small: 0.8,
         large: Math.PI * 1.4,
@@ -88,14 +89,18 @@ export default function lessonLayout() {
     circEquation: {
       leftBottom: new Point(-1.6, -1.1),
       twoPiOffset: new Point(0.08, 0),
+      summary: new Point(-1.7, -1.8),
+      summaryScale: 0.8,
     },
     arcEquation: {
       left: new Point(-2.3, -1.2),
       leftMiddle: new Point(-2.5, -1.1),
       centerTop: new Point(-1.0, 0.9),
       centerBottom: new Point(-0.5, -1.0),
-      leftBottom: new Point(-2.5, -1.3),
+      leftBottom: new Point(-1.7, -1.3),
       scale: 1.2,
+      summaryScale: 0.8,
+      summary: new Point(-1.7, -1.2),
     },
     sectionText: {
       position: new Point(-2.3, -0.3),
@@ -106,13 +111,13 @@ export default function lessonLayout() {
       top: new Point(0.7, 1.2),
       bottomMostRight: new Point(0.9, -1.7),
       bottomMostRightDeg: new Point(1.1, -1.7),
+      summary: new Point(1.1, -1.6),
       bottomRight: new Point(1.0, -1.8),
       units: {
         deg: 0.87,
         text: 0.90,
       },
     },
-    // splitCircleAngleStart: Math.PI * 1.4,
 
     colors,
   };

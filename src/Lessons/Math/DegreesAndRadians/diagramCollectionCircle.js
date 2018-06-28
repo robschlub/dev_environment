@@ -287,7 +287,8 @@ function makeCircumferenceEquation(diagram: Diagram) {
   equationElements._circumference.isTouchable = true;
   equationElements._arc.isTouchable = true;
   equationElements._equals.isTouchable = true;
-  equationElements.hasTouchableElements = true;
+  equationElements.isTouchable = true;
+  equationElements.touchInBoundingRect = true;
   equationElements.varState = 0;
   return equationElements;
 }
@@ -565,23 +566,20 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._radialLinesDeg.hideAll();
   }
   showDegrees() {
+    this.varState.radialLines = 360;
+    this._angleText.setUnits('&deg;');
+    this.updateNumSectionsText();
     this._circle._radialLinesDeg.showAll();
     this._angleText.showAll();
-    this.varState.radialLines = 360;
-    // this.setAngleUnits('&deg;');
-    this._angleText.setUnits('&deg;');
-    // this._angleText._units.vertices.element.innerHTML = ;
     this.diagram.animateNextFrame();
   }
 
   showRadians() {
-    
-    this._circle._radialLinesRad.show();
-    this._angleText.showAll();
     this.varState.radialLines = Math.PI * 2;
-    // this.setAngleUnits('&deg;');
     this._angleText.setUnits('radians');
-    // this._angleText._units.vertices.element.innerHTML = ;
+    this.updateNumSectionsText();
+    this._angleText.showAll();
+    this._circle._radialLinesRad.show();
     this.diagram.animateNextFrame();
   }
 
@@ -605,12 +603,12 @@ class CircleCollection extends DiagramElementCollection {
   summaryShowRadiusAsArc() {
     this.hideDegrees();
     this.showRadians();
+    this.rotateTo(1, 0, 2);
     this.arcRadius();
     this.diagram.animateNextFrame();
-    this.rotateTo(1, 2, 1);
   }
   summaryShowRadians() {
-    this._circle._radialLinesDeg.hideAll();
+    this.hideDegrees();
     this._circle._radiusToArc.hideAll();
     this._circle._radiusOnArc.hideAll();
     this.showRadians();
@@ -623,18 +621,54 @@ class CircleCollection extends DiagramElementCollection {
   }
   summaryRotateToDeg(angle: number) {
     this.summaryShowDegrees();
-    this.rotateTo(angle, 1, 1);
+    this.rotateTo(angle, 2, 2);
   }
   summaryRotateToRad(angle: number) {
     this.summaryShowRadians();
-    this.rotateTo(angle, 1, 1);
+    this.rotateTo(angle, 2, 2);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  summaryAngleToggler(toState: 'deg' | 'rad') {
+    const deg = document.getElementById('id_deg_toggle');
+    const rad = document.getElementById('id_rad_toggle');
+
+    if (deg == null || rad == null) {
+      return;
+    }
+    if (toState === 'deg') {
+      if (rad.classList.contains('portions_selected')) {
+        rad.classList.remove('portions_selected');
+      }
+      if (deg.classList.contains('portions_not_selected')) {
+        deg.classList.remove('portions_not_selected');
+      }
+      deg.classList.add('portions_selected');
+      rad.classList.add('portions_not_selected');
+      this.summaryShowDegrees();
+    } else {
+      if (deg.classList.contains('portions_selected')) {
+        deg.classList.remove('portions_selected');
+      }
+      if (rad.classList.contains('portions_not_selected')) {
+        rad.classList.remove('portions_not_selected');
+      }
+      rad.classList.add('portions_selected');
+      deg.classList.add('portions_not_selected');
+      this.summaryShowRadians();
+    }
   }
 
 
-  toggleCircEquations(callback: ?(?mixed) => void = null) {
+  toggleCircEquations(scale: number = 1, callback: ?(?mixed) => void = null) {
+    this.diagram.stop();
     let callbackToUse = null;
+    let scaleToUse = 1;
     if (typeof callback === 'function') {
       callbackToUse = callback;
+    }
+    if (typeof scale === 'number') {
+      scaleToUse = scale;
     }
     if (this._circumferenceEquation.varState === 0) {
       this._circumferenceEquation.varState += 1;
@@ -657,7 +691,7 @@ class CircleCollection extends DiagramElementCollection {
       this._circumferenceEquation._c.show();
       this._circumferenceEquation._r.show();
       this.circEqnShort.animateTo(
-        1, 2, this._circumferenceEquation._equals,
+        scaleToUse, 2, this._circumferenceEquation._equals,
         callbackToUse,
       );
     } else if (this._circumferenceEquation.varState === 2) {
@@ -877,7 +911,10 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._arc.color = colors.arc.slice();
   }
 
-  animateEquation(leftSide: 'arc' | 'radius' | 'angle') {
+  animateEquation(
+    leftSide: 'arc' | 'radius' | 'angle',
+    scale: number,
+  ) {
     const arcOptions =
       this._arcEquation._arc.animate.transform.translation.options;
     const radiusOptions =
@@ -891,7 +928,7 @@ class CircleCollection extends DiagramElementCollection {
     radiusOptions.magnitude = 0.7;
     arcOptions.direction = 'up';
 
-    const { scale } = layout.arcEquation;
+    // const { scale } = layout.arcEquation;
 
     if (leftSide === 'arc') {
       this.arcEqn.animateTo(scale, 2, this._arcEquation._equals);

@@ -51,9 +51,15 @@ body {
   padding-left: calc(var(--lesson__diagram-font-size) * 0.8);
 }
 
+
+.portions_not_selected {
+  color: color(diagram, 'disabled');
+}
+
 .portions_selected {
   color: color(diagram, 'text-plot');
 }
+
 
 #id_compare_text {
   color: map-get($geometry_colors, action);

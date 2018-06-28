@@ -719,11 +719,11 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag._arcEquation.showArc();
         diag._arcEquation._angle.onClick =
-          diag.animateEquation.bind(diag, 'angle');
+          diag.animateEquation.bind(diag, 'angle', layout.arcEquation.scale);
         diag._arcEquation._radius.onClick =
-          diag.animateEquation.bind(diag, 'radius');
+          diag.animateEquation.bind(diag, 'radius', layout.arcEquation.scale);
         diag._arcEquation._arc.onClick =
-          diag.animateEquation.bind(diag, 'arc');
+          diag.animateEquation.bind(diag, 'arc', layout.arcEquation.scale);
       },
     });
     this.addSection({
@@ -906,7 +906,7 @@ class Content extends LessonContent {
         circ._arc.onClick = diag.pulseArc.bind(diag);
       },
       transitionToNext: (done) => {
-        diag.toggleCircEquations(done);
+        diag.toggleCircEquations(1, done);
       },
     });
 
@@ -921,7 +921,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         circle: click(diag.rotateTo, [diag, 1.999 * Math.PI, 1, 2], colors.arc),
-        calculate: click(diag.toggleCircEquations, [diag], colors.action),
+        calculate: click(diag.toggleCircEquations, [diag, 1, null], colors.action),
 
       },
       setEnterState: () => {
@@ -962,83 +962,128 @@ class Content extends LessonContent {
         circ._c.onClick = diag.pulseCircumference.bind(diag);
         circ._circumference.onClick = diag.pulseCircumference.bind(diag);
         circ._twoPi.onClick = diag.rotateTo.bind(diag, 1.999 * Math.PI, 1, 2);
-        circ._equals.onClick = diag.toggleCircEquations.bind(diag);
+        circ._equals.onClick = diag.toggleCircEquations.bind(diag, 1, null);
       },
     });
     this.addSection({
       title: 'Summary',
       setContent: `
-        <p class="lesson__font_0p8" style="margin-top: 7%">
+        <p class="lesson__font_0p7" style="margin-top: 3%">
           There are 2 common ways to measure |angle|.
         </p>
         <ul>
           <li  class="lesson__font_0p6">
-            |degrees| - useful when using angle values
+            |degrees| - useful for simple angle calculations
           </li>
           <li  class="lesson__font_0p6">
-            |radians| - useful for relating |radius| and |arc_length|
+            |radians| - useful for relating |radius| and |arc| length
           </li>
         </ul>
-        <p class="lesson__p_width_55 lesson__font_0p8">
+        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:5%">
           There are |_360_degrees| in a full circle.
         </p>
-        <p class="lesson__p_width_55 lesson__font_0p8">
+        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:5%">
           There are |_2pi_radians| in a full circle.
         </p>
-        <p class="lesson__p_width_50 lesson__font_0p8">
-          The arc of one radian has a length |equal| to the radius.
+        <p class="lesson__p_width_50 lesson__font_0p7" style="margin-top:5%">
+          The |arc_length| of a |one_radian_angle| is |equal| to the |radius_|.
         </p>
-        <p class="lesson__p_width_55 lesson__font_0p8">
+        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:5%">
           When using radians:
+        </p>
+        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:8%">
+          Which leads to:
         </p>
       `,
       modifiers: {
         angle: click(diag.pulseAngle, [diag], colors.angle),
         radius: click(diag.pulseRadius, [diag], colors.radius),
+        radius_: click(diag.pulseRadius, [diag], colors.radius),
+        arc: click(diag.pulseArc, [diag], colors.arc),
         arc_length: click(diag.pulseArc, [diag], colors.arc),
-        degrees: click(diag.summaryShowDegrees, [diag], colors.degrees),
-        radians: click(diag.summaryShowRadians, [diag], colors.radians),
+        degrees: clickWord('degrees', 'id_deg_toggle', diag.summaryAngleToggler, [diag, 'deg']),
+        radians: clickWord('radians', 'id_rad_toggle', diag.summaryAngleToggler, [diag, 'rad']),
         _360_degrees: toHTML('360&deg;', 'id_360_deg', '', colors.degrees),
         _2pi_radians: toHTML('2&pi; radians', 'id_2pi_rad', '', colors.radians),
         equal: click(diag.summaryShowRadiusAsArc, [diag, 'rad'], colors.action),
-        // _360_degrees: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 1], colors.degrees),
-        // _2pi_radians: clickWord('2&pi; radians', 'id_2pi_radians', diag.rotateTo, [diag, Math.PI * 1.999, 2, 1], colors.radians),
+        one_radian_angle: click(diag.summaryRotateToRad, [diag, 1], colors.angle),
       },
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.arcEquation.leftBottom);
-        diag.arcEqn.arrange(0.8);
-        diag._angleText.setPosition(layout.angleEqualsText.bottomMostRightDeg);
+        let scale = layout.arcEquation.summaryScale;
+        diag._angleText.setPosition(layout.angleEqualsText.summary);
+
+        diag.radiusEqn.arrange(scale, diag._arcEquation._equals);
+        diag.angleEqn.arrange(scale, diag._arcEquation._equals);
+        diag.arcEqn.arrange(scale, diag._arcEquation._equals);
+        diag._arcEquation.setPosition(layout.arcEquation.summary);
+
+        scale = layout.circEquation.summaryScale;
+        diag.circEqn.arrange(scale, diag._circumferenceEquation._equals);
+        diag.circEqnShort.arrange(scale, diag._circumferenceEquation._equals);
+        diag.circEqnGeneral.arrange(scale, diag._circumferenceEquation._equals);
+        diag._circumferenceEquation.varState = 1;
+        const t = diag._circumferenceEquation._angle.transform.t();
+        if (t != null) {
+          diag._circumferenceEquation._twoPi.transform
+            .updateTranslation(t.add(layout.circEquation.twoPiOffset));
+        }
+        diag._circumferenceEquation.setPosition(layout.circEquation.summary);
       },
       showOnly: [
         circle,
         circle._radius,
         circle._reference,
         circle._arc,
+        diag._circumferenceEquation,
+        diag._circumferenceEquation._circumference,
+        diag._circumferenceEquation._equals,
+        diag._circumferenceEquation._twoPi,
+        diag._circumferenceEquation._radius,
+        diag._circumferenceEquation._times,
       ],
       show: [
         circle._angle,
-        diag._arcEquation,
+        // diag._arcEquation,
       ],
       hide: [
-        diag._arcEquation._v,
+        // diag._arcEquation._v,
       ],
       setSteadyState: () => {
-        diag.resetCircle('middleMostRight');
-        diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
-        diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
-        diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
-        // const rotateToCircleAndDeg = () => {
-        //   diag.showDegrees();
-        //   diag.rotateTo(Math.PI * 1.999, 1, 1);
-        // };
-        // const rotateToCircleAndRad = () => {
-        //   diag.showRadians();
-        //   diag.rotateTo(Math.PI * 1.999, 1, 1);
-        // };
+        diag.resetCircle('summary');
+        diag.summaryAngleToggler('deg');
+
+        const scale = layout.arcEquation.summaryScale;
+        diag._arcEquation.showArc();
+        diag._arcEquation._angle.onClick =
+          diag.animateEquation.bind(diag, 'angle', scale);
+        diag._arcEquation._radius.onClick =
+          diag.animateEquation.bind(diag, 'radius', scale);
+        diag._arcEquation._arc.onClick =
+          diag.animateEquation.bind(diag, 'arc', scale);
+
+        const circ = diag._circumferenceEquation;
+        // circ._angle.onClick = diag.pulseAngle.bind(diag);
+        // circ._radius.onClick = diag.pulseRadius.bind(diag);
+        // circ._arc.onClick = diag.pulseArc.bind(diag);
+        // circ._r.onClick = diag.pulseRadius.bind(diag);
+        // circ._c.onClick = diag.pulseCircumference.bind(diag);
+        // circ._circumference.onClick = diag.pulseCircumference.bind(diag);
+        // circ._twoPi.onClick = diag.rotateTo.bind(diag, 1.999 * Math.PI, 1, 2);
+        // circ._equals.onClick = diag.toggleCircEquations.bind(
+        //   diag,
+        //   layout.circEquation.summaryScale,
+        // );
+        circ.onClick = diag.toggleCircEquations.bind(
+          diag,
+          layout.circEquation.summaryScale,
+        );
 
         onClickId('id_360_deg', diag.summaryRotateToDeg, [diag, Math.PI * 1.999]);
         onClickId('id_2pi_rad', diag.summaryRotateToRad, [diag, Math.PI * 1.999]);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+      setLeaveState: () => {
+        diag._circumferenceEquation.onClick = null;
       },
     });
 /* eslint-disable */
