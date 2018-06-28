@@ -858,7 +858,88 @@ class Content extends LessonContent {
         // onClickId('id_rad5', rotateRad, [diag, 90]);
       },
     });
+    this.addSection({
+      title: 'Circumference of a circle',
+      setContent: `
+        <p class="lesson__p_width_50" style="margin-top:10%">
+          Let's use what we've learned about radians to calculate the |circumference| of any |circle| that we know the radius of.
+        </p>
+        <p class="lesson__p_width_50">
+          When using radians, |angle| and |radius| is related to |arc_length| by:
+        </p>
+      `,
+      modifiers: {
+        circle: click(diag.pulseCircumference, [diag], colors.arcLight),
+        angle: click(diag.pulseAngle, [diag], colors.angle),
+        radius: click(diag.pulseRadius, [diag], colors.radius),
+        arc_length: click(diag.pulseArc, [diag], colors.arc),
+      },
+      setEnterState: () => {
+        diag._arcEquation.setPosition(layout.arcEquation.leftMiddle);
+        diag.arcEqn.arrange();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._circumference,
+        circle._arc,
+        circle._reference,
+      ],
+      show: [
+        circle._angle,
+        diag._arcEquation,
+      ],
+      hide: [
+        diag._arcEquation._v,
+      ],
+      setSteadyState: () => {
+        diag.resetCircle('middleMostRight');
+        diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
+        diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
+        diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
+      },
+    });
 
+    this.addSection({
+      setContent: `
+        <p class="lesson__p_width_50" style="margin-top:10%">
+          A |circle| has an angle of |6.28|, or |2&pi; radians|.
+        </p>
+        <p class="lesson__p_width_50">
+          Therefore, we can calculate the |circumference| of any circle |just by knowing the radius|:
+        </p>
+      `,
+      modifiers: {
+        circle: click(diag.rotateTo, [diag, 1.999 * Math.PI, 1, 2], colors.arc),
+        // angle: click(diag.pulseAngle, [diag], colors.angle),
+        // radius: click(diag.pulseRadius, [diag], colors.radius),
+        // arc_length: click(diag.pulseArc, [diag], colors.arc),
+      },
+      setEnterState: () => {
+        diag._arcEquation.setPosition(layout.arcEquation.leftMiddle);
+        diag.arcEqn.arrange();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._circumference,
+        circle._arc,
+        circle._reference,
+      ],
+      show: [
+        circle._angle,
+        diag._arcEquation,
+      ],
+      hide: [
+        diag._arcEquation._v,
+      ],
+      setSteadyState: () => {
+        diag.resetCircle('middleMostRight');
+        diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
+        diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
+        diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
+      },
+    });
 
 /* eslint-disable */
 //     '<p>Rotate the stick, till the |_arc_length| is the |_same| as the stick length (|_radius|).</p>' +

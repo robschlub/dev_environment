@@ -88,7 +88,7 @@ function makeCompareText(shapes: Object) {
 function makeCircumference(shapes: Object) {
   return shapes.polygon(
     layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Point(0, 0),
+    layout.circlePoints, colors.arcLight, new Point(0, 0),
   );
 }
 
@@ -374,6 +374,7 @@ export type circleCollectionType = {
   _straightArc: straightArcType;
   _radiusOnArc: radiusOnArcType;
   _radiusToArc: radiusToArcType;
+  _circumference: DiagramElementPrimative;
 } & DiagramElementCollection;
 
 
@@ -386,9 +387,9 @@ function makeCircle(numSections: Array<number>, shapes: Object) {
   circle.add('radialLinesDeg', makeMajorAndMinRadialMarks(shapes, 36, 360));
   circle.add('radialLinesRad', makeRadialMarks(shapes, Math.PI * 2));
   circle.add('reference', makeReference(shapes));
+  circle.add('circumference', makeCircumference(shapes));
   circle.add('arc', makeArc(shapes, layout.radius));
   circle.add('straightArc', makeStraightArc(shapes));
-  circle.add('circumference', makeCircumference(shapes));
   circle.add('radius', makeRadius(shapes));
   circle.add('compareRadius', makeReference(shapes));
   circle.add('anchor', makeAnchor(shapes));
@@ -606,6 +607,11 @@ class CircleCollection extends DiagramElementCollection {
 
   pulseArc() {
     this._circle._arc.pulseThickNow(1, 1.04, 7);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseCircumference() {
+    this._circle._circumference.pulseThickNow(1, 1.04, 7);
     this.diagram.animateNextFrame();
   }
 
