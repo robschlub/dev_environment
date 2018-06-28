@@ -171,13 +171,16 @@ class Content extends LessonContent {
 
         const makeEquation = () => {
           circle._equation.transform.updateTranslation(0, 0);
-          circle._equation.show();
+          circle._equation.showOnly([circle._equation._d, circle._equation._c]);
           circle.equationTextToInitialPositions();
-          circle.eqn.animateTo(new Point(-1, 0), 1, 2);
-          circle._equation._d.disolveIn(1);
-          circle._equation._c.disolveIn(1);
-          circle._equation._equals.disolveInWithDelay(1.5, 1);
-          circle._equation._pi.disolveInWithDelay(1.5, 1, done);
+          // circle.eqn.animateTo(1, 2);
+          // circle._equation.showAll();
+          // circle._equation._d.disolveIn(1);
+          // circle._equation._c.disolveIn(1);
+          // circle._equation._equals.disolveInWithDelay(1.5, 1);
+          // circle._equation._pi.disolveInWithDelay(1.5, 1, done);
+          circle._equation.setPosition(new Point(-0.05 - 1, -0.065));
+          circle.eqn.animateTo(1, 2, null, done);
         };
 
         circle._circumferenceDimension.appearWithDelay(tDiameter, 1);
@@ -190,7 +193,8 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         circle.resetColors();
-        circle.eqn.calcSize(new Point(-1, 0), 1);
+        circle.eqn.arrange(1);
+        // circle._equation.setPosition(new Point(-1, 0));
         circle._equation.showAll();
         circle._diameterDimension.grow(1);
         circle._circumferenceDimension.grow(1);

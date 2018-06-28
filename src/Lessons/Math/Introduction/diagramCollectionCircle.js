@@ -304,8 +304,8 @@ class CircleCollection extends DiagramElementCollection {
     tct = tct === null || tct === undefined ? new Point(0, 0) : tct;
 
     if (tdt !== null && td !== null && tc !== null) {
-      this._equation._d.transform.updateTranslation(tdt.x + td.x, tdt.y + td.y);
-      this._equation._c.transform.updateTranslation(tct.x + tc.x, tct.y + tc.y);
+      this._equation._d.transform.updateTranslation(tdt.x + td.x + 1, tdt.y + td.y);
+      this._equation._c.transform.updateTranslation(tct.x + tc.x + 1, tct.y + tc.y);
     }
   }
 
