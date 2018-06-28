@@ -85,6 +85,7 @@ export default function lessonLayout() {
 
     circEquation: {
       leftBottom: new Point(-1.6, -1.1),
+      twoPiOffset: new Point(0.08, 0),
     },
     arcEquation: {
       left: new Point(-2.3, -1.2),

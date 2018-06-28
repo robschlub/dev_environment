@@ -875,28 +875,46 @@ class Content extends LessonContent {
         arc_length: click(diag.pulseArc, [diag], colors.arc),
       },
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.circEquation.leftBottom);
-        diag.arcEqn.arrange(1, diag._arcEquation._equals);
+        // diag._arcEquation.setPosition(layout.circEquation.leftBottom);
+        // diag.arcEqn.arrange(1, diag._arcEquation._equals);
+        diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
+        diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
+        diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
+        diag._circumferenceEquation.varState = 0;
+        const t = diag._circumferenceEquation._angle.transform.t();
+        if (t != null) {
+          diag._circumferenceEquation._twoPi.transform
+            .updateTranslation(t.add(layout.circEquation.twoPiOffset));
+        }
       },
+      blank: [
+        'toNext',
+      ],
       showOnly: [
         circle,
         circle._radius,
         circle._circumference,
         circle._arc,
         circle._reference,
+        diag._circumferenceEquation,
+        diag._circumferenceEquation._angle,
+        diag._circumferenceEquation._equals,
+        diag._circumferenceEquation._arc,
+        diag._circumferenceEquation._radius,
+        diag._circumferenceEquation._times,
       ],
       show: [
         circle._angle,
-        diag._arcEquation,
-      ],
-      hide: [
-        diag._arcEquation._v,
       ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
-        diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
-        diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
-        diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
+        const circ = diag._circumferenceEquation;
+        circ._angle.onClick = diag.pulseAngle.bind(diag);
+        circ._radius.onClick = diag.pulseRadius.bind(diag);
+        circ._arc.onClick = diag.pulseArc.bind(diag);
+      },
+      transitionToNext: (done) => {
+        diag.toggleCircEquations(done);
       },
     });
 
@@ -920,6 +938,11 @@ class Content extends LessonContent {
         diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
         diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
         diag._circumferenceEquation.varState = 1;
+        const t = diag._circumferenceEquation._angle.transform.t();
+        if (t != null) {
+          diag._circumferenceEquation._twoPi.transform
+            .updateTranslation(t.add(layout.circEquation.twoPiOffset));
+        }
       },
       showOnly: [
         circle,

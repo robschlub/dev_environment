@@ -599,17 +599,19 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  toggleCircEquations() {
+  toggleCircEquations(callback: ?(?mixed) => void = null) {
+    let callbackToUse = null;
+    if (typeof callback === 'function') {
+      callbackToUse = callback;
+    }
     if (this._circumferenceEquation.varState === 0) {
       this._circumferenceEquation.varState += 1;
-      const t = this._circumferenceEquation._twoPi.transform.t();
+      const t = this._circumferenceEquation._angle.transform.t();
       if (t != null) {
-        this._circumferenceEquation._twoPi.transform.updateTranslation(
-          t.x + 0.1,
-          t.y,
-        );
+        this._circumferenceEquation._twoPi.transform
+          .updateTranslation(t.add(layout.circEquation.twoPiOffset));
       }
-      this.circEqn.hideShow(0.5, 0.5);
+      this.circEqn.hideShow(0.5, 0.5, callbackToUse);
     } else if (this._circumferenceEquation.varState === 1) {
       this._circumferenceEquation.varState += 1;
       let t = this._circumferenceEquation._radius.transform.t();
@@ -622,10 +624,13 @@ class CircleCollection extends DiagramElementCollection {
       }
       this._circumferenceEquation._c.show();
       this._circumferenceEquation._r.show();
-      this.circEqnShort.animateTo(1, 2, this._circumferenceEquation._equals);
+      this.circEqnShort.animateTo(
+        1, 2, this._circumferenceEquation._equals,
+        callbackToUse,
+      );
     } else if (this._circumferenceEquation.varState === 2) {
       this._circumferenceEquation.varState = 0;
-      this.circEqnGeneral.hideShow(0.5, 0.5);
+      this.circEqnGeneral.hideShow(0.5, 0.5, callbackToUse);
     }
     this.diagram.animateNextFrame();
   }
