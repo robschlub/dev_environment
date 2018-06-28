@@ -89,7 +89,7 @@ export default function lessonLayout() {
     circEquation: {
       leftBottom: new Point(-1.6, -1.1),
       twoPiOffset: new Point(0.08, 0),
-      summary: new Point(-1.7, -1.8),
+      summary: new Point(-1.55, -1.75),
       summaryScale: 0.8,
     },
     arcEquation: {
@@ -100,7 +100,7 @@ export default function lessonLayout() {
       leftBottom: new Point(-1.7, -1.3),
       scale: 1.2,
       summaryScale: 0.8,
-      summary: new Point(-1.7, -1.2),
+      summary: new Point(-1.55, -1.1),
     },
     sectionText: {
       position: new Point(-2.3, -0.3),

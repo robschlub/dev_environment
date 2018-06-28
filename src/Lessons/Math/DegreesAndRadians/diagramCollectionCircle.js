@@ -914,6 +914,9 @@ class CircleCollection extends DiagramElementCollection {
   animateEquation(
     leftSide: 'arc' | 'radius' | 'angle',
     scale: number,
+    radiusMag: number,
+    angleMag: number,
+    arcMag: number,
   ) {
     const arcOptions =
       this._arcEquation._arc.animate.transform.translation.options;
@@ -924,8 +927,9 @@ class CircleCollection extends DiagramElementCollection {
 
     radiusOptions.direction = 'down';
     angleOptions.direction = 'down';
-    angleOptions.magnitude = 0.3;
-    radiusOptions.magnitude = 0.7;
+    angleOptions.magnitude = angleMag;
+    radiusOptions.magnitude = radiusMag;
+    arcOptions.magnitude = arcMag;
     arcOptions.direction = 'up';
 
     // const { scale } = layout.arcEquation;
