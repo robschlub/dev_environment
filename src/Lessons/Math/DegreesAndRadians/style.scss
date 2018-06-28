@@ -16,6 +16,8 @@ $colors: (
   radiusLight:      map-get($geometry_colors, radiusLight),
   arc:              map-get($geometry_colors, arc),
   arcLight:         map-get($geometry_colors, arcLight),
+  degrees:          map-get($geometry_colors, degrees),
+  radians:          map-get($geometry_colors, radians),
 );
 
 body {

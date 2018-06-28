@@ -965,7 +965,81 @@ class Content extends LessonContent {
         circ._equals.onClick = diag.toggleCircEquations.bind(diag);
       },
     });
+    this.addSection({
+      title: 'Summary',
+      setContent: `
+        <p class="lesson__font_0p8" style="margin-top: 7%">
+          There are 2 common ways to measure |angle|.
+        </p>
+        <ul>
+          <li  class="lesson__font_0p6">
+            |degrees| - useful when using angle values
+          </li>
+          <li  class="lesson__font_0p6">
+            |radians| - useful for relating |radius| and |arc_length|
+          </li>
+        </ul>
+        <p class="lesson__p_width_55 lesson__font_0p8">
+          There are |_360_degrees| in a full circle.
+        </p>
+        <p class="lesson__p_width_55 lesson__font_0p8">
+          There are |_2pi_radians| in a full circle.
+        </p>
+        <p class="lesson__p_width_50 lesson__font_0p8">
+          The arc of one radian has a length equal to the radius.
+        </p>
+        <p class="lesson__p_width_55 lesson__font_0p8">
+          When using radians:
+        </p>
+      `,
+      modifiers: {
+        angle: click(diag.pulseAngle, [diag], colors.angle),
+        radius: click(diag.pulseRadius, [diag], colors.radius),
+        arc_length: click(diag.pulseArc, [diag], colors.arc),
+        degrees: click(diag.showDegrees, [diag], colors.degrees),
+        radians: click(diag.showRadians, [diag], colors.radians),
+        _360_degrees: toHTML('360&deg;', 'id_360_deg', '', colors.degrees),
+        _2pi_radians: toHTML('2&pi; radians', 'id_2pi_rad', '', colors.radians),
+        // _360_degrees: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 1], colors.degrees),
+        // _2pi_radians: clickWord('2&pi; radians', 'id_2pi_radians', diag.rotateTo, [diag, Math.PI * 1.999, 2, 1], colors.radians),
+      },
+      setEnterState: () => {
+        diag._arcEquation.setPosition(layout.arcEquation.leftBottom);
+        diag.arcEqn.arrange(0.8);
+        diag._angleText.setPosition(layout.angleEqualsText.bottomMostRightDeg);
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._reference,
+        circle._arc,
+      ],
+      show: [
+        circle._angle,
+        diag._arcEquation,
+      ],
+      hide: [
+        diag._arcEquation._v,
+      ],
+      setSteadyState: () => {
+        diag.resetCircle('middleMostRight');
+        diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
+        diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
+        diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
+        const rotateToCircleAndDeg = () => {
+          diag.showDegrees();
+          diag.rotateTo(Math.PI * 1.999, 1, 1);
+        };
+        const rotateToCircleAndRad = () => {
+          diag.showRadians();
+          diag.rotateTo(Math.PI * 1.999, 1, 1);
+        };
 
+        onClickId('id_360_deg', rotateToCircleAndDeg, [diag]);
+        onClickId('id_2pi_rad', rotateToCircleAndRad, [diag]);
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+    });
 /* eslint-disable */
 //     '<p>Rotate the stick, till the |_arc_length| is the |_same| as the stick length (|_radius|).</p>' +
 //             '<p>|_Compare| the |_arc_length1| to the |_radius1| length at different angles.<p>' +

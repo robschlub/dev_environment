@@ -19,6 +19,8 @@ const cssColorNames = [
   'rotation',
   'action',
   'disabled',
+  'degrees',
+  'radians',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -92,6 +94,7 @@ export default function lessonLayout() {
       leftMiddle: new Point(-2.5, -1.1),
       centerTop: new Point(-1.0, 0.9),
       centerBottom: new Point(-0.5, -1.0),
+      leftBottom: new Point(-2.5, -1.3),
       scale: 1.2,
     },
     sectionText: {

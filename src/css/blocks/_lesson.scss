@@ -413,6 +413,31 @@ $diagram_ratio: 1.5;
   color: color(diagram, 'text-english');
 }
 
+.lesson__font_0p8 {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+  // margin-left: calc(var(--lesson__text-margin) * 1);
+}
+
+.lesson__font_0p7 {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+  // margin-left: calc(var(--lesson__text-margin) * 1);
+}
+
+.lesson__font_0p6 {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  // margin-left: calc(var(--lesson__text-margin) * 1);
+}
+
+.lesson__font_0p5 {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
+  // margin-left: calc(var(--lesson__text-margin) * 1);
+}
+
+.lesson__font_0p4 {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.4);
+  // margin-left: calc(var(--lesson__text-margin) * 1);
+}
+
 .lesson__sub_title {
   padding-top: 0;
   padding-bottom: 0;

@@ -565,21 +565,25 @@ class CircleCollection extends DiagramElementCollection {
     this._circle._radialLinesDeg.hideAll();
   }
   showDegrees() {
+    this._circle._radialLinesRad.hide();
     this._circle._radialLinesDeg.showAll();
     this._angleText.showAll();
     this.varState.radialLines = 360;
     // this.setAngleUnits('&deg;');
     this._angleText.setUnits('&deg;');
     // this._angleText._units.vertices.element.innerHTML = ;
+    this.diagram.animateNextFrame();
   }
 
   showRadians() {
-    // this._circle._radialLinesRad.showAll();
+    this._circle._radialLinesDeg.hideAll();
+    this._circle._radialLinesRad.show();
     this._angleText.showAll();
     this.varState.radialLines = Math.PI * 2;
     // this.setAngleUnits('&deg;');
     this._angleText.setUnits('radians');
     // this._angleText._units.vertices.element.innerHTML = ;
+    this.diagram.animateNextFrame();
   }
 
 
