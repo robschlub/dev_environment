@@ -826,7 +826,7 @@ class Content extends LessonContent {
         diag.resetCircle('middleMostRight');
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.bottomMostRightDeg);
         diag.showDegrees();
-        const bindArray = deg => [diag, deg / 180 * Math.PI, 2, 1];
+        // const bindArray = deg => [diag, deg / 180 * Math.PI, 2, 1];
         const rotateDeg = (angle: number) => {
           diag.showDegrees();
           diag.rotateTo(angle / 180 * Math.PI, 2, 1);
