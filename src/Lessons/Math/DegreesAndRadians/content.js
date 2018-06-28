@@ -765,10 +765,10 @@ class Content extends LessonContent {
           eqn.createEq([eqn.frac(numerator, denominator)]);
           return eqn.render();
         };
-        const _2pi = '2&pi;';
-        const _pi = '&pi;';
+        // const _2pi = '2&pi;';
+        // const _pi = '&pi;';
         const _3piOn2 = fraction('id_3pi_2', '3&pi;', '2');
-        const _2piOn3 = fraction('id_2pi', '2&pi;', '3');
+        const _2piOn3 = fraction('id_2pi_3', '2&pi;', '3');
         const _piOn2 = fraction('id_pi_2', '&pi;', '2');
         const _piOn3 = fraction('id_pi_3', '&pi;', '3');
         return `
@@ -777,13 +777,13 @@ class Content extends LessonContent {
           </p>
           <table class="lesson__table lesson__common_angles_table">
             <tr>
-              <td>Full circle:</td><td>|_360deg|</td><td>${_2pi}</td><td>rad</td>
+              <td>Full circle:</td><td>|_360deg|</td><td>|_2pi|</td><td>rad</td>
             </tr>
             <tr>
               <td>Three quarter circle:</td><td>|_270deg|</td><td>${_3piOn2}</td><td>rad</td>
             </tr>
             <tr>
-              <td>Half circle:</td><td>|_180deg|</td><td>${_pi}</td><td>rad</td>
+              <td>Half circle:</td><td>|_180deg|</td><td>|_pi|</td><td>rad</td>
             </tr>
             <tr>
               <td>One third circle:</td><td>|_120deg|</td><td>${_2piOn3}</td><td>rad</td>
@@ -796,8 +796,10 @@ class Content extends LessonContent {
             </tr>
           </table>
         `;
-      }, 
+      },
       modifiers: {
+        _2pi: actionWord('2&pi;', 'id_2pi', colors.action),
+        _pi: actionWord('&pi;', 'id_pi', colors.action),
         _360deg: actionWord('360&deg;', 'id_360', colors.diagram.text.keyword),
         _270deg: actionWord('270&deg;', 'id_270', colors.diagram.text.keyword),
         _180deg: actionWord('180&deg;', 'id_180', colors.diagram.text.keyword),
@@ -824,16 +826,29 @@ class Content extends LessonContent {
         diag.resetCircle('middleMostRight');
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.bottomMostRightDeg);
         diag.showDegrees();
-        const bindArray = deg => [diag, deg / 180 * Math.PI, 0, 1, () => {}];
+        const bindArray = deg => [diag, deg / 180 * Math.PI, 2, 1];
+        const rotateDeg = (angle: number) => {
+          diag.showDegrees();
+          diag.rotateTo(angle / 180 * Math.PI, 2, 1);
+        };
+        const rotateRad = (angle: number) => {
+          diag.showRadians();
+          diag.rotateTo(angle / 180 * Math.PI, 2, 1);
+        };
         onClickId('id_angle', diag.pulseAngle, [diag]);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
-        onClickId('id_360', diag.rotateTo, bindArray(359.99));
-        onClickId('id_270', diag.rotateTo, bindArray(270));
-        onClickId('id_180', diag.rotateTo, bindArray(180));
-        onClickId('id_120', diag.rotateTo, bindArray(120));
-        onClickId('id_90', diag.rotateTo, bindArray(90));
-        onClickId('id_60', diag.rotateTo, bindArray(60));
-        onClickId('id_')
+        onClickId('id_360', rotateDeg, [diag, 359.99]);
+        onClickId('id_270', rotateDeg, [diag, 270]);
+        onClickId('id_180', rotateDeg, [diag, 180]);
+        onClickId('id_120', rotateDeg, [diag, 120]);
+        onClickId('id_90', rotateDeg, [diag, 90]);
+        onClickId('id_60', rotateDeg, [diag, 60]);
+        onClickId('id_2pi', rotateRad, [diag, 359.99]);
+        onClickId('id_3pi_2', rotateRad, [diag, 270]);
+        onClickId('id_pi', rotateRad, [diag, 180]);
+        onClickId('id_2pi_3', rotateRad, [diag, 120]);
+        onClickId('id_pi_2', rotateRad, [diag, 90]);
+        onClickId('id_pi_3', rotateRad, [diag, 60]);
       },
     });
 

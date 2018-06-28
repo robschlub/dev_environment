@@ -108,4 +108,5 @@ body {
 
 .equation_element {
   font-size: calc(var(--lesson__diagram-font-size) * 0.45);
+  color: color(diagram, 'action');
 }
