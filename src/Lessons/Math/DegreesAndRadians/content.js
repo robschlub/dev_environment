@@ -850,12 +850,6 @@ class Content extends LessonContent {
         onClickId('id_pi', rotateRad, [diag, 180]);
         onClickId('id_2pi_3', rotateRad, [diag, 120]);
         onClickId('id_pi_2', rotateRad, [diag, 90]);
-
-        // onClickId('id_rad1', rotateRad, [diag, 359.99]);
-        // onClickId('id_rad2', rotateRad, [diag, 270]);
-        // onClickId('id_rad3', rotateRad, [diag, 180]);
-        // onClickId('id_rad4', rotateRad, [diag, 120]);
-        // onClickId('id_rad5', rotateRad, [diag, 90]);
       },
     });
     this.addSection({
@@ -875,8 +869,6 @@ class Content extends LessonContent {
         arc_length: click(diag.pulseArc, [diag], colors.arc),
       },
       setEnterState: () => {
-        // diag._arcEquation.setPosition(layout.circEquation.leftBottom);
-        // diag.arcEqn.arrange(1, diag._arcEquation._equals);
         diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
         diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
         diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
