@@ -33,7 +33,7 @@ class Content extends LessonContent {
           Many |_shapes| have |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
-        </p><p style="margin-top:30%">
+        </p><p style="margin-top:33%">
           The |_sharpness| of the corner is a property that can describe a shape.
         </p>`,
       modifiers: {
