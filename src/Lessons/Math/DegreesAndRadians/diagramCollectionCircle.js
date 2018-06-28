@@ -256,6 +256,7 @@ type circumferenceEquationType = {
   _c: DiagramElementPrimative;
   _arcLength: DiagramElementPrimative;
   _angle: DiagramElementPrimative;
+  varState: number;
 };
 
 function makeCircumferenceEquation(diagram: Diagram) {
@@ -277,6 +278,17 @@ function makeCircumferenceEquation(diagram: Diagram) {
   equationElements._radius.setColor(colors.radius);
   equationElements._twoPi.setColor(colors.angle);
   equationElements._angle.setColor(colors.angle);
+
+  equationElements._radius.isTouchable = true;
+  equationElements._angle.isTouchable = true;
+  equationElements._twoPi.isTouchable = true;
+  equationElements._r.isTouchable = true;
+  equationElements._c.isTouchable = true;
+  equationElements._circumference.isTouchable = true;
+  equationElements._arc.isTouchable = true;
+  equationElements._equals.isTouchable = true;
+  equationElements.hasTouchableElements = true;
+  equationElements.varState = 0;
   return equationElements;
 }
 
@@ -299,14 +311,14 @@ function makeArcEquation(diagram: Diagram) {
     equals: '  =  ',
     v: diagram.equation.vinculum(colors.diagram.text.base),
   }, colors.diagram.text.base);
-  equationElements._arc.vertices.setColor(colors.arc);
+  equationElements._arc.setColor(colors.arc);
   equationElements._arc.isTouchable = true;
   equationElements._arc.animate.transform.translation.style = 'curved';
-  equationElements._radius.vertices.setColor(colors.radius);
+  equationElements._radius.setColor(colors.radius);
   equationElements._radius.isTouchable = true;
   equationElements._radius.animate.transform.translation.style = 'curved';
   equationElements._radius.animate.transform.translation.options.direction = 1;
-  equationElements._angle.vertices.setColor(colors.angle);
+  equationElements._angle.setColor(colors.angle);
   equationElements._angle.isTouchable = true;
   equationElements._angle.animate.transform.translation.style = 'curved';
   equationElements._angle.animate.transform.translation.options.direction = 1;
@@ -588,12 +600,32 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   toggleCircEquations() {
-    if (this._circumferenceEquation._angle.isShown) {
-      this.circEqn.animateTo(1, 0.2, this._circumferenceEquation._equals);
-    } else if (this._circumferenceEquation._radius.isShown) {
-      this.circEqnShort.animateTo(1, 0.2, this._circumferenceEquation._equals);
-    } else if (this._circumferenceEquation._r.isShown) {
-      this.circEqnGeneral.animateTo(1, 0.2, this._circumferenceEquation._equals);
+    if (this._circumferenceEquation.varState === 0) {
+      this._circumferenceEquation.varState += 1;
+      const t = this._circumferenceEquation._twoPi.transform.t();
+      if (t != null) {
+        this._circumferenceEquation._twoPi.transform.updateTranslation(
+          t.x + 0.1,
+          t.y,
+        );
+      }
+      this.circEqn.hideShow(0.5, 0.5);
+    } else if (this._circumferenceEquation.varState === 1) {
+      this._circumferenceEquation.varState += 1;
+      let t = this._circumferenceEquation._radius.transform.t();
+      if (t != null) {
+        this._circumferenceEquation._r.setPosition(t);
+      }
+      t = this._circumferenceEquation._circumference.transform.t();
+      if (t != null) {
+        this._circumferenceEquation._c.setPosition(t);
+      }
+      this._circumferenceEquation._c.show();
+      this._circumferenceEquation._r.show();
+      this.circEqnShort.animateTo(1, 2, this._circumferenceEquation._equals);
+    } else if (this._circumferenceEquation.varState === 2) {
+      this._circumferenceEquation.varState = 0;
+      this.circEqnGeneral.hideShow(0.5, 0.5);
     }
     this.diagram.animateNextFrame();
   }

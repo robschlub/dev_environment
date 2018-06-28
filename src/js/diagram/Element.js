@@ -1043,6 +1043,20 @@ class DiagramElement {
     // console.log("disolve out", targetColor, this.color)
   }
 
+  disolveOutWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const targetColor = this.color.slice();
+    targetColor[3] = 0;
+    // this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
+    const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
+    const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
+    this.animate.color.toDisolve = 'out';
+    this.animateColorPlan([phase1, phase2], checkCallback(callback));
+  }
+
   // With update only first instace of translation in the transform order
   animateTranslationTo(
     translation: Point,

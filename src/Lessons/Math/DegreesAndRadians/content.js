@@ -862,10 +862,10 @@ class Content extends LessonContent {
       title: 'Circumference of a circle',
       setContent: `
         <p class="lesson__p_width_50" style="margin-top:10%">
-          Let's use what we've learned about radians to calculate the |circumference| of any |circle| that we know the radius of.
+          Let's use what we've learned about radians to calculate the |circumference| of any |circle| |we know the radius of|.
         </p>
         <p class="lesson__p_width_50">
-          When using radians, |angle| and |radius| is related to |arc_length| by:
+          When using radians, |angle| and |radius| are related to |arc_length|:
         </p>
       `,
       modifiers: {
@@ -875,8 +875,8 @@ class Content extends LessonContent {
         arc_length: click(diag.pulseArc, [diag], colors.arc),
       },
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.arcEquation.leftMiddle);
-        diag.arcEqn.arrange();
+        diag._arcEquation.setPosition(layout.circEquation.leftBottom);
+        diag.arcEqn.arrange(1, diag._arcEquation._equals);
       },
       showOnly: [
         circle,
@@ -906,23 +906,20 @@ class Content extends LessonContent {
           A |circle| has an angle of |6.28|, or |2&pi; radians|.
         </p>
         <p class="lesson__p_width_50">
-          Therefore, we can calculate the |circumference| of any circle |just by knowing the radius|:
+          Therefore, we can |calculate| the |circumference of any circle from just the radius|:
         </p>
       `,
       modifiers: {
         circle: click(diag.rotateTo, [diag, 1.999 * Math.PI, 1, 2], colors.arc),
-        circumference: click(diag.toggleCircEquations, [diag], colors.arc),
-        // angle: click(diag.pulseAngle, [diag], colors.angle),
-        // radius: click(diag.pulseRadius, [diag], colors.radius),
-        // arc_length: click(diag.pulseArc, [diag], colors.arc),
+        calculate: click(diag.toggleCircEquations, [diag], colors.action),
+
       },
       setEnterState: () => {
-        // diag._arcEquation.setPosition(layout.arcEquation.leftMiddle);
-        // diag.arcEqn.arrange(1.2, diag._arcEquation._equals);
         diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
         diag.circEqnShort.arrange(1, diag._circumferenceEquation._equals);
         diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
         diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
+        diag._circumferenceEquation.varState = 1;
       },
       showOnly: [
         circle,
@@ -931,24 +928,26 @@ class Content extends LessonContent {
         circle._arc,
         circle._reference,
         diag._circumferenceEquation,
-        diag._circumferenceEquation._arc,
+        diag._circumferenceEquation._circumference,
         diag._circumferenceEquation._equals,
-        diag._circumferenceEquation._angle,
+        diag._circumferenceEquation._twoPi,
         diag._circumferenceEquation._radius,
+        diag._circumferenceEquation._times,
       ],
       show: [
         circle._angle,
-        // diag._arcEquation,
-        // diag._circumferenceEquation,
       ],
-      // hide: [
-        // diag._arcEquation._v,
-      // ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
-        diag._arcEquation._angle.onClick = diag.pulseAngle.bind(diag);
-        diag._arcEquation._radius.onClick = diag.pulseRadius.bind(diag);
-        diag._arcEquation._arc.onClick = diag.pulseArc.bind(diag);
+        const circ = diag._circumferenceEquation;
+        circ._angle.onClick = diag.pulseAngle.bind(diag);
+        circ._radius.onClick = diag.pulseRadius.bind(diag);
+        circ._arc.onClick = diag.pulseArc.bind(diag);
+        circ._r.onClick = diag.pulseRadius.bind(diag);
+        circ._c.onClick = diag.pulseCircumference.bind(diag);
+        circ._circumference.onClick = diag.pulseCircumference.bind(diag);
+        circ._twoPi.onClick = diag.rotateTo.bind(diag, 1.999 * Math.PI, 1, 2);
+        circ._equals.onClick = diag.toggleCircEquations.bind(diag);
       },
     });
 
