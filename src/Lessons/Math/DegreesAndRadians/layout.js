@@ -97,6 +97,7 @@ export default function lessonLayout() {
       left: new Point(-2.3, -0.6),
       top: new Point(0.7, 1),
       bottomMostRight: new Point(0.9, -1.6),
+      bottomMostRightDeg: new Point(1.1, -1.7),
       bottomRight: new Point(1.0, -1.8),
       units: {
         deg: 0.87,
