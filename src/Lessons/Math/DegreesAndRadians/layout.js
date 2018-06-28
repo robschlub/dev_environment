@@ -72,10 +72,10 @@ export default function lessonLayout() {
     },
 
     circle: {
-      center: new Point(0, -0.5),
-      right: new Point(1.1, -0.5),
+      center: new Point(0, -0.3),
+      right: new Point(1.1, -0.3),
       // topRight: new Point(1.1, -0.2),
-      mostRight: new Point(1.6, -0.5),
+      mostRight: new Point(1.6, -0.3),
       middleMostRight: new Point(1.6, -0.2),
       angle: {
         small: 0.8,
@@ -93,10 +93,10 @@ export default function lessonLayout() {
       position: new Point(-2.3, -0.3),
     },
     angleEqualsText: {
-      leftCenter: new Point( -2.1, -0.4),
+      leftCenter: new Point( -2.1, -0.2),
       left: new Point(-2.3, -0.6),
-      top: new Point(0.7, 1),
-      bottomMostRight: new Point(0.9, -1.6),
+      top: new Point(0.7, 1.2),
+      bottomMostRight: new Point(0.9, -1.7),
       bottomMostRightDeg: new Point(1.1, -1.7),
       bottomRight: new Point(1.0, -1.8),
       units: {

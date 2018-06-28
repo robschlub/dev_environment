@@ -198,7 +198,7 @@ class Content extends LessonContent {
         <p>
           One way, is to |divide| the circle into |portions|.
         </p>
-        <p>
+        <p class="lesson__p_width_50">
           For example, here are |12 equal portions| (like a clock).
         </p>
         `,
@@ -219,10 +219,10 @@ class Content extends LessonContent {
       ],
 
       transitionFromNext: (done) => {
-        diag.transitionCircle(done, 'center');
+        diag.transitionCircle(done, 'right');
       },
       setSteadyState: () => {
-        diag.resetCircle('center');
+        diag.resetCircle('right');
       },
     });
 
@@ -799,11 +799,11 @@ class Content extends LessonContent {
       modifiers: {
         _2pi: actionWord('2&pi;', 'id_2pi', colors.action),
         _pi: actionWord('&pi;', 'id_pi', colors.action),
-        _360deg: actionWord('360', 'id_360', colors.diagram.text.keyword),
-        _270deg: actionWord('270', 'id_270', colors.diagram.text.keyword),
-        _180deg: actionWord('180', 'id_180', colors.diagram.text.keyword),
-        _120deg: actionWord('120', 'id_120', colors.diagram.text.keyword),
-        _90deg: actionWord('90', 'id_90', colors.diagram.text.keyword),
+        _360deg: actionWord('360', 'id_360a', colors.diagram.text.keyword),
+        _270deg: actionWord('270', 'id_270a', colors.diagram.text.keyword),
+        _180deg: actionWord('180', 'id_180a', colors.diagram.text.keyword),
+        _120deg: actionWord('120', 'id_120a', colors.diagram.text.keyword),
+        _90deg: actionWord('90', 'id_90a', colors.diagram.text.keyword),
         // rad1: toHTML('rad', 'id_rad1', '', colors.action),
         // rad2: toHTML('rad', 'id_rad2', '', colors.action),
         // rad3: toHTML('rad', 'id_rad3', '', colors.action),
@@ -840,16 +840,17 @@ class Content extends LessonContent {
         };
         onClickId('id_angle', diag.pulseAngle, [diag]);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
-        onClickId('id_360', rotateDeg, [diag, 359.99]);
-        onClickId('id_270', rotateDeg, [diag, 270]);
-        onClickId('id_180', rotateDeg, [diag, 180]);
-        onClickId('id_120', rotateDeg, [diag, 120]);
-        onClickId('id_90', rotateDeg, [diag, 90]);
+        onClickId('id_360a', rotateDeg, [diag, 359.99]);
+        onClickId('id_270a', rotateDeg, [diag, 270]);
+        onClickId('id_180a', rotateDeg, [diag, 180]);
+        onClickId('id_120a', rotateDeg, [diag, 120]);
+        onClickId('id_90a', rotateDeg, [diag, 90]);
         onClickId('id_2pi', rotateRad, [diag, 359.99]);
         onClickId('id_3pi_2', rotateRad, [diag, 270]);
         onClickId('id_pi', rotateRad, [diag, 180]);
         onClickId('id_2pi_3', rotateRad, [diag, 120]);
         onClickId('id_pi_2', rotateRad, [diag, 90]);
+
         // onClickId('id_rad1', rotateRad, [diag, 359.99]);
         // onClickId('id_rad2', rotateRad, [diag, 270]);
         // onClickId('id_rad3', rotateRad, [diag, 180]);
