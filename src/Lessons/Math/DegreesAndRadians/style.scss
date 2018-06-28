@@ -72,15 +72,19 @@ body {
 
 .lesson__common_angles_table {
   font-size: calc(var(--lesson__diagram-font-size) * 0.55);
-  width: 50%;
+  width: 45%;
   table-layout: fixed;
   color: color(diagram, 'text-base');
   margin-top: 5%;
-  margin-left: 5%; 
+  margin-left: 5%;
+}
+
+.lesson__common_angles_table td {
+  height: calc(var(--lesson__diagram-font-size) * 2);
 }
 
 .lesson__common_angles_table td:first-child {
-  width: 50%;
+  width: 55%;
 }
 
 .lesson__common_angles_table td:nth-child(2) {
@@ -89,24 +93,63 @@ body {
 
 .lesson__common_angles_table td:nth-child(3) {
   text-align: center;
-  width: 13%;
+  width: 17%;
 }
+
 .lesson__common_angles_table td:last-child {
   padding-left: 0;
   margin-left: 0;
 }
 
-.lesson__common_angles_table tr:nth-child(3) td:nth-child(3){
-  text-align: right;
-  width: 13%;
-  padding-right: 3%
+.lesson__common_angles_table tr td:first-child {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
 }
 
-.lesson__common_angles_table td {
-  height: calc(var(--lesson__diagram-font-size) * 2);
+.lesson__common_angles_table tr:first-child td {
+  height: calc(var(--lesson__diagram-font-size) * 0.3);
+  padding: 0;
+  margin: 0;
 }
+
+// .lesson__common_angles_table tr:first-child td:nth-child(3) {
+//   // text-align: right;
+//   width: 13%;
+//   padding-right: 2%;
+// }
+
+// .lesson__common_angles_table tr:nth-child(3) td:nth-child(3) {
+//   // text-align: right;
+//   width: 13%;
+//   padding-right: 3%;
+// }
 
 .equation_element {
-  font-size: calc(var(--lesson__diagram-font-size) * 0.45);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
   color: color(diagram, 'action');
+}
+
+.lesson__rad_text {
+  color: color(diagram, 'action');
+}
+
+.lesson__deg_title {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.35);
+  color: map-get($colors, radius);
+  font-style: italic;
+}
+
+.lesson__rad_title {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.35);
+  color: map-get($colors, action);
+  font-style: italic;
+}
+
+#id_360,
+#id_270,
+#id_180,
+#id_120,
+#id_90,
+#id_pi,
+#id_2pi {
+  text-decoration: none;
 }

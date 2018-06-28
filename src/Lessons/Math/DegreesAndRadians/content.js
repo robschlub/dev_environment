@@ -770,29 +770,28 @@ class Content extends LessonContent {
         const _3piOn2 = fraction('id_3pi_2', '3&pi;', '2');
         const _2piOn3 = fraction('id_2pi_3', '2&pi;', '3');
         const _piOn2 = fraction('id_pi_2', '&pi;', '2');
-        const _piOn3 = fraction('id_pi_3', '&pi;', '3');
         return `
           <p>
-            Let's look at some angles in degrees and radians
+            Some common angles in degrees and radians.
           </p>
           <table class="lesson__table lesson__common_angles_table">
             <tr>
-              <td>Full circle:</td><td>|_360deg|</td><td>|_2pi|</td><td>rad</td>
+              <td></td><td><div class="lesson__deg_title">degrees</div></td><td><div class="lesson__rad_title">radians</div></td>
             </tr>
             <tr>
-              <td>Three quarter circle:</td><td>|_270deg|</td><td>${_3piOn2}</td><td>rad</td>
+              <td>Full circle:</td><td>|_360deg|</td><td>|_2pi|</td>
             </tr>
             <tr>
-              <td>Half circle:</td><td>|_180deg|</td><td>|_pi|</td><td>rad</td>
+              <td>Three quarter circle:</td><td>|_270deg|</td><td>${_3piOn2}</td>
             </tr>
             <tr>
-              <td>One third circle:</td><td>|_120deg|</td><td>${_2piOn3}</td><td>rad</td>
+              <td>Half circle:</td><td>|_180deg|</td><td>|_pi|</td>
             </tr>
             <tr>
-              <td>One quarter circle:</td><td>|_90deg|</td><td>${_piOn2}</td><td>rad</td>
+              <td>One third circle:</td><td>|_120deg|</td><td>${_2piOn3}</td>
             </tr>
             <tr>
-              <td>One sixth circle:</td><td>|_60deg|</td><td>${_piOn3}</td><td>rad</td>
+              <td>One quarter circle:</td><td>|_90deg|</td><td>${_piOn2}</td>
             </tr>
           </table>
         `;
@@ -800,12 +799,16 @@ class Content extends LessonContent {
       modifiers: {
         _2pi: actionWord('2&pi;', 'id_2pi', colors.action),
         _pi: actionWord('&pi;', 'id_pi', colors.action),
-        _360deg: actionWord('360&deg;', 'id_360', colors.diagram.text.keyword),
-        _270deg: actionWord('270&deg;', 'id_270', colors.diagram.text.keyword),
-        _180deg: actionWord('180&deg;', 'id_180', colors.diagram.text.keyword),
-        _120deg: actionWord('120&deg;', 'id_120', colors.diagram.text.keyword),
-        _90deg: actionWord('90&deg;', 'id_90', colors.diagram.text.keyword),
-        _60deg: actionWord('60&deg;', 'id_60', colors.diagram.text.keyword),
+        _360deg: actionWord('360', 'id_360', colors.diagram.text.keyword),
+        _270deg: actionWord('270', 'id_270', colors.diagram.text.keyword),
+        _180deg: actionWord('180', 'id_180', colors.diagram.text.keyword),
+        _120deg: actionWord('120', 'id_120', colors.diagram.text.keyword),
+        _90deg: actionWord('90', 'id_90', colors.diagram.text.keyword),
+        // rad1: toHTML('rad', 'id_rad1', '', colors.action),
+        // rad2: toHTML('rad', 'id_rad2', '', colors.action),
+        // rad3: toHTML('rad', 'id_rad3', '', colors.action),
+        // rad4: toHTML('rad', 'id_rad4', '', colors.action),
+        // rad5: toHTML('rad', 'id_rad5', '', colors.action),
       },
       setEnterState: () => {
         diag.updateRotation();
@@ -842,13 +845,16 @@ class Content extends LessonContent {
         onClickId('id_180', rotateDeg, [diag, 180]);
         onClickId('id_120', rotateDeg, [diag, 120]);
         onClickId('id_90', rotateDeg, [diag, 90]);
-        onClickId('id_60', rotateDeg, [diag, 60]);
         onClickId('id_2pi', rotateRad, [diag, 359.99]);
         onClickId('id_3pi_2', rotateRad, [diag, 270]);
         onClickId('id_pi', rotateRad, [diag, 180]);
         onClickId('id_2pi_3', rotateRad, [diag, 120]);
         onClickId('id_pi_2', rotateRad, [diag, 90]);
-        onClickId('id_pi_3', rotateRad, [diag, 60]);
+        // onClickId('id_rad1', rotateRad, [diag, 359.99]);
+        // onClickId('id_rad2', rotateRad, [diag, 270]);
+        // onClickId('id_rad3', rotateRad, [diag, 180]);
+        // onClickId('id_rad4', rotateRad, [diag, 120]);
+        // onClickId('id_rad5', rotateRad, [diag, 90]);
       },
     });
 
