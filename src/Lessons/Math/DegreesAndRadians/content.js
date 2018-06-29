@@ -103,7 +103,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          To form a |circle|, the |line| must therefore be |rotated| to the |maximum| |angle|.
+          To form a |circle|, the |line| must be |rotated| to the |maximum| |angle|.
         </p>
       `,
       modifiers: {
@@ -199,7 +199,7 @@ class Content extends LessonContent {
           One way, is to |divide| the circle into |portions|.
         </p>
         <p class="lesson__p_width_50">
-          For example, here are |12 equal portions| (like a clock).
+          For example, here are |12 equal portions| like a clock.
         </p>
         `,
       modifiers: {
@@ -407,12 +407,12 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-        Instead of thinking of angle as |portions_of_a_circle|, we can think of it as how many |radius_lengths_are_on_the_arc|.
+        Instead of thinking of angle as |portions_of_a_circle|, we can think of it as how many |radius_lengths_make_up_the_arc|.
         </p>
       `,
       modifiers: {
         portions_of_a_circle: click(diag.toggleDegreesRadians, [diag, 'deg'], colors.action),
-        radius_lengths_are_on_the_arc: click(diag.toggleDegreesRadians, [diag, 'rad'], colors.action),
+        radius_lengths_make_up_the_arc: click(diag.toggleDegreesRadians, [diag, 'rad'], colors.action),
       },
       setEnterState: () => {
         diag.updateRotation();
@@ -500,11 +500,11 @@ class Content extends LessonContent {
           So we can see when the angle is:
           <ul>
             <li>|one_radian|: </li>
-            <li class="lesson__li_indent">|arc_length| = |one| |radius_ length|</li>
+            <li class="lesson__li_indent">|arc_length| = |one| |radius_length|</li>
             <li>|two_radians|: </li>
-            <li class="lesson__li_indent">|arc_length| = |two| |radius_lengths|.</li>
+            <li class="lesson__li_indent">|arc_length| = |two| |radius_lengths|</li>
             <li>|five_radians|: </li>
-            <li class="lesson__li_indent">|arc_length| = |five| |radius_lengths|.</li>
+            <li class="lesson__li_indent">|arc_length| = |five| |radius_lengths|</li>
           </ul>
         </p>
         <p style="margin-top:7%">
@@ -595,8 +595,8 @@ class Content extends LessonContent {
           How many radians are there in a half circle and full circle?
         </p>
         <ul style="margin-top: 23%">
-        <li>A |half_circle| has about 3.14 radians.</li>
-        <li>A |full_circle| has about 6.28 radians.</li>
+        <li style="margin-top: 4%">A |half_circle| has about 3.14 radians.</li>
+        <li style="margin-top: 4%">A |full_circle| has about 6.28 radians.</li>
         </ul>
       `,
       modifiers: {
@@ -630,7 +630,10 @@ class Content extends LessonContent {
           Actually, the digits after the 3 go on forever.
         </p>
         <p>
-          A more accurate |approximation| is |3.141593...|.
+          A more accurate |approximation| is |3.141593...|
+        </p>
+        <p>
+          An even more accurate |approximation| is |3.14159265359...|
         </p>
       `),
     });
@@ -641,7 +644,7 @@ class Content extends LessonContent {
       title: 'Why Use Radians?',
       setContent: centerV(`
         <p>
-          At first glance, dividing a circle into |6.283185...| portions isn't as convenient as dividing it into 360.
+          At first glance, dividing a circle into |6.283185...| portions isn't as convenient as dividing it into |360|.
         </p>
         <p>
           A radian is a big portion, and there are plenty of applications that will require a |fraction of a radian|.
@@ -664,56 +667,59 @@ class Content extends LessonContent {
           In addition, a circle cannot be divided |evenly| in radians without a remainder. 
         </p>
         <p>
-          6 radians go into a circle, but we are left with |0.283185... radians remaining|.
+          |6| radians go into a circle, but we are left with |0.283185... radians remaining|.
         </p>
       `),
     });
     this.addSection({
       setContent: `
-        <p style="margin-top: 15%">
+        <p style="margin-top: 10%">
           But as radians relate |angle|, |radius| and |arc_length|, it means you can calculate one property from the other two.
         </p>
-        <p>
-          You only need to |measure the two easiest properties|, to have all three.
+        <p style="margin-top: 28%">
+          This means, you only need to |measure the two easiest properties|, to have all three.
         </p>
       `,
       modifiers: {
-        angle: click(diag.animateEquation, [diag, 'angle', 0.7, 0.3, 0.5], colors.angle),
-        radius: click(diag.animateEquation, [diag, 'radius', 0.7, 0.3, 0.5], colors.radius),
-        arc_length: click(diag.animateEquation, [diag, 'arc', 0.7, 0.3, 0.5], colors.arc),
+        angle: click(diag.animateEquation, [diag, 'angle', layout.arcEquation.scale, 0.7, 0.3, 0.4], colors.angle),
+        radius: click(diag.animateEquation, [diag, 'radius', layout.arcEquation.scale, 0.7, 0.3, 0.4], colors.radius),
+        arc_length: click(diag.animateEquation, [diag, 'arc', layout.arcEquation.scale, 0.7, 0.3, 0.4], colors.arc),
       },
       setEnterState: () => {
         const { scale } = layout.arcEquation;
         diag.radiusEqn.arrange(scale, diag._arcEquation._equals);
         diag.angleEqn.arrange(scale, diag._arcEquation._equals);
         diag.arcEqn.arrange(scale, diag._arcEquation._equals);
-        diag._arcEquation.setPosition(layout.arcEquation.centerBottom);
+        diag._arcEquation.setPosition(layout.arcEquation.center);
       },
       setSteadyState: () => {
         diag._arcEquation.showArc();
         diag._arcEquation._angle.onClick =
-          diag.animateEquation.bind(diag, 'angle', layout.arcEquation.scale, 0.7, 0.3, 0.5);
+          diag.animateEquation.bind(diag, 'angle', layout.arcEquation.scale, 0.7, 0.3, 0.4);
         diag._arcEquation._radius.onClick =
-          diag.animateEquation.bind(diag, 'radius', layout.arcEquation.scale, 0.7, 0.3, 0.5);
+          diag.animateEquation.bind(diag, 'radius', layout.arcEquation.scale, 0.7, 0.3, 0.4);
         diag._arcEquation._arc.onClick =
-          diag.animateEquation.bind(diag, 'arc', layout.arcEquation.scale, 0.7, 0.3, 0.5);
+          diag.animateEquation.bind(diag, 'arc', layout.arcEquation.scale, 0.7, 0.3, 0.4);
       },
     });
     this.addSection({
-      setContent: centerV(`
-        <p style="text-align:center">
+      setContent: centerVH(`
+        <p>
           This is |very powerful|. 
         </p>
         <p>
-          So powerful that people work with this weird
-          angular size because its |advantages outweigh the disadvantages|.
+          So powerful that people work with radians |all the time|.
         </p>
       `),
     });
     this.addSection({
       setContent: centerV(`
+        
         <p>
-          One way they work with it, is instead of writing out the approximate value |3.14159...| each time, they substitute the value with the greek letter |&pi;| (prounounced |pi|).
+          One way to make it easier work with, is to substitue the approximate value |3.14159...| with a |symbol| when showing or writing angles. 
+        </p>
+        <p>
+          Most commonly, the Greek letter |&pi;| is used as this symbol (pronounced pi).
         </p>
         `),
     });
@@ -927,6 +933,17 @@ class Content extends LessonContent {
         circ._circumference.onClick = diag.pulseCircumference.bind(diag);
         circ._twoPi.onClick = diag.rotateTo.bind(diag, 1.999 * Math.PI, 1, 2);
         circ._equals.onClick = diag.toggleCircEquations.bind(diag, 1, null);
+      },
+      setLeaveState: () => {
+        const circ = diag._circumferenceEquation;
+        circ._angle.onClick = null;
+        circ._radius.onClick = null;
+        circ._arc.onClick = null;
+        circ._r.onClick = null;
+        circ._c.onClick = null;
+        circ._circumference.onClick = null;
+        circ._twoPi.onClick = null;
+        circ._equals.onClick = null;
       },
     });
     this.addSection({

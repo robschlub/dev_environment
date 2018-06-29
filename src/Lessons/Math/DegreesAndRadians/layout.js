@@ -97,6 +97,7 @@ export default function lessonLayout() {
       leftMiddle: new Point(-2.5, -1.1),
       centerTop: new Point(-1.0, 0.9),
       centerBottom: new Point(-0.5, -1.0),
+      center: new Point(-0.5, 0),
       leftBottom: new Point(-1.7, -1.3),
       scale: 1.2,
       summaryScale: 0.8,

@@ -199,6 +199,12 @@ function onClickId(
     if (bind.length === 5) {
       element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
     }
+    if (bind.length === 6) {
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3], bind[4], bind[5]);
+    }
+    if (bind.length === 7) {
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3], bind[4], bind[5], bind[6]);
+    }
   }
 }
 
