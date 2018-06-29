@@ -51,7 +51,7 @@ $_color_theme-standard-light: (
   ),
   lesson: (
     'background':       (color: 'grey',   shade: 'lighter'),
-    'text-title':       (color: 'grey',   shade: 'darker'),
+    'text-title':       (color: 'blue',   shade: 'dark'),
     'text':             (color: 'grey',   shade: 'darker'),
     'navigation':       (color: 'grey',   shade: 'base'),
   ),
@@ -59,6 +59,7 @@ $_color_theme-standard-light: (
     'primary':          (color: 'blue',   shade: 'base'),
     'secondary':        (color: 'blue',   shade: 'light'),
     'text':             (color: 'grey',   shade: 'darker'),
+    'background':       (color: 'white',  shade: 'base'),
   ),
   navbar: (
     'button':           (color: 'white',   shade: 'lighter'),

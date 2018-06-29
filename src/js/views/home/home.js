@@ -8,6 +8,7 @@ import './home.scss';
 import HomeBanner from './banner';
 import Navbar from '../../components/navbar';
 import LessonNavigator from '../../components/lessonNavigator';
+import NavbarSpacer from '../../components/navbarSpacer';
 
 const homePage = () => {
   const id:HTMLElement | null = document.getElementById('home');
@@ -16,6 +17,7 @@ const homePage = () => {
     ReactDOM.render(
       <div>
         <Navbar active=''/>
+        <NavbarSpacer/>
         <div className="navbar__spacer"/>
         <HomeBanner/>
         <LessonNavigator/>

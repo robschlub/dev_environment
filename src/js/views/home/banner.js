@@ -6,7 +6,6 @@ export default class HomeBanner extends React.Component
   // eslint-disable-next-line class-methods-use-this
   render() {
     return <div className="home__banner">
-      <div className="home__banner_logo_spacer"/>
       <div className="home__banner_logo">
         <div className="home__banner_logo_text_container">
           <div className="home__banner_logo_text">

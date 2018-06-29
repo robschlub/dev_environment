@@ -256,21 +256,21 @@ export default class LessonComponent extends React.Component
               {this.lesson.content.title}
       </div>
       <div className="lesson__widescreen_backdrop">
-      <div id="lesson__container_name" className="lesson__container">
-            {this.addPrevButton()}
-            <div id={this.lesson.content.diagramHtmlId} className="diagram__container multipage_diagram">
-              <canvas className='diagram__gl'>
-              </canvas>
-              <div id="dd" className='diagram__html'>
-                {this.renderContent(this.state.htmlText)}
+        <div id="lesson__container_name" className="lesson__container">
+              {this.addPrevButton()}
+              <div id={this.lesson.content.diagramHtmlId} className="diagram__container multipage_diagram">
+                <canvas className='diagram__gl'>
+                </canvas>
+                <div id="dd" className='diagram__html'>
+                  {this.renderContent(this.state.htmlText)}
+                </div>
+                <canvas className='diagram__text'>
+                </canvas>
               </div>
-              <canvas className='diagram__text'>
-              </canvas>
-            </div>
-            {this.addPageNumber()}
-            {this.addGoToButton()}
-            {this.addNextButton()}
-      </div>
+              {this.addPageNumber()}
+              {this.addGoToButton()}
+              {this.addNextButton()}
+        </div>
       </div>
     </div>;
   }

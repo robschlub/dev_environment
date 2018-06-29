@@ -7,8 +7,7 @@
 @import 'settings/color-palettes/color-palette_standard';
 @import 'settings/color-themes/color-theme_standard_light';
 @import 'settings/color-themes/color-theme_standard_dark';
-// @import 'settings/color-themes/color-theme_dark2';
-// @import 'settings/color-themes/color-theme_standard2';
+//
 @import 'settings/colors';
 //
 @import 'assets/images';
@@ -19,7 +18,6 @@
 @import "blocks/diagram";
 @import "blocks/lesson";
 @import "blocks/equation";
+@import "blocks/lessonNavigator";
+@import "blocks/navbarSpacer";
 //
-// @import "views/home";
-// @import "views/about";
-// @import "views/introduction";

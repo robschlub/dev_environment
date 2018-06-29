@@ -1,5 +1,5 @@
 $title-height: 5;
-$title-font-size: 2.5;
+$title-font-size: 3;
 $np_button-width: 3;
 $np_button-height-portrait: 8;
 $np_button-height-landscape: 8;
@@ -13,7 +13,7 @@ $goto_button-font-size: 1.4;
 
 $top_margin-no_navbar: 20px;
 $top_margin-with_navbar: 70px;
-$bottom_margin: 50px;
+$bottom_margin: 0;
 $side-margin: 10px;
 $diagram_ratio: 1.5;
 
@@ -205,12 +205,14 @@ $diagram_ratio: 1.5;
 .lesson__title {
   font-size: var(--lesson__title-font-size);
   color: color(lesson, 'text-title');
+  // color: color(site, 'primary');
   height: var(--lesson__title-height);
   text-align: center;
-  margin-top: var(--lesson__top-margin);
+  margin-top: calc(var(--lesson__top-margin) / 2);
   margin-bottom: 0;
   padding-bottom: 0;
   font-weight: bold;
+  background-color: color(site, 'background');
 }
 
 .btn-multi-page-lesson {
