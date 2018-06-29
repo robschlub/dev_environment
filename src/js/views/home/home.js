@@ -28,6 +28,43 @@ const homePage = () => {
             </p>
           </div>
       </Jumbotron>
+      <div className="naviagator__container">
+        <div className="navigator__left_side">
+        </div>
+        <div className="navigator__right_side">
+        </div>
+        <div id="navigator__lesson_angle" className="navigator__lesson_position">
+          <div className="navigator__lesson_containter navigator__lesson_shadow">
+            <div className="navigator__lesson_title">
+              Angles
+            </div>
+          </div>
+        </div>
+        <div id="navigator__lesson_circles" className="navigator__lesson_position">
+          <div className="navigator__lesson_containter navigator__lesson_shadow">
+            <div className="navigator__lesson_title">
+              Circles
+            </div>
+          </div>
+        </div>
+        <div id="navigator__lesson_measuring" className="navigator__lesson_position">
+          <div className="navigator__lesson_containter navigator__lesson_shadow">
+            <div className="navigator__lesson_title">
+              Measure
+            </div>
+          </div>
+        </div>
+        <div id="navigator__lesson_triangles" className="navigator__lesson_position">
+          <div className="navigator__lesson_containter navigator__lesson_shadow">
+            <div className="navigator__lesson_title">
+              Triangles
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="box effect2">
+          <h3>Effect 2</h3>
+        </div>
       </div>,
       id,
     );
