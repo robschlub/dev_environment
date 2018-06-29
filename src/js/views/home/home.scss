@@ -78,6 +78,7 @@ $home-image-xl: $bark-lg-image;
   height: 100%;
   position: relative;
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   // z-index: 1;
   // color: white;
 }
