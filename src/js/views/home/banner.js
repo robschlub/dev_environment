@@ -15,21 +15,15 @@ export default class HomeBanner extends React.Component
         </div>
       </div>
       <div className="home__banner_sub_title">
-        <div className="home__banner_sub_title_text">
-          Interact
-        </div>
-        <div className="home__banner_sub_title_text">
-          ●
-        </div>
-        <div className="home__banner_sub_title_text">
-          Intuit
-        </div>
-        <div className="home__banner_sub_title_text">
-          ●
-        </div>
-        <div className="home__banner_sub_title_text">
-          Learn
-        </div>
+        <table>
+          <tr className = "home__banner_sub_title_text">
+            <td>Interact</td>
+            <td>●</td>
+            <td>Intuit</td>
+            <td>●</td>
+            <td>Learn</td>
+          </tr>
+        </table>
       </div>
     </div>;
   }
