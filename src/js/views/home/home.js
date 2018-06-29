@@ -6,6 +6,7 @@ import './home.scss';
 import Button from '../../components/button';
 import Jumbotron from '../../jumbotron';
 import Navbar from '../../components/navbar';
+import LessonNavigator from '../../components/lessonNavigator';
 
 const homePage = () => {
   const id:HTMLElement | null = document.getElementById('home');
@@ -28,43 +29,21 @@ const homePage = () => {
             </p>
           </div>
       </Jumbotron>
+      <LessonNavigator/>
+      {/*
       <div className="naviagator__container">
         <div className="navigator__left_side">
         </div>
         <div className="navigator__right_side">
         </div>
-        <div id="navigator__lesson_angle" className="navigator__lesson_position">
-          <div className="navigator__lesson_containter navigator__lesson_shadow">
-            <div className="navigator__lesson_title">
-              Angles
-            </div>
-          </div>
-        </div>
-        <div id="navigator__lesson_circles" className="navigator__lesson_position">
-          <div className="navigator__lesson_containter navigator__lesson_shadow">
-            <div className="navigator__lesson_title">
-              Circles
-            </div>
-          </div>
-        </div>
-        <div id="navigator__lesson_measuring" className="navigator__lesson_position">
-          <div className="navigator__lesson_containter navigator__lesson_shadow">
-            <div className="navigator__lesson_title">
-              Measure
-            </div>
-          </div>
-        </div>
-        <div id="navigator__lesson_triangles" className="navigator__lesson_position">
-          <div className="navigator__lesson_containter navigator__lesson_shadow">
-            <div className="navigator__lesson_title">
-              Triangles
-            </div>
-          </div>
-        </div>
+        <LessonTile id="id_test1" label='Angles' left='100px' top='100px' />
+        <LessonTile id="id_test2" label='Circles' left='300px' top='100px' />
+        <LessonTile id="id_test3" label='Measure' left='500px' top='70px' />
+        <LessonTile id="id_test4" label='Triangles' left='500px' top='150px' />
+        <LessonTile id="id_test4" label='Test1' left='700px' top='150px' />
+        <LessonTile id="id_test4" label='Test2' left='900px' top='150px' />
       </div>
-      <div className="box effect2">
-          <h3>Effect 2</h3>
-        </div>
+      */}
       </div>,
       id,
     );
