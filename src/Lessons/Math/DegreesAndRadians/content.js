@@ -801,10 +801,12 @@ class Content extends LessonContent {
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.bottomMostRightDeg);
         diag.showDegrees();
         const rotateDeg = (angle: number) => {
+          diag.hideRadians();
           diag.showDegrees();
           diag.rotateTo(angle / 180 * Math.PI, 2, 1);
         };
         const rotateRad = (angle: number) => {
+          diag.hideDegrees();
           diag.showRadians();
           diag.rotateTo(angle / 180 * Math.PI, 2, 1);
         };

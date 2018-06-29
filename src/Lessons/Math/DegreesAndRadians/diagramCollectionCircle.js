@@ -565,6 +565,9 @@ class CircleCollection extends DiagramElementCollection {
   hideDegrees() {
     this._circle._radialLinesDeg.hideAll();
   }
+  hideRadians() {
+    this._circle._radialLinesRad.hide();
+  }
   showDegrees() {
     this.varState.radialLines = 360;
     this._angleText.setUnits('&deg;');
