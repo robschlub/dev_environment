@@ -16,7 +16,7 @@ export default class HomeBanner extends React.Component
       </div>
       <div className="home__banner_sub_title">
         <table>
-          <tr className = "home__banner_sub_title_text">
+          <tr>
             <td>Interact</td>
             <td>●</td>
             <td>Intuit</td>
