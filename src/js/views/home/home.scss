@@ -1,47 +1,4 @@
-// @import "style";
 @import '../../../css/style';
-
-$home-image-xs: $bark-sm-image;
-$home-image-sm: $bark-sm-image;
-$home-image-md: $bark-md-image;
-$home-image-lg: $bark-lg-image;
-$home-image-xl: $bark-lg-image;
-
-.views-home {
-  background-size: cover;
-  background-position: center;
-  margin-bottom: 0;
-}
-
-@include media-breakpoint-up(xs) {
-  .views-home {
-    background-image: $home-image-xs;
-  }
-}
-
-@include media-breakpoint-up(sm) {
-  .views-home {
-    background-image: $home-image-sm;
-  }
-}
-
-@include media-breakpoint-up(md) {
-  .views-home {
-    background-image: $home-image-md;
-  }
-}
-
-@include media-breakpoint-up(lg) {
-  .views-home {
-    background-image: $home-image-lg;
-  }
-}
-
-@include media-breakpoint-up(xl) {
-  .views-home {
-    background-image: $home-image-xl;
-  }
-}
 
 .naviagator__container {
   width: 100%;
@@ -49,6 +6,7 @@ $home-image-xl: $bark-lg-image;
   position: relative;
   background: white;
   z-index: 0;
+  border-top: solid 2px #BBB;
 }
 
 
@@ -86,12 +44,8 @@ $home-image-xl: $bark-lg-image;
 }
 
 
-.navigator__lesson_tile_containter {
-  // position: absolute;
-  // left: 100px;
-  // top: 100px;
-  // z-index: 0;
-  background: #00A2FF;
+.navigator__lesson_tile_containter { 
+  background: color(site, 'primary');
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 40px;
@@ -113,9 +67,6 @@ $home-image-xl: $bark-lg-image;
   vertical-align: middle;
 }
 
-.jumbotron {
-  margin-bottom: 0;
-}
 
 .navigator__lesson_shadow
 {
@@ -128,70 +79,42 @@ $home-image-xl: $bark-lg-image;
   bottom: 4px;
   left: 0.5%;
   width: 49.5%;
-  // top: 84%;
   max-width:300px;
   height: 60px;
   background: #777;
-  // -webkit-box-shadow: 0 15px 10px #000;
-  // -moz-box-shadow: 0 15px 10px #000;
+  -webkit-box-shadow: 0 5px 7px #000;
+  -moz-box-shadow: 0 5px 7px #000;
   box-shadow: 0 5px 7px #000;
-  // -webkit-transform: rotate(-3deg);
-  // -moz-transform: rotate(-3deg);
-  // -o-transform: rotate(-3deg);
-  // -ms-transform: rotate(-3deg);
+  -webkit-transform: rotate(-3deg);
+  -moz-transform: rotate(-3deg);
+  -o-transform: rotate(-3deg);
+  -ms-transform: rotate(-3deg);
   transform: rotate(-3deg);
   border-radius: 10px;
 }
 
 .navigator__lesson_shadow:after
 {
-  // -webkit-transform: rotate(3deg);
-  // -moz-transform: rotate(3deg);
-  // -o-transform: rotate(3deg);
-  // -ms-transform: rotate(3deg);
+  -webkit-transform: rotate(3deg);
+  -moz-transform: rotate(3deg);
+  -o-transform: rotate(3deg);
+  -ms-transform: rotate(3deg);
   transform: rotate(3deg);
   right: 0.5%;
   left: auto;
 }
 
-.box h3{
-    text-align:center;
-    position:relative;
-    top:80px;
-}
-.box {
-    width:70%;
-    height:200px;
-    background:#FFF;
-    margin:40px auto;
+
+.navbar__spacer {
+  height: 0px;
+  width: 100%;
 }
 
-/*==================================================
- * Effect 2
- * ===============================================*/
-.effect2
-{
-  position: relative;
-}
-.effect2:before, .effect2:after
-{
-  z-index: -1;
-  position: absolute;
-  content: "";
-  bottom: 15px;
-  left: 10px;
-  width: 50%;
-  top: 80%;
-  max-width:300px;
-  background: #777;
-  box-shadow: 0 15px 10px #777;
-  transform: rotate(-3deg);
-}
-.effect2:after
-{
-  transform: rotate(3deg);
-  right: 10px;
-  left: auto;
+@include media-breakpoint-up(md) {
+  .navbar__spacer {
+    height: 50px;
+    width: 100%;
+  }
 }
 
 
