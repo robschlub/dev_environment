@@ -16,6 +16,7 @@ export default class HomeBanner extends React.Component
       </div>
       <div className="home__banner_sub_title">
         <table>
+          <tbody>
           <tr>
             <td>Interact</td>
             <td>●</td>
@@ -23,6 +24,7 @@ export default class HomeBanner extends React.Component
             <td>●</td>
             <td>Learn</td>
           </tr>
+          </tbody>
         </table>
       </div>
     </div>;
