@@ -11,25 +11,27 @@ export default class LessonNavigator extends React.Component
                                     <Props> {
   componentDidMount() {
     const navigator = document.getElementById('id_navigator__container');
+
     if (navigator) {
-      console.log("asdf1");
-      navigator.scrollLeft = 100;
-      navigator.addEventListener('mousedown', this.mdh.bind(this), false);
-      navigator.addEventListener('mousemove', this.mdh.bind(this), false);
+    //   navigator.scrollLeft = 100;
+    //   navigator.addEventListener('mousedown', this.mdh.bind(this), false);
+    //   navigator.addEventListener('mousemove', this.mdh.bind(this), false);
+      // navigator.scrollWidth = 1500;
     }
-    const navigator1 = document.getElementById('master_containter');
-    if (navigator1) {
-      console.log("asdf2");
-      navigator1.addEventListener('mousedown', this.mdh.bind(this), false);
-      navigator1.addEventListener('mousemove', this.mdh.bind(this), false);
-    }
+    // const navigator1 = document.getElementById('master_containter');
+    // if (navigator1) {
+    //   navigator1.addEventListener('mousedown', this.mdh.bind(this), false);
+    //   navigator1.addEventListener('mousemove', this.mdh.bind(this), false);
+    // }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   mdh(event: MouseEvent) {
     console.log("Asdfasdf")
     console.log(event);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   render() {
     return <div id="master_containter" className="naviagator__container">
       <div className="navigator__left_side" />

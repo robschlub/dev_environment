@@ -44,12 +44,11 @@ $home-image-xl: $bark-lg-image;
 }
 
 .naviagator__container {
-  z-index: -2;
   width: 100%;
   height: 30vh;
   position: relative;
   background: white;
-  // overflow: scroll;
+  z-index: 0;
 }
 
 .navigator__left_side {
@@ -78,8 +77,9 @@ $home-image-xl: $bark-lg-image;
   width: 100%;
   height: 100%;
   position: relative;
-  overflow: hidden;
-  color: white;
+  overflow: scroll;
+  // z-index: 1;
+  // color: white;
 }
 
 .navigator__lesson_position {
@@ -94,6 +94,7 @@ $home-image-xl: $bark-lg-image;
   // position: absolute;
   // left: 100px;
   // top: 100px;
+  // z-index: 0;
   background: #00A2FF;
   padding-top: 10px;
   padding-bottom: 10px;
