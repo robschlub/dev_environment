@@ -6,8 +6,9 @@ import '../../css/style.scss';
 type Props = {
   label: ?string,
   id: ?string,
-  left: ?number,
-  top: ?number,
+  left: ?string,
+  top: ?string,
+  link: ?string,
 };
 
 export default class LessonTile extends React.Component
@@ -20,18 +21,20 @@ export default class LessonTile extends React.Component
     const left = props.left || 0;
     const top = props.top || 0;
     const style = {
-      left: left,
-      top: top,
-    }
-    return <div 
-        id={id} 
+      left,
+      top,
+    };
+    const link = props.link || '/';
+    return <a
+        href={link}
+        id={id}
         style={style}
-        className="navigator__lesson_position">
-      <div className="navigator__lesson_containter navigator__lesson_shadow">
-        <div className="navigator__lesson_title">
+        className="navigator__lesson_tile">
+      <div className="navigator__lesson_tile_containter navigator__lesson_shadow">
+        <div className="navigator__lesson_tile_title">
           {label}
         </div>
       </div>
-    </div>
+    </a>;
   }
 }

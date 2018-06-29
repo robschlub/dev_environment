@@ -3,48 +3,91 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
+import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
+import { Point } from '../diagram/tools/g2';
 
 type Props = {
 };
 
 export default class LessonNavigator extends React.Component
                                     <Props> {
-  componentDidMount() {
-    const navigator = document.getElementById('id_navigator__container');
+  lessonIndex: Array<Array<LessonDescription> | LessonDescription>;
+  key: number;
 
-    if (navigator) {
-    //   navigator.scrollLeft = 100;
-    //   navigator.addEventListener('mousedown', this.mdh.bind(this), false);
-    //   navigator.addEventListener('mousemove', this.mdh.bind(this), false);
-      // navigator.scrollWidth = 1500;
-    }
-    // const navigator1 = document.getElementById('master_containter');
-    // if (navigator1) {
-    //   navigator1.addEventListener('mousedown', this.mdh.bind(this), false);
-    //   navigator1.addEventListener('mousemove', this.mdh.bind(this), false);
-    // }
+  constructor(props: Props) {
+    super(props);
+    this.lessonIndex = lessonIndex;
+    const y = 200;
+    let x = 50;
+    const width = 200;
+    const height = 70;
+    const vSpace = 20;
+    this.lessonIndex.forEach((lesson) => {
+      if (Array.isArray(lesson)) {
+        const len = lesson.length;
+        lesson.forEach((parallelLesson, index) => {
+          const totalHeight = len * height + (len - 1 * vSpace) - height / 2;
+          const yLocation = y - totalHeight / 2 + index * (height + vSpace);
+          parallelLesson.location = new Point(x, yLocation);
+        });
+      } else {
+        lesson.location = new Point(x, y);
+      }
+      x += width;
+    });
+    this.key = 0;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  mdh(event: MouseEvent) {
-    console.log("Asdfasdf")
-    console.log(event);
+  createLessonJsx(lesson: LessonDescription) {
+    this.key += 1;
+    return <LessonTile
+              id="e"
+              link={lesson.link}
+              key={this.key}
+              label={lesson.name}
+              left={`${lesson.location.x}px`}
+              top={`${lesson.location.y}px`}
+            />;
   }
+
+  lessons() {
+    const lessons = [];
+    this.lessonIndex.forEach((lesson) => {
+      if (Array.isArray(lesson)) {
+        lesson.forEach((parallelLesson) => {
+          lessons.push(this.createLessonJsx(parallelLesson));
+        });
+      } else {
+        lessons.push(this.createLessonJsx(lesson));
+      }
+    });
+    return lessons;
+  }
+
+  // componentDidMount() {
+  //   const navigator = document.getElementById('id_navigator__container');
+
+  //   if (navigator) {
+  //   //   navigator.scrollLeft = 100;
+  //   //   navigator.addEventListener('mousedown', this.mdh.bind(this), false);
+  //   //   navigator.addEventListener('mousemove', this.mdh.bind(this), false);
+  //     // navigator.scrollWidth = 1500;
+  //   }
+  //   // const navigator1 = document.getElementById('master_containter');
+  //   // if (navigator1) {
+  //   //   navigator1.addEventListener('mousedown', this.mdh.bind(this), false);
+  //   //   navigator1.addEventListener('mousemove', this.mdh.bind(this), false);
+  //   // }
+  // }
 
   // eslint-disable-next-line class-methods-use-this
   render() {
     return <div id="master_containter" className="naviagator__container">
       <div className="navigator__left_side" />
       <div className="navigator__right_side" />
-      <div id="id_navigator__container"  className="navigator__scroll_container">
-        <LessonTile id="id_test1" label='Angles' left='100px' top='100px' />
-        <LessonTile id="id_test2" label='Circles' left='300px' top='100px' />
-        <LessonTile id="id_test3" label='Measure' left='500px' top='70px' />
-        <LessonTile id="id_test4" label='Triangles' left='500px' top='150px' />
-        <LessonTile id="id_test4" label='Test1' left='700px' top='150px' />
-        <LessonTile id="id_test4" label='Test2' left='900px' top='150px' />
-        <LessonTile id="id_test5" label='Test3' left='1100px' top='150px' />
+      <div id="id_navigator__container" className="navigator__scroll_container">
+        {this.lessons()}
       </div>
-    </div>
+    </div>;
   }
 }
