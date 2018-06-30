@@ -5,7 +5,7 @@ import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
 // import Canvas from './canvas';
 import Button from './button';
-import LessonTile from './lessonTile';
+// import LessonTile from './lessonTile';
 
 type Props = {
   lesson: Lesson;
@@ -265,8 +265,6 @@ export default class LessonComponent extends React.Component
       <div className='navigator__left_side'/>
       {this.titleAsTile()}
       <div className='navigator__right_side'/>
-      {/*this.lesson.content.title*/}
-    {/*<LessonTile id="lesson__title_title"/>*/}
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

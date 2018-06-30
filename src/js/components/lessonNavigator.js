@@ -28,10 +28,10 @@ export default class LessonNavigator extends React.Component
       if (Array.isArray(lesson)) {
         const len = lesson.length;
         const totalHeight = len * height + (len - 1) * vSpace;
-          let yStart = y - totalHeight / 2 + height / 2;
-          if (yStart < y - 2 * height - 2 * vSpace) {
-            yStart = y - 2 * height - 2 * vSpace
-          }
+        let yStart = y - totalHeight / 2 + height / 2;
+        if (yStart < y - 2 * height - 2 * vSpace) {
+          yStart = y - 2 * height - 2 * vSpace;
+        }
         lesson.forEach((parallelLesson, index) => {
           const yLocation = yStart + index * (height + vSpace);
           // eslint-disable-next-line no-param-reassign
