@@ -42,7 +42,6 @@ $diagram_ratio: 1.5;
   }
 }
 
-
 @media (min-aspect-ratio: 2/1) and (max-height: 500px) {
   :root {
     --lesson-container-width: calc(150vh * #{$diagram_ratio});
@@ -295,7 +294,7 @@ $diagram_ratio: 1.5;
   .lesson__button-goto_container {
     // left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
     // right: calc(0 - var(--lesson__np_button-width));
-    left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2 );
+    left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
     // right: 0;
     // left: 0;
     // top: 105%;
