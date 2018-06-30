@@ -224,7 +224,7 @@ $diagram_ratio: 1.5;
   position: absolute;
   border: 0;
   left: calc(50% - var(--lesson__goto_button-width) / 2);
-  top: calc(100% - (100% - var(--lesson__content-height)) / 4 - var(--lesson__np_button-height) / 3);
+  top: calc(100% - (100% - var(--lesson__content-height)) / 2 - var(--lesson__goto_button-height) / 2);
   height: var(--lesson__goto_button-height);
   width: var(--lesson__goto_button-width);
 }
@@ -232,25 +232,25 @@ $diagram_ratio: 1.5;
 .lesson__button-goto {
   position: absolute;
   border: 0;
-  background-color: color(navbar, 'button');
+  background-color: color(diagram, 'background');
   font-size: var(--lesson__goto_button-font-size);
   color: color(lesson, 'text');
   width: var(--lesson__goto_button-width);
 }
 
 #lesson__button-goto:hover {
-  background-color: lighten(color(navbar, 'button'), 10);
+  background-color: color(diagram, 'background', 'dark');
 }
 
-#lesson__page_number {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  top: calc(100% - (100% - var(--lesson__content-height)) * 3 / 4 - var(--lesson__goto_button-font-size) / 2);
-  font-size: var(--lesson__goto_button-font-size);
-  text-align: center;
-  color: color(navbar, 'button');
-}
+// #lesson__page_number {
+//   position: absolute;
+//   left: 0;
+//   width: 100%;
+//   top: calc(100% - (100% - var(--lesson__content-height)) * 3 / 4 - var(--lesson__goto_button-font-size) / 2);
+//   font-size: var(--lesson__goto_button-font-size);
+//   text-align: center;
+//   color: color(navbar, 'button');
+// }
 
 @media (min-aspect-ratio: 3/2) {
   :root {
@@ -294,26 +294,26 @@ $diagram_ratio: 1.5;
 
   .lesson__button-goto_container {
     // left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
-
-    left: calc(100% - var(--lesson__goto_button-width));
+    // right: calc(0 - var(--lesson__np_button-width));
+    left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2 );
     // right: 0;
     // left: 0;
     // top: 105%;
     top: calc(85% + var(--lesson__goto_button-font-size) * 2);
   }
 
-  #lesson__page_number {
-    // left: calc(50% - var(--lesson__goto_button-width) / 2);
-    // width: var(--lesson__goto_button-width);
-    // text-align: center;
-    top: calc(85% + var(--lesson__goto_button-font-size) * 2);
-    // bottom: 0;
-    // left: calc(0% + var(--lesson__goto_button-width) / 2);
-    left: 0;
-    // width: 5%;
-    text-align: left;
-    // top: -10%;
-  }
+  // #lesson__page_number {
+  //   // left: calc(50% - var(--lesson__goto_button-width) / 2);
+  //   // width: var(--lesson__goto_button-width);
+  //   // text-align: center;
+  //   top: calc(85% + var(--lesson__goto_button-font-size) * 2);
+  //   // bottom: 0;
+  //   // left: calc(0% + var(--lesson__goto_button-width) / 2);
+  //   left: 0;
+  //   // width: 5%;
+  //   text-align: left;
+  //   // top: -10%;
+  // }
 }
 
 .lesson-clear-floats {
