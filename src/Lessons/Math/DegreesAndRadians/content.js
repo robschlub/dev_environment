@@ -14,7 +14,7 @@ const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Angle Measurement';
+    this.title = 'Measuring Angle';
   }
 
   setDiagram(htmlId: string = '') {

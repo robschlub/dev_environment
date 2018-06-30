@@ -7,10 +7,12 @@ import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
 import { Point } from '../diagram/tools/g2';
 
 type Props = {
+  selected: ?string;
 };
 
 export default class LessonNavigator extends React.Component
                                     <Props> {
+  selected: string;
   lessonIndex: Array<Array<LessonDescription> | LessonDescription>;
   key: number;
 
@@ -28,23 +30,34 @@ export default class LessonNavigator extends React.Component
         lesson.forEach((parallelLesson, index) => {
           const totalHeight = len * height + (len - 1 * vSpace) - height / 2;
           const yLocation = y - totalHeight / 2 + index * (height + vSpace);
+          // eslint-disable-next-line no-param-reassign
           parallelLesson.location = new Point(x, yLocation);
         });
       } else {
+        // eslint-disable-next-line no-param-reassign
         lesson.location = new Point(x, y);
       }
       x += width;
     });
     this.key = 0;
+    this.selected = props.selected || '';
   }
 
   createLessonJsx(lesson: LessonDescription) {
     this.key += 1;
+    let state = '';
+    if (lesson.name === this.selected) {
+      state = 'selected';
+    }
+    if (lesson.link === '') {
+      state = 'disabled';
+    }
     return <LessonTile
               id="e"
               link={lesson.link}
               key={this.key}
               label={lesson.name}
+              state={state}
               left={`${lesson.location.x}px`}
               top={`${lesson.location.y}px`}
             />;

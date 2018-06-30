@@ -253,7 +253,7 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='lesson__title'>
-              {this.lesson.content.title}
+      {this.lesson.content.title}
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

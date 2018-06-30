@@ -9,6 +9,7 @@ type Props = {
   left: ?string,
   top: ?string,
   link: ?string,
+  state: '' | 'disabled' | 'selected',
 };
 
 export default class LessonTile extends React.Component
@@ -25,12 +26,19 @@ export default class LessonTile extends React.Component
       top,
     };
     const link = props.link || '/';
+    let classText = 'navigator__lesson_tile_containter navigator__lesson_shadow';
+    if (props.state === 'disabled') {
+      classText = `${classText} navigator__lesson_tile_disabled`;
+    }
+    if (props.state === 'selected') {
+      classText = `${classText} navigator__lesson_tile_selected`;
+    }
     return <a
         href={link}
         id={id}
         style={style}
         className="navigator__lesson_tile">
-      <div className="navigator__lesson_tile_containter navigator__lesson_shadow">
+      <div className={classText}>
         <div className="navigator__lesson_tile_title">
           {label}
         </div>

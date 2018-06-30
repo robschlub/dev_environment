@@ -26,7 +26,7 @@ const renderLesson = (content: LessonContent) => {
             </div>
           </div>
         </div>
-        <LessonNavigator/>
+        <LessonNavigator selected={content.title}/>
       </div>,
       lessonId,
     );

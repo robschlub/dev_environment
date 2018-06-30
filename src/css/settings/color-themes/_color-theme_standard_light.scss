@@ -60,6 +60,8 @@ $_color_theme-standard-light: (
     'secondary':        (color: 'blue',   shade: 'light'),
     'text':             (color: 'grey',   shade: 'darker'),
     'background':       (color: 'white',  shade: 'base'),
+    'disabled':       (color: 'grey',   shade: 'base'),
+    'safe':             (color: 'green',  shade: 'base'),
   ),
   navbar: (
     'button':           (color: 'white',   shade: 'lighter'),
