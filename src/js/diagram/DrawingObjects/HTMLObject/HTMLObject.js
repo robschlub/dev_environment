@@ -14,6 +14,7 @@ class HTMLObject extends DrawingObject {
   parentDiv: HTMLElement;
   alignH: 'left' | 'right' | 'center';
   alignV: 'top' | 'bottom' | 'middle';
+  show: boolean;
 
   constructor(
     parentDiv: HTMLElement,
@@ -31,6 +32,7 @@ class HTMLObject extends DrawingObject {
     this.alignV = alignV;
     this.alignH = alignH;
     this.parentDiv = parentDiv;
+    this.show = true;
   }
 
   getGLBoundaries(): Array<Array<Point>> {
@@ -67,28 +69,34 @@ class HTMLObject extends DrawingObject {
   }
 
   transformHtml(transformMatrix: Array<number>) {
-    const glLocation = this.location.transformBy(transformMatrix);
-    const pixelLocation = this.glToPixelSpace(glLocation);
-    const w = this.element.offsetWidth;
-    const h = this.element.offsetHeight;
-    let left = 0;
-    let top = 0;
-    if (this.alignH === 'center') {
-      left = -w / 2;
-    } else if (this.alignH === 'right') {
-      left = -w;
+    if (this.show) {
+      const glLocation = this.location.transformBy(transformMatrix);
+      const pixelLocation = this.glToPixelSpace(glLocation);
+
+      const w = this.element.offsetWidth;
+      const h = this.element.offsetHeight;
+      let left = 0;
+      let top = 0;
+      if (this.alignH === 'center') {
+        left = -w / 2;
+      } else if (this.alignH === 'right') {
+        left = -w;
+      }
+      if (this.alignV === 'middle') {
+        top = -h / 2;
+      } else if (this.alignV === 'bottom') {
+        top = -h;
+      }
+      const x = pixelLocation.x + left;
+      const y = pixelLocation.y + top;
+      this.element.style.position = 'absolute';
+      this.element.style.left = `${x}px`;
+      this.element.style.top = `${y}px`;
+    } else {
+      this.element.style.position = 'absolute';
+      this.element.style.left = '-10000px';
+      this.element.style.top = '-10000px';
     }
-    if (this.alignV === 'middle') {
-      top = -h / 2;
-    } else if (this.alignV === 'bottom') {
-      top = -h;
-    }
-    const x = pixelLocation.x + left;
-    const y = pixelLocation.y + top;
-    this.element.style.position = 'absolute';
-    this.element.style.left = `${x}px`;
-    this.element.style.top = `${y}px`;
-    // this.element.style = `position:absolute; left:${x}px; top:${y}px;`;
   }
   drawWithTransformMatrix(transformMatrix: Array<number>) {
     this.transformHtml(transformMatrix);

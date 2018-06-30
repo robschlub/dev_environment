@@ -1,0 +1,77 @@
+// Define a contrasts map, mapping the shade of color to a contrast
+$_color_contrasts: (
+  'higher': 'darker',
+  'high': 'dark',
+  'low': 'light',
+  'lower': 'lighter'
+);
+
+// Get a final palette with contrasts added
+$_color_standard-light-theme-palette: add-contrasts-to-palette($_color-palette_standard, $_color_contrasts);
+
+// We now have a palette that has colors defined as:
+//  - lighter
+//  - light
+//  - base
+//  - dark
+//  - darker
+//  - lower      (contrast to background)
+//  - low        (contrast to background)
+//  - high       (contrast to background)
+//  - higher     (contrast to background)
+
+// Define the theme colors
+$_color_theme-standard-light: (
+  'hue0':             (color: 'black',  shade: 'base'),
+  'hue1':             (color: 'white',  shade: 'base'),
+  'hue2':             (color: 'blue',   shade: 'base'),
+  'hue3':             (color: 'red',    shade: 'base'),
+  'hue4':             (color: 'green',  shade: 'base'),
+  'hue5':             (color: 'yellow', shade: 'base'),
+  'hue6':             (color: 'cyan',   shade: 'base'),
+  'hue7':             (color: 'orange', shade: 'base'),
+  'hue8':             (color: 'violet', shade: 'base'),
+  'hue9':             (color: 'brown',  shade: 'base'),
+  diagram: (
+    'background':     (color: 'white',  shade: 'base'),
+    'primary':        (color: 'blue',   shade: 'base'),
+    'warning':        (color: 'red',    shade: 'base'),
+    'safe':           (color: 'green',  shade: 'base'),
+    'passive':        (color: 'yellow', shade: 'base'),
+    'disabled':       (color: 'grey',   shade: 'base'),
+    'push':           (color: 'red',    shade: 'base'),
+    'text-base':      (color: 'grey',   shade: 'dark'),
+    'text-plot':      (color: 'blue',   shade: 'light'),
+    'text-keyword':   (color: 'blue',   shade: 'light'),
+    'text-keyword2':  (color: 'green',   shade: 'light'),
+    'text-latin':     (color: 'green',   shade: 'light'),
+    'text-greek':     (color: 'orange',   shade: 'light'),
+    'text-english':   (color: 'blue',   shade: 'light'),
+    'action':         (color: 'violet', shade: 'lighter'),
+  ),
+  lesson: (
+    'background':       (color: 'grey',   shade: 'lighter'),
+    'text-title':       (color: 'blue',   shade: 'dark'),
+    'text':             (color: 'grey',   shade: 'darker'),
+    'navigation':       (color: 'grey',   shade: 'base'),
+  ),
+  site: (
+    'primary':          (color: 'blue',   shade: 'base'),
+    'secondary':        (color: 'blue',   shade: 'light'),
+    'text':             (color: 'grey',   shade: 'darker'),
+    'background':       (color: 'white',  shade: 'base'),
+    'disabled':       (color: 'grey',   shade: 'base'),
+    'safe':             (color: 'green',  shade: 'base'),
+  ),
+  navbar: (
+    'button':           (color: 'white',   shade: 'lighter'),
+    'background':       (color: 'grey',   shade: 'darker'),
+    'base':             (color: 'white',  shade: 'light'),
+    'hover':            (color: 'white',  shade: 'lighter'),
+    'active':           (color: 'white',  shade: 'base'),
+    'disabled':         (color: 'white',  shade: 'darker'),
+    'toggler-border':   (color: 'white',  shade: 'light'),
+    'toggler-icon':     $navbar-dark-toggler-icon-bg
+  ),
+  palette: $_color_standard-light-theme-palette,
+);

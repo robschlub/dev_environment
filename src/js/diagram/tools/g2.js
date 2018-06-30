@@ -34,6 +34,10 @@ import * as m2 from './m2';
 //   // isInPolygon: boolean;
 //   // isOnPolygon: boolean;
 // };
+function quadraticBezier(P0: number, P1: number, P2: number, t: number) {
+  return (1 - t) * ((1 - t) * P0 + t * P1) + t * ((1 - t) * P1 + t * P2);
+}
+
 class Rect {
   left: number;
   top: number;
@@ -77,11 +81,17 @@ class Point {
   scale(scalar: number) {
     return new Point(this.x * scalar, this.y * scalar);
   }
-  sub(q: Point) {
-    return new Point(this.x - q.x, this.y - q.y);
+  sub(qOrX: Point, y: number = 0) {
+    if (qOrX instanceof Point) {
+      return new Point(this.x - qOrX.x, this.y - qOrX.y);
+    }
+    return new Point(this.x - qOrX, this.y - y);
   }
-  add(q: Point) {
-    return new Point(this.x + q.x, this.y + q.y);
+  add(qOrX: Point | number, y: number = 0) {
+    if (qOrX instanceof Point) {
+      return new Point(this.x + qOrX.x, this.y + qOrX.y);
+    }
+    return new Point(this.x + qOrX, this.y + y);
   }
   distance() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -118,6 +128,12 @@ class Point {
   transformBy(matrix: Array<number>) {
     const transformedPoint = m2.transform(matrix, this.x, this.y);
     return new Point(transformedPoint[0], transformedPoint[1]);
+  }
+
+  quadraticBezier(p1: Point, p2: Point, t: number) {
+    const bx = quadraticBezier(this.x, p1.x, p2.x, t);
+    const by = quadraticBezier(this.y, p1.y, p2.y, t);
+    return new Point(bx, by);
   }
 
   rotate(angle: number, center?: Point) {
@@ -599,7 +615,7 @@ class Translation extends Point {
   x: number;
   y: number;
 
-  constructor(tx: Point | number, ty: number) {
+  constructor(tx: Point | number, ty: number = 0) {
     if (tx instanceof Point) {
       super(tx.x, tx.y);
       // this.x = tx.x;
@@ -614,17 +630,35 @@ class Translation extends Point {
     return m2.translationMatrix(this.x, this.y);
   }
 
-  sub(translationToSub: Translation | Point = new Translation(0, 0)): Translation {
+  sub(
+    translationToSub: Translation | Point | number = new Translation(0, 0),
+    y: number = 0,
+  ): Translation {
+    let t = new Point(0, 0);
+    if (typeof translationToSub === 'number') {
+      t = new Translation(translationToSub, y);
+    } else {
+      t = translationToSub;
+    }
     return new Translation(
-      this.x - translationToSub.x,
-      this.y - translationToSub.y,
+      this.x - t.x,
+      this.y - t.y,
     );
   }
 
-  add(translationToAdd: Translation | Point = new Translation(0, 0)): Translation {
+  add(
+    translationToAdd: Translation | Point | number = new Translation(0, 0),
+    y: number = 0,
+  ): Translation {
+    let t = new Point(0, 0);
+    if (typeof translationToAdd === 'number') {
+      t = new Translation(translationToAdd, y);
+    } else {
+      t = translationToAdd;
+    }
     return new Translation(
-      this.x + translationToAdd.x,
-      this.y + translationToAdd.y,
+      this.x + t.x,
+      this.y + t.y,
     );
   }
 
@@ -665,10 +699,19 @@ class Scale extends Point {
   matrix(): Array<number> {
     return m2.scaleMatrix(this.x, this.y);
   }
-  sub(scaleToSub: Scale | Point = new Scale(0, 0)): Scale {
+  sub(
+    scaleToSub: Scale | Point | number = new Scale(0, 0),
+    y: number = 0,
+  ): Scale {
+    let s = new Point(0, 0);
+    if (typeof scaleToSub === 'number') {
+      s = new Scale(scaleToSub, y);
+    } else {
+      s = scaleToSub;
+    }
     return new Scale(
-      this.x - scaleToSub.x,
-      this.y - scaleToSub.y,
+      this.x - s.x,
+      this.y - s.y,
     );
   }
 
@@ -679,17 +722,32 @@ class Scale extends Point {
     );
   }
 
-  add(scaleToAdd: Scale | Point = new Scale(0, 0)): Scale {
+  add(
+    scaleToAdd: Scale | Point | number = new Scale(0, 0),
+    y: number = 0,
+  ): Scale {
+    let s = new Point(0, 0);
+    if (typeof scaleToAdd === 'number') {
+      s = new Scale(scaleToAdd, y);
+    } else {
+      s = scaleToAdd;
+    }
     return new Scale(
-      this.x + scaleToAdd.x,
-      this.y + scaleToAdd.y,
+      this.x + s.x,
+      this.y + s.y,
     );
   }
 
-  mul(scaleToMul: Scale = new Scale(1, 1)): Scale {
+  mul(scaleToMul: Scale | Point | number = new Scale(1, 1)): Scale {
+    if (scaleToMul instanceof Scale || scaleToMul instanceof Point) {
+      return new Scale(
+        this.x * scaleToMul.x,
+        this.y * scaleToMul.y,
+      );
+    }
     return new Scale(
-      this.x * scaleToMul.x,
-      this.y * scaleToMul.y,
+      this.x * scaleToMul,
+      this.y * scaleToMul,
     );
   }
 
@@ -697,6 +755,92 @@ class Scale extends Point {
     return new Scale(this.x, this.y);
   }
 }
+
+
+function linearPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+) {
+  return start.add(delta.x * percent, delta.y * percent);
+}
+
+type linearPathOptionsType = {
+};
+type curvedPathOptionsType = {
+  // path: '(Point, Point, number) => Point';
+  rot: number;
+  magnitude: number;
+  offset: number;
+  controlPoint: Point | null;
+  direction: '' | 'up' | 'left' | 'down' | 'right';
+};
+export type pathOptionsType = curvedPathOptionsType & linearPathOptionsType;
+
+function curvedPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+  options: pathOptionsType,
+) {
+  const o = options;
+  const angle = Math.atan2(delta.y, delta.x);
+  const midPoint = start.add(new Point(delta.x * o.offset, delta.y * o.offset));
+  const dist = delta.toPolar().mag * o.magnitude;
+  let { controlPoint } = options;
+  if (controlPoint == null) {
+    const { direction } = options;
+    let xDelta = Math.cos(angle + o.rot * Math.PI / 2);
+    let yDelta = Math.sin(angle + o.rot * Math.PI / 2);
+    if (direction === 'up') {
+      if (yDelta < 0) {
+        yDelta = Math.sin(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'down') {
+      if (yDelta > 0) {
+        yDelta = Math.sin(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'left') {
+      if (xDelta > 0) {
+        xDelta = Math.cos(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'right') {
+      if (xDelta < 0) {
+        xDelta = Math.cos(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    }
+
+    controlPoint = new Point(
+      midPoint.x + dist * xDelta,
+      midPoint.y + dist * yDelta,
+    );
+  }
+
+  const p0 = start;
+  const p1 = controlPoint;
+  const p2 = start.add(delta);
+  const t = percent;
+  const bx = quadraticBezier(p0.x, p1.x, p2.x, t);
+  const by = quadraticBezier(p0.y, p1.y, p2.y, t);
+  return new Point(bx, by);
+}
+
+
+function translationPath(
+  pathType: 'linear' | 'curved' = 'linear',
+  start: Point,
+  delta: Point,
+  percent: number,
+  options: pathOptionsType,
+) {
+  if (pathType === 'linear') {
+    return linearPath(start, delta, percent);
+  } else if (pathType === 'curved') {
+    return curvedPath(start, delta, percent, options);
+  }
+  return new Point(0, 0);
+}
+
 
 class TransformLimit {
   rotation: number | null;
@@ -724,7 +868,7 @@ class Transform {
     this.calcMatrix();
   }
 
-  translate(x: number, y: number) {
+  translate(x: number | Point, y: number = 0) {
     const translation = new Translation(x, y);
     const order = this.order.slice();
 
@@ -755,7 +899,7 @@ class Transform {
     return new Transform(order);
   }
 
-  scale(x: number, y: number) {
+  scale(x: number | Point, y: number = 0) {
     const scale = new Scale(x, y);
     const order = this.order.slice();
 
@@ -832,6 +976,38 @@ class Transform {
       }
     }
     return null;
+  }
+
+  toDelta(
+    delta: Transform,
+    percent: number,
+    translationStyle: 'linear' | 'curved',
+    translationOptions: pathOptionsType,
+    // translationPath: (Point, Point, number, ?number, ?number) => Point,
+    // direction: number = 1,
+    // mag: number = 0.5,
+    // offset: number = 0.5,
+  ) {
+    const calcTransform = this.copy();
+    for (let i = 0; i < this.order.length; i += 1) {
+      const stepStart = this.order[i];
+      const stepDelta = delta.order[i];
+      if (stepStart instanceof Scale && stepDelta instanceof Scale) {
+        calcTransform.order[i] = stepStart.add(stepDelta.mul(percent));
+      }
+      if (stepStart instanceof Rotation && stepDelta instanceof Rotation) {
+        calcTransform.order[i] = new Rotation(stepStart.r + stepDelta.r * percent);
+      }
+      if (stepStart instanceof Translation && stepDelta instanceof Translation) {
+        calcTransform.order[i] =
+          new Translation(translationPath(
+            translationStyle,
+            stepStart, stepDelta, percent,
+            translationOptions,
+          ));
+      }
+    }
+    return calcTransform;
   }
 
   updateScale(x: number | Point, yOrIndex: number = 0, index: number = 0) {
@@ -1255,4 +1431,8 @@ export {
   Rotation,
   spaceToSpaceTransform,
   getBoundingRect,
+  linearPath,
+  curvedPath,
+  quadraticBezier,
+  translationPath,
 };

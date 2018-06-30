@@ -16,6 +16,7 @@ class Element {
   width: number;
   location: Point;
   height: number;
+  scale: number;
 
   constructor(content: DiagramElementPrimative | DiagramElementCollection) {
     this.content = content;
@@ -37,11 +38,24 @@ class Element {
 
       // Get the boundaries of element
       const r = content.getRelativeDiagramBoundingRect();
+      this.location = location.copy();
+      this.scale = scale;
       this.ascent = r.top;
       this.descent = -r.bottom;
       this.height = r.height;
       this.width = r.width;
-      // content.show = true;
+    }
+  }
+  getAllElements() {
+    return [this.content];
+  }
+  setPositions() {
+    const { content } = this;
+    if (content instanceof DiagramElementCollection ||
+        content instanceof DiagramElementPrimative) {
+      content.transform.updateTranslation(this.location.x, this.location.y);
+      content.transform.updateScale(this.scale, this.scale);
+      content.updateLastDrawTransform();
     }
   }
 }
@@ -53,15 +67,16 @@ class Elements {
   width: number;
   location: Point;
   height: number;
+  +getAllElements: () => Array<DiagramElementPrimative | DiagramElementCollection>;
 
   constructor(content: Array<Element | Elements | null>) {
-    const filteredContent = [];
+    const nonNullContent = [];
     content.forEach((c) => {
       if (c !== null) {
-        filteredContent.push(c);
+        nonNullContent.push(c);
       }
     });
-    this.content = filteredContent;
+    this.content = nonNullContent;
     this.ascent = 0;
     this.descent = 0;
     this.width = 0;
@@ -91,6 +106,22 @@ class Elements {
     this.location = location.copy();
     this.height = this.descent + this.ascent;
   }
+  getAllElements() {
+    let elements = [];
+    this.content.forEach((e) => {
+      if (e instanceof Element) {
+        elements.push(e.content);
+      } else {
+        elements = [...elements, ...e.getAllElements()];
+      }
+    });
+    return elements;
+  }
+  setPositions() {
+    this.content.forEach((e) => {
+      e.setPositions();
+    });
+  }
 }
 
 class Fraction extends Elements {
@@ -102,6 +133,8 @@ class Fraction extends Elements {
   lineVAboveBaseline: number;
   vinculum: DiagramElementPrimative | null | DiagramElementCollection;
   mini: boolean;
+  vinculumPosition: Point;
+  vinculumScale: Point;
 
   constructor(
     numerator: Elements,
@@ -122,6 +155,8 @@ class Fraction extends Elements {
     this.lineVAboveBaseline = 0;
     this.lineWidth = 0;
     this.mini = false;
+    this.vinculumPosition = new Point(0, 0);
+    this.vinculumScale = new Point(1, 0.01);
   }
 
   calcSize(location: Point, incomingScale: number) {
@@ -133,10 +168,10 @@ class Fraction extends Elements {
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
 
-    this.vSpaceNum = scale * 0.15;
-    this.vSpaceDenom = scale * 0.15;
-    this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.35;
-    this.lineWidth = scale * 0.05;
+    this.vSpaceNum = scale * 0.05;
+    this.vSpaceDenom = scale * 0.02;
+    this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.07;
+    this.lineWidth = scale * 0.02;
 
     const yNumerator = this.numerator.descent +
                         this.vSpaceNum + this.lineVAboveBaseline;
@@ -164,12 +199,37 @@ class Fraction extends Elements {
 
     const { vinculum } = this;
     if (vinculum) {
-      vinculum.transform.updateScale(this.width, this.lineWidth);
-      vinculum.transform.updateTranslation(
+      this.vinculumPosition = new Point(
         this.location.x,
         this.location.y + this.lineVAboveBaseline,
       );
-      vinculum.show = true;
+      this.vinculumScale = new Point(this.width, this.lineWidth);
+      vinculum.transform.updateScale(this.vinculumScale);
+      vinculum.transform.updateTranslation(this.vinculumPosition);
+
+      vinculum.show();
+    }
+  }
+  getAllElements() {
+    let elements = [];
+    if (this.numerator) {
+      elements = [...elements, ...this.numerator.getAllElements()];
+    }
+    if (this.denominator) {
+      elements = [...elements, ...this.denominator.getAllElements()];
+    }
+    if (this.vinculum) {
+      elements = [...elements, this.vinculum];
+    }
+    return elements;
+  }
+  setPositions() {
+    this.numerator.setPositions();
+    this.denominator.setPositions();
+    const { vinculum } = this;
+    if (vinculum) {
+      vinculum.transform.updateScale(this.vinculumScale);
+      vinculum.transform.updateTranslation(this.vinculumPosition);
     }
   }
 }
@@ -244,6 +304,28 @@ class SuperSub extends Elements {
     this.ascent = asc;
     this.descent = des;
   }
+  getAllElements() {
+    let elements = [];
+    if (this.superscript) {
+      elements = [...elements, ...this.superscript.getAllElements()];
+    }
+    if (this.subscript) {
+      elements = [...elements, ...this.subscript.getAllElements()];
+    }
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    return elements;
+  }
+  setPositions() {
+    this.mainContent.setPositions();
+    if (this.superscript) {
+      this.superscript.setPositions();
+    }
+    if (this.subscript) {
+      this.subscript.setPositions();
+    }
+  }
 }
 
 class Bounds {
@@ -263,6 +345,8 @@ class Integral extends Elements {
   limitMax: Elements | null;
   mainContent: Elements | null;
   integralGlyph: DiagramElementPrimative | DiagramElementCollection | null;
+  glyphLocation: Point;
+  glyphScale: number;
 
   constructor(
     limitMin: Elements | null,
@@ -277,6 +361,45 @@ class Integral extends Elements {
     this.limitMax = limitMax;
     this.mainContent = content;
     this.integralGlyph = integralGlyph;
+    this.glyphLocation = new Point(0, 0);
+    this.glyphScale = 1;
+  }
+
+  getAllElements() {
+    let elements = [];
+    if (this.limitMin) {
+      elements = [...elements, ...this.limitMin.getAllElements()];
+    }
+    if (this.limitMax) {
+      elements = [...elements, ...this.limitMax.getAllElements()];
+    }
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    if (this.integralGlyph) {
+      elements = [...elements, this.integralGlyph];
+    }
+    return elements;
+  }
+
+  setPositions() {
+    const { integralGlyph } = this;
+    if (integralGlyph != null) {
+      integralGlyph.transform.updateScale(this.glyphScale, this.glyphScale);
+      integralGlyph.transform.updateTranslation(
+        this.glyphLocation.x,
+        this.glyphLocation.y,
+      );
+    }
+    if (this.limitMin) {
+      this.limitMin.setPositions();
+    }
+    if (this.limitMax) {
+      this.limitMax.setPositions();
+    }
+    if (this.mainContent) {
+      this.mainContent.setPositions();
+    }
   }
 
   calcSize(location: Point, scale: number) {
@@ -327,7 +450,7 @@ class Integral extends Elements {
 
     const { integralGlyph } = this;
     if (integralGlyph instanceof DiagramElementPrimative) {
-      integralGlyph.show = true;
+      integralGlyph.show();
       integralGlyph.transform.updateScale(
         height,
         height,
@@ -336,6 +459,8 @@ class Integral extends Elements {
         integralSymbolLocation.x,
         integralSymbolLocation.y,
       );
+      this.glyphLocation = integralSymbolLocation;
+      this.glyphScale = height;
       const bounds = integralGlyph.vertices
         .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
       integralGlyphBounds.width = bounds.width;
@@ -430,21 +555,118 @@ export default class DiagramGLEquation extends Elements {
     });
   }
 
-  calcSize(location: Point, scale: number) {
-    this.collection.hideAll();
-    this.collection.show = true;
-    super.calcSize(location, scale);
-  }
-  animateTo(
-    location: Point,
-    scale: number,
-    time: number = 1,
+  arrange(
+    // location: Point = new Point(0, 0),
+    scale: number = 1,
+    fixElement: DiagramElementPrimative | DiagramElementCollection | null = null,
   ) {
+    const elementsInEqn = this.getAllElements();
+    const elementsInCollection = this.collection.getAllElements();
+    const elementsCurrentlyShowing = elementsInCollection.filter(e => e.isShown);
+    this.collection.hideAll();
+    this.collection.show();
+    super.calcSize(new Point(0, 0), scale);
+    if (fixElement != null) {
+      const t = fixElement.transform.t();
+      if (t != null) {
+        const delta = new Point(0, 0).sub(t);
+        elementsInEqn.forEach((e) => {
+          const et = e.transform.t();
+          if (et != null) {
+            const etNew = et.add(delta);
+            e.transform.updateTranslation(etNew);
+          }
+        });
+      }
+    }
+    this.collection.showOnly(elementsCurrentlyShowing);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  dissolveElements(
+    elements: Array<DiagramElementPrimative | DiagramElementCollection>,
+    appear: boolean = true,
+    delay: number = 0.01,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ) {
+    let callbackToUse = callback;
+    if (elements.length === 0) {
+      if (callback) {
+        callback();
+      }
+    }
+    elements.forEach((e) => {
+      if (appear) {
+        e.disolveInWithDelay(delay, time, callbackToUse);
+        callbackToUse = null;
+      } else {
+        e.disolveOutWithDelay(delay, time, callbackToUse);
+        callbackToUse = null;
+      }
+    });
+  }
+
+  getElementsToShowAndHide() {
+    const allElements = this.collection.getAllElements();
+    const elementsShown = allElements.filter(e => e.isShown);
+    const elementsShownTarget = this.getAllElements();
+    const elementsToHide =
+      elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
+    const elementsToShow =
+      elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
+
+    return {
+      show: elementsToShow,
+      hide: elementsToHide,
+    };
+  }
+  showHide(
+    showTime: number = 1,
+    hideTime: number = 1,
+    callback: ?(?mixed) => void = null,
+  ) {
+    this.collection.stop();
+    const { show, hide } = this.getElementsToShowAndHide();
+    this.dissolveElements(show, true, 0.01, showTime, null);
+    this.dissolveElements(hide, false, showTime, hideTime, callback);
+  }
+
+  hideShow(
+    showTime: number = 1,
+    hideTime: number = 1,
+    callback: ?(?mixed) => void = null,
+  ) {
+    this.collection.stop();
+    const { show, hide } = this.getElementsToShowAndHide();
+    this.dissolveElements(hide, false, 0.01, hideTime, null);
+    this.dissolveElements(show, true, hideTime, showTime, callback);
+  }
+
+  animateTo(
+    // location: Point,
+    scale: number = 1,
+    time: number = 1,
+    fixElement: DiagramElementPrimative | DiagramElementCollection | null = null,
+    callback: ?(?mixed) => void = null,
+  ) {
+    const allElements = this.collection.getAllElements();
+    this.collection.stop();
+    const elementsShown = allElements.filter(e => e.isShown);
+    const elementsShownTarget = this.getAllElements();
+    const elementsToHide =
+      elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
+    const elementsToShow =
+      elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
+
     const currentTransforms = this.collection.getElementTransforms();
-    this.calcSize(location, scale);
+
+    this.arrange(scale, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.collection.animateToTransforms(animateToTransforms, time);
+    this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);
+    this.collection.animateToTransforms(animateToTransforms, time, 0);
+    this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
 
   contentToElement(content: EquationInput): Elements {

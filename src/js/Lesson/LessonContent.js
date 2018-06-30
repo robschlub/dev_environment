@@ -2,37 +2,152 @@
 
 import Diagram from '../diagram/Diagram';
 import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
-// import { Transform } from '../diagram/tools/g2';
+import { colorArrayToRGBA } from '../tools/tools';
+// import { Transform, Point } from '../diagram/tools/g2';
+
+function centerV(text: string = '') {
+  return `<div style="display: table; height: 100%;" class="lesson__p_top_margin_2">
+        <div style="display: table-cell; vertical-align: middle">
+        ${text}</div></div>`;
+}
+
+function centerVH(text: string = '') {
+  return `<div style="display: table; height: 100%; text-align:center; width:100%" class="lesson__p_top_margin_2">
+        <div style="display: table-cell; vertical-align: middle">
+        ${text}</div></div>`;
+}
+
+function centerH(text: string = '') {
+  return `<div style="text-align:center;">
+        ${text}</div>`;
+}
+
+function toHTML(
+  text: string = '',
+  id: string = '',
+  classes: string = '',
+  color: Array<number> | null = null,
+) {
+  let idStr = '';
+  if (id) {
+    idStr = ` id="${id}"`;
+  }
+  let classStr = '';
+  if (classes) {
+    classStr = ` class="${classes}"`;
+  }
+  let colorStr = '';
+  if (color) {
+    colorStr = ` style="color:${colorArrayToRGBA(color)};"`;
+  }
+  return {
+    replacementText: `<span${idStr}${classStr}"${colorStr}>${text.replace(RegExp(/_/, 'gi'), ' ').trim()}</span>`,
+  };
+}
+
+function highlight(classes: string = '') {
+  const classStr = `${classes} highlight_word`;
+  return {
+    replacementText: (text: string) => toHTML(text, '', classStr),
+  };
+}
+
+function highlightWord(text: string, classes: string = '') {
+  const classStr = `${classes} highlight_word`;
+  return {
+    replacementText: toHTML(text, '', classStr).replacementText,
+  };
+}
+
+function addClass(classes: string = '') {
+  return {
+    replacementText: (text: string) => toHTML(text, '', classes),
+    // id: '',
+  };
+}
+
+function addId(id: string = '') {
+  return {
+    replacementText: (text: string) => toHTML(text, id),
+    // id: '',
+  };
+}
+
+
+function clickWord(
+  textToUse: string,
+  id: string,
+  actionMethod: Function,
+  bind: Array<mixed>,
+  classesOrColor: string | Array<number> | null = null,
+) {
+  let classStr = 'action_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
+  const idToUse = () => id;
+  // const id = `lesson__id_${textToUse}`;
+  return {
+    replacementText: () => toHTML(textToUse, idToUse(), classStr, color),
+    id: idToUse,
+    actionMethod,
+    bind,
+  };
+}
+
+
+function click(
+  actionMethod: Function,
+  bind: Array<mixed>,
+  classesOrColor: string | Array<number> | null = null,
+) {
+  let classStr = 'action_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
+  const idToUse = (text: string) => `lesson__id_${text}`;
+  return {
+    replacementText: (text: string) => toHTML(text, idToUse(text), classStr, color),
+    id: idToUse,
+    actionMethod,
+    bind,
+  };
+}
 
 function actionWord(
   text: string,
   id: string = '',
-  classes: string = '',
-): Object {
+  classesOrColor: string | Array<number> | null = null,
+) {
+  let classStr = 'action_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
   return {
-    replacementText: `<span id="${id}" class="${classes} action_word">${text}</span>`,
-    type: 'html',
+    replacementText: toHTML(text, id, classStr, color).replacementText,
     id,
   };
 }
-function highlightWord(
-  text: string,
-  id: string = '',
-  classes: string = '',
-): Object {
-  return {
-    replacementText: `<span id="${id}" class="${classes} highlight_word">${text}</span>`,
-    type: 'html',
-    id,
-  };
-}
+
 function diagramCanvas(
   id: string,
   DiagramClass: Object,
   classes: string = '',
 ): Object {
   return {
-    replacementText: `<div id="${id}" class="canvas_container ${classes}">
+    replacementText: () => `<div id="${id}" class="canvas_container ${classes}">
         <canvas class="diagram__gl"></canvas>
         <div class="diagram__html"></div>
         <canvas class="diagram__text"></canvas>
@@ -50,32 +165,48 @@ function modifyText(
 ): string {
   let outText = '';
   const expression = new RegExp(`\\|${key}\\|`, 'gi');
-  const replacement = mod.replacementText;
+  let replacement = '';
+  if (typeof mod.replacementText === 'string') {
+    replacement = mod.replacementText;
+  } else {
+    replacement = mod.replacementText(key).replacementText;
+    // console.log(replacement)
+  }
   outText = text.replace(expression, replacement);
   return outText;
 }
 
 function onClickId(
   id: string,
-  action: Function,
+  actionMethod: Function,
   bind: Array<mixed>,
 ) {
   const element = document.getElementById(id);
   if (element) {
+    element.classList.add('action_word_enabled');
     if (bind.length === 1) {
-      element.onclick = action.bind(bind[0]);
+      element.onclick = actionMethod.bind(bind[0]);
     }
     if (bind.length === 2) {
-      element.onclick = action.bind(bind[0], bind[1]);
+      element.onclick = actionMethod.bind(bind[0], bind[1]);
     }
     if (bind.length === 3) {
-      element.onclick = action.bind(bind[0], bind[1], bind[2]);
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2]);
     }
     if (bind.length === 4) {
-      element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3]);
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3]);
     }
     if (bind.length === 5) {
-      element.onclick = action.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3], bind[4]);
+    }
+    if (bind.length === 6) {
+      element.onclick = actionMethod.bind(bind[0], bind[1], bind[2], bind[3], bind[4], bind[5]);
+    }
+    if (bind.length === 7) {
+      element.onclick = actionMethod.bind(
+        bind[0], bind[1], bind[2], bind[3], bind[4],
+        bind[5], bind[6],
+      );
     }
   }
 }
@@ -110,30 +241,65 @@ function onClickId(
 class Section {
   title: string;
   modifiers: Object;
+  blank: Array<string>;
   diagram: Diagram;
+  // comingFrom: 'next' | 'prev' | 'goto';
+  // goingTo: 'next' | 'prev' | 'goto';
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
   hideOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
   show: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  // position: Array<PositionObject>;
-  // isSinglePagePrimary: boolean;
+  hide: Array<DiagramElementPrimative | DiagramElementCollection>
+           | () => {};
+  initialPositions: Object | () => {};
+  blankTransition: {
+    toNext: boolean;
+    toPrev: boolean;
+    fromNext: boolean;
+    fromPrev: boolean;
+    toGoto: boolean;
+    fromGoto: boolean;
+  }
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
     this.showOnly = [];
+    this.blank = [];
+    this.blankTransition = {
+      toNext: false,
+      toPrev: false,
+      fromNext: false,
+      fromPrev: false,
+      toGoto: false,
+      fromGoto: false,
+    };
   }
 
   setContent(): Array<string> | string {
     return [];
   }
 
+  setOnClicks() {
+    Object.keys(this.modifiers).forEach((key) => {
+      const mod = this.modifiers[key];
+      if ('actionMethod' in mod) {
+        onClickId(mod.id(key), mod.actionMethod, mod.bind);
+      }
+    });
+  }
   getContent(): string {
     let htmlText = '';
-    let content = this.setContent();
+    let content = '';
+    if (typeof this.setContent === 'string'
+        || Array.isArray(this.setContent)) {
+      content = this.setContent;
+    } else {
+      content = this.setContent();
+    }
     if (typeof content === 'string') {
       content = [content];
     }
@@ -145,53 +311,59 @@ class Section {
       const mod = this.modifiers[key];
       htmlText = modifyText(htmlText, key, mod);
     });
-    return htmlText;
+
+    // Go through all text, and replace all characters between | | with
+    // with default keywords
+    const r = RegExp(/\|([^|]*)\|/, 'gi');
+    return htmlText.replace(r, '<span class="highlight_word">$1</span>');
   }
 
   /* eslint-disable no-unused-vars */
-  setState(previousState: Object) {
+  setSteadyState(previousState: Object) {
   }
 
-  // fillPosition(positionArray: Array<Object>) {
-  //   const final = [];
-  //   positionArray.forEach((p) => {
-  //     const newP = new PositionObject(p.element);
-  //     if ('position' in p) {
-  //       newP.position = p.position;
+  /* eslint-disable no-unused-vars */
+  setEnterState(previousState: Object) {
+  }
+
+  /* eslint-disable no-unused-vars */
+  setLeaveState(): ?Object {
+  }
+
+  // setInitialPositions() {
+  //   if ('initialPositions' in this) {
+  //     const elementsOrMethod = this.initialPositions;
+  //     if (typeof elementsOrMethod === 'function') {
+  //       elementsOrMethod();
   //     }
-  //     if ('animTimeFromPrev' in p) {
-  //       newP.animTimeFromPrev = p.animTimeFromPrev;
+  //     if (Array.isArray(elementsOrMethod)) {
+  //       for (let i = 0; i < elementsOrMethod.length; i += 2) {
+  //         const element = elementsOrMethod[i];
+  //         const transformPointOrNumber = elementsOrMethod[i + 1];
+  //         if (transformPointOrNumber instanceof Transform) {
+  //           element.transform = transformPointOrNumber.copy();
+  //         } else if (transformPointOrNumber instanceof Point) {
+  //           element.transform.updateTranslation(transformPointOrNumber);
+  //         } else if (typeof transformPointOrNumber === 'number') {
+  //           element.transform.updateRotation(transformPointOrNumber);
+  //         }
+  //       }
   //     }
-  //     if ('animTimeFromNext' in p) {
-  //       newP.animTimeFromNext = p.animTimeFromNext;
-  //     }
-  //     if ('animTimeFromGoTo' in p) {
-  //       newP.animTimeFromGoTo = p.animTimeFromGoTo;
-  //     }
-  //     if ('animTimeToPrev' in p) {
-  //       newP.animTimeToPrev = p.animTimeToPrev;
-  //     }
-  //     if ('animTimeToNext' in p) {
-  //       newP.animTimeToNext = p.animTimeToNext;
-  //     }
-  //     final.push(newP);
-  //   });
-  //   if (final) {
-  //     this.position = final;
   //   }
   // }
 
-  // setPositionAndAnimations() {
-  //   if ('position' in this) {
-  //     const { position } = this;
-  //     if (Array.isArray(position)) {
-
-  //     } else {
-  //       position();
-  //     }
-  //   };
-  // }
-
+  setBlanks() {
+    this.blank.forEach((element) => {
+      if (element in this.blankTransition) {
+        this.blankTransition[element] = true;
+      }
+    });
+    // if ('blank' in this) {
+    //   Object.keys(this.blank).forEach((key) => {
+    //     this.blankTransition[key] = this.blank[key];
+    //   });
+    // }
+  }
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -213,8 +385,25 @@ class Section {
       const elementsOrMethod = this.show;
       if (Array.isArray(elementsOrMethod)) {
         elementsOrMethod.forEach((element) => {
-          // eslint-disable-next-line no-param-reassign
-          element.show = true;
+          if (element instanceof DiagramElementCollection) {
+            element.showAll();
+          } else {
+            element.show();
+          }
+        });
+      } else {
+        elementsOrMethod();
+      }
+    }
+    if ('hide' in this) {
+      const elementsOrMethod = this.hide;
+      if (Array.isArray(elementsOrMethod)) {
+        elementsOrMethod.forEach((element) => {
+          if (element instanceof DiagramElementCollection) {
+            element.hideAll();
+          } else {
+            element.hide();
+          }
         });
       } else {
         elementsOrMethod();
@@ -226,19 +415,22 @@ class Section {
     return {};
   }
 
-  transitionNext(done: () => void = function temp() {}): void {
+  transitionToNext(done: () => void = function temp() {}): void {
     done();
   }
   transitionFromNext(done: () => void = function temp() {}): void {
     done();
   }
-  transitionPrev(done: () => void = function temp() {}): void {
+  transitionToPrev(done: () => void = function temp() {}): void {
     done();
   }
   transitionFromPrev(done: () => void = function temp() {}): void {
     done();
   }
   transitionFromAny(done: () => void = function temp() {}): void {
+    done();
+  }
+  transitionToAny(done: () => void = function temp() {}): void {
     done();
   }
   /* eslint-enable no-unused-vars */
@@ -252,13 +444,11 @@ class LessonContent {
   sections: Array<Section>;
   diagram: Object;
   diagramHtmlId: string;
+  goingTo: 'next' | 'prev' | 'goto';
+  comingFrom: 'next' | 'prev' | 'goto';
   // questions
 
   constructor(htmlId: string) {
-    // this.setTitle();
-    // this.setDiagram(htmlId);
-    // this.sections = [];
-    // this.addSections();
     this.diagramHtmlId = htmlId;
     this.sections = [];
     this.setTitle();
@@ -280,17 +470,6 @@ class LessonContent {
   addSections() {
   }
 
-  // cleanSections() {
-  //   this.sections.forEach((section, index) => {
-  //     if ('position' in section) {
-  //       const position = section.position;
-  //       if (Array.isArray(position)) {
-  //         section.
-  //       }
-  //       }
-  //   });
-  // }
-
   addSection(section: Object) {
     const s = new Section(this.diagram);
 
@@ -299,11 +478,11 @@ class LessonContent {
       s[key] = section[key];
     });
     this.sections.push(s);
-    // this.cleanSections();
   }
 }
 
 export {
-  Section, LessonContent, actionWord,
-  diagramCanvas, onClickId, highlightWord,
+  Section, LessonContent, actionWord, click, highlight, addClass, addId,
+  diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
+  clickWord,
 };

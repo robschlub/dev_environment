@@ -12,6 +12,7 @@ const roundNum = (value: number, precision: number = 5) => {
 const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
   let result = 0;
   if (arrayOrValue instanceof Array) {
+    // $FlowFixMe
     result = arrayOrValue.map(elem => round(elem, precision));
   // } else if (arrayOrValue.constructor == d2.point(0,0).constructor){
   //     result = roundPoint(arrayOrValue, precision);
@@ -214,6 +215,7 @@ function sinusoid(
 ) {
   return bias + mag * Math.sin(deltaTime * frequency * 2.0 * Math.PI + phaseOffset);
 }
+
 // const animationPhase = (transform, time, rotDirection = 0, animationStyle = easeinout) => {
 //     return {
 //         transform: transform.copy(),
@@ -222,6 +224,15 @@ function sinusoid(
 //         animationStyle: animationStyle,
 //     }
 // }
+
+function range(start: number, stop: number, step: number) {
+  const out = [];
+  for (let i = start; i <= stop + step * 0.5; i += step) {
+    out.push(i);
+  }
+  return out;
+}
+
 
 export {
   round,
@@ -234,5 +245,6 @@ export {
   linear,
   clipMag,
   clipValue,
+  range,
 };
 

@@ -31,6 +31,11 @@ describe('g2 tests', () => {
         const s = p.add(q);
         expect(s).toEqual(new Point(1, 1));
       });
+      test('(0, 0) + (1, 1) = (1, 1) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.add(1, 1);
+        expect(s).toEqual(new Point(1, 1));
+      });
       test('(0, 0) + (1, -1) = (1, -1)', () => {
         const p = new Point(0, 0);
         const q = new Point(1, -1);
@@ -43,6 +48,11 @@ describe('g2 tests', () => {
         const s = p.add(q).add(q);
         expect(s).toEqual(new Point(2, 2));
       });
+      test('(0, 0) + (1, 1) = (2, 2) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.add(1, 1).add(1, 1);
+        expect(s).toEqual(new Point(2, 2));
+      });
     });
 
     describe('Points can be subtracted from each other', () => {
@@ -50,6 +60,11 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         const q = new Point(1, 1);
         const s = p.sub(q);
+        expect(s).toEqual(new Point(-1, -1));
+      });
+      test('(0, 0) - (1, 1) = (-1, -1) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.sub(1, 1);
         expect(s).toEqual(new Point(-1, -1));
       });
       test('(0, 0) - (1, -1) = (-1, 1)', () => {
@@ -62,6 +77,11 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         const q = new Point(1, 1);
         const s = p.sub(q).sub(q);
+        expect(s).toEqual(new Point(-2, -2));
+      });
+      test('(0, 0) - (1, 1) - (1, 1) = (-2, -2) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.sub(1, 1).sub(1, 1);
         expect(s).toEqual(new Point(-2, -2));
       });
     });
@@ -1371,6 +1391,34 @@ describe('g2 tests', () => {
       expect(result.right).toEqual(4);
       expect(result.top).toEqual(3);
       // expect(result.max).toEqual(new Point(4, 3));
+    });
+  });
+  describe('Quadratic Bezier', () => {
+    test('flat case', () => {
+      const p0 = new Point(0, 0);
+      const p1 = new Point(0.5, 0.5);
+      const p2 = new Point(1, 0);
+      let b = p0.quadraticBezier(p1, p2, 0);
+      expect(b).toEqual(p0);
+
+      b = p0.quadraticBezier(p1, p2, 0.5);
+      expect(b).toEqual(new Point(0.5, 0.25));
+
+      b = p0.quadraticBezier(p1, p2, 1);
+      expect(b).toEqual(p2);
+    });
+    test('flat 90 deg case', () => {
+      const p0 = new Point(1, 1);
+      const p1 = new Point(0.5, 1.5);
+      const p2 = new Point(1, 2);
+      let b = p0.quadraticBezier(p1, p2, 0);
+      expect(b).toEqual(p0);
+
+      b = p0.quadraticBezier(p1, p2, 0.5);
+      expect(b).toEqual(new Point(0.75, 1.5));
+
+      b = p0.quadraticBezier(p1, p2, 1);
+      expect(b).toEqual(p2);
     });
   });
 });

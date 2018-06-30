@@ -1,0 +1,12 @@
+
+.navbar__spacer {
+  height: 0;
+  width: 100%;
+}
+
+@include media-breakpoint-up(md) {
+  .navbar__spacer {
+    height: 56px;
+    width: 100%;
+  }
+}
