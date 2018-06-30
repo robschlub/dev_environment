@@ -5,6 +5,7 @@ import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
 // import Canvas from './canvas';
 import Button from './button';
+import LessonTile from './lessonTile';
 
 type Props = {
   lesson: Lesson;
@@ -254,6 +255,7 @@ export default class LessonComponent extends React.Component
     return <div>
       <div className='lesson__title'>
       {this.lesson.content.title}
+    {/*<LessonTile id="lesson__title_title"/>*/}
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

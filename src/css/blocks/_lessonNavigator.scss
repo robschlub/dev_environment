@@ -17,13 +17,13 @@
   top: 0;
   height: 100%;
   width: 15vw;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(50, 50, 50, 0));
   pointer-events: none;
 }
 
 .navigator__right_side {
   left: 85%;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(50, 50, 50, 0));;
 }
 
 .navigator__scroll_container {
