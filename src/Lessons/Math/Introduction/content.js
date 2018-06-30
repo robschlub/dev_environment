@@ -6,7 +6,7 @@ import {
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Point } from '../../../js/diagram/tools/g2';
-import { easeinout } from '../../../js/diagram/tools/mathtools';
+// import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
 
@@ -38,7 +38,7 @@ class Content extends LessonContent {
         `),
       modifiers: {
         _mathematics_is_a_powerful_tool:
-          highlightWord('Mathematics is a powerful tool.', '', 'english'),
+          highlightWord('Mathematics is a powerful tool.', 'english'),
       },
     });
     this.addSection({
@@ -56,10 +56,10 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _simple: highlightWord('simple', '', 'english'),
-        _general: highlightWord('general', '', 'english'),
-        _simply: highlightWord('simply', '', 'english'),
-        _generally: highlightWord('generally', '', 'english'),
+        _simple: highlightWord('simple', 'english'),
+        _general: highlightWord('general', 'english'),
+        _simply: highlightWord('simply', 'english'),
+        _generally: highlightWord('generally', 'english'),
       },
     });
 
@@ -75,10 +75,10 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _shapes: highlightWord('shapes', '', 'english'),
-        _Shape: highlightWord('Shapes', '', 'english'),
-        _objects: highlightWord('objects', '', 'english'),
-        _paths: highlightWord('paths', '', 'english'),
+        _shapes: highlightWord('shapes', 'english'),
+        _Shape: highlightWord('Shapes', 'english'),
+        _objects: highlightWord('objects', 'english'),
+        _paths: highlightWord('paths', 'english'),
       },
     });
 
@@ -98,10 +98,10 @@ class Content extends LessonContent {
         circle._wheel,
       ],
       modifiers: {
-        _wheel: highlightWord('wheel', '', 'english'),
+        _wheel: highlightWord('wheel', 'english'),
         _shape: actionWord('shape', 'id_shape', colors.circle),
       },
-      setState: () => {
+      setSteadyState: () => {
         circle._wheel.transform.updateTranslation(0, 0);
       },
     });
@@ -118,13 +118,8 @@ class Content extends LessonContent {
         circle._wheelShape,
       ],
       modifiers: {
-        _wheel: highlightWord('wheel', '', 'english'),
+        _wheel: highlightWord('wheel', 'english'),
         _shape: actionWord('shape', 'id_shape', colors.circle),
-      },
-      setState: () => {
-        circle._wheel.transform.updateTranslation(-1, 0);
-        circle._wheelShape.transform.updateTranslation(1, 0);
-        onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
       },
       transitionFromAny: (done) => {
         if (circle._wheel.transform.t().x === 0) {
@@ -132,6 +127,12 @@ class Content extends LessonContent {
         } else {
           done();
         }
+      },
+      setSteadyState: () => {
+        circle._wheel.transform.updateTranslation(-1, 0);
+        circle.resetColors();
+        circle._wheelShape.transform.updateTranslation(1, 0);
+        onClickId('id_shape', circle.showWheelShape, [circle, () => {}]);
       },
     });
 
@@ -170,13 +171,16 @@ class Content extends LessonContent {
 
         const makeEquation = () => {
           circle._equation.transform.updateTranslation(0, 0);
-          circle._equation.show();
+          circle._equation.showOnly([circle._equation._d, circle._equation._c]);
           circle.equationTextToInitialPositions();
-          circle.eqn.animateTo(new Point(-1, 0), 1, 2);
-          circle._equation._d.disolveIn(1);
-          circle._equation._c.disolveIn(1);
-          circle._equation._equals.disolveInWithDelay(1.5, 1);
-          circle._equation._pi.disolveInWithDelay(1.5, 1, done);
+          // circle.eqn.animateTo(1, 2);
+          // circle._equation.showAll();
+          // circle._equation._d.disolveIn(1);
+          // circle._equation._c.disolveIn(1);
+          // circle._equation._equals.disolveInWithDelay(1.5, 1);
+          // circle._equation._pi.disolveInWithDelay(1.5, 1, done);
+          circle._equation.setPosition(new Point(-0.05 - 1, -0.065));
+          circle.eqn.animateTo(1, 2, null, done);
         };
 
         circle._circumferenceDimension.appearWithDelay(tDiameter, 1);
@@ -184,11 +188,18 @@ class Content extends LessonContent {
           tDiameter,
           circle._circumferenceDimension.grow.bind(circle),
           1.5,
-          easeinout,
           makeEquation.bind(circle),
         );
       },
-      setState: () => {
+      setSteadyState: () => {
+        circle.resetColors();
+        circle.eqn.arrange(1);
+        // circle._equation.setPosition(new Point(-1, 0));
+        circle._equation.showAll();
+        circle._diameterDimension.grow(1);
+        circle._circumferenceDimension.grow(1);
+
+
         circle._circumferenceDimension.showAll();
         circle._diameterDimension.showAll();
         onClickId('id_properties', circle.pulseProperties, [circle]);
@@ -211,7 +222,7 @@ class Content extends LessonContent {
       modifiers: {
         _properties: actionWord('properties', 'id_properties', colors.dimensions),
       },
-      setState: () => {
+      setSteadyState: () => {
         circle.eqn.calcSize(new Point(0, 0), 1);
         circle._clock.transform.updateTranslation(-1.8, 0);
         circle._ball.transform.updateTranslation(0, 0);
@@ -230,7 +241,7 @@ class Content extends LessonContent {
         circle,
         circle._earth,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._earth.transform.updateTranslation(-1, 0);
         onClickId('id_calculation', circle.calculateEarth, [circle]);
       },
@@ -253,12 +264,12 @@ class Content extends LessonContent {
           </p>
         `),
       modifiers: {
-        _sound: highlightWord('sound', '', 'english'),
-        _gravity: highlightWord('gravity', '', 'english'),
-        _electricity: highlightWord('electricity', '', 'english'),
-        _radio_waves: highlightWord('radio waves', '', 'english'),
-        _magnetism: highlightWord('magnetism', '', 'english'),
-        _better_understand: highlightWord('better understand the world we live in', '', 'english'),
+        _sound: highlightWord('sound', 'english'),
+        _gravity: highlightWord('gravity', 'english'),
+        _electricity: highlightWord('electricity', 'english'),
+        _radio_waves: highlightWord('radio waves', 'english'),
+        _magnetism: highlightWord('magnetism', 'english'),
+        _better_understand: highlightWord('better understand the world we live in', 'english'),
       },
     });
 

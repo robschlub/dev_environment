@@ -40,7 +40,7 @@ class Content extends LessonContent {
         _more_sharp: actionWord('more sharp', 'id_more_sharp'),
         _less_sharp: actionWord('less sharp', 'id_less_sharp'),
       },
-      setState() {
+      setSteadyState: () => {
         const collection = this.diagram.elements._shapes;
         this.diagram.elements.hideOnly([
           this.diagram.elements._circle,
@@ -88,7 +88,7 @@ class Content extends LessonContent {
         this.diagram.elements._circle.rotateTo(3, 0, 1, done);
       },
 
-      setState: (previousState: Object) => {
+      setSteadyState: (previousState: Object) => {
         const { diagram } = this;
         const collection = diagram.elements._circle;
         const t = collection._radius.transform.copy();
@@ -137,7 +137,7 @@ class Content extends LessonContent {
         };
       },
 
-      setState: (previousState: Object) => {
+      setSteadyState: (previousState: Object) => {
         const { diagram } = this;
         const collection = diagram.elements._circle;
         const t = collection._radius.transform.copy();

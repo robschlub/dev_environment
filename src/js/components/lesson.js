@@ -5,6 +5,7 @@ import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
 // import Canvas from './canvas';
 import Button from './button';
+// import LessonTile from './lessonTile';
 
 type Props = {
   lesson: Lesson;
@@ -24,7 +25,8 @@ export default class LessonComponent extends React.Component
   key: number;
   state: State;
   diagrams: Object;
-  setStateOnNextRefresh: boolean;
+  // setStateOnNextRefresh: boolean;
+  componentUpdateCallback: ?() => void;
 
   constructor(props: Props) {
     super(props);
@@ -36,19 +38,106 @@ export default class LessonComponent extends React.Component
     };
     this.lesson = props.lesson;
     this.key = 0;
-    this.lesson.refresh = this.refresh.bind(this);
-    this.setStateOnNextRefresh = false;
+    this.lesson.refresh = this.refreshText.bind(this);
+    // this.lesson.refreshPageOnly = this.refreshPageOnly.bind(this);
+    // this.lesson.blank = this.blank.bind(this);
+    // this.setStateOnNextRefresh = false;
+    this.componentUpdateCallback = null;
   }
 
   componentDidUpdate() {
-    if (this.setStateOnNextRefresh) {
-      this.lesson.setState();
+    // if (this.setStateOnNextRefresh) {
+    //   this.lesson.setState();
+    //   this.setStateOnNextRefresh = false;
+    // }
+    if (this.componentUpdateCallback) {
+      const callback = this.componentUpdateCallback;
+      this.componentUpdateCallback = null;
+      callback();
     }
   }
-  refresh(htmlText: string, page: number) {
-    this.setStateOnNextRefresh = true;
-    this.setState({ htmlText, page });
+
+  refreshText(htmlText: string, page: number, callback: ?() => void = null) {
+    if (htmlText !== this.state.htmlText || page !== this.state.page) {
+      this.componentUpdateCallback = callback;
+      this.setState({ htmlText, page });
+    } else if (callback) {
+      callback();
+    }
+
+    const nextButton = document.getElementById('lesson__button-next');
+    if (nextButton) {
+      if (this.lesson.currentSectionIndex ===
+        this.lesson.content.sections.length - 1) {
+        nextButton.classList.add('lesson__button-next-disabled');
+      } else {
+        nextButton.classList.remove('lesson__button-next-disabled');
+      }
+    }
+    const prevButton = document.getElementById('lesson__button-previous');
+    if (prevButton) {
+      if (this.lesson.currentSectionIndex === 0) {
+        prevButton.classList.add('lesson__button-prev-disabled');
+      } else {
+        prevButton.classList.remove('lesson__button-prev-disabled');
+      }
+    }
   }
+
+  // blank() {
+  //   this.setState({ htmlText: '' });
+  // }
+
+  // refreshPageOnly(page: number) {
+  //   this.setStateOnNextRefresh = true;
+  //   this.setState({ htmlText: '', page });
+  // }
+
+  // refresh(htmlText: string, page: number) {
+  //   // this.setStateOnNextRefresh = true;
+  //   this.setState({ htmlText, page });
+
+  //   const nextButton = document.getElementById('lesson__button-next');
+  //   if (nextButton) {
+  //     if (this.lesson.currentSectionIndex ===
+  //       this.lesson.content.sections.length - 1) {
+  //       nextButton.classList.add('lesson__button-next-disabled');
+  //     } else {
+  //       nextButton.classList.remove('lesson__button-next-disabled');
+  //     }
+  //   }
+  //   const prevButton = document.getElementById('lesson__button-previous');
+  //   if (prevButton) {
+  //     if (this.lesson.currentSectionIndex === 0) {
+  //       prevButton.classList.add('lesson__button-prev-disabled');
+  //     } else {
+  //       prevButton.classList.remove('lesson__button-prev-disabled');
+  //     }
+  //   }
+  //   // if (this.lesson.currentSectionIndex ===
+  //   //     this.lesson.content.sections.length - 1) {
+  //   //   const nextButton = document.getElementById('lesson__button-next');
+  //   //   if (nextButton) {
+  //   //     nextButton.classList.add('lesson__button-next-disabled');
+  //   //   }
+  //   // }
+  //   // if (this.lesson.currentSectionIndex === 0) {
+  //   //   const prevButton = document.getElementById('lesson__button-previous');
+  //   //   if (prevButton) {
+  //   //     prevButton.classList.add('lesson__button-prev-disabled');
+  //   //   }
+  //   // }
+  //   //  {
+  //   //   const nextButton = document.getElementById('lesson__button-next');
+  //   //   const prevButton = document.getElementById('lesson__button-previous');
+  //   //   if (prevButton) {
+  //   //     prevButton.classList.remove('lesson__button-prev-disabled');
+  //   //   }
+  //   //   if (nextButton) {
+  //   //     nextButton.classList.remove('lesson__button-next-disabled');
+  //   //   }
+  //   // }
+  // }
   goToNext() {
     this.lesson.nextSection();
   }
@@ -95,12 +184,12 @@ export default class LessonComponent extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   addPrevButton() {
-    return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson"/>;
+    return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson lesson__button-prev-enabled"/>;
   }
 
   // eslint-disable-next-line class-methods-use-this
   addNextButton() {
-    return <Button label="" id="lesson__button-next" className=" -multi-page-lesson"/>;
+    return <Button label="" id="lesson__button-next" className=" -multi-page-lesson lesson__button-next-enabled"/>;
   }
 
   addGoToButton() {
@@ -161,28 +250,38 @@ export default class LessonComponent extends React.Component
   // renderMultiPageCanvas() {
   //   return <Canvas id="multipage_diagram"/>;
   // }
-
+  titleAsTile() {
+    return <div className="lesson__title_tile">
+      <div className="lesson__title_tile_containter lesson__title_tile_shadow">
+        <div className="lesson__title_tile_title">
+          {this.lesson.content.title}
+        </div>
+      </div>
+    </div>;
+  }
   render() {
     return <div>
       <div className='lesson__title'>
-              {this.lesson.content.title}
+      <div className='navigator__left_side'/>
+      {this.titleAsTile()}
+      <div className='navigator__right_side'/>
       </div>
       <div className="lesson__widescreen_backdrop">
-      <div id="lesson__container_name" className="lesson__container">
-            {this.addPrevButton()}
-            <div id={this.lesson.content.diagramHtmlId} className="diagram__container multipage_diagram">
-              <canvas className='diagram__gl'>
-              </canvas>
-              <div id="dd" className='diagram__html'>
-                {this.renderContent(this.state.htmlText)}
+        <div id="lesson__container_name" className="lesson__container">
+              {this.addPrevButton()}
+              <div id={this.lesson.content.diagramHtmlId} className="diagram__container multipage_diagram">
+                <canvas className='diagram__gl'>
+                </canvas>
+                <div id="dd" className='diagram__html'>
+                  {this.renderContent(this.state.htmlText)}
+                </div>
+                <canvas className='diagram__text'>
+                </canvas>
               </div>
-              <canvas className='diagram__text'>
-              </canvas>
-            </div>
-            {this.addPageNumber()}
-            {this.addGoToButton()}
-            {this.addNextButton()}
-      </div>
+              {this.addPageNumber()}
+              {this.addGoToButton()}
+              {this.addNextButton()}
+        </div>
       </div>
     </div>;
   }

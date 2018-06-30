@@ -8,7 +8,7 @@ class Gesture {
   diagram: Diagram;
   mouseDown: boolean;
   enable: boolean;
-  start: (Point) => void;
+  start: (Point) => boolean;
   end: void => void;
   move: (Point, Point) => boolean;
 
@@ -66,8 +66,9 @@ class Gesture {
     if (this.enable) {
       this.mouseDown = true;
       this.previousPoint = point;
-      this.start(point);
+      return this.start(point);
     }
+    return false;
   }
 
   endHandler() {
@@ -88,7 +89,10 @@ class Gesture {
 
   touchStartHandler(event: TouchEvent) {
     const touch = event.touches[0];
-    this.startHandler(new Point(touch.clientX, touch.clientY));
+    const disableEvent = this.startHandler(new Point(touch.clientX, touch.clientY));
+    if (disableEvent) {
+      event.preventDefault();
+    }
   }
   mouseDownHandler(event: MouseEvent) {
     this.startHandler(new Point(event.clientX, event.clientY));

@@ -10,6 +10,7 @@ import getCssColors from '../../tools/getCssColors';
 import { colorArrayToRGB } from '../../tools/tools';
 
 function getTextColor(color: Array<number>) {
+  // console.log(color)
   const colorSum = color.reduce((acc, val) => acc + val);
   let textColor = [1, 1, 1, 1];
   if (colorSum > 2) {
@@ -22,7 +23,7 @@ const introPage = () => {
   const elem: HTMLElement | null = document.getElementById('intro');
   const colors = getCssColors();
   // console.log(colors)
-
+  // console.log(colors)
   let reactKey = 0;
   const paletteRows = [];
   Object.keys(colors.palette).sort().forEach((hue) => {
@@ -46,15 +47,29 @@ const introPage = () => {
 
   const diagramCols = [];
   Object.keys(colors.diagram).sort().forEach((element) => {
-    const color = colors.diagram[element];
-    const textColor = getTextColor(color);
-    reactKey += 1;
-    diagramCols.push(<div className="col-1" key={reactKey} style={{
-        backgroundColor: colorArrayToRGB(color),
-        color: colorArrayToRGB(textColor),
-        padding: '10px',
-        fontSize: '10px',
-      }}>{element}</div>);
+    if (Array.isArray(element)) {
+      const color = colors.diagram[element];
+      const textColor = getTextColor(color);
+      reactKey += 1;
+      diagramCols.push(<div className="col-1" key={reactKey} style={{
+          backgroundColor: colorArrayToRGB(color),
+          color: colorArrayToRGB(textColor),
+          padding: '10px',
+          fontSize: '10px',
+        }}>{element}</div>);
+    } else if (typeof element === 'object') {
+      element.forEach((e) => {
+        const color = colors.diagram[e];
+        const textColor = getTextColor(color);
+        reactKey += 1;
+        diagramCols.push(<div className="col-1" key={reactKey} style={{
+            backgroundColor: colorArrayToRGB(color),
+            color: colorArrayToRGB(textColor),
+            padding: '10px',
+            fontSize: '10px',
+          }}>{e}</div>);
+      });
+    }
   });
   const diagramRows = [];
   reactKey += 1;

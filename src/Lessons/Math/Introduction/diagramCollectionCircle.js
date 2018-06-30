@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import * as tools from '../../../js/diagram/tools/mathtools';
+// import * as tools from '../../../js/diagram/tools/mathtools';
 
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
@@ -304,8 +304,8 @@ class CircleCollection extends DiagramElementCollection {
     tct = tct === null || tct === undefined ? new Point(0, 0) : tct;
 
     if (tdt !== null && td !== null && tc !== null) {
-      this._equation._d.transform.updateTranslation(tdt.x + td.x, tdt.y + td.y);
-      this._equation._c.transform.updateTranslation(tct.x + tc.x, tct.y + tc.y);
+      this._equation._d.transform.updateTranslation(tdt.x + td.x + 1, tdt.y + td.y);
+      this._equation._c.transform.updateTranslation(tct.x + tc.x + 1, tct.y + tc.y);
     }
   }
 
@@ -373,7 +373,7 @@ class CircleCollection extends DiagramElementCollection {
       this._wheelShape.show();
       this._wheelShape.transform.updateTranslation(t.x, t.y);
       this._wheelShape.animateTranslationToWithDelay(new Point(1, 0), 0.5, 1);
-      this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1, tools.easeinout, done);
+      this._wheel.animateTranslationToWithDelay(new Point(-1, 0), 0.5, 1, done);
       this._wheelShape.disolveIn(0.5);
     }
     this.diagram.animateNextFrame();

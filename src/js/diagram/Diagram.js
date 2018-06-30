@@ -669,7 +669,7 @@ class Diagram {
   // coming to a stop.
   touchDownHandler(clientPoint: Point) {
     if (this.inTransition) {
-      return;
+      return false;
     }
 
     // Get the touched point in clip space
@@ -682,6 +682,7 @@ class Diagram {
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(glPoint);
+    touchedElements.forEach(e => e.click());
     // console.log(touchedElements)
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
@@ -696,6 +697,10 @@ class Diagram {
     if (this.beingMovedElements.length > 0) {
       this.animateNextFrame();
     }
+    if (touchedElements.length > 0) {
+      return true;
+    }
+    return false;
   }
 
   // Handle touch up, or mouse click up events in the canvas. When an UP even

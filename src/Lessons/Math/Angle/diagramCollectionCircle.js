@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import * as tools from '../../../js/diagram/tools/mathtools';
+// import * as tools from '../../../js/diagram/tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/tools/g2';
@@ -255,7 +255,7 @@ class CircleCollection extends DiagramElementCollection {
         d = delta / Math.abs(delta);
       }
     }
-    this._radius.animateRotationTo(angle, d, time, tools.easeinout, callback);
+    this._radius.animateRotationTo(angle, d, time, callback);
     this.diagram.animateNextFrame();
   }
 

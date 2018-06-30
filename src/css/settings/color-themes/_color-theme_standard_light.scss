@@ -47,16 +47,21 @@ $_color_theme-standard-light: (
     'text-latin':     (color: 'green',   shade: 'light'),
     'text-greek':     (color: 'orange',   shade: 'light'),
     'text-english':   (color: 'blue',   shade: 'light'),
+    'action':         (color: 'violet', shade: 'lighter'),
   ),
   lesson: (
     'background':       (color: 'grey',   shade: 'lighter'),
-    'text-title':       (color: 'grey',   shade: 'darker'),
+    'text-title':       (color: 'blue',   shade: 'dark'),
     'text':             (color: 'grey',   shade: 'darker'),
     'navigation':       (color: 'grey',   shade: 'base'),
   ),
   site: (
     'primary':          (color: 'blue',   shade: 'base'),
+    'secondary':        (color: 'blue',   shade: 'light'),
     'text':             (color: 'grey',   shade: 'darker'),
+    'background':       (color: 'white',  shade: 'base'),
+    'disabled':       (color: 'grey',   shade: 'base'),
+    'safe':             (color: 'green',  shade: 'base'),
   ),
   navbar: (
     'button':           (color: 'white',   shade: 'lighter'),

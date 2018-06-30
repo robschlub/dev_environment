@@ -4,11 +4,27 @@ import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
 } from './tools/g2';
+import type { pathOptionsType } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import { TextObject } from './DrawingObjects/TextObject/TextObject';
+
+function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
+  let callbackToUse = () => {};
+  if (typeof callback === 'function') {
+    callbackToUse = callback;
+  }
+  return callbackToUse;
+}
+
+// type translationOptionsType = {
+//   path: (Point, Point, number) => Point;
+//   direction: number;
+//   magnitude: number;
+//   offset: number;
+// };
 
 // Planned Animation
 class AnimationPhase {
@@ -16,6 +32,9 @@ class AnimationPhase {
   time: number;                       // animation time
   rotDirection: number;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
+  animationPath: (number) => number;
+  translationStyle: 'linear' | 'curved';
+  translationOptions: pathOptionsType;
 
   startTime: number;                 // Time when phase started
   startTransform: Transform;       // Transform at start of phase
@@ -26,11 +45,21 @@ class AnimationPhase {
     time: number = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
+    translationStyle: 'linear' | 'curved' = 'linear',
+    translationOptions: pathOptionsType = {
+      rot: 1,
+      magnitude: 0.5,
+      offset: 0.5,
+      controlPoint: null,
+      direction: '',
+    },
   ) {
     this.targetTransform = transform.copy();
     this.time = time;
     this.rotDirection = rotDirection;
     this.animationStyle = animationStyle;
+    this.translationStyle = translationStyle;
+    this.translationOptions = translationOptions;
 
     this.startTime = -1;
     this.startTransform = new Transform();
@@ -40,8 +69,22 @@ class AnimationPhase {
   start(currentTransform: Transform) {
     this.startTransform = currentTransform.copy();
     this.deltaTransform = this.targetTransform.sub(this.startTransform);
+    // Rotation direction can be:
+    //   - 0: shortest possible direction
+    //   1:   clockwise
+    //   -1:  anti-clockwise
+    //   2:   not through zero or 2pi
     let rotDiff = this.deltaTransform.r() || 0;
-    if (rotDiff * this.rotDirection < 0) {
+    if (this.rotDirection === 2) {
+      const rStart = this.startTransform.r();
+      if (rStart) {
+        if (rStart + rotDiff < 0) {
+          rotDiff = Math.PI * 2 + rotDiff;
+        } else if (rStart + rotDiff > Math.PI * 2) {
+          rotDiff = -(Math.PI * 2 - rotDiff);
+        }
+      }
+    } else if (rotDiff * this.rotDirection < 0) {
       rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
     }
     this.deltaTransform.updateRotation(rotDiff);
@@ -159,14 +202,34 @@ class DiagramElement {
   // hasMovableElements: boolean;
 
   // Callbacks
-  callback: ?(?mixed) => void;             // ending animation or moving freely
+  onClick: ?(?mixed) => void;
   setTransformCallback: (Transform) => void; // element.transform is updated
 
-  animationPlan: Array<AnimationPhase>;    // Animation plan
-  colorAnimationPlan: Array<ColorAnimationPhase>;
-  customAnimationPlan: Array<CustomAnimationPhase>;
   color: Array<number>;           // For the future when collections use color
 
+  animate: {
+    transform: {
+      plan: Array<AnimationPhase>;
+      translation: {
+        style: 'linear' | 'curved';
+        options: pathOptionsType;
+        // path: (Point, Point, number) => Point;
+        // direction: number;
+        // magnitude: number;
+        // offset: number;
+      };
+      callback: ?(?mixed) => void;
+    };
+    custom: {
+      plan: Array<CustomAnimationPhase>;
+      callback: ?(?mixed) => void;
+    };
+    color: {
+      toDisolve: '' | 'in' | 'out';
+      plan: Array<ColorAnimationPhase>;
+      callback: ?(?mixed) => void;
+    };
+  }
   move: {
     maxTransform: Transform,
     minTransform: Transform,
@@ -201,6 +264,7 @@ class DiagramElement {
     isAnimating: boolean,
     isAnimatingColor: boolean,
     isAnimatingCustom: boolean,
+    disolving: '' | 'in' | 'out',
     animation: {
       currentPhaseIndex: number,
       currentPhase: AnimationPhase,
@@ -246,14 +310,33 @@ class DiagramElement {
     this.isTouchable = false;
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
-    this.callback = null;
-    this.animationPlan = [];
-    this.colorAnimationPlan = [];
-    this.customAnimationPlan = [];
+    this.onClick = null;
+    this.animate = {
+      color: {
+        plan: [],
+        toDisolve: '',
+        callback: null,
+      },
+      transform: {
+        plan: [],
+        translation: {
+          style: 'linear',
+          options: {
+            rot: 1,
+            magnitude: 0.5,
+            offset: 0.5,
+            controlPoint: null,
+            direction: '',
+          },
+        },
+        callback: null,
+      },
+      custom: {
+        plan: [],
+        callback: null,
+      },
+    };
     this.diagramLimits = diagramLimits;
-    //   min: new Point(-1, -1),
-    //   max: new Point(1, 1),
-    // }
 
     this.move = {
       maxTransform: this.transform.constant(1000),
@@ -267,10 +350,6 @@ class DiagramElement {
       bounce: true,
       canBeMovedAfterLoosingTouch: false,
     };
-    // this.move.freely = {
-    //   zeroVelocityThreshold: new TransformLimit(0.001, 0.001, 0.001),
-    //   deceleration: new TransformLimit(1, 1, 1),
-    // };
 
     this.pulse = {
       time: 1,
@@ -288,6 +367,7 @@ class DiagramElement {
       isAnimating: false,
       isAnimatingColor: false,
       isAnimatingCustom: false,
+      disolving: '',
       animation: {
         currentPhaseIndex: 0,         // current animation phase index in plan
         currentPhase: new AnimationPhase(),  // current animation phase
@@ -381,15 +461,20 @@ class DiagramElement {
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): Transform {
     const phase = this.state.animation.currentPhase;
-    const start = phase.startTransform;
-    const delta = phase.deltaTransform;
+    const start = phase.startTransform.copy();
+    const delta = phase.deltaTransform.copy();
     const percentTime = elapsedTime / phase.time;
     const percentComplete = phase.animationStyle(percentTime);
 
     const p = percentComplete;
-    let next = delta.copy().constant(p);
+    // let next = delta.copy().constant(p);
 
-    next = start.add(delta.mul(next));
+    // next = start.add(delta.mul(next));
+    const next = start.toDelta(
+      delta, p,
+      phase.translationStyle,
+      phase.translationOptions,
+    );
     return next;
   }
 
@@ -415,6 +500,17 @@ class DiagramElement {
     const percentComplete = phase.animationStyle(percentTime);
     return percentComplete;
   }
+
+  setPosition(pointOrX: Point, y: number = 0) {
+    let position = pointOrX;
+    if (typeof pointOrX === 'number') {
+      position = new Point(pointOrX, y);
+    }
+    const currentTransform = this.transform.copy();
+    currentTransform.updateTranslation(position);
+    this.setTransform(currentTransform);
+  }
+
   // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
   setTransform(transform: Transform): void {
@@ -462,7 +558,7 @@ class DiagramElement {
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
-        if (this.state.animation.currentPhaseIndex < this.animationPlan.length - 1) {
+        if (this.state.animation.currentPhaseIndex < this.animate.transform.plan.length - 1) {
           // Set current transform to the end of the current phase
           this.setTransform(this.calcNextAnimationTransform(phase.time));
 
@@ -545,7 +641,7 @@ class DiagramElement {
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
-        if (this.state.customAnimation.currentPhaseIndex < this.customAnimationPlan.length - 1) {
+        if (this.state.customAnimation.currentPhaseIndex < this.animate.custom.plan.length - 1) {
           // Set current transform to the end of the current phase
           phase.animationCallback(1);
 
@@ -607,7 +703,7 @@ class DiagramElement {
         // If there are more animation phases in the plan:
         //   - set the current transform to be the end of the current phase
         //   - start the next phase
-        if (this.state.colorAnimation.currentPhaseIndex < this.colorAnimationPlan.length - 1) {
+        if (this.state.colorAnimation.currentPhaseIndex < this.animate.color.plan.length - 1) {
           // Set current transform to the end of the current phase
           this.setColor(this.calcNextAnimationColor(phase.time));
 
@@ -626,13 +722,16 @@ class DiagramElement {
         // the animation plan (incase a callback is used to start another
         // animation)
         const endColor = this.calcNextAnimationColor(phase.time);
-        this.stopAnimatingColor(true);
         this.setColor(endColor);
+        this.stopAnimatingColor(true);
         return;
       }
       // If we are here, that means the time elapsed is not more than the
       // current animation phase plan time, so calculate the next transform.
       this.setColor(this.calcNextAnimationColor(deltaTime));
+      // if(this.name === 'times') {
+      //   console.log(now, this.color[3])
+      // }
     }
   }
 
@@ -701,13 +800,13 @@ class DiagramElement {
     this.stopAnimating(false);
     this.stopMovingFreely(false);
     this.stopBeingMoved();
-    this.animationPlan = [];
+    this.animate.transform.plan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.animationPlan.push(phases[i]);
+      this.animate.transform.plan.push(phases[i]);
     }
-    if (this.animationPlan.length > 0) {
+    if (this.animate.transform.plan.length > 0) {
       if (callback) {
-        this.callback = callback;
+        this.animate.transform.callback = callback;
       }
       this.state.isAnimating = true;
       this.state.animation.currentPhaseIndex = 0;
@@ -720,14 +819,16 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.stopAnimatingColor();
-    this.colorAnimationPlan = [];
+    this.animate.color.plan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.colorAnimationPlan.push(phases[i]);
+      this.animate.color.plan.push(phases[i]);
     }
-    if (this.colorAnimationPlan.length > 0) {
+    if (this.animate.color.plan.length > 0) {
       if (callback) {
-        this.callback = callback;
+        this.animate.color.callback = callback;
       }
+      this.state.disolving = this.animate.color.toDisolve;
+      this.animate.color.toDisolve = '';
       this.state.isAnimatingColor = true;
       this.state.colorAnimation.currentPhaseIndex = 0;
       this.animateColorPhase(this.state.colorAnimation.currentPhaseIndex);
@@ -738,13 +839,13 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.stopAnimatingCustom();
-    this.customAnimationPlan = [];
+    this.animate.custom.plan = [];
     for (let i = 0, j = phases.length; i < j; i += 1) {
-      this.customAnimationPlan.push(phases[i]);
+      this.animate.custom.plan.push(phases[i]);
     }
-    if (this.customAnimationPlan.length > 0) {
+    if (this.animate.custom.plan.length > 0) {
       if (callback) {
-        this.callback = callback;
+        this.animate.custom.callback = callback;
       }
       this.state.isAnimatingCustom = true;
       this.state.customAnimation.currentPhaseIndex = 0;
@@ -754,41 +855,53 @@ class DiagramElement {
   // Start the animation of a phase - this should only be called by methods
   // internal to this class.
   animatePhase(index: number): void {
-    this.state.animation.currentPhase = this.animationPlan[index];
+    this.state.animation.currentPhase = this.animate.transform.plan[index];
     this.state.animation.currentPhase.start(this.transform.copy());
   }
 
   animateColorPhase(index: number): void {
-    this.state.colorAnimation.currentPhase = this.colorAnimationPlan[index];
+    this.state.colorAnimation.currentPhase = this.animate.color.plan[index];
     this.state.colorAnimation.currentPhase.start(this.color.slice());
   }
   animateCustomPhase(index: number): void {
-    this.state.customAnimation.currentPhase = this.customAnimationPlan[index];
+    this.state.customAnimation.currentPhase = this.animate.custom.plan[index];
     this.state.customAnimation.currentPhase.start();
   }
 
   // When animation is stopped, any callback associated with the animation
   // needs to be called, with whatever is passed to stopAnimating.
   stopAnimating(result: ?mixed): void {
-    this.animationPlan = [];
+    this.animate.transform.plan = [];
     this.state.isAnimating = false;
-    const { callback } = this;
-    this.callback = null;
+    const { callback } = this.animate.transform;
+    this.animate.transform.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
       } else {
         callback();
       }
-      // this.callback = null;
     }
   }
 
   stopAnimatingColor(result: ?mixed): void {
-    this.colorAnimationPlan = [];
     this.state.isAnimatingColor = false;
-    const { callback } = this;
-    this.callback = null;
+    if (this.animate.color.plan.length) {
+      if (this.state.disolving === 'in') {
+        this.setColor(this.animate.color.plan.slice(-1)[0].targetColor.slice());
+        this.state.disolving = '';
+      } else if (this.state.disolving === 'out') {
+        this.hide();
+        this.setColor(this.animate.color.plan.slice(-1)[0].startColor.slice());
+        // Do not move this reset out of the if statement as stopAnimatingColor
+        // is called at the start of an new animation and therefore the
+        // disolving state will be lost.
+        this.state.disolving = '';
+      }
+    }
+    this.animate.color.plan = [];
+    const { callback } = this.animate.color;
+    this.animate.color.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
@@ -799,10 +912,10 @@ class DiagramElement {
   }
 
   stopAnimatingCustom(result: ?mixed): void {
-    this.customAnimationPlan = [];
+    this.animate.custom.plan = [];
     this.state.isAnimatingCustom = false;
-    const { callback } = this;
-    this.callback = null;
+    const { callback } = this.animate.custom;
+    this.animate.custom.callback = null;
     if (callback) {
       if (result !== null && result !== undefined) {
         callback(result);
@@ -821,24 +934,33 @@ class DiagramElement {
     transform: Transform,
     time: number = 1,
     rotDirection: number = 0,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+    // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
-    const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    // let translationPathMethod = this.animate.transform.translation.path;
+    // if (translationPath !== null && translationPath !== undefined) {
+    //   translationPathMethod = translationPath;
+    // }
+    const phase = new AnimationPhase(
+      transform, time, rotDirection,
+      easeFunction, this.animate.transform.translation.style,
+      this.animate.transform.translation.options,
+    );
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
   animateColorTo(
     color: Array<number>,
     time: number = 1,
-    easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.linear,
   ): void {
     const phase = new ColorAnimationPhase(color, time, easeFunction);
     if (phase instanceof ColorAnimationPhase) {
-      this.animateColorPlan([phase], callback);
+      this.animateColorPlan([phase], checkCallback(callback));
     }
   }
 
@@ -846,12 +968,12 @@ class DiagramElement {
     phaseCallback: (number) => void,
     time: number = 1,
     startPercent: number = 0,
-    easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.linear,
   ): void {
     const phase = new CustomAnimationPhase(phaseCallback, time, startPercent, easeFunction);
     if (phase instanceof CustomAnimationPhase) {
-      this.animateCustomPlan([phase], callback);
+      this.animateCustomPlan([phase], checkCallback(callback));
     }
   }
 
@@ -859,8 +981,8 @@ class DiagramElement {
     delay: number,
     phaseCallback: (number) => void,
     time: number = 1,
-    easeFunction: (number) => number = tools.linear,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const phase1 = new CustomAnimationPhase(() => {}, delay, 0, easeFunction);
     const phase2 = new CustomAnimationPhase(phaseCallback, time, 0, easeFunction);
@@ -869,7 +991,7 @@ class DiagramElement {
     // console.log(phase2.animationCallback)
     // console.log(phase2)
     // phase2.animationCallback(0);
-    this.animateCustomPlan([phase1, phase2], callback);
+    this.animateCustomPlan([phase1, phase2], checkCallback(callback));
     // }
   }
 
@@ -884,7 +1006,9 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.animateColorPlan([phase], callback);
+      this.animate.color.toDisolve = 'in';
+      // this.state.disolving = 'in';
+      this.animateColorPlan([phase], checkCallback(callback));
     }
   }
 
@@ -899,7 +1023,9 @@ class DiagramElement {
     // this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
-    this.animateColorPlan([phase1, phase2], callback);
+    this.animate.color.toDisolve = 'in';
+    // this.state.disolving = 'in';
+    this.animateColorPlan([phase1, phase2], checkCallback(callback));
   }
 
   disolveOut(
@@ -910,25 +1036,40 @@ class DiagramElement {
     targetColor[3] = 0;
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
-      this.animateColorPlan([phase], callback);
+      this.animate.color.toDisolve = 'out';
+      // this.state.disolving = 'out';
+      this.animateColorPlan([phase], checkCallback(callback));
     }
-
     // console.log("disolve out", targetColor, this.color)
+  }
+
+  disolveOutWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    const targetColor = this.color.slice();
+    targetColor[3] = 0;
+    // this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
+    const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
+    const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
+    this.animate.color.toDisolve = 'out';
+    this.animateColorPlan([phase1, phase2], checkCallback(callback));
   }
 
   // With update only first instace of translation in the transform order
   animateTranslationTo(
     translation: Point,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateTranslation(translation);
     // transform.translation = translation.copy();
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
@@ -936,8 +1077,8 @@ class DiagramElement {
     translation: Point,
     delay: number = 1,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateTranslation(translation);
@@ -946,7 +1087,7 @@ class DiagramElement {
       easeFunction,
     );
     const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
-    this.animatePlan([phase1, phase2], callback);
+    this.animatePlan([phase1, phase2], checkCallback(callback));
   }
 
   // With update only first instace of rotation in the transform order
@@ -954,14 +1095,14 @@ class DiagramElement {
     rotation: number,
     rotDirection: number,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateRotation(rotation);
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
@@ -971,15 +1112,15 @@ class DiagramElement {
     rotation: number,
     rotDirection: number,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     transform.updateRotation(rotation);
     transform.updateTranslation(translation.copy());
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
 
@@ -987,8 +1128,8 @@ class DiagramElement {
     translation: Point,
     scale: Point | number,
     time: number = 1,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform.copy();
     if (typeof scale === 'number') {
@@ -1000,7 +1141,7 @@ class DiagramElement {
     transform.updateTranslation(translation.copy());
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], callback);
+      this.animatePlan([phase], checkCallback(callback));
     }
   }
   // **************************************************************
@@ -1061,7 +1202,7 @@ class DiagramElement {
     this.stopAnimating(false);
     this.stopBeingMoved();
     if (callback) {
-      this.callback = callback;
+      this.animate.transform.callback = callback;
     }
     this.state.isMovingFreely = true;
     this.state.movement.previousTime = -1;
@@ -1074,13 +1215,13 @@ class DiagramElement {
   stopMovingFreely(result: ?mixed): void {
     this.state.isMovingFreely = false;
     this.state.movement.previousTime = -1;
-    if (this.callback) {
+    if (this.animate.transform.callback) {
       if (result !== null && result !== undefined) {
-        this.callback(result);
+        this.animate.transform.callback(result);
       } else {
-        this.callback();
+        this.animate.transform.callback();
       }
-      this.callback = null;
+      this.animate.transform.callback = null;
     }
   }
 
@@ -1191,7 +1332,9 @@ class DiagramElement {
   stopPulsing(result: ?mixed) {
     this.state.isPulsing = false;
     if (this.pulse.callback) {
-      this.pulse.callback(result);
+      const { callback } = this.pulse;
+      this.pulse.callback = null;
+      callback(result);
     }
   }
 
@@ -1304,6 +1447,12 @@ class DiagramElement {
       this.show();
     }
   }
+
+  click(): void {
+    if (this.onClick !== null && this.onClick !== undefined) {
+      this.onClick(this);
+    }
+  }
 }
 
 // ***************************************************************
@@ -1343,6 +1492,18 @@ class DiagramElementPrimative extends DiagramElement {
       }
     }
     return false;
+  }
+
+  copy(
+    transform: Transform = this.transform.copy(),
+    color: Array<number> = this.color.slice(),
+  ) {
+    return new DiagramElementPrimative(
+      this.vertices,
+      transform,
+      color,
+      this.diagramLimits.copy(),
+    );
   }
 
   setColor(color: Array<number>) {
@@ -1390,6 +1551,10 @@ class DiagramElementPrimative extends DiagramElement {
     if (this.isShown) {
       this.setNextTransform(now);
       this.setNextColor(now);
+      // set next color can end up hiding an element when disolving out
+      if (!this.isShown) {
+        return;
+      }
       this.setNextCustomAnimation(now);
       // this.lastDrawParentTransform = parentTransform.copy();
       this.lastDrawElementTransformPosition = {
@@ -1567,6 +1732,10 @@ class DiagramElementCollection extends DiagramElement {
     if (this.isShown) {
       this.setNextTransform(now);
       this.setNextColor(now);
+      // set next color can end up hiding an element when disolving out
+      if (!this.isShown) {
+        return;
+      }
       this.setNextCustomAnimation(now);
       // this.lastDrawParentTransform = parentTransform.copy();
       // this.lastDrawElementTransform = this.transform.copy();
@@ -1780,21 +1949,42 @@ class DiagramElementCollection extends DiagramElement {
     elementTransforms: Object,
     time: number = 1,
     rotDirection: number = 0,
-    easeFunction: (number) => number = tools.easeinout,
     callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+    // translationPath: (Point, Point, number) => Point = linearPath,
   ) {
+    let callbackMethod = callback;
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.name in elementTransforms) {
-        element.animateTo(
-          elementTransforms[element.name],
-          time,
-          rotDirection,
-          easeFunction,
-          callback,
-        );
+        if (element.isShown) {
+          element.animateTo(
+            elementTransforms[element.name],
+            time,
+            rotDirection,
+            callbackMethod,
+            easeFunction,
+          );
+          // only want to send callback once
+          callbackMethod = null;
+        } else {
+          element.transform = elementTransforms[element.name].copy();
+        }
       }
     }
+  }
+
+  getAllElements() {
+    let elements = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        elements = [...elements, ...element.getAllElements()];
+      } else {
+        elements.push(element);
+      }
+    }
+    return elements;
   }
 }
 

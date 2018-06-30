@@ -1393,4 +1393,32 @@ describe('g2 tests', () => {
       // expect(result.max).toEqual(new Point(4, 3));
     });
   });
+  describe('Quadratic Bezier', () => {
+    test('flat case', () => {
+      const p0 = new Point(0, 0);
+      const p1 = new Point(0.5, 0.5);
+      const p2 = new Point(1, 0);
+      let b = p0.quadraticBezier(p1, p2, 0);
+      expect(b).toEqual(p0);
+
+      b = p0.quadraticBezier(p1, p2, 0.5);
+      expect(b).toEqual(new Point(0.5, 0.25));
+
+      b = p0.quadraticBezier(p1, p2, 1);
+      expect(b).toEqual(p2);
+    });
+    test('flat 90 deg case', () => {
+      const p0 = new Point(1, 1);
+      const p1 = new Point(0.5, 1.5);
+      const p2 = new Point(1, 2);
+      let b = p0.quadraticBezier(p1, p2, 0);
+      expect(b).toEqual(p0);
+
+      b = p0.quadraticBezier(p1, p2, 0.5);
+      expect(b).toEqual(new Point(0.75, 1.5));
+
+      b = p0.quadraticBezier(p1, p2, 1);
+      expect(b).toEqual(p2);
+    });
+  });
 });

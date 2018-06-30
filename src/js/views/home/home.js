@@ -3,9 +3,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './home.scss';
-import Button from '../../components/button';
-import Jumbotron from '../../jumbotron';
+// import Button from '../../components/button';
+// import Jumbotron from '../../jumbotron';
+import HomeBanner from './banner';
 import Navbar from '../../components/navbar';
+import LessonNavigator from '../../components/lessonNavigator';
+import Footer from '../../components/footer';
+// import NavbarSpacer from '../../components/navbarSpacer';
 
 const homePage = () => {
   const id:HTMLElement | null = document.getElementById('home');
@@ -14,20 +18,10 @@ const homePage = () => {
     ReactDOM.render(
       <div>
         <Navbar active=''/>
-
-        <Jumbotron className="jumbotron -fluid views-home"
-                    containerFluid={false}
-                    >
-          <div className="col-6">
-            <h1 className="display-4">I Get It!</h1>
-            <p className="lead">The greatest thing ever.</p>
-            <hr className="my-4" style={{ borderColor: 'lightGrey' }}/>
-            <p>Everything is great.</p>
-            <p className="lead">
-              <Button label="Learn More" className="-primary -lg" href="#"/>
-            </p>
-          </div>
-      </Jumbotron>
+        <div className="navbar__spacer"/>
+        <HomeBanner/>
+        <LessonNavigator/>
+        <Footer/>
       </div>,
       id,
     );

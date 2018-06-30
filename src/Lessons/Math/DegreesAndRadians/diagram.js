@@ -1,7 +1,8 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
+import { DiagramElementCollection } from '../../../js/diagram/Element';
 import CircleCollection from './diagramCollectionCircle';
+import type { circleCollectionType } from './diagramCollectionCircle';
 import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
@@ -10,17 +11,17 @@ const { colors } = layout;
 const backgroundColor = colors.diagram.background;
 
 
-type circleCollectionType = {
-  _anchor: DiagramElementPrimative;
-  _arc: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _reference: DiagramElementPrimative;
-  _radialLinesA: DiagramElementPrimative;
-  _radialLinesB: DiagramElementCollection;
-  _radialLinesDeg: DiagramElementCollection;
-  // resize: () => void;
-} & DiagramElementCollection;
+// type circleCollectionType = {
+//   _anchor: DiagramElementPrimative;
+//   _arc: DiagramElementPrimative;
+//   _angle: DiagramElementPrimative;
+//   _radius: DiagramElementPrimative;
+//   _reference: DiagramElementPrimative;
+//   _radialLinesA: DiagramElementPrimative;
+//   _radialLinesB: DiagramElementCollection;
+//   _radialLinesDeg: DiagramElementCollection;
+//   // resize: () => void;
+// } & DiagramElementCollection;
 
 type typeElements = {
   _circle: circleCollectionType;
@@ -71,32 +72,35 @@ class LessonDiagram extends Diagram {
     // if (!this.elements._circle.show) {
     //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     // }
+    if (this.elements._circle._radius.state.isBeingMoved) {
+      let center = this.elements._circle.transform.t();
+      if (center === null || center === undefined) {
+        center = new Point(0, 0);
+      }
+      const previousPixelPoint = this.clientToPixel(previousClientPoint);
+      const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
-    let center = this.elements._circle.transform.t();
-    if (center === null || center === undefined) {
-      center = new Point(0, 0);
-    }
-    const previousPixelPoint = this.clientToPixel(previousClientPoint);
-    const currentPixelPoint = this.clientToPixel(currentClientPoint);
-
-    const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentAngle = Math.atan2(
-      currentDiagramPoint.y - center.y,
-      currentDiagramPoint.x - center.x,
-    );
-    const previousAngle = Math.atan2(
-      previousDiagramPoint.y - center.y,
-      previousDiagramPoint.x - center.x,
-    );
-    const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = this.elements._circle._radius.transform.copy();
-    const rot = transform.r();
-    if (rot != null) {
-      transform.updateRotation(rot - diffAngle);
-      this.elements._circle._radius.moved(transform);
+      const previousDiagramPoint =
+        previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+      const currentDiagramPoint =
+        currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+      const currentAngle = Math.atan2(
+        currentDiagramPoint.y - center.y,
+        currentDiagramPoint.x - center.x,
+      );
+      const previousAngle = Math.atan2(
+        previousDiagramPoint.y - center.y,
+        previousDiagramPoint.x - center.x,
+      );
+      const diffAngle = minAngleDiff(previousAngle, currentAngle);
+      const transform = this.elements._circle._radius.transform.copy();
+      const rot = transform.r();
+      if (rot != null) {
+        transform.updateRotation(rot - diffAngle);
+        this.elements._circle._radius.moved(transform);
+      }
+    } else {
+      return super.touchMoveHandler(previousClientPoint, currentClientPoint);
     }
 
     this.animateNextFrame();

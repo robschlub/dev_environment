@@ -6,7 +6,7 @@ import {
 
 import LessonDiagram from './diagram';
 import { Transform } from '../../../js/diagram/tools/g2';
-import { easeinout } from '../../../js/diagram/tools/mathtools';
+// import { easeinout } from '../../../js/diagram/tools/mathtools';
 
 import lessonLayout from './layout';
 
@@ -15,7 +15,7 @@ const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Angles';
+    this.title = 'Angle';
   }
 
   setDiagram(htmlId: string = '') {
@@ -33,7 +33,7 @@ class Content extends LessonContent {
           Many |_shapes| have |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
-        </p><p style="margin-top:30%">
+        </p><p style="margin-top:33%">
           The |_sharpness| of the corner is a property that can describe a shape.
         </p>`,
       modifiers: {
@@ -41,7 +41,7 @@ class Content extends LessonContent {
         _corners: actionWord('corners', 'id_corners', colors.corners),
         _more_sharp: actionWord('more sharp', 'id_more_sharp', colors.moreSharp),
         _less_sharp: actionWord('less sharp', 'id_less_sharp', colors.lessSharp),
-        _sharpness: highlightWord('sharpness', '', 'english'),
+        _sharpness: highlightWord('sharpness', 'english'),
       },
       hideOnly: [
         circle,
@@ -53,7 +53,7 @@ class Content extends LessonContent {
         shapes._pent._moreSharpCorners,
         shapes._pent._lessSharpCorners,
       ],
-      setState: () => {
+      setSteadyState: () => {
         onClickId('id_shapes', shapes.pulseShapes, [shapes]);
         onClickId('id_corners', shapes.toggleCorners, [shapes]);
         onClickId('id_more_sharp', shapes.toggleMoreSharpCorners, [shapes]);
@@ -73,8 +73,8 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _measure: highlightWord('measure', '', 'english'),
-        _name: highlightWord('name', '', 'english'),
+        _measure: highlightWord('measure', 'english'),
+        _name: highlightWord('name', 'english'),
       },
     });
 
@@ -94,7 +94,7 @@ class Content extends LessonContent {
           circle,
         ]);
       },
-      setState: () => {
+      setSteadyState: () => {
         circle._fakeRadius.transform.updateTranslation(-1, 0);
         circle._fakeRadius.transform.updateRotation(Math.PI / 2);
         circle._reference.transform.updateTranslation(1, 0);
@@ -109,7 +109,7 @@ class Content extends LessonContent {
 
         circle._reference.animateTo(new Transform()
           .rotate(Math.PI / 2)
-          .translate(1, 0), 1, 0, easeinout, done);
+          .translate(1, 0), 1, 0, done);
       },
       transitionFromPrev: (done) => {
         circle._fakeRadius.transform.updateTranslation(-4.5, 1);
@@ -143,7 +143,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._anchor,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._radius.transform.updateRotation(0.01);
         circle._radius.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
@@ -165,7 +165,7 @@ class Content extends LessonContent {
           .translate(0, 0), 1);
         circle._radius.animateTo(new Transform()
           .rotate(0)
-          .translate(0, 0), 1.3, 0, easeinout, done);
+          .translate(0, 0), 1.3, 0, done);
 
         if (circle._anchor.color[3] === 0.01) {
           circle._anchor.color[3] = 1;
@@ -200,7 +200,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._anchor,
       ],
-      setState: () => {
+      setSteadyState: () => {
         const smallRotation = [circle, Math.PI / 7, 0, 1, () => {}];
         const largeRotation = [circle, 5 * Math.PI / 6, 0, 1, () => {}];
         circle._anchor.color = circle.colors.anchor.slice();
@@ -219,7 +219,7 @@ class Content extends LessonContent {
             .translate(0, 0), Math.PI / 6);
           circle._radius.animateTo(new Transform()
             .rotate(0.5)
-            .translate(0, 0), Math.PI / 6, 0, easeinout, done);
+            .translate(0, 0), Math.PI / 6, 0, done);
         } else {
           done();
         }
@@ -244,7 +244,7 @@ class Content extends LessonContent {
         circle._anchor,
         circle._angle,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
@@ -273,12 +273,12 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _angle: highlightWord('angle', '', 'english'),
-        _angulus: highlightWord('angulus', '', 'latin'),
-        _Latin: highlightWord('Latin', '', 'latin'),
-        _corner: highlightWord('corner', '', 'english'),
-        _corner_sharpness: highlightWord('corner sharpness', '', 'english'),
-        _name: highlightWord('name', '', 'english'),
+        _angle: highlightWord('angle', 'english'),
+        _angulus: highlightWord('angulus', 'latin'),
+        _Latin: highlightWord('Latin', 'latin'),
+        _corner: highlightWord('corner', 'english'),
+        _corner_sharpness: highlightWord('corner sharpness', 'english'),
+        _name: highlightWord('name', 'english'),
       },
     });
 
@@ -302,7 +302,7 @@ class Content extends LessonContent {
         circle._reference,
         circle._angle,
       ],
-      setState: () => {
+      setSteadyState: () => {
         circle._reference.transform.updateTranslation(0, 0);
         circle._reference.transform.updateRotation(0);
         circle._radius.transform.updateTranslation(0, 0);
@@ -331,8 +331,8 @@ class Content extends LessonContent {
         `),
       showOnly: [],
       modifiers: {
-        _measure: highlightWord('measure', '', 'english'),
-        _angle: highlightWord('angle', '', 'english'),
+        _measure: highlightWord('measure', 'english'),
+        _angle: highlightWord('angle', 'english'),
       },
     });
   }
