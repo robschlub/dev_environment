@@ -12,7 +12,8 @@ $home-image-xl: $bark-blurred-lg;
   background-size: cover;
   background-position: center;
   margin-bottom: 0;
-  height: 500px;
+  // height: 90vh;
+  height: 600px;
   width: 100%;
   border-bottom: solid 2px #777;
 }
@@ -51,8 +52,8 @@ $home-image-xl: $bark-blurred-lg;
 .home__banner_logo {
   margin-left: auto;
   margin-right: auto;
-  width: 50vw;
-  height: 50vw;
+  width: 250px;
+  height: 250px;
   border-radius: 150px;
   background-color: color(site, 'primary');
   -webkit-box-shadow: 0 5px 7px #333;
@@ -61,7 +62,7 @@ $home-image-xl: $bark-blurred-lg;
 }
 
 .home__banner_logo_spacer {
-  height: 10vw;
+  height: 125px;
 }
 
 .home__banner_logo_text_container {
@@ -75,36 +76,36 @@ $home-image-xl: $bark-blurred-lg;
   vertical-align: middle;
   text-align: center;
   color: white;
-  font-size: 12vw;
+  font-size: 50px;
   height: 100%;
   width: 100%;
 }
 
 
 @media screen and (min-width: 600px) {
-  .home__banner_logo_text {
-    font-size: 70px;
-  }
-  .home__banner_logo {
-    width: 300px;
-    height: 300px;
-  }
+  // .home__banner_logo_text {
+  //   font-size: 70px;
+  // }
+  // .home__banner_logo {
+  //   width: 300px;
+  //   height: 300px;
+  // }
 
-  .home__banner_logo_spacer {
-    height: 50px;
-  }
+  // .home__banner_logo_spacer {
+  //   height: 50px;
+  // }
 }
 
 
 // Home Banner Sub Title *****************************************
 .home__banner_sub_title {
-  table-layout: fixed;
   width: 100%;
-  height: 30vw;
+  height: 175px;
   display: table;
 }
 
 .home__banner_sub_title table {
+  table-layout: fixed;
   height: 100%;
   width: 100%;
   margin-left: auto;
@@ -116,19 +117,20 @@ $home-image-xl: $bark-blurred-lg;
   text-align: center;
   vertical-align: middle;
   color: white;
-  font-size: 4vw;
+  font-size: 20px;
+  width: 80px;
 }
 
 @media screen and (min-width: 600px) {
-  .home__banner_sub_title {
-    height: 150px;
-  }
+  // .home__banner_sub_title {
+  //   height: 150px;
+  // }
   .home__banner_sub_title table {
-    width: 500px;
+    width: 600px;
   }
-  .home__banner_sub_title td {
-    font-size: 30px;
-  }
+  // .home__banner_sub_title td {
+  //   font-size: 30px;
+  // }
 }
 
 

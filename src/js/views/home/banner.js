@@ -19,9 +19,9 @@ export default class HomeBanner extends React.Component
           <tbody>
           <tr>
             <td>Interact</td>
-            <td>●</td>
+            <td>•</td>
             <td>Intuit</td>
-            <td>●</td>
+            <td>•</td>
             <td>Learn</td>
           </tr>
           </tbody>
