@@ -8,6 +8,7 @@ import './home.scss';
 import HomeBanner from './banner';
 import Navbar from '../../components/navbar';
 import LessonNavigator from '../../components/lessonNavigator';
+import Footer from '../../components/footer';
 // import NavbarSpacer from '../../components/navbarSpacer';
 
 const homePage = () => {
@@ -20,6 +21,7 @@ const homePage = () => {
         <div className="navbar__spacer"/>
         <HomeBanner/>
         <LessonNavigator/>
+        <Footer/>
       </div>,
       id,
     );

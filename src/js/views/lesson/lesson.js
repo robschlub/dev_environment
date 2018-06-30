@@ -9,6 +9,7 @@ import Lesson from '../../../js/Lesson/Lesson';
 import { LessonContent } from '../../../js/Lesson/LessonContent';
 import LessonNavigator from '../../components/lessonNavigator';
 import NavbarSpacer from '../../components/navbarSpacer';
+import Footer from '../../components/footer';
 
 const renderLesson = (content: LessonContent) => {
   const lessonId:HTMLElement | null = document.getElementById('single-page-lesson');
@@ -27,6 +28,7 @@ const renderLesson = (content: LessonContent) => {
           </div>
         </div>
         <LessonNavigator selected={content.title}/>
+        <Footer/>
       </div>,
       lessonId,
     );
