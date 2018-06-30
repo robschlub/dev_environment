@@ -57,7 +57,7 @@ const introPage = () => {
           padding: '10px',
           fontSize: '10px',
         }}>{element}</div>);
-    } else if (typeof element === 'Object' ){
+    } else if (typeof element === 'object') {
       element.forEach((e) => {
         const color = colors.diagram[e];
         const textColor = getTextColor(color);
