@@ -19,17 +19,21 @@ export default class LessonNavigator extends React.Component
   constructor(props: Props) {
     super(props);
     this.lessonIndex = lessonIndex;
-    const y = 200;
+    const y = 120;
     let x = 50;
     const width = 200;
-    const height = 70;
-    const vSpace = 20;
+    const height = 40;
+    const vSpace = 10;
     this.lessonIndex.forEach((lesson) => {
       if (Array.isArray(lesson)) {
         const len = lesson.length;
+        const totalHeight = len * height + (len - 1) * vSpace;
+          let yStart = y - totalHeight / 2 + height / 2;
+          if (yStart < y - 2 * height - 2 * vSpace) {
+            yStart = y - 2 * height - 2 * vSpace
+          }
         lesson.forEach((parallelLesson, index) => {
-          const totalHeight = len * height + (len - 1 * vSpace) - height / 2;
-          const yLocation = y - totalHeight / 2 + index * (height + vSpace);
+          const yLocation = yStart + index * (height + vSpace);
           // eslint-disable-next-line no-param-reassign
           parallelLesson.location = new Point(x, yLocation);
         });

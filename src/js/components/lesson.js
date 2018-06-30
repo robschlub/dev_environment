@@ -250,11 +250,22 @@ export default class LessonComponent extends React.Component
   // renderMultiPageCanvas() {
   //   return <Canvas id="multipage_diagram"/>;
   // }
-
+  titleAsTile() {
+    return <div className="lesson__title_tile">
+      <div className="lesson__title_tile_containter lesson__title_tile_shadow">
+        <div className="lesson__title_tile_title">
+          {this.lesson.content.title}
+        </div>
+      </div>
+    </div>;
+  }
   render() {
     return <div>
       <div className='lesson__title'>
-      {this.lesson.content.title}
+      <div className='navigator__left_side'/>
+      {this.titleAsTile()}
+      <div className='navigator__right_side'/>
+      {/*this.lesson.content.title*/}
     {/*<LessonTile id="lesson__title_title"/>*/}
       </div>
       <div className="lesson__widescreen_backdrop">
