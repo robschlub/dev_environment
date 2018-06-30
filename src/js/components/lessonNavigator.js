@@ -7,7 +7,7 @@ import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
 import { Point } from '../diagram/tools/g2';
 
 type Props = {
-  selected: ?string;
+  selected?: ?string;
 };
 
 export default class LessonNavigator extends React.Component
