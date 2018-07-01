@@ -195,7 +195,7 @@ export default class LessonComponent extends React.Component
   addGoToButton() {
     return <div className="dropdown lesson__button-goto_container">
       <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Go to
+          {`${this.state.page + 1} / ${this.state.numPages}`}
       </button>
       <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
       {this.state.listOfSections}
@@ -240,16 +240,6 @@ export default class LessonComponent extends React.Component
     return output;
   }
 
-  addPageNumber() {
-    return <div id="lesson__page_number">
-    {`${this.state.page + 1} / ${this.state.numPages}`}
-    </div>;
-  }
-
-  // // eslint-disable-next-line class-methods-use-this
-  // renderMultiPageCanvas() {
-  //   return <Canvas id="multipage_diagram"/>;
-  // }
   titleAsTile() {
     return <div className="lesson__title_tile">
       <div className="lesson__title_tile_containter lesson__title_tile_shadow">
@@ -278,7 +268,6 @@ export default class LessonComponent extends React.Component
                 <canvas className='diagram__text'>
                 </canvas>
               </div>
-              {this.addPageNumber()}
               {this.addGoToButton()}
               {this.addNextButton()}
         </div>
