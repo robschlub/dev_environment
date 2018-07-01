@@ -175,7 +175,7 @@ export default class LessonComponent extends React.Component
 
   renderContent(content: string) {
     this.key += 1;
-    return <div key={this.key} className='lesson__text'
+    return <div key={this.key} className='lesson__diagram_text'
       dangerouslySetInnerHTML={ {
         __html: content.slice(0, content.length - 1),
       } }
@@ -184,12 +184,12 @@ export default class LessonComponent extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   addPrevButton() {
-    return <Button label="" id="lesson__button-previous" className=" -multi-page-lesson lesson__button-prev-enabled"/>;
+    return <Button label="" id="lesson__button-previous" className=" lesson__np_button lesson__button-prev-enabled"/>;
   }
 
   // eslint-disable-next-line class-methods-use-this
   addNextButton() {
-    return <Button label="" id="lesson__button-next" className=" -multi-page-lesson lesson__button-next-enabled"/>;
+    return <Button label="" id="lesson__button-next" className=" lesson__np_button lesson__button-next-enabled"/>;
   }
 
   addGoToButton() {
@@ -259,7 +259,7 @@ export default class LessonComponent extends React.Component
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
               {this.addPrevButton()}
-              <div id={this.lesson.content.diagramHtmlId} className="diagram__container multipage_diagram">
+              <div id={this.lesson.content.diagramHtmlId} className="diagram__container lesson__diagram">
                 <canvas className='diagram__gl'>
                 </canvas>
                 <div id="dd" className='diagram__html'>

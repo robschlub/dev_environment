@@ -6,13 +6,13 @@ import { colorArrayToRGBA } from '../tools/tools';
 // import { Transform, Point } from '../diagram/tools/g2';
 
 function centerV(text: string = '') {
-  return `<div style="display: table; height: 100%;" class="lesson__p_top_margin_2">
+  return `<div style="display: table; height: 100%;" class="lesson__diatram_text_p_top_margin_2">
         <div style="display: table-cell; vertical-align: middle">
         ${text}</div></div>`;
 }
 
 function centerVH(text: string = '') {
-  return `<div style="display: table; height: 100%; text-align:center; width:100%" class="lesson__p_top_margin_2">
+  return `<div style="display: table; height: 100%; text-align:center; width:100%" class="lesson__diatram_text_p_top_margin_2">
         <div style="display: table-cell; vertical-align: middle">
         ${text}</div></div>`;
 }
