@@ -4,7 +4,7 @@ import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
 import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
-import { Point } from '../diagram/tools/g2';
+import { Point, Rect } from '../diagram/tools/g2';
 
 type Props = {
   selected?: ?string;
@@ -18,20 +18,60 @@ export default class LessonNavigator extends React.Component
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
   asTitle: boolean
+  lessonTilesBounds: Rect;
 
   constructor(props: Props) {
     super(props);
     this.lessonIndex = lessonIndex;
-    let viewPortWidth = 0;
-    const doc = document.documentElement;
-    if (doc) {
-      viewPortWidth = doc.clientWidth;
+    this.layoutLessonTiles();
+    this.getLessonTilesBounds();
+    // let viewPortWidth = 0;
+    // const doc = document.documentElement;
+    // if (doc) {
+    //   viewPortWidth = doc.clientWidth;
+    // }
+    // const y = 200;
+    // const width = 200;
+    // const height = 40;
+    // const vSpace = 10;
+    // let x = viewPortWidth / 2 - 180 / 2;
+    // this.lessonArray = [];
+    // this.lessonIndex.forEach((lesson) => {
+    //   if (Array.isArray(lesson)) {
+    //     const len = lesson.length;
+    //     const totalHeight = len * height + (len - 1) * vSpace;
+    //     let yStart = y - totalHeight / 2 + height / 2;
+    //     if (yStart < y - 2 * height - 2 * vSpace) {
+    //       yStart = y - 2 * height - 2 * vSpace;
+    //     }
+    //     lesson.forEach((parallelLesson, index) => {
+    //       const yLocation = yStart + index * (height + vSpace);
+    //       // eslint-disable-next-line no-param-reassign
+    //       parallelLesson.location = new Point(x, yLocation);
+    //       this.lessonArray.push(parallelLesson);
+    //     });
+    //   } else {
+    //     // eslint-disable-next-line no-param-reassign
+    //     lesson.location = new Point(x, y);
+    //     this.lessonArray.push(lesson);
+    //   }
+    //   x += width;
+    // });
+    this.key = 0;
+    this.selected = props.selected || '';
+    this.asTitle = false;
+    if (this.selected !== '') {
+      this.asTitle = true;
     }
-    const y = 200;
+  }
+
+  layoutLessonTiles() {
+    this.lessonArray = [];
+    const y = 100;
     const width = 200;
     const height = 40;
     const vSpace = 10;
-    let x = viewPortWidth / 2 - 180 / 2;
+    let x = 0;
     this.lessonArray = [];
     this.lessonIndex.forEach((lesson) => {
       if (Array.isArray(lesson)) {
@@ -54,14 +94,7 @@ export default class LessonNavigator extends React.Component
       }
       x += width;
     });
-    this.key = 0;
-    this.selected = props.selected || '';
-    this.asTitle = false;
-    if (this.selected !== '') {
-      this.asTitle = true;
-    }
   }
-
   componentDidUpdate() {
     if (this.asTitle) {
       this.hideAllTilesButSelected();
@@ -74,7 +107,7 @@ export default class LessonNavigator extends React.Component
     const nav2 = document.getElementById('id_navigator__container');
 
     if (nav2) {
-      nav2.style.height = '500px';
+      nav2.style.height = '60vh';
     }
     const nav = document.getElementById('id_navigator__scroll_container');
     if (nav) {
@@ -150,41 +183,14 @@ export default class LessonNavigator extends React.Component
       nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * 180 / 2;
       nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * 40 / 2.7;
     }
-  //   const tile = document.getElementById(this.selectedLesson.id);
-  //   if (tile) {
-  //     const { x, y } = this.selectedLesson.location;
-  //     tile.style.borderRadius = '13px';
-  //     tile.style.width = '180px';
-  //     tile.style.height = '40px';
-  //     tile.style.fontSize = '12px';
-  //     tile.style.top = '12px';
-  //     tile.style.left = `${x}px`;
-  //     tile.style.top = `${y}px`;
-  //   }
   }
 
   zoomInSelected() {
-    // const tile = document.getElementById(this.selectedLesson.id);
-    // console.log(tile)
     const nav = document.getElementById('id_navigator__scroll_container');
     if (nav) {
       const { x, y } = this.selectedLesson.location;
-      // tile.style.borderRadius = '18px';
-      // tile.style.width = '250px';
-      // tile.style.height = '56px';
-      // tile.style.fontSize = '18px';
-      // tile.style.top = '17px';
-      // nav.style.transform = 'scale(1.39, 1.39)';
       nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * 180 / 2;
       nav.scrollTop = y - 90 / 2 + 1.39 * 40 / 2.7;
-      // nav.style.overflow = 'hidden';
-      // console.log("a",tile.style.left, tile.style.top, nav.scrollLeft, nav.scrollTop, nav.clientWidth)
-      // tile.style.left = `${nav.scrollLeft + nav.clientWidth / 2 - 125}px`;
-      // tile.style.top = `${nav.scrollTop + 90 / 2 - 28}px`;
-      // tile.style.left = '0';
-      // tile.style.top = '0';
-      // console.log("b",tile.style.left, tile.style.top, nav.scrollLeft, nav.scrollTop, y)
-      // console.log(tile.style)
     }
   }
 
@@ -227,7 +233,6 @@ export default class LessonNavigator extends React.Component
 
   lessons() {
     const lessons = [];
-    console.log("Creating", this.selectedLesson);
     this.lessonIndex.forEach((lesson) => {
       if (Array.isArray(lesson)) {
         lesson.forEach((parallelLesson) => {
@@ -240,6 +245,59 @@ export default class LessonNavigator extends React.Component
     return lessons;
   }
 
+  componentDidMount() {
+    console.log("asdf")
+    this.centerLessons();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  centerLessons() {
+    const nav =
+      document.getElementById('id_lesson__title_navigator_container');
+    const lessonsContainer =
+      document.getElementById('id_navigator__lessons_positions_container');
+    if (nav && lessonsContainer) {
+      const xMargin = nav.clientWidth / 2 - 180 / 2;
+      const yMargin = window.innerHeight * 0.6 / 2;
+      lessonsContainer.style.left = `${xMargin}px`;
+      lessonsContainer.style.top = `${yMargin - 40 / 2}px`;
+      lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
+      lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + 40 / 2}px`;
+      // console.log(yMargin, lessonsContainer.style.height, this.lessonTilesBounds);
+    }
+  }
+
+  getLessonTilesBounds() {
+    // const elem =
+    //   document.getElementById('id_navigator__lessons_positions_container');
+    // if (elem) {
+    let xMax = 0;
+    let yMax = 0;
+    let yMin = 0;
+    let firstElement = true;
+    this.lessonArray.forEach((lesson) => {
+      if (firstElement) {
+        xMax = lesson.location.x + 180;
+        yMin = lesson.location.y;
+        yMax = lesson.location.y + 40;
+        firstElement = false;
+      } else {
+        if (lesson.location.x + 180 > xMax) {
+          xMax = lesson.location.x + 180;
+        }
+        if (lesson.location.y + 40 > yMax) {
+          yMax = lesson.location.y + 40;
+        }
+        if (lesson.location.y + 40 < yMin) {
+          yMin = lesson.location.y + 40;
+        }
+      }
+    });
+    this.lessonTilesBounds = new Rect(0, yMin, xMax, yMax - yMin);
+    // } else {
+    //   this.lessonTilesBounds = new Rect(0, 0, 1, 1);
+    // }
+  }
   // componentDidMount() {
   //   const navigator = document.getElementById('id_navigator__container');
 
@@ -266,8 +324,9 @@ export default class LessonNavigator extends React.Component
       <div className="navigator__left_side" />
       <div className="navigator__right_side" />
       <div id="id_navigator__scroll_container" className="navigator__scroll_container">
-        {this.lessons()}
-        <div id="id_navigator__scroll_container_limit_element">.</div>
+        <div id='id_navigator__lessons_positions_container'>
+            {this.lessons()}
+        </div>
       </div>
     </div>;
   }

@@ -134,22 +134,19 @@
   left: auto;
 }
 
-#id_navigator__scroll_container_limit_element {
+// #id_navigator__scroll_container_limit_element {
+//   position: absolute;
+//   left: 300px;
+//   top: 200px;
+//   height: 2px;
+//   width: 2px;
+// }
+
+#id_navigator__lessons_positions_container {
   position: absolute;
-  left: 3000px;
-  top: 2000px;
-  height: 2px;
-  width: 2px;
+  left: 0px;
+  top: 0px;
+  width: 0px;
+  height: 0px;
 }
 
-// .navbar__spacer {
-//   height: 0px;
-//   width: 100%;
-// }
-
-// @include media-breakpoint-up(md) {
-//   .navbar__spacer {
-//     height: 50px;
-//     width: 100%;
-//   }
-// }
