@@ -27,6 +27,7 @@ export default class LessonComponent extends React.Component
   diagrams: Object;
   // setStateOnNextRefresh: boolean;
   componentUpdateCallback: ?() => void;
+  centerLessonFlag: boolean;
 
   constructor(props: Props) {
     super(props);
@@ -43,6 +44,7 @@ export default class LessonComponent extends React.Component
     // this.lesson.blank = this.blank.bind(this);
     // this.setStateOnNextRefresh = false;
     this.componentUpdateCallback = null;
+    this.centerLessonFlag = false;
   }
 
   componentDidUpdate() {
@@ -84,60 +86,6 @@ export default class LessonComponent extends React.Component
     }
   }
 
-  // blank() {
-  //   this.setState({ htmlText: '' });
-  // }
-
-  // refreshPageOnly(page: number) {
-  //   this.setStateOnNextRefresh = true;
-  //   this.setState({ htmlText: '', page });
-  // }
-
-  // refresh(htmlText: string, page: number) {
-  //   // this.setStateOnNextRefresh = true;
-  //   this.setState({ htmlText, page });
-
-  //   const nextButton = document.getElementById('lesson__button-next');
-  //   if (nextButton) {
-  //     if (this.lesson.currentSectionIndex ===
-  //       this.lesson.content.sections.length - 1) {
-  //       nextButton.classList.add('lesson__button-next-disabled');
-  //     } else {
-  //       nextButton.classList.remove('lesson__button-next-disabled');
-  //     }
-  //   }
-  //   const prevButton = document.getElementById('lesson__button-previous');
-  //   if (prevButton) {
-  //     if (this.lesson.currentSectionIndex === 0) {
-  //       prevButton.classList.add('lesson__button-prev-disabled');
-  //     } else {
-  //       prevButton.classList.remove('lesson__button-prev-disabled');
-  //     }
-  //   }
-  //   // if (this.lesson.currentSectionIndex ===
-  //   //     this.lesson.content.sections.length - 1) {
-  //   //   const nextButton = document.getElementById('lesson__button-next');
-  //   //   if (nextButton) {
-  //   //     nextButton.classList.add('lesson__button-next-disabled');
-  //   //   }
-  //   // }
-  //   // if (this.lesson.currentSectionIndex === 0) {
-  //   //   const prevButton = document.getElementById('lesson__button-previous');
-  //   //   if (prevButton) {
-  //   //     prevButton.classList.add('lesson__button-prev-disabled');
-  //   //   }
-  //   // }
-  //   //  {
-  //   //   const nextButton = document.getElementById('lesson__button-next');
-  //   //   const prevButton = document.getElementById('lesson__button-previous');
-  //   //   if (prevButton) {
-  //   //     prevButton.classList.remove('lesson__button-prev-disabled');
-  //   //   }
-  //   //   if (nextButton) {
-  //   //     nextButton.classList.remove('lesson__button-next-disabled');
-  //   //   }
-  //   // }
-  // }
   goToNext() {
     this.lesson.nextSection();
   }
@@ -164,8 +112,55 @@ export default class LessonComponent extends React.Component
     if (prevButton instanceof HTMLElement) {
       prevButton.onclick = this.goToPrevious.bind(this);
     }
+
+    window.addEventListener('resize', this.centerLesson.bind(this));
+    window.addEventListener('orientationchange', this.orientationChange.bind(this));
   }
 
+  orientationChange() {
+    const doc = document.documentElement;
+    if (doc) {
+      // if currently in portrait, then want to center.
+      if (doc.clientHeight > doc.clientWidth) {
+        this.centerLessonFlag = true;
+      }
+    }
+  }
+
+  centerLesson() {
+    // console.log("Asdf1");
+    if (this.centerLessonFlag) {
+      const lesson = document.getElementById('lesson__container_name');
+      if (lesson) {
+        const y = this.centerLessonPosition(lesson);
+        // setTimeout(function center() { window.scroll(0, a); }, 500);
+        setTimeout(() => window.scroll(0, y), 500);
+      }
+    }
+    this.centerLessonFlag = false;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  centerLessonPosition(element: HTMLElement) {
+    const doc = document.documentElement;
+    if (element != null && doc != null) {
+      const r = element.getBoundingClientRect();
+      // console.log(r)
+      const top = r.top + window.pageYOffset;
+      const { height } = r;
+      const windowHeight = doc.clientHeight;
+      // console.log(windowHeight);
+      if (windowHeight >= height) {
+        return top - (windowHeight - height) / 2;
+      }
+      return top;
+    }
+    return 0;
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('orientationchange', this.centerLesson.bind(this));
+  }
   renderTitle(title: string) {
     this.key += 1;
     return <div className='lesson__title' key={this.key}>
