@@ -144,18 +144,25 @@ export default class LessonComponent extends React.Component
     this.titleScaleDown();
     setTimeout(this.expandLessonNavigator, 1000);
     const nav = document.getElementById('id_navigator__container');
+    // const title_container = document.getElementById('id_lesson__title_container');
+    // const title = document.getElementById('id_lesson__title_tile');
     if (this.lessonNavigator && nav) {
       const { x, y } = this.lessonNavigator.selectedLesson.location;
       nav.scrollTop = y;
       nav.scrollLeft = x - nav.clientWidth / 2 + 90;
+      // title.style.height = '0';
+      // title_container.style.height = '0';
     }
   }
 
   // eslint-disable-next-line class-methods-use-this
   expandLessonNavigator() {
     const nav = document.getElementById('master_containter');
-    if (nav) {
+    const container =
+      document.getElementById('id_lesson__title_navigator_container');
+    if (nav && container) {
       nav.style.height = '30vh';
+      container.style.height = '30vh';
     }
   }
 
@@ -286,14 +293,16 @@ export default class LessonComponent extends React.Component
   }
   render() {
     return <div>
-      <LessonNavigator
-        selected={this.lesson.content.title}
-        ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
-      />
-      <div className='lesson__title'>
-      <div className='navigator__left_side'/>
-      {this.titleAsTile()}
-      <div className='navigator__right_side'/>
+      <div id="id_lesson__title_navigator_container" className="lesson__title_navigator_container">
+        <div id="id_lesson__title_container" className='lesson__title'>
+          <div className='navigator__left_side'/>
+          {this.titleAsTile()}
+          <div className='navigator__right_side'/>
+        </div>
+        <LessonNavigator
+          selected={this.lesson.content.title}
+          ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
+        />
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
