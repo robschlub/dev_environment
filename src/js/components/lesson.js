@@ -115,6 +115,18 @@ export default class LessonComponent extends React.Component
 
     window.addEventListener('resize', this.centerLesson.bind(this));
     window.addEventListener('orientationchange', this.orientationChange.bind(this));
+    const nav = document.getElementById('id_navigator__container');
+    if (nav) {
+      nav.addEventListener('mouseover', this.expandLessonNavigator.bind(this));
+    }
+  }
+  expandLessonNavigator() {
+    console.log("asdfasdf");
+    const nav = document.getElementById('master_containter');
+    if (nav) {
+      console.log("rtyerty");
+      nav.style = "height:30vh;";
+    }
   }
 
   orientationChange() {

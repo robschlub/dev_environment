@@ -384,6 +384,7 @@ $diagram_ratio: 1.5;
   position: relative;
   width: 100%;
   background-color: color(lesson, 'title-background');
+  z-index: 0;
 }
 
 .lesson__title_tile {
