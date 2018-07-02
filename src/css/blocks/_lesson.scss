@@ -389,11 +389,12 @@ $diagram_ratio: 1.5;
 
 .lesson__title_tile {
   position: absolute;
-  left: calc(50% - 120px);
+  left: calc(50% - 125px);
   top: 20px;
   width: 250px;
   height: 56px;
   font-size: 20px;
+  transition: all 0.5s ease;
 }
 
 .lesson__title_tile_containter {

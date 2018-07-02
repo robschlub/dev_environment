@@ -15,15 +15,21 @@ export default class LessonNavigator extends React.Component
   selected: string;
   lessonIndex: Array<Array<LessonDescription> | LessonDescription>;
   key: number;
+  selectedLesson: LessonDescription;
 
   constructor(props: Props) {
     super(props);
     this.lessonIndex = lessonIndex;
-    const y = 120;
-    let x = 50;
+    let viewPortWidth = 0;
+    const doc = document.documentElement;
+    if (doc) {
+      viewPortWidth = doc.clientWidth;
+    }
+    const y = 200;
     const width = 200;
     const height = 40;
     const vSpace = 10;
+    let x = viewPortWidth / 2 - 180 / 2;
     this.lessonIndex.forEach((lesson) => {
       if (Array.isArray(lesson)) {
         const len = lesson.length;
@@ -52,6 +58,7 @@ export default class LessonNavigator extends React.Component
     let state = '';
     if (lesson.name === this.selected) {
       state = 'selected';
+      this.selectedLesson = lesson;
     }
     if (lesson.link === '') {
       state = 'disabled';
