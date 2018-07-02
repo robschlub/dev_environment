@@ -1,7 +1,7 @@
 
 .naviagator__container {
   width: 100%;
-  height: 1px;
+  height: 50vh;
   max-height: 280px;
   position: relative;
   background: white;
@@ -49,6 +49,8 @@
   width: 180px;
   height: 40px;
   font-size: 12px;
+  transition: all 0.5s ease;
+  // overflow: auto;
 }
 
 .navigator__lesson_tile_containter {

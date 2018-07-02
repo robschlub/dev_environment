@@ -121,12 +121,23 @@ export default class LessonComponent extends React.Component
     // if (nav) {
     //   nav.addEventListener('mouseover', this.expandLessonNavigator.bind(this));
     // }
-    const title = document.getElementById('id_lesson__title_tile');
+    const title = document.getElementById('id_navigator__scroll_container');
     if (title) {
-      title.onclick = this.titleToNav.bind(this);
+      // title.onclick = this.titleToNav.bind(this);
+      title.addEventListener('mouseover', this.test.bind(this));
+      console.log("asdf");
+      // title.onclick = this.test()
     }
   }
 
+  test() {
+    if (this.lessonNavigator) {
+      this.lessonNavigator.selectTitle();
+      setTimeout(() => {this.lessonNavigator.showNavigator() }, 2000);
+      // this.lessonNavigator.zoomInSelected();
+    }
+    // console.log("1");
+  }
   // eslint-disable-next-line class-methods-use-this
   titleScaleDown() {
     const title = document.getElementById('id_lesson__title_tile');
@@ -143,7 +154,7 @@ export default class LessonComponent extends React.Component
   titleToNav() {
     this.titleScaleDown();
     setTimeout(this.expandLessonNavigator, 1000);
-    const nav = document.getElementById('id_navigator__container');
+    const nav = document.getElementById('id_navigator__scroll_container');
     // const title_container = document.getElementById('id_lesson__title_container');
     // const title = document.getElementById('id_lesson__title_tile');
     if (this.lessonNavigator && nav) {
@@ -294,11 +305,11 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div id="id_lesson__title_navigator_container" className="lesson__title_navigator_container">
-        <div id="id_lesson__title_container" className='lesson__title'>
+        { /* <div id="id_lesson__title_container" className='lesson__title'>
           <div className='navigator__left_side'/>
           {this.titleAsTile()}
           <div className='navigator__right_side'/>
-        </div>
+        </div> */ }
         <LessonNavigator
           selected={this.lesson.content.title}
           ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
