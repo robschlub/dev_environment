@@ -145,11 +145,9 @@ export default class LessonComponent extends React.Component
     const doc = document.documentElement;
     if (element != null && doc != null) {
       const r = element.getBoundingClientRect();
-      // console.log(r)
       const top = r.top + window.pageYOffset;
       const { height } = r;
       const windowHeight = doc.clientHeight;
-      // console.log(windowHeight);
       if (windowHeight >= height) {
         return top - (windowHeight - height) / 2;
       }
