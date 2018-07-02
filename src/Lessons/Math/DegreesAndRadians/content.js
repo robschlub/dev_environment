@@ -131,13 +131,13 @@ class Content extends LessonContent {
     });
     this.addSection({
       setContent: centerV(`
-        <p class="lesson__p_width_50">
+        <p class="lesson__diagram_text_p_width_50">
           |Rotating| the line any |angle| less than maximum, will only form part of a circle.
         </p>
         <p>
           This part is named an |arc|.
         </p>
-        <p class="lesson__p_width_50">
+        <p class="lesson__diagram_text_p_width_50">
           The name |arc1| comes from the |Latin| word |arcus| and means a |bow| or |arch|.
         </p>
       `),
@@ -198,7 +198,7 @@ class Content extends LessonContent {
         <p>
           One way, is to |divide| the circle into |portions|.
         </p>
-        <p class="lesson__p_width_50">
+        <p class="lesson__diagram_text_p_width_50">
           For example, here are |12 equal portions| like a clock.
         </p>
         `,
@@ -336,7 +336,7 @@ class Content extends LessonContent {
           </ul>
         `),
       modifiers: {
-        _factors: highlightWord('1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360', 'lesson__small_text'),
+        _factors: highlightWord('1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360', 'lesson__diagram_text_small'),
       },
     });
 
@@ -827,10 +827,10 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Circle Circumference',
       setContent: `
-        <p class="lesson__p_width_50" style="margin-top:10%">
+        <p class="lesson__diagram_text_p_width_50" style="margin-top:10%">
           Let's use what we've learned about radians to calculate the |circumference| of any |circle| |we know the radius of|.
         </p>
-        <p class="lesson__p_width_50">
+        <p class="lesson__diagram_text_p_width_50">
           When using radians, |angle| and |radius| are related to |arc_length|:
         </p>
       `,
@@ -884,10 +884,10 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: `
-        <p class="lesson__p_width_50" style="margin-top:10%">
+        <p class="lesson__diagram_text_p_width_50" style="margin-top:10%">
           A |circle| has an angle of |6.28|, or |2&pi; radians|.
         </p>
-        <p class="lesson__p_width_50">
+        <p class="lesson__diagram_text_p_width_50">
           Therefore, we can |calculate| the |circumference of any circle from just the radius|:
         </p>
       `,
@@ -962,19 +962,19 @@ class Content extends LessonContent {
             |radians| - useful for relating |radius| and |arc| length
           </li>
         </ul>
-        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:4.5%">
+        <p class="lesson__diagram_text_p_width_55 lesson__font_0p7" style="margin-top:4.5%">
           There are |_360_degrees| in a full circle.
         </p>
-        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:4.5%">
+        <p class="lesson__diagram_text_p_width_55 lesson__font_0p7" style="margin-top:4.5%">
           There are |_2pi_radians| in a full circle.
         </p>
-        <p class="lesson__p_width_50 lesson__font_0p7" style="margin-top:4.5%">
+        <p class="lesson__diagram_text_p_width_50 lesson__font_0p7" style="margin-top:4.5%">
           The |arc_length| of a |one_radian_angle| is |equal| to the |radius_|.
         </p>
-        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:4.5%">
+        <p class="lesson__diagram_text_p_width_55 lesson__font_0p7" style="margin-top:4.5%">
           When using radians:
         </p>
-        <p class="lesson__p_width_55 lesson__font_0p7" style="margin-top:8%">
+        <p class="lesson__diagram_text_p_width_55 lesson__font_0p7" style="margin-top:8%">
           Which leads to:
         </p>
       `,
