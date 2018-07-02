@@ -30,6 +30,7 @@ export default class LessonComponent extends React.Component
   componentUpdateCallback: ?() => void;
   centerLessonFlag: boolean;
   lessonNavigator: ?LessonNavigator;
+  showNavigator: boolean;
 
   constructor(props: Props) {
     super(props);
@@ -47,6 +48,7 @@ export default class LessonComponent extends React.Component
     // this.setStateOnNextRefresh = false;
     this.componentUpdateCallback = null;
     this.centerLessonFlag = false;
+    this.showNavigator = false;
   }
 
   componentDidUpdate() {
@@ -121,12 +123,33 @@ export default class LessonComponent extends React.Component
     // if (nav) {
     //   nav.addEventListener('mouseover', this.expandLessonNavigator.bind(this));
     // }
-    const title = document.getElementById('id_navigator__scroll_container');
-    if (title) {
-      // title.onclick = this.titleToNav.bind(this);
-      title.addEventListener('mouseover', this.test.bind(this));
-      console.log("asdf");
-      // title.onclick = this.test()
+    // const title = document.getElementById('id_navigator__scroll_container');
+    // if (title) {
+    //   // title.onclick = this.titleToNav.bind(this);
+    //   title.addEventListener('mouseover', this.test.bind(this));
+    //   console.log("asdf");
+    //   // title.onclick = this.test()
+    // }
+    const angle = document.getElementById('id_lesson__navigator_tile_circle');
+    if (angle) {
+      angle.onclick = this.test.bind(this);
+    }
+    if (this.lessonNavigator) {
+      this.lessonNavigator.showSelectedImediately();
+    }
+    const nav = document.getElementById('id_navigator__scroll_container');
+    if (nav) {
+      nav.onclick = this.showHideNavigator.bind(this);
+    }
+  }
+
+  showHideNavigator() {
+    if (this.showNavigator) {
+      this.lessonNavigator.selectTitle();
+      this.showNavigator = false;
+    } else {
+      this.lessonNavigator.showNavigator();
+      this.showNavigator = true;
     }
   }
 

@@ -17,6 +17,7 @@ export default class LessonNavigator extends React.Component
   key: number;
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
+  asTitle: boolean
 
   constructor(props: Props) {
     super(props);
@@ -55,42 +56,84 @@ export default class LessonNavigator extends React.Component
     });
     this.key = 0;
     this.selected = props.selected || '';
+    this.asTitle = false;
+    if (this.selected !== '') {
+      this.asTitle = true;
+    }
   }
 
+  componentDidUpdate() {
+    if (this.asTitle) {
+      this.hideAllTilesButSelected();
+    }
+  }
   showNavigator() {
-    console.log("got here");
+    this.enableTransitions();
     this.showAllTiles();
     this.zoomOutSelected();
     const nav2 = document.getElementById('id_navigator__container');
-    // console.log()
+
     if (nav2) {
       nav2.style.height = '500px';
     }
+    const nav = document.getElementById('id_navigator__scroll_container');
+    if (nav) {
+      nav.style.overflow = 'scroll';
+    }
   }
+  // eslint-disable-next-line class-methods-use-this
+  enableTransition(id: string, enable: boolean = false) {
+    const element = document.getElementById(id);
+    if (element) {
+      if (enable) {
+        element.style.transition = 'all 1.0s ease';
+      } else {
+        element.style.transition = 'none';
+      }
+    }
+  }
+
+  disableTransitions() {
+    this.enableTransition('id_lesson__title_navigator_container', false);
+    this.enableTransition('id_navigator__container', false);
+    this.enableTransition('id_navigator__scroll_container', false);
+    // this.enableTransition('navigator__lesson_tile', false);
+  }
+
+  enableTransitions() {
+    // this.enableTransition('id_lesson__title_navigator_container', true);
+    this.enableTransition('id_navigator__container', true);
+    // this.enableTransition('id_navigator__scroll_container', true);
+    // this.enableTransition('navigator__lesson_tile', true);
+  }
+
   selectTitle() {
     this.hideAllTilesButSelected();
     this.zoomInSelected();
-    // const nav1 = document.getElementById('id_lesson__title_navigator_container');
-    // if (nav1) {
-    //   nav1.style.height = '90px';
-    // }
+
     const nav2 = document.getElementById('id_navigator__container');
     if (nav2) {
       nav2.style.height = '90px';
     }
-    // const nav = document.getElementById('id_navigator__scroll_container');
-    // if (nav) {
-    //   const { x, y } = this.selectedLesson.location;
-    //   nav.scrollTop = y - 17;
-    //   nav.scrollLeft = x - nav.clientWidth / 2 + 125;
-    // }
+  }
+
+  showSelectedImediately() {
+
+    this.disableTransitions();
+    // this.hideAllTilesButSelected();
+    this.selectTitle();
+    // this.enableTransitions();
+    // setTimeout(this.enableTransitions.bind(this), 100);
   }
 
   hideAllTilesButSelected() {
     this.lessonArray.forEach((lesson) => {
       const elem = document.getElementById(lesson.id);
-      if (elem && lesson.id !== this.selectedLesson.id) {
-        elem.style.opacity = '0';
+      if (elem) {
+        if (lesson.id !== this.selectedLesson.id) {
+          elem.style.opacity = '0';
+        }
+        elem.style.pointerEvents = 'none';
       }
     });
     const nav = document.getElementById('id_navigator__scroll_container');
@@ -100,29 +143,48 @@ export default class LessonNavigator extends React.Component
   }
 
   zoomOutSelected() {
-    const tile = document.getElementById(this.selectedLesson.id);
-    if (tile) {
+    const nav = document.getElementById('id_navigator__scroll_container');
+    if (nav) {
       const { x, y } = this.selectedLesson.location;
-      tile.style.borderRadius = '13px';
-      tile.style.width = '180px';
-      tile.style.height = '40px';
-      tile.style.fontSize = '12px';
-      tile.style.top = '12px';
-      tile.style.left = `${x}px`;
-      tile.style.top = `${y}px`;
+      // nav.style.transform = 'scale(1, 1)';
+      nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * 180 / 2;
+      nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * 40 / 2.7;
     }
+  //   const tile = document.getElementById(this.selectedLesson.id);
+  //   if (tile) {
+  //     const { x, y } = this.selectedLesson.location;
+  //     tile.style.borderRadius = '13px';
+  //     tile.style.width = '180px';
+  //     tile.style.height = '40px';
+  //     tile.style.fontSize = '12px';
+  //     tile.style.top = '12px';
+  //     tile.style.left = `${x}px`;
+  //     tile.style.top = `${y}px`;
+  //   }
   }
 
   zoomInSelected() {
-    const tile = document.getElementById(this.selectedLesson.id);
-    if (tile) {
-      tile.style.borderRadius = '18px';
-      tile.style.width = '250px';
-      tile.style.height = '56px';
-      tile.style.fontSize = '18px';
-      tile.style.top = '17px';
-      tile.style.left = 'calc(50% - 125px)';
-      // tile.style.left = 'calc(50% - 125px)';
+    // const tile = document.getElementById(this.selectedLesson.id);
+    // console.log(tile)
+    const nav = document.getElementById('id_navigator__scroll_container');
+    if (nav) {
+      const { x, y } = this.selectedLesson.location;
+      // tile.style.borderRadius = '18px';
+      // tile.style.width = '250px';
+      // tile.style.height = '56px';
+      // tile.style.fontSize = '18px';
+      // tile.style.top = '17px';
+      // nav.style.transform = 'scale(1.39, 1.39)';
+      nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * 180 / 2;
+      nav.scrollTop = y - 90 / 2 + 1.39 * 40 / 2.7;
+      // nav.style.overflow = 'hidden';
+      // console.log("a",tile.style.left, tile.style.top, nav.scrollLeft, nav.scrollTop, nav.clientWidth)
+      // tile.style.left = `${nav.scrollLeft + nav.clientWidth / 2 - 125}px`;
+      // tile.style.top = `${nav.scrollTop + 90 / 2 - 28}px`;
+      // tile.style.left = '0';
+      // tile.style.top = '0';
+      // console.log("b",tile.style.left, tile.style.top, nav.scrollLeft, nav.scrollTop, y)
+      // console.log(tile.style)
     }
   }
 
@@ -131,6 +193,7 @@ export default class LessonNavigator extends React.Component
       const elem = document.getElementById(lesson.id);
       if (elem && lesson.id !== this.selectedLesson.id) {
         elem.style.opacity = '1';
+        elem.style.pointerEvents = 'auto';
       }
     });
   }
@@ -138,9 +201,15 @@ export default class LessonNavigator extends React.Component
   createLessonJsx(lesson: LessonDescription) {
     this.key += 1;
     let state = '';
+    const { x, y } = lesson.location;
     if (lesson.name === this.selected) {
       state = 'selected';
       this.selectedLesson = lesson;
+      // const nav = document.getElementById('id_navigator__scroll_container');
+      // if (nav) {
+      //   x = `${nav.scrollLeft + nav.clientWidth / 2 - 125}px`;
+      //   y = `${nav.scrollTop + 90 / 2 - 28}px`;
+      // }
     }
     if (lesson.link === '') {
       state = 'disabled';
@@ -151,13 +220,14 @@ export default class LessonNavigator extends React.Component
               key={this.key}
               label={lesson.name}
               state={state}
-              left={`${lesson.location.x}px`}
-              top={`${lesson.location.y}px`}
+              left={`${x}px`}
+              top={`${y}px`}
             />;
   }
 
   lessons() {
     const lessons = [];
+    console.log("Creating", this.selectedLesson);
     this.lessonIndex.forEach((lesson) => {
       if (Array.isArray(lesson)) {
         lesson.forEach((parallelLesson) => {
@@ -188,11 +258,16 @@ export default class LessonNavigator extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   render() {
-    return <div id="id_navigator__container" className="naviagator__container">
+    let classStr = 'naviagator__container';
+    if (this.asTitle) {
+      classStr = `${classStr} navigator__container_as_title`;
+    }
+    return <div id="id_navigator__container" className={classStr}>
       <div className="navigator__left_side" />
       <div className="navigator__right_side" />
       <div id="id_navigator__scroll_container" className="navigator__scroll_container">
         {this.lessons()}
+        <div id="id_navigator__scroll_container_limit_element">.</div>
       </div>
     </div>;
   }
