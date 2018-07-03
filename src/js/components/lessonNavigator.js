@@ -257,17 +257,13 @@ export default class LessonNavigator extends React.Component
   }
 
   scrollToSelected() {
-    // const nav =
-    //   document.getElementById('id_lesson__title_navigator_container');
     const navScroll = document.getElementById('id_navigator__scroll_container');
-    // if (nav) {
-    //   x = `${nav.scrollLeft + nav.clientWidth / 2 - 125}px`;
-    //   y = `${nav.scrollTop + 90 / 2 - 28}px`;
-    // }
-    console.log(navScroll.scrollLeft)
-    console.log(this.selected !== '' && navScroll != null)
-    if (this.selected !== ''&& navScroll != null) {
-      navScroll.scrollLeft = this.selectedLesson.location.x + 200 - navScroll.clientWidth / 2 + 180 / 2;
+
+    if (this.selected !== '' && navScroll != null) {
+      navScroll.scrollLeft = this.selectedLesson.location.x + 200
+                             - navScroll.clientWidth / 2 + 180 / 2;
+      navScroll.scrollTop = this.selectedLesson.location.y + 100
+                             - navScroll.clientHeight / 2 + 40 / 2;
     }
   }
   // eslint-disable-next-line class-methods-use-this
