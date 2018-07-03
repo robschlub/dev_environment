@@ -69,7 +69,7 @@ export default class LessonNavigator extends React.Component
     this.lessonArray = [];
     const y = 100;
     const width = 200;
-    const height = 40;
+    const height = 56;
     const vSpace = 10;
     let x = 0;
     this.lessonArray = [];
@@ -182,7 +182,7 @@ export default class LessonNavigator extends React.Component
       const { x, y } = this.selectedLesson.location;
       // nav.style.transform = 'scale(1, 1)';
       nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * 180 / 2;
-      nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * 40 / 2.7;
+      nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * 56 / 2.7;
     }
   }
 
@@ -263,12 +263,12 @@ export default class LessonNavigator extends React.Component
         navScroll.scrollLeft = this.selectedLesson.location.x + 200
                                - navScroll.clientWidth / 2 + 180 / 2;
         navScroll.scrollTop = this.selectedLesson.location.y + 100
-                               - navScroll.clientHeight / 2 + 40 / 2;
+                               - navScroll.clientHeight / 2 + 56 / 2;
       } else {
         navScroll.scrollLeft = this.lessonArray[0].location.x + 200
                                - navScroll.clientWidth / 2 + 180 / 2;
         navScroll.scrollTop = this.lessonArray[0].location.y + 100
-                               - navScroll.clientHeight / 2 + 40 / 2;
+                               - navScroll.clientHeight / 2 + 56 / 2;
       }
     }
   }
@@ -284,9 +284,9 @@ export default class LessonNavigator extends React.Component
       const yMargin = 100;
       // const yMargin = window.innerHeight * 0.6 / 2;
       lessonsContainer.style.left = `${xMargin}px`;
-      lessonsContainer.style.top = `${yMargin - 40 / 2}px`;
+      lessonsContainer.style.top = `${yMargin - 56 / 2}px`;
       lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
-      lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + 40 / 2}px`;
+      lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + 56 / 2}px`;
     }
   }
 
@@ -302,17 +302,17 @@ export default class LessonNavigator extends React.Component
       if (firstElement) {
         xMax = lesson.location.x + 180;
         yMin = lesson.location.y;
-        yMax = lesson.location.y + 40;
+        yMax = lesson.location.y + 56;
         firstElement = false;
       } else {
         if (lesson.location.x + 180 > xMax) {
           xMax = lesson.location.x + 180;
         }
-        if (lesson.location.y + 40 > yMax) {
-          yMax = lesson.location.y + 40;
+        if (lesson.location.y + 56 > yMax) {
+          yMax = lesson.location.y + 56;
         }
-        if (lesson.location.y + 40 < yMin) {
-          yMin = lesson.location.y + 40;
+        if (lesson.location.y + 56 < yMin) {
+          yMin = lesson.location.y + 56;
         }
       }
     });
