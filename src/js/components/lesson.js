@@ -130,17 +130,17 @@ export default class LessonComponent extends React.Component
     //   console.log("asdf");
     //   // title.onclick = this.test()
     // }
-    const angle = document.getElementById('id_lesson__navigator_tile_circle');
-    if (angle) {
-      angle.onclick = this.test.bind(this);
-    }
-    if (this.lessonNavigator) {
-      this.lessonNavigator.showSelectedImediately();
-    }
-    const nav = document.getElementById('id_navigator__scroll_container');
-    if (nav) {
-      nav.onclick = this.showHideNavigator.bind(this);
-    }
+    // const angle = document.getElementById('id_lesson__navigator_tile_circle');
+    // if (angle) {
+    //   angle.onclick = this.test.bind(this);
+    // }
+    // if (this.lessonNavigator) {
+    //   this.lessonNavigator.showSelectedImediately();
+    // }
+    // const nav = document.getElementById('id_navigator__scroll_container');
+    // if (nav) {
+    //   nav.onclick = this.showHideNavigator.bind(this);
+    // }
   }
 
   showHideNavigator() {
@@ -327,16 +327,10 @@ export default class LessonComponent extends React.Component
   }
   render() {
     return <div>
-      <div id="id_lesson__title_navigator_container" className="lesson__title_navigator_container">
-        { /* <div id="id_lesson__title_container" className='lesson__title'>
-          <div className='navigator__left_side'/>
-          {this.titleAsTile()}
-          <div className='navigator__right_side'/>
-        </div> */ }
-        <LessonNavigator
-          selected={this.lesson.content.title}
-          ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
-        />
+      <div id="id_lesson__title_container" className='lesson__title'>
+        {/*<div className='navigator__left_side'/>*/}
+        {this.titleAsTile()}
+        {/*<div className='navigator__right_side'/>*/}
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
@@ -354,6 +348,12 @@ export default class LessonComponent extends React.Component
               {this.addNextButton()}
         </div>
       </div>
+      <div className='lesson__white_spacer'/>
+      <LessonNavigator
+          selected={this.lesson.content.title}
+          ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
+        />
+      <div className='lesson__white_spacer'/>
     </div>;
   }
 }

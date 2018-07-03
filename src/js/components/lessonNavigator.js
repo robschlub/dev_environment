@@ -95,12 +95,13 @@ export default class LessonNavigator extends React.Component
       x += width;
     });
   }
-  componentDidUpdate() {
-    if (this.asTitle) {
-      this.hideAllTilesButSelected();
-    }
-  }
+  // componentDidUpdate() {
+  //   if (this.asTitle) {
+  //     this.hideAllTilesButSelected();
+  //   }
+  // }
   showNavigator() {
+    // console.log("showing")
     this.enableTransitions();
     this.showAllTiles();
     this.zoomOutSelected();
@@ -194,11 +195,7 @@ export default class LessonNavigator extends React.Component
       const { x, y } = this.selectedLesson.location;
       nav.scrollLeft = x - nav.clientWidth / 2 + 1 * 180 / 2
                        + parseInt(lessonsContainer.style.left, 10);
-      // nav.scrollTop = y - 90 / 2 + 1.39 * 40 / 2.7;
-      // nav.scrollTop = y - nav.clientHeight / 2 + 1 * 90 / 2
-      //                 + parseInt(lessonsContainer.style.top, 10);
       nav.scrollTop = y + parseInt(lessonsContainer.style.top, 10);
-      console.log(nav.scrollTop);
     }
   }
 
@@ -260,13 +257,15 @@ export default class LessonNavigator extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   centerLessons() {
-    const nav =
-      document.getElementById('id_lesson__title_navigator_container');
+    // const nav =
+    //   document.getElementById('id_lesson__title_navigator_container');
     const lessonsContainer =
       document.getElementById('id_navigator__lessons_positions_container');
-    if (nav && lessonsContainer) {
-      const xMargin = nav.clientWidth / 2 - 180 / 2;
-      const yMargin = window.innerHeight * 0.6 / 2;
+    if (lessonsContainer) {
+      // const xMargin = nav.clientWidth / 2 - 180 / 2;
+      const xMargin = 200;
+      const yMargin = 100;
+      // const yMargin = window.innerHeight * 0.6 / 2;
       lessonsContainer.style.left = `${xMargin}px`;
       lessonsContainer.style.top = `${yMargin - 40 / 2}px`;
       lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
@@ -325,12 +324,12 @@ export default class LessonNavigator extends React.Component
   render() {
     let classStr = 'naviagator__container';
     if (this.asTitle) {
-      classStr = `${classStr} navigator__container_as_title`;
+      classStr = `${classStr} navigator__container_with_shadow`;
     }
     return <div id="id_navigator__container" className={classStr}>
       <div className="navigator__left_side" />
       <div className="navigator__right_side" />
-      <div id="id_navigator__scroll_container" className="navigator__scroll_container">
+      <div id="id_navigator__scroll_container" className="navigator__scroll_container navigator__container_with_shadow">
         <div id='id_navigator__lessons_positions_container'>
             {this.lessons()}
         </div>
