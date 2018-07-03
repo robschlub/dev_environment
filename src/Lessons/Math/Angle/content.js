@@ -15,7 +15,7 @@ const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Angle';
+    this.title = 'Angles';
   }
 
   setDiagram(htmlId: string = '') {
