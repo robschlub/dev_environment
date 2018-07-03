@@ -336,11 +336,12 @@ export default class LessonNavigator extends React.Component
     let classStr = 'naviagator__container';
     if (this.asTitle) {
       classStr = `${classStr} navigator__container_with_shadow`;
+      // classStr = `${classStr}`;
     }
     return <div id="id_navigator__container" className={classStr}>
       <div className="navigator__left_side" />
       <div className="navigator__right_side" />
-      <div id="id_navigator__scroll_container" className="navigator__scroll_container navigator__container_with_shadow">
+      <div id="id_navigator__scroll_container" className="navigator__scroll_container">
         <div id='id_navigator__lessons_positions_container'>
             {this.lessons()}
         </div>
