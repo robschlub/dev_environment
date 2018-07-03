@@ -16,6 +16,7 @@ const { colors } = layout;
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Why study shapes?';
+    this.iconLink = '/Lessons/Math/Introduction';
   }
 
   setDiagram(htmlId: string = '') {

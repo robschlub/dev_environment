@@ -16,6 +16,7 @@ const { colors } = layout;
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Circles';
+    this.iconLink = '/Lessons/Math/Circle';
   }
 
   setDiagram(htmlId: string = '') {

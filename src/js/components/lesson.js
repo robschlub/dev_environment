@@ -335,7 +335,7 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='lesson__title'>
-      <LessonTile id={'id_lesson__title_container'} link='/Lessons/Math/Introduction' key='1' label={this.lesson.content.title} state={'selected'}/>
+      <LessonTile id={'id_lesson__title_container'} link={this.lesson.content.iconLink} key='1' label={this.lesson.content.title} state={'selected'}/>
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
