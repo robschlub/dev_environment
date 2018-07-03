@@ -258,12 +258,18 @@ export default class LessonNavigator extends React.Component
 
   scrollToSelected() {
     const navScroll = document.getElementById('id_navigator__scroll_container');
-
-    if (this.selected !== '' && navScroll != null) {
-      navScroll.scrollLeft = this.selectedLesson.location.x + 200
-                             - navScroll.clientWidth / 2 + 180 / 2;
-      navScroll.scrollTop = this.selectedLesson.location.y + 100
-                             - navScroll.clientHeight / 2 + 40 / 2;
+    if (navScroll) {
+      if (this.selected !== '') {
+        navScroll.scrollLeft = this.selectedLesson.location.x + 200
+                               - navScroll.clientWidth / 2 + 180 / 2;
+        navScroll.scrollTop = this.selectedLesson.location.y + 100
+                               - navScroll.clientHeight / 2 + 40 / 2;
+      } else {
+        navScroll.scrollLeft = this.lessonArray[0].location.x + 200
+                               - navScroll.clientWidth / 2 + 180 / 2;
+        navScroll.scrollTop = this.lessonArray[0].location.y + 100
+                               - navScroll.clientHeight / 2 + 40 / 2;
+      }
     }
   }
   // eslint-disable-next-line class-methods-use-this
@@ -333,11 +339,11 @@ export default class LessonNavigator extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   render() {
-    let classStr = 'naviagator__container';
-    if (this.asTitle) {
-      classStr = `${classStr} navigator__container_with_shadow`;
-      // classStr = `${classStr}`;
-    }
+    let classStr = 'naviagator__container navigator__container_with_shadow';
+    // if (this.asTitle) {
+    //   classStr = `${classStr} navigator__container_with_shadow`;
+    //   // classStr = `${classStr}`;
+    // }
     return <div id="id_navigator__container" className={classStr}>
       <div className="navigator__left_side" />
       <div className="navigator__right_side" />

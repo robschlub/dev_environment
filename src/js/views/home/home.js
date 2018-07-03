@@ -17,7 +17,9 @@ const homePage = () => {
         <Navbar active=''/>
         <div className="navbar__spacer"/>
         <HomeBanner/>
+        <div className='lesson__white_spacer'/>
         <LessonNavigator/>
+        <div className='lesson__white_spacer'/>
         <Footer/>
       </div>,
       id,
