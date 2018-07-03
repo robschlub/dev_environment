@@ -145,18 +145,23 @@ export default class LessonComponent extends React.Component
 
   showHideNavigator() {
     if (this.showNavigator) {
-      this.lessonNavigator.selectTitle();
+      if (this.lessonNavigator) {
+        this.lessonNavigator.selectTitle();
+      }
       this.showNavigator = false;
     } else {
-      this.lessonNavigator.showNavigator();
+      if (this.lessonNavigator) {
+        this.lessonNavigator.showNavigator();
+      }
       this.showNavigator = true;
     }
   }
 
   test() {
-    if (this.lessonNavigator) {
-      this.lessonNavigator.selectTitle();
-      setTimeout(() => {this.lessonNavigator.showNavigator() }, 2000);
+    const { lessonNavigator } = this;
+    if (lessonNavigator) {
+      lessonNavigator.selectTitle();
+      setTimeout(() => { lessonNavigator.showNavigator(); }, 2000);
       // this.lessonNavigator.zoomInSelected();
     }
     // console.log("1");
@@ -328,9 +333,7 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div id="id_lesson__title_container" className='lesson__title'>
-        {/*<div className='navigator__left_side'/>*/}
         {this.titleAsTile()}
-        {/*<div className='navigator__right_side'/>*/}
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

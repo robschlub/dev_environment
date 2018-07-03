@@ -152,7 +152,6 @@ export default class LessonNavigator extends React.Component
   }
 
   showSelectedImediately() {
-
     this.disableTransitions();
     // this.hideAllTilesButSelected();
     this.selectTitle();
@@ -339,7 +338,7 @@ export default class LessonNavigator extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   render() {
-    let classStr = 'naviagator__container navigator__container_with_shadow';
+    const classStr = 'naviagator__container navigator__container_with_shadow';
     // if (this.asTitle) {
     //   classStr = `${classStr} navigator__container_with_shadow`;
     //   // classStr = `${classStr}`;
