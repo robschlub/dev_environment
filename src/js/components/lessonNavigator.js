@@ -187,10 +187,18 @@ export default class LessonNavigator extends React.Component
 
   zoomInSelected() {
     const nav = document.getElementById('id_navigator__scroll_container');
-    if (nav) {
+    const lessonsContainer =
+      document.getElementById('id_navigator__lessons_positions_container');
+
+    if (nav && lessonsContainer) {
       const { x, y } = this.selectedLesson.location;
-      nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * 180 / 2;
-      nav.scrollTop = y - 90 / 2 + 1.39 * 40 / 2.7;
+      nav.scrollLeft = x - nav.clientWidth / 2 + 1 * 180 / 2
+                       + parseInt(lessonsContainer.style.left, 10);
+      // nav.scrollTop = y - 90 / 2 + 1.39 * 40 / 2.7;
+      // nav.scrollTop = y - nav.clientHeight / 2 + 1 * 90 / 2
+      //                 + parseInt(lessonsContainer.style.top, 10);
+      nav.scrollTop = y + parseInt(lessonsContainer.style.top, 10);
+      console.log(nav.scrollTop);
     }
   }
 
@@ -246,8 +254,8 @@ export default class LessonNavigator extends React.Component
   }
 
   componentDidMount() {
-    console.log("asdf")
     this.centerLessons();
+    window.addEventListener('resize', this.centerLessons.bind(this));
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -263,7 +271,6 @@ export default class LessonNavigator extends React.Component
       lessonsContainer.style.top = `${yMargin - 40 / 2}px`;
       lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
       lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + 40 / 2}px`;
-      // console.log(yMargin, lessonsContainer.style.height, this.lessonTilesBounds);
     }
   }
 
