@@ -33,14 +33,21 @@ export default class LessonTile extends React.Component
     if (props.state === 'selected') {
       classText = `${classText} navigator__lesson_tile_selected`;
     }
+    let imgLink = '/static/defaultTile.png';
+    if (link !== '/') {
+      imgLink = `/static${link}/tile.png`;
+    }
     return <a
         href={link}
         id={id}
         style={style}
         className="navigator__lesson_tile">
       <div className={classText}>
-        <div className="navigator__lesson_tile_title">
-          {label}
+        <img src={imgLink} className="navigator__lesson_tile_image" />
+        <div className="navigator__lesson_tile_title_container">
+          <div className="navigator__lesson_tile_title">
+            {label}
+          </div>
         </div>
       </div>
     </a>;
