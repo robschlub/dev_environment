@@ -5,6 +5,7 @@ import '../../css/style.scss';
 import LessonTile from './lessonTile';
 import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
 import { Point, Rect } from '../diagram/tools/g2';
+import { getDefinedCSSVariables } from '../tools/getCssVariables';
 
 type Props = {
   selected?: ?string;
@@ -19,10 +20,13 @@ export default class LessonNavigator extends React.Component
   lessonArray: Array<LessonDescription>;
   asTitle: boolean
   lessonTilesBounds: Rect;
+  tileWidth: number;
+  tileHeight: number;
 
   constructor(props: Props) {
     super(props);
     this.lessonIndex = lessonIndex;
+    this.getVariables();
     this.layoutLessonTiles();
     this.getLessonTilesBounds();
     // let viewPortWidth = 0;
@@ -63,14 +67,40 @@ export default class LessonNavigator extends React.Component
     if (this.selected !== '') {
       this.asTitle = true;
     }
+    this.tileWidth = 180;
+    this.tileHeight = 56;
+  }
+
+  getVariables() {
+    const { body } = document;
+    if (body) {
+      const vars: Object = getDefinedCSSVariables(
+        body,
+        [
+          '--navigator__tile_width',
+          '--navigator__tile_height',
+          // '--navigator__tile_font_size',
+          // '--navigator__tile_img_width',
+          // '--navigator__large_screen_height',
+          // '--navigator__tile_padding_vertical',
+          // '--navigator__tile_padding_horizontal',
+          // '--navigator__tile_border_radius',
+          // '--navigator__tile_img_text_space',
+        ],
+        '--navigator__',
+      );
+      this.tileWidth = vars.tileWidth;
+      this.tileHeight = vars.tileHeight;
+    }
   }
 
   layoutLessonTiles() {
     this.lessonArray = [];
-    const y = 100;
-    const width = 200;
-    const height = 56;
+    // const y = this.tileHeight * 2 + vSpace * 2;
+    const width = this.tileWidth + 20;
+    const height = this.tileHeight;
     const vSpace = 10;
+    const y = this.tileHeight * 2 + vSpace * 2;
     let x = 0;
     this.lessonArray = [];
     this.lessonIndex.forEach((lesson) => {
@@ -180,8 +210,8 @@ export default class LessonNavigator extends React.Component
     if (nav) {
       const { x, y } = this.selectedLesson.location;
       // nav.style.transform = 'scale(1, 1)';
-      nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * 180 / 2;
-      nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * 56 / 2.7;
+      nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * this.tileWidth / 2;
+      nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * this.tileHeight / 2.7;
     }
   }
 
@@ -192,7 +222,7 @@ export default class LessonNavigator extends React.Component
 
     if (nav && lessonsContainer) {
       const { x, y } = this.selectedLesson.location;
-      nav.scrollLeft = x - nav.clientWidth / 2 + 1 * 180 / 2
+      nav.scrollLeft = x - nav.clientWidth / 2 + 1 * this.tileWidth / 2
                        + parseInt(lessonsContainer.style.left, 10);
       nav.scrollTop = y + parseInt(lessonsContainer.style.top, 10);
     }
@@ -260,14 +290,14 @@ export default class LessonNavigator extends React.Component
     if (navScroll) {
       if (this.selected !== '') {
         navScroll.scrollLeft = this.selectedLesson.location.x + 200
-                               - navScroll.clientWidth / 2 + 180 / 2;
+                               - navScroll.clientWidth / 2 + this.tileWidth / 2;
         navScroll.scrollTop = this.selectedLesson.location.y + 100
-                               - navScroll.clientHeight / 2 + 56 / 2;
+                               - navScroll.clientHeight / 2 + this.tileHeight / 2;
       } else {
         navScroll.scrollLeft = this.lessonArray[0].location.x + 200
-                               - navScroll.clientWidth / 2 + 180 / 2;
+                               - navScroll.clientWidth / 2 + this.tileWidth / 2;
         navScroll.scrollTop = this.lessonArray[0].location.y + 100
-                               - navScroll.clientHeight / 2 + 56 / 2;
+                               - navScroll.clientHeight / 2 + this.tileHeight / 2;
       }
     }
   }
@@ -283,9 +313,9 @@ export default class LessonNavigator extends React.Component
       const yMargin = 100;
       // const yMargin = window.innerHeight * 0.6 / 2;
       lessonsContainer.style.left = `${xMargin}px`;
-      lessonsContainer.style.top = `${yMargin - 56 / 2}px`;
+      lessonsContainer.style.top = `${yMargin - this.tileHeight / 2}px`;
       lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
-      lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + 56 / 2}px`;
+      lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + this.tileHeight / 2}px`;
     }
   }
 
@@ -299,19 +329,19 @@ export default class LessonNavigator extends React.Component
     let firstElement = true;
     this.lessonArray.forEach((lesson) => {
       if (firstElement) {
-        xMax = lesson.location.x + 180;
+        xMax = lesson.location.x + this.tileWidth;
         yMin = lesson.location.y;
-        yMax = lesson.location.y + 56;
+        yMax = lesson.location.y + this.tileHeight;
         firstElement = false;
       } else {
-        if (lesson.location.x + 180 > xMax) {
-          xMax = lesson.location.x + 180;
+        if (lesson.location.x + this.tileWidth > xMax) {
+          xMax = lesson.location.x + this.tileWidth;
         }
-        if (lesson.location.y + 56 > yMax) {
-          yMax = lesson.location.y + 56;
+        if (lesson.location.y + this.tileHeight > yMax) {
+          yMax = lesson.location.y + this.tileHeight;
         }
-        if (lesson.location.y + 56 < yMin) {
-          yMin = lesson.location.y + 56;
+        if (lesson.location.y + this.tileHeight < yMin) {
+          yMin = lesson.location.y + this.tileHeight;
         }
       }
     });

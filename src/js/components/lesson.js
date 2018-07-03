@@ -7,6 +7,7 @@ import Lesson from '../Lesson/Lesson';
 import Button from './button';
 // import LessonTile from './lessonTile';
 import LessonNavigator from './lessonNavigator';
+import LessonTile from './lessonTile';
 
 type Props = {
   lesson: Lesson;
@@ -323,6 +324,7 @@ export default class LessonComponent extends React.Component
 
   titleAsTile() {
     return <div id="id_lesson__title_tile" className="lesson__title_tile">
+      <img src={'/static/'} className="navigator__lesson_tile_image" />
       <div className="lesson__title_tile_containter lesson__title_tile_shadow">
         <div className="lesson__title_tile_title">
           {this.lesson.content.title}
@@ -332,8 +334,8 @@ export default class LessonComponent extends React.Component
   }
   render() {
     return <div>
-      <div id="id_lesson__title_container" className='lesson__title'>
-        {this.titleAsTile()}
+      <div className='lesson__title'>
+      <LessonTile id={'id_lesson__title_container'} link={this.lesson.content.iconLink} key='1' label={this.lesson.content.title} state={'selected'}/>
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

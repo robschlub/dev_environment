@@ -1,3 +1,14 @@
+:root {
+  --navigator__tile_width: 180px;
+  --navigator__tile_height: 56px;
+  --navigator__tile_font_size: 13px;
+  --navigator__large_screen_height: 400px;
+  --navigator__tile_padding_vertical: 10px;
+  --navigator__tile_img_width: calc(var(--navigator__tile_height) - var(--navigator__tile_padding_vertical) * 2);
+  --navigator__tile_padding_horizontal: 20px;
+  --navigator__tile_border_radius: 13px;
+  --navigator__tile_img_text_space: 10px;
+}
 
 .naviagator__container {
   width: 100%;
@@ -6,20 +17,13 @@
   position: relative;
   background: white;
   z-index: 0;
-  // border-top: solid 2px #DDD;
-  // transition: all 1.0s ease;
-  // transition: none;
-  // transition: scale 1.0s ease;
 }
 
-// .navigator__container_as_title {
-//   height: 90px;
-// }
-// .navigator__container:hover {
-//   // border: solid 10px black;
-//   // max-height: 350px;
-//   height: 10vh;
-// }
+@media screen and (min-width: 600px) {
+  .naviagator__container {
+    height: var(--navigator__large_screen_height);
+  }
+}
 
 .navigator__left_side,
 .navigator__right_side {
@@ -51,29 +55,23 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 180px;
-  height: 56px;
-  font-size: 13px;
+  width: var(--navigator__tile_width);
+  height: var(--navigator__tile_height);
+  font-size: var(--navigator__tile_font_size);
   z-index: 0;
-  // transition: all 1.0s ease;
-  // transition: none;
-  // overflow: auto;
 }
 
 .navigator__lesson_tile_containter {
   background: color(site, 'primary');
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 13px;
+  padding-top: var(--navigator__tile_padding_vertical);
+  padding-bottom: var(--navigator__tile_padding_vertical);
+  padding-left: var(--navigator__tile_padding_horizontal);
+  padding-right: var(--navigator__tile_padding_horizontal);
+  border-radius: var(--navigator__tile_border_radius);
   color: white;
-  // text-align: center;
   width: 100%;
   border-bottom: solid 1px #555;
   height: 100%;
-  // display: table;
-  // z-index: 0;
 }
 
 .navigator__lesson_tile_containter:hover {
@@ -84,7 +82,7 @@
   display: table;
   height: 100%;
   float: left;
-  width: 180px - 20px - 20px - 10px - 30px;
+  width: calc(var(--navigator__tile_width) - var(--navigator__tile_padding_horizontal) * 2 - var(--navigator__tile_img_text_space) - var(--navigator__tile_img_width));
 }
 
 .navigator__lesson_tile_title {
@@ -93,7 +91,7 @@
 }
 
 .navigator__lesson_tile_disabled {
-  background-color: color(site, 'disabled');
+  background-color: color(site, 'disabled', 'lighter');
 }
 
 .navigator__lesson_tile_disabled:hover {
@@ -101,11 +99,11 @@
 }
 
 .navigator__lesson_tile_selected {
-  background-color: color(site, 'safe');
+  background-color: color(site, 'safe', 'dark');
 }
 
 .navigator__lesson_tile_selected:hover {
-  background: color(site, 'safe', 'light');
+  background: color(site, 'safe');
 }
 
 .navigator__lesson_shadow {
@@ -121,7 +119,7 @@
   left: 0.5%;
   width: 49.5%;
   max-width: 300px;
-  height: 46px;
+  height: calc(var(--navigator__tile_height) - 10px);
   background: #777;
   -webkit-box-shadow: 0 5px 7px #000;
   -moz-box-shadow: 0 5px 7px #000;
@@ -191,10 +189,10 @@
 }
 
 .navigator__lesson_tile_image {
-  height: 30px;
-  width: 30px;
+  height: var(--navigator__tile_img_width);
+  width: var(--navigator__tile_img_width);
   left: 0;
-  margin-top: 3px;
-  margin-right: 10px;
+  // margin-top: var(--navigator__tile_padding_vertical);
+  margin-right: var(--navigator__tile_img_text_space);
   float: left;
 }
