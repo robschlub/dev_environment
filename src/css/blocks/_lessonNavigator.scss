@@ -2,7 +2,6 @@
   --navigator__tile_width: 180px;
   --navigator__tile_height: 56px;
   --navigator__tile_font_size: 13px;
-  
   --navigator__large_screen_height: 400px;
   --navigator__tile_padding_vertical: 10px;
   --navigator__tile_img_width: calc(var(--navigator__tile_height) - var(--navigator__tile_padding_vertical) * 2);
@@ -10,6 +9,7 @@
   --navigator__tile_border_radius: 13px;
   --navigator__tile_img_text_space: 10px;
 }
+
 .naviagator__container {
   width: 100%;
   height: var(--lesson__container-height);
@@ -91,7 +91,7 @@
 }
 
 .navigator__lesson_tile_disabled {
-  background-color: color(site, 'disabled');
+  background-color: color(site, 'disabled', 'lighter');
 }
 
 .navigator__lesson_tile_disabled:hover {
@@ -99,11 +99,11 @@
 }
 
 .navigator__lesson_tile_selected {
-  background-color: color(site, 'safe');
+  background-color: color(site, 'safe', 'dark');
 }
 
 .navigator__lesson_tile_selected:hover {
-  background: color(site, 'safe', 'light');
+  background: color(site, 'safe');
 }
 
 .navigator__lesson_shadow {

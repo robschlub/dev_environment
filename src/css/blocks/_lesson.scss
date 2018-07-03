@@ -379,31 +379,25 @@ $diagram_ratio: 1.5;
 
 .lesson__title_navigator_container {
   position: relative;
-  // height: 90px;
   width: 100%;
-  // transition: all 1.0s ease;
-  // transition: none;
 }
 
 .lesson__title {
   height: 90px;
   text-align: center;
   font-weight: bold;
-  // position: absolute;
-  // left: 0;
-  // top: 0;
   width: 100%;
   background-color: color(lesson, 'title-background');
-  // background-color: red;
-  // z-index: -2;
 }
 
-:root{
-  --lesson__title_tile_width: 250px;
-  --lesson__title_tile_height: 56px;
-  --lesson__title_tile_font_size: 18px;
-  --lesson__title_tile_border_radius: 13px;
-  --lesson__title_tile_top: 20px;
+@media screen and (min-width: $mobile) {
+  :root {
+    --lesson__title_tile_width: 250px;
+    --lesson__title_tile_height: 56px;
+    --lesson__title_tile_font_size: 15px;
+    --lesson__title_tile_border_radius: 13px;
+    --lesson__title_tile_top: 20px;
+  }
 }
 
 @media screen and (min-width: $small-tablet) {
@@ -489,4 +483,16 @@ $diagram_ratio: 1.5;
   height: 100px;
   background-color: white;
   z-index: -2;
+}
+
+#id_lesson__title_container {
+  left: calc(50% - var(--lesson__title_tile_width) / 2);
+  top: var(--lesson__title_tile_top);
+  width: var(--lesson__title_tile_width);
+  height: var(--lesson__title_tile_height);
+  font-size: var(--lesson__title_tile_font_size);
+}
+
+#id_lesson__title_container .navigator__lesson_tile_title_container {
+  width: calc(var(--lesson__title_tile_width) - var(--navigator__tile_padding_horizontal) * 2 - var(--navigator__tile_img_text_space) * 2 - var(--navigator__tile_img_width) * 2);
 }
