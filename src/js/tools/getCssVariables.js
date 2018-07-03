@@ -41,11 +41,13 @@ function searchObject(obj: Object, path: string, text: string) {
 
 function toCamelCase(input: string, prefix) {
   const rePrefix = new RegExp(prefix, 'g');
-  const reCamelCase = /-[a-z]/g;
+  const reCamelCase1 = /-[a-z]/g;
+  const reCamelCase2 = /_[a-z]/g;
   const repl = str => str[1].toUpperCase();
   const noPrefix = input.replace(rePrefix, '');
-  const camelCase = noPrefix.replace(reCamelCase, repl);
-  const noDash = camelCase.replace(/-/g, '');
+  const camelCase1 = noPrefix.replace(reCamelCase1, repl);
+  const camelCase2 = camelCase1.replace(reCamelCase2, repl);
+  const noDash = camelCase2.replace(/-/g, '');
   return noDash;
 }
 

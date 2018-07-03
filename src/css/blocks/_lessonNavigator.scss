@@ -2,9 +2,10 @@
   --navigator__tile_width: 180px;
   --navigator__tile_height: 56px;
   --navigator__tile_font_size: 13px;
-  --navigator__tile_img_width: 35px;
+  
   --navigator__large_screen_height: 400px;
   --navigator__tile_padding_vertical: 10px;
+  --navigator__tile_img_width: calc(var(--navigator__tile_height) - var(--navigator__tile_padding_vertical) * 2);
   --navigator__tile_padding_horizontal: 20px;
   --navigator__tile_border_radius: 13px;
   --navigator__tile_img_text_space: 10px;
@@ -118,7 +119,7 @@
   left: 0.5%;
   width: 49.5%;
   max-width: 300px;
-  height: 46px;
+  height: calc(var(--navigator__tile_height) - 10px);
   background: #777;
   -webkit-box-shadow: 0 5px 7px #000;
   -moz-box-shadow: 0 5px 7px #000;
@@ -188,10 +189,10 @@
 }
 
 .navigator__lesson_tile_image {
-  height: 35px;
-  width: 35px;
+  height: var(--navigator__tile_img_width);
+  width: var(--navigator__tile_img_width);
   left: 0;
-  margin-top: 1px;
-  margin-right: 10px;
+  // margin-top: var(--navigator__tile_padding_vertical);
+  margin-right: var(--navigator__tile_img_text_space);
   float: left;
 }
