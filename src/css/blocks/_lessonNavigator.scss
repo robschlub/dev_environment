@@ -6,20 +6,13 @@
   position: relative;
   background: white;
   z-index: 0;
-  // border-top: solid 2px #DDD;
-  // transition: all 1.0s ease;
-  // transition: none;
-  // transition: scale 1.0s ease;
 }
 
-// .navigator__container_as_title {
-//   height: 90px;
-// }
-// .navigator__container:hover {
-//   // border: solid 10px black;
-//   // max-height: 350px;
-//   height: 10vh;
-// }
+@media screen and (min-width: 600px) {
+  .naviagator__container {
+    height: 400px;
+  }
+}
 
 .navigator__left_side,
 .navigator__right_side {
