@@ -143,7 +143,7 @@ export default class LessonComponent extends React.Component
     //   nav.onclick = this.showHideNavigator.bind(this);
     // }
 
-    //uncomment this if the lesson should be centered on going to it
+    // uncomment this if the lesson should be centered on going to it
     this.orientationChange();
     this.centerLessonFlag = !this.centerLessonFlag;
     this.centerLesson();
