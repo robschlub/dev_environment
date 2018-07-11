@@ -15,6 +15,7 @@ const { colors } = layout;
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Measuring Angle';
+    this.iconLink = '/Lessons/Math/DegreesAndRadians';
   }
 
   setDiagram(htmlId: string = '') {

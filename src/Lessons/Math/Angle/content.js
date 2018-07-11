@@ -15,7 +15,8 @@ const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Angle';
+    this.title = 'Angles';
+    this.iconLink = '/Lessons/Math/Angle';
   }
 
   setDiagram(htmlId: string = '') {
