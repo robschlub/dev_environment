@@ -446,11 +446,13 @@ class LessonContent {
   diagramHtmlId: string;
   goingTo: 'next' | 'prev' | 'goto';
   comingFrom: 'next' | 'prev' | 'goto';
+  iconLink: string;
   // questions
 
   constructor(htmlId: string) {
     this.diagramHtmlId = htmlId;
     this.sections = [];
+    this.iconLink = '/';
     this.setTitle();
   }
 

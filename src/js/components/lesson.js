@@ -6,6 +6,8 @@ import Lesson from '../Lesson/Lesson';
 // import Canvas from './canvas';
 import Button from './button';
 // import LessonTile from './lessonTile';
+import LessonNavigator from './lessonNavigator';
+import LessonTile from './lessonTile';
 
 type Props = {
   lesson: Lesson;
@@ -28,6 +30,8 @@ export default class LessonComponent extends React.Component
   // setStateOnNextRefresh: boolean;
   componentUpdateCallback: ?() => void;
   centerLessonFlag: boolean;
+  lessonNavigator: ?LessonNavigator;
+  showNavigator: boolean;
 
   constructor(props: Props) {
     super(props);
@@ -45,6 +49,7 @@ export default class LessonComponent extends React.Component
     // this.setStateOnNextRefresh = false;
     this.componentUpdateCallback = null;
     this.centerLessonFlag = false;
+    this.showNavigator = false;
   }
 
   componentDidUpdate() {
@@ -115,6 +120,95 @@ export default class LessonComponent extends React.Component
 
     window.addEventListener('resize', this.centerLesson.bind(this));
     window.addEventListener('orientationchange', this.orientationChange.bind(this));
+    // const nav = document.getElementById('id_navigator__container');
+    // if (nav) {
+    //   nav.addEventListener('mouseover', this.expandLessonNavigator.bind(this));
+    // }
+    // const title = document.getElementById('id_navigator__scroll_container');
+    // if (title) {
+    //   // title.onclick = this.titleToNav.bind(this);
+    //   title.addEventListener('mouseover', this.test.bind(this));
+    //   console.log("asdf");
+    //   // title.onclick = this.test()
+    // }
+    // const angle = document.getElementById('id_lesson__navigator_tile_circle');
+    // if (angle) {
+    //   angle.onclick = this.test.bind(this);
+    // }
+    // if (this.lessonNavigator) {
+    //   this.lessonNavigator.showSelectedImediately();
+    // }
+    // const nav = document.getElementById('id_navigator__scroll_container');
+    // if (nav) {
+    //   nav.onclick = this.showHideNavigator.bind(this);
+    // }
+
+    // uncomment this if the lesson should be centered on going to it
+    this.orientationChange();
+    this.centerLessonFlag = !this.centerLessonFlag;
+    this.centerLesson();
+  }
+
+  showHideNavigator() {
+    if (this.showNavigator) {
+      if (this.lessonNavigator) {
+        this.lessonNavigator.selectTitle();
+      }
+      this.showNavigator = false;
+    } else {
+      if (this.lessonNavigator) {
+        this.lessonNavigator.showNavigator();
+      }
+      this.showNavigator = true;
+    }
+  }
+
+  test() {
+    const { lessonNavigator } = this;
+    if (lessonNavigator) {
+      lessonNavigator.selectTitle();
+      setTimeout(() => { lessonNavigator.showNavigator(); }, 2000);
+      // this.lessonNavigator.zoomInSelected();
+    }
+    // console.log("1");
+  }
+  // eslint-disable-next-line class-methods-use-this
+  titleScaleDown() {
+    const title = document.getElementById('id_lesson__title_tile');
+    if (title) {
+      title.style.borderRadius = '13px';
+      title.style.width = '180px';
+      title.style.height = '40px';
+      title.style.fontSize = '12px';
+      title.style.left = 'calc(50% - 90px)';
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  titleToNav() {
+    this.titleScaleDown();
+    setTimeout(this.expandLessonNavigator, 1000);
+    const nav = document.getElementById('id_navigator__scroll_container');
+    // const title_container = document.getElementById('id_lesson__title_container');
+    // const title = document.getElementById('id_lesson__title_tile');
+    if (this.lessonNavigator && nav) {
+      const { x, y } = this.lessonNavigator.selectedLesson.location;
+      nav.scrollTop = y;
+      nav.scrollLeft = x - nav.clientWidth / 2 + 90;
+      // title.style.height = '0';
+      // title_container.style.height = '0';
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  expandLessonNavigator() {
+    const nav = document.getElementById('master_containter');
+    const container =
+      document.getElementById('id_lesson__title_navigator_container');
+    if (nav && container) {
+      nav.style.height = '30vh';
+      container.style.height = '30vh';
+    }
   }
 
   orientationChange() {
@@ -234,7 +328,8 @@ export default class LessonComponent extends React.Component
   }
 
   titleAsTile() {
-    return <div className="lesson__title_tile">
+    return <div id="id_lesson__title_tile" className="lesson__title_tile">
+      <img src={'/static/'} className="navigator__lesson_tile_image" />
       <div className="lesson__title_tile_containter lesson__title_tile_shadow">
         <div className="lesson__title_tile_title">
           {this.lesson.content.title}
@@ -245,9 +340,7 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='lesson__title'>
-      <div className='navigator__left_side'/>
-      {this.titleAsTile()}
-      <div className='navigator__right_side'/>
+      <LessonTile id={'id_lesson__title_container'} link={this.lesson.content.iconLink} key='1' label={this.lesson.content.title} state={'selected'}/>
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
@@ -265,6 +358,12 @@ export default class LessonComponent extends React.Component
               {this.addNextButton()}
         </div>
       </div>
+      <div className='lesson__white_spacer'/>
+      <LessonNavigator
+          selected={this.lesson.content.title}
+          ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
+        />
+      <div className='lesson__white_spacer'/>
     </div>;
   }
 }

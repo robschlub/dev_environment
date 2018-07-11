@@ -5,11 +5,17 @@
 
 @include media-breakpoint-up(md) {
   .nav-responsive {
-    position: fixed;
+    // position: fixed;
     top: 0;
     right: 0;
     left: 0;
     z-index: $zindex-fixed;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .nav-responsive {
+    // position: fixed;
   }
 }
 
