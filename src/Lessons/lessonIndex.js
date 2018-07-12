@@ -27,6 +27,7 @@ const lessonIndex = [
   new LessonDescription('Circles', '/Lessons/Math/Circle'),
   new LessonDescription('Angles', '/Lessons/Math/Angle'),
   new LessonDescription('Measuring Angle', '/Lessons/Math/DegreesAndRadians'),
+  new LessonDescription('Important Angles', '/Lessons/Math/ImportantAngles'),
   new LessonDescription('Triangles'),
   [
     new LessonDescription('Similar Triangles'),
