@@ -11,100 +11,13 @@ import makeSlider from '../../../LessonsCommon/slider';
 import type { sliderType } from '../../../LessonsCommon/slider';
 import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
-const layout = lessonLayout();
-const { colors } = layout;
-
-
-function makeLine(
-  shapes: Object,
-  location: Point,
-  length: number,
-  width: number,
-  color: Array<number>,
-  pointOrTransform: Point | Transform,
-): DiagramElementPrimative {
-  const line = shapes.horizontalLine(
-    location, length, width,
-    0, color, pointOrTransform,
-  );
-  line.pulse.transformMethod = s => new Transform().scale(1, s);
-  return line;
-}
-
-function makeRadius(shapes: Object) {
-  const radius = makeLine(
-    shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.radius, new Transform().rotate(0).translate(
-      0,
-      0,
-    ),
-  );
-  radius.isTouchable = true;
-  radius.isMovable = true;
-  radius.pulse.transformMethod = s => new Transform().scale(1, s);
-
-  for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-    radius.vertices.border[0][i].y *= 10;
-  }
-  return radius;
-}
-
-function makeArc(shapes: Object, radius: number) {
-  return shapes.polygon(
-    layout.anglePoints, radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.arc, new Point(0, 0),
-  );
-}
+// const layout = lessonLayout();
+// const { this.colors } = layout;
 
 type straightArcType = {
   _arc: DiagramElementPrimative;
   _line: DiagramElementPrimative;
 } & DiagramElementCollection;
-
-function makeStraightArc(shapes: Object) {
-  const straightArc = shapes.collection(new Transform().rotate(0).translate(0, 0));
-  const arc = makeArc(shapes, layout.radius);
-  const line = makeLine(
-    shapes, new Point(0, 0),
-    layout.radius * 2 * Math.PI, layout.linewidth, colors.arc,
-    new Transform().scale(1, 1).rotate(Math.PI / 2)
-      .translate(layout.radius - layout.linewidth / 2, 0),
-  );
-
-  arc.angleToDraw = 0;
-  straightArc.add('arc', arc);
-  straightArc.add('line', line);
-
-  return straightArc;
-}
-
-function makeCompareText(shapes: Object) {
-  return shapes.htmlText(
-    'Compare', 'id_compare_text', '',
-    layout.compare.textPosition, 'middle', 'left',
-  );
-}
-
-function makeCircumference(shapes: Object) {
-  return shapes.polygon(
-    layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.arcLight, new Point(0, 0),
-  );
-}
-
-function makeAnchor(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.anchorPoints, layout.linewidth * 2, 0,
-    layout.anchorPoints, colors.anchor, new Point(0, 0),
-  );
-}
-
-function makeAngle(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.anglePoints, layout.angleRadius, 0,
-    layout.anglePoints, colors.angle, new Point(0, 0),
-  );
-}
 
 type lineAngleType = {
   _arc: DiagramElementPrimative;
@@ -112,74 +25,11 @@ type lineAngleType = {
   updateRotation: (number) => {};
 };
 
-function makeAngleLine(shapes: Object) {
-  const angle = shapes.collection(new Transform().translate(0, 0));
-  const arc = makeArc(shapes, layout.angle.radius);
-  arc.color = colors.angle.slice();
-  const arrow = shapes.arrow(
-    layout.angle.arrow.width, 0, layout.angle.arrow.height, 0,
-    colors.angle, new Transform().rotate(0).translate(0, 0),
-  );
-  angle.add('arc', arc);
-  angle.add('arrow', arrow);
-  const arrowAngleAtArc =
-    Math.asin(layout.angle.arrow.height / layout.angle.radius);
-
-  angle.updateRotation = (r) => {
-    if (r < arrowAngleAtArc) {
-      arc.angleToDraw = r;
-      arrow.color[3] = 0;
-    } else {
-      arc.angleToDraw = r - arrowAngleAtArc * 0.9;
-      arrow.color[3] = 1;
-    }
-    const arrowTip = new Point(
-      (layout.angle.radius - layout.linewidth / 4) * Math.cos(r),
-      (layout.angle.radius - layout.linewidth / 4) * Math.sin(r),
-    );
-    arrow.transform.updateTranslation(arrowTip);
-    arrow.transform.updateRotation(r - arrowAngleAtArc);
-  };
-  return angle;
-}
-
 type radiusToArcType = {
   _arc: DiagramElementPrimative;
   _line: DiagramElementPrimative;
   toArc: (number) => void;
 } & DiagramElementCollection;
-function makeRadiusToArc(shapes: Object) {
-  const radiusToArc = shapes.collection(new Transform()
-    .scale(1, 1).rotate(0).translate(layout.radiusArc.radius - layout.linewidth / 2, 0));
-
-  const arc = shapes.polygon(
-    layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
-    Math.floor(layout.anglePoints / Math.PI / 2),
-    colors.radiusLight, new Point(-layout.radiusArc.radius + layout.linewidth / 2, 0),
-  );
-
-  const line = makeLine(
-    shapes, new Point(0, 0),
-    layout.radiusArc.radius, layout.linewidth, colors.radiusLight,
-    new Transform().scale(1, 1).rotate(Math.PI / 2)
-      .translate(0, 0),
-  );
-
-  arc.angleToDraw = 0;
-  radiusToArc.add('arc', arc);
-  radiusToArc.add('line', line);
-
-  radiusToArc.toArc = (percent: number) => {
-    radiusToArc._line.transform.updateScale(1 - percent, 1);
-    radiusToArc._arc.angleToDraw = percent;
-    radiusToArc._arc.transform.updateTranslation(
-      -layout.radiusArc.radius + layout.linewidth / 2,
-      (1 - percent) * layout.radiusArc.radius,
-    );
-  };
-
-  return radiusToArc;
-}
 
 type radiusOnArcType = {
   _r1: DiagramElementPrimative;
@@ -190,61 +40,6 @@ type radiusOnArcType = {
   _r6: DiagramElementPrimative;
   stepIn: (number) => void;
 } & DiagramElementCollection;
-
-function makeRadiusOnArc(shapes: Object) {
-  const radiusArc = shapes.collection(new Transform().translate(0, 0));
-  const r1 = shapes.polygon(
-    layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
-    Math.floor(layout.anglePoints / Math.PI / 2), colors.radiusLight,
-    new Transform().rotate(0),
-  );
-  const r2 = shapes.polygon(
-    layout.anglePoints, layout.radiusArc.radius, layout.linewidth, 0, 1,
-    Math.floor(layout.anglePoints / Math.PI / 2) - 1, colors.radiusLight,
-    new Transform().rotate(1.02),
-  );
-  radiusArc.add('r1', r1);
-  radiusArc.add('r2', r2);
-  radiusArc.add('r3', r2.copy(new Transform().rotate(2.02)));
-  radiusArc.add('r4', r2.copy(new Transform().rotate(3.02)));
-  radiusArc.add('r5', r2.copy(new Transform().rotate(4.02)));
-  radiusArc.add('r6', r2.copy(new Transform().rotate(5.02)));
-
-  radiusArc.stepIn = (time: number) => {
-    const timePerSegment = time / 6;
-    radiusArc.hideAll();
-    radiusArc.show();
-    radiusArc._r1.show();
-    radiusArc._r2.disolveInWithDelay(timePerSegment * 0.01, timePerSegment);
-    radiusArc._r3.disolveInWithDelay(timePerSegment * 1, timePerSegment);
-    radiusArc._r4.disolveInWithDelay(timePerSegment * 2, timePerSegment);
-    radiusArc._r5.disolveInWithDelay(timePerSegment * 3, timePerSegment);
-    radiusArc._r6.disolveInWithDelay(timePerSegment * 4, timePerSegment);
-  };
-
-  return radiusArc;
-}
-
-function makeReference(shapes: Object) {
-  return makeLine(
-    shapes, new Point(0, 0), layout.radius, layout.linewidth,
-    colors.reference, new Transform().rotate(0).translate(0, 0),
-  );
-}
-
-function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
-  let inner = layout.radialLineMajorInner;
-  let outer = layout.radialLineMajorOuter;
-  if (minor) {
-    inner = layout.radialLineMinorInner;
-    outer = layout.radialLineMinorOuter;
-  }
-  return shapes.radialLines(
-    inner, outer,
-    layout.radialLineWidth, Math.PI * 2 / num,
-    colors.radialLines, new Transform().translate(0, 0),
-  );
-}
 
 type circumferenceEquationType = {
   _circumference: DiagramElementPrimative;
@@ -259,40 +54,6 @@ type circumferenceEquationType = {
   varState: number;
 };
 
-function makeCircumferenceEquation(diagram: Diagram) {
-  const equationElements = diagram.equation.elements({
-    circumference: 'circumference',
-    radius: 'radius',
-    twoPi: `2${String.fromCharCode(960)} `,
-    times: ` ${String.fromCharCode(215)} `,
-    equals: '  =  ',
-    r: 'r',
-    c: 'c',
-    arc: 'arc length',
-    angle: 'angle',
-  }, colors.diagram.text.base);
-  equationElements._arc.setColor(colors.arc);
-  equationElements._circumference.setColor(colors.arc);
-  equationElements._c.setColor(colors.arc);
-  equationElements._r.setColor(colors.radius);
-  equationElements._radius.setColor(colors.radius);
-  equationElements._twoPi.setColor(colors.angle);
-  equationElements._angle.setColor(colors.angle);
-
-  equationElements._radius.isTouchable = true;
-  equationElements._angle.isTouchable = true;
-  equationElements._twoPi.isTouchable = true;
-  equationElements._r.isTouchable = true;
-  equationElements._c.isTouchable = true;
-  equationElements._circumference.isTouchable = true;
-  equationElements._arc.isTouchable = true;
-  equationElements._equals.isTouchable = true;
-  equationElements.isTouchable = true;
-  equationElements.touchInBoundingRect = true;
-  equationElements.varState = 0;
-  return equationElements;
-}
-
 type equationType = {
   _arc: DiagramElementPrimative;
   _equals: DiagramElementPrimative;
@@ -303,72 +64,6 @@ type equationType = {
   showAngle: () => void;
 } & DiagramElementCollection;
 
-function makeArcEquation(diagram: Diagram) {
-  const equationElements = diagram.equation.elements({
-    arc: 'arc length',
-    radius: 'radius',
-    angle: 'angle',
-    times: ` ${String.fromCharCode(215)} `,
-    equals: '  =  ',
-    v: diagram.equation.vinculum(colors.diagram.text.base),
-  }, colors.diagram.text.base);
-  equationElements._arc.setColor(colors.arc);
-  equationElements._arc.isTouchable = true;
-  equationElements._arc.animate.transform.translation.style = 'curved';
-  equationElements._radius.setColor(colors.radius);
-  equationElements._radius.isTouchable = true;
-  equationElements._radius.animate.transform.translation.style = 'curved';
-  equationElements._radius.animate.transform.translation.options.direction = 1;
-  equationElements._angle.setColor(colors.angle);
-  equationElements._angle.isTouchable = true;
-  equationElements._angle.animate.transform.translation.style = 'curved';
-  equationElements._angle.animate.transform.translation.options.direction = 1;
-  equationElements.hasTouchableElements = true;
-
-  equationElements.showArc = () => {
-    equationElements.show();
-    equationElements._arc.show();
-    equationElements._radius.show();
-    equationElements._angle.show();
-    equationElements._equals.show();
-    equationElements._v.hide();
-    equationElements._times.show();
-  };
-
-  equationElements.showRadius = () => {
-    equationElements.show();
-    equationElements._arc.show();
-    equationElements._radius.show();
-    equationElements._angle.show();
-    equationElements._equals.show();
-    equationElements._v.show();
-    equationElements._times.hide();
-  };
-
-  equationElements.showAngle = () => {
-    equationElements.show();
-    equationElements._arc.show();
-    equationElements._radius.show();
-    equationElements._angle.show();
-    equationElements._equals.show();
-    equationElements._v.show();
-    equationElements._times.hide();
-  };
-
-  return equationElements;
-}
-
-function makeMajorAndMinRadialMarks(
-  shapes: Object,
-  major: number,
-  minor: number,
-) {
-  const collection = shapes.collection(new Transform().translate(0, 0));
-  collection.add('minor', makeRadialMarks(shapes, minor, true));
-  collection.add('major', makeRadialMarks(shapes, major, false));
-
-  return collection;
-}
 
 type angleTextType = {
   text: DiagramElementPrimative;
@@ -377,34 +72,6 @@ type angleTextType = {
   units: DiagramElementPrimative;
   setUnits: (string) => void;
 } & DiagramElementCollection;
-function makeAngleText(shapes: Object) {
-  const angleText = shapes.collection(layout.angleEqualsText.left);
-  angleText.add('text', shapes.htmlText(
-    'Angle', 'id_angle_text', 'action_word',
-    new Point(0, 0), 'middle', 'left',
-  ));
-  angleText.add('equals', shapes.htmlText(
-    '=', 'id_angle_equals', '',
-    new Point(0.45, 0), 'middle', 'left',
-  ));
-  angleText.add('angle', shapes.htmlText(
-    '0', 'id_angle_value', '',
-    new Point(0.85, 0), 'middle', 'right',
-  ));
-  angleText.add('units', shapes.htmlText(
-    'portions', 'id_angle_units', '',
-    new Point(0.87, 0), 'middle', 'left',
-  ));
-  angleText.setUnits = (units: string) => {
-    if (units === '&deg;') {
-      angleText._units.transform.updateTranslation(layout.angleEqualsText.units.deg, 0);
-    } else {
-      angleText._units.transform.updateTranslation(layout.angleEqualsText.units.text, 0);
-    }
-    angleText._units.vertices.element.innerHTML = units;
-  };
-  return angleText;
-}
 
 export type circleCollectionType = {
   _anchor: DiagramElementPrimative;
@@ -425,27 +92,10 @@ export type circleCollectionType = {
 } & DiagramElementCollection;
 
 
-function makeCircle(numSections: Array<number>, shapes: Object) {
-  const circle = shapes.collection(new Transform().scale(1, 1).translate(layout.circle.center));
-  circle.add('angleFill', makeAngle(shapes));
-  circle.add('angle', makeAngleLine(shapes));
-  circle.add('radialLinesA', makeRadialMarks(shapes, numSections[0]));
-  circle.add('radialLinesB', makeMajorAndMinRadialMarks(shapes, 10, numSections[1]));
-  circle.add('radialLinesDeg', makeMajorAndMinRadialMarks(shapes, 36, 360));
-  circle.add('radialLinesRad', makeRadialMarks(shapes, Math.PI * 2));
-  circle.add('reference', makeReference(shapes));
-  circle.add('circumference', makeCircumference(shapes));
-  circle.add('arc', makeArc(shapes, layout.radius));
-  circle.add('straightArc', makeStraightArc(shapes));
-  circle.add('radius', makeRadius(shapes));
-  circle.add('compareRadius', makeReference(shapes));
-  circle.add('anchor', makeAnchor(shapes));
-  circle.add('radiusOnArc', makeRadiusOnArc(shapes));
-  circle.add('radiusToArc', makeRadiusToArc(shapes));
-  return circle;
-}
-
 class CircleCollection extends DiagramElementCollection {
+  layout: Object;
+  colors: Object;
+  shapes: Object;
   _circle: circleCollectionType;
   // _sectionTitle: DiagramElementPrimative;
   _angleText: angleTextType;
@@ -468,6 +118,365 @@ class CircleCollection extends DiagramElementCollection {
   numSections: Array<number>;
   diagram: Diagram;
 
+
+  makeLine(
+    location: Point,
+    length: number,
+    width: number,
+    color: Array<number>,
+    pointOrTransform: Point | Transform,
+  ): DiagramElementPrimative {
+    const line = this.shapes.horizontalLine(
+      location, length, width,
+      0, color, pointOrTransform,
+    );
+    line.pulse.transformMethod = s => new Transform().scale(1, s);
+    return line;
+  }
+
+  makeRadius() {
+    const radius = this.makeLine(
+      new Point(0, 0), this.layout.radius, this.layout.linewidth,
+      this.colors.radius, new Transform().rotate(0).translate(
+        0,
+        0,
+      ),
+    );
+    radius.isTouchable = true;
+    radius.isMovable = true;
+    radius.pulse.transformMethod = s => new Transform().scale(1, s);
+
+    for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
+      radius.vertices.border[0][i].y *= 10;
+    }
+    return radius;
+  }
+
+  makeArc(radius: number) {
+    return this.shapes.polygon(
+      this.layout.anglePoints, radius, this.layout.linewidth, 0, 1,
+      this.layout.circlePoints, this.colors.arc, new Point(0, 0),
+    );
+  }
+
+  makeStraightArc() {
+    const straightArc = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
+    const arc = this.makeArc(this.layout.radius);
+    const line = this.makeLine(
+      new Point(0, 0),
+      this.layout.radius * 2 * Math.PI, this.layout.linewidth, this.colors.arc,
+      new Transform().scale(1, 1).rotate(Math.PI / 2)
+        .translate(this.layout.radius - this.layout.linewidth / 2, 0),
+    );
+
+    arc.angleToDraw = 0;
+    straightArc.add('arc', arc);
+    straightArc.add('line', line);
+
+    return straightArc;
+  }
+
+  makeCompareText() {
+    return this.shapes.htmlText(
+      'Compare', 'id_compare_text', '',
+      this.layout.compare.textPosition, 'middle', 'left',
+    );
+  }
+
+  makeCircumference() {
+    return this.shapes.polygon(
+      this.layout.anglePoints, this.layout.radius, this.layout.linewidth, 0, 1,
+      this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
+    );
+  }
+
+  makeAnchor() {
+    return this.shapes.polygonFilled(
+      this.layout.anchorPoints, this.layout.linewidth * 2, 0,
+      this.layout.anchorPoints, this.colors.anchor, new Point(0, 0),
+    );
+  }
+
+  makeAngle() {
+    return this.shapes.polygonFilled(
+      this.layout.anglePoints, this.layout.angleRadius, 0,
+      this.layout.anglePoints, this.colors.angle, new Point(0, 0),
+    );
+  }
+
+  makeAngleLine() {
+    const angle = this.shapes.collection(new Transform().translate(0, 0));
+    const arc = this.makeArc(this.layout.angle.radius);
+    arc.color = this.colors.angle.slice();
+    const arrow = this.shapes.arrow(
+      this.layout.angle.arrow.width, 0, this.layout.angle.arrow.height, 0,
+      this.colors.angle, new Transform().rotate(0).translate(0, 0),
+    );
+    angle.add('arc', arc);
+    angle.add('arrow', arrow);
+    const arrowAngleAtArc =
+      Math.asin(this.layout.angle.arrow.height / this.layout.angle.radius);
+
+    angle.updateRotation = (r) => {
+      if (r < arrowAngleAtArc) {
+        arc.angleToDraw = r;
+        arrow.color[3] = 0;
+      } else {
+        arc.angleToDraw = r - arrowAngleAtArc * 0.9;
+        arrow.color[3] = 1;
+      }
+      const arrowTip = new Point(
+        (this.layout.angle.radius - this.layout.linewidth / 4) * Math.cos(r),
+        (this.layout.angle.radius - this.layout.linewidth / 4) * Math.sin(r),
+      );
+      arrow.transform.updateTranslation(arrowTip);
+      arrow.transform.updateRotation(r - arrowAngleAtArc);
+    };
+    return angle;
+  }
+
+
+  makeRadiusToArc() {
+    const radiusToArc = this.shapes.collection(new Transform()
+      .scale(1, 1)
+      .rotate(0)
+      .translate(this.layout.radiusArc.radius - this.layout.linewidth / 2, 0));
+
+    const arc = this.shapes.polygon(
+      this.layout.anglePoints, this.layout.radiusArc.radius, this.layout.linewidth, 0, 1,
+      Math.floor(this.layout.anglePoints / Math.PI / 2),
+      this.colors.radiusLight,
+      new Point(-this.layout.radiusArc.radius + this.layout.linewidth / 2, 0),
+    );
+
+    const line = this.makeLine(
+      new Point(0, 0),
+      this.layout.radiusArc.radius, this.layout.linewidth, this.colors.radiusLight,
+      new Transform().scale(1, 1).rotate(Math.PI / 2)
+        .translate(0, 0),
+    );
+
+    arc.angleToDraw = 0;
+    radiusToArc.add('arc', arc);
+    radiusToArc.add('line', line);
+
+    radiusToArc.toArc = (percent: number) => {
+      radiusToArc._line.transform.updateScale(1 - percent, 1);
+      radiusToArc._arc.angleToDraw = percent;
+      radiusToArc._arc.transform.updateTranslation(
+        -this.layout.radiusArc.radius + this.layout.linewidth / 2,
+        (1 - percent) * this.layout.radiusArc.radius,
+      );
+    };
+
+    return radiusToArc;
+  }
+
+  makeRadiusOnArc() {
+    const radiusArc = this.shapes.collection(new Transform().translate(0, 0));
+    const r1 = this.shapes.polygon(
+      this.layout.anglePoints, this.layout.radiusArc.radius, this.layout.linewidth, 0, 1,
+      Math.floor(this.layout.anglePoints / Math.PI / 2), this.colors.radiusLight,
+      new Transform().rotate(0),
+    );
+    const r2 = this.shapes.polygon(
+      this.layout.anglePoints, this.layout.radiusArc.radius, this.layout.linewidth, 0, 1,
+      Math.floor(this.layout.anglePoints / Math.PI / 2) - 1, this.colors.radiusLight,
+      new Transform().rotate(1.02),
+    );
+    radiusArc.add('r1', r1);
+    radiusArc.add('r2', r2);
+    radiusArc.add('r3', r2.copy(new Transform().rotate(2.02)));
+    radiusArc.add('r4', r2.copy(new Transform().rotate(3.02)));
+    radiusArc.add('r5', r2.copy(new Transform().rotate(4.02)));
+    radiusArc.add('r6', r2.copy(new Transform().rotate(5.02)));
+
+    radiusArc.stepIn = (time: number) => {
+      const timePerSegment = time / 6;
+      radiusArc.hideAll();
+      radiusArc.show();
+      radiusArc._r1.show();
+      radiusArc._r2.disolveInWithDelay(timePerSegment * 0.01, timePerSegment);
+      radiusArc._r3.disolveInWithDelay(timePerSegment * 1, timePerSegment);
+      radiusArc._r4.disolveInWithDelay(timePerSegment * 2, timePerSegment);
+      radiusArc._r5.disolveInWithDelay(timePerSegment * 3, timePerSegment);
+      radiusArc._r6.disolveInWithDelay(timePerSegment * 4, timePerSegment);
+    };
+
+    return radiusArc;
+  }
+
+  makeReference() {
+    return this.makeLine(
+      new Point(0, 0), this.layout.radius, this.layout.linewidth,
+      this.colors.reference, new Transform().rotate(0).translate(0, 0),
+    );
+  }
+
+  makeRadialMarks(num: number, minor: boolean = false) {
+    let inner = this.layout.radialLineMajorInner;
+    let outer = this.layout.radialLineMajorOuter;
+    if (minor) {
+      inner = this.layout.radialLineMinorInner;
+      outer = this.layout.radialLineMinorOuter;
+    }
+    return this.shapes.radialLines(
+      inner, outer,
+      this.layout.radialLineWidth, Math.PI * 2 / num,
+      this.colors.radialLines, new Transform().translate(0, 0),
+    );
+  }
+
+  makeCircumferenceEquation() {
+    const equationElements = this.diagram.equation.elements({
+      circumference: 'circumference',
+      radius: 'radius',
+      twoPi: `2${String.fromCharCode(960)} `,
+      times: ` ${String.fromCharCode(215)} `,
+      equals: '  =  ',
+      r: 'r',
+      c: 'c',
+      arc: 'arc length',
+      angle: 'angle',
+    }, this.colors.diagram.text.base);
+    equationElements._arc.setColor(this.colors.arc);
+    equationElements._circumference.setColor(this.colors.arc);
+    equationElements._c.setColor(this.colors.arc);
+    equationElements._r.setColor(this.colors.radius);
+    equationElements._radius.setColor(this.colors.radius);
+    equationElements._twoPi.setColor(this.colors.angle);
+    equationElements._angle.setColor(this.colors.angle);
+
+    equationElements._radius.isTouchable = true;
+    equationElements._angle.isTouchable = true;
+    equationElements._twoPi.isTouchable = true;
+    equationElements._r.isTouchable = true;
+    equationElements._c.isTouchable = true;
+    equationElements._circumference.isTouchable = true;
+    equationElements._arc.isTouchable = true;
+    equationElements._equals.isTouchable = true;
+    equationElements.isTouchable = true;
+    equationElements.touchInBoundingRect = true;
+    equationElements.varState = 0;
+    return equationElements;
+  }
+
+  makeArcEquation() {
+    const equationElements = this.diagram.equation.elements({
+      arc: 'arc length',
+      radius: 'radius',
+      angle: 'angle',
+      times: ` ${String.fromCharCode(215)} `,
+      equals: '  =  ',
+      v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
+    }, this.colors.diagram.text.base);
+    equationElements._arc.setColor(this.colors.arc);
+    equationElements._arc.isTouchable = true;
+    equationElements._arc.animate.transform.translation.style = 'curved';
+    equationElements._radius.setColor(this.colors.radius);
+    equationElements._radius.isTouchable = true;
+    equationElements._radius.animate.transform.translation.style = 'curved';
+    equationElements._radius.animate.transform.translation.options.direction = 1;
+    equationElements._angle.setColor(this.colors.angle);
+    equationElements._angle.isTouchable = true;
+    equationElements._angle.animate.transform.translation.style = 'curved';
+    equationElements._angle.animate.transform.translation.options.direction = 1;
+    equationElements.hasTouchableElements = true;
+
+    equationElements.showArc = () => {
+      equationElements.show();
+      equationElements._arc.show();
+      equationElements._radius.show();
+      equationElements._angle.show();
+      equationElements._equals.show();
+      equationElements._v.hide();
+      equationElements._times.show();
+    };
+
+    equationElements.showRadius = () => {
+      equationElements.show();
+      equationElements._arc.show();
+      equationElements._radius.show();
+      equationElements._angle.show();
+      equationElements._equals.show();
+      equationElements._v.show();
+      equationElements._times.hide();
+    };
+
+    equationElements.showAngle = () => {
+      equationElements.show();
+      equationElements._arc.show();
+      equationElements._radius.show();
+      equationElements._angle.show();
+      equationElements._equals.show();
+      equationElements._v.show();
+      equationElements._times.hide();
+    };
+
+    return equationElements;
+  }
+
+  makeMajorAndMinRadialMarks(
+    major: number,
+    minor: number,
+  ) {
+    const collection = this.shapes.collection(new Transform().translate(0, 0));
+    collection.add('minor', this.makeRadialMarks(minor, true));
+    collection.add('major', this.makeRadialMarks(major, false));
+    return collection;
+  }
+
+  makeAngleText() {
+    const angleText = this.shapes.collection(this.layout.angleEqualsText.left);
+    angleText.add('text', this.shapes.htmlText(
+      'Angle', 'id_angle_text', 'action_word',
+      new Point(0, 0), 'middle', 'left',
+    ));
+    angleText.add('equals', this.shapes.htmlText(
+      '=', 'id_angle_equals', '',
+      new Point(0.45, 0), 'middle', 'left',
+    ));
+    angleText.add('angle', this.shapes.htmlText(
+      '0', 'id_angle_value', '',
+      new Point(0.85, 0), 'middle', 'right',
+    ));
+    angleText.add('units', this.shapes.htmlText(
+      'portions', 'id_angle_units', '',
+      new Point(0.87, 0), 'middle', 'left',
+    ));
+    angleText.setUnits = (units: string) => {
+      if (units === '&deg;') {
+        angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.deg, 0);
+      } else {
+        angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.text, 0);
+      }
+      angleText._units.vertices.element.innerHTML = units;
+    };
+    return angleText;
+  }
+
+  makeCircle(numSections: Array<number>) {
+    const circle = this.shapes.collection(new Transform()
+      .scale(1, 1)
+      .translate(this.layout.circle.center));
+    circle.add('angleFill', this.makeAngle());
+    circle.add('angle', this.makeAngleLine());
+    circle.add('radialLinesA', this.makeRadialMarks(numSections[0]));
+    circle.add('radialLinesB', this.makeMajorAndMinRadialMarks(10, numSections[1]));
+    circle.add('radialLinesDeg', this.makeMajorAndMinRadialMarks(36, 360));
+    circle.add('radialLinesRad', this.makeRadialMarks(Math.PI * 2));
+    circle.add('reference', this.makeReference());
+    circle.add('circumference', this.makeCircumference());
+    circle.add('arc', this.makeArc(this.layout.radius));
+    circle.add('straightArc', this.makeStraightArc());
+    circle.add('radius', this.makeRadius());
+    circle.add('compareRadius', this.makeReference());
+    circle.add('anchor', this.makeAnchor());
+    circle.add('radiusOnArc', this.makeRadiusOnArc());
+    circle.add('radiusToArc', this.makeRadiusToArc());
+    return circle;
+  }
+
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
@@ -480,14 +489,17 @@ class CircleCollection extends DiagramElementCollection {
     };
     this.numSections = [12, 100];
 
-    const { shapes } = diagram;
-    this.add('compareText', makeCompareText(shapes));
-    this.add('circle', makeCircle(this.numSections, shapes));
+    // const { shapes } = diagram;
+    this.shapes = diagram.shapes;
+    this.layout = lessonLayout();
+    this.colors = this.layout.colors;
+    this.add('compareText', this.makeCompareText());
+    this.add('circle', this.makeCircle(this.numSections));
     // this.add('sectionTitle', makeSectionTitle(shapes));
-    this.add('angleText', makeAngleText(shapes));
-    this.add('slider', makeSlider(shapes, layout.slider));
-    this.add('arcEquation', makeArcEquation(diagram));
-    this.add('circumferenceEquation', makeCircumferenceEquation(diagram));
+    this.add('angleText', this.makeAngleText());
+    this.add('slider', makeSlider(this.shapes, this.layout.slider));
+    this.add('arcEquation', this.makeArcEquation());
+    this.add('circumferenceEquation', this.makeCircumferenceEquation());
 
     let eqn;
     eqn = diagram.equation.make(this._arcEquation);
@@ -678,7 +690,7 @@ class CircleCollection extends DiagramElementCollection {
       const t = this._circumferenceEquation._angle.transform.t();
       if (t != null) {
         this._circumferenceEquation._twoPi.transform
-          .updateTranslation(t.add(layout.circEquation.twoPiOffset));
+          .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
       }
       this.circEqn.hideShow(0.5, 0.5, callbackToUse);
     } else if (this._circumferenceEquation.varState === 1) {
@@ -881,23 +893,23 @@ class CircleCollection extends DiagramElementCollection {
       sArc._arc.angleToDraw = (1 - percent) * r;
       sArc._arc.transform.updateTranslation(
         0,
-        scale * layout.radius * Math.PI * 2,
+        scale * this.layout.radius * Math.PI * 2,
       );
 
       this._circle._compareRadius.transform
         .updateRotation(r + percent * (Math.PI / 2 - r));
       this._circle._compareRadius.transform.updateTranslation(
-        percent * (layout.radius + layout.compare.radiusOffset),
+        percent * (this.layout.radius + this.layout.compare.radiusOffset),
         0,
       );
       // const totalRot = percent * Math.PI / 2;
       // sArc.transform.updateRotation(totalRot);
       // sArc.transform.updateTranslation(
-      //   1 - layout.radius * Math.cos(totalRot),
-      //   - layout.radius * Math.sin(totalRot),
+      //   1 - this.layout.radius * Math.cos(totalRot),
+      //   - this.layout.radius * Math.sin(totalRot),
       // );
       sArc.transform.updateTranslation(
-        layout.compare.arcOffset * percent,
+        this.layout.compare.arcOffset * percent,
         0,
       );
       this.varState.percentStraight = percent;
@@ -905,13 +917,13 @@ class CircleCollection extends DiagramElementCollection {
     if (percent === 0) {
       this.resetColors();
     } else {
-      this._circle._radius.color = colors.radiusLight.slice();
-      this._circle._arc.color = colors.arcLight.slice();
+      this._circle._radius.color = this.colors.radiusLight.slice();
+      this._circle._arc.color = this.colors.arcLight.slice();
     }
   }
   resetColors() {
-    this._circle._radius.color = colors.radius.slice();
-    this._circle._arc.color = colors.arc.slice();
+    this._circle._radius.color = this.colors.radius.slice();
+    this._circle._arc.color = this.colors.arc.slice();
   }
 
   animateEquation(
@@ -935,7 +947,7 @@ class CircleCollection extends DiagramElementCollection {
     arcOptions.magnitude = arcMag;
     arcOptions.direction = 'up';
 
-    // const { scale } = layout.arcEquation;
+    // const { scale } = this.layout.arcEquation;
 
     if (leftSide === 'arc') {
       this.arcEqn.animateTo(scale, 2, this._arcEquation._equals);
@@ -997,15 +1009,15 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   resetCircle(position: string = 'center', angle: ?number) {
-    this._circle.transform.updateTranslation(layout.circle[position]);
+    this._circle.transform.updateTranslation(this.layout.circle[position]);
     this._circle.transform.updateScale(1, 1);
     const r = this._circle._radius.transform.r();
     if (r != null && angle == null) {
       let newAngle = r;
-      if (r < layout.circle.angle.small) {
-        newAngle = layout.circle.angle.small;
-      } else if (r > layout.circle.angle.large) {
-        newAngle = layout.circle.angle.large;
+      if (r < this.layout.circle.angle.small) {
+        newAngle = this.layout.circle.angle.small;
+      } else if (r > this.layout.circle.angle.large) {
+        newAngle = this.layout.circle.angle.large;
       }
       this.setRotation(newAngle);
     } else if (angle != null) {
@@ -1028,7 +1040,7 @@ class CircleCollection extends DiagramElementCollection {
     let rTime = time;
     let tTime = time;
     if (t) {
-      const tDelta = layout.circle[toPosition].sub(t);
+      const tDelta = this.layout.circle[toPosition].sub(t);
       const { mag } = tDelta.toPolar();
       tTime *= mag / this.diagramLimits.width * 2;
     }
@@ -1036,13 +1048,13 @@ class CircleCollection extends DiagramElementCollection {
       tTime = 0.001;
     }
 
-    let angle = layout.circle.angle.small;
+    let angle = this.layout.circle.angle.small;
     if (r != null && r !== undefined) {
       if (toAngle === null) {
-        if (r < layout.circle.angle.small) {
-          angle = layout.circle.angle.small;
-        } else if (r > layout.circle.angle.large) {
-          angle = layout.circle.angle.large;
+        if (r < this.layout.circle.angle.small) {
+          angle = this.layout.circle.angle.small;
+        } else if (r > this.layout.circle.angle.large) {
+          angle = this.layout.circle.angle.large;
         } else {
           angle = r;
         }
@@ -1069,10 +1081,10 @@ class CircleCollection extends DiagramElementCollection {
     const maxTime = Math.max(rTime, tTime);
 
     if (t && r !== null && r !== undefined) {
-      if (t.isNotEqualTo(layout.circle[toPosition]) || r !== angle) {
+      if (t.isNotEqualTo(this.layout.circle[toPosition]) || r !== angle) {
         this.rotateTo(angle, 2, maxTime);
         this._circle.animateTranslationTo(
-          layout.circle[toPosition],
+          this.layout.circle[toPosition],
           maxTime,
           done,
         );

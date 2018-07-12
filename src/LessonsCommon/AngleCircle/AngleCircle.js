@@ -54,35 +54,6 @@ function makeArc(shapes: Object, radius: number) {
   );
 }
 
-// type straightArcType = {
-//   _arc: DiagramElementPrimative;
-//   _line: DiagramElementPrimative;
-// } & DiagramElementCollection;
-
-// function makeStraightArc(shapes: Object) {
-//   const straightArc = shapes.collection(new Transform().rotate(0).translate(0, 0));
-//   const arc = makeArc(shapes, layout.radius);
-//   const line = makeLine(
-//     shapes, new Point(0, 0),
-//     layout.radius * 2 * Math.PI, layout.linewidth, colors.arc,
-//     new Transform().scale(1, 1).rotate(Math.PI / 2)
-//       .translate(layout.radius - layout.linewidth / 2, 0),
-//   );
-
-//   arc.angleToDraw = 0;
-//   straightArc.add('arc', arc);
-//   straightArc.add('line', line);
-
-//   return straightArc;
-// }
-
-// function makeCompareText(shapes: Object) {
-//   return shapes.htmlText(
-//     'Compare', 'id_compare_text', '',
-//     layout.compare.textPosition, 'middle', 'left',
-//   );
-// }
-
 function makeCircumference(shapes: Object) {
   return shapes.polygon(
     layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
@@ -96,13 +67,6 @@ function makeAnchor(shapes: Object) {
     layout.anchorPoints, colors.anchor, new Point(0, 0),
   );
 }
-
-// function makeAngle(shapes: Object) {
-//   return shapes.polygonFilled(
-//     layout.anglePoints, layout.angleRadius, 0,
-//     layout.anglePoints, colors.angle, new Point(0, 0),
-//   );
-// }
 
 type lineAngleType = {
   _arc: DiagramElementPrimative;
@@ -244,18 +208,18 @@ function makeRadialMarks(shapes: Object, num: number, minor: boolean = false) {
   );
 }
 
-type circumferenceEquationType = {
-  _circumference: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _twoPi: DiagramElementPrimative;
-  _times: DiagramElementPrimative;
-  _equals: DiagramElementPrimative;
-  _r: DiagramElementPrimative;
-  _c: DiagramElementPrimative;
-  _arcLength: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
-  varState: number;
-};
+// type circumferenceEquationType = {
+//   _circumference: DiagramElementPrimative;
+//   _radius: DiagramElementPrimative;
+//   _twoPi: DiagramElementPrimative;
+//   _times: DiagramElementPrimative;
+//   _equals: DiagramElementPrimative;
+//   _r: DiagramElementPrimative;
+//   _c: DiagramElementPrimative;
+//   _arcLength: DiagramElementPrimative;
+//   _angle: DiagramElementPrimative;
+//   varState: number;
+// };
 
 // function makeCircumferenceEquation(diagram: Diagram) {
 //   const equationElements = diagram.equation.elements({
