@@ -4,7 +4,7 @@ import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
 import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
-import lessonLayout from './layout';
+// import lessonLayout from './layout';
 
 
 type lineAngleType = {
@@ -222,7 +222,7 @@ class AngleCircle extends DiagramElementCollection {
     return circle;
   }
 
-  constructor(diagram: Diagram, transform: Transform = new Transform()) {
+  constructor(layout: Object, diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.varState = {
@@ -232,7 +232,7 @@ class AngleCircle extends DiagramElementCollection {
       // straightening: false,
     };
     this.shapes = diagram.shapes;
-    this.layout = lessonLayout();
+    this.layout = layout;
     this.colors = this.layout.colors;
     this.add('circle', this.makeCircle());
     this.add('angleText', this.makeAngleText());

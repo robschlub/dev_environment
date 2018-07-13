@@ -7,6 +7,7 @@ import { Point, Transform } from '../../../js/diagram/tools/g2';
 import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
+import lessonLayout from './layout';
 
 type straightArcType = {
   _arc: DiagramElementPrimative;
@@ -282,7 +283,7 @@ class CircleCollection extends AngleCircle {
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
-    super(diagram, transform);
+    super(lessonLayout(), diagram, transform);
     this.diagram = diagram;
     this.varState = {
       radialLines: 4,
