@@ -4,7 +4,6 @@ import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
 import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
-// import lessonLayout from './layout';
 
 
 type lineAngleType = {

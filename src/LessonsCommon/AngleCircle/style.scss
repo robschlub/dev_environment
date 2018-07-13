@@ -6,18 +6,9 @@ $colors: (
   reference:        map-get($geometry_colors, reference),
   angle:            map-get($geometry_colors, angle),
   angleText:        map-get($geometry_colors, angleText),
-  latin:            color(diagram, 'text-latin'),
   circle:           map-get($geometry_colors, circle),
   radialLines:      map-get($geometry_colors, radialLines),
-  radialLinesText:  color(diagram, 'text-plot'),
-  rotation:         map-get($geometry_colors, rotation),
-  action:           map-get($geometry_colors, action),
-  disabled:         map-get($geometry_colors, disabled),
-  radiusLight:      map-get($geometry_colors, radiusLight),
   arc:              map-get($geometry_colors, arc),
-  arcLight:         map-get($geometry_colors, arcLight),
-  degrees:          map-get($geometry_colors, degrees),
-  radians:          map-get($geometry_colors, radians),
 );
 
 body {

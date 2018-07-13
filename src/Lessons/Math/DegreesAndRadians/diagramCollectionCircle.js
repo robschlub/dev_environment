@@ -70,7 +70,6 @@ type varStateExtendedType = {
 
 class CircleCollection extends AngleCircle {
   _circle: circleCollectionType;
-  // _slider: sliderType;
   _arcEquation: equationType;
   _circumferenceEquation: circumferenceEquationType;
   arcEqn: DiagramGLEquation;
@@ -324,19 +323,8 @@ class CircleCollection extends AngleCircle {
     eqn = this.diagram.equation.make(this._circumferenceEquation);
     eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
     this.circEqnGeneral = eqn;
-
-    // this._slider.setCallback(this.updateSlider.bind(this));
   }
 
-  // updateSlider() {
-  //   const percent = 0.5 + this._slider.getValue() * 0.5;
-  //   this._circle.transform.updateScale(percent, percent);
-  //   this._slider._value.transform.updateScale(1, percent);
-  //   if (this._circle._straightArc.isShown) {
-  //     this.straighten(this.varState.percentStraight);
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
   updateRotation() {
     super.updateRotation();
     if (this._circle._straightArc.isShown) {
@@ -483,13 +471,6 @@ class CircleCollection extends AngleCircle {
     this.diagram.animateNextFrame();
   }
 
-
-  // pulseSlider() {
-  //   this._slider._circle.pulseScaleNow(1, 1.5);
-  //   this.diagram.animateNextFrame();
-  // }
-
-
   toggleRadialLines(toPosition: number = -1) {
     if (toPosition > 0) {
       this.varState.radialLines = this.numSections[toPosition - 1];
@@ -555,7 +536,7 @@ class CircleCollection extends AngleCircle {
 
   straighten(percent: number) {
     const r = this._circle._radius.transform.r();
-    // const s = this._circle.transform.s();
+
     const sArc = this._circle._straightArc;
     if (r !== null && r !== undefined) {
       const scale = percent * r / (Math.PI * 2);
@@ -572,12 +553,7 @@ class CircleCollection extends AngleCircle {
         percent * (this.layout.radius + this.layout.compare.radiusOffset),
         0,
       );
-      // const totalRot = percent * Math.PI / 2;
-      // sArc.transform.updateRotation(totalRot);
-      // sArc.transform.updateTranslation(
-      //   1 - this.layout.radius * Math.cos(totalRot),
-      //   - this.layout.radius * Math.sin(totalRot),
-      // );
+
       sArc.transform.updateTranslation(
         this.layout.compare.arcOffset * percent,
         0,
@@ -616,8 +592,6 @@ class CircleCollection extends AngleCircle {
     radiusOptions.magnitude = radiusMag;
     arcOptions.magnitude = arcMag;
     arcOptions.direction = 'up';
-
-    // const { scale } = this.layout.arcEquation;
 
     if (leftSide === 'arc') {
       this.arcEqn.animateTo(scale, 2, this._arcEquation._equals);
