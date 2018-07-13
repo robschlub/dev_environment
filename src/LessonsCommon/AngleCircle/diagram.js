@@ -10,7 +10,6 @@ type typeElements = {
   _circle: circleType;
 } & DiagramElementCollection ;
 
-// $FlowFixMe
 class AngleCircleDiagram extends Diagram {
   elements: typeElements;
   CircleCollection: typeElements;
@@ -28,11 +27,8 @@ class AngleCircleDiagram extends Diagram {
       layout.colors.diagram.background,
     );
   }
+
   createDiagramElements() {
-    // const circleCollection = new CircleCollection(
-    //   this,
-    //   new Transform().translate(0, 0),
-    // );
     const circleCollection = new CircleCollectionClass(this, new Transform().translate(0, 0));
     this.elements = circleCollection;
 

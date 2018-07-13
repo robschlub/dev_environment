@@ -465,7 +465,7 @@ function shapes(diagram: Diagram) {
 class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
-  elements: DiagramElementCollection;
+  +elements: DiagramElementCollection;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
   inTransition: boolean;
