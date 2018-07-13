@@ -24,7 +24,7 @@ type angleTextType = {
   setUnits: (string) => void;
 } & DiagramElementCollection;
 
-export type circleCollectionType = {
+export type circleType = {
   _anchor: DiagramElementPrimative;
   _arc: DiagramElementPrimative;
   _angle: lineAngleType;
@@ -42,13 +42,27 @@ export type circleCollectionType = {
   _circumference: DiagramElementPrimative;
 } & DiagramElementCollection;
 
+export type varStateType = {
+  radialLines: number;
+  rotation: number;
+}
 
-class CircleCollection extends DiagramElementCollection {
+export type angleCircleType = {
+  layout: Object;
+  colors: Object;
+  shapes: Object;
+  _circle: circleType;
+  _angleText: angleTextType;
+  +varState: varStateType;
+  diagram: Diagram;
+};
+
+class AngleCircle extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   shapes: Object;
 
-  _circle: circleCollectionType;
+  +_circle: circleType;
   _angleText: angleTextType;
   // _slider: sliderType;
   // _arcEquation: equationType;
@@ -63,8 +77,8 @@ class CircleCollection extends DiagramElementCollection {
     radialLines: number,
     // angleInSections: number,
     rotation: number,
-    // percentStraight: number,
-    // straightening: boolean,
+    percentStraight: number,
+    straightening: boolean,
   };
   // numSections: Array<number>;
   diagram: Diagram;
@@ -421,7 +435,7 @@ class CircleCollection extends DiagramElementCollection {
     circle.add('arc', this.makeArc(this.layout.radius));
     // circle.add('straightArc', this.makeStraightArc());
     circle.add('radius', this.makeRadius());
-    circle.add('compareRadius', this.makeReference());
+    // circle.add('compareRadius', this.makeReference());
     circle.add('anchor', this.makeAnchor());
     // circle.add('radiusOnArc', this.makeRadiusOnArc());
     // circle.add('radiusToArc', this.makeRadiusToArc());
@@ -435,8 +449,8 @@ class CircleCollection extends DiagramElementCollection {
       radialLines: 4,
       // angleInSections: 0,
       rotation: 0,
-      // percentStraight: 0,
-      // straightening: false,
+      percentStraight: 0,
+      straightening: false,
     };
     // this.numSections = [12, 100];
 
@@ -1048,4 +1062,4 @@ class CircleCollection extends DiagramElementCollection {
   }
 }
 
-export default CircleCollection;
+export default AngleCircle;

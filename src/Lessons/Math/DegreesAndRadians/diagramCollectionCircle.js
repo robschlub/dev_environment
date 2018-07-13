@@ -5,12 +5,13 @@ import Diagram from '../../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
-import { Point, Transform, minAngleDiff, normAngle } from '../../../js/diagram/tools/g2';
-import lessonLayout from './layout';
+import { Point, Transform } from '../../../js/diagram/tools/g2';
+// import lessonLayout from './layout';
 import makeSlider from '../../../LessonsCommon/slider';
 import type { sliderType } from '../../../LessonsCommon/slider';
 import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-
+import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
+import type { circleType, angleCircleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 // const layout = lessonLayout();
 // const { this.colors } = layout;
 
@@ -19,11 +20,11 @@ type straightArcType = {
   _line: DiagramElementPrimative;
 } & DiagramElementCollection;
 
-type lineAngleType = {
-  _arc: DiagramElementPrimative;
-  _arrow: DiagramElementPrimative;
-  updateRotation: (number) => {};
-};
+// type lineAngleType = {
+//   _arc: DiagramElementPrimative;
+//   _arrow: DiagramElementPrimative;
+//   updateRotation: (number) => {};
+// };
 
 type radiusToArcType = {
   _arc: DiagramElementPrimative;
@@ -65,40 +66,59 @@ type equationType = {
 } & DiagramElementCollection;
 
 
-type angleTextType = {
-  text: DiagramElementPrimative;
-  equals: DiagramElementPrimative;
-  angle: DiagramElementPrimative;
-  units: DiagramElementPrimative;
-  setUnits: (string) => void;
-} & DiagramElementCollection;
+// type angleTextType = {
+//   text: DiagramElementPrimative;
+//   equals: DiagramElementPrimative;
+//   angle: DiagramElementPrimative;
+//   units: DiagramElementPrimative;
+//   setUnits: (string) => void;
+// } & DiagramElementCollection;
 
 export type circleCollectionType = {
-  _anchor: DiagramElementPrimative;
-  _arc: DiagramElementPrimative;
-  _angle: lineAngleType;
+  // _anchor: DiagramElementPrimative;
+  // _arc: DiagramElementPrimative;
+  // _angle: lineAngleType;
   _angleFill: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _reference: DiagramElementPrimative;
+  // _radius: DiagramElementPrimative;
+  // _reference: DiagramElementPrimative;
   _radialLinesA: DiagramElementPrimative;
   _radialLinesB: DiagramElementCollection;
-  _radialLinesDeg: DiagramElementCollection;
-  _radialLinesRad: DiagramElementCollection;
-  _compareRadius: DiagramElementPrimative;
+  // _radialLinesDeg: DiagramElementCollection;
+  // _radialLinesRad: DiagramElementCollection;
+  // _compareRadius: DiagramElementPrimative;
   _straightArc: straightArcType;
   _radiusOnArc: radiusOnArcType;
   _radiusToArc: radiusToArcType;
-  _circumference: DiagramElementPrimative;
-} & DiagramElementCollection;
+  // _circumference: DiagramElementPrimative;
+} & circleType;
 
+// class circleCollectionType = {
 
-class CircleCollection extends DiagramElementCollection {
-  layout: Object;
-  colors: Object;
-  shapes: Object;
+// } & angleCircleType;
+
+// interface CircleCollectionT {
+//   _circle: circleCollectionType;
+//   // _sectionTitle: DiagramElementPrimative;
+//   // _angleText: angleTextType;
+//   _slider: sliderType;
+//   _arcEquation: equationType;
+//   _circumferenceEquation: circumferenceEquationType;
+//   arcEqn: DiagramGLEquation;
+//   radiusEqn: DiagramGLEquation;
+//   angleEqn: DiagramGLEquation;
+//   circEqn: DiagramGLEquation;
+//   circEqnShort: DiagramGLEquation;
+//   circEqnGeneral: DiagramGLEquation;
+//   numSections: Array<number>;
+// } & angleCircleType;
+
+class CircleCollection extends AngleCircle {
+  // layout: Object;
+  // colors: Object;
+  // shapes: Object;
   _circle: circleCollectionType;
   // _sectionTitle: DiagramElementPrimative;
-  _angleText: angleTextType;
+  // _angleText: angleTextType;
   _slider: sliderType;
   _arcEquation: equationType;
   _circumferenceEquation: circumferenceEquationType;
@@ -108,56 +128,56 @@ class CircleCollection extends DiagramElementCollection {
   circEqn: DiagramGLEquation;
   circEqnShort: DiagramGLEquation;
   circEqnGeneral: DiagramGLEquation;
-  varState: {
-    radialLines: number,
-    angleInSections: number,
-    rotation: number,
-    percentStraight: number,
-    straightening: boolean,
-  };
+  // varState: {
+  //   // radialLines: number,
+  //   // angleInSections: number,
+  //   // rotation: number,
+  //   percentStraight: number,
+  //   straightening: boolean,
+  // } & varStateType;
   numSections: Array<number>;
-  diagram: Diagram;
+  // diagram: Diagram;
 
 
-  makeLine(
-    location: Point,
-    length: number,
-    width: number,
-    color: Array<number>,
-    pointOrTransform: Point | Transform,
-  ): DiagramElementPrimative {
-    const line = this.shapes.horizontalLine(
-      location, length, width,
-      0, color, pointOrTransform,
-    );
-    line.pulse.transformMethod = s => new Transform().scale(1, s);
-    return line;
-  }
+  // makeLine(
+  //   location: Point,
+  //   length: number,
+  //   width: number,
+  //   color: Array<number>,
+  //   pointOrTransform: Point | Transform,
+  // ): DiagramElementPrimative {
+  //   const line = this.shapes.horizontalLine(
+  //     location, length, width,
+  //     0, color, pointOrTransform,
+  //   );
+  //   line.pulse.transformMethod = s => new Transform().scale(1, s);
+  //   return line;
+  // }
 
-  makeRadius() {
-    const radius = this.makeLine(
-      new Point(0, 0), this.layout.radius, this.layout.linewidth,
-      this.colors.radius, new Transform().rotate(0).translate(
-        0,
-        0,
-      ),
-    );
-    radius.isTouchable = true;
-    radius.isMovable = true;
-    radius.pulse.transformMethod = s => new Transform().scale(1, s);
+  // makeRadius() {
+  //   const radius = this.makeLine(
+  //     new Point(0, 0), this.layout.radius, this.layout.linewidth,
+  //     this.colors.radius, new Transform().rotate(0).translate(
+  //       0,
+  //       0,
+  //     ),
+  //   );
+  //   radius.isTouchable = true;
+  //   radius.isMovable = true;
+  //   radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
-    for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-      radius.vertices.border[0][i].y *= 10;
-    }
-    return radius;
-  }
+  //   for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
+  //     radius.vertices.border[0][i].y *= 10;
+  //   }
+  //   return radius;
+  // }
 
-  makeArc(radius: number) {
-    return this.shapes.polygon(
-      this.layout.anglePoints, radius, this.layout.linewidth, 0, 1,
-      this.layout.circlePoints, this.colors.arc, new Point(0, 0),
-    );
-  }
+  // makeArc(radius: number) {
+  //   return this.shapes.polygon(
+  //     this.layout.anglePoints, radius, this.layout.linewidth, 0, 1,
+  //     this.layout.circlePoints, this.colors.arc, new Point(0, 0),
+  //   );
+  // }
 
   makeStraightArc() {
     const straightArc = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
@@ -183,19 +203,19 @@ class CircleCollection extends DiagramElementCollection {
     );
   }
 
-  makeCircumference() {
-    return this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius, this.layout.linewidth, 0, 1,
-      this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
-    );
-  }
+  // makeCircumference() {
+  //   return this.shapes.polygon(
+  //     this.layout.anglePoints, this.layout.radius, this.layout.linewidth, 0, 1,
+  //     this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
+  //   );
+  // }
 
-  makeAnchor() {
-    return this.shapes.polygonFilled(
-      this.layout.anchorPoints, this.layout.linewidth * 2, 0,
-      this.layout.anchorPoints, this.colors.anchor, new Point(0, 0),
-    );
-  }
+  // makeAnchor() {
+  //   return this.shapes.polygonFilled(
+  //     this.layout.anchorPoints, this.layout.linewidth * 2, 0,
+  //     this.layout.anchorPoints, this.colors.anchor, new Point(0, 0),
+  //   );
+  // }
 
   makeAngle() {
     return this.shapes.polygonFilled(
@@ -204,36 +224,36 @@ class CircleCollection extends DiagramElementCollection {
     );
   }
 
-  makeAngleLine() {
-    const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.makeArc(this.layout.angle.radius);
-    arc.color = this.colors.angle.slice();
-    const arrow = this.shapes.arrow(
-      this.layout.angle.arrow.width, 0, this.layout.angle.arrow.height, 0,
-      this.colors.angle, new Transform().rotate(0).translate(0, 0),
-    );
-    angle.add('arc', arc);
-    angle.add('arrow', arrow);
-    const arrowAngleAtArc =
-      Math.asin(this.layout.angle.arrow.height / this.layout.angle.radius);
+  // makeAngleLine() {
+  //   const angle = this.shapes.collection(new Transform().translate(0, 0));
+  //   const arc = this.makeArc(this.layout.angle.radius);
+  //   arc.color = this.colors.angle.slice();
+  //   const arrow = this.shapes.arrow(
+  //     this.layout.angle.arrow.width, 0, this.layout.angle.arrow.height, 0,
+  //     this.colors.angle, new Transform().rotate(0).translate(0, 0),
+  //   );
+  //   angle.add('arc', arc);
+  //   angle.add('arrow', arrow);
+  //   const arrowAngleAtArc =
+  //     Math.asin(this.layout.angle.arrow.height / this.layout.angle.radius);
 
-    angle.updateRotation = (r) => {
-      if (r < arrowAngleAtArc) {
-        arc.angleToDraw = r;
-        arrow.color[3] = 0;
-      } else {
-        arc.angleToDraw = r - arrowAngleAtArc * 0.9;
-        arrow.color[3] = 1;
-      }
-      const arrowTip = new Point(
-        (this.layout.angle.radius - this.layout.linewidth / 4) * Math.cos(r),
-        (this.layout.angle.radius - this.layout.linewidth / 4) * Math.sin(r),
-      );
-      arrow.transform.updateTranslation(arrowTip);
-      arrow.transform.updateRotation(r - arrowAngleAtArc);
-    };
-    return angle;
-  }
+  //   angle.updateRotation = (r) => {
+  //     if (r < arrowAngleAtArc) {
+  //       arc.angleToDraw = r;
+  //       arrow.color[3] = 0;
+  //     } else {
+  //       arc.angleToDraw = r - arrowAngleAtArc * 0.9;
+  //       arrow.color[3] = 1;
+  //     }
+  //     const arrowTip = new Point(
+  //       (this.layout.angle.radius - this.layout.linewidth / 4) * Math.cos(r),
+  //       (this.layout.angle.radius - this.layout.linewidth / 4) * Math.sin(r),
+  //     );
+  //     arrow.transform.updateTranslation(arrowTip);
+  //     arrow.transform.updateRotation(r - arrowAngleAtArc);
+  //   };
+  //   return angle;
+  // }
 
 
   makeRadiusToArc() {
@@ -306,26 +326,26 @@ class CircleCollection extends DiagramElementCollection {
     return radiusArc;
   }
 
-  makeReference() {
-    return this.makeLine(
-      new Point(0, 0), this.layout.radius, this.layout.linewidth,
-      this.colors.reference, new Transform().rotate(0).translate(0, 0),
-    );
-  }
+  // makeReference() {
+  //   return this.makeLine(
+  //     new Point(0, 0), this.layout.radius, this.layout.linewidth,
+  //     this.colors.reference, new Transform().rotate(0).translate(0, 0),
+  //   );
+  // }
 
-  makeRadialMarks(num: number, minor: boolean = false) {
-    let inner = this.layout.radialLineMajorInner;
-    let outer = this.layout.radialLineMajorOuter;
-    if (minor) {
-      inner = this.layout.radialLineMinorInner;
-      outer = this.layout.radialLineMinorOuter;
-    }
-    return this.shapes.radialLines(
-      inner, outer,
-      this.layout.radialLineWidth, Math.PI * 2 / num,
-      this.colors.radialLines, new Transform().translate(0, 0),
-    );
-  }
+  // makeRadialMarks(num: number, minor: boolean = false) {
+  //   let inner = this.layout.radialLineMajorInner;
+  //   let outer = this.layout.radialLineMajorOuter;
+  //   if (minor) {
+  //     inner = this.layout.radialLineMinorInner;
+  //     outer = this.layout.radialLineMinorOuter;
+  //   }
+  //   return this.shapes.radialLines(
+  //     inner, outer,
+  //     this.layout.radialLineWidth, Math.PI * 2 / num,
+  //     this.colors.radialLines, new Transform().translate(0, 0),
+  //   );
+  // }
 
   makeCircumferenceEquation() {
     const equationElements = this.diagram.equation.elements({
@@ -416,87 +436,89 @@ class CircleCollection extends DiagramElementCollection {
     return equationElements;
   }
 
-  makeMajorAndMinRadialMarks(
-    major: number,
-    minor: number,
-  ) {
-    const collection = this.shapes.collection(new Transform().translate(0, 0));
-    collection.add('minor', this.makeRadialMarks(minor, true));
-    collection.add('major', this.makeRadialMarks(major, false));
-    return collection;
-  }
+  // makeMajorAndMinRadialMarks(
+  //   major: number,
+  //   minor: number,
+  // ) {
+  //   const collection = this.shapes.collection(new Transform().translate(0, 0));
+  //   collection.add('minor', this.makeRadialMarks(minor, true));
+  //   collection.add('major', this.makeRadialMarks(major, false));
+  //   return collection;
+  // }
 
-  makeAngleText() {
-    const angleText = this.shapes.collection(this.layout.angleEqualsText.left);
-    angleText.add('text', this.shapes.htmlText(
-      'Angle', 'id_angle_text', 'action_word',
-      new Point(0, 0), 'middle', 'left',
-    ));
-    angleText.add('equals', this.shapes.htmlText(
-      '=', 'id_angle_equals', '',
-      new Point(0.45, 0), 'middle', 'left',
-    ));
-    angleText.add('angle', this.shapes.htmlText(
-      '0', 'id_angle_value', '',
-      new Point(0.85, 0), 'middle', 'right',
-    ));
-    angleText.add('units', this.shapes.htmlText(
-      'portions', 'id_angle_units', '',
-      new Point(0.87, 0), 'middle', 'left',
-    ));
-    angleText.setUnits = (units: string) => {
-      if (units === '&deg;') {
-        angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.deg, 0);
-      } else {
-        angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.text, 0);
-      }
-      angleText._units.vertices.element.innerHTML = units;
-    };
-    return angleText;
-  }
+  // makeAngleText() {
+  //   const angleText = this.shapes.collection(this.layout.angleEqualsText.left);
+  //   angleText.add('text', this.shapes.htmlText(
+  //     'Angle', 'id_angle_text', 'action_word',
+  //     new Point(0, 0), 'middle', 'left',
+  //   ));
+  //   angleText.add('equals', this.shapes.htmlText(
+  //     '=', 'id_angle_equals', '',
+  //     new Point(0.45, 0), 'middle', 'left',
+  //   ));
+  //   angleText.add('angle', this.shapes.htmlText(
+  //     '0', 'id_angle_value', '',
+  //     new Point(0.85, 0), 'middle', 'right',
+  //   ));
+  //   angleText.add('units', this.shapes.htmlText(
+  //     'portions', 'id_angle_units', '',
+  //     new Point(0.87, 0), 'middle', 'left',
+  //   ));
+  //   angleText.setUnits = (units: string) => {
+  //     if (units === '&deg;') {
+  //       angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.deg, 0);
+  //     } else {
+  //       angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.text, 0);
+  //     }
+  //     angleText._units.vertices.element.innerHTML = units;
+  //   };
+  //   return angleText;
+  // }
 
-  makeCircle(numSections: Array<number>) {
-    const circle = this.shapes.collection(new Transform()
-      .scale(1, 1)
-      .translate(this.layout.circle.center));
-    circle.add('angleFill', this.makeAngle());
-    circle.add('angle', this.makeAngleLine());
-    circle.add('radialLinesA', this.makeRadialMarks(numSections[0]));
-    circle.add('radialLinesB', this.makeMajorAndMinRadialMarks(10, numSections[1]));
-    circle.add('radialLinesDeg', this.makeMajorAndMinRadialMarks(36, 360));
-    circle.add('radialLinesRad', this.makeRadialMarks(Math.PI * 2));
-    circle.add('reference', this.makeReference());
-    circle.add('circumference', this.makeCircumference());
-    circle.add('arc', this.makeArc(this.layout.radius));
-    circle.add('straightArc', this.makeStraightArc());
-    circle.add('radius', this.makeRadius());
-    circle.add('compareRadius', this.makeReference());
-    circle.add('anchor', this.makeAnchor());
-    circle.add('radiusOnArc', this.makeRadiusOnArc());
-    circle.add('radiusToArc', this.makeRadiusToArc());
-    return circle;
+  makeExtendedCircle(numSections: Array<number>) {
+    // const circle = this.makeCircle();
+    // const circle = this.shapes.collection(new Transform()
+    //   .scale(1, 1)
+    //   .translate(this.layout.circle.center));
+    this._circle.add('angleFill', this.makeAngle());
+    // circle.add('angle', this.makeAngleLine());
+    this._circle.add('radialLinesA', this.makeRadialMarks(numSections[0]));
+    this._circle.add('radialLinesB', this.makeMajorAndMinRadialMarks(10, numSections[1]));
+    // circle.add('radialLinesDeg', this.makeMajorAndMinRadialMarks(36, 360));
+    // circle.add('radialLinesRad', this.makeRadialMarks(Math.PI * 2));
+    // circle.add('reference', this.makeReference());
+    // circle.add('circumference', this.makeCircumference());
+    // circle.add('arc', this.makeArc(this.layout.radius));
+    this._circle.add('straightArc', this.makeStraightArc());
+    // circle.add('radius', this.makeRadius());
+    this._circle.add('compareRadius', this.makeReference());
+    // circle.add('anchor', this.makeAnchor());
+    this._circle.add('radiusOnArc', this.makeRadiusOnArc());
+    this._circle.add('radiusToArc', this.makeRadiusToArc());
+
+    // return circle;
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
-    super(transform, diagram.limits);
-    this.diagram = diagram;
-    this.varState = {
-      radialLines: 4,
-      angleInSections: 0,
-      rotation: 0,
-      percentStraight: 0,
-      straightening: false,
-    };
+    super(diagram, transform);
+    // this.diagram = diagram;
+    // this.varState = {
+    //   radialLines: 4,
+    //   // angleInSections: 0,
+    //   rotation: 0,
+    //   percentStraight: 0,
+    //   straightening: false,
+    // };
     this.numSections = [12, 100];
 
     // const { shapes } = diagram;
-    this.shapes = diagram.shapes;
-    this.layout = lessonLayout();
-    this.colors = this.layout.colors;
+    // this.shapes = diagram.shapes;
+    // this.layout = lessonLayout();
+    // this.colors = this.layout.colors;
     this.add('compareText', this.makeCompareText());
-    this.add('circle', this.makeCircle(this.numSections));
+    this.makeExtendedCircle(this.numSections);
     // this.add('sectionTitle', makeSectionTitle(shapes));
-    this.add('angleText', this.makeAngleText());
+    // this.add('angleText', this.makeAngleText());
     this.add('slider', makeSlider(this.shapes, this.layout.slider));
     this.add('arcEquation', this.makeArcEquation());
     this.add('circumferenceEquation', this.makeCircumferenceEquation());
@@ -529,12 +551,12 @@ class CircleCollection extends DiagramElementCollection {
 
     this._slider.setCallback(this.updateSlider.bind(this));
 
-    this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
+    // this._circle._radius.setTransformCallback = this.updateRotation.bind(this);
 
-    this.isTouchable = true;
-    this.isMovable = true;
-    this._circle.isTouchable = true;
-    this._circle.isMovable = true;
+    // this.isTouchable = true;
+    // this.isMovable = true;
+    // this._circle.isTouchable = true;
+    // this._circle.isMovable = true;
   }
 
   updateSlider() {
@@ -549,54 +571,55 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
   updateRotation() {
-    let rotation = this._circle._radius.transform.r();
-    if (rotation !== null && rotation !== undefined) {
-      if (rotation > Math.PI * 2) {
-        rotation -= Math.PI * 2;
-      }
-      if (rotation < 0) {
-        rotation += Math.PI * 2;
-      }
-      const r = normAngle(rotation);
-      this.varState.rotation = r;
-      this._circle._radius.transform.updateRotation(r);
-      this._circle._angleFill.angleToDraw = r + 0.01;
-      this._circle._arc.angleToDraw = r + 0.01;
-      this._circle._angle.updateRotation(r);
-      this.updateNumSectionsText();
-      if (this._circle._straightArc.isShown) {
-        this.straighten(this.varState.percentStraight);
-        // this._circle._compareRadius.transform.updateRotation(r);
-      }
-      // if (this._slider.isShown) {
-      //   this._slider.transform.updateRotation(r);
-      // }
+    super.updateRotation();
+    // let rotation = this._circle._radius.transform.r();
+    // if (rotation !== null && rotation !== undefined) {
+    // if (rotation > Math.PI * 2) {
+    //   rotation -= Math.PI * 2;
+    // }
+    // if (rotation < 0) {
+    //   rotation += Math.PI * 2;
+    // }
+    // const r = normAngle(rotation);
+    // this.varState.rotation = r;
+    // this._circle._radius.transform.updateRotation(r);
+    // this._circle._angleFill.angleToDraw = r + 0.01;
+    // this._circle._arc.angleToDraw = r + 0.01;
+    // this._circle._angle.updateRotation(r);
+    // this.updateNumSectionsText();
+    if (this._circle._straightArc.isShown) {
+      this.straighten(this.varState.percentStraight);
+      // this._circle._compareRadius.transform.updateRotation(r);
     }
+    // if (this._slider.isShown) {
+    //   this._slider.transform.updateRotation(r);
+    // }
+    // }
   }
 
-  hideDegrees() {
-    this._circle._radialLinesDeg.hideAll();
-  }
-  hideRadians() {
-    this._circle._radialLinesRad.hide();
-  }
-  showDegrees() {
-    this.varState.radialLines = 360;
-    this._angleText.setUnits('&deg;');
-    this.updateNumSectionsText();
-    this._circle._radialLinesDeg.showAll();
-    this._angleText.showAll();
-    this.diagram.animateNextFrame();
-  }
+  // hideDegrees() {
+  //   this._circle._radialLinesDeg.hideAll();
+  // }
+  // hideRadians() {
+  //   this._circle._radialLinesRad.hide();
+  // }
+  // showDegrees() {
+  //   this.varState.radialLines = 360;
+  //   this._angleText.setUnits('&deg;');
+  //   this.updateNumSectionsText();
+  //   this._circle._radialLinesDeg.showAll();
+  //   this._angleText.showAll();
+  //   this.diagram.animateNextFrame();
+  // }
 
-  showRadians() {
-    this.varState.radialLines = Math.PI * 2;
-    this._angleText.setUnits('radians');
-    this.updateNumSectionsText();
-    this._angleText.showAll();
-    this._circle._radialLinesRad.show();
-    this.diagram.animateNextFrame();
-  }
+  // showRadians() {
+  //   this.varState.radialLines = Math.PI * 2;
+  //   this._angleText.setUnits('radians');
+  //   this.updateNumSectionsText();
+  //   this._angleText.showAll();
+  //   this._circle._radialLinesRad.show();
+  //   this.diagram.animateNextFrame();
+  // }
 
 
   toggleDegreesRadians(show: 'deg' | 'rad') {
@@ -720,21 +743,21 @@ class CircleCollection extends DiagramElementCollection {
   //   this._angleText._units.vertices.element.innerHTML = units;
   // }
 
-  updateNumSectionsText() {
-    const r = this.varState.rotation;
-    let angleInSections =
-        Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 100)) / 100;
+  // updateNumSectionsText() {
+  //   const r = this.varState.rotation;
+  //   let angleInSections =
+  //       Math.round((r / (Math.PI * 2 / this.varState.radialLines) * 100)) / 100;
 
-    if (this.varState.radialLines === 360) {
-      angleInSections = Math.round(angleInSections);
-    } else if (this.varState.radialLines === Math.PI * 2) {
-      angleInSections = angleInSections.toFixed(2);
-    } else {
-      angleInSections = angleInSections.toFixed(1);
-    }
-    // $FlowFixMe
-    this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
-  }
+  //   if (this.varState.radialLines === 360) {
+  //     angleInSections = Math.round(angleInSections);
+  //   } else if (this.varState.radialLines === Math.PI * 2) {
+  //     angleInSections = angleInSections.toFixed(2);
+  //   } else {
+  //     angleInSections = angleInSections.toFixed(1);
+  //   }
+  //   // $FlowFixMe
+  //   this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
+  // }
 
   stepInRadiusOnArc() {
     this._circle._radiusOnArc.stepIn(3);
@@ -745,11 +768,11 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  pulseAngle() {
-    this._circle._angle._arc.pulseThickNow(1, 1.04, 7);
-    this._circle._angle._arrow.pulseScaleNow(1, 1.5);
-    this.diagram.animateNextFrame();
-  }
+  // pulseAngle() {
+  //   this._circle._angle._arc.pulseThickNow(1, 1.04, 7);
+  //   this._circle._angle._arrow.pulseScaleNow(1, 1.5);
+  //   this.diagram.animateNextFrame();
+  // }
   pulseRadiusOnArc(numToPulse: number = 1) {
     for (let i = 1; i <= numToPulse; i += 1) {
       const key = `_r${i}`;
@@ -758,67 +781,67 @@ class CircleCollection extends DiagramElementCollection {
     // this._circle._radiusOnArc._r1.pulseThickNow(1, 1.04, 7);
     this.diagram.animateNextFrame();
   }
-  pulseAnchor() {
-    this._circle._anchor.pulseScaleNow(1, 2);
-    this.diagram.animateNextFrame();
-  }
+  // pulseAnchor() {
+  //   this._circle._anchor.pulseScaleNow(1, 2);
+  //   this.diagram.animateNextFrame();
+  // }
 
-  pulseRadius() {
-    this._circle._radius.pulseScaleNow(1, 2.5);
-    this.diagram.animateNextFrame();
-  }
+  // pulseRadius() {
+  //   this._circle._radius.pulseScaleNow(1, 2.5);
+  //   this.diagram.animateNextFrame();
+  // }
 
-  pulseReference() {
-    this._circle._reference.pulseScaleNow(1, 2.5);
-    this.diagram.animateNextFrame();
-  }
+  // pulseReference() {
+  //   this._circle._reference.pulseScaleNow(1, 2.5);
+  //   this.diagram.animateNextFrame();
+  // }
 
-  pulseLines() {
-    this._circle._radius.pulseScaleNow(1, 2.5);
-    this._circle._reference.pulseScaleNow(1, 2.5);
-    this.diagram.animateNextFrame();
-  }
+  // pulseLines() {
+  //   this._circle._radius.pulseScaleNow(1, 2.5);
+  //   this._circle._reference.pulseScaleNow(1, 2.5);
+  //   this.diagram.animateNextFrame();
+  // }
 
   pulseRadialLines() {
     this._circle._radialLinesA.pulseScaleNow(1, 1.2);
     this.diagram.animateNextFrame();
   }
 
-  pulseArc() {
-    this._circle._arc.pulseThickNow(1, 1.04, 7);
-    this.diagram.animateNextFrame();
-  }
+  // pulseArc() {
+  //   this._circle._arc.pulseThickNow(1, 1.04, 7);
+  //   this.diagram.animateNextFrame();
+  // }
 
-  pulseCircumference() {
-    this._circle._circumference.pulseThickNow(1, 1.04, 7);
-    this.diagram.animateNextFrame();
-  }
+  // pulseCircumference() {
+  //   this._circle._circumference.pulseThickNow(1, 1.04, 7);
+  //   this.diagram.animateNextFrame();
+  // }
 
   pulseSlider() {
     this._slider._circle.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
 
-  pushRadius() {
-    const angle = this._circle._radius.transform.r();
-    let targetAngle = angle + Math.PI / 6;
-    if (targetAngle > Math.PI * 2) {
-      targetAngle -= Math.PI * 2;
-    }
-    this._circle._radius.animateRotationTo(targetAngle, 1, 1);
-    this.diagram.animateNextFrame();
-  }
+  // pushRadius() {
+  //   const angle = this._circle._radius.transform.r();
+  //   let targetAngle = angle + Math.PI / 6;
+  //   if (targetAngle > Math.PI * 2) {
+  //     targetAngle -= Math.PI * 2;
+  //   }
+  //   this._circle._radius.animateRotationTo(targetAngle, 1, 1);
+  //   this.diagram.animateNextFrame();
+  // }
 
-  setRotation(angle: number) {
-    this._circle._radius.transform.updateRotation(angle);
-    this.updateRotation();
-  }
+  // setRotation(angle: number) {
+  //   this._circle._radius.transform.updateRotation(angle);
+  //   this.updateRotation();
+  // }
 
-  rotateToRandom(time: number) {
-    const angle = Math.random() * Math.PI * 2;
-    this.rotateTo(angle, 1, time, () => {});
-    this.diagram.animateNextFrame();
-  }
+  // rotateToRandom(time: number) {
+  //   const angle = Math.random() * Math.PI * 2;
+  //   this.rotateTo(angle, 1, time, () => {});
+  //   this.diagram.animateNextFrame();
+  // }
 
   toggleRadialLines(toPosition: number = -1) {
     if (toPosition > 0) {
@@ -959,31 +982,31 @@ class CircleCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
-  rotateTo(
-    angle: number,
-    direction: number,
-    time: number,
-    callback: () => void = () => {},
-  ) {
-    let d = 1;
-    if (typeof direction === 'number') {
-      d = direction;
-      if (d === 0) {
-        const r = this._circle._radius.transform.r();
-        d = 1;
-        if (r) {
-          const delta = minAngleDiff(angle, r);
-          d = delta / Math.abs(delta);
-        }
-      }
-    }
-    let t = 1;
-    if (typeof time === 'number') {
-      t = time;
-    }
-    this._circle._radius.animateRotationTo(angle, d, t, callback);
-    this.diagram.animateNextFrame();
-  }
+  // rotateTo(
+  //   angle: number,
+  //   direction: number,
+  //   time: number,
+  //   callback: () => void = () => {},
+  // ) {
+  //   let d = 1;
+  //   if (typeof direction === 'number') {
+  //     d = direction;
+  //     if (d === 0) {
+  //       const r = this._circle._radius.transform.r();
+  //       d = 1;
+  //       if (r) {
+  //         const delta = minAngleDiff(angle, r);
+  //         d = delta / Math.abs(delta);
+  //       }
+  //     }
+  //   }
+  //   let t = 1;
+  //   if (typeof time === 'number') {
+  //     t = time;
+  //   }
+  //   this._circle._radius.animateRotationTo(angle, d, t, callback);
+  //   this.diagram.animateNextFrame();
+  // }
 
   toggler(index: number) {
     this.toggleRadialLines(index);
@@ -1008,91 +1031,91 @@ class CircleCollection extends DiagramElementCollection {
     }
   }
 
-  resetCircle(position: string = 'center', angle: ?number) {
-    this._circle.transform.updateTranslation(this.layout.circle[position]);
-    this._circle.transform.updateScale(1, 1);
-    const r = this._circle._radius.transform.r();
-    if (r != null && angle == null) {
-      let newAngle = r;
-      if (r < this.layout.circle.angle.small) {
-        newAngle = this.layout.circle.angle.small;
-      } else if (r > this.layout.circle.angle.large) {
-        newAngle = this.layout.circle.angle.large;
-      }
-      this.setRotation(newAngle);
-    } else if (angle != null) {
-      this.setRotation(angle);
-    }
-  }
+  // resetCircle(position: string = 'center', angle: ?number) {
+  //   this._circle.transform.updateTranslation(this.layout.circle[position]);
+  //   this._circle.transform.updateScale(1, 1);
+  //   const r = this._circle._radius.transform.r();
+  //   if (r != null && angle == null) {
+  //     let newAngle = r;
+  //     if (r < this.layout.circle.angle.small) {
+  //       newAngle = this.layout.circle.angle.small;
+  //     } else if (r > this.layout.circle.angle.large) {
+  //       newAngle = this.layout.circle.angle.large;
+  //     }
+  //     this.setRotation(newAngle);
+  //   } else if (angle != null) {
+  //     this.setRotation(angle);
+  //   }
+  // }
 
-  transitionCircle(
-    done: () => void,
-    toPosition: string = 'center',
-    toAngle: number | null = null,
-    time: number = 5,
-  ) {
-    const t = this._circle.transform.t();
-    const r = this._circle._radius.transform.r();
-    // The time is the time it takes to rotate 360 degrees, or move laterally
-    // from (0, 0) to the side edge of the screen
-    // Therefore calculate the rotation and translation fractions of these
-    // maximums and scale the time accordingly.
-    let rTime = time;
-    let tTime = time;
-    if (t) {
-      const tDelta = this.layout.circle[toPosition].sub(t);
-      const { mag } = tDelta.toPolar();
-      tTime *= mag / this.diagramLimits.width * 2;
-    }
-    if (tTime === 0) {
-      tTime = 0.001;
-    }
+  // transitionCircle(
+  //   done: () => void,
+  //   toPosition: string = 'center',
+  //   toAngle: number | null = null,
+  //   time: number = 5,
+  // ) {
+  //   const t = this._circle.transform.t();
+  //   const r = this._circle._radius.transform.r();
+  //   // The time is the time it takes to rotate 360 degrees, or move laterally
+  //   // from (0, 0) to the side edge of the screen
+  //   // Therefore calculate the rotation and translation fractions of these
+  //   // maximums and scale the time accordingly.
+  //   let rTime = time;
+  //   let tTime = time;
+  //   if (t) {
+  //     const tDelta = this.layout.circle[toPosition].sub(t);
+  //     const { mag } = tDelta.toPolar();
+  //     tTime *= mag / this.diagramLimits.width * 2;
+  //   }
+  //   if (tTime === 0) {
+  //     tTime = 0.001;
+  //   }
 
-    let angle = this.layout.circle.angle.small;
-    if (r != null && r !== undefined) {
-      if (toAngle === null) {
-        if (r < this.layout.circle.angle.small) {
-          angle = this.layout.circle.angle.small;
-        } else if (r > this.layout.circle.angle.large) {
-          angle = this.layout.circle.angle.large;
-        } else {
-          angle = r;
-        }
-      } else {
-        angle = toAngle;
-      }
-    }
+  //   let angle = this.layout.circle.angle.small;
+  //   if (r != null && r !== undefined) {
+  //     if (toAngle === null) {
+  //       if (r < this.layout.circle.angle.small) {
+  //         angle = this.layout.circle.angle.small;
+  //       } else if (r > this.layout.circle.angle.large) {
+  //         angle = this.layout.circle.angle.large;
+  //       } else {
+  //         angle = r;
+  //       }
+  //     } else {
+  //       angle = toAngle;
+  //     }
+  //   }
 
-    if (r !== null && r !== undefined) {
-      const rStart = r;
-      let rotDiff = angle - r;
-      if (rStart + rotDiff < 0) {
-        rotDiff = Math.PI * 2 + rotDiff;
-      } else if (rStart + rotDiff > Math.PI * 2) {
-        rotDiff = -(Math.PI * 2 - rotDiff);
-      }
+  //   if (r !== null && r !== undefined) {
+  //     const rStart = r;
+  //     let rotDiff = angle - r;
+  //     if (rStart + rotDiff < 0) {
+  //       rotDiff = Math.PI * 2 + rotDiff;
+  //     } else if (rStart + rotDiff > Math.PI * 2) {
+  //       rotDiff = -(Math.PI * 2 - rotDiff);
+  //     }
 
-      rTime *= Math.abs(rotDiff / Math.PI / 2);
-      // console.log(rStart, rotDiff, rTime)
-    }
-    if (rTime === 0) {
-      rTime = 0.001;
-    }
-    const maxTime = Math.max(rTime, tTime);
+  //     rTime *= Math.abs(rotDiff / Math.PI / 2);
+  //     // console.log(rStart, rotDiff, rTime)
+  //   }
+  //   if (rTime === 0) {
+  //     rTime = 0.001;
+  //   }
+  //   const maxTime = Math.max(rTime, tTime);
 
-    if (t && r !== null && r !== undefined) {
-      if (t.isNotEqualTo(this.layout.circle[toPosition]) || r !== angle) {
-        this.rotateTo(angle, 2, maxTime);
-        this._circle.animateTranslationTo(
-          this.layout.circle[toPosition],
-          maxTime,
-          done,
-        );
-        return;
-      }
-    }
-    done();
-  }
+  //   if (t && r !== null && r !== undefined) {
+  //     if (t.isNotEqualTo(this.layout.circle[toPosition]) || r !== angle) {
+  //       this.rotateTo(angle, 2, maxTime);
+  //       this._circle.animateTranslationTo(
+  //         this.layout.circle[toPosition],
+  //         maxTime,
+  //         done,
+  //       );
+  //       return;
+  //     }
+  //   }
+  //   done();
+  // }
 }
 
 export default CircleCollection;
