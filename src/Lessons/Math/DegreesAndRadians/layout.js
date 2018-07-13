@@ -50,7 +50,7 @@ export default function lessonLayout() {
   };
   layout.arcEquation = {
     left: new Point(-2.3, -1.2),
-    leftMiddle: new Point(-2.5, -1.1),
+    // leftMiddle: new Point(-2.5, -1.1),
     centerTop: new Point(-1.0, 0.9),
     centerBottom: new Point(-0.5, -1.0),
     center: new Point(-0.5, 0),
