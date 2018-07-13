@@ -9,50 +9,6 @@ import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 
-// type straightArcType = {
-//   _arc: DiagramElementPrimative;
-//   _line: DiagramElementPrimative;
-// } & DiagramElementCollection;
-
-// type radiusToArcType = {
-//   _arc: DiagramElementPrimative;
-//   _line: DiagramElementPrimative;
-//   toArc: (number) => void;
-// } & DiagramElementCollection;
-
-// type radiusOnArcType = {
-//   _r1: DiagramElementPrimative;
-//   _r2: DiagramElementPrimative;
-//   _r3: DiagramElementPrimative;
-//   _r4: DiagramElementPrimative;
-//   _r5: DiagramElementPrimative;
-//   _r6: DiagramElementPrimative;
-//   stepIn: (number) => void;
-// } & DiagramElementCollection;
-
-// type circumferenceEquationType = {
-//   _circumference: DiagramElementPrimative;
-//   _radius: DiagramElementPrimative;
-//   _twoPi: DiagramElementPrimative;
-//   _times: DiagramElementPrimative;
-//   _equals: DiagramElementPrimative;
-//   _r: DiagramElementPrimative;
-//   _c: DiagramElementPrimative;
-//   _arcLength: DiagramElementPrimative;
-//   _angle: DiagramElementPrimative;
-//   varState: number;
-// };
-
-// type equationType = {
-//   _arc: DiagramElementPrimative;
-//   _equals: DiagramElementPrimative;
-//   _radius: DiagramElementPrimative;
-//   _angle: DiagramElementPrimative;
-//   showArc: () => void;
-//   showRadius: () => void;
-//   showAngle: () => void;
-// } & DiagramElementCollection;
-
 
 export type circleCollectionType = {
   // _angleFill: DiagramElementPrimative;
@@ -63,9 +19,10 @@ export type circleCollectionType = {
   // _radiusToArc: radiusToArcType;
 } & circleType;
 
+type angleTypes = 'acute' | 'obtuse' | 'right' | 'reflex' | 'straight';
+
 type varStateExtendedType = {
-    // percentStraight: number,
-    // straightening: boolean,
+    angleSelected: angleTypes;
   } & varStateType;
 
 class CircleCollection extends AngleCircle {
@@ -287,6 +244,7 @@ class CircleCollection extends AngleCircle {
     this.varState = {
       radialLines: 4,
       rotation: 0,
+      angleSelected: 'acute',
       // percentStraight: 0,
       // straightening: false,
     };
@@ -325,6 +283,34 @@ class CircleCollection extends AngleCircle {
     // this.circEqnGeneral = eqn;
   }
 
+  selectAngle(angleType: angleTypes) {
+    // const ids = [
+    //   'id_acute', 'id_right',
+    //   'id_obtuse', 'id_straight', 'id_reflex',
+    // ];
+    // ids.forEach((id) => {
+    //   if (id !== idToActivate) {
+    //     const elem = document.getElementById(id);
+    //     if (elem != null) {
+    //       elem.c
+    //     }
+    //   }
+    // })
+    let elem;
+    if (angleType !== this.varState.angleSelected) {
+      elem = document.getElementById(`id_${this.varState.angleSelected}`);
+      if (elem != null) {
+        elem.classList.remove('lesson__important_angles_table_selected');
+      }
+    }
+    elem = document.getElementById(`id_${angleType}`);
+    if (elem != null) {
+      elem.classList.add('lesson__important_angles_table_selected');
+    }
+    this.varState.angleSelected = angleType;
+    // }
+  }
+
   goToAcute() {
     const angle45 = Math.random() * Math.PI / 4 * 0.95;
     let angle = angle45;
@@ -335,10 +321,12 @@ class CircleCollection extends AngleCircle {
       }
       this.rotateTo(angle, 2, 2);
     }
+    this.selectAngle('acute');
   }
 
   goToRight() {
     this.rotateTo(Math.PI / 2, 2, 2);
+    this.selectAngle('right');
   }
 
   goToObtuse() {
@@ -353,9 +341,11 @@ class CircleCollection extends AngleCircle {
       }
       this.rotateTo(angle, 2, 2);
     }
+    this.selectAngle('obtuse');
   }
   goToStraight() {
     this.rotateTo(Math.PI, 2, 2);
+    this.selectAngle('straight');
   }
   goToReflex() {
     const angle90 = Math.random() * Math.PI / 2 * 0.95;
@@ -369,6 +359,7 @@ class CircleCollection extends AngleCircle {
       }
       this.rotateTo(angle, 2, 2);
     }
+    this.selectAngle('reflex');
   }
   // updateRotation() {
   //   super.updateRotation();
