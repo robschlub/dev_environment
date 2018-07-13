@@ -58,8 +58,6 @@ class AngleCircle extends DiagramElementCollection {
   +varState: {
     radialLines: number,
     rotation: number,
-    // percentStraight: number,
-    // straightening: boolean,
   };
   diagram: Diagram;
 
