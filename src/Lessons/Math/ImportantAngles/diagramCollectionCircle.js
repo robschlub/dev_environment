@@ -252,6 +252,7 @@ class CircleCollection extends AngleCircle {
 
     // this.add('compareText', this.makeCompareText());
     this.addToCircle(this.numSections);
+    // this._circle._radius.setTransformCallback = this.checkAngle.bind(this);
     // this.add('slider', makeSlider(this.shapes, this.layout.slider));
     // this.add('arcEquation', this.makeArcEquation());
     // this.add('circumferenceEquation', this.makeCircumferenceEquation());
@@ -283,19 +284,87 @@ class CircleCollection extends AngleCircle {
     // this.circEqnGeneral = eqn;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  calcAngleType(angle: number, thresholds: Object): angleTypes {
+    if (angle >= thresholds.acute.min && angle <= thresholds.acute.max) {
+      return 'acute';
+    }
+    if (angle >= thresholds.right.min && angle <= thresholds.right.max) {
+      return 'right';
+    }
+    if (angle >= thresholds.obtuse.min && angle <= thresholds.obtuse.max) {
+      return 'obtuse';
+    }
+    if (angle >= thresholds.straight.min && angle <= thresholds.straight.max) {
+      return 'straight';
+    }
+    return 'reflex';
+  }
+
+  calcAngleTypeDegrees(angle: number): angleTypes {
+    const thresholds = {
+      acute: {
+        min: 0,
+        max: 89,
+      },
+      right: {
+        min: 90,
+        max: 90,
+      },
+      obtuse: {
+        min: 91,
+        max: 179,
+      },
+      straight: {
+        min: 180,
+        max: 180,
+      },
+      reflex: {
+        min: 181,
+        max: 360,
+      },
+    };
+    return this.calcAngleType(angle, thresholds);
+  }
+
+  calcAngleTypeRadians(angle: number): angleTypes {
+    const thresholds = {
+      acute: {
+        min: 0,
+        max: 1.56,
+      },
+      right: {
+        min: 1.57,
+        max: 1.57,
+      },
+      obtuse: {
+        min: 1.58,
+        max: 3.13,
+      },
+      straight: {
+        min: 3.14,
+        max: 3.14,
+      },
+      reflex: {
+        min: 3.15,
+        max: 6.28,
+      },
+    };
+    return this.calcAngleType(angle, thresholds);
+  }
+
+  updateNumSectionsText() {
+    super.updateNumSectionsText();
+    const r = this.varState.rotation;
+
+    if (this.varState.radialLines === 360) {
+      this.selectAngle(this.calcAngleTypeDegrees(Math.round(r * 180 / Math.PI)));
+    } else if (this.varState.radialLines === Math.PI * 2) {
+      this.selectAngle(this.calcAngleTypeRadians(Math.round(r * 100) / 100));
+    }
+  }
+
   selectAngle(angleType: angleTypes) {
-    // const ids = [
-    //   'id_acute', 'id_right',
-    //   'id_obtuse', 'id_straight', 'id_reflex',
-    // ];
-    // ids.forEach((id) => {
-    //   if (id !== idToActivate) {
-    //     const elem = document.getElementById(id);
-    //     if (elem != null) {
-    //       elem.c
-    //     }
-    //   }
-    // })
     let elem;
     if (angleType !== this.varState.angleSelected) {
       elem = document.getElementById(`id_${this.varState.angleSelected}`);
@@ -308,7 +377,6 @@ class CircleCollection extends AngleCircle {
       elem.classList.add('lesson__important_angles_table_selected');
     }
     this.varState.angleSelected = angleType;
-    // }
   }
 
   goToAcute() {

@@ -59,7 +59,7 @@ class Content extends LessonContent {
         circle._angle.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
-        diag.showDegrees();
+        diag.showRadians();
         diag.selectAngle('acute');
       },
     });
