@@ -1059,67 +1059,6 @@ class Content extends LessonContent {
         diag._circumferenceEquation.onClick = null;
       },
     });
-
-    // this.addSection({
-    //   setContent: `
-    //   <p>
-    //   |Radius|, |angle| and |arc_length| are related.
-    //   </p>
-    //   <p>
-    //     |Change| the radius and angle and the arc length will change.
-    //   </p>
-    //   `,
-    //   modifiers: {
-    //     angle: click(diag.pulseAngle, [diag], colors.angle),
-    //     Radius: click(diag.pulseRadius, [diag], colors.radius),
-    //     arc_length: click(diag.pulseArc, [diag], colors.circle),
-    //     Straighten: click(diag.straightenArc, [diag], colors.action),
-    //     Change: click(diag.pulseSlider, [diag], colors.action),
-    //   },
-    //   setEnterState: () => {
-    //     if (this.comingFrom !== 'next') {
-    //       diag.straighten(0);
-    //       diag.updateRotation();
-    //       diag._slider.setValue(1.0);
-    //     }
-    //   },
-    //   showOnly: [
-    //     circle,
-    //     circle._radius,
-    //     circle._reference,
-    //     circle._arc,
-    //     circle._compareRadius,
-    //     diag._compareText,
-    //   ],
-    //   show: [
-    //     circle._angle,
-    //     circle._straightArc,
-    //     diag._slider,
-    //   ],
-    //   transitionFromAny: (done) => {
-    //     if (this.comingFrom !== 'next') {
-    //       diag.transitionCircle(done, 'center');
-    //     } else {
-    //       done();
-    //     }
-    //   },
-    //   setSteadyState: () => {
-    //     if (this.comingFrom !== 'next') {
-    //       diag.resetCircle('center');
-    //     }
-    //     onClickId('id_compare_text', diag.straightenArc, [diag]);
-    //   },
-    //   setLeaveState: () => {
-    //     if (this.goingTo !== 'next') {
-    //       diag.straighten(0);
-    //       diag.varState.straightening = false;
-    //     } else if (diag.varState.straightening) {
-    //       diag.straighten(1);
-    //     } else {
-    //       diag.straighten(0);
-    //     }
-    //   },
-    // });
   }
 }
 
