@@ -26,7 +26,7 @@ const lessonIndex = [
   new LessonDescription('Why study shapes?', '/Lessons/Math/Introduction'),
   new LessonDescription('Circles', '/Lessons/Math/Circle'),
   new LessonDescription('Angles', '/Lessons/Math/Angle'),
-  new LessonDescription('Measuring Angle', '/Lessons/Math/DegreesAndRadians'),
+  new LessonDescription('Measuring Angles', '/Lessons/Math/MeasuringAngles'),
   new LessonDescription('Important Angles', '/Lessons/Math/ImportantAngles'),
   new LessonDescription('Triangles'),
   [

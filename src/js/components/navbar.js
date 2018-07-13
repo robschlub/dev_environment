@@ -74,7 +74,7 @@ export default class Navbar extends React.Component
                 <a className="dropdown-item" href="/Lessons/Math/Introduction">1 - Why study shapes?</a>
                 <a className="dropdown-item" href="/Lessons/Math/Circle">2 - Circle</a>
                 <a className="dropdown-item" href="/Lessons/Math/Angle">3 - Angles</a>
-                <a className="dropdown-item" href="/Lessons/Math/DegreesAndRadians">4 - Measuring Angles</a>
+                <a className="dropdown-item" href="/Lessons/Math/MeasuringAngles">4 - Measuring Angles</a>
                 <div className="dropdown-divider"></div>
                 <a className="dropdown-item" href="/Lessons/Math/ShapesAndCornersTest">Test</a>
               </div>
