@@ -1,6 +1,6 @@
 // @flow
 
-import { LessonContent, clickWord } from '../../../js/Lesson/LessonContent';
+import { LessonContent, clickWord, onClickId } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 
 import lessonLayout from './layout';
@@ -32,6 +32,12 @@ class Content extends LessonContent {
             <td>|Reflex|</td>
           </tr>
         </table>
+        <div id="id_unit_selection"
+             class="lesson__important_angles_unit_selection">
+          <span id="id_radians">Radians</span>
+          /
+          <span id="id_degrees">Degrees</span>
+        </div>
       `,
       modifiers: {
         Acute: clickWord('Acute', 'id_acute', diag.goToAcute, [diag]),
@@ -56,6 +62,8 @@ class Content extends LessonContent {
         diag._angleText.showAll();
         diag.showRadians();
         diag.selectAngle('acute');
+        onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
+        diag.toggleUnits('deg');
       },
     });
   }

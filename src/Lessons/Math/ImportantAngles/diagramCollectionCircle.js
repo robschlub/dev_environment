@@ -117,6 +117,32 @@ class ImportantAnglesCollection extends AngleCircle {
     return this.calcAngleType(angle, thresholds);
   }
 
+  toggleUnits(toUnit: 'rad' | 'deg' | null) {
+    const elemDeg = document.getElementById('id_degrees');
+    const elemRad = document.getElementById('id_radians');
+    let unit = toUnit;
+    if (toUnit === null) {
+      if (this.varState.radialLines === 360) {
+        unit = 'rad';
+      } else {
+        unit = 'deg';
+      }
+    }
+    if (elemDeg != null && elemRad != null) {
+      if (unit === 'rad') {
+        this.hideDegrees();
+        this.showRadians();
+        elemDeg.classList.remove('lesson__important_angles_unit_selected');
+        elemRad.classList.add('lesson__important_angles_unit_selected');
+      } else if (unit === 'deg') {
+        this.hideRadians();
+        this.showDegrees();
+        elemRad.classList.remove('lesson__important_angles_unit_selected');
+        elemDeg.classList.add('lesson__important_angles_unit_selected');
+      }
+    }
+  }
+
   updateNumSectionsText() {
     super.updateNumSectionsText();
     if (this.enableAutoChange) {
@@ -159,7 +185,7 @@ class ImportantAnglesCollection extends AngleCircle {
 
   rotateToAngleDisablingAutoChange(angle: number) {
     this.enableAutoChange = false;
-    this.rotateTo(angle, 2, 2, ((result) => {
+    this.rotateTo(angle, 2, 1, ((result) => {
       if (result) {
         this.enableAutoChange = true;
       }
