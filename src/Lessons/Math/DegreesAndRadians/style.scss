@@ -3,7 +3,6 @@
 
 $colors: (
   latin:            color(diagram, 'text-latin'),
-  // radialLines:      map-get($geometry_colors, radialLines),
   rotation:         map-get($geometry_colors, rotation),
   action:           map-get($geometry_colors, action),
   disabled:         map-get($geometry_colors, disabled),
