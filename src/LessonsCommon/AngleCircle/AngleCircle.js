@@ -55,11 +55,11 @@ class AngleCircle extends DiagramElementCollection {
 
   +_circle: circleType;
   _angleText: angleTextType;
-  varState: {
+  +varState: {
     radialLines: number,
     rotation: number,
-    percentStraight: number,
-    straightening: boolean,
+    // percentStraight: number,
+    // straightening: boolean,
   };
   diagram: Diagram;
 
@@ -230,8 +230,8 @@ class AngleCircle extends DiagramElementCollection {
     this.varState = {
       radialLines: 4,
       rotation: 0,
-      percentStraight: 0,
-      straightening: false,
+      // percentStraight: 0,
+      // straightening: false,
     };
     this.shapes = diagram.shapes;
     this.layout = lessonLayout();

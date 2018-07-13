@@ -8,7 +8,7 @@ import { Point, Transform } from '../../../js/diagram/tools/g2';
 // import type { sliderType } from '../../../LessonsCommon/slider';
 import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
-import type { circleType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
+import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 
 type straightArcType = {
   _arc: DiagramElementPrimative;
@@ -64,6 +64,11 @@ export type circleCollectionType = {
   _radiusToArc: radiusToArcType;
 } & circleType;
 
+type varStateExtendedType = {
+    percentStraight: number,
+    straightening: boolean,
+  } & varStateType;
+
 class CircleCollection extends AngleCircle {
   _circle: circleCollectionType;
   // _slider: sliderType;
@@ -76,6 +81,7 @@ class CircleCollection extends AngleCircle {
   circEqnShort: DiagramGLEquation;
   circEqnGeneral: DiagramGLEquation;
   numSections: Array<number>;
+  varState: varStateExtendedType;
 
   makeStraightArc() {
     const straightArc = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
@@ -479,10 +485,10 @@ class CircleCollection extends AngleCircle {
   }
 
 
-  pulseSlider() {
-    this._slider._circle.pulseScaleNow(1, 1.5);
-    this.diagram.animateNextFrame();
-  }
+  // pulseSlider() {
+  //   this._slider._circle.pulseScaleNow(1, 1.5);
+  //   this.diagram.animateNextFrame();
+  // }
 
 
   toggleRadialLines(toPosition: number = -1) {
