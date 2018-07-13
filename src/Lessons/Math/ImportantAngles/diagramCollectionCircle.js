@@ -1,10 +1,7 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-// import { DiagramElementCollection, DiagramElementPrimative }
-//   from '../../../js/diagram/Element';
 import { Transform } from '../../../js/diagram/tools/g2';
-// import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
