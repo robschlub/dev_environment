@@ -20,12 +20,15 @@ body {
   text-align: center;
   border-bottom: 1px solid map-get($colors, disabled);
   border-top: 1px solid map-get($colors, disabled);
+  
 }
 
-// .lesson__important_angles_table td {
+.lesson__important_angles_table td {
+  padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
+  padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
 //   border-left: 1px solid map-get($colors, disabled);
 //   border-right: 1px solid map-get($colors, disabled);
-// }
+}
 
 .lesson__important_angles_table_selected {
   color: color(diagram, 'text-base');
@@ -40,4 +43,9 @@ body {
   position: absolute;
   left: 45%;
   top: 95%;
+}
+
+.lesson__important_angles_text_hide {
+  width: 0;
+  font-size: 0;
 }

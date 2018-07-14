@@ -1,6 +1,6 @@
 // @flow
 
-import { LessonContent, clickWord, onClickId } from '../../../js/Lesson/LessonContent';
+import { LessonContent, clickWord, onClickId, centerV } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 
 import lessonLayout from './layout';
@@ -22,7 +22,7 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     this.addSection({
       title: 'Introduction',
-      setContent: `
+      setContent: [`
         <table class="lesson__important_angles_table">
           <tr>
             <td>|Acute|</td>
@@ -39,6 +39,24 @@ class Content extends LessonContent {
           <span id="id_degrees">Degrees</span>
         </div>
       `,
+      `<div id="id_acute_text"><p 
+          class="lesson__diagram_text_p_width_45"
+          style="margin-top:20%">
+          An acute angle is any angle less than 90
+            <span id="id_acute_deg1">&deg;</span>
+            <span id="id_acute_rad1">radians</span>.
+      </p></div>`,
+      `<div id="id_obtuse_text"><p 
+          class="lesson__diagram_text_p_width_45"
+          style="margin-top:20%">
+          An obtuse angle is any angle greater than 90
+            <span id="id_obtuse_deg1">&deg;</span>
+            <span id="id_obtuse_rad1">radians</span>
+          and less than 180
+            <span id="id_obtuse_deg2">&deg;</span>
+            <span id="id_obtuse_rad2">radians</span>.
+      </p></div>`,
+      ],
       modifiers: {
         Acute: clickWord('Acute', 'id_acute', diag.goToAcute, [diag]),
         Right: clickWord('Right', 'id_right', diag.goToRight, [diag]),

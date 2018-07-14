@@ -181,6 +181,30 @@ class ImportantAnglesCollection extends AngleCircle {
       this.rotateToAngleDisablingAutoChange(angle);
     }
     this.selectAngle('acute');
+    this.showText('acute');
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  showText(angleType: angleTypes) {
+    const ids = [
+      'id_acute_text',
+      'id_obtuse_text',
+      'id_right_text',
+      'id_straight_text',
+      'id_reflex_text',
+    ];
+    ids.forEach((id) => {
+      if (id !== angleType) {
+        const elem = document.getElementById(id);
+        if (elem != null) {
+          elem.classList.add('lesson__important_angles_text_hide');
+        }
+      }
+    });
+    const elem = document.getElementById(`id_${angleType}_text`);
+    if (elem != null) {
+      elem.classList.remove('lesson__important_angles_text_hide');
+    }
   }
 
   rotateToAngleDisablingAutoChange(angle: number) {
@@ -197,6 +221,7 @@ class ImportantAnglesCollection extends AngleCircle {
     const angle = Math.PI / 2;
     this.rotateToAngleDisablingAutoChange(angle);
     this.selectAngle('right');
+    this.showText('right');
   }
 
   goToObtuse() {
@@ -212,11 +237,13 @@ class ImportantAnglesCollection extends AngleCircle {
       this.rotateToAngleDisablingAutoChange(angle);
     }
     this.selectAngle('obtuse');
+    this.showText('obtuse');
   }
   goToStraight() {
     const angle = Math.PI;
     this.rotateToAngleDisablingAutoChange(angle);
     this.selectAngle('straight');
+    this.showText('straight');
   }
   goToReflex() {
     const angle90 = Math.random() * Math.PI / 2 * 0.95;
@@ -231,6 +258,7 @@ class ImportantAnglesCollection extends AngleCircle {
       this.rotateToAngleDisablingAutoChange(angle);
     }
     this.selectAngle('reflex');
+    this.showText('reflex');
   }
 }
 
