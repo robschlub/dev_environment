@@ -53,6 +53,7 @@ body {
 }
 
 .lesson__important_angles_from_Latin {
-  color: map-get($colors, disabled);
+  // color: map-get($colors, disabled);
+  color: color(diagram, 'text-base');
   font-style: normal;
 }

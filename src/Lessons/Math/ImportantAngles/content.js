@@ -60,7 +60,7 @@ class Content extends LessonContent {
           ${unit('90', _piOn2, 'acute')}.
         </p>
         <p class="lesson__font_0p5" style="margin-top:23%; margin-left: 4%">
-          Acute |from_Latin| <i>acutus</i>: “sharp, pointed”
+          <span class="english">Acute</span> |from_Latin| <i class="latin">acutus</i>: “sharp, pointed”
         </p>
       </div>`,
       `<div id="id_obtuse_text">
@@ -73,7 +73,7 @@ class Content extends LessonContent {
         </p>
         <p class="lesson__font_0p5"
           style="margin-top:21%; margin-left: 4%">
-          Obtuse |from_Latin| <i>obtusus</i>: “dull, blunted”
+          <span class="english">Obtuse</span> |from_Latin| <i class="latin">obtusus</i>: “dull, blunted”
         </p>
       </div>`,
       `<div id="id_straight_text">
@@ -83,8 +83,8 @@ class Content extends LessonContent {
           ${unit('180', '&pi;', 'straight')}.
         </p>
         <p class="lesson__font_0p5"
-          style="margin-top:23%; margin-left: 4%">
-          Straight: “direct, undeviating; not crooked, not bent or curved”
+          style="margin-top:23.2%; margin-left: 4%">
+          <span class="english">Straight</span>: “direct, undeviating; not crooked, not bent or curved”
         </p>
       </div>`,
       `<div id="id_right_text">
@@ -101,19 +101,19 @@ class Content extends LessonContent {
         </p>
         <p class="lesson__font_0p5"
            style="margin-top:3%; margin-left: 4%">
-          Right Angle |from_Latin| <i>angulus rectus</i>: “upright corner”
+          <span class="english">Right Angle</span> |from_Latin| <i class="latin">angulus rectus</i>: “upright corner”
         </p>
       </div>`,
       `<div id="id_reflex_text">
-        <p class="lesson__diagram_text_p_width_45"
-          style="margin-top:20%">
+        <p class="lesson__diagram_text_p_width_40"
+          style="margin-top:17%">
           A |reflex_angle| is any angle between
           ${unit('180', '&pi;', 'reflex')}
           and ${unit('360', '2&pi;', 'reflex', 2)}.
         </p>
         <p class="lesson__font_0p5"
-          style="margin-top:23%; margin-left: 4%">
-          Reflex |from_Late_Latin| <i>reflexus</i>: “to bend back”
+          style="margin-top:21%; margin-left: 4%">
+          <span class="english">Reflex</span> |from_Late_Latin| <i class="latin">reflexus</i>: “to bend back”
         </p>
       </div>`,
       ],
