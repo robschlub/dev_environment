@@ -59,14 +59,21 @@ class Content extends LessonContent {
           An |acute_angle| is any angle less than
           ${unit('90', _piOn2, 'acute')}.
         </p>
+        <p class="lesson__font_0p5" style="margin-top:23%; margin-left: 4%">
+          Acute |from_Latin| <i>acutus</i>: “sharp, pointed”
+        </p>
       </div>`,
       `<div id="id_obtuse_text">
-        <p class="lesson__diagram_text_p_width_45"
+        <p class="lesson__diagram_text_p_width_40"
            style="margin-top:17%">
           An |obtuse_angle| is any angle between
           ${unit('90', _piOn2, 'obtuse')}
           and
           ${unit('180', '&pi;', 'obtuse', 2)}.
+        </p>
+        <p class="lesson__font_0p5"
+          style="margin-top:21%; margin-left: 4%">
+          Obtuse |from_Latin| <i>obtusus</i>: “dull, blunted”
         </p>
       </div>`,
       `<div id="id_straight_text">
@@ -75,10 +82,14 @@ class Content extends LessonContent {
           A |straight_angle| is an angle of
           ${unit('180', '&pi;', 'straight')}.
         </p>
+        <p class="lesson__font_0p5"
+          style="margin-top:23%; margin-left: 4%">
+          Straight: “direct, undeviating; not crooked, not bent or curved”
+        </p>
       </div>`,
       `<div id="id_right_text">
         <p class="lesson__diagram_text_p_width_45"
-           style="margin-top:10%">
+           style="margin-top:5%">
           A |right_angle| is an angle of
           ${unit('90', _piOn2, 'right')}.
         </p>
@@ -88,13 +99,21 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_45">
           The angle mark is usually shown as a |square| instead of arc.
         </p>
+        <p class="lesson__font_0p5"
+           style="margin-top:3%; margin-left: 4%">
+          Right Angle |from_Latin| <i>angulus rectus</i>: “upright corner”
+        </p>
       </div>`,
       `<div id="id_reflex_text">
         <p class="lesson__diagram_text_p_width_45"
-          style="margin-top:13%">
+          style="margin-top:20%">
           A |reflex_angle| is any angle between
           ${unit('180', '&pi;', 'reflex')}
           and ${unit('360', '2&pi;', 'reflex', 2)}.
+        </p>
+        <p class="lesson__font_0p5"
+          style="margin-top:23%; margin-left: 4%">
+          Reflex |from_Late_Latin| <i>reflexus</i>: “to bend back”
         </p>
       </div>`,
       ],
@@ -111,6 +130,8 @@ class Content extends LessonContent {
         reflex_angle: click(diag.pulseAngle, [diag], colors.angleText),
         quarter_circle: highlight(),
         square: click(diag.toggleRightAngleLine, [diag, true], colors.angleText),
+        from_Latin: highlight('lesson__important_angles_from_Latin'),
+        from_Late_Latin: highlight('lesson__important_angles_from_Latin'),
       },
       setEnterState: () => {
         diag.setRotation(Math.PI / 3);

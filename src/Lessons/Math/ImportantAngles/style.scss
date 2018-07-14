@@ -47,4 +47,12 @@ body {
 .lesson__important_angles_text_hide {
   width: 0;
   font-size: 0;
+  height: 0;
+  position: absolute;
+  left: -10000px;
+}
+
+.lesson__important_angles_from_Latin {
+  color: map-get($colors, disabled);
+  font-style: normal;
 }
