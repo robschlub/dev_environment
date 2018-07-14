@@ -130,6 +130,7 @@ class Content extends LessonContent {
         diag.selectAngle('acute');
         onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
         diag.toggleUnits('deg');
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
     });
   }
