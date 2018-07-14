@@ -2,14 +2,14 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import { Transform, Point } from '../../../js/diagram/tools/g2';
-import { DiagramElementCollection, diagramElementPrimative } from '../../../js/diagram/Element';
+import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 
 type rightAngleType = {
-  _horizontal: diagramElementPrimative;
-  _vertical: diagramElementPrimative;
+  _horizontal: DiagramElementPrimative;
+  _vertical: DiagramElementPrimative;
 } & DiagramElementCollection;
 
 export type extendedCircleType = {
