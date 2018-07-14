@@ -85,6 +85,9 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_45">
           It can also be thought of as the angle of a |quarter_circle|.
         </p>
+        <p class="lesson__diagram_text_p_width_45">
+          The angle mark is usually shown as a |square| instead of arc.
+        </p>
       </div>`,
       `<div id="id_reflex_text">
         <p class="lesson__diagram_text_p_width_45"
@@ -107,6 +110,7 @@ class Content extends LessonContent {
         right_angle: click(diag.pulseAngle, [diag], colors.angleText),
         reflex_angle: click(diag.pulseAngle, [diag], colors.angleText),
         quarter_circle: highlight(),
+        square: click(diag.toggleRightAngleLine, [diag, true], colors.angleText),
       },
       setEnterState: () => {
         diag.setRotation(Math.PI / 3);

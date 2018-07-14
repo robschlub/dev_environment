@@ -1,14 +1,19 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform } from '../../../js/diagram/tools/g2';
+import { Transform, Point } from '../../../js/diagram/tools/g2';
+import { DiagramElementCollection, diagramElementPrimative } from '../../../js/diagram/Element';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 
+type rightAngleType = {
+  _horizontal: diagramElementPrimative;
+  _vertical: diagramElementPrimative;
+} & DiagramElementCollection;
 
 export type extendedCircleType = {
-  // _angleFill: DiagramElementPrimative;
+  _rightAngle: rightAngleType;
 } & circleType;
 
 type angleTypes = 'acute' | 'obtuse' | 'right' | 'reflex' | 'straight';
@@ -31,10 +36,25 @@ class ImportantAnglesCollection extends AngleCircle {
   enableAutoChange: boolean;
   angleTypes: Array<string>;
 
+  makeRightAngle() {
+    const rad = this.layout.angleRadius * 0.9;
+    const rightAngle = this.shapes.collection();
+    rightAngle.add('vertical', this.makeLine(
+      new Point(0, 0), rad, this.layout.linewidth,
+      this.colors.angle, new Transform()
+        .rotate(Math.PI / 2)
+        .translate(rad, this.layout.linewidth / 2),
+    ));
+    rightAngle.add('horizontal', this.makeLine(
+      new Point(0, 0), rad, this.layout.linewidth,
+      this.colors.angle, new Transform()
+        .translate(this.layout.linewidth / 2, rad),
+    ));
+    return rightAngle;
+  }
+
   addToCircle() {
-    // this._circle.add('compareRadius', this.makeReference());
-    // this._circle.add('radiusOnArc', this.makeRadiusOnArc());
-    // this._circle.add('radiusToArc', this.makeRadiusToArc());
+    this._circle.add('rightAngle', this.makeRightAngle());
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -173,8 +193,8 @@ class ImportantAnglesCollection extends AngleCircle {
 
   updateNumSectionsText() {
     super.updateNumSectionsText();
+    const r = this.varState.rotation;
     if (this.enableAutoChange) {
-      const r = this.varState.rotation;
       if (this.varState.radialLines === 360) {
         const angleType = this.calcAngleTypeDegrees(Math.round(r * 180 / Math.PI));
         this.selectAngle(angleType);
@@ -198,6 +218,9 @@ class ImportantAnglesCollection extends AngleCircle {
     elem = document.getElementById(`id_${angleType}`);
     if (elem != null) {
       elem.classList.add('lesson__important_angles_table_selected');
+    }
+    if (this.varState.angleSelected === 'right' && angleType !== 'right') {
+      this.toggleRightAngleLine(false);
     }
     this.varState.angleSelected = angleType;
   }
@@ -295,6 +318,37 @@ class ImportantAnglesCollection extends AngleCircle {
     }
     this.selectAngle('reflex');
     this.showText('reflex');
+  }
+
+  pulseAngle() {
+    if (this._circle._rightAngle.isShown) {
+      this._circle._rightAngle._horizontal.pulseScaleNow(1, 2);
+      this._circle._rightAngle._vertical.pulseScaleNow(1, 2);
+    } else {
+      this._circle._angle._arc.pulseThickNow(1, 1.04, 7);
+      this._circle._angle._arrow.pulseScaleNow(1, 1.5);
+    }
+    this.diagram.animateNextFrame();
+  }
+  toggleRightAngleLine(show: boolean | null) {
+    let toShow = show;
+    if (show === null) {
+      if (this._circle._rightAngle.isShown) {
+        toShow = false;
+      } else {
+        toShow = true;
+      }
+    }
+    if (toShow) {
+      this._circle._rightAngle.showAll();
+      this._circle._angle.hideAll();
+      this._circle._rightAngle._horizontal.pulseScaleNow(1, 2);
+      this._circle._rightAngle._vertical.pulseScaleNow(1, 2);
+    } else {
+      this._circle._rightAngle.hideAll();
+      this._circle._angle.showAll();
+    }
+    this.diagram.animateNextFrame();
   }
 }
 

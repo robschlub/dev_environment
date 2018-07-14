@@ -10,7 +10,7 @@ type lineAngleType = {
   _arc: DiagramElementPrimative;
   _arrow: DiagramElementPrimative;
   updateRotation: (number) => {};
-};
+} & DiagramElementCollection;
 
 type angleTextType = {
   text: DiagramElementPrimative;
