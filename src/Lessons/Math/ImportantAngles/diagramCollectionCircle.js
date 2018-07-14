@@ -207,7 +207,9 @@ class ImportantAnglesCollection extends AngleCircle {
     let angle = angle45;
     const r = this._circle._radius.transform.r();
     if (r != null) {
-      if (r < Math.PI / 4) {
+      if (this.varState.angleSelected !== 'acute') {
+        angle = Math.PI / 4;
+      } else if (r < Math.PI / 4) {
         angle += Math.PI / 4;
       }
       this.rotateToAngleDisablingAutoChange(angle);
@@ -261,7 +263,9 @@ class ImportantAnglesCollection extends AngleCircle {
     let angle = angle45;
     const r = this._circle._radius.transform.r();
     if (r != null) {
-      if (r < 3 * Math.PI / 4) {
+      if (this.varState.angleSelected !== 'obtuse') {
+        angle = 3 * Math.PI / 4;
+      } else if (r < 3 * Math.PI / 4) {
         angle += 3 * Math.PI / 4;
       } else {
         angle += Math.PI / 2;

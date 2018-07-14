@@ -1,16 +1,25 @@
 // @flow
 
-import { LessonContent, clickWord, onClickId, centerV } from '../../../js/Lesson/LessonContent';
+import { LessonContent, clickWord, onClickId, click, highlight } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
+// import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
+const { colors } = layout;
 
-const unit = (angleType: string, num: number = 1) => {
-  return `<span id="id_${angleType}_deg${num}">&deg;</span><span id="id_${angleType}_rad${num}"> radians</span>
+const unit = (deg: string, rad: string, angleType: string, num: number = 1) => `<span id="id_${angleType}_deg${num}" class="highlight_word">${deg}&deg;</span><span id="id_${angleType}_rad${num}" class="highlight_word">${rad} radians</span>
   `;
-};
+
+// const fraction = (id: string, numerator: string, denominator: string) => {
+//   const eqn = new HTMLEquation(`${id}`);
+//   eqn.createEq([eqn.frac(numerator, denominator)]);
+//   return eqn.render();
+// };
+
+const _piOn2 = '<sup>&pi;</sup>&frasl;<sub>2</sub>';
+// const _piOn2 = '<sup>1</sup>&frasl;<sub>2</sub>';
 
 class Content extends LessonContent {
   setTitle() {
@@ -47,36 +56,42 @@ class Content extends LessonContent {
       `<div id="id_acute_text">
         <p class="lesson__diagram_text_p_width_45"
           style="margin-top:20%">
-          An acute angle is any angle less than 90${unit('acute')}.
+          An |acute_angle| is any angle less than
+          ${unit('90', _piOn2, 'acute')}.
         </p>
       </div>`,
       `<div id="id_obtuse_text">
         <p class="lesson__diagram_text_p_width_45"
-           style="margin-top:20%">
-          An obtuse angle is any angle greater than 90${unit('obtuse')}
-          and less than 180${unit('obtuse', 2)}.
+           style="margin-top:17%">
+          An |obtuse_angle| is any angle between
+          ${unit('90', _piOn2, 'obtuse')}
+          and
+          ${unit('180', '&pi;', 'obtuse', 2)}.
         </p>
       </div>`,
       `<div id="id_straight_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:20%">
-          An straight angle is an angle of 180${unit('straight')}.
+          A |straight_angle| is an angle of
+          ${unit('180', '&pi;', 'straight')}.
         </p>
       </div>`,
       `<div id="id_right_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:10%">
-          A right angle is an angle of 90${unit('right')}.
+          A |right_angle| is an angle of
+          ${unit('90', _piOn2, 'right')}.
         </p>
         <p class="lesson__diagram_text_p_width_45">
-          It can also be thought of as the angle of a quarter turn or circle.
+          It can also be thought of as the angle of a |quarter_circle|.
         </p>
       </div>`,
       `<div id="id_reflex_text">
         <p class="lesson__diagram_text_p_width_45"
-          style="margin-top:20%">
-          A reflex angle is any angle greater than 180${unit('reflex')}
-          and less than 360${unit('reflex', 2)}.
+          style="margin-top:13%">
+          A |reflex_angle| is any angle between
+          ${unit('180', '&pi;', 'reflex')}
+          and ${unit('360', '2&pi;', 'reflex', 2)}.
         </p>
       </div>`,
       ],
@@ -86,6 +101,12 @@ class Content extends LessonContent {
         Obtuse: clickWord('Obtuse', 'id_obtuse', diag.goToObtuse, [diag]),
         Straight: clickWord('Straight', 'id_straight', diag.goToStraight, [diag]),
         Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
+        acute_angle: click(diag.pulseAngle, [diag], colors.angleText),
+        straight_angle: click(diag.pulseAngle, [diag], colors.angleText),
+        obtuse_angle: click(diag.pulseAngle, [diag], colors.angleText),
+        right_angle: click(diag.pulseAngle, [diag], colors.angleText),
+        reflex_angle: click(diag.pulseAngle, [diag], colors.angleText),
+        quarter_circle: highlight(),
       },
       setEnterState: () => {
         diag.setRotation(Math.PI / 3);
