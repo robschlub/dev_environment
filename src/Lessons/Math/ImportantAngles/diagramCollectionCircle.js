@@ -9,7 +9,6 @@ import lessonLayout from './layout';
 
 export type extendedCircleType = {
   // _angleFill: DiagramElementPrimative;
-  // _radialLinesA: DiagramElementPrimative;
 } & circleType;
 
 type angleTypes = 'acute' | 'obtuse' | 'right' | 'reflex' | 'straight';

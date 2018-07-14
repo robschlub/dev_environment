@@ -39,23 +39,55 @@ class Content extends LessonContent {
           <span id="id_degrees">Degrees</span>
         </div>
       `,
-      `<div id="id_acute_text"><p 
-          class="lesson__diagram_text_p_width_45"
+      `<div id="id_acute_text">
+        <p class="lesson__diagram_text_p_width_45"
           style="margin-top:20%">
           An acute angle is any angle less than 90
             <span id="id_acute_deg1">&deg;</span>
             <span id="id_acute_rad1">radians</span>.
-      </p></div>`,
-      `<div id="id_obtuse_text"><p 
-          class="lesson__diagram_text_p_width_45"
-          style="margin-top:20%">
+        </p>
+      </div>`,
+      `<div id="id_obtuse_text">
+        <p class="lesson__diagram_text_p_width_45"
+           style="margin-top:20%">
           An obtuse angle is any angle greater than 90
             <span id="id_obtuse_deg1">&deg;</span>
             <span id="id_obtuse_rad1">radians</span>
           and less than 180
             <span id="id_obtuse_deg2">&deg;</span>
             <span id="id_obtuse_rad2">radians</span>.
-      </p></div>`,
+        </p>
+      </div>`,
+      `<div id="id_straight_text">
+        <p class="lesson__diagram_text_p_width_45"
+           style="margin-top:20%">
+          An straight angle is an angle of 180
+          <span id="id_straight_deg1">&deg;</span>
+          <span id="id_straight_rad1">radians</span>.
+        </p>
+      </div>`,
+      `<div id="id_right_text">
+        <p class="lesson__diagram_text_p_width_45"
+           style="margin-top:10%">
+          A right angle is an angle of 90
+          <span id="id_right_deg1">&deg;</span>
+          <span id="id_right_rad1">radians</span>.
+        </p>
+        <p class="lesson__diagram_text_p_width_45">
+          It can also be thought of as the angle of a quarter turn or circle.
+        </p>
+      </div>`,
+      `<div id="id_reflex_text">
+        <p class="lesson__diagram_text_p_width_45"
+          style="margin-top:20%">
+          A reflex angle is any angle greater than 180
+            <span id="id_reflex_deg1">&deg;</span>
+            <span id="id_reflex_rad1">radians</span>
+          and less than 360
+            <span id="id_reflex_deg2">&deg;</span>
+            <span id="id_reflex_rad2">radians</span>.
+        </p>
+      </div>`,
       ],
       modifiers: {
         Acute: clickWord('Acute', 'id_acute', diag.goToAcute, [diag]),
