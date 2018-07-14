@@ -7,6 +7,11 @@ import lessonLayout from './layout';
 
 const layout = lessonLayout();
 
+const unit = (angleType: string, num: number = 1) => {
+  return `<span id="id_${angleType}_deg${num}">&deg;</span><span id="id_${angleType}_rad${num}"> radians</span>
+  `;
+};
+
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Important Angles';
@@ -42,36 +47,26 @@ class Content extends LessonContent {
       `<div id="id_acute_text">
         <p class="lesson__diagram_text_p_width_45"
           style="margin-top:20%">
-          An acute angle is any angle less than 90
-            <span id="id_acute_deg1">&deg;</span>
-            <span id="id_acute_rad1">radians</span>.
+          An acute angle is any angle less than 90${unit('acute')}.
         </p>
       </div>`,
       `<div id="id_obtuse_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:20%">
-          An obtuse angle is any angle greater than 90
-            <span id="id_obtuse_deg1">&deg;</span>
-            <span id="id_obtuse_rad1">radians</span>
-          and less than 180
-            <span id="id_obtuse_deg2">&deg;</span>
-            <span id="id_obtuse_rad2">radians</span>.
+          An obtuse angle is any angle greater than 90${unit('obtuse')}
+          and less than 180${unit('obtuse', 2)}.
         </p>
       </div>`,
       `<div id="id_straight_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:20%">
-          An straight angle is an angle of 180
-          <span id="id_straight_deg1">&deg;</span>
-          <span id="id_straight_rad1">radians</span>.
+          An straight angle is an angle of 180${unit('straight')}.
         </p>
       </div>`,
       `<div id="id_right_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:10%">
-          A right angle is an angle of 90
-          <span id="id_right_deg1">&deg;</span>
-          <span id="id_right_rad1">radians</span>.
+          A right angle is an angle of 90${unit('right')}.
         </p>
         <p class="lesson__diagram_text_p_width_45">
           It can also be thought of as the angle of a quarter turn or circle.
@@ -80,12 +75,8 @@ class Content extends LessonContent {
       `<div id="id_reflex_text">
         <p class="lesson__diagram_text_p_width_45"
           style="margin-top:20%">
-          A reflex angle is any angle greater than 180
-            <span id="id_reflex_deg1">&deg;</span>
-            <span id="id_reflex_rad1">radians</span>
-          and less than 360
-            <span id="id_reflex_deg2">&deg;</span>
-            <span id="id_reflex_rad2">radians</span>.
+          A reflex angle is any angle greater than 180${unit('reflex')}
+          and less than 360${unit('reflex', 2)}.
         </p>
       </div>`,
       ],

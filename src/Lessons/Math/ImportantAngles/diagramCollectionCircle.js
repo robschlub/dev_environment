@@ -21,6 +21,7 @@ export type ImportantAnglesCollectionType = {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   enableAutoChange: boolean;
+  angleTypes: Array<string>;
 };
 
 class ImportantAnglesCollection extends AngleCircle {
@@ -28,6 +29,7 @@ class ImportantAnglesCollection extends AngleCircle {
   // numSections: Array<number>;
   varState: varStateExtendedType;
   enableAutoChange: boolean;
+  angleTypes: Array<string>;
 
   addToCircle() {
     // this._circle.add('compareRadius', this.makeReference());
@@ -45,6 +47,7 @@ class ImportantAnglesCollection extends AngleCircle {
     };
     this.enableAutoChange = true;
     this.addToCircle();
+    this.angleTypes = ['acute', 'obtuse', 'right', 'reflex', 'straight'];
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -133,13 +136,39 @@ class ImportantAnglesCollection extends AngleCircle {
         this.showRadians();
         elemDeg.classList.remove('lesson__important_angles_unit_selected');
         elemRad.classList.add('lesson__important_angles_unit_selected');
+        this.setParagraphUnits('rad');
       } else if (unit === 'deg') {
         this.hideRadians();
         this.showDegrees();
         elemRad.classList.remove('lesson__important_angles_unit_selected');
         elemDeg.classList.add('lesson__important_angles_unit_selected');
+        this.setParagraphUnits('deg');
       }
     }
+  }
+
+
+  setParagraphUnits(onUnit: 'rad' | 'deg') {
+    // const angleType = this.varState.angleSelected;
+    this.angleTypes.forEach((angleType) => {
+      const offUnit = onUnit === 'rad' ? 'deg' : 'rad';
+      const elemOn1 = document.getElementById(`id_${angleType}_${onUnit}1`);
+      const elemOn2 = document.getElementById(`id_${angleType}_${onUnit}2`);
+      const elemOff1 = document.getElementById(`id_${angleType}_${offUnit}1`);
+      const elemOff2 = document.getElementById(`id_${angleType}_${offUnit}2`);
+      if (elemOn1 != null) {
+        elemOn1.classList.remove('lesson__important_angles_text_hide');
+      }
+      if (elemOn2 != null) {
+        elemOn2.classList.remove('lesson__important_angles_text_hide');
+      }
+      if (elemOff1 != null) {
+        elemOff1.classList.add('lesson__important_angles_text_hide');
+      }
+      if (elemOff2 != null) {
+        elemOff2.classList.add('lesson__important_angles_text_hide');
+      }
+    });
   }
 
   updateNumSectionsText() {
@@ -147,9 +176,13 @@ class ImportantAnglesCollection extends AngleCircle {
     if (this.enableAutoChange) {
       const r = this.varState.rotation;
       if (this.varState.radialLines === 360) {
-        this.selectAngle(this.calcAngleTypeDegrees(Math.round(r * 180 / Math.PI)));
+        const angleType = this.calcAngleTypeDegrees(Math.round(r * 180 / Math.PI));
+        this.selectAngle(angleType);
+        this.showText(angleType);
       } else if (this.varState.radialLines === Math.PI * 2) {
-        this.selectAngle(this.calcAngleTypeRadians(Math.round(r * 100) / 100));
+        const angleType = this.calcAngleTypeRadians(Math.round(r * 100) / 100);
+        this.selectAngle(angleType);
+        this.showText(angleType);
       }
     }
   }
