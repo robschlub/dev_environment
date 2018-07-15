@@ -465,7 +465,7 @@ function shapes(diagram: Diagram) {
 class Diagram {
   canvas: HTMLCanvasElement;
   webgl: WebGLInstance;
-  elements: DiagramElementCollection;
+  +elements: DiagramElementCollection;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
   inTransition: boolean;
@@ -777,6 +777,7 @@ class Diagram {
   // To add elements to a diagram, either this method can be overridden,
   // or the `add` method can be used.
   createDiagramElements() {
+    // $FlowFixMe
     this.elements = new DiagramElementCollection();
     this.elements.diagramLimits = this.limits;
   }

@@ -9,7 +9,7 @@ import Jumbotron from '../../jumbotron';
 import Navbar from '../../components/navbar';
 
 const aboutPage = () => {
-  const aboutId:HTMLElement | null = document.getElementById('about');
+  const aboutId: HTMLElement | null = document.getElementById('about');
 
   if (aboutId instanceof HTMLElement) {
     ReactDOM.render(

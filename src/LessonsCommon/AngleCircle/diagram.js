@@ -1,53 +1,35 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
-import { DiagramElementCollection } from '../../../js/diagram/Element';
-import CircleCollection from './diagramCollectionCircle';
-import type { circleCollectionType } from './diagramCollectionCircle';
-import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
-import lessonLayout from './layout';
+import Diagram from '../../js/diagram/Diagram';
+import { DiagramElementCollection } from '../../js/diagram/Element';
+import type { circleType } from './AngleCircle';
+import { Point, minAngleDiff, Transform } from '../../js/diagram/tools/g2';
 
-const layout = lessonLayout();
-const { colors } = layout;
-const backgroundColor = colors.diagram.background;
-
-
-// type circleCollectionType = {
-//   _anchor: DiagramElementPrimative;
-//   _arc: DiagramElementPrimative;
-//   _angle: DiagramElementPrimative;
-//   _radius: DiagramElementPrimative;
-//   _reference: DiagramElementPrimative;
-//   _radialLinesA: DiagramElementPrimative;
-//   _radialLinesB: DiagramElementCollection;
-//   _radialLinesDeg: DiagramElementCollection;
-//   // resize: () => void;
-// } & DiagramElementCollection;
-
+let layout: Object;
+let CircleCollectionClass: Function;
 type typeElements = {
-  _circle: circleCollectionType;
-  // +resize: () => void;
+  _circle: circleType;
 } & DiagramElementCollection ;
 
-// $FlowFixMe
-class LessonDiagram extends Diagram {
+class AngleCircleDiagram extends Diagram {
   elements: typeElements;
+  CircleCollection: typeElements;
 
-  constructor(id: string) {
-    const { limits } = lessonLayout();
+  constructor(id: string, lessonLayout: Object, CircleCollection: Function) {
+    const { limits } = lessonLayout;
+    layout = lessonLayout;
+    CircleCollectionClass = CircleCollection;
     super(
       `${id}`,
       limits.left,
       limits.bottom,
       limits.width,
       limits.height,
-      backgroundColor,
+      layout.colors.diagram.background,
     );
   }
+
   createDiagramElements() {
-    const circleCollection = new CircleCollection(
-      this,
-      new Transform().translate(0, 0),
-    );
+    const circleCollection = new CircleCollectionClass(this, new Transform().translate(0, 0));
     this.elements = circleCollection;
 
     this.elements.isTouchable = true;
@@ -69,9 +51,6 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    // if (!this.elements._circle.show) {
-    //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
-    // }
     if (this.elements._circle._radius.state.isBeingMoved) {
       let center = this.elements._circle.transform.t();
       if (center === null || center === undefined) {
@@ -108,4 +87,4 @@ class LessonDiagram extends Diagram {
   }
 }
 
-export default LessonDiagram;
+export default AngleCircleDiagram;

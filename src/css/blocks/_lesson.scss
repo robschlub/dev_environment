@@ -311,12 +311,13 @@ $diagram_ratio: 1.5;
 }
 
 .action_word_enabled {
-  text-decoration: underline;
+  // text-decoration: underline;
   cursor: pointer;
 }
 
 .latin {
   font-style: italic;
+  font-family: Times New Roman, serif;
   color: color(diagram, 'text-latin');
 }
 

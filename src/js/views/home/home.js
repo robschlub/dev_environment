@@ -9,7 +9,7 @@ import LessonNavigator from '../../components/lessonNavigator';
 import Footer from '../../components/footer';
 
 const homePage = () => {
-  const id:HTMLElement | null = document.getElementById('home');
+  const id: HTMLElement | null = document.getElementById('home');
 
   if (id instanceof HTMLElement) {
     ReactDOM.render(
