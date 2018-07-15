@@ -63,19 +63,19 @@ class ImportantAnglesCollection extends AngleCircle {
   makeAxes() {
     const xAxis = this.makeLine(
       new Point(0, 0),
-      this.layout.axes.length * 2,
-      this.layout.linewidth / 2,
+      this.layout.axes.length * 2.2,
+      this.layout.linewidth / 4,
       this.colors.axes,
-      new Transform().translate(-this.layout.axes.length, 0),
+      new Transform().translate(-this.layout.axes.length * 1.1, 0),
     );
     const yAxis = this.makeLine(
       new Point(0, 0),
-      this.layout.axes.length * 2,
-      this.layout.linewidth / 2,
+      this.layout.axes.length * 2.2,
+      this.layout.linewidth / 4,
       this.colors.axes,
       new Transform()
         .rotate(Math.PI / 2)
-        .translate(0, -this.layout.axes.length),
+        .translate(0, -this.layout.axes.length * 1.1),
     );
     const axes = this.shapes.collection();
     axes.add('x', xAxis);

@@ -33,7 +33,7 @@ export default function lessonLayout() {
   //   textPosition: new Point(2.0, -0.42),
   // };
 
-  layout.circle.right = new Point(1.4, -0.1);
+  layout.circle.right = new Point(1.4, -0.2);
   //   right: new Point(1.1, -0.3),
   //   mostRight: new Point(1.6, -0.3),
   //   middleMostRight: new Point(1.6, -0.2),
@@ -70,7 +70,7 @@ export default function lessonLayout() {
   // layout.angleEqualsText.bottomMostRight = new Point(0.9, -1.7);
   // layout.angleEqualsText.bottomMostRightDeg = new Point(1.1, -1.7);
   // layout.angleEqualsText.summary = new Point(1.1, -1.6);
-  layout.angleEqualsText.bottomRight = new Point(1.0, -1.6);
+  layout.angleEqualsText.bottomRight = new Point(1.0, -1.7);
   layout.axes = {
     length: 1.3,
   };
