@@ -10,7 +10,7 @@ import Lesson from '../../../js/Lesson/Lesson';
 import './style.scss';
 
 const lessonSinglePage = () => {
-  const lessonId:HTMLElement | null = document.getElementById('single-page-lesson');
+  const lessonId: HTMLElement | null = document.getElementById('single-page-lesson');
   const lesson = new Lesson(new Content('shapes'));
 
   if (lessonId instanceof HTMLElement) {
