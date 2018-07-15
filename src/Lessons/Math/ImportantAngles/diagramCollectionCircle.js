@@ -115,7 +115,12 @@ class ImportantAnglesCollection extends AngleCircle {
     this._circle.add('obtuseRange', this.makeObtuseRange());
     this._circle.add('reflexRange', this.makeReflexRange());
     this._circle.add('axes', this.makeAxes());
-    this._circle.order = [...this._circle.order.slice(-4), ...this._circle.order.slice(0, -4)];
+    this._circle.order = [
+      ...this._circle.order.slice(-4, -1),
+      ...this._circle.order.slice(0, 2),
+      ...this._circle.order.slice(-1),
+      ...this._circle.order.slice(2, -4),
+    ];
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {

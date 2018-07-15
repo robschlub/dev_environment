@@ -210,9 +210,9 @@ class AngleCircle extends DiagramElementCollection {
     const circle = this.shapes.collection(new Transform()
       .scale(1, 1)
       .translate(this.layout.circle.center));
-    circle.add('angle', this.makeAngleLine());
     circle.add('radialLinesDeg', this.makeMajorAndMinRadialMarks(36, 360));
     circle.add('radialLinesRad', this.makeRadialMarks(Math.PI * 2));
+    circle.add('angle', this.makeAngleLine());
     circle.add('reference', this.makeReference());
     circle.add('circumference', this.makeCircumference());
     circle.add('arc', this.makeArc(this.layout.radius));
