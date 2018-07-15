@@ -11,6 +11,8 @@ const cssColorNames = [
   'rotation',
   'action',
   'disabled',
+  'angleArea',
+  'axes',
   // 'degrees',
   // 'radians',
 ];
@@ -69,5 +71,8 @@ export default function lessonLayout() {
   // layout.angleEqualsText.bottomMostRightDeg = new Point(1.1, -1.7);
   // layout.angleEqualsText.summary = new Point(1.1, -1.6);
   layout.angleEqualsText.bottomRight = new Point(1.0, -1.6);
+  layout.axes = {
+    length: 1.3,
+  };
   return layout;
 }

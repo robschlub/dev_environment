@@ -145,6 +145,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag.resetCircle('right', Math.PI / 3);
         circle._angle.showAll();
+        circle._axes.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
         diag.showRadians();

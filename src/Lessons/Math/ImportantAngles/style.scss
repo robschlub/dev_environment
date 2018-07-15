@@ -7,6 +7,8 @@ $colors: (
   action:           map-get($geometry_colors, action),
   disabled:         map-get($geometry_colors, disabled),
   arcLight:         map-get($geometry_colors, arcLight),
+  angleArea:        #2F351A,
+  axes:             color(diagram, 'disabled', darker),
 );
 
 body {

@@ -14,6 +14,13 @@ type rightAngleType = {
 
 export type extendedCircleType = {
   _rightAngle: rightAngleType;
+  _acuteRange: DiagramElementPrimative;
+  _obtuseRange: DiagramElementPrimative;
+  _reflexRange: DiagramElementPrimative;
+  _axes: {
+    _x: DiagramElementPrimative;
+    _y: DiagramElementPrimative;
+  } & DiagramElementCollection;
 } & circleType;
 
 type angleTypes = 'acute' | 'obtuse' | 'right' | 'reflex' | 'straight';
@@ -53,8 +60,62 @@ class ImportantAnglesCollection extends AngleCircle {
     return rightAngle;
   }
 
+  makeAxes() {
+    const xAxis = this.makeLine(
+      new Point(0, 0),
+      this.layout.axes.length * 2,
+      this.layout.linewidth / 2,
+      this.colors.axes,
+      new Transform().translate(-this.layout.axes.length, 0),
+    );
+    const yAxis = this.makeLine(
+      new Point(0, 0),
+      this.layout.axes.length * 2,
+      this.layout.linewidth / 2,
+      this.colors.axes,
+      new Transform()
+        .rotate(Math.PI / 2)
+        .translate(0, -this.layout.axes.length),
+    );
+    const axes = this.shapes.collection();
+    axes.add('x', xAxis);
+    axes.add('y', yAxis);
+    return axes;
+  }
+
+  makeAcuteRange() {
+    return this.shapes.polygonFilled(
+      this.layout.anglePoints, this.layout.axes.length, 0,
+      this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
+        .translate(0, 0),
+    );
+  }
+
+  makeObtuseRange() {
+    return this.shapes.polygonFilled(
+      this.layout.anglePoints, this.layout.axes.length, 0,
+      this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
+        .rotate(Math.PI / 2)
+        .translate(0, 0),
+    );
+  }
+
+  makeReflexRange() {
+    return this.shapes.polygonFilled(
+      this.layout.anglePoints, this.layout.axes.length, 0,
+      this.layout.anglePoints / 2, this.colors.angleArea, new Transform()
+        .rotate(Math.PI)
+        .translate(0, 0),
+    );
+  }
+
   addToCircle() {
     this._circle.add('rightAngle', this.makeRightAngle());
+    this._circle.add('acuteRange', this.makeAcuteRange());
+    this._circle.add('obtuseRange', this.makeObtuseRange());
+    this._circle.add('reflexRange', this.makeReflexRange());
+    this._circle.add('axes', this.makeAxes());
+    this._circle.order = [...this._circle.order.slice(-4), ...this._circle.order.slice(0, -4)];
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -197,12 +258,14 @@ class ImportantAnglesCollection extends AngleCircle {
     if (this.enableAutoChange) {
       if (this.varState.radialLines === 360) {
         const angleType = this.calcAngleTypeDegrees(Math.round(r * 180 / Math.PI));
-        this.selectAngle(angleType);
-        this.showText(angleType);
+        // this.selectAngle(angleType);
+        // this.showText(angleType);
+        this.showAngleType(angleType);
       } else if (this.varState.radialLines === Math.PI * 2) {
         const angleType = this.calcAngleTypeRadians(Math.round(r * 100) / 100);
-        this.selectAngle(angleType);
-        this.showText(angleType);
+        // this.selectAngle(angleType);
+        // this.showText(angleType);
+        this.showAngleType(angleType);
       }
     }
   }
@@ -225,6 +288,29 @@ class ImportantAnglesCollection extends AngleCircle {
     this.varState.angleSelected = angleType;
   }
 
+  showAngleType(angleType: angleTypes) {
+    this.selectAngle(angleType);
+    this.showText(angleType);
+    if (angleType !== 'acute') {
+      this._circle._acuteRange.hide();
+    }
+    if (angleType !== 'obtuse') {
+      this._circle._obtuseRange.hide();
+    }
+    if (angleType !== 'reflex') {
+      this._circle._reflexRange.hide();
+    }
+    if (angleType === 'acute') {
+      this._circle._acuteRange.show();
+    }
+    if (angleType === 'obtuse') {
+      this._circle._obtuseRange.show();
+    }
+    if (angleType === 'reflex') {
+      this._circle._reflexRange.show();
+    }
+  }
+
   goToAcute() {
     const angle45 = Math.random() * Math.PI / 4 * 0.95;
     let angle = angle45;
@@ -237,8 +323,10 @@ class ImportantAnglesCollection extends AngleCircle {
       }
       this.rotateToAngleDisablingAutoChange(angle);
     }
-    this.selectAngle('acute');
-    this.showText('acute');
+    // this.selectAngle('acute');
+    // this.showText('acute');
+    // this._circle._acuteRange.show();
+    this.showAngleType('acute');
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -277,8 +365,9 @@ class ImportantAnglesCollection extends AngleCircle {
     this.enableAutoChange = false;
     const angle = Math.PI / 2;
     this.rotateToAngleDisablingAutoChange(angle);
-    this.selectAngle('right');
-    this.showText('right');
+    // this.selectAngle('right');
+    // this.showText('right');
+    this.showAngleType('right');
   }
 
   goToObtuse() {
@@ -295,14 +384,16 @@ class ImportantAnglesCollection extends AngleCircle {
       }
       this.rotateToAngleDisablingAutoChange(angle);
     }
-    this.selectAngle('obtuse');
-    this.showText('obtuse');
+    // this.selectAngle('obtuse');
+    // this.showText('obtuse');
+    this.showAngleType('obtuse');
   }
   goToStraight() {
     const angle = Math.PI;
     this.rotateToAngleDisablingAutoChange(angle);
-    this.selectAngle('straight');
-    this.showText('straight');
+    // this.selectAngle('straight');
+    // this.showText('straight');
+    this.showAngleType('straight');
   }
   goToReflex() {
     const angle90 = Math.random() * Math.PI / 2 * 0.95;
@@ -316,8 +407,9 @@ class ImportantAnglesCollection extends AngleCircle {
       }
       this.rotateToAngleDisablingAutoChange(angle);
     }
-    this.selectAngle('reflex');
-    this.showText('reflex');
+    // this.selectAngle('reflex');
+    // this.showText('reflex');
+    this.showAngleType('reflex');
   }
 
   pulseAngle() {
