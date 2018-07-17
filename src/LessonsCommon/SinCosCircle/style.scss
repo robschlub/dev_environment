@@ -2,7 +2,8 @@
 @import '../../LessonsCommon/AngleCircle/style';
 
 $colors: (
-  angleArea:        #2F351A,
+  // angleArea:        #2F351A,
+  angleArea:        color(diagram, 'safe', 'darkest'),
   radialLines:      color(diagram, 'disabled', 'darker'),
   axes:             color(0, light),
   reference:        map-get($geometry_colors, disabled),

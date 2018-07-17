@@ -1,9 +1,11 @@
 // Define a contrasts map, mapping the shade of color to a contrast
 $_color_contrasts: (
+  'highest': 'lightest',
   'higher': 'lighter',
   'high': 'light',
   'low': 'dark',
-  'lower': 'darker'
+  'lower': 'darker',
+  'lowest': 'darkest'
 );
 
 // Get a final palette with contrasts added
