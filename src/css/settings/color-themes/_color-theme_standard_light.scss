@@ -47,7 +47,7 @@ $_color_theme-standard-light: (
   'violet':           (color: 'violet', shade: 'base'),
   'brown':            (color: 'brown',  shade: 'base'),
   'grey':             (color: 'grey',   shade: 'base'),
-  diagram: (
+  'diagram': (
     'background':     (color: 'white',  shade: 'base'),
     'primary':        (color: 'blue',   shade: 'base'),
     'warning':        (color: 'red',    shade: 'base'),
@@ -58,30 +58,30 @@ $_color_theme-standard-light: (
     'text-base':      (color: 'grey',   shade: 'dark'),
     'text-plot':      (color: 'blue',   shade: 'light'),
     'text-keyword':   (color: 'blue',   shade: 'light'),
-    'text-keyword2':  (color: 'green',   shade: 'light'),
+    'text-keyword2':  (color: 'green',  shade: 'light'),
     'text-latin':     (color: 'blue',   shade: 'light'),
-    'text-greek':     (color: 'orange',   shade: 'light'),
+    'text-greek':     (color: 'orange', shade: 'light'),
     'text-english':   (color: 'blue',   shade: 'light'),
     'action':         (color: 'violet', shade: 'lighter'),
   ),
-  lesson: (
+  'lesson': (
     'background':       (color: 'grey',   shade: 'lighter'),
     'text-title':       (color: 'blue',   shade: 'dark'),
     'title-background': (color: 'white',  shade: 'base'),
     'text':             (color: 'grey',   shade: 'darker'),
     'navigation':       (color: 'grey',   shade: 'base'),
   ),
-  site: (
+  'site': (
     'primary':          (color: 'blue',   shade: 'base'),
     'secondary':        (color: 'blue',   shade: 'light'),
     'text':             (color: 'grey',   shade: 'darker'),
-    'background':       (color: 'grey',  shade: 'darker'),
+    'background':       (color: 'grey',   shade: 'darker'),
     'disabled':         (color: 'grey',   shade: 'base'),
     'safe':             (color: 'green',  shade: 'base'),
-    'menus':            (color: 'grey',  shade: 'darker'),
+    'menus':            (color: 'grey',   shade: 'darker'),
   ),
-  navbar: (
-    'button':           (color: 'white',   shade: 'lighter'),
+  'navbar': (
+    'button':           (color: 'white',  shade: 'lighter'),
     'background':       (color: 'grey',   shade: 'darker'),
     'base':             (color: 'white',  shade: 'light'),
     'hover':            (color: 'white',  shade: 'lighter'),
@@ -90,5 +90,5 @@ $_color_theme-standard-light: (
     'toggler-border':   (color: 'white',  shade: 'light'),
     'toggler-icon':     $navbar-dark-toggler-icon-bg
   ),
-  palette: $_color_standard-light-theme-palette,
+  'palette': $_color_standard-light-theme-palette,
 );

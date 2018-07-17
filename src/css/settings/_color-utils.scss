@@ -31,7 +31,7 @@
 
 // Get the color and shade from a globally defined palette
 @function palette-color($color, $shade) {
-  $palette: map-get($_color_theme, palette);
+  $palette: map-get($_color_theme, 'palette');
 
   @return map-get(map-get($palette, $color), $shade);
 }
@@ -42,8 +42,8 @@
 // Get color function from color_theme
 //  color(1):                       get 'hue1' from root of theme-map
 //  color(1, dark):                 get 'hue1' shade 'dark'
-//  color(diagram, 'text'):         get 'text' default color from diagram
-//  color(diagram, 'text', 'dark'): get 'text' hue with shade 'dark'
+//  color('diagram', 'text'):         get 'text' default color from diagram
+//  color('diagram', 'text', 'dark'): get 'text' hue with shade 'dark'
 //
 @function color($fromOrName, $nameOrShade: '', $shadeName: '') {
   $color-map: '';
