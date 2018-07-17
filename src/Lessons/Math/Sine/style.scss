@@ -11,11 +11,20 @@ $colors: (
   radialLines:      color(diagram, 'disabled', 'darker'),
   axes:             color(0, light),
   reference:        map-get($geometry_colors, disabled),
+
+  sine:             color(diagram, 'warning'),
 );
 
 body {
   @include color_vars($colors);
 }
+
+
+#id_diagram_sin {
+  color: map-get($colors, sine);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+}
+
 
 .lesson__important_angles_table {
   width: 100%;

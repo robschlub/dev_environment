@@ -12,6 +12,7 @@ const cssColorNames = [
   'disabled',
   'angleArea',
   'axes',
+  'sine',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -23,6 +24,14 @@ export default function lessonLayout() {
   layout.angleEqualsText.bottomRight = new Point(1.0, -1.7);
   layout.axes = {
     length: 1.3,
+  };
+
+  layout.sine = {
+    lineWidth: 0.01,
+    offset: 0.12,
+  };
+  layout.cosine = {
+    lineWidth: 0.005,
   };
   return layout;
 }

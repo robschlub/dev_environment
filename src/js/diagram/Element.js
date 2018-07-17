@@ -501,7 +501,7 @@ class DiagramElement {
     return percentComplete;
   }
 
-  setPosition(pointOrX: Point, y: number = 0) {
+  setPosition(pointOrX: Point | number, y: number = 0) {
     let position = pointOrX;
     if (typeof pointOrX === 'number') {
       position = new Point(pointOrX, y);

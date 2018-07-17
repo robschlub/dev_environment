@@ -18,6 +18,11 @@ export type extendedCircleType = {
   _quad2: DiagramElementPrimative;
   _quad3: DiagramElementPrimative;
   _quad4: DiagramElementPrimative;
+  _sineLine: {
+    _line: DiagramElementPrimative;
+    _text: DiagramElementPrimative;
+    updateRotation: (number, number) => void;
+  } & DiagramElementCollection;
   _axes: {
     _x: DiagramElementPrimative;
     _y: DiagramElementPrimative;
@@ -93,20 +98,47 @@ class SineCollection extends AngleCircle {
     );
   }
 
+  makeSineLine() {
+    const line = this.makeLine(
+      new Point(0, 0),
+      this.layout.radius,
+      this.layout.sine.lineWidth,
+      this.colors.sine,
+      new Transform().scale(1, 1).rotate(Math.PI / 2).translate(0, 0),
+    );
+    const text = this.shapes.htmlText(
+      'sin', 'id_diagram_sin', '',
+      new Point(0, 0), 'middle', 'center',
+    );
+    const sine = this.shapes.collection();
+    sine.add('line', line);
+    sine.add('text', text);
+    sine.updateRotation = (radius: number, angle: number) => {
+      if (sine.isShown) {
+        const endX = radius * Math.cos(angle);
+        const endY = radius * Math.sin(angle);
+        sine._line.setPosition(endX, 0);
+        sine._line.transform.updateScale(endY / radius, 1);
+        if (sine._text.isShown) {
+          sine._text.setPosition(endX + endX / Math.abs(endX) * this.layout.sine.offset, endY / 2);
+        }
+      }
+    };
+    return sine;
+  }
+
   addToCircle() {
     this._circle.add('rightAngle', this.makeRightAngle());
     this._circle.add('axes', this.makeAxes());
+    this._circle.add('sineLine', this.makeSineLine());
     this._circle.add('quad1', this.makeQuad(1));
     this._circle.add('quad2', this.makeQuad(2));
     this._circle.add('quad3', this.makeQuad(3));
     this._circle.add('quad4', this.makeQuad(4));
     this._circle.order = [
       ...this._circle.order.slice(-4),
-      // ...this._circle.order.slice(0, 2),
-      // ...this._circle.order.slice(-1),
       ...this._circle.order.slice(0, -4),
     ];
-    console.log(this._circle.order)
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -120,6 +152,11 @@ class SineCollection extends AngleCircle {
     this.enableAutoChange = true;
     this.addToCircle();
     this.angleTypes = [1, 2, 3, 4];
+  }
+
+  updateRotation() {
+    super.updateRotation();
+    this._circle._sineLine.updateRotation(this.layout.radius, this.varState.rotation);
   }
 
   // eslint-disable-next-line class-methods-use-this
