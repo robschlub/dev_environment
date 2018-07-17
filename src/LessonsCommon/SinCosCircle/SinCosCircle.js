@@ -64,36 +64,76 @@ class SinCosCircle extends AngleCircle {
     return rightAngle;
   }
 
-  makeAxes() {
-    const xAxis = this.makeLine(
-      new Point(0, 0),
-      this.layout.axes.length * 2.2,
-      this.layout.linewidth / 4,
-      this.colors.axes,
-      new Transform().translate(-this.layout.axes.length * 1.1, 0),
-    );
-    const yAxis = this.makeLine(
-      new Point(0, 0),
-      this.layout.axes.length * 2.2,
-      this.layout.linewidth / 4,
-      this.colors.axes,
-      new Transform()
-        .rotate(Math.PI / 2)
-        .translate(0, -this.layout.axes.length * 1.1),
-    );
-    const axes = this.shapes.collection();
-    axes.add('x', xAxis);
-    axes.add('y', yAxis);
-    return axes;
-  }
+  // makeAxes() {
+  //   const xAxis = this.makeLine(
+  //     new Point(0, 0),
+  //     this.layout.axes.length * 2.2,
+  //     this.layout.linewidth / 4,
+  //     this.colors.axes,
+  //     new Transform().translate(-this.layout.axes.length * 1.1, 0),
+  //   );
+  //   const yAxis = this.makeLine(
+  //     new Point(0, 0),
+  //     this.layout.axes.length * 2.2,
+  //     this.layout.linewidth / 4,
+  //     this.colors.axes,
+  //     new Transform()
+  //       .rotate(Math.PI / 2)
+  //       .translate(0, -this.layout.axes.length * 1.1),
+  //   );
+  //   const axes = this.shapes.collection();
+  //   axes.add('x', xAxis);
+  //   axes.add('y', yAxis);
+  //   return axes;
+  // }
 
   makeQuad(num: number = 1) {
+    // return this.shapes.polygonFilled(
+    //   this.layout.anglePoints, this.layout.radius, 0,
+    //   this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
+    //     .translate(0, 0)
+    //     .rotate((num - 1) * Math.PI / 2),
+    // );
+    let xSign = 1;
+    let ySign = 1;
+    if (num === 2 || num === 3) {
+      xSign = -1;
+    }
+    if (num === 3 || num === 4) {
+      ySign = -1;
+    }
+
     return this.shapes.polygonFilled(
-      this.layout.anglePoints, this.layout.axes.length, 0,
-      this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
-        .translate(0, 0)
-        .rotate((num - 1) * Math.PI / 2),
+      4, this.layout.radius / 2 * Math.sqrt(2), 0,
+      4, this.colors.quadrant, new Transform()
+        .rotate(Math.PI / 4)
+        .translate(
+          xSign * this.layout.radius / 2,
+          ySign * this.layout.radius / 2,
+        ),
     );
+  }
+
+  makeAxesAndGrid() {
+    const grid = this.shapes.axes(
+      this.layout.grid.width, this.layout.grid.height, this.layout.grid.range,
+      0, 0, this.layout.grid.step, this.layout.grid.step,
+      0.08, true, this.colors.axes, this.colors.grid, this.layout.grid.position,
+    );
+    grid._x.props.majorTicks.fontColor = this.colors.grid;
+    grid._x.props.majorTicks.color = this.colors.grid;
+    grid._x.props.majorTicks.labelOffset = new Point(-0.07, 0);
+    grid._x.props.majorTicks.labels[5] = '0';
+    grid._x.props.majorTicks.width = 0.005;
+    grid._x.rebuild();
+    grid._y.props.majorTicks.fontColor = this.colors.grid;
+    grid._y.props.majorTicks.color = this.colors.grid;
+    grid._y.props.majorTicks.labelOffset = new Point(-0.02, -0.05);
+    grid._y.props.majorTicks.labels[5] = '';
+    grid._y.props.majorTicks.width = 0.005;
+    grid._y.rebuild();
+    // console.log(grid._grid)
+    return grid;
   }
 
   makeSineLine() {
@@ -127,16 +167,36 @@ class SinCosCircle extends AngleCircle {
 
   addToSinCosCircle() {
     this._circle.add('rightAngle', this.makeRightAngle());
-    this._circle.add('axes', this.makeAxes());
+    // this._circle.add('axes', this.makeAxes());
     this._circle.add('sineLine', this.makeSineLine());
     this._circle.add('quad1', this.makeQuad(1));
     this._circle.add('quad2', this.makeQuad(2));
     this._circle.add('quad3', this.makeQuad(3));
     this._circle.add('quad4', this.makeQuad(4));
+    this._circle.add('grid', this.makeAxesAndGrid());
+
     this._circle.order = [
-      ...this._circle.order.slice(-4),
-      ...this._circle.order.slice(0, -4),
+      ...this._circle.order.slice(-5),
+      ...this._circle.order.slice(0, -5),
     ];
+  }
+
+  showDegrees() {
+    this.varState.radialLines = 360;
+    this._angleText.setUnits('&deg;');
+    this.updateNumSectionsText();
+    // this._circle._radialLinesDeg.showAll();
+    this._angleText.showAll();
+    this.diagram.animateNextFrame();
+  }
+
+  showRadians() {
+    this.varState.radialLines = Math.PI * 2;
+    this._angleText.setUnits('radians');
+    this.updateNumSectionsText();
+    this._angleText.showAll();
+    // this._circle._radialLinesRad.show();
+    this.diagram.animateNextFrame();
   }
 
   constructor(layout: Object, diagram: Diagram, transform: Transform = new Transform()) {

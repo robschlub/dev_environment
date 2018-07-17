@@ -229,10 +229,11 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     const linePairs = [];
-    for (let x = bounds.left; x < bounds.right + xStep; x += xStep) {
+    // const xLimit = tools.roundNum(bounds.righ + xStep);
+    for (let x = bounds.left; tools.roundNum(x, 8) <= bounds.right; x += xStep) {
       linePairs.push([new Point(x, bounds.top), new Point(x, bounds.bottom)]);
     }
-    for (let y = bounds.bottom; y < bounds.top + yStep; y += yStep) {
+    for (let y = bounds.bottom; tools.roundNum(y, 8) <= bounds.top; y += yStep) {
       linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
     }
     return lines(linePairs, color, transform);
@@ -329,6 +330,7 @@ function shapes(diagram: Diagram) {
     color: Array<number> = [1, 1, 1, 0],
     gridColor: Array<number> = [1, 1, 1, 0],
     location: Transform | Point = new Transform(),
+    decimalPlaces: number = 1,
   ) {
     const lineWidth = 0.01;
     const xProps = new AxisProperties('x', 0);
@@ -353,7 +355,7 @@ function shapes(diagram: Diagram) {
       xProps.limits.min,
       xProps.limits.max,
       stepX,
-    ).map(v => v.toString()).map((v) => {
+    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
       if (v === yAxisLocation.toString() && yAxisLocation === xAxisLocation) {
         return `${v}     `;
       }
@@ -374,7 +376,7 @@ function shapes(diagram: Diagram) {
     const xAxis = new Axis(
       diagram.webgl, diagram.draw2D, xProps,
       new Transform().scale(1, 1).rotate(0)
-        .translate(0, xAxisLocation - limits.bottom),
+        .translate(0, xAxisLocation - limits.bottom * height / 2),
       diagram.limits,
     );
 
@@ -400,7 +402,7 @@ function shapes(diagram: Diagram) {
       yProps.limits.min,
       yProps.limits.max,
       stepY,
-    ).map(v => v.toString()).map((v) => {
+    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
       if (v === xAxisLocation.toString() && yAxisLocation === xAxisLocation) {
         return '';
       }
@@ -421,7 +423,7 @@ function shapes(diagram: Diagram) {
     const yAxis = new Axis(
       diagram.webgl, diagram.draw2D, yProps,
       new Transform().scale(1, 1).rotate(0)
-        .translate(yAxisLocation - limits.left, 0),
+        .translate(yAxisLocation - limits.left * width / 2, 0),
       diagram.limits,
     );
 
@@ -435,7 +437,8 @@ function shapes(diagram: Diagram) {
     if (showGrid) {
       const gridLines = grid(
         new Rect(0, 0, width, height),
-        stepX * width / limits.width, stepY * height / limits.height,
+        tools.roundNum(stepX * width / limits.width, 8),
+        tools.roundNum(stepY * height / limits.height, 8),
         gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
       );
       xy.add('grid', gridLines);

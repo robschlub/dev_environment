@@ -6,7 +6,7 @@ import angleCircleLayout from '../../LessonsCommon/AngleCircle/layout';
 
 const cssColorNames = [
   'disabled',
-  'angleArea',
+  'quadrant',
   'axes',
   'sine',
 ];

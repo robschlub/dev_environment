@@ -2,6 +2,8 @@
 @import '../../../LessonsCommon/SinCosCircle/style';
 
 $colors: (
+  axes:       color('diagram', 'disabled', 'dark'),
+  grid:       color('diagram', 'disabled', 'darker')
 );
 
 body {

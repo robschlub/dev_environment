@@ -62,16 +62,21 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._radius,
-        circle._reference,
+        // circle._quad1,
+        // circle._quad2,
+        // circle._quad3,
+        // circle._quad4,
+        // circle._reference,
       ],
       setSteadyState: () => {
         diag.resetCircle('right', Math.PI / 3);
         circle._angle.showAll();
-        circle._axes.showAll();
+        // circle._axes.showAll();
         circle._sineLine.showAll();
+        circle._grid.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
-        diag.showRadians();
+        diag.showDegrees();
         diag.selectAngle(1);
         // onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
         // diag.toggleUnits('deg');

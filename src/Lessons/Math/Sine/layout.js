@@ -1,17 +1,27 @@
 // @flow
 
-// import { Point } from '../../../js/diagram/tools/g2';
+import { Point, Rect } from '../../../js/diagram/tools/g2';
 import getCssColors from '../../../js/tools/getCssColors';
 import sinCosCircleLayout from '../../../LessonsCommon/SinCosCircle/layout';
 
 const cssColorNames = [
+  'grid',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
   const colors = getCssColors(cssColorNames);
-  console.log(colors)
   const layout: Object = sinCosCircleLayout();
+  layout.radius = 1.4;
   layout.colors = Object.assign(colors, layout.colors);
+  layout.circle.right = new Point(1.2, 0);
+  layout.angleEqualsText.bottomRight = new Point(0.7, -1.7);
+  layout.grid = {
+    width: layout.radius * 2,
+    height: layout.radius * 2,
+    range: new Rect(-1, -1, 2, 2),
+    step: 0.2,
+    position: new Point(-layout.radius, -layout.radius),
+  };
   return layout;
 }

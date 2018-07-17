@@ -2,10 +2,10 @@
 @import '../../LessonsCommon/AngleCircle/style';
 
 $colors: (
-  angleArea:        color('diagram', 'safe', 'darkest'),
+  quadrant:         darken(color('diagram', 'safe', 'darkest'), 2%),
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
-  reference:        map-get($geometry_colors, disabled),
+  // reference:        map-get($geometry_colors, disabled),
   sine:             color('blue', 'darker'),
 );
 
