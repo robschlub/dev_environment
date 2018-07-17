@@ -36,7 +36,7 @@
   @return map-get(map-get($palette, $color), $shade);
 }
 
-$_color_special_map_names: diagram, lesson, site, navbar, name;
+$_color_special_map_names: diagram, lesson, site, navbar;
 
 //
 // Get color function from color_theme
@@ -60,7 +60,15 @@ $_color_special_map_names: diagram, lesson, site, navbar, name;
   }
 
   // Otherwise it's from the root hue map
-  $color-map: map-get($_color_theme, 'hue' + $fromOrName);
+  $color-map: '';
+  @if map-has-key($_color_theme, $fromOrName) {
+    $color-map: map-get($_color_theme, $fromOrName);
+  }
+  @else {
+    $color-map: map-get($_color_theme, 'hue' + $fromOrName);
+  }
+  
+  // $color-map: map-get($_color_theme, 'hue' + $fromOrName);
   $color: map-get($color-map, color);
   $shade: map-get($color-map, shade);
 

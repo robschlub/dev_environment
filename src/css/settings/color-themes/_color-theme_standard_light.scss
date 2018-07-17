@@ -24,6 +24,7 @@ $_color_standard-light-theme-palette: add-contrasts-to-palette($_color-palette_s
 
 // Define the theme colors
 $_color_theme-standard-light: (
+
   'hue0':             (color: 'black',  shade: 'base'),
   'hue1':             (color: 'white',  shade: 'base'),
   'hue2':             (color: 'blue',   shade: 'base'),
@@ -35,19 +36,17 @@ $_color_theme-standard-light: (
   'hue8':             (color: 'violet', shade: 'base'),
   'hue9':             (color: 'brown',  shade: 'base'),
   'hue10':            (color: 'grey',   shade: 'base'),
-  name: (
-    'black':          (color: 'black',  shade: 'base'),
-    'white':          (color: 'white',  shade: 'base'),
-    'blue':           (color: 'blue',   shade: 'base'),
-    'red':            (color: 'red',    shade: 'base'),
-    'green':          (color: 'green',  shade: 'base'),
-    'yellow':         (color: 'yellow', shade: 'base'),
-    'cyan':           (color: 'cyan',   shade: 'base'),
-    'orange':         (color: 'green',  shade: 'base'),
-    'violet':         (color: 'violet', shade: 'base'),
-    'brown':          (color: 'brown',  shade: 'base'),
-    'grey':           (color: 'grey',   shade: 'base'),
-  ),
+  'black':            (color: 'black',  shade: 'base'),
+  'white':            (color: 'white',  shade: 'base'),
+  'blue':             (color: 'blue',   shade: 'base'),
+  'red':              (color: 'red',    shade: 'base'),
+  'green':            (color: 'green',  shade: 'base'),
+  'yellow':           (color: 'yellow', shade: 'base'),
+  'cyan':             (color: 'cyan',   shade: 'base'),
+  'orange':           (color: 'green',  shade: 'base'),
+  'violet':           (color: 'violet', shade: 'base'),
+  'brown':            (color: 'brown',  shade: 'base'),
+  'grey':             (color: 'grey',   shade: 'base'),
   diagram: (
     'background':     (color: 'white',  shade: 'base'),
     'primary':        (color: 'blue',   shade: 'base'),
@@ -77,7 +76,7 @@ $_color_theme-standard-light: (
     'secondary':        (color: 'blue',   shade: 'light'),
     'text':             (color: 'grey',   shade: 'darker'),
     'background':       (color: 'grey',  shade: 'darker'),
-    'disabled':       (color: 'grey',   shade: 'base'),
+    'disabled':         (color: 'grey',   shade: 'base'),
     'safe':             (color: 'green',  shade: 'base'),
     'menus':            (color: 'grey',  shade: 'darker'),
   ),
