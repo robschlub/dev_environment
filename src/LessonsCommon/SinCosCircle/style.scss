@@ -7,7 +7,7 @@ $colors: (
   radialLines:      color(diagram, 'disabled', 'darker'),
   axes:             color(0, light),
   reference:        map-get($geometry_colors, disabled),
-  sine:             color(diagram, 'warning'),
+  sine:             color(name, 'red', 'darker'),
 );
 
 body {
