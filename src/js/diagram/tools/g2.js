@@ -1390,6 +1390,12 @@ function comparePoints(
   return { min, max };
 }
 
+function polarToRect(mag: number, angle: number) {
+  return new Point(
+    mag * Math.cos(angle),
+    mag * Math.sin(angle),
+  );
+}
 // $FlowFixMe
 function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   let firstPoint = true;
@@ -1435,4 +1441,5 @@ export {
   curvedPath,
   quadraticBezier,
   translationPath,
+  polarToRect,
 };

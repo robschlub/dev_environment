@@ -74,6 +74,10 @@ class Content extends LessonContent {
         // circle._axes.showAll();
         circle._sineLine.showAll();
         circle._grid.showAll();
+        circle._quad1Angle.showAll();
+        circle._quad2Angle.showAll();
+        circle._quad3Angle.showAll();
+        circle._quad4Angle.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
         diag.showDegrees();

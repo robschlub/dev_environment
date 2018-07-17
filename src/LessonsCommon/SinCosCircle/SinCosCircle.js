@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
-import { Transform, Point } from '../../js/diagram/tools/g2';
+import { Transform, Point, polarToRect } from '../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../AngleCircle/AngleCircle';
@@ -11,12 +11,22 @@ type rightAngleType = {
   _vertical: DiagramElementPrimative;
 } & DiagramElementCollection;
 
+type quadAngle = {
+  _arc: DiagramElementPrimative;
+  _text: DiagramElementPrimative;
+  updateRotation: (number, number) => void;
+} & DiagramElementCollection;
+
 export type SinCosCircleType = {
   _rightAngle: rightAngleType;
   _quad1: DiagramElementPrimative;
   _quad2: DiagramElementPrimative;
   _quad3: DiagramElementPrimative;
   _quad4: DiagramElementPrimative;
+  _quad1Angle: quadAngle;
+  _quad2Angle: quadAngle;
+  _quad3Angle: quadAngle;
+  _quad4Angle: quadAngle;
   _sineLine: {
     _line: DiagramElementPrimative;
     _text: DiagramElementPrimative;
@@ -47,6 +57,53 @@ class SinCosCircle extends AngleCircle {
   enableAutoChange: boolean;
   quadrants: Array<number>;
 
+  makeAngle(
+    radius: number,
+    name: string,
+    label: string,
+    startAngle: number = 0,
+    direction: -1 | 1 = 1,
+    textOffset: number = 0.15,
+  ) {
+    const angle = this.shapes.collection(new Transform().translate(0, 0));
+    const arc = this.shapes.polygon(
+      this.layout.anglePoints,
+      radius, this.layout.quadAngles.lineWidth,
+      startAngle, direction, this.layout.anglePoints,
+      this.layout.colors.quadAngles, new Transform()
+        .rotate(0)
+        .translate(0, 0),
+    );
+    const text = this.shapes.htmlText(
+      label, `id_diagram_quadAngles_${name}`, 'diagram__quad_angles',
+      new Point(0, 0), 'middle', 'center',
+    );
+
+    angle.add('arc', arc);
+    angle.add('text', text);
+
+    angle.updateRotation = (r: number, quad: number) => {
+      if (angle.isShown) {
+        let angleToDraw = r;
+        if (quad === 2) {
+          angleToDraw = Math.PI - r;
+        }
+        if (quad === 3) {
+          angleToDraw = r - Math.PI;
+        }
+        if (quad === 4) {
+          angleToDraw = Math.PI * 2 - r;
+        }
+        arc.angleToDraw = angleToDraw;
+        text.setPosition(polarToRect(
+          radius + textOffset,
+          startAngle + direction * angleToDraw / 2,
+        ));
+      }
+    };
+    return angle;
+  }
+
   makeRightAngle() {
     const rad = this.layout.angleRadius * 0.9;
     const rightAngle = this.shapes.collection();
@@ -63,29 +120,6 @@ class SinCosCircle extends AngleCircle {
     ));
     return rightAngle;
   }
-
-  // makeAxes() {
-  //   const xAxis = this.makeLine(
-  //     new Point(0, 0),
-  //     this.layout.axes.length * 2.2,
-  //     this.layout.linewidth / 4,
-  //     this.colors.axes,
-  //     new Transform().translate(-this.layout.axes.length * 1.1, 0),
-  //   );
-  //   const yAxis = this.makeLine(
-  //     new Point(0, 0),
-  //     this.layout.axes.length * 2.2,
-  //     this.layout.linewidth / 4,
-  //     this.colors.axes,
-  //     new Transform()
-  //       .rotate(Math.PI / 2)
-  //       .translate(0, -this.layout.axes.length * 1.1),
-  //   );
-  //   const axes = this.shapes.collection();
-  //   axes.add('x', xAxis);
-  //   axes.add('y', yAxis);
-  //   return axes;
-  // }
 
   makeQuad(num: number = 1) {
     // return this.shapes.polygonFilled(
@@ -165,10 +199,15 @@ class SinCosCircle extends AngleCircle {
     return sine;
   }
 
+
   addToSinCosCircle() {
     this._circle.add('rightAngle', this.makeRightAngle());
-    // this._circle.add('axes', this.makeAxes());
     this._circle.add('sineLine', this.makeSineLine());
+    const rad = this.layout.quadAngles.radius;
+    this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'θ', 0, 1, 0.08));
+    this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'π - θ', Math.PI, -1, 0.12));
+    this._circle.add('quad3Angle', this.makeAngle(rad, '3', 'θ - π', Math.PI, 1));
+    this._circle.add('quad4Angle', this.makeAngle(rad, '4', '2π - θ', 0, -1));
     this._circle.add('quad1', this.makeQuad(1));
     this._circle.add('quad2', this.makeQuad(2));
     this._circle.add('quad3', this.makeQuad(3));
@@ -185,7 +224,6 @@ class SinCosCircle extends AngleCircle {
     this.varState.radialLines = 360;
     this._angleText.setUnits('&deg;');
     this.updateNumSectionsText();
-    // this._circle._radialLinesDeg.showAll();
     this._angleText.showAll();
     this.diagram.animateNextFrame();
   }
@@ -195,7 +233,6 @@ class SinCosCircle extends AngleCircle {
     this._angleText.setUnits('radians');
     this.updateNumSectionsText();
     this._angleText.showAll();
-    // this._circle._radialLinesRad.show();
     this.diagram.animateNextFrame();
   }
 
@@ -214,7 +251,26 @@ class SinCosCircle extends AngleCircle {
 
   updateRotation() {
     super.updateRotation();
-    this._circle._sineLine.updateRotation(this.layout.radius, this.varState.rotation);
+    this._circle._sineLine.updateRotation(
+      this.layout.radius,
+      this.varState.rotation,
+    );
+    this._circle._quad1Angle.updateRotation(
+      this.varState.rotation,
+      this.varState.quadrant,
+    );
+    this._circle._quad2Angle.updateRotation(
+      this.varState.rotation,
+      this.varState.quadrant,
+    );
+    this._circle._quad3Angle.updateRotation(
+      this.varState.rotation,
+      this.varState.quadrant,
+    );
+    this._circle._quad4Angle.updateRotation(
+      this.varState.rotation,
+      this.varState.quadrant,
+    );
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -9,6 +9,7 @@ const cssColorNames = [
   'quadrant',
   'axes',
   'sine',
+  'quadAngles',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -28,6 +29,10 @@ export default function sinCosCircleLayout() {
   };
   layout.cosine = {
     lineWidth: 0.005,
+  };
+  layout.quadAngles = {
+    lineWidth: 0.005,
+    radius: 0.8,
   };
   return layout;
 }

@@ -5,8 +5,8 @@ $colors: (
   quadrant:         darken(color('diagram', 'safe', 'darkest'), 2%),
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
-  // reference:        map-get($geometry_colors, disabled),
-  sine:             color('blue', 'darker'),
+  sine:             color('red', 'darker'),
+  quadAngles:  color('blue', 'darker'),
 );
 
 body {
@@ -16,6 +16,24 @@ body {
 
 #id_diagram_sin {
   color: map-get($colors, sine);
-  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
 }
 
+// #id_diagram_quadAngles_1 {
+//   font-size: calc(var(--lesson__diagram-font-size) * 0.5);
+//   color: map-get($colors, quadAngles);
+// }
+
+// #id_diagram_quadAngles_2 {
+//   font-size: calc(var(--lesson__diagram-font-size) * 0.5);
+//   color: map-get($colors, quadAngles);
+//   font-family: Times New Roman serif
+//   font-style: italics;
+// }
+
+.diagram__quad_angles {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
+  color: map-get($colors, quadAngles);
+  font-family: Times New Roman, serif;
+  font-style: italic; 
+}
