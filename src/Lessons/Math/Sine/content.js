@@ -62,7 +62,7 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._radius,
-        // circle._quad1,
+        // circle._symmetricLine,
         // circle._quad2,
         // circle._quad3,
         // circle._quad4,
@@ -78,6 +78,7 @@ class Content extends LessonContent {
         circle._quad2Angle.showAll();
         circle._quad3Angle.showAll();
         circle._quad4Angle.showAll();
+        circle._symmetry.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
         diag.showDegrees();

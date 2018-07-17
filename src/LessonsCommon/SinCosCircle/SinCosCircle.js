@@ -57,6 +57,37 @@ class SinCosCircle extends AngleCircle {
   enableAutoChange: boolean;
   quadrants: Array<number>;
 
+  makeSymmetry() {
+    const symmetry = this.shapes.collection();
+    const line = this.makeLine(
+      new Point(0, 0), this.layout.radius, this.layout.quadAngles.lineWidth,
+      this.colors.quadAngles, new Transform()
+        .rotate(0),
+    );
+    symmetry.add('line', line);
+    const sine = this.makeSineLine('symmetry');
+    symmetry.add('sine', sine);
+    console.log(symmetry)
+
+    symmetry.updateRotation = (r: number, quad: number) => {
+      if (symmetry.isShown) {
+        let angleToDraw = r;
+        if (quad === 2) {
+          angleToDraw = Math.PI - r;
+        }
+        if (quad === 3) {
+          angleToDraw = r - Math.PI;
+        }
+        if (quad === 4) {
+          angleToDraw = Math.PI * 2 - r;
+        }
+        line.transform.updateRotation(angleToDraw);
+        sine.updateRotation(this.layout.radius, angleToDraw);
+      }
+    };
+    return symmetry;
+  }
+
   makeAngle(
     radius: number,
     name: string,
@@ -74,6 +105,7 @@ class SinCosCircle extends AngleCircle {
         .rotate(0)
         .translate(0, 0),
     );
+
     const text = this.shapes.htmlText(
       label, `id_diagram_quadAngles_${name}`, 'diagram__quad_angles',
       new Point(0, 0), 'middle', 'center',
@@ -170,7 +202,7 @@ class SinCosCircle extends AngleCircle {
     return grid;
   }
 
-  makeSineLine() {
+  makeSineLine(id: string) {
     const line = this.makeLine(
       new Point(0, 0),
       this.layout.radius,
@@ -179,7 +211,7 @@ class SinCosCircle extends AngleCircle {
       new Transform().scale(1, 1).rotate(Math.PI / 2).translate(0, 0),
     );
     const text = this.shapes.htmlText(
-      'sin', 'id_diagram_sin', '',
+      'sin', `id_diagram_sine_line_${id}`, 'diagram__sine_line',
       new Point(0, 0), 'middle', 'center',
     );
     const sine = this.shapes.collection();
@@ -189,10 +221,15 @@ class SinCosCircle extends AngleCircle {
       if (sine.isShown) {
         const endX = radius * Math.cos(angle);
         const endY = radius * Math.sin(angle);
+        const endYSign = endY / Math.abs(endY);
         sine._line.setPosition(endX, 0);
         sine._line.transform.updateScale(endY / radius, 1);
         if (sine._text.isShown) {
-          sine._text.setPosition(endX + endX / Math.abs(endX) * this.layout.sine.offset, endY / 2);
+          let textY = endY / 2;
+          if (Math.abs(textY) < 0.05) {
+            textY = 0.05 * endYSign;
+          }
+          sine._text.setPosition(endX + endX / Math.abs(endX) * this.layout.sine.offset, textY);
         }
       }
     };
@@ -202,8 +239,9 @@ class SinCosCircle extends AngleCircle {
 
   addToSinCosCircle() {
     this._circle.add('rightAngle', this.makeRightAngle());
-    this._circle.add('sineLine', this.makeSineLine());
+    this._circle.add('sineLine', this.makeSineLine('primary'));
     const rad = this.layout.quadAngles.radius;
+    this._circle.add('symmetry', this.makeSymmetry());
     this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'θ', 0, 1, 0.08));
     this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'π - θ', Math.PI, -1, 0.12));
     this._circle.add('quad3Angle', this.makeAngle(rad, '3', 'θ - π', Math.PI, 1));
@@ -251,26 +289,14 @@ class SinCosCircle extends AngleCircle {
 
   updateRotation() {
     super.updateRotation();
-    this._circle._sineLine.updateRotation(
-      this.layout.radius,
-      this.varState.rotation,
-    );
-    this._circle._quad1Angle.updateRotation(
-      this.varState.rotation,
-      this.varState.quadrant,
-    );
-    this._circle._quad2Angle.updateRotation(
-      this.varState.rotation,
-      this.varState.quadrant,
-    );
-    this._circle._quad3Angle.updateRotation(
-      this.varState.rotation,
-      this.varState.quadrant,
-    );
-    this._circle._quad4Angle.updateRotation(
-      this.varState.rotation,
-      this.varState.quadrant,
-    );
+    const r = this.varState.rotation;
+    const q = this.varState.quadrant;
+    this._circle._sineLine.updateRotation(this.layout.radius, r);
+    this._circle._quad1Angle.updateRotation(r, q);
+    this._circle._quad2Angle.updateRotation(r, q);
+    this._circle._quad3Angle.updateRotation(r, q);
+    this._circle._quad4Angle.updateRotation(r, q);
+    this._circle._symmetry.updateRotation(r, q);
   }
 
   // eslint-disable-next-line class-methods-use-this
