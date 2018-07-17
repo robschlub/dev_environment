@@ -5,10 +5,6 @@ import getCssColors from '../../js/tools/getCssColors';
 import angleCircleLayout from '../../LessonsCommon/AngleCircle/layout';
 
 const cssColorNames = [
-  'latin',
-  'arcLight',
-  'rotation',
-  'action',
   'disabled',
   'angleArea',
   'axes',

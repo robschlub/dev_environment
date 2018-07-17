@@ -5,7 +5,6 @@ import { Transform, Point } from '../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../AngleCircle/AngleCircle';
-// import lessonLayout from './layout';
 
 type rightAngleType = {
   _horizontal: DiagramElementPrimative;

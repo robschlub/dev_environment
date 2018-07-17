@@ -2,16 +2,10 @@
 @import '../../LessonsCommon/AngleCircle/style';
 
 $colors: (
-  latin:            color(diagram, 'text-latin'),
-  rotation:         map-get($geometry_colors, rotation),
-  action:           map-get($geometry_colors, action),
-  disabled:         map-get($geometry_colors, disabled),
-  arcLight:         map-get($geometry_colors, arcLight),
   angleArea:        #2F351A,
   radialLines:      color(diagram, 'disabled', 'darker'),
   axes:             color(0, light),
   reference:        map-get($geometry_colors, disabled),
-
   sine:             color(diagram, 'warning'),
 );
 
