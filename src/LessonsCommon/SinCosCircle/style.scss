@@ -3,12 +3,12 @@
 
 $colors: (
   // angleArea:        #2F351A,
-  angleArea:        color(diagram, 'safe', 'darkest'),
-  radialLines:      color(diagram, 'disabled', 'darker'),
-  axes:             color(0, light),
+  angleArea:        color1(diagram, 'safe', 'darkest'),
+  radialLines:      color1(diagram, 'disabled', 'darker'),
+  axes:             color1(0, light),
   reference:        map-get($geometry_colors, disabled),
   // sine:             color(name, 'red', 'darker'),
-  sine:             color('red', 'darker'),
+  sine:             color1('blue', 'darker'),
 );
 
 body {
