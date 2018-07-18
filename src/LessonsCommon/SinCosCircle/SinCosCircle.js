@@ -523,6 +523,7 @@ class SinCosCircle extends AngleCircle {
         this._circle._symmetry.hideAll();
         this._circle._quad0Angle.hideAll();
         this._circle[`_quad${quad}Angle`].showAll();
+        this._circle[`_quad${quad}Angle`].pulseScaleNow(1, 1.4);
       }
       if (step === 1) {
         this.updateRotation(true);
@@ -531,12 +532,14 @@ class SinCosCircle extends AngleCircle {
         this._circle._symmetry.show();
         this._circle._quad0Angle.showAll();
         this._circle[`_quad${quad}Angle`].showAll();
+        this._circle._quad0Angle.pulseScaleNow(1, 1.4);
       }
       if (step === 2) {
         this.updateRotation(true);
         this._circle._symmetry.showAll();
         this._circle._quad0Angle.showAll();
         this._circle[`_quad${quad}Angle`].showAll();
+        this._circle._symmetry._sine._line.pulseThickNow(1, 7, 7);
       }
       if (step === 3) {
         this.updateRotation(true);
