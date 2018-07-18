@@ -42,6 +42,10 @@ export default function angleCircleLayout() {
       },
     },
 
+    arc: {
+      lineWidth: 0.03,
+    },
+
     angleRadius: 0.5,
     anchorPoints: 50,
     anglePoints: 400,

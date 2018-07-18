@@ -96,14 +96,14 @@ class AngleCircle extends DiagramElementCollection {
 
   makeArc(radius: number) {
     return this.shapes.polygon(
-      this.layout.anglePoints, radius, this.layout.linewidth, 0, 1,
+      this.layout.anglePoints, radius, this.layout.arc.lineWidth, 0, 1,
       this.layout.circlePoints, this.colors.arc, new Point(0, 0),
     );
   }
 
   makeCircumference() {
     return this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius, this.layout.linewidth, 0, 1,
+      this.layout.anglePoints, this.layout.radius, this.layout.arc.lineWidth, 0, 1,
       this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
     );
   }

@@ -5,8 +5,9 @@ $colors: (
   quadrant:         darken(color('diagram', 'safe', 'darkest'), 2%),
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
-  sine:             color('red', 'darker'),
+  sine:             color('red', 'base'),
   quadAngles:       color('blue', 'darker'),
+  arc:         color('blue', 'darker'),
 );
 
 body {

@@ -63,6 +63,7 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         diag._unitsSelector,
+        circle._arc,
         // circle._symmetricLine,
         // circle._quad2,
         // circle._quad3,

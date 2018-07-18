@@ -346,13 +346,14 @@ class SinCosCircle extends AngleCircle {
   addToSinCosCircle() {
     this.add('unitsSelector', this.makeDegreesRadiansSelector());
     this._circle.add('rightAngle', this.makeRightAngle());
-    this._circle.add('sineLine', this.makeSineLine('primary'));
     const rad = this.layout.quadAngles.radius;
-    this._circle.add('symmetry', this.makeSymmetry());
+    
     this._circle.add('quad0Angle', this.makeAngle(rad, '0', 'θ', 0, 1, quadrantOffsets[0]));
     this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'π - θ', Math.PI, -1, quadrantOffsets[1]));
     this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1, quadrantOffsets[2]));
     this._circle.add('quad3Angle', this.makeAngle(rad, '3', '2π - θ', 0, -1, quadrantOffsets[3]));
+    this._circle.add('symmetry', this.makeSymmetry());
+    this._circle.add('sineLine', this.makeSineLine('primary'));
     this._circle.add('mainAngle', this.makeMainAngle());
     this._circle.add('quad0', this.makeQuad(0));
     this._circle.add('quad1', this.makeQuad(1));
