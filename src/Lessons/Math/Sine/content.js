@@ -81,7 +81,7 @@ class Content extends LessonContent {
         circle._symmetry.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
-        diag.showRadiasn();
+        diag.showRadians();
         diag.toggleUnits('rad');
         diag.selectAngle(1);
       },

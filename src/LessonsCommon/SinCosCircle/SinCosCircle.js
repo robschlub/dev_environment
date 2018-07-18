@@ -363,6 +363,7 @@ class SinCosCircle extends AngleCircle {
       ...this._circle.order.slice(-5),
       ...this._circle.order.slice(0, -5),
     ];
+    // console.log(this._circle.order)
   }
 
   showDegrees() {
