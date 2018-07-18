@@ -666,6 +666,20 @@ class SinCosCircle extends AngleCircle {
   //   }
   // }
 
+  toggleParagraphs(quad: number) {
+    const paragraph0 = document.getElementById('id__sine_paragraph_quad0');
+    const paragraph1 = document.getElementById('id__sine_paragraph_quad123');
+    if (paragraph0 && paragraph1) {
+      if (quad === 0) {
+        paragraph0.classList.remove('lesson__sine_text_hide');
+        paragraph1.classList.add('lesson__sine_text_hide');
+      } else {
+        paragraph0.classList.add('lesson__sine_text_hide');
+        paragraph1.classList.remove('lesson__sine_text_hide');
+      }
+    }
+  }
+
   changeQuadrant(oldQuad: quadrantType, newQuad: quadrantType) {
     const circle = this._circle;
     const quadShading = [
@@ -689,6 +703,21 @@ class SinCosCircle extends AngleCircle {
     this._circle._symmetry.setSineText(`sin ${quadrantAngles[newQuad]}`);
 
     this.varState.quadrant = newQuad;
+
+    this.toggleParagraphs(newQuad);
+    // const paragraph0 = document.getElementById('id__sine_paragraph_quad0');
+    // const paragraph1 = document.getElementById('id__sine_paragraph_quad123');
+    // if (paragraph0 && paragraph1) {
+    //   console.log("got here");
+    //   if (newQuad === 0) {
+    //     paragraph0.classList.remove('lesson__sine_text_hide');
+    //     paragraph1.classList.add('lesson__sine_text_hide');
+    //   }
+    //   if (oldQuad === 0 && newQuad > 0) {
+    //     paragraph0.classList.add('lesson__sine_text_hide');
+    //     paragraph1.classList.remove('lesson__sine_text_hide');
+    //   }
+    // }
     this.resetSteps();
   }
 

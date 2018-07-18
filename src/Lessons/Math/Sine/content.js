@@ -38,7 +38,7 @@ class Content extends LessonContent {
       title: 'Introduction',
       setContent: [`
         <p>
-          Choose quadrant:
+          For quadrant (quarter circle):
         </p>
         <table class="lesson__quadrant_selector_table">
           <tr>
@@ -52,20 +52,27 @@ class Content extends LessonContent {
       `<p>
         To calculate |sin_theta|:
       </p>
+      <div id="id__sine_paragraph_quad0" class="lesson__sine_paragraph_quad0">
+        
+          Use either geometry or the series equation.
+      
+      </div>
+      <div id="id__sine_paragraph_quad123">
         <ul class="lesson__quadrant_steps">
-        <li id="id_lesson_quadrant_steps_1">
-          Calculate symmetric angle
-        </li>
-        <li id="id_lesson_quadrant_steps_2">
-          Use symmetry to find angle in 1st quadrant
-        </li>
-        <li id="id_lesson_quadrant_steps_3">
-          Calculate sine of 1st quadrant angle
-        </li>
-        <li id="id_lesson_quadrant_steps_4">
-          Generalize
-        </li>
-      </ul>
+          <li id="id_lesson_quadrant_steps_1">
+            Calculate symmetric angle
+          </li>
+          <li id="id_lesson_quadrant_steps_2">
+            Use symmetry to find angle in 1st quadrant
+          </li>
+          <li id="id_lesson_quadrant_steps_3">
+            Calculate sine of 1st quadrant angle
+          </li>
+          <li id="id_lesson_quadrant_steps_4">
+            Generalize
+          </li>
+        </ul>
+      </div>
       `,
       ],
       modifiers: {
@@ -119,7 +126,7 @@ class Content extends LessonContent {
         diag.showRadians();
         diag.toggleUnits('rad');
         diag.setQuadrantNumberInTable(0);
-
+        diag.toggleParagraphs(0);
         onClickId('id_lesson_quadrant_steps_1', diag.goToStep, [diag, 0]);
         onClickId('id_lesson_quadrant_steps_2', diag.goToStep, [diag, 1]);
         onClickId('id_lesson_quadrant_steps_3', diag.goToStep, [diag, 2]);

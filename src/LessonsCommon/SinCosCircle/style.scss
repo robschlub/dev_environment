@@ -6,6 +6,7 @@ $colors: (
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
   sine:             color('red', 'base'),
+  // symmetrySine:     color('red', 'darker'),
   quadAngles:       color('blue', 'darker'),
   arcLight:         color('grey', 'darker'),
 );
@@ -84,3 +85,20 @@ body {
   font-size: calc(var(--lesson__diagram-font-size) * 1.1);
   font-style: italic;
 }
+
+.lesson__sine_text_hide {
+  width: 0;
+  font-size: 0;
+  height: 0;
+  position: absolute;
+  left: -10000px;
+}
+
+.lesson__sine_paragraph_quad0 {
+  width: 40%;
+  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+  margin-left: 6%;
+  color: color('diagram', 'text-base');
+  margin-top: 2%;
+}
+
