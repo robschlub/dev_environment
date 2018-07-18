@@ -28,6 +28,10 @@ export type circleType = {
   _reference: DiagramElementPrimative;
   _radialLinesDeg: DiagramElementCollection;
   _radialLinesRad: DiagramElementCollection;
+  _axes: {
+    _x: DiagramElementPrimative;
+    _y: DiagramElementPrimative;
+  } & DiagramElementCollection;
   _compareRadius: DiagramElementPrimative;
   _circumference: DiagramElementPrimative;
 } & DiagramElementCollection;
@@ -94,16 +98,40 @@ class AngleCircle extends DiagramElementCollection {
     return radius;
   }
 
-  makeArc(radius: number) {
+  makeAxes() {
+    const xAxis = this.makeLine(
+      new Point(0, 0),
+      this.layout.axes.length * 2.2,
+      this.layout.linewidth / 4,
+      this.colors.axes,
+      new Transform().translate(-this.layout.axes.length * 1.1, 0),
+    );
+    const yAxis = this.makeLine(
+      new Point(0, 0),
+      this.layout.axes.length * 2.2,
+      this.layout.linewidth / 4,
+      this.colors.axes,
+      new Transform()
+        .rotate(Math.PI / 2)
+        .translate(0, -this.layout.axes.length * 1.1),
+    );
+    const axes = this.shapes.collection();
+    axes.add('x', xAxis);
+    axes.add('y', yAxis);
+    return axes;
+  }
+
+  makeArc(radius: number, lineWidth: number = this.layout.arc.lineWidth) {
     return this.shapes.polygon(
-      this.layout.anglePoints, radius, this.layout.arc.lineWidth, 0, 1,
+      this.layout.anglePoints, radius, lineWidth, 0, 1,
       this.layout.circlePoints, this.colors.arc, new Point(0, 0),
     );
   }
 
   makeCircumference() {
     return this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius, this.layout.arc.lineWidth, 0, 1,
+      this.layout.anglePoints, this.layout.radius,
+      this.layout.circumference.lineWidth, 0, 1,
       this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
     );
   }
@@ -117,7 +145,7 @@ class AngleCircle extends DiagramElementCollection {
 
   makeAngleLine() {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.makeArc(this.layout.angle.radius);
+    const arc = this.makeArc(this.layout.angle.radius, this.layout.angle.lineWidth);
     arc.color = this.colors.angle.slice();
     const arrow = this.shapes.arrow(
       this.layout.angle.arrow.width, 0, this.layout.angle.arrow.height, 0,
@@ -212,6 +240,7 @@ class AngleCircle extends DiagramElementCollection {
       .translate(this.layout.circle.center));
     circle.add('radialLinesDeg', this.makeMajorAndMinRadialMarks(36, 360));
     circle.add('radialLinesRad', this.makeRadialMarks(Math.PI * 2));
+    circle.add('axes', this.makeAxes());
     circle.add('angle', this.makeAngleLine());
     circle.add('reference', this.makeReference());
     circle.add('circumference', this.makeCircumference());
@@ -436,6 +465,7 @@ class AngleCircle extends DiagramElementCollection {
     if (tTime === 0) {
       tTime = 0.001;
     }
+
 
     let angle = this.layout.circle.angle.small;
     if (r != null && r !== undefined) {

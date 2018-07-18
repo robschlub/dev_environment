@@ -448,6 +448,7 @@ class SinCosCircle extends AngleCircle {
     };
     this.enableAutoChange = true;
     this.addToSinCosCircle();
+    this._circle.setPosition(this.layout.circle.bottomRight);
     this.quadrants = [0, 1, 2, 3];
     this.interactiveSinePage = false;
   }
@@ -457,8 +458,8 @@ class SinCosCircle extends AngleCircle {
     const r = this.varState.rotation;
     const q = this.varState.quadrant;
     this._circle._sineLine.updateRotation(this.layout.radius, r, override);
-    this._circle._mainAngle.updateRotation(r, override);
     if (this.interactiveSinePage) {
+      this._circle._mainAngle.updateRotation(r, override);
       this._circle._quad0Angle.updateRotation(r, q, override);
       this._circle._quad1Angle.updateRotation(r, q, override);
       this._circle._quad2Angle.updateRotation(r, q, override);

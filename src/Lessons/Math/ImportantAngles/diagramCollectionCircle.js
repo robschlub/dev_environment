@@ -17,10 +17,6 @@ export type extendedCircleType = {
   _acuteRange: DiagramElementPrimative;
   _obtuseRange: DiagramElementPrimative;
   _reflexRange: DiagramElementPrimative;
-  _axes: {
-    _x: DiagramElementPrimative;
-    _y: DiagramElementPrimative;
-  } & DiagramElementCollection;
 } & circleType;
 
 type angleTypes = 'acute' | 'obtuse' | 'right' | 'reflex' | 'straight';
@@ -60,28 +56,28 @@ class ImportantAnglesCollection extends AngleCircle {
     return rightAngle;
   }
 
-  makeAxes() {
-    const xAxis = this.makeLine(
-      new Point(0, 0),
-      this.layout.axes.length * 2.2,
-      this.layout.linewidth / 4,
-      this.colors.axes,
-      new Transform().translate(-this.layout.axes.length * 1.1, 0),
-    );
-    const yAxis = this.makeLine(
-      new Point(0, 0),
-      this.layout.axes.length * 2.2,
-      this.layout.linewidth / 4,
-      this.colors.axes,
-      new Transform()
-        .rotate(Math.PI / 2)
-        .translate(0, -this.layout.axes.length * 1.1),
-    );
-    const axes = this.shapes.collection();
-    axes.add('x', xAxis);
-    axes.add('y', yAxis);
-    return axes;
-  }
+  // makeAxes() {
+  //   const xAxis = this.makeLine(
+  //     new Point(0, 0),
+  //     this.layout.axes.length * 2.2,
+  //     this.layout.linewidth / 4,
+  //     this.colors.axes,
+  //     new Transform().translate(-this.layout.axes.length * 1.1, 0),
+  //   );
+  //   const yAxis = this.makeLine(
+  //     new Point(0, 0),
+  //     this.layout.axes.length * 2.2,
+  //     this.layout.linewidth / 4,
+  //     this.colors.axes,
+  //     new Transform()
+  //       .rotate(Math.PI / 2)
+  //       .translate(0, -this.layout.axes.length * 1.1),
+  //   );
+  //   const axes = this.shapes.collection();
+  //   axes.add('x', xAxis);
+  //   axes.add('y', yAxis);
+  //   return axes;
+  // }
 
   makeAcuteRange() {
     return this.shapes.polygonFilled(
@@ -114,11 +110,11 @@ class ImportantAnglesCollection extends AngleCircle {
     this._circle.add('acuteRange', this.makeAcuteRange());
     this._circle.add('obtuseRange', this.makeObtuseRange());
     this._circle.add('reflexRange', this.makeReflexRange());
-    this._circle.add('axes', this.makeAxes());
+    // this._circle.add('axes', this.makeAxes());
     this._circle.order = [
-      ...this._circle.order.slice(-4, -1),
+      ...this._circle.order.slice(-4),
       ...this._circle.order.slice(0, 2),
-      ...this._circle.order.slice(-1),
+      // ...this._circle.order.slice(-1),
       ...this._circle.order.slice(2, -4),
     ];
   }

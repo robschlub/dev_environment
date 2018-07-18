@@ -11,6 +11,7 @@ const cssColorNames = [
   'sine',
   'quadAngles',
   'arcLight',
+  'angleDark',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -21,7 +22,7 @@ export default function sinCosCircleLayout() {
   layout.circle.right = new Point(1.4, -0.2);
   layout.circle.bottomRight = new Point(1.4, 0);
   layout.angleEqualsText.bottomRight = new Point(1.0, -1.7);
-  layout.angleEqualsText.bottomRight2 = new Point(1, -1.5);
+  // layout.angleEqualsText.bottomRight2 = new Point(1, -1.5);
   layout.axes = {
     length: 1.3,
   };
@@ -46,7 +47,7 @@ export default function sinCosCircleLayout() {
   layout.unitsSelector = {
     position: new Point(0, -1.9),
   };
-  layout.arc.lineWidth = 0.01;
+  layout.circumference.lineWidth = 0.01;
 
   layout.grid = {
     width: layout.radius * 2,
@@ -57,8 +58,8 @@ export default function sinCosCircleLayout() {
   };
 
   // layout.angle.radius = 0.3;
-  layout.angle.arrow.width = 0.05;
-  layout.angle.arrow.height = 0.05;
+  // layout.angle.arrow.width = 0.05;
+  // layout.angle.arrow.height = 0.05;
 
   layout.quadEqn = {
     position: new Point(-1.3, -1.35),

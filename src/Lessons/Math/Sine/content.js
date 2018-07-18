@@ -53,22 +53,68 @@ class Content extends LessonContent {
         angle: click(diag.pulseAngle, [diag], colors.angleText),
         circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 2], colors.circle),
       },
+      setEnterState: () => {
+        diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+        diag.resetCircle('bottomRight', 0.001);
+        diag.showRadians();
+        diag.toggleUnits('rad');
+      },
       showOnly: [
         circle,
         circle._radius,
         circle._arc,
-        circle._reference,
         diag._unitsSelector,
       ],
+      show: [
+        diag._angleText,
+        circle._axes,
+        circle._angle,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'bottomRight', null, 5);
+      },
       setSteadyState: () => {
-        circle._angle.showAll();
-        diag._angleText.setPosition(layout.angleEqualsText.bottomRight2);
         diag._angleText.showAll();
-        diag.resetCircle('bottomRight', Math.PI / 3);
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_45">
+          As the rotation angle changes, the line's vertical height and horizontal length changes.
+        </p>
+      `),
+      modifiers: {
+      },
+      // setEnterState: () => {
+      //   circle._angle.setColor(colors.angleDark);
+      // },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._circumference,
+        circle._sineLine,
+        circle._sineLine._line,
+        diag._unitsSelector,
+      ],
+      show: [
+        diag._angleText,
+        circle._axes,
+        circle._angle,
+      ],
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'bottomRight', null, 5);
+      },
+      setSteadyState: () => {
+        circle._axes.showAll();
+        diag.resetCircle('bottomRight');
         diag.showRadians();
         diag.toggleUnits('rad');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
+      // setLeaveState: () => {
+      //   circle._angle.setColor(colors.angle);
+      // },
     });
     this.addSection({
       title: 'How to calculate',

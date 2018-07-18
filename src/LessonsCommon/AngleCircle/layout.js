@@ -34,18 +34,24 @@ export default function angleCircleLayout() {
         width: 0.1,
         height: 0.1,
       },
+      lineWidth: 0.03,
+    },
+    axes: {
+      length: 1.2,
     },
     circle: {
       angle: {
         small: 0.8,
         large: Math.PI * 1.4,
       },
+      center: new Point(0, 0),
     },
-
     arc: {
       lineWidth: 0.03,
     },
-
+    circumference: {
+      lineWidth: 0.03,
+    },
     angleRadius: 0.5,
     anchorPoints: 50,
     anglePoints: 400,
