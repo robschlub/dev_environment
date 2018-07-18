@@ -33,12 +33,12 @@ export default function sinCosCircleLayout() {
   };
   layout.quadAngles = {
     lineWidth: 0.01,
-    radius: 0.8,
+    radius: 0.4,
   };
   layout.textYLimit = 0.07;
-  layout.angle.radius = 0.4;
+  layout.angle.radius = 0.2;
   layout.angle.lineWidth = 0.02;
-  layout.angle.textOffset = -0.15;
+  layout.angle.textOffset = 0.07;
   layout.unitsSelector = {
     position: new Point(0, -1.9),
   };

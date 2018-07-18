@@ -68,7 +68,7 @@ export type SineCollectionType = {
 };
 
 const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
-const quadrantOffsets = [-0.07, -0.12, -0.12, -0.15];
+const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
 const sineOffsets = [0.03, 0.22, 0.22, 0.25];
 
 class SinCosCircle extends AngleCircle {
@@ -218,7 +218,7 @@ class SinCosCircle extends AngleCircle {
         arc.angleToDraw = r;
         const position = polarToRect(
           this.layout.angle.radius + this.layout.angle.textOffset,
-          Math.min(r / 2, Math.PI / 4),
+          Math.min(r / 2, Math.PI),
         );
         const ySign = position.y / Math.abs(position.y);
         if (Math.abs(position.y) < this.layout.textYLimit) {
@@ -523,7 +523,7 @@ class SinCosCircle extends AngleCircle {
         this._circle._symmetry.hideAll();
         this._circle._quad0Angle.hideAll();
         this._circle[`_quad${quad}Angle`].showAll();
-        this._circle[`_quad${quad}Angle`].pulseScaleNow(1, 1.4);
+        this._circle[`_quad${quad}Angle`].pulseScaleNow(1, 1.3);
       }
       if (step === 1) {
         this.updateRotation(true);
@@ -532,14 +532,14 @@ class SinCosCircle extends AngleCircle {
         this._circle._symmetry.show();
         this._circle._quad0Angle.showAll();
         this._circle[`_quad${quad}Angle`].showAll();
-        this._circle._quad0Angle.pulseScaleNow(1, 1.4);
+        this._circle._quad0Angle.pulseScaleNow(1, 1.3);
       }
       if (step === 2) {
         this.updateRotation(true);
         this._circle._symmetry.showAll();
         this._circle._quad0Angle.showAll();
         this._circle[`_quad${quad}Angle`].showAll();
-        this._circle._symmetry._sine._line.pulseThickNow(1, 7, 7);
+        this._circle._symmetry._sine._line.pulseThickNow(1, 5, 7);
       }
       if (step === 3) {
         this.updateRotation(true);
