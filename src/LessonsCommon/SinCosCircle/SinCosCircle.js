@@ -534,26 +534,23 @@ class SinCosCircle extends AngleCircle {
     }
   }
 
-  selectAngle(quadrant: quadrantType) {
-    // let elem;
-    // if (quadrant !== this.varState.quadrant) {
-    //   elem = document.getElementById(`id_${this.varState.quadrant}`);
-    //   if (elem != null) {
-    //     elem.classList.remove('lesson__important_angles_table_selected');
-    //   }
-    // }
-    // elem = document.getElementById(`id_${quadrant}`);
-    // if (elem != null) {
-    //   elem.classList.add('lesson__important_angles_table_selected');
-    // }
-    // if (this.varState.quadrant === 'right' && quadrant !== 'right') {
-    //   this.toggleRightAngleLine(false);
-    // }
+  selectQuadrant(quadrant: quadrantType) {
+    let elem;
+    if (quadrant !== this.varState.quadrant) {
+      elem = document.getElementById(`id_lesson__quadrant_selector_${this.varState.quadrant + 1}`);
+      if (elem != null) {
+        elem.classList.remove('lesson__sine_cos_diagram_units_selected');
+      }
+    }
+    elem = document.getElementById(`id_lesson__quadrant_selector_${quadrant + 1}`);
+    if (elem != null) {
+      elem.classList.add('lesson__sine_cos_diagram_units_selected');
+    }
     this.varState.quadrant = quadrant;
   }
 
   showQuadrant(quadrant: quadrantType) {
-    this.selectAngle(quadrant);
+    this.selectQuadrant(quadrant);
     this.showText(quadrant);
     const circle = this._circle;
     const quads = [circle._quad0, circle._quad1, circle._quad2, circle._quad3];

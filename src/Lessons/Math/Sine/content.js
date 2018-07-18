@@ -97,7 +97,7 @@ class Content extends LessonContent {
         diag._angleText.showAll();
         diag.showRadians();
         diag.toggleUnits('rad');
-        diag.selectAngle(0);
+        diag.selectQuadrant(0);
       },
     });
   }
