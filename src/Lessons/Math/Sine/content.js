@@ -70,7 +70,8 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         diag.resetCircle('right', Math.PI / 3);
-        circle._angle.showAll();
+        // circle._angle.showAll();
+        circle._mainAngle.showAll();
         // circle._axes.showAll();
         circle._sineLine.showAll();
         circle._grid.showAll();

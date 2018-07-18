@@ -36,6 +36,11 @@ export type SinCosCircleType = {
   _quad1Angle: quadAngle;
   _quad2Angle: quadAngle;
   _quad3Angle: quadAngle;
+  _mainAngle: {
+    _arc: DiagramElementPrimative;
+    _text: DiagramElementPrimative;
+    updateRotation: (number) => void;
+  } & DiagramElementCollection;
   _symmetry: {
     _line: DiagramElementPrimative;
     _sine: sineLineType;
@@ -63,7 +68,7 @@ export type SineCollectionType = {
 };
 
 const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
-const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
+const quadrantOffsets = [-0.07, -0.12, -0.12, -0.15];
 const sineOffsets = [0.03, 0.22, 0.22, 0.25];
 
 class SinCosCircle extends AngleCircle {
@@ -153,11 +158,58 @@ class SinCosCircle extends AngleCircle {
           position.y = this.layout.textYLimit * ySign;
         }
         text.setPosition(position);
+        if (angleToDraw < 0.14) {
+          text.hide();
+        } else {
+          text.show();
+        }
       }
     };
     angle.setAngleText = (newText: string) => {
       angle._text.vertices.element.innerHTML = newText;
     };
+    return angle;
+  }
+
+  makeMainAngle() {
+    const angle = this.shapes.collection(new Transform().translate(0, 0));
+    const arc = this.shapes.polygon(
+      this.layout.anglePoints,
+      this.layout.angle.radius, this.layout.angle.lineWidth,
+      0, 1, this.layout.anglePoints,
+      this.layout.colors.angle, new Transform()
+        .rotate(0)
+        .translate(0, 0),
+    );
+
+    const text = this.shapes.htmlText(
+      'θ', 'id_diagram_main_angle_theta', '',
+      new Point(0, 0), 'middle', 'center',
+    );
+
+    angle.add('arc', arc);
+    angle.add('text', text);
+
+    angle.updateRotation = (r: number) => {
+      if (angle.isShown) {
+        arc.angleToDraw = r;
+        const position = polarToRect(
+          this.layout.angle.radius + this.layout.angle.textOffset,
+          Math.min(r / 2, Math.PI / 4),
+        );
+        const ySign = position.y / Math.abs(position.y);
+        if (Math.abs(position.y) < this.layout.textYLimit) {
+          position.y = this.layout.textYLimit * ySign;
+        }
+        if (r < 0.52) {
+          text.hide();
+        } else {
+          text.show();
+        }
+        text.setPosition(position);
+      }
+    };
+
     return angle;
   }
 
@@ -250,13 +302,18 @@ class SinCosCircle extends AngleCircle {
         const endYSign = endY / Math.abs(endY);
         sine._line.setPosition(endX, 0);
         sine._line.transform.updateScale(endY / radius, 1);
-        if (sine._text.isShown) {
+        if (sine.isShown) {
           let textY = endY / 1.7;
           if (Math.abs(textY) < this.layout.textYLimit) {
             textY = this.layout.textYLimit * endYSign;
           }
           // console.log(sine.textOffset);
           sine._text.setPosition(endX + endX / Math.abs(endX) * sine.textOffset, textY);
+          // if (Math.abs(endY) < 0.06) {
+          //   text.hide();
+          // } else {
+          //   text.show();
+          // }
         }
       }
     };
@@ -273,6 +330,7 @@ class SinCosCircle extends AngleCircle {
     this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'π - θ', Math.PI, -1, quadrantOffsets[1]));
     this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1, quadrantOffsets[2]));
     this._circle.add('quad3Angle', this.makeAngle(rad, '3', '2π - θ', 0, -1, quadrantOffsets[3]));
+    this._circle.add('mainAngle', this.makeMainAngle());
     this._circle.add('quad0', this.makeQuad(0));
     this._circle.add('quad1', this.makeQuad(1));
     this._circle.add('quad2', this.makeQuad(2));
@@ -324,6 +382,7 @@ class SinCosCircle extends AngleCircle {
     this._circle._quad2Angle.updateRotation(r, q);
     this._circle._quad3Angle.updateRotation(r, q);
     this._circle._symmetry.updateRotation(r, q);
+    this._circle._mainAngle.updateRotation(r);
   }
 
   // eslint-disable-next-line class-methods-use-this

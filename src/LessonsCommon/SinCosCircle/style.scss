@@ -6,7 +6,7 @@ $colors: (
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
   sine:             color('red', 'darker'),
-  quadAngles:  color('blue', 'darker'),
+  quadAngles:       color('blue', 'darker'),
 );
 
 body {
@@ -21,6 +21,13 @@ body {
 .diagram__quad_angles {
   font-size: calc(var(--lesson__diagram-font-size) * 0.5);
   color: map-get($colors, quadAngles);
+  font-family: Times New Roman, serif;
+  font-style: italic;
+}
+
+#id_diagram_main_angle_theta {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+  color: map-get($geometry_colors, angle);
   font-family: Times New Roman, serif;
   font-style: italic;
 }
