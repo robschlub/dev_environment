@@ -25,7 +25,7 @@ export default function sinCosCircleLayout() {
 
   layout.sine = {
     lineWidth: 0.01,
-    offset: 0.12,
+    // offset: 0.12,
   };
   layout.cosine = {
     lineWidth: 0.005,
@@ -34,5 +34,6 @@ export default function sinCosCircleLayout() {
     lineWidth: 0.005,
     radius: 0.8,
   };
+  layout.textYLimit = 0.07;
   return layout;
 }

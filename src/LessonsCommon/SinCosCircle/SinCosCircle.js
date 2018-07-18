@@ -14,6 +14,7 @@ type rightAngleType = {
 type quadAngle = {
   _arc: DiagramElementPrimative;
   _text: DiagramElementPrimative;
+  textOffset: number;
   updateRotation: (number, number) => void;
   setAngleText: (string) => void;
 } & DiagramElementCollection;
@@ -63,6 +64,7 @@ export type SineCollectionType = {
 
 const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
 const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
+const sineOffsets = [0.03, 0.22, 0.22, 0.25];
 
 class SinCosCircle extends AngleCircle {
   _circle: SinCosCircleType;
@@ -142,10 +144,15 @@ class SinCosCircle extends AngleCircle {
           angleToDraw = Math.PI * 2 - r;
         }
         arc.angleToDraw = angleToDraw;
-        text.setPosition(polarToRect(
+        const position = polarToRect(
           radius + angle.textOffset,
           startAngle + direction * angleToDraw / 2,
-        ));
+        );
+        const ySign = position.y / Math.abs(position.y);
+        if (Math.abs(position.y) < this.layout.textYLimit) {
+          position.y = this.layout.textYLimit * ySign;
+        }
+        text.setPosition(position);
       }
     };
     angle.setAngleText = (newText: string) => {
@@ -235,6 +242,7 @@ class SinCosCircle extends AngleCircle {
     const sine = this.shapes.collection();
     sine.add('line', line);
     sine.add('text', text);
+    sine.textOffset = 0.15;
     sine.updateRotation = (radius: number, angle: number) => {
       if (sine.isShown) {
         const endX = radius * Math.cos(angle);
@@ -244,10 +252,11 @@ class SinCosCircle extends AngleCircle {
         sine._line.transform.updateScale(endY / radius, 1);
         if (sine._text.isShown) {
           let textY = endY / 2;
-          if (Math.abs(textY) < 0.05) {
-            textY = 0.05 * endYSign;
+          if (Math.abs(textY) < this.layout.textYLimit) {
+            textY = this.layout.textYLimit * endYSign;
           }
-          sine._text.setPosition(endX + endX / Math.abs(endX) * this.layout.sine.offset, textY);
+          // console.log(sine.textOffset);
+          sine._text.setPosition(endX + endX / Math.abs(endX) * sine.textOffset, textY);
         }
       }
     };
@@ -472,6 +481,7 @@ class SinCosCircle extends AngleCircle {
         // if (index === 1) {
         this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
         this._circle._quad0Angle.textOffset = quadrantOffsets[index];
+        this._circle._symmetry._sine.textOffset = sineOffsets[index];
         this._circle._symmetry.setSineText(`sin ${quadrantAngles[index]}`);
         // }
       }
