@@ -1,6 +1,6 @@
 // @flow
 
-import { LessonContent, clickWord, onClickId, click, highlight } from '../../../js/Lesson/LessonContent';
+import { LessonContent, clickWord, onClickId, click, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 
@@ -37,7 +37,9 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Introduction',
       setContent: [`
-        <p>Quadrant (quarter circle):</p>
+        <p>
+          Choose quadrant:
+        </p>
         <table class="lesson__quadrant_selector_table">
           <tr>
             <td>|q1|</td>
@@ -47,8 +49,27 @@ class Content extends LessonContent {
           </tr>
         </table>
       `,
+      `<p>
+        To calculate |sin_theta|:
+      </p>
+        <ul class="lesson__quadrant_steps">
+        <li id="id_lesson_quadrant_steps_1">
+          Calculate symmetric angle
+        </li>
+        <li id="id_lesson_quadrant_steps_2">
+          Use symmetry to find angle in 1st quadrant
+        </li>
+        <li id="id_lesson_quadrant_steps_3">
+          Calculate sine of 1st quadrant angle
+        </li>
+        <li id="id_lesson_quadrant_steps_4">
+          Generalize
+        </li>
+      </ul>
+      `,
       ],
       modifiers: {
+        sin_theta: highlightWord('sin θ', 'lesson__highlight_sin_theta'),
         q1: clickWord('1', 'id_lesson__quadrant_selector_1', diag.goToQuadrant, [diag, 0]),
         q2: clickWord('2', 'id_lesson__quadrant_selector_2', diag.goToQuadrant, [diag, 1]),
         q3: clickWord('3', 'id_lesson__quadrant_selector_3', diag.goToQuadrant, [diag, 2]),
@@ -88,16 +109,22 @@ class Content extends LessonContent {
         circle._mainAngle.showAll();
         circle._sineLine.showAll();
         circle._grid.showAll();
-        circle._quad0Angle.showAll();
-        circle._quad1Angle.showAll();
-        circle._quad2Angle.showAll();
-        circle._quad3Angle.showAll();
-        circle._symmetry.showAll();
+        // circle._quad0Angle.showAll();
+        // circle._quad1Angle.showAll();
+        // circle._quad2Angle.showAll();
+        // circle._quad3Angle.showAll();
+        // circle._symmetry.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
         diag.showRadians();
         diag.toggleUnits('rad');
         diag.selectQuadrant(0);
+
+        onClickId('id_lesson_quadrant_steps_1', diag.goToStep, [diag, 0]);
+        onClickId('id_lesson_quadrant_steps_2', diag.goToStep, [diag, 1]);
+        onClickId('id_lesson_quadrant_steps_3', diag.goToStep, [diag, 2]);
+        onClickId('id_lesson_quadrant_steps_4', diag.goToStep, [diag, 3]);
+        diag.goToStep(-1);
       },
     });
   }

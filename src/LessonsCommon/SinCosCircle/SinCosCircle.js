@@ -347,7 +347,7 @@ class SinCosCircle extends AngleCircle {
     this.add('unitsSelector', this.makeDegreesRadiansSelector());
     this._circle.add('rightAngle', this.makeRightAngle());
     const rad = this.layout.quadAngles.radius;
-    
+
     this._circle.add('quad0Angle', this.makeAngle(rad, '0', 'θ', 0, 1, quadrantOffsets[0]));
     this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'π - θ', Math.PI, -1, quadrantOffsets[1]));
     this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1, quadrantOffsets[2]));
@@ -496,6 +496,55 @@ class SinCosCircle extends AngleCircle {
     }
   }
 
+  goToStep(step: number) {
+    const elem1 = document.getElementById('id_lesson_quadrant_steps_1');
+    const elem2 = document.getElementById('id_lesson_quadrant_steps_2');
+    const elem3 = document.getElementById('id_lesson_quadrant_steps_3');
+    const elem4 = document.getElementById('id_lesson_quadrant_steps_4');
+    if (elem1 && elem2 && elem3 && elem4) {
+      const elems = [elem1, elem2, elem3, elem4];
+      elems.forEach((e, index) => {
+        if (index === step) {
+          e.classList.add('lesson__sine_cos_diagram_step_selected');
+        } else {
+          e.classList.remove('lesson__sine_cos_diagram_step_selected');
+        }
+      });
+      const quad = this.varState.quadrant;
+      // console.log(this._circle, `quad${quad}Angle`)
+      // console.log(this._circle[`_quad${quad}Angle`])
+      if (step === -1) {
+        this._circle._symmetry.hideAll();
+        this._circle._quad0Angle.hideAll();
+        this._circle[`_quad${quad}Angle`].hideAll();
+      }
+      if (step === 0) {
+        this._circle._symmetry.hideAll();
+        this._circle._quad0Angle.hideAll();
+        this._circle[`_quad${quad}Angle`].showAll();
+      }
+      if (step === 1) {
+        this._circle._symmetry.showAll();
+        this._circle._symmetry._sine.hideAll();
+        // this._circle._symmetry._line.show();
+        this._circle._symmetry.show();
+        this._circle._quad0Angle.showAll();
+        this._circle[`_quad${quad}Angle`].showAll();
+      }
+      if (step === 2) {
+        this._circle._symmetry.showAll();
+        this._circle._quad0Angle.showAll();
+        this._circle[`_quad${quad}Angle`].showAll();
+      }
+      if (step === 3) {
+        this._circle._symmetry.showAll();
+        this._circle._quad0Angle.showAll();
+        this._circle[`_quad${quad}Angle`].showAll();
+      }
+    }
+    this.updateRotation();
+    this.diagram.animateNextFrame();
+  }
 
   // setParagraphUnits(onUnit: 'rad' | 'deg') {
   //   // const angleType = this.varState.angleSelected;
@@ -546,11 +595,18 @@ class SinCosCircle extends AngleCircle {
     if (elem != null) {
       elem.classList.add('lesson__sine_cos_diagram_units_selected');
     }
-    this.varState.quadrant = quadrant;
   }
 
+  checkForQuadrantChange(quadrant: number) {
+    if (quadrant !== this.varState.quadrant) {
+      this.varState.quadrant = quadrant;
+      this.resetSteps();
+    }
+  }
   showQuadrant(quadrant: quadrantType) {
     this.selectQuadrant(quadrant);
+    this.checkForQuadrantChange(quadrant);
+    // this.varState.quadrant = quadrant;
     this.showText(quadrant);
     const circle = this._circle;
     const quads = [circle._quad0, circle._quad1, circle._quad2, circle._quad3];
@@ -564,36 +620,45 @@ class SinCosCircle extends AngleCircle {
           this._circle._quad0Angle.hideAll();
           this._circle._symmetry.hideAll();
         } else {
-          this._circle._quad0Angle.showAll();
-          this._circle._symmetry.showAll();
+          // this._circle._quad0Angle.showAll();
+          // this._circle._symmetry.showAll();
           this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
           this._circle._quad0Angle.textOffset = quadrantOffsets[index];
           this._circle._symmetry._sine.textOffset = sineOffsets[index];
           this._circle._symmetry.setSineText(`sin ${quadrantAngles[index]}`);
         }
-        if (index === 0) {
-          this._circle._quad1Angle.hideAll();
-          this._circle._quad2Angle.hideAll();
-          this._circle._quad3Angle.hideAll();
-        }
-        if (index === 1) {
-          this._circle._quad1Angle.showAll();
-          this._circle._quad2Angle.hideAll();
-          this._circle._quad3Angle.hideAll();
-        }
-        if (index === 2) {
-          this._circle._quad1Angle.hideAll();
-          this._circle._quad2Angle.showAll();
-          this._circle._quad3Angle.hideAll();
-        }
-        if (index === 3) {
-          this._circle._quad1Angle.hideAll();
-          this._circle._quad2Angle.hideAll();
-          this._circle._quad3Angle.showAll();
-        }
+        // if (index === 0) {
+        //   this._circle._quad1Angle.hideAll();
+        //   this._circle._quad2Angle.hideAll();
+        //   this._circle._quad3Angle.hideAll();
+        // }
+        // if (index === 1) {
+        //   this._circle._quad1Angle.showAll();
+        //   this._circle._quad2Angle.hideAll();
+        //   this._circle._quad3Angle.hideAll();
+        // }
+        // if (index === 2) {
+        //   this._circle._quad1Angle.hideAll();
+        //   this._circle._quad2Angle.showAll();
+        //   this._circle._quad3Angle.hideAll();
+        // }
+        // if (index === 3) {
+        //   this._circle._quad1Angle.hideAll();
+        //   this._circle._quad2Angle.hideAll();
+        //   this._circle._quad3Angle.showAll();
+        // }
         // }
       }
     });
+  }
+
+  resetSteps() {
+    this._circle._quad0Angle.hideAll();
+    this._circle._quad1Angle.hideAll();
+    this._circle._quad2Angle.hideAll();
+    this._circle._quad3Angle.hideAll();
+    this._circle._symmetry.hideAll();
+    this.goToStep(-1);
   }
 
   goToQuadrant(quad: number) {
@@ -608,11 +673,13 @@ class SinCosCircle extends AngleCircle {
       }
     }
     if (this.varState.quadrant !== quad) {
-      this._circle._quad0Angle.hideAll();
-      this._circle._quad1Angle.hideAll();
-      this._circle._quad2Angle.hideAll();
-      this._circle._quad3Angle.hideAll();
-      this._circle._symmetry.hideAll();
+      // this._circle._quad0Angle.hideAll();
+      // this._circle._quad1Angle.hideAll();
+      // this._circle._quad2Angle.hideAll();
+      // this._circle._quad3Angle.hideAll();
+      // this._circle._symmetry.hideAll();
+      // this.goToStep(-1);
+      this.resetSteps();
     }
     this.rotateToAngleDisablingAutoChange(angle);
   }
