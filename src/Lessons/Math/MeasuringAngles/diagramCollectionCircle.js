@@ -41,7 +41,7 @@ type circumferenceEquationType = {
   _arcLength: DiagramElementPrimative;
   _angle: DiagramElementPrimative;
   varState: number;
-};
+} & DiagramElementCollection;
 
 type equationType = {
   _arc: DiagramElementPrimative;
@@ -409,7 +409,7 @@ class CircleCollection extends AngleCircle {
 
 
   toggleCircEquations(scale: number = 1, callback: ?(?mixed) => void = null) {
-    this.diagram.stop();
+    this._circumferenceEquation.stop();
     let callbackToUse = null;
     let scaleToUse = 1;
     if (typeof callback === 'function') {

@@ -134,7 +134,7 @@ class WebGLInstance {
       // this.gl.viewport(0, 500, 500, 500);   // Tell WebGL how to convert from clip space to pixels
 
       // Clear the canvas
-      const bc = backgroundColor;
+      // const bc = backgroundColor;
       // this.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
       this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
