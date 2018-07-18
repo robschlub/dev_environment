@@ -470,6 +470,7 @@ class SinCosCircle extends AngleCircle {
         q.show();
         // if (index === 1) {
         this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
+        this._circle._symmetry.setSineText(`sin ${quadrantAngles[index]}`);
         // }
       }
     });
