@@ -41,3 +41,14 @@ body {
 .lesson__sine_cos_diagram_units_selected {
   color: color('diagram', 'text-base');
 }
+
+.lesson__quadrant_selector_table {
+  width: 40%;
+  table-layout: fixed;
+  color: map-get($colors, disabled);
+  text-align: center;
+}
+
+// .lesson__quadrant_selector_table td {
+//   padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
+//   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);

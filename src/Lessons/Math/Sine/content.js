@@ -36,10 +36,23 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     this.addSection({
       title: 'Introduction',
-      setContent: `
-        This is a test
+      setContent: [`
+        <p>Quadrant (quarter circle):</p>
+        <table class="lesson__quadrant_selector_table">
+          <tr>
+            <td>|q1|</td>
+            <td>|q2|</td>
+            <td>|q3|</td>
+            <td>|q4|</td>
+          </tr>
+        </table>
       `,
+      ],
       modifiers: {
+        q1: clickWord('1', 'id_lesson__quadrant_selector_1', diag.goToQuadrant, [diag, 0]),
+        q2: clickWord('2', 'id_lesson__quadrant_selector_2', diag.goToQuadrant, [diag, 1]),
+        q3: clickWord('3', 'id_lesson__quadrant_selector_3', diag.goToQuadrant, [diag, 2]),
+        q4: clickWord('4', 'id_lesson__quadrant_selector_4', diag.goToQuadrant, [diag, 3]),
         // Acute: clickWord('Acute', 'id_acute', diag.goToAcute, [diag]),
         // Right: clickWord('Right', 'id_right', diag.goToRight, [diag]),
         // Obtuse: clickWord('Obtuse', 'id_obtuse', diag.goToObtuse, [diag]),
@@ -84,7 +97,7 @@ class Content extends LessonContent {
         diag._angleText.showAll();
         diag.showRadians();
         diag.toggleUnits('rad');
-        diag.selectAngle(1);
+        diag.selectAngle(0);
       },
     });
   }

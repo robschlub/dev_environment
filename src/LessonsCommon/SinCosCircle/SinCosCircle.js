@@ -599,6 +599,26 @@ class SinCosCircle extends AngleCircle {
     });
   }
 
+  goToQuadrant(quad: number) {
+    const randAngle45 = Math.random() * Math.PI / 4 * 0.95;
+    let angle = quad * Math.PI / 2 + Math.PI / 4;
+    const r = this.varState.rotation;
+    if (this.varState.quadrant === quad) {
+      if (r <= angle) {
+        angle = r + randAngle45;
+      } else {
+        angle = r - randAngle45;
+      }
+    }
+    if (this.varState.quadrant !== quad) {
+      this._circle._quad0Angle.hideAll();
+      this._circle._quad1Angle.hideAll();
+      this._circle._quad2Angle.hideAll();
+      this._circle._quad3Angle.hideAll();
+      this._circle._symmetry.hideAll();
+    }
+    this.rotateToAngleDisablingAutoChange(angle);
+  }
   // goToAcute() {
   //   const angle45 = Math.random() * Math.PI / 4 * 0.95;
   //   let angle = angle45;
