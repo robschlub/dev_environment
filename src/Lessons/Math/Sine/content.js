@@ -55,7 +55,7 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-        diag.resetCircle('bottomRight', 0.001);
+        diag.resetCircle('right', 0.001);
         diag.showRadians();
         diag.toggleUnits('rad');
       },
@@ -71,7 +71,7 @@ class Content extends LessonContent {
         circle._angle,
       ],
       transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'bottomRight', null, 5);
+        diag.transitionCircle(done, 'right', null, 5);
       },
       setSteadyState: () => {
         diag._angleText.showAll();
@@ -107,11 +107,11 @@ class Content extends LessonContent {
         circle._sineLine,
       ],
       transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'bottomRight', Math.PI / 4, 5);
+        diag.transitionCircle(done, 'right', Math.PI / 4, 5);
       },
       setSteadyState: () => {
         circle._axes.showAll();
-        diag.resetCircle('bottomRight');
+        diag.resetCircle('right');
         diag.showRadians();
         diag.toggleUnits('rad');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
@@ -119,6 +119,61 @@ class Content extends LessonContent {
       // setLeaveState: () => {
       //   circle._angle.setColor(colors.angle);
       // },
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          Understanding the |relationship| between a line's |angle of rotation|, and its |vertical| and |horizontal| components is key to understanding more about circles and triangles.
+        </p>
+        <p>
+          |This lesson| will examine the relationship between the |angle| and |vertical| component.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          To examine this relationship, we can overlay the circle on a grid and measure the vertical component at different angles.
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+        For simplicity we will:
+        <ul>
+          <li>Make the circle center the origin</li>
+          <li>Use a radius of 1</li>
+          <li>Label the angle as 𝜽</li>
+        </ul>
+        </p>
+      `),
+      setEnterState: () => {
+        // diag.interactiveSinePage = true;
+        circle._sineLine.setText('');
+        diag._sineText.setText('Vertical');
+        diag._angleText.setText('θ');
+        diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+        diag._sineText.setPosition(layout.angleEqualsText.bottomRight);
+        diag._angleText._text.vertices.element.classList.add('lesson__math_stye');
+        diag._angleText._text.vertices.element.classList.remove('action_word');
+        diag._angleText._text.vertices.element.classList.remove('action_word_enabled');
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        diag._unitsSelector,
+        circle._circumference,
+      ],
+      show: [
+        circle._mainAngle,
+        circle._grid,
+        circle._sineLine,
+        diag._angleText,
+        diag._sineText,
+      ],
+      setSteadyState: () => {
+        diag.resetCircle('right', Math.PI / 3);
+        diag.showRadians();
+        diag.toggleUnits('rad');
+        diag.updateRotation();
+      },
     });
     this.addSection({
       title: 'How to calculate',

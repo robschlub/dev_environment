@@ -15,7 +15,7 @@ export default function lessonLayout() {
   layout.radius = 1.3;
   layout.colors = Object.assign(colors, layout.colors);
   layout.circle.right = new Point(1.2, 0);
-  layout.angleEqualsText.bottomRight = new Point(0.7, -1.7);
+  layout.angleEqualsText.bottomRight = new Point(1.2, -1.6);
   layout.grid.width = layout.radius * 2;
   layout.grid.height = layout.radius * 2;
   layout.grid.position = new Point(-layout.radius, -layout.radius);

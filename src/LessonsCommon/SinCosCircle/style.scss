@@ -93,6 +93,12 @@ body {
   font-style: italic;
 }
 
+.lesson__math_stye {
+  font-family: Times New Roman, serif;
+  font-style: italic;
+  font-weight: normal;
+}
+
 .lesson__sine_text_hide {
   width: 0;
   font-size: 0;
@@ -108,4 +114,36 @@ body {
   color: color('diagram', 'text-base');
   margin-top: 2%;
 }
+
+#id_angle_text,
+#id_angle_value,
+#id_angle_units,
+#id_angle_equals,
+#id__sine_angle_sine__sine_text,
+#id__sine_angle_sine__sine_equals,
+#id__sine_angle_sine_angle__sine_value {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  font-weight: normal;
+}
+
+#id_angle_text,
+#id_angle_value,
+#id_angle_units,
+#id_angle_equals {
+  color: map-get($geometry_colors, angle);
+}
+
+
+#id__sine_angle_sine__sine_text,
+#id__sine_angle_sine__sine_equals,
+#id__sine_angle_sine_angle__sine_value {
+  color: map-get($colors, sine);
+}
+
+#id_angle_text {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+  color: map-get($colors, angleText);
+  font-weight: normal;
+}
+
 

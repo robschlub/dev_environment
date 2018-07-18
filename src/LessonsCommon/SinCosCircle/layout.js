@@ -22,7 +22,7 @@ export default function sinCosCircleLayout() {
   layout.colors = Object.assign(colors, layout.colors);
   layout.circle.right = new Point(1.4, -0.2);
   layout.circle.bottomRight = new Point(1.4, 0);
-  layout.angleEqualsText.bottomRight = new Point(1.0, -1.7);
+  layout.angleEqualsText.bottomRight = new Point(1.42, -1.7);
   // layout.angleEqualsText.bottomRight2 = new Point(1, -1.5);
   layout.axes = {
     length: 1.3,

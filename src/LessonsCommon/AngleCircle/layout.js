@@ -64,8 +64,8 @@ export default function angleCircleLayout() {
     angleEqualsText: {
       left: new Point(0, 0),
       units: {
-        deg: 0.87,
-        text: 0.90,
+        deg: 0.45,
+        text: 0.48,
       },
     },
 

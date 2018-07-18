@@ -245,6 +245,32 @@ class SinCosCircle extends AngleCircle {
     return angle;
   }
 
+  makeSineText() {
+    const sineText = this.shapes.collection(this.layout.angleEqualsText.left);
+
+    sineText.add('textSine', this.shapes.htmlText(
+      'Vertical', 'id__sine_angle_sine__sine_text', '',
+      new Point(-0.07, -0.2), 'middle', 'right',
+    ));
+    sineText.add('equalsSine', this.shapes.htmlText(
+      '=', 'id__sine_angle_sine__sine_equals', '',
+      new Point(0, -0.2), 'middle', 'left',
+    ));
+    sineText.add('valueSine', this.shapes.htmlText(
+      '0', 'id__sine_angle_sine_angle__sine_value', '',
+      new Point(0.42, -0.2), 'middle', 'right',
+    ));
+
+    sineText.setText = (newText: string) => {
+      sineText._textSine.vertices.element.innerHTML = newText;
+    };
+    sineText.updateRotation = (r: number) => {
+      const value = Math.sin(r);
+      sineText._valueSine.vertices.element.innerHTML = value.toFixed(2);
+    };
+    return sineText;
+  }
+
   makeMainAngle() {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
     const arc = this.shapes.polygon(
@@ -265,7 +291,7 @@ class SinCosCircle extends AngleCircle {
     angle.add('text', text);
 
     angle.updateRotation = (r: number, override: boolean = false) => {
-      if (angle.isShown || override) {
+      if (angle.isShown || override === true) {
         arc.angleToDraw = r;
         const position = polarToRect(
           this.layout.mainAngle.radius + this.layout.mainAngle.textOffset,
@@ -284,6 +310,9 @@ class SinCosCircle extends AngleCircle {
       }
     };
 
+    angle.setText = (newText: string) => {
+      angle._text.vertices.element.innerHTML = newText;
+    };
     return angle;
   }
 
@@ -432,6 +461,7 @@ class SinCosCircle extends AngleCircle {
     this.add('quad1Eqn', this.makeQuad1Equation());
     this.add('quad2Eqn', this.makeQuad2Equation());
     this.add('quad3Eqn', this.makeQuad3Equation());
+    this.add('sineText', this.makeSineText());
 
     this._circle.add('rightAngle', this.makeRightAngle());
     const rad = this.layout.quadAngles.radius;
@@ -493,8 +523,9 @@ class SinCosCircle extends AngleCircle {
     const q = this.varState.quadrant;
     this._circle._sineLine.updateRotation(this.layout.radius, r, override);
     this._circle._cosineLine.updateRotation(this.layout.radius, r, override);
+    this._circle._mainAngle.updateRotation(r, override);
+    this._sineText.updateRotation(r);
     if (this.interactiveSinePage) {
-      this._circle._mainAngle.updateRotation(r, override);
       this._circle._quad0Angle.updateRotation(r, q, override);
       this._circle._quad1Angle.updateRotation(r, q, override);
       this._circle._quad2Angle.updateRotation(r, q, override);

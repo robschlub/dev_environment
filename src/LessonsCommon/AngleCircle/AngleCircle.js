@@ -209,19 +209,19 @@ class AngleCircle extends DiagramElementCollection {
     const angleText = this.shapes.collection(this.layout.angleEqualsText.left);
     angleText.add('text', this.shapes.htmlText(
       'Angle', 'id_angle_text', 'action_word',
-      new Point(0, 0), 'middle', 'left',
+      new Point(-0.07, 0), 'middle', 'right',
     ));
     angleText.add('equals', this.shapes.htmlText(
       '=', 'id_angle_equals', '',
-      new Point(0.45, 0), 'middle', 'left',
+      new Point(0, 0), 'middle', 'left',
     ));
     angleText.add('angle', this.shapes.htmlText(
       '0', 'id_angle_value', '',
-      new Point(0.85, 0), 'middle', 'right',
+      new Point(0.43, 0), 'middle', 'right',
     ));
     angleText.add('units', this.shapes.htmlText(
       'portions', 'id_angle_units', '',
-      new Point(0.87, 0), 'middle', 'left',
+      new Point(0.45, 0), 'middle', 'left',
     ));
     angleText.setUnits = (units: string) => {
       if (units === '&deg;') {
@@ -230,6 +230,9 @@ class AngleCircle extends DiagramElementCollection {
         angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.text, 0);
       }
       angleText._units.vertices.element.innerHTML = units;
+    };
+    angleText.setText = (newText: string) => {
+      angleText._text.vertices.element.innerHTML = newText;
     };
     return angleText;
   }
