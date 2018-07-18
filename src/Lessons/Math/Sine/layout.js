@@ -14,7 +14,7 @@ export default function lessonLayout() {
   const layout: Object = sinCosCircleLayout();
   layout.radius = 1.3;
   layout.colors = Object.assign(colors, layout.colors);
-  layout.circle.right = new Point(1.3, 0);
+  layout.circle.right = new Point(1.2, 0);
   layout.angleEqualsText.bottomRight = new Point(0.7, -1.7);
   layout.grid.width = layout.radius * 2;
   layout.grid.height = layout.radius * 2;

@@ -22,6 +22,7 @@ type quadAngle = {
 type sineLineType = {
     _line: DiagramElementPrimative;
     _text: DiagramElementPrimative;
+    setText: (string) => void;
     textOffset: number;
     updateRotation: (number, number, boolean) => void;
   } & DiagramElementCollection;
@@ -383,6 +384,9 @@ class SinCosCircle extends AngleCircle {
         sine._text.setPosition(endX + endX / Math.abs(endX) * sine.textOffset, textY);
       }
     };
+    sine.setText = (newText: string) => {
+      sine._text.vertices.element.innerHTML = newText;
+    };
     return sine;
   }
 
@@ -415,6 +419,9 @@ class SinCosCircle extends AngleCircle {
         }
         cosine._text.setPosition(textX, endY + endY / Math.abs(endY) * cosine.textOffset);
       }
+    };
+    cosine.setText = (newText: string) => {
+      cosine._text.vertices.element.innerHTML = newText;
     };
     return cosine;
   }
@@ -820,6 +827,16 @@ class SinCosCircle extends AngleCircle {
   //     elem.classList.remove('lesson__important_angles_text_hide');
   //   }
   // }
+
+  pulseSineLine() {
+    this._circle._sineLine._line.pulseThickNow(1, 5, 7);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseCosineLine() {
+    this._circle._cosineLine._line.pulseThickNow(1, 5, 7);
+    this.diagram.animateNextFrame();
+  }
 
   rotateToAngleDisablingAutoChange(angle: number) {
     this.enableAutoChange = false;

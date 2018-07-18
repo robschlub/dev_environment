@@ -81,20 +81,22 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_45">
-          As the rotation angle changes, the line's vertical height and horizontal length changes.
+          As the rotation angle changes, the line's |vertical| height and |horizontal| length also changes.
         </p>
       `),
       modifiers: {
+        vertical: click(diag.pulseSineLine, [diag], colors.sine),
+        horizontal: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
-      // setEnterState: () => {
-      //   circle._angle.setColor(colors.angleDark);
-      // },
+      setEnterState: () => {
+        circle._sineLine.setText('vertical');
+        circle._cosineLine.setText('horizontal');
+        circle._sineLine.textOffset = 0.2;
+      },
       showOnly: [
         circle,
         circle._radius,
         circle._circumference,
-        circle._sineLine,
-        circle._sineLine._line,
         diag._unitsSelector,
       ],
       show: [
@@ -102,9 +104,10 @@ class Content extends LessonContent {
         circle._axes,
         circle._angle,
         circle._cosineLine,
+        circle._sineLine,
       ],
       transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'bottomRight', null, 5);
+        diag.transitionCircle(done, 'bottomRight', Math.PI / 4, 5);
       },
       setSteadyState: () => {
         circle._axes.showAll();
@@ -169,6 +172,8 @@ class Content extends LessonContent {
         diag.setRotation(Math.PI / 3);
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag.interactiveSinePage = true;
+        circle._sineLine.setText('sin θ');
+        circle._sineLine.textOffset = 0.15;
       },
       showOnly: [
         circle,
