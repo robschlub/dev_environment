@@ -513,9 +513,6 @@ class SinCosCircle extends AngleCircle {
         }
       });
       const quad = this.varState.quadrant;
-      // console.log(this._circle, `quad${quad}Angle`)
-      // console.log(this._circle[`_quad${quad}Angle`])
-      const r = this.varState.rotation;
       if (step === -1) {
         this._circle._symmetry.hideAll();
         this._circle._quad0Angle.hideAll();
@@ -525,9 +522,7 @@ class SinCosCircle extends AngleCircle {
         this.updateRotation(true);
         this._circle._symmetry.hideAll();
         this._circle._quad0Angle.hideAll();
-        // this._circle[`_quad${quad}Angle`].updateRotation(r, quad, true);
         this._circle[`_quad${quad}Angle`].showAll();
-        // this.updateRotation(true);
       }
       if (step === 1) {
         this.updateRotation(true);
@@ -629,7 +624,6 @@ class SinCosCircle extends AngleCircle {
     this._circle._symmetry.setSineText(`sin ${quadrantAngles[newQuad]}`);
 
     this.varState.quadrant = newQuad;
-    console.log("changing to", newQuad)
     this.resetSteps();
   }
 
@@ -640,7 +634,6 @@ class SinCosCircle extends AngleCircle {
   }
 
   resetSteps() {
-    console.log("resetting");
     this._circle._quad0Angle.hideAll();
     this._circle._quad1Angle.hideAll();
     this._circle._quad2Angle.hideAll();
