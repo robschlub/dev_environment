@@ -10,7 +10,7 @@ const cssColorNames = [
   'axes',
   'sine',
   'quadAngles',
-  'arc',
+  'arcLight',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -50,6 +50,10 @@ export default function sinCosCircleLayout() {
     range: new Rect(-1, -1, 2, 2),
     step: 0.2,
     position: new Point(-layout.radius, -layout.radius),
+  };
+
+  layout.quadEqn = {
+    position: new Point(-1.3, -1.35),
   };
   return layout;
 }

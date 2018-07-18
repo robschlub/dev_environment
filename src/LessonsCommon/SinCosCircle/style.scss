@@ -7,7 +7,7 @@ $colors: (
   axes:             color(0, light),
   sine:             color('red', 'base'),
   quadAngles:       color('blue', 'darker'),
-  arc:         color('blue', 'darker'),
+  arcLight:         color('grey', 'darker'),
 );
 
 body {
@@ -46,6 +46,17 @@ body {
 
 .lesson__sine_cos_diagram_step_selected {
   color: color('diagram', 'text-base');
+}
+
+.lesson__sine_eqn {
+  color: map-get($colors, disabled);
+  font-family: Times New Roman, serif;
+  // font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  font-style: italic;
+}
+
+.lesson__sine_eqn_selected {
+  color: map-get($colors, sine);
 }
 
 .lesson__quadrant_selector_table {
