@@ -1,6 +1,8 @@
 // @flow
 
-import { LessonContent, clickWord, onClickId, click, highlightWord } from '../../../js/Lesson/LessonContent';
+import {
+  LessonContent, clickWord, onClickId, centerV,
+  click, highlightWord } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 
@@ -36,6 +38,40 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     this.addSection({
       title: 'Introduction',
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_45">
+          |Rotating| a |line| around a fixed point creates an |arc|, whose length depends on the |angle| of rotation.
+        </p>
+        <p class="lesson__diagram_text_p_width_45">
+          The arc forms a |circle| with complete rotation.
+        </p>
+      `),
+      modifiers: {
+        Rotating: click(diag.pushRadius, [diag], colors.radius),
+        line: click(diag.pulseRadius, [diag], colors.radius),
+        arc: click(diag.pulseArc, [diag], colors.arc),
+        angle: click(diag.pulseAngle, [diag], colors.angleText),
+        circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 2], colors.circle),
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._arc,
+        circle._reference,
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        circle._angle.showAll();
+        diag._angleText.setPosition(layout.angleEqualsText.bottomRight2);
+        diag._angleText.showAll();
+        diag.resetCircle('bottomRight', Math.PI / 3);
+        diag.showRadians();
+        diag.toggleUnits('rad');
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+    });
+    this.addSection({
+      title: 'How to calculate',
       setContent: [`
         <p>
           For quadrant (quarter circle):
@@ -81,46 +117,23 @@ class Content extends LessonContent {
         q2: clickWord('2', 'id_lesson__quadrant_selector_2', diag.goToQuadrant, [diag, 1]),
         q3: clickWord('3', 'id_lesson__quadrant_selector_3', diag.goToQuadrant, [diag, 2]),
         q4: clickWord('4', 'id_lesson__quadrant_selector_4', diag.goToQuadrant, [diag, 3]),
-        // Acute: clickWord('Acute', 'id_acute', diag.goToAcute, [diag]),
-        // Right: clickWord('Right', 'id_right', diag.goToRight, [diag]),
-        // Obtuse: clickWord('Obtuse', 'id_obtuse', diag.goToObtuse, [diag]),
-        // Straight: clickWord('Straight', 'id_straight', diag.goToStraight, [diag]),
-        // Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
-        // acute_angle: click(diag.pulseAngle, [diag], colors.angleText),
-        // straight_angle: click(diag.pulseAngle, [diag], colors.angleText),
-        // obtuse_angle: click(diag.pulseAngle, [diag], colors.angleText),
-        // right_angle: click(diag.pulseAngle, [diag], colors.angleText),
-        // reflex_angle: click(diag.pulseAngle, [diag], colors.angleText),
-        // quarter_circle: highlight(),
-        // square: click(diag.toggleRightAngleLine, [diag, true], colors.angleText),
-        // from_Latin: highlight('lesson__important_angles_from_Latin'),
-        // from_Late_Latin: highlight('lesson__important_angles_from_Latin'),
       },
       setEnterState: () => {
         diag.setRotation(Math.PI / 3);
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+        diag.interactiveSinePage = true;
       },
       showOnly: [
         circle,
         circle._radius,
         diag._unitsSelector,
         circle._circumference,
-        // circle._symmetricLine,
-        // circle._quad2,
-        // circle._quad3,
-        // circle._quad4,
-        // circle._reference,
       ],
       setSteadyState: () => {
         diag.resetCircle('right', Math.PI / 3);
         circle._mainAngle.showAll();
         circle._sineLine.showAll();
         circle._grid.showAll();
-        // circle._quad0Angle.showAll();
-        // circle._quad1Angle.showAll();
-        // circle._quad2Angle.showAll();
-        // circle._quad3Angle.showAll();
-        // circle._symmetry.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
         diag.showRadians();
@@ -132,6 +145,11 @@ class Content extends LessonContent {
         onClickId('id_lesson_quadrant_steps_3', diag.goToStep, [diag, 2]);
         onClickId('id_lesson_quadrant_steps_4', diag.goToStep, [diag, 3]);
         diag.goToStep(-1);
+        diag.updateRotation();
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+      setLeaveState: () => {
+        diag.interactiveSinePage = false;
       },
     });
   }

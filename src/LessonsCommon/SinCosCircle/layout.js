@@ -19,7 +19,9 @@ export default function sinCosCircleLayout() {
   const layout: Object = angleCircleLayout();
   layout.colors = Object.assign(colors, layout.colors);
   layout.circle.right = new Point(1.4, -0.2);
+  layout.circle.bottomRight = new Point(1.4, 0);
   layout.angleEqualsText.bottomRight = new Point(1.0, -1.7);
+  layout.angleEqualsText.bottomRight2 = new Point(1, -1.5);
   layout.axes = {
     length: 1.3,
   };
@@ -36,9 +38,11 @@ export default function sinCosCircleLayout() {
     radius: 0.4,
   };
   layout.textYLimit = 0.07;
-  layout.angle.radius = 0.2;
-  layout.angle.lineWidth = 0.02;
-  layout.angle.textOffset = 0.07;
+  layout.mainAngle = {
+    radius: 0.2,
+    lineWidth: 0.02,
+    textOffset: 0.07,
+  };
   layout.unitsSelector = {
     position: new Point(0, -1.9),
   };
@@ -51,6 +55,10 @@ export default function sinCosCircleLayout() {
     step: 0.2,
     position: new Point(-layout.radius, -layout.radius),
   };
+
+  // layout.angle.radius = 0.3;
+  layout.angle.arrow.width = 0.05;
+  layout.angle.arrow.height = 0.05;
 
   layout.quadEqn = {
     position: new Point(-1.3, -1.35),

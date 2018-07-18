@@ -69,6 +69,7 @@ export type SineCollectionType = {
   _quad2Eqn: DiagramElementPrimative;
   _quad3Eqn: DiagramElementPrimative;
   _unitsSelector: DiagramElementPrimative;
+  interactiveSinePage: boolean;
 };
 
 const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
@@ -84,6 +85,7 @@ class SinCosCircle extends AngleCircle {
   _quad2Eqn: DiagramElementPrimative;
   _quad3Eqn: DiagramElementPrimative;
   _unitsSelector: DiagramElementPrimative;
+  interactiveSinePage: boolean;
 
   // makeSineEqualsEquation() {
   //   const equationElements = this.diagram.equation.elements({
@@ -245,7 +247,7 @@ class SinCosCircle extends AngleCircle {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
     const arc = this.shapes.polygon(
       this.layout.anglePoints,
-      this.layout.angle.radius, this.layout.angle.lineWidth,
+      this.layout.mainAngle.radius, this.layout.mainAngle.lineWidth,
       0, 1, this.layout.anglePoints,
       this.layout.colors.angle, new Transform()
         .rotate(0)
@@ -264,7 +266,7 @@ class SinCosCircle extends AngleCircle {
       if (angle.isShown || override) {
         arc.angleToDraw = r;
         const position = polarToRect(
-          this.layout.angle.radius + this.layout.angle.textOffset,
+          this.layout.mainAngle.radius + this.layout.mainAngle.textOffset,
           Math.min(r / 2, Math.PI),
         );
         const ySign = position.y / Math.abs(position.y);
@@ -447,6 +449,7 @@ class SinCosCircle extends AngleCircle {
     this.enableAutoChange = true;
     this.addToSinCosCircle();
     this.quadrants = [0, 1, 2, 3];
+    this.interactiveSinePage = false;
   }
 
   updateRotation(override: boolean = false) {
@@ -454,12 +457,14 @@ class SinCosCircle extends AngleCircle {
     const r = this.varState.rotation;
     const q = this.varState.quadrant;
     this._circle._sineLine.updateRotation(this.layout.radius, r, override);
-    this._circle._quad0Angle.updateRotation(r, q, override);
-    this._circle._quad1Angle.updateRotation(r, q, override);
-    this._circle._quad2Angle.updateRotation(r, q, override);
-    this._circle._quad3Angle.updateRotation(r, q, override);
-    this._circle._symmetry.updateRotation(r, q, override);
     this._circle._mainAngle.updateRotation(r, override);
+    if (this.interactiveSinePage) {
+      this._circle._quad0Angle.updateRotation(r, q, override);
+      this._circle._quad1Angle.updateRotation(r, q, override);
+      this._circle._quad2Angle.updateRotation(r, q, override);
+      this._circle._quad3Angle.updateRotation(r, q, override);
+      this._circle._symmetry.updateRotation(r, q, override);
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -732,7 +737,7 @@ class SinCosCircle extends AngleCircle {
   }
 
   updateQuadrant(quadrant: quadrantType) {
-    if (quadrant !== this.varState.quadrant) {
+    if (quadrant !== this.varState.quadrant && this.interactiveSinePage) {
       this.changeQuadrant(this.varState.quadrant, quadrant);
     }
   }
