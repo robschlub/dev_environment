@@ -22,6 +22,7 @@ type quadAngle = {
 type sineLineType = {
     _line: DiagramElementPrimative;
     _text: DiagramElementPrimative;
+    textOffset: number;
     updateRotation: (number, number) => void;
   } & DiagramElementCollection;
 
@@ -38,7 +39,6 @@ export type SinCosCircleType = {
   _symmetry: {
     _line: DiagramElementPrimative;
     _sine: sineLineType;
-    textOffset: number;
     setSineText: (string) => void;
     updateRotation: (number, number) => void;
   } & DiagramElementCollection;
@@ -236,7 +236,7 @@ class SinCosCircle extends AngleCircle {
       new Transform().scale(1, 1).rotate(Math.PI / 2).translate(0, 0),
     );
     const text = this.shapes.htmlText(
-      'sin', `id_diagram_sine_line_${id}`, 'diagram__sine_line',
+      'sin θ', `id_diagram_sine_line_${id}`, 'diagram__sine_line',
       new Point(0, 0), 'middle', 'center',
     );
     const sine = this.shapes.collection();
@@ -251,7 +251,7 @@ class SinCosCircle extends AngleCircle {
         sine._line.setPosition(endX, 0);
         sine._line.transform.updateScale(endY / radius, 1);
         if (sine._text.isShown) {
-          let textY = endY / 2;
+          let textY = endY / 1.7;
           if (Math.abs(textY) < this.layout.textYLimit) {
             textY = this.layout.textYLimit * endYSign;
           }
@@ -479,10 +479,37 @@ class SinCosCircle extends AngleCircle {
       } else {
         q.show();
         // if (index === 1) {
-        this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
-        this._circle._quad0Angle.textOffset = quadrantOffsets[index];
-        this._circle._symmetry._sine.textOffset = sineOffsets[index];
-        this._circle._symmetry.setSineText(`sin ${quadrantAngles[index]}`);
+        if (index === 0) {
+          this._circle._quad0Angle.hideAll();
+          this._circle._symmetry.hideAll();
+        } else {
+          this._circle._quad0Angle.showAll();
+          this._circle._symmetry.showAll();
+          this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
+          this._circle._quad0Angle.textOffset = quadrantOffsets[index];
+          this._circle._symmetry._sine.textOffset = sineOffsets[index];
+          this._circle._symmetry.setSineText(`sin ${quadrantAngles[index]}`);
+        }
+        if (index === 0) {
+          this._circle._quad1Angle.hideAll();
+          this._circle._quad2Angle.hideAll();
+          this._circle._quad3Angle.hideAll();
+        }
+        if (index === 1) {
+          this._circle._quad1Angle.showAll();
+          this._circle._quad2Angle.hideAll();
+          this._circle._quad3Angle.hideAll();
+        }
+        if (index === 2) {
+          this._circle._quad1Angle.hideAll();
+          this._circle._quad2Angle.showAll();
+          this._circle._quad3Angle.hideAll();
+        }
+        if (index === 3) {
+          this._circle._quad1Angle.hideAll();
+          this._circle._quad2Angle.hideAll();
+          this._circle._quad3Angle.showAll();
+        }
         // }
       }
     });
