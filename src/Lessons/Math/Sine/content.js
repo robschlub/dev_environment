@@ -54,6 +54,8 @@ class Content extends LessonContent {
         circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 2], colors.circle),
       },
       setEnterState: () => {
+        diag._angleText.setText('Angle');
+        diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag.resetCircle('right', 0.001);
         diag.showRadians();
@@ -89,6 +91,9 @@ class Content extends LessonContent {
         horizontal: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
       setEnterState: () => {
+        diag._angleText.setText('Angle');
+        diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
+        diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         circle._sineLine.setText('vertical');
         circle._cosineLine.setText('horizontal');
         circle._sineLine.textOffset = 0.2;
@@ -152,8 +157,6 @@ class Content extends LessonContent {
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._sineText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText._text.vertices.element.classList.add('lesson__math_stye');
-        diag._angleText._text.vertices.element.classList.remove('action_word');
-        diag._angleText._text.vertices.element.classList.remove('action_word_enabled');
       },
       showOnly: [
         circle,
