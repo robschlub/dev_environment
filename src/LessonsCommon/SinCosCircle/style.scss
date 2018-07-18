@@ -6,6 +6,7 @@ $colors: (
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
   sine:             color('red', 'base'),
+  cosine:           color('violet', 'base'),
   // symmetrySine:     color('red', 'darker'),
   quadAngles:       color('blue', 'darker'),
   arcLight:         color('grey', 'darker'),
@@ -16,11 +17,16 @@ body {
   @include color_vars($colors);
 }
 
-.diagram__sine_line {
+.diagram__sine_line,
+.diagram__cosine_line {
   color: map-get($colors, sine);
   font-size: calc(var(--lesson__diagram-font-size) * 0.5);
   font-family: Times New Roman, serif;
   font-style: italic;
+}
+
+.diagram__cosine_line {
+  color: map-get($colors, cosine);
 }
 
 .diagram__quad_angles {

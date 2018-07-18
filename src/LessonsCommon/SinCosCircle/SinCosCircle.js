@@ -48,6 +48,7 @@ export type SinCosCircleType = {
     updateRotation: (number, number, boolean) => void;
   } & DiagramElementCollection;
   _sineLine: sineLineType;
+  _cosineLine: sineLineType;
   _axes: {
     _x: DiagramElementPrimative;
     _y: DiagramElementPrimative;
@@ -375,22 +376,47 @@ class SinCosCircle extends AngleCircle {
         const endYSign = endY / Math.abs(endY);
         sine._line.setPosition(endX, 0);
         sine._line.transform.updateScale(endY / radius, 1);
-        // if (sine.isShown ) {
         let textY = endY / 1.7;
         if (Math.abs(textY) < this.layout.textYLimit) {
           textY = this.layout.textYLimit * endYSign;
         }
-        // console.log(sine.textOffset);
         sine._text.setPosition(endX + endX / Math.abs(endX) * sine.textOffset, textY);
-        // if (Math.abs(endY) < 0.06) {
-        //   text.hide();
-        // } else {
-        //   text.show();
-        // }
-        // }
       }
     };
     return sine;
+  }
+
+  makeCosineLine(id: string) {
+    const line = this.makeLine(
+      new Point(0, 0),
+      this.layout.radius,
+      this.layout.cosine.lineWidth,
+      this.colors.cosine,
+      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    );
+    const text = this.shapes.htmlText(
+      'cos θ', `id_diagram_cosine_line_${id}`, 'diagram__cosine_line',
+      new Point(0, 0), 'middle', 'center',
+    );
+    const cosine = this.shapes.collection();
+    cosine.add('line', line);
+    cosine.add('text', text);
+    cosine.textOffset = 0.08;
+    cosine.updateRotation = (radius: number, angle: number, override: boolean = false) => {
+      if (cosine.isShown || override) {
+        const endX = radius * Math.cos(angle);
+        const endY = radius * Math.sin(angle);
+        const endYSign = endY / Math.abs(endY);
+        cosine._line.setPosition(0, endY);
+        cosine._line.transform.updateScale(endX / radius, 1);
+        let textX = endX / 2;
+        if (Math.abs(textX) < this.layout.textXLimit) {
+          textX = this.layout.textYLimit * endYSign;
+        }
+        cosine._text.setPosition(textX, endY + endY / Math.abs(endY) * cosine.textOffset);
+      }
+    };
+    return cosine;
   }
 
 
@@ -408,6 +434,7 @@ class SinCosCircle extends AngleCircle {
     this._circle.add('quad3Angle', this.makeAngle(rad, '3', '2π - θ', 0, -1, quadrantOffsets[3]));
     this._circle.add('symmetry', this.makeSymmetry());
     this._circle.add('sineLine', this.makeSineLine('primary'));
+    this._circle.add('cosineLine', this.makeCosineLine('primary'));
     this._circle.add('mainAngle', this.makeMainAngle());
     this._circle.add('quad0', this.makeQuad(0));
     this._circle.add('quad1', this.makeQuad(1));
@@ -458,6 +485,7 @@ class SinCosCircle extends AngleCircle {
     const r = this.varState.rotation;
     const q = this.varState.quadrant;
     this._circle._sineLine.updateRotation(this.layout.radius, r, override);
+    this._circle._cosineLine.updateRotation(this.layout.radius, r, override);
     if (this.interactiveSinePage) {
       this._circle._mainAngle.updateRotation(r, override);
       this._circle._quad0Angle.updateRotation(r, q, override);

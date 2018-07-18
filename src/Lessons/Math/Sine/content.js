@@ -101,6 +101,7 @@ class Content extends LessonContent {
         diag._angleText,
         circle._axes,
         circle._angle,
+        circle._cosineLine,
       ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'bottomRight', null, 5);

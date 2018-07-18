@@ -9,6 +9,7 @@ const cssColorNames = [
   'quadrant',
   'axes',
   'sine',
+  'cosine',
   'quadAngles',
   'arcLight',
   'angleDark',
@@ -29,7 +30,6 @@ export default function sinCosCircleLayout() {
 
   layout.sine = {
     lineWidth: 0.01,
-    // offset: 0.12,
   };
   layout.cosine = {
     lineWidth: 0.01,
@@ -39,6 +39,7 @@ export default function sinCosCircleLayout() {
     radius: 0.4,
   };
   layout.textYLimit = 0.07;
+  layout.textXLimit = 0.07;
   layout.mainAngle = {
     radius: 0.2,
     lineWidth: 0.02,
@@ -56,10 +57,6 @@ export default function sinCosCircleLayout() {
     step: 0.2,
     position: new Point(-layout.radius, -layout.radius),
   };
-
-  // layout.angle.radius = 0.3;
-  // layout.angle.arrow.width = 0.05;
-  // layout.angle.arrow.height = 0.05;
 
   layout.quadEqn = {
     position: new Point(-1.3, -1.35),
