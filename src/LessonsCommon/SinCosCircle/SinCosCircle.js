@@ -65,6 +65,10 @@ export type SineCollectionType = {
   varState: SinCosVarStateType;
   enableAutoChange: boolean;
   quadrants: Array<number>;
+  _quad1Eqn: DiagramElementPrimative;
+  _quad2Eqn: DiagramElementPrimative;
+  _quad3Eqn: DiagramElementPrimative;
+  _unitsSelector: DiagramElementPrimative;
 };
 
 const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
@@ -76,6 +80,10 @@ class SinCosCircle extends AngleCircle {
   varState: SinCosVarStateType;
   enableAutoChange: boolean;
   quadrants: Array<number>;
+  _quad1Eqn: DiagramElementPrimative;
+  _quad2Eqn: DiagramElementPrimative;
+  _quad3Eqn: DiagramElementPrimative;
+  _unitsSelector: DiagramElementPrimative;
 
   // makeSineEqualsEquation() {
   //   const equationElements = this.diagram.equation.elements({
@@ -386,11 +394,12 @@ class SinCosCircle extends AngleCircle {
 
   addToSinCosCircle() {
     this.add('unitsSelector', this.makeDegreesRadiansSelector());
-    this._circle.add('rightAngle', this.makeRightAngle());
-    const rad = this.layout.quadAngles.radius;
     this.add('quad1Eqn', this.makeQuad1Equation());
     this.add('quad2Eqn', this.makeQuad2Equation());
     this.add('quad3Eqn', this.makeQuad3Equation());
+
+    this._circle.add('rightAngle', this.makeRightAngle());
+    const rad = this.layout.quadAngles.radius;
     this._circle.add('quad0Angle', this.makeAngle(rad, '0', 'θ', 0, 1, quadrantOffsets[0]));
     this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'π - θ', Math.PI, -1, quadrantOffsets[1]));
     this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1, quadrantOffsets[2]));
@@ -666,6 +675,7 @@ class SinCosCircle extends AngleCircle {
   //   }
   // }
 
+  // eslint-disable-next-line class-methods-use-this
   toggleParagraphs(quad: number) {
     const paragraph0 = document.getElementById('id__sine_paragraph_quad0');
     const paragraph1 = document.getElementById('id__sine_paragraph_quad123');
@@ -686,7 +696,7 @@ class SinCosCircle extends AngleCircle {
       circle._quad0, circle._quad1,
       circle._quad2, circle._quad3,
     ];
-    const eqn = [this._quad1Eqn, this._quad2Eqn, this._quad3Eqn]
+    const eqn = [this._quad1Eqn, this._quad2Eqn, this._quad3Eqn];
     if (oldQuad > 0) {
       eqn[oldQuad - 1].hide();
     }
@@ -755,27 +765,27 @@ class SinCosCircle extends AngleCircle {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  showText(quadrant: quadrantType) {
-    // const ids = [
-    //   'id_acute_text',
-    //   'id_obtuse_text',
-    //   'id_right_text',
-    //   'id_straight_text',
-    //   'id_reflex_text',
-    // ];
-    // ids.forEach((id) => {
-    //   if (id !== angleType) {
-    //     const elem = document.getElementById(id);
-    //     if (elem != null) {
-    //       elem.classList.add('lesson__important_angles_text_hide');
-    //     }
-    //   }
-    // });
-    // const elem = document.getElementById(`id_${angleType}_text`);
-    // if (elem != null) {
-    //   elem.classList.remove('lesson__important_angles_text_hide');
-    // }
-  }
+  // showText(quadrant: quadrantType) {
+  //   const ids = [
+  //     'id_acute_text',
+  //     'id_obtuse_text',
+  //     'id_right_text',
+  //     'id_straight_text',
+  //     'id_reflex_text',
+  //   ];
+  //   ids.forEach((id) => {
+  //     if (id !== angleType) {
+  //       const elem = document.getElementById(id);
+  //       if (elem != null) {
+  //         elem.classList.add('lesson__important_angles_text_hide');
+  //       }
+  //     }
+  //   });
+  //   const elem = document.getElementById(`id_${angleType}_text`);
+  //   if (elem != null) {
+  //     elem.classList.remove('lesson__important_angles_text_hide');
+  //   }
+  // }
 
   rotateToAngleDisablingAutoChange(angle: number) {
     this.enableAutoChange = false;
