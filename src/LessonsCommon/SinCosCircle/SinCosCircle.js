@@ -266,10 +266,11 @@ class SinCosCircle extends AngleCircle {
     if (num === 2 || num === 3) {
       ySign = -1;
     }
-
+    const color = this.colors.quadrant.slice();
+    color[3] = 0.6;
     return this.shapes.polygonFilled(
       4, this.layout.radius / 2 * Math.sqrt(2), 0,
-      4, this.colors.quadrant, new Transform()
+      4, color, new Transform()
         .rotate(Math.PI / 4)
         .translate(
           xSign * this.layout.radius / 2,

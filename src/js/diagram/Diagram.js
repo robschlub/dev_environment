@@ -807,9 +807,10 @@ class Diagram {
   }
   clearContext() {
     const bc = this.backgroundColor;
-    this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
+    // this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
+    
+    this.webgl.gl.clearColor(0, 0, 0, 0);
     this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
-
     if (this.draw2D) {
       this.draw2D.ctx.clearRect(0, 0, this.draw2D.ctx.canvas.width, this.draw2D.ctx.canvas.height);
     }
