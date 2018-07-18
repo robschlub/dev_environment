@@ -15,30 +15,39 @@ type quadAngle = {
   _arc: DiagramElementPrimative;
   _text: DiagramElementPrimative;
   updateRotation: (number, number) => void;
+  setAngleText: (string) => void;
 } & DiagramElementCollection;
 
-export type SinCosCircleType = {
-  _rightAngle: rightAngleType;
-  _quad1: DiagramElementPrimative;
-  _quad2: DiagramElementPrimative;
-  _quad3: DiagramElementPrimative;
-  _quad4: DiagramElementPrimative;
-  _quad1Angle: quadAngle;
-  _quad2Angle: quadAngle;
-  _quad3Angle: quadAngle;
-  _quad4Angle: quadAngle;
-  _sineLine: {
+type sineLineType = {
     _line: DiagramElementPrimative;
     _text: DiagramElementPrimative;
     updateRotation: (number, number) => void;
   } & DiagramElementCollection;
+
+export type SinCosCircleType = {
+  _rightAngle: rightAngleType;
+  _quad0: DiagramElementPrimative;
+  _quad1: DiagramElementPrimative;
+  _quad2: DiagramElementPrimative;
+  _quad3: DiagramElementPrimative;
+  _quad0Angle: quadAngle;
+  _quad1Angle: quadAngle;
+  _quad2Angle: quadAngle;
+  _quad3Angle: quadAngle;
+  _symmetry: {
+    _line: DiagramElementPrimative;
+    _sine: sineLineType;
+    setSineText: (string) => void;
+    updateRotation: (number, number) => void;
+  } & DiagramElementCollection;
+  _sineLine: sineLineType;
   _axes: {
     _x: DiagramElementPrimative;
     _y: DiagramElementPrimative;
   } & DiagramElementCollection;
 } & circleType;
 
-type quadrantType = 1 | 2 | 3 | 4;
+type quadrantType = 0 | 1 | 2 | 3;
 
 export type SinCosVarStateType = {
     quadrant: quadrantType;
@@ -50,6 +59,9 @@ export type SineCollectionType = {
   enableAutoChange: boolean;
   quadrants: Array<number>;
 };
+
+const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
+// const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
 
 class SinCosCircle extends AngleCircle {
   _circle: SinCosCircleType;
@@ -67,23 +79,25 @@ class SinCosCircle extends AngleCircle {
     symmetry.add('line', line);
     const sine = this.makeSineLine('symmetry');
     symmetry.add('sine', sine);
-    console.log(symmetry)
-
     symmetry.updateRotation = (r: number, quad: number) => {
       if (symmetry.isShown) {
         let angleToDraw = r;
-        if (quad === 2) {
+        if (quad === 1) {
           angleToDraw = Math.PI - r;
         }
-        if (quad === 3) {
+        if (quad === 2) {
           angleToDraw = r - Math.PI;
         }
-        if (quad === 4) {
+        if (quad === 3) {
           angleToDraw = Math.PI * 2 - r;
         }
         line.transform.updateRotation(angleToDraw);
         sine.updateRotation(this.layout.radius, angleToDraw);
       }
+    };
+
+    symmetry.setSineText = (newText: string) => {
+      sine._text.vertices.element.innerHTML = newText;
     };
     return symmetry;
   }
@@ -117,13 +131,13 @@ class SinCosCircle extends AngleCircle {
     angle.updateRotation = (r: number, quad: number) => {
       if (angle.isShown) {
         let angleToDraw = r;
-        if (quad === 2) {
+        if (quad === 1) {
           angleToDraw = Math.PI - r;
         }
-        if (quad === 3) {
+        if (quad === 2) {
           angleToDraw = r - Math.PI;
         }
-        if (quad === 4) {
+        if (quad === 3) {
           angleToDraw = Math.PI * 2 - r;
         }
         arc.angleToDraw = angleToDraw;
@@ -132,6 +146,9 @@ class SinCosCircle extends AngleCircle {
           startAngle + direction * angleToDraw / 2,
         ));
       }
+    };
+    angle.setAngleText = (newText: string) => {
+      angle._text.vertices.element.innerHTML = newText;
     };
     return angle;
   }
@@ -153,7 +170,7 @@ class SinCosCircle extends AngleCircle {
     return rightAngle;
   }
 
-  makeQuad(num: number = 1) {
+  makeQuad(num: number = 0) {
     // return this.shapes.polygonFilled(
     //   this.layout.anglePoints, this.layout.radius, 0,
     //   this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
@@ -162,10 +179,10 @@ class SinCosCircle extends AngleCircle {
     // );
     let xSign = 1;
     let ySign = 1;
-    if (num === 2 || num === 3) {
+    if (num === 1 || num === 2) {
       xSign = -1;
     }
-    if (num === 3 || num === 4) {
+    if (num === 2 || num === 3) {
       ySign = -1;
     }
 
@@ -242,14 +259,14 @@ class SinCosCircle extends AngleCircle {
     this._circle.add('sineLine', this.makeSineLine('primary'));
     const rad = this.layout.quadAngles.radius;
     this._circle.add('symmetry', this.makeSymmetry());
-    this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'θ', 0, 1, 0.08));
-    this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'π - θ', Math.PI, -1, 0.12));
-    this._circle.add('quad3Angle', this.makeAngle(rad, '3', 'θ - π', Math.PI, 1));
-    this._circle.add('quad4Angle', this.makeAngle(rad, '4', '2π - θ', 0, -1));
+    this._circle.add('quad0Angle', this.makeAngle(rad, '0', 'θ', 0, 1));
+    this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'π - θ', Math.PI, -1));
+    this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1));
+    this._circle.add('quad3Angle', this.makeAngle(rad, '3', '2π - θ', 0, -1));
+    this._circle.add('quad0', this.makeQuad(0));
     this._circle.add('quad1', this.makeQuad(1));
     this._circle.add('quad2', this.makeQuad(2));
     this._circle.add('quad3', this.makeQuad(3));
-    this._circle.add('quad4', this.makeQuad(4));
     this._circle.add('grid', this.makeAxesAndGrid());
 
     this._circle.order = [
@@ -280,11 +297,11 @@ class SinCosCircle extends AngleCircle {
     this.varState = {
       radialLines: 4,
       rotation: 0,
-      quadrant: 1,
+      quadrant: 0,
     };
     this.enableAutoChange = true;
     this.addToSinCosCircle();
-    this.quadrants = [1, 2, 3, 4];
+    this.quadrants = [0, 1, 2, 3];
   }
 
   updateRotation() {
@@ -292,42 +309,42 @@ class SinCosCircle extends AngleCircle {
     const r = this.varState.rotation;
     const q = this.varState.quadrant;
     this._circle._sineLine.updateRotation(this.layout.radius, r);
+    this._circle._quad0Angle.updateRotation(r, q);
     this._circle._quad1Angle.updateRotation(r, q);
     this._circle._quad2Angle.updateRotation(r, q);
     this._circle._quad3Angle.updateRotation(r, q);
-    this._circle._quad4Angle.updateRotation(r, q);
     this._circle._symmetry.updateRotation(r, q);
   }
 
   // eslint-disable-next-line class-methods-use-this
   calcQuadrant(angle: number, thresholds: Object): quadrantType {
+    if (angle >= thresholds.quad0.min && angle <= thresholds.quad0.max) {
+      return 0;
+    }
     if (angle >= thresholds.quad1.min && angle <= thresholds.quad1.max) {
       return 1;
     }
     if (angle >= thresholds.quad2.min && angle <= thresholds.quad2.max) {
       return 2;
     }
-    if (angle >= thresholds.quad3.min && angle <= thresholds.quad3.max) {
-      return 3;
-    }
-    return 4;
+    return 3;
   }
 
   calcQuadrantDegrees(angle: number): quadrantType {
     const thresholds = {
-      quad1: {
+      quad0: {
         min: 0,
         max: 89,
       },
-      quad2: {
+      quad1: {
         min: 90,
         max: 179,
       },
-      quad3: {
+      quad2: {
         min: 180,
         max: 269,
       },
-      quad4: {
+      quad3: {
         min: 270,
         max: 359,
       },
@@ -337,19 +354,19 @@ class SinCosCircle extends AngleCircle {
 
   calcQuadrantRadians(angle: number): quadrantType {
     const thresholds = {
-      quad1: {
+      quad0: {
         min: 0,
         max: 1.56,
       },
-      quad2: {
+      quad1: {
         min: 1.57,
         max: 3.13,
       },
-      quad3: {
+      quad2: {
         min: 3.14,
         max: 4.70,
       },
-      quad4: {
+      quad3: {
         min: 4.71,
         max: 6.27,
       },
@@ -445,12 +462,15 @@ class SinCosCircle extends AngleCircle {
     this.selectAngle(quadrant);
     this.showText(quadrant);
     const circle = this._circle;
-    const quads = [circle._quad1, circle._quad2, circle._quad3, circle._quad4];
+    const quads = [circle._quad0, circle._quad1, circle._quad2, circle._quad3];
     quads.forEach((q, index) => {
-      if (quadrant !== index + 1) {
+      if (quadrant !== index) {
         q.hide();
       } else {
         q.show();
+        // if (index === 1) {
+        this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
+        // }
       }
     });
   }
