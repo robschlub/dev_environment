@@ -37,6 +37,7 @@ export type SinCosCircleType = {
   _symmetry: {
     _line: DiagramElementPrimative;
     _sine: sineLineType;
+    textOffset: number;
     setSineText: (string) => void;
     updateRotation: (number, number) => void;
   } & DiagramElementCollection;
@@ -61,7 +62,7 @@ export type SineCollectionType = {
 };
 
 const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
-// const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
+const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
 
 class SinCosCircle extends AngleCircle {
   _circle: SinCosCircleType;
@@ -127,7 +128,7 @@ class SinCosCircle extends AngleCircle {
 
     angle.add('arc', arc);
     angle.add('text', text);
-
+    angle.textOffset = textOffset;
     angle.updateRotation = (r: number, quad: number) => {
       if (angle.isShown) {
         let angleToDraw = r;
@@ -142,7 +143,7 @@ class SinCosCircle extends AngleCircle {
         }
         arc.angleToDraw = angleToDraw;
         text.setPosition(polarToRect(
-          radius + textOffset,
+          radius + angle.textOffset,
           startAngle + direction * angleToDraw / 2,
         ));
       }
@@ -259,10 +260,10 @@ class SinCosCircle extends AngleCircle {
     this._circle.add('sineLine', this.makeSineLine('primary'));
     const rad = this.layout.quadAngles.radius;
     this._circle.add('symmetry', this.makeSymmetry());
-    this._circle.add('quad0Angle', this.makeAngle(rad, '0', 'θ', 0, 1));
-    this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'π - θ', Math.PI, -1));
-    this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1));
-    this._circle.add('quad3Angle', this.makeAngle(rad, '3', '2π - θ', 0, -1));
+    this._circle.add('quad0Angle', this.makeAngle(rad, '0', 'θ', 0, 1, quadrantOffsets[0]));
+    this._circle.add('quad1Angle', this.makeAngle(rad, '1', 'π - θ', Math.PI, -1, quadrantOffsets[1]));
+    this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1, quadrantOffsets[2]));
+    this._circle.add('quad3Angle', this.makeAngle(rad, '3', '2π - θ', 0, -1, quadrantOffsets[3]));
     this._circle.add('quad0', this.makeQuad(0));
     this._circle.add('quad1', this.makeQuad(1));
     this._circle.add('quad2', this.makeQuad(2));
@@ -470,6 +471,7 @@ class SinCosCircle extends AngleCircle {
         q.show();
         // if (index === 1) {
         this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
+        this._circle._quad0Angle.textOffset = quadrantOffsets[index];
         this._circle._symmetry.setSineText(`sin ${quadrantAngles[index]}`);
         // }
       }
