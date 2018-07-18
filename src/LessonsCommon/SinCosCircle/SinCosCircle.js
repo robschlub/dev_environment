@@ -77,6 +77,27 @@ class SinCosCircle extends AngleCircle {
   enableAutoChange: boolean;
   quadrants: Array<number>;
 
+  makeDegreesRadiansSelector() {
+    const radSpan = document.createElement('span');
+    const degSpan = document.createElement('span');
+    radSpan.setAttribute('id', 'id_diagram_units_selector_radians');
+    degSpan.setAttribute('id', 'id_diagram_units_selector_degrees');
+    radSpan.appendChild(document.createTextNode('radians'));
+    degSpan.appendChild(document.createTextNode('degrees'));
+    const slash = document.createTextNode(' / ');
+    const elements = [radSpan, slash, degSpan];
+    const selector = this.shapes.htmlElement(
+      elements, 'id_diagram_units_selector', '',
+      this.layout.unitsSelector.position,
+      'middle', 'center',
+    );
+
+    const element = document.getElementById('id_diagram_units_selector');
+    if (element != null) {
+      element.onclick = this.toggleUnits.bind(this, null);
+    }
+    return selector;
+  }
   makeSymmetry() {
     const symmetry = this.shapes.collection();
     const line = this.makeLine(
@@ -322,6 +343,7 @@ class SinCosCircle extends AngleCircle {
 
 
   addToSinCosCircle() {
+    this.add('unitsSelector', this.makeDegreesRadiansSelector());
     this._circle.add('rightAngle', this.makeRightAngle());
     this._circle.add('sineLine', this.makeSineLine('primary'));
     const rad = this.layout.quadAngles.radius;
@@ -443,33 +465,33 @@ class SinCosCircle extends AngleCircle {
     return this.calcQuadrant(angle, thresholds);
   }
 
-  // toggleUnits(toUnit: 'rad' | 'deg' | null) {
-  //   const elemDeg = document.getElementById('id_degrees');
-  //   const elemRad = document.getElementById('id_radians');
-  //   let unit = toUnit;
-  //   if (toUnit === null) {
-  //     if (this.varState.radialLines === 360) {
-  //       unit = 'rad';
-  //     } else {
-  //       unit = 'deg';
-  //     }
-  //   }
-  //   if (elemDeg != null && elemRad != null) {
-  //     if (unit === 'rad') {
-  //       this.hideDegrees();
-  //       this.showRadians();
-  //       elemDeg.classList.remove('lesson__important_angles_unit_selected');
-  //       elemRad.classList.add('lesson__important_angles_unit_selected');
-  //       this.setParagraphUnits('rad');
-  //     } else if (unit === 'deg') {
-  //       this.hideRadians();
-  //       this.showDegrees();
-  //       elemRad.classList.remove('lesson__important_angles_unit_selected');
-  //       elemDeg.classList.add('lesson__important_angles_unit_selected');
-  //       this.setParagraphUnits('deg');
-  //     }
-  //   }
-  // }
+  toggleUnits(toUnit: 'rad' | 'deg' | null) {
+    const elemDeg = document.getElementById('id_diagram_units_selector_degrees');
+    const elemRad = document.getElementById('id_diagram_units_selector_radians');
+    let unit = toUnit;
+    if (toUnit === null) {
+      if (this.varState.radialLines === 360) {
+        unit = 'rad';
+      } else {
+        unit = 'deg';
+      }
+    }
+    if (elemDeg != null && elemRad != null) {
+      if (unit === 'rad') {
+        this.hideDegrees();
+        this.showRadians();
+        elemDeg.classList.remove('lesson__sine_cos_diagram_units_selected');
+        elemRad.classList.add('lesson__sine_cos_diagram_units_selected');
+        // this.setParagraphUnits('rad');
+      } else if (unit === 'deg') {
+        this.hideRadians();
+        this.showDegrees();
+        elemRad.classList.remove('lesson__sine_cos_diagram_units_selected');
+        elemDeg.classList.add('lesson__sine_cos_diagram_units_selected');
+        // this.setParagraphUnits('deg');
+      }
+    }
+  }
 
 
   // setParagraphUnits(onUnit: 'rad' | 'deg') {

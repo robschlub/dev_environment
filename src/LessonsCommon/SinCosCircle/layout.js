@@ -38,5 +38,8 @@ export default function sinCosCircleLayout() {
   layout.angle.radius = 0.4;
   layout.angle.lineWidth = 0.02;
   layout.angle.textOffset = -0.15;
+  layout.unitsSelector = {
+    position: new Point(0, -1.9),
+  };
   return layout;
 }

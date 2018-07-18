@@ -62,6 +62,7 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._radius,
+        diag._unitsSelector,
         // circle._symmetricLine,
         // circle._quad2,
         // circle._quad3,
@@ -70,9 +71,7 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         diag.resetCircle('right', Math.PI / 3);
-        // circle._angle.showAll();
         circle._mainAngle.showAll();
-        // circle._axes.showAll();
         circle._sineLine.showAll();
         circle._grid.showAll();
         circle._quad0Angle.showAll();
@@ -82,11 +81,9 @@ class Content extends LessonContent {
         circle._symmetry.showAll();
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._angleText.showAll();
-        diag.showDegrees();
+        diag.showRadiasn();
+        diag.toggleUnits('rad');
         diag.selectAngle(1);
-        // onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
-        // diag.toggleUnits('deg');
-        // onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
     });
   }

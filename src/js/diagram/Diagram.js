@@ -170,8 +170,8 @@ function shapes(diagram: Diagram) {
     );
   }
 
-  function htmlText(
-    textInput: string,
+  function htmlElement(
+    elementToAdd: HTMLElement | Array<HTMLElement>,
     id: string = '',
     classes: string = '',
     location: Point = new Point(0, 0),
@@ -183,14 +183,14 @@ function shapes(diagram: Diagram) {
       const classArray = classes.split(',');
       classArray.forEach(c => element.classList.add(c.trim()));
     }
-    const inside = document.createTextNode(textInput);
-    element.appendChild(inside);
+    if (Array.isArray(elementToAdd)) {
+      elementToAdd.forEach(e => element.appendChild(e));
+    } else {
+      element.appendChild(elementToAdd);
+    }
     element.style.position = 'absolute';
-    // element.style.left = '0px';
-    // element.style.top = '0px';
     element.setAttribute('id', id);
     diagram.htmlCanvas.appendChild(element);
-
     const hT = new HTMLObject(diagram.htmlCanvas, id, new Point(0, 0), alignV, alignH);
     const diagramElement = new DiagramElementPrimative(
       hT,
@@ -201,6 +201,19 @@ function shapes(diagram: Diagram) {
     // diagramElement.setFirstTransform();
     return diagramElement;
   }
+
+  function htmlText(
+    textInput: string,
+    id: string = '',
+    classes: string = '',
+    location: Point = new Point(0, 0),
+    alignV: 'top' | 'bottom' | 'middle' = 'middle',
+    alignH: 'left' | 'right' | 'center' = 'left',
+  ) {
+    const inside = document.createTextNode(textInput);
+    return this.htmlElement(inside, id, classes, location, alignV, alignH);
+  }
+
   function arrow(
     width: number = 1,
     legWidth: number = 0.5,
@@ -461,6 +474,7 @@ function shapes(diagram: Diagram) {
     text,
     radialLines,
     htmlText,
+    htmlElement,
     axes,
   };
 }
