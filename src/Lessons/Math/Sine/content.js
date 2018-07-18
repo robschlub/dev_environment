@@ -118,7 +118,7 @@ class Content extends LessonContent {
         diag._angleText.showAll();
         diag.showRadians();
         diag.toggleUnits('rad');
-        diag.selectQuadrant(0);
+        diag.setQuadrantNumberInTable(0);
 
         onClickId('id_lesson_quadrant_steps_1', diag.goToStep, [diag, 0]);
         onClickId('id_lesson_quadrant_steps_2', diag.goToStep, [diag, 1]);

@@ -15,7 +15,7 @@ type quadAngle = {
   _arc: DiagramElementPrimative;
   _text: DiagramElementPrimative;
   textOffset: number;
-  updateRotation: (number, number) => void;
+  updateRotation: (number, number, boolean) => void;
   setAngleText: (string) => void;
 } & DiagramElementCollection;
 
@@ -23,7 +23,7 @@ type sineLineType = {
     _line: DiagramElementPrimative;
     _text: DiagramElementPrimative;
     textOffset: number;
-    updateRotation: (number, number) => void;
+    updateRotation: (number, number, boolean) => void;
   } & DiagramElementCollection;
 
 export type SinCosCircleType = {
@@ -39,13 +39,13 @@ export type SinCosCircleType = {
   _mainAngle: {
     _arc: DiagramElementPrimative;
     _text: DiagramElementPrimative;
-    updateRotation: (number) => void;
+    updateRotation: (number, boolean) => void;
   } & DiagramElementCollection;
   _symmetry: {
     _line: DiagramElementPrimative;
     _sine: sineLineType;
     setSineText: (string) => void;
-    updateRotation: (number, number) => void;
+    updateRotation: (number, number, boolean) => void;
   } & DiagramElementCollection;
   _sineLine: sineLineType;
   _axes: {
@@ -108,8 +108,8 @@ class SinCosCircle extends AngleCircle {
     symmetry.add('line', line);
     const sine = this.makeSineLine('symmetry');
     symmetry.add('sine', sine);
-    symmetry.updateRotation = (r: number, quad: number) => {
-      if (symmetry.isShown) {
+    symmetry.updateRotation = (r: number, quad: number, override: boolean = false) => {
+      if (symmetry.isShown || override) {
         let angleToDraw = r;
         if (quad === 1) {
           angleToDraw = Math.PI - r;
@@ -121,7 +121,7 @@ class SinCosCircle extends AngleCircle {
           angleToDraw = Math.PI * 2 - r;
         }
         line.transform.updateRotation(angleToDraw);
-        sine.updateRotation(this.layout.radius, angleToDraw);
+        sine.updateRotation(this.layout.radius, angleToDraw, override);
       }
     };
 
@@ -157,8 +157,8 @@ class SinCosCircle extends AngleCircle {
     angle.add('arc', arc);
     angle.add('text', text);
     angle.textOffset = textOffset;
-    angle.updateRotation = (r: number, quad: number) => {
-      if (angle.isShown) {
+    angle.updateRotation = (r: number, quad: number, override: boolean = false) => {
+      if (angle.isShown || override) {
         let angleToDraw = r;
         if (quad === 1) {
           angleToDraw = Math.PI - r;
@@ -179,10 +179,12 @@ class SinCosCircle extends AngleCircle {
           position.y = this.layout.textYLimit * ySign;
         }
         text.setPosition(position);
-        if (angleToDraw < 0.14) {
-          text.hide();
-        } else {
-          text.show();
+        if (!override) {
+          if (angleToDraw < 0.14) {
+            text.hide();
+          } else {
+            text.show();
+          }
         }
       }
     };
@@ -211,8 +213,8 @@ class SinCosCircle extends AngleCircle {
     angle.add('arc', arc);
     angle.add('text', text);
 
-    angle.updateRotation = (r: number) => {
-      if (angle.isShown) {
+    angle.updateRotation = (r: number, override: boolean = false) => {
+      if (angle.isShown || override) {
         arc.angleToDraw = r;
         const position = polarToRect(
           this.layout.angle.radius + this.layout.angle.textOffset,
@@ -317,26 +319,26 @@ class SinCosCircle extends AngleCircle {
     sine.add('line', line);
     sine.add('text', text);
     sine.textOffset = 0.15;
-    sine.updateRotation = (radius: number, angle: number) => {
-      if (sine.isShown) {
+    sine.updateRotation = (radius: number, angle: number, override: boolean = false) => {
+      if (sine.isShown || override) {
         const endX = radius * Math.cos(angle);
         const endY = radius * Math.sin(angle);
         const endYSign = endY / Math.abs(endY);
         sine._line.setPosition(endX, 0);
         sine._line.transform.updateScale(endY / radius, 1);
-        if (sine.isShown) {
-          let textY = endY / 1.7;
-          if (Math.abs(textY) < this.layout.textYLimit) {
-            textY = this.layout.textYLimit * endYSign;
-          }
-          // console.log(sine.textOffset);
-          sine._text.setPosition(endX + endX / Math.abs(endX) * sine.textOffset, textY);
-          // if (Math.abs(endY) < 0.06) {
-          //   text.hide();
-          // } else {
-          //   text.show();
-          // }
+        // if (sine.isShown ) {
+        let textY = endY / 1.7;
+        if (Math.abs(textY) < this.layout.textYLimit) {
+          textY = this.layout.textYLimit * endYSign;
         }
+        // console.log(sine.textOffset);
+        sine._text.setPosition(endX + endX / Math.abs(endX) * sine.textOffset, textY);
+        // if (Math.abs(endY) < 0.06) {
+        //   text.hide();
+        // } else {
+        //   text.show();
+        // }
+        // }
       }
     };
     return sine;
@@ -397,17 +399,17 @@ class SinCosCircle extends AngleCircle {
     this.quadrants = [0, 1, 2, 3];
   }
 
-  updateRotation() {
+  updateRotation(override: boolean = false) {
     super.updateRotation();
     const r = this.varState.rotation;
     const q = this.varState.quadrant;
-    this._circle._sineLine.updateRotation(this.layout.radius, r);
-    this._circle._quad0Angle.updateRotation(r, q);
-    this._circle._quad1Angle.updateRotation(r, q);
-    this._circle._quad2Angle.updateRotation(r, q);
-    this._circle._quad3Angle.updateRotation(r, q);
-    this._circle._symmetry.updateRotation(r, q);
-    this._circle._mainAngle.updateRotation(r);
+    this._circle._sineLine.updateRotation(this.layout.radius, r, override);
+    this._circle._quad0Angle.updateRotation(r, q, override);
+    this._circle._quad1Angle.updateRotation(r, q, override);
+    this._circle._quad2Angle.updateRotation(r, q, override);
+    this._circle._quad3Angle.updateRotation(r, q, override);
+    this._circle._symmetry.updateRotation(r, q, override);
+    this._circle._mainAngle.updateRotation(r, override);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -513,36 +515,42 @@ class SinCosCircle extends AngleCircle {
       const quad = this.varState.quadrant;
       // console.log(this._circle, `quad${quad}Angle`)
       // console.log(this._circle[`_quad${quad}Angle`])
+      const r = this.varState.rotation;
       if (step === -1) {
         this._circle._symmetry.hideAll();
         this._circle._quad0Angle.hideAll();
         this._circle[`_quad${quad}Angle`].hideAll();
       }
       if (step === 0) {
+        this.updateRotation(true);
         this._circle._symmetry.hideAll();
         this._circle._quad0Angle.hideAll();
+        // this._circle[`_quad${quad}Angle`].updateRotation(r, quad, true);
         this._circle[`_quad${quad}Angle`].showAll();
+        // this.updateRotation(true);
       }
       if (step === 1) {
+        this.updateRotation(true);
         this._circle._symmetry.showAll();
         this._circle._symmetry._sine.hideAll();
-        // this._circle._symmetry._line.show();
         this._circle._symmetry.show();
         this._circle._quad0Angle.showAll();
         this._circle[`_quad${quad}Angle`].showAll();
       }
       if (step === 2) {
+        this.updateRotation(true);
         this._circle._symmetry.showAll();
         this._circle._quad0Angle.showAll();
         this._circle[`_quad${quad}Angle`].showAll();
       }
       if (step === 3) {
+        this.updateRotation(true);
+
         this._circle._symmetry.showAll();
         this._circle._quad0Angle.showAll();
         this._circle[`_quad${quad}Angle`].showAll();
       }
     }
-    this.updateRotation();
     this.diagram.animateNextFrame();
   }
 
@@ -575,15 +583,15 @@ class SinCosCircle extends AngleCircle {
     if (this.enableAutoChange) {
       if (this.varState.radialLines === 360) {
         const quad = this.calcQuadrantDegrees(Math.round(r * 180 / Math.PI));
-        this.showQuadrant(quad);
+        this.updateQuadrant(quad);
       } else if (this.varState.radialLines === Math.PI * 2) {
         const quad = this.calcQuadrantRadians(Math.round(r * 100) / 100);
-        this.showQuadrant(quad);
+        this.updateQuadrant(quad);
       }
     }
   }
 
-  selectQuadrant(quadrant: quadrantType) {
+  setQuadrantNumberInTable(quadrant: quadrantType) {
     let elem;
     if (quadrant !== this.varState.quadrant) {
       elem = document.getElementById(`id_lesson__quadrant_selector_${this.varState.quadrant + 1}`);
@@ -597,62 +605,42 @@ class SinCosCircle extends AngleCircle {
     }
   }
 
-  checkForQuadrantChange(quadrant: number) {
-    if (quadrant !== this.varState.quadrant) {
-      this.varState.quadrant = quadrant;
-      this.resetSteps();
-    }
-  }
-  showQuadrant(quadrant: quadrantType) {
-    this.selectQuadrant(quadrant);
-    this.checkForQuadrantChange(quadrant);
-    // this.varState.quadrant = quadrant;
-    this.showText(quadrant);
+  // checkForQuadrantChange(quadrant: quadrantType) {
+  //   if (quadrant !== this.varState.quadrant) {
+  //     this.varState.quadrant = quadrant;
+  //     this.resetSteps();
+  //   }
+  // }
+
+  changeQuadrant(oldQuad: quadrantType, newQuad: quadrantType) {
     const circle = this._circle;
-    const quads = [circle._quad0, circle._quad1, circle._quad2, circle._quad3];
-    quads.forEach((q, index) => {
-      if (quadrant !== index) {
-        q.hide();
-      } else {
-        q.show();
-        // if (index === 1) {
-        if (index === 0) {
-          this._circle._quad0Angle.hideAll();
-          this._circle._symmetry.hideAll();
-        } else {
-          // this._circle._quad0Angle.showAll();
-          // this._circle._symmetry.showAll();
-          this._circle._quad0Angle.setAngleText(quadrantAngles[index]);
-          this._circle._quad0Angle.textOffset = quadrantOffsets[index];
-          this._circle._symmetry._sine.textOffset = sineOffsets[index];
-          this._circle._symmetry.setSineText(`sin ${quadrantAngles[index]}`);
-        }
-        // if (index === 0) {
-        //   this._circle._quad1Angle.hideAll();
-        //   this._circle._quad2Angle.hideAll();
-        //   this._circle._quad3Angle.hideAll();
-        // }
-        // if (index === 1) {
-        //   this._circle._quad1Angle.showAll();
-        //   this._circle._quad2Angle.hideAll();
-        //   this._circle._quad3Angle.hideAll();
-        // }
-        // if (index === 2) {
-        //   this._circle._quad1Angle.hideAll();
-        //   this._circle._quad2Angle.showAll();
-        //   this._circle._quad3Angle.hideAll();
-        // }
-        // if (index === 3) {
-        //   this._circle._quad1Angle.hideAll();
-        //   this._circle._quad2Angle.hideAll();
-        //   this._circle._quad3Angle.showAll();
-        // }
-        // }
-      }
-    });
+    const quadShading = [
+      circle._quad0, circle._quad1,
+      circle._quad2, circle._quad3,
+    ];
+
+    this.setQuadrantNumberInTable(newQuad);
+    quadShading[oldQuad].hide();
+    quadShading[newQuad].show();
+
+    this._circle._quad0Angle.setAngleText(quadrantAngles[newQuad]);
+    this._circle._quad0Angle.textOffset = quadrantOffsets[newQuad];
+    this._circle._symmetry._sine.textOffset = sineOffsets[newQuad];
+    this._circle._symmetry.setSineText(`sin ${quadrantAngles[newQuad]}`);
+
+    this.varState.quadrant = newQuad;
+    console.log("changing to", newQuad)
+    this.resetSteps();
+  }
+
+  updateQuadrant(quadrant: quadrantType) {
+    if (quadrant !== this.varState.quadrant) {
+      this.changeQuadrant(this.varState.quadrant, quadrant);
+    }
   }
 
   resetSteps() {
+    console.log("resetting");
     this._circle._quad0Angle.hideAll();
     this._circle._quad1Angle.hideAll();
     this._circle._quad2Angle.hideAll();
@@ -661,7 +649,7 @@ class SinCosCircle extends AngleCircle {
     this.goToStep(-1);
   }
 
-  goToQuadrant(quad: number) {
+  goToQuadrant(quad: quadrantType) {
     const randAngle45 = Math.random() * Math.PI / 4 * 0.95;
     let angle = quad * Math.PI / 2 + Math.PI / 4;
     const r = this.varState.rotation;
@@ -672,34 +660,12 @@ class SinCosCircle extends AngleCircle {
         angle = r - randAngle45;
       }
     }
-    if (this.varState.quadrant !== quad) {
-      // this._circle._quad0Angle.hideAll();
-      // this._circle._quad1Angle.hideAll();
-      // this._circle._quad2Angle.hideAll();
-      // this._circle._quad3Angle.hideAll();
-      // this._circle._symmetry.hideAll();
-      // this.goToStep(-1);
-      this.resetSteps();
-    }
+    // if (this.varState.quadrant !== quad) {
+    //   this.resetSteps();
+    // }
+    this.updateQuadrant(quad);
     this.rotateToAngleDisablingAutoChange(angle);
   }
-  // goToAcute() {
-  //   const angle45 = Math.random() * Math.PI / 4 * 0.95;
-  //   let angle = angle45;
-  //   const r = this._circle._radius.transform.r();
-  //   if (r != null) {
-  //     if (this.varState.angleSelected !== 'acute') {
-  //       angle = Math.PI / 4;
-  //     } else if (r < Math.PI / 4) {
-  //       angle += Math.PI / 4;
-  //     }
-  //     this.rotateToAngleDisablingAutoChange(angle);
-  //   }
-  //   // this.selectAngle('acute');
-  //   // this.showText('acute');
-  //   // this._circle._acuteRange.show();
-  //   this.showAngleType('acute');
-  // }
 
   // eslint-disable-next-line class-methods-use-this
   showText(quadrant: quadrantType) {
@@ -732,88 +698,6 @@ class SinCosCircle extends AngleCircle {
       }
     }));
   }
-
-  // goToRight() {
-  //   this.enableAutoChange = false;
-  //   const angle = Math.PI / 2;
-  //   this.rotateToAngleDisablingAutoChange(angle);
-  //   // this.selectAngle('right');
-  //   // this.showText('right');
-  //   this.showAngleType('right');
-  // }
-
-  // goToObtuse() {
-  //   const angle45 = Math.random() * Math.PI / 4 * 0.95;
-  //   let angle = angle45;
-  //   const r = this._circle._radius.transform.r();
-  //   if (r != null) {
-  //     if (this.varState.angleSelected !== 'obtuse') {
-  //       angle = 3 * Math.PI / 4;
-  //     } else if (r < 3 * Math.PI / 4) {
-  //       angle += 3 * Math.PI / 4;
-  //     } else {
-  //       angle += Math.PI / 2;
-  //     }
-  //     this.rotateToAngleDisablingAutoChange(angle);
-  //   }
-  //   // this.selectAngle('obtuse');
-  //   // this.showText('obtuse');
-  //   this.showAngleType('obtuse');
-  // }
-  // goToStraight() {
-  //   const angle = Math.PI;
-  //   this.rotateToAngleDisablingAutoChange(angle);
-  //   // this.selectAngle('straight');
-  //   // this.showText('straight');
-  //   this.showAngleType('straight');
-  // }
-  // goToReflex() {
-  //   const angle90 = Math.random() * Math.PI / 2 * 0.95;
-  //   let angle = angle90;
-  //   const r = this._circle._radius.transform.r();
-  //   if (r != null) {
-  //     if (r < 3 * Math.PI / 2) {
-  //       angle += 3 * Math.PI / 2;
-  //     } else {
-  //       angle += Math.PI;
-  //     }
-  //     this.rotateToAngleDisablingAutoChange(angle);
-  //   }
-  //   // this.selectAngle('reflex');
-  //   // this.showText('reflex');
-  //   this.showAngleType('reflex');
-  // }
-
-  // pulseAngle() {
-  //   if (this._circle._rightAngle.isShown) {
-  //     this._circle._rightAngle._horizontal.pulseScaleNow(1, 2);
-  //     this._circle._rightAngle._vertical.pulseScaleNow(1, 2);
-  //   } else {
-  //     this._circle._angle._arc.pulseThickNow(1, 1.04, 7);
-  //     this._circle._angle._arrow.pulseScaleNow(1, 1.5);
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
-  // toggleRightAngleLine(show: boolean | null) {
-  //   let toShow = show;
-  //   if (show === null) {
-  //     if (this._circle._rightAngle.isShown) {
-  //       toShow = false;
-  //     } else {
-  //       toShow = true;
-  //     }
-  //   }
-  //   if (toShow) {
-  //     this._circle._rightAngle.showAll();
-  //     this._circle._angle.hideAll();
-  //     this._circle._rightAngle._horizontal.pulseScaleNow(1, 2);
-  //     this._circle._rightAngle._vertical.pulseScaleNow(1, 2);
-  //   } else {
-  //     this._circle._rightAngle.hideAll();
-  //     this._circle._angle.showAll();
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 }
 
 export default SinCosCircle;
