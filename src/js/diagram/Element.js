@@ -1284,7 +1284,10 @@ class DiagramElement {
     }
     return pulseTransforms;
   }
-  pulseScaleNow(time: number, scale: number, frequency: number = 0) {
+  pulseScaleNow(
+    time: number, scale: number,
+    frequency: number = 0, callback: ?(?mixed) => void = null,
+  ) {
     this.pulse.time = time;
     if (frequency === 0 && time === 0) {
       this.pulse.frequency = 1;
@@ -1300,9 +1303,13 @@ class DiagramElement {
     this.pulse.B = scale - 1;
     this.pulse.C = 0;
     this.pulse.num = 1;
+    this.pulse.callback = callback;
     this.pulseNow();
   }
-  pulseThickNow(time: number, scale: number, num: number = 3) {
+  pulseThickNow(
+    time: number, scale: number,
+    num: number = 3, callback: ?(?mixed) => void = null,
+  ) {
     let bArray = [scale];
     this.pulse.num = num;
     if (this.pulse.num > 1) {
@@ -1321,6 +1328,7 @@ class DiagramElement {
     this.pulse.A = 1;
     this.pulse.B = bArray;
     this.pulse.C = 0;
+    this.pulse.callback = callback;
     this.pulseNow();
   }
 

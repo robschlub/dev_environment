@@ -13,6 +13,8 @@ const cssColorNames = [
   'quadAngles',
   'arcLight',
   'angleDark',
+  'bowHandle',
+  'bowString',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -60,6 +62,11 @@ export default function sinCosCircleLayout() {
 
   layout.quadEqn = {
     position: new Point(-1.3, -1.35),
+  };
+
+  layout.bow = {
+    lineWidth: 0.05,
+    angle: Math.PI / 2,
   };
   return layout;
 }

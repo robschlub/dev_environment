@@ -94,10 +94,10 @@ class Content extends LessonContent {
         horizontal: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
       setEnterState: () => {
-        diag._angleText.setText('Angle');
-        diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
-        diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-        diag._angleText.setFirstTransform();
+        // diag._angleText.setText('Angle');
+        // diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
+        // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+        // diag._angleText.setFirstTransform();
         circle._sineLine.setText('vertical');
         circle._cosineLine.setText('horizontal');
         circle._cosineLine.textXLimit = 0;
@@ -117,9 +117,9 @@ class Content extends LessonContent {
         circle._sineLine,
       ],
       setSteadyState: () => {
-        circle._axes.showAll();
+        // circle._axes.showAll();
         diag.resetCircle('right', Math.PI / 6);
-        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        // onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
     });
     this.addSection({
@@ -136,10 +136,10 @@ class Content extends LessonContent {
         cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
       setEnterState: () => {
-        diag._angleText.setText('Angle');
-        diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
-        diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-        diag._angleText.setFirstTransform();
+        // diag._angleText.setText('Angle');
+        // diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
+        // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+        // diag._angleText.setFirstTransform();
         circle._sineLine.setText('sine');
         circle._cosineLine.setText('cosine');
         circle._cosineLine.textXLimit = 0;
@@ -159,8 +159,45 @@ class Content extends LessonContent {
         circle._sineLine,
       ],
       setSteadyState: () => {
-        circle._axes.showAll();
-        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        // circle._axes.showAll();
+        // onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
+          The name |sine| originally comes from several translations of Sanskrit.
+        </p>
+        <p>
+          |bow|
+        </p>
+      `),
+      modifiers: {
+        sine: click(diag.pulseSineLine, [diag], colors.sine),
+        cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
+        bow: click(diag.showBow, [diag], colors.bowString),
+      },
+      setEnterState: () => {
+        circle._sineLine.setText('sine');
+        circle._sineLine.textYLimit = 0;
+        circle._sineLine.textYMultiplier = 0.5;
+        circle._sineLine.textOffset = 0.13;
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._circumference,
+        diag._unitsSelector,
+      ],
+      show: [
+        circle._axes,
+        circle._sineLine,
+      ],
+      transitionFromAny: (done) => {
+        diag.showBow(done);
+      },
+      setSteadyState: () => {
       },
     });
 
@@ -200,7 +237,8 @@ class Content extends LessonContent {
         circle._sineLine,
       ],
       // transitionFromAny: (done) => {
-      //   diag.transitionCircle(done, 'right', Math.PI / 4, 5);
+      //   // diag.transitionCircle(done, 'right', Math.PI / 4, 5);
+      //   diag.showBow(done);
       // },
       setSteadyState: () => {
         circle._axes.showAll();
