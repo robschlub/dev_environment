@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform, Point } from '../../../js/diagram/tools/g2';
+import { Transform, Point, polarToRect } from '../../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import SinCosCircle from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type { SinCosCircleType, SinCosVarStateType } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
@@ -81,8 +81,31 @@ class SineCollection extends SinCosCircle {
       this.colors.cosine, new Point(0, 0),
     );
 
+    const sine = this.makeSineLine('complimentary_sine');
+    const cosine = this.makeCosineLine('complimentary_cosine');
+    sine.updateRotation(this.layout.radius, angle);
+    cosine.updateRotation(this.layout.radius, angle);
+
+    const thetaPosition = polarToRect(this.layout.radius / 4, angle / 2);
+    const theta = this.shapes.htmlText(
+      'θ', 'id_diagram__complimentary_sine_angle', 'diagram__sine_text',
+      thetaPosition, 'middle', 'center',
+    );
+
+    const eqn = this.diagram.equation.makeHTML('id__piOn2MinusTheta');
+    eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
+
+    const piOn2Position = polarToRect(this.layout.radius / 4, (Math.PI / 2 - angle) / 2 + angle);
+    const piOn2MinusTheta = this.shapes.htmlText(
+      eqn.render(), 'id_diagram__complimentary_cosine_angle', 'diagram__cosine_text',
+      piOn2Position, 'middle', 'center',
+    );
     collection.add('arc', arc);
     collection.add('coArc', coArc);
+    collection.add('sine', sine);
+    collection.add('cosine', cosine);
+    collection.add('theta', theta);
+    collection.add('piOn2MinusTheta', piOn2MinusTheta);
     collection.add('radius', radius);
     return collection;
   }

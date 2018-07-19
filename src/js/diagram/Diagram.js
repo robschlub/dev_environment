@@ -210,7 +210,9 @@ function shapes(diagram: Diagram) {
     alignV: 'top' | 'bottom' | 'middle' = 'middle',
     alignH: 'left' | 'right' | 'center' = 'left',
   ) {
-    const inside = document.createTextNode(textInput);
+    // const inside = document.createTextNode(textInput);
+    const inside = document.createElement('div');
+    inside.innerHTML = textInput;
     return this.htmlElement(inside, id, classes, location, alignV, alignH);
   }
 
