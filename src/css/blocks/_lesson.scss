@@ -513,3 +513,8 @@ $diagram_ratio: 1.5;
 #id_lesson__title_container .navigator__lesson_tile_title_container {
   width: calc(var(--lesson__title_tile_width) - var(--navigator__tile_padding_horizontal) * 2 - var(--navigator__tile_img_text_space) * 2 - var(--navigator__tile_img_width) * 2);
 }
+
+.lesson__item_selector_selected {
+  color: color('diagram', 'text-base');
+}
+

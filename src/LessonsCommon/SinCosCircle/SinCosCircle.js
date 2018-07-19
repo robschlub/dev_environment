@@ -28,6 +28,14 @@ export type sineLineType = {
     updateRotation: (number, number, boolean) => void;
   } & DiagramElementCollection;
 
+type sineTextType = {
+   _text: DiagramElementPrimative;
+   _equals: DiagramElementPrimative;
+   _value: DiagramElementPrimative;
+  setText: (string) => void;
+  updateRotation: (number) => void;
+} & DiagramElementCollection;
+
 export type SinCosCircleType = {
   _rightAngle: rightAngleType;
   _quad0: DiagramElementPrimative;
@@ -72,6 +80,7 @@ export type SineCollectionType = {
   _quad2Eqn: DiagramElementPrimative;
   _quad3Eqn: DiagramElementPrimative;
   _unitsSelector: DiagramElementPrimative;
+  _sineText: sineTextType;
   interactiveSinePage: boolean;
 };
 
@@ -88,6 +97,7 @@ class SinCosCircle extends AngleCircle {
   _quad2Eqn: DiagramElementPrimative;
   _quad3Eqn: DiagramElementPrimative;
   _unitsSelector: DiagramElementPrimative;
+  _sineText: sineTextType;
   interactiveSinePage: boolean;
 
   // makeSineEqualsEquation() {
@@ -249,25 +259,25 @@ class SinCosCircle extends AngleCircle {
   makeSineText() {
     const sineText = this.shapes.collection(this.layout.angleEqualsText.left);
 
-    sineText.add('textSine', this.shapes.htmlText(
+    sineText.add('text', this.shapes.htmlText(
       'Vertical', 'id__sine_angle_sine__sine_text', '',
       new Point(-0.07, -0.2), 'middle', 'right',
     ));
-    sineText.add('equalsSine', this.shapes.htmlText(
+    sineText.add('equals', this.shapes.htmlText(
       '=', 'id__sine_angle_sine__sine_equals', '',
       new Point(0, -0.2), 'middle', 'left',
     ));
-    sineText.add('valueSine', this.shapes.htmlText(
+    sineText.add('value', this.shapes.htmlText(
       '0', 'id__sine_angle_sine_angle__sine_value', '',
       new Point(0.42, -0.2), 'middle', 'right',
     ));
 
     sineText.setText = (newText: string) => {
-      sineText._textSine.vertices.element.innerHTML = newText;
+      sineText._text.vertices.element.innerHTML = newText;
     };
     sineText.updateRotation = (r: number) => {
       const value = Math.sin(r);
-      sineText._valueSine.vertices.element.innerHTML = value.toFixed(2);
+      sineText._value.vertices.element.innerHTML = value.toFixed(2);
     };
     return sineText;
   }
@@ -626,7 +636,7 @@ class SinCosCircle extends AngleCircle {
     }
   }
 
-  goToStep(step: number) {
+  goToStepOld(step: number) {
     const elem1 = document.getElementById('id_lesson_quadrant_steps_1');
     const elem2 = document.getElementById('id_lesson_quadrant_steps_2');
     const elem3 = document.getElementById('id_lesson_quadrant_steps_3');
@@ -821,7 +831,7 @@ class SinCosCircle extends AngleCircle {
     this._circle._quad2Angle.hideAll();
     this._circle._quad3Angle.hideAll();
     this._circle._symmetry.hideAll();
-    this.goToStep(-1);
+    this.goToStepOld(-1);
   }
 
   goToQuadrant(quad: quadrantType) {

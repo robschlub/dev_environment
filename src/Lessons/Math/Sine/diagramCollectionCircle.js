@@ -167,6 +167,12 @@ class SineCollection extends SinCosCircle {
     this.diagram.animateNextFrame();
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  goToStep(step: number) {
+    super.goToStep(step);
+    
+  }
+
   updateRotation() {
     super.updateRotation();
     const r = this.varState.rotation;

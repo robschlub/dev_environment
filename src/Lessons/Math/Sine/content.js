@@ -2,7 +2,7 @@
 
 import {
   LessonContent, clickWord, onClickId, centerV,
-  click, highlightWord } from '../../../js/Lesson/LessonContent';
+  click, highlightWord, initializeItemSelector, itemSelector } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 
@@ -303,6 +303,7 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_40 lesson__font_0p9">
           The name |sine| originally comes from |Sanskrit| where it was called |ardha|, meaning “half |bow| string”.
         </p>
+        ${itemSelector(['step 1', 'step 2', 'step 3'])}
       `),
       modifiers: {
         Sanskrit: highlightWord('Sanskrit', 'lesson__sanskrit'),
@@ -322,7 +323,6 @@ class Content extends LessonContent {
           min: Math.PI / 6,
           max: Math.PI / 2 + Math.PI / 6,
         };
-        // circle._complimentarySineCollection._sine.textXOffset = 0.3;
       },
       showOnly: [
         circle,
@@ -334,7 +334,6 @@ class Content extends LessonContent {
         circle._axes,
         circle._sineLine,
         circle._cosineLine,
-        // circle._complimentarySineCollection,
       ],
       hide: [
         circle._sineLine._text,
@@ -343,14 +342,9 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'right', Math.PI / 6);
       },
-      // transitionFromAny: (done) => {
-      //   diag.showBow(done);
-      // },
       setSteadyState: () => {
-        // diag.rotateComplimentaryAngle();
+        initializeItemSelector(diag.goToStep, circle, 0);
         circle._complimentarySineCollection.showAll();
-        console.log(circle._complimentarySineCollection._sine.textYMultiplier)
-        // circle._radius.hide();
         circle._sineLine.hideAll();
         circle._cosineLine.hideAll();
       },
@@ -569,11 +563,11 @@ class Content extends LessonContent {
         diag.toggleUnits('rad');
         diag.setQuadrantNumberInTable(0);
         diag.toggleParagraphs(0);
-        onClickId('id_lesson_quadrant_steps_1', diag.goToStep, [diag, 0]);
-        onClickId('id_lesson_quadrant_steps_2', diag.goToStep, [diag, 1]);
-        onClickId('id_lesson_quadrant_steps_3', diag.goToStep, [diag, 2]);
-        onClickId('id_lesson_quadrant_steps_4', diag.goToStep, [diag, 3]);
-        diag.goToStep(-1);
+        onClickId('id_lesson_quadrant_steps_1', diag.goToStepOld, [diag, 0]);
+        onClickId('id_lesson_quadrant_steps_2', diag.goToStepOld, [diag, 1]);
+        onClickId('id_lesson_quadrant_steps_3', diag.goToStepOld, [diag, 2]);
+        onClickId('id_lesson_quadrant_steps_4', diag.goToStepOld, [diag, 3]);
+        diag.goToStepOld(-1);
         diag.updateRotation();
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },

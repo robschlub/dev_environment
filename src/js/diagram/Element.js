@@ -1994,6 +1994,27 @@ class DiagramElementCollection extends DiagramElement {
     }
     return elements;
   }
+
+  // This method is here as a convenience method for content item selectors
+  // eslint-disable-next-line class-methods-use-this
+  goToStep(step: number) {
+    const elem = document.getElementById('id__lesson_item_selector_0');
+    const elems = [];
+    if (elem != null) {
+      if (elem.children.length > 0) {
+        for (let i = 0; i < elem.children.length; i += 1) {
+          elems.push(elem.children[i]);
+        }
+      }
+    }
+    elems.forEach((e, index) => {
+      if (index === step) {
+        e.classList.add('lesson__item_selector_selected');
+      } else {
+        e.classList.remove('lesson__item_selector_selected');
+      }
+    });
+  }
 }
 
 export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };
