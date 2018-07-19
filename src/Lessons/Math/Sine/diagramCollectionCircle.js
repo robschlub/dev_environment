@@ -18,8 +18,10 @@ type complimentarySineCollectionType = {
   _radius: DiagramElementPrimative;
   _theta: DiagramElementPrimative;
   _sineArc: DiagramElementPrimative;
-  _cosineArc: DiagramElementPrimative;
-  _piOn2MinusTheta: DiagramElementCollection;
+  _compAngle: {
+    _arc: DiagramElementPrimative;
+    _text: DiagramElementCollection;
+  };
 } & DiagramElementCollection;
 
 export type extendedCircleType = {
@@ -126,6 +128,11 @@ class SineCollection extends SinCosCircle {
       this.colors.cosine, new Point(0, 0),
     );
 
+    const compAngle = this.shapes.collection(new Transform().scale(1, 1));
+    compAngle.add('text', piOn2MinusTheta);
+    compAngle.add('arc', cosineArc);
+
+
     const xAxis = this.makeLine(
       new Point(0, 0), this.layout.axes.length, this.layout.linewidth / 4,
       this.colors.axes, new Transform().translate(0, 0),
@@ -141,10 +148,11 @@ class SineCollection extends SinCosCircle {
     // collection.add('coArc', coArc);
     collection.add('sine', sine);
     collection.add('sineArc', sineArc);
-    collection.add('cosineArc', cosineArc);
+    // collection.add('cosineArc', cosineArc);
     collection.add('cosine', cosine);
     collection.add('theta', theta);
-    collection.add('piOn2MinusTheta', piOn2MinusTheta);
+    // collection.add('piOn2MinusTheta', piOn2MinusTheta);
+    collection.add('compAngle', compAngle);
     collection.add('radius', radius);
     return collection;
   }
@@ -184,10 +192,8 @@ class SineCollection extends SinCosCircle {
 
   showStep(step: number) {
     this.showMinimalComplimentaryAngle();
-    this._circle._complimentarySineCollection._piOn2MinusTheta
-      .setFirstTransform(this._circle._complimentarySineCollection.transform);
-    this._circle._complimentarySineCollection._piOn2MinusTheta.show();
-    this._circle._complimentarySineCollection._cosineArc.show();
+    const compAngle = this._circle._complimentarySineCollection._compAngle;
+    compAngle.showAll();
     if (step === 2) {
       //
     }
@@ -204,6 +210,7 @@ class SineCollection extends SinCosCircle {
         min: Math.PI / 6,
         max: Math.PI / 6,
       };
+      this._circle._complimentarySineCollection._compAngle.pulseScaleNow(1, 1.5);
     }
     if (step === 1) {
       this.showStep(0);
