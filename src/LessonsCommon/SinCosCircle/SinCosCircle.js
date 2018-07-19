@@ -54,10 +54,6 @@ export type SinCosCircleType = {
     _x: DiagramElementPrimative;
     _y: DiagramElementPrimative;
   } & DiagramElementCollection;
-  _bow: {
-    _handle: DiagramElementPrimative;
-    _string: DiagramElementPrimative;
-  } & DiagramElementCollection;
 } & circleType;
 
 type quadrantType = 0 | 1 | 2 | 3;
@@ -83,8 +79,8 @@ const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
 const sineOffsets = [0.03, 0.22, 0.22, 0.25];
 
 class SinCosCircle extends AngleCircle {
-  _circle: SinCosCircleType;
-  varState: SinCosVarStateType;
+  +_circle: SinCosCircleType;
+  +varState: SinCosVarStateType;
   enableAutoChange: boolean;
   quadrants: Array<number>;
   _quad1Eqn: DiagramElementPrimative;
@@ -93,34 +89,6 @@ class SinCosCircle extends AngleCircle {
   _unitsSelector: DiagramElementPrimative;
   interactiveSinePage: boolean;
 
-  makeBow() {
-    const bow = this.shapes.collection();
-    const { angle } = this.layout.bow;
-    const handle = this.shapes.polygon(
-      this.layout.anglePoints,
-      this.layout.radius, this.layout.bow.lineWidth,
-      -angle / 2, 1,
-      this.layout.anglePoints * angle / Math.PI / 2,
-      this.layout.colors.bowHandle, new Transform()
-        .rotate(0)
-        .translate(0, 0),
-    );
-    const offset = this.layout.radius * 0.05;
-    const string = this.makeLine(
-      new Point(0, 0),
-      this.layout.radius * Math.sin(angle / 2) * 2 - offset, this.layout.bow.lineWidth,
-      this.colors.bowString, new Transform()
-        .rotate(Math.PI / 2)
-        .translate(
-          this.layout.radius * Math.cos(angle / 2) - this.layout.bow.lineWidth * 0.2,
-          -this.layout.radius * Math.sin(angle / 2) + offset / 2,
-        ),
-    );
-
-    bow.add('string', string);
-    bow.add('handle', handle);
-    return bow;
-  }
   // makeSineEqualsEquation() {
   //   const equationElements = this.diagram.equation.elements({
   //     sin1: 'sin',
@@ -497,7 +465,7 @@ class SinCosCircle extends AngleCircle {
     this.add('quad2Eqn', this.makeQuad2Equation());
     this.add('quad3Eqn', this.makeQuad3Equation());
     this.add('sineText', this.makeSineText());
-    this._circle.add('bow', this.makeBow());
+
     this._circle.add('rightAngle', this.makeRightAngle());
     const rad = this.layout.quadAngles.radius;
     this._circle.add('quad0Angle', this.makeAngle(rad, '0', 'θ', 0, 1, quadrantOffsets[0]));
@@ -916,18 +884,6 @@ class SinCosCircle extends AngleCircle {
         this.enableAutoChange = true;
       }
     }));
-  }
-
-  showBow(done: ?(?mixed) => void = null) {
-    const finishTransitionCircle = () => {
-      this._circle._bow.show();
-      this._circle._bow._handle.disolveIn(1);
-      this._circle._bow._string.disolveIn(1, done);
-    };
-    this._circle._bow.stop(true);
-    this._circle._bow.hideAll();
-    this.transitionCircle(finishTransitionCircle, 'right', Math.PI / 4, 5);
-    this.diagram.animateNextFrame();
   }
 }
 

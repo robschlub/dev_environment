@@ -297,6 +297,46 @@ class Content extends LessonContent {
         </p>
       `),
     });
+    this.addSection({
+      title: 'cosine',
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40 lesson__font_0p9">
+          The name |sine| originally comes from |Sanskrit| where it was called |ardha|, meaning “half |bow| string”.
+        </p>
+      `),
+      modifiers: {
+        Sanskrit: highlightWord('Sanskrit', 'lesson__sanskrit'),
+        ardha: highlightWord('ardha-jyās', 'lesson__sanskrit'),
+        jya: highlightWord('jyā', 'lesson__sanskrit'),
+        sine: click(diag.pulseSineLine, [diag], colors.sine),
+        cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
+        bow: click(diag.showBow, [diag], colors.bowString),
+      },
+      setEnterState: () => {
+        circle._sineLine.setText('sin θ');
+        circle._sineLine.textYLimit = 0;
+        circle._sineLine.textYMultiplier = 0.5;
+        circle._sineLine.textOffset = 0.13;
+        circle._cosineLine.setText('cos θ');
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._circumference,
+        diag._unitsSelector,
+      ],
+      show: [
+        circle._axes,
+        circle._sineLine,
+        circle._cosineLine,
+        circle._complimentarySineCollection,
+      ],
+      // transitionFromAny: (done) => {
+      //   diag.showBow(done);
+      // },
+      setSteadyState: () => {
+      },
+    });
 
     this.addSection({
       setContent: centerV(`

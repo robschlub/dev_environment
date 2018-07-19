@@ -3,7 +3,9 @@
 
 $colors: (
   axes:       color('diagram', 'disabled', 'dark'),
-  grid:       color('diagram', 'disabled', 'darker')
+  grid:       color('diagram', 'disabled', 'darker'),
+  bowHandle:        color('blue', 'dark'),
+  bowString:        color('red', 'dark'),
 );
 
 body {

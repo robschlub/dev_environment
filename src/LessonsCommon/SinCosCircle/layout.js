@@ -13,8 +13,6 @@ const cssColorNames = [
   'quadAngles',
   'arcLight',
   'angleDark',
-  'bowHandle',
-  'bowString',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
