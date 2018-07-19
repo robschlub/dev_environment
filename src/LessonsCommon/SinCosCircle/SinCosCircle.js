@@ -399,6 +399,7 @@ class SinCosCircle extends AngleCircle {
     sine.add('line', line);
     sine.add('text', text);
     sine.textOffset = 0.15;
+    sine.textYLimit = this.layout.textYLimit;
     sine.updateRotation = (radius: number, angle: number, override: boolean = false) => {
       if (sine.isShown || override) {
         const endX = radius * Math.cos(angle);
@@ -407,8 +408,8 @@ class SinCosCircle extends AngleCircle {
         sine._line.setPosition(endX, 0);
         sine._line.transform.updateScale(endY / radius, 1);
         let textY = endY / 1.7;
-        if (Math.abs(textY) < this.layout.textYLimit) {
-          textY = this.layout.textYLimit * endYSign;
+        if (Math.abs(textY) < sine.textYLimit) {
+          textY = sine.textYLimit * endYSign;
         }
         sine._text.setPosition(endX + endX / Math.abs(endX) * sine.textOffset, textY);
       }
@@ -435,6 +436,7 @@ class SinCosCircle extends AngleCircle {
     cosine.add('line', line);
     cosine.add('text', text);
     cosine.textOffset = 0.08;
+    cosine.textXLimit = this.layout.textXLimit;
     cosine.updateRotation = (radius: number, angle: number, override: boolean = false) => {
       if (cosine.isShown || override) {
         const endX = radius * Math.cos(angle);
@@ -443,8 +445,8 @@ class SinCosCircle extends AngleCircle {
         cosine._line.setPosition(0, endY);
         cosine._line.transform.updateScale(endX / radius, 1);
         let textX = endX / 2;
-        if (Math.abs(textX) < this.layout.textXLimit) {
-          textX = this.layout.textYLimit * endYSign;
+        if (Math.abs(textX) < cosine.textXLimit) {
+          textX = cosine.textYLimit * endYSign;
         }
         cosine._text.setPosition(textX, endY + endY / Math.abs(endY) * cosine.textOffset);
       }

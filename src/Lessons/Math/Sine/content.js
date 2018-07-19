@@ -36,54 +36,105 @@ class Content extends LessonContent {
   addSections() {
     const circle = this.diagram.elements._circle;
     const diag = this.diagram.elements;
+
+    // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+    // this.addSection({
+    //   title: 'Introduction',
+    //   setContent: centerV(`
+    //     <p class="lesson__diagram_text_p_width_45">
+    //       |Rotating| a |line| around a fixed point creates an |arc|, whose length depends on the |angle| of rotation.
+    //     </p>
+    //     <p class="lesson__diagram_text_p_width_45">
+    //       The arc forms a |circle| with complete rotation.
+    //     </p>
+    //   `),
+    //   modifiers: {
+    //     Rotating: click(diag.pushRadius, [diag], colors.radius),
+    //     line: click(diag.pulseRadius, [diag], colors.radius),
+    //     arc: click(diag.pulseArc, [diag], colors.arc),
+    //     angle: click(diag.pulseAngle, [diag], colors.angleText),
+    //     circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 2], colors.circle),
+    //   },
+    //   setEnterState: () => {
+    //     diag._angleText.setText('Angle');
+    //     diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
+    //     diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+    //     diag.resetCircle('right', 0.001);
+    //     diag.showRadians();
+    //     diag.toggleUnits('rad');
+    //   },
+    //   showOnly: [
+    //     circle,
+    //     circle._radius,
+    //     circle._arc,
+    //     diag._unitsSelector,
+    //   ],
+    //   show: [
+    //     diag._angleText,
+    //     circle._axes,
+    //     circle._angle,
+    //   ],
+    //   transitionFromAny: (done) => {
+    //     diag.transitionCircle(done, 'right', null, 5);
+    //   },
+    //   setSteadyState: () => {
+    //     diag._angleText.showAll();
+    //     onClickId('id_angle_text', diag.pulseAngle, [diag]);
+    //   },
+    // });
     this.addSection({
-      title: 'Introduction',
       setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_45">
-          |Rotating| a |line| around a fixed point creates an |arc|, whose length depends on the |angle| of rotation.
-        </p>
-        <p class="lesson__diagram_text_p_width_45">
-          The arc forms a |circle| with complete rotation.
+        <p class="lesson__diagram_text_p_width_40 lesson__font_0p8">
+          As a line rotates, its |vertical| height and |horizontal| length  changes.
         </p>
       `),
       modifiers: {
-        Rotating: click(diag.pushRadius, [diag], colors.radius),
-        line: click(diag.pulseRadius, [diag], colors.radius),
-        arc: click(diag.pulseArc, [diag], colors.arc),
-        angle: click(diag.pulseAngle, [diag], colors.angleText),
-        circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 2], colors.circle),
+        vertical: click(diag.pulseSineLine, [diag], colors.sine),
+        horizontal: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
       setEnterState: () => {
         diag._angleText.setText('Angle');
         diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-        diag.resetCircle('right', 0.001);
-        diag.showRadians();
-        diag.toggleUnits('rad');
+        diag._angleText.setFirstTransform();
+        circle._sineLine.setText('vertical');
+        circle._cosineLine.setText('horizontal');
+        circle._cosineLine.textXLimit = 0;
+        circle._sineLine.textYLimit = 0;
+
+        circle._sineLine.textOffset = 0.2;
       },
       showOnly: [
         circle,
         circle._radius,
-        circle._arc,
+        circle._circumference,
         diag._unitsSelector,
       ],
       show: [
-        diag._angleText,
+        // diag._angleText,
         circle._axes,
-        circle._angle,
+        // circle._angle,
+        circle._cosineLine,
+        circle._sineLine,
       ],
-      transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'right', null, 5);
-      },
+      // transitionFromAny: (done) => {
+      //   diag.transitionCircle(done, 'right', Math.PI / 4, 5);
+      // },
       setSteadyState: () => {
-        diag._angleText.showAll();
+        circle._axes.showAll();
+        diag.resetCircle('right', Math.PI / 6);
+        // diag.showRadians();
+        // diag.toggleUnits('rad');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
+      // setLeaveState: () => {
+      //   circle._angle.setColor(colors.angle);
+      // },
     });
     this.addSection({
       setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_45">
-          As the rotation angle changes, the line's |vertical| height and |horizontal| length also changes.
+        <p class="lesson__diagram_text_p_width_40 lesson__font_0p8">
+          The change is dependent on angle of rotation.
         </p>
       `),
       modifiers: {
@@ -96,7 +147,11 @@ class Content extends LessonContent {
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         circle._sineLine.setText('vertical');
         circle._cosineLine.setText('horizontal');
+        circle._cosineLine.textXLimit = 0;
+        circle._sineLine.textYLimit = 0;
         circle._sineLine.textOffset = 0.2;
+        diag.showRadians();
+        diag.toggleUnits('rad');
       },
       showOnly: [
         circle,
@@ -111,12 +166,12 @@ class Content extends LessonContent {
         circle._cosineLine,
         circle._sineLine,
       ],
-      transitionFromAny: (done) => {
-        diag.transitionCircle(done, 'right', Math.PI / 4, 5);
-      },
+      // transitionFromAny: (done) => {
+      //   diag.transitionCircle(done, 'right', Math.PI / 4, 5);
+      // },
       setSteadyState: () => {
         circle._axes.showAll();
-        diag.resetCircle('right');
+        // diag.resetCircle('right');
         diag.showRadians();
         diag.toggleUnits('rad');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
@@ -181,8 +236,9 @@ class Content extends LessonContent {
           It can be seen how the vertical length changes with angle.
         </p>
         <p class="lesson__diagram_text_p_width_45">
-          But what is the a way to calculate this?
+          Is the a way to calculate this?
         </p>
+        <
       `),
       setEnterState: () => {
         circle._sineLine.setText('');
