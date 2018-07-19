@@ -348,6 +348,9 @@ class Content extends LessonContent {
         circle._sineLine.hideAll();
         circle._cosineLine.hideAll();
       },
+      setLeaveState: () => {
+        diag.rotationLimits = null;
+      },
     });
 
     this.addSection({

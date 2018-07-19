@@ -2,6 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import { Transform, Point, polarToRect } from '../../../js/diagram/tools/g2';
+import { roundNum } from '../../../js/diagram/tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import SinCosCircle from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type { SinCosCircleType, SinCosVarStateType } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
@@ -23,7 +24,7 @@ export type extendedCircleType = {
 
 
 type varStateExtendedType = {
-  complimentaryRotatingTo: 'left' | 'right';
+  complimentaryRotatingTo: 'left' | 'right' | 'done';
 } & SinCosVarStateType;
 
 export type SineCollectionType = {
@@ -171,11 +172,14 @@ class SineCollection extends SinCosCircle {
     }
   }
   rotateComplimentaryAngle() {
-    if (this.varState.complimentaryRotatingTo === 'right') {
-      this._circle._radius.animateRotationTo(Math.PI / 2 + Math.PI / 6, 2, 2);
+    const callback = () => { this.varState.complimentaryRotatingTo = 'done'; };
+    if (this.varState.complimentaryRotatingTo === 'right'
+      || (this.varState.complimentaryRotatingTo === 'done'
+          && this.varState.rotation < Math.PI / 6 + Math.PI / 4)) {
+      this._circle._radius.animateRotationTo(Math.PI / 2 + Math.PI / 6, 2, 2, callback);
       this.varState.complimentaryRotatingTo = 'left';
     } else {
-      this._circle._radius.animateRotationTo(Math.PI / 6, 2, 2);
+      this._circle._radius.animateRotationTo(Math.PI / 6, 2, 2, callback);
       this.varState.complimentaryRotatingTo = 'right';
     }
     this.diagram.animateNextFrame();
