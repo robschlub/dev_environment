@@ -19,11 +19,12 @@ type quadAngle = {
   setAngleText: (string) => void;
 } & DiagramElementCollection;
 
-type sineLineType = {
+export type sineLineType = {
     _line: DiagramElementPrimative;
     _text: DiagramElementPrimative;
     setText: (string) => void;
-    textOffset: number;
+    textXOffset: number;
+    textYOffset: number;
     updateRotation: (number, number, boolean) => void;
   } & DiagramElementCollection;
 
@@ -437,7 +438,8 @@ class SinCosCircle extends AngleCircle {
     const cosine = this.shapes.collection();
     cosine.add('line', line);
     cosine.add('text', text);
-    cosine.textOffset = 0.08;
+    cosine.textYOffset = 0.08;
+    cosine.textXOffset = 0;
     cosine.textXLimit = this.layout.textXLimit;
     cosine.updateRotation = (radius: number, angle: number, override: boolean = false) => {
       if (cosine.isShown || override) {
@@ -450,7 +452,7 @@ class SinCosCircle extends AngleCircle {
         if (Math.abs(textX) < cosine.textXLimit) {
           textX = cosine.textYLimit * endYSign;
         }
-        cosine._text.setPosition(textX, endY + endY / Math.abs(endY) * cosine.textOffset);
+        cosine._text.setPosition(textX, endY + endY / Math.abs(endY) * cosine.textYOffset);
       }
     };
     cosine.setText = (newText: string) => {
@@ -785,7 +787,7 @@ class SinCosCircle extends AngleCircle {
 
     this._circle._quad0Angle.setAngleText(quadrantAngles[newQuad]);
     this._circle._quad0Angle.textOffset = quadrantOffsets[newQuad];
-    this._circle._symmetry._sine.textOffset = sineOffsets[newQuad];
+    this._circle._symmetry._sine.textXOffset = sineOffsets[newQuad];
     this._circle._symmetry.setSineText(`sin ${quadrantAngles[newQuad]}`);
 
     this.varState.quadrant = newQuad;

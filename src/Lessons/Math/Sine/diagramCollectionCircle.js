@@ -2,10 +2,9 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import { Transform, Point, polarToRect } from '../../../js/diagram/tools/g2';
-import { roundNum } from '../../../js/diagram/tools/mathtools';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import SinCosCircle from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
-import type { SinCosCircleType, SinCosVarStateType } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
+import type { SinCosCircleType, SinCosVarStateType, sineLineType } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import lessonLayout from './layout';
 
 type bowType = {
@@ -14,7 +13,8 @@ type bowType = {
   } & DiagramElementCollection;
 
 type complimentarySineCollectionType = {
-
+  _sine: sineLineType;
+  _cosine: sineLineType;
 } & DiagramElementCollection;
 
 export type extendedCircleType = {
@@ -152,7 +152,7 @@ class SineCollection extends SinCosCircle {
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(lessonLayout(), diagram, transform);
     this.addToCircle();
-    this.varState.complimentaryRotatingTo = 'right';
+    this.varState.complimentaryRotatingTo = 'done';
   }
 
   showBow(done: ?(?mixed) => void = null) {
@@ -175,9 +175,9 @@ class SineCollection extends SinCosCircle {
       const angle = r - Math.PI / 6;
       comp.transform.updateRotation(angle);
       comp._sine.textXOffset = -0.13 + angle * 0.04;
-      comp._sine.updateRotation(this.layout.radius, Math.PI / 6);
-      comp._cosine.textOffset = +0.08 + angle * 0.04;
-      comp._cosine.updateRotation(this.layout.radius, Math.PI / 6);
+      comp._sine.updateRotation(this.layout.radius, Math.PI / 6, false);
+      comp._cosine.textYOffset = +0.08 + angle * 0.04;
+      comp._cosine.updateRotation(this.layout.radius, Math.PI / 6, false);
     }
   }
   rotateComplimentaryAngle() {
