@@ -303,7 +303,12 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_40 lesson__font_0p9">
           The name |sine| originally comes from |Sanskrit| where it was called |ardha|, meaning “half |bow| string”.
         </p>
-        ${itemSelector(['step 1', 'step 2', 'step 3'])}
+        ${itemSelector([
+    'Find complimentary angle',
+    'Rotate to second quadrant',
+    'Mirror to first quadrant',
+    'Find sine',
+  ])}
       `),
       modifiers: {
         Sanskrit: highlightWord('Sanskrit', 'lesson__sanskrit'),
@@ -343,8 +348,14 @@ class Content extends LessonContent {
         diag.transitionCircle(done, 'right', Math.PI / 6);
       },
       setSteadyState: () => {
-        initializeItemSelector(diag.goToStep, circle, 0);
-        circle._complimentarySineCollection.showAll();
+        initializeItemSelector(diag.goToStep, diag, 0);
+        diag.showMinimalComplimentaryAngle();
+        // circle._complimentarySineCollection.show();
+        // circle._complimentarySineCollection._radius.show();
+        // circle._complimentarySineCollection._sine.showAll();
+        // circle._complimentarySineCollection._cosine.showAll();
+        // circle._complimentarySineCollection._theta.show();
+        // circle._complimentarySineCollection._thetaArc.show();
         circle._sineLine.hideAll();
         circle._cosineLine.hideAll();
       },

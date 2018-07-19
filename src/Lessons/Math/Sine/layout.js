@@ -21,5 +21,8 @@ export default function lessonLayout() {
   layout.grid.width = layout.radius * 2;
   layout.grid.height = layout.radius * 2;
   layout.grid.position = new Point(-layout.radius, -layout.radius);
+  layout.compAngle = {
+    angle: Math.PI / 6,
+  };
   return layout;
 }

@@ -46,7 +46,6 @@ function initializeItemSelector(
   if (elem != null) {
     if (elem.children.length > 0) {
       for (let i = 0; i < elem.children.length; i += 1) {
-        console.log('asdf');
         elem.children[i].onclick = methodToExecute.bind(bindingObject, i);
       }
     }
