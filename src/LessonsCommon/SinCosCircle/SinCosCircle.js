@@ -400,6 +400,7 @@ class SinCosCircle extends AngleCircle {
     sine.add('text', text);
     sine.textOffset = 0.15;
     sine.textYLimit = this.layout.textYLimit;
+    sine.textYMultiplier = 1 / 1.7;
     sine.updateRotation = (radius: number, angle: number, override: boolean = false) => {
       if (sine.isShown || override) {
         const endX = radius * Math.cos(angle);
@@ -407,7 +408,7 @@ class SinCosCircle extends AngleCircle {
         const endYSign = endY / Math.abs(endY);
         sine._line.setPosition(endX, 0);
         sine._line.transform.updateScale(endY / radius, 1);
-        let textY = endY / 1.7;
+        let textY = endY * sine.textYMultiplier;
         if (Math.abs(textY) < sine.textYLimit) {
           textY = sine.textYLimit * endYSign;
         }

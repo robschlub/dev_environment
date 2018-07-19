@@ -84,11 +84,12 @@ class Content extends LessonContent {
     // });
     this.addSection({
       setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40 lesson__font_0p8">
-          As a line rotates, its |vertical| height and |horizontal| length  changes.
+        <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
+          As a |line_rotates|, its |vertical| height and |horizontal| length  changes.
         </p>
       `),
       modifiers: {
+        line_rotates: click(diag.pushRadius, [diag], colors.radius),
         vertical: click(diag.pulseSineLine, [diag], colors.sine),
         horizontal: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
@@ -101,7 +102,7 @@ class Content extends LessonContent {
         circle._cosineLine.setText('horizontal');
         circle._cosineLine.textXLimit = 0;
         circle._sineLine.textYLimit = 0;
-
+        circle._sineLine.textYMultiplier = 0.5;
         circle._sineLine.textOffset = 0.2;
       },
       showOnly: [
@@ -111,26 +112,58 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       show: [
-        // diag._angleText,
         circle._axes,
-        // circle._angle,
         circle._cosineLine,
         circle._sineLine,
       ],
-      // transitionFromAny: (done) => {
-      //   diag.transitionCircle(done, 'right', Math.PI / 4, 5);
-      // },
       setSteadyState: () => {
         circle._axes.showAll();
         diag.resetCircle('right', Math.PI / 6);
-        // diag.showRadians();
-        // diag.toggleUnits('rad');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
-      // setLeaveState: () => {
-      //   circle._angle.setColor(colors.angle);
-      // },
     });
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
+          The verical height is called the |sine|.
+        </p>
+        <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
+          The horizontal length is called the |cosine|.
+        </p>
+      `),
+      modifiers: {
+        sine: click(diag.pulseSineLine, [diag], colors.sine),
+        cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
+      },
+      setEnterState: () => {
+        diag._angleText.setText('Angle');
+        diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
+        diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+        diag._angleText.setFirstTransform();
+        circle._sineLine.setText('sine');
+        circle._cosineLine.setText('cosine');
+        circle._cosineLine.textXLimit = 0;
+        circle._sineLine.textYLimit = 0;
+        circle._sineLine.textYMultiplier = 0.5;
+        circle._sineLine.textOffset = 0.13;
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._circumference,
+        diag._unitsSelector,
+      ],
+      show: [
+        circle._axes,
+        circle._cosineLine,
+        circle._sineLine,
+      ],
+      setSteadyState: () => {
+        circle._axes.showAll();
+        onClickId('id_angle_text', diag.pulseAngle, [diag]);
+      },
+    });
+
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40 lesson__font_0p8">
