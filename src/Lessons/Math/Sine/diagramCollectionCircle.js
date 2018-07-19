@@ -89,8 +89,11 @@ class SineCollection extends SinCosCircle {
 
     const sine = this.makeSineLine('complimentary_sine');
     const cosine = this.makeCosineLine('complimentary_cosine');
+    sine.textXOffset = -0.13;
+    cosine.textOffset = 0.08;
     sine.updateRotation(this.layout.radius, angle);
     cosine.updateRotation(this.layout.radius, angle);
+
 
     const thetaPosition = polarToRect(this.layout.radius / 4, angle / 2);
     const theta = this.shapes.htmlText(
@@ -167,8 +170,14 @@ class SineCollection extends SinCosCircle {
   updateRotation() {
     super.updateRotation();
     const r = this.varState.rotation;
-    if (this._circle._complimentarySineCollection.isShown) {
-      this._circle._complimentarySineCollection.transform.updateRotation(r - Math.PI / 6);
+    const comp = this._circle._complimentarySineCollection;
+    if (comp.isShown) {
+      const angle = r - Math.PI / 6;
+      comp.transform.updateRotation(angle);
+      comp._sine.textXOffset = -0.13 + angle * 0.04;
+      comp._sine.updateRotation(this.layout.radius, Math.PI / 6);
+      comp._cosine.textOffset = +0.08 + angle * 0.04;
+      comp._cosine.updateRotation(this.layout.radius, Math.PI / 6);
     }
   }
   rotateComplimentaryAngle() {

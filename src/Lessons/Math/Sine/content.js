@@ -103,7 +103,7 @@ class Content extends LessonContent {
         circle._cosineLine.textXLimit = 0;
         circle._sineLine.textYLimit = 0;
         circle._sineLine.textYMultiplier = 0.5;
-        circle._sineLine.textOffset = 0.2;
+        circle._sineLine.textXOffset = 0.2;
       },
       showOnly: [
         circle,
@@ -145,7 +145,7 @@ class Content extends LessonContent {
         circle._cosineLine.textXLimit = 0;
         circle._sineLine.textYLimit = 0;
         circle._sineLine.textYMultiplier = 0.5;
-        circle._sineLine.textOffset = 0.13;
+        circle._sineLine.textXOffset = 0.13;
         diag.updateRotation();
       },
       showOnly: [
@@ -196,7 +196,7 @@ class Content extends LessonContent {
         circle._cosineLine.textXLimit = 0;
         circle._sineLine.textYLimit = 0;
         circle._sineLine.textYMultiplier = 0.5;
-        circle._sineLine.textOffset = 0.16;
+        circle._sineLine.textXOffset = 0.16;
         diag.updateRotation();
       },
       showOnly: [
@@ -235,7 +235,7 @@ class Content extends LessonContent {
         circle._sineLine.setText('sine');
         circle._sineLine.textYLimit = 0;
         circle._sineLine.textYMultiplier = 0.5;
-        circle._sineLine.textOffset = 0.13;
+        circle._sineLine.textXOffset = 0.13;
       },
       showOnly: [
         circle,
@@ -316,12 +316,13 @@ class Content extends LessonContent {
         circle._sineLine.setText('sin θ');
         circle._sineLine.textYLimit = 0;
         circle._sineLine.textYMultiplier = 0.5;
-        circle._sineLine.textOffset = 0.13;
+        circle._sineLine.textXOffset = 0.13;
         circle._cosineLine.setText('cos θ');
         diag.rotationLimits = {
           min: Math.PI / 6,
           max: Math.PI / 2 + Math.PI / 6,
         };
+        // circle._complimentarySineCollection._sine.textXOffset = 0.3;
       },
       showOnly: [
         circle,
@@ -335,6 +336,10 @@ class Content extends LessonContent {
         circle._cosineLine,
         // circle._complimentarySineCollection,
       ],
+      hide: [
+        circle._sineLine._text,
+        circle._cosineLine._text,
+      ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'right', Math.PI / 6);
       },
@@ -344,6 +349,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         // diag.rotateComplimentaryAngle();
         circle._complimentarySineCollection.showAll();
+        console.log(circle._complimentarySineCollection._sine.textYMultiplier)
         // circle._radius.hide();
         circle._sineLine.hideAll();
         circle._cosineLine.hideAll();
@@ -371,7 +377,7 @@ class Content extends LessonContent {
         circle._cosineLine.setText('horizontal');
         circle._cosineLine.textXLimit = 0;
         circle._sineLine.textYLimit = 0;
-        circle._sineLine.textOffset = 0.2;
+        circle._sineLine.textXOffset = 0.2;
         diag.showRadians();
         diag.toggleUnits('rad');
       },
@@ -544,7 +550,7 @@ class Content extends LessonContent {
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag.interactiveSinePage = true;
         circle._sineLine.setText('sin θ');
-        circle._sineLine.textOffset = 0.15;
+        circle._sineLine.textXOffset = 0.15;
       },
       showOnly: [
         circle,
