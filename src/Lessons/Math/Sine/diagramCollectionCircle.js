@@ -21,7 +21,7 @@ type complimentarySineCollectionType = {
   _compAngle: {
     _arc: DiagramElementPrimative;
     _text: DiagramElementCollection;
-  };
+  } & DiagramElementCollection;
 } & DiagramElementCollection;
 
 export type extendedCircleType = {
@@ -74,7 +74,7 @@ class SineCollection extends SinCosCircle {
 
   makeComplimentarySineCollection() {
     const collection = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
-    const angle = Math.PI / 6;
+    const { angle } = this.layout.compAngle;
     const radius = this.makeLine(
       new Point(0, 0), this.layout.radius, this.layout.linewidth,
       this.colors.radius, new Transform()
@@ -144,22 +144,64 @@ class SineCollection extends SinCosCircle {
 
     collection.add('xAxis', xAxis);
     collection.add('yAxis', yAxis);
-    // collection.add('arc', arc);
-    // collection.add('coArc', coArc);
     collection.add('sine', sine);
     collection.add('sineArc', sineArc);
-    // collection.add('cosineArc', cosineArc);
     collection.add('cosine', cosine);
     collection.add('theta', theta);
-    // collection.add('piOn2MinusTheta', piOn2MinusTheta);
     collection.add('compAngle', compAngle);
     collection.add('radius', radius);
     return collection;
   }
 
+  makeCosineSymmetry() {
+    const symmetry = this.shapes.collection();
+    const angle = Math.PI / 2 - this.layout.compAngle.angle;
+    const radius = this.makeLine(
+      new Point(0, 0), this.layout.radius, this.layout.linewidth / 3,
+      this.colors.radius, new Transform()
+        .rotate(angle)
+        .translate(0, 0),
+    );
+    
+
+    const eqn = this.diagram.equation.makeHTML('id__symmetry_piOn2MinusTheta', 'diagram__cosine_text');
+    eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
+
+    const piOn2Position = polarToRect(this.layout.radius / 3.3, angle / 2);
+    const piOn2MinusTheta = this.shapes.htmlText(
+      eqn.render(), 'id_diagram__complimentary_symmetry_cosine_angle', '',
+      piOn2Position, 'middle', 'center',
+    );
+
+    const arc = this.shapes.polygon(
+      this.layout.anglePoints, this.layout.radius / 5,
+      this.layout.linewidth / 2, 0, 1,
+      this.layout.anglePoints * angle / Math.PI / 2,
+      this.colors.cosine, new Point(0, 0),
+    );
+
+    const sine = this.makeSineLine('mirror_sine');
+    
+    const sineEqn = this.diagram.equation.makeHTML('id__symmetry_sine_piOn2MinusTheta', 'diagram__sine_text');
+    sineEqn.createEq(['sin', eqn.frac('π', '2'), '−', 'θ']);
+    sine.setText(sineEqn.render());
+    sine.textXOffset = 0.2;
+    sine.updateRotation(this.layout.radius, angle);
+
+    const compAngle = this.shapes.collection(new Transform().scale(1, 1));
+    compAngle.add('text', piOn2MinusTheta);
+    compAngle.add('arc', arc);
+
+    symmetry.add('sine', sine);
+    symmetry.add('angle', compAngle);
+    symmetry.add('radius', radius);
+    // symmetry.add('text', piOn2MinusTheta);
+    return symmetry;
+  }
   addToCircle() {
     this._circle.add('bow', this.makeBow());
     this._circle.add('complimentarySineCollection', this.makeComplimentarySineCollection());
+    this._circle.add('cosineSymmetry', this.makeCosineSymmetry());
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -188,14 +230,22 @@ class SineCollection extends SinCosCircle {
     this._circle._complimentarySineCollection._cosine.showAll();
     this._circle._complimentarySineCollection._theta.show();
     this._circle._complimentarySineCollection._sineArc.show();
+    this._circle._complimentarySineCollection._xAxis.show();
+    this._circle._complimentarySineCollection._yAxis.show();
+    this._circle._cosineSymmetry.hideAll();
   }
 
   showStep(step: number) {
     this.showMinimalComplimentaryAngle();
     const compAngle = this._circle._complimentarySineCollection._compAngle;
     compAngle.showAll();
-    if (step === 2) {
-      //
+    if (step >= 2) {
+      this._circle._cosineSymmetry.show();
+      this._circle._cosineSymmetry._angle.showAll();
+      this._circle._cosineSymmetry._radius.show();
+    }
+    if (step >= 3) {
+      this._circle._cosineSymmetry._sine.showAll();
     }
   }
 
@@ -203,22 +253,43 @@ class SineCollection extends SinCosCircle {
   goToStep(step: number) {
     super.goToStep(step);
     if (step === 0) {
+      this.rotationLimits = {
+        min: this.layout.compAngle.angle,
+        max: this.layout.compAngle.angle,
+      };
       this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
       this.updateRotation();
       this.showStep(0);
-      this.rotationLimits = {
-        min: Math.PI / 6,
-        max: Math.PI / 6,
-      };
       this._circle._complimentarySineCollection._compAngle.pulseScaleNow(1, 1.5);
     }
     if (step === 1) {
+      this.rotationLimits = {
+        min: this.layout.compAngle.angle,
+        max: Math.PI / 2 + this.layout.compAngle.angle,
+      };
       this.showStep(0);
       this.rotateComplimentaryAngle(1);
+    }
+
+    if (step === 2) {
       this.rotationLimits = {
-        min: Math.PI / 6,
-        max: Math.PI / 2 + Math.PI / 6,
+        min: this.layout.compAngle.angle + Math.PI / 2,
+        max: this.layout.compAngle.angle + Math.PI / 2,
       };
+      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
+      this.updateRotation();
+      this.showStep(2);
+      this._circle._cosineSymmetry._angle.pulseScaleNow(1, 1.5);
+    }
+
+    if (step === 3) {
+      this.rotationLimits = {
+        min: this.layout.compAngle.angle + Math.PI / 2,
+        max: this.layout.compAngle.angle + Math.PI / 2,
+      };
+      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
+      this.updateRotation();
+      this.showStep(3);
     }
     this.diagram.animateNextFrame();
   }
