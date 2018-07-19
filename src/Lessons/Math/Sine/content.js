@@ -85,7 +85,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
-          As a |line_rotates|, its |vertical| height and |horizontal| length  changes.
+          As a |line_rotates|, its |vertical| height and |horizontal| length  change.
         </p>
       `),
       modifiers: {
@@ -290,7 +290,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p class="lesson__font_0p9">
-          The name |cosine| comes from the phrase |complimentary sine|, which means "sine of the complimentary angle".
+          The name |cosine| comes from the phrase |complimentary sine|, which means |sine of the complimentary angle|.
         </p>
         <p class="lesson__font_0p9">
           In other words, the horiztonal component, has the same length as the vertical component of the complementary angle.
