@@ -318,16 +318,21 @@ $diagram_ratio: 1.5;
   cursor: pointer;
 }
 
+.lesson__sanskrit,
+.lesson__arabic,
+.lesson__latin,
+.lesson__greek,
+.greek,
 .latin {
   font-style: italic;
   font-family: Times New Roman, serif;
   color: color('diagram', 'text-latin');
 }
 
-.greek {
-  font-style: italic;
-  color: color('diagram', 'text-greek');
-}
+// .greek {
+//   font-style: italic;
+//   color: color('diagram', 'text-greek');
+// }
 
 .english {
   font-style: italic;

@@ -146,6 +146,7 @@ class Content extends LessonContent {
         circle._sineLine.textYLimit = 0;
         circle._sineLine.textYMultiplier = 0.5;
         circle._sineLine.textOffset = 0.13;
+        diag.updateRotation();
       },
       showOnly: [
         circle,
@@ -166,14 +167,15 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
-          The name |sine| originally comes from several translations of Sanskrit.
+        <p class="lesson__diagram_text_p_width_40 lesson__font_0p9">
+          The name |sine| originally comes from |Sanskrit| where it was called |ardha|, meaning “half |bow| string”.
         </p>
-        <p>
-          |bow|
-        </p>
+        
       `),
       modifiers: {
+        Sanskrit: highlightWord('Sanskrit', 'lesson__sanskrit'),
+        ardha: highlightWord('ardha-jyās', 'lesson__sanskrit'),
+        jya: highlightWord('jyā', 'lesson__sanskrit'),
         sine: click(diag.pulseSineLine, [diag], colors.sine),
         cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
         bow: click(diag.showBow, [diag], colors.bowString),
@@ -201,6 +203,39 @@ class Content extends LessonContent {
       },
     });
 
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__font_0p9">
+          Over time |ardha| simply became |jya|.
+        </p>
+        <p class="lesson__font_0p9" style="margin-top: 5%">
+          This was then translated to Arabic |jiba| and then Latin.
+        </p>
+        <p class="lesson__font_0p9" style="margin-top: 5%">
+          However, when it was translated to Latin, it was likely confused with the Arabic word |jaib|, which means “bundle, bosom, fold in a garment”.
+        </p>
+        <p class="lesson__font_0p9" style="margin-top: 5%">
+          The Latin word for "fold in a garment" and "bosom" is |sinus|, which is where our name |sine| derives.
+        </p>
+      `),
+      modifiers: {
+        ardha: highlightWord('ardha-jyās', 'lesson__sanskrit'),
+        jya: highlightWord('jyā', 'lesson__sanskrit'),
+        jiba: highlightWord('jiba', 'lesson__arabic'),
+        jaib: highlightWord('jaib', 'lesson__arabic'),
+        sinus: highlightWord('sinus', 'lesson__latin'),
+      },
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__font_0p9">
+          So, if we were naming |sine| today, we might call it something more obvious, like |vertical component| or |half bow string|.
+        </p>
+        <p class="lesson__font_0p9">
+          However, as its name comes from millenia past, it is no longer intuitive, and we just have to remember it.
+        </p>
+      `),
+    });
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40 lesson__font_0p8">
