@@ -167,6 +167,57 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_45 lesson__font_0p9"
+           style="margin-top: 5%">
+          The |sine| and |cosine| change with rotation angle.
+        </p>
+        <p class="lesson__diagram_text_p_width_40 lesson__font_0p9"
+           style="margin-top: 5%">
+          Therefore, when we refer to the |angle| as |theta|, then we usually use the names |sine_theta| and |cosine_theta|.
+        </p>
+        <p class="lesson__diagram_text_p_width_45 lesson__font_0p9"
+           style="margin-top: 5%">
+          Often this is shortened to |sin_theta| and |cos_theta| where the brackets can be removed if the expression is clear.
+        </p>
+      `),
+      modifiers: {
+        sine: click(diag.pulseSineLine, [diag], colors.sine),
+        cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
+        theta: highlightWord('θ', 'diagram__equation_text diagram__theta'),
+        sine_theta: clickWord('sine(θ)', 'id_sine_theta', diag.pulseSineLine, [diag], 'diagram__sine_text'),
+        cosine_theta: clickWord('cosine(θ)', 'id_cosine_theta', diag.pulseCosineLine, [diag], 'diagram__cosine_text'),
+        sin_theta: clickWord('sin θ', 'id_sine_theta2', diag.pulseSineLine, [diag], 'diagram__sine_text'),
+        cos_theta: clickWord('cos θ', 'id_cosine_theta2', diag.pulseCosineLine, [diag], 'diagram__cosine_text'),
+        angle: click(diag.pulseMainAngle, [diag], colors.angleText),
+      },
+      setEnterState: () => {
+        circle._sineLine.setText('sin θ');
+        circle._cosineLine.setText('cos θ');
+        circle._cosineLine.textXLimit = 0;
+        circle._sineLine.textYLimit = 0;
+        circle._sineLine.textYMultiplier = 0.5;
+        circle._sineLine.textOffset = 0.16;
+        diag.updateRotation();
+      },
+      showOnly: [
+        circle,
+        circle._radius,
+        circle._circumference,
+        diag._unitsSelector,
+      ],
+      show: [
+        circle._axes,
+        circle._cosineLine,
+        circle._sineLine,
+        circle._mainAngle,
+      ],
+      setSteadyState: () => {
+        diag.updateRotation();
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40 lesson__font_0p9">
           The name |sine| originally comes from |Sanskrit| where it was called |ardha|, meaning “half |bow| string”.
         </p>
@@ -236,6 +287,17 @@ class Content extends LessonContent {
         </p>
       `),
     });
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__font_0p9">
+          The name |cosine| comes from the phrase |complimentary sine|, which means "sine of the complimentary angle".
+        </p>
+        <p class="lesson__font_0p9">
+          In other words, the horiztonal component, has the same length as the vertical component of the complementary angle.
+        </p>
+      `),
+    });
+
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40 lesson__font_0p8">

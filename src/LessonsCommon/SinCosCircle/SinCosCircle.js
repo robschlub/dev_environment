@@ -894,6 +894,11 @@ class SinCosCircle extends AngleCircle {
   //   }
   // }
 
+  pulseMainAngle() {
+    this._circle._mainAngle.pulseScaleNow(1, 1.4);
+    this.diagram.animateNextFrame();
+  }
+
   pulseSineLine() {
     this._circle._sineLine._line.pulseThickNow(1, 5, 7);
     this.diagram.animateNextFrame();
