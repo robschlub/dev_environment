@@ -12,13 +12,18 @@ type bowType = {
     _string: DiagramElementPrimative;
   } & DiagramElementCollection;
 
+type complimentarySineCollectionType = {
+
+} & DiagramElementCollection;
+
 export type extendedCircleType = {
   _bow: bowType;
+  _complimentarySineCollection: complimentarySineCollectionType;
 } & SinCosCircleType;
 
 
 type varStateExtendedType = {
-  //
+  complimentaryRotatingTo: 'left' | 'right';
 } & SinCosVarStateType;
 
 export type SineCollectionType = {
@@ -60,7 +65,7 @@ class SineCollection extends SinCosCircle {
   }
 
   makeComplimentarySineCollection() {
-    const collection = this.shapes.collection();
+    const collection = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
     const angle = Math.PI / 6;
     const radius = this.makeLine(
       new Point(0, 0), this.layout.radius, this.layout.linewidth,
@@ -95,14 +100,28 @@ class SineCollection extends SinCosCircle {
     const eqn = this.diagram.equation.makeHTML('id__piOn2MinusTheta');
     eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
 
-    const piOn2Position = polarToRect(this.layout.radius / 4, (Math.PI / 2 - angle) / 2 + angle);
+    const piOn2Position = polarToRect(this.layout.radius / 3.3, (Math.PI / 2 - angle) / 2 + angle);
     const piOn2MinusTheta = this.shapes.htmlText(
       eqn.render(), 'id_diagram__complimentary_cosine_angle', 'diagram__cosine_text',
       piOn2Position, 'middle', 'center',
     );
+
+    const sineArc = this.shapes.polygon(
+      this.layout.anglePoints, this.layout.radius / 5, this.layout.linewidth / 2, 0, 1,
+      this.layout.anglePoints * angle / Math.PI / 2, this.colors.sine, new Point(0, 0),
+    );
+    const cosineArc = this.shapes.polygon(
+      this.layout.anglePoints, this.layout.radius / 5,
+      this.layout.linewidth / 2, angle, 1,
+      this.layout.anglePoints * (Math.PI / 2 - angle) / Math.PI / 2,
+      this.colors.cosine, new Point(0, 0),
+    );
+
     collection.add('arc', arc);
     collection.add('coArc', coArc);
     collection.add('sine', sine);
+    collection.add('sineArc', sineArc);
+    collection.add('cosineArc', cosineArc);
     collection.add('cosine', cosine);
     collection.add('theta', theta);
     collection.add('piOn2MinusTheta', piOn2MinusTheta);
@@ -118,6 +137,7 @@ class SineCollection extends SinCosCircle {
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(lessonLayout(), diagram, transform);
     this.addToCircle();
+    this.varState.complimentaryRotatingTo = 'right';
   }
 
   showBow(done: ?(?mixed) => void = null) {
@@ -129,6 +149,17 @@ class SineCollection extends SinCosCircle {
     this._circle._bow.stop(true);
     this._circle._bow.hideAll();
     this.transitionCircle(finishTransitionCircle, 'right', Math.PI / 4, 5);
+    this.diagram.animateNextFrame();
+  }
+
+  rotateComplimentaryAngle() {
+    if (this.varState.complimentaryRotatingTo === 'right') {
+      this._circle._complimentarySineCollection.animateRotationTo(Math.PI / 2, 1, 2);
+      this.varState.complimentaryRotatingTo = 'left';
+    } else {
+      this._circle._complimentarySineCollection.animateRotationTo(0, -1, 2);
+      this.varState.complimentaryRotatingTo = 'right';
+    }
     this.diagram.animateNextFrame();
   }
 }

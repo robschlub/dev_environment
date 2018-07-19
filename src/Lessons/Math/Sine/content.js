@@ -310,7 +310,7 @@ class Content extends LessonContent {
         jya: highlightWord('jyā', 'lesson__sanskrit'),
         sine: click(diag.pulseSineLine, [diag], colors.sine),
         cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
-        bow: click(diag.showBow, [diag], colors.bowString),
+        bow: click(diag.rotateComplimentaryAngle, [diag, null], colors.bowString),
       },
       setEnterState: () => {
         circle._sineLine.setText('sin θ');
@@ -331,10 +331,12 @@ class Content extends LessonContent {
         circle._cosineLine,
         circle._complimentarySineCollection,
       ],
+      // transitionFromAny: (done)
       // transitionFromAny: (done) => {
       //   diag.showBow(done);
       // },
       setSteadyState: () => {
+        // diag.rotateComplimentaryAngle();
       },
     });
 
