@@ -318,6 +318,10 @@ class Content extends LessonContent {
         circle._sineLine.textYMultiplier = 0.5;
         circle._sineLine.textOffset = 0.13;
         circle._cosineLine.setText('cos θ');
+        diag.rotationLimits = {
+          min: Math.PI / 6,
+          max: Math.PI / 2 + Math.PI / 6,
+        };
       },
       showOnly: [
         circle,

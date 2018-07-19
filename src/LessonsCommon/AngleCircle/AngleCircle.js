@@ -62,6 +62,10 @@ class AngleCircle extends DiagramElementCollection {
     radialLines: number,
     rotation: number,
   };
+  rotationLimits: {
+    min: number,
+    max: number,
+  } | null;
   diagram: Diagram;
 
 
@@ -262,6 +266,7 @@ class AngleCircle extends DiagramElementCollection {
       // percentStraight: 0,
       // straightening: false,
     };
+    this.rotationLimits = null;
     this.shapes = diagram.shapes;
     this.layout = layout;
     this.colors = this.layout.colors;
@@ -277,12 +282,21 @@ class AngleCircle extends DiagramElementCollection {
   updateRotation() {
     let rotation = this._circle._radius.transform.r();
     if (rotation !== null && rotation !== undefined) {
+      if (this.rotationLimits != null) {
+        if (rotation < this.rotationLimits.min) {
+          rotation = this.rotationLimits.min;
+        }
+        if (rotation > this.rotationLimits.max) {
+          rotation = this.rotationLimits.max;
+        }
+      }
       if (rotation > Math.PI * 2) {
         rotation -= Math.PI * 2;
       }
       if (rotation < 0) {
         rotation += Math.PI * 2;
       }
+
       const r = normAngle(rotation);
       this.varState.rotation = r;
       this._circle._radius.transform.updateRotation(r);
