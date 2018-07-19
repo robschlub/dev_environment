@@ -152,12 +152,19 @@ class SineCollection extends SinCosCircle {
     this.diagram.animateNextFrame();
   }
 
+  updateRotation() {
+    super.updateRotation();
+    const r = this.varState.rotation;
+    if (this._circle._complimentarySineCollection.isShown) {
+      this._circle._complimentarySineCollection.transform.updateRotation(r - Math.PI / 6);
+    }
+  }
   rotateComplimentaryAngle() {
     if (this.varState.complimentaryRotatingTo === 'right') {
-      this._circle._complimentarySineCollection.animateRotationTo(Math.PI / 2, 1, 2);
+      this._circle._radius.animateRotationTo(Math.PI / 2 + Math.PI / 6, 1, 2);
       this.varState.complimentaryRotatingTo = 'left';
     } else {
-      this._circle._complimentarySineCollection.animateRotationTo(0, -1, 2);
+      this._circle._radius.animateRotationTo(Math.PI / 6, -1, 2);
       this.varState.complimentaryRotatingTo = 'right';
     }
     this.diagram.animateNextFrame();

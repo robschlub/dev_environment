@@ -329,14 +329,20 @@ class Content extends LessonContent {
         circle._axes,
         circle._sineLine,
         circle._cosineLine,
-        circle._complimentarySineCollection,
+        // circle._complimentarySineCollection,
       ],
-      // transitionFromAny: (done)
+      transitionFromAny: (done) => {
+        diag.transitionCircle(done, 'right', Math.PI / 6);
+      },
       // transitionFromAny: (done) => {
       //   diag.showBow(done);
       // },
       setSteadyState: () => {
         // diag.rotateComplimentaryAngle();
+        circle._complimentarySineCollection.showAll();
+        // circle._radius.hide();
+        circle._sineLine.hideAll();
+        circle._cosineLine.hideAll();
       },
     });
 
