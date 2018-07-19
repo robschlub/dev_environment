@@ -117,6 +117,17 @@ class SineCollection extends SinCosCircle {
       this.colors.cosine, new Point(0, 0),
     );
 
+    const xAxis = this.makeLine(
+      new Point(0, 0), this.layout.axes.length, this.layout.linewidth / 4,
+      this.colors.axes, new Transform().translate(0, 0),
+    );
+    const yAxis = this.makeLine(
+      new Point(0, 0), this.layout.axes.length, this.layout.linewidth / 4,
+      this.colors.axes, new Transform().rotate(Math.PI / 2).translate(0, 0),
+    );
+
+    collection.add('xAxis', xAxis);
+    collection.add('yAxis', yAxis);
     collection.add('arc', arc);
     collection.add('coArc', coArc);
     collection.add('sine', sine);
@@ -161,10 +172,10 @@ class SineCollection extends SinCosCircle {
   }
   rotateComplimentaryAngle() {
     if (this.varState.complimentaryRotatingTo === 'right') {
-      this._circle._radius.animateRotationTo(Math.PI / 2 + Math.PI / 6, 1, 2);
+      this._circle._radius.animateRotationTo(Math.PI / 2 + Math.PI / 6, 2, 2);
       this.varState.complimentaryRotatingTo = 'left';
     } else {
-      this._circle._radius.animateRotationTo(Math.PI / 6, -1, 2);
+      this._circle._radius.animateRotationTo(Math.PI / 6, 2, 2);
       this.varState.complimentaryRotatingTo = 'right';
     }
     this.diagram.animateNextFrame();
