@@ -221,6 +221,17 @@ class SineCollection extends SinCosCircle {
     // symmetry.add('text', piOn2MinusTheta);
     return symmetry;
   }
+
+  makeCosineEquation() {
+    const eqn = this.diagram.equation.makeHTML('id__symmetry_sine_cosine_eqn', 'diagram__cosine_text');
+    eqn.createEq(['cos θ = sin', eqn.frac('π', '2'), '−θ']);
+
+    return this.shapes.htmlText(
+      eqn.render(), 'id__sine_eqn_cosine', 'diagram__equation_text',
+      this.layout.quadEqn.position, 'middle', 'center',
+    );
+  }
+
   addToCircle() {
     this._circle.add('bow', this.makeBow());
     this._circle.add('complimentarySineCollection', this.makeComplimentarySineCollection());
@@ -230,6 +241,7 @@ class SineCollection extends SinCosCircle {
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(lessonLayout(), diagram, transform);
     this.addToCircle();
+    this.add('cosineEqn', this.makeCosineEquation());
     this.varState.complimentaryRotatingTo = 'done';
   }
 
@@ -270,6 +282,9 @@ class SineCollection extends SinCosCircle {
     }
     if (step >= 3) {
       this._circle._cosineSymmetry._sine.showAll();
+    }
+    if (step >= 4) {
+      this._cosineEqn.show();
     }
   }
 
