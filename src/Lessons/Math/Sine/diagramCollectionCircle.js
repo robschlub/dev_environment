@@ -95,17 +95,18 @@ class SineCollection extends SinCosCircle {
     angleText: string = '',
     id: string = '',
     color: Array<number> = [0.5, 0.5, 0.5, 1],
+    layout: Object = this.layout.angleAnnotation,
   ) {
     const { angle } = this.layout.compAngle;
     const angleFraction = angle / Math.PI / 2;
-    const layout = this.layout.thetaAngle;
+    // const layout = this.layout.thetaAngle;
 
-    const thetaPosition = polarToRect(layout.label.radius, angle / 2);
+    const labelPosition = polarToRect(layout.arc.radius + layout.label.radiusOffset, angle / 2);
     const label = this.shapes.htmlText(
       angleText,
       `id_lessons__angle_annotation__${id}`,
       'lessons__equation__text lessons__angle_annotation__text',
-      thetaPosition,
+      labelPosition,
       'middle', 'center',
     );
     label.setColor(color);
@@ -122,9 +123,34 @@ class SineCollection extends SinCosCircle {
     return thetaAngle;
   }
 
+  makeThetaAngle(
+    id: string = '',
+    color: Array<number> = [0.5, 0.5, 0.5, 1],
+  ) {
+    return this.makeAngleAnnotation('θ', `theta_${id}`, color, this.layout.thetaAngle);
+  }
+
+  makeComplimentAngle(
+    id: string = '',
+    color: Array<number> = [0.5, 0.5, 0.5, 1],
+  ) {
+    const eqn = this.diagram.equation.makeHTML(`id_lessons__equation__compliment_angle_${id}`);
+
+    eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
+    const complimentAngle = this.makeAngleAnnotation(
+      eqn.render(),
+      `comp_${id}`,
+      color,
+      this.layout.complimentAngle,
+    );
+    complimentAngle.transform.updateRotation(this.layout.compAngle);
+    return complimentAngle;
+  }
+
   makeComplimentarySineCollection(id: string = '') {
     const collection = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
     const { angle } = this.layout.compAngle;
+
     const radius = this.makeLine(
       new Point(0, 0), this.layout.radius, this.layout.linewidth,
       this.colors.radius, new Transform()
@@ -133,19 +159,7 @@ class SineCollection extends SinCosCircle {
         .translate(0, 0),
     );
 
-    // const arc = this.shapes.polygon(
-    //   this.layout.anglePoints, this.layout.radius, this.layout.linewidth, 0, 1,
-    //   this.layout.anglePoints * angle / Math.PI / 2, this.colors.sine, new Point(0, 0),
-    // );
-
-    // const coArc = this.shapes.polygon(
-    //   this.layout.anglePoints, this.layout.radius,
-    //   this.layout.linewidth, angle, 1,
-    //   this.layout.anglePoints * (Math.PI / 2 - angle) / Math.PI / 2,
-    //   this.colors.cosine, new Point(0, 0),
-    // );
-
-    const theta = this.makeAngleAnnotation('θ', `theta${id}`, this.colors.sine);
+    const theta = this.makeThetaAngle(`${id}`, this.colors.sine);
     const sine = this.makeSineLine(`complimentary_sine${id}`);
     const cosine = this.makeCosineLine(`complimentary_cosine${id}`);
     sine.textXOffset = -0.13;
@@ -154,14 +168,6 @@ class SineCollection extends SinCosCircle {
     cosine._text.color = this.colors.cosine;
     sine.updateRotation(this.layout.radius, angle);
     cosine.updateRotation(this.layout.radius, angle);
-
-
-    // const thetaPosition = polarToRect(this.layout.radius / 4, angle / 2);
-    // const theta = this.shapes.htmlText(
-    //   'θ', `id_diagram__complimentary_sine_angle${id}`, 'diagram__sine_text',
-    //   thetaPosition, 'middle', 'center',
-    // );
-    // theta.color = this.colors.sine;
 
     const eqn = this.diagram.equation.makeHTML(`id__piOn2MinusTheta${id}`);
     eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);

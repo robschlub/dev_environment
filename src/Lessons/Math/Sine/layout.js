@@ -25,19 +25,20 @@ export default function lessonLayout() {
     angle: Math.PI / 6,
   };
 
-  const angleLineWidth = 0.02;
-  const angleRadius = 0.3;
-  const angleSides = 200;
-  layout.thetaAngle = {
+  layout.angleAnnotation = {
     arc: {
-      lineWidth: angleLineWidth,
-      radius: angleRadius,
-      sides: angleSides,
+      lineWidth: 0.02,
+      radius: 0.3,
+      sides: 200,
     },
     label: {
-      radius: angleRadius + 0.07,
+      radiusOffset: 0.07,
     },
   };
+
+  layout.thetaAngle = Object.assign({}, layout.angleAnnotation);
+  layout.complimentAngle = Object.assign({}, layout.angleAnnotation);
+  layout.complimentAngle.label.radiusOffset = 0.1;
 
   return layout;
 }
