@@ -157,6 +157,17 @@ class SineCollection extends SinCosCircle {
       this.colors.axes, new Transform().rotate(Math.PI / 2).translate(0, 0),
     );
 
+    collection.updateRotation = (r: number) => {
+      if (collection.isShown) {
+        const radiusAngle = r - this.layout.compAngle.angle;
+        collection.transform.updateRotation(radiusAngle);
+        collection._sine.textXOffset = -0.13 + radiusAngle * 0.04;
+        collection._sine.updateRotation(this.layout.radius, this.layout.compAngle.angle, false);
+        collection._cosine.textYOffset = +0.08 + radiusAngle * 0.04;
+        collection._cosine.updateRotation(this.layout.radius, this.layout.compAngle.angle, false);
+      }
+    };
+
     collection.add('xAxis', xAxis);
     collection.add('yAxis', yAxis);
     collection.add('sine', sine);
@@ -302,6 +313,14 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._angle.showAll();
       this._circle._cosineSymmetry._radius.show();
       this._circle._cosineSymmetry._xAxis.show();
+      this._circle._radius.hide();
+      this._circle._complimentarySineCollection.hideAll();
+
+      const angle = this.layout.compAngle.angle + Math.PI / 2;
+      this._circle._radius.transform.updateRotation(angle);
+      this._circle._compShadow.updateRotation(angle);
+      this._circle._compShadow.setFirstTransform(this._circle.transform);
+      this.updateRotation();
     }
     if (step >= 4) {
       this._circle._cosineSymmetry._sine.showAll();
@@ -348,8 +367,6 @@ class SineCollection extends SinCosCircle {
         min: this.layout.compAngle.angle + Math.PI / 2,
         max: this.layout.compAngle.angle + Math.PI / 2,
       };
-      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
-      this.updateRotation();
       this.showStep(3);
       this._circle._cosineSymmetry
         .transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
@@ -382,15 +399,7 @@ class SineCollection extends SinCosCircle {
   updateRotation() {
     super.updateRotation();
     const r = this.varState.rotation;
-    const comp = this._circle._complimentarySineCollection;
-    if (comp.isShown) {
-      const angle = r - this.layout.compAngle.angle;
-      comp.transform.updateRotation(angle);
-      comp._sine.textXOffset = -0.13 + angle * 0.04;
-      comp._sine.updateRotation(this.layout.radius, this.layout.compAngle.angle, false);
-      comp._cosine.textYOffset = +0.08 + angle * 0.04;
-      comp._cosine.updateRotation(this.layout.radius, this.layout.compAngle.angle, false);
-    }
+    this._circle._complimentarySineCollection.updateRotation(r);
   }
   rotateComplimentaryAngle(toQuad: number | null) {
     const maxAngle = Math.PI / 2 + this.layout.compAngle.angle;
