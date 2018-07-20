@@ -282,6 +282,7 @@ class SineCollection extends SinCosCircle {
     this._circle._complimentarySineCollection._yAxis.show();
     this._circle._compShadow.hideAll();
     this._cosineEqn.hide();
+    this._circle._cosineSymmetry.hideAll();
   }
 
   showStep(step: number) {
