@@ -109,7 +109,7 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._circumference,
-        diag._unitsSelector,
+        // diag._unitsSelector,
       ],
       show: [
         circle._axes,
@@ -152,7 +152,7 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._circumference,
-        diag._unitsSelector,
+        // diag._unitsSelector,
       ],
       show: [
         circle._axes,
@@ -203,7 +203,7 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._circumference,
-        diag._unitsSelector,
+        // diag._unitsSelector,
       ],
       show: [
         circle._axes,
@@ -241,7 +241,7 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._circumference,
-        diag._unitsSelector,
+        // diag._unitsSelector,
       ],
       show: [
         circle._axes,
@@ -336,7 +336,7 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._circumference,
-        diag._unitsSelector,
+        // diag._unitsSelector,
       ],
       show: [
         circle._axes,

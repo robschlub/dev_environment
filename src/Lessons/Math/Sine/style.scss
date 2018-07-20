@@ -23,5 +23,24 @@ body {
 }
 
 #id__piOn2MinusTheta .denominator {
-  line-height: 1.0;
+  line-height: 1;
+}
+
+#id__symmetry_sine_cosine_eqn_left {
+  padding-right: calc(var(--lesson__diagram-font-size) * 0.2);
+}
+
+#id__symmetry_sine_cosine_eqn_right {
+  padding-left: calc(var(--lesson__diagram-font-size) * 0.2);
+}
+
+#id__symmetry_sine_cosine_eqn_frac {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+}
+
+#id__symmetry_sine_cosine_eqn_bracket_l,
+#id__symmetry_sine_cosine_eqn_bracket_r {
+  font-size: calc(var(--lesson__diagram-font-size) * 1.9);
+  font-style: normal;
+  font-weight: 100;
 }

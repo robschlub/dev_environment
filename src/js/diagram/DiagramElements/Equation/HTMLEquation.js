@@ -283,6 +283,15 @@ export default class HTMLEquation extends HTMLElements {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  el(
+    content: 'string',
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    return new HTMLElement(content, id, classes);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   supsub(
     content: EquationInput,
     superscript: EquationInput,

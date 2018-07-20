@@ -224,7 +224,13 @@ class SineCollection extends SinCosCircle {
 
   makeCosineEquation() {
     const eqn = this.diagram.equation.makeHTML('id__symmetry_sine_cosine_eqn', 'diagram__cosine_text');
-    eqn.createEq(['cos θ = sin', eqn.frac('π', '2'), '−θ']);
+    eqn.createEq([
+      eqn.el('cos θ = sin', 'id__symmetry_sine_cosine_eqn_left'),
+      eqn.el('(', 'id__symmetry_sine_cosine_eqn_bracket_l'),
+      eqn.frac('π', '2', 'id__symmetry_sine_cosine_eqn_frac'),
+      eqn.el('− θ', 'id__symmetry_sine_cosine_eqn_right', ''),
+      eqn.el(')', 'id__symmetry_sine_cosine_eqn_bracket_r'),
+    ]);
 
     return this.shapes.htmlText(
       eqn.render(), 'id__sine_eqn_cosine', 'diagram__equation_text',
