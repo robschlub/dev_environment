@@ -92,16 +92,16 @@ class SineCollection extends SinCosCircle {
   }
 
   makeAngleAnnotation(
+    angleStart: number,
+    angleSize: number,
     angleText: string = '',
     id: string = '',
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     layout: Object = this.layout.angleAnnotation,
   ) {
-    const { angle } = this.layout.compAngle;
-    const angleFraction = angle / Math.PI / 2;
-    // const layout = this.layout.thetaAngle;
+    const angleFraction = angleSize / Math.PI / 2;
 
-    const labelPosition = polarToRect(layout.arc.radius + layout.label.radiusOffset, angle / 2);
+    const labelPosition = polarToRect(layout.arc.radius + layout.label.radiusOffset, angleStart + angleSize / 2);
     const label = this.shapes.htmlText(
       angleText,
       `id_lessons__angle_annotation__${id}`,
@@ -112,22 +112,26 @@ class SineCollection extends SinCosCircle {
     label.setColor(color);
 
     const arc = this.shapes.polygon(
-      layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, 0, 1,
+      layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
       layout.arc.sides * angleFraction, color,
-      new Transform().scale(1, 1).rotate(0),
+      new Transform(),
     );
 
-    const thetaAngle = this.shapes.collection();
-    thetaAngle.add('arc', arc);
-    thetaAngle.add('label', label);
-    return thetaAngle;
+    const angleAnnotation = this.shapes.collection(new Transform()
+      .scale(1, 1));
+    angleAnnotation.add('arc', arc);
+    angleAnnotation.add('label', label);
+    return angleAnnotation;
   }
 
   makeThetaAngle(
     id: string = '',
     color: Array<number> = [0.5, 0.5, 0.5, 1],
   ) {
-    return this.makeAngleAnnotation('θ', `theta_${id}`, color, this.layout.thetaAngle);
+    return this.makeAngleAnnotation(
+      0, this.layout.compAngle.angle,
+      'θ', `theta_${id}`, color, this.layout.thetaAngle,
+    );
   }
 
   makeComplimentAngle(
@@ -138,12 +142,13 @@ class SineCollection extends SinCosCircle {
 
     eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
     const complimentAngle = this.makeAngleAnnotation(
+      this.layout.compAngle.angle,
+      Math.PI / 2 - this.layout.compAngle.angle,
       eqn.render(),
       `comp_${id}`,
       color,
       this.layout.complimentAngle,
     );
-    complimentAngle.transform.updateRotation(this.layout.compAngle);
     return complimentAngle;
   }
 
@@ -159,7 +164,7 @@ class SineCollection extends SinCosCircle {
         .translate(0, 0),
     );
 
-    const theta = this.makeThetaAngle(`${id}`, this.colors.sine);
+    const theta = this.makeThetaAngle(id, this.colors.sine);
     const sine = this.makeSineLine(`complimentary_sine${id}`);
     const cosine = this.makeCosineLine(`complimentary_cosine${id}`);
     sine.textXOffset = -0.13;
@@ -169,30 +174,7 @@ class SineCollection extends SinCosCircle {
     sine.updateRotation(this.layout.radius, angle);
     cosine.updateRotation(this.layout.radius, angle);
 
-    const eqn = this.diagram.equation.makeHTML(`id__piOn2MinusTheta${id}`);
-    eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
-
-    const piOn2Position = polarToRect(this.layout.radius / 3.3, (Math.PI / 2 - angle) / 2 + angle);
-    const piOn2MinusTheta = this.shapes.htmlText(
-      eqn.render(), `id_diagram__complimentary_cosine_angle${id}`, 'diagram__cosine_text',
-      piOn2Position, 'middle', 'center',
-    );
-    piOn2MinusTheta.color = this.colors.cosine;
-
-    // const sineArc = this.shapes.polygon(
-    //   this.layout.anglePoints, this.layout.radius / 5, this.layout.linewidth / 2, 0, 1,
-    //   this.layout.anglePoints * angle / Math.PI / 2, this.colors.sine, new Point(0, 0),
-    // );
-    const cosineArc = this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius / 5,
-      this.layout.linewidth / 2, angle, 1,
-      this.layout.anglePoints * (Math.PI / 2 - angle) / Math.PI / 2,
-      this.colors.cosine, new Point(0, 0),
-    );
-
-    const compAngle = this.shapes.collection(new Transform().scale(1, 1));
-    compAngle.add('text', piOn2MinusTheta);
-    compAngle.add('arc', cosineArc);
+    const compAngle = this.makeComplimentAngle(id, this.colors.cosine);
 
 
     const xAxis = this.makeLine(

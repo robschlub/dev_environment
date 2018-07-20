@@ -38,7 +38,7 @@ export default function lessonLayout() {
 
   layout.thetaAngle = Object.assign({}, layout.angleAnnotation);
   layout.complimentAngle = Object.assign({}, layout.angleAnnotation);
-  layout.complimentAngle.label.radiusOffset = 0.1;
+  layout.complimentAngle.label.radiusOffset = 0.15;
 
   return layout;
 }
