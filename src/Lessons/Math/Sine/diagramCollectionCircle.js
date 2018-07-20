@@ -113,6 +113,8 @@ class SineCollection extends SinCosCircle {
     const cosine = this.makeCosineLine(`complimentary_cosine${id}`);
     sine.textXOffset = -0.13;
     cosine.textOffset = 0.08;
+    sine._text.color = this.colors.sine;
+    cosine._text.color = this.colors.sine;
     sine.updateRotation(this.layout.radius, angle);
     cosine.updateRotation(this.layout.radius, angle);
 
@@ -122,6 +124,7 @@ class SineCollection extends SinCosCircle {
       'θ', `id_diagram__complimentary_sine_angle${id}`, 'diagram__sine_text',
       thetaPosition, 'middle', 'center',
     );
+    theta.color = this.colors.sine;
 
     const eqn = this.diagram.equation.makeHTML(`id__piOn2MinusTheta${id}`);
     eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
@@ -131,6 +134,7 @@ class SineCollection extends SinCosCircle {
       eqn.render(), `id_diagram__complimentary_cosine_angle${id}`, 'diagram__cosine_text',
       piOn2Position, 'middle', 'center',
     );
+    piOn2MinusTheta.color = this.colors.cosine;
 
     const sineArc = this.shapes.polygon(
       this.layout.anglePoints, this.layout.radius / 5, this.layout.linewidth / 2, 0, 1,
@@ -184,7 +188,7 @@ class SineCollection extends SinCosCircle {
     const angle = Math.PI / 2 - this.layout.compAngle.angle;
     const radius = this.makeLine(
       new Point(0, 0), this.layout.radius, this.layout.linewidth / 3,
-      this.colors.axis, new Transform()
+      this.colors.radius, new Transform()
         .scale(1, 1)
         .rotate(angle)
         .translate(0, 0),
@@ -311,11 +315,11 @@ class SineCollection extends SinCosCircle {
     if (step >= 3) {
       this._circle._cosineSymmetry.setFirstTransform(this._circle.transform);
       this._circle._cosineSymmetry.show();
-      this._circle._cosineSymmetry._angle.showAll();
+      this._circle._cosineSymmetry._angle.show();
+      this._circle._cosineSymmetry._angle._arc.show();
       this._circle._cosineSymmetry._radius.show();
       this._circle._cosineSymmetry._xAxis.show();
-      this._circle._radius.hide();
-      this._circle._complimentarySineCollection.hideAll();
+
       // this.updateRotation();
     }
     if (step >= 4) {
@@ -331,6 +335,10 @@ class SineCollection extends SinCosCircle {
   // eslint-disable-next-line class-methods-use-this
   goToStep(step: number) {
     super.goToStep(step);
+    // need to call stop twice as there is up to two levels of callbacks
+    this._circle.stop();
+    this._circle.stop();
+
     if (step === 0) {
       this.rotationLimits = {
         min: this.layout.compAngle.angle,
@@ -371,10 +379,8 @@ class SineCollection extends SinCosCircle {
       this._circle._compShadow.updateRotation(angle);
       this._circle._compShadow.setFirstTransform(this._circle.transform);
       this.showStep(3);
-      // this._circle._cosineSymmetry.transform.updateRotation(angle);
 
-      // this._circle._cosineSymmetry
-      //   .animateRotationTo(0, 2, 2);
+
       const mirror = (percent: number) => {
         const startAngle = angle;
         const stopAngle = angle - this.layout.compAngle.angle * 2;
@@ -383,12 +389,32 @@ class SineCollection extends SinCosCircle {
           .updateRotation(currentAngle);
 
         this._circle._cosineSymmetry._radius.transform
-          .updateScale(Math.sin(startAngle) / Math.sin(currentAngle), (1 - percent) * 2 - 1);
+          .updateScale(
+            Math.sin(startAngle) / Math.sin(currentAngle),
+            (1 - percent) * 2 - 1,
+          );
         this._circle._cosineSymmetry._angle._arc.transform
           .updateScale(-(1 - percent * 2), 1);
       };
+
+      const done = () => {
+        this._circle._radius.hide();
+        this._circle._complimentarySineCollection._radius.disolveOut(1);
+        this._circle._complimentarySineCollection._sine._line.disolveOut(1);
+        this._circle._complimentarySineCollection._sine._text.disolveOut(1);
+        this._circle._complimentarySineCollection._cosine._line.disolveOut(1);
+        this._circle._complimentarySineCollection._cosine._text.disolveOut(1);
+        this._circle._complimentarySineCollection._theta.disolveOut(1);
+        this._circle._complimentarySineCollection._sineArc.disolveOut(1);
+        this._circle._complimentarySineCollection._compAngle._arc.disolveOut(1);
+        this._circle._complimentarySineCollection._compAngle._text.disolveOut(1);
+        this._circle._complimentarySineCollection._xAxis.disolveOut(1);
+        this._circle._complimentarySineCollection._yAxis.disolveOut(1);
+        this._circle._cosineSymmetry._angle._text.disolveIn(2);
+      };
+
       this._circle._cosineSymmetry
-        .animateCustomTo(mirror, 1);
+        .animateCustomTo(mirror, 1, 0, done);
     }
 
     if (step === 4) {

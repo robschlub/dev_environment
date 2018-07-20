@@ -10,6 +10,7 @@ import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import { TextObject } from './DrawingObjects/TextObject/TextObject';
+import { colorArrayToRGBA } from '../tools/tools';
 
 function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
   let callbackToUse = () => {};
@@ -1520,6 +1521,9 @@ class DiagramElementPrimative extends DiagramElement {
     if (this instanceof DiagramElementPrimative) {
       if (this.vertices instanceof TextObject) {
         this.vertices.setColor(this.color);
+      }
+      if (this.vertices instanceof HTMLObject) {
+        this.vertices.element.style.color = colorArrayToRGBA(this.color);
       }
     }
   }
