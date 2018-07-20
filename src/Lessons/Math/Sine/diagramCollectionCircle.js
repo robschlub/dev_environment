@@ -211,6 +211,7 @@ class SineCollection extends SinCosCircle {
       eqn.render(), 'id_diagram__complimentary_symmetry_cosine_angle', '',
       piOn2Position, 'middle', 'center',
     );
+    piOn2MinusTheta.color = this.colors.cosine;
 
     const arc = this.shapes.polygon(
       this.layout.anglePoints, this.layout.radius / 5,
@@ -380,7 +381,6 @@ class SineCollection extends SinCosCircle {
       this._circle._compShadow.setFirstTransform(this._circle.transform);
       this.showStep(3);
 
-
       const mirror = (percent: number) => {
         const startAngle = angle;
         const stopAngle = angle - this.layout.compAngle.angle * 2;
@@ -399,17 +399,18 @@ class SineCollection extends SinCosCircle {
 
       const done = () => {
         this._circle._radius.hide();
-        this._circle._complimentarySineCollection._radius.disolveOut(1);
-        this._circle._complimentarySineCollection._sine._line.disolveOut(1);
-        this._circle._complimentarySineCollection._sine._text.disolveOut(1);
-        this._circle._complimentarySineCollection._cosine._line.disolveOut(1);
-        this._circle._complimentarySineCollection._cosine._text.disolveOut(1);
-        this._circle._complimentarySineCollection._theta.disolveOut(1);
-        this._circle._complimentarySineCollection._sineArc.disolveOut(1);
-        this._circle._complimentarySineCollection._compAngle._arc.disolveOut(1);
-        this._circle._complimentarySineCollection._compAngle._text.disolveOut(1);
-        this._circle._complimentarySineCollection._xAxis.disolveOut(1);
-        this._circle._complimentarySineCollection._yAxis.disolveOut(1);
+        this._circle._complimentarySineCollection.disolveElementsOut(1);
+        // this._circle._complimentarySineCollection._radius.disolveOut(1);
+        // this._circle._complimentarySineCollection._sine._line.disolveOut(1);
+        // this._circle._complimentarySineCollection._sine._text.disolveOut(1);
+        // this._circle._complimentarySineCollection._cosine._line.disolveOut(1);
+        // this._circle._complimentarySineCollection._cosine._text.disolveOut(1);
+        // this._circle._complimentarySineCollection._theta.disolveOut(1);
+        // this._circle._complimentarySineCollection._sineArc.disolveOut(1);
+        // this._circle._complimentarySineCollection._compAngle._arc.disolveOut(1);
+        // this._circle._complimentarySineCollection._compAngle._text.disolveOut(1);
+        // this._circle._complimentarySineCollection._xAxis.disolveOut(1);
+        // this._circle._complimentarySineCollection._yAxis.disolveOut(1);
         this._circle._cosineSymmetry._angle._text.disolveIn(2);
       };
 
@@ -427,6 +428,7 @@ class SineCollection extends SinCosCircle {
       this._circle._compShadow.updateRotation(angle);
       this._circle._compShadow.setFirstTransform(this._circle.transform);
       // this.updateRotation();
+      this._circle._cosineSymmetry._angle._text.disolveOut(2);
       this.showStep(4);
     }
     if (step === 5) {

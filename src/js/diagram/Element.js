@@ -2000,6 +2000,20 @@ class DiagramElementCollection extends DiagramElement {
     return elements;
   }
 
+  disolveElementsOut(
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        element.disolveElementsOut(time, callback);
+      } else {
+        element.disolveOut(time, callback);
+      }
+    }
+  }
+
   // This method is here as a convenience method for content item selectors
   // eslint-disable-next-line class-methods-use-this
   goToStep(step: number) {
