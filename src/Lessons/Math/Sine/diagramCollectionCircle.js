@@ -30,9 +30,10 @@ export type extendedCircleType = {
   _bow: bowType;
   _complimentarySineCollection: complimentarySineCollectionType;
   _cosineSymmetry: {
+    _radius: DiagramElementPrimative;
     _angle: {
       _arc: DiagramElementPrimative;
-      _radius: DiagramElementPrimative;
+      _text: DiagramElementPrimative;
     } & DiagramElementCollection;
     _sine: sineLineType;
     _text: DiagramElementCollection;
@@ -47,12 +48,14 @@ type varStateExtendedType = {
 
 export type SineCollectionType = {
   _circle: extendedCircleType;
+  _cosineEqn: DiagramElementPrimative;
   varState: varStateExtendedType;
 };
 
 class SineCollection extends SinCosCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
+  _cosineEqn: DiagramElementPrimative;
 
   makeBow() {
     const bow = this.shapes.collection();

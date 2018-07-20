@@ -2,7 +2,8 @@
 
 import {
   LessonContent, clickWord, onClickId, centerV,
-  click, highlightWord, initializeItemSelector, itemSelector } from '../../../js/Lesson/LessonContent';
+  click, highlightWord, initializeItemSelector, itemSelector,
+} from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 
@@ -11,8 +12,9 @@ import lessonLayout from './layout';
 const layout = lessonLayout();
 const { colors } = layout;
 
-const unit = (deg: string, rad: string, angleType: string, num: number = 1) => `<span id="id_${angleType}_deg${num}" class="highlight_word">${deg}&deg;</span><span id="id_${angleType}_rad${num}" class="highlight_word">${rad} radians</span>
-  `;
+// eslint-disable-next-line
+// const unit = (deg: string, rad: string, angleType: string, num: number = 1) => `<span id="id_${angleType}_deg${num}" class="highlight_word">${deg}&deg;</span><span id="id_${angleType}_rad${num}" class="highlight_word">${rad} radians</span>
+//   `;
 
 // const fraction = (id: string, numerator: string, denominator: string) => {
 //   const eqn = new HTMLEquation(`${id}`);
@@ -42,7 +44,8 @@ class Content extends LessonContent {
     //   title: 'Introduction',
     //   setContent: centerV(`
     //     <p class="lesson__diagram_text_p_width_45">
-    //       |Rotating| a |line| around a fixed point creates an |arc|, whose length depends on the |angle| of rotation.
+    //       |Rotating| a |line| around a fixed point creates an |arc|,
+    //       whose length depends on the |angle| of rotation.
     //     </p>
     //     <p class="lesson__diagram_text_p_width_45">
     //       The arc forms a |circle| with complete rotation.

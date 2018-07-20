@@ -350,7 +350,6 @@ export default class LessonComponent extends React.Component
                 </canvas>
                 <canvas className='diagram__gl'>
                 </canvas>
-                
                 <div id="dd" className='diagram__html'>
                   {this.renderContent(this.state.htmlText)}
                 </div>

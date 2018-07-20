@@ -12,7 +12,7 @@
     $map: map-merge(
       $hue-map,
       (
-        'lowest': color_from_palette($palette, $hue, map-get($contrast_map, 'lowest')), 
+        'lowest': color_from_palette($palette, $hue, map-get($contrast_map, 'lowest')),
         'lower': color_from_palette($palette, $hue, map-get($contrast_map, 'lower')),
         'low': color_from_palette($palette, $hue, map-get($contrast_map, 'low')),
         'high': color_from_palette($palette, $hue, map-get($contrast_map, 'high')),
@@ -48,16 +48,20 @@
 @function color($fromOrName, $nameOrShade: '', $shadeName: '') {
   $color-map: '';
   $shadeToGet: '';
+
   @if map-has-key($_color_theme, $fromOrName) {
     $color-map: map-get($_color_theme, $fromOrName);
+
     @if map-has-key($color-map, color) {
       $shadeToGet: $nameOrShade;
     }
+
     @else {
       $color-map: map-get(map-get($_color_theme, $fromOrName), $nameOrShade);
       $shadeToGet: $shadeName;
     }
   }
+
   @else {
     $color-map: map-get($_color_theme, 'hue' + $fromOrName);
     $shadeToGet: $nameOrShade;
@@ -65,9 +69,11 @@
 
   $color: map-get($color-map, color);
   $shade: map-get($color-map, shade);
+
   @if $shadeToGet != '' {
     $shade: $shadeToGet;
   }
+
   @return palette-color($color, $shade);
 }
 
@@ -93,7 +99,7 @@
 //   @else {
 //     $color-map: map-get($_color_theme, 'hue' + $fromOrName);
 //   }
-  
+
 //   // $color-map: map-get($_color_theme, 'hue' + $fromOrName);
 //   $color: map-get($color-map, color);
 //   $shade: map-get($color-map, shade);
