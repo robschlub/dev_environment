@@ -23,26 +23,23 @@ type complimentarySineCollectionType = {
   _radius: DiagramElementPrimative;
   _theta: angleAnnotationType;
   // _sineArc: DiagramElementPrimative;
-  _compAngle: {
-    _arc: DiagramElementPrimative;
-    _text: DiagramElementCollection;
-  } & DiagramElementCollection;
+  _compAngle: angleAnnotationType;
   _xAxis: DiagramElementPrimative;
   _yAxis: DiagramElementPrimative;
+  updateRotation: (number) => void;
 } & DiagramElementCollection;
 
 export type extendedCircleType = {
   _bow: bowType;
   _complimentarySineCollection: complimentarySineCollectionType;
+  _compShadow: complimentarySineCollectionType;
   _cosineSymmetry: {
     _radius: DiagramElementPrimative;
-    _angle: {
-      _arc: DiagramElementPrimative;
-      _text: DiagramElementPrimative;
-    } & DiagramElementCollection;
-    _sine: sineLineType;
-    _text: DiagramElementCollection;
-    _xAxis: DiagramElementPrimative;
+    _compAngle: angleAnnotationType;
+    _cosine: sineLineType;
+    _sine: DiagramElementPrimative;
+    // _text: DiagramElementCollection;
+    // _xAxis: DiagramElementPrimative;
   } & DiagramElementCollection;
 } & SinCosCircleType;
 
@@ -289,8 +286,6 @@ class SineCollection extends SinCosCircle {
     this._circle._complimentarySineCollection._sine.showAll();
     this._circle._complimentarySineCollection._cosine.showAll();
     this._circle._complimentarySineCollection._theta.showAll();
-    // console.log(this._circle._complimentarySineCollection._theta)
-    // this._circle._complimentarySineCollection._sineArc.show();
     this._circle._complimentarySineCollection._xAxis.show();
     this._circle._complimentarySineCollection._yAxis.show();
     this._circle._compShadow.hideAll();
@@ -316,15 +311,12 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._compAngle.show();
       this._circle._cosineSymmetry._compAngle._arc.show();
       this._circle._cosineSymmetry._radius.show();
-      // this._circle._cosineSymmetry._xAxis.show();
       this._circle._cosineSymmetry._cosine.show();
       this._circle._cosineSymmetry._cosine._line.show();
-      // this.updateRotation();
     }
     if (step >= 4) {
       this._circle._cosineSymmetry._cosine.showAll();
       this._circle._cosineSymmetry._compAngle.showAll();
-      // this._circle._cosineSymmetry._sine.show();
       this._circle._complimentarySineCollection.hideAll();
       this._circle._radius.hide();
     }
@@ -335,6 +327,86 @@ class SineCollection extends SinCosCircle {
     this.updateRotation();
   }
 
+  step0() {
+    const { angle } = this.layout.compAngle;
+    this.rotationLimits = { min: angle, max: angle };
+    this._circle._radius.transform.updateRotation(angle);
+    this.showStep(0);
+  }
+
+  step1() {
+    const { angle } = this.layout.compAngle;
+    this.rotationLimits = { min: angle, max: angle };
+    this._circle._radius.transform.updateRotation(angle);
+    this.showStep(1);
+    this._circle._complimentarySineCollection._compAngle.pulseScaleNow(1, 1.5);
+  }
+
+  step2() {
+    const { angle } = this.layout.compAngle;
+    this.rotationLimits = { min: angle, max: Math.PI / 2 + angle };
+    this._circle._compShadow.updateRotation(this.layout.compAngle.angle);
+    this._circle._compShadow.setFirstTransform(this._circle.transform);
+    this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
+    this.showStep(2);
+    this.rotateComplimentaryAngle(1);
+  }
+
+  step3() {
+    const angle = this.layout.compAngle.angle + Math.PI / 2;
+    this.rotationLimits = { min: angle, max: angle };
+    this._circle._radius.transform.updateRotation(angle);
+    this._circle._compShadow.updateRotation(angle);
+    this._circle._compShadow.setFirstTransform(this._circle.transform);
+    this.showStep(3);
+
+    const sineLength = this.layout.radius
+      * Math.cos(this.layout.compAngle.angle) / this.layout.radius;
+    const cosSym = this._circle._cosineSymmetry;
+
+    const mirror = (percent: number) => {
+      const startAngle = angle;
+      const stopAngle = angle - this.layout.compAngle.angle * 2;
+      const currentAngle = startAngle + (stopAngle - startAngle) * percent;
+      const currentScale = Math.sin(startAngle) / Math.sin(currentAngle);
+
+      const s = (1 - percent) * 2 - 1;
+      cosSym._radius.transform.updateRotation(currentAngle);
+      cosSym._radius.transform.updateScale(currentScale, s);
+      cosSym._compAngle.transform.updateScale(-(1 - percent * 2), 1);
+      cosSym._cosine._line.transform.updateTranslation(
+        currentScale * this.layout.radius * Math.cos(currentAngle),
+        0,
+      );
+      cosSym._cosine._line.transform.updateScale(sineLength, s);
+    };
+
+    const done = () => {
+      this._circle._radius.hide();
+      this._circle._complimentarySineCollection.disolveElementsOut(1);
+      cosSym._compAngle._label.disolveIn(1);
+      cosSym._cosine._text.disolveIn(1);
+    };
+
+    cosSym.animateCustomTo(mirror, 1.5, 0, done);
+  }
+
+  step4() {
+    const angle = this.layout.compAngle.angle + Math.PI / 2;
+    this.rotationLimits = { min: angle, max: angle };
+    this._circle._radius.transform.updateRotation(angle);
+    this._circle._compShadow.updateRotation(angle);
+    this._circle._compShadow.setFirstTransform(this._circle.transform);
+    this.showStep(4);
+  }
+
+  step5() {
+    const angle = this.layout.compAngle.angle + Math.PI / 2;
+    this.rotationLimits = { min: angle, max: angle };
+    this._circle._radius.transform.updateRotation(angle);
+    this.showStep(5);
+  }
+
   // eslint-disable-next-line class-methods-use-this
   goToStep(step: number) {
     super.goToStep(step);
@@ -342,100 +414,15 @@ class SineCollection extends SinCosCircle {
     this._circle.stop();
     this._circle.stop();
 
-    if (step === 0) {
-      this.rotationLimits = {
-        min: this.layout.compAngle.angle,
-        max: this.layout.compAngle.angle,
-      };
-      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
-      this.showStep(0);
-    }
-    if (step === 1) {
-      this.rotationLimits = {
-        min: this.layout.compAngle.angle,
-        max: this.layout.compAngle.angle,
-      };
-      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
-      this.showStep(1);
-      this._circle._complimentarySineCollection._compAngle.pulseScaleNow(1, 1.5);
-    }
-    if (step === 2) {
-      this.rotationLimits = {
-        min: this.layout.compAngle.angle,
-        max: Math.PI / 2 + this.layout.compAngle.angle,
-      };
-      this._circle._compShadow.updateRotation(this.layout.compAngle.angle);
-      this._circle._compShadow.setFirstTransform(this._circle.transform);
-      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
-      this.showStep(2);
-      // this.updateRotation();
-      this.rotateComplimentaryAngle(1);
-    }
-
-    if (step === 3) {
-      this.rotationLimits = {
-        min: this.layout.compAngle.angle + Math.PI / 2,
-        max: this.layout.compAngle.angle + Math.PI / 2,
-      };
-      const angle = this.layout.compAngle.angle + Math.PI / 2;
-      this._circle._radius.transform.updateRotation(angle);
-      this._circle._compShadow.updateRotation(angle);
-      this._circle._compShadow.setFirstTransform(this._circle.transform);
-      this.showStep(3);
-      const sineLength = this.layout.radius * Math.cos(this.layout.compAngle.angle) / this.layout.radius;
-
-      const mirror = (percent: number) => {
-        const startAngle = angle;
-        const stopAngle = angle - this.layout.compAngle.angle * 2;
-        const currentAngle = startAngle + (stopAngle - startAngle) * percent;
-        const currentScale = Math.sin(startAngle) / Math.sin(currentAngle);
-        this._circle._cosineSymmetry._radius.transform
-          .updateRotation(currentAngle);
-
-        this._circle._cosineSymmetry._radius.transform
-          .updateScale(currentScale, (1 - percent) * 2 - 1);
-        this._circle._cosineSymmetry._compAngle.transform
-          .updateScale(-(1 - percent * 2), 1);
-
-        this._circle._cosineSymmetry._cosine._line.transform
-          .updateTranslation(currentScale * this.layout.radius * Math.cos(currentAngle), 0);
-        this._circle._cosineSymmetry._cosine._line.transform
-          .updateScale(sineLength, (1 - percent) * 2 - 1);
-      };
-
-      const done = () => {
-        this._circle._radius.hide();
-        this._circle._complimentarySineCollection.disolveElementsOut(1);
-        this._circle._cosineSymmetry._compAngle._label.disolveIn(1);
-        this._circle._cosineSymmetry._cosine._text.disolveIn(1);
-      };
-
-      this._circle._cosineSymmetry
-        .animateCustomTo(mirror, 1.5, 0, done);
-    }
-
-    if (step === 4) {
-      this.rotationLimits = {
-        min: this.layout.compAngle.angle + Math.PI / 2,
-        max: this.layout.compAngle.angle + Math.PI / 2,
-      };
-      const angle = this.layout.compAngle.angle + Math.PI / 2;
-      this._circle._radius.transform.updateRotation(angle);
-      this._circle._compShadow.updateRotation(angle);
-      this._circle._compShadow.setFirstTransform(this._circle.transform);
-      // this.updateRotation();
-      // this._circle._cosineSymmetry._angle._text.disolveOut(2);
-      this.showStep(4);
-    }
-    if (step === 5) {
-      this.rotationLimits = {
-        min: this.layout.compAngle.angle + Math.PI / 2,
-        max: this.layout.compAngle.angle + Math.PI / 2,
-      };
-      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
-      // this.updateRotation();
-      this.showStep(5);
-    }
+    const steps = [
+      this.step0.bind(this),
+      this.step1.bind(this),
+      this.step2.bind(this),
+      this.step3.bind(this),
+      this.step4.bind(this),
+      this.step5.bind(this),
+    ];
+    steps[step]();
     this.diagram.animateNextFrame();
   }
 
