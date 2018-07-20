@@ -273,13 +273,12 @@ class SineCollection extends SinCosCircle {
   showStep(step: number) {
     this.showMinimalComplimentaryAngle();
     const compAngle = this._circle._complimentarySineCollection._compAngle;
-    // compAngle.showAll();
-    console.log(step)
     if (step >= 1) {
+      compAngle.setFirstTransform(this._circle.transform);
       compAngle.showAll();
-      // this._circle._complimentarySineCollection._compAngle.showAll();
     }
     if (step >= 3) {
+      this._circle._cosineSymmetry.setFirstTransform(this._circle.transform);
       this._circle._cosineSymmetry.show();
       this._circle._cosineSymmetry._angle.showAll();
       this._circle._cosineSymmetry._radius.show();
@@ -289,6 +288,7 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._sine.showAll();
     }
     if (step >= 5) {
+      this._cosineEqn.setFirstTransform(this.transform);
       this._cosineEqn.show();
     }
   }

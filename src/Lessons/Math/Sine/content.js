@@ -353,6 +353,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         initializeItemSelector(diag.goToStep, diag, 0);
         diag.showMinimalComplimentaryAngle();
+        diag.goToStep(0);
         // circle._complimentarySineCollection.show();
         // circle._complimentarySineCollection._radius.show();
         // circle._complimentarySineCollection._sine.showAll();
