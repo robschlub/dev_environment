@@ -1271,7 +1271,8 @@ class DiagramElement {
 
         // Use the pulse magnitude to get the current pulse transform
         const pTransform = this.pulse.transformMethod(pulseMag);
-
+        // if(this.name === '_radius') {
+        // }
         // Transform the current transformMatrix by the pulse transform matrix
         // const pMatrix = m2.mul(m2.copy(transform), pTransform.matrix());
 

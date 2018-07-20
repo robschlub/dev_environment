@@ -22,11 +22,22 @@ type complimentarySineCollectionType = {
     _arc: DiagramElementPrimative;
     _text: DiagramElementCollection;
   } & DiagramElementCollection;
+  _xAxis: DiagramElementPrimative;
+  _yAxis: DiagramElementPrimative;
 } & DiagramElementCollection;
 
 export type extendedCircleType = {
   _bow: bowType;
   _complimentarySineCollection: complimentarySineCollectionType;
+  _cosineSymmetry: {
+    _angle: {
+      _arc: DiagramElementPrimative;
+      _radius: DiagramElementPrimative;
+    } & DiagramElementCollection;
+    _sine: sineLineType;
+    _text: DiagramElementCollection;
+    _xAxis: DiagramElementPrimative;
+  } & DiagramElementCollection;
 } & SinCosCircleType;
 
 
@@ -154,15 +165,24 @@ class SineCollection extends SinCosCircle {
   }
 
   makeCosineSymmetry() {
-    const symmetry = this.shapes.collection();
+    const symmetry = this.shapes.collection(new Transform().rotate(0));
     const angle = Math.PI / 2 - this.layout.compAngle.angle;
     const radius = this.makeLine(
       new Point(0, 0), this.layout.radius, this.layout.linewidth / 3,
-      this.colors.radius, new Transform()
+      this.colors.axis, new Transform()
+        .scale(1, 1)
         .rotate(angle)
         .translate(0, 0),
     );
-    
+    const xAxis = this.makeLine(
+      new Point(0, 0), this.layout.radius, this.layout.linewidth / 3,
+      this.colors.axis, new Transform()
+        .scale(1, 1)
+        .rotate(0)
+        .translate(0, 0),
+    );
+    // radius.pulse.transformMethod = s => new Transform().scale(s, 1);
+    // radius.pulse.style = s => s;
 
     const eqn = this.diagram.equation.makeHTML('id__symmetry_piOn2MinusTheta', 'diagram__cosine_text');
     eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
@@ -181,20 +201,23 @@ class SineCollection extends SinCosCircle {
     );
 
     const sine = this.makeSineLine('mirror_sine');
-    
-    const sineEqn = this.diagram.equation.makeHTML('id__symmetry_sine_piOn2MinusTheta', 'diagram__sine_text');
+
+    const sineEqn = this.diagram.equation.makeHTML('id__symmetry_sine_piOn2MinusTheta', 'diagram__cosine_text');
     sineEqn.createEq(['sin', eqn.frac('π', '2'), '−', 'θ']);
     sine.setText(sineEqn.render());
     sine.textXOffset = 0.2;
+    sine._line.color = this.colors.cosine;
     sine.updateRotation(this.layout.radius, angle);
 
     const compAngle = this.shapes.collection(new Transform().scale(1, 1));
     compAngle.add('text', piOn2MinusTheta);
     compAngle.add('arc', arc);
 
+    symmetry.add('xAxis', xAxis);
     symmetry.add('sine', sine);
     symmetry.add('angle', compAngle);
     symmetry.add('radius', radius);
+
     // symmetry.add('text', piOn2MinusTheta);
     return symmetry;
   }
@@ -243,6 +266,7 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry.show();
       this._circle._cosineSymmetry._angle.showAll();
       this._circle._cosineSymmetry._radius.show();
+      this._circle._cosineSymmetry._xAxis.show();
     }
     if (step >= 3) {
       this._circle._cosineSymmetry._sine.showAll();
@@ -279,7 +303,11 @@ class SineCollection extends SinCosCircle {
       this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
       this.updateRotation();
       this.showStep(2);
-      this._circle._cosineSymmetry._angle.pulseScaleNow(1, 1.5);
+      this._circle._cosineSymmetry
+        .transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
+
+      this._circle._cosineSymmetry
+        .animateRotationTo(0, 2, 2);
     }
 
     if (step === 3) {
@@ -290,6 +318,15 @@ class SineCollection extends SinCosCircle {
       this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
       this.updateRotation();
       this.showStep(3);
+    }
+    if (step === 4) {
+      this.rotationLimits = {
+        min: this.layout.compAngle.angle + Math.PI / 2,
+        max: this.layout.compAngle.angle + Math.PI / 2,
+      };
+      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
+      this.updateRotation();
+      this.showStep(4);
     }
     this.diagram.animateNextFrame();
   }

@@ -300,14 +300,16 @@ class Content extends LessonContent {
     this.addSection({
       title: 'cosine',
       setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40 lesson__font_0p9">
-          The name |sine| originally comes from |Sanskrit| where it was called |ardha|, meaning “half |bow| string”.
+        <p class="lesson__diagram_text_p_width_40 lesson__font_0p9"
+           style="margin-bottom:5%">
+          To show the cosine is the same as the sine of the complementary angle:
         </p>
         ${itemSelector([
     'Find complimentary angle',
     'Rotate to second quadrant',
     'Mirror to first quadrant',
     'Find sine',
+    'Generalize',
   ])}
       `),
       modifiers: {
