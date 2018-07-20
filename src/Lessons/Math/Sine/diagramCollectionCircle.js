@@ -212,7 +212,7 @@ class SineCollection extends SinCosCircle {
       this.layout.anglePoints, this.layout.radius / 5,
       this.layout.linewidth / 2, 0, 1,
       this.layout.anglePoints * angle / Math.PI / 2,
-      this.colors.cosine, new Point(0, 0),
+      this.colors.cosine, new Transform().scale(1, 1),
     );
 
     const sine = this.makeSineLine('mirror_sine');
@@ -371,10 +371,24 @@ class SineCollection extends SinCosCircle {
       this._circle._compShadow.updateRotation(angle);
       this._circle._compShadow.setFirstTransform(this._circle.transform);
       this.showStep(3);
-      this._circle._cosineSymmetry.transform.updateRotation(angle);
+      // this._circle._cosineSymmetry.transform.updateRotation(angle);
 
+      // this._circle._cosineSymmetry
+      //   .animateRotationTo(0, 2, 2);
+      const mirror = (percent: number) => {
+        const startAngle = angle;
+        const stopAngle = angle - this.layout.compAngle.angle * 2;
+        const currentAngle = startAngle + (stopAngle - startAngle) * percent;
+        this._circle._cosineSymmetry._radius.transform
+          .updateRotation(currentAngle);
+
+        this._circle._cosineSymmetry._radius.transform
+          .updateScale(Math.sin(startAngle) / Math.sin(currentAngle), (1 - percent) * 2 - 1);
+        this._circle._cosineSymmetry._angle._arc.transform
+          .updateScale(-(1 - percent * 2), 1);
+      };
       this._circle._cosineSymmetry
-        .animateRotationTo(0, 2, 2);
+        .animateCustomTo(mirror, 1);
     }
 
     if (step === 4) {
