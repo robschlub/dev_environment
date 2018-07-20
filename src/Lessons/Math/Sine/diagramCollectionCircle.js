@@ -86,12 +86,13 @@ class SineCollection extends SinCosCircle {
     return bow;
   }
 
-  makeComplimentarySineCollection() {
+  makeComplimentarySineCollection(id: string = '') {
     const collection = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
     const { angle } = this.layout.compAngle;
     const radius = this.makeLine(
       new Point(0, 0), this.layout.radius, this.layout.linewidth,
       this.colors.radius, new Transform()
+        .scale(1, 1)
         .rotate(angle)
         .translate(0, 0),
     );
@@ -108,8 +109,8 @@ class SineCollection extends SinCosCircle {
     //   this.colors.cosine, new Point(0, 0),
     // );
 
-    const sine = this.makeSineLine('complimentary_sine');
-    const cosine = this.makeCosineLine('complimentary_cosine');
+    const sine = this.makeSineLine(`complimentary_sine${id}`);
+    const cosine = this.makeCosineLine(`complimentary_cosine${id}`);
     sine.textXOffset = -0.13;
     cosine.textOffset = 0.08;
     sine.updateRotation(this.layout.radius, angle);
@@ -118,16 +119,16 @@ class SineCollection extends SinCosCircle {
 
     const thetaPosition = polarToRect(this.layout.radius / 4, angle / 2);
     const theta = this.shapes.htmlText(
-      'θ', 'id_diagram__complimentary_sine_angle', 'diagram__sine_text',
+      'θ', `id_diagram__complimentary_sine_angle${id}`, 'diagram__sine_text',
       thetaPosition, 'middle', 'center',
     );
 
-    const eqn = this.diagram.equation.makeHTML('id__piOn2MinusTheta');
+    const eqn = this.diagram.equation.makeHTML(`id__piOn2MinusTheta${id}`);
     eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
 
     const piOn2Position = polarToRect(this.layout.radius / 3.3, (Math.PI / 2 - angle) / 2 + angle);
     const piOn2MinusTheta = this.shapes.htmlText(
-      eqn.render(), 'id_diagram__complimentary_cosine_angle', 'diagram__cosine_text',
+      eqn.render(), `id_diagram__complimentary_cosine_angle${id}`, 'diagram__cosine_text',
       piOn2Position, 'middle', 'center',
     );
 
@@ -243,8 +244,11 @@ class SineCollection extends SinCosCircle {
 
   addToCircle() {
     this._circle.add('bow', this.makeBow());
+    this._circle.add('compShadow', this.makeComplimentarySineCollection('1'));
     this._circle.add('complimentarySineCollection', this.makeComplimentarySineCollection());
     this._circle.add('cosineSymmetry', this.makeCosineSymmetry());
+    this._circle._compShadow.setColor(this.colors.grid);
+    this._circle._compShadow._radius.transform.updateScale(1, 0.3);
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -276,7 +280,7 @@ class SineCollection extends SinCosCircle {
     this._circle._complimentarySineCollection._sineArc.show();
     this._circle._complimentarySineCollection._xAxis.show();
     this._circle._complimentarySineCollection._yAxis.show();
-    this._circle._cosineSymmetry.hideAll();
+    this._circle._compShadow.hideAll();
     this._cosineEqn.hide();
   }
 
@@ -286,6 +290,10 @@ class SineCollection extends SinCosCircle {
     if (step >= 1) {
       compAngle.setFirstTransform(this._circle.transform);
       compAngle.showAll();
+    }
+    if (step >= 2) {
+      this._circle._compShadow.setFirstTransform(this._circle.transform);
+      this._circle._compShadow.showAll();
     }
     if (step >= 3) {
       this._circle._cosineSymmetry.setFirstTransform(this._circle.transform);
