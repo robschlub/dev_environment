@@ -114,7 +114,7 @@ class SineCollection extends SinCosCircle {
     sine.textXOffset = -0.13;
     cosine.textOffset = 0.08;
     sine._text.color = this.colors.sine;
-    cosine._text.color = this.colors.sine;
+    cosine._text.color = this.colors.cosine;
     sine.updateRotation(this.layout.radius, angle);
     cosine.updateRotation(this.layout.radius, angle);
 
@@ -320,7 +320,8 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._angle._arc.show();
       this._circle._cosineSymmetry._radius.show();
       this._circle._cosineSymmetry._xAxis.show();
-
+      this._circle._cosineSymmetry._sine.show();
+      this._circle._cosineSymmetry._sine._line.show();
       // this.updateRotation();
     }
     if (step >= 4) {
@@ -380,42 +381,41 @@ class SineCollection extends SinCosCircle {
       this._circle._compShadow.updateRotation(angle);
       this._circle._compShadow.setFirstTransform(this._circle.transform);
       this.showStep(3);
+      const sineLength = this.layout.radius * Math.cos(this.layout.compAngle.angle) / this.layout.radius;
 
       const mirror = (percent: number) => {
         const startAngle = angle;
         const stopAngle = angle - this.layout.compAngle.angle * 2;
         const currentAngle = startAngle + (stopAngle - startAngle) * percent;
+        const currentScale = Math.sin(startAngle) / Math.sin(currentAngle);
         this._circle._cosineSymmetry._radius.transform
           .updateRotation(currentAngle);
 
         this._circle._cosineSymmetry._radius.transform
           .updateScale(
-            Math.sin(startAngle) / Math.sin(currentAngle),
+            currentScale,
             (1 - percent) * 2 - 1,
           );
         this._circle._cosineSymmetry._angle._arc.transform
           .updateScale(-(1 - percent * 2), 1);
+
+        this._circle._cosineSymmetry._sine._line.transform
+          .updateTranslation(currentScale * this.layout.radius * Math.cos(currentAngle), 0);
+        this._circle._cosineSymmetry._sine._line.transform
+          .updateScale(
+            sineLength,
+            (1 - percent) * 2 - 1,
+          );
       };
 
       const done = () => {
         this._circle._radius.hide();
         this._circle._complimentarySineCollection.disolveElementsOut(1);
-        // this._circle._complimentarySineCollection._radius.disolveOut(1);
-        // this._circle._complimentarySineCollection._sine._line.disolveOut(1);
-        // this._circle._complimentarySineCollection._sine._text.disolveOut(1);
-        // this._circle._complimentarySineCollection._cosine._line.disolveOut(1);
-        // this._circle._complimentarySineCollection._cosine._text.disolveOut(1);
-        // this._circle._complimentarySineCollection._theta.disolveOut(1);
-        // this._circle._complimentarySineCollection._sineArc.disolveOut(1);
-        // this._circle._complimentarySineCollection._compAngle._arc.disolveOut(1);
-        // this._circle._complimentarySineCollection._compAngle._text.disolveOut(1);
-        // this._circle._complimentarySineCollection._xAxis.disolveOut(1);
-        // this._circle._complimentarySineCollection._yAxis.disolveOut(1);
         this._circle._cosineSymmetry._angle._text.disolveIn(2);
       };
 
       this._circle._cosineSymmetry
-        .animateCustomTo(mirror, 1, 0, done);
+        .animateCustomTo(mirror, 1.5, 0, done);
     }
 
     if (step === 4) {
