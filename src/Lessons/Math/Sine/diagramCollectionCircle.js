@@ -158,14 +158,14 @@ class SineCollection extends SinCosCircle {
     );
 
     collection.updateRotation = (r: number) => {
-      if (collection.isShown) {
-        const radiusAngle = r - this.layout.compAngle.angle;
-        collection.transform.updateRotation(radiusAngle);
-        collection._sine.textXOffset = -0.13 + radiusAngle * 0.04;
-        collection._sine.updateRotation(this.layout.radius, this.layout.compAngle.angle, false);
-        collection._cosine.textYOffset = +0.08 + radiusAngle * 0.04;
-        collection._cosine.updateRotation(this.layout.radius, this.layout.compAngle.angle, false);
-      }
+      // if (collection.isShown) {
+      const radiusAngle = r - this.layout.compAngle.angle;
+      collection.transform.updateRotation(radiusAngle);
+      collection._sine.textXOffset = -0.13 + radiusAngle * 0.04;
+      collection._sine.updateRotation(this.layout.radius, this.layout.compAngle.angle, true);
+      collection._cosine.textYOffset = +0.08 + radiusAngle * 0.04;
+      collection._cosine.updateRotation(this.layout.radius, this.layout.compAngle.angle, true);
+      // }
     };
 
     collection.add('xAxis', xAxis);
@@ -294,6 +294,7 @@ class SineCollection extends SinCosCircle {
     this._circle._compShadow.hideAll();
     this._cosineEqn.hide();
     this._circle._cosineSymmetry.hideAll();
+    this._circle._radius.show();
   }
 
   showStep(step: number) {
@@ -315,12 +316,7 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._xAxis.show();
       this._circle._radius.hide();
       this._circle._complimentarySineCollection.hideAll();
-
-      const angle = this.layout.compAngle.angle + Math.PI / 2;
-      this._circle._radius.transform.updateRotation(angle);
-      this._circle._compShadow.updateRotation(angle);
-      this._circle._compShadow.setFirstTransform(this._circle.transform);
-      this.updateRotation();
+      // this.updateRotation();
     }
     if (step >= 4) {
       this._circle._cosineSymmetry._sine.showAll();
@@ -329,6 +325,7 @@ class SineCollection extends SinCosCircle {
       this._cosineEqn.setFirstTransform(this.transform);
       this._cosineEqn.show();
     }
+    this.updateRotation();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -340,7 +337,6 @@ class SineCollection extends SinCosCircle {
         max: this.layout.compAngle.angle,
       };
       this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
-      this.updateRotation();
       this.showStep(0);
     }
     if (step === 1) {
@@ -349,7 +345,6 @@ class SineCollection extends SinCosCircle {
         max: this.layout.compAngle.angle,
       };
       this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
-      this.updateRotation();
       this.showStep(1);
       this._circle._complimentarySineCollection._compAngle.pulseScaleNow(1, 1.5);
     }
@@ -358,7 +353,11 @@ class SineCollection extends SinCosCircle {
         min: this.layout.compAngle.angle,
         max: Math.PI / 2 + this.layout.compAngle.angle,
       };
+      this._circle._compShadow.updateRotation(this.layout.compAngle.angle);
+      this._circle._compShadow.setFirstTransform(this._circle.transform);
+      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
       this.showStep(2);
+      // this.updateRotation();
       this.rotateComplimentaryAngle(1);
     }
 
@@ -367,9 +366,12 @@ class SineCollection extends SinCosCircle {
         min: this.layout.compAngle.angle + Math.PI / 2,
         max: this.layout.compAngle.angle + Math.PI / 2,
       };
+      const angle = this.layout.compAngle.angle + Math.PI / 2;
+      this._circle._radius.transform.updateRotation(angle);
+      this._circle._compShadow.updateRotation(angle);
+      this._circle._compShadow.setFirstTransform(this._circle.transform);
       this.showStep(3);
-      this._circle._cosineSymmetry
-        .transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
+      this._circle._cosineSymmetry.transform.updateRotation(angle);
 
       this._circle._cosineSymmetry
         .animateRotationTo(0, 2, 2);
@@ -380,8 +382,11 @@ class SineCollection extends SinCosCircle {
         min: this.layout.compAngle.angle + Math.PI / 2,
         max: this.layout.compAngle.angle + Math.PI / 2,
       };
-      this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
-      this.updateRotation();
+      const angle = this.layout.compAngle.angle + Math.PI / 2;
+      this._circle._radius.transform.updateRotation(angle);
+      this._circle._compShadow.updateRotation(angle);
+      this._circle._compShadow.setFirstTransform(this._circle.transform);
+      // this.updateRotation();
       this.showStep(4);
     }
     if (step === 5) {
@@ -390,7 +395,7 @@ class SineCollection extends SinCosCircle {
         max: this.layout.compAngle.angle + Math.PI / 2,
       };
       this._circle._radius.transform.updateRotation(this.layout.compAngle.angle + Math.PI / 2);
-      this.updateRotation();
+      // this.updateRotation();
       this.showStep(5);
     }
     this.diagram.animateNextFrame();
@@ -399,7 +404,9 @@ class SineCollection extends SinCosCircle {
   updateRotation() {
     super.updateRotation();
     const r = this.varState.rotation;
-    this._circle._complimentarySineCollection.updateRotation(r);
+    if (this._circle._complimentarySineCollection.isShown) {
+      this._circle._complimentarySineCollection.updateRotation(r);
+    }
   }
   rotateComplimentaryAngle(toQuad: number | null) {
     const maxAngle = Math.PI / 2 + this.layout.compAngle.angle;
