@@ -305,6 +305,7 @@ class Content extends LessonContent {
           To show the cosine is the same as the sine of the complementary angle:
         </p>
         ${itemSelector([
+    'Start with an angle',
     'Find complimentary angle',
     'Rotate to second quadrant',
     'Mirror to first quadrant',
