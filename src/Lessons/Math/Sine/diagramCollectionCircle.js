@@ -12,12 +12,17 @@ type bowType = {
     _string: DiagramElementPrimative;
   } & DiagramElementCollection;
 
+type angleAnnotationType = {
+  _label: DiagramElementPrimative;
+  _arc: DiagramElementPrimative;
+} & DiagramElementCollection;
+
 type complimentarySineCollectionType = {
   _sine: sineLineType;
   _cosine: sineLineType;
   _radius: DiagramElementPrimative;
-  _theta: DiagramElementPrimative;
-  _sineArc: DiagramElementPrimative;
+  _theta: angleAnnotationType;
+  // _sineArc: DiagramElementPrimative;
   _compAngle: {
     _arc: DiagramElementPrimative;
     _text: DiagramElementCollection;
@@ -86,6 +91,37 @@ class SineCollection extends SinCosCircle {
     return bow;
   }
 
+  makeAngleAnnotation(
+    angleText: string = '',
+    id: string = '',
+    color: Array<number> = [0.5, 0.5, 0.5, 1],
+  ) {
+    const { angle } = this.layout.compAngle;
+    const angleFraction = angle / Math.PI / 2;
+    const layout = this.layout.thetaAngle;
+
+    const thetaPosition = polarToRect(layout.label.radius, angle / 2);
+    const label = this.shapes.htmlText(
+      angleText,
+      `id_lessons__angle_annotation__${id}`,
+      'lessons__equation__text lessons__angle_annotation__text',
+      thetaPosition,
+      'middle', 'center',
+    );
+    label.setColor(color);
+
+    const arc = this.shapes.polygon(
+      layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, 0, 1,
+      layout.arc.sides * angleFraction, color,
+      new Transform().scale(1, 1).rotate(0),
+    );
+
+    const thetaAngle = this.shapes.collection();
+    thetaAngle.add('arc', arc);
+    thetaAngle.add('label', label);
+    return thetaAngle;
+  }
+
   makeComplimentarySineCollection(id: string = '') {
     const collection = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
     const { angle } = this.layout.compAngle;
@@ -109,6 +145,7 @@ class SineCollection extends SinCosCircle {
     //   this.colors.cosine, new Point(0, 0),
     // );
 
+    const theta = this.makeAngleAnnotation('θ', `theta${id}`, this.colors.sine);
     const sine = this.makeSineLine(`complimentary_sine${id}`);
     const cosine = this.makeCosineLine(`complimentary_cosine${id}`);
     sine.textXOffset = -0.13;
@@ -119,12 +156,12 @@ class SineCollection extends SinCosCircle {
     cosine.updateRotation(this.layout.radius, angle);
 
 
-    const thetaPosition = polarToRect(this.layout.radius / 4, angle / 2);
-    const theta = this.shapes.htmlText(
-      'θ', `id_diagram__complimentary_sine_angle${id}`, 'diagram__sine_text',
-      thetaPosition, 'middle', 'center',
-    );
-    theta.color = this.colors.sine;
+    // const thetaPosition = polarToRect(this.layout.radius / 4, angle / 2);
+    // const theta = this.shapes.htmlText(
+    //   'θ', `id_diagram__complimentary_sine_angle${id}`, 'diagram__sine_text',
+    //   thetaPosition, 'middle', 'center',
+    // );
+    // theta.color = this.colors.sine;
 
     const eqn = this.diagram.equation.makeHTML(`id__piOn2MinusTheta${id}`);
     eqn.createEq([eqn.frac('π', '2'), '−', 'θ']);
@@ -136,10 +173,10 @@ class SineCollection extends SinCosCircle {
     );
     piOn2MinusTheta.color = this.colors.cosine;
 
-    const sineArc = this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius / 5, this.layout.linewidth / 2, 0, 1,
-      this.layout.anglePoints * angle / Math.PI / 2, this.colors.sine, new Point(0, 0),
-    );
+    // const sineArc = this.shapes.polygon(
+    //   this.layout.anglePoints, this.layout.radius / 5, this.layout.linewidth / 2, 0, 1,
+    //   this.layout.anglePoints * angle / Math.PI / 2, this.colors.sine, new Point(0, 0),
+    // );
     const cosineArc = this.shapes.polygon(
       this.layout.anglePoints, this.layout.radius / 5,
       this.layout.linewidth / 2, angle, 1,
@@ -175,8 +212,9 @@ class SineCollection extends SinCosCircle {
     collection.add('xAxis', xAxis);
     collection.add('yAxis', yAxis);
     collection.add('sine', sine);
-    collection.add('sineArc', sineArc);
+    // collection.add('sineArc', sineArc);
     collection.add('cosine', cosine);
+    // collection.add('theta', theta);
     collection.add('theta', theta);
     collection.add('compAngle', compAngle);
     collection.add('radius', radius);
@@ -299,8 +337,9 @@ class SineCollection extends SinCosCircle {
     this._circle._complimentarySineCollection._radius.show();
     this._circle._complimentarySineCollection._sine.showAll();
     this._circle._complimentarySineCollection._cosine.showAll();
-    this._circle._complimentarySineCollection._theta.show();
-    this._circle._complimentarySineCollection._sineArc.show();
+    this._circle._complimentarySineCollection._theta.showAll();
+    // console.log(this._circle._complimentarySineCollection._theta)
+    // this._circle._complimentarySineCollection._sineArc.show();
     this._circle._complimentarySineCollection._xAxis.show();
     this._circle._complimentarySineCollection._yAxis.show();
     this._circle._compShadow.hideAll();

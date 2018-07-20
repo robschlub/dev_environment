@@ -17,6 +17,15 @@ body {
   @include color_vars($colors);
 }
 
+.lessons__equation__text {
+  font-family: Times New Roman, serif;
+  font-style: italic;
+}
+
+.lessons__angle_annotation__text {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
+}
+
 .diagram__equation_text,
 .diagram__sine_text,
 .diagram__cosine_text,

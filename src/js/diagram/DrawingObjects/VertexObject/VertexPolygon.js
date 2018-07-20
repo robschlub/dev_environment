@@ -28,7 +28,7 @@ class VertexPolygon extends VertexObject {
 
     // Check potential errors in constructor input
     let sides = numSides;
-    let sidesToDraw = numSidesToDraw;
+    let sidesToDraw = Math.floor(numSidesToDraw);
     if (sides < 3) {
       sides = 3;
     }

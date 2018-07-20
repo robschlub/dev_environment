@@ -24,5 +24,20 @@ export default function lessonLayout() {
   layout.compAngle = {
     angle: Math.PI / 6,
   };
+
+  const angleLineWidth = 0.02;
+  const angleRadius = 0.3;
+  const angleSides = 200;
+  layout.thetaAngle = {
+    arc: {
+      lineWidth: angleLineWidth,
+      radius: angleRadius,
+      sides: angleSides,
+    },
+    label: {
+      radius: angleRadius + 0.07,
+    },
+  };
+
   return layout;
 }
