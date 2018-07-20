@@ -220,14 +220,20 @@ class SineCollection extends SinCosCircle {
       this.colors.cosine, new Transform().scale(1, 1),
     );
 
-    const sine = this.makeSineLine('mirror_sine');
+    const cosine = this.makeSineLine('mirror_cosine');
+    cosine.setText('cos θ');
+    cosine.textXOffset = 0.13;
+    cosine._line.color = this.colors.cosine;
+    cosine._text.color = this.colors.cosine;
+    cosine.updateRotation(this.layout.radius, angle);
 
     const sineEqn = this.diagram.equation.makeHTML('id__symmetry_sine_piOn2MinusTheta', 'diagram__cosine_text');
-    sineEqn.createEq(['sin', eqn.frac('π', '2'), '−', 'θ']);
-    sine.setText(sineEqn.render());
-    sine.textXOffset = 0.2;
-    sine._line.color = this.colors.cosine;
-    sine.updateRotation(this.layout.radius, angle);
+    sineEqn.createEq(['= sin', eqn.frac('π', '2'), '−', 'θ']);
+    const sine = this.shapes.htmlText(
+      sineEqn.render(), 'id__sine_consine_symmetry_sine',
+      'diagram__equation_text',
+      this.layout.quadEqn.position, 'middle', 'center',
+    );
 
     const compAngle = this.shapes.collection(new Transform().scale(1, 1));
     compAngle.add('text', piOn2MinusTheta);
@@ -235,6 +241,7 @@ class SineCollection extends SinCosCircle {
 
     symmetry.add('xAxis', xAxis);
     symmetry.add('sine', sine);
+    symmetry.add('cosine', cosine);
     symmetry.add('angle', compAngle);
     symmetry.add('radius', radius);
 
@@ -320,12 +327,16 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._angle._arc.show();
       this._circle._cosineSymmetry._radius.show();
       this._circle._cosineSymmetry._xAxis.show();
-      this._circle._cosineSymmetry._sine.show();
-      this._circle._cosineSymmetry._sine._line.show();
+      this._circle._cosineSymmetry._cosine.show();
+      this._circle._cosineSymmetry._cosine._line.show();
       // this.updateRotation();
     }
     if (step >= 4) {
-      this._circle._cosineSymmetry._sine.showAll();
+      this._circle._cosineSymmetry._cosine.showAll();
+      this._circle._cosineSymmetry._angle.showAll();
+      // this._circle._cosineSymmetry._sine.show();
+      this._circle._complimentarySineCollection.hideAll();
+      this._circle._radius.hide();
     }
     if (step >= 5) {
       this._cosineEqn.setFirstTransform(this.transform);
@@ -392,26 +403,22 @@ class SineCollection extends SinCosCircle {
           .updateRotation(currentAngle);
 
         this._circle._cosineSymmetry._radius.transform
-          .updateScale(
-            currentScale,
-            (1 - percent) * 2 - 1,
-          );
+          .updateScale(currentScale, (1 - percent) * 2 - 1);
         this._circle._cosineSymmetry._angle._arc.transform
           .updateScale(-(1 - percent * 2), 1);
 
-        this._circle._cosineSymmetry._sine._line.transform
+        this._circle._cosineSymmetry._cosine._line.transform
           .updateTranslation(currentScale * this.layout.radius * Math.cos(currentAngle), 0);
-        this._circle._cosineSymmetry._sine._line.transform
-          .updateScale(
-            sineLength,
-            (1 - percent) * 2 - 1,
-          );
+        this._circle._cosineSymmetry._cosine._line.transform
+          .updateScale(sineLength, (1 - percent) * 2 - 1);
       };
 
       const done = () => {
         this._circle._radius.hide();
+        // this._circle._cosineSymmetry._cosine.updateRotation(this.layout.radius, Math.PI / 2 - this.layout.compAngle.angle);
         this._circle._complimentarySineCollection.disolveElementsOut(1);
-        this._circle._cosineSymmetry._angle._text.disolveIn(2);
+        this._circle._cosineSymmetry._angle._text.disolveIn(1);
+        this._circle._cosineSymmetry._cosine._text.disolveIn(1);
       };
 
       this._circle._cosineSymmetry
@@ -428,7 +435,7 @@ class SineCollection extends SinCosCircle {
       this._circle._compShadow.updateRotation(angle);
       this._circle._compShadow.setFirstTransform(this._circle.transform);
       // this.updateRotation();
-      this._circle._cosineSymmetry._angle._text.disolveOut(2);
+      // this._circle._cosineSymmetry._angle._text.disolveOut(2);
       this.showStep(4);
     }
     if (step === 5) {
