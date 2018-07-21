@@ -22,7 +22,6 @@ type complimentarySineCollectionType = {
   _cosine: sineLineType;
   _radius: DiagramElementPrimative;
   _theta: angleAnnotationType;
-  // _sineArc: DiagramElementPrimative;
   _compAngle: angleAnnotationType;
   _xAxis: DiagramElementPrimative;
   _yAxis: DiagramElementPrimative;
@@ -38,8 +37,6 @@ export type extendedCircleType = {
     _compAngle: angleAnnotationType;
     _cosine: sineLineType;
     _sine: DiagramElementPrimative;
-    // _text: DiagramElementCollection;
-    // _xAxis: DiagramElementPrimative;
   } & DiagramElementCollection;
 } & SinCosCircleType;
 
@@ -214,7 +211,7 @@ class SineCollection extends SinCosCircle {
 
     const compAngle = this.makeComplimentAngle('symmetry', this.colors.cosine);
     const cosine = this.makeSineLine('mirror_cosine');
-    cosine.setText('cos θ');
+    cosine.setText('cos θa');
     cosine.textXOffset = 0.13;
     cosine._line.setColor(this.colors.cosine);
     cosine._text.setColor(this.colors.cosine);
@@ -254,10 +251,9 @@ class SineCollection extends SinCosCircle {
   addToCircle() {
     this._circle.add('bow', this.makeBow());
     this._circle.add('compShadow', this.makeComplimentarySineCollection('1'));
+    this._circle._compShadow.setColor(this.colors.grid);
     this._circle.add('complimentarySineCollection', this.makeComplimentarySineCollection());
     this._circle.add('cosineSymmetry', this.makeCosineSymmetry());
-    this._circle._compShadow.setColor(this.colors.grid);
-    this._circle._compShadow._radius.transform.updateScale(1, 0.3);
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -314,15 +310,16 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._cosine.show();
       this._circle._cosineSymmetry._cosine._line.show();
     }
-    if (step >= 4) {
+    if (step >= 4) {      
       this._circle._cosineSymmetry._cosine.showAll();
       this._circle._cosineSymmetry._compAngle.showAll();
       this._circle._complimentarySineCollection.hideAll();
       this._circle._radius.hide();
     }
     if (step >= 5) {
-      this._cosineEqn.setFirstTransform(this.transform);
-      this._cosineEqn.show();
+
+      // this._cosineEqn.setFirstTransform(this.transform);
+      // this._cosineEqn.show();
     }
     this.updateRotation();
   }
@@ -391,19 +388,46 @@ class SineCollection extends SinCosCircle {
     cosSym.animateCustomTo(mirror, 1.5, 0, done);
   }
 
+  resetSymmetry() {
+    const angle = Math.PI / 2 - this.layout.compAngle.angle;
+    const sineLength = Math.sin(angle);
+    const cosSym = this._circle._cosineSymmetry;
+    cosSym._radius.transform.updateRotation(angle);
+    cosSym._radius.transform.updateScale(1, 1);
+    cosSym._compAngle.transform.updateScale(1, 1);
+    cosSym._cosine._line.transform.updateTranslation(
+      this.layout.radius * Math.cos(angle),
+      0,
+    );
+    cosSym._cosine._line.transform.updateScale(sineLength, 1);
+    // cosSym._cosine._text.setFirstTransform(cosSym._cosine.transform);
+    // cosSym._cosine._text.disolveIn(1, () => {console.log(cosSym._cosine._text.transform.t())});
+    cosSym._cosine._text.transform.updateTranslation(0, this.layout.radius);
+    cosSym._cosine.updateRotation(this.layout.radius, angle);
+    console.log(cosSym._cosine.textYMultiplier)
+    console.log(cosSym._cosine.textYOffset)
+    console.log(cosSym._cosine._text.transform.t())
+    this._circle.setFirstTransform(this.transform)
+    // cosSym._cosine._text.setFirstTransform(cosSym._cosine.transform)
+    // cosSym._cosine._text.disolveIn(1)
+  }
+
   step4() {
     const angle = this.layout.compAngle.angle + Math.PI / 2;
     this.rotationLimits = { min: angle, max: angle };
     this._circle._radius.transform.updateRotation(angle);
     this._circle._compShadow.updateRotation(angle);
     this._circle._compShadow.setFirstTransform(this._circle.transform);
+    this.resetSymmetry();
     this.showStep(4);
+    this._circle._cosineSymmetry.showAll();
   }
 
   step5() {
     const angle = this.layout.compAngle.angle + Math.PI / 2;
     this.rotationLimits = { min: angle, max: angle };
     this._circle._radius.transform.updateRotation(angle);
+    cosSym._compAngle.updateRotation();
     this.showStep(5);
   }
 
