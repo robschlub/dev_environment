@@ -312,6 +312,10 @@ class DiagramElement {
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
     this.onClick = null;
+    this.lastDrawElementTransformPosition = {
+      parentCount: 0,
+      elementCount: 0,
+    };
     this.animate = {
       color: {
         plan: [],

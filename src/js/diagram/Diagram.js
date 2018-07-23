@@ -25,7 +25,7 @@ import Axis from './DiagramElements/Plot/Axis';
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
-import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
+import { DiagramGLEquation } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 
