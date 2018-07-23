@@ -25,7 +25,7 @@ import Axis from './DiagramElements/Plot/Axis';
 import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
-import { DiagramGLEquation } from './DiagramElements/Equation/GLEquation';
+import { DiagramGLEquation, createEquationElements } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 
@@ -48,48 +48,54 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // eslint-disable-next-line no-use-before-define
 function equation(diagram: Diagram) {
   function elements(elems: Object, colorOrFont: Array<number> | DiagramFont = []) {
-    let color = [1, 1, 1, 1];
-    if (Array.isArray(colorOrFont)) {
-      color = colorOrFont.slice();
-    }
-    let font = new DiagramFont(
-      'Times New Roman',
-      'italic',
-      0.2,
-      '200',
-      'left',
-      'alphabetic',
-      color,
-    );
-    if (colorOrFont instanceof DiagramFont) {
-      font = colorOrFont;
-      // color = font.color;
-    }
-
-    const equationElements = new DiagramElementCollection(
-      new Transform().scale(1, 1).translate(0, 0),
+    return createEquationElements(
+      elems,
+      diagram.draw2D,
+      colorOrFont,
       diagram.limits,
     );
-    Object.keys(elems).forEach((key) => {
-      if (typeof elems[key] === 'string') {
-        const dT = new DiagramText(new Point(0, 0), elems[key], font);
-        const to = new TextObject(diagram.draw2D, [dT]);
-        const p = new DiagramElementPrimative(
-          to,
-          new Transform().scale(1, 1).translate(0, 0),
-          color,
-          diagram.limits,
-        );
-        equationElements.add(key, p);
-      }
-      if (elems[key] instanceof DiagramElementPrimative) {
-        equationElements.add(key, elems[key]);
-      }
-      if (elems[key] instanceof DiagramElementCollection) {
-        equationElements.add(key, elems[key]);
-      }
-    });
-    return equationElements;
+    // let color = [1, 1, 1, 1];
+    // if (Array.isArray(colorOrFont)) {
+    //   color = colorOrFont.slice();
+    // }
+    // let font = new DiagramFont(
+    //   'Times New Roman',
+    //   'italic',
+    //   0.2,
+    //   '200',
+    //   'left',
+    //   'alphabetic',
+    //   color,
+    // );
+    // if (colorOrFont instanceof DiagramFont) {
+    //   font = colorOrFont;
+    //   // color = font.color;
+    // }
+
+    // const equationElements = new DiagramElementCollection(
+    //   new Transform().scale(1, 1).translate(0, 0),
+    //   diagram.limits,
+    // );
+    // Object.keys(elems).forEach((key) => {
+    //   if (typeof elems[key] === 'string') {
+    //     const dT = new DiagramText(new Point(0, 0), elems[key], font);
+    //     const to = new TextObject(diagram.draw2D, [dT]);
+    //     const p = new DiagramElementPrimative(
+    //       to,
+    //       new Transform().scale(1, 1).translate(0, 0),
+    //       color,
+    //       diagram.limits,
+    //     );
+    //     equationElements.add(key, p);
+    //   }
+    //   if (elems[key] instanceof DiagramElementPrimative) {
+    //     equationElements.add(key, elems[key]);
+    //   }
+    //   if (elems[key] instanceof DiagramElementCollection) {
+    //     equationElements.add(key, elems[key]);
+    //   }
+    // });
+    // return equationElements;
   }
 
   function vinculum(color: Array<number> = [1, 1, 1, 1]) {

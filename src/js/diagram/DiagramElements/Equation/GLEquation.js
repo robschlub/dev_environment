@@ -606,8 +606,9 @@ export class DiagramGLEquation extends Elements {
     });
   }
 
+  // By default, the colleciton is arranged so the first element in the
+  // equation is at (0,0) in colleciton space.
   arrange(
-    // location: Point = new Point(0, 0),
     scale: number = 1,
     alignH: 'left' | 'right' | 'center' | null = 'left',
     alignV: 'top' | 'bottom' | 'middle' | 'baseline' | null = 'baseline',
@@ -660,9 +661,6 @@ export class DiagramGLEquation extends Elements {
     } else if (alignV === 'middle') {
       fixPoint.y += p.y - d + h / 2;
     }
-    // if (fixElement != null) {
-    //   const t = fixElement.transform.t();
-    //   if (t != null) {
     const delta = new Point(0, 0).sub(fixPoint);
     elementsInEqn.forEach((e) => {
       const et = e.transform.t();
