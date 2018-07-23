@@ -330,6 +330,7 @@ class Content extends LessonContent {
         circle._sineLine.textYMultiplier = 0.5;
         circle._sineLine.textXOffset = 0.13;
         circle._cosineLine.setText('cos θ');
+        // circle._complimentarySineCollection._theta._label.eqn.arrange(2, 'center', 'middle');
         diag.rotationLimits = {
           min: Math.PI / 6,
           max: Math.PI / 2 + Math.PI / 6,

@@ -5,16 +5,6 @@ import DrawContext2D from '../../../__mocks__/DrawContext2DMock';
 
 
 describe('GL Equation', () => {
-  // let collection;
-  // beforeEach(() => {
-  //   e1 = new fakePrimative;
-  //   collection.elements.
-  // })
-  // describe('Instantiation', () => {
-  //   test('Single Element', () => {
-
-  //   })
-  // }
   describe('Create collection', () => {
     test('One element collection', () => {
       const collection = createEquationElements({ a: 'a' }, DrawContext2D);

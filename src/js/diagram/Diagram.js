@@ -54,48 +54,6 @@ function equation(diagram: Diagram) {
       colorOrFont,
       diagram.limits,
     );
-    // let color = [1, 1, 1, 1];
-    // if (Array.isArray(colorOrFont)) {
-    //   color = colorOrFont.slice();
-    // }
-    // let font = new DiagramFont(
-    //   'Times New Roman',
-    //   'italic',
-    //   0.2,
-    //   '200',
-    //   'left',
-    //   'alphabetic',
-    //   color,
-    // );
-    // if (colorOrFont instanceof DiagramFont) {
-    //   font = colorOrFont;
-    //   // color = font.color;
-    // }
-
-    // const equationElements = new DiagramElementCollection(
-    //   new Transform().scale(1, 1).translate(0, 0),
-    //   diagram.limits,
-    // );
-    // Object.keys(elems).forEach((key) => {
-    //   if (typeof elems[key] === 'string') {
-    //     const dT = new DiagramText(new Point(0, 0), elems[key], font);
-    //     const to = new TextObject(diagram.draw2D, [dT]);
-    //     const p = new DiagramElementPrimative(
-    //       to,
-    //       new Transform().scale(1, 1).translate(0, 0),
-    //       color,
-    //       diagram.limits,
-    //     );
-    //     equationElements.add(key, p);
-    //   }
-    //   if (elems[key] instanceof DiagramElementPrimative) {
-    //     equationElements.add(key, elems[key]);
-    //   }
-    //   if (elems[key] instanceof DiagramElementCollection) {
-    //     equationElements.add(key, elems[key]);
-    //   }
-    // });
-    // return equationElements;
   }
 
   function vinculum(color: Array<number> = [1, 1, 1, 1]) {

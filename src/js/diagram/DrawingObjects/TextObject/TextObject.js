@@ -37,6 +37,14 @@ class DiagramFont {
     this.weight = weight;
     this.alignH = alignH;
     this.alignV = alignV;
+    this.setColor(color);
+    // if (Array.isArray(color)) {
+    //   this.color = colorArrayToString(color);
+    // } else {
+    //   this.color = color;
+    // }
+  }
+  setColor(color: Array<number> | null | string = null) {
     if (Array.isArray(color)) {
       this.color = colorArrayToString(color);
     } else {

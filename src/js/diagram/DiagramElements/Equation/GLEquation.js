@@ -90,7 +90,6 @@ class Elements {
     let des = 0;
     let asc = 0;
     const loc = location.copy();
-
     this.content.forEach((element) => {
       element.calcSize(loc, scale);
 
@@ -620,7 +619,6 @@ export class DiagramGLEquation extends Elements {
     this.collection.hideAll();
     this.collection.show();
     super.calcSize(new Point(0, 0), scale);
-
     let fixPoint = new Point(0, 0);
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
