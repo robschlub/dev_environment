@@ -863,7 +863,8 @@ class Transform {
   index: number;
 
   constructor(order: Array<Translation | Rotation | Scale> = []) {
-    this.order = order.slice();
+    this.order = order.map(t => t.copy());
+    // this.order = order.slice();
     this.index = this.order.length;
     this.calcMatrix();
   }

@@ -2,7 +2,7 @@
 
 import {
   Transform, Point, TransformLimit, Rect,
-  Translation, spaceToSpaceTransform, getBoundingRect,
+  Translation, spaceToSpaceTransform, getBoundingRect, Rotation
 } from './tools/g2';
 import type { pathOptionsType } from './tools/g2';
 import * as tools from './tools/mathtools';
@@ -207,6 +207,7 @@ class DiagramElement {
   setTransformCallback: (Transform) => void; // element.transform is updated
 
   color: Array<number>;           // For the future when collections use color
+  noRotationFromParent: boolean;
 
   animate: {
     transform: {
@@ -316,6 +317,7 @@ class DiagramElement {
       parentCount: 0,
       elementCount: 0,
     };
+    this.noRotationFromParent = false;
     this.animate = {
       color: {
         plan: [],
@@ -1467,6 +1469,91 @@ class DiagramElement {
       this.onClick(this);
     }
   }
+
+  processParentTransform(parentTransform: Transform): Transform {
+    let newTransform;
+    if (this.noRotationFromParent) {
+      const finalParentTransform = parentTransform.copy();
+      let r = 0;
+      for (let i = 0; i < finalParentTransform.order.length; i += 1) {
+        const t = finalParentTransform.order[i];
+        if (t instanceof Rotation) {
+          r += t.r;
+        }
+      }
+
+      const m = parentTransform.matrix();
+      const translation = new Point(m[2], m[5]);
+      const scale = new Point(
+        new Point(m[0], m[3]).distance(),
+        new Point(m[1], m[4]).distance(),
+      );
+      newTransform = new Transform()
+        .scale(scale)
+        // .rotate(r)
+        .translate(translation);
+      
+      // // console.log(r)
+      // newTransform = finalParentTransform.rotate(-r);
+      // // newTransform = finalParentTransform;
+      // console.log(newTransform, parentTransform)
+
+
+
+      // const finalParentTransform = parentTransform.copy();
+      // const translated = new Point(1, 1).transformBy(finalParentTransform.matrix());
+      // const scaleTransform = new Transform();
+      // for (let i = 0; i < finalParentTransform.order.length; i += 1) {
+      //   const t = finalParentTransform.order[i];
+      //   if (t instanceof Scale) {
+      //     scaleTransform.order.push(t);
+      //   }
+      // }
+      // scaleTransform.calcMatrix();
+      // const scaled = new Point(1, 1).transformBy(scaleTransform.matrix());
+      // const translation = translated.sub(scaled);
+      // console.log(scaled, translation)
+      // newTransform = new Transform()
+      //   .scale(scaled)
+      //   .translate(translation);
+
+
+      // for (let i = 0; i < finalParentTransform.order.length; i += 1) {
+      //   const t = finalParentTransform.order[i];
+
+      //   if (t instanceof Rotation) {
+      //     t.r = 0;
+      //     // console.log(this.name, t, parentTransform.order[i])
+      //   }
+      // }
+      // const m = parentTransform.matrix();
+      // const angle = Math.asin(m[3]);
+      // let cosAngle = Math.cos(angle);
+      // if (cosAngle === 0) {
+      //   cosAngle = 1;
+      // }
+      // console.log(cosAngle);
+      // newTransform = new Transform()
+      //   .scale(m[0] / cosAngle, m[4] / cosAngle)
+      //   .translate(m[2], m[5]);
+      // const finalParentTransform = parentTransform.copy();
+      // // console.log(finalParentTransform === parentTransform)
+      // for (let i = 0; i < finalParentTransform.order.length; i += 1) {
+      //   const t = finalParentTransform.order[i];
+
+      //   if (t instanceof Rotation) {
+      //     t.r = 0;
+      //     // console.log(this.name, t, parentTransform.order[i])
+      //   }
+      // }
+      // finalParentTransform.calcMatrix();
+      // newTransform = finalParentTransform;
+      // console.log(parentTransform, finalParentTransform)
+    } else {
+      newTransform = parentTransform;
+    }
+    return newTransform;
+  }
 }
 
 // ***************************************************************
@@ -1578,7 +1665,9 @@ class DiagramElementPrimative extends DiagramElement {
         parentCount: parentTransform.order.length,
         elementCount: this.transform.order.length,
       };
-      const newTransform = parentTransform.transform(this.transform);
+
+      const finalParentTransform = this.processParentTransform(parentTransform);
+      const newTransform = finalParentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
       // let matrix = m2.mul(transformMatrix, this.transform.matrix());
@@ -1609,7 +1698,8 @@ class DiagramElementPrimative extends DiagramElement {
       parentCount: parentTransform.order.length,
       elementCount: this.transform.order.length,
     };
-    const firstTransform = parentTransform.transform(this.transform);
+    const finalParentTransform = this.processParentTransform(parentTransform);
+    const firstTransform = finalParentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
     if (this.vertices instanceof HTMLObject) {
@@ -1760,7 +1850,8 @@ class DiagramElementCollection extends DiagramElement {
         parentCount: parentTransform.order.length,
         elementCount: this.transform.order.length,
       };
-      const newTransform = parentTransform.transform(this.transform);
+      const finalParentTransform = this.processParentTransform(parentTransform);
+      const newTransform = finalParentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
       // eslint-disable-next-line prefer-destructuring
@@ -1848,7 +1939,8 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   setFirstTransform(parentTransform: Transform = new Transform()) {
-    const firstTransform = parentTransform.transform(this.transform);
+    const finalParentTransform = this.processParentTransform(parentTransform);
+    const firstTransform = finalParentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
     for (let i = 0; i < this.order.length; i += 1) {
