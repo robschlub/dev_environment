@@ -76,11 +76,26 @@ class SineCollection extends SinCosCircle {
     collection.transform.index = 0;
     collection.transform = collection.transform.rotate(0);
 
-    // collection._theta.transform = collection._theta.transform.rotate(0);
-    // collection.noRotationFromParent = true;
     const eqn = this.diagram.equation.make(collection);
     eqn.createEq(['theta']);
-    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform)
+    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
+    collection.eqn = eqn;
+    return collection;
+  }
+
+  makeEquationSinCosTheta(color: Array<number> = [1, 1, 1, 1], func: string = 'sin') {
+    angleAnnotationFont.setColor(color);
+    const collection = this.diagram.equation.elements({
+      func,
+      theta: 'θ',
+    }, angleAnnotationFont);
+    collection.transform.index = 0;
+    collection.transform = collection.transform.rotate(0);
+
+    const eqn = this.diagram.equation.make(collection);
+    eqn.createEq(['func', 'theta']);
+    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
     collection.eqn = eqn;
     return collection;
@@ -94,7 +109,6 @@ class SineCollection extends SinCosCircle {
       minus: ' \u2212 ',
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
-    // }, color);
     }, angleAnnotationFont);
     collection.transform.index = 0;
     collection.transform = collection.transform.rotate(0);
@@ -118,7 +132,7 @@ class SineCollection extends SinCosCircle {
       v: this.diagram.equation.vinculum(color),
     }, angleAnnotationFont);
     const eqn = this.diagram.equation.make(collection);
-    eqn.createEq(['sin', eqn.frac('pi', 'two', 'v'), 'minus', 'theta']);
+    eqn.createEq(['sin', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
     collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     eqn.arrange(0.6, 'center', 'middle');
     collection.eqn = eqn;
