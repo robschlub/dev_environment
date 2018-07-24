@@ -3,9 +3,9 @@
 import Diagram from '../../../js/diagram/Diagram';
 import { Transform, Point, polarToRect, Rect } from '../../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
-import { SinCosCircle, angleAnnotationFont } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
+import { SinCosCircle, labelFont } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type {
-  SinCosCircleType, equationType, sineCosineLineType,
+  SinCosCircleType, equationType, sineCosineLineType, textEquationType,
   SinCosVarStateType, sineLineType,
 } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import lessonLayout from './layout';
@@ -60,9 +60,9 @@ export type SineCollectionType = {
 //   eqn: DiagramGLEquation;
 // } & DiagramElementCollection;
 
-type thetaEquationType = {
-  _theta: DiagramElementPrimative;
-} & equationType;
+// type thetaEquationType = {
+//   _theta: DiagramElementPrimative;
+// } & equationType;
 
 // type sineCosineLine = {
 //   _label: equationType;
@@ -81,29 +81,30 @@ class SineCollection extends SinCosCircle {
   varState: varStateExtendedType;
   _cosineEqn: DiagramElementPrimative;
 
-  makeEquationTheta(color: Array<number> = [1, 1, 1, 1]): thetaEquationType {
-    angleAnnotationFont.setColor(color);
-    const collection = this.diagram.equation.elements(
-      { theta: 'θ' },
-      angleAnnotationFont,
-    );
-    collection.transform.index = 0;
-    collection.transform = collection.transform.rotate(0);
+  makeEquationTheta(color: Array<number> = [1, 1, 1, 1]): textEquationType {
+    return this.makeEquationText('θ', color);
+    // labelFont.setColor(color);
+    // const collection = this.diagram.equation.elements(
+    //   { theta: 'θ' },
+    //   labelFont,
+    // );
+    // collection.transform.index = 0;
+    // collection.transform = collection.transform.rotate(0);
 
-    const eqn = this.diagram.equation.make(collection);
-    eqn.createEq(['theta']);
-    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-    eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
-    collection.eqn = eqn;
-    return collection;
+    // const eqn = this.diagram.equation.make(collection);
+    // eqn.createEq(['theta']);
+    // collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    // eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
+    // collection.eqn = eqn;
+    // return collection;
   }
 
-  makeEquationSinCosTheta(color: Array<number> = [1, 1, 1, 1], func: string = 'sin') {
-    angleAnnotationFont.setColor(color);
+  makeEquationFuncTheta(color: Array<number> = [1, 1, 1, 1], func: string = 'sin') {
+    labelFont.setColor(color);
     const collection = this.diagram.equation.elements({
       func,
       theta: 'θ',
-    }, angleAnnotationFont);
+    }, labelFont);
     collection.transform.index = 0;
     collection.transform = collection.transform.rotate(0);
 
@@ -116,14 +117,14 @@ class SineCollection extends SinCosCircle {
   }
 
   makeEquationCompliment(color: Array<number> = [1, 1, 1, 1]) {
-    angleAnnotationFont.setColor(color);
+    labelFont.setColor(color);
     const collection = this.diagram.equation.elements({
       pi: 'π',
       two: '2',
       minus: ' \u2212 ',
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
-    }, angleAnnotationFont);
+    }, labelFont);
     collection.transform.index = 0;
     collection.transform = collection.transform.rotate(0);
 
@@ -136,7 +137,7 @@ class SineCollection extends SinCosCircle {
   }
 
   makeEquationSineCompliment(color: Array<number> = [1, 1, 1, 1]) {
-    angleAnnotationFont.setColor(color);
+    labelFont.setColor(color);
     const collection = this.diagram.equation.elements({
       sin: 'sin ',
       pi: 'π',
@@ -144,7 +145,7 @@ class SineCollection extends SinCosCircle {
       minus: ' \u2212 ',
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
-    }, angleAnnotationFont);
+    }, labelFont);
     const eqn = this.diagram.equation.make(collection);
     eqn.createEq(['sin', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
     collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
@@ -152,72 +153,6 @@ class SineCollection extends SinCosCircle {
     collection.eqn = eqn;
     return collection;
   }
-
-  // makeSineCosineLine(
-  //   label: equationType,
-  //   sine: boolean = true,
-  //   color: Array<number> = [1, 1, 1, 1],
-  // ): sineCosineLine {
-  //   const rot = sine ? Math.PI / 2 : 0;
-  //   const line = this.makeLine(
-  //     new Point(0, 0),
-  //     this.layout.radius,
-  //     this.layout.sine.lineWidth,
-  //     color,
-  //     new Transform().scale(1, 1).rotate(rot).translate(0, 0),
-  //   );
-  //   // const textYLimit = sine ? this.layout.textYLimit : 0;
-  //   // const textXLimit = sine ? 0 : this.layout.textXLimit;
-  //   // const textXOffset = sine ? label.eqn.width / 2 * 1.1 : 0;
-  //   // const textYOffset = sine ? 0 : label.eqn.height / 2 * 1.1;
-  //   // const text = this.shapes.htmlText(
-  //   //   'sin θ', `id_diagram_sine_line_${id}`, 'diagram__sine_line',
-  //   //   new Point(0, 0), 'middle', 'center',
-  //   // );
-  //   const sineCosine = this.shapes.collection();
-  //   sineCosine.add('line', line);
-  //   sineCosine.add('label', label);
-
-  //   sineCosine.textYLimit = sine ? this.layout.textYLimit : 0;
-  //   sineCosine.textXLimit = sine ? 0 : this.layout.textXLimit;
-  //   sineCosine.textXOffset = sine ? label.eqn.width / 2 * 1.1 : 0;
-  //   sineCosine.textYOffset = sine ? 0 : label.eqn.height / 2 * 1.1;
-  //   sineCosine.textYMultiplier = sine ? 0.5 : 0;
-  //   // sine.add('line', line);
-  //   // sine.add('text', text);
-  //   // sine.textXOffset = 0.15;
-  //   // sine.textYOffset = 0;
-  //   // sine.textYLimit = this.layout.textYLimit;
-  //   // sine.textYMultiplier = 1 / 2;
-  //   sineCosine.updateRotation = (radius: number, angle: number) => {
-  //     const endX = radius * Math.cos(angle);
-  //     const endY = radius * Math.sin(angle);
-  //     const endYSign = endY / Math.abs(endY);
-  //     let textX = 0;
-  //     let textY = 0;
-  //     if (sine) {
-  //       sineCosine._line.setPosition(endX, 0);
-  //       sineCosine._line.transform.updateScale(endY / radius, 1);
-  //       textY = endY * sineCosine.textYMultiplier + sineCosine.textYOffset;
-  //       if (Math.abs(textY) < sineCosine.textYLimit) {
-  //         textY = sineCosine.textYLimit * endYSign;
-  //       }
-  //       sineCosine._label.setPosition(endX + endX / Math.abs(endX) * sineCosine.textXOffset, textY);
-  //     } else {
-  //       sineCosine._line.setPosition(0, endY);
-  //       sineCosine._line.transform.updateScale(endX / radius, 1);
-  //       textX = endX / 2;
-  //       if (Math.abs(textX) < sineCosine.textXLimit) {
-  //         textX = sineCosine.textYLimit * endYSign;
-  //       }
-  //       sineCosine._text.setPosition(textX, endY + endY / Math.abs(endY) * sineCosine.textYOffset);
-  //     }
-  //   };
-  //   // sineCosine.setText = (newText: string) => {
-  //   //   sineCosine._label.vertices.element.innerHTML = newText;
-  //   // };
-  //   return sineCosine;
-  // }
 
   makeBow() {
     const bow = this.shapes.collection();
@@ -331,7 +266,7 @@ class SineCollection extends SinCosCircle {
     return complimentAngle;
   }
 
-  makeComplimentarySineCollection(id: string = '') {
+  makeComplimentarySineCollection() {
     const collection = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
     const { angle } = this.layout.compAngle;
 
@@ -344,16 +279,16 @@ class SineCollection extends SinCosCircle {
     );
 
     const theta = this.makeThetaAngle(this.colors.sine);
-    // const sine = this.makeSineLine(`complimentary_sine${id}`);
     const sine = this.makeSineCosineLine(
-      this.makeEquationSinCosTheta(this.colors.sine),
+      this.makeEquationFuncTheta(this.colors.sine, 'sin'),
       true, this.colors.sine,
     );
-    const cosine = this.makeCosineLine(`complimentary_cosine${id}`);
+    const cosine = this.makeSineCosineLine(
+      this.makeEquationFuncTheta(this.colors.cosine, 'cos'),
+      false, this.colors.cosine,
+    );
     sine.textXOffset = -0.13;
     cosine.textOffset = 0.08;
-    // sine._text.color = this.colors.sine;
-    cosine._text.color = this.colors.cosine;
     sine.updateRotation(this.layout.radius, angle);
     cosine.updateRotation(this.layout.radius, angle);
 
@@ -379,6 +314,7 @@ class SineCollection extends SinCosCircle {
       collection._theta._label.transform.updateRotation(-radiusAngle);
       collection._compAngle._label.transform.updateRotation(-radiusAngle);
       collection._sine._label.transform.updateRotation(-radiusAngle);
+      collection._cosine._label.transform.updateRotation(-radiusAngle);
     };
 
     collection.add('xAxis', xAxis);
@@ -442,7 +378,7 @@ class SineCollection extends SinCosCircle {
 
   addToCircle() {
     this._circle.add('bow', this.makeBow());
-    this._circle.add('compShadow', this.makeComplimentarySineCollection('1'));
+    this._circle.add('compShadow', this.makeComplimentarySineCollection());
     this._circle._compShadow.setColor(this.colors.grid);
     this._circle.add('complimentarySineCollection', this.makeComplimentarySineCollection());
     this._circle.add('cosineSymmetry', this.makeCosineSymmetry());
@@ -452,7 +388,7 @@ class SineCollection extends SinCosCircle {
     super(lessonLayout(), diagram, transform);
     this.addToCircle();
     this.add('cosineEqn', this.makeCosineEquation());
-    
+
     const temp = this.makeEquationCompliment([1, 0, 0, 1]);
     this.add('temp', temp);
     const grid = this.shapes.grid(
@@ -460,8 +396,8 @@ class SineCollection extends SinCosCircle {
       0.5,
       0.5,
       [0.4, 0.4, 0.4, 1],
-      new Transform()
-      )
+      new Transform(),
+    );
     this.add('grid', grid);
 
     this.varState.complimentaryRotatingTo = 'done';

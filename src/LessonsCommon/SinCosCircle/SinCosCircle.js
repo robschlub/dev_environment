@@ -101,7 +101,11 @@ export type sineCosineLineType = {
   textYLimit: number;
 } & DiagramElementCollection;
 
-export const angleAnnotationFont = new DiagramFont(
+export type textEquationType = {
+  _text: DiagramElementPrimative;
+} & equationType;
+
+export const labelFont = new DiagramFont(
   'Times New Roman, serif',
   'italic',
   0.18,
@@ -147,6 +151,26 @@ export class SinCosCircle extends AngleCircle {
   //   }
   //   return equationElements;
   // }
+  makeEquationText(
+    text: string,
+    color: Array<number> = [1, 1, 1, 1],
+  ): textEquationType {
+    labelFont.setColor(color);
+    const collection = this.diagram.equation.elements(
+      { text },
+      labelFont,
+    );
+    collection.transform.index = 0;
+    collection.transform = collection.transform.rotate(0);
+
+    const eqn = this.diagram.equation.make(collection);
+    eqn.createEq(['text']);
+    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
+    collection.eqn = eqn;
+    return collection;
+  }
+
   makeQuad1Equation() {
     return this.shapes.htmlText(
       'sin θ  =  sin (π - θ)', 'id__sine_eqn_quad2', 'lesson__sine_eqn',
@@ -566,8 +590,16 @@ export class SinCosCircle extends AngleCircle {
     this._circle.add('quad2Angle', this.makeAngle(rad, '2', 'θ - π', Math.PI, 1, quadrantOffsets[2]));
     this._circle.add('quad3Angle', this.makeAngle(rad, '3', '2π - θ', 0, -1, quadrantOffsets[3]));
     this._circle.add('symmetry', this.makeSymmetry());
-    this._circle.add('sineLine', this.makeSineLine('primary'));
-    this._circle.add('cosineLine', this.makeCosineLine('primary'));
+    
+    this._circle.add('sineLine', this.makeSineCosineLine(
+      this.makeEquationText('vertical', this.colors.sine),
+      true, this.colors.sine,
+    ));
+    // this._circle.add('cosineLine', this.makeCosineLine('primary'));
+    this._circle.add('cosineLine', this.makeSineCosineLine(
+      this.makeEquationText('horizontal', this.colors.cosine),
+      false, this.colors.cosine,
+    ));
     this._circle.add('mainAngle', this.makeMainAngle());
     this._circle.add('quad0', this.makeQuad(0));
     this._circle.add('quad1', this.makeQuad(1));

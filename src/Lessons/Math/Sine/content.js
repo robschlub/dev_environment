@@ -101,8 +101,8 @@ class Content extends LessonContent {
         // diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
         // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         // diag._angleText.setFirstTransform();
-        circle._sineLine.setText('vertical');
-        circle._cosineLine.setText('horizontal');
+        // circle._sineLine.setText('vertical');
+        // circle._cosineLine.setText('horizontal');
         circle._cosineLine.textXLimit = 0;
         circle._sineLine.textYLimit = 0;
         circle._sineLine.textYMultiplier = 0.5;
