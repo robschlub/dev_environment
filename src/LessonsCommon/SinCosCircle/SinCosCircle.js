@@ -5,6 +5,8 @@ import { Transform, Point, polarToRect } from '../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../AngleCircle/AngleCircle';
+import { DiagramGLEquation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 type rightAngleType = {
   _horizontal: DiagramElementPrimative;
@@ -84,11 +86,36 @@ export type SineCollectionType = {
   interactiveSinePage: boolean;
 };
 
+export type equationType = {
+  eqn: DiagramGLEquation;
+} & DiagramElementCollection;
+
+export type sineCosineLineType = {
+  _label: equationType;
+  _line: DiagramElementPrimative;
+  updateRotation: (number, number) => void;
+  textXOffset: number;
+  textYOffset: number;
+  textXMultiplier: number;
+  textXLimit: number;
+  textYLimit: number;
+} & DiagramElementCollection;
+
+export const angleAnnotationFont = new DiagramFont(
+  'Times New Roman, serif',
+  'italic',
+  0.18,
+  '400',
+  'left',
+  'alphabetic',
+  [1, 1, 1, 1],
+);
+
 const quadrantAngles = ['θ', 'π - θ', 'θ - π', '2π - θ'];
 const quadrantOffsets = [0.07, 0.12, 0.12, 0.15];
 const sineOffsets = [0.03, 0.22, 0.22, 0.25];
 
-class SinCosCircle extends AngleCircle {
+export class SinCosCircle extends AngleCircle {
   +_circle: SinCosCircleType;
   +varState: SinCosVarStateType;
   enableAutoChange: boolean;
@@ -471,6 +498,59 @@ class SinCosCircle extends AngleCircle {
     return cosine;
   }
 
+  makeSineCosineLine(
+    label: equationType,
+    sine: boolean = true,
+    color: Array<number> = [1, 1, 1, 1],
+  ): sineCosineLine {
+    const rot = sine ? Math.PI / 2 : 0;
+    const line = this.makeLine(
+      new Point(0, 0),
+      this.layout.radius,
+      this.layout.sine.lineWidth,
+      color,
+      new Transform().scale(1, 1).rotate(rot).translate(0, 0),
+    );
+
+    const sineCosine = this.shapes.collection();
+    sineCosine.add('line', line);
+    sineCosine.add('label', label);
+
+    sineCosine.textYLimit = sine ? this.layout.textYLimit : 0;
+    sineCosine.textXLimit = sine ? 0 : this.layout.textXLimit;
+    sineCosine.textXOffset = sine ? label.eqn.width / 2 * 1.1 : 0;
+    sineCosine.textYOffset = sine ? 0 : label.eqn.height / 2 * 1.1;
+    sineCosine.textYMultiplier = sine ? 0.5 : 0;
+
+    sineCosine.updateRotation = (radius: number, angle: number) => {
+      const endX = radius * Math.cos(angle);
+      const endY = radius * Math.sin(angle);
+      const endYSign = endY / Math.abs(endY);
+      let textX = 0;
+      let textY = 0;
+      if (sine) {
+        sineCosine._line.setPosition(endX, 0);
+        sineCosine._line.transform.updateScale(endY / radius, 1);
+        textY = endY * sineCosine.textYMultiplier + sineCosine.textYOffset;
+        if (Math.abs(textY) < sineCosine.textYLimit) {
+          textY = sineCosine.textYLimit * endYSign;
+        }
+        sineCosine._label.setPosition(endX + endX / Math.abs(endX) * sineCosine.textXOffset, textY);
+      } else {
+        sineCosine._line.setPosition(0, endY);
+        sineCosine._line.transform.updateScale(endX / radius, 1);
+        textX = endX / 2;
+        if (Math.abs(textX) < sineCosine.textXLimit) {
+          textX = sineCosine.textYLimit * endYSign;
+        }
+        sineCosine._label.setPosition(textX, endY + endY / Math.abs(endY) * sineCosine.textYOffset);
+      }
+    };
+    // sineCosine.setText = (newText: string) => {
+    //   sineCosine._label.vertices.element.innerHTML = newText;
+    // };
+    return sineCosine;
+  }
 
   addToSinCosCircle() {
     this.add('unitsSelector', this.makeDegreesRadiansSelector());
@@ -900,4 +980,4 @@ class SinCosCircle extends AngleCircle {
   }
 }
 
-export default SinCosCircle;
+// export SinCosCircle;
