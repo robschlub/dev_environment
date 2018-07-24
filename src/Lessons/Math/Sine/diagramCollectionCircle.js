@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform, Point, polarToRect } from '../../../js/diagram/tools/g2';
+import { Transform, Point, polarToRect, Rect } from '../../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import SinCosCircle from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type { SinCosCircleType, SinCosVarStateType, sineLineType } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
@@ -55,7 +55,7 @@ export type SineCollectionType = {
 const angleAnnotationFont = new DiagramFont(
   'Times New Roman, serif',
   'italic',
-  0.12,
+  0.2,
   '700',
   'left',
   'alphabetic',
@@ -76,11 +76,11 @@ class SineCollection extends SinCosCircle {
     collection.transform.index = 0;
     collection.transform = collection.transform.rotate(0);
 
-    collection._theta.transform = collection._theta.transform.rotate(0);
+    // collection._theta.transform = collection._theta.transform.rotate(0);
     // collection.noRotationFromParent = true;
     const eqn = this.diagram.equation.make(collection);
     eqn.createEq(['theta']);
-    eqn.arrange(1, 'center', 'middle');
+    eqn.arrange(0.5, 'center', 'middle', new Point(0, 0));
     collection.eqn = eqn;
     return collection;
   }
@@ -94,9 +94,12 @@ class SineCollection extends SinCosCircle {
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
     }, angleAnnotationFont);
+    collection.transform.index = 0;
+    collection.transform = collection.transform.rotate(0);
+
     const eqn = this.diagram.equation.make(collection);
     eqn.createEq([eqn.frac('pi', 'two', 'v'), 'minus', 'theta']);
-    eqn.arrange(1, 'center', 'middle');
+    eqn.arrange(1, 'right', 'baseline');
     collection.eqn = eqn;
     return collection;
   }
@@ -273,8 +276,9 @@ class SineCollection extends SinCosCircle {
       // collection._theta._label._theta.transform.updateRotation(-radiusAngle);
       // console.log(collection._theta._label._theta.transform)
       collection._theta._label.transform.updateRotation(-radiusAngle);
-      console.log(collection._theta._label.transform)
-      console.log(collection)
+      collection._compAngle._label.transform.updateRotation(-radiusAngle);
+      // console.log(collection._theta._label.transform)
+      // console.log(collection)
     };
 
     collection.add('xAxis', xAxis);
@@ -348,6 +352,18 @@ class SineCollection extends SinCosCircle {
     super(lessonLayout(), diagram, transform);
     this.addToCircle();
     this.add('cosineEqn', this.makeCosineEquation());
+    
+    const temp = this.makeEquationCompliment([1, 0, 0, 1]);
+    this.add('temp', temp);
+    const grid = this.shapes.grid(
+      new Rect(-3, -2, 6, 4),
+      0.5,
+      0.5,
+      [0.4, 0.4, 0.4, 1],
+      new Transform()
+      )
+    this.add('grid', grid);
+
     this.varState.complimentaryRotatingTo = 'done';
   }
 

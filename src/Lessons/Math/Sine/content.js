@@ -118,6 +118,8 @@ class Content extends LessonContent {
         circle._axes,
         circle._cosineLine,
         circle._sineLine,
+        diag._temp,
+        diag._grid,
       ],
       setSteadyState: () => {
         // circle._axes.showAll();

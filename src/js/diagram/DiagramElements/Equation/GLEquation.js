@@ -46,6 +46,7 @@ class Element {
       this.descent = -r.bottom;
       this.height = r.height;
       this.width = r.width;
+      console.log("primative", this.width, scale)
     }
   }
   getAllElements() {
@@ -90,10 +91,12 @@ class Elements {
     let des = 0;
     let asc = 0;
     const loc = location.copy();
+    console.log(this.content[0].content.name)
     this.content.forEach((element) => {
       element.calcSize(loc, scale);
 
       loc.x += element.width;
+      console.log(element.width)
       if (element.descent > des) {
         des = element.descent;
       }
@@ -106,6 +109,7 @@ class Elements {
     this.descent = des;
     this.location = location.copy();
     this.height = this.descent + this.ascent;
+    console.log("finish: this.width")
   }
   getAllElements() {
     let elements = [];
@@ -165,10 +169,12 @@ class Fraction extends Elements {
     this.location = location.copy();
     this.numerator.calcSize(location, scale);
     this.denominator.calcSize(location, scale);
-    this.width = Math.max(this.numerator.width, this.denominator.width) + scale * 0.4;
+
+    this.width = Math.max(this.numerator.width, this.denominator.width) * 1.1;
+
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
-
+    console.log(this.numerator.width, this.denominator.width, this.width, xNumerator)
     this.vSpaceNum = scale * 0.05;
     this.vSpaceDenom = scale * 0.02;
     this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.07;
