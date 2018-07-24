@@ -338,11 +338,11 @@ class SineCollection extends SinCosCircle {
     );
 
     const compAngle = this.makeComplimentAngle(this.colors.cosine);
-    const cosine = this.makeSineLine('mirror_cosine');
-    cosine.setText('cos θa');
+    const cosine = this.makeCosineLine();
+    // cosine.setText('cos θa');
     cosine.textXOffset = 0.13;
-    cosine._line.setColor(this.colors.cosine);
-    cosine._text.setColor(this.colors.cosine);
+    // cosine._line.setColor(this.colors.cosine);
+    // cosine._text.setColor(this.colors.cosine);
     cosine.updateRotation(this.layout.radius, angle);
 
     const eqn = this.diagram.equation.makeHTML('id__symmetry_sine_piOn2MinusTheta', 'diagram__cosine_text');
