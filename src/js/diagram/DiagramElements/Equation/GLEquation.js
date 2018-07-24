@@ -46,7 +46,6 @@ class Element {
       this.descent = -r.bottom;
       this.height = r.height;
       this.width = r.width;
-      console.log("primative", this.width, scale)
     }
   }
   getAllElements() {
@@ -91,12 +90,10 @@ class Elements {
     let des = 0;
     let asc = 0;
     const loc = location.copy();
-    console.log(this.content[0].content.name)
     this.content.forEach((element) => {
       element.calcSize(loc, scale);
 
       loc.x += element.width;
-      console.log(element.width)
       if (element.descent > des) {
         des = element.descent;
       }
@@ -109,7 +106,6 @@ class Elements {
     this.descent = des;
     this.location = location.copy();
     this.height = this.descent + this.ascent;
-    console.log("finish: this.width")
   }
   getAllElements() {
     let elements = [];
@@ -137,7 +133,8 @@ class Fraction extends Elements {
   lineWidth: number;
   lineVAboveBaseline: number;
   vinculum: DiagramElementPrimative | null | DiagramElementCollection;
-  mini: boolean;
+  // mini: boolean;
+  scaleModifier: number
   vinculumPosition: Point;
   vinculumScale: Point;
 
@@ -159,25 +156,25 @@ class Fraction extends Elements {
     this.vSpaceDenom = 0;
     this.lineVAboveBaseline = 0;
     this.lineWidth = 0;
-    this.mini = false;
+    // this.mini = false;
+    this.scaleModifier = 1;
     this.vinculumPosition = new Point(0, 0);
     this.vinculumScale = new Point(1, 0.01);
   }
 
   calcSize(location: Point, incomingScale: number) {
-    const scale = this.mini ? incomingScale * 0.35 : incomingScale;
+    const scale = incomingScale * this.scaleModifier;
     this.location = location.copy();
     this.numerator.calcSize(location, scale);
     this.denominator.calcSize(location, scale);
 
-    this.width = Math.max(this.numerator.width, this.denominator.width) * 1.1;
+    this.width = Math.max(this.numerator.width, this.denominator.width) * 1.3;
 
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
-    console.log(this.numerator.width, this.denominator.width, this.width, xNumerator)
     this.vSpaceNum = scale * 0.05;
     this.vSpaceDenom = scale * 0.02;
-    this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.07;
+    this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
     this.lineWidth = scale * 0.02;
 
     const yNumerator = this.numerator.descent +
@@ -806,9 +803,10 @@ export class DiagramGLEquation extends Elements {
     numerator: EquationInput,
     denominator: EquationInput,
     vinculum: DiagramElementPrimative | DiagramElementCollection | string,
+    scaleModifier: number = 1,
   ) {
     const f = this.frac(numerator, denominator, vinculum);
-    f.mini = true;
+    f.scaleModifier = scaleModifier;
     return f;
   }
   frac(

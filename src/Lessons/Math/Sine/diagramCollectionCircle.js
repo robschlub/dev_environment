@@ -80,7 +80,8 @@ class SineCollection extends SinCosCircle {
     // collection.noRotationFromParent = true;
     const eqn = this.diagram.equation.make(collection);
     eqn.createEq(['theta']);
-    eqn.arrange(0.5, 'center', 'middle', new Point(0, 0));
+    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform)
+    eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
     collection.eqn = eqn;
     return collection;
   }
@@ -90,16 +91,18 @@ class SineCollection extends SinCosCircle {
     const collection = this.diagram.equation.elements({
       pi: 'π',
       two: '2',
-      minus: '-',
+      minus: ' \u2212 ',
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
+    // }, color);
     }, angleAnnotationFont);
     collection.transform.index = 0;
     collection.transform = collection.transform.rotate(0);
 
     const eqn = this.diagram.equation.make(collection);
-    eqn.createEq([eqn.frac('pi', 'two', 'v'), 'minus', 'theta']);
-    eqn.arrange(1, 'right', 'baseline');
+    eqn.createEq([eqn.sfrac('pi', 'two', 'v', 1), 'minus', 'theta']);
+    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    eqn.arrange(0.6, 'center', 'middle');
     collection.eqn = eqn;
     return collection;
   }
@@ -116,7 +119,8 @@ class SineCollection extends SinCosCircle {
     }, angleAnnotationFont);
     const eqn = this.diagram.equation.make(collection);
     eqn.createEq(['sin', eqn.frac('pi', 'two', 'v'), 'minus', 'theta']);
-    eqn.arrange(1, 'center', 'middle');
+    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    eqn.arrange(0.6, 'center', 'middle');
     collection.eqn = eqn;
     return collection;
   }

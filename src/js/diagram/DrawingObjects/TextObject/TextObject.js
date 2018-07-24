@@ -187,7 +187,6 @@ class TextObject extends DrawingObject {
     color: Array<number> = [1, 1, 1, 1],
   ) {
     const { ctx } = this.drawContext2D;
-
     // Arbitrary scaling factor used to ensure font size is >> 1 pixel
     // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
     //                       (this.diagramLimits.height / 1000);
@@ -293,7 +292,6 @@ class TextObject extends DrawingObject {
     const height = ascent + descent;
 
     const { width } = ctx.measureText(text.text);
-
     let asc = 0;
     let des = 0;
     let left = 0;
@@ -344,7 +342,6 @@ class TextObject extends DrawingObject {
     text.font.set(this.drawContext2D.ctx, scalingFactor);
     // const textMetrics = this.drawContext2D.ctx.measureText(text.text);
     const textMetrics = this.measureText(this.drawContext2D.ctx, text);
-
     // Create a box around the text
     const { location } = text;
     const box = [
@@ -365,11 +362,9 @@ class TextObject extends DrawingObject {
         -textMetrics.fontBoundingBoxDescent / scalingFactor,
       ).add(location),
     ];
-
     box.forEach((p) => {
       glBoundary.push(p.transformBy(lastDrawTransformMatrix));
     });
-
     return glBoundary;
   }
 }
