@@ -100,7 +100,7 @@ class SineCollection extends SinCosCircle {
     collection.transform = collection.transform.rotate(0);
 
     const eqn = this.diagram.equation.make(collection);
-    eqn.createEq([eqn.sfrac('pi', 'two', 'v', 1), 'minus', 'theta']);
+    eqn.createEq([eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
     collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     eqn.arrange(0.6, 'center', 'middle');
     collection.eqn = eqn;
