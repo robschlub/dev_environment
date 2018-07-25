@@ -1042,7 +1042,6 @@ class DiagramElement {
   ): void {
     const targetColor = this.color.slice();
     targetColor[3] = 0;
-    console.log(this.name, targetColor)
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
       this.animate.color.toDisolve = 'out';
@@ -2107,8 +2106,21 @@ class DiagramElementCollection extends DiagramElement {
       if (element instanceof DiagramElementCollection) {
         element.disolveElementsOut(time, callback);
       } else {
-        console.log(element)
         element.disolveOut(time, callback);
+      }
+    }
+  }
+
+  disolveElementsIn(
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        element.disolveElementsIn(time, callback);
+      } else {
+        element.disolveIn(time, callback);
       }
     }
   }

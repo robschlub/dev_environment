@@ -545,7 +545,6 @@ export function createEquationElements(
     font = colorOrFont;
     if (font.color != null) {
       color = RGBToArray(font.color);
-      console.log(font.color, color);
     }
   }
 

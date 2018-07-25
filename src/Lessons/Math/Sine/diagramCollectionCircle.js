@@ -396,11 +396,13 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry.show();
       this._circle._cosineSymmetry._compAngle.show();
       this._circle._cosineSymmetry._compAngle._arc.show();
+      this._circle._cosineSymmetry._compAngle._label.show();
       this._circle._cosineSymmetry._radius.show();
       this._circle._cosineSymmetry._cosine.show();
       this._circle._cosineSymmetry._cosine._line.show();
+      this._circle._cosineSymmetry._cosine._label.show();
     }
-    if (step >= 4) {      
+    if (step >= 4) {
       this._circle._cosineSymmetry._cosine.showAll();
       this._circle._cosineSymmetry._compAngle.showAll();
       this._circle._complimentarySineCollection.hideAll();
@@ -471,9 +473,8 @@ class SineCollection extends SinCosCircle {
     const done = () => {
       this._circle._radius.hide();
       this._circle._complimentarySineCollection.disolveElementsOut(1);
-      console.log(this._circle._complimentarySineCollection)
-      cosSym._compAngle._label.disolveIn(1);
-      cosSym._cosine._label.disolveIn(1);
+      cosSym._compAngle._label.disolveElementsIn(1);
+      cosSym._cosine._label.disolveElementsIn(1);
     };
 
     cosSym.animateCustomTo(mirror, 1.5, 0, done);
