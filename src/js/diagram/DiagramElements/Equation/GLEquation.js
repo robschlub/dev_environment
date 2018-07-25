@@ -745,6 +745,8 @@ export class DiagramGLEquation extends Elements {
     time: number = 1,
     fixElement: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
     callback: ?(?mixed) => void = null,
+    xAlign: 'left' | 'center' | 'right' = 'left',
+    yAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'baseline',
   ) {
     const allElements = this.collection.getAllElements();
     this.collection.stop();
@@ -757,7 +759,7 @@ export class DiagramGLEquation extends Elements {
 
     const currentTransforms = this.collection.getElementTransforms();
 
-    this.arrange(scale, 'left', 'baseline', fixElement);
+    this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
     this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);

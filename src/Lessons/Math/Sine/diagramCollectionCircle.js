@@ -382,6 +382,7 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._compAngle.showAll();
       this._circle._complimentarySineCollection.hideAll();
       this._circle._cosineSymmetry._sineComp.showAll();
+      this._circle._cosineSymmetry._sineComp._sin.hide();
       this._circle._radius.hide();
       // console.log(this._cosineEqn);
     }
@@ -481,8 +482,19 @@ class SineCollection extends SinCosCircle {
     this._circle._compShadow.setFirstTransform(this._circle.transform);
     this.resetSymmetry();
     const p = this._circle._cosineSymmetry._cosine._label.transform.t();
-    this._circle._cosineSymmetry._sineComp.setPosition(p.x + 0.15, p.y - 0.15);
+    // this._circle._cosineSymmetry._sineComp.setPosition(p.x + 0.15, p.y - 0.15);
     this.showStep(4);
+    const cosSym = this._circle._cosineSymmetry;
+    // console.log(cosSym._sineComp, cosSym._compAngle)
+    cosSym._sineComp.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+
+    const offset = cosSym._sineComp.eqn.content[0].width / 2;
+    cosSym._sineComp.setPosition(cosSym._compAngle._label.transform.t().add(new Point(-offset, 0)));
+    cosSym._sineComp.animateTranslationTo(new Point(p.x + 0.15, p.y - 0.15), 2, () => {
+      cosSym._sineComp._sin.disolveIn(1);
+    });
+    // cosSym._sineComp._pi.setPosition(cosSym._compAngle._label._pi.transform.t());
+    // cosSym._sineComp.eqn.animateTo(0.6, 2, new Point(0, 0), null, 'center', 'middle');
   }
 
   step5() {
