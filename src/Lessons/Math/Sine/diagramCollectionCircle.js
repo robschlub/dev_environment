@@ -9,8 +9,6 @@ import type {
   SinCosVarStateType, sineLineType,
 } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import lessonLayout from './layout';
-// import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
-// import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type bowType = {
     _handle: DiagramElementPrimative;
@@ -52,71 +50,72 @@ type varStateExtendedType = {
 
 export type SineCollectionType = {
   _circle: extendedCircleType;
-  _cosineEqn: DiagramElementPrimative;
+  // _cosineEqn: DiagramElementPrimative;
   varState: varStateExtendedType;
 };
 
 class SineCollection extends SinCosCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
-  _cosineEqn: DiagramElementPrimative;
+  // _cosineEqn: DiagramElementPrimative;
 
   makeEquationTheta(color: Array<number> = [1, 1, 1, 1]): textEquationType {
     return this.makeEquationText('θ', color);
   }
 
-  makeEquationFuncTheta(color: Array<number> = [1, 1, 1, 1], func: string = 'sin') {
+  makeEqn(elementDefinitions: Object, color: Array<number>) {
     labelFont.setColor(color);
-    const collection = this.diagram.equation.elements({
-      func,
-      theta: 'θ',
-    }, labelFont);
+    const collection = this.diagram.equation.elements(
+      elementDefinitions,
+      labelFont,
+    );
     collection.transform.index = 0;
     collection.transform = collection.transform.rotate(0);
 
     const eqn = this.diagram.equation.make(collection);
-    eqn.createEq(['func', 'theta']);
-    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-    eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
     collection.eqn = eqn;
+
+    collection.init = () => {
+      collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+      collection.eqn.arrange(0.6, 'center', 'middle');
+    };
+    return collection;
+  }
+
+  makeEquationFuncTheta(color: Array<number> = [1, 1, 1, 1], func: string = 'sin') {
+    const collection = this.makeEqn({ func, theta: 'θ' }, color);
+    collection.eqn.createEq(['func', 'theta']);
+    collection.init();
     return collection;
   }
 
   makeEquationCompliment(color: Array<number> = [1, 1, 1, 1]) {
-    labelFont.setColor(color);
-    const collection = this.diagram.equation.elements({
+    const collection = this.makeEqn({
       pi: 'π',
       two: '2',
       minus: ' \u2212 ',
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
-    }, labelFont);
-    collection.transform.index = 0;
-    collection.transform = collection.transform.rotate(0);
-
-    const eqn = this.diagram.equation.make(collection);
+    }, color);
+    const { eqn } = collection;
     eqn.createEq([eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
-    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-    eqn.arrange(0.6, 'center', 'middle');
-    collection.eqn = eqn;
+    collection.init();
     return collection;
   }
 
-  makeEquationSineCompliment(color: Array<number> = [1, 1, 1, 1]) {
-    labelFont.setColor(color);
-    const collection = this.diagram.equation.elements({
-      sin: 'sin ',
+  makeEquationSineCompliment() {
+    const color = this.colors.cosine;
+    const collection = this.makeEqn({
+      sin: '= sin ',
       pi: 'π',
       two: '2',
       minus: ' \u2212 ',
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
-    }, labelFont);
-    const eqn = this.diagram.equation.make(collection);
+    }, color);
+    const { eqn } = collection;
     eqn.createEq(['sin', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
-    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-    eqn.arrange(0.6, 'center', 'middle');
-    collection.eqn = eqn;
+    collection.init();
     return collection;
   }
 
@@ -272,33 +271,35 @@ class SineCollection extends SinCosCircle {
     cosine.textXOffset = 0.15;
     cosine.updateRotation(this.layout.radius, angle);
 
+    const sineComp = this.makeEquationSineCompliment();
     symmetry.add('cosine', cosine);
     symmetry.add('compAngle', compAngle);
     symmetry.add('radius', radius);
+    symmetry.add('sineComp', sineComp);
     return symmetry;
   }
 
-  makeCosineEquation() {
-    const color = this.colors.cosine;
-    labelFont.setColor(color);
-    const collection = this.diagram.equation.elements({
-      cos: 'cos ',
-      pi: 'π',
-      two: '2',
-      minus: ' \u2212 ',
-      theta: 'θ',
-      v: this.diagram.equation.vinculum(color),
-    }, labelFont);
-    collection.transform.index = 0;
-    collection.transform = collection.transform.rotate(0);
+  // makeCosineEquation() {
+  //   const color = this.colors.cosine;
+  //   labelFont.setColor(color);
+  //   const collection = this.diagram.equation.elements({
+  //     cos: 'cos ',
+  //     pi: 'π',
+  //     two: '2',
+  //     minus: ' \u2212 ',
+  //     theta: 'θ',
+  //     v: this.diagram.equation.vinculum(color),
+  //   }, labelFont);
+  //   collection.transform.index = 0;
+  //   collection.transform = collection.transform.rotate(0);
 
-    const eqn = this.diagram.equation.make(collection);
-    eqn.createEq(['cos', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
-    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-    eqn.arrange(0.6, 'center', 'middle');
-    collection.eqn = eqn;
-    return collection;
-  }
+  //   const eqn = this.diagram.equation.make(collection);
+  //   eqn.createEq(['cos', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
+  //   collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+  //   eqn.arrange(0.6, 'center', 'middle');
+  //   collection.eqn = eqn;
+  //   return collection;
+  // }
 
   addToCircle() {
     this._circle.add('bow', this.makeBow());
@@ -311,7 +312,7 @@ class SineCollection extends SinCosCircle {
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(lessonLayout(), diagram, transform);
     this.addToCircle();
-    this.add('cosineEqn', this.makeCosineEquation());
+    // this.add('cosineEqn', this.makeCosineEquation());
 
     const temp = this.makeEquationCompliment([1, 0, 0, 1]);
     this.add('temp', temp);
@@ -349,7 +350,7 @@ class SineCollection extends SinCosCircle {
     this._circle._complimentarySineCollection._xAxis.show();
     this._circle._complimentarySineCollection._yAxis.show();
     this._circle._compShadow.hideAll();
-    this._cosineEqn.hide();
+    // this._cosineEqn.hide();
     this._circle._cosineSymmetry.hideAll();
     this._circle._radius.show();
   }
@@ -380,12 +381,13 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._cosine.showAll();
       this._circle._cosineSymmetry._compAngle.showAll();
       this._circle._complimentarySineCollection.hideAll();
+      this._circle._cosineSymmetry._sineComp.showAll();
       this._circle._radius.hide();
-      console.log(this._cosineEqn);
+      // console.log(this._cosineEqn);
     }
     if (step >= 5) {
       // this._cosineEqn.setFirstTransform(this.transform);
-      this._cosineEqn.showAll()();
+      // this._cosineEqn.showAll()();
     }
     this.updateRotation();
   }
@@ -466,16 +468,9 @@ class SineCollection extends SinCosCircle {
       0,
     );
     cosSym._cosine._line.transform.updateScale(sineLength, 1);
-    // cosSym._cosine._text.setFirstTransform(cosSym._cosine.transform);
-    // cosSym._cosine._text.disolveIn(1, () => {console.log(cosSym._cosine._text.transform.t())});
     cosSym._cosine._label.transform.updateTranslation(0, this.layout.radius);
     cosSym._cosine.updateRotation(this.layout.radius, angle);
-    // console.log(cosSym._cosine.textYMultiplier)
-    // console.log(cosSym._cosine.textYOffset)
-    // console.log(cosSym._cosine._text.transform.t())
     this._circle.setFirstTransform(this.transform);
-    // cosSym._cosine._text.setFirstTransform(cosSym._cosine.transform)
-    // cosSym._cosine._text.disolveIn(1)
   }
 
   step4() {
@@ -485,8 +480,9 @@ class SineCollection extends SinCosCircle {
     this._circle._compShadow.updateRotation(angle);
     this._circle._compShadow.setFirstTransform(this._circle.transform);
     this.resetSymmetry();
+    const p = this._circle._cosineSymmetry._cosine._label.transform.t();
+    this._circle._cosineSymmetry._sineComp.setPosition(p.x + 0.15, p.y - 0.15);
     this.showStep(4);
-    this._circle._cosineSymmetry.showAll();
   }
 
   step5() {
