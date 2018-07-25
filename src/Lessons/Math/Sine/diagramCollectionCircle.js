@@ -56,26 +56,6 @@ export type SineCollectionType = {
   varState: varStateExtendedType;
 };
 
-// type equationType = {
-//   eqn: DiagramGLEquation;
-// } & DiagramElementCollection;
-
-// type thetaEquationType = {
-//   _theta: DiagramElementPrimative;
-// } & equationType;
-
-// type sineCosineLine = {
-//   _label: equationType;
-//   _line: DiagramElementPrimative;
-//   updateRotation: (number, number) => void;
-//   textXOffset: number;
-//   textYOffset: number;
-//   textXMultiplier: number;
-//   textXLimit: number;
-//   textYLimit: number;
-// } & DiagramElementCollection;
-
-
 class SineCollection extends SinCosCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
@@ -290,12 +270,8 @@ class SineCollection extends SinCosCircle {
     const compAngle = this.makeComplimentAngle(this.colors.cosine);
     const cosine = this.makeSineLine('cos θ', this.colors.cosine);
     cosine.textXOffset = 0.15;
-    // cosine._line.setColor(this.colors.cosine);
-    // cosine._text.setColor(this.colors.cosine);
     cosine.updateRotation(this.layout.radius, angle);
 
-
-    // symmetry.add('sine', sine);
     symmetry.add('cosine', cosine);
     symmetry.add('compAngle', compAngle);
     symmetry.add('radius', radius);
@@ -303,19 +279,25 @@ class SineCollection extends SinCosCircle {
   }
 
   makeCosineEquation() {
-    const eqn = this.diagram.equation.makeHTML('id__symmetry_sine_cosine_eqn', 'diagram__cosine_text');
-    eqn.createEq([
-      eqn.el('cos θ = sin', 'id__symmetry_sine_cosine_eqn_left'),
-      eqn.el('(', 'id__symmetry_sine_cosine_eqn_bracket_l'),
-      eqn.frac('π', '2', 'id__symmetry_sine_cosine_eqn_frac'),
-      eqn.el('− θ', 'id__symmetry_sine_cosine_eqn_right', ''),
-      eqn.el(')', 'id__symmetry_sine_cosine_eqn_bracket_r'),
-    ]);
+    const color = this.colors.cosine;
+    labelFont.setColor(color);
+    const collection = this.diagram.equation.elements({
+      cos: 'cos ',
+      pi: 'π',
+      two: '2',
+      minus: ' \u2212 ',
+      theta: 'θ',
+      v: this.diagram.equation.vinculum(color),
+    }, labelFont);
+    collection.transform.index = 0;
+    collection.transform = collection.transform.rotate(0);
 
-    return this.shapes.htmlText(
-      eqn.render(), 'id__sine_eqn_cosine', 'diagram__equation_text',
-      this.layout.quadEqn.position, 'middle', 'center',
-    );
+    const eqn = this.diagram.equation.make(collection);
+    eqn.createEq(['cos', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
+    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    eqn.arrange(0.6, 'center', 'middle');
+    collection.eqn = eqn;
+    return collection;
   }
 
   addToCircle() {
@@ -399,11 +381,11 @@ class SineCollection extends SinCosCircle {
       this._circle._cosineSymmetry._compAngle.showAll();
       this._circle._complimentarySineCollection.hideAll();
       this._circle._radius.hide();
+      console.log(this._cosineEqn);
     }
     if (step >= 5) {
-
       // this._cosineEqn.setFirstTransform(this.transform);
-      // this._cosineEqn.show();
+      this._cosineEqn.showAll()();
     }
     this.updateRotation();
   }
@@ -486,12 +468,12 @@ class SineCollection extends SinCosCircle {
     cosSym._cosine._line.transform.updateScale(sineLength, 1);
     // cosSym._cosine._text.setFirstTransform(cosSym._cosine.transform);
     // cosSym._cosine._text.disolveIn(1, () => {console.log(cosSym._cosine._text.transform.t())});
-    cosSym._cosine._text.transform.updateTranslation(0, this.layout.radius);
+    cosSym._cosine._label.transform.updateTranslation(0, this.layout.radius);
     cosSym._cosine.updateRotation(this.layout.radius, angle);
     // console.log(cosSym._cosine.textYMultiplier)
     // console.log(cosSym._cosine.textYOffset)
     // console.log(cosSym._cosine._text.transform.t())
-    this._circle.setFirstTransform(this.transform)
+    this._circle.setFirstTransform(this.transform);
     // cosSym._cosine._text.setFirstTransform(cosSym._cosine.transform)
     // cosSym._cosine._text.disolveIn(1)
   }
