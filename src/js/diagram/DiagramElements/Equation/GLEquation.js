@@ -1,6 +1,7 @@
 // @flow
 import { Point, Rect, Transform } from '../../tools/g2';
 import { roundNum } from '../../tools/mathtools';
+import { RGBToArray } from '../../../tools/tools';
 import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
 import { DiagramText, DiagramFont, TextObject } from '../../DrawingObjects/TextObject/TextObject';
 import DrawContext2D from '../../DrawContext2D';
@@ -542,6 +543,10 @@ export function createEquationElements(
   );
   if (colorOrFont instanceof DiagramFont) {
     font = colorOrFont;
+    if (font.color != null) {
+      color = RGBToArray(font.color);
+      console.log(font.color, color);
+    }
   }
 
   const equationElements = new DiagramElementCollection(

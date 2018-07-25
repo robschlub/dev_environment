@@ -450,17 +450,17 @@ export class SinCosCircle extends AngleCircle {
     return grid;
   }
 
-  makeSineLine(text: string = 'sin θ') {
+  makeSineLine(text: string = 'sin θ', color: Array<number> = this.colors.sine) {
     return this.makeSineCosineLine(
-      this.makeEquationText(text, this.colors.sine),
-      true, this.colors.sine,
+      this.makeEquationText(text, color),
+      true, color,
     );
   }
 
-  makeCosineLine(text: string = 'cos θ') {
+  makeCosineLine(text: string = 'cos θ', color: Array<number> = this.colors.sine) {
     return this.makeSineCosineLine(
-      this.makeEquationText(text, this.colors.cosine),
-      false, this.colors.cosine,
+      this.makeEquationText(text, color),
+      false, color,
     );
   }
 

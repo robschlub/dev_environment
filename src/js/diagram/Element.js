@@ -903,6 +903,7 @@ class DiagramElement {
         // Do not move this reset out of the if statement as stopAnimatingColor
         // is called at the start of an new animation and therefore the
         // disolving state will be lost.
+        // console.log(this.name, this.animate.color.plan.slice(-1)[0].startColor.slice())
         this.state.disolving = '';
       }
     }
@@ -1041,6 +1042,7 @@ class DiagramElement {
   ): void {
     const targetColor = this.color.slice();
     targetColor[3] = 0;
+    console.log(this.name, targetColor)
     const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
     if (phase instanceof ColorAnimationPhase) {
       this.animate.color.toDisolve = 'out';
@@ -2105,6 +2107,7 @@ class DiagramElementCollection extends DiagramElement {
       if (element instanceof DiagramElementCollection) {
         element.disolveElementsOut(time, callback);
       } else {
+        console.log(element)
         element.disolveOut(time, callback);
       }
     }

@@ -349,10 +349,10 @@ class Content extends LessonContent {
         circle._sineLine,
         circle._cosineLine,
       ],
-      hide: [
-        circle._sineLine._text,
-        circle._cosineLine._text,
-      ],
+      // hide: [
+      //   circle._sineLine._text,
+      //   circle._cosineLine._text,
+      // ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'right', Math.PI / 6);
       },
