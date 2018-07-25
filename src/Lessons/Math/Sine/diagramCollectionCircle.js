@@ -230,11 +230,11 @@ class SineCollection extends SinCosCircle {
 
     const theta = this.makeThetaAngle(this.colors.sine);
     const sine = this.makeSineCosineLine(
-      this.makeEquationFuncTheta(this.colors.sine, 'sin'),
+      this.makeEquationFuncTheta(this.colors.sine, 'sin '),
       true, this.colors.sine,
     );
     const cosine = this.makeSineCosineLine(
-      this.makeEquationFuncTheta(this.colors.cosine, 'cos'),
+      this.makeEquationFuncTheta(this.colors.cosine, 'cos '),
       false, this.colors.cosine,
     );
     sine.textXOffset = -0.13;
@@ -289,19 +289,11 @@ class SineCollection extends SinCosCircle {
 
     const compAngle = this.makeComplimentAngle(this.colors.cosine);
     const cosine = this.makeSineLine('cos θ', this.colors.cosine);
-    // cosine.setText('cos θa');
-    cosine.textXOffset = 0.13;
+    cosine.textXOffset = 0.15;
     // cosine._line.setColor(this.colors.cosine);
     // cosine._text.setColor(this.colors.cosine);
     cosine.updateRotation(this.layout.radius, angle);
 
-    // const eqn = this.diagram.equation.makeHTML('id__symmetry_sine_piOn2MinusTheta', 'diagram__cosine_text');
-    // eqn.createEq(['= sin', eqn.frac('π', '2'), '−', 'θ']);
-    // const sine = this.shapes.htmlText(
-    //   eqn.render(), 'id__sine_consine_symmetry_sine',
-    //   'diagram__equation_text',
-    //   this.layout.quadEqn.position, 'middle', 'center',
-    // );
 
     // symmetry.add('sine', sine);
     symmetry.add('cosine', cosine);
