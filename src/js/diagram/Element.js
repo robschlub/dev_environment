@@ -1393,7 +1393,7 @@ class DiagramElement {
     );
   }
 
-  getDiagramLocation() {
+  getDiagramPosition() {
     const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
     const glSpace = {
       x: { bottomLeft: -1, width: 2 },
@@ -1413,7 +1413,7 @@ class DiagramElement {
     return location.transformBy(glToDiagramSpace.matrix());
   }
 
-  setDiagramLocation(diagramLocation: Point) {
+  setDiagramPosition(diagramPosition: Point) {
     const glSpace = {
       x: { bottomLeft: -1, width: 2 },
       y: { bottomLeft: -1, height: 2 },
@@ -1429,7 +1429,7 @@ class DiagramElement {
       },
     };
     const diagramToGLSpace = spaceToSpaceTransform(diagramSpace, glSpace);
-    const glLocation = diagramLocation.transformBy(diagramToGLSpace.matrix());
+    const glLocation = diagramPosition.transformBy(diagramToGLSpace.matrix());
     const t = new Transform(this.lastDrawTransform.order.slice(2));
     const newLocation = glLocation.transformBy(m2.inverse(t.matrix()));
     this.setPosition(newLocation);
