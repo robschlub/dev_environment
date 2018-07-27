@@ -359,15 +359,15 @@ class SineCollection extends SinCosCircle {
     this.showMinimalComplimentaryAngle();
     const compAngle = this._circle._complimentarySineCollection._compAngle;
     if (step >= 1) {
-      compAngle.setFirstTransform(this._circle.transform);
+      compAngle.setFirstTransform(this._circle.lastDrawTransform);
       compAngle.showAll();
     }
     if (step >= 2) {
-      this._circle._compShadow.setFirstTransform(this._circle.transform);
+      this._circle._compShadow.setFirstTransform(this._circle.lastDrawTransform);
       this._circle._compShadow.showAll();
     }
     if (step >= 3) {
-      this._circle._cosineSymmetry.setFirstTransform(this._circle.transform);
+      this._circle._cosineSymmetry.setFirstTransform(this._circle.lastDrawTransform);
       this._circle._cosineSymmetry.show();
       this._circle._cosineSymmetry._compAngle.show();
       this._circle._cosineSymmetry._compAngle._arc.show();
@@ -412,7 +412,7 @@ class SineCollection extends SinCosCircle {
     const { angle } = this.layout.compAngle;
     this.rotationLimits = { min: angle, max: Math.PI / 2 + angle };
     this._circle._compShadow.updateRotation(this.layout.compAngle.angle);
-    this._circle._compShadow.setFirstTransform(this._circle.transform);
+    this._circle._compShadow.setFirstTransform(this._circle.lastDrawTransform);
     this._circle._radius.transform.updateRotation(this.layout.compAngle.angle);
     this.showStep(2);
     this.rotateComplimentaryAngle(1);
@@ -423,7 +423,7 @@ class SineCollection extends SinCosCircle {
     this.rotationLimits = { min: angle, max: angle };
     this._circle._radius.transform.updateRotation(angle);
     this._circle._compShadow.updateRotation(angle);
-    this._circle._compShadow.setFirstTransform(this._circle.transform);
+    this._circle._compShadow.setFirstTransform(this._circle.lastDrawTransform);
     this.showStep(3);
 
     const sineLength = this.layout.radius
@@ -471,7 +471,7 @@ class SineCollection extends SinCosCircle {
     cosSym._cosine._line.transform.updateScale(sineLength, 1);
     cosSym._cosine._label.transform.updateTranslation(0, this.layout.radius);
     cosSym._cosine.updateRotation(this.layout.radius, angle);
-    this._circle.setFirstTransform(this.transform);
+    this._circle.setFirstTransform(this.lastDrawTransform);
   }
 
   step4() {
@@ -479,13 +479,11 @@ class SineCollection extends SinCosCircle {
     this.rotationLimits = { min: angle, max: angle };
     this._circle._radius.transform.updateRotation(angle);
     this._circle._compShadow.updateRotation(angle);
-    this._circle._compShadow.setFirstTransform(this._circle.transform);
+    this._circle._compShadow.setFirstTransform(this._circle.lastDrawTransform);
     this.resetSymmetry();
     const p = this._circle._cosineSymmetry._cosine._label.transform.t();
-    // this._circle._cosineSymmetry._sineComp.setPosition(p.x + 0.15, p.y - 0.15);
     this.showStep(4);
     const cosSym = this._circle._cosineSymmetry;
-    // console.log(cosSym._sineComp, cosSym._compAngle)
     cosSym._sineComp.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
 
     const offset = cosSym._sineComp.eqn.content[0].width / 2;
@@ -493,8 +491,13 @@ class SineCollection extends SinCosCircle {
     cosSym._sineComp.animateTranslationTo(new Point(p.x + 0.15, p.y - 0.15), 2, () => {
       cosSym._sineComp._sin.disolveIn(1);
     });
-    // cosSym._sineComp._pi.setPosition(cosSym._compAngle._label._pi.transform.t());
-    // cosSym._sineComp.eqn.animateTo(0.6, 2, new Point(0, 0), null, 'center', 'middle');
+
+    const initialPos = this._circle._compShadow._compAngle._label._pi.getDiagramLocation();
+    // console.log(initialPos);
+    // console.log(this._circle._compShadow._compAngle._label._pi)
+    const a = cosSym._compAngle._label._pi.transform.t();
+    cosSym._compAngle._label._pi.setDiagramLocation(initialPos);
+    cosSym._compAngle._label._pi.animateTranslationTo(a, 2);
   }
 
   step5() {

@@ -4,6 +4,7 @@ import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect, Rotation
 } from './tools/g2';
+import * as m2 from './tools/m2';
 import type { pathOptionsType } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
@@ -1392,6 +1393,48 @@ class DiagramElement {
     );
   }
 
+  getDiagramLocation() {
+    const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const diagramSpace = {
+      x: {
+        bottomLeft: this.diagramLimits.left,
+        width: this.diagramLimits.width,
+      },
+      y: {
+        bottomLeft: this.diagramLimits.bottom,
+        height: this.diagramLimits.height,
+      },
+    };
+    const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
+    return location.transformBy(glToDiagramSpace.matrix());
+  }
+
+  setDiagramLocation(diagramLocation: Point) {
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const diagramSpace = {
+      x: {
+        bottomLeft: this.diagramLimits.left,
+        width: this.diagramLimits.width,
+      },
+      y: {
+        bottomLeft: this.diagramLimits.bottom,
+        height: this.diagramLimits.height,
+      },
+    };
+    const diagramToGLSpace = spaceToSpaceTransform(diagramSpace, glSpace);
+    const glLocation = diagramLocation.transformBy(diagramToGLSpace.matrix());
+    const t = new Transform(this.lastDrawTransform.order.slice(2));
+    const newLocation = glLocation.transformBy(m2.inverse(t.matrix()));
+    this.setPosition(newLocation);
+  }
+
   setMoveBoundaryToDiagram(
     boundary: Array<number> = [
       this.diagramLimits.left,
@@ -1494,67 +1537,13 @@ class DiagramElement {
         // .rotate(r)
         .translate(translation);
       
-      // // console.log(r)
-      // newTransform = finalParentTransform.rotate(-r);
-      // // newTransform = finalParentTransform;
-      // console.log(newTransform, parentTransform)
-
-
-
-      // const finalParentTransform = parentTransform.copy();
-      // const translated = new Point(1, 1).transformBy(finalParentTransform.matrix());
-      // const scaleTransform = new Transform();
-      // for (let i = 0; i < finalParentTransform.order.length; i += 1) {
-      //   const t = finalParentTransform.order[i];
-      //   if (t instanceof Scale) {
-      //     scaleTransform.order.push(t);
-      //   }
-      // }
-      // scaleTransform.calcMatrix();
-      // const scaled = new Point(1, 1).transformBy(scaleTransform.matrix());
-      // const translation = translated.sub(scaled);
-      // console.log(scaled, translation)
-      // newTransform = new Transform()
-      //   .scale(scaled)
-      //   .translate(translation);
-
-
-      // for (let i = 0; i < finalParentTransform.order.length; i += 1) {
-      //   const t = finalParentTransform.order[i];
-
-      //   if (t instanceof Rotation) {
-      //     t.r = 0;
-      //     // console.log(this.name, t, parentTransform.order[i])
-      //   }
-      // }
-      // const m = parentTransform.matrix();
-      // const angle = Math.asin(m[3]);
-      // let cosAngle = Math.cos(angle);
-      // if (cosAngle === 0) {
-      //   cosAngle = 1;
-      // }
-      // console.log(cosAngle);
-      // newTransform = new Transform()
-      //   .scale(m[0] / cosAngle, m[4] / cosAngle)
-      //   .translate(m[2], m[5]);
-      // const finalParentTransform = parentTransform.copy();
-      // // console.log(finalParentTransform === parentTransform)
-      // for (let i = 0; i < finalParentTransform.order.length; i += 1) {
-      //   const t = finalParentTransform.order[i];
-
-      //   if (t instanceof Rotation) {
-      //     t.r = 0;
-      //     // console.log(this.name, t, parentTransform.order[i])
-      //   }
-      // }
-      // finalParentTransform.calcMatrix();
-      // newTransform = finalParentTransform;
-      // console.log(parentTransform, finalParentTransform)
     } else {
       newTransform = parentTransform;
     }
     return newTransform;
   }
+
+
 }
 
 // ***************************************************************
@@ -1993,10 +1982,8 @@ class DiagramElementCollection extends DiagramElement {
     if (!this.isTouchable && !this.hasTouchableElements) {
       return [];
     }
-    // console.log(this.name, 1)
     let touched = [];
     if (this.touchInBoundingRect && this.isTouchable) {
-      // console.log(this.name, 2)
       if (this.isBeingTouched(glLocation)) {
         touched.push(this);
       }
