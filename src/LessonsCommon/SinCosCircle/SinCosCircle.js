@@ -21,14 +21,14 @@ type quadAngle = {
   setAngleText: (string) => void;
 } & DiagramElementCollection;
 
-export type sineLineType = {
-    _line: DiagramElementPrimative;
-    _text: DiagramElementPrimative;
-    setText: (string) => void;
-    textXOffset: number;
-    textYOffset: number;
-    updateRotation: (number, number, boolean) => void;
-  } & DiagramElementCollection;
+// export type sineLineType = {
+//     _line: DiagramElementPrimative;
+//     _label: DiagramElementPrimative;
+//     setText: (string) => void;
+//     textXOffset: number;
+//     textYOffset: number;
+//     updateRotation: (number, number, boolean) => void;
+//   } & DiagramElementCollection;
 
 type sineTextType = {
    _text: DiagramElementPrimative;
@@ -36,6 +36,21 @@ type sineTextType = {
    _value: DiagramElementPrimative;
   setText: (string) => void;
   updateRotation: (number) => void;
+} & DiagramElementCollection;
+
+export type equationType = {
+  eqn: DiagramGLEquation;
+} & DiagramElementCollection;
+
+export type sineCosineLineType = {
+  _label: equationType;
+  _line: DiagramElementPrimative;
+  updateRotation: (number, number) => void;
+  textXOffset: number;
+  textYOffset: number;
+  textXMultiplier: number;
+  textXLimit: number;
+  textYLimit: number;
 } & DiagramElementCollection;
 
 export type SinCosCircleType = {
@@ -55,12 +70,12 @@ export type SinCosCircleType = {
   } & DiagramElementCollection;
   _symmetry: {
     _line: DiagramElementPrimative;
-    _sine: sineLineType;
+    _sine: sineCosineLineType;
     setSineText: (string) => void;
     updateRotation: (number, number, boolean) => void;
   } & DiagramElementCollection;
-  _sineLine: sineLineType;
-  _cosineLine: sineLineType;
+  _sineLine: sineCosineLineType;
+  _cosineLine: sineCosineLineType;
   _axes: {
     _x: DiagramElementPrimative;
     _y: DiagramElementPrimative;
@@ -85,21 +100,6 @@ export type SineCollectionType = {
   _sineText: sineTextType;
   interactiveSinePage: boolean;
 };
-
-export type equationType = {
-  eqn: DiagramGLEquation;
-} & DiagramElementCollection;
-
-export type sineCosineLineType = {
-  _label: equationType;
-  _line: DiagramElementPrimative;
-  updateRotation: (number, number) => void;
-  textXOffset: number;
-  textYOffset: number;
-  textXMultiplier: number;
-  textXLimit: number;
-  textYLimit: number;
-} & DiagramElementCollection;
 
 export type textEquationType = {
   _text: DiagramElementPrimative;
@@ -239,12 +239,13 @@ export class SinCosCircle extends AngleCircle {
           angleToDraw = Math.PI * 2 - r;
         }
         line.transform.updateRotation(angleToDraw);
-        sine.updateRotation(this.layout.radius, angleToDraw, override);
+        sine.updateRotation(this.layout.radius, angleToDraw);
       }
     };
 
+    // eslint-disable-next-line
     symmetry.setSineText = (newText: string) => {
-      sine._text.vertices.element.innerHTML = newText;
+      // sine._label._sine.vertices.element.innerHTML = newText;
     };
     return symmetry;
   }
@@ -664,8 +665,8 @@ export class SinCosCircle extends AngleCircle {
     super.updateRotation();
     const r = this.varState.rotation;
     const q = this.varState.quadrant;
-    this._circle._sineLine.updateRotation(this.layout.radius, r, override);
-    this._circle._cosineLine.updateRotation(this.layout.radius, r, override);
+    this._circle._sineLine.updateRotation(this.layout.radius, r);
+    this._circle._cosineLine.updateRotation(this.layout.radius, r);
     this._circle._mainAngle.updateRotation(r, override);
     this._sineText.updateRotation(r);
     if (this.interactiveSinePage) {

@@ -2,7 +2,7 @@
 
 import {
   Transform, Point, TransformLimit, Rect,
-  Translation, spaceToSpaceTransform, getBoundingRect, Rotation
+  Translation, spaceToSpaceTransform, getBoundingRect,
 } from './tools/g2';
 import * as m2 from './tools/m2';
 import type { pathOptionsType } from './tools/g2';
@@ -1514,36 +1514,33 @@ class DiagramElement {
     }
   }
 
-  processParentTransform(parentTransform: Transform): Transform {
-    let newTransform;
-    if (this.noRotationFromParent) {
-      const finalParentTransform = parentTransform.copy();
-      let r = 0;
-      for (let i = 0; i < finalParentTransform.order.length; i += 1) {
-        const t = finalParentTransform.order[i];
-        if (t instanceof Rotation) {
-          r += t.r;
-        }
-      }
+  // processParentTransform(parentTransform: Transform): Transform {
+  //   let newTransform;
+  //   if (this.noRotationFromParent) {
+  //     const finalParentTransform = parentTransform.copy();
+  //     let r = 0;
+  //     for (let i = 0; i < finalParentTransform.order.length; i += 1) {
+  //       const t = finalParentTransform.order[i];
+  //       if (t instanceof Rotation) {
+  //         r += t.r;
+  //       }
+  //     }
 
-      const m = parentTransform.matrix();
-      const translation = new Point(m[2], m[5]);
-      const scale = new Point(
-        new Point(m[0], m[3]).distance(),
-        new Point(m[1], m[4]).distance(),
-      );
-      newTransform = new Transform()
-        .scale(scale)
-        // .rotate(r)
-        .translate(translation);
-      
-    } else {
-      newTransform = parentTransform;
-    }
-    return newTransform;
-  }
-
-
+  //     const m = parentTransform.matrix();
+  //     const translation = new Point(m[2], m[5]);
+  //     const scale = new Point(
+  //       new Point(m[0], m[3]).distance(),
+  //       new Point(m[1], m[4]).distance(),
+  //     );
+  //     newTransform = new Transform()
+  //       .scale(scale)
+  //       // .rotate(r)
+  //       .translate(translation);
+  //   } else {
+  //     newTransform = parentTransform;
+  //   }
+  //   return newTransform;
+  // }
 }
 
 // ***************************************************************
@@ -1604,6 +1601,7 @@ class DiagramElementPrimative extends DiagramElement {
         this.vertices.setColor(this.color);
       }
       if (this.vertices instanceof HTMLObject) {
+        // $FlowFixMe
         this.vertices.element.style.color = colorArrayToRGBA(this.color);
       }
     }
@@ -1656,8 +1654,8 @@ class DiagramElementPrimative extends DiagramElement {
         elementCount: this.transform.order.length,
       };
 
-      const finalParentTransform = this.processParentTransform(parentTransform);
-      const newTransform = finalParentTransform.transform(this.transform);
+      // const finalParentTransform = this.processParentTransform(parentTransform);
+      const newTransform = parentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
       // let matrix = m2.mul(transformMatrix, this.transform.matrix());
@@ -1688,8 +1686,8 @@ class DiagramElementPrimative extends DiagramElement {
       parentCount: parentTransform.order.length,
       elementCount: this.transform.order.length,
     };
-    const finalParentTransform = this.processParentTransform(parentTransform);
-    const firstTransform = finalParentTransform.transform(this.transform);
+    // const finalParentTransform = this.processParentTransform(parentTransform);
+    const firstTransform = parentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
     if (this.vertices instanceof HTMLObject) {
@@ -1840,8 +1838,8 @@ class DiagramElementCollection extends DiagramElement {
         parentCount: parentTransform.order.length,
         elementCount: this.transform.order.length,
       };
-      const finalParentTransform = this.processParentTransform(parentTransform);
-      const newTransform = finalParentTransform.transform(this.transform);
+      // const finalParentTransform = this.processParentTransform(parentTransform);
+      const newTransform = parentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
       // eslint-disable-next-line prefer-destructuring
@@ -1929,8 +1927,8 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   setFirstTransform(parentTransform: Transform = new Transform()) {
-    const finalParentTransform = this.processParentTransform(parentTransform);
-    const firstTransform = finalParentTransform.transform(this.transform);
+    // const finalParentTransform = this.processParentTransform(parentTransform);
+    const firstTransform = parentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
     for (let i = 0; i < this.order.length; i += 1) {

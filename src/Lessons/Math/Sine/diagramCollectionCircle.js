@@ -6,40 +6,76 @@ import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/d
 import { SinCosCircle, labelFont } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type {
   SinCosCircleType, equationType, sineCosineLineType, textEquationType,
-  SinCosVarStateType, sineLineType,
+  SinCosVarStateType,
 } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import lessonLayout from './layout';
+import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type bowType = {
     _handle: DiagramElementPrimative;
     _string: DiagramElementPrimative;
   } & DiagramElementCollection;
 
+
+type baseEquationType = {
+  eqn: DiagramGLEquation;
+  init: () => void;
+} & DiagramElementCollection;
+
+type equationFuncThetaType = {
+  _func: DiagramElementPrimative;
+  _theta: DiagramElementPrimative;
+} & baseEquationType;
+
+type equationComplimentType = {
+  _pi: DiagramElementPrimative;
+  _two: DiagramElementPrimative;
+  _minus: DiagramElementPrimative;
+  _theta: DiagramElementPrimative;
+  _v: DiagramElementPrimative;
+} & baseEquationType;
+
+type equationSineComplimentType = {
+  _sin: DiagramElementPrimative;
+  _pi: DiagramElementPrimative;
+  _two: DiagramElementPrimative;
+  _minus: DiagramElementPrimative;
+  _theta: DiagramElementPrimative;
+  _v: DiagramElementPrimative;
+} & baseEquationType;
+
+type equationThetaType = equationType;
+
 type angleAnnotationType = {
-  _label: DiagramElementPrimative;
+  _label: equationComplimentType | equationThetaType;
   _arc: DiagramElementPrimative;
 } & DiagramElementCollection;
 
 type complimentarySineCollectionType = {
-  _sine: sineLineType;
-  _cosine: sineLineType;
+  _xAxis: DiagramElementPrimative;
+  _yAxis: DiagramElementPrimative;
+  _sine: {
+    _label: equationFuncThetaType;
+  } & sineCosineLineType;
+  _cosine: {
+    _label: equationFuncThetaType;
+  } & sineCosineLineType;
   _radius: DiagramElementPrimative;
   _theta: angleAnnotationType;
   _compAngle: angleAnnotationType;
-  _xAxis: DiagramElementPrimative;
-  _yAxis: DiagramElementPrimative;
   updateRotation: (number) => void;
 } & DiagramElementCollection;
 
-export type extendedCircleType = {
+type extendedCircleType = {
   _bow: bowType;
   _complimentarySineCollection: complimentarySineCollectionType;
   _compShadow: complimentarySineCollectionType;
   _cosineSymmetry: {
     _radius: DiagramElementPrimative;
     _compAngle: angleAnnotationType;
-    _cosine: sineLineType;
-    _sine: DiagramElementPrimative;
+    _cosine: sineCosineLineType;
+    _sine: equationSineComplimentType;
+    _sineComp: equationSineComplimentType;
   } & DiagramElementCollection;
 } & SinCosCircleType;
 
@@ -50,7 +86,6 @@ type varStateExtendedType = {
 
 export type SineCollectionType = {
   _circle: extendedCircleType;
-  // _cosineEqn: DiagramElementPrimative;
   varState: varStateExtendedType;
 };
 
@@ -487,10 +522,15 @@ class SineCollection extends SinCosCircle {
     cosSym._sineComp.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
 
     const offset = cosSym._sineComp.eqn.content[0].width / 2;
-    cosSym._sineComp.setPosition(cosSym._compAngle._label.transform.t().add(new Point(-offset, 0)));
-    cosSym._sineComp.animateTranslationTo(new Point(p.x + 0.15, p.y - 0.15), 2, () => {
-      cosSym._sineComp._sin.disolveIn(1);
-    });
+    const t = cosSym._compAngle._label.transform.t();
+    if (t != null) {
+      cosSym._sineComp.setPosition(t.add(new Point(-offset, 0)));
+    }
+    if (p != null) {
+      cosSym._sineComp.animateTranslationTo(new Point(p.x + 0.15, p.y - 0.15), 2, () => {
+        cosSym._sineComp._sin.disolveIn(1);
+      });
+    }
 
     // const initialPos = this._circle._compShadow._compAngle._label._pi.getDiagramPosition();
     // // console.log(initialPos);
@@ -504,7 +544,7 @@ class SineCollection extends SinCosCircle {
     const angle = this.layout.compAngle.angle + Math.PI / 2;
     this.rotationLimits = { min: angle, max: angle };
     this._circle._radius.transform.updateRotation(angle);
-    this._circle._cosineSymmetry._compAngle.updateRotation();
+    // this._circle._cosineSymmetry._compAngle.updateRotation();
     this.showStep(5);
   }
 
