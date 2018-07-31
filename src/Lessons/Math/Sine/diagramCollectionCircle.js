@@ -422,6 +422,7 @@ class SineCollection extends SinCosCircle {
       // console.log(this._cosineEqn);
     }
     if (step >= 5) {
+      this._circle._cosineSymmetry.showAll();
       // this._cosineEqn.setFirstTransform(this.transform);
       // this._cosineEqn.showAll()();
     }
@@ -531,13 +532,6 @@ class SineCollection extends SinCosCircle {
         cosSym._sineComp._sin.disolveIn(1);
       });
     }
-
-    // const initialPos = this._circle._compShadow._compAngle._label._pi.getDiagramPosition();
-    // // console.log(initialPos);
-    // // console.log(this._circle._compShadow._compAngle._label._pi)
-    // const a = cosSym._compAngle._label._pi.transform.t();
-    // cosSym._compAngle._label._pi.setDiagramPosition(initialPos);
-    // cosSym._compAngle._label._pi.animateTranslationTo(a, 2);
   }
 
   step5() {

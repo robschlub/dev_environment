@@ -1435,6 +1435,11 @@ class DiagramElement {
     this.setPosition(newLocation);
   }
 
+  setDiagramPositionToElement(element: DiagramElement) {
+    const p = element.getDiagramPosition();
+    this.setDiagramPosition(p);
+  }
+
   setMoveBoundaryToDiagram(
     boundary: Array<number> = [
       this.diagramLimits.left,
@@ -1513,6 +1518,7 @@ class DiagramElement {
       this.onClick(this);
     }
   }
+
 
   // processParentTransform(parentTransform: Transform): Transform {
   //   let newTransform;
