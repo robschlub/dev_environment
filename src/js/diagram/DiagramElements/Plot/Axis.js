@@ -13,6 +13,10 @@ import DrawContext2D from '../../DrawContext2D';
 
 class Axis extends DiagramElementCollection {
   props: AxisProperties;
+  webgl: WebGLInstance;
+  diagramLimits: Rect;
+  drawContext2D: DrawContext2D;
+
   constructor(
     webgl: WebGLInstance,
     drawContext2D: DrawContext2D,
@@ -22,6 +26,16 @@ class Axis extends DiagramElementCollection {
   ) {
     super(transform, diagramLimits);
     this.props = axisProperties;
+    this.webgl = webgl;
+    this.diagramLimits = diagramLimits;
+    this.drawContext2D = drawContext2D;
+    this.build();
+  }
+  rebuild() {
+    this.order = [];
+    this.build();
+  }
+  build() {
     const {
       minorTicks, majorTicks,
       minorGrid, majorGrid,
@@ -32,7 +46,7 @@ class Axis extends DiagramElementCollection {
     if (minorTicks.mode === 'auto') {
       this.props.generateAutoMinorTicks();
     }
-    const xRatio = 2 / diagramLimits.width;
+    const xRatio = 2 / this.diagramLimits.width;
     // const xRatio = 1;
     // const yRatio = 2 / diagramLimits.height;
     const cMajorTicksStart = this.props.valueToClip(majorTicks.start);
@@ -42,33 +56,33 @@ class Axis extends DiagramElementCollection {
 
     // Grid
     this.addTicksOrGrid(
-      'minorGrid', webgl, minorGrid, minorTicksNum,
-      minorTicks.step, cMinorTicksStart, xRatio, diagramLimits,
+      'minorGrid', this.webgl, minorGrid, minorTicksNum,
+      minorTicks.step, cMinorTicksStart, xRatio, this.diagramLimits,
     );
 
     this.addTicksOrGrid(
-      'majorGrid', webgl, majorGrid, majorTicksNum,
-      majorTicks.step, cMajorTicksStart, xRatio, diagramLimits,
+      'majorGrid', this.webgl, majorGrid, majorTicksNum,
+      majorTicks.step, cMajorTicksStart, xRatio, this.diagramLimits,
     );
 
     // Ticks
     this.addTicksOrGrid(
-      'minorTicks', webgl, minorTicks, minorTicksNum,
-      minorTicks.step, cMinorTicksStart, xRatio, diagramLimits,
+      'minorTicks', this.webgl, minorTicks, minorTicksNum,
+      minorTicks.step, cMinorTicksStart, xRatio, this.diagramLimits,
     );
 
     this.addTicksOrGrid(
-      'majorTicks', webgl, majorTicks, majorTicksNum,
-      majorTicks.step, cMajorTicksStart, xRatio, diagramLimits,
+      'majorTicks', this.webgl, majorTicks, majorTicksNum,
+      majorTicks.step, cMajorTicksStart, xRatio, this.diagramLimits,
     );
 
     // Axis Line
-    const axis = new VAxis(webgl, axisProperties);
+    const axis = new VAxis(this.webgl, this.props);
     this.add('line', new DiagramElementPrimative(
       axis,
       new Transform(),
-      axisProperties.color,
-      diagramLimits,
+      this.props.color,
+      this.diagramLimits,
     ));
 
     const font = new DiagramFont(
@@ -87,7 +101,7 @@ class Axis extends DiagramElementCollection {
       font,
     )];
     const title = new TextObject(
-      drawContext2D,
+      this.drawContext2D,
       titleText,
     );
 
@@ -97,18 +111,18 @@ class Axis extends DiagramElementCollection {
         .rotate(this.props.rotation)
         .translate(this.props.titleOffset.x, this.props.titleOffset.y),
       [0.5, 0.5, 0.5, 1],
-      diagramLimits,
+      this.diagramLimits,
     ));
 
     // Labels
     this.addTickLabels(
-      'major', drawContext2D, majorTicks,
-      this.props.generateMajorLabels.bind(this.props), diagramLimits,
+      'major', this.drawContext2D, majorTicks,
+      this.props.generateMajorLabels.bind(this.props), this.diagramLimits,
       this.props.majorTicks.labelOffset,
     );
     this.addTickLabels(
-      'minor', drawContext2D, minorTicks,
-      this.props.generateMinorLabels.bind(this.props), diagramLimits,
+      'minor', this.drawContext2D, minorTicks,
+      this.props.generateMinorLabels.bind(this.props), this.diagramLimits,
       this.props.minorTicks.labelOffset,
     );
   }

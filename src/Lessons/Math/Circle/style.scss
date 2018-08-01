@@ -5,13 +5,13 @@ $colors: (
   radius:           map-get($geometry_colors, radius),
   diameter:         map-get($geometry_colors, diameter),
   reference:        map-get($geometry_colors, reference),
-  latin:            color(diagram, 'text-latin'),
+  latin:            color('diagram', 'text-latin'),
   circle:           map-get($geometry_colors, circle),
   rotation:         map-get($geometry_colors, rotation),
-  disabled:         color(diagram, 'disabled'),
-  grid:             color(diagram, 'disabled', 'darker'),
-  axis:             color(diagram, 'disabled'),
-  push:             color(diagram, 'push'),
+  disabled:         color('diagram', 'disabled'),
+  grid:             color('diagram', 'disabled', 'darker'),
+  axis:             color('diagram', 'disabled'),
+  push:             color('diagram', 'push'),
   slider:           map-get($geometry_colors, radius),
 );
 

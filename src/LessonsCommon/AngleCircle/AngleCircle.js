@@ -28,6 +28,10 @@ export type circleType = {
   _reference: DiagramElementPrimative;
   _radialLinesDeg: DiagramElementCollection;
   _radialLinesRad: DiagramElementCollection;
+  _axes: {
+    _x: DiagramElementPrimative;
+    _y: DiagramElementPrimative;
+  } & DiagramElementCollection;
   _compareRadius: DiagramElementPrimative;
   _circumference: DiagramElementPrimative;
 } & DiagramElementCollection;
@@ -58,6 +62,10 @@ class AngleCircle extends DiagramElementCollection {
     radialLines: number,
     rotation: number,
   };
+  rotationLimits: {
+    min: number,
+    max: number,
+  } | null;
   diagram: Diagram;
 
 
@@ -94,16 +102,40 @@ class AngleCircle extends DiagramElementCollection {
     return radius;
   }
 
-  makeArc(radius: number) {
+  makeAxes() {
+    const xAxis = this.makeLine(
+      new Point(0, 0),
+      this.layout.axes.length * 2.2,
+      this.layout.linewidth / 4,
+      this.colors.axes,
+      new Transform().translate(-this.layout.axes.length * 1.1, 0),
+    );
+    const yAxis = this.makeLine(
+      new Point(0, 0),
+      this.layout.axes.length * 2.2,
+      this.layout.linewidth / 4,
+      this.colors.axes,
+      new Transform()
+        .rotate(Math.PI / 2)
+        .translate(0, -this.layout.axes.length * 1.1),
+    );
+    const axes = this.shapes.collection();
+    axes.add('x', xAxis);
+    axes.add('y', yAxis);
+    return axes;
+  }
+
+  makeArc(radius: number, lineWidth: number = this.layout.arc.lineWidth) {
     return this.shapes.polygon(
-      this.layout.anglePoints, radius, this.layout.linewidth, 0, 1,
+      this.layout.anglePoints, radius, lineWidth, 0, 1,
       this.layout.circlePoints, this.colors.arc, new Point(0, 0),
     );
   }
 
   makeCircumference() {
     return this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius, this.layout.linewidth, 0, 1,
+      this.layout.anglePoints, this.layout.radius,
+      this.layout.circumference.lineWidth, 0, 1,
       this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
     );
   }
@@ -117,7 +149,7 @@ class AngleCircle extends DiagramElementCollection {
 
   makeAngleLine() {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.makeArc(this.layout.angle.radius);
+    const arc = this.makeArc(this.layout.angle.radius, this.layout.angle.lineWidth);
     arc.color = this.colors.angle.slice();
     const arrow = this.shapes.arrow(
       this.layout.angle.arrow.width, 0, this.layout.angle.arrow.height, 0,
@@ -181,19 +213,19 @@ class AngleCircle extends DiagramElementCollection {
     const angleText = this.shapes.collection(this.layout.angleEqualsText.left);
     angleText.add('text', this.shapes.htmlText(
       'Angle', 'id_angle_text', 'action_word',
-      new Point(0, 0), 'middle', 'left',
+      new Point(-0.07, 0), 'middle', 'right',
     ));
     angleText.add('equals', this.shapes.htmlText(
       '=', 'id_angle_equals', '',
-      new Point(0.45, 0), 'middle', 'left',
+      new Point(0, 0), 'middle', 'left',
     ));
     angleText.add('angle', this.shapes.htmlText(
       '0', 'id_angle_value', '',
-      new Point(0.85, 0), 'middle', 'right',
+      new Point(0.43, 0), 'middle', 'right',
     ));
     angleText.add('units', this.shapes.htmlText(
       'portions', 'id_angle_units', '',
-      new Point(0.87, 0), 'middle', 'left',
+      new Point(0.45, 0), 'middle', 'left',
     ));
     angleText.setUnits = (units: string) => {
       if (units === '&deg;') {
@@ -202,6 +234,9 @@ class AngleCircle extends DiagramElementCollection {
         angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.text, 0);
       }
       angleText._units.vertices.element.innerHTML = units;
+    };
+    angleText.setText = (newText: string) => {
+      angleText._text.vertices.element.innerHTML = newText;
     };
     return angleText;
   }
@@ -212,6 +247,7 @@ class AngleCircle extends DiagramElementCollection {
       .translate(this.layout.circle.center));
     circle.add('radialLinesDeg', this.makeMajorAndMinRadialMarks(36, 360));
     circle.add('radialLinesRad', this.makeRadialMarks(Math.PI * 2));
+    circle.add('axes', this.makeAxes());
     circle.add('angle', this.makeAngleLine());
     circle.add('reference', this.makeReference());
     circle.add('circumference', this.makeCircumference());
@@ -230,6 +266,7 @@ class AngleCircle extends DiagramElementCollection {
       // percentStraight: 0,
       // straightening: false,
     };
+    this.rotationLimits = null;
     this.shapes = diagram.shapes;
     this.layout = layout;
     this.colors = this.layout.colors;
@@ -245,12 +282,21 @@ class AngleCircle extends DiagramElementCollection {
   updateRotation() {
     let rotation = this._circle._radius.transform.r();
     if (rotation !== null && rotation !== undefined) {
+      if (this.rotationLimits != null) {
+        if (rotation < this.rotationLimits.min) {
+          rotation = this.rotationLimits.min;
+        }
+        if (rotation > this.rotationLimits.max) {
+          rotation = this.rotationLimits.max;
+        }
+      }
       if (rotation > Math.PI * 2) {
         rotation -= Math.PI * 2;
       }
       if (rotation < 0) {
         rotation += Math.PI * 2;
       }
+
       const r = normAngle(rotation);
       this.varState.rotation = r;
       this._circle._radius.transform.updateRotation(r);
@@ -436,6 +482,7 @@ class AngleCircle extends DiagramElementCollection {
     if (tTime === 0) {
       tTime = 0.001;
     }
+
 
     let angle = this.layout.circle.angle.small;
     if (r != null && r !== undefined) {

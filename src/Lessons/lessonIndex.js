@@ -36,7 +36,7 @@ const lessonIndex = [
     new LessonDescription('Triangle Area'),
     new LessonDescription('Circle Area'),
   ],
-  new LessonDescription('sine'),
+  new LessonDescription('Sine (work in progress)', '/Lessons/Math/Sine'),
   [
     new LessonDescription('cosine'),
     new LessonDescription('tan'),

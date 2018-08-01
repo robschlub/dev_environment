@@ -91,7 +91,6 @@ class DrawingObject {
     const glLocation = this.getGLLocation(lastDrawTransformMatrix);
     const glAbsoluteBoundaries =
       this.getGLBoundingRect(lastDrawTransformMatrix);
-
     const glRelativeBoundaries = new Rect(
       glAbsoluteBoundaries.left - glLocation.x,
       glAbsoluteBoundaries.bottom - glLocation.y,
