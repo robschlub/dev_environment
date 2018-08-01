@@ -27,7 +27,7 @@ const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Sine';
+    this.title = 'Sine (work in progress)';
     this.iconLink = '/Lessons/Math/Sine';
   }
 
@@ -39,52 +39,6 @@ class Content extends LessonContent {
     const circle = this.diagram.elements._circle;
     const diag = this.diagram.elements;
 
-    // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-    // this.addSection({
-    //   title: 'Introduction',
-    //   setContent: centerV(`
-    //     <p class="lesson__diagram_text_p_width_45">
-    //       |Rotating| a |line| around a fixed point creates an |arc|,
-    //       whose length depends on the |angle| of rotation.
-    //     </p>
-    //     <p class="lesson__diagram_text_p_width_45">
-    //       The arc forms a |circle| with complete rotation.
-    //     </p>
-    //   `),
-    //   modifiers: {
-    //     Rotating: click(diag.pushRadius, [diag], colors.radius),
-    //     line: click(diag.pulseRadius, [diag], colors.radius),
-    //     arc: click(diag.pulseArc, [diag], colors.arc),
-    //     angle: click(diag.pulseAngle, [diag], colors.angleText),
-    //     circle: click(diag.rotateTo, [diag, Math.PI * 1.999, 2, 2], colors.circle),
-    //   },
-    //   setEnterState: () => {
-    //     diag._angleText.setText('Angle');
-    //     diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
-    //     diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-    //     diag.resetCircle('right', 0.001);
-    //     diag.showRadians();
-    //     diag.toggleUnits('rad');
-    //   },
-    //   showOnly: [
-    //     circle,
-    //     circle._radius,
-    //     circle._arc,
-    //     diag._unitsSelector,
-    //   ],
-    //   show: [
-    //     diag._angleText,
-    //     circle._axes,
-    //     circle._angle,
-    //   ],
-    //   transitionFromAny: (done) => {
-    //     diag.transitionCircle(done, 'right', null, 5);
-    //   },
-    //   setSteadyState: () => {
-    //     diag._angleText.showAll();
-    //     onClickId('id_angle_text', diag.pulseAngle, [diag]);
-    //   },
-    // });
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
@@ -97,10 +51,6 @@ class Content extends LessonContent {
         horizontal: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
       setEnterState: () => {
-        // diag._angleText.setText('Angle');
-        // diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
-        // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-        // diag._angleText.setFirstTransform();
         circle._sineLine.setText('vertical');
         circle._cosineLine.setText('horizontal');
         circle._cosineLine.textXLimit = 0;
@@ -112,21 +62,17 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._circumference,
-        // diag._unitsSelector,
       ],
       show: [
         circle._axes,
         circle._cosineLine,
         circle._sineLine,
-        diag._temp,
-        diag._grid,
       ],
       setSteadyState: () => {
-        // circle._axes.showAll();
         diag.resetCircle('right', Math.PI / 6);
-        // onClickId('id_angle_text', diag.pulseAngle, [diag]);
       },
     });
+
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_45 lesson__font_0p9">
@@ -141,10 +87,6 @@ class Content extends LessonContent {
         cosine: click(diag.pulseCosineLine, [diag], colors.cosine),
       },
       setEnterState: () => {
-        // diag._angleText.setText('Angle');
-        // diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
-        // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
-        // diag._angleText.setFirstTransform();
         circle._sineLine.setText('sine');
         circle._cosineLine.setText('cosine');
         circle._cosineLine.textXLimit = 0;
@@ -157,7 +99,6 @@ class Content extends LessonContent {
         circle,
         circle._radius,
         circle._circumference,
-        // diag._unitsSelector,
       ],
       show: [
         circle._axes,
