@@ -33,6 +33,7 @@ class Content extends LessonContent {
 
   addSections() {
     const circle = this.diagram.elements._circle;
+
     const diag = this.diagram.elements;
     this.addSection({
       title: 'Introduction',
@@ -44,6 +45,7 @@ class Content extends LessonContent {
             <td>|Obtuse|</td>
             <td>|Straight|</td>
             <td>|Reflex|</td>
+            <td>|Full|</td>
           </tr>
         </table>
         <div id="id_unit_selection"
@@ -116,6 +118,17 @@ class Content extends LessonContent {
           <span class="english">Reflex</span> |from_Late_Latin| <i class="latin">reflexus</i>: “to bend back”
         </p>
       </div>`,
+      `<div id="id_full_text">
+        <p class="lesson__diagram_text_p_width_40"
+          style="margin-top:20%">
+          A |full_angle| is an angle of
+          ${unit('360', '2&pi;', 'full')}.
+        </p>
+        <p class="lesson__font_0p5"
+          style="margin-top:23.2%; margin-left: 4%">
+          <span class="english">Full</span>: “containing all that can be received; perfect, entire”
+        </p>
+      </div>`,
       ],
       modifiers: {
         Acute: clickWord('Acute', 'id_acute', diag.goToAcute, [diag]),
@@ -123,11 +136,13 @@ class Content extends LessonContent {
         Obtuse: clickWord('Obtuse', 'id_obtuse', diag.goToObtuse, [diag]),
         Straight: clickWord('Straight', 'id_straight', diag.goToStraight, [diag]),
         Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
+        Full: clickWord('Full', 'id_full', diag.goToFull, [diag]),
         acute_angle: click(diag.pulseAngle, [diag], colors.angleText),
         straight_angle: click(diag.pulseAngle, [diag], colors.angleText),
         obtuse_angle: click(diag.pulseAngle, [diag], colors.angleText),
         right_angle: click(diag.pulseAngle, [diag], colors.angleText),
         reflex_angle: click(diag.pulseAngle, [diag], colors.angleText),
+        full_angle: click(diag.pulseAngle, [diag], colors.angleText),
         quarter_circle: highlight(),
         square: click(diag.toggleRightAngleLine, [diag, true], colors.angleText),
         from_Latin: highlight('lesson__important_angles_from_Latin'),
