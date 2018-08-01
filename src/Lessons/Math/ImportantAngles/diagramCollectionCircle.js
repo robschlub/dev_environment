@@ -326,6 +326,7 @@ class ImportantAnglesCollection extends AngleCircle {
       'id_right_text',
       'id_straight_text',
       'id_reflex_text',
+      'id_full_text',
     ];
     ids.forEach((id) => {
       if (id !== angleType) {

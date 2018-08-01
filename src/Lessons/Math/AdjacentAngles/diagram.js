@@ -1,7 +1,7 @@
 // @flow
 // import { DiagramElementCollection } from '../../../js/diagram/Element';
-import ImportantAnglesCollection from './diagramCollectionCircle';
-import type { ImportantAnglesCollectionType } from './diagramCollectionCircle';
+import AdjacentAnglesCollection from './diagramCollectionCircle';
+import type { AdjacentAnglesCollectionType } from './diagramCollectionCircle';
 import lessonLayout from './layout';
 import AngleCircleDiagram from '../../../LessonsCommon/AngleCircle/diagram';
 import { Point } from '../../../js/diagram/tools/g2';
@@ -12,10 +12,10 @@ import { Point } from '../../../js/diagram/tools/g2';
 
 // $FlowFixMe
 class LessonDiagram extends AngleCircleDiagram {
-  elements: ImportantAnglesCollectionType;
+  elements: AdjacentAnglesCollectionType;
 
   constructor(id: string) {
-    super(id, lessonLayout(), ImportantAnglesCollection);
+    super(id, lessonLayout(), AdjacentAnglesCollection);
   }
 
   touchMoveHandler(
