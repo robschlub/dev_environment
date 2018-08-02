@@ -303,8 +303,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
     this.rotationLimits = { min: 0, max: Math.PI / 3 };
-    this._circle._endLine.isTouchable = true;
-    this._circle._endLine.isMovable = true;
+    // this._circle._endLine.isTouchable = true;
+    // this._circle._endLine.isMovable = true;
   }
 
   goToComplementary() {
@@ -314,8 +314,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
     this.rotationLimits = { min: 0, max: Math.PI / 2 };
-    this._circle._endLine.isTouchable = false;
-    this._circle._endLine.isMovable = false;
+    // this._circle._endLine.isTouchable = false;
+    // this._circle._endLine.isMovable = false;
   }
 
   goToSupplementary() {
@@ -325,8 +325,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
     this.rotationLimits = { min: 0, max: Math.PI };
-    this._circle._endLine.isTouchable = false;
-    this._circle._endLine.isMovable = false;
+    // this._circle._endLine.isTouchable = false;
+    // this._circle._endLine.isMovable = false;
   }
 
   goToExplementary() {
@@ -336,8 +336,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
     this.rotationLimits = { min: 0, max: Math.PI * 2 * 0.999 };
-    this._circle._endLine.isTouchable = false;
-    this._circle._endLine.isMovable = false;
+    // this._circle._endLine.isTouchable = false;
+    // this._circle._endLine.isMovable = false;
   }
 
   // goToRight() {

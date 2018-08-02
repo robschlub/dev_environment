@@ -24,7 +24,12 @@ class LessonDiagram extends AngleCircleDiagram {
     const startLine = this.elements._circle._startLine;
     if (this.beingMovedElements.indexOf(endLine) >= 0) {
       this.elements._circle._endLine.stopBeingMoved();
-      this.elements._circle._endLine.startMovingFreely();
+      if (this.elements.varState.angleSelected === 'adjacent') {
+        this.elements._circle._endLine.startMovingFreely();
+      } else {
+        this.elements._circle.stopBeingMoved();
+        this.elements._circle.startMovingFreely();
+      }
     }
     if (this.beingMovedElements.indexOf(startLine) >= 0) {
       this.elements._circle.stopBeingMoved();
@@ -82,17 +87,18 @@ class LessonDiagram extends AngleCircleDiagram {
       if (rad.state.isBeingMoved) {
         transform = rad.transform.copy();
       }
-      if (endLine.state.isBeingMoved) {
+      if (endLine.state.isBeingMoved && this.elements.varState.angleSelected === 'adjacent') {
         transform = this.elements._circle._endLine.transform.copy();
       }
       const rot = transform.r();
       if (rot != null) {
         transform.updateRotation(rot - diffAngle);
-        if (endLine.state.isBeingMoved) {
+        if (endLine.state.isBeingMoved && this.elements.varState.angleSelected === 'adjacent') {
           this.elements._circle._endLine.moved(transform.copy());
         } else if (rad.state.isBeingMoved) {
           this.elements._circle._radius.moved(transform.copy());
-        } else if (startLine.state.isBeingMoved) {
+        } else if (endLine.state.isBeingMoved
+          || startLine.state.isBeingMoved) {
           this.elements._circle.moved(transform.copy());
         }
       }
