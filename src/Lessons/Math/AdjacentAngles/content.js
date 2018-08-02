@@ -165,6 +165,7 @@ class Content extends LessonContent {
         onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
         diag.toggleUnits('deg');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        diag.goToAdjacent();
       },
     });
   }

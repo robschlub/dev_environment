@@ -28,6 +28,7 @@ class LessonDiagram extends AngleCircleDiagram {
     }
     if (this.beingMovedElements.indexOf(startLine) >= 0) {
       this.elements._circle.stopBeingMoved();
+      this.elements._circle._startLine.stopBeingMoved();
       this.elements._circle.startMovingFreely();
     }
     if (this.beingMovedElements.indexOf(rad) >= 0) {
@@ -35,10 +36,10 @@ class LessonDiagram extends AngleCircleDiagram {
       this.elements._circle._radius.startMovingFreely();
     }
     if (this.beingMovedElements.indexOf(rad) === -1
-        && this.beingMovedElements.indexOf(endLine) === -1) {
+        && this.beingMovedElements.indexOf(endLine) === -1
+        && this.beingMovedElements.indexOf(startLine) === -1) {
       super.touchUpHandler();
     }
-
     this.beingMovedElements = [];
   }
 
@@ -77,20 +78,20 @@ class LessonDiagram extends AngleCircleDiagram {
       );
       const diffAngle = minAngleDiff(previousAngle, currentAngle);
 
-      let transform = this.elements._circle._endLine.transform.copy();
-      if (startLine.state.isBeingMoved) {
-        transform = this.elements._circle.transform.copy();
-      }
+      let transform = this.elements._circle.transform.copy();
       if (rad.state.isBeingMoved) {
-        transform = this.elements._circle._radius.transform.copy();
+        transform = rad.transform.copy();
+      }
+      if (endLine.state.isBeingMoved) {
+        transform = this.elements._circle._endLine.transform.copy();
       }
       const rot = transform.r();
       if (rot != null) {
         transform.updateRotation(rot - diffAngle);
-        if (rad.state.isBeingMoved) {
-          this.elements._circle._radius.moved(transform.copy());
-        } else if (endLine.state.isBeingMoved) {
+        if (endLine.state.isBeingMoved) {
           this.elements._circle._endLine.moved(transform.copy());
+        } else if (rad.state.isBeingMoved) {
+          this.elements._circle._radius.moved(transform.copy());
         } else if (startLine.state.isBeingMoved) {
           this.elements._circle.moved(transform.copy());
         }

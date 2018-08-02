@@ -126,11 +126,22 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   updateEndLineRotation() {
-    const r = this._circle._endLine.transform.r();
-    if (r != null) {
+    let r = this._circle._endLine.transform.r();
+    const radiusRot = this._circle._radius.transform.r();
+    if (r != null && radiusRot != null) {
+      if (r < 0) {
+        r = 0;
+      }
+      if (r > Math.PI * 2) {
+        r = Math.PI * 2;
+      }
       this.rotationLimits = { min: 0, max: r };
+      this._circle._endLine.transform.updateRotation(r);
+      if (r < radiusRot) {
+        this._circle._radius.transform.updateRotation(r);
+      }
     }
-  } 
+  }
 
   setParagraphUnits(onUnit: 'rad' | 'deg') {
     // const angleType = this.varState.angleSelected;
@@ -235,22 +246,25 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
   }
 
-  rotateToAngleDisablingAutoChange(angle: number) {
-    // this.enableAutoChange = false;
-    this.rotateTo(angle, 2, 1, ((result) => {
-      if (result) {
-        // this.enableAutoChange = true;
-      }
-    }));
+  // rotateToAngleDisablingAutoChange(angle: number) {
+  //   this.rotateTo(angle, 2, 1, ((result) => {
+  //     if (result) {
+  //     }
+  //   }));
+  // }
+
+  setEndLineRotation(angle: number) {
+    this._circle._endLine.transform.updateRotation(angle);
+    this.updateEndLineRotation();
   }
 
   goToAdjacent() {
     this.showAngleType('adjacent');
     this._circle.transform.updateRotation(0);
-    this._circle._endLine.transform.updateRotation(Math.PI / 3);
+    this.setEndLineRotation(Math.PI / 3);
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
-    this.rotationLimits = { min: 0, max: 2 * Math.PI };
+    this.rotationLimits = { min: 0, max: Math.PI / 3 };
     this._circle._endLine.isTouchable = true;
     this._circle._endLine.isMovable = true;
   }
