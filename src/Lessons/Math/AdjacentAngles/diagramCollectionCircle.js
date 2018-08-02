@@ -42,6 +42,8 @@ class AdjacentAnglesCollection extends AngleCircle {
         0,
       ),
     );
+    line.isTouchable = true;
+    line.isMovable = true;
     line.pulse.transformMethod = s => new Transform().scale(1, s);
 
     for (let i = 0; i < line.vertices.border[0].length; i += 1) {
@@ -244,7 +246,7 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToAdjacent() {
     this.showAngleType('adjacent');
-    this._circle._startLine.transform.updateRotation(0);
+    this._circle.transform.updateRotation(0);
     this._circle._endLine.transform.updateRotation(Math.PI / 3);
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
@@ -255,7 +257,7 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToComplementary() {
     this.showAngleType('complementary');
-    this._circle._startLine.transform.updateRotation(0);
+    this._circle.transform.updateRotation(0);
     this._circle._endLine.transform.updateRotation(Math.PI / 2);
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
@@ -266,7 +268,7 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToSupplementary() {
     this.showAngleType('supplementary');
-    this._circle._startLine.transform.updateRotation(0);
+    this._circle.transform.updateRotation(0);
     this._circle._endLine.transform.updateRotation(Math.PI);
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
@@ -277,7 +279,7 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToExplementary() {
     this.showAngleType('explementary');
-    this._circle._startLine.transform.updateRotation(0);
+    this._circle.transform.updateRotation(0);
     this._circle._endLine.transform.updateRotation(Math.PI * 2);
     this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();

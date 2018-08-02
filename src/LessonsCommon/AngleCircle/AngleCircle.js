@@ -244,6 +244,7 @@ class AngleCircle extends DiagramElementCollection {
   makeCircle() {
     const circle = this.shapes.collection(new Transform()
       .scale(1, 1)
+      .rotate(0)
       .translate(this.layout.circle.center));
     circle.add('radialLinesDeg', this.makeMajorAndMinRadialMarks(36, 360));
     circle.add('radialLinesRad', this.makeRadialMarks(Math.PI * 2));

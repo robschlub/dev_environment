@@ -18,6 +18,30 @@ class LessonDiagram extends AngleCircleDiagram {
     super(id, lessonLayout(), AdjacentAnglesCollection);
   }
 
+  touchUpHandler() {
+    const rad = this.elements._circle._radius;
+    const endLine = this.elements._circle._endLine;
+    const startLine = this.elements._circle._startLine;
+    if (this.beingMovedElements.indexOf(endLine) >= 0) {
+      this.elements._circle._endLine.stopBeingMoved();
+      this.elements._circle._endLine.startMovingFreely();
+    }
+    if (this.beingMovedElements.indexOf(startLine) >= 0) {
+      this.elements._circle.stopBeingMoved();
+      this.elements._circle.startMovingFreely();
+    }
+    if (this.beingMovedElements.indexOf(rad) >= 0) {
+      this.elements._circle._radius.stopBeingMoved();
+      this.elements._circle._radius.startMovingFreely();
+    }
+    if (this.beingMovedElements.indexOf(rad) === -1
+        && this.beingMovedElements.indexOf(endLine) === -1) {
+      super.touchUpHandler();
+    }
+
+    this.beingMovedElements = [];
+  }
+
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
@@ -27,8 +51,11 @@ class LessonDiagram extends AngleCircleDiagram {
     }
     const rad = this.elements._circle._radius;
     const endLine = this.elements._circle._endLine;
+    const startLine = this.elements._circle._startLine;
+
     if (rad.state.isBeingMoved
-      || endLine.state.isBeingMoved) {
+      || endLine.state.isBeingMoved
+      || startLine.state.isBeingMoved) {
       let center = this.elements._circle.transform.t();
       if (center === null || center === undefined) {
         center = new Point(0, 0);
@@ -51,6 +78,9 @@ class LessonDiagram extends AngleCircleDiagram {
       const diffAngle = minAngleDiff(previousAngle, currentAngle);
 
       let transform = this.elements._circle._endLine.transform.copy();
+      if (startLine.state.isBeingMoved) {
+        transform = this.elements._circle.transform.copy();
+      }
       if (rad.state.isBeingMoved) {
         transform = this.elements._circle._radius.transform.copy();
       }
@@ -59,8 +89,10 @@ class LessonDiagram extends AngleCircleDiagram {
         transform.updateRotation(rot - diffAngle);
         if (rad.state.isBeingMoved) {
           this.elements._circle._radius.moved(transform.copy());
-        } else {
+        } else if (endLine.state.isBeingMoved) {
           this.elements._circle._endLine.moved(transform.copy());
+        } else if (startLine.state.isBeingMoved) {
+          this.elements._circle.moved(transform.copy());
         }
       }
     } else {
