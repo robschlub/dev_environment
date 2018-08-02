@@ -158,6 +158,9 @@ class Content extends LessonContent {
         diag.resetCircle('right', Math.PI / 3);
         circle._angleA.showAll();
         circle._angleB.showAll();
+        diag.setEndLineRotation(Math.PI / 3);
+        diag.setRotation(Math.PI / 6);
+        circle.transform.updateRotation(0);
         // circle._angle.showAll();
         // circle._axes.showAll();
         // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);

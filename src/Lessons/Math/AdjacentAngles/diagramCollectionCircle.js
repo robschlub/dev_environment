@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform, Point } from '../../../js/diagram/tools/g2';
+import { Transform, Point, minAngleDiff } from '../../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
@@ -298,9 +298,12 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToAdjacent() {
     this.showAngleType('adjacent');
-    this._circle.transform.updateRotation(0);
-    this.setEndLineRotation(Math.PI / 3);
-    this.setRotation(Math.PI / 6);
+    // this._circle.transform.updateRotation(0);
+    this.rotateElementTo(this._circle._endLine, Math.PI / 3);
+    this.rotateElementTo(this._circle, 0);
+    this.rotateElementTo(this._circle._radius, Math.PI / 6);
+    // this.setEndLineRotation(Math.PI / 3);
+    // this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
     this.rotationLimits = { min: 0, max: Math.PI / 3 };
     // this._circle._endLine.isTouchable = true;
@@ -340,6 +343,37 @@ class AdjacentAnglesCollection extends AngleCircle {
     // this._circle._endLine.isMovable = false;
   }
 
+  rotateElementTo(
+    element: DiagramElementPrimative | DiagramElementCollection,
+    angle: number,
+    direction: number = 2,
+    time: number = 2,
+    normalizeTime: boolean = false,
+    callback: () => void = () => {},
+  ) {
+    let t = time;
+    let d = 1;
+    d = direction;
+    const r = element.transform.r();
+    let delta = 0;
+    if (r) {
+      delta = minAngleDiff(angle, r);
+    }
+
+    if (d === 0) {
+      d = 1;
+      if (delta !== 0) {
+        d = delta / Math.abs(delta);
+      }
+    }
+
+    if (normalizeTime) {
+      t = time * delta / 2 / Math.PI;
+    }
+
+    element.animateRotationTo(angle, d, t, callback);
+    this.diagram.animateNextFrame();
+  }
   // goToRight() {
   //   // this.enableAutoChange = false;
   //   const angle = Math.PI / 2;
