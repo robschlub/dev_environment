@@ -68,7 +68,16 @@ export default function angleCircleLayout() {
         text: 0.48,
       },
     },
-
+    angleAnnotation: {
+      arc: {
+        lineWidth: 0.02,
+        radius: 0.3,
+        sides: 200,
+      },
+      label: {
+        radiusOffset: 0.07,
+      },
+    },
     colors,
   };
 }

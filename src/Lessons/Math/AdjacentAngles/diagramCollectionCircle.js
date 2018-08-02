@@ -4,7 +4,7 @@ import Diagram from '../../../js/diagram/Diagram';
 import { Transform, Point } from '../../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
-import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
+import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 
 // type rightAngleType = {
@@ -15,6 +15,7 @@ import lessonLayout from './layout';
 export type extendedCircleType = {
   _startLine: DiagramElementPrimative;
   _endLine: DiagramElementPrimative;
+  _angleA: angleAnnotationType;
 } & circleType;
 
 type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
@@ -51,6 +52,15 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
     return line;
   }
+
+  makeAngleA() {
+    return this.makeAngleAnnotation(
+      0,
+      Math.PI / 6,
+      'a',
+      [1, 0, 0, 1],
+    );
+  }
   // makeRightAngle() {
   //   const rad = this.layout.angleRadius * 0.9;
   //   const rightAngle = this.shapes.collection();
@@ -71,6 +81,7 @@ class AdjacentAnglesCollection extends AngleCircle {
   addToCircle() {
     this._circle.add('startLine', this.makeMoveableLine());
     this._circle.add('endLine', this.makeMoveableLine());
+    this._circle.add('angleA', this.makeAngleA());
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     // this._circle._startLine.setTransformCallback = this.updateEndLineRotation.bind(this);
@@ -125,6 +136,11 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
   }
 
+  updateRotation() {
+    super.updateRotation();
+    this._circle._angleA.updateAngle(this.varState.rotation);
+  }
+
   updateEndLineRotation() {
     let r = this._circle._endLine.transform.r();
     const radiusRot = this._circle._radius.transform.r();
@@ -138,7 +154,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       this.rotationLimits = { min: 0, max: r };
       this._circle._endLine.transform.updateRotation(r);
       if (r < radiusRot) {
-        this._circle._radius.transform.updateRotation(r);
+        this.setRotation(r);
       }
     }
   }

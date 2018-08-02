@@ -3,7 +3,8 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle } from '../../js/diagram/tools/g2';
+import { Point, Transform, minAngleDiff, normAngle, polarToRect } from '../../js/diagram/tools/g2';
+import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 
 type lineAngleType = {
@@ -18,6 +19,13 @@ type angleTextType = {
   angle: DiagramElementPrimative;
   units: DiagramElementPrimative;
   setUnits: (string) => void;
+} & DiagramElementCollection;
+
+
+export type angleAnnotationType = {
+  +_label: DiagramElementCollection;
+  _arc: DiagramElementPrimative;
+  updateAngle: (number) => void;
 } & DiagramElementCollection;
 
 export type circleType = {
@@ -39,7 +47,17 @@ export type circleType = {
 export type varStateType = {
   radialLines: number;
   rotation: number;
-}
+};
+
+export const labelFont = new DiagramFont(
+  'Times New Roman, serif',
+  'italic',
+  0.18,
+  '400',
+  'left',
+  'alphabetic',
+  [1, 1, 1, 1],
+);
 
 export type angleCircleType = {
   layout: Object;
@@ -206,6 +224,68 @@ class AngleCircle extends DiagramElementCollection {
     const collection = this.shapes.collection(new Transform().translate(0, 0));
     collection.add('minor', this.makeRadialMarks(minor, true));
     collection.add('major', this.makeRadialMarks(major, false));
+    return collection;
+  }
+
+  makeAngleAnnotation(
+    angleStart: number,
+    angleSize: number,
+    angleText: DiagramElementCollection | string | null,
+    color: Array<number> = [0.5, 0.5, 0.5, 1],
+    layout: Object = this.layout.angleAnnotation,
+  ) {
+    let label = this.makeEquationText(color, '');
+    if (typeof angleText === 'string') {
+      label = this.makeEquationText(color, angleText);
+    } else if (angleText instanceof DiagramElementCollection) {
+      label = angleText;
+    }
+
+    const arc = this.shapes.polygon(
+      layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
+      layout.arc.sides, color,
+      new Transform(),
+    );
+
+    const angleAnnotation = this.shapes.collection(new Transform()
+      .scale(1, 1).rotate(0));
+    angleAnnotation.add('arc', arc);
+    angleAnnotation.add('label', label);
+
+    angleAnnotation.updateAngle = (angle: number) => {
+      arc.angleToDraw = angle;
+      const labelPosition = polarToRect(layout.arc.radius +
+      layout.label.radiusOffset, angleStart + angle / 2);
+      label.transform.updateTranslation(labelPosition);
+    };
+
+    angleAnnotation.updateAngle(angleSize);
+    return angleAnnotation;
+  }
+
+  makeEqn(elementDefinitions: Object, color: Array<number>) {
+    labelFont.setColor(color);
+    const collection = this.diagram.equation.elements(
+      elementDefinitions,
+      labelFont,
+    );
+    collection.transform.index = 0;
+    collection.transform = collection.transform.rotate(0);
+
+    const eqn = this.diagram.equation.make(collection);
+    collection.eqn = eqn;
+
+    collection.init = () => {
+      collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+      collection.eqn.arrange(0.6, 'center', 'middle');
+    };
+    return collection;
+  }
+
+  makeEquationText(color: Array<number> = [1, 1, 1, 1], text: string = '') {
+    const collection = this.makeEqn({ text }, color);
+    collection.eqn.createEq(['text']);
+    collection.init();
     return collection;
   }
 
