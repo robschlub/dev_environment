@@ -234,9 +234,9 @@ class AngleCircle extends DiagramElementCollection {
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     layout: Object = this.layout.angleAnnotation,
   ) {
-    let label = this.makeEquationText(color, '');
+    let label = this.makeEquationText('', color);
     if (typeof angleText === 'string') {
-      label = this.makeEquationText(color, angleText);
+      label = this.makeEquationText(angleText, color);
     } else if (angleText instanceof DiagramElementCollection) {
       label = angleText;
     }
@@ -280,14 +280,19 @@ class AngleCircle extends DiagramElementCollection {
     const eqn = this.diagram.equation.make(collection);
     collection.eqn = eqn;
 
-    collection.init = () => {
-      collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    collection.layout = () => {
       collection.eqn.arrange(0.6, 'center', 'middle');
     };
+
+    collection.init = () => {
+      collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+      collection.layout();
+    };
+    
     return collection;
   }
 
-  makeEquationText(color: Array<number> = [1, 1, 1, 1], text: string = '') {
+  makeEquationText(text: string = '', color: Array<number> = [1, 1, 1, 1]) {
     const collection = this.makeEqn({ text }, color);
     collection.eqn.createEq(['text']);
     collection.init();

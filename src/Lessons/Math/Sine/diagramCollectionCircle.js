@@ -1,12 +1,12 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform, Point, polarToRect, Rect } from '../../../js/diagram/tools/g2';
+import { Transform, Point, Rect } from '../../../js/diagram/tools/g2';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
-import { SinCosCircle, labelFont } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
+import { SinCosCircle } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type {
   SinCosCircleType, equationType, sineCosineLineType, textEquationType,
-  SinCosVarStateType,
+  SinCosVarStateType, SinCosCircleAngleAnnotationType,
 } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import lessonLayout from './layout';
 import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
@@ -48,8 +48,7 @@ type equationThetaType = equationType;
 
 type angleAnnotationType = {
   _label: equationComplimentType | equationThetaType;
-  _arc: DiagramElementPrimative;
-} & DiagramElementCollection;
+} & SinCosCircleAngleAnnotationType;
 
 type complimentarySineCollectionType = {
   _xAxis: DiagramElementPrimative;
@@ -98,24 +97,24 @@ class SineCollection extends SinCosCircle {
     return this.makeEquationText('θ', color);
   }
 
-  makeEqn(elementDefinitions: Object, color: Array<number>) {
-    labelFont.setColor(color);
-    const collection = this.diagram.equation.elements(
-      elementDefinitions,
-      labelFont,
-    );
-    collection.transform.index = 0;
-    collection.transform = collection.transform.rotate(0);
+  // makeEqn(elementDefinitions: Object, color: Array<number>) {
+  //   labelFont.setColor(color);
+  //   const collection = this.diagram.equation.elements(
+  //     elementDefinitions,
+  //     labelFont,
+  //   );
+  //   collection.transform.index = 0;
+  //   collection.transform = collection.transform.rotate(0);
 
-    const eqn = this.diagram.equation.make(collection);
-    collection.eqn = eqn;
+  //   const eqn = this.diagram.equation.make(collection);
+  //   collection.eqn = eqn;
 
-    collection.init = () => {
-      collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-      collection.eqn.arrange(0.6, 'center', 'middle');
-    };
-    return collection;
-  }
+  //   collection.init = () => {
+  //     collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+  //     collection.eqn.arrange(0.6, 'center', 'middle');
+  //   };
+  //   return collection;
+  // }
 
   makeEquationFuncTheta(color: Array<number> = [1, 1, 1, 1], func: string = 'sin') {
     const collection = this.makeEqn({ func, theta: 'θ' }, color);
@@ -183,31 +182,31 @@ class SineCollection extends SinCosCircle {
     return bow;
   }
 
-  makeAngleAnnotation(
-    angleStart: number,
-    angleSize: number,
-    angleText: DiagramElementCollection,
-    color: Array<number> = [0.5, 0.5, 0.5, 1],
-    layout: Object = this.layout.angleAnnotation,
-  ) {
-    const angleFraction = angleSize / Math.PI / 2;
-    const labelPosition = polarToRect(layout.arc.radius +
-      layout.label.radiusOffset, angleStart + angleSize / 2);
-    const label = angleText;
-    label.transform.updateTranslation(labelPosition);
+  // makeAngleAnnotation(
+  //   angleStart: number,
+  //   angleSize: number,
+  //   angleText: DiagramElementCollection,
+  //   color: Array<number> = [0.5, 0.5, 0.5, 1],
+  //   layout: Object = this.layout.angleAnnotation,
+  // ) {
+  //   const angleFraction = angleSize / Math.PI / 2;
+  //   const labelPosition = polarToRect(layout.arc.radius +
+  //     layout.label.radiusOffset, angleStart + angleSize / 2);
+  //   const label = angleText;
+  //   label.transform.updateTranslation(labelPosition);
 
-    const arc = this.shapes.polygon(
-      layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
-      layout.arc.sides * angleFraction, color,
-      new Transform(),
-    );
+  //   const arc = this.shapes.polygon(
+  //     layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
+  //     layout.arc.sides * angleFraction, color,
+  //     new Transform(),
+  //   );
 
-    const angleAnnotation = this.shapes.collection(new Transform()
-      .scale(1, 1).rotate(0));
-    angleAnnotation.add('arc', arc);
-    angleAnnotation.add('label', label);
-    return angleAnnotation;
-  }
+  //   const angleAnnotation = this.shapes.collection(new Transform()
+  //     .scale(1, 1).rotate(0));
+  //   angleAnnotation.add('arc', arc);
+  //   angleAnnotation.add('label', label);
+  //   return angleAnnotation;
+  // }
 
   makeThetaAngle(color: Array<number> = [0.5, 0.5, 0.5, 1]) {
     return this.makeAngleAnnotation(
