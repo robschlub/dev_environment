@@ -863,7 +863,8 @@ class Transform {
   index: number;
 
   constructor(order: Array<Translation | Rotation | Scale> = []) {
-    this.order = order.slice();
+    this.order = order.map(t => t.copy());
+    // this.order = order.slice();
     this.index = this.order.length;
     this.calcMatrix();
   }
@@ -1390,6 +1391,12 @@ function comparePoints(
   return { min, max };
 }
 
+function polarToRect(mag: number, angle: number) {
+  return new Point(
+    mag * Math.cos(angle),
+    mag * Math.sin(angle),
+  );
+}
 // $FlowFixMe
 function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   let firstPoint = true;
@@ -1435,4 +1442,5 @@ export {
   curvedPath,
   quadraticBezier,
   translationPath,
+  polarToRect,
 };

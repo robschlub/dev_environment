@@ -4,12 +4,14 @@ import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
 } from './tools/g2';
+import * as m2 from './tools/m2';
 import type { pathOptionsType } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import { TextObject } from './DrawingObjects/TextObject/TextObject';
+import { colorArrayToRGBA } from '../tools/tools';
 
 function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
   let callbackToUse = () => {};
@@ -206,6 +208,7 @@ class DiagramElement {
   setTransformCallback: (Transform) => void; // element.transform is updated
 
   color: Array<number>;           // For the future when collections use color
+  noRotationFromParent: boolean;
 
   animate: {
     transform: {
@@ -311,6 +314,11 @@ class DiagramElement {
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
     this.onClick = null;
+    this.lastDrawElementTransformPosition = {
+      parentCount: 0,
+      elementCount: 0,
+    };
+    this.noRotationFromParent = false;
     this.animate = {
       color: {
         plan: [],
@@ -501,7 +509,7 @@ class DiagramElement {
     return percentComplete;
   }
 
-  setPosition(pointOrX: Point, y: number = 0) {
+  setPosition(pointOrX: Point | number, y: number = 0) {
     let position = pointOrX;
     if (typeof pointOrX === 'number') {
       position = new Point(pointOrX, y);
@@ -896,6 +904,7 @@ class DiagramElement {
         // Do not move this reset out of the if statement as stopAnimatingColor
         // is called at the start of an new animation and therefore the
         // disolving state will be lost.
+        // console.log(this.name, this.animate.color.plan.slice(-1)[0].startColor.slice())
         this.state.disolving = '';
       }
     }
@@ -1271,7 +1280,8 @@ class DiagramElement {
 
         // Use the pulse magnitude to get the current pulse transform
         const pTransform = this.pulse.transformMethod(pulseMag);
-
+        // if(this.name === '_radius') {
+        // }
         // Transform the current transformMatrix by the pulse transform matrix
         // const pMatrix = m2.mul(m2.copy(transform), pTransform.matrix());
 
@@ -1284,7 +1294,10 @@ class DiagramElement {
     }
     return pulseTransforms;
   }
-  pulseScaleNow(time: number, scale: number, frequency: number = 0) {
+  pulseScaleNow(
+    time: number, scale: number,
+    frequency: number = 0, callback: ?(?mixed) => void = null,
+  ) {
     this.pulse.time = time;
     if (frequency === 0 && time === 0) {
       this.pulse.frequency = 1;
@@ -1300,9 +1313,13 @@ class DiagramElement {
     this.pulse.B = scale - 1;
     this.pulse.C = 0;
     this.pulse.num = 1;
+    this.pulse.callback = callback;
     this.pulseNow();
   }
-  pulseThickNow(time: number, scale: number, num: number = 3) {
+  pulseThickNow(
+    time: number, scale: number,
+    num: number = 3, callback: ?(?mixed) => void = null,
+  ) {
     let bArray = [scale];
     this.pulse.num = num;
     if (this.pulse.num > 1) {
@@ -1321,6 +1338,7 @@ class DiagramElement {
     this.pulse.A = 1;
     this.pulse.B = bArray;
     this.pulse.C = 0;
+    this.pulse.callback = callback;
     this.pulseNow();
   }
 
@@ -1373,6 +1391,53 @@ class DiagramElement {
       gl.width * glToDiagramScale.x,
       gl.height * glToDiagramScale.y,
     );
+  }
+
+  getDiagramPosition() {
+    const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const diagramSpace = {
+      x: {
+        bottomLeft: this.diagramLimits.left,
+        width: this.diagramLimits.width,
+      },
+      y: {
+        bottomLeft: this.diagramLimits.bottom,
+        height: this.diagramLimits.height,
+      },
+    };
+    const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
+    return location.transformBy(glToDiagramSpace.matrix());
+  }
+
+  setDiagramPosition(diagramPosition: Point) {
+    const glSpace = {
+      x: { bottomLeft: -1, width: 2 },
+      y: { bottomLeft: -1, height: 2 },
+    };
+    const diagramSpace = {
+      x: {
+        bottomLeft: this.diagramLimits.left,
+        width: this.diagramLimits.width,
+      },
+      y: {
+        bottomLeft: this.diagramLimits.bottom,
+        height: this.diagramLimits.height,
+      },
+    };
+    const diagramToGLSpace = spaceToSpaceTransform(diagramSpace, glSpace);
+    const glLocation = diagramPosition.transformBy(diagramToGLSpace.matrix());
+    const t = new Transform(this.lastDrawTransform.order.slice(2));
+    const newLocation = glLocation.transformBy(m2.inverse(t.matrix()));
+    this.setPosition(newLocation);
+  }
+
+  setDiagramPositionToElement(element: DiagramElement) {
+    const p = element.getDiagramPosition();
+    this.setDiagramPosition(p);
   }
 
   setMoveBoundaryToDiagram(
@@ -1453,6 +1518,35 @@ class DiagramElement {
       this.onClick(this);
     }
   }
+
+
+  // processParentTransform(parentTransform: Transform): Transform {
+  //   let newTransform;
+  //   if (this.noRotationFromParent) {
+  //     const finalParentTransform = parentTransform.copy();
+  //     let r = 0;
+  //     for (let i = 0; i < finalParentTransform.order.length; i += 1) {
+  //       const t = finalParentTransform.order[i];
+  //       if (t instanceof Rotation) {
+  //         r += t.r;
+  //       }
+  //     }
+
+  //     const m = parentTransform.matrix();
+  //     const translation = new Point(m[2], m[5]);
+  //     const scale = new Point(
+  //       new Point(m[0], m[3]).distance(),
+  //       new Point(m[1], m[4]).distance(),
+  //     );
+  //     newTransform = new Transform()
+  //       .scale(scale)
+  //       // .rotate(r)
+  //       .translate(translation);
+  //   } else {
+  //     newTransform = parentTransform;
+  //   }
+  //   return newTransform;
+  // }
 }
 
 // ***************************************************************
@@ -1512,6 +1606,10 @@ class DiagramElementPrimative extends DiagramElement {
       if (this.vertices instanceof TextObject) {
         this.vertices.setColor(this.color);
       }
+      if (this.vertices instanceof HTMLObject) {
+        // $FlowFixMe
+        this.vertices.element.style.color = colorArrayToRGBA(this.color);
+      }
     }
   }
 
@@ -1561,6 +1659,8 @@ class DiagramElementPrimative extends DiagramElement {
         parentCount: parentTransform.order.length,
         elementCount: this.transform.order.length,
       };
+
+      // const finalParentTransform = this.processParentTransform(parentTransform);
       const newTransform = parentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
@@ -1592,6 +1692,7 @@ class DiagramElementPrimative extends DiagramElement {
       parentCount: parentTransform.order.length,
       elementCount: this.transform.order.length,
     };
+    // const finalParentTransform = this.processParentTransform(parentTransform);
     const firstTransform = parentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
@@ -1743,6 +1844,7 @@ class DiagramElementCollection extends DiagramElement {
         parentCount: parentTransform.order.length,
         elementCount: this.transform.order.length,
       };
+      // const finalParentTransform = this.processParentTransform(parentTransform);
       const newTransform = parentTransform.transform(this.transform);
       const pulseTransforms = this.transformWithPulse(now, newTransform);
 
@@ -1831,6 +1933,7 @@ class DiagramElementCollection extends DiagramElement {
   }
 
   setFirstTransform(parentTransform: Transform = new Transform()) {
+    // const finalParentTransform = this.processParentTransform(parentTransform);
     const firstTransform = parentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
@@ -1883,10 +1986,8 @@ class DiagramElementCollection extends DiagramElement {
     if (!this.isTouchable && !this.hasTouchableElements) {
       return [];
     }
-    // console.log(this.name, 1)
     let touched = [];
     if (this.touchInBoundingRect && this.isTouchable) {
-      // console.log(this.name, 2)
       if (this.isBeingTouched(glLocation)) {
         touched.push(this);
       }
@@ -1985,6 +2086,55 @@ class DiagramElementCollection extends DiagramElement {
       }
     }
     return elements;
+  }
+
+  disolveElementsOut(
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        element.disolveElementsOut(time, callback);
+      } else {
+        element.disolveOut(time, callback);
+      }
+    }
+  }
+
+  disolveElementsIn(
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element instanceof DiagramElementCollection) {
+        element.disolveElementsIn(time, callback);
+      } else {
+        element.disolveIn(time, callback);
+      }
+    }
+  }
+
+  // This method is here as a convenience method for content item selectors
+  // eslint-disable-next-line class-methods-use-this
+  goToStep(step: number) {
+    const elem = document.getElementById('id__lesson_item_selector_0');
+    const elems = [];
+    if (elem != null) {
+      if (elem.children.length > 0) {
+        for (let i = 0; i < elem.children.length; i += 1) {
+          elems.push(elem.children[i]);
+        }
+      }
+    }
+    elems.forEach((e, index) => {
+      if (index === step) {
+        e.classList.add('lesson__item_selector_selected');
+      } else {
+        e.classList.remove('lesson__item_selector_selected');
+      }
+    });
   }
 }
 

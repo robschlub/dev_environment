@@ -1,14 +1,14 @@
 // https://codepen.io/jakealbaugh/post/css4-variables-and-sass
 @import '../../../css/style';
 
-$color-lines: color(diagram, 'primary');
-$color-corners: color(diagram, 'primary', light);
+$color-lines: color('diagram', 'primary');
+$color-corners: color('diagram', 'primary', light);
 $color-moreSharp: color(3);
 $color-lessSharp: color(4);
 $color-anchor: color(4);
-$color-radius: color(diagram, 'primary');
-$color-reference: color(diagram, 'primary', light);
-$color-background: color(diagram, 'background'),;
+$color-radius: color('diagram', 'primary');
+$color-reference: color('diagram', 'primary', light);
+$color-background: color('diagram', 'background'),;
 
 $_lesson_vars: (
   linewidth: 0.03,
@@ -148,16 +148,16 @@ $_lesson_vars: (
   colorRadius: $color-radius;
   colorReference: $color-reference;
   colorBackground: $color-background;
-  colorGrid: color(navbar, 'background');
+  colorGrid: color('navbar', 'background');
 }
 /* stylelint-enable */
 
 #section1__upper {
-  background-color: rgba(color(diagram, 'background'), 0.4);
+  background-color: rgba(color('diagram', 'background'), 0.4);
 }
 
 #section1__lower {
-  background-color: rgba(color(diagram, 'background'), 0.4);
+  background-color: rgba(color('diagram', 'background'), 0.4);
   // margin-top: calc(var(--lesson__content-height) * 0.5);
   margin-top: 35%;
 }

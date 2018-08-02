@@ -22,6 +22,36 @@ function centerH(text: string = '') {
         ${text}</div>`;
 }
 
+function itemSelector(
+  items: Array<string> = [''],
+  classes: string = '',
+  selectorIndex: number = 0,
+) {
+  let outStr = `<ul id="id__lesson_item_selector_${selectorIndex}" 
+                    class=${classes}>`;
+  items.forEach((item, index) => {
+    outStr += `<li id="id__lesson_item_selector_${index}">${item}</li>`;
+  });
+  outStr += '</ul>';
+  return outStr;
+}
+
+function initializeItemSelector(
+  methodToExecute: Function,
+  bindingObject: Object,
+  index: number = 0,
+) {
+  const elem = document
+    .getElementById(`id__lesson_item_selector_${index}`);
+  if (elem != null) {
+    if (elem.children.length > 0) {
+      for (let i = 0; i < elem.children.length; i += 1) {
+        elem.children[i].onclick = methodToExecute.bind(bindingObject, i);
+      }
+    }
+  }
+}
+
 function toHTML(
   text: string = '',
   id: string = '',
@@ -261,7 +291,7 @@ class Section {
     fromPrev: boolean;
     toGoto: boolean;
     fromGoto: boolean;
-  }
+  };
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
@@ -486,5 +516,5 @@ class LessonContent {
 export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
-  clickWord,
+  clickWord, itemSelector, initializeItemSelector,
 };

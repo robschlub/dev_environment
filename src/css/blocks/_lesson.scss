@@ -82,7 +82,7 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__widescreen_backdrop {
-  background-color: color(diagram, 'background');
+  background-color: color('diagram', 'background');
 }
 
 .lesson__container {
@@ -119,7 +119,7 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__diagram_text p {
-  color: color(diagram, 'text-base');
+  color: color('diagram', 'text-base');
   margin-left: calc(var(--lesson__text-margin) * 1);
   margin-right: calc(var(--lesson__text-margin) * 1);
   margin-top: var(--lesson__text-p-spacing);
@@ -139,23 +139,26 @@ $diagram_ratio: 1.5;
 // }
 
 .lesson__diagram_text_p_width_50 {
-  width: 50%;
+  // width: 50%;
+  width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.5);
 }
 
 .lesson__diagram_text_p_width_45 {
-  width: 45%;
+  // width: 45%;
+  width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.45);
 }
 
 .lesson__diagram_text_p_width_40 {
-  width: 40%;
+  // width: 40%;
+  width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.4);
 }
 
 .lesson__diagram_text_p_width_55 {
-  width: 55%;
+  width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.55);
 }
 
 .lesson__diagram_text_p_width_60 {
-  width: 60%;
+  width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.6);
 }
 
 .lesson__diagram_text_p_right {
@@ -167,7 +170,7 @@ $diagram_ratio: 1.5;
   border-style: none;
   border: 0;
   padding: 0;
-  background-color: color(diagram, 'background');
+  background-color: color('diagram', 'background');
   top: calc(100% - (100% - var(--lesson__content-height)) / 2 - var(--lesson__np_button-height) / 2);
   width: 0;
   height: 0;
@@ -184,35 +187,35 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__button-next-enabled {
-  border-left: var(--lesson__np_button-width) solid color(navbar, 'button');
+  border-left: var(--lesson__np_button-width) solid color('navbar', 'button');
 }
 
 .lesson__button-next-enabled:hover {
-  border-left: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
+  border-left: var(--lesson__np_button-width) solid lighten(color('navbar', 'button'), 20);
 }
 
 .lesson__button-next-disabled {
-  border-left: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
+  border-left: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
 }
 
 .lesson__button-next-disabled:hover {
-  border-left: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
+  border-left: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
 }
 
 .lesson__button-prev-enabled {
-  border-right: var(--lesson__np_button-width) solid color(navbar, 'button');
+  border-right: var(--lesson__np_button-width) solid color('navbar', 'button');
 }
 
 .lesson__button-prev-enabled:hover {
-  border-right: var(--lesson__np_button-width) solid lighten(color(navbar, 'button'), 20);
+  border-right: var(--lesson__np_button-width) solid lighten(color('navbar', 'button'), 20);
 }
 
 .lesson__button-prev-disabled {
-  border-right: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
+  border-right: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
 }
 
 .lesson__button-prev-disabled:hover {
-  border-right: var(--lesson__np_button-width) solid darken(color(navbar, 'button'), 40);
+  border-right: var(--lesson__np_button-width) solid darken(color('navbar', 'button'), 40);
 }
 
 .lesson__button-goto_container {
@@ -227,14 +230,14 @@ $diagram_ratio: 1.5;
 .lesson__button-goto {
   position: absolute;
   border: 0;
-  background-color: color(diagram, 'background');
+  background-color: color('diagram', 'background');
   font-size: var(--lesson__goto_button-font-size);
-  color: color(lesson, 'text');
+  color: color('lesson', 'text');
   width: var(--lesson__goto_button-width);
 }
 
 #lesson__button-goto:hover {
-  background-color: color(diagram, 'background', 'dark');
+  background-color: color('diagram', 'background', 'dark');
 }
 
 // #lesson__page_number {
@@ -244,7 +247,7 @@ $diagram_ratio: 1.5;
 //   top: calc(100% - (100% - var(--lesson__content-height)) * 3 / 4 - var(--lesson__goto_button-font-size) / 2);
 //   font-size: var(--lesson__goto_button-font-size);
 //   text-align: center;
-//   color: color(navbar, 'button');
+//   color: color('navbar', 'button');
 // }
 
 @media (min-aspect-ratio: 3/2) {
@@ -302,7 +305,7 @@ $diagram_ratio: 1.5;
 }
 
 .highlight_word {
-  color: color(diagram, 'text-keyword');
+  color: color('diagram', 'text-keyword');
   font-style: italic;
 }
 
@@ -315,20 +318,33 @@ $diagram_ratio: 1.5;
   cursor: pointer;
 }
 
+.lesson__sanskrit,
+.lesson__arabic,
+.lesson__latin,
+.lesson__greek,
+.greek,
 .latin {
   font-style: italic;
   font-family: Times New Roman, serif;
-  color: color(diagram, 'text-latin');
+  color: color('diagram', 'text-latin');
 }
 
-.greek {
-  font-style: italic;
-  color: color(diagram, 'text-greek');
-}
+// .greek {
+//   font-style: italic;
+//   color: color('diagram', 'text-greek');
+// }
 
 .english {
   font-style: italic;
-  color: color(diagram, 'text-english');
+  color: color('diagram', 'text-english');
+}
+
+.lesson__font_0p95 {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.95);
+}
+
+.lesson__font_0p9 {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.9);
 }
 
 .lesson__font_0p8 {
@@ -358,14 +374,14 @@ $diagram_ratio: 1.5;
   margin-top: var(--lesson__text-p-spacing);
   padding-left: calc(var(--lesson__text-margin) * 0.2);
   margin-left: calc(var(--lesson__text-margin) * 1);
-  color: color(diagram, 'disabled');
+  color: color('diagram', 'disabled');
   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
   font-style: italic;
 }
 
 .lesson__table {
   border-collapse: separate;
-  color: color(diagram, 'text-base');
+  color: color('diagram', 'text-base');
   margin-left: calc(var(--lesson__text-margin) * 1);
   margin-right: calc(var(--lesson__text-margin) * 1);
   font-size: calc(var(--lesson__diagram-font-size) * 0.8);
@@ -388,7 +404,7 @@ $diagram_ratio: 1.5;
   text-align: center;
   // font-weight: bold;
   width: 100%;
-  background-color: color(lesson, 'title-background');
+  background-color: color('lesson', 'title-background');
 }
 
 @media screen and (min-width: $mobile) {
@@ -424,7 +440,7 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__title_tile_containter {
-  background: color(site, 'primary');
+  background: color('site', 'primary');
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 30px;
@@ -497,3 +513,8 @@ $diagram_ratio: 1.5;
 #id_lesson__title_container .navigator__lesson_tile_title_container {
   width: calc(var(--lesson__title_tile_width) - var(--navigator__tile_padding_horizontal) * 2 - var(--navigator__tile_img_text_space) * 2 - var(--navigator__tile_img_width) * 2);
 }
+
+.lesson__item_selector_selected {
+  color: color('diagram', 'text-base');
+}
+

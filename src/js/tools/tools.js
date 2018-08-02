@@ -111,10 +111,14 @@ function RGBToArray(color: string): Array<number> {
   let colString: string = color;
   colString = colString.replace(/.*\(/i, '');
   colString = colString.replace(/\)/i, '');
-  const strArray = colString.split(', ');
-
+  const strArray = colString.split(',');
   // Go through each rgb(a) value and normalize to 1.0
-  const value: Array<number> = strArray.map(x => parseInt(x, 10) / 255.0);
+  const value: Array<number> = strArray.map((x, index) => {
+    if (index < 3) {
+      return parseInt(x, 10) / 255.0;
+    }
+    return parseFloat(x);
+  });
 
   // If an alpha value isn't included, then include it with default value 1.0
   if (value.length === 3) {

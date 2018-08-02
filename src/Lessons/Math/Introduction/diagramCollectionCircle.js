@@ -6,7 +6,7 @@ import Diagram from '../../../js/diagram/Diagram';
 import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
 import { Point, Transform, Rect } from '../../../js/diagram/tools/g2';
-import DiagramGLEquation from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 import lessonLayout from './layout';
 

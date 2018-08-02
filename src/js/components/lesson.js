@@ -346,13 +346,13 @@ export default class LessonComponent extends React.Component
         <div id="lesson__container_name" className="lesson__container">
               {this.addPrevButton()}
               <div id={this.lesson.content.diagramHtmlId} className="diagram__container lesson__diagram">
+                <canvas className='diagram__text'>
+                </canvas>
                 <canvas className='diagram__gl'>
                 </canvas>
                 <div id="dd" className='diagram__html'>
                   {this.renderContent(this.state.htmlText)}
                 </div>
-                <canvas className='diagram__text'>
-                </canvas>
               </div>
               {this.addGoToButton()}
               {this.addNextButton()}

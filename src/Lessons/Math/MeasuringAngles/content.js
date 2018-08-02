@@ -688,9 +688,9 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         const { scale } = layout.arcEquation;
-        diag.radiusEqn.arrange(scale, diag._arcEquation._equals);
-        diag.angleEqn.arrange(scale, diag._arcEquation._equals);
-        diag.arcEqn.arrange(scale, diag._arcEquation._equals);
+        diag.radiusEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
+        diag.angleEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
+        diag.arcEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
         diag._arcEquation.setPosition(layout.arcEquation.center);
       },
       setSteadyState: () => {
@@ -842,8 +842,8 @@ class Content extends LessonContent {
         arc_length: click(diag.pulseArc, [diag], colors.arc),
       },
       setEnterState: () => {
-        diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
+        diag.circEqn.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        diag.circEqnGeneral.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
         diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
         diag._circumferenceEquation.varState = 0;
         const t = diag._circumferenceEquation._angle.transform.t();
@@ -898,9 +898,9 @@ class Content extends LessonContent {
 
       },
       setEnterState: () => {
-        diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
-        diag.circEqnShort.arrange(1, diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
+        diag.circEqn.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        diag.circEqnShort.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        diag.circEqnGeneral.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
         diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
         diag._circumferenceEquation.varState = 1;
         const t = diag._circumferenceEquation._angle.transform.t();
@@ -996,15 +996,15 @@ class Content extends LessonContent {
         let scale = layout.arcEquation.summaryScale;
         diag._angleText.setPosition(layout.angleEqualsText.summary);
 
-        diag.radiusEqn.arrange(scale, diag._arcEquation._equals);
-        diag.angleEqn.arrange(scale, diag._arcEquation._equals);
-        diag.arcEqn.arrange(scale, diag._arcEquation._equals);
+        diag.radiusEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
+        diag.angleEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
+        diag.arcEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
         diag._arcEquation.setPosition(layout.arcEquation.summary);
 
         scale = layout.circEquation.summaryScale;
-        diag.circEqn.arrange(scale, diag._circumferenceEquation._equals);
-        diag.circEqnShort.arrange(scale, diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(scale, diag._circumferenceEquation._equals);
+        diag.circEqn.arrange(scale, 'left', 'baseline', diag._circumferenceEquation._equals);
+        diag.circEqnShort.arrange(scale, 'left', 'baseline', diag._circumferenceEquation._equals);
+        diag.circEqnGeneral.arrange(scale, 'left', 'baseline', diag._circumferenceEquation._equals);
         diag._circumferenceEquation.varState = 1;
         const t = diag._circumferenceEquation._angle.transform.t();
         if (t != null) {

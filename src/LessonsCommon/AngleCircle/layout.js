@@ -34,14 +34,24 @@ export default function angleCircleLayout() {
         width: 0.1,
         height: 0.1,
       },
+      lineWidth: 0.03,
+    },
+    axes: {
+      length: 1.2,
     },
     circle: {
       angle: {
         small: 0.8,
         large: Math.PI * 1.4,
       },
+      center: new Point(0, 0),
     },
-
+    arc: {
+      lineWidth: 0.03,
+    },
+    circumference: {
+      lineWidth: 0.03,
+    },
     angleRadius: 0.5,
     anchorPoints: 50,
     anglePoints: 400,
@@ -54,11 +64,21 @@ export default function angleCircleLayout() {
     angleEqualsText: {
       left: new Point(0, 0),
       units: {
-        deg: 0.87,
-        text: 0.90,
+        deg: 0.45,
+        text: 0.48,
       },
     },
-
+    angleAnnotation: {
+      arc: {
+        lineWidth: 0.02,
+        radius: 0.3,
+        sides: 200,
+      },
+      label: {
+        radiusOffset: 0.07,
+        hideAngle: 0.15,
+      },
+    },
     colors,
   };
 }

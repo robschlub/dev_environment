@@ -28,6 +28,7 @@ const lessonIndex = [
   new LessonDescription('Angles', '/Lessons/Math/Angle'),
   new LessonDescription('Measuring Angles', '/Lessons/Math/MeasuringAngles'),
   new LessonDescription('Important Angles', '/Lessons/Math/ImportantAngles'),
+  new LessonDescription('Adjacent Angles', '/Lessons/Math/AdjacentAngles'),
   new LessonDescription('Triangles'),
   [
     new LessonDescription('Similar Triangles'),
@@ -36,7 +37,7 @@ const lessonIndex = [
     new LessonDescription('Triangle Area'),
     new LessonDescription('Circle Area'),
   ],
-  new LessonDescription('sine'),
+  new LessonDescription('Sine (work in progress)', '/Lessons/Math/Sine'),
   [
     new LessonDescription('cosine'),
     new LessonDescription('tan'),

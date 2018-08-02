@@ -1,7 +1,10 @@
 // @flow
-import { Point } from '../../tools/g2';
+import { Point, Rect, Transform } from '../../tools/g2';
 import { roundNum } from '../../tools/mathtools';
+import { RGBToArray } from '../../../tools/tools';
 import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
+import { DiagramText, DiagramFont, TextObject } from '../../DrawingObjects/TextObject/TextObject';
+import DrawContext2D from '../../DrawContext2D';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
 // import { HTMLObject } from './DrawingObjects/HTMLObject/HTMLObject';
 
@@ -88,7 +91,6 @@ class Elements {
     let des = 0;
     let asc = 0;
     const loc = location.copy();
-
     this.content.forEach((element) => {
       element.calcSize(loc, scale);
 
@@ -132,7 +134,8 @@ class Fraction extends Elements {
   lineWidth: number;
   lineVAboveBaseline: number;
   vinculum: DiagramElementPrimative | null | DiagramElementCollection;
-  mini: boolean;
+  // mini: boolean;
+  scaleModifier: number
   vinculumPosition: Point;
   vinculumScale: Point;
 
@@ -154,23 +157,25 @@ class Fraction extends Elements {
     this.vSpaceDenom = 0;
     this.lineVAboveBaseline = 0;
     this.lineWidth = 0;
-    this.mini = false;
+    // this.mini = false;
+    this.scaleModifier = 1;
     this.vinculumPosition = new Point(0, 0);
     this.vinculumScale = new Point(1, 0.01);
   }
 
   calcSize(location: Point, incomingScale: number) {
-    const scale = this.mini ? incomingScale * 0.35 : incomingScale;
+    const scale = incomingScale * this.scaleModifier;
     this.location = location.copy();
     this.numerator.calcSize(location, scale);
     this.denominator.calcSize(location, scale);
-    this.width = Math.max(this.numerator.width, this.denominator.width) + scale * 0.4;
+
+    this.width = Math.max(this.numerator.width, this.denominator.width) * 1.3;
+
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
-
     this.vSpaceNum = scale * 0.05;
     this.vSpaceDenom = scale * 0.02;
-    this.lineVAboveBaseline = this.mini ? incomingScale * 0.35 : scale * 0.07;
+    this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
     this.lineWidth = scale * 0.02;
 
     const yNumerator = this.numerator.descent +
@@ -517,7 +522,59 @@ class Integral extends Elements {
 
 type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
-export default class DiagramGLEquation extends Elements {
+export function createEquationElements(
+  elems: Object,
+  drawContext2D: DrawContext2D,
+  colorOrFont: Array<number> | DiagramFont = [],
+  diagramLimits: Rect = new Rect(-1, -1, 2, 2),
+) {
+  let color = [1, 1, 1, 1];
+  if (Array.isArray(colorOrFont)) {
+    color = colorOrFont.slice();
+  }
+  let font = new DiagramFont(
+    'Times New Roman',
+    'italic',
+    0.2,
+    '200',
+    'left',
+    'alphabetic',
+    color,
+  );
+  if (colorOrFont instanceof DiagramFont) {
+    font = colorOrFont;
+    if (font.color != null) {
+      color = RGBToArray(font.color);
+    }
+  }
+
+  const equationElements = new DiagramElementCollection(
+    new Transform().scale(1, 1).translate(0, 0),
+    diagramLimits,
+  );
+  Object.keys(elems).forEach((key) => {
+    if (typeof elems[key] === 'string') {
+      const dT = new DiagramText(new Point(0, 0), elems[key], font);
+      const to = new TextObject(drawContext2D, [dT]);
+      const p = new DiagramElementPrimative(
+        to,
+        new Transform().scale(1, 1).translate(0, 0),
+        color,
+        diagramLimits,
+      );
+      equationElements.add(key, p);
+    }
+    if (elems[key] instanceof DiagramElementPrimative) {
+      equationElements.add(key, elems[key]);
+    }
+    if (elems[key] instanceof DiagramElementCollection) {
+      equationElements.add(key, elems[key]);
+    }
+  });
+  return equationElements;
+}
+
+export class DiagramGLEquation extends Elements {
   collection: DiagramElementCollection;
 
   constructor(collection: DiagramElementCollection) {
@@ -555,10 +612,13 @@ export default class DiagramGLEquation extends Elements {
     });
   }
 
+  // By default, the colleciton is arranged so the first element in the
+  // equation is at (0,0) in colleciton space.
   arrange(
-    // location: Point = new Point(0, 0),
     scale: number = 1,
-    fixElement: DiagramElementPrimative | DiagramElementCollection | null = null,
+    alignH: 'left' | 'right' | 'center' | null = 'left',
+    alignV: 'top' | 'bottom' | 'middle' | 'baseline' | null = 'baseline',
+    fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
     const elementsInEqn = this.getAllElements();
     const elementsInCollection = this.collection.getAllElements();
@@ -566,19 +626,55 @@ export default class DiagramGLEquation extends Elements {
     this.collection.hideAll();
     this.collection.show();
     super.calcSize(new Point(0, 0), scale);
-    if (fixElement != null) {
-      const t = fixElement.transform.t();
+    let fixPoint = new Point(0, 0);
+    if (fixTo instanceof DiagramElementPrimative
+        || fixTo instanceof DiagramElementCollection) {
+      const t = fixTo.transform.t();
       if (t != null) {
-        const delta = new Point(0, 0).sub(t);
-        elementsInEqn.forEach((e) => {
-          const et = e.transform.t();
-          if (et != null) {
-            const etNew = et.add(delta);
-            e.transform.updateTranslation(etNew);
-          }
-        });
+        fixPoint = t.copy();
+      }
+    } else {
+      fixPoint = fixTo.copy();
+    }
+    let w = this.width;
+    let h = this.height;
+    let a = this.ascent;
+    let d = this.descent;
+    let p = this.location.copy();
+    // let { height } = this;
+    if (fixTo instanceof DiagramElementPrimative
+        || fixTo instanceof DiagramElementCollection) {
+      const t = fixTo.transform.t();
+      if (t != null) {
+        const rect = fixTo.getRelativeDiagramBoundingRect();
+        w = rect.width;
+        h = rect.height;
+        a = rect.top - t.y;
+        d = t.y - rect.bottom;
+        p = t.copy();
       }
     }
+    if (alignH === 'right') {
+      fixPoint.x += w;
+    } else if (alignH === 'center') {
+      fixPoint.x += w / 2;
+    }
+    if (alignV === 'top') {
+      fixPoint.y += p.y + a;
+    } else if (alignV === 'bottom') {
+      fixPoint.y += p.y - d;
+    } else if (alignV === 'middle') {
+      fixPoint.y += p.y - d + h / 2;
+    }
+    const delta = new Point(0, 0).sub(fixPoint);
+    elementsInEqn.forEach((e) => {
+      const et = e.transform.t();
+      if (et != null) {
+        const etNew = et.add(delta);
+        e.transform.updateTranslation(etNew);
+      }
+    });
+
     this.collection.showOnly(elementsCurrentlyShowing);
   }
 
@@ -647,8 +743,10 @@ export default class DiagramGLEquation extends Elements {
     // location: Point,
     scale: number = 1,
     time: number = 1,
-    fixElement: DiagramElementPrimative | DiagramElementCollection | null = null,
+    fixElement: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
     callback: ?(?mixed) => void = null,
+    xAlign: 'left' | 'center' | 'right' = 'left',
+    yAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'baseline',
   ) {
     const allElements = this.collection.getAllElements();
     this.collection.stop();
@@ -661,7 +759,7 @@ export default class DiagramGLEquation extends Elements {
 
     const currentTransforms = this.collection.getElementTransforms();
 
-    this.arrange(scale, fixElement);
+    this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
     this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);
@@ -711,9 +809,10 @@ export default class DiagramGLEquation extends Elements {
     numerator: EquationInput,
     denominator: EquationInput,
     vinculum: DiagramElementPrimative | DiagramElementCollection | string,
+    scaleModifier: number = 1,
   ) {
     const f = this.frac(numerator, denominator, vinculum);
-    f.mini = true;
+    f.scaleModifier = scaleModifier;
     return f;
   }
   frac(
