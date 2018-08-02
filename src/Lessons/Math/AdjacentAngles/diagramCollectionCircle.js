@@ -7,16 +7,14 @@ import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 
-type rightAngleType = {
-  _horizontal: DiagramElementPrimative;
-  _vertical: DiagramElementPrimative;
-} & DiagramElementCollection;
+// type rightAngleType = {
+//   _horizontal: DiagramElementPrimative;
+//   _vertical: DiagramElementPrimative;
+// } & DiagramElementCollection;
 
 export type extendedCircleType = {
-  _rightAngle: rightAngleType;
-  _acuteRange: DiagramElementPrimative;
-  _obtuseRange: DiagramElementPrimative;
-  _reflexRange: DiagramElementPrimative;
+  _startLine: DiagramElementPrimative;
+  _endLine: DiagramElementPrimative;
 } & circleType;
 
 type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
@@ -28,16 +26,31 @@ type varStateExtendedType = {
 export type AdjacentAnglesCollectionType = {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
-  // enableAutoChange: boolean;
   angleTypes: Array<string>;
 };
 
 class AdjacentAnglesCollection extends AngleCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
-  // enableAutoChange: boolean;
   angleTypes: Array<string>;
 
+  makeMoveableLine() {
+    const line = this.makeLine(
+      new Point(0, 0), this.layout.radius, this.layout.linewidth,
+      this.colors.outsideLines, new Transform().rotate(0).translate(
+        0,
+        0,
+      ),
+    );
+    line.isTouchable = true;
+    line.isMovable = true;
+    line.pulse.transformMethod = s => new Transform().scale(1, s);
+
+    for (let i = 0; i < line.vertices.border[0].length; i += 1) {
+      line.vertices.border[0][i].y *= 10;
+    }
+    return line;
+  }
   // makeRightAngle() {
   //   const rad = this.layout.angleRadius * 0.9;
   //   const rightAngle = this.shapes.collection();
@@ -55,44 +68,19 @@ class AdjacentAnglesCollection extends AngleCircle {
   //   return rightAngle;
   // }
 
-  // makeAcuteRange() {
-  //   return this.shapes.polygonFilled(
-  //     this.layout.anglePoints, this.layout.axes.length, 0,
-  //     this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
-  //       .translate(0, 0),
-  //   );
-  // }
-
-  // makeObtuseRange() {
-  //   return this.shapes.polygonFilled(
-  //     this.layout.anglePoints, this.layout.axes.length, 0,
-  //     this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
-  //       .rotate(Math.PI / 2)
-  //       .translate(0, 0),
-  //   );
-  // }
-
-  // makeReflexRange() {
-  //   return this.shapes.polygonFilled(
-  //     this.layout.anglePoints, this.layout.axes.length, 0,
-  //     this.layout.anglePoints / 2, this.colors.angleArea, new Transform()
-  //       .rotate(Math.PI)
-  //       .translate(0, 0),
-  //   );
-  // }
-
   addToCircle() {
+    this._circle.add('startLine', this.makeMoveableLine());
+    this._circle.add('endLine', this.makeMoveableLine());
     // this._circle.add('rightAngle', this.makeRightAngle());
     // this._circle.add('acuteRange', this.makeAcuteRange());
     // this._circle.add('obtuseRange', this.makeObtuseRange());
     // this._circle.add('reflexRange', this.makeReflexRange());
     // this._circle.add('axes', this.makeAxes());
-    // this._circle.order = [
-    //   ...this._circle.order.slice(-4),
-    //   ...this._circle.order.slice(0, 2),
-    //   // ...this._circle.order.slice(-1),
-    //   ...this._circle.order.slice(2, -4),
-    // ];
+    this._circle.order = [
+      ...this._circle.order.slice(-2),
+      ...this._circle.order.slice(0, -2),
+      // ...this._circle.order.slice(2, -4),
+    ];
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -108,86 +96,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.angleTypes = ['adjacent', 'complementary', 'supplementary', 'explementary'];
   }
 
-  // // eslint-disable-next-line class-methods-use-this
-  // calcAngleType(angle: number, thresholds: Object): angleTypes {
-  //   if (angle >= thresholds.acute.min && angle <= thresholds.acute.max) {
-  //     return 'acute';
-  //   }
-  //   if (angle >= thresholds.right.min && angle <= thresholds.right.max) {
-  //     return 'right';
-  //   }
-  //   if (angle >= thresholds.obtuse.min && angle <= thresholds.obtuse.max) {
-  //     return 'obtuse';
-  //   }
-  //   if (angle >= thresholds.straight.min && angle <= thresholds.straight.max) {
-  //     return 'straight';
-  //   }
-  //   if (angle >= thresholds.reflex.min && angle <= thresholds.reflex.max) {
-  //     return 'reflex';
-  //   }
-  //   return 'full';
-  // }
-
-  // calcAngleTypeDegrees(angle: number): angleTypes {
-  //   const thresholds = {
-  //     acute: {
-  //       min: 0,
-  //       max: 89,
-  //     },
-  //     right: {
-  //       min: 90,
-  //       max: 90,
-  //     },
-  //     obtuse: {
-  //       min: 91,
-  //       max: 179,
-  //     },
-  //     straight: {
-  //       min: 180,
-  //       max: 180,
-  //     },
-  //     reflex: {
-  //       min: 181,
-  //       max: 359,
-  //     },
-  //     full: {
-  //       min: 360,
-  //       max: 360,
-  //     },
-  //   };
-  //   return this.calcAngleType(angle, thresholds);
-  // }
-
-  // calcAngleTypeRadians(angle: number): angleTypes {
-  //   const thresholds = {
-  //     acute: {
-  //       min: 0,
-  //       max: 1.56,
-  //     },
-  //     right: {
-  //       min: 1.57,
-  //       max: 1.57,
-  //     },
-  //     obtuse: {
-  //       min: 1.58,
-  //       max: 3.13,
-  //     },
-  //     straight: {
-  //       min: 3.14,
-  //       max: 3.14,
-  //     },
-  //     reflex: {
-  //       min: 3.15,
-  //       max: 6.27,
-  //     },
-  //     full: {
-  //       min: 6.28,
-  //       max: 6.28,
-  //     },
-  //   };
-  //   return this.calcAngleType(angle, thresholds);
-  // }
-
   toggleUnits(toUnit: 'rad' | 'deg' | null) {
     const elemDeg = document.getElementById('id_degrees');
     const elemRad = document.getElementById('id_radians');
@@ -201,16 +109,12 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
     if (elemDeg != null && elemRad != null) {
       if (unit === 'rad') {
-        this.varState.radialLines = 2*Math.PI;
-        // this.hideDegrees();
-        // this.showRadians();
+        this.varState.radialLines = 2 * Math.PI;
         elemDeg.classList.remove('lesson__important_angles_unit_selected');
         elemRad.classList.add('lesson__important_angles_unit_selected');
         this.setParagraphUnits('rad');
       } else if (unit === 'deg') {
         this.varState.radialLines = 360;
-        // this.hideRadians();
-        // this.showDegrees();
         elemRad.classList.remove('lesson__important_angles_unit_selected');
         elemDeg.classList.add('lesson__important_angles_unit_selected');
         this.setParagraphUnits('deg');
@@ -333,18 +237,38 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToAdjacent() {
     this.showAngleType('adjacent');
+    this._circle._startLine.transform.updateRotation(0);
+    this._circle._endLine.transform.updateRotation(Math.PI / 3);
+    this.setRotation(Math.PI / 6);
+    this.diagram.animateNextFrame();
+    this.rotationLimits = { min: 0, max: 2 * Math.PI };
   }
 
   goToComplementary() {
     this.showAngleType('complementary');
+    this._circle._startLine.transform.updateRotation(0);
+    this._circle._endLine.transform.updateRotation(Math.PI / 2);
+    this.setRotation(Math.PI / 6);
+    this.diagram.animateNextFrame();
+    this.rotationLimits = { min: 0, max: Math.PI / 2};
   }
 
   goToSupplementary() {
     this.showAngleType('supplementary');
+    this._circle._startLine.transform.updateRotation(0);
+    this._circle._endLine.transform.updateRotation(Math.PI);
+    this.setRotation(Math.PI / 6);
+    this.diagram.animateNextFrame();
+    this.rotationLimits = { min: 0, max: Math.PI };
   }
 
   goToExplementary() {
     this.showAngleType('explementary');
+    this._circle._startLine.transform.updateRotation(0);
+    this._circle._endLine.transform.updateRotation(Math.PI * 2);
+    this.setRotation(Math.PI / 6);
+    this.diagram.animateNextFrame();
+    this.rotationLimits = { min: 0, max: Math.PI * 2 * 0.999 };
   }
 
   // goToRight() {

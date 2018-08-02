@@ -150,7 +150,9 @@ class Content extends LessonContent {
       showOnly: [
         circle,
         circle._radius,
-        circle._reference,
+        circle._startLine,
+        circle._endLine,
+        // circle._reference,
       ],
       setSteadyState: () => {
         diag.resetCircle('right', Math.PI / 3);

@@ -7,12 +7,12 @@ import angleCircleLayout from '../../../LessonsCommon/AngleCircle/layout';
 const cssColorNames = [
   // 'radiusLight',
   'latin',
-  'arcLight',
-  'rotation',
-  'action',
+  'outsideLines',
+  // 'rotation',
+  // 'action',
   'disabled',
-  'angleArea',
-  'axes',
+  // 'angleArea',
+  // 'axes',
   // 'degrees',
   // 'radians',
 ];

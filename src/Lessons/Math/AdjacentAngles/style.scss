@@ -10,6 +10,7 @@ $colors: (
   angleArea:        #2F351A,
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
+  outsideLines:     color('blue', 'darker'),
 );
 
 body {
