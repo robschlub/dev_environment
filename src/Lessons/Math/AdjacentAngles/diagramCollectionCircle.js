@@ -94,6 +94,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle.add('angleB', this.makeAngleB());
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
+    this._circle.setTransformCallback = this.updateCircleRotation.bind(this);
     // this._circle._startLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     // this._circle.add('rightAngle', this.makeRightAngle());
     // this._circle.add('acuteRange', this.makeAcuteRange());
@@ -146,12 +147,31 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
   }
 
+  updateCircleRotation() {
+    // const circleRotation = this._circle.transform.r();
+    // const endLineRotation = this._circle._endLine.transform.r();
+    // if (circleRotation != null && endLineRotation != null) {
+    //   this._circle._angleB._label.transform.updateRotation(-this.varState.rotation - circleRotation);
+    // }
+    this.rotateAngleLabelsToUpright();
+  }
+
   updateAngleBRotation() {
     const endLineRotation = this._circle._endLine.transform.r();
     if (endLineRotation != null) {
       this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
       this._circle._angleB.transform.updateRotation(this.varState.rotation);
-      this._circle._angleB._label.transform.updateRotation(-this.varState.rotation);
+      // this._circle._angleB._label.transform.updateRotation(-this.varState.rotation);
+      this.rotateAngleLabelsToUpright();
+    }
+  }
+
+  rotateAngleLabelsToUpright() {
+    const circleRotation = this._circle.transform.r();
+    if (circleRotation != null) {
+      this._circle._angleB._label.transform
+        .updateRotation(-this.varState.rotation - circleRotation);
+      this._circle._angleA._label.transform.updateRotation(-circleRotation);
     }
   }
 
