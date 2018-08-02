@@ -16,6 +16,7 @@ export type extendedCircleType = {
   _startLine: DiagramElementPrimative;
   _endLine: DiagramElementPrimative;
   _angleA: angleAnnotationType;
+  _angleB: angleAnnotationType;
 } & circleType;
 
 type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
@@ -61,6 +62,14 @@ class AdjacentAnglesCollection extends AngleCircle {
       [1, 0, 0, 1],
     );
   }
+  makeAngleB() {
+    return this.makeAngleAnnotation(
+      0,
+      Math.PI / 6,
+      'b',
+      [0, 1, 0, 1],
+    );
+  }
   // makeRightAngle() {
   //   const rad = this.layout.angleRadius * 0.9;
   //   const rightAngle = this.shapes.collection();
@@ -82,6 +91,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle.add('startLine', this.makeMoveableLine());
     this._circle.add('endLine', this.makeMoveableLine());
     this._circle.add('angleA', this.makeAngleA());
+    this._circle.add('angleB', this.makeAngleB());
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     // this._circle._startLine.setTransformCallback = this.updateEndLineRotation.bind(this);
@@ -136,9 +146,19 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
   }
 
+  updateAngleBRotation() {
+    const endLineRotation = this._circle._endLine.transform.r();
+    if (endLineRotation != null) {
+      this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
+      this._circle._angleB.transform.updateRotation(this.varState.rotation);
+      this._circle._angleB._label.transform.updateRotation(-this.varState.rotation);
+    }
+  }
+
   updateRotation() {
     super.updateRotation();
     this._circle._angleA.updateAngle(this.varState.rotation);
+    this.updateAngleBRotation();
   }
 
   updateEndLineRotation() {
@@ -155,6 +175,8 @@ class AdjacentAnglesCollection extends AngleCircle {
       this._circle._endLine.transform.updateRotation(r);
       if (r < radiusRot) {
         this.setRotation(r);
+      } else {
+        this.updateAngleBRotation();
       }
     }
   }

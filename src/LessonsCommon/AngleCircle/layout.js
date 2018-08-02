@@ -76,6 +76,7 @@ export default function angleCircleLayout() {
       },
       label: {
         radiusOffset: 0.07,
+        hideAngle: 0.15,
       },
     },
     colors,

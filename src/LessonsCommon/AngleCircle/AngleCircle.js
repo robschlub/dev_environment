@@ -257,6 +257,11 @@ class AngleCircle extends DiagramElementCollection {
       const labelPosition = polarToRect(layout.arc.radius +
       layout.label.radiusOffset, angleStart + angle / 2);
       label.transform.updateTranslation(labelPosition);
+      if (angle < layout.label.hideAngle) {
+        label.hideAll();
+      } else {
+        label.showAll();
+      }
     };
 
     angleAnnotation.updateAngle(angleSize);
