@@ -296,49 +296,74 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.updateEndLineRotation();
   }
 
+  setUntouchable() {
+    this._circle._endLine.isTouchable = false;
+    this._circle._startLine.isTouchable = false;
+    this._circle._radius.isTouchable = false;
+  }
+
+  setTouchable() {
+    this._circle._endLine.isTouchable = true;
+    this._circle._startLine.isTouchable = true;
+    this._circle._radius.isTouchable = true;
+  }
+
   goToAdjacent() {
     this.showAngleType('adjacent');
     // this._circle.transform.updateRotation(0);
+    this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI / 3);
     this.rotateElementTo(this._circle, 0);
-    this.rotateElementTo(this._circle._radius, Math.PI / 6);
+    this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     // this.setEndLineRotation(Math.PI / 3);
     // this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
-    this.rotationLimits = { min: 0, max: Math.PI / 3 };
+    // this.rotationLimits = { min: 0, max: Math.PI / 3 };
     // this._circle._endLine.isTouchable = true;
     // this._circle._endLine.isMovable = true;
   }
 
   goToComplementary() {
     this.showAngleType('complementary');
-    this._circle.transform.updateRotation(0);
-    this._circle._endLine.transform.updateRotation(Math.PI / 2);
-    this.setRotation(Math.PI / 6);
+    // this._circle.transform.updateRotation(0);
+    // this._circle._endLine.transform.updateRotation(Math.PI / 2);
+    // this.setRotation(Math.PI / 6);
+    this.setUntouchable();
+    this.rotateElementTo(this._circle._endLine, Math.PI / 2);
+    this.rotateElementTo(this._circle, 0);
+    this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.diagram.animateNextFrame();
-    this.rotationLimits = { min: 0, max: Math.PI / 2 };
+    // this.rotationLimits = { min: 0, max: Math.PI / 2 };
     // this._circle._endLine.isTouchable = false;
     // this._circle._endLine.isMovable = false;
   }
 
   goToSupplementary() {
     this.showAngleType('supplementary');
-    this._circle.transform.updateRotation(0);
-    this._circle._endLine.transform.updateRotation(Math.PI);
-    this.setRotation(Math.PI / 6);
+    // this._circle.transform.updateRotation(0);
+    // this._circle._endLine.transform.updateRotation(Math.PI);
+    // this.setRotation(Math.PI / 6);
+    this.setUntouchable();
+    this.rotateElementTo(this._circle._endLine, Math.PI);
+    this.rotateElementTo(this._circle, 0);
+    this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.diagram.animateNextFrame();
-    this.rotationLimits = { min: 0, max: Math.PI };
+    // this.rotationLimits = { min: 0, max: Math.PI };
     // this._circle._endLine.isTouchable = false;
     // this._circle._endLine.isMovable = false;
   }
 
   goToExplementary() {
     this.showAngleType('explementary');
-    this._circle.transform.updateRotation(0);
-    this._circle._endLine.transform.updateRotation(Math.PI * 2);
-    this.setRotation(Math.PI / 6);
+    // this._circle.transform.updateRotation(0);
+    // this._circle._endLine.transform.updateRotation(Math.PI * 2);
+    // this.setRotation(Math.PI / 6);
+    this.setUntouchable();
+    this.rotateElementTo(this._circle._endLine, Math.PI * 2);
+    this.rotateElementTo(this._circle, 0);
+    this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.diagram.animateNextFrame();
-    this.rotationLimits = { min: 0, max: Math.PI * 2 * 0.999 };
+    // this.rotationLimits = { min: 0, max: Math.PI * 2 * 0.999 };
     // this._circle._endLine.isTouchable = false;
     // this._circle._endLine.isMovable = false;
   }
@@ -346,10 +371,10 @@ class AdjacentAnglesCollection extends AngleCircle {
   rotateElementTo(
     element: DiagramElementPrimative | DiagramElementCollection,
     angle: number,
+    callback: () => void = () => {},
     direction: number = 2,
     time: number = 2,
     normalizeTime: boolean = false,
-    callback: () => void = () => {},
   ) {
     let t = time;
     let d = 1;
@@ -359,6 +384,10 @@ class AdjacentAnglesCollection extends AngleCircle {
     if (r) {
       delta = minAngleDiff(angle, r);
     }
+    if (delta === 0) {
+      callback();
+      return;
+    }
 
     if (d === 0) {
       d = 1;
@@ -367,8 +396,8 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
     }
 
-    if (normalizeTime) {
-      t = time * delta / 2 / Math.PI;
+    if (normalizeTime && delta !== 0) {
+      t = time * Math.abs(delta) / 2 / Math.PI;
     }
 
     element.animateRotationTo(angle, d, t, callback);
