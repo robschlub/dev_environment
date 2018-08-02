@@ -65,7 +65,7 @@ class Content extends LessonContent {
       `<div id="id_complementary_text">
         <p class="lesson__diagram_text_p_width_40"
            style="margin-top:17%">
-          Complementary angles add up to a right angle.
+          |Complementary_angles| add up to a right angle.
         </p>
         <p class="lesson__diagram_text_p_width_40">
           a + b = ${unit('90', _piOn2, 'complementary')}
@@ -78,7 +78,7 @@ class Content extends LessonContent {
       `<div id="id_supplementary_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:17%">
-          Supplementary angles add up to a straight angle.
+          |Supplementary_angles| add up to a straight angle.
         </p>
         <p class="lesson__diagram_text_p_width_40">
           a + b = ${unit('180', '&pi;', 'supplementary')}
@@ -91,7 +91,7 @@ class Content extends LessonContent {
       `<div id="id_explementary_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:17%">
-          |Explementary angles| add up to a full angle.
+          |Explementary_angles| add up to a full angle.
         </p>
         <p class="lesson__diagram_text_p_width_40">
           a + b = ${unit('360', '2&pi;', 'explementary')}
@@ -108,6 +108,18 @@ class Content extends LessonContent {
         Supplementary: clickWord('Supplementary', 'id_supplementary', diag.goToSupplementary, [diag]),
         Explementary: clickWord('Explementary', 'id_explementary', diag.goToExplementary, [diag]),
         Adjacent_angles: click(diag.goToRandomAdjancentAngle, [diag], colors.angleText),
+        Complementary_angles: click(
+          diag.goToRandomAngle, [diag, Math.PI / 2],
+          colors.angleText,
+        ),
+        Supplementary_angles: click(
+          diag.goToRandomAngle, [diag, Math.PI],
+          colors.angleText,
+        ),
+        Explementary_angles: click(
+          diag.goToRandomAngle, [diag, Math.PI * 2],
+          colors.angleText,
+        ),
         // Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
         // Full: clickWord('Full', 'id_full', diag.goToFull, [diag]),
         // acute_angle: click(diag.pulseAngle, [diag], colors.angleText),
