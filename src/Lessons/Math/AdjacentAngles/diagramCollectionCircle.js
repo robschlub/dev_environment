@@ -95,16 +95,9 @@ class AdjacentAnglesCollection extends AngleCircle {
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     this._circle.setTransformCallback = this.updateCircleRotation.bind(this);
-    // this._circle._startLine.setTransformCallback = this.updateEndLineRotation.bind(this);
-    // this._circle.add('rightAngle', this.makeRightAngle());
-    // this._circle.add('acuteRange', this.makeAcuteRange());
-    // this._circle.add('obtuseRange', this.makeObtuseRange());
-    // this._circle.add('reflexRange', this.makeReflexRange());
-    // this._circle.add('axes', this.makeAxes());
     this._circle.order = [
       ...this._circle.order.slice(-2),
       ...this._circle.order.slice(0, -2),
-      // ...this._circle.order.slice(2, -4),
     ];
   }
 
@@ -148,11 +141,6 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   updateCircleRotation() {
-    // const circleRotation = this._circle.transform.r();
-    // const endLineRotation = this._circle._endLine.transform.r();
-    // if (circleRotation != null && endLineRotation != null) {
-    //   this._circle._angleB._label.transform.updateRotation(-this.varState.rotation - circleRotation);
-    // }
     this.rotateAngleLabelsToUpright();
   }
 
@@ -161,7 +149,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     if (endLineRotation != null) {
       this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
       this._circle._angleB.transform.updateRotation(this.varState.rotation);
-      // this._circle._angleB._label.transform.updateRotation(-this.varState.rotation);
       this.rotateAngleLabelsToUpright();
     }
   }
@@ -241,46 +228,25 @@ class AdjacentAnglesCollection extends AngleCircle {
     if (elem != null) {
       elem.classList.add('lesson__important_angles_table_selected');
     }
-    // if (this.varState.angleSelected === 'right' && angleType !== 'right') {
-    //   this.toggleRightAngleLine(false);
-    // }
     this.varState.angleSelected = angleType;
   }
 
   showAngleType(angleType: angleTypes) {
     this.selectAngle(angleType);
     this.showText(angleType);
-    if (angleType !== 'adjacent') {
-      // this._circle._acuteRange.hide();
-    }
-    if (angleType !== 'complementary') {
-      // this._circle._obtuseRange.hide();
-    }
-    if (angleType !== 'supplementary') {
-      // this._circle._reflexRange.hide();
-    }
-    if (angleType === 'explementary') {
-      // this._circle._acuteRange.show();
-    }
+    // if (angleType !== 'adjacent') {
+    //   // this._circle._acuteRange.hide();
+    // }
+    // if (angleType !== 'complementary') {
+    //   // this._circle._obtuseRange.hide();
+    // }
+    // if (angleType !== 'supplementary') {
+    //   // this._circle._reflexRange.hide();
+    // }
+    // if (angleType === 'explementary') {
+    //   // this._circle._acuteRange.show();
+    // }
   }
-
-  // goToAcute() {
-  //   const angle45 = Math.random() * Math.PI / 4 * 0.95;
-  //   let angle = angle45;
-  //   const r = this._circle._radius.transform.r();
-  //   if (r != null) {
-  //     if (this.varState.angleSelected !== 'acute') {
-  //       angle = Math.PI / 4;
-  //     } else if (r < Math.PI / 4) {
-  //       angle += Math.PI / 4;
-  //     }
-  //     this.rotateToAngleDisablingAutoChange(angle);
-  //   }
-  //   // this.selectAngle('acute');
-  //   // this.showText('acute');
-  //   // this._circle._acuteRange.show();
-  //   this.showAngleType('acute');
-  // }
 
   // eslint-disable-next-line class-methods-use-this
   showText(angleType: angleTypes) {
@@ -304,13 +270,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
   }
 
-  // rotateToAngleDisablingAutoChange(angle: number) {
-  //   this.rotateTo(angle, 2, 1, ((result) => {
-  //     if (result) {
-  //     }
-  //   }));
-  // }
-
   setEndLineRotation(angle: number) {
     this._circle._endLine.transform.updateRotation(angle);
     this.updateEndLineRotation();
@@ -330,62 +289,38 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToAdjacent() {
     this.showAngleType('adjacent');
-    // this._circle.transform.updateRotation(0);
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI / 3);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
-    // this.setEndLineRotation(Math.PI / 3);
-    // this.setRotation(Math.PI / 6);
     this.diagram.animateNextFrame();
-    // this.rotationLimits = { min: 0, max: Math.PI / 3 };
-    // this._circle._endLine.isTouchable = true;
-    // this._circle._endLine.isMovable = true;
   }
 
   goToComplementary() {
     this.showAngleType('complementary');
-    // this._circle.transform.updateRotation(0);
-    // this._circle._endLine.transform.updateRotation(Math.PI / 2);
-    // this.setRotation(Math.PI / 6);
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI / 2);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.diagram.animateNextFrame();
-    // this.rotationLimits = { min: 0, max: Math.PI / 2 };
-    // this._circle._endLine.isTouchable = false;
-    // this._circle._endLine.isMovable = false;
   }
 
   goToSupplementary() {
     this.showAngleType('supplementary');
-    // this._circle.transform.updateRotation(0);
-    // this._circle._endLine.transform.updateRotation(Math.PI);
-    // this.setRotation(Math.PI / 6);
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.diagram.animateNextFrame();
-    // this.rotationLimits = { min: 0, max: Math.PI };
-    // this._circle._endLine.isTouchable = false;
-    // this._circle._endLine.isMovable = false;
   }
 
   goToExplementary() {
     this.showAngleType('explementary');
-    // this._circle.transform.updateRotation(0);
-    // this._circle._endLine.transform.updateRotation(Math.PI * 2);
-    // this.setRotation(Math.PI / 6);
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI * 2);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.diagram.animateNextFrame();
-    // this.rotationLimits = { min: 0, max: Math.PI * 2 * 0.999 };
-    // this._circle._endLine.isTouchable = false;
-    // this._circle._endLine.isMovable = false;
   }
 
   rotateElementTo(
@@ -423,94 +358,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     element.animateRotationTo(angle, d, t, callback);
     this.diagram.animateNextFrame();
   }
-  // goToRight() {
-  //   // this.enableAutoChange = false;
-  //   const angle = Math.PI / 2;
-  //   this.rotateToAngleDisablingAutoChange(angle);
-  //   // this.selectAngle('right');
-  //   // this.showText('right');
-  //   this.showAngleType('right');
-  // }
-
-  // goToObtuse() {
-  //   const angle45 = Math.random() * Math.PI / 4 * 0.95;
-  //   let angle = angle45;
-  //   const r = this._circle._radius.transform.r();
-  //   if (r != null) {
-  //     if (this.varState.angleSelected !== 'obtuse') {
-  //       angle = 3 * Math.PI / 4;
-  //     } else if (r < 3 * Math.PI / 4) {
-  //       angle += 3 * Math.PI / 4;
-  //     } else {
-  //       angle += Math.PI / 2;
-  //     }
-  //     this.rotateToAngleDisablingAutoChange(angle);
-  //   }
-  //   // this.selectAngle('obtuse');
-  //   // this.showText('obtuse');
-  //   this.showAngleType('obtuse');
-  // }
-  // goToStraight() {
-  //   const angle = Math.PI;
-  //   this.rotateToAngleDisablingAutoChange(angle);
-  //   // this.selectAngle('straight');
-  //   // this.showText('straight');
-  //   this.showAngleType('straight');
-  // }
-
-  // goToReflex() {
-  //   const angle90 = Math.random() * Math.PI / 2 * 0.95;
-  //   let angle = angle90;
-  //   const r = this._circle._radius.transform.r();
-  //   if (r != null) {
-  //     if (r < 3 * Math.PI / 2) {
-  //       angle += 3 * Math.PI / 2;
-  //     } else {
-  //       angle += Math.PI;
-  //     }
-  //     this.rotateToAngleDisablingAutoChange(angle);
-  //   }
-  //   // this.selectAngle('reflex');
-  //   // this.showText('reflex');
-  //   this.showAngleType('reflex');
-  // }
-
-  // goToFull() {
-  //   const angle = 2 * Math.PI * 0.999;
-  //   this.rotateToAngleDisablingAutoChange(angle);
-  //   this.showAngleType('full');
-  // }
-
-  // pulseAngle() {
-  //   if (this._circle._rightAngle.isShown) {
-  //     this._circle._rightAngle._horizontal.pulseScaleNow(1, 2);
-  //     this._circle._rightAngle._vertical.pulseScaleNow(1, 2);
-  //   } else {
-  //     this._circle._angle._arc.pulseThickNow(1, 1.04, 7);
-  //     this._circle._angle._arrow.pulseScaleNow(1, 1.5);
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
-  // toggleRightAngleLine(show: boolean | null) {
-  //   let toShow = show;
-  //   if (show === null) {
-  //     if (this._circle._rightAngle.isShown) {
-  //       toShow = false;
-  //     } else {
-  //       toShow = true;
-  //     }
-  //   }
-  //   if (toShow) {
-  //     this._circle._rightAngle.showAll();
-  //     this._circle._angle.hideAll();
-  //     this._circle._rightAngle._horizontal.pulseScaleNow(1, 2);
-  //     this._circle._rightAngle._vertical.pulseScaleNow(1, 2);
-  //   } else {
-  //     this._circle._rightAngle.hideAll();
-  //     this._circle._angle.showAll();
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 }
 
 export default AdjacentAnglesCollection;
