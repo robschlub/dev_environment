@@ -288,7 +288,6 @@ class AngleCircle extends DiagramElementCollection {
       collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
       collection.layout();
     };
-    
     return collection;
   }
 

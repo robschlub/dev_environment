@@ -56,7 +56,7 @@ class Content extends LessonContent {
       `<div id="id_adjacent_text">
         <p class="lesson__diagram_text_p_width_40"
           style="margin-top:17%">
-          Adjacent angles are any angles that share a common vertex and edge.
+          |Adjacent_angles| are any angles that share a common vertex and edge.
         </p>
         <p class="lesson__font_0p5" style="margin-top:16.2%; margin-left: 4%">
           <span class="english">Adjacent</span> |from_Latin| <i class="latin">adjacent</i>: "lying near to"
@@ -101,35 +101,13 @@ class Content extends LessonContent {
           <span class="english">Explementary</span> |from_Latin| <i class="latin">explementum</i>: “something that fills up, stuff”
         </p>
       </div>`,
-      // `<div id="id_reflex_text">
-      //   <p class="lesson__diagram_text_p_width_40"
-      //     style="margin-top:17%">
-      //     A |reflex_angle| is any angle between
-      //     ${unit('180', '&pi;', 'reflex')}
-      //     and ${unit('360', '2&pi;', 'reflex', 2)}.
-      //   </p>
-      //   <p class="lesson__font_0p5"
-      //     style="margin-top:21%; margin-left: 4%">
-      //     <span class="english">Reflex</span> |from_Late_Latin| <i class="latin">reflexus</i>: “to bend back”
-      //   </p>
-      // </div>`,
-      // `<div id="id_full_text">
-      //   <p class="lesson__diagram_text_p_width_40"
-      //     style="margin-top:20%">
-      //     A |full_angle| is an angle of
-      //     ${unit('360', '2&pi;', 'full')}.
-      //   </p>
-      //   <p class="lesson__font_0p5"
-      //     style="margin-top:23.2%; margin-left: 4%">
-      //     <span class="english">Full</span>: “containing all that can be received; perfect, entire”
-      //   </p>
-      // </div>`,
       ],
       modifiers: {
         Adjacent: clickWord('Adjacent', 'id_adjacent', diag.goToAdjacent, [diag]),
         Complementary: clickWord('Complementary', 'id_complementary', diag.goToComplementary, [diag]),
         Supplementary: clickWord('Supplementary', 'id_supplementary', diag.goToSupplementary, [diag]),
         Explementary: clickWord('Explementary', 'id_explementary', diag.goToExplementary, [diag]),
+        Adjacent_angles: click(diag.goToRandomAdjancentAngle, [diag], colors.angleText),
         // Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
         // Full: clickWord('Full', 'id_full', diag.goToFull, [diag]),
         // acute_angle: click(diag.pulseAngle, [diag], colors.angleText),

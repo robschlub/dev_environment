@@ -296,6 +296,14 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.diagram.animateNextFrame();
   }
 
+  goToRandomAdjancentAngle() {
+    const angle = Math.random() * Math.PI + 0.5 * Math.PI;
+    const divider = Math.random() * 0.6 + 0.3;
+    this.rotateElementTo(this._circle._endLine, angle);
+    this.rotateElementTo(this._circle._radius, angle * divider, this.setTouchable.bind(this));
+    this.diagram.animateNextFrame();
+  }
+
   goToComplementary() {
     this.showAngleType('complementary');
     this.setUntouchable();
