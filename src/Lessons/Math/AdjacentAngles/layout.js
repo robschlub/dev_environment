@@ -8,6 +8,8 @@ const cssColorNames = [
   // 'radiusLight',
   'latin',
   'outsideLines',
+  'angleA',
+  'angleB',
   // 'rotation',
   // 'action',
   'disabled',

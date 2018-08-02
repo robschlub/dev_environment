@@ -9,7 +9,7 @@ import lessonLayout from './layout';
 const layout = lessonLayout();
 const { colors } = layout;
 
-const unit = (deg: string, rad: string, angleType: string, num: number = 1) => `<span id="id_${angleType}_deg${num}" class="highlight_word">${deg}&deg;</span><span id="id_${angleType}_rad${num}" class="highlight_word">${rad} radians</span>
+const unit = (deg: string, rad: string, angleType: string, num: number = 1) => `<span id="id_${angleType}_deg${num}" class="highlight_word">${deg}&deg;</span><span id="id_${angleType}_rad${num}" class="highlight_word">${rad}</span>
   `;
 
 // const fraction = (id: string, numerator: string, denominator: string) => {
@@ -64,11 +64,17 @@ class Content extends LessonContent {
       </div>`,
       `<div id="id_complementary_text">
         <p class="lesson__diagram_text_p_width_40"
-           style="margin-top:17%">
+           style="margin-top:10%">
           |Complementary_angles| add up to a right angle.
         </p>
         <p class="lesson__diagram_text_p_width_40">
           a + b = ${unit('90', _piOn2, 'complementary')}
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+          a = ${unit('90', _piOn2, 'complementary', 2)} - b
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+          b = ${unit('90', _piOn2, 'complementary', 3)} - a
         </p>
         <p class="lesson__font_0p5"
           style="margin-top:12%; margin-left: 4%">

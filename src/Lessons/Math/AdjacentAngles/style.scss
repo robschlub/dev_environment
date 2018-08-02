@@ -11,6 +11,8 @@ $colors: (
   radialLines:      color('diagram', 'disabled', 'darker'),
   axes:             color(0, light),
   outsideLines:     color('blue', 'darker'),
+  angleA:           color('red', 'base'),
+  angleB:           color('violet', 'base'),
 );
 
 body {
