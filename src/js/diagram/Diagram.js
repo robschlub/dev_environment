@@ -12,6 +12,7 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
+// eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 

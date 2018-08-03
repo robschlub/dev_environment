@@ -1,6 +1,7 @@
 // @flow
 
 import { Point } from './tools/g2';
+// eslint-disable-next-line import/no-cycle
 import Diagram from './Diagram';
 
 class Gesture {
