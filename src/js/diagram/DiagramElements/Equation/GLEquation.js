@@ -666,6 +666,23 @@ export class DiagramGLEquation extends Elements {
     });
   }
 
+  createNewEq(content: Array<Elements | Element | string>) {
+    // const elements = [];
+    const eqn = new DiagramGLEquation(this.collection);
+    return eqn.createEq(content);
+    // content.forEach((c) => {
+    //   if (typeof c === 'string') {
+    //     const diagramElement = getDiagramElement(this.collection, c);
+    //     if (diagramElement) {
+    //       elements.push(new Element(diagramElement));
+    //     }
+    //   } else {
+    //     elements.push(c);
+    //   }
+    //   this.content = elements;
+    // });
+  }
+
   // By default, the colleciton is arranged so the first element in the
   // equation is at (0,0) in colleciton space.
   arrange(
@@ -893,3 +910,5 @@ export class DiagramGLEquation extends Elements {
     );
   }
 }
+
+
