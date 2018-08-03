@@ -76,7 +76,9 @@ function extractFrom(
       }
     }
     return undefined;
-  } else if (Array.isArray(keyValues)) {
+  }
+
+  if (Array.isArray(keyValues)) {
     keyValues.forEach((kv) => {
       const result = extractFrom(objectToExtractFrom, kv, keyPrefix);
       if (result !== undefined) {

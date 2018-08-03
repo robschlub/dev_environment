@@ -837,7 +837,8 @@ function translationPath(
 ) {
   if (pathType === 'linear') {
     return linearPath(start, delta, percent);
-  } else if (pathType === 'curved') {
+  }
+  if (pathType === 'curved') {
     return curvedPath(start, delta, percent, options);
   }
   return new Point(0, 0);
