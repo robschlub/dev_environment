@@ -1,4 +1,6 @@
-import { Point, Line } from '../../tools/g2';
+import {
+  Point, Line,
+} from '../../tools/g2';
 
 
 function simpleIntersect(p1, p2, q1, q2) {

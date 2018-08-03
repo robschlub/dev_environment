@@ -3,9 +3,13 @@
 import Diagram from '../../../js/diagram/Diagram';
 // import * as tools from '../../../js/diagram/tools/mathtools';
 
-import { DiagramElementCollection, DiagramElementPrimative }
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+}
   from '../../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
+import {
+  Point, Transform, minAngleDiff, normAngle, Rect,
+} from '../../../js/diagram/tools/g2';
 import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
 

@@ -1,6 +1,8 @@
 // @flow
 
-import { Rect, Point } from '../../../js/diagram/tools/g2';
+import {
+  Rect, Point,
+} from '../../../js/diagram/tools/g2';
 import getCssColors from '../../../js/tools/getCssColors';
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */

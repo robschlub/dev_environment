@@ -1,6 +1,10 @@
-import { DiagramGLEquation, createEquationElements } from './GLEquation';
+import {
+  DiagramGLEquation, createEquationElements,
+} from './GLEquation';
 import { Point } from '../../tools/g2';
-import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../../Element';
 import DrawContext2D from '../../../__mocks__/DrawContext2DMock';
 
 

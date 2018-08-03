@@ -1,8 +1,12 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform, Point, Rect } from '../../../js/diagram/tools/g2';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
+import {
+  Transform, Point, Rect,
+} from '../../../js/diagram/tools/g2';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../../js/diagram/Element';
 import { SinCosCircle } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type {
   SinCosCircleType, equationType, sineCosineLineType, textEquationType,

@@ -1,9 +1,15 @@
 // @flow
-import { Point, Rect, Transform } from '../../tools/g2';
+import {
+  Point, Rect, Transform,
+} from '../../tools/g2';
 import { roundNum } from '../../tools/mathtools';
 import { RGBToArray } from '../../../tools/tools';
-import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
-import { DiagramText, DiagramFont, TextObject } from '../../DrawingObjects/TextObject/TextObject';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../../Element';
+import {
+  DiagramText, DiagramFont, TextObject,
+} from '../../DrawingObjects/TextObject/TextObject';
 import DrawContext2D from '../../DrawContext2D';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
 // import { HTMLObject } from './DrawingObjects/HTMLObject/HTMLObject';

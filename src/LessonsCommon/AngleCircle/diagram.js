@@ -2,7 +2,9 @@
 import Diagram from '../../js/diagram/Diagram';
 import { DiagramElementCollection } from '../../js/diagram/Element';
 import type { circleType } from './AngleCircle';
-import { Point, minAngleDiff, Transform } from '../../js/diagram/tools/g2';
+import {
+  Point, minAngleDiff, Transform,
+} from '../../js/diagram/tools/g2';
 
 let layout: Object;
 let CircleCollectionClass: Function;

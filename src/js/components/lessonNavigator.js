@@ -3,8 +3,12 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
-import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
-import { Point, Rect } from '../diagram/tools/g2';
+import {
+  lessonIndex, LessonDescription,
+} from '../../Lessons/lessonIndex';
+import {
+  Point, Rect,
+} from '../diagram/tools/g2';
 import { getDefinedCSSVariables } from '../tools/getCssVariables';
 
 type Props = {

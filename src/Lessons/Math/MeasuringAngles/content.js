@@ -171,8 +171,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             So |angle| describes the sharpness of a corner, and the amount of a circle, or |arc| that is drawn.
           </p>
@@ -186,16 +185,14 @@ class Content extends LessonContent {
     });
     this.addSection({
       title: 'How to Measure?',
-      setContent: () =>
-        centerVH(`
+      setContent: () => centerVH(`
           <p>
             How do we |measure| angle?
           </p> 
         `),
     });
     this.addSection({
-      setContent: () =>
-        `
+      setContent: () => `
         <p>
           One way, is to |divide| the circle into |portions|.
         </p>
@@ -228,8 +225,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        `
+      setContent: () => `
         <p>
           Now, as you |rotate| the line to change the |angle|, you can count how many portions there are.
         </p>
@@ -278,8 +274,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Degrees',
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             So how many portions should we use?
           </p>
@@ -293,8 +288,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             The word |degree| comes from |Latin|:
           </p>
@@ -317,8 +311,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>|Why choose 360?| </p>
           <p>If you were defining it today, you could choose anything!</p>
           <p>But angle is a concept people have worked on and understood for thousands of years.</p>
@@ -327,8 +320,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>So |why did they| choose 360?</p>
           <p>It's not known, but one reason might be |360 is an easy number to work with| when you don't have a calculator.</p>
           <p>360 has a lot of numbers that can divide into it without a remainder:</p>
@@ -342,8 +334,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        `
+      setContent: () => `
           <p>This means it's easy to work with fractions of a circle.</p>
           <ul style="margin-top:15%;margin-left:15%">
                 <li>${String.fromCharCode(190)} circle =   |_270deg|</li>

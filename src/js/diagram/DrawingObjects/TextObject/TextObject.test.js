@@ -1,6 +1,10 @@
 
-import { TextObject, DiagramFont, DiagramText } from './TextObject';
-import { Point, Transform } from '../../tools/g2';
+import {
+  TextObject, DiagramFont, DiagramText,
+} from './TextObject';
+import {
+  Point, Transform,
+} from '../../tools/g2';
 import * as m2 from '../../tools/m2';
 import { round } from '../../tools/mathtools';
 import DrawContext2D from '../../../__mocks__/DrawContext2DMock';

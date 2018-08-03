@@ -1,9 +1,13 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
-import { DiagramElementCollection, DiagramElementPrimative }
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+}
   from '../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle, polarToRect } from '../../js/diagram/tools/g2';
+import {
+  Point, Transform, minAngleDiff, normAngle, polarToRect,
+} from '../../js/diagram/tools/g2';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 

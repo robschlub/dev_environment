@@ -6,7 +6,9 @@
 //  - minAngleDiff
 //  - normAngle
 
-import { roundNum, decelerate, clipMag, clipValue } from './mathtools';
+import {
+  roundNum, decelerate, clipMag, clipValue,
+} from './mathtools';
 import { Console } from '../../tools/tools';
 import * as m2 from './m2';
 

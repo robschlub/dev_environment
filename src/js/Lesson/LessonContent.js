@@ -1,7 +1,9 @@
 // @flow
 
 import Diagram from '../diagram/Diagram';
-import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../diagram/Element';
 import { colorArrayToRGBA } from '../tools/tools';
 // import { Transform, Point } from '../diagram/tools/g2';
 

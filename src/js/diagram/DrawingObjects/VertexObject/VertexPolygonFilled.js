@@ -1,6 +1,8 @@
 // @flow
 
-import { Point, Rect } from '../../tools/g2';
+import {
+  Point, Rect,
+} from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from './VertexObject';
 

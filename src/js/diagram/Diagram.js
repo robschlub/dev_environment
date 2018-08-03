@@ -8,13 +8,19 @@ import {
   spaceToSpaceTransform,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
-import { DiagramElementCollection, DiagramElementPrimative } from './Element';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 
-import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
-import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import {
+  PolyLine, PolyLineCorners,
+} from './DiagramElements/PolyLine';
+import {
+  Polygon, PolygonFilled,
+} from './DiagramElements/Polygon';
 import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
@@ -22,10 +28,14 @@ import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import Axis from './DiagramElements/Plot/Axis';
 
-import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
+import {
+  DiagramText, DiagramFont, TextObject,
+} from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
-import { DiagramGLEquation, createEquationElements } from './DiagramElements/Equation/GLEquation';
+import {
+  DiagramGLEquation, createEquationElements,
+} from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 

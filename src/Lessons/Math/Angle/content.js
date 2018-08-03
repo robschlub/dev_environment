@@ -29,8 +29,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Corners',
-      setContent: () =>
-        `<p>
+      setContent: () => `<p>
           Many |_shapes| have |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
@@ -63,8 +62,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerVH(`
+      setContent: () => centerVH(`
           <p>
             How can we |_measure| corner sharpness?
           </p> 
@@ -261,8 +259,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             What |_name| do we use for corner sharpness?
           </p> 
@@ -321,8 +318,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             Now, describing the angle as more sharp or less sharp is not that useful.
           </p> 

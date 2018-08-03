@@ -1,4 +1,6 @@
-import { round, decelerate, easeinout, clipMag, clipValue } from './mathtools';
+import {
+  round, decelerate, easeinout, clipMag, clipValue,
+} from './mathtools';
 
 describe('Math tools testing', () => {
   // Rounding a value

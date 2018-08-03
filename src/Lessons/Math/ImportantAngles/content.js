@@ -1,6 +1,8 @@
 // @flow
 
-import { LessonContent, clickWord, onClickId, click, highlight } from '../../../js/Lesson/LessonContent';
+import {
+  LessonContent, clickWord, onClickId, click, highlight,
+} from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 

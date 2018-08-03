@@ -1,8 +1,12 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
-import { Transform, Point, polarToRect } from '../../js/diagram/tools/g2';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../js/diagram/Element';
+import {
+  Transform, Point, polarToRect,
+} from '../../js/diagram/tools/g2';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../AngleCircle/AngleCircle';
 import { DiagramGLEquation } from '../../js/diagram/DiagramElements/Equation/GLEquation';

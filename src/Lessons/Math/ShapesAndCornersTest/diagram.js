@@ -5,7 +5,9 @@ import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
 import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
-import { Point, minAngleDiff, Rect, Transform } from '../../../js/diagram/tools/g2';
+import {
+  Point, minAngleDiff, Rect, Transform,
+} from '../../../js/diagram/tools/g2';
 import { getCSSVariables } from '../../../js/tools/getCssVariables';
 
 const colors = getScssColors(styles);

@@ -2,7 +2,9 @@
 
 import VertexRadialLines from '../DrawingObjects/VertexObject/VertexRadialLines';
 import { DiagramElementPrimative } from '../Element';
-import { Point, Transform, Rect } from '../tools/g2';
+import {
+  Point, Transform, Rect,
+} from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 
 function RadialLines(

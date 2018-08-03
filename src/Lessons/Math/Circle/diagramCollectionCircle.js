@@ -2,10 +2,14 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import * as tools from '../../../js/diagram/tools/mathtools';
-import { DiagramElementCollection, DiagramElementPrimative }
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+}
   from '../../../js/diagram/Element';
 // import { DiagramFont } from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
-import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
+import {
+  Point, Transform, minAngleDiff, normAngle, Rect,
+} from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();

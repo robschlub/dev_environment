@@ -2,7 +2,9 @@
 import Diagram from '../../../js/diagram/Diagram';
 import CircleCollection from './diagramCollectionCircle';
 import type { CircleCollectionType } from './diagramCollectionCircle';
-import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
+import {
+  Point, minAngleDiff, Transform,
+} from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
