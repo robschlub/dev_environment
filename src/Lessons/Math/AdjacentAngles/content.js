@@ -81,7 +81,7 @@ class Content extends LessonContent {
       `<div id="id_supplementary_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:17%">
-          |Supplementary_angles| add up to a straight angle.
+          |Supplementary_angles| add up to a |straight_angle|.
         </p>
         <p class="lesson__font_0p5"
           style="margin-top:21%; margin-left: 4%">
@@ -112,20 +112,21 @@ class Content extends LessonContent {
         Complementary: clickWord('Complementary', 'id_complementary', diag.goToComplementary, [diag]),
         Supplementary: clickWord('Supplementary', 'id_supplementary', diag.goToSupplementary, [diag]),
         Explementary: clickWord('Explementary', 'id_explementary', diag.goToExplementary, [diag]),
-        Adjacent_angles: click(diag.goToRandomAdjancentAngle, [diag], colors.angleText),
+        Adjacent_angles: click(diag.goToRandomAdjancentAngle, [diag], colors.radius),
         Complementary_angles: click(
           diag.goToRandomAngle, [diag, Math.PI / 2],
-          colors.angleText,
+          colors.radius,
         ),
         Supplementary_angles: click(
           diag.goToRandomAngle, [diag, Math.PI],
-          colors.angleText,
+          colors.radius,
         ),
         Explementary_angles: click(
           diag.goToRandomAngle, [diag, Math.PI * 2],
-          colors.angleText,
+          colors.radius,
         ),
         right_angle: click(diag.pulseRightAngle, [diag], colors.angleText),
+        straight_angle: click(diag.pulseStraightAngle, [diag], colors.angleText),
         // Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
         // Full: clickWord('Full', 'id_full', diag.goToFull, [diag]),
         // acute_angle: click(diag.pulseAngle, [diag], colors.angleText),
