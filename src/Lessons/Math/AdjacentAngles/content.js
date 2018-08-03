@@ -155,7 +155,7 @@ class Content extends LessonContent {
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
         diag.goToAdjacent();
         // diag._eqn.complimentaryADeg.arrange(1, 'left', 'baseline')
-        diag._eqn.showEqn('supplementary', 'add');
+        // diag._eqn.showEqn('supplementary', 'add');
       },
     });
   }

@@ -25,9 +25,13 @@ export type extendedCircleType = {
 
 type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
 
+type equationFormType = 'add' | 'a' | 'b';
+
 type varStateExtendedType = {
     angleSelected: angleTypes;
+    equationForm: equationFormType;
   } & varStateType;
+
 
 export type AdjacentAnglesCollectionType = {
   _circle: extendedCircleType;
@@ -227,7 +231,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
     };
 
-    equationElements.showEqn = (angleType: angleTypes, form: 'add' | 'a' | 'b' = 'add') => {
+    equationElements.showEqn = (angleType: angleTypes, form: equationFormType = 'add') => {
       if (angleType === 'adjacent') {
         equationElements.hideAll();
         return;
@@ -246,6 +250,7 @@ class AdjacentAnglesCollection extends AngleCircle {
         equationElements._plus.hide();
         equationElements._minus.show();
       }
+      this.varState.equationForm = form;
     };
     return equationElements;
   }
@@ -271,6 +276,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       radialLines: 4,
       rotation: 0,
       angleSelected: 'adjacent',
+      equationForm: 'add',
     };
     // this.enableAutoChange = true;
     this.addToCircle();
@@ -302,6 +308,8 @@ class AdjacentAnglesCollection extends AngleCircle {
         this.setParagraphUnits('deg');
       }
     }
+    this._eqn.showEqn(this.varState.angleSelected, this.varState.equationForm);
+    this.diagram.animateNextFrame();
   }
 
   updateCircleRotation() {
@@ -497,7 +505,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this._eqn.showEqn('complementary', 'add');
-    console.log(this._eqn)
     this.diagram.animateNextFrame();
   }
 
