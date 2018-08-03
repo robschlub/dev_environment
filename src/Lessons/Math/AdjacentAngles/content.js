@@ -67,7 +67,7 @@ class Content extends LessonContent {
       `<div id="id_complementary_text">
         <p class="lesson__diagram_text_p_width_40"
            style="margin-top:17%">
-          |Complementary_angles| add up to a right angle.
+          |Complementary_angles| add up to a |right_angle|.
         </p>
         <p class="lesson__font_0p5"
           style="margin-top:21%; margin-left: 4%">
@@ -125,6 +125,7 @@ class Content extends LessonContent {
           diag.goToRandomAngle, [diag, Math.PI * 2],
           colors.angleText,
         ),
+        right_angle: click(diag.pulseRightAngle, [diag], colors.angleText),
         // Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
         // Full: clickWord('Full', 'id_full', diag.goToFull, [diag]),
         // acute_angle: click(diag.pulseAngle, [diag], colors.angleText),

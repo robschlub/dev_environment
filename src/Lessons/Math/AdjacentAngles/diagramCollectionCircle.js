@@ -21,6 +21,10 @@ export type extendedCircleType = {
   _endLine: DiagramElementPrimative;
   _angleA: angleAnnotationType;
   _angleB: angleAnnotationType;
+  _rightAngle: {
+    _horizontal: DiagramElementPrimative;
+    _vertical: DiagramElementPrimative;
+  } & DiagramElementCollection;
 } & circleType;
 
 type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
@@ -79,22 +83,23 @@ class AdjacentAnglesCollection extends AngleCircle {
       this.colors.angleB,
     );
   }
-  // makeRightAngle() {
-  //   const rad = this.layout.angleRadius * 0.9;
-  //   const rightAngle = this.shapes.collection();
-  //   rightAngle.add('vertical', this.makeLine(
-  //     new Point(0, 0), rad, this.layout.linewidth,
-  //     this.colors.angle, new Transform()
-  //       .rotate(Math.PI / 2)
-  //       .translate(rad, this.layout.linewidth / 2),
-  //   ));
-  //   rightAngle.add('horizontal', this.makeLine(
-  //     new Point(0, 0), rad, this.layout.linewidth,
-  //     this.colors.angle, new Transform()
-  //       .translate(this.layout.linewidth / 2, rad),
-  //   ));
-  //   return rightAngle;
-  // }
+
+  makeRightAngle() {
+    const rad = this.layout.angleRadius * 0.9;
+    const rightAngle = this.shapes.collection();
+    rightAngle.add('vertical', this.makeLine(
+      new Point(0, 0), rad - this.layout.linewidth, this.layout.linewidth,
+      this.colors.angle, new Transform()
+        .rotate(Math.PI / 2)
+        .translate(rad, this.layout.linewidth / 2),
+    ));
+    rightAngle.add('horizontal', this.makeLine(
+      new Point(0, 0), rad, this.layout.linewidth,
+      this.colors.angle, new Transform()
+        .translate(this.layout.linewidth / 2, rad),
+    ));
+    return rightAngle;
+  }
 
   makeAnglesEquation() {
     const equationElements = this.diagram.equation.elements({
@@ -300,6 +305,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle.add('endLine', this.makeMoveableLine());
     this._circle.add('angleA', this.makeAngleA());
     this._circle.add('angleB', this.makeAngleB());
+    this._circle.add('rightAngle', this.makeRightAngle());
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     this._circle.setTransformCallback = this.updateCircleRotation.bind(this);
@@ -399,6 +405,21 @@ class AdjacentAnglesCollection extends AngleCircle {
         this.updateAngleBRotation();
       }
     }
+  }
+
+  pulseRightAngle() {
+    this._circle._endLine.stop();
+    this._circle._endLine.transform.updateRotation(Math.PI / 2);
+    this.updateEndLineRotation();
+    this._circle._rightAngle.stop();
+    this._circle._rightAngle.showAll();
+    this._circle._rightAngle.pulseScaleNow(
+      2, 1.5, 0.25,
+      () => {
+        this._circle._rightAngle.disolveElementsOut(1);
+      },
+    );
+    this.diagram.animateNextFrame();
   }
 
   setParagraphUnits(onUnit: 'rad' | 'deg') {
@@ -550,6 +571,7 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   goToSupplementary() {
+    this._circle._rightAngle.stop();
     this.showAngleType('supplementary');
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI);
