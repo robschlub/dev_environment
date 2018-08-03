@@ -5,10 +5,7 @@
                 "airbnb-base"],
     "rules": {
         "no-console": "error",
-        // "quotes": ["error", "double"]
         "no-underscore-dangle": 0,
-        // "lines-between-class-members": "off",
-        // "operator-linebreak": "off",
         "operator-linebreak": [
           "error",
           "before",
