@@ -146,15 +146,15 @@ class AdjacentAnglesCollection extends AngleCircle {
     equationElements.complementary = {
       add: {
         deg: makeEqn(['a', 'plus', 'b', 'equals', '_90']),
-        rad: makeEqn(['a', 'plus', 'b', 'equals', piOn2]),
+        rad: makeEqn(['a', 'plus', 'b', 'equals', eqn.frac('pi', '_2', 'v')]),
       },
       a: {
         deg: makeEqn(['a', 'equals', '_90', 'minus', 'b']),
-        rad: makeEqn(['a', 'equals', piOn2, 'minus', 'b']),
+        rad: makeEqn(['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b']),
       },
       b: {
         deg: makeEqn(['b', 'equals', '_90', 'minus', 'a']),
-        rad: makeEqn(['b', 'equals', piOn2, 'minus', 'a']),
+        rad: makeEqn(['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a']),
       },
     };
     equationElements.supplementary = {
@@ -174,15 +174,15 @@ class AdjacentAnglesCollection extends AngleCircle {
     equationElements.explementary = {
       add: {
         deg: makeEqn(['a', 'plus', 'b', 'equals', '_360']),
-        rad: makeEqn(['a', 'plus', 'b', 'equals', '2', 'pi']),
+        rad: makeEqn(['a', 'plus', 'b', 'equals', '_2', 'pi']),
       },
       a: {
         deg: makeEqn(['a', 'equals', '_360', 'minus', 'b']),
-        rad: makeEqn(['a', 'equals', '2', 'pi', 'minus', 'b']),
+        rad: makeEqn(['a', 'equals', '_2', 'pi', 'minus', 'b']),
       },
       b: {
         deg: makeEqn(['b', 'equals', '_360', 'minus', 'a']),
-        rad: makeEqn(['b', 'equals', '2', 'pi', 'minus', 'a']),
+        rad: makeEqn(['b', 'equals', '_2', 'pi', 'minus', 'a']),
       },
     };
 
@@ -214,7 +214,7 @@ class AdjacentAnglesCollection extends AngleCircle {
         if (angleType === 'complementary') {
           equationElements._pi.show();
           equationElements._v.show();
-          equationElements._2.show();
+          equationElements.__2.show();
         }
         if (angleType === 'supplementary') {
           equationElements._pi.show();
@@ -229,7 +229,11 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
     };
 
-    equationElements.showEqn = (form: 'add' | 'a' | 'b', angleType: angleTypes) => {
+    equationElements.showEqn = (angleType: angleTypes, form: 'add' | 'a' | 'b' = 'add') => {
+      if (angleType === 'adjacent') {
+        equationElements.hideAll();
+        return;
+      }
       equationElements.showAngle(angleType);
       const units = this.varState.radialLines === 360 ? 'deg' : 'rad';
       equationElements[angleType][form][units].setPositions();
@@ -244,40 +248,7 @@ class AdjacentAnglesCollection extends AngleCircle {
         equationElements._plus.hide();
         equationElements._minus.show();
       }
-    }
-
-    // equationElements.showAdd = (angleType) => {
-    //   // equationElements.showAngle(this.varState.angleSelected);
-    //   equationElements.showAngle('complementary');
-    //   // equationElements.complementary.add.deg.setPositions();
-    //   equationElements[angleType]['add'][]
-    //   equationElements._a.show();
-    //   equationElements._b.show();
-    //   equationElements._equals.show();
-    //   equationElements._plus.show();
-    //   equationElements._minus.hide();
-    // };
-
-    // equationElements.showA = () => {
-    //   // equationElements.showAngle(this.varState.angleSelected);
-    //   equationElements.showAngle('complementary');
-    //   equationElements.complementary.a.deg.setPositions();
-    //   equationElements._a.show();
-    //   equationElements._b.show();
-    //   equationElements._equals.show();
-    //   equationElements._plus.hide();
-    //   equationElements._minus.show();
-    // };
-
-    // equationElements.showB = () => {
-    //   equationElements.showAngle(this.varState.angleSelected);
-    //   equationElements._a.show();
-    //   equationElements._b.show();
-    //   equationElements._equals.show();
-    //   equationElements._plus.hide();
-    //   equationElements._minus.show();
-    // };
-
+    };
     return equationElements;
   }
 
@@ -496,6 +467,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI / 3);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
+    this._eqn.showEqn('adjacent');
     this.diagram.animateNextFrame();
   }
 
@@ -526,6 +498,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI / 2);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
+    this._eqn.showEqn('complementary', 'add');
+    console.log(this._eqn)
     this.diagram.animateNextFrame();
   }
 
@@ -535,6 +509,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
+    this._eqn.showEqn('supplementary', 'add');
     this.diagram.animateNextFrame();
   }
 
@@ -544,6 +519,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI * 2);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
+    this._eqn.showEqn('explementary', 'add');
     this.diagram.animateNextFrame();
   }
 
