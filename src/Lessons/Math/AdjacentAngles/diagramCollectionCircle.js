@@ -135,6 +135,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     setElem(ee._pi, null, 'down');
     setElem(ee._v);
     setElem(ee.__2);
+    setElem(ee.__90);
     equationElements.hasTouchableElements = true;
 
 
@@ -252,7 +253,33 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
       this.varState.equationForm = form;
     };
+
+    const onclickEqn = (form: equationFormType) => {
+      equationElements[this.getAngleType()][form][this.getUnits()].setPositions();
+      this.diagram.animateNextFrame();
+    };
+    equationElements._a.onClick = onclickEqn.bind(this, 'a');
+    equationElements._b.onClick = onclickEqn.bind(this, 'b');
+    equationElements._pi.onClick = onclickEqn.bind(this, 'add');
+    equationElements.__90.onClick = onclickEqn.bind(this, 'add');
+    equationElements.__2.onClick = onclickEqn.bind(this, 'add');
+    equationElements._v.onClick = onclickEqn.bind(this, 'add');
     return equationElements;
+  }
+
+  getUnits() {
+    if (this.varState.radialLines === 360) {
+      return 'deg';
+    }
+    return 'rad';
+  }
+
+  getAngleType(): angleTypes {
+    return this.varState.angleSelected;
+  }
+
+  getEquationForm(): equationFormType {
+    return this.varState.equationForm;
   }
 
   addToCircle() {
