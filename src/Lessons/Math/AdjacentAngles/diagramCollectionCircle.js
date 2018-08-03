@@ -132,11 +132,11 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
     /* eslint-enable no-param-reassign */
 
-    setElem(ee._a, this.colors.angleA, 'up', 0.7);
+    setElem(ee._a, this.colors.angleA, 'up', 0.65);
     setElem(ee._b, this.colors.angleB, 'up', 0.85);
-    setElem(ee._pi, null, 'down', 1.1);
-    setElem(ee._v, null, 'down', 1.1);
-    setElem(ee.__2, null, 'down', 1.1);
+    setElem(ee._pi, null, 'down', 1);
+    setElem(ee._v, null, 'down', 1);
+    setElem(ee.__2, null, 'down', 1);
     setElem(ee.__90, null, 'down', 0.7);
     equationElements.hasTouchableElements = true;
 

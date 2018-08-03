@@ -73,6 +73,10 @@ class Content extends LessonContent {
           style="margin-top:21%; margin-left: 4%">
           <span class="english">Complementary</span> |from_Latin| <i class="latin">complementum</i>: “that which fills up or completes”
         </p>
+        <p class="lesson__font_0p3" style="margin-top:0.5%; margin-left: 4%">
+          <span class="lesson__note"><i>Complementary</i>, <i>Supplementary</i> and <i>Explementary</i> all come from latin roots that mean “to fill up or to complete". When used in geometry, they are used to make a distinction between filling up a right angle, straight angle, or full angle.
+          </span>
+        </p>
       </div>`,
       `<div id="id_supplementary_text">
         <p class="lesson__diagram_text_p_width_45"
@@ -83,6 +87,10 @@ class Content extends LessonContent {
           style="margin-top:21%; margin-left: 4%">
           <span class="english">Supplementary</span> |from_Latin| <i class="latin">supplementum</i>: “fill up, complete”
         </p>
+        <p class="lesson__font_0p3" style="margin-top:0.5%; margin-left: 4%">
+          <span class="lesson__note"><i>Complementary</i>, <i>Supplementary</i> and <i>Explementary</i> all come from latin roots that mean “to fill up or to complete". When used in geometry, they are used to make a distinction between filling up a right angle, straight angle, or full angle.
+          </span>
+        </p>
       </div>`,
       `<div id="id_explementary_text">
         <p class="lesson__diagram_text_p_width_45"
@@ -92,6 +100,10 @@ class Content extends LessonContent {
         <p class="lesson__font_0p5"
           style="margin-top:21%; margin-left: 4%">
           <span class="english">Explementary</span> |from_Latin| <i class="latin">explementum</i>: “something that fills up, stuff”
+        </p>
+        <p class="lesson__font_0p3" style="margin-top:0.5%; margin-left: 4%">
+          <span class="lesson__note"><i>Complementary</i>, <i>Supplementary</i> and <i>Explementary</i> all come from latin roots that mean “to fill up or to complete". When used in geometry, they are used to make a distinction between filling up a right angle, straight angle, or full angle.
+          </span>
         </p>
       </div>`,
       ],
