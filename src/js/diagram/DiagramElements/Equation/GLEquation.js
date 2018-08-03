@@ -69,6 +69,10 @@ class Element {
       content.updateLastDrawTransform();
     }
   }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+  }
 }
 
 class Elements {
@@ -132,6 +136,13 @@ class Elements {
   setPositions() {
     this.content.forEach((e) => {
       e.setPositions();
+    });
+  }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    this.content.forEach((e) => {
+      e.offsetLocation(offset);
     });
   }
 }
@@ -251,6 +262,13 @@ class Fraction extends Elements {
       vinculum.transform.updateTranslation(this.vinculumPosition);
     }
   }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    this.numerator.offsetLocation(offset);
+    this.denominator.offsetLocation(offset);
+    this.vinculumPosition = this.vinculumPosition.add(offset);
+  }
 }
 
 class SuperSub extends Elements {
@@ -347,6 +365,17 @@ class SuperSub extends Elements {
       this.subscript.setPositions();
     }
   }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    this.mainContent.offsetLocation(offset);
+    if (this.superscript) {
+      this.superscript.offsetLocation(offset);
+    }
+    if (this.subscript) {
+      this.subscript.offsetLocation(offset);
+    }
+  }
 }
 
 class Bounds {
@@ -420,6 +449,23 @@ class Integral extends Elements {
     }
     if (this.mainContent) {
       this.mainContent.setPositions();
+    }
+  }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    const { integralGlyph } = this;
+    if (integralGlyph != null) {
+      this.glyphLocation = this.glyphLocation.add(offset);
+    }
+    if (this.mainContent) {
+      this.mainContent.offsetLocation(offset);
+    }
+    if (this.limitMax) {
+      this.limitMax.offsetLocation(offset);
+    }
+    if (this.limitMin) {
+      this.limitMin.offsetLocation(offset);
     }
   }
 
@@ -726,14 +772,20 @@ export class DiagramGLEquation extends Elements {
     } else if (alignV === 'middle') {
       fixPoint.y += p.y - d + h / 2;
     }
+
     const delta = new Point(0, 0).sub(fixPoint);
-    elementsInEqn.forEach((e) => {
-      const et = e.transform.t();
-      if (et != null) {
-        const etNew = et.add(delta);
-        e.transform.updateTranslation(etNew);
-      }
-    });
+    if (delta.x !== 0 || delta.y !== 0) {
+      this.offsetLocation(delta);
+      this.setPositions();
+    }
+    // const delta = new Point(0, 0).sub(fixPoint);
+    // elementsInEqn.forEach((e) => {
+    //   const et = e.transform.t();
+    //   if (et != null) {
+    //     const etNew = et.add(delta);
+    //     e.transform.updateTranslation(etNew);
+    //   }
+    // });
 
     this.collection.showOnly(elementsCurrentlyShowing);
   }
