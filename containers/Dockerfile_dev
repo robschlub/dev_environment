@@ -21,6 +21,9 @@ ADD .flowconfig .
 ADD .stylelintrc .
 ADD .stylelintignore .
 
+# Testing
+ADD jest.config.js .
+
 # Packaging
 ADD containers/dev/webpack.config.js .
 ADD containers/dev/getLessons.js .
