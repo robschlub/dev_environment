@@ -169,6 +169,8 @@ class Content extends LessonContent {
         diag.toggleUnits('deg');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
         diag.goToAdjacent();
+        // diag._eqn.complimentaryADeg.arrange(1, 'left', 'baseline')
+        diag._eqn.showA();
       },
     });
   }
