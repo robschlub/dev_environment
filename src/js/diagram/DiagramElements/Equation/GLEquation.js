@@ -726,7 +726,7 @@ export class DiagramGLEquation extends Elements {
     alignV: 'top' | 'bottom' | 'middle' | 'baseline' | null = 'baseline',
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
-    const elementsInEqn = this.getAllElements();
+    // const elementsInEqn = this.getAllElements();
     const elementsInCollection = this.collection.getAllElements();
     const elementsCurrentlyShowing = elementsInCollection.filter(e => e.isShown);
     this.collection.hideAll();
@@ -951,5 +951,3 @@ export class DiagramGLEquation extends Elements {
     );
   }
 }
-
-

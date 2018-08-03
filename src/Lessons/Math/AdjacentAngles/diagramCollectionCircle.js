@@ -10,6 +10,7 @@ import {
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
+import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 // type rightAngleType = {
 //   _horizontal: DiagramElementPrimative;
@@ -38,17 +39,54 @@ type varStateExtendedType = {
     equationForm: equationFormType;
   } & varStateType;
 
+type angleEquationSetType = {
+  add: {
+    deg: DiagramGLEquation;
+    rad: DiagramGLEquation;
+  };
+  a: {
+    deg: DiagramGLEquation;
+    rad: DiagramGLEquation;
+  };
+  b: {
+    deg: DiagramGLEquation;
+    rad: DiagramGLEquation;
+  };
+};
+
+type equationType = {
+  _a: DiagramElementPrimative;
+  _b: DiagramElementPrimative;
+  _pi: DiagramElementPrimative;
+  __2: DiagramElementPrimative;
+  _equals: DiagramElementPrimative;
+  _plus: DiagramElementPrimative;
+  _minus: DiagramElementPrimative;
+  __90: DiagramElementPrimative;
+  __180: DiagramElementPrimative;
+  __360: DiagramElementPrimative;
+  _deg: DiagramElementPrimative;
+  _v: DiagramElementPrimative;
+  complementary: angleEquationSetType;
+  supplementary: angleEquationSetType;
+  explementary: angleEquationSetType;
+  showAngle: (angleTypes) => void;
+  showEqn: (angleTypes, ?equationFormType) => void;
+  onclickEqn: (equationFormType) => void;
+} & DiagramElementCollection;
 
 export type AdjacentAnglesCollectionType = {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
+  _eqn: equationType;
 };
 
 class AdjacentAnglesCollection extends AngleCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
+  _eqn: equationType;
 
   makeMoveableLine() {
     const line = this.makeLine(
@@ -328,7 +366,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle.add('rightAngle', this.makeRightAngle());
     this._circle.add('straightAngle', this.makeStraightAngle());
     this._circle.add('fullAngle', this.makeFullAngle());
-    
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     this._circle.setTransformCallback = this.updateCircleRotation.bind(this);
@@ -369,12 +406,12 @@ class AdjacentAnglesCollection extends AngleCircle {
         this.varState.radialLines = 2 * Math.PI;
         elemDeg.classList.remove('lesson__important_angles_unit_selected');
         elemRad.classList.add('lesson__important_angles_unit_selected');
-        this.setParagraphUnits('rad');
+        // this.setParagraphUnits('rad');
       } else if (unit === 'deg') {
         this.varState.radialLines = 360;
         elemRad.classList.remove('lesson__important_angles_unit_selected');
         elemDeg.classList.add('lesson__important_angles_unit_selected');
-        this.setParagraphUnits('deg');
+        // this.setParagraphUnits('deg');
       }
     }
     this._eqn.stop();
@@ -490,35 +527,35 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.diagram.animateNextFrame();
   }
 
-  setParagraphUnits(onUnit: 'rad' | 'deg') {
-    this.angleTypes.forEach((angleType) => {
-      const offUnit = onUnit === 'rad' ? 'deg' : 'rad';
-      const elemOn1 = document.getElementById(`id_${angleType}_${onUnit}1`);
-      const elemOn2 = document.getElementById(`id_${angleType}_${onUnit}2`);
-      const elemOn3 = document.getElementById(`id_${angleType}_${onUnit}3`);
-      const elemOff1 = document.getElementById(`id_${angleType}_${offUnit}1`);
-      const elemOff2 = document.getElementById(`id_${angleType}_${offUnit}2`);
-      const elemOff3 = document.getElementById(`id_${angleType}_${offUnit}3`);
-      if (elemOn1 != null) {
-        elemOn1.classList.remove('lesson__important_angles_text_hide');
-      }
-      if (elemOn2 != null) {
-        elemOn2.classList.remove('lesson__important_angles_text_hide');
-      }
-      if (elemOn3 != null) {
-        elemOn3.classList.remove('lesson__important_angles_text_hide');
-      }
-      if (elemOff1 != null) {
-        elemOff1.classList.add('lesson__important_angles_text_hide');
-      }
-      if (elemOff2 != null) {
-        elemOff2.classList.add('lesson__important_angles_text_hide');
-      }
-      if (elemOff3 != null) {
-        elemOff3.classList.add('lesson__important_angles_text_hide');
-      }
-    });
-  }
+  // setParagraphUnits(onUnit: 'rad' | 'deg') {
+  //   this.angleTypes.forEach((angleType) => {
+  //     const offUnit = onUnit === 'rad' ? 'deg' : 'rad';
+  //     const elemOn1 = document.getElementById(`id_${angleType}_${onUnit}1`);
+  //     const elemOn2 = document.getElementById(`id_${angleType}_${onUnit}2`);
+  //     const elemOn3 = document.getElementById(`id_${angleType}_${onUnit}3`);
+  //     const elemOff1 = document.getElementById(`id_${angleType}_${offUnit}1`);
+  //     const elemOff2 = document.getElementById(`id_${angleType}_${offUnit}2`);
+  //     const elemOff3 = document.getElementById(`id_${angleType}_${offUnit}3`);
+  //     if (elemOn1 != null) {
+  //       elemOn1.classList.remove('lesson__important_angles_text_hide');
+  //     }
+  //     if (elemOn2 != null) {
+  //       elemOn2.classList.remove('lesson__important_angles_text_hide');
+  //     }
+  //     if (elemOn3 != null) {
+  //       elemOn3.classList.remove('lesson__important_angles_text_hide');
+  //     }
+  //     if (elemOff1 != null) {
+  //       elemOff1.classList.add('lesson__important_angles_text_hide');
+  //     }
+  //     if (elemOff2 != null) {
+  //       elemOff2.classList.add('lesson__important_angles_text_hide');
+  //     }
+  //     if (elemOff3 != null) {
+  //       elemOff3.classList.add('lesson__important_angles_text_hide');
+  //     }
+  //   });
+  // }
 
   updateNumSectionsText() {
     super.updateNumSectionsText();
