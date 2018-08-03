@@ -108,124 +108,124 @@ class AdjacentAnglesCollection extends AngleCircle {
       v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
     }, this.colors.diagram.text.base);
 
-    equationElements._a.setColor(this.colors.angleA);
-    equationElements._a.isTouchable = true;
-    equationElements._a.animate.transform.translation.style = 'curved';
+    // equationElements._a.setColor(this.colors.angleA);
+    // equationElements._a.isTouchable = true;
+    // equationElements._a.animate.transform.translation.style = 'curved';
 
-    equationElements._b.setColor(this.colors.angleB);
-    equationElements._b.isTouchable = true;
-    equationElements._b.animate.transform.translation.style = 'curved';
-    equationElements._b.animate.transform.translation.options.direction = 1;
+    // equationElements._b.setColor(this.colors.angleB);
+    // equationElements._b.isTouchable = true;
+    // equationElements._b.animate.transform.translation.style = 'curved';
+    // equationElements._b.animate.transform.translation.options.direction = 1;
 
-    equationElements._pi.isTouchable = true;
-    equationElements._pi.animate.transform.translation.style = 'curved';
-    equationElements._pi.animate.transform.translation.options.direction = 1;
+    // equationElements._pi.isTouchable = true;
+    // equationElements._pi.animate.transform.translation.style = 'curved';
+    // equationElements._pi.animate.transform.translation.options.direction = 1;
 
-    equationElements._v.isTouchable = true;
-    equationElements._v.animate.transform.translation.style = 'curved';
-    equationElements._v.animate.transform.translation.options.direction = 1;
+    // equationElements._v.isTouchable = true;
+    // equationElements._v.animate.transform.translation.style = 'curved';
+    // equationElements._v.animate.transform.translation.options.direction = 1;
 
-    equationElements._2.isTouchable = true;
-    equationElements._2.animate.transform.translation.style = 'curved';
-    equationElements._2.animate.transform.translation.options.direction = 1;
+    // equationElements._2.isTouchable = true;
+    // equationElements._2.animate.transform.translation.style = 'curved';
+    // equationElements._2.animate.transform.translation.options.direction = 1;
 
-    equationElements.hasTouchableElements = true;
+    // equationElements.hasTouchableElements = true;
 
-    let eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'plus', 'b', 'equals', '_90', 'deg']);
-    equationElements.complimentaryAddDeg = eqn;
+    // let eqn = this.diagram.equation.make(equationElements);
+    // eqn.createEq(['a', 'plus', 'b', 'equals', '_90', 'deg']);
+    // equationElements.complimentaryAddDeg = eqn;
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'plus', 'b', 'equals', eqn.frac('pi', '_2', 'v')]);
-    equationElements.complimentaryAddRad = eqn;
+    // eqn = this.diagram.equation.make(equationElements);
+    // eqn.createEq(['a', 'plus', 'b', 'equals', eqn.frac('pi', '_2', 'v')]);
+    // equationElements.complimentaryAddRad = eqn;
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b']);
-    equationElements.complimentaryARad = eqn;
+    // eqn = this.diagram.equation.make(equationElements);
+    // eqn.createEq(['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b']);
+    // equationElements.complimentaryARad = eqn;
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'equals', '_90', 'deg', 'minus', 'b']);
-    equationElements.complimentaryADeg = eqn;
+    // eqn = this.diagram.equation.make(equationElements);
+    // eqn.createEq(['a', 'equals', '_90', 'deg', 'minus', 'b']);
+    // equationElements.complimentaryADeg = eqn;
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a']);
-    equationElements.complimentaryBRad = eqn;
+    // eqn = this.diagram.equation.make(equationElements);
+    // eqn.createEq(['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a']);
+    // equationElements.complimentaryBRad = eqn;
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['b', 'equals', '_90', 'deg', 'minus', 'a']);
-    equationElements.complimentaryBDeg = eqn;
+    // eqn = this.diagram.equation.make(equationElements);
+    // eqn.createEq(['b', 'equals', '_90', 'deg', 'minus', 'a']);
+    // equationElements.complimentaryBDeg = eqn;
 
-    equationElements.showAngle = (angleType: angleTypes) => {
-      equationElements.show();
-      if (this.varState.radialLines === 360) {
-        equationElements._pi.hide();
-        equationElements._v.hide();
-        equationElements._2.hide();
-        equationElements._deg.show();
-        if (angleType === 'complementary') {
-          equationElements._90.show();
-          equationElements._180.hide();
-          equationElements._360.hide();
-        }
-        if (angleType === 'supplementary') {
-          equationElements._90.hide();
-          equationElements._180.show();
-          equationElements._360.hide();
-        }
-        if (angleType === 'explementary') {
-          equationElements._90.hide();
-          equationElements._180.hide();
-          equationElements._360.show();
-        }
-      } else {
-        equationElements._90.hide();
-        equationElements._180.hide();
-        equationElements._360.hide();
-        equationElements._deg.hide();
-        if (angleType === 'complementary') {
-          equationElements._pi.show();
-          equationElements._v.show();
-          equationElements._2.show();
-        }
-        if (angleType === 'supplementary') {
-          equationElements._pi.show();
-          equationElements._v.hide();
-          equationElements._2.hide();
-        }
-        if (angleType === 'explementary') {
-          equationElements._pi.show();
-          equationElements._v.hide();
-          equationElements._2.show();
-        }
-      }
-    };
+    // equationElements.showAngle = (angleType: angleTypes) => {
+    //   equationElements.show();
+    //   if (this.varState.radialLines === 360) {
+    //     equationElements._pi.hide();
+    //     equationElements._v.hide();
+    //     equationElements._2.hide();
+    //     equationElements._deg.show();
+    //     if (angleType === 'complementary') {
+    //       equationElements._90.show();
+    //       equationElements._180.hide();
+    //       equationElements._360.hide();
+    //     }
+    //     if (angleType === 'supplementary') {
+    //       equationElements._90.hide();
+    //       equationElements._180.show();
+    //       equationElements._360.hide();
+    //     }
+    //     if (angleType === 'explementary') {
+    //       equationElements._90.hide();
+    //       equationElements._180.hide();
+    //       equationElements._360.show();
+    //     }
+    //   } else {
+    //     equationElements._90.hide();
+    //     equationElements._180.hide();
+    //     equationElements._360.hide();
+    //     equationElements._deg.hide();
+    //     if (angleType === 'complementary') {
+    //       equationElements._pi.show();
+    //       equationElements._v.show();
+    //       equationElements._2.show();
+    //     }
+    //     if (angleType === 'supplementary') {
+    //       equationElements._pi.show();
+    //       equationElements._v.hide();
+    //       equationElements._2.hide();
+    //     }
+    //     if (angleType === 'explementary') {
+    //       equationElements._pi.show();
+    //       equationElements._v.hide();
+    //       equationElements._2.show();
+    //     }
+    //   }
+    // };
 
-    equationElements.showAdd = () => {
-      equationElements.showAngle(this.varState.angleSelected);
-      equationElements._a.show();
-      equationElements._b.show();
-      equationElements._equals.show();
-      equationElements._plus.show();
-      equationElements._minus.hide();
-    };
+    // equationElements.showAdd = () => {
+    //   equationElements.showAngle(this.varState.angleSelected);
+    //   equationElements._a.show();
+    //   equationElements._b.show();
+    //   equationElements._equals.show();
+    //   equationElements._plus.show();
+    //   equationElements._minus.hide();
+    // };
 
-    equationElements.showA = () => {
-      equationElements.showAngle(this.varState.angleSelected);
-      equationElements._a.show();
-      equationElements._b.show();
-      equationElements._equals.show();
-      equationElements._plus.hide();
-      equationElements._minus.show();
-    };
+    // equationElements.showA = () => {
+    //   equationElements.showAngle(this.varState.angleSelected);
+    //   equationElements._a.show();
+    //   equationElements._b.show();
+    //   equationElements._equals.show();
+    //   equationElements._plus.hide();
+    //   equationElements._minus.show();
+    // };
 
-    equationElements.showA = () => {
-      equationElements.showAngle(this.varState.angleSelected);
-      equationElements._a.show();
-      equationElements._b.show();
-      equationElements._equals.show();
-      equationElements._plus.hide();
-      equationElements._minus.show();
-    };
+    // equationElements.showA = () => {
+    //   equationElements.showAngle(this.varState.angleSelected);
+    //   equationElements._a.show();
+    //   equationElements._b.show();
+    //   equationElements._equals.show();
+    //   equationElements._plus.hide();
+    //   equationElements._minus.show();
+    // };
 
     return equationElements;
   }
