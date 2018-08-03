@@ -120,6 +120,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       elem: DiagramElementCollection | DiagramElementPrimative,
       color: Array<number> | null = null,
       direction: 'up' | 'down' = 'up',
+      mag: number = 1,
     ) {
       if (color != null) {
         elem.setColor(color);
@@ -127,15 +128,16 @@ class AdjacentAnglesCollection extends AngleCircle {
       elem.isTouchable = true;
       elem.animate.transform.translation.style = 'curved';
       elem.animate.transform.translation.options.direction = direction;
+      elem.animate.transform.translation.options.magnitude = mag;
     }
     /* eslint-enable no-param-reassign */
 
-    setElem(ee._a, this.colors.angleA);
-    setElem(ee._b, this.colors.angleB);
-    setElem(ee._pi, null, 'down');
-    setElem(ee._v);
-    setElem(ee.__2);
-    setElem(ee.__90);
+    setElem(ee._a, this.colors.angleA, 'up', 0.7);
+    setElem(ee._b, this.colors.angleB, 'up', 0.85);
+    setElem(ee._pi, null, 'down', 1.1);
+    setElem(ee._v, null, 'down', 1.1);
+    setElem(ee.__2, null, 'down', 1.1);
+    setElem(ee.__90, null, 'down', 0.7);
     equationElements.hasTouchableElements = true;
 
 
@@ -256,8 +258,9 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
 
     const onclickEqn = (form: equationFormType) => {
-      equationElements.showEqn(this.getAngleType(), form);
-      equationElements[this.getAngleType()][form][this.getUnits()].setPositions();
+      // equationElements.showEqn(this.getAngleType(), form);
+      // equationElements[this.getAngleType()][form][this.getUnits()].setPositions();
+      equationElements[this.getAngleType()][form][this.getUnits()].animateTo(1, 2, equationElements._equals);
       this.diagram.animateNextFrame();
     };
     equationElements._a.onClick = onclickEqn.bind(this, 'a');
