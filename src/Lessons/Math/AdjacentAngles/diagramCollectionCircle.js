@@ -109,92 +109,60 @@ class AdjacentAnglesCollection extends AngleCircle {
     }, this.colors.diagram.text.base);
     equationElements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
 
-    equationElements._a.setColor(this.colors.angleA);
-    equationElements._a.isTouchable = true;
-    equationElements._a.animate.transform.translation.style = 'curved';
+    const ee = equationElements;
 
-    equationElements._b.setColor(this.colors.angleB);
-    equationElements._b.isTouchable = true;
-    equationElements._b.animate.transform.translation.style = 'curved';
-    equationElements._b.animate.transform.translation.options.direction = 1;
+    /* eslint-disable no-param-reassign */
+    function setElem(
+      elem: DiagramElementCollection | DiagramElementPrimative,
+      color: Array<number> | null = null,
+      direction: 'up' | 'down' = 'up',
+    ) {
+      if (color != null) {
+        elem.setColor(color);
+      }
+      elem.isTouchable = true;
+      elem.animate.transform.translation.style = 'curved';
+      elem.animate.transform.translation.options.direction = direction;
+    }
+    /* eslint-enable no-param-reassign */
 
-    equationElements._pi.isTouchable = true;
-    equationElements._pi.animate.transform.translation.style = 'curved';
-    equationElements._pi.animate.transform.translation.options.direction = 1;
-
-    equationElements._v.isTouchable = true;
-    equationElements._v.animate.transform.translation.style = 'curved';
-    equationElements._v.animate.transform.translation.options.direction = 1;
-
-    equationElements.__2.isTouchable = true;
-    equationElements.__2.animate.transform.translation.style = 'curved';
-    equationElements.__2.animate.transform.translation.options.direction = 1;
-
+    setElem(ee._a, this.colors.angleA);
+    setElem(ee._b, this.colors.angleB);
+    setElem(ee._pi, null, 'down');
+    setElem(ee._v);
+    setElem(ee.__2);
     equationElements.hasTouchableElements = true;
 
 
-    // const makeEqn = ()
-    // Complimenary
-    let eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'plus', 'b', 'equals', '_90']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryAddDeg = eqn;
+    const eqn = this.diagram.equation.make(equationElements);
+    const makeEqn = (content) => {
+      const e = eqn.createNewEq(content);
+      e.arrange(1, 'left', 'baseline', equationElements._equals);
+      return e;
+    };
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'plus', 'b', 'equals', eqn.frac('pi', '_2', 'v')]);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryAddRad = eqn;
+    const piOn2 = eqn.frac('pi', '_2', 'v');
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryARad = eqn;
+    ee.complementaryAddDeg = makeEqn(['a', 'plus', 'b', 'equals', '_90']);
+    ee.complementaryAddRad = makeEqn(['a', 'plus', 'b', 'equals', piOn2]);
+    ee.complementaryARad = makeEqn(['a', 'equals', piOn2, 'minus', 'b']);
+    ee.complementaryADeg = makeEqn(['a', 'equals', '_90', 'minus', 'b']);
+    ee.complementaryBRad = makeEqn(['b', 'equals', piOn2, 'minus', 'a']);
+    ee.complementaryBDeg = makeEqn(['b', 'equals', '_90', 'minus', 'a']);
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'equals', '_90', 'minus', 'b']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryADeg = eqn;
+    ee.suplementaryAddDeg = makeEqn(['a', 'plus', 'b', 'equals', '_180']);
+    ee.suplementaryAddRad = makeEqn(['a', 'plus', 'b', 'equals', 'pi']);
+    ee.suplementaryARad = makeEqn(['a', 'equals', 'pi', 'minus', 'b']);
+    ee.suplementaryADeg = makeEqn(['a', 'equals', '_180', 'minus', 'b']);
+    ee.suplementaryBRad = makeEqn(['b', 'equals', 'pi', 'minus', 'a']);
+    ee.suplementaryBDeg = makeEqn(['b', 'equals', '_180', 'minus', 'a']);
 
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryBRad = eqn;
-
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['b', 'equals', '_90', 'minus', 'a']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryBDeg = eqn;
-
-    // Supplementary
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'plus', 'b', 'equals', '_180']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryAddDeg = eqn;
-
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'plus', 'b', 'equals', 'pi']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryAddRad = eqn;
-
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'equals', 'pi', 'minus', 'b']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryARad = eqn;
-
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['a', 'equals', '_180', 'minus', 'b']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryADeg = eqn;
-
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['b', 'equals', 'pi', 'minus', 'a']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryBRad = eqn;
-
-    eqn = this.diagram.equation.make(equationElements);
-    eqn.createEq(['b', 'equals', '_180', 'minus', 'a']);
-    eqn.arrange(1, 'left', 'baseline', equationElements._equals);
-    equationElements.complimentaryBDeg = eqn;
+    ee.explementaryAddDeg = makeEqn(['a', 'plus', 'b', 'equals', '_360']);
+    ee.explementaryAddRad = makeEqn(['a', 'plus', 'b', 'equals', '2', 'pi']);
+    ee.explementaryARad = makeEqn(['a', 'equals', '2', 'pi', 'minus', 'b']);
+    ee.explementaryADeg = makeEqn(['a', 'equals', '_360', 'minus', 'b']);
+    ee.explementaryBRad = makeEqn(['b', 'equals', '2', 'pi', 'minus', 'a']);
+    ee.explementaryBDeg = makeEqn(['b', 'equals', '_360', 'minus', 'a']);
 
     equationElements.showAngle = (angleType: angleTypes) => {
       equationElements.show();
@@ -221,7 +189,6 @@ class AdjacentAnglesCollection extends AngleCircle {
         equationElements.__90.hide();
         equationElements.__180.hide();
         equationElements.__360.hide();
-        // equationElements._deg.hide();
         if (angleType === 'complementary') {
           equationElements._pi.show();
           equationElements._v.show();
@@ -243,7 +210,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     equationElements.showAdd = () => {
       // equationElements.showAngle(this.varState.angleSelected);
       equationElements.showAngle('complementary');
-      equationElements.complimentaryAddDeg.setPositions();
+      equationElements.complementaryAddDeg.setPositions();
       equationElements._a.show();
       equationElements._b.show();
       equationElements._equals.show();
@@ -254,7 +221,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     equationElements.showA = () => {
       // equationElements.showAngle(this.varState.angleSelected);
       equationElements.showAngle('complementary');
-      equationElements.complimentaryADeg.setPositions();
+      equationElements.complementaryADeg.setPositions();
       equationElements._a.show();
       equationElements._b.show();
       equationElements._equals.show();
