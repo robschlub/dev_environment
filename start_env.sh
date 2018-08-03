@@ -69,6 +69,7 @@ else
     -v $PROJECT_PATH/containers/dev/update_paths.py:/opt/app/update_paths.py \
     -v $PROJECT_PATH/.eslintrc.json:/opt/app/.eslintrc.json \
     -v $PROJECT_PATH/.flake8:/opt/app/.flake8 \
+    -v $PROJECT_PATH/.babelrc:/opt/app/.babelrc \
     -v $PROJECT_PATH/jest.config.js:/opt/app/jest.config.js \
     -v $PROJECT_PATH/.stylelintrc:/opt/app/.stylelintrc \
     -v $PROJECT_PATH/containers/dev/pytest.ini:/opt/app/pytest.ini \
