@@ -231,8 +231,8 @@ function contentToElement(content: EquationInput): HTMLElements {
   if (content instanceof HTMLElements) {
     return content;
   }
-  if (content instanceof HTMLElement ||
-      content instanceof HTMLElementProperties) {
+  if (content instanceof HTMLElement
+      || content instanceof HTMLElementProperties) {
     return new HTMLElements([content]);
   }
   if (typeof content === 'string') {

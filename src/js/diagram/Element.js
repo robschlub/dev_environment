@@ -761,10 +761,10 @@ class DiagramElement {
       const min = this.move.minTransform.order[i];
       const max = this.move.maxTransform.order[i];
       const v = next.v.order[i];
-      if (t instanceof Translation &&
-          v instanceof Translation &&
-          max instanceof Translation &&
-          min instanceof Translation
+      if (t instanceof Translation
+          && v instanceof Translation
+          && max instanceof Translation
+          && min instanceof Translation
       ) {
         if (min.x >= t.x || max.x <= t.x) {
           if (this.move.bounce) {
@@ -1800,12 +1800,12 @@ class DiagramElementCollection extends DiagramElement {
     if (this.isShown === false) {
       return false;
     }
-    if (this.state.isAnimating ||
-        this.state.isAnimatingCustom ||
-        this.state.isAnimatingColor ||
-        this.state.isMovingFreely ||
-        this.state.isBeingMoved ||
-        this.state.isPulsing) {
+    if (this.state.isAnimating
+        || this.state.isAnimatingCustom
+        || this.state.isAnimatingColor
+        || this.state.isMovingFreely
+        || this.state.isBeingMoved
+        || this.state.isPulsing) {
       return true;
     }
     for (let i = 0; i < this.order.length; i += 1) {

@@ -38,8 +38,8 @@ class Element {
 
   calcSize(location: Point, scale: number) {
     const { content } = this;
-    if (content instanceof DiagramElementCollection ||
-        content instanceof DiagramElementPrimative) {
+    if (content instanceof DiagramElementCollection
+        || content instanceof DiagramElementPrimative) {
       // Update translation and scale
       content.transform.updateTranslation(location.x, location.y);
       content.transform.updateScale(scale, scale);
@@ -60,8 +60,8 @@ class Element {
   }
   setPositions() {
     const { content } = this;
-    if (content instanceof DiagramElementCollection ||
-        content instanceof DiagramElementPrimative) {
+    if (content instanceof DiagramElementCollection
+        || content instanceof DiagramElementPrimative) {
       content.transform.updateTranslation(this.location.x, this.location.y);
       content.transform.updateScale(this.scale, this.scale);
       content.updateLastDrawTransform();
@@ -184,11 +184,11 @@ class Fraction extends Elements {
     this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
     this.lineWidth = scale * 0.02;
 
-    const yNumerator = this.numerator.descent +
-                        this.vSpaceNum + this.lineVAboveBaseline;
+    const yNumerator = this.numerator.descent
+                        + this.vSpaceNum + this.lineVAboveBaseline;
 
-    const yDenominator = this.denominator.ascent +
-                         this.vSpaceDenom - this.lineVAboveBaseline;
+    const yDenominator = this.denominator.ascent
+                         + this.vSpaceDenom - this.lineVAboveBaseline;
 
     const yScale = 1;
 
@@ -203,10 +203,12 @@ class Fraction extends Elements {
       scale,
     );
 
-    this.descent = this.vSpaceNum + this.lineWidth / 2 - this.lineVAboveBaseline +
-                   this.denominator.ascent + this.denominator.descent;
-    this.ascent = this.vSpaceNum + this.lineWidth / 2 + this.lineVAboveBaseline +
-                   this.numerator.ascent + this.numerator.descent;
+    this.descent = this.vSpaceNum + this.lineWidth / 2
+                   - this.lineVAboveBaseline
+                   + this.denominator.ascent + this.denominator.descent;
+    this.ascent = this.vSpaceNum + this.lineWidth / 2
+                  + this.lineVAboveBaseline + this.numerator.ascent
+                  + this.numerator.descent;
 
     const { vinculum } = this;
     if (vinculum) {
@@ -448,10 +450,8 @@ class Integral extends Elements {
       limitMinBounds.descent = limitMin.descent;
     }
 
-    const integralMinHeight =
-      contentBounds.ascent + contentBounds.descent +
-      limitMinBounds.height +
-      limitMaxBounds.height;
+    const integralMinHeight = contentBounds.ascent + contentBounds.descent
+                              + limitMinBounds.height + limitMaxBounds.height;
     const numLines = roundNum(integralMinHeight / scale, 0);
     const height = numLines * scale * 1.2;
     const integralSymbolLocation = new Point(

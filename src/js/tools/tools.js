@@ -17,9 +17,8 @@ const divide = (a: number, b: number): number => a / b;
 
 const classify = (key: string, value: string) => {
   const nonEmpty = value || key;
-  const withKey = nonEmpty[0] === '-' || nonEmpty.startsWith(`${key}-`) ?
-    `${key} ${nonEmpty}` :
-    nonEmpty;
+  const withKey = nonEmpty[0] === '-' || nonEmpty.startsWith(`${key}-`)
+    ? `${key} ${nonEmpty}` : nonEmpty;
   const joinStr = ` ${key}-`;
   return `${withKey.split(' -').join(joinStr)}`;
 };

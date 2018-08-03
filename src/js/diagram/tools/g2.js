@@ -267,17 +267,17 @@ function point(x: number, y: number) {
 
 function pointinRect(q: Point, p1: Point, p2: Point, precision?: number) {
   if (precision === undefined || precision === null) {
-    if (q.x >= Math.min(p1.x, p2.x) &&
-       q.x <= Math.max(p1.x, p2.x) &&
-       q.y >= Math.min(p1.y, p2.y) &&
-       q.y <= Math.max(p1.y, p2.y)) {
+    if (q.x >= Math.min(p1.x, p2.x)
+      && q.x <= Math.max(p1.x, p2.x)
+      && q.y >= Math.min(p1.y, p2.y)
+      && q.y <= Math.max(p1.y, p2.y)) {
       return true;
     }
   } else if (
-    roundNum(q.x, precision) >= roundNum(Math.min(p1.x, p2.x), precision) &&
-    roundNum(q.x, precision) <= roundNum(Math.max(p1.x, p2.x), precision) &&
-    roundNum(q.y, precision) >= roundNum(Math.min(p1.y, p2.y), precision) &&
-    roundNum(q.y, precision) <= roundNum(Math.max(p1.y, p2.y), precision)) {
+    roundNum(q.x, precision) >= roundNum(Math.min(p1.x, p2.x), precision)
+    && roundNum(q.x, precision) <= roundNum(Math.max(p1.x, p2.x), precision)
+    && roundNum(q.y, precision) >= roundNum(Math.min(p1.y, p2.y), precision)
+    && roundNum(q.y, precision) <= roundNum(Math.max(p1.y, p2.y), precision)) {
     return true;
   }
   return false;
@@ -395,8 +395,7 @@ Line.prototype.isOnSameLineAs = function lineisOnSameLineAs(line2: Line, precisi
   const l2 = line2.round(precision);
   // If A and B are zero, then this is not a line
   if ((l1.A === 0 && l1.B === 0)
-    ||
-    (l2.A === 0 && l2.B === 0)) {
+    || (l2.A === 0 && l2.B === 0)) {
     return false;
   }
   // If A is 0, then it must be 0 on the other line. Similar with B
@@ -453,8 +452,7 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     i.y = (l1.A * l2.C - l2.A * l1.C) / det;
     if (
       pointinRect(i, l1.p1, l1.p2, precision)
-      &&
-      pointinRect(i, l2.p1, l2.p2, precision)
+      && pointinRect(i, l2.p1, l2.p2, precision)
     ) {
       return {
         onLine: true,
@@ -478,10 +476,10 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     //   - if not overlapping, the intersect point is halfway between the nearest ends
     // let l1 = this;
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       const line11 = new Line(l1.p1, l2.p1);
       const line12 = new Line(l1.p1, l2.p2);
@@ -510,15 +508,14 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     }
     if (
       (
-        l1.p1.isOnLine(l2, precision) &&
-        l1.p2.isOnLine(l2, precision) &&
-        (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
+        l1.p1.isOnLine(l2, precision)
+        && l1.p2.isOnLine(l2, precision)
+        && (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
       )
-      ||
-      (
-        l2.p1.isOnLine(l1, precision) &&
-        l2.p2.isOnLine(l1, precision) &&
-        (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
+      || (
+        l2.p1.isOnLine(l1, precision)
+        && l2.p2.isOnLine(l1, precision)
+        && (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
       )
     ) {
       const midLine = new Line(l1.midpoint(), l2.midpoint());
@@ -530,34 +527,34 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     }
     let midLine;
     if (
-      l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p1, l2.p1);
     }
     if (
-      l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      l2.p2.isOnLine(l1, precision)
+      l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p1, l2.p2);
     }
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      l1.p2.isOnLine(l2, precision) &&
-      l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && l1.p2.isOnLine(l2, precision)
+      && l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p2, l2.p1);
     }
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p2, l2.p2);
     }
@@ -1160,19 +1157,19 @@ class Transform {
       const t = this.order[i];
       const min = minTransform.order[i];
       const max = maxTransform.order[i];
-      if (t instanceof Translation &&
-          min instanceof Translation &&
-          max instanceof Translation) {
+      if (t instanceof Translation
+          && min instanceof Translation
+          && max instanceof Translation) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
         order.push(new Translation(x, y));
-      } else if (t instanceof Rotation &&
-                 min instanceof Rotation &&
-                 max instanceof Rotation) {
+      } else if (t instanceof Rotation
+                 && min instanceof Rotation
+                 && max instanceof Rotation) {
         order.push(new Rotation(clipValue(t.r, min.r, max.r)));
-      } else if (t instanceof Scale &&
-                 min instanceof Scale &&
-                 max instanceof Scale) {
+      } else if (t instanceof Scale
+                 && min instanceof Scale
+                 && max instanceof Scale) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
         order.push(new Scale(x, y));

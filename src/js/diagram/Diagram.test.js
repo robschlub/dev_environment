@@ -24,14 +24,14 @@ describe('Diagram', () => {
 
   beforeEach(() => {
     document.body.innerHTML =
-      '<div id="c">' +
-      '  <canvas class="diagram__gl">' +
-      '  </canvas>' +
-      '  <canvas class="diagram__text">' +
-      '  </canvas>' +
-      '  <div class="diagram__html">' +
-      '  </div>' +
-      '</div>';
+      '<div id="c">'
+      + '  <canvas class="diagram__gl">'
+      + '  </canvas>'
+      + '  <canvas class="diagram__text">'
+      + '  </canvas>'
+      + '  <div class="diagram__html">'
+      + '  </div>'
+      + '</div>';
     // canvas = document.getElementById('c');
     const diagramDefinitions = {
       landscapeCenter: {

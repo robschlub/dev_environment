@@ -122,8 +122,7 @@ class AxisProperties {
     this.titleFontColor = defaultColor;
   }
   getNum(start: number, step: number) {
-    return Math.floor((this.limits.max - start) /
-          step) + 1;
+    return Math.floor((this.limits.max - start) / step) + 1;
   }
   getMajorNum() {
     return this.getNum(this.majorTicks.start, this.majorTicks.step);

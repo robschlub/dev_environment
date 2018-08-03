@@ -39,9 +39,8 @@ class VertexIntegral extends VertexObject {
     const bias = 0.01 * mul;
     const xArray = range(-0.18, 0.18, 0.01);
     const yArray = xArray.map(x => L / (1 + Math.exp(-k * x)));
-    const normDist = xArray.map(x => a /
-      Math.sqrt(2 * Math.PI * sigma ** 2) *
-      Math.exp(-(x ** 2) / (2 * sigma ** 2)));
+    const normDist = xArray.map(x => a / Math.sqrt(2 * Math.PI * sigma ** 2)
+                                     * Math.exp(-(x ** 2) / (2 * sigma ** 2)));
     const xLeft = xArray.map((x, index) => x - normDist[index] - bias);
     const xRight = xArray.map((x, index) => x + normDist[index] + bias);
     const serifRadius = 0.03 * mul;
