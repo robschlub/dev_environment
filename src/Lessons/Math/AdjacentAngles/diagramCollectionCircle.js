@@ -25,7 +25,8 @@ export type extendedCircleType = {
     _horizontal: DiagramElementPrimative;
     _vertical: DiagramElementPrimative;
   } & DiagramElementCollection;
-  _straightAngle: angleAnnotationType;
+  _straightAngle: DiagramElementPrimative;
+  _fullAngle: DiagramElementPrimative;
 } & circleType;
 
 type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
@@ -86,20 +87,25 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   makeStraightAngle() {
-    // const arc = 
-    // const layout = Object.assign({arc: { radius: 0.5 }}, this.layout.angleAnnotation);
-    // // layout.arc.radius = 0.5;
-    // return this.makeAngleAnnotation(0, Math.PI, '', this.colors.angle, layout);
     const layout = this.layout.angleAnnotation;
     return this.shapes.polygon(
-      layout.arc.sides, layout.arc.radius * 1.5, layout.arc.lineWidth, 0, 1,
+      layout.arc.sides, layout.arc.radius * 1.0, layout.arc.lineWidth, 0, 1,
       layout.arc.sides / 2, this.colors.angle,
       new Transform(),
     );
   }
 
+  makeFullAngle() {
+    const layout = this.layout.angleAnnotation;
+    return this.shapes.polygon(
+      layout.arc.sides, layout.arc.radius * 1.0, layout.arc.lineWidth, 0, 1,
+      layout.arc.sides, this.colors.angle,
+      new Transform(),
+    );
+  }
+
   makeRightAngle() {
-    const rad = this.layout.angleRadius * 0.9;
+    const rad = this.layout.angleAnnotation.arc.radius;
     const rightAngle = this.shapes.collection();
     rightAngle.add('vertical', this.makeLine(
       new Point(0, 0), rad - this.layout.linewidth, this.layout.linewidth,
@@ -321,12 +327,14 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle.add('angleB', this.makeAngleB());
     this._circle.add('rightAngle', this.makeRightAngle());
     this._circle.add('straightAngle', this.makeStraightAngle());
+    this._circle.add('fullAngle', this.makeFullAngle());
+    
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     this._circle.setTransformCallback = this.updateCircleRotation.bind(this);
     this._circle.order = [
-      ...this._circle.order.slice(-2),
-      ...this._circle.order.slice(0, -2),
+      ...this._circle.order.slice(-5),
+      ...this._circle.order.slice(0, -5),
     ];
   }
 
@@ -432,6 +440,11 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle._straightAngle.stop();
   }
 
+  stopFullAngle() {
+    this._circle._fullAngle.stop();
+    this._circle._fullAngle.stop();
+  }
+
   pulseRightAngle() {
     this._circle._endLine.stop();
     this._circle._endLine.transform.updateRotation(Math.PI / 2);
@@ -441,7 +454,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle._rightAngle.pulseScaleNow(
       2, 1.5, 0.25,
       () => {
-        this._circle._rightAngle.disolveElementsOut(1);
+        this._circle._rightAngle.disolveElementsOut(2);
       },
     );
     this.diagram.animateNextFrame();
@@ -456,7 +469,22 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle._straightAngle.pulseScaleNow(
       2, 1.5, 0.25,
       () => {
-        this._circle._straightAngle.disolveOut(1);
+        this._circle._straightAngle.disolveOut(2);
+      },
+    );
+    this.diagram.animateNextFrame();
+  }
+
+  pulseFullAngle() {
+    this._circle._endLine.stop();
+    this._circle._endLine.transform.updateRotation(Math.PI * 2);
+    this.updateEndLineRotation();
+    this._circle._fullAngle.stop();
+    this._circle._fullAngle.show();
+    this._circle._fullAngle.pulseScaleNow(
+      2, 1.5, 0.25,
+      () => {
+        this._circle._fullAngle.disolveOut(2);
       },
     );
     this.diagram.animateNextFrame();
@@ -569,6 +597,9 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   goToAdjacent() {
+    this.stopRightAngle();
+    this.stopFullAngle();
+    this.stopStraightAngle();
     this.showAngleType('adjacent');
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI / 3);
@@ -603,6 +634,7 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToComplementary() {
     this.stopStraightAngle();
+    this.stopFullAngle();
     this.showAngleType('complementary');
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI / 2);
@@ -614,6 +646,7 @@ class AdjacentAnglesCollection extends AngleCircle {
 
   goToSupplementary() {
     this.stopRightAngle();
+    this.stopFullAngle();
     this.showAngleType('supplementary');
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI);

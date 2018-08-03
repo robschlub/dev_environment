@@ -95,7 +95,7 @@ class Content extends LessonContent {
       `<div id="id_explementary_text">
         <p class="lesson__diagram_text_p_width_45"
            style="margin-top:17%">
-          |Explementary_angles| add up to a full angle.
+          |Explementary_angles| add up to a |full_angle|.
         </p>
         <p class="lesson__font_0p5"
           style="margin-top:21%; margin-left: 4%">
@@ -127,6 +127,7 @@ class Content extends LessonContent {
         ),
         right_angle: click(diag.pulseRightAngle, [diag], colors.angleText),
         straight_angle: click(diag.pulseStraightAngle, [diag], colors.angleText),
+        full_angle: click(diag.pulseFullAngle, [diag], colors.angleText),
         // Reflex: clickWord('Reflex', 'id_reflex', diag.goToReflex, [diag]),
         // Full: clickWord('Full', 'id_full', diag.goToFull, [diag]),
         // acute_angle: click(diag.pulseAngle, [diag], colors.angleText),
