@@ -588,6 +588,61 @@ export function createEquationElements(
   return equationElements;
 }
 
+export function getDiagramElement(
+  collection: DiagramElementCollection,
+  name: string | DiagramElementPrimative | DiagramElementCollection,
+): DiagramElementPrimative | DiagramElementCollection | null {
+  if (typeof name === 'string') {
+    if (collection && `_${name}` in collection) {
+    // $FlowFixMe
+      return collection[`_${name}`];
+    }
+    return null;
+  }
+  return name;
+}
+
+export function contentToElement(
+  collection: DiagramElementCollection,
+  content: EquationInput,
+): Elements {
+  // If input is alread an Elements object, then return it
+  if (content instanceof Elements) {
+    return content;
+  }
+
+  // If it is not an Elements object, then create an Element(s) array
+  // and create a new Elements Object
+  const elementArray: Array<Elements | Element | null> = [];
+
+  // If the content is a string, then find the corresponding
+  // DiagramElement associated with the string
+  if (typeof content === 'string') {
+    const diagramElement = getDiagramElement(collection, content);
+    if (diagramElement) {
+      elementArray.push(new Element(diagramElement));
+    }
+  // Otherwise, if the input content is an array, then process each element
+  // and add it to the ElementArray
+  } else if (Array.isArray(content)) {
+    content.forEach((c) => {
+      if (typeof c === 'string') {
+        const diagramElement = getDiagramElement(collection, c);
+        if (diagramElement) {
+          elementArray.push(new Element(diagramElement));
+        }
+      } else if (c !== null) {
+        elementArray.push(c);
+      }
+    });
+  // Otherwise, if the input is an Element or Elements object, so just add
+  // it to the ElementsArray
+  } else if (content !== null) {
+    elementArray.push(content);
+  }
+  return new Elements(elementArray);
+}
+
 export class DiagramGLEquation extends Elements {
   collection: DiagramElementCollection;
 
@@ -596,26 +651,26 @@ export class DiagramGLEquation extends Elements {
     this.collection = collection;
   }
 
-  // eslint-disable-next-line function-paren-newline
-  getDiagramElement(name: string |
-    DiagramElementPrimative |
-    DiagramElementCollection): DiagramElementPrimative |
-  DiagramElementCollection | null {
-    if (typeof name === 'string') {
-      if (this.collection && `_${name}` in this.collection) {
-      // $FlowFixMe
-        return this.collection[`_${name}`];
-      }
-      return null;
-    }
-    return name;
-  }
+  // // eslint-disable-next-line function-paren-newline
+  // getDiagramElement(name: string |
+  //   DiagramElementPrimative |
+  //   DiagramElementCollection): DiagramElementPrimative |
+  // DiagramElementCollection | null {
+  //   if (typeof name === 'string') {
+  //     if (this.collection && `_${name}` in this.collection) {
+  //     // $FlowFixMe
+  //       return this.collection[`_${name}`];
+  //     }
+  //     return null;
+  //   }
+  //   return name;
+  // }
 
   createEq(content: Array<Elements | Element | string>) {
     const elements = [];
     content.forEach((c) => {
       if (typeof c === 'string') {
-        const diagramElement = this.getDiagramElement(c);
+        const diagramElement = getDiagramElement(this.collection, c);
         if (diagramElement) {
           elements.push(new Element(diagramElement));
         }
@@ -782,43 +837,43 @@ export class DiagramGLEquation extends Elements {
     this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
 
-  contentToElement(content: EquationInput): Elements {
-    // If input is alread an Elements object, then return it
-    if (content instanceof Elements) {
-      return content;
-    }
+  // contentToElement(content: EquationInput): Elements {
+  //   // If input is alread an Elements object, then return it
+  //   if (content instanceof Elements) {
+  //     return content;
+  //   }
 
-    // If it is not an Elements object, then create an Element(s) array
-    // and create a new Elements Object
-    const elementArray: Array<Elements | Element | null> = [];
+  //   // If it is not an Elements object, then create an Element(s) array
+  //   // and create a new Elements Object
+  //   const elementArray: Array<Elements | Element | null> = [];
 
-    // If the content is a string, then find the corresponding
-    // DiagramElement associated with the string
-    if (typeof content === 'string') {
-      const diagramElement = this.getDiagramElement(content);
-      if (diagramElement) {
-        elementArray.push(new Element(diagramElement));
-      }
-    // Otherwise, if the input content is an array, then process each element
-    // and add it to the ElementArray
-    } else if (Array.isArray(content)) {
-      content.forEach((c) => {
-        if (typeof c === 'string') {
-          const diagramElement = this.getDiagramElement(c);
-          if (diagramElement) {
-            elementArray.push(new Element(diagramElement));
-          }
-        } else if (c !== null) {
-          elementArray.push(c);
-        }
-      });
-    // Otherwise, if the input is an Element or Elements object, so just add
-    // it to the ElementsArray
-    } else if (content !== null) {
-      elementArray.push(content);
-    }
-    return new Elements(elementArray);
-  }
+  //   // If the content is a string, then find the corresponding
+  //   // DiagramElement associated with the string
+  //   if (typeof content === 'string') {
+  //     const diagramElement = getDiagramElement(this.collection, content);
+  //     if (diagramElement) {
+  //       elementArray.push(new Element(diagramElement));
+  //     }
+  //   // Otherwise, if the input content is an array, then process each element
+  //   // and add it to the ElementArray
+  //   } else if (Array.isArray(content)) {
+  //     content.forEach((c) => {
+  //       if (typeof c === 'string') {
+  //         const diagramElement = getDiagramElement(this.collection, c);
+  //         if (diagramElement) {
+  //           elementArray.push(new Element(diagramElement));
+  //         }
+  //       } else if (c !== null) {
+  //         elementArray.push(c);
+  //       }
+  //     });
+  //   // Otherwise, if the input is an Element or Elements object, so just add
+  //   // it to the ElementsArray
+  //   } else if (content !== null) {
+  //     elementArray.push(content);
+  //   }
+  //   return new Elements(elementArray);
+  // }
 
   sfrac(
     numerator: EquationInput,
@@ -837,9 +892,9 @@ export class DiagramGLEquation extends Elements {
     vinculum: string | DiagramElementPrimative | DiagramElementCollection,
   ) {
     return new Fraction(
-      this.contentToElement(numerator),
-      this.contentToElement(denominator),
-      this.getDiagramElement(vinculum),
+      contentToElement(this.collection, numerator),
+      contentToElement(this.collection, denominator),
+      getDiagramElement(this.collection, vinculum),
     );
   }
 
@@ -848,9 +903,9 @@ export class DiagramGLEquation extends Elements {
     subscript: EquationInput,
   ) {
     return new SuperSub(
-      this.contentToElement(content),
+      contentToElement(this.collection, content),
       null,
-      this.contentToElement(subscript),
+      contentToElement(this.collection, subscript),
     );
   }
 
@@ -859,8 +914,8 @@ export class DiagramGLEquation extends Elements {
     superscript: EquationInput,
   ) {
     return new SuperSub(
-      this.contentToElement(content),
-      this.contentToElement(superscript),
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, superscript),
       null,
     );
   }
@@ -871,9 +926,9 @@ export class DiagramGLEquation extends Elements {
     subscript: EquationInput,
   ) {
     return new SuperSub(
-      this.contentToElement(content),
-      this.contentToElement(superscript),
-      this.contentToElement(subscript),
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, superscript),
+      contentToElement(this.collection, subscript),
     );
   }
 
@@ -884,10 +939,10 @@ export class DiagramGLEquation extends Elements {
     integralGlyph: DiagramElementPrimative,
   ) {
     return new Integral(
-      this.contentToElement(limitMin),
-      this.contentToElement(limitMax),
-      this.contentToElement(content),
-      this.getDiagramElement(integralGlyph),
+      contentToElement(this.collection, limitMin),
+      contentToElement(this.collection, limitMax),
+      contentToElement(this.collection, content),
+      getDiagramElement(this.collection, integralGlyph),
     );
   }
 }
