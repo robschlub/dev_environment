@@ -60,26 +60,17 @@ class Content extends LessonContent {
           style="margin-top:17%">
           |Adjacent_angles| are any angles that share a common vertex and edge.
         </p>
-        <p class="lesson__font_0p5" style="margin-top:16.2%; margin-left: 4%">
+        <p class="lesson__font_0p5" style="margin-top:15.6%; margin-left: 4%">
           <span class="english">Adjacent</span> |from_Latin| <i class="latin">adjacent</i>: "lying near to"
         </p>
       </div>`,
       `<div id="id_complementary_text">
         <p class="lesson__diagram_text_p_width_40"
-           style="margin-top:10%">
+           style="margin-top:17%">
           |Complementary_angles| add up to a right angle.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
-          a + b = ${unit('90', _piOn2, 'complementary')}
-        </p>
-        <p class="lesson__diagram_text_p_width_40">
-          a = ${unit('90', _piOn2, 'complementary', 2)} - b
-        </p>
-        <p class="lesson__diagram_text_p_width_40">
-          b = ${unit('90', _piOn2, 'complementary', 3)} - a
-        </p>
         <p class="lesson__font_0p5"
-          style="margin-top:12%; margin-left: 4%">
+          style="margin-top:21%; margin-left: 4%">
           <span class="english">Complementary</span> |from_Latin| <i class="latin">complementum</i>: “that which fills up or completes”
         </p>
       </div>`,
@@ -88,11 +79,8 @@ class Content extends LessonContent {
            style="margin-top:17%">
           |Supplementary_angles| add up to a straight angle.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
-          a + b = ${unit('180', '&pi;', 'supplementary')}
-        </p>
         <p class="lesson__font_0p5"
-          style="margin-top:12%; margin-left: 4%">
+          style="margin-top:21%; margin-left: 4%">
           <span class="english">Supplementary</span> |from_Latin| <i class="latin">supplementum</i>: “fill up, complete”
         </p>
       </div>`,
@@ -101,11 +89,8 @@ class Content extends LessonContent {
            style="margin-top:17%">
           |Explementary_angles| add up to a full angle.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
-          a + b = ${unit('360', '2&pi;', 'explementary')}
-        </p>
         <p class="lesson__font_0p5"
-          style="margin-top:12%; margin-left: 4%">
+          style="margin-top:21%; margin-left: 4%">
           <span class="english">Explementary</span> |from_Latin| <i class="latin">explementum</i>: “something that fills up, stuff”
         </p>
       </div>`,

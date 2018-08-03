@@ -108,7 +108,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
     }, this.colors.diagram.text.base);
     equationElements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-
+    equationElements.setPosition(this.layout.equationPosition);
     const ee = equationElements;
 
     /* eslint-disable no-param-reassign */
@@ -141,12 +141,10 @@ class AdjacentAnglesCollection extends AngleCircle {
       return e;
     };
 
-    const piOn2 = eqn.frac('pi', '_2', 'v');
-
     equationElements.complementary = {
       add: {
-        deg: makeEqn(['a', 'plus', 'b', 'equals', '_90']),
-        rad: makeEqn(['a', 'plus', 'b', 'equals', eqn.frac('pi', '_2', 'v')]),
+        deg: makeEqn(['_90', 'equals', 'a', 'plus', 'b']),
+        rad: makeEqn([eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b']),
       },
       a: {
         deg: makeEqn(['a', 'equals', '_90', 'minus', 'b']),
@@ -159,8 +157,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
     equationElements.supplementary = {
       add: {
-        deg: makeEqn(['a', 'plus', 'b', 'equals', '_180']),
-        rad: makeEqn(['a', 'plus', 'b', 'equals', 'pi']),
+        deg: makeEqn(['_180', 'equals', 'a', 'plus', 'b']),
+        rad: makeEqn(['pi', 'equals', 'a', 'plus', 'b']),
       },
       a: {
         deg: makeEqn(['a', 'equals', '_180', 'minus', 'b']),
@@ -173,8 +171,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
     equationElements.explementary = {
       add: {
-        deg: makeEqn(['a', 'plus', 'b', 'equals', '_360']),
-        rad: makeEqn(['a', 'plus', 'b', 'equals', '_2', 'pi']),
+        deg: makeEqn(['_360', 'equals', 'a', 'plus', 'b']),
+        rad: makeEqn(['_2', 'pi', 'equals', 'a', 'plus', 'b']),
       },
       a: {
         deg: makeEqn(['a', 'equals', '_360', 'minus', 'b']),
