@@ -99,7 +99,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       pi: 'π',
       _2: '2',
       equals: '  =  ',
-      plus: '+',
+      plus: ' + ',
       minus: ' \u2212 ',
       _90: '90º',
       _180: '180º',
@@ -143,26 +143,48 @@ class AdjacentAnglesCollection extends AngleCircle {
 
     const piOn2 = eqn.frac('pi', '_2', 'v');
 
-    ee.complementaryAddDeg = makeEqn(['a', 'plus', 'b', 'equals', '_90']);
-    ee.complementaryAddRad = makeEqn(['a', 'plus', 'b', 'equals', piOn2]);
-    ee.complementaryARad = makeEqn(['a', 'equals', piOn2, 'minus', 'b']);
-    ee.complementaryADeg = makeEqn(['a', 'equals', '_90', 'minus', 'b']);
-    ee.complementaryBRad = makeEqn(['b', 'equals', piOn2, 'minus', 'a']);
-    ee.complementaryBDeg = makeEqn(['b', 'equals', '_90', 'minus', 'a']);
-
-    ee.suplementaryAddDeg = makeEqn(['a', 'plus', 'b', 'equals', '_180']);
-    ee.suplementaryAddRad = makeEqn(['a', 'plus', 'b', 'equals', 'pi']);
-    ee.suplementaryARad = makeEqn(['a', 'equals', 'pi', 'minus', 'b']);
-    ee.suplementaryADeg = makeEqn(['a', 'equals', '_180', 'minus', 'b']);
-    ee.suplementaryBRad = makeEqn(['b', 'equals', 'pi', 'minus', 'a']);
-    ee.suplementaryBDeg = makeEqn(['b', 'equals', '_180', 'minus', 'a']);
-
-    ee.explementaryAddDeg = makeEqn(['a', 'plus', 'b', 'equals', '_360']);
-    ee.explementaryAddRad = makeEqn(['a', 'plus', 'b', 'equals', '2', 'pi']);
-    ee.explementaryARad = makeEqn(['a', 'equals', '2', 'pi', 'minus', 'b']);
-    ee.explementaryADeg = makeEqn(['a', 'equals', '_360', 'minus', 'b']);
-    ee.explementaryBRad = makeEqn(['b', 'equals', '2', 'pi', 'minus', 'a']);
-    ee.explementaryBDeg = makeEqn(['b', 'equals', '_360', 'minus', 'a']);
+    equationElements.complementary = {
+      add: {
+        deg: makeEqn(['a', 'plus', 'b', 'equals', '_90']),
+        rad: makeEqn(['a', 'plus', 'b', 'equals', piOn2]),
+      },
+      a: {
+        deg: makeEqn(['a', 'equals', '_90', 'minus', 'b']),
+        rad: makeEqn(['a', 'equals', piOn2, 'minus', 'b']),
+      },
+      b: {
+        deg: makeEqn(['b', 'equals', '_90', 'minus', 'a']),
+        rad: makeEqn(['b', 'equals', piOn2, 'minus', 'a']),
+      },
+    };
+    equationElements.supplementary = {
+      add: {
+        deg: makeEqn(['a', 'plus', 'b', 'equals', '_180']),
+        rad: makeEqn(['a', 'plus', 'b', 'equals', 'pi']),
+      },
+      a: {
+        deg: makeEqn(['a', 'equals', '_180', 'minus', 'b']),
+        rad: makeEqn(['a', 'equals', 'pi', 'minus', 'b']),
+      },
+      b: {
+        deg: makeEqn(['b', 'equals', '_180', 'minus', 'a']),
+        rad: makeEqn(['b', 'equals', 'pi', 'minus', 'a']),
+      },
+    };
+    equationElements.explementary = {
+      add: {
+        deg: makeEqn(['a', 'plus', 'b', 'equals', '_360']),
+        rad: makeEqn(['a', 'plus', 'b', 'equals', '2', 'pi']),
+      },
+      a: {
+        deg: makeEqn(['a', 'equals', '_360', 'minus', 'b']),
+        rad: makeEqn(['a', 'equals', '2', 'pi', 'minus', 'b']),
+      },
+      b: {
+        deg: makeEqn(['b', 'equals', '_360', 'minus', 'a']),
+        rad: makeEqn(['b', 'equals', '2', 'pi', 'minus', 'a']),
+      },
+    };
 
     equationElements.showAngle = (angleType: angleTypes) => {
       equationElements.show();
@@ -207,36 +229,54 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
     };
 
-    equationElements.showAdd = () => {
-      // equationElements.showAngle(this.varState.angleSelected);
-      equationElements.showAngle('complementary');
-      equationElements.complementaryAddDeg.setPositions();
-      equationElements._a.show();
-      equationElements._b.show();
-      equationElements._equals.show();
-      equationElements._plus.show();
-      equationElements._minus.hide();
-    };
+    equationElements.showEqn = (form: 'add' | 'a' | 'b', angleType: angleTypes) => {
+      equationElements.showAngle(angleType);
+      const units = this.varState.radialLines === 360 ? 'deg' : 'rad';
+      equationElements[angleType][form][units].setPositions();
 
-    equationElements.showA = () => {
-      // equationElements.showAngle(this.varState.angleSelected);
-      equationElements.showAngle('complementary');
-      equationElements.complementaryADeg.setPositions();
       equationElements._a.show();
       equationElements._b.show();
       equationElements._equals.show();
-      equationElements._plus.hide();
-      equationElements._minus.show();
-    };
+      if (form === 'add') {
+        equationElements._plus.show();
+        equationElements._minus.hide();
+      } else {
+        equationElements._plus.hide();
+        equationElements._minus.show();
+      }
+    }
 
-    equationElements.showB = () => {
-      equationElements.showAngle(this.varState.angleSelected);
-      equationElements._a.show();
-      equationElements._b.show();
-      equationElements._equals.show();
-      equationElements._plus.hide();
-      equationElements._minus.show();
-    };
+    // equationElements.showAdd = (angleType) => {
+    //   // equationElements.showAngle(this.varState.angleSelected);
+    //   equationElements.showAngle('complementary');
+    //   // equationElements.complementary.add.deg.setPositions();
+    //   equationElements[angleType]['add'][]
+    //   equationElements._a.show();
+    //   equationElements._b.show();
+    //   equationElements._equals.show();
+    //   equationElements._plus.show();
+    //   equationElements._minus.hide();
+    // };
+
+    // equationElements.showA = () => {
+    //   // equationElements.showAngle(this.varState.angleSelected);
+    //   equationElements.showAngle('complementary');
+    //   equationElements.complementary.a.deg.setPositions();
+    //   equationElements._a.show();
+    //   equationElements._b.show();
+    //   equationElements._equals.show();
+    //   equationElements._plus.hide();
+    //   equationElements._minus.show();
+    // };
+
+    // equationElements.showB = () => {
+    //   equationElements.showAngle(this.varState.angleSelected);
+    //   equationElements._a.show();
+    //   equationElements._b.show();
+    //   equationElements._equals.show();
+    //   equationElements._plus.hide();
+    //   equationElements._minus.show();
+    // };
 
     return equationElements;
   }
