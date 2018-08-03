@@ -651,21 +651,6 @@ export class DiagramGLEquation extends Elements {
     this.collection = collection;
   }
 
-  // // eslint-disable-next-line function-paren-newline
-  // getDiagramElement(name: string |
-  //   DiagramElementPrimative |
-  //   DiagramElementCollection): DiagramElementPrimative |
-  // DiagramElementCollection | null {
-  //   if (typeof name === 'string') {
-  //     if (this.collection && `_${name}` in this.collection) {
-  //     // $FlowFixMe
-  //       return this.collection[`_${name}`];
-  //     }
-  //     return null;
-  //   }
-  //   return name;
-  // }
-
   createEq(content: Array<Elements | Element | string>) {
     const elements = [];
     content.forEach((c) => {
@@ -836,44 +821,6 @@ export class DiagramGLEquation extends Elements {
     this.collection.animateToTransforms(animateToTransforms, time, 0);
     this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
-
-  // contentToElement(content: EquationInput): Elements {
-  //   // If input is alread an Elements object, then return it
-  //   if (content instanceof Elements) {
-  //     return content;
-  //   }
-
-  //   // If it is not an Elements object, then create an Element(s) array
-  //   // and create a new Elements Object
-  //   const elementArray: Array<Elements | Element | null> = [];
-
-  //   // If the content is a string, then find the corresponding
-  //   // DiagramElement associated with the string
-  //   if (typeof content === 'string') {
-  //     const diagramElement = getDiagramElement(this.collection, content);
-  //     if (diagramElement) {
-  //       elementArray.push(new Element(diagramElement));
-  //     }
-  //   // Otherwise, if the input content is an array, then process each element
-  //   // and add it to the ElementArray
-  //   } else if (Array.isArray(content)) {
-  //     content.forEach((c) => {
-  //       if (typeof c === 'string') {
-  //         const diagramElement = getDiagramElement(this.collection, c);
-  //         if (diagramElement) {
-  //           elementArray.push(new Element(diagramElement));
-  //         }
-  //       } else if (c !== null) {
-  //         elementArray.push(c);
-  //       }
-  //     });
-  //   // Otherwise, if the input is an Element or Elements object, so just add
-  //   // it to the ElementsArray
-  //   } else if (content !== null) {
-  //     elementArray.push(content);
-  //   }
-  //   return new Elements(elementArray);
-  // }
 
   sfrac(
     numerator: EquationInput,
