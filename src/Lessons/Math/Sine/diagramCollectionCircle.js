@@ -571,6 +571,7 @@ class SineCollection extends SinCosCircle {
       this._circle._complimentarySineCollection.updateRotation(r);
     }
   }
+
   rotateComplimentaryAngle(toQuad: number | null) {
     const maxAngle = Math.PI / 2 + this.layout.compAngle.angle;
     const minAngle = this.layout.compAngle.angle;

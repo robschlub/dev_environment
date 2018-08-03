@@ -55,9 +55,11 @@ class Element {
       this.width = r.width;
     }
   }
+
   getAllElements() {
     return [this.content];
   }
+
   setPositions() {
     const { content } = this;
     if (content instanceof DiagramElementCollection
@@ -114,6 +116,7 @@ class Elements {
     this.location = location.copy();
     this.height = this.descent + this.ascent;
   }
+
   getAllElements() {
     let elements = [];
     this.content.forEach((e) => {
@@ -125,6 +128,7 @@ class Elements {
     });
     return elements;
   }
+
   setPositions() {
     this.content.forEach((e) => {
       e.setPositions();
@@ -223,6 +227,7 @@ class Fraction extends Elements {
       vinculum.show();
     }
   }
+
   getAllElements() {
     let elements = [];
     if (this.numerator) {
@@ -236,6 +241,7 @@ class Fraction extends Elements {
     }
     return elements;
   }
+
   setPositions() {
     this.numerator.setPositions();
     this.denominator.setPositions();
@@ -317,6 +323,7 @@ class SuperSub extends Elements {
     this.ascent = asc;
     this.descent = des;
   }
+
   getAllElements() {
     let elements = [];
     if (this.superscript) {
@@ -330,6 +337,7 @@ class SuperSub extends Elements {
     }
     return elements;
   }
+
   setPositions() {
     this.mainContent.setPositions();
     if (this.superscript) {
@@ -723,6 +731,7 @@ export class DiagramGLEquation extends Elements {
       hide: elementsToHide,
     };
   }
+
   showHide(
     showTime: number = 1,
     hideTime: number = 1,
@@ -821,6 +830,7 @@ export class DiagramGLEquation extends Elements {
     f.scaleModifier = scaleModifier;
     return f;
   }
+
   frac(
     numerator: EquationInput,
     denominator: EquationInput,

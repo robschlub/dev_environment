@@ -145,6 +145,7 @@ class CustomAnimationPhase {
     this.animationStyle = animationStyle;
     this.plannedStartTime = startPercent * time;
   }
+
   start() {
     // this.startColor = currentColor.slice();
     // this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
@@ -233,6 +234,7 @@ class DiagramElement {
       callback: ?(?mixed) => void;
     };
   }
+
   move: {
     maxTransform: Transform,
     minTransform: Transform,
@@ -689,6 +691,7 @@ class DiagramElement {
     //   console.log("6", this.state.isAnimatingCustom)
     // }
   }
+
   setNextColor(now: number): void {
     // If animation is happening
     if (this.state.isAnimatingColor) {
@@ -746,6 +749,7 @@ class DiagramElement {
   setColor(color: Array<number>) {
     this.color = color.slice();
   }
+
   // Decelerate over some time when moving freely to get a new element
   // transform and movement velocity
   decelerate(deltaTime: number): Object {
@@ -842,6 +846,7 @@ class DiagramElement {
       this.animateColorPhase(this.state.colorAnimation.currentPhaseIndex);
     }
   }
+
   animateCustomPlan(
     phases: Array<CustomAnimationPhase>,
     callback: ?(?mixed) => void = null,
@@ -860,6 +865,7 @@ class DiagramElement {
       this.animateCustomPhase(this.state.customAnimation.currentPhaseIndex);
     }
   }
+
   // Start the animation of a phase - this should only be called by methods
   // internal to this class.
   animatePhase(index: number): void {
@@ -871,6 +877,7 @@ class DiagramElement {
     this.state.colorAnimation.currentPhase = this.animate.color.plan[index];
     this.state.colorAnimation.currentPhase.start(this.color.slice());
   }
+
   animateCustomPhase(index: number): void {
     this.state.customAnimation.currentPhase = this.animate.custom.plan[index];
     this.state.customAnimation.currentPhase.start();
@@ -1294,6 +1301,7 @@ class DiagramElement {
     }
     return pulseTransforms;
   }
+
   pulseScaleNow(
     time: number, scale: number,
     frequency: number = 0, callback: ?(?mixed) => void = null,
@@ -1316,6 +1324,7 @@ class DiagramElement {
     this.pulse.callback = callback;
     this.pulseNow();
   }
+
   pulseThickNow(
     time: number, scale: number,
     num: number = 3, callback: ?(?mixed) => void = null,
@@ -1769,9 +1778,11 @@ class DiagramElementPrimative extends DiagramElement {
   getGLBoundaries() {
     return this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
   }
+
   getGLBoundingRect() {
     return this.vertices.getGLBoundingRect(this.lastDrawTransform.matrix());
   }
+
   getRelativeGLBoundingRect(): Rect {
     return this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
   }
@@ -2037,6 +2048,7 @@ class DiagramElementCollection extends DiagramElement {
     }
     return out;
   }
+
   setElementTransforms(elementTransforms: Object) {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];

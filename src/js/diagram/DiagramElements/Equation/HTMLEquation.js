@@ -198,6 +198,7 @@ class Root extends HTMLElementProperties {
     super(id, classes);
     this.content = content;
   }
+
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
     let out = '';

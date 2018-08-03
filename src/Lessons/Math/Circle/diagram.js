@@ -26,6 +26,7 @@ class LessonDiagram extends Diagram {
       backgroundColor,
     );
   }
+
   createDiagramElements() {
     const circleCollection = new CircleCollection(
       this,

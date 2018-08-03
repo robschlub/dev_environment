@@ -70,31 +70,38 @@ class Point {
   static zero() {
     return new Point(0, 0);
   }
+
   static Unity() {
     return new Point(1, 1);
   }
+
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
+
   copy() {
     return new Point(this.x, this.y);
   }
+
   scale(scalar: number) {
     return new Point(this.x * scalar, this.y * scalar);
   }
+
   sub(qOrX: Point, y: number = 0) {
     if (qOrX instanceof Point) {
       return new Point(this.x - qOrX.x, this.y - qOrX.y);
     }
     return new Point(this.x - qOrX, this.y - y);
   }
+
   add(qOrX: Point | number, y: number = 0) {
     if (qOrX instanceof Point) {
       return new Point(this.x + qOrX.x, this.y + qOrX.y);
     }
     return new Point(this.x + qOrX, this.y + y);
   }
+
   distance() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
@@ -150,6 +157,7 @@ class Point {
       matrix[2] * pt.x + matrix[3] * pt.y + centerPoint.y
     );
   }
+
   /* eslint-enable comma-dangle */
   isEqualTo(q: Point, precision?: number) {
     let pr = this;
@@ -164,16 +172,20 @@ class Point {
     }
     return false;
   }
+
   isNotEqualTo(q: Point, precision?: number) {
     return !this.isEqualTo(q, precision);
   }
+
   /* eslint-disable no-use-before-define */
   isOnLine(l: Line, precision?: number) {
     return l.hasPointOn(this, precision);
   }
+
   isOnUnboundLine(l: Line, precision?: number) {
     return l.hasPointAlong(this, precision);
   }
+
   /* eslint-enable no-use-before-define */
   console(text?: string) {
     Console(`${text || ''} + ${this.x}, ${this.y}`);
@@ -587,9 +599,11 @@ class Rotation {
   constructor(angle: number) {
     this.r = angle;
   }
+
   matrix(): Array<number> {
     return m2.rotationMatrix(this.r);
   }
+
   sub(rotToSub: Rotation = new Rotation(0)): Rotation {
     return new Rotation(this.r - rotToSub.r);
   }
@@ -605,6 +619,7 @@ class Rotation {
   mul(rotToMul: Rotation = new Rotation(1)): Rotation {
     return new Rotation(this.r * rotToMul.r);
   }
+
   copy() {
     return new Rotation(this.r);
   }
@@ -625,6 +640,7 @@ class Translation extends Point {
       // this.y = ty;
     }
   }
+
   matrix(): Array<number> {
     return m2.translationMatrix(this.x, this.y);
   }
@@ -695,9 +711,11 @@ class Scale extends Point {
       // this.y = sy;
     }
   }
+
   matrix(): Array<number> {
     return m2.scaleMatrix(this.x, this.y);
   }
+
   sub(
     scaleToSub: Scale | Point | number = new Scale(0, 0),
     y: number = 0,
@@ -1269,6 +1287,7 @@ class Transform {
     }
     return true;
   }
+
   copy(): Transform {
     return new Transform(this.order);
   }

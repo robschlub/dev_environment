@@ -34,17 +34,20 @@ class ObjectKeyPointer {
       this.key = key;
     }
   }
+
   setValue(value: mixed) {
     if (this.key) {
       this.object[this.key] = value;
     }
   }
+
   execute(...args: mixed) {
     if (this.key) {
       return this.object[this.key].apply(null, args);
     }
     return undefined;
   }
+
   value() {
     if (this.key) {
       return this.object[this.key];

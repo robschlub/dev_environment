@@ -39,10 +39,12 @@ class Axis extends DiagramElementCollection {
     this.drawContext2D = drawContext2D;
     this.build();
   }
+
   rebuild() {
     this.order = [];
     this.build();
   }
+
   build() {
     const {
       minorTicks, majorTicks,
@@ -138,6 +140,7 @@ class Axis extends DiagramElementCollection {
   toClip(value: number) {
     return this.props.toClip(value);
   }
+
   valueToClip(value: number) {
     return this.props.valueToClip(value);
   }

@@ -32,6 +32,7 @@ class LessonDiagram extends Diagram {
       backgroundColor,
     );
   }
+
   createDiagramElements() {
     const { shapes } = this;
     this.elements = shapes.collection();

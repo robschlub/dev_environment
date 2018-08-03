@@ -100,6 +100,7 @@ class HTMLObject extends DrawingObject {
       this.element.style.top = '-10000px';
     }
   }
+
   drawWithTransformMatrix(transformMatrix: Array<number>) {
     this.transformHtml(transformMatrix);
   }

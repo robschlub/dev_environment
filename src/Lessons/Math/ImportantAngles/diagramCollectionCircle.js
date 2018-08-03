@@ -382,6 +382,7 @@ class ImportantAnglesCollection extends AngleCircle {
     // this.showText('obtuse');
     this.showAngleType('obtuse');
   }
+
   goToStraight() {
     const angle = Math.PI;
     this.rotateToAngleDisablingAutoChange(angle);
@@ -423,6 +424,7 @@ class ImportantAnglesCollection extends AngleCircle {
     }
     this.diagram.animateNextFrame();
   }
+
   toggleRightAngleLine(show: boolean | null) {
     let toShow = show;
     if (show === null) {

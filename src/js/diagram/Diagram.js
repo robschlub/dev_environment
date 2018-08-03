@@ -465,6 +465,7 @@ class Diagram {
   inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
+
   limits: Rect;
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
@@ -565,6 +566,7 @@ class Diagram {
   getShapes() {
     return shapes(this);
   }
+
   getEquations() {
     return equation(this);
   }
@@ -657,6 +659,7 @@ class Diagram {
     this.sizeHtmlText();
     this.animateNextFrame();
   }
+
   // Handle touch down, or mouse click events within the canvas.
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
@@ -782,6 +785,7 @@ class Diagram {
   ) {
     this.elements.add(name, diagramElement);
   }
+
   clearContext() {
     // const bc = this.backgroundColor;
     // this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);

@@ -84,10 +84,12 @@ class AngleCircle extends DiagramElementCollection {
     radialLines: number,
     rotation: number,
   };
+
   rotationLimits: {
     min: number,
     max: number,
   } | null;
+
   diagram: Diagram;
 
 
@@ -405,9 +407,11 @@ class AngleCircle extends DiagramElementCollection {
   hideDegrees() {
     this._circle._radialLinesDeg.hideAll();
   }
+
   hideRadians() {
     this._circle._radialLinesRad.hide();
   }
+
   showDegrees() {
     this.varState.radialLines = 360;
     this._angleText.setUnits('&deg;');

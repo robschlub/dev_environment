@@ -275,16 +275,14 @@ class Section {
   modifiers: Object;
   blank: Array<string>;
   diagram: Diagram;
-  // comingFrom: 'next' | 'prev' | 'goto';
-  // goingTo: 'next' | 'prev' | 'goto';
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
+
   hideOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  show: Array<DiagramElementPrimative | DiagramElementCollection>
-           | () => {};
-  hide: Array<DiagramElementPrimative | DiagramElementCollection>
-           | () => {};
+
+  show: Array<DiagramElementPrimative | DiagramElementCollection> | () => {};
+  hide: Array<DiagramElementPrimative | DiagramElementCollection> | () => {};
   initialPositions: Object | () => {};
   blankTransition: {
     toNext: boolean;
@@ -323,6 +321,7 @@ class Section {
       }
     });
   }
+
   getContent(): string {
     let htmlText = '';
     let content = '';
@@ -396,6 +395,7 @@ class Section {
     //   });
     // }
   }
+
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -450,18 +450,23 @@ class Section {
   transitionToNext(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromNext(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionToPrev(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromPrev(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromAny(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionToAny(done: () => void = function temp() {}): void {
     done();
   }
@@ -492,6 +497,7 @@ class LessonContent {
     this.setDiagram(this.diagramHtmlId);
     this.addSections();
   }
+
   setTitle() {
     this.title = '';
   }

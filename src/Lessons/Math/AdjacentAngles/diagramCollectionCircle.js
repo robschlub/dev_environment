@@ -66,6 +66,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       this.colors.angleA,
     );
   }
+
   makeAngleB() {
     return this.makeAngleAnnotation(
       0,

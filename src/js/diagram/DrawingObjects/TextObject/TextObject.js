@@ -44,6 +44,7 @@ class DiagramFont {
     //   this.color = color;
     // }
   }
+
   setColor(color: Array<number> | null | string = null) {
     if (Array.isArray(color)) {
       this.color = colorArrayToString(color);
@@ -51,11 +52,13 @@ class DiagramFont {
       this.color = color;
     }
   }
+
   set(ctx: CanvasRenderingContext2D, scalingFactor: number = 1) {
     ctx.font = `${this.style} ${this.weight} ${this.size * scalingFactor}px ${this.family}`;
     ctx.textAlign = this.alignH;
     ctx.textBaseline = this.alignV;
   }
+
   copy() {
     return new DiagramFont(
       this.family,
@@ -330,6 +333,7 @@ class TextObject extends DrawingObject {
       fontBoundingBoxDescent: des,
     };
   }
+
   getGLBoundaryOfText(
     text: DiagramText,
     lastDrawTransformMatrix: Array<number>,

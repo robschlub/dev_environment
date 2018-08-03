@@ -7,7 +7,7 @@
         "no-console": "error",
         // "quotes": ["error", "double"]
         "no-underscore-dangle": 0,
-        "lines-between-class-members": "off",
+        // "lines-between-class-members": "off",
         // "operator-linebreak": "off",
         "operator-linebreak": [
           "error",
@@ -21,13 +21,13 @@
           }
         ],
         "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
-        // "lines-between-class-members": [
-        //   "error",
-        //   "always",
-        //   {
-        //     "exceptAfterSingleLine": true
-        //   }
-        // ],
+        "lines-between-class-members": [
+          "error",
+          "always",
+          {
+            "exceptAfterSingleLine": true
+          }
+        ],
         "class-methods-use-this": [
           "error",
           { 

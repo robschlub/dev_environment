@@ -172,6 +172,7 @@ export default class LessonComponent extends React.Component
     }
     // console.log("1");
   }
+
   // eslint-disable-next-line class-methods-use-this
   titleScaleDown() {
     const title = document.getElementById('id_lesson__title_tile');
@@ -253,6 +254,7 @@ export default class LessonComponent extends React.Component
   componentWillUnmount() {
     window.removeEventListener('orientationchange', this.centerLesson.bind(this));
   }
+
   renderTitle(title: string) {
     this.key += 1;
     return <div className='lesson__title' key={this.key}>
@@ -337,6 +339,7 @@ export default class LessonComponent extends React.Component
       </div>
     </div>;
   }
+
   render() {
     return <div>
       <div className='lesson__title'>

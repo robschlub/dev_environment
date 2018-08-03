@@ -359,22 +359,26 @@ class CircleCollection extends AngleCircle {
     this.arcRadius();
     this.diagram.animateNextFrame();
   }
+
   summaryShowRadians() {
     this.hideDegrees();
     this._circle._radiusToArc.hideAll();
     this._circle._radiusOnArc.hideAll();
     this.showRadians();
   }
+
   summaryShowDegrees() {
     this._circle._radialLinesRad.hide();
     this._circle._radiusToArc.hideAll();
     this._circle._radiusOnArc.hideAll();
     this.showDegrees();
   }
+
   summaryRotateToDeg(angle: number) {
     this.summaryShowDegrees();
     this.rotateTo(angle, 2, 2);
   }
+
   summaryRotateToRad(angle: number) {
     this.summaryShowRadians();
     this.rotateTo(angle, 2, 2);
@@ -457,6 +461,7 @@ class CircleCollection extends AngleCircle {
     this._circle._radiusOnArc.stepIn(3);
     this.diagram.animateNextFrame();
   }
+
   pulseAngleFill() {
     this._circle._angleFill.pulseScaleNow(1, 1.3);
     this.diagram.animateNextFrame();
@@ -517,6 +522,7 @@ class CircleCollection extends AngleCircle {
       this.diagram.animateNextFrame();
     }
   }
+
   bendRadius(percent: number) {
     this._circle._radiusToArc.toArc(percent);
   }
@@ -571,6 +577,7 @@ class CircleCollection extends AngleCircle {
       this._circle._arc.color = this.colors.arcLight.slice();
     }
   }
+
   resetColors() {
     this._circle._radius.color = this.colors.radius.slice();
     this._circle._arc.color = this.colors.arc.slice();

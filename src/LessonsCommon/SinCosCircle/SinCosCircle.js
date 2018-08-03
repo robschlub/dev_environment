@@ -187,12 +187,14 @@ export class SinCosCircle extends AngleCircle {
       this.layout.quadEqn.position, 'middle', 'center',
     );
   }
+
   makeQuad2Equation() {
     return this.shapes.htmlText(
       'sin θ  =  sin (θ - π)', 'id__sine_eqn_quad3', 'lesson__sine_eqn',
       this.layout.quadEqn.position, 'middle', 'center',
     );
   }
+
   makeQuad3Equation() {
     return this.shapes.htmlText(
       'sin θ  =  sin (2π - θ)', 'id__sine_eqn_quad4', 'lesson__sine_eqn',
@@ -221,6 +223,7 @@ export class SinCosCircle extends AngleCircle {
     }
     return selector;
   }
+
   makeSymmetry() {
     const symmetry = this.shapes.collection();
     const line = this.makeLine(

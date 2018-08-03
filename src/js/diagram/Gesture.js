@@ -95,6 +95,7 @@ class Gesture {
       event.preventDefault();
     }
   }
+
   mouseDownHandler(event: MouseEvent) {
     this.startHandler(new Point(event.clientX, event.clientY));
   }
@@ -103,6 +104,7 @@ class Gesture {
     const touch = event.touches[0];
     this.moveHandler(event, new Point(touch.clientX, touch.clientY));
   }
+
   mouseMoveHandler(event: MouseEvent) {
     this.moveHandler(event, new Point(event.clientX, event.clientY));
   }
@@ -110,6 +112,7 @@ class Gesture {
   mouseUpHandler() {
     this.endHandler();
   }
+
   touchEndHandler() {
     this.endHandler();
   }

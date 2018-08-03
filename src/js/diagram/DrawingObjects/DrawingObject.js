@@ -84,6 +84,7 @@ class DrawingObject {
   getLocation(): Point {
     return this.location;
   }
+
   // eslint-disable-next-line class-methods-use-this
   getGLLocation(lastDrawTransformMatrix: Array<number>): Point {
     return this.getLocation().transformBy(lastDrawTransformMatrix);

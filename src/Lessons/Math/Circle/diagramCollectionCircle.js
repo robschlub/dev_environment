@@ -454,6 +454,7 @@ class CircleCollection extends DiagramElementCollection {
     scaledRadius: number,
     percentStraight: number,
   };
+
   numSections: Array<number>;
   diagram: Diagram;
 
@@ -567,6 +568,7 @@ class CircleCollection extends DiagramElementCollection {
       }
     }
   }
+
   updateLocation() {
     const t = this._circle.transform.t();
     const s = this._circle.transform.s();
@@ -793,6 +795,7 @@ class CircleCollection extends DiagramElementCollection {
       ),
     );
   }
+
   toggleShape() {
     if (this.varState.shapeTurn === 0) {
       this.transitionShape(this._moonShape, layout.moon.center, layout.moon.radius);
@@ -853,6 +856,7 @@ class CircleCollection extends DiagramElementCollection {
     }
     this.diagram.animateNextFrame();
   }
+
   toggleDiameter() {
     if (this._circle._diameter.isShown) {
       this._circle._diameter.hideAll();

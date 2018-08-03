@@ -67,6 +67,7 @@ class LessonDiagram extends Diagram {
       backgroundColor,
     );
   }
+
   createDiagramElements() {
     const { shapes } = this;
     this.elements = shapes.collection();
@@ -108,6 +109,7 @@ class LessonDiagram extends Diagram {
     // this.elements._shapes.eq1.updateMoveTranslationBoundary();
     // console.log(this.elements._shapes._eq5Elements._a);
   }
+
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
