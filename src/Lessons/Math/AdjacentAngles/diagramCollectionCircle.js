@@ -237,6 +237,7 @@ class AdjacentAnglesCollection extends AngleCircle {
         equationElements.hideAll();
         return;
       }
+
       equationElements.showAngle(angleType);
       const units = this.varState.radialLines === 360 ? 'deg' : 'rad';
       equationElements[angleType][form][units].setPositions();
@@ -255,6 +256,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
 
     const onclickEqn = (form: equationFormType) => {
+      equationElements.showEqn(this.getAngleType(), form);
       equationElements[this.getAngleType()][form][this.getUnits()].setPositions();
       this.diagram.animateNextFrame();
     };
