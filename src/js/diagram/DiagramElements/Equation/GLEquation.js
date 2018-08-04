@@ -595,14 +595,6 @@ export function getDiagramElement(
 
 type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
-export type EquationElementsType = {
-  setElem?: (DiagramElementCollection | DiagramElementPrimative | string,
-            Array<number> | null,
-            boolean,
-            'up' | 'down',
-            number) => void;
-} & DiagramElementCollection;
-
 export function createEquationElements(
   elems: Object,
   drawContext2D: DrawContext2D,
@@ -655,38 +647,7 @@ export function createEquationElements(
   });
 
   collection.setFirstTransform(firstTransform);
-
-  /* eslint-disable no-param-reassign */
-  function setElem(
-    element: DiagramElementCollection | DiagramElementPrimative | string,
-    elementColor: Array<number> | null = null,
-    isTouchable: boolean = false,
-    direction: 'up' | 'down' = 'up',
-    mag: number = 0.5,
-  ) {
-    let elem = element;
-    if (typeof elem === 'string') {
-      elem = getDiagramElement(collection, element);
-    }
-    if (elem instanceof DiagramElementCollection
-      || elem instanceof DiagramElementPrimative) {
-      if (elementColor != null) {
-        elem.setColor(elementColor);
-      }
-      elem.isTouchable = isTouchable;
-      if (isTouchable) {
-        collection.hasTouchableElements = true;
-      }
-      elem.animate.transform.translation.style = 'curved';
-      elem.animate.transform.translation.options.direction = direction;
-      elem.animate.transform.translation.options.magnitude = mag;
-    }
-  }
-  /* eslint-enable no-param-reassign */
-
-  const equationElements: EquationElementsType = collection;
-  equationElements.setElem = setElem;
-  return equationElements;
+  return collection;
 }
 
 
@@ -731,6 +692,10 @@ export function contentToElement(
   return new Elements(elementArray);
 }
 
+export type alignHType = 'left' | 'right' | 'center';
+export type alignVType = 'top' | 'bottom' | 'middle' | 'baseline';
+
+
 export class DiagramGLEquation extends Elements {
   collection: DiagramElementCollection;
 
@@ -764,8 +729,8 @@ export class DiagramGLEquation extends Elements {
   // equation is at (0,0) in colleciton space.
   arrange(
     scale: number = 1,
-    alignH: 'left' | 'right' | 'center' | null = 'left',
-    alignV: 'top' | 'bottom' | 'middle' | 'baseline' | null = 'baseline',
+    alignH: alignHType | null = 'left',
+    alignV: alignVType | null = 'baseline',
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
     // const elementsInEqn = this.getAllElements();
@@ -990,6 +955,127 @@ export class DiagramGLEquation extends Elements {
       contentToElement(this.collection, limitMax),
       contentToElement(this.collection, content),
       getDiagramElement(this.collection, integralGlyph),
+    );
+  }
+}
+
+
+export type EquationType = {
+  +collection: DiagramElementCollection;
+  diagramLimits: Rect;
+  firstTransform: Transform;
+  forms: Object;
+  formAlignment: {
+    vAlign: alignVType;
+    hAlign: alignHType;
+    fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
+    scale: number;
+  };
+  setElem: (DiagramElementCollection | DiagramElementPrimative | string,
+            Array<number> | null,
+            boolean,
+            'up' | 'down',
+            number) => void;
+};
+
+export class Equation {
+  collection: DiagramElementCollection;
+  diagramLimits: Rect;
+  firstTransform: Transform;
+  forms: Object;
+  formAlignment: {
+    vAlign: alignVType;
+    hAlign: alignHType;
+    fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
+    scale: number;
+  };
+
+  constructor(
+    diagramLimits: Rect = new Rect(-1, -1, 2, 2),
+    firstTransform: Transform = new Transform(),
+  ) {
+    this.diagramLimits = diagramLimits;
+    this.firstTransform = firstTransform;
+    this.forms = {};
+    this.formAlignment = {
+      vAlign: 'baseline',
+      hAlign: 'left',
+      fixTo: new Point(0, 0),
+      scale: 1,
+    };
+  }
+
+  createElements(
+    elems: Object,
+    drawContext2D: DrawContext2D,
+    colorOrFont: Array<number> | DiagramFont = [],
+  ) {
+    this.collection = createEquationElements(
+      elems,
+      drawContext2D,
+      colorOrFont,
+      this.diagramLimits,
+      this.firstTransform,
+    );
+  }
+
+  setPosition(position: Point) {
+    this.collection.setPosition(position);
+  }
+
+  stop() {
+    this.collection.stop();
+  }
+
+  setElem(
+    element: DiagramElementCollection | DiagramElementPrimative | string,
+    elementColor: Array<number> | null = null,
+    isTouchable: boolean = false,
+    direction: 'up' | 'down' = 'up',
+    mag: number = 0.5,
+  ) {
+    let elem = element;
+    if (typeof elem === 'string') {
+      elem = getDiagramElement(this.collection, element);
+    }
+    if (elem instanceof DiagramElementCollection
+      || elem instanceof DiagramElementPrimative) {
+      if (elementColor != null) {
+        elem.setColor(elementColor);
+      }
+      elem.isTouchable = isTouchable;
+      if (isTouchable) {
+        this.collection.hasTouchableElements = true;
+      }
+      elem.animate.transform.translation.style = 'curved';
+      elem.animate.transform.translation.options.direction = direction;
+      elem.animate.transform.translation.options.magnitude = mag;
+    }
+  }
+
+  addForm(
+    name: string,
+    content: Array<Elements | Element | string>,
+  ) {
+    const eqn = new DiagramGLEquation(this.collection);
+    this.forms[name] = eqn.createNewEq(content);
+    this.forms[name].arrange(
+      this.formAlignment.scale,
+      this.formAlignment.hAlign,
+      this.formAlignment.vAlign,
+      this.formAlignment.fixTo,
+    );
+  }
+
+  frac(
+    numerator: EquationInput,
+    denominator: EquationInput,
+    vinculum: string | DiagramElementPrimative | DiagramElementCollection,
+  ) {
+    return new Fraction(
+      contentToElement(this.collection, numerator),
+      contentToElement(this.collection, denominator),
+      getDiagramElement(this.collection, vinculum),
     );
   }
 }

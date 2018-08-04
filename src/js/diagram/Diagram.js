@@ -35,7 +35,7 @@ import {
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
 import {
-  DiagramGLEquation, createEquationElements,
+  DiagramGLEquation, createEquationElements, Equation,
 } from './DiagramElements/Equation/GLEquation';
 import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
@@ -63,7 +63,7 @@ function equation(diagram: Diagram) {
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],
     firstTransform: Transform = new Transform(),
-  ): EquationElementsType {
+  ): DiagramElementCollection {
     return createEquationElements(
       elems,
       diagram.draw2D,
@@ -102,12 +102,18 @@ function equation(diagram: Diagram) {
   function makeHTML(id: string = '', classes: string | Array<string> = []) {
     return new HTMLEquation(id, classes);
   }
+
+  function makeEqn() {
+    return new Equation(diagram.limits, diagram.diagramToGLSpaceTransform);
+  }
+
   return {
     elements,
     vinculum,
     integral,
     make,
     makeHTML,
+    makeEqn,
   };
 }
 

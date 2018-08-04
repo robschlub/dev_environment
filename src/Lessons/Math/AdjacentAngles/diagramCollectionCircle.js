@@ -10,7 +10,7 @@ import {
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
-import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+// import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 // type rightAngleType = {
 //   _horizontal: DiagramElementPrimative;
@@ -39,22 +39,7 @@ type varStateExtendedType = {
     equationForm: equationFormType;
   } & varStateType;
 
-type angleEquationSetType = {
-  add: {
-    deg: DiagramGLEquation;
-    rad: DiagramGLEquation;
-  };
-  a: {
-    deg: DiagramGLEquation;
-    rad: DiagramGLEquation;
-  };
-  b: {
-    deg: DiagramGLEquation;
-    rad: DiagramGLEquation;
-  };
-};
-
-type equationType = {
+type equationElementsType = {
   _a: DiagramElementPrimative;
   _b: DiagramElementPrimative;
   _pi: DiagramElementPrimative;
@@ -67,26 +52,27 @@ type equationType = {
   __360: DiagramElementPrimative;
   _deg: DiagramElementPrimative;
   _v: DiagramElementPrimative;
-  complementary: angleEquationSetType;
-  supplementary: angleEquationSetType;
-  explementary: angleEquationSetType;
+} & DiagramElementCollection;
+
+type equationType = {
+  collection: equationElementsType;
   showAngle: (angleTypes) => void;
   showEqn: (angleTypes, ?equationFormType) => void;
   onclickEqn: (equationFormType) => void;
-} & DiagramElementCollection;
+};
 
 export type AdjacentAnglesCollectionType = {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
-  _eqn: equationType;
+  eqn: equationType;
 };
 
 class AdjacentAnglesCollection extends AngleCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
-  _eqn: equationType;
+  eqn: equationType;
 
   makeMoveableLine() {
     const line = this.makeLine(
@@ -160,7 +146,8 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   makeAnglesEquation() {
-    const equationElements = this.diagram.equation.elements(
+    const equation = this.diagram.equation.makeEqn();
+    equation.createElements(
       {
         a: 'a',
         b: 'b',
@@ -175,138 +162,166 @@ class AdjacentAnglesCollection extends AngleCircle {
         v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
       },
       this.colors.diagram.text.base,
-      this.diagram.diagramToGLSpaceTransform,
     );
 
-    equationElements.setPosition(this.layout.equationPosition);
+    equation.setPosition(this.layout.equationPosition);
 
-    const ee = equationElements;
-    ee.setElem('a', this.colors.angleA, true, 'up', 0.65);
-    ee.setElem('b', this.colors.angleB, true, 'up', 0.85);
-    ee.setElem('pi', null, true, 'down', 1);
-    ee.setElem('v', null, true, 'down', 1);
-    ee.setElem('_2', null, true, 'down', 1);
-    ee.setElem('_90', null, true, 'down', 0.7);
+    equation.setElem('a', this.colors.angleA, true, 'up', 0.65);
+    equation.setElem('b', this.colors.angleB, true, 'up', 0.85);
+    equation.setElem('pi', null, true, 'down', 1);
+    equation.setElem('v', null, true, 'down', 1);
+    equation.setElem('_2', null, true, 'down', 1);
+    equation.setElem('_90', null, true, 'down', 0.7);
 
-    const eqn = this.diagram.equation.make(equationElements);
-    const makeEqn = (content) => {
-      const e = eqn.createNewEq(content);
-      e.arrange(1, 'left', 'baseline', equationElements._equals);
-      return e;
-    };
+    // const eqn = this.diagram.equation.make(equationElements);
+    // const makeEqn = (content) => {
+    //   const e = eqn.createNewEq(content);
+    //   e.arrange(1, 'left', 'baseline', equationElements._equals);
+    //   return e;
+    // };
+    const e = equation;
+    e.formAlignment.fixTo = equation.collection._equals;
+    e.addForm('comAddDeg', ['_90', 'equals', 'a', 'plus', 'b']);
+    e.addForm('comAddRad', [e.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b']);
+    e.addForm('comADeg', ['a', 'equals', '_90', 'minus', 'b']);
+    e.addForm('comARad', ['a', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'b']);
+    e.addForm('comBDeg', ['b', 'equals', '_90', 'minus', 'a']);
+    e.addForm('comBRad', ['b', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'a']);
 
-    equationElements.complementary = {
-      add: {
-        deg: makeEqn(['_90', 'equals', 'a', 'plus', 'b']),
-        rad: makeEqn([eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b']),
-      },
-      a: {
-        deg: makeEqn(['a', 'equals', '_90', 'minus', 'b']),
-        rad: makeEqn(['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b']),
-      },
-      b: {
-        deg: makeEqn(['b', 'equals', '_90', 'minus', 'a']),
-        rad: makeEqn(['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a']),
-      },
-    };
-    equationElements.supplementary = {
-      add: {
-        deg: makeEqn(['_180', 'equals', 'a', 'plus', 'b']),
-        rad: makeEqn(['pi', 'equals', 'a', 'plus', 'b']),
-      },
-      a: {
-        deg: makeEqn(['a', 'equals', '_180', 'minus', 'b']),
-        rad: makeEqn(['a', 'equals', 'pi', 'minus', 'b']),
-      },
-      b: {
-        deg: makeEqn(['b', 'equals', '_180', 'minus', 'a']),
-        rad: makeEqn(['b', 'equals', 'pi', 'minus', 'a']),
-      },
-    };
-    equationElements.explementary = {
-      add: {
-        deg: makeEqn(['_360', 'equals', 'a', 'plus', 'b']),
-        rad: makeEqn(['_2', 'pi', 'equals', 'a', 'plus', 'b']),
-      },
-      a: {
-        deg: makeEqn(['a', 'equals', '_360', 'minus', 'b']),
-        rad: makeEqn(['a', 'equals', '_2', 'pi', 'minus', 'b']),
-      },
-      b: {
-        deg: makeEqn(['b', 'equals', '_360', 'minus', 'a']),
-        rad: makeEqn(['b', 'equals', '_2', 'pi', 'minus', 'a']),
-      },
-    };
+    e.addForm('supAddDeg', ['_180', 'equals', 'a', 'plus', 'b']);
+    e.addForm('supAddRad', ['pi', 'equals', 'a', 'plus', 'b']);
+    e.addForm('supADeg', ['a', 'equals', '_180', 'minus', 'b']);
+    e.addForm('supARad', ['a', 'equals', 'pi', 'minus', 'b']);
+    e.addForm('supBDeg', ['b', 'equals', '_180', 'minus', 'a']);
+    e.addForm('supBRad', ['b', 'equals', 'pi', 'minus', 'a']);
 
-    equationElements.showAngle = (angleType: angleTypes) => {
-      equationElements.show();
+    e.addForm('expAddDeg', ['_360', 'equals', 'a', 'plus', 'b']);
+    e.addForm('expAddRad', ['_2', 'pi', 'equals', 'a', 'plus', 'b']);
+    e.addForm('expADeg', ['a', 'equals', '_360', 'minus', 'b']);
+    e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
+    e.addForm('expBDeg', ['b', 'equals', '_360', 'minus', 'a']);
+    e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
+
+    // equationElements.complementary = {
+    //   add: {
+    //     deg: makeEqn(['_90', 'equals', 'a', 'plus', 'b']),
+    //     rad: makeEqn([eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b']),
+    //   },
+    //   a: {
+    //     deg: makeEqn(['a', 'equals', '_90', 'minus', 'b']),
+    //     rad: makeEqn(['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b']),
+    //   },
+    //   b: {
+    //     deg: makeEqn(['b', 'equals', '_90', 'minus', 'a']),
+    //     rad: makeEqn(['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a']),
+    //   },
+    // };
+    // equationElements.supplementary = {
+    //   add: {
+    //     deg: makeEqn(['_180', 'equals', 'a', 'plus', 'b']),
+    //     rad: makeEqn(['pi', 'equals', 'a', 'plus', 'b']),
+    //   },
+    //   a: {
+    //     deg: makeEqn(['a', 'equals', '_180', 'minus', 'b']),
+    //     rad: makeEqn(['a', 'equals', 'pi', 'minus', 'b']),
+    //   },
+    //   b: {
+    //     deg: makeEqn(['b', 'equals', '_180', 'minus', 'a']),
+    //     rad: makeEqn(['b', 'equals', 'pi', 'minus', 'a']),
+    //   },
+    // };
+    // equationElements.explementary = {
+    //   add: {
+    //     deg: makeEqn(['_360', 'equals', 'a', 'plus', 'b']),
+    //     rad: makeEqn(['_2', 'pi', 'equals', 'a', 'plus', 'b']),
+    //   },
+    //   a: {
+    //     deg: makeEqn(['a', 'equals', '_360', 'minus', 'b']),
+    //     rad: makeEqn(['a', 'equals', '_2', 'pi', 'minus', 'b']),
+    //   },
+    //   b: {
+    //     deg: makeEqn(['b', 'equals', '_360', 'minus', 'a']),
+    //     rad: makeEqn(['b', 'equals', '_2', 'pi', 'minus', 'a']),
+    //   },
+    // };
+
+    const { collection } = equation;
+    equation.showAngle = (angleType: angleTypes) => {
+      collection.show();
       if (this.varState.radialLines === 360) {
-        equationElements._pi.hide();
-        equationElements._v.hide();
-        equationElements.__2.hide();
+        collection._pi.hide();
+        collection._v.hide();
+        collection.__2.hide();
         if (angleType === 'complementary') {
-          equationElements.__90.show();
-          equationElements.__180.hide();
-          equationElements.__360.hide();
+          collection.__90.show();
+          collection.__180.hide();
+          collection.__360.hide();
         }
         if (angleType === 'supplementary') {
-          equationElements.__90.hide();
-          equationElements.__180.show();
-          equationElements.__360.hide();
+          collection.__90.hide();
+          collection.__180.show();
+          collection.__360.hide();
         }
         if (angleType === 'explementary') {
-          equationElements.__90.hide();
-          equationElements.__180.hide();
-          equationElements.__360.show();
+          collection.__90.hide();
+          collection.__180.hide();
+          collection.__360.show();
         }
       } else {
-        equationElements.__90.hide();
-        equationElements.__180.hide();
-        equationElements.__360.hide();
+        collection.__90.hide();
+        collection.__180.hide();
+        collection.__360.hide();
         if (angleType === 'complementary') {
-          equationElements._pi.show();
-          equationElements._v.show();
-          equationElements.__2.show();
+          collection._pi.show();
+          collection._v.show();
+          collection.__2.show();
         }
         if (angleType === 'supplementary') {
-          equationElements._pi.show();
-          equationElements._v.hide();
-          equationElements.__2.hide();
+          collection._pi.show();
+          collection._v.hide();
+          collection.__2.hide();
         }
         if (angleType === 'explementary') {
-          equationElements._pi.show();
-          equationElements._v.hide();
-          equationElements.__2.show();
+          collection._pi.show();
+          collection._v.hide();
+          collection.__2.show();
         }
       }
     };
 
-    equationElements.showEqn = (angleType: angleTypes, form: equationFormType = 'add') => {
+    equation.showEqn = (angleType: angleTypes, form: equationFormType = 'add') => {
       if (angleType === 'adjacent') {
-        equationElements.hideAll();
+        collection.hideAll();
         return;
       }
 
-      equationElements.showAngle(angleType);
+      collection.showAngle(angleType);
       const units = this.varState.radialLines === 360 ? 'deg' : 'rad';
-      equationElements[angleType][form][units].setPositions();
+      collection[angleType][form][units].setPositions();
 
-      equationElements._a.show();
-      equationElements._b.show();
-      equationElements._equals.show();
+      collection._a.show();
+      collection._b.show();
+      collection._equals.show();
       if (form === 'add') {
-        equationElements._plus.show();
-        equationElements._minus.hide();
+        collection._plus.show();
+        collection._minus.hide();
       } else {
-        equationElements._plus.hide();
-        equationElements._minus.show();
+        collection._plus.hide();
+        collection._minus.show();
       }
       this.varState.equationForm = form;
     };
 
     const onclickEqn = (form: equationFormType) => {
-      equationElements[this.getAngleType()][form][this.getUnits()]
-        .animateTo(1, 2, equationElements._equals);
+      const angleType = this.varState.angleSelected.slice[3];
+      const formString = this.varState.equationForm;
+      const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
+      const unitsString = this.getUnits();
+      // form[0] = form[0].toUpperCase();
+      const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
+
+      equation[`${angleType}${eqnForm}${units}`]
+        .animateTo(1, 2, collection._equals);
 
       if (form === 'a') {
         this._circle._angleA.pulseScaleNow(1, 1.5);
@@ -318,13 +333,13 @@ class AdjacentAnglesCollection extends AngleCircle {
       this.diagram.animateNextFrame();
     };
 
-    equationElements._a.onClick = onclickEqn.bind(this, 'a');
-    equationElements._b.onClick = onclickEqn.bind(this, 'b');
-    equationElements._pi.onClick = onclickEqn.bind(this, 'add');
-    equationElements.__90.onClick = onclickEqn.bind(this, 'add');
-    equationElements.__2.onClick = onclickEqn.bind(this, 'add');
-    equationElements._v.onClick = onclickEqn.bind(this, 'add');
-    return equationElements;
+    collection._a.onClick = onclickEqn.bind(this, 'a');
+    collection._b.onClick = onclickEqn.bind(this, 'b');
+    collection._pi.onClick = onclickEqn.bind(this, 'add');
+    collection.__90.onClick = onclickEqn.bind(this, 'add');
+    collection.__2.onClick = onclickEqn.bind(this, 'add');
+    collection._v.onClick = onclickEqn.bind(this, 'add');
+    return equation;
   }
 
   getUnits() {
@@ -370,7 +385,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
     // this.enableAutoChange = true;
     this.addToCircle();
-    this.add('eqn', this.makeAnglesEquation());
+    this.eqn = this.makeAnglesEquation();
+    this.add('eqn', this.eqn.collection);
     this.angleTypes = ['adjacent', 'complementary', 'supplementary', 'explementary'];
   }
 
@@ -398,8 +414,8 @@ class AdjacentAnglesCollection extends AngleCircle {
         // this.setParagraphUnits('deg');
       }
     }
-    this._eqn.stop();
-    this._eqn.showEqn(this.varState.angleSelected, this.varState.equationForm);
+    this.eqn.collection.stop();
+    this.eqn.showEqn(this.varState.angleSelected, this.varState.equationForm);
     this.diagram.animateNextFrame();
   }
 
@@ -635,7 +651,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI / 3);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
-    this._eqn.showEqn('adjacent');
+    this.eqn.showEqn('adjacent');
     this.diagram.animateNextFrame();
   }
 
@@ -670,7 +686,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI / 2);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
-    this._eqn.showEqn('complementary', 'add');
+    this.eqn.showEqn('complementary', 'add');
     this.diagram.animateNextFrame();
   }
 
@@ -682,7 +698,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
-    this._eqn.showEqn('supplementary', 'add');
+    this.eqn.showEqn('supplementary', 'add');
     this.diagram.animateNextFrame();
   }
 
@@ -694,7 +710,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._endLine, Math.PI * 2);
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
-    this._eqn.showEqn('explementary', 'add');
+    this.eqn.showEqn('explementary', 'add');
     this.diagram.animateNextFrame();
   }
 
