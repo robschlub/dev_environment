@@ -694,7 +694,26 @@ export function contentToElement(
 
 export type alignHType = 'left' | 'right' | 'center';
 export type alignVType = 'top' | 'bottom' | 'middle' | 'baseline';
-
+export type DiagramGLEquationType = {
+  collection: DiagramElementCollection;
+  createEq: (Array<Elements | Element | string>) => void;
+  arrange: (
+    number, alignHType | null, alignVType | null,
+    DiagramElementPrimative | DiagramElementCollection | Point
+  ) => void;
+  dissolveElements: (
+    Array<DiagramElementPrimative | DiagramElementCollection>,
+    boolean, number, number, ?(?mixed)) => void;
+  getElementsToShowAndHide: () => void;
+  showHide: (number, number, ?(?mixed)) => void;
+  hideShow: (number, number, ?(?mixed)) => void;
+  animateTo: (
+    number, number,
+    DiagramElementPrimative | DiagramElementCollection | Point,
+    ?(?mixed) => void,
+    'left' | 'center' | 'right', 'top' | 'bottom' | 'middle' | 'baseline',
+  ) => void;
+};
 
 export class DiagramGLEquation extends Elements {
   collection: DiagramElementCollection;
@@ -830,14 +849,23 @@ export class DiagramGLEquation extends Elements {
   }
 
   showHide(
-    showTime: number = 1,
-    hideTime: number = 1,
+    showTime: number = 0,
+    hideTime: number = 0,
     callback: ?(?mixed) => void = null,
   ) {
     this.collection.stop();
     const { show, hide } = this.getElementsToShowAndHide();
-    this.dissolveElements(show, true, 0.01, showTime, null);
-    this.dissolveElements(hide, false, showTime, hideTime, callback);
+    if (showTime === 0) {
+      show.forEach(e => e.show());
+    } else {
+      this.dissolveElements(show, true, 0.01, showTime, null);
+    }
+
+    if (hideTime === 0) {
+      hide.forEach(e => e.hide());
+    } else {
+      this.dissolveElements(hide, false, showTime, hideTime, callback);
+    }
   }
 
   hideShow(
