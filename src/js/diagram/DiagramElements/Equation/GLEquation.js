@@ -595,7 +595,7 @@ export function getDiagramElement(
 
 type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
-type EquationElementsType = {
+export type EquationElementsType = {
   setElem?: (DiagramElementCollection | DiagramElementPrimative | string,
             Array<number> | null,
             boolean,

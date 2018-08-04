@@ -37,6 +37,7 @@ import Integral from './DiagramElements/Equation/Integral';
 import {
   DiagramGLEquation, createEquationElements,
 } from './DiagramElements/Equation/GLEquation';
+import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 
@@ -62,7 +63,7 @@ function equation(diagram: Diagram) {
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],
     firstTransform: Transform = new Transform(),
-  ) {
+  ): EquationElementsType {
     return createEquationElements(
       elems,
       diagram.draw2D,
