@@ -59,7 +59,7 @@ type anlesEquationType = {
   showAngle: (angleTypes) => void;
   showEqn: (angleTypes, ?equationFormType) => void;
   onclickEqn: (equationFormType) => void;
-  getEquationForm: (angleTypes, string, 'deg' | 'rad' | null) => EquationType;
+  getForm: (angleTypes, string, 'deg' | 'rad' | null) => EquationType;
 } & EquationType;
 
 export type AdjacentAnglesCollectionType = {
@@ -243,7 +243,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
     };
 
-    equation.getEquationForm = (inputAngleType: angleTypes = this.varState.angleSelected, inputForm: string = this.varState.equationForm, inputUnits: 'deg' | 'rad' | null = null) => {
+    equation.getForm = (inputAngleType: angleTypes = this.varState.angleSelected, inputForm: string = this.varState.equationForm, inputUnits: 'deg' | 'rad' | null = null) => {
       const angleType = inputAngleType.slice(0, 3);
       const formString = inputForm;
       const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
@@ -263,7 +263,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
 
       equation.showAngle(angleType);
-      equation.getEquationForm(angleType, form).setPositions();
+      equation.getForm(angleType, form).setPositions();
 
       collection._a.show();
       collection._b.show();
@@ -279,7 +279,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
 
     const onclickEqn = (form: equationFormType) => {
-      equation.getEquationForm(this.varState.angleSelected, form)
+      equation.getForm(this.varState.angleSelected, form)
         .animateTo(1, 2, collection._equals);
 
       if (form === 'a') {

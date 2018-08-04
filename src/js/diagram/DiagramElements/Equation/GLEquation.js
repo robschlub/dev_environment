@@ -719,11 +719,11 @@ export class DiagramGLEquation extends Elements {
     });
   }
 
-  createNewEq(content: Array<Elements | Element | string>) {
-    const eqn = new DiagramGLEquation(this.collection);
-    eqn.createEq(content);
-    return eqn;
-  }
+  // createNewEq(content: Array<Elements | Element | string>) {
+  //   const eqn = new DiagramGLEquation(this.collection);
+  //   eqn.createEq(content);
+  //   return eqn;
+  // }
 
   // By default, the colleciton is arranged so the first element in the
   // equation is at (0,0) in colleciton space.
@@ -785,14 +785,6 @@ export class DiagramGLEquation extends Elements {
       this.offsetLocation(delta);
       this.setPositions();
     }
-    // const delta = new Point(0, 0).sub(fixPoint);
-    // elementsInEqn.forEach((e) => {
-    //   const et = e.transform.t();
-    //   if (et != null) {
-    //     const etNew = et.add(delta);
-    //     e.transform.updateTranslation(etNew);
-    //   }
-    // });
 
     this.collection.showOnly(elementsCurrentlyShowing);
   }
@@ -1059,8 +1051,8 @@ export class Equation {
     name: string,
     content: Array<Elements | Element | string>,
   ) {
-    const eqn = new DiagramGLEquation(this.collection);
-    this.form[name] = eqn.createNewEq(content);
+    this.form[name] = new DiagramGLEquation(this.collection);
+    this.form[name].createEq(content);
     this.form[name].arrange(
       this.formAlignment.scale,
       this.formAlignment.hAlign,
