@@ -10,7 +10,7 @@ import {
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
-// import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { EquationType } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 // type rightAngleType = {
 //   _horizontal: DiagramElementPrimative;
@@ -54,25 +54,26 @@ type equationElementsType = {
   _v: DiagramElementPrimative;
 } & DiagramElementCollection;
 
-type equationType = {
+type anlesEquationType = {
   collection: equationElementsType;
   showAngle: (angleTypes) => void;
   showEqn: (angleTypes, ?equationFormType) => void;
   onclickEqn: (equationFormType) => void;
-};
+  getEquationForm: (angleTypes, string, 'deg' | 'rad' | null) => EquationType;
+} & EquationType;
 
 export type AdjacentAnglesCollectionType = {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
-  eqn: equationType;
+  eqn: anlesEquationType;
 };
 
 class AdjacentAnglesCollection extends AngleCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
-  eqn: equationType;
+  eqn: anlesEquationType;
 
   makeMoveableLine() {
     const line = this.makeLine(
@@ -172,13 +173,9 @@ class AdjacentAnglesCollection extends AngleCircle {
     equation.setElem('v', null, true, 'down', 1);
     equation.setElem('_2', null, true, 'down', 1);
     equation.setElem('_90', null, true, 'down', 0.7);
+    equation.setElem('_180', null, true, 'down', 0.7);
+    equation.setElem('_360', null, true, 'down', 0.7);
 
-    // const eqn = this.diagram.equation.make(equationElements);
-    // const makeEqn = (content) => {
-    //   const e = eqn.createNewEq(content);
-    //   e.arrange(1, 'left', 'baseline', equationElements._equals);
-    //   return e;
-    // };
     const e = equation;
     e.formAlignment.fixTo = equation.collection._equals;
     e.addForm('comAddDeg', ['_90', 'equals', 'a', 'plus', 'b']);
@@ -201,49 +198,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
     e.addForm('expBDeg', ['b', 'equals', '_360', 'minus', 'a']);
     e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
-
-    // equationElements.complementary = {
-    //   add: {
-    //     deg: makeEqn(['_90', 'equals', 'a', 'plus', 'b']),
-    //     rad: makeEqn([eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b']),
-    //   },
-    //   a: {
-    //     deg: makeEqn(['a', 'equals', '_90', 'minus', 'b']),
-    //     rad: makeEqn(['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b']),
-    //   },
-    //   b: {
-    //     deg: makeEqn(['b', 'equals', '_90', 'minus', 'a']),
-    //     rad: makeEqn(['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a']),
-    //   },
-    // };
-    // equationElements.supplementary = {
-    //   add: {
-    //     deg: makeEqn(['_180', 'equals', 'a', 'plus', 'b']),
-    //     rad: makeEqn(['pi', 'equals', 'a', 'plus', 'b']),
-    //   },
-    //   a: {
-    //     deg: makeEqn(['a', 'equals', '_180', 'minus', 'b']),
-    //     rad: makeEqn(['a', 'equals', 'pi', 'minus', 'b']),
-    //   },
-    //   b: {
-    //     deg: makeEqn(['b', 'equals', '_180', 'minus', 'a']),
-    //     rad: makeEqn(['b', 'equals', 'pi', 'minus', 'a']),
-    //   },
-    // };
-    // equationElements.explementary = {
-    //   add: {
-    //     deg: makeEqn(['_360', 'equals', 'a', 'plus', 'b']),
-    //     rad: makeEqn(['_2', 'pi', 'equals', 'a', 'plus', 'b']),
-    //   },
-    //   a: {
-    //     deg: makeEqn(['a', 'equals', '_360', 'minus', 'b']),
-    //     rad: makeEqn(['a', 'equals', '_2', 'pi', 'minus', 'b']),
-    //   },
-    //   b: {
-    //     deg: makeEqn(['b', 'equals', '_360', 'minus', 'a']),
-    //     rad: makeEqn(['b', 'equals', '_2', 'pi', 'minus', 'a']),
-    //   },
-    // };
 
     const { collection } = equation;
     equation.showAngle = (angleType: angleTypes) => {
@@ -289,11 +243,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
     };
 
-    const getEquationForm = (
-      inputAngleType: angleTypes = this.varState.angleSelected,
-      inputForm: string = this.varState.equationForm,
-      inputUnits: 'deg' | 'rad' | null = null,
-    ) => {
+    equation.getEquationForm = (inputAngleType: angleTypes = this.varState.angleSelected, inputForm: string = this.varState.equationForm, inputUnits: 'deg' | 'rad' | null = null) => {
       const angleType = inputAngleType.slice(0, 3);
       const formString = inputForm;
       const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
@@ -313,7 +263,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
 
       equation.showAngle(angleType);
-      getEquationForm(angleType, form).setPositions();
+      equation.getEquationForm(angleType, form).setPositions();
 
       collection._a.show();
       collection._b.show();
@@ -329,16 +279,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
 
     const onclickEqn = (form: equationFormType) => {
-      // const angleType = this.varState.angleSelected.slice[3];
-      // const formString = this.varState.equationForm;
-      // const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
-      // const unitsString = this.getUnits();
-      // // form[0] = form[0].toUpperCase();
-      // const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
-      getEquationForm(this.varState.angleSelected, form)
+      equation.getEquationForm(this.varState.angleSelected, form)
         .animateTo(1, 2, collection._equals);
-      // equation[`${angleType}${eqnForm}${units}`]
-      //   .animateTo(1, 2, collection._equals);
 
       if (form === 'a') {
         this._circle._angleA.pulseScaleNow(1, 1.5);
@@ -354,6 +296,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     collection._b.onClick = onclickEqn.bind(this, 'b');
     collection._pi.onClick = onclickEqn.bind(this, 'add');
     collection.__90.onClick = onclickEqn.bind(this, 'add');
+    collection.__180.onClick = onclickEqn.bind(this, 'add');
+    collection.__360.onClick = onclickEqn.bind(this, 'add');
     collection.__2.onClick = onclickEqn.bind(this, 'add');
     collection._v.onClick = onclickEqn.bind(this, 'add');
     return equation;
