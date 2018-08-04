@@ -579,8 +579,28 @@ class Integral extends Elements {
   }
 }
 
+export function getDiagramElement(
+  collection: DiagramElementCollection,
+  name: string | DiagramElementPrimative | DiagramElementCollection,
+): DiagramElementPrimative | DiagramElementCollection | null {
+  if (typeof name === 'string') {
+    if (collection && `_${name}` in collection) {
+    // $FlowFixMe
+      return collection[`_${name}`];
+    }
+    return null;
+  }
+  return name;
+}
 
 type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
+
+type EquationElementsType = {
+  setElem?: (DiagramElementCollection | DiagramElementPrimative | string,
+            Array<number> | null,
+            'up' | 'down',
+            number) => void;
+} & DiagramElementCollection;
 
 export function createEquationElements(
   elems: Object,
@@ -608,7 +628,7 @@ export function createEquationElements(
     }
   }
 
-  const equationElements = new DiagramElementCollection(
+  const collection = new DiagramElementCollection(
     new Transform().scale(1, 1).translate(0, 0),
     diagramLimits,
   );
@@ -622,31 +642,49 @@ export function createEquationElements(
         color,
         diagramLimits,
       );
-      equationElements.add(key, p);
+      collection.add(key, p);
     }
     if (elems[key] instanceof DiagramElementPrimative) {
-      equationElements.add(key, elems[key]);
+      collection.add(key, elems[key]);
     }
     if (elems[key] instanceof DiagramElementCollection) {
-      equationElements.add(key, elems[key]);
+      collection.add(key, elems[key]);
     }
   });
+
+  /* eslint-disable no-param-reassign */
+  function setElem(
+    element: DiagramElementCollection | DiagramElementPrimative | string,
+    elementColor: Array<number> | null = null,
+    direction: 'up' | 'down' = 'up',
+    mag: number = 0.5,
+    isTouchable: boolean = false,
+  ) {
+    let elem = element;
+    if (typeof elem === 'string') {
+      elem = getDiagramElement(collection, element);
+    }
+    if (elem instanceof DiagramElementCollection
+      || elem instanceof DiagramElementPrimative) {
+      if (elementColor != null) {
+        elem.setColor(elementColor);
+      }
+      elem.isTouchable = isTouchable;
+      if (isTouchable) {
+        collection.hasTouchableElements = true;
+      }
+      elem.animate.transform.translation.style = 'curved';
+      elem.animate.transform.translation.options.direction = direction;
+      elem.animate.transform.translation.options.magnitude = mag;
+    }
+  }
+  /* eslint-enable no-param-reassign */
+
+  const equationElements: EquationElementsType = collection;
+  equationElements.setElem = setElem;
   return equationElements;
 }
 
-export function getDiagramElement(
-  collection: DiagramElementCollection,
-  name: string | DiagramElementPrimative | DiagramElementCollection,
-): DiagramElementPrimative | DiagramElementCollection | null {
-  if (typeof name === 'string') {
-    if (collection && `_${name}` in collection) {
-    // $FlowFixMe
-      return collection[`_${name}`];
-    }
-    return null;
-  }
-  return name;
-}
 
 export function contentToElement(
   collection: DiagramElementCollection,

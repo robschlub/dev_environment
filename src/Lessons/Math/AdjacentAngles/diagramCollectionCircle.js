@@ -177,33 +177,14 @@ class AdjacentAnglesCollection extends AngleCircle {
 
     equationElements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     equationElements.setPosition(this.layout.equationPosition);
+
     const ee = equationElements;
-
-    /* eslint-disable no-param-reassign */
-    function setElem(
-      elem: DiagramElementCollection | DiagramElementPrimative,
-      color: Array<number> | null = null,
-      direction: 'up' | 'down' = 'up',
-      mag: number = 1,
-    ) {
-      if (color != null) {
-        elem.setColor(color);
-      }
-      elem.isTouchable = true;
-      elem.animate.transform.translation.style = 'curved';
-      elem.animate.transform.translation.options.direction = direction;
-      elem.animate.transform.translation.options.magnitude = mag;
-    }
-    /* eslint-enable no-param-reassign */
-
-    setElem(ee._a, this.colors.angleA, 'up', 0.65);
-    setElem(ee._b, this.colors.angleB, 'up', 0.85);
-    setElem(ee._pi, null, 'down', 1);
-    setElem(ee._v, null, 'down', 1);
-    setElem(ee.__2, null, 'down', 1);
-    setElem(ee.__90, null, 'down', 0.7);
-    equationElements.hasTouchableElements = true;
-
+    ee.setElem('a', this.colors.angleA, 'up', 0.65, true);
+    ee.setElem('b', this.colors.angleB, 'up', 0.85, true);
+    ee.setElem('pi', null, 'down', 1, true);
+    ee.setElem('v', null, 'down', 1, true);
+    ee.setElem('_2', null, 'down', 1, true);
+    ee.setElem('_90', null, 'down', 0.7, true);
 
     const eqn = this.diagram.equation.make(equationElements);
     const makeEqn = (content) => {
