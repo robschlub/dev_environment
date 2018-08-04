@@ -171,9 +171,10 @@ class AdjacentAnglesCollection extends AngleCircle {
       _90: '90º',
       _180: '180º',
       _360: '360º',
-      deg: 'º',
+      // deg: 'º',
       v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
     }, this.colors.diagram.text.base);
+
     equationElements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     equationElements.setPosition(this.layout.equationPosition);
     const ee = equationElements;
@@ -361,17 +362,17 @@ class AdjacentAnglesCollection extends AngleCircle {
   addToCircle() {
     this._circle.add('startLine', this.makeMoveableLine());
     this._circle.add('endLine', this.makeMoveableLine());
-    this._circle.add('angleA', this.makeAngleA());
-    this._circle.add('angleB', this.makeAngleB());
     this._circle.add('rightAngle', this.makeRightAngle());
     this._circle.add('straightAngle', this.makeStraightAngle());
     this._circle.add('fullAngle', this.makeFullAngle());
+    this._circle.add('angleA', this.makeAngleA());
+    this._circle.add('angleB', this.makeAngleB());
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     this._circle.setTransformCallback = this.updateCircleRotation.bind(this);
     this._circle.order = [
-      ...this._circle.order.slice(-5),
-      ...this._circle.order.slice(0, -5),
+      ...this._circle.order.slice(-2),
+      ...this._circle.order.slice(0, -2),
     ];
   }
 
@@ -420,6 +421,15 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   updateCircleRotation() {
+    const r = this._circle.transform.r();
+    if (r != null) {
+      if (r > Math.PI * 2) {
+        this._circle.transform.updateRotation(r - Math.PI * 2);
+      }
+      if (r < 0) {
+        this._circle.transform.updateRotation(r + Math.PI * 2);
+      }
+    }
     this.rotateAngleLabelsToUpright();
   }
 

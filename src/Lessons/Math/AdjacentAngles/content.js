@@ -39,7 +39,7 @@ class Content extends LessonContent {
 
     const diag = this.diagram.elements;
     this.addSection({
-      title: 'Introduction',
+      title: 'Summary',
       setContent: [`
         <table class="lesson__adjacent_angles_table">
           <tr>
