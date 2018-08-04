@@ -289,15 +289,31 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
     };
 
+    const getEquationForm = (
+      inputAngleType: angleTypes = this.varState.angleSelected,
+      inputForm: string = this.varState.equationForm,
+      inputUnits: 'deg' | 'rad' | null = null,
+    ) => {
+      const angleType = inputAngleType.slice(0, 3);
+      const formString = inputForm;
+      const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
+      let unitsString = inputUnits;
+      if (unitsString == null) {
+        unitsString = this.getUnits();
+      }
+      const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
+
+      return equation.form[`${angleType}${eqnForm}${units}`];
+    };
+
     equation.showEqn = (angleType: angleTypes, form: equationFormType = 'add') => {
       if (angleType === 'adjacent') {
         collection.hideAll();
         return;
       }
 
-      collection.showAngle(angleType);
-      const units = this.varState.radialLines === 360 ? 'deg' : 'rad';
-      collection[angleType][form][units].setPositions();
+      equation.showAngle(angleType);
+      getEquationForm(angleType, form).setPositions();
 
       collection._a.show();
       collection._b.show();
@@ -313,15 +329,16 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
 
     const onclickEqn = (form: equationFormType) => {
-      const angleType = this.varState.angleSelected.slice[3];
-      const formString = this.varState.equationForm;
-      const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
-      const unitsString = this.getUnits();
-      // form[0] = form[0].toUpperCase();
-      const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
-
-      equation[`${angleType}${eqnForm}${units}`]
+      // const angleType = this.varState.angleSelected.slice[3];
+      // const formString = this.varState.equationForm;
+      // const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
+      // const unitsString = this.getUnits();
+      // // form[0] = form[0].toUpperCase();
+      // const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
+      getEquationForm(this.varState.angleSelected, form)
         .animateTo(1, 2, collection._equals);
+      // equation[`${angleType}${eqnForm}${units}`]
+      //   .animateTo(1, 2, collection._equals);
 
       if (form === 'a') {
         this._circle._angleA.pulseScaleNow(1, 1.5);

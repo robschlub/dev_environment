@@ -964,7 +964,7 @@ export type EquationType = {
   +collection: DiagramElementCollection;
   diagramLimits: Rect;
   firstTransform: Transform;
-  forms: Object;
+  form: Object;
   formAlignment: {
     vAlign: alignVType;
     hAlign: alignHType;
@@ -982,7 +982,8 @@ export class Equation {
   collection: DiagramElementCollection;
   diagramLimits: Rect;
   firstTransform: Transform;
-  forms: Object;
+  form: Object;
+  drawContext2D: DrawContext2D;
   formAlignment: {
     vAlign: alignVType;
     hAlign: alignHType;
@@ -991,12 +992,14 @@ export class Equation {
   };
 
   constructor(
+    drawContext2D: DrawContext2D,
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
     firstTransform: Transform = new Transform(),
   ) {
+    this.drawContext2D = drawContext2D;
     this.diagramLimits = diagramLimits;
     this.firstTransform = firstTransform;
-    this.forms = {};
+    this.form = {};
     this.formAlignment = {
       vAlign: 'baseline',
       hAlign: 'left',
@@ -1007,12 +1010,11 @@ export class Equation {
 
   createElements(
     elems: Object,
-    drawContext2D: DrawContext2D,
     colorOrFont: Array<number> | DiagramFont = [],
   ) {
     this.collection = createEquationElements(
       elems,
-      drawContext2D,
+      this.drawContext2D,
       colorOrFont,
       this.diagramLimits,
       this.firstTransform,
@@ -1058,8 +1060,8 @@ export class Equation {
     content: Array<Elements | Element | string>,
   ) {
     const eqn = new DiagramGLEquation(this.collection);
-    this.forms[name] = eqn.createNewEq(content);
-    this.forms[name].arrange(
+    this.form[name] = eqn.createNewEq(content);
+    this.form[name].arrange(
       this.formAlignment.scale,
       this.formAlignment.hAlign,
       this.formAlignment.vAlign,
