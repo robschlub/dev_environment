@@ -598,6 +598,7 @@ type EquationInput = Array<Elements | Element | string> | Elements | Element | s
 type EquationElementsType = {
   setElem?: (DiagramElementCollection | DiagramElementPrimative | string,
             Array<number> | null,
+            boolean,
             'up' | 'down',
             number) => void;
 } & DiagramElementCollection;
@@ -607,6 +608,7 @@ export function createEquationElements(
   drawContext2D: DrawContext2D,
   colorOrFont: Array<number> | DiagramFont = [],
   diagramLimits: Rect = new Rect(-1, -1, 2, 2),
+  firstTransform: Transform = new Transform(),
 ) {
   let color = [1, 1, 1, 1];
   if (Array.isArray(colorOrFont)) {
@@ -652,13 +654,15 @@ export function createEquationElements(
     }
   });
 
+  collection.setFirstTransform(firstTransform);
+
   /* eslint-disable no-param-reassign */
   function setElem(
     element: DiagramElementCollection | DiagramElementPrimative | string,
     elementColor: Array<number> | null = null,
+    isTouchable: boolean = false,
     direction: 'up' | 'down' = 'up',
     mag: number = 0.5,
-    isTouchable: boolean = false,
   ) {
     let elem = element;
     if (typeof elem === 'string') {

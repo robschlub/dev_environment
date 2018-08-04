@@ -160,31 +160,33 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   makeAnglesEquation() {
-    const equationElements = this.diagram.equation.elements({
-      a: 'a',
-      b: 'b',
-      pi: 'π',
-      _2: '2',
-      equals: '  =  ',
-      plus: ' + ',
-      minus: ' \u2212 ',
-      _90: '90º',
-      _180: '180º',
-      _360: '360º',
-      // deg: 'º',
-      v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
-    }, this.colors.diagram.text.base);
+    const equationElements = this.diagram.equation.elements(
+      {
+        a: 'a',
+        b: 'b',
+        pi: 'π',
+        _2: '2',
+        equals: '  =  ',
+        plus: ' + ',
+        minus: ' \u2212 ',
+        _90: '90º',
+        _180: '180º',
+        _360: '360º',
+        v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
+      },
+      this.colors.diagram.text.base,
+      this.diagram.diagramToGLSpaceTransform,
+    );
 
-    equationElements.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
     equationElements.setPosition(this.layout.equationPosition);
 
     const ee = equationElements;
-    ee.setElem('a', this.colors.angleA, 'up', 0.65, true);
-    ee.setElem('b', this.colors.angleB, 'up', 0.85, true);
-    ee.setElem('pi', null, 'down', 1, true);
-    ee.setElem('v', null, 'down', 1, true);
-    ee.setElem('_2', null, 'down', 1, true);
-    ee.setElem('_90', null, 'down', 0.7, true);
+    ee.setElem('a', this.colors.angleA, true, 'up', 0.65);
+    ee.setElem('b', this.colors.angleB, true, 'up', 0.85);
+    ee.setElem('pi', null, true, 'down', 1);
+    ee.setElem('v', null, true, 'down', 1);
+    ee.setElem('_2', null, true, 'down', 1);
+    ee.setElem('_90', null, true, 'down', 0.7);
 
     const eqn = this.diagram.equation.make(equationElements);
     const makeEqn = (content) => {

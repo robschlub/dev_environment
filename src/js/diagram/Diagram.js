@@ -58,12 +58,17 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 
 // eslint-disable-next-line no-use-before-define
 function equation(diagram: Diagram) {
-  function elements(elems: Object, colorOrFont: Array<number> | DiagramFont = []) {
+  function elements(
+    elems: Object,
+    colorOrFont: Array<number> | DiagramFont = [],
+    firstTransform: Transform = new Transform(),
+  ) {
     return createEquationElements(
       elems,
       diagram.draw2D,
       colorOrFont,
       diagram.limits,
+      firstTransform,
     );
   }
 
