@@ -200,48 +200,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
 
     const { collection } = equation;
-    // equation.showAngle = (angleType: angleTypes) => {
-    //   collection.show();
-    //   if (this.varState.radialLines === 360) {
-    //     collection._pi.hide();
-    //     collection._v.hide();
-    //     collection.__2.hide();
-    //     if (angleType === 'complementary') {
-    //       collection.__90.show();
-    //       collection.__180.hide();
-    //       collection.__360.hide();
-    //     }
-    //     if (angleType === 'supplementary') {
-    //       collection.__90.hide();
-    //       collection.__180.show();
-    //       collection.__360.hide();
-    //     }
-    //     if (angleType === 'explementary') {
-    //       collection.__90.hide();
-    //       collection.__180.hide();
-    //       collection.__360.show();
-    //     }
-    //   } else {
-    //     collection.__90.hide();
-    //     collection.__180.hide();
-    //     collection.__360.hide();
-    //     if (angleType === 'complementary') {
-    //       collection._pi.show();
-    //       collection._v.show();
-    //       collection.__2.show();
-    //     }
-    //     if (angleType === 'supplementary') {
-    //       collection._pi.show();
-    //       collection._v.hide();
-    //       collection.__2.hide();
-    //     }
-    //     if (angleType === 'explementary') {
-    //       collection._pi.show();
-    //       collection._v.hide();
-    //       collection.__2.show();
-    //     }
-    //   }
-    // };
 
     equation.getForm = (inputAngleType: angleTypes = this.varState.angleSelected, inputForm: string = this.varState.equationForm, inputUnits: 'deg' | 'rad' | null = null) => {
       const angleType = inputAngleType.slice(0, 3);
@@ -261,22 +219,9 @@ class AdjacentAnglesCollection extends AngleCircle {
         collection.hideAll();
         return;
       }
-
-      // equation.showAngle(angleType);
-      equation.collection.show();
-      equation.getForm(angleType, form).showHide();
-      equation.getForm(angleType, form).setPositions();
-
-      collection._a.show();
-      collection._b.show();
-      collection._equals.show();
-      if (form === 'add') {
-        collection._plus.show();
-        collection._minus.hide();
-      } else {
-        collection._plus.hide();
-        collection._minus.show();
-      }
+      const eqnForm = equation.getForm(angleType, form);
+      eqnForm.showHide();
+      eqnForm.setPositions();
       this.varState.equationForm = form;
     };
 

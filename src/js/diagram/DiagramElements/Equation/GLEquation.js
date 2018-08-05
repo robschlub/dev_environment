@@ -854,6 +854,7 @@ export class DiagramGLEquation extends Elements {
     callback: ?(?mixed) => void = null,
   ) {
     this.collection.stop();
+    this.collection.show();
     const { show, hide } = this.getElementsToShowAndHide();
     if (showTime === 0) {
       show.forEach(e => e.show());
@@ -869,14 +870,23 @@ export class DiagramGLEquation extends Elements {
   }
 
   hideShow(
-    showTime: number = 1,
-    hideTime: number = 1,
+    showTime: number = 0,
+    hideTime: number = 0,
     callback: ?(?mixed) => void = null,
   ) {
     this.collection.stop();
+    this.collection.show();
     const { show, hide } = this.getElementsToShowAndHide();
-    this.dissolveElements(hide, false, 0.01, hideTime, null);
-    this.dissolveElements(show, true, hideTime, showTime, callback);
+    if (hideTime === 0) {
+      hide.forEach(e => e.hide());
+    } else {
+      this.dissolveElements(hide, false, 0.01, hideTime, null);
+    }
+    if (showTime === 0) {
+      show.forEach(e => e.show());
+    } else {
+      this.dissolveElements(show, true, hideTime, showTime, callback);
+    }
   }
 
   animateTo(
