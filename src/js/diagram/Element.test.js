@@ -787,6 +787,8 @@ describe('Animationa and Movement', () => {
         expect(collection._square).toEqual(copy._square);
         expect(collection._square).not.toBe(copy._square);
         expect(collection._square.vertices).toBe(copy._square.vertices);
+        expect(collection.transform).toEqual(copy.transform);
+        expect(collection.transform).not.toBe(copy.transform);
       });
     });
   });
