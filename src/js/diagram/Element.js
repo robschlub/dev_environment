@@ -476,6 +476,7 @@ class DiagramElement {
           || value instanceof DrawingObject
           || value instanceof Transform
           || value instanceof Point
+          || value instanceof Rect
           || value instanceof TransformLimit) {
         return value.copy();
       }

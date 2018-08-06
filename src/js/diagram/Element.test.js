@@ -529,83 +529,38 @@ describe('Animationa and Movement', () => {
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -1.79));
       });
     });
-    // describe('vertexToClip', () => {
-    //   let e;
-    //   beforeEach(() => {
-    //     const square = new VertexPolygon(webgl, 4, 1.01, 0.01, 0, Point.zero());
-    //     const element = new DiagramElementPrimative(
-    //       square,
-    //       new Transform(),
-    //       [0, 0, 1, 1],
-    //       new Rect(-1, -1, 2, 2),
-    //     );
-    //     element.draw();
-    //     e = element;
-    //   });
-    //   test('No transform', () => {
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(1, 1));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-1, -1));
-    //   });
-    //   test('Scaling up tranform', () => {
-    //     e.transform = new Transform().scale(2, 2);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-2, -2));
-    //   });
-    //   test('Scaling down tranform', () => {
-    //     e.transform = new Transform().scale(0.5, 0.5);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(0.5, 0.5));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-0.5, -0.5));
-    //   });
-    //   test('Translation tranform', () => {
-    //     e.transform = new Transform().translate(1, 1);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(1, 1));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
-    //   });
-    //   test('Landscape', () => {
-    //     // First perform transform in element space, then squish element
-    //     // space to diagram space.
-    //     e.diagramLimits = new Rect(0, 0, 4, 2);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(2, 1));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(4, 2));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
-    //   });
-    //   test('Landscape with offset', () => {
-    //     // First perform transform in element space, then squish element
-    //     // space to diagram space.
-    //     e.diagramLimits = new Rect(0, 0, 4, 2);
-    //     e.transform = new Transform().translate(1, 1);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(6, 3));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(2, 1));
-    //   });
-    //   test('Landscape with scale and offset', () => {
-    //     e.diagramLimits = new Rect(0, 0, 4, 2);
-    //     e.transform = new Transform().scale(2, 0.5).translate(1, 1);
-    //     e.draw();
-    //     // 1. scale point by 2, 0.5
-    //     // 2. offset point by 1, 1
-    //     // 3. Squish/stretch point into diagram space
-    //     //
-    //     // e.g. (1, 1)
-    //     //  1. (2, 0.5)
-    //     //  2. (3, 1.5)
-    //     //  3. <(-1, -1), (1, 1)> goes to <(0, 0), (4, 2)>
-    //     //     scale x by 2, scale y by 1: (6, 1.5)
-    //     //     offset x by +2, y by +1: (8, 2.5)
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(8, 2.5));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 1.5));
-    //   });
-    // });
+    describe('Copy', () => {
+      test('Vertex Object', () => {
+        const sq = new VertexPolygon(
+          webgl,
+          4,
+          Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
+          Math.PI / 4, new Point(0, 0),
+        );
+        const square = new DiagramElementPrimative(
+          sq,
+          new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        );
+        // change a default value DiagramElement base class
+        square.isShown = true;
+        // change a default value in DiagramElementPrimative class
+        square.color = [0.5, 0.4, 0.3, 0.2];
+
+        const copy = square.copy();
+        expect(copy).toEqual(square);
+        expect(copy).not.toBe(square);
+        expect(copy.vertices).toBe(square.vertices);
+
+        // change a default value DiagramElement base class
+        square.isShown = false;
+        // change a default value in DiagramElementPrimative class
+        square.color = [0.6, 0.5, 0.4, 0.3];
+        expect(square.color).toEqual([0.6, 0.5, 0.4, 0.3]);
+        expect(copy.color).toEqual([0.5, 0.4, 0.3, 0.2]);
+        expect(square.isShown).toBe(false);
+        expect(copy.isShown).toBe(true);
+      });
+    });
   });
   describe('DiagramElementCollection', () => {
     let squareElement;
@@ -818,6 +773,20 @@ describe('Animationa and Movement', () => {
         squareElement.isTouchable = false;
         touched = collection.getTouched(new Point(0, 0));
         expect(touched).toHaveLength(0);
+      });
+    });
+    describe('Copy', () => {
+      test('Vertex Objects', () => {
+        const copy = collection.copy();
+        expect(collection).toEqual(copy);
+        expect(collection).not.toBe(copy);
+        expect(collection.elements).toEqual(copy.elements);
+        expect(collection.elements).not.toBe(copy.elements);
+        expect(collection.order).toEqual(copy.order);
+        expect(collection.order).not.toBe(copy.order);
+        expect(collection._square).toEqual(copy._square);
+        expect(collection._square).not.toBe(copy._square);
+        expect(collection._square.vertices).toBe(copy._square.vertices);
       });
     });
   });
