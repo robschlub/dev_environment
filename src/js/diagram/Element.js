@@ -471,7 +471,9 @@ class DiagramElement {
       if (value instanceof AnimationPhase
           || value instanceof ColorAnimationPhase
           || value instanceof CustomAnimationPhase
+          // eslint-disable-next-line no-use-before-define
           || value instanceof DiagramElementCollection
+          // eslint-disable-next-line no-use-before-define
           || value instanceof DiagramElementPrimative
           || value instanceof DrawingObject
           || value instanceof Transform
@@ -497,7 +499,10 @@ class DiagramElement {
     };
 
     Object.keys(element).forEach((key) => {
-      this[key] = copyValue(element[key]);
+      if (key in this) {
+        // $FlowFixMe
+        this[key] = copyValue(element[key]);
+      }
     });
   }
 

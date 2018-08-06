@@ -56,6 +56,17 @@ class Element {
     }
   }
 
+  copy() {
+    const c = new Element(this.content.copy());
+    c.ascent = this.ascent;
+    c.descent = this.descent;
+    c.width = this.width;
+    c.location = this.location.copy();
+    c.height = this.height;
+    c.scale = this.scale;
+    return c;
+  }
+
   getAllElements() {
     return [this.content];
   }
@@ -97,6 +108,59 @@ class Elements {
     this.width = 0;
     this.location = new Point(0, 0);
     this.height = 0;
+  }
+
+  copyFrom(elements: Elements) {
+    const copyValue = (value) => {
+      if (typeof value === 'number'
+          || typeof value === 'boolean'
+          || typeof value === 'string'
+          || value == null
+          || typeof value === 'function') {
+        return value;
+      }
+      // eslint-disable-next-line no-use-before-define
+      if (value instanceof Fraction
+          // eslint-disable-next-line no-use-before-define
+          || value instanceof SuperSub
+          // eslint-disable-next-line no-use-before-define
+          || value instanceof Integral
+          || value instanceof Transform
+          || value instanceof Point
+          // eslint-disable-next-line no-use-before-define
+          || value instanceof DiagramGLEquation) {
+        return value.copy();
+      }
+      if (Array.isArray(value)) {
+        const arrayCopy = [];
+        value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
+        return arrayCopy;
+      }
+      if (typeof value === 'object') {
+        const objectCopy = {};
+        Object.keys(value).forEach((key) => {
+          const v = copyValue(value[key]);
+          objectCopy[key] = v;
+        });
+        return objectCopy;
+      }
+      return value;
+    };
+
+    Object.keys(elements).forEach((key) => {
+      if (key in this) {
+        // $FlowFixMe
+        this[key] = copyValue(elements[key]);
+      }
+    });
+  }
+
+  copy() {
+    const contentCopy = [];
+    this.content.forEach(element => contentCopy.push(element.copy()));
+    const c = new Elements(contentCopy);
+    c.copyFrom(this);
+    return c;
   }
 
   calcSize(location: Point, scale: number) {
@@ -182,6 +246,16 @@ class Fraction extends Elements {
     this.scaleModifier = 1;
     this.vinculumPosition = new Point(0, 0);
     this.vinculumScale = new Point(1, 0.01);
+  }
+
+  copy() {
+    const fractionCopy = new Fraction(
+      this.numerator,
+      this.denominator,
+      this.vinculum,
+    );
+    fractionCopy.copyFrom(this);
+    return fractionCopy;
   }
 
   calcSize(location: Point, incomingScale: number) {
@@ -292,6 +366,19 @@ class SuperSub extends Elements {
     this.subscriptXBias = subscriptXBias;
     this.mainContent = content;
     this.xBias = xBias;
+  }
+
+  copy() {
+    const superSubCopy = new SuperSub(
+      this.mainContent,
+      this.superscript,
+      this.subscript,
+      this.xBias,
+      this.subscriptXBias,
+    );
+
+    superSubCopy.copyFrom(this);
+    return superSubCopy;
   }
 
   calcSize(location: Point, scale: number) {
@@ -413,6 +500,17 @@ class Integral extends Elements {
     this.integralGlyph = integralGlyph;
     this.glyphLocation = new Point(0, 0);
     this.glyphScale = 1;
+  }
+
+  copy() {
+    const integralCopy = new Integral(
+      this.limitMin,
+      this.limitMax,
+      this.mainContent,
+      this.integralGlyph,
+    );
+    integralCopy.copyFrom(this);
+    return integralCopy;
   }
 
   getAllElements() {
@@ -721,6 +819,12 @@ export class DiagramGLEquation extends Elements {
   constructor(collection: DiagramElementCollection) {
     super([]);
     this.collection = collection;
+  }
+
+  copy() {
+    const equationCopy = new DiagramGLEquation(this.collection);
+    equationCopy.copyFrom(this);
+    return equationCopy;
   }
 
   createEq(content: Array<Elements | Element | string>) {
@@ -1041,6 +1145,15 @@ export class Equation {
       fixTo: new Point(0, 0),
       scale: 1,
     };
+  }
+
+  copy() {
+    const equationCopy = new Equation(
+      this.drawContext2D,
+      this.diagramLimits.copy(),
+      this.firstTransform.copy(),
+    );
+    equationCopy
   }
 
   createElements(
