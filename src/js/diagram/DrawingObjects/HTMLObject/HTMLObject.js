@@ -18,6 +18,8 @@ class HTMLObject extends DrawingObject {
   alignV: 'top' | 'bottom' | 'middle';
   show: boolean;
 
+  copy: () => HTMLObject;
+
   constructor(
     parentDiv: HTMLElement,
     id: string,
@@ -35,6 +37,16 @@ class HTMLObject extends DrawingObject {
     this.alignH = alignH;
     this.parentDiv = parentDiv;
     this.show = true;
+  }
+
+  copy() {
+    const c = new HTMLObject(
+      this.parentDiv, this.id,
+      this.location.copy(), this.alignV, this.alignH,
+    );
+    c.show = this.show;
+    c.border = this.border.map(b => b.map(p => p.copy()));
+    return c;
   }
 
   getGLBoundaries(): Array<Array<Point>> {

@@ -21,6 +21,20 @@ function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
   return callbackToUse;
 }
 
+// function cloneObject(obj) {
+//   const clone = {};
+//   for (let i in obj) {
+//   //   // console.log(i)
+//   //   if (obj[i] != null &&  typeof(obj[i]) === 'object') {
+//   //       // clone[i] = cloneObject(obj[i]);
+//   //   }
+//   //   else {
+//   //     clone[i] = obj[i];
+//   //   // }
+//   }
+//   // return clone;
+// }
+
 // type translationOptionsType = {
 //   path: (Point, Point, number) => Point;
 //   direction: number;
@@ -66,6 +80,21 @@ class AnimationPhase {
     this.startTime = -1;
     this.startTransform = new Transform();
     this.deltaTransform = new Transform();
+  }
+
+  copy() {
+    const c = new AnimationPhase(
+      this.targetTransform,
+      this.time,
+      this.rotDirection,
+      this.animationStyle,
+      this.translationStyle,
+      Object.assign({}, this.translationOptions),
+    );
+    c.startTime = this.startTime;
+    this.startTransform = this.startTransform.copy();
+    this.deltaTransform = this.deltaTransform.copy();
+    return c;
   }
 
   start(currentTransform: Transform) {
@@ -118,6 +147,18 @@ class ColorAnimationPhase {
     this.deltaColor = [0, 0, 0, 1];
   }
 
+  copy() {
+    const c = new ColorAnimationPhase(
+      this.targetColor,
+      this.time,
+      this.animationStyle,
+    );
+    c.startTime = this.startTime;
+    this.startColor = this.startColor.slice();
+    this.deltaColor = this.deltaColor.slice();
+    return c;
+  }
+
   start(currentColor: Array<number>) {
     this.startColor = currentColor.slice();
     this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
@@ -144,6 +185,17 @@ class CustomAnimationPhase {
     this.startTime = -1;
     this.animationStyle = animationStyle;
     this.plannedStartTime = startPercent * time;
+  }
+
+  copy() {
+    const c = new CustomAnimationPhase(
+      this.animationCallback,
+      this.time,
+      this.plannedStartTime / this.time,
+      this.animationStyle,
+    );
+    c.startTime = this.startTime;
+    return c;
   }
 
   start() {
@@ -189,7 +241,7 @@ class CustomAnimationPhase {
 //
 class DiagramElement {
   transform: Transform;        // Transform of diagram element
-  presetTransforms: Object;       // Convenience dict of transform presets
+  // presetTransforms: Object;       // Convenience dict of transform presets
   lastDrawTransform: Transform; // Transform matrix used in last draw
   // lastDrawParentTransform: Transform;
   // lastDrawElementTransform: Transform;
@@ -404,7 +456,48 @@ class DiagramElement {
       },
     };
 
-    this.presetTransforms = {};
+    // this.presetTransforms = {};
+  }
+
+  copyFrom(element: DiagramElement) {
+    const copyValue = (value) => {
+      if (typeof value === 'number'
+          || typeof value === 'boolean'
+          || typeof value === 'string'
+          || value == null
+          || typeof value === 'function') {
+        return value;
+      }
+      if (value instanceof AnimationPhase
+          || value instanceof ColorAnimationPhase
+          || value instanceof CustomAnimationPhase
+          || value instanceof DiagramElementCollection
+          || value instanceof DiagramElementPrimative
+          || value instanceof DrawingObject
+          || value instanceof Transform
+          || value instanceof Point
+          || value instanceof TransformLimit) {
+        return value.copy();
+      }
+      if (Array.isArray(value)) {
+        const arrayCopy = [];
+        value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
+        return arrayCopy;
+      }
+      if (typeof value === 'object') {
+        const objectCopy = {};
+        Object.keys(value).forEach((key) => {
+          const v = copyValue(value[key]);
+          objectCopy[key] = v;
+        });
+        return objectCopy;
+      }
+      return value;
+    };
+
+    Object.keys(element).forEach((key) => {
+      this[key] = copyValue(element[key]);
+    });
   }
 
   // Space definition:
@@ -1598,15 +1691,21 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   copy(
-    transform: Transform = this.transform.copy(),
-    color: Array<number> = this.color.slice(),
+    // transform: Transform = this.transform.copy(),
+    // color: Array<number> = this.color.slice(),
   ) {
-    return new DiagramElementPrimative(
-      this.vertices,
-      transform,
-      color,
-      this.diagramLimits.copy(),
-    );
+    // const vertices = this.vertices.copy();
+    const primative = new DiagramElementPrimative(this.vertices.copy());
+    // const primative = new DiagramElementPrimative(
+    //   vertices,
+    //   transform,
+    //   color,
+    //   this.diagramLimits.copy(),
+    // );
+    // primative.pointsToDraw = this.pointsToDraw;
+    // primative.angleToDraw = this.angleToDraw;
+    primative.copyFrom(this);
+    return primative;
   }
 
   setColor(color: Array<number>) {
@@ -1805,6 +1904,19 @@ class DiagramElementCollection extends DiagramElement {
     this.elements = {};
     this.order = [];
     this.touchInBoundingRect = false;
+  }
+
+  copy(
+    // transform: Transform = this.transform.copy(),
+    // diagramLimits: Rect = this.diagramLimits.copy(),
+  ) {
+    const collection = new DiagramElementCollection(
+      // transform,
+      // diagramLimits,
+    );
+    // collection.touchInBoundingRect = this.touchInBoundingRect;
+    collection.copyFrom(this);
+    return collection;
   }
 
   isMoving(): boolean {

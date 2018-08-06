@@ -848,6 +848,11 @@ export class DiagramGLEquation extends Elements {
     };
   }
 
+  render() {
+    this.hideShow();
+    this.setPositions();
+  }
+
   showHide(
     showTime: number = 0,
     hideTime: number = 0,

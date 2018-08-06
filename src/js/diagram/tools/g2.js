@@ -873,6 +873,10 @@ class TransformLimit {
     this.rotation = rotation;
     this.translation = translation;
   }
+
+  copy() {
+    return new TransformLimit(this.scale, this.rotation, this.translation);
+  }
 }
 
 class Transform {

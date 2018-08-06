@@ -31,6 +31,10 @@ class DrawingObject {
     this.border = [[]];
   }
 
+  copy() {
+    return this;
+  }
+
   /* eslint-disable class-methods-use-this, no-unused-vars */
   // glToDiagramTransformMatrix: Array<number>,
   getGLBoundaries(lastDrawTransformMatrix: Array<number>): Array<Array<Point>> {

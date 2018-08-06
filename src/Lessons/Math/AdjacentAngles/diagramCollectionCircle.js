@@ -164,6 +164,33 @@ class AdjacentAnglesCollection extends AngleCircle {
       },
       this.colors.diagram.text.base,
     );
+    // function cloneObject(obj) {
+    //   var clone = {};
+    //   for(var i in obj) {
+    //       console.log(i)
+    //       if(obj[i] != null &&  typeof(obj[i])=="object")
+    //           clone[i] = cloneObject(obj[i]);
+    //       else
+    //           clone[i] = obj[i];
+    //   }
+    //   return clone;
+    // }
+    // const b = cloneObject(equation.collection);
+    // console.log(equation.collection)
+    // console.log(b)
+    console.log(equation.collection)
+    const a = equation.collection;
+    const b = equation.collection.copy();
+    console.log(b)
+    console.log(Object.entries(a), Object.entries(b))
+    // console.log(equation.collection._equals)
+    // Object.keys(equation._a).forEach(k=>console.log(k))
+    // console.log(Object.keys(equation.collection._a))
+    // console.log(Object.keys(equation.collection._equals))
+    // console.log(Object.values(equation.collection._a))
+    // console.log(Object.entries(equation.collection._a))
+    // console.log(Object.getOwnPropertyNames(equation.collection._a))
+    // console.log(Object.keys(equation.collection._pi))
 
     equation.setPosition(this.layout.equationPosition);
 

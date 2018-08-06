@@ -85,8 +85,12 @@ class DiagramText {
     font: DiagramFont = new DiagramFont(),
   ) {
     this.location = location.copy();
-    this.text = text;
+    this.text = text.slice();
     this.font = font.copy();
+  }
+
+  copy() {
+    return new DiagramText(this.location, this.text, this.font);
   }
 }
 
@@ -121,6 +125,13 @@ class TextObject extends DrawingObject {
         this.scalingFactor = 10 ** power;
       }
     }
+  }
+
+  copy() {
+    const c = new TextObject(this.drawContext2D, this.text);
+    c.scalingFactor = this.scalingFactor;
+    c.border = this.border.map(b => b.map(p => p.copy()));
+    return c;
   }
 
   setFont(fontSize: number) {
