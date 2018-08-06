@@ -1696,10 +1696,7 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  copy(
-    // transform: Transform = this.transform.copy(),
-    // color: Array<number> = this.color.slice(),
-  ) {
+  copy(transform: Transform = this.transform) {
     // const vertices = this.vertices.copy();
     const primative = new DiagramElementPrimative(this.vertices.copy());
     // const primative = new DiagramElementPrimative(
@@ -1711,6 +1708,7 @@ class DiagramElementPrimative extends DiagramElement {
     // primative.pointsToDraw = this.pointsToDraw;
     // primative.angleToDraw = this.angleToDraw;
     primative.copyFrom(this);
+    primative.transform = transform.copy();
     return primative;
   }
 
@@ -1912,10 +1910,7 @@ class DiagramElementCollection extends DiagramElement {
     this.touchInBoundingRect = false;
   }
 
-  copy(
-    // transform: Transform = this.transform.copy(),
-    // diagramLimits: Rect = this.diagramLimits.copy(),
-  ) {
+  copy() {
     const collection = new DiagramElementCollection(
       // transform,
       // diagramLimits,
