@@ -171,6 +171,8 @@ describe('GL Equation', () => {
         const eqnCopy = eqn._dup();
         expect(eqnCopy).toEqual(eqn);
         expect(eqnCopy).not.toBe(eqn);
+        expect(eqnCopy.collection._a).toEqual(eqn.collection._a);
+        expect(eqnCopy.collection._a).not.toBe(eqn.collection._a);
       });
     });
   });

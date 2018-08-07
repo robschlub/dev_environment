@@ -178,11 +178,11 @@ class AdjacentAnglesCollection extends AngleCircle {
     // const b = cloneObject(equation.collection);
     // console.log(equation.collection)
     // console.log(b)
-    console.log(equation.collection)
-    const a = equation.collection;
-    const b = equation.collection._dup();
-    console.log(b)
-    console.log(Object.entries(a), Object.entries(b))
+    // console.log(equation.collection)
+    // const a = equation.collection;
+    // const b = equation.collection._dup();
+    // console.log(b)
+    // console.log(Object.entries(a), Object.entries(b))
     // console.log(equation.collection._equals)
     // Object.keys(equation._a).forEach(k=>console.log(k))
     // console.log(Object.keys(equation.collection._a))
