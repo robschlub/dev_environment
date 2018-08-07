@@ -99,11 +99,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     equation.formAlignment.fixTo = new Point(0, 0);
     equation.formAlignment.hAlign = 'center';
     equation.addForm('a', ['a', 'b']);
-    console.log(equation.form['a'].collection === equation.form['comADeg'].collection)
-    console.log(equation.form['a'].content[0].content === equation.form['a'].collection._a)
-    console.log(equation.form['a'].content[0].content === equation.form['comADeg'].content[0].content)
-    console.log(equation.form['comADeg'].content[0].content === equation.collection._a);
-    console.log(equation.form['comADeg'].content[0].content)
     equation.collection.hasTouchableElements = false;
     equation.showEqn = () => {
       let eqnForm = equation.form['a'];
@@ -120,10 +115,6 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
       eqnForm.showHide();
       eqnForm.setPositions();
-      // console.log(eqnForm.collection._a.isShown)
-      console.log(eqnForm)
-      console.log(this._circle)
-      // console.log(this._circle)
     };
 
     const angleA = this.makeAngleAnnotation(

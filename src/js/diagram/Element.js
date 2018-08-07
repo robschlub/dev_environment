@@ -1921,7 +1921,13 @@ class DiagramElementCollection extends DiagramElement {
     );
     // collection.touchInBoundingRect = this.touchInBoundingRect;
     // collection.copyFrom(this);
-    duplicateFromTo(this, collection);
+    const doNotDuplicate = this.order.map(e => `_${e}`);
+    duplicateFromTo(this, collection, ['elements', 'order', ...doNotDuplicate]);
+    for (let i = 0; i < this.order.length; i += 1) {
+      const name = this.order[i];
+      collection.add(name, this.elements[name]._dup());
+    }
+
     return collection;
   }
 

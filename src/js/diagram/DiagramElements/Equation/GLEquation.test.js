@@ -204,8 +204,7 @@ describe('Equation', () => {
       expect(eqn.form.f1.content[0].content).toBe(eqn.form.f3.content[0].content);
       expect(dup.form.f1.content[0].content).toBe(dup.form.f3.content[0].content);
     });
-    test.only('Add new form', () => {
-      // eqn.addForm('f4', ['a', 'b', 'c']);
+    test('Add new form', () => {
       const dup = eqn._dup();
       eqn.addForm('f4', ['a', 'b', 'c']);
       dup.addForm('f4', ['a', 'b', 'c']);

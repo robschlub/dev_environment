@@ -17,6 +17,7 @@ import DrawContext2D from '../../DrawContext2D';
 // Equation is a class that takes a set of drawing objects (TextObjects,
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
+let temp;
 
 class Element {
   content: DiagramElementPrimative | DiagramElementCollection;
@@ -57,7 +58,6 @@ class Element {
   }
 
   _dup(namedCollection: Object) {
-    console.log(Object.keys(namedCollection))
     const c = new Element(namedCollection[this.content.name]);
     c.ascent = this.ascent;
     c.descent = this.descent;
@@ -798,7 +798,6 @@ export class DiagramGLEquation extends Elements {
     collection.getAllElements().forEach((element) => {
       namedElements[element.name] = element;
     });
-    // console.log(namedElements)
     const newContent = [];
     this.content.forEach((contentElement) => {
       newContent.push(contentElement._dup(namedElements));
@@ -923,8 +922,6 @@ export class DiagramGLEquation extends Elements {
     const allElements = this.collection.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsShownTarget = this.getAllElements();
-    // console.log("target", elementsShownTarget)
-    // console.log(elementsShownTarget._a === this.collection._a)
     const elementsToHide =
       elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
     const elementsToShow =
@@ -949,7 +946,6 @@ export class DiagramGLEquation extends Elements {
     this.collection.stop();
     this.collection.show();
     const { show, hide } = this.getElementsToShowAndHide();
-    // console.log(show, hide)
     if (showTime === 0) {
       show.forEach(e => e.show());
     } else {
@@ -1146,12 +1142,14 @@ export class Equation {
     );
 
     const newCollection = this.collection._dup();
-    equationCopy.collection = newCollection;
 
+    equationCopy.collection = newCollection;
+    temp = newCollection._a;
     const newForm = {};
     Object.keys(this.form).forEach((key) => {
       newForm[key] = this.form[key]._dup(newCollection);
     });
+
     equationCopy.form = newForm;
 
     duplicateFromTo(this.formAlignment, equationCopy.formAlignment, ['fixTo']);
@@ -1165,7 +1163,6 @@ export class Equation {
         }
       });
     }
-
     return equationCopy;
   }
 
