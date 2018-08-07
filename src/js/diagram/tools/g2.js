@@ -1293,7 +1293,9 @@ class Transform {
   }
 
   _dup(): Transform {
-    return new Transform(this.order);
+    const t = new Transform(this.order);
+    t.index = this.index;
+    return t;
   }
 
   decelerate(

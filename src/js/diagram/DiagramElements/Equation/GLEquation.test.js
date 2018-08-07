@@ -164,6 +164,15 @@ describe('GL Equation', () => {
         expect(c[2].content.transform.t().round(4)).toEqual(new Point(1.08, 1.02));
       });
     });
+    describe('duplicate', () => {
+      test('Simple Inline', () => {
+        eqn.createEq(['a', 'b', 'c']);
+        expect(eqn.content).toHaveLength(3);
+        const eqnCopy = eqn._dup();
+        expect(eqnCopy).toEqual(eqn);
+        expect(eqnCopy).not.toBe(eqn);
+      });
+    });
   });
 });
 

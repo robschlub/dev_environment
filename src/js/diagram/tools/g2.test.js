@@ -1047,6 +1047,7 @@ describe('g2 tests', () => {
     });
     test('Copy', () => {
       const t = new Transform().scale(1, 1).rotate(1).translate(1, 1);
+      t.index = 0;
       const b = t._dup();
       expect(t).toEqual(b);
       expect(t).not.toBe(b);
