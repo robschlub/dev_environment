@@ -11,7 +11,7 @@ import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
 import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import { TextObject } from './DrawingObjects/TextObject/TextObject';
-import { colorArrayToRGBA } from '../tools/tools';
+import { colorArrayToRGBA, duplicateFromTo } from '../tools/tools';
 
 function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
   let callbackToUse = () => {};
@@ -459,53 +459,53 @@ class DiagramElement {
     // this.presetTransforms = {};
   }
 
-  copyFrom(element: Object) {
-    const copyValue = (value) => {
-      if (typeof value === 'number'
-          || typeof value === 'boolean'
-          || typeof value === 'string'
-          || value == null
-          || typeof value === 'function') {
-        return value;
-      }
-      if (typeof value._dup === 'function') {
-        return value._dup();
-      }
-      // if (value instanceof AnimationPhase
-      //     || value instanceof ColorAnimationPhase
-      //     || value instanceof CustomAnimationPhase
-      //     // eslint-disable-next-line no-use-before-define
-      //     || value instanceof DiagramElementCollection
-      //     // eslint-disable-next-line no-use-before-define
-      //     || value instanceof DiagramElementPrimative
-      //     || value instanceof DrawingObject
-      //     || value instanceof Transform
-      //     || value instanceof Point
-      //     || value instanceof Rect
-      //     || value instanceof TransformLimit) {
-      //   return value._dup();
-      // }
-      if (Array.isArray(value)) {
-        const arrayCopy = [];
-        value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
-        return arrayCopy;
-      }
-      if (typeof value === 'object') {
-        const objectCopy = {};
-        Object.keys(value).forEach((key) => {
-          const v = copyValue(value[key]);
-          objectCopy[key] = v;
-        });
-        return objectCopy;
-      }
-      return value;
-    };
+  // copyFrom(element: Object) {
+  //   const copyValue = (value) => {
+  //     if (typeof value === 'number'
+  //         || typeof value === 'boolean'
+  //         || typeof value === 'string'
+  //         || value == null
+  //         || typeof value === 'function') {
+  //       return value;
+  //     }
+  //     if (typeof value._dup === 'function') {
+  //       return value._dup();
+  //     }
+  //     // if (value instanceof AnimationPhase
+  //     //     || value instanceof ColorAnimationPhase
+  //     //     || value instanceof CustomAnimationPhase
+  //     //     // eslint-disable-next-line no-use-before-define
+  //     //     || value instanceof DiagramElementCollection
+  //     //     // eslint-disable-next-line no-use-before-define
+  //     //     || value instanceof DiagramElementPrimative
+  //     //     || value instanceof DrawingObject
+  //     //     || value instanceof Transform
+  //     //     || value instanceof Point
+  //     //     || value instanceof Rect
+  //     //     || value instanceof TransformLimit) {
+  //     //   return value._dup();
+  //     // }
+  //     if (Array.isArray(value)) {
+  //       const arrayCopy = [];
+  //       value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
+  //       return arrayCopy;
+  //     }
+  //     if (typeof value === 'object') {
+  //       const objectCopy = {};
+  //       Object.keys(value).forEach((key) => {
+  //         const v = copyValue(value[key]);
+  //         objectCopy[key] = v;
+  //       });
+  //       return objectCopy;
+  //     }
+  //     return value;
+  //   };
 
-    Object.keys(element).forEach((key) => {
-      // $FlowFixMe
-      this[key] = copyValue(element[key]);
-    });
-  }
+  //   Object.keys(element).forEach((key) => {
+  //     // $FlowFixMe
+  //     this[key] = copyValue(element[key]);
+  //   });
+  // }
 
   // Space definition:
   //   * Pixel space: css pixels
@@ -1708,7 +1708,8 @@ class DiagramElementPrimative extends DiagramElement {
     // );
     // primative.pointsToDraw = this.pointsToDraw;
     // primative.angleToDraw = this.angleToDraw;
-    primative.copyFrom(this);
+    // primative.copyFrom(this);
+    duplicateFromTo(this, primative);
     if (transform != null) {
       primative.transform = transform._dup();
     }
@@ -1919,7 +1920,8 @@ class DiagramElementCollection extends DiagramElement {
       // diagramLimits,
     );
     // collection.touchInBoundingRect = this.touchInBoundingRect;
-    collection.copyFrom(this);
+    // collection.copyFrom(this);
+    duplicateFromTo(this, collection);
     return collection;
   }
 

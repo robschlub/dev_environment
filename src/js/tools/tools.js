@@ -213,9 +213,43 @@ function addToObject(
   });
 }
 
+function duplicateFromTo(fromObject: Object, toObject: Object) {
+  const copyValue = (value) => {
+    if (typeof value === 'number'
+        || typeof value === 'boolean'
+        || typeof value === 'string'
+        || value == null
+        || typeof value === 'function') {
+      return value;
+    }
+    if (typeof value._dup === 'function') {
+      return value._dup();
+    }
+    if (Array.isArray(value)) {
+      const arrayCopy = [];
+      value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
+      return arrayCopy;
+    }
+    if (typeof value === 'object') {
+      const objectCopy = {};
+      Object.keys(value).forEach((key) => {
+        const v = copyValue(value[key]);
+        objectCopy[key] = v;
+      });
+      return objectCopy;
+    }
+    return value;
+  };
+
+  Object.keys(fromObject).forEach((key) => {
+    // eslint-disable-next-line no-param-reassign
+    toObject[key] = copyValue(fromObject[key]);
+  });
+}
+
 export {
   divide, mulToString, add, Console,
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
-  colorArrayToRGBA, addToObject,
+  colorArrayToRGBA, addToObject, duplicateFromTo,
 };

@@ -3,7 +3,7 @@ import {
   Point, Rect, Transform,
 } from '../../tools/g2';
 import { roundNum } from '../../tools/mathtools';
-import { RGBToArray } from '../../../tools/tools';
+import { RGBToArray, duplicateFromTo } from '../../../tools/tools';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../Element';
@@ -110,56 +110,11 @@ class Elements {
     this.height = 0;
   }
 
-  copyFrom(elements: Elements) {
-    const copyValue = (value) => {
-      if (typeof value === 'number'
-          || typeof value === 'boolean'
-          || typeof value === 'string'
-          || value == null
-          || typeof value === 'function') {
-        return value;
-      }
-      // eslint-disable-next-line no-use-before-define
-      if (value instanceof Fraction
-          // eslint-disable-next-line no-use-before-define
-          || value instanceof SuperSub
-          // eslint-disable-next-line no-use-before-define
-          || value instanceof Integral
-          || value instanceof Transform
-          || value instanceof Point
-          // eslint-disable-next-line no-use-before-define
-          || value instanceof DiagramGLEquation) {
-        return value._dup();
-      }
-      if (Array.isArray(value)) {
-        const arrayCopy = [];
-        value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
-        return arrayCopy;
-      }
-      if (typeof value === 'object') {
-        const objectCopy = {};
-        Object.keys(value).forEach((key) => {
-          const v = copyValue(value[key]);
-          objectCopy[key] = v;
-        });
-        return objectCopy;
-      }
-      return value;
-    };
-
-    Object.keys(elements).forEach((key) => {
-      if (key in this) {
-        // $FlowFixMe
-        this[key] = copyValue(elements[key]);
-      }
-    });
-  }
-
   _dup() {
     const contentCopy = [];
     this.content.forEach(element => contentCopy.push(element._dup()));
     const c = new Elements(contentCopy);
-    c.copyFrom(this);
+    duplicateFromTo(this, c);
     return c;
   }
 
@@ -254,7 +209,7 @@ class Fraction extends Elements {
       this.denominator,
       this.vinculum,
     );
-    fractionCopy.copyFrom(this);
+    duplicateFromTo(this, fractionCopy);
     return fractionCopy;
   }
 
@@ -376,8 +331,7 @@ class SuperSub extends Elements {
       this.xBias,
       this.subscriptXBias,
     );
-
-    superSubCopy.copyFrom(this);
+    duplicateFromTo(this, superSubCopy);
     return superSubCopy;
   }
 
@@ -509,7 +463,7 @@ class Integral extends Elements {
       this.mainContent,
       this.integralGlyph,
     );
-    integralCopy.copyFrom(this);
+    duplicateFromTo(this, integralCopy);
     return integralCopy;
   }
 
@@ -823,7 +777,7 @@ export class DiagramGLEquation extends Elements {
 
   _dup() {
     const equationCopy = new DiagramGLEquation(this.collection);
-    equationCopy.copyFrom(this);
+    duplicateFromTo(this, equationCopy);
     return equationCopy;
   }
 
@@ -1153,7 +1107,7 @@ export class Equation {
       this.diagramLimits._dup(),
       this.firstTransform._dup(),
     );
-    equationCopy
+    duplicateFromTo(this, equationCopy);
   }
 
   createElements(
