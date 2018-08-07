@@ -37,7 +37,7 @@ import Integral from './DiagramElements/Equation/Integral';
 import {
   DiagramGLEquation, createEquationElements, Equation,
 } from './DiagramElements/Equation/GLEquation';
-import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
+// import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 

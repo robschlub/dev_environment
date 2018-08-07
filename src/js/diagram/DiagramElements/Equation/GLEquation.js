@@ -56,8 +56,8 @@ class Element {
     }
   }
 
-  _dup() {
-    const c = new Element(this.content._dup());
+  _dup(namedCollection: Object) {
+    const c = new Element(namedCollection[this.content.name]);
     c.ascent = this.ascent;
     c.descent = this.descent;
     c.width = this.width;
@@ -110,11 +110,11 @@ class Elements {
     this.height = 0;
   }
 
-  _dup() {
+  _dup(namedCollection: Object) {
     const contentCopy = [];
-    this.content.forEach(element => contentCopy.push(element._dup()));
+    this.content.forEach(element => contentCopy.push(element._dup(namedCollection)));
     const c = new Elements(contentCopy);
-    duplicateFromTo(this, c);
+    duplicateFromTo(this, c, ['content']);
     return c;
   }
 
@@ -203,13 +203,17 @@ class Fraction extends Elements {
     this.vinculumScale = new Point(1, 0.01);
   }
 
-  _dup() {
+  _dup(namedCollection: Object) {
+    let vinculum = null;
+    if (this.vinculum != null) {
+      vinculum = namedCollection[this.vinculum.name];
+    }
     const fractionCopy = new Fraction(
-      this.numerator,
-      this.denominator,
-      this.vinculum,
+      this.numerator._dup(namedCollection),
+      this.denominator._dup(namedCollection),
+      vinculum,
     );
-    duplicateFromTo(this, fractionCopy);
+    duplicateFromTo(this, fractionCopy, ['numerator', 'denominator', 'vinculum', 'content']);
     return fractionCopy;
   }
 
@@ -323,15 +327,17 @@ class SuperSub extends Elements {
     this.xBias = xBias;
   }
 
-  _dup() {
+  _dup(namedCollection: Object) {
+    const superscript = this.superscript == null ? null : this.superscript._dup(namedCollection);
+    const subscript = this.subscript == null ? null : this.subscript._dup(namedCollection);
     const superSubCopy = new SuperSub(
-      this.mainContent,
-      this.superscript,
-      this.subscript,
+      this.mainContent._dup(namedCollection),
+      superscript,
+      subscript,
       this.xBias,
       this.subscriptXBias,
     );
-    duplicateFromTo(this, superSubCopy);
+    duplicateFromTo(this, superSubCopy, ['mainContent', 'superscript', 'subscript', 'content']);
     return superSubCopy;
   }
 
@@ -456,14 +462,21 @@ class Integral extends Elements {
     this.glyphScale = 1;
   }
 
-  _dup() {
+  _dup(namedCollection: Object) {
+    const limitMin = this.limitMin == null ? null : this.limitMin._dup(namedCollection);
+    const limitMax = this.limitMax == null ? null : this.limitMax._dup(namedCollection);
+    const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
+    const glyph = this.integralGlyph == null ? null : namedCollection[this.integralGlyph.name];
     const integralCopy = new Integral(
-      this.limitMin,
-      this.limitMax,
-      this.mainContent,
-      this.integralGlyph,
+      limitMin,
+      limitMax,
+      content,
+      glyph,
     );
-    duplicateFromTo(this, integralCopy);
+    duplicateFromTo(
+      this, integralCopy,
+      ['limitMin', 'limitMax', 'content', 'integralGlyph', 'content'],
+    );
     return integralCopy;
   }
 
@@ -775,9 +788,22 @@ export class DiagramGLEquation extends Elements {
     this.collection = collection;
   }
 
-  _dup() {
+  _dup(collection: DiagramElementCollection) {
     const equationCopy = new DiagramGLEquation(this.collection);
-    duplicateFromTo(this, equationCopy);
+    equationCopy.collection = collection;
+
+    const allCollectionElements = collection.getAllElements();
+    const namedElements = {};
+    Object.keys(allCollectionElements).forEach((key) => {
+      namedElements[allCollectionElements[key].name] = allCollectionElements[key];
+    });
+    const newContent = [];
+    this.content.forEach((contentElement) => {
+      newContent.push(contentElement._dup(namedElements));
+    });
+    equationCopy.content = newContent;
+
+    duplicateFromTo(this, equationCopy, ['content', 'collection', 'form']);
     return equationCopy;
   }
 
@@ -895,6 +921,8 @@ export class DiagramGLEquation extends Elements {
     const allElements = this.collection.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsShownTarget = this.getAllElements();
+    // console.log("target", elementsShownTarget)
+    // console.log(elementsShownTarget._a === this.collection._a)
     const elementsToHide =
       elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
     const elementsToShow =
@@ -919,6 +947,7 @@ export class DiagramGLEquation extends Elements {
     this.collection.stop();
     this.collection.show();
     const { show, hide } = this.getElementsToShowAndHide();
+    // console.log(show, hide)
     if (showTime === 0) {
       show.forEach(e => e.show());
     } else {
@@ -1064,6 +1093,7 @@ export type EquationType = {
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
     scale: number;
   };
+  _dup: () => EquationType;
   setElem: (DiagramElementCollection | DiagramElementPrimative | string,
             Array<number> | null,
             boolean,
@@ -1107,7 +1137,29 @@ export class Equation {
       this.diagramLimits._dup(),
       this.firstTransform._dup(),
     );
-    duplicateFromTo(this, equationCopy);
+    duplicateFromTo(
+      this, equationCopy,
+      ['collection', 'form'],
+    );
+    // this.collection = this.collection._dup();
+    // const allCollectionElements = this.collection.getAllElements();
+    // const allElements = {};
+    // Object.keys(allCollectionElements).forEach((key) => {
+    //   allElements[allCollectionElements[key].name] = allCollectionElements[key];
+    // });
+    const newCollection = this.collection._dup();
+    const newForm = {};
+    Object.keys(this.form).forEach((key) => {
+      newForm[key] = this.form[key]._dup(newCollection);
+      // const allFormElements = this.form[key].getAllElements();
+      // allFormElements.forEach((element) => {
+      //   // console.log(element)
+      //   element.content = allElements[element.name];
+      // });
+    });
+    equationCopy.collection = newCollection;
+    equationCopy.form = newForm;
+    return equationCopy;
   }
 
   createElements(

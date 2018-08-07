@@ -213,7 +213,11 @@ function addToObject(
   });
 }
 
-function duplicateFromTo(fromObject: Object, toObject: Object) {
+function duplicateFromTo(
+  fromObject: Object,
+  toObject: Object,
+  exceptKeys: Array<string> = [],
+) {
   const copyValue = (value) => {
     if (typeof value === 'number'
         || typeof value === 'boolean'
@@ -242,8 +246,10 @@ function duplicateFromTo(fromObject: Object, toObject: Object) {
   };
 
   Object.keys(fromObject).forEach((key) => {
-    // eslint-disable-next-line no-param-reassign
-    toObject[key] = copyValue(fromObject[key]);
+    if (exceptKeys.indexOf(key) === -1) {
+      // eslint-disable-next-line no-param-reassign
+      toObject[key] = copyValue(fromObject[key]);
+    }
   });
 }
 

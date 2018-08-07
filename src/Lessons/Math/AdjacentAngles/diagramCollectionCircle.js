@@ -54,9 +54,8 @@ type equationElementsType = {
   _v: DiagramElementPrimative;
 } & DiagramElementCollection;
 
-type anlesEquationType = {
+type anglesEquationType = {
   collection: equationElementsType;
-  // showAngle: (angleTypes) => void;
   showEqn: (angleTypes, ?equationFormType) => void;
   onclickEqn: (equationFormType) => void;
   getForm: (angleTypes, string, 'deg' | 'rad' | null) => EquationType;
@@ -66,14 +65,14 @@ export type AdjacentAnglesCollectionType = {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
-  eqn: anlesEquationType;
+  eqn: anglesEquationType;
 };
 
 class AdjacentAnglesCollection extends AngleCircle {
   _circle: extendedCircleType;
   varState: varStateExtendedType;
   angleTypes: Array<string>;
-  eqn: anlesEquationType;
+  eqn: anglesEquationType;
 
   makeMoveableLine() {
     const line = this.makeLine(
@@ -93,13 +92,43 @@ class AdjacentAnglesCollection extends AngleCircle {
     return line;
   }
 
+
   makeAngleA() {
-    return this.makeAngleAnnotation(
+    const equation = this.eqn._dup();
+
+    equation.addForm('a', ['a']);
+    equation.collection.hasTouchableElements = false;
+
+    equation.showEqn = () => {
+      let eqnForm = equation.form['a'];
+      const currentAngle = this.varState.angleSelected;
+      const currentForm = this.varState.equationForm;
+      const currentUnits = this.getUnits();
+      if (currentAngle !== 'adjacent') {
+        if (currentForm === 'a') {
+          const angleString = currentAngle.slice(0, 3);
+          const formString = 'A';
+          const unitString = `${currentUnits.charAt(0).toUpperCase()}${currentUnits.slice(1)}`;
+          eqnForm = equation.form[`${angleString}${formString}${unitString}`];
+        }
+      }
+      eqnForm.showHide();
+      eqnForm.setPositions();
+      // console.log(eqnForm.collection._a.isShown)
+      console.log(eqnForm)
+      // console.log(this._circle)
+    };
+
+    const angleA = this.makeAngleAnnotation(
       0,
       Math.PI / 6,
       'a',
       this.colors.angleA,
     );
+    angleA.eqn = equation;
+    angleA.add('temp', equation.collection);
+    angleA._temp.show();
+    return angleA;
   }
 
   makeAngleB() {
@@ -198,6 +227,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
     e.addForm('expBDeg', ['b', 'equals', '_360', 'minus', 'a']);
     e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
+    // e.addForm('aa', ['a']);
 
     const { collection } = equation;
 
@@ -228,14 +258,14 @@ class AdjacentAnglesCollection extends AngleCircle {
     const onclickEqn = (form: equationFormType) => {
       equation.getForm(this.varState.angleSelected, form)
         .animateTo(1, 2, collection._equals);
-
+      this.varState.equationForm = form;
       if (form === 'a') {
         this._circle._angleA.pulseScaleNow(1, 1.5);
       }
       if (form === 'b') {
         this._circle._angleB.pulseScaleNow(1, 1.5);
       }
-      this.varState.equationForm = form;
+      this._circle._angleA.eqn.showEqn();
       this.diagram.animateNextFrame();
     };
 
@@ -292,9 +322,9 @@ class AdjacentAnglesCollection extends AngleCircle {
       equationForm: 'add',
     };
     // this.enableAutoChange = true;
-    this.addToCircle();
     this.eqn = this.makeAnglesEquation();
     this.add('eqn', this.eqn.collection);
+    this.addToCircle();
     this.angleTypes = ['adjacent', 'complementary', 'supplementary', 'explementary'];
   }
 

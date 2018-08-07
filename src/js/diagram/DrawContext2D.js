@@ -35,6 +35,10 @@ class DrawContext2D {
     this.canvas.height = this.canvas.clientHeight * this.ratio;
     this.ctx.scale(this.ratio, this.ratio);
   }
+
+  _dup() {
+    return this;
+  }
 }
 
 export default DrawContext2D;

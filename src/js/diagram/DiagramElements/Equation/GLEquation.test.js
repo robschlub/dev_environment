@@ -1,5 +1,5 @@
 import {
-  DiagramGLEquation, createEquationElements,
+  DiagramGLEquation, createEquationElements, Equation
 } from './GLEquation';
 import { Point } from '../../tools/g2';
 import {
@@ -168,16 +168,58 @@ describe('GL Equation', () => {
       test('Simple Inline', () => {
         eqn.createEq(['a', 'b', 'c']);
         expect(eqn.content).toHaveLength(3);
-        const eqnCopy = eqn._dup();
+        const eqnCopy = eqn._dup(eqn.collection);  // testing to make sure colleciton is not overwritten
         expect(eqnCopy).toEqual(eqn);
         expect(eqnCopy).not.toBe(eqn);
         expect(eqnCopy.collection._a).toEqual(eqn.collection._a);
-        expect(eqnCopy.collection._a).not.toBe(eqn.collection._a);
+        expect(eqnCopy.collection._a).toBe(eqn.collection._a);
       });
     });
   });
 });
+describe('Equation', () => {
+  let eqn;
+  beforeEach(() => {
+    eqn = new Equation(new DrawContext2D());
+    eqn.createElements({
+      a: 'a',
+      b: 'b',
+      c: 'c',
+    });
+    eqn.addForm('f1', ['a', 'b', 'c']);
+    eqn.addForm('f2', [eqn.frac('a', 'b', 'c')]);
+  });
+  test('Instantiation', () => {
+    expect(eqn.collection.order).toHaveLength(3);
+    expect(eqn.form.f2.content[0].vinculum).toBe(eqn.collection._c);
+  });
+  describe('Duplicate', () => {
+    test('Simple', () => {
+      const dup = eqn._dup();
+      expect(dup.collection).toEqual(eqn.collection);
+      expect(dup.collection).not.toBe(eqn.collection);
+      expect(dup).toEqual(eqn);
+      expect(dup).not.toBe(eqn);
 
+      expect(dup.collection).toBe(dup.form.f1.collection);
+      // expect(dup).toEqual(eqn);
+    });
+  });
+  // describe('Create', () => {
+  //   test('Simple inline', () => {
+  //     eqn.createEq(['a', 'b', 'c']);
+  //     expect(eqn.content).toHaveLength(3);
+  //   });
+  //   test('Fraction', () => {
+  //     eqn.createEq([eqn.frac('a', 'b', 'c')]);
+  //     expect(eqn.content).toHaveLength(1);
+  //     const c = eqn.content[0];
+  //     expect(c.vinculum).toBe(collection._c);
+  //     expect(c.numerator.content[0].content).toBe(collection._a);
+  //     expect(c.denominator.content[0].content).toBe(collection._b);
+  //   });
+  // });
+});
 // makeEquationTheta(color: Array<number> = [1, 1, 1, 1]) {
 //    const collection = this.diagram.equation.elements({ theta: 'θ' }, color);
 //    const eqn = this.diagram.equation.make(collection);
