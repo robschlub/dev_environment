@@ -689,7 +689,7 @@ export function createEquationElements(
   }
 
   const collection = new DiagramElementCollection(
-    new Transform().scale(1, 1).translate(0, 0),
+    new Transform().scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits,
   );
   Object.keys(elems).forEach((key) => {
@@ -1115,7 +1115,8 @@ export class Equation {
   constructor(
     drawContext2D: DrawContext2D,
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
-    firstTransform: Transform = new Transform(),
+    firstTransform: Transform = new Transform()
+      .scale(1, 1).rotate(0).translate(0, 0),
   ) {
     this.drawContext2D = drawContext2D;
     this.diagramLimits = diagramLimits;
@@ -1127,6 +1128,7 @@ export class Equation {
       fixTo: new Point(0, 0),
       scale: 1,
     };
+    console.log(this.firstTransform)
   }
 
   _dup() {

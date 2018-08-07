@@ -104,7 +104,11 @@ function equation(diagram: Diagram) {
   }
 
   function makeEqn() {
-    return new Equation(diagram.draw2D, diagram.limits, diagram.diagramToGLSpaceTransform);
+    return new Equation(
+      diagram.draw2D,
+      diagram.limits,
+      diagram.diagramToGLSpaceTransform,
+    );
   }
 
   return {

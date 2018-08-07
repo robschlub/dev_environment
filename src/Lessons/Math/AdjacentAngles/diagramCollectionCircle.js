@@ -98,7 +98,17 @@ class AdjacentAnglesCollection extends AngleCircle {
 
     equation.formAlignment.fixTo = new Point(0, 0);
     equation.formAlignment.hAlign = 'center';
-    equation.addForm('a', ['a', 'b']);
+    equation.formAlignment.vAlign = 'middle';
+    equation.formAlignment.scale = 0.5;
+    equation.form = {};
+    equation.addForm('a', ['a']);
+    const e = equation;
+    e.addForm('comADeg', ['_90', 'minus', 'b']);
+    e.addForm('comARad', ['a', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'b']);
+    e.addForm('supADeg', ['a', 'equals', '_180', 'minus', 'b']);
+    e.addForm('supARad', ['a', 'equals', 'pi', 'minus', 'b']);
+    e.addForm('expADeg', ['a', 'equals', '_360', 'minus', 'b']);
+    e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
     equation.collection.hasTouchableElements = false;
     equation.showEqn = () => {
       let eqnForm = equation.form['a'];
@@ -120,12 +130,12 @@ class AdjacentAnglesCollection extends AngleCircle {
     const angleA = this.makeAngleAnnotation(
       0,
       Math.PI / 6,
-      'a',
+      equation.collection,
       this.colors.angleA,
     );
     angleA.eqn = equation;
-    angleA.add('temp', equation.collection);
-    angleA._temp.show();
+    // angleA.add('temp', equation.collection);
+    // angleA._temp.show();
     return angleA;
   }
 
