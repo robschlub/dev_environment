@@ -166,10 +166,10 @@ class CircleCollection extends AngleCircle {
     );
     radiusArc.add('r1', r1);
     radiusArc.add('r2', r2);
-    radiusArc.add('r3', r2.copy(new Transform().rotate(2.02)));
-    radiusArc.add('r4', r2.copy(new Transform().rotate(3.02)));
-    radiusArc.add('r5', r2.copy(new Transform().rotate(4.02)));
-    radiusArc.add('r6', r2.copy(new Transform().rotate(5.02)));
+    radiusArc.add('r3', r2._dup(new Transform().rotate(2.02)));
+    radiusArc.add('r4', r2._dup(new Transform().rotate(3.02)));
+    radiusArc.add('r5', r2._dup(new Transform().rotate(4.02)));
+    radiusArc.add('r6', r2._dup(new Transform().rotate(5.02)));
 
     radiusArc.stepIn = (time: number) => {
       const timePerSegment = time / 6;
