@@ -31,7 +31,7 @@ class DrawingObject {
     this.border = [[]];
   }
 
-  copy() {
+  _dup() {
     return this;
   }
 

@@ -22,7 +22,7 @@ import * as m2 from './m2';
 // export type PointType = {
 //   x: number;
 //   y: number;
-//   copy(): PointType;
+//   _dup(): PointType;
 //   // sub(): PointType;
 //   // add(): PointType;
 //   // distance(): number;
@@ -57,7 +57,7 @@ class Rect {
     this.right = left + width;
   }
 
-  copy() {
+  _dup() {
     return new Rect(this.left, this.bottom, this.width, this.height);
   }
 }
@@ -80,7 +80,7 @@ class Point {
     this.y = y;
   }
 
-  copy() {
+  _dup() {
     return new Point(this.x, this.y);
   }
 
@@ -321,8 +321,8 @@ function normAngle(angle: number) {
 }
 
 function Line(p1: Point, p2: Point) {
-  this.p1 = p1.copy();
-  this.p2 = p2.copy();
+  this.p1 = p1._dup();
+  this.p2 = p2._dup();
   this.A = p2.y - p1.y;
   this.B = p1.x - p2.x;
   this.C = this.A * p1.x + this.B * p1.y;
@@ -620,7 +620,7 @@ class Rotation {
     return new Rotation(this.r * rotToMul.r);
   }
 
-  copy() {
+  _dup() {
     return new Rotation(this.r);
   }
 }
@@ -691,7 +691,7 @@ class Translation extends Point {
     );
   }
 
-  copy() {
+  _dup() {
     return new Translation(this.x, this.y);
   }
 }
@@ -768,7 +768,7 @@ class Scale extends Point {
     );
   }
 
-  copy() {
+  _dup() {
     return new Scale(this.x, this.y);
   }
 }
@@ -874,7 +874,7 @@ class TransformLimit {
     this.translation = translation;
   }
 
-  copy() {
+  _dup() {
     return new TransformLimit(this.scale, this.rotation, this.translation);
   }
 }
@@ -885,7 +885,7 @@ class Transform {
   index: number;
 
   constructor(order: Array<Translation | Rotation | Scale> = []) {
-    this.order = order.map(t => t.copy());
+    this.order = order.map(t => t._dup());
     // this.order = order.slice();
     this.index = this.order.length;
     this.calcMatrix();
@@ -1011,7 +1011,7 @@ class Transform {
     // mag: number = 0.5,
     // offset: number = 0.5,
   ) {
-    const calcTransform = this.copy();
+    const calcTransform = this._dup();
     for (let i = 0; i < this.order.length; i += 1) {
       const stepStart = this.order[i];
       const stepDelta = delta.order[i];
@@ -1172,7 +1172,7 @@ class Transform {
     maxTransform: Transform,
   ) {
     if (!this.isSimilarTo(minTransform) || !this.isSimilarTo(maxTransform)) {
-      return this.copy();
+      return this._dup();
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
@@ -1292,7 +1292,7 @@ class Transform {
     return true;
   }
 
-  copy(): Transform {
+  _dup(): Transform {
     return new Transform(this.order);
   }
 
@@ -1365,7 +1365,7 @@ class Transform {
     //   z = this.constant(0);
     // }
     // if (!this.isSimilarTo(maxTransform)) {
-    //   m = v.copy();
+    //   m = v._dup();
     // }
     return v.clipMag(zeroThreshold, maxTransform);
   }

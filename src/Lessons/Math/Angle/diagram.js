@@ -95,7 +95,7 @@ class LessonDiagram extends Diagram {
       previousDiagramPoint.x - center.x,
     );
     const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = this.elements._circle._radius.transform.copy();
+    const transform = this.elements._circle._radius.transform._dup();
     const rot = transform.r();
     if (rot != null) {
       transform.updateRotation(rot - diffAngle);

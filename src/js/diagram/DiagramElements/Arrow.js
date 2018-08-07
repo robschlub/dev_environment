@@ -30,7 +30,7 @@ export default function Arrow(
   if (transformOrLocation instanceof Point) {
     transform = transform.translate(transformOrLocation.x, transformOrLocation.y);
   } else {
-    transform = transformOrLocation.copy();
+    transform = transformOrLocation._dup();
   }
   return new DiagramElementPrimative(vertexLine, transform, color, diagramLimits);
 }

@@ -149,7 +149,7 @@ class CircleCollection extends DiagramElementCollection {
   //   const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
   //   const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
   //   const diffAngle = minAngleDiff(previousAngle, currentAngle);
-  //   const transform = this._radius.transform.copy();
+  //   const transform = this._radius.transform._dup();
   //   const rot = transform.r();
   //   if (rot != null) {
   //     transform.updateRotation(rot - diffAngle);

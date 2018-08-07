@@ -51,7 +51,7 @@ class PolygonFilled extends VertexObject {
 
     // Make the encapsulating border
     if (sidesToDraw < sides) {
-      this.border[0].push(center.copy());
+      this.border[0].push(center._dup());
       // b = 1;
     }
     for (i = 0; i < sidesToDraw + 1; i += 1) {
@@ -62,7 +62,7 @@ class PolygonFilled extends VertexObject {
       j += 2;
     }
     if (sidesToDraw < sides) {
-      this.border[0].push(center.copy());
+      this.border[0].push(center._dup());
     }
     this.textureLocation = textureLocation;
 

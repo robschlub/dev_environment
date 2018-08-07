@@ -70,7 +70,7 @@ class AnimationPhase {
       direction: '',
     },
   ) {
-    this.targetTransform = transform.copy();
+    this.targetTransform = transform._dup();
     this.time = time;
     this.rotDirection = rotDirection;
     this.animationStyle = animationStyle;
@@ -82,7 +82,7 @@ class AnimationPhase {
     this.deltaTransform = new Transform();
   }
 
-  copy() {
+  _dup() {
     const c = new AnimationPhase(
       this.targetTransform,
       this.time,
@@ -92,13 +92,13 @@ class AnimationPhase {
       Object.assign({}, this.translationOptions),
     );
     c.startTime = this.startTime;
-    this.startTransform = this.startTransform.copy();
-    this.deltaTransform = this.deltaTransform.copy();
+    this.startTransform = this.startTransform._dup();
+    this.deltaTransform = this.deltaTransform._dup();
     return c;
   }
 
   start(currentTransform: Transform) {
-    this.startTransform = currentTransform.copy();
+    this.startTransform = currentTransform._dup();
     this.deltaTransform = this.targetTransform.sub(this.startTransform);
     // Rotation direction can be:
     //   - 0: shortest possible direction
@@ -147,7 +147,7 @@ class ColorAnimationPhase {
     this.deltaColor = [0, 0, 0, 1];
   }
 
-  copy() {
+  _dup() {
     const c = new ColorAnimationPhase(
       this.targetColor,
       this.time,
@@ -187,7 +187,7 @@ class CustomAnimationPhase {
     this.plannedStartTime = startPercent * time;
   }
 
-  copy() {
+  _dup() {
     const c = new CustomAnimationPhase(
       this.animationCallback,
       this.time,
@@ -358,10 +358,10 @@ class DiagramElement {
     transform: Transform = new Transform(),
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
-    this.transform = transform.copy();
+    this.transform = transform._dup();
     this.setTransformCallback = () => {};
     this.isShown = true;
-    this.lastDrawTransform = this.transform.copy();
+    this.lastDrawTransform = this.transform._dup();
     this.name = ''; // This is updated when an element is added to a collection
     this.isMovable = false;
     this.isTouchable = false;
@@ -446,7 +446,7 @@ class DiagramElement {
       isMovingFreely: false,
       movement: {
         previousTime: -1,
-        previousTransform: this.transform.copy(),
+        previousTransform: this.transform._dup(),
         velocity: this.transform.zero(),
       },
 
@@ -459,7 +459,7 @@ class DiagramElement {
     // this.presetTransforms = {};
   }
 
-  copyFrom(element: DiagramElement) {
+  copyFrom(element: Object) {
     const copyValue = (value) => {
       if (typeof value === 'number'
           || typeof value === 'boolean'
@@ -468,20 +468,23 @@ class DiagramElement {
           || typeof value === 'function') {
         return value;
       }
-      if (value instanceof AnimationPhase
-          || value instanceof ColorAnimationPhase
-          || value instanceof CustomAnimationPhase
-          // eslint-disable-next-line no-use-before-define
-          || value instanceof DiagramElementCollection
-          // eslint-disable-next-line no-use-before-define
-          || value instanceof DiagramElementPrimative
-          || value instanceof DrawingObject
-          || value instanceof Transform
-          || value instanceof Point
-          || value instanceof Rect
-          || value instanceof TransformLimit) {
-        return value.copy();
+      if (typeof value._dup === 'function') {
+        return value._dup();
       }
+      // if (value instanceof AnimationPhase
+      //     || value instanceof ColorAnimationPhase
+      //     || value instanceof CustomAnimationPhase
+      //     // eslint-disable-next-line no-use-before-define
+      //     || value instanceof DiagramElementCollection
+      //     // eslint-disable-next-line no-use-before-define
+      //     || value instanceof DiagramElementPrimative
+      //     || value instanceof DrawingObject
+      //     || value instanceof Transform
+      //     || value instanceof Point
+      //     || value instanceof Rect
+      //     || value instanceof TransformLimit) {
+      //   return value._dup();
+      // }
       if (Array.isArray(value)) {
         const arrayCopy = [];
         value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
@@ -499,10 +502,8 @@ class DiagramElement {
     };
 
     Object.keys(element).forEach((key) => {
-      if (key in this) {
-        // $FlowFixMe
-        this[key] = copyValue(element[key]);
-      }
+      // $FlowFixMe
+      this[key] = copyValue(element[key]);
     });
   }
 
@@ -570,13 +571,13 @@ class DiagramElement {
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): Transform {
     const phase = this.state.animation.currentPhase;
-    const start = phase.startTransform.copy();
-    const delta = phase.deltaTransform.copy();
+    const start = phase.startTransform._dup();
+    const delta = phase.deltaTransform._dup();
     const percentTime = elapsedTime / phase.time;
     const percentComplete = phase.animationStyle(percentTime);
 
     const p = percentComplete;
-    // let next = delta.copy().constant(p);
+    // let next = delta._dup().constant(p);
 
     // next = start.add(delta.mul(next));
     const next = start.toDelta(
@@ -597,7 +598,7 @@ class DiagramElement {
     const p = percentComplete;
     const next = start.map((c, index) => c + delta[index] * p);
 
-    // let next = delta.copy().constant(p);
+    // let next = delta._dup().constant(p);
 
     // next = start.add(delta.mul(next));
     return next;
@@ -615,7 +616,7 @@ class DiagramElement {
     if (typeof pointOrX === 'number') {
       position = new Point(pointOrX, y);
     }
-    const currentTransform = this.transform.copy();
+    const currentTransform = this.transform._dup();
     currentTransform.updateTranslation(position);
     this.setTransform(currentTransform);
   }
@@ -623,7 +624,7 @@ class DiagramElement {
   // Use this method to set the element's transform in case a callback has been
   // connected that is tied to an update of the transform.
   setTransform(transform: Transform): void {
-    this.transform = transform.copy().clip(
+    this.transform = transform._dup().clip(
       this.move.minTransform,
       this.move.maxTransform,
     );
@@ -898,7 +899,7 @@ class DiagramElement {
     const { parentCount } = this.lastDrawElementTransformPosition;
     const pLength = this.lastDrawTransform.order.length;
     this.transform.order.forEach((t, index) => {
-      this.lastDrawTransform.order[pLength - parentCount - index - 1] = t.copy();
+      this.lastDrawTransform.order[pLength - parentCount - index - 1] = t._dup();
     });
     this.lastDrawTransform.calcMatrix();
   }
@@ -969,7 +970,7 @@ class DiagramElement {
   // internal to this class.
   animatePhase(index: number): void {
     this.state.animation.currentPhase = this.animate.transform.plan[index];
-    this.state.animation.currentPhase.start(this.transform.copy());
+    this.state.animation.currentPhase.start(this.transform._dup());
   }
 
   animateColorPhase(index: number): void {
@@ -1179,9 +1180,9 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
-    const transform = this.transform.copy();
+    const transform = this.transform._dup();
     transform.updateTranslation(translation);
-    // transform.translation = translation.copy();
+    // transform.translation = translation._dup();
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
@@ -1195,10 +1196,10 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
-    const transform = this.transform.copy();
+    const transform = this.transform._dup();
     transform.updateTranslation(translation);
     const phase1 = new AnimationPhase(
-      this.transform.copy(), delay, 0,
+      this.transform._dup(), delay, 0,
       easeFunction,
     );
     const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
@@ -1213,7 +1214,7 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
-    const transform = this.transform.copy();
+    const transform = this.transform._dup();
     transform.updateRotation(rotation);
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
@@ -1230,9 +1231,9 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
-    const transform = this.transform.copy();
+    const transform = this.transform._dup();
     transform.updateRotation(rotation);
-    transform.updateTranslation(translation.copy());
+    transform.updateTranslation(translation._dup());
     const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
@@ -1246,14 +1247,14 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
-    const transform = this.transform.copy();
+    const transform = this.transform._dup();
     if (typeof scale === 'number') {
       transform.updateScale(scale, scale);
     } else {
-      transform.updateScale(scale.copy());
+      transform.updateScale(scale._dup());
     }
 
-    transform.updateTranslation(translation.copy());
+    transform.updateTranslation(translation._dup());
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
@@ -1268,14 +1269,14 @@ class DiagramElement {
     this.stopAnimating(false);
     this.stopMovingFreely(false);
     this.state.movement.velocity = this.transform.zero();
-    this.state.movement.previousTransform = this.transform.copy();
+    this.state.movement.previousTransform = this.transform._dup();
     this.state.movement.previousTime = Date.now() / 1000;
     this.state.isBeingMoved = true;
   }
 
   moved(newTransform: Transform): void {
     this.calcVelocity(newTransform);
-    this.setTransform(newTransform.copy());
+    this.setTransform(newTransform._dup());
   }
 
   stopBeingMoved(): void {
@@ -1396,7 +1397,7 @@ class DiagramElement {
       }
     // If not pulsing, then make no changes to the transformMatrix.
     } else {
-      pulseTransforms.push(transform.copy());
+      pulseTransforms.push(transform._dup());
     }
     return pulseTransforms;
   }
@@ -1631,7 +1632,7 @@ class DiagramElement {
   // processParentTransform(parentTransform: Transform): Transform {
   //   let newTransform;
   //   if (this.noRotationFromParent) {
-  //     const finalParentTransform = parentTransform.copy();
+  //     const finalParentTransform = parentTransform._dup();
   //     let r = 0;
   //     for (let i = 0; i < finalParentTransform.order.length; i += 1) {
   //       const t = finalParentTransform.order[i];
@@ -1696,19 +1697,21 @@ class DiagramElementPrimative extends DiagramElement {
     return false;
   }
 
-  copy(transform: Transform = this.transform) {
-    // const vertices = this.vertices.copy();
-    const primative = new DiagramElementPrimative(this.vertices.copy());
+  _dup(transform: Transform | null = null) {
+    // const vertices = this.vertices._dup();
+    const primative = new DiagramElementPrimative(this.vertices._dup());
     // const primative = new DiagramElementPrimative(
     //   vertices,
     //   transform,
     //   color,
-    //   this.diagramLimits.copy(),
+    //   this.diagramLimits._dup(),
     // );
     // primative.pointsToDraw = this.pointsToDraw;
     // primative.angleToDraw = this.angleToDraw;
     primative.copyFrom(this);
-    primative.transform = transform.copy();
+    if (transform != null) {
+      primative.transform = transform._dup();
+    }
     return primative;
   }
 
@@ -1766,7 +1769,7 @@ class DiagramElementPrimative extends DiagramElement {
         return;
       }
       this.setNextCustomAnimation(now);
-      // this.lastDrawParentTransform = parentTransform.copy();
+      // this.lastDrawParentTransform = parentTransform._dup();
       this.lastDrawElementTransformPosition = {
         parentCount: parentTransform.order.length,
         elementCount: this.transform.order.length,
@@ -1781,7 +1784,7 @@ class DiagramElementPrimative extends DiagramElement {
 
       // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransform = pulseTransforms[0];
-      // this.lastDrawPulseTransform = pulseTransforms[0].copy();
+      // this.lastDrawPulseTransform = pulseTransforms[0]._dup();
 
       let pointCount = -1;
       if (this.vertices instanceof VertexObject) {
@@ -1910,7 +1913,7 @@ class DiagramElementCollection extends DiagramElement {
     this.touchInBoundingRect = false;
   }
 
-  copy() {
+  _dup() {
     const collection = new DiagramElementCollection(
       // transform,
       // diagramLimits,
@@ -1962,8 +1965,8 @@ class DiagramElementCollection extends DiagramElement {
         return;
       }
       this.setNextCustomAnimation(now);
-      // this.lastDrawParentTransform = parentTransform.copy();
-      // this.lastDrawElementTransform = this.transform.copy();
+      // this.lastDrawParentTransform = parentTransform._dup();
+      // this.lastDrawElementTransform = this.transform._dup();
       this.lastDrawElementTransformPosition = {
         parentCount: parentTransform.order.length,
         elementCount: this.transform.order.length,
@@ -1974,7 +1977,7 @@ class DiagramElementCollection extends DiagramElement {
 
       // eslint-disable-next-line prefer-destructuring
       this.lastDrawTransform = pulseTransforms[0];
-      // this.lastDrawPulseTransform = pulseTransforms[0].copy();
+      // this.lastDrawPulseTransform = pulseTransforms[0]._dup();
 
       for (let k = 0; k < pulseTransforms.length; k += 1) {
         for (let i = 0, j = this.order.length; i < j; i += 1) {
@@ -2157,7 +2160,7 @@ class DiagramElementCollection extends DiagramElement {
     const out = {};
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      out[element.name] = element.transform.copy();
+      out[element.name] = element.transform._dup();
     }
     return out;
   }
@@ -2194,7 +2197,7 @@ class DiagramElementCollection extends DiagramElement {
           // only want to send callback once
           callbackMethod = null;
         } else {
-          element.transform = elementTransforms[element.name].copy();
+          element.transform = elementTransforms[element.name]._dup();
         }
       }
     }

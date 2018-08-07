@@ -47,7 +47,7 @@ describe('Diagram Text Object', () => {
       expect(ctx.textBaseline).toBe('middle');
     });
     test('Copy', () => {
-      const f2 = font.copy();
+      const f2 = font._dup();
       expect(font).not.toBe(f2);
       expect(font).toEqual(f2);
       const oldSize = font.size;

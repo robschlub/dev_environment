@@ -218,7 +218,7 @@ function sinusoid(
 
 // const animationPhase = (transform, time, rotDirection = 0, animationStyle = easeinout) => {
 //     return {
-//         transform: transform.copy(),
+//         transform: transform._dup(),
 //         time: time,
 //         rotDirection: rotDirection,
 //         animationStyle: animationStyle,

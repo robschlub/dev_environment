@@ -180,7 +180,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     // console.log(b)
     console.log(equation.collection)
     const a = equation.collection;
-    const b = equation.collection.copy();
+    const b = equation.collection._dup();
     console.log(b)
     console.log(Object.entries(a), Object.entries(b))
     // console.log(equation.collection._equals)

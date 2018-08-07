@@ -47,7 +47,7 @@ class Element {
 
       // Get the boundaries of element
       const r = content.getRelativeDiagramBoundingRect();
-      this.location = location.copy();
+      this.location = location._dup();
       this.scale = scale;
       this.ascent = r.top;
       this.descent = -r.bottom;
@@ -56,12 +56,12 @@ class Element {
     }
   }
 
-  copy() {
-    const c = new Element(this.content.copy());
+  _dup() {
+    const c = new Element(this.content._dup());
     c.ascent = this.ascent;
     c.descent = this.descent;
     c.width = this.width;
-    c.location = this.location.copy();
+    c.location = this.location._dup();
     c.height = this.height;
     c.scale = this.scale;
     return c;
@@ -129,7 +129,7 @@ class Elements {
           || value instanceof Point
           // eslint-disable-next-line no-use-before-define
           || value instanceof DiagramGLEquation) {
-        return value.copy();
+        return value._dup();
       }
       if (Array.isArray(value)) {
         const arrayCopy = [];
@@ -155,9 +155,9 @@ class Elements {
     });
   }
 
-  copy() {
+  _dup() {
     const contentCopy = [];
-    this.content.forEach(element => contentCopy.push(element.copy()));
+    this.content.forEach(element => contentCopy.push(element._dup()));
     const c = new Elements(contentCopy);
     c.copyFrom(this);
     return c;
@@ -166,7 +166,7 @@ class Elements {
   calcSize(location: Point, scale: number) {
     let des = 0;
     let asc = 0;
-    const loc = location.copy();
+    const loc = location._dup();
     this.content.forEach((element) => {
       element.calcSize(loc, scale);
 
@@ -181,7 +181,7 @@ class Elements {
     this.width = loc.x - location.x;
     this.ascent = asc;
     this.descent = des;
-    this.location = location.copy();
+    this.location = location._dup();
     this.height = this.descent + this.ascent;
   }
 
@@ -248,7 +248,7 @@ class Fraction extends Elements {
     this.vinculumScale = new Point(1, 0.01);
   }
 
-  copy() {
+  _dup() {
     const fractionCopy = new Fraction(
       this.numerator,
       this.denominator,
@@ -260,7 +260,7 @@ class Fraction extends Elements {
 
   calcSize(location: Point, incomingScale: number) {
     const scale = incomingScale * this.scaleModifier;
-    this.location = location.copy();
+    this.location = location._dup();
     this.numerator.calcSize(location, scale);
     this.denominator.calcSize(location, scale);
 
@@ -368,7 +368,7 @@ class SuperSub extends Elements {
     this.xBias = xBias;
   }
 
-  copy() {
+  _dup() {
     const superSubCopy = new SuperSub(
       this.mainContent,
       this.superscript,
@@ -382,8 +382,8 @@ class SuperSub extends Elements {
   }
 
   calcSize(location: Point, scale: number) {
-    this.location = location.copy();
-    const loc = location.copy();
+    this.location = location._dup();
+    const loc = location._dup();
     this.mainContent.calcSize(loc, scale);
     let w = this.mainContent.width;
     let asc = this.mainContent.ascent;
@@ -502,7 +502,7 @@ class Integral extends Elements {
     this.glyphScale = 1;
   }
 
-  copy() {
+  _dup() {
     const integralCopy = new Integral(
       this.limitMin,
       this.limitMax,
@@ -568,8 +568,8 @@ class Integral extends Elements {
   }
 
   calcSize(location: Point, scale: number) {
-    this.location = location.copy();
-    const loc = location.copy();
+    this.location = location._dup();
+    const loc = location._dup();
     const contentBounds = new Bounds();
     const limitMinBounds = new Bounds();
     const limitMaxBounds = new Bounds();
@@ -577,7 +577,7 @@ class Integral extends Elements {
 
     const { mainContent } = this;
     if (mainContent instanceof Elements) {
-      mainContent.calcSize(loc.copy(), scale);
+      mainContent.calcSize(loc._dup(), scale);
       contentBounds.width = mainContent.width;
       contentBounds.height = mainContent.ascent + mainContent.descent;
       contentBounds.ascent = mainContent.ascent;
@@ -586,7 +586,7 @@ class Integral extends Elements {
 
     const { limitMax } = this;
     if (limitMax instanceof Elements) {
-      limitMax.calcSize(loc.copy(), scale / 2);
+      limitMax.calcSize(loc._dup(), scale / 2);
       limitMaxBounds.width = limitMax.width;
       limitMaxBounds.height = limitMax.ascent + limitMax.descent;
       limitMaxBounds.ascent = limitMax.ascent;
@@ -595,7 +595,7 @@ class Integral extends Elements {
 
     const { limitMin } = this;
     if (limitMin instanceof Elements) {
-      limitMin.calcSize(loc.copy(), scale / 2);
+      limitMin.calcSize(loc._dup(), scale / 2);
       limitMinBounds.width = limitMin.width;
       limitMinBounds.height = limitMin.ascent + limitMin.descent;
       limitMinBounds.ascent = limitMin.ascent;
@@ -821,7 +821,7 @@ export class DiagramGLEquation extends Elements {
     this.collection = collection;
   }
 
-  copy() {
+  _dup() {
     const equationCopy = new DiagramGLEquation(this.collection);
     equationCopy.copyFrom(this);
     return equationCopy;
@@ -867,16 +867,16 @@ export class DiagramGLEquation extends Elements {
         || fixTo instanceof DiagramElementCollection) {
       const t = fixTo.transform.t();
       if (t != null) {
-        fixPoint = t.copy();
+        fixPoint = t._dup();
       }
     } else {
-      fixPoint = fixTo.copy();
+      fixPoint = fixTo._dup();
     }
     let w = this.width;
     let h = this.height;
     let a = this.ascent;
     let d = this.descent;
-    let p = this.location.copy();
+    let p = this.location._dup();
     // let { height } = this;
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
@@ -887,7 +887,7 @@ export class DiagramGLEquation extends Elements {
         h = rect.height;
         a = rect.top - t.y;
         d = t.y - rect.bottom;
-        p = t.copy();
+        p = t._dup();
       }
     }
     if (alignH === 'right') {
@@ -1147,11 +1147,11 @@ export class Equation {
     };
   }
 
-  copy() {
+  _dup() {
     const equationCopy = new Equation(
       this.drawContext2D,
-      this.diagramLimits.copy(),
-      this.firstTransform.copy(),
+      this.diagramLimits._dup(),
+      this.firstTransform._dup(),
     );
     equationCopy
   }

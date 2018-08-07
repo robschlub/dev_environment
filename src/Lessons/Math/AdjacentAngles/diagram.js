@@ -85,23 +85,23 @@ class LessonDiagram extends AngleCircleDiagram {
       );
       const diffAngle = minAngleDiff(previousAngle, currentAngle);
 
-      let transform = this.elements._circle.transform.copy();
+      let transform = this.elements._circle.transform._dup();
       if (rad.state.isBeingMoved) {
-        transform = rad.transform.copy();
+        transform = rad.transform._dup();
       }
       if (endLine.state.isBeingMoved && this.elements.varState.angleSelected === 'adjacent') {
-        transform = this.elements._circle._endLine.transform.copy();
+        transform = this.elements._circle._endLine.transform._dup();
       }
       const rot = transform.r();
       if (rot != null) {
         transform.updateRotation(rot - diffAngle);
         if (endLine.state.isBeingMoved && this.elements.varState.angleSelected === 'adjacent') {
-          this.elements._circle._endLine.moved(transform.copy());
+          this.elements._circle._endLine.moved(transform._dup());
         } else if (rad.state.isBeingMoved) {
-          this.elements._circle._radius.moved(transform.copy());
+          this.elements._circle._radius.moved(transform._dup());
         } else if (endLine.state.isBeingMoved
           || startLine.state.isBeingMoved) {
-          this.elements._circle.moved(transform.copy());
+          this.elements._circle.moved(transform._dup());
         }
       }
     } else {

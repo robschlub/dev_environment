@@ -92,8 +92,8 @@ class VertexIntegral extends VertexObject {
       this.points.push(pRight.y);
       this.points.push(pLeft.x);
       this.points.push(pLeft.y);
-      borderLeft.push(pLeft.copy());
-      borderRight.push(pRight.copy());
+      borderLeft.push(pLeft._dup());
+      borderRight.push(pRight._dup());
       return undefined;
     });
 
@@ -114,7 +114,7 @@ class VertexIntegral extends VertexObject {
     }
 
     this.border[0] = borderLeft.concat(borderRight.reverse());
-    this.border[0].push(this.border[0][0].copy());
+    this.border[0].push(this.border[0][0]._dup());
 
     // normalize all points to have bottom left corner at 0,0
     // and height to be 1.

@@ -76,7 +76,7 @@ class VertexPolygon extends VertexObject {
           center.y + inRad * Math.sin(i * this.dAngle * direction + rotation * direction),
         ));
       }
-      this.border[0].push(this.border[0][0].copy());
+      this.border[0].push(this.border[0][0]._dup());
     } else {
       for (i = 0; i <= sidesToDraw; i += 1) {
         this.border[0].push(new Point(

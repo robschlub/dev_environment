@@ -91,7 +91,7 @@ class Content extends LessonContent {
       setSteadyState: (previousState: Object) => {
         const { diagram } = this;
         const collection = diagram.elements._circle;
-        const t = collection._radius.transform.copy();
+        const t = collection._radius.transform._dup();
         if ('angle' in previousState) {
           t.updateRotation(previousState.angle);
         } else {
@@ -139,7 +139,7 @@ class Content extends LessonContent {
       setSteadyState: (previousState: Object) => {
         const { diagram } = this;
         const collection = diagram.elements._circle;
-        const t = collection._radius.transform.copy();
+        const t = collection._radius.transform._dup();
         if ('angle' in previousState) {
           t.updateRotation(previousState.angle);
         } else {

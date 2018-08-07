@@ -315,7 +315,7 @@ function shapes(diagram: Diagram) {
     if (transformOrPoint instanceof Point) {
       transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
     } else {
-      transform = transformOrPoint.copy();
+      transform = transformOrPoint._dup();
     }
     return new DiagramElementCollection(transform, diagram.limits);
   }
@@ -433,7 +433,7 @@ function shapes(diagram: Diagram) {
     if (location instanceof Point) {
       transform = transform.translate(location.x, location.y);
     } else {
-      transform = location.copy();
+      transform = location._dup();
     }
     const xy = collection(transform);
     if (showGrid) {
@@ -660,7 +660,7 @@ class Diagram {
   }
 
   updateLimits(limits: Rect) {
-    this.limits = limits.copy();
+    this.limits = limits._dup();
     this.setSpaceTransforms();
   }
 
@@ -764,7 +764,7 @@ class Diagram {
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       if (element !== this.elements) {
-        const currentTransform = element.transform.copy();
+        const currentTransform = element.transform._dup();
         const currentTranslation = currentTransform.t();
         if (currentTranslation
           && (element.isBeingTouched(previousGLPoint)

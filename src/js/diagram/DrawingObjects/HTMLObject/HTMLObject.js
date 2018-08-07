@@ -39,13 +39,13 @@ class HTMLObject extends DrawingObject {
     this.show = true;
   }
 
-  copy() {
+  _dup() {
     const c = new HTMLObject(
       this.parentDiv, this.id,
-      this.location.copy(), this.alignV, this.alignH,
+      this.location._dup(), this.alignV, this.alignH,
     );
     c.show = this.show;
-    c.border = this.border.map(b => b.map(p => p.copy()));
+    c.border = this.border.map(b => b.map(p => p._dup()));
     return c;
   }
 

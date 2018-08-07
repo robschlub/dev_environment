@@ -372,7 +372,7 @@ class Section {
   //         const element = elementsOrMethod[i];
   //         const transformPointOrNumber = elementsOrMethod[i + 1];
   //         if (transformPointOrNumber instanceof Transform) {
-  //           element.transform = transformPointOrNumber.copy();
+  //           element.transform = transformPointOrNumber._dup();
   //         } else if (transformPointOrNumber instanceof Point) {
   //           element.transform.updateTranslation(transformPointOrNumber);
   //         } else if (typeof transformPointOrNumber === 'number') {

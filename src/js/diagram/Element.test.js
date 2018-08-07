@@ -546,7 +546,7 @@ describe('Animationa and Movement', () => {
         // change a default value in DiagramElementPrimative class
         square.color = [0.5, 0.4, 0.3, 0.2];
 
-        const copy = square.copy();
+        const copy = square._dup();
         expect(copy).toEqual(square);
         expect(copy).not.toBe(square);
         expect(copy.vertices).toBe(square.vertices);
@@ -777,7 +777,7 @@ describe('Animationa and Movement', () => {
     });
     describe('Copy', () => {
       test('Vertex Objects', () => {
-        const copy = collection.copy();
+        const copy = collection._dup();
         expect(collection).toEqual(copy);
         expect(collection).not.toBe(copy);
         expect(collection.elements).toEqual(copy.elements);

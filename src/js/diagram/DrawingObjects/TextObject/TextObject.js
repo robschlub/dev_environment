@@ -59,7 +59,7 @@ class DiagramFont {
     ctx.textBaseline = this.alignV;
   }
 
-  copy() {
+  _dup() {
     return new DiagramFont(
       this.family,
       this.style,
@@ -84,12 +84,12 @@ class DiagramText {
     text: string = '',
     font: DiagramFont = new DiagramFont(),
   ) {
-    this.location = location.copy();
+    this.location = location._dup();
     this.text = text.slice();
-    this.font = font.copy();
+    this.font = font._dup();
   }
 
-  copy() {
+  _dup() {
     return new DiagramText(this.location, this.text, this.font);
   }
 }
@@ -127,10 +127,10 @@ class TextObject extends DrawingObject {
     }
   }
 
-  copy() {
+  _dup() {
     const c = new TextObject(this.drawContext2D, this.text);
     c.scalingFactor = this.scalingFactor;
-    c.border = this.border.map(b => b.map(p => p.copy()));
+    c.border = this.border.map(b => b.map(p => p._dup()));
     return c;
   }
 
