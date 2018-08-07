@@ -57,6 +57,7 @@ class Element {
   }
 
   _dup(namedCollection: Object) {
+    console.log(Object.keys(namedCollection))
     const c = new Element(namedCollection[this.content.name]);
     c.ascent = this.ascent;
     c.descent = this.descent;
@@ -789,14 +790,15 @@ export class DiagramGLEquation extends Elements {
   }
 
   _dup(collection: DiagramElementCollection) {
-    const equationCopy = new DiagramGLEquation(this.collection);
-    equationCopy.collection = collection;
+    const equationCopy = new DiagramGLEquation(collection);
+    // equationCopy.collection = collection;
 
-    const allCollectionElements = collection.getAllElements();
+    // const allCollectionElements = collection.getAllElements();
     const namedElements = {};
-    Object.keys(allCollectionElements).forEach((key) => {
-      namedElements[allCollectionElements[key].name] = allCollectionElements[key];
+    collection.getAllElements().forEach((element) => {
+      namedElements[element.name] = element;
     });
+    // console.log(namedElements)
     const newContent = [];
     this.content.forEach((contentElement) => {
       newContent.push(contentElement._dup(namedElements));
@@ -1137,28 +1139,33 @@ export class Equation {
       this.diagramLimits._dup(),
       this.firstTransform._dup(),
     );
+
     duplicateFromTo(
       this, equationCopy,
-      ['collection', 'form'],
+      ['collection', 'form', 'drawContext2D', 'formAlignment'],
     );
-    // this.collection = this.collection._dup();
-    // const allCollectionElements = this.collection.getAllElements();
-    // const allElements = {};
-    // Object.keys(allCollectionElements).forEach((key) => {
-    //   allElements[allCollectionElements[key].name] = allCollectionElements[key];
-    // });
+
     const newCollection = this.collection._dup();
+    equationCopy.collection = newCollection;
+
     const newForm = {};
     Object.keys(this.form).forEach((key) => {
       newForm[key] = this.form[key]._dup(newCollection);
-      // const allFormElements = this.form[key].getAllElements();
-      // allFormElements.forEach((element) => {
-      //   // console.log(element)
-      //   element.content = allElements[element.name];
-      // });
     });
-    equationCopy.collection = newCollection;
     equationCopy.form = newForm;
+
+    duplicateFromTo(this.formAlignment, equationCopy.formAlignment, ['fixTo']);
+    const { fixTo } = this.formAlignment;
+    if (fixTo instanceof Point) {
+      equationCopy.formAlignment.fixTo = this.formAlignment.fixTo._dup();
+    } else {
+      Object.keys(newCollection.elements).forEach((key) => {
+        if (newCollection.elements[key].name === fixTo.name) {
+          equationCopy.formAlignment.fixTo = newCollection.elements[key];
+        }
+      });
+    }
+
     return equationCopy;
   }
 

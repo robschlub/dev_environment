@@ -188,6 +188,7 @@ describe('Equation', () => {
     });
     eqn.addForm('f1', ['a', 'b', 'c']);
     eqn.addForm('f2', [eqn.frac('a', 'b', 'c')]);
+    eqn.addForm('f3', ['a', 'b', 'c']);
   });
   test('Instantiation', () => {
     expect(eqn.collection.order).toHaveLength(3);
@@ -200,9 +201,26 @@ describe('Equation', () => {
       expect(dup.collection).not.toBe(eqn.collection);
       expect(dup).toEqual(eqn);
       expect(dup).not.toBe(eqn);
-
+      expect(eqn.form.f1.content[0].content).toBe(eqn.form.f3.content[0].content);
+      expect(dup.form.f1.content[0].content).toBe(dup.form.f3.content[0].content);
+    });
+    test.only('Add new form', () => {
+      // eqn.addForm('f4', ['a', 'b', 'c']);
+      const dup = eqn._dup();
+      eqn.addForm('f4', ['a', 'b', 'c']);
+      dup.addForm('f4', ['a', 'b', 'c']);
       expect(dup.collection).toBe(dup.form.f1.collection);
-      // expect(dup).toEqual(eqn);
+      expect(dup.collection).toBe(dup.form.f4.collection);
+      expect(dup.collection._a).toBe(dup.form.f1.content[0].content);
+      expect(dup.form.f1.collection).toBe(dup.form.f4.collection);
+
+      expect(eqn.form.f1.content[0].content).toBe(eqn.form.f4.content[0].content);
+
+      expect(dup.form.f1.content[0].content).toBe(dup.form.f3.content[0].content);
+      expect(dup.form.f1.content[0].content).toBe(dup.form.f4.content[0].content);
+
+      expect(eqn.form.f4.content[0].content).toEqual(dup.form.f4.content[0].content);
+      expect(eqn.form.f4.content[0].content).not.toBe(dup.form.f4.content[0].content);
     });
   });
   // describe('Create', () => {

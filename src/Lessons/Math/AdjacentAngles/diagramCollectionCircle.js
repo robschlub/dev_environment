@@ -96,9 +96,15 @@ class AdjacentAnglesCollection extends AngleCircle {
   makeAngleA() {
     const equation = this.eqn._dup();
 
-    equation.addForm('a', ['a']);
+    equation.formAlignment.fixTo = new Point(0, 0);
+    equation.formAlignment.hAlign = 'center';
+    equation.addForm('a', ['a', 'b']);
+    console.log(equation.form['a'].collection === equation.form['comADeg'].collection)
+    console.log(equation.form['a'].content[0].content === equation.form['a'].collection._a)
+    console.log(equation.form['a'].content[0].content === equation.form['comADeg'].content[0].content)
+    console.log(equation.form['comADeg'].content[0].content === equation.collection._a);
+    console.log(equation.form['comADeg'].content[0].content)
     equation.collection.hasTouchableElements = false;
-
     equation.showEqn = () => {
       let eqnForm = equation.form['a'];
       const currentAngle = this.varState.angleSelected;
@@ -116,6 +122,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       eqnForm.setPositions();
       // console.log(eqnForm.collection._a.isShown)
       console.log(eqnForm)
+      console.log(this._circle)
       // console.log(this._circle)
     };
 
@@ -227,6 +234,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
     e.addForm('expBDeg', ['b', 'equals', '_360', 'minus', 'a']);
     e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
+    // e.addForm('a', ['a']);
     // e.addForm('aa', ['a']);
 
     const { collection } = equation;
