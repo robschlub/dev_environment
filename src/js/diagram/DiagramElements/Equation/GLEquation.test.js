@@ -1,5 +1,5 @@
 import {
-  DiagramGLEquation, createEquationElements, Equation
+  DiagramGLEquation, createEquationElements, Equation,
 } from './GLEquation';
 import { Point } from '../../tools/g2';
 import {
@@ -168,7 +168,8 @@ describe('GL Equation', () => {
       test('Simple Inline', () => {
         eqn.createEq(['a', 'b', 'c']);
         expect(eqn.content).toHaveLength(3);
-        const eqnCopy = eqn._dup(eqn.collection);  // testing to make sure colleciton is not overwritten
+        // testing to make sure colleciton is not overwritten
+        const eqnCopy = eqn._dup(eqn.collection);
         expect(eqnCopy).toEqual(eqn);
         expect(eqnCopy).not.toBe(eqn);
         expect(eqnCopy.collection._a).toEqual(eqn.collection._a);
@@ -224,8 +225,10 @@ describe('Equation', () => {
       expect(eqn.form.f4.content[0].content).not.toBe(dup.form.f4.content[0].content);
 
       expect(dup.collection._a.vertices.text).not.toBe(eqn.collection._a.vertices.text);
-      expect(dup.collection._a.vertices.text[0].location).not.toBe(eqn.collection._a.vertices.text[0].location);
-      expect(dup.collection._a.vertices.text[0].font).not.toBe(eqn.collection._a.vertices.text[0].font);
+      expect(dup.collection._a.vertices.text[0].location)
+        .not.toBe(eqn.collection._a.vertices.text[0].location);
+      expect(dup.collection._a.vertices.text[0].font)
+        .not.toBe(eqn.collection._a.vertices.text[0].font);
     });
   });
   // describe('Create', () => {

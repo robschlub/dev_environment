@@ -1084,19 +1084,34 @@ export type EquationType = {
   +collection: DiagramElementCollection;
   diagramLimits: Rect;
   firstTransform: Transform;
+  _dup: () => EquationType;
   form: Object;
+  currentForm: ?DiagramGLEquation;
   formAlignment: {
     vAlign: alignVType;
     hAlign: alignHType;
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
     scale: number;
   };
-  _dup: () => EquationType;
+  addForm: (string, Array<Elements | Element | string>) => void;
   setElem: (DiagramElementCollection | DiagramElementPrimative | string,
             Array<number> | null,
             boolean,
             'up' | 'down',
             number) => void;
+  frac: (
+      EquationInput,
+      EquationInput,
+      string | DiagramElementPrimative | DiagramElementCollection,
+    ) => Fraction;
+  sfrac: (
+      EquationInput,
+      EquationInput,
+      string | DiagramElementPrimative | DiagramElementCollection, number,
+    ) => Fraction;
+  setCurrentForm: (DiagramGLEquation) => void;
+  render: () => void;
+  setPosition: (Point) => void;
 };
 
 export class Equation {

@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, minAngleDiff, polarToRect
+  Transform, Point, minAngleDiff, polarToRect,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -17,27 +17,9 @@ import type { EquationType } from '../../../js/diagram/DiagramElements/Equation/
 //   _vertical: DiagramElementPrimative;
 // } & DiagramElementCollection;
 
-export type extendedCircleType = {
-  _startLine: DiagramElementPrimative;
-  _endLine: DiagramElementPrimative;
-  _angleA: angleAnnotationType;
-  _angleB: angleAnnotationType;
-  _rightAngle: {
-    _horizontal: DiagramElementPrimative;
-    _vertical: DiagramElementPrimative;
-  } & DiagramElementCollection;
-  _straightAngle: DiagramElementPrimative;
-  _fullAngle: DiagramElementPrimative;
-} & circleType;
-
 type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
 
 type equationFormType = 'add' | 'a' | 'b';
-
-type varStateExtendedType = {
-    angleSelected: angleTypes;
-    equationForm: equationFormType;
-  } & varStateType;
 
 type equationElementsType = {
   _a: DiagramElementPrimative;
@@ -59,7 +41,35 @@ type anglesEquationType = {
   showEqn: (angleTypes, ?equationFormType) => void;
   onclickEqn: (equationFormType) => void;
   getForm: (angleTypes, string, 'deg' | 'rad' | null) => EquationType;
+  _dup: () => anglesEquationType;
+  showCurrentForm: () => void;
 } & EquationType;
+
+
+export type extendedCircleType = {
+  _startLine: DiagramElementPrimative;
+  _endLine: DiagramElementPrimative;
+  _angleA: {
+    eqn: anglesEquationType;
+    _equation: equationElementsType;
+    } & angleAnnotationType;
+  _angleB: {
+    eqn: anglesEquationType;
+      _equation: equationElementsType;
+    } & angleAnnotationType;
+  _rightAngle: {
+    _horizontal: DiagramElementPrimative;
+    _vertical: DiagramElementPrimative;
+  } & DiagramElementCollection;
+  _straightAngle: DiagramElementPrimative;
+  _fullAngle: DiagramElementPrimative;
+} & circleType;
+
+type varStateExtendedType = {
+    angleSelected: angleTypes;
+    equationForm: equationFormType;
+  } & varStateType;
+
 
 export type AdjacentAnglesCollectionType = {
   _circle: extendedCircleType;
@@ -91,7 +101,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
     return line;
   }
-
 
   makeAngle(name: 'a' | 'b', color: Array<number>) {
     const equation = this.eqn._dup();
@@ -154,17 +163,18 @@ class AdjacentAnglesCollection extends AngleCircle {
         labelWidth = equation.currentForm.width / 2;
         labelHeight = equation.currentForm.height * 0.4;
       }
-      const labelPosition = polarToRect(
-        layout.arc.radius
-        + Math.max(
-          Math.abs(labelWidth * Math.cos(equation.collection.transform.r()
-            - angle / 2)),
-          labelHeight,
-        ) - layout.label.radiusOffset / 3,
-        angle / 2,
-      );
-
-      angleA._equation.setPosition(labelPosition);
+      const equationRotation = equation.collection.transform.r();
+      if (equationRotation != null) {
+        const labelPosition = polarToRect(
+          layout.arc.radius
+          + Math.max(
+            Math.abs(labelWidth * Math.cos(equationRotation - angle / 2)),
+            labelHeight,
+          ) - layout.label.radiusOffset / 3,
+          angle / 2,
+        );
+        angleA._equation.setPosition(labelPosition);
+      }
 
       if (angle < layout.label.hideAngle) {
         angleA._label.hideAll();
@@ -271,11 +281,9 @@ class AdjacentAnglesCollection extends AngleCircle {
     e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
     e.addForm('expBDeg', ['b', 'equals', '_360', 'minus', 'a']);
     e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
-    // e.addForm('a', ['a']);
-    // e.addForm('aa', ['a']);
 
     const { collection } = equation;
-
+    equation.showCurrentForm = () => {};
     equation.getForm = (inputAngleType: angleTypes = this.varState.angleSelected, inputForm: string = this.varState.equationForm, inputUnits: 'deg' | 'rad' | null = null) => {
       const angleType = inputAngleType.slice(0, 3);
       const formString = inputForm;
@@ -312,11 +320,12 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
       this._circle._angleA.eqn.showCurrentForm();
       this._circle._angleB.eqn.showCurrentForm();
-      // this._circle._angleA.eqn.updateAngle();
-      // this._circle._angleB.eqn.showCurrentForm();
       this._circle._angleA.updateAngle(this.varState.rotation);
       const endLineRotation = this._circle._endLine.transform.r();
-      this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
+      if (endLineRotation != null) {
+        this._circle._angleB.updateAngle(endLineRotation
+          - this.varState.rotation);
+      }
       this.diagram.animateNextFrame();
     };
 
@@ -442,7 +451,9 @@ class AdjacentAnglesCollection extends AngleCircle {
       this._circle._angleA._equation.transform.updateRotation(-circleRotation);
       this._circle._angleA.updateAngle(this.varState.rotation);
       const endLineRotation = this._circle._endLine.transform.r();
-      this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
+      if (endLineRotation != null) {
+        this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
+      }
     }
   }
 
@@ -450,8 +461,10 @@ class AdjacentAnglesCollection extends AngleCircle {
     super.updateRotation();
     this._circle._angleA.updateAngle(this.varState.rotation);
     const endLineRotation = this._circle._endLine.transform.r();
+    if (endLineRotation != null) {
       this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
-    // this._circle._angleA._equation.setPosition(this._circle._angleA._label.transform.t().scale(1.8));
+    }
+
     this.updateAngleBRotation();
   }
 

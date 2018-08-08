@@ -21,15 +21,15 @@ export default function lessonLayout() {
   layout.equationPosition = new Point(-1.7, -0.6);
   layout.angleAnnotation.arc.lineWidth = 0.03;
   layout.angleAnnotation.arc.radius = 0.4;
-   // {
-   //    arc: {
-   //      lineWidth: 0.02,
-   //      radius: 0.3,
-   //      sides: 200,
-   //    },
-   //    label: {
-   //      radiusOffset: 0.07,
-   //      hideAngle: 0.15,
-   //    },
+  // {
+  //    arc: {
+  //      lineWidth: 0.02,
+  //      radius: 0.3,
+  //      sides: 200,
+  //    },
+  //    label: {
+  //      radiusOffset: 0.07,
+  //      hideAngle: 0.15,
+  //    },
   return layout;
 }
