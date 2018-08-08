@@ -4,6 +4,7 @@ import * as m2 from '../../tools/m2';
 import { Point } from '../../tools/g2';
 import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../../DrawContext2D';
+import { duplicateFromTo } from '../../../tools/tools';
 
 function colorArrayToString(color: Array<number>) {
   return `rgba(${
@@ -90,7 +91,7 @@ class DiagramText {
   }
 
   _dup() {
-    return new DiagramText(this.location, this.text, this.font);
+    return new DiagramText(this.location._dup(), this.text, this.font._dup());
   }
 }
 
@@ -129,6 +130,7 @@ class TextObject extends DrawingObject {
 
   _dup() {
     const c = new TextObject(this.drawContext2D, this.text);
+    duplicateFromTo(this, c);
     c.scalingFactor = this.scalingFactor;
     c.border = this.border.map(b => b.map(p => p._dup()));
     return c;

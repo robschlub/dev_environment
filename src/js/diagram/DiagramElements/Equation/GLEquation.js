@@ -17,7 +17,7 @@ import DrawContext2D from '../../DrawContext2D';
 // Equation is a class that takes a set of drawing objects (TextObjects,
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
-let temp;
+
 
 class Element {
   content: DiagramElementPrimative | DiagramElementCollection;
@@ -1128,7 +1128,6 @@ export class Equation {
       fixTo: new Point(0, 0),
       scale: 1,
     };
-    console.log(this.firstTransform)
   }
 
   _dup() {
@@ -1146,7 +1145,6 @@ export class Equation {
     const newCollection = this.collection._dup();
 
     equationCopy.collection = newCollection;
-    temp = newCollection._a;
     const newForm = {};
     Object.keys(this.form).forEach((key) => {
       newForm[key] = this.form[key]._dup(newCollection);

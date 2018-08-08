@@ -199,6 +199,8 @@ describe('Equation', () => {
       const dup = eqn._dup();
       expect(dup.collection).toEqual(eqn.collection);
       expect(dup.collection).not.toBe(eqn.collection);
+      expect(dup.collection._a).toEqual(eqn.collection._a);
+      expect(dup.collection._a).not.toBe(eqn.collection._a);
       expect(dup).toEqual(eqn);
       expect(dup).not.toBe(eqn);
       expect(eqn.form.f1.content[0].content).toBe(eqn.form.f3.content[0].content);
@@ -220,6 +222,10 @@ describe('Equation', () => {
 
       expect(eqn.form.f4.content[0].content).toEqual(dup.form.f4.content[0].content);
       expect(eqn.form.f4.content[0].content).not.toBe(dup.form.f4.content[0].content);
+
+      expect(dup.collection._a.vertices.text).not.toBe(eqn.collection._a.vertices.text);
+      expect(dup.collection._a.vertices.text[0].location).not.toBe(eqn.collection._a.vertices.text[0].location);
+      expect(dup.collection._a.vertices.text[0].font).not.toBe(eqn.collection._a.vertices.text[0].font);
     });
   });
   // describe('Create', () => {
