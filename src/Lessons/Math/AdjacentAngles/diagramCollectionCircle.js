@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, minAngleDiff,
+  Transform, Point, minAngleDiff, polarToRect
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -125,8 +125,10 @@ class AdjacentAnglesCollection extends AngleCircle {
           eqnForm = equation.form[`${angleString}${formString}${unitString}`];
         }
       }
-      eqnForm.showHide();
-      eqnForm.setPositions();
+      equation.setCurrentForm(eqnForm);
+      equation.render();
+      // eqnForm.showHide();
+      // eqnForm.setPositions();
     };
 
     const layout = this.layout.angleAnnotation;
@@ -140,8 +142,29 @@ class AdjacentAnglesCollection extends AngleCircle {
       layout,
     );
     angleA.eqn = equation;
-    equation.setPosition(angleA._label.transform.t().scale(1.8))
-    angleA.add('equation', equation.collection)
+    equation.setPosition(angleA._label.transform.t().scale(1.8));
+    angleA.add('equation', equation.collection);
+    
+    angleA.updateAngle = (angle: number) => {
+      const labelWidth = equation.currentForm != null ? equation.currentForm.width / 2 : 0;
+      const labelHeight = equation.currentForm != null ? equation.currentForm.height * 0.4 : 0;
+      angleA._arc.angleToDraw = angle;
+      // console.log(angleA._equation.transform.r() * 180 / Math.PI, angle / 2 * 180 / Math.PI, this._circle.transform.r() * 180 / Math.PI)
+      const labelPosition = polarToRect(
+        layout.arc.radius + Math.max(Math.abs(labelWidth * Math.cos(equation.collection.transform.r() - angle / 2)), labelHeight)
+          - layout.label.radiusOffset,
+        angle / 2,
+      );
+      // angleA._label.transform.updateTranslation(labelPosition);
+      // console.log(layout.arc.radius + Math.abs(labelWidth * Math.cos(equation.collection.transform.r() - angle / 2)))
+      angleA._equation.setPosition(labelPosition);
+      // equation.setPosition(angleA._label.transform.t().scale(1.8));
+      if (angle < layout.label.hideAngle) {
+        angleA._label.hideAll();
+      } else {
+        angleA._label.showAll();
+      }
+    };
     // angleA.add('temp', equation.collection);
     // angleA._temp.show();
     return angleA;
@@ -405,13 +428,14 @@ class AdjacentAnglesCollection extends AngleCircle {
         .updateRotation(-this.varState.rotation - circleRotation);
       this._circle._angleA._label.transform.updateRotation(-circleRotation);
       this._circle._angleA._equation.transform.updateRotation(-circleRotation);
+      this._circle._angleA.updateAngle(this.varState.rotation);
     }
   }
 
   updateRotation() {
     super.updateRotation();
     this._circle._angleA.updateAngle(this.varState.rotation);
-    this._circle._angleA._equation.setPosition(this._circle._angleA._label.transform.t().scale(1.8));
+    // this._circle._angleA._equation.setPosition(this._circle._angleA._label.transform.t().scale(1.8));
     this.updateAngleBRotation();
   }
 

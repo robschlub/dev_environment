@@ -1105,6 +1105,7 @@ export class Equation {
   firstTransform: Transform;
   form: Object;
   drawContext2D: DrawContext2D;
+  currentForm: ?DiagramGLEquation;
   formAlignment: {
     vAlign: alignVType;
     hAlign: alignHType;
@@ -1128,6 +1129,7 @@ export class Equation {
       fixTo: new Point(0, 0),
       scale: 1,
     };
+    this.currentForm = null;
   }
 
   _dup() {
@@ -1225,6 +1227,18 @@ export class Equation {
       this.formAlignment.vAlign,
       this.formAlignment.fixTo,
     );
+  }
+
+  render() {
+    const form = this.currentForm;
+    if (form != null) {
+      form.showHide();
+      form.setPositions();
+    }
+  }
+
+  setCurrentForm(form: DiagramGLEquation) {
+    this.currentForm = form;
   }
 
   frac(
