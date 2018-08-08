@@ -93,34 +93,36 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
 
-  makeAngleA() {
+  makeAngle(name: 'a' | 'b', color: Array<number>) {
     const equation = this.eqn._dup();
+    const otherName = name === 'a' ? 'b' : 'a';
 
     equation.formAlignment.fixTo = new Point(0, 0);
     equation.formAlignment.hAlign = 'center';
     equation.formAlignment.vAlign = 'middle';
     equation.formAlignment.scale = 0.7;
     equation.form = {};
-    equation.addForm('a', ['a']);
+    equation.addForm(name, [name]);
     const e = equation;
     equation.formAlignment.scale = 0.5;
-    e.addForm('comADeg', ['a', 'equals', '_90', 'minus', 'b']);
-    e.addForm('comARad', ['a', 'equals', e.sfrac('pi', '_2', 'v', 0.8), 'minus', 'b']);
-    e.addForm('supADeg', ['a', 'equals', '_180', 'minus', 'b']);
-    e.addForm('supARad', ['a', 'equals', 'pi', 'minus', 'b']);
-    e.addForm('expADeg', ['a', 'equals', '_360', 'minus', 'b']);
-    e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
+    const N = name.toUpperCase();
+    e.addForm(`com${N}Deg`, [name, 'equals', '_90', 'minus', otherName]);
+    e.addForm(`com${N}Rad`, [name, 'equals', e.sfrac('pi', '_2', 'v', 0.8), 'minus', otherName]);
+    e.addForm(`sup${N}Deg`, [name, 'equals', '_180', 'minus', otherName]);
+    e.addForm(`sup${N}Rad`, [name, 'equals', 'pi', 'minus', otherName]);
+    e.addForm(`exp${N}Deg`, [name, 'equals', '_360', 'minus', otherName]);
+    e.addForm(`exp${N}Rad`, [name, 'equals', '_2', 'pi', 'minus', otherName]);
     equation.collection.hasTouchableElements = false;
 
     equation.showCurrentForm = () => {
-      let eqnForm = equation.form['a'];
+      let eqnForm = equation.form[name];
       const currentAngle = this.varState.angleSelected;
       const currentForm = this.varState.equationForm;
       const currentUnits = this.getUnits();
       if (currentAngle !== 'adjacent') {
-        if (currentForm === 'a') {
+        if (currentForm === otherName) {
           const angleString = currentAngle.slice(0, 3);
-          const formString = 'A';
+          const formString = N;
           const unitString = `${currentUnits.charAt(0).toUpperCase()}${currentUnits.slice(1)}`;
           eqnForm = equation.form[`${angleString}${formString}${unitString}`];
         }
@@ -138,35 +140,36 @@ class AdjacentAnglesCollection extends AngleCircle {
       0,
       Math.PI / 6,
       '',
-      this.colors.angleA,
+      color,
       layout,
     );
     angleA.eqn = equation;
     equation.setPosition(angleA._label.transform.t().scale(1.8));
     angleA.add('equation', equation.collection);
-    
+
     angleA.updateAngle = (angle: number) => {
       const labelWidth = equation.currentForm != null ? equation.currentForm.width / 2 : 0;
       const labelHeight = equation.currentForm != null ? equation.currentForm.height * 0.4 : 0;
       angleA._arc.angleToDraw = angle;
-      // console.log(angleA._equation.transform.r() * 180 / Math.PI, angle / 2 * 180 / Math.PI, this._circle.transform.r() * 180 / Math.PI)
+
       const labelPosition = polarToRect(
-        layout.arc.radius + Math.max(Math.abs(labelWidth * Math.cos(equation.collection.transform.r() - angle / 2)), labelHeight)
-          - layout.label.radiusOffset,
+        layout.arc.radius
+        + Math.max(
+          Math.abs(labelWidth * Math.cos(equation.collection.transform.r()
+            - angle / 2)),
+          labelHeight,
+        ) - layout.label.radiusOffset,
         angle / 2,
       );
-      // angleA._label.transform.updateTranslation(labelPosition);
-      // console.log(layout.arc.radius + Math.abs(labelWidth * Math.cos(equation.collection.transform.r() - angle / 2)))
+
       angleA._equation.setPosition(labelPosition);
-      // equation.setPosition(angleA._label.transform.t().scale(1.8));
+
       if (angle < layout.label.hideAngle) {
         angleA._label.hideAll();
       } else {
         angleA._label.showAll();
       }
     };
-    // angleA.add('temp', equation.collection);
-    // angleA._temp.show();
     return angleA;
   }
 
@@ -341,8 +344,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle.add('rightAngle', this.makeRightAngle());
     this._circle.add('straightAngle', this.makeStraightAngle());
     this._circle.add('fullAngle', this.makeFullAngle());
-    this._circle.add('angleA', this.makeAngleA());
-    this._circle.add('angleB', this.makeAngleB());
+    this._circle.add('angleA', this.makeAngle('a', this.colors.angleA));
+    this._circle.add('angleB', this.makeAngle('b', this.colors.angleB));
 
     this._circle._endLine.setTransformCallback = this.updateEndLineRotation.bind(this);
     this._circle.setTransformCallback = this.updateCircleRotation.bind(this);
