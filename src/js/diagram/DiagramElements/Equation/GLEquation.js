@@ -1238,4 +1238,15 @@ export class Equation {
       getDiagramElement(this.collection, vinculum),
     );
   }
+
+  sfrac(
+    numerator: EquationInput,
+    denominator: EquationInput,
+    vinculum: DiagramElementPrimative | DiagramElementCollection | string,
+    scaleModifier: number = 1,
+  ) {
+    const f = this.frac(numerator, denominator, vinculum);
+    f.scaleModifier = scaleModifier;
+    return f;
+  }
 }

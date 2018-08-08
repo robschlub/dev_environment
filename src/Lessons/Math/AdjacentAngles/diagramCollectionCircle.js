@@ -99,18 +99,19 @@ class AdjacentAnglesCollection extends AngleCircle {
     equation.formAlignment.fixTo = new Point(0, 0);
     equation.formAlignment.hAlign = 'center';
     equation.formAlignment.vAlign = 'middle';
-    equation.formAlignment.scale = 0.5;
+    equation.formAlignment.scale = 0.7;
     equation.form = {};
     equation.addForm('a', ['a']);
     const e = equation;
-    e.addForm('comADeg', ['_90', 'minus', 'b']);
-    e.addForm('comARad', ['a', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'b']);
+    equation.formAlignment.scale = 0.5;
+    e.addForm('comADeg', ['a', 'equals', '_90', 'minus', 'b']);
+    e.addForm('comARad', ['a', 'equals', e.sfrac('pi', '_2', 'v', 0.8), 'minus', 'b']);
     e.addForm('supADeg', ['a', 'equals', '_180', 'minus', 'b']);
     e.addForm('supARad', ['a', 'equals', 'pi', 'minus', 'b']);
     e.addForm('expADeg', ['a', 'equals', '_360', 'minus', 'b']);
     e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
     equation.collection.hasTouchableElements = false;
-    // console.log(equation.collection._minus.vertices.text[0])
+
     equation.showCurrentForm = () => {
       let eqnForm = equation.form['a'];
       const currentAngle = this.varState.angleSelected;
@@ -129,15 +130,18 @@ class AdjacentAnglesCollection extends AngleCircle {
     };
 
     const layout = this.layout.angleAnnotation;
-    layout.label.radiusOffset = 0.15;
+    layout.label.radiusOffset = -0.15;
+    layout.arc.radius = 0.7;
     const angleA = this.makeAngleAnnotation(
       0,
       Math.PI / 6,
-      equation.collection,
+      '',
       this.colors.angleA,
       layout,
     );
     angleA.eqn = equation;
+    equation.setPosition(angleA._label.transform.t().scale(1.8))
+    angleA.add('equation', equation.collection)
     // angleA.add('temp', equation.collection);
     // angleA._temp.show();
     return angleA;
@@ -400,12 +404,14 @@ class AdjacentAnglesCollection extends AngleCircle {
       this._circle._angleB._label.transform
         .updateRotation(-this.varState.rotation - circleRotation);
       this._circle._angleA._label.transform.updateRotation(-circleRotation);
+      this._circle._angleA._equation.transform.updateRotation(-circleRotation);
     }
   }
 
   updateRotation() {
     super.updateRotation();
     this._circle._angleA.updateAngle(this.varState.rotation);
+    this._circle._angleA._equation.setPosition(this._circle._angleA._label.transform.t().scale(1.8));
     this.updateAngleBRotation();
   }
 

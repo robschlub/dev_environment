@@ -268,11 +268,7 @@ class AngleCircle extends DiagramElementCollection {
       if (angle < layout.label.hideAngle) {
         label.hideAll();
       } else {
-        if ('eqn' in angleAnnotation) {
-          angleAnnotation.eqn.showCurrentForm();
-        } else {
-          label.showAll();
-        }
+        label.showAll();
       }
     };
 
