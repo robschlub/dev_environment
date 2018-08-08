@@ -25,7 +25,6 @@ type angleTextType = {
   setUnits: (string) => void;
 } & DiagramElementCollection;
 
-
 export type angleAnnotationType = {
   +_label: DiagramElementCollection;
   _arc: DiagramElementPrimative;

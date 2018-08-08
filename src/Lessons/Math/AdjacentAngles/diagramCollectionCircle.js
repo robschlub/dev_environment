@@ -120,7 +120,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       const currentForm = this.varState.equationForm;
       const currentUnits = this.getUnits();
       if (currentAngle !== 'adjacent') {
-        if (currentForm === otherName) {
+        if (currentForm === name) {
           const angleString = currentAngle.slice(0, 3);
           const formString = N;
           const unitString = `${currentUnits.charAt(0).toUpperCase()}${currentUnits.slice(1)}`;
@@ -129,8 +129,6 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
       equation.setCurrentForm(eqnForm);
       equation.render();
-      // eqnForm.showHide();
-      // eqnForm.setPositions();
     };
 
     const layout = this.layout.angleAnnotation;
@@ -148,17 +146,21 @@ class AdjacentAnglesCollection extends AngleCircle {
     angleA.add('equation', equation.collection);
 
     angleA.updateAngle = (angle: number) => {
-      const labelWidth = equation.currentForm != null ? equation.currentForm.width / 2 : 0;
-      const labelHeight = equation.currentForm != null ? equation.currentForm.height * 0.4 : 0;
       angleA._arc.angleToDraw = angle;
 
+      let labelWidth = 0;
+      let labelHeight = 0;
+      if (equation.currentForm != null) {
+        labelWidth = equation.currentForm.width / 2;
+        labelHeight = equation.currentForm.height * 0.4;
+      }
       const labelPosition = polarToRect(
         layout.arc.radius
         + Math.max(
           Math.abs(labelWidth * Math.cos(equation.collection.transform.r()
             - angle / 2)),
           labelHeight,
-        ) - layout.label.radiusOffset,
+        ) - layout.label.radiusOffset / 3,
         angle / 2,
       );
 
@@ -173,14 +175,14 @@ class AdjacentAnglesCollection extends AngleCircle {
     return angleA;
   }
 
-  makeAngleB() {
-    return this.makeAngleAnnotation(
-      0,
-      Math.PI / 6,
-      'b',
-      this.colors.angleB,
-    );
-  }
+  // makeAngleB() {
+  //   return this.makeAngleAnnotation(
+  //     0,
+  //     Math.PI / 6,
+  //     'b',
+  //     this.colors.angleB,
+  //   );
+  // }
 
   makeStraightAngle() {
     const layout = this.layout.angleAnnotation;
@@ -303,12 +305,18 @@ class AdjacentAnglesCollection extends AngleCircle {
         .animateTo(1, 2, collection._equals);
       this.varState.equationForm = form;
       if (form === 'a') {
-        this._circle._angleA.pulseScaleNow(1, 1.5);
+        this._circle._angleA._arc.pulseScaleNow(1, 1.5);
       }
       if (form === 'b') {
-        this._circle._angleB.pulseScaleNow(1, 1.5);
+        this._circle._angleB._arc.pulseScaleNow(1, 1.5);
       }
       this._circle._angleA.eqn.showCurrentForm();
+      this._circle._angleB.eqn.showCurrentForm();
+      // this._circle._angleA.eqn.updateAngle();
+      // this._circle._angleB.eqn.showCurrentForm();
+      this._circle._angleA.updateAngle(this.varState.rotation);
+      const endLineRotation = this._circle._endLine.transform.r();
+      this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
       this.diagram.animateNextFrame();
     };
 
@@ -398,6 +406,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.eqn.collection.stop();
     this.eqn.showEqn(this.varState.angleSelected, this.varState.equationForm);
     this._circle._angleA.eqn.showCurrentForm();
+    this._circle._angleB.eqn.showCurrentForm();
     // this._circle._angleA.showEqn();
     this.diagram.animateNextFrame();
   }
@@ -427,17 +436,21 @@ class AdjacentAnglesCollection extends AngleCircle {
   rotateAngleLabelsToUpright() {
     const circleRotation = this._circle.transform.r();
     if (circleRotation != null) {
-      this._circle._angleB._label.transform
+      this._circle._angleB._equation.transform
         .updateRotation(-this.varState.rotation - circleRotation);
-      this._circle._angleA._label.transform.updateRotation(-circleRotation);
+      // this._circle._angleA._label.transform.updateRotation(-circleRotation);
       this._circle._angleA._equation.transform.updateRotation(-circleRotation);
       this._circle._angleA.updateAngle(this.varState.rotation);
+      const endLineRotation = this._circle._endLine.transform.r();
+      this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
     }
   }
 
   updateRotation() {
     super.updateRotation();
     this._circle._angleA.updateAngle(this.varState.rotation);
+    const endLineRotation = this._circle._endLine.transform.r();
+      this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
     // this._circle._angleA._equation.setPosition(this._circle._angleA._label.transform.t().scale(1.8));
     this.updateAngleBRotation();
   }
@@ -638,6 +651,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.eqn.showEqn('adjacent');
+    this._circle._angleA.eqn.showCurrentForm();
+    this._circle._angleB.eqn.showCurrentForm();
     this.diagram.animateNextFrame();
   }
 
@@ -673,6 +688,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.eqn.showEqn('complementary', 'add');
+    this._circle._angleA.eqn.showCurrentForm();
+    this._circle._angleB.eqn.showCurrentForm();
     this.diagram.animateNextFrame();
   }
 
@@ -685,6 +702,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.eqn.showEqn('supplementary', 'add');
+    this._circle._angleA.eqn.showCurrentForm();
+    this._circle._angleB.eqn.showCurrentForm();
     this.diagram.animateNextFrame();
   }
 
@@ -697,6 +716,8 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle, 0);
     this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
     this.eqn.showEqn('explementary', 'add');
+    this._circle._angleA.eqn.showCurrentForm();
+    this._circle._angleB.eqn.showCurrentForm();
     this.diagram.animateNextFrame();
   }
 

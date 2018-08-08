@@ -151,12 +151,16 @@ class Content extends LessonContent {
         circle._radius,
         circle._startLine,
         circle._endLine,
+        circle._angleA,
+        circle._angleA._arc,
+        circle._angleB,
+        circle._angleB._arc,
         // circle._reference,
       ],
       setSteadyState: () => {
         diag.resetCircle('right', Math.PI / 3);
-        circle._angleA.showAll();
-        circle._angleB.showAll();
+        // circle._angleA.showAll();
+        // circle._angleB.showAll();
         diag.setEndLineRotation(Math.PI / 3);
         diag.setRotation(Math.PI / 6);
         circle.transform.updateRotation(0);
