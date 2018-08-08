@@ -99,7 +99,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     equation.formAlignment.fixTo = new Point(0, 0);
     equation.formAlignment.hAlign = 'center';
     equation.formAlignment.vAlign = 'middle';
-    equation.formAlignment.scale = 0.3;
+    equation.formAlignment.scale = 0.5;
     equation.form = {};
     equation.addForm('a', ['a']);
     const e = equation;
@@ -111,7 +111,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
     equation.collection.hasTouchableElements = false;
     // console.log(equation.collection._minus.vertices.text[0])
-    equation.showEqn = () => {
+    equation.showCurrentForm = () => {
       let eqnForm = equation.form['a'];
       const currentAngle = this.varState.angleSelected;
       const currentForm = this.varState.equationForm;
@@ -278,7 +278,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       if (form === 'b') {
         this._circle._angleB.pulseScaleNow(1, 1.5);
       }
-      this._circle._angleA.eqn.showEqn();
+      this._circle._angleA.eqn.showCurrentForm();
       this.diagram.animateNextFrame();
     };
 
@@ -367,7 +367,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
     this.eqn.collection.stop();
     this.eqn.showEqn(this.varState.angleSelected, this.varState.equationForm);
-    this._circle._angleA.eqn.showEqn();
+    this._circle._angleA.eqn.showCurrentForm();
     // this._circle._angleA.showEqn();
     this.diagram.animateNextFrame();
   }
