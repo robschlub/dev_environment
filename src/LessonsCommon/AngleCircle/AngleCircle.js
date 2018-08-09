@@ -1,14 +1,14 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
-import {
-  DiagramElementCollection, DiagramElementPrimative,
-}
+import { DiagramElementCollection, DiagramElementPrimative }
   from '../../js/diagram/Element';
 import {
   Point, Transform, minAngleDiff, normAngle, polarToRect,
 } from '../../js/diagram/tools/g2';
-import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
+import { DiagramFont }
+  from '../../js/diagram/DrawingObjects/TextObject/TextObject';
+import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 
 
 type lineAngleType = {
@@ -235,15 +235,21 @@ class AngleCircle extends DiagramElementCollection {
   makeAngleAnnotation(
     angleStart: number,
     angleSize: number,
-    angleText: DiagramElementCollection | string | null,
+    angleText: DiagramElementCollection | DiagramElementPrimative | string | null | Equation,
     color: Array<number> = [0.5, 0.5, 0.5, 1],
     layout: Object = this.layout.angleAnnotation,
   ) {
+    const angleAnnotation = this.shapes.collection(new Transform()
+      .scale(1, 1).rotate(0));
+
     let label = this.makeEquationText('', color);
     if (typeof angleText === 'string') {
       label = this.makeEquationText(angleText, color);
     } else if (angleText instanceof DiagramElementCollection) {
       label = angleText;
+    } else if (angleText instanceof Equation) {
+      label = angleText.collection;
+      label.eqn = angleText;
     }
 
     const arc = this.shapes.polygon(
@@ -252,8 +258,6 @@ class AngleCircle extends DiagramElementCollection {
       new Transform(),
     );
 
-    const angleAnnotation = this.shapes.collection(new Transform()
-      .scale(1, 1).rotate(0));
     angleAnnotation.add('arc', arc);
     angleAnnotation.add('label', label);
 
@@ -276,6 +280,32 @@ class AngleCircle extends DiagramElementCollection {
   }
 
   makeEqn(elementDefinitions: Object, color: Array<number>) {
+    const equation = this.diagram.equation.makeEqn();
+    equation.createElements(elementDefinitions, color);
+
+    // labelFont.setColor(color);
+    // const collection = this.diagram.equation.elements(
+    //   elementDefinitions,
+    //   labelFont,
+    // );
+    // // collection.transform.index = 0;
+    // // collection.transform = collection.transform.rotate(0);
+
+    // // const eqn = this.diagram.equation.make(collection);
+    // // collection.eqn = eqn;
+
+    // collection.layout = () => {
+    //   collection.eqn.arrange(0.6, 'center', 'middle');
+    // };
+
+    // collection.init = () => {
+    //   collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+    //   collection.layout();
+    // };
+    return equation;
+  }
+
+  makeEqnOld(elementDefinitions: Object, color: Array<number>) {
     labelFont.setColor(color);
     const collection = this.diagram.equation.elements(
       elementDefinitions,
@@ -299,6 +329,13 @@ class AngleCircle extends DiagramElementCollection {
   }
 
   makeEquationText(text: string = '', color: Array<number> = [1, 1, 1, 1]) {
+    const equation = this.makeEqn({ text }, color);
+    equation.addForm('base', ['text']);
+    // collection.init();
+    return equation;
+  }
+
+  makeEquationTextOld(text: string = '', color: Array<number> = [1, 1, 1, 1]) {
     const collection = this.makeEqn({ text }, color);
     collection.eqn.createEq(['text']);
     collection.init();

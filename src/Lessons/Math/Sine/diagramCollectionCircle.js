@@ -121,29 +121,41 @@ class SineCollection extends SinCosCircle {
   // }
 
   makeEquationFuncTheta(color: Array<number> = [1, 1, 1, 1], func: string = 'sin') {
-    const collection = this.makeEqn({ func, theta: 'θ' }, color);
-    collection.eqn.createEq(['func', 'theta']);
-    collection.init();
-    return collection;
+    return this.makeEquationText(`${func}θ`, color);
+    // const collection = this.makeEqn({ func, theta: 'θ' }, color);
+    // collection.eqn.createEq(['func', 'theta']);
+    // collection.init();
+    // return collection;
   }
 
   makeEquationCompliment(color: Array<number> = [1, 1, 1, 1]) {
-    const collection = this.makeEqn({
+    const equation = this.diagram.equation.makeEqn();
+    equation.createElements({
       pi: 'π',
       two: '2',
       minus: ' \u2212 ',
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
     }, color);
-    const { eqn } = collection;
-    eqn.createEq([eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
-    collection.init();
-    return collection;
+    equation.addForm('base', [equation.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
+    return equation;
+    // const collection = this.makeEqn({
+    //   pi: 'π',
+    //   two: '2',
+    //   minus: ' \u2212 ',
+    //   theta: 'θ',
+    //   v: this.diagram.equation.vinculum(color),
+    // }, color);
+    // const { eqn } = collection;
+    // eqn.createEq([eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
+    // collection.init();
+    // return collection;
   }
 
   makeEquationSineCompliment() {
     const color = this.colors.cosine;
-    const collection = this.makeEqn({
+    const equation = this.diagram.equation.makeEqn();
+    equation.createElements({
       sin: '= sin ',
       pi: 'π',
       two: '2',
@@ -151,10 +163,23 @@ class SineCollection extends SinCosCircle {
       theta: 'θ',
       v: this.diagram.equation.vinculum(color),
     }, color);
-    const { eqn } = collection;
-    eqn.createEq(['sin', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
-    collection.init();
-    return collection;
+    const e = equation;
+    e.addForm('base', ['sin', e.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
+    return equation;
+
+    // const color = this.colors.cosine;
+    // const collection = this.makeEqn({
+    //   sin: '= sin ',
+    //   pi: 'π',
+    //   two: '2',
+    //   minus: ' \u2212 ',
+    //   theta: 'θ',
+    //   v: this.diagram.equation.vinculum(color),
+    // }, color);
+    // const { eqn } = collection;
+    // eqn.createEq(['sin', eqn.sfrac('pi', 'two', 'v', 0.8), 'minus', 'theta']);
+    // collection.init();
+    // return collection;
   }
 
   makeBow() {

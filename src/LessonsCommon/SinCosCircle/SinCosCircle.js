@@ -9,7 +9,7 @@ import {
 } from '../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../AngleCircle/AngleCircle';
-import { EquationForm } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import { EquationForm, Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 type rightAngleType = {
@@ -551,7 +551,7 @@ export class SinCosCircle extends AngleCircle {
   // }
 
   makeSineCosineLine(
-    label: equationType,
+    label: Equation,
     sine: boolean = true,
     color: Array<number> = [1, 1, 1, 1],
   ): sineCosineLineType {
@@ -566,12 +566,13 @@ export class SinCosCircle extends AngleCircle {
 
     const sineCosine = this.shapes.collection();
     sineCosine.add('line', line);
-    sineCosine.add('label', label);
+    sineCosine.add('label', label.collection);
+    sineCosine.eqn = label;
 
     sineCosine.textYLimit = sine ? this.layout.textYLimit : 0;
     sineCosine.textXLimit = sine ? 0 : this.layout.textXLimit;
-    sineCosine.textXOffset = sine ? label.eqn.width / 2 * 1.1 : 0;
-    sineCosine.textYOffset = sine ? 0 : label.eqn.height / 2 * 1.1;
+    sineCosine.textXOffset = sine ? label.form.base.width / 2 * 1.1 : 0;
+    sineCosine.textYOffset = sine ? 0 : label.form.base.height / 2 * 1.1;
     sineCosine.textYMultiplier = sine ? 0.5 : 0;
 
     sineCosine.updateRotation = (radius: number, angle: number) => {
