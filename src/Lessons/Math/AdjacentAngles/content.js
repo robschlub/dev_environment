@@ -169,7 +169,7 @@ class Content extends LessonContent {
         // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         // diag._angleText.showAll();
         // diag.showRadians();
-        diag.selectAngle('adjacent');
+        diag.selectAnglePair('adjacent');
         onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
         diag.toggleUnits('deg');
         onClickId('id_angle_text', diag.pulseAngle, [diag]);

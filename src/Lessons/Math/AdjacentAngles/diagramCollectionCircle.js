@@ -12,16 +12,13 @@ import type { circleType, varStateType, angleAnnotationType } from '../../../Les
 import lessonLayout from './layout';
 import type { EquationType } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
-// type rightAngleType = {
-//   _horizontal: DiagramElementPrimative;
-//   _vertical: DiagramElementPrimative;
-// } & DiagramElementCollection;
+type TypeAnglePairName = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
 
-type angleTypes = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
+type TypeEquationForm = 'add' | 'a' | 'b';
 
-type equationFormType = 'add' | 'a' | 'b';
+type TypeUnit = 'deg' | 'rad';
 
-type equationElementsType = {
+type TypeEquationElements = {
   _a: DiagramElementPrimative;
   _b: DiagramElementPrimative;
   _pi: DiagramElementPrimative;
@@ -36,55 +33,59 @@ type equationElementsType = {
   _v: DiagramElementPrimative;
 } & DiagramElementCollection;
 
-type anglesEquationType = {
-  collection: equationElementsType;
-  showEqn: (angleTypes, ?equationFormType) => void;
-  onclickEqn: (equationFormType) => void;
-  getForm: (angleTypes, string, 'deg' | 'rad' | null) => EquationType;
-  _dup: () => anglesEquationType;
+type TypeMainTextEquation = {
+  collection: TypeEquationElements;
+  showEqn: (TypeAnglePairName, ?TypeEquationForm) => void;
+  onclickEqn: (TypeEquationForm) => void;
+  getForm: (TypeAnglePairName, string, TypeUnit | null) => EquationType;
   showCurrentForm: () => void;
+  _dup: () => TypeMainTextEquation;
 } & EquationType;
 
+type TypeAnglePairNameAnnotationEquation = {
+  showCurrentForm: () => void;
+} & TypeMainTextEquation;
 
-export type extendedCircleType = {
+type TypeAnglePairNameAnnotation = {
+  eqn: TypeAnglePairNameAnnotationEquation;
+  _equation: TypeEquationElements;
+} & angleAnnotationType;
+
+type TypeRightAngle = {
+  _horizontal: DiagramElementPrimative;
+  _vertical: DiagramElementPrimative;
+} & DiagramElementCollection;
+
+export type TypeCircleCollectionExtended = {
   _startLine: DiagramElementPrimative;
   _endLine: DiagramElementPrimative;
-  _angleA: {
-    eqn: anglesEquationType;
-    _equation: equationElementsType;
-    } & angleAnnotationType;
-  _angleB: {
-    eqn: anglesEquationType;
-      _equation: equationElementsType;
-    } & angleAnnotationType;
-  _rightAngle: {
-    _horizontal: DiagramElementPrimative;
-    _vertical: DiagramElementPrimative;
-  } & DiagramElementCollection;
+  _angleA: TypeAnglePairNameAnnotation;
+  _angleB: TypeAnglePairNameAnnotation;
+  _rightAngle: TypeRightAngle;
   _straightAngle: DiagramElementPrimative;
   _fullAngle: DiagramElementPrimative;
 } & circleType;
 
-type varStateExtendedType = {
-    angleSelected: angleTypes;
-    equationForm: equationFormType;
+type TypeVarStateExtended = {
+    angleSelected: TypeAnglePairName;
+    equationForm: TypeEquationForm;
   } & varStateType;
 
 
 export type AdjacentAnglesCollectionType = {
-  _circle: extendedCircleType;
-  varState: varStateExtendedType;
-  angleTypes: Array<string>;
-  eqn: anglesEquationType;
+  _circle: TypeCircleCollectionExtended;
+  varState: TypeVarStateExtended;
+  anglePairNames: Array<string>;
+  eqn: TypeMainTextEquation;
 };
 
 class AdjacentAnglesCollection extends AngleCircle {
-  _circle: extendedCircleType;
-  varState: varStateExtendedType;
-  angleTypes: Array<string>;
-  eqn: anglesEquationType;
+  _circle: TypeCircleCollectionExtended;
+  varState: TypeVarStateExtended;
+  anglePairNames: Array<string>;
+  eqn: TypeMainTextEquation;
 
-  makeMoveableLine() {
+  makeMoveableLine(): DiagramElementPrimative {
     const line = this.makeLine(
       new Point(0, 0), this.layout.radius, this.layout.linewidth,
       this.colors.outsideLines, new Transform().rotate(0).translate(
@@ -100,6 +101,150 @@ class AdjacentAnglesCollection extends AngleCircle {
       line.vertices.border[0][i].y *= 10;
     }
     return line;
+  }
+
+  makeStraightAngle(): DiagramElementPrimative {
+    const layout = this.layout.angleAnnotation;
+    return this.shapes.polygon(
+      layout.arc.sides, layout.arc.radius * 1.0, layout.arc.lineWidth, 0, 1,
+      layout.arc.sides / 2, this.colors.angle,
+      new Transform(),
+    );
+  }
+
+  makeFullAngle(): DiagramElementPrimative {
+    const layout = this.layout.angleAnnotation;
+    return this.shapes.polygon(
+      layout.arc.sides, layout.arc.radius * 1.0, layout.arc.lineWidth, 0, 1,
+      layout.arc.sides, this.colors.angle,
+      new Transform(),
+    );
+  }
+
+  makeRightAngle(): TypeRightAngle {
+    const rad = this.layout.angleAnnotation.arc.radius;
+    const rightAngle = this.shapes.collection();
+    rightAngle.add('vertical', this.makeLine(
+      new Point(0, 0), rad - this.layout.linewidth, this.layout.linewidth,
+      this.colors.angle, new Transform()
+        .rotate(Math.PI / 2)
+        .translate(rad, this.layout.linewidth / 2),
+    ));
+    rightAngle.add('horizontal', this.makeLine(
+      new Point(0, 0), rad, this.layout.linewidth,
+      this.colors.angle, new Transform()
+        .translate(this.layout.linewidth / 2, rad),
+    ));
+    return rightAngle;
+  }
+
+  makeMainTextEquation(): TypeMainTextEquation {
+    const equation = this.diagram.equation.makeEqn();
+    equation.createElements(
+      {
+        a: 'a',
+        b: 'b',
+        pi: 'π',
+        _2: '2',
+        equals: '  =  ',
+        plus: ' + ',
+        minus: ' \u2212 ',
+        _90: '90º',
+        _180: '180º',
+        _360: '360º',
+        v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
+      },
+      this.colors.diagram.text.base,
+    );
+
+    equation.setPosition(this.layout.equationPosition);
+
+    equation.setElem('a', this.colors.angleA, true, 'up', 0.65);
+    equation.setElem('b', this.colors.angleB, true, 'up', 0.85);
+    equation.setElem('pi', null, true, 'down', 1);
+    equation.setElem('v', null, true, 'down', 1);
+    equation.setElem('_2', null, true, 'down', 1);
+    equation.setElem('_90', null, true, 'down', 0.7);
+    equation.setElem('_180', null, true, 'down', 0.7);
+    equation.setElem('_360', null, true, 'down', 0.7);
+
+    const e = equation;
+    e.formAlignment.fixTo = equation.collection._equals;
+    e.addForm('comAddDeg', ['_90', 'equals', 'a', 'plus', 'b']);
+    e.addForm('comAddRad', [e.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b']);
+    e.addForm('comADeg', ['a', 'equals', '_90', 'minus', 'b']);
+    e.addForm('comARad', ['a', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'b']);
+    e.addForm('comBDeg', ['b', 'equals', '_90', 'minus', 'a']);
+    e.addForm('comBRad', ['b', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'a']);
+
+    e.addForm('supAddDeg', ['_180', 'equals', 'a', 'plus', 'b']);
+    e.addForm('supAddRad', ['pi', 'equals', 'a', 'plus', 'b']);
+    e.addForm('supADeg', ['a', 'equals', '_180', 'minus', 'b']);
+    e.addForm('supARad', ['a', 'equals', 'pi', 'minus', 'b']);
+    e.addForm('supBDeg', ['b', 'equals', '_180', 'minus', 'a']);
+    e.addForm('supBRad', ['b', 'equals', 'pi', 'minus', 'a']);
+
+    e.addForm('expAddDeg', ['_360', 'equals', 'a', 'plus', 'b']);
+    e.addForm('expAddRad', ['_2', 'pi', 'equals', 'a', 'plus', 'b']);
+    e.addForm('expADeg', ['a', 'equals', '_360', 'minus', 'b']);
+    e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
+    e.addForm('expBDeg', ['b', 'equals', '_360', 'minus', 'a']);
+    e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
+
+    const { collection } = equation;
+    // equation.showCurrentForm = () => {};
+
+    // Get an equation form string (as defined above with `addForm` methods)
+    // based on input angle pair name, equation form units.
+    // eslint-disable-next-line max-len
+    equation.getForm = (inputAnglePairName: TypeAnglePairName = this.varState.angleSelected, inputForm: string = this.varState.equationForm, inputUnits: TypeUnit | null = null) => {
+      const anglePairName = inputAnglePairName.slice(0, 3);
+      const formString = inputForm;
+      const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
+      let unitsString = inputUnits;
+      if (unitsString == null) {
+        unitsString = this.getUnits();
+      }
+      const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
+
+      return equation.form[`${anglePairName}${eqnForm}${units}`];
+    };
+
+    // Show equation with input angle pair name and form using current units.
+    equation.showEqn = (anglePairName: TypeAnglePairName, form: TypeEquationForm = 'add') => {
+      if (anglePairName === 'adjacent') {
+        collection.hideAll();
+        return;
+      }
+      const eqnForm = equation.getForm(anglePairName, form);
+      eqnForm.showHide();
+      eqnForm.setPositions();
+      this.varState.equationForm = form;
+    };
+
+    const onclickEqn = (form: TypeEquationForm) => {
+      equation.getForm(this.varState.angleSelected, form)
+        .animateTo(1, 2, collection._equals);
+      this.varState.equationForm = form;
+      if (form === 'a') {
+        this._circle._angleA._arc.pulseScaleNow(1, 1.5);
+      }
+      if (form === 'b') {
+        this._circle._angleB._arc.pulseScaleNow(1, 1.5);
+      }
+      this.updateAngleAnnotationEquations();
+      this.diagram.animateNextFrame();
+    };
+
+    collection._a.onClick = onclickEqn.bind(this, 'a');
+    collection._b.onClick = onclickEqn.bind(this, 'b');
+    collection._pi.onClick = onclickEqn.bind(this, 'add');
+    collection.__90.onClick = onclickEqn.bind(this, 'add');
+    collection.__180.onClick = onclickEqn.bind(this, 'add');
+    collection.__360.onClick = onclickEqn.bind(this, 'add');
+    collection.__2.onClick = onclickEqn.bind(this, 'add');
+    collection._v.onClick = onclickEqn.bind(this, 'add');
+    return equation;
   }
 
   makeAngle(name: 'a' | 'b', color: Array<number>) {
@@ -185,161 +330,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     return angleA;
   }
 
-  // makeAngleB() {
-  //   return this.makeAngleAnnotation(
-  //     0,
-  //     Math.PI / 6,
-  //     'b',
-  //     this.colors.angleB,
-  //   );
-  // }
-
-  makeStraightAngle() {
-    const layout = this.layout.angleAnnotation;
-    return this.shapes.polygon(
-      layout.arc.sides, layout.arc.radius * 1.0, layout.arc.lineWidth, 0, 1,
-      layout.arc.sides / 2, this.colors.angle,
-      new Transform(),
-    );
-  }
-
-  makeFullAngle() {
-    const layout = this.layout.angleAnnotation;
-    return this.shapes.polygon(
-      layout.arc.sides, layout.arc.radius * 1.0, layout.arc.lineWidth, 0, 1,
-      layout.arc.sides, this.colors.angle,
-      new Transform(),
-    );
-  }
-
-  makeRightAngle() {
-    const rad = this.layout.angleAnnotation.arc.radius;
-    const rightAngle = this.shapes.collection();
-    rightAngle.add('vertical', this.makeLine(
-      new Point(0, 0), rad - this.layout.linewidth, this.layout.linewidth,
-      this.colors.angle, new Transform()
-        .rotate(Math.PI / 2)
-        .translate(rad, this.layout.linewidth / 2),
-    ));
-    rightAngle.add('horizontal', this.makeLine(
-      new Point(0, 0), rad, this.layout.linewidth,
-      this.colors.angle, new Transform()
-        .translate(this.layout.linewidth / 2, rad),
-    ));
-    return rightAngle;
-  }
-
-  makeAnglesEquation() {
-    const equation = this.diagram.equation.makeEqn();
-    equation.createElements(
-      {
-        a: 'a',
-        b: 'b',
-        pi: 'π',
-        _2: '2',
-        equals: '  =  ',
-        plus: ' + ',
-        minus: ' \u2212 ',
-        _90: '90º',
-        _180: '180º',
-        _360: '360º',
-        v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
-      },
-      this.colors.diagram.text.base,
-    );
-
-    equation.setPosition(this.layout.equationPosition);
-
-    equation.setElem('a', this.colors.angleA, true, 'up', 0.65);
-    equation.setElem('b', this.colors.angleB, true, 'up', 0.85);
-    equation.setElem('pi', null, true, 'down', 1);
-    equation.setElem('v', null, true, 'down', 1);
-    equation.setElem('_2', null, true, 'down', 1);
-    equation.setElem('_90', null, true, 'down', 0.7);
-    equation.setElem('_180', null, true, 'down', 0.7);
-    equation.setElem('_360', null, true, 'down', 0.7);
-
-    const e = equation;
-    e.formAlignment.fixTo = equation.collection._equals;
-    e.addForm('comAddDeg', ['_90', 'equals', 'a', 'plus', 'b']);
-    e.addForm('comAddRad', [e.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b']);
-    e.addForm('comADeg', ['a', 'equals', '_90', 'minus', 'b']);
-    e.addForm('comARad', ['a', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'b']);
-    e.addForm('comBDeg', ['b', 'equals', '_90', 'minus', 'a']);
-    e.addForm('comBRad', ['b', 'equals', e.frac('pi', '_2', 'v'), 'minus', 'a']);
-
-    e.addForm('supAddDeg', ['_180', 'equals', 'a', 'plus', 'b']);
-    e.addForm('supAddRad', ['pi', 'equals', 'a', 'plus', 'b']);
-    e.addForm('supADeg', ['a', 'equals', '_180', 'minus', 'b']);
-    e.addForm('supARad', ['a', 'equals', 'pi', 'minus', 'b']);
-    e.addForm('supBDeg', ['b', 'equals', '_180', 'minus', 'a']);
-    e.addForm('supBRad', ['b', 'equals', 'pi', 'minus', 'a']);
-
-    e.addForm('expAddDeg', ['_360', 'equals', 'a', 'plus', 'b']);
-    e.addForm('expAddRad', ['_2', 'pi', 'equals', 'a', 'plus', 'b']);
-    e.addForm('expADeg', ['a', 'equals', '_360', 'minus', 'b']);
-    e.addForm('expARad', ['a', 'equals', '_2', 'pi', 'minus', 'b']);
-    e.addForm('expBDeg', ['b', 'equals', '_360', 'minus', 'a']);
-    e.addForm('expBRad', ['b', 'equals', '_2', 'pi', 'minus', 'a']);
-
-    const { collection } = equation;
-    equation.showCurrentForm = () => {};
-    equation.getForm = (inputAngleType: angleTypes = this.varState.angleSelected, inputForm: string = this.varState.equationForm, inputUnits: 'deg' | 'rad' | null = null) => {
-      const angleType = inputAngleType.slice(0, 3);
-      const formString = inputForm;
-      const eqnForm = `${formString.charAt(0).toUpperCase()}${formString.slice(1)}`;
-      let unitsString = inputUnits;
-      if (unitsString == null) {
-        unitsString = this.getUnits();
-      }
-      const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
-
-      return equation.form[`${angleType}${eqnForm}${units}`];
-    };
-
-    equation.showEqn = (angleType: angleTypes, form: equationFormType = 'add') => {
-      if (angleType === 'adjacent') {
-        collection.hideAll();
-        return;
-      }
-      const eqnForm = equation.getForm(angleType, form);
-      eqnForm.showHide();
-      eqnForm.setPositions();
-      this.varState.equationForm = form;
-    };
-
-    const onclickEqn = (form: equationFormType) => {
-      equation.getForm(this.varState.angleSelected, form)
-        .animateTo(1, 2, collection._equals);
-      this.varState.equationForm = form;
-      if (form === 'a') {
-        this._circle._angleA._arc.pulseScaleNow(1, 1.5);
-      }
-      if (form === 'b') {
-        this._circle._angleB._arc.pulseScaleNow(1, 1.5);
-      }
-      this._circle._angleA.eqn.showCurrentForm();
-      this._circle._angleB.eqn.showCurrentForm();
-      this._circle._angleA.updateAngle(this.varState.rotation);
-      const endLineRotation = this._circle._endLine.transform.r();
-      if (endLineRotation != null) {
-        this._circle._angleB.updateAngle(endLineRotation
-          - this.varState.rotation);
-      }
-      this.diagram.animateNextFrame();
-    };
-
-    collection._a.onClick = onclickEqn.bind(this, 'a');
-    collection._b.onClick = onclickEqn.bind(this, 'b');
-    collection._pi.onClick = onclickEqn.bind(this, 'add');
-    collection.__90.onClick = onclickEqn.bind(this, 'add');
-    collection.__180.onClick = onclickEqn.bind(this, 'add');
-    collection.__360.onClick = onclickEqn.bind(this, 'add');
-    collection.__2.onClick = onclickEqn.bind(this, 'add');
-    collection._v.onClick = onclickEqn.bind(this, 'add');
-    return equation;
-  }
-
   getUnits() {
     if (this.varState.radialLines === 360) {
       return 'deg';
@@ -347,11 +337,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     return 'rad';
   }
 
-  getAngleType(): angleTypes {
-    return this.varState.angleSelected;
-  }
-
-  getEquationForm(): equationFormType {
+  getEquationForm(): TypeEquationForm {
     return this.varState.equationForm;
   }
 
@@ -382,13 +368,13 @@ class AdjacentAnglesCollection extends AngleCircle {
       equationForm: 'add',
     };
     // this.enableAutoChange = true;
-    this.eqn = this.makeAnglesEquation();
+    this.eqn = this.makeMainTextEquation();
     this.add('eqn', this.eqn.collection);
     this.addToCircle();
-    this.angleTypes = ['adjacent', 'complementary', 'supplementary', 'explementary'];
+    this.anglePairNames = ['adjacent', 'complementary', 'supplementary', 'explementary'];
   }
 
-  toggleUnits(toUnit: 'rad' | 'deg' | null) {
+  toggleUnits(toUnit: TypeUnit | null) {
     const elemDeg = document.getElementById('id_degrees');
     const elemRad = document.getElementById('id_radians');
     let unit = toUnit;
@@ -414,10 +400,24 @@ class AdjacentAnglesCollection extends AngleCircle {
     }
     this.eqn.collection.stop();
     this.eqn.showEqn(this.varState.angleSelected, this.varState.equationForm);
+    // this._circle._angleA.eqn.showCurrentForm();
+    // this._circle._angleB.eqn.showCurrentForm();
+    this.updateAngleAnnotationEquations();
+    this.diagram.animateNextFrame();
+  }
+
+  updateAngleAnnotationEquations() {
     this._circle._angleA.eqn.showCurrentForm();
     this._circle._angleB.eqn.showCurrentForm();
-    // this._circle._angleA.showEqn();
-    this.diagram.animateNextFrame();
+
+    this._circle._angleA.updateAngle(this.varState.rotation);
+    const endLineRotation = this._circle._endLine.transform.r();
+    if (endLineRotation != null) {
+      this._circle._angleB.updateAngle(endLineRotation
+        - this.varState.rotation);
+      this._circle._angleB.transform.updateRotation(this.varState.rotation);
+    }
+    this.rotateAngleLabelsToUpright();
   }
 
   updateCircleRotation() {
@@ -430,30 +430,20 @@ class AdjacentAnglesCollection extends AngleCircle {
         this._circle.transform.updateRotation(r + Math.PI * 2);
       }
     }
-    this.rotateAngleLabelsToUpright();
+    this.updateAngleAnnotationEquations();
   }
 
   updateAngleBRotation() {
-    const endLineRotation = this._circle._endLine.transform.r();
-    if (endLineRotation != null) {
-      this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
-      this._circle._angleB.transform.updateRotation(this.varState.rotation);
-      this.rotateAngleLabelsToUpright();
-    }
+    this.updateAngleAnnotationEquations();
   }
 
   rotateAngleLabelsToUpright() {
     const circleRotation = this._circle.transform.r();
     if (circleRotation != null) {
-      this._circle._angleB._equation.transform
-        .updateRotation(-this.varState.rotation - circleRotation);
-      // this._circle._angleA._label.transform.updateRotation(-circleRotation);
-      this._circle._angleA._equation.transform.updateRotation(-circleRotation);
-      this._circle._angleA.updateAngle(this.varState.rotation);
-      const endLineRotation = this._circle._endLine.transform.r();
-      if (endLineRotation != null) {
-        this._circle._angleB.updateAngle(endLineRotation - this.varState.rotation);
-      }
+      this._circle._angleB._equation
+        .transform.updateRotation(-this.varState.rotation - circleRotation);
+      this._circle._angleA._equation
+        .transform.updateRotation(-circleRotation);
     }
   }
 
@@ -548,75 +538,33 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.diagram.animateNextFrame();
   }
 
-  // setParagraphUnits(onUnit: 'rad' | 'deg') {
-  //   this.angleTypes.forEach((angleType) => {
-  //     const offUnit = onUnit === 'rad' ? 'deg' : 'rad';
-  //     const elemOn1 = document.getElementById(`id_${angleType}_${onUnit}1`);
-  //     const elemOn2 = document.getElementById(`id_${angleType}_${onUnit}2`);
-  //     const elemOn3 = document.getElementById(`id_${angleType}_${onUnit}3`);
-  //     const elemOff1 = document.getElementById(`id_${angleType}_${offUnit}1`);
-  //     const elemOff2 = document.getElementById(`id_${angleType}_${offUnit}2`);
-  //     const elemOff3 = document.getElementById(`id_${angleType}_${offUnit}3`);
-  //     if (elemOn1 != null) {
-  //       elemOn1.classList.remove('lesson__important_angles_text_hide');
-  //     }
-  //     if (elemOn2 != null) {
-  //       elemOn2.classList.remove('lesson__important_angles_text_hide');
-  //     }
-  //     if (elemOn3 != null) {
-  //       elemOn3.classList.remove('lesson__important_angles_text_hide');
-  //     }
-  //     if (elemOff1 != null) {
-  //       elemOff1.classList.add('lesson__important_angles_text_hide');
-  //     }
-  //     if (elemOff2 != null) {
-  //       elemOff2.classList.add('lesson__important_angles_text_hide');
-  //     }
-  //     if (elemOff3 != null) {
-  //       elemOff3.classList.add('lesson__important_angles_text_hide');
-  //     }
-  //   });
-  // }
-
   updateNumSectionsText() {
     super.updateNumSectionsText();
-    this.showAngleType(this.varState.angleSelected);
+    this.showAnglePairName(this.varState.angleSelected);
   }
 
-  selectAngle(angleType: angleTypes) {
+  selectAnglePair(anglePairName: TypeAnglePairName) {
     let elem;
-    if (angleType !== this.varState.angleSelected) {
+    if (anglePairName !== this.varState.angleSelected) {
       elem = document.getElementById(`id_${this.varState.angleSelected}`);
       if (elem != null) {
         elem.classList.remove('lesson__important_angles_table_selected');
       }
     }
-    elem = document.getElementById(`id_${angleType}`);
+    elem = document.getElementById(`id_${anglePairName}`);
     if (elem != null) {
       elem.classList.add('lesson__important_angles_table_selected');
     }
-    this.varState.angleSelected = angleType;
+    this.varState.angleSelected = anglePairName;
   }
 
-  showAngleType(angleType: angleTypes) {
-    this.selectAngle(angleType);
-    this.showText(angleType);
-    // if (angleType !== 'adjacent') {
-    //   // this._circle._acuteRange.hide();
-    // }
-    // if (angleType !== 'complementary') {
-    //   // this._circle._obtuseRange.hide();
-    // }
-    // if (angleType !== 'supplementary') {
-    //   // this._circle._reflexRange.hide();
-    // }
-    // if (angleType === 'explementary') {
-    //   // this._circle._acuteRange.show();
-    // }
+  showAnglePairName(anglePairName: TypeAnglePairName) {
+    this.selectAnglePair(anglePairName);
+    this.showText(anglePairName);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  showText(angleType: angleTypes) {
+  showText(anglePairName: TypeAnglePairName) {
     const ids = [
       'id_adjacent_text',
       'id_complementary_text',
@@ -624,14 +572,14 @@ class AdjacentAnglesCollection extends AngleCircle {
       'id_explementary_text',
     ];
     ids.forEach((id) => {
-      if (id !== angleType) {
+      if (id !== anglePairName) {
         const elem = document.getElementById(id);
         if (elem != null) {
           elem.classList.add('lesson__important_angles_text_hide');
         }
       }
     });
-    const elem = document.getElementById(`id_${angleType}_text`);
+    const elem = document.getElementById(`id_${anglePairName}_text`);
     if (elem != null) {
       elem.classList.remove('lesson__important_angles_text_hide');
     }
@@ -652,21 +600,6 @@ class AdjacentAnglesCollection extends AngleCircle {
     this._circle._endLine.isTouchable = true;
     this._circle._startLine.isTouchable = true;
     this._circle._radius.isTouchable = true;
-  }
-
-  goToAdjacent() {
-    this.stopRightAngle();
-    this.stopFullAngle();
-    this.stopStraightAngle();
-    this.showAngleType('adjacent');
-    this.setUntouchable();
-    this.rotateElementTo(this._circle._endLine, Math.PI / 3);
-    this.rotateElementTo(this._circle, 0);
-    this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
-    this.eqn.showEqn('adjacent');
-    this._circle._angleA.eqn.showCurrentForm();
-    this._circle._angleB.eqn.showCurrentForm();
-    this.diagram.animateNextFrame();
   }
 
   goToRandomAdjancentAngle() {
@@ -692,10 +625,25 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._radius, angle, () => {}, 2, 6, true);
   }
 
+  goToAdjacent() {
+    this.stopRightAngle();
+    this.stopFullAngle();
+    this.stopStraightAngle();
+    this.showAnglePairName('adjacent');
+    this.setUntouchable();
+    this.rotateElementTo(this._circle._endLine, Math.PI / 3);
+    this.rotateElementTo(this._circle, 0);
+    this.rotateElementTo(this._circle._radius, Math.PI / 6, this.setTouchable.bind(this));
+    this.eqn.showEqn('adjacent');
+    this._circle._angleA.eqn.showCurrentForm();
+    this._circle._angleB.eqn.showCurrentForm();
+    this.diagram.animateNextFrame();
+  }
+
   goToComplementary() {
     this.stopStraightAngle();
     this.stopFullAngle();
-    this.showAngleType('complementary');
+    this.showAnglePairName('complementary');
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI / 2);
     this.rotateElementTo(this._circle, 0);
@@ -709,7 +657,7 @@ class AdjacentAnglesCollection extends AngleCircle {
   goToSupplementary() {
     this.stopRightAngle();
     this.stopFullAngle();
-    this.showAngleType('supplementary');
+    this.showAnglePairName('supplementary');
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI);
     this.rotateElementTo(this._circle, 0);
@@ -723,7 +671,7 @@ class AdjacentAnglesCollection extends AngleCircle {
   goToExplementary() {
     this.stopRightAngle();
     this.stopStraightAngle();
-    this.showAngleType('explementary');
+    this.showAnglePairName('explementary');
     this.setUntouchable();
     this.rotateElementTo(this._circle._endLine, Math.PI * 2);
     this.rotateElementTo(this._circle, 0);
