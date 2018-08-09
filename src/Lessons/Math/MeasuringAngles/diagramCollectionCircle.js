@@ -8,7 +8,8 @@ import {
 import {
   Point, Transform,
 } from '../../../js/diagram/tools/g2';
-import { EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { Equation, EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { TypeEquation, TypeEquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
@@ -79,7 +80,7 @@ class CircleCollection extends AngleCircle {
   arcEqn: EquationForm;
   radiusEqn: EquationForm;
   angleEqn: EquationForm;
-  circEqn: EquationForm;
+  circEqn: Equation;
   circEqnShort: EquationForm;
   circEqnGeneral: EquationForm;
   numSections: Array<number>;
@@ -187,6 +188,80 @@ class CircleCollection extends AngleCircle {
   }
 
   makeCircumferenceEquation() {
+    const equation = this.diagram.equation.makeEqn();
+    equation.createElements({
+      circumference: 'circumference',
+      radius: 'radius',
+      twoPi: `2${String.fromCharCode(960)} `,
+      times: ` ${String.fromCharCode(215)} `,
+      equals: '  =  ',
+      r: 'r',
+      c: 'c',
+      arc: 'arc length',
+      angle: 'angle',
+    }, this.colors.diagram.text.base);
+
+    equation.setElem('arc', this.colors.arc, true);
+    equation.setElem('circumference', this.colors.arc, true);
+    equation.setElem('c', this.colors.arc, true, '', 0);
+    equation.setElem('r', this.colors.radius, true, '', 0);
+    equation.setElem('radius', this.colors.radius, true);
+    equation.setElem('twoPi', this.colors.angle, true, '', 0);
+    equation.setElem('angle', this.colors.angle, true);
+    equation.setElem('equals', null, true);
+
+    const { collection } = equation;
+    collection.isTouchale = true;
+    collection.touchInBoundingRect = true;
+    collection.varState = 0;
+
+    const e = equation;
+    e.formAlignment.fixTo = equation.collection._equals;
+    e.addForm('circumference', ['circumference', 'equals', 'twoPi', 'times', 'radius']);
+    e.addForm('c', ['c', 'equals', 'twoPi', 'r']);
+    e.addForm('arc', ['arc', 'equals', 'angle', 'times', 'radius']);
+
+    // collection._angle.onClick = this.pulseAngle.bind(this);
+    // collection._radius.onClick = this.pulseRadius.bind(this);
+    // collection._arc.onClick = this.pulseArc.bind(this);
+
+    equation.setCurrentForm('arc');
+    // eqn = this.diagram.equation.make(this._circumferenceEquation);
+    // eqn.createEq(['circumference', 'equals', 'twoPi', 'times', 'radius']);
+    // this.circEqn = eqn;
+
+    // eqn = this.diagram.equation.make(this._circumferenceEquation);
+    // eqn.createEq(['c', 'equals', 'twoPi', 'r']);
+    // this.circEqnShort = eqn;
+
+    // eqn = this.diagram.equation.make(this._circumferenceEquation);
+    // eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
+    // this.circEqnGeneral = eqn;
+
+    return equation;
+    // equationElements._arc.setColor(this.colors.arc);
+    // equationElements._circumference.setColor(this.colors.arc);
+    // equationElements._c.setColor(this.colors.arc);
+    // equationElements._r.setColor(this.colors.radius);
+    // equationElements._radius.setColor(this.colors.radius);
+    // equationElements._twoPi.setColor(this.colors.angle);
+    // equationElements._angle.setColor(this.colors.angle);
+
+    // equationElements._radius.isTouchable = true;
+    // equationElements._angle.isTouchable = true;
+    // equationElements._twoPi.isTouchable = true;
+    // equationElements._r.isTouchable = true;
+    // equationElements._c.isTouchable = true;
+    // equationElements._circumference.isTouchable = true;
+    // equationElements._arc.isTouchable = true;
+    // equationElements._equals.isTouchable = true;
+    // equationElements.isTouchable = true;
+    // equationElements.touchInBoundingRect = true;
+    // equationElements.varState = 0;
+    // return equationElements;
+  }
+
+  makeCircumferenceEquationOld() {
     const equationElements = this.diagram.equation.elements({
       circumference: 'circumference',
       radius: 'radius',
@@ -300,7 +375,8 @@ class CircleCollection extends AngleCircle {
     this.addToCircle(this.numSections);
     // this.add('slider', makeSlider(this.shapes, this.layout.slider));
     this.add('arcEquation', this.makeArcEquation());
-    this.add('circumferenceEquation', this.makeCircumferenceEquation());
+    this.circEqn = this.makeCircumferenceEquation();
+    this.add('circumferenceEquation', this.circEqn.collection);
 
     let eqn;
     eqn = diagram.equation.make(this._arcEquation);
@@ -316,17 +392,17 @@ class CircleCollection extends AngleCircle {
 
     this.angleEqn = eqn;
 
-    eqn = this.diagram.equation.make(this._circumferenceEquation);
-    eqn.createEq(['circumference', 'equals', 'twoPi', 'times', 'radius']);
-    this.circEqn = eqn;
+    // eqn = this.diagram.equation.make(this._circumferenceEquation);
+    // eqn.createEq(['circumference', 'equals', 'twoPi', 'times', 'radius']);
+    // this.circEqn = eqn;
 
-    eqn = this.diagram.equation.make(this._circumferenceEquation);
-    eqn.createEq(['c', 'equals', 'twoPi', 'r']);
-    this.circEqnShort = eqn;
+    // eqn = this.diagram.equation.make(this._circumferenceEquation);
+    // eqn.createEq(['c', 'equals', 'twoPi', 'r']);
+    // this.circEqnShort = eqn;
 
-    eqn = this.diagram.equation.make(this._circumferenceEquation);
-    eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
-    this.circEqnGeneral = eqn;
+    // eqn = this.diagram.equation.make(this._circumferenceEquation);
+    // eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
+    // this.circEqnGeneral = eqn;
   }
 
   updateRotation() {
@@ -415,8 +491,41 @@ class CircleCollection extends AngleCircle {
     }
   }
 
+  toggleCircEquations(
+    // scale: number = 1,
+    callback: ?(?mixed) => void = null,
+  ) {
+    const eqn = this.circEqn;
 
-  toggleCircEquations(scale: number = 1, callback: ?(?mixed) => void = null) {
+    eqn.stop();
+    const callbackToUse = typeof callback === 'function' ? callback : null;
+
+    if (eqn.currentFormName === 'arc') {
+      eqn.setCurrentForm('circumference');
+      eqn.form['circumference'].setPositions();
+      eqn.form['arc'].setPositions();
+      const t = this._circumferenceEquation._angle.transform.t();
+      if (t != null) {
+        this._circumferenceEquation._twoPi.transform
+          .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
+      }
+      eqn.form['circumference'].hideShow(0.5, 0.5, callbackToUse);
+    } else if (eqn.currentFormName === 'circumference') {
+      eqn.setCurrentForm('c');
+      eqn.collection._r.setPositionToElement(eqn.collection._radius);
+      eqn.collection._c.setPositionToElement(eqn.collection._circumference);
+      eqn.collection._r.show();
+      eqn.collection._c.show();
+      eqn.form['c'].animatePositionsTo(2, callbackToUse);
+    } else if (eqn.currentFormName === 'c') {
+      eqn.setCurrentForm('arc');
+      eqn.form['arc'].setPositions();
+      eqn.form['arc'].hideShow(0.5, 0.5, callbackToUse);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  toggleCircEquationsOld(scale: number = 1, callback: ?(?mixed) => void = null) {
     this._circumferenceEquation.stop();
     let callbackToUse = null;
     let scaleToUse = 1;

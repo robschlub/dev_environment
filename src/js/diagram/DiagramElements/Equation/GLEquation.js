@@ -975,9 +975,37 @@ export class EquationForm extends Elements {
     }
     if (showTime === 0) {
       show.forEach(e => e.show());
+      if (callback != null) {
+        callback();
+      }
     } else {
       this.dissolveElements(show, true, hideTime, showTime, callback);
     }
+  }
+
+  animatePositionsTo(
+    // location: Point,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ) {
+    const allElements = this.collection.getAllElements();
+    this.collection.stop();
+    const elementsShown = allElements.filter(e => e.isShown);
+    const elementsShownTarget = this.getAllElements();
+    const elementsToHide =
+      elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
+    const elementsToShow =
+      elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
+
+    const currentTransforms = this.collection.getElementTransforms();
+
+    // this.arrange(scale, xAlign, yAlign, fixElement);
+    this.setPositions();
+    const animateToTransforms = this.collection.getElementTransforms();
+    this.collection.setElementTransforms(currentTransforms);
+    this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);
+    this.collection.animateToTransforms(animateToTransforms, time, 0);
+    this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
 
   animateTo(
@@ -1098,7 +1126,7 @@ export type EquationType = {
   setElem: (DiagramElementCollection | DiagramElementPrimative | string,
             Array<number> | null,
             boolean,
-            'up' | 'down',
+            'up' | 'down' | 'left' | 'right' | '',
             number) => void;
   frac: (
       TypeEquationInput,
@@ -1122,6 +1150,7 @@ export class Equation {
   form: Object;
   drawContext2D: DrawContext2D;
   currentForm: ?EquationForm;
+  currentFormName: string;
   formAlignment: {
     vAlign: TypeVAlign;
     hAlign: TypeHAlign;
@@ -1209,7 +1238,7 @@ export class Equation {
     element: DiagramElementCollection | DiagramElementPrimative | string,
     elementColor: Array<number> | null = null,
     isTouchable: boolean = false,
-    direction: 'up' | 'down' = 'up',
+    direction: 'up' | 'down' | 'left' | 'right' | '' = '',
     mag: number = 0.5,
   ) {
     let elem = element;
@@ -1253,8 +1282,19 @@ export class Equation {
     }
   }
 
-  setCurrentForm(form: EquationForm) {
-    this.currentForm = form;
+  setCurrentForm(form: EquationForm | string) {
+    if (typeof form === 'string') {
+      this.currentForm = this.form[form];
+      this.currentFormName = form;
+    } else {
+      this.currentForm = form;
+      Object.keys(this.form).forEach((key) => {
+        if (this.form[key] === this.currentForm) {
+          this.currentFormName = key;
+          return;
+        }
+      });
+    }
   }
 
   frac(

@@ -819,10 +819,10 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Circle Circumference',
       setContent: `
-        <p class="lesson__diagram_text_p_width_50" style="margin-top:10%">
+        <p class="lesson__diagram_text_p_width_45" style="margin-top:10%">
           Let's use what we've learned about radians to calculate the |circumference| of any |circle| |we know the radius of|.
         </p>
-        <p class="lesson__diagram_text_p_width_50">
+        <p class="lesson__diagram_text_p_width_45">
           When using radians, |angle| and |radius| are related to |arc_length|:
         </p>
       `,
@@ -833,15 +833,16 @@ class Content extends LessonContent {
         arc_length: click(diag.pulseArc, [diag], colors.arc),
       },
       setEnterState: () => {
-        diag.circEqn.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
-        diag._circumferenceEquation.varState = 0;
-        const t = diag._circumferenceEquation._angle.transform.t();
-        if (t != null) {
-          diag._circumferenceEquation._twoPi.transform
-            .updateTranslation(t.add(layout.circEquation.twoPiOffset));
-        }
+        // diag.circEqn.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        // diag.circEqnGeneral.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        diag.circEqn.setPosition(layout.circEquation.leftBottom);
+        diag.circEqn.setCurrentForm('arc');
+        // diag._circumferenceEquation.varState = 0;
+        // const t = diag._circumferenceEquation._angle.transform.t();
+        // if (t != null) {
+        //   diag._circumferenceEquation._twoPi.transform
+        //     .updateTranslation(t.add(layout.circEquation.twoPiOffset));
+        // }
       },
       blank: [
         'toNext',
@@ -852,48 +853,55 @@ class Content extends LessonContent {
         circle._circumference,
         circle._arc,
         circle._reference,
-        diag._circumferenceEquation,
-        diag._circumferenceEquation._angle,
-        diag._circumferenceEquation._equals,
-        diag._circumferenceEquation._arc,
-        diag._circumferenceEquation._radius,
-        diag._circumferenceEquation._times,
+        // diag._circumferenceEquation,
+        // diag._circumferenceEquation._angle,
+        // diag._circumferenceEquation._equals,
+        // diag._circumferenceEquation._arc,
+        // diag._circumferenceEquation._radius,
+        // diag._circumferenceEquation._times,
       ],
       show: [
         circle._angle,
       ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
+        diag.circEqn.render();
         const circ = diag._circumferenceEquation;
         circ._angle.onClick = diag.pulseAngle.bind(diag);
         circ._radius.onClick = diag.pulseRadius.bind(diag);
         circ._arc.onClick = diag.pulseArc.bind(diag);
       },
       transitionToNext: (done) => {
-        diag.toggleCircEquations(1, done);
+        diag.toggleCircEquations(done);
       },
     });
 
     this.addSection({
       setContent: `
-        <p class="lesson__diagram_text_p_width_50" style="margin-top:10%">
+        <p class="lesson__diagram_text_p_width_45" style="margin-top:10%">
           A |circle| has an angle of |6.28|, or |2&pi; radians|.
         </p>
-        <p class="lesson__diagram_text_p_width_50">
+        <p class="lesson__diagram_text_p_width_45">
           Therefore, we can |calculate| the |circumference of any circle from just the radius|:
         </p>
       `,
       modifiers: {
         circle: click(diag.rotateTo, [diag, 1.999 * Math.PI, 1, 2], colors.arc),
-        calculate: click(diag.toggleCircEquations, [diag, 1, null], colors.action),
+        calculate: click(diag.toggleCircEquations, [diag, null], colors.action),
 
       },
       setEnterState: () => {
-        diag.circEqn.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag.circEqnShort.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
-        diag._circumferenceEquation.varState = 1;
+        diag.circEqn.setPosition(layout.circEquation.leftBottom);
+        diag.circEqn.setCurrentForm('arc');
+        // diag.circEqn.collection._twoPi
+        //   .setDiagramPositionToElement(diag.circEqn.collection._angle);
+        // diag.toggleCircEquations();
+
+        // diag.circEqn.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        // diag.circEqnShort.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        // diag.circEqnGeneral.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
+        // diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
+        // diag._circumferenceEquation.varState = 1;
         const t = diag._circumferenceEquation._angle.transform.t();
         if (t != null) {
           diag._circumferenceEquation._twoPi.transform
@@ -918,6 +926,8 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
+        // diag.circEqn.render();
+        diag.circEqn.setCurrentForm('circumference');
         const circ = diag._circumferenceEquation;
         circ._angle.onClick = diag.pulseAngle.bind(diag);
         circ._radius.onClick = diag.pulseRadius.bind(diag);
@@ -926,7 +936,7 @@ class Content extends LessonContent {
         circ._c.onClick = diag.pulseCircumference.bind(diag);
         circ._circumference.onClick = diag.pulseCircumference.bind(diag);
         circ._twoPi.onClick = diag.rotateTo.bind(diag, 1.999 * Math.PI, 1, 2);
-        circ._equals.onClick = diag.toggleCircEquations.bind(diag, 1, null);
+        circ._equals.onClick = diag.toggleCircEquations.bind(diag, null);
       },
       setLeaveState: () => {
         const circ = diag._circumferenceEquation;
@@ -1037,10 +1047,7 @@ class Content extends LessonContent {
           diag.animateEquation.bind(diag, 'arc', scale, 0.6, 0.2, 0.25);
 
         const circ = diag._circumferenceEquation;
-        circ.onClick = diag.toggleCircEquations.bind(
-          diag,
-          layout.circEquation.summaryScale,
-        );
+        circ.onClick = diag.toggleCircEquations.bind(diag);
 
         onClickId('id_360_deg', diag.summaryRotateToDeg, [diag, Math.PI * 1.999]);
         onClickId('id_2pi_rad', diag.summaryRotateToRad, [diag, Math.PI * 1.999]);

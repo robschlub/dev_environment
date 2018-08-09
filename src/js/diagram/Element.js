@@ -1541,12 +1541,19 @@ class DiagramElement {
     const glLocation = diagramPosition.transformBy(diagramToGLSpace.matrix());
     const t = new Transform(this.lastDrawTransform.order.slice(2));
     const newLocation = glLocation.transformBy(m2.inverse(t.matrix()));
-    this.setPosition(newLocation);
+    this.setPosition(newLocation._dup());
   }
 
   setDiagramPositionToElement(element: DiagramElement) {
     const p = element.getDiagramPosition();
-    this.setDiagramPosition(p);
+    this.setDiagramPosition(p._dup());
+  }
+
+  setPositionToElement(element: DiagramElement) {
+    const p = element.transform.t();
+    if (p != null) {
+      this.setPosition(p._dup());
+    }
   }
 
   setMoveBoundaryToDiagram(
@@ -1956,7 +1963,10 @@ class DiagramElementCollection extends DiagramElement {
     return false;
   }
 
-  add(name: string, diagramElement: DiagramElementPrimative | DiagramElementCollection) {
+  add(
+    name: string,
+    diagramElement: DiagramElementPrimative | DiagramElementCollection,
+  ) {
     this.elements[name] = diagramElement;
     this.elements[name].name = name;
     // $FlowFixMe
