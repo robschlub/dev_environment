@@ -891,6 +891,7 @@ class Content extends LessonContent {
 
       },
       setEnterState: () => {
+        diag.circEqn.scale(1);
         diag.circEqn.setPosition(layout.circEquation.leftBottom);
         diag.circEqn.setCurrentForm('arc');
         const t = diag._circumferenceEquation._angle.transform.t();
@@ -984,7 +985,7 @@ class Content extends LessonContent {
         one_radian_angle: click(diag.summaryRotateToRad, [diag, 1], colors.angle),
       },
       setEnterState: () => {
-        let scale = layout.arcEquation.summaryScale;
+        const scale = layout.arcEquation.summaryScale;
         diag._angleText.setPosition(layout.angleEqualsText.summary);
 
         diag.radiusEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
@@ -992,17 +993,14 @@ class Content extends LessonContent {
         diag.arcEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
         diag._arcEquation.setPosition(layout.arcEquation.summary);
 
-        scale = layout.circEquation.summaryScale;
-        diag.circEqn.arrange(scale, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag.circEqnShort.arrange(scale, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(scale, 'left', 'baseline', diag._circumferenceEquation._equals);
-        diag._circumferenceEquation.varState = 1;
+        diag.circEqn.scale(layout.circEquation.summaryScale);
+        diag.circEqn.setCurrentForm('circumference');
+        diag.circEqn.setPosition(layout.circEquation.summary);
         const t = diag._circumferenceEquation._angle.transform.t();
         if (t != null) {
           diag._circumferenceEquation._twoPi.transform
             .updateTranslation(t.add(layout.circEquation.twoPiOffset));
         }
-        diag._circumferenceEquation.setPosition(layout.circEquation.summary);
       },
       showOnly: [
         circle,
@@ -1018,11 +1016,10 @@ class Content extends LessonContent {
       ],
       show: [
         circle._angle,
-        // diag._arcEquation,
       ],
-      hide: [
-        // diag._arcEquation._v,
-      ],
+      // hide: [
+      //   // diag._arcEquation._v,
+      // ],
       setSteadyState: () => {
         diag.resetCircle('summary');
         diag.summaryAngleToggler('deg');

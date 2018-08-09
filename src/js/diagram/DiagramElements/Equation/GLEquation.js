@@ -1125,6 +1125,7 @@ export type TypeEquation = {
     scale: number;
   };
   addForm: (string, Array<Elements | Element | string>) => void;
+  scaleForm: (string, number) => void;
   setElem: (DiagramElementCollection | DiagramElementPrimative | string,
             Array<number> | null,
             boolean,
@@ -1144,6 +1145,7 @@ export type TypeEquation = {
   render: () => void;
   setPosition: (Point) => void;
   stop: () => void;
+  scale: (number) => void;
 };
 
 export class Equation {
@@ -1277,6 +1279,23 @@ export class Equation {
     );
   }
 
+  scaleForm(name: string, scale: number) {
+    if (name in this.form) {
+      this.form[name].arrange(
+        scale,
+        this.formAlignment.hAlign,
+        this.formAlignment.vAlign,
+        this.formAlignment.fixTo,
+      );
+    }
+  }
+
+  scale(scale: number) {
+    Object.keys(this.form).forEach((key) => {
+      this.scaleForm(key, scale);
+    });
+  }
+
   render() {
     const form = this.currentForm;
     if (form != null) {
@@ -1294,7 +1313,6 @@ export class Equation {
       Object.keys(this.form).forEach((key) => {
         if (this.form[key] === this.currentForm) {
           this.currentFormName = key;
-          return;
         }
       });
     }

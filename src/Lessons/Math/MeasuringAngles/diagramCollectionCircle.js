@@ -220,7 +220,7 @@ class CircleCollection extends AngleCircle {
     equation.setElem('equals', null, true);
 
     const { collection } = equation;
-    collection.isTouchale = true;
+    collection.isTouchable = true;
     collection.touchInBoundingRect = true;
     collection.varState = 0;
 
@@ -508,7 +508,7 @@ class CircleCollection extends AngleCircle {
 
     eqn.stop();
     const callbackToUse = typeof callback === 'function' ? callback : null;
-
+    console.log("Asdfasfd");
     if (eqn.currentFormName === 'arc') {
       eqn.setCurrentForm('circumference');
       eqn.form.circumference.setPositions();
