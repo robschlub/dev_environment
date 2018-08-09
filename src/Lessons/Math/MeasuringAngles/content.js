@@ -893,15 +893,6 @@ class Content extends LessonContent {
       setEnterState: () => {
         diag.circEqn.setPosition(layout.circEquation.leftBottom);
         diag.circEqn.setCurrentForm('arc');
-        // diag.circEqn.collection._twoPi
-        //   .setDiagramPositionToElement(diag.circEqn.collection._angle);
-        // diag.toggleCircEquations();
-
-        // diag.circEqn.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        // diag.circEqnShort.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        // diag.circEqnGeneral.arrange(1, 'left', 'baseline', diag._circumferenceEquation._equals);
-        // diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
-        // diag._circumferenceEquation.varState = 1;
         const t = diag._circumferenceEquation._angle.transform.t();
         if (t != null) {
           diag._circumferenceEquation._twoPi.transform
@@ -926,7 +917,6 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
-        // diag.circEqn.render();
         diag.circEqn.setCurrentForm('circumference');
         const circ = diag._circumferenceEquation;
         circ._angle.onClick = diag.pulseAngle.bind(diag);

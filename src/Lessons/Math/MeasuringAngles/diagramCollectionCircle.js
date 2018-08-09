@@ -35,7 +35,7 @@ type radiusOnArcType = {
   stepIn: (number) => void;
 } & DiagramElementCollection;
 
-type circumferenceEquationType = {
+type TypeCircumferenceEquationCollection = {
   _circumference: DiagramElementPrimative;
   _radius: DiagramElementPrimative;
   _twoPi: DiagramElementPrimative;
@@ -47,6 +47,15 @@ type circumferenceEquationType = {
   _angle: DiagramElementPrimative;
   varState: number;
 } & DiagramElementCollection;
+
+type TypeCircumferenceEquation = {
+  collection: TypeCircumferenceEquationCollection;
+  form: {
+    circumference: TypeEquationForm;
+    c: TypeEquationForm;
+    arc: TypeEquationForm;
+  };
+} & TypeEquation;
 
 type equationType = {
   _arc: DiagramElementPrimative;
@@ -76,13 +85,13 @@ type varStateExtendedType = {
 class CircleCollection extends AngleCircle {
   _circle: circleCollectionType;
   _arcEquation: equationType;
-  _circumferenceEquation: circumferenceEquationType;
+  _circumferenceEquation: TypeCircumferenceEquationCollection;
   arcEqn: EquationForm;
   radiusEqn: EquationForm;
   angleEqn: EquationForm;
-  circEqn: Equation;
-  circEqnShort: EquationForm;
-  circEqnGeneral: EquationForm;
+  circEqn: TypeCircumferenceEquation;
+  // circEqnShort: EquationForm;
+  // circEqnGeneral: EquationForm;
   numSections: Array<number>;
   varState: varStateExtendedType;
 
@@ -502,69 +511,69 @@ class CircleCollection extends AngleCircle {
 
     if (eqn.currentFormName === 'arc') {
       eqn.setCurrentForm('circumference');
-      eqn.form['circumference'].setPositions();
-      eqn.form['arc'].setPositions();
+      eqn.form.circumference.setPositions();
+      eqn.form.arc.setPositions();
       const t = this._circumferenceEquation._angle.transform.t();
       if (t != null) {
         this._circumferenceEquation._twoPi.transform
           .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
       }
-      eqn.form['circumference'].hideShow(0.5, 0.5, callbackToUse);
+      eqn.form.circumference.hideShow(0.5, 0.5, callbackToUse);
     } else if (eqn.currentFormName === 'circumference') {
       eqn.setCurrentForm('c');
       eqn.collection._r.setPositionToElement(eqn.collection._radius);
       eqn.collection._c.setPositionToElement(eqn.collection._circumference);
       eqn.collection._r.show();
       eqn.collection._c.show();
-      eqn.form['c'].animatePositionsTo(2, callbackToUse);
+      eqn.form.c.animatePositionsTo(2, callbackToUse);
     } else if (eqn.currentFormName === 'c') {
       eqn.setCurrentForm('arc');
-      eqn.form['arc'].setPositions();
-      eqn.form['arc'].hideShow(0.5, 0.5, callbackToUse);
+      eqn.form.arc.setPositions();
+      eqn.form.arc.hideShow(0.5, 0.5, callbackToUse);
     }
     this.diagram.animateNextFrame();
   }
 
-  toggleCircEquationsOld(scale: number = 1, callback: ?(?mixed) => void = null) {
-    this._circumferenceEquation.stop();
-    let callbackToUse = null;
-    let scaleToUse = 1;
-    if (typeof callback === 'function') {
-      callbackToUse = callback;
-    }
-    if (typeof scale === 'number') {
-      scaleToUse = scale;
-    }
-    if (this._circumferenceEquation.varState === 0) {
-      this._circumferenceEquation.varState += 1;
-      const t = this._circumferenceEquation._angle.transform.t();
-      if (t != null) {
-        this._circumferenceEquation._twoPi.transform
-          .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
-      }
-      this.circEqn.hideShow(0.5, 0.5, callbackToUse);
-    } else if (this._circumferenceEquation.varState === 1) {
-      this._circumferenceEquation.varState += 1;
-      let t = this._circumferenceEquation._radius.transform.t();
-      if (t != null) {
-        this._circumferenceEquation._r.setPosition(t);
-      }
-      t = this._circumferenceEquation._circumference.transform.t();
-      if (t != null) {
-        this._circumferenceEquation._c.setPosition(t);
-      }
-      this._circumferenceEquation._c.show();
-      this._circumferenceEquation._r.show();
-      this.circEqnShort.animateTo(
-        scaleToUse, 2, this._circumferenceEquation._equals,
-        callbackToUse,
-      );
-    } else if (this._circumferenceEquation.varState === 2) {
-      this._circumferenceEquation.varState = 0;
-      this.circEqnGeneral.hideShow(0.5, 0.5, callbackToUse);
-    }
-    this.diagram.animateNextFrame();
-  }
+  // toggleCircEquationsOld(scale: number = 1, callback: ?(?mixed) => void = null) {
+  //   this._circumferenceEquation.stop();
+  //   let callbackToUse = null;
+  //   let scaleToUse = 1;
+  //   if (typeof callback === 'function') {
+  //     callbackToUse = callback;
+  //   }
+  //   if (typeof scale === 'number') {
+  //     scaleToUse = scale;
+  //   }
+  //   if (this._circumferenceEquation.varState === 0) {
+  //     this._circumferenceEquation.varState += 1;
+  //     const t = this._circumferenceEquation._angle.transform.t();
+  //     if (t != null) {
+  //       this._circumferenceEquation._twoPi.transform
+  //         .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
+  //     }
+  //     this.circEqn.hideShow(0.5, 0.5, callbackToUse);
+  //   } else if (this._circumferenceEquation.varState === 1) {
+  //     this._circumferenceEquation.varState += 1;
+  //     let t = this._circumferenceEquation._radius.transform.t();
+  //     if (t != null) {
+  //       this._circumferenceEquation._r.setPosition(t);
+  //     }
+  //     t = this._circumferenceEquation._circumference.transform.t();
+  //     if (t != null) {
+  //       this._circumferenceEquation._c.setPosition(t);
+  //     }
+  //     this._circumferenceEquation._c.show();
+  //     this._circumferenceEquation._r.show();
+  //     this.circEqnShort.animateTo(
+  //       scaleToUse, 2, this._circumferenceEquation._equals,
+  //       callbackToUse,
+  //     );
+  //   } else if (this._circumferenceEquation.varState === 2) {
+  //     this._circumferenceEquation.varState = 0;
+  //     this.circEqnGeneral.hideShow(0.5, 0.5, callbackToUse);
+  //   }
+  //   this.diagram.animateNextFrame();
+  // }
 
   stepInRadiusOnArc() {
     this._circle._radiusOnArc.stepIn(3);

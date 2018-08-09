@@ -780,7 +780,8 @@ export type TypeEquationForm = {
     ?(?mixed) => void,
     'left' | 'center' | 'right', 'top' | 'bottom' | 'middle' | 'baseline',
   ) => void;
-};
+  animatePositionsTo: (number, ?(?mixed) => void) => void;
+} & Elements;
 
 export class EquationForm extends Elements {
   collection: DiagramElementCollection;
@@ -1109,13 +1110,14 @@ export class EquationForm extends Elements {
 }
 
 
-export type EquationType = {
+export type TypeEquation = {
   +collection: DiagramElementCollection;
   diagramLimits: Rect;
   firstTransform: Transform;
-  _dup: () => EquationType;
+  _dup: () => TypeEquation;
   form: Object;
   currentForm: ?EquationForm;
+  currentFormName: string;
   formAlignment: {
     vAlign: TypeVAlign;
     hAlign: TypeHAlign;
@@ -1138,9 +1140,10 @@ export type EquationType = {
       TypeEquationInput,
       string | DiagramElementPrimative | DiagramElementCollection, number,
     ) => Fraction;
-  setCurrentForm: (EquationForm) => void;
+  setCurrentForm: (EquationForm | string) => void;
   render: () => void;
   setPosition: (Point) => void;
+  stop: () => void;
 };
 
 export class Equation {

@@ -10,7 +10,7 @@ import {
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
-import type { EquationType } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { TypeEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type TypeAnglePairName = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
 
@@ -37,10 +37,10 @@ type TypeMainTextEquation = {
   collection: TypeEquationElements;
   showEqn: (TypeAnglePairName, ?TypeEquationForm) => void;
   onclickEqn: (TypeEquationForm) => void;
-  getForm: (TypeAnglePairName, string, TypeUnit | null) => EquationType;
+  getForm: (TypeAnglePairName, string, TypeUnit | null) => TypeEquation;
   showCurrentForm: () => void;
   _dup: () => TypeMainTextEquation;
-} & EquationType;
+} & TypeEquation;
 
 type TypeAnglePairNameAnnotationEquation = {
   showCurrentForm: () => void;
