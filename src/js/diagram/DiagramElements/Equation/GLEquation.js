@@ -785,6 +785,7 @@ export type TypeEquationForm = {
 
 export class EquationForm extends Elements {
   collection: DiagramElementCollection;
+  name: string;
 
   constructor(collection: DiagramElementCollection) {
     super([]);
@@ -1271,6 +1272,7 @@ export class Equation {
   ) {
     this.form[name] = new EquationForm(this.collection);
     this.form[name].createEq(content);
+    this.form[name].name = name;
     this.form[name].arrange(
       this.formAlignment.scale,
       this.formAlignment.hAlign,
