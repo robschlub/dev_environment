@@ -34,22 +34,30 @@ body {
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
 }
 
-.lesson__important_angles_table_selected {
+.lesson__adjacent_angles_table_selected {
   color: color('diagram', 'text-base');
 }
 
-.lesson__important_angles_unit_selected {
+.lesson__adjacent_angles_unit_selected {
   color: color('diagram', 'text-base');
 }
 
-.lesson__important_angles_unit_selection {
+.lesson__adjacent_angles_unit_selection {
   font-size: calc(var(--lesson__diagram-font-size) * 0.4);
   position: absolute;
   left: 45%;
   top: 95%;
 }
 
-.lesson__important_angles_text_hide {
+.lesson__adjacent_angles_unit_selection_hide {
+  width: 0;
+  font-size: 0;
+  left: -10000px;
+  height: 0;
+  position: absolute;
+}
+
+.lesson__adjacent_angles_text_hide {
   width: 0;
   font-size: 0;
   height: 0;
@@ -57,7 +65,7 @@ body {
   left: -10000px;
 }
 
-.lesson__important_angles_from_Latin {
+.lesson__adjacent_angles_from_Latin {
   color: color('diagram', 'text-base');
   font-style: normal;
 }

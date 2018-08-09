@@ -388,13 +388,13 @@ class AdjacentAnglesCollection extends AngleCircle {
     if (elemDeg != null && elemRad != null) {
       if (unit === 'rad') {
         this.varState.radialLines = 2 * Math.PI;
-        elemDeg.classList.remove('lesson__important_angles_unit_selected');
-        elemRad.classList.add('lesson__important_angles_unit_selected');
+        elemDeg.classList.remove('lesson__adjacent_angles_unit_selected');
+        elemRad.classList.add('lesson__adjacent_angles_unit_selected');
         // this.setParagraphUnits('rad');
       } else if (unit === 'deg') {
         this.varState.radialLines = 360;
-        elemRad.classList.remove('lesson__important_angles_unit_selected');
-        elemDeg.classList.add('lesson__important_angles_unit_selected');
+        elemRad.classList.remove('lesson__adjacent_angles_unit_selected');
+        elemDeg.classList.add('lesson__adjacent_angles_unit_selected');
         // this.setParagraphUnits('deg');
       }
     }
@@ -548,12 +548,12 @@ class AdjacentAnglesCollection extends AngleCircle {
     if (anglePairName !== this.varState.angleSelected) {
       elem = document.getElementById(`id_${this.varState.angleSelected}`);
       if (elem != null) {
-        elem.classList.remove('lesson__important_angles_table_selected');
+        elem.classList.remove('lesson__adjacent_angles_table_selected');
       }
     }
     elem = document.getElementById(`id_${anglePairName}`);
     if (elem != null) {
-      elem.classList.add('lesson__important_angles_table_selected');
+      elem.classList.add('lesson__adjacent_angles_table_selected');
     }
     this.varState.angleSelected = anglePairName;
   }
@@ -575,13 +575,13 @@ class AdjacentAnglesCollection extends AngleCircle {
       if (id !== anglePairName) {
         const elem = document.getElementById(id);
         if (elem != null) {
-          elem.classList.add('lesson__important_angles_text_hide');
+          elem.classList.add('lesson__adjacent_angles_text_hide');
         }
       }
     });
     const elem = document.getElementById(`id_${anglePairName}_text`);
     if (elem != null) {
-      elem.classList.remove('lesson__important_angles_text_hide');
+      elem.classList.remove('lesson__adjacent_angles_text_hide');
     }
   }
 
@@ -625,7 +625,24 @@ class AdjacentAnglesCollection extends AngleCircle {
     this.rotateElementTo(this._circle._radius, angle, () => {}, 2, 6, true);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  hideUnitSelection() {
+    const element = document.getElementById('id_unit_selection');
+    if (element != null) {
+      element.classList.add('lesson__adjacent_angles_unit_selection_hide');
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  showUnitSelection() {
+    const element = document.getElementById('id_unit_selection');
+    if (element != null) {
+      element.classList.remove('lesson__adjacent_angles_unit_selection_hide');
+    }
+  }
+
   goToAdjacent() {
+    this.hideUnitSelection();
     this.stopRightAngle();
     this.stopFullAngle();
     this.stopStraightAngle();
@@ -641,6 +658,7 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   goToComplementary() {
+    this.showUnitSelection();
     this.stopStraightAngle();
     this.stopFullAngle();
     this.showAnglePairName('complementary');
@@ -655,6 +673,7 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   goToSupplementary() {
+    this.showUnitSelection();
     this.stopRightAngle();
     this.stopFullAngle();
     this.showAnglePairName('supplementary');
@@ -669,6 +688,7 @@ class AdjacentAnglesCollection extends AngleCircle {
   }
 
   goToExplementary() {
+    this.showUnitSelection();
     this.stopRightAngle();
     this.stopStraightAngle();
     this.showAnglePairName('explementary');
