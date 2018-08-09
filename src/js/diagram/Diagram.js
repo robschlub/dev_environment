@@ -684,7 +684,6 @@ class Diagram {
     if (this.inTransition) {
       return false;
     }
-
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
     // console.log(pixelPoint)
@@ -695,6 +694,7 @@ class Diagram {
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(glPoint);
+  
     touchedElements.forEach(e => e.click());
     // console.log(touchedElements)
     // Make a list of, and start moving elements that are being moved

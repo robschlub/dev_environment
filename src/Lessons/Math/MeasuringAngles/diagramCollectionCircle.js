@@ -9,7 +9,7 @@ import {
   Point, Transform,
 } from '../../../js/diagram/tools/g2';
 import { Equation, EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-// import type { TypeEquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { TypeEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
@@ -76,7 +76,7 @@ type TypeArcEquation = {
   showArc: () => void;
   showRadius: () => void;
   showAngle: () => void;
-};
+} & Equation;
 
 type equationType = {
   _arc: DiagramElementPrimative;
@@ -230,7 +230,6 @@ class CircleCollection extends AngleCircle {
       arc: 'arc length',
       angle: 'angle',
     }, this.colors.diagram.text.base);
-
     equation.setElem('arc', this.colors.arc, true);
     equation.setElem('circumference', this.colors.arc, true);
     equation.setElem('c', this.colors.arc, true, '', 0);
@@ -410,7 +409,7 @@ class CircleCollection extends AngleCircle {
     this.add('compareText', this.makeCompareText());
     this.addToCircle(this.numSections);
     // this.add('slider', makeSlider(this.shapes, this.layout.slider));
-    this.add('arcEquation', this.makeArcEquation());
+    // this.add('arcEquation', this.makeArcEquation());
     this.circEqn = this.makeCircumferenceEquation();
     this.add('circumferenceEquation', this.circEqn.collection);
     this.arcEqn = this.makeArcEquation();
@@ -730,7 +729,8 @@ class CircleCollection extends AngleCircle {
   }
 
   animateEquation(
-    leftSide: 'arc' | 'radius' | 'angle',
+    form: 'arc' | 'radius' | 'angle',
+    temp: number,
     // scale: number,
     // radiusMag: number,
     // angleMag: number,
@@ -749,16 +749,20 @@ class CircleCollection extends AngleCircle {
     // radiusOptions.magnitude = radiusMag;
     // arcOptions.magnitude = arcMag;
     // arcOptions.direction = 'up';
-
-    if (leftSide === 'arc') {
-      this.arcEqn.form.arc.animatePositionsTo(2);
-    } else if (leftSide === 'radius') {
-      this.arcEqn.form.radius.animatePositionsTo(2);
-      // this.radiusEqn.animateTo(scale, 2, this._arcEquation._equals);
-    } else if (leftSide === 'angle') {
-      this.arcEqn.form.angle.animatePositionsTo(2);
-      // this.angleEqn.animateTo(scale, 2, this._arcEquation._equals);
-    }
+    this.arcEqn.setCurrentForm(form);
+    this.arcEqn.form[form].animatePositionsTo(2);
+    // if (form === 'arc') {
+    //   this.arcEqn.setCurrentForm('arc');
+    //   this.arcEqn.form.arc.animatePositionsTo(2);
+    // } else if (form === 'radius') {
+    //   this.arcEqn.setCurrentForm('radius');
+    //   this.arcEqn.form.radius.animatePositionsTo(2);
+    //   // this.radiusEqn.animateTo(scale, 2, this._arcEquation._equals);
+    // } else if (form === 'angle') {
+    //   this.arcEqn.setCurrentForm('angle');
+    //   this.arcEqn.form.angle.animatePositionsTo(2);
+    //   // this.angleEqn.animateTo(scale, 2, this._arcEquation._equals);
+    // }
     this.diagram.animateNextFrame();
   }
 
