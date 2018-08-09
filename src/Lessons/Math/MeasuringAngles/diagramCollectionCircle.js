@@ -9,7 +9,7 @@ import {
   Point, Transform,
 } from '../../../js/diagram/tools/g2';
 import { Equation, EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-import type { TypeEquation, TypeEquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { TypeEquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
@@ -55,7 +55,7 @@ type TypeCircumferenceEquation = {
     c: TypeEquationForm;
     arc: TypeEquationForm;
   };
-} & TypeEquation;
+} & Equation;
 
 type equationType = {
   _arc: DiagramElementPrimative;
@@ -230,78 +230,8 @@ class CircleCollection extends AngleCircle {
     e.addForm('c', ['c', 'equals', 'twoPi', 'r']);
     e.addForm('arc', ['arc', 'equals', 'angle', 'times', 'radius']);
 
-    // collection._angle.onClick = this.pulseAngle.bind(this);
-    // collection._radius.onClick = this.pulseRadius.bind(this);
-    // collection._arc.onClick = this.pulseArc.bind(this);
-
     equation.setCurrentForm('arc');
-    // eqn = this.diagram.equation.make(this._circumferenceEquation);
-    // eqn.createEq(['circumference', 'equals', 'twoPi', 'times', 'radius']);
-    // this.circEqn = eqn;
-
-    // eqn = this.diagram.equation.make(this._circumferenceEquation);
-    // eqn.createEq(['c', 'equals', 'twoPi', 'r']);
-    // this.circEqnShort = eqn;
-
-    // eqn = this.diagram.equation.make(this._circumferenceEquation);
-    // eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
-    // this.circEqnGeneral = eqn;
-
     return equation;
-    // equationElements._arc.setColor(this.colors.arc);
-    // equationElements._circumference.setColor(this.colors.arc);
-    // equationElements._c.setColor(this.colors.arc);
-    // equationElements._r.setColor(this.colors.radius);
-    // equationElements._radius.setColor(this.colors.radius);
-    // equationElements._twoPi.setColor(this.colors.angle);
-    // equationElements._angle.setColor(this.colors.angle);
-
-    // equationElements._radius.isTouchable = true;
-    // equationElements._angle.isTouchable = true;
-    // equationElements._twoPi.isTouchable = true;
-    // equationElements._r.isTouchable = true;
-    // equationElements._c.isTouchable = true;
-    // equationElements._circumference.isTouchable = true;
-    // equationElements._arc.isTouchable = true;
-    // equationElements._equals.isTouchable = true;
-    // equationElements.isTouchable = true;
-    // equationElements.touchInBoundingRect = true;
-    // equationElements.varState = 0;
-    // return equationElements;
-  }
-
-  makeCircumferenceEquationOld() {
-    const equationElements = this.diagram.equation.elements({
-      circumference: 'circumference',
-      radius: 'radius',
-      twoPi: `2${String.fromCharCode(960)} `,
-      times: ` ${String.fromCharCode(215)} `,
-      equals: '  =  ',
-      r: 'r',
-      c: 'c',
-      arc: 'arc length',
-      angle: 'angle',
-    }, this.colors.diagram.text.base);
-    equationElements._arc.setColor(this.colors.arc);
-    equationElements._circumference.setColor(this.colors.arc);
-    equationElements._c.setColor(this.colors.arc);
-    equationElements._r.setColor(this.colors.radius);
-    equationElements._radius.setColor(this.colors.radius);
-    equationElements._twoPi.setColor(this.colors.angle);
-    equationElements._angle.setColor(this.colors.angle);
-
-    equationElements._radius.isTouchable = true;
-    equationElements._angle.isTouchable = true;
-    equationElements._twoPi.isTouchable = true;
-    equationElements._r.isTouchable = true;
-    equationElements._c.isTouchable = true;
-    equationElements._circumference.isTouchable = true;
-    equationElements._arc.isTouchable = true;
-    equationElements._equals.isTouchable = true;
-    equationElements.isTouchable = true;
-    equationElements.touchInBoundingRect = true;
-    equationElements.varState = 0;
-    return equationElements;
   }
 
   makeArcEquation() {
@@ -508,7 +438,7 @@ class CircleCollection extends AngleCircle {
 
     eqn.stop();
     const callbackToUse = typeof callback === 'function' ? callback : null;
-    console.log("Asdfasfd");
+
     if (eqn.currentFormName === 'arc') {
       eqn.setCurrentForm('circumference');
       eqn.form.circumference.setPositions();
