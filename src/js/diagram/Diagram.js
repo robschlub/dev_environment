@@ -35,7 +35,7 @@ import {
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
 import {
-  DiagramGLEquation, createEquationElements, Equation,
+  EquationForm, createEquationElements, Equation,
 } from './DiagramElements/Equation/GLEquation';
 // import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
@@ -96,7 +96,7 @@ function equation(diagram: Diagram) {
   }
 
   function make(equationCollection: DiagramElementCollection) {
-    return new DiagramGLEquation(equationCollection);
+    return new EquationForm(equationCollection);
   }
 
   function makeHTML(id: string = '', classes: string | Array<string> = []) {

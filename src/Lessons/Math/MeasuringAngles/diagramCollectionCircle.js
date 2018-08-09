@@ -8,7 +8,7 @@ import {
 import {
   Point, Transform,
 } from '../../../js/diagram/tools/g2';
-import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
@@ -76,12 +76,12 @@ class CircleCollection extends AngleCircle {
   _circle: circleCollectionType;
   _arcEquation: equationType;
   _circumferenceEquation: circumferenceEquationType;
-  arcEqn: DiagramGLEquation;
-  radiusEqn: DiagramGLEquation;
-  angleEqn: DiagramGLEquation;
-  circEqn: DiagramGLEquation;
-  circEqnShort: DiagramGLEquation;
-  circEqnGeneral: DiagramGLEquation;
+  arcEqn: EquationForm;
+  radiusEqn: EquationForm;
+  angleEqn: EquationForm;
+  circEqn: EquationForm;
+  circEqnShort: EquationForm;
+  circEqnGeneral: EquationForm;
   numSections: Array<number>;
   varState: varStateExtendedType;
 

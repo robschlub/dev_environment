@@ -1,5 +1,5 @@
 import {
-  DiagramGLEquation, createEquationElements, Equation,
+  EquationForm, createEquationElements, Equation,
 } from './GLEquation';
 import { Point } from '../../tools/g2';
 import {
@@ -8,7 +8,7 @@ import {
 import DrawContext2D from '../../../__mocks__/DrawContext2DMock';
 
 
-describe('GL Equation', () => {
+describe('Equation Form', () => {
   describe('Create collection', () => {
     test('One element collection', () => {
       const collection = createEquationElements({ a: 'a' }, DrawContext2D);
@@ -38,7 +38,7 @@ describe('GL Equation', () => {
         b: 'b',
         c: 'c',
       }, new DrawContext2D());
-      eqn = new DiagramGLEquation(collection);
+      eqn = new EquationForm(collection);
     });
     test('Instantiation', () => {
       expect(eqn.collection).toBe(collection);

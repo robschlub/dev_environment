@@ -438,6 +438,7 @@ class Bounds {
     this.descent = 0;
   }
 }
+
 class Integral extends Elements {
   limitMin: Elements | null;
   limitMax: Elements | null;
@@ -659,7 +660,7 @@ export function getDiagramElement(
   return name;
 }
 
-type EquationInput = Array<Elements | Element | string> | Elements | Element | string;
+type TypeEquationInput = Array<Elements | Element | string> | Elements | Element | string;
 
 export function createEquationElements(
   elems: Object,
@@ -719,7 +720,7 @@ export function createEquationElements(
 
 export function contentToElement(
   collection: DiagramElementCollection,
-  content: EquationInput,
+  content: TypeEquationInput,
 ): Elements {
   // If input is alread an Elements object, then return it
   if (content instanceof Elements) {
@@ -758,13 +759,13 @@ export function contentToElement(
   return new Elements(elementArray);
 }
 
-export type alignHType = 'left' | 'right' | 'center';
-export type alignVType = 'top' | 'bottom' | 'middle' | 'baseline';
-export type DiagramGLEquationType = {
+export type TypeHAlign = 'left' | 'right' | 'center';
+export type TypeVAlign = 'top' | 'bottom' | 'middle' | 'baseline';
+export type TypeEquationForm = {
   collection: DiagramElementCollection;
   createEq: (Array<Elements | Element | string>) => void;
   arrange: (
-    number, alignHType | null, alignVType | null,
+    number, TypeHAlign | null, TypeVAlign | null,
     DiagramElementPrimative | DiagramElementCollection | Point
   ) => void;
   dissolveElements: (
@@ -781,7 +782,7 @@ export type DiagramGLEquationType = {
   ) => void;
 };
 
-export class DiagramGLEquation extends Elements {
+export class EquationForm extends Elements {
   collection: DiagramElementCollection;
 
   constructor(collection: DiagramElementCollection) {
@@ -790,7 +791,7 @@ export class DiagramGLEquation extends Elements {
   }
 
   _dup(collection: DiagramElementCollection) {
-    const equationCopy = new DiagramGLEquation(collection);
+    const equationCopy = new EquationForm(collection);
     // equationCopy.collection = collection;
 
     // const allCollectionElements = collection.getAllElements();
@@ -824,7 +825,7 @@ export class DiagramGLEquation extends Elements {
   }
 
   // createNewEq(content: Array<Elements | Element | string>) {
-  //   const eqn = new DiagramGLEquation(this.collection);
+  //   const eqn = new EquationForm(this.collection);
   //   eqn.createEq(content);
   //   return eqn;
   // }
@@ -833,8 +834,8 @@ export class DiagramGLEquation extends Elements {
   // equation is at (0,0) in colleciton space.
   arrange(
     scale: number = 1,
-    alignH: alignHType | null = 'left',
-    alignV: alignVType | null = 'baseline',
+    alignH: TypeHAlign | null = 'left',
+    alignV: TypeVAlign | null = 'baseline',
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
     // const elementsInEqn = this.getAllElements();
@@ -1008,8 +1009,8 @@ export class DiagramGLEquation extends Elements {
   }
 
   sfrac(
-    numerator: EquationInput,
-    denominator: EquationInput,
+    numerator: TypeEquationInput,
+    denominator: TypeEquationInput,
     vinculum: DiagramElementPrimative | DiagramElementCollection | string,
     scaleModifier: number = 1,
   ) {
@@ -1019,8 +1020,8 @@ export class DiagramGLEquation extends Elements {
   }
 
   frac(
-    numerator: EquationInput,
-    denominator: EquationInput,
+    numerator: TypeEquationInput,
+    denominator: TypeEquationInput,
     vinculum: string | DiagramElementPrimative | DiagramElementCollection,
   ) {
     return new Fraction(
@@ -1031,8 +1032,8 @@ export class DiagramGLEquation extends Elements {
   }
 
   sub(
-    content: EquationInput,
-    subscript: EquationInput,
+    content: TypeEquationInput,
+    subscript: TypeEquationInput,
   ) {
     return new SuperSub(
       contentToElement(this.collection, content),
@@ -1042,8 +1043,8 @@ export class DiagramGLEquation extends Elements {
   }
 
   sup(
-    content: EquationInput,
-    superscript: EquationInput,
+    content: TypeEquationInput,
+    superscript: TypeEquationInput,
   ) {
     return new SuperSub(
       contentToElement(this.collection, content),
@@ -1053,9 +1054,9 @@ export class DiagramGLEquation extends Elements {
   }
 
   supsub(
-    content: EquationInput,
-    superscript: EquationInput,
-    subscript: EquationInput,
+    content: TypeEquationInput,
+    superscript: TypeEquationInput,
+    subscript: TypeEquationInput,
   ) {
     return new SuperSub(
       contentToElement(this.collection, content),
@@ -1065,9 +1066,9 @@ export class DiagramGLEquation extends Elements {
   }
 
   int(
-    limitMin: EquationInput,
-    limitMax: EquationInput,
-    content: EquationInput,
+    limitMin: TypeEquationInput,
+    limitMax: TypeEquationInput,
+    content: TypeEquationInput,
     integralGlyph: DiagramElementPrimative,
   ) {
     return new Integral(
@@ -1086,10 +1087,10 @@ export type EquationType = {
   firstTransform: Transform;
   _dup: () => EquationType;
   form: Object;
-  currentForm: ?DiagramGLEquation;
+  currentForm: ?EquationForm;
   formAlignment: {
-    vAlign: alignVType;
-    hAlign: alignHType;
+    vAlign: TypeVAlign;
+    hAlign: TypeHAlign;
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
     scale: number;
   };
@@ -1100,16 +1101,16 @@ export type EquationType = {
             'up' | 'down',
             number) => void;
   frac: (
-      EquationInput,
-      EquationInput,
+      TypeEquationInput,
+      TypeEquationInput,
       string | DiagramElementPrimative | DiagramElementCollection,
     ) => Fraction;
   sfrac: (
-      EquationInput,
-      EquationInput,
+      TypeEquationInput,
+      TypeEquationInput,
       string | DiagramElementPrimative | DiagramElementCollection, number,
     ) => Fraction;
-  setCurrentForm: (DiagramGLEquation) => void;
+  setCurrentForm: (EquationForm) => void;
   render: () => void;
   setPosition: (Point) => void;
 };
@@ -1120,10 +1121,10 @@ export class Equation {
   firstTransform: Transform;
   form: Object;
   drawContext2D: DrawContext2D;
-  currentForm: ?DiagramGLEquation;
+  currentForm: ?EquationForm;
   formAlignment: {
-    vAlign: alignVType;
-    hAlign: alignHType;
+    vAlign: TypeVAlign;
+    hAlign: TypeHAlign;
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
     scale: number;
   };
@@ -1234,7 +1235,7 @@ export class Equation {
     name: string,
     content: Array<Elements | Element | string>,
   ) {
-    this.form[name] = new DiagramGLEquation(this.collection);
+    this.form[name] = new EquationForm(this.collection);
     this.form[name].createEq(content);
     this.form[name].arrange(
       this.formAlignment.scale,
@@ -1252,13 +1253,13 @@ export class Equation {
     }
   }
 
-  setCurrentForm(form: DiagramGLEquation) {
+  setCurrentForm(form: EquationForm) {
     this.currentForm = form;
   }
 
   frac(
-    numerator: EquationInput,
-    denominator: EquationInput,
+    numerator: TypeEquationInput,
+    denominator: TypeEquationInput,
     vinculum: string | DiagramElementPrimative | DiagramElementCollection,
   ) {
     return new Fraction(
@@ -1269,8 +1270,8 @@ export class Equation {
   }
 
   sfrac(
-    numerator: EquationInput,
-    denominator: EquationInput,
+    numerator: TypeEquationInput,
+    denominator: TypeEquationInput,
     vinculum: DiagramElementPrimative | DiagramElementCollection | string,
     scaleModifier: number = 1,
   ) {

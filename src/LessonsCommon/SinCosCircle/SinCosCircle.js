@@ -9,7 +9,7 @@ import {
 } from '../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../AngleCircle/AngleCircle';
-import { DiagramGLEquation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import { EquationForm } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 type rightAngleType = {
@@ -44,7 +44,7 @@ type sineTextType = {
 } & DiagramElementCollection;
 
 export type equationType = {
-  eqn: DiagramGLEquation;
+  eqn: EquationForm;
 } & DiagramElementCollection;
 
 export type sineCosineLineType = {

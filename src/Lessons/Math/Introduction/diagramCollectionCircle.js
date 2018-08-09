@@ -10,7 +10,7 @@ import {
 import {
   Point, Transform, Rect,
 } from '../../../js/diagram/tools/g2';
-import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 import lessonLayout from './layout';
 
@@ -260,7 +260,7 @@ class CircleCollection extends DiagramElementCollection {
   _diameterDimension: DiameterDimensionType;
   _shade: DiameterDimensionType;
   diagram: Diagram;
-  eqn: DiagramGLEquation;
+  eqn: EquationForm;
   _equation: EquationType;
   _earthCalculation: EarthCalculationType;
   propertyLocations: Array<number>;

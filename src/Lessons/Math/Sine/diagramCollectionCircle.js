@@ -13,7 +13,7 @@ import type {
   SinCosVarStateType, SinCosCircleAngleAnnotationType,
 } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import lessonLayout from './layout';
-import { DiagramGLEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type bowType = {
     _handle: DiagramElementPrimative;
@@ -22,7 +22,7 @@ type bowType = {
 
 
 type baseEquationType = {
-  eqn: DiagramGLEquation;
+  eqn: EquationForm;
   init: () => void;
 } & DiagramElementCollection;
 
