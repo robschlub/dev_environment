@@ -985,13 +985,16 @@ class Content extends LessonContent {
         one_radian_angle: click(diag.summaryRotateToRad, [diag, 1], colors.angle),
       },
       setEnterState: () => {
-        const scale = layout.arcEquation.summaryScale;
+        // const scale = layout.arcEquation.summaryScale;
         diag._angleText.setPosition(layout.angleEqualsText.summary);
 
-        diag.radiusEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
-        diag.angleEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
-        diag.arcEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
-        diag._arcEquation.setPosition(layout.arcEquation.summary);
+        diag.arcEqn.scale(layout.arcEquation.summaryScale);
+        diag.arcEqn.setPosition(layout.arcEquation.summary);
+        diag.arcEqn.setCurrentForm('arc');
+        // diag.radiusEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
+        // diag.angleEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
+        // diag.arcEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
+        // diag._arcEquation.setPosition(layout.arcEquation.summary);
 
         diag.circEqn.scale(layout.circEquation.summaryScale);
         diag.circEqn.setCurrentForm('circumference');
@@ -1024,14 +1027,20 @@ class Content extends LessonContent {
         diag.resetCircle('summary');
         diag.summaryAngleToggler('deg');
 
-        const scale = layout.arcEquation.summaryScale;
-        diag._arcEquation.showArc();
-        diag._arcEquation._angle.onClick =
-          diag.animateEquation.bind(diag, 'angle', scale, 0.6, 0.2, 0.25);
-        diag._arcEquation._radius.onClick =
-          diag.animateEquation.bind(diag, 'radius', scale, 0.6, 0.2, 0.25);
-        diag._arcEquation._arc.onClick =
-          diag.animateEquation.bind(diag, 'arc', scale, 0.6, 0.2, 0.25);
+        // const scale = layout.arcEquation.summaryScale;
+        // diag.arcEqn.showArc();
+        // diag.arcEqn.form.arc.setPositions();
+        // diag.arcEqn.form.arc.showHide();
+        diag.arcEqn.render();
+        // diag._arcEquation._angle.onClick =
+        //   diag.animateEquation.bind(diag, 'angle', scale, 0.6, 0.2, 0.25);
+        // diag._arcEquation._radius.onClick =
+        //   diag.animateEquation.bind(diag, 'radius', scale, 0.6, 0.2, 0.25);
+        // diag._arcEquation._arc.onClick =
+        //   diag.animateEquation.bind(diag, 'arc', scale, 0.6, 0.2, 0.25);
+        diag._arcEquation._angle.onClick = diag.animateEquation.bind(diag, 'angle');
+        diag._arcEquation._radius.onClick = diag.animateEquation.bind(diag, 'radius');
+        diag._arcEquation._arc.onClick = diag.animateEquation.bind(diag, 'arc');
 
         const circ = diag._circumferenceEquation;
         circ.onClick = diag.toggleCircEquations.bind(diag);
