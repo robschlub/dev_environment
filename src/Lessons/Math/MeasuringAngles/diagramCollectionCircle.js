@@ -268,19 +268,6 @@ class CircleCollection extends AngleCircle {
     equation.setElem('arc', this.colors.arc, true, 'up', 0.25);
     equation.setElem('radius', this.colors.radius, true, 'down', 0.6);
     equation.setElem('angle', this.colors.angle, true, 'down', 0.2);
-    // equation.setElem('equals', null, true);
-
-    // equationElements._arc.setColor(this.colors.arc);
-    // equationElements._arc.isTouchable = true;
-    // equationElements._arc.animate.transform.translation.style = 'curved';
-    // equationElements._radius.setColor(this.colors.radius);
-    // equationElements._radius.isTouchable = true;
-    // equationElements._radius.animate.transform.translation.style = 'curved';
-    // equationElements._radius.animate.transform.translation.options.direction = 1;
-    // equationElements._angle.setColor(this.colors.angle);
-    // equationElements._angle.isTouchable = true;
-    // equationElements._angle.animate.transform.translation.style = 'curved';
-    // equationElements._angle.animate.transform.translation.options.direction = 1;
 
     const e = equation;
     e.formAlignment.fixTo = equation.collection._equals;
@@ -292,97 +279,7 @@ class CircleCollection extends AngleCircle {
 
     collection.hasTouchableElements = true;
 
-    equation.showArc = () => {
-      equation.form.arc.setPositions();
-      equation.form.arc.showHide();
-      // equationElements.show();
-      // equationElements._arc.show();
-      // equationElements._radius.show();
-      // equationElements._angle.show();
-      // equationElements._equals.show();
-      // equationElements._v.hide();
-      // equationElements._times.show();
-    };
-
-    equation.showRadius = () => {
-      // equation.form.arc.setPositions();
-      equation.form.radius.showHide();
-      // equationElements.show();
-      // equationElements._arc.show();
-      // equationElements._radius.show();
-      // equationElements._angle.show();
-      // equationElements._equals.show();
-      // equationElements._v.show();
-      // equationElements._times.hide();
-    };
-
-    equation.showAngle = () => {
-      equation.form.angle.showHide();
-      // equationElements.show();
-      // equationElements._arc.show();
-      // equationElements._radius.show();
-      // equationElements._angle.show();
-      // equationElements._equals.show();
-      // equationElements._v.show();
-      // equationElements._times.hide();
-    };
-
     return equation;
-  }
-
-  makeArcEquationOld() {
-    const equationElements = this.diagram.equation.elements({
-      arc: 'arc length',
-      radius: 'radius',
-      angle: 'angle',
-      times: ` ${String.fromCharCode(215)} `,
-      equals: '  =  ',
-      v: this.diagram.equation.vinculum(this.colors.diagram.text.base),
-    }, this.colors.diagram.text.base);
-    equationElements._arc.setColor(this.colors.arc);
-    equationElements._arc.isTouchable = true;
-    equationElements._arc.animate.transform.translation.style = 'curved';
-    equationElements._radius.setColor(this.colors.radius);
-    equationElements._radius.isTouchable = true;
-    equationElements._radius.animate.transform.translation.style = 'curved';
-    equationElements._radius.animate.transform.translation.options.direction = 1;
-    equationElements._angle.setColor(this.colors.angle);
-    equationElements._angle.isTouchable = true;
-    equationElements._angle.animate.transform.translation.style = 'curved';
-    equationElements._angle.animate.transform.translation.options.direction = 1;
-    equationElements.hasTouchableElements = true;
-
-    equationElements.showArc = () => {
-      equationElements.show();
-      equationElements._arc.show();
-      equationElements._radius.show();
-      equationElements._angle.show();
-      equationElements._equals.show();
-      equationElements._v.hide();
-      equationElements._times.show();
-    };
-
-    equationElements.showRadius = () => {
-      equationElements.show();
-      equationElements._arc.show();
-      equationElements._radius.show();
-      equationElements._angle.show();
-      equationElements._equals.show();
-      equationElements._v.show();
-      equationElements._times.hide();
-    };
-
-    equationElements.showAngle = () => {
-      equationElements.show();
-      equationElements._arc.show();
-      equationElements._radius.show();
-      equationElements._angle.show();
-      equationElements._equals.show();
-      equationElements._v.show();
-      equationElements._times.hide();
-    };
-
-    return equationElements;
   }
 
   addToCircle(numSections: Array<number>) {
@@ -408,37 +305,10 @@ class CircleCollection extends AngleCircle {
 
     this.add('compareText', this.makeCompareText());
     this.addToCircle(this.numSections);
-    // this.add('slider', makeSlider(this.shapes, this.layout.slider));
-    // this.add('arcEquation', this.makeArcEquation());
     this.circEqn = this.makeCircumferenceEquation();
     this.add('circumferenceEquation', this.circEqn.collection);
     this.arcEqn = this.makeArcEquation();
     this.add('arcEquation', this.arcEqn.collection);
-    // let eqn;
-    // eqn = diagram.equation.make(this._arcEquation);
-    // eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
-
-    // this.arcEqn = eqn;
-    // eqn = this.diagram.equation.make(this._arcEquation);
-    // eqn.createEq(['radius', 'equals', eqn.frac('arc', 'angle', 'v')]);
-
-    // this.radiusEqn = eqn;
-    // eqn = this.diagram.equation.make(this._arcEquation);
-    // eqn.createEq(['angle', 'equals', eqn.frac('arc', 'radius', 'v')]);
-
-    // this.angleEqn = eqn;
-
-    // eqn = this.diagram.equation.make(this._circumferenceEquation);
-    // eqn.createEq(['circumference', 'equals', 'twoPi', 'times', 'radius']);
-    // this.circEqn = eqn;
-
-    // eqn = this.diagram.equation.make(this._circumferenceEquation);
-    // eqn.createEq(['c', 'equals', 'twoPi', 'r']);
-    // this.circEqnShort = eqn;
-
-    // eqn = this.diagram.equation.make(this._circumferenceEquation);
-    // eqn.createEq(['arc', 'equals', 'angle', 'times', 'radius']);
-    // this.circEqnGeneral = eqn;
   }
 
   updateRotation() {
@@ -560,47 +430,6 @@ class CircleCollection extends AngleCircle {
     }
     this.diagram.animateNextFrame();
   }
-
-  // toggleCircEquationsOld(scale: number = 1, callback: ?(?mixed) => void = null) {
-  //   this._circumferenceEquation.stop();
-  //   let callbackToUse = null;
-  //   let scaleToUse = 1;
-  //   if (typeof callback === 'function') {
-  //     callbackToUse = callback;
-  //   }
-  //   if (typeof scale === 'number') {
-  //     scaleToUse = scale;
-  //   }
-  //   if (this._circumferenceEquation.varState === 0) {
-  //     this._circumferenceEquation.varState += 1;
-  //     const t = this._circumferenceEquation._angle.transform.t();
-  //     if (t != null) {
-  //       this._circumferenceEquation._twoPi.transform
-  //         .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
-  //     }
-  //     this.circEqn.hideShow(0.5, 0.5, callbackToUse);
-  //   } else if (this._circumferenceEquation.varState === 1) {
-  //     this._circumferenceEquation.varState += 1;
-  //     let t = this._circumferenceEquation._radius.transform.t();
-  //     if (t != null) {
-  //       this._circumferenceEquation._r.setPosition(t);
-  //     }
-  //     t = this._circumferenceEquation._circumference.transform.t();
-  //     if (t != null) {
-  //       this._circumferenceEquation._c.setPosition(t);
-  //     }
-  //     this._circumferenceEquation._c.show();
-  //     this._circumferenceEquation._r.show();
-  //     this.circEqnShort.animateTo(
-  //       scaleToUse, 2, this._circumferenceEquation._equals,
-  //       callbackToUse,
-  //     );
-  //   } else if (this._circumferenceEquation.varState === 2) {
-  //     this._circumferenceEquation.varState = 0;
-  //     this.circEqnGeneral.hideShow(0.5, 0.5, callbackToUse);
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 
   stepInRadiusOnArc() {
     this._circle._radiusOnArc.stepIn(3);
@@ -728,41 +557,9 @@ class CircleCollection extends AngleCircle {
     this._circle._arc.color = this.colors.arc.slice();
   }
 
-  animateEquation(
-    form: 'arc' | 'radius' | 'angle',
-    temp: number,
-    // scale: number,
-    // radiusMag: number,
-    // angleMag: number,
-    // arcMag: number,
-  ) {
-    // const arcOptions =
-    //   this._arcEquation._arc.animate.transform.translation.options;
-    // const radiusOptions =
-    //   this._arcEquation._radius.animate.transform.translation.options;
-    // const angleOptions =
-    //   this._arcEquation._angle.animate.transform.translation.options;
-
-    // radiusOptions.direction = 'down';
-    // angleOptions.direction = 'down';
-    // angleOptions.magnitude = angleMag;
-    // radiusOptions.magnitude = radiusMag;
-    // arcOptions.magnitude = arcMag;
-    // arcOptions.direction = 'up';
+  animateEquation(form: 'arc' | 'radius' | 'angle') {
     this.arcEqn.setCurrentForm(form);
     this.arcEqn.form[form].animatePositionsTo(2);
-    // if (form === 'arc') {
-    //   this.arcEqn.setCurrentForm('arc');
-    //   this.arcEqn.form.arc.animatePositionsTo(2);
-    // } else if (form === 'radius') {
-    //   this.arcEqn.setCurrentForm('radius');
-    //   this.arcEqn.form.radius.animatePositionsTo(2);
-    //   // this.radiusEqn.animateTo(scale, 2, this._arcEquation._equals);
-    // } else if (form === 'angle') {
-    //   this.arcEqn.setCurrentForm('angle');
-    //   this.arcEqn.form.angle.animatePositionsTo(2);
-    //   // this.angleEqn.animateTo(scale, 2, this._arcEquation._equals);
-    // }
     this.diagram.animateNextFrame();
   }
 

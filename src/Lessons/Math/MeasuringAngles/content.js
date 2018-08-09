@@ -515,8 +515,9 @@ class Content extends LessonContent {
         five_radians: toHTML('5 radians', 'id_5_rad', '', colors.angle),
       },
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.arcEquation.left);
-        diag.arcEqn.arrange();
+        diag.arcEqn.setPosition(layout.arcEquation.leftBottom);
+        diag.arcEqn.scale(layout.arcEquation.scale);
+        diag.arcEqn.setCurrentForm('arc');
       },
       blank: [
         'fromPrev',
@@ -536,8 +537,9 @@ class Content extends LessonContent {
         diag.transitionCircle(done, 'middleMostRight');
       },
       setSteadyState: () => {
-        diag._arcEquation.showAll();
-        diag._arcEquation.hideOnly([diag._arcEquation._v]);
+        // diag._arcEquation.showAll();
+        // diag._arcEquation.hideOnly([diag._arcEquation._v]);
+        diag.arcEqn.render();
         diag.resetCircle('middleMostRight');
         function rotateToAndPulse(angle: number, num: number) {
           diag.rotateTo(angle, 2, 1.5, diag.pulseRadiusOnArc.bind(diag, num));
@@ -566,19 +568,16 @@ class Content extends LessonContent {
         </p>
       `),
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.arcEquation.centerTop);
-        diag.arcEqn.arrange();
-        // }
+        diag.arcEqn.setPosition(layout.arcEquation.centerTop);
+        diag.arcEqn.scale(layout.arcEquation.scale);
+        diag.arcEqn.setCurrentForm('arc');
       },
       blank: [
         'fromPrev',
       ],
-      show: [
-        diag._arcEquation,
-      ],
-      hide: [
-        diag._arcEquation._v,
-      ],
+      setSteadyState: () => {
+        diag.arcEqn.render();
+      },
     });
     this.addSection({
       title: 'Radians in a Circle',
@@ -678,14 +677,13 @@ class Content extends LessonContent {
         arc_length: click(diag.animateEquation, [diag, 'arc', layout.arcEquation.scale, 0.7, 0.3, 0.4], colors.arc),
       },
       setEnterState: () => {
-        const { scale } = layout.arcEquation;
-        diag.radiusEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
-        diag.angleEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
-        diag.arcEqn.arrange(scale, 'left', 'baseline', diag._arcEquation._equals);
-        diag._arcEquation.setPosition(layout.arcEquation.center);
+        diag.arcEqn.setPosition(layout.arcEquation.center);
+        diag.arcEqn.scale(layout.arcEquation.scale);
+        diag.arcEqn.setCurrentForm('arc');
       },
       setSteadyState: () => {
-        diag._arcEquation.showArc();
+        diag.arcEqn.render();
+
         diag._arcEquation._angle.onClick =
           diag.animateEquation.bind(diag, 'angle', layout.arcEquation.scale, 0.7, 0.3, 0.4);
         diag._arcEquation._radius.onClick =
@@ -1027,20 +1025,13 @@ class Content extends LessonContent {
         diag.resetCircle('summary');
         diag.summaryAngleToggler('deg');
 
-        // const scale = layout.arcEquation.summaryScale;
-        // diag.arcEqn.showArc();
-        // diag.arcEqn.form.arc.setPositions();
-        // diag.arcEqn.form.arc.showHide();
         diag.arcEqn.render();
-        // diag._arcEquation._angle.onClick =
-        //   diag.animateEquation.bind(diag, 'angle', scale, 0.6, 0.2, 0.25);
-        // diag._arcEquation._radius.onClick =
-        //   diag.animateEquation.bind(diag, 'radius', scale, 0.6, 0.2, 0.25);
-        // diag._arcEquation._arc.onClick =
-        //   diag.animateEquation.bind(diag, 'arc', scale, 0.6, 0.2, 0.25);
-        diag._arcEquation._angle.onClick = diag.animateEquation.bind(diag, 'angle');
-        diag._arcEquation._radius.onClick = diag.animateEquation.bind(diag, 'radius');
-        diag._arcEquation._arc.onClick = diag.animateEquation.bind(diag, 'arc');
+        diag._arcEquation._angle.onClick =
+          diag.animateEquation.bind(diag, 'angle');
+        diag._arcEquation._radius.onClick =
+          diag.animateEquation.bind(diag, 'radius');
+        diag._arcEquation._arc.onClick =
+          diag.animateEquation.bind(diag, 'arc');
 
         const circ = diag._circumferenceEquation;
         circ.onClick = diag.toggleCircEquations.bind(diag);
