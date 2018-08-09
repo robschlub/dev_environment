@@ -3,8 +3,12 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
-import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
-import { Point, Rect } from '../diagram/tools/g2';
+import {
+  lessonIndex, LessonDescription,
+} from '../../Lessons/lessonIndex';
+import {
+  Point, Rect,
+} from '../diagram/tools/g2';
 import { getDefinedCSSVariables } from '../tools/getCssVariables';
 
 type Props = {
@@ -130,6 +134,7 @@ export default class LessonNavigator extends React.Component
   //     this.hideAllTilesButSelected();
   //   }
   // }
+
   showNavigator() {
     // console.log("showing")
     this.enableTransitions();
@@ -145,6 +150,7 @@ export default class LessonNavigator extends React.Component
       nav.style.overflow = 'scroll';
     }
   }
+
   // eslint-disable-next-line class-methods-use-this
   enableTransition(id: string, enable: boolean = false) {
     const element = document.getElementById(id);
@@ -301,6 +307,7 @@ export default class LessonNavigator extends React.Component
       }
     }
   }
+
   // eslint-disable-next-line class-methods-use-this
   centerLessons() {
     // const nav =

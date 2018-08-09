@@ -3,9 +3,13 @@
 import Diagram from '../../../js/diagram/Diagram';
 // import * as tools from '../../../js/diagram/tools/mathtools';
 
-import { DiagramElementCollection, DiagramElementPrimative }
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+}
   from '../../../js/diagram/Element';
-import { Point, Transform, minAngleDiff, normAngle, Rect } from '../../../js/diagram/tools/g2';
+import {
+  Point, Transform, minAngleDiff, normAngle, Rect,
+} from '../../../js/diagram/tools/g2';
 import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
 
@@ -145,7 +149,7 @@ class CircleCollection extends DiagramElementCollection {
   //   const currentAngle = Math.atan2(currentClipPoint.y, currentClipPoint.x);
   //   const previousAngle = Math.atan2(previousClipPoint.y, previousClipPoint.x);
   //   const diffAngle = minAngleDiff(previousAngle, currentAngle);
-  //   const transform = this._radius.transform.copy();
+  //   const transform = this._radius.transform._dup();
   //   const rot = transform.r();
   //   if (rot != null) {
   //     transform.updateRotation(rot - diffAngle);

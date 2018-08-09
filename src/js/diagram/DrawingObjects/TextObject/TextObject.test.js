@@ -1,6 +1,10 @@
 
-import { TextObject, DiagramFont, DiagramText } from './TextObject';
-import { Point, Transform } from '../../tools/g2';
+import {
+  TextObject, DiagramFont, DiagramText,
+} from './TextObject';
+import {
+  Point, Transform,
+} from '../../tools/g2';
 import * as m2 from '../../tools/m2';
 import { round } from '../../tools/mathtools';
 import DrawContext2D from '../../../__mocks__/DrawContext2DMock';
@@ -43,7 +47,7 @@ describe('Diagram Text Object', () => {
       expect(ctx.textBaseline).toBe('middle');
     });
     test('Copy', () => {
-      const f2 = font.copy();
+      const f2 = font._dup();
       expect(font).not.toBe(f2);
       expect(font).toEqual(f2);
       const oldSize = font.size;

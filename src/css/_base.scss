@@ -1,6 +1,6 @@
 
 body {
-  background-color: color(site, 'background');
-  // color: color(site, 'text');
-  color: color(site, 'text');
+  background-color: color('site', 'background');
+  // color: color('site', 'text');
+  color: color('site', 'text');
 }

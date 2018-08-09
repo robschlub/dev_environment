@@ -1,8 +1,12 @@
 // @flow
 
-import { DiagramElementCollection, DiagramElementPrimative }
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+}
   from '../js/diagram/Element';
-import { Point, Transform } from '../js/diagram/tools/g2';
+import {
+  Point, Transform,
+} from '../js/diagram/tools/g2';
 
 export type sliderType = {
   _value: DiagramElementPrimative;

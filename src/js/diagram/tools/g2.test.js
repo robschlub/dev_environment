@@ -1047,7 +1047,8 @@ describe('g2 tests', () => {
     });
     test('Copy', () => {
       const t = new Transform().scale(1, 1).rotate(1).translate(1, 1);
-      const b = t.copy();
+      t.index = 0;
+      const b = t._dup();
       expect(t).toEqual(b);
       expect(t).not.toBe(b);
       expect(t.order).not.toBe(b.order);
@@ -1147,7 +1148,7 @@ describe('g2 tests', () => {
       //     .rotate(100001)
       //     .translate(0.1, 100001);
       //   v = t1.velocity(t0, deltaTime, zero, max);
-      //   const vExpected = t1.copy();
+      //   const vExpected = t1._dup();
       //   vExpected.updateTranslation(0, 100001);
       //   expect(v).toEqual(vExpected);
       // });
@@ -1351,7 +1352,7 @@ describe('g2 tests', () => {
     });
     test('copy', () => {
       const r = new Rect(0, 0, 4, 2);
-      const c = r.copy();
+      const c = r._dup();
       expect(r).toEqual(c);
       expect(r).not.toBe(c);
     });

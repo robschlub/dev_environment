@@ -1,8 +1,12 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform, Point } from '../../../js/diagram/tools/g2';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
+import {
+  Transform, Point,
+} from '../../../js/diagram/tools/g2';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../../js/diagram/Element';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
@@ -17,13 +21,9 @@ export type extendedCircleType = {
   _acuteRange: DiagramElementPrimative;
   _obtuseRange: DiagramElementPrimative;
   _reflexRange: DiagramElementPrimative;
-  _axes: {
-    _x: DiagramElementPrimative;
-    _y: DiagramElementPrimative;
-  } & DiagramElementCollection;
 } & circleType;
 
-type angleTypes = 'acute' | 'obtuse' | 'right' | 'reflex' | 'straight';
+type angleTypes = 'acute' | 'obtuse' | 'right' | 'reflex' | 'straight' | 'full';
 
 type varStateExtendedType = {
     angleSelected: angleTypes;
@@ -60,29 +60,6 @@ class ImportantAnglesCollection extends AngleCircle {
     return rightAngle;
   }
 
-  makeAxes() {
-    const xAxis = this.makeLine(
-      new Point(0, 0),
-      this.layout.axes.length * 2.2,
-      this.layout.linewidth / 4,
-      this.colors.axes,
-      new Transform().translate(-this.layout.axes.length * 1.1, 0),
-    );
-    const yAxis = this.makeLine(
-      new Point(0, 0),
-      this.layout.axes.length * 2.2,
-      this.layout.linewidth / 4,
-      this.colors.axes,
-      new Transform()
-        .rotate(Math.PI / 2)
-        .translate(0, -this.layout.axes.length * 1.1),
-    );
-    const axes = this.shapes.collection();
-    axes.add('x', xAxis);
-    axes.add('y', yAxis);
-    return axes;
-  }
-
   makeAcuteRange() {
     return this.shapes.polygonFilled(
       this.layout.anglePoints, this.layout.axes.length, 0,
@@ -114,11 +91,11 @@ class ImportantAnglesCollection extends AngleCircle {
     this._circle.add('acuteRange', this.makeAcuteRange());
     this._circle.add('obtuseRange', this.makeObtuseRange());
     this._circle.add('reflexRange', this.makeReflexRange());
-    this._circle.add('axes', this.makeAxes());
+    // this._circle.add('axes', this.makeAxes());
     this._circle.order = [
-      ...this._circle.order.slice(-4, -1),
+      ...this._circle.order.slice(-4),
       ...this._circle.order.slice(0, 2),
-      ...this._circle.order.slice(-1),
+      // ...this._circle.order.slice(-1),
       ...this._circle.order.slice(2, -4),
     ];
   }
@@ -133,7 +110,7 @@ class ImportantAnglesCollection extends AngleCircle {
     };
     this.enableAutoChange = true;
     this.addToCircle();
-    this.angleTypes = ['acute', 'obtuse', 'right', 'reflex', 'straight'];
+    this.angleTypes = ['acute', 'obtuse', 'right', 'reflex', 'straight', 'full'];
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -150,7 +127,10 @@ class ImportantAnglesCollection extends AngleCircle {
     if (angle >= thresholds.straight.min && angle <= thresholds.straight.max) {
       return 'straight';
     }
-    return 'reflex';
+    if (angle >= thresholds.reflex.min && angle <= thresholds.reflex.max) {
+      return 'reflex';
+    }
+    return 'full';
   }
 
   calcAngleTypeDegrees(angle: number): angleTypes {
@@ -173,6 +153,10 @@ class ImportantAnglesCollection extends AngleCircle {
       },
       reflex: {
         min: 181,
+        max: 359,
+      },
+      full: {
+        min: 360,
         max: 360,
       },
     };
@@ -199,6 +183,10 @@ class ImportantAnglesCollection extends AngleCircle {
       },
       reflex: {
         min: 3.15,
+        max: 6.27,
+      },
+      full: {
+        min: 6.28,
         max: 6.28,
       },
     };
@@ -342,6 +330,7 @@ class ImportantAnglesCollection extends AngleCircle {
       'id_right_text',
       'id_straight_text',
       'id_reflex_text',
+      'id_full_text',
     ];
     ids.forEach((id) => {
       if (id !== angleType) {
@@ -393,6 +382,7 @@ class ImportantAnglesCollection extends AngleCircle {
     // this.showText('obtuse');
     this.showAngleType('obtuse');
   }
+
   goToStraight() {
     const angle = Math.PI;
     this.rotateToAngleDisablingAutoChange(angle);
@@ -400,6 +390,7 @@ class ImportantAnglesCollection extends AngleCircle {
     // this.showText('straight');
     this.showAngleType('straight');
   }
+
   goToReflex() {
     const angle90 = Math.random() * Math.PI / 2 * 0.95;
     let angle = angle90;
@@ -417,6 +408,12 @@ class ImportantAnglesCollection extends AngleCircle {
     this.showAngleType('reflex');
   }
 
+  goToFull() {
+    const angle = 2 * Math.PI * 0.999;
+    this.rotateToAngleDisablingAutoChange(angle);
+    this.showAngleType('full');
+  }
+
   pulseAngle() {
     if (this._circle._rightAngle.isShown) {
       this._circle._rightAngle._horizontal.pulseScaleNow(1, 2);
@@ -427,6 +424,7 @@ class ImportantAnglesCollection extends AngleCircle {
     }
     this.diagram.animateNextFrame();
   }
+
   toggleRightAngleLine(show: boolean | null) {
     let toShow = show;
     if (show === null) {

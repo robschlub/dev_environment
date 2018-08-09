@@ -32,9 +32,6 @@ class Content extends LessonContent {
           |Circles| and |Angles| are closely related.
         </p>
       `),
-      // setSteadyState: () => {
-      //   console.log(diag.getAllElements())
-      // }
     });
     this.addSection({
       setContent: `
@@ -77,10 +74,6 @@ class Content extends LessonContent {
         line: click(diag.pulseRadius, [diag], colors.radius),
         another: click(diag.pulseReference, [diag], colors.radius),
       },
-      // blank: [
-      //   'fromNext',
-      //   'fromPrev',
-      // ],
       setEnterState: () => {
         diag.resetCircle('center');
         diag.updateRotation();
@@ -171,8 +164,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             So |angle| describes the sharpness of a corner, and the amount of a circle, or |arc| that is drawn.
           </p>
@@ -186,16 +178,14 @@ class Content extends LessonContent {
     });
     this.addSection({
       title: 'How to Measure?',
-      setContent: () =>
-        centerVH(`
+      setContent: () => centerVH(`
           <p>
             How do we |measure| angle?
           </p> 
         `),
     });
     this.addSection({
-      setContent: () =>
-        `
+      setContent: () => `
         <p>
           One way, is to |divide| the circle into |portions|.
         </p>
@@ -228,8 +218,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        `
+      setContent: () => `
         <p>
           Now, as you |rotate| the line to change the |angle|, you can count how many portions there are.
         </p>
@@ -266,10 +255,8 @@ class Content extends LessonContent {
       setSteadyState: () => {
         circle.setPosition(layout.circle.right);
         diag._angleText.showAll();
-        // diag.toggleRadialLines(0);
         diag._angleText._units.vertices.element.innerHTML = 'portions';
         diag._angleText.transform.updateTranslation(layout.angleEqualsText.left);
-        // circle.transform.updateTranslation(layout.circle.right);
         onClickId('id_angle_text', diag.pulseAngle, [diag]);
         onClickId('id_12p', diag.toggler, [diag, 0]);
         onClickId('id_100p', diag.toggler, [diag, 1]);
@@ -278,8 +265,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Degrees',
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             So how many portions should we use?
           </p>
@@ -293,8 +279,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             The word |degree| comes from |Latin|:
           </p>
@@ -317,8 +302,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>|Why choose 360?| </p>
           <p>If you were defining it today, you could choose anything!</p>
           <p>But angle is a concept people have worked on and understood for thousands of years.</p>
@@ -327,8 +311,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>So |why did they| choose 360?</p>
           <p>It's not known, but one reason might be |360 is an easy number to work with| when you don't have a calculator.</p>
           <p>360 has a lot of numbers that can divide into it without a remainder:</p>
@@ -342,8 +325,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        `
+      setContent: () => `
           <p>This means it's easy to work with fractions of a circle.</p>
           <ul style="margin-top:15%;margin-left:15%">
                 <li>${String.fromCharCode(190)} circle =   |_270deg|</li>
@@ -427,8 +409,6 @@ class Content extends LessonContent {
       ],
       show: [
         circle._angle,
-        // circle._radiusOnArc,
-        // circle._radiusToArc,
       ],
       transitionFromAny: (done) => {
         diag.transitionCircle(done, 'right');
@@ -449,27 +429,12 @@ class Content extends LessonContent {
           This |angle| is called a |radian|.
         </p>
       `,
-      /* <p>
-          Observe some examples:
-          <ul>
-            <li>|one_radian|</li>
-            <li>|two_radians|</li>
-            <li>|threeP5_radians|</li>
-            <li>|five_radians|</li>
-          </ul>
-        <p>
-      */
       modifiers: {
         line: click(diag.pulseRadius, [diag], colors.radius),
         arc_length: click(diag.pulseArc, [diag], colors.arc),
         same: click(diag.rotateTo, [diag, 1, 2, 2], colors.action),
         radius_length: click(diag.pulseRadiusOnArc, [diag, 1], colors.radiusLight),
         angle: click(diag.pulseAngle, [diag], colors.angle),
-        // one_radian: toHTML('1 radian', 'id_1_rad', '', colors.radiusLight),
-        // two_radians: toHTML('2 radians', 'id_2_rad', '', colors.radiusLight),
-        // threeP5_radians: toHTML('3.5 radians', 'id_3p5_rad', '', colors.radiusLight),
-        // five_radians: toHTML('5 radians', 'id_5_rad', '', colors.radiusLight),
-
       },
       showOnly: [
         circle,
@@ -486,14 +451,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         diag.resetCircle('right');
-        // onClickId('id_1_rad', diag.rotateTo, [diag, 1, 2, 2]);
-        // onClickId('id_2_rad', diag.rotateTo, [diag, 2, 2, 2]);
-        // onClickId('id_3p5_rad', diag.rotateTo, [diag, 3.5, 2, 2]);
-        // onClickId('id_5_rad', diag.rotateTo, [diag, 5, 2, 2]);
       },
-      // blank: [
-      //   'toNext',
-      // ],
     });
     this.addSection({
       setContent: `
@@ -524,8 +482,9 @@ class Content extends LessonContent {
         five_radians: toHTML('5 radians', 'id_5_rad', '', colors.angle),
       },
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.arcEquation.left);
-        diag.arcEqn.arrange();
+        diag.arcEqn.setPosition(layout.arcEquation.leftBottom);
+        diag.arcEqn.scale(layout.arcEquation.scale);
+        diag.arcEqn.setCurrentForm('arc');
       },
       blank: [
         'fromPrev',
@@ -545,8 +504,7 @@ class Content extends LessonContent {
         diag.transitionCircle(done, 'middleMostRight');
       },
       setSteadyState: () => {
-        diag._arcEquation.showAll();
-        diag._arcEquation.hideOnly([diag._arcEquation._v]);
+        diag.arcEqn.render();
         diag.resetCircle('middleMostRight');
         function rotateToAndPulse(angle: number, num: number) {
           diag.rotateTo(angle, 2, 1.5, diag.pulseRadiusOnArc.bind(diag, num));
@@ -575,19 +533,16 @@ class Content extends LessonContent {
         </p>
       `),
       setEnterState: () => {
-        diag._arcEquation.setPosition(layout.arcEquation.centerTop);
-        diag.arcEqn.arrange();
-        // }
+        diag.arcEqn.setPosition(layout.arcEquation.centerTop);
+        diag.arcEqn.scale(layout.arcEquation.scale);
+        diag.arcEqn.setCurrentForm('arc');
       },
       blank: [
         'fromPrev',
       ],
-      show: [
-        diag._arcEquation,
-      ],
-      hide: [
-        diag._arcEquation._v,
-      ],
+      setSteadyState: () => {
+        diag.arcEqn.render();
+      },
     });
     this.addSection({
       title: 'Radians in a Circle',
@@ -687,14 +642,13 @@ class Content extends LessonContent {
         arc_length: click(diag.animateEquation, [diag, 'arc', layout.arcEquation.scale, 0.7, 0.3, 0.4], colors.arc),
       },
       setEnterState: () => {
-        const { scale } = layout.arcEquation;
-        diag.radiusEqn.arrange(scale, diag._arcEquation._equals);
-        diag.angleEqn.arrange(scale, diag._arcEquation._equals);
-        diag.arcEqn.arrange(scale, diag._arcEquation._equals);
-        diag._arcEquation.setPosition(layout.arcEquation.center);
+        diag.arcEqn.setPosition(layout.arcEquation.center);
+        diag.arcEqn.scale(layout.arcEquation.scale);
+        diag.arcEqn.setCurrentForm('arc');
       },
       setSteadyState: () => {
-        diag._arcEquation.showArc();
+        diag.arcEqn.render();
+
         diag._arcEquation._angle.onClick =
           diag.animateEquation.bind(diag, 'angle', layout.arcEquation.scale, 0.7, 0.3, 0.4);
         diag._arcEquation._radius.onClick =
@@ -745,8 +699,6 @@ class Content extends LessonContent {
           eqn.createEq([eqn.frac(numerator, denominator)]);
           return eqn.render();
         };
-        // const _2pi = '2&pi;';
-        // const _pi = '&pi;';
         const _3piOn2 = fraction('id_3pi_2', '3&pi;', '2');
         const _2piOn3 = fraction('id_2pi_3', '2&pi;', '3');
         const _piOn2 = fraction('id_pi_2', '&pi;', '2');
@@ -828,10 +780,10 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Circle Circumference',
       setContent: `
-        <p class="lesson__diagram_text_p_width_50" style="margin-top:10%">
+        <p class="lesson__diagram_text_p_width_45" style="margin-top:10%">
           Let's use what we've learned about radians to calculate the |circumference| of any |circle| |we know the radius of|.
         </p>
-        <p class="lesson__diagram_text_p_width_50">
+        <p class="lesson__diagram_text_p_width_45">
           When using radians, |angle| and |radius| are related to |arc_length|:
         </p>
       `,
@@ -842,15 +794,8 @@ class Content extends LessonContent {
         arc_length: click(diag.pulseArc, [diag], colors.arc),
       },
       setEnterState: () => {
-        diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
-        diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
-        diag._circumferenceEquation.varState = 0;
-        const t = diag._circumferenceEquation._angle.transform.t();
-        if (t != null) {
-          diag._circumferenceEquation._twoPi.transform
-            .updateTranslation(t.add(layout.circEquation.twoPiOffset));
-        }
+        diag.circEqn.setPosition(layout.circEquation.leftBottom);
+        diag.circEqn.setCurrentForm('arc');
       },
       blank: [
         'toNext',
@@ -861,48 +806,41 @@ class Content extends LessonContent {
         circle._circumference,
         circle._arc,
         circle._reference,
-        diag._circumferenceEquation,
-        diag._circumferenceEquation._angle,
-        diag._circumferenceEquation._equals,
-        diag._circumferenceEquation._arc,
-        diag._circumferenceEquation._radius,
-        diag._circumferenceEquation._times,
       ],
       show: [
         circle._angle,
       ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
+        diag.circEqn.render();
         const circ = diag._circumferenceEquation;
         circ._angle.onClick = diag.pulseAngle.bind(diag);
         circ._radius.onClick = diag.pulseRadius.bind(diag);
         circ._arc.onClick = diag.pulseArc.bind(diag);
       },
       transitionToNext: (done) => {
-        diag.toggleCircEquations(1, done);
+        diag.toggleCircEquations(done);
       },
     });
 
     this.addSection({
       setContent: `
-        <p class="lesson__diagram_text_p_width_50" style="margin-top:10%">
+        <p class="lesson__diagram_text_p_width_45" style="margin-top:10%">
           A |circle| has an angle of |6.28|, or |2&pi; radians|.
         </p>
-        <p class="lesson__diagram_text_p_width_50">
+        <p class="lesson__diagram_text_p_width_45">
           Therefore, we can |calculate| the |circumference of any circle from just the radius|:
         </p>
       `,
       modifiers: {
         circle: click(diag.rotateTo, [diag, 1.999 * Math.PI, 1, 2], colors.arc),
-        calculate: click(diag.toggleCircEquations, [diag, 1, null], colors.action),
+        calculate: click(diag.toggleCircEquations, [diag, null], colors.action),
 
       },
       setEnterState: () => {
-        diag.circEqn.arrange(1, diag._circumferenceEquation._equals);
-        diag.circEqnShort.arrange(1, diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(1, diag._circumferenceEquation._equals);
-        diag._circumferenceEquation.setPosition(layout.circEquation.leftBottom);
-        diag._circumferenceEquation.varState = 1;
+        diag.circEqn.scale(1);
+        diag.circEqn.setPosition(layout.circEquation.leftBottom);
+        diag.circEqn.setCurrentForm('arc');
         const t = diag._circumferenceEquation._angle.transform.t();
         if (t != null) {
           diag._circumferenceEquation._twoPi.transform
@@ -927,6 +865,7 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         diag.resetCircle('middleMostRight');
+        diag.circEqn.setCurrentForm('circumference');
         const circ = diag._circumferenceEquation;
         circ._angle.onClick = diag.pulseAngle.bind(diag);
         circ._radius.onClick = diag.pulseRadius.bind(diag);
@@ -935,7 +874,7 @@ class Content extends LessonContent {
         circ._c.onClick = diag.pulseCircumference.bind(diag);
         circ._circumference.onClick = diag.pulseCircumference.bind(diag);
         circ._twoPi.onClick = diag.rotateTo.bind(diag, 1.999 * Math.PI, 1, 2);
-        circ._equals.onClick = diag.toggleCircEquations.bind(diag, 1, null);
+        circ._equals.onClick = diag.toggleCircEquations.bind(diag, null);
       },
       setLeaveState: () => {
         const circ = diag._circumferenceEquation;
@@ -993,25 +932,20 @@ class Content extends LessonContent {
         one_radian_angle: click(diag.summaryRotateToRad, [diag, 1], colors.angle),
       },
       setEnterState: () => {
-        let scale = layout.arcEquation.summaryScale;
         diag._angleText.setPosition(layout.angleEqualsText.summary);
 
-        diag.radiusEqn.arrange(scale, diag._arcEquation._equals);
-        diag.angleEqn.arrange(scale, diag._arcEquation._equals);
-        diag.arcEqn.arrange(scale, diag._arcEquation._equals);
-        diag._arcEquation.setPosition(layout.arcEquation.summary);
+        diag.arcEqn.scale(layout.arcEquation.summaryScale);
+        diag.arcEqn.setPosition(layout.arcEquation.summary);
+        diag.arcEqn.setCurrentForm('arc');
 
-        scale = layout.circEquation.summaryScale;
-        diag.circEqn.arrange(scale, diag._circumferenceEquation._equals);
-        diag.circEqnShort.arrange(scale, diag._circumferenceEquation._equals);
-        diag.circEqnGeneral.arrange(scale, diag._circumferenceEquation._equals);
-        diag._circumferenceEquation.varState = 1;
+        diag.circEqn.scale(layout.circEquation.summaryScale);
+        diag.circEqn.setCurrentForm('circumference');
+        diag.circEqn.setPosition(layout.circEquation.summary);
         const t = diag._circumferenceEquation._angle.transform.t();
         if (t != null) {
           diag._circumferenceEquation._twoPi.transform
             .updateTranslation(t.add(layout.circEquation.twoPiOffset));
         }
-        diag._circumferenceEquation.setPosition(layout.circEquation.summary);
       },
       showOnly: [
         circle,
@@ -1027,29 +961,21 @@ class Content extends LessonContent {
       ],
       show: [
         circle._angle,
-        // diag._arcEquation,
-      ],
-      hide: [
-        // diag._arcEquation._v,
       ],
       setSteadyState: () => {
         diag.resetCircle('summary');
         diag.summaryAngleToggler('deg');
 
-        const scale = layout.arcEquation.summaryScale;
-        diag._arcEquation.showArc();
+        diag.arcEqn.render();
         diag._arcEquation._angle.onClick =
-          diag.animateEquation.bind(diag, 'angle', scale, 0.6, 0.2, 0.25);
+          diag.animateEquation.bind(diag, 'angle');
         diag._arcEquation._radius.onClick =
-          diag.animateEquation.bind(diag, 'radius', scale, 0.6, 0.2, 0.25);
+          diag.animateEquation.bind(diag, 'radius');
         diag._arcEquation._arc.onClick =
-          diag.animateEquation.bind(diag, 'arc', scale, 0.6, 0.2, 0.25);
+          diag.animateEquation.bind(diag, 'arc');
 
         const circ = diag._circumferenceEquation;
-        circ.onClick = diag.toggleCircEquations.bind(
-          diag,
-          layout.circEquation.summaryScale,
-        );
+        circ.onClick = diag.toggleCircEquations.bind(diag);
 
         onClickId('id_360_deg', diag.summaryRotateToDeg, [diag, Math.PI * 1.999]);
         onClickId('id_2pi_rad', diag.summaryRotateToRad, [diag, Math.PI * 1.999]);

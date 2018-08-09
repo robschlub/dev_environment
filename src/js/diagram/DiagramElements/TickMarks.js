@@ -40,6 +40,7 @@ class TickMarks extends DiagramElementPrimative {
     this.rotation = rotation;
     this.start = start;
   }
+
   draw(
     transform: g2.Transform = new g2.Transform(),
     now: number = 0,

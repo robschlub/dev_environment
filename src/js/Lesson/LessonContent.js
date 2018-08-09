@@ -1,7 +1,9 @@
 // @flow
 
 import Diagram from '../diagram/Diagram';
-import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../diagram/Element';
 import { colorArrayToRGBA } from '../tools/tools';
 // import { Transform, Point } from '../diagram/tools/g2';
 
@@ -20,6 +22,36 @@ function centerVH(text: string = '') {
 function centerH(text: string = '') {
   return `<div style="text-align:center;">
         ${text}</div>`;
+}
+
+function itemSelector(
+  items: Array<string> = [''],
+  classes: string = '',
+  selectorIndex: number = 0,
+) {
+  let outStr = `<ul id="id__lesson_item_selector_${selectorIndex}" 
+                    class=${classes}>`;
+  items.forEach((item, index) => {
+    outStr += `<li id="id__lesson_item_selector_${index}">${item}</li>`;
+  });
+  outStr += '</ul>';
+  return outStr;
+}
+
+function initializeItemSelector(
+  methodToExecute: Function,
+  bindingObject: Object,
+  index: number = 0,
+) {
+  const elem = document
+    .getElementById(`id__lesson_item_selector_${index}`);
+  if (elem != null) {
+    if (elem.children.length > 0) {
+      for (let i = 0; i < elem.children.length; i += 1) {
+        elem.children[i].onclick = methodToExecute.bind(bindingObject, i);
+      }
+    }
+  }
 }
 
 function toHTML(
@@ -243,16 +275,14 @@ class Section {
   modifiers: Object;
   blank: Array<string>;
   diagram: Diagram;
-  // comingFrom: 'next' | 'prev' | 'goto';
-  // goingTo: 'next' | 'prev' | 'goto';
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
+
   hideOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  show: Array<DiagramElementPrimative | DiagramElementCollection>
-           | () => {};
-  hide: Array<DiagramElementPrimative | DiagramElementCollection>
-           | () => {};
+
+  show: Array<DiagramElementPrimative | DiagramElementCollection> | () => {};
+  hide: Array<DiagramElementPrimative | DiagramElementCollection> | () => {};
   initialPositions: Object | () => {};
   blankTransition: {
     toNext: boolean;
@@ -261,7 +291,7 @@ class Section {
     fromPrev: boolean;
     toGoto: boolean;
     fromGoto: boolean;
-  }
+  };
 
   constructor(diagram: Diagram) {
     this.diagram = diagram;
@@ -291,6 +321,7 @@ class Section {
       }
     });
   }
+
   getContent(): string {
     let htmlText = '';
     let content = '';
@@ -341,7 +372,7 @@ class Section {
   //         const element = elementsOrMethod[i];
   //         const transformPointOrNumber = elementsOrMethod[i + 1];
   //         if (transformPointOrNumber instanceof Transform) {
-  //           element.transform = transformPointOrNumber.copy();
+  //           element.transform = transformPointOrNumber._dup();
   //         } else if (transformPointOrNumber instanceof Point) {
   //           element.transform.updateTranslation(transformPointOrNumber);
   //         } else if (typeof transformPointOrNumber === 'number') {
@@ -364,6 +395,7 @@ class Section {
     //   });
     // }
   }
+
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -418,18 +450,23 @@ class Section {
   transitionToNext(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromNext(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionToPrev(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromPrev(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromAny(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionToAny(done: () => void = function temp() {}): void {
     done();
   }
@@ -460,6 +497,7 @@ class LessonContent {
     this.setDiagram(this.diagramHtmlId);
     this.addSections();
   }
+
   setTitle() {
     this.title = '';
   }
@@ -486,5 +524,5 @@ class LessonContent {
 export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
-  clickWord,
+  clickWord, itemSelector, initializeItemSelector,
 };

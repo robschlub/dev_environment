@@ -116,8 +116,7 @@ class Content extends LessonContent {
     });
     this.addSection({
       title: 'Create a Circle',
-      setContent: () =>
-        `
+      setContent: () => `
         <p>
           We can create a circle, by |_anchoring| a |_line| at one end and |_pushing| the other.
         </p>

@@ -1,7 +1,9 @@
 // @flow
 
 // import { Lesson } from '../../../js/Lesson/Lesson';
-import { LessonContent, actionWord, onClickId } from '../../../js/Lesson/LessonContent';
+import {
+  LessonContent, actionWord, onClickId,
+} from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import { Point } from '../../../js/diagram/tools/g2';
 // import CircleDiagram from './diagramCircle';
@@ -18,8 +20,7 @@ class Content extends LessonContent {
   addSections() {
     this.addSection({
       title: 'Shapes',
-      setContent: () =>
-        `<div id="section1__upper">
+      setContent: () => `<div id="section1__upper">
         <p>Many |_shapes| have |_corners|.</p>
         <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
@@ -67,8 +68,7 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      setContent: () =>
-        `<p>
+      setContent: () => `<p>
           Let's start with two lines |_anchored| at one end. One |_line| can be
           rotated around the anchor.
         </p>`,
@@ -91,7 +91,7 @@ class Content extends LessonContent {
       setSteadyState: (previousState: Object) => {
         const { diagram } = this;
         const collection = diagram.elements._circle;
-        const t = collection._radius.transform.copy();
+        const t = collection._radius.transform._dup();
         if ('angle' in previousState) {
           t.updateRotation(previousState.angle);
         } else {
@@ -117,8 +117,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Make a corner',
-      setContent: () =>
-        `<p>
+      setContent: () => `<p>
           The two lines form a |_corner| at the anchor.
         </p><p>
           |_Small_rotation| results in a |_sharper_corner| corner. |_Large_rotation| results in a |_less_sharp_corner| corner.
@@ -140,7 +139,7 @@ class Content extends LessonContent {
       setSteadyState: (previousState: Object) => {
         const { diagram } = this;
         const collection = diagram.elements._circle;
-        const t = collection._radius.transform.copy();
+        const t = collection._radius.transform._dup();
         if ('angle' in previousState) {
           t.updateRotation(previousState.angle);
         } else {

@@ -1,7 +1,9 @@
 // @flow
 
 import TRIParallelLines from '../../../DrawingObjects/VertexObject/Triangles/TRIParallelLines';
-import { Point, Transform } from '../../../tools/g2';
+import {
+  Point, Transform,
+} from '../../../tools/g2';
 import WebGLInstance from '../../../webgl/webgl';
 import VertexObject from '../../../DrawingObjects/VertexObject/VertexObject';
 

@@ -172,6 +172,7 @@ export default class LessonComponent extends React.Component
     }
     // console.log("1");
   }
+
   // eslint-disable-next-line class-methods-use-this
   titleScaleDown() {
     const title = document.getElementById('id_lesson__title_tile');
@@ -253,6 +254,7 @@ export default class LessonComponent extends React.Component
   componentWillUnmount() {
     window.removeEventListener('orientationchange', this.centerLesson.bind(this));
   }
+
   renderTitle(title: string) {
     this.key += 1;
     return <div className='lesson__title' key={this.key}>
@@ -337,6 +339,7 @@ export default class LessonComponent extends React.Component
       </div>
     </div>;
   }
+
   render() {
     return <div>
       <div className='lesson__title'>
@@ -346,13 +349,13 @@ export default class LessonComponent extends React.Component
         <div id="lesson__container_name" className="lesson__container">
               {this.addPrevButton()}
               <div id={this.lesson.content.diagramHtmlId} className="diagram__container lesson__diagram">
+                <canvas className='diagram__text'>
+                </canvas>
                 <canvas className='diagram__gl'>
                 </canvas>
                 <div id="dd" className='diagram__html'>
                   {this.renderContent(this.state.htmlText)}
                 </div>
-                <canvas className='diagram__text'>
-                </canvas>
               </div>
               {this.addGoToButton()}
               {this.addNextButton()}

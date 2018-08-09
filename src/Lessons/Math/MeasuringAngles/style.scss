@@ -2,7 +2,7 @@
 @import '../../../LessonsCommon/AngleCircle/style';
 
 $colors: (
-  latin:            color(diagram, 'text-latin'),
+  latin:            color('diagram', 'text-latin'),
   rotation:         map-get($geometry_colors, rotation),
   action:           map-get($geometry_colors, action),
   disabled:         map-get($geometry_colors, disabled),
@@ -23,7 +23,7 @@ body {
 }
 
 .lesson__diagram_text ul {
-  color: color(diagram, 'text-base');
+  color: color('diagram', 'text-base');
   font-size: calc(var(--lesson__diagram-font-size) * 0.8);
   list-style-type: none;
   padding-left: 0;
@@ -35,11 +35,11 @@ body {
 }
 
 .portions_not_selected {
-  color: color(diagram, 'disabled');
+  color: color('diagram', 'disabled');
 }
 
 .portions_selected {
-  color: color(diagram, 'text-plot');
+  color: color('diagram', 'text-plot');
 }
 
 #id_compare_text {
@@ -63,7 +63,7 @@ body {
   font-size: calc(var(--lesson__diagram-font-size) * 0.55);
   width: 45%;
   table-layout: fixed;
-  color: color(diagram, 'text-base');
+  color: color('diagram', 'text-base');
   margin-top: 5%;
   margin-left: 5%;
 }
@@ -102,11 +102,11 @@ body {
 
 .equation_element {
   font-size: calc(var(--lesson__diagram-font-size) * 0.5);
-  color: color(diagram, 'action');
+  color: color('diagram', 'action');
 }
 
 .lesson__rad_text {
-  color: color(diagram, 'action');
+  color: color('diagram', 'action');
 }
 
 .lesson__deg_title {

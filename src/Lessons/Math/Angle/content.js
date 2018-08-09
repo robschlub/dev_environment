@@ -29,8 +29,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Corners',
-      setContent: () =>
-        `<p>
+      setContent: () => `<p>
           Many |_shapes| have |_corners|.
         </p> <p>
           Somes corners are |_more_sharp|, while others are |_less_sharp|.
@@ -63,8 +62,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerVH(`
+      setContent: () => centerVH(`
           <p>
             How can we |_measure| corner sharpness?
           </p> 
@@ -120,7 +118,7 @@ class Content extends LessonContent {
         done();
       },
       transitionFromNext: (done) => {
-        circle._fakeRadius.transform = circle._radius.transform.copy();
+        circle._fakeRadius.transform = circle._radius.transform._dup();
         done();
       },
     });
@@ -157,7 +155,7 @@ class Content extends LessonContent {
         circle.pulseArrow();
       },
       transitionPrev: (done) => {
-        circle._fakeRadius.transform = circle._radius.transform.copy();
+        circle._fakeRadius.transform = circle._radius.transform._dup();
         done();
       },
       transitionFromAny: (done) => {
@@ -175,7 +173,7 @@ class Content extends LessonContent {
       },
       transitionFromPrev: (done) => {
         circle._anchor.color[3] = 0.01;
-        circle._radius.transform = circle._fakeRadius.transform.copy();
+        circle._radius.transform = circle._fakeRadius.transform._dup();
         done();
       },
     });
@@ -261,8 +259,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             What |_name| do we use for corner sharpness?
           </p> 
@@ -321,8 +318,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             Now, describing the angle as more sharp or less sharp is not that useful.
           </p> 

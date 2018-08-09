@@ -8,13 +8,20 @@ import {
   spaceToSpaceTransform,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
-import { DiagramElementCollection, DiagramElementPrimative } from './Element';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
+// eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 
-import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
-import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import {
+  PolyLine, PolyLineCorners,
+} from './DiagramElements/PolyLine';
+import {
+  Polygon, PolygonFilled,
+} from './DiagramElements/Polygon';
 import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
@@ -22,10 +29,15 @@ import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import Axis from './DiagramElements/Plot/Axis';
 
-import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
+import {
+  DiagramText, DiagramFont, TextObject,
+} from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
-import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
+import {
+  EquationForm, createEquationElements, Equation,
+} from './DiagramElements/Equation/GLEquation';
+// import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 
@@ -47,49 +59,18 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 
 // eslint-disable-next-line no-use-before-define
 function equation(diagram: Diagram) {
-  function elements(elems: Object, colorOrFont: Array<number> | DiagramFont = []) {
-    let color = [1, 1, 1, 1];
-    if (Array.isArray(colorOrFont)) {
-      color = colorOrFont.slice();
-    }
-    let font = new DiagramFont(
-      'Times New Roman',
-      'italic',
-      0.2,
-      '200',
-      'left',
-      'alphabetic',
-      color,
-    );
-    if (colorOrFont instanceof DiagramFont) {
-      font = colorOrFont;
-      // color = font.color;
-    }
-
-    const equationElements = new DiagramElementCollection(
-      new Transform().scale(1, 1).translate(0, 0),
+  function elements(
+    elems: Object,
+    colorOrFont: Array<number> | DiagramFont = [],
+    firstTransform: Transform = new Transform(),
+  ): DiagramElementCollection {
+    return createEquationElements(
+      elems,
+      diagram.draw2D,
+      colorOrFont,
       diagram.limits,
+      firstTransform,
     );
-    Object.keys(elems).forEach((key) => {
-      if (typeof elems[key] === 'string') {
-        const dT = new DiagramText(new Point(0, 0), elems[key], font);
-        const to = new TextObject(diagram.draw2D, [dT]);
-        const p = new DiagramElementPrimative(
-          to,
-          new Transform().scale(1, 1).translate(0, 0),
-          color,
-          diagram.limits,
-        );
-        equationElements.add(key, p);
-      }
-      if (elems[key] instanceof DiagramElementPrimative) {
-        equationElements.add(key, elems[key]);
-      }
-      if (elems[key] instanceof DiagramElementCollection) {
-        equationElements.add(key, elems[key]);
-      }
-    });
-    return equationElements;
   }
 
   function vinculum(color: Array<number> = [1, 1, 1, 1]) {
@@ -115,18 +96,28 @@ function equation(diagram: Diagram) {
   }
 
   function make(equationCollection: DiagramElementCollection) {
-    return new DiagramGLEquation(equationCollection);
+    return new EquationForm(equationCollection);
   }
 
   function makeHTML(id: string = '', classes: string | Array<string> = []) {
     return new HTMLEquation(id, classes);
   }
+
+  function makeEqn() {
+    return new Equation(
+      diagram.draw2D,
+      diagram.limits,
+      diagram.diagramToGLSpaceTransform,
+    );
+  }
+
   return {
     elements,
     vinculum,
     integral,
     make,
     makeHTML,
+    makeEqn,
   };
 }
 
@@ -170,8 +161,8 @@ function shapes(diagram: Diagram) {
     );
   }
 
-  function htmlText(
-    textInput: string,
+  function htmlElement(
+    elementToAdd: HTMLElement | Array<HTMLElement>,
     id: string = '',
     classes: string = '',
     location: Point = new Point(0, 0),
@@ -180,17 +171,17 @@ function shapes(diagram: Diagram) {
   ) {
     const element = document.createElement('div');
     if (classes && element) {
-      const classArray = classes.split(',');
+      const classArray = classes.split(' ');
       classArray.forEach(c => element.classList.add(c.trim()));
     }
-    const inside = document.createTextNode(textInput);
-    element.appendChild(inside);
+    if (Array.isArray(elementToAdd)) {
+      elementToAdd.forEach(e => element.appendChild(e));
+    } else {
+      element.appendChild(elementToAdd);
+    }
     element.style.position = 'absolute';
-    // element.style.left = '0px';
-    // element.style.top = '0px';
     element.setAttribute('id', id);
     diagram.htmlCanvas.appendChild(element);
-
     const hT = new HTMLObject(diagram.htmlCanvas, id, new Point(0, 0), alignV, alignH);
     const diagramElement = new DiagramElementPrimative(
       hT,
@@ -201,6 +192,21 @@ function shapes(diagram: Diagram) {
     // diagramElement.setFirstTransform();
     return diagramElement;
   }
+
+  function htmlText(
+    textInput: string,
+    id: string = '',
+    classes: string = '',
+    location: Point = new Point(0, 0),
+    alignV: 'top' | 'bottom' | 'middle' = 'middle',
+    alignH: 'left' | 'right' | 'center' = 'left',
+  ) {
+    // const inside = document.createTextNode(textInput);
+    const inside = document.createElement('div');
+    inside.innerHTML = textInput;
+    return this.htmlElement(inside, id, classes, location, alignV, alignH);
+  }
+
   function arrow(
     width: number = 1,
     legWidth: number = 0.5,
@@ -229,10 +235,11 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     const linePairs = [];
-    for (let x = bounds.left; x < bounds.right + xStep; x += xStep) {
+    // const xLimit = tools.roundNum(bounds.righ + xStep);
+    for (let x = bounds.left; tools.roundNum(x, 8) <= bounds.right; x += xStep) {
       linePairs.push([new Point(x, bounds.top), new Point(x, bounds.bottom)]);
     }
-    for (let y = bounds.bottom; y < bounds.top + yStep; y += yStep) {
+    for (let y = bounds.bottom; tools.roundNum(y, 8) <= bounds.top; y += yStep) {
       linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
     }
     return lines(linePairs, color, transform);
@@ -312,7 +319,7 @@ function shapes(diagram: Diagram) {
     if (transformOrPoint instanceof Point) {
       transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
     } else {
-      transform = transformOrPoint.copy();
+      transform = transformOrPoint._dup();
     }
     return new DiagramElementCollection(transform, diagram.limits);
   }
@@ -329,6 +336,7 @@ function shapes(diagram: Diagram) {
     color: Array<number> = [1, 1, 1, 0],
     gridColor: Array<number> = [1, 1, 1, 0],
     location: Transform | Point = new Transform(),
+    decimalPlaces: number = 1,
   ) {
     const lineWidth = 0.01;
     const xProps = new AxisProperties('x', 0);
@@ -353,7 +361,7 @@ function shapes(diagram: Diagram) {
       xProps.limits.min,
       xProps.limits.max,
       stepX,
-    ).map(v => v.toString()).map((v) => {
+    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
       if (v === yAxisLocation.toString() && yAxisLocation === xAxisLocation) {
         return `${v}     `;
       }
@@ -374,7 +382,7 @@ function shapes(diagram: Diagram) {
     const xAxis = new Axis(
       diagram.webgl, diagram.draw2D, xProps,
       new Transform().scale(1, 1).rotate(0)
-        .translate(0, xAxisLocation - limits.bottom),
+        .translate(0, xAxisLocation - limits.bottom * height / 2),
       diagram.limits,
     );
 
@@ -400,7 +408,7 @@ function shapes(diagram: Diagram) {
       yProps.limits.min,
       yProps.limits.max,
       stepY,
-    ).map(v => v.toString()).map((v) => {
+    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
       if (v === xAxisLocation.toString() && yAxisLocation === xAxisLocation) {
         return '';
       }
@@ -421,7 +429,7 @@ function shapes(diagram: Diagram) {
     const yAxis = new Axis(
       diagram.webgl, diagram.draw2D, yProps,
       new Transform().scale(1, 1).rotate(0)
-        .translate(yAxisLocation - limits.left, 0),
+        .translate(yAxisLocation - limits.left * width / 2, 0),
       diagram.limits,
     );
 
@@ -429,13 +437,14 @@ function shapes(diagram: Diagram) {
     if (location instanceof Point) {
       transform = transform.translate(location.x, location.y);
     } else {
-      transform = location.copy();
+      transform = location._dup();
     }
     const xy = collection(transform);
     if (showGrid) {
       const gridLines = grid(
         new Rect(0, 0, width, height),
-        stepX * width / limits.width, stepY * height / limits.height,
+        tools.roundNum(stepX * width / limits.width, 8),
+        tools.roundNum(stepY * height / limits.height, 8),
         gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
       );
       xy.add('grid', gridLines);
@@ -458,6 +467,7 @@ function shapes(diagram: Diagram) {
     text,
     radialLines,
     htmlText,
+    htmlElement,
     axes,
   };
 }
@@ -471,6 +481,7 @@ class Diagram {
   inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
+
   limits: Rect;
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
@@ -571,6 +582,7 @@ class Diagram {
   getShapes() {
     return shapes(this);
   }
+
   getEquations() {
     return equation(this);
   }
@@ -652,7 +664,7 @@ class Diagram {
   }
 
   updateLimits(limits: Rect) {
-    this.limits = limits.copy();
+    this.limits = limits._dup();
     this.setSpaceTransforms();
   }
 
@@ -663,6 +675,7 @@ class Diagram {
     this.sizeHtmlText();
     this.animateNextFrame();
   }
+
   // Handle touch down, or mouse click events within the canvas.
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
@@ -671,7 +684,6 @@ class Diagram {
     if (this.inTransition) {
       return false;
     }
-
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
     // console.log(pixelPoint)
@@ -682,6 +694,7 @@ class Diagram {
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(glPoint);
+
     touchedElements.forEach(e => e.click());
     // console.log(touchedElements)
     // Make a list of, and start moving elements that are being moved
@@ -755,7 +768,7 @@ class Diagram {
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       if (element !== this.elements) {
-        const currentTransform = element.transform.copy();
+        const currentTransform = element.transform._dup();
         const currentTranslation = currentTransform.t();
         if (currentTranslation
           && (element.isBeingTouched(previousGLPoint)
@@ -788,11 +801,13 @@ class Diagram {
   ) {
     this.elements.add(name, diagramElement);
   }
-  clearContext() {
-    const bc = this.backgroundColor;
-    this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
-    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
 
+  clearContext() {
+    // const bc = this.backgroundColor;
+    // this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
+
+    this.webgl.gl.clearColor(0, 0, 0, 0);
+    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
     if (this.draw2D) {
       this.draw2D.ctx.clearRect(0, 0, this.draw2D.ctx.canvas.width, this.draw2D.ctx.canvas.height);
     }

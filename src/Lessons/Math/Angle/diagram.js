@@ -3,7 +3,9 @@ import Diagram from '../../../js/diagram/Diagram';
 import { DiagramElementCollection } from '../../../js/diagram/Element';
 import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
-import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
+import {
+  Point, minAngleDiff, Transform,
+} from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -30,6 +32,7 @@ class LessonDiagram extends Diagram {
       backgroundColor,
     );
   }
+
   createDiagramElements() {
     const { shapes } = this;
     this.elements = shapes.collection();
@@ -92,7 +95,7 @@ class LessonDiagram extends Diagram {
       previousDiagramPoint.x - center.x,
     );
     const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = this.elements._circle._radius.transform.copy();
+    const transform = this.elements._circle._radius.transform._dup();
     const rot = transform.r();
     if (rot != null) {
       transform.updateRotation(rot - diffAngle);
