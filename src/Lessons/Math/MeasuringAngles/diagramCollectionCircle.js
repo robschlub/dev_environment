@@ -1,31 +1,28 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import {
-  DiagramElementCollection, DiagramElementPrimative,
-}
+import { DiagramElementCollection, DiagramElementPrimative }
   from '../../../js/diagram/Element';
-import {
-  Point, Transform,
-} from '../../../js/diagram/tools/g2';
-import { Equation, EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-import type { TypeEquation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { Point, Transform } from '../../../js/diagram/tools/g2';
+import { Equation, EquationForm }
+  from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
-import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
+import type { circleType, varStateType }
+  from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 
-type straightArcType = {
+type TypeStraightArc = {
   _arc: DiagramElementPrimative;
   _line: DiagramElementPrimative;
 } & DiagramElementCollection;
 
-type radiusToArcType = {
+type TypeRadiusToArc = {
   _arc: DiagramElementPrimative;
   _line: DiagramElementPrimative;
   toArc: (number) => void;
 } & DiagramElementCollection;
 
-type radiusOnArcType = {
+type TypeRadiusOnArc = {
   _r1: DiagramElementPrimative;
   _r2: DiagramElementPrimative;
   _r3: DiagramElementPrimative;
@@ -78,43 +75,28 @@ type TypeArcEquation = {
   showAngle: () => void;
 } & Equation;
 
-type equationType = {
-  _arc: DiagramElementPrimative;
-  _equals: DiagramElementPrimative;
-  _radius: DiagramElementPrimative;
-  _angle: DiagramElementPrimative;
-  showArc: () => void;
-  showRadius: () => void;
-  showAngle: () => void;
-} & DiagramElementCollection;
-
-
-export type circleCollectionType = {
+export type TypeCircleCollectionExtended = {
   _angleFill: DiagramElementPrimative;
   _radialLinesA: DiagramElementPrimative;
   _radialLinesB: DiagramElementCollection;
-  _straightArc: straightArcType;
-  _radiusOnArc: radiusOnArcType;
-  _radiusToArc: radiusToArcType;
+  _straightArc: TypeStraightArc;
+  _radiusOnArc: TypeRadiusOnArc;
+  _radiusToArc: TypeRadiusToArc;
 } & circleType;
 
-type varStateExtendedType = {
+type TypeVarStateExtended = {
     percentStraight: number,
     straightening: boolean,
   } & varStateType;
 
 class CircleCollection extends AngleCircle {
-  _circle: circleCollectionType;
-  _arcEquation: equationType;
+  _circle: TypeCircleCollectionExtended;
   _circumferenceEquation: TypeCircumferenceEquationCollection;
+  _arcEquation: TypeArcEquationCollection;
   arcEqn: TypeArcEquation;
-  // radiusEqn: EquationForm;
-  // angleEqn: EquationForm;
   circEqn: TypeCircumferenceEquation;
-  // circEqnShort: EquationForm;
-  // circEqnGeneral: EquationForm;
   numSections: Array<number>;
-  varState: varStateExtendedType;
+  varState: TypeVarStateExtended;
 
   makeStraightArc() {
     const straightArc = this.shapes.collection(new Transform().rotate(0).translate(0, 0));
