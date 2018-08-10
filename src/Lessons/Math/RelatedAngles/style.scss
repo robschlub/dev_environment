@@ -3,7 +3,8 @@
 
 $colors: (
   latin:            color('diagram', 'text-latin'),
-  rotation:         map-get($geometry_colors, rotation),
+  line:             color('blue', 'base'),
+  disabled:         color('grey', 'darker'),
   action:           map-get($geometry_colors, action),
   disabled:         map-get($geometry_colors, disabled),
   arcLight:         map-get($geometry_colors, arcLight),
@@ -19,7 +20,7 @@ body {
   @include color_vars($colors);
 }
 
-.lesson__adjacent_angles_table {
+.lesson__related_angles_table {
   width: 100%;
   // table-layout: fixed;
   // margin-left: auto;
@@ -31,7 +32,7 @@ body {
   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
 }
 
-.lesson__adjacent_angles_table td {
+.lesson__related_angles_table td {
   padding-left: calc(var(--lesson__diagram-font-size));
   padding-right: calc(var(--lesson__diagram-font-size));
   padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
