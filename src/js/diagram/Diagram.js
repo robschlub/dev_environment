@@ -163,7 +163,7 @@ function shapes(diagram: Diagram) {
 
   function htmlElement(
     elementToAdd: HTMLElement | Array<HTMLElement>,
-    id: string = '',
+    id: string = `id__temp_${Math.round(Math.random()*10000)}`,
     classes: string = '',
     location: Point = new Point(0, 0),
     alignV: 'top' | 'bottom' | 'middle' = 'middle',
@@ -195,7 +195,7 @@ function shapes(diagram: Diagram) {
 
   function htmlText(
     textInput: string,
-    id: string = '',
+    id: string = `id__temp_${Math.round(Math.random()*10000)}`,
     classes: string = '',
     location: Point = new Point(0, 0),
     alignV: 'top' | 'bottom' | 'middle' = 'middle',

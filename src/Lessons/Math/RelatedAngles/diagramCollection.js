@@ -20,9 +20,46 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   // anglePairNames: Array<string>;
   // eqn: TypeMainTextEquation;
 
-  // makeSelector(titles: Object, yPosition: number = )
+  makeSelector(
+    titles: Object,
+    firstSelection: string = Object.keys(titles)[0],
+    id: string = 'id__lesson_selector',
+  ) {
+    const table = document.createElement('table');
+    const row = document.createElement('tr');
+    const cols: Array<HTMLElement> = [];
+    const selectorHandler = (key: string) => {
+      const selectedId = `${id}__${key}`;
+      cols.forEach((col) => {
+        if (col.id !== selectedId) {
+          col.classList.remove('lesson__selector_title_selected');
+          col.classList.add('lesson__selector_table_not_selected');
+        } else {
+          col.classList.add('lesson__selector_title_selected');
+          col.classList.remove('lesson__selector_table_not_selected');
+        }
+      });
+      this.selectorClicked(key);
+    };
 
-  makeSelector(titles: Object, yPosition: number = 1.8) {
+    Object.keys(titles).forEach((key) => {
+      const col = document.createElement('td');
+      col.innerHTML = titles[key];
+      col.id = `${id}__${key}`;
+      col.onclick = selectorHandler.bind(this, key);
+      col.classList.add('lesson__selector_table_not_selected');
+      cols.push(col);
+      row.appendChild(col);
+    });
+
+    table.appendChild(row);
+    const selector = this.diagram.shapes.htmlElement(table, id, 'lesson__selector_table');
+    selector.setPosition(this.diagram.limits.left, this.layout.selector.y);
+    this.add('_selector', selector);
+    selectorHandler(firstSelection);
+  }
+
+  makeSelectorOld(titles: Object, yPosition: number = 1.8) {
     const selector = this.diagram.shapes.collection();
     let width = 0;
     const widthRecord = [];
@@ -67,7 +104,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       corresponding: 'Corresponding',
       alternate: 'Alternate',
       interior: 'Interior',
-    });
+    }, 'opposite');
   }
 
   selectorClicked(title: string) {

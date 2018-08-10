@@ -21,6 +21,10 @@ export default function baseLayout() {
     linewidth: 0.03,
     position: new Point(0, 0),
 
+    selector: {
+      y: 1.5,
+    },
+
     selectorFont: new DiagramFont(
       'helvetica, sans-serif',
       'normal',
