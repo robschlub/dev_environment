@@ -2,7 +2,7 @@
 
 import { Rect, Point } from '../../../js/diagram/tools/g2';
 import getCssColors from '../../../js/tools/getCssColors';
-// import angleCircleLayout from '../../../LessonsCommon/AngleCircle/layout';
+import baseLayout from '../../../LessonsCommon/layout';
 
 const cssColorNames = [
   'latin',
@@ -14,12 +14,8 @@ const cssColorNames = [
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
-  const colors = getCssColors(cssColorNames);
-  const layout = {
-    limits: new Rect(-3, -2, 6, 4),
-    linewidth: 0.03,
-    position: new Point(0, 0),
-    colors,
-  };
+  const layout = baseLayout();
+  layout.colors = getCssColors(cssColorNames);
+  // layout.selectorFont.size = 0.15;
   return layout;
 }

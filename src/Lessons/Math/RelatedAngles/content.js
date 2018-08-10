@@ -67,10 +67,12 @@ class Content extends LessonContent {
         ),
       },
       setEnterState: () => {
+        console.log(diag)
         // diag.setRotation(Math.PI / 3);
         // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
       },
       showOnly: [
+        // diag.__selector,
         // circle,
         // circle._radius,
         // circle._startLine,
@@ -80,7 +82,11 @@ class Content extends LessonContent {
         // circle._angleB,
         // circle._angleB._arc,
       ],
+      show: [
+        diag.__selector,
+      ],
       setSteadyState: () => {
+        // diag.__selector.showAll();
         // diag.resetCircle('right', Math.PI / 3);
         // diag.setEndLineRotation(Math.PI / 3);
         // diag.setRotation(Math.PI / 6);
