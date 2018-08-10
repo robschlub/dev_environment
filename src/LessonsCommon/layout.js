@@ -22,7 +22,7 @@ export default function baseLayout() {
     position: new Point(0, 0),
 
     selector: {
-      y: 1.5,
+      y: 1.7,
     },
 
     selectorFont: new DiagramFont(

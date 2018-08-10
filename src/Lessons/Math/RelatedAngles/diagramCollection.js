@@ -26,6 +26,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     id: string = 'id__lesson_selector',
   ) {
     const table = document.createElement('table');
+    table.classList.add('lesson__selector_table');
     const row = document.createElement('tr');
     const cols: Array<HTMLElement> = [];
     const selectorHandler = (key: string) => {
@@ -53,7 +54,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     });
 
     table.appendChild(row);
-    const selector = this.diagram.shapes.htmlElement(table, id, 'lesson__selector_table');
+    const selector = this.diagram.shapes.htmlElement(table, id, 'lesson__selector_container');
     selector.setPosition(this.diagram.limits.left, this.layout.selector.y);
     this.add('_selector', selector);
     selectorHandler(firstSelection);

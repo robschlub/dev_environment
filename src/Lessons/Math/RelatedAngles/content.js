@@ -27,16 +27,7 @@ class Content extends LessonContent {
     console.log(diag)
     this.addSection({
       title: 'Parallel',
-      setContent: `
-        <table class="lesson__related_angles_table">
-          <tr>
-            <td>|Parallel|</td>
-            <td>|Vertically_Opposite|</td>
-            <td>|Corresponding|</td>
-            <td>|Alternate|</td>
-            <td>|Interior|</td>
-          </tr>
-        </table>
+      setContent:`
         <div id="id_unit_selection"
              class="lesson__adjacent_angles_unit_selection">
           <span id="id_radians">Radians</span>
