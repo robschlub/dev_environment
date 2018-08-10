@@ -8,7 +8,7 @@ import LessonDiagram from './diagram';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
-const { colors } = layout;
+// const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -17,13 +17,14 @@ class Content extends LessonContent {
   }
 
   setDiagram(htmlId: string = '') {
-    this.diagram = new LessonDiagram(htmlId);
+    this.diagram = new LessonDiagram(htmlId, layout);
   }
 
   addSections() {
-    const circle = this.diagram.elements._circle;
+    // const circle = this.diagram.elements._circle;
 
     const diag = this.diagram.elements;
+    console.log(diag)
     this.addSection({
       title: 'Parallel',
       setContent: `
@@ -66,29 +67,29 @@ class Content extends LessonContent {
         ),
       },
       setEnterState: () => {
-        diag.setRotation(Math.PI / 3);
-        diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
+        // diag.setRotation(Math.PI / 3);
+        // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
       },
       showOnly: [
-        circle,
-        circle._radius,
-        circle._startLine,
-        circle._endLine,
-        circle._angleA,
-        circle._angleA._arc,
-        circle._angleB,
-        circle._angleB._arc,
+        // circle,
+        // circle._radius,
+        // circle._startLine,
+        // circle._endLine,
+        // circle._angleA,
+        // circle._angleA._arc,
+        // circle._angleB,
+        // circle._angleB._arc,
       ],
       setSteadyState: () => {
-        diag.resetCircle('right', Math.PI / 3);
-        diag.setEndLineRotation(Math.PI / 3);
-        diag.setRotation(Math.PI / 6);
-        circle.transform.updateRotation(0);
-        diag.selectAnglePair('adjacent');
-        onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
-        onClickId('id_angle_text', diag.pulseAngle, [diag]);
-        diag.toggleUnits('deg');
-        diag.goToAdjacent();
+        // diag.resetCircle('right', Math.PI / 3);
+        // diag.setEndLineRotation(Math.PI / 3);
+        // diag.setRotation(Math.PI / 6);
+        // circle.transform.updateRotation(0);
+        // diag.selectAnglePair('adjacent');
+        // onClickId('id_unit_selection', diag.toggleUnits, [diag, null]);
+        // onClickId('id_angle_text', diag.pulseAngle, [diag]);
+        // diag.toggleUnits('deg');
+        // diag.goToAdjacent();
       },
     });
   }

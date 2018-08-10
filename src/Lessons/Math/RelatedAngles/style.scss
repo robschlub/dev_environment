@@ -1,19 +1,11 @@
-// @import '../geometry';
-@import '../../../LessonsCommon/AngleCircle/style';
+@import '../geometry';
 
 $colors: (
   latin:            color('diagram', 'text-latin'),
-  line:             color('blue', 'base'),
-  disabled:         color('grey', 'darker'),
-  action:           map-get($geometry_colors, action),
+  line:             map-get($geometry_colors, lines),
   disabled:         map-get($geometry_colors, disabled),
-  arcLight:         map-get($geometry_colors, arcLight),
-  angleArea:        #2F351A,
-  radialLines:      color('diagram', 'disabled', 'darker'),
-  axes:             color(0, light),
-  outsideLines:     color('blue', 'darker'),
-  angleA:           color('red', 'base'),
-  angleB:           color('violet', 'base'),
+  angleA:           map-get($geometry_colors, angleA),
+  angleB:           map-get($geometry_colors, angleB),
 );
 
 body {
@@ -22,9 +14,6 @@ body {
 
 .lesson__related_angles_table {
   width: 100%;
-  // table-layout: fixed;
-  // margin-left: auto;
-  // margin-right: 0;
   color: map-get($colors, disabled);
   text-align: center;
   border-bottom: 1px solid map-get($colors, disabled);
@@ -39,22 +28,22 @@ body {
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
 }
 
-.lesson__adjacent_angles_table_selected {
+.lesson__related_angles_table_selected {
   color: color('diagram', 'text-base');
 }
 
-.lesson__adjacent_angles_unit_selected {
+.lesson__related_angles_unit_selected {
   color: color('diagram', 'text-base');
 }
 
-.lesson__adjacent_angles_unit_selection {
+.lesson__related_angles_unit_selection {
   font-size: calc(var(--lesson__diagram-font-size) * 0.4);
   position: absolute;
   left: 45%;
   top: 95%;
 }
 
-.lesson__adjacent_angles_unit_selection_hide {
+.lesson__related_angles_unit_selection_hide {
   width: 0;
   font-size: 0;
   left: -10000px;
@@ -62,18 +51,18 @@ body {
   position: absolute;
 }
 
-.lesson__adjacent_angles_text_hide {
-  width: 0;
-  font-size: 0;
-  height: 0;
-  position: absolute;
-  left: -10000px;
-}
+// .lesson__relatedt_angles_text_hide {
+//   width: 0;
+//   font-size: 0;
+//   height: 0;
+//   position: absolute;
+//   left: -10000px;
+// }
 
-.lesson__adjacent_angles_from_Latin {
-  color: color('diagram', 'text-base');
-  font-style: normal;
-}
+// .lesson__related_angles_from_Latin {
+//   color: color('diagram', 'text-base');
+//   font-style: normal;
+// }
 
 .lesson__note {
   font-size: calc(var(--lesson__diagram-font-size) * 0.4);

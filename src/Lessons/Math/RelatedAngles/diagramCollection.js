@@ -8,10 +8,10 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
-import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+// import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 
-class AdjacentAnglesCollection extends DiagramElementCollection {
+class RelatedAnglesCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   shapes: Object;
@@ -23,8 +23,21 @@ class AdjacentAnglesCollection extends DiagramElementCollection {
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
+    this.layout = lessonLayout();
+  }
+
+  goToParallel() {
+  }
+  goToOpposite() {
+  }
+  goToCorresponding() {
+  }
+  goToAlternate() {
+  }
+
+  goToInterior() {
   }
 
 }
 
-export default AdjacentAnglesCollection;
+export default RelatedAnglesCollection;

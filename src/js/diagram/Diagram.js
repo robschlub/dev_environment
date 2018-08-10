@@ -490,6 +490,7 @@ class Diagram {
   equation: Object;
   backgroundColor: Array<number>;
   fontScale: number;
+  layout: Object;
 
   glToDiagramSpaceTransform: Transform;
   diagramToGLSpaceTransform: Transform;
@@ -508,7 +509,9 @@ class Diagram {
     width: number = 2,
     height: number = 2,
     backgroundColor: Array<number> = [1, 1, 1, 1],
+    layout: Object = {},
   ) {
+    this.layout = layout;
     if (typeof containerIdOrWebGLContext === 'string') {
       const container = document.getElementById(containerIdOrWebGLContext);
       if (container instanceof HTMLElement) {
