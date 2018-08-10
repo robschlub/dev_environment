@@ -8,13 +8,20 @@ import {
   spaceToSpaceTransform,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
-import { DiagramElementCollection, DiagramElementPrimative } from './Element';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
+// eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 
-import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
-import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import {
+  PolyLine, PolyLineCorners,
+} from './DiagramElements/PolyLine';
+import {
+  Polygon, PolygonFilled,
+} from './DiagramElements/Polygon';
 import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
@@ -22,10 +29,15 @@ import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import Axis from './DiagramElements/Plot/Axis';
 
-import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
+import {
+  DiagramText, DiagramFont, TextObject,
+} from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
-import { DiagramGLEquation, createEquationElements } from './DiagramElements/Equation/GLEquation';
+import {
+  EquationForm, createEquationElements, Equation,
+} from './DiagramElements/Equation/GLEquation';
+// import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 
@@ -47,12 +59,17 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 
 // eslint-disable-next-line no-use-before-define
 function equation(diagram: Diagram) {
-  function elements(elems: Object, colorOrFont: Array<number> | DiagramFont = []) {
+  function elements(
+    elems: Object,
+    colorOrFont: Array<number> | DiagramFont = [],
+    firstTransform: Transform = new Transform(),
+  ): DiagramElementCollection {
     return createEquationElements(
       elems,
       diagram.draw2D,
       colorOrFont,
       diagram.limits,
+      firstTransform,
     );
   }
 
@@ -79,18 +96,28 @@ function equation(diagram: Diagram) {
   }
 
   function make(equationCollection: DiagramElementCollection) {
-    return new DiagramGLEquation(equationCollection);
+    return new EquationForm(equationCollection);
   }
 
   function makeHTML(id: string = '', classes: string | Array<string> = []) {
     return new HTMLEquation(id, classes);
   }
+
+  function makeEqn() {
+    return new Equation(
+      diagram.draw2D,
+      diagram.limits,
+      diagram.diagramToGLSpaceTransform,
+    );
+  }
+
   return {
     elements,
     vinculum,
     integral,
     make,
     makeHTML,
+    makeEqn,
   };
 }
 
@@ -292,7 +319,7 @@ function shapes(diagram: Diagram) {
     if (transformOrPoint instanceof Point) {
       transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
     } else {
-      transform = transformOrPoint.copy();
+      transform = transformOrPoint._dup();
     }
     return new DiagramElementCollection(transform, diagram.limits);
   }
@@ -410,7 +437,7 @@ function shapes(diagram: Diagram) {
     if (location instanceof Point) {
       transform = transform.translate(location.x, location.y);
     } else {
-      transform = location.copy();
+      transform = location._dup();
     }
     const xy = collection(transform);
     if (showGrid) {
@@ -454,6 +481,7 @@ class Diagram {
   inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
+
   limits: Rect;
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
@@ -554,6 +582,7 @@ class Diagram {
   getShapes() {
     return shapes(this);
   }
+
   getEquations() {
     return equation(this);
   }
@@ -635,7 +664,7 @@ class Diagram {
   }
 
   updateLimits(limits: Rect) {
-    this.limits = limits.copy();
+    this.limits = limits._dup();
     this.setSpaceTransforms();
   }
 
@@ -646,6 +675,7 @@ class Diagram {
     this.sizeHtmlText();
     this.animateNextFrame();
   }
+
   // Handle touch down, or mouse click events within the canvas.
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
@@ -654,7 +684,6 @@ class Diagram {
     if (this.inTransition) {
       return false;
     }
-
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
     // console.log(pixelPoint)
@@ -665,6 +694,7 @@ class Diagram {
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
     const touchedElements = this.elements.getTouched(glPoint);
+
     touchedElements.forEach(e => e.click());
     // console.log(touchedElements)
     // Make a list of, and start moving elements that are being moved
@@ -738,7 +768,7 @@ class Diagram {
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       if (element !== this.elements) {
-        const currentTransform = element.transform.copy();
+        const currentTransform = element.transform._dup();
         const currentTranslation = currentTransform.t();
         if (currentTranslation
           && (element.isBeingTouched(previousGLPoint)
@@ -771,6 +801,7 @@ class Diagram {
   ) {
     this.elements.add(name, diagramElement);
   }
+
   clearContext() {
     // const bc = this.backgroundColor;
     // this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);

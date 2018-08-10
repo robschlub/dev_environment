@@ -5,7 +5,9 @@ import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
 import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
-import { Point, minAngleDiff, Rect, Transform } from '../../../js/diagram/tools/g2';
+import {
+  Point, minAngleDiff, Rect, Transform,
+} from '../../../js/diagram/tools/g2';
 import { getCSSVariables } from '../../../js/tools/getCssVariables';
 
 const colors = getScssColors(styles);
@@ -65,6 +67,7 @@ class LessonDiagram extends Diagram {
       backgroundColor,
     );
   }
+
   createDiagramElements() {
     const { shapes } = this;
     this.elements = shapes.collection();
@@ -106,6 +109,7 @@ class LessonDiagram extends Diagram {
     // this.elements._shapes.eq1.updateMoveTranslationBoundary();
     // console.log(this.elements._shapes._eq5Elements._a);
   }
+
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
@@ -138,7 +142,7 @@ class LessonDiagram extends Diagram {
       previousDiagramPoint.x - center.x,
     );
     const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = this.elements._circle._radius.transform.copy();
+    const transform = this.elements._circle._radius.transform._dup();
     const rot = transform.r();
     if (rot != null) {
       transform.updateRotation(rot - diffAngle);

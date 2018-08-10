@@ -4,6 +4,7 @@ import * as m2 from '../../tools/m2';
 import { Point } from '../../tools/g2';
 import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../../DrawContext2D';
+import { duplicateFromTo } from '../../../tools/tools';
 
 function colorArrayToString(color: Array<number>) {
   return `rgba(${
@@ -44,6 +45,7 @@ class DiagramFont {
     //   this.color = color;
     // }
   }
+
   setColor(color: Array<number> | null | string = null) {
     if (Array.isArray(color)) {
       this.color = colorArrayToString(color);
@@ -51,12 +53,14 @@ class DiagramFont {
       this.color = color;
     }
   }
+
   set(ctx: CanvasRenderingContext2D, scalingFactor: number = 1) {
     ctx.font = `${this.style} ${this.weight} ${this.size * scalingFactor}px ${this.family}`;
     ctx.textAlign = this.alignH;
     ctx.textBaseline = this.alignV;
   }
-  copy() {
+
+  _dup() {
     return new DiagramFont(
       this.family,
       this.style,
@@ -81,9 +85,13 @@ class DiagramText {
     text: string = '',
     font: DiagramFont = new DiagramFont(),
   ) {
-    this.location = location.copy();
-    this.text = text;
-    this.font = font.copy();
+    this.location = location._dup();
+    this.text = text.slice();
+    this.font = font._dup();
+  }
+
+  _dup() {
+    return new DiagramText(this.location._dup(), this.text, this.font._dup());
   }
 }
 
@@ -118,6 +126,14 @@ class TextObject extends DrawingObject {
         this.scalingFactor = 10 ** power;
       }
     }
+  }
+
+  _dup() {
+    const c = new TextObject(this.drawContext2D, this.text);
+    duplicateFromTo(this, c);
+    c.scalingFactor = this.scalingFactor;
+    c.border = this.border.map(b => b.map(p => p._dup()));
+    return c;
   }
 
   setFont(fontSize: number) {
@@ -330,6 +346,7 @@ class TextObject extends DrawingObject {
       fontBoundingBoxDescent: des,
     };
   }
+
   getGLBoundaryOfText(
     text: DiagramText,
     lastDrawTransformMatrix: Array<number>,

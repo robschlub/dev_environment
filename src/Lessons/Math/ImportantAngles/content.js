@@ -1,6 +1,8 @@
 // @flow
 
-import { LessonContent, clickWord, onClickId, click, highlight } from '../../../js/Lesson/LessonContent';
+import {
+  LessonContent, clickWord, onClickId, click, highlight,
+} from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 
@@ -36,7 +38,7 @@ class Content extends LessonContent {
 
     const diag = this.diagram.elements;
     this.addSection({
-      title: 'Introduction',
+      title: 'Summary',
       setContent: [`
         <table class="lesson__important_angles_table">
           <tr>

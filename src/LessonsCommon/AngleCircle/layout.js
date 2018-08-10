@@ -1,6 +1,8 @@
 // @flow
 
-import { Rect, Point } from '../../js/diagram/tools/g2';
+import {
+  Rect, Point,
+} from '../../js/diagram/tools/g2';
 import getCssColors from '../../js/tools/getCssColors';
 
 const cssColorNames = [
@@ -68,7 +70,17 @@ export default function angleCircleLayout() {
         text: 0.48,
       },
     },
-
+    angleAnnotation: {
+      arc: {
+        lineWidth: 0.02,
+        radius: 0.3,
+        sides: 200,
+      },
+      label: {
+        radiusOffset: 0.07,
+        hideAngle: 0.15,
+      },
+    },
     colors,
   };
 }

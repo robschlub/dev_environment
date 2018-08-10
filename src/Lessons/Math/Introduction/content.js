@@ -28,8 +28,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Introduction',
-      setContent: () =>
-        centerVH(`
+      setContent: () => centerVH(`
           <p>
             |_mathematics_is_a_powerful_tool|
           </p> 
@@ -43,8 +42,7 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             Mathematics describes an object or phenomenon in a more |_simple|, and more |_general| way.
           </p>
@@ -65,8 +63,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             A large area of mathematics is the study of |_shapes|.
           </p>
@@ -252,8 +249,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: () =>
-        centerV(`
+      setContent: () => centerV(`
           <p>
             The mathematics from studying shapes also helps us understand phenonmum we don't see, like |_sound|, |_gravity|, |_electricity|, |_radio_waves| and |_magnetism|.
           </p>

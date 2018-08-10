@@ -159,8 +159,8 @@ class WebGLInstance {
       Math.floor(this.gl.canvas.clientHeight * realToCSSPixels);
 
     // Check if the canvas is not the same size.
-    if (this.gl.canvas.width  !== displayWidth ||
-        this.gl.canvas.height !== displayHeight) {
+    if (this.gl.canvas.width  !== displayWidth
+        || this.gl.canvas.height !== displayHeight) {
 
       // Make the canvas the same size
       this.gl.canvas.width  = displayWidth;

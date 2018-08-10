@@ -1,8 +1,12 @@
 // @flow
 
 import Diagram from '../../../js/diagram/Diagram';
-import { Transform, Point } from '../../../js/diagram/tools/g2';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
+import {
+  Transform, Point,
+} from '../../../js/diagram/tools/g2';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../../js/diagram/Element';
 import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
@@ -326,6 +330,7 @@ class ImportantAnglesCollection extends AngleCircle {
       'id_right_text',
       'id_straight_text',
       'id_reflex_text',
+      'id_full_text',
     ];
     ids.forEach((id) => {
       if (id !== angleType) {
@@ -377,6 +382,7 @@ class ImportantAnglesCollection extends AngleCircle {
     // this.showText('obtuse');
     this.showAngleType('obtuse');
   }
+
   goToStraight() {
     const angle = Math.PI;
     this.rotateToAngleDisablingAutoChange(angle);
@@ -418,6 +424,7 @@ class ImportantAnglesCollection extends AngleCircle {
     }
     this.diagram.animateNextFrame();
   }
+
   toggleRightAngleLine(show: boolean | null) {
     let toShow = show;
     if (show === null) {

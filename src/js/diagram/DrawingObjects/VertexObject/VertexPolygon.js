@@ -76,7 +76,7 @@ class VertexPolygon extends VertexObject {
           center.y + inRad * Math.sin(i * this.dAngle * direction + rotation * direction),
         ));
       }
-      this.border[0].push(this.border[0][0].copy());
+      this.border[0].push(this.border[0][0]._dup());
     } else {
       for (i = 0; i <= sidesToDraw; i += 1) {
         this.border[0].push(new Point(
@@ -88,7 +88,7 @@ class VertexPolygon extends VertexObject {
     this.setupBuffer();
     // console.log(this.numPoints);
   }
-  // Polygon.prototype = Object.create(VertexObject.prototype);
+
   drawToAngle(
     offset: Object,
     rotate: number,
@@ -102,6 +102,7 @@ class VertexPolygon extends VertexObject {
     }
     this.draw(offset, rotate, scale, count, color);
   }
+
   getPointCountForAngle(drawAngle: number = Math.PI * 2) {
     let count = Math.floor(drawAngle / this.dAngle) * 2.0 + 2;
     if (drawAngle >= Math.PI * 2.0) {

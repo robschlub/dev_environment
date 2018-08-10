@@ -1,14 +1,22 @@
 // @flow
 
-import { DiagramElementPrimative, DiagramElementCollection } from '../../Element';
-import { Rect, Transform, Point } from '../../tools/g2';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../../Element';
+import {
+  Rect, Transform, Point,
+} from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 
 import VAxis from './VertexObjects/VAxis';
 import VTickMarks from './VertexObjects/VTickMarks';
-import { AxisProperties, GridProperties, TickProperties } from './AxisProperties';
+import {
+  AxisProperties, GridProperties, TickProperties,
+} from './AxisProperties';
 // import TextObject from '../../textObjects/TextObject';
-import { TextObject, DiagramText, DiagramFont } from '../../DrawingObjects/TextObject/TextObject';
+import {
+  TextObject, DiagramText, DiagramFont,
+} from '../../DrawingObjects/TextObject/TextObject';
 import DrawContext2D from '../../DrawContext2D';
 
 class Axis extends DiagramElementCollection {
@@ -31,10 +39,12 @@ class Axis extends DiagramElementCollection {
     this.drawContext2D = drawContext2D;
     this.build();
   }
+
   rebuild() {
     this.order = [];
     this.build();
   }
+
   build() {
     const {
       minorTicks, majorTicks,
@@ -130,6 +140,7 @@ class Axis extends DiagramElementCollection {
   toClip(value: number) {
     return this.props.toClip(value);
   }
+
   valueToClip(value: number) {
     return this.props.valueToClip(value);
   }

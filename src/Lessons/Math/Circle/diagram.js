@@ -2,7 +2,9 @@
 import Diagram from '../../../js/diagram/Diagram';
 import CircleCollection from './diagramCollectionCircle';
 import type { CircleCollectionType } from './diagramCollectionCircle';
-import { Point, minAngleDiff, Transform } from '../../../js/diagram/tools/g2';
+import {
+  Point, minAngleDiff, Transform,
+} from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -24,6 +26,7 @@ class LessonDiagram extends Diagram {
       backgroundColor,
     );
   }
+
   createDiagramElements() {
     const circleCollection = new CircleCollection(
       this,
@@ -91,17 +94,17 @@ class LessonDiagram extends Diagram {
       );
       const diffAngle = minAngleDiff(previousAngle, currentAngle);
 
-      let transform = this.elements._circle._diameter.transform.copy();
+      let transform = this.elements._circle._diameter.transform._dup();
       if (rad.state.isBeingMoved) {
-        transform = this.elements._circle._radius.transform.copy();
+        transform = this.elements._circle._radius.transform._dup();
       }
       const rot = transform.r();
       if (rot != null) {
         transform.updateRotation(rot - diffAngle);
         if (rad.state.isBeingMoved) {
-          this.elements._circle._radius.moved(transform.copy());
+          this.elements._circle._radius.moved(transform._dup());
         } else {
-          this.elements._circle._diameter.moved(transform.copy());
+          this.elements._circle._diameter.moved(transform._dup());
         }
       }
     } else {

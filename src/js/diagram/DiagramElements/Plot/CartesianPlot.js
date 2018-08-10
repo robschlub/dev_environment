@@ -1,7 +1,11 @@
 // @flow
 
-import { DiagramElementCollection, DiagramElementPrimative } from '../../Element';
-import { Rect, Transform, Point } from '../../tools/g2';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../Element';
+import {
+  Rect, Transform, Point,
+} from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 
 // import AxisProperties from './AxisProperties';

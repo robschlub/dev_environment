@@ -1,6 +1,8 @@
 // @flow
 
-import { Point, Rect, getBoundingRect } from '../tools/g2';
+import {
+  Point, Rect, getBoundingRect,
+} from '../tools/g2';
 
 // A Drawing object can be:
 //  - GL primitive vertices
@@ -27,6 +29,10 @@ class DrawingObject {
     // this.numPoints = 0;
     this.location = new Point(0, 0);
     this.border = [[]];
+  }
+
+  _dup() {
+    return this;
   }
 
   /* eslint-disable class-methods-use-this, no-unused-vars */
@@ -82,6 +88,7 @@ class DrawingObject {
   getLocation(): Point {
     return this.location;
   }
+
   // eslint-disable-next-line class-methods-use-this
   getGLLocation(lastDrawTransformMatrix: Array<number>): Point {
     return this.getLocation().transformBy(lastDrawTransformMatrix);

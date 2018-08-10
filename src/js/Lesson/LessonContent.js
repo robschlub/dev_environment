@@ -1,7 +1,9 @@
 // @flow
 
 import Diagram from '../diagram/Diagram';
-import { DiagramElementPrimative, DiagramElementCollection } from '../diagram/Element';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../diagram/Element';
 import { colorArrayToRGBA } from '../tools/tools';
 // import { Transform, Point } from '../diagram/tools/g2';
 
@@ -273,16 +275,14 @@ class Section {
   modifiers: Object;
   blank: Array<string>;
   diagram: Diagram;
-  // comingFrom: 'next' | 'prev' | 'goto';
-  // goingTo: 'next' | 'prev' | 'goto';
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
+
   hideOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
-  show: Array<DiagramElementPrimative | DiagramElementCollection>
-           | () => {};
-  hide: Array<DiagramElementPrimative | DiagramElementCollection>
-           | () => {};
+
+  show: Array<DiagramElementPrimative | DiagramElementCollection> | () => {};
+  hide: Array<DiagramElementPrimative | DiagramElementCollection> | () => {};
   initialPositions: Object | () => {};
   blankTransition: {
     toNext: boolean;
@@ -321,6 +321,7 @@ class Section {
       }
     });
   }
+
   getContent(): string {
     let htmlText = '';
     let content = '';
@@ -371,7 +372,7 @@ class Section {
   //         const element = elementsOrMethod[i];
   //         const transformPointOrNumber = elementsOrMethod[i + 1];
   //         if (transformPointOrNumber instanceof Transform) {
-  //           element.transform = transformPointOrNumber.copy();
+  //           element.transform = transformPointOrNumber._dup();
   //         } else if (transformPointOrNumber instanceof Point) {
   //           element.transform.updateTranslation(transformPointOrNumber);
   //         } else if (typeof transformPointOrNumber === 'number') {
@@ -394,6 +395,7 @@ class Section {
     //   });
     // }
   }
+
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -448,18 +450,23 @@ class Section {
   transitionToNext(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromNext(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionToPrev(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromPrev(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionFromAny(done: () => void = function temp() {}): void {
     done();
   }
+
   transitionToAny(done: () => void = function temp() {}): void {
     done();
   }
@@ -490,6 +497,7 @@ class LessonContent {
     this.setDiagram(this.diagramHtmlId);
     this.addSections();
   }
+
   setTitle() {
     this.title = '';
   }

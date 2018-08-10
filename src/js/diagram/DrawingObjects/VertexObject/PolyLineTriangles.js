@@ -1,4 +1,6 @@
-import { Point, Line } from '../../tools/g2';
+import {
+  Point, Line,
+} from '../../tools/g2';
 
 
 function simpleIntersect(p1, p2, q1, q2) {
@@ -70,8 +72,8 @@ function polyLineTriangles(coords, close, width) {
   // but the inner border isn't necessarily the INSIDE border, it is just a
   // name.
   // p and q are the first points of the borders.
-  innerBorder.push(p.copy());
-  outerBorder.push(q.copy());
+  innerBorder.push(p._dup());
+  outerBorder.push(q._dup());
 
   // Go through all offset lines, calculate their intersection points
   // and from them calculate the triangle and border points.
@@ -98,8 +100,8 @@ function polyLineTriangles(coords, close, width) {
     );
 
     // Push the next points to the border
-    innerBorder.push(p.copy());
-    outerBorder.push(q.copy());
+    innerBorder.push(p._dup());
+    outerBorder.push(q._dup());
 
     // Finish triangle 1
     points.push(q.x);
@@ -141,8 +143,8 @@ function polyLineTriangles(coords, close, width) {
   points.push(endq.y);
   points.push(endp.x);
   points.push(endp.y);
-  innerBorder.push(endp.copy());
-  outerBorder.push(endq.copy());
+  innerBorder.push(endp._dup());
+  outerBorder.push(endq._dup());
 
   // If closing, then remove the last duplicate coord as it was added by this
   // function

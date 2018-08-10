@@ -1,11 +1,15 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
-import { Transform, Point, polarToRect } from '../../js/diagram/tools/g2';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../js/diagram/Element';
+import {
+  Transform, Point, polarToRect,
+} from '../../js/diagram/tools/g2';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../js/diagram/Element';
 import AngleCircle from '../AngleCircle/AngleCircle';
-import type { circleType, varStateType } from '../AngleCircle/AngleCircle';
-import { DiagramGLEquation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { circleType, varStateType, angleAnnotationType } from '../AngleCircle/AngleCircle';
+import { EquationForm } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 type rightAngleType = {
@@ -21,6 +25,7 @@ type quadAngle = {
   setAngleText: (string) => void;
 } & DiagramElementCollection;
 
+export type SinCosCircleAngleAnnotationType = angleAnnotationType;
 // export type sineLineType = {
 //     _line: DiagramElementPrimative;
 //     _label: DiagramElementPrimative;
@@ -39,7 +44,7 @@ type sineTextType = {
 } & DiagramElementCollection;
 
 export type equationType = {
-  eqn: DiagramGLEquation;
+  eqn: EquationForm;
 } & DiagramElementCollection;
 
 export type sineCosineLineType = {
@@ -152,29 +157,29 @@ export class SinCosCircle extends AngleCircle {
   //   }
   //   return equationElements;
   // }
-  makeEquationText(
-    text: string,
-    color: Array<number> = [1, 1, 1, 1],
-  ): textEquationType {
-    labelFont.setColor(color);
-    const collection = this.diagram.equation.elements(
-      { text },
-      labelFont,
-    );
-    collection.transform.index = 0;
-    collection.transform = collection.transform.rotate(0);
+  // makeEquationText(
+  //   text: string,
+  //   color: Array<number> = [1, 1, 1, 1],
+  // ): textEquationType {
+  //   labelFont.setColor(color);
+  //   const collection = this.diagram.equation.elements(
+  //     { text },
+  //     labelFont,
+  //   );
+  //   collection.transform.index = 0;
+  //   collection.transform = collection.transform.rotate(0);
 
-    const eqn = this.diagram.equation.make(collection);
-    eqn.createEq(['text']);
-    collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
-    collection.layout = () => {
-      eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
-    };
-    collection.layout();
-    // eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
-    collection.eqn = eqn;
-    return collection;
-  }
+  //   const eqn = this.diagram.equation.make(collection);
+  //   eqn.createEq(['text']);
+  //   collection.setFirstTransform(this.diagram.diagramToGLSpaceTransform);
+  //   collection.layout = () => {
+  //     eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
+  //   };
+  //   collection.layout();
+  //   // eqn.arrange(0.6, 'center', 'middle', new Point(0, 0));
+  //   collection.eqn = eqn;
+  //   return collection;
+  // }
 
   makeQuad1Equation() {
     return this.shapes.htmlText(
@@ -182,12 +187,14 @@ export class SinCosCircle extends AngleCircle {
       this.layout.quadEqn.position, 'middle', 'center',
     );
   }
+
   makeQuad2Equation() {
     return this.shapes.htmlText(
       'sin θ  =  sin (θ - π)', 'id__sine_eqn_quad3', 'lesson__sine_eqn',
       this.layout.quadEqn.position, 'middle', 'center',
     );
   }
+
   makeQuad3Equation() {
     return this.shapes.htmlText(
       'sin θ  =  sin (2π - θ)', 'id__sine_eqn_quad4', 'lesson__sine_eqn',
@@ -216,6 +223,7 @@ export class SinCosCircle extends AngleCircle {
     }
     return selector;
   }
+
   makeSymmetry() {
     const symmetry = this.shapes.collection();
     const line = this.makeLine(

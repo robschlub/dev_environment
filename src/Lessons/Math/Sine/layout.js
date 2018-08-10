@@ -25,16 +25,16 @@ export default function lessonLayout() {
     angle: Math.PI / 6,
   };
 
-  layout.angleAnnotation = {
-    arc: {
-      lineWidth: 0.02,
-      radius: 0.3,
-      sides: 200,
-    },
-    label: {
-      radiusOffset: 0.07,
-    },
-  };
+  // layout.angleAnnotation = {
+  //   arc: {
+  //     lineWidth: 0.02,
+  //     radius: 0.3,
+  //     sides: 200,
+  //   },
+  //   label: {
+  //     radiusOffset: 0.07,
+  //   },
+  // };
 
   layout.thetaAngle = Object.assign({}, layout.angleAnnotation);
   layout.complimentAngle = Object.assign({}, layout.angleAnnotation);

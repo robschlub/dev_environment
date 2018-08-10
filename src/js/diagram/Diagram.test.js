@@ -4,7 +4,9 @@ import {
   // AnimationPhase,
 } from './Element';
 import Diagram from './Diagram';
-import { Point, Transform, TransformLimit, Rect } from './tools/g2';
+import {
+  Point, Transform, TransformLimit, Rect,
+} from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import DrawContext2D from '../__mocks__/DrawContext2DMock';
 import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
@@ -22,14 +24,14 @@ describe('Diagram', () => {
 
   beforeEach(() => {
     document.body.innerHTML =
-      '<div id="c">' +
-      '  <canvas class="diagram__gl">' +
-      '  </canvas>' +
-      '  <canvas class="diagram__text">' +
-      '  </canvas>' +
-      '  <div class="diagram__html">' +
-      '  </div>' +
-      '</div>';
+      '<div id="c">'
+      + '  <canvas class="diagram__gl">'
+      + '  </canvas>'
+      + '  <canvas class="diagram__text">'
+      + '  </canvas>'
+      + '  <div class="diagram__html">'
+      + '  </div>'
+      + '</div>';
     // canvas = document.getElementById('c');
     const diagramDefinitions = {
       landscapeCenter: {

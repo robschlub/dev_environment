@@ -84,6 +84,7 @@ class Lesson {
     }
     this.renderDiagrams();
   }
+
   prevSection() {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
