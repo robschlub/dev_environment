@@ -4,7 +4,7 @@ import Diagram from '../../js/diagram/Diagram';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { RGBToArray } from '../../js/tools/tools';
 
-import { Point } from '../../js/diagram/tools/g2';
+import { Point, Transform } from '../../js/diagram/tools/g2';
 import baseLayout from '../layout';
 
 const layout = baseLayout();
@@ -74,7 +74,7 @@ export function makeSelectorText(
   separator: string = '',
   spacing: ?number = null,
 ) {
-  const selector = diagram.shapes.collection();
+  const selector = diagram.shapes.collection(new Transform().translate(0, 0));
   let width = 0;
   const widthRecord = [];
 
@@ -132,18 +132,19 @@ export function makeSelectorText(
     space = spacing;
   }
 
-  let x = diagram.limits.left;
+  let x = 0 - width / 2 - space * numTitles / 2;
   selector.order.forEach((key, index) => {
     const element = selector.elements[key];
     if (separator !== '' && index % 2 === 1) {
-      element.setPosition(x + widthRecord[index] / 2, yPosition);
+      element.setPosition(x + widthRecord[index] / 2, 0);
       x += widthRecord[index];
     } else {
-      element.setPosition(x + widthRecord[index] / 2 + space / 2, yPosition);
+      element.setPosition(x + widthRecord[index] / 2 + space / 2, 0);
       x += widthRecord[index] + space;
     }
   });
   selector.hasTouchableElements = true;
+  selector.setPosition(0, yPosition);
   selectorHandler(firstSelection);
   return selector;
 }

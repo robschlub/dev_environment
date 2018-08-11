@@ -20,12 +20,8 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   // anglePairNames: Array<string>;
   // eqn: TypeMainTextEquation;
 
-  constructor(diagram: Diagram, transform: Transform = new Transform()) {
-    super(transform, diagram.limits);
-    this.diagram = diagram;
-    this.layout = lessonLayout();
-
-    this.add('selector', makeSelectorHTML(
+  makeSelector() {
+    return makeSelectorHTML(
       {
         parallel: 'Parallel',
         opposite: 'Vertically Opposite',
@@ -39,12 +35,14 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this.selectorClicked.bind(this),
       1,
       '/',
-    ));
+    );
+  }
 
+  makeUnitsSelector() {
     const font = this.layout.defaultFont._dup();
     font.size = 0.1;
     font.setColor(this.layout.colors.diagram.disabled);
-    this.add('_selector', makeSelectorText(
+    return makeSelectorText(
       {
         parallel: 'Parallel1',
         opposite: 'Vertically Opposite1',
@@ -60,7 +58,16 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this.layout.colors.diagram.text.base,
       '/',
       0.3,
-    ));
+    );
+  }
+
+  constructor(diagram: Diagram, transform: Transform = new Transform()) {
+    super(transform, diagram.limits);
+    this.diagram = diagram;
+    this.layout = lessonLayout();
+
+    this.add('selector', this.makeSelector());
+    this.add('_selector', this.makeUnitsSelector());
   }
 
   selectorClicked(title: string) {
