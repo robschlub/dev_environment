@@ -16,6 +16,7 @@ export function makeSelectorHTML(
   diagram: Diagram,
   onclick: Function,
   yPosition: number = diagram.limits.top - diagram.limits.height / 2,
+  separator: string = '',
 ) {
   const table = document.createElement('table');
   table.classList.add('lesson__selector_table');
@@ -36,14 +37,23 @@ export function makeSelectorHTML(
     onclick(key);
   };
 
-  Object.keys(titles).forEach((key) => {
+  const numKeys = Object.keys(titles).length;
+  Object.keys(titles).forEach((key, index) => {
     const col = document.createElement('td');
     col.innerHTML = titles[key];
     col.id = `${id}__${key}`;
     col.onclick = selectorHandler.bind(this, key);
     col.classList.add('lesson__selector_table_not_selected');
+    col.classList.add('lesson__selector_table_selectable');
     cols.push(col);
     row.appendChild(col);
+    if (separator !== '' && index < numKeys - 1) {
+      const sep = document.createElement('td');
+      sep.innerHTML = '/';
+      sep.style.paddingLeft = '0';
+      sep.style.paddingRight = '0';
+      row.appendChild(sep)
+    }
   });
 
   table.appendChild(row);

@@ -38,6 +38,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this.diagram,
       this.selectorClicked.bind(this),
       1,
+      '/',
     ));
   }
 

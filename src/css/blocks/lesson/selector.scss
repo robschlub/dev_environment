@@ -1,0 +1,37 @@
+.lesson__selector_container {
+  width: 100%;
+}
+
+.lesson__selector_table {
+  margin-left: auto;
+  margin-right: auto;
+  color: color('diagram', 'disabled');
+  text-align: center;
+  border-bottom: 1px solid color('diagram', 'disabled');
+  border-top: 1px solid color('diagram', 'disabled');
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  font-weight: bold;
+}
+
+.lesson__selector_table_selectable {
+  cursor: pointer;
+}
+
+.lesson__selector_table td {
+  padding-left: calc(var(--lesson__diagram-font-size));
+  padding-right: calc(var(--lesson__diagram-font-size));
+  padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
+  padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
+}
+
+.lesson__selector_table_not_selected:hover {
+  color: color('diagram', 'disabled', 'base');
+}
+
+.lesson__selector_title_selected {
+  color: color('diagram', 'text-base');
+}
+
+.lesson__selector_title_selected:hover {
+  color: color('diagram', 'text-base');
+}
