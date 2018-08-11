@@ -128,13 +128,15 @@ export function makeSelectorText(
 
   const spacing = (diagram.limits.width - width) / numTitles;
 
-  let x = diagram.limits.left + spacing / 2;
+  // let x = diagram.limits.left + spacing / 2;
+  let x = diagram.limits.left;
   selector.order.forEach((key, index) => {
     const element = selector.elements[key];
-    element.setPosition(x + widthRecord[index] / 2, yPosition);
     if (separator !== '' && index % 2 === 1) {
+      element.setPosition(x + widthRecord[index] / 2, yPosition);
       x += widthRecord[index];
     } else {
+      element.setPosition(x + widthRecord[index] / 2 + spacing / 2, yPosition);
       x += widthRecord[index] + spacing;
     }
   });
