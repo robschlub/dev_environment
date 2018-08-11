@@ -24,7 +24,7 @@
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
 }
 
-.lesson__selector_table_not_selected:hover {
+.lesson__selector_title_not_selected:hover {
   color: color('diagram', 'disabled', 'base');
 }
 
@@ -34,4 +34,16 @@
 
 .lesson__selector_title_selected:hover {
   color: color('diagram', 'text-base');
+}
+
+.lesson__vertical_selector_table {
+  color: color('diagram', 'disabled');
+  text-align: left;
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  font-weight: bold;
+}
+
+.lesson__vertical_selector_table td {
+  padding-top: calc(var(--lesson__diagram-font-size) * 0.2);
+  padding-bottom: calc(var(--lesson__diagram-font-size) * 0.2);
 }

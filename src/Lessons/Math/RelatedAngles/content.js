@@ -76,6 +76,7 @@ class Content extends LessonContent {
       show: [
         diag._selector,
         diag.__selector,
+        diag._vselector,
       ],
       setSteadyState: () => {
         // diag.__selector.showAll();

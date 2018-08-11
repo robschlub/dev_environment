@@ -9,6 +9,20 @@ import baseLayout from '../layout';
 
 const layout = baseLayout();
 
+const selectorHandler = (key: string, id: string, cols: Array<HTMLElement>, onclick: Function) => {
+  const selectedId = `${id}__${key}`;
+  cols.forEach((col) => {
+    if (col.id !== selectedId) {
+      col.classList.remove('lesson__selector_title_selected');
+      col.classList.add('lesson__selector_title_not_selected');
+    } else {
+      col.classList.add('lesson__selector_title_selected');
+      col.classList.remove('lesson__selector_title_not_selected');
+    }
+  });
+  onclick(key);
+};
+
 export function makeSelectorHTML(
   titles: Object,
   firstSelection: string = Object.keys(titles)[0],
@@ -23,27 +37,27 @@ export function makeSelectorHTML(
   const row = document.createElement('tr');
   const cols: Array<HTMLElement> = [];
 
-  const selectorHandler = (key: string) => {
-    const selectedId = `${id}__${key}`;
-    cols.forEach((col) => {
-      if (col.id !== selectedId) {
-        col.classList.remove('lesson__selector_title_selected');
-        col.classList.add('lesson__selector_table_not_selected');
-      } else {
-        col.classList.add('lesson__selector_title_selected');
-        col.classList.remove('lesson__selector_table_not_selected');
-      }
-    });
-    onclick(key);
-  };
+  // const selectorHandler = (key: string) => {
+  //   const selectedId = `${id}__${key}`;
+  //   cols.forEach((col) => {
+  //     if (col.id !== selectedId) {
+  //       col.classList.remove('lesson__selector_title_selected');
+  //       col.classList.add('lesson__selector_title_not_selected');
+  //     } else {
+  //       col.classList.add('lesson__selector_title_selected');
+  //       col.classList.remove('lesson__selector_title_not_selected');
+  //     }
+  //   });
+  //   onclick(key);
+  // };
 
   const numKeys = Object.keys(titles).length;
   Object.keys(titles).forEach((key, index) => {
     const col = document.createElement('td');
     col.innerHTML = titles[key];
     col.id = `${id}__${key}`;
-    col.onclick = selectorHandler.bind(this, key);
-    col.classList.add('lesson__selector_table_not_selected');
+    col.onclick = selectorHandler.bind(this, key, id, cols, onclick);
+    col.classList.add('lesson__selector_title_not_selected');
     col.classList.add('lesson__selector_table_selectable');
     cols.push(col);
     row.appendChild(col);
@@ -59,7 +73,38 @@ export function makeSelectorHTML(
   table.appendChild(row);
   const selector = diagram.shapes.htmlElement(table, id, 'lesson__selector_container');
   selector.setPosition(diagram.limits.left, yPosition);
-  selectorHandler(firstSelection);
+  selectorHandler(firstSelection, id, cols, onclick);
+  return selector;
+}
+
+export function makeVerticalSelectorHTML(
+  titles: Object,
+  firstSelection: string = Object.keys(titles)[0],
+  id: string = 'id__lesson_selector',
+  diagram: Diagram,
+  onclick: Function,
+) {
+  const table = document.createElement('table');
+  table.classList.add('lesson__vertical_selector_table');
+  // const row = document.createElement('tr');
+  const cols: Array<HTMLElement> = [];
+
+  Object.keys(titles).forEach((key) => {
+    const row = document.createElement('tr');
+    const col = document.createElement('td');
+    col.innerHTML = titles[key];
+    col.id = `${id}__${key}`;
+    col.onclick = selectorHandler.bind(this, key, id, cols, onclick);
+    col.classList.add('lesson__selector_title_not_selected');
+    col.classList.add('lesson__selector_table_selectable');
+    cols.push(col);
+    row.appendChild(col);
+    table.appendChild(row);
+  });
+
+  const selector = diagram.shapes.htmlElement(table, id, 'lesson__selector_container');
+  selector.setPosition(0, 0);
+  selectorHandler(firstSelection, id, cols, onclick);
   return selector;
 }
 
