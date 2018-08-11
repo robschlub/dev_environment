@@ -74,7 +74,6 @@ class Content extends LessonContent {
         // circle._angleB._arc,
       ],
       show: [
-        diag.__selector,
         diag._selector,
       ],
       setSteadyState: () => {

@@ -49,7 +49,6 @@ export function makeSelectorHTML(
   table.appendChild(row);
   const selector = diagram.shapes.htmlElement(table, id, 'lesson__selector_container');
   selector.setPosition(diagram.limits.left, yPosition);
-  // this.add('_selector', selector);
   selectorHandler(firstSelection);
   return selector;
 }
