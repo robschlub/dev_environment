@@ -9,7 +9,7 @@ import {
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
 // import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-import { makeSelectorHTML } from '../../../LessonsCommon/tools/selector';
+import { makeSelectorHTML, makeSelectorText } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
   layout: Object;
@@ -38,6 +38,27 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this.diagram,
       this.selectorClicked.bind(this),
       1,
+      '/',
+    ));
+
+    const font = this.layout.defaultFont._dup();
+    console.log(font)
+    font.size = 0.1;
+    font.setColor(this.layout.colors.diagram.disabled);
+    this.add('_selector', makeSelectorText(
+      {
+        parallel: 'Parallel1',
+        opposite: 'Vertically Opposite1',
+        corresponding: 'Corresponding1',
+        alternate: 'Alternate',
+        interior: 'Interior',
+      },
+      'opposite',
+      this.diagram,
+      this.selectorClicked.bind(this),
+      -1,
+      font,
+      this.layout.colors.diagram.text.base,
       '/',
     ));
   }

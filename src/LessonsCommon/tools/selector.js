@@ -71,6 +71,7 @@ export function makeSelectorText(
   yPosition: number = diagram.limits.top - diagram.limits.height / 2,
   font: DiagramFont = layout.defaultFont,
   selectedColor: Array<number> = layout.colors.diagram.text.base,
+  separator: string = '',
 ) {
   const selector = diagram.shapes.collection();
   let width = 0;
@@ -92,7 +93,10 @@ export function makeSelectorText(
     diagram.animateNextFrame();
   };
 
-  Object.keys(titles).forEach((key) => {
+  const numTitles = Object.keys(titles).length;
+  
+  // const numKeys = Object.keys(titles).length;
+  Object.keys(titles).forEach((key, index) => {
     const text = diagram.shapes.text(
       titles[key],
       new Point(0, 0),
@@ -106,15 +110,33 @@ export function makeSelectorText(
     width += bounds.width;
     widthRecord.push(bounds.width);
     selector.add(key, text);
+
+    if (separator !== '' && index < numTitles - 1) {
+      const sep = diagram.shapes.text(
+        separator,
+        new Point(0, 0),
+        disabledColor,
+        font,
+      );
+      sep.setFirstTransform(diagram.diagramToGLSpaceTransform);
+      const sepBounds = sep.getRelativeDiagramBoundingRect();
+      width += sepBounds.width;
+      widthRecord.push(sepBounds.width);
+      selector.add(`sep${index}`, sep);
+    }
   });
 
-  const numTitles = Object.keys(titles).length;
   const spacing = (diagram.limits.width - width) / numTitles;
+
   let x = diagram.limits.left + spacing / 2;
   selector.order.forEach((key, index) => {
     const element = selector.elements[key];
     element.setPosition(x + widthRecord[index] / 2, yPosition);
-    x += widthRecord[index] + spacing;
+    if (separator !== '' && index % 2 === 1) {
+      x += widthRecord[index];
+    } else {
+      x += widthRecord[index] + spacing;
+    }
   });
   selector.hasTouchableElements = true;
   selectorHandler(firstSelection);
