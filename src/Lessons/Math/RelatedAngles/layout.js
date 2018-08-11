@@ -14,8 +14,10 @@ const cssColorNames = [
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
-  const layout = baseLayout();
+  const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
-  // layout.selectorFont.size = 0.15;
+  layout.units = {
+    position: new Point(0, -1.8),
+  };
   return layout;
 }

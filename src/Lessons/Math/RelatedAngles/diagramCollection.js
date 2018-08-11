@@ -38,43 +38,42 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     );
   }
 
-  makeVerticalSelector() {
-    return makeVerticalSelectorHTML(
-      {
-        parallel: 'Parallel',
-        opposite: 'Vertically Opposite',
-        corresponding: 'Corresponding',
-        alternate: 'Alternate',
-        interior: 'Interior',
-      },
-      'opposite',
-      'id_lesson__vselector',
-      this.diagram,
-      this.selectorClicked.bind(this),
-    );
-  }
+  // makeVerticalSelector() {
+  //   return makeVerticalSelectorHTML(
+  //     {
+  //       parallel: 'Parallel',
+  //       opposite: 'Vertically Opposite',
+  //       corresponding: 'Corresponding',
+  //       alternate: 'Alternate',
+  //       interior: 'Interior',
+  //     },
+  //     'opposite',
+  //     'id_lesson__vselector',
+  //     this.diagram,
+  //     this.selectorClicked.bind(this),
+  //   );
+  // }
 
   makeUnitsSelector() {
     const font = this.layout.defaultFont._dup();
     font.size = 0.1;
     font.setColor(this.layout.colors.diagram.disabled);
-    return makeSelectorText(
+    const selector = makeSelectorText(
       {
-        parallel: 'Parallel1',
-        opposite: 'Vertically Opposite1',
-        corresponding: 'Corresponding1',
-        alternate: 'Alternate',
-        interior: 'Interior',
+        deg: 'degrees',
+        rad: 'radians',
       },
-      'opposite',
+      'deg',
       this.diagram,
       this.selectorClicked.bind(this),
-      -1,
+      0,
       font,
       this.layout.colors.diagram.text.base,
       '/',
-      0.3,
+      0.1,
     );
+    selector.setPosition(this.layout.units.position);
+    return selector;
   }
 
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
@@ -83,8 +82,8 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.layout = lessonLayout();
 
     this.add('selector', this.makeSelector());
-    this.add('_selector', this.makeUnitsSelector());
-    this.add('vselector', this.makeVerticalSelector());
+    this.add('unitsSelector', this.makeUnitsSelector());
+    // this.add('vselector', this.makeVerticalSelector());
   }
 
   selectorClicked(title: string) {

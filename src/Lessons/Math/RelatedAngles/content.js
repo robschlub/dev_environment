@@ -28,12 +28,9 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Parallel',
       setContent:`
-        <div id="id_unit_selection"
-             class="lesson__adjacent_angles_unit_selection">
-          <span id="id_radians">Radians</span>
-          /
-          <span id="id_degrees">Degrees</span>
-        </div>
+        <p>
+          Parallel Lines
+        </p>
       `,
       modifiers: {
         // Parallel: clickWord(
@@ -75,8 +72,8 @@ class Content extends LessonContent {
       ],
       show: [
         diag._selector,
-        diag.__selector,
-        diag._vselector,
+        diag._unitsSelector,
+        // diag._vselector,
       ],
       setSteadyState: () => {
         // diag.__selector.showAll();
