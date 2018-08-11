@@ -9,7 +9,7 @@ import {
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
 // import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-
+import { makeSelectorHTML, makeSelectorText } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
   layout: Object;
@@ -20,7 +20,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   // anglePairNames: Array<string>;
   // eqn: TypeMainTextEquation;
 
-  makeSelector(
+  makeSelectorOld2(
     titles: Object,
     firstSelection: string = Object.keys(titles)[0],
     id: string = 'id__lesson_selector',
@@ -58,9 +58,10 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     selector.setPosition(this.diagram.limits.left, this.layout.selector.y);
     this.add('_selector', selector);
     selectorHandler(firstSelection);
+    return selector;
   }
 
-  makeSelectorOld(titles: Object, yPosition: number = 1.8) {
+  makeSelectorCanvas(titles: Object, yPosition: number = 1.8) {
     const selector = this.diagram.shapes.collection();
     let width = 0;
     const widthRecord = [];
@@ -99,13 +100,46 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.diagram = diagram;
     this.layout = lessonLayout();
 
-    this.makeSelector({
-      parallel: 'Parallel',
-      opposite: 'Vertically Opposite',
-      corresponding: 'Corresponding',
-      alternate: 'Alternate',
-      interior: 'Interior',
-    }, 'opposite');
+    this.add('_selector', makeSelectorHTML(
+      {
+        parallel: 'Parallel',
+        opposite: 'Vertically Opposite',
+        corresponding: 'Corresponding',
+        alternate: 'Alternate',
+        interior: 'Interior',
+      },
+      'opposite',
+      'id_lesson__selector',
+      this.diagram,
+      this.selectorClicked.bind(this),
+      1,
+    ));
+
+    const font = this.layout.defaultFont._dup();
+    console.log(font)
+    font.size = 0.1;
+    font.setColor(this.layout.colors.diagram.disabled)
+    this.add('selector', makeSelectorText(
+      {
+        parallel: 'Parallel1',
+        opposite: 'Vertically Opposite1',
+        corresponding: 'Corresponding1',
+        alternate: 'Alternate',
+        interior: 'Interior',
+      },
+      'opposite',
+      this.diagram,
+      this.selectorClicked.bind(this),
+      -1,
+      font,
+    ));
+    // this.makeSelector({
+    //   parallel: 'Parallel',
+    //   opposite: 'Vertically Opposite',
+    //   corresponding: 'Corresponding',
+    //   alternate: 'Alternate',
+    //   interior: 'Interior',
+    // }, 'opposite');
   }
 
   selectorClicked(title: string) {

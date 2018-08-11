@@ -25,11 +25,21 @@ export default function baseLayout() {
       y: 1.7,
     },
 
-    selectorFont: new DiagramFont(
+    // selectorFont: new DiagramFont(
+    //   'helvetica, sans-serif',
+    //   'normal',
+    //   0.12,
+    //   '600',
+    //   'center',
+    //   'middle',
+    //   colors.diagram.text.base,
+    // ),
+
+    defaultFont: new DiagramFont(
       'helvetica, sans-serif',
       'normal',
-      0.12,
-      '600',
+      0.2,
+      '400',
       'center',
       'middle',
       colors.diagram.text.base,

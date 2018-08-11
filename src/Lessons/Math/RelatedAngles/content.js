@@ -36,29 +36,29 @@ class Content extends LessonContent {
         </div>
       `,
       modifiers: {
-        Parallel: clickWord(
-          'Parallel', 'id_related_angles__parallel',
-          diag.goToParallel, [diag],
-        ),
-        Vertically_Opposite: clickWord(
-          'Vertically Opposite', 'id_related_angles__vertically_opposite',
-          diag.goToOpposite, [diag],
-        ),
-        Corresponding: clickWord(
-          'Corresponding', 'id_related_angles__corresponding',
-          diag.goToCorresponding, [diag],
-        ),
-        Alternate: clickWord(
-          'Alternate', 'id_related_angles__alternate',
-          diag.goToAlternate, [diag],
-        ),
-        Interior: clickWord(
-          'Interior', 'id_related_angles__interior',
-          diag.goToInterior, [diag],
-        ),
+        // Parallel: clickWord(
+        //   'Parallel', 'id_related_angles__parallel',
+        //   diag.goToParallel, [diag],
+        // ),
+        // Vertically_Opposite: clickWord(
+        //   'Vertically Opposite', 'id_related_angles__vertically_opposite',
+        //   diag.goToOpposite, [diag],
+        // ),
+        // Corresponding: clickWord(
+        //   'Corresponding', 'id_related_angles__corresponding',
+        //   diag.goToCorresponding, [diag],
+        // ),
+        // Alternate: clickWord(
+        //   'Alternate', 'id_related_angles__alternate',
+        //   diag.goToAlternate, [diag],
+        // ),
+        // Interior: clickWord(
+        //   'Interior', 'id_related_angles__interior',
+        //   diag.goToInterior, [diag],
+        // ),
       },
       setEnterState: () => {
-        console.log(diag)
+        // console.log(diag)
         // diag.setRotation(Math.PI / 3);
         // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
       },
@@ -75,6 +75,7 @@ class Content extends LessonContent {
       ],
       show: [
         diag.__selector,
+        diag._selector,
       ],
       setSteadyState: () => {
         // diag.__selector.showAll();
