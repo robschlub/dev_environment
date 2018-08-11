@@ -52,7 +52,7 @@ export function makeSelectorHTML(
       sep.innerHTML = '/';
       sep.style.paddingLeft = '0';
       sep.style.paddingRight = '0';
-      row.appendChild(sep)
+      row.appendChild(sep);
     }
   });
 
@@ -72,6 +72,7 @@ export function makeSelectorText(
   font: DiagramFont = layout.defaultFont,
   selectedColor: Array<number> = layout.colors.diagram.text.base,
   separator: string = '',
+  spacing: ?number = null,
 ) {
   const selector = diagram.shapes.collection();
   let width = 0;
@@ -94,8 +95,6 @@ export function makeSelectorText(
   };
 
   const numTitles = Object.keys(titles).length;
-  
-  // const numKeys = Object.keys(titles).length;
   Object.keys(titles).forEach((key, index) => {
     const text = diagram.shapes.text(
       titles[key],
@@ -126,9 +125,13 @@ export function makeSelectorText(
     }
   });
 
-  const spacing = (diagram.limits.width - width) / numTitles;
+  let space = 0;
+  if (spacing == null) {
+    space = (diagram.limits.width - width) / numTitles;
+  } else {
+    space = spacing;
+  }
 
-  // let x = diagram.limits.left + spacing / 2;
   let x = diagram.limits.left;
   selector.order.forEach((key, index) => {
     const element = selector.elements[key];
@@ -136,8 +139,8 @@ export function makeSelectorText(
       element.setPosition(x + widthRecord[index] / 2, yPosition);
       x += widthRecord[index];
     } else {
-      element.setPosition(x + widthRecord[index] / 2 + spacing / 2, yPosition);
-      x += widthRecord[index] + spacing;
+      element.setPosition(x + widthRecord[index] / 2 + space / 2, yPosition);
+      x += widthRecord[index] + space;
     }
   });
   selector.hasTouchableElements = true;

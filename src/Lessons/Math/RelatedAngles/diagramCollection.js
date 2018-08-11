@@ -42,7 +42,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     ));
 
     const font = this.layout.defaultFont._dup();
-    console.log(font)
     font.size = 0.1;
     font.setColor(this.layout.colors.diagram.disabled);
     this.add('_selector', makeSelectorText(
@@ -60,6 +59,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       font,
       this.layout.colors.diagram.text.base,
       '/',
+      0.3,
     ));
   }
 
