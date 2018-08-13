@@ -12,7 +12,7 @@ import lessonLayout from './layout';
 import {
   makeSelectorHTML, makeSelectorText, makeVerticalSelectorHTML,
   SelectorList, makeVerticalSelectorText, makeExpandingVerticalSelectorHTML,
-  ExpandingSelectorHTML,
+  addSelector,
 } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
@@ -82,18 +82,15 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     return selector;
   }
 
-  makeTemp() {
-    const selector = new ExpandingSelectorHTML(
-      'id_lesson__related_angles_selector',
-      this.selectorClicked.bind(this),
-    );
-    const element = this.diagram.shapes.htmlElement(
-      selector.table,
+  addTemp() {
+    addSelector(
+      this.diagram,
+      this,
+      'temp',
       'lesson__related_angles_selector',
-      'lesson__selector_container',
+      this.selectorClicked.bind(this),
+      'horizontal',
     );
-    element.selector = selector;
-    return element;
   }
 
   makeExpandingVerticalSelectorText() {
@@ -163,7 +160,8 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     // this.add('vselector', this.makeVerticalSelector());
     // this.add('vselectorText', this.makeVerticalSelectorText());
     // this.add('veselectorText', this.makeExpandingVerticalSelectorText());
-    this.add('temp', this.makeTemp());
+    // this.add('temp', this.makeTemp());
+    this.addTemp(this, 'temp');
   }
 
   selectorClicked(title: string) {

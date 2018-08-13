@@ -1,7 +1,7 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
-import { DiagramElementPrimative } from '../../js/diagram/Element';
+import { DiagramElementCollection } from '../../js/diagram/Element';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { RGBToArray } from '../../js/tools/tools';
 
@@ -142,15 +142,88 @@ export function makeVerticalSelectorHTML(
   return selector;
 }
 
-export class ExpandingSelectorHTML {
+export class Selector {
   list: SelectorList;
   table: HTMLTableElement;
   titleElements: Array<HTMLElement>;
   subTextElements: Array<HTMLElement>;
   onclick: (string) => void;
   id: string;
-  // diagram: Diagram;
-  selector: DiagramElementPrimative;
+  type: 'horizontal' | 'vertical';
+}
+export class HorizontalSelectorHTML {
+  list: SelectorList;
+  table: HTMLTableElement;
+  titleRow: HTMLElement;
+  subTextRow: HTMLElement;
+  titleElements: Array<HTMLElement>;
+  subTextElements: Array<HTMLElement>;
+  onclick: (string) => void;
+  id: string;
+
+  constructor(
+    id: string = 'id__lesson_horizontal_selector',
+    onclick: (string) => void = () => {},
+  ) {
+    this.list = new SelectorList();
+
+    this.table = document.createElement('table');
+    this.table.classList.add('lesson__selector_table');
+
+    this.titleRow = document.createElement('tr');
+    this.table.appendChild(this.titleRow);
+
+    this.subTextRow = document.createElement('tr');
+    this.table.appendChild(this.subTextRow);
+
+    this.id = id;
+    this.onclick = onclick;
+    this.titleElements = [];
+    this.subTextElements = [];
+  }
+
+  add(listId: string, text: string, subText: string = '') {
+    this.list.add(listId, text, subText);
+    const newItem = this.list.order.slice(-1)[0];
+    // const titleRow = document.createElement('tr');
+    const titleCol = document.createElement('td');
+    titleCol.innerHTML = newItem.text;
+    titleCol.id = `${this.id}__${newItem.id}`;
+    titleCol.onclick = selectorHandler.bind(
+      this,
+      newItem.id,
+      this.id,
+      this.titleElements,
+      this.onclick,
+      this.subTextElements,
+    );
+    titleCol.classList.add('lesson__selector_title_not_selected');
+    titleCol.classList.add('lesson__selector_table_selectable');
+    titleCol.classList.add('lesson__vertical_selector_table_cell');
+    this.titleElements.push(titleCol);
+    this.titleRow.appendChild(titleCol);
+
+    // const subTextRow = document.createElement('tr');
+    const subTextCol = document.createElement('td');
+    subTextCol.innerHTML = newItem.subText;
+    subTextCol.id = `${this.id}__${newItem.id}__subtext`;
+    subTextCol.classList.add('lesson__selector_table_subtext');
+    subTextCol.classList.add('lesson__selector_table_subtext__hide');
+    this.subTextElements.push(subTextCol);
+    this.subTextRow.appendChild(subTextCol);
+    // subTextRow.appendChild(subTextCol);
+    // this.table.appendChild(subTextRow);
+  }
+}
+
+export class VerticalSelectorHTML {
+  list: SelectorList;
+  table: HTMLTableElement;
+  titleElements: Array<HTMLElement>;
+  subTextElements: Array<HTMLElement>;
+  onclick: (string) => void;
+  id: string;
+  // selector: DiagramElementPrimative;
 
   constructor(
     id: string = 'id__lesson_selector',
@@ -394,4 +467,33 @@ export function makeVerticalSelectorText(
   selector.hasTouchableElements = true;
   selectorHandlerText(firstSelection);
   return selector;
+}
+
+export function addSelector(
+  diagram: Diagram,
+  collection: DiagramElementCollection,
+  elementName: string,
+  uniqueString: string,
+  onclick: (string) => void,
+  style: 'horizontal' | 'vertical' = 'horizontal',
+) {
+  let selector;
+  if (style === 'vertical') {
+    selector = new VerticalSelectorHTML(
+      `id_${uniqueString}`,
+      onclick,
+    );
+  } else {
+    selector = new HorizontalSelectorHTML(
+      `id_${uniqueString}`,
+      onclick,
+    );
+  }
+  const element = diagram.shapes.htmlElement(
+    selector.table,
+    `${uniqueString}`,
+    'lesson__selector_container',
+  );
+  element.selector = selector;
+  collection.add(elementName, element);
 }
