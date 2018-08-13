@@ -22,11 +22,11 @@ class Content extends LessonContent {
 
   setElementContent() {
     const selector = this.diagram.elements._temp.selector;
-    selector.add('parallel', 'Parallel', 'Hello12');
-    selector.add('opposite', 'Vertically Opposite');
-    selector.add('corresponding', 'Corresponding', 'World1');
-    selector.add('alternate', 'Alternate');
-    selector.add('interior', 'Interior', 'There you go1');
+    selector.add('parallel', 'Parallel', 'Lines');
+    selector.add('opposite', 'Vertically Opposite', 'Angle');
+    selector.add('corresponding', 'Corresponding', 'Angle');
+    selector.add('alternate', 'Alternate', 'Angle');
+    selector.add('interior', 'Interior', 'Angle');
     selector.selectWithoutExecution('interior');
   }
 

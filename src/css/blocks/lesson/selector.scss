@@ -48,6 +48,10 @@
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.2);
 }
 
+.lesson__horizontal_selector_table_subtext_selected {
+  color: color('diagram', 'text-base');
+}
+
 // *********************** Vertical ***********************
 .lesson__vertical_selector_table {
   color: color('diagram', 'disabled');

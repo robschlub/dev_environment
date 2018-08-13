@@ -19,5 +19,8 @@ export default function lessonLayout() {
   layout.units = {
     position: new Point(0, -1.8),
   };
+  layout.selector = {
+    position: new Point(0, 1.7),
+  }
   return layout;
 }

@@ -49,27 +49,34 @@ function selectorHandler(
     if (col.id !== selectedId) {
       col.classList.remove('lesson__selector_title_selected');
       col.classList.add('lesson__selector_title_not_selected');
-      if (Array.isArray(subTextCols) && subTextCols.length) {
-        const subTextCol = subTextCols[index];
-        if (subTextCol != null && type === 'vertical') {
-          subTextCol.classList
-            .add('lesson__vertical_selector_table_subtext__hide');
-          col.classList
-            .remove('lesson__vertical_selector_table_cell_with_subtext');
-        }
+      
+      const subTextCol = subTextCols[index];
+      if (subTextCol !== '' && type === 'vertical') {
+        subTextCol.classList
+          .add('lesson__vertical_selector_table_subtext__hide');
+        col.classList
+          .remove('lesson__vertical_selector_table_cell_with_subtext');
+      }
+      if (type === 'horizontal') {
+        subTextCol.classList
+          .remove('lesson__horizontal_selector_table_subtext_selected');
       }
     } else {
       col.classList.add('lesson__selector_title_selected');
       col.classList.remove('lesson__selector_title_not_selected');
-      if (Array.isArray(subTextCols) && subTextCols.length) {
-        const subTextCol = subTextCols[index];
-        if (subTextCol != null && subTextCol.innerHTML !== '' && type === 'vertical') {
-          subTextCol.classList
-            .remove('lesson__vertical_selector_table_subtext__hide');
-          col.classList
-            .add('lesson__vertical_selector_table_cell_with_subtext');
-        }
+
+      const subTextCol = subTextCols[index];
+      if (subTextCol.innerHTML !== '' && type === 'vertical') {
+        subTextCol.classList
+          .remove('lesson__vertical_selector_table_subtext__hide');
+        col.classList
+          .add('lesson__vertical_selector_table_cell_with_subtext');
       }
+      if (type === 'horizontal') {
+        subTextCol.classList
+          .add('lesson__horizontal_selector_table_subtext_selected');
+      }
+      // }
     }
   });
   onclick(listId);
@@ -303,6 +310,43 @@ export class VerticalSelectorHTML extends SelectorHTML {
   }
 }
 
+
+export function addSelector(
+  diagram: Diagram,
+  collection: DiagramElementCollection,
+  elementName: string,
+  uniqueString: string,
+  onclick: (string) => void,
+  style: 'horizontal' | 'vertical' = 'horizontal',
+  separator: string = '',
+  vAlign: 'top' | 'bottom' | 'middle' = 'middle',
+  hAlign: 'left' | 'right' | 'center' = 'center',
+) {
+  let selector;
+  if (style === 'vertical') {
+    selector = new VerticalSelectorHTML(
+      `id_${uniqueString}`,
+      onclick,
+    );
+  } else {
+    selector = new HorizontalSelectorHTML(
+      `id_${uniqueString}`,
+      onclick,
+      separator,
+    );
+  }
+  const element = diagram.shapes.htmlElement(
+    selector.table,
+    `${uniqueString}`,
+    'lesson__selector_container',
+    new Point(0, 0),
+    vAlign,
+    hAlign,
+  );
+  element.selector = selector;
+  collection.add(elementName, element);
+}
+
 // export function makeExpandingVerticalSelectorHTML(
 //   selectorItems: SelectorList,
 //   firstSelection: string = selectorItems.order[0].id,
@@ -499,36 +543,3 @@ export function makeVerticalSelectorText(
   return selector;
 }
 
-export function addSelector(
-  diagram: Diagram,
-  collection: DiagramElementCollection,
-  elementName: string,
-  uniqueString: string,
-  onclick: (string) => void,
-  style: 'horizontal' | 'vertical' = 'horizontal',
-  separator: string = '',
-) {
-  let selector;
-  if (style === 'vertical') {
-    selector = new VerticalSelectorHTML(
-      `id_${uniqueString}`,
-      onclick,
-    );
-  } else {
-    selector = new HorizontalSelectorHTML(
-      `id_${uniqueString}`,
-      onclick,
-      separator,
-    );
-  }
-  const element = diagram.shapes.htmlElement(
-    selector.table,
-    `${uniqueString}`,
-    'lesson__selector_container',
-    new Point(0, 0),
-    'middle',
-    'center',
-  );
-  element.selector = selector;
-  collection.add(elementName, element);
-}

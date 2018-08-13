@@ -5,14 +5,12 @@ import {
   Transform, Point, minAngleDiff, polarToRect,
 } from '../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementCollection,
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
-// import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+
 import {
-  makeSelectorHTML, makeSelectorText, makeVerticalSelectorHTML,
-  SelectorList, makeVerticalSelectorText, makeExpandingVerticalSelectorHTML,
-  addSelector,
+  makeSelectorText, addSelector, SelectorList,
 } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
@@ -24,63 +22,63 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   // anglePairNames: Array<string>;
   // eqn: TypeMainTextEquation;
 
-  makeSelector() {
-    const list = new SelectorList();
-    list.add('parallel', 'Parallel');
-    list.add('opposite', 'Vertically Opposite');
-    list.add('corresponding', 'Corresponding');
-    list.add('alternate', 'Alternate');
-    list.add('interior', 'Interior');
-    return makeSelectorHTML(
-      list,
-      'opposite',
-      'id_lesson__selector',
-      this.diagram,
-      this.selectorClicked.bind(this),
-      1,
-      '/',
-    );
-  }
+  // makeSelector() {
+  //   const list = new SelectorList();
+  //   list.add('parallel', 'Parallel');
+  //   list.add('opposite', 'Vertically Opposite');
+  //   list.add('corresponding', 'Corresponding');
+  //   list.add('alternate', 'Alternate');
+  //   list.add('interior', 'Interior');
+  //   return makeSelectorHTML(
+  //     list,
+  //     'opposite',
+  //     'id_lesson__selector',
+  //     this.diagram,
+  //     this.selectorClicked.bind(this),
+  //     1,
+  //     '/',
+  //   );
+  // }
 
-  makeVerticalSelector() {
-    const list = new SelectorList();
-    list.add('parallel', 'Parallel');
-    list.add('opposite', 'Vertically Opposite');
-    list.add('corresponding', 'Corresponding');
-    list.add('alternate', 'Alternate');
-    list.add('interior', 'Interior');
-    return makeVerticalSelectorHTML(
-      list,
-      'opposite',
-      'id_lesson__vselector',
-      this.diagram,
-      this.selectorClicked.bind(this),
-    );
-  }
+  // makeVerticalSelector() {
+  //   const list = new SelectorList();
+  //   list.add('parallel', 'Parallel');
+  //   list.add('opposite', 'Vertically Opposite');
+  //   list.add('corresponding', 'Corresponding');
+  //   list.add('alternate', 'Alternate');
+  //   list.add('interior', 'Interior');
+  //   return makeVerticalSelectorHTML(
+  //     list,
+  //     'opposite',
+  //     'id_lesson__vselector',
+  //     this.diagram,
+  //     this.selectorClicked.bind(this),
+  //   );
+  // }
 
-  makeVerticalSelectorText() {
-    const font = this.layout.defaultFont._dup();
-    font.alignH = 'left';
-    font.size = 0.1;
-    font.setColor(this.layout.colors.diagram.disabled);
-    const list = new SelectorList();
-    list.add('parallel', 'Parallel');
-    list.add('opposite', 'Vertically Opposite');
-    list.add('corresponding', 'Corresponding');
-    list.add('alternate', 'Alternate');
-    list.add('interior', 'Interior');
-    const selector = makeVerticalSelectorText(
-      list,
-      'opposite',
-      this.diagram,
-      this.selectorClicked.bind(this),
-      font,
-      this.layout.colors.diagram.text.base,
-      0.05,
-    );
-    selector.setPosition(-2, 0);
-    return selector;
-  }
+  // makeVerticalSelectorText() {
+  //   const font = this.layout.defaultFont._dup();
+  //   font.alignH = 'left';
+  //   font.size = 0.1;
+  //   font.setColor(this.layout.colors.diagram.disabled);
+  //   const list = new SelectorList();
+  //   list.add('parallel', 'Parallel');
+  //   list.add('opposite', 'Vertically Opposite');
+  //   list.add('corresponding', 'Corresponding');
+  //   list.add('alternate', 'Alternate');
+  //   list.add('interior', 'Interior');
+  //   const selector = makeVerticalSelectorText(
+  //     list,
+  //     'opposite',
+  //     this.diagram,
+  //     this.selectorClicked.bind(this),
+  //     font,
+  //     this.layout.colors.diagram.text.base,
+  //     0.05,
+  //   );
+  //   selector.setPosition(-2, 0);
+  //   return selector;
+  // }
 
   addTemp() {
     addSelector(
@@ -90,28 +88,27 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       'lesson__related_angles_selector',
       this.selectorClicked.bind(this),
       'horizontal',
-      '/',
     );
-    this._temp.setPosition(0, 0);
+    this._temp.setPosition(this.layout.selector.position);
   }
 
-  makeExpandingVerticalSelectorText() {
-    const list = new SelectorList();
-    list.add('parallel', 'Parallel', 'asdf');
-    list.add('opposite', 'Vertically Opposite', 'qwer');
-    list.add('corresponding', 'Corresponding', 'xcvb');
-    list.add('alternate', 'Alternate', 'tyuity');
-    list.add('interior', 'Interior', '23t4');
-    const selector = makeExpandingVerticalSelectorHTML(
-      list,
-      'opposite',
-      'id_expanding_v_selector',
-      this.diagram,
-      this.selectorClicked.bind(this),
-    );
-    selector.setPosition(2, -0.5);
-    return selector;
-  }
+  // makeExpandingVerticalSelectorText() {
+  //   const list = new SelectorList();
+  //   list.add('parallel', 'Parallel', 'asdf');
+  //   list.add('opposite', 'Vertically Opposite', 'qwer');
+  //   list.add('corresponding', 'Corresponding', 'xcvb');
+  //   list.add('alternate', 'Alternate', 'tyuity');
+  //   list.add('interior', 'Interior', '23t4');
+  //   const selector = makeExpandingVerticalSelectorHTML(
+  //     list,
+  //     'opposite',
+  //     'id_expanding_v_selector',
+  //     this.diagram,
+  //     this.selectorClicked.bind(this),
+  //   );
+  //   selector.setPosition(this.layout.selector.position);
+  //   return selector;
+  // }
 
   makeUnitsSelector() {
     const font = this.layout.defaultFont._dup();

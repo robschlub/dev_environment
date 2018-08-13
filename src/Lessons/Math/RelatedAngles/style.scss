@@ -12,63 +12,6 @@ body {
   @include color_vars($colors);
 }
 
-.lesson__related_angles_table {
-  width: 100%;
-  color: map-get($colors, disabled);
-  text-align: center;
-  border-bottom: 1px solid map-get($colors, disabled);
-  border-top: 1px solid map-get($colors, disabled);
-  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
-}
-
-.lesson__related_angles_table td {
-  padding-left: calc(var(--lesson__diagram-font-size));
-  padding-right: calc(var(--lesson__diagram-font-size));
-  padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
-  padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
-}
-
-.lesson__related_angles_table_selected {
-  color: color('diagram', 'text-base');
-}
-
-.lesson__related_angles_unit_selected {
-  color: color('diagram', 'text-base');
-}
-
-.lesson__related_angles_unit_selection {
-  font-size: calc(var(--lesson__diagram-font-size) * 0.4);
-  position: absolute;
-  left: 45%;
-  top: 95%;
-}
-
-.lesson__related_angles_unit_selection_hide {
-  width: 0;
-  font-size: 0;
-  left: -10000px;
-  height: 0;
-  position: absolute;
-}
-
-// .lesson__relatedt_angles_text_hide {
-//   width: 0;
-//   font-size: 0;
-//   height: 0;
-//   position: absolute;
-//   left: -10000px;
-// }
-
-// .lesson__related_angles_from_Latin {
-//   color: color('diagram', 'text-base');
-//   font-style: normal;
-// }
-
-.lesson__note {
-  font-size: calc(var(--lesson__diagram-font-size) * 0.4);
-  color: color('diagram', 'disabled');
-}
-
 .diagram__text {
   z-index: 1;
 }
