@@ -10,7 +10,7 @@ import {
 import lessonLayout from './layout';
 
 import {
-  makeSelectorText, addSelector, SelectorList,
+  makeSelectorText, addSelectorHTML, SelectorList,
 } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
@@ -81,7 +81,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   // }
 
   addTemp() {
-    addSelector(
+    addSelectorHTML(
       this.diagram,
       this,
       'temp',

@@ -1,7 +1,7 @@
 // @flow
 
 import {
-  LessonContent, clickWord, onClickId, click, highlight,
+  LessonContent, clickWord, onClickId, click, highlight, centerV,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 
@@ -36,10 +36,14 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     this.addSection({
       title: 'Parallel',
-      setContent: `<p>
-          Parallel Lines
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_45">
+          Parallel lines are lines that have the same rotation and are not on top of each other.
         </p>
-      `,
+        <p class="lesson__diagram_text_p_width_45">
+          Parallel lines can never cross or touch each other.
+        </p>
+      `),
       modifiers: {
         // Parallel: clickWord(
         //   'Parallel', 'id_related_angles__parallel',

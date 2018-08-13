@@ -311,7 +311,7 @@ export class VerticalSelectorHTML extends SelectorHTML {
 }
 
 
-export function addSelector(
+export function addSelectorHTML(
   diagram: Diagram,
   collection: DiagramElementCollection,
   elementName: string,
