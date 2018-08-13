@@ -59,6 +59,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
 
   makeVerticalSelectorText() {
     const font = this.layout.defaultFont._dup();
+    font.alignH = 'left';
     font.size = 0.1;
     font.setColor(this.layout.colors.diagram.disabled);
     const list = new SelectorList();
@@ -74,7 +75,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this.selectorClicked.bind(this),
       font,
       this.layout.colors.diagram.text.base,
-      0.1,
+      0.05,
     );
     selector.setPosition(-2, 0);
     return selector;
@@ -96,7 +97,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       font,
       this.layout.colors.diagram.text.base,
       '/',
-      0.1,
+      0.2,
     );
     selector.setPosition(this.layout.units.position);
     return selector;
