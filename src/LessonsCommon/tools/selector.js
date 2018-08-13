@@ -210,47 +210,67 @@ export function makeSelectorText(
   return selector;
 }
 
-export function makeVerticalExpandingSelector(
-  mainContent: Array<{title: string, content: string}>,
-  firstSelection: number,
+export function makeVerticalSelectorText(
+  selectorItems: SelectorList,
+  firstSelection: string = selectorItems.order[0].id,
   diagram: Diagram,
-  onclick: Function,
-  classPrefix = 'lesson__vertical_expanding_selector',
-  idPrefix = 'id__lesson__vertical_expanding_selector',
+  onclick: Function = () => {},
+  font: DiagramFont = layout.defaultFont,
+  selectedColor: Array<number> = layout.colors.diagram.text.base,
+  spacing: ?number = null,
 ) {
   const selector = diagram.shapes.collection(new Transform().translate(0, 0));
   let height = 0;
   const heightRecord = [];
 
-  mainContent.forEach((element, index) => {
-    const title = diagram.shapes.htmlText(
-      element.title,
-      `${idPrefix}__${element.title}_${index}`,
-      `${classPrefix}__title`,
-      new Point(0, 0),
-      'baseline',
-      'left',
-    );
-    title.setFirstTransform(diagram.diagramToGLSpaceTransform);
-    title.isTouchable = true;
-    title.onClick = vExpanderSelectorHandlerText.bind(this, key);
-    const bounds = title.getRelativeDiagramBoundingRect();
-    height += bounds.height;
-    heightRecord.push(bounds.width);
-    selector.add(key, text);
+  let disabledColor = font.color;
+  if (typeof disabledColor === 'string') {
+    disabledColor = RGBToArray(disabledColor).slice();
+  } else if (disabledColor == null) {
+    disabledColor = [0.5, 0.5, 0.5, 1];
+  } else {
+    disabledColor = disabledColor.slice();
+  }
 
-    if (separator !== '' && index < numTitles - 1) {
-      const sep = diagram.shapes.text(
-        separator,
-        new Point(0, 0),
-        disabledColor,
-        font,
-      );
-      sep.setFirstTransform(diagram.diagramToGLSpaceTransform);
-      const sepBounds = sep.getRelativeDiagramBoundingRect();
-      width += sepBounds.width;
-      widthRecord.push(sepBounds.width);
-      selector.add(`sep${index}`, sep);
-    }
+  const selectorHandlerText = (id: string) => {
+    selector.setColor(disabledColor);
+    selector[`_${id}`].setColor(selectedColor.slice());
+    onclick(id);
+    diagram.animateNextFrame();
+  };
+
+  const numTitles = selectorItems.order.length;
+  selectorItems.order.forEach((selectorItem) => {
+    const text = diagram.shapes.text(
+      selectorItem.text,
+      new Point(0, 0),
+      disabledColor,
+      font,
+    );
+    text.setFirstTransform(diagram.diagramToGLSpaceTransform);
+    text.isTouchable = true;
+    text.onClick = selectorHandlerText.bind(this, selectorItem.id);
+    const bounds = text.getRelativeDiagramBoundingRect();
+    height += bounds.height;
+    heightRecord.push(bounds.height);
+    selector.add(selectorItem.id, text);
   });
+
+  let space = 0;
+  if (spacing == null) {
+    space = (diagram.limits.height - height) / numTitles;
+  } else {
+    space = spacing;
+  }
+
+  let y = 0;
+  selector.order.forEach((key, index) => {
+    const element = selector.elements[key];
+    element.setPosition(0, y - heightRecord[index] / 2 - space / 2);
+    y -= heightRecord[index] + space;
+    // }
+  });
+  selector.hasTouchableElements = true;
+  selectorHandlerText(firstSelection);
+  return selector;
 }

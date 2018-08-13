@@ -11,7 +11,7 @@ import lessonLayout from './layout';
 // import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import {
   makeSelectorHTML, makeSelectorText, makeVerticalSelectorHTML,
-  SelectorList,
+  SelectorList, makeVerticalSelectorText,
 } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
@@ -55,6 +55,29 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this.diagram,
       this.selectorClicked.bind(this),
     );
+  }
+
+  makeVerticalSelectorText() {
+    const font = this.layout.defaultFont._dup();
+    font.size = 0.1;
+    font.setColor(this.layout.colors.diagram.disabled);
+    const list = new SelectorList();
+    list.add('parallel', 'Parallel');
+    list.add('opposite', 'Vertically Opposite');
+    list.add('corresponding', 'Corresponding');
+    list.add('alternate', 'Alternate');
+    list.add('interior', 'Interior');
+    const selector = makeVerticalSelectorText(
+      list,
+      'opposite',
+      this.diagram,
+      this.selectorClicked.bind(this),
+      font,
+      this.layout.colors.diagram.text.base,
+      0.1,
+    );
+    selector.setPosition(-2, 0);
+    return selector;
   }
 
   makeUnitsSelector() {
@@ -104,6 +127,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.add('selector', this.makeSelector());
     this.add('unitsSelector', this.makeUnitsSelector());
     this.add('vselector', this.makeVerticalSelector());
+    this.add('vselectorText', this.makeVerticalSelectorText());
   }
 
   selectorClicked(title: string) {
