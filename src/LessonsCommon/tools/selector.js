@@ -40,15 +40,30 @@ function selectorHandler(
   htmlId: string,
   cols: Array<HTMLElement>,
   onclick: Function,
+  subTextCols: Array<?HTMLElement> = [],
 ) {
   const selectedId = `${htmlId}__${listId}`;
-  cols.forEach((col) => {
+  cols.forEach((col, index) => {
     if (col.id !== selectedId) {
       col.classList.remove('lesson__selector_title_selected');
       col.classList.add('lesson__selector_title_not_selected');
+      if (Array.isArray(subTextCols) && subTextCols.length) {
+        const subTextCol = subTextCols[index];
+        if (subTextCol != null) {
+          subTextCol.classList.add('lesson__selector_table_subtext__hide');
+          col.classList.remove('lesson__vertical_selector_table_cell_with_subtext');
+        }
+      }
     } else {
       col.classList.add('lesson__selector_title_selected');
       col.classList.remove('lesson__selector_title_not_selected');
+      if (Array.isArray(subTextCols) && subTextCols.length) {
+        const subTextCol = subTextCols[index];
+        if (subTextCol != null) {
+          subTextCol.classList.remove('lesson__selector_table_subtext__hide');
+          col.classList.add('lesson__vertical_selector_table_cell_with_subtext');
+        }
+      }
     }
   });
   onclick(listId);
@@ -76,6 +91,7 @@ export function makeSelectorHTML(
     col.onclick = selectorHandler.bind(this, selectorItem.id, id, cols, onclick);
     col.classList.add('lesson__selector_title_not_selected');
     col.classList.add('lesson__selector_table_selectable');
+    col.classList.add('lesson__vertical_selector_table_cell');
     cols.push(col);
     row.appendChild(col);
     if (separator !== '' && index < numKeys - 1) {
@@ -113,6 +129,7 @@ export function makeVerticalSelectorHTML(
     col.onclick = selectorHandler.bind(this, selectorItem.id, id, cols, onclick);
     col.classList.add('lesson__selector_title_not_selected');
     col.classList.add('lesson__selector_table_selectable');
+    col.classList.add('lesson__vertical_selector_table_cell');
     cols.push(col);
     row.appendChild(col);
     table.appendChild(row);
@@ -121,6 +138,52 @@ export function makeVerticalSelectorHTML(
   const selector = diagram.shapes.htmlElement(table, id, 'lesson__selector_container');
   selector.setPosition(0, 0);
   selectorHandler(firstSelection, id, cols, onclick);
+  return selector;
+}
+
+
+export function makeExpandingVerticalSelectorHTML(
+  selectorItems: SelectorList,
+  firstSelection: string = selectorItems.order[0].id,
+  id: string = 'id__lesson_selector',
+  diagram: Diagram,
+  onclick: Function,
+) {
+  const table = document.createElement('table');
+  table.classList.add('lesson__vertical_selector_table');
+  const cols: Array<HTMLElement> = [];
+  const subTextCols: Array<?HTMLElement> = [];
+
+  selectorItems.order.forEach((selectorItem) => {
+    const row = document.createElement('tr');
+    const col = document.createElement('td');
+    col.innerHTML = selectorItem.text;
+    col.id = `${id}__${selectorItem.id}`;
+    col.onclick = selectorHandler.bind(this, selectorItem.id, id, cols, onclick, subTextCols);
+    col.classList.add('lesson__selector_title_not_selected');
+    col.classList.add('lesson__selector_table_selectable');
+    col.classList.add('lesson__vertical_selector_table_cell');
+    cols.push(col);
+    row.appendChild(col);
+    table.appendChild(row);
+    if (selectorItem.subText) {
+      const rowSub = document.createElement('tr');
+      const colSub = document.createElement('td');
+      colSub.innerHTML = selectorItem.subText;
+      colSub.id = `${id}__${selectorItem.id}__subtext`;
+      colSub.classList.add('lesson__selector_table_subtext');
+      colSub.classList.add('lesson__selector_table_subtext__hide');
+      subTextCols.push(colSub);
+      rowSub.appendChild(colSub);
+      table.appendChild(rowSub);
+    } else {
+      subTextCols.push(null);
+    }
+  });
+
+  const selector = diagram.shapes.htmlElement(table, id, 'lesson__selector_container');
+  selector.setPosition(0, 0);
+  selectorHandler(firstSelection, id, cols, onclick, subTextCols);
   return selector;
 }
 

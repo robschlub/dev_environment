@@ -73,6 +73,7 @@ class Content extends LessonContent {
         diag._unitsSelector,
         diag._vselector,
         diag._vselectorText,
+        diag._veselectorText,
       ],
       setSteadyState: () => {
         // diag.__selector.showAll();

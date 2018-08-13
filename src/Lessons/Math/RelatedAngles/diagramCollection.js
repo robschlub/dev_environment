@@ -11,7 +11,7 @@ import lessonLayout from './layout';
 // import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import {
   makeSelectorHTML, makeSelectorText, makeVerticalSelectorHTML,
-  SelectorList, makeVerticalSelectorText,
+  SelectorList, makeVerticalSelectorText, makeExpandingVerticalSelectorHTML,
 } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
@@ -63,7 +63,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     font.size = 0.1;
     font.setColor(this.layout.colors.diagram.disabled);
     const list = new SelectorList();
-    list.add('parallel', 'Parallel');
+    list.add('parallel', 'Parallel', );
     list.add('opposite', 'Vertically Opposite');
     list.add('corresponding', 'Corresponding');
     list.add('alternate', 'Alternate');
@@ -78,6 +78,24 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0.05,
     );
     selector.setPosition(-2, 0);
+    return selector;
+  }
+
+  makeExpandingVerticalSelectorText() {
+    const list = new SelectorList();
+    list.add('parallel', 'Parallel', 'asdf');
+    list.add('opposite', 'Vertically Opposite', 'qwer');
+    list.add('corresponding', 'Corresponding', 'xcvb');
+    list.add('alternate', 'Alternate', 'tyuity');
+    list.add('interior', 'Interior', '23t4');
+    const selector = makeExpandingVerticalSelectorHTML(
+      list,
+      'opposite',
+      'id_expanding_v_selector',
+      this.diagram,
+      this.selectorClicked.bind(this),
+    );
+    selector.setPosition(2, -0.5);
     return selector;
   }
 
@@ -129,6 +147,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.add('unitsSelector', this.makeUnitsSelector());
     this.add('vselector', this.makeVerticalSelector());
     this.add('vselectorText', this.makeVerticalSelectorText());
+    this.add('veselectorText', this.makeExpandingVerticalSelectorText());
   }
 
   selectorClicked(title: string) {
