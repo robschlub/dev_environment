@@ -27,6 +27,7 @@ class Content extends LessonContent {
     selector.add('corresponding', 'Corresponding', 'World1');
     selector.add('alternate', 'Alternate');
     selector.add('interior', 'Interior', 'There you go1');
+    selector.selectWithoutExecution('interior');
   }
 
   addSections() {
@@ -35,7 +36,7 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     this.addSection({
       title: 'Parallel',
-      setContent:`<p>
+      setContent: `<p>
           Parallel Lines
         </p>
       `,

@@ -41,7 +41,7 @@ function selectorHandler(
   htmlId: string,
   cols: Array<HTMLElement>,
   onclick: (string) => void,
-  subTextCols: Array<?HTMLElement> = [],
+  subTextCols: Array<HTMLElement> = [],
   type: 'horizontal' | 'vertical' = 'horizontal',
 ) {
   const selectedId = `${htmlId}__${listId}`;
@@ -167,17 +167,41 @@ export class SelectorHTML {
     this.onclick = onclick;
     this.titleElements = [];
     this.subTextElements = [];
-    this.type = 'horizontal'
+    this.type = 'horizontal';
+  }
+
+  select(listId: string) {
+    selectorHandler(
+      listId,
+      this.id,
+      this.titleElements,
+      this.onclick,
+      this.subTextElements,
+      this.type,
+    );
+  }
+
+  selectWithoutExecution(listId: string) {
+    selectorHandler(
+      listId,
+      this.id,
+      this.titleElements,
+      () => {},
+      this.subTextElements,
+      this.type,
+    );
   }
 }
 
 export class HorizontalSelectorHTML extends SelectorHTML {
   titleRow: HTMLElement;
   subTextRow: HTMLElement;
+  separator: string;
 
   constructor(
     id: string = 'id__lesson_horizontal_selector',
     onclick: (string) => void = () => {},
+    separator: string = '',
   ) {
     super(id, onclick);
     this.table.classList.add('lesson__horizontal_selector_table');
@@ -188,9 +212,23 @@ export class HorizontalSelectorHTML extends SelectorHTML {
     this.table.appendChild(this.subTextRow);
 
     this.type = 'horizontal';
+    this.separator = separator;
   }
 
   add(listId: string, text: string, subText: string = '') {
+    if (this.separator && this.list.order.length > 0) {
+      const sepTitleCol = document.createElement('td');
+      sepTitleCol.innerHTML = this.separator;
+      sepTitleCol.classList
+        .add('lesson__horiztonal_selector_table_separator_cell');
+      this.titleElements.push(sepTitleCol);
+      this.titleRow.appendChild(sepTitleCol);
+
+      const sepSubTextCol = document.createElement('td');
+      this.subTextElements.push(sepSubTextCol);
+      this.subTextRow.appendChild(sepSubTextCol);
+    }
+
     this.list.add(listId, text, subText);
     const newItem = this.list.order.slice(-1)[0];
     const titleCol = document.createElement('td');
@@ -468,6 +506,7 @@ export function addSelector(
   uniqueString: string,
   onclick: (string) => void,
   style: 'horizontal' | 'vertical' = 'horizontal',
+  separator: string = '',
 ) {
   let selector;
   if (style === 'vertical') {
@@ -479,12 +518,16 @@ export function addSelector(
     selector = new HorizontalSelectorHTML(
       `id_${uniqueString}`,
       onclick,
+      separator,
     );
   }
   const element = diagram.shapes.htmlElement(
     selector.table,
     `${uniqueString}`,
     'lesson__selector_container',
+    new Point(0, 0),
+    'middle',
+    'center',
   );
   element.selector = selector;
   collection.add(elementName, element);
