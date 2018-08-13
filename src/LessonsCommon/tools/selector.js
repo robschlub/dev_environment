@@ -125,8 +125,8 @@ export function makeVerticalSelectorHTML(
 }
 
 export function makeSelectorText(
-  titles: Object,
-  firstSelection: string = Object.keys(titles)[0],
+  selectorItems: SelectorList,
+  firstSelection: string = selectorItems.order[0].id,
   diagram: Diagram,
   onclick: Function = () => {},
   yPosition: number = diagram.limits.top - diagram.limits.height / 2,
@@ -148,28 +148,28 @@ export function makeSelectorText(
     disabledColor = disabledColor.slice();
   }
 
-  const selectorHandlerText = (key: string) => {
+  const selectorHandlerText = (id: string) => {
     selector.setColor(disabledColor);
-    selector[`_${key}`].setColor(selectedColor.slice());
-    onclick(key);
+    selector[`_${id}`].setColor(selectedColor.slice());
+    onclick(id);
     diagram.animateNextFrame();
   };
 
-  const numTitles = Object.keys(titles).length;
-  Object.keys(titles).forEach((key, index) => {
+  const numTitles = selectorItems.order.length;
+  selectorItems.order.forEach((selectorItem, index) => {
     const text = diagram.shapes.text(
-      titles[key],
+      selectorItem.text,
       new Point(0, 0),
       disabledColor,
       font,
     );
     text.setFirstTransform(diagram.diagramToGLSpaceTransform);
     text.isTouchable = true;
-    text.onClick = selectorHandlerText.bind(this, key);
+    text.onClick = selectorHandlerText.bind(this, selectorItem.id);
     const bounds = text.getRelativeDiagramBoundingRect();
     width += bounds.width;
     widthRecord.push(bounds.width);
-    selector.add(key, text);
+    selector.add(selectorItem.id, text);
 
     if (separator !== '' && index < numTitles - 1) {
       const sep = diagram.shapes.text(

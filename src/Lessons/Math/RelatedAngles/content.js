@@ -24,11 +24,9 @@ class Content extends LessonContent {
     // const circle = this.diagram.elements._circle;
 
     const diag = this.diagram.elements;
-    console.log(diag)
     this.addSection({
       title: 'Parallel',
-      setContent:`
-        <p>
+      setContent:`<p>
           Parallel Lines
         </p>
       `,
@@ -72,7 +70,7 @@ class Content extends LessonContent {
       ],
       show: [
         diag._selector,
-        // diag._unitsSelector,
+        diag._unitsSelector,
         diag._vselector,
       ],
       setSteadyState: () => {

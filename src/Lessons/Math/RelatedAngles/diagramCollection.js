@@ -61,11 +61,11 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     const font = this.layout.defaultFont._dup();
     font.size = 0.1;
     font.setColor(this.layout.colors.diagram.disabled);
+    const list = new SelectorList();
+    list.add('deg', 'degrees');
+    list.add('rad', 'radians');
     const selector = makeSelectorText(
-      {
-        deg: 'degrees',
-        rad: 'radians',
-      },
+      list,
       'deg',
       this.diagram,
       this.selectorClicked.bind(this),
@@ -102,7 +102,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.layout = lessonLayout();
 
     this.add('selector', this.makeSelector());
-    // this.add('unitsSelector', this.makeUnitsSelector());
+    this.add('unitsSelector', this.makeUnitsSelector());
     this.add('vselector', this.makeVerticalSelector());
   }
 
