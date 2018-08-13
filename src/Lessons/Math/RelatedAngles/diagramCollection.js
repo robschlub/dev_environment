@@ -9,7 +9,10 @@ import {
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
 // import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-import { makeSelectorHTML, makeSelectorText, makeVerticalSelectorHTML } from '../../../LessonsCommon/tools/selector';
+import {
+  makeSelectorHTML, makeSelectorText, makeVerticalSelectorHTML,
+  SelectorList,
+} from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
   layout: Object;
@@ -21,14 +24,14 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   // eqn: TypeMainTextEquation;
 
   makeSelector() {
+    const list = new SelectorList();
+    list.add('parallel', 'Parallel');
+    list.add('opposite', 'Vertically Opposite');
+    list.add('corresponding', 'Corresponding');
+    list.add('alternate', 'Alternate');
+    list.add('interior', 'Interior');
     return makeSelectorHTML(
-      {
-        parallel: 'Parallel',
-        opposite: 'Vertically Opposite',
-        corresponding: 'Corresponding',
-        alternate: 'Alternate',
-        interior: 'Interior',
-      },
+      list,
       'opposite',
       'id_lesson__selector',
       this.diagram,
@@ -38,21 +41,21 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     );
   }
 
-  // makeVerticalSelector() {
-  //   return makeVerticalSelectorHTML(
-  //     {
-  //       parallel: 'Parallel',
-  //       opposite: 'Vertically Opposite',
-  //       corresponding: 'Corresponding',
-  //       alternate: 'Alternate',
-  //       interior: 'Interior',
-  //     },
-  //     'opposite',
-  //     'id_lesson__vselector',
-  //     this.diagram,
-  //     this.selectorClicked.bind(this),
-  //   );
-  // }
+  makeVerticalSelector() {
+    const list = new SelectorList();
+    list.add('parallel', 'Parallel');
+    list.add('opposite', 'Vertically Opposite');
+    list.add('corresponding', 'Corresponding');
+    list.add('alternate', 'Alternate');
+    list.add('interior', 'Interior');
+    return makeVerticalSelectorHTML(
+      list,
+      'opposite',
+      'id_lesson__vselector',
+      this.diagram,
+      this.selectorClicked.bind(this),
+    );
+  }
 
   makeUnitsSelector() {
     const font = this.layout.defaultFont._dup();
@@ -76,14 +79,31 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     return selector;
   }
 
+  makeVerticalExandingSelector() {
+    const all_content = [
+      {
+        title: 'Option 1',
+        content: '<p>test content</p>',
+      },
+      {
+        title: 'Option 2',
+        content: '<p>test 2 content</p>',
+      },
+      {
+        title: 'Option 2',
+        content: '<p>test 3 content</p>',
+      },
+    ]
+  }
+
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.layout = lessonLayout();
 
     this.add('selector', this.makeSelector());
-    this.add('unitsSelector', this.makeUnitsSelector());
-    // this.add('vselector', this.makeVerticalSelector());
+    // this.add('unitsSelector', this.makeUnitsSelector());
+    this.add('vselector', this.makeVerticalSelector());
   }
 
   selectorClicked(title: string) {

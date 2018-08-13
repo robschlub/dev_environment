@@ -9,8 +9,39 @@ import baseLayout from '../layout';
 
 const layout = baseLayout();
 
-const selectorHandler = (key: string, id: string, cols: Array<HTMLElement>, onclick: Function) => {
-  const selectedId = `${id}__${key}`;
+type SelectorItemType = {
+  id: string;
+  text: string;
+  subText: string;
+};
+
+export class SelectorList {
+  order: Array<SelectorItemType>;
+  content: Object;
+
+  constructor() {
+    this.content = {};
+    this.order = [];
+  }
+
+  add(id: string, text: string, subText: string = '') {
+    const selectorItem = {
+      id,
+      text,
+      subText,
+    };
+    this.content[id] = selectorItem;
+    this.order.push(selectorItem);
+  }
+}
+
+function selectorHandler(
+  listId: string,
+  htmlId: string,
+  cols: Array<HTMLElement>,
+  onclick: Function,
+) {
+  const selectedId = `${htmlId}__${listId}`;
   cols.forEach((col) => {
     if (col.id !== selectedId) {
       col.classList.remove('lesson__selector_title_selected');
@@ -20,12 +51,12 @@ const selectorHandler = (key: string, id: string, cols: Array<HTMLElement>, oncl
       col.classList.remove('lesson__selector_title_not_selected');
     }
   });
-  onclick(key);
-};
+  onclick(listId);
+}
 
 export function makeSelectorHTML(
-  titles: Object,
-  firstSelection: string = Object.keys(titles)[0],
+  selectorItems: SelectorList,
+  firstSelection: string = selectorItems.order[0].id,
   id: string = 'id__lesson_selector',
   diagram: Diagram,
   onclick: Function,
@@ -37,26 +68,12 @@ export function makeSelectorHTML(
   const row = document.createElement('tr');
   const cols: Array<HTMLElement> = [];
 
-  // const selectorHandler = (key: string) => {
-  //   const selectedId = `${id}__${key}`;
-  //   cols.forEach((col) => {
-  //     if (col.id !== selectedId) {
-  //       col.classList.remove('lesson__selector_title_selected');
-  //       col.classList.add('lesson__selector_title_not_selected');
-  //     } else {
-  //       col.classList.add('lesson__selector_title_selected');
-  //       col.classList.remove('lesson__selector_title_not_selected');
-  //     }
-  //   });
-  //   onclick(key);
-  // };
-
-  const numKeys = Object.keys(titles).length;
-  Object.keys(titles).forEach((key, index) => {
+  const numKeys = selectorItems.order.length;
+  selectorItems.order.forEach((selectorItem, index) => {
     const col = document.createElement('td');
-    col.innerHTML = titles[key];
-    col.id = `${id}__${key}`;
-    col.onclick = selectorHandler.bind(this, key, id, cols, onclick);
+    col.innerHTML = selectorItem.text;
+    col.id = `${id}__${selectorItem.id}`;
+    col.onclick = selectorHandler.bind(this, selectorItem.id, id, cols, onclick);
     col.classList.add('lesson__selector_title_not_selected');
     col.classList.add('lesson__selector_table_selectable');
     cols.push(col);
@@ -78,23 +95,22 @@ export function makeSelectorHTML(
 }
 
 export function makeVerticalSelectorHTML(
-  titles: Object,
-  firstSelection: string = Object.keys(titles)[0],
+  selectorItems: SelectorList,
+  firstSelection: string = selectorItems.order[0].id,
   id: string = 'id__lesson_selector',
   diagram: Diagram,
   onclick: Function,
 ) {
   const table = document.createElement('table');
   table.classList.add('lesson__vertical_selector_table');
-  // const row = document.createElement('tr');
   const cols: Array<HTMLElement> = [];
 
-  Object.keys(titles).forEach((key) => {
+  selectorItems.order.forEach((selectorItem) => {
     const row = document.createElement('tr');
     const col = document.createElement('td');
-    col.innerHTML = titles[key];
-    col.id = `${id}__${key}`;
-    col.onclick = selectorHandler.bind(this, key, id, cols, onclick);
+    col.innerHTML = selectorItem.text;
+    col.id = `${id}__${selectorItem.id}`;
+    col.onclick = selectorHandler.bind(this, selectorItem.id, id, cols, onclick);
     col.classList.add('lesson__selector_title_not_selected');
     col.classList.add('lesson__selector_table_selectable');
     cols.push(col);
@@ -132,7 +148,7 @@ export function makeSelectorText(
     disabledColor = disabledColor.slice();
   }
 
-  const selectorHandler = (key: string) => {
+  const selectorHandlerText = (key: string) => {
     selector.setColor(disabledColor);
     selector[`_${key}`].setColor(selectedColor.slice());
     onclick(key);
@@ -149,7 +165,7 @@ export function makeSelectorText(
     );
     text.setFirstTransform(diagram.diagramToGLSpaceTransform);
     text.isTouchable = true;
-    text.onClick = selectorHandler.bind(this, key);
+    text.onClick = selectorHandlerText.bind(this, key);
     const bounds = text.getRelativeDiagramBoundingRect();
     width += bounds.width;
     widthRecord.push(bounds.width);
@@ -190,6 +206,51 @@ export function makeSelectorText(
   });
   selector.hasTouchableElements = true;
   selector.setPosition(0, yPosition);
-  selectorHandler(firstSelection);
+  selectorHandlerText(firstSelection);
   return selector;
+}
+
+export function makeVerticalExpandingSelector(
+  mainContent: Array<{title: string, content: string}>,
+  firstSelection: number,
+  diagram: Diagram,
+  onclick: Function,
+  classPrefix = 'lesson__vertical_expanding_selector',
+  idPrefix = 'id__lesson__vertical_expanding_selector',
+) {
+  const selector = diagram.shapes.collection(new Transform().translate(0, 0));
+  let height = 0;
+  const heightRecord = [];
+
+  mainContent.forEach((element, index) => {
+    const title = diagram.shapes.htmlText(
+      element.title,
+      `${idPrefix}__${element.title}_${index}`,
+      `${classPrefix}__title`,
+      new Point(0, 0),
+      'baseline',
+      'left',
+    );
+    title.setFirstTransform(diagram.diagramToGLSpaceTransform);
+    title.isTouchable = true;
+    title.onClick = vExpanderSelectorHandlerText.bind(this, key);
+    const bounds = title.getRelativeDiagramBoundingRect();
+    height += bounds.height;
+    heightRecord.push(bounds.width);
+    selector.add(key, text);
+
+    if (separator !== '' && index < numTitles - 1) {
+      const sep = diagram.shapes.text(
+        separator,
+        new Point(0, 0),
+        disabledColor,
+        font,
+      );
+      sep.setFirstTransform(diagram.diagramToGLSpaceTransform);
+      const sepBounds = sep.getRelativeDiagramBoundingRect();
+      width += sepBounds.width;
+      widthRecord.push(sepBounds.width);
+      selector.add(`sep${index}`, sep);
+    }
+  });
 }
