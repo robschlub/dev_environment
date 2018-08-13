@@ -12,6 +12,7 @@ import lessonLayout from './layout';
 import {
   makeSelectorHTML, makeSelectorText, makeVerticalSelectorHTML,
   SelectorList, makeVerticalSelectorText, makeExpandingVerticalSelectorHTML,
+  ExpandingSelectorHTML,
 } from '../../../LessonsCommon/tools/selector';
 
 class RelatedAnglesCollection extends DiagramElementCollection {
@@ -63,7 +64,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     font.size = 0.1;
     font.setColor(this.layout.colors.diagram.disabled);
     const list = new SelectorList();
-    list.add('parallel', 'Parallel', );
+    list.add('parallel', 'Parallel');
     list.add('opposite', 'Vertically Opposite');
     list.add('corresponding', 'Corresponding');
     list.add('alternate', 'Alternate');
@@ -79,6 +80,20 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     );
     selector.setPosition(-2, 0);
     return selector;
+  }
+
+  makeTemp() {
+    const selector = new ExpandingSelectorHTML(
+      'id_lesson__related_angles_selector',
+      this.selectorClicked.bind(this),
+    );
+    const element = this.diagram.shapes.htmlElement(
+      selector.table,
+      'lesson__related_angles_selector',
+      'lesson__selector_container',
+    );
+    element.selector = selector;
+    return element;
   }
 
   makeExpandingVerticalSelectorText() {
@@ -145,9 +160,10 @@ class RelatedAnglesCollection extends DiagramElementCollection {
 
     this.add('selector', this.makeSelector());
     this.add('unitsSelector', this.makeUnitsSelector());
-    this.add('vselector', this.makeVerticalSelector());
-    this.add('vselectorText', this.makeVerticalSelectorText());
-    this.add('veselectorText', this.makeExpandingVerticalSelectorText());
+    // this.add('vselector', this.makeVerticalSelector());
+    // this.add('vselectorText', this.makeVerticalSelectorText());
+    // this.add('veselectorText', this.makeExpandingVerticalSelectorText());
+    this.add('temp', this.makeTemp());
   }
 
   selectorClicked(title: string) {

@@ -20,6 +20,15 @@ class Content extends LessonContent {
     this.diagram = new LessonDiagram(htmlId, layout);
   }
 
+  setElementContent() {
+    const selector = this.diagram.elements._temp.selector;
+    selector.add('parallel', 'Parallel', 'Hello12');
+    selector.add('opposite', 'Vertically Opposite');
+    selector.add('corresponding', 'Corresponding', 'World1');
+    selector.add('alternate', 'Alternate');
+    selector.add('interior', 'Interior', 'There you go1');
+  }
+
   addSections() {
     // const circle = this.diagram.elements._circle;
 
@@ -71,9 +80,10 @@ class Content extends LessonContent {
       show: [
         diag._selector,
         diag._unitsSelector,
-        diag._vselector,
-        diag._vselectorText,
-        diag._veselectorText,
+        // diag._vselector,
+        // diag._vselectorText,
+        // diag._veselectorText,
+        diag._temp,
       ],
       setSteadyState: () => {
         // diag.__selector.showAll();

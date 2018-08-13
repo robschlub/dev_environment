@@ -1,6 +1,7 @@
 // @flow
 
 import Diagram from '../../js/diagram/Diagram';
+import { DiagramElementPrimative } from '../../js/diagram/Element';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 import { RGBToArray } from '../../js/tools/tools';
 
@@ -39,7 +40,7 @@ function selectorHandler(
   listId: string,
   htmlId: string,
   cols: Array<HTMLElement>,
-  onclick: Function,
+  onclick: (string) => void,
   subTextCols: Array<?HTMLElement> = [],
 ) {
   const selectedId = `${htmlId}__${listId}`;
@@ -59,7 +60,7 @@ function selectorHandler(
       col.classList.remove('lesson__selector_title_not_selected');
       if (Array.isArray(subTextCols) && subTextCols.length) {
         const subTextCol = subTextCols[index];
-        if (subTextCol != null) {
+        if (subTextCol != null && subTextCol.innerHTML !== '') {
           subTextCol.classList.remove('lesson__selector_table_subtext__hide');
           col.classList.add('lesson__vertical_selector_table_cell_with_subtext');
         }
@@ -141,6 +142,63 @@ export function makeVerticalSelectorHTML(
   return selector;
 }
 
+export class ExpandingSelectorHTML {
+  list: SelectorList;
+  table: HTMLTableElement;
+  titleElements: Array<HTMLElement>;
+  subTextElements: Array<HTMLElement>;
+  onclick: (string) => void;
+  id: string;
+  // diagram: Diagram;
+  selector: DiagramElementPrimative;
+
+  constructor(
+    id: string = 'id__lesson_selector',
+    onclick: (string) => void = () => {},
+  ) {
+    this.list = new SelectorList();
+    this.table = document.createElement('table');
+    this.table.classList.add('lesson__vertical_selector_table');
+    // this.diagram = diagram;
+    this.id = id;
+    this.onclick = onclick;
+    this.titleElements = [];
+    this.subTextElements = [];
+  }
+
+  add(listId: string, text: string, subText: string = '') {
+    this.list.add(listId, text, subText);
+    const newItem = this.list.order.slice(-1)[0];
+    const titleRow = document.createElement('tr');
+    const titleCol = document.createElement('td');
+    titleCol.innerHTML = newItem.text;
+    titleCol.id = `${this.id}__${newItem.id}`;
+    titleCol.onclick = selectorHandler.bind(
+      this,
+      newItem.id,
+      this.id,
+      this.titleElements,
+      this.onclick,
+      this.subTextElements,
+    );
+    titleCol.classList.add('lesson__selector_title_not_selected');
+    titleCol.classList.add('lesson__selector_table_selectable');
+    titleCol.classList.add('lesson__vertical_selector_table_cell');
+    this.titleElements.push(titleCol);
+    titleRow.appendChild(titleCol);
+    this.table.appendChild(titleRow);
+
+    const subTextRow = document.createElement('tr');
+    const subTextCol = document.createElement('td');
+    subTextCol.innerHTML = newItem.subText;
+    subTextCol.id = `${this.id}__${newItem.id}__subtext`;
+    subTextCol.classList.add('lesson__selector_table_subtext');
+    subTextCol.classList.add('lesson__selector_table_subtext__hide');
+    this.subTextElements.push(subTextCol);
+    subTextRow.appendChild(subTextCol);
+    this.table.appendChild(subTextRow);
+  }
+}
 
 export function makeExpandingVerticalSelectorHTML(
   selectorItems: SelectorList,

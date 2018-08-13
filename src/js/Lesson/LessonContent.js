@@ -495,6 +495,7 @@ class LessonContent {
 
   initialize() {
     this.setDiagram(this.diagramHtmlId);
+    this.setElementContent();
     this.addSections();
   }
 
@@ -504,6 +505,10 @@ class LessonContent {
 
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   setDiagram(htmlId: string = '') {
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  setElementContent() {
   }
 
   // eslint-disable-next-line class-methods-use-this
