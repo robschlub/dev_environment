@@ -89,8 +89,9 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       'temp',
       'lesson__related_angles_selector',
       this.selectorClicked.bind(this),
-      'horizontal',
+      'vertical',
     );
+    this._temp.setPosition(-2.8, 0);
   }
 
   makeExpandingVerticalSelectorText() {
@@ -155,7 +156,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.diagram = diagram;
     this.layout = lessonLayout();
 
-    this.add('selector', this.makeSelector());
+    // this.add('selector', this.makeSelector());
     this.add('unitsSelector', this.makeUnitsSelector());
     // this.add('vselector', this.makeVerticalSelector());
     // this.add('vselectorText', this.makeVerticalSelectorText());

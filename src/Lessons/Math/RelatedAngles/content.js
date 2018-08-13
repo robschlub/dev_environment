@@ -78,7 +78,7 @@ class Content extends LessonContent {
         // circle._angleB._arc,
       ],
       show: [
-        diag._selector,
+        // diag._selector,
         diag._unitsSelector,
         // diag._vselector,
         // diag._vselectorText,
