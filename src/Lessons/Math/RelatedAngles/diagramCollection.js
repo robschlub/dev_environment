@@ -198,13 +198,21 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     console.log(title);
   }
 
+  pulseParallel() {
+    this._line1.pulseScaleNow(1, 3);
+    this._line2.pulseScaleNow(1, 3);
+    this.diagram.animateNextFrame();
+  }
+
   rotateLine1ToParallel() {
     this._line1.stop();
     this._line2.stop();
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
+    const t = this._line1.transform.constant(0);
+    t.updateRotation(2 * Math.PI / 6);
     if (r1 != null && r2 != null) {
-      this._line1.animateRotationTo(r2, 0, 1);
+      this._line1.animateRotationTo(r2, 0, t, this.pulseParallel.bind(this));
     }
     this.diagram.animateNextFrame();
   }

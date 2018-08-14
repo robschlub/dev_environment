@@ -27,7 +27,7 @@ class Content extends LessonContent {
     selector.add('corresponding', 'Corresponding', 'Angle');
     selector.add('alternate', 'Alternate', 'Angle');
     selector.add('interior', 'Interior', 'Angle');
-    selector.selectWithoutExecution('interior');
+    selector.selectWithoutExecution('parallel');
   }
 
   addSections() {
@@ -35,13 +35,13 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Parallel',
       setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_45">
+        <p class="lesson__diagram_text_p_width_40">
           |Parallel_lines| are lines that never meet.
         </p>
-        <p class="lesson__diagram_text_p_width_45">
+        <p class="lesson__diagram_text_p_width_40">
           They have the same rotation, and do not touch.
         </p>
-        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html()}
+        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_parallel')}
       `),
       modifiers: {
         Parallel_lines: click(diag.rotateLine1ToParallel, [diag], colors.line),

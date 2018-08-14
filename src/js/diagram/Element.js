@@ -3,6 +3,7 @@
 import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
+  Scale, Rotation,
 } from './tools/g2';
 import * as m2 from './tools/m2';
 import type { pathOptionsType } from './tools/g2';
@@ -45,7 +46,13 @@ function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
 // Planned Animation
 class AnimationPhase {
   targetTransform: Transform;            // The target transform to animate to
-  time: number;                       // animation time
+
+  // animation time or velocity.
+  // If velocity=0, it is disregarded.
+  // Time for all transform operations will be equal to the time of the longest
+  // operation.
+  timeOrVelocity: number | Transform;
+  time: number ;                         // animation time
   rotDirection: number;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
   animationPath: (number) => number;
@@ -58,7 +65,7 @@ class AnimationPhase {
 
   constructor(
     transform: Transform = new Transform(),
-    time: number = 1,
+    timeOrVelocity: number | Transform = 1,
     rotDirection: number = 0,
     animationStyle: (number) => number = tools.easeinout,
     translationStyle: 'linear' | 'curved' = 'linear',
@@ -71,7 +78,7 @@ class AnimationPhase {
     },
   ) {
     this.targetTransform = transform._dup();
-    this.time = time;
+    this.timeOrVelocity = timeOrVelocity;
     this.rotDirection = rotDirection;
     this.animationStyle = animationStyle;
     this.translationStyle = translationStyle;
@@ -85,7 +92,7 @@ class AnimationPhase {
   _dup() {
     const c = new AnimationPhase(
       this.targetTransform,
-      this.time,
+      this.timeOrVelocity,
       this.rotDirection,
       this.animationStyle,
       this.translationStyle,
@@ -100,25 +107,57 @@ class AnimationPhase {
   start(currentTransform: Transform) {
     this.startTransform = currentTransform._dup();
     this.deltaTransform = this.targetTransform.sub(this.startTransform);
-    // Rotation direction can be:
-    //   - 0: shortest possible direction
-    //   1:   clockwise
-    //   -1:  anti-clockwise
-    //   2:   not through zero or 2pi
-    let rotDiff = this.deltaTransform.r() || 0;
-    if (this.rotDirection === 2) {
-      const rStart = this.startTransform.r();
-      if (rStart) {
-        if (rStart + rotDiff < 0) {
-          rotDiff = Math.PI * 2 + rotDiff;
-        } else if (rStart + rotDiff > Math.PI * 2) {
-          rotDiff = -(Math.PI * 2 - rotDiff);
+    let time = 0;
+    if (typeof this.timeOrVelocity === 'number') {
+      time = this.timeOrVelocity;
+    }
+    this.deltaTransform.order.forEach((delta, index) => {
+      if (this.timeOrVelocity instanceof Transform) {
+        if (delta instanceof Translation || delta instanceof Scale) {
+          const v = this.timeOrVelocity.order[index];
+          if (
+            (v instanceof Translation || v instanceof Scale)
+            && v.x !== 0
+            && v.y !== 0
+          ) {
+            const xTime = Math.abs(delta.x) / v.x;
+            const yTime = Math.abs(delta.y) / v.y;
+            time = xTime > time ? xTime : time;
+            time = yTime > time ? yTime : time;
+          }
         }
       }
-    } else if (rotDiff * this.rotDirection < 0) {
-      rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
+      const start = this.startTransform.order[index];
+      if (delta instanceof Rotation && start instanceof Rotation) {
+        let rotDiff = delta.r || 0;
+        if (this.rotDirection === 2) {
+          const rStart = start.r;
+          if (rStart) {
+            if (rStart + rotDiff < 0) {
+              rotDiff = Math.PI * 2 + rotDiff;
+            } else if (rStart + rotDiff > Math.PI * 2) {
+              rotDiff = -(Math.PI * 2 - rotDiff);
+            }
+          }
+        } else if (rotDiff * this.rotDirection < 0) {
+          rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
+        }
+        // eslint-disable-next-line no-param-reassign
+        delta.r = rotDiff;
+        if (this.timeOrVelocity instanceof Transform) {
+          const v = this.timeOrVelocity.order[index];
+          if (v instanceof Rotation && v !== 0) {
+            const rTime = delta.r / v.r;
+            time = rTime > time ? rTime : time;
+          }
+        }
+      }
+    });
+    if (time === 0) {
+      this.time = 1;
+    } else {
+      this.time = time;
     }
-    this.deltaTransform.updateRotation(rotDiff);
     this.startTime = -1;
   }
 }
@@ -1048,7 +1087,7 @@ class DiagramElement {
   // Helper functions for quicker animation plans
   animateTo(
     transform: Transform,
-    time: number = 1,
+    timeOrVelocity: number | Transform = 1,
     rotDirection: number = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
@@ -1058,8 +1097,14 @@ class DiagramElement {
     // if (translationPath !== null && translationPath !== undefined) {
     //   translationPathMethod = translationPath;
     // }
+    // let time = 1;
+    // if (typeof timeOrVelocity === 'number') {
+    //   time = timeOrVelocity;
+    // } else {
+
+    // }
     const phase = new AnimationPhase(
-      transform, time, rotDirection,
+      transform, timeOrVelocity, rotDirection,
       easeFunction, this.animate.transform.translation.style,
       this.animate.transform.translation.options,
     );
@@ -1210,13 +1255,13 @@ class DiagramElement {
   animateRotationTo(
     rotation: number,
     rotDirection: number,
-    time: number = 1,
+    timeOrVelocity: number | Transform = 1,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform._dup();
     transform.updateRotation(rotation);
-    const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    const phase = new AnimationPhase(transform, timeOrVelocity, rotDirection, easeFunction);
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
     }

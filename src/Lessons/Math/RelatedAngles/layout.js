@@ -30,14 +30,14 @@ export default function lessonLayout() {
       middle: len / 3,
     },
     width: 0.02,
-    boundary: new Rect(0.5, -1.7, 2.5, 3),
+    boundary: new Rect(0, -1.7, 3, 3),
   };
   layout.line1 = {
-    position: new Point(1.5, 0.5),
+    position: new Point(1.5, 0.3),
     rotation: 0,
   };
   layout.line2 = {
-    position: new Point(1.5, -0.5),
+    position: new Point(1.5, -0.3),
     rotation: 0,
   };
   return layout;
