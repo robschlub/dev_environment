@@ -22,9 +22,11 @@ export default function lessonLayout() {
   layout.selector = {
     position: new Point(0, 1.7),
   };
+  const len = 1.4;
   layout.moveableLine = {
-    length: 1.4,
-    width: 0.01,
+    length: len,
+    width: 0.02,
+    boundary: new Rect(0.5, -1.7, 2.5 - len / 2, 3),
   };
   layout.line1 = {
     position: new Point(1.5, 0.5),

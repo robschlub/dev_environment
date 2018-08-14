@@ -31,6 +31,24 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform().rotate(0).translate(0, 0),
     );
     line.pulse.transformMethod = s => new Transform().scale(1, s);
+    line.isTouchable = true;
+    line.isMovable = true;
+    const bounds = this.layout.moveableLine.boundary;
+    line.move.maxTransform = new Transform().rotate(Math.PI * 2)
+      .translate(bounds.right, bounds.top);
+    line.move.minTransform = new Transform().rotate(0)
+      .translate(bounds.left, bounds.bottom);
+    // line.move.limitToDiagram = true;
+    // line.setMoveBoundaryToDiagram([
+    //   0,
+    //   -2,
+    //   3,
+    //   1.6,
+    // ]);
+
+    for (let i = 0; i < line.vertices.border[0].length; i += 1) {
+      line.vertices.border[0][i].y *= 10;
+    }
     return line;
   }
   // varState: TypeVarStateExtended;
