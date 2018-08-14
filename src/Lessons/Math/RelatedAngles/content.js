@@ -21,7 +21,7 @@ class Content extends LessonContent {
   }
 
   setElementContent() {
-    const selector = this.diagram.elements._temp.selector;
+    const { selector } = this.diagram.elements._selector;
     selector.add('parallel', 'Parallel', 'Lines');
     selector.add('opposite', 'Vertically Opposite', 'Angle');
     selector.add('corresponding', 'Corresponding', 'Angle');
@@ -67,6 +67,8 @@ class Content extends LessonContent {
         // ),
       },
       setEnterState: () => {
+        diag._line1.setPosition(layout.line1.position);
+        diag._line2.setPosition(layout.line2.position);
         // console.log(diag)
         // diag.setRotation(Math.PI / 3);
         // diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
@@ -88,7 +90,9 @@ class Content extends LessonContent {
         // diag._vselector,
         // diag._vselectorText,
         // diag._veselectorText,
-        diag._temp,
+        diag._selector,
+        diag._line1,
+        diag._line2,
       ],
       setSteadyState: () => {
         // diag.__selector.showAll();

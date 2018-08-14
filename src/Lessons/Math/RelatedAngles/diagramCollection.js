@@ -5,7 +5,7 @@ import {
   Transform, Point, minAngleDiff, polarToRect,
 } from '../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection,
+  DiagramElementCollection, DiagramElementPrimative,
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
 
@@ -18,6 +18,21 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   colors: Object;
   shapes: Object;
   diagram: Diagram;
+  _selector: DiagramElementPrimative;
+  _line1: DiagramElementPrimative;
+  _line2: DiagramElementPrimative;
+  _line3: DiagramElementPrimative;
+
+  makeMoveableLine() {
+    const { length, width } = this.layout.moveableLine;
+    const line = this.diagram.shapes.horizontalLine(
+      new Point(-length / 2, 0),
+      length, width,
+      0, this.layout.colors.line, new Transform().rotate(0).translate(0, 0),
+    );
+    line.pulse.transformMethod = s => new Transform().scale(1, s);
+    return line;
+  }
   // varState: TypeVarStateExtended;
   // anglePairNames: Array<string>;
   // eqn: TypeMainTextEquation;
@@ -80,16 +95,16 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   //   return selector;
   // }
 
-  addTemp() {
+  addSelector() {
     addSelectorHTML(
       this.diagram,
       this,
-      'temp',
+      'selector',
       'lesson__related_angles_selector',
       this.selectorClicked.bind(this),
       'horizontal',
     );
-    this._temp.setPosition(this.layout.selector.position);
+    this._selector.setPosition(this.layout.selector.position);
   }
 
   // makeExpandingVerticalSelectorText() {
@@ -160,7 +175,10 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     // this.add('vselectorText', this.makeVerticalSelectorText());
     // this.add('veselectorText', this.makeExpandingVerticalSelectorText());
     // this.add('temp', this.makeTemp());
-    this.addTemp(this, 'temp');
+    this.addSelector();
+    this.add('line1', this.makeMoveableLine());
+    this.add('line2', this.makeMoveableLine());
+    this.add('line3', this.makeMoveableLine());
   }
 
   selectorClicked(title: string) {

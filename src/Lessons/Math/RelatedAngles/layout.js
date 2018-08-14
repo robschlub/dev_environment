@@ -21,6 +21,18 @@ export default function lessonLayout() {
   };
   layout.selector = {
     position: new Point(0, 1.7),
-  }
+  };
+  layout.moveableLine = {
+    length: 1.4,
+    width: 0.01,
+  };
+  layout.line1 = {
+    position: new Point(1.5, 0.5),
+    rotation: 0,
+  };
+  layout.line2 = {
+    position: new Point(1.5, -0.5),
+    rotation: 0,
+  };
   return layout;
 }
