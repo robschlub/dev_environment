@@ -481,6 +481,8 @@ class Diagram {
   inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
+  beingTouchedElements: Array<DiagramElementPrimative |
+                      DiagramElementCollection>;
 
   limits: Rect;
   draw2D: DrawContext2D;
@@ -568,6 +570,7 @@ class Diagram {
     this.inTransition = false;
     // console.log(this.limits)
     this.beingMovedElements = [];
+    this.beingTouchedElements = [];
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
     this.equation = this.getEquations();
@@ -696,15 +699,15 @@ class Diagram {
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
-    const touchedElements = this.elements.getTouched(glPoint);
+    this.beingTouchedElements = this.elements.getTouched(glPoint);
 
-    touchedElements.forEach(e => e.click());
+    this.beingTouchedElements.forEach(e => e.click());
     // console.log(touchedElements)
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
-    for (let i = 0; i < touchedElements.length; i += 1) {
-      const element = touchedElements[i];
+    for (let i = 0; i < this.beingTouchedElements.length; i += 1) {
+      const element = this.beingTouchedElements[i];
       if (element.isMovable) {
         this.beingMovedElements.push(element);
         element.startBeingMoved();
@@ -713,7 +716,7 @@ class Diagram {
     if (this.beingMovedElements.length > 0) {
       this.animateNextFrame();
     }
-    if (touchedElements.length > 0) {
+    if (this.beingTouchedElements.length > 0) {
       return true;
     }
     return false;
@@ -731,6 +734,7 @@ class Diagram {
       element.startMovingFreely();
     }
     this.beingMovedElements = [];
+    this.beingTouchedElements = [];
     // console.log("after", this.elements._circle.transform.t())
   }
 

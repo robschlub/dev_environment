@@ -13,37 +13,95 @@ import {
   makeSelectorText, addSelectorHTML, SelectorList,
 } from '../../../LessonsCommon/tools/selector';
 
+type MoveableLineType = {
+  _end1: DiagramElementPrimative;
+  _end2: DiagramElementPrimative;
+  _mid: DiagramElementPrimative
+} & DiagramElementCollection;
+
 class RelatedAnglesCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   shapes: Object;
   diagram: Diagram;
   _selector: DiagramElementPrimative;
-  _line1: DiagramElementPrimative;
-  _line2: DiagramElementPrimative;
-  _line3: DiagramElementPrimative;
+  _line1: MoveableLineType;
+  _line2: MoveableLineType;
+  _line3: MoveableLineType;
 
   makeMoveableLine() {
-    const { length, width } = this.layout.moveableLine;
-    const line = this.diagram.shapes.horizontalLine(
-      new Point(-length / 2, 0),
-      length, width,
-      0, this.layout.colors.line, new Transform().rotate(0).translate(0, 0),
-    );
-    line.pulse.transformMethod = s => new Transform().scale(1, s);
-    line.isTouchable = true;
-    line.isMovable = true;
-    const bounds = this.layout.moveableLine.boundary;
-    line.move.maxTransform = new Transform().rotate(Math.PI * 2)
-      .translate(bounds.right, bounds.top);
-    line.move.minTransform = new Transform().rotate(0)
-      .translate(bounds.left, bounds.bottom);
+    const { width } = this.layout.moveableLine;
+    const { end, middle, full } = this.layout.moveableLine.length;
 
-    for (let i = 0; i < line.vertices.border[0].length; i += 1) {
-      line.vertices.border[0][i].y *= 10;
-    }
+    const line = this.diagram.shapes.collection(new Transform()
+      .rotate(0)
+      .translate(0, 0));
+    line.pulse.transformMethod = s => new Transform().scale(1, s);
+    line.hasTouchableElements = true;
+    line.isMovable = true;
+
+    const end1 = this.diagram.shapes.horizontalLine(
+      new Point(-full / 2, 0),
+      end, width,
+      0, this.layout.colors.line, new Transform(),
+    );
+    end1.isTouchable = true;
+    end1.isMovable = true;
+
+    const end2 = this.diagram.shapes.horizontalLine(
+      new Point(middle / 2, 0),
+      end, width,
+      0, this.layout.colors.line, new Transform(),
+    );
+    end2.isTouchable = true;
+    end2.isMovable = true;
+
+    const mid = this.diagram.shapes.horizontalLine(
+      new Point(-middle / 2, 0),
+      middle, width,
+      0, this.layout.colors.line, new Transform(),
+    );
+    mid.isTouchable = true;
+    mid.isMovable = true;
+
+    const increaseBorderSize = (element: DiagramElementPrimative) => {
+      for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+        // eslint-disable-next-line no-param-reassign
+        element.vertices.border[0][i].y *= 10;
+      }
+    };
+
+    increaseBorderSize(end1);
+    increaseBorderSize(end2);
+    increaseBorderSize(mid);
+
+    line.add('end1', end1);
+    line.add('mid', mid);
+    line.add('end2', mid);
     return line;
   }
+
+  // makeMoveableLine() {
+  //   const { length, width } = this.layout.moveableLine;
+  //   const line = this.diagram.shapes.horizontalLine(
+  //     new Point(-length / 2, 0),
+  //     length, width,
+  //     0, this.layout.colors.line, new Transform().rotate(0).translate(0, 0),
+  //   );
+  //   line.pulse.transformMethod = s => new Transform().scale(1, s);
+  //   line.isTouchable = true;
+  //   line.isMovable = true;
+  //   const bounds = this.layout.moveableLine.boundary;
+  //   line.move.maxTransform = new Transform().rotate(Math.PI * 2)
+  //     .translate(bounds.right, bounds.top);
+  //   line.move.minTransform = new Transform().rotate(0)
+  //     .translate(bounds.left, bounds.bottom);
+
+  //   for (let i = 0; i < line.vertices.border[0].length; i += 1) {
+  //     line.vertices.border[0][i].y *= 10;
+  //   }
+  //   return line;
+  // }
   // varState: TypeVarStateExtended;
   // anglePairNames: Array<string>;
   // eqn: TypeMainTextEquation;

@@ -24,7 +24,11 @@ export default function lessonLayout() {
   };
   const len = 1.4;
   layout.moveableLine = {
-    length: len,
+    length: {
+      full: len,
+      end: len / 2 * 0.5,
+      middle: len / 2,
+    },
     width: 0.02,
     boundary: new Rect(0.5, -1.7, 2.5 - len / 2, 3),
   };
