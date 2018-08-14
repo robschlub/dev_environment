@@ -4,7 +4,7 @@ import {
   LessonContent, clickWord, onClickId, click, highlight, centerV,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-
+import Definition from '../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -41,6 +41,7 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_45">
           They have the same rotation, and do not touch.
         </p>
+        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html()}
       `),
       modifiers: {
         Parallel_lines: click(diag.rotateLine1ToParallel, [diag], colors.line),

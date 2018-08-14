@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, minAngleDiff, rectToPolar, Line,
+  Transform, Point, minAngleDiff, Line,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -45,8 +45,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     const t2 = this._line2.transform.t();
     if (r1 != null && r2 != null && t1 != null && t2 != null) {
       let isParallel = true;
-      const lineRotationDifference = Math.abs(minAngleDiff(r1, r2)); 
-
+      const lineRotationDifference = Math.abs(minAngleDiff(r1, r2));
       if (lineRotationDifference > angleSameThreshold) {
         isParallel = false;
       }
