@@ -16,7 +16,8 @@ import {
 import type { LessonDiagramType } from './diagram';
 
 type MoveableLinePrimativeType = {
-  originalBorder: Array<Point>;
+  // originalBorder: Array<Point>;
+  movementAllowed: 'rotation' | 'translation';
 } & DiagramElementPrimative;
 
 export type MoveableLineType = {
@@ -119,6 +120,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     end1.isTouchable = true;
+    end1.movementAllowed = 'rotation';
 
     const end2 = this.diagram.shapes.horizontalLine(
       new Point(middle / 2, 0),
@@ -126,6 +128,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     end2.isTouchable = true;
+    end2.movementAllowed = 'rotation';
 
     const mid = this.diagram.shapes.horizontalLine(
       new Point(-middle / 2, 0),
@@ -133,10 +136,11 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     mid.isTouchable = true;
+    mid.movementAllowed = 'translation';
 
     const increaseBorderSize = (element: MoveableLinePrimativeType) => {
       // eslint-disable-next-line no-param-reassign
-      element.originalBorder = element.vertices.border[0].slice();
+      // element.originalBorder = element.vertices.border[0].slice();
       for (let i = 0; i < element.vertices.border[0].length; i += 1) {
         // eslint-disable-next-line no-param-reassign
         element.vertices.border[0][i].y *= 5;

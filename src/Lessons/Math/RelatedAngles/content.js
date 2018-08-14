@@ -51,6 +51,13 @@ class Content extends LessonContent {
         diag.isParallelHighlighting = true;
         diag._line1.setColor(layout.colors.line);
         diag._line2.setColor(layout.colors.line);
+
+        diag._line1._end1.movementAllowed = 'rotation';
+        diag._line1._end2.movementAllowed = 'rotation';
+        diag._line1._mid.movementAllowed = 'translation';
+        diag._line2._end1.movementAllowed = 'rotation';
+        diag._line2._end2.movementAllowed = 'rotation';
+        diag._line2._mid.movementAllowed = 'translation';
       },
       showOnly: [
       ],
@@ -83,6 +90,12 @@ class Content extends LessonContent {
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
         diag.isParallelHighlighting = false;
+        diag._line1._end1.movementAllowed = 'rotation';
+        diag._line1._end2.movementAllowed = 'rotation';
+        diag._line1._mid.movementAllowed = 'rotation';
+        diag._line2._end1.movementAllowed = 'rotation';
+        diag._line2._end2.movementAllowed = 'rotation';
+        diag._line2._mid.movementAllowed = 'rotation';
         diag._line1.setColor(layout.colors.line);
         diag._line2.setColor(layout.colors.line);
       },

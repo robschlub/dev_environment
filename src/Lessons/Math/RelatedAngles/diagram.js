@@ -155,26 +155,57 @@ class LessonDiagram extends Diagram {
     currentClientPoint: Point,
     line: MoveableLineType,
   ): boolean {
-    if (line.state.isBeingMoved) {
-      if (this.beingTouchedElements.indexOf(line._end1) >= 0
-        || this.beingTouchedElements.indexOf(line._end2) >= 0
-      ) {
-        this.rotateElement(
-          previousClientPoint,
-          currentClientPoint,
-          line,
-        );
+    const lineSegmentHandler = (segment) => {
+      if (this.beingTouchedElements.indexOf(segment) >= 0) {
+        if (segment.movementAllowed === 'rotation') {
+          this.rotateElement(
+            previousClientPoint,
+            currentClientPoint,
+            line,
+          );
+        } else {
+          this.moveLineElement(
+            previousClientPoint,
+            currentClientPoint,
+            line,
+          );
+        }
         return true;
       }
-      if (this.beingTouchedElements.indexOf(line._mid) >= 0) {
-        this.moveLineElement(
-          previousClientPoint,
-          currentClientPoint,
-          line,
-        );
+      return false;
+    };
+
+    if (line.state.isBeingMoved) {
+      if (lineSegmentHandler(line._end1)) {
+        return true;
+      }
+      if (lineSegmentHandler(line._end2)) {
+        return true;
+      }
+      if (lineSegmentHandler(line._mid)) {
         return true;
       }
     }
+    // if (line.state.isBeingMoved) {
+    //   if (this.beingTouchedElements.indexOf(line._end1) >= 0
+    //     || this.beingTouchedElements.indexOf(line._end2) >= 0
+    //   ) {
+    //     this.rotateElement(
+    //       previousClientPoint,
+    //       currentClientPoint,
+    //       line,
+    //     );
+    //     return true;
+    //   }
+    //   if (this.beingTouchedElements.indexOf(line._mid) >= 0) {
+    //     this.moveLineElement(
+    //       previousClientPoint,
+    //       currentClientPoint,
+    //       line,
+    //     );
+    //     return true;
+    //   }
+    // }
     return false;
   }
 
@@ -193,6 +224,10 @@ class LessonDiagram extends Diagram {
     }
     if (this.lineHandler(previousClientPoint, currentClientPoint, line2)) {
       return this.endHandler();
+    }
+    if (this.beingMovedElements.indexOf(line1) >= 0
+      || this.beingMovedElements.indexOf(line2) >= 0) {
+      return true;
     }
     return super.touchMoveHandler(previousClientPoint, currentClientPoint);
   }
