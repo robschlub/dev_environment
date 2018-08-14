@@ -772,7 +772,6 @@ class DiagramElement {
     // If animation is happening
     if (this.state.isAnimating) {
       const phase = this.state.animation.currentPhase;
-
       // If an animation hasn't yet started, the start time will be -1.
       // If this is so, then set the start time to the current time and
       // return the current transform.

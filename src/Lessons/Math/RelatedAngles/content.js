@@ -48,8 +48,6 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
-        // diag._line1.setPosition(layout.line1.position);
-        // diag._line2.setPosition(layout.line2.position);
       },
       showOnly: [
       ],
@@ -80,8 +78,6 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
-        diag._line1.setPosition(layout.line1.position);
-        diag._line2.setPosition(layout.line2.position);
       },
       showOnly: [
       ],

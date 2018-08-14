@@ -192,7 +192,9 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.add('unitsSelector', this.makeUnitsSelector());
     this.addSelector();
     this.add('line1', this.makeMoveableLine());
+    this._line1.setPosition(this.layout.line1.parallel.position.x, 0);
     this.add('line2', this.makeMoveableLine());
+    this._line2.setPosition(this.layout.line2.parallel.position.x, 0);
     this.add('line3', this.makeMoveableLine());
   }
 
@@ -243,6 +245,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     } else {
       time = animationTime;
     }
+
     element.animateTo(target, time, 0, callback);
     return time;
   }

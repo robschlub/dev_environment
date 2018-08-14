@@ -22,7 +22,7 @@ export default function lessonLayout() {
   layout.selector = {
     position: new Point(0, 1.7),
   };
-  const len = 1.4;
+  const len = 1.7;
   layout.moveableLine = {
     length: {
       full: len,
