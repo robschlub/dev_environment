@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, minAngleDiff, polarToRect,
+  Transform, Point, minAngleDiff, rectToPolar,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -28,6 +28,38 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   _line1: MoveableLineType;
   _line2: MoveableLineType;
   _line3: MoveableLineType;
+
+  checkForParallel() {
+    if (!this._line1 || !this._line2) {
+      return;
+    }
+    const angleSameThreshold = Math.PI / 100;
+    const r1 = this._line1.transform.r();
+    const r2 = this._line2.transform.r();
+    const t1 = this._line1.transform.t();
+    const t2 = this._line2.transform.t();
+    if (r1 != null && r2 != null && t1 != null && t2 != null) {
+      let isParallel = false;
+      if (Math.abs(minAngleDiff(r1, r2)) < angleSameThreshold) {
+        // isParallel = true;
+        // Check if r1 center is on r2 by looking at angle between line1 and
+        // line2 centers. If angle is similar to r2, then it is on the line.
+        const polar = rectToPolar(t2.sub(t1));
+        if (Math.abs(minAngleDiff(polar.angle, r2)) > angleSameThreshold
+          && Math.abs(minAngleDiff(polar.angle + Math.PI, r2)) > angleSameThreshold
+        ) {
+          isParallel = true;
+        }
+      }
+      if (isParallel) {
+        this._line1.setColor(this.layout.colors.line);
+        this._line2.setColor(this.layout.colors.line);
+      } else {
+        this._line1.setColor(this.layout.colors.disabled);
+        this._line2.setColor(this.layout.colors.disabled);
+      }
+    }
+  }
 
   makeMoveableLine() {
     const { width } = this.layout.moveableLine;
@@ -56,6 +88,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
           bounds.bottom + h,
         );
       }
+      this.checkForParallel();
     };
     line.setTransform(new Transform().rotate(0).translate(0, 0));
 
@@ -65,7 +98,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     end1.isTouchable = true;
-    // end1.isMovable = true;
 
     const end2 = this.diagram.shapes.horizontalLine(
       new Point(middle / 2, 0),
@@ -73,7 +105,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     end2.isTouchable = true;
-    // end2.isMovable = true;
 
     const mid = this.diagram.shapes.horizontalLine(
       new Point(-middle / 2, 0),
@@ -81,7 +112,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     mid.isTouchable = true;
-    // mid.isMovable = true;
 
     const increaseBorderSize = (element: DiagramElementPrimative) => {
       for (let i = 0; i < element.vertices.border[0].length; i += 1) {
@@ -100,88 +130,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     return line;
   }
 
-  // makeMoveableLine() {
-  //   const { length, width } = this.layout.moveableLine;
-  //   const line = this.diagram.shapes.horizontalLine(
-  //     new Point(-length / 2, 0),
-  //     length, width,
-  //     0, this.layout.colors.line, new Transform().rotate(0).translate(0, 0),
-  //   );
-  //   line.pulse.transformMethod = s => new Transform().scale(1, s);
-  //   line.isTouchable = true;
-  //   line.isMovable = true;
-  //   const bounds = this.layout.moveableLine.boundary;
-  //   line.move.maxTransform = new Transform().rotate(Math.PI * 2)
-  //     .translate(bounds.right, bounds.top);
-  //   line.move.minTransform = new Transform().rotate(0)
-  //     .translate(bounds.left, bounds.bottom);
-
-  //   for (let i = 0; i < line.vertices.border[0].length; i += 1) {
-  //     line.vertices.border[0][i].y *= 10;
-  //   }
-  //   return line;
-  // }
-  // varState: TypeVarStateExtended;
-  // anglePairNames: Array<string>;
-  // eqn: TypeMainTextEquation;
-
-  // makeSelector() {
-  //   const list = new SelectorList();
-  //   list.add('parallel', 'Parallel');
-  //   list.add('opposite', 'Vertically Opposite');
-  //   list.add('corresponding', 'Corresponding');
-  //   list.add('alternate', 'Alternate');
-  //   list.add('interior', 'Interior');
-  //   return makeSelectorHTML(
-  //     list,
-  //     'opposite',
-  //     'id_lesson__selector',
-  //     this.diagram,
-  //     this.selectorClicked.bind(this),
-  //     1,
-  //     '/',
-  //   );
-  // }
-
-  // makeVerticalSelector() {
-  //   const list = new SelectorList();
-  //   list.add('parallel', 'Parallel');
-  //   list.add('opposite', 'Vertically Opposite');
-  //   list.add('corresponding', 'Corresponding');
-  //   list.add('alternate', 'Alternate');
-  //   list.add('interior', 'Interior');
-  //   return makeVerticalSelectorHTML(
-  //     list,
-  //     'opposite',
-  //     'id_lesson__vselector',
-  //     this.diagram,
-  //     this.selectorClicked.bind(this),
-  //   );
-  // }
-
-  // makeVerticalSelectorText() {
-  //   const font = this.layout.defaultFont._dup();
-  //   font.alignH = 'left';
-  //   font.size = 0.1;
-  //   font.setColor(this.layout.colors.diagram.disabled);
-  //   const list = new SelectorList();
-  //   list.add('parallel', 'Parallel');
-  //   list.add('opposite', 'Vertically Opposite');
-  //   list.add('corresponding', 'Corresponding');
-  //   list.add('alternate', 'Alternate');
-  //   list.add('interior', 'Interior');
-  //   const selector = makeVerticalSelectorText(
-  //     list,
-  //     'opposite',
-  //     this.diagram,
-  //     this.selectorClicked.bind(this),
-  //     font,
-  //     this.layout.colors.diagram.text.base,
-  //     0.05,
-  //   );
-  //   selector.setPosition(-2, 0);
-  //   return selector;
-  // }
 
   addSelector() {
     addSelectorHTML(
@@ -194,24 +142,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     );
     this._selector.setPosition(this.layout.selector.position);
   }
-
-  // makeExpandingVerticalSelectorText() {
-  //   const list = new SelectorList();
-  //   list.add('parallel', 'Parallel', 'asdf');
-  //   list.add('opposite', 'Vertically Opposite', 'qwer');
-  //   list.add('corresponding', 'Corresponding', 'xcvb');
-  //   list.add('alternate', 'Alternate', 'tyuity');
-  //   list.add('interior', 'Interior', '23t4');
-  //   const selector = makeExpandingVerticalSelectorHTML(
-  //     list,
-  //     'opposite',
-  //     'id_expanding_v_selector',
-  //     this.diagram,
-  //     this.selectorClicked.bind(this),
-  //   );
-  //   selector.setPosition(this.layout.selector.position);
-  //   return selector;
-  // }
 
   makeUnitsSelector() {
     const font = this.layout.defaultFont._dup();
@@ -235,43 +165,31 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     return selector;
   }
 
-  makeVerticalExandingSelector() {
-    const all_content = [
-      {
-        title: 'Option 1',
-        content: '<p>test content</p>',
-      },
-      {
-        title: 'Option 2',
-        content: '<p>test 2 content</p>',
-      },
-      {
-        title: 'Option 2',
-        content: '<p>test 3 content</p>',
-      },
-    ]
-  }
-
   constructor(diagram: Diagram, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.layout = lessonLayout();
 
-    // this.add('selector', this.makeSelector());
     this.add('unitsSelector', this.makeUnitsSelector());
-    // this.add('vselector', this.makeVerticalSelector());
-    // this.add('vselectorText', this.makeVerticalSelectorText());
-    // this.add('veselectorText', this.makeExpandingVerticalSelectorText());
-    // this.add('temp', this.makeTemp());
     this.addSelector();
     this.add('line1', this.makeMoveableLine());
     this.add('line2', this.makeMoveableLine());
     this.add('line3', this.makeMoveableLine());
-    console.log(this._line2);
   }
 
   selectorClicked(title: string) {
     console.log(title);
+  }
+
+  rotateLine1ToParallel() {
+    this._line1.stop();
+    this._line2.stop();
+    const r1 = this._line1.transform.r();
+    const r2 = this._line2.transform.r();
+    if (r1 != null && r2 != null) {
+      this._line1.animateRotationTo(r2, 0, 1);
+    }
+    this.diagram.animateNextFrame();
   }
 }
 

@@ -26,8 +26,8 @@ export default function lessonLayout() {
   layout.moveableLine = {
     length: {
       full: len,
-      end: len / 2 * 0.5,
-      middle: len / 2,
+      end: len / 3,
+      middle: len / 3,
     },
     width: 0.02,
     boundary: new Rect(0.5, -1.7, 2.5, 3),

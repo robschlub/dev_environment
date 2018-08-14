@@ -1423,7 +1423,7 @@ function polarToRect(mag: number, angle: number) {
   );
 }
 
-function rectToPolar(x: number | Point, y: number) {
+function rectToPolar(x: number | Point, y: number = 0) {
   let rect;
   if (typeof x === 'number') {
     rect = new Point(x, y);

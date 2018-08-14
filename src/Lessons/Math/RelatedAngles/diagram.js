@@ -110,7 +110,15 @@ class LessonDiagram extends Diagram {
     if (rot == null) {
       rot = 0;
     }
-    transform.updateRotation(rot - diffAngle);
+    let newAngle = rot - diffAngle;
+    if (newAngle < 0) {
+      newAngle += Math.PI;
+    }
+    if (newAngle > Math.PI) {
+      newAngle -= Math.PI;
+    }
+
+    transform.updateRotation(newAngle);
     element.moved(transform._dup());
   }
 

@@ -8,7 +8,7 @@ import LessonDiagram from './diagram';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
-// const { colors } = layout;
+const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -36,13 +36,14 @@ class Content extends LessonContent {
       title: 'Parallel',
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_45">
-          Parallel lines are lines that have the same rotation and are not on top of each other.
+          |Parallel_lines| are lines that have the same rotation and are not on top of each other.
         </p>
         <p class="lesson__diagram_text_p_width_45">
           Parallel lines can never cross or touch each other.
         </p>
       `),
       modifiers: {
+        Parallel_lines: click(diag.rotateLine1ToParallel, [diag], colors.line),
       },
       setEnterState: () => {
         diag._line1.setPosition(layout.line1.position);
