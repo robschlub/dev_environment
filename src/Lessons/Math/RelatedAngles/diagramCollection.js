@@ -209,10 +209,10 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this._line2.stop();
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
-    const t = this._line1.transform.constant(0);
-    t.updateRotation(2 * Math.PI / 6);
+    const velocity = this._line1.transform.constant(0);
+    velocity.updateRotation(2 * Math.PI / 6);
     if (r1 != null && r2 != null) {
-      this._line1.animateRotationTo(r2, 0, t, this.pulseParallel.bind(this));
+      this._line1.animateRotationTo(r2, 0, velocity, this.pulseParallel.bind(this));
     }
     this.diagram.animateNextFrame();
   }
