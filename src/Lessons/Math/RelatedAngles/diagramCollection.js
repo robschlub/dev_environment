@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, minAngleDiff, rectToPolar,
+  Transform, Point, minAngleDiff, rectToPolar, Line,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -13,10 +13,14 @@ import {
   makeSelectorText, addSelectorHTML, SelectorList,
 } from '../../../LessonsCommon/tools/selector';
 
+type MoveableLinePrimativeType = {
+  originalBorder: Array<Point>;
+} & DiagramElementPrimative;
+
 export type MoveableLineType = {
-  _end1: DiagramElementPrimative;
-  _end2: DiagramElementPrimative;
-  _mid: DiagramElementPrimative
+  _end1: MoveableLinePrimativeType;
+  _end2: MoveableLinePrimativeType;
+  _mid: MoveableLinePrimativeType;
 } & DiagramElementCollection;
 
 class RelatedAnglesCollection extends DiagramElementCollection {
@@ -33,33 +37,36 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     if (!this._line1 || !this._line2) {
       return;
     }
-    const angleSameThreshold = Math.PI / 200;
-    const positionSameThreshold = this.layout.moveableLine.width;
+    const angleSameThreshold = Math.PI / 300;
+    const distanceThreshold = this.layout.moveableLine.width * 1.1;
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     const t1 = this._line1.transform.t();
     const t2 = this._line2.transform.t();
     if (r1 != null && r2 != null && t1 != null && t2 != null) {
       let isParallel = true;
-      if (Math.abs(minAngleDiff(r1, r2)) > angleSameThreshold) {
+      const lineRotationDifference = Math.abs(minAngleDiff(r1, r2)); 
+
+      if (lineRotationDifference > angleSameThreshold) {
         isParallel = false;
       }
-      // Check if r1 center is on r2 by looking at angle between line1 and
-      // line2 centers. If angle is similar to r2, then it is on the line.
+
       if (isParallel) {
-        const polar = rectToPolar(t2.sub(t1));
-        if (Math.abs(minAngleDiff(polar.angle, r2)) < angleSameThreshold * 2.5
-          || Math.abs(minAngleDiff(polar.angle + Math.PI, r2)) < angleSameThreshold * 2.5
-        ) {
+        if (!this._line2.state.isBeingMoved) {
+          this._line2.transform.updateRotation(r1);
+        } else if (!this._line1.state.isBeingMoved) {
+          this._line1.transform.updateRotation(r2);
+        }
+      }
+
+      if (isParallel) {
+        const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
+        const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
+        if (line2DistanceToLineCenter1 < distanceThreshold) {
           isParallel = false;
         }
       }
-      // Check the line center points aren't too close together
-      if (isParallel) {
-        if (t1.sub(t2).distance() < positionSameThreshold) {
-          isParallel = false;
-        }
-      }
+
       if (isParallel) {
         this._line1.setColor(this.layout.colors.line);
         this._line2.setColor(this.layout.colors.line);
@@ -122,7 +129,9 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     );
     mid.isTouchable = true;
 
-    const increaseBorderSize = (element: DiagramElementPrimative) => {
+    const increaseBorderSize = (element: MoveableLinePrimativeType) => {
+      // eslint-disable-next-line no-param-reassign
+      element.originalBorder = element.vertices.border[0].slice();
       for (let i = 0; i < element.vertices.border[0].length; i += 1) {
         // eslint-disable-next-line no-param-reassign
         element.vertices.border[0][i].y *= 5;

@@ -36,10 +36,10 @@ class Content extends LessonContent {
       title: 'Parallel',
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_45">
-          |Parallel_lines| are lines that have the same rotation and are not on top of each other.
+          |Parallel_lines| are lines that never meet.
         </p>
         <p class="lesson__diagram_text_p_width_45">
-          Parallel lines can never cross or touch each other.
+          They have the same rotation, and do not touch.
         </p>
       `),
       modifiers: {

@@ -363,6 +363,12 @@ Line.prototype.hasPointAlong = function linehasPointAlong(p: Point, precision?: 
   }
   return false;
 };
+Line.prototype.distanceToPoint = function distanceToPoint(p: Point, precision?: number) {
+  return roundNum(
+    Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),
+    precision,
+  );
+};
 
 Line.prototype.hasPointOn = function linehasPointOn(p: Point, precision?: number) {
   if (this.hasPointAlong(p, precision)) {
