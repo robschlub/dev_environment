@@ -1422,6 +1422,24 @@ function polarToRect(mag: number, angle: number) {
     mag * Math.sin(angle),
   );
 }
+
+function rectToPolar(x: number | Point, y: number) {
+  let rect;
+  if (typeof x === 'number') {
+    rect = new Point(x, y);
+  } else {
+    rect = x;
+  }
+  const mag = rect.distance();
+  let angle = Math.atan2(rect.y, rect.x);
+  if (angle < 0) {
+    angle += Math.PI * 2;
+  }
+  return {
+    mag,
+    angle,
+  };
+}
 // $FlowFixMe
 function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   let firstPoint = true;
@@ -1468,4 +1486,5 @@ export {
   quadraticBezier,
   translationPath,
   polarToRect,
+  rectToPolar,
 };
