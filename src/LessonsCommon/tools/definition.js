@@ -60,12 +60,14 @@ export default class Definition {
     outStr += this.word;
     outStr += '</span>';
     this.from.forEach((fromLanguage) => {
-      outStr += ` from ${fromLanguage.language} `;
+      outStr += ` - from ${fromLanguage.language}`;
       fromLanguage.roots.forEach((root, index) => {
         outStr += '<span class="lesson__definition_root">';
         outStr += `${root.root}: `;
         outStr += '</span>';
+        outStr += '<span class="lesson__definition_meaning">';
         outStr += `"${root.meaning}"`;
+        outStr += '</span>';
         if (fromLanguage.roots.length > index + 1) {
           outStr += ', ';
         }
@@ -87,7 +89,7 @@ export default class Definition {
 
     this.from.forEach((fromLanguage) => {
       const language = document.createElement('span');
-      language.innerHTML = `from ${fromLanguage.language}`;
+      language.innerHTML = `from ${fromLanguage.language} `;
       container.appendChild(language);
 
       const { roots } = fromLanguage;
@@ -98,6 +100,7 @@ export default class Definition {
         container.appendChild(rootElement);
 
         const meaningElement = document.createElement('span');
+        meaningElement.classList.add('lesson__definition_meaning');
         let meaningString = `"${root.meaning}"`;
         if (roots.length > index + 1) {
           meaningString += ',';
