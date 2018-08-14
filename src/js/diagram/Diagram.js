@@ -702,7 +702,6 @@ class Diagram {
     this.beingTouchedElements = this.elements.getTouched(glPoint);
 
     this.beingTouchedElements.forEach(e => e.click());
-    // console.log(touchedElements)
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
@@ -759,16 +758,12 @@ class Diagram {
 
     const previousGLPoint =
       previousPixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
-    // const currentGLPoint =
-    //   currentPixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
 
     const previousDiagramPoint =
       previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
     const currentDiagramPoint =
       currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
 
-    // const previousClipPoint = this.clientToClip(previousClientPoint);
-    // const currentClipPoint = this.clientToClip(currentClientPoint);
     const delta = currentDiagramPoint.sub(previousDiagramPoint);
 
     // Go through each element being moved, get the current translation

@@ -13,7 +13,7 @@ import {
   makeSelectorText, addSelectorHTML, SelectorList,
 } from '../../../LessonsCommon/tools/selector';
 
-type MoveableLineType = {
+export type MoveableLineType = {
   _end1: DiagramElementPrimative;
   _end2: DiagramElementPrimative;
   _mid: DiagramElementPrimative
@@ -39,6 +39,25 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     line.pulse.transformMethod = s => new Transform().scale(1, s);
     line.hasTouchableElements = true;
     line.isMovable = true;
+    line.touchInBoundingRect = true;
+    line.isTouchable = true;
+    const bounds = this.layout.moveableLine.boundary;
+    line.setTransformCallback = (t) => {
+      const r = t.r();
+      if (r != null) {
+        const w = Math.abs(this.layout.moveableLine.length.full / 2 * Math.cos(r));
+        const h = Math.abs(this.layout.moveableLine.length.full / 2 * Math.sin(r));
+        line.move.maxTransform.updateTranslation(
+          bounds.right - w,
+          bounds.top - h,
+        );
+        line.move.minTransform.updateTranslation(
+          bounds.left + w,
+          bounds.bottom + h,
+        );
+      }
+    };
+    line.setTransform(new Transform().rotate(0).translate(0, 0));
 
     const end1 = this.diagram.shapes.horizontalLine(
       new Point(-full / 2, 0),
@@ -46,7 +65,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     end1.isTouchable = true;
-    end1.isMovable = true;
+    // end1.isMovable = true;
 
     const end2 = this.diagram.shapes.horizontalLine(
       new Point(middle / 2, 0),
@@ -54,7 +73,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     end2.isTouchable = true;
-    end2.isMovable = true;
+    // end2.isMovable = true;
 
     const mid = this.diagram.shapes.horizontalLine(
       new Point(-middle / 2, 0),
@@ -62,12 +81,12 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       0, this.layout.colors.line, new Transform(),
     );
     mid.isTouchable = true;
-    mid.isMovable = true;
+    // mid.isMovable = true;
 
     const increaseBorderSize = (element: DiagramElementPrimative) => {
       for (let i = 0; i < element.vertices.border[0].length; i += 1) {
         // eslint-disable-next-line no-param-reassign
-        element.vertices.border[0][i].y *= 10;
+        element.vertices.border[0][i].y *= 5;
       }
     };
 
@@ -77,7 +96,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
 
     line.add('end1', end1);
     line.add('mid', mid);
-    line.add('end2', mid);
+    line.add('end2', end2);
     return line;
   }
 
@@ -248,6 +267,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.add('line1', this.makeMoveableLine());
     this.add('line2', this.makeMoveableLine());
     this.add('line3', this.makeMoveableLine());
+    console.log(this._line2);
   }
 
   selectorClicked(title: string) {

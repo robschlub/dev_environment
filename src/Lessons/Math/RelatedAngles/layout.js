@@ -30,7 +30,7 @@ export default function lessonLayout() {
       middle: len / 2,
     },
     width: 0.02,
-    boundary: new Rect(0.5, -1.7, 2.5 - len / 2, 3),
+    boundary: new Rect(0.5, -1.7, 2.5, 3),
   };
   layout.line1 = {
     position: new Point(1.5, 0.5),
