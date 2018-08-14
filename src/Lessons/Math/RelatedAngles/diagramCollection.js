@@ -38,13 +38,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       .translate(bounds.right, bounds.top);
     line.move.minTransform = new Transform().rotate(0)
       .translate(bounds.left, bounds.bottom);
-    // line.move.limitToDiagram = true;
-    // line.setMoveBoundaryToDiagram([
-    //   0,
-    //   -2,
-    //   3,
-    //   1.6,
-    // ]);
 
     for (let i = 0; i < line.vertices.border[0].length; i += 1) {
       line.vertices.border[0][i].y *= 10;
