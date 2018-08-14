@@ -33,22 +33,31 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     if (!this._line1 || !this._line2) {
       return;
     }
-    const angleSameThreshold = Math.PI / 100;
+    const angleSameThreshold = Math.PI / 200;
+    const positionSameThreshold = this.layout.moveableLine.width;
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     const t1 = this._line1.transform.t();
     const t2 = this._line2.transform.t();
     if (r1 != null && r2 != null && t1 != null && t2 != null) {
-      let isParallel = false;
-      if (Math.abs(minAngleDiff(r1, r2)) < angleSameThreshold) {
-        // isParallel = true;
-        // Check if r1 center is on r2 by looking at angle between line1 and
-        // line2 centers. If angle is similar to r2, then it is on the line.
+      let isParallel = true;
+      if (Math.abs(minAngleDiff(r1, r2)) > angleSameThreshold) {
+        isParallel = false;
+      }
+      // Check if r1 center is on r2 by looking at angle between line1 and
+      // line2 centers. If angle is similar to r2, then it is on the line.
+      if (isParallel) {
         const polar = rectToPolar(t2.sub(t1));
-        if (Math.abs(minAngleDiff(polar.angle, r2)) > angleSameThreshold
-          && Math.abs(minAngleDiff(polar.angle + Math.PI, r2)) > angleSameThreshold
+        if (Math.abs(minAngleDiff(polar.angle, r2)) < angleSameThreshold * 2.5
+          || Math.abs(minAngleDiff(polar.angle + Math.PI, r2)) < angleSameThreshold * 2.5
         ) {
-          isParallel = true;
+          isParallel = false;
+        }
+      }
+      // Check the line center points aren't too close together
+      if (isParallel) {
+        if (t1.sub(t2).distance() < positionSameThreshold) {
+          isParallel = false;
         }
       }
       if (isParallel) {
