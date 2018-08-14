@@ -48,6 +48,9 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
+        diag.isParallelHighlighting = true;
+        diag._line1.setColor(layout.colors.line);
+        diag._line2.setColor(layout.colors.line);
       },
       showOnly: [
       ],
@@ -62,6 +65,7 @@ class Content extends LessonContent {
         diag.moveToPosition(diag._line2, 'parallel', time, done);
       },
       setSteadyState: () => {
+        diag.isParallelHighlighting = true;
       },
     });
 
@@ -78,6 +82,9 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
+        diag.isParallelHighlighting = false;
+        diag._line1.setColor(layout.colors.line);
+        diag._line2.setColor(layout.colors.line);
       },
       showOnly: [
       ],
@@ -92,6 +99,7 @@ class Content extends LessonContent {
         diag.moveToPosition(diag._line2, 'opposite', time, done);
       },
       setSteadyState: () => {
+        diag.isParallelHighlighting = false;
       },
     });
   }

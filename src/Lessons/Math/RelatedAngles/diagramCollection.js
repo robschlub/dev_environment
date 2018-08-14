@@ -34,8 +34,12 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   _line1: MoveableLineType;
   _line2: MoveableLineType;
   _line3: MoveableLineType;
+  isParallelHighlighting: boolean;
 
   checkForParallel() {
+    if (!this.isParallelHighlighting) {
+      return;
+    }
     if (!this._line1 || !this._line2) {
       return;
     }
@@ -196,6 +200,8 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.add('line2', this.makeMoveableLine());
     this._line2.setPosition(this.layout.line2.parallel.position.x, 0);
     this.add('line3', this.makeMoveableLine());
+
+    this.isParallelHighlighting = true;
   }
 
   selectorClicked(title: string) {

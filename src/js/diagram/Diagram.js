@@ -481,8 +481,9 @@ class Diagram {
   inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
+
   beingTouchedElements: Array<DiagramElementPrimative |
-                      DiagramElementCollection>;
+                        DiagramElementCollection>;
 
   limits: Rect;
   draw2D: DrawContext2D;
