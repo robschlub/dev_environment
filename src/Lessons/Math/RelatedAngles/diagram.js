@@ -137,6 +137,39 @@ class LessonDiagram extends Diagram {
     }
   }
 
+  endHandler() {
+    this.animateNextFrame();
+    return true;
+  }
+
+  lineHandler(
+    previousClientPoint: Point,
+    currentClientPoint: Point,
+    line: MoveableLineType,
+  ): boolean {
+    if (line.state.isBeingMoved) {
+      if (this.beingTouchedElements.indexOf(line._end1) >= 0
+        || this.beingTouchedElements.indexOf(line._end2) >= 0
+      ) {
+        this.rotateElement(
+          previousClientPoint,
+          currentClientPoint,
+          line,
+        );
+        return true;
+      }
+      if (this.beingTouchedElements.indexOf(line._mid) >= 0) {
+        this.moveLineElement(
+          previousClientPoint,
+          currentClientPoint,
+          line,
+        );
+        return true;
+      }
+    }
+    return false;
+  }
+
   touchMoveHandler(
     previousClientPoint: Point,
     currentClientPoint: Point,
@@ -147,43 +180,13 @@ class LessonDiagram extends Diagram {
     const line1 = this.elements._line1;
     const line2 = this.elements._line2;
 
-    if (line1.state.isBeingMoved) {
-      if (this.beingTouchedElements.indexOf(line1._end1) >= 0
-        || this.beingTouchedElements.indexOf(line1._end2) >= 0
-      ) {
-        this.rotateElement(
-          previousClientPoint,
-          currentClientPoint,
-          line1,
-        );
-      } else if (this.beingTouchedElements.indexOf(line1._mid) >= 0) {
-        this.moveLineElement(
-          previousClientPoint,
-          currentClientPoint,
-          line1,
-        );
-      }
-    } else if (line2.state.isBeingMoved) {
-      if (this.beingTouchedElements.indexOf(line2._end1) >= 0
-        || this.beingTouchedElements.indexOf(line2._end2) >= 0
-      ) {
-        this.rotateElement(
-          previousClientPoint,
-          currentClientPoint,
-          line2,
-        );
-      } else if (this.beingTouchedElements.indexOf(line2._mid) >= 0) {
-        this.moveLineElement(
-          previousClientPoint,
-          currentClientPoint,
-          line2,
-        );
-      }
-    } else {
-      return super.touchMoveHandler(previousClientPoint, currentClientPoint);
+    if (this.lineHandler(previousClientPoint, currentClientPoint, line1)) {
+      return this.endHandler();
     }
-    this.animateNextFrame();
-    return true;
+    if (this.lineHandler(previousClientPoint, currentClientPoint, line2)) {
+      return this.endHandler();
+    }
+    return super.touchMoveHandler(previousClientPoint, currentClientPoint);
   }
 }
 
