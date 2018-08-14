@@ -12,6 +12,8 @@ import lessonLayout from './layout';
 import {
   makeSelectorText, addSelectorHTML, SelectorList,
 } from '../../../LessonsCommon/tools/selector';
+// eslint-disable-next-line import/no-cycle
+import type { LessonDiagramType } from './diagram';
 
 type MoveableLinePrimativeType = {
   originalBorder: Array<Point>;
@@ -27,7 +29,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   shapes: Object;
-  diagram: Diagram;
+  diagram: LessonDiagramType;
   _selector: DiagramElementPrimative;
   _line1: MoveableLineType;
   _line2: MoveableLineType;
@@ -182,7 +184,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     return selector;
   }
 
-  constructor(diagram: Diagram, transform: Transform = new Transform()) {
+  constructor(diagram: LessonDiagramType, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.layout = lessonLayout();
@@ -195,7 +197,12 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   }
 
   selectorClicked(title: string) {
-    console.log(title);
+    if (title === 'parallel') {
+      this.diagram.lesson.goToSection('Parallel Lines');
+    }
+    if (title === 'opposite') {
+      this.diagram.lesson.goToSection('Opposite Angles');
+    }
   }
 
   pulseParallel() {

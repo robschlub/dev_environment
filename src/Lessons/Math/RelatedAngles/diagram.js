@@ -1,26 +1,26 @@
 // @flow
-// import { DiagramElementCollection } from '../../../js/diagram/Element';
-// import AdjacentAnglesCollection from './diagramCollection';
-// import type { AdjacentAnglesCollectionType } from './diagramCollection';
 import Diagram from '../../../js/diagram/Diagram';
+import Lesson from '../../../js/Lesson/Lesson';
 import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
+// eslint-disable-next-line import/no-cycle
 import RelatedAnglesCollection from './diagramCollection';
+// eslint-disable-next-line import/no-cycle
 import type { MoveableLineType } from './diagramCollection';
-// import lessonLayout from './layout';
-// import AngleCircleDiagram from '../../../LessonsCommon/AngleCircle/diagram';
 import {
   Point, minAngleDiff, Transform,
 } from '../../../js/diagram/tools/g2';
-// import lessonLayout from './layout';
 
-// type typeElements = {
-//   _circle: extendedCircleType;
-// } & DiagramElementCollection ;
+export type LessonDiagramType = {
+  elements: RelatedAnglesCollection;
+  layout: Object;
+  lesson: Lesson;
+} & Diagram;
 
 // $FlowFixMe
 class LessonDiagram extends Diagram {
   elements: RelatedAnglesCollection;
   layout: Object;
+  lesson: Lesson;
 
   constructor(id: string, layout: Object) {
     const { limits } = layout;

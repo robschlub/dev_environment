@@ -23,17 +23,17 @@ class Content extends LessonContent {
   setElementContent() {
     const { selector } = this.diagram.elements._selector;
     selector.add('parallel', 'Parallel', 'Lines');
-    selector.add('opposite', 'Vertically Opposite', 'Angle');
-    selector.add('corresponding', 'Corresponding', 'Angle');
-    selector.add('alternate', 'Alternate', 'Angle');
-    selector.add('interior', 'Interior', 'Angle');
+    selector.add('opposite', 'Opposite', 'Angles');
+    selector.add('corresponding', 'Corresponding', 'Angles');
+    selector.add('alternate', 'Alternate', 'Angles');
+    selector.add('interior', 'Interior', 'Angles');
     selector.selectWithoutExecution('parallel');
   }
 
   addSections() {
     const diag = this.diagram.elements;
     this.addSection({
-      title: 'Parallel',
+      title: 'Parallel Lines',
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
           |Parallel_lines| are lines that never meet.
@@ -41,12 +41,41 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_40">
           They have the same rotation, and do not touch.
         </p>
-        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_parallel')}
+        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
       `),
       modifiers: {
         Parallel_lines: click(diag.rotateLine1ToParallel, [diag], colors.line),
       },
       setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('parallel');
+        diag._line1.setPosition(layout.line1.position);
+        diag._line2.setPosition(layout.line2.position);
+      },
+      showOnly: [
+      ],
+      show: [
+        diag._unitsSelector,
+        diag._selector,
+        diag._line1,
+        diag._line2,
+      ],
+      setSteadyState: () => {
+      },
+    });
+
+    this.addSection({
+      title: 'Opposite Angles',
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          |Opposite_Angles| at the intersection of two lines are equal.
+        </p>
+        ${new Definition('Opposite', 'Latin', ['oppositus', 'set against, opposing']).html('id_lesson__related_angles_definition')}
+      `),
+      modifiers: {
+        Opposite_Angles: click(diag.rotateLine1ToParallel, [diag], colors.line),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('opposite');
         diag._line1.setPosition(layout.line1.position);
         diag._line2.setPosition(layout.line2.position);
       },

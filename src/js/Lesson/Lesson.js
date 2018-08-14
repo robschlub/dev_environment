@@ -110,7 +110,17 @@ class Lesson {
     this.renderDiagrams();
   }
 
-  goToSection(sectionIndex: number) {
+  goToSection(sectionId: number | string) {
+    let sectionIndex = 0;
+    if (typeof sectionId === 'number') {
+      sectionIndex = sectionId;
+    } else {
+      this.content.sections.forEach((section, index) => {
+        if (section.title === sectionId) {
+          sectionIndex = index;
+        }
+      });
+    }
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       if (this.inTransition) {
         this.stopTransition();
@@ -274,6 +284,7 @@ class Lesson {
     this.closeDiagram();
     this.content.initialize();
     this.diagram = this.content.diagram;
+    this.diagram.lesson = this;
   }
 }
 
