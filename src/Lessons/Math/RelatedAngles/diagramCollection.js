@@ -5,7 +5,7 @@ import {
   Transform, Point, minAngleDiff, Line,
 } from '../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementCollection, DiagramElementPrimative, getMaxTimeFromVelocity,
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
 
@@ -164,7 +164,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
 
   makeUnitsSelector() {
     const font = this.layout.defaultFont._dup();
-    font.size = 0.1;
+    font.size = 0.09;
     font.setColor(this.layout.colors.diagram.disabled);
     const list = new SelectorList();
     list.add('deg', 'degrees');
@@ -178,7 +178,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       font,
       this.layout.colors.diagram.text.base,
       '/',
-      0.2,
+      0.1,
     );
     selector.setPosition(this.layout.units.position);
     return selector;
@@ -222,6 +222,29 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this._line1.animateRotationTo(r2, 0, velocity, this.pulseParallel.bind(this));
     }
     this.diagram.animateNextFrame();
+  }
+
+  moveToPosition(
+    element: MoveableLineType,
+    angleType: 'parallel' | 'opposite',
+    animationTime: ?number = null,
+    callback: () => void,
+  ) {
+    element.stop();
+    const target = element.transform.constant(0);
+    target.updateTranslation(this.layout[element.name][angleType].position);
+    target.updateRotation(this.layout[element.name][angleType].rotation);
+    let time = 1;
+    if (typeof animationTime !== 'number') {
+      const velocity = element.transform.constant(0);
+      velocity.updateTranslation(new Point(1 / 2, 1 / 2));
+      velocity.updateRotation(2 * Math.PI / 6);
+      time = getMaxTimeFromVelocity(element.transform._dup(), target, velocity, 0);
+    } else {
+      time = animationTime;
+    }
+    element.animateTo(target, time, 0, callback);
+    return time;
   }
 }
 

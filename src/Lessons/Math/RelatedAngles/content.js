@@ -48,8 +48,8 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
-        diag._line1.setPosition(layout.line1.position);
-        diag._line2.setPosition(layout.line2.position);
+        // diag._line1.setPosition(layout.line1.position);
+        // diag._line2.setPosition(layout.line2.position);
       },
       showOnly: [
       ],
@@ -59,6 +59,10 @@ class Content extends LessonContent {
         diag._line1,
         diag._line2,
       ],
+      transitionFromAny: (done) => {
+        const time = diag.moveToPosition(diag._line1, 'parallel');
+        diag.moveToPosition(diag._line2, 'parallel', time, done);
+      },
       setSteadyState: () => {
       },
     });
@@ -87,6 +91,10 @@ class Content extends LessonContent {
         diag._line1,
         diag._line2,
       ],
+      transitionFromAny: (done) => {
+        const time = diag.moveToPosition(diag._line1, 'opposite');
+        diag.moveToPosition(diag._line2, 'opposite', time, done);
+      },
       setSteadyState: () => {
       },
     });

@@ -43,6 +43,73 @@ function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
 //   offset: number;
 // };
 
+function getDeltaAngle(
+  start: number,
+  delta: number,
+  rotDirection: number,
+) {
+  let rotDiff = delta;
+  if (rotDirection === 2) {
+    if (start + rotDiff < 0) {
+      rotDiff = Math.PI * 2 + rotDiff;
+    } else if (start + rotDiff > Math.PI * 2) {
+      rotDiff = -(Math.PI * 2 - rotDiff);
+    }
+  } else if (rotDiff * rotDirection < 0) {
+    rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+  }
+  return rotDiff;
+}
+
+function getMaxTimeFromVelocity(
+  startTransform: Transform,
+  stopTransform: Transform,
+  velocityTransform: Transform,
+  rotDirection: number,
+) {
+  const deltaTransform = stopTransform.sub(startTransform);
+  let time = 0;
+  deltaTransform.order.forEach((delta, index) => {
+    if (delta instanceof Translation || delta instanceof Scale) {
+      const v = velocityTransform.order[index];
+      if (
+        (v instanceof Translation || v instanceof Scale)
+        && v.x !== 0
+        && v.y !== 0
+      ) {
+        const xTime = Math.abs(delta.x) / v.x;
+        const yTime = Math.abs(delta.y) / v.y;
+        time = xTime > time ? xTime : time;
+        time = yTime > time ? yTime : time;
+      }
+    }
+    const start = startTransform.order[index];
+    if (delta instanceof Rotation && start instanceof Rotation) {
+      const rotDiff = getDeltaAngle(start.r, delta.r, rotDirection);
+      // let rotDiff = delta.r || 0;
+      // if (rotDirection === 2) {
+      //   const rStart = start.r;
+      //   if (rStart) {
+      //     if (rStart + rotDiff < 0) {
+      //       rotDiff = Math.PI * 2 + rotDiff;
+      //     } else if (rStart + rotDiff > Math.PI * 2) {
+      //       rotDiff = -(Math.PI * 2 - rotDiff);
+      //     }
+      //   }
+      // } else if (rotDiff * rotDirection < 0) {
+      //   rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+      // }
+      // eslint-disable-next-line no-param-reassign
+      delta.r = rotDiff;
+      const v = velocityTransform.order[index];
+      if (v instanceof Rotation && v !== 0) {
+        const rTime = delta.r / v.r;
+        time = rTime > time ? rTime : time;
+      }
+    }
+  });
+  return time;
+}
 // Planned Animation
 class AnimationPhase {
   targetTransform: Transform;            // The target transform to animate to
@@ -110,54 +177,70 @@ class AnimationPhase {
     let time = 0;
     if (typeof this.timeOrVelocity === 'number') {
       time = this.timeOrVelocity;
+    } else {
+      time = getMaxTimeFromVelocity(
+        this.startTransform,
+        this.targetTransform,
+        this.timeOrVelocity,
+        this.rotDirection,
+      );
     }
-    this.deltaTransform.order.forEach((delta, index) => {
-      if (this.timeOrVelocity instanceof Transform) {
-        if (delta instanceof Translation || delta instanceof Scale) {
-          const v = this.timeOrVelocity.order[index];
-          if (
-            (v instanceof Translation || v instanceof Scale)
-            && v.x !== 0
-            && v.y !== 0
-          ) {
-            const xTime = Math.abs(delta.x) / v.x;
-            const yTime = Math.abs(delta.y) / v.y;
-            time = xTime > time ? xTime : time;
-            time = yTime > time ? yTime : time;
-          }
-        }
-      }
-      const start = this.startTransform.order[index];
-      if (delta instanceof Rotation && start instanceof Rotation) {
-        let rotDiff = delta.r || 0;
-        if (this.rotDirection === 2) {
-          const rStart = start.r;
-          if (rStart) {
-            if (rStart + rotDiff < 0) {
-              rotDiff = Math.PI * 2 + rotDiff;
-            } else if (rStart + rotDiff > Math.PI * 2) {
-              rotDiff = -(Math.PI * 2 - rotDiff);
-            }
-          }
-        } else if (rotDiff * this.rotDirection < 0) {
-          rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
-        }
-        // eslint-disable-next-line no-param-reassign
-        delta.r = rotDiff;
-        if (this.timeOrVelocity instanceof Transform) {
-          const v = this.timeOrVelocity.order[index];
-          if (v instanceof Rotation && v !== 0) {
-            const rTime = delta.r / v.r;
-            time = rTime > time ? rTime : time;
-          }
-        }
-      }
-    });
     if (time === 0) {
       this.time = 1;
     } else {
       this.time = time;
     }
+    // this.deltaTransform.order.forEach((delta, index) => {
+    //   if (this.timeOrVelocity instanceof Transform) {
+    //     if (delta instanceof Translation || delta instanceof Scale) {
+    //       const v = this.timeOrVelocity.order[index];
+    //       if (
+    //         (v instanceof Translation || v instanceof Scale)
+    //         && v.x !== 0
+    //         && v.y !== 0
+    //       ) {
+    //         const xTime = Math.abs(delta.x) / v.x;
+    //         const yTime = Math.abs(delta.y) / v.y;
+    //         time = xTime > time ? xTime : time;
+    //         time = yTime > time ? yTime : time;
+    //       }
+    //     }
+    //   }
+    //   const start = this.startTransform.order[index];
+    //   if (delta instanceof Rotation && start instanceof Rotation) {
+    //     let rotDiff = delta.r || 0;
+    //     if (this.rotDirection === 2) {
+    //       const rStart = start.r;
+    //       if (rStart) {
+    //         if (rStart + rotDiff < 0) {
+    //           rotDiff = Math.PI * 2 + rotDiff;
+    //         } else if (rStart + rotDiff > Math.PI * 2) {
+    //           rotDiff = -(Math.PI * 2 - rotDiff);
+    //         }
+    //       }
+    //     } else if (rotDiff * this.rotDirection < 0) {
+    //       rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
+    //     }
+    //     // eslint-disable-next-line no-param-reassign
+    //     delta.r = rotDiff;
+    //     if (this.timeOrVelocity instanceof Transform) {
+    //       const v = this.timeOrVelocity.order[index];
+    //       if (v instanceof Rotation && v !== 0) {
+    //         const rTime = delta.r / v.r;
+    //         time = rTime > time ? rTime : time;
+    //       }
+    //     }
+    //   }
+    // });
+    this.deltaTransform.order.forEach((delta, index) => {
+      const start = this.startTransform.order[index];
+      if (delta instanceof Rotation && start instanceof Rotation) {
+        const rotDiff = getDeltaAngle(start.r, delta.r, this.rotDirection);
+        // eslint-disable-next-line no-param-reassign
+        delta.r = rotDiff;
+      }
+    });
+
     this.startTime = -1;
   }
 }
@@ -2329,4 +2412,7 @@ class DiagramElementCollection extends DiagramElement {
   }
 }
 
-export { DiagramElementPrimative, DiagramElementCollection, AnimationPhase };
+export {
+  DiagramElementPrimative, DiagramElementCollection, AnimationPhase,
+  getDeltaAngle, getMaxTimeFromVelocity,
+};
