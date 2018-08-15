@@ -88,7 +88,7 @@ class Content extends LessonContent {
         ${new Definition('Opposite', 'Latin', ['oppositus', 'set against, opposing']).html('id_lesson__related_angles_definition')}
       `),
       modifiers: {
-        Opposite_Angles: click(diag.rotateLine1ToParallel, [diag], colors.line),
+        Opposite_Angles: click(diag.toggleOppositeAngles, [diag], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
@@ -110,21 +110,18 @@ class Content extends LessonContent {
         diag._line1,
         diag._line2,
         diag._angleA,
-        diag._angleB,
-        // diag._angleC,
-        // diag._angleD,
+        diag._angleC,
       ],
       transitionFromAny: (done) => {
         diag._angleA.eqn.showForm('a');
-        diag._angleB.eqn.showForm('b');
+        diag._angleC.eqn.showForm('a');
         const time = diag.moveToPosition(diag._line1, 'opposite');
         diag.moveToPosition(diag._line2, 'opposite', time, done);
       },
       setSteadyState: () => {
         diag.isParallelHighlighting = false;
         diag._angleA.eqn.showForm('a');
-        diag._angleB.eqn.showForm('b');
-        // console.log(diag)
+        diag._angleC.eqn.showForm('a');
       },
     });
   }

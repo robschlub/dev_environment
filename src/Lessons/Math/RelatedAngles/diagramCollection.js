@@ -290,12 +290,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
         );
         angle._label.setPosition(labelPosition);
       }
-
-      // if (angle < layout.label.hideAngle) {
-      //   angleA._label.hideAll();
-      // } else {
-      //   angleA._label.showAll();
-      // }
     };
     return angle;
   }
@@ -348,20 +342,46 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  toggleOppositeAngles() {
+    if (this._angleA.isShown) {
+      this._angleB.eqn.showForm('b');
+      this._angleD.eqn.showForm('b');
+      this._angleB.show();
+      this._angleB._arc.show();
+      this._angleD.show();
+      this._angleD._arc.show();
+      this._angleA.hide();
+      this._angleC.hide();
+    } else {
+      this._angleB.hide();
+      this._angleD.hide();
+      this._angleA.eqn.showForm('a');
+      this._angleC.eqn.showForm('a');
+      this._angleA.show();
+      this._angleC.show();
+      this._angleA._arc.show();
+      this._angleC._arc.show();
+    }
+    this.diagram.animateNextFrame();
+  }
+
   updateOppositeAngles() {
     if (this._line1 && this._line2 && this._angleA) {
       const r1 = this._line1.transform.r();
       const r2 = this._line2.transform.r();
       if (r1 != null && r2 != null) {
-        if (this._angleA.isShown) {
+        if (this._angleA.isShown || this._angleB.isShown || this._angleC.isShown || this._angleD.isShown) {
           const minAngle = minAngleDiff(r2, r1);
-          // console.log(minAngle, r1, r2)
           if (minAngle > 0) {
             this._angleA.updateAngle(r1, minAngle);
             this._angleB.updateAngle(r2, Math.PI - minAngle);
+            this._angleC.updateAngle(r1 + Math.PI, minAngle);
+            this._angleD.updateAngle(r2 + Math.PI, Math.PI - minAngle);
           } else {
             this._angleA.updateAngle(r1, Math.PI - Math.abs(minAngle));
             this._angleB.updateAngle(r2, Math.abs(minAngle));
+            this._angleC.updateAngle(r1 + Math.PI, Math.PI - Math.abs(minAngle));
+            this._angleD.updateAngle(r2 + Math.PI, Math.abs(minAngle));
           }
           this._angleA.setPosition(this._line1.transform.t() || new Point(0, 0));
           this._angleB.setPosition(this._line1.transform.t() || new Point(0, 0));
