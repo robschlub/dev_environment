@@ -118,11 +118,11 @@ class RelatedAnglesCollection extends DiagramElementCollection {
           bounds.left + w,
           bounds.bottom + h,
         );
-        if (r > Math.PI) {
-          line.transform.updateRotation(r - Math.PI);
+        if (r > 2 * Math.PI) {
+          line.transform.updateRotation(r - 2 * Math.PI);
         }
         if (r < 0) {
-          line.transform.updateRotation(r + Math.PI);
+          line.transform.updateRotation(r + 2 * Math.PI);
         }
       }
       this.checkForParallel();
@@ -344,6 +344,8 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       if (r1 != null && r2 != null) {
         if (this._angleA.isShown) {
           const minAngle = minAngleDiff(r1, r2);
+          // const minAngle = r2 - r1;
+          console.log(minAngle)
           if (minAngle > 0) {
             this._angleA.updateAngle(r1, Math.abs(Math.PI - minAngle));
           } else {
