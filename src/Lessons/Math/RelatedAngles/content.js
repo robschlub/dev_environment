@@ -121,10 +121,52 @@ class Content extends LessonContent {
         diag.moveToPosition(opp._line2, 'opposite', time, done);
       },
       setSteadyState: () => {
+        opp._angleC.setColor(layout.colors.angleA);
+        opp._angleD.setColor(layout.colors.angleB);
         opp._angleA._arc.show();
         opp._angleC._arc.show();
         opp._angleA.eqn.showForm('a');
         opp._angleC.eqn.showForm('a');
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          This can be shown by considering the four angles separately, and
+          recognizing the supplementary angles.
+        </p>
+      `),
+      modifiers: {
+        Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.line),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('opposite');
+      },
+      showOnly: [
+        opp,
+        opp._angleA,
+        opp._angleB,
+        opp._angleC,
+        opp._angleD,
+      ],
+      show: [
+        diag._unitsSelector,
+        diag._selector,
+        opp._line1,
+        opp._line2,
+      ],
+      setSteadyState: () => {
+        opp._angleC.setColor(layout.colors.angleC);
+        opp._angleD.setColor(layout.colors.angleD);
+        opp._angleA._arc.show();
+        opp._angleB._arc.show();
+        opp._angleC._arc.show();
+        opp._angleD._arc.show();
+        opp._angleA.eqn.showForm('a');
+        opp._angleB.eqn.showForm('b');
+        opp._angleC.eqn.showForm('c');
+        opp._angleD.eqn.showForm('d');
       },
     });
   }

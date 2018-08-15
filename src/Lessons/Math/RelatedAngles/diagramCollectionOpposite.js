@@ -65,10 +65,11 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.formAlignment.vAlign = 'middle';
     eqn.formAlignment.scale = 0.7;
 
+
     eqn.setElem('a', this.layout.colors.angleA);
     eqn.setElem('b', this.layout.colors.angleB);
-    eqn.setElem('c', this.layout.colors.angleA);
-    eqn.setElem('d', this.layout.colors.angleB);
+    eqn.setElem('c', this.layout.colors.angleC);
+    eqn.setElem('d', this.layout.colors.angleD);
 
     eqn.addForm('a', ['a']);
     eqn.addForm('b', ['b']);
@@ -83,10 +84,11 @@ export default class OppositeCollection extends DiagramElementCollection {
 
     const arcLayout = this.layout.angle.arc;
 
-    const color = name === 'a' || name === 'c'
-      ? this.layout.colors.angleA : this.layout.colors.angleB;
+    // const color = name === 'a' || name === 'c'
+    //   ? this.layout.colors.angleA : this.layout.colors.angleB;
+    const color = this.layout.colors[`angle${name.toUpperCase()}`];
     const radius = name === 'a' || name === 'c'
-      ? arcLayout.radius : arcLayout.radius * 0.9;
+      ? arcLayout.radius : arcLayout.radius * 1.0;
     const label = eqn.collection;
     const arc = this.diagram.shapes.polygon(
       arcLayout.sides, radius, arcLayout.width,

@@ -9,6 +9,8 @@ const cssColorNames = [
   'line',
   'angleA',
   'angleB',
+  'angleC',
+  'angleD',
   'disabled',
 ];
 

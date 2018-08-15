@@ -112,7 +112,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     } else {
       time = animationTime;
     }
-
+    time = time === 0 ? 0.001 : time;
     element.animateTo(target, time, 0, callback);
     return time;
   }
