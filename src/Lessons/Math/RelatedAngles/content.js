@@ -115,11 +115,16 @@ class Content extends LessonContent {
         // diag._angleD,
       ],
       transitionFromAny: (done) => {
+        diag._angleA.eqn.showForm('a');
+        diag._angleB.eqn.showForm('b');
         const time = diag.moveToPosition(diag._line1, 'opposite');
         diag.moveToPosition(diag._line2, 'opposite', time, done);
       },
       setSteadyState: () => {
         diag.isParallelHighlighting = false;
+        diag._angleA.eqn.showForm('a');
+        diag._angleB.eqn.showForm('b');
+        // console.log(diag)
       },
     });
   }

@@ -63,7 +63,7 @@ export default function lessonLayout() {
       sides: 200,
     },
     label: {
-      radius: 0.6,
+      radius: 0.5,
     },
   }
   return layout;

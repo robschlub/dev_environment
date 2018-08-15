@@ -226,6 +226,12 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       },
       this.layout.colors.diagram.text.base,
     );
+
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+
     eqn.setElem('a', this.layout.colors.angleA);
     eqn.setElem('b', this.layout.colors.angleB);
     eqn.setElem('c', this.layout.colors.angleA);
@@ -235,11 +241,6 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     eqn.addForm('b', ['b']);
     eqn.addForm('c', ['c']);
     eqn.addForm('d', ['d']);
-
-    eqn.formAlignment.fixTo = new Point(0, 0);
-    eqn.formAlignment.hAlign = 'center';
-    eqn.formAlignment.vAlign = 'middle';
-    eqn.formAlignment.scale = 0.7;
 
     eqn.showForm = (form: string) => {
       eqn.setCurrentForm(form);
@@ -252,7 +253,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     const color = name === 'a' || name === 'c'
       ? this.layout.colors.angleA : this.layout.colors.angleB;
     const radius = name === 'a' || name === 'c'
-      ? arcLayout.radius : arcLayout.radius * 0.8;
+      ? arcLayout.radius : arcLayout.radius * 0.9;
     const label = eqn.collection;
     const arc = this.diagram.shapes.polygon(
       arcLayout.sides, radius, arcLayout.width,
@@ -268,6 +269,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     angle.updateAngle = (start: number, size: number) => {
       angle._arc.angleToDraw = size;
       angle.transform.updateRotation(start);
+      angle._label.transform.updateRotation(-start);
 
       let labelWidth = 0;
       let labelHeight = 0;
@@ -276,14 +278,15 @@ class RelatedAnglesCollection extends DiagramElementCollection {
         labelHeight = eqn.currentForm.height * 0.4;
       }
       const equationRotation = eqn.collection.transform.r();
+      // const equation
       if (equationRotation != null) {
         const labelPosition = polarToRect(
-          arcLayout.radius
+          this.layout.angle.label.radius
           + Math.max(
-            Math.abs(labelWidth * Math.cos(equationRotation - angle / 2)),
+            Math.abs(labelWidth * Math.cos(start + size / 2)),
             labelHeight,
-          ) - this.layout.angle.label.radius / 3,
-          angle / 2,
+          ),
+          size / 2,
         );
         angle._label.setPosition(labelPosition);
       }
@@ -352,7 +355,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       if (r1 != null && r2 != null) {
         if (this._angleA.isShown) {
           const minAngle = minAngleDiff(r2, r1);
-          console.log(minAngle, r1, r2)
+          // console.log(minAngle, r1, r2)
           if (minAngle > 0) {
             this._angleA.updateAngle(r1, minAngle);
             this._angleB.updateAngle(r2, Math.PI - minAngle);
