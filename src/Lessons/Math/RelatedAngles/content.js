@@ -142,7 +142,7 @@ class Content extends LessonContent {
         </p>
       `),
       modifiers: {
-        supplementary_angles: click(opp.pulseSupplementaryAngle, [opp], colors.line),
+        supplementary_angles: click(opp.pulseSupplementaryAngle, [opp], colors.supplementary),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
