@@ -38,6 +38,9 @@ export default class OppositeCollection extends DiagramElementCollection {
       line.updateTransform(t);
       this.updateOppositeAngles();
     };
+    line._end1.movementAllowed = 'rotation';
+    line._end2.movementAllowed = 'rotation';
+    line._mid.movementAllowed = 'rotation';
     return line;
   }
 

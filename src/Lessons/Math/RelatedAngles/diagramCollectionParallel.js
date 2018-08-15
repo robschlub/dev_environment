@@ -8,7 +8,6 @@ import {
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-// import type { LessonDiagramType } from './diagram';
 import makeMoveableLine from './diagramCollectionCommon';
 import type { MoveableLineType } from './diagramCollectionCommon';
 
@@ -63,6 +62,29 @@ export default class ParallelCollection extends DiagramElementCollection {
     }
   }
 
+  normalizeAngle(element: DiagramElementCollection) {
+    let angle = element.transform.r();
+    if (angle != null) {
+      if (angle > Math.PI) {
+        angle -= Math.PI;
+      }
+      element.transform.updateRotation(angle);
+    }
+  }
+
+  makeLine() {
+    const line = makeMoveableLine(this.diagram, this.layout);
+    line.setTransformCallback = (t: Transform) => {
+      line.updateTransform(t);
+      this.normalizeAngle(line);
+      this.checkForParallel();
+    };
+    line._end1.movementAllowed = 'rotation';
+    line._end2.movementAllowed = 'rotation';
+    line._mid.movementAllowed = 'translation';
+    return line;
+  }
+
   constructor(
     diagram: Diagram,
     layout: Object,
@@ -72,17 +94,18 @@ export default class ParallelCollection extends DiagramElementCollection {
     this.diagram = diagram;
     this.layout = layout;
 
-    this.add('line1', makeMoveableLine(diagram, layout));
+    this.add('line1', this.makeLine());
     this._line1.setPosition(this.layout.line1.parallel.position.x, 0);
-    this._line1.setTransformCallback = (t) => {
-      this._line1.updateTransform(t);
-      this.checkForParallel();
-    };
-    this.add('line2', makeMoveableLine(diagram, layout));
-    this._line2.setTransformCallback = (t) => {
-      this._line2.updateTransform(t);
-      this.checkForParallel();
-    };
+    // this._line1.setTransformCallback = (t) => {
+    //   this._line1.updateTransform(t);
+    //   this.checkForParallel();
+    // };
+    this.add('line2', this.makeLine());
+    this._line2.setPosition(this.layout.line2.parallel.position.x, 0);
+    // this._line2.setTransformCallback = (t) => {
+    //   this._line2.updateTransform(t);
+    //   this.checkForParallel();
+    // };
 
     this.hasTouchableElements = true;
   }

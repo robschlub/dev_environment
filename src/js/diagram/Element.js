@@ -103,7 +103,7 @@ function getMaxTimeFromVelocity(
       delta.r = rotDiff;
       const v = velocityTransform.order[index];
       if (v instanceof Rotation && v !== 0) {
-        const rTime = delta.r / v.r;
+        const rTime = Math.abs(delta.r / v.r);
         time = rTime > time ? rTime : time;
       }
     }

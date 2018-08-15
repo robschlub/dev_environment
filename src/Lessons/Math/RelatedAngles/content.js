@@ -50,16 +50,19 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
-        // diag.isParallelHighlighting = true;
-        parallel._line1.setColor(layout.colors.line);
-        parallel._line2.setColor(layout.colors.line);
+        if (opp.isShown) {
+          parallel._line1.setTransform(opp._line1.transform._dup());
+          parallel._line2.setTransform(opp._line2.transform._dup());
+        }
+        // parallel._line1.setColor(layout.colors.line);
+        // parallel._line2.setColor(layout.colors.line);
 
-        parallel._line1._end1.movementAllowed = 'rotation';
-        parallel._line1._end2.movementAllowed = 'rotation';
-        parallel._line1._mid.movementAllowed = 'translation';
-        parallel._line2._end1.movementAllowed = 'rotation';
-        parallel._line2._end2.movementAllowed = 'rotation';
-        parallel._line2._mid.movementAllowed = 'translation';
+        // parallel._line1._end1.movementAllowed = 'rotation';
+        // parallel._line1._end2.movementAllowed = 'rotation';
+        // parallel._line1._mid.movementAllowed = 'translation';
+        // parallel._line2._end1.movementAllowed = 'rotation';
+        // parallel._line2._end2.movementAllowed = 'rotation';
+        // parallel._line2._mid.movementAllowed = 'translation';
       },
       showOnly: [
       ],
@@ -71,7 +74,11 @@ class Content extends LessonContent {
         parallel._line2,
       ],
       transitionFromAny: (done) => {
-        const time = diag.moveToPosition(parallel._line1, 'parallel');
+        const time = Math.max(
+          diag.getTimeToMoveToPosition(parallel._line1, 'parallel'),
+          diag.getTimeToMoveToPosition(parallel._line2, 'parallel'),
+        );
+        diag.moveToPosition(parallel._line1, 'parallel', time);
         diag.moveToPosition(parallel._line2, 'parallel', time, done);
       },
       setSteadyState: () => {
@@ -96,36 +103,33 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
-        // diag.isParallelHighlighting = false;
-        opp._line1._end1.movementAllowed = 'rotation';
-        opp._line1._end2.movementAllowed = 'rotation';
-        opp._line1._mid.movementAllowed = 'rotation';
-        opp._line2._end1.movementAllowed = 'rotation';
-        opp._line2._end2.movementAllowed = 'rotation';
-        opp._line2._mid.movementAllowed = 'rotation';
-        // opp._line1.setColor(layout.colors.line);
-        // opp._line2.setColor(layout.colors.line);
+        if (parallel.isShown) {
+          opp._line1.transform = parallel._line1.transform._dup();
+          opp._line2.transform = parallel._line2.transform._dup();
+        }
       },
       showOnly: [
         opp,
+        opp._angleA,
+        opp._angleC,
       ],
       show: [
         diag._unitsSelector,
         diag._selector,
         opp._line1,
         opp._line2,
-        opp._angleA,
-        opp._angleC,
       ],
       transitionFromAny: (done) => {
-        opp._angleA.eqn.showForm('a');
-        opp._angleC.eqn.showForm('a');
-        const time = diag.moveToPosition(opp._line1, 'opposite');
+        const time = Math.max(
+          diag.getTimeToMoveToPosition(opp._line1, 'opposite'),
+          diag.getTimeToMoveToPosition(opp._line2, 'opposite'),
+        );
+        diag.moveToPosition(opp._line1, 'opposite', time);
         diag.moveToPosition(opp._line2, 'opposite', time, done);
-        console.log(time)
       },
       setSteadyState: () => {
-        // diag.isParallelHighlighting = false;
+        opp._angleA._arc.show();
+        opp._angleC._arc.show();
         opp._angleA.eqn.showForm('a');
         opp._angleC.eqn.showForm('a');
       },
