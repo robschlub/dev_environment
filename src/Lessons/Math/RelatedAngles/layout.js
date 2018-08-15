@@ -56,5 +56,15 @@ export default function lessonLayout() {
     position: new Point(1.5, -0.3),
     rotation: 0,
   };
+  layout.angle = {
+    arc: {
+      radius: 0.4,
+      width: 0.02,
+      sides: 200,
+    },
+    label: {
+      radius: 0.6,
+    },
+  }
   return layout;
 }

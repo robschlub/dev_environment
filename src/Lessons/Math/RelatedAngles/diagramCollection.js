@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, minAngleDiff, Line,
+  Transform, Point, minAngleDiff, Line, polarToRect,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative, getMaxTimeFromVelocity,
@@ -14,6 +14,7 @@ import {
 } from '../../../LessonsCommon/tools/selector';
 // eslint-disable-next-line import/no-cycle
 import type { LessonDiagramType } from './diagram';
+import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type MoveableLinePrimativeType = {
   // originalBorder: Array<Point>;
@@ -26,6 +27,13 @@ export type MoveableLineType = {
   _mid: MoveableLinePrimativeType;
 } & DiagramElementCollection;
 
+type AngleType = {
+  _label: DiagramElementCollection;
+  _arc: DiagramElementPrimative;
+  eqn: Equation;
+  updateAngle: (number, number) => void;
+} & DiagramElementCollection;
+
 class RelatedAnglesCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
@@ -35,6 +43,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   _line1: MoveableLineType;
   _line2: MoveableLineType;
   _line3: MoveableLineType;
+  _angleA: AngleType;
   isParallelHighlighting: boolean;
 
   checkForParallel() {
@@ -109,8 +118,15 @@ class RelatedAnglesCollection extends DiagramElementCollection {
           bounds.left + w,
           bounds.bottom + h,
         );
+        if (r > Math.PI) {
+          line.transform.updateRotation(r - Math.PI);
+        }
+        if (r < 0) {
+          line.transform.updateRotation(r + Math.PI);
+        }
       }
       this.checkForParallel();
+      this.updateOppositeAngles();
     };
     line.setTransform(new Transform().rotate(0).translate(0, 0));
 
@@ -192,6 +208,90 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     return selector;
   }
 
+  makeAngle(name: 'a' | 'b' | 'c' | 'd') {
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements(
+      {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+        d: 'd',
+        equals: ' = ',
+        minus: ' \u2212 ',
+        _180: '180º',
+        pi: 'π',
+      },
+      this.layout.colors.diagram.text.base,
+    );
+    eqn.setElem('a', this.layout.colors.angleA);
+    eqn.setElem('b', this.layout.colors.angleB);
+    eqn.setElem('c', this.layout.colors.angleA);
+    eqn.setElem('d', this.layout.colors.angleB);
+
+    eqn.addForm('a', ['a']);
+    eqn.addForm('b', ['b']);
+    eqn.addForm('c', ['c']);
+    eqn.addForm('d', ['d']);
+
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+
+    eqn.showForm = (form: string) => {
+      eqn.setCurrentForm(form);
+      eqn.render();
+    };
+    eqn.showForm(name);
+
+    const arcLayout = this.layout.angle.arc;
+
+    const color = name === 'a' || name === 'c'
+      ? this.layout.colors.angleA : this.layout.colors.angleB;
+    const label = eqn.collection;
+    const arc = this.diagram.shapes.polygon(
+      arcLayout.sides, arcLayout.radius, arcLayout.width,
+      0, 1, arcLayout.sides, color,
+      new Transform(),
+    );
+    const angle = this.diagram.shapes.collection(new Transform()
+      .scale(1, 1).rotate(0).translate(0, 0));
+    angle.add('arc', arc);
+    angle.add('label', label);
+    angle.eqn = eqn;
+
+    angle.updateAngle = (start: number, size: number) => {
+      angle._arc.angleToDraw = size;
+      angle.transform.updateRotation(start);
+
+      let labelWidth = 0;
+      let labelHeight = 0;
+      if (eqn.currentForm != null) {
+        labelWidth = eqn.currentForm.width / 2;
+        labelHeight = eqn.currentForm.height * 0.4;
+      }
+      const equationRotation = eqn.collection.transform.r();
+      if (equationRotation != null) {
+        const labelPosition = polarToRect(
+          arcLayout.radius
+          + Math.max(
+            Math.abs(labelWidth * Math.cos(equationRotation - angle / 2)),
+            labelHeight,
+          ) - this.layout.angle.label.radius / 3,
+          angle / 2,
+        );
+        angle._label.setPosition(labelPosition);
+      }
+
+      // if (angle < layout.label.hideAngle) {
+      //   angleA._label.hideAll();
+      // } else {
+      //   angleA._label.showAll();
+      // }
+    };
+    return angle;
+  }
+
   constructor(diagram: LessonDiagramType, transform: Transform = new Transform()) {
     super(transform, diagram.limits);
     this.diagram = diagram;
@@ -204,6 +304,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.add('line2', this.makeMoveableLine());
     this._line2.setPosition(this.layout.line2.parallel.position.x, 0);
     this.add('line3', this.makeMoveableLine());
+    this.add('angleA', this.makeAngle('a'));
 
     this.isParallelHighlighting = true;
   }
@@ -234,6 +335,24 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       this._line1.animateRotationTo(r2, 0, velocity, this.pulseParallel.bind(this));
     }
     this.diagram.animateNextFrame();
+  }
+
+  updateOppositeAngles() {
+    if (this._line1 && this._line2 && this._angleA) {
+      const r1 = this._line1.transform.r();
+      const r2 = this._line2.transform.r();
+      if (r1 != null && r2 != null) {
+        if (this._angleA.isShown) {
+          const minAngle = minAngleDiff(r1, r2);
+          if (minAngle > 0) {
+            this._angleA.updateAngle(r1, Math.abs(Math.PI - minAngle));
+          } else {
+            this._angleA.updateAngle(r1, Math.abs(minAngle));
+          }
+          this._angleA.setPosition(this._line1.transform.t() || new Point(0, 0));
+        }
+      }
+    }
   }
 
   moveToPosition(

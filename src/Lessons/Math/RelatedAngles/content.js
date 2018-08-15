@@ -80,7 +80,10 @@ class Content extends LessonContent {
       title: 'Opposite Angles',
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
-          |Opposite_Angles| at the intersection of two lines are equal.
+          When two lines intersect, 4 angles are created.
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+          |Opposite_Angles| at the intersection are equal.
         </p>
         ${new Definition('Opposite', 'Latin', ['oppositus', 'set against, opposing']).html('id_lesson__related_angles_definition')}
       `),
@@ -106,6 +109,7 @@ class Content extends LessonContent {
         diag._selector,
         diag._line1,
         diag._line2,
+        diag._angleA,
       ],
       transitionFromAny: (done) => {
         const time = diag.moveToPosition(diag._line1, 'opposite');
