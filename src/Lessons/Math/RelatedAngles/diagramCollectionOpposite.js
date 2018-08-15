@@ -79,7 +79,10 @@ export default class OppositeCollection extends DiagramElementCollection {
         labelHeight / Math.abs(Math.sin(newAngle)),
         labelWidth / Math.abs(Math.cos(newAngle)),
       ) + this.layout.moveableLine.label.length;
-      line._label.setPosition(labelDistance, 0);
+      const a = labelWidth + this.layout.moveableLine.label.length;
+      const b = labelHeight + this.layout.moveableLine.label.length;
+      const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
+      line._label.setPosition(r, 0);
     };
 
     return line;
