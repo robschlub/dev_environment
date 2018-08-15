@@ -44,6 +44,9 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   _line2: MoveableLineType;
   _line3: MoveableLineType;
   _angleA: AngleType;
+  _angleB: AngleType;
+  _angleC: AngleType;
+  _angleD: AngleType;
   isParallelHighlighting: boolean;
 
   checkForParallel() {
@@ -248,9 +251,11 @@ class RelatedAnglesCollection extends DiagramElementCollection {
 
     const color = name === 'a' || name === 'c'
       ? this.layout.colors.angleA : this.layout.colors.angleB;
+    const radius = name === 'a' || name === 'c'
+      ? arcLayout.radius : arcLayout.radius * 0.8;
     const label = eqn.collection;
     const arc = this.diagram.shapes.polygon(
-      arcLayout.sides, arcLayout.radius, arcLayout.width,
+      arcLayout.sides, radius, arcLayout.width,
       0, 1, arcLayout.sides, color,
       new Transform(),
     );
@@ -305,6 +310,9 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this._line2.setPosition(this.layout.line2.parallel.position.x, 0);
     this.add('line3', this.makeMoveableLine());
     this.add('angleA', this.makeAngle('a'));
+    this.add('angleB', this.makeAngle('b'));
+    this.add('angleC', this.makeAngle('c'));
+    this.add('angleD', this.makeAngle('d'));
 
     this.isParallelHighlighting = true;
   }
@@ -343,15 +351,19 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       const r2 = this._line2.transform.r();
       if (r1 != null && r2 != null) {
         if (this._angleA.isShown) {
-          const minAngle = minAngleDiff(r1, r2);
-          // const minAngle = r2 - r1;
-          console.log(minAngle)
+          const minAngle = minAngleDiff(r2, r1);
+          console.log(minAngle, r1, r2)
           if (minAngle > 0) {
-            this._angleA.updateAngle(r1, Math.abs(Math.PI - minAngle));
+            this._angleA.updateAngle(r1, minAngle);
+            this._angleB.updateAngle(r2, Math.PI - minAngle);
           } else {
-            this._angleA.updateAngle(r1, Math.abs(minAngle));
+            this._angleA.updateAngle(r1, Math.PI - Math.abs(minAngle));
+            this._angleB.updateAngle(r2, Math.abs(minAngle));
           }
           this._angleA.setPosition(this._line1.transform.t() || new Point(0, 0));
+          this._angleB.setPosition(this._line1.transform.t() || new Point(0, 0));
+          this._angleC.setPosition(this._line1.transform.t() || new Point(0, 0));
+          this._angleD.setPosition(this._line1.transform.t() || new Point(0, 0));
         }
       }
     }

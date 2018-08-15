@@ -112,10 +112,10 @@ class LessonDiagram extends Diagram {
     }
     let newAngle = rot - diffAngle;
     if (newAngle < 0) {
-      newAngle += Math.PI;
+      newAngle += 2 * Math.PI;
     }
-    if (newAngle > Math.PI) {
-      newAngle -= Math.PI;
+    if (newAngle > 2 * Math.PI) {
+      newAngle -= 2 * Math.PI;
     }
 
     transform.updateRotation(newAngle);

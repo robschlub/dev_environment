@@ -110,6 +110,9 @@ class Content extends LessonContent {
         diag._line1,
         diag._line2,
         diag._angleA,
+        diag._angleB,
+        // diag._angleC,
+        // diag._angleD,
       ],
       transitionFromAny: (done) => {
         const time = diag.moveToPosition(diag._line1, 'opposite');
