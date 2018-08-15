@@ -54,15 +54,6 @@ class Content extends LessonContent {
           parallel._line1.setTransform(opp._line1.transform._dup());
           parallel._line2.setTransform(opp._line2.transform._dup());
         }
-        // parallel._line1.setColor(layout.colors.line);
-        // parallel._line2.setColor(layout.colors.line);
-
-        // parallel._line1._end1.movementAllowed = 'rotation';
-        // parallel._line1._end2.movementAllowed = 'rotation';
-        // parallel._line1._mid.movementAllowed = 'translation';
-        // parallel._line2._end1.movementAllowed = 'rotation';
-        // parallel._line2._end2.movementAllowed = 'rotation';
-        // parallel._line2._mid.movementAllowed = 'translation';
       },
       showOnly: [
       ],
@@ -74,10 +65,11 @@ class Content extends LessonContent {
         parallel._line2,
       ],
       transitionFromAny: (done) => {
-        const time = Math.max(
+        let time = Math.max(
           diag.getTimeToMoveToPosition(parallel._line1, 'parallel'),
           diag.getTimeToMoveToPosition(parallel._line2, 'parallel'),
         );
+        time = time > 2 ? 2 : time;
         diag.moveToPosition(parallel._line1, 'parallel', time);
         diag.moveToPosition(parallel._line2, 'parallel', time, done);
       },
@@ -120,10 +112,11 @@ class Content extends LessonContent {
         opp._line2,
       ],
       transitionFromAny: (done) => {
-        const time = Math.max(
+        let time = Math.max(
           diag.getTimeToMoveToPosition(opp._line1, 'opposite'),
           diag.getTimeToMoveToPosition(opp._line2, 'opposite'),
         );
+        time = time > 2 ? 2 : time;
         diag.moveToPosition(opp._line1, 'opposite', time);
         diag.moveToPosition(opp._line2, 'opposite', time, done);
       },

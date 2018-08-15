@@ -62,6 +62,7 @@ export default class ParallelCollection extends DiagramElementCollection {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   normalizeAngle(element: DiagramElementCollection) {
     let angle = element.transform.r();
     if (angle != null) {

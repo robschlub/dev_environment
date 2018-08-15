@@ -44,7 +44,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     return line;
   }
 
-
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
     const eqn = this.diagram.equation.makeEqn();
     eqn.createElements(
