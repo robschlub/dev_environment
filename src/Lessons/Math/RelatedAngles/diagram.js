@@ -216,17 +216,28 @@ class LessonDiagram extends Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    const line1 = this.elements._line1;
-    const line2 = this.elements._line2;
+    const pLine1 = this.elements._parallel._line1;
+    const pLine2 = this.elements._parallel._line2;
+    const oLine1 = this.elements._opposite._line1;
+    const oLine2 = this.elements._opposite._line2;
 
-    if (this.lineHandler(previousClientPoint, currentClientPoint, line1)) {
+    if (this.lineHandler(previousClientPoint, currentClientPoint, pLine1)) {
       return this.endHandler();
     }
-    if (this.lineHandler(previousClientPoint, currentClientPoint, line2)) {
+    if (this.lineHandler(previousClientPoint, currentClientPoint, pLine2)) {
       return this.endHandler();
     }
-    if (this.beingMovedElements.indexOf(line1) >= 0
-      || this.beingMovedElements.indexOf(line2) >= 0) {
+    if (this.lineHandler(previousClientPoint, currentClientPoint, oLine1)) {
+      return this.endHandler();
+    }
+    if (this.lineHandler(previousClientPoint, currentClientPoint, oLine2)) {
+      return this.endHandler();
+    }
+    if (this.beingMovedElements.indexOf(pLine1) >= 0
+      || this.beingMovedElements.indexOf(pLine2) >= 0
+      || this.beingMovedElements.indexOf(oLine1) >= 0
+      || this.beingMovedElements.indexOf(oLine2) >= 0
+    ) {
       return true;
     }
     return super.touchMoveHandler(previousClientPoint, currentClientPoint);

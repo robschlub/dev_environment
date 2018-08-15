@@ -32,6 +32,8 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
+    const opp = diag._opposite;
+    const parallel = diag._parallel;
     this.addSection({
       title: 'Parallel Lines',
       setContent: centerV(`
@@ -44,37 +46,39 @@ class Content extends LessonContent {
         ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
       `),
       modifiers: {
-        Parallel_lines: click(diag.rotateLine1ToParallel, [diag], colors.line),
+        Parallel_lines: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
-        diag.isParallelHighlighting = true;
-        diag._line1.setColor(layout.colors.line);
-        diag._line2.setColor(layout.colors.line);
+        // diag.isParallelHighlighting = true;
+        parallel._line1.setColor(layout.colors.line);
+        parallel._line2.setColor(layout.colors.line);
 
-        diag._line1._end1.movementAllowed = 'rotation';
-        diag._line1._end2.movementAllowed = 'rotation';
-        diag._line1._mid.movementAllowed = 'translation';
-        diag._line2._end1.movementAllowed = 'rotation';
-        diag._line2._end2.movementAllowed = 'rotation';
-        diag._line2._mid.movementAllowed = 'translation';
+        parallel._line1._end1.movementAllowed = 'rotation';
+        parallel._line1._end2.movementAllowed = 'rotation';
+        parallel._line1._mid.movementAllowed = 'translation';
+        parallel._line2._end1.movementAllowed = 'rotation';
+        parallel._line2._end2.movementAllowed = 'rotation';
+        parallel._line2._mid.movementAllowed = 'translation';
       },
       showOnly: [
       ],
       show: [
         diag._unitsSelector,
         diag._selector,
-        diag._line1,
-        diag._line2,
+        parallel,
+        parallel._line1,
+        parallel._line2,
       ],
       transitionFromAny: (done) => {
-        const time = diag.moveToPosition(diag._line1, 'parallel');
-        diag.moveToPosition(diag._line2, 'parallel', time, done);
+        const time = diag.moveToPosition(parallel._line1, 'parallel');
+        diag.moveToPosition(parallel._line2, 'parallel', time, done);
       },
       setSteadyState: () => {
         diag.isParallelHighlighting = true;
       },
     });
+
 
     this.addSection({
       title: 'Opposite Angles',
@@ -88,40 +92,42 @@ class Content extends LessonContent {
         ${new Definition('Opposite', 'Latin', ['oppositus', 'set against, opposing']).html('id_lesson__related_angles_definition')}
       `),
       modifiers: {
-        Opposite_Angles: click(diag.toggleOppositeAngles, [diag], colors.line),
+        Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
-        diag.isParallelHighlighting = false;
-        diag._line1._end1.movementAllowed = 'rotation';
-        diag._line1._end2.movementAllowed = 'rotation';
-        diag._line1._mid.movementAllowed = 'rotation';
-        diag._line2._end1.movementAllowed = 'rotation';
-        diag._line2._end2.movementAllowed = 'rotation';
-        diag._line2._mid.movementAllowed = 'rotation';
-        diag._line1.setColor(layout.colors.line);
-        diag._line2.setColor(layout.colors.line);
+        // diag.isParallelHighlighting = false;
+        opp._line1._end1.movementAllowed = 'rotation';
+        opp._line1._end2.movementAllowed = 'rotation';
+        opp._line1._mid.movementAllowed = 'rotation';
+        opp._line2._end1.movementAllowed = 'rotation';
+        opp._line2._end2.movementAllowed = 'rotation';
+        opp._line2._mid.movementAllowed = 'rotation';
+        // opp._line1.setColor(layout.colors.line);
+        // opp._line2.setColor(layout.colors.line);
       },
       showOnly: [
+        opp,
       ],
       show: [
         diag._unitsSelector,
         diag._selector,
-        diag._line1,
-        diag._line2,
-        diag._angleA,
-        diag._angleC,
+        opp._line1,
+        opp._line2,
+        opp._angleA,
+        opp._angleC,
       ],
       transitionFromAny: (done) => {
-        diag._angleA.eqn.showForm('a');
-        diag._angleC.eqn.showForm('a');
-        const time = diag.moveToPosition(diag._line1, 'opposite');
-        diag.moveToPosition(diag._line2, 'opposite', time, done);
+        opp._angleA.eqn.showForm('a');
+        opp._angleC.eqn.showForm('a');
+        const time = diag.moveToPosition(opp._line1, 'opposite');
+        diag.moveToPosition(opp._line2, 'opposite', time, done);
+        console.log(time)
       },
       setSteadyState: () => {
-        diag.isParallelHighlighting = false;
-        diag._angleA.eqn.showForm('a');
-        diag._angleC.eqn.showForm('a');
+        // diag.isParallelHighlighting = false;
+        opp._angleA.eqn.showForm('a');
+        opp._angleC.eqn.showForm('a');
       },
     });
   }
