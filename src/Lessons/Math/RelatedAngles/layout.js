@@ -32,6 +32,9 @@ export default function lessonLayout() {
       end: len / 3,
       middle: len / 3,
     },
+    label: {
+      length: len / 2,
+    },
     width: 0.02,
     boundary: new Rect(0, -1.7, 3, 3),
   };

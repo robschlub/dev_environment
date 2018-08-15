@@ -21,12 +21,18 @@ type AngleType = {
   updateAngle: (number, number) => void;
 } & DiagramElementCollection;
 
+type labeledLineType = {
+  _label: DiagramElementCollection;
+  eqn: Equation;
+  updateLabel: (number) => void;
+} & MoveableLineType;
+
 export default class OppositeCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
-  _line1: MoveableLineType;
-  _line2: MoveableLineType;
+  _line1: labeledLineType;
+  _line2: labeledLineType;
   _angleA: AngleType;
   _angleB: AngleType;
   _angleC: AngleType;
@@ -36,7 +42,7 @@ export default class OppositeCollection extends DiagramElementCollection {
     supplementary: number;
   };
 
-  makeLine() {
+  makeLine(labelText: string) {
     const line = makeMoveableLine(this.diagram, this.layout);
     line.setTransformCallback = (t: Transform) => {
       line.updateTransform(t);
@@ -45,7 +51,83 @@ export default class OppositeCollection extends DiagramElementCollection {
     line._end1.movementAllowed = 'rotation';
     line._end2.movementAllowed = 'rotation';
     line._mid.movementAllowed = 'rotation';
+
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements({ label: labelText }, this.layout.colors.line);
+
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+
+    eqn.addForm('base', ['label']);
+    eqn.setCurrentForm('base');
+
+    line.eqn = eqn;
+    line.add('label', eqn.collection);
+    // line._label.setPosition(this.layout.moveableLine.length)
+
+    line.updateLabel = (newAngle: number) => {
+      line._label.transform.updateRotation(-newAngle);
+      let labelWidth = 0;
+      let labelHeight = 0;
+      if (eqn.currentForm != null) {
+        labelWidth = eqn.currentForm.width / 2 + 0.1;
+        labelHeight = eqn.currentForm.height / 2 + 0.1;
+      }
+      const labelDistance = Math.min(
+        labelHeight / Math.abs(Math.sin(newAngle)),
+        labelWidth / Math.abs(Math.cos(newAngle)),
+      ) + this.layout.moveableLine.label.length;
+      line._label.setPosition(labelDistance, 0);
+    };
+
     return line;
+  }
+
+  makeLineLabel(labelText: string) {
+    // const label = this.diagram.htmlText(
+    //   labelText,
+    //   'id__'
+    //   )
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements({ label: labelText }, this.layout.colors.line);
+
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+
+    eqn.addForm('base', ['label']);
+    eqn.setCurrentForm('base');
+
+    angle.updateAngle = (start: number, size: number) => {
+      angle._arc.angleToDraw = size;
+      angle.transform.updateRotation(start);
+      angle._label.transform.updateRotation(-start);
+
+      let labelWidth = 0;
+      let labelHeight = 0;
+      if (eqn.currentForm != null) {
+        labelWidth = eqn.currentForm.width / 2;
+        labelHeight = eqn.currentForm.height * 0.4;
+      }
+      const equationRotation = eqn.collection.transform.r();
+      // const equation
+      if (equationRotation != null) {
+        const labelPosition = polarToRect(
+          this.layout.angle.label.radius
+          + Math.max(
+            Math.abs(labelWidth * Math.cos(start + size / 2)),
+            labelHeight,
+          ),
+          size / 2,
+        );
+        angle._label.setPosition(labelPosition);
+      }
+    };
+    angle.setPosition(this.layout.line1.opposite.position);
+    return angle;
   }
 
   makeSupplementaryAngle() {
@@ -152,9 +234,9 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.diagram = diagram;
     this.layout = layout;
 
-    this.add('line1', this.makeLine());
+    this.add('line1', this.makeLine('1'));
     this._line1.setPosition(this.layout.line1.opposite.position.x, 0);
-    this.add('line2', this.makeLine());
+    this.add('line2', this.makeLine('2 this is a test'));
     this._line2.setPosition(this.layout.line2.opposite.position.x, 0);
     this.add('angleA', this.makeAngle('a'));
     this.add('angleB', this.makeAngle('b'));
@@ -164,7 +246,7 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.add('supplementary', this.makeSupplementaryAngle());
 
     this.varState = {
-      supplementary: 0,
+      supplementary: 3,
     };
     this.hasTouchableElements = true;
   }
@@ -195,6 +277,8 @@ export default class OppositeCollection extends DiagramElementCollection {
           // this._angleC.setPosition(this._line1.transform.t() || new Point(0, 0));
           // this._angleD.setPosition(this._line1.transform.t() || new Point(0, 0));
         }
+        this._line1.updateLabel(r1);
+        this._line2.updateLabel(r2);
       }
     }
   }

@@ -106,12 +106,20 @@ class Content extends LessonContent {
         opp,
         opp._angleA,
         opp._angleC,
+        opp._line1,
+        opp._line1._end1,
+        opp._line1._end2,
+        opp._line1._mid,
+        opp._line2,
+        opp._line2._end1,
+        opp._line2._end2,
+        opp._line2._mid,
       ],
       show: [
         diag._unitsSelector,
         diag._selector,
-        opp._line1,
-        opp._line2,
+        // opp._line1,
+        // opp._line2,
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
