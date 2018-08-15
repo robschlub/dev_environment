@@ -12,6 +12,7 @@ const cssColorNames = [
   'angleC',
   'angleD',
   'disabled',
+  'supplementary',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */

@@ -8,6 +8,7 @@ $colors: (
   angleB:           map-get($geometry_colors, angleB),
   angleC:           map-get($geometry_colors, angleC),
   angleD:           map-get($geometry_colors, angleD),
+  supplementary:    color(7, 'base'),
 );
 
 body {

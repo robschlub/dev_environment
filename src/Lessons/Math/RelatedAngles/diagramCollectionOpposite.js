@@ -31,6 +31,10 @@ export default class OppositeCollection extends DiagramElementCollection {
   _angleB: AngleType;
   _angleC: AngleType;
   _angleD: AngleType;
+  _supplementary: DiagramElementPrimative;
+  varState: {
+    supplementary: number;
+  };
 
   makeLine() {
     const line = makeMoveableLine(this.diagram, this.layout);
@@ -42,6 +46,17 @@ export default class OppositeCollection extends DiagramElementCollection {
     line._end2.movementAllowed = 'rotation';
     line._mid.movementAllowed = 'rotation';
     return line;
+  }
+
+  makeSupplementaryAngle() {
+    const arcLayout = this.layout.angle.arc;
+    const arc = this.diagram.shapes.polygon(
+      arcLayout.sides, arcLayout.radius, arcLayout.width * 2,
+      0, 1, arcLayout.sides / 2, this.layout.colors.supplementary,
+      new Transform().rotate(0).translate(0, 0),
+    );
+    arc.setPosition(this.layout.line1.opposite.position);
+    return arc;
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
@@ -84,8 +99,6 @@ export default class OppositeCollection extends DiagramElementCollection {
 
     const arcLayout = this.layout.angle.arc;
 
-    // const color = name === 'a' || name === 'c'
-    //   ? this.layout.colors.angleA : this.layout.colors.angleB;
     const color = this.layout.colors[`angle${name.toUpperCase()}`];
     const radius = name === 'a' || name === 'c'
       ? arcLayout.radius : arcLayout.radius * 1.0;
@@ -126,6 +139,7 @@ export default class OppositeCollection extends DiagramElementCollection {
         angle._label.setPosition(labelPosition);
       }
     };
+    angle.setPosition(this.layout.line1.opposite.position);
     return angle;
   }
 
@@ -147,6 +161,11 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.add('angleC', this.makeAngle('c'));
     this.add('angleD', this.makeAngle('d'));
 
+    this.add('supplementary', this.makeSupplementaryAngle());
+
+    this.varState = {
+      supplementary: 0,
+    };
     this.hasTouchableElements = true;
   }
 
@@ -171,14 +190,46 @@ export default class OppositeCollection extends DiagramElementCollection {
             this._angleC.updateAngle(r1 + Math.PI, Math.PI - Math.abs(minAngle));
             this._angleD.updateAngle(r2 + Math.PI, Math.abs(minAngle));
           }
-          this._angleA.setPosition(this._line1.transform.t() || new Point(0, 0));
-          this._angleB.setPosition(this._line1.transform.t() || new Point(0, 0));
-          this._angleC.setPosition(this._line1.transform.t() || new Point(0, 0));
-          this._angleD.setPosition(this._line1.transform.t() || new Point(0, 0));
+          // this._angleA.setPosition(this._line1.transform.t() || new Point(0, 0));
+          // this._angleB.setPosition(this._line1.transform.t() || new Point(0, 0));
+          // this._angleC.setPosition(this._line1.transform.t() || new Point(0, 0));
+          // this._angleD.setPosition(this._line1.transform.t() || new Point(0, 0));
         }
       }
     }
   }
+
+  pulseSupplementaryAngle() {
+    // this.varState.supplementary += 1;
+    this.varState.supplementary = this.varState.supplementary === 3
+      ? 0
+      : this.varState.supplementary + 1;
+    const r1 = this._line1.transform.r();
+    const r2 = this._line2.transform.r();
+    if (r1 != null && r2 != null) {
+      if (this.varState.supplementary === 0) {
+        this._supplementary.transform.updateRotation(r1);
+      }
+      if (this.varState.supplementary === 1) {
+        this._supplementary.transform.updateRotation(r2);
+      }
+      if (this.varState.supplementary === 2) {
+        this._supplementary.transform.updateRotation(r1 + Math.PI);
+      }
+      if (this.varState.supplementary === 3) {
+        this._supplementary.transform.updateRotation(r2 + Math.PI);
+      }
+    }
+    this._supplementary.stop();
+    this._supplementary.stop();
+    this._supplementary.show();
+    this._supplementary.pulseScaleNow(2, 1.2, 0.25,
+      () => {
+        this._supplementary.disolveOut(2);
+      });
+    this.diagram.animateNextFrame();
+  }
+
 
   toggleOppositeAngles() {
     if (this._angleA.isShown) {

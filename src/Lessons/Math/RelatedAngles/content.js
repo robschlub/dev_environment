@@ -75,6 +75,8 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         diag.isParallelHighlighting = true;
+        diag.moveToPosition(parallel._line1, 'parallel', 0.001);
+        diag.moveToPosition(parallel._line2, 'parallel', 0.001);
       },
     });
 
@@ -121,6 +123,8 @@ class Content extends LessonContent {
         diag.moveToPosition(opp._line2, 'opposite', time, done);
       },
       setSteadyState: () => {
+        diag.moveToPosition(opp._line1, 'opposite', 0.001);
+        diag.moveToPosition(opp._line2, 'opposite', 0.001);
         opp._angleC.setColor(layout.colors.angleA);
         opp._angleD.setColor(layout.colors.angleB);
         opp._angleA._arc.show();
@@ -134,11 +138,11 @@ class Content extends LessonContent {
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
           This can be shown by considering the four angles separately, and
-          recognizing the supplementary angles.
+          recognizing the |supplementary_angles|.
         </p>
       `),
       modifiers: {
-        Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.line),
+        supplementary_angles: click(opp.pulseSupplementaryAngle, [opp], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
