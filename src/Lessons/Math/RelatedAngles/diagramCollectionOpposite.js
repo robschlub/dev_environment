@@ -43,7 +43,8 @@ export default class OppositeCollection extends DiagramElementCollection {
   };
 
   makeLine(labelText: string) {
-    const line = makeMoveableLine(this.diagram, this.layout);
+    // $FlowFixMe
+    const line: labeledLineType = makeMoveableLine(this.diagram, this.layout);
     line.setTransformCallback = (t: Transform) => {
       line.updateTransform(t);
       this.updateOppositeAngles();
@@ -58,27 +59,26 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.formAlignment.fixTo = new Point(0, 0);
     eqn.formAlignment.hAlign = 'center';
     eqn.formAlignment.vAlign = 'middle';
-    eqn.formAlignment.scale = 0.7;
+    eqn.formAlignment.scale = 0.6;
 
     eqn.addForm('base', ['label']);
     eqn.setCurrentForm('base');
 
     line.eqn = eqn;
     line.add('label', eqn.collection);
-    // line._label.setPosition(this.layout.moveableLine.length)
 
     line.updateLabel = (newAngle: number) => {
       line._label.transform.updateRotation(-newAngle);
       let labelWidth = 0;
       let labelHeight = 0;
       if (eqn.currentForm != null) {
-        labelWidth = eqn.currentForm.width / 2 + 0.1;
-        labelHeight = eqn.currentForm.height / 2 + 0.1;
+        labelWidth = eqn.currentForm.width / 2 + 0.04;
+        labelHeight = eqn.currentForm.height / 2 + 0.04;
       }
-      const labelDistance = Math.min(
-        labelHeight / Math.abs(Math.sin(newAngle)),
-        labelWidth / Math.abs(Math.cos(newAngle)),
-      ) + this.layout.moveableLine.label.length;
+      // const labelDistance = Math.min(
+      //   labelHeight / Math.abs(Math.sin(newAngle)),
+      //   labelWidth / Math.abs(Math.cos(newAngle)),
+      // ) + this.layout.moveableLine.label.length;
       const a = labelWidth + this.layout.moveableLine.label.length;
       const b = labelHeight + this.layout.moveableLine.label.length;
       const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
@@ -239,7 +239,7 @@ export default class OppositeCollection extends DiagramElementCollection {
 
     this.add('line1', this.makeLine('1'));
     this._line1.setPosition(this.layout.line1.opposite.position.x, 0);
-    this.add('line2', this.makeLine('2 this is a test'));
+    this.add('line2', this.makeLine('2'));
     this._line2.setPosition(this.layout.line2.opposite.position.x, 0);
     this.add('angleA', this.makeAngle('a'));
     this.add('angleB', this.makeAngle('b'));
