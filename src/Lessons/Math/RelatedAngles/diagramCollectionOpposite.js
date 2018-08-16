@@ -286,11 +286,15 @@ export default class OppositeCollection extends DiagramElementCollection {
     }
   }
 
-  pulseSupplementaryAngle() {
-    // this.varState.supplementary += 1;
-    this.varState.supplementary = this.varState.supplementary === 3
-      ? 0
-      : this.varState.supplementary + 1;
+  pulseSupplementaryAngle(index: number | null = null) {
+    if (index != null) {
+      this.varState.supplementary = index;
+    } else if (this.varState.supplementary === 3) {
+      this.varState.supplementary = 0;
+    } else {
+      this.varState.supplementary += 1;
+    }
+
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     if (r1 != null && r2 != null) {

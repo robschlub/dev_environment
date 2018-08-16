@@ -527,5 +527,9 @@ $diagram_ratio: 1.5;
   color: color('diagram', 'text-base');
 }
 
+.lesson__unit_hide {
+  font-size: 0;
+}
+
 @import './lesson/selector';
 @import './lesson/definition';

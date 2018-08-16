@@ -23,3 +23,19 @@ body {
   top: 92%;
   left: 7%;
 }
+
+.lesson__related_angles__angleA {
+  color: map-get($colors, angleA);
+}
+
+.lesson__related_angles__angleB {
+  color: map-get($colors, angleB);
+}
+
+.lesson__related_angles__angleC {
+  color: map-get($colors, angleC);
+}
+
+.lesson__related_angles__angleD {
+  color: map-get($colors, angleD);
+}

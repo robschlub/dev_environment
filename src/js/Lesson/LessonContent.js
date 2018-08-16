@@ -38,6 +38,13 @@ function itemSelector(
   return outStr;
 }
 
+// const unit = (deg: string, rad: string, angleType: string, num: number = 1) => `<span id="id_${angleType}_deg${num}" class="highlight_word">${deg}&deg;</span><span id="id_${angleType}_rad${num}" class="highlight_word">${rad} radians</span>
+//   `;
+
+const unit = (deg: string, rad: string) => `<span class="lesson__unit_deg">${deg}&deg;</span><span class="lesson__unit_rad">${rad}</span>
+  `;
+
+
 function initializeItemSelector(
   methodToExecute: Function,
   bindingObject: Object,
@@ -529,5 +536,5 @@ class LessonContent {
 export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
-  clickWord, itemSelector, initializeItemSelector,
+  clickWord, itemSelector, initializeItemSelector, unit,
 };

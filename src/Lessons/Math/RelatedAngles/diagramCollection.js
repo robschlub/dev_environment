@@ -51,7 +51,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
       list,
       'deg',
       this.diagram,
-      this.selectorClicked.bind(this),
+      this.unitsSelectorClicked.bind(this),
       0,
       font,
       this.layout.colors.diagram.text.base,
@@ -79,6 +79,20 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     }
     if (title === 'opposite') {
       this.diagram.lesson.goToSection('Opposite Angles');
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  unitsSelectorClicked(units: string) {
+    const degSpans = document.getElementsByClassName('lesson__unit_deg');
+    const radSpans = document.getElementsByClassName('lesson__unit_rad');
+    if (units === 'rad') {
+      [].forEach.call(degSpans, degSpan => degSpan.classList.add('lesson__unit_hide'));
+      [].forEach.call(radSpans, radSpan => radSpan.classList.remove('lesson__unit_hide'));
+    }
+    if (units === 'deg') {
+      [].forEach.call(degSpans, degSpan => degSpan.classList.remove('lesson__unit_hide'));
+      [].forEach.call(radSpans, radSpan => radSpan.classList.add('lesson__unit_hide'));
     }
   }
 

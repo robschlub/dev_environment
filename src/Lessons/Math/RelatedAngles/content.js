@@ -1,7 +1,7 @@
 // @flow
 
 import {
-  LessonContent, clickWord, onClickId, click, highlight, centerV,
+  LessonContent, clickWord, onClickId, click, highlight, centerV, unit,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import Definition from '../../../LessonsCommon/tools/definition';
@@ -171,6 +171,50 @@ class Content extends LessonContent {
       setSteadyState: () => {
         opp._angleC.setColor(layout.colors.angleC);
         opp._angleD.setColor(layout.colors.angleD);
+        opp._angleA._arc.show();
+        opp._angleB._arc.show();
+        opp._angleC._arc.show();
+        opp._angleD._arc.show();
+        opp._angleA.eqn.showForm('a');
+        opp._angleB.eqn.showForm('b');
+        opp._angleC.eqn.showForm('c');
+        opp._angleD.eqn.showForm('d');
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          Line 1 is straight, therefore angles |a| and |b| are |supplementary|, and add up to ${unit('180', '&pi;')}.
+        </p>
+      `),
+      modifiers: {
+        supplementary: click(opp.pulseSupplementaryAngle, [opp, 0], colors.supplementary),
+        a: highlight('lesson__related_angles__angleA'),
+        b: highlight('lesson__related_angles__angleB'),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('opposite');
+        opp._angleC.setColor(layout.colors.disabled);
+        opp._angleD.setColor(layout.colors.disabled);
+        opp._line2.setColor(layout.colors.disabled);
+      },
+      showOnly: [
+        opp,
+        opp._angleA,
+        opp._angleB,
+        opp._angleC,
+        opp._angleD,
+      ],
+      show: [
+        diag._unitsSelector,
+        diag._selector,
+        opp._line1,
+        opp._line2,
+      ],
+      setSteadyState: () => {
+        // opp._angleC.setColor(layout.colors.angleC);
+        // opp._angleD.setColor(layout.colors.angleD);
         opp._angleA._arc.show();
         opp._angleB._arc.show();
         opp._angleC._arc.show();
