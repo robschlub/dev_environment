@@ -101,6 +101,8 @@ class Content extends LessonContent {
           opp._line1.transform = parallel._line1.transform._dup();
           opp._line2.transform = parallel._line2.transform._dup();
         }
+        opp._angleC.setColor(layout.colors.angleA);
+        opp._angleD.setColor(layout.colors.angleB);
       },
       showOnly: [
         opp,
@@ -133,8 +135,6 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag.moveToPosition(opp._line1, 'opposite', 0.001);
         diag.moveToPosition(opp._line2, 'opposite', 0.001);
-        opp._angleC.setColor(layout.colors.angleA);
-        opp._angleD.setColor(layout.colors.angleB);
         opp._angleA._arc.show();
         opp._angleC._arc.show();
         opp._angleA.eqn.showForm('a');
@@ -154,6 +154,8 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
+        opp._angleC.setColor(layout.colors.angleC);
+        opp._angleD.setColor(layout.colors.angleD);
       },
       showOnly: [
         opp,
@@ -169,8 +171,6 @@ class Content extends LessonContent {
         opp._line2,
       ],
       setSteadyState: () => {
-        opp._angleC.setColor(layout.colors.angleC);
-        opp._angleD.setColor(layout.colors.angleD);
         opp._angleA._arc.show();
         opp._angleB._arc.show();
         opp._angleC._arc.show();
@@ -185,13 +185,14 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
-          Line 1 is straight, therefore angles |a| and |b| are |supplementary|, and add up to ${unit('180', '&pi;')}.
+          |Line_1| is straight, therefore angles |a| and |b| are |supplementary|. This means they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
         </p>
       `),
       modifiers: {
         supplementary: click(opp.pulseSupplementaryAngle, [opp, 0], colors.supplementary),
         a: highlight('lesson__related_angles__angleA'),
         b: highlight('lesson__related_angles__angleB'),
+        Line_1: click(opp.pulseLine, [opp, 1], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
@@ -213,8 +214,6 @@ class Content extends LessonContent {
         opp._line2,
       ],
       setSteadyState: () => {
-        // opp._angleC.setColor(layout.colors.angleC);
-        // opp._angleD.setColor(layout.colors.angleD);
         opp._angleA._arc.show();
         opp._angleB._arc.show();
         opp._angleC._arc.show();

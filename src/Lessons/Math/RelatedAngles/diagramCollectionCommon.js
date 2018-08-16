@@ -29,7 +29,6 @@ export default function makeMoveableLine(
   const line = diagram.shapes.collection(new Transform()
     .rotate(0)
     .translate(0, 0));
-  line.pulse.transformMethod = s => new Transform().scale(1, s);
   line.hasTouchableElements = true;
   line.isMovable = true;
   line.touchInBoundingRect = true;
@@ -81,6 +80,10 @@ export default function makeMoveableLine(
   );
   mid.isTouchable = true;
   mid.movementAllowed = 'translation';
+
+  end1.pulse.transformMethod = s => new Transform().scale(1, s);
+  end2.pulse.transformMethod = s => new Transform().scale(1, s);
+  mid.pulse.transformMethod = s => new Transform().scale(1, s);
 
   const increaseBorderSize = (element: DiagramElementPrimative) => {
     for (let i = 0; i < element.vertices.border[0].length; i += 1) {

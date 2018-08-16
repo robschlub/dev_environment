@@ -286,6 +286,14 @@ export default class OppositeCollection extends DiagramElementCollection {
     }
   }
 
+  pulseLine(index: number = 1) {
+    // $FlowFixMe
+    this.elements[`line${index}`]._end1.pulseScaleNow(1, 3);
+    this.elements[`line${index}`]._end2.pulseScaleNow(1, 3);
+    this.elements[`line${index}`]._mid.pulseScaleNow(1, 3);
+    this.diagram.animateNextFrame();
+  }
+
   pulseSupplementaryAngle(index: number | null = null) {
     if (index != null) {
       this.varState.supplementary = index;

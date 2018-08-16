@@ -38,10 +38,7 @@ function itemSelector(
   return outStr;
 }
 
-// const unit = (deg: string, rad: string, angleType: string, num: number = 1) => `<span id="id_${angleType}_deg${num}" class="highlight_word">${deg}&deg;</span><span id="id_${angleType}_rad${num}" class="highlight_word">${rad} radians</span>
-//   `;
-
-const unit = (deg: string, rad: string) => `<span class="lesson__unit_deg">${deg}&deg;</span><span class="lesson__unit_rad">${rad}</span>
+const unit = (deg: string, rad: string) => `<span class="lesson__unit_deg">${deg}</span><span class="lesson__unit_rad">${rad}</span>
   `;
 
 
