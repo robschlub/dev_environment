@@ -88,51 +88,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     return line;
   }
 
-  makeLineLabel(labelText: string) {
-    // const label = this.diagram.htmlText(
-    //   labelText,
-    //   'id__'
-    //   )
-    const eqn = this.diagram.equation.makeEqn();
-    eqn.createElements({ label: labelText }, this.layout.colors.line);
-
-    eqn.formAlignment.fixTo = new Point(0, 0);
-    eqn.formAlignment.hAlign = 'center';
-    eqn.formAlignment.vAlign = 'middle';
-    eqn.formAlignment.scale = 0.7;
-
-    eqn.addForm('base', ['label']);
-    eqn.setCurrentForm('base');
-
-    angle.updateAngle = (start: number, size: number) => {
-      angle._arc.angleToDraw = size;
-      angle.transform.updateRotation(start);
-      angle._label.transform.updateRotation(-start);
-
-      let labelWidth = 0;
-      let labelHeight = 0;
-      if (eqn.currentForm != null) {
-        labelWidth = eqn.currentForm.width / 2;
-        labelHeight = eqn.currentForm.height * 0.4;
-      }
-      const equationRotation = eqn.collection.transform.r();
-      // const equation
-      if (equationRotation != null) {
-        const labelPosition = polarToRect(
-          this.layout.angle.label.radius
-          + Math.max(
-            Math.abs(labelWidth * Math.cos(start + size / 2)),
-            labelHeight,
-          ),
-          size / 2,
-        );
-        angle._label.setPosition(labelPosition);
-      }
-    };
-    angle.setPosition(this.layout.line1.opposite.position);
-    return angle;
-  }
-
   makeSupplementaryAngle() {
     const arcLayout = this.layout.angle.arc;
     const arc = this.diagram.shapes.polygon(
@@ -142,6 +97,73 @@ export default class OppositeCollection extends DiagramElementCollection {
     );
     arc.setPosition(this.layout.line1.opposite.position);
     return arc;
+  }
+
+  addEquation(name: string) {
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements(
+      {
+        a: 'a',
+        a1: 'a',
+        b: 'b',
+        c: 'c',
+        d: 'd',
+        equals: ' = ',
+        minus: ' \u2212 ',
+        minus1: ' \u2212 ',
+        _180: '180º',
+        _1801: '180º',
+        pi: 'π',
+        pi1: 'π',
+        plus: ' + ',
+      },
+      this.layout.colors.diagram.text.base,
+    );
+
+    eqn.formAlignment.fixTo = eqn.collection._equals;
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 1.0;
+
+    eqn.setElem('a', this.layout.colors.angleA);
+    eqn.setElem('a1', this.layout.colors.angleA);
+    eqn.setElem('b', this.layout.colors.angleB);
+    eqn.setElem('c', this.layout.colors.angleC);
+    eqn.setElem('d', this.layout.colors.angleD);
+
+    eqn.addForm('deg_a_plus_b', ['a', 'plus', 'b', 'equals', '_180']);
+    eqn.addForm('rad_a_plus_b', ['a', 'plus', 'b', 'equals', 'pi']);
+
+    eqn.addForm('deg_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', '_180', 'minus', 'a1']);
+    eqn.addForm('rad_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', 'pi', 'minus', 'a1']);
+
+    eqn.addForm('deg_b', ['b', 'equals', '_180', 'minus', 'a1']);
+    eqn.addForm('rad_b', ['b', 'equals', 'pi', 'minus', 'a1']);
+
+    eqn.showForm = (form: string) => {
+      eqn.setCurrentForm(form);
+      eqn.render();
+    };
+    eqn.showForm('deg_a_plus_b');
+    eqn.setUnits = (units: 'deg' | 'rad') => {
+      if (units === 'deg' && eqn.currentForm.name.startsWith('rad')) {
+        eqn.showForm(`deg${eqn.currentForm.name.slice(3)}`);
+      }
+      if (units === 'rad' && eqn.currentForm.name.startsWith('deg')) {
+        eqn.showForm(`rad${eqn.currentForm.name.slice(3)}`);
+      }
+    };
+
+    this.add(name, eqn.collection);
+    this.elements[name].eqn = eqn;
+
+    return eqn;
+  }
+
+  setUnits(units: 'deg' | 'rad') {
+    if (this._equation1.isShown) {
+      this._equation1.eqn.setUnits(units);
+    }
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
@@ -245,6 +267,9 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.add('angleB', this.makeAngle('b'));
     this.add('angleC', this.makeAngle('c'));
     this.add('angleD', this.makeAngle('d'));
+    this.addEquation('equation1');
+    this.addEquation('equation2');
+    this.addEquation('equation3');
 
     this.add('supplementary', this.makeSupplementaryAngle());
 

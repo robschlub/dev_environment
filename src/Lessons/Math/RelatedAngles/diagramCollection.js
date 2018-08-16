@@ -80,10 +80,10 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this.diagram = diagram;
     this.layout = lessonLayout();
 
-    this.add('unitsSelector', this.makeUnitsSelector());
-    this.addSelector();
     this.add('parallel', new ParallelCollection(diagram, this.layout));
     this.add('opposite', new OppositeCollection(diagram, this.layout));
+    this.add('unitsSelector', this.makeUnitsSelector());
+    this.addSelector();
   }
 
   selectorClicked(title: string) {
@@ -96,7 +96,10 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  setUnits(units: string) {
+  setUnits(units: 'deg' | 'rad') {
+    if (this._opposite.isShown) {
+      this._opposite.setUnits(units);
+    }
     // const degSpans = document.getElementsByClassName('lesson__unit_deg');
     // const radSpans = document.getElementsByClassName('lesson__unit_rad');
     // if (units === 'rad') {

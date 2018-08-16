@@ -222,7 +222,9 @@ class Content extends LessonContent {
         opp._angleB.eqn.showForm('b');
         opp._angleC.eqn.showForm('c');
         opp._angleD.eqn.showForm('d');
+        opp._equation1.eqn.showForm('deg_a_plus_b');
         diag._unitsSelector.select('deg');
+        opp._equation1.eqn.setPosition(layout.equation1.aPlusB);
       },
     });
   }

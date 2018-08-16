@@ -71,6 +71,10 @@ export default function lessonLayout() {
     label: {
       radius: 0.5,
     },
-  }
+  };
+  layout.equation1 = {
+    aPlusB: new Point(-1.7, -1),
+  };
+
   return layout;
 }
