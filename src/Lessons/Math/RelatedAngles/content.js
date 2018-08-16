@@ -223,6 +223,7 @@ class Content extends LessonContent {
         opp._angleB.eqn.showForm('b');
         opp._angleC.eqn.showForm('c');
         opp._angleD.eqn.showForm('d');
+        diag._unitsSelector.select('deg');
       },
     });
   }

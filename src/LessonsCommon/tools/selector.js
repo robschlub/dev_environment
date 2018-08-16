@@ -475,6 +475,7 @@ export function makeSelectorText(
   selector.hasTouchableElements = true;
   selector.setPosition(0, yPosition);
   selectorHandlerText(firstSelection);
+  selector.select = selection => selectorHandlerText(selection);
   return selector;
 }
 
