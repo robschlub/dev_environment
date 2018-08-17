@@ -5,7 +5,7 @@ import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/d
 // eslint-disable-next-line import/no-cycle
 import RelatedAnglesCollection from './diagramCollection';
 // eslint-disable-next-line import/no-cycle
-import type { MoveableLineType } from './diagramCollection';
+import type { MoveableLineType } from './diagramCollectionCommon';
 import {
   Point, minAngleDiff, Transform,
 } from '../../../js/diagram/tools/g2';

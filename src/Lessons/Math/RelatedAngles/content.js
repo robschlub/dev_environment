@@ -1,7 +1,7 @@
 // @flow
 
 import {
-  LessonContent, clickWord, onClickId, click, highlight, centerV, unit,
+  LessonContent, click, highlight, centerV, unit,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 import Definition from '../../../LessonsCommon/tools/definition';

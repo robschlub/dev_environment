@@ -42,6 +42,10 @@ export default class OppositeCollection extends DiagramElementCollection {
     supplementary: number;
   };
 
+  _equation1: {
+    eqn: Equation;
+  } & DiagramElementCollection;
+
   makeLine(labelText: string) {
     // $FlowFixMe
     const line: labeledLineType = makeMoveableLine(this.diagram, this.layout);
@@ -140,19 +144,7 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('deg_b', ['b', 'equals', '_180', 'minus', 'a1']);
     eqn.addForm('rad_b', ['b', 'equals', 'pi', 'minus', 'a1']);
 
-    eqn.showForm = (form: string) => {
-      eqn.setCurrentForm(form);
-      eqn.render();
-    };
     eqn.showForm('deg_a_plus_b');
-    eqn.setUnits = (units: 'deg' | 'rad') => {
-      if (units === 'deg' && eqn.currentForm.name.startsWith('rad')) {
-        eqn.showForm(`deg${eqn.currentForm.name.slice(3)}`);
-      }
-      if (units === 'rad' && eqn.currentForm.name.startsWith('deg')) {
-        eqn.showForm(`rad${eqn.currentForm.name.slice(3)}`);
-      }
-    };
 
     this.add(name, eqn.collection);
     this.elements[name].eqn = eqn;
@@ -233,7 +225,6 @@ export default class OppositeCollection extends DiagramElementCollection {
         labelHeight = eqn.currentForm.height * 0.4;
       }
       const equationRotation = eqn.collection.transform.r();
-      // const equation
       if (equationRotation != null) {
         const labelPosition = polarToRect(
           this.layout.angle.label.radius
@@ -300,10 +291,6 @@ export default class OppositeCollection extends DiagramElementCollection {
             this._angleC.updateAngle(r1 + Math.PI, Math.PI - Math.abs(minAngle));
             this._angleD.updateAngle(r2 + Math.PI, Math.abs(minAngle));
           }
-          // this._angleA.setPosition(this._line1.transform.t() || new Point(0, 0));
-          // this._angleB.setPosition(this._line1.transform.t() || new Point(0, 0));
-          // this._angleC.setPosition(this._line1.transform.t() || new Point(0, 0));
-          // this._angleD.setPosition(this._line1.transform.t() || new Point(0, 0));
         }
         this._line1.updateLabel(r1);
         this._line2.updateLabel(r2);

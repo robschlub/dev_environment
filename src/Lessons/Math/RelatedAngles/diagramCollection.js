@@ -47,7 +47,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     const list = new SelectorList();
     list.add('deg', 'degrees');
     list.add('rad', 'radians');
-    const selectorClicked = (selectedUnits: string) => {
+    const selectorClicked = (selectedUnits: 'deg' | 'rad') => {
       const degSpans = document.getElementsByClassName('lesson__unit_deg');
       const radSpans = document.getElementsByClassName('lesson__unit_rad');
       if (selectedUnits === 'rad') {
