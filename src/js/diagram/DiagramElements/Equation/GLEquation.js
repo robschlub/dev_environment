@@ -912,8 +912,10 @@ export class EquationForm extends Elements {
     }
     elements.forEach((e) => {
       if (appear) {
-        e.disolveInWithDelay(delay, time, callbackToUse);
-        callbackToUse = null;
+        if (delay > 0) {
+          e.disolveInWithDelay(delay, time, callbackToUse);
+          callbackToUse = null;
+        }
       } else {
         e.disolveOutWithDelay(delay, time, callbackToUse);
         callbackToUse = null;
@@ -1000,14 +1002,19 @@ export class EquationForm extends Elements {
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
 
     const currentTransforms = this.collection.getElementTransforms();
-
     // this.arrange(scale, xAlign, yAlign, fixElement);
     this.setPositions();
     const animateToTransforms = this.collection.getElementTransforms();
+
     this.collection.setElementTransforms(currentTransforms);
     this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);
-    this.collection.animateToTransforms(animateToTransforms, time, 0);
-    this.dissolveElements(elementsToShow, true, time, 0.5, callback);
+    const t = this.collection.animateToTransforms(
+      animateToTransforms,
+      time,
+      0,
+      // this.dissolveElements.bind(this, elementsToShow, true, 0, 0.5, callback),
+    );
+    this.dissolveElements(elementsToShow, true, t + 0.001, 0.5, callback);
   }
 
   animateTo(
@@ -1033,7 +1040,7 @@ export class EquationForm extends Elements {
     this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);
+    this.dissolveElements(elementsToHide, false, 0.00, 0.01, null);
     this.collection.animateToTransforms(animateToTransforms, time, 0);
     this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
@@ -1154,6 +1161,7 @@ export class Equation {
   diagramLimits: Rect;
   firstTransform: Transform;
   form: Object;
+  formSeries: Array<EquationForm>;
   drawContext2D: DrawContext2D;
   currentForm: ?EquationForm;
   currentFormName: string;
@@ -1296,6 +1304,45 @@ export class Equation {
     Object.keys(this.form).forEach((key) => {
       this.scaleForm(key, scale);
     });
+  }
+
+  setFormSeries(series: Array<string | EquationForm>) {
+    this.formSeries = [];
+    series.forEach((form) => {
+      if (typeof form === 'string') {
+        this.formSeries.push(this.form[form]);
+      } else {
+        this.formSeries.push(form);
+      }
+    });
+  }
+
+  nextForm(name: ?string) {
+    this.collection.stop();
+    this.collection.stop();
+    let nextIndex = 0;
+    if (name == null) {
+      let index = 0;
+      if (this.currentForm != null) {
+        index = this.formSeries.indexOf(this.currentForm);
+        if (index < 0) {
+          index = 0;
+        }
+      }
+      nextIndex = index + 1;
+      if (nextIndex === this.formSeries.length) {
+        nextIndex = 0;
+      }
+    } else {
+      this.formSeries.forEach((form, index) => {
+        if (form.name === name) {
+          nextIndex = index;
+        }
+      });
+    }
+
+    this.formSeries[nextIndex].animatePositionsTo(2);
+    this.setCurrentForm(this.formSeries[nextIndex]);
   }
 
   render() {

@@ -49,7 +49,7 @@ function selectorHandler(
     if (col.id !== selectedId) {
       col.classList.remove('lesson__selector_title_selected');
       col.classList.add('lesson__selector_title_not_selected');
-      
+
       const subTextCol = subTextCols[index];
       if (subTextCol !== '' && type === 'vertical') {
         subTextCol.classList

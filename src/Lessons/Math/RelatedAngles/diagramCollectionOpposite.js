@@ -136,6 +136,7 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.formAlignment.scale = 1.0;
 
     eqn.setElem('a', this.layout.colors.angleA);
+    // eqn.collection._a.animate.transform.translation.style = 'linear';
     eqn.setElem('a1', this.layout.colors.angleA);
     eqn.setElem('b', this.layout.colors.angleB);
     eqn.setElem('c', this.layout.colors.angleC);
@@ -150,12 +151,10 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('deg_b', ['b', 'equals', '_180', 'minus', 'a1']);
     eqn.addForm('rad_b', ['b', 'equals', 'pi', 'minus', 'a1']);
 
-    // eqn.addForm('deg_b_plus_c', ['b', 'plus', 'c', 'equals', '_180']);
-    // eqn.addForm('rad_b_plus_c', ['b', 'plus', 'c', 'equals', 'pi']);
     eqn.addForm('deg_c', ['c', 'equals', '_180', 'minus', 'b']);
     eqn.addForm('rad_c', ['c', 'equals', 'pi', 'minus', 'b']);
-    eqn.addForm('deg_c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a1', 'rb']);
-    eqn.addForm('rad_c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a1', 'rb']);
+    eqn.addForm('deg_c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb']);
+    eqn.addForm('rad_c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb']);
     eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
 
     eqn.showForm('deg_a_plus_b');
@@ -358,6 +357,10 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  nextEquation2Form() {
+    this._equation2.eqn.nextForm();
+    this.diagram.animateNextFrame();
+  }
 
   toggleOppositeAngles() {
     if (this._angleA.isShown) {

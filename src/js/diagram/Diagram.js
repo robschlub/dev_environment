@@ -691,6 +691,7 @@ class Diagram {
     if (this.inTransition) {
       return false;
     }
+
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
     // console.log(pixelPoint)

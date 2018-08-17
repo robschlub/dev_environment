@@ -1269,6 +1269,11 @@ class DiagramElement {
     this.animate.color.toDisolve = 'in';
     // this.state.disolving = 'in';
     this.animateColorPlan([phase1, phase2], checkCallback(callback));
+    // if (delay === 0) {
+      // this.animateColorPlan([phase2], checkCallback(callback));
+    // } else {
+    //   this.animateColorPlan([phase1, phase2], checkCallback(callback));
+    // }
   }
 
   disolveOut(
@@ -1298,6 +1303,11 @@ class DiagramElement {
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
     this.animate.color.toDisolve = 'out';
     this.animateColorPlan([phase1, phase2], checkCallback(callback));
+    // if (delay === 0) {
+    //   this.animateColorPlan([phase2], checkCallback(callback));
+    // } else {
+    //   this.animateColorPlan([phase1, phase2], checkCallback(callback));
+    // }
   }
 
   // With update only first instace of translation in the transform order
@@ -2328,24 +2338,32 @@ class DiagramElementCollection extends DiagramElement {
     // translationPath: (Point, Point, number) => Point = linearPath,
   ) {
     let callbackMethod = callback;
+    let timeToAnimate = 0;
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
       if (element.name in elementTransforms) {
         if (element.isShown) {
-          element.animateTo(
-            elementTransforms[element.name],
-            time,
-            rotDirection,
-            callbackMethod,
-            easeFunction,
-          );
-          // only want to send callback once
-          callbackMethod = null;
+          if (!elementTransforms[element.name].isEqualTo(element.transform)) {
+            element.animateTo(
+              elementTransforms[element.name],
+              time,
+              rotDirection,
+              callbackMethod,
+              easeFunction,
+            );
+            // only want to send callback once
+            callbackMethod = null;
+            timeToAnimate = time;
+          }
         } else {
           element.transform = elementTransforms[element.name]._dup();
         }
       }
     }
+    if (timeToAnimate === 0 && callbackMethod != null) {
+      callbackMethod(true);
+    }
+    return timeToAnimate;
   }
 
   getAllElements() {

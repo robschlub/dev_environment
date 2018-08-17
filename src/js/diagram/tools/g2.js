@@ -1108,6 +1108,32 @@ class Transform {
     return true;
   }
 
+  isEqualTo(transformToCompare: Transform): boolean {
+    if (transformToCompare.order.length !== this.order.length) {
+      return false;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      if (this.order[i].constructor.name !==
+          transformToCompare.order[i].constructor.name) {
+        return false;
+      }
+      if (this.order[i] instanceof Translation || this.order[i] instanceof Scale) {
+        if (transformToCompare.order[i].x !== this.order[i].x) {
+          return false;
+        }
+        if (transformToCompare.order[i].y !== this.order[i].y) {
+          return false;
+        }
+      }
+      if (this.order[i] instanceof Rotation) {
+        if (transformToCompare.r !== this.order[i].r) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // Subtract a transform from the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
