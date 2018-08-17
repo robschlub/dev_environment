@@ -101,8 +101,12 @@ class Content extends LessonContent {
           opp._line1.transform = parallel._line1.transform._dup();
           opp._line2.transform = parallel._line2.transform._dup();
         }
+        opp._angleA.setColor(layout.colors.angleA);
+        opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.angleA);
         opp._angleD.setColor(layout.colors.angleB);
+        opp._line1.setColor(layout.colors.line);
+        opp._line2.setColor(layout.colors.line);
       },
       showOnly: [
         opp,
@@ -154,8 +158,12 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
+        opp._angleA.setColor(layout.colors.angleA);
+        opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.angleC);
         opp._angleD.setColor(layout.colors.angleD);
+        opp._line1.setColor(layout.colors.line);
+        opp._line2.setColor(layout.colors.line);
       },
       showOnly: [
         opp,
@@ -187,6 +195,9 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_40">
           |Line_1| is straight, therefore angles |a| and |b| are |supplementary|. This means they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
         </p>
+        <p class="lesson__diagram_text_p_width_40" style="margin-top:18%">
+          Therefore:
+        </p>
       `),
       modifiers: {
         supplementary: click(opp.pulseSupplementaryAngle, [opp, 0], colors.supplementary),
@@ -196,8 +207,11 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
+        opp._angleA.setColor(layout.colors.angleA);
+        opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.disabled);
         opp._angleD.setColor(layout.colors.disabled);
+        opp._line1.setColor(layout.colors.line);
         opp._line2.setColor(layout.colors.disabled);
       },
       showOnly: [
@@ -223,8 +237,66 @@ class Content extends LessonContent {
         opp._angleC.eqn.showForm('c');
         opp._angleD.eqn.showForm('d');
         opp._equation1.eqn.showForm('deg_a_plus_b');
+        opp._equation2.eqn.showForm('deg_b');
         diag._unitsSelector.select('deg');
         opp._equation1.eqn.setPosition(layout.equation1.aPlusB);
+        opp._equation2.eqn.setPosition(layout.equation2.b);
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          |Line_2| is straight, therefore angles |b| and |c| are |supplementary|. 
+        </p>
+        <p class="lesson__diagram_text_p_width_40" style="margin-top:18%">
+          Therefore:
+        </p>
+      `),
+      modifiers: {
+        supplementary: click(opp.pulseSupplementaryAngle, [opp, 1], colors.supplementary),
+        c: highlight('lesson__related_angles__angleC'),
+        b: highlight('lesson__related_angles__angleB'),
+        Line_2: click(opp.pulseLine, [opp, 1], colors.line),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('opposite');
+        opp._angleA.setColor(layout.colors.disabled);
+        opp._angleB.setColor(layout.colors.angleB);
+        opp._angleC.setColor(layout.colors.angleC);
+        opp._angleD.setColor(layout.colors.disabled);
+        opp._line1.setColor(layout.colors.disabled);
+        opp._line2.setColor(layout.colors.line);
+      },
+      showOnly: [
+        opp,
+        opp._angleA,
+        opp._angleB,
+        opp._angleC,
+        opp._angleD,
+      ],
+      show: [
+        diag._unitsSelector,
+        diag._selector,
+        opp._line1,
+        opp._line2,
+      ],
+      setSteadyState: () => {
+        opp._angleA._arc.show();
+        opp._angleB._arc.show();
+        opp._angleC._arc.show();
+        opp._angleD._arc.show();
+        opp._angleA.eqn.showForm('a');
+        opp._angleB.eqn.showForm('b');
+        opp._angleC.eqn.showForm('c');
+        opp._angleD.eqn.showForm('d');
+        opp._equation1.eqn.showForm('deg_c');
+        opp._equation2.eqn.showForm('deg_c_equals_a_full');
+        opp._equation3.eqn.showForm('c_equals_a');
+        diag._unitsSelector.select('deg');
+        opp._equation1.eqn.setPosition(layout.equation1.bPlusC);
+        opp._equation2.eqn.setPosition(layout.equation2.c);
+        opp._equation3.eqn.setPosition(layout.equation3.cEqualsA);
       },
     });
   }

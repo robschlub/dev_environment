@@ -46,6 +46,10 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
+  _equation2: {
+    eqn: Equation;
+  } & DiagramElementCollection;
+
   makeLine(labelText: string) {
     // $FlowFixMe
     const line: labeledLineType = makeMoveableLine(this.diagram, this.layout);
@@ -120,6 +124,8 @@ export default class OppositeCollection extends DiagramElementCollection {
         pi: 'π',
         pi1: 'π',
         plus: ' + ',
+        lb: '(',
+        rb: ')',
       },
       this.layout.colors.diagram.text.base,
     );
@@ -144,6 +150,14 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('deg_b', ['b', 'equals', '_180', 'minus', 'a1']);
     eqn.addForm('rad_b', ['b', 'equals', 'pi', 'minus', 'a1']);
 
+    // eqn.addForm('deg_b_plus_c', ['b', 'plus', 'c', 'equals', '_180']);
+    // eqn.addForm('rad_b_plus_c', ['b', 'plus', 'c', 'equals', 'pi']);
+    eqn.addForm('deg_c', ['c', 'equals', '_180', 'minus', 'b']);
+    eqn.addForm('rad_c', ['c', 'equals', 'pi', 'minus', 'b']);
+    eqn.addForm('deg_c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a1', 'rb']);
+    eqn.addForm('rad_c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a1', 'rb']);
+    eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
+
     eqn.showForm('deg_a_plus_b');
 
     this.add(name, eqn.collection);
@@ -155,6 +169,9 @@ export default class OppositeCollection extends DiagramElementCollection {
   setUnits(units: 'deg' | 'rad') {
     if (this._equation1.isShown) {
       this._equation1.eqn.setUnits(units);
+    }
+    if (this._equation2.isShown) {
+      this._equation2.eqn.setUnits(units);
     }
   }
 

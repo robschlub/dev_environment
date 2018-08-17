@@ -73,7 +73,17 @@ export default function lessonLayout() {
     },
   };
   layout.equation1 = {
-    aPlusB: new Point(-1.7, -1),
+    aPlusB: new Point(-1.5, -0.5),
+    bPlusC: new Point(-1.5, -0.5),
+  };
+
+  layout.equation2 = {
+    b: new Point(-1.5, -1.2),
+    c: new Point(-1.5, -1.2),
+  };
+
+  layout.equation3 = {
+    cEqualsA: new Point(-1.5, -1.6),
   };
 
   return layout;
