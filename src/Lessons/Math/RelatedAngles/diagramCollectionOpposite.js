@@ -136,7 +136,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.formAlignment.scale = 1.0;
 
     eqn.setElem('a', this.layout.colors.angleA);
-    // eqn.collection._a.animate.transform.translation.style = 'linear';
     eqn.setElem('a1', this.layout.colors.angleA);
     eqn.setElem('b', this.layout.colors.angleB);
     eqn.setElem('c', this.layout.colors.angleC);

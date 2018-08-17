@@ -79,11 +79,11 @@ export default function lessonLayout() {
 
   layout.equation2 = {
     b: new Point(-1.5, -1.2),
-    c: new Point(-1.5, -1.2),
+    c: new Point(-1.5, -0.9),
   };
 
   layout.equation3 = {
-    cEqualsA: new Point(-1.5, -1.6),
+    cEqualsA: new Point(-1.5, -1.3),
   };
 
   return layout;
