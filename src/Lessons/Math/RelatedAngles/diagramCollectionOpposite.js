@@ -141,23 +141,23 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.setElem('c', this.layout.colors.angleC);
     eqn.setElem('d', this.layout.colors.angleD);
 
-    eqn.addForm('deg_a_plus_b', ['a', 'plus', 'b', 'equals', '_180']);
-    eqn.addForm('rad_a_plus_b', ['a', 'plus', 'b', 'equals', 'pi']);
+    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', '_180', 'deg']);
+    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', 'pi'], 'rad');
 
-    eqn.addForm('deg_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', '_180', 'minus', 'a1']);
-    eqn.addForm('rad_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', 'pi', 'minus', 'a1']);
+    // eqn.addForm('deg_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', '_180', 'minus', 'a1']);
+    // eqn.addForm('rad_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', 'pi', 'minus', 'a1']);
 
-    eqn.addForm('deg_b', ['b', 'equals', '_180', 'minus', 'a1']);
-    eqn.addForm('rad_b', ['b', 'equals', 'pi', 'minus', 'a1']);
+    eqn.addForm('b', ['b', 'equals', '_180', 'minus', 'a1'], 'deg');
+    eqn.addForm('b', ['b', 'equals', 'pi', 'minus', 'a1'], 'rad');
 
-    eqn.addForm('deg_c', ['c', 'equals', '_180', 'minus', 'b']);
-    eqn.addForm('rad_c', ['c', 'equals', 'pi', 'minus', 'b']);
-    eqn.addForm('deg_c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb']);
-    eqn.addForm('rad_c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb']);
+    eqn.addForm('c', ['c', 'equals', '_180', 'minus', 'b'], 'deg');
+    eqn.addForm('c', ['c', 'equals', 'pi', 'minus', 'b'], 'rad');
+    eqn.addForm('c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb'], 'deg');
+    eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], 'rad');
     eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
 
     eqn.showForm('deg_a_plus_b');
-
+    console.log(eqn)
     this.add(name, eqn.collection);
     this.elements[name].eqn = eqn;
 

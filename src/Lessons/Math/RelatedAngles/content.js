@@ -236,9 +236,9 @@ class Content extends LessonContent {
         opp._angleB.eqn.showForm('b');
         opp._angleC.eqn.showForm('c');
         opp._angleD.eqn.showForm('d');
-        opp._equation1.eqn.showForm('deg_a_plus_b');
-        opp._equation2.eqn.showForm('deg_b');
         diag._unitsSelector.select('deg');
+        opp._equation1.eqn.showForm('a_plus_b');
+        opp._equation2.eqn.showForm('b');
         opp._equation1.eqn.setPosition(layout.equation1.aPlusB);
         opp._equation2.eqn.setPosition(layout.equation2.b);
       },
@@ -287,10 +287,10 @@ class Content extends LessonContent {
         opp._angleB.eqn.showForm('b');
         opp._angleC.eqn.showForm('c');
         opp._angleD.eqn.showForm('d');
-        opp._equation1.eqn.showForm('deg_c');
-        opp._equation2.eqn.showForm('deg_c_equals_a_full');
-        opp._equation3.eqn.showForm('c_equals_a');
         diag._unitsSelector.select('deg');
+        opp._equation1.eqn.showForm('c');
+        opp._equation2.eqn.showForm('c_equals_a_full');
+        opp._equation3.eqn.showForm('c_equals_a');
         opp._equation1.eqn.setPosition(layout.equation1.bPlusC);
         opp._equation2.eqn.setPosition(layout.equation2.c);
         opp._equation3.eqn.setPosition(layout.equation3.cEqualsA);
