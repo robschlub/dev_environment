@@ -1420,7 +1420,7 @@ export class Equation {
     formOrName: EquationForm | string,
     formType: ?string,
   ) {
-    console.log(formOrName)
+    // console.log(formOrName)
     if (typeof formOrName === 'string') {
       if (formOrName in this.form) {
         let formTypeToUse = formType;
@@ -1431,7 +1431,7 @@ export class Equation {
             formTypeToUse = possibleFormTypes[0];
           }
         }
-        console.log(formTypeToUse, this.formTypeOrder)
+        // console.log(formTypeToUse, this.formTypeOrder)
         this.setCurrentForm(formOrName, formTypeToUse);
         this.render();
       }

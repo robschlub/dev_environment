@@ -164,6 +164,7 @@ export default class OppositeCollection extends DiagramElementCollection {
     this._equation1.eqn.setUnits(units);
     this._equation2.eqn.setUnits(units);
     this._equation3.eqn.setUnits(units);
+    this._angleB.eqn.setUnits(units);
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
@@ -195,13 +196,15 @@ export default class OppositeCollection extends DiagramElementCollection {
 
     eqn.addForm('a', ['a']);
     eqn.addForm('b', ['b']);
+    eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
+    eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
     eqn.addForm('c', ['c']);
     eqn.addForm('d', ['d']);
 
-    eqn.showForm = (form: string) => {
-      eqn.setCurrentForm(form);
-      eqn.render();
-    };
+    // eqn.showForm = (form: string) => {
+    //   eqn.setCurrentForm(form);
+    //   eqn.render();
+    // };
     eqn.showForm(name);
 
     const arcLayout = this.layout.angle.arc;
@@ -221,29 +224,58 @@ export default class OppositeCollection extends DiagramElementCollection {
     angle.add('label', label);
     angle.eqn = eqn;
 
+    // line.updateLabel = (newAngle: number) => {
+    //   line._label.transform.updateRotation(-newAngle);
+    //   let labelWidth = 0;
+    //   let labelHeight = 0;
+    //   if (eqn.currentForm != null) {
+    //     labelWidth = eqn.currentForm.width / 2 + 0.04;
+    //     labelHeight = eqn.currentForm.height / 2 + 0.04;
+    //   }
+    //   // const labelDistance = Math.min(
+    //   //   labelHeight / Math.abs(Math.sin(newAngle)),
+    //   //   labelWidth / Math.abs(Math.cos(newAngle)),
+    //   // ) + this.layout.moveableLine.label.length;
+    //   const a = labelWidth + this.layout.moveableLine.label.length;
+    //   const b = labelHeight + this.layout.moveableLine.label.length;
+    //   const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
+    //   line._label.setPosition(r, 0);
+    // };
+
     angle.updateAngle = (start: number, size: number) => {
       angle._arc.angleToDraw = size;
       angle.transform.updateRotation(start);
       angle._label.transform.updateRotation(-start);
 
+      // let labelWidth = 0;
+      // let labelHeight = 0;
+      // if (eqn.currentForm != null) {
+      //   labelWidth = eqn.currentForm.width / 2;
+      //   labelHeight = eqn.currentForm.height * 0.4;
+      // }
       let labelWidth = 0;
       let labelHeight = 0;
       if (eqn.currentForm != null) {
-        labelWidth = eqn.currentForm.width / 2;
-        labelHeight = eqn.currentForm.height * 0.4;
+        labelWidth = eqn.currentForm.width / 2 + 0.04;
+        labelHeight = eqn.currentForm.height / 2 + 0.04;
       }
-      const equationRotation = eqn.collection.transform.r();
-      if (equationRotation != null) {
-        const labelPosition = polarToRect(
-          this.layout.angle.label.radius
-          + Math.max(
-            Math.abs(labelWidth * Math.cos(start + size / 2)),
-            labelHeight,
-          ),
-          size / 2,
-        );
-        angle._label.setPosition(labelPosition);
-      }
+      // const equationRotation = eqn.collection.transform.r();
+      // if (equationRotation != null) {
+      //   const labelPosition = polarToRect(
+      //     this.layout.angle.label.radius
+      //     + Math.max(
+      //       Math.abs(labelWidth * Math.cos(start + size / 2)),
+      //       labelHeight,
+      //     ),
+      //     size / 2,
+      //   );
+      //   angle._label.setPosition(labelPosition);
+      // }
+      const a = labelWidth + this.layout.angle.label.radius;
+      const b = labelHeight + this.layout.angle.label.radius;
+      const r = a * b / Math.sqrt((b * Math.cos(start + size / 2)) ** 2 + (a * Math.sin(start + size / 2)) ** 2);
+      const labelPosition = polarToRect(r, size / 2)
+      angle._label.setPosition(labelPosition);
     };
     angle.setPosition(this.layout.line1.opposite.position);
     return angle;

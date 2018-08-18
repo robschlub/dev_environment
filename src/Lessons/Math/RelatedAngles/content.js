@@ -279,15 +279,15 @@ class Content extends LessonContent {
         opp._line2,
       ],
       setSteadyState: () => {
+        // diag._unitsSelector.select('deg');
         opp._angleA._arc.show();
         opp._angleB._arc.show();
         opp._angleC._arc.show();
         opp._angleD._arc.show();
         opp._angleA.eqn.showForm('a');
-        opp._angleB.eqn.showForm('b');
+        opp._angleB.eqn.showForm('b_equals');
         opp._angleC.eqn.showForm('c');
         opp._angleD.eqn.showForm('d');
-        diag._unitsSelector.select('deg');
         opp._equation1.eqn.showForm('c');
         opp._equation2.eqn.showForm('c_equals_a_full');
         opp._equation3.eqn.showForm('c_equals_a');
