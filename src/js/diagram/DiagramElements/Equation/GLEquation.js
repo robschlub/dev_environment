@@ -1400,9 +1400,11 @@ export class Equation {
     if (units === 'rad') {
       this.formTypeOrder = ['rad', 'base'];
     }
-    const form = this.currentForm;
-    if (form != null) {
-      this.showForm(form.name);
+    if (this.collection.isShown) {
+      const form = this.currentForm;
+      if (form != null) {
+        this.showForm(form.name);
+      }
     }
     // if (this.currentForm != null) {
     //   if (units === 'deg' && this.currentForm.name.startsWith('rad')) {
@@ -1418,6 +1420,7 @@ export class Equation {
     formOrName: EquationForm | string,
     formType: ?string,
   ) {
+    console.log(formOrName)
     if (typeof formOrName === 'string') {
       if (formOrName in this.form) {
         let formTypeToUse = formType;
@@ -1428,6 +1431,7 @@ export class Equation {
             formTypeToUse = possibleFormTypes[0];
           }
         }
+        console.log(formTypeToUse, this.formTypeOrder)
         this.setCurrentForm(formOrName, formTypeToUse);
         this.render();
       }

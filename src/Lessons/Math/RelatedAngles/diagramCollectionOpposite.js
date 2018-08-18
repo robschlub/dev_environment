@@ -144,9 +144,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', '_180', 'deg']);
     eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', 'pi'], 'rad');
 
-    // eqn.addForm('deg_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', '_180', 'minus', 'a1']);
-    // eqn.addForm('rad_a_plus_b_minus_a', ['a', 'plus', 'b', 'minus1', 'a1', 'equals', 'pi', 'minus', 'a1']);
-
     eqn.addForm('b', ['b', 'equals', '_180', 'minus', 'a1'], 'deg');
     eqn.addForm('b', ['b', 'equals', 'pi', 'minus', 'a1'], 'rad');
 
@@ -164,12 +161,9 @@ export default class OppositeCollection extends DiagramElementCollection {
   }
 
   setUnits(units: 'deg' | 'rad') {
-    if (this._equation1.isShown) {
-      this._equation1.eqn.setUnits(units);
-    }
-    if (this._equation2.isShown) {
-      this._equation2.eqn.setUnits(units);
-    }
+    this._equation1.eqn.setUnits(units);
+    this._equation2.eqn.setUnits(units);
+    this._equation3.eqn.setUnits(units);
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
