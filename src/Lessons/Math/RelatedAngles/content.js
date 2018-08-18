@@ -279,7 +279,6 @@ class Content extends LessonContent {
         opp._line2,
       ],
       setSteadyState: () => {
-        // diag._unitsSelector.select('deg');
         opp._angleA._arc.show();
         opp._angleB._arc.show();
         opp._angleC._arc.show();
@@ -294,10 +293,6 @@ class Content extends LessonContent {
         opp._equation1.eqn.setPosition(layout.equation1.bPlusC);
         opp._equation2.eqn.setPosition(layout.equation2.c);
         opp._equation3.eqn.setPosition(layout.equation3.cEqualsA);
-        // opp._equation2.eqn.setFormSeries(['deg_c', 'deg_c_equals_a_full', 'c_equals_a']);
-        // opp._equation2.isTouchable = true;
-        // opp._equation2.touchInBoundingRect = true;
-        // opp._equation2.onClick = opp.nextEquation2Form.bind(opp);
       },
     });
   }
