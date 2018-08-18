@@ -157,7 +157,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
 
     eqn.showForm('deg_a_plus_b');
-    console.log(eqn)
     this.add(name, eqn.collection);
     this.elements[name].eqn = eqn;
 

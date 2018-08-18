@@ -1402,7 +1402,6 @@ export class Equation {
     }
     const form = this.currentForm;
     if (form != null) {
-      console.log("here", form, this.formTypeOrder);
       this.showForm(form.name);
     }
     // if (this.currentForm != null) {
@@ -1429,7 +1428,6 @@ export class Equation {
             formTypeToUse = possibleFormTypes[0];
           }
         }
-        console.log(formTypeToUse);
         this.setCurrentForm(formOrName, formTypeToUse);
         this.render();
       }
