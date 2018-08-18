@@ -1420,6 +1420,7 @@ export class Equation {
     formOrName: EquationForm | string,
     formType: ?string,
   ) {
+    // console.log("this", this)
     // console.log(formOrName)
     if (typeof formOrName === 'string') {
       if (formOrName in this.form) {

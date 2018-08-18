@@ -201,12 +201,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('c', ['c']);
     eqn.addForm('d', ['d']);
 
-    // eqn.showForm = (form: string) => {
-    //   eqn.setCurrentForm(form);
-    //   eqn.render();
-    // };
-    eqn.showForm(name);
-
     const arcLayout = this.layout.angle.arc;
 
     const color = this.layout.colors[`angle${name.toUpperCase()}`];
@@ -240,6 +234,18 @@ export default class OppositeCollection extends DiagramElementCollection {
       const labelPosition = polarToRect(r, size / 2)
       angle._label.setPosition(labelPosition);
     };
+
+    eqn.showForm = (form: string) => {
+      eqn.__proto__.showForm.call(eqn, form);
+      // eqn.render();
+      const start = angle.transform.r();
+      const size = angle._arc.angleToDraw;
+      if (start != null) {
+        angle.updateAngle(start, size);
+      }
+    };
+    eqn.showForm(name);
+
     angle.setPosition(this.layout.line1.opposite.position);
     return angle;
   }
