@@ -230,13 +230,14 @@ export default class OppositeCollection extends DiagramElementCollection {
       }
       const a = labelWidth + this.layout.angle.label.radius;
       const b = labelHeight + this.layout.angle.label.radius;
-      const r = a * b / Math.sqrt((b * Math.cos(start + size / 2)) ** 2 + (a * Math.sin(start + size / 2)) ** 2);
-      const labelPosition = polarToRect(r, size / 2)
+      const r = a * b / Math.sqrt((b * Math.cos(start + size / 2)) ** 2
+        + (a * Math.sin(start + size / 2)) ** 2);
+      const labelPosition = polarToRect(r, size / 2);
       angle._label.setPosition(labelPosition);
     };
 
     eqn.showForm = (form: string) => {
-      eqn.__proto__.showForm.call(eqn, form);
+      Object.getPrototypeOf(eqn).showForm.call(eqn, form);
       // eqn.render();
       const start = angle.transform.r();
       const size = angle._arc.angleToDraw;
@@ -291,14 +292,14 @@ export default class OppositeCollection extends DiagramElementCollection {
           const minAngle = minAngleDiff(r2, r1);
           if (minAngle > 0) {
             this._angleA.updateAngle(r1, minAngle);
-            this._angleB.updateAngle(r2, Math.PI - minAngle);
+            this._angleB.updateAngle(r1 + Math.PI - (Math.PI - minAngle), Math.PI - minAngle);
             this._angleC.updateAngle(r1 + Math.PI, minAngle);
-            this._angleD.updateAngle(r2 + Math.PI, Math.PI - minAngle);
+            this._angleD.updateAngle(r1 + 2 * Math.PI - (Math.PI - minAngle), Math.PI - minAngle);
           } else {
             this._angleA.updateAngle(r1, Math.PI - Math.abs(minAngle));
-            this._angleB.updateAngle(r2, Math.abs(minAngle));
+            this._angleB.updateAngle(r1 + Math.PI - Math.abs(minAngle), Math.abs(minAngle));
             this._angleC.updateAngle(r1 + Math.PI, Math.PI - Math.abs(minAngle));
-            this._angleD.updateAngle(r2 + Math.PI, Math.abs(minAngle));
+            this._angleD.updateAngle(r1 + 2 * Math.PI - Math.abs(minAngle), Math.abs(minAngle));
           }
         }
         this._line1.updateLabel(r1);
