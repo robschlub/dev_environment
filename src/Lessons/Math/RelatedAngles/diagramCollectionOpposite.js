@@ -153,6 +153,14 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], 'rad');
     eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
 
+    // eqn.addForm('a_plus_d', ['a', 'plus', 'd', 'equals', '_180', 'deg']);
+    // eqn.addForm('a_plus_d', ['a', 'plus', 'd', 'equals', 'pi'], 'rad');
+
+    eqn.addForm('d', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
+    eqn.addForm('d', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+
+    eqn.addForm('d_equals_b', ['d', 'equals', 'b']);
+
     eqn.showForm('deg_a_plus_b');
     this.add(name, eqn.collection);
     this.elements[name].eqn = eqn;

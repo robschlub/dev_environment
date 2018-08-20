@@ -295,6 +295,98 @@ class Content extends LessonContent {
         opp._equation3.eqn.setPosition(layout.equation3.cEqualsA);
       },
     });
+
+    this.addSection({
+      setContent: `
+        <p class="lesson__diagram_text_p_width_40" style="margin-top:20%">
+          Also, as |Line_2| is straight, angles |a| and |d| are |supplementary|. 
+        </p>
+      `,
+      modifiers: {
+        supplementary: click(opp.pulseSupplementaryAngle, [opp, 3], colors.supplementary),
+        a: highlight('lesson__related_angles__angleA'),
+        d: highlight('lesson__related_angles__angleD'),
+        Line_2: click(opp.pulseLine, [opp, 1], colors.line),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('opposite');
+        opp._angleA.setColor(layout.colors.angleA);
+        opp._angleB.setColor(layout.colors.disabled);
+        opp._angleC.setColor(layout.colors.disabled);
+        opp._angleD.setColor(layout.colors.angleD);
+        opp._line1.setColor(layout.colors.disabled);
+        opp._line2.setColor(layout.colors.line);
+      },
+      showOnly: [
+        opp,
+        opp._angleA,
+        opp._angleB,
+        opp._angleC,
+        opp._angleD,
+      ],
+      show: [
+        diag._unitsSelector,
+        diag._selector,
+        opp._line1,
+        opp._line2,
+      ],
+      setSteadyState: () => {
+        opp._angleA._arc.show();
+        opp._angleB._arc.show();
+        opp._angleC._arc.show();
+        opp._angleD._arc.show();
+        opp._angleA.eqn.showForm('a');
+        opp._angleB.eqn.showForm('b_equals');
+        opp._angleC.eqn.showForm('a');
+        opp._angleD.eqn.showForm('d');
+        opp._equation1.eqn.showForm('d');
+        opp._equation2.eqn.showForm('d_equals_b');
+        opp._equation1.eqn.setPosition(layout.equation1.bPlusC);
+        opp._equation2.eqn.setPosition(layout.equation2.c);
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          And therefore, opposite angles are equal. 
+        </p>
+      `),
+      modifiers: {
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('opposite');
+        opp._angleA.setColor(layout.colors.angleA);
+        opp._angleB.setColor(layout.colors.angleB);
+        opp._angleC.setColor(layout.colors.angleA);
+        opp._angleD.setColor(layout.colors.angleB);
+        opp._line1.setColor(layout.colors.line);
+        opp._line2.setColor(layout.colors.line);
+      },
+      showOnly: [
+        opp,
+        opp._angleA,
+        opp._angleB,
+        opp._angleC,
+        opp._angleD,
+      ],
+      show: [
+        diag._unitsSelector,
+        diag._selector,
+        opp._line1,
+        opp._line2,
+      ],
+      setSteadyState: () => {
+        opp._angleA._arc.show();
+        opp._angleB._arc.show();
+        opp._angleC._arc.show();
+        opp._angleD._arc.show();
+        opp._angleA.eqn.showForm('a');
+        opp._angleB.eqn.showForm('b');
+        opp._angleC.eqn.showForm('a');
+        opp._angleD.eqn.showForm('b');
+      },
+    });
   }
 }
 
