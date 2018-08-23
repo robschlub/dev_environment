@@ -8,8 +8,8 @@ import {
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeLabeledLine } from './diagramCollectionCommon';
-import type { TypeLabeledLine } from './diagramCollectionCommon';
+import makeMoveableLine from './diagramCollectionCommon';
+import type { MoveableLineType } from './diagramCollectionCommon';
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type AngleType = {
@@ -21,18 +21,18 @@ type AngleType = {
   updateAngle: (number, number) => void;
 } & DiagramElementCollection;
 
-// type labeledLineType = {
-//   _label: DiagramElementCollection;
-//   eqn: Equation;
-//   updateLabel: (number) => void;
-// } & MoveableLineType;
+type labeledLineType = {
+  _label: DiagramElementCollection;
+  eqn: Equation;
+  updateLabel: (number) => void;
+} & MoveableLineType;
 
 export default class OppositeCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
-  _line1: TypeLabeledLine;
-  _line2: TypeLabeledLine;
+  _line1: labeledLineType;
+  _line2: labeledLineType;
   _angleA: AngleType;
   _angleB: AngleType;
   _angleC: AngleType;
@@ -50,64 +50,51 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
-  _equation3: {
-    eqn: Equation;
-  } & DiagramElementCollection;
-
   makeLine(labelText: string) {
-    const line = makeLabeledLine(this.diagram, this.layout, labelText);
+    // $FlowFixMe
+    const line: labeledLineType = makeMoveableLine(this.diagram, this.layout);
     line.setTransformCallback = (t: Transform) => {
       line.updateTransform(t);
       this.updateOppositeAngles();
     };
+    line._end1.movementAllowed = 'rotation';
+    line._end2.movementAllowed = 'rotation';
+    line._mid.movementAllowed = 'rotation';
+
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements({ label: labelText }, this.layout.colors.line);
+
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.6;
+
+    eqn.addForm('base', ['label']);
+    eqn.setCurrentForm('base');
+
+    line.eqn = eqn;
+    line.add('label', eqn.collection);
+
+    line.updateLabel = (newAngle: number) => {
+      line._label.transform.updateRotation(-newAngle);
+      let labelWidth = 0;
+      let labelHeight = 0;
+      if (eqn.currentForm != null) {
+        labelWidth = eqn.currentForm.width / 2 + 0.04;
+        labelHeight = eqn.currentForm.height / 2 + 0.04;
+      }
+      // const labelDistance = Math.min(
+      //   labelHeight / Math.abs(Math.sin(newAngle)),
+      //   labelWidth / Math.abs(Math.cos(newAngle)),
+      // ) + this.layout.moveableLine.label.length;
+      const a = labelWidth + this.layout.moveableLine.label.length;
+      const b = labelHeight + this.layout.moveableLine.label.length;
+      const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
+      line._label.setPosition(r, 0);
+    };
+
     return line;
   }
-
-  // makeLine(labelText: string) {
-  //   // $FlowFixMe
-  //   const line: labeledLineType = makeMoveableLine(this.diagram, this.layout);
-  //   line.setTransformCallback = (t: Transform) => {
-  //     line.updateTransform(t);
-  //     this.updateOppositeAngles();
-  //   };
-  //   line._end1.movementAllowed = 'rotation';
-  //   line._end2.movementAllowed = 'rotation';
-  //   line._mid.movementAllowed = 'rotation';
-
-  //   const eqn = this.diagram.equation.makeEqn();
-  //   eqn.createElements({ label: labelText }, this.layout.colors.line);
-
-  //   eqn.formAlignment.fixTo = new Point(0, 0);
-  //   eqn.formAlignment.hAlign = 'center';
-  //   eqn.formAlignment.vAlign = 'middle';
-  //   eqn.formAlignment.scale = 0.6;
-
-  //   eqn.addForm('base', ['label']);
-  //   eqn.setCurrentForm('base');
-
-  //   line.eqn = eqn;
-  //   line.add('label', eqn.collection);
-
-  //   line.updateLabel = (newAngle: number) => {
-  //     line._label.transform.updateRotation(-newAngle);
-  //     let labelWidth = 0;
-  //     let labelHeight = 0;
-  //     if (eqn.currentForm != null) {
-  //       labelWidth = eqn.currentForm.width / 2 + 0.04;
-  //       labelHeight = eqn.currentForm.height / 2 + 0.04;
-  //     }
-  //     // const labelDistance = Math.min(
-  //     //   labelHeight / Math.abs(Math.sin(newAngle)),
-  //     //   labelWidth / Math.abs(Math.cos(newAngle)),
-  //     // ) + this.layout.moveableLine.label.length;
-  //     const a = labelWidth + this.layout.moveableLine.label.length;
-  //     const b = labelHeight + this.layout.moveableLine.label.length;
-  //     const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
-  //     line._label.setPosition(r, 0);
-  //   };
-
-  //   return line;
-  // }
 
   makeSupplementaryAngle() {
     const arcLayout = this.layout.angle.arc;

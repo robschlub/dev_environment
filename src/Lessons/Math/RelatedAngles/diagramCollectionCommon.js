@@ -7,6 +7,7 @@ import {
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../js/diagram/Element';
+import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type MoveableLinePrimativeType = {
   movementAllowed: 'rotation' | 'translation';
@@ -19,7 +20,14 @@ export type MoveableLineType = {
   updateTransform: (Transform) => void;
 } & DiagramElementCollection;
 
-export default function makeMoveableLine(
+export type TypeLabeledLine = {
+  _label: DiagramElementCollection;
+  eqn: Equation;
+  updateLabel: (number) => void;
+} & MoveableLineType;
+
+
+export function makeMoveableLine(
   diagram: Diagram,
   layout: Object,
 ): MoveableLineType {
@@ -99,5 +107,51 @@ export default function makeMoveableLine(
   line.add('end1', end1);
   line.add('mid', mid);
   line.add('end2', end2);
+  return line;
+}
+
+export function makeLabeledLine(
+  diagram: Diagram,
+  layout: Object,
+  labelText: string,
+) {
+  // $FlowFixMe
+  const line: labeledLineType = makeMoveableLine(diagram, layout);
+  line.setTransformCallback = (t: Transform) => {
+    line.updateTransform(t);
+  };
+  line._end1.movementAllowed = 'rotation';
+  line._end2.movementAllowed = 'rotation';
+  line._mid.movementAllowed = 'rotation';
+
+  const eqn = diagram.equation.makeEqn();
+  eqn.createElements({ label: labelText }, layout.colors.line);
+
+  eqn.formAlignment.fixTo = new Point(0, 0);
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'middle';
+  eqn.formAlignment.scale = 0.6;
+
+  eqn.addForm('base', ['label']);
+  eqn.setCurrentForm('base');
+
+  line.eqn = eqn;
+  line.add('label', eqn.collection);
+
+  line.updateLabel = (newAngle: number) => {
+    line._label.transform.updateRotation(-newAngle);
+    let labelWidth = 0;
+    let labelHeight = 0;
+    if (eqn.currentForm != null) {
+      labelWidth = eqn.currentForm.width / 2 + 0.04;
+      labelHeight = eqn.currentForm.height / 2 + 0.04;
+    }
+
+    const a = labelWidth + layout.moveableLine.label.length;
+    const b = labelHeight + layout.moveableLine.label.length;
+    const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
+    line._label.setPosition(r, 0);
+  };
+
   return line;
 }

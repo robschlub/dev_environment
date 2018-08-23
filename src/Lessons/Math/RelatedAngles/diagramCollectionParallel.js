@@ -8,7 +8,7 @@ import {
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import makeMoveableLine from './diagramCollectionCommon';
+import { makeMoveableLine } from './diagramCollectionCommon';
 import type { MoveableLineType } from './diagramCollectionCommon';
 
 export default class ParallelCollection extends DiagramElementCollection {

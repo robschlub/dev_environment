@@ -34,6 +34,7 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     const opp = diag._opposite;
     const parallel = diag._parallel;
+    const threeLines = diag._threeLines;
     this.addSection({
       title: 'Parallel Lines',
       setContent: centerV(`
