@@ -8,18 +8,18 @@ import {
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeLabeledLine, makeLabeledAngle } from './diagramCollectionCommon';
-import type { TypeLabeledLine, TypeAngle } from './diagramCollectionCommon';
+import { makeLabeledLine, makeLabeledAngle, makeSupplementaryAngle } from './diagramCollectionCommon';
+import type { TypeLabeledLine, TypeAngle, TypeSupplementaryAngle } from './diagramCollectionCommon';
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
-type AngleType = {
-  _label: DiagramElementCollection;
-  _arc: DiagramElementPrimative;
-  eqn: {
-    showForm: (string) => void;
-  } & Equation;
-  updateAngle: (number, number) => void;
-} & DiagramElementCollection;
+// type AngleType = {
+//   _label: DiagramElementCollection;
+//   _arc: DiagramElementPrimative;
+//   eqn: {
+//     showForm: (string) => void;
+//   } & Equation;
+//   updateAngle: (number, number) => void;
+// } & DiagramElementCollection;
 
 // type labeledLineType = {
 //   _label: DiagramElementCollection;
@@ -37,7 +37,7 @@ export default class OppositeCollection extends DiagramElementCollection {
   _angleB: TypeAngle;
   _angleC: TypeAngle;
   _angleD: TypeAngle;
-  _supplementary: DiagramElementPrimative;
+  _supplementary: TypeSupplementaryAngle;
   varState: {
     supplementary: number;
   };
@@ -63,15 +63,10 @@ export default class OppositeCollection extends DiagramElementCollection {
     return line;
   }
 
-  makeSupplementaryAngle() {
-    const arcLayout = this.layout.angle.arc;
-    const arc = this.diagram.shapes.polygon(
-      arcLayout.sides, arcLayout.radius, arcLayout.width * 2,
-      0, 1, arcLayout.sides / 2, this.layout.colors.supplementary,
-      new Transform().rotate(0).translate(0, 0),
-    );
-    arc.setPosition(this.layout.line1.opposite.position);
-    return arc;
+  makeSuppAngle() {
+    const angle = makeSupplementaryAngle(this.diagram, this.layout);
+    angle.setPosition(this.layout.line1.opposite.position);
+    return angle;
   }
 
   addEquation(name: string) {
@@ -174,7 +169,7 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.addEquation('equation2');
     this.addEquation('equation3');
 
-    this.add('supplementary', this.makeSupplementaryAngle());
+    this.add('supplementary', this.makeSuppAngle());
 
     this.varState = {
       supplementary: 3,
@@ -243,13 +238,14 @@ export default class OppositeCollection extends DiagramElementCollection {
         this._supplementary.transform.updateRotation(r2 + Math.PI);
       }
     }
-    this._supplementary.stop();
-    this._supplementary.stop();
-    this._supplementary.show();
-    this._supplementary.pulseScaleNow(2, 1.2, 0.25,
-      () => {
-        this._supplementary.disolveOut(2);
-      });
+    this._supplementary.scaleAndDisolve();
+    // this._supplementary.stop();
+    // this._supplementary.stop();
+    // this._supplementary.show();
+    // this._supplementary.pulseScaleNow(2, 1.2, 0.25,
+    //   () => {
+    //     this._supplementary.disolveOut(2);
+    //   });
     this.diagram.animateNextFrame();
   }
 

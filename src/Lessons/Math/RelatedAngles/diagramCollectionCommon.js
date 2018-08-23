@@ -241,3 +241,30 @@ export function makeLabeledAngle(
   return angle;
 }
 
+export type TypeSupplementaryAngle = {
+  scaleAndDisolve: () => {};
+} & DiagramElementPrimative;
+
+export function makeSupplementaryAngle(
+  diagram: Diagram,
+  layout: Object,
+) {
+  const arcLayout = layout.angle.arc;
+  const arc = diagram.shapes.polygon(
+    arcLayout.sides, arcLayout.radius, arcLayout.width * 2,
+    0, 1, arcLayout.sides / 2, layout.colors.supplementary,
+    new Transform().rotate(0).translate(0, 0),
+  );
+
+  arc.scaleAndDisolve = () => {
+    arc.stop();
+    arc.stop();
+    arc.show();
+    arc.pulseScaleNow(2, 1.2, 0.25,
+      () => {
+        arc.disolveOut(2);
+      });
+  };
+  // arc.setPosition(layout.line1.opposite.position);
+  return arc;
+}
