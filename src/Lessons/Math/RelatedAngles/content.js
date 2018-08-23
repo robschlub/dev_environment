@@ -58,7 +58,7 @@ class Content extends LessonContent {
       showOnly: [
       ],
       show: [
-        diag._unitsSelector,
+        // diag._unitsSelector,
         diag._selector,
         parallel,
         parallel._line1,
@@ -122,7 +122,7 @@ class Content extends LessonContent {
         opp._line2._mid,
       ],
       show: [
-        diag._unitsSelector,
+        // diag._unitsSelector,
         diag._selector,
         // opp._line1,
         // opp._line2,
@@ -154,7 +154,7 @@ class Content extends LessonContent {
         </p>
       `),
       modifiers: {
-        supplementary_angles: click(opp.pulseSupplementaryAngle, [opp], colors.supplementary),
+        supplementary_angles: click(opp.pulseSupplementaryAngle, [opp, null], colors.supplementary),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
@@ -173,7 +173,7 @@ class Content extends LessonContent {
         opp._angleD,
       ],
       show: [
-        diag._unitsSelector,
+        // diag._unitsSelector,
         diag._selector,
         opp._line1,
         opp._line2,
@@ -371,7 +371,7 @@ class Content extends LessonContent {
         opp._angleD,
       ],
       show: [
-        diag._unitsSelector,
+        // diag._unitsSelector,
         diag._selector,
         opp._line1,
         opp._line2,
