@@ -8,8 +8,8 @@ import {
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeLabeledLine } from './diagramCollectionCommon';
-import type { TypeLabeledLine } from './diagramCollectionCommon';
+import { makeLabeledLine, makeLabeledAngle } from './diagramCollectionCommon';
+import type { TypeLabeledLine, TypeAngle } from './diagramCollectionCommon';
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type AngleType = {
@@ -33,10 +33,10 @@ export default class OppositeCollection extends DiagramElementCollection {
   diagram: Diagram;
   _line1: TypeLabeledLine;
   _line2: TypeLabeledLine;
-  _angleA: AngleType;
-  _angleB: AngleType;
-  _angleC: AngleType;
-  _angleD: AngleType;
+  _angleA: TypeAngle;
+  _angleB: TypeAngle;
+  _angleC: TypeAngle;
+  _angleD: TypeAngle;
   _supplementary: DiagramElementPrimative;
   varState: {
     supplementary: number;
@@ -62,52 +62,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     };
     return line;
   }
-
-  // makeLine(labelText: string) {
-  //   // $FlowFixMe
-  //   const line: labeledLineType = makeMoveableLine(this.diagram, this.layout);
-  //   line.setTransformCallback = (t: Transform) => {
-  //     line.updateTransform(t);
-  //     this.updateOppositeAngles();
-  //   };
-  //   line._end1.movementAllowed = 'rotation';
-  //   line._end2.movementAllowed = 'rotation';
-  //   line._mid.movementAllowed = 'rotation';
-
-  //   const eqn = this.diagram.equation.makeEqn();
-  //   eqn.createElements({ label: labelText }, this.layout.colors.line);
-
-  //   eqn.formAlignment.fixTo = new Point(0, 0);
-  //   eqn.formAlignment.hAlign = 'center';
-  //   eqn.formAlignment.vAlign = 'middle';
-  //   eqn.formAlignment.scale = 0.6;
-
-  //   eqn.addForm('base', ['label']);
-  //   eqn.setCurrentForm('base');
-
-  //   line.eqn = eqn;
-  //   line.add('label', eqn.collection);
-
-  //   line.updateLabel = (newAngle: number) => {
-  //     line._label.transform.updateRotation(-newAngle);
-  //     let labelWidth = 0;
-  //     let labelHeight = 0;
-  //     if (eqn.currentForm != null) {
-  //       labelWidth = eqn.currentForm.width / 2 + 0.04;
-  //       labelHeight = eqn.currentForm.height / 2 + 0.04;
-  //     }
-  //     // const labelDistance = Math.min(
-  //     //   labelHeight / Math.abs(Math.sin(newAngle)),
-  //     //   labelWidth / Math.abs(Math.cos(newAngle)),
-  //     // ) + this.layout.moveableLine.label.length;
-  //     const a = labelWidth + this.layout.moveableLine.label.length;
-  //     const b = labelHeight + this.layout.moveableLine.label.length;
-  //     const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
-  //     line._label.setPosition(r, 0);
-  //   };
-
-  //   return line;
-  // }
 
   makeSupplementaryAngle() {
     const arcLayout = this.layout.angle.arc;
@@ -166,9 +120,6 @@ export default class OppositeCollection extends DiagramElementCollection {
     eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], 'rad');
     eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
 
-    // eqn.addForm('a_plus_d', ['a', 'plus', 'd', 'equals', '_180', 'deg']);
-    // eqn.addForm('a_plus_d', ['a', 'plus', 'd', 'equals', 'pi'], 'rad');
-
     eqn.addForm('d', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
     eqn.addForm('d', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
 
@@ -189,85 +140,15 @@ export default class OppositeCollection extends DiagramElementCollection {
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
-    const eqn = this.diagram.equation.makeEqn();
-    eqn.createElements(
-      {
-        a: 'a',
-        b: 'b',
-        c: 'c',
-        d: 'd',
-        equals: ' = ',
-        minus: ' \u2212 ',
-        _180: '180º',
-        pi: 'π',
-      },
-      this.layout.colors.diagram.text.base,
-    );
-
-    eqn.formAlignment.fixTo = new Point(0, 0);
-    eqn.formAlignment.hAlign = 'center';
-    eqn.formAlignment.vAlign = 'middle';
-    eqn.formAlignment.scale = 0.7;
-
-
-    eqn.setElem('a', this.layout.colors.angleA);
-    eqn.setElem('b', this.layout.colors.angleB);
-    eqn.setElem('c', this.layout.colors.angleC);
-    eqn.setElem('d', this.layout.colors.angleD);
-
-    eqn.addForm('a', ['a']);
-    eqn.addForm('b', ['b']);
-    eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
-    eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
-    eqn.addForm('c', ['c']);
-    eqn.addForm('d', ['d']);
-
-    const arcLayout = this.layout.angle.arc;
-
     const color = this.layout.colors[`angle${name.toUpperCase()}`];
+    const arcLayout = this.layout.angle.arc;
     const radius = name === 'a' || name === 'c'
       ? arcLayout.radius : arcLayout.radius * 1.0;
-    const label = eqn.collection;
-    const arc = this.diagram.shapes.polygon(
-      arcLayout.sides, radius, arcLayout.width,
-      0, 1, arcLayout.sides, color,
-      new Transform(),
-    );
-    const angle = this.diagram.shapes.collection(new Transform()
-      .scale(1, 1).rotate(0).translate(0, 0));
-    angle.add('arc', arc);
-    angle.add('label', label);
-    angle.eqn = eqn;
+    const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.updateAngle = (start: number, size: number) => {
-      angle._arc.angleToDraw = size;
-      angle.transform.updateRotation(start);
-      angle._label.transform.updateRotation(-start);
-      let labelWidth = 0;
-      let labelHeight = 0;
-      if (eqn.currentForm != null) {
-        labelWidth = eqn.currentForm.width / 2 + 0.04;
-        labelHeight = eqn.currentForm.height / 2 + 0.04;
-      }
-      const a = labelWidth + this.layout.angle.label.radius;
-      const b = labelHeight + this.layout.angle.label.radius;
-      const r = a * b / Math.sqrt((b * Math.cos(start + size / 2)) ** 2
-        + (a * Math.sin(start + size / 2)) ** 2);
-      const labelPosition = polarToRect(r, size / 2);
-      angle._label.setPosition(labelPosition);
-    };
-
-    eqn.showForm = (form: string) => {
-      Object.getPrototypeOf(eqn).showForm.call(eqn, form);
-      // eqn.render();
-      const start = angle.transform.r();
-      const size = angle._arc.angleToDraw;
-      if (start != null) {
-        angle.updateAngle(start, size);
-      }
-    };
-    eqn.showForm(name);
-
+    angle.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.eqn.showForm(name);
     angle.setPosition(this.layout.line1.opposite.position);
     return angle;
   }

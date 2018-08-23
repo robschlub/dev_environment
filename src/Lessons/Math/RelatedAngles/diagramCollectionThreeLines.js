@@ -8,35 +8,26 @@ import {
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import makeMoveableLine from './diagramCollectionCommon';
-import type { MoveableLineType } from './diagramCollectionCommon';
+import { makeLabeledLine } from './diagramCollectionCommon';
+import type { TypeLabeledLine } from './diagramCollectionCommon';
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
-type AngleType = {
-  _label: DiagramElementCollection;
-  _arc: DiagramElementPrimative;
-  eqn: {
-    showForm: (string) => void;
-  } & Equation;
-  updateAngle: (number, number) => void;
-} & DiagramElementCollection;
 
-type labeledLineType = {
-  _label: DiagramElementCollection;
-  eqn: Equation;
-  updateLabel: (number) => void;
-} & MoveableLineType;
-
-export default class OppositeCollection extends DiagramElementCollection {
+export default class ThreeLinesCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
-  _line1: labeledLineType;
-  _line2: labeledLineType;
-  _angleA: AngleType;
-  _angleB: AngleType;
-  _angleC: AngleType;
-  _angleD: AngleType;
+  _line1: TypeLabeledLine;
+  _line2: TypeLabeledLine;
+  _line3: TypeLabeledLine;
+  _angleA1: AngleType;
+  _angleB1: AngleType;
+  _angleC1: AngleType;
+  _angleD1: AngleType;
+  _angleA2: AngleType;
+  _angleB2: AngleType;
+  _angleC2: AngleType;
+  _angleD2: AngleType;
   _supplementary: DiagramElementPrimative;
   varState: {
     supplementary: number;
@@ -51,48 +42,11 @@ export default class OppositeCollection extends DiagramElementCollection {
   } & DiagramElementCollection;
 
   makeLine(labelText: string) {
-    // $FlowFixMe
-    const line: labeledLineType = makeMoveableLine(this.diagram, this.layout);
+    const line = makeLabeledLine(this.diagram, this.layout, labelText);
     line.setTransformCallback = (t: Transform) => {
       line.updateTransform(t);
-      this.updateOppositeAngles();
+      this.updateAngles();
     };
-    line._end1.movementAllowed = 'rotation';
-    line._end2.movementAllowed = 'rotation';
-    line._mid.movementAllowed = 'rotation';
-
-    const eqn = this.diagram.equation.makeEqn();
-    eqn.createElements({ label: labelText }, this.layout.colors.line);
-
-    eqn.formAlignment.fixTo = new Point(0, 0);
-    eqn.formAlignment.hAlign = 'center';
-    eqn.formAlignment.vAlign = 'middle';
-    eqn.formAlignment.scale = 0.6;
-
-    eqn.addForm('base', ['label']);
-    eqn.setCurrentForm('base');
-
-    line.eqn = eqn;
-    line.add('label', eqn.collection);
-
-    line.updateLabel = (newAngle: number) => {
-      line._label.transform.updateRotation(-newAngle);
-      let labelWidth = 0;
-      let labelHeight = 0;
-      if (eqn.currentForm != null) {
-        labelWidth = eqn.currentForm.width / 2 + 0.04;
-        labelHeight = eqn.currentForm.height / 2 + 0.04;
-      }
-      // const labelDistance = Math.min(
-      //   labelHeight / Math.abs(Math.sin(newAngle)),
-      //   labelWidth / Math.abs(Math.cos(newAngle)),
-      // ) + this.layout.moveableLine.label.length;
-      const a = labelWidth + this.layout.moveableLine.label.length;
-      const b = labelHeight + this.layout.moveableLine.label.length;
-      const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
-      line._label.setPosition(r, 0);
-    };
-
     return line;
   }
 
@@ -288,7 +242,7 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.hasTouchableElements = true;
   }
 
-  updateOppositeAngles() {
+  updateAngles() {
     if (this._line1 && this._line2 && this._angleA) {
       const r1 = this._line1.transform.r();
       const r2 = this._line2.transform.r();
