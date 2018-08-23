@@ -35,6 +35,7 @@ class Content extends LessonContent {
     const opp = diag._opposite;
     const parallel = diag._parallel;
     const threeLines = diag._threeLines;
+
     this.addSection({
       title: 'Parallel Lines',
       setContent: centerV(`
@@ -386,6 +387,83 @@ class Content extends LessonContent {
         opp._angleB.eqn.showForm('b');
         opp._angleC.eqn.showForm('a');
         opp._angleD.eqn.showForm('b');
+      },
+    });
+
+    this.addSection({
+      title: 'Corresponding Angles',
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          |Corresponding_Angles| at the intersection of two parallel lines and
+          a third intersecting line, are equal.
+        </p>
+      `),
+      modifiers: {
+        Corresponding_Angles: click(threeLines.toggleCorrespondingAngles, [threeLines], colors.line),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('corresponding');
+        if (parallel.isShown) {
+          threeLines._line1.transform = parallel._line1.transform._dup();
+          threeLines._line2.transform = parallel._line2.transform._dup();
+        }
+        if (opp.isShown) {
+          threeLines._line1.transform = opp._line1.transform._dup();
+          threeLines._line2.transform = opp._line2.transform._dup();
+        }
+        threeLines._angleA1.setColor(layout.colors.angleA);
+        threeLines._angleB1.setColor(layout.colors.angleB);
+        threeLines._angleC1.setColor(layout.colors.angleA);
+        threeLines._angleD1.setColor(layout.colors.angleB);
+        threeLines._angleA2.setColor(layout.colors.angleA);
+        threeLines._angleB2.setColor(layout.colors.angleB);
+        threeLines._angleC2.setColor(layout.colors.angleA);
+        threeLines._angleD2.setColor(layout.colors.angleB);
+        threeLines._line1.setColor(layout.colors.line);
+        threeLines._line2.setColor(layout.colors.line);
+      },
+      showOnly: [
+        threeLines,
+        threeLines._angleA1,
+        threeLines._angleA2,
+        threeLines._line1,
+        threeLines._line1._end1,
+        threeLines._line1._end2,
+        threeLines._line1._mid,
+        threeLines._line2,
+        threeLines._line2._end1,
+        threeLines._line2._end2,
+        threeLines._line2._mid,
+        threeLines._line3,
+        threeLines._line3._end1,
+        threeLines._line3._end2,
+        threeLines._line3._mid,
+      ],
+      show: [
+        // diag._unitsSelector,
+        diag._selector,
+        // opp._line1,
+        // opp._line2,
+      ],
+      transitionFromAny: (done) => {
+        let time = Math.max(
+          diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
+          diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
+          diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+        );
+        time = time > 2 ? 2 : time;
+        diag.moveToPosition(threeLines._line1, 'corresponding', time);
+        diag.moveToPosition(threeLines._line2, 'corresponding', time);
+        diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+      },
+      setSteadyState: () => {
+        diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
+        diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
+        diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        threeLines._angleA1._arc.show();
+        threeLines._angleA2._arc.show();
+        threeLines._angleA1.eqn.showForm('a');
+        threeLines._angleA2.eqn.showForm('a');
       },
     });
   }

@@ -110,6 +110,12 @@ export function makeMoveableLine(
   increaseBorderSize(end2);
   increaseBorderSize(mid);
 
+  line.pulseWidth = () => {
+    end1.pulseScaleNow(1, 3);
+    end2.pulseScaleNow(1, 3);
+    mid.pulseScaleNow(1, 3);
+  };
+
   line.add('end1', end1);
   line.add('mid', mid);
   line.add('end2', end2);

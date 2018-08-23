@@ -47,6 +47,10 @@ export default function lessonLayout() {
       position: new Point(1.5, 0),
       rotation: 0,
     },
+    corresponding: {
+      position: new Point(1.5, 0.5),
+      rotation: 0,
+    },
     position: new Point(1.5, 0.3),
     rotation: 0,
   };
@@ -59,8 +63,18 @@ export default function lessonLayout() {
       position: new Point(1.5, 0),
       rotation: Math.PI / 4,
     },
+    corresponding: {
+      position: new Point(1.5, -0.5),
+      rotation: 0,
+    },
     position: new Point(1.5, -0.3),
     rotation: 0,
+  };
+  layout.line3 = {
+    corresponding: {
+      position: new Point(1.5, 0),
+      rotation: Math.PI / 3,
+    },
   };
   layout.angle = {
     arc: {

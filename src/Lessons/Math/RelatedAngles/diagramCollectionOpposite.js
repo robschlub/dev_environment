@@ -1,10 +1,10 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, minAngleDiff, Point, polarToRect,
+  Transform, minAngleDiff,
 } from '../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementCollection,
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
@@ -206,10 +206,7 @@ export default class OppositeCollection extends DiagramElementCollection {
   }
 
   pulseLine(index: number = 1) {
-    // $FlowFixMe
-    this.elements[`line${index}`]._end1.pulseScaleNow(1, 3);
-    this.elements[`line${index}`]._end2.pulseScaleNow(1, 3);
-    this.elements[`line${index}`]._mid.pulseScaleNow(1, 3);
+    this.elements[`line${index}`].pulseWidth();
     this.diagram.animateNextFrame();
   }
 

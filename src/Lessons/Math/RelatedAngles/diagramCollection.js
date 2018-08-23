@@ -16,6 +16,7 @@ import type { LessonDiagramType } from './diagram';
 
 import ParallelCollection from './diagramCollectionParallel';
 import OppositeCollection from './diagramCollectionOpposite';
+import ThreeLinesCollection from './diagramCollectionThreeLines';
 import type { MoveableLineType } from './diagramCollectionCommon';
 
 
@@ -82,6 +83,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
 
     this.add('parallel', new ParallelCollection(diagram, this.layout));
     this.add('opposite', new OppositeCollection(diagram, this.layout));
+    this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
     this.add('unitsSelector', this.makeUnitsSelector());
     this.addSelector();
   }
@@ -92,6 +94,9 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     }
     if (title === 'opposite') {
       this.diagram.lesson.goToSection('Opposite Angles');
+    }
+    if (title === 'corresponding') {
+      this.diagram.lesson.goToSection('Corresponding Angles');
     }
   }
 
