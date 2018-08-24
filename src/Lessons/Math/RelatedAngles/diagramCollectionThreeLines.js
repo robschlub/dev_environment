@@ -180,8 +180,8 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     //   this.layout.line1.corresponding.position.y + 0.2,
     // );
     line3.transform.updateRotation(Math.PI / 2);
-    line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 3.8);
-    line3.move.minTransform.updateRotation(Math.PI / 3.8);
+    line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 3.7);
+    line3.move.minTransform.updateRotation(Math.PI / 3.7);
   }
 
   constructor(
@@ -226,7 +226,7 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     angle.setPosition(intersect);
     if (angle.angleIndex === 0) {
       angle.updateAngle(0, r);
-    } else if (angle.angleIndex === 0) {
+    } else if (angle.angleIndex === 1) {
       angle.updateAngle(r, Math.PI - r);
     }
   }
@@ -241,7 +241,14 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
         (t1.y - t3.y) / Math.tan(r) + t3.x,
         (t1.y - t3.y),
       );
+      const intersectT2 = new Point(
+        (t2.y - t3.y) / Math.tan(r) + t3.x,
+        (t2.y - t3.y),
+      );
       this.updateAngle(this._angleA1, intersectT1, r);
+      this.updateAngle(this._angleA2, intersectT2, r);
+      this.updateAngle(this._angleB1, intersectT1, r);
+      this.updateAngle(this._angleB2, intersectT2, r);
     }
   }
 

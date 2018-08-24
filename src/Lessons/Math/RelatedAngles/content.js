@@ -426,7 +426,9 @@ class Content extends LessonContent {
       showOnly: [
         threeLines,
         threeLines._angleA1,
-        // threeLines._angleA2,
+        threeLines._angleA2,
+        threeLines._angleB1,
+        threeLines._angleB2,
         threeLines._line1,
         threeLines._line1._end1,
         threeLines._line1._end2,
@@ -465,6 +467,10 @@ class Content extends LessonContent {
         threeLines._angleA2._arc.show();
         threeLines._angleA1.eqn.showForm('a');
         threeLines._angleA2.eqn.showForm('a');
+        threeLines._angleB1._arc.show();
+        threeLines._angleB2._arc.show();
+        threeLines._angleB1.eqn.showForm('b');
+        threeLines._angleB2.eqn.showForm('b');
       },
     });
   }
