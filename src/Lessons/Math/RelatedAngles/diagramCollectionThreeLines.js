@@ -228,6 +228,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       angle.updateAngle(0, r);
     } else if (angle.angleIndex === 1) {
       angle.updateAngle(r, Math.PI - r);
+    } else if (angle.angleIndex === 2) {
+      angle.updateAngle(Math.PI, r);
+    } else if (angle.angleIndex === 3) {
+      angle.updateAngle(r + Math.PI, Math.PI - r);
     }
   }
 
@@ -249,6 +253,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this.updateAngle(this._angleA2, intersectT2, r);
       this.updateAngle(this._angleB1, intersectT1, r);
       this.updateAngle(this._angleB2, intersectT2, r);
+      this.updateAngle(this._angleC1, intersectT1, r);
+      this.updateAngle(this._angleC2, intersectT2, r);
+      this.updateAngle(this._angleD1, intersectT1, r);
+      this.updateAngle(this._angleD2, intersectT2, r);
     }
   }
 

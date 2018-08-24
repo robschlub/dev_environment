@@ -429,6 +429,10 @@ class Content extends LessonContent {
         threeLines._angleA2,
         threeLines._angleB1,
         threeLines._angleB2,
+        threeLines._angleC1,
+        threeLines._angleC2,
+        threeLines._angleD1,
+        threeLines._angleD2,
         threeLines._line1,
         threeLines._line1._end1,
         threeLines._line1._end2,
@@ -471,6 +475,14 @@ class Content extends LessonContent {
         threeLines._angleB2._arc.show();
         threeLines._angleB1.eqn.showForm('b');
         threeLines._angleB2.eqn.showForm('b');
+        threeLines._angleC1._arc.show();
+        threeLines._angleC2._arc.show();
+        threeLines._angleC1.eqn.showForm('c');
+        threeLines._angleC2.eqn.showForm('c');
+        threeLines._angleD1._arc.show();
+        threeLines._angleD2._arc.show();
+        threeLines._angleD1.eqn.showForm('d');
+        threeLines._angleD2.eqn.showForm('d');
       },
     });
   }
