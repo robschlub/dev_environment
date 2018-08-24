@@ -421,11 +421,12 @@ class Content extends LessonContent {
         threeLines._angleD2.setColor(layout.colors.angleB);
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
+        threeLines._line3.setColor(layout.colors.line);
       },
       showOnly: [
         threeLines,
         threeLines._angleA1,
-        threeLines._angleA2,
+        // threeLines._angleA2,
         threeLines._line1,
         threeLines._line1._end1,
         threeLines._line1._end2,

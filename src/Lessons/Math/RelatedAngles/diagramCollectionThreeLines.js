@@ -12,6 +12,10 @@ import { makeLabeledLine, makeLabeledAngle, makeSupplementaryAngle } from './dia
 import type { TypeLabeledLine, TypeAngle, TypeSupplementaryAngle } from './diagramCollectionCommon';
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 
+type TypeIndexAngle = {
+  lineIndex: number;
+  angleIndex: number;
+} & TypeAngle;
 
 export default class ThreeLinesCollection extends DiagramElementCollection {
   layout: Object;
@@ -20,14 +24,14 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
   _line1: TypeLabeledLine;
   _line2: TypeLabeledLine;
   _line3: TypeLabeledLine;
-  _angleA1: TypeAngle;
-  _angleB1: TypeAngle;
-  _angleC1: TypeAngle;
-  _angleD1: TypeAngle;
-  _angleA2: TypeAngle;
-  _angleB2: TypeAngle;
-  _angleC2: TypeAngle;
-  _angleD2: TypeAngle;
+  _angleA1: TypeIndexAngle;
+  _angleB1: TypeIndexAngle;
+  _angleC1: TypeIndexAngle;
+  _angleD1: TypeIndexAngle;
+  _angleA2: TypeIndexAngle;
+  _angleB2: TypeIndexAngle;
+  _angleC2: TypeIndexAngle;
+  _angleD2: TypeIndexAngle;
   _supplementary: TypeSupplementaryAngle;
   varState: {
     supplementary: number;
@@ -41,12 +45,23 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
-  makeLine(labelText: string) {
-    const line = makeLabeledLine(this.diagram, this.layout, labelText);
-    // line.setTransformCallback = (t: Transform) => {
-    //   line.updateTransform(t);
-    //   this.updateAngles();
-    // };
+  makeParallelLine(labelText: string) {
+    const line = makeLabeledLine(
+      this.diagram,
+      this.layout.parallelLine,
+      this.layout.colors.line,
+      labelText,
+    );
+    return line;
+  }
+
+  makeIntersectingLine(labelText: string) {
+    const line = makeLabeledLine(
+      this.diagram,
+      this.layout.intersectingLine,
+      this.layout.colors.line,
+      labelText,
+    );
     return line;
   }
 
@@ -124,7 +139,11 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
   //   // this._angleB.eqn.setUnits(units);
   // }
 
-  makeAngle(name: 'a' | 'b' | 'c' | 'd') {
+  makeAngle(
+    name: 'a' | 'b' | 'c' | 'd',
+    lineIndex: number,
+    angleIndex: number,
+  ) {
     const color = this.layout.colors[`angle${name.toUpperCase()}`];
     const arcLayout = this.layout.angle.arc;
     const radius = name === 'a' || name === 'c'
@@ -134,33 +153,65 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     angle.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
     angle.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
     angle.eqn.showForm(name);
-    angle.setPosition(this.layout.line1.opposite.position);
+
+    // angle.setPositionToElement(line);
+    angle.lineIndex = lineIndex;
+    angle.angleIndex = angleIndex;
+    // angle.setPosition(this.layout.line1.opposite.position);
     return angle;
+  }
+
+  addThreeLines() {
+    const line1 = this.makeParallelLine('1');
+    const line2 = this.makeParallelLine('2');
+    const line3 = this.makeIntersectingLine('3');
+    this.add('line1', line1);
+    this.add('line2', line2);
+    this.add('line3', line3);
+    line1.setPosition(this.layout.line3.corresponding.position);
+    line2.setPosition(this.layout.line3.corresponding.position);
+    line3.setPosition(this.layout.line3.corresponding.position);
+    // line1.isMoveable = false;
+    // line2.isMoveable = false;
+    // line1.movementAllowed = 'translation';
+    // line2.movementAllowed = 'translation';
+    // line1.move.maxTransform.updateTranslation(
+    //   this.layout.line1.corresponding.position.x,
+    //   this.layout.line1.corresponding.position.y + 0.2,
+    // );
+    line3.transform.updateRotation(Math.PI / 2);
+    line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 3.8);
+    line3.move.minTransform.updateRotation(Math.PI / 3.8);
   }
 
   constructor(
     diagram: Diagram,
     layout: Object,
-    transform: Transform = new Transform(),
+    transform: Transform = new Transform().rotate(0),
   ) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.layout = layout;
 
-    this.add('line1', this.makeLine('1'));
-    this._line1.setPosition(this.layout.line1.corresponding.position);
-    this.add('line2', this.makeLine('2'));
-    this._line2.setPosition(this.layout.line2.corresponding.position);
-    this.add('line3', this.makeLine('2'));
-    this._line3.setPosition(this.layout.line3.corresponding.position);
-    this.add('angleA1', this.makeAngle('a'));
-    this.add('angleB1', this.makeAngle('b'));
-    this.add('angleC1', this.makeAngle('c'));
-    this.add('angleD1', this.makeAngle('d'));
-    this.add('angleA2', this.makeAngle('a'));
-    this.add('angleB2', this.makeAngle('b'));
-    this.add('angleC2', this.makeAngle('c'));
-    this.add('angleD2', this.makeAngle('d'));
+    this.addThreeLines();
+    // this.add('line1', this.makeLine('1'));
+    // this._line1.setPosition(this.layout.line1.corresponding.position);
+    // this.add('line2', this.makeLine('2'));
+    // this._line2.setPosition(this.layout.line2.corresponding.position);
+    // this.add('line3', this.makeLine('2'));
+    // this._line3.setPosition(this.layout.line3.corresponding.position);
+    this.add('angleA1', this.makeAngle('a', 1, 0));
+    this.add('angleB1', this.makeAngle('b', 1, 1));
+    this.add('angleC1', this.makeAngle('c', 1, 2));
+    this.add('angleD1', this.makeAngle('d', 1, 3));
+    this.add('angleA2', this.makeAngle('a', 2, 0));
+    this.add('angleB2', this.makeAngle('b', 2, 1));
+    this.add('angleC2', this.makeAngle('c', 2, 2));
+    this.add('angleD2', this.makeAngle('d', 2, 3));
+    this._line3.setTransformCallback = (t: Transform) => {
+      this._line3.updateTransform(t);
+      this.updateIntersectingLineAngle();
+    };
 
     this.add('supplementary', this.makeSuppAngle());
 
@@ -168,6 +219,30 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       supplementary: 3,
     };
     this.hasTouchableElements = true;
+    this.isMovable = true;
+  }
+
+  updateAngle(angle: TypeIndexAngle, intersect: Point, r: number) {
+    angle.setPosition(intersect);
+    if (angle.angleIndex === 0) {
+      angle.updateAngle(0, r);
+    } else if (angle.angleIndex === 0) {
+      angle.updateAngle(r, Math.PI - r);
+    }
+  }
+
+  updateIntersectingLineAngle() {
+    const r = this._line3.transform.r();
+    const t1 = this._line1.transform.t();
+    const t2 = this._line2.transform.t();
+    const t3 = this._line3.transform.t();
+    if (r != null && t1 != null && t2 != null && t3 != null) {
+      const intersectT1 = new Point(
+        (t1.y - t3.y) / Math.tan(r) + t3.x,
+        (t1.y - t3.y),
+      );
+      this.updateAngle(this._angleA1, intersectT1, r);
+    }
   }
 
   // updateAngles() {

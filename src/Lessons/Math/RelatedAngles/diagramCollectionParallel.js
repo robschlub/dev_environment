@@ -24,7 +24,7 @@ export default class ParallelCollection extends DiagramElementCollection {
       return;
     }
     const angleSameThreshold = Math.PI / 300;
-    const distanceThreshold = this.layout.moveableLine.width * 1.1;
+    const distanceThreshold = this.layout.parallelLine.width * 1.1;
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     const t1 = this._line1.transform.t();
@@ -74,7 +74,10 @@ export default class ParallelCollection extends DiagramElementCollection {
   }
 
   makeLine() {
-    const line = makeMoveableLine(this.diagram, this.layout);
+    const line = makeMoveableLine(
+      this.diagram, this.layout.parallelLine,
+      this.layout.colors.line,
+    );
     line.setTransformCallback = (t: Transform) => {
       line.updateTransform(t);
       this.normalizeAngle(line);

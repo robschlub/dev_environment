@@ -220,6 +220,9 @@ class LessonDiagram extends Diagram {
     const pLine2 = this.elements._parallel._line2;
     const oLine1 = this.elements._opposite._line1;
     const oLine2 = this.elements._opposite._line2;
+    // const tLine1 = this.elements._threeLines._line1;
+    // const tLine2 = this.elements._threeLines._line2;
+    const tLine3 = this.elements._threeLines._line3;
 
     if (this.lineHandler(previousClientPoint, currentClientPoint, pLine1)) {
       return this.endHandler();
@@ -233,10 +236,22 @@ class LessonDiagram extends Diagram {
     if (this.lineHandler(previousClientPoint, currentClientPoint, oLine2)) {
       return this.endHandler();
     }
+    // if (this.lineHandler(previousClientPoint, currentClientPoint, tLine1)) {
+    //   return this.endHandler();
+    // }
+    // if (this.lineHandler(previousClientPoint, currentClientPoint, tLine2)) {
+    //   return this.endHandler();
+    // }
+    if (this.lineHandler(previousClientPoint, currentClientPoint, tLine3)) {
+      return this.endHandler();
+    }
     if (this.beingMovedElements.indexOf(pLine1) >= 0
       || this.beingMovedElements.indexOf(pLine2) >= 0
       || this.beingMovedElements.indexOf(oLine1) >= 0
       || this.beingMovedElements.indexOf(oLine2) >= 0
+      // || this.beingMovedElements.indexOf(tLine1) >= 0
+      // || this.beingMovedElements.indexOf(tLine2) >= 0
+      || this.beingMovedElements.indexOf(tLine3) >= 0
     ) {
       return true;
     }

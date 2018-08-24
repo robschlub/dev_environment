@@ -27,6 +27,7 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   diagram: LessonDiagramType;
   _parallel: ParallelCollection;
   _opposite: OppositeCollection;
+  _threeLines: ThreeLinesCollection;
   _selector: DiagramElementPrimative;
 
   addSelector() {

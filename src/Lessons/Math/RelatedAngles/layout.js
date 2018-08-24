@@ -26,7 +26,7 @@ export default function lessonLayout() {
     position: new Point(0, 1.7),
   };
   const len = 1.7;
-  layout.moveableLine = {
+  layout.parallelLine = {
     length: {
       full: len,
       end: len / 3,
@@ -34,6 +34,18 @@ export default function lessonLayout() {
     },
     label: {
       length: len / 2,
+    },
+    width: 0.02,
+    boundary: new Rect(0, -1.7, 3, 3),
+  };
+  layout.intersectingLine = {
+    length: {
+      full: len * 1.5,
+      end: len / 3 * 1.5,
+      middle: len / 3 * 1.5,
+    },
+    label: {
+      length: len / 2  * 1.5,
     },
     width: 0.02,
     boundary: new Rect(0, -1.7, 3, 3),

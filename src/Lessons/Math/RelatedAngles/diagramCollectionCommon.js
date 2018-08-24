@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, polarToRect
+  Transform, Point, polarToRect, Rect,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -35,10 +35,22 @@ export type TypeAngle = {
 
 export function makeMoveableLine(
   diagram: Diagram,
-  layout: Object,
+  layout: {
+    length: {
+      full: number,
+      end: number,
+      middle: number,
+    },
+    label: {
+      length: number,
+    },
+    width: number,
+    boundary: Rect,
+  },
+  color: Array<number>,
 ): MoveableLineType {
-  const { width } = layout.moveableLine;
-  const { end, middle, full } = layout.moveableLine.length;
+  const { width } = layout;
+  const { end, middle, full } = layout.length;
 
   const line = diagram.shapes.collection(new Transform()
     .rotate(0)
@@ -47,12 +59,12 @@ export function makeMoveableLine(
   line.isMovable = true;
   line.touchInBoundingRect = true;
   line.isTouchable = true;
-  const bounds = layout.moveableLine.boundary;
+  const bounds = layout.boundary;
   line.updateTransform = (t: Transform) => {
     const r = t.r();
     if (r != null) {
-      const w = Math.abs(layout.moveableLine.length.full / 2 * Math.cos(r));
-      const h = Math.abs(layout.moveableLine.length.full / 2 * Math.sin(r));
+      const w = Math.abs(layout.length.full / 2 * Math.cos(r));
+      const h = Math.abs(layout.length.full / 2 * Math.sin(r));
       line.move.maxTransform.updateTranslation(
         bounds.right - w,
         bounds.top - h,
@@ -74,7 +86,7 @@ export function makeMoveableLine(
   const end1 = diagram.shapes.horizontalLine(
     new Point(-full / 2, 0),
     end, width,
-    0, layout.colors.line, new Transform(),
+    0, color, new Transform(),
   );
   end1.isTouchable = true;
   end1.movementAllowed = 'rotation';
@@ -82,7 +94,7 @@ export function makeMoveableLine(
   const end2 = diagram.shapes.horizontalLine(
     new Point(middle / 2, 0),
     end, width,
-    0, layout.colors.line, new Transform(),
+    0, color, new Transform(),
   );
   end2.isTouchable = true;
   end2.movementAllowed = 'rotation';
@@ -90,7 +102,7 @@ export function makeMoveableLine(
   const mid = diagram.shapes.horizontalLine(
     new Point(-middle / 2, 0),
     middle, width,
-    0, layout.colors.line, new Transform(),
+    0, color, new Transform(),
   );
   mid.isTouchable = true;
   mid.movementAllowed = 'translation';
@@ -124,7 +136,19 @@ export function makeMoveableLine(
 
 export function makeLabeledLine(
   diagram: Diagram,
-  layout: Object,
+  layout: {
+    length: {
+      full: number,
+      end: number,
+      middle: number,
+    },
+    label: {
+      length: number,
+    },
+    width: number,
+    boundary: Rect,
+  },
+  color: Array<number>,
   labelText: string,
 ) {
   // $FlowFixMe
@@ -137,7 +161,7 @@ export function makeLabeledLine(
   line._mid.movementAllowed = 'rotation';
 
   const eqn = diagram.equation.makeEqn();
-  eqn.createElements({ label: labelText }, layout.colors.line);
+  eqn.createElements({ label: labelText }, color);
 
   eqn.formAlignment.fixTo = new Point(0, 0);
   eqn.formAlignment.hAlign = 'center';
@@ -159,8 +183,8 @@ export function makeLabeledLine(
       labelHeight = eqn.currentForm.height / 2 + 0.04;
     }
 
-    const a = labelWidth + layout.moveableLine.label.length;
-    const b = labelHeight + layout.moveableLine.label.length;
+    const a = labelWidth + layout.label.length;
+    const b = labelHeight + layout.label.length;
     const r = a * b / Math.sqrt((b * Math.cos(newAngle)) ** 2 + (a * Math.sin(newAngle)) ** 2);
     line._label.setPosition(r, 0);
   };

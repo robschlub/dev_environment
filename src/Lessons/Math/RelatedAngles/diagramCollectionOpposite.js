@@ -55,7 +55,10 @@ export default class OppositeCollection extends DiagramElementCollection {
   } & DiagramElementCollection;
 
   makeLine(labelText: string) {
-    const line = makeLabeledLine(this.diagram, this.layout, labelText);
+    const line = makeLabeledLine(
+      this.diagram, this.layout.parallelLine,
+      this.layout.colors.line, labelText,
+    );
     line.setTransformCallback = (t: Transform) => {
       line.updateTransform(t);
       this.updateOppositeAngles();
