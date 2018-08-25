@@ -2269,7 +2269,7 @@ class DiagramElementCollection extends DiagramElement {
       return [];
     }
     let touched = [];
-    if (this.touchInBoundingRect && this.isTouchable) {
+    if (this.touchInBoundingRect || this.isTouchable) {
       if (this.isBeingTouched(glLocation)) {
         touched.push(this);
       }

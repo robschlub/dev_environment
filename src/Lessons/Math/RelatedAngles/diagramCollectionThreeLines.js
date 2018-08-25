@@ -187,12 +187,12 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
   constructor(
     diagram: Diagram,
     layout: Object,
-    transform: Transform = new Transform().rotate(0),
+    transform: Transform = new Transform().rotate(0).translate(0, 0),
   ) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.layout = layout;
-
+    this.setPosition(this.layout.position);
     this.addThreeLines();
     // this.add('line1', this.makeLine('1'));
     // this._line1.setPosition(this.layout.line1.corresponding.position);

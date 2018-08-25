@@ -26,6 +26,7 @@ export default function lessonLayout() {
     position: new Point(0, 1.7),
   };
   const len = 1.7;
+  layout.position = new Point(1.5, 0);
   layout.parallelLine = {
     length: {
       full: len,
@@ -36,7 +37,7 @@ export default function lessonLayout() {
       length: len / 2,
     },
     width: 0.02,
-    boundary: new Rect(0, -1.7, 3, 3),
+    boundary: new Rect(-1.5, -1.7, 3, 3),
   };
   layout.intersectingLine = {
     length: {
@@ -48,43 +49,43 @@ export default function lessonLayout() {
       length: len / 2  * 1.5,
     },
     width: 0.02,
-    boundary: new Rect(0, -1.7, 3, 3),
+    boundary: new Rect(-1.5, -1.7, 3, 3),
   };
   layout.line1 = {
     parallel: {
-      position: new Point(1.5, 0.3),
+      position: new Point(0, 0.3),
       rotation: 0,
     },
     opposite: {
-      position: new Point(1.5, 0),
+      position: new Point(0, 0),
       rotation: 0,
     },
     corresponding: {
-      position: new Point(1.5, 0.5),
+      position: new Point(0, 0.5),
       rotation: 0,
     },
-    position: new Point(1.5, 0.3),
+    position: new Point(0, 0.3),
     rotation: 0,
   };
   layout.line2 = {
     parallel: {
-      position: new Point(1.5, -0.3),
+      position: new Point(0, -0.3),
       rotation: 0,
     },
     opposite: {
-      position: new Point(1.5, 0),
+      position: new Point(0, 0),
       rotation: Math.PI / 4,
     },
     corresponding: {
-      position: new Point(1.5, -0.5),
+      position: new Point(0, -0.5),
       rotation: 0,
     },
-    position: new Point(1.5, -0.3),
+    position: new Point(0, -0.3),
     rotation: 0,
   };
   layout.line3 = {
     corresponding: {
-      position: new Point(1.5, 0),
+      position: new Point(0, 0),
       rotation: Math.PI / 3,
     },
   };

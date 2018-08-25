@@ -154,12 +154,12 @@ export default class OppositeCollection extends DiagramElementCollection {
   constructor(
     diagram: Diagram,
     layout: Object,
-    transform: Transform = new Transform(),
+    transform: Transform = new Transform().translate(0, 0),
   ) {
     super(transform, diagram.limits);
     this.diagram = diagram;
     this.layout = layout;
-
+    this.setPosition(this.layout.position);
     this.add('line1', this.makeLine('1'));
     this._line1.setPosition(this.layout.line1.opposite.position.x, 0);
     this.add('line2', this.makeLine('2'));

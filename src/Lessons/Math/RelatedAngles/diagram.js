@@ -85,7 +85,7 @@ class LessonDiagram extends Diagram {
     currentClientPoint: Point,
     element: DiagramElementCollection | DiagramElementPrimative,
   ) {
-    let center = element.transform.t();
+    let center = element.getDiagramPosition();
     if (center == null) {
       center = new Point(0, 0);
     }
@@ -220,7 +220,7 @@ class LessonDiagram extends Diagram {
     const pLine2 = this.elements._parallel._line2;
     const oLine1 = this.elements._opposite._line1;
     const oLine2 = this.elements._opposite._line2;
-    // const tLine1 = this.elements._threeLines._line1;
+    const tLine1 = this.elements._threeLines._line1;
     // const tLine2 = this.elements._threeLines._line2;
     const tLine3 = this.elements._threeLines._line3;
 
@@ -245,6 +245,7 @@ class LessonDiagram extends Diagram {
     if (this.lineHandler(previousClientPoint, currentClientPoint, tLine3)) {
       return this.endHandler();
     }
+    console.log(this.beingTouchedElements)
     if (this.beingMovedElements.indexOf(pLine1) >= 0
       || this.beingMovedElements.indexOf(pLine2) >= 0
       || this.beingMovedElements.indexOf(oLine1) >= 0
@@ -254,6 +255,10 @@ class LessonDiagram extends Diagram {
       || this.beingMovedElements.indexOf(tLine3) >= 0
     ) {
       return true;
+    }
+    // console.log(this.beingTouchedElements)
+    if (this.beingTouchedElements.indexOf(tLine1) >= 0) {
+      console.log("asdf")
     }
     return super.touchMoveHandler(previousClientPoint, currentClientPoint);
   }

@@ -207,7 +207,7 @@ class AdjacentAnglesCollection extends AngleCircle {
       }
       const units = `${unitsString.charAt(0).toUpperCase()}${unitsString.slice(1)}`;
 
-      return equation.form[`${anglePairName}${eqnForm}${units}`];
+      return equation.form[`${anglePairName}${eqnForm}${units}`].base;
     };
 
     // Show equation with input angle pair name and form using current units.
@@ -269,7 +269,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     equation.collection.hasTouchableElements = false;
 
     equation.showCurrentForm = () => {
-      let eqnForm = equation.form[name];
+      let eqnForm = equation.form[name].base;
       const currentAngle = this.varState.angleSelected;
       const currentForm = this.varState.equationForm;
       const currentUnits = this.getUnits();
@@ -281,8 +281,9 @@ class AdjacentAnglesCollection extends AngleCircle {
           eqnForm = equation.form[`${angleString}${formString}${unitString}`];
         }
       }
-      equation.setCurrentForm(eqnForm);
-      equation.render();
+      equation.showForm(eqnForm);
+      // equation.setCurrentForm(eqnForm);
+      // equation.render();
     };
 
     const layout = this.layout.angleAnnotation;

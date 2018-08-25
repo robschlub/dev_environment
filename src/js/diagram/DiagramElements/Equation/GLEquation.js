@@ -1212,11 +1212,15 @@ export class Equation {
     equationCopy.collection = newCollection;
     const newForm = {};
     Object.keys(this.form).forEach((name) => {
-      if (!(name in this.form)) {
+      if (!(name in newForm)) {
         newForm[name] = {};
       }
       Object.keys(this.form[name]).forEach((formType) => {
-        newForm[name][formType] = this.form[name][formType]._dup(newCollection);
+        if (formType !== 'name') {
+          newForm[name][formType] = this.form[name][formType]._dup(newCollection);
+        } else {
+          newForm[name][formType] = this.form[name][formType];
+        }
       });
     });
     equationCopy.form = newForm;
@@ -1307,6 +1311,7 @@ export class Equation {
   }
 
   scaleForm(name: string, scale: number, formType: string = 'base') {
+    // console.log(name, this.form, formType, this.form[name][formType])
     if (name in this.form) {
       if (formType in this.form[name]) {
         this.form[name][formType].arrange(
@@ -1322,7 +1327,9 @@ export class Equation {
   scale(scale: number) {
     Object.keys(this.form).forEach((name) => {
       Object.keys(this.form[name]).forEach((formType) => {
-        this.scaleForm(name, scale, formType);
+        if (formType !== 'name') {
+          this.scaleForm(name, scale, formType);
+        }
       });
     });
   }
@@ -1420,14 +1427,12 @@ export class Equation {
     formOrName: EquationForm | string,
     formType: ?string,
   ) {
-    // console.log("this", this)
-    // console.log(formOrName)
     if (typeof formOrName === 'string') {
       if (formOrName in this.form) {
         let formTypeToUse = formType;
         if (formTypeToUse == null) {
-          const possibleFormTypes 
-            = this.formTypeOrder.filter(fType => fType in this.form[formOrName])
+          const possibleFormTypes
+            = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
           if (possibleFormTypes.length) {
             formTypeToUse = possibleFormTypes[0];
           }

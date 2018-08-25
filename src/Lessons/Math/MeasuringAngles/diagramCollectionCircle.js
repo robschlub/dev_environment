@@ -48,9 +48,18 @@ type TypeCircumferenceEquationCollection = {
 type TypeCircumferenceEquation = {
   collection: TypeCircumferenceEquationCollection;
   form: {
-    circumference: EquationForm;
-    c: EquationForm;
-    arc: EquationForm;
+    circumference: {
+      base: EquationForm;
+      name: string;
+    };
+    c: {
+      base: EquationForm;
+      name: string;
+    };
+    arc: {
+      base: EquationForm;
+      name: string;
+    }
   };
 } & Equation;
 
@@ -66,9 +75,18 @@ type TypeArcEquationCollection = {
 type TypeArcEquation = {
   collection: TypeArcEquationCollection;
   form: {
-    arc: EquationForm;
-    radius: EquationForm;
-    angle: EquationForm;
+    arc: {
+      base: EquationForm;
+      name: string;
+    };
+    radius: {
+      base: EquationForm;
+      name: string;
+    };
+    angle: {
+      base: EquationForm;
+      name: string;
+    };
   };
   showArc: () => void;
   showRadius: () => void;
@@ -388,27 +406,29 @@ class CircleCollection extends AngleCircle {
     eqn.stop();
     const callbackToUse = typeof callback === 'function' ? callback : null;
 
-    if (eqn.currentFormName === 'arc') {
-      eqn.setCurrentForm('circumference');
-      eqn.form.circumference.setPositions();
-      eqn.form.arc.setPositions();
-      const t = this._circumferenceEquation._angle.transform.t();
-      if (t != null) {
-        this._circumferenceEquation._twoPi.transform
-          .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
+    if (eqn.currentForm != null) {
+      if (eqn.currentForm.name === 'arc') {
+        eqn.setCurrentForm('circumference');
+        eqn.form.circumference.base.setPositions();
+        eqn.form.arc.base.setPositions();
+        const t = this._circumferenceEquation._angle.transform.t();
+        if (t != null) {
+          this._circumferenceEquation._twoPi.transform
+            .updateTranslation(t.add(this.layout.circEquation.twoPiOffset));
+        }
+        eqn.form.circumference.base.hideShow(0.5, 0.5, callbackToUse);
+      } else if (eqn.currentForm.name === 'circumference') {
+        eqn.setCurrentForm('c');
+        eqn.collection._r.setPositionToElement(eqn.collection._radius);
+        eqn.collection._c.setPositionToElement(eqn.collection._circumference);
+        eqn.collection._r.show();
+        eqn.collection._c.show();
+        eqn.form.c.base.animatePositionsTo(2, callbackToUse);
+      } else if (eqn.currentForm.name === 'c') {
+        eqn.setCurrentForm('arc');
+        eqn.form.arc.base.setPositions();
+        eqn.form.arc.base.hideShow(0.5, 0.5, callbackToUse);
       }
-      eqn.form.circumference.hideShow(0.5, 0.5, callbackToUse);
-    } else if (eqn.currentFormName === 'circumference') {
-      eqn.setCurrentForm('c');
-      eqn.collection._r.setPositionToElement(eqn.collection._radius);
-      eqn.collection._c.setPositionToElement(eqn.collection._circumference);
-      eqn.collection._r.show();
-      eqn.collection._c.show();
-      eqn.form.c.animatePositionsTo(2, callbackToUse);
-    } else if (eqn.currentFormName === 'c') {
-      eqn.setCurrentForm('arc');
-      eqn.form.arc.setPositions();
-      eqn.form.arc.hideShow(0.5, 0.5, callbackToUse);
     }
     this.diagram.animateNextFrame();
   }
@@ -541,7 +561,7 @@ class CircleCollection extends AngleCircle {
 
   animateEquation(form: 'arc' | 'radius' | 'angle') {
     this.arcEqn.setCurrentForm(form);
-    this.arcEqn.form[form].animatePositionsTo(2);
+    this.arcEqn.form[form].base.animatePositionsTo(2);
     this.diagram.animateNextFrame();
   }
 
