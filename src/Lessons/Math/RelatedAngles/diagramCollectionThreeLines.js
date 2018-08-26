@@ -302,6 +302,11 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  pulseParallel() {
+    this.pulseLine(1);
+    this.pulseLine(2);
+  }
+
   pulseSupplementaryAngle() {
     // if (index != null) {
     //   this.varState.supplementary = index;
@@ -342,6 +347,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._angleA2.hide();
       this._angleB1.show();
       this._angleB2.show();
+      this._angleB1._arc.show();
+      this._angleB2._arc.show();
+      this._angleB1.eqn.showForm('b');
+      this._angleB2.eqn.showForm('b');
       this._angleC1.hide();
       this._angleC2.hide();
       this._angleD1.hide();
@@ -353,6 +362,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._angleB2.hide();
       this._angleC1.show();
       this._angleC2.show();
+      this._angleC1._arc.show();
+      this._angleC2._arc.show();
+      this._angleC1.eqn.showForm('c');
+      this._angleC2.eqn.showForm('c');
       this._angleD1.hide();
       this._angleD2.hide();
     } else if (this._angleC1.isShown) {
@@ -364,9 +377,17 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._angleC2.hide();
       this._angleD1.show();
       this._angleD2.show();
-    } else if (this._angleD1.isShown) {
+      this._angleD1._arc.show();
+      this._angleD2._arc.show();
+      this._angleD1.eqn.showForm('d');
+      this._angleD2.eqn.showForm('d');
+    } else {
       this._angleA1.show();
       this._angleA2.show();
+      this._angleA1._arc.show();
+      this._angleA2._arc.show();
+      this._angleA1.eqn.showForm('a');
+      this._angleA2.eqn.showForm('a');
       this._angleB1.hide();
       this._angleB2.hide();
       this._angleC1.hide();
@@ -374,6 +395,7 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._angleD1.hide();
       this._angleD2.hide();
     }
+    this.diagram.animateNextFrame();
   }
   // toggleOppositeAngles() {
   //   // if (this._angleA.isShown) {

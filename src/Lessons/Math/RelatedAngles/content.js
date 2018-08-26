@@ -394,45 +394,52 @@ class Content extends LessonContent {
       title: 'Corresponding Angles',
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
-          |Corresponding_Angles| at the intersection of two parallel lines and
-          a third intersecting line, are equal.
+          |Corresponding_Angles| at the intersection of two |parallel| lines and
+          a third |intersecting| line, are equal.
         </p>
       `),
       modifiers: {
-        Corresponding_Angles: click(threeLines.toggleCorrespondingAngles, [threeLines], colors.line),
+        Corresponding_Angles: click(
+          threeLines.toggleCorrespondingAngles, [threeLines],
+          colors.angleA,
+        ),
+        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+        intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('corresponding');
         if (parallel.isShown) {
+          threeLines.transform.updateRotation(0);
           threeLines._line1.transform = parallel._line1.transform._dup();
           threeLines._line2.transform = parallel._line2.transform._dup();
         }
         if (opp.isShown) {
+          threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();
           threeLines._line2.transform = opp._line2.transform._dup();
         }
         threeLines._angleA1.setColor(layout.colors.angleA);
-        threeLines._angleB1.setColor(layout.colors.angleB);
+        threeLines._angleB1.setColor(layout.colors.angleA);
         threeLines._angleC1.setColor(layout.colors.angleA);
-        threeLines._angleD1.setColor(layout.colors.angleB);
+        threeLines._angleD1.setColor(layout.colors.angleA);
         threeLines._angleA2.setColor(layout.colors.angleA);
-        threeLines._angleB2.setColor(layout.colors.angleB);
+        threeLines._angleB2.setColor(layout.colors.angleA);
         threeLines._angleC2.setColor(layout.colors.angleA);
-        threeLines._angleD2.setColor(layout.colors.angleB);
+        threeLines._angleD2.setColor(layout.colors.angleA);
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         threeLines._line3.setColor(layout.colors.line);
       },
       showOnly: [
         threeLines,
-        threeLines._angleA1,
-        threeLines._angleA2,
-        threeLines._angleB1,
-        threeLines._angleB2,
-        threeLines._angleC1,
-        threeLines._angleC2,
-        threeLines._angleD1,
-        threeLines._angleD2,
+        // threeLines._angleA1,
+        // threeLines._angleA2,
+        // threeLines._angleB1,
+        // threeLines._angleB2,
+        // threeLines._angleC1,
+        // threeLines._angleC2,
+        // threeLines._angleD1,
+        // threeLines._angleD2,
         threeLines._line1,
         threeLines._line1._end1,
         threeLines._line1._end2,
@@ -467,22 +474,23 @@ class Content extends LessonContent {
         diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
         diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
         diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
-        threeLines._angleA1._arc.show();
-        threeLines._angleA2._arc.show();
-        threeLines._angleA1.eqn.showForm('a');
-        threeLines._angleA2.eqn.showForm('a');
-        threeLines._angleB1._arc.show();
-        threeLines._angleB2._arc.show();
-        threeLines._angleB1.eqn.showForm('b');
-        threeLines._angleB2.eqn.showForm('b');
-        threeLines._angleC1._arc.show();
-        threeLines._angleC2._arc.show();
-        threeLines._angleC1.eqn.showForm('c');
-        threeLines._angleC2.eqn.showForm('c');
-        threeLines._angleD1._arc.show();
-        threeLines._angleD2._arc.show();
-        threeLines._angleD1.eqn.showForm('d');
-        threeLines._angleD2.eqn.showForm('d');
+        threeLines.toggleCorrespondingAngles();
+        // threeLines._angleA1._arc.show();
+        // threeLines._angleA2._arc.show();
+        // threeLines._angleA1.eqn.showForm('a');
+        // threeLines._angleA2.eqn.showForm('a');
+        // threeLines._angleB1._arc.show();
+        // threeLines._angleB2._arc.show();
+        // threeLines._angleB1.eqn.showForm('b');
+        // threeLines._angleB2.eqn.showForm('b');
+        // threeLines._angleC1._arc.show();
+        // threeLines._angleC2._arc.show();
+        // threeLines._angleC1.eqn.showForm('c');
+        // threeLines._angleC2.eqn.showForm('c');
+        // threeLines._angleD1._arc.show();
+        // threeLines._angleD2._arc.show();
+        // threeLines._angleD1.eqn.showForm('d');
+        // threeLines._angleD2.eqn.showForm('d');
       },
     });
   }
