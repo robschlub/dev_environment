@@ -52,6 +52,7 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this.layout.colors.line,
       labelText,
     );
+    line.isMovable = false;
     return line;
   }
 
@@ -194,6 +195,9 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.layout = layout;
     this.setPosition(this.layout.position);
     this.addThreeLines();
+    this.isMovable = true;
+    this.isTouchable = true;
+    // this.movementAllowed = 'rotation';
     // this.add('line1', this.makeLine('1'));
     // this._line1.setPosition(this.layout.line1.corresponding.position);
     // this.add('line2', this.makeLine('2'));
@@ -220,18 +224,23 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     };
     this.hasTouchableElements = true;
     this.isMovable = true;
+    this.setTransformCallback = this.updateIntersectingLineAngle.bind(this);
   }
 
   updateAngle(angle: TypeIndexAngle, intersect: Point, r: number) {
-    angle.setPosition(intersect);
-    if (angle.angleIndex === 0) {
-      angle.updateAngle(0, r);
-    } else if (angle.angleIndex === 1) {
-      angle.updateAngle(r, Math.PI - r);
-    } else if (angle.angleIndex === 2) {
-      angle.updateAngle(Math.PI, r);
-    } else if (angle.angleIndex === 3) {
-      angle.updateAngle(r + Math.PI, Math.PI - r);
+    const threeLinesRotation = this.transform.r();
+    // console.log("A", threeLinesRotation, this)
+    if (threeLinesRotation != null) {
+      angle.setPosition(intersect);
+      if (angle.angleIndex === 0) {
+        angle.updateAngle(0, r, threeLinesRotation);
+      } else if (angle.angleIndex === 1) {
+        angle.updateAngle(r, Math.PI - r, threeLinesRotation);
+      } else if (angle.angleIndex === 2) {
+        angle.updateAngle(Math.PI, r, threeLinesRotation);
+      } else if (angle.angleIndex === 3) {
+        angle.updateAngle(r + Math.PI, Math.PI - r, threeLinesRotation);
+      }
     }
   }
 

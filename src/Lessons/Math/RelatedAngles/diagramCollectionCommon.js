@@ -242,10 +242,10 @@ export function makeLabeledAngle(
   angle.add('label', label);
   angle.eqn = eqn;
 
-  angle.updateAngle = (start: number, size: number) => {
+  angle.updateAngle = (start: number, size: number, labelRotationOffset: number = 0) => {
     angle._arc.angleToDraw = size;
     angle.transform.updateRotation(start);
-    angle._label.transform.updateRotation(-start);
+    angle._label.transform.updateRotation(-start - labelRotationOffset);
     let labelWidth = 0;
     let labelHeight = 0;
     if (eqn.currentForm != null) {
