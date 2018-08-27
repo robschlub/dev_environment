@@ -395,8 +395,10 @@ class Content extends LessonContent {
       title: 'Corresponding Angles',
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
-          |Corresponding_Angles| at the intersection of two |parallel| lines and
-          a third |intersecting| line, are equal.
+          |Corresponding_Angles| are the angles in the same relative position at the intersection of each |parallel| line and an |intersecting| line.
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+          Corresponding angles are always |equal|.
         </p>
       `),
       modifiers: {
@@ -471,10 +473,10 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
-          When two lines intersect, the |angle| they form does not change when one line is |moved| without rotation.
+          When two lines intersect, an |angle| is formed.
         </p>
         <p class="lesson__diagram_text_p_width_40">
-          Comparing one position to another shows corresponding angles are equal.
+          This angle doesn't change when one line is |moved| without rotation.
         </p>
       `),
       modifiers: {
@@ -502,10 +504,6 @@ class Content extends LessonContent {
         threeLines._line1._end1,
         threeLines._line1._end2,
         threeLines._line1._mid,
-        // threeLines._line2,
-        // threeLines._line2._end1,
-        // threeLines._line2._end2,
-        // threeLines._line2._mid,
         threeLines._line3,
         threeLines._line3._end1,
         threeLines._line3._end2,
@@ -517,12 +515,11 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         let time = Math.max(
           diag.getTimeToMoveToPosition(threeLines._line1, 'center'),
-          // diag.getTimeToMoveToPosition(threeLines._line2, 'center'),
           diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
         );
         time = time > 2 ? 2 : time;
+        threeLines.animateRotationTo(0, 0, time);
         diag.moveToPosition(threeLines._line1, 'center', time);
-        // diag.moveToPosition(threeLines._line2, 'center', time);
         diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
@@ -549,6 +546,110 @@ class Content extends LessonContent {
           layout.line2.corresponding.position.y,
         );
         threeLines.moveLine2ToLine1();
+        threeLines._line2.show();
+        threeLines._line2._end1.show();
+        threeLines._line2._end2.show();
+        threeLines._line2._mid.show();
+        threeLines._line2.isTouchable = false;
+      },
+      setLeaveState: () => {
+        threeLines._line1.isMovable = false;
+        threeLines._line2.isTouchable = true;
+      },
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          |Moving| a line without rotation means the line is |parallel| to its original.
+        </p>
+      `),
+      modifiers: {
+        Moving: click(threeLines.translateLine1, [threeLines], colors.line),
+        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+      },
+      showOnly: () => {},
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          Therefore comparing the original and moved line, shows corresponding angles are equal.
+        </p>
+      `),
+      // modifiers: {
+      //   angle: click(threeLines.toggleCorrespondingAngles, [threeLines], colors.angleA),
+      //   moved: click(threeLines.translateLine1, [threeLines], colors.line),
+      //   Comparing: click(threeLines.moveLine2ToLine1, [threeLines], colors.line),
+      // },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('corresponding');
+        threeLines._angleA1.setColor(layout.colors.angleA);
+        threeLines._angleB1.setColor(layout.colors.angleA);
+        threeLines._angleC1.setColor(layout.colors.angleA);
+        threeLines._angleD1.setColor(layout.colors.angleA);
+        threeLines._angleA2.setColor(layout.colors.disabled);
+        threeLines._angleB2.setColor(layout.colors.disabled);
+        threeLines._angleC2.setColor(layout.colors.disabled);
+        threeLines._angleD2.setColor(layout.colors.disabled);
+        threeLines._line1.setColor(layout.colors.line);
+        threeLines._line2.setColor(layout.colors.disabled);
+        threeLines._line3.setColor(layout.colors.line);
+      },
+      showOnly: [
+        threeLines,
+        threeLines._line1,
+        threeLines._line1._end1,
+        threeLines._line1._end2,
+        threeLines._line1._mid,
+        threeLines._line3,
+        threeLines._line3._end1,
+        threeLines._line3._end2,
+        threeLines._line3._mid,
+      ],
+      show: [
+        diag._selector,
+      ],
+      transitionFromAny: (done) => {
+        if (this.comingFrom !== 'prev') {
+          let time = Math.max(
+            diag.getTimeToMoveToPosition(threeLines._line1, 'center'),
+            diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+          );
+          time = time > 2 ? 2 : time;
+          threeLines.animateRotationTo(0, 0, time);
+          diag.moveToPosition(threeLines._line1, 'center', time);
+          diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+        } else {
+          done();
+        }
+      },
+      setSteadyState: () => {
+        if (this.comingFrom !== 'prev') {
+          threeLines._angleA1.show();
+          threeLines._angleA1._arc.show();
+          threeLines._angleA1.eqn.showForm('a');
+          threeLines._angleA2.show();
+          threeLines._angleA2._arc.show();
+          threeLines._angleA2.eqn.showForm('a');
+
+          diag.moveToPosition(threeLines._line1, 'center', 0.001);
+          diag.moveToPosition(threeLines._line2, 'center', 0.001);
+          diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+          threeLines._line1.isMovable = true;
+          threeLines._line1._end1.movementAllowed = 'translation';
+          threeLines._line1._end2.movementAllowed = 'translation';
+          threeLines._line1._mid.movementAllowed = 'translation';
+          threeLines._line1.move.maxTransform.updateTranslation(
+            10,
+            layout.line1.corresponding.position.y,
+          );
+          threeLines._line1.move.minTransform.updateTranslation(
+            -10,
+            layout.line2.corresponding.position.y,
+          );
+          threeLines.moveLine2ToLine1();
+        } else {
+        }
         threeLines._line2.show();
         threeLines._line2._end1.show();
         threeLines._line2._end2.show();
