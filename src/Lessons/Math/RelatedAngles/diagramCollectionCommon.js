@@ -30,7 +30,7 @@ export type TypeAngle = {
   _label: DiagramElementCollection;
   _arc: DiagramElementPrimative;
   eqn: Equation;
-  updateAngle: (number, number) => void;
+  updateAngle: (number, number, ?number) => void;
 } & DiagramElementCollection;
 
 export function makeMoveableLine(
@@ -60,9 +60,10 @@ export function makeMoveableLine(
   // line.touchInBoundingRect = true;
   line.isTouchable = true;
   const bounds = layout.boundary;
+
   line.updateTransform = (t: Transform) => {
     const r = t.r();
-    if (r != null) {
+    if (r != null && line._end1.movementAllowed === 'rotation') {
       const w = Math.abs(layout.length.full / 2 * Math.cos(r));
       const h = Math.abs(layout.length.full / 2 * Math.sin(r));
       line.move.maxTransform.updateTranslation(

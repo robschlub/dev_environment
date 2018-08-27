@@ -72,74 +72,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     return angle;
   }
 
-  // addEquation(name: string) {
-  //   const eqn = this.diagram.equation.makeEqn();
-  //   eqn.createElements(
-  //     {
-  //       a: 'a',
-  //       a1: 'a',
-  //       b: 'b',
-  //       c: 'c',
-  //       d: 'd',
-  //       equals: ' = ',
-  //       minus: ' \u2212 ',
-  //       minus1: ' \u2212 ',
-  //       _180: '180º',
-  //       _1801: '180º',
-  //       pi: 'π',
-  //       pi1: 'π',
-  //       plus: ' + ',
-  //       lb: '(',
-  //       rb: ')',
-  //     },
-  //     this.layout.colors.diagram.text.base,
-  //   );
-
-  //   eqn.formAlignment.fixTo = eqn.collection._equals;
-  //   eqn.formAlignment.hAlign = 'center';
-  //   eqn.formAlignment.vAlign = 'middle';
-  //   eqn.formAlignment.scale = 1.0;
-
-  //   eqn.setElem('a', this.layout.colors.angleA);
-  //   eqn.setElem('a1', this.layout.colors.angleA);
-  //   eqn.setElem('b', this.layout.colors.angleB);
-  //   eqn.setElem('c', this.layout.colors.angleC);
-  //   eqn.setElem('d', this.layout.colors.angleD);
-
-  //   eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', '_180', 'deg']);
-  //   eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', 'pi'], 'rad');
-
-  //   eqn.addForm('b', ['b', 'equals', '_180', 'minus', 'a1'], 'deg');
-  //   eqn.addForm('b', ['b', 'equals', 'pi', 'minus', 'a1'], 'rad');
-
-  //   eqn.addForm('c', ['c', 'equals', '_180', 'minus', 'b'], 'deg');
-  //   eqn.addForm('c', ['c', 'equals', 'pi', 'minus', 'b'], 'rad');
-  //   eqn.addForm('c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb'], 'deg');
-  //   eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], 'rad');
-  //   eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
-
-  //   // eqn.addForm('a_plus_d', ['a', 'plus', 'd', 'equals', '_180', 'deg']);
-  //   // eqn.addForm('a_plus_d', ['a', 'plus', 'd', 'equals', 'pi'], 'rad');
-
-  //   eqn.addForm('d', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
-  //   eqn.addForm('d', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
-
-  //   eqn.addForm('d_equals_b', ['d', 'equals', 'b']);
-
-  //   eqn.showForm('deg_a_plus_b');
-  //   this.add(name, eqn.collection);
-  //   this.elements[name].eqn = eqn;
-
-  //   return eqn;
-  // }
-
-  // setUnits(units: 'deg' | 'rad') {
-  //   // this._equation1.eqn.setUnits(units);
-  //   // this._equation2.eqn.setUnits(units);
-  //   // this._equation3.eqn.setUnits(units);
-  //   // this._angleB.eqn.setUnits(units);
-  // }
-
   makeAngle(
     name: 'a' | 'b' | 'c' | 'd',
     lineIndex: number,
@@ -197,13 +129,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.addThreeLines();
     this.isMovable = true;
     this.isTouchable = true;
-    // this.movementAllowed = 'rotation';
-    // this.add('line1', this.makeLine('1'));
-    // this._line1.setPosition(this.layout.line1.corresponding.position);
-    // this.add('line2', this.makeLine('2'));
-    // this._line2.setPosition(this.layout.line2.corresponding.position);
-    // this.add('line3', this.makeLine('2'));
-    // this._line3.setPosition(this.layout.line3.corresponding.position);
     this.add('angleA1', this.makeAngle('a', 1, 0));
     this.add('angleB1', this.makeAngle('b', 1, 1));
     this.add('angleC1', this.makeAngle('c', 1, 2));
@@ -229,7 +154,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
 
   updateAngle(angle: TypeIndexAngle, intersect: Point, r: number) {
     const threeLinesRotation = this.transform.r();
-    // console.log("A", threeLinesRotation, this)
     if (threeLinesRotation != null) {
       angle.setPosition(intersect);
       if (angle.angleIndex === 0) {
@@ -268,34 +192,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this.updateAngle(this._angleD2, intersectT2, r);
     }
   }
-
-  // updateAngles() {
-  //   // if (this._line1 && this._line2 && this._angleA) {
-  //   //   const r1 = this._line1.transform.r();
-  //   //   const r2 = this._line2.transform.r();
-  //   //   if (r1 != null && r2 != null) {
-  //   //     if (this._angleA.isShown
-  //   //       || this._angleB.isShown
-  //   //       || this._angleC.isShown
-  //   //       || this._angleD.isShown) {
-  //   //       const minAngle = minAngleDiff(r2, r1);
-  //   //       if (minAngle > 0) {
-  //   //         this._angleA.updateAngle(r1, minAngle);
-  //   //         this._angleB.updateAngle(r1 + Math.PI - (Math.PI - minAngle), Math.PI - minAngle);
-  //   //         this._angleC.updateAngle(r1 + Math.PI, minAngle);
-  //   //         this._angleD.updateAngle(r1 + 2 * Math.PI - (Math.PI - minAngle), Math.PI - minAngle);
-  //   //       } else {
-  //   //         this._angleA.updateAngle(r1, Math.PI - Math.abs(minAngle));
-  //   //         this._angleB.updateAngle(r1 + Math.PI - Math.abs(minAngle), Math.abs(minAngle));
-  //   //         this._angleC.updateAngle(r1 + Math.PI, Math.PI - Math.abs(minAngle));
-  //   //         this._angleD.updateAngle(r1 + 2 * Math.PI - Math.abs(minAngle), Math.abs(minAngle));
-  //   //       }
-  //   //     }
-  //   //     this._line1.updateLabel(r1);
-  //   //     this._line2.updateLabel(r2);
-  //   //   }
-  //   // }
-  // }
 
   pulseLine(index: number = 1) {
     this.elements[`line${index}`].pulseWidth();
@@ -397,26 +293,4 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     }
     this.diagram.animateNextFrame();
   }
-  // toggleOppositeAngles() {
-  //   // if (this._angleA.isShown) {
-  //   //   this._angleB.eqn.showForm('b');
-  //   //   this._angleD.eqn.showForm('b');
-  //   //   this._angleB.show();
-  //   //   this._angleB._arc.show();
-  //   //   this._angleD.show();
-  //   //   this._angleD._arc.show();
-  //   //   this._angleA.hide();
-  //   //   this._angleC.hide();
-  //   // } else {
-  //   //   this._angleB.hide();
-  //   //   this._angleD.hide();
-  //   //   this._angleA.eqn.showForm('a');
-  //   //   this._angleC.eqn.showForm('a');
-  //   //   this._angleA.show();
-  //   //   this._angleC.show();
-  //   //   this._angleA._arc.show();
-  //   //   this._angleC._arc.show();
-  //   // }
-  //   // this.diagram.animateNextFrame();
-  // }
 }
