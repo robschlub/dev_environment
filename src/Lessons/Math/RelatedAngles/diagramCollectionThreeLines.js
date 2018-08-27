@@ -141,6 +141,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._line3.updateTransform(t);
       this.updateIntersectingLineAngle();
     };
+    this._line1.setTransformCallback = (t: Transform) => {
+      this._line3.updateTransform(t);
+      this.updateParallelLineTranlsation();
+    };
 
     this.add('supplementary', this.makeSuppAngle());
 
@@ -165,6 +169,12 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       } else if (angle.angleIndex === 3) {
         angle.updateAngle(r + Math.PI, Math.PI - r, threeLinesRotation);
       }
+    }
+  }
+
+  updateParallelLineTranlsation() {
+    if (this._line1.isMovable) {
+      this.updateIntersectingLineAngle();
     }
   }
 
@@ -201,6 +211,58 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
   pulseParallel() {
     this.pulseLine(1);
     this.pulseLine(2);
+  }
+
+  toggleAngle1() {
+    if (this._angleA1.isShown) {
+      this._angleA1.hide();
+      this._angleB1.show();
+      this._angleB1._arc.show();
+      this._angleB1.eqn.showForm('b');
+      this._angleC1.hide();
+      this._angleD1.hide();
+    } else if (this._angleB1.isShown) {
+      this._angleA1.hide();
+      this._angleB1.hide();
+      this._angleC1.show();
+      this._angleC1._arc.show();
+      this._angleC1.eqn.showForm('c');
+      this._angleD1.hide();
+    } else if (this._angleC1.isShown) {
+      this._angleA1.hide();
+      this._angleB1.hide();
+      this._angleC1.hide();
+      this._angleD1.show();
+      this._angleD1._arc.show();
+      this._angleD1.eqn.showForm('d');
+    } else {
+      this._angleA1.show();
+      this._angleA1._arc.show();
+      this._angleA1.eqn.showForm('a');
+      this._angleB1.hide();
+      this._angleC1.hide();
+      this._angleD1.hide();
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  translateLine1() {
+    const range = this.layout.line1.corresponding.position
+      .sub(this.layout.line2.corresponding.position).y;
+    let y = Math.max(Math.random(), 0.7) * range / 2;
+    const t = this._line1.transform.t();
+    if (t != null) {
+      if (t.y >= 0) {
+        y *= -1;
+      } 
+      const position = new Point(
+        this.layout.line1.corresponding.position.x,
+        y + t.y,
+      );
+      this._line1.stop();
+      this._line1.animateTranslationTo(position, 1);
+      this.diagram.animateNextFrame();
+    }
   }
 
   pulseSupplementaryAngle() {

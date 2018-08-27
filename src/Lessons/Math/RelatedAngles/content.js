@@ -471,39 +471,20 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
-          When two lines intersect, the angle they form does not change when one line is moved without rotation.
+          When two lines intersect, the |angle| they form does not change when one line is |move| without rotation.
         </p>
       `),
-      // modifiers: {
-      //   Corresponding_Angles: click(
-      //     threeLines.toggleCorrespondingAngles, [threeLines],
-      //     colors.angleA,
-      //   ),
-      //   parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
-      //   intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.line),
-      // },
+      modifiers: {
+        angle: click(threeLines.toggleAngle1, [threeLines], colors.angleA),
+        move: click(threeLines.translateLine1, [threeLines], colors.line),
+      },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('corresponding');
-        // if (parallel.isShown) {
-        //   threeLines.transform.updateRotation(0);
-        //   threeLines._line1.transform = parallel._line1.transform._dup();
-        //   threeLines._line2.transform = parallel._line2.transform._dup();
-        // }
-        // if (opp.isShown) {
-        //   threeLines.transform.updateRotation(0);
-        //   threeLines._line1.transform = opp._line1.transform._dup();
-        //   threeLines._line2.transform = opp._line2.transform._dup();
-        // }
         threeLines._angleA1.setColor(layout.colors.angleA);
         threeLines._angleB1.setColor(layout.colors.angleA);
         threeLines._angleC1.setColor(layout.colors.angleA);
         threeLines._angleD1.setColor(layout.colors.angleA);
-        // threeLines._angleA2.setColor(layout.colors.angleA);
-        // threeLines._angleB2.setColor(layout.colors.angleA);
-        // threeLines._angleC2.setColor(layout.colors.angleA);
-        // threeLines._angleD2.setColor(layout.colors.angleA);
         threeLines._line1.setColor(layout.colors.line);
-        // threeLines._line2.setColor(layout.colors.line);
         threeLines._line3.setColor(layout.colors.line);
       },
       showOnly: [
@@ -512,10 +493,6 @@ class Content extends LessonContent {
         threeLines._line1._end1,
         threeLines._line1._end2,
         threeLines._line1._mid,
-        // threeLines._line2,
-        // threeLines._line2._end1,
-        // threeLines._line2._end2,
-        // threeLines._line2._mid,
         threeLines._line3,
         threeLines._line3._end1,
         threeLines._line3._end2,
@@ -527,25 +504,19 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         let time = Math.max(
           diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
-          // diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
           diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
         );
         time = time > 2 ? 2 : time;
         diag.moveToPosition(threeLines._line1, 'corresponding', time);
-        // diag.moveToPosition(threeLines._line2, 'corresponding', time);
         diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
         threeLines._angleA1.show();
-        threeLines._angleA2.show();
         threeLines._angleA1._arc.show();
-        threeLines._angleA2._arc.show();
         threeLines._angleA1.eqn.showForm('a');
-        threeLines._angleA2.eqn.showForm('a');
 
         diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
         diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
-        threeLines.toggleCorrespondingAngles();
         threeLines._line1.isMovable = true;
         threeLines._line1._end1.movementAllowed = 'translation';
         threeLines._line1._end2.movementAllowed = 'translation';
