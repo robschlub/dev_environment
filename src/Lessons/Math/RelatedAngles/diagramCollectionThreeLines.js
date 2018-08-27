@@ -98,8 +98,8 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     const line1 = this.makeParallelLine('1');
     const line2 = this.makeParallelLine('2');
     const line3 = this.makeIntersectingLine('3');
-    this.add('line1', line1);
     this.add('line2', line2);
+    this.add('line1', line1);
     this.add('line3', line3);
     line1.setPosition(this.layout.line3.corresponding.position);
     line2.setPosition(this.layout.line3.corresponding.position);
@@ -129,21 +129,24 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.addThreeLines();
     this.isMovable = true;
     this.isTouchable = true;
-    this.add('angleA1', this.makeAngle('a', 1, 0));
-    this.add('angleB1', this.makeAngle('b', 1, 1));
-    this.add('angleC1', this.makeAngle('c', 1, 2));
-    this.add('angleD1', this.makeAngle('d', 1, 3));
     this.add('angleA2', this.makeAngle('a', 2, 0));
     this.add('angleB2', this.makeAngle('b', 2, 1));
     this.add('angleC2', this.makeAngle('c', 2, 2));
     this.add('angleD2', this.makeAngle('d', 2, 3));
+    this.add('angleA1', this.makeAngle('a', 1, 0));
+    this.add('angleB1', this.makeAngle('b', 1, 1));
+    this.add('angleC1', this.makeAngle('c', 1, 2));
+    this.add('angleD1', this.makeAngle('d', 1, 3));
+
     this._line3.setTransformCallback = (t: Transform) => {
       this._line3.updateTransform(t);
       this.updateIntersectingLineAngle();
+      this.updateParallelLineTranlsation();
     };
     this._line1.setTransformCallback = (t: Transform) => {
       this._line3.updateTransform(t);
       this.updateParallelLineTranlsation();
+      this.updateIntersectingLineAngle();
     };
 
     this.add('supplementary', this.makeSuppAngle());
@@ -174,16 +177,31 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
 
   updateParallelLineTranlsation() {
     if (this._line1.isMovable) {
-      const t = this._line1.transform.t();
+      const t1 = this._line1.transform.t();
+      const t2 = this._line2.transform.t();
       const r = this._line3.transform.r();
-      if (t != null && r != null) {
+      if (t1 != null && r != null && t2 != null) {
         this._line1.transform.updateTranslation(
-          t.y / Math.tan(r),
-          t.y,
+          t1.y / Math.tan(r),
+          t1.y,
+        );
+        this._line2.transform.updateTranslation(
+          t2.y / Math.tan(r),
+          t2.y,
         );
       }
-      this.updateIntersectingLineAngle();
+      this.diagram.animateNextFrame();
+      // this.updateIntersectingLineAngle();
     }
+  }
+
+  moveLine2ToLine1() {
+    this._line2.setPositionToElement(this._line1);
+    this._angleA2.setPositionToElement(this._angleA1);
+    this._angleB2.setPositionToElement(this._angleB1);
+    this._angleC2.setPositionToElement(this._angleC1);
+    this._angleD2.setPositionToElement(this._angleD1);
+    this.diagram.animateNextFrame();
   }
 
   updateIntersectingLineAngle() {
@@ -255,14 +273,15 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
   }
 
   translateLine1() {
+    this.moveLine2ToLine1();
     const range = this.layout.line1.corresponding.position
       .sub(this.layout.line2.corresponding.position).y;
-    let y = Math.max(Math.random(), 0.7) * range / 2;
+    let y = Math.max(Math.random(), 0.5);
     const t = this._line1.transform.t();
     if (t != null) {
       if (t.y >= 0) {
         y *= -1;
-      } 
+      }
       const position = new Point(
         this.layout.line1.corresponding.position.x,
         y + t.y,
