@@ -64,6 +64,10 @@ export default function lessonLayout() {
       position: new Point(0, 0.5),
       rotation: 0,
     },
+    center: {
+      position: new Point(0, 0),
+      rotation: 0,
+    },
     position: new Point(0, 0.3),
     rotation: 0,
   };

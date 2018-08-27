@@ -503,11 +503,11 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
+          diag.getTimeToMoveToPosition(threeLines._line1, 'center'),
           diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
         );
         time = time > 2 ? 2 : time;
-        diag.moveToPosition(threeLines._line1, 'corresponding', time);
+        diag.moveToPosition(threeLines._line1, 'center', time);
         diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
@@ -515,14 +515,20 @@ class Content extends LessonContent {
         threeLines._angleA1._arc.show();
         threeLines._angleA1.eqn.showForm('a');
 
-        diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
+        diag.moveToPosition(threeLines._line1, 'center', 0.001);
         diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
         threeLines._line1.isMovable = true;
         threeLines._line1._end1.movementAllowed = 'translation';
         threeLines._line1._end2.movementAllowed = 'translation';
         threeLines._line1._mid.movementAllowed = 'translation';
-        threeLines._line1.move.maxTransform.updateTranslation(layout.line1.corresponding.position);
-        threeLines._line1.move.minTransform.updateTranslation(layout.line2.corresponding.position);
+        threeLines._line1.move.maxTransform.updateTranslation(
+          10,
+          layout.line1.corresponding.position.y,
+        );
+        threeLines._line1.move.minTransform.updateTranslation(
+          -10,
+          layout.line2.corresponding.position.y,
+        );
       },
       setLeaveState: () => {
         threeLines._line1.isMovable = false;

@@ -174,6 +174,14 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
 
   updateParallelLineTranlsation() {
     if (this._line1.isMovable) {
+      const t = this._line1.transform.t();
+      const r = this._line3.transform.r();
+      if (t != null && r != null) {
+        this._line1.transform.updateTranslation(
+          t.y / Math.tan(r),
+          t.y,
+        );
+      }
       this.updateIntersectingLineAngle();
     }
   }
