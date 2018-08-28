@@ -920,6 +920,7 @@ class Content extends LessonContent {
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         threeLines._line3.setColor(layout.colors.line);
+        diag._unitsSelector.select('deg');
       },
       showOnly: [
         threeLines,
@@ -957,7 +958,7 @@ class Content extends LessonContent {
         diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
         diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
         threeLines.toggleInteriorAngles();
-        diag._unitsSelector.select('deg');
+        // diag._unitsSelector.select('deg');
       },
     });
 
