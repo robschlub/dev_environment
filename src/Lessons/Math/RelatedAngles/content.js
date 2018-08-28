@@ -809,10 +809,10 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_40">
           |Corresponding_angles| are equal.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
+        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
           |Opposite_angles| are equal.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
+        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
           Therefore, |alternate_angles| are equal.
         </p>
       `),
@@ -839,14 +839,6 @@ class Content extends LessonContent {
           threeLines._line1.transform = opp._line1.transform._dup();
           threeLines._line2.transform = opp._line2.transform._dup();
         }
-        // threeLines._angleA1.setColor(layout.colors.angleA);
-        // threeLines._angleB1.setColor(layout.colors.angleA);
-        // threeLines._angleC1.setColor(layout.colors.angleA);
-        // threeLines._angleD1.setColor(layout.colors.angleA);
-        // threeLines._angleA2.setColor(layout.colors.angleA);
-        // threeLines._angleB2.setColor(layout.colors.angleA);
-        // threeLines._angleC2.setColor(layout.colors.angleA);
-        // threeLines._angleD2.setColor(layout.colors.angleA);
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         threeLines._line3.setColor(layout.colors.line);
@@ -974,10 +966,10 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_40">
           |Corresponding_angles| are equal.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
+        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
           |Supplementary_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
+        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
           Therefore, |interior_angles| are equal.
         </p>
       `),
@@ -997,39 +989,25 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('interior');
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
-        if (opp.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = opp._line1.transform._dup();
-          threeLines._line2.transform = opp._line2.transform._dup();
-        }
-        threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.line);
-        threeLines._line3.setColor(layout.colors.line);
       },
-      showOnly: [
-        threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
-      ],
-      show: [
-        diag._selector,
-        diag._unitsSelector,
-      ],
+      showOnly: () => {
+        if (this.comingFrom !== 'prev') {
+          this.diagram.elements.showOnly([threeLines]);
+          this.diagram.elements.show([
+            diag._selector,
+            diag._unitsSelector,
+            threeLines._line1,
+            threeLines._line2,
+            threeLines._line3,
+          ]);
+          this.diagram.elements.hide([
+            threeLines._line1._label,
+            threeLines._line2._label,
+            threeLines._line3._label,
+          ]);
+        }
+      },
+
       transitionFromAny: (done) => {
         if (this.comingFrom !== 'prev') {
           let time = Math.max(
@@ -1051,7 +1029,7 @@ class Content extends LessonContent {
           diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
           diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
         }
-        threeLines.toggleInteriorAngles();
+        threeLines.showCorrespondingAnglesInterior();
         diag._unitsSelector.select('deg');
       },
     });
