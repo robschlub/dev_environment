@@ -552,16 +552,24 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
 
   showInteriorAngles() {
     const disabledColor = JSON.stringify(this.layout.colors.disabled);
-    const isDisabled = (element: TypeAngle) => JSON.stringify(element._arc.color) === disabledColor;
+    const correspondingColor = JSON.stringify(this.layout.colors.angleB);
+    const isDisabled =
+      (element: TypeAngle) => JSON.stringify(element._arc.color) === disabledColor;
+    const isCorresponding =
+      (element: TypeAngle) => JSON.stringify(element._arc.color) === correspondingColor;
     if (this._angleC1.isShown) {
-      if (isDisabled(this._angleC1) || isDisabled(this._angleB2)) {
+      if (isDisabled(this._angleC1)
+        || isDisabled(this._angleB2)
+        || isCorresponding(this._angleC1)) {
         this.showOnlyAngles(['C1', 'B2'], this.layout.colors.angleA, ['C2']);
         this._angleB2.eqn.showForm('b_equals');
       } else {
         this.toggleInteriorAngles();
         return;
       }
-    } else if (isDisabled(this._angleD1) || isDisabled(this._angleA2)) {
+    } else if (isDisabled(this._angleD1)
+        || isDisabled(this._angleA2)
+        || isCorresponding(this._angleD1)) {
       this.showOnlyAngles(['D1', 'A2'], this.layout.colors.angleA, ['D2']);
       this._angleA2.eqn.showForm('a_equals');
     } else {

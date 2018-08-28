@@ -971,7 +971,7 @@ class Content extends LessonContent {
           |Supplementary_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
         </p>
         <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
-          Therefore, |interior_angles| are equal.
+          Therefore, |interior_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
         </p>
       `),
       modifiers: {
