@@ -239,43 +239,43 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.pulseLine(2);
   }
 
-  toggleAngle1() {
-    if (this._angleA1.isShown) {
-      this._angleA1.hide();
-      this._angleB1.show();
-      this._angleB1._arc.show();
-      this._angleB1.eqn.showForm('b');
-      this._angleC1.hide();
-      this._angleD1.hide();
-    } else if (this._angleB1.isShown) {
-      this._angleA1.hide();
-      this._angleB1.hide();
-      this._angleC1.show();
-      this._angleC1._arc.show();
-      this._angleC1.eqn.showForm('c');
-      this._angleD1.hide();
-    } else if (this._angleC1.isShown) {
-      this._angleA1.hide();
-      this._angleB1.hide();
-      this._angleC1.hide();
-      this._angleD1.show();
-      this._angleD1._arc.show();
-      this._angleD1.eqn.showForm('d');
-    } else {
-      this._angleA1.show();
-      this._angleA1._arc.show();
-      this._angleA1.eqn.showForm('a');
-      this._angleB1.hide();
-      this._angleC1.hide();
-      this._angleD1.hide();
-    }
-    this.diagram.animateNextFrame();
-  }
+  // toggleAngle1() {
+  //   if (this._angleA1.isShown) {
+  //     this._angleA1.hide();
+  //     this._angleB1.show();
+  //     this._angleB1._arc.show();
+  //     this._angleB1.eqn.showForm('b');
+  //     this._angleC1.hide();
+  //     this._angleD1.hide();
+  //   } else if (this._angleB1.isShown) {
+  //     this._angleA1.hide();
+  //     this._angleB1.hide();
+  //     this._angleC1.show();
+  //     this._angleC1._arc.show();
+  //     this._angleC1.eqn.showForm('c');
+  //     this._angleD1.hide();
+  //   } else if (this._angleC1.isShown) {
+  //     this._angleA1.hide();
+  //     this._angleB1.hide();
+  //     this._angleC1.hide();
+  //     this._angleD1.show();
+  //     this._angleD1._arc.show();
+  //     this._angleD1.eqn.showForm('d');
+  //   } else {
+  //     this._angleA1.show();
+  //     this._angleA1._arc.show();
+  //     this._angleA1.eqn.showForm('a');
+  //     this._angleB1.hide();
+  //     this._angleC1.hide();
+  //     this._angleD1.hide();
+  //   }
+  //   this.diagram.animateNextFrame();
+  // }
 
   translateLine1() {
     this.moveLine2ToLine1();
-    const range = this.layout.line1.corresponding.position
-      .sub(this.layout.line2.corresponding.position).y;
+    // const range = this.layout.line1.corresponding.position
+    //   .sub(this.layout.line2.corresponding.position).y;
     let y = Math.max(Math.random(), 0.5);
     const t = this._line1.transform.t();
     if (t != null) {
@@ -349,8 +349,8 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._angleC2.show();
       this._angleC1._arc.show();
       this._angleC2._arc.show();
-      this._angleC1.eqn.showForm('c');
-      this._angleC2.eqn.showForm('c');
+      this._angleC1.eqn.showForm('a');
+      this._angleC2.eqn.showForm('a');
       this._angleD1.hide();
       this._angleD2.hide();
     } else if (this._angleC1.isShown) {
@@ -364,8 +364,8 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._angleD2.show();
       this._angleD1._arc.show();
       this._angleD2._arc.show();
-      this._angleD1.eqn.showForm('d');
-      this._angleD2.eqn.showForm('d');
+      this._angleD1.eqn.showForm('b');
+      this._angleD2.eqn.showForm('b');
     } else {
       this._angleA1.show();
       this._angleA2.show();
@@ -379,6 +379,119 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this._angleC2.hide();
       this._angleD1.hide();
       this._angleD2.hide();
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  toggleAlternateAngles() {
+    if (this._angleA1.isShown) {
+      this.showOnlyAngles(['B1', 'D2']);
+    } else if (this._angleB1.isShown) {
+      this.showOnlyAngles(['C1', 'A2']);
+    } else if (this._angleC1.isShown) {
+      this.showOnlyAngles(['D1', 'B2']);
+    } else {
+      this.showOnlyAngles(['A1', 'C2']);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  showOnlyAngles(
+    anglesToShow: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'D1' | 'D2'>,
+    anglesToShowDisabled: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'D1' | 'D2'> = [],
+  ) {
+    const allAngles = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2'];
+    const anglesToHide = allAngles.filter(angleString => anglesToShow.indexOf(angleString) === -1
+      && anglesToShowDisabled.indexOf(angleString) === -1);
+    const showAngle = (angleString: string, color: Array<number>) => {
+      // $FlowFixMe
+      const angle = this[`_angle${angleString}`];
+      angle.show();
+      angle._arc.show();
+      let angleLabel = angleString[0].toLowerCase();
+      if (angleLabel === 'c') {
+        angleLabel = 'a';
+      }
+      if (angleLabel === 'd') {
+        angleLabel = 'b';
+      }
+      angle.eqn.showForm(angleLabel);
+      angle.setColor(color);
+    };
+    anglesToShow.forEach((angleString) => {
+      showAngle(angleString, this.layout.colors.angleA);
+    });
+    anglesToShowDisabled.forEach((angleString) => {
+      showAngle(angleString, this.layout.colors.disabled);
+    });
+    anglesToHide.forEach((angleString) => {
+      // $FlowFixMe
+      const angle = this[`_angle${angleString}`];
+      angle.hide();
+    });
+  }
+
+  showCorrespondingAngles() {
+    if (this._angleA1.isShown) {
+      this.showOnlyAngles(['A1', 'A2'], ['C2']);
+    }
+    if (this._angleB1.isShown) {
+      this.showOnlyAngles(['B1', 'B2'], ['D2']);
+    }
+    if (this._angleC1.isShown) {
+      this.showOnlyAngles(['C1', 'C2'], ['A2']);
+    }
+    if (this._angleD1.isShown) {
+      this.showOnlyAngles(['D1', 'D2'], ['B2']);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  showOppositeAngles() {
+    if (this._angleA1.isShown) {
+      this.showOnlyAngles(['A2', 'C2'], ['A1']);
+    }
+    if (this._angleB1.isShown) {
+      this.showOnlyAngles(['B2', 'D2'], ['B1']);
+    }
+    if (this._angleC1.isShown) {
+      this.showOnlyAngles(['C2', 'A2'], ['C1']);
+    }
+    if (this._angleD1.isShown) {
+      this.showOnlyAngles(['D2', 'B2'], ['D1']);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  showAlternateAngles() {
+    if (this._angleA1.isShown) {
+      if (this._angleA2.isShown
+        && JSON.stringify(this._angleA2.color) !== JSON.stringify(this.layout.colors.disabled)) {
+        this.showOnlyAngles(['A1', 'C2'], ['A2']);
+      } else {
+        this.toggleAlternateAngles();
+      }
+    }
+    if (this._angleB1.isShown) {
+      if (this._angleB2.isShown) {
+        this.toggleAlternateAngles();
+      } else {
+        this.showOnlyAngles(['B1', 'D2'], ['B2']);
+      }
+    }
+    if (this._angleC1.isShown) {
+      if (this._angleC2.isShown) {
+        this.toggleAlternateAngles();
+      } else {
+        this.showOnlyAngles(['C1', 'A2'], ['C2']);
+      }
+    }
+    if (this._angleD1.isShown) {
+      if (this._angleD2.isShown) {
+        this.toggleAlternateAngles();
+      } else {
+        this.showOnlyAngles(['D1', 'B2'], ['D2']);
+      }
     }
     this.diagram.animateNextFrame();
   }

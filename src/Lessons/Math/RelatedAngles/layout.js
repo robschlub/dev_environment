@@ -104,7 +104,7 @@ export default function lessonLayout() {
       sides: 200,
     },
     label: {
-      radius: 0.5,
+      radius: 0.45,
     },
   };
   layout.equation1 = {

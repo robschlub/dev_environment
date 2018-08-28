@@ -99,6 +99,9 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     if (title === 'corresponding') {
       this.diagram.lesson.goToSection('Corresponding Angles');
     }
+    if (title === 'alternate') {
+      this.diagram.lesson.goToSection('Alternate Angles');
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
