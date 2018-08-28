@@ -100,23 +100,15 @@ export default class ParallelCollection extends DiagramElementCollection {
     this.setPosition(this.layout.position);
     this.add('line1', this.makeLine());
     this._line1.setPosition(this.layout.line1.parallel.position.x, 0);
-    // this._line1.setTransformCallback = (t) => {
-    //   this._line1.updateTransform(t);
-    //   this.checkForParallel();
-    // };
     this.add('line2', this.makeLine());
     this._line2.setPosition(this.layout.line2.parallel.position.x, 0);
-    // this._line2.setTransformCallback = (t) => {
-    //   this._line2.updateTransform(t);
-    //   this.checkForParallel();
-    // };
 
     this.hasTouchableElements = true;
   }
 
   pulseParallel() {
-    this._line1.pulseScaleNow(1, 3);
-    this._line2.pulseScaleNow(1, 3);
+    this._line1.pulseWidth();
+    this._line2.pulseWidth();
     this.diagram.animateNextFrame();
   }
 

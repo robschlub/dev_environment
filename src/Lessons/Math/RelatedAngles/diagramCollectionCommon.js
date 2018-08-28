@@ -18,6 +18,7 @@ export type MoveableLineType = {
   _end2: MoveableLinePrimativeType;
   _mid: MoveableLinePrimativeType;
   updateTransform: (Transform) => void;
+  pulseWidth: () => void;
 } & DiagramElementCollection;
 
 export type TypeLabeledLine = {

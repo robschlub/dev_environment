@@ -3,6 +3,7 @@
 $colors: (
   latin:            color('diagram', 'text-latin'),
   line:             map-get($geometry_colors, lines),
+  intersectingLine: lighten(map-get($geometry_colors, lines), 30),
   disabled:         map-get($geometry_colors, disabled),
   angleA:           map-get($geometry_colors, angleA),
   angleB:           map-get($geometry_colors, angleB),

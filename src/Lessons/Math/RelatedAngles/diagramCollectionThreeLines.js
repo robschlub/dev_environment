@@ -66,12 +66,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     return line;
   }
 
-  // makeSuppAngle() {
-  //   const angle = makeSupplementaryAngle(this.diagram, this.layout);
-  //   // angle.setPosition(this.layout.line1.opposite.position);
-  //   return angle;
-  // }
-
   makeAngle(
     name: 'a' | 'b' | 'c' | 'd',
     lineIndex: number,
@@ -106,17 +100,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     line1.setPosition(this.layout.line3.corresponding.position);
     line2.setPosition(this.layout.line3.corresponding.position);
     line3.setPosition(this.layout.line3.corresponding.position);
-    // line1.isMoveable = false;
-    // line2.isMoveable = false;
-    // line1.movementAllowed = 'translation';
-    // line2.movementAllowed = 'translation';
-    // line1.move.maxTransform.updateTranslation(
-    //   this.layout.line1.corresponding.position.x,
-    //   this.layout.line1.corresponding.position.y + 0.2,
-    // );
     line3.transform.updateRotation(Math.PI / 2);
     line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 3.7);
     line3.move.minTransform.updateRotation(Math.PI / 3.7);
+    line3.setColor(this.layout.colors.intersectingLine);
   }
 
   constructor(
@@ -151,11 +138,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this.updateIntersectingLineAngle();
     };
 
-    // this.add('supplementary', this.makeSuppAngle());
-
-    // this.varState = {
-    //   supplementary: 3,
-    // };
     this.hasTouchableElements = true;
     this.isMovable = true;
     this.setTransformCallback = this.updateIntersectingLineAngle.bind(this);
@@ -241,43 +223,8 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.pulseLine(2);
   }
 
-  // toggleAngle1() {
-  //   if (this._angleA1.isShown) {
-  //     this._angleA1.hide();
-  //     this._angleB1.show();
-  //     this._angleB1._arc.show();
-  //     this._angleB1.eqn.showForm('b');
-  //     this._angleC1.hide();
-  //     this._angleD1.hide();
-  //   } else if (this._angleB1.isShown) {
-  //     this._angleA1.hide();
-  //     this._angleB1.hide();
-  //     this._angleC1.show();
-  //     this._angleC1._arc.show();
-  //     this._angleC1.eqn.showForm('c');
-  //     this._angleD1.hide();
-  //   } else if (this._angleC1.isShown) {
-  //     this._angleA1.hide();
-  //     this._angleB1.hide();
-  //     this._angleC1.hide();
-  //     this._angleD1.show();
-  //     this._angleD1._arc.show();
-  //     this._angleD1.eqn.showForm('d');
-  //   } else {
-  //     this._angleA1.show();
-  //     this._angleA1._arc.show();
-  //     this._angleA1.eqn.showForm('a');
-  //     this._angleB1.hide();
-  //     this._angleC1.hide();
-  //     this._angleD1.hide();
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
-
   translateLine1() {
     this.moveLine2ToLine1();
-    // const range = this.layout.line1.corresponding.position
-    //   .sub(this.layout.line2.corresponding.position).y;
     let y = Math.max(Math.random(), 0.5);
     const t = this._line1.transform.t();
     if (t != null) {
@@ -294,94 +241,83 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     }
   }
 
-  // pulseSupplementaryAngle() {
-  //   // if (index != null) {
-  //   //   this.varState.supplementary = index;
-  //   // } else if (this.varState.supplementary === 3) {
-  //   //   this.varState.supplementary = 0;
-  //   // } else {
-  //   //   this.varState.supplementary += 1;
-  //   // }
-
-  //   // const r1 = this._line1.transform.r();
-  //   // const r2 = this._line2.transform.r();
-  //   // if (r1 != null && r2 != null) {
-  //   //   if (this.varState.supplementary === 0) {
-  //   //     this._supplementary.transform.updateRotation(r1);
-  //   //   }
-  //   //   if (this.varState.supplementary === 1) {
-  //   //     this._supplementary.transform.updateRotation(r2);
-  //   //   }
-  //   //   if (this.varState.supplementary === 2) {
-  //   //     this._supplementary.transform.updateRotation(r1 + Math.PI);
-  //   //   }
-  //   //   if (this.varState.supplementary === 3) {
-  //   //     this._supplementary.transform.updateRotation(r2 + Math.PI);
-  //   //   }
-  //   // }
-  //   this._supplementary.scaleAndDisolve();
-  //   this.diagram.animateNextFrame();
-  // }
-
-  // nextEquation2Form() {
-  //   this._equation2.eqn.nextForm();
-  //   this.diagram.animateNextFrame();
-  // }
-
-  toggleCorrespondingAngles() {
-    if (this._angleA1.isShown) {
-      this._angleA1.hide();
-      this._angleA2.hide();
-      this._angleB1.show();
-      this._angleB2.show();
-      this._angleB1._arc.show();
-      this._angleB2._arc.show();
-      this._angleB1.eqn.showForm('b');
-      this._angleB2.eqn.showForm('b');
-      this._angleC1.hide();
-      this._angleC2.hide();
-      this._angleD1.hide();
-      this._angleD2.hide();
-    } else if (this._angleB1.isShown) {
-      this._angleA1.hide();
-      this._angleA2.hide();
-      this._angleB1.hide();
-      this._angleB2.hide();
-      this._angleC1.show();
-      this._angleC2.show();
-      this._angleC1._arc.show();
-      this._angleC2._arc.show();
-      this._angleC1.eqn.showForm('a');
-      this._angleC2.eqn.showForm('a');
-      this._angleD1.hide();
-      this._angleD2.hide();
-    } else if (this._angleC1.isShown) {
-      this._angleA1.hide();
-      this._angleA2.hide();
-      this._angleB1.hide();
-      this._angleB2.hide();
-      this._angleC1.hide();
-      this._angleC2.hide();
-      this._angleD1.show();
-      this._angleD2.show();
-      this._angleD1._arc.show();
-      this._angleD2._arc.show();
-      this._angleD1.eqn.showForm('b');
-      this._angleD2.eqn.showForm('b');
-    } else {
-      this._angleA1.show();
-      this._angleA2.show();
-      this._angleA1._arc.show();
-      this._angleA2._arc.show();
-      this._angleA1.eqn.showForm('a');
-      this._angleA2.eqn.showForm('a');
-      this._angleB1.hide();
-      this._angleB2.hide();
-      this._angleC1.hide();
-      this._angleC2.hide();
-      this._angleD1.hide();
-      this._angleD2.hide();
+  toggleCorrespondingAngles(make2Disabled: boolean = false) {
+    let disable2 = make2Disabled;
+    if (typeof disable2 !== 'boolean') {
+      disable2 = false;
     }
+    if (this._angleA1.isShown) {
+      if (disable2) {
+        this.showOnlyAngles(['B1'], this.layout.colors.angleA, ['B2']);
+      } else {
+        this.showOnlyAngles(['B1', 'B2']);
+      }
+      // this._angleA1.hide();
+      // this._angleA2.hide();
+      // this._angleB1.show();
+      // this._angleB2.show();
+      // this._angleB1._arc.show();
+      // this._angleB2._arc.show();
+      // this._angleB1.eqn.showForm('b');
+      // this._angleB2.eqn.showForm('b');
+      // this._angleC1.hide();
+      // this._angleC2.hide();
+      // this._angleD1.hide();
+      // this._angleD2.hide();
+    } else if (this._angleB1.isShown) {
+      if (disable2) {
+        this.showOnlyAngles(['C1'], this.layout.colors.angleA, ['C2']);
+      } else {
+        this.showOnlyAngles(['C1', 'C2']);
+      }
+      // this._angleA1.hide();
+      // this._angleA2.hide();
+      // this._angleB1.hide();
+      // this._angleB2.hide();
+      // this._angleC1.show();
+      // this._angleC2.show();
+      // this._angleC1._arc.show();
+      // this._angleC2._arc.show();
+      // this._angleC1.eqn.showForm('a');
+      // this._angleC2.eqn.showForm('a');
+      // this._angleD1.hide();
+      // this._angleD2.hide();
+    } else if (this._angleC1.isShown) {
+      if (disable2) {
+        this.showOnlyAngles(['D1'], this.layout.colors.angleA, ['D2']);
+      } else {
+        this.showOnlyAngles(['D1', 'D2']);
+      }
+      // this._angleA1.hide();
+      // this._angleA2.hide();
+      // this._angleB1.hide();
+      // this._angleB2.hide();
+      // this._angleC1.hide();
+      // this._angleC2.hide();
+      // this._angleD1.show();
+      // this._angleD2.show();
+      // this._angleD1._arc.show();
+      // this._angleD2._arc.show();
+      // this._angleD1.eqn.showForm('b');
+      // this._angleD2.eqn.showForm('b');
+    } else if (disable2) {
+      this.showOnlyAngles(['A1'], this.layout.colors.angleA, ['A2']);
+    } else {
+      this.showOnlyAngles(['A1', 'A2']);
+    }
+    // }
+      // this._angleA1.show();
+      // this._angleA2.show();
+      // this._angleA1._arc.show();
+      // this._angleA2._arc.show();
+      // this._angleA1.eqn.showForm('a');
+      // this._angleA2.eqn.showForm('a');
+      // this._angleB1.hide();
+      // this._angleB2.hide();
+      // this._angleC1.hide();
+      // this._angleC2.hide();
+      // this._angleD1.hide();
+      // this._angleD2.hide();
     this.diagram.animateNextFrame();
   }
 
