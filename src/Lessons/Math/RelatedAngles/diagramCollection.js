@@ -102,12 +102,18 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     if (title === 'alternate') {
       this.diagram.lesson.goToSection('Alternate Angles');
     }
+    if (title === 'interior') {
+      this.diagram.lesson.goToSection('Interior Angles');
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
   setUnits(units: 'deg' | 'rad') {
     if (this._opposite.isShown) {
       this._opposite.setUnits(units);
+    }
+    if (this._threeLines.isShown) {
+      this._threeLines.setUnits(units);
     }
   }
 

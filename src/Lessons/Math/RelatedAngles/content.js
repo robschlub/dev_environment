@@ -755,14 +755,14 @@ class Content extends LessonContent {
           threeLines._line1.transform = opp._line1.transform._dup();
           threeLines._line2.transform = opp._line2.transform._dup();
         }
-        threeLines._angleA1.setColor(layout.colors.angleA);
-        threeLines._angleB1.setColor(layout.colors.angleA);
-        threeLines._angleC1.setColor(layout.colors.angleA);
-        threeLines._angleD1.setColor(layout.colors.angleA);
-        threeLines._angleA2.setColor(layout.colors.angleA);
-        threeLines._angleB2.setColor(layout.colors.angleA);
-        threeLines._angleC2.setColor(layout.colors.angleA);
-        threeLines._angleD2.setColor(layout.colors.angleA);
+        // threeLines._angleA1.setColor(layout.colors.angleA);
+        // threeLines._angleB1.setColor(layout.colors.angleA);
+        // threeLines._angleC1.setColor(layout.colors.angleA);
+        // threeLines._angleD1.setColor(layout.colors.angleA);
+        // threeLines._angleA2.setColor(layout.colors.angleA);
+        // threeLines._angleB2.setColor(layout.colors.angleA);
+        // threeLines._angleC2.setColor(layout.colors.angleA);
+        // threeLines._angleD2.setColor(layout.colors.angleA);
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         threeLines._line3.setColor(layout.colors.line);
@@ -821,7 +821,10 @@ class Content extends LessonContent {
           threeLines.showAlternateAngles, [threeLines],
           colors.angleA,
         ),
-        Corresponding_angles: click(threeLines.showCorrespondingAngles, [threeLines], colors.angleB),
+        Corresponding_angles: click(
+          threeLines.showCorrespondingAngles, [threeLines],
+          colors.angleB,
+        ),
         Opposite_angles: click(threeLines.showOppositeAngles, [threeLines], colors.angleC),
       },
       setEnterState: () => {
@@ -836,14 +839,14 @@ class Content extends LessonContent {
           threeLines._line1.transform = opp._line1.transform._dup();
           threeLines._line2.transform = opp._line2.transform._dup();
         }
-        threeLines._angleA1.setColor(layout.colors.angleA);
-        threeLines._angleB1.setColor(layout.colors.angleA);
-        threeLines._angleC1.setColor(layout.colors.angleA);
-        threeLines._angleD1.setColor(layout.colors.angleA);
-        threeLines._angleA2.setColor(layout.colors.angleA);
-        threeLines._angleB2.setColor(layout.colors.angleA);
-        threeLines._angleC2.setColor(layout.colors.angleA);
-        threeLines._angleD2.setColor(layout.colors.angleA);
+        // threeLines._angleA1.setColor(layout.colors.angleA);
+        // threeLines._angleB1.setColor(layout.colors.angleA);
+        // threeLines._angleC1.setColor(layout.colors.angleA);
+        // threeLines._angleD1.setColor(layout.colors.angleA);
+        // threeLines._angleA2.setColor(layout.colors.angleA);
+        // threeLines._angleB2.setColor(layout.colors.angleA);
+        // threeLines._angleC2.setColor(layout.colors.angleA);
+        // threeLines._angleD2.setColor(layout.colors.angleA);
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         threeLines._line3.setColor(layout.colors.line);
@@ -888,6 +891,168 @@ class Content extends LessonContent {
           diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
         }
         threeLines.toggleAlternateAngles();
+      },
+    });
+
+    this.addSection({
+      title: 'Interior Angles',
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          |Interior_angles| are the inside angles on the same side of the |intersecting| line that crosses |two_lines|.
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+          When the two lines are |parallel|, the interior angles always add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+        </p>
+      `),
+      modifiers: {
+        Interior_angles: click(
+          threeLines.toggleInteriorAngles, [threeLines],
+          colors.angleA,
+        ),
+        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+        two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
+        intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.line),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('interior');
+        if (parallel.isShown) {
+          threeLines.transform.updateRotation(0);
+          threeLines._line1.transform = parallel._line1.transform._dup();
+          threeLines._line2.transform = parallel._line2.transform._dup();
+        }
+        if (opp.isShown) {
+          threeLines.transform.updateRotation(0);
+          threeLines._line1.transform = opp._line1.transform._dup();
+          threeLines._line2.transform = opp._line2.transform._dup();
+        }
+        threeLines._line1.setColor(layout.colors.line);
+        threeLines._line2.setColor(layout.colors.line);
+        threeLines._line3.setColor(layout.colors.line);
+      },
+      showOnly: [
+        threeLines,
+        threeLines._line1,
+        threeLines._line1._end1,
+        threeLines._line1._end2,
+        threeLines._line1._mid,
+        threeLines._line2,
+        threeLines._line2._end1,
+        threeLines._line2._end2,
+        threeLines._line2._mid,
+        threeLines._line3,
+        threeLines._line3._end1,
+        threeLines._line3._end2,
+        threeLines._line3._mid,
+      ],
+      show: [
+        diag._selector,
+        diag._unitsSelector,
+      ],
+      transitionFromAny: (done) => {
+        let time = Math.max(
+          diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
+          diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
+          diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+        );
+        time = time > 2 ? 2 : time;
+        threeLines.animateRotationTo(0, 0, time);
+        diag.moveToPosition(threeLines._line1, 'corresponding', time);
+        diag.moveToPosition(threeLines._line2, 'corresponding', time);
+        diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+      },
+      setSteadyState: () => {
+        diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
+        diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
+        diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        threeLines.toggleInteriorAngles();
+        diag._unitsSelector.select('deg');
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p class="lesson__diagram_text_p_width_40">
+          |Corresponding_angles| are equal.
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+          |Supplementary_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+        </p>
+        <p class="lesson__diagram_text_p_width_40">
+          Therefore, |interior_angles| are equal.
+        </p>
+      `),
+      modifiers: {
+        interior_angles: click(
+          threeLines.showInteriorAngles, [threeLines],
+          colors.angleA,
+        ),
+        Corresponding_angles: click(
+          threeLines.showCorrespondingAnglesInterior, [threeLines],
+          colors.angleB,
+        ),
+        Supplementary_angles: click(
+          threeLines.showSupplementary, [threeLines],
+          colors.angleC,
+        ),
+      },
+      setEnterState: () => {
+        diag._selector.selector.selectWithoutExecution('interior');
+        if (parallel.isShown) {
+          threeLines.transform.updateRotation(0);
+          threeLines._line1.transform = parallel._line1.transform._dup();
+          threeLines._line2.transform = parallel._line2.transform._dup();
+        }
+        if (opp.isShown) {
+          threeLines.transform.updateRotation(0);
+          threeLines._line1.transform = opp._line1.transform._dup();
+          threeLines._line2.transform = opp._line2.transform._dup();
+        }
+        threeLines._line1.setColor(layout.colors.line);
+        threeLines._line2.setColor(layout.colors.line);
+        threeLines._line3.setColor(layout.colors.line);
+      },
+      showOnly: [
+        threeLines,
+        threeLines._line1,
+        threeLines._line1._end1,
+        threeLines._line1._end2,
+        threeLines._line1._mid,
+        threeLines._line2,
+        threeLines._line2._end1,
+        threeLines._line2._end2,
+        threeLines._line2._mid,
+        threeLines._line3,
+        threeLines._line3._end1,
+        threeLines._line3._end2,
+        threeLines._line3._mid,
+      ],
+      show: [
+        diag._selector,
+        diag._unitsSelector,
+      ],
+      transitionFromAny: (done) => {
+        if (this.comingFrom !== 'prev') {
+          let time = Math.max(
+            diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
+            diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
+            diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+          );
+          time = time > 2 ? 2 : time;
+          diag.moveToPosition(threeLines._line1, 'corresponding', time);
+          diag.moveToPosition(threeLines._line2, 'corresponding', time);
+          diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+        } else {
+          done();
+        }
+      },
+      setSteadyState: () => {
+        if (this.comingFrom !== 'prev') {
+          diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
+          diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
+          diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        }
+        threeLines.toggleInteriorAngles();
+        diag._unitsSelector.select('deg');
       },
     });
   }

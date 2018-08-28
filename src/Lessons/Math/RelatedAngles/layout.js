@@ -99,12 +99,12 @@ export default function lessonLayout() {
   };
   layout.angle = {
     arc: {
-      radius: 0.4,
+      radius: 0.3,
       width: 0.02,
       sides: 200,
     },
     label: {
-      radius: 0.45,
+      radius: 0.35,
     },
   };
   layout.equation1 = {

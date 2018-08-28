@@ -255,10 +255,11 @@ export function makeLabeledAngle(
     }
     const a = labelWidth + layout.angle.label.radius;
     const b = labelHeight + layout.angle.label.radius;
-    const r = a * b / Math.sqrt((b * Math.cos(start + size / 2)) ** 2
-      + (a * Math.sin(start + size / 2)) ** 2);
+    const r = a * b / Math.sqrt((b * Math.cos(start + size / 2 + labelRotationOffset)) ** 2
+      + (a * Math.sin(start + size / 2 + labelRotationOffset)) ** 2);
     const labelPosition = polarToRect(r, size / 2);
     angle._label.setPosition(labelPosition);
+    // if (eqn.currentForm != null) { console.log(eqn.currentForm.name); }
   };
 
   eqn.showForm = (form: string) => {

@@ -33,9 +33,9 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
   _angleC2: TypeIndexAngle;
   _angleD2: TypeIndexAngle;
   _supplementary: TypeSupplementaryAngle;
-  varState: {
-    supplementary: number;
-  };
+  // varState: {
+  //   supplementary: number;
+  // };
 
   _equation1: {
     eqn: Equation;
@@ -66,11 +66,11 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     return line;
   }
 
-  makeSuppAngle() {
-    const angle = makeSupplementaryAngle(this.diagram, this.layout);
-    // angle.setPosition(this.layout.line1.opposite.position);
-    return angle;
-  }
+  // makeSuppAngle() {
+  //   const angle = makeSupplementaryAngle(this.diagram, this.layout);
+  //   // angle.setPosition(this.layout.line1.opposite.position);
+  //   return angle;
+  // }
 
   makeAngle(
     name: 'a' | 'b' | 'c' | 'd',
@@ -83,8 +83,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       ? arcLayout.radius : arcLayout.radius * 1.0;
     const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
-    angle.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('b_equals', ['_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('b_equals', ['pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('a_equals', ['_180', 'minus', 'b'], 'deg');
+    angle.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
     angle.eqn.showForm(name);
 
     // angle.setPositionToElement(line);
@@ -149,11 +151,11 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this.updateIntersectingLineAngle();
     };
 
-    this.add('supplementary', this.makeSuppAngle());
+    // this.add('supplementary', this.makeSuppAngle());
 
-    this.varState = {
-      supplementary: 3,
-    };
+    // this.varState = {
+    //   supplementary: 3,
+    // };
     this.hasTouchableElements = true;
     this.isMovable = true;
     this.setTransformCallback = this.updateIntersectingLineAngle.bind(this);
@@ -292,34 +294,34 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     }
   }
 
-  pulseSupplementaryAngle() {
-    // if (index != null) {
-    //   this.varState.supplementary = index;
-    // } else if (this.varState.supplementary === 3) {
-    //   this.varState.supplementary = 0;
-    // } else {
-    //   this.varState.supplementary += 1;
-    // }
+  // pulseSupplementaryAngle() {
+  //   // if (index != null) {
+  //   //   this.varState.supplementary = index;
+  //   // } else if (this.varState.supplementary === 3) {
+  //   //   this.varState.supplementary = 0;
+  //   // } else {
+  //   //   this.varState.supplementary += 1;
+  //   // }
 
-    // const r1 = this._line1.transform.r();
-    // const r2 = this._line2.transform.r();
-    // if (r1 != null && r2 != null) {
-    //   if (this.varState.supplementary === 0) {
-    //     this._supplementary.transform.updateRotation(r1);
-    //   }
-    //   if (this.varState.supplementary === 1) {
-    //     this._supplementary.transform.updateRotation(r2);
-    //   }
-    //   if (this.varState.supplementary === 2) {
-    //     this._supplementary.transform.updateRotation(r1 + Math.PI);
-    //   }
-    //   if (this.varState.supplementary === 3) {
-    //     this._supplementary.transform.updateRotation(r2 + Math.PI);
-    //   }
-    // }
-    this._supplementary.scaleAndDisolve();
-    this.diagram.animateNextFrame();
-  }
+  //   // const r1 = this._line1.transform.r();
+  //   // const r2 = this._line2.transform.r();
+  //   // if (r1 != null && r2 != null) {
+  //   //   if (this.varState.supplementary === 0) {
+  //   //     this._supplementary.transform.updateRotation(r1);
+  //   //   }
+  //   //   if (this.varState.supplementary === 1) {
+  //   //     this._supplementary.transform.updateRotation(r2);
+  //   //   }
+  //   //   if (this.varState.supplementary === 2) {
+  //   //     this._supplementary.transform.updateRotation(r1 + Math.PI);
+  //   //   }
+  //   //   if (this.varState.supplementary === 3) {
+  //   //     this._supplementary.transform.updateRotation(r2 + Math.PI);
+  //   //   }
+  //   // }
+  //   this._supplementary.scaleAndDisolve();
+  //   this.diagram.animateNextFrame();
+  // }
 
   // nextEquation2Form() {
   //   this._equation2.eqn.nextForm();
@@ -396,6 +398,22 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  setUnits(units: 'deg' | 'rad') {
+    this._angleA2.eqn.setUnits(units);
+    this._angleB2.eqn.setUnits(units);
+  }
+
+  toggleInteriorAngles() {
+    if (this._angleC1.isShown) {
+      this.showOnlyAngles(['D1', 'A2']);
+      this._angleA2.eqn.showForm('a_equals');
+    } else {
+      this.showOnlyAngles(['C1', 'B2']);
+      this._angleB2.eqn.showForm('b_equals');
+    }
+    this.diagram.animateNextFrame();
+  }
+
   showOnlyAngles(
     anglesToShow: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'D1' | 'D2'>,
     color: Array<number> = this.layout.colors.angleA.slice(),
@@ -435,18 +453,31 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     });
   }
 
+  showCorrespondingAnglesInterior() {
+    if (this._angleC1.isShown) {
+      this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB);
+    } else {
+      this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB);
+    }
+    this.diagram.animateNextFrame();
+  }
+
   showCorrespondingAngles() {
     if (this._angleA1.isShown) {
-      this.showOnlyAngles(['A1', 'A2'], this.layout.colors.angleB, ['C2']);
+      // this.showOnlyAngles(['A1', 'A2'], this.layout.colors.angleB, ['C2']);
+      this.showOnlyAngles(['A1', 'A2'], this.layout.colors.angleB);
     }
     if (this._angleB1.isShown) {
-      this.showOnlyAngles(['B1', 'B2'], this.layout.colors.angleB, ['D2']);
+      // this.showOnlyAngles(['B1', 'B2'], this.layout.colors.angleB, ['D2']);
+      this.showOnlyAngles(['B1', 'B2'], this.layout.colors.angleB);
     }
     if (this._angleC1.isShown) {
-      this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB, ['A2']);
+      // this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB, ['A2']);
+      this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB);
     }
     if (this._angleD1.isShown) {
-      this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB, ['B2']);
+      // this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB, ['B2']);
+      this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB);
     }
     this.diagram.animateNextFrame();
   }
@@ -463,6 +494,20 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     }
     if (this._angleD1.isShown) {
       this.showOnlyAngles(['D2', 'B2'], this.layout.colors.angleC, ['D1']);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  showSupplementary() {
+    const r = this._line3.transform.r();
+    if (r != null) {
+      if (this._angleC1.isShown) {
+        this.showOnlyAngles(['B2', 'C2'], this.layout.colors.angleC, ['C1']);
+        this._angleB2.eqn.showForm('b_equals');
+      } else {
+        this.showOnlyAngles(['A2', 'D2'], this.layout.colors.angleC, ['D1']);
+        this._angleA2.eqn.showForm('a_equals');
+      }
     }
     this.diagram.animateNextFrame();
   }
@@ -501,6 +546,27 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
         this.toggleAlternateAngles();
         return;
       }
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  showInteriorAngles() {
+    const disabledColor = JSON.stringify(this.layout.colors.disabled);
+    const isDisabled = (element: TypeAngle) => JSON.stringify(element._arc.color) === disabledColor;
+    if (this._angleC1.isShown) {
+      if (isDisabled(this._angleC1) || isDisabled(this._angleB2)) {
+        this.showOnlyAngles(['C1', 'B2'], this.layout.colors.angleA, ['C2']);
+        this._angleB2.eqn.showForm('b_equals');
+      } else {
+        this.toggleInteriorAngles();
+        return;
+      }
+    } else if (isDisabled(this._angleD1) || isDisabled(this._angleA2)) {
+      this.showOnlyAngles(['D1', 'A2'], this.layout.colors.angleA, ['D2']);
+      this._angleA2.eqn.showForm('a_equals');
+    } else {
+      this.toggleInteriorAngles();
+      return;
     }
     this.diagram.animateNextFrame();
   }
