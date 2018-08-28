@@ -398,12 +398,13 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
 
   showOnlyAngles(
     anglesToShow: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'D1' | 'D2'>,
+    color: Array<number> = this.layout.colors.angleA.slice(),
     anglesToShowDisabled: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'D1' | 'D2'> = [],
   ) {
     const allAngles = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2'];
     const anglesToHide = allAngles.filter(angleString => anglesToShow.indexOf(angleString) === -1
       && anglesToShowDisabled.indexOf(angleString) === -1);
-    const showAngle = (angleString: string, color: Array<number>) => {
+    const showAngle = (angleString: string, col: Array<number>, pulse: boolean = false) => {
       // $FlowFixMe
       const angle = this[`_angle${angleString}`];
       angle.show();
@@ -416,10 +417,13 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
         angleLabel = 'b';
       }
       angle.eqn.showForm(angleLabel);
-      angle.setColor(color);
+      angle.setColor(col);
+      if (pulse) {
+        angle.pulseScaleNow(1, 1.2);
+      }
     };
     anglesToShow.forEach((angleString) => {
-      showAngle(angleString, this.layout.colors.angleA);
+      showAngle(angleString, color, true);
     });
     anglesToShowDisabled.forEach((angleString) => {
       showAngle(angleString, this.layout.colors.disabled);
@@ -433,64 +437,69 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
 
   showCorrespondingAngles() {
     if (this._angleA1.isShown) {
-      this.showOnlyAngles(['A1', 'A2'], ['C2']);
+      this.showOnlyAngles(['A1', 'A2'], this.layout.colors.angleB, ['C2']);
     }
     if (this._angleB1.isShown) {
-      this.showOnlyAngles(['B1', 'B2'], ['D2']);
+      this.showOnlyAngles(['B1', 'B2'], this.layout.colors.angleB, ['D2']);
     }
     if (this._angleC1.isShown) {
-      this.showOnlyAngles(['C1', 'C2'], ['A2']);
+      this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB, ['A2']);
     }
     if (this._angleD1.isShown) {
-      this.showOnlyAngles(['D1', 'D2'], ['B2']);
+      this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB, ['B2']);
     }
     this.diagram.animateNextFrame();
   }
 
   showOppositeAngles() {
     if (this._angleA1.isShown) {
-      this.showOnlyAngles(['A2', 'C2'], ['A1']);
+      this.showOnlyAngles(['A2', 'C2'], this.layout.colors.angleC, ['A1']);
     }
     if (this._angleB1.isShown) {
-      this.showOnlyAngles(['B2', 'D2'], ['B1']);
+      this.showOnlyAngles(['B2', 'D2'], this.layout.colors.angleC, ['B1']);
     }
     if (this._angleC1.isShown) {
-      this.showOnlyAngles(['C2', 'A2'], ['C1']);
+      this.showOnlyAngles(['C2', 'A2'], this.layout.colors.angleC, ['C1']);
     }
     if (this._angleD1.isShown) {
-      this.showOnlyAngles(['D2', 'B2'], ['D1']);
+      this.showOnlyAngles(['D2', 'B2'], this.layout.colors.angleC, ['D1']);
     }
     this.diagram.animateNextFrame();
   }
 
   showAlternateAngles() {
+    const disabledColor = JSON.stringify(this.layout.colors.disabled);
+    const isDisabled = (element: TypeAngle) => JSON.stringify(element._arc.color) === disabledColor;
     if (this._angleA1.isShown) {
-      if (this._angleA2.isShown
-        && JSON.stringify(this._angleA2.color) !== JSON.stringify(this.layout.colors.disabled)) {
-        this.showOnlyAngles(['A1', 'C2'], ['A2']);
+      if (isDisabled(this._angleA1) || isDisabled(this._angleC2)) {
+        this.showOnlyAngles(['A1', 'C2'], this.layout.colors.angleA, ['A2']);
       } else {
         this.toggleAlternateAngles();
+        return;
       }
     }
     if (this._angleB1.isShown) {
-      if (this._angleB2.isShown) {
-        this.toggleAlternateAngles();
+      if (isDisabled(this._angleB1) || isDisabled(this._angleD2)) {
+        this.showOnlyAngles(['B1', 'D2'], this.layout.colors.angleA, ['B2']);
       } else {
-        this.showOnlyAngles(['B1', 'D2'], ['B2']);
+        this.toggleAlternateAngles();
+        return;
       }
     }
     if (this._angleC1.isShown) {
-      if (this._angleC2.isShown) {
-        this.toggleAlternateAngles();
+      if (isDisabled(this._angleC1) || isDisabled(this._angleA2)) {
+        this.showOnlyAngles(['C1', 'A2'], this.layout.colors.angleA, ['C2']);
       } else {
-        this.showOnlyAngles(['C1', 'A2'], ['C2']);
+        this.toggleAlternateAngles();
+        return;
       }
     }
     if (this._angleD1.isShown) {
-      if (this._angleD2.isShown) {
-        this.toggleAlternateAngles();
+      if (isDisabled(this._angleD1) || isDisabled(this._angleB2)) {
+        this.showOnlyAngles(['D1', 'B2'], this.layout.colors.angleA, ['D2']);
       } else {
-        this.showOnlyAngles(['D1', 'B2'], ['D2']);
+        this.toggleAlternateAngles();
+        return;
       }
     }
     this.diagram.animateNextFrame();

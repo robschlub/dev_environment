@@ -821,8 +821,8 @@ class Content extends LessonContent {
           threeLines.showAlternateAngles, [threeLines],
           colors.angleA,
         ),
-        Corresponding_angles: click(threeLines.showCorrespondingAngles, [threeLines], colors.line),
-        Opposite_angles: click(threeLines.showOppositeAngles, [threeLines], colors.line),
+        Corresponding_angles: click(threeLines.showCorrespondingAngles, [threeLines], colors.angleB),
+        Opposite_angles: click(threeLines.showOppositeAngles, [threeLines], colors.angleC),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('alternate');
