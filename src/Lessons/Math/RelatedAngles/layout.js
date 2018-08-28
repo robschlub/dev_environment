@@ -108,17 +108,17 @@ export default function lessonLayout() {
     },
   };
   layout.equation1 = {
-    aPlusB: new Point(-1.5, -0.5),
-    bPlusC: new Point(-1.5, -0.5),
+    aPlusB: new Point(-3, -0.5),
+    bPlusC: new Point(-3, -0.5),
   };
 
   layout.equation2 = {
-    b: new Point(-1.5, -1.35),
-    c: new Point(-1.5, -0.9),
+    b: new Point(-3, -1.35),
+    c: new Point(-3, -0.9),
   };
 
   layout.equation3 = {
-    cEqualsA: new Point(-1.5, -1.3),
+    cEqualsA: new Point(-3, -1.3),
   };
 
   return layout;
