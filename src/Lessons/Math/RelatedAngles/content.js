@@ -573,14 +573,15 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p class="lesson__diagram_text_p_width_40">
-          Therefore comparing the original and moved line, shows corresponding angles are equal.
+          Therefore comparing the original and moved line, shows |corresponding_angles| are |equal|.
         </p>
       `),
-      // modifiers: {
-      //   angle: click(threeLines.toggleCorrespondingAngles, [threeLines], colors.angleA),
-      //   moved: click(threeLines.translateLine1, [threeLines], colors.line),
-      //   Comparing: click(threeLines.moveLine2ToLine1, [threeLines], colors.line),
-      // },
+      modifiers: {
+        corresponding_angles: click(
+          threeLines.toggleCorrespondingAngles, [threeLines],
+          colors.angleA,
+        ),
+      },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('corresponding');
         threeLines._angleA1.setColor(layout.colors.angleA);
@@ -595,20 +596,22 @@ class Content extends LessonContent {
         threeLines._line2.setColor(layout.colors.disabled);
         threeLines._line3.setColor(layout.colors.line);
       },
-      showOnly: [
-        threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
-      ],
-      show: [
-        diag._selector,
-      ],
+      showOnly: () => {
+        if (this.comingFrom !== 'prev') {
+          this.diagram.elements.showOnly([
+            threeLines,
+            threeLines._line1,
+            threeLines._line1._end1,
+            threeLines._line1._end2,
+            threeLines._line1._mid,
+            threeLines._line3,
+            threeLines._line3._end1,
+            threeLines._line3._end2,
+            threeLines._line3._mid,
+          ]);
+          diag._selector.show();
+        }
+      },
       transitionFromAny: (done) => {
         if (this.comingFrom !== 'prev') {
           let time = Math.max(
@@ -648,12 +651,13 @@ class Content extends LessonContent {
             layout.line2.corresponding.position.y,
           );
           threeLines.moveLine2ToLine1();
-        } else {
         }
         threeLines._line2.show();
         threeLines._line2._end1.show();
         threeLines._line2._end2.show();
         threeLines._line2._mid.show();
+        threeLines._line2.isTouchable = false;
+        threeLines._line1.isMovable = true;
         threeLines._line2.isTouchable = false;
       },
       setLeaveState: () => {
