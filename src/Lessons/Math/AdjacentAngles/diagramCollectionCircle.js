@@ -281,7 +281,12 @@ class AdjacentAnglesCollection extends AngleCircle {
           eqnForm = equation.form[`${angleString}${formString}${unitString}`];
         }
       }
-      equation.showForm(eqnForm);
+      // console.log(eqnForm)
+      if ('base' in eqnForm) {
+        equation.showForm(eqnForm.base);
+      } else {
+        equation.showForm(eqnForm);
+      }
       // equation.setCurrentForm(eqnForm);
       // equation.render();
     };

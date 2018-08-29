@@ -1262,6 +1262,7 @@ class DiagramElement {
   ): void {
     this.show();
     const targetColor = this.color.slice();
+    // console.log(this.name, targetColor)
     this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);

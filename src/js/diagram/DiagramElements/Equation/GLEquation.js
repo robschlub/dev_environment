@@ -911,6 +911,7 @@ export class EquationForm extends Elements {
       }
     }
     elements.forEach((e) => {
+      // console.log(e.name, e.color.slice())
       if (appear) {
         if (delay > 0) {
           e.disolveInWithDelay(delay, time, callbackToUse);
@@ -1040,7 +1041,7 @@ export class EquationForm extends Elements {
     this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.dissolveElements(elementsToHide, false, 0.00, 0.01, null);
+    this.dissolveElements(elementsToHide, false, 0.001, 0.01, null);
     this.collection.animateToTransforms(animateToTransforms, time, 0);
     this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
