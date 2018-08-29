@@ -3,7 +3,7 @@
 import {
   LessonContent, click, highlight, centerV, unit,
 } from '../../../js/Lesson/LessonContent';
-import { Transform } from '../../../js/diagram/tools/g2';
+// import { Transform } from '../../../js/diagram/tools/g2';
 import LessonDiagram from './diagram';
 import Definition from '../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
@@ -374,7 +374,6 @@ class Content extends LessonContent {
         opp._angleD,
       ],
       show: [
-        // diag._unitsSelector,
         diag._selector,
         opp._line1,
         opp._line2,

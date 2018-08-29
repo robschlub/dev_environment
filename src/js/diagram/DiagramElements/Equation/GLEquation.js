@@ -1434,11 +1434,13 @@ export class Equation {
           const possibleFormTypes
             = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
           if (possibleFormTypes.length) {
+            // eslint-disable-next-line prefer-destructuring
             formTypeToUse = possibleFormTypes[0];
           }
         }
-        // console.log(formTypeToUse, this.formTypeOrder)
-        this.setCurrentForm(formOrName, formTypeToUse);
+        if (formTypeToUse != null) {
+          this.setCurrentForm(formOrName, formTypeToUse);
+        }
         this.render();
       }
     } else {

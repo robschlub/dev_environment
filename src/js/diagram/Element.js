@@ -1263,17 +1263,10 @@ class DiagramElement {
     this.show();
     const targetColor = this.color.slice();
     this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
-    // this.color[3] = 0.01;
     const phase1 = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phase2 = new ColorAnimationPhase(targetColor, time, tools.linear);
     this.animate.color.toDisolve = 'in';
-    // this.state.disolving = 'in';
     this.animateColorPlan([phase1, phase2], checkCallback(callback));
-    // if (delay === 0) {
-      // this.animateColorPlan([phase2], checkCallback(callback));
-    // } else {
-    //   this.animateColorPlan([phase1, phase2], checkCallback(callback));
-    // }
   }
 
   disolveOut(
