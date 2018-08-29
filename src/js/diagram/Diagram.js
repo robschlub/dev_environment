@@ -163,7 +163,7 @@ function shapes(diagram: Diagram) {
 
   function htmlElement(
     elementToAdd: HTMLElement | Array<HTMLElement>,
-    id: string = '',
+    id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
     classes: string = '',
     location: Point = new Point(0, 0),
     alignV: 'top' | 'bottom' | 'middle' = 'middle',
@@ -195,7 +195,7 @@ function shapes(diagram: Diagram) {
 
   function htmlText(
     textInput: string,
-    id: string = '',
+    id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
     classes: string = '',
     location: Point = new Point(0, 0),
     alignV: 'top' | 'bottom' | 'middle' = 'middle',
@@ -482,6 +482,9 @@ class Diagram {
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
 
+  beingTouchedElements: Array<DiagramElementPrimative |
+                        DiagramElementCollection>;
+
   limits: Rect;
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
@@ -490,6 +493,7 @@ class Diagram {
   equation: Object;
   backgroundColor: Array<number>;
   fontScale: number;
+  layout: Object;
 
   glToDiagramSpaceTransform: Transform;
   diagramToGLSpaceTransform: Transform;
@@ -508,7 +512,9 @@ class Diagram {
     width: number = 2,
     height: number = 2,
     backgroundColor: Array<number> = [1, 1, 1, 1],
+    layout: Object = {},
   ) {
+    this.layout = layout;
     if (typeof containerIdOrWebGLContext === 'string') {
       const container = document.getElementById(containerIdOrWebGLContext);
       if (container instanceof HTMLElement) {
@@ -565,6 +571,7 @@ class Diagram {
     this.inTransition = false;
     // console.log(this.limits)
     this.beingMovedElements = [];
+    this.beingTouchedElements = [];
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
     this.equation = this.getEquations();
@@ -684,6 +691,7 @@ class Diagram {
     if (this.inTransition) {
       return false;
     }
+
     // Get the touched point in clip space
     const pixelPoint = this.clientToPixel(clientPoint);
     // console.log(pixelPoint)
@@ -693,15 +701,14 @@ class Diagram {
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
-    const touchedElements = this.elements.getTouched(glPoint);
+    this.beingTouchedElements = this.elements.getTouched(glPoint);
 
-    touchedElements.forEach(e => e.click());
-    // console.log(touchedElements)
+    this.beingTouchedElements.forEach(e => e.click());
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
-    for (let i = 0; i < touchedElements.length; i += 1) {
-      const element = touchedElements[i];
+    for (let i = 0; i < this.beingTouchedElements.length; i += 1) {
+      const element = this.beingTouchedElements[i];
       if (element.isMovable) {
         this.beingMovedElements.push(element);
         element.startBeingMoved();
@@ -710,7 +717,7 @@ class Diagram {
     if (this.beingMovedElements.length > 0) {
       this.animateNextFrame();
     }
-    if (touchedElements.length > 0) {
+    if (this.beingTouchedElements.length > 0) {
       return true;
     }
     return false;
@@ -728,6 +735,7 @@ class Diagram {
       element.startMovingFreely();
     }
     this.beingMovedElements = [];
+    this.beingTouchedElements = [];
     // console.log("after", this.elements._circle.transform.t())
   }
 
@@ -752,16 +760,12 @@ class Diagram {
 
     const previousGLPoint =
       previousPixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
-    // const currentGLPoint =
-    //   currentPixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
 
     const previousDiagramPoint =
       previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
     const currentDiagramPoint =
       currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
 
-    // const previousClipPoint = this.clientToClip(previousClientPoint);
-    // const currentClipPoint = this.clientToClip(currentClientPoint);
     const delta = currentDiagramPoint.sub(previousDiagramPoint);
 
     // Go through each element being moved, get the current translation

@@ -911,9 +911,12 @@ export class EquationForm extends Elements {
       }
     }
     elements.forEach((e) => {
+      // console.log(e.name, e.color.slice())
       if (appear) {
-        e.disolveInWithDelay(delay, time, callbackToUse);
-        callbackToUse = null;
+        if (delay > 0) {
+          e.disolveInWithDelay(delay, time, callbackToUse);
+          callbackToUse = null;
+        }
       } else {
         e.disolveOutWithDelay(delay, time, callbackToUse);
         callbackToUse = null;
@@ -1000,14 +1003,19 @@ export class EquationForm extends Elements {
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
 
     const currentTransforms = this.collection.getElementTransforms();
-
     // this.arrange(scale, xAlign, yAlign, fixElement);
     this.setPositions();
     const animateToTransforms = this.collection.getElementTransforms();
+
     this.collection.setElementTransforms(currentTransforms);
     this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);
-    this.collection.animateToTransforms(animateToTransforms, time, 0);
-    this.dissolveElements(elementsToShow, true, time, 0.5, callback);
+    const t = this.collection.animateToTransforms(
+      animateToTransforms,
+      time,
+      0,
+      // this.dissolveElements.bind(this, elementsToShow, true, 0, 0.5, callback),
+    );
+    this.dissolveElements(elementsToShow, true, t + 0.001, 0.5, callback);
   }
 
   animateTo(
@@ -1033,7 +1041,7 @@ export class EquationForm extends Elements {
     this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.dissolveElements(elementsToHide, false, 0.01, 0.01, null);
+    this.dissolveElements(elementsToHide, false, 0.001, 0.01, null);
     this.collection.animateToTransforms(animateToTransforms, time, 0);
     this.dissolveElements(elementsToShow, true, time, 0.5, callback);
   }
@@ -1117,8 +1125,9 @@ export type TypeEquation = {
   firstTransform: Transform;
   _dup: () => TypeEquation;
   form: Object;
+  unitsForm: Object;
   currentForm: ?EquationForm;
-  currentFormName: string;
+  // currentFormName: string;
   formAlignment: {
     vAlign: TypeVAlign;
     hAlign: TypeHAlign;
@@ -1154,9 +1163,12 @@ export class Equation {
   diagramLimits: Rect;
   firstTransform: Transform;
   form: Object;
+  formSeries: Array<EquationForm>;
   drawContext2D: DrawContext2D;
   currentForm: ?EquationForm;
-  currentFormName: string;
+  formTypeOrder: Array<string>;
+  // currentFormName: string;
+  // currentFormType: string;
   formAlignment: {
     vAlign: TypeVAlign;
     hAlign: TypeHAlign;
@@ -1181,6 +1193,7 @@ export class Equation {
       scale: 1,
     };
     this.currentForm = null;
+    this.formTypeOrder = ['base'];
   }
 
   _dup() {
@@ -1199,10 +1212,18 @@ export class Equation {
 
     equationCopy.collection = newCollection;
     const newForm = {};
-    Object.keys(this.form).forEach((key) => {
-      newForm[key] = this.form[key]._dup(newCollection);
+    Object.keys(this.form).forEach((name) => {
+      if (!(name in newForm)) {
+        newForm[name] = {};
+      }
+      Object.keys(this.form[name]).forEach((formType) => {
+        if (formType !== 'name') {
+          newForm[name][formType] = this.form[name][formType]._dup(newCollection);
+        } else {
+          newForm[name][formType] = this.form[name][formType];
+        }
+      });
     });
-
     equationCopy.form = newForm;
 
     duplicateFromTo(this.formAlignment, equationCopy.formAlignment, ['fixTo']);
@@ -1269,11 +1290,20 @@ export class Equation {
   addForm(
     name: string,
     content: Array<Elements | Element | string>,
+    formType: string = 'base',
   ) {
-    this.form[name] = new EquationForm(this.collection);
-    this.form[name].createEq(content);
+    if (!(name in this.form)) {
+      this.form[name] = {};
+    }
+
+    this.form[name][formType] = new EquationForm(this.collection);
     this.form[name].name = name;
-    this.form[name].arrange(
+    this.form[name][formType].name = name;
+
+    const form = this.form[name][formType];
+    form.createEq(content);
+    form.type = formType;
+    form.arrange(
       this.formAlignment.scale,
       this.formAlignment.hAlign,
       this.formAlignment.vAlign,
@@ -1281,21 +1311,69 @@ export class Equation {
     );
   }
 
-  scaleForm(name: string, scale: number) {
+  scaleForm(name: string, scale: number, formType: string = 'base') {
+    // console.log(name, this.form, formType, this.form[name][formType])
     if (name in this.form) {
-      this.form[name].arrange(
-        scale,
-        this.formAlignment.hAlign,
-        this.formAlignment.vAlign,
-        this.formAlignment.fixTo,
-      );
+      if (formType in this.form[name]) {
+        this.form[name][formType].arrange(
+          scale,
+          this.formAlignment.hAlign,
+          this.formAlignment.vAlign,
+          this.formAlignment.fixTo,
+        );
+      }
     }
   }
 
   scale(scale: number) {
-    Object.keys(this.form).forEach((key) => {
-      this.scaleForm(key, scale);
+    Object.keys(this.form).forEach((name) => {
+      Object.keys(this.form[name]).forEach((formType) => {
+        if (formType !== 'name') {
+          this.scaleForm(name, scale, formType);
+        }
+      });
     });
+  }
+
+  // TODO add formType
+  setFormSeries(series: Array<string | EquationForm>) {
+    this.formSeries = [];
+    series.forEach((form) => {
+      if (typeof form === 'string') {
+        this.formSeries.push(this.form[form]);
+      } else {
+        this.formSeries.push(form);
+      }
+    });
+  }
+
+  // TODO add formType
+  nextForm(name: ?string) {
+    this.collection.stop();
+    this.collection.stop();
+    let nextIndex = 0;
+    if (name == null) {
+      let index = 0;
+      if (this.currentForm != null) {
+        index = this.formSeries.indexOf(this.currentForm);
+        if (index < 0) {
+          index = 0;
+        }
+      }
+      nextIndex = index + 1;
+      if (nextIndex === this.formSeries.length) {
+        nextIndex = 0;
+      }
+    } else {
+      this.formSeries.forEach((form, index) => {
+        if (form.name === name) {
+          nextIndex = index;
+        }
+      });
+    }
+
+    this.formSeries[nextIndex].animatePositionsTo(2);
+    this.setCurrentForm(this.formSeries[nextIndex]);
   }
 
   render() {
@@ -1306,17 +1384,69 @@ export class Equation {
     }
   }
 
-  setCurrentForm(form: EquationForm | string) {
-    if (typeof form === 'string') {
-      this.currentForm = this.form[form];
-      this.currentFormName = form;
-    } else {
-      this.currentForm = form;
-      Object.keys(this.form).forEach((key) => {
-        if (this.form[key] === this.currentForm) {
-          this.currentFormName = key;
+  setCurrentForm(
+    formOrName: EquationForm | string,
+    formType: string = 'base',
+  ) {
+    if (typeof formOrName === 'string') {
+      this.currentForm = null;
+      if (formOrName in this.form) {
+        if (formType in this.form[formOrName]) {
+          this.currentForm = this.form[formOrName][formType];
         }
-      });
+      }
+    } else {
+      this.currentForm = formOrName;
+    }
+  }
+
+
+  setUnits(units: 'deg' | 'rad') {
+    if (units === 'deg') {
+      this.formTypeOrder = ['deg', 'base'];
+    }
+    if (units === 'rad') {
+      this.formTypeOrder = ['rad', 'base'];
+    }
+    if (this.collection.isShown) {
+      const form = this.currentForm;
+      if (form != null) {
+        this.showForm(form.name);
+      }
+    }
+    // if (this.currentForm != null) {
+    //   if (units === 'deg' && this.currentForm.name.startsWith('rad')) {
+    //     this.showForm(`deg${this.currentForm.name.slice(3)}`);
+    //   }
+    //   if (units === 'rad' && this.currentForm.name.startsWith('deg')) {
+    //     this.showForm(`rad${this.currentForm.name.slice(3)}`);
+    //   }
+    // }
+  }
+
+  showForm(
+    formOrName: EquationForm | string,
+    formType: ?string,
+  ) {
+    if (typeof formOrName === 'string') {
+      if (formOrName in this.form) {
+        let formTypeToUse = formType;
+        if (formTypeToUse == null) {
+          const possibleFormTypes
+            = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
+          if (possibleFormTypes.length) {
+            // eslint-disable-next-line prefer-destructuring
+            formTypeToUse = possibleFormTypes[0];
+          }
+        }
+        if (formTypeToUse != null) {
+          this.setCurrentForm(formOrName, formTypeToUse);
+        }
+        this.render();
+      }
+    } else {
+      this.setCurrentForm(formOrName);
+      this.render();
     }
   }
 

@@ -363,6 +363,12 @@ Line.prototype.hasPointAlong = function linehasPointAlong(p: Point, precision?: 
   }
   return false;
 };
+Line.prototype.distanceToPoint = function distanceToPoint(p: Point, precision?: number) {
+  return roundNum(
+    Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),
+    precision,
+  );
+};
 
 Line.prototype.hasPointOn = function linehasPointOn(p: Point, precision?: number) {
   if (this.hasPointAlong(p, precision)) {
@@ -1102,6 +1108,32 @@ class Transform {
     return true;
   }
 
+  isEqualTo(transformToCompare: Transform): boolean {
+    if (transformToCompare.order.length !== this.order.length) {
+      return false;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      if (this.order[i].constructor.name !==
+          transformToCompare.order[i].constructor.name) {
+        return false;
+      }
+      if (this.order[i] instanceof Translation || this.order[i] instanceof Scale) {
+        if (transformToCompare.order[i].x !== this.order[i].x) {
+          return false;
+        }
+        if (transformToCompare.order[i].y !== this.order[i].y) {
+          return false;
+        }
+      }
+      if (this.order[i] instanceof Rotation) {
+        if (transformToCompare.r !== this.order[i].r) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // Subtract a transform from the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
@@ -1422,6 +1454,24 @@ function polarToRect(mag: number, angle: number) {
     mag * Math.sin(angle),
   );
 }
+
+function rectToPolar(x: number | Point, y: number = 0) {
+  let rect;
+  if (typeof x === 'number') {
+    rect = new Point(x, y);
+  } else {
+    rect = x;
+  }
+  const mag = rect.distance();
+  let angle = Math.atan2(rect.y, rect.x);
+  if (angle < 0) {
+    angle += Math.PI * 2;
+  }
+  return {
+    mag,
+    angle,
+  };
+}
 // $FlowFixMe
 function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   let firstPoint = true;
@@ -1468,4 +1518,5 @@ export {
   quadraticBezier,
   translationPath,
   polarToRect,
+  rectToPolar,
 };

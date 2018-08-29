@@ -21,15 +21,19 @@ body {
 
 .lesson__adjacent_angles_table {
   width: 100%;
-  table-layout: fixed;
+  // table-layout: fixed;
+  // margin-left: auto;
+  // margin-right: 0;
   color: map-get($colors, disabled);
   text-align: center;
   border-bottom: 1px solid map-get($colors, disabled);
   border-top: 1px solid map-get($colors, disabled);
-  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
 }
 
 .lesson__adjacent_angles_table td {
+  padding-left: calc(var(--lesson__diagram-font-size));
+  padding-right: calc(var(--lesson__diagram-font-size));
   padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
 }

@@ -38,6 +38,10 @@ function itemSelector(
   return outStr;
 }
 
+const unit = (deg: string, rad: string) => `<span class="lesson__unit_deg">${deg}</span><span class="lesson__unit_rad">${rad}</span>
+  `;
+
+
 function initializeItemSelector(
   methodToExecute: Function,
   bindingObject: Object,
@@ -495,6 +499,7 @@ class LessonContent {
 
   initialize() {
     this.setDiagram(this.diagramHtmlId);
+    this.setElementContent();
     this.addSections();
   }
 
@@ -504,6 +509,10 @@ class LessonContent {
 
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   setDiagram(htmlId: string = '') {
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  setElementContent() {
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -524,5 +533,5 @@ class LessonContent {
 export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
-  clickWord, itemSelector, initializeItemSelector,
+  clickWord, itemSelector, initializeItemSelector, unit,
 };
