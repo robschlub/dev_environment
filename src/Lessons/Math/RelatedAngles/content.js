@@ -422,17 +422,8 @@ class Content extends LessonContent {
           threeLines._line1.transform = opp._line1.transform._dup();
           threeLines._line2.transform = opp._line2.transform._dup();
         }
-        // threeLines._angleA1.setColor(layout.colors.angleA);
-        // threeLines._angleB1.setColor(layout.colors.angleA);
-        // threeLines._angleC1.setColor(layout.colors.angleA);
-        // threeLines._angleD1.setColor(layout.colors.angleA);
-        // threeLines._angleA2.setColor(layout.colors.angleA);
-        // threeLines._angleB2.setColor(layout.colors.angleA);
-        // threeLines._angleC2.setColor(layout.colors.angleA);
-        // threeLines._angleD2.setColor(layout.colors.angleA);
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
-        // threeLines._line3.setColor(layout.colors.intersectingLine);
       },
       showOnly: [
         threeLines,
@@ -467,7 +458,7 @@ class Content extends LessonContent {
         diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
         diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
         diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
-        threeLines.toggleCorrespondingAngles();
+        threeLines.toggleCorrespondingAngles(false);
       },
     });
 
@@ -665,14 +656,6 @@ class Content extends LessonContent {
           threeLines._line1.transform = opp._line1.transform._dup();
           threeLines._line2.transform = opp._line2.transform._dup();
         }
-        // threeLines._angleA1.setColor(layout.colors.angleA);
-        // threeLines._angleB1.setColor(layout.colors.angleA);
-        // threeLines._angleC1.setColor(layout.colors.angleA);
-        // threeLines._angleD1.setColor(layout.colors.angleA);
-        // threeLines._angleA2.setColor(layout.colors.angleA);
-        // threeLines._angleB2.setColor(layout.colors.angleA);
-        // threeLines._angleC2.setColor(layout.colors.angleA);
-        // threeLines._angleD2.setColor(layout.colors.angleA);
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         // threeLines._line3.setColor(layout.colors.intersectingLine);
@@ -865,6 +848,7 @@ class Content extends LessonContent {
           diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
         }
         threeLines.toggleAlternateAngles();
+        threeLines.showCorrespondingAngles();
       },
     });
 

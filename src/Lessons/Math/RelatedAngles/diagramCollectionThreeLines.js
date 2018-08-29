@@ -252,72 +252,23 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       } else {
         this.showOnlyAngles(['B1', 'B2']);
       }
-      // this._angleA1.hide();
-      // this._angleA2.hide();
-      // this._angleB1.show();
-      // this._angleB2.show();
-      // this._angleB1._arc.show();
-      // this._angleB2._arc.show();
-      // this._angleB1.eqn.showForm('b');
-      // this._angleB2.eqn.showForm('b');
-      // this._angleC1.hide();
-      // this._angleC2.hide();
-      // this._angleD1.hide();
-      // this._angleD2.hide();
     } else if (this._angleB1.isShown) {
       if (disable2) {
         this.showOnlyAngles(['C1'], this.layout.colors.angleA, ['C2']);
       } else {
         this.showOnlyAngles(['C1', 'C2']);
       }
-      // this._angleA1.hide();
-      // this._angleA2.hide();
-      // this._angleB1.hide();
-      // this._angleB2.hide();
-      // this._angleC1.show();
-      // this._angleC2.show();
-      // this._angleC1._arc.show();
-      // this._angleC2._arc.show();
-      // this._angleC1.eqn.showForm('a');
-      // this._angleC2.eqn.showForm('a');
-      // this._angleD1.hide();
-      // this._angleD2.hide();
     } else if (this._angleC1.isShown) {
       if (disable2) {
         this.showOnlyAngles(['D1'], this.layout.colors.angleA, ['D2']);
       } else {
         this.showOnlyAngles(['D1', 'D2']);
       }
-      // this._angleA1.hide();
-      // this._angleA2.hide();
-      // this._angleB1.hide();
-      // this._angleB2.hide();
-      // this._angleC1.hide();
-      // this._angleC2.hide();
-      // this._angleD1.show();
-      // this._angleD2.show();
-      // this._angleD1._arc.show();
-      // this._angleD2._arc.show();
-      // this._angleD1.eqn.showForm('b');
-      // this._angleD2.eqn.showForm('b');
     } else if (disable2) {
       this.showOnlyAngles(['A1'], this.layout.colors.angleA, ['A2']);
     } else {
       this.showOnlyAngles(['A1', 'A2']);
     }
-    // }
-      // this._angleA1.show();
-      // this._angleA2.show();
-      // this._angleA1._arc.show();
-      // this._angleA2._arc.show();
-      // this._angleA1.eqn.showForm('a');
-      // this._angleA2.eqn.showForm('a');
-      // this._angleB1.hide();
-      // this._angleB2.hide();
-      // this._angleC1.hide();
-      // this._angleC2.hide();
-      // this._angleD1.hide();
-      // this._angleD2.hide();
     this.diagram.animateNextFrame();
   }
 
@@ -400,19 +351,15 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
 
   showCorrespondingAngles() {
     if (this._angleA1.isShown) {
-      // this.showOnlyAngles(['A1', 'A2'], this.layout.colors.angleB, ['C2']);
       this.showOnlyAngles(['A1', 'A2'], this.layout.colors.angleB);
     }
     if (this._angleB1.isShown) {
-      // this.showOnlyAngles(['B1', 'B2'], this.layout.colors.angleB, ['D2']);
       this.showOnlyAngles(['B1', 'B2'], this.layout.colors.angleB);
     }
     if (this._angleC1.isShown) {
-      // this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB, ['A2']);
       this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB);
     }
     if (this._angleD1.isShown) {
-      // this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB, ['B2']);
       this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB);
     }
     this.diagram.animateNextFrame();
