@@ -29,6 +29,7 @@ const lessonIndex = [
   new LessonDescription('Measuring Angles', '/Lessons/Math/MeasuringAngles'),
   new LessonDescription('Important Angles', '/Lessons/Math/ImportantAngles'),
   new LessonDescription('Adjacent Angles', '/Lessons/Math/AdjacentAngles'),
+  new LessonDescription('Related Angles', '/Lessons/Math/RelatedAngles'),
   new LessonDescription('Triangles'),
   [
     new LessonDescription('Similar Triangles'),

@@ -12,8 +12,14 @@ $geometry_colors: (
   radiusLight:  color('diagram', 'primary', 'lighter'),
   background:   color('diagram', 'background'),
   arrow:        color('diagram', 'warning'),
+  //
   angle:        color('diagram', 'safe', 'lighter'),
   angleText:    color('diagram', 'safe', 'light'),
+  angleA:       color(3, 'base'),
+  angleB:       color(4, 'base'),
+  angleC:       color(5, 'base'),
+  angleD:       color(6, 'lighter'),
+  //
   dimensions:   color('diagram', 'primary', 'light'),
   radialLines:  color('diagram', 'disabled', 'light'),
   circle:       color('diagram', 'warning'),

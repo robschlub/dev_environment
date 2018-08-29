@@ -193,7 +193,7 @@ describe('Equation', () => {
   });
   test('Instantiation', () => {
     expect(eqn.collection.order).toHaveLength(3);
-    expect(eqn.form.f2.content[0].vinculum).toBe(eqn.collection._c);
+    expect(eqn.form.f2.base.content[0].vinculum).toBe(eqn.collection._c);
   });
   describe('Duplicate', () => {
     test('Simple', () => {
@@ -204,25 +204,25 @@ describe('Equation', () => {
       expect(dup.collection._a).not.toBe(eqn.collection._a);
       expect(dup).toEqual(eqn);
       expect(dup).not.toBe(eqn);
-      expect(eqn.form.f1.content[0].content).toBe(eqn.form.f3.content[0].content);
-      expect(dup.form.f1.content[0].content).toBe(dup.form.f3.content[0].content);
+      expect(eqn.form.f1.base.content[0].content).toBe(eqn.form.f3.base.content[0].content);
+      expect(dup.form.f1.base.content[0].content).toBe(dup.form.f3.base.content[0].content);
     });
     test('Add new form', () => {
       const dup = eqn._dup();
       eqn.addForm('f4', ['a', 'b', 'c']);
       dup.addForm('f4', ['a', 'b', 'c']);
-      expect(dup.collection).toBe(dup.form.f1.collection);
-      expect(dup.collection).toBe(dup.form.f4.collection);
-      expect(dup.collection._a).toBe(dup.form.f1.content[0].content);
-      expect(dup.form.f1.collection).toBe(dup.form.f4.collection);
+      expect(dup.collection).toBe(dup.form.f1.base.collection);
+      expect(dup.collection).toBe(dup.form.f4.base.collection);
+      expect(dup.collection._a).toBe(dup.form.f1.base.content[0].content);
+      expect(dup.form.f1.base.collection).toBe(dup.form.f4.base.collection);
 
-      expect(eqn.form.f1.content[0].content).toBe(eqn.form.f4.content[0].content);
+      expect(eqn.form.f1.base.content[0].content).toBe(eqn.form.f4.base.content[0].content);
 
-      expect(dup.form.f1.content[0].content).toBe(dup.form.f3.content[0].content);
-      expect(dup.form.f1.content[0].content).toBe(dup.form.f4.content[0].content);
+      expect(dup.form.f1.base.content[0].content).toBe(dup.form.f3.base.content[0].content);
+      expect(dup.form.f1.base.content[0].content).toBe(dup.form.f4.base.content[0].content);
 
-      expect(eqn.form.f4.content[0].content).toEqual(dup.form.f4.content[0].content);
-      expect(eqn.form.f4.content[0].content).not.toBe(dup.form.f4.content[0].content);
+      expect(eqn.form.f4.base.content[0].content).toEqual(dup.form.f4.base.content[0].content);
+      expect(eqn.form.f4.base.content[0].content).not.toBe(dup.form.f4.base.content[0].content);
 
       expect(dup.collection._a.vertices.text).not.toBe(eqn.collection._a.vertices.text);
       expect(dup.collection._a.vertices.text[0].location)

@@ -760,7 +760,8 @@ describe('Animationa and Movement', () => {
         );
         collection.add('square2', squareElement2);
         let touched = collection.getTouched(new Point(0, 0));
-        expect(touched).toHaveLength(1);
+        // console.log(touched)
+        expect(touched).toHaveLength(2);
         // expect(touched.includes(collection)).toBe(true);
         expect(touched.includes(squareElement)).toBe(true);
         expect(touched.includes(squareElement2)).toBe(false);
