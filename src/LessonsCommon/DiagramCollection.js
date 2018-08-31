@@ -14,6 +14,26 @@ import {
 
 export type TypeUnits = 'deg' | 'rad';
 
+function getTarget(
+  element: DiagramElement,
+  scenario: string | null | { position: Point, rotation: number } = null,
+  layout: Object,
+) {
+  const target = element.transform.constant(0);
+  if (scenario === null) {
+    target.updateTranslation(layout[element.name].position);
+    target.updateRotation(layout[element.name].rotation);
+  } else if (typeof scenario === 'string') {
+    target.updateTranslation(layout[element.name][scenario].position);
+    target.updateRotation(layout[element.name][scenario].rotation);
+  } else {
+    target.updateTranslation(scenario.position);
+    target.updateRotation(scenario.rotation);
+  }
+  return target;
+}
+
+
 export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
@@ -34,22 +54,21 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     element: DiagramElement,
     scenario: string | null | { position: Point, rotation: number } = null,
   ) {
-    const target = element.transform.constant(0);
-    if (scenario === null) {
-      target.updateTranslation(this.layout[element.name].position);
-      target.updateRotation(this.layout[element.name].rotation);
-    } else if (typeof scenario === 'string') {
-      target.updateTranslation(this.layout[element.name][scenario].position);
-      target.updateRotation(this.layout[element.name][scenario].rotation);
-    } else {
-      target.updateTranslation(scenario.position);
-      target.updateRotation(scenario.rotation);
-    }
+    const target = getTarget(element, scenario, this.layout);
     const velocity = element.transform.constant(0);
     velocity.updateTranslation(new Point(1 / 2, 1 / 2));
     velocity.updateRotation(2 * Math.PI / 6);
     const time = getMaxTimeFromVelocity(element.transform._dup(), target, velocity, 0);
     return time;
+  }
+
+  setScenario(
+    element: DiagramElement,
+    scenario: string | null | { position: Point, rotation: number } = null,
+  ) {
+    const target = getTarget(element, scenario, this.layout);
+    // eslint-disable-next-line no-param-reassign
+    element.transform = target._dup();
   }
 
   moveToScenario(
@@ -59,17 +78,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     callback: () => void,
   ) {
     element.stop();
-    const target = element.transform.constant(0);
-    if (scenario === null) {
-      target.updateTranslation(this.layout[element.name].position);
-      target.updateRotation(this.layout[element.name].rotation);
-    } else if (typeof scenario === 'string') {
-      target.updateTranslation(this.layout[element.name][scenario].position);
-      target.updateRotation(this.layout[element.name][scenario].rotation);
-    } else {
-      target.updateTranslation(scenario.position);
-      target.updateRotation(scenario.rotation);
-    }
+    const target = getTarget(element, scenario, this.layout);
     let time = 1;
     if (typeof animationTime !== 'number') {
       time = this.getTimeToMoveToScenario(element, scenario);

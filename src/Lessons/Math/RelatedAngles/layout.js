@@ -14,6 +14,7 @@ const cssColorNames = [
   'disabled',
   'supplementary',
   'intersectingLine',
+  'quizLine',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -27,6 +28,7 @@ export default function lessonLayout() {
     position: new Point(0, 1.7),
   };
   const len = 1.7;
+  
   layout.position = new Point(1.5, 0);
   layout.parallelLine = {
     length: {
@@ -56,6 +58,20 @@ export default function lessonLayout() {
     width: 0.02,
     boundary: new Rect(-1.5, -1.7, 3, 3),
   };
+  layout.quiz = {
+    position: new Point(0, 0),
+    first: {
+      line1: {
+        position: new Point(-1, 0),
+        rotation: Math.PI / 2,
+      },
+      line2: {
+        position: new Point(1, 0),
+        rotation: Math.PI / 4,
+      },
+    },
+    check: new Point(0, -1.7),
+  };
   layout.line1 = {
     parallel: {
       position: new Point(0, 0.3),
@@ -70,6 +86,10 @@ export default function lessonLayout() {
       rotation: 0,
     },
     center: {
+      position: new Point(0, 0),
+      rotation: 0,
+    },
+    quiz: {
       position: new Point(0, 0),
       rotation: 0,
     },
@@ -90,6 +110,10 @@ export default function lessonLayout() {
       rotation: 0,
     },
     center: {
+      position: new Point(0, 0),
+      rotation: 0,
+    },
+    quiz: {
       position: new Point(0, 0),
       rotation: 0,
     },

@@ -18,6 +18,7 @@ import ParallelCollection from './diagramCollectionParallel';
 import OppositeCollection from './diagramCollectionOpposite';
 import ThreeLinesCollection from './diagramCollectionThreeLines';
 import CommonDiagramCollection from '../../../LessonsCommon/DiagramCollection';
+import QuizCollection from './diagramCollectionQuiz';
 import type { TypeUnits } from '../../../LessonsCommon/DiagramCollection';
 
 class RelatedAnglesCollection extends CommonDiagramCollection {
@@ -26,6 +27,7 @@ class RelatedAnglesCollection extends CommonDiagramCollection {
   _opposite: OppositeCollection;
   _threeLines: ThreeLinesCollection;
   _selector: DiagramElementPrimative;
+  _quiz: QuizCollection;
   units: TypeUnits;
 
   addSelector() {
@@ -48,6 +50,7 @@ class RelatedAnglesCollection extends CommonDiagramCollection {
     this.add('parallel', new ParallelCollection(diagram, this.layout));
     this.add('opposite', new OppositeCollection(diagram, this.layout));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
+    this.add('quiz', new QuizCollection(diagram, this.layout));
     this.add('unitsSelector', this.makeUnitsSelector());
     this.addSelector();
   }
@@ -67,6 +70,9 @@ class RelatedAnglesCollection extends CommonDiagramCollection {
     }
     if (title === 'interior') {
       this.diagram.lesson.goToSection('Interior Angles');
+    }
+    if (title === 'quiz') {
+      this.diagram.lesson.goToSection('Quiz');
     }
   }
 

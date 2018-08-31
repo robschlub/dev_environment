@@ -1,7 +1,7 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, minAngleDiff, Line, normAngleTo90,
+  Transform, minAngleDiff, Line, normAngleTo90, Rect,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,

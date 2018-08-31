@@ -10,6 +10,7 @@ $colors: (
   angleC:           map-get($geometry_colors, angleC),
   angleD:           map-get($geometry_colors, angleD),
   supplementary:    color(7, 'base'),
+  quizLine:         color(3, 'base'),
 );
 
 body {

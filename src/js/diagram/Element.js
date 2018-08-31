@@ -2114,6 +2114,28 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
+  show(listToShow: Array<DiagramElementPrimative | DiagramElementCollection> = []): void {
+    super.show();
+    listToShow.forEach((element) => {
+      if (element instanceof DiagramElementCollection) {
+        element.showAll();
+      } else {
+        element.show();
+      }
+    });
+  }
+
+  hide(listToShow: Array<DiagramElementPrimative | DiagramElementCollection> = []): void {
+    super.hide();
+    listToShow.forEach((element) => {
+      if (element instanceof DiagramElementCollection) {
+        element.hideAll();
+      } else {
+        element.show();
+      }
+    });
+  }
+
   showAll(): void {
     this.show();
     for (let i = 0, j = this.order.length; i < j; i += 1) {
