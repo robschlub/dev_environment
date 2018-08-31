@@ -57,7 +57,7 @@ export function makeMoveableLine(
     .rotate(0)
     .translate(0, 0));
   line.hasTouchableElements = true;
-  line.isMovable = true;
+  // line.isMovable = true;
   // line.touchInBoundingRect = true;
   line.isTouchable = true;
   const bounds = layout.boundary;
@@ -91,7 +91,9 @@ export function makeMoveableLine(
     0, color, new Transform(),
   );
   end1.isTouchable = true;
-  end1.movementAllowed = 'rotation';
+  end1.move.type = 'rotation';
+  end1.move.element = line;
+  end1.isMovable = true;
 
   const end2 = diagram.shapes.horizontalLine(
     new Point(middle / 2, 0),
@@ -99,7 +101,9 @@ export function makeMoveableLine(
     0, color, new Transform(),
   );
   end2.isTouchable = true;
-  end2.movementAllowed = 'rotation';
+  end2.move.type = 'rotation';
+  end2.move.element = line;
+  end2.isMovable = true;
 
   const mid = diagram.shapes.horizontalLine(
     new Point(-middle / 2, 0),
@@ -107,7 +111,9 @@ export function makeMoveableLine(
     0, color, new Transform(),
   );
   mid.isTouchable = true;
-  mid.movementAllowed = 'translation';
+  mid.move.type = 'translation';
+  mid.move.element = line;
+  mid.isMovable = true;
 
   end1.pulse.transformMethod = s => new Transform().scale(1, s);
   end2.pulse.transformMethod = s => new Transform().scale(1, s);

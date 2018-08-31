@@ -5,7 +5,7 @@ import getShaders from './webgl/shaders';
 
 import {
   Rect, Point, Transform,
-  spaceToSpaceTransform,
+  spaceToSpaceTransform, minAngleDiff,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
 import {
@@ -739,6 +739,71 @@ class Diagram {
     // console.log("after", this.elements._circle.transform.t())
   }
 
+  rotateElement(
+    element: DiagramElementPrimative | DiagramElementCollection,
+    previousClientPoint: Point,
+    currentClientPoint: Point,
+    ) {
+    let center = element.getDiagramPosition();
+    if (center == null) {
+      center = new Point(0, 0);
+    }
+    const previousPixelPoint = this.clientToPixel(previousClientPoint);
+    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+    const previousDiagramPoint =
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+    const currentDiagramPoint =
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+    const currentAngle = Math.atan2(
+      currentDiagramPoint.y - center.y,
+      currentDiagramPoint.x - center.x,
+    );
+    const previousAngle = Math.atan2(
+      previousDiagramPoint.y - center.y,
+      previousDiagramPoint.x - center.x,
+    );
+    const diffAngle = minAngleDiff(previousAngle, currentAngle);
+    const transform = element.transform._dup();
+    let rot = transform.r();
+    if (rot == null) {
+      rot = 0;
+    }
+    let newAngle = rot - diffAngle;
+    if (newAngle < 0) {
+      newAngle += 2 * Math.PI;
+    }
+    if (newAngle > 2 * Math.PI) {
+      newAngle -= 2 * Math.PI;
+    }
+    console.log(newAngle, rot, newAngle)
+    transform.updateRotation(newAngle);
+    element.moved(transform._dup());
+  }
+
+  translateElement(
+    element: DiagramElementPrimative | DiagramElementCollection,
+    previousClientPoint: Point,
+    currentClientPoint: Point,
+    ) {
+    const previousPixelPoint = this.clientToPixel(previousClientPoint);
+    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+    const previousDiagramPoint =
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+    const currentDiagramPoint =
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+
+    const delta = currentDiagramPoint.sub(previousDiagramPoint);
+    const currentTransform = element.transform._dup();
+    const currentTranslation = currentTransform.t();
+    if (currentTranslation != null) {
+      const newTranslation = currentTranslation.add(delta);
+      currentTransform.updateTranslation(newTranslation);
+      element.moved(currentTransform);
+    }
+  }
+
   // Handle touch/mouse move events in the canvas. These events will only be
   // sent if the initial touch down happened in the canvas.
   // The default behavior is to drag (move) any objects that were touched in
@@ -754,32 +819,34 @@ class Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    // Get the previous, current and delta between touch points in clip space
+
     const previousPixelPoint = this.clientToPixel(previousClientPoint);
     const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
     const previousGLPoint =
       previousPixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
 
-    const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-
-    const delta = currentDiagramPoint.sub(previousDiagramPoint);
-
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       if (element !== this.elements) {
-        const currentTransform = element.transform._dup();
-        const currentTranslation = currentTransform.t();
-        if (currentTranslation
-          && (element.isBeingTouched(previousGLPoint)
-              || element.move.canBeMovedAfterLoosingTouch)) {
-          const newTranslation = currentTranslation.add(delta);
-          currentTransform.updateTranslation(newTranslation);
-          element.moved(currentTransform);
+        if (element.isBeingTouched(previousGLPoint)
+              || element.move.canBeMovedAfterLoosingTouch) {
+          const elementToMove = element.element == null ? element : element.element;
+        console.log(element.name, element.move.type)
+          if (element.move.type === 'rotation') {
+            this.rotateElement(
+              elementToMove,
+              previousClientPoint,
+              currentClientPoint,
+            );
+          } else {
+            this.translateElement(
+              elementToMove,
+              previousClientPoint,
+              currentClientPoint,
+            );
+          }
         }
       }
     }

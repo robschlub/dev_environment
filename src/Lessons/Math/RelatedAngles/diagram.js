@@ -80,70 +80,70 @@ class LessonDiagram extends Diagram {
   //   this.beingMovedElements = [];
   // }
 
-  rotateElement(
-    previousClientPoint: Point,
-    currentClientPoint: Point,
-    element: DiagramElementCollection | DiagramElementPrimative,
-  ) {
-    let center = element.getDiagramPosition();
-    if (center == null) {
-      center = new Point(0, 0);
-    }
-    const previousPixelPoint = this.clientToPixel(previousClientPoint);
-    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+  // rotateElement(
+  //   previousClientPoint: Point,
+  //   currentClientPoint: Point,
+  //   element: DiagramElementCollection | DiagramElementPrimative,
+  // ) {
+  //   let center = element.getDiagramPosition();
+  //   if (center == null) {
+  //     center = new Point(0, 0);
+  //   }
+  //   const previousPixelPoint = this.clientToPixel(previousClientPoint);
+  //   const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
-    const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentAngle = Math.atan2(
-      currentDiagramPoint.y - center.y,
-      currentDiagramPoint.x - center.x,
-    );
-    const previousAngle = Math.atan2(
-      previousDiagramPoint.y - center.y,
-      previousDiagramPoint.x - center.x,
-    );
-    const diffAngle = minAngleDiff(previousAngle, currentAngle);
-    const transform = element.transform._dup();
-    let rot = transform.r();
-    if (rot == null) {
-      rot = 0;
-    }
-    let newAngle = rot - diffAngle;
-    if (newAngle < 0) {
-      newAngle += 2 * Math.PI;
-    }
-    if (newAngle > 2 * Math.PI) {
-      newAngle -= 2 * Math.PI;
-    }
+  //   const previousDiagramPoint =
+  //     previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+  //   const currentDiagramPoint =
+  //     currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+  //   const currentAngle = Math.atan2(
+  //     currentDiagramPoint.y - center.y,
+  //     currentDiagramPoint.x - center.x,
+  //   );
+  //   const previousAngle = Math.atan2(
+  //     previousDiagramPoint.y - center.y,
+  //     previousDiagramPoint.x - center.x,
+  //   );
+  //   const diffAngle = minAngleDiff(previousAngle, currentAngle);
+  //   const transform = element.transform._dup();
+  //   let rot = transform.r();
+  //   if (rot == null) {
+  //     rot = 0;
+  //   }
+  //   let newAngle = rot - diffAngle;
+  //   if (newAngle < 0) {
+  //     newAngle += 2 * Math.PI;
+  //   }
+  //   if (newAngle > 2 * Math.PI) {
+  //     newAngle -= 2 * Math.PI;
+  //   }
 
-    transform.updateRotation(newAngle);
-    element.moved(transform._dup());
-  }
+  //   transform.updateRotation(newAngle);
+  //   element.moved(transform._dup());
+  // }
 
-  moveLineElement(
-    previousClientPoint: Point,
-    currentClientPoint: Point,
-    element: DiagramElementCollection | DiagramElementPrimative,
-  ) {
-    const previousPixelPoint = this.clientToPixel(previousClientPoint);
-    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+  // moveLineElement(
+  //   previousClientPoint: Point,
+  //   currentClientPoint: Point,
+  //   element: DiagramElementCollection | DiagramElementPrimative,
+  // ) {
+  //   const previousPixelPoint = this.clientToPixel(previousClientPoint);
+  //   const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
-    const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+  //   const previousDiagramPoint =
+  //     previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+  //   const currentDiagramPoint =
+  //     currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
 
-    const delta = currentDiagramPoint.sub(previousDiagramPoint);
-    const currentTransform = element.transform._dup();
-    const currentTranslation = currentTransform.t();
-    if (currentTranslation) {
-      const newTranslation = currentTranslation.add(delta);
-      currentTransform.updateTranslation(newTranslation);
-      element.moved(currentTransform);
-    }
-  }
+  //   const delta = currentDiagramPoint.sub(previousDiagramPoint);
+  //   const currentTransform = element.transform._dup();
+  //   const currentTranslation = currentTransform.t();
+  //   if (currentTranslation) {
+  //     const newTranslation = currentTranslation.add(delta);
+  //     currentTransform.updateTranslation(newTranslation);
+  //     element.moved(currentTransform);
+  //   }
+  // }
 
   endHandler() {
     this.animateNextFrame();
@@ -209,64 +209,64 @@ class LessonDiagram extends Diagram {
     return false;
   }
 
-  touchMoveHandler(
-    previousClientPoint: Point,
-    currentClientPoint: Point,
-  ): boolean {
-    if (this.beingMovedElements.length === 0) {
-      return false;
-    }
-    const pLine1 = this.elements._parallel._line1;
-    const pLine2 = this.elements._parallel._line2;
-    const oLine1 = this.elements._opposite._line1;
-    const oLine2 = this.elements._opposite._line2;
-    const tLine1 = this.elements._threeLines._line1;
-    // const tLine2 = this.elements._threeLines._line2;
-    const tLine3 = this.elements._threeLines._line3;
+  // touchMoveHandler(
+  //   previousClientPoint: Point,
+  //   currentClientPoint: Point,
+  // ): boolean {
+  //   if (this.beingMovedElements.length === 0) {
+  //     return false;
+  //   }
+  //   const pLine1 = this.elements._parallel._line1;
+  //   const pLine2 = this.elements._parallel._line2;
+  //   const oLine1 = this.elements._opposite._line1;
+  //   const oLine2 = this.elements._opposite._line2;
+  //   const tLine1 = this.elements._threeLines._line1;
+  //   // const tLine2 = this.elements._threeLines._line2;
+  //   const tLine3 = this.elements._threeLines._line3;
 
-    if (this.lineHandler(previousClientPoint, currentClientPoint, pLine1)) {
-      return this.endHandler();
-    }
-    if (this.lineHandler(previousClientPoint, currentClientPoint, pLine2)) {
-      return this.endHandler();
-    }
-    if (this.lineHandler(previousClientPoint, currentClientPoint, oLine1)) {
-      return this.endHandler();
-    }
-    if (this.lineHandler(previousClientPoint, currentClientPoint, oLine2)) {
-      return this.endHandler();
-    }
-    if (this.lineHandler(previousClientPoint, currentClientPoint, tLine1)) {
-      return this.endHandler();
-    }
-    // if (this.lineHandler(previousClientPoint, currentClientPoint, tLine2)) {
-    //   return this.endHandler();
-    // }
-    if (this.lineHandler(previousClientPoint, currentClientPoint, tLine3)) {
-      return this.endHandler();
-    }
+  //   if (this.lineHandler(previousClientPoint, currentClientPoint, pLine1)) {
+  //     return this.endHandler();
+  //   }
+  //   if (this.lineHandler(previousClientPoint, currentClientPoint, pLine2)) {
+  //     return this.endHandler();
+  //   }
+  //   if (this.lineHandler(previousClientPoint, currentClientPoint, oLine1)) {
+  //     return this.endHandler();
+  //   }
+  //   if (this.lineHandler(previousClientPoint, currentClientPoint, oLine2)) {
+  //     return this.endHandler();
+  //   }
+  //   if (this.lineHandler(previousClientPoint, currentClientPoint, tLine1)) {
+  //     return this.endHandler();
+  //   }
+  //   // if (this.lineHandler(previousClientPoint, currentClientPoint, tLine2)) {
+  //   //   return this.endHandler();
+  //   // }
+  //   if (this.lineHandler(previousClientPoint, currentClientPoint, tLine3)) {
+  //     return this.endHandler();
+  //   }
 
-    if (this.beingMovedElements.indexOf(pLine1) >= 0
-      || this.beingMovedElements.indexOf(pLine2) >= 0
-      || this.beingMovedElements.indexOf(oLine1) >= 0
-      || this.beingMovedElements.indexOf(oLine2) >= 0
-      || this.beingMovedElements.indexOf(tLine1) >= 0
-      // || this.beingMovedElements.indexOf(tLine2) >= 0
-      || this.beingMovedElements.indexOf(tLine3) >= 0
-    ) {
-      return true;
-    }
-    // console.log(this.beingTouchedElements)
-    if (this.beingTouchedElements.indexOf(this.elements._threeLines) >= 0) {
-      this.rotateElement(
-        previousClientPoint,
-        currentClientPoint,
-        this.elements._threeLines,
-      );
-      return true;
-    }
-    return super.touchMoveHandler(previousClientPoint, currentClientPoint);
-  }
+  //   if (this.beingMovedElements.indexOf(pLine1) >= 0
+  //     || this.beingMovedElements.indexOf(pLine2) >= 0
+  //     || this.beingMovedElements.indexOf(oLine1) >= 0
+  //     || this.beingMovedElements.indexOf(oLine2) >= 0
+  //     || this.beingMovedElements.indexOf(tLine1) >= 0
+  //     // || this.beingMovedElements.indexOf(tLine2) >= 0
+  //     || this.beingMovedElements.indexOf(tLine3) >= 0
+  //   ) {
+  //     return true;
+  //   }
+  //   // console.log(this.beingTouchedElements)
+  //   if (this.beingTouchedElements.indexOf(this.elements._threeLines) >= 0) {
+  //     this.rotateElement(
+  //       previousClientPoint,
+  //       currentClientPoint,
+  //       this.elements._threeLines,
+  //     );
+  //     return true;
+  //   }
+  //   return super.touchMoveHandler(previousClientPoint, currentClientPoint);
+  // }
 }
 
 export default LessonDiagram;

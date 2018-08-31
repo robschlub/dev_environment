@@ -422,6 +422,8 @@ class DiagramElement {
     };
     bounce: boolean;
     canBeMovedAfterLoosingTouch: boolean;
+    type: 'rotation' | 'translation';
+    element: DiagramElementPrimative | DiagramElementCollection | null;
   };
 
   pulse: {
@@ -533,6 +535,8 @@ class DiagramElement {
       },
       bounce: true,
       canBeMovedAfterLoosingTouch: false,
+      type: 'translation',
+      element: null,
     };
 
     this.pulse = {
