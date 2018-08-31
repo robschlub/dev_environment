@@ -104,6 +104,13 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 3.7);
     line3.move.minTransform.updateRotation(Math.PI / 3.7);
     line3.setColor(this.layout.colors.intersectingLine);
+
+    line1._end1.move.element = this;
+    line1._end2.move.element = this;
+    line1._mid.move.element = this;
+    line2._end1.move.element = this;
+    line2._end2.move.element = this;
+    line2._mid.move.element = this;
   }
 
   constructor(
@@ -116,7 +123,7 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.layout = layout;
     this.setPosition(this.layout.position);
     this.addThreeLines();
-    this.isMovable = true;
+    // this.isMovable = true;
     this.isTouchable = true;
     this.add('angleA2', this.makeAngle('a', 2, 0));
     this.add('angleB2', this.makeAngle('b', 2, 1));
@@ -139,7 +146,7 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     };
 
     this.hasTouchableElements = true;
-    this.isMovable = true;
+    // this.isMovable = true;
     this.setTransformCallback = this.updateIntersectingLineAngle.bind(this);
   }
 

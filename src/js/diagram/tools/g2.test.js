@@ -1,7 +1,8 @@
 import {
   Point, Transform, Line, minAngleDiff, normAngle,
   TransformLimit, spaceToSpaceTransform, Rect,
-  getBoundingRect, polarToRect, rectToPolar,
+  getBoundingRect, polarToRect, rectToPolar, getDeltaAngle,
+  normAngleTo90,
 } from './g2';
 import { round } from './mathtools';
 
@@ -1478,6 +1479,164 @@ describe('g2 tests', () => {
     test('-y axis', () => {
       const r = polarToRect(1, 3 * Math.PI / 2).round(3);
       expect(r).toEqual(new Point(0, -1));
+    });
+  });
+  describe('getDeltaAngle', () => {
+    let dir;
+    describe('1 - clockwise', () => {
+      beforeEach(() => { dir = 1; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        expect(diff).toBe(1);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(Math.PI * 2 - 1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+    describe('-1 - Anti-clockwise', () => {
+      beforeEach(() => { dir = -1; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        const expected = round(1 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(-2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+    describe('0 - fastest', () => {
+      beforeEach(() => { dir = 0; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        expect(diff).toBe(1);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(-2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+    describe('2 - not through 0', () => {
+      beforeEach(() => { dir = 2; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        expect(diff).toBe(1);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+  });
+  describe('normAngleTo90', () => {
+    test('0 = 0', () => {
+      expect(normAngleTo90(0)).toBe(0);
+    });
+    test('45 = 45', () => {
+      expect(normAngleTo90(Math.PI / 4)).toBe(Math.PI / 4);
+    });
+    test('90 = 90', () => {
+      expect(normAngleTo90(Math.PI / 2)).toBe(Math.PI / 2);
+    });
+    test('135 = 315', () => {
+      expect(normAngleTo90(Math.PI / 4 * 3)).toBe(Math.PI / 4 * 7);
+    });
+    test('180 = 0', () => {
+      expect(normAngleTo90(Math.PI)).toBe(0);
+    });
+    test('225 = 45', () => {
+      expect(normAngleTo90(Math.PI / 4 * 5)).toBe(Math.PI / 4);
+    });
+    test('270 = 270', () => {
+      expect(normAngleTo90(Math.PI / 4 * 6)).toBe(Math.PI / 4 * 6);
+    });
+    test('315 = 315', () => {
+      expect(normAngleTo90(Math.PI / 4 * 7)).toBe(Math.PI / 4 * 7);
     });
   });
 });

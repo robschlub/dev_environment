@@ -164,9 +164,9 @@ export function makeLabeledLine(
   line.setTransformCallback = (t: Transform) => {
     line.updateTransform(t);
   };
-  line._end1.movementAllowed = 'rotation';
-  line._end2.movementAllowed = 'rotation';
-  line._mid.movementAllowed = 'rotation';
+  line._end1.move.type = 'rotation';
+  line._end2.move.type = 'rotation';
+  line._mid.move.type = 'rotation';
 
   const eqn = diagram.equation.makeEqn();
   eqn.createElements({ label: labelText }, color);

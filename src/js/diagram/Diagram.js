@@ -484,6 +484,7 @@ class Diagram {
 
   beingTouchedElements: Array<DiagramElementPrimative |
                         DiagramElementCollection>;
+  moveTopElementOnly: boolean;
 
   limits: Rect;
   draw2D: DrawContext2D;
@@ -572,6 +573,7 @@ class Diagram {
     // console.log(this.limits)
     this.beingMovedElements = [];
     this.beingTouchedElements = [];
+    this.moveTopElementOnly = true;
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
     this.equation = this.getEquations();
@@ -731,8 +733,10 @@ class Diagram {
     // console.log(this.beingMovedElements)
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
-      element.stopBeingMoved();
-      element.startMovingFreely();
+      if (element.state.isBeingMoved) {
+        element.stopBeingMoved();
+        element.startMovingFreely();
+      }
     }
     this.beingMovedElements = [];
     this.beingTouchedElements = [];
@@ -743,7 +747,7 @@ class Diagram {
     element: DiagramElementPrimative | DiagramElementCollection,
     previousClientPoint: Point,
     currentClientPoint: Point,
-    ) {
+  ) {
     let center = element.getDiagramPosition();
     if (center == null) {
       center = new Point(0, 0);
@@ -769,14 +773,13 @@ class Diagram {
     if (rot == null) {
       rot = 0;
     }
-    let newAngle = rot - diffAngle;
-    if (newAngle < 0) {
-      newAngle += 2 * Math.PI;
-    }
-    if (newAngle > 2 * Math.PI) {
-      newAngle -= 2 * Math.PI;
-    }
-    console.log(newAngle, rot, newAngle)
+    const newAngle = rot - diffAngle;
+    // if (newAngle < 0) {
+    //   newAngle += 2 * Math.PI;
+    // }
+    // if (newAngle > 2 * Math.PI) {
+    //   newAngle -= 2 * Math.PI;
+    // }
     transform.updateRotation(newAngle);
     element.moved(transform._dup());
   }
@@ -785,7 +788,7 @@ class Diagram {
     element: DiagramElementPrimative | DiagramElementCollection,
     previousClientPoint: Point,
     currentClientPoint: Point,
-    ) {
+  ) {
     const previousPixelPoint = this.clientToPixel(previousClientPoint);
     const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
@@ -821,7 +824,7 @@ class Diagram {
     }
 
     const previousPixelPoint = this.clientToPixel(previousClientPoint);
-    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+    // const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
     const previousGLPoint =
       previousPixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
@@ -832,8 +835,13 @@ class Diagram {
       if (element !== this.elements) {
         if (element.isBeingTouched(previousGLPoint)
               || element.move.canBeMovedAfterLoosingTouch) {
-          const elementToMove = element.element == null ? element : element.element;
-        console.log(element.name, element.move.type)
+          const elementToMove = element.move.element == null ? element : element.move.element;
+          if (elementToMove.state.isBeingMoved === false) {
+            elementToMove.startBeingMoved();
+          }
+          if (this.beingMovedElements.indexOf(elementToMove) === -1) {
+            this.beingMovedElements.push(elementToMove);
+          }
           if (element.move.type === 'rotation') {
             this.rotateElement(
               elementToMove,
@@ -848,6 +856,9 @@ class Diagram {
             );
           }
         }
+      }
+      if (this.moveTopElementOnly) {
+        i = this.beingMovedElements.length;
       }
     }
     this.animateNextFrame();

@@ -3,7 +3,7 @@
 import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
-  Scale, Rotation,
+  Scale, Rotation, getDeltaAngle,
 } from './tools/g2';
 import * as m2 from './tools/m2';
 import type { pathOptionsType } from './tools/g2';
@@ -43,29 +43,52 @@ function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
 //   offset: number;
 // };
 
-function getDeltaAngle(
-  start: number,
-  delta: number,
-  rotDirection: number,
-) {
-  let rotDiff = delta;
-  if (rotDirection === 2) {
-    if (start + rotDiff < 0) {
-      rotDiff = Math.PI * 2 + rotDiff;
-    } else if (start + rotDiff > Math.PI * 2) {
-      rotDiff = -(Math.PI * 2 - rotDiff);
-    }
-  } else if (rotDiff * rotDirection < 0) {
-    rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
-  }
-  return rotDiff;
-}
+// function getDeltaAngleOld(
+//   start: number,
+//   delta: number,
+//   rotDirection: number,
+// ) {
+//   let rotDiff = delta;
+//   if (rotDirection === 2) {
+//     if (start + rotDiff < 0) {
+//       rotDiff = Math.PI * 2 + rotDiff;
+//     } else if (start + rotDiff > Math.PI * 2) {
+//       rotDiff = -(Math.PI * 2 - rotDiff);
+//     }
+//   } else if (rotDiff * rotDirection < 0) {
+//     rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+//   }
+//   return rotDiff;
+// }
+
+// function getDeltaAngle(
+//   start: number,
+//   target: number,
+//   rotDirection: number,
+// ) {
+//   let rotDiff = 0;
+//   if (rotDirection === 0) {
+//     rotDiff = minAngleDiff(start, target);
+//   } else if (rotDirection === 1) {
+
+//   }
+//   if (rotDirection === 2) {
+//     if (start + rotDiff < 0) {
+//       rotDiff = Math.PI * 2 + rotDiff;
+//     } else if (start + rotDiff > Math.PI * 2) {
+//       rotDiff = -(Math.PI * 2 - rotDiff);
+//     }
+//   } else if (rotDiff * rotDirection < 0) {
+//     rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+//   }
+//   return rotDiff;
+// }
 
 function getMaxTimeFromVelocity(
   startTransform: Transform,
   stopTransform: Transform,
   velocityTransform: Transform,
-  rotDirection: number,
+  rotDirection: 0 | 1 | -1 | 2,
 ) {
   const deltaTransform = stopTransform.sub(startTransform);
   let time = 0;
@@ -84,21 +107,11 @@ function getMaxTimeFromVelocity(
       }
     }
     const start = startTransform.order[index];
-    if (delta instanceof Rotation && start instanceof Rotation) {
-      const rotDiff = getDeltaAngle(start.r, delta.r, rotDirection);
-      // let rotDiff = delta.r || 0;
-      // if (rotDirection === 2) {
-      //   const rStart = start.r;
-      //   if (rStart) {
-      //     if (rStart + rotDiff < 0) {
-      //       rotDiff = Math.PI * 2 + rotDiff;
-      //     } else if (rStart + rotDiff > Math.PI * 2) {
-      //       rotDiff = -(Math.PI * 2 - rotDiff);
-      //     }
-      //   }
-      // } else if (rotDiff * rotDirection < 0) {
-      //   rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
-      // }
+    const target = stopTransform.order[index];
+    if (delta instanceof Rotation
+        && start instanceof Rotation
+        && target instanceof Rotation) {
+      const rotDiff = getDeltaAngle(start.r, target.r, rotDirection);
       // eslint-disable-next-line no-param-reassign
       delta.r = rotDiff;
       const v = velocityTransform.order[index];
@@ -120,7 +133,7 @@ class AnimationPhase {
   // operation.
   timeOrVelocity: number | Transform;
   time: number ;                         // animation time
-  rotDirection: number;               // Direction of rotation
+  rotDirection: 0 | 1 | -1 | 2;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
   animationPath: (number) => number;
   translationStyle: 'linear' | 'curved';
@@ -133,7 +146,7 @@ class AnimationPhase {
   constructor(
     transform: Transform = new Transform(),
     timeOrVelocity: number | Transform = 1,
-    rotDirection: number = 0,
+    rotDirection: 0 | 1 | -1 | 2 = 0,
     animationStyle: (number) => number = tools.easeinout,
     translationStyle: 'linear' | 'curved' = 'linear',
     translationOptions: pathOptionsType = {
@@ -234,8 +247,11 @@ class AnimationPhase {
     // });
     this.deltaTransform.order.forEach((delta, index) => {
       const start = this.startTransform.order[index];
-      if (delta instanceof Rotation && start instanceof Rotation) {
-        const rotDiff = getDeltaAngle(start.r, delta.r, this.rotDirection);
+      const target = this.targetTransform.order[index];
+      if (delta instanceof Rotation
+        && start instanceof Rotation
+        && target instanceof Rotation) {
+        const rotDiff = getDeltaAngle(start.r, target.r, this.rotDirection);
         // eslint-disable-next-line no-param-reassign
         delta.r = rotDiff;
       }
@@ -2429,5 +2445,5 @@ class DiagramElementCollection extends DiagramElement {
 
 export {
   DiagramElementPrimative, DiagramElementCollection, AnimationPhase,
-  getDeltaAngle, getMaxTimeFromVelocity,
+  getMaxTimeFromVelocity,
 };

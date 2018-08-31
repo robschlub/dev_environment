@@ -972,4 +972,5 @@ describe('Animationa and Movement', () => {
     //   expect(box.min.round()).toEqual(new Point(-0.105 * 2 + 0.5 * 2, -0.105 * 2));
     // });
   });
+  
 });

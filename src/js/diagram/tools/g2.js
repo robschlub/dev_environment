@@ -320,6 +320,77 @@ function normAngle(angle: number) {
   return newAngle;
 }
 
+function normAngleTo90(angle: number) {
+  let newAngle = normAngle(angle);
+  if (newAngle > Math.PI / 2 && newAngle < Math.PI) {
+    newAngle += Math.PI;
+  }
+  if (newAngle === Math.PI) {
+    newAngle = 0;
+  }
+  if (newAngle > Math.PI && newAngle < Math.PI * 3 / 2) {
+    newAngle -= Math.PI;
+  }
+  return newAngle;
+}
+
+
+function getDeltaAngle(
+  startAngle: number,
+  targetAngle: number,
+  rotDirection: 0 | 1 | -1 | 2 = 0,
+) {
+  const start = normAngle(startAngle);
+  const target = normAngle(targetAngle);
+  let dir = rotDirection;
+
+  if (start === target) {
+    return 0;
+  }
+
+  if (dir === 2) {
+    if (start > target) {
+      dir = -1;
+    } else {
+      dir = 1;
+    }
+  }
+
+  if (rotDirection === 0) {
+    return minAngleDiff(target, start);
+  }
+
+  if (rotDirection === 1) {
+    if (start > target) {
+      return Math.PI * 2 - start + target;
+    }
+  }
+
+  if (rotDirection === -1) {
+    if (target > start) {
+      return -start - (Math.PI * 2 - target);
+    }
+  }
+
+  return target - start;
+
+  // if (rotDirection === 2) {
+  //   if (target > start) {
+  //     return target - start;
+  //   }
+  // }
+  // if (rotDirection === 2) {
+  //   if (start + rotDiff < 0) {
+  //     rotDiff = Math.PI * 2 + rotDiff;
+  //   } else if (start + rotDiff > Math.PI * 2) {
+  //     rotDiff = -(Math.PI * 2 - rotDiff);
+  //   }
+  // } else if (rotDiff * rotDirection < 0) {
+  //   rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+  // }
+  // return rotDiff;
+}
+
 function Line(p1: Point, p2: Point) {
   this.p1 = p1._dup();
   this.p2 = p2._dup();
@@ -1519,4 +1590,6 @@ export {
   translationPath,
   polarToRect,
   rectToPolar,
+  getDeltaAngle,
+  normAngleTo90,
 };

@@ -1,7 +1,7 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, minAngleDiff, Line,
+  Transform, minAngleDiff, Line, normAngleTo90,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
@@ -23,7 +23,7 @@ export default class ParallelCollection extends DiagramElementCollection {
     if (!this._line1 || !this._line2) {
       return;
     }
-    const angleSameThreshold = Math.PI / 300;
+    const angleSameThreshold = Math.PI / 400;
     const distanceThreshold = this.layout.parallelLine.width * 1.1;
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
@@ -35,14 +35,13 @@ export default class ParallelCollection extends DiagramElementCollection {
       if (lineRotationDifference > angleSameThreshold) {
         isParallel = false;
       }
-
-      if (isParallel) {
-        if (!this._line2.state.isBeingMoved) {
-          this._line2.transform.updateRotation(r1);
-        } else if (!this._line1.state.isBeingMoved) {
-          this._line1.transform.updateRotation(r2);
-        }
-      }
+      // if (isParallel) {
+      //   if (!this._line2.state.isBeingMoved) {
+      //     this._line2.transform.updateRotation(r1);
+      //   } else if (!this._line1.state.isBeingMoved) {
+      //     this._line1.transform.updateRotation(r2);
+      //   }
+      // }
 
       if (isParallel) {
         const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
@@ -63,11 +62,11 @@ export default class ParallelCollection extends DiagramElementCollection {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  normalizeAngle(element: DiagramElementCollection) {
+  normalizeAngle(element: DiagramElementCollection, wrap: number = 2 * Math.PI) {
     let angle = element.transform.r();
     if (angle != null) {
-      if (angle > Math.PI) {
-        angle -= Math.PI;
+      if (angle > wrap) {
+        angle -= wrap;
       }
       element.transform.updateRotation(angle);
     }
@@ -112,14 +111,26 @@ export default class ParallelCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  normalizeAngleTo90(element: DiagramElementCollection) {
+    let angle = element.transform.r();
+    if (angle != null) {
+      angle = normAngleTo90(angle);
+      element.transform.updateRotation(angle);
+    }
+  }
+
   rotateLine1ToParallel() {
     this._line1.stop();
     this._line2.stop();
+    this.normalizeAngleTo90(this._line1);
+    this.normalizeAngleTo90(this._line2);
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     const velocity = this._line1.transform.constant(0);
     velocity.updateRotation(2 * Math.PI / 6);
     if (r1 != null && r2 != null) {
+      console.log(r1, r2)
       this._line1.animateRotationTo(r2, 0, velocity, this.pulseParallel.bind(this));
     }
     this.diagram.animateNextFrame();
