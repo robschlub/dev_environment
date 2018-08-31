@@ -69,17 +69,17 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(parallel._line1, 'parallel'),
-          diag.getTimeToMoveToPosition(parallel._line2, 'parallel'),
+          diag.getTimeToMoveToScenario(parallel._line1, 'parallel'),
+          diag.getTimeToMoveToScenario(parallel._line2, 'parallel'),
         );
         time = time > 2 ? 2 : time;
-        diag.moveToPosition(parallel._line1, 'parallel', time);
-        diag.moveToPosition(parallel._line2, 'parallel', time, done);
+        diag.moveToScenario(parallel._line1, 'parallel', time);
+        diag.moveToScenario(parallel._line2, 'parallel', time, done);
       },
       setSteadyState: () => {
         diag.isParallelHighlighting = true;
-        diag.moveToPosition(parallel._line1, 'parallel', 0.001);
-        diag.moveToPosition(parallel._line2, 'parallel', 0.001);
+        diag.moveToScenario(parallel._line1, 'parallel', 0.001);
+        diag.moveToScenario(parallel._line2, 'parallel', 0.001);
       },
     });
 
@@ -132,16 +132,16 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(opp._line1, 'opposite'),
-          diag.getTimeToMoveToPosition(opp._line2, 'opposite'),
+          diag.getTimeToMoveToScenario(opp._line1, 'opposite'),
+          diag.getTimeToMoveToScenario(opp._line2, 'opposite'),
         );
         time = time > 2 ? 2 : time;
-        diag.moveToPosition(opp._line1, 'opposite', time);
-        diag.moveToPosition(opp._line2, 'opposite', time, done);
+        diag.moveToScenario(opp._line1, 'opposite', time);
+        diag.moveToScenario(opp._line2, 'opposite', time, done);
       },
       setSteadyState: () => {
-        diag.moveToPosition(opp._line1, 'opposite', 0.001);
-        diag.moveToPosition(opp._line2, 'opposite', 0.001);
+        diag.moveToScenario(opp._line1, 'opposite', 0.001);
+        diag.moveToScenario(opp._line2, 'opposite', 0.001);
         opp._angleA._arc.show();
         opp._angleC._arc.show();
         opp._angleA.eqn.showForm('a');
@@ -239,7 +239,7 @@ class Content extends LessonContent {
         opp._angleB.eqn.showForm('b');
         opp._angleC.eqn.showForm('c');
         opp._angleD.eqn.showForm('d');
-        diag._unitsSelector.select('deg');
+        diag._unitsSelector.select(diag.units);
         opp._equation1.eqn.showForm('a_plus_b');
         opp._equation2.eqn.showForm('b');
         opp._equation1.eqn.setPosition(layout.equation1.aPlusB);
@@ -444,19 +444,19 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
         );
         time = time > 2 ? 2 : time;
-        diag.moveToPosition(threeLines._line1, 'corresponding', time);
-        diag.moveToPosition(threeLines._line2, 'corresponding', time);
-        diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+        diag.moveToScenario(threeLines._line1, 'corresponding', time);
+        diag.moveToScenario(threeLines._line2, 'corresponding', time);
+        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
-        diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
         threeLines.toggleCorrespondingAngles(false);
       },
     });
@@ -499,13 +499,14 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(threeLines._line1, 'center'),
-          diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line1, 'center'),
+          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines),
         );
         time = time > 2 ? 2 : time;
-        threeLines.animateRotationTo(0, 0, time);
-        diag.moveToPosition(threeLines._line1, 'center', time);
-        diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+        diag.moveToScenario(threeLines);
+        diag.moveToScenario(threeLines._line1, 'center', time);
+        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
         threeLines._angleA1.show();
@@ -515,9 +516,11 @@ class Content extends LessonContent {
         threeLines._angleA2._arc.show();
         threeLines._angleA2.eqn.showForm('a');
 
-        diag.moveToPosition(threeLines._line1, 'center', 0.001);
-        diag.moveToPosition(threeLines._line2, 'center', 0.001);
-        diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line1, 'center', 0.001);
+        diag.moveToScenario(threeLines._line2, 'center', 0.001);
+        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines, null, 0.001);
+
         threeLines._line1.isMovable = true;
         threeLines._line1.move.maxTransform.updateTranslation(
           10,
@@ -577,13 +580,15 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         if (this.comingFrom !== 'prev') {
           let time = Math.max(
-            diag.getTimeToMoveToPosition(threeLines._line1, 'center'),
-            diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines._line1, 'center'),
+            diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines),
           );
           time = time > 2 ? 2 : time;
-          threeLines.animateRotationTo(0, 0, time);
-          diag.moveToPosition(threeLines._line1, 'center', time);
-          diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+          // threeLines.animateRotationTo(0, 0, time);
+          diag.moveToScenario(threeLines);
+          diag.moveToScenario(threeLines._line1, 'center', time);
+          diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
         } else {
           done();
         }
@@ -597,9 +602,10 @@ class Content extends LessonContent {
           threeLines._angleA2._arc.show();
           threeLines._angleA2.eqn.showForm('a');
 
-          diag.moveToPosition(threeLines._line1, 'center', 0.001);
-          diag.moveToPosition(threeLines._line2, 'center', 0.001);
-          diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines._line1, 'center', 0.001);
+          diag.moveToScenario(threeLines._line2, 'center', 0.001);
+          diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines, null, 0.001);
           threeLines._line1.isMovable = true;
           threeLines._line1._end1.movementAllowed = 'translation';
           threeLines._line1._end2.movementAllowed = 'translation';
@@ -676,19 +682,19 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
         );
         time = time > 2 ? 2 : time;
-        diag.moveToPosition(threeLines._line1, 'corresponding', time);
-        diag.moveToPosition(threeLines._line2, 'corresponding', time);
-        diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+        diag.moveToScenario(threeLines._line1, 'corresponding', time);
+        diag.moveToScenario(threeLines._line2, 'corresponding', time);
+        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
-        diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
         threeLines.toggleCorrespondingAngles();
       },
     });
@@ -748,19 +754,19 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
         );
         time = time > 2 ? 2 : time;
-        diag.moveToPosition(threeLines._line1, 'corresponding', time);
-        diag.moveToPosition(threeLines._line2, 'corresponding', time);
-        diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+        diag.moveToScenario(threeLines._line1, 'corresponding', time);
+        diag.moveToScenario(threeLines._line2, 'corresponding', time);
+        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
-        diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
         threeLines.toggleAlternateAngles();
       },
     });
@@ -825,23 +831,23 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         if (this.comingFrom !== 'prev') {
           let time = Math.max(
-            diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
-            diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
-            diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
           );
           time = time > 2 ? 2 : time;
-          diag.moveToPosition(threeLines._line1, 'corresponding', time);
-          diag.moveToPosition(threeLines._line2, 'corresponding', time);
-          diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+          diag.moveToScenario(threeLines._line1, 'corresponding', time);
+          diag.moveToScenario(threeLines._line2, 'corresponding', time);
+          diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
         } else {
           done();
         }
       },
       setSteadyState: () => {
         if (this.comingFrom !== 'prev') {
-          diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
-          diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
-          diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
         }
         threeLines.toggleAlternateAngles();
         threeLines.showCorrespondingAngles();
@@ -882,7 +888,7 @@ class Content extends LessonContent {
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         // threeLines._line3.setColor(layout.colors.line);
-        diag._unitsSelector.select('deg');
+        diag._unitsSelector.select(diag.units);
       },
       showOnly: [
         threeLines,
@@ -905,22 +911,25 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
+          diag.getTimeToMoveToScenario(threeLines),
         );
         time = time > 2 ? 2 : time;
-        threeLines.animateRotationTo(0, 0, time);
-        diag.moveToPosition(threeLines._line1, 'corresponding', time);
-        diag.moveToPosition(threeLines._line2, 'corresponding', time);
-        diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+        // threeLines.animateRotationTo(0, 0, time);
+        diag.moveToScenario(threeLines);
+        diag.moveToScenario(threeLines._line1, 'corresponding', time);
+        diag.moveToScenario(threeLines._line2, 'corresponding', time);
+        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
       },
       setSteadyState: () => {
-        diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
+        diag.moveToScenario(threeLines, null, 0.001);
         threeLines.toggleInteriorAngles();
-        // diag._unitsSelector.select('deg');
+        diag._unitsSelector.select(diag.units);
       },
     });
 
@@ -974,26 +983,26 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         if (this.comingFrom !== 'prev') {
           let time = Math.max(
-            diag.getTimeToMoveToPosition(threeLines._line1, 'corresponding'),
-            diag.getTimeToMoveToPosition(threeLines._line2, 'corresponding'),
-            diag.getTimeToMoveToPosition(threeLines._line3, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
+            diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
           );
           time = time > 2 ? 2 : time;
-          diag.moveToPosition(threeLines._line1, 'corresponding', time);
-          diag.moveToPosition(threeLines._line2, 'corresponding', time);
-          diag.moveToPosition(threeLines._line3, 'corresponding', time, done);
+          diag.moveToScenario(threeLines._line1, 'corresponding', time);
+          diag.moveToScenario(threeLines._line2, 'corresponding', time);
+          diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
         } else {
           done();
         }
       },
       setSteadyState: () => {
         if (this.comingFrom !== 'prev') {
-          diag.moveToPosition(threeLines._line1, 'corresponding', 0.001);
-          diag.moveToPosition(threeLines._line2, 'corresponding', 0.001);
-          diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
+          diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
         }
         threeLines.showCorrespondingAnglesInterior();
-        diag._unitsSelector.select('deg');
+        diag._unitsSelector.select(diag.units);
       },
     });
   }

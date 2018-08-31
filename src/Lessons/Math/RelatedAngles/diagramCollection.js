@@ -1,15 +1,15 @@
 // @flow
 
 import {
-  Transform, Point,
+  Transform,
 } from '../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative, getMaxTimeFromVelocity,
+  DiagramElementPrimative,
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
 
 import {
-  makeSelectorText, addSelectorHTML, SelectorList,
+  addSelectorHTML,
 } from '../../../LessonsCommon/tools/selector';
 // eslint-disable-next-line import/no-cycle
 import type { LessonDiagramType } from './diagram';
@@ -17,18 +17,16 @@ import type { LessonDiagramType } from './diagram';
 import ParallelCollection from './diagramCollectionParallel';
 import OppositeCollection from './diagramCollectionOpposite';
 import ThreeLinesCollection from './diagramCollectionThreeLines';
-import type { MoveableLineType } from './diagramCollectionCommon';
+import CommonDiagramCollection from '../../../LessonsCommon/DiagramCollection';
+import type { TypeUnits } from '../../../LessonsCommon/DiagramCollection';
 
-
-class RelatedAnglesCollection extends DiagramElementCollection {
-  layout: Object;
-  colors: Object;
-  shapes: Object;
+class RelatedAnglesCollection extends CommonDiagramCollection {
   diagram: LessonDiagramType;
   _parallel: ParallelCollection;
   _opposite: OppositeCollection;
   _threeLines: ThreeLinesCollection;
   _selector: DiagramElementPrimative;
+  units: TypeUnits;
 
   addSelector() {
     addSelectorHTML(
@@ -42,46 +40,11 @@ class RelatedAnglesCollection extends DiagramElementCollection {
     this._selector.setPosition(this.layout.selector.position);
   }
 
-  makeUnitsSelector() {
-    const font = this.layout.defaultFont._dup();
-    font.size = 0.09;
-    font.setColor(this.layout.colors.diagram.disabled);
-    const list = new SelectorList();
-    list.add('deg', 'degrees');
-    list.add('rad', 'radians');
-    const selectorClicked = (selectedUnits: 'deg' | 'rad') => {
-      const degSpans = document.getElementsByClassName('lesson__unit_deg');
-      const radSpans = document.getElementsByClassName('lesson__unit_rad');
-      if (selectedUnits === 'rad') {
-        [].forEach.call(degSpans, degSpan => degSpan.classList.add('lesson__unit_hide'));
-        [].forEach.call(radSpans, radSpan => radSpan.classList.remove('lesson__unit_hide'));
-      }
-      if (selectedUnits === 'deg') {
-        [].forEach.call(degSpans, degSpan => degSpan.classList.remove('lesson__unit_hide'));
-        [].forEach.call(radSpans, radSpan => radSpan.classList.add('lesson__unit_hide'));
-      }
-      this.setUnits(selectedUnits);
-    };
-    const selector = makeSelectorText(
-      list,
-      'deg',
-      this.diagram,
-      selectorClicked.bind(this),
-      0,
-      font,
-      this.layout.colors.diagram.text.base,
-      '/',
-      0.1,
-    );
-    selector.setPosition(this.layout.units.position);
-    return selector;
-  }
-
   constructor(diagram: LessonDiagramType, transform: Transform = new Transform()) {
-    super(transform, diagram.limits);
-    this.diagram = diagram;
-    this.layout = lessonLayout();
+    const layout = lessonLayout();
+    super(diagram, layout, transform);
 
+    this.units = 'deg';
     this.add('parallel', new ParallelCollection(diagram, this.layout));
     this.add('opposite', new OppositeCollection(diagram, this.layout));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
@@ -108,48 +71,14 @@ class RelatedAnglesCollection extends DiagramElementCollection {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  setUnits(units: 'deg' | 'rad') {
+  setUnits(units: TypeUnits) {
+    this.units = units;
     if (this._opposite.isShown) {
       this._opposite.setUnits(units);
     }
     if (this._threeLines.isShown) {
       this._threeLines.setUnits(units);
     }
-  }
-
-  getTimeToMoveToPosition(
-    element: MoveableLineType,
-    angleType: 'parallel' | 'opposite',
-  ) {
-    const target = element.transform.constant(0);
-    target.updateTranslation(this.layout[element.name][angleType].position);
-    target.updateRotation(this.layout[element.name][angleType].rotation);
-    const velocity = element.transform.constant(0);
-    velocity.updateTranslation(new Point(1 / 2, 1 / 2));
-    velocity.updateRotation(2 * Math.PI / 6);
-    const time = getMaxTimeFromVelocity(element.transform._dup(), target, velocity, 0);
-    return time;
-  }
-
-  moveToPosition(
-    element: MoveableLineType,
-    angleType: 'parallel' | 'opposite',
-    animationTime: ?number = null,
-    callback: () => void,
-  ) {
-    element.stop();
-    const target = element.transform.constant(0);
-    target.updateTranslation(this.layout[element.name][angleType].position);
-    target.updateRotation(this.layout[element.name][angleType].rotation);
-    let time = 1;
-    if (typeof animationTime !== 'number') {
-      time = this.getTimeToMoveToPosition(element, angleType);
-    } else {
-      time = animationTime;
-    }
-    time = time === 0 ? 0.001 : time;
-    element.animateTo(target, time, 0, callback);
-    return time;
   }
 }
 

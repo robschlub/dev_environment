@@ -40,6 +40,10 @@ export default function lessonLayout() {
     width: 0.02,
     boundary: new Rect(-1.5, -1.7, 3, 3),
   };
+  layout.threeLines = {
+    position: layout.position,
+    rotation: 0,
+  };
   layout.intersectingLine = {
     length: {
       full: len * 1.5,

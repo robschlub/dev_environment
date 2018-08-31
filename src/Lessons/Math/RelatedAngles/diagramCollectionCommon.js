@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, polarToRect, Rect,
+  Transform, Point, polarToRect, Rect, minAngleDiff, normAngle,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -94,6 +94,7 @@ export function makeMoveableLine(
   end1.move.type = 'rotation';
   end1.move.element = line;
   end1.isMovable = true;
+  end1.move.canBeMovedAfterLoosingTouch = true;
 
   const end2 = diagram.shapes.horizontalLine(
     new Point(middle / 2, 0),
@@ -104,6 +105,7 @@ export function makeMoveableLine(
   end2.move.type = 'rotation';
   end2.move.element = line;
   end2.isMovable = true;
+  end2.move.canBeMovedAfterLoosingTouch = true;
 
   const mid = diagram.shapes.horizontalLine(
     new Point(-middle / 2, 0),
@@ -114,6 +116,7 @@ export function makeMoveableLine(
   mid.move.type = 'translation';
   mid.move.element = line;
   mid.isMovable = true;
+  mid.move.canBeMovedAfterLoosingTouch = true;
 
   end1.pulse.transformMethod = s => new Transform().scale(1, s);
   end2.pulse.transformMethod = s => new Transform().scale(1, s);
@@ -122,7 +125,7 @@ export function makeMoveableLine(
   const increaseBorderSize = (element: DiagramElementPrimative) => {
     for (let i = 0; i < element.vertices.border[0].length; i += 1) {
       // eslint-disable-next-line no-param-reassign
-      element.vertices.border[0][i].y *= 10;
+      element.vertices.border[0][i].y *= 15;
     }
   };
 
@@ -306,4 +309,17 @@ export function makeSupplementaryAngle(
   };
   // arc.setPosition(layout.line1.opposite.position);
   return arc;
+}
+
+export function makeAnglesClose(
+  element1: DiagramElementCollection | DiagramElementPrimative,
+  element2: DiagramElementCollection | DiagramElementPrimative,
+) {
+  const r1 = element1.transform.r();
+  const r2 = element2.transform.r();
+  if (r1 != null && r2 != null) {
+    if (Math.abs(minAngleDiff(r2, r1)) > Math.PI / 2) {
+      element2.transform.updateRotation(normAngle(r2 + Math.PI));
+    }
+  }
 }

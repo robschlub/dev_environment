@@ -1,14 +1,14 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, minAngleDiff, Line, normAngleTo90, normAngle,
+  Transform, minAngleDiff, Line, normAngleTo90,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeMoveableLine } from './diagramCollectionCommon';
+import { makeMoveableLine, makeAnglesClose } from './diagramCollectionCommon';
 import type { MoveableLineType } from './diagramCollectionCommon';
 
 export default class ParallelCollection extends DiagramElementCollection {
@@ -121,26 +121,11 @@ export default class ParallelCollection extends DiagramElementCollection {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  makeAnglesClose(
-    element1: DiagramElementCollection,
-    element2: DiagramElementCollection,
-  ) {
-    const r1 = element1.transform.r();
-    const r2 = element2.transform.r();
-    if (r1 != null && r2 != null) {
-      if (Math.abs(minAngleDiff(r2, r1)) > Math.PI / 2) {
-        element2.transform.updateRotation(normAngle(r2 + Math.PI));
-      }
-    }
-  }
-
   rotateLine1ToParallel() {
     this._line1.stop();
     this._line2.stop();
-    this.makeAnglesClose(this._line1, this._line2);
-    // this.normalizeAngleTo90(this._line1);
-    // this.normalizeAngleTo90(this._line2);
+    makeAnglesClose(this._line1, this._line2);
+
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     const velocity = this._line1.transform.constant(0);

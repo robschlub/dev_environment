@@ -1,13 +1,13 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
 import Lesson from '../../../js/Lesson/Lesson';
-import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
+// import { DiagramElementCollection, DiagramElementPrimative } from '../../../js/diagram/Element';
 // eslint-disable-next-line import/no-cycle
 import RelatedAnglesCollection from './diagramCollection';
 // eslint-disable-next-line import/no-cycle
-import type { MoveableLineType } from './diagramCollectionCommon';
+// import type { MoveableLineType } from './diagramCollectionCommon';
 import {
-  Point, minAngleDiff, Transform,
+  Transform,
 } from '../../../js/diagram/tools/g2';
 
 export type LessonDiagramType = {
@@ -152,69 +152,69 @@ class LessonDiagram extends Diagram {
     }
   }
 
-  endHandler() {
-    this.animateNextFrame();
-    return true;
-  }
+  // endHandler() {
+  //   this.animateNextFrame();
+  //   return true;
+  // }
 
-  lineHandler(
-    previousClientPoint: Point,
-    currentClientPoint: Point,
-    line: MoveableLineType,
-  ): boolean {
-    const lineSegmentHandler = (segment) => {
-      if (this.beingTouchedElements.indexOf(segment) >= 0) {
-        if (segment.movementAllowed === 'rotation') {
-          this.rotateElement(
-            previousClientPoint,
-            currentClientPoint,
-            line,
-          );
-        } else {
-          this.moveLineElement(
-            previousClientPoint,
-            currentClientPoint,
-            line,
-          );
-        }
-        return true;
-      }
-      return false;
-    };
+  // lineHandler(
+  //   previousClientPoint: Point,
+  //   currentClientPoint: Point,
+  //   line: MoveableLineType,
+  // ): boolean {
+  //   const lineSegmentHandler = (segment) => {
+  //     if (this.beingTouchedElements.indexOf(segment) >= 0) {
+  //       if (segment.movementAllowed === 'rotation') {
+  //         this.rotateElement(
+  //           previousClientPoint,
+  //           currentClientPoint,
+  //           line,
+  //         );
+  //       } else {
+  //         this.moveLineElement(
+  //           previousClientPoint,
+  //           currentClientPoint,
+  //           line,
+  //         );
+  //       }
+  //       return true;
+  //     }
+  //     return false;
+  //   };
 
-    if (line.state.isBeingMoved) {
-      if (lineSegmentHandler(line._end1)) {
-        return true;
-      }
-      if (lineSegmentHandler(line._end2)) {
-        return true;
-      }
-      if (lineSegmentHandler(line._mid)) {
-        return true;
-      }
-    }
-    // if (line.state.isBeingMoved) {
-    //   if (this.beingTouchedElements.indexOf(line._end1) >= 0
-    //     || this.beingTouchedElements.indexOf(line._end2) >= 0
-    //   ) {
-    //     this.rotateElement(
-    //       previousClientPoint,
-    //       currentClientPoint,
-    //       line,
-    //     );
-    //     return true;
-    //   }
-    //   if (this.beingTouchedElements.indexOf(line._mid) >= 0) {
-    //     this.moveLineElement(
-    //       previousClientPoint,
-    //       currentClientPoint,
-    //       line,
-    //     );
-    //     return true;
-    //   }
-    // }
-    return false;
-  }
+  //   if (line.state.isBeingMoved) {
+  //     if (lineSegmentHandler(line._end1)) {
+  //       return true;
+  //     }
+  //     if (lineSegmentHandler(line._end2)) {
+  //       return true;
+  //     }
+  //     if (lineSegmentHandler(line._mid)) {
+  //       return true;
+  //     }
+  //   }
+  //   // if (line.state.isBeingMoved) {
+  //   //   if (this.beingTouchedElements.indexOf(line._end1) >= 0
+  //   //     || this.beingTouchedElements.indexOf(line._end2) >= 0
+  //   //   ) {
+  //   //     this.rotateElement(
+  //   //       previousClientPoint,
+  //   //       currentClientPoint,
+  //   //       line,
+  //   //     );
+  //   //     return true;
+  //   //   }
+  //   //   if (this.beingTouchedElements.indexOf(line._mid) >= 0) {
+  //   //     this.moveLineElement(
+  //   //       previousClientPoint,
+  //   //       currentClientPoint,
+  //   //       line,
+  //   //     );
+  //   //     return true;
+  //   //   }
+  //   // }
+  //   return false;
+  // }
 
   // touchMoveHandler(
   //   previousClientPoint: Point,

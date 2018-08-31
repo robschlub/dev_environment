@@ -203,48 +203,6 @@ class AnimationPhase {
     } else {
       this.time = time;
     }
-    // this.deltaTransform.order.forEach((delta, index) => {
-    //   if (this.timeOrVelocity instanceof Transform) {
-    //     if (delta instanceof Translation || delta instanceof Scale) {
-    //       const v = this.timeOrVelocity.order[index];
-    //       if (
-    //         (v instanceof Translation || v instanceof Scale)
-    //         && v.x !== 0
-    //         && v.y !== 0
-    //       ) {
-    //         const xTime = Math.abs(delta.x) / v.x;
-    //         const yTime = Math.abs(delta.y) / v.y;
-    //         time = xTime > time ? xTime : time;
-    //         time = yTime > time ? yTime : time;
-    //       }
-    //     }
-    //   }
-    //   const start = this.startTransform.order[index];
-    //   if (delta instanceof Rotation && start instanceof Rotation) {
-    //     let rotDiff = delta.r || 0;
-    //     if (this.rotDirection === 2) {
-    //       const rStart = start.r;
-    //       if (rStart) {
-    //         if (rStart + rotDiff < 0) {
-    //           rotDiff = Math.PI * 2 + rotDiff;
-    //         } else if (rStart + rotDiff > Math.PI * 2) {
-    //           rotDiff = -(Math.PI * 2 - rotDiff);
-    //         }
-    //       }
-    //     } else if (rotDiff * this.rotDirection < 0) {
-    //       rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
-    //     }
-    //     // eslint-disable-next-line no-param-reassign
-    //     delta.r = rotDiff;
-    //     if (this.timeOrVelocity instanceof Transform) {
-    //       const v = this.timeOrVelocity.order[index];
-    //       if (v instanceof Rotation && v !== 0) {
-    //         const rTime = delta.r / v.r;
-    //         time = rTime > time ? rTime : time;
-    //       }
-    //     }
-    //   }
-    // });
     this.deltaTransform.order.forEach((delta, index) => {
       const start = this.startTransform.order[index];
       const target = this.targetTransform.order[index];
@@ -392,7 +350,6 @@ class DiagramElement {
   isMovable: boolean;             // Element is able to be moved
   isTouchable: boolean;           // Element can be touched
   hasTouchableElements: boolean;
-  // hasMovableElements: boolean;
 
   // Callbacks
   onClick: ?(?mixed) => void;
@@ -439,7 +396,7 @@ class DiagramElement {
     bounce: boolean;
     canBeMovedAfterLoosingTouch: boolean;
     type: 'rotation' | 'translation';
-    element: DiagramElementPrimative | DiagramElementCollection | null;
+    element: DiagramElement | null;
   };
 
   pulse: {
@@ -2455,5 +2412,5 @@ class DiagramElementCollection extends DiagramElement {
 
 export {
   DiagramElementPrimative, DiagramElementCollection, AnimationPhase,
-  getMaxTimeFromVelocity,
+  getMaxTimeFromVelocity, DiagramElement,
 };
