@@ -1,7 +1,7 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, minAngleDiff, Line, normAngleTo90,
+  Transform, minAngleDiff, Line, normAngleTo90, normAngle,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
@@ -120,17 +120,31 @@ export default class ParallelCollection extends DiagramElementCollection {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  makeAnglesClose(
+    element1: DiagramElementCollection,
+    element2: DiagramElementCollection,
+  ) {
+    const r1 = element1.transform.r();
+    const r2 = element2.transform.r();
+    if (r1 != null && r2 != null) {
+      if (Math.abs(minAngleDiff(r2, r1)) > Math.PI / 2) {
+        element2.transform.updateRotation(normAngle(r2 + Math.PI));
+      }
+    }
+  }
+
   rotateLine1ToParallel() {
     this._line1.stop();
     this._line2.stop();
-    this.normalizeAngleTo90(this._line1);
-    this.normalizeAngleTo90(this._line2);
+    this.makeAnglesClose(this._line1, this._line2);
+    // this.normalizeAngleTo90(this._line1);
+    // this.normalizeAngleTo90(this._line2);
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     const velocity = this._line1.transform.constant(0);
     velocity.updateRotation(2 * Math.PI / 6);
     if (r1 != null && r2 != null) {
-      console.log(r1, r2)
       this._line1.animateRotationTo(r2, 0, velocity, this.pulseParallel.bind(this));
     }
     this.diagram.animateNextFrame();
