@@ -61,7 +61,6 @@ class Content extends LessonContent {
       showOnly: [
       ],
       show: [
-        // diag._unitsSelector,
         diag._selector,
         parallel,
         parallel._line1,
