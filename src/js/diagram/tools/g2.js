@@ -334,11 +334,12 @@ function normAngleTo90(angle: number) {
   return newAngle;
 }
 
+export type TypeRotationDirection = 0 | 1 | 2 | -1;
 
 function getDeltaAngle(
   startAngle: number,
   targetAngle: number,
-  rotDirection: 0 | 1 | -1 | 2 = 0,
+  rotDirection: TypeRotationDirection = 0,
 ) {
   const start = normAngle(startAngle);
   const target = normAngle(targetAngle);

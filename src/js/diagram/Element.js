@@ -6,7 +6,7 @@ import {
   Scale, Rotation, getDeltaAngle,
 } from './tools/g2';
 import * as m2 from './tools/m2';
-import type { pathOptionsType } from './tools/g2';
+import type { pathOptionsType, TypeRotationDirection } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
@@ -396,7 +396,8 @@ class DiagramElement {
     bounce: boolean;
     canBeMovedAfterLoosingTouch: boolean;
     type: 'rotation' | 'translation';
-    element: DiagramElement | null;
+    // eslint-disable-next-line no-use-before-define
+    element: DiagramElementCollection | DiagramElementPrimative | null;
   };
 
   pulse: {
@@ -1147,7 +1148,7 @@ class DiagramElement {
   animateTo(
     transform: Transform,
     timeOrVelocity: number | Transform = 1,
-    rotDirection: number = 0,
+    rotDirection: TypeRotationDirection = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
     // translationPath: ?(Point, Point, number) => Point = null,
@@ -1317,7 +1318,7 @@ class DiagramElement {
   // With update only first instace of rotation in the transform order
   animateRotationTo(
     rotation: number,
-    rotDirection: number,
+    rotDirection: TypeRotationDirection,
     timeOrVelocity: number | Transform = 1,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
@@ -1334,7 +1335,7 @@ class DiagramElement {
   animateTranslationAndRotationTo(
     translation: Point,
     rotation: number,
-    rotDirection: number,
+    rotDirection: TypeRotationDirection,
     time: number = 1,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,

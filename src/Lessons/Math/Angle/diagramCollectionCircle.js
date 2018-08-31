@@ -10,6 +10,7 @@ import {
   Point, Transform, minAngleDiff, normAngle,
 } from '../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
+import type { TypeRotationDirection } from '../../../js/diagram/tools/g2';
 
 const layout = lessonLayout();
 const { colors } = layout;
@@ -246,7 +247,7 @@ class CircleCollection extends DiagramElementCollection {
 
   rotateTo(
     angle: number,
-    direction: number,
+    direction: TypeRotationDirection,
     time: number,
     callback: () => void = () => {},
   ) {
@@ -256,7 +257,7 @@ class CircleCollection extends DiagramElementCollection {
       d = 1;
       if (r) {
         const delta = minAngleDiff(angle, r);
-        d = delta / Math.abs(delta);
+        d = delta / Math.abs(delta) === 1 ? 1 : -1;
       }
     }
     this._radius.animateRotationTo(angle, d, time, callback);

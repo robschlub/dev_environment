@@ -11,6 +11,7 @@ import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { TypeRotationDirection } from '../../../js/diagram/tools/g2';
 
 type TypeAnglePairName = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
 
@@ -712,7 +713,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     element: DiagramElementPrimative | DiagramElementCollection,
     angle: number,
     callback: () => void = () => {},
-    direction: number = 2,
+    direction: TypeRotationDirection = 2,
     time: number = 2,
     normalizeTime: boolean = false,
   ) {
@@ -732,7 +733,7 @@ class AdjacentAnglesCollection extends AngleCircle {
     if (d === 0) {
       d = 1;
       if (delta !== 0) {
-        d = delta / Math.abs(delta);
+        d = delta / Math.abs(delta) === 1 ? 1 : -1;
       }
     }
 

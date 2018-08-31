@@ -33,9 +33,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
   _angleC2: TypeIndexAngle;
   _angleD2: TypeIndexAngle;
   _supplementary: TypeSupplementaryAngle;
-  // varState: {
-  //   supplementary: number;
-  // };
 
   _equation1: {
     eqn: Equation;
@@ -83,10 +80,8 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     angle.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
     angle.eqn.showForm(name);
 
-    // angle.setPositionToElement(line);
     angle.lineIndex = lineIndex;
     angle.angleIndex = angleIndex;
-    // angle.setPosition(this.layout.line1.opposite.position);
     return angle;
   }
 
@@ -123,8 +118,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.layout = layout;
     this.setPosition(this.layout.position);
     this.addThreeLines();
-    // this.isMovable = true;
-    this.isTouchable = true;
     this.add('angleA2', this.makeAngle('a', 2, 0));
     this.add('angleB2', this.makeAngle('b', 2, 1));
     this.add('angleC2', this.makeAngle('c', 2, 2));
@@ -145,7 +138,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this.updateIntersectingLineAngle();
     };
     this.hasTouchableElements = true;
-    // this.isMovable = true;
     this.setTransformCallback = this.updateIntersectingLineAngle.bind(this);
   }
 
@@ -181,7 +173,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
         );
       }
       this.diagram.animateNextFrame();
-      // this.updateIntersectingLineAngle();
     }
   }
 

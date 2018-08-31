@@ -18,7 +18,6 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   +diagram: Diagram;
-  // +setUnits: (TypeUnits) => {};
 
   constructor(
     diagram: Diagram,

@@ -12,6 +12,7 @@ import {
 } from '../../../js/diagram/tools/g2';
 import getScssColors from '../../../js/tools/getScssColors';
 import styles from './style.scss';
+import type { TypeRotationDirection } from '../../../js/diagram/tools/g2';
 
 const colors = getScssColors(styles);
 const anchorPoints = 50;
@@ -181,7 +182,7 @@ class CircleCollection extends DiagramElementCollection {
 
   rotateTo(
     angle: number,
-    direction: number,
+    direction: TypeRotationDirection,
     time: number,
     callback: () => void = () => {},
   ) {
@@ -191,7 +192,8 @@ class CircleCollection extends DiagramElementCollection {
       d = 1;
       if (r) {
         const delta = minAngleDiff(angle, r);
-        d = delta / Math.abs(delta);
+        // d = delta / Math.abs(delta);
+        d = delta / Math.abs(delta) === 1 ? 1 : -1;
       }
     }
     this._radius.animateRotationTo(angle, d, time, callback);

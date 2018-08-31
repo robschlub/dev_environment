@@ -1156,6 +1156,8 @@ export type TypeEquation = {
   setPosition: (Point) => void;
   stop: () => void;
   scale: (number) => void;
+
+  +showForm: (EquationForm | string, ?string) => {};
 };
 
 export class Equation {
@@ -1175,6 +1177,8 @@ export class Equation {
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
     scale: number;
   };
+
+  +showForm: (EquationForm | string, ?string) => {};
 
   constructor(
     drawContext2D: DrawContext2D,

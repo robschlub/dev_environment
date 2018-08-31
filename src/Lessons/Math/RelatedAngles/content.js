@@ -917,7 +917,6 @@ class Content extends LessonContent {
           diag.getTimeToMoveToScenario(threeLines),
         );
         time = time > 2 ? 2 : time;
-        // threeLines.animateRotationTo(0, 0, time);
         diag.moveToScenario(threeLines);
         diag.moveToScenario(threeLines._line1, 'corresponding', time);
         diag.moveToScenario(threeLines._line2, 'corresponding', time);

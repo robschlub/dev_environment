@@ -484,6 +484,7 @@ class Diagram {
 
   beingTouchedElements: Array<DiagramElementPrimative |
                         DiagramElementCollection>;
+
   moveTopElementOnly: boolean;
 
   limits: Rect;
