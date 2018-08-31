@@ -19,11 +19,11 @@ export default class ParallelCollection extends DiagramElementCollection {
   _line2: MoveableLineType;
   _line3: MoveableLineType;
 
-  checkForParallel() {
+  checkForParallel(makeRotationEqual: boolean = false) {
     if (!this._line1 || !this._line2) {
       return;
     }
-    const angleSameThreshold = Math.PI / 400;
+    const angleSameThreshold = Math.PI / 300;
     const distanceThreshold = this.layout.parallelLine.width * 1.1;
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
@@ -35,13 +35,14 @@ export default class ParallelCollection extends DiagramElementCollection {
       if (lineRotationDifference > angleSameThreshold) {
         isParallel = false;
       }
-      // if (isParallel) {
-      //   if (!this._line2.state.isBeingMoved) {
-      //     this._line2.transform.updateRotation(r1);
-      //   } else if (!this._line1.state.isBeingMoved) {
-      //     this._line1.transform.updateRotation(r2);
-      //   }
-      // }
+
+      if (isParallel && makeRotationEqual) {
+        if (!this._line2.state.isBeingMoved) {
+          this._line1.transform.updateRotation(r2);
+        } else if (!this._line1.state.isBeingMoved) {
+          this._line2.transform.updateRotation(r1);
+        }
+      }
 
       if (isParallel) {
         const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));

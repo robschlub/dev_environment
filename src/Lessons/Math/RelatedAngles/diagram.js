@@ -145,6 +145,13 @@ class LessonDiagram extends Diagram {
   //   }
   // }
 
+  touchUpHandler() {
+    super.touchUpHandler();
+    if (this.elements._parallel.isShown) {
+      this.elements._parallel.checkForParallel(true);
+    }
+  }
+
   endHandler() {
     this.animateNextFrame();
     return true;

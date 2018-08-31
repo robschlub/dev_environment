@@ -144,7 +144,6 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       this.updateParallelLineTranlsation();
       this.updateIntersectingLineAngle();
     };
-
     this.hasTouchableElements = true;
     // this.isMovable = true;
     this.setTransformCallback = this.updateIntersectingLineAngle.bind(this);

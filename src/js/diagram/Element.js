@@ -2278,6 +2278,16 @@ class DiagramElementCollection extends DiagramElement {
     this.diagramLimits = limits;
   }
 
+  // Returns an array of touched elements.
+  // In a collection, elements defined later in the collection.order
+  // array are on top of earlier elements. The touched array
+  // is sorted to have elements on top first, where the collection containing
+  // the elements will be before it's elements. For example, the array
+  // would be ordered as:
+  //  0: top collection
+  //  1 to n: n top elements in collection
+  //  n+1: second top collection
+  //  n+2 to m: top elements in second top colleciton.
   getTouched(glLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
     if (!this.isTouchable && !this.hasTouchableElements) {
       return [];
@@ -2288,7 +2298,7 @@ class DiagramElementCollection extends DiagramElement {
         touched.push(this);
       }
     }
-    for (let i = 0; i < this.order.length; i += 1) {
+    for (let i = this.order.length - 1; i >= 0; i -= 1) {
       const element = this.elements[this.order[i]];
       if (element.isShown === true) {
         touched = touched.concat(element.getTouched(glLocation));

@@ -519,9 +519,6 @@ class Content extends LessonContent {
         diag.moveToPosition(threeLines._line2, 'center', 0.001);
         diag.moveToPosition(threeLines._line3, 'corresponding', 0.001);
         threeLines._line1.isMovable = true;
-        threeLines._line1._end1.movementAllowed = 'translation';
-        threeLines._line1._end2.movementAllowed = 'translation';
-        threeLines._line1._mid.movementAllowed = 'translation';
         threeLines._line1.move.maxTransform.updateTranslation(
           10,
           layout.line1.corresponding.position.y,
