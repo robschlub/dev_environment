@@ -2,12 +2,13 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, polarToRect, Rect, minAngleDiff, normAngle,
+  Transform, Point, Rect, minAngleDiff, normAngle,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../js/diagram/Element';
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import makeAngleAnnotation from '../../../LessonsCommon/tools/angleAnnotation';
 
 type MoveableLinePrimativeType = {
   movementAllowed: 'rotation' | 'translation';
@@ -237,47 +238,7 @@ export function makeLabeledAngle(
   eqn.addForm('c', ['c']);
   eqn.addForm('d', ['d']);
 
-  const arcLayout = layout.angle.arc;
-
-  const label = eqn.collection;
-  const arc = diagram.shapes.polygon(
-    arcLayout.sides, radius, arcLayout.width,
-    0, 1, arcLayout.sides, color,
-    new Transform(),
-  );
-  const angle = diagram.shapes.collection(new Transform()
-    .scale(1, 1).rotate(0).translate(0, 0));
-  angle.add('arc', arc);
-  angle.add('label', label);
-  angle.eqn = eqn;
-
-  angle.updateAngle = (start: number, size: number, labelRotationOffset: number = 0) => {
-    angle._arc.angleToDraw = size;
-    angle.transform.updateRotation(start);
-    angle._label.transform.updateRotation(-start - labelRotationOffset);
-    let labelWidth = 0;
-    let labelHeight = 0;
-    if (eqn.currentForm != null) {
-      labelWidth = eqn.currentForm.width / 2 + 0.04;
-      labelHeight = eqn.currentForm.height / 2 + 0.04;
-    }
-    const a = labelWidth + layout.angle.label.radius;
-    const b = labelHeight + layout.angle.label.radius;
-    const r = a * b / Math.sqrt((b * Math.cos(start + size / 2 + labelRotationOffset)) ** 2
-      + (a * Math.sin(start + size / 2 + labelRotationOffset)) ** 2);
-    const labelPosition = polarToRect(r, size / 2);
-    angle._label.setPosition(labelPosition);
-    // if (eqn.currentForm != null) { console.log(eqn.currentForm.name); }
-  };
-
-  eqn.showForm = (form: string) => {
-    Object.getPrototypeOf(eqn).showForm.call(eqn, form);
-    const start = angle.transform.r();
-    const size = angle._arc.angleToDraw;
-    if (start != null) {
-      angle.updateAngle(start, size);
-    }
-  };
+  const angle = makeAngleAnnotation(diagram, layout.angle, color, eqn);
   return angle;
 }
 

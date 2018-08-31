@@ -144,8 +144,8 @@ class Content extends LessonContent {
         diag.moveToScenario(opp._line2, 'opposite', 0.001);
         opp._angleA._arc.show();
         opp._angleC._arc.show();
-        opp._angleA.eqn.showForm('a');
-        opp._angleC.eqn.showForm('a');
+        opp._angleA.showForm('a');
+        opp._angleC.showForm('a');
       },
     });
 
@@ -186,10 +186,10 @@ class Content extends LessonContent {
         opp._angleB._arc.show();
         opp._angleC._arc.show();
         opp._angleD._arc.show();
-        opp._angleA.eqn.showForm('a');
-        opp._angleB.eqn.showForm('b');
-        opp._angleC.eqn.showForm('c');
-        opp._angleD.eqn.showForm('d');
+        opp._angleA.showForm('a');
+        opp._angleB.showForm('b');
+        opp._angleC.showForm('c');
+        opp._angleD.showForm('d');
       },
     });
 
@@ -235,10 +235,10 @@ class Content extends LessonContent {
         opp._angleB._arc.show();
         opp._angleC._arc.show();
         opp._angleD._arc.show();
-        opp._angleA.eqn.showForm('a');
-        opp._angleB.eqn.showForm('b');
-        opp._angleC.eqn.showForm('c');
-        opp._angleD.eqn.showForm('d');
+        opp._angleA.showForm('a');
+        opp._angleB.showForm('b');
+        opp._angleC.showForm('c');
+        opp._angleD.showForm('d');
         diag._unitsSelector.select(diag.units);
         opp._equation1.eqn.showForm('a_plus_b');
         opp._equation2.eqn.showForm('b');
@@ -286,10 +286,10 @@ class Content extends LessonContent {
         opp._angleB._arc.show();
         opp._angleC._arc.show();
         opp._angleD._arc.show();
-        opp._angleA.eqn.showForm('a');
-        opp._angleB.eqn.showForm('b_equals');
-        opp._angleC.eqn.showForm('c');
-        opp._angleD.eqn.showForm('d');
+        opp._angleA.showForm('a');
+        opp._angleB.showForm('b_equals');
+        opp._angleC.showForm('c');
+        opp._angleD.showForm('d');
         opp._equation1.eqn.showForm('c');
         opp._equation2.eqn.showForm('c_equals_a_full');
         opp._equation3.eqn.showForm('c_equals_a');
@@ -338,10 +338,10 @@ class Content extends LessonContent {
         opp._angleB._arc.show();
         opp._angleC._arc.show();
         opp._angleD._arc.show();
-        opp._angleA.eqn.showForm('a');
-        opp._angleB.eqn.showForm('b_equals');
-        opp._angleC.eqn.showForm('a');
-        opp._angleD.eqn.showForm('d');
+        opp._angleA.showForm('a');
+        opp._angleB.showForm('b_equals');
+        opp._angleC.showForm('a');
+        opp._angleD.showForm('d');
         opp._equation1.eqn.showForm('d');
         opp._equation2.eqn.showForm('d_equals_b');
         opp._equation1.eqn.setPosition(layout.equation1.bPlusC);
@@ -383,10 +383,10 @@ class Content extends LessonContent {
         opp._angleB._arc.show();
         opp._angleC._arc.show();
         opp._angleD._arc.show();
-        opp._angleA.eqn.showForm('a');
-        opp._angleB.eqn.showForm('b');
-        opp._angleC.eqn.showForm('a');
-        opp._angleD.eqn.showForm('b');
+        opp._angleA.showForm('a');
+        opp._angleB.showForm('b');
+        opp._angleC.showForm('a');
+        opp._angleD.showForm('b');
       },
     });
 
@@ -511,10 +511,10 @@ class Content extends LessonContent {
       setSteadyState: () => {
         threeLines._angleA1.show();
         threeLines._angleA1._arc.show();
-        threeLines._angleA1.eqn.showForm('a');
+        threeLines._angleA1.showForm('a');
         threeLines._angleA2.show();
         threeLines._angleA2._arc.show();
-        threeLines._angleA2.eqn.showForm('a');
+        threeLines._angleA2.showForm('a');
 
         diag.moveToScenario(threeLines._line1, 'center', 0.001);
         diag.moveToScenario(threeLines._line2, 'center', 0.001);
@@ -597,10 +597,10 @@ class Content extends LessonContent {
         if (this.comingFrom !== 'prev') {
           threeLines._angleA1.show();
           threeLines._angleA1._arc.show();
-          threeLines._angleA1.eqn.showForm('a');
+          threeLines._angleA1.showForm('a');
           threeLines._angleA2.show();
           threeLines._angleA2._arc.show();
-          threeLines._angleA2.eqn.showForm('a');
+          threeLines._angleA2.showForm('a');
 
           diag.moveToScenario(threeLines._line1, 'center', 0.001);
           diag.moveToScenario(threeLines._line2, 'center', 0.001);
