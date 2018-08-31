@@ -257,7 +257,7 @@ class Content extends LessonContent {
         supplementary: click(opp.pulseSupplementaryAngle, [opp, 1], colors.supplementary),
         c: highlight('lesson__related_angles__angleC'),
         b: highlight('lesson__related_angles__angleB'),
-        Line_2: click(opp.pulseLine, [opp, 1], colors.line),
+        Line_2: click(opp.pulseLine, [opp, 2], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
@@ -309,7 +309,7 @@ class Content extends LessonContent {
         supplementary: click(opp.pulseSupplementaryAngle, [opp, 3], colors.supplementary),
         a: highlight('lesson__related_angles__angleA'),
         d: highlight('lesson__related_angles__angleD'),
-        Line_2: click(opp.pulseLine, [opp, 1], colors.line),
+        Line_2: click(opp.pulseLine, [opp, 2], colors.line),
       },
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');

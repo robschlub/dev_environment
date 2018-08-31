@@ -116,7 +116,7 @@ export function makeMoveableLine(
   const increaseBorderSize = (element: DiagramElementPrimative) => {
     for (let i = 0; i < element.vertices.border[0].length; i += 1) {
       // eslint-disable-next-line no-param-reassign
-      element.vertices.border[0][i].y *= 5;
+      element.vertices.border[0][i].y *= 10;
     }
   };
 
