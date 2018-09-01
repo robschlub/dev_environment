@@ -24,8 +24,8 @@
   margin-right: auto;
   color: color('diagram', 'disabled');
   text-align: center;
-  border-bottom: 1px solid color('diagram', 'disabled');
-  border-top: 1px solid color('diagram', 'disabled');
+  // border-bottom: 1px solid color('diagram', 'disabled');
+  // border-top: 1px solid color('diagram', 'disabled');
   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
   font-weight: bold;
 }

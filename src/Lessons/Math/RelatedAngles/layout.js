@@ -25,7 +25,7 @@ export default function lessonLayout() {
     position: new Point(2, -1.75),
   };
   layout.selector = {
-    position: new Point(0, 1.7),
+    position: new Point(0, 1.8),
   };
   const len = 1.7;
   
