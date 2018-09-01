@@ -1048,6 +1048,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag.setScenario(quiz._line1, layout.quiz.first.line1);
         diag.setScenario(quiz._line2, layout.quiz.first.line2);
+        quiz._check.vertices.element.onclick = quiz.checkAnswer.bind(quiz);
       },
     });
   }

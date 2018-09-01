@@ -1,10 +1,10 @@
 // @flow
 
 import {
-  Transform,
+  Transform, minAngleDiff, Line,
 } from '../../../js/diagram/tools/g2';
 import {
-  DiagramElementPrimative,
+  DiagramElementPrimative, DiagramElementCollection,
 } from '../../../js/diagram/Element';
 import lessonLayout from './layout';
 

@@ -1,14 +1,16 @@
 // @flow
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, minAngleDiff, Line, normAngleTo90, Rect,
+  Transform, normAngleTo90,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeMoveableLine, makeAnglesClose } from './diagramCollectionCommon';
+import {
+  makeMoveableLine, makeAnglesClose, checkForParallel,
+} from './diagramCollectionCommon';
 import type { MoveableLineType } from './diagramCollectionCommon';
 
 export default class ParallelCollection extends DiagramElementCollection {
@@ -23,43 +25,47 @@ export default class ParallelCollection extends DiagramElementCollection {
     if (!this._line1 || !this._line2) {
       return;
     }
-    const angleSameThreshold = Math.PI / 300;
-    const distanceThreshold = this.layout.parallelLine.width * 1.1;
-    const r1 = this._line1.transform.r();
-    const r2 = this._line2.transform.r();
-    const t1 = this._line1.transform.t();
-    const t2 = this._line2.transform.t();
-    if (r1 != null && r2 != null && t1 != null && t2 != null) {
-      let isParallel = true;
-      const lineRotationDifference = Math.abs(minAngleDiff(r1, r2));
-      if (lineRotationDifference > angleSameThreshold) {
-        isParallel = false;
-      }
+    // const angleSameThreshold = Math.PI / 300;
+    // const distanceThreshold = this.layout.parallelLine.width * 1.1;
+    // const r1 = this._line1.transform.r();
+    // const r2 = this._line2.transform.r();
+    // const t1 = this._line1.transform.t();
+    // const t2 = this._line2.transform.t();
+    // if (r1 != null && r2 != null && t1 != null && t2 != null) {
+    //   let isParallel = true;
+    //   const lineRotationDifference = Math.abs(minAngleDiff(r1, r2));
+    //   if (lineRotationDifference > angleSameThreshold) {
+    //     isParallel = false;
+    //   }
 
-      if (isParallel && makeRotationEqual) {
-        if (!this._line2.state.isBeingMoved) {
-          this._line1.transform.updateRotation(r2);
-        } else if (!this._line1.state.isBeingMoved) {
-          this._line2.transform.updateRotation(r1);
-        }
-      }
+    //   if (isParallel && makeRotationEqual) {
+    //     if (!this._line2.state.isBeingMoved) {
+    //       this._line1.transform.updateRotation(r2);
+    //     } else if (!this._line1.state.isBeingMoved) {
+    //       this._line2.transform.updateRotation(r1);
+    //     }
+    //   }
 
-      if (isParallel) {
-        const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
-        const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
-        if (line2DistanceToLineCenter1 < distanceThreshold) {
-          isParallel = false;
-        }
-      }
+    //   if (isParallel) {
+    //     const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
+    //     const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
+    //     if (line2DistanceToLineCenter1 < distanceThreshold) {
+    //       isParallel = false;
+    //     }
+    //   }
 
-      if (isParallel) {
-        this._line1.setColor(this.layout.colors.line);
-        this._line2.setColor(this.layout.colors.line);
-      } else {
-        this._line1.setColor(this.layout.colors.disabled);
-        this._line2.setColor(this.layout.colors.disabled);
-      }
+    const isParallel = checkForParallel(
+      this._line1, this._line2,
+      makeRotationEqual, this.layout.parallelLine.width * 1.1,
+    );
+    if (isParallel) {
+      this._line1.setColor(this.layout.colors.line);
+      this._line2.setColor(this.layout.colors.line);
+    } else {
+      this._line1.setColor(this.layout.colors.disabled);
+      this._line2.setColor(this.layout.colors.disabled);
     }
+    // }
   }
 
   // eslint-disable-next-line class-methods-use-this

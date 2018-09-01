@@ -8,7 +8,9 @@ import {
 } from '../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeMoveableLine, makeAnglesClose } from './diagramCollectionCommon';
+import {
+  makeMoveableLine, makeAnglesClose, checkForParallel,
+} from './diagramCollectionCommon';
 import type { MoveableLineType } from './diagramCollectionCommon';
 
 export default class QuizCollection extends DiagramElementCollection {
@@ -45,10 +47,12 @@ export default class QuizCollection extends DiagramElementCollection {
   }
 
   makeCheckButton() {
-    return this.diagram.shapes.htmlText(
+    const check = this.diagram.shapes.htmlText(
       'Check', 'id__related_angles_check',
       'lesson__quiz_check', this.layout.quiz.check, 'middle', 'center',
     );
+    // check.onclick = this.checkAnswer.bind(this);
+    return check;
   }
 
   constructor(
@@ -103,5 +107,21 @@ export default class QuizCollection extends DiagramElementCollection {
       position: new Point(x, y),
       rotation: r,
     };
+  }
+
+  isParallel() {
+    return checkForParallel(
+      this._line1, this._line2, false,
+      this.layout.parallelLine.width * 1.1, Math.PI / 150,
+    );
+  }
+
+  checkAnswer() {
+    console.log(this.isParallel())
+    if (this.isParallel()) {
+      this.diagram.elements.moveToScenario(this._line1, this.randomizeParallelLine(), 1);
+      this.diagram.elements.moveToScenario(this._line2, this.randomizeParallelLine(), 1);
+      this.diagram.animateNextFrame();
+    }
   }
 }

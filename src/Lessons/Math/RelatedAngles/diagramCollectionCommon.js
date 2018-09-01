@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, Rect, minAngleDiff, normAngle,
+  Transform, Point, Rect, minAngleDiff, normAngle, Line,
 } from '../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -281,4 +281,50 @@ export function makeAnglesClose(
       element2.transform.updateRotation(normAngle(r2 + Math.PI));
     }
   }
+}
+
+export function checkForParallel(
+  element1: DiagramElementPrimative | DiagramElementCollection,
+  element2: DiagramElementPrimative | DiagramElementCollection,
+  makeRotationEqual: boolean = false,
+  distanceThreshold: number,
+  rotThreshold: number = Math.PI / 300,
+) {
+  // if (!this._line1 || !this._line2) {
+  //   return;
+  // }
+  const angleSameThreshold = rotThreshold;
+  // const distanceThreshold = this.layout.parallelLine.width * 1.1;
+  const r1 = element1.transform.r();
+  const r2 = element2.transform.r();
+  const t1 = element1.transform.t();
+  const t2 = element2.transform.t();
+  if (r1 != null && r2 != null && t1 != null && t2 != null) {
+    let isParallel = true;
+    const lineRotationDifference = Math.min(
+      Math.abs(minAngleDiff(r1, r2)),
+      Math.abs(minAngleDiff(r1, r2 - Math.PI)),
+    );
+    if (lineRotationDifference > angleSameThreshold) {
+      isParallel = false;
+    }
+
+    if (isParallel && makeRotationEqual) {
+      if (!element2.state.isBeingMoved) {
+        element1.transform.updateRotation(r2);
+      } else if (!element1.state.isBeingMoved) {
+        element2.transform.updateRotation(r1);
+      }
+    }
+
+    if (isParallel) {
+      const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
+      const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
+      if (line2DistanceToLineCenter1 < distanceThreshold) {
+        isParallel = false;
+      }
+    }
+    return isParallel;
+  }
+  return false;
 }
