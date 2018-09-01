@@ -70,7 +70,9 @@ export default function lessonLayout() {
         rotation: Math.PI / 4,
       },
     },
-    check: new Point(0, -1.7),
+    answer: new Point(0, -1.7),
+    nextSteps: new Point(0, -1.9),
+    check: new Point(2.3, 1.3),
   };
   layout.line1 = {
     parallel: {

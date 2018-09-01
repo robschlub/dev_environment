@@ -6,7 +6,9 @@ import {
 import {
   DiagramElementCollection,
 } from '../../../js/diagram/Element';
-
+import {
+  click, applyModifiers, setOnClicks,
+} from '../../../js/Lesson/LessonContent';
 // eslint-disable-next-line import/no-cycle
 import {
   makeMoveableLine, makeAnglesClose, checkForParallel,
@@ -55,6 +57,104 @@ export default class QuizCollection extends DiagramElementCollection {
     return check;
   }
 
+  makeCorrectAnswerMessage() {
+    let text = `
+      <p>
+        That's correct!.
+      </p>
+      `;
+    const html = this.diagram.shapes.htmlText(
+      text, 'id__related_angles_quiz__correct',
+      'lesson__quiz_correct', this.layout.quiz.answer, 'middle', 'center',
+    );
+    return html;
+  }
+
+  newProblem() {
+    this.diagram.elements.moveToScenario(this._line1, this.randomizeParallelLine(), 1);
+    this.diagram.elements.moveToScenario(this._line2, this.randomizeParallelLine(), 1);
+    this.diagram.animateNextFrame();
+  }
+
+  makeIncorrectAnswerMessage() {
+    return this.diagram.shapes.htmlText(
+      `
+      <p>
+        Lines aren't parallel.
+      </p>
+      `, 'id__related_angles_quiz__incorrect',
+      'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
+    );
+  }
+
+  makeIncorrectTouchingMessage() {
+    return this.diagram.shapes.htmlText(
+      `
+      <p>
+        Not quite (remember parallel lines cannot touch).
+      </p>
+      `, 'id__related_angles_quiz__incorrect_touching',
+      'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
+    );
+  }
+
+  makeIncorrectCloseRotationMessage() {
+    return this.diagram.shapes.htmlText(
+      `
+      <p>
+        Close, but not quite!.
+      </p>
+      `, 'id__related_angles_quiz__incorrect_close_rotation',
+      'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
+    );
+  }
+
+  makeCorrectNextStepsMessage() {
+    let text = `
+      <p>
+        |Next| problem.
+      </p>
+      `;
+    const modifiers = { Next: click(this.newProblem, [this], this.layout.colors.line) }
+    text = applyModifiers(text, modifiers)
+    const html = this.diagram.shapes.htmlText(
+      text, 'id__related_angles_quiz__correct_next_steps',
+      'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
+    );
+    setOnClicks(modifiers);
+    return html;
+  }
+
+  makeIncorrectNextStepsMessage() {
+    let text = `
+      <p>
+        Try again, show |answer| or |next| problem. Hint: Line rotation is easier compared when lines are closer together.
+      </p>
+      `;
+    const modifiers = {
+      answer: click(this.rotateLine2ToParallel, [this], this.layout.colors.line),
+      next: click(this.newProblem, [this], this.layout.colors.line),
+    }
+    text = applyModifiers(text, modifiers)
+    const html = this.diagram.shapes.htmlText(
+      text, 'id__related_angles_quiz__incorrect_next_steps',
+      'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
+    );
+    setOnClicks(modifiers);
+    return html;
+  }
+
+  makeMessages() {
+    const collection = this.diagram.shapes.collection(new Transform().translate(0, 0));
+    collection.add('correct', this.makeCorrectAnswerMessage());
+    collection.add('incorrect', this.makeIncorrectAnswerMessage());
+    collection.add('incorrectTouching', this.makeIncorrectTouchingMessage());
+    collection.add('incorrectCloseRotation', this.makeIncorrectCloseRotationMessage());
+    collection.add('incorrectNextSteps', this.makeIncorrectNextStepsMessage());
+    collection.add('correctNextSteps', this.makeCorrectNextStepsMessage());
+    return collection;
+  }
+
   constructor(
     diagram: Diagram,
     layout: Object,
@@ -66,13 +166,16 @@ export default class QuizCollection extends DiagramElementCollection {
     this.setPosition(this.layout.quiz.position);
     this.add('line1', this.makeLine());
     this._line1.setPosition(this.layout.line1.quiz.position.x, 0);
+    this._line1.hasTouchableElements = false;
     this.add('line2', this.makeLine());
     this._line2.setPosition(this.layout.line2.quiz.position.x, 0);
     this.hasTouchableElements = true;
+    this.add('messages', this.makeMessages());
+    this._messages.hideAll();
     this.add('check', this.makeCheckButton());
   }
 
-  rotateLine1ToParallel() {
+  rotateLine2ToParallel() {
     this._line1.stop();
     this._line2.stop();
     makeAnglesClose(this._line1, this._line2);
@@ -82,7 +185,7 @@ export default class QuizCollection extends DiagramElementCollection {
     const velocity = this._line1.transform.constant(0);
     velocity.updateRotation(2 * Math.PI / 6);
     if (r1 != null && r2 != null) {
-      this._line1.animateRotationTo(r2, 0, velocity);
+      this._line2.animateRotationTo(r1, 0, velocity);
     }
     this.diagram.animateNextFrame();
   }
@@ -109,19 +212,33 @@ export default class QuizCollection extends DiagramElementCollection {
     };
   }
 
-  isParallel() {
+  isParallel(distanceMultiplier = 1.1, rotationThreshold: number = Math.PI / 200) {
     return checkForParallel(
       this._line1, this._line2, false,
-      this.layout.parallelLine.width * 1.1, Math.PI / 150,
+      this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,
     );
   }
 
   checkAnswer() {
-    console.log(this.isParallel())
     if (this.isParallel()) {
-      this.diagram.elements.moveToScenario(this._line1, this.randomizeParallelLine(), 1);
-      this.diagram.elements.moveToScenario(this._line2, this.randomizeParallelLine(), 1);
-      this.diagram.animateNextFrame();
+      // this.diagram.elements.moveToScenario(this._line1, this.randomizeParallelLine(), 1);
+      // this.diagram.elements.moveToScenario(this._line2, this.randomizeParallelLine(), 1);
+      // this.diagram.animateNextFrame();
+      this._messages.hideAll();
+      this._messages._correct.show();
+      this._messages._correctNextSteps.show();
+    } else {
+      this._messages.hideAll();
+      const isTouching = !this.isParallel(1.1, 1);
+      const isCloseRotation = this.isParallel(1.1, Math.PI / 20);
+      if (isTouching) {
+        this._messages._incorrectTouching.show();
+      } else if (isCloseRotation) {
+        this._messages._incorrectCloseRotation.show();
+      } else {
+        this._messages._incorrect.show();
+      }
+      this._messages._incorrectNextSteps.show();
     }
   }
 }

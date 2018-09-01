@@ -15,3 +15,14 @@
   background-color: color('diagram', 'primary', 'light');
   color: color(1, 'lightest');
 }
+
+.lesson__quiz_correct,
+.lesson__quiz_incorrect {
+  color: color('diagram', 'text-base');
+  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+}
+
+.lesson__quiz_nextsteps {
+  color: color('diagram', 'text-base');
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5); 
+}
