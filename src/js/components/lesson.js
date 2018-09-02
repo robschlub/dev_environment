@@ -345,10 +345,15 @@ export default class LessonComponent extends React.Component
     return <div>
       <div className='lesson__title'>
         <div className="lesson__path_container">
-          <LessonTilePath id='id_lesson__tile_path_1' link='/' key='200' label='1' state='selected' />
-          <LessonTilePath id='id_lesson__tile_path_2' link='/' key='201' label='2' state='' />
-          <LessonTilePath id='id_lesson__tile_path_quiz' link='/' key='202' label='Quiz' state='' right={true}/>
-          <LessonTilePath id='id_lesson__tile_path_summary' link='/' key='203' label='Summary' state='' right={true}/>
+          <div className="lesson__path_left_tiles">
+            <LessonTilePath id='id_lesson__tile_path_1' link='/' key='200' label='1' state='selected' />
+            <LessonTilePath id='id_lesson__tile_path_2' link='/' key='201' label='2' state='' />
+            <LessonTilePath id='id_lesson__tile_path_2' link='/' key='201' label='3' state='' />
+          </div>
+          <div className="lesson__path_right_tiles">
+            <LessonTilePath id='id_lesson__tile_path_summary' link='/' key='203' label='Summary' state='' right={true}/>
+            <LessonTilePath id='id_lesson__tile_path_quiz' link='/' key='202' label='Quiz' state='' right={true}/>
+          </div>
         </div>
         <LessonTile id={'id_lesson__title_container'} link={this.lesson.content.iconLink} key='1' label={this.lesson.content.title} state={'selected'}/>
       </div>

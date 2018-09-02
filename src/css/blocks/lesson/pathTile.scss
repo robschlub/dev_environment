@@ -4,13 +4,23 @@
   display: block;
 }
 
+.lesson__path_left_tiles {
+  display: inline-block;
+  margin-top: 90px;
+}
+
+.lesson__path_right_tiles {
+  display: inline-block; 
+  margin-top: 90px;
+}
+
 .lesson__path_tile {
   min-width: 40px;
   height: 40px;
   border-radius: 20px;
   background-color: color('site', 'primary', 'base');
   display: inline-block;
-  margin-top: 110px;
+  // margin-top: 110px;
   margin-right: 5px;
   margin-left: 5px;
   padding-left: 10px;
@@ -23,25 +33,29 @@
 }
 
 @media screen and (min-width: $tablet) {
-  .lesson__path_tile {
-    // display: none;
-    // float: left;
-    margin-top: 25px;
-    margin-left: 10px;
+
+  .lesson__path_left_tiles {
+    display: initial;
     float: left;
+    margin-left: 10px;
   }
 
-  .lesson__path_tile_right {
-    // float: right;
-    // display: none;
-    margin-right: 10px;
-    margin-left: 0;
+  .lesson__path_right_tiles {
+    display: initial;
     float: right;
+    margin-right: 10px;
+  }
+
+  .lesson__path_left_tiles {
+    margin-top: 30px;
+  }
+
+  .lesson__path_right_tiles {
+    margin-top: 30px;
   }
 
   .lesson__path_container {
     width: 96%;
-    // display: none;
     margin-left: 2%;
     margin-right: 2%;
   }
