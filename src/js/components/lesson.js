@@ -344,11 +344,13 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='lesson__title'>
-        <LessonTilePath id='id_lesson__tile_path_1' link='/' key='200' label='1' state='selected' />
-        <LessonTilePath id='id_lesson__tile_path_2' link='/' key='201' label='2' state='' />
+        <div className="lesson__path_container">
+          <LessonTilePath id='id_lesson__tile_path_1' link='/' key='200' label='1' state='selected' />
+          <LessonTilePath id='id_lesson__tile_path_2' link='/' key='201' label='2' state='' />
+          <LessonTilePath id='id_lesson__tile_path_quiz' link='/' key='202' label='Quiz' state='' right={true}/>
+          <LessonTilePath id='id_lesson__tile_path_summary' link='/' key='203' label='Summary' state='' right={true}/>
+        </div>
         <LessonTile id={'id_lesson__title_container'} link={this.lesson.content.iconLink} key='1' label={this.lesson.content.title} state={'selected'}/>
-        <LessonTilePath id='id_lesson__tile_path_quiz' link='/' key='202' label='Quiz' state='' right={true}/>
-        <LessonTilePath id='id_lesson__tile_path_summary' link='/' key='203' label='Summary' state='' right={true}/>
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

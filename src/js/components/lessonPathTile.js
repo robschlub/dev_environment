@@ -61,8 +61,10 @@ export default class LessonTilePath extends React.Component
         id={id}
         // style={style}
         className={classText}>
-          <div className="lesson__path_tile_label">
-            {label}
+          <div className="lesson__path_tile_label_container">
+            <div className="lesson__path_tile_label">
+              {label}
+            </div>
           </div>
         </a>;
   }

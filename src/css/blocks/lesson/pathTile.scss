@@ -1,21 +1,56 @@
+.lesson__path_container {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
 .lesson__path_tile {
-  min-width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 20px;
   background-color: color('site', 'primary', 'base');
-  float: left;
-  display: table;
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 0;
+  display: inline-block;
+  margin-top: 110px;
+  margin-right: 5px;
+  margin-left: 5px;
   padding-left: 10px;
   padding-right: 10px;
 }
 
 .lesson__path_tile_right {
-  float: right;
-  margin-right: 20px;
-  margin-left: 0;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+@media screen and (min-width: $tablet) {
+  .lesson__path_tile {
+    // display: none;
+    // float: left;
+    margin-top: 25px;
+    margin-left: 10px;
+    float: left;
+  }
+
+  .lesson__path_tile_right {
+    // float: right;
+    // display: none;
+    margin-right: 10px;
+    margin-left: 0;
+    float: right;
+  }
+
+  .lesson__path_container {
+    width: 96%;
+    // display: none;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+}
+
+.lesson__path_tile_label_container {
+  width: 100%;
+  height: 100%;
+  display: table;
 }
 
 .lesson__path_tile_label{
