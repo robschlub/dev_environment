@@ -7,6 +7,7 @@ import Lesson from '../Lesson/Lesson';
 import Button from './button';
 // import LessonTile from './lessonTile';
 import LessonNavigator from './lessonNavigator';
+import LessonTilePath from './lessonPathTile';
 import LessonTile from './lessonTile';
 
 type Props = {
@@ -343,6 +344,8 @@ export default class LessonComponent extends React.Component
   render() {
     return <div>
       <div className='lesson__title'>
+      <LessonTilePath id='id_lesson__tile_path_1' link='/' key='200' label='1' state='selected' />
+      <LessonTilePath id='id_lesson__tile_path_2' link='/' key='200' label='2' state='' />
       <LessonTile id={'id_lesson__title_container'} link={this.lesson.content.iconLink} key='1' label={this.lesson.content.title} state={'selected'}/>
       </div>
       <div className="lesson__widescreen_backdrop">
