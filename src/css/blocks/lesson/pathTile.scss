@@ -1,19 +1,22 @@
 .lesson__path_tile {
-  width: 50px;
+  min-width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: 25px;
   background-color: color('site', 'primary', 'base');
   float: left;
   display: table;
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 0;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-// .lesson__quiz_tile {
-//   float: right;
-//   display:
-// }
+.lesson__path_tile_right {
+  float: right;
+  margin-right: 20px;
+  margin-left: 0;
+}
 
 .lesson__path_tile_label{
   color: white;
@@ -25,6 +28,7 @@
 
 .lesson__path_tile:hover {
   background-color: color('site', 'primary', 'light');
+  text-decoration: none;
 }
 
 .lesson__path_tile_disabled {
@@ -33,6 +37,7 @@
 
 .lesson__path_tile_disabled:hover {
   background-color: color('site', 'disabled', 'light');
+  text-decoration: none;
 }
 
 .lesson__path_tile_selected {
@@ -41,4 +46,5 @@
 
 .lesson__path_tile_selected:hover {
   background-color: color('site', 'safe');
+  text-decoration: none;
 }

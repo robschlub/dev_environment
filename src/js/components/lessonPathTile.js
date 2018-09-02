@@ -6,8 +6,9 @@ import '../../css/style.scss';
 type Props = {
   label: ?string,
   id: ?string,
-  left?: ?string,
-  top?: ?string,
+  // left?: ?string,
+  // top?: ?string,
+  right: ?boolean,
   link: ?string,
   state: '' | 'disabled' | 'selected',
 };
@@ -20,14 +21,14 @@ export default class LessonTilePath extends React.Component
     const label = props.label || '';
     const id = props.id || '';
     let style = {};
-    if (props.left != null || props.top != null) {
-      const left = props.left || 0;
-      const top = props.top || 0;
-      style = {
-        left,
-        top,
-      };
-    }
+    // if (props.left != null || props.top != null) {
+    //   const left = props.left || 0;
+    //   const top = props.top || 0;
+    //   style = {
+    //     left,
+    //     top,
+    //   };
+    // }
 
     const link = props.link || '/';
     let classText = 'lesson__path_tile';
@@ -37,7 +38,10 @@ export default class LessonTilePath extends React.Component
     if (props.state === 'selected') {
       classText = `${classText} navigator__lesson_tile_selected`;
     }
-    console.log(classText)
+    const right = props.right || false;
+    if (right) {
+      classText = `${classText} lesson__path_tile_right`;
+    }
     // return <a
     //     href={link}
     //     id={id}
