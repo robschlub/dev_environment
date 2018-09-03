@@ -9,6 +9,8 @@ FROM rschlub/nodepy:dev
 # ## General ##
 WORKDIR /opt/app
 
+RUN npm install file-loader --save-dev
+
 # This is the folder that will be shared with the docker host machine
 RUN mkdir app
 RUN mkdir tests

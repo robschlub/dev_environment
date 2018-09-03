@@ -5,7 +5,7 @@ import {
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
-
+import imgLink from './tile.png';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -26,7 +26,7 @@ const _piOn2 = '<sup>&pi;</sup>&frasl;<sub>2</sub>';
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Important Angles';
-    this.iconLink = '/Lessons/Math/ImportantAngles';
+    this.iconLink = imgLink;
   }
 
   setDiagram(htmlId: string = '') {

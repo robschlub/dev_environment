@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
+// import img from '../../tile.png';
 
 type Props = {
   label: ?string,
@@ -39,15 +40,16 @@ export default class LessonTile extends React.Component
     }
     let imgLink = '/static/defaultTile.png';
     if (link !== '/') {
-      imgLink = `/static${link}/tile.png`;
+      imgLink = link;
     }
+    console.log(imgLink)
     return <a
         href={link}
         id={id}
         style={style}
         className="navigator__lesson_tile">
       <div className={classText}>
-        <img src={imgLink} className="navigator__lesson_tile_image" />
+        <img src={`/static/dist/${link}`} className="navigator__lesson_tile_image" />
         <div className="navigator__lesson_tile_title_container">
           <div className="navigator__lesson_tile_title">
             {label}

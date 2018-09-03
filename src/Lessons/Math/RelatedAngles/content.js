@@ -7,14 +7,14 @@ import {
 import LessonDiagram from './diagram';
 import Definition from '../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
-
+import imgLink from './tile.png';
 const layout = lessonLayout();
 const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Related Angles';
-    this.iconLink = '/Lessons/Math/RelatedAngles';
+    this.iconLink = imgLink;
   }
 
   setDiagram(htmlId: string = '') {

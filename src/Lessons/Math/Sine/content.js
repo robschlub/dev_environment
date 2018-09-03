@@ -6,7 +6,7 @@ import {
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
-
+import imgLink from './tile.png';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -28,7 +28,7 @@ const { colors } = layout;
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Sine (work in progress)';
-    this.iconLink = '/Lessons/Math/Sine';
+    this.iconLink = imgLink;
   }
 
   setDiagram(htmlId: string = '') {

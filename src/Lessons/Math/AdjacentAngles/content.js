@@ -4,7 +4,7 @@ import {
   LessonContent, clickWord, onClickId, click, highlight,
 } from '../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-
+import imgLink from './tile.png';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -13,7 +13,7 @@ const { colors } = layout;
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Adjacent Angles';
-    this.iconLink = '/Lessons/Math/AdjacentAngles';
+    this.iconLink = imgLink;
   }
 
   setDiagram(htmlId: string = '') {

@@ -7,7 +7,7 @@ import {
 import LessonDiagram from './diagram';
 import { Transform } from '../../../js/diagram/tools/g2';
 // import { easeinout } from '../../../js/diagram/tools/mathtools';
-
+import imgLink from './tile.png';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
@@ -16,7 +16,7 @@ const { colors } = layout;
 class Content extends LessonContent {
   setTitle() {
     this.title = 'Angles';
-    this.iconLink = '/Lessons/Math/Angle';
+    this.iconLink = imgLink;
   }
 
   setDiagram(htmlId: string = '') {
