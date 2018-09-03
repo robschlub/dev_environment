@@ -65,6 +65,7 @@ else
     -v $PROJECT_PATH/app:/opt/app/app \
     -v $PROJECT_PATH/src:/opt/app/src \
     -v $PROJECT_PATH/containers/dev/webpack.config.js:/opt/app/webpack.config.js \
+    -v $PROJECT_PATH/containers/dev/getLessons.js:/opt/app/getLessons.js \
     -v $PROJECT_PATH/containers/dev/lessons.js:/opt/app/lessons.js \
     -v $PROJECT_PATH/containers/dev/update_paths.py:/opt/app/update_paths.py \
     -v $PROJECT_PATH/.eslintrc.json:/opt/app/.eslintrc.json \

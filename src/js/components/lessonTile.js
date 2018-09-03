@@ -10,6 +10,7 @@ type Props = {
   left?: ?string,
   top?: ?string,
   link: ?string,
+  imgLink: ?string,
   state: '' | 'disabled' | 'selected',
 };
 
@@ -39,17 +40,16 @@ export default class LessonTile extends React.Component
       classText = `${classText} navigator__lesson_tile_selected`;
     }
     let imgLink = '/static/defaultTile.png';
-    if (link !== '/') {
-      imgLink = link;
+    if (props.imgLink != null) {
+      imgLink = `${'/static/dist'}${props.imgLink}`;
     }
-    console.log(imgLink)
     return <a
         href={link}
         id={id}
         style={style}
         className="navigator__lesson_tile">
       <div className={classText}>
-        <img src={`/static/dist/${link}`} className="navigator__lesson_tile_image" />
+        <img src={imgLink} className="navigator__lesson_tile_image" />
         <div className="navigator__lesson_tile_title_container">
           <div className="navigator__lesson_tile_title">
             {label}

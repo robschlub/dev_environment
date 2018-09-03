@@ -8,6 +8,8 @@ const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-u
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
+entryPoints.makeLessonIndex();
+
 const envConfig = {
   prod: {
     name: 'production',
@@ -163,8 +165,7 @@ module.exports = (env) => {
                   // }
                   let newPath = file.replace('/opt/app/src/', '');
                   newPath = newPath.replace('/tile.png', '');
-                  console.log(newPath)
-                  return `${newPath}/[hash].[ext]`
+                  return `${newPath}/[name].[ext]`
                 },
               },
             },

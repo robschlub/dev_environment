@@ -342,6 +342,7 @@ export default class LessonComponent extends React.Component
   }
 
   render() {
+    // console.log(this.lesson.content.iconLink)
     return <div>
       <div className='lesson__title'>
         <div className="lesson__path_container">
@@ -355,7 +356,13 @@ export default class LessonComponent extends React.Component
             <LessonTilePath id='id_lesson__tile_path_quiz' link='/' key='204' label='Quiz' state='' right={true}/>
           </div>
         </div>
-        <LessonTile id={'id_lesson__title_container'} link={this.lesson.content.iconLink} key='1' label={this.lesson.content.title} state={'selected'}/>
+        <LessonTile 
+          id={'id_lesson__title_container'}
+          link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '')}`}
+          imgLink={`/${this.lesson.content.iconLink}`}
+          key='1'
+          label={this.lesson.content.title}
+          state={'selected'}/>
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

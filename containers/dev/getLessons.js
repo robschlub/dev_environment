@@ -41,8 +41,45 @@ function entryPoints() {
   return points;
 }
 
+function makeLessonIndex() {
+  const lessons = getAllLessons('./src/Lessons');
+  const lessonDescriptions = [];
+  let outStr = `
+import LessonDescription from './lessonIndex';
+export default function getLessonIndex() {
+  const lessonIndex = [];
+  `;
+  lessons.forEach((lessonPath) => {
+    const path = lessonPath.replace(/src/, '');
+    const content = `${lessonPath}/content.js`
+    let title = '';
+    if (fs.existsSync(content)) {
+      const lines = fs.readFileSync(content).toString().split("\n");
+      lines.forEach((line) => {
+        if (line.match(/^ *this.title *= */)) {
+            title = line.replace(/^ *this.title *= *['"]/, '');
+            title = title.replace(/['"] *;/, '');
+            return
+          }
+      })
+    }
+    if (title !== '') {
+      // outStr = `${outStr}\n${path}  ${title}`
+      outStr = `${outStr}\n  lessonIndex.push(new LessonDescription(\n    '${title}',\n    '${path}',\n  ));`
+    }
+  });
+  outStr = `${outStr}\n  return lessonIndex;\n}\n`
+  if (outStr !== '') {
+    fs.writeFile('./src/Lessons/index.js', outStr, (err) => {
+      if (err) {
+        console.log(err)
+      }
+    });
+  }
+}
+
 module.exports = {
-  entryPoints,
+  entryPoints, makeLessonIndex,
 };
 
 // entryPoints();
