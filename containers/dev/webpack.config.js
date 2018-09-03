@@ -153,7 +153,20 @@ module.exports = (env) => {
           use: [
             {
               loader: 'file-loader',
-              options: {}
+              // options: {
+              //   name: '[path][hash].[ext]'
+              // }
+              options: {
+                name (file) {
+                  // if (env === 'development') {
+                  //   return '[path][name].[ext]'
+                  // }
+                  let newPath = file.replace('/opt/app/src/', '');
+                  newPath = newPath.replace('/tile.png', '');
+                  console.log(newPath)
+                  return `${newPath}/[hash].[ext]`
+                },
+              },
             },
           ],
         }
