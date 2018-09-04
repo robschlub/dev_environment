@@ -140,7 +140,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     collection.add('correctNextSteps', this.makeCorrectNextStepsMessage());
     Object.keys(incorrectMessages).forEach((key) => {
       const message = incorrectMessages[key];
-      collection.add(key, this.makeIncorrectAnswerMessage(message));
+      collection.add(key, this.makeIncorrectAnswerMessage(key, message));
     });
     return collection;
   }
