@@ -6,7 +6,7 @@ function walkSync(currentDirPath, callback) {
     const filePath = path.join(currentDirPath, name);
     const stat = fs.statSync(filePath);
     if (stat.isFile()) {
-      if (name === 'lesson.js') {
+      if (name === 'details.js') {
         callback(currentDirPath);
       }
     } else if (stat.isDirectory()) {
