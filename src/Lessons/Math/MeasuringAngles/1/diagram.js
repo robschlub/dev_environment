@@ -1,9 +1,9 @@
 // @flow
-import { DiagramElementCollection } from '../../../js/diagram/Element';
+import { DiagramElementCollection } from '../../../../js/diagram/Element';
 import CircleCollection from './diagramCollectionCircle';
 import type { TypeCircleCollectionExtended } from './diagramCollectionCircle';
 import lessonLayout from './layout';
-import AngleCircleDiagram from '../../../LessonsCommon/AngleCircle/diagram';
+import AngleCircleDiagram from '../../../../LessonsCommon/AngleCircle/diagram';
 
 
 type typeElements = {

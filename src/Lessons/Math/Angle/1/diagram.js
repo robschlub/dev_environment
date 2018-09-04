@@ -1,11 +1,11 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
-import { DiagramElementCollection } from '../../../js/diagram/Element';
+import Diagram from '../../../../js/diagram/Diagram';
+import { DiagramElementCollection } from '../../../../js/diagram/Element';
 import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
 import {
   Point, minAngleDiff, Transform,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
 const layout = lessonLayout();

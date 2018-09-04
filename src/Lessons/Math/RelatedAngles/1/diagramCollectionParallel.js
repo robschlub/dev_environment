@@ -1,11 +1,11 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   Transform, normAngleTo90,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
-} from '../../../js/diagram/Element';
+} from '../../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
 import {

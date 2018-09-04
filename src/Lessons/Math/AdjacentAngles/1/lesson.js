@@ -1,11 +1,11 @@
 // // @flow
 
-import '../../../css/style.scss';
-import renderLesson from '../../../js/views/lesson/lesson';
-import { Point } from '../../../js/diagram/tools/g2';
+import '../../../../css/style.scss';
+import renderLesson from '../../../../js/views/lesson/lesson';
+// import { Point } from '../../../../js/diagram/tools/g2';
 import Content from './content';
 import './style.scss';
-import imgLink from './tile.png';
+// import imgLink from '../tile.png';
 
 renderLesson(new Content('shapes'));
 

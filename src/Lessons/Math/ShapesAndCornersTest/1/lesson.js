@@ -2,11 +2,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../../css/style.scss';
-import Navbar from '../../../js/components/navbar';
-import LessonComponent from '../../../js/components/lesson';
+import '../../../../css/style.scss';
+import Navbar from '../../../../js/components/navbar';
+import LessonComponent from '../../../../js/components/lesson';
 import Content from './shapesAndCorners';
-import Lesson from '../../../js/Lesson/Lesson';
+import Lesson from '../../../../js/Lesson/Lesson';
 import './style.scss';
 
 const lessonSinglePage = () => {

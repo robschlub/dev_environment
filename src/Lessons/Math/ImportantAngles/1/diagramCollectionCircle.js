@@ -1,14 +1,14 @@
 // @flow
 
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   Transform, Point,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
-} from '../../../js/diagram/Element';
-import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
-import type { circleType, varStateType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
+} from '../../../../js/diagram/Element';
+import AngleCircle from '../../../../LessonsCommon/AngleCircle/AngleCircle';
+import type { circleType, varStateType } from '../../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
 
 type rightAngleType = {

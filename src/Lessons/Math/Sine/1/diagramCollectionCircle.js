@@ -1,19 +1,19 @@
 // @flow
 
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   Transform, Point, Rect,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
-} from '../../../js/diagram/Element';
-import { SinCosCircle } from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
+} from '../../../../js/diagram/Element';
+import { SinCosCircle } from '../../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import type {
   SinCosCircleType, equationType, sineCosineLineType, textEquationType,
   SinCosVarStateType, SinCosCircleAngleAnnotationType,
-} from '../../../LessonsCommon/SinCosCircle/SinCosCircle';
+} from '../../../../LessonsCommon/SinCosCircle/SinCosCircle';
 import lessonLayout from './layout';
-import { EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { EquationForm } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 type bowType = {
     _handle: DiagramElementPrimative;

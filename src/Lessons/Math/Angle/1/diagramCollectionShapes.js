@@ -1,13 +1,13 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 }
-  from '../../../js/diagram/Element';
+  from '../../../../js/diagram/Element';
 
 import {
   Point, Transform,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 // import getScssColors from '../../../js/tools/getScssColors';
 // import styles from './style.scss';
 import lessonLayout from './layout';

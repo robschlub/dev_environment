@@ -1,8 +1,8 @@
 // @flow
 
-import { Point } from '../../../js/diagram/tools/g2';
-import getCssColors from '../../../js/tools/getCssColors';
-import angleCircleLayout from '../../../LessonsCommon/AngleCircle/layout';
+import { Point } from '../../../../js/diagram/tools/g2';
+import getCssColors from '../../../../js/tools/getCssColors';
+import angleCircleLayout from '../../../../LessonsCommon/AngleCircle/layout';
 
 const cssColorNames = [
   // 'radiusLight',

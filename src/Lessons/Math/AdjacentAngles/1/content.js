@@ -2,11 +2,11 @@
 
 import {
   LessonContent, clickWord, onClickId, click, highlight,
-} from '../../../js/Lesson/LessonContent';
+} from '../../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import imgLink from './tile.png';
+import imgLink from '../tile.png';
 import lessonLayout from './layout';
-import details from './details';
+import details from '../details';
 
 const layout = lessonLayout();
 const { colors } = layout;

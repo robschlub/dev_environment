@@ -1,11 +1,11 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
-import { DiagramElementCollection } from '../../../js/diagram/Element';
+import Diagram from '../../../../js/diagram/Diagram';
+import { DiagramElementCollection } from '../../../../js/diagram/Element';
 // import ShapesCollection from './diagramCollectionShapes';
 import CircleCollection from './diagramCollectionCircle';
 // import getScssColors from '../../../js/tools/getScssColors';
 // import styles from './style.scss';
-import { Transform } from '../../../js/diagram/tools/g2';
+import { Transform } from '../../../../js/diagram/tools/g2';
 // import getCssVariables from '../../js/tools/getCssVariables';
 import lessonLayout from './layout';
 

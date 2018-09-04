@@ -1,8 +1,8 @@
 // @flow
 
-import { Point } from '../../../js/diagram/tools/g2';
-import getCssColors from '../../../js/tools/getCssColors';
-import sinCosCircleLayout from '../../../LessonsCommon/SinCosCircle/layout';
+import { Point } from '../../../../js/diagram/tools/g2';
+import getCssColors from '../../../../js/tools/getCssColors';
+import sinCosCircleLayout from '../../../../LessonsCommon/SinCosCircle/layout';
 
 const cssColorNames = [
   'grid',

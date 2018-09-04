@@ -20,7 +20,7 @@ export default class LessonTilePath extends React.Component
     // const Tag = props.href ? 'a' : 'button';
     const label = props.label || '';
     const id = props.id || '';
-    let style = {};
+    // let style = {};
     // if (props.left != null || props.top != null) {
     //   const left = props.left || 0;
     //   const top = props.top || 0;

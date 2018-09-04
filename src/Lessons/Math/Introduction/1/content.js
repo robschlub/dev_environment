@@ -3,13 +3,13 @@
 import {
   LessonContent, actionWord, onClickId,
   highlightWord, centerVH, centerV,
-} from '../../../js/Lesson/LessonContent';
+} from '../../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import { Point } from '../../../js/diagram/tools/g2';
+import { Point } from '../../../../js/diagram/tools/g2';
 // import { easeinout } from '../../../js/diagram/tools/mathtools';
-import imgLink from './tile.png';
+import imgLink from '../tile.png';
 import lessonLayout from './layout';
-import details from './details';
+import details from '../details';
 
 const layout = lessonLayout();
 const { colors } = layout;

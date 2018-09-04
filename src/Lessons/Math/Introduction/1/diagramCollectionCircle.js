@@ -1,16 +1,16 @@
 // @flow
 
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 // import * as tools from '../../../js/diagram/tools/mathtools';
 
 import {
   DiagramElementCollection, DiagramElementPrimative,
 }
-  from '../../../js/diagram/Element';
+  from '../../../../js/diagram/Element';
 import {
   Point, Transform, Rect,
-} from '../../../js/diagram/tools/g2';
-import { EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+} from '../../../../js/diagram/tools/g2';
+import { EquationForm } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 import lessonLayout from './layout';
 

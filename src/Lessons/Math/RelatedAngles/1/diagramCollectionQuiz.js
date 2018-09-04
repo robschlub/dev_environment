@@ -1,14 +1,14 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   Transform, Rect, Point,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
-} from '../../../js/diagram/Element';
+} from '../../../../js/diagram/Element';
 import {
   click, applyModifiers, setOnClicks,
-} from '../../../js/Lesson/LessonContent';
+} from '../../../../js/Lesson/LessonContent';
 // eslint-disable-next-line import/no-cycle
 import {
   makeMoveableLine, makeAnglesClose, checkForParallel,

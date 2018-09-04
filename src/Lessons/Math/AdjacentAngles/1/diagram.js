@@ -3,10 +3,10 @@
 import AdjacentAnglesCollection from './diagramCollectionCircle';
 import type { AdjacentAnglesCollectionType } from './diagramCollectionCircle';
 import lessonLayout from './layout';
-import AngleCircleDiagram from '../../../LessonsCommon/AngleCircle/diagram';
+import AngleCircleDiagram from '../../../../LessonsCommon/AngleCircle/diagram';
 import {
   Point, minAngleDiff,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 
 // type typeElements = {
 //   _circle: extendedCircleType;

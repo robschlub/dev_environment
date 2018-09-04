@@ -2,24 +2,24 @@
 
 import {
   Transform, minAngleDiff, Line,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
-} from '../../../js/diagram/Element';
+} from '../../../../js/diagram/Element';
 import lessonLayout from './layout';
 
 import {
   addSelectorHTML,
-} from '../../../LessonsCommon/tools/selector';
+} from '../../../../LessonsCommon/tools/selector';
 // eslint-disable-next-line import/no-cycle
 import type { LessonDiagramType } from './diagram';
 
 import ParallelCollection from './diagramCollectionParallel';
 import OppositeCollection from './diagramCollectionOpposite';
 import ThreeLinesCollection from './diagramCollectionThreeLines';
-import CommonDiagramCollection from '../../../LessonsCommon/DiagramCollection';
+import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import QuizCollection from './diagramCollectionQuiz';
-import type { TypeUnits } from '../../../LessonsCommon/DiagramCollection';
+import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
 class RelatedAnglesCollection extends CommonDiagramCollection {
   diagram: LessonDiagramType;

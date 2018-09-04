@@ -1,22 +1,22 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 }
-  from '../../../js/diagram/Element';
+  from '../../../../js/diagram/Element';
 import {
   TextObject, DiagramText, DiagramFont,
-} from '../../../js/diagram/DrawingObjects/TextObject/TextObject';
-import HTMLObject from '../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
-import { AxisProperties } from '../../../js/diagram/DiagramElements/Plot/AxisProperties';
+} from '../../../../js/diagram/DrawingObjects/TextObject/TextObject';
+import HTMLObject from '../../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
+import { AxisProperties } from '../../../../js/diagram/DiagramElements/Plot/AxisProperties';
 import {
   CartesianPlotProperties, TraceProperties,
-} from '../../../js/diagram/DiagramElements/Plot/CartesianPlotProperties';
-import CartesianPlot from '../../../js/diagram/DiagramElements/Plot/CartesianPlot';
+} from '../../../../js/diagram/DiagramElements/Plot/CartesianPlotProperties';
+import CartesianPlot from '../../../../js/diagram/DiagramElements/Plot/CartesianPlot';
 import {
   Point, Transform, Rect,
-} from '../../../js/diagram/tools/g2';
-import getScssColors from '../../../js/tools/getScssColors';
+} from '../../../../js/diagram/tools/g2';
+import getScssColors from '../../../../js/tools/getScssColors';
 import styles from './style.scss';
 // import * as e from '../../../js/diagram/Equation';
 // import Integral from '../../../js/diagram/DiagramElements/Equation/Integral';

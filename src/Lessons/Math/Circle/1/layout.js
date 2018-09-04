@@ -2,8 +2,8 @@
 
 import {
   Point, Rect,
-} from '../../../js/diagram/tools/g2';
-import getCssColors from '../../../js/tools/getCssColors';
+} from '../../../../js/diagram/tools/g2';
+import getCssColors from '../../../../js/tools/getCssColors';
 
 const cssColorNames = [
   'anchor',

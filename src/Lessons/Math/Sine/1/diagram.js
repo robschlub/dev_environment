@@ -3,7 +3,7 @@
 import ImportantAnglesCollection from './diagramCollectionCircle';
 // import type { ImportantAnglesCollectionType } from './diagramCollectionCircle';
 import lessonLayout from './layout';
-import SinCosCircleDiagram from '../../../LessonsCommon/SinCosCircle/diagram';
+import SinCosCircleDiagram from '../../../../LessonsCommon/SinCosCircle/diagram';
 // import { Point } from '../../../js/diagram/tools/g2';
 
 // type typeElements = {

@@ -1,18 +1,18 @@
 // @flow
 
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 // import * as tools from '../../../js/diagram/tools/mathtools';
 
 import {
   DiagramElementCollection, DiagramElementPrimative,
 }
-  from '../../../js/diagram/Element';
+  from '../../../../js/diagram/Element';
 import {
   Point, Transform, minAngleDiff, normAngle, Rect,
-} from '../../../js/diagram/tools/g2';
-import getScssColors from '../../../js/tools/getScssColors';
+} from '../../../../js/diagram/tools/g2';
+import getScssColors from '../../../../js/tools/getScssColors';
 import styles from './style.scss';
-import type { TypeRotationDirection } from '../../../js/diagram/tools/g2';
+import type { TypeRotationDirection } from '../../../../js/diagram/tools/g2';
 
 const colors = getScssColors(styles);
 const anchorPoints = 50;

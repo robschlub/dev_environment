@@ -1,12 +1,12 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
-import Lesson from '../../../js/Lesson/Lesson';
+import Diagram from '../../../../js/diagram/Diagram';
+import Lesson from '../../../../js/Lesson/Lesson';
 
 // eslint-disable-next-line import/no-cycle
 import RelatedAnglesCollection from './diagramCollection';
 import {
   Transform,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 
 export type LessonDiagramType = {
   elements: RelatedAnglesCollection;

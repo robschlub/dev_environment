@@ -3,8 +3,8 @@
 import ImportantAnglesCollection from './diagramCollectionCircle';
 import type { ImportantAnglesCollectionType } from './diagramCollectionCircle';
 import lessonLayout from './layout';
-import AngleCircleDiagram from '../../../LessonsCommon/AngleCircle/diagram';
-import { Point } from '../../../js/diagram/tools/g2';
+import AngleCircleDiagram from '../../../../LessonsCommon/AngleCircle/diagram';
+import { Point } from '../../../../js/diagram/tools/g2';
 
 // type typeElements = {
 //   _circle: extendedCircleType;

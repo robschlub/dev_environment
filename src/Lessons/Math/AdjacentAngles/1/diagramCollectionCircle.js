@@ -1,17 +1,17 @@
 // @flow
 
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   Transform, Point, minAngleDiff, polarToRect,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
-} from '../../../js/diagram/Element';
-import AngleCircle from '../../../LessonsCommon/AngleCircle/AngleCircle';
-import type { circleType, varStateType, angleAnnotationType } from '../../../LessonsCommon/AngleCircle/AngleCircle';
+} from '../../../../js/diagram/Element';
+import AngleCircle from '../../../../LessonsCommon/AngleCircle/AngleCircle';
+import type { circleType, varStateType, angleAnnotationType } from '../../../../LessonsCommon/AngleCircle/AngleCircle';
 import lessonLayout from './layout';
-import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-import type { TypeRotationDirection } from '../../../js/diagram/tools/g2';
+import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import type { TypeRotationDirection } from '../../../../js/diagram/tools/g2';
 
 type TypeAnglePairName = 'adjacent' | 'complementary' | 'supplementary' | 'explementary';
 

@@ -1,14 +1,14 @@
 // @flow
 
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   Transform, Point, Rect, minAngleDiff, normAngle, Line,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
-} from '../../../js/diagram/Element';
-import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
-import makeAngleAnnotation from '../../../LessonsCommon/tools/angleAnnotation';
+} from '../../../../js/diagram/Element';
+import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import makeAngleAnnotation from '../../../../LessonsCommon/tools/angleAnnotation';
 
 type MoveableLinePrimativeType = {
   movementAllowed: 'rotation' | 'translation';

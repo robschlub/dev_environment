@@ -3,12 +3,12 @@
 import {
   LessonContent, actionWord, onClickId, highlightWord, highlight, click,
   centerVH, centerV, toHTML, clickWord,
-} from '../../../js/Lesson/LessonContent';
+} from '../../../../js/Lesson/LessonContent';
 import LessonDiagram from './diagram';
-import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
-import imgLink from './tile.png';
+import HTMLEquation from '../../../../js/diagram/DiagramElements/Equation/HTMLEquation';
+import imgLink from '../tile.png';
 import lessonLayout from './layout';
-import details from './details';
+import details from '../details';
 
 const layout = lessonLayout();
 const { colors } = layout;

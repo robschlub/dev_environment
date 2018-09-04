@@ -1,16 +1,16 @@
 // @flow
-import Diagram from '../../../js/diagram/Diagram';
+import Diagram from '../../../../js/diagram/Diagram';
 import {
   Transform, minAngleDiff,
-} from '../../../js/diagram/tools/g2';
+} from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
-} from '../../../js/diagram/Element';
+} from '../../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
 import { makeLabeledLine, makeLabeledAngle, makeSupplementaryAngle } from './diagramCollectionCommon';
 import type { TypeLabeledLine, TypeAngle, TypeSupplementaryAngle } from './diagramCollectionCommon';
-import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 // type AngleType = {
 //   _label: DiagramElementCollection;
