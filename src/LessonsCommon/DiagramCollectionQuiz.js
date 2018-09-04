@@ -1,7 +1,7 @@
 // @flow
-
+import Diagram from '../js/diagram/Diagram';
 import {
-  Transform, Point,
+  Transform,
 } from '../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -18,20 +18,21 @@ import {
 
 import CommonDiagramCollection from './DiagramCollection';
 
+export type TypeMessages = {
+  _correct: DiagramElementPrimative;
+  _correctNextSteps: DiagramElementPrimative;
+  _incorrect: DiagramElementPrimative;
+  _incorrectNextSteps: DiagramElementPrimative;
+} & DiagramElementCollection;
+
 export default class CommonQuizDiagramCollection extends CommonDiagramCollection {
   _check: DiagramElementPrimative;
-  _messages: {
-    _correct: DiagramElementPrimative;
-    _correctNextSteps: DiagramElementPrimative;
-    _incorrect: DiagramElementPrimative;
-    _incorrectNotQuite: DiagramElementPrimative;
-    _incorrectNextSteps: DiagramElementPrimative;
-  } & DiagramElementCollection;
+  _messages: TypeMessages;
 
-  makeCorrectAnswerMessage(reason: string = 'Correct!') {
+  makeCorrectAnswerMessage() {
     const text = `
       <p>
-        ${reason}
+        Correct!
       </p>
       `;
     const html = this.diagram.shapes.htmlText(
@@ -58,27 +59,42 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   showAnswer() {
   }
 
-  makeIncorrectAnswerMessage(reason: string = 'Incorrect.') {
+  constructor(
+    diagram: Diagram,
+    layout: Object = { colors: {} },
+    messages: Object = {},
+    transform: Transform = new Transform(),
+  ) {
+    super(diagram, layout, transform);
+    this.add('check', this.makeCheckButton());
+    this.add('messages', this.makeQuizAnswerMessages(messages));
+    this._messages.hideAll();
+  }
+
+  makeIncorrectAnswerMessage(
+    id: string = 'incorrect',
+    reason: string = 'Incorrect!',
+  ) {
     return this.diagram.shapes.htmlText(
       `
       <p>
         ${reason}
       </p>
-      `, 'id__quiz__incorrect',
+      `, `id__quiz__${id}`,
       'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
     );
   }
 
-  makeIncorrectNotQuiteMessage() {
-    return this.diagram.shapes.htmlText(
-      `
-      <p>
-        Not quite (remember parallel lines cannot touch).
-      </p>
-      `, 'id__quiz__not_quite',
-      'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
-    );
-  }
+  // makeIncorrectNotQuiteMessage() {
+  //   return this.diagram.shapes.htmlText(
+  //     `
+  //     <p>
+  //       Not quite (remember parallel lines cannot touch).
+  //     </p>
+  //     `, 'id__quiz__not_quite',
+  //     'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
+  //   );
+  // }
 
   makeCorrectNextStepsMessage() {
     let text = `
@@ -116,15 +132,25 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     return html;
   }
 
-  makeQuizAnswerMessages() {
+  makeQuizAnswerMessages(incorrectMessages: Object = {}) {
     const collection = this.diagram.shapes.collection(new Transform().translate(0, 0));
     collection.add('correct', this.makeCorrectAnswerMessage());
     collection.add('incorrect', this.makeIncorrectAnswerMessage());
-    collection.add('incorrectNotQuite', this.makeIncorrectNotQuiteMessage());
-    // collection.add('incorrectTouching', this.makeIncorrectTouchingMessage());
-    // collection.add('incorrectCloseRotation', this.makeIncorrectCloseRotationMessage());
     collection.add('incorrectNextSteps', this.makeIncorrectNextStepsMessage());
     collection.add('correctNextSteps', this.makeCorrectNextStepsMessage());
+    Object.keys(incorrectMessages).forEach((key) => {
+      const message = incorrectMessages[key];
+      collection.add(key, this.makeIncorrectAnswerMessage(message));
+    });
     return collection;
+  }
+
+  makeCheckButton() {
+    const check = this.diagram.shapes.htmlText(
+      'Check', 'id__related_angles_check',
+      'lesson__quiz_check', this.layout.quiz.check, 'middle', 'center',
+    );
+    // check.onclick = this.checkAnswer.bind(this);
+    return check;
   }
 }

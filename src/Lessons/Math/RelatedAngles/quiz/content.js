@@ -62,6 +62,7 @@ class Content extends LessonContent {
         diag.setScenario(quiz._line2, layout.quiz.first.line2);
         quiz._check.show();
         quiz._check.vertices.element.onclick = quiz.checkAnswer.bind(quiz);
+        console.log(quiz._messages)
       },
     });
   }
