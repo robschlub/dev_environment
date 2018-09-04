@@ -22,7 +22,7 @@ export type TypeMessages = {
 
 export default class CommonQuizDiagramCollection extends CommonDiagramCollection {
   _check: DiagramElementPrimative;
-  _messages: TypeMessages;
+  +_messages: TypeMessages;
 
   makeCorrectAnswerMessage() {
     const text = `
