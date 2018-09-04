@@ -683,7 +683,7 @@ class Diagram {
     this.draw2D.resize();
     this.setSpaceTransforms();
     this.sizeHtmlText();
-    this.elements.resize();
+    this.elements.resizeHtmlObject();
     this.animateNextFrame();
   }
 

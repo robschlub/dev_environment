@@ -6,11 +6,6 @@ import {
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../js/diagram/Element';
-// import Diagram from '../js/diagram/Diagram';
-
-// import {
-//   makeSelectorText, SelectorList,
-// } from './tools/selector';
 
 import {
   click, applyModifiers, setOnClicks,
