@@ -15,7 +15,7 @@ function walkSync(currentDirPath, fileIdentifier, callback) {
   });
 }
 
-function getAllLessons(lessonsPath) {
+function getAllPaths(lessonsPath) {
   const lessons = [];
   walkSync(lessonsPath, 'lesson.js', (lessonPath) => {
     lessons.push(lessonPath);
@@ -23,7 +23,7 @@ function getAllLessons(lessonsPath) {
   return lessons;
 }
 
-function getAllTopics(lessonsPath) {
+function getAllLessons(lessonsPath) {
   const lessons = [];
   walkSync(lessonsPath, 'details.js', (lessonPath) => {
     lessons.push(lessonPath);
@@ -35,7 +35,7 @@ function entryPoints() {
   const points = {
     main: ['whatwg-fetch', 'babel-polyfill', './src/js/main.js'],
   };
-  const lessons = getAllLessons('./src/Lessons');
+  const lessons = getAllPaths('./src/Lessons');
   lessons.forEach((lessonPath) => {
     const p = lessonPath.replace(/src\/Lessons\//, '');
     points[`Lessons/${p}/lesson`] = `./${lessonPath}/lesson.js`;
@@ -50,7 +50,7 @@ function entryPoints() {
 }
 
 function makeLessonIndex() {
-  const lessons = getAllTopics('./src/Lessons');
+  const lessons = getAllLessons('./src/Lessons');
   // const lessonDescriptions = [];
   let outStr =
 `import LessonDescription from './lessonDescription';
@@ -64,6 +64,7 @@ export default function getLessonIndex() {
     let title = '';
     let dependencies = [];
     let uid = '';
+    const paths = getAllPaths(lessonPath);
     if (fs.existsSync(detailsPath)) {
       // const detailsPath = `./${lessonPath}/details.js`;
       // eslint-disable-next-line global-require, import/no-dynamic-require
@@ -73,15 +74,24 @@ export default function getLessonIndex() {
       ({ uid } = details.details);
     }
     if (title !== '') {
-      outStr = `${outStr}\n  lessonIndex.push(new LessonDescription(\n    '${title}',\n    '${shortPath}',\n    '${uid}',\n`;
+      outStr = `${outStr}\n  lessonIndex.push(new LessonDescription(`;
+      outStr = `${outStr}\n    '${title}',`;
+      outStr = `${outStr}\n    '${shortPath}',`;
+      outStr = `${outStr}\n    '${uid}',`;
+      outStr = `${outStr}\n    [`;
+      paths.forEach((p) => {
+        const shortP = p.replace(`${lessonPath}/`, '');
+        outStr = `${outStr}\n      '${shortP}',`;
+      });
+      outStr = `${outStr}\n    ],`;
       if (dependencies.length > 0) {
-        outStr = `${outStr}    [`;
+        outStr = `${outStr}\n    [`;
         dependencies.forEach((dependency) => {
-          outStr = `${outStr}\n      '${dependency}',\n`;
+          outStr = `${outStr}\n      '${dependency}',`;
         });
-        outStr = `${outStr}    ],\n`;
+        outStr = `${outStr}\n    ],`;
       }
-      outStr = `${outStr}  ));`;
+      outStr = `${outStr}\n  ));`;
     }
   });
   outStr = `${outStr}\n  return lessonIndex;\n}\n`;

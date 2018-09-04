@@ -15,6 +15,7 @@ export default class LessonDescription {
     name: string,
     link: string = '',
     uid: string = '',
+    paths: Array<string> = [],
     dependencies: Array<string> = [],
     id: string = '',
   ) {
@@ -31,6 +32,7 @@ export default class LessonDescription {
     }
     this.dependencies = dependencies;
     this.uid = uid;
+    this.paths = paths;
   }
 }
 

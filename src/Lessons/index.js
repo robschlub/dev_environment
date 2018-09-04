@@ -8,6 +8,9 @@ export default function getLessonIndex() {
     '/Lessons/Math/AdjacentAngles',
     'adjacent_angles',
     [
+      '1',
+    ],
+    [
       'important_angles',
     ],
   ));
@@ -15,6 +18,9 @@ export default function getLessonIndex() {
     'Angles',
     '/Lessons/Math/Angle',
     'angles',
+    [
+      '1',
+    ],
     [
       'circles',
     ],
@@ -24,6 +30,9 @@ export default function getLessonIndex() {
     '/Lessons/Math/Circle',
     'circles',
     [
+      '1',
+    ],
+    [
       'why_study_shapes',
     ],
   ));
@@ -32,6 +41,9 @@ export default function getLessonIndex() {
     '/Lessons/Math/ImportantAngles',
     'important_angles',
     [
+      '1',
+    ],
+    [
       'measuring_angles',
     ],
   ));
@@ -39,11 +51,17 @@ export default function getLessonIndex() {
     'Why Study Shapes?',
     '/Lessons/Math/Introduction',
     'why_study_shapes',
+    [
+      '1',
+    ],
   ));
   lessonIndex.push(new LessonDescription(
     'Measuring Angles',
     '/Lessons/Math/MeasuringAngles',
     'measuring_angles',
+    [
+      '1',
+    ],
     [
       'angles',
     ],
@@ -53,6 +71,9 @@ export default function getLessonIndex() {
     '/Lessons/Math/RelatedAngles',
     'related_angles',
     [
+      '1',
+    ],
+    [
       'adjacent_angles',
     ],
   ));
@@ -60,6 +81,9 @@ export default function getLessonIndex() {
     'Sine',
     '/Lessons/Math/Sine',
     'sine',
+    [
+      '1',
+    ],
     [
       'adjacent_angles',
     ],
