@@ -55,15 +55,17 @@ export default function getLessonIndex() {
     const content = `${lessonPath}/content.js`;
     let title = '';
     let dependencies = [];
+    let uid = '';
     if (fs.existsSync(content)) {
       const detailsPath = `./${lessonPath}/details.js`;
       // eslint-disable-next-line global-require, import/no-dynamic-require
       const details = require(detailsPath);
       ({ title } = details.details);
       ({ dependencies } = details.details);
+      ({ uid } = details.details);
     }
     if (title !== '') {
-      outStr = `${outStr}\n  lessonIndex.push(new LessonDescription(\n    '${title}',\n    '${shortPath}',\n`;
+      outStr = `${outStr}\n  lessonIndex.push(new LessonDescription(\n    '${title}',\n    '${shortPath}',\n    '${uid}',\n`;
       if (dependencies.length > 0) {
         outStr = `${outStr}    [`;
         dependencies.forEach((dependency) => {

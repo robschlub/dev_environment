@@ -8,11 +8,13 @@ export default class LessonDescription {
   imgLink: string;
   location: Point;
   id: string;
+  uid: string;
   dependencies: Array<string>;
 
   constructor(
     name: string,
     link: string = '',
+    uid: string = '',
     dependencies: Array<string> = [],
     id: string = '',
   ) {
@@ -28,6 +30,7 @@ export default class LessonDescription {
         .replace(/!/gi, '')}`;
     }
     this.dependencies = dependencies;
+    this.uid = uid;
   }
 }
 
