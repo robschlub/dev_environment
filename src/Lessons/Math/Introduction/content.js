@@ -9,13 +9,14 @@ import { Point } from '../../../js/diagram/tools/g2';
 // import { easeinout } from '../../../js/diagram/tools/mathtools';
 import imgLink from './tile.png';
 import lessonLayout from './layout';
+import details from './details';
 
 const layout = lessonLayout();
 const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Why study shapes?';
+    this.title = details.details.title;
     this.iconLink = imgLink;
   }
 

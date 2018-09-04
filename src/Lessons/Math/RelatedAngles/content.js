@@ -8,12 +8,13 @@ import LessonDiagram from './diagram';
 import Definition from '../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from './tile.png';
+import details from './details';
 const layout = lessonLayout();
 const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Related Angles';
+    this.title = details.details.title;
     this.iconLink = imgLink;
   }
 

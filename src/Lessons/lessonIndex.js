@@ -8,8 +8,14 @@ class LessonDescription {
   imgLink: string;
   location: Point;
   id: string;
+  dependencies: Array<string>;
 
-  constructor(name: string, link: string = '', id: string = '') {
+  constructor(
+    name: string,
+    link: string = '',
+    dependencies: Array<string> = [],
+    id: string = '',
+  ) {
     this.name = name;
     this.link = link;
     this.location = new Point(0, 0);
@@ -21,6 +27,7 @@ class LessonDescription {
         .replace(/\?/gi, '')
         .replace(/!/gi, '')}`;
     }
+    this.dependencies = dependencies;
   }
 }
 

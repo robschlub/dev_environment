@@ -8,13 +8,14 @@ import LessonDiagram from './diagram';
 import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 import imgLink from './tile.png';
 import lessonLayout from './layout';
+import details from './details';
 
 const layout = lessonLayout();
 const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
-    this.title = 'Measuring Angles';
+    this.title = details.details.title;
     this.iconLink = imgLink;
   }
 
