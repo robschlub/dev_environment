@@ -10,7 +10,7 @@
 }
 
 .lesson__path_right_tiles {
-  display: inline-block; 
+  display: inline-block;
   margin-top: 90px;
 }
 
@@ -33,24 +33,17 @@
 }
 
 @media screen and (min-width: $tablet) {
-
   .lesson__path_left_tiles {
     display: initial;
     float: left;
     margin-left: 10px;
+    margin-top: 30px;
   }
 
   .lesson__path_right_tiles {
     display: initial;
     float: right;
     margin-right: 10px;
-  }
-
-  .lesson__path_left_tiles {
-    margin-top: 30px;
-  }
-
-  .lesson__path_right_tiles {
     margin-top: 30px;
   }
 
@@ -67,7 +60,7 @@
   display: table;
 }
 
-.lesson__path_tile_label{
+.lesson__path_tile_label {
   color: white;
   display: table-cell;
   vertical-align: middle;
