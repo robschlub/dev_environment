@@ -1,23 +1,16 @@
 // @flow
-import {
-  Transform,
-} from '../../../../js/diagram/tools/g2';
-import {
-  DiagramElementPrimative,
-} from '../../../../js/diagram/Element';
+import { Transform } from '../../../../js/diagram/tools/g2';
+import { DiagramElementPrimative } from '../../../../js/diagram/Element';
 import lessonLayout from './layout';
 
-import {
-  addSelectorHTML,
-} from '../../../../LessonsCommon/tools/selector';
+import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
-import ParallelCollection from './diagramCollectionParallel';
-import OppositeCollection from './diagramCollectionOpposite';
-import ThreeLinesCollection from './diagramCollectionThreeLines';
+import ParallelCollection from '../common/diagramCollectionParallel';
+import OppositeCollection from '../common/diagramCollectionOpposite';
+import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
 import RelatedAnglesCommonCollection from '../common/diagramCollection';
-import QuizCollection from './diagramCollectionQuiz';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
 export default class RelatedAngles1Collection extends RelatedAnglesCommonCollection {
@@ -25,7 +18,6 @@ export default class RelatedAngles1Collection extends RelatedAnglesCommonCollect
   _opposite: OppositeCollection;
   _threeLines: ThreeLinesCollection;
   _selector: DiagramElementPrimative;
-  // _quiz: QuizCollection;
   units: TypeUnits;
 
   addSelector() {
@@ -51,7 +43,6 @@ export default class RelatedAngles1Collection extends RelatedAnglesCommonCollect
     this.add('parallel', new ParallelCollection(diagram, this.layout));
     this.add('opposite', new OppositeCollection(diagram, this.layout));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
-    // this.add('quiz', new QuizCollection(diagram, this.layout));
     this.addSelector();
     this.add('unitsSelector', this.makeUnitsSelector());
   }
@@ -71,9 +62,6 @@ export default class RelatedAngles1Collection extends RelatedAnglesCommonCollect
     }
     if (title === 'interior') {
       this.diagram.lesson.goToSection('Interior Angles');
-    }
-    if (title === 'quiz') {
-      this.diagram.lesson.goToSection('Quiz');
     }
   }
 

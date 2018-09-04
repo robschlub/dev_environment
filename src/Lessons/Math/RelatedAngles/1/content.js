@@ -22,23 +22,11 @@ class Content extends LessonContent {
     this.diagram = new LessonDiagram(htmlId, layout);
   }
 
-  // setElementContent() {
-  //   const { selector } = this.diagram.elements._selector;
-  //   selector.add('parallel', 'Parallel', 'Lines');
-  //   selector.add('opposite', 'Opposite', 'Angles');
-  //   selector.add('corresponding', 'Corresponding', 'Angles');
-  //   selector.add('alternate', 'Alternate', 'Angles');
-  //   selector.add('interior', 'Interior', 'Angles');
-  //   selector.add('quiz', 'Quiz', '');
-  //   selector.selectWithoutExecution('parallel');
-  // }
-
   addSections() {
     const diag = this.diagram.elements;
     const opp = diag._opposite;
     const parallel = diag._parallel;
     const threeLines = diag._threeLines;
-    // const quiz = diag._quiz;
 
     this.addSection({
       title: 'Parallel Lines',
@@ -103,7 +91,6 @@ class Content extends LessonContent {
         Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.line),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('opposite');
         if (parallel.isShown) {
           opp._line1.transform = parallel._line1.transform._dup();
           opp._line2.transform = parallel._line2.transform._dup();
@@ -127,12 +114,6 @@ class Content extends LessonContent {
         opp._line2._end1,
         opp._line2._end2,
         opp._line2._mid,
-      ],
-      show: [
-        // diag._unitsSelector,
-        // diag._selector,
-        // opp._line1,
-        // opp._line2,
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
@@ -164,7 +145,6 @@ class Content extends LessonContent {
         supplementary_angles: click(opp.pulseSupplementaryAngle, [opp, null], colors.supplementary),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('opposite');
         opp._angleA.setColor(layout.colors.angleA);
         opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.angleC);
@@ -180,8 +160,6 @@ class Content extends LessonContent {
         opp._angleD,
       ],
       show: [
-        // diag._unitsSelector,
-        // diag._selector,
         opp._line1,
         opp._line2,
       ],
@@ -230,7 +208,6 @@ class Content extends LessonContent {
       ],
       show: [
         diag._unitsSelector,
-        // diag._selector,
         opp._line1,
         opp._line2,
       ],
@@ -264,7 +241,6 @@ class Content extends LessonContent {
         Line_2: click(opp.pulseLine, [opp, 2], colors.line),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('opposite');
         opp._angleA.setColor(layout.colors.disabled);
         opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.angleC);
@@ -281,7 +257,6 @@ class Content extends LessonContent {
       ],
       show: [
         diag._unitsSelector,
-        // diag._selector,
         opp._line1,
         opp._line2,
       ],
@@ -316,7 +291,6 @@ class Content extends LessonContent {
         Line_2: click(opp.pulseLine, [opp, 2], colors.line),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('opposite');
         opp._angleA.setColor(layout.colors.angleA);
         opp._angleB.setColor(layout.colors.disabled);
         opp._angleC.setColor(layout.colors.disabled);
@@ -333,7 +307,6 @@ class Content extends LessonContent {
       ],
       show: [
         diag._unitsSelector,
-        // diag._selector,
         opp._line1,
         opp._line2,
       ],
@@ -362,7 +335,6 @@ class Content extends LessonContent {
       modifiers: {
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('opposite');
         opp._angleA.setColor(layout.colors.angleA);
         opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.angleA);
@@ -378,7 +350,6 @@ class Content extends LessonContent {
         opp._angleD,
       ],
       show: [
-        // diag._selector,
         opp._line1,
         opp._line2,
       ],
@@ -414,7 +385,6 @@ class Content extends LessonContent {
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('corresponding');
         if (parallel.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = parallel._line1.transform._dup();
@@ -443,9 +413,6 @@ class Content extends LessonContent {
         threeLines._line3._end2,
         threeLines._line3._mid,
       ],
-      // show: [
-      //   diag._selector,
-      // ],
       transitionFromAny: (done) => {
         let time = Math.max(
           diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
@@ -479,7 +446,6 @@ class Content extends LessonContent {
         moved: click(threeLines.translateLine1, [threeLines], colors.line),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('corresponding');
         threeLines._angleA2.setColor(layout.colors.disabled);
         threeLines._angleB2.setColor(layout.colors.disabled);
         threeLines._angleC2.setColor(layout.colors.disabled);
@@ -498,9 +464,6 @@ class Content extends LessonContent {
         threeLines._line3._end2,
         threeLines._line3._mid,
       ],
-      // show: [
-      //   diag._selector,
-      // ],
       transitionFromAny: (done) => {
         let time = Math.max(
           diag.getTimeToMoveToScenario(threeLines._line1, 'center'),
@@ -557,7 +520,6 @@ class Content extends LessonContent {
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('corresponding');
         threeLines._angleA2.setColor(layout.colors.disabled);
         threeLines._angleB2.setColor(layout.colors.disabled);
         threeLines._angleC2.setColor(layout.colors.disabled);
@@ -578,7 +540,6 @@ class Content extends LessonContent {
             threeLines._line3._end2,
             threeLines._line3._mid,
           ]);
-          // diag._selector.show();
         }
       },
       transitionFromAny: (done) => {
@@ -589,7 +550,6 @@ class Content extends LessonContent {
             diag.getTimeToMoveToScenario(threeLines),
           );
           time = time > 2 ? 2 : time;
-          // threeLines.animateRotationTo(0, 0, time);
           diag.moveToScenario(threeLines);
           diag.moveToScenario(threeLines._line1, 'center', time);
           diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
@@ -651,7 +611,6 @@ class Content extends LessonContent {
         ),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('corresponding');
         if (parallel.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = parallel._line1.transform._dup();
@@ -664,7 +623,6 @@ class Content extends LessonContent {
         }
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
-        // threeLines._line3.setColor(layout.colors.intersectingLine);
       },
       showOnly: [
         threeLines,
@@ -681,9 +639,6 @@ class Content extends LessonContent {
         threeLines._line3._end2,
         threeLines._line3._mid,
       ],
-      // show: [
-      //   diag._selector,
-      // ],
       transitionFromAny: (done) => {
         let time = Math.max(
           diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
@@ -723,7 +678,6 @@ class Content extends LessonContent {
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('alternate');
         if (parallel.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = parallel._line1.transform._dup();
@@ -736,7 +690,6 @@ class Content extends LessonContent {
         }
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
-        // threeLines._line3.setColor(layout.colors.line);
       },
       showOnly: [
         threeLines,
@@ -753,9 +706,6 @@ class Content extends LessonContent {
         threeLines._line3._end2,
         threeLines._line3._mid,
       ],
-      // show: [
-      //   diag._selector,
-      // ],
       transitionFromAny: (done) => {
         let time = Math.max(
           diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
@@ -799,7 +749,6 @@ class Content extends LessonContent {
         Opposite_angles: click(threeLines.showOppositeAngles, [threeLines], colors.angleC),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('alternate');
         if (parallel.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = parallel._line1.transform._dup();
@@ -812,7 +761,6 @@ class Content extends LessonContent {
         }
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
-        // threeLines._line3.setColor(layout.colors.line);
       },
       showOnly: [
         threeLines,
@@ -829,9 +777,6 @@ class Content extends LessonContent {
         threeLines._line3._end2,
         threeLines._line3._mid,
       ],
-      // show: [
-      //   diag._selector,
-      // ],
       transitionFromAny: (done) => {
         if (this.comingFrom !== 'prev') {
           let time = Math.max(
@@ -878,7 +823,6 @@ class Content extends LessonContent {
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('interior');
         if (parallel.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = parallel._line1.transform._dup();
@@ -891,7 +835,6 @@ class Content extends LessonContent {
         }
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
-        // threeLines._line3.setColor(layout.colors.line);
         diag._unitsSelector.select(diag.units);
       },
       showOnly: [
@@ -910,7 +853,6 @@ class Content extends LessonContent {
         threeLines._line3._mid,
       ],
       show: [
-        // diag._selector,
         diag._unitsSelector,
       ],
       transitionFromAny: (done) => {
@@ -963,14 +905,12 @@ class Content extends LessonContent {
         ),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('interior');
         diag._unitsSelector.select(diag.units);
       },
       showOnly: () => {
         if (this.comingFrom !== 'prev') {
           this.diagram.elements.showOnly([threeLines]);
           this.diagram.elements.show([
-            // diag._selector,
             diag._unitsSelector,
             threeLines._line1,
             threeLines._line2,
@@ -1009,49 +949,6 @@ class Content extends LessonContent {
         diag._unitsSelector.select(diag.units);
       },
     });
-
-    // this.addSection({
-    //   title: 'Quiz',
-    //   setContent: `
-    //     <p style="margin-top:10%">
-    //       Move the |red_line| to be parallel with the |blue_line|.
-    //     </p>
-    //   `,
-    //   modifiers: {
-    //     red_line: click(quiz.pulseLine2, [quiz], colors.quizLine),
-    //     blue_line: click(quiz.pulseLine1, [quiz], colors.line),
-    //   },
-    //   setEnterState: () => {
-    //     // diag._selector.selector.selectWithoutExecution('quiz');
-    //     quiz.setPosition(0, 0);
-    //     quiz._line2.setColor(colors.quizLine);
-    //     diag.setScenario(parallel._line1, 'quiz');
-    //     diag.setScenario(parallel._line2, 'quiz');
-    //   },
-    //   showOnly: [
-    //     quiz,
-    //     quiz._check,
-    //   ],
-    //   show: [
-    //     // diag._selector,
-    //     quiz._line1,
-    //     quiz._line2,
-    //   ],
-    //   transitionFromAny: (done) => {
-    //     let time = Math.max(
-    //       diag.getTimeToMoveToScenario(quiz._line1, layout.quiz.first.line1),
-    //       diag.getTimeToMoveToScenario(quiz._line2, layout.quiz.first.line2),
-    //     );
-    //     time = time > 2 ? 2 : time;
-    //     diag.moveToScenario(quiz._line1, layout.quiz.first.line1, time);
-    //     diag.moveToScenario(quiz._line2, layout.quiz.first.line2, time, done);
-    //   },
-    //   setSteadyState: () => {
-    //     diag.setScenario(quiz._line1, layout.quiz.first.line1);
-    //     diag.setScenario(quiz._line2, layout.quiz.first.line2);
-    //     quiz._check.vertices.element.onclick = quiz.checkAnswer.bind(quiz);
-    //   },
-    // });
   }
 }
 
