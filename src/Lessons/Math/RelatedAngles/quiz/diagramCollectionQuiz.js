@@ -12,8 +12,8 @@ import {
 // eslint-disable-next-line import/no-cycle
 import {
   makeMoveableLine, makeAnglesClose, checkForParallel,
-} from './diagramCollectionCommon';
-import type { MoveableLineType } from './diagramCollectionCommon';
+} from '../common/diagramCollectionCommon';
+import type { MoveableLineType } from '../common/diagramCollectionCommon';
 
 export default class QuizCollection extends DiagramElementCollection {
   layout: Object;

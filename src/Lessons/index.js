@@ -76,6 +76,7 @@ export default function getLessonIndex() {
     'related_angles',
     [
       '1',
+      'quiz',
       'summary',
     ],
     [
