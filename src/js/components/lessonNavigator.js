@@ -3,9 +3,8 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
-import {
-  lessonIndex, LessonDescription,
-} from '../../Lessons/lessonIndex';
+import LessonDescription from '../../Lessons/lessonDescription';
+import makeLessonTree from '../../Lessons/lessonTree';
 import {
   Point, Rect,
 } from '../diagram/tools/g2';
@@ -18,7 +17,7 @@ type Props = {
 export default class LessonNavigator extends React.Component
                                     <Props> {
   selected: string;
-  lessonIndex: Array<Array<LessonDescription> | LessonDescription>;
+  lessonIndex: Array<Array<LessonDescription>>;
   key: number;
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
@@ -29,7 +28,7 @@ export default class LessonNavigator extends React.Component
 
   constructor(props: Props) {
     super(props);
-    this.lessonIndex = lessonIndex;
+    this.lessonIndex = makeLessonTree();
     this.getVariables();
     this.layoutLessonTiles();
     this.getLessonTilesBounds();
@@ -262,7 +261,8 @@ export default class LessonNavigator extends React.Component
     }
     return <LessonTile
               id={lesson.id}
-              link={lesson.link}
+              link={`${lesson.link}/1`}
+              imgLink={lesson.imgLink}
               key={this.key}
               label={lesson.name}
               state={state}

@@ -409,7 +409,7 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__title {
-  height: 90px;
+  height: 145px;
   text-align: center;
   // font-weight: bold;
   width: 100%;
@@ -426,13 +426,17 @@ $diagram_ratio: 1.5;
   }
 }
 
-@media screen and (min-width: $small-tablet) {
+@media screen and (min-width: $tablet) {
   :root {
     --lesson__title_tile_width: 350px;
     --lesson__title_tile_height: 56px;
     --lesson__title_tile_font_size: 20px;
     --lesson__title_tile_border_radius: 22px;
     --lesson__title_tile_top: 20px;
+  }
+
+  .lesson__title {
+    height: 90px;
   }
 }
 
@@ -533,3 +537,5 @@ $diagram_ratio: 1.5;
 
 @import './lesson/selector';
 @import './lesson/definition';
+@import './lesson/quizCheck';
+@import './lesson/pathTile';

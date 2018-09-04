@@ -1,5 +1,5 @@
 // @import '../geometry';
-@import '../../LessonsCommon/AngleCircle/style';
+@import '../AngleCircle/style';
 
 $colors: (
   quadrant:         darken(color('diagram', 'safe', 'darkest'), 2%),

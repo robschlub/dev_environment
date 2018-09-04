@@ -147,6 +147,7 @@ describe('Diagram', () => {
         collection.add(sKey, squareElement);
         collection.isTouchable = true;
       });
+      diagram.moveTopElementOnly = false;
       diagram.elements = collection;
       diagram.dToGL = (x, y) => new Point(x, y)
         .transformBy(diagram.diagramToGLSpaceTransform.matrix());
@@ -393,8 +394,8 @@ describe('Diagram', () => {
       expect(d.beingMovedElements).toHaveLength(0);
       d.touchDownHandler(new Point(601, 449));          // Touch 0.01, 0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
     });
     test('Touch on B and C square', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
@@ -403,8 +404,8 @@ describe('Diagram', () => {
       expect(d.beingMovedElements).toHaveLength(0);
       d.touchDownHandler(new Point(1099, 201));         // Touch 0.99, 0.99
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._b);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._b);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
     });
     test('Touch on B and C square LandscapeOffset', () => {
       const d = diagrams.landscapeOffset;
@@ -412,8 +413,8 @@ describe('Diagram', () => {
       expect(d.beingMovedElements).toHaveLength(0);
       d.touchDownHandler(new Point(349, 451));           // Touch 0.99, 0.99
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._b);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._b);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
     });
   });
   describe('Touch move', () => {
@@ -478,8 +479,8 @@ describe('Diagram', () => {
 
       d.touchDownHandler(t1);          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
       d.draw(1);
 
       // Move to 0.25, 0.25
@@ -528,8 +529,8 @@ describe('Diagram', () => {
 
       d.touchDownHandler(t0);          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
       expect(d.elements._a.transform.t().round(2)).toEqual(a0);
       expect(d.elements._c.transform.t().round(2)).toEqual(c0);
       d.draw(0.1);
@@ -586,8 +587,8 @@ describe('Diagram', () => {
 
       d.touchDownHandler(t0);          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
       expect(d.elements._a.transform.t().round(2)).toEqual(a0);
       expect(d.elements._c.transform.t().round(2)).toEqual(c0);
       d.draw(0.1);

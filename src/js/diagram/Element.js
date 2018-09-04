@@ -3,10 +3,10 @@
 import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
-  Scale, Rotation,
+  Scale, Rotation, getDeltaAngle,
 } from './tools/g2';
 import * as m2 from './tools/m2';
-import type { pathOptionsType } from './tools/g2';
+import type { pathOptionsType, TypeRotationDirection } from './tools/g2';
 import * as tools from './tools/mathtools';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import DrawingObject from './DrawingObjects/DrawingObject';
@@ -43,29 +43,52 @@ function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
 //   offset: number;
 // };
 
-function getDeltaAngle(
-  start: number,
-  delta: number,
-  rotDirection: number,
-) {
-  let rotDiff = delta;
-  if (rotDirection === 2) {
-    if (start + rotDiff < 0) {
-      rotDiff = Math.PI * 2 + rotDiff;
-    } else if (start + rotDiff > Math.PI * 2) {
-      rotDiff = -(Math.PI * 2 - rotDiff);
-    }
-  } else if (rotDiff * rotDirection < 0) {
-    rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
-  }
-  return rotDiff;
-}
+// function getDeltaAngleOld(
+//   start: number,
+//   delta: number,
+//   rotDirection: number,
+// ) {
+//   let rotDiff = delta;
+//   if (rotDirection === 2) {
+//     if (start + rotDiff < 0) {
+//       rotDiff = Math.PI * 2 + rotDiff;
+//     } else if (start + rotDiff > Math.PI * 2) {
+//       rotDiff = -(Math.PI * 2 - rotDiff);
+//     }
+//   } else if (rotDiff * rotDirection < 0) {
+//     rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+//   }
+//   return rotDiff;
+// }
+
+// function getDeltaAngle(
+//   start: number,
+//   target: number,
+//   rotDirection: number,
+// ) {
+//   let rotDiff = 0;
+//   if (rotDirection === 0) {
+//     rotDiff = minAngleDiff(start, target);
+//   } else if (rotDirection === 1) {
+
+//   }
+//   if (rotDirection === 2) {
+//     if (start + rotDiff < 0) {
+//       rotDiff = Math.PI * 2 + rotDiff;
+//     } else if (start + rotDiff > Math.PI * 2) {
+//       rotDiff = -(Math.PI * 2 - rotDiff);
+//     }
+//   } else if (rotDiff * rotDirection < 0) {
+//     rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+//   }
+//   return rotDiff;
+// }
 
 function getMaxTimeFromVelocity(
   startTransform: Transform,
   stopTransform: Transform,
   velocityTransform: Transform,
-  rotDirection: number,
+  rotDirection: 0 | 1 | -1 | 2,
 ) {
   const deltaTransform = stopTransform.sub(startTransform);
   let time = 0;
@@ -84,21 +107,11 @@ function getMaxTimeFromVelocity(
       }
     }
     const start = startTransform.order[index];
-    if (delta instanceof Rotation && start instanceof Rotation) {
-      const rotDiff = getDeltaAngle(start.r, delta.r, rotDirection);
-      // let rotDiff = delta.r || 0;
-      // if (rotDirection === 2) {
-      //   const rStart = start.r;
-      //   if (rStart) {
-      //     if (rStart + rotDiff < 0) {
-      //       rotDiff = Math.PI * 2 + rotDiff;
-      //     } else if (rStart + rotDiff > Math.PI * 2) {
-      //       rotDiff = -(Math.PI * 2 - rotDiff);
-      //     }
-      //   }
-      // } else if (rotDiff * rotDirection < 0) {
-      //   rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
-      // }
+    const target = stopTransform.order[index];
+    if (delta instanceof Rotation
+        && start instanceof Rotation
+        && target instanceof Rotation) {
+      const rotDiff = getDeltaAngle(start.r, target.r, rotDirection);
       // eslint-disable-next-line no-param-reassign
       delta.r = rotDiff;
       const v = velocityTransform.order[index];
@@ -120,7 +133,7 @@ class AnimationPhase {
   // operation.
   timeOrVelocity: number | Transform;
   time: number ;                         // animation time
-  rotDirection: number;               // Direction of rotation
+  rotDirection: 0 | 1 | -1 | 2;               // Direction of rotation
   animationStyle: (number) => number; // Animation style
   animationPath: (number) => number;
   translationStyle: 'linear' | 'curved';
@@ -133,7 +146,7 @@ class AnimationPhase {
   constructor(
     transform: Transform = new Transform(),
     timeOrVelocity: number | Transform = 1,
-    rotDirection: number = 0,
+    rotDirection: 0 | 1 | -1 | 2 = 0,
     animationStyle: (number) => number = tools.easeinout,
     translationStyle: 'linear' | 'curved' = 'linear',
     translationOptions: pathOptionsType = {
@@ -190,52 +203,13 @@ class AnimationPhase {
     } else {
       this.time = time;
     }
-    // this.deltaTransform.order.forEach((delta, index) => {
-    //   if (this.timeOrVelocity instanceof Transform) {
-    //     if (delta instanceof Translation || delta instanceof Scale) {
-    //       const v = this.timeOrVelocity.order[index];
-    //       if (
-    //         (v instanceof Translation || v instanceof Scale)
-    //         && v.x !== 0
-    //         && v.y !== 0
-    //       ) {
-    //         const xTime = Math.abs(delta.x) / v.x;
-    //         const yTime = Math.abs(delta.y) / v.y;
-    //         time = xTime > time ? xTime : time;
-    //         time = yTime > time ? yTime : time;
-    //       }
-    //     }
-    //   }
-    //   const start = this.startTransform.order[index];
-    //   if (delta instanceof Rotation && start instanceof Rotation) {
-    //     let rotDiff = delta.r || 0;
-    //     if (this.rotDirection === 2) {
-    //       const rStart = start.r;
-    //       if (rStart) {
-    //         if (rStart + rotDiff < 0) {
-    //           rotDiff = Math.PI * 2 + rotDiff;
-    //         } else if (rStart + rotDiff > Math.PI * 2) {
-    //           rotDiff = -(Math.PI * 2 - rotDiff);
-    //         }
-    //       }
-    //     } else if (rotDiff * this.rotDirection < 0) {
-    //       rotDiff = this.rotDirection * Math.PI * 2.0 + rotDiff;
-    //     }
-    //     // eslint-disable-next-line no-param-reassign
-    //     delta.r = rotDiff;
-    //     if (this.timeOrVelocity instanceof Transform) {
-    //       const v = this.timeOrVelocity.order[index];
-    //       if (v instanceof Rotation && v !== 0) {
-    //         const rTime = delta.r / v.r;
-    //         time = rTime > time ? rTime : time;
-    //       }
-    //     }
-    //   }
-    // });
     this.deltaTransform.order.forEach((delta, index) => {
       const start = this.startTransform.order[index];
-      if (delta instanceof Rotation && start instanceof Rotation) {
-        const rotDiff = getDeltaAngle(start.r, delta.r, this.rotDirection);
+      const target = this.targetTransform.order[index];
+      if (delta instanceof Rotation
+        && start instanceof Rotation
+        && target instanceof Rotation) {
+        const rotDiff = getDeltaAngle(start.r, target.r, this.rotDirection);
         // eslint-disable-next-line no-param-reassign
         delta.r = rotDiff;
       }
@@ -376,7 +350,6 @@ class DiagramElement {
   isMovable: boolean;             // Element is able to be moved
   isTouchable: boolean;           // Element can be touched
   hasTouchableElements: boolean;
-  // hasMovableElements: boolean;
 
   // Callbacks
   onClick: ?(?mixed) => void;
@@ -422,6 +395,9 @@ class DiagramElement {
     };
     bounce: boolean;
     canBeMovedAfterLoosingTouch: boolean;
+    type: 'rotation' | 'translation';
+    // eslint-disable-next-line no-use-before-define
+    element: DiagramElementCollection | DiagramElementPrimative | null;
   };
 
   pulse: {
@@ -533,6 +509,8 @@ class DiagramElement {
       },
       bounce: true,
       canBeMovedAfterLoosingTouch: false,
+      type: 'translation',
+      element: null,
     };
 
     this.pulse = {
@@ -1170,7 +1148,7 @@ class DiagramElement {
   animateTo(
     transform: Transform,
     timeOrVelocity: number | Transform = 1,
-    rotDirection: number = 0,
+    rotDirection: TypeRotationDirection = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
     // translationPath: ?(Point, Point, number) => Point = null,
@@ -1340,7 +1318,7 @@ class DiagramElement {
   // With update only first instace of rotation in the transform order
   animateRotationTo(
     rotation: number,
-    rotDirection: number,
+    rotDirection: TypeRotationDirection,
     timeOrVelocity: number | Transform = 1,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
@@ -1357,7 +1335,7 @@ class DiagramElement {
   animateTranslationAndRotationTo(
     translation: Point,
     rotation: number,
-    rotDirection: number,
+    rotDirection: TypeRotationDirection,
     time: number = 1,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
@@ -2136,6 +2114,28 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
+  show(listToShow: Array<DiagramElementPrimative | DiagramElementCollection> = []): void {
+    super.show();
+    listToShow.forEach((element) => {
+      if (element instanceof DiagramElementCollection) {
+        element.showAll();
+      } else {
+        element.show();
+      }
+    });
+  }
+
+  hide(listToShow: Array<DiagramElementPrimative | DiagramElementCollection> = []): void {
+    super.hide();
+    listToShow.forEach((element) => {
+      if (element instanceof DiagramElementCollection) {
+        element.hideAll();
+      } else {
+        element.show();
+      }
+    });
+  }
+
   showAll(): void {
     this.show();
     for (let i = 0, j = this.order.length; i < j; i += 1) {
@@ -2258,6 +2258,16 @@ class DiagramElementCollection extends DiagramElement {
     this.diagramLimits = limits;
   }
 
+  // Returns an array of touched elements.
+  // In a collection, elements defined later in the collection.order
+  // array are on top of earlier elements. The touched array
+  // is sorted to have elements on top first, where the collection containing
+  // the elements will be before it's elements. For example, the array
+  // would be ordered as:
+  //  0: top collection
+  //  1 to n: n top elements in collection
+  //  n+1: second top collection
+  //  n+2 to m: top elements in second top colleciton.
   getTouched(glLocation: Point): Array<DiagramElementPrimative | DiagramElementCollection> {
     if (!this.isTouchable && !this.hasTouchableElements) {
       return [];
@@ -2268,7 +2278,7 @@ class DiagramElementCollection extends DiagramElement {
         touched.push(this);
       }
     }
-    for (let i = 0; i < this.order.length; i += 1) {
+    for (let i = this.order.length - 1; i >= 0; i -= 1) {
       const element = this.elements[this.order[i]];
       if (element.isShown === true) {
         touched = touched.concat(element.getTouched(glLocation));
@@ -2425,5 +2435,5 @@ class DiagramElementCollection extends DiagramElement {
 
 export {
   DiagramElementPrimative, DiagramElementCollection, AnimationPhase,
-  getDeltaAngle, getMaxTimeFromVelocity,
+  getMaxTimeFromVelocity, DiagramElement,
 };

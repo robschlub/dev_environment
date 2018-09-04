@@ -10,7 +10,7 @@ import { LessonContent } from '../../Lesson/LessonContent';
 import NavbarSpacer from '../../components/navbarSpacer';
 import Footer from '../../components/footer';
 
-const renderLesson = (content: LessonContent) => {
+const renderLesson = (content: LessonContent, lessonDetails: Object) => {
   const lessonId: HTMLElement | null = document.getElementById('single-page-lesson');
   const lesson = new Lesson(content);
 
@@ -22,7 +22,7 @@ const renderLesson = (content: LessonContent) => {
         <div className="container-fluid">
           <div className="row">
             <div className="col lesson__padding_override">
-              <LessonComponent lesson={lesson}/>
+              <LessonComponent lesson={lesson} lessonDetails={lessonDetails}/>
             </div>
           </div>
         </div>

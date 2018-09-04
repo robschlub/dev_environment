@@ -247,6 +247,23 @@ function onClickId(
   }
 }
 
+function applyModifiers(text: string, modifiers: Object) {
+  let outText = text;
+  Object.keys(modifiers).forEach((key) => {
+    const mod = modifiers[key];
+    outText = modifyText(outText, key, mod);
+  });
+  return outText;
+}
+
+function setOnClicks(modifiers: Object) {
+  Object.keys(modifiers).forEach((key) => {
+    const mod = modifiers[key];
+    if ('actionMethod' in mod) {
+      onClickId(mod.id(key), mod.actionMethod, mod.bind);
+    }
+  });
+}
 // class PositionObject {
 //   element: DiagramElementPrimative | DiagramElementCollection;
 //   position: Transform | null;
@@ -318,12 +335,13 @@ class Section {
   }
 
   setOnClicks() {
-    Object.keys(this.modifiers).forEach((key) => {
-      const mod = this.modifiers[key];
-      if ('actionMethod' in mod) {
-        onClickId(mod.id(key), mod.actionMethod, mod.bind);
-      }
-    });
+    setOnClicks(this.modifiers);
+    // Object.keys(this.modifiers).forEach((key) => {
+    //   const mod = this.modifiers[key];
+    //   if ('actionMethod' in mod) {
+    //     onClickId(mod.id(key), mod.actionMethod, mod.bind);
+    //   }
+    // });
   }
 
   getContent(): string {
@@ -342,10 +360,11 @@ class Section {
       htmlText = `${htmlText}${element}`;
     });
     // htmlText += '\n';
-    Object.keys(this.modifiers).forEach((key) => {
-      const mod = this.modifiers[key];
-      htmlText = modifyText(htmlText, key, mod);
-    });
+    htmlText = applyModifiers(htmlText, this.modifiers);
+    // Object.keys(this.modifiers).forEach((key) => {
+    //   const mod = this.modifiers[key];
+    //   htmlText = modifyText(htmlText, key, mod);
+    // });
 
     // Go through all text, and replace all characters between | | with
     // with default keywords
@@ -490,7 +509,7 @@ class LessonContent {
   iconLink: string;
   // questions
 
-  constructor(htmlId: string) {
+  constructor(htmlId: string = 'lesson_diagram') {
     this.diagramHtmlId = htmlId;
     this.sections = [];
     this.iconLink = '/';
@@ -533,5 +552,6 @@ class LessonContent {
 export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
-  clickWord, itemSelector, initializeItemSelector, unit,
+  clickWord, itemSelector, initializeItemSelector, unit, applyModifiers,
+  setOnClicks,
 };

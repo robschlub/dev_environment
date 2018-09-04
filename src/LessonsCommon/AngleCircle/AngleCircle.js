@@ -8,6 +8,7 @@ import {
 import {
   Point, Transform, minAngleDiff, normAngle, polarToRect,
 } from '../../js/diagram/tools/g2';
+import type { TypeRotationDirection } from '../../js/diagram/tools/g2';
 import { DiagramFont } from '../../js/diagram/DrawingObjects/TextObject/TextObject';
 
 
@@ -518,11 +519,11 @@ class AngleCircle extends DiagramElementCollection {
 
   rotateTo(
     angle: number,
-    direction: number,
+    direction: TypeRotationDirection,
     time: number,
     callback: () => void = () => {},
   ) {
-    let d = 1;
+    let d: TypeRotationDirection = 1;
     if (typeof direction === 'number') {
       d = direction;
       if (d === 0) {
@@ -530,7 +531,7 @@ class AngleCircle extends DiagramElementCollection {
         d = 1;
         if (r) {
           const delta = minAngleDiff(angle, r);
-          d = delta / Math.abs(delta);
+          d = delta / Math.abs(delta) === 1 ? 1 : -1;
         }
       }
     }
