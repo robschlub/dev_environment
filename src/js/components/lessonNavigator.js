@@ -3,8 +3,8 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
-import LessonDescription from '../../Lessons/lessonIndex';
-import getLessonIndex from '../../Lessons/index';
+import LessonDescription from '../../Lessons/lessonDescription';
+import makeLessonTree from '../../Lessons/lessonTree';
 import {
   Point, Rect,
 } from '../diagram/tools/g2';
@@ -28,7 +28,7 @@ export default class LessonNavigator extends React.Component
 
   constructor(props: Props) {
     super(props);
-    this.lessonIndex = getLessonIndex();
+    this.lessonIndex = makeLessonTree();
     this.getVariables();
     this.layoutLessonTiles();
     this.getLessonTilesBounds();

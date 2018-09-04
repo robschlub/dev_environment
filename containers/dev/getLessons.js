@@ -45,7 +45,7 @@ function makeLessonIndex() {
   const lessons = getAllLessons('./src/Lessons');
   // const lessonDescriptions = [];
   let outStr =
-`import LessonDescription from './lessonIndex';
+`import LessonDescription from './lessonDescription';
 
 export default function getLessonIndex() {
   const lessonIndex = [];

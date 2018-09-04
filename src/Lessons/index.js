@@ -1,4 +1,4 @@
-import LessonDescription from './lessonIndex';
+import LessonDescription from './lessonDescription';
 
 export default function getLessonIndex() {
   const lessonIndex = [];

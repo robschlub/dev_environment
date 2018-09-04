@@ -2,7 +2,7 @@
 
 import { Point } from '../js/diagram/tools/g2';
 
-class LessonDescription {
+export default class LessonDescription {
   name: string;
   link: string;
   imgLink: string;
@@ -54,4 +54,13 @@ class LessonDescription {
 //   ],
 // ];
 
-export default LessonDescription;
+// function makeLessonTree() {
+//   const lessonIndex = getLessonIndex();
+//   const lessonTree = [];
+//   lessonIndex.forEach((lesson) => {
+
+//   });
+//   return lessonTree;
+// }
+
+// export { LessonDescription, makeLessonTree };
