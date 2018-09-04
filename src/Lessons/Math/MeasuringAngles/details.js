@@ -1,10 +1,10 @@
 // @flow
 
-// export default details = [
+// eslint-disable-next-line no-var
 var details = {
-  title: "Measuring Angles",
-  uid: "measuring_angles",
-  dependencies: ["angles"],
+  title: 'Measuring Angles',
+  uid: 'measuring_angles',
+  dependencies: ['angles'],
 };
 
 module.exports = {

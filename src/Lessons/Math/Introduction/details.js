@@ -1,9 +1,9 @@
 // @flow
 
-// export default details = [
+// eslint-disable-next-line no-var
 var details = {
-  title: "Why Study Shapes?",
-  uid: "why_study_shapes",
+  title: 'Why Study Shapes?',
+  uid: 'why_study_shapes',
   dependencies: [],
 };
 
