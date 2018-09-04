@@ -24,14 +24,14 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   _check: DiagramElementPrimative;
   +_messages: TypeMessages;
 
-  makeCorrectAnswerMessage() {
+  makeCorrectAnswerMessage(id: string) {
     const text = `
       <p>
         Correct!
       </p>
       `;
     const html = this.diagram.shapes.htmlText(
-      text, 'id__quiz__correct',
+      text, `id__quiz__correct_${id}`,
       'lesson__quiz_correct', this.layout.quiz.answer, 'middle', 'center',
     );
     return html;
@@ -57,16 +57,18 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   constructor(
     diagram: Diagram,
     layout: Object = { colors: {} },
+    id: string = Math.round(Math.random() * 10000).toString(),
     messages: Object = {},
     transform: Transform = new Transform(),
   ) {
     super(diagram, layout, transform);
-    this.add('check', this.makeCheckButton());
-    this.add('messages', this.makeQuizAnswerMessages(messages));
+    this.add('check', this.makeCheckButton(id));
+    this.add('messages', this.makeQuizAnswerMessages(id, messages));
     this._messages.hideAll();
   }
 
   makeIncorrectAnswerMessage(
+    groupId: string,
     id: string = 'incorrect',
     reason: string = 'Incorrect!',
   ) {
@@ -75,7 +77,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
       <p>
         ${reason}
       </p>
-      `, `id__quiz__${id}`,
+      `, `id__quiz__${groupId}_${id}`,
       'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
     );
   }
@@ -91,7 +93,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   //   );
   // }
 
-  makeCorrectNextStepsMessage() {
+  makeCorrectNextStepsMessage(id: string) {
     let text = `
       <p>
         |Try_new| problem.
@@ -100,14 +102,14 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     const modifiers = { Try_new: click(this.newProblem, [this], this.layout.colors.line) };
     text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(
-      text, 'id__quiz__correct_next_steps',
+      text, `id__quiz__correct_next_steps_${id}`,
       'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
     );
     setOnClicks(modifiers);
     return html;
   }
 
-  makeIncorrectNextStepsMessage() {
+  makeIncorrectNextStepsMessage(id: string) {
     let text = `
       <p>
         |Try_again|, |show_answer| or |try_new_problem|.
@@ -120,29 +122,29 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     };
     text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(
-      text, 'id__quiz__incorrect_next_steps',
+      text, `id__quiz__incorrect_next_steps_${id}`,
       'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
     );
     setOnClicks(modifiers);
     return html;
   }
 
-  makeQuizAnswerMessages(incorrectMessages: Object = {}) {
+  makeQuizAnswerMessages(id: string, incorrectMessages: Object = {}) {
     const collection = this.diagram.shapes.collection(new Transform().translate(0, 0));
-    collection.add('correct', this.makeCorrectAnswerMessage());
-    collection.add('incorrect', this.makeIncorrectAnswerMessage());
-    collection.add('incorrectNextSteps', this.makeIncorrectNextStepsMessage());
-    collection.add('correctNextSteps', this.makeCorrectNextStepsMessage());
+    collection.add('correct', this.makeCorrectAnswerMessage(id));
+    collection.add('incorrect', this.makeIncorrectAnswerMessage(id));
+    collection.add('incorrectNextSteps', this.makeIncorrectNextStepsMessage(id));
+    collection.add('correctNextSteps', this.makeCorrectNextStepsMessage(id));
     Object.keys(incorrectMessages).forEach((key) => {
       const message = incorrectMessages[key];
-      collection.add(key, this.makeIncorrectAnswerMessage(key, message));
+      collection.add(key, this.makeIncorrectAnswerMessage(id, key, message));
     });
     return collection;
   }
 
-  makeCheckButton() {
+  makeCheckButton(id: string) {
     const check = this.diagram.shapes.htmlText(
-      'Check', 'id__related_angles_check',
+      'Check', `id__related_angles_check_${id}`,
       'lesson__quiz_check', this.layout.quiz.check, 'middle', 'center',
     );
     // check.onclick = this.checkAnswer.bind(this);

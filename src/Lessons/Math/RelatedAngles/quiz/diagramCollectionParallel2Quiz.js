@@ -7,9 +7,7 @@ import {
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
-// import {
-//   click, applyModifiers, setOnClicks,
-// } from '../../../../js/Lesson/LessonContent';
+
 // eslint-disable-next-line import/no-cycle
 import {
   makeMoveableLine, makeAnglesClose, checkForParallel,
@@ -18,7 +16,7 @@ import type { MoveableLineType } from '../common/diagramCollectionCommon';
 import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 
-export default class QuizParallelCollection extends CommonQuizDiagramCollection {
+export default class QuizParallel2Collection extends CommonQuizDiagramCollection {
   diagram: LessonDiagram;
   _line1: MoveableLineType;
   _line2: MoveableLineType;
@@ -61,8 +59,9 @@ export default class QuizParallelCollection extends CommonQuizDiagramCollection 
     super(
       diagram,
       layout,
+      'p2',
       {
-        rotation: 'Incorrect! (Close, but rotation is off)',
+        rotation: 'Incorrect! (Close, but rotation is way off)',
         touching: 'Not Quite - parallel lines cannot touch',
       },
       transform,
@@ -77,9 +76,6 @@ export default class QuizParallelCollection extends CommonQuizDiagramCollection 
     this.add('line2', this.makeLine());
     this._line2.setPosition(this.layout.line2.quiz.position.x, 0);
     this.hasTouchableElements = true;
-    // this.add('messages', this.makeQuizAnswerMessages());
-    // this._messages.hideAll();
-    // this.add('check', this.makeCheckButton());
   }
 
   showAnswer() {
@@ -126,13 +122,6 @@ export default class QuizParallelCollection extends CommonQuizDiagramCollection 
     );
   }
 
-  // tryAgain() {
-  //   this._messages.hideAll();
-  //   this._check.show();
-  //   this.hasTouchableElements = true;
-  //   this.diagram.animateNextFrame();
-  // }
-
   newProblem() {
     super.newProblem();
     const time = 1;
@@ -147,8 +136,6 @@ export default class QuizParallelCollection extends CommonQuizDiagramCollection 
       time,
       () => { this._check.show(); },
     );
-    // this._messages.hideAll();
-    // this.hasTouchableElements = true;
     this.diagram.animateNextFrame();
   }
 
