@@ -402,7 +402,7 @@ export default class LessonComponent extends React.Component
     const output = [];
     const { lessonDescription } = this;
     const currentLocation = getCurrentLesson();
-    if (lessonDescription != null) {
+    if (lessonDescription != null && lessonDescription.paths.length > 1) {
       let paths = lessonDescription.paths.slice();
       paths = paths.sort((a, b) => {
         const upperA = a.toUpperCase();
