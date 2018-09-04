@@ -1,5 +1,4 @@
 // @flow
-
 import {
   LessonContent, click, highlight, centerV, unit,
 } from '../../../../js/Lesson/LessonContent';

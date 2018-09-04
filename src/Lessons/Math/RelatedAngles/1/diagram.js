@@ -1,48 +1,18 @@
 // @flow
-import Diagram from '../../../../js/diagram/Diagram';
-import Lesson from '../../../../js/Lesson/Lesson';
+import RelatedAnglesCommonLessonDiagram from '../common/diagram';
 
 // eslint-disable-next-line import/no-cycle
-import RelatedAnglesCollection from './diagramCollection';
-import {
-  Transform,
-} from '../../../../js/diagram/tools/g2';
+import RelatedAngles1Collection from './diagramCollection';
+import { Transform } from '../../../../js/diagram/tools/g2';
 
-export type LessonDiagramType = {
-  elements: RelatedAnglesCollection;
-  layout: Object;
-  lesson: Lesson;
-} & Diagram;
-
-class LessonDiagram extends Diagram {
-  elements: RelatedAnglesCollection;
-  layout: Object;
-  lesson: Lesson;
-
-  constructor(id: string, layout: Object) {
-    const { limits } = layout;
-    super(
-      `${id}`,
-      limits.left,
-      limits.bottom,
-      limits.width,
-      limits.height,
-      layout.colors.diagram.background,
-      layout,
-    );
-  }
+class LessonDiagram extends RelatedAnglesCommonLessonDiagram {
+  elements: RelatedAngles1Collection;
 
   createDiagramElements() {
-    this.elements = new RelatedAnglesCollection(this, new Transform().translate(0, 0));
+    super.createDiagramElements();
+    this.elements = new RelatedAngles1Collection(this, new Transform().translate(0, 0));
 
     this.elements.hasTouchableElements = true;
-    this.fontScale = 1.2;
-  }
-
-  resize() {
-    this.elements.updateLimits(this.limits);
-    // this.elements._circle.resize();
-    super.resize();
   }
 
   touchUpHandler() {

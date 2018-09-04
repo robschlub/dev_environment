@@ -1,5 +1,4 @@
 // @flow
-
 import {
   Transform,
 } from '../../../../js/diagram/tools/g2';
@@ -12,17 +11,16 @@ import {
   addSelectorHTML,
 } from '../../../../LessonsCommon/tools/selector';
 // eslint-disable-next-line import/no-cycle
-import type { LessonDiagramType } from './diagram';
+import LessonDiagram from './diagram';
 
 import ParallelCollection from './diagramCollectionParallel';
 import OppositeCollection from './diagramCollectionOpposite';
 import ThreeLinesCollection from './diagramCollectionThreeLines';
-import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import RelatedAnglesCommonCollection from '../common/diagramCollection';
 import QuizCollection from './diagramCollectionQuiz';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
-class RelatedAnglesCollection extends CommonDiagramCollection {
-  diagram: LessonDiagramType;
+export default class RelatedAngles1Collection extends RelatedAnglesCommonCollection {
   _parallel: ParallelCollection;
   _opposite: OppositeCollection;
   _threeLines: ThreeLinesCollection;
@@ -42,7 +40,10 @@ class RelatedAnglesCollection extends CommonDiagramCollection {
     this._selector.setPosition(this.layout.selector.position);
   }
 
-  constructor(diagram: LessonDiagramType, transform: Transform = new Transform()) {
+  constructor(
+    diagram: LessonDiagram,
+    transform: Transform = new Transform(),
+  ) {
     const layout = lessonLayout();
     super(diagram, layout, transform);
 
@@ -51,8 +52,8 @@ class RelatedAnglesCollection extends CommonDiagramCollection {
     this.add('opposite', new OppositeCollection(diagram, this.layout));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
     this.add('quiz', new QuizCollection(diagram, this.layout));
-    this.add('unitsSelector', this.makeUnitsSelector());
     this.addSelector();
+    this.add('unitsSelector', this.makeUnitsSelector());
   }
 
   selectorClicked(title: string) {
@@ -87,5 +88,3 @@ class RelatedAnglesCollection extends CommonDiagramCollection {
     }
   }
 }
-
-export default RelatedAnglesCollection;
