@@ -509,7 +509,7 @@ class LessonContent {
   iconLink: string;
   // questions
 
-  constructor(htmlId: string) {
+  constructor(htmlId: string = 'lesson_diagram') {
     this.diagramHtmlId = htmlId;
     this.sections = [];
     this.iconLink = '/';
