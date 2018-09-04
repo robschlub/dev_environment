@@ -14,6 +14,7 @@ import LessonDiagram from './diagram';
 // import OppositeCollection from './diagramCollectionOpposite';
 // import ThreeLinesCollection from './diagramCollectionThreeLines';
 import RelatedAnglesCommonCollection from '../common/diagramCollection';
+// eslint-disable-next-line import/no-cycle
 import QuizParallelCollection from './diagramCollectionQuiz';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 

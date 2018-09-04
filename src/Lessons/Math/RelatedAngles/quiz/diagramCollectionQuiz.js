@@ -1,5 +1,5 @@
 // @flow
-// import Diagram from '../../../../js/diagram/Diagram';
+// eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import {
   Transform, Rect, Point,
