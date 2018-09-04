@@ -14,11 +14,11 @@ import LessonDiagram from './diagram';
 // import OppositeCollection from './diagramCollectionOpposite';
 // import ThreeLinesCollection from './diagramCollectionThreeLines';
 import RelatedAnglesCommonCollection from '../common/diagramCollection';
-import QuizCollection from './diagramCollectionQuiz';
+import QuizParallelCollection from './diagramCollectionQuiz';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
-export default class RelatedAngles1Collection extends RelatedAnglesCommonCollection {
-  _quiz: QuizCollection;
+export default class QuizCollection extends RelatedAnglesCommonCollection {
+  _quiz: QuizParallelCollection;
   units: TypeUnits;
 
   constructor(
@@ -29,7 +29,7 @@ export default class RelatedAngles1Collection extends RelatedAnglesCommonCollect
     super(diagram, layout, transform);
 
     this.units = 'deg';
-    this.add('quiz', new QuizCollection(diagram, this.layout));
+    this.add('quiz', new QuizParallelCollection(diagram, this.layout));
     this.add('unitsSelector', this.makeUnitsSelector());
   }
 

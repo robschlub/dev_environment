@@ -43,7 +43,6 @@ class Content extends LessonContent {
         Parallel_lines: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
       },
       setEnterState: () => {
-        // diag._selector.selector.selectWithoutExecution('parallel');
         parallel.setPosition(layout.position);
         if (opp.isShown) {
           parallel._line1.setTransform(opp._line1.transform._dup());
@@ -54,7 +53,6 @@ class Content extends LessonContent {
       showOnly: [
       ],
       show: [
-        // diag._selector,
         parallel,
         parallel._line1,
         parallel._line2,

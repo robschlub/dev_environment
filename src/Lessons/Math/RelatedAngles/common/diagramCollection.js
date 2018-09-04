@@ -3,9 +3,9 @@
 import {
   Transform,
 } from '../../../../js/diagram/tools/g2';
-import {
-  DiagramElementPrimative,
-} from '../../../../js/diagram/Element';
+// import {
+//   DiagramElementPrimative,
+// } from '../../../../js/diagram/Element';
 // import lessonLayout from './layout';
 
 // import {

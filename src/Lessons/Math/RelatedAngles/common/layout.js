@@ -58,22 +58,7 @@ export default function lessonLayoutCommon() {
     width: 0.02,
     boundary: new Rect(-1.5, -1.7, 3, 3),
   };
-  layout.quiz = {
-    position: new Point(0, 0),
-    first: {
-      line1: {
-        position: new Point(-1, 0),
-        rotation: Math.PI / 2,
-      },
-      line2: {
-        position: new Point(1, 0),
-        rotation: Math.PI / 4,
-      },
-    },
-    answer: new Point(0, -1.7),
-    nextSteps: new Point(0, -1.9),
-    check: new Point(2.3, 1.3),
-  };
+
   layout.line1 = {
     parallel: {
       position: new Point(0, 0.3),

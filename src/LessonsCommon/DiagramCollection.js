@@ -33,11 +33,14 @@ function getTarget(
   return target;
 }
 
+type TypeScenario = string | null | { position: Point, rotation: number };
 
 export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   +diagram: Diagram;
+  moveToScenario: (DiagramElement, TypeScenario, ?number, ?(() => void)) => number;
+  getTimeToMoveToScenario: (DiagramElement, TypeScenario) => number;
 
   constructor(
     diagram: Diagram,
@@ -52,7 +55,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
 
   getTimeToMoveToScenario(
     element: DiagramElement,
-    scenario: string | null | { position: Point, rotation: number } = null,
+    scenario: TypeScenario = null,
   ) {
     const target = getTarget(element, scenario, this.layout);
     const velocity = element.transform.constant(0);
@@ -64,7 +67,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
 
   setScenario(
     element: DiagramElement,
-    scenario: string | null | { position: Point, rotation: number } = null,
+    scenario: TypeScenario = null,
   ) {
     const target = getTarget(element, scenario, this.layout);
     // eslint-disable-next-line no-param-reassign
@@ -73,14 +76,14 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
 
   moveToScenario(
     element: DiagramElement,
-    scenario: string | null | { position: Point, rotation: number } = null,
+    scenario: TypeScenario = null,
     animationTime: ?number = null,
     callback: () => void,
   ) {
     element.stop();
     const target = getTarget(element, scenario, this.layout);
     let time = 1;
-    if (typeof animationTime !== 'number') {
+    if (animationTime == null) {
       time = this.getTimeToMoveToScenario(element, scenario);
     } else {
       time = animationTime;

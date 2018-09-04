@@ -1,5 +1,6 @@
 // @flow
-import Diagram from '../../../../js/diagram/Diagram';
+// import Diagram from '../../../../js/diagram/Diagram';
+import LessonDiagram from './diagram';
 import {
   Transform, Rect, Point,
 } from '../../../../js/diagram/tools/g2';
@@ -15,10 +16,10 @@ import {
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
 
-export default class QuizCollection extends DiagramElementCollection {
+export default class QuizParallelCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
-  diagram: Diagram;
+  diagram: LessonDiagram;
   _line1: MoveableLineType;
   _line2: MoveableLineType;
   _messages: {
@@ -164,7 +165,7 @@ export default class QuizCollection extends DiagramElementCollection {
   }
 
   constructor(
-    diagram: Diagram,
+    diagram: LessonDiagram,
     layout: Object,
     transform: Transform = new Transform().translate(0, 0),
   ) {
