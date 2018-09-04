@@ -356,7 +356,7 @@ export default class LessonComponent extends React.Component
             <LessonTilePath id='id_lesson__tile_path_quiz' link='/' key='204' label='Quiz' state='' right={true}/>
           </div>
         </div>
-        <LessonTile 
+        <LessonTile
           id={'id_lesson__title_container'}
           link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '')}`}
           imgLink={`/${this.lesson.content.iconLink}`}
