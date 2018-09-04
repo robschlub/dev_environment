@@ -10,6 +10,7 @@ export default class LessonDescription {
   id: string;
   uid: string;
   dependencies: Array<string>;
+  paths: Array<string>;
 
   constructor(
     name: string,
@@ -58,14 +59,3 @@ export default class LessonDescription {
 //     new LessonDescription('tan'),
 //   ],
 // ];
-
-// function makeLessonTree() {
-//   const lessonIndex = getLessonIndex();
-//   const lessonTree = [];
-//   lessonIndex.forEach((lesson) => {
-
-//   });
-//   return lessonTree;
-// }
-
-// export { LessonDescription, makeLessonTree };

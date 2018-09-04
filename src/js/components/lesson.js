@@ -3,15 +3,16 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
-// import Canvas from './canvas';
 import Button from './button';
-// import LessonTile from './lessonTile';
 import LessonNavigator from './lessonNavigator';
 import LessonTilePath from './lessonPathTile';
 import LessonTile from './lessonTile';
+import getLessonIndex from '../../Lessons/index';
+import LessonDescription from '../../Lessons/lessonDescription';
 
 type Props = {
   lesson: Lesson;
+  lessonDetails: Object;
   section?: number;
 };
 
@@ -22,17 +23,34 @@ type State = {
   listOfSections: Array<React.Node>,
 };
 
+function getLessonDescription(uid: string) {
+  const lessons = getLessonIndex();
+  for (let i = 0; i < lessons.length; i += 1) {
+    const lessonDescription = lessons[i];
+    if (lessonDescription.uid === uid) {
+      return lessonDescription;
+    }
+  }
+  return null;
+}
+
+function getCurrentLesson() {
+  const currentLocation = window.location.href;
+  return currentLocation.split('/').pop();
+}
+
 export default class LessonComponent extends React.Component
                                     <Props, State> {
   lesson: Lesson;
+  lessonDetails: Object;
   key: number;
   state: State;
   diagrams: Object;
-  // setStateOnNextRefresh: boolean;
   componentUpdateCallback: ?() => void;
   centerLessonFlag: boolean;
   lessonNavigator: ?LessonNavigator;
   showNavigator: boolean;
+  lessonDescription: null | LessonDescription;
 
   constructor(props: Props) {
     super(props);
@@ -43,21 +61,17 @@ export default class LessonComponent extends React.Component
       listOfSections: [],
     };
     this.lesson = props.lesson;
+    this.lessonDetails = props.lessonDetails;
+    console.log(props)
+    this.lessonDescription = getLessonDescription(props.lessonDetails.details.uid);
     this.key = 0;
     this.lesson.refresh = this.refreshText.bind(this);
-    // this.lesson.refreshPageOnly = this.refreshPageOnly.bind(this);
-    // this.lesson.blank = this.blank.bind(this);
-    // this.setStateOnNextRefresh = false;
     this.componentUpdateCallback = null;
     this.centerLessonFlag = false;
     this.showNavigator = false;
   }
 
   componentDidUpdate() {
-    // if (this.setStateOnNextRefresh) {
-    //   this.lesson.setState();
-    //   this.setStateOnNextRefresh = false;
-    // }
     if (this.componentUpdateCallback) {
       const callback = this.componentUpdateCallback;
       this.componentUpdateCallback = null;
@@ -341,19 +355,158 @@ export default class LessonComponent extends React.Component
     </div>;
   }
 
+  addQuizSummary() {
+    const output = [];
+    const { lessonDescription } = this;
+    if (lessonDescription != null) {
+      const paths = lessonDescription.paths.slice();
+      const quiz = paths.indexOf('quiz');
+      const summary = paths.indexOf('summary');
+      const currentLocation = getCurrentLesson();
+      if (summary !== -1) {
+        this.key += 1;
+        let selected = '';
+        if (currentLocation.toLowerCase() === 'summary') {
+          selected = 'selected';
+        }
+        output.push(
+          <LessonTilePath
+            id='id_lesson__tile_path_summary'
+            link={`${lessonDescription.link}/summary`}
+            key={this.key}
+            label='Summary'
+            state={selected}
+            right={true}/>,
+        );
+      }
+      if (quiz !== -1) {
+        this.key += 1;
+        let selected = '';
+        if (currentLocation.toLowerCase() === 'quiz') {
+          selected = 'selected';
+        }
+        output.push(
+          <LessonTilePath
+            id='id_lesson__tile_path_quiz'
+            link={`${lessonDescription.link}/quiz`}
+            key={this.key}
+            label='Quiz'
+            state={selected}
+            />,
+        );
+      }
+    }
+    return output;
+  }
+
+  addLessonPaths() {
+    const output = [];
+    const { lessonDescription } = this;
+    const currentLocation = getCurrentLesson();
+    if (lessonDescription != null) {
+      let paths = lessonDescription.paths.slice();
+      paths = paths.sort((a, b) => {
+        const upperA = a.toUpperCase();
+        const upperB = b.toUpperCase();
+        if (upperA < upperB) {
+          return -1;
+        }
+        if (upperA > upperB) {
+          return 1;
+        }
+        return 0;
+      });
+      paths.forEach((path) => {
+        if (path.toLowerCase() !== 'quiz' && path.toLowerCase() !== 'summary') {
+          this.key += 1;
+          let selected = '';
+          if (path === currentLocation) {
+            selected = 'selected';
+          }
+          output.push(
+            <LessonTilePath
+              id={`id_lesson__tile_path_${path}`}
+              link={`${lessonDescription.link}/${path}`}
+              key={this.key}
+              label={path}
+              state={selected}
+              />,
+          );
+        }
+      });
+    }
+    return output;
+  }
+
+  // addLessonPaths() {
+  //   const output = [];
+  //   const { lessonDescription } = this;
+  //   if (lessonDescription != null) {
+  //     let remainingPaths = lessonDescription.paths.slice();
+  //     const quiz = remainingPaths.indexOf('quiz');
+  //     const summary = remainingPaths.indexOf('summary');
+  //     if (summary !== -1) {
+  //       this.key += 1;
+  //       output.push(
+  //         <LessonTilePath
+  //           id='id_lesson__tile_path_summary'
+  //           link={`${lessonDescription.link}/summary`}
+  //           key={this.key}
+  //           label='Summary'
+  //           state=''
+  //           right={true}/>,
+  //       );
+  //       remainingPaths = remainingPaths.splice(summary, 1);
+  //     }
+  //     if (quiz !== -1) {
+  //       this.key += 1;
+  //       output.push(
+  //         <LessonTilePath
+  //           id='id_lesson__tile_path_quiz'
+  //           link={`${lessonDescription.link}/quiz`}
+  //           key={this.key}
+  //           label='Quiz'
+  //           state=''
+  //           right={true}/>,
+  //       );
+  //       remainingPaths = remainingPaths.splice(quiz, 1);
+  //     }
+  //     remainingPaths = remainingPaths.sort((a, b) => {
+  //       const upperA = a.toUpperCase();
+  //       const upperB = b.toUpperCase();
+  //       if (upperA < upperB) {
+  //         return -1;
+  //       }
+  //       if (upperA > upperB) {
+  //         return 1;
+  //       }
+  //       return 0;
+  //     });
+  //     remainingPaths.forEach((path) => {
+  //       this.key += 1;
+  //       output.push(
+  //         <LessonTilePath
+  //           id={`id_lesson__tile_path_${path}`}
+  //           link={`${lessonDescription.link}/${path}`}
+  //           key={this.key}
+  //           label={path}
+  //           state='selected'
+  //           right={false}/>,
+  //       );
+  //     });
+  //   }
+  // }
+
   render() {
     // console.log(this.lesson.content.iconLink)
     return <div>
       <div className='lesson__title'>
         <div className="lesson__path_container">
           <div className="lesson__path_left_tiles">
-            <LessonTilePath id='id_lesson__tile_path_1' link='/' key='200' label='1' state='selected' />
-            <LessonTilePath id='id_lesson__tile_path_2' link='/' key='201' label='2' state='' />
-            <LessonTilePath id='id_lesson__tile_path_2' link='/' key='202' label='3' state='' />
+            {this.addLessonPaths()}
           </div>
           <div className="lesson__path_right_tiles">
-            <LessonTilePath id='id_lesson__tile_path_summary' link='/' key='203' label='Summary' state='' right={true}/>
-            <LessonTilePath id='id_lesson__tile_path_quiz' link='/' key='204' label='Quiz' state='' right={true}/>
+            {this.addQuizSummary()}
           </div>
         </div>
         <LessonTile

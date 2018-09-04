@@ -8,7 +8,7 @@ type Props = {
   id: ?string,
   // left?: ?string,
   // top?: ?string,
-  right: ?boolean,
+  // right: ?boolean,
   link: ?string,
   state: '' | 'disabled' | 'selected',
 };
@@ -38,10 +38,10 @@ export default class LessonTilePath extends React.Component
     if (props.state === 'selected') {
       classText = `${classText} navigator__lesson_tile_selected`;
     }
-    const right = props.right || false;
-    if (right) {
-      classText = `${classText} lesson__path_tile_right`;
-    }
+    // const right = props.right || false;
+    // if (right) {
+    //   classText = `${classText} lesson__path_tile_right`;
+    // }
     // return <a
     //     href={link}
     //     id={id}
