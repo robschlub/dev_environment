@@ -4,7 +4,7 @@ import {
   Transform, Rect, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection,
+  DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
 import {
   click, applyModifiers, setOnClicks,
@@ -21,6 +21,14 @@ export default class QuizCollection extends DiagramElementCollection {
   diagram: Diagram;
   _line1: MoveableLineType;
   _line2: MoveableLineType;
+  _messages: {
+    _correct: DiagramElementPrimative;
+    _correctNextSteps: DiagramElementPrimative;
+    _incorrect: DiagramElementPrimative;
+    _incorrectTouching: DiagramElementPrimative;
+    _incorrectCloseRotation: DiagramElementPrimative;
+    _incorrectNextSteps: DiagramElementPrimative;
+  } & DiagramElementCollection;
 
   // eslint-disable-next-line class-methods-use-this
   normalizeAngle(element: DiagramElementCollection, wrap: number = 2 * Math.PI) {
@@ -58,7 +66,7 @@ export default class QuizCollection extends DiagramElementCollection {
   }
 
   makeCorrectAnswerMessage() {
-    let text = `
+    const text = `
       <p>
         That's correct!.
       </p>
@@ -115,8 +123,8 @@ export default class QuizCollection extends DiagramElementCollection {
         |Next| problem.
       </p>
       `;
-    const modifiers = { Next: click(this.newProblem, [this], this.layout.colors.line) }
-    text = applyModifiers(text, modifiers)
+    const modifiers = { Next: click(this.newProblem, [this], this.layout.colors.line) };
+    text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(
       text, 'id__related_angles_quiz__correct_next_steps',
       'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
@@ -134,8 +142,8 @@ export default class QuizCollection extends DiagramElementCollection {
     const modifiers = {
       answer: click(this.rotateLine2ToParallel, [this], this.layout.colors.line),
       next: click(this.newProblem, [this], this.layout.colors.line),
-    }
-    text = applyModifiers(text, modifiers)
+    };
+    text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(
       text, 'id__related_angles_quiz__incorrect_next_steps',
       'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
@@ -212,7 +220,7 @@ export default class QuizCollection extends DiagramElementCollection {
     };
   }
 
-  isParallel(distanceMultiplier = 1.1, rotationThreshold: number = Math.PI / 200) {
+  isParallel(distanceMultiplier: number = 1.1, rotationThreshold: number = Math.PI / 200) {
     return checkForParallel(
       this._line1, this._line2, false,
       this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,

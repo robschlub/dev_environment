@@ -9,6 +9,7 @@ import Content from './shapesAndCorners';
 import Lesson from '../../../../js/Lesson/Lesson';
 import './style.scss';
 
+
 const lessonSinglePage = () => {
   const lessonId: HTMLElement | null = document.getElementById('single-page-lesson');
   const lesson = new Lesson(new Content('shapes'));
@@ -20,7 +21,7 @@ const lessonSinglePage = () => {
         <div className="container-fluid">
           <div className="row">
             <div className="col">
-              <LessonComponent lesson={lesson}/>
+              <LessonComponent lesson={lesson} lessonDetails={{}}/>
             </div>
           </div>
         </div>

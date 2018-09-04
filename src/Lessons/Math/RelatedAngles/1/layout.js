@@ -28,7 +28,7 @@ export default function lessonLayout() {
     position: new Point(0, 1.8),
   };
   const len = 1.7;
-  
+
   layout.position = new Point(1.5, 0);
   layout.parallelLine = {
     length: {

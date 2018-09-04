@@ -257,13 +257,13 @@ function applyModifiers(text: string, modifiers: Object) {
 }
 
 function setOnClicks(modifiers: Object) {
-    Object.keys(modifiers).forEach((key) => {
-      const mod = modifiers[key];
-      if ('actionMethod' in mod) {
-        onClickId(mod.id(key), mod.actionMethod, mod.bind);
-      }
-    });
-  }
+  Object.keys(modifiers).forEach((key) => {
+    const mod = modifiers[key];
+    if ('actionMethod' in mod) {
+      onClickId(mod.id(key), mod.actionMethod, mod.bind);
+    }
+  });
+}
 // class PositionObject {
 //   element: DiagramElementPrimative | DiagramElementCollection;
 //   position: Transform | null;

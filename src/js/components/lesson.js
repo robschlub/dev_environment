@@ -62,7 +62,6 @@ export default class LessonComponent extends React.Component
     };
     this.lesson = props.lesson;
     this.lessonDetails = props.lessonDetails;
-    console.log(props)
     this.lessonDescription = getLessonDescription(props.lessonDetails.details.uid);
     this.key = 0;
     this.lesson.refresh = this.refreshText.bind(this);

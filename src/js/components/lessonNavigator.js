@@ -17,7 +17,7 @@ type Props = {
 export default class LessonNavigator extends React.Component
                                     <Props> {
   selected: string;
-  lessonIndex: Array<Array<LessonDescription> | LessonDescription>;
+  lessonIndex: Array<Array<LessonDescription>>;
   key: number;
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
