@@ -142,10 +142,10 @@ export default class QuizParallelCollection extends DiagramElementCollection {
   makeCorrectNextStepsMessage() {
     let text = `
       <p>
-        |Next| problem.
+        |Try_new| problem.
       </p>
       `;
-    const modifiers = { Next: click(this.newProblem, [this], this.layout.colors.line) };
+    const modifiers = { Try_new: click(this.newProblem, [this], this.layout.colors.line) };
     text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(
       text, 'id__related_angles_quiz__correct_next_steps',
@@ -158,12 +158,12 @@ export default class QuizParallelCollection extends DiagramElementCollection {
   makeIncorrectNextStepsMessage() {
     let text = `
       <p>
-        |Try_again|, |show_answer| or |next_problem|.
+        |Try_again|, |show_answer| or |try_new_problem|.
       </p>
       `;
     const modifiers = {
       show_answer: click(this.rotateLine2ToParallel, [this], this.layout.colors.line),
-      next_problem: click(this.newProblem, [this], this.layout.colors.line),
+      try_new_problem: click(this.newProblem, [this], this.layout.colors.line),
       Try_again: click(this.tryAgain, [this], this.layout.colors.line),
     };
     text = applyModifiers(text, modifiers);
@@ -175,7 +175,7 @@ export default class QuizParallelCollection extends DiagramElementCollection {
     return html;
   }
 
-  makeMessages() {
+  makeQuizAnswerMessages() {
     const collection = this.diagram.shapes.collection(new Transform().translate(0, 0));
     collection.add('correct', this.makeCorrectAnswerMessage());
     collection.add('incorrect', this.makeIncorrectAnswerMessage());
@@ -202,7 +202,7 @@ export default class QuizParallelCollection extends DiagramElementCollection {
     this.add('line2', this.makeLine());
     this._line2.setPosition(this.layout.line2.quiz.position.x, 0);
     this.hasTouchableElements = true;
-    this.add('messages', this.makeMessages());
+    this.add('messages', this.makeQuizAnswerMessages());
     this._messages.hideAll();
     this.add('check', this.makeCheckButton());
   }

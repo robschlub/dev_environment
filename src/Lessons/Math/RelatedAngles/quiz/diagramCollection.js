@@ -15,7 +15,7 @@ import LessonDiagram from './diagram';
 // import ThreeLinesCollection from './diagramCollectionThreeLines';
 import RelatedAnglesCommonCollection from '../common/diagramCollection';
 // eslint-disable-next-line import/no-cycle
-import QuizParallelCollection from './diagramCollectionQuiz';
+import QuizParallelCollection from './diagramCollectionParallelQuiz';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
 export default class QuizCollection extends RelatedAnglesCommonCollection {
