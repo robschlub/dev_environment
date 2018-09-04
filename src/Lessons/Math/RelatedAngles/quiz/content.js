@@ -39,10 +39,10 @@ class Content extends LessonContent {
       setEnterState: () => {
         quiz.setPosition(0, 0);
         quiz._line2.setColor(colors.quizLine);
+        quiz.hasTouchableElements = true;
       },
       showOnly: [
         quiz,
-        quiz._check,
       ],
       show: [
         quiz._line1,
@@ -60,6 +60,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag.setScenario(quiz._line1, layout.quiz.first.line1);
         diag.setScenario(quiz._line2, layout.quiz.first.line2);
+        quiz._check.show();
         quiz._check.vertices.element.onclick = quiz.checkAnswer.bind(quiz);
       },
     });

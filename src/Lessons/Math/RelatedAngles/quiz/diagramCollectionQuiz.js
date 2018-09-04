@@ -22,6 +22,7 @@ export default class QuizParallelCollection extends DiagramElementCollection {
   diagram: LessonDiagram;
   _line1: MoveableLineType;
   _line2: MoveableLineType;
+  _check: DiagramElementPrimative;
   _messages: {
     _correct: DiagramElementPrimative;
     _correctNextSteps: DiagramElementPrimative;
@@ -79,9 +80,29 @@ export default class QuizParallelCollection extends DiagramElementCollection {
     return html;
   }
 
+  tryAgain() {
+    this._messages.hideAll();
+    this._check.show();
+    this.hasTouchableElements = true;
+    this.diagram.animateNextFrame();
+  }
+
   newProblem() {
-    this.diagram.elements.moveToScenario(this._line1, this.randomizeParallelLine(), 1);
-    this.diagram.elements.moveToScenario(this._line2, this.randomizeParallelLine(), 1);
+    const time = 1;
+    this.diagram.elements.moveToScenario(
+      this._line1,
+      this.randomizeParallelLine(),
+      time,
+    );
+    this.diagram.elements.moveToScenario(
+      this._line2,
+      this.randomizeParallelLine(),
+      time,
+      () => { this._check.show(); },
+    );
+    this._messages.hideAll();
+    // this._check.show();
+    this.hasTouchableElements = true;
     this.diagram.animateNextFrame();
   }
 
@@ -137,12 +158,13 @@ export default class QuizParallelCollection extends DiagramElementCollection {
   makeIncorrectNextStepsMessage() {
     let text = `
       <p>
-        Try again, show |answer| or |next| problem. Hint: Line rotation is easier compared when lines are closer together.
+        |Try_again|, |show_answer| or |next_problem|.
       </p>
       `;
     const modifiers = {
-      answer: click(this.rotateLine2ToParallel, [this], this.layout.colors.line),
-      next: click(this.newProblem, [this], this.layout.colors.line),
+      show_answer: click(this.rotateLine2ToParallel, [this], this.layout.colors.line),
+      next_problem: click(this.newProblem, [this], this.layout.colors.line),
+      Try_again: click(this.tryAgain, [this], this.layout.colors.line),
     };
     text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(
@@ -176,6 +198,7 @@ export default class QuizParallelCollection extends DiagramElementCollection {
     this.add('line1', this.makeLine());
     this._line1.setPosition(this.layout.line1.quiz.position.x, 0);
     this._line1.hasTouchableElements = false;
+    this._line1.isTouchable = false;
     this.add('line2', this.makeLine());
     this._line2.setPosition(this.layout.line2.quiz.position.x, 0);
     this.hasTouchableElements = true;
@@ -229,6 +252,8 @@ export default class QuizParallelCollection extends DiagramElementCollection {
   }
 
   checkAnswer() {
+    this._check.hide();
+    this.hasTouchableElements = false;
     if (this.isParallel()) {
       // this.diagram.elements.moveToScenario(this._line1, this.randomizeParallelLine(), 1);
       // this.diagram.elements.moveToScenario(this._line2, this.randomizeParallelLine(), 1);
@@ -238,7 +263,7 @@ export default class QuizParallelCollection extends DiagramElementCollection {
       this._messages._correctNextSteps.show();
     } else {
       this._messages.hideAll();
-      const isTouching = !this.isParallel(1.1, 1);
+      const isTouching = !this.isParallel(1.1, Math.PI * 2);
       const isCloseRotation = this.isParallel(1.1, Math.PI / 20);
       if (isTouching) {
         this._messages._incorrectTouching.show();
