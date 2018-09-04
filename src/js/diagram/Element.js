@@ -1877,6 +1877,12 @@ class DiagramElementPrimative extends DiagramElement {
     }
   }
 
+  resize() {
+    if (this.vertices instanceof HTMLObject) {
+      this.vertices.transformHtml(this.lastDrawTransform.matrix());
+    }
+  }
+
   draw(parentTransform: Transform = new Transform(), now: number = 0) {
     if (this.isShown) {
       this.setNextTransform(now);
@@ -2206,6 +2212,13 @@ class DiagramElementCollection extends DiagramElement {
       }
     }
     return false;
+  }
+
+  resize() {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.resize();
+    }
   }
 
   setFirstTransform(parentTransform: Transform = new Transform()) {

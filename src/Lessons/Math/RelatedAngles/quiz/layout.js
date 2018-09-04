@@ -35,7 +35,7 @@ export default function lessonLayout() {
     },
     answer: new Point(0, -1.7),
     nextSteps: new Point(0, -1.9),
-    check: new Point(2.3, 1.3),
+    check: new Point(0, -1.7),
   };
   return layout;
 }

@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click,
+  LessonContent, click, centerH,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -27,11 +27,11 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Parallel Lines',
-      setContent: `
-        <p style="margin-top:10%">
+      setContent: centerH(`
+        <p style="margin-top:3%">
           Move the |red_line| to be parallel with the |blue_line|.
         </p>
-      `,
+      `),
       modifiers: {
         red_line: click(quiz.pulseLine2, [quiz], colors.quizLine),
         blue_line: click(quiz.pulseLine1, [quiz], colors.line),
