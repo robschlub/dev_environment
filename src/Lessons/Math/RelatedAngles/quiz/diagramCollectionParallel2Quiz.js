@@ -13,13 +13,16 @@ import {
   makeMoveableLine, checkElementsForParallel, checkValuesForParallel,
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
-import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
+import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
+import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
 type TypeSelectableLine = {
   selected: boolean;
 } & MoveableLineType;
 
-export default class QuizParallel2Collection extends CommonQuizDiagramCollection {
+
+export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagramCollection) {
+// export default class QuizParallel2Collection extends CommonQuizDiagramCollection {
   diagram: LessonDiagram;
   _line1: TypeSelectableLine;
   _line2: TypeSelectableLine;

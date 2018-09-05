@@ -23,7 +23,9 @@ export type MoveableLineType = {
 } & DiagramElementCollection;
 
 export type TypeLabeledLine = {
-  _label: DiagramElementCollection;
+  _label: {
+    _label: DiagramElementPrimative;
+  } & DiagramElementCollection;
   eqn: Equation;
   updateLabel: (number) => void;
 } & MoveableLineType;
@@ -34,6 +36,12 @@ export type TypeAngle = {
   eqn: Equation;
   updateAngle: (number, number, ?number) => void;
 } & DiagramElementCollection;
+
+export type TypeIndexAngle = {
+  lineIndex: number;
+  angleIndex: number;
+} & TypeAngle;
+
 
 export function makeMoveableLine(
   diagram: Diagram,

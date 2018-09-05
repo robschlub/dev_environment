@@ -1315,6 +1315,19 @@ export class Equation {
     );
   }
 
+  reArrangeCurrentForm() {
+    const form = this.currentForm;
+    if (form == null) {
+      return;
+    }
+    form.arrange(
+      this.formAlignment.scale,
+      this.formAlignment.hAlign,
+      this.formAlignment.vAlign,
+      this.formAlignment.fixTo,
+    );
+  }
+
   scaleForm(name: string, scale: number, formType: string = 'base') {
     // console.log(name, this.form, formType, this.form[name][formType])
     if (name in this.form) {

@@ -128,6 +128,10 @@ class TextObject extends DrawingObject {
     }
   }
 
+  setText(text: string, index: number = 0) {
+    this.text[index].text = text;
+  }
+
   _dup() {
     const c = new TextObject(this.drawContext2D, this.text);
     duplicateFromTo(this, c);

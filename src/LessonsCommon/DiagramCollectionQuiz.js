@@ -7,16 +7,16 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../js/diagram/Element';
 
-import CommonDiagramCollection from './DiagramCollection';
+// import CommonDiagramCollection from './DiagramCollection';
 
 export type TypeMessages = {
   _correct: DiagramElementPrimative;
-  // _correctNextSteps: DiagramElementPrimative;
   _incorrect: DiagramElementPrimative;
-  // _incorrectNextSteps: DiagramElementPrimative;
 } & DiagramElementCollection;
 
-export default class CommonQuizDiagramCollection extends CommonDiagramCollection {
+
+// $FlowFixMe
+const CommonQuizMixin = superclass => class extends superclass {
   _check: DiagramElementPrimative;
   _newProblem: DiagramElementPrimative;
   +_messages: TypeMessages;
@@ -192,4 +192,69 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     );
     return html;
   }
-}
+
+  // eslint-disable-next-line class-methods-use-this
+  makeEntryBox(
+    id: string,
+    placeholder: string = '',
+    numDigits: number = 10,
+  ) {
+    const container = document.createElement('div');
+    container.classList.add('lesson__quiz_input_container');
+    // const form = document.createElement('form');
+    // container.appendChild(form);
+    const input = document.createElement('input');
+    input.classList.add('lesson__quiz_input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('placeholder', placeholder);
+    input.onkeypress = (event) => {
+      if (event.keyCode === 13) {
+        this.checkAnswer();
+      }
+    };
+    input.oninput = () => {
+      const str = input.value.slice();
+      let validStr = '';
+      for (let i = 0; i < str.length; i += 1) {
+        if (validStr.length >= numDigits) {
+          i = str.length;
+        } else {
+          const char = str.charAt(i);
+          if (char >= '0' && char <= '9') {
+            validStr = `${validStr}${char}`;
+          }
+        }
+      }
+      input.value = `${validStr}`;
+    };
+    container.appendChild(input);
+    const html = this.diagram.shapes.htmlElement(
+      container,
+      `id__quiz_input__${id}`,
+      '',
+      new Point(0, 0),
+      'middle',
+      'center',
+    );
+    html.getValue = () => input.value;
+    html.setValue = (value: number | string) => {
+      if (typeof value === 'number') {
+        input.value = value.toString();
+      } else {
+        input.value = value;
+      }
+    };
+    html.disable = () => {
+      input.disabled = true;
+      input.classList.add('lesson__quiz_input_disabled');
+    };
+    html.enable = () => {
+      input.disabled = false;
+      input.classList.remove('lesson__quiz_input_disabled');
+    };
+
+    return html;
+  }
+};
+
+export default CommonQuizMixin;

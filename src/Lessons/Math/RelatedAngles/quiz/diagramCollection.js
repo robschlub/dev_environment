@@ -10,6 +10,8 @@ import RelatedAnglesCommonCollection from '../common/diagramCollection';
 import QuizParallel1Collection from './diagramCollectionParallel1Quiz';
 // eslint-disable-next-line import/no-cycle
 import QuizParallel2Collection from './diagramCollectionParallel2Quiz';
+// eslint-disable-next-line import/no-cycle
+import QuizAngle1Collection from './diagramCollectionAngles1Quiz';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
 export default class QuizCollection extends RelatedAnglesCommonCollection {
@@ -27,6 +29,7 @@ export default class QuizCollection extends RelatedAnglesCommonCollection {
     this.units = 'deg';
     this.add('quizP1', new QuizParallel1Collection(diagram, this.layout));
     this.add('quizP2', new QuizParallel2Collection(diagram, this.layout));
+    this.add('quizA1', new QuizAngle1Collection(diagram, this.layout));
     this.add('unitsSelector', this.makeUnitsSelector());
   }
 }
