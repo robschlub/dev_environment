@@ -79,7 +79,6 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         quizP2.setPosition(0, 0);
-        // quizP2._line2.setColor(colors.quizLine);
         quizP2.hasTouchableElements = true;
         quizP2.randomizeFuturePositions();
         quizP2.resetLines();
@@ -96,19 +95,10 @@ class Content extends LessonContent {
         quizP2._line6,
       ],
       transitionFromAny: (done) => {
-        // let time = Math.max(
-        //   diag.getTimeToMoveToScenario(quizP2._line1, layout.quiz.first.line1),
-        //   diag.getTimeToMoveToScenario(quizP2._line2, layout.quiz.first.line2),
-        // );
-        // time = time > 2 ? 2 : time;
-        // diag.moveToScenario(quizP2._line1, layout.quiz.first.line1, time);
-        // diag.moveToScenario(quizP2._line2, layout.quiz.first.line2, time, done);
         quizP2.moveToFuturePositions(2, done);
       },
       setSteadyState: () => {
         quizP2.setFuturePositions();
-        // diag.setScenario(quizP2._line1, layout.quiz.first.line1);
-        // diag.setScenario(quizP2._line2, layout.quiz.first.line2);
         quizP2._check.show();
         quizP2._check.vertices.element.onclick = quizP2.checkAnswer.bind(quizP2);
       },

@@ -152,7 +152,6 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
 
     const isTouching = !this.isParallel(1.1, Math.PI * 2);
     if (isTouching) {
-      // this._messages._touching.show();
       return 'touching';
     }
 

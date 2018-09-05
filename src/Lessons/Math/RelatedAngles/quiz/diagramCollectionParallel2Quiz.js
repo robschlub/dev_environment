@@ -14,7 +14,6 @@ import {
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
 import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
-// import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 
 type TypeSelectableLine = {
   selected: boolean;
@@ -28,12 +27,8 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
   _line4: TypeSelectableLine;
   _line5: TypeSelectableLine;
   _line6: TypeSelectableLine;
-  parallelLines: Array<number>;
+  parallelLines: Array<1 | 2 | 3 | 4 | 5 | 6>;
   futurePositions: Object;
-  // _messages: {
-  //   _touching: DiagramElementPrimative;
-  //   _rotation: DiagramElementPrimative;
-  // } & TypeMessages;
 
   // eslint-disable-next-line class-methods-use-this
   normalizeAngle(element: DiagramElementCollection, wrap: number = 2 * Math.PI) {
@@ -47,7 +42,7 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
   }
 
   makeLine() {
-    const line: TypeSelectableLine = makeMoveableLine(
+    const line: Object = makeMoveableLine(
       this.diagram, this.layout.parallelLine,
       this.layout.colors.line,
     );
@@ -67,7 +62,7 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
         line.setColor(this.layout.colors.line);
       }
     };
-    return line;
+    return (line: TypeSelectableLine);
   }
 
   constructor(
@@ -96,21 +91,6 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
 
     this.hasTouchableElements = true;
   }
-
-  // showAnswer() {
-  //   this._line1.stop();
-  //   this._line2.stop();
-  //   makeAnglesClose(this._line1, this._line2);
-
-  //   const r1 = this._line1.transform.r();
-  //   const r2 = this._line2.transform.r();
-  //   const velocity = this._line1.transform.constant(0);
-  //   velocity.updateRotation(2 * Math.PI / 6);
-  //   if (r1 != null && r2 != null) {
-  //     this._line2.animateRotationTo(r1, 0, velocity);
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 
   // eslint-disable-next-line class-methods-use-this
   randomizeParallelLine() {
@@ -179,7 +159,7 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
 
     const { rotation } = parallelLine2;
     parallelLine1.rotation = rotation;
-    parallelLine1.position = parallelLine2.position.add(0.01, 0.01)
+    parallelLine1.position = parallelLine2.position.add(0.01, 0.01);
     const isParallel = checkValuesForParallel(
       parallelLine1.rotation,
       parallelLine1.position,
@@ -198,22 +178,6 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
       const newY = oldY < 0 ? oldY + yMag : oldY - yMag;
       parallelLine1.position = new Point(newX, newY);
     }
-    // Object.keys(this.futurePositions).forEach((fullKey) => {
-    //   const key = fullKey.slice(-1);
-    //   if (key !== p1 && key !== p2) {
-    //     const line = this.futurePositions[`line${key}`];
-    //     console.log(line, `line${key}`)
-    //     // const rot = line.rotation;
-    //     if (Math.abs(minAngleDiff(line.rotation, rotation)) < Math.PI / 10) {
-    //       console.log('initial', line.rotation, rotation)
-    //       line.rotation += Math.PI / 3;
-    //       if (line.rotation > Math.PI * 2) {
-    //         line.rotation -= Math.PI * 2;
-    //       }
-    //       console.log('final', line.rotation, rotation)
-    //     }
-    //   }
-    // });
 
     this.parallelLines = [p1, p2];
   }
@@ -256,7 +220,9 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
   showAnswer() {
     super.showAnswer();
     this.resetLines();
+    // $FlowFixMe
     this[`_line${this.parallelLines[0]}`].onClick();
+    // $FlowFixMe
     this[`_line${this.parallelLines[1]}`].onClick();
     this.diagram.animateNextFrame();
   }
@@ -271,34 +237,5 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
       return 'correct';
     }
     return 'incorrect';
-    // let answer = 'correct';
-    // const notParallel = [1, 2, 3, 4, 5].filter(n => this.parallelLines.indexOf(n) === -1);
-
-    // if (
-    //   !this[`_line${this.parallelLines[0]}`].selected
-    //   || !this[`_line${this.parallelLines[1]}`].selected) {
-    //   return 'incorrect';
-    // }
-
-    // const incorrectlySelected = notParallel.filter(n => this.parallelLines.indexOf(n) > -1);
-    // if (incorrectlySelected.length > 0) {
-    //   return 'incorrect';
-    // }
-    // return 'correct';
   }
-  // findAnswer() {
-  // }
-  // findAnswer() {
-  //   this._check.hide();
-  //   this.hasTouchableElements = false;
-  //   if (this.isParallel()) {
-  //     this._messages.hideAll();
-  //     this._messages._correct.show();
-  //     this._messages._correctNextSteps.show();
-  //   } else {
-  //     this._messages.hideAll();
-  //     this._messages._incorrect.show();
-  //     this._messages._incorrectNextSteps.show();
-  //   }
-  // }
 }

@@ -24,8 +24,6 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   _check: DiagramElementPrimative;
   +_messages: TypeMessages;
 
-  
-
   tryAgain() {
     this._messages.hideAll();
     this._check.show();
@@ -98,7 +96,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     );
     return html;
   }
-  
+
   makeIncorrectAnswerMessage(
     groupId: string,
     id: string = 'incorrect',
