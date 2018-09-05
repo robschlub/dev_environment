@@ -42,12 +42,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
       diagram,
       layout,
       'a1',
-      {
-        selectTwoLines: {
-          answer: 'Wrong number of lines selected.',
-          details: 'Must select two and only two lines.',
-        },
-      },
+      {},
       transform,
     );
 
@@ -180,6 +175,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
   tryAgain() {
     super.tryAgain();
     this.diagram.animateNextFrame();
+    this._input.enable();
   }
 
   newProblem() {
@@ -191,15 +187,23 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
       this.showCheck();
     };
     this.moveToFuturePositions(1, done.bind(this));
+    this._input.setValue('');
+    this._input.enable();
     this.diagram.animateNextFrame();
   }
 
   showAnswer() {
     super.showAnswer();
+    this._input.setValue(this.angleToFind);
+    this._input.disable();
     this.diagram.animateNextFrame();
   }
 
   findAnswer() {
+    this._input.disable();
+    if (this._input.getValue() === this.angleToFind.toString()) {
+      return 'correct';
+    }
     return 'incorrect';
   }
 }

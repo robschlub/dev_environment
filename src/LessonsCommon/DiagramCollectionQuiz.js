@@ -408,6 +408,23 @@ const CommonQuizMixin = superclass => class extends superclass {
       'middle',
       'center',
     );
+    html.getValue = () => input.value;
+    html.setValue = (value: number | string) => {
+      if (typeof value === 'number') {
+        input.value = value.toString();
+      } else {
+        input.value = value;
+      }
+    };
+    html.disable = () => {
+      input.disabled = true;
+      input.classList.add('lesson__quiz_input_disabled');
+    };
+    html.enable = () => {
+      input.disabled = false;
+      input.classList.remove('lesson__quiz_input_disabled');
+    };
+
     return html;
   }
 };

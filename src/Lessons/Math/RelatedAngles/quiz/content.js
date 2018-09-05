@@ -134,6 +134,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         quizA1.setFuturePositions();
         quizA1.showAngles();
+        quizA1._input.enable();
         quizA1._check.show();
       },
     });
