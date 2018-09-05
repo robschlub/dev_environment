@@ -133,6 +133,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         quizA1.setFuturePositions();
+        quizA1.showAngles();
         quizA1._check.show();
       },
     });

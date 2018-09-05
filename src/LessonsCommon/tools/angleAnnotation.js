@@ -68,7 +68,9 @@ export default function makeAnnotatedAngle(
   };
 
   angle.setLabel = (newLabel: string) => {
-    angle._label._vertices.setText(newLabel);
+    if (angle._lable._base) {
+      angle._label._base.vertices.setText(newLabel);
+    }
   };
 
   angle.showForm = (form: string = 'base') => {

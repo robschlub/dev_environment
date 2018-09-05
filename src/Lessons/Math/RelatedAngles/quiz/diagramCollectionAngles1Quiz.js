@@ -118,14 +118,31 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
         rotation,
       },
     };
+  }
 
-    const angleAValue = roundNum(intersectingLineRotation, 0);
-    const angleBValue = 180 - angleA;
+  hideAngles() {
+    this._lines._angleA1.hide();
+    this._lines._angleA2.hide();
+    this._lines._angleB1.hide();
+    this._lines._angleB2.hide();
+    this._lines._angleC1.hide();
+    this._lines._angleC2.hide();
+    this._lines._angleD1.hide();
+    this._lines._angleD2.hide();
+  }
+
+  showAngles() {
+    const r = this._lines._line3.transform.r();
+    if (r == null) {
+      return;
+    }
+    const angleAValue = roundNum(r * 180 / Math.PI, 0);
+    const angleBValue = 180 - angleAValue;
     const angleValues = {
-      A: angleA,
-      B: angleB,
-      C: angleA,
-      D: angleB,
+      A: angleAValue,
+      B: angleBValue,
+      C: angleAValue,
+      D: angleBValue,
     };
 
     const angles = ['A1', 'B1', 'C1', 'D1', 'A2', 'B2', 'C2', 'D2'];
@@ -134,6 +151,27 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
 
     const knownAngleValue = angleValues[knownAngle.charAt(0)];
     const unknownAngleValue = angleValues[unknownAngle.charAt(0)];
+
+    this.angleToFind = unknownAngleValue;
+
+    // $FlowFixMe
+    const knownAngleElement = this._lines[`_angle${knownAngle}`];
+    knownAngleElement._label._a.vertices.setText(`${knownAngleValue}º`);
+    knownAngleElement.eqn.showForm('a');
+    knownAngleElement._arc.show();
+    knownAngleElement.show();
+    knownAngleElement.setColor(this.layout.colors.angleA);
+    knownAngleElement.eqn.reArrangeCurrentForm();
+
+    // $FlowFixMe
+    const unknownAngleElement = this._lines[`_angle${unknownAngle}`];
+    unknownAngleElement._label._a.vertices.setText('?º');
+    unknownAngleElement.eqn.showForm('a');
+    unknownAngleElement._arc.show();
+    unknownAngleElement.show();
+    unknownAngleElement.setColor(this.layout.colors.angleB);
+    unknownAngleElement.eqn.reArrangeCurrentForm();
+    this._lines.updateIntersectingLineAngle();
   }
 
   setFuturePositions() {
@@ -161,8 +199,13 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
 
   newProblem() {
     super.newProblem();
+    this.hideAngles();
     this.randomizeLines();
-    this.moveToFuturePositions(1, this.showCheck.bind(this));
+    const done = () => {
+      this.showAngles();
+      this.showCheck();
+    }
+    this.moveToFuturePositions(1, done.bind(this));
     this.diagram.animateNextFrame();
   }
 
