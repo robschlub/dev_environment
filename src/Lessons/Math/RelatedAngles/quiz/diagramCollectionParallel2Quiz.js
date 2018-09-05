@@ -75,7 +75,10 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
       layout,
       'p2',
       {
-        selectTwoLines: 'Must select two lines',
+        selectTwoLines: {
+          answer: 'Wrong number of lines selected.',
+          details: 'Must select two and only two lines.',
+        },
       },
       transform,
     );

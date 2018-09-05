@@ -61,8 +61,14 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
       layout,
       'p1',
       {
-        rotation: 'Incorrect! (Close, but rotation is off)',
-        touching: 'Not Quite - parallel lines cannot touch',
+        rotation: {
+          answer: 'Almost!',
+          details: 'Hint: Rotation is slightly off',
+        },
+        touching: {
+          answer: 'Not Quite',
+          details: 'Hint: Parallel lines cannot touch and so there fore is this too long by far and far and far',
+        },
       },
       transform,
     );
