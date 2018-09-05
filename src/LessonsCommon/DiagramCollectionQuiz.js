@@ -120,12 +120,14 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     if (incorrectBox) {
       const tryAgain = document.createElement('div');
       tryAgain.classList.add('lesson__quiz__button');
+      tryAgain.classList.add('lesson__quiz__button_fixed_size');
       tryAgain.innerHTML = 'Try Again';
       tryAgain.onclick = this.tryAgain.bind(this);
       nextSteps.appendChild(tryAgain);
 
       const showAnswer = document.createElement('div');
       showAnswer.classList.add('lesson__quiz__button');
+      showAnswer.classList.add('lesson__quiz__button_fixed_size');
       showAnswer.innerHTML = 'Show Answer';
       showAnswer.onclick = this.showAnswer.bind(this);
       nextSteps.appendChild(showAnswer);
@@ -133,6 +135,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
 
     const newProblem = document.createElement('div');
     newProblem.classList.add('lesson__quiz__button');
+    newProblem.classList.add('lesson__quiz__button_fixed_size');
     newProblem.innerHTML = 'Try New Problem';
     newProblem.onclick = this.newProblem.bind(this);
     nextSteps.appendChild(newProblem);

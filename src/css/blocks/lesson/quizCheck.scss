@@ -37,7 +37,7 @@
   padding-bottom: 10px;
   border-radius: 10px;
   text-align: center;
-  max-width: 0.8vw;
+  max-width: 80vw;
 }
 
 .lesson__quiz__answer_incorrect {
@@ -61,14 +61,19 @@
 }
 
 .lesson__quiz__next_steps {
+  margin-top: 15px;
   // font-size: calc(var(--lesson__diagram-font-size) * 0.6);
 }
 
 .lesson__quiz__button {
   border-radius: 5px;
   background-color: color('diagram', 'primary');
+  text-align: center;
   cursor: pointer;
-  margin: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  // margin-top: 10px;
+  margin-bottom: 10px;
   padding: 5px;
   padding-left: 10px;
   padding-right: 10px;
@@ -76,9 +81,18 @@
   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
 }
 
+.lesson__quiz__button_fixed_size {
+  width: 150px;
+}
+
 @media screen and (min-width: $tablet) {
   .lesson__quiz__button {
     display: inline-block;
+    margin: 10px;
+  }
+
+  .lesson__quiz__button_fixed_size {
+    width: auto;
   }
 }
 
