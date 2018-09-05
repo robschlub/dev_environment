@@ -757,7 +757,6 @@ class DiagramElement {
         phase.startTime = now;
         return;
       }
-
       // If we have got here, that means the animation has already started,
       // so calculate the time delta between now and the startTime
       const deltaTime = now - phase.startTime;
@@ -1163,6 +1162,7 @@ class DiagramElement {
     // } else {
 
     // }
+
     const phase = new AnimationPhase(
       transform, timeOrVelocity, rotDirection,
       easeFunction, this.animate.transform.translation.style,

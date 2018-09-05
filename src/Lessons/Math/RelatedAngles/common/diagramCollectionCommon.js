@@ -35,6 +35,12 @@ export type TypeAngle = {
   updateAngle: (number, number, ?number) => void;
 } & DiagramElementCollection;
 
+export type TypeIndexAngle = {
+  lineIndex: number;
+  angleIndex: number;
+} & TypeAngle;
+
+
 export function makeMoveableLine(
   diagram: Diagram,
   layout: {

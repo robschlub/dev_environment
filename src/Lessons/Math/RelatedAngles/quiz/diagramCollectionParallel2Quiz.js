@@ -13,7 +13,7 @@ import {
   makeMoveableLine, checkElementsForParallel, checkValuesForParallel,
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
-import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
+import { CommonQuizDiagramCollection } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 
 type TypeSelectableLine = {
   selected: boolean;

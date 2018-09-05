@@ -9,13 +9,15 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import { makeLabeledLine, makeLabeledAngle } from './diagramCollectionCommon';
-import type { TypeLabeledLine, TypeAngle, TypeSupplementaryAngle } from './diagramCollectionCommon';
+import type {
+  TypeLabeledLine, TypeAngle, TypeIndexAngle, TypeSupplementaryAngle,
+} from './diagramCollectionCommon';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 
-type TypeIndexAngle = {
-  lineIndex: number;
-  angleIndex: number;
-} & TypeAngle;
+// type TypeIndexAngle = {
+//   lineIndex: number;
+//   angleIndex: number;
+// } & TypeAngle;
 
 export default class ThreeLinesCollection extends DiagramElementCollection {
   layout: Object;

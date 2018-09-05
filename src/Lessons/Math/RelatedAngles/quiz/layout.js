@@ -61,6 +61,10 @@ export default function lessonLayout() {
       },
     },
   };
+  layout.quizA1 = {
+    minSeparation: 0.3,
+    maxSeparation: 1,
+  };
   layout.parallelLine.boundary = new Rect(-2.5, -1.7, 5, 3);
   return layout;
 }

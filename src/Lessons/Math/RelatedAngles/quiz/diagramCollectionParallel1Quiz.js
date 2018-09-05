@@ -14,7 +14,7 @@ import {
   checkElementsForParallel, checkValuesForParallel,
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
-import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
+import { CommonQuizDiagramCollection } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 
 export default class QuizParallel1Collection extends CommonQuizDiagramCollection {

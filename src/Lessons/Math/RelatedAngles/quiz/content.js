@@ -25,6 +25,7 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     const quizP1 = diag._quizP1;
     const quizP2 = diag._quizP2;
+    const quizA1 = diag._quizA1;
 
     this.addSection({
       title: 'Parallel Lines 1',
@@ -62,7 +63,6 @@ class Content extends LessonContent {
         diag.setScenario(quizP1._line1, layout.quiz.first.line1);
         diag.setScenario(quizP1._line2, layout.quiz.first.line2);
         quizP1._check.show();
-        // quizP1._check.vertices.element.onclick = quizP1.checkAnswer.bind(quizP1);
       },
     });
 
@@ -100,7 +100,40 @@ class Content extends LessonContent {
       setSteadyState: () => {
         quizP2.setFuturePositions();
         quizP2._check.show();
-        // quizP2._check.vertices.element.onclick = quizP2.checkAnswer.bind(quizP2);
+      },
+    });
+
+    this.addSection({
+      title: 'Related Angles 1',
+      setContent: centerH(`
+        <p style="margin-top:3%">
+          Calculate the unknown angle.
+        </p>
+      `),
+      modifiers: {
+        red_line: click(quizA1.pulseLine2, [quizP1], colors.quizLine),
+        blue_line: click(quizA1.pulseLine1, [quizP1], colors.line),
+      },
+      setEnterState: () => {
+        quizA1.setPosition(0, 0);
+        quizA1.hasTouchableElements = true;
+        quizA1.randomizeLines();
+      },
+      showOnly: [
+        quizA1,
+        quizA1._lines,
+      ],
+      show: [
+        quizA1._lines._line1,
+        quizA1._lines._line2,
+        quizA1._lines._line3,
+      ],
+      transitionFromAny: (done) => {
+        quizA1.moveToFuturePositions(2, done);
+      },
+      setSteadyState: () => {
+        quizA1.setFuturePositions();
+        quizA1._check.show();
       },
     });
   }
