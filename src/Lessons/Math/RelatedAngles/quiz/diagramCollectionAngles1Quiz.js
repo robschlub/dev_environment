@@ -47,7 +47,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
     );
 
     this.add('lines', new ThreeLinesCollection(diagram, this.layout));
-    this._lines.setPosition(0, 0);
+    this._lines.setPosition(this.layout.quizA1.position);
     this._lines._line1._label._label.vertices.setText('');
     this._lines._line2._label._label.vertices.setText('');
     this._lines._line3._label._label.vertices.setText('');
@@ -92,7 +92,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
         rotation: intersectingLineRotation,
       },
       threeLines: {
-        position: new Point(0, 0),
+        position: this.layout.quizA1.position,
         rotation,
       },
     };
