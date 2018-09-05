@@ -10,7 +10,8 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import {
-  makeMoveableLine, makeAnglesClose, checkForParallel,
+  makeMoveableLine, makeAnglesClose,
+  checkElementsForParallel, checkValuesForParallel,
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
 import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
@@ -63,11 +64,11 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
       {
         rotation: {
           answer: 'Almost!',
-          details: 'Hint: Rotation is slightly off',
+          details: 'Hint: Rotation is slightly off. Bringing lines closer together makes it easier to compare rotation.',
         },
         touching: {
           answer: 'Not Quite',
-          details: 'Hint: Parallel lines cannot touch and so there fore is this too long by far and far and far',
+          details: 'Hint: Parallel lines cannot touch.',
         },
       },
       transform,
@@ -92,10 +93,32 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
 
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
+    const t1 = this._line1.transform.t();
+    const t2 = this._line2.transform.t();
+
+    const dist = this.layout.parallelLine.width * 1.1;
+    const rot = Math.PI / 200;
+    if (r1 != null && t1 != null && t2 != null) {
+      if (!checkValuesForParallel(r1, t1, r1, t2, dist, rot)) {
+        const magX = Math.abs(0.4 * Math.cos(r1 + Math.PI / 2));
+        const magY = Math.abs(0.4 * Math.sin(r1 + Math.PI / 2));
+        t2.x = t2.x < 0 ? t2.x + magX : t2.x - magX;
+        t2.y = t2.y < 0 ? t2.y + magY : t2.y - magY;
+      }
+    }
+
     const velocity = this._line1.transform.constant(0);
     velocity.updateRotation(2 * Math.PI / 6);
-    if (r1 != null && r2 != null) {
-      this._line2.animateRotationTo(r1, 0, velocity);
+    if (r1 != null && r2 != null && t2 != null) {
+      // this._line2.animateRotationTo(r1, 0, velocity);
+      this.diagram.elements.moveToScenario(
+        this._line2,
+        {
+          position: t2,
+          rotation: r1,
+        },
+        1,
+      );
     }
     this.diagram.animateNextFrame();
   }
@@ -129,7 +152,7 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
   }
 
   isParallel(distanceMultiplier: number = 1.1, rotationThreshold: number = Math.PI / 200) {
-    return checkForParallel(
+    return checkElementsForParallel(
       this._line1, this._line2, false,
       this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,
     );

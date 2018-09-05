@@ -10,7 +10,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import {
-  makeMoveableLine, checkForParallel, checkValuesForParallel,
+  makeMoveableLine, checkElementsForParallel, checkValuesForParallel,
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
 import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
@@ -118,7 +118,7 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     distanceMultiplier: number = 1.1,
     rotationThreshold: number = Math.PI / 200,
   ) {
-    return checkForParallel(
+    return checkElementsForParallel(
       line1, line2, false,
       this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,
     );

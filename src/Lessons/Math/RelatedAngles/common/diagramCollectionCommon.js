@@ -310,7 +310,7 @@ export function checkValuesForParallel(
   return isParallel;
 }
 
-export function checkForParallel(
+export function checkElementsForParallel(
   element1: DiagramElementPrimative | DiagramElementCollection,
   element2: DiagramElementPrimative | DiagramElementCollection,
   makeRotationEqual: boolean = false,
@@ -320,7 +320,7 @@ export function checkForParallel(
   // if (!this._line1 || !this._line2) {
   //   return;
   // }
-  const angleSameThreshold = rotThreshold;
+  // const angleSameThreshold = rotThreshold;
   // const distanceThreshold = this.layout.parallelLine.width * 1.1;
   const r1 = element1.transform.r();
   const r2 = element2.transform.r();
@@ -328,27 +328,31 @@ export function checkForParallel(
   const t2 = element2.transform.t();
   if (r1 != null && r2 != null && t1 != null && t2 != null) {
     let isParallel = true;
-    const lineRotationDifference = Math.min(
-      Math.abs(minAngleDiff(r1, r2)),
-      Math.abs(minAngleDiff(r1, r2 - Math.PI)),
+    isParallel = checkValuesForParallel(
+      r1, t1, r2, t2,
+      distanceThreshold, rotThreshold,
     );
-    if (lineRotationDifference > angleSameThreshold) {
-      isParallel = false;
-    }
+    // const lineRotationDifference = Math.min(
+    //   Math.abs(minAngleDiff(r1, r2)),
+    //   Math.abs(minAngleDiff(r1, r2 - Math.PI)),
+    // );
+    // if (lineRotationDifference > angleSameThreshold) {
+    //   isParallel = false;
+    // }
+
+    // if (isParallel) {
+    //   const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
+    //   const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
+    //   if (line2DistanceToLineCenter1 < distanceThreshold) {
+    //     isParallel = false;
+    //   }
+    // }
 
     if (isParallel && makeRotationEqual) {
       if (!element2.state.isBeingMoved) {
         element1.transform.updateRotation(r2);
       } else if (!element1.state.isBeingMoved) {
         element2.transform.updateRotation(r1);
-      }
-    }
-
-    if (isParallel) {
-      const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
-      const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
-      if (line2DistanceToLineCenter1 < distanceThreshold) {
-        isParallel = false;
       }
     }
     return isParallel;
