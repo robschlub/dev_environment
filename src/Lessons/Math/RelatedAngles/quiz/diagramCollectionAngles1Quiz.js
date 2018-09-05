@@ -5,6 +5,9 @@ import {
   Transform, Rect, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
+  rand, removeRandElement, roundNum,
+} from '../../../../js/diagram/tools/mathtools';
+import {
   DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 
@@ -37,6 +40,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
   // _angleC2: TypeIndexAngle;
   // _angleD2: TypeIndexAngle;
   futurePositions: Object;
+  angleToFind: number;
 
   // eslint-disable-next-line class-methods-use-this
   normalizeAngle(element: DiagramElementCollection, wrap: number = 2 * Math.PI) {
@@ -87,10 +91,15 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
   }
 
   randomizeLines() {
-    const separation = Math.random() * (this.layout.quizA1.maxSeparation
-      - this.layout.quizA1.minSeparation) + this.layout.quizA1.minSeparation;
-    const intersectingLineRotation = Math.random() * Math.PI * 0.45 + Math.PI / 3.7;
-    const rotation = Math.random() * 2 * Math.PI;
+    const separation = rand(
+      this.layout.quizA1.minSeparation,
+      this.layout.quizA1.maxSeparation,
+    );
+    const intersectingLineRotation = rand(
+      Math.PI / 3.7,
+      Math.PI - Math.PI / 3.7,
+    );
+    const rotation = rand(2 * Math.PI);
     this.futurePositions = {
       line1: {
         position: new Point(0, separation / 2),
@@ -109,6 +118,22 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
         rotation,
       },
     };
+
+    const angleAValue = roundNum(intersectingLineRotation, 0);
+    const angleBValue = 180 - angleA;
+    const angleValues = {
+      A: angleA,
+      B: angleB,
+      C: angleA,
+      D: angleB,
+    };
+
+    const angles = ['A1', 'B1', 'C1', 'D1', 'A2', 'B2', 'C2', 'D2'];
+    const knownAngle = removeRandElement(angles);
+    const unknownAngle = removeRandElement(angles);
+
+    const knownAngleValue = angleValues[knownAngle.charAt(0)];
+    const unknownAngleValue = angleValues[unknownAngle.charAt(0)];
   }
 
   setFuturePositions() {

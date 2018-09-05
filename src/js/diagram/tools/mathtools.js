@@ -233,6 +233,31 @@ function range(start: number, stop: number, step: number) {
   return out;
 }
 
+function randInt(minOrMax: number, max: ?number = null) {
+  if (max != null) {
+    const min = minOrMax;
+    return Math.floor(Math.random() * Math.floor((max - min)) + Math.floor(min));
+  }
+  return Math.floor(Math.random() * Math.floor(minOrMax));
+}
+
+function rand(minOrMax: number, max: ?number = null) {
+  if (max != null) {
+    const min = minOrMax;
+    return Math.random() * (max - min) + min;
+  }
+  return Math.random() * minOrMax;
+}
+
+function randElement(inputArray: Array<any>) {
+  const index = rand(inputArray.length);
+  return randElement[index];
+}
+
+function removeRandElement<T>(inputArray: Array<T>): T {
+  const index = rand(inputArray.length);
+  return inputArray.splice(index, 1)[0];
+}
 
 export {
   round,
@@ -246,5 +271,9 @@ export {
   clipMag,
   clipValue,
   range,
+  randInt,
+  rand,
+  randElement,
+  removeRandElement,
 };
 
