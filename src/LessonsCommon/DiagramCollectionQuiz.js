@@ -50,6 +50,35 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     this.diagram.animateNextFrame();
   }
 
+  showCheck() {
+    this._check.show();
+  }
+
+  checkAnswer() {
+    this._check.hide();
+    this.hasTouchableElements = false;
+    const answer = this.findAnswer();
+    if (answer === 'correct') {
+      this._messages.hideAll();
+      this._messages._correct.show();
+      this._messages._correctNextSteps.show();
+    } else if (answer === 'incorrect') {
+      this._messages.hideAll();
+      this._messages._incorrect.show();
+      this._messages._incorrectNextSteps.show();
+    } else {
+      this._messages.hideAll();
+      this._messages[`_${answer}`].show();
+      this._messages._incorrectNextSteps.show();
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  findAnswer() {
+    return 'incorrect';
+  }
+
   // eslint-disable-next-line class-methods-use-this
   showAnswer() {
   }
@@ -82,24 +111,13 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     );
   }
 
-  // makeIncorrectNotQuiteMessage() {
-  //   return this.diagram.shapes.htmlText(
-  //     `
-  //     <p>
-  //       Not quite (remember parallel lines cannot touch).
-  //     </p>
-  //     `, 'id__quiz__not_quite',
-  //     'lesson__quiz_incorrect', this.layout.quiz.answer, 'middle', 'center',
-  //   );
-  // }
-
   makeCorrectNextStepsMessage(id: string) {
     let text = `
       <p>
         |Try_new| problem.
       </p>
       `;
-    const modifiers = { Try_new: click(this.newProblem, [this], this.layout.colors.line) };
+    const modifiers = { Try_new: click(this.newProblem, [this], this.layout.colors.line, id) };
     text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(
       text, `id__quiz__correct_next_steps_${id}`,
@@ -116,9 +134,9 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
       </p>
       `;
     const modifiers = {
-      show_answer: click(this.showAnswer, [this], this.layout.colors.line),
-      try_new_problem: click(this.newProblem, [this], this.layout.colors.line),
-      Try_again: click(this.tryAgain, [this], this.layout.colors.line),
+      show_answer: click(this.showAnswer, [this], this.layout.colors.line, id),
+      try_new_problem: click(this.newProblem, [this], this.layout.colors.line, id),
+      Try_again: click(this.tryAgain, [this], this.layout.colors.line, id),
     };
     text = applyModifiers(text, modifiers);
     const html = this.diagram.shapes.htmlText(

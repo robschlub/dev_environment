@@ -70,7 +70,7 @@ class Content extends LessonContent {
       title: 'Parallel Lines 2',
       setContent: centerH(`
         <p style="margin-top:3%">
-          Move the |red_line| to be parallel with the |blue_line|.
+          Select two parallel lines.
         </p>
       `),
       modifiers: {
@@ -79,8 +79,10 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         quizP2.setPosition(0, 0);
-        quizP2._line2.setColor(colors.quizLine);
+        // quizP2._line2.setColor(colors.quizLine);
         quizP2.hasTouchableElements = true;
+        quizP2.randomizeFuturePositions();
+        quizP2.resetLineColors();
       },
       showOnly: [
         quizP2,
@@ -88,21 +90,27 @@ class Content extends LessonContent {
       show: [
         quizP2._line1,
         quizP2._line2,
+        quizP2._line3,
+        quizP2._line4,
+        quizP2._line5,
+        quizP2._line6,
       ],
       transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(quizP2._line1, layout.quiz.first.line1),
-          diag.getTimeToMoveToScenario(quizP2._line2, layout.quiz.first.line2),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(quizP2._line1, layout.quiz.first.line1, time);
-        diag.moveToScenario(quizP2._line2, layout.quiz.first.line2, time, done);
+        // let time = Math.max(
+        //   diag.getTimeToMoveToScenario(quizP2._line1, layout.quiz.first.line1),
+        //   diag.getTimeToMoveToScenario(quizP2._line2, layout.quiz.first.line2),
+        // );
+        // time = time > 2 ? 2 : time;
+        // diag.moveToScenario(quizP2._line1, layout.quiz.first.line1, time);
+        // diag.moveToScenario(quizP2._line2, layout.quiz.first.line2, time, done);
+        quizP2.moveToFuturePositions(2, done);
       },
       setSteadyState: () => {
-        diag.setScenario(quizP2._line1, layout.quiz.first.line1);
-        diag.setScenario(quizP2._line2, layout.quiz.first.line2);
+        quizP2.setFuturePositions();
+        // diag.setScenario(quizP2._line1, layout.quiz.first.line1);
+        // diag.setScenario(quizP2._line2, layout.quiz.first.line2);
         quizP2._check.show();
-        quizP2._check.vertices.element.onclick = quizP1.checkAnswer.bind(quizP2);
+        quizP2._check.vertices.element.onclick = quizP2.checkAnswer.bind(quizP2);
       },
     });
   }

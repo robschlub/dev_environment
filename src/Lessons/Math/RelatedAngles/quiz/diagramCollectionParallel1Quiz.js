@@ -139,25 +139,22 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
     this.diagram.animateNextFrame();
   }
 
-  checkAnswer() {
-    this._check.hide();
-    this.hasTouchableElements = false;
+  findAnswer() {
     if (this.isParallel()) {
-      this._messages.hideAll();
-      this._messages._correct.show();
-      this._messages._correctNextSteps.show();
-    } else {
-      this._messages.hideAll();
-      const isTouching = !this.isParallel(1.1, Math.PI * 2);
-      const isCloseRotation = this.isParallel(1.1, Math.PI / 20);
-      if (isTouching) {
-        this._messages._touching.show();
-      } else if (isCloseRotation) {
-        this._messages._rotation.show();
-      } else {
-        this._messages._incorrect.show();
-      }
-      this._messages._incorrectNextSteps.show();
+      return 'correct';
     }
+
+    const isTouching = !this.isParallel(1.1, Math.PI * 2);
+    if (isTouching) {
+      // this._messages._touching.show();
+      return 'touching';
+    }
+
+    const isCloseRotation = this.isParallel(1.1, Math.PI / 20);
+    if (isCloseRotation) {
+      return 'rotation';
+    }
+
+    return 'incorrect';
   }
 }

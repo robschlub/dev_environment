@@ -140,6 +140,7 @@ function click(
   actionMethod: Function,
   bind: Array<mixed>,
   classesOrColor: string | Array<number> | null = null,
+  id: string = '',
 ) {
   let classStr = 'action_word';
   if (typeof classesOrColor === 'string') {
@@ -149,7 +150,7 @@ function click(
   if (Array.isArray(classesOrColor)) {
     color = classesOrColor;
   }
-  const idToUse = (text: string) => `lesson__id_${text}`;
+  const idToUse = (text: string) => `lesson__id_${text}${id}`;
   return {
     replacementText: (text: string) => toHTML(text, idToUse(text), classStr, color),
     id: idToUse,
