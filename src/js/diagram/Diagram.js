@@ -708,7 +708,9 @@ class Diagram {
     this.beingTouchedElements = this.elements.getTouched(glPoint);
 
     if (this.moveTopElementOnly) {
-      this.beingTouchedElements[0].click();
+      if (this.beingTouchedElements.length > 0) {
+        this.beingTouchedElements[0].click();
+      }
     } else {
       this.beingTouchedElements.forEach(e => e.click());
     }

@@ -55,9 +55,9 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
       line.updateTransform(t);
       this.normalizeAngle(line);
     };
-    line._end1.movementAllowed = 'translation';
-    line._end2.movementAllowed = 'translation';
-    line._mid.movementAllowed = 'translation';
+    line._end1.move.type = 'translation';
+    line._end2.move.type = 'translation';
+    line._mid.move.type = 'translation';
     line.selected = false;
     line.onClick = () => {
       line.selected = !line.selected;
@@ -67,6 +67,7 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
         line.setColor(this.layout.colors.line);
       }
     };
+    console.log(line)
     return line;
   }
 

@@ -63,7 +63,7 @@ export function makeMoveableLine(
 
   line.updateTransform = (t: Transform) => {
     const r = t.r();
-    if (r != null && line._end1.movementAllowed === 'rotation') {
+    if (r != null) {
       const w = Math.abs(layout.length.full / 2 * Math.cos(r));
       const h = Math.abs(layout.length.full / 2 * Math.sin(r));
       line.move.maxTransform.updateTranslation(
