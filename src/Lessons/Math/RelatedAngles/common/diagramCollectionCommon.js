@@ -63,7 +63,7 @@ export function makeMoveableLine(
 
   line.updateTransform = (t: Transform) => {
     const r = t.r();
-    if (r != null && line._end1.movementAllowed === 'rotation') {
+    if (r != null) {
       const w = Math.abs(layout.length.full / 2 * Math.cos(r));
       const h = Math.abs(layout.length.full / 2 * Math.sin(r));
       line.move.maxTransform.updateTranslation(
@@ -283,7 +283,34 @@ export function makeAnglesClose(
   }
 }
 
-export function checkForParallel(
+export function checkValuesForParallel(
+  r1: number,
+  t1: Point,
+  r2: number,
+  t2: Point,
+  distanceThreshold: number,
+  rotThreshold: number = Math.PI / 300,
+) {
+  const angleSameThreshold = rotThreshold;
+  let isParallel = true;
+  const lineRotationDifference = Math.min(
+    Math.abs(minAngleDiff(r1, r2)),
+    Math.abs(minAngleDiff(r1, r2 - Math.PI)),
+  );
+  if (lineRotationDifference > angleSameThreshold) {
+    isParallel = false;
+  }
+  if (isParallel) {
+    const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
+    const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
+    if (line2DistanceToLineCenter1 < distanceThreshold) {
+      isParallel = false;
+    }
+  }
+  return isParallel;
+}
+
+export function checkElementsForParallel(
   element1: DiagramElementPrimative | DiagramElementCollection,
   element2: DiagramElementPrimative | DiagramElementCollection,
   makeRotationEqual: boolean = false,
@@ -293,7 +320,7 @@ export function checkForParallel(
   // if (!this._line1 || !this._line2) {
   //   return;
   // }
-  const angleSameThreshold = rotThreshold;
+  // const angleSameThreshold = rotThreshold;
   // const distanceThreshold = this.layout.parallelLine.width * 1.1;
   const r1 = element1.transform.r();
   const r2 = element2.transform.r();
@@ -301,27 +328,31 @@ export function checkForParallel(
   const t2 = element2.transform.t();
   if (r1 != null && r2 != null && t1 != null && t2 != null) {
     let isParallel = true;
-    const lineRotationDifference = Math.min(
-      Math.abs(minAngleDiff(r1, r2)),
-      Math.abs(minAngleDiff(r1, r2 - Math.PI)),
+    isParallel = checkValuesForParallel(
+      r1, t1, r2, t2,
+      distanceThreshold, rotThreshold,
     );
-    if (lineRotationDifference > angleSameThreshold) {
-      isParallel = false;
-    }
+    // const lineRotationDifference = Math.min(
+    //   Math.abs(minAngleDiff(r1, r2)),
+    //   Math.abs(minAngleDiff(r1, r2 - Math.PI)),
+    // );
+    // if (lineRotationDifference > angleSameThreshold) {
+    //   isParallel = false;
+    // }
+
+    // if (isParallel) {
+    //   const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
+    //   const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
+    //   if (line2DistanceToLineCenter1 < distanceThreshold) {
+    //     isParallel = false;
+    //   }
+    // }
 
     if (isParallel && makeRotationEqual) {
       if (!element2.state.isBeingMoved) {
         element1.transform.updateRotation(r2);
       } else if (!element1.state.isBeingMoved) {
         element2.transform.updateRotation(r1);
-      }
-    }
-
-    if (isParallel) {
-      const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
-      const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
-      if (line2DistanceToLineCenter1 < distanceThreshold) {
-        isParallel = false;
       }
     }
     return isParallel;

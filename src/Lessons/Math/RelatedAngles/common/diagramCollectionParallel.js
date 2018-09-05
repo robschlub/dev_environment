@@ -9,7 +9,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import {
-  makeMoveableLine, makeAnglesClose, checkForParallel,
+  makeMoveableLine, makeAnglesClose, checkElementsForParallel,
 } from './diagramCollectionCommon';
 import type { MoveableLineType } from './diagramCollectionCommon';
 
@@ -54,7 +54,7 @@ export default class ParallelCollection extends DiagramElementCollection {
     //     }
     //   }
 
-    const isParallel = checkForParallel(
+    const isParallel = checkElementsForParallel(
       this._line1, this._line2,
       makeRotationEqual, this.layout.parallelLine.width * 1.1,
     );
