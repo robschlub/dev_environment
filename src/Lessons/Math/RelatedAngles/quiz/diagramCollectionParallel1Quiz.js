@@ -79,6 +79,7 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
   }
 
   showAnswer() {
+    super.showAnswer();
     this._line1.stop();
     this._line2.stop();
     makeAnglesClose(this._line1, this._line2);

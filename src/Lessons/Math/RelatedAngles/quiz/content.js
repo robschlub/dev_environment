@@ -62,7 +62,7 @@ class Content extends LessonContent {
         diag.setScenario(quizP1._line1, layout.quiz.first.line1);
         diag.setScenario(quizP1._line2, layout.quiz.first.line2);
         quizP1._check.show();
-        quizP1._check.vertices.element.onclick = quizP1.checkAnswer.bind(quizP1);
+        // quizP1._check.vertices.element.onclick = quizP1.checkAnswer.bind(quizP1);
       },
     });
 
@@ -100,7 +100,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         quizP2.setFuturePositions();
         quizP2._check.show();
-        quizP2._check.vertices.element.onclick = quizP2.checkAnswer.bind(quizP2);
+        // quizP2._check.vertices.element.onclick = quizP2.checkAnswer.bind(quizP2);
       },
     });
   }

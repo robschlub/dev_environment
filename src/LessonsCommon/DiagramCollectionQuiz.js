@@ -1,7 +1,7 @@
 // @flow
 import Diagram from '../js/diagram/Diagram';
 import {
-  Transform,
+  Transform, Point,
 } from '../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -15,13 +15,14 @@ import CommonDiagramCollection from './DiagramCollection';
 
 export type TypeMessages = {
   _correct: DiagramElementPrimative;
-  _correctNextSteps: DiagramElementPrimative;
+  // _correctNextSteps: DiagramElementPrimative;
   _incorrect: DiagramElementPrimative;
-  _incorrectNextSteps: DiagramElementPrimative;
+  // _incorrectNextSteps: DiagramElementPrimative;
 } & DiagramElementCollection;
 
 export default class CommonQuizDiagramCollection extends CommonDiagramCollection {
   _check: DiagramElementPrimative;
+  _newProblem: DiagramElementPrimative;
   +_messages: TypeMessages;
 
   tryAgain() {
@@ -33,6 +34,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
 
   newProblem() {
     this._messages.hideAll();
+    this._newProblem.hide();
     this.hasTouchableElements = true;
     this.diagram.animateNextFrame();
   }
@@ -48,15 +50,12 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     if (answer === 'correct') {
       this._messages.hideAll();
       this._messages._correct.show();
-      this._messages._correctNextSteps.show();
     } else if (answer === 'incorrect') {
       this._messages.hideAll();
       this._messages._incorrect.show();
-      this._messages._incorrectNextSteps.show();
     } else {
       this._messages.hideAll();
       this._messages[`_${answer}`].show();
-      this._messages._incorrectNextSteps.show();
     }
     this.diagram.animateNextFrame();
   }
@@ -69,6 +68,9 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   // eslint-disable-next-line class-methods-use-this
   showAnswer() {
     this.hasTouchableElements = false;
+    this._messages.hideAll();
+    this._check.hide();
+    this._newProblem.show();
   }
 
   constructor(
@@ -80,19 +82,52 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   ) {
     super(diagram, layout, transform);
     this.add('check', this.makeCheckButton(id));
+    this.add('newProblem', this.makeNewProblemButton(id));
     this.add('messages', this.makeQuizAnswerMessages(id, messages));
     this._messages.hideAll();
   }
 
-  makeCorrectAnswerMessage(id: string) {
-    const text = `
-      <p style="margin-bottom=0">
-        Correct!
-      </p>
-      `;
-    const html = this.diagram.shapes.htmlText(
-      text, `id__quiz__correct_${id}`,
-      'lesson__quiz_correct', this.layout.quiz.answer, 'middle', 'center',
+  makeAnswerBox(id: string, resultText: string, incorrectBox: boolean = true) {
+    const container = document.createElement('div');
+    container.classList.add('lesson__quiz__answer_container');
+
+    const result = document.createElement('div');
+    result.classList.add('lesson__quiz__answer_text');
+    result.innerHTML = resultText;
+    container.appendChild(result);
+
+    const nextSteps = document.createElement('div');
+    nextSteps.classList.add('lesson__quiz__next_steps');
+    container.appendChild(nextSteps);
+
+    if (incorrectBox) {
+      const tryAgain = document.createElement('div');
+      tryAgain.classList.add('lesson__quiz__button');
+      tryAgain.innerHTML = 'Try Again';
+      tryAgain.onclick = this.tryAgain.bind(this);
+      nextSteps.appendChild(tryAgain);
+
+      const showAnswer = document.createElement('div');
+      showAnswer.classList.add('lesson__quiz__button');
+      showAnswer.innerHTML = 'Show Answer';
+      showAnswer.onclick = this.showAnswer.bind(this);
+      nextSteps.appendChild(showAnswer);
+    }
+
+    const newProblem = document.createElement('div');
+    newProblem.classList.add('lesson__quiz__button');
+    newProblem.innerHTML = 'Try New Problem';
+    newProblem.onclick = this.newProblem.bind(this);
+    nextSteps.appendChild(newProblem);
+
+
+    const html = this.diagram.shapes.htmlElement(
+      container,
+      `id__quiz_answer_box__${id}`,
+      '',
+      new Point(0, 0),
+      'middle',
+      'center',
     );
     return html;
   }
@@ -112,48 +147,50 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     );
   }
 
-  makeCorrectNextStepsMessage(id: string) {
-    let text = `
-      <p style="margin-bottom=0">
-        |Try_new| problem.
-      </p>
-      `;
-    const modifiers = { Try_new: click(this.newProblem, [this], this.layout.colors.line, id) };
-    text = applyModifiers(text, modifiers);
-    const html = this.diagram.shapes.htmlText(
-      text, `id__quiz__correct_next_steps_${id}`,
-      'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
-    );
-    setOnClicks(modifiers);
-    return html;
-  }
+  // makeCorrectNextStepsMessage(id: string) {
+  //   let text = `
+  //     <p style="margin-bottom=0">
+  //       |Try_new| problem.
+  //     </p>
+  //     `;
+  //   const modifiers = { Try_new: click(this.newProblem, [this], this.layout.colors.line, id) };
+  //   text = applyModifiers(text, modifiers);
+  //   const html = this.diagram.shapes.htmlText(
+  //     text, `id__quiz__correct_next_steps_${id}`,
+  //     'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
+  //   );
+  //   setOnClicks(modifiers);
+  //   return html;
+  // }
 
-  makeIncorrectNextStepsMessage(id: string) {
-    let text = `
-      <p style="margin-bottom=0">
-        |Try_again|, |show_answer| or |try_new_problem|.
-      </p>
-      `;
-    const modifiers = {
-      show_answer: click(this.showAnswer, [this], this.layout.colors.line, id),
-      try_new_problem: click(this.newProblem, [this], this.layout.colors.line, id),
-      Try_again: click(this.tryAgain, [this], this.layout.colors.line, id),
-    };
-    text = applyModifiers(text, modifiers);
-    const html = this.diagram.shapes.htmlText(
-      text, `id__quiz__incorrect_next_steps_${id}`,
-      'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
-    );
-    setOnClicks(modifiers);
-    return html;
-  }
+  // makeIncorrectNextStepsMessage(id: string) {
+  //   let text = `
+  //     <p style="margin-bottom=0">
+  //       |Try_again|, |show_answer| or |try_new_problem|.
+  //     </p>
+  //     `;
+  //   const modifiers = {
+  //     show_answer: click(this.showAnswer, [this], this.layout.colors.line, id),
+  //     try_new_problem: click(this.newProblem, [this], this.layout.colors.line, id),
+  //     Try_again: click(this.tryAgain, [this], this.layout.colors.line, id),
+  //   };
+  //   text = applyModifiers(text, modifiers);
+  //   const html = this.diagram.shapes.htmlText(
+  //     text, `id__quiz__incorrect_next_steps_${id}`,
+  //     'lesson__quiz_nextsteps', this.layout.quiz.nextSteps, 'middle', 'center',
+  //   );
+  //   setOnClicks(modifiers);
+  //   return html;
+  // }
 
   makeQuizAnswerMessages(id: string, incorrectMessages: Object = {}) {
     const collection = this.diagram.shapes.collection(new Transform().translate(0, 0));
-    collection.add('correct', this.makeCorrectAnswerMessage(id));
-    collection.add('incorrect', this.makeIncorrectAnswerMessage(id));
-    collection.add('incorrectNextSteps', this.makeIncorrectNextStepsMessage(id));
-    collection.add('correctNextSteps', this.makeCorrectNextStepsMessage(id));
+    // collection.add('correct', this.makeCorrectAnswerMessage(id));
+    // collection.add('incorrect', this.makeIncorrectAnswerMessage(id));
+    collection.add('correct', this.makeAnswerBox(`correct_${id}`, 'Correct!'));
+    collection.add('incorrect', this.makeAnswerBox(`incorrect_${id}`, 'Incorrect!'));
+    // collection.add('incorrectNextSteps', this.makeIncorrectNextStepsMessage(id));
+    // collection.add('correctNextSteps', this.makeCorrectNextStepsMessage(id));
     Object.keys(incorrectMessages).forEach((key) => {
       const message = incorrectMessages[key];
       collection.add(key, this.makeIncorrectAnswerMessage(id, key, message));
@@ -162,11 +199,34 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   }
 
   makeCheckButton(id: string) {
-    const check = this.diagram.shapes.htmlText(
-      'Check', `id__related_angles_check_${id}`,
-      'lesson__quiz_check', this.layout.quiz.check, 'middle', 'center',
+    const check = document.createElement('div');
+    check.classList.add('lesson__quiz__button');
+    check.innerHTML = 'Check';
+    check.onclick = this.checkAnswer.bind(this);
+    const html = this.diagram.shapes.htmlElement(
+      check,
+      `id__related_angles_check_${id}`,
+      '',
+      this.layout.quiz.check,
+      'middle',
+      'center',
     );
-    // check.onclick = this.checkAnswer.bind(this);
-    return check;
+    return html;
+  }
+
+  makeNewProblemButton(id: string) {
+    const newProblem = document.createElement('div');
+    newProblem.classList.add('lesson__quiz__button');
+    newProblem.innerHTML = 'New Problem';
+    newProblem.onclick = this.newProblem.bind(this);
+    const html = this.diagram.shapes.htmlElement(
+      newProblem,
+      `id__related_angles_new_problem_${id}`,
+      '',
+      this.layout.quiz.check,
+      'middle',
+      'center',
+    );
+    return html;
   }
 }
