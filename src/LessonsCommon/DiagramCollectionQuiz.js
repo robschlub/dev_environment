@@ -7,10 +7,6 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../js/diagram/Element';
 
-import {
-  click, applyModifiers, setOnClicks,
-} from '../js/Lesson/LessonContent';
-
 import CommonDiagramCollection from './DiagramCollection';
 
 export type TypeMessages = {

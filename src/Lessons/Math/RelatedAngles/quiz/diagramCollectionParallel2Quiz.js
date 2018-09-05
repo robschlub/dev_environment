@@ -239,6 +239,10 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     if (this.isParallel(selected[0], selected[1])) {
       return 'correct';
     }
+    if (this.parallelLines.indexOf(selected[0]) >= -1
+      && this.parallelLines.indexOf(selected[1]) >= -1) {
+      return 'correct';
+    }
     return 'incorrect';
   }
 }
