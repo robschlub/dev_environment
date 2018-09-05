@@ -63,6 +63,9 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
     this._lines._line3.isTouchable = false;
     this._lines._line3.hasTouchableElements = false;
     this._lines._line3.setColor(this.layout.colors.line);
+    const line3 = this._lines._line3;
+    line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 4);
+    line3.move.minTransform.updateRotation(Math.PI / 4);
 
     this.add('input', this.makeEntryBox('a1', '?', 3));
     this._input.setPosition(this.layout.quizA1.input);
@@ -74,8 +77,8 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
       this.layout.quizA1.maxSeparation,
     );
     const intersectingLineRotation = rand(
-      Math.PI / 3.7,
-      Math.PI - Math.PI / 3.7,
+      Math.PI / 4,
+      Math.PI - Math.PI / 4,
     );
     const rotation = rand(2 * Math.PI);
     this.futurePositions = {
