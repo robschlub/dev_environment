@@ -2,7 +2,7 @@
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect, Point,
+  Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   rand, removeRandElement, roundNum,
@@ -11,34 +11,14 @@ import {
   DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 
-// eslint-disable-next-line import/no-cycle
-// import {
-//   makeMoveableLine,
-// } from '../common/diagramCollectionCommon';
-// import type { MoveableLineType, TypeIndexAngle } from '../common/diagramCollectionCommon';
-import { CommonQuizMixin } from '../../../../LessonsCommon/DiagramCollectionQuiz';
+import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-// import makeAngleAnnotation from '../../../../LessonsCommon/tools/angleAnnotation';
 
-// type TypeSelectableLine = {
-//   selected: boolean;
-// } & MoveableLineType;
 
 export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramCollection) {
   diagram: LessonDiagram;
   _lines: ThreeLinesCollection;
-  // _line1: MoveableLineType;
-  // _line2: MoveableLineType;
-  // _line3: MoveableLineType;
-  // _angleA1: TypeIndexAngle;
-  // _angleB1: TypeIndexAngle;
-  // _angleC1: TypeIndexAngle;
-  // _angleD1: TypeIndexAngle;
-  // _angleA2: TypeIndexAngle;
-  // _angleB2: TypeIndexAngle;
-  // _angleC2: TypeIndexAngle;
-  // _angleD2: TypeIndexAngle;
   futurePositions: Object;
   angleToFind: number;
 
@@ -88,6 +68,9 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
     this._lines._line3.isTouchable = false;
     this._lines._line3.hasTouchableElements = false;
     this._lines._line3.setColor(this.layout.colors.line);
+
+    this.add('input', this.makeEntryBox('a1', '?', 3));
+    this._input.setPosition(this.layout.quizA1.input);
   }
 
   randomizeLines() {
@@ -160,7 +143,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
     knownAngleElement.eqn.showForm('a');
     knownAngleElement._arc.show();
     knownAngleElement.show();
-    knownAngleElement.setColor(this.layout.colors.angleA);
+    knownAngleElement.setColor(this.layout.colors.angleB);
     knownAngleElement.eqn.reArrangeCurrentForm();
 
     // $FlowFixMe
@@ -169,9 +152,11 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
     unknownAngleElement.eqn.showForm('a');
     unknownAngleElement._arc.show();
     unknownAngleElement.show();
-    unknownAngleElement.setColor(this.layout.colors.angleB);
+    unknownAngleElement.setColor(this.layout.colors.angleA);
     unknownAngleElement.eqn.reArrangeCurrentForm();
     this._lines.updateIntersectingLineAngle();
+
+    this._input.show();
   }
 
   setFuturePositions() {
@@ -204,7 +189,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
     const done = () => {
       this.showAngles();
       this.showCheck();
-    }
+    };
     this.moveToFuturePositions(1, done.bind(this));
     this.diagram.animateNextFrame();
   }

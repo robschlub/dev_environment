@@ -14,10 +14,12 @@ import {
   checkElementsForParallel, checkValuesForParallel,
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
-import { CommonQuizDiagramCollection } from '../../../../LessonsCommon/DiagramCollectionQuiz';
+import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
+import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class QuizParallel1Collection extends CommonQuizDiagramCollection {
+export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagramCollection) {
+// export default class QuizParallel1Collection extends CommonQuizDiagramCollection {
   diagram: LessonDiagram;
   _line1: MoveableLineType;
   _line2: MoveableLineType;

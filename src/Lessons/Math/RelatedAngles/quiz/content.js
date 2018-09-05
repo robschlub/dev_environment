@@ -107,7 +107,7 @@ class Content extends LessonContent {
       title: 'Related Angles 1',
       setContent: centerH(`
         <p style="margin-top:3%">
-          Calculate the unknown angle.
+          Enter the unknown angle in degrees.
         </p>
       `),
       modifiers: {
