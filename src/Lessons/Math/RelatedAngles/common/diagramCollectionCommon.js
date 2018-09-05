@@ -283,6 +283,33 @@ export function makeAnglesClose(
   }
 }
 
+export function checkValuesForParallel(
+  r1: number,
+  t1: Point,
+  r2: number,
+  t2: Point,
+  distanceThreshold: number,
+  rotThreshold: number = Math.PI / 300,
+) {
+  const angleSameThreshold = rotThreshold;
+  let isParallel = true;
+  const lineRotationDifference = Math.min(
+    Math.abs(minAngleDiff(r1, r2)),
+    Math.abs(minAngleDiff(r1, r2 - Math.PI)),
+  );
+  if (lineRotationDifference > angleSameThreshold) {
+    isParallel = false;
+  }
+  if (isParallel) {
+    const line2 = new Line(t2, t2.add(Math.cos(r2), Math.sin(r2)));
+    const line2DistanceToLineCenter1 = line2.distanceToPoint(t1);
+    if (line2DistanceToLineCenter1 < distanceThreshold) {
+      isParallel = false;
+    }
+  }
+  return isParallel;
+}
+
 export function checkForParallel(
   element1: DiagramElementPrimative | DiagramElementCollection,
   element2: DiagramElementPrimative | DiagramElementCollection,

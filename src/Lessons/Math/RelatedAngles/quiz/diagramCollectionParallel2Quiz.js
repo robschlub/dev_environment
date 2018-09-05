@@ -2,7 +2,7 @@
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect, Point, minAngleDiff,
+  Transform, Rect, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
@@ -10,7 +10,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import {
-  makeMoveableLine, makeAnglesClose, checkForParallel,
+  makeMoveableLine, checkForParallel, checkValuesForParallel,
 } from '../common/diagramCollectionCommon';
 import type { MoveableLineType } from '../common/diagramCollectionCommon';
 import CommonQuizDiagramCollection from '../../../../LessonsCommon/DiagramCollectionQuiz';
@@ -97,20 +97,20 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     this.hasTouchableElements = true;
   }
 
-  showAnswer() {
-    this._line1.stop();
-    this._line2.stop();
-    makeAnglesClose(this._line1, this._line2);
+  // showAnswer() {
+  //   this._line1.stop();
+  //   this._line2.stop();
+  //   makeAnglesClose(this._line1, this._line2);
 
-    const r1 = this._line1.transform.r();
-    const r2 = this._line2.transform.r();
-    const velocity = this._line1.transform.constant(0);
-    velocity.updateRotation(2 * Math.PI / 6);
-    if (r1 != null && r2 != null) {
-      this._line2.animateRotationTo(r1, 0, velocity);
-    }
-    this.diagram.animateNextFrame();
-  }
+  //   const r1 = this._line1.transform.r();
+  //   const r2 = this._line2.transform.r();
+  //   const velocity = this._line1.transform.constant(0);
+  //   velocity.updateRotation(2 * Math.PI / 6);
+  //   if (r1 != null && r2 != null) {
+  //     this._line2.animateRotationTo(r1, 0, velocity);
+  //   }
+  //   this.diagram.animateNextFrame();
+  // }
 
   // eslint-disable-next-line class-methods-use-this
   randomizeParallelLine() {
@@ -133,14 +133,15 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     line1: TypeSelectableLine,
     line2: TypeSelectableLine,
     distanceMultiplier: number = 1.1,
-    rotationThreshold: number = Math.PI / 200) {
+    rotationThreshold: number = Math.PI / 200,
+  ) {
     return checkForParallel(
       line1, line2, false,
       this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,
     );
   }
 
-  resetLineColors() {
+  resetLines() {
     this._line1.setColor(this.layout.colors.line);
     this._line1.selected = false;
     this._line2.setColor(this.layout.colors.line);
@@ -172,9 +173,31 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     possibilities.splice(r1, 1);
     const p2 = possibilities[r2];
     possibilities.splice(r2, 1);
-    const { rotation } = this.futurePositions[`line${p2}`];
-    this.futurePositions[`line${p1}`].rotation = rotation;
 
+    const parallelLine1 = this.futurePositions[`line${p1}`];
+    const parallelLine2 = this.futurePositions[`line${p2}`];
+
+    const { rotation } = parallelLine2;
+    parallelLine1.rotation = rotation;
+    parallelLine1.position = parallelLine2.position.add(0.01, 0.01)
+    const isParallel = checkValuesForParallel(
+      parallelLine1.rotation,
+      parallelLine1.position,
+      parallelLine2.rotation,
+      parallelLine2.position,
+      this.layout.parallelLine.width * 1.1,
+      Math.PI / 200,
+    );
+
+    if (!isParallel) {
+      const xMag = 0.5 * Math.cos(rotation + Math.PI / 2);
+      const yMag = 0.5 * Math.sin(rotation + Math.PI / 2);
+      const oldX = parallelLine1.position.x;
+      const newX = oldX < 0 ? oldX + xMag : oldX - xMag;
+      const oldY = parallelLine1.position.y;
+      const newY = oldY < 0 ? oldY + yMag : oldY - yMag;
+      parallelLine1.position = new Point(newX, newY);
+    }
     // Object.keys(this.futurePositions).forEach((fullKey) => {
     //   const key = fullKey.slice(-1);
     //   if (key !== p1 && key !== p2) {
@@ -219,14 +242,22 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
 
   tryAgain() {
     super.tryAgain();
-    this.resetLineColors();
+    this.resetLines();
   }
 
   newProblem() {
     super.newProblem();
-    this.resetLineColors();
+    this.resetLines();
     this.randomizeFuturePositions();
     this.moveToFuturePositions(1, this.showCheck.bind(this));
+    this.diagram.animateNextFrame();
+  }
+
+  showAnswer() {
+    super.showAnswer();
+    this.resetLines();
+    this[`_line${this.parallelLines[0]}`].onClick();
+    this[`_line${this.parallelLines[1]}`].onClick();
     this.diagram.animateNextFrame();
   }
 

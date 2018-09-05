@@ -24,18 +24,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   _check: DiagramElementPrimative;
   +_messages: TypeMessages;
 
-  makeCorrectAnswerMessage(id: string) {
-    const text = `
-      <p>
-        Correct!
-      </p>
-      `;
-    const html = this.diagram.shapes.htmlText(
-      text, `id__quiz__correct_${id}`,
-      'lesson__quiz_correct', this.layout.quiz.answer, 'middle', 'center',
-    );
-    return html;
-  }
+  
 
   tryAgain() {
     this._messages.hideAll();
@@ -81,6 +70,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
 
   // eslint-disable-next-line class-methods-use-this
   showAnswer() {
+    this.hasTouchableElements = false;
   }
 
   constructor(
@@ -96,6 +86,19 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
     this._messages.hideAll();
   }
 
+  makeCorrectAnswerMessage(id: string) {
+    const text = `
+      <p style="margin-bottom=0">
+        Correct!
+      </p>
+      `;
+    const html = this.diagram.shapes.htmlText(
+      text, `id__quiz__correct_${id}`,
+      'lesson__quiz_correct', this.layout.quiz.answer, 'middle', 'center',
+    );
+    return html;
+  }
+  
   makeIncorrectAnswerMessage(
     groupId: string,
     id: string = 'incorrect',
@@ -103,7 +106,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
   ) {
     return this.diagram.shapes.htmlText(
       `
-      <p>
+      <p style="margin-bottom=0">
         ${reason}
       </p>
       `, `id__quiz__${groupId}_${id}`,
@@ -113,7 +116,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
 
   makeCorrectNextStepsMessage(id: string) {
     let text = `
-      <p>
+      <p style="margin-bottom=0">
         |Try_new| problem.
       </p>
       `;
@@ -129,7 +132,7 @@ export default class CommonQuizDiagramCollection extends CommonDiagramCollection
 
   makeIncorrectNextStepsMessage(id: string) {
     let text = `
-      <p>
+      <p style="margin-bottom=0">
         |Try_again|, |show_answer| or |try_new_problem|.
       </p>
       `;

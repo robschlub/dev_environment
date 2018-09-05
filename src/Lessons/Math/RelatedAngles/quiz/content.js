@@ -82,7 +82,7 @@ class Content extends LessonContent {
         // quizP2._line2.setColor(colors.quizLine);
         quizP2.hasTouchableElements = true;
         quizP2.randomizeFuturePositions();
-        quizP2.resetLineColors();
+        quizP2.resetLines();
       },
       showOnly: [
         quizP2,
