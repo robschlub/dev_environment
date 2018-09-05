@@ -23,7 +23,9 @@ export type MoveableLineType = {
 } & DiagramElementCollection;
 
 export type TypeLabeledLine = {
-  _label: DiagramElementCollection;
+  _label: {
+    _label: DiagramElementPrimative;
+  } & DiagramElementCollection;
   eqn: Equation;
   updateLabel: (number) => void;
 } & MoveableLineType;

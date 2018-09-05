@@ -35,6 +35,10 @@ class DrawingObject {
     return this;
   }
 
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  setText(text: string) {
+  }
+
   /* eslint-disable class-methods-use-this, no-unused-vars */
   // glToDiagramTransformMatrix: Array<number>,
   getGLBoundaries(lastDrawTransformMatrix: Array<number>): Array<Array<Point>> {
