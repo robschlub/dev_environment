@@ -118,6 +118,7 @@ class Content extends LessonContent {
         quizA1.setPosition(0, 0);
         quizA1.hasTouchableElements = true;
         quizA1.randomizeLines();
+        quizA1._input.setValue('');
       },
       showOnly: [
         quizA1,

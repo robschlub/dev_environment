@@ -380,10 +380,17 @@ const CommonQuizMixin = superclass => class extends superclass {
   ) {
     const container = document.createElement('div');
     container.classList.add('lesson__quiz_input_container');
-
+    // const form = document.createElement('form');
+    // container.appendChild(form);
     const input = document.createElement('input');
     input.classList.add('lesson__quiz_input');
+    input.setAttribute('type', 'text');
     input.setAttribute('placeholder', placeholder);
+    input.onkeypress = (event) => {
+      if (event.keyCode === 13) {
+        this.checkAnswer();
+      }
+    };
     input.oninput = () => {
       const str = input.value.slice();
       let validStr = '';
