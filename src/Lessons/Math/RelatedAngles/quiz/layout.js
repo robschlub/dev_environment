@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../../../js/diagram/tools/g2';
+import { Point, Rect } from '../../../../js/diagram/tools/g2';
 // import getCssColors from '../../../../js/tools/getCssColors';
 import lessonLayoutCommon from '../common/layout';
 
@@ -61,5 +61,6 @@ export default function lessonLayout() {
       },
     },
   };
+  layout.parallelLine.boundary = new Rect(-2.5, -1.7, 5, 3);
   return layout;
 }

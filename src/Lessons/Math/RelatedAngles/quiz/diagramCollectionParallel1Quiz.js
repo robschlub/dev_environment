@@ -105,7 +105,13 @@ export default class QuizParallel1Collection extends CommonQuizDiagramCollection
 
   // eslint-disable-next-line class-methods-use-this
   randomizeParallelLine() {
-    const limit = new Rect(-1, -0.5, 2, 1);
+    const limit = new Rect(
+      this.layout.parallelLine.boundary.left + this.layout.parallelLine.length.full / 2,
+      -0.5,
+      this.layout.parallelLine.boundary.width - this.layout.parallelLine.length.full,
+      1,
+    );
+
     const x = Math.random() * limit.width + limit.left;
     const y = Math.random() * limit.height + limit.bottom;
     const r = Math.random() * Math.PI;

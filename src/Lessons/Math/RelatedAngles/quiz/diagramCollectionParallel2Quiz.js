@@ -2,10 +2,10 @@
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect, Point,
+  Transform, Rect, Point, minAngleDiff,
 } from '../../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
@@ -67,7 +67,6 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
         line.setColor(this.layout.colors.line);
       }
     };
-    console.log(line)
     return line;
   }
 
@@ -80,7 +79,9 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
       diagram,
       layout,
       'p2',
-      {},
+      {
+        selectTwoLines: 'Must select two lines',
+      },
       transform,
     );
     this.diagram = diagram;
@@ -111,19 +112,14 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     this.diagram.animateNextFrame();
   }
 
-  // pulseLine() {
-  //   this._line1.pulseWidth();
-  //   this.diagram.animateNextFrame();
-  // }
-
-  // pulseLine2() {
-  //   this._line2.pulseWidth();
-  //   this.diagram.animateNextFrame();
-  // }
-
   // eslint-disable-next-line class-methods-use-this
   randomizeParallelLine() {
-    const limit = new Rect(-1, -0.5, 2, 1);
+    const limit = new Rect(
+      this.layout.parallelLine.boundary.left + this.layout.parallelLine.length.full / 2,
+      -0.5,
+      this.layout.parallelLine.boundary.width - this.layout.parallelLine.length.full,
+      1,
+    );
     const x = Math.random() * limit.width + limit.left;
     const y = Math.random() * limit.height + limit.bottom;
     const r = Math.random() * Math.PI;
@@ -133,20 +129,30 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     };
   }
 
-  isParallel(distanceMultiplier: number = 1.1, rotationThreshold: number = Math.PI / 200) {
+  isParallel(
+    line1: TypeSelectableLine,
+    line2: TypeSelectableLine,
+    distanceMultiplier: number = 1.1,
+    rotationThreshold: number = Math.PI / 200) {
     return checkForParallel(
-      this._line1, this._line2, false,
+      line1, line2, false,
       this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,
     );
   }
 
   resetLineColors() {
     this._line1.setColor(this.layout.colors.line);
+    this._line1.selected = false;
     this._line2.setColor(this.layout.colors.line);
+    this._line2.selected = false;
     this._line3.setColor(this.layout.colors.line);
+    this._line3.selected = false;
     this._line4.setColor(this.layout.colors.line);
+    this._line4.selected = false;
     this._line5.setColor(this.layout.colors.line);
+    this._line5.selected = false;
     this._line6.setColor(this.layout.colors.line);
+    this._line6.selected = false;
   }
 
   randomizeFuturePositions() {
@@ -166,8 +172,26 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     possibilities.splice(r1, 1);
     const p2 = possibilities[r2];
     possibilities.splice(r2, 1);
+    const { rotation } = this.futurePositions[`line${p2}`];
+    this.futurePositions[`line${p1}`].rotation = rotation;
 
-    this.futurePositions[`line${p1}`].rotation = this.futurePositions[`line${p2}`].rotation;
+    // Object.keys(this.futurePositions).forEach((fullKey) => {
+    //   const key = fullKey.slice(-1);
+    //   if (key !== p1 && key !== p2) {
+    //     const line = this.futurePositions[`line${key}`];
+    //     console.log(line, `line${key}`)
+    //     // const rot = line.rotation;
+    //     if (Math.abs(minAngleDiff(line.rotation, rotation)) < Math.PI / 10) {
+    //       console.log('initial', line.rotation, rotation)
+    //       line.rotation += Math.PI / 3;
+    //       if (line.rotation > Math.PI * 2) {
+    //         line.rotation -= Math.PI * 2;
+    //       }
+    //       console.log('final', line.rotation, rotation)
+    //     }
+    //   }
+    // });
+
     this.parallelLines = [p1, p2];
   }
 
@@ -193,13 +217,44 @@ export default class QuizParallel2Collection extends CommonQuizDiagramCollection
     move(this._line6, fp.line6, time, done);
   }
 
+  tryAgain() {
+    super.tryAgain();
+    this.resetLineColors();
+  }
+
   newProblem() {
     super.newProblem();
+    this.resetLineColors();
     this.randomizeFuturePositions();
     this.moveToFuturePositions(1, this.showCheck.bind(this));
     this.diagram.animateNextFrame();
   }
 
+  findAnswer() {
+    const lines = [this._line1, this._line2, this._line3, this._line4, this._line5, this._line6];
+    const selected = lines.filter(line => line.selected);
+    if (selected.length !== 2) {
+      return 'selectTwoLines';
+    }
+    if (this.isParallel(selected[0], selected[1])) {
+      return 'correct';
+    }
+    return 'incorrect';
+    // let answer = 'correct';
+    // const notParallel = [1, 2, 3, 4, 5].filter(n => this.parallelLines.indexOf(n) === -1);
+
+    // if (
+    //   !this[`_line${this.parallelLines[0]}`].selected
+    //   || !this[`_line${this.parallelLines[1]}`].selected) {
+    //   return 'incorrect';
+    // }
+
+    // const incorrectlySelected = notParallel.filter(n => this.parallelLines.indexOf(n) > -1);
+    // if (incorrectlySelected.length > 0) {
+    //   return 'incorrect';
+    // }
+    // return 'correct';
+  }
   // findAnswer() {
   // }
   // findAnswer() {
