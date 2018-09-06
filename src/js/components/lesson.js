@@ -133,13 +133,16 @@ export default class LessonComponent extends React.Component
     }
 
     const infoButton = document.getElementById('id_lesson__info_button');
-    const infoBox = document.getElementById('id_lesson__info_box');
-    if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
-      infoButton.onclick = () => {
-        infoBox.classList.toggle('lesson__info_hide');
-        infoButton.classList.toggle('lesson__info_button_show');
-      };
+    if (infoButton instanceof HTMLElement) {
+      infoButton.onclick = this.lesson.content.toggleInfo.bind(this);
     }
+    // const infoBox = document.getElementById('id_lesson__info_box');
+    // if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
+    //   infoButton.onclick = () => {
+    //     infoBox.classList.toggle('lesson__info_hide');
+    //     infoButton.classList.toggle('lesson__info_button_show');
+    //   };
+    // }
     window.addEventListener('resize', this.centerLesson.bind(this));
     window.addEventListener('orientationchange', this.orientationChange.bind(this));
     // const nav = document.getElementById('id_navigator__container');

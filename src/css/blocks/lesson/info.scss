@@ -7,7 +7,7 @@
   position: absolute;
   left: calc(90% - var(--lesson__goto_button-font-size) * 1.2);
   top: calc(100% - (100% - var(--lesson__content-height)) / 2 - var(--lesson__goto_button-font-size) * 1.2);
-  border: 2px solid;
+  border: 1px solid;
   border-radius: calc(var(--lesson__goto_button-font-size) * 1.2);
   font-family: times new roman, serif;
   font-style: italic;
@@ -26,6 +26,12 @@
   background-color: color('diagram', 'background', 'dark');
 }
 
+@media screen and (min-width: $small-tablet) {
+  .lesson__info_button {
+    border: 2px solid;
+  }
+}
+
 @media (min-aspect-ratio: 3/2) {
   .lesson__info_button {
     left: calc(100% - var(--lesson__np_button-width) / 2 - calc(var(--lesson__goto_button-font-size) * 1.2));
@@ -35,24 +41,27 @@
 
 .lesson__info_box {
   position: absolute;
-  top: 50%;
+  top: 96%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -100%);
   background-color: rgba(200, 200, 200, 0.9);
   color: color('diagram', 'disabled', 'darker');
   border-radius: calc(var(--lesson__diagram-font-size) * 0.4);
+  width: max-content;
+  max-width: calc(var(--lesson__content-width) * 0.8);
 }
 
-.lesson__info_box p {
+.lesson__info_box ul {
   margin: 0;
+  padding-left: calc(var(--lesson__diagram-font-size) * 0.5);
 }
 
 .lesson__info_box__close {
   // text-align: right;
   padding: 0;
   padding-right: calc(var(--lesson__diagram-font-size) * 0.4);
-  padding-top: calc(var(--lesson__diagram-font-size) * 0.4);
-  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+  padding-top: calc(var(--lesson__diagram-font-size) * 0.1);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
   width: auto;
   float: right;
 }
@@ -61,8 +70,21 @@
   color: color('diagram', 'primary', 'light');
 }
 
+.lesson__info_box__title {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
+  border: 0;
+  text-align: center;
+  margin-top: calc(var(--lesson__diagram-font-size) * 0.5);
+  padding-bottom: calc(var(--lesson__diagram-font-size) * 0.5);
+  // border-bottom: 1px solid rgba(200, 200, 200, 1);
+  // color: rgba(255, 255, 255, 1);
+}
+
 .lesson__info_box__text {
-  padding: calc(var(--lesson__diagram-font-size) * 0.8);
+  padding: calc(var(--lesson__diagram-font-size) * 1);
+  max-height: calc(var(--lesson__content-height) * 0.3);
+  overflow: scroll;
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
 }
 
 .lesson__info_hide {

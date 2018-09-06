@@ -557,6 +557,7 @@ class LessonContent {
   goingTo: 'next' | 'prev' | 'goto';
   comingFrom: 'next' | 'prev' | 'goto';
   iconLink: string;
+  toggleInfo: () => void;
   // questions
 
   constructor(htmlId: string = 'lesson_diagram') {
@@ -574,6 +575,18 @@ class LessonContent {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  toggleInfo() {
+    const infoButton = document.getElementById('id_lesson__info_button');
+    const infoBox = document.getElementById('id_lesson__info_box');
+    if (infoButton instanceof HTMLElement) {
+      infoButton.classList.toggle('lesson__info_button_show');
+    }
+    if (infoBox instanceof HTMLElement) {
+      infoBox.classList.toggle('lesson__info_hide');
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   addInfoBox() {
     const container = document.createElement('div');
     container.classList.add('lesson__info_box');
@@ -584,7 +597,13 @@ class LessonContent {
     close.classList.add('lesson__info_box__close');
     close.id = 'id_lesson__info_box__close';
     close.innerHTML = 'X';
+    close.onclick = this.toggleInfo.bind(this);
     container.appendChild(close);
+
+    const title = document.createElement('div');
+    title.classList.add('lesson__info_box__title');
+    title.innerHTML = 'What can you do on this page?';
+    container.appendChild(title);
 
     const text = document.createElement('div');
     text.classList.add('lesson__info_box__text');
