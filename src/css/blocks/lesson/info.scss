@@ -71,9 +71,10 @@
 }
 
 .lesson__info_box__title {
+  color: color('diagram', 'disabled', 'base');
   font-size: calc(var(--lesson__diagram-font-size) * 0.5);
   text-align: center;
-  margin-top: calc(var(--lesson__diagram-font-size) * 0.5);
+  padding-top: calc(var(--lesson__diagram-font-size) * 0.5);
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.5);
   width: 100%;
   // display: table;
@@ -85,16 +86,19 @@
   display: inline-block;
   width: auto;
   height: calc(var(--lesson__diagram-font-size) * 0.8);
+  margin-top: calc(var(--lesson__diagram-font-size) * 0.2);
 }
 
 .lesson__info_box__title_i {
   display: inline-block;
-  margin-right: calc(var(--lesson__diagram-font-size) * 1);
-  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
-  width: calc(var(--lesson__diagram-font-size) * 0.8);
-  height: calc(var(--lesson__diagram-font-size) * 0.8);
+  float: left;
+  margin-left: calc(var(--lesson__diagram-font-size) * 0.5);
+  // margin-right: calc(var(--lesson__diagram-font-size) * 1);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+  width: calc(var(--lesson__diagram-font-size) * 1.1);
+  height: calc(var(--lesson__diagram-font-size) * 1.1);
   border: 1px solid;
-  border-radius: calc(var(--lesson__diagram-font-size) * 0.4);
+  border-radius: calc(var(--lesson__diagram-font-size) * 0.55);
   font-family: times new roman, serif;
   font-style: italic;
 }
