@@ -592,16 +592,6 @@ class LessonContent {
     container.appendChild(text);
 
     this.diagram.htmlCanvas.appendChild(container);
-    // const html = this.diagram.shapes.htmlElement(
-    //   container,
-    //   'id_lesson__info_box',
-    //   'lesson__info_box lesson__info_hide',
-    //   new Point(0, 0),
-    //   'middle',
-    //   'center',
-    // );
-
-    // this.diagram.info = html;
   }
 
   setTitle() {
