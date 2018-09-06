@@ -297,7 +297,7 @@ export default class LessonComponent extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   addHintButton() {
-    return <Button label="?" id="id_lesson__hint_button" className="lesson_hint_button"/>;
+    return <Button label="i" id="id_lesson__hint_button" className="lesson_hint_button"/>;
   }
 
   addGoToButton() {
