@@ -300,6 +300,7 @@ class Section {
   hint: Array<string> | string;
   blank: Array<string>;
   diagram: Diagram;
+  infoElements: Array<DiagramElementCollection | DiagramElementPrimative>;
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
 
@@ -325,6 +326,7 @@ class Section {
     this.infoModifiers = {};
     this.showOnly = [];
     this.blank = [];
+    this.infoElements = [];
     this.blankTransition = {
       toNext: false,
       toPrev: false,
@@ -346,12 +348,7 @@ class Section {
 
   setOnClicks() {
     setOnClicks(this.modifiers);
-    // Object.keys(this.modifiers).forEach((key) => {
-    //   const mod = this.modifiers[key];
-    //   if ('actionMethod' in mod) {
-    //     onClickId(mod.id(key), mod.actionMethod, mod.bind);
-    //   }
-    // });
+    setOnClicks(this.infoModifiers);
   }
 
   getInfo(): string {
@@ -469,6 +466,18 @@ class Section {
     // }
   }
 
+  // setInfoElements() {
+  //   if ('infoElements' in this) {
+  //     const elementsOrMethod = this.showOnly;
+  //     if (Array.isArray(elementsOrMethod)) {
+  //       this.diagram.elements.showOnly(elementsOrMethod);
+  //     } else {
+  //       elementsOrMethod();
+  //     }
+  //   }
+  //   }
+  // }
+
   setVisible() {
     if ('showOnly' in this) {
       const elementsOrMethod = this.showOnly;
@@ -548,6 +557,23 @@ class Section {
 
 // class diagramClass {
 // }
+const whichAnimationEvent = () => {
+  let t;
+  const el = document.createElement("fakeelement");
+
+  const transitions = {
+    animation: 'animationend',
+    OAnimation: 'oAnimationEnd',
+    MozAnimation: 'animationend',
+    WebkitAnimation: 'webkitAnimationEnd',
+  };
+  for (t in transitions) {
+    if (el.style[t] !== undefined) {
+      return transitions[t];
+    }
+  }
+  return '';
+};
 
 class LessonContent {
   title: string;
@@ -558,6 +584,7 @@ class LessonContent {
   comingFrom: 'next' | 'prev' | 'goto';
   iconLink: string;
   toggleInfo: (?boolean) => void;
+  animationEnd: string;
   // questions
 
   constructor(htmlId: string = 'lesson_diagram') {
@@ -565,6 +592,8 @@ class LessonContent {
     this.sections = [];
     this.iconLink = '/';
     this.setTitle();
+
+    this.animationEnd = whichAnimationEvent();
   }
 
   initialize() {
@@ -590,7 +619,6 @@ class LessonContent {
         infoButton.classList.toggle('lesson__info_button_show');
         infoBox.classList.toggle('lesson__info_hide');
       }
-      this.pulseStar();
     }
     // if (infoBox instanceof HTMLElement) {
     //   infoBox.classList.toggle('lesson__info_hide');
@@ -633,22 +661,46 @@ class LessonContent {
     this.diagram.htmlCanvas.appendChild(container);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   pulseStar() {
     const star = document.getElementById('id_lesson__star');
-    console.log(star)
-    star.classList.toggle('lesson__info_star_pulse');
-    // star.classList.add('lesson__info_star_pulse');
+    if (star instanceof HTMLElement) {
+      star.classList.toggle('lesson__info_star_pulse');
+    }
+  }
+
+  starOnElement(
+    element: DiagramElementCollection | DiagramElementPrimative,
+    center: boolean = false,
+  ) {
+    const star = document.getElementById('id_lesson__star');
+    if (star instanceof HTMLElement) {
+      const animationEnd = () => {
+        star.removeEventListener(this.animationEnd, animationEnd);
+        star.classList.remove('lesson__info_star_pulse');
+        // this next line triggers a relflow, making the class removal stick
+        // eslint-disable-next-line no-unused-vars
+        const w = star.offsetWidth;
+      };
+      animationEnd();
+
+      const diagramPosition = center
+        ? element.getCenterDiagramPosition() : element.getDiagramPosition();
+      const cssPosition = diagramPosition
+        .transformBy(this.diagram.diagramToPixelSpaceTransform.matrix());
+      star.classList.add('lesson__info_star_pulse');
+      const rect = star.getBoundingClientRect();
+      star.style.left = `${cssPosition.x - rect.width / 2}px`;
+      star.style.top = `${cssPosition.y - rect.height / 2}px`;
+      star.addEventListener(this.animationEnd, animationEnd.bind(this));
+    }
   }
 
   addStar() {
-    // const container = document.createElement('div');
-    // container.classList.add('lesson__info_star');
-
     const img = document.createElement('img');
     img.setAttribute('src', '/static/star.png');
     img.id = 'id_lesson__star';
     img.classList.add('lesson__info_star');
-    // container.appendChild(img);
 
     this.diagram.htmlCanvas.appendChild(img);
   }

@@ -33,8 +33,12 @@
 }
 
 @-webkit-keyframes spin {
+  0% { -webkit-opacity: 0; }
+  50% { -webkit-opacity: 1; }
+
   100% {
-    -webkit-transform: rotate(360deg);
+    -webkit-opacity: 0;
+    -webkit-transform: rotate(270deg);
   }
 }
 

@@ -503,6 +503,7 @@ class Diagram {
   diagramToPixelSpaceTransform: Transform;
   pixelToGLSpaceTransform: Transform;
   glToPixelSpaceTransform: Transform;
+  diagramToCSSPercentSpaceTransform: Transform;
 
   drawQueued: boolean;
 
@@ -649,6 +650,11 @@ class Diagram {
       y: { bottomLeft: canvasRect.height, height: -canvasRect.height },
     };
 
+    const percentSpace = {
+      x: { bottomLeft: 0, width: 1 },
+      y: { bottomLeft: 1, height: -1 },
+    };
+
     this.diagramToGLSpaceTransform =
       spaceToSpaceTransform(diagramSpace, glSpace);
 
@@ -666,6 +672,9 @@ class Diagram {
 
     this.glToPixelSpaceTransform =
       spaceToSpaceTransform(glSpace, pixelSpace);
+
+    this.diagramToCSSPercentSpaceTransform =
+      spaceToSpaceTransform(diagramSpace, percentSpace);
   }
 
   initialize() {

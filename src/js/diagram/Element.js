@@ -1592,6 +1592,20 @@ class DiagramElement {
     return new Rect(0, 0, 1, 1);
   }
 
+  getDiagramBoundingRect() {
+    const gl = this.getGLBoundingRect();
+    const glToDiagramScale = new Point(
+      this.diagramLimits.width / 2,
+      this.diagramLimits.height / 2,
+    );
+    return new Rect(
+      gl.left * glToDiagramScale.x,
+      gl.bottom * glToDiagramScale.y,
+      gl.width * glToDiagramScale.x,
+      gl.height * glToDiagramScale.y,
+    );
+  }
+
   // eslint-disable-next-line class-methods-use-this
   getRelativeGLBoundingRect() {
     return new Rect(0, 0, 1, 1);
@@ -1608,6 +1622,14 @@ class DiagramElement {
       gl.bottom * glToDiagramScale.y,
       gl.width * glToDiagramScale.x,
       gl.height * glToDiagramScale.y,
+    );
+  }
+
+  getCenterDiagramPosition() {
+    const rect = this.getDiagramBoundingRect();
+    return new Point(
+      rect.left + rect.width / 2,
+      rect.bottom + rect.height / 2,
     );
   }
 

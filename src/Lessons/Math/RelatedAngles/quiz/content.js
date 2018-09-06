@@ -39,10 +39,14 @@ class Content extends LessonContent {
         blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
       },
       setInfo: `<ul>
-          <li>Move the line by dragging its middle.</li>
-          <li>Rotate the line by dragging one of its ends.</li>
+          <li>Move the line by dragging its |middle|.</li>
+          <li>Rotate the line by dragging one of its |ends|.</li>
           </ul>
       `,
+      infoModifiers: {
+        middle: click(this.starOnElement, [this, quizP1._line2._mid, false], layout.colors.line),
+        ends: click(this.starOnElement, [this, quizP1._line2._end1, true], layout.colors.line),
+      },
       setEnterState: () => {
         quizP1.setPosition(0, 0);
         quizP1._line2.setColor(colors.quizLine);
@@ -68,6 +72,7 @@ class Content extends LessonContent {
         diag.setScenario(quizP1._line1, layout.quiz.first.line1);
         diag.setScenario(quizP1._line2, layout.quiz.first.line2);
         quizP1._check.show();
+        // this.shineStarOnElement(quizP1._line2);
       },
     });
 
