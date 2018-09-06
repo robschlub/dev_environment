@@ -44,7 +44,7 @@
   top: 96%;
   left: 50%;
   transform: translate(-50%, -100%);
-  background-color: rgba(200, 200, 200, 0.9);
+  background-color: rgba(255, 255, 255, 0.9);
   color: color('diagram', 'disabled', 'darker');
   border-radius: calc(var(--lesson__diagram-font-size) * 0.4);
   width: max-content;
@@ -59,15 +59,18 @@
 .lesson__info_box__close {
   // text-align: right;
   padding: 0;
-  padding-right: calc(var(--lesson__diagram-font-size) * 0.4);
-  padding-top: calc(var(--lesson__diagram-font-size) * 0.1);
-  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+  margin-right: calc(var(--lesson__diagram-font-size) * 0.8);
+  // padding-top: calc(var(--lesson__diagram-font-size) * 0.1);
+  margin-top: calc(var(--lesson__diagram-font-size) * -0.1);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.9);
   width: auto;
   float: right;
+  font-weight: lighter;
 }
 
 .lesson__info_box__close:hover {
-  color: color('diagram', 'disabled', 'dark');
+  color: color('diagram', 'disabled', 'darker');
+  font-weight: light;
 }
 
 .lesson__info_box__title {

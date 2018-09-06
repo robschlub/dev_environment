@@ -593,13 +593,6 @@ class LessonContent {
     container.classList.add('lesson__info_hide');
     container.id = 'id_lesson__info_box';
 
-    const close = document.createElement('div');
-    close.classList.add('lesson__info_box__close');
-    close.id = 'id_lesson__info_box__close';
-    close.innerHTML = 'X';
-    close.onclick = this.toggleInfo.bind(this);
-    container.appendChild(close);
-
     const title = document.createElement('div');
     title.classList.add('lesson__info_box__title');
     container.appendChild(title);
@@ -608,6 +601,13 @@ class LessonContent {
     infoSymbol.classList.add('lesson__info_box__title_i');
     infoSymbol.innerHTML = 'i';
     title.appendChild(infoSymbol);
+
+    const close = document.createElement('div');
+    close.classList.add('lesson__info_box__close');
+    close.id = 'id_lesson__info_box__close';
+    close.innerHTML = 'X';
+    close.onclick = this.toggleInfo.bind(this);
+    title.appendChild(close);
 
     const titleText = document.createElement('div');
     titleText.classList.add('lesson__info_box__title_text');
