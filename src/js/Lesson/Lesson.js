@@ -258,6 +258,18 @@ class Lesson {
     }
   }
 
+  starOnNextInteractiveItem() {
+    const section = this.content.sections[this.currentSectionIndex];
+    if (section.interactiveItems.length > 0) {
+      let index = section.currentInteractiveItem + 1;
+      if (index > section.interactiveItems.length - 1) {
+        index = 0;
+      }
+      const { element, location } = section.interactiveItems[index];
+      this.content.starOnElement(element, location);
+      section.currentInteractiveItem = index;
+    }
+  }
 
   stopTransition() {
     const { diagram } = this;

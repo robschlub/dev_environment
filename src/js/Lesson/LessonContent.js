@@ -110,7 +110,6 @@ function addId(id: string = '') {
   };
 }
 
-
 function clickWord(
   textToUse: string,
   id: string,
@@ -176,6 +175,16 @@ function actionWord(
   return {
     replacementText: toHTML(text, id, classStr, color).replacementText,
     id,
+  };
+}
+
+function interactiveItem(
+  element: DiagramElementPrimative | DiagramElementCollection,
+  location: string | Point,
+) {
+  return {
+    element,
+    location,
   };
 }
 
@@ -319,6 +328,13 @@ class Section {
     fromGoto: boolean;
   };
 
+  interactiveItems: Array<{
+    element: DiagramElementCollection | DiagramElementPrimative,
+    location: 'center' | 'zero' | Point,
+  }>;
+
+  currentInteractiveItem: number;
+
   constructor(diagram: Diagram) {
     this.diagram = diagram;
     this.title = '';
@@ -335,6 +351,8 @@ class Section {
       toGoto: false,
       fromGoto: false,
     };
+    this.interactiveItems = [];
+    this.currentInteractiveItem = 0;
   }
 
   setContent(): Array<string> | string {
@@ -466,6 +484,11 @@ class Section {
     // }
   }
 
+  // setInteractiveItems() {
+  //   if ('interativeItems' in this) {
+  //     this.interativeItems = interativeItems;
+  //   }
+  // }
   // setInfoElements() {
   //   if ('infoElements' in this) {
   //     const elementsOrMethod = this.showOnly;
@@ -669,9 +692,13 @@ class LessonContent {
     }
   }
 
+  // starOnNextInteractiveItem() {
+  //   const index = this.
+  // }
+
   starOnElement(
     element: DiagramElementCollection | DiagramElementPrimative,
-    center: boolean = false,
+    location: 'center' | 'zero' | '' | Point = '',
   ) {
     const star = document.getElementById('id_lesson__star');
     if (star instanceof HTMLElement) {
@@ -684,8 +711,12 @@ class LessonContent {
       };
       animationEnd();
 
-      const diagramPosition = center
-        ? element.getCenterDiagramPosition() : element.getDiagramPosition();
+      let diagramPosition;
+      if (location === 'center') {
+        diagramPosition = element.getCenterDiagramPosition();
+      } else {
+        diagramPosition = element.getDiagramPosition();
+      }
       const cssPosition = diagramPosition
         .transformBy(this.diagram.diagramToPixelSpaceTransform.matrix());
       star.classList.add('lesson__info_star_pulse');
@@ -736,5 +767,5 @@ export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
   clickWord, itemSelector, initializeItemSelector, unit, applyModifiers,
-  setOnClicks,
+  setOnClicks, interactiveItem,
 };

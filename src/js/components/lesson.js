@@ -322,6 +322,15 @@ export default class LessonComponent extends React.Component
     </div>;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  addInteractiveElementButton() {
+    return <img
+      id="id_lesson__interactive_element_button"
+      className="lesson__interactive_element_button"
+      onClick={this.lesson.starOnNextInteractiveItem.bind(this.lesson)}
+      src="/static/star.png"/>;
+  }
+
   addGoToButton() {
     return <div className="dropdown lesson__button-goto_container">
       <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -559,6 +568,7 @@ export default class LessonComponent extends React.Component
               {this.addGoToButton()}
               {this.addNextButton()}
               {this.addInfoButton()}
+              {this.addInteractiveElementButton()}
         </div>
       </div>
       <div className='lesson__white_spacer'/>

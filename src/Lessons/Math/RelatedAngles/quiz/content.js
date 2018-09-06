@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click, centerH,
+  LessonContent, click, centerH, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -47,6 +47,11 @@ class Content extends LessonContent {
         middle: click(this.starOnElement, [this, quizP1._line2._mid, false], layout.colors.line),
         ends: click(this.starOnElement, [this, quizP1._line2._end1, true], layout.colors.line),
       },
+      interactiveItems: [
+        interactiveItem(quizP1._line2._end1, 'center'),
+        interactiveItem(quizP1._line2._mid, 'zero'),
+        interactiveItem(quizP1._line2._end2, 'center'),
+      ],
       setEnterState: () => {
         quizP1.setPosition(0, 0);
         quizP1._line2.setColor(colors.quizLine);
