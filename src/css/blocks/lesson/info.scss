@@ -67,21 +67,42 @@
 }
 
 .lesson__info_box__close:hover {
-  color: color('diagram', 'primary', 'light');
+  color: color('diagram', 'disabled', 'dark');
 }
 
 .lesson__info_box__title {
   font-size: calc(var(--lesson__diagram-font-size) * 0.5);
-  border: 0;
   text-align: center;
   margin-top: calc(var(--lesson__diagram-font-size) * 0.5);
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.5);
+  width: 100%;
+  // display: table;
   // border-bottom: 1px solid rgba(200, 200, 200, 1);
   // color: rgba(255, 255, 255, 1);
 }
 
+.lesson__info_box__title_text {
+  display: inline-block;
+  width: auto;
+  height: calc(var(--lesson__diagram-font-size) * 0.8);
+}
+
+.lesson__info_box__title_i {
+  display: inline-block;
+  margin-right: calc(var(--lesson__diagram-font-size) * 1);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
+  width: calc(var(--lesson__diagram-font-size) * 0.8);
+  height: calc(var(--lesson__diagram-font-size) * 0.8);
+  border: 1px solid;
+  border-radius: calc(var(--lesson__diagram-font-size) * 0.4);
+  font-family: times new roman, serif;
+  font-style: italic;
+}
+
 .lesson__info_box__text {
-  padding: calc(var(--lesson__diagram-font-size) * 1);
+  padding-left: calc(var(--lesson__diagram-font-size) * 1);
+  padding-right: calc(var(--lesson__diagram-font-size) * 1);
+  padding-bottom: calc(var(--lesson__diagram-font-size) * 0.5);
   max-height: calc(var(--lesson__content-height) * 0.3);
   overflow: scroll;
   font-size: calc(var(--lesson__diagram-font-size) * 0.7);

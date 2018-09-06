@@ -39,7 +39,7 @@ class Content extends LessonContent {
         blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
       },
       setInfo: `<ul>
-          <li>Rotate and move the red line around and really really long and even longer.</li>
+          <li>Rotate and move the red line around.</li>
           <li>Touching the line ends will rotate it.</li>
           <li>Touching the line middle will move it.</li>
           </ul>

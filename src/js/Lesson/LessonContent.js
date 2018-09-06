@@ -602,8 +602,17 @@ class LessonContent {
 
     const title = document.createElement('div');
     title.classList.add('lesson__info_box__title');
-    title.innerHTML = 'What can you do on this page?';
     container.appendChild(title);
+
+    const infoSymbol = document.createElement('div');
+    infoSymbol.classList.add('lesson__info_box__title_i');
+    infoSymbol.innerHTML = 'i';
+    title.appendChild(infoSymbol);
+
+    const titleText = document.createElement('div');
+    titleText.classList.add('lesson__info_box__title_text');
+    titleText.innerHTML = 'What can you do on this page?';
+    title.appendChild(titleText);
 
     const text = document.createElement('div');
     text.classList.add('lesson__info_box__text');
