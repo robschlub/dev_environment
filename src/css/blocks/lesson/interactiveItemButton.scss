@@ -29,3 +29,12 @@
     top: calc(66% + var(--lesson__goto_button-font-size));
   }
 }
+
+.lesson__interactive_element_button__hide {
+  left: -10000px;
+  top: -10000px;
+  font-size: 0;
+  border: 0;
+  height: 0;
+  width: 0;
+}

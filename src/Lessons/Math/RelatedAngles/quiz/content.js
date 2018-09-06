@@ -44,8 +44,8 @@ class Content extends LessonContent {
           </ul>
       `,
       infoModifiers: {
-        middle: click(this.starOnElement, [this, quizP1._line2._mid, false], layout.colors.line),
-        ends: click(this.starOnElement, [this, quizP1._line2._end1, true], layout.colors.line),
+        middle: click(this.starOnElement, [this, quizP1._line2._mid, ''], layout.colors.line),
+        ends: click(this.starOnElement, [this, quizP1._line2._end1, 'center'], layout.colors.line),
       },
       interactiveItems: [
         interactiveItem(quizP1._line2._end1, 'center'),
@@ -94,9 +94,17 @@ class Content extends LessonContent {
       },
       setInfo: `<ul>
           <li>Touch a line to toggle selection.</li>
-          <li>Move lines by dragging them help determine if parallel.</li>
+          <li>Move lines by dragging them to help determine if parallel.</li>
           </ul>
       `,
+      interactiveItems: [
+        interactiveItem(quizP2._line1, ''),
+        interactiveItem(quizP2._line2, ''),
+        interactiveItem(quizP2._line3, ''),
+        interactiveItem(quizP2._line4, ''),
+        interactiveItem(quizP2._line5, ''),
+        interactiveItem(quizP2._line6, ''),
+      ],
       setEnterState: () => {
         quizP2.setPosition(0, 0);
         quizP2.hasTouchableElements = true;
@@ -135,6 +143,9 @@ class Content extends LessonContent {
         blue_line: click(quizA1.pulseLine1, [quizP1], colors.line),
       },
       setInfo: 'Touch the grey box to enter the angle',
+      interactiveItems: [
+        interactiveItem(quizA1._input, ''),
+      ],
       setEnterState: () => {
         quizA1.setPosition(0, 0);
         quizA1.hasTouchableElements = true;

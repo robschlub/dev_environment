@@ -409,6 +409,20 @@ class Section {
     }
   }
 
+  setInteractiveElementsButton() {
+    // const infoHtml = this.getInfo();
+    const button = document
+      .getElementById('id_lesson__interactive_element_button');
+    // const infoBox = document.getElementById('id_lesson__info_box__text');
+    if (button instanceof HTMLElement) {
+      if (this.interactiveItems.length > 0) {
+        button.classList.remove('lesson__interactive_element_button__hide');
+      } else {
+        button.classList.add('lesson__interactive_element_button__hide');
+      }
+    }
+  }
+
   getContent(): string {
     let htmlText = '';
     let content = '';

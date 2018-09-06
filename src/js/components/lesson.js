@@ -326,7 +326,7 @@ export default class LessonComponent extends React.Component
   addInteractiveElementButton() {
     return <img
       id="id_lesson__interactive_element_button"
-      className="lesson__interactive_element_button"
+      className="lesson__interactive_element_button lesson__interactive_element_button__hide"
       onClick={this.lesson.starOnNextInteractiveItem.bind(this.lesson)}
       src="/static/star.png"/>;
   }

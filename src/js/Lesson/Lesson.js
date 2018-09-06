@@ -201,6 +201,7 @@ class Lesson {
     if (diagram) {
       section.setEnterState(this.state);
       section.setInfoButton();
+      section.setInteractiveElementsButton();
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {
