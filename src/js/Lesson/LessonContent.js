@@ -352,7 +352,7 @@ class Section {
       fromGoto: false,
     };
     this.interactiveItems = [];
-    this.currentInteractiveItem = 0;
+    this.currentInteractiveItem = -1;
   }
 
   setContent(): Array<string> | string {

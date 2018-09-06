@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click, centerV, unit,
+  LessonContent, click, centerV, unit, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -54,6 +54,21 @@ class Content extends LessonContent {
       modifiers: {
         Parallel_lines: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
       },
+      setInfo: `<ul>
+          <li>Move a line by dragging its middle.</li>
+          <li>Rotate a line by dragging one of its ends.</li>
+          <li>The lines will be blue when they are parallel.</li>
+          <li>Touch |Parallel Lines| to make lines parallel.</li>
+          </ul>
+      `,
+      interactiveItems: [
+        interactiveItem(parallel._line1._end1, 'center'),
+        interactiveItem(parallel._line1._mid, 'zero'),
+        interactiveItem(parallel._line1._end2, 'center'),
+        interactiveItem(parallel._line2._end1, 'center'),
+        interactiveItem(parallel._line2._mid, 'zero'),
+        interactiveItem(parallel._line2._end2, 'center'),
+      ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
         parallel.setPosition(layout.position);
@@ -100,8 +115,19 @@ class Content extends LessonContent {
         ${new Definition('Opposite', 'Latin', ['oppositus', 'set against, opposing']).html('id_lesson__related_angles_definition')}
       `),
       modifiers: {
-        Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.line),
+        Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.angleA),
       },
+      setInfo: `<ul>
+          <li>Rotate the lines to change the angle.</li>
+          <li>Click |Opposite Angles| to see the other pair of angles.</li>
+          </ul>
+      `,
+      interactiveItems: [
+        interactiveItem(opp._line1._end1, 'center'),
+        interactiveItem(opp._line1._end2, 'center'),
+        interactiveItem(opp._line2._end1, 'center'),
+        interactiveItem(opp._line2._end2, 'center'),
+      ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
         if (parallel.isShown) {
@@ -172,6 +198,20 @@ class Content extends LessonContent {
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
+      setInfo: `<ul>
+          <li>Rotate the intersecting line to change the angle.</li>
+          <li>Rotate the parallel lines to change perspective.</li>
+          <li>Touch |Corresponding Angles| to change the angle pair.</li>
+          </ul>
+      `,
+      interactiveItems: [
+        interactiveItem(threeLines._line3._end1, 'center'),
+        interactiveItem(threeLines._line3._end2, 'center'),
+        interactiveItem(threeLines._line1._end1, 'center'),
+        interactiveItem(threeLines._line1._end2, 'center'),
+        interactiveItem(threeLines._line2._end1, 'center'),
+        interactiveItem(threeLines._line2._end2, 'center'),
+      ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('corresponding');
         if (parallel.isShown) {
@@ -243,6 +283,20 @@ class Content extends LessonContent {
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
+      setInfo: `<ul>
+          <li>Rotate the intersecting line to change the angle.</li>
+          <li>Rotate the parallel lines to change perspective.</li>
+          <li>Touch |Alternate Angles| to change the angle pair.</li>
+          </ul>
+      `,
+      interactiveItems: [
+        interactiveItem(threeLines._line3._end1, 'center'),
+        interactiveItem(threeLines._line3._end2, 'center'),
+        interactiveItem(threeLines._line1._end1, 'center'),
+        interactiveItem(threeLines._line1._end2, 'center'),
+        interactiveItem(threeLines._line2._end1, 'center'),
+        interactiveItem(threeLines._line2._end2, 'center'),
+      ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('alternate');
         if (parallel.isShown) {
@@ -315,6 +369,20 @@ class Content extends LessonContent {
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
+      setInfo: `<ul>
+          <li>Rotate the intersecting line to change the angle.</li>
+          <li>Rotate the parallel lines to change perspective.</li>
+          <li>Touch |Interior Angles| to change the angle pair.</li>
+          </ul>
+      `,
+      interactiveItems: [
+        interactiveItem(threeLines._line3._end1, 'center'),
+        interactiveItem(threeLines._line3._end2, 'center'),
+        interactiveItem(threeLines._line1._end1, 'center'),
+        interactiveItem(threeLines._line1._end2, 'center'),
+        interactiveItem(threeLines._line2._end1, 'center'),
+        interactiveItem(threeLines._line2._end2, 'center'),
+      ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('interior');
         if (parallel.isShown) {

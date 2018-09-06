@@ -202,6 +202,7 @@ class Lesson {
       section.setEnterState(this.state);
       section.setInfoButton();
       section.setInteractiveElementsButton();
+      section.currentInteractiveItem = -1;
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {

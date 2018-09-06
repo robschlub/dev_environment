@@ -10,10 +10,10 @@
   width: calc(var(--lesson__diagram-font-size) * 2);
   height: calc(var(--lesson__diagram-font-size) * 2);
   opacity: 0;
-  -webkit-animation: spin 4s linear infinite;
-  -moz-animation: spin 4s linear infinite;
-  animation: spin 1s linear 1;
-  -o-animation: spin 4s linear infinite;
+  -webkit-animation: spin spin 1.2s linear 1;
+  -moz-animation: spin 1.2s linear 1;
+  animation: spin 1.2s linear 1;
+  -o-animation: spin 1.2s linear 1;
   -webkit-transform-origin: 50% 50%;
   -moz-transform-origin: 50% 50%;
   -o-transform-origin: 50% 50%;
@@ -38,7 +38,7 @@
 
   100% {
     -webkit-opacity: 0;
-    -webkit-transform: rotate(135deg);
+    -webkit-transform: rotate(120deg);
   }
 }
 
@@ -49,8 +49,8 @@
 
   100% {
     opacity: 0;
-    -webkit-transform: rotate(135deg);
-    transform: rotate(135deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
   }
 }
 
