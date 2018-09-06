@@ -82,6 +82,11 @@ class Content extends LessonContent {
         red_line: click(quizP1.pulseLine2, [quizP1], colors.quizLine),
         blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
       },
+      setInfo: `<ul>
+          <li>Touch a line to toggle selection.</li>
+          <li>Move lines by dragging them help determine if parallel.</li>
+          </ul>
+      `,
       setEnterState: () => {
         quizP2.setPosition(0, 0);
         quizP2.hasTouchableElements = true;
@@ -119,6 +124,7 @@ class Content extends LessonContent {
         red_line: click(quizA1.pulseLine2, [quizP1], colors.quizLine),
         blue_line: click(quizA1.pulseLine1, [quizP1], colors.line),
       },
+      setInfo: 'Touch the grey box to enter the angle',
       setEnterState: () => {
         quizA1.setPosition(0, 0);
         quizA1.hasTouchableElements = true;

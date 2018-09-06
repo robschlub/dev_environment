@@ -76,6 +76,7 @@ class Lesson {
       if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
+      this.content.toggleInfo(false);
       // this.currentSection().goingTo = 'next';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'prev';
       this.transitionStart('prev');
@@ -103,6 +104,7 @@ class Lesson {
       }
       // this.currentSection().goingTo = 'prev';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'next';
+      this.content.toggleInfo(false);
       this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
@@ -132,6 +134,7 @@ class Lesson {
       if (this.currentSection().blankTransition.toGoto) {
         this.refresh('', this.currentSectionIndex);
       }
+      this.content.toggleInfo(false);
       this.transitionStart('goto');
       this.goToSectionIndex = sectionIndex;
       this.currentSection().transitionToAny(this.finishTransToAny.bind(this));

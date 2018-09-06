@@ -557,7 +557,7 @@ class LessonContent {
   goingTo: 'next' | 'prev' | 'goto';
   comingFrom: 'next' | 'prev' | 'goto';
   iconLink: string;
-  toggleInfo: () => void;
+  toggleInfo: (?boolean) => void;
   // questions
 
   constructor(htmlId: string = 'lesson_diagram') {
@@ -575,15 +575,24 @@ class LessonContent {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  toggleInfo() {
+  toggleInfo(toState: ?boolean = null) {
     const infoButton = document.getElementById('id_lesson__info_button');
     const infoBox = document.getElementById('id_lesson__info_box');
-    if (infoButton instanceof HTMLElement) {
-      infoButton.classList.toggle('lesson__info_button_show');
+    if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
+      if (typeof toState === 'boolean' && toState === true) {
+        infoButton.classList.add('lesson__info_button_show');
+        infoBox.classList.remove('lesson__info_hide');
+      } else if (typeof toState === 'boolean' && toState === false) {
+        infoButton.classList.remove('lesson__info_button_show');
+        infoBox.classList.add('lesson__info_hide');
+      } else {
+        infoButton.classList.toggle('lesson__info_button_show');
+        infoBox.classList.toggle('lesson__info_hide');
+      }
     }
-    if (infoBox instanceof HTMLElement) {
-      infoBox.classList.toggle('lesson__info_hide');
-    }
+    // if (infoBox instanceof HTMLElement) {
+    //   infoBox.classList.toggle('lesson__info_hide');
+    // }
   }
 
   // eslint-disable-next-line class-methods-use-this
