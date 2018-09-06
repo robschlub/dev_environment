@@ -295,6 +295,8 @@ function setOnClicks(modifiers: Object) {
 class Section {
   title: string;
   modifiers: Object;
+  hintModifiers: Object;
+  hint: Array<string> | string;
   blank: Array<string>;
   diagram: Diagram;
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
@@ -335,6 +337,11 @@ class Section {
     return [];
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  setHint(): Array<string> | string {
+    return [];
+  }
+
   setOnClicks() {
     setOnClicks(this.modifiers);
     // Object.keys(this.modifiers).forEach((key) => {
@@ -343,6 +350,35 @@ class Section {
     //     onClickId(mod.id(key), mod.actionMethod, mod.bind);
     //   }
     // });
+  }
+
+  getHint(): string {
+    let htmlText = '';
+    let hint = '';
+    if (typeof this.setHint === 'string'
+        || Array.isArray(this.setHint)) {
+      hint = this.setHint;
+    } else {
+      hint = this.setContent();
+    }
+    if (typeof hint === 'string') {
+      hint = [hint];
+    }
+    hint.forEach((element) => {
+      htmlText = `${htmlText}${element}`;
+    });
+    // htmlText += '\n';
+    htmlText = applyModifiers(htmlText, this.hintModifiers);
+
+    // Go through all text, and replace all characters between | | with
+    // with default keywords
+    const r = RegExp(/\|([^|]*)\|/, 'gi');
+    return htmlText.replace(r, '<span class="highlight_word">$1</span>');
+  }
+
+  generateHint() {
+    const htmlHint = this.getHint();
+    
   }
 
   getContent(): string {
