@@ -572,6 +572,7 @@ class LessonContent {
     this.setElementContent();
     this.addSections();
     this.addInfoBox();
+    this.addStar();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -589,6 +590,7 @@ class LessonContent {
         infoButton.classList.toggle('lesson__info_button_show');
         infoBox.classList.toggle('lesson__info_hide');
       }
+      this.pulseStar();
     }
     // if (infoBox instanceof HTMLElement) {
     //   infoBox.classList.toggle('lesson__info_hide');
@@ -629,6 +631,26 @@ class LessonContent {
     container.appendChild(text);
 
     this.diagram.htmlCanvas.appendChild(container);
+  }
+
+  pulseStar() {
+    const star = document.getElementById('id_lesson__star');
+    console.log(star)
+    star.classList.toggle('lesson__info_star_pulse');
+    // star.classList.add('lesson__info_star_pulse');
+  }
+
+  addStar() {
+    // const container = document.createElement('div');
+    // container.classList.add('lesson__info_star');
+
+    const img = document.createElement('img');
+    img.setAttribute('src', '/static/star.png');
+    img.id = 'id_lesson__star';
+    img.classList.add('lesson__info_star');
+    // container.appendChild(img);
+
+    this.diagram.htmlCanvas.appendChild(img);
   }
 
   setTitle() {

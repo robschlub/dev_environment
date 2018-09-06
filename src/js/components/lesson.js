@@ -134,7 +134,7 @@ export default class LessonComponent extends React.Component
 
     const infoButton = document.getElementById('id_lesson__info_button');
     if (infoButton instanceof HTMLElement) {
-      infoButton.onclick = this.lesson.content.toggleInfo.bind(this);
+      infoButton.onclick = this.lesson.content.toggleInfo.bind(this.lesson.content);
     }
     // const infoBox = document.getElementById('id_lesson__info_box');
     // if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
