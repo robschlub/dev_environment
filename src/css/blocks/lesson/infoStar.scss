@@ -7,8 +7,8 @@
 }
 
 .lesson__info_star_pulse {
-  width: 80px;
-  height: 80px;
+  width: calc(var(--lesson__diagram-font-size) * 2);
+  height: calc(var(--lesson__diagram-font-size) * 2);
   opacity: 0;
   -webkit-animation: spin 4s linear infinite;
   -moz-animation: spin 4s linear infinite;
