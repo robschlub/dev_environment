@@ -1,0 +1,26 @@
+.lesson_hint_button {
+  background-color: color('diagram', 'background');
+  color: color('lesson', 'text');
+  font-size: var(--lesson__goto_button-font-size);
+  position: absolute;
+  border: 0;
+  left: calc(90% - var(--lesson__goto_button-width) / 2);
+  top: calc(100% - (100% - var(--lesson__content-height)) / 2 - var(--lesson__goto_button-height) / 2);
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-radius: 5px;
+}
+
+.lesson_hint_button:hover {
+  background-color: color('diagram', 'background', 'dark');
+}
+
+@media (min-aspect-ratio: 3/2) {
+  .lesson_hint_button {
+    // left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
+    left: calc(100% - var(--lesson__np_button-width) / 2 - calc(var(--lesson__diagram-font-size) * 0.8));
+    top: calc(80% + var(--lesson__diagram-font-size) * 0.4);
+  }
+}

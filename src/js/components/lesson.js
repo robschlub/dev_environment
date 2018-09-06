@@ -295,6 +295,11 @@ export default class LessonComponent extends React.Component
     return <Button label="" id="lesson__button-next" className=" lesson__np_button lesson__button-next-enabled"/>;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  addHintButton() {
+    return <Button label="?" id="id_lesson__hint_button" className="lesson_hint_button"/>;
+  }
+
   addGoToButton() {
     return <div className="dropdown lesson__button-goto_container">
       <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -530,6 +535,7 @@ export default class LessonComponent extends React.Component
               </div>
               {this.addGoToButton()}
               {this.addNextButton()}
+              {this.addHintButton()}
         </div>
       </div>
       <div className='lesson__white_spacer'/>
