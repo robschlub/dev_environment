@@ -38,6 +38,12 @@ class Content extends LessonContent {
         red_line: click(quizP1.pulseLine2, [quizP1], colors.quizLine),
         blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
       },
+      setInfo: `<p>
+          This is test content
+        </p>
+        <p>
+          That is two lines long.
+        </p>`,
       setEnterState: () => {
         quizP1.setPosition(0, 0);
         quizP1._line2.setColor(colors.quizLine);

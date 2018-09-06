@@ -197,6 +197,7 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
       section.setEnterState(this.state);
+      section.setInfoButton();
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {

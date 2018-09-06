@@ -1,6 +1,7 @@
 // @flow
 
 import Diagram from '../diagram/Diagram';
+import { Point } from '../diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../diagram/Element';
@@ -295,7 +296,7 @@ function setOnClicks(modifiers: Object) {
 class Section {
   title: string;
   modifiers: Object;
-  hintModifiers: Object;
+  infoModifiers: Object;
   hint: Array<string> | string;
   blank: Array<string>;
   diagram: Diagram;
@@ -321,6 +322,7 @@ class Section {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
+    this.infoModifiers = {};
     this.showOnly = [];
     this.blank = [];
     this.blankTransition = {
@@ -338,7 +340,7 @@ class Section {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  setHint(): Array<string> | string {
+  setInfo(): Array<string> | string {
     return [];
   }
 
@@ -352,23 +354,23 @@ class Section {
     // });
   }
 
-  getHint(): string {
+  getInfo(): string {
     let htmlText = '';
-    let hint = '';
-    if (typeof this.setHint === 'string'
-        || Array.isArray(this.setHint)) {
-      hint = this.setHint;
+    let info = '';
+    if (typeof this.setInfo === 'string'
+        || Array.isArray(this.setInfo)) {
+      info = this.setInfo;
     } else {
-      hint = this.setContent();
+      info = this.setInfo();
     }
-    if (typeof hint === 'string') {
-      hint = [hint];
+    if (typeof info === 'string') {
+      info = [info];
     }
-    hint.forEach((element) => {
+    info.forEach((element) => {
       htmlText = `${htmlText}${element}`;
     });
     // htmlText += '\n';
-    htmlText = applyModifiers(htmlText, this.hintModifiers);
+    htmlText = applyModifiers(htmlText, this.infoModifiers);
 
     // Go through all text, and replace all characters between | | with
     // with default keywords
@@ -376,9 +378,20 @@ class Section {
     return htmlText.replace(r, '<span class="highlight_word">$1</span>');
   }
 
-  generateHint() {
-    const htmlHint = this.getHint();
-    
+  setInfoButton() {
+    const infoHtml = this.getInfo();
+    const infoElement = document.getElementById('id_lesson__info_button');
+    const infoBox = document.getElementById('id_lesson__info_box__text');
+    if (infoElement instanceof HTMLElement) {
+      if (infoHtml) {
+        infoElement.classList.remove('lesson__info_hide');
+        if (infoBox instanceof HTMLElement) {
+          infoBox.innerHTML = infoHtml;
+        }
+      } else {
+        infoElement.classList.add('lesson__info_hide');
+      }
+    }
   }
 
   getContent(): string {
@@ -557,6 +570,38 @@ class LessonContent {
     this.setDiagram(this.diagramHtmlId);
     this.setElementContent();
     this.addSections();
+    this.addInfoBox();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  addInfoBox() {
+    const container = document.createElement('div');
+    container.classList.add('lesson__info_box');
+    container.classList.add('lesson__info_hide');
+    container.id = 'id_lesson__info_box';
+
+    const close = document.createElement('div');
+    close.classList.add('lesson__info_box__close');
+    close.id = 'id_lesson__info_box__close';
+    close.innerHTML = 'X';
+    container.appendChild(close);
+
+    const text = document.createElement('div');
+    text.classList.add('lesson__info_box__text');
+    text.id = ('id_lesson__info_box__text');
+    container.appendChild(text);
+
+    this.diagram.htmlCanvas.appendChild(container);
+    // const html = this.diagram.shapes.htmlElement(
+    //   container,
+    //   'id_lesson__info_box',
+    //   'lesson__info_box lesson__info_hide',
+    //   new Point(0, 0),
+    //   'middle',
+    //   'center',
+    // );
+
+    // this.diagram.info = html;
   }
 
   setTitle() {
