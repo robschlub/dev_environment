@@ -78,22 +78,6 @@ class Content extends LessonContent {
       },
     };
 
-    // this.addSection(Object.assign({}, {
-    //   title: 'Definition',
-    //   setContent: centerV(`
-    //     <p class="lesson__diagram_text_p_width_40">
-    //       Lines are |parallel| if they never meet.
-    //     </p>
-    //     <p class="lesson__diagram_text_p_width_40">
-    //       They have the same rotation, and do not touch (even if made longer).
-    //     </p>
-    //     ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
-    //   `),
-    //   modifiers: {
-    //     parallel: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
-    //   },
-    // }, commonState));
-
     this.addSection(Object.assign({}, {
       title: 'Definition',
       setContent: `

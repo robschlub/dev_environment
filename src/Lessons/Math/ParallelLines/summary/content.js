@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click, centerV,
+  LessonContent, click,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';

@@ -2,7 +2,7 @@
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect, Point,
+  Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
@@ -10,7 +10,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import {
-  checkElementsForParallel, checkValuesForParallel, randomizeParallelLine
+  checkElementsForParallel, checkValuesForParallel, randomizeParallelLine,
 } from '../common/tools';
 import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
 import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
