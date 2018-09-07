@@ -179,7 +179,7 @@ function actionWord(
 }
 
 function interactiveItem(
-  element: DiagramElementPrimative | DiagramElementCollection,
+  element: DiagramElementPrimative | DiagramElementCollection | string,
   location: string | Point,
 ) {
   return {
@@ -302,6 +302,14 @@ function setOnClicks(modifiers: Object) {
 //     fromNext: number;
 //   }
 // }
+
+type TypeInteractiveElement = DiagramElementCollection
+                              | DiagramElementPrimative
+                              | string
+                              | HTMLElement;
+type TypeInteractiveElementLocation = 'center' | 'zero' | ''
+                                      | 'topleft' | 'topright' | Point;
+
 class Section {
   title: string;
   modifiers: Object;
@@ -328,9 +336,19 @@ class Section {
     fromGoto: boolean;
   };
 
-  interactiveItems: Array<{
-    element: DiagramElementCollection | DiagramElementPrimative,
-    location: 'center' | 'zero' | Point,
+  interactiveElements: Array<{
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
+  }>;
+
+  removeInteractiveElements: Array<{
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
+  }>;
+
+  interactiveElementsOnly: Array<{
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
   }>;
 
   currentInteractiveItem: number;
@@ -351,7 +369,7 @@ class Section {
       toGoto: false,
       fromGoto: false,
     };
-    this.interactiveItems = [];
+    this.interactiveElements = [];
     this.currentInteractiveItem = -1;
   }
 
@@ -498,6 +516,40 @@ class Section {
     // }
   }
 
+  setInteractiveElements() {
+    if ('interactiveElementsOnly' in this) {
+      this.interactiveElements = this.interactiveElementsOnly;
+    }
+
+    const elements = document.getElementsByClassName('action_word');
+    for (let i = 0; i < elements.length; i += 1) {
+      const element = elements[i];
+      this.interactiveElements.push({
+        element,
+        location: 'topright',
+      });
+    }
+
+    highlightElementsOnly
+    highlightElements          // override, add
+    highlightElementsRemove    // remove
+
+    if ('removeInteractiveElements' in this) {
+      this.removeInteractiveElements.forEach((element) => {
+        let elem = element;
+        if (typeof element === 'string') {
+          elem = document.getElementById(element);
+        }
+        for (let i = 0; i < this.interactiveElements.length; i += 1) {
+          const item = this.interactiveElements[i];
+          if (item.element === elem) {
+            this.interactiveElements.splice(i, 1);
+            i = this.interactiveElements.length;
+          }
+        }
+      });
+    }
+  }
   // setInteractiveItems() {
   //   if ('interativeItems' in this) {
   //     this.interativeItems = interativeItems;
@@ -718,8 +770,8 @@ class LessonContent {
   // }
 
   starOnElement(
-    element: DiagramElementCollection | DiagramElementPrimative,
-    location: 'center' | 'zero' | '' | Point = '',
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
   ) {
     const star = document.getElementById('id_lesson__star');
     if (star instanceof HTMLElement) {
@@ -732,14 +784,43 @@ class LessonContent {
       };
       animationEnd();
 
-      let diagramPosition;
-      if (location === 'center') {
-        diagramPosition = element.getCenterDiagramPosition();
+      let cssPosition = new Point(0, 0);
+      if (element instanceof DiagramElementPrimative
+        || element instanceof DiagramElementCollection) {
+        let diagramPosition;
+        if (location === 'center') {
+          diagramPosition = element.getCenterDiagramPosition();
+        } else {
+          diagramPosition = element.getDiagramPosition();
+        }
+        cssPosition = diagramPosition
+          .transformBy(this.diagram.diagramToPixelSpaceTransform.matrix());
       } else {
-        diagramPosition = element.getDiagramPosition();
+        let html = element;
+        if (typeof element === 'string') {
+          html = document.getElementById(element);
+        }
+        if (html instanceof HTMLElement) {
+          const rect = html.getBoundingClientRect();
+          const rectBase = this.diagram.htmlCanvas.getBoundingClientRect();
+          if (location === 'topleft') {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * 0.05,
+              rect.top - rectBase.top + rect.height * 0.25,
+            );
+          } else if (location === 'topright') {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * 0.95,
+              rect.top - rectBase.top + rect.height * 0.25,
+            );
+          } else {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width / 2,
+              rect.top - rectBase.top + rect.height / 2,
+            );
+          }
+        }
       }
-      const cssPosition = diagramPosition
-        .transformBy(this.diagram.diagramToPixelSpaceTransform.matrix());
       star.classList.add('lesson__info_star_pulse');
       const rect = star.getBoundingClientRect();
       star.style.left = `${cssPosition.x - rect.width / 2}px`;

@@ -47,10 +47,14 @@ class Content extends LessonContent {
         middle: click(this.starOnElement, [this, quizP1._line2._mid, ''], layout.colors.line),
         ends: click(this.starOnElement, [this, quizP1._line2._end1, 'center'], layout.colors.line),
       },
-      interactiveItems: [
+      interactiveElements: [
         interactiveItem(quizP1._line2._end1, 'center'),
         interactiveItem(quizP1._line2._mid, 'zero'),
         interactiveItem(quizP1._line2._end2, 'center'),
+      ],
+      removeInteractiveElements: [
+        quizP1._line2._mid,
+        'redline',
       ],
       setEnterState: () => {
         quizP1.setPosition(0, 0);
@@ -97,7 +101,7 @@ class Content extends LessonContent {
           <li>Move lines by dragging them to help determine if parallel.</li>
           </ul>
       `,
-      interactiveItems: [
+      interactiveElements: [
         interactiveItem(quizP2._line1, ''),
         interactiveItem(quizP2._line2, ''),
         interactiveItem(quizP2._line3, ''),
@@ -143,7 +147,7 @@ class Content extends LessonContent {
         blue_line: click(quizA1.pulseLine1, [quizP1], colors.line),
       },
       setInfo: 'Touch the grey box to enter the angle',
-      interactiveItems: [
+      interactiveElements: [
         interactiveItem(quizA1._input, ''),
       ],
       setEnterState: () => {

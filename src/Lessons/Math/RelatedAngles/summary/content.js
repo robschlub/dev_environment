@@ -61,13 +61,14 @@ class Content extends LessonContent {
           <li>Touch |Parallel Lines| to make lines parallel.</li>
           </ul>
       `,
-      interactiveItems: [
+      interactiveElements: [
         interactiveItem(parallel._line1._end1, 'center'),
         interactiveItem(parallel._line1._mid, 'zero'),
         interactiveItem(parallel._line1._end2, 'center'),
         interactiveItem(parallel._line2._end1, 'center'),
         interactiveItem(parallel._line2._mid, 'zero'),
         interactiveItem(parallel._line2._end2, 'center'),
+        // interactiveItem('lesson__id_Parallel_lines', 'topleft'),
       ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
@@ -122,11 +123,12 @@ class Content extends LessonContent {
           <li>Click |Opposite Angles| to see the other pair of angles.</li>
           </ul>
       `,
-      interactiveItems: [
+      interactiveElements: [
         interactiveItem(opp._line1._end1, 'center'),
         interactiveItem(opp._line1._end2, 'center'),
         interactiveItem(opp._line2._end1, 'center'),
         interactiveItem(opp._line2._end2, 'center'),
+        // interactiveItem('lesson__id_Opposite_Angles', 'topleft'),
       ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
@@ -204,13 +206,14 @@ class Content extends LessonContent {
           <li>Touch |Corresponding Angles| to change the angle pair.</li>
           </ul>
       `,
-      interactiveItems: [
+      interactiveElements: [
         interactiveItem(threeLines._line3._end1, 'center'),
         interactiveItem(threeLines._line3._end2, 'center'),
         interactiveItem(threeLines._line1._end1, 'center'),
         interactiveItem(threeLines._line1._end2, 'center'),
         interactiveItem(threeLines._line2._end1, 'center'),
         interactiveItem(threeLines._line2._end2, 'center'),
+        // interactiveItem('lesson__id_Corresponding_Angles', 'topleft'),
       ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('corresponding');
@@ -289,7 +292,8 @@ class Content extends LessonContent {
           <li>Touch |Alternate Angles| to change the angle pair.</li>
           </ul>
       `,
-      interactiveItems: [
+      interactiveElements: [
+        // interactiveItem('lesson__id_Alternate_angles', 'topleft'),
         interactiveItem(threeLines._line3._end1, 'center'),
         interactiveItem(threeLines._line3._end2, 'center'),
         interactiveItem(threeLines._line1._end1, 'center'),
@@ -375,7 +379,7 @@ class Content extends LessonContent {
           <li>Touch |Interior Angles| to change the angle pair.</li>
           </ul>
       `,
-      interactiveItems: [
+      interactiveElements: [
         interactiveItem(threeLines._line3._end1, 'center'),
         interactiveItem(threeLines._line3._end2, 'center'),
         interactiveItem(threeLines._line1._end1, 'center'),

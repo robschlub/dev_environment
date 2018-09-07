@@ -201,6 +201,7 @@ class Lesson {
     if (diagram) {
       section.setEnterState(this.state);
       section.setInfoButton();
+      section.setInteractiveElements();
       section.setInteractiveElementsButton();
       section.currentInteractiveItem = -1;
       section.setVisible();
