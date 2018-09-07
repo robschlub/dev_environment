@@ -142,6 +142,21 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this._line6.selected = false;
   }
 
+  enableTouchLines(isEnabled: boolean = true) {
+    this._line1.hasTouchableElements = isEnabled;
+    this._line2.hasTouchableElements = isEnabled;
+    this._line3.hasTouchableElements = isEnabled;
+    this._line4.hasTouchableElements = isEnabled;
+    this._line5.hasTouchableElements = isEnabled;
+    this._line6.hasTouchableElements = isEnabled;
+    this._line1.isTouchable = isEnabled;
+    this._line2.isTouchable = isEnabled;
+    this._line3.isTouchable = isEnabled;
+    this._line4.isTouchable = isEnabled;
+    this._line5.isTouchable = isEnabled;
+    this._line6.isTouchable = isEnabled;
+  }
+
   randomizeFuturePositions() {
     this.futurePositions = {
       line1: this.randomizeParallelLine(),
@@ -165,7 +180,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
     const { rotation } = parallelLine2;
     parallelLine1.rotation = rotation;
-    parallelLine1.position = parallelLine2.position.add(0.01, 0.01);
     const isParallel = checkValuesForParallel(
       parallelLine1.rotation,
       parallelLine1.position,
@@ -200,6 +214,11 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
   }
 
   moveToFuturePositions(time: number, done: () => void = () => {}) {
+    this.enableTouchLines(false);
+    const callback = () => {
+      this.enableTouchLines(true);
+      done();
+    };
     const move = this.diagram.elements.moveToScenario.bind(this);
     const fp = this.futurePositions;
     move(this._line1, fp.line1, time);
@@ -207,7 +226,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     move(this._line3, fp.line3, time);
     move(this._line4, fp.line4, time);
     move(this._line5, fp.line5, time);
-    move(this._line6, fp.line6, time, done);
+    move(this._line6, fp.line6, time, callback.bind(this));
   }
 
   tryAgain() {

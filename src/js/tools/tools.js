@@ -253,9 +253,26 @@ function duplicateFromTo(
   });
 }
 
+function isTouchDevice() {
+  const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
+  const mq = query => window.matchMedia(query).matches;
+
+  /* eslint-disable no-undef, no-mixed-operators */
+  // $FlowFixMe
+  if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+    return true;
+  }
+  /* eslint-enable no-undef, no-mixed-operators */
+
+  // include the 'heartz' as a way to have a non matching MQ to help terminate the join
+  // https://git.io/vznFH
+  const query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
+  return mq(query);
+}
+
 export {
   divide, mulToString, add, Console,
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
-  colorArrayToRGBA, addToObject, duplicateFromTo,
+  colorArrayToRGBA, addToObject, duplicateFromTo, isTouchDevice,
 };

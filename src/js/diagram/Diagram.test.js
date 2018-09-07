@@ -10,14 +10,11 @@ import {
 import webgl from '../__mocks__/WebGLInstanceMock';
 import DrawContext2D from '../__mocks__/DrawContext2DMock';
 import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
-// import { linear, round } from './mathtools';
-// import Gesture from './Gesture';
-// import WebGLInstance from './webgl';
-// import * as m2 from './m2';
 
 jest.mock('./Gesture');
 jest.mock('./webgl/webgl');
 jest.mock('./DrawContext2D');
+jest.mock('../tools/tools');
 
 describe('Diagram', () => {
   let diagrams;
@@ -123,6 +120,7 @@ describe('Diagram', () => {
       diagram.webgl = webgl;
       diagram.canvas = canvasMock;
       diagram.htmlCanvas = htmlCanvasMock;
+      diagram.isTouchDevice = false;
       diagram.draw2D = new DrawContext2D(definition.width, definition.height);
       diagram.setSpaceTransforms();
       // create squares:
