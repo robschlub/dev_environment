@@ -595,8 +595,8 @@ class Section {
 // class diagramClass {
 // }
 const whichAnimationEvent = () => {
-  let t;
-  const el = document.createElement("fakeelement");
+  // let t;
+  const el = document.createElement('fakeelement');
 
   const transitions = {
     animation: 'animationend',
@@ -604,9 +604,16 @@ const whichAnimationEvent = () => {
     MozAnimation: 'animationend',
     WebkitAnimation: 'webkitAnimationEnd',
   };
-  for (t in transitions) {
-    if (el.style[t] !== undefined) {
-      return transitions[t];
+  // for (t in transitions) {
+  //   console.log(t)
+  //   if (el.style[t] !== undefined) {
+  //     return transitions[t];
+  //   }
+  // }
+  for (let i = 0; i < Object.keys(transitions).length; i += 1) {
+    const key = Object.keys(transitions)[i];
+    if (key in el.style) {
+      return transitions[key];
     }
   }
   return '';

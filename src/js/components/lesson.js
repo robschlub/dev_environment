@@ -562,7 +562,6 @@ export default class LessonComponent extends React.Component
                 </canvas>
                 <div id="dd" className='diagram__html'>
                   {this.renderContent(this.state.htmlText)}
-                {/*this.addInfoBox()*/}
                 </div>
               </div>
               {this.addGoToButton()}
