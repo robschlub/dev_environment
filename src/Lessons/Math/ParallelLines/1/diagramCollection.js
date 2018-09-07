@@ -8,9 +8,9 @@ import lessonLayout from './layout';
 import LessonDiagram from './diagram';
 
 import ParallelCollection from '../common/diagramCollectionParallel';
-import RelatedAnglesCommonCollection from '../common/diagramCollection';
+import CommonLessonDiagramCollection from '../common/diagramCollection';
 
-export default class RelatedAngles1Collection extends RelatedAnglesCommonCollection {
+export default class DiagramCollection extends CommonLessonDiagramCollection {
   _parallel: ParallelCollection;
 
   constructor(

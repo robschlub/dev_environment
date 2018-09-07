@@ -10,7 +10,7 @@ import {
 // eslint-disable-next-line import/no-cycle
 import {
   makeAnglesClose, checkElementsForParallel,
-} from './diagramCollectionCommon';
+} from './tools';
 
 import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
 import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
