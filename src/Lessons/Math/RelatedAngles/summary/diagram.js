@@ -14,13 +14,6 @@ class LessonDiagram extends RelatedAnglesCommonLessonDiagram {
 
     this.elements.hasTouchableElements = true;
   }
-
-  touchUpHandler() {
-    super.touchUpHandler();
-    if (this.elements._parallel.isShown) {
-      this.elements._parallel.checkForParallel(true);
-    }
-  }
 }
 
 export default LessonDiagram;

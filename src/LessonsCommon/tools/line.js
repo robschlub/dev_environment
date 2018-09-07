@@ -33,9 +33,6 @@ export function makeMoveableLine(
       end: number,
       middle: number,
     },
-    label: {
-      length: number,
-    },
     width: number,
     boundary: Rect,
   },

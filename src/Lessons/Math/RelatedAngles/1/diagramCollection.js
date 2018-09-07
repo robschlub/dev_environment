@@ -7,14 +7,12 @@ import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
-import ParallelCollection from '../common/diagramCollectionParallel';
 import OppositeCollection from '../common/diagramCollectionOpposite';
 import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
 import RelatedAnglesCommonCollection from '../common/diagramCollection';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
 export default class RelatedAngles1Collection extends RelatedAnglesCommonCollection {
-  _parallel: ParallelCollection;
   _opposite: OppositeCollection;
   _threeLines: ThreeLinesCollection;
   units: TypeUnits;
@@ -27,7 +25,6 @@ export default class RelatedAngles1Collection extends RelatedAnglesCommonCollect
     super(diagram, layout, transform);
 
     this.units = 'deg';
-    this.add('parallel', new ParallelCollection(diagram, this.layout));
     this.add('opposite', new OppositeCollection(diagram, this.layout));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
     this.add('unitsSelector', this.makeUnitsSelector());

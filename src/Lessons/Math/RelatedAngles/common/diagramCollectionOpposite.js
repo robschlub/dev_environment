@@ -8,24 +8,11 @@ import {
 } from '../../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeLabeledLine, makeLabeledAngle, makeSupplementaryAngle } from './diagramCollectionCommon';
-import type { TypeLabeledLine, TypeAngle, TypeSupplementaryAngle } from './diagramCollectionCommon';
+import { makeLabeledAngle, makeSupplementaryAngle } from './diagramCollectionCommon';
+import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeAngle, TypeSupplementaryAngle } from './diagramCollectionCommon';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
-
-// type AngleType = {
-//   _label: DiagramElementCollection;
-//   _arc: DiagramElementPrimative;
-//   eqn: {
-//     showForm: (string) => void;
-//   } & Equation;
-//   updateAngle: (number, number) => void;
-// } & DiagramElementCollection;
-
-// type labeledLineType = {
-//   _label: DiagramElementCollection;
-//   eqn: Equation;
-//   updateLabel: (number) => void;
-// } & MoveableLineType;
 
 export default class OppositeCollection extends DiagramElementCollection {
   layout: Object;
@@ -239,13 +226,6 @@ export default class OppositeCollection extends DiagramElementCollection {
       }
     }
     this._supplementary.scaleAndDisolve();
-    // this._supplementary.stop();
-    // this._supplementary.stop();
-    // this._supplementary.show();
-    // this._supplementary.pulseScaleNow(2, 1.2, 0.25,
-    //   () => {
-    //     this._supplementary.disolveOut(2);
-    //   });
     this.diagram.animateNextFrame();
   }
 

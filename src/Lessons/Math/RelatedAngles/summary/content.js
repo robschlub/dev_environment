@@ -24,76 +24,18 @@ class Content extends LessonContent {
 
   setElementContent() {
     const { selector } = this.diagram.elements._selector;
-    selector.add('parallel', 'Parallel', 'Lines');
     selector.add('opposite', 'Opposite', 'Angles');
     selector.add('corresponding', 'Corresponding', 'Angles');
     selector.add('alternate', 'Alternate', 'Angles');
     selector.add('interior', 'Interior', 'Angles');
-    // selector.add('quiz', 'Quiz', '');
     selector.selectWithoutExecution('parallel');
   }
 
   addSections() {
     const diag = this.diagram.elements;
     const opp = diag._opposite;
-    const parallel = diag._parallel;
     const threeLines = diag._threeLines;
     // const quiz = diag._quiz;
-
-    this.addSection({
-      title: 'Parallel Lines',
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
-          |Parallel_lines| are lines that never meet.
-        </p>
-        <p class="lesson__diagram_text_p_width_40">
-          They have the same rotation, and do not touch.
-        </p>
-        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
-      `),
-      modifiers: {
-        Parallel_lines: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
-      },
-      setInfo: `<ul>
-          <li>Move a line by dragging its middle.</li>
-          <li>Rotate a line by dragging one of its ends.</li>
-          <li>The lines will be blue when they are parallel.</li>
-          <li>Touch |Parallel Lines| to make lines parallel.</li>
-          </ul>
-      `,
-      setEnterState: () => {
-        diag._selector.selector.selectWithoutExecution('parallel');
-        parallel.setPosition(layout.position);
-        if (opp.isShown) {
-          parallel._line1.setTransform(opp._line1.transform._dup());
-          parallel._line2.setTransform(opp._line2.transform._dup());
-        }
-        parallel._line1.setColor(colors.line);
-      },
-      showOnly: [
-      ],
-      show: [
-        diag._selector,
-        parallel,
-        parallel._line1,
-        parallel._line2,
-      ],
-      transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(parallel._line1, 'parallel'),
-          diag.getTimeToMoveToScenario(parallel._line2, 'parallel'),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(parallel._line1, 'parallel', time);
-        diag.moveToScenario(parallel._line2, 'parallel', time, done);
-      },
-      setSteadyState: () => {
-        diag.isParallelHighlighting = true;
-        diag.moveToScenario(parallel._line1, 'parallel', 0.001);
-        diag.moveToScenario(parallel._line2, 'parallel', 0.001);
-      },
-    });
-
 
     this.addSection({
       title: 'Opposite Angles',
@@ -120,10 +62,6 @@ class Content extends LessonContent {
       ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('opposite');
-        if (parallel.isShown) {
-          opp._line1.transform = parallel._line1.transform._dup();
-          opp._line2.transform = parallel._line2.transform._dup();
-        }
         opp._angleA.setColor(layout.colors.angleA);
         opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.angleA);
@@ -145,10 +83,7 @@ class Content extends LessonContent {
         opp._line2._mid,
       ],
       show: [
-        // diag._unitsSelector,
         diag._selector,
-        // opp._line1,
-        // opp._line2,
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
@@ -201,11 +136,6 @@ class Content extends LessonContent {
       ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('corresponding');
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();
@@ -283,11 +213,6 @@ class Content extends LessonContent {
       ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('alternate');
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();
@@ -366,11 +291,6 @@ class Content extends LessonContent {
       ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('interior');
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();

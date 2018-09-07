@@ -60,10 +60,6 @@ export default function lessonLayoutCommon() {
   };
 
   layout.line1 = {
-    parallel: {
-      position: new Point(0, 0.3),
-      rotation: 0,
-    },
     opposite: {
       position: new Point(0, 0),
       rotation: 0,
@@ -84,10 +80,6 @@ export default function lessonLayoutCommon() {
     rotation: 0,
   };
   layout.line2 = {
-    parallel: {
-      position: new Point(0, -0.3),
-      rotation: 0,
-    },
     opposite: {
       position: new Point(0, 0),
       rotation: Math.PI / 4,

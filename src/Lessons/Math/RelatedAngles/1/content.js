@@ -25,54 +25,7 @@ class Content extends LessonContent {
   addSections() {
     const diag = this.diagram.elements;
     const opp = diag._opposite;
-    const parallel = diag._parallel;
     const threeLines = diag._threeLines;
-
-    this.addSection({
-      title: 'Parallel Lines',
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
-          |Parallel_lines| are lines that never meet.
-        </p>
-        <p class="lesson__diagram_text_p_width_40">
-          They have the same rotation, and do not touch.
-        </p>
-        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
-      `),
-      modifiers: {
-        Parallel_lines: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
-      },
-      setEnterState: () => {
-        parallel.setPosition(layout.position);
-        if (opp.isShown) {
-          parallel._line1.setTransform(opp._line1.transform._dup());
-          parallel._line2.setTransform(opp._line2.transform._dup());
-        }
-        parallel._line1.setColor(colors.line);
-      },
-      showOnly: [
-      ],
-      show: [
-        parallel,
-        parallel._line1,
-        parallel._line2,
-      ],
-      transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(parallel._line1, 'parallel'),
-          diag.getTimeToMoveToScenario(parallel._line2, 'parallel'),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(parallel._line1, 'parallel', time);
-        diag.moveToScenario(parallel._line2, 'parallel', time, done);
-      },
-      setSteadyState: () => {
-        diag.isParallelHighlighting = true;
-        diag.moveToScenario(parallel._line1, 'parallel', 0.001);
-        diag.moveToScenario(parallel._line2, 'parallel', 0.001);
-      },
-    });
-
 
     this.addSection({
       title: 'Opposite Angles',
@@ -89,10 +42,6 @@ class Content extends LessonContent {
         Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.line),
       },
       setEnterState: () => {
-        if (parallel.isShown) {
-          opp._line1.transform = parallel._line1.transform._dup();
-          opp._line2.transform = parallel._line2.transform._dup();
-        }
         opp._angleA.setColor(layout.colors.angleA);
         opp._angleB.setColor(layout.colors.angleB);
         opp._angleC.setColor(layout.colors.angleA);
@@ -383,11 +332,6 @@ class Content extends LessonContent {
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
       setEnterState: () => {
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();
@@ -609,11 +553,6 @@ class Content extends LessonContent {
         ),
       },
       setEnterState: () => {
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();
@@ -676,11 +615,6 @@ class Content extends LessonContent {
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
       setEnterState: () => {
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();
@@ -747,11 +681,6 @@ class Content extends LessonContent {
         Opposite_angles: click(threeLines.showOppositeAngles, [threeLines], colors.angleC),
       },
       setEnterState: () => {
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();
@@ -821,11 +750,6 @@ class Content extends LessonContent {
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
       setEnterState: () => {
-        if (parallel.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = parallel._line1.transform._dup();
-          threeLines._line2.transform = parallel._line2.transform._dup();
-        }
         if (opp.isShown) {
           threeLines.transform.updateRotation(0);
           threeLines._line1.transform = opp._line1.transform._dup();

@@ -23,117 +23,7 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    const quizP1 = diag._quizP1;
-    const quizP2 = diag._quizP2;
     const quizA1 = diag._quizA1;
-
-    this.addSection({
-      title: 'Parallel Lines 1',
-      setContent: centerH(`
-        <p style="margin-top:3%">
-          Move the |red_line| to be parallel with the |blue_line|.
-        </p>
-      `),
-      modifiers: {
-        red_line: click(quizP1.pulseLine2, [quizP1], colors.quizLine),
-        blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
-      },
-      setInfo: `<ul>
-          <li>Move the line by dragging its |middle|.</li>
-          <li>Rotate the line by dragging one of its |ends|.</li>
-          </ul>
-      `,
-      infoModifiers: {
-        middle: click(this.highlightInteractiveElement, [this, quizP1._line2._mid, ''], layout.colors.line, false),
-        ends: click(this.highlightInteractiveElement, [this, quizP1._line2._end1, 'center'], layout.colors.line, false),
-      },
-      // interactiveElements: [
-      //   interactiveItem(quizP1._line2._end1, 'center'),
-      //   interactiveItem(quizP1._line2._mid, 'zero'),
-      //   interactiveItem(quizP1._line2._end2, 'center'),
-      // ],
-      // interactiveElementsRemove: [
-      //   quizP1._line2._mid,
-      //   'lesson__id_red_line',
-      // ],
-      setEnterState: () => {
-        quizP1.setPosition(0, 0);
-        quizP1._line2.setColor(colors.quizLine);
-        quizP1.hasTouchableElements = true;
-      },
-      showOnly: [
-        quizP1,
-      ],
-      show: [
-        quizP1._line1,
-        quizP1._line2,
-      ],
-      transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(quizP1._line1, layout.quiz.first.line1),
-          diag.getTimeToMoveToScenario(quizP1._line2, layout.quiz.first.line2),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(quizP1._line1, layout.quiz.first.line1, time);
-        diag.moveToScenario(quizP1._line2, layout.quiz.first.line2, time, done);
-      },
-      setSteadyState: () => {
-        diag.setScenario(quizP1._line1, layout.quiz.first.line1);
-        diag.setScenario(quizP1._line2, layout.quiz.first.line2);
-        quizP1._check.show();
-        // this.shineStarOnElement(quizP1._line2);
-      },
-    });
-
-    this.addSection({
-      title: 'Parallel Lines 2',
-      setContent: centerH(`
-        <p style="margin-top:3%">
-          Select two parallel lines.
-        </p>
-      `),
-      modifiers: {
-        red_line: click(quizP1.pulseLine2, [quizP1], colors.quizLine),
-        blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
-      },
-      setInfo: `<ul>
-          <li>Touch a line to toggle selection.</li>
-          <li>Move lines by dragging them to help determine if parallel.</li>
-          </ul>
-      `,
-      interactiveElementsOnly: [
-        interactiveItem(quizP2._line1),
-        interactiveItem(quizP2._line2),
-        interactiveItem(quizP2._line3),
-        interactiveItem(quizP2._line4),
-        interactiveItem(quizP2._line5),
-        interactiveItem(quizP2._line6),
-      ],
-      setEnterState: () => {
-        quizP2.setPosition(0, 0);
-        quizP2.hasTouchableElements = true;
-        quizP2.randomizeFuturePositions();
-        quizP2.resetLines();
-      },
-      showOnly: [
-        quizP2,
-      ],
-      show: [
-        quizP2._line1,
-        quizP2._line2,
-        quizP2._line3,
-        quizP2._line4,
-        quizP2._line5,
-        quizP2._line6,
-      ],
-      transitionFromAny: (done) => {
-        quizP2.moveToFuturePositions(2, done);
-      },
-      setSteadyState: () => {
-        quizP2.setFuturePositions();
-        quizP2._check.show();
-      },
-    });
 
     this.addSection({
       title: 'Related Angles 1',
@@ -143,8 +33,8 @@ class Content extends LessonContent {
         </p>
       `),
       modifiers: {
-        red_line: click(quizA1.pulseLine2, [quizP1], colors.quizLine),
-        blue_line: click(quizA1.pulseLine1, [quizP1], colors.line),
+        red_line: click(quizA1.pulseLine2, [quizA1], colors.quizLine),
+        blue_line: click(quizA1.pulseLine1, [quizA1], colors.line),
       },
       setInfo: 'Touch the grey box to enter the angle',
       interactiveElements: [
