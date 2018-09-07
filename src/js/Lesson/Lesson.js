@@ -201,8 +201,6 @@ class Lesson {
     if (diagram) {
       section.setEnterState(this.state);
       section.setInfoButton();
-      section.setInteractiveElements();
-      section.setInteractiveElementsButton();
       section.currentInteractiveItem = -1;
       section.setVisible();
       this.renderDiagrams();
@@ -240,6 +238,8 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     section.setOnClicks();
     section.setSteadyState(this.state);
+    section.setInteractiveElements();
+    section.setInteractiveElementsButton();
     this.inTransition = false;
     const { diagram } = this;
     if (diagram) {

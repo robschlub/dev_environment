@@ -47,15 +47,15 @@ class Content extends LessonContent {
         middle: click(this.starOnElement, [this, quizP1._line2._mid, ''], layout.colors.line, false),
         ends: click(this.starOnElement, [this, quizP1._line2._end1, 'center'], layout.colors.line, false),
       },
-      interactiveElements: [
-        interactiveItem(quizP1._line2._end1, 'center'),
-        interactiveItem(quizP1._line2._mid, 'zero'),
-        interactiveItem(quizP1._line2._end2, 'center'),
-      ],
-      interactiveElementsRemove: [
-        quizP1._line2._mid,
-        'lesson__id_red_line',
-      ],
+      // interactiveElements: [
+      //   interactiveItem(quizP1._line2._end1, 'center'),
+      //   interactiveItem(quizP1._line2._mid, 'zero'),
+      //   interactiveItem(quizP1._line2._end2, 'center'),
+      // ],
+      // interactiveElementsRemove: [
+      //   quizP1._line2._mid,
+      //   'lesson__id_red_line',
+      // ],
       setEnterState: () => {
         quizP1.setPosition(0, 0);
         quizP1._line2.setColor(colors.quizLine);
@@ -101,13 +101,13 @@ class Content extends LessonContent {
           <li>Move lines by dragging them to help determine if parallel.</li>
           </ul>
       `,
-      interactiveElements: [
-        interactiveItem(quizP2._line1, ''),
-        interactiveItem(quizP2._line2, ''),
-        interactiveItem(quizP2._line3, ''),
-        interactiveItem(quizP2._line4, ''),
-        interactiveItem(quizP2._line5, ''),
-        interactiveItem(quizP2._line6, ''),
+      interactiveElementsOnly: [
+        interactiveItem(quizP2._line1),
+        interactiveItem(quizP2._line2),
+        interactiveItem(quizP2._line3),
+        interactiveItem(quizP2._line4),
+        interactiveItem(quizP2._line5),
+        interactiveItem(quizP2._line6),
       ],
       setEnterState: () => {
         quizP2.setPosition(0, 0);
