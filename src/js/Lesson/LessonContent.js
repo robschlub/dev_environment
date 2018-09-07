@@ -116,8 +116,12 @@ function clickWord(
   actionMethod: Function,
   bind: Array<mixed>,
   classesOrColor: string | Array<number> | null = null,
+  interactive: boolean = true,
 ) {
   let classStr = 'action_word';
+  if (interactive) {
+    classStr = `${classStr} interactive_word`;
+  }
   if (typeof classesOrColor === 'string') {
     classStr = `${classesOrColor} ${classStr}`;
   }
@@ -140,9 +144,13 @@ function click(
   actionMethod: Function,
   bind: Array<mixed>,
   classesOrColor: string | Array<number> | null = null,
+  interactive: boolean = true,
   id: string = '',
 ) {
   let classStr = 'action_word';
+  if (interactive) {
+    classStr = `${classStr} interactive_word`;
+  }
   if (typeof classesOrColor === 'string') {
     classStr = `${classesOrColor} ${classStr}`;
   }
@@ -163,8 +171,12 @@ function actionWord(
   text: string,
   id: string = '',
   classesOrColor: string | Array<number> | null = null,
+  interactive: boolean = true,
 ) {
   let classStr = 'action_word';
+  if (interactive) {
+    classStr = `${classStr} interactive_word`;
+  }
   if (typeof classesOrColor === 'string') {
     classStr = `${classesOrColor} ${classStr}`;
   }
@@ -309,6 +321,10 @@ type TypeInteractiveElement = DiagramElementCollection
                               | HTMLElement;
 type TypeInteractiveElementLocation = 'center' | 'zero' | ''
                                       | 'topleft' | 'topright' | Point;
+type TypeInteractiveElements = Array<{
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
+  }>;
 
 class Section {
   title: string;
@@ -336,20 +352,10 @@ class Section {
     fromGoto: boolean;
   };
 
-  interactiveElements: Array<{
-    element: TypeInteractiveElement,
-    location: TypeInteractiveElementLocation,
-  }>;
-
-  removeInteractiveElements: Array<{
-    element: TypeInteractiveElement,
-    location: TypeInteractiveElementLocation,
-  }>;
-
-  interactiveElementsOnly: Array<{
-    element: TypeInteractiveElement,
-    location: TypeInteractiveElementLocation,
-  }>;
+  interactiveElementsOnly: TypeInteractiveElements;
+  interactiveElements: TypeInteractiveElements;
+  interactiveElementsRemove: Array<TypeInteractiveElement>;
+  interactiveElementList: TypeInteractiveElements;
 
   currentInteractiveItem: number;
 
@@ -369,7 +375,7 @@ class Section {
       toGoto: false,
       fromGoto: false,
     };
-    this.interactiveElements = [];
+    this.interactiveElementList = [];
     this.currentInteractiveItem = -1;
   }
 
@@ -433,7 +439,7 @@ class Section {
       .getElementById('id_lesson__interactive_element_button');
     // const infoBox = document.getElementById('id_lesson__info_box__text');
     if (button instanceof HTMLElement) {
-      if (this.interactiveItems.length > 0) {
+      if (this.interactiveElementList.length > 0) {
         button.classList.remove('lesson__interactive_element_button__hide');
       } else {
         button.classList.add('lesson__interactive_element_button__hide');
@@ -516,37 +522,48 @@ class Section {
     // }
   }
 
+  removeInteractiveElement(element: TypeInteractiveElement) {
+    let elem = element;
+    if (typeof element === 'string') {
+      elem = document.getElementById(element);
+    }
+    for (let i = 0; i < this.interactiveElementList.length; i += 1) {
+      const item = this.interactiveElementList[i];
+      if (item.element === elem) {
+        this.interactiveElementList.splice(i, 1);
+        i = this.interactiveElementList.length;
+      }
+    }
+  }
+
   setInteractiveElements() {
     if ('interactiveElementsOnly' in this) {
-      this.interactiveElements = this.interactiveElementsOnly;
-    }
+      this.interactiveElementList = this.interactiveElementsOnly;
+    } else {
+      // Get all action words
+      const elements = document.getElementsByClassName('interactive_word');
+      for (let i = 0; i < elements.length; i += 1) {
+        const element = elements[i];
+        this.interactiveElements.push({
+          element,
+          location: 'topright',
+        });
+      }
 
-    const elements = document.getElementsByClassName('action_word');
-    for (let i = 0; i < elements.length; i += 1) {
-      const element = elements[i];
-      this.interactiveElements.push({
-        element,
-        location: 'topright',
+      // Get all movable diagram elements
+    }
+    if ('interactiveElements' in this) {
+      this.interactiveElements.forEach((element) => {
+        this.interactiveElementList.push(element);
       });
     }
+    // interactiveElementsOnly
+    // addInteractiveElements          // override, add
+    // interactiveElementsRemove    // remove
 
-    highlightElementsOnly
-    highlightElements          // override, add
-    highlightElementsRemove    // remove
-
-    if ('removeInteractiveElements' in this) {
-      this.removeInteractiveElements.forEach((element) => {
-        let elem = element;
-        if (typeof element === 'string') {
-          elem = document.getElementById(element);
-        }
-        for (let i = 0; i < this.interactiveElements.length; i += 1) {
-          const item = this.interactiveElements[i];
-          if (item.element === elem) {
-            this.interactiveElements.splice(i, 1);
-            i = this.interactiveElements.length;
-          }
-        }
+    if ('interactiveElementsRemove' in this) {
+      this.interactiveElementsRemove.forEach((element) => {
+        this.removeInteractiveElement(element);
       });
     }
   }

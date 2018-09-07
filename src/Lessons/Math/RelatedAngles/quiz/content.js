@@ -44,17 +44,17 @@ class Content extends LessonContent {
           </ul>
       `,
       infoModifiers: {
-        middle: click(this.starOnElement, [this, quizP1._line2._mid, ''], layout.colors.line),
-        ends: click(this.starOnElement, [this, quizP1._line2._end1, 'center'], layout.colors.line),
+        middle: click(this.starOnElement, [this, quizP1._line2._mid, ''], layout.colors.line, false),
+        ends: click(this.starOnElement, [this, quizP1._line2._end1, 'center'], layout.colors.line, false),
       },
       interactiveElements: [
         interactiveItem(quizP1._line2._end1, 'center'),
         interactiveItem(quizP1._line2._mid, 'zero'),
         interactiveItem(quizP1._line2._end2, 'center'),
       ],
-      removeInteractiveElements: [
+      interactiveElementsRemove: [
         quizP1._line2._mid,
-        'redline',
+        'lesson__id_red_line',
       ],
       setEnterState: () => {
         quizP1.setPosition(0, 0);
