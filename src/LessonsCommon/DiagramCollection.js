@@ -14,26 +14,38 @@ import {
 
 export type TypeUnits = 'deg' | 'rad';
 
+type TypeScenario = string | null | { position?: Point, rotation?: number, scale?: Point | number };
+
 function getTarget(
   element: DiagramElement,
-  scenario: string | null | { position: Point, rotation: number } = null,
+  scenario: TypeScenario,
   layout: Object,
 ) {
-  const target = element.transform.constant(0);
-  if (scenario === null) {
-    target.updateTranslation(layout[element.name].position);
-    target.updateRotation(layout[element.name].rotation);
+  const target = element.transform._dup();
+  let scenarioObject;
+  if (scenario == null || scenario === '') {
+    scenarioObject = layout[element.name];
   } else if (typeof scenario === 'string') {
-    target.updateTranslation(layout[element.name][scenario].position);
-    target.updateRotation(layout[element.name][scenario].rotation);
+    scenarioObject = layout[element.name][scenario];
   } else {
-    target.updateTranslation(scenario.position);
-    target.updateRotation(scenario.rotation);
+    scenarioObject = scenario;
+  }
+  if (scenarioObject.position != null) {
+    target.updateTranslation(scenarioObject.position);
+  }
+
+  if (scenarioObject.rotation != null) {
+    target.updateRotation(scenarioObject.rotation);
+  }
+  if (scenarioObject.scale != null) {
+    if (scenarioObject.scale instanceof Point) {
+      target.updateScale(scenarioObject.scale);
+    } else {
+      target.updateScale(scenarioObject.scale, scenarioObject.scale);
+    }
   }
   return target;
 }
-
-type TypeScenario = string | null | { position: Point, rotation: number };
 
 export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
@@ -61,6 +73,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     const velocity = element.transform.constant(0);
     velocity.updateTranslation(new Point(1 / 2, 1 / 2));
     velocity.updateRotation(2 * Math.PI / 6);
+    velocity.updateScale(1, 1);
     const time = getMaxTimeFromVelocity(element.transform._dup(), target, velocity, 0);
     return time;
   }

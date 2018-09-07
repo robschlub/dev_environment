@@ -1,7 +1,7 @@
 // @flow
 
 import {
-  Point, minAngleDiff, normAngle, Line,
+  Point, minAngleDiff, normAngle, Line, Rect,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -74,4 +74,28 @@ export function checkElementsForParallel(
     return isParallel;
   }
   return false;
+}
+
+type TypeLineLayout = {
+  length: {
+    full: number;
+  };
+  boundary: Rect;
+};
+
+export function randomizeParallelLine(lineLayout: TypeLineLayout) {
+  const limit = new Rect(
+    lineLayout.boundary.left + lineLayout.length.full / 2,
+    lineLayout.boundary.bottom + lineLayout.length.full / 2,
+    lineLayout.boundary.width - lineLayout.length.full,
+    lineLayout.boundary.height - lineLayout.length.full,
+  );
+
+  const x = Math.random() * limit.width + limit.left;
+  const y = Math.random() * limit.height + limit.bottom;
+  const r = Math.random() * Math.PI;
+  return {
+    position: new Point(x, y),
+    rotation: r,
+  };
 }

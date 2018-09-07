@@ -46,10 +46,14 @@ class Content extends LessonContent {
         middle: click(this.highlightInteractiveElement, [this, quizP1._line2._mid, ''], layout.colors.line, false),
         ends: click(this.highlightInteractiveElement, [this, quizP1._line2._end1, 'center'], layout.colors.line, false),
       },
+      interactiveElements: [
+        interactiveItem(quizP1._check),
+      ],
       setEnterState: () => {
         quizP1.setPosition(0, 0);
         quizP1._line2.setColor(colors.quizLine);
         quizP1.hasTouchableElements = true;
+        quizP1.randomizeFuturePositions();
       },
       showOnly: [
         quizP1,
@@ -59,19 +63,11 @@ class Content extends LessonContent {
         quizP1._line2,
       ],
       transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(quizP1._line1, layout.quiz.first.line1),
-          diag.getTimeToMoveToScenario(quizP1._line2, layout.quiz.first.line2),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(quizP1._line1, layout.quiz.first.line1, time);
-        diag.moveToScenario(quizP1._line2, layout.quiz.first.line2, time, done);
+        quizP1.moveToFuturePositions(2, done);
       },
       setSteadyState: () => {
-        diag.setScenario(quizP1._line1, layout.quiz.first.line1);
-        diag.setScenario(quizP1._line2, layout.quiz.first.line2);
+        quizP1.setFuturePositions();
         quizP1._check.show();
-        // this.shineStarOnElement(quizP1._line2);
       },
     });
 
@@ -89,6 +85,7 @@ class Content extends LessonContent {
       setInfo: `<ul>
           <li>Touch a line to toggle selection.</li>
           <li>Move lines by dragging them to help determine if parallel.</li>
+          <li>Note, there may be more than one answer to choose from!</li>
           </ul>
       `,
       interactiveElementsOnly: [
@@ -98,6 +95,7 @@ class Content extends LessonContent {
         interactiveItem(quizP2._line4),
         interactiveItem(quizP2._line5),
         interactiveItem(quizP2._line6),
+        interactiveItem(quizP2._check),
       ],
       setEnterState: () => {
         quizP2.setPosition(0, 0);

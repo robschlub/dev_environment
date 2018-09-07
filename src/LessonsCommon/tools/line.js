@@ -40,8 +40,8 @@ export function makeMoveableLine(
 ): MoveableLineType {
   const { width } = layout;
   const { end, middle, full } = layout.length;
-
   const line = diagram.shapes.collection(new Transform()
+    .scale(1, 1)
     .rotate(0)
     .translate(0, 0));
   line.hasTouchableElements = true;
@@ -69,7 +69,7 @@ export function makeMoveableLine(
       }
     }
   };
-  line.setTransform(new Transform().rotate(0).translate(0, 0));
+  line.setTransform(new Transform().scale(1, 1).rotate(0).translate(0, 0));
 
   const end1 = diagram.shapes.horizontalLine(
     new Point(-full / 2, 0),

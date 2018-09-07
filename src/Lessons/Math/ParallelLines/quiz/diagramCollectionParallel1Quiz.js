@@ -2,7 +2,7 @@
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect, Point,
+  Transform,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -11,6 +11,7 @@ import {
 // eslint-disable-next-line import/no-cycle
 import {
   checkElementsForParallel, checkValuesForParallel, makeAnglesClose,
+  randomizeParallelLine,
 } from '../common/tools';
 import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
 import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
@@ -29,6 +30,8 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     _rotation: DiagramElementPrimative;
   } & TypeMessages;
 
+  futurePositions: Object;
+
   // eslint-disable-next-line class-methods-use-this
   normalizeAngle(element: DiagramElementCollection, wrap: number = 2 * Math.PI) {
     let angle = element.transform.r();
@@ -42,7 +45,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   makeLine() {
     const line = makeMoveableLine(
-      this.diagram, this.layout.parallelLine,
+      this.diagram, this.layout.line,
       this.layout.colors.line,
     );
     line.setTransformCallback = (t: Transform) => {
@@ -77,11 +80,9 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.layout = layout;
     this.setPosition(this.layout.quiz.position);
     this.add('line1', this.makeLine());
-    this._line1.setPosition(this.layout.line1.quiz.position.x, 0);
     this._line1.hasTouchableElements = false;
     this._line1.isTouchable = false;
     this.add('line2', this.makeLine());
-    this._line2.setPosition(this.layout.line2.quiz.position.x, 0);
     this.hasTouchableElements = true;
   }
 
@@ -96,7 +97,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     const t1 = this._line1.transform.t();
     const t2 = this._line2.transform.t();
 
-    const dist = this.layout.parallelLine.width * 1.1;
+    const dist = this.layout.line.width * 1.1;
     const rot = Math.PI / 200;
     if (r1 != null && t1 != null && t2 != null) {
       if (!checkValuesForParallel(r1, t1, r1, t2, dist, rot)) {
@@ -133,45 +134,36 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.diagram.animateNextFrame();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  randomizeParallelLine() {
-    const limit = new Rect(
-      this.layout.parallelLine.boundary.left + this.layout.parallelLine.length.full / 2,
-      -0.5,
-      this.layout.parallelLine.boundary.width - this.layout.parallelLine.length.full,
-      1,
-    );
-
-    const x = Math.random() * limit.width + limit.left;
-    const y = Math.random() * limit.height + limit.bottom;
-    const r = Math.random() * Math.PI;
-    return {
-      position: new Point(x, y),
-      rotation: r,
+  randomizeFuturePositions() {
+    this.futurePositions = {
+      line1: randomizeParallelLine(this.layout.line),
+      line2: randomizeParallelLine(this.layout.line),
     };
+  }
+
+  setFuturePositions() {
+    const fp = this.futurePositions;
+    this.setScenario(this._line1, fp.line1);
+    this.setScenario(this._line2, fp.line2);
+  }
+
+  moveToFuturePositions(time: number, done: () => void = () => {}) {
+    const fp = this.futurePositions;
+    this.moveToScenario(this._line1, fp.line1, time);
+    this.moveToScenario(this._line2, fp.line2, time, done);
   }
 
   isParallel(distanceMultiplier: number = 1.1, rotationThreshold: number = Math.PI / 200) {
     return checkElementsForParallel(
       this._line1, this._line2, false,
-      this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,
+      this.layout.line.width * distanceMultiplier, rotationThreshold,
     );
   }
 
   newProblem() {
     super.newProblem();
-    const time = 1;
-    this.diagram.elements.moveToScenario(
-      this._line1,
-      this.randomizeParallelLine(),
-      time,
-    );
-    this.diagram.elements.moveToScenario(
-      this._line2,
-      this.randomizeParallelLine(),
-      time,
-      () => { this._check.show(); },
-    );
+    this.randomizeFuturePositions();
+    this.moveToFuturePositions(1, this.showCheck.bind(this));
     this.diagram.animateNextFrame();
   }
 

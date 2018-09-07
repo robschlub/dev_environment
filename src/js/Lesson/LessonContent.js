@@ -83,17 +83,31 @@ function toHTML(
   };
 }
 
-function highlight(classes: string = '') {
-  const classStr = `${classes} highlight_word`;
+function highlight(classesOrColor: string | Array<number> = '') {
+  let classStr = 'highlight_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
   return {
-    replacementText: (text: string) => toHTML(text, '', classStr),
+    replacementText: (text: string) => toHTML(text, '', classStr, color),
   };
 }
 
-function highlightWord(text: string, classes: string = '') {
-  const classStr = `${classes} highlight_word`;
+function highlightWord(text: string, classesOrColor: string | Array<number> = '') {
+  let classStr = 'highlight_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
   return {
-    replacementText: toHTML(text, '', classStr).replacementText,
+    replacementText: toHTML(text, '', classStr, color).replacementText,
   };
 }
 

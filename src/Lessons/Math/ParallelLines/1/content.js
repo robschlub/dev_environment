@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click, centerV,
+  LessonContent, click, centerV, highlight,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -27,18 +27,29 @@ class Content extends LessonContent {
     const parallel = diag._parallel;
 
     this.addSection({
-      title: 'Parallel Lines',
+      title: 'Introduction',
       setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
-          |Parallel_lines| are lines that never meet.
+        <p>
+          |Parallel lines| exist everywhere around us.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
-          They have the same rotation, and do not touch.
+        <p>
+          Identifying parallel lines can often simplify a shape considerably, allowing faster calculation of angles and lengths.
         </p>
-        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
       `),
-      modifiers: {
-        Parallel_lines: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
+    });
+
+    const commonState = {
+      setInfo: [
+        '<ul>',
+        '<li>Move and rotate the lines to see when they are parallel.</li>',
+        '<li>Move the line by dragging its <i>middle</i>.</li>',
+        '<li>Rotate the line by dragging one of its <i>ends</i>.</li>',
+        '<li>The lines will have color when they are parallel.</li>',
+        '<li>Touch |parallel| to make the lines parallel.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        parallel: highlight(colors.line),
       },
       setEnterState: () => {
         parallel.setPosition(layout.position);
@@ -53,19 +64,72 @@ class Content extends LessonContent {
       ],
       transitionFromAny: (done) => {
         let time = Math.max(
-          diag.getTimeToMoveToScenario(parallel._line1, 'parallel'),
-          diag.getTimeToMoveToScenario(parallel._line2, 'parallel'),
+          diag.getTimeToMoveToScenario(parallel._line1),
+          diag.getTimeToMoveToScenario(parallel._line2),
         );
         time = time > 2 ? 2 : time;
-        diag.moveToScenario(parallel._line1, 'parallel', time);
-        diag.moveToScenario(parallel._line2, 'parallel', time, done);
+        diag.moveToScenario(parallel._line1, '', time);
+        diag.moveToScenario(parallel._line2, '', time, done);
       },
       setSteadyState: () => {
         diag.isParallelHighlighting = true;
-        diag.moveToScenario(parallel._line1, 'parallel', 0.001);
-        diag.moveToScenario(parallel._line2, 'parallel', 0.001);
+        diag.moveToScenario(parallel._line1, '', 0.001);
+        diag.moveToScenario(parallel._line2, '', 0.001);
       },
-    });
+    };
+
+    // this.addSection(Object.assign({}, {
+    //   title: 'Definition',
+    //   setContent: centerV(`
+    //     <p class="lesson__diagram_text_p_width_40">
+    //       Lines are |parallel| if they never meet.
+    //     </p>
+    //     <p class="lesson__diagram_text_p_width_40">
+    //       They have the same rotation, and do not touch (even if made longer).
+    //     </p>
+    //     ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
+    //   `),
+    //   modifiers: {
+    //     parallel: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
+    //   },
+    // }, commonState));
+
+    this.addSection(Object.assign({}, {
+      title: 'Definition',
+      setContent: `
+        <p>
+          Lines are |parallel| if they never meet.
+          They have the same rotation, and do not touch (even if made longer).
+        </p>
+        ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
+      `,
+      modifiers: {
+        parallel: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
+      },
+    }, commonState));
+
+    this.addSection(Object.assign({}, commonState, {
+      setContent: `
+        <p>
+          Parallel lines are |parallel| no matter how |long| or |short| they are.
+        </p>
+      `,
+      modifiers: {
+        parallel: click(parallel.rotateLine1ToParallel, [parallel], colors.line),
+        long: click(parallel.scaleLine, [parallel, layout.scale.long], colors.diagram.action),
+        short: click(parallel.scaleLine, [parallel, layout.scale.short], colors.diagram.action),
+      },
+      setInfo: [
+        ...commonState.setInfo.slice(0, 5),
+        '<li>Touch |long| to make the lines longer.</li>',
+        '<li>Touch |short| to make the lines shorter.</li>',
+        ...commonState.setInfo.slice(5),
+      ],
+      infoModifiers: {
+        long: highlight(colors.diagram.action),
+        short: highlight(colors.diagram.action),
+      },
+    }));
   }
 }
 

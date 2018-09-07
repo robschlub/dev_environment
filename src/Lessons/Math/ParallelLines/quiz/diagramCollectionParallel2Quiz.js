@@ -10,7 +10,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import {
-  checkElementsForParallel, checkValuesForParallel,
+  checkElementsForParallel, checkValuesForParallel, randomizeParallelLine
 } from '../common/tools';
 import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
 import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
@@ -48,7 +48,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   makeLine() {
     const line: Object = makeMoveableLine(
-      this.diagram, this.layout.parallelLine,
+      this.diagram, this.layout.line,
       this.layout.colors.line,
     );
     line.setTransformCallback = (t: Transform) => {
@@ -98,22 +98,22 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.hasTouchableElements = true;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  randomizeParallelLine() {
-    const limit = new Rect(
-      this.layout.parallelLine.boundary.left + this.layout.parallelLine.length.full / 2,
-      -0.5,
-      this.layout.parallelLine.boundary.width - this.layout.parallelLine.length.full,
-      1,
-    );
-    const x = Math.random() * limit.width + limit.left;
-    const y = Math.random() * limit.height + limit.bottom;
-    const r = Math.random() * Math.PI;
-    return {
-      position: new Point(x, y),
-      rotation: r,
-    };
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // randomizeParallelLine() {
+  //   const limit = new Rect(
+  //     this.layout.line.boundary.left + this.layout.line.length.full / 2,
+  //     -0.5,
+  //     this.layout.line.boundary.width - this.layout.line.length.full,
+  //     1,
+  //   );
+  //   const x = Math.random() * limit.width + limit.left;
+  //   const y = Math.random() * limit.height + limit.bottom;
+  //   const r = Math.random() * Math.PI;
+  //   return {
+  //     position: new Point(x, y),
+  //     rotation: r,
+  //   };
+  // }
 
   isParallel(
     line1: TypeSelectableLine,
@@ -123,7 +123,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
   ) {
     return checkElementsForParallel(
       line1, line2, false,
-      this.layout.parallelLine.width * distanceMultiplier, rotationThreshold,
+      this.layout.line.width * distanceMultiplier, rotationThreshold,
     );
   }
 
@@ -159,12 +159,12 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   randomizeFuturePositions() {
     this.futurePositions = {
-      line1: this.randomizeParallelLine(),
-      line2: this.randomizeParallelLine(),
-      line3: this.randomizeParallelLine(),
-      line4: this.randomizeParallelLine(),
-      line5: this.randomizeParallelLine(),
-      line6: this.randomizeParallelLine(),
+      line1: randomizeParallelLine(this.layout.line),
+      line2: randomizeParallelLine(this.layout.line),
+      line3: randomizeParallelLine(this.layout.line),
+      line4: randomizeParallelLine(this.layout.line),
+      line5: randomizeParallelLine(this.layout.line),
+      line6: randomizeParallelLine(this.layout.line),
     };
     const rand = n => Math.floor(Math.random() * n * 0.999);
     const possibilities = [1, 2, 3, 4, 5, 6];
@@ -185,7 +185,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       parallelLine1.position,
       parallelLine2.rotation,
       parallelLine2.position,
-      this.layout.parallelLine.width * 1.1,
+      this.layout.line.width * 1.1,
       Math.PI / 200,
     );
 

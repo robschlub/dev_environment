@@ -1,7 +1,7 @@
 // @flow
-import Diagram from '../../../../js/diagram/Diagram';
+import LessonDiagram from './diagram';
 import {
-  Transform, normAngleTo90,
+  Transform, normAngleTo90, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
@@ -14,11 +14,12 @@ import {
 
 import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
 import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
+import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class ParallelCollection extends DiagramElementCollection {
+export default class ParallelCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
-  diagram: Diagram;
+  diagram: LessonDiagram;
   _line1: MoveableLineType;
   _line2: MoveableLineType;
   _line3: MoveableLineType;
@@ -29,7 +30,7 @@ export default class ParallelCollection extends DiagramElementCollection {
     }
     const isParallel = checkElementsForParallel(
       this._line1, this._line2,
-      makeRotationEqual, this.layout.parallelLine.width * 1.1,
+      makeRotationEqual, this.layout.line.width * 1.1,
     );
     if (isParallel) {
       this._line1.setColor(this.layout.colors.line);
@@ -53,7 +54,7 @@ export default class ParallelCollection extends DiagramElementCollection {
 
   makeLine() {
     const line = makeMoveableLine(
-      this.diagram, this.layout.parallelLine,
+      this.diagram, this.layout.line,
       this.layout.colors.line,
     );
     line.setTransformCallback = (t: Transform) => {
@@ -65,18 +66,18 @@ export default class ParallelCollection extends DiagramElementCollection {
   }
 
   constructor(
-    diagram: Diagram,
+    diagram: LessonDiagram,
     layout: Object,
     transform: Transform = new Transform().translate(0, 0),
   ) {
-    super(transform, diagram.limits);
+    super(diagram, layout, transform);
     this.diagram = diagram;
     this.layout = layout;
     this.setPosition(this.layout.position);
     this.add('line1', this.makeLine());
-    this._line1.setPosition(this.layout.line1.parallel.position.x, 0);
+    this._line1.setPosition(this.layout.line1.position.x, 0);
     this.add('line2', this.makeLine());
-    this._line2.setPosition(this.layout.line2.parallel.position.x, 0);
+    this._line2.setPosition(this.layout.line2.position.x, 0);
 
     this.hasTouchableElements = true;
   }
@@ -94,6 +95,15 @@ export default class ParallelCollection extends DiagramElementCollection {
       angle = normAngleTo90(angle);
       element.transform.updateRotation(angle);
     }
+  }
+
+  scaleLine(scale: number) {
+    const scenario = {
+      scale: new Point(scale, 1),
+    };
+    this.moveToScenario(this._line1, scenario, 1);
+    this.moveToScenario(this._line2, scenario, 1);
+    this.diagram.animateNextFrame();
   }
 
   rotateLine1ToParallel() {
