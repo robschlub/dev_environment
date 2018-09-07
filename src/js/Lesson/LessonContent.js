@@ -205,7 +205,7 @@ type TypeInteractiveElements = Array<{
 
 function interactiveItem(
   element: TypeInteractiveElement,
-  location: TypeInteractiveElementLocation,
+  location: TypeInteractiveElementLocation = '',
 ) {
   return {
     element,

@@ -1,10 +1,7 @@
 // @flow
 import {
-  LessonContent, click, centerV, unit, interactiveItem,
+  LessonContent, click, centerV, unit,
 } from '../../../../js/Lesson/LessonContent';
-import {
-  Point,
-} from '../../../../js/diagram/tools/g2';
 
 import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';

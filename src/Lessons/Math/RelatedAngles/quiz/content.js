@@ -44,8 +44,8 @@ class Content extends LessonContent {
           </ul>
       `,
       infoModifiers: {
-        middle: click(this.starOnElement, [this, quizP1._line2._mid, ''], layout.colors.line, false),
-        ends: click(this.starOnElement, [this, quizP1._line2._end1, 'center'], layout.colors.line, false),
+        middle: click(this.highlightInteractiveElement, [this, quizP1._line2._mid, ''], layout.colors.line, false),
+        ends: click(this.highlightInteractiveElement, [this, quizP1._line2._end1, 'center'], layout.colors.line, false),
       },
       // interactiveElements: [
       //   interactiveItem(quizP1._line2._end1, 'center'),
