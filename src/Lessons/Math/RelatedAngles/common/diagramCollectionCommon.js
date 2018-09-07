@@ -129,10 +129,11 @@ export function makeMoveableLine(
   end2.pulse.transformMethod = s => new Transform().scale(1, s);
   mid.pulse.transformMethod = s => new Transform().scale(1, s);
 
+  const multiplier = diagram.isTouchDevice ? 16 : 8;
   const increaseBorderSize = (element: DiagramElementPrimative) => {
     for (let i = 0; i < element.vertices.border[0].length; i += 1) {
       // eslint-disable-next-line no-param-reassign
-      element.vertices.border[0][i].y *= 15;
+      element.vertices.border[0][i].y *= multiplier;
     }
   };
 

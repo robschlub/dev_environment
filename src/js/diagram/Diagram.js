@@ -8,6 +8,7 @@ import {
   spaceToSpaceTransform, minAngleDiff,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
+import { isTouchDevice } from '../tools/tools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from './Element';
@@ -507,6 +508,8 @@ class Diagram {
 
   drawQueued: boolean;
 
+  isTouchDevice: boolean;
+
   constructor(
     // canvas: HTMLCanvasElement,
     containerIdOrWebGLContext: string | WebGLInstance = 'DiagramContainer',
@@ -587,6 +590,7 @@ class Diagram {
     window.addEventListener('resize', this.resize.bind(this));
     this.sizeHtmlText();
     this.initialize();
+    this.isTouchDevice = isTouchDevice();
     this.animateNextFrame();
   }
 
