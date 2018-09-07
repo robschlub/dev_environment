@@ -132,6 +132,17 @@ export default class LessonComponent extends React.Component
       prevButton.onclick = this.goToPrevious.bind(this);
     }
 
+    const infoButton = document.getElementById('id_lesson__info_button');
+    if (infoButton instanceof HTMLElement) {
+      infoButton.onclick = this.lesson.content.toggleInfo.bind(this.lesson.content);
+    }
+    // const infoBox = document.getElementById('id_lesson__info_box');
+    // if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
+    //   infoButton.onclick = () => {
+    //     infoBox.classList.toggle('lesson__info_hide');
+    //     infoButton.classList.toggle('lesson__info_button_show');
+    //   };
+    // }
     window.addEventListener('resize', this.centerLesson.bind(this));
     window.addEventListener('orientationchange', this.orientationChange.bind(this));
     // const nav = document.getElementById('id_navigator__container');
@@ -293,6 +304,31 @@ export default class LessonComponent extends React.Component
   // eslint-disable-next-line class-methods-use-this
   addNextButton() {
     return <Button label="" id="lesson__button-next" className=" lesson__np_button lesson__button-next-enabled"/>;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  addInfoButton() {
+    return <Button label="i" id="id_lesson__info_button" className="lesson__info_button"/>;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  addInfoBox() {
+    return <div
+      id="id_lesson__info_box"
+      className="lesson__info_box lesson__info_hide">
+      <div className="lesson__info_box__close">{'X'}</div>
+      <div id="id_lesson__info_box__text"
+           className="lesson__info_box__text"></div>
+    </div>;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  addInteractiveElementButton() {
+    return <img
+      id="id_lesson__interactive_element_button"
+      className="lesson__interactive_element_button lesson__interactive_element_button__hide"
+      onClick={this.lesson.starOnNextInteractiveItem.bind(this.lesson)}
+      src="/static/star.png"/>;
   }
 
   addGoToButton() {
@@ -530,6 +566,8 @@ export default class LessonComponent extends React.Component
               </div>
               {this.addGoToButton()}
               {this.addNextButton()}
+              {this.addInfoButton()}
+              {this.addInteractiveElementButton()}
         </div>
       </div>
       <div className='lesson__white_spacer'/>

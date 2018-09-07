@@ -1,6 +1,7 @@
 // @flow
 
 import Diagram from '../diagram/Diagram';
+import { Point } from '../diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../diagram/Element';
@@ -109,7 +110,6 @@ function addId(id: string = '') {
   };
 }
 
-
 function clickWord(
   textToUse: string,
   id: string,
@@ -175,6 +175,16 @@ function actionWord(
   return {
     replacementText: toHTML(text, id, classStr, color).replacementText,
     id,
+  };
+}
+
+function interactiveItem(
+  element: DiagramElementPrimative | DiagramElementCollection,
+  location: string | Point,
+) {
+  return {
+    element,
+    location,
   };
 }
 
@@ -295,8 +305,11 @@ function setOnClicks(modifiers: Object) {
 class Section {
   title: string;
   modifiers: Object;
+  infoModifiers: Object;
+  hint: Array<string> | string;
   blank: Array<string>;
   diagram: Diagram;
+  infoElements: Array<DiagramElementCollection | DiagramElementPrimative>;
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
 
@@ -315,12 +328,21 @@ class Section {
     fromGoto: boolean;
   };
 
+  interactiveItems: Array<{
+    element: DiagramElementCollection | DiagramElementPrimative,
+    location: 'center' | 'zero' | Point,
+  }>;
+
+  currentInteractiveItem: number;
+
   constructor(diagram: Diagram) {
     this.diagram = diagram;
     this.title = '';
     this.modifiers = {};
+    this.infoModifiers = {};
     this.showOnly = [];
     this.blank = [];
+    this.infoElements = [];
     this.blankTransition = {
       toNext: false,
       toPrev: false,
@@ -329,20 +351,76 @@ class Section {
       toGoto: false,
       fromGoto: false,
     };
+    this.interactiveItems = [];
+    this.currentInteractiveItem = -1;
   }
 
   setContent(): Array<string> | string {
     return [];
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  setInfo(): Array<string> | string {
+    return [];
+  }
+
   setOnClicks() {
     setOnClicks(this.modifiers);
-    // Object.keys(this.modifiers).forEach((key) => {
-    //   const mod = this.modifiers[key];
-    //   if ('actionMethod' in mod) {
-    //     onClickId(mod.id(key), mod.actionMethod, mod.bind);
-    //   }
-    // });
+    setOnClicks(this.infoModifiers);
+  }
+
+  getInfo(): string {
+    let htmlText = '';
+    let info = '';
+    if (typeof this.setInfo === 'string'
+        || Array.isArray(this.setInfo)) {
+      info = this.setInfo;
+    } else {
+      info = this.setInfo();
+    }
+    if (typeof info === 'string') {
+      info = [info];
+    }
+    info.forEach((element) => {
+      htmlText = `${htmlText}${element}`;
+    });
+    // htmlText += '\n';
+    htmlText = applyModifiers(htmlText, this.infoModifiers);
+
+    // Go through all text, and replace all characters between | | with
+    // with default keywords
+    const r = RegExp(/\|([^|]*)\|/, 'gi');
+    return htmlText.replace(r, '<span class="highlight_word">$1</span>');
+  }
+
+  setInfoButton() {
+    const infoHtml = this.getInfo();
+    const infoElement = document.getElementById('id_lesson__info_button');
+    const infoBox = document.getElementById('id_lesson__info_box__text');
+    if (infoElement instanceof HTMLElement) {
+      if (infoHtml) {
+        infoElement.classList.remove('lesson__info_hide');
+        if (infoBox instanceof HTMLElement) {
+          infoBox.innerHTML = infoHtml;
+        }
+      } else {
+        infoElement.classList.add('lesson__info_hide');
+      }
+    }
+  }
+
+  setInteractiveElementsButton() {
+    // const infoHtml = this.getInfo();
+    const button = document
+      .getElementById('id_lesson__interactive_element_button');
+    // const infoBox = document.getElementById('id_lesson__info_box__text');
+    if (button instanceof HTMLElement) {
+      if (this.interactiveItems.length > 0) {
+        button.classList.remove('lesson__interactive_element_button__hide');
+      } else {
+        button.classList.add('lesson__interactive_element_button__hide');
+      }
+    }
   }
 
   getContent(): string {
@@ -419,6 +497,23 @@ class Section {
     //   });
     // }
   }
+
+  // setInteractiveItems() {
+  //   if ('interativeItems' in this) {
+  //     this.interativeItems = interativeItems;
+  //   }
+  // }
+  // setInfoElements() {
+  //   if ('infoElements' in this) {
+  //     const elementsOrMethod = this.showOnly;
+  //     if (Array.isArray(elementsOrMethod)) {
+  //       this.diagram.elements.showOnly(elementsOrMethod);
+  //     } else {
+  //       elementsOrMethod();
+  //     }
+  //   }
+  //   }
+  // }
 
   setVisible() {
     if ('showOnly' in this) {
@@ -499,6 +594,30 @@ class Section {
 
 // class diagramClass {
 // }
+const whichAnimationEvent = () => {
+  // let t;
+  const el = document.createElement('fakeelement');
+
+  const transitions = {
+    animation: 'animationend',
+    OAnimation: 'oAnimationEnd',
+    MozAnimation: 'animationend',
+    WebkitAnimation: 'webkitAnimationEnd',
+  };
+  // for (t in transitions) {
+  //   console.log(t)
+  //   if (el.style[t] !== undefined) {
+  //     return transitions[t];
+  //   }
+  // }
+  for (let i = 0; i < Object.keys(transitions).length; i += 1) {
+    const key = Object.keys(transitions)[i];
+    if (key in el.style) {
+      return transitions[key];
+    }
+  }
+  return '';
+};
 
 class LessonContent {
   title: string;
@@ -508,6 +627,8 @@ class LessonContent {
   goingTo: 'next' | 'prev' | 'goto';
   comingFrom: 'next' | 'prev' | 'goto';
   iconLink: string;
+  toggleInfo: (?boolean) => void;
+  animationEnd: string;
   // questions
 
   constructor(htmlId: string = 'lesson_diagram') {
@@ -515,12 +636,125 @@ class LessonContent {
     this.sections = [];
     this.iconLink = '/';
     this.setTitle();
+
+    this.animationEnd = whichAnimationEvent();
   }
 
   initialize() {
     this.setDiagram(this.diagramHtmlId);
     this.setElementContent();
     this.addSections();
+    this.addInfoBox();
+    this.addStar();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  toggleInfo(toState: ?boolean = null) {
+    const infoButton = document.getElementById('id_lesson__info_button');
+    const infoBox = document.getElementById('id_lesson__info_box');
+    if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
+      if (typeof toState === 'boolean' && toState === true) {
+        infoButton.classList.add('lesson__info_button_show');
+        infoBox.classList.remove('lesson__info_hide');
+      } else if (typeof toState === 'boolean' && toState === false) {
+        infoButton.classList.remove('lesson__info_button_show');
+        infoBox.classList.add('lesson__info_hide');
+      } else {
+        infoButton.classList.toggle('lesson__info_button_show');
+        infoBox.classList.toggle('lesson__info_hide');
+      }
+    }
+    // if (infoBox instanceof HTMLElement) {
+    //   infoBox.classList.toggle('lesson__info_hide');
+    // }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  addInfoBox() {
+    const container = document.createElement('div');
+    container.classList.add('lesson__info_box');
+    container.classList.add('lesson__info_hide');
+    container.id = 'id_lesson__info_box';
+
+    const title = document.createElement('div');
+    title.classList.add('lesson__info_box__title');
+    container.appendChild(title);
+
+    const infoSymbol = document.createElement('div');
+    infoSymbol.classList.add('lesson__info_box__title_i');
+    infoSymbol.innerHTML = 'i';
+    title.appendChild(infoSymbol);
+
+    const close = document.createElement('div');
+    close.classList.add('lesson__info_box__close');
+    close.id = 'id_lesson__info_box__close';
+    close.innerHTML = 'X';
+    close.onclick = this.toggleInfo.bind(this);
+    title.appendChild(close);
+
+    const titleText = document.createElement('div');
+    titleText.classList.add('lesson__info_box__title_text');
+    titleText.innerHTML = 'What can you do on this page?';
+    title.appendChild(titleText);
+
+    const text = document.createElement('div');
+    text.classList.add('lesson__info_box__text');
+    text.id = ('id_lesson__info_box__text');
+    container.appendChild(text);
+
+    this.diagram.htmlCanvas.appendChild(container);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  pulseStar() {
+    const star = document.getElementById('id_lesson__star');
+    if (star instanceof HTMLElement) {
+      star.classList.toggle('lesson__info_star_pulse');
+    }
+  }
+
+  // starOnNextInteractiveItem() {
+  //   const index = this.
+  // }
+
+  starOnElement(
+    element: DiagramElementCollection | DiagramElementPrimative,
+    location: 'center' | 'zero' | '' | Point = '',
+  ) {
+    const star = document.getElementById('id_lesson__star');
+    if (star instanceof HTMLElement) {
+      const animationEnd = () => {
+        star.removeEventListener(this.animationEnd, animationEnd);
+        star.classList.remove('lesson__info_star_pulse');
+        // this next line triggers a relflow, making the class removal stick
+        // eslint-disable-next-line no-unused-vars
+        const w = star.offsetWidth;
+      };
+      animationEnd();
+
+      let diagramPosition;
+      if (location === 'center') {
+        diagramPosition = element.getCenterDiagramPosition();
+      } else {
+        diagramPosition = element.getDiagramPosition();
+      }
+      const cssPosition = diagramPosition
+        .transformBy(this.diagram.diagramToPixelSpaceTransform.matrix());
+      star.classList.add('lesson__info_star_pulse');
+      const rect = star.getBoundingClientRect();
+      star.style.left = `${cssPosition.x - rect.width / 2}px`;
+      star.style.top = `${cssPosition.y - rect.height / 2}px`;
+      star.addEventListener(this.animationEnd, animationEnd.bind(this));
+    }
+  }
+
+  addStar() {
+    const img = document.createElement('img');
+    img.setAttribute('src', '/static/star.png');
+    img.id = 'id_lesson__star';
+    img.classList.add('lesson__info_star');
+
+    this.diagram.htmlCanvas.appendChild(img);
   }
 
   setTitle() {
@@ -554,5 +788,5 @@ export {
   Section, LessonContent, actionWord, click, highlight, addClass, addId,
   diagramCanvas, onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
   clickWord, itemSelector, initializeItemSelector, unit, applyModifiers,
-  setOnClicks,
+  setOnClicks, interactiveItem,
 };

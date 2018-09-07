@@ -76,6 +76,7 @@ class Lesson {
       if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
+      this.content.toggleInfo(false);
       // this.currentSection().goingTo = 'next';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'prev';
       this.transitionStart('prev');
@@ -103,6 +104,7 @@ class Lesson {
       }
       // this.currentSection().goingTo = 'prev';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'next';
+      this.content.toggleInfo(false);
       this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
@@ -132,6 +134,7 @@ class Lesson {
       if (this.currentSection().blankTransition.toGoto) {
         this.refresh('', this.currentSectionIndex);
       }
+      this.content.toggleInfo(false);
       this.transitionStart('goto');
       this.goToSectionIndex = sectionIndex;
       this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
@@ -197,6 +200,9 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
       section.setEnterState(this.state);
+      section.setInfoButton();
+      section.setInteractiveElementsButton();
+      section.currentInteractiveItem = -1;
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {
@@ -254,6 +260,18 @@ class Lesson {
     }
   }
 
+  starOnNextInteractiveItem() {
+    const section = this.content.sections[this.currentSectionIndex];
+    if (section.interactiveItems.length > 0) {
+      let index = section.currentInteractiveItem + 1;
+      if (index > section.interactiveItems.length - 1) {
+        index = 0;
+      }
+      const { element, location } = section.interactiveItems[index];
+      this.content.starOnElement(element, location);
+      section.currentInteractiveItem = index;
+    }
+  }
 
   stopTransition() {
     const { diagram } = this;

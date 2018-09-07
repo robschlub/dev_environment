@@ -237,7 +237,7 @@ $diagram_ratio: 1.5;
 }
 
 #lesson__button-goto:hover {
-  background-color: color('diagram', 'background', 'dark');
+  background-color: color('diagram', 'background', 'darker');
 }
 
 // #lesson__page_number {
@@ -538,4 +538,7 @@ $diagram_ratio: 1.5;
 @import './lesson/selector';
 @import './lesson/definition';
 @import './lesson/quizCheck';
+@import './lesson/info';
+@import './lesson/infoStar';
+@import './lesson/interactiveItemButton';
 @import './lesson/pathTile';

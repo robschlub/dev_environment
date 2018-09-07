@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click, centerH,
+  LessonContent, click, centerH, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -38,6 +38,20 @@ class Content extends LessonContent {
         red_line: click(quizP1.pulseLine2, [quizP1], colors.quizLine),
         blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
       },
+      setInfo: `<ul>
+          <li>Move the line by dragging its |middle|.</li>
+          <li>Rotate the line by dragging one of its |ends|.</li>
+          </ul>
+      `,
+      infoModifiers: {
+        middle: click(this.starOnElement, [this, quizP1._line2._mid, ''], layout.colors.line),
+        ends: click(this.starOnElement, [this, quizP1._line2._end1, 'center'], layout.colors.line),
+      },
+      interactiveItems: [
+        interactiveItem(quizP1._line2._end1, 'center'),
+        interactiveItem(quizP1._line2._mid, 'zero'),
+        interactiveItem(quizP1._line2._end2, 'center'),
+      ],
       setEnterState: () => {
         quizP1.setPosition(0, 0);
         quizP1._line2.setColor(colors.quizLine);
@@ -63,6 +77,7 @@ class Content extends LessonContent {
         diag.setScenario(quizP1._line1, layout.quiz.first.line1);
         diag.setScenario(quizP1._line2, layout.quiz.first.line2);
         quizP1._check.show();
+        // this.shineStarOnElement(quizP1._line2);
       },
     });
 
@@ -77,6 +92,19 @@ class Content extends LessonContent {
         red_line: click(quizP1.pulseLine2, [quizP1], colors.quizLine),
         blue_line: click(quizP1.pulseLine1, [quizP1], colors.line),
       },
+      setInfo: `<ul>
+          <li>Touch a line to toggle selection.</li>
+          <li>Move lines by dragging them to help determine if parallel.</li>
+          </ul>
+      `,
+      interactiveItems: [
+        interactiveItem(quizP2._line1, ''),
+        interactiveItem(quizP2._line2, ''),
+        interactiveItem(quizP2._line3, ''),
+        interactiveItem(quizP2._line4, ''),
+        interactiveItem(quizP2._line5, ''),
+        interactiveItem(quizP2._line6, ''),
+      ],
       setEnterState: () => {
         quizP2.setPosition(0, 0);
         quizP2.hasTouchableElements = true;
@@ -114,6 +142,10 @@ class Content extends LessonContent {
         red_line: click(quizA1.pulseLine2, [quizP1], colors.quizLine),
         blue_line: click(quizA1.pulseLine1, [quizP1], colors.line),
       },
+      setInfo: 'Touch the grey box to enter the angle',
+      interactiveItems: [
+        interactiveItem(quizA1._input, ''),
+      ],
       setEnterState: () => {
         quizA1.setPosition(0, 0);
         quizA1.hasTouchableElements = true;
