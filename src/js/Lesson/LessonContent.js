@@ -419,6 +419,14 @@ class Section {
     return htmlText.replace(r, '<span class="highlight_word">$1</span>');
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  hideInfoButton() {
+    const infoElement = document.getElementById('id_lesson__info_button');
+    if (infoElement instanceof HTMLElement) {
+      infoElement.classList.add('lesson__info_hide');
+    }
+  }
+
   setInfoButton() {
     const infoHtml = this.getInfo();
     const infoElement = document.getElementById('id_lesson__info_button');
@@ -489,28 +497,6 @@ class Section {
   setLeaveState(): ?Object {
   }
 
-  // setInitialPositions() {
-  //   if ('initialPositions' in this) {
-  //     const elementsOrMethod = this.initialPositions;
-  //     if (typeof elementsOrMethod === 'function') {
-  //       elementsOrMethod();
-  //     }
-  //     if (Array.isArray(elementsOrMethod)) {
-  //       for (let i = 0; i < elementsOrMethod.length; i += 2) {
-  //         const element = elementsOrMethod[i];
-  //         const transformPointOrNumber = elementsOrMethod[i + 1];
-  //         if (transformPointOrNumber instanceof Transform) {
-  //           element.transform = transformPointOrNumber._dup();
-  //         } else if (transformPointOrNumber instanceof Point) {
-  //           element.transform.updateTranslation(transformPointOrNumber);
-  //         } else if (typeof transformPointOrNumber === 'number') {
-  //           element.transform.updateRotation(transformPointOrNumber);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
   setBlanks() {
     this.blank.forEach((element) => {
       if (element in this.blankTransition) {
@@ -570,6 +556,7 @@ class Section {
   }
 
   setInteractiveElements() {
+    this.interactiveElementList = [];
     if ('interactiveElementsOnly' in this) {
       this.interactiveElementList = this.interactiveElementsOnly;
     } else {
@@ -810,7 +797,7 @@ class LessonContent {
   //   const index = this.
   // }
 
-  starOnElement(
+  highlightInteractiveElement(
     element: TypeInteractiveElement,
     location: TypeInteractiveElementLocation,
   ) {

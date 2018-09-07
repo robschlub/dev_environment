@@ -64,18 +64,6 @@ class Content extends LessonContent {
           <li>Touch |Parallel Lines| to make lines parallel.</li>
           </ul>
       `,
-      interactiveElements: [
-        interactiveItem(parallel._line1._end1, ''),
-      ],
-      // interactiveElements: [
-      //   interactiveItem(parallel._line1._end1, 'center'),
-      //   interactiveItem(parallel._line1._mid, 'zero'),
-      //   interactiveItem(parallel._line1._end2, 'center'),
-      //   interactiveItem(parallel._line2._end1, 'center'),
-      //   interactiveItem(parallel._line2._mid, 'zero'),
-      //   interactiveItem(parallel._line2._end2, 'center'),
-      //   // interactiveItem('lesson__id_Parallel_lines', 'topleft'),
-      // ],
       setEnterState: () => {
         diag._selector.selector.selectWithoutExecution('parallel');
         parallel.setPosition(layout.position);
@@ -84,7 +72,6 @@ class Content extends LessonContent {
           parallel._line2.setTransform(opp._line2.transform._dup());
         }
         parallel._line1.setColor(colors.line);
-        parallel._line1._end1.interactiveLocation = new Point(1, 0);
       },
       showOnly: [
       ],
