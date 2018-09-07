@@ -2,9 +2,9 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Related Angles',
-  uid: 'related_angles',
-  dependencies: ['parallel_lines'],
+  title: 'Parallel Lines',
+  uid: 'parallel_lines',
+  dependencies: ['adjacent_angles'],
 };
 
 module.exports = {

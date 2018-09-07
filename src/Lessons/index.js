@@ -71,6 +71,19 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
+    'Parallel Lines',
+    '/Lessons/Math/ParallelLines',
+    'parallel_lines',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'adjacent_angles',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
     'Related Angles',
     '/Lessons/Math/RelatedAngles',
     'related_angles',
@@ -80,7 +93,7 @@ export default function getLessonIndex() {
       'summary',
     ],
     [
-      'adjacent_angles',
+      'parallel_lines',
     ],
   ));
   lessonIndex.push(new LessonDescription(
