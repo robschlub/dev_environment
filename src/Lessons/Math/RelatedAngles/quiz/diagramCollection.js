@@ -5,13 +5,13 @@ import {
 import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
-import RelatedAnglesCommonCollection from '../common/diagramCollection';
+import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 // eslint-disable-next-line import/no-cycle
 import QuizAngle1Collection from './diagramCollectionAngles1Quiz';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
-export default class QuizCollection extends RelatedAnglesCommonCollection {
+export default class DiagramCollection extends CommonLessonDiagramCollection {
   units: TypeUnits;
 
   constructor(

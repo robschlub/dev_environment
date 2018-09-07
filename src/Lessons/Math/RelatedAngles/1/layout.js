@@ -1,8 +1,8 @@
 // @flow
-import lessonLayoutCommon from '../common/layout';
+import commonLessonLayout from '../common/layout';
 
 export default function lessonLayout() {
-  const layout: Object = lessonLayoutCommon();
+  const layout: Object = commonLessonLayout();
 
   return layout;
 }

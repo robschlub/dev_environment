@@ -8,7 +8,7 @@ import LessonDiagram from './diagram';
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class RelatedAnglesCommonCollection extends CommonDiagramCollection {
+export default class CommonLessonDiagramCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
 
   constructor(

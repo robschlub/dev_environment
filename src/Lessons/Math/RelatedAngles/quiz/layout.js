@@ -2,7 +2,7 @@
 
 import { Point, Rect } from '../../../../js/diagram/tools/g2';
 // import getCssColors from '../../../../js/tools/getCssColors';
-import lessonLayoutCommon from '../common/layout';
+import commonLessonLayout from '../common/layout';
 
 // const cssColorNames = [
 //   'latin',
@@ -19,7 +19,7 @@ import lessonLayoutCommon from '../common/layout';
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
-  const layout: Object = lessonLayoutCommon();
+  const layout: Object = commonLessonLayout();
   // layout.colors = getCssColors(cssColorNames);
   const len = 2.4;
   layout.parallelLine.length = {

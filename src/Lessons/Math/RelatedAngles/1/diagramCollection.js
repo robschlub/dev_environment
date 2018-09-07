@@ -9,10 +9,10 @@ import LessonDiagram from './diagram';
 
 import OppositeCollection from '../common/diagramCollectionOpposite';
 import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
-import RelatedAnglesCommonCollection from '../common/diagramCollection';
+import CommonLessonDiagramCollection from '../common/diagramCollection';
 import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
-export default class RelatedAngles1Collection extends RelatedAnglesCommonCollection {
+export default class DiagramCollection extends CommonLessonDiagramCollection {
   _opposite: OppositeCollection;
   _threeLines: ThreeLinesCollection;
   units: TypeUnits;

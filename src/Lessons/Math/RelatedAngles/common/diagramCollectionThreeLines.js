@@ -8,10 +8,10 @@ import {
 } from '../../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeLabeledAngle } from './diagramCollectionCommon';
+import { makeLabeledAngle } from './tools';
 import type {
   TypeAngle, TypeIndexAngle, TypeSupplementaryAngle,
-} from './diagramCollectionCommon';
+} from './tools';
 import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';

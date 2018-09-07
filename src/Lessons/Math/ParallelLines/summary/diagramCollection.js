@@ -8,7 +8,7 @@ import LessonDiagram from './diagram';
 import ParallelCollection from '../common/diagramCollectionParallel';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
-export default class SummaryCollection extends CommonLessonDiagramCollection {
+export default class DiagramCollection extends CommonLessonDiagramCollection {
   _parallel: ParallelCollection;
 
   constructor(

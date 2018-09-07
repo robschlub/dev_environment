@@ -7,7 +7,7 @@ export type LessonDiagramType = {
   lesson: Lesson;
 } & Diagram;
 
-export default class RelatedAnglesCommonLessonDiagram extends Diagram {
+export default class CommonLessonDiagram extends Diagram {
   layout: Object;
   lesson: Lesson;
 
