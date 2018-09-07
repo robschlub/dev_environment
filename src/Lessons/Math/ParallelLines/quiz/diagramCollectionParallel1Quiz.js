@@ -10,10 +10,11 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import {
-  makeMoveableLine, makeAnglesClose,
-  checkElementsForParallel, checkValuesForParallel,
+  checkElementsForParallel, checkValuesForParallel, makeAnglesClose,
 } from '../common/diagramCollectionCommon';
-import type { MoveableLineType } from '../common/diagramCollectionCommon';
+import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
+import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
+
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -48,9 +49,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       line.updateTransform(t);
       this.normalizeAngle(line);
     };
-    line._end1.movementAllowed = 'rotation';
-    line._end2.movementAllowed = 'rotation';
-    line._mid.movementAllowed = 'translation';
     return line;
   }
 
