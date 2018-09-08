@@ -136,6 +136,8 @@ export default class OppositeCollection extends CommonDiagramCollection {
 
     angle.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
     angle.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('b_silent', ['_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('b_silent', ['pi', 'minus', 'a'], 'rad');
     angle.eqn.showForm(name);
     angle.setPosition(this.layout.line1.opposite.position);
     return angle;
@@ -237,7 +239,11 @@ export default class OppositeCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  showAngles(anglesToShow: Array<TypeAngle>, form: Array<string>) {
+  showAnglesOld(
+    anglesToShow: Array<TypeAngle>,
+    form: Array<string>,
+    color: Array<Array<number>> = [],
+  ) {
     const allAngles = [this._angleA, this._angleB, this._angleC, this._angleD];
     const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
     anglesToHide.forEach((angle) => {
@@ -247,34 +253,62 @@ export default class OppositeCollection extends CommonDiagramCollection {
       angle.eqn.showForm(form[index]);
       angle.show();
       angle._arc.show();
+      if (color) {
+        angle.setColor(color[index]);
+      }
+    });
+  }
+
+  showAngles(
+    angles: Array<[TypeAngle, string, Array<number>] | [TypeAngle, string]>,
+    showOnly: boolean = true,
+  ) {
+    const allAngles = [this._angleA, this._angleB, this._angleC, this._angleD];
+    if (showOnly) {
+      const anglesToShow = angles.map(angle => angle[0]);
+      const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
+      anglesToHide.forEach((angle) => {
+        angle.hide();
+      });
+    }
+
+    angles.forEach((angle) => {
+      console.log(angle)
+      const [element, form] = angle;
+      element.eqn.showForm(form);
+      element.show();
+      element._arc.show();
+      if (angle.length === 3) {
+        element.setColor(angle[2]);
+      }
     });
   }
 
   toggleOppositeAngles() {
     if (this._angleA.isShown) {
-      this.showAngles([this._angleB, this._angleD], ['b', 'b']);
+      this.showAngles([[this._angleB, 'b'], [this._angleD, 'b']]);
     } else {
-      this.showAngles([this._angleA, this._angleC], ['a', 'a']);
+      this.showAngles([[this._angleA, 'a'], [this._angleC, 'c']]);
     }
     this.diagram.animateNextFrame();
   }
 
   toggleAngles() {
     if (this._angleA.isShown) {
-      this.showAngles([this._angleB], ['b']);
+      this.showAngles([[this._angleB, 'b', this.layout.colors.angleA]]);
     } else if (this._angleB.isShown) {
-      this.showAngles([this._angleC], ['c']);
+      this.showAngles([[this._angleC, 'c', this.layout.colors.angleA]]);
     } else if (this._angleC.isShown) {
-      this.showAngles([this._angleD], ['d']);
+      this.showAngles([[this._angleD, 'd', this.layout.colors.angleA]]);
     } else {
-      this.showAngles([this._angleA], ['a']);
+      this.showAngles([[this._angleA, 'a', this.layout.colors.angleA]]);
     }
     this.diagram.animateNextFrame();
   }
 
   calculateFuturePositions() {
     const rotateScenario = r => ({
-      position: this.layout.line1.opposite,
+      position: this.layout.line1.opposite.position,
       rotation: r,
     });
     const futurePosition = (element, scenario) => ({ element, scenario });

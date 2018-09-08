@@ -19,5 +19,9 @@ export default function lessonLayout() {
     boundary: new Rect(-3, -1.7, 6, 3),
   };
   layout.minAngleThreshold = 1;
+
+  layout.equation2 = {
+    b: new Point(1, 1.65),
+  };
   return layout;
 }

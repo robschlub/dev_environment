@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click, highlight, centerV, unit, centerH,
+  LessonContent, click, highlight, centerV, unit,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -67,10 +67,6 @@ class Content extends LessonContent {
       setEnterState: () => {
         opp._line1.setColor(colors.line);
         opp._line2.setColor(colors.line);
-        opp._angleA.setColor(colors.angleA);
-        opp._angleB.setColor(colors.angleA);
-        opp._angleC.setColor(colors.angleA);
-        opp._angleD.setColor(colors.angleA);
         opp.calculateFuturePositions();
       },
       showOnly: [
@@ -89,17 +85,15 @@ class Content extends LessonContent {
         opp.moveToFuturePositions(done);
       },
       setSteadyState: () => {
-        diag.moveToScenario(opp._line1, 'opposite', 0.001);
-        diag.moveToScenario(opp._line2, 'opposite', 0.001);
-        opp.showAngles([opp._angleA], ['a']);
         opp.setFuturePositions();
+        opp.showAngles([[opp._angleA, 'a', colors.angleA]]);
       },
     });
 
     this.addSection({
       setContent: `
       <p>
-        First consider angles |a| and |b|. These are supplementary angles, and therefore, they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+        First consider angles |a| and |b|. These are supplementary angles, and therefore they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
       </p>
       `,
       modifiers: {
@@ -122,8 +116,7 @@ class Content extends LessonContent {
       setEnterState: () => {
         opp._line1.setColor(colors.line);
         opp._line2.setColor(colors.line);
-        opp._angleA.setColor(colors.angleA);
-        opp._angleB.setColor(colors.angleB);
+        diag._unitsSelector.select(diag.units);
         opp.calculateFuturePositions();
       },
       showOnly: [
@@ -143,21 +136,74 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       transitionFromAny: (done) => {
-        // let time = Math.max(
-        //   diag.getTimeToMoveToScenario(opp._line1, 'opposite'),
-        //   diag.getTimeToMoveToScenario(opp._line2, 'opposite'),
-        // );
-        // time = time > 2 ? 2 : time;
-        // diag.moveToScenario(opp._line1, 'opposite', time);
-        // diag.moveToScenario(opp._line2, 'opposite', time, done);
         opp.moveToFuturePositions(done);
       },
       setSteadyState: () => {
         opp.setFuturePositions();
-        diag.moveToScenario(opp._line1, 'opposite', 0.001);
-        diag.moveToScenario(opp._line2, 'opposite', 0.001);
-        opp.showAngles([opp._angleA, opp._angleB], ['a', 'b']);
+        opp.showAngles([
+          [opp._angleA, 'a', colors.angleA],
+          [opp._angleB, 'b', colors.angleB],
+        ]);
+      },
+    });
+
+    this.addSection({
+      setContent: `
+      <p>
+        Therefore we can calculate |b| from |a|:
+      </p>
+      `,
+      modifiers: {
+        four_angles: click(opp.toggleAngles, [opp], colors.angleA),
+        a: highlight(colors.angleA),
+        b: highlight(colors.angleB),
+      },
+      interactiveElementsRemove: [
+        opp._line1._mid,
+        opp._line2._mid,
+      ],
+      setInfo: `
+      <ul>
+        <li>Drag the lines to rotate.</li>
+      </ul>
+      `,
+      infoModifiers: {
+        four_angles: highlight(colors.angleA),
+      },
+      setEnterState: () => {
+        opp._line1.setColor(colors.line);
+        opp._line2.setColor(colors.line);
         diag._unitsSelector.select(diag.units);
+        opp.calculateFuturePositions();
+      },
+      showOnly: [
+        opp,
+        opp._angleA,
+        opp._angleB,
+        opp._line1,
+        opp._line1._end1,
+        opp._line1._end2,
+        opp._line1._mid,
+        opp._line2,
+        opp._line2._end1,
+        opp._line2._end2,
+        opp._line2._mid,
+      ],
+      show: [
+        diag._unitsSelector,
+      ],
+      transitionFromAny: (done) => {
+        opp.moveToFuturePositions(done);
+      },
+      setSteadyState: () => {
+        opp.setFuturePositions();
+        opp.showAngles([
+          [opp._angleA, opp._angleB],
+          ['a', 'b_silent'],
+          [colors.angleA, colors.angleB],
+        ]);
+        opp._equation2.eqn.showForm('b');
+        opp._equation2.eqn.setPosition(layout.equation2.b);
       },
     });
 
