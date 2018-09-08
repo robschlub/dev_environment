@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent, click, highlight, centerV, unit, centerH,
+  LessonContent, click, highlight, centerV, unit,
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
@@ -34,133 +34,13 @@ class Content extends LessonContent {
           |Related angles| are angles that have the same value, but are in different locations. 
         </p>
         <p>
-          This lesson will look at related angles in two scenarios:
-          <ul>
-            <li>when two lines intersect</li>
-            <li>when a line intersects two parallel lines</li>
-          </ul>
+          This lesson will look at related angles where two lines intersect, and where a line intersects two parallel lines.
+        </p>
+        <p>
+          General rules of thumb will be developed, that can make analyzing a complex system of intersecting lines easier.
         </p>
       `),
     });
-    this.addSection({
-      setContent: `
-      <p>
-        When two lines intersect, |four_angles| are formed. If you know one angle, all others can be calculated.
-      </p>
-      `,
-      modifiers: {
-        four_angles: click(opp.toggleAngles, [opp], layout.colors.angleA),
-      },
-      interactiveElementsRemove: [
-        opp._line1._mid,
-        opp._line2._mid,
-      ],
-      setInfo: `
-      <ul>
-        <li>Drag the lines to rotate.</li>
-        <li>Touch |four_angles| to toggle the angles.</li>
-      </ul>
-      `,
-      infoModifiers: {
-        four_angles: highlight(colors.angleA),
-      },
-      setEnterState: () => {
-        opp._line1.setColor(colors.line);
-        opp._line2.setColor(colors.line);
-        opp._angleA.setColor(colors.angleA);
-        opp._angleB.setColor(colors.angleA);
-        opp._angleC.setColor(colors.angleA);
-        opp._angleD.setColor(colors.angleA);
-        opp.calculateFuturePositions();
-      },
-      showOnly: [
-        opp,
-        opp._angleA,
-        opp._line1,
-        opp._line1._end1,
-        opp._line1._end2,
-        opp._line1._mid,
-        opp._line2,
-        opp._line2._end1,
-        opp._line2._end2,
-        opp._line2._mid,
-      ],
-      transitionFromAny: (done) => {
-        opp.moveToFuturePositions(done);
-      },
-      setSteadyState: () => {
-        diag.moveToScenario(opp._line1, 'opposite', 0.001);
-        diag.moveToScenario(opp._line2, 'opposite', 0.001);
-        opp.showAngles([opp._angleA], ['a']);
-        opp.setFuturePositions();
-      },
-    });
-
-    this.addSection({
-      setContent: `
-      <p>
-        First consider angles |a| and |b|. These are supplementary angles, and therefore, they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
-      </p>
-      `,
-      modifiers: {
-        four_angles: click(opp.toggleAngles, [opp], colors.angleA),
-        a: highlight(colors.angleA),
-        b: highlight(colors.angleB),
-      },
-      interactiveElementsRemove: [
-        opp._line1._mid,
-        opp._line2._mid,
-      ],
-      setInfo: `
-      <ul>
-        <li>Drag the lines to rotate.</li>
-      </ul>
-      `,
-      infoModifiers: {
-        four_angles: highlight(colors.angleA),
-      },
-      setEnterState: () => {
-        opp._line1.setColor(colors.line);
-        opp._line2.setColor(colors.line);
-        opp._angleA.setColor(colors.angleA);
-        opp._angleB.setColor(colors.angleB);
-        opp.calculateFuturePositions();
-      },
-      showOnly: [
-        opp,
-        opp._angleA,
-        opp._angleB,
-        opp._line1,
-        opp._line1._end1,
-        opp._line1._end2,
-        opp._line1._mid,
-        opp._line2,
-        opp._line2._end1,
-        opp._line2._end2,
-        opp._line2._mid,
-      ],
-      show: [
-        diag._unitsSelector,
-      ],
-      transitionFromAny: (done) => {
-        // let time = Math.max(
-        //   diag.getTimeToMoveToScenario(opp._line1, 'opposite'),
-        //   diag.getTimeToMoveToScenario(opp._line2, 'opposite'),
-        // );
-        // time = time > 2 ? 2 : time;
-        // diag.moveToScenario(opp._line1, 'opposite', time);
-        // diag.moveToScenario(opp._line2, 'opposite', time, done);
-        opp.moveToFuturePositions(done);
-      },
-      setSteadyState: () => {
-        opp.setFuturePositions();
-        diag.moveToScenario(opp._line1, 'opposite', 0.001);
-        diag.moveToScenario(opp._line2, 'opposite', 0.001);
-        opp.showAngles([opp._angleA, opp._angleB], ['a', 'b']);
-        diag._unitsSelector.select(diag.units);
-      },
-    });
-
 
     this.addSection({
       title: 'Opposite Angles',

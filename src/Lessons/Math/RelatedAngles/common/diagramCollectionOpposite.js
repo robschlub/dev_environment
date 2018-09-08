@@ -13,8 +13,9 @@ import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeAngle, TypeSupplementaryAngle } from './tools';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class OppositeCollection extends DiagramElementCollection {
+export default class OppositeCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
@@ -40,6 +41,8 @@ export default class OppositeCollection extends DiagramElementCollection {
   _equation3: {
     eqn: Equation;
   } & DiagramElementCollection;
+
+  futurePositions: Array<Object>;
 
   makeLine(labelText: string) {
     const line = makeLabeledLine(
@@ -234,26 +237,97 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  showAngles(anglesToShow: Array<TypeAngle>, form: Array<string>) {
+    const allAngles = [this._angleA, this._angleB, this._angleC, this._angleD];
+    const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
+    anglesToHide.forEach((angle) => {
+      angle.hide();
+    });
+    anglesToShow.forEach((angle, index) => {
+      angle.eqn.showForm(form[index]);
+      angle.show();
+      angle._arc.show();
+    });
+  }
+
   toggleOppositeAngles() {
     if (this._angleA.isShown) {
-      this._angleB.eqn.showForm('b');
-      this._angleD.eqn.showForm('b');
-      this._angleB.show();
-      this._angleB._arc.show();
-      this._angleD.show();
-      this._angleD._arc.show();
-      this._angleA.hide();
-      this._angleC.hide();
+      this.showAngles([this._angleB, this._angleD], ['b', 'b']);
     } else {
-      this._angleB.hide();
-      this._angleD.hide();
-      this._angleA.eqn.showForm('a');
-      this._angleC.eqn.showForm('a');
-      this._angleA.show();
-      this._angleC.show();
-      this._angleA._arc.show();
-      this._angleC._arc.show();
+      this.showAngles([this._angleA, this._angleC], ['a', 'a']);
     }
     this.diagram.animateNextFrame();
+  }
+
+  toggleAngles() {
+    if (this._angleA.isShown) {
+      this.showAngles([this._angleB], ['b']);
+    } else if (this._angleB.isShown) {
+      this.showAngles([this._angleC], ['c']);
+    } else if (this._angleC.isShown) {
+      this.showAngles([this._angleD], ['d']);
+    } else {
+      this.showAngles([this._angleA], ['a']);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  calculateFuturePositions() {
+    const rotateScenario = r => ({
+      position: this.layout.line1.opposite,
+      rotation: r,
+    });
+    const futurePosition = (element, scenario) => ({ element, scenario });
+    const r1 = this._line1.transform.r();
+    const r2 = this._line2.transform.r();
+    if (r1 != null && r2 != null) {
+      if (Math.abs(minAngleDiff(r1, r2)) < this.layout.minAngleThreshold) {
+        this.futurePositions = [
+          futurePosition(this._line1, this.layout.line1.opposite),
+          futurePosition(this._line2, this.layout.line2.opposite),
+        ];
+      } else {
+        this.futurePositions = [
+          futurePosition(this._line1, rotateScenario(r1)),
+          futurePosition(this._line2, rotateScenario(r2)),
+        ];
+      }
+    }
+  }
+
+  setFuturePositions() {
+    this.futurePositions.forEach((futurePosition) => {
+      const { element, scenario } = futurePosition;
+      this.setScenario(element, scenario);
+    });
+  }
+
+  moveToFuturePositions(
+    timeOrCallback: ?number | () => void = null,
+    done: ?() => void = null,
+  ) {
+    let maxTime: number = 0;
+    if (typeof timeOrCallback !== 'number'
+      || timeOrCallback == null
+      || timeOrCallback === 0
+    ) {
+      this.futurePositions.forEach((futurePosition) => {
+        const { element, scenario } = futurePosition;
+        const thisTime = this.getTimeToMoveToScenario(element, scenario);
+        maxTime = Math.max(maxTime, thisTime);
+      });
+    } else {
+      maxTime = timeOrCallback;
+    }
+
+    let callbackToUse = done;
+    if (typeof timeOrCallback === 'function') {
+      callbackToUse = timeOrCallback;
+    }
+    this.futurePositions.forEach((futurePosition, index) => {
+      const callback = index === this.futurePositions.length - 1 ? callbackToUse : null;
+      const { element, scenario } = futurePosition;
+      this.moveToScenario(element, scenario, maxTime, callback);
+    });
   }
 }

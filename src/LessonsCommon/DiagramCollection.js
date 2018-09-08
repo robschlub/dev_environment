@@ -91,7 +91,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     element: DiagramElement,
     scenario: TypeScenario = null,
     animationTime: ?number = null,
-    callback: () => void,
+    callback: ?() => void = null,
   ) {
     element.stop();
     const target = getTarget(element, scenario, this.layout);
