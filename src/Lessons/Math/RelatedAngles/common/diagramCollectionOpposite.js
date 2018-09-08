@@ -42,7 +42,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
-  futurePositions: Array<Object>;
+  // futurePositions: Array<Object>;
 
   makeLine(labelText: string) {
     const line = makeLabeledLine(
@@ -319,39 +319,39 @@ export default class OppositeCollection extends CommonDiagramCollection {
     }
   }
 
-  setFuturePositions() {
-    this.futurePositions.forEach((futurePosition) => {
-      const { element, scenario } = futurePosition;
-      this.setScenario(element, scenario);
-    });
-  }
+  // setFuturePositions() {
+  //   this.futurePositions.forEach((futurePosition) => {
+  //     const { element, scenario } = futurePosition;
+  //     this.setScenario(element, scenario);
+  //   });
+  // }
 
-  moveToFuturePositions(
-    timeOrCallback: ?number | () => void = null,
-    done: ?() => void = null,
-  ) {
-    let maxTime: number = 0;
-    if (typeof timeOrCallback !== 'number'
-      || timeOrCallback == null
-      || timeOrCallback === 0
-    ) {
-      this.futurePositions.forEach((futurePosition) => {
-        const { element, scenario } = futurePosition;
-        const thisTime = this.getTimeToMoveToScenario(element, scenario);
-        maxTime = Math.max(maxTime, thisTime);
-      });
-    } else {
-      maxTime = timeOrCallback;
-    }
+  // moveToFuturePositions(
+  //   timeOrCallback: ?number | () => void = null,
+  //   done: ?() => void = null,
+  // ) {
+  //   let maxTime: number = 0;
+  //   if (typeof timeOrCallback !== 'number'
+  //     || timeOrCallback == null
+  //     || timeOrCallback === 0
+  //   ) {
+  //     this.futurePositions.forEach((futurePosition) => {
+  //       const { element, scenario } = futurePosition;
+  //       const thisTime = this.getTimeToMoveToScenario(element, scenario);
+  //       maxTime = Math.max(maxTime, thisTime);
+  //     });
+  //   } else {
+  //     maxTime = timeOrCallback;
+  //   }
 
-    let callbackToUse = done;
-    if (typeof timeOrCallback === 'function') {
-      callbackToUse = timeOrCallback;
-    }
-    this.futurePositions.forEach((futurePosition, index) => {
-      const callback = index === this.futurePositions.length - 1 ? callbackToUse : null;
-      const { element, scenario } = futurePosition;
-      this.moveToScenario(element, scenario, maxTime, callback);
-    });
-  }
+  //   let callbackToUse = done;
+  //   if (typeof timeOrCallback === 'function') {
+  //     callbackToUse = timeOrCallback;
+  //   }
+  //   this.futurePositions.forEach((futurePosition, index) => {
+  //     const callback = index === this.futurePositions.length - 1 ? callbackToUse : null;
+  //     const { element, scenario } = futurePosition;
+  //     this.moveToScenario(element, scenario, maxTime, callback);
+  //   });
+  // }
 }

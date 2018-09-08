@@ -47,12 +47,19 @@ function getTarget(
   return target;
 }
 
+type TypeFuturePosition = {
+  element: DiagramElement;
+  scenario: TypeScenario;
+}
+
 export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   +diagram: Diagram;
   moveToScenario: (DiagramElement, TypeScenario, ?number, ?(() => void)) => number;
   getTimeToMoveToScenario: (DiagramElement, TypeScenario) => number;
+  setScenario: (DiagramElement, TypeScenario) => void;
+  futurePositions: Array<TypeFuturePosition>;
 
   constructor(
     diagram: Diagram,
@@ -63,6 +70,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     this.diagram = diagram;
     this.layout = layout;
     this.colors = layout.colors;
+    this.futurePositions = [];
   }
 
   getTimeToMoveToScenario(
@@ -143,5 +151,45 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
 
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   setUnits(units: TypeUnits) {
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  calculateFuturePositions() {
+  }
+
+  setFuturePositions() {
+    this.futurePositions.forEach((futurePosition) => {
+      const { element, scenario } = futurePosition;
+      this.setScenario(element, scenario);
+    });
+  }
+
+  moveToFuturePositions(
+    timeOrCallback: ?number | () => void = null,
+    done: ?() => void = null,
+  ) {
+    let maxTime: number = 0;
+    if (typeof timeOrCallback !== 'number'
+      || timeOrCallback == null
+      || timeOrCallback === 0
+    ) {
+      this.futurePositions.forEach((futurePosition) => {
+        const { element, scenario } = futurePosition;
+        const thisTime = this.getTimeToMoveToScenario(element, scenario);
+        maxTime = Math.max(maxTime, thisTime);
+      });
+    } else {
+      maxTime = timeOrCallback;
+    }
+
+    let callbackToUse = done;
+    if (typeof timeOrCallback === 'function') {
+      callbackToUse = timeOrCallback;
+    }
+    this.futurePositions.forEach((futurePosition, index) => {
+      const callback = index === this.futurePositions.length - 1 ? callbackToUse : null;
+      const { element, scenario } = futurePosition;
+      this.moveToScenario(element, scenario, maxTime, callback);
+    });
   }
 }
