@@ -239,26 +239,6 @@ export default class OppositeCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  showAnglesOld(
-    anglesToShow: Array<TypeAngle>,
-    form: Array<string>,
-    color: Array<Array<number>> = [],
-  ) {
-    const allAngles = [this._angleA, this._angleB, this._angleC, this._angleD];
-    const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
-    anglesToHide.forEach((angle) => {
-      angle.hide();
-    });
-    anglesToShow.forEach((angle, index) => {
-      angle.eqn.showForm(form[index]);
-      angle.show();
-      angle._arc.show();
-      if (color) {
-        angle.setColor(color[index]);
-      }
-    });
-  }
-
   showAngles(
     angles: Array<[TypeAngle, string, Array<number>] | [TypeAngle, string]>,
     showOnly: boolean = true,
@@ -273,12 +253,12 @@ export default class OppositeCollection extends CommonDiagramCollection {
     }
 
     angles.forEach((angle) => {
-      console.log(angle)
       const [element, form] = angle;
       element.eqn.showForm(form);
       element.show();
       element._arc.show();
       if (angle.length === 3) {
+        // $FlowFixMe
         element.setColor(angle[2]);
       }
     });

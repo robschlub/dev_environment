@@ -57,7 +57,7 @@ class Content extends LessonContent {
       ],
       setInfo: `
       <ul>
-        <li>Drag the lines to rotate.</li>
+        <li>Drag the lines to rotate and see the a different perspective.</li>
         <li>Touch |four_angles| to toggle the angles.</li>
       </ul>
       `,
@@ -107,7 +107,7 @@ class Content extends LessonContent {
       ],
       setInfo: `
       <ul>
-        <li>Drag the lines to rotate.</li>
+        <li>Drag the lines to rotate and see the a different perspective.</li>
       </ul>
       `,
       infoModifiers: {
@@ -164,7 +164,7 @@ class Content extends LessonContent {
       ],
       setInfo: `
       <ul>
-        <li>Drag the lines to rotate.</li>
+        <li>Drag the lines to rotate and see the a different perspective.</li>
       </ul>
       `,
       infoModifiers: {
@@ -198,9 +198,8 @@ class Content extends LessonContent {
       setSteadyState: () => {
         opp.setFuturePositions();
         opp.showAngles([
-          [opp._angleA, opp._angleB],
-          ['a', 'b_silent'],
-          [colors.angleA, colors.angleB],
+          [opp._angleA, 'a', colors.angleA],
+          [opp._angleB, 'b', colors.angleB],
         ]);
         opp._equation2.eqn.showForm('b');
         opp._equation2.eqn.setPosition(layout.equation2.b);
