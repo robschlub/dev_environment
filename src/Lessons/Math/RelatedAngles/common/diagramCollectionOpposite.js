@@ -262,6 +262,8 @@ export default class OppositeCollection extends CommonDiagramCollection {
         element.setColor(angle[2]);
       }
     });
+    this.updateOppositeAngles();
+    this.diagram.animateNextFrame();
   }
 
   toggleOppositeAngles() {

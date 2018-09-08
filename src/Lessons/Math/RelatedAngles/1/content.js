@@ -42,7 +42,43 @@ class Content extends LessonContent {
         </p>
       `),
     });
-    this.addSection({
+
+    const oppCommon = {
+      interactiveElementsRemove: [
+        opp._line1._mid,
+        opp._line2._mid,
+      ],
+      setInfo: [
+        '<ul>',
+        '<li>Drag the lines to rotate and see the a different perspective.</li>',
+        '</ul>',
+      ],
+      setEnterState: () => {
+        opp._line1.setColor(colors.line);
+        opp._line2.setColor(colors.line);
+        diag._unitsSelector.select(diag.units);
+        opp.calculateFuturePositions();
+      },
+      showOnly: [
+        opp,
+        opp._line1,
+        opp._line1._end1,
+        opp._line1._end2,
+        opp._line1._mid,
+        opp._line2,
+        opp._line2._end1,
+        opp._line2._end2,
+        opp._line2._mid,
+      ],
+      show: [
+        diag._unitsSelector,
+      ],
+      transitionFromAny: (done) => {
+        opp.moveToFuturePositions(done);
+      },
+    };
+
+    this.addSection(Object.assign({}, oppCommon, {
       setContent: `
       <p>
         When two lines intersect, |four_angles| are formed. If you know one angle, all others can be calculated.
@@ -51,87 +87,30 @@ class Content extends LessonContent {
       modifiers: {
         four_angles: click(opp.toggleAngles, [opp], layout.colors.angleA),
       },
-      interactiveElementsRemove: [
-        opp._line1._mid,
-        opp._line2._mid,
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |four_angles| to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
       ],
-      setInfo: `
-      <ul>
-        <li>Drag the lines to rotate and see the a different perspective.</li>
-        <li>Touch |four_angles| to toggle the angles.</li>
-      </ul>
-      `,
       infoModifiers: {
         four_angles: highlight(colors.angleA),
-      },
-      setEnterState: () => {
-        opp._line1.setColor(colors.line);
-        opp._line2.setColor(colors.line);
-        opp.calculateFuturePositions();
-      },
-      showOnly: [
-        opp,
-        opp._angleA,
-        opp._line1,
-        opp._line1._end1,
-        opp._line1._end2,
-        opp._line1._mid,
-        opp._line2,
-        opp._line2._end1,
-        opp._line2._end2,
-        opp._line2._mid,
-      ],
-      transitionFromAny: (done) => {
-        opp.moveToFuturePositions(done);
       },
       setSteadyState: () => {
         opp.setFuturePositions();
         opp.showAngles([[opp._angleA, 'a', colors.angleA]]);
       },
-    });
+    }));
 
-    this.addSection({
+    this.addSection(Object.assign({}, oppCommon, {
       setContent: `
       <p>
         First consider angles |a| and |b|. These are supplementary angles, and therefore they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
       </p>
       `,
       modifiers: {
-        four_angles: click(opp.toggleAngles, [opp], colors.angleA),
         a: highlight(colors.angleA),
         b: highlight(colors.angleB),
       },
-      interactiveElementsRemove: [
-        opp._line1._mid,
-        opp._line2._mid,
-      ],
-      setInfo: `
-      <ul>
-        <li>Drag the lines to rotate and see the a different perspective.</li>
-      </ul>
-      `,
-      infoModifiers: {
-        four_angles: highlight(colors.angleA),
-      },
-      setEnterState: () => {
-        opp._line1.setColor(colors.line);
-        opp._line2.setColor(colors.line);
-        diag._unitsSelector.select(diag.units);
-        opp.calculateFuturePositions();
-      },
-      showOnly: [
-        opp,
-        opp._angleA,
-        opp._angleB,
-        opp._line1,
-        opp._line1._end1,
-        opp._line1._end2,
-        opp._line1._mid,
-        opp._line2,
-        opp._line2._end1,
-        opp._line2._end2,
-        opp._line2._mid,
-      ],
       show: [
         diag._unitsSelector,
       ],
@@ -145,66 +124,31 @@ class Content extends LessonContent {
           [opp._angleB, 'b', colors.angleB],
         ]);
       },
-    });
+    }));
 
-    this.addSection({
+    this.addSection(Object.assign({}, oppCommon, {
       setContent: `
       <p>
         Therefore we can calculate |b| from |a|:
       </p>
       `,
       modifiers: {
-        four_angles: click(opp.toggleAngles, [opp], colors.angleA),
         a: highlight(colors.angleA),
         b: highlight(colors.angleB),
       },
-      interactiveElementsRemove: [
-        opp._line1._mid,
-        opp._line2._mid,
-      ],
-      setInfo: `
-      <ul>
-        <li>Drag the lines to rotate and see the a different perspective.</li>
-      </ul>
-      `,
-      infoModifiers: {
-        four_angles: highlight(colors.angleA),
-      },
-      setEnterState: () => {
-        opp._line1.setColor(colors.line);
-        opp._line2.setColor(colors.line);
-        diag._unitsSelector.select(diag.units);
-        opp.calculateFuturePositions();
-      },
-      showOnly: [
-        opp,
-        opp._angleA,
-        opp._angleB,
-        opp._line1,
-        opp._line1._end1,
-        opp._line1._end2,
-        opp._line1._mid,
-        opp._line2,
-        opp._line2._end1,
-        opp._line2._end2,
-        opp._line2._mid,
-      ],
       show: [
         diag._unitsSelector,
       ],
-      transitionFromAny: (done) => {
-        opp.moveToFuturePositions(done);
-      },
       setSteadyState: () => {
         opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
-          [opp._angleB, 'b', colors.angleB],
+          [opp._angleB, 'b_silent', colors.angleB],
         ]);
         opp._equation2.eqn.showForm('b');
         opp._equation2.eqn.setPosition(layout.equation2.b);
       },
-    });
+    }));
 
 
     this.addSection({

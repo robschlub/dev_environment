@@ -84,7 +84,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   ) {
     const target = getTarget(element, scenario, this.layout);
     // eslint-disable-next-line no-param-reassign
-    element.transform = target._dup();
+    element.setTransform(target._dup());
   }
 
   moveToScenario(
