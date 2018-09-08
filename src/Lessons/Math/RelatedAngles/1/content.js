@@ -79,9 +79,10 @@ class Content extends LessonContent {
     };
 
     this.addSection(oppCommon, {
+      title: 'Opposite Angles',
       setContent: `
       <p>
-        When two lines intersect, |four_angles| are formed. If you know one angle, all others can be calculated.
+        When two lines intersect, |four_angles| are formed. If you know one angle, can you calulate all the others?
       </p>
       `,
       modifiers: {
@@ -150,6 +151,136 @@ class Content extends LessonContent {
       },
     });
 
+    this.addSection(oppCommon, {
+      setContent: `
+      <p>
+        Next we can consider |a| and |d|, which are also supplimentary angles and add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+      </p>
+      `,
+      modifiers: {
+        a: highlight(colors.angleA),
+        d: highlight(colors.angleD),
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        opp.setFuturePositions();
+        opp.showAngles([
+          [opp._angleA, 'a', colors.angleA],
+          [opp._angleB, 'b_silent', colors.disabled],
+          [opp._angleD, 'd', colors.angleD],
+        ]);
+      },
+    });
+
+    this.addSection(oppCommon, {
+      setContent: `
+      <p>
+        Therefore, we can calculate |d| from |a|:
+      </p>
+      `,
+      modifiers: {
+        a: highlight(colors.angleA),
+        d: highlight(colors.angleD),
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        opp.setFuturePositions();
+        opp.showAngles([
+          [opp._angleA, 'a', colors.angleA],
+          [opp._angleB, 'b_silent', colors.disabled],
+          [opp._angleD, 'd_silent', colors.angleD],
+        ]);
+        opp._equation2.eqn.showForm('d');
+        opp._equation2.eqn.setPosition(layout.equation2.b);
+      },
+    });
+
+    this.addSection(oppCommon, {
+      setContent: `
+      <p>
+        So we can see that the opposite angles |b| and |d| are equal.
+      </p>
+      `,
+      modifiers: {
+        b: highlight(colors.angleB),
+        d: highlight(colors.angleD),
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        opp.setFuturePositions();
+        opp.showAngles([
+          [opp._angleA, 'a', colors.disabled],
+          [opp._angleB, 'b_equals', colors.angleB],
+          [opp._angleD, 'd_equals', colors.angleD],
+        ]);
+      },
+    });
+
+    this.addSection(oppCommon, {
+      setContent: `
+      <p>
+        Doing the same exercise with angles |b| and |c|, or |d| and |c| shows that opposite angles |a| and |c| are also equal.
+      </p>
+      `,
+      modifiers: {
+        a: highlight(colors.angleA),
+        b: highlight(colors.angleB),
+        c: highlight(colors.angleC),
+        d: highlight(colors.angleD),
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        opp.setFuturePositions();
+        opp.showAngles([
+          [opp._angleA, 'a', colors.disabled],
+          [opp._angleB, 'b_equals', colors.disabled],
+          [opp._angleC, 'c_equals', colors.angleC],
+          [opp._angleD, 'd_equals', colors.disabled],
+        ]);
+      },
+    });
+
+    this.addSection(oppCommon, {
+      setContent: `
+      <p>
+        More generally, we can see that at the intersection of two lines, the |opposite angles are always equal|.
+      </p>
+      `,
+      setSteadyState: () => {
+        opp.setFuturePositions();
+        opp.showAngles([
+          [opp._angleA, 'a', colors.angleA],
+          [opp._angleB, 'b', colors.angleB],
+          [opp._angleC, 'a', colors.angleA],
+          [opp._angleD, 'b', colors.angleB],
+        ]);
+      },
+    });
+
+    this.addSection(oppCommon, {
+      setContent: `
+      <p>
+        If we know one angle, all others can be calculated!
+      </p>
+      `,
+      setSteadyState: () => {
+        opp.setFuturePositions();
+        opp.showAngles([
+          [opp._angleA, 'a', colors.angleA],
+          [opp._angleB, 'b', colors.angleB],
+          [opp._angleC, 'a', colors.angleA],
+          [opp._angleD, 'b', colors.angleB],
+        ]);
+      },
+    });
 
     this.addSection({
       title: 'Opposite Angles',

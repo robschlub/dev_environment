@@ -124,7 +124,10 @@ export default class OppositeCollection extends CommonDiagramCollection {
     this._equation1.eqn.setUnits(units);
     this._equation2.eqn.setUnits(units);
     this._equation3.eqn.setUnits(units);
+    this._angleA.eqn.setUnits(units);
     this._angleB.eqn.setUnits(units);
+    this._angleC.eqn.setUnits(units);
+    this._angleD.eqn.setUnits(units);
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
@@ -138,6 +141,11 @@ export default class OppositeCollection extends CommonDiagramCollection {
     angle.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
     angle.eqn.addForm('b_silent', ['_180', 'minus', 'a'], 'deg');
     angle.eqn.addForm('b_silent', ['pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('d_silent', ['_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('d_silent', ['pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('c_equals', ['c', 'equals', 'a']);
     angle.eqn.showForm(name);
     angle.setPosition(this.layout.line1.opposite.position);
     return angle;
@@ -148,7 +156,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
     layout: Object,
     transform: Transform = new Transform().translate(0, 0),
   ) {
-    super(transform, diagram.limits);
+    super(diagram, layout, transform);
     this.diagram = diagram;
     this.layout = layout;
     this.setPosition(this.layout.position);
