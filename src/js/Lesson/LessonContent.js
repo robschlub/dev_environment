@@ -905,9 +905,19 @@ class LessonContent {
   addSections() {
   }
 
-  addSection(section: Object) {
-    const s = new Section(this.diagram);
+  // addSection(section: Object) {
+  //   const s = new Section(this.diagram);
 
+  //   Object.keys(section).forEach((key) => {
+  //     // $FlowFixMe
+  //     s[key] = section[key];
+  //   });
+  //   this.sections.push(s);
+  // }
+
+  addSection(...sectionObjects: Array<Object>) {
+    const s = new Section(this.diagram);
+    const section = Object.assign({}, ...sectionObjects);
     Object.keys(section).forEach((key) => {
       // $FlowFixMe
       s[key] = section[key];

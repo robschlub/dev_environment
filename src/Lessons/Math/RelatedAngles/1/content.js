@@ -78,7 +78,7 @@ class Content extends LessonContent {
       },
     };
 
-    this.addSection(Object.assign({}, oppCommon, {
+    this.addSection(oppCommon, {
       setContent: `
       <p>
         When two lines intersect, |four_angles| are formed. If you know one angle, all others can be calculated.
@@ -99,9 +99,9 @@ class Content extends LessonContent {
         opp.setFuturePositions();
         opp.showAngles([[opp._angleA, 'a', colors.angleA]]);
       },
-    }));
+    });
 
-    this.addSection(Object.assign({}, oppCommon, {
+    this.addSection(oppCommon, {
       setContent: `
       <p>
         First consider angles |a| and |b|. These are supplementary angles, and therefore they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
@@ -124,9 +124,9 @@ class Content extends LessonContent {
           [opp._angleB, 'b', colors.angleB],
         ]);
       },
-    }));
+    });
 
-    this.addSection(Object.assign({}, oppCommon, {
+    this.addSection(oppCommon, {
       setContent: `
       <p>
         Therefore we can calculate |b| from |a|:
@@ -148,7 +148,7 @@ class Content extends LessonContent {
         opp._equation2.eqn.showForm('b');
         opp._equation2.eqn.setPosition(layout.equation2.b);
       },
-    }));
+    });
 
 
     this.addSection({
