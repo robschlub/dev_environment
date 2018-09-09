@@ -158,6 +158,14 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     }
   }
 
+  xOfLine3AtY(y: number = 0) {
+    const r = this._line3.transform.r();
+    if (r != null) {
+      return y / Math.tan(r);
+    }
+    return 0;
+  }
+
   updateParallelLineTranlsation() {
     if (this._line1.isMovable) {
       const t1 = this._line1.transform.t();
@@ -165,11 +173,11 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       const r = this._line3.transform.r();
       if (t1 != null && r != null && t2 != null) {
         this._line1.transform.updateTranslation(
-          t1.y / Math.tan(r),
+          this.xOfLine3AtY(t1.y),
           t1.y,
         );
         this._line2.transform.updateTranslation(
-          t2.y / Math.tan(r),
+          this.xOfLine3AtY(t2.y),
           t2.y,
         );
       }
@@ -238,7 +246,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
         y *= -1;
       }
       position = new Point(
-        this.layout.line1.corresponding.position.x,
+        this.xOfLine3AtY(y + t1.y),
         y + t1.y,
       );
     }
@@ -250,12 +258,11 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
           rotation: r,
         },
       });
-      console.log([position])
       this.futurePositions = [];
       if (t1 != null && t3 != null && r3 != null) {
         this.futurePositions = [
           futurePosition(this._line1, position, 0),
-          futurePosition(this._line2, position, 0),
+          // futurePosition(this._line2, position, 0),
           futurePosition(this._line3, t3, r3),
         ];
       }
@@ -265,7 +272,6 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       this._line1.animateTranslationTo(position, 1);
       this.diagram.animateNextFrame();
     }
-    console.log(this.futurePositions)
   }
 
   toggleCorrespondingAngles(
@@ -517,8 +523,10 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
         futurePosition(this._line1, this.layout.line1[goToScenario]),
         futurePosition(this._line2, this.layout.line2[goToScenario]),
         futurePosition(this._line3, this.layout.line3[goToScenario]),
+        futurePosition(this, { position: this.layout.position, rotation: 0 }),
       ];
     }
+    // console.log(this.futurePositions)
   }
 
   showAngles(

@@ -362,70 +362,48 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
+      title: 'Corresponding Angles',
       setContent: `
-        <p>
-          When the two lines are |parallel|, |corresponding_angles| are always |equal|.
+        <p >
+          What is the relationship between |corresponding_angles|?
         </p>
       `,
       modifiers: {
         corresponding_angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines],
+          threeLines.toggleCorrespondingAngles, [threeLines, false, true],
           colors.angleA,
         ),
-        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+      },
+      transitionFromAny: (done) => {
+        if (!(this.comingFrom === 'prev')) {
+          threeLines.moveToFuturePositions(done);
+        } else {
+          done();
+        }
       },
       setSteadyState: () => {
-        threeLines.toggleCorrespondingAngles(false);
+        if (!(this.comingFrom === 'prev')) {
+          threeLines.setFuturePositions();
+        }
+        threeLines.toggleCorrespondingAngles(false, true);
       },
     });
 
-    this.addSection(common, {
-      setContent: `
-        <p>
-          When two lines intersect, an |angle| is formed. This angle doesn't change when one line is |moved| without rotation.
-        </p>
-      `,
-      modifiers: {
-        angle: click(threeLines.toggleCorrespondingAngles, [threeLines, true], colors.angleA),
-        moved: click(threeLines.translateLine1, [threeLines], colors.line),
-      },
+    const commonCorresponding = {
       setEnterState: () => {
         threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.line);
+        threeLines._line2.setColor(layout.colors.disabled);
         threeLines.translateLine1(1, true);
-        console.log(threeLines.futurePositions)
       },
       hide: [
         threeLines._line2,
       ],
-      // transitionFromAny: (done) => {
-      //   let time = Math.max(
-      //     diag.getTimeToMoveToScenario(threeLines._line1, 'center'),
-      //     diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-      //     // diag.getTimeToMoveToScenario(threeLines),
-      //   );
-      //   time = time > 2 ? 2 : time;
-      //   // diag.moveToScenario(threeLines);
-      //   diag.moveToScenario(threeLines._line1, 'center', time);
-      //   diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
-      // },
       transitionFromAny: (done) => {
         threeLines.moveToFuturePositions(done);
       },
       setSteadyState: () => {
-        // threeLines._angleA1.show();
-        // threeLines._angleA1._arc.show();
-        // threeLines._angleA1.showForm('a');
-        // threeLines._angleA2.show();
-        // threeLines._angleA2._arc.show();
-        // threeLines._angleA2.showForm('a');
         threeLines.setFuturePositions();
-        threeLines.toggleCorrespondingAngles(false);
-        // diag.moveToScenario(threeLines._line1, 'center', 0.001);
-        // diag.moveToScenario(threeLines._line2, 'center', 0.001);
-        // diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        // diag.moveToScenario(threeLines, null, 0.001);
-
+        threeLines.toggleCorrespondingAngles(true);
         threeLines._line1.isMovable = true;
         threeLines._line1.move.maxTransform.updateTranslation(
           10,
@@ -441,100 +419,98 @@ class Content extends LessonContent {
         threeLines._line2._end2.show();
         threeLines._line2._mid.show();
         threeLines._line2.isTouchable = false;
+        threeLines._line2.hasTouchableElements = false;
       },
       setLeaveState: () => {
         threeLines._line1.isMovable = false;
         threeLines._line2.isTouchable = true;
+        threeLines._line2.hasTouchableElements = true;
+      },
+    };
+
+    this.addSection(common, commonCorresponding, {
+      setContent: `
+        <p>
+          When two lines intersect, an |angle| is formed. This angle doesn't change when one line is |moved| without rotation.
+        </p>
+      `,
+      modifiers: {
+        angle: click(threeLines.toggleCorrespondingAngles, [threeLines, true], colors.angleA),
+        moved: click(threeLines.translateLine1, [threeLines, null, false], colors.line),
       },
     });
-    this.addSection({
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
+
+    this.addSection(common, commonCorresponding, {
+      setContent: `
+        <p>
           |Moving| a line without rotation means the line is |parallel| to its original.
         </p>
-      `),
+      `,
       modifiers: {
         Moving: click(threeLines.translateLine1, [threeLines, true], colors.line),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
       },
-      setEnterState: () => {
-        threeLines._angleA2.setColor(layout.colors.disabled);
-        threeLines._angleB2.setColor(layout.colors.disabled);
-        threeLines._angleC2.setColor(layout.colors.disabled);
-        threeLines._angleD2.setColor(layout.colors.disabled);
-        threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.disabled);
-      },
-      showOnly: () => {
-        if (this.comingFrom !== 'prev') {
-          this.diagram.elements.showOnly([
-            threeLines,
-            threeLines._line1,
-            threeLines._line1._end1,
-            threeLines._line1._end2,
-            threeLines._line1._mid,
-            threeLines._line3,
-            threeLines._line3._end1,
-            threeLines._line3._end2,
-            threeLines._line3._mid,
-          ]);
-        }
-      },
       transitionFromAny: (done) => {
-        if (this.comingFrom !== 'prev') {
-          let time = Math.max(
-            diag.getTimeToMoveToScenario(threeLines._line1, 'center'),
-            diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-            diag.getTimeToMoveToScenario(threeLines),
-          );
-          time = time > 2 ? 2 : time;
-          diag.moveToScenario(threeLines);
-          diag.moveToScenario(threeLines._line1, 'center', time);
-          diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
+        if (!(this.comingFrom === 'prev')) {
+          threeLines.moveToFuturePositions(done);
         } else {
           done();
         }
       },
       setSteadyState: () => {
-        if (this.comingFrom !== 'prev') {
-          threeLines._angleA1.show();
-          threeLines._angleA1._arc.show();
-          threeLines._angleA1.showForm('a');
-          threeLines._angleA2.show();
-          threeLines._angleA2._arc.show();
-          threeLines._angleA2.showForm('a');
-
-          diag.moveToScenario(threeLines._line1, 'center', 0.001);
-          diag.moveToScenario(threeLines._line2, 'center', 0.001);
-          diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-          diag.moveToScenario(threeLines, null, 0.001);
+        if (!(this.comingFrom === 'prev')) {
+          commonCorresponding.setSteadyState();
+        } else {
+          threeLines.toggleCorrespondingAngles(true);
           threeLines._line1.isMovable = true;
-          threeLines._line1._end1.movementAllowed = 'translation';
-          threeLines._line1._end2.movementAllowed = 'translation';
-          threeLines._line1._mid.movementAllowed = 'translation';
-          threeLines._line1.move.maxTransform.updateTranslation(
-            10,
-            layout.line1.corresponding.position.y,
-          );
-          threeLines._line1.move.minTransform.updateTranslation(
-            -10,
-            layout.line2.corresponding.position.y,
-          );
-          threeLines.moveLine2ToLine1();
+          threeLines._line2.show();
+          threeLines._line2._end1.show();
+          threeLines._line2._end2.show();
+          threeLines._line2._mid.show();
+          threeLines._line2.isTouchable = false;
+          threeLines._line2.hasTouchableElements = false;
         }
-        threeLines._line2.show();
-        threeLines._line2._end1.show();
-        threeLines._line2._end2.show();
-        threeLines._line2._mid.show();
-        threeLines._line2.isTouchable = false;
-        threeLines._line1.isMovable = true;
-        threeLines._line2.isTouchable = false;
-      },
-      setLeaveState: () => {
-        threeLines._line1.isMovable = false;
-        threeLines._line2.isTouchable = true;
       },
     });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Therefore comparing the original and moved line, shows |corresponding_angles| are |equal|.
+        </p>
+      `,
+      modifiers: {
+        corresponding_angles: click(
+          threeLines.toggleCorrespondingAngles, [threeLines, false, true],
+          colors.angleA,
+        ),
+      },
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines.toggleCorrespondingAngles(false, false);
+      },
+    });
+
+    // this.addSection(common, {
+    //   setContent: `
+    //     <p>
+    //       When the two lines are |parallel|, |corresponding_angles| are always |equal|.
+    //     </p>
+    //   `,
+    //   modifiers: {
+    //     corresponding_angles: click(
+    //       threeLines.toggleCorrespondingAngles, [threeLines],
+    //       colors.angleA,
+    //     ),
+    //     parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+    //   },
+    //   setSteadyState: () => {
+    //     threeLines.toggleCorrespondingAngles(false);
+    //   },
+    //   transitionFromNext: (done) => {
+    //     threeLines.moveToFuturePositions(done);
+    //   },
+    // });
 
     this.addSection({
       setContent: centerV(`
