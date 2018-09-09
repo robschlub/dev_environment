@@ -229,7 +229,6 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     if (yToTranslateTo != null) {
       y = yToTranslateTo;
     }
-    console.log(y)
     let position = new Point(0, 0);
     const t1 = this._line1.transform.t();
     const t3 = this._line3.transform.t();
@@ -251,11 +250,12 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
           rotation: r,
         },
       });
+      console.log([position])
       this.futurePositions = [];
       if (t1 != null && t3 != null && r3 != null) {
         this.futurePositions = [
           futurePosition(this._line1, position, 0),
-          futurePosition(this._line2, t1, 0),
+          futurePosition(this._line2, position, 0),
           futurePosition(this._line3, t3, r3),
         ];
       }

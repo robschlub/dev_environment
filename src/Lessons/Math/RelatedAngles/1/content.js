@@ -392,7 +392,7 @@ class Content extends LessonContent {
       setEnterState: () => {
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
-        threeLines.translateLine1(-0.5, true);
+        threeLines.translateLine1(1, true);
         console.log(threeLines.futurePositions)
       },
       hide: [
