@@ -14,7 +14,8 @@ import {
 
 export type TypeUnits = 'deg' | 'rad';
 
-type TypeScenario = string | null | { position?: Point, rotation?: number, scale?: Point | number };
+export type TypeScenario = string | null
+  | { position?: Point, rotation?: number, scale?: Point | number };
 
 function getTarget(
   element: DiagramElement,
@@ -50,7 +51,7 @@ function getTarget(
 type TypeFuturePosition = {
   element: DiagramElement;
   scenario: TypeScenario;
-}
+};
 
 export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
@@ -60,6 +61,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   getTimeToMoveToScenario: (DiagramElement, TypeScenario) => number;
   setScenario: (DiagramElement, TypeScenario) => void;
   futurePositions: Array<TypeFuturePosition>;
+  +calculateFuturePositions: (?TypeScenario) => void;
 
   constructor(
     diagram: Diagram,

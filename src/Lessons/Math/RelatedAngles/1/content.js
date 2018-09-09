@@ -282,33 +282,28 @@ class Content extends LessonContent {
       },
     });
 
-    this.addSection({
-      title: 'Corresponding Angles',
-      setContent: `
-        <p >
-          |Corresponding_Angles| are the angles in the same relative position at the intersection of |two_lines| and an |intersecting| line.
-        </p>
-        <p class="lesson__diagram_text_p_width_40">
-          When the two lines are |parallel|, corresponding angles are always |equal|.
-        </p>
-      `,
-      modifiers: {
-        Corresponding_Angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines],
-          colors.angleA,
-        ),
-        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
-        two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
-        intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
-      },
+
+    // Intersecting Line
+    const common = {
+      interactiveElementsRemove: [
+        threeLines._line1._mid,
+        threeLines._line2._mid,
+        threeLines._line3._mid,
+      ],
+      setInfo: [
+        '<ul>',
+        '<li>Drag the different lines see the a different perspective.</li>',
+        '</ul>',
+      ],
       setEnterState: () => {
-        if (opp.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = opp._line1.transform._dup();
-          threeLines._line2.transform = opp._line2.transform._dup();
-        }
+        // if (opp.isShown) {
+        //   threeLines.transform.updateRotation(0);
+        //   threeLines._line1.transform = opp._line1.transform._dup();
+        //   threeLines._line2.transform = opp._line2.transform._dup();
+        // }
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
+        threeLines.calculateFuturePositions('corresponding');
       },
       showOnly: [
         threeLines,
@@ -325,21 +320,66 @@ class Content extends LessonContent {
         threeLines._line3._end2,
         threeLines._line3._mid,
       ],
+    };
+    this.addSection(common, {
+      title: 'Parallel Intersection',
+      setContent: `
+        <p>
+          The next scenario is when there is a line |intersecting| two |parallel| lines. In this case, |eight_angles| are formed.
+        </p>
+      `,
+      modifiers: {
+        eight_angles: click(threeLines.toggleAllAngles, [threeLines], colors.angleA),
+        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+        intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
+      },
       transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(threeLines._line1, 'corresponding', time);
-        diag.moveToScenario(threeLines._line2, 'corresponding', time);
-        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
+        threeLines.moveToFuturePositions(done);
       },
       setSteadyState: () => {
-        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
+        threeLines.setFuturePositions();
+        threeLines.showAngles([[threeLines._angleA1, 'a', colors.angleA]]);
+      },
+    });
+
+    this.addSection(common, {
+      title: 'Corresponding Angles',
+      setContent: `
+        <p >
+          |Corresponding_Angles| are the angles in the same relative position at the intersection of |two_lines| and an |intersecting| line.
+        </p>
+      `,
+      modifiers: {
+        Corresponding_Angles: click(
+          threeLines.toggleCorrespondingAngles, [threeLines, false, true],
+          colors.angleA,
+        ),
+        two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
+        intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
+      },
+      transitionFromAny: (done) => {
+        threeLines.moveToFuturePositions(done);
+      },
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines.toggleCorrespondingAngles(false, true);
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          When the two lines are |parallel|, |corresponding_angles| are always |equal|.
+        </p>
+      `,
+      modifiers: {
+        corresponding_angles: click(
+          threeLines.toggleCorrespondingAngles, [threeLines],
+          colors.angleA,
+        ),
+        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+      },
+      setSteadyState: () => {
         threeLines.toggleCorrespondingAngles(false);
       },
     });

@@ -23,5 +23,10 @@ export default function lessonLayout() {
   layout.equation2 = {
     b: new Point(1, 1.85),
   };
+
+  // layout.scenario = {
+  //   position: new Point(0, -0.5),
+  //   rotation: 0,
+  // };
   return layout;
 }

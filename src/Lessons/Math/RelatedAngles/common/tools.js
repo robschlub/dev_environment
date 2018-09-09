@@ -35,6 +35,10 @@ export function makeLabeledAngle(
       b: 'b',
       c: 'c',
       d: 'd',
+      e: 'e',
+      f: 'f',
+      g: 'g',
+      h: 'h',
       equals: ' = ',
       minus: ' \u2212 ',
       _180: '180º',
@@ -57,6 +61,10 @@ export function makeLabeledAngle(
   eqn.addForm('b', ['b']);
   eqn.addForm('c', ['c']);
   eqn.addForm('d', ['d']);
+  eqn.addForm('e', ['e']);
+  eqn.addForm('f', ['f']);
+  eqn.addForm('g', ['g']);
+  eqn.addForm('h', ['h']);
 
   const angle = makeAngleAnnotation(diagram, layout.angle, color, eqn);
   return angle;
