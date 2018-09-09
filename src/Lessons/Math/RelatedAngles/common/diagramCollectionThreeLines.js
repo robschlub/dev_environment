@@ -221,54 +221,52 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     this.pulseLine(2);
   }
 
-  translateLine1() {
-    this.moveLine2ToLine1();
+  translateLine1(
+    yToTranslateTo: ?number = null,
+    setAsFuturePosition: boolean = false,
+  ) {
     let y = Math.max(Math.random(), 0.5);
-    const t = this._line1.transform.t();
-    if (t != null) {
-      if (t.y >= 0) {
+    if (yToTranslateTo != null) {
+      y = yToTranslateTo;
+    }
+    console.log(y)
+    let position = new Point(0, 0);
+    const t1 = this._line1.transform.t();
+    const t3 = this._line3.transform.t();
+    const r3 = this._line3.transform.r();
+    if (t1 != null) {
+      if (t1.y >= 0) {
         y *= -1;
       }
-      const position = new Point(
+      position = new Point(
         this.layout.line1.corresponding.position.x,
-        y + t.y,
+        y + t1.y,
       );
+    }
+    if (setAsFuturePosition) {
+      const futurePosition = (element, p, r) => ({
+        element,
+        scenario: {
+          position: p,
+          rotation: r,
+        },
+      });
+      this.futurePositions = [];
+      if (t1 != null && t3 != null && r3 != null) {
+        this.futurePositions = [
+          futurePosition(this._line1, position, 0),
+          futurePosition(this._line2, t1, 0),
+          futurePosition(this._line3, t3, r3),
+        ];
+      }
+    } else {
+      this.moveLine2ToLine1();
       this._line1.stop();
       this._line1.animateTranslationTo(position, 1);
       this.diagram.animateNextFrame();
     }
+    console.log(this.futurePositions)
   }
-
-  // toggleCorrespondingAnglesOld(make2Disabled: boolean = false) {
-  //   let disable2 = make2Disabled;
-  //   if (typeof disable2 !== 'boolean') {
-  //     disable2 = false;
-  //   }
-  //   if (this._angleA1.isShown) {
-  //     if (disable2) {
-  //       this.showOnlyAngles(['B1'], this.layout.colors.angleA, ['B2']);
-  //     } else {
-  //       this.showOnlyAngles(['B1', 'B2']);
-  //     }
-  //   } else if (this._angleB1.isShown) {
-  //     if (disable2) {
-  //       this.showOnlyAngles(['C1'], this.layout.colors.angleA, ['C2']);
-  //     } else {
-  //       this.showOnlyAngles(['C1', 'C2']);
-  //     }
-  //   } else if (this._angleC1.isShown) {
-  //     if (disable2) {
-  //       this.showOnlyAngles(['D1'], this.layout.colors.angleA, ['D2']);
-  //     } else {
-  //       this.showOnlyAngles(['D1', 'D2']);
-  //     }
-  //   } else if (disable2) {
-  //     this.showOnlyAngles(['A1'], this.layout.colors.angleA, ['A2']);
-  //   } else {
-  //     this.showOnlyAngles(['A1', 'A2']);
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 
   toggleCorrespondingAngles(
     make2Disabled: boolean = false,

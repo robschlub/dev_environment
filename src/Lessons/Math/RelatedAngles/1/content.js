@@ -296,11 +296,6 @@ class Content extends LessonContent {
         '</ul>',
       ],
       setEnterState: () => {
-        // if (opp.isShown) {
-        //   threeLines.transform.updateRotation(0);
-        //   threeLines._line1.transform = opp._line1.transform._dup();
-        //   threeLines._line2.transform = opp._line2.transform._dup();
-        // }
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         threeLines.calculateFuturePositions('corresponding');
@@ -384,61 +379,52 @@ class Content extends LessonContent {
       },
     });
 
-    this.addSection({
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
-          When two lines intersect, an |angle| is formed.
+    this.addSection(common, {
+      setContent: `
+        <p>
+          When two lines intersect, an |angle| is formed. This angle doesn't change when one line is |moved| without rotation.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
-          This angle doesn't change when one line is |moved| without rotation.
-        </p>
-      `),
+      `,
       modifiers: {
         angle: click(threeLines.toggleCorrespondingAngles, [threeLines, true], colors.angleA),
         moved: click(threeLines.translateLine1, [threeLines], colors.line),
       },
       setEnterState: () => {
-        threeLines._angleA2.setColor(layout.colors.disabled);
-        threeLines._angleB2.setColor(layout.colors.disabled);
-        threeLines._angleC2.setColor(layout.colors.disabled);
-        threeLines._angleD2.setColor(layout.colors.disabled);
         threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.disabled);
+        threeLines._line2.setColor(layout.colors.line);
+        threeLines.translateLine1(-0.5, true);
+        console.log(threeLines.futurePositions)
       },
-      showOnly: [
-        threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
+      hide: [
+        threeLines._line2,
       ],
+      // transitionFromAny: (done) => {
+      //   let time = Math.max(
+      //     diag.getTimeToMoveToScenario(threeLines._line1, 'center'),
+      //     diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
+      //     // diag.getTimeToMoveToScenario(threeLines),
+      //   );
+      //   time = time > 2 ? 2 : time;
+      //   // diag.moveToScenario(threeLines);
+      //   diag.moveToScenario(threeLines._line1, 'center', time);
+      //   diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
+      // },
       transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(threeLines._line1, 'center'),
-          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(threeLines);
-        diag.moveToScenario(threeLines._line1, 'center', time);
-        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
+        threeLines.moveToFuturePositions(done);
       },
       setSteadyState: () => {
-        threeLines._angleA1.show();
-        threeLines._angleA1._arc.show();
-        threeLines._angleA1.showForm('a');
-        threeLines._angleA2.show();
-        threeLines._angleA2._arc.show();
-        threeLines._angleA2.showForm('a');
-
-        diag.moveToScenario(threeLines._line1, 'center', 0.001);
-        diag.moveToScenario(threeLines._line2, 'center', 0.001);
-        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines, null, 0.001);
+        // threeLines._angleA1.show();
+        // threeLines._angleA1._arc.show();
+        // threeLines._angleA1.showForm('a');
+        // threeLines._angleA2.show();
+        // threeLines._angleA2._arc.show();
+        // threeLines._angleA2.showForm('a');
+        threeLines.setFuturePositions();
+        threeLines.toggleCorrespondingAngles(false);
+        // diag.moveToScenario(threeLines._line1, 'center', 0.001);
+        // diag.moveToScenario(threeLines._line2, 'center', 0.001);
+        // diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
+        // diag.moveToScenario(threeLines, null, 0.001);
 
         threeLines._line1.isMovable = true;
         threeLines._line1.move.maxTransform.updateTranslation(
