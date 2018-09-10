@@ -276,49 +276,68 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   }
 
   toggleAngles(
-    angles: Array<Array<'A1' | 'B1' | 'C1' | 'D1'>>,
-    colors: Array<Array<number>>,
-    labelsSingle: boolean = false,
+    angleSets: Array<Array<string>>,
+    labels: Array<Array<string>>,
+    colors: Array<Array<Array<number>>>,
+    // labelsSingle: boolean = false,
   ) {
     // $FlowFixMe
-    const angleElements = angles.map(an => an.map(a => this[`_angle${a}`]));
-    const labels = angles.map(an => an.map(a => this))
-    // $FlowFixMe
-    const a1 = angles1.map(a => this[`_angle${a}`]);
-    // $FlowFixMe
-    const a2 = angles2.map(a => this[`_angle${a}`]);
-    const labels1 = angles1.map(a => a.charAt(0).toLowerCase());
-    let labels2 = angles2.map(a => a.charAt(0).toLowerCase());
-    if ((typeof labelsSingle === 'boolean') && (labelsSingle === true)) {
-      const singleTemplate = {
-        A: 'e', B: 'f', C: 'g', D: 'h',
-      };
-      labels2 = angles2.map(a => singleTemplate[a.charAt(0)]);
-    }
-    for (let i = 0; i < angles1.length; i += 1) {
-      if (a1[i].isShown) {
-        const nextI = (i + 1) % angles1.length;
-        this.showAngles([
-          [a1[nextI], labels1[nextI], color1],
-          [a2[nextI], labels2[nextI], color2],
-        ]);
+    const angles = angleSets.map(an => an.map(a => this[`_angle${a}`]));
+    // const labels = labelSets.map(ln => ln.map(a => a.charAt(0).toLowerCase()));
+    const showIndex = (index: number) => {
+      const showArray = [];
+      for (let j = 0; j < angles.length; j += 1) {
+        showArray.push([angles[j][index], labels[j][index], colors[j][index]]);
+      }
+      this.showAngles(showArray);
+    };
+
+    for (let i = 0; i < angles[0].length; i += 1) {
+      if (angles[0][i].isShown) {
+        const nextI = (i + 1) % angles[0].length;
+        showIndex(nextI);
         this.diagram.animateNextFrame();
         return;
       }
     }
-    this.showAngles([
-      [a1[0], labels1[0], color1],
-      [a2[0], labels2[0], color2],
-    ]);
+    showIndex(0);
     this.diagram.animateNextFrame();
+
+
+    // // $FlowFixMe
+    // const a1 = angles1.map(a => this[`_angle${a}`]);
+    // // $FlowFixMe
+    // const a2 = angles2.map(a => this[`_angle${a}`]);
+    // const labels1 = angles1.map(a => a.charAt(0).toLowerCase());
+    // let labels2 = angles2.map(a => a.charAt(0).toLowerCase());
+    // if ((typeof labelsSingle === 'boolean') && (labelsSingle === true)) {
+    //   const singleTemplate = {
+    //     A: 'e', B: 'f', C: 'g', D: 'h',
+    //   };
+    //   labels2 = angles2.map(a => singleTemplate[a.charAt(0)]);
+    // }
+    // for (let i = 0; i < angles1.length; i += 1) {
+    //   if (a1[i].isShown) {
+    //     const nextI = (i + 1) % angles1.length;
+    //     this.showAngles([
+    //       [a1[nextI], labels1[nextI], color1],
+    //       [a2[nextI], labels2[nextI], color2],
+    //     ]);
+    //     this.diagram.animateNextFrame();
+    //     return;
+    //   }
+    // }
+    // this.showAngles([
+    //   [a1[0], labels1[0], color1],
+    //   [a2[0], labels2[0], color2],
+    // ]);
+    // this.diagram.animateNextFrame();
   }
 
   toggleCorrespondingAngles(
     make2Disabled: boolean = false,
     singleLabels: boolean = false,
   ) {
-    const angles1 = ['A1', 'B1', 'C1', 'D1'];
-    const angles2 = ['A2', 'B2', 'C2', 'D2'];
     const color1 = this.layout.colors.angleA;
     let color2 = this.layout.colors.angleA;
     if (typeof singleLabels === 'boolean' && singleLabels === true) {
@@ -327,18 +346,58 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     if (typeof make2Disabled === 'boolean' && make2Disabled === true) {
       color2 = this.layout.colors.disabled;
     }
-    this.toggleAngles(angles1, angles2, color1, color2, singleLabels);
+    let labels = [['a', 'b', 'c', 'd'], ['a', 'b', 'c', 'd']];
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      labels = [['a', 'b', 'c', 'd'], ['e', 'f', 'g', 'h']];
+    }
+    this.toggleAngles(
+      [['A1', 'B1', 'C1', 'D1'], ['A2', 'B2', 'C2', 'D2']],
+      labels,
+      [[color1, color1, color1, color1], [color2, color2, color2, color2]],
+    );
+  }
+
+  showAllAngles(singleLabels: boolean = false) {
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      this.showAngles([
+        [this._angleA1, 'a', this.colors.angleA],
+        [this._angleB1, 'b', this.colors.angleB],
+        [this._angleC1, 'c', this.colors.angleC],
+        [this._angleD1, 'd', this.colors.angleD],
+        [this._angleA2, 'e', this.colors.angleA],
+        [this._angleB2, 'f', this.colors.angleB],
+        [this._angleC2, 'g', this.colors.angleC],
+        [this._angleD2, 'h', this.colors.angleD],
+      ]);
+    } else {
+      this.showAngles([
+        [this._angleA1, 'a', this.colors.angleA],
+        [this._angleB1, 'b', this.colors.angleB],
+        [this._angleC1, 'c', this.colors.angleC],
+        [this._angleD1, 'd', this.colors.angleD],
+        [this._angleA2, 'a', this.colors.angleA],
+        [this._angleB2, 'b', this.colors.angleB],
+        [this._angleC2, 'c', this.colors.angleC],
+        [this._angleD2, 'd', this.colors.angleD],
+      ]);
+    }
   }
 
   toggleAlternateAngles(singleLabels: boolean = false) {
-    const angles1 = ['A1', 'B1', 'C1', 'D1'];
-    const angles2 = ['C2', 'D2', 'A2', 'B2'];
     const color1 = this.layout.colors.angleA;
     let color2 = this.layout.colors.angleA;
     if (typeof singleLabels === 'boolean' && singleLabels === true) {
       color2 = this.layout.colors.angleB;
     }
-    this.toggleAngles(angles1, angles2, color1, color2, singleLabels);
+    let labels = [['a', 'b', 'c', 'd'], ['c', 'd', 'a', 'b']];
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      labels = [['a', 'b', 'c', 'd'], ['g', 'h', 'e', 'f']];
+    }
+    this.toggleAngles(
+      [['A1', 'B1', 'C1', 'D1'], ['C2', 'D2', 'A2', 'B2']],
+      labels,
+      [[color1, color1, color1, color1], [color2, color2, color2, color2]],
+    );
   }
 
   setUnits(units: 'deg' | 'rad') {

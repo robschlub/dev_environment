@@ -504,6 +504,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
+        // threeLines.showAllAngles();
         threeLines.toggleCorrespondingAngles(false, false);
       },
     });
