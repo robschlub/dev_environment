@@ -530,7 +530,7 @@ class Content extends LessonContent {
       },
     });
 
-    this.addSection(common, {
+    this.addSection(common, commonCorresponding, {
       setContent: `
         <p>
           Therefore comparing the original and moved line, shows |corresponding_angles| are |equal|.
@@ -550,27 +550,35 @@ class Content extends LessonContent {
       infoModifiers: {
         corresponding_angles: highlight(colors.angleA),
       },
+      setEnterState: () => {
+        commonCorresponding.setEnterState();
+        if (this.comingFrom !== 'prev') {
+          threeLines.moveLine1ToLine2();
+          threeLines.correspondingTranslateLine1Future(0.5);
+        }
+      },
       transitionFromAny: (done) => {
-        if (!(this.comingFrom === 'prev')) {
+        if (this.comingFrom !== 'prev') {
           threeLines.moveToFuturePositions(done);
         } else {
           done();
         }
       },
       setSteadyState: () => {
-        if (!(this.comingFrom === 'prev')) {
+        if (this.comingFrom !== 'prev') {
           threeLines.setFuturePositions();
-          commonCorresponding.setSteadyState();
-        } else {
-          threeLines.correspondingToggleAngles(true);
-          threeLines._line1.isMovable = true;
-          threeLines._line2.show();
-          threeLines._line2._end1.show();
-          threeLines._line2._end2.show();
-          threeLines._line2._mid.show();
-          threeLines._line2.isTouchable = false;
-          threeLines._line2.hasTouchableElements = false;
         }
+        commonCorresponding.setSteadyState();
+        // } else {
+        //   threeLines.correspondingToggleAngles(true);
+        //   threeLines._line1.isMovable = true;
+        //   threeLines._line2.show();
+        //   threeLines._line2._end1.show();
+        //   threeLines._line2._end2.show();
+        //   threeLines._line2._mid.show();
+        //   threeLines._line2.isTouchable = false;
+        //   threeLines._line2.hasTouchableElements = false;
+        // }
       },
     });
 

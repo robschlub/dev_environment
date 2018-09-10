@@ -534,54 +534,6 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  // interiorToggleInteriorWithCorresponding() {
-  //   const angles = [['D1', 'C1'], ['A2', 'B2'], ['D2', 'C2']];
-  //   const labels = [['d', 'c'], ['d_equals', 'c_equals'], ['d', 'c']];
-  //   const c = this.layout.colors.angleA;
-  //   const cd = this.layout.colors.disabled;
-  //   const colors = [[c, c], [c, c], [cd, cd]];
-  //   const pulses = [[true, true], [true, true], [false, false]];
-  //   this.toggleAngles(angles, labels, colors, pulses);
-  // }
-
-  // showAlternateAngles() {
-  //   const disabledColor = JSON.stringify(this.layout.colors.disabled);
-  //   const isDisabled = (element: TypeAngle) => JSON.stringify(element._arc.color) === disabledColor;
-  //   if (this._angleA1.isShown) {
-  //     if (isDisabled(this._angleA1) || isDisabled(this._angleC2)) {
-  //       this.showOnlyAngles(['A1', 'C2'], this.layout.colors.angleA, ['A2']);
-  //     } else {
-  //       this.toggleAlternateAngles();
-  //       return;
-  //     }
-  //   }
-  //   if (this._angleB1.isShown) {
-  //     if (isDisabled(this._angleB1) || isDisabled(this._angleD2)) {
-  //       this.showOnlyAngles(['B1', 'D2'], this.layout.colors.angleA, ['B2']);
-  //     } else {
-  //       this.toggleAlternateAngles();
-  //       return;
-  //     }
-  //   }
-  //   if (this._angleC1.isShown) {
-  //     if (isDisabled(this._angleC1) || isDisabled(this._angleA2)) {
-  //       this.showOnlyAngles(['C1', 'A2'], this.layout.colors.angleA, ['C2']);
-  //     } else {
-  //       this.toggleAlternateAngles();
-  //       return;
-  //     }
-  //   }
-  //   if (this._angleD1.isShown) {
-  //     if (isDisabled(this._angleD1) || isDisabled(this._angleB2)) {
-  //       this.showOnlyAngles(['D1', 'B2'], this.layout.colors.angleA, ['D2']);
-  //     } else {
-  //       this.toggleAlternateAngles();
-  //       return;
-  //     }
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
-
   calculateFuturePositions(goToScenario: string) {
     const futurePosition = (element, scenario) => ({ element, scenario });
     this.futurePositions = [];
