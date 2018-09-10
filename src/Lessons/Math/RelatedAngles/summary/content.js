@@ -116,7 +116,7 @@ class Content extends LessonContent {
       `),
       modifiers: {
         Corresponding_Angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines],
+          threeLines.correspondingToggleAngles, [threeLines, false, false],
           colors.angleA,
         ),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
@@ -177,7 +177,7 @@ class Content extends LessonContent {
         diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
         diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
         diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        threeLines.toggleCorrespondingAngles(false);
+        threeLines.correspondingToggleAngles();
       },
     });
 
@@ -193,7 +193,7 @@ class Content extends LessonContent {
       `),
       modifiers: {
         Alternate_angles: click(
-          threeLines.toggleAlternateAngles, [threeLines],
+          threeLines.alternateToggleAngles, [threeLines, false],
           colors.angleA,
         ),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
@@ -255,7 +255,7 @@ class Content extends LessonContent {
         diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
         diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
         diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        threeLines.toggleAlternateAngles();
+        threeLines.alternateToggleAngles();
       },
     });
 
@@ -271,7 +271,7 @@ class Content extends LessonContent {
       `),
       modifiers: {
         Interior_angles: click(
-          threeLines.toggleInteriorAngles, [threeLines],
+          threeLines.interiorToggleAngles, [threeLines, false],
           colors.angleA,
         ),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
@@ -338,7 +338,7 @@ class Content extends LessonContent {
         diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
         diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
         diag.moveToScenario(threeLines, null, 0.001);
-        threeLines.toggleInteriorAngles();
+        threeLines.interiorToggleAngles();
         diag._unitsSelector.select(diag.units);
       },
     });
