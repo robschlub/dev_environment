@@ -261,6 +261,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       this.futurePositions = [];
       if (t1 != null && t3 != null && r3 != null) {
         this.futurePositions = [
+          futurePosition(this, this.layout.position, 0),
           futurePosition(this._line1, position, 0),
           // futurePosition(this._line2, position, 0),
           futurePosition(this._line3, t3, r3),
@@ -520,10 +521,10 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     this.futurePositions = [];
     if (goToScenario != null) {
       this.futurePositions = [
+        futurePosition(this, { position: this.layout.position, rotation: 0 }),
         futurePosition(this._line1, this.layout.line1[goToScenario]),
         futurePosition(this._line2, this.layout.line2[goToScenario]),
         futurePosition(this._line3, this.layout.line3[goToScenario]),
-        futurePosition(this, { position: this.layout.position, rotation: 0 }),
       ];
     }
     // console.log(this.futurePositions)

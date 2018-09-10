@@ -481,7 +481,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         corresponding_angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines, false, true],
+          threeLines.toggleCorrespondingAngles, [threeLines, false, false],
           colors.angleA,
         ),
       },
