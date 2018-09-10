@@ -57,7 +57,6 @@ class Content extends LessonContent {
         opp._line1.setColor(colors.line);
         opp._line2.setColor(colors.line);
         diag._unitsSelector.select(diag.units);
-        opp.calculateFuturePositions();
       },
       showOnly: [
         opp,
@@ -73,9 +72,6 @@ class Content extends LessonContent {
       show: [
         diag._unitsSelector,
       ],
-      transitionFromAny: (done) => {
-        opp.moveToFuturePositions(done);
-      },
     };
 
     // ************************************************************************
@@ -101,6 +97,13 @@ class Content extends LessonContent {
       infoModifiers: {
         four_angles: highlight(colors.angleA),
       },
+      setEnterState: () => {
+        oppCommon.setEnterState();
+        opp.calculateFuturePositions();
+      },
+      transitionFromAny: (done) => {
+        opp.moveToFuturePositions(done);
+      },
       setSteadyState: () => {
         opp.setFuturePositions();
         opp.showAngles([[opp._angleA, 'a', colors.angleA]]);
@@ -120,11 +123,7 @@ class Content extends LessonContent {
       show: [
         diag._unitsSelector,
       ],
-      transitionFromAny: (done) => {
-        opp.moveToFuturePositions(done);
-      },
       setSteadyState: () => {
-        opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
           [opp._angleB, 'b', colors.angleB],
@@ -146,7 +145,6 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
           [opp._angleB, 'b_silent', colors.angleB],
@@ -170,7 +168,6 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
           [opp._angleB, 'b_silent', colors.disabled],
@@ -193,7 +190,6 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
           [opp._angleB, 'b_silent', colors.disabled],
@@ -218,7 +214,6 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.disabled],
           [opp._angleB, 'b_equals', colors.angleB],
@@ -243,7 +238,6 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.disabled],
           [opp._angleB, 'b_equals', colors.disabled],
@@ -260,7 +254,6 @@ class Content extends LessonContent {
       </p>
       `,
       setSteadyState: () => {
-        opp.setFuturePositions();
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
           [opp._angleB, 'b', colors.angleB],
@@ -276,6 +269,13 @@ class Content extends LessonContent {
         If we know one angle, all others can be calculated!
       </p>
       `,
+      setEnterState: () => {
+        oppCommon.setEnterState();
+        opp.calculateFuturePositions();
+      },
+      transitionFromAny: (done) => {
+        opp.moveToFuturePositions(done);
+      },
       setSteadyState: () => {
         opp.setFuturePositions();
         opp.showAngles([
