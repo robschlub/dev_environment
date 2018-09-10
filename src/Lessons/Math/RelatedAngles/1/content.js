@@ -569,16 +569,6 @@ class Content extends LessonContent {
           threeLines.setFuturePositions();
         }
         commonCorresponding.setSteadyState();
-        // } else {
-        //   threeLines.correspondingToggleAngles(true);
-        //   threeLines._line1.isMovable = true;
-        //   threeLines._line2.show();
-        //   threeLines._line2._end1.show();
-        //   threeLines._line2._end2.show();
-        //   threeLines._line2._mid.show();
-        //   threeLines._line2.isTouchable = false;
-        //   threeLines._line2.hasTouchableElements = false;
-        // }
       },
     });
 
@@ -669,7 +659,6 @@ class Content extends LessonContent {
         Alternate_angles: highlight(colors.angleA),
       },
       setSteadyState: () => {
-        threeLines.setFuturePositions();
         threeLines.alternateToggleAngles(true);
       },
     });
@@ -687,7 +676,6 @@ class Content extends LessonContent {
         ),
       },
       setSteadyState: () => {
-        threeLines.setFuturePositions();
         threeLines.alternateShowCorrespondingAngles();
       },
     });
@@ -705,7 +693,6 @@ class Content extends LessonContent {
         ),
       },
       setSteadyState: () => {
-        threeLines.setFuturePositions();
         threeLines.alternateShowOppositeAngles();
       },
     });
@@ -728,6 +715,34 @@ class Content extends LessonContent {
       ],
       infoModifiers: {
         alternate_angles: highlight(colors.angleA),
+      },
+      setSteadyState: () => {
+        threeLines.alternateToggleAngles();
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          In general, all |alternate_angles| are equal when a line intersects with parallel lines.
+        </p>
+      `,
+      modifiers: {
+        alternate_angles: click(
+          threeLines.alternateToggleAngles, [threeLines],
+          colors.angleA,
+        ),
+      },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |alternate_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        alternate_angles: highlight(colors.angleA),
+      },
+      transitionFromAny: (done) => {
+        threeLines.moveToFuturePositions(done);
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
@@ -764,6 +779,9 @@ class Content extends LessonContent {
       infoModifiers: {
         Interior_angles: highlight(colors.angleA),
       },
+      transitionFromAny: (done) => {
+        threeLines.moveToFuturePositions(done);
+      },
       setSteadyState: () => {
         threeLines.setFuturePositions();
         threeLines.interiorToggleAngles(true);
@@ -791,7 +809,6 @@ class Content extends LessonContent {
         interior_angles: highlight(colors.angleA),
       },
       setSteadyState: () => {
-        threeLines.setFuturePositions();
         threeLines.interiorToggleAngles(true);
       },
     });
@@ -835,8 +852,6 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        threeLines.setFuturePositions();
-        // threeLines._angleA1.show();
         threeLines.interiorShowSupplementary();
       },
     });
@@ -861,7 +876,6 @@ class Content extends LessonContent {
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        threeLines.setFuturePositions();
         threeLines.interiorShowInterior();
       },
     });
@@ -893,6 +907,9 @@ class Content extends LessonContent {
       show: [
         diag._unitsSelector,
       ],
+      transitionFromAny: (done) => {
+        threeLines.moveToFuturePositions(done);
+      },
       setSteadyState: () => {
         threeLines.setFuturePositions();
         threeLines.interiorToggleAngles();
