@@ -30,6 +30,9 @@ class LessonDiagram extends Diagram {
       limits.width,
       limits.height,
       backgroundColor,
+      layout,
+      'withTexture',
+      'withTexture',
     );
   }
 

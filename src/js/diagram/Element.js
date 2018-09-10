@@ -358,6 +358,8 @@ class DiagramElement {
   color: Array<number>;           // For the future when collections use color
   noRotationFromParent: boolean;
 
+  interactiveLocation: Point;   // this is in vertex space
+
   animate: {
     transform: {
       plan: Array<AnimationPhase>;
@@ -555,6 +557,7 @@ class DiagramElement {
         startTime: -1,
       },
     };
+    this.interactiveLocation = new Point(0, 0);
 
     // this.presetTransforms = {};
   }
@@ -1633,8 +1636,8 @@ class DiagramElement {
     );
   }
 
-  getDiagramPosition() {
-    const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
+  getVertexSpaceDiagramPosition(vertexSpacePoint: Point) {
+    const location = vertexSpacePoint.transformBy(this.lastDrawTransform.matrix());
     const glSpace = {
       x: { bottomLeft: -1, width: 2 },
       y: { bottomLeft: -1, height: 2 },
@@ -1651,6 +1654,27 @@ class DiagramElement {
     };
     const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
     return location.transformBy(glToDiagramSpace.matrix());
+  }
+
+  getDiagramPosition() {
+    return this.getVertexSpaceDiagramPosition(new Point(0, 0));
+    // const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
+    // const glSpace = {
+    //   x: { bottomLeft: -1, width: 2 },
+    //   y: { bottomLeft: -1, height: 2 },
+    // };
+    // const diagramSpace = {
+    //   x: {
+    //     bottomLeft: this.diagramLimits.left,
+    //     width: this.diagramLimits.width,
+    //   },
+    //   y: {
+    //     bottomLeft: this.diagramLimits.bottom,
+    //     height: this.diagramLimits.height,
+    //   },
+    // };
+    // const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
+    // return location.transformBy(glToDiagramSpace.matrix());
   }
 
   setDiagramPosition(diagramPosition: Point) {
@@ -2413,6 +2437,23 @@ class DiagramElementCollection extends DiagramElement {
         elements = [...elements, ...element.getAllElements()];
       } else {
         elements.push(element);
+      }
+    }
+    return elements;
+  }
+
+  getAllCurrentlyInteractiveElements() {
+    let elements = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element.isShown) {
+        if (element instanceof DiagramElementCollection
+          && (element.isTouchable || element.hasTouchableElements)) {
+          elements = [...elements, ...element.getAllCurrentlyInteractiveElements()];
+        }
+        if (element.isTouchable && element.isMovable) {
+          elements.push(element);
+        }
       }
     }
     return elements;

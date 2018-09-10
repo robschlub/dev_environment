@@ -8,6 +8,7 @@ import {
 import { colorArrayToRGBA } from '../tools/tools';
 // import { Transform, Point } from '../diagram/tools/g2';
 
+
 function centerV(text: string = '') {
   return `<div style="display: table; height: 100%;" class="lesson__diatram_text_p_top_margin_2">
         <div style="display: table-cell; vertical-align: middle">
@@ -82,17 +83,31 @@ function toHTML(
   };
 }
 
-function highlight(classes: string = '') {
-  const classStr = `${classes} highlight_word`;
+function highlight(classesOrColor: string | Array<number> = '') {
+  let classStr = 'highlight_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
   return {
-    replacementText: (text: string) => toHTML(text, '', classStr),
+    replacementText: (text: string) => toHTML(text, '', classStr, color),
   };
 }
 
-function highlightWord(text: string, classes: string = '') {
-  const classStr = `${classes} highlight_word`;
+function highlightWord(text: string, classesOrColor: string | Array<number> = '') {
+  let classStr = 'highlight_word';
+  if (typeof classesOrColor === 'string') {
+    classStr = `${classesOrColor} ${classStr}`;
+  }
+  let color = null;
+  if (Array.isArray(classesOrColor)) {
+    color = classesOrColor;
+  }
   return {
-    replacementText: toHTML(text, '', classStr).replacementText,
+    replacementText: toHTML(text, '', classStr, color).replacementText,
   };
 }
 
@@ -116,8 +131,12 @@ function clickWord(
   actionMethod: Function,
   bind: Array<mixed>,
   classesOrColor: string | Array<number> | null = null,
+  interactive: boolean = true,
 ) {
   let classStr = 'action_word';
+  if (interactive) {
+    classStr = `${classStr} interactive_word`;
+  }
   if (typeof classesOrColor === 'string') {
     classStr = `${classesOrColor} ${classStr}`;
   }
@@ -140,9 +159,13 @@ function click(
   actionMethod: Function,
   bind: Array<mixed>,
   classesOrColor: string | Array<number> | null = null,
+  interactive: boolean = true,
   id: string = '',
 ) {
   let classStr = 'action_word';
+  if (interactive) {
+    classStr = `${classStr} interactive_word`;
+  }
   if (typeof classesOrColor === 'string') {
     classStr = `${classesOrColor} ${classStr}`;
   }
@@ -163,8 +186,12 @@ function actionWord(
   text: string,
   id: string = '',
   classesOrColor: string | Array<number> | null = null,
+  interactive: boolean = true,
 ) {
   let classStr = 'action_word';
+  if (interactive) {
+    classStr = `${classStr} interactive_word`;
+  }
   if (typeof classesOrColor === 'string') {
     classStr = `${classesOrColor} ${classStr}`;
   }
@@ -178,9 +205,21 @@ function actionWord(
   };
 }
 
+
+type TypeInteractiveElement = DiagramElementCollection
+                              | DiagramElementPrimative
+                              | string
+                              | HTMLElement;
+type TypeInteractiveElementLocation = 'center' | 'zero' | ''
+                                      | 'topleft' | 'topright';
+type TypeInteractiveElements = Array<{
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
+  }>;
+
 function interactiveItem(
-  element: DiagramElementPrimative | DiagramElementCollection,
-  location: string | Point,
+  element: TypeInteractiveElement,
+  location: TypeInteractiveElementLocation = '',
 ) {
   return {
     element,
@@ -302,6 +341,7 @@ function setOnClicks(modifiers: Object) {
 //     fromNext: number;
 //   }
 // }
+
 class Section {
   title: string;
   modifiers: Object;
@@ -328,10 +368,10 @@ class Section {
     fromGoto: boolean;
   };
 
-  interactiveItems: Array<{
-    element: DiagramElementCollection | DiagramElementPrimative,
-    location: 'center' | 'zero' | Point,
-  }>;
+  interactiveElementsOnly: TypeInteractiveElements;
+  interactiveElements: TypeInteractiveElements;
+  interactiveElementsRemove: Array<TypeInteractiveElement>;
+  interactiveElementList: TypeInteractiveElements;
 
   currentInteractiveItem: number;
 
@@ -351,7 +391,7 @@ class Section {
       toGoto: false,
       fromGoto: false,
     };
-    this.interactiveItems = [];
+    this.interactiveElementList = [];
     this.currentInteractiveItem = -1;
   }
 
@@ -393,6 +433,14 @@ class Section {
     return htmlText.replace(r, '<span class="highlight_word">$1</span>');
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  hideInfoButton() {
+    const infoElement = document.getElementById('id_lesson__info_button');
+    if (infoElement instanceof HTMLElement) {
+      infoElement.classList.add('lesson__info_hide');
+    }
+  }
+
   setInfoButton() {
     const infoHtml = this.getInfo();
     const infoElement = document.getElementById('id_lesson__info_button');
@@ -415,7 +463,7 @@ class Section {
       .getElementById('id_lesson__interactive_element_button');
     // const infoBox = document.getElementById('id_lesson__info_box__text');
     if (button instanceof HTMLElement) {
-      if (this.interactiveItems.length > 0) {
+      if (this.interactiveElementList.length > 0) {
         button.classList.remove('lesson__interactive_element_button__hide');
       } else {
         button.classList.add('lesson__interactive_element_button__hide');
@@ -463,28 +511,6 @@ class Section {
   setLeaveState(): ?Object {
   }
 
-  // setInitialPositions() {
-  //   if ('initialPositions' in this) {
-  //     const elementsOrMethod = this.initialPositions;
-  //     if (typeof elementsOrMethod === 'function') {
-  //       elementsOrMethod();
-  //     }
-  //     if (Array.isArray(elementsOrMethod)) {
-  //       for (let i = 0; i < elementsOrMethod.length; i += 2) {
-  //         const element = elementsOrMethod[i];
-  //         const transformPointOrNumber = elementsOrMethod[i + 1];
-  //         if (transformPointOrNumber instanceof Transform) {
-  //           element.transform = transformPointOrNumber._dup();
-  //         } else if (transformPointOrNumber instanceof Point) {
-  //           element.transform.updateTranslation(transformPointOrNumber);
-  //         } else if (typeof transformPointOrNumber === 'number') {
-  //           element.transform.updateRotation(transformPointOrNumber);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
   setBlanks() {
     this.blank.forEach((element) => {
       if (element in this.blankTransition) {
@@ -498,22 +524,90 @@ class Section {
     // }
   }
 
-  // setInteractiveItems() {
-  //   if ('interativeItems' in this) {
-  //     this.interativeItems = interativeItems;
-  //   }
-  // }
-  // setInfoElements() {
-  //   if ('infoElements' in this) {
-  //     const elementsOrMethod = this.showOnly;
-  //     if (Array.isArray(elementsOrMethod)) {
-  //       this.diagram.elements.showOnly(elementsOrMethod);
-  //     } else {
-  //       elementsOrMethod();
-  //     }
-  //   }
-  //   }
-  // }
+  getInteractiveElementIndex(
+    element: TypeInteractiveElement,
+  ) {
+    let elem = element;
+    if (typeof element === 'string') {
+      elem = document.getElementById(element);
+    }
+    for (let i = 0; i < this.interactiveElementList.length; i += 1) {
+      const item = this.interactiveElementList[i];
+      if (item.element === elem || item.element === element) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  removeInteractiveElement(element: TypeInteractiveElement) {
+    const index = this.getInteractiveElementIndex(element);
+    if (index > -1) {
+      this.interactiveElementList.splice(index, 1);
+    }
+  }
+
+  replaceInteractiveElement(
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
+  ) {
+    const index = this.getInteractiveElementIndex(element);
+    if (index > -1) {
+      this.interactiveElementList[index] = interactiveItem(element, location);
+      return true;
+    }
+    return false;
+  }
+
+  replaceOrAddInteractiveElement(
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
+  ) {
+    const replaced = this.replaceInteractiveElement(element, location);
+    if (!replaced) {
+      this.interactiveElementList.push(interactiveItem(element, location));
+    }
+  }
+
+  setInteractiveElements() {
+    this.interactiveElementList = [];
+    if ('interactiveElementsOnly' in this) {
+      this.interactiveElementList = this.interactiveElementsOnly;
+    } else {
+      // Get all action words
+      const elements = document.getElementsByClassName('interactive_word');
+      for (let i = 0; i < elements.length; i += 1) {
+        const element = elements[i];
+        this.interactiveElementList.push({
+          element,
+          location: 'topleft',
+        });
+      }
+
+      // Get all movable diagram elements
+      const diagramElements = this.diagram.elements.getAllCurrentlyInteractiveElements();
+      diagramElements.forEach((element) => {
+        this.interactiveElementList.push({
+          element,
+          location: 'center',
+        });
+      });
+    }
+
+    // Overwrite or add single elements
+    if ('interactiveElements' in this) {
+      this.interactiveElements.forEach((element) => {
+        this.replaceOrAddInteractiveElement(element.element, element.location);
+      });
+    }
+
+    // Remove elements
+    if ('interactiveElementsRemove' in this) {
+      this.interactiveElementsRemove.forEach((element) => {
+        this.removeInteractiveElement(element);
+      });
+    }
+  }
 
   setVisible() {
     if ('showOnly' in this) {
@@ -717,9 +811,9 @@ class LessonContent {
   //   const index = this.
   // }
 
-  starOnElement(
-    element: DiagramElementCollection | DiagramElementPrimative,
-    location: 'center' | 'zero' | '' | Point = '',
+  highlightInteractiveElement(
+    element: TypeInteractiveElement,
+    location: TypeInteractiveElementLocation,
   ) {
     const star = document.getElementById('id_lesson__star');
     if (star instanceof HTMLElement) {
@@ -732,14 +826,52 @@ class LessonContent {
       };
       animationEnd();
 
-      let diagramPosition;
-      if (location === 'center') {
-        diagramPosition = element.getCenterDiagramPosition();
+      let cssPosition = new Point(0, 0);
+      if (element instanceof DiagramElementPrimative
+        || element instanceof DiagramElementCollection) {
+        let diagramPosition;
+        if (location === 'center') {
+          diagramPosition = element.getCenterDiagramPosition();
+        } else if (location === 'zero') {
+          diagramPosition = element.getDiagramPosition();
+        } else if (location === 'topleft') {
+          const rect = element.getDiagramBoundingRect();
+          diagramPosition = new Point(rect.left, rect.top);
+        } else if (location === 'topright') {
+          const rect = element.getDiagramBoundingRect();
+          diagramPosition = new Point(rect.right, rect.top);
+        } else {
+          diagramPosition = element
+            .getVertexSpaceDiagramPosition(element.interactiveLocation);
+        }
+        cssPosition = diagramPosition
+          .transformBy(this.diagram.diagramToPixelSpaceTransform.matrix());
       } else {
-        diagramPosition = element.getDiagramPosition();
+        let html = element;
+        if (typeof element === 'string') {
+          html = document.getElementById(element);
+        }
+        if (html instanceof HTMLElement) {
+          const rect = html.getBoundingClientRect();
+          const rectBase = this.diagram.htmlCanvas.getBoundingClientRect();
+          if (location === 'topleft') {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * 0.05,
+              rect.top - rectBase.top + rect.height * 0.25,
+            );
+          } else if (location === 'topright') {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * 0.95,
+              rect.top - rectBase.top + rect.height * 0.25,
+            );
+          } else {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width / 2,
+              rect.top - rectBase.top + rect.height / 2,
+            );
+          }
+        }
       }
-      const cssPosition = diagramPosition
-        .transformBy(this.diagram.diagramToPixelSpaceTransform.matrix());
       star.classList.add('lesson__info_star_pulse');
       const rect = star.getBoundingClientRect();
       star.style.left = `${cssPosition.x - rect.width / 2}px`;
@@ -773,9 +905,9 @@ class LessonContent {
   addSections() {
   }
 
-  addSection(section: Object) {
+  addSection(...sectionObjects: Array<Object>) {
     const s = new Section(this.diagram);
-
+    const section = Object.assign({}, ...sectionObjects);
     Object.keys(section).forEach((key) => {
       // $FlowFixMe
       s[key] = section[key];

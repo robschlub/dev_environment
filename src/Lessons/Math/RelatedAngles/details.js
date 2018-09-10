@@ -4,7 +4,7 @@
 var details = {
   title: 'Related Angles',
   uid: 'related_angles',
-  dependencies: ['adjacent_angles'],
+  dependencies: ['parallel_lines'],
 };
 
 module.exports = {

@@ -164,8 +164,9 @@ module.exports = (env) => {
                   //   return '[path][name].[ext]'
                   // }
                   let newPath = file.replace('/opt/app/src/', '');
-                  newPath = newPath.replace('/tile.png', '');
-                  return `${newPath}/[name].[ext]`
+                  // newPath = newPath.replace('/tile.png', '');
+                  newPath = newPath.replace(/\/[^/]*$/, '');
+                  return `${newPath}/[name].[ext]`;
                 },
               },
             },

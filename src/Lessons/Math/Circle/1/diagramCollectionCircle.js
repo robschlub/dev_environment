@@ -12,10 +12,12 @@ import {
 } from '../../../../js/diagram/tools/g2';
 import type { TypeRotationDirection } from '../../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
+import textureMap from '../../../../LessonsCommon/images/textureMaps/circles.png';
 
 const layout = lessonLayout();
 const { colors } = layout;
 
+const textureFile = `/static/dist/${textureMap}`;
 
 function makeLine(
   shapes: Object,
@@ -37,7 +39,7 @@ function makeWheel(shapes: Object) {
   return shapes.polygonFilled(
     layout.circlePoints, layout.wheel.radius, 0,
     layout.circlePoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0.3333, 0, 0.2222, 0.2222),
+    textureFile, new Rect(0.3333, 0, 0.2222, 0.2222),
   );
 }
 
@@ -45,7 +47,7 @@ function makeBall(shapes: Object) {
   return shapes.polygonFilled(
     layout.circlePoints, layout.ball.radius, 0,
     layout.circlePoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0.5555, 0, 0.1667, 0.1667),
+    textureFile, new Rect(0.5555, 0, 0.1667, 0.1667),
   );
 }
 
@@ -53,7 +55,7 @@ function makeMoon(shapes: Object) {
   return shapes.polygonFilled(
     layout.circlePoints, layout.moon.radius, 0,
     layout.circlePoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0, 0, 0.3333, 0.3333),
+    textureFile, new Rect(0, 0, 0.3333, 0.3333),
   );
 }
 
@@ -61,7 +63,7 @@ function makeRing(shapes: Object) {
   return shapes.polygonFilled(
     layout.circlePoints, layout.ring.radius, 0,
     layout.circlePoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0.7222, 0.1481, 0.1481, 0.1481),
+    textureFile, new Rect(0.7222, 0.1481, 0.1481, 0.1481),
   );
 }
 
