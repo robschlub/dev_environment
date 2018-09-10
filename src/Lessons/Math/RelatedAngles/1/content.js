@@ -407,33 +407,33 @@ class Content extends LessonContent {
       infoModifiers: {
         Corresponding_Angles: highlight(colors.angleA),
       },
-      // transitionFromAny: (done) => {
-      //   if (!(this.comingFrom === 'prev')) {
-      //     threeLines.moveToFuturePositions(done);
-      //   } else {
-      //     done();
-      //   }
-      // },
-      // setSteadyState: () => {
-      //   if (!(this.comingFrom === 'prev')) {
-      //     threeLines.setFuturePositions();
-      //   }
-      //   threeLines.correspondingToggleAngles(false, true);
-      // },
+      transitionFromAny: (done) => {
+        if (!(this.comingFrom === 'prev')) {
+          threeLines.moveToFuturePositions(done);
+        } else {
+          done();
+        }
+      },
       setSteadyState: () => {
+        if (!(this.comingFrom === 'prev')) {
+          threeLines.setFuturePositions();
+        }
         threeLines.correspondingToggleAngles(false, true);
       },
+      // setSteadyState: () => {
+      //   threeLines.correspondingToggleAngles(false, true);
+      // },
     });
 
     const commonCorresponding = {
       setEnterState: () => {
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.disabled);
-        threeLines.correspondingTranslateLine1(1, true);
+        // threeLines.correspondingTranslateLine1(1, true);
       },
-      hide: [
-        threeLines._line2,
-      ],
+      // hide: [
+      //   threeLines._line2,
+      // ],
       setSteadyState: () => {
         threeLines.correspondingToggleAngles(true);
         threeLines._line1.isMovable = true;
@@ -445,7 +445,7 @@ class Content extends LessonContent {
           -10,
           layout.line2.corresponding.position.y,
         );
-        threeLines.moveLine2ToLine1();
+        // threeLines.moveLine2ToLine1();
         threeLines._line2.show();
         threeLines._line2._end1.show();
         threeLines._line2._end2.show();
@@ -470,13 +470,13 @@ class Content extends LessonContent {
         angle: click(threeLines.correspondingToggleAngles, [threeLines, true], colors.angleA),
         moved: click(
           threeLines.correspondingTranslateLine1,
-          [threeLines, null, false], colors.line,
+          [threeLines], colors.line,
         ),
       },
       setInfo: [
         '<ul>',
         '<li>Move the horizontal line to see if the angle changes.</li>',
-        '<li>Touch |moved| text to move the line a random distance.</li>',
+        '<li>Touch |moved| to move the line a random distance.</li>',
         '<li>Touch |angle| text to toggle the angles.</li>',
         '</ul>',
       ],
@@ -484,12 +484,25 @@ class Content extends LessonContent {
         angle: highlight(colors.angleA),
         moved: highlight(colors.line),
       },
+      setEnterState: () => {
+        commonCorresponding.setEnterState();
+        if (this.comingFrom !== 'next') {
+          threeLines.moveLine1ToLine2();
+          threeLines.correspondingTranslateLine1Future(0.5);
+        }
+      },
       transitionFromAny: (done) => {
-        threeLines.moveToFuturePositions(done);
+        if (this.comingFrom !== 'next') {
+          threeLines.moveToFuturePositions(2, done);
+        } else {
+          done();
+        }
       },
       setSteadyState: () => {
         commonCorresponding.setSteadyState();
-        threeLines.setFuturePositions();
+        if (this.comingFrom !== 'next') {
+          threeLines.setFuturePositions();
+        }
       },
     });
 
@@ -500,7 +513,7 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        Moving: click(threeLines.correspondingTranslateLine1, [threeLines, true, false], colors.line),
+        Moving: click(threeLines.correspondingTranslateLine1, [threeLines], colors.line),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
       },
       setInfo: [
@@ -512,30 +525,7 @@ class Content extends LessonContent {
       infoModifiers: {
         Moving: highlight(colors.line),
       },
-      // transitionFromAny: (done) => {
-      //   if (!(this.comingFrom === 'prev')) {
-      //     threeLines.moveToFuturePositions(done);
-      //   } else {
-      //     done();
-      //   }
-      // },
-      // setSteadyState: () => {
-      //   if (!(this.comingFrom === 'prev')) {
-      //     threeLines.setFuturePositions();
-      //     commonCorresponding.setSteadyState();
-      //   } else {
-      //     threeLines.correspondingToggleAngles(true);
-      //     threeLines._line1.isMovable = true;
-      //     threeLines._line2.show();
-      //     threeLines._line2._end1.show();
-      //     threeLines._line2._end2.show();
-      //     threeLines._line2._mid.show();
-      //     threeLines._line2.isTouchable = false;
-      //     threeLines._line2.hasTouchableElements = false;
-      //   }
-      // },
       setSteadyState: () => {
-        // threeLines.setFuturePositions();
         threeLines.correspondingToggleAngles(true);
       },
     });

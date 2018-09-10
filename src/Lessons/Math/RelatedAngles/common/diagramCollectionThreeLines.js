@@ -196,6 +196,15 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
+  moveLine1ToLine2() {
+    this._line1.setPositionToElement(this._line2);
+    this._angleA1.setPositionToElement(this._angleA2);
+    this._angleB1.setPositionToElement(this._angleB2);
+    this._angleC1.setPositionToElement(this._angleC2);
+    this._angleD1.setPositionToElement(this._angleD2);
+    this.diagram.animateNextFrame();
+  }
+
   updateIntersectingLineAngle() {
     const r = this._line3.transform.r();
     const t1 = this._line1.transform.t();
@@ -380,18 +389,40 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     );
   }
 
-  correspondingTranslateLine1(
-    yToTranslateTo: ?number = null,
-    setAsFuturePosition: boolean = false,
-  ) {
-    let y = Math.max(Math.random(), 0.5);
-    if (yToTranslateTo != null) {
-      y = yToTranslateTo;
+  correspondingTranslateLine1Future(y: number = 0.5) {
+    const position = new Point(
+      this.xOfLine3AtY(y),
+      y,
+    );
+    const futurePosition = (element, p, r) => ({
+      element,
+      scenario: {
+        position: p,
+        rotation: r,
+      },
+    });
+    const t2 = this._line2.transform.t();
+    let position2 = new Point(0, 0);
+    if (t2 != null) {
+      position2 = new Point(this.xOfLine3AtY(t2.y), t2.y);
     }
-    let position = new Point(0, 0);
-    const t1 = this._line1.transform.t();
+    this.futurePositions = [];
     const t3 = this._line3.transform.t();
     const r3 = this._line3.transform.r();
+    if (t3 != null && r3 != null) {
+      this.futurePositions = [
+        futurePosition(this, this.layout.position, 0),
+        futurePosition(this._line1, position, 0),
+        futurePosition(this._line2, position2, 0),
+        futurePosition(this._line3, t3, r3),
+      ];
+    }
+  }
+
+  correspondingTranslateLine1() {
+    let y = Math.max(Math.random(), 0.5);
+    let position = new Point(0, 0);
+    const t1 = this._line1.transform.t();
     if (t1 != null) {
       if (t1.y >= 0) {
         y *= -1;
@@ -401,29 +432,10 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
         y + t1.y,
       );
     }
-    if (setAsFuturePosition) {
-      const futurePosition = (element, p, r) => ({
-        element,
-        scenario: {
-          position: p,
-          rotation: r,
-        },
-      });
-      this.futurePositions = [];
-      if (t1 != null && t3 != null && r3 != null) {
-        this.futurePositions = [
-          futurePosition(this, this.layout.position, 0),
-          futurePosition(this._line1, position, 0),
-          // futurePosition(this._line2, position, 0),
-          futurePosition(this._line3, t3, r3),
-        ];
-      }
-    } else {
-      this.moveLine2ToLine1();
-      this._line1.stop();
-      this._line1.animateTranslationTo(position, 1);
-      this.diagram.animateNextFrame();
-    }
+    this.moveLine2ToLine1();
+    this._line1.stop();
+    this._line1.animateTranslationTo(position, 1);
+    this.diagram.animateNextFrame();
   }
 
   // ***********************************************************************
@@ -582,5 +594,4 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       ];
     }
   }
-
 }
