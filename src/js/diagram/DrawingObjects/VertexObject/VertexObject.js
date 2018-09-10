@@ -99,6 +99,21 @@ class VertexObject extends DrawingObject {
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
   }
 
+  resetBuffer(numPoints: number = 0) {
+    if (this.textureLocation) {
+      this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+      this.gl.deleteTexture(this.textureBuffer);
+    }
+    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+    this.gl.deleteBuffer(this.buffer);
+    this.setupBuffer(numPoints);
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  change(coords: Array<g2.Point>) {
+    this.resetBuffer();
+  }
+
   // Abstract method - should be reimplemented for any vertexObjects that
   getPointCountForAngle(drawAngle: number = Math.PI * 2) {
     return this.numPoints * drawAngle / (Math.PI * 2);

@@ -2,6 +2,7 @@
 
 $geometry_colors: (
   lines:        color('diagram', 'primary'),
+  point:        color('diagram', 'warning'),
   corners:      color('diagram', 'primary', 'light'),
   moreSharp:    color('diagram', 'warning', 'light'),
   lessSharp:    color('diagram', 'safe', 'light'),

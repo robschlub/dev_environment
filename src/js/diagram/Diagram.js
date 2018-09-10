@@ -284,6 +284,7 @@ function shapes(diagram: Diagram) {
     textureLocation: string = '',
     textureCoords: Rect = new Rect(0, 0, 1, 1),
   ) {
+    console.log(transform)
     return PolygonFilled(
       diagram.webgl, numSides, radius,
       rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation, textureCoords,

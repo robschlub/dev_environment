@@ -84,6 +84,19 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
+    'Rectangles',
+    '/Lessons/Math/Rectangles',
+    'rectangle_introduction',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'square_introduction',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
     'Related Angles',
     '/Lessons/Math/RelatedAngles',
     'related_angles',
@@ -95,6 +108,32 @@ export default function getLessonIndex() {
     ],
     [
       'parallel_lines',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Squares',
+    '/Lessons/Math/Squares',
+    'square_introduction',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'adjacent_angles',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Triangles',
+    '/Lessons/Math/Triangles',
+    'triangle_introduction',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'adjacent_angles',
     ],
   ));
   return lessonIndex;

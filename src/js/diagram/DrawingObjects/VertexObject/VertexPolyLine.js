@@ -3,10 +3,13 @@
 import { Point } from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from './VertexObject';
-import polyLineTriangles from './PolyLineTriangles';
+import polyLineTriangles2 from './PolyLineTriangles2';
 
 
 class VertexPolyLine extends VertexObject {
+  width: number;
+  close: boolean;
+
   constructor(
     webgl: WebGLInstance,
     coords: Array<Point>,
@@ -14,12 +17,21 @@ class VertexPolyLine extends VertexObject {
     width: number,
   ): void {
     super(webgl);
-    const lineTriangles = polyLineTriangles(coords, close, width);
+    this.width = width;
+    this.close = close;
+    this.setupPoints(coords);
+    this.setupBuffer();
+  }
 
+  change(coords: Array<Point>) {
+    this.setupPoints(coords);
+    this.resetBuffer();
+  }
+
+  setupPoints(coords: Array<Point>) {
+    const lineTriangles = polyLineTriangles2(coords, this.close, this.width);
     this.points = lineTriangles.points;
     this.border[0] = lineTriangles.border;
-
-    this.setupBuffer();
   }
 }
 
