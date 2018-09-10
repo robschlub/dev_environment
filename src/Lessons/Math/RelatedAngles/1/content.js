@@ -362,7 +362,6 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
-      title: 'Corresponding Angles',
       setContent: `
         <p >
           What is the relationship between |corresponding_angles|?
@@ -491,140 +490,63 @@ class Content extends LessonContent {
       },
     });
 
-    // this.addSection(common, {
-    //   setContent: `
-    //     <p>
-    //       When the two lines are |parallel|, |corresponding_angles| are always |equal|.
-    //     </p>
-    //   `,
-    //   modifiers: {
-    //     corresponding_angles: click(
-    //       threeLines.toggleCorrespondingAngles, [threeLines],
-    //       colors.angleA,
-    //     ),
-    //     parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
-    //   },
-    //   setSteadyState: () => {
-    //     threeLines.toggleCorrespondingAngles(false);
-    //   },
-    //   transitionFromNext: (done) => {
-    //     threeLines.moveToFuturePositions(done);
-    //   },
-    // });
-
-    this.addSection({
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
-          Therefore comparing the original and moved line, shows |corresponding_angles| are |equal|.
+    this.addSection(common, {
+      setContent: `
+        <p>
+          In general, |corresponding_angles| are always |equal| when the two lines being intersected are parallel.
         </p>
-      `),
+      `,
       modifiers: {
         corresponding_angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines],
+          threeLines.toggleCorrespondingAngles, [threeLines, false, false],
           colors.angleA,
         ),
       },
-      setEnterState: () => {
-        if (opp.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = opp._line1.transform._dup();
-          threeLines._line2.transform = opp._line2.transform._dup();
-        }
-        threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.line);
-      },
-      showOnly: [
-        threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
-      ],
-      transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(threeLines._line1, 'corresponding', time);
-        diag.moveToScenario(threeLines._line2, 'corresponding', time);
-        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
-      },
       setSteadyState: () => {
-        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        threeLines.toggleCorrespondingAngles();
+        threeLines.setFuturePositions();
+        threeLines.toggleCorrespondingAngles(false, false);
       },
     });
 
-    this.addSection({
+    this.addSection(common, {
       title: 'Alternate Angles',
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
+      setContent: `
+        <p>
           |Alternate_angles| are the angles that are on opposite sides of the |intersecting| line that crosses |two_lines|.
         </p>
         <p class="lesson__diagram_text_p_width_40">
           When the two lines are |parallel|, the alternate angles are always |equal|.
         </p>
-      `),
+      `,
       modifiers: {
         Alternate_angles: click(
-          threeLines.toggleAlternateAngles, [threeLines],
+          threeLines.toggleAlternateAngles, [threeLines, true],
           colors.angleA,
         ),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
-      setEnterState: () => {
-        if (opp.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = opp._line1.transform._dup();
-          threeLines._line2.transform = opp._line2.transform._dup();
-        }
-        threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.line);
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines.toggleAlternateAngles(true);
       },
-      showOnly: [
-        threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
-      ],
-      transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(threeLines._line1, 'corresponding', time);
-        diag.moveToScenario(threeLines._line2, 'corresponding', time);
-        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Can you determine the relationship between |alternate_angles|?
+        </p>
+      `,
+      modifiers: {
+        alternate_angles: click(
+          threeLines.toggleAlternateAngles, [threeLines],
+          colors.angleA,
+        ),
       },
       setSteadyState: () => {
-        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
+        threeLines.setFuturePositions();
         threeLines.toggleAlternateAngles();
       },
     });
