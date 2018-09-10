@@ -16,7 +16,6 @@ import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 
 export default class ThreeLinesCollection extends CommonDiagramCollection {
   layout: Object;
@@ -534,6 +533,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
+  // $FlowFixMe
   calculateFuturePositions(goToScenario: string) {
     const futurePosition = (element, scenario) => ({ element, scenario });
     this.futurePositions = [];

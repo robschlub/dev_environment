@@ -4,7 +4,7 @@ import {
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
-import Definition from '../../../../LessonsCommon/tools/definition';
+// import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import details from '../details';

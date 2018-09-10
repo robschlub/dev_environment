@@ -42,8 +42,6 @@ export default class OppositeCollection extends CommonDiagramCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
-  // futurePositions: Array<Object>;
-
   makeLine(labelText: string) {
     const line = makeLabeledLine(
       this.diagram, this.layout.parallelLine,
@@ -297,25 +295,14 @@ export default class OppositeCollection extends CommonDiagramCollection {
   }
 
   calculateFuturePositions() {
-    const rotateScenario = r => ({
-      position: this.layout.line1.opposite.position,
-      rotation: r,
-    });
     const futurePosition = (element, scenario) => ({ element, scenario });
     const r1 = this._line1.transform.r();
     const r2 = this._line2.transform.r();
     if (r1 != null && r2 != null) {
-      // if (Math.abs(minAngleDiff(r1, r2)) < this.layout.minAngleThreshold) {
       this.futurePositions = [
         futurePosition(this._line1, this.layout.line1.opposite),
         futurePosition(this._line2, this.layout.line2.opposite),
       ];
-      // } else {
-      // this.futurePositions = [
-      //   futurePosition(this._line1, rotateScenario(r1)),
-      //   futurePosition(this._line2, rotateScenario(r2)),
-      // ];
-      // }
     }
   }
 }

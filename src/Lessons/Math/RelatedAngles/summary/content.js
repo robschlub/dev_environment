@@ -4,7 +4,6 @@ import {
 } from '../../../../js/Lesson/LessonContent';
 
 import LessonDiagram from './diagram';
-import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import details from '../details';
@@ -46,7 +45,6 @@ class Content extends LessonContent {
         <p class="lesson__diagram_text_p_width_40">
           |Opposite_Angles| at the intersection are equal.
         </p>
-        ${new Definition('Opposite', 'Latin', ['oppositus', 'set against, opposing']).html('id_lesson__related_angles_definition')}
       `),
       modifiers: {
         Opposite_Angles: click(opp.toggleOppositeAngles, [opp], colors.angleA),
