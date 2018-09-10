@@ -308,7 +308,7 @@ export default class LessonComponent extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   addInfoButton() {
-    return <Button label="i" id="id_lesson__info_button" className="lesson__info_button"/>;
+    return <Button label="i" id="id_lesson__info_button" className="lesson__info_button lesson__info_hide"/>;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -327,7 +327,7 @@ export default class LessonComponent extends React.Component
     return <img
       id="id_lesson__interactive_element_button"
       className="lesson__interactive_element_button lesson__interactive_element_button__hide"
-      onClick={this.lesson.starOnNextInteractiveItem.bind(this.lesson)}
+      onClick={this.lesson.highlightNextInteractiveItem.bind(this.lesson)}
       src="/static/star.png"/>;
   }
 

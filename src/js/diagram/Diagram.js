@@ -519,6 +519,8 @@ class Diagram {
     height: number = 2,
     backgroundColor: Array<number> = [1, 1, 1, 1],
     layout: Object = {},
+    vertexShader: string = 'simple',
+    fragmentShader: string = 'simple',
   ) {
     this.layout = layout;
     if (typeof containerIdOrWebGLContext === 'string') {
@@ -541,7 +543,7 @@ class Diagram {
           }
         }
         this.backgroundColor = backgroundColor;
-        const shaders = getShaders('withTexture', 'withTexture');
+        const shaders = getShaders(vertexShader, fragmentShader);
         const webgl = new WebGLInstance(
           this.canvas,
           shaders.vertexSource,

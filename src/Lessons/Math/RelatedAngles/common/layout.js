@@ -18,7 +18,7 @@ const cssColorNames = [
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
-export default function lessonLayoutCommon() {
+export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
   layout.units = {
@@ -60,10 +60,6 @@ export default function lessonLayoutCommon() {
   };
 
   layout.line1 = {
-    parallel: {
-      position: new Point(0, 0.3),
-      rotation: 0,
-    },
     opposite: {
       position: new Point(0, 0),
       rotation: 0,
@@ -84,10 +80,6 @@ export default function lessonLayoutCommon() {
     rotation: 0,
   };
   layout.line2 = {
-    parallel: {
-      position: new Point(0, -0.3),
-      rotation: 0,
-    },
     opposite: {
       position: new Point(0, 0),
       rotation: Math.PI / 4,

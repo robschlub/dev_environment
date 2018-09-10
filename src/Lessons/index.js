@@ -71,9 +71,9 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
-    'Related Angles',
-    '/Lessons/Math/RelatedAngles',
-    'related_angles',
+    'Parallel Lines',
+    '/Lessons/Math/ParallelLines',
+    'parallel_lines',
     [
       '1',
       'quiz',
@@ -84,14 +84,17 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
-    'Sine',
-    '/Lessons/Math/Sine',
-    'sine',
+    'Related Angles',
+    '/Lessons/Math/RelatedAngles',
+    'related_angles',
     [
       '1',
+      '2',
+      'quiz',
+      'summary',
     ],
     [
-      'adjacent_angles',
+      'parallel_lines',
     ],
   ));
   return lessonIndex;

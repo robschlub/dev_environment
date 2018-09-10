@@ -54,6 +54,7 @@ $_color_theme-standard-dark: (
     'passive':        (color: 'yellow', shade: 'base'),
     'disabled':       (color: 'grey',   shade: 'base'),
     'push':           (color: 'red',    shade: 'base'),
+    'action':         (color: 'cyan',   shade: 'base'),
     'text-base':      (color: 'yellow', shade: 'lighter'),
     'text-plot':      (color: 'blue',   shade: 'light'),
     'text-keyword':   (color: 'blue',   shade: 'light'),
@@ -61,7 +62,6 @@ $_color_theme-standard-dark: (
     'text-latin':     (color: 'blue',  shade: 'light'),
     'text-greek':     (color: 'orange',   shade: 'light'),
     'text-english':   (color: 'blue',   shade: 'light'),
-    'action':         (color: 'violet', shade: 'lighter'),
     'quizCheck':      (color: 'violet', shade: 'base'),
   ),
   'lesson': (

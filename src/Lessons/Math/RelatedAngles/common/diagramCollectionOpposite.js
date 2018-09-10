@@ -8,26 +8,14 @@ import {
 } from '../../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeLabeledLine, makeLabeledAngle, makeSupplementaryAngle } from './diagramCollectionCommon';
-import type { TypeLabeledLine, TypeAngle, TypeSupplementaryAngle } from './diagramCollectionCommon';
+import { makeLabeledAngle, makeSupplementaryAngle } from './tools';
+import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeAngle, TypeSupplementaryAngle } from './tools';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-// type AngleType = {
-//   _label: DiagramElementCollection;
-//   _arc: DiagramElementPrimative;
-//   eqn: {
-//     showForm: (string) => void;
-//   } & Equation;
-//   updateAngle: (number, number) => void;
-// } & DiagramElementCollection;
-
-// type labeledLineType = {
-//   _label: DiagramElementCollection;
-//   eqn: Equation;
-//   updateLabel: (number) => void;
-// } & MoveableLineType;
-
-export default class OppositeCollection extends DiagramElementCollection {
+export default class OppositeCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
@@ -134,7 +122,10 @@ export default class OppositeCollection extends DiagramElementCollection {
     this._equation1.eqn.setUnits(units);
     this._equation2.eqn.setUnits(units);
     this._equation3.eqn.setUnits(units);
+    this._angleA.eqn.setUnits(units);
     this._angleB.eqn.setUnits(units);
+    this._angleC.eqn.setUnits(units);
+    this._angleD.eqn.setUnits(units);
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
@@ -146,6 +137,13 @@ export default class OppositeCollection extends DiagramElementCollection {
 
     angle.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
     angle.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('b_silent', ['_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('b_silent', ['pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('d_silent', ['_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('d_silent', ['pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
+    angle.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.eqn.addForm('c_equals', ['c', 'equals', 'a']);
     angle.eqn.showForm(name);
     angle.setPosition(this.layout.line1.opposite.position);
     return angle;
@@ -156,9 +154,9 @@ export default class OppositeCollection extends DiagramElementCollection {
     layout: Object,
     transform: Transform = new Transform().translate(0, 0),
   ) {
-    super(transform, diagram.limits);
-    this.diagram = diagram;
-    this.layout = layout;
+    super(diagram, layout, transform);
+    // this.diagram = diagram;
+    // this.layout = layout;
     this.setPosition(this.layout.position);
     this.add('line1', this.makeLine('1'));
     this._line1.setPosition(this.layout.line1.opposite.position.x, 0);
@@ -239,13 +237,6 @@ export default class OppositeCollection extends DiagramElementCollection {
       }
     }
     this._supplementary.scaleAndDisolve();
-    // this._supplementary.stop();
-    // this._supplementary.stop();
-    // this._supplementary.show();
-    // this._supplementary.pulseScaleNow(2, 1.2, 0.25,
-    //   () => {
-    //     this._supplementary.disolveOut(2);
-    //   });
     this.diagram.animateNextFrame();
   }
 
@@ -254,26 +245,64 @@ export default class OppositeCollection extends DiagramElementCollection {
     this.diagram.animateNextFrame();
   }
 
+  showAngles(
+    angles: Array<[TypeAngle, string, Array<number>] | [TypeAngle, string]>,
+    showOnly: boolean = true,
+  ) {
+    const allAngles = [this._angleA, this._angleB, this._angleC, this._angleD];
+    if (showOnly) {
+      const anglesToShow = angles.map(angle => angle[0]);
+      const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
+      anglesToHide.forEach((angle) => {
+        angle.hide();
+      });
+    }
+
+    angles.forEach((angle) => {
+      const [element, form] = angle;
+      element.eqn.showForm(form);
+      element.show();
+      element._arc.show();
+      if (angle.length === 3) {
+        // $FlowFixMe
+        element.setColor(angle[2]);
+      }
+    });
+    this.updateOppositeAngles();
+    this.diagram.animateNextFrame();
+  }
+
   toggleOppositeAngles() {
     if (this._angleA.isShown) {
-      this._angleB.eqn.showForm('b');
-      this._angleD.eqn.showForm('b');
-      this._angleB.show();
-      this._angleB._arc.show();
-      this._angleD.show();
-      this._angleD._arc.show();
-      this._angleA.hide();
-      this._angleC.hide();
+      this.showAngles([[this._angleB, 'b'], [this._angleD, 'b']]);
     } else {
-      this._angleB.hide();
-      this._angleD.hide();
-      this._angleA.eqn.showForm('a');
-      this._angleC.eqn.showForm('a');
-      this._angleA.show();
-      this._angleC.show();
-      this._angleA._arc.show();
-      this._angleC._arc.show();
+      this.showAngles([[this._angleA, 'a'], [this._angleC, 'c']]);
     }
     this.diagram.animateNextFrame();
+  }
+
+  toggleAngles() {
+    if (this._angleA.isShown) {
+      this.showAngles([[this._angleB, 'b', this.layout.colors.angleA]]);
+    } else if (this._angleB.isShown) {
+      this.showAngles([[this._angleC, 'c', this.layout.colors.angleA]]);
+    } else if (this._angleC.isShown) {
+      this.showAngles([[this._angleD, 'd', this.layout.colors.angleA]]);
+    } else {
+      this.showAngles([[this._angleA, 'a', this.layout.colors.angleA]]);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  calculateFuturePositions() {
+    const futurePosition = (element, scenario) => ({ element, scenario });
+    const r1 = this._line1.transform.r();
+    const r2 = this._line2.transform.r();
+    if (r1 != null && r2 != null) {
+      this.futurePositions = [
+        futurePosition(this._line1, this.layout.line1.opposite),
+        futurePosition(this._line2, this.layout.line2.opposite),
+      ];
+    }
   }
 }

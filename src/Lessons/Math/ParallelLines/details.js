@@ -2,8 +2,8 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Sine',
-  uid: 'sine',
+  title: 'Parallel Lines',
+  uid: 'parallel_lines',
   dependencies: ['adjacent_angles'],
 };
 
