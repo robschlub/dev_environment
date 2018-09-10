@@ -276,12 +276,13 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   }
 
   toggleAngles(
-    angles1: Array<'A1' | 'B1' | 'C1' | 'D1'>,
-    angles2: Array<'A2' | 'B2' | 'C2' | 'D2'>,
-    color1: Array<number>,
-    color2: Array<number>,
+    angles: Array<Array<'A1' | 'B1' | 'C1' | 'D1'>>,
+    colors: Array<Array<number>>,
     labelsSingle: boolean = false,
   ) {
+    // $FlowFixMe
+    const angleElements = angles.map(an => an.map(a => this[`_angle${a}`]));
+    const labels = angles.map(an => an.map(a => this))
     // $FlowFixMe
     const a1 = angles1.map(a => this[`_angle${a}`]);
     // $FlowFixMe
