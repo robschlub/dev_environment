@@ -157,7 +157,7 @@ class Content extends LessonContent {
     this.addSection(oppCommon, {
       setContent: `
       <p>
-        Next we can consider |a| and |d|, which are also supplimentary angles and add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+        Next we can consider |a| and |d|, which are also supplementary angles and add up to ${unit('|180&deg;|', '|&pi; radians|')}.
       </p>
       `,
       modifiers: {
@@ -304,6 +304,7 @@ class Content extends LessonContent {
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.line);
         threeLines.calculateFuturePositions('corresponding');
+        diag._unitsSelector.select(diag.units);
       },
       showOnly: [
         threeLines,
@@ -914,6 +915,21 @@ class Content extends LessonContent {
         threeLines.setFuturePositions();
         threeLines.interiorToggleAngles();
       },
+    });
+
+    this.addSection({
+      title: 'Conculsion',
+      setContent: centerV(`
+        <p>
+          When two lines intersect, or one line intersects a pair of parallel lines, the knowledge of |opposite|, |corresponding| and |alternate| and |interior| angles can be used to find all angles in the system.
+        </p>
+        <p>
+          However, you don't necessarily need to remember these relationships to use them.
+        </p>
+        <p>
+          If you forget, you can always figure them out, just using |supplementary angles|!
+        </p>
+      `),
     });
   }
 }
