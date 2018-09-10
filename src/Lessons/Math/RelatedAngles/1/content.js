@@ -562,7 +562,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines._angleA1.show();
+        // threeLines._angleA1.show();
         threeLines.showCorrespondingAngles();
       },
     });
@@ -604,147 +604,215 @@ class Content extends LessonContent {
       },
     });
 
-    this.addSection({
+    // <p class="lesson__diagram_text_p_width_40">
+    //       When the two lines are |parallel|, the interior angles always add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+    //     </p>
+    this.addSection(common, {
       title: 'Interior Angles',
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
+      setContent: `
+        <p>
           |Interior_angles| are the inside angles on the same side of the |intersecting| line that crosses |two_lines|.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
-          When the two lines are |parallel|, the interior angles always add up to ${unit('|180&deg;|', '|&pi; radians|')}.
-        </p>
-      `),
+      `,
       modifiers: {
         Interior_angles: click(
-          threeLines.toggleInteriorAngles, [threeLines],
+          threeLines.toggleInteriorAngles, [threeLines, true],
           colors.angleA,
         ),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
-      setEnterState: () => {
-        if (opp.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = opp._line1.transform._dup();
-          threeLines._line2.transform = opp._line2.transform._dup();
-        }
-        threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.line);
-        diag._unitsSelector.select(diag.units);
-      },
-      showOnly: [
-        threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
-      ],
-      show: [
-        diag._unitsSelector,
-      ],
-      transitionFromAny: (done) => {
-        let time = Math.max(
-          diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-          diag.getTimeToMoveToScenario(threeLines),
-        );
-        time = time > 2 ? 2 : time;
-        diag.moveToScenario(threeLines);
-        diag.moveToScenario(threeLines._line1, 'corresponding', time);
-        diag.moveToScenario(threeLines._line2, 'corresponding', time);
-        diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
-      },
       setSteadyState: () => {
-        diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        diag.moveToScenario(threeLines, null, 0.001);
-        threeLines.toggleInteriorAngles();
-        diag._unitsSelector.select(diag.units);
+        threeLines.setFuturePositions();
+        threeLines.toggleInteriorAngles(true);
       },
     });
 
-    this.addSection({
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
-          |Corresponding_angles| are equal.
+    this.addSection(common, {
+      setContent: `
+        <p>
+          How can the relationship between |interior_angles| be determined?
         </p>
-        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
-          |Supplementary_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
-        </p>
-        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
-          Therefore, |interior_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
-        </p>
-      `),
+      `,
       modifiers: {
-        interior_angles: click(
-          threeLines.showInteriorAngles, [threeLines],
+        Interior_angles: click(
+          threeLines.toggleInteriorAngles, [threeLines, true],
           colors.angleA,
         ),
-        Corresponding_angles: click(
-          threeLines.showCorrespondingAnglesInterior, [threeLines],
+      },
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines.toggleInteriorAngles(true);
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          First, we know |corresponding_angles| are equal.
+        </p>
+      `,
+      modifiers: {
+        corresponding_angles: click(
+          threeLines.interiorShowCorresponding, [threeLines],
           colors.angleB,
         ),
-        Supplementary_angles: click(
-          threeLines.showSupplementary, [threeLines],
+      },
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines._angleA1.show();
+        threeLines.interiorShowCorresponding();
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          We also know that |supplementary| angles add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+        </p>
+      `,
+      modifiers: {
+        supplementary: click(
+          threeLines.interiorShowSupplementary, [threeLines],
           colors.angleC,
         ),
       },
       setEnterState: () => {
+        common.setEnterState();
         diag._unitsSelector.select(diag.units);
       },
-      showOnly: () => {
-        if (this.comingFrom !== 'prev') {
-          this.diagram.elements.showOnly([threeLines]);
-          this.diagram.elements.show([
-            diag._unitsSelector,
-            threeLines._line1,
-            threeLines._line2,
-            threeLines._line3,
-          ]);
-          this.diagram.elements.hide([
-            threeLines._line1._label,
-            threeLines._line2._label,
-            threeLines._line3._label,
-          ]);
-        }
-      },
-
-      transitionFromAny: (done) => {
-        if (this.comingFrom !== 'prev') {
-          let time = Math.max(
-            diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
-            diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
-            diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-          );
-          time = time > 2 ? 2 : time;
-          diag.moveToScenario(threeLines._line1, 'corresponding', time);
-          diag.moveToScenario(threeLines._line2, 'corresponding', time);
-          diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
-        } else {
-          done();
-        }
-      },
+      show: [
+        diag._unitsSelector,
+      ],
       setSteadyState: () => {
-        if (this.comingFrom !== 'prev') {
-          diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
-          diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
-          diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        }
-        threeLines.showCorrespondingAnglesInterior();
-        diag._unitsSelector.select(diag.units);
+        threeLines.setFuturePositions();
+        // threeLines._angleA1.show();
+        threeLines.interiorShowSupplementary();
       },
     });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Adding the |interior| angles shows they add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+        </p>
+      `,
+      modifiers: {
+        interior: click(
+          threeLines.interiorShowInterior, [threeLines],
+          colors.angleA,
+        ),
+      },
+      setEnterState: () => {
+        common.setEnterState();
+        diag._unitsSelector.select(diag.units);
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines.interiorShowInterior();
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          In general, for any line intersecting any parallel lines, the |interior| angles always add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+        </p>
+      `,
+      modifiers: {
+        interior: click(
+          threeLines.interiorToggleInteriorWithCorresponding, [threeLines],
+          colors.angleA,
+        ),
+      },
+      setEnterState: () => {
+        common.setEnterState();
+        diag._unitsSelector.select(diag.units);
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines.interiorToggleInteriorWithCorresponding();
+      },
+    });
+
+    // this.addSection({
+    //   setContent: centerV(`
+    //     <p class="lesson__diagram_text_p_width_40">
+    //       |Corresponding_angles| are equal.
+    //     </p>
+    //     <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
+    //       |Supplementary_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+    //     </p>
+    //     <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
+    //       Therefore, |interior_angles| add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+    //     </p>
+    //   `),
+    //   modifiers: {
+    //     interior_angles: click(
+    //       threeLines.showInteriorAngles, [threeLines],
+    //       colors.angleA,
+    //     ),
+    //     Corresponding_angles: click(
+    //       threeLines.showCorrespondingAnglesInterior, [threeLines],
+    //       colors.angleB,
+    //     ),
+    //     Supplementary_angles: click(
+    //       threeLines.showSupplementary, [threeLines],
+    //       colors.angleC,
+    //     ),
+    //   },
+    //   setEnterState: () => {
+    //     diag._unitsSelector.select(diag.units);
+    //   },
+    //   showOnly: () => {
+    //     if (this.comingFrom !== 'prev') {
+    //       this.diagram.elements.showOnly([threeLines]);
+    //       this.diagram.elements.show([
+    //         diag._unitsSelector,
+    //         threeLines._line1,
+    //         threeLines._line2,
+    //         threeLines._line3,
+    //       ]);
+    //       this.diagram.elements.hide([
+    //         threeLines._line1._label,
+    //         threeLines._line2._label,
+    //         threeLines._line3._label,
+    //       ]);
+    //     }
+    //   },
+
+    //   transitionFromAny: (done) => {
+    //     if (this.comingFrom !== 'prev') {
+    //       let time = Math.max(
+    //         diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
+    //         diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
+    //         diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
+    //       );
+    //       time = time > 2 ? 2 : time;
+    //       diag.moveToScenario(threeLines._line1, 'corresponding', time);
+    //       diag.moveToScenario(threeLines._line2, 'corresponding', time);
+    //       diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
+    //     } else {
+    //       done();
+    //     }
+    //   },
+    //   setSteadyState: () => {
+    //     if (this.comingFrom !== 'prev') {
+    //       diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
+    //       diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
+    //       diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
+    //     }
+    //     threeLines.showCorrespondingAnglesInterior();
+    //     diag._unitsSelector.select(diag.units);
+    //   },
+    // });
   }
 }
 
