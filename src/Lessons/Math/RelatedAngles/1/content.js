@@ -514,9 +514,6 @@ class Content extends LessonContent {
         <p>
           |Alternate_angles| are the angles that are on opposite sides of the |intersecting| line that crosses |two_lines|.
         </p>
-        <p class="lesson__diagram_text_p_width_40">
-          When the two lines are |parallel|, the alternate angles are always |equal|.
-        </p>
       `,
       modifiers: {
         Alternate_angles: click(
@@ -536,18 +533,74 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-          Can you determine the relationship between |alternate_angles|?
+          How can you determine the relationship between |alternate_angles|?
         </p>
       `,
       modifiers: {
         alternate_angles: click(
-          threeLines.toggleAlternateAngles, [threeLines],
+          threeLines.toggleAlternateAngles, [threeLines, true],
           colors.angleA,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleAlternateAngles();
+        threeLines.toggleAlternateAngles(true);
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          First, we know |corresponding_angles| are equal.
+        </p>
+      `,
+      modifiers: {
+        corresponding_angles: click(
+          threeLines.showCorrespondingAngles, [threeLines],
+          colors.angleB,
+        ),
+      },
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines._angleA1.show();
+        threeLines.showCorrespondingAngles();
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          We also know that |opposite_angles| are equal.
+        </p>
+      `,
+      modifiers: {
+        opposite_angles: click(
+          threeLines.showOppositeAngles, [threeLines],
+          colors.angleC,
+        ),
+      },
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines._angleA1.show();
+        threeLines.showOppositeAngles();
+      },
+    });
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Therefore |alternate_angles| are equal.
+        </p>
+      `,
+      modifiers: {
+        alternate_angles: click(
+          threeLines.showAlternateAngles, [threeLines],
+          colors.angleA,
+        ),
+      },
+      setSteadyState: () => {
+        threeLines.setFuturePositions();
+        threeLines._angleA1.show();
+        threeLines.showAlternateAngles();
       },
     });
 
