@@ -333,6 +333,14 @@ class Content extends LessonContent {
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |eight_angles| to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        eight_angles: highlight(colors.angleA),
+      },
       transitionFromAny: (done) => {
         threeLines.moveToFuturePositions(done);
       },
@@ -362,6 +370,14 @@ class Content extends LessonContent {
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |Corresponding_Angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        Corresponding_Angles: highlight(colors.angleA),
+      },
       transitionFromAny: (done) => {
         threeLines.moveToFuturePositions(done);
       },
@@ -382,6 +398,14 @@ class Content extends LessonContent {
           threeLines.correspondingToggleAngles, [threeLines, false, true],
           colors.angleA,
         ),
+      },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |Corresponding_Angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        Corresponding_Angles: highlight(colors.angleA),
       },
       transitionFromAny: (done) => {
         if (!(this.comingFrom === 'prev')) {
@@ -445,7 +469,21 @@ class Content extends LessonContent {
       `,
       modifiers: {
         angle: click(threeLines.correspondingToggleAngles, [threeLines, true], colors.angleA),
-        moved: click(threeLines.correspondingTranslateLine1, [threeLines, null, false], colors.line),
+        moved: click(
+          threeLines.correspondingTranslateLine1,
+          [threeLines, null, false], colors.line,
+        ),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Move the horizontal line to see if the angle changes.</li>',
+        '<li>Touch |moved| text to move the line a random distance.</li>',
+        '<li>Touch |angle| text to toggle the angles.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        angle: highlight(colors.angleA),
+        moved: highlight(colors.line),
       },
     });
 
@@ -458,6 +496,15 @@ class Content extends LessonContent {
       modifiers: {
         Moving: click(threeLines.correspondingTranslateLine1, [threeLines, true], colors.line),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Move the horizontal line to see if the angle changes.</li>',
+        '<li>Touch |Moving| text to move the line a random distance.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        Moving: highlight(colors.line),
       },
       transitionFromAny: (done) => {
         if (!(this.comingFrom === 'prev')) {
@@ -494,6 +541,14 @@ class Content extends LessonContent {
           colors.angleA,
         ),
       },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |corresponding_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        corresponding_angles: highlight(colors.angleA),
+      },
       setSteadyState: () => {
         threeLines.setFuturePositions();
         threeLines.correspondingToggleAngles(false, false);
@@ -511,6 +566,14 @@ class Content extends LessonContent {
           threeLines.correspondingToggleAngles, [threeLines, false, false],
           colors.angleA,
         ),
+      },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |corresponding_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        corresponding_angles: highlight(colors.angleA),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
@@ -539,6 +602,14 @@ class Content extends LessonContent {
         parallel_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |Alternate_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        Alternate_angles: highlight(colors.angleA),
+      },
       setSteadyState: () => {
         threeLines.setFuturePositions();
         threeLines.alternateToggleAngles(true);
@@ -556,6 +627,14 @@ class Content extends LessonContent {
           threeLines.alternateToggleAngles, [threeLines, true],
           colors.angleA,
         ),
+      },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |Alternate_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        Alternate_angles: highlight(colors.angleA),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
@@ -610,6 +689,14 @@ class Content extends LessonContent {
           colors.angleA,
         ),
       },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |alternate_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        alternate_angles: highlight(colors.angleA),
+      },
       setSteadyState: () => {
         threeLines.setFuturePositions();
         threeLines.alternateToggleAngles();
@@ -637,6 +724,14 @@ class Content extends LessonContent {
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |Interior_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        Interior_angles: highlight(colors.angleA),
+      },
       setSteadyState: () => {
         threeLines.setFuturePositions();
         threeLines.interiorToggleAngles(true);
@@ -654,6 +749,14 @@ class Content extends LessonContent {
           threeLines.interiorToggleAngles, [threeLines, true],
           colors.angleA,
         ),
+      },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |interior_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        interior_angles: highlight(colors.angleA),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
@@ -734,14 +837,22 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-          In general, for any line intersecting any parallel lines, the |interior| angles always add up to ${unit('|180&deg;|', '|&pi; radians|')}.
+          In general, for any line intersecting any parallel lines, the |interior_angles| always add up to ${unit('|180&deg;|', '|&pi; radians|')}.
         </p>
       `,
       modifiers: {
-        interior: click(
+        interior_angles: click(
           threeLines.interiorToggleAngles, [threeLines],
           colors.angleA,
         ),
+      },
+      setInfo: [
+        ...oppCommon.setInfo.slice(0, 2),
+        '<li>Touch |interior_angles| text to toggle the angles.</li>',
+        ...oppCommon.setInfo.slice(2),
+      ],
+      infoModifiers: {
+        interior_angles: highlight(colors.angleA),
       },
       setEnterState: () => {
         common.setEnterState();
