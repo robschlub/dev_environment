@@ -2,7 +2,7 @@
 
 import { Point, Rect } from '../../../../js/diagram/tools/g2';
 // import getCssColors from '../../../../js/tools/getCssColors';
-import lessonLayoutCommon from '../common/layout';
+import commonLessonLayout from '../common/layout';
 
 // const cssColorNames = [
 //   'latin',
@@ -19,7 +19,7 @@ import lessonLayoutCommon from '../common/layout';
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
-  const layout: Object = lessonLayoutCommon();
+  const layout: Object = commonLessonLayout();
   // layout.colors = getCssColors(cssColorNames);
   const len = 2.4;
   layout.parallelLine.length = {
@@ -42,30 +42,6 @@ export default function lessonLayout() {
     answer: new Point(0, -1.7),
     nextSteps: new Point(0, -1.9),
     check: new Point(0, -1.7),
-  };
-  layout.quizP2 = {
-    first: {
-      line1: {
-        position: new Point(0, 0),
-        rotation: 0,
-      },
-      line2: {
-        position: new Point(0, 0),
-        rotation: 0,
-      },
-      line3: {
-        position: new Point(0, 0),
-        rotation: 0,
-      },
-      line4: {
-        position: new Point(0, 0),
-        rotation: 0,
-      },
-      line5: {
-        position: new Point(0, 0),
-        rotation: 0,
-      },
-    },
   };
   layout.quizA1 = {
     minSeparation: 0.6,

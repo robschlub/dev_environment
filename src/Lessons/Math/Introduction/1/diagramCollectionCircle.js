@@ -11,17 +11,20 @@ import {
   Point, Transform, Rect,
 } from '../../../../js/diagram/tools/g2';
 import { EquationForm } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import textureMap from '../../../../LessonsCommon/images/textureMaps/circles.png';
 
 import lessonLayout from './layout';
 
 const layout = lessonLayout();
 const { colors } = layout;
 
+const textureFile = `/static/dist/${textureMap}`;
+
 function makeWheel(shapes: Object) {
   return shapes.polygonFilled(
     layout.wheelPoints, layout.wheelSize, 0,
     layout.wheelPoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0.3333, 0.3333, 0.3333, 0.3333),
+    textureFile, new Rect(0.3333, 0.3333, 0.3333, 0.3333),
   );
 }
 
@@ -29,7 +32,7 @@ function makeBall(shapes: Object) {
   return shapes.polygonFilled(
     layout.wheelPoints, layout.wheelSize, 0,
     layout.wheelPoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0.3333, 0.6666, 0.3333, 0.3333),
+    textureFile, new Rect(0.3333, 0.6666, 0.3333, 0.3333),
   );
 }
 
@@ -37,7 +40,7 @@ function makeEarth(shapes: Object) {
   return shapes.polygonFilled(
     layout.wheelPoints, layout.wheelSize, 0,
     layout.wheelPoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0, 0.6666, 0.3333, 0.3333),
+    textureFile, new Rect(0, 0.6666, 0.3333, 0.3333),
   );
 }
 
@@ -45,7 +48,7 @@ function makeClock(shapes: Object) {
   return shapes.polygonFilled(
     layout.wheelPoints, layout.wheelSize, 0,
     layout.wheelPoints, colors.anchor, new Point(0, 0),
-    '/static/circles.png', new Rect(0, 0.3333, 0.3333, 0.3333),
+    textureFile, new Rect(0, 0.3333, 0.3333, 0.3333),
   );
 }
 

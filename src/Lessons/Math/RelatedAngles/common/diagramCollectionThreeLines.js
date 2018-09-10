@@ -8,18 +8,16 @@ import {
 } from '../../../../js/diagram/Element';
 
 // eslint-disable-next-line import/no-cycle
-import { makeLabeledLine, makeLabeledAngle } from './diagramCollectionCommon';
+import { makeLabeledAngle } from './tools';
 import type {
-  TypeLabeledLine, TypeAngle, TypeIndexAngle, TypeSupplementaryAngle,
-} from './diagramCollectionCommon';
+  TypeAngle, TypeIndexAngle, TypeSupplementaryAngle,
+} from './tools';
+import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-// type TypeIndexAngle = {
-//   lineIndex: number;
-//   angleIndex: number;
-// } & TypeAngle;
-
-export default class ThreeLinesCollection extends DiagramElementCollection {
+export default class ThreeLinesCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
@@ -80,6 +78,10 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     angle.eqn.addForm('b_equals', ['pi', 'minus', 'a'], 'rad');
     angle.eqn.addForm('a_equals', ['_180', 'minus', 'b'], 'deg');
     angle.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
+    angle.eqn.addForm('c_equals', ['_180', 'minus', 'c'], 'deg');
+    angle.eqn.addForm('c_equals', ['pi', 'minus', 'c'], 'rad');
+    angle.eqn.addForm('d_equals', ['_180', 'minus', 'd'], 'deg');
+    angle.eqn.addForm('d_equals', ['pi', 'minus', 'd'], 'rad');
     angle.eqn.showForm(name);
 
     angle.lineIndex = lineIndex;
@@ -115,9 +117,7 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     layout: Object,
     transform: Transform = new Transform().rotate(0).translate(0, 0),
   ) {
-    super(transform, diagram.limits);
-    this.diagram = diagram;
-    this.layout = layout;
+    super(diagram, layout, transform);
     this.setPosition(this.layout.position);
     this.addThreeLines();
     this.add('angleA2', this.makeAngle('a', 2, 0));
@@ -159,6 +159,14 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     }
   }
 
+  xOfLine3AtY(y: number = 0) {
+    const r = this._line3.transform.r();
+    if (r != null) {
+      return y / Math.tan(r);
+    }
+    return 0;
+  }
+
   updateParallelLineTranlsation() {
     if (this._line1.isMovable) {
       const t1 = this._line1.transform.t();
@@ -166,11 +174,11 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
       const r = this._line3.transform.r();
       if (t1 != null && r != null && t2 != null) {
         this._line1.transform.updateTranslation(
-          t1.y / Math.tan(r),
+          this.xOfLine3AtY(t1.y),
           t1.y,
         );
         this._line2.transform.updateTranslation(
-          t2.y / Math.tan(r),
+          this.xOfLine3AtY(t2.y),
           t2.y,
         );
       }
@@ -184,6 +192,15 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this._angleB2.setPositionToElement(this._angleB1);
     this._angleC2.setPositionToElement(this._angleC1);
     this._angleD2.setPositionToElement(this._angleD1);
+    this.diagram.animateNextFrame();
+  }
+
+  moveLine1ToLine2() {
+    this._line1.setPositionToElement(this._line2);
+    this._angleA1.setPositionToElement(this._angleA2);
+    this._angleB1.setPositionToElement(this._angleB2);
+    this._angleC1.setPositionToElement(this._angleC2);
+    this._angleD1.setPositionToElement(this._angleD2);
     this.diagram.animateNextFrame();
   }
 
@@ -222,242 +239,311 @@ export default class ThreeLinesCollection extends DiagramElementCollection {
     this.pulseLine(2);
   }
 
-  translateLine1() {
-    this.moveLine2ToLine1();
-    let y = Math.max(Math.random(), 0.5);
-    const t = this._line1.transform.t();
-    if (t != null) {
-      if (t.y >= 0) {
-        y *= -1;
-      }
-      const position = new Point(
-        this.layout.line1.corresponding.position.x,
-        y + t.y,
-      );
-      this._line1.stop();
-      this._line1.animateTranslationTo(position, 1);
-      this.diagram.animateNextFrame();
-    }
-  }
-
-  toggleCorrespondingAngles(make2Disabled: boolean = false) {
-    let disable2 = make2Disabled;
-    if (typeof disable2 !== 'boolean') {
-      disable2 = false;
-    }
-    if (this._angleA1.isShown) {
-      if (disable2) {
-        this.showOnlyAngles(['B1'], this.layout.colors.angleA, ['B2']);
-      } else {
-        this.showOnlyAngles(['B1', 'B2']);
-      }
-    } else if (this._angleB1.isShown) {
-      if (disable2) {
-        this.showOnlyAngles(['C1'], this.layout.colors.angleA, ['C2']);
-      } else {
-        this.showOnlyAngles(['C1', 'C2']);
-      }
-    } else if (this._angleC1.isShown) {
-      if (disable2) {
-        this.showOnlyAngles(['D1'], this.layout.colors.angleA, ['D2']);
-      } else {
-        this.showOnlyAngles(['D1', 'D2']);
-      }
-    } else if (disable2) {
-      this.showOnlyAngles(['A1'], this.layout.colors.angleA, ['A2']);
-    } else {
-      this.showOnlyAngles(['A1', 'A2']);
-    }
-    this.diagram.animateNextFrame();
-  }
-
-  toggleAlternateAngles() {
-    if (this._angleA1.isShown) {
-      this.showOnlyAngles(['B1', 'D2']);
-    } else if (this._angleB1.isShown) {
-      this.showOnlyAngles(['C1', 'A2']);
-    } else if (this._angleC1.isShown) {
-      this.showOnlyAngles(['D1', 'B2']);
-    } else {
-      this.showOnlyAngles(['A1', 'C2']);
-    }
-    this.diagram.animateNextFrame();
-  }
-
   setUnits(units: 'deg' | 'rad') {
     this._angleA2.eqn.setUnits(units);
     this._angleB2.eqn.setUnits(units);
   }
 
-  toggleInteriorAngles() {
-    if (this._angleC1.isShown) {
-      this.showOnlyAngles(['D1', 'A2']);
-      this._angleA2.eqn.showForm('a_equals');
-    } else {
-      this.showOnlyAngles(['C1', 'B2']);
-      this._angleB2.eqn.showForm('b_equals');
-    }
-    this.diagram.animateNextFrame();
-  }
-
-  showOnlyAngles(
-    anglesToShow: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'D1' | 'D2'>,
-    color: Array<number> = this.layout.colors.angleA.slice(),
-    anglesToShowDisabled: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'D1' | 'D2'> = [],
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  showAngles(
+    angles: Array<[TypeAngle, string, Array<number>]
+            | [TypeAngle, string, Array<number>, boolean]>,
+    showOnly: boolean = true,
   ) {
-    const allAngles = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D1', 'D2'];
-    const anglesToHide = allAngles.filter(angleString => anglesToShow.indexOf(angleString) === -1
-      && anglesToShowDisabled.indexOf(angleString) === -1);
-    const showAngle = (angleString: string, col: Array<number>, pulse: boolean = false) => {
-      // $FlowFixMe
-      const angle = this[`_angle${angleString}`];
-      angle.show();
-      angle._arc.show();
-      let angleLabel = angleString[0].toLowerCase();
-      if (angleLabel === 'c') {
-        angleLabel = 'a';
+    const allAngles = [
+      this._angleA1, this._angleB1, this._angleC1, this._angleD1,
+      this._angleA2, this._angleB2, this._angleC2, this._angleD2,
+    ];
+    if (showOnly) {
+      const anglesToShow = angles.map(angle => angle[0]);
+      const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
+      anglesToHide.forEach((angle) => {
+        angle.hide();
+      });
+    }
+
+    angles.forEach((angle) => {
+      const [element, form, color] = angle;
+      element.eqn.showForm(form);
+      element.show();
+      element._arc.show();
+      element.setColor(color);
+
+      if (angle.length === 4) {
+        // $FlowFixMe
+        if (angle[3]) {
+          element.pulseScaleNow(1, 1.2);
+        }
       }
-      if (angleLabel === 'd') {
-        angleLabel = 'b';
+    });
+    this.updateIntersectingLineAngle();
+    this.diagram.animateNextFrame();
+  }
+
+  toggleAngles(
+    angleSets: Array<Array<string>>,
+    labels: Array<Array<string>>,
+    colors: Array<Array<Array<number>>>,
+    pulseSets: Array<Array<boolean>> = [],
+  ) {
+    // $FlowFixMe
+    const angles = angleSets.map(an => an.map(a => this[`_angle${a}`]));
+    let pulses = pulseSets;
+    if (pulseSets.length === 0) {
+      pulses = angleSets.map(an => an.map(() => false));
+    }
+    const showIndex = (index: number) => {
+      const showArray = [];
+      for (let j = 0; j < angles.length; j += 1) {
+        showArray.push([
+          angles[j][index],
+          labels[j][index],
+          colors[j][index],
+          pulses[j][index],
+        ]);
       }
-      angle.eqn.showForm(angleLabel);
-      angle.setColor(col);
-      if (pulse) {
-        angle.pulseScaleNow(1, 1.2);
-      }
+      this.showAngles(showArray);
     };
-    anglesToShow.forEach((angleString) => {
-      showAngle(angleString, color, true);
-    });
-    anglesToShowDisabled.forEach((angleString) => {
-      showAngle(angleString, this.layout.colors.disabled);
-    });
-    anglesToHide.forEach((angleString) => {
-      // $FlowFixMe
-      const angle = this[`_angle${angleString}`];
-      angle.hide();
-    });
+    for (let i = 0; i < angles[0].length; i += 1) {
+      if (angles[0][i].isShown) {
+        const nextI = (i + 1) % angles[0].length;
+        showIndex(nextI);
+        this.diagram.animateNextFrame();
+        return;
+      }
+    }
+    showIndex(0);
+    this.diagram.animateNextFrame();
   }
 
-  showCorrespondingAnglesInterior() {
-    if (this._angleC1.isShown) {
-      this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB);
+  showAllAngles(singleLabels: boolean = false) {
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      this.showAngles([
+        [this._angleA1, 'a', this.colors.angleA],
+        [this._angleB1, 'b', this.colors.angleB],
+        [this._angleC1, 'c', this.colors.angleC],
+        [this._angleD1, 'd', this.colors.angleD],
+        [this._angleA2, 'e', this.colors.angleA],
+        [this._angleB2, 'f', this.colors.angleB],
+        [this._angleC2, 'g', this.colors.angleC],
+        [this._angleD2, 'h', this.colors.angleD],
+      ]);
     } else {
-      this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB);
+      this.showAngles([
+        [this._angleA1, 'a', this.colors.angleA],
+        [this._angleB1, 'b', this.colors.angleB],
+        [this._angleC1, 'c', this.colors.angleC],
+        [this._angleD1, 'd', this.colors.angleD],
+        [this._angleA2, 'a', this.colors.angleA],
+        [this._angleB2, 'b', this.colors.angleB],
+        [this._angleC2, 'c', this.colors.angleC],
+        [this._angleD2, 'd', this.colors.angleD],
+      ]);
     }
-    this.diagram.animateNextFrame();
   }
 
-  showCorrespondingAngles() {
-    if (this._angleA1.isShown) {
-      this.showOnlyAngles(['A1', 'A2'], this.layout.colors.angleB);
-    }
-    if (this._angleB1.isShown) {
-      this.showOnlyAngles(['B1', 'B2'], this.layout.colors.angleB);
-    }
-    if (this._angleC1.isShown) {
-      this.showOnlyAngles(['C1', 'C2'], this.layout.colors.angleB);
-    }
-    if (this._angleD1.isShown) {
-      this.showOnlyAngles(['D1', 'D2'], this.layout.colors.angleB);
-    }
-    this.diagram.animateNextFrame();
-  }
-
-  showOppositeAngles() {
-    if (this._angleA1.isShown) {
-      this.showOnlyAngles(['A2', 'C2'], this.layout.colors.angleC, ['A1']);
-    }
-    if (this._angleB1.isShown) {
-      this.showOnlyAngles(['B2', 'D2'], this.layout.colors.angleC, ['B1']);
-    }
-    if (this._angleC1.isShown) {
-      this.showOnlyAngles(['C2', 'A2'], this.layout.colors.angleC, ['C1']);
-    }
-    if (this._angleD1.isShown) {
-      this.showOnlyAngles(['D2', 'B2'], this.layout.colors.angleC, ['D1']);
-    }
-    this.diagram.animateNextFrame();
-  }
-
-  showSupplementary() {
-    const r = this._line3.transform.r();
-    if (r != null) {
-      if (this._angleC1.isShown) {
-        this.showOnlyAngles(['B2', 'C2'], this.layout.colors.angleC, ['C1']);
-        this._angleB2.eqn.showForm('b_equals');
-      } else {
-        this.showOnlyAngles(['A2', 'D2'], this.layout.colors.angleC, ['D1']);
-        this._angleA2.eqn.showForm('a_equals');
-      }
-    }
-    this.diagram.animateNextFrame();
-  }
-
-  showAlternateAngles() {
-    const disabledColor = JSON.stringify(this.layout.colors.disabled);
-    const isDisabled = (element: TypeAngle) => JSON.stringify(element._arc.color) === disabledColor;
-    if (this._angleA1.isShown) {
-      if (isDisabled(this._angleA1) || isDisabled(this._angleC2)) {
-        this.showOnlyAngles(['A1', 'C2'], this.layout.colors.angleA, ['A2']);
-      } else {
-        this.toggleAlternateAngles();
+  toggleAllAngles() {
+    const angles = [
+      this._angleA1, this._angleB1, this._angleC1, this._angleD1,
+      this._angleA2, this._angleB2, this._angleC2, this._angleD2,
+    ];
+    const labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    for (let i = 0; i < angles.length; i += 1) {
+      if (angles[i].isShown) {
+        const nextI = (i + 1) % angles.length;
+        this.showAngles([[angles[nextI], labels[nextI], this.layout.colors.angleA]]);
+        this.diagram.animateNextFrame();
         return;
       }
     }
-    if (this._angleB1.isShown) {
-      if (isDisabled(this._angleB1) || isDisabled(this._angleD2)) {
-        this.showOnlyAngles(['B1', 'D2'], this.layout.colors.angleA, ['B2']);
-      } else {
-        this.toggleAlternateAngles();
-        return;
-      }
+  }
+
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  correspondingToggleAngles(
+    make2Disabled: boolean = false,
+    singleLabels: boolean = false,
+  ) {
+    const color1 = this.layout.colors.angleA;
+    let color2 = this.layout.colors.angleA;
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      color2 = this.layout.colors.angleB;
     }
-    if (this._angleC1.isShown) {
-      if (isDisabled(this._angleC1) || isDisabled(this._angleA2)) {
-        this.showOnlyAngles(['C1', 'A2'], this.layout.colors.angleA, ['C2']);
-      } else {
-        this.toggleAlternateAngles();
-        return;
-      }
+    if (typeof make2Disabled === 'boolean' && make2Disabled === true) {
+      color2 = this.layout.colors.disabled;
     }
-    if (this._angleD1.isShown) {
-      if (isDisabled(this._angleD1) || isDisabled(this._angleB2)) {
-        this.showOnlyAngles(['D1', 'B2'], this.layout.colors.angleA, ['D2']);
-      } else {
-        this.toggleAlternateAngles();
-        return;
-      }
+    let labels = [['a', 'b', 'c', 'd'], ['a', 'b', 'c', 'd']];
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      labels = [['a', 'b', 'c', 'd'], ['e', 'f', 'g', 'h']];
     }
+    this.toggleAngles(
+      [['A1', 'B1', 'C1', 'D1'], ['A2', 'B2', 'C2', 'D2']],
+      labels,
+      [[color1, color1, color1, color1], [color2, color2, color2, color2]],
+    );
+  }
+
+  correspondingTranslateLine1Future(y: number = 0.5) {
+    const position = new Point(
+      this.xOfLine3AtY(y),
+      y,
+    );
+    const futurePosition = (element, p, r) => ({
+      element,
+      scenario: {
+        position: p,
+        rotation: r,
+      },
+    });
+    const t2 = this._line2.transform.t();
+    let position2 = new Point(0, 0);
+    if (t2 != null) {
+      position2 = new Point(this.xOfLine3AtY(t2.y), t2.y);
+    }
+    this.futurePositions = [];
+    const t3 = this._line3.transform.t();
+    const r3 = this._line3.transform.r();
+    if (t3 != null && r3 != null) {
+      this.futurePositions = [
+        futurePosition(this, this.layout.position, 0),
+        futurePosition(this._line1, position, 0),
+        futurePosition(this._line2, position2, 0),
+        futurePosition(this._line3, t3, r3),
+      ];
+    }
+  }
+
+  correspondingTranslateLine1() {
+    let y = Math.max(Math.random(), 0.5);
+    let position = new Point(0, 0);
+    const t1 = this._line1.transform.t();
+    if (t1 != null) {
+      if (t1.y >= 0) {
+        y *= -1;
+      }
+      position = new Point(
+        this.xOfLine3AtY(y + t1.y),
+        y + t1.y,
+      );
+    }
+    this.moveLine2ToLine1();
+    this._line1.stop();
+    this._line1.animateTranslationTo(position, 1);
     this.diagram.animateNextFrame();
   }
 
-  showInteriorAngles() {
-    const disabledColor = JSON.stringify(this.layout.colors.disabled);
-    const correspondingColor = JSON.stringify(this.layout.colors.angleB);
-    const isDisabled =
-      (element: TypeAngle) => JSON.stringify(element._arc.color) === disabledColor;
-    const isCorresponding =
-      (element: TypeAngle) => JSON.stringify(element._arc.color) === correspondingColor;
-    if (this._angleC1.isShown) {
-      if (isDisabled(this._angleC1)
-        || isDisabled(this._angleB2)
-        || isCorresponding(this._angleC1)) {
-        this.showOnlyAngles(['C1', 'B2'], this.layout.colors.angleA, ['C2']);
-        this._angleB2.eqn.showForm('b_equals');
-      } else {
-        this.toggleInteriorAngles();
-        return;
-      }
-    } else if (isDisabled(this._angleD1)
-        || isDisabled(this._angleA2)
-        || isCorresponding(this._angleD1)) {
-      this.showOnlyAngles(['D1', 'A2'], this.layout.colors.angleA, ['D2']);
-      this._angleA2.eqn.showForm('a_equals');
-    } else {
-      this.toggleInteriorAngles();
-      return;
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  alternateToggleAngles(singleLabels: boolean = false) {
+    const color1 = this.layout.colors.angleA;
+    let color2 = this.layout.colors.angleA;
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      color2 = this.layout.colors.angleB;
     }
+    let labels = [['a', 'b', 'c', 'd'], ['c', 'd', 'a', 'b']];
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      labels = [['a', 'b', 'c', 'd'], ['g', 'h', 'e', 'f']];
+    }
+    this.toggleAngles(
+      [['A1', 'B1', 'C1', 'D1'], ['C2', 'D2', 'A2', 'B2']],
+      labels,
+      [[color1, color1, color1, color1], [color2, color2, color2, color2]],
+    );
+  }
+
+  alternateShowCorrespondingAngles() {
+    const angles = [['A1'], ['A2']];
+    const labels = [['a'], ['a']];
+    const c = this.layout.colors.angleB;
+    const colors = [[c], [c]];
+    const pulses = [[true], [true]];
+    this.toggleAngles(angles, labels, colors, pulses);
+  }
+
+  alternateShowOppositeAngles() {
+    const angles = [['A1'], ['A2'], ['C2']];
+    const labels = [['a'], ['a'], ['a']];
+    const c = this.layout.colors.angleC;
+    const cd = this.layout.colors.disabled;
+    const colors = [[cd], [c], [c]];
+    const pulses = [[false], [true], [true]];
+    this.toggleAngles(angles, labels, colors, pulses);
+    // this.diagram.animateNextFrame();
+  }
+
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  // ***********************************************************************
+  interiorToggleAngles(singleLabels: boolean = false) {
+    const c1 = this.layout.colors.angleA;
+    const c2 = this.layout.colors.angleB;
+    let colors = [[c1, c1], [c1, c1]];
+    let labels = [['d', 'c'], ['d_equals', 'c_equals']];
+    if (typeof singleLabels === 'boolean' && singleLabels === true) {
+      labels = [['d', 'c'], ['e', 'f']];
+      colors = [[c1, c1], [c2, c2]];
+    }
+    this.toggleAngles(
+      [['D1', 'C1'], ['A2', 'B2']],
+      labels,
+      colors,
+    );
     this.diagram.animateNextFrame();
+  }
+
+  interiorShowCorresponding() {
+    const angles = [['D1'], ['D2']];
+    const labels = [['d'], ['d']];
+    const c = this.layout.colors.angleB;
+    const colors = [[c], [c]];
+    const pulses = [[true], [true]];
+    this.toggleAngles(angles, labels, colors, pulses);
+    this.diagram.animateNextFrame();
+  }
+
+  interiorShowSupplementary() {
+    const c = this.layout.colors.angleC;
+    const cd = this.layout.colors.disabled;
+    const angles = [['D1'], ['D2'], ['A2']];
+    const labels = [['d'], ['d'], ['d_equals']];
+    const colors = [[cd], [c], [c]];
+    const pulses = [[false], [true], [true]];
+    this.toggleAngles(angles, labels, colors, pulses);
+    this.updateIntersectingLineAngle();
+    this.diagram.animateNextFrame();
+  }
+
+  interiorShowInterior() {
+    const c = this.layout.colors.angleA;
+    const cd = this.layout.colors.disabled;
+    const angles = [['D1'], ['D2'], ['A2']];
+    const labels = [['d'], ['d'], ['d_equals']];
+    const colors = [[c], [cd], [c]];
+    const pulses = [[true], [false], [true]];
+    this.toggleAngles(angles, labels, colors, pulses);
+    this.updateIntersectingLineAngle();
+    this.diagram.animateNextFrame();
+  }
+
+  // $FlowFixMe
+  calculateFuturePositions(goToScenario: string) {
+    const futurePosition = (element, scenario) => ({ element, scenario });
+    this.futurePositions = [];
+    if (goToScenario != null) {
+      this.futurePositions = [
+        futurePosition(this, { position: this.layout.position, rotation: 0 }),
+        futurePosition(this._line1, this.layout.line1[goToScenario]),
+        futurePosition(this._line2, this.layout.line2[goToScenario]),
+        futurePosition(this._line3, this.layout.line3[goToScenario]),
+      ];
+    }
   }
 }

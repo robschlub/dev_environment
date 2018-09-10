@@ -14,26 +14,44 @@ import {
 
 export type TypeUnits = 'deg' | 'rad';
 
+export type TypeScenario = string | null
+  | { position?: Point, rotation?: number, scale?: Point | number };
+
 function getTarget(
   element: DiagramElement,
-  scenario: string | null | { position: Point, rotation: number } = null,
+  scenario: TypeScenario,
   layout: Object,
 ) {
-  const target = element.transform.constant(0);
-  if (scenario === null) {
-    target.updateTranslation(layout[element.name].position);
-    target.updateRotation(layout[element.name].rotation);
+  const target = element.transform._dup();
+  let scenarioObject;
+  if (scenario == null || scenario === '') {
+    scenarioObject = layout[element.name];
   } else if (typeof scenario === 'string') {
-    target.updateTranslation(layout[element.name][scenario].position);
-    target.updateRotation(layout[element.name][scenario].rotation);
+    scenarioObject = layout[element.name][scenario];
   } else {
-    target.updateTranslation(scenario.position);
-    target.updateRotation(scenario.rotation);
+    scenarioObject = scenario;
+  }
+  if (scenarioObject.position != null) {
+    target.updateTranslation(scenarioObject.position);
+  }
+
+  if (scenarioObject.rotation != null) {
+    target.updateRotation(scenarioObject.rotation);
+  }
+  if (scenarioObject.scale != null) {
+    if (scenarioObject.scale instanceof Point) {
+      target.updateScale(scenarioObject.scale);
+    } else {
+      target.updateScale(scenarioObject.scale, scenarioObject.scale);
+    }
   }
   return target;
 }
 
-type TypeScenario = string | null | { position: Point, rotation: number };
+type TypeFuturePosition = {
+  element: DiagramElement;
+  scenario: TypeScenario;
+};
 
 export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
@@ -41,6 +59,9 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   +diagram: Diagram;
   moveToScenario: (DiagramElement, TypeScenario, ?number, ?(() => void)) => number;
   getTimeToMoveToScenario: (DiagramElement, TypeScenario) => number;
+  setScenario: (DiagramElement, TypeScenario) => void;
+  futurePositions: Array<TypeFuturePosition>;
+  +calculateFuturePositions: (?TypeScenario) => void;
 
   constructor(
     diagram: Diagram,
@@ -51,6 +72,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     this.diagram = diagram;
     this.layout = layout;
     this.colors = layout.colors;
+    this.futurePositions = [];
   }
 
   getTimeToMoveToScenario(
@@ -61,6 +83,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     const velocity = element.transform.constant(0);
     velocity.updateTranslation(new Point(1 / 2, 1 / 2));
     velocity.updateRotation(2 * Math.PI / 6);
+    velocity.updateScale(1, 1);
     const time = getMaxTimeFromVelocity(element.transform._dup(), target, velocity, 0);
     return time;
   }
@@ -71,14 +94,14 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   ) {
     const target = getTarget(element, scenario, this.layout);
     // eslint-disable-next-line no-param-reassign
-    element.transform = target._dup();
+    element.setTransform(target._dup());
   }
 
   moveToScenario(
     element: DiagramElement,
     scenario: TypeScenario = null,
     animationTime: ?number = null,
-    callback: () => void,
+    callback: ?() => void = null,
   ) {
     element.stop();
     const target = getTarget(element, scenario, this.layout);
@@ -130,5 +153,45 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
 
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   setUnits(units: TypeUnits) {
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  calculateFuturePositions() {
+  }
+
+  setFuturePositions() {
+    this.futurePositions.forEach((futurePosition) => {
+      const { element, scenario } = futurePosition;
+      this.setScenario(element, scenario);
+    });
+  }
+
+  moveToFuturePositions(
+    timeOrCallback: ?number | () => void = null,
+    done: ?() => void = null,
+  ) {
+    let maxTime: number = 0;
+    if (typeof timeOrCallback !== 'number'
+      || timeOrCallback == null
+      || timeOrCallback === 0
+    ) {
+      this.futurePositions.forEach((futurePosition) => {
+        const { element, scenario } = futurePosition;
+        const thisTime = this.getTimeToMoveToScenario(element, scenario);
+        maxTime = Math.max(maxTime, thisTime);
+      });
+    } else {
+      maxTime = timeOrCallback;
+    }
+
+    let callbackToUse = done;
+    if (typeof timeOrCallback === 'function') {
+      callbackToUse = timeOrCallback;
+    }
+    this.futurePositions.forEach((futurePosition, index) => {
+      const callback = index === this.futurePositions.length - 1 ? callbackToUse : null;
+      const { element, scenario } = futurePosition;
+      this.moveToScenario(element, scenario, maxTime, callback);
+    });
   }
 }

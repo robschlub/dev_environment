@@ -2,6 +2,21 @@
 import { LessonContent } from './LessonContent';
 import Diagram from '../diagram/Diagram';
 
+function hideInfoButton() {
+  const infoButton = document.getElementById('id_lesson__info_button');
+  if (infoButton instanceof HTMLElement) {
+    infoButton.classList.add('lesson__info_hide');
+  }
+}
+
+function hideInteractiveHighlightButton() {
+  const interactiveHighlightButton = document
+    .getElementById('id_lesson__interactive_element_button');
+  if (interactiveHighlightButton instanceof HTMLElement) {
+    interactiveHighlightButton.classList.add('lesson__interactive_element_button__hide');
+  }
+}
+
 // Flow:
 //
 //  Coming from any section
@@ -174,6 +189,9 @@ class Lesson {
   }
 
   setLeaveStateAndMoveToNextSection() {
+    hideInfoButton();
+    hideInteractiveHighlightButton();
+
     const possibleState = this.currentSection().setLeaveState();
     if (possibleState !== null && possibleState !== undefined) {
       this.state = possibleState;
@@ -200,8 +218,6 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
       section.setEnterState(this.state);
-      section.setInfoButton();
-      section.setInteractiveElementsButton();
       section.currentInteractiveItem = -1;
       section.setVisible();
       this.renderDiagrams();
@@ -239,6 +255,9 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     section.setOnClicks();
     section.setSteadyState(this.state);
+    section.setInfoButton();
+    section.setInteractiveElements();
+    section.setInteractiveElementsButton();
     this.inTransition = false;
     const { diagram } = this;
     if (diagram) {
@@ -260,15 +279,15 @@ class Lesson {
     }
   }
 
-  starOnNextInteractiveItem() {
+  highlightNextInteractiveItem() {
     const section = this.content.sections[this.currentSectionIndex];
-    if (section.interactiveItems.length > 0) {
+    if (section.interactiveElementList.length > 0) {
       let index = section.currentInteractiveItem + 1;
-      if (index > section.interactiveItems.length - 1) {
+      if (index > section.interactiveElementList.length - 1) {
         index = 0;
       }
-      const { element, location } = section.interactiveItems[index];
-      this.content.starOnElement(element, location);
+      const { element, location } = section.interactiveElementList[index];
+      this.content.highlightInteractiveElement(element, location);
       section.currentInteractiveItem = index;
     }
   }
