@@ -78,6 +78,11 @@ class Content extends LessonContent {
       },
     };
 
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
     this.addSection(oppCommon, {
       title: 'Opposite Angles',
       setContent: `
@@ -337,6 +342,11 @@ class Content extends LessonContent {
       },
     });
 
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
     this.addSection(common, {
       title: 'Corresponding Angles',
       setContent: `
@@ -346,7 +356,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         Corresponding_Angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines, false, true],
+          threeLines.correspondingToggleAngles, [threeLines, false, true],
           colors.angleA,
         ),
         two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
@@ -357,7 +367,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleCorrespondingAngles(false, true);
+        threeLines.correspondingToggleAngles(false, true);
       },
     });
 
@@ -369,7 +379,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         corresponding_angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines, false, true],
+          threeLines.correspondingToggleAngles, [threeLines, false, true],
           colors.angleA,
         ),
       },
@@ -384,7 +394,7 @@ class Content extends LessonContent {
         if (!(this.comingFrom === 'prev')) {
           threeLines.setFuturePositions();
         }
-        threeLines.toggleCorrespondingAngles(false, true);
+        threeLines.correspondingToggleAngles(false, true);
       },
     });
 
@@ -392,7 +402,7 @@ class Content extends LessonContent {
       setEnterState: () => {
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.disabled);
-        threeLines.translateLine1(1, true);
+        threeLines.correspondingTranslateLine1(1, true);
       },
       hide: [
         threeLines._line2,
@@ -402,7 +412,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleCorrespondingAngles(true);
+        threeLines.correspondingToggleAngles(true);
         threeLines._line1.isMovable = true;
         threeLines._line1.move.maxTransform.updateTranslation(
           10,
@@ -434,8 +444,8 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        angle: click(threeLines.toggleCorrespondingAngles, [threeLines, true], colors.angleA),
-        moved: click(threeLines.translateLine1, [threeLines, null, false], colors.line),
+        angle: click(threeLines.correspondingToggleAngles, [threeLines, true], colors.angleA),
+        moved: click(threeLines.correspondingTranslateLine1, [threeLines, null, false], colors.line),
       },
     });
 
@@ -446,7 +456,7 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        Moving: click(threeLines.translateLine1, [threeLines, true], colors.line),
+        Moving: click(threeLines.correspondingTranslateLine1, [threeLines, true], colors.line),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
       },
       transitionFromAny: (done) => {
@@ -460,7 +470,7 @@ class Content extends LessonContent {
         if (!(this.comingFrom === 'prev')) {
           commonCorresponding.setSteadyState();
         } else {
-          threeLines.toggleCorrespondingAngles(true);
+          threeLines.correspondingToggleAngles(true);
           threeLines._line1.isMovable = true;
           threeLines._line2.show();
           threeLines._line2._end1.show();
@@ -480,13 +490,13 @@ class Content extends LessonContent {
       `,
       modifiers: {
         corresponding_angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines, false, false],
+          threeLines.correspondingToggleAngles, [threeLines, false, false],
           colors.angleA,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleCorrespondingAngles(false, false);
+        threeLines.correspondingToggleAngles(false, false);
       },
     });
 
@@ -498,17 +508,22 @@ class Content extends LessonContent {
       `,
       modifiers: {
         corresponding_angles: click(
-          threeLines.toggleCorrespondingAngles, [threeLines, false, false],
+          threeLines.correspondingToggleAngles, [threeLines, false, false],
           colors.angleA,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
         // threeLines.showAllAngles();
-        threeLines.toggleCorrespondingAngles(false, false);
+        threeLines.correspondingToggleAngles(false, false);
       },
     });
 
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
     this.addSection(common, {
       title: 'Alternate Angles',
       setContent: `
@@ -518,7 +533,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         Alternate_angles: click(
-          threeLines.toggleAlternateAngles, [threeLines, true],
+          threeLines.alternateToggleAngles, [threeLines, true],
           colors.angleA,
         ),
         parallel_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
@@ -526,7 +541,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleAlternateAngles(true);
+        threeLines.alternateToggleAngles(true);
       },
     });
 
@@ -538,13 +553,13 @@ class Content extends LessonContent {
       `,
       modifiers: {
         alternate_angles: click(
-          threeLines.toggleAlternateAngles, [threeLines, true],
+          threeLines.alternateToggleAngles, [threeLines, true],
           colors.angleA,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleAlternateAngles(true);
+        threeLines.alternateToggleAngles(true);
       },
     });
 
@@ -556,14 +571,13 @@ class Content extends LessonContent {
       `,
       modifiers: {
         corresponding_angles: click(
-          threeLines.showCorrespondingAngles, [threeLines],
+          threeLines.alternateShowCorrespondingAngles, [threeLines],
           colors.angleB,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        // threeLines._angleA1.show();
-        threeLines.showCorrespondingAngles();
+        threeLines.alternateShowCorrespondingAngles();
       },
     });
 
@@ -575,14 +589,13 @@ class Content extends LessonContent {
       `,
       modifiers: {
         opposite_angles: click(
-          threeLines.showOppositeAngles, [threeLines],
+          threeLines.alternateShowOppositeAngles, [threeLines],
           colors.angleC,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines._angleA1.show();
-        threeLines.showOppositeAngles();
+        threeLines.alternateShowOppositeAngles();
       },
     });
     this.addSection(common, {
@@ -593,20 +606,21 @@ class Content extends LessonContent {
       `,
       modifiers: {
         alternate_angles: click(
-          threeLines.toggleAlternateAndOppositeAngles, [threeLines],
+          threeLines.alternateToggleAngles, [threeLines],
           colors.angleA,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        // threeLines._angleA1.show();
-        threeLines.toggleAlternateAndOppositeAngles();
+        threeLines.alternateToggleAngles();
       },
     });
 
-    // <p class="lesson__diagram_text_p_width_40">
-    //       When the two lines are |parallel|, the interior angles always add up to ${unit('|180&deg;|', '|&pi; radians|')}.
-    //     </p>
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
+    // ************************************************************************
     this.addSection(common, {
       title: 'Interior Angles',
       setContent: `
@@ -616,7 +630,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         Interior_angles: click(
-          threeLines.toggleInteriorAngles, [threeLines, true],
+          threeLines.interiorToggleAngles, [threeLines, true],
           colors.angleA,
         ),
         parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
@@ -625,7 +639,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleInteriorAngles(true);
+        threeLines.interiorToggleAngles(true);
       },
     });
 
@@ -637,13 +651,13 @@ class Content extends LessonContent {
       `,
       modifiers: {
         Interior_angles: click(
-          threeLines.toggleInteriorAngles, [threeLines, true],
+          threeLines.interiorToggleAngles, [threeLines, true],
           colors.angleA,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.toggleInteriorAngles(true);
+        threeLines.interiorToggleAngles(true);
       },
     });
 
@@ -725,7 +739,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         interior: click(
-          threeLines.interiorToggleInteriorWithCorresponding, [threeLines],
+          threeLines.interiorToggleAngles, [threeLines],
           colors.angleA,
         ),
       },
@@ -738,7 +752,7 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines.interiorToggleInteriorWithCorresponding();
+        threeLines.interiorToggleAngles();
       },
     });
 
