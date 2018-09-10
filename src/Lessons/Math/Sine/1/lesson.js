@@ -6,3 +6,4 @@ import './style.scss';
 // import details from '../details';
 
 renderLesson(new Content(), {});
+
