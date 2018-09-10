@@ -513,7 +513,7 @@ class Content extends LessonContent {
       title: 'Alternate Angles',
       setContent: `
         <p>
-          |Alternate_angles| are the angles that are on opposite sides of the |intersecting| line that crosses |two_lines|.
+          |Alternate_angles| are the angles that are on opposite sides of the |intersecting| and |parallel_lines|.
         </p>
       `,
       modifiers: {
@@ -521,8 +521,7 @@ class Content extends LessonContent {
           threeLines.toggleAlternateAngles, [threeLines, true],
           colors.angleA,
         ),
-        parallel: click(threeLines.pulseParallel, [threeLines], colors.line),
-        two_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
+        parallel_lines: click(threeLines.pulseParallel, [threeLines], colors.line),
         intersecting: click(threeLines.pulseLine, [threeLines, 3], colors.intersectingLine),
       },
       setSteadyState: () => {
@@ -594,87 +593,14 @@ class Content extends LessonContent {
       `,
       modifiers: {
         alternate_angles: click(
-          threeLines.showAlternateAngles, [threeLines],
+          threeLines.toggleAlternateAndOppositeAngles, [threeLines],
           colors.angleA,
         ),
       },
       setSteadyState: () => {
         threeLines.setFuturePositions();
-        threeLines._angleA1.show();
-        threeLines.showAlternateAngles();
-      },
-    });
-
-    this.addSection({
-      setContent: centerV(`
-        <p class="lesson__diagram_text_p_width_40">
-          |Corresponding_angles| are equal.
-        </p>
-        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
-          |Opposite_angles| are equal.
-        </p>
-        <p class="lesson__diagram_text_p_width_40" style="margin-top:6%">
-          Therefore, |alternate_angles| are equal.
-        </p>
-      `),
-      modifiers: {
-        alternate_angles: click(
-          threeLines.showAlternateAngles, [threeLines],
-          colors.angleA,
-        ),
-        Corresponding_angles: click(
-          threeLines.showCorrespondingAngles, [threeLines],
-          colors.angleB,
-        ),
-        Opposite_angles: click(threeLines.showOppositeAngles, [threeLines], colors.angleC),
-      },
-      setEnterState: () => {
-        if (opp.isShown) {
-          threeLines.transform.updateRotation(0);
-          threeLines._line1.transform = opp._line1.transform._dup();
-          threeLines._line2.transform = opp._line2.transform._dup();
-        }
-        threeLines._line1.setColor(layout.colors.line);
-        threeLines._line2.setColor(layout.colors.line);
-      },
-      showOnly: [
-        threeLines,
-        threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
-        threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
-        threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
-      ],
-      transitionFromAny: (done) => {
-        if (this.comingFrom !== 'prev') {
-          let time = Math.max(
-            diag.getTimeToMoveToScenario(threeLines._line1, 'corresponding'),
-            diag.getTimeToMoveToScenario(threeLines._line2, 'corresponding'),
-            diag.getTimeToMoveToScenario(threeLines._line3, 'corresponding'),
-          );
-          time = time > 2 ? 2 : time;
-          diag.moveToScenario(threeLines._line1, 'corresponding', time);
-          diag.moveToScenario(threeLines._line2, 'corresponding', time);
-          diag.moveToScenario(threeLines._line3, 'corresponding', time, done);
-        } else {
-          done();
-        }
-      },
-      setSteadyState: () => {
-        if (this.comingFrom !== 'prev') {
-          diag.moveToScenario(threeLines._line1, 'corresponding', 0.001);
-          diag.moveToScenario(threeLines._line2, 'corresponding', 0.001);
-          diag.moveToScenario(threeLines._line3, 'corresponding', 0.001);
-        }
-        threeLines.toggleAlternateAngles();
-        threeLines.showCorrespondingAngles();
+        // threeLines._angleA1.show();
+        threeLines.toggleAlternateAndOppositeAngles();
       },
     });
 
