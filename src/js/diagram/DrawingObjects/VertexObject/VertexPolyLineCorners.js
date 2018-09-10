@@ -22,8 +22,8 @@ function cornerLength(coords, length, forceLength = true) {
       endLength * Math.sin(angle) + center.y,
     ));
   }
-  points.push(points[1].copy());
-  points[1] = center.copy();
+  points.push(points[1]._dup());
+  points[1] = center._dup();
   return points;
 }
 

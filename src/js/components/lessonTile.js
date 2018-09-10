@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import '../../css/style.scss';
+// import img from '../../tile.png';
 
 type Props = {
   label: ?string,
@@ -9,6 +10,7 @@ type Props = {
   left?: ?string,
   top?: ?string,
   link: ?string,
+  imgLink: ?string,
   state: '' | 'disabled' | 'selected',
 };
 
@@ -38,8 +40,8 @@ export default class LessonTile extends React.Component
       classText = `${classText} navigator__lesson_tile_selected`;
     }
     let imgLink = '/static/defaultTile.png';
-    if (link !== '/') {
-      imgLink = `/static${link}/tile.png`;
+    if (props.imgLink != null) {
+      imgLink = `${'/static/dist'}${props.imgLink}`;
     }
     return <a
         href={link}

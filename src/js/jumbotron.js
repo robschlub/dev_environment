@@ -21,12 +21,11 @@ export default class Jumbotron extends React.Component
     delete props.containerFluid;
 
     props.className = classify(CSS_NAME, props.className || '');
-    const body = props.className.includes(`${CSS_NAME}-fluid`) ?
-      <Container fluid={containerFluid} style={{ color: 'yellow' }}>
-        {props.children}
-      </Container> :
-      props.children;
-
+    const body = props.className.includes(`${CSS_NAME}-fluid`)
+      ? <Container fluid={containerFluid} style={{ color: 'yellow' }}>
+          {props.children}
+        </Container>
+      : props.children;
     return <div {...props}>
       {body}
     </div>;

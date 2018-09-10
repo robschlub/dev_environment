@@ -3,8 +3,11 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
-import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
-import { Point, Rect } from '../diagram/tools/g2';
+import LessonDescription from '../../Lessons/lessonDescription';
+import makeLessonTree from '../../Lessons/lessonTree';
+import {
+  Point, Rect,
+} from '../diagram/tools/g2';
 import { getDefinedCSSVariables } from '../tools/getCssVariables';
 
 type Props = {
@@ -14,7 +17,7 @@ type Props = {
 export default class LessonNavigator extends React.Component
                                     <Props> {
   selected: string;
-  lessonIndex: Array<Array<LessonDescription> | LessonDescription>;
+  lessonIndex: Array<Array<LessonDescription>>;
   key: number;
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
@@ -25,7 +28,7 @@ export default class LessonNavigator extends React.Component
 
   constructor(props: Props) {
     super(props);
-    this.lessonIndex = lessonIndex;
+    this.lessonIndex = makeLessonTree();
     this.getVariables();
     this.layoutLessonTiles();
     this.getLessonTilesBounds();
@@ -100,9 +103,20 @@ export default class LessonNavigator extends React.Component
     const width = this.tileWidth + 20;
     const height = this.tileHeight;
     const vSpace = 10;
-    const y = this.tileHeight * 2 + vSpace * 2;
+    // const y = this.tileHeight * 2 + vSpace * 2;
     let x = 0;
     this.lessonArray = [];
+    // console.log(this.lessonIndex)
+    let maxParallel = 1;
+    this.lessonIndex.forEach((lesson) => {
+      if (Array.isArray(lesson)) {
+        if (lesson.length > maxParallel) {
+          maxParallel = lesson.length;
+        }
+      }
+    });
+    const y = maxParallel * (this.tileHeight + vSpace) / 2;
+    // const y = 0;
     this.lessonIndex.forEach((lesson) => {
       if (Array.isArray(lesson)) {
         const len = lesson.length;
@@ -130,6 +144,7 @@ export default class LessonNavigator extends React.Component
   //     this.hideAllTilesButSelected();
   //   }
   // }
+
   showNavigator() {
     // console.log("showing")
     this.enableTransitions();
@@ -145,6 +160,7 @@ export default class LessonNavigator extends React.Component
       nav.style.overflow = 'scroll';
     }
   }
+
   // eslint-disable-next-line class-methods-use-this
   enableTransition(id: string, enable: boolean = false) {
     const element = document.getElementById(id);
@@ -256,7 +272,8 @@ export default class LessonNavigator extends React.Component
     }
     return <LessonTile
               id={lesson.id}
-              link={lesson.link}
+              link={`${lesson.link}/1`}
+              imgLink={lesson.imgLink}
               key={this.key}
               label={lesson.name}
               state={state}
@@ -301,6 +318,7 @@ export default class LessonNavigator extends React.Component
       }
     }
   }
+
   // eslint-disable-next-line class-methods-use-this
   centerLessons() {
     // const nav =
@@ -310,7 +328,7 @@ export default class LessonNavigator extends React.Component
     if (lessonsContainer) {
       // const xMargin = nav.clientWidth / 2 - 180 / 2;
       const xMargin = 200;
-      const yMargin = 100;
+      const yMargin = 80;
       // const yMargin = window.innerHeight * 0.6 / 2;
       lessonsContainer.style.left = `${xMargin}px`;
       lessonsContainer.style.top = `${yMargin - this.tileHeight / 2}px`;

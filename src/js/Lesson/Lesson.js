@@ -2,6 +2,21 @@
 import { LessonContent } from './LessonContent';
 import Diagram from '../diagram/Diagram';
 
+function hideInfoButton() {
+  const infoButton = document.getElementById('id_lesson__info_button');
+  if (infoButton instanceof HTMLElement) {
+    infoButton.classList.add('lesson__info_hide');
+  }
+}
+
+function hideInteractiveHighlightButton() {
+  const interactiveHighlightButton = document
+    .getElementById('id_lesson__interactive_element_button');
+  if (interactiveHighlightButton instanceof HTMLElement) {
+    interactiveHighlightButton.classList.add('lesson__interactive_element_button__hide');
+  }
+}
+
 // Flow:
 //
 //  Coming from any section
@@ -76,6 +91,7 @@ class Lesson {
       if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
+      this.content.toggleInfo(false);
       // this.currentSection().goingTo = 'next';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'prev';
       this.transitionStart('prev');
@@ -84,6 +100,7 @@ class Lesson {
     }
     this.renderDiagrams();
   }
+
   prevSection() {
     const { diagram } = this;
     if (this.currentSectionIndex > 0 && diagram) {
@@ -102,6 +119,7 @@ class Lesson {
       }
       // this.currentSection().goingTo = 'prev';
       // this.sections.[this.currentSectionIndex + 1].comingFrom = 'next';
+      this.content.toggleInfo(false);
       this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
@@ -109,7 +127,17 @@ class Lesson {
     this.renderDiagrams();
   }
 
-  goToSection(sectionIndex: number) {
+  goToSection(sectionId: number | string) {
+    let sectionIndex = 0;
+    if (typeof sectionId === 'number') {
+      sectionIndex = sectionId;
+    } else {
+      this.content.sections.forEach((section, index) => {
+        if (section.title === sectionId) {
+          sectionIndex = index;
+        }
+      });
+    }
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       if (this.inTransition) {
         this.stopTransition();
@@ -121,6 +149,7 @@ class Lesson {
       if (this.currentSection().blankTransition.toGoto) {
         this.refresh('', this.currentSectionIndex);
       }
+      this.content.toggleInfo(false);
       this.transitionStart('goto');
       this.goToSectionIndex = sectionIndex;
       this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
@@ -160,6 +189,9 @@ class Lesson {
   }
 
   setLeaveStateAndMoveToNextSection() {
+    hideInfoButton();
+    hideInteractiveHighlightButton();
+
     const possibleState = this.currentSection().setLeaveState();
     if (possibleState !== null && possibleState !== undefined) {
       this.state = possibleState;
@@ -186,6 +218,7 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     if (diagram) {
       section.setEnterState(this.state);
+      section.currentInteractiveItem = -1;
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {
@@ -222,6 +255,9 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     section.setOnClicks();
     section.setSteadyState(this.state);
+    section.setInfoButton();
+    section.setInteractiveElements();
+    section.setInteractiveElementsButton();
     this.inTransition = false;
     const { diagram } = this;
     if (diagram) {
@@ -243,6 +279,18 @@ class Lesson {
     }
   }
 
+  highlightNextInteractiveItem() {
+    const section = this.content.sections[this.currentSectionIndex];
+    if (section.interactiveElementList.length > 0) {
+      let index = section.currentInteractiveItem + 1;
+      if (index > section.interactiveElementList.length - 1) {
+        index = 0;
+      }
+      const { element, location } = section.interactiveElementList[index];
+      this.content.highlightInteractiveElement(element, location);
+      section.currentInteractiveItem = index;
+    }
+  }
 
   stopTransition() {
     const { diagram } = this;
@@ -273,6 +321,7 @@ class Lesson {
     this.closeDiagram();
     this.content.initialize();
     this.diagram = this.content.diagram;
+    this.diagram.lesson = this;
   }
 }
 

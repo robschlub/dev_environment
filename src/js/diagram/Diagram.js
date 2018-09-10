@@ -5,16 +5,24 @@ import getShaders from './webgl/shaders';
 
 import {
   Rect, Point, Transform,
-  spaceToSpaceTransform,
+  spaceToSpaceTransform, minAngleDiff,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
-import { DiagramElementCollection, DiagramElementPrimative } from './Element';
+import { isTouchDevice } from '../tools/tools';
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from './Element';
 import GlobalAnimation from './webgl/GlobalAnimation';
+// eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 
-import { PolyLine, PolyLineCorners } from './DiagramElements/PolyLine';
-import { Polygon, PolygonFilled } from './DiagramElements/Polygon';
+import {
+  PolyLine, PolyLineCorners,
+} from './DiagramElements/PolyLine';
+import {
+  Polygon, PolygonFilled,
+} from './DiagramElements/Polygon';
 import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import Lines from './DiagramElements/Lines';
@@ -22,10 +30,15 @@ import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import Axis from './DiagramElements/Plot/Axis';
 
-import { DiagramText, DiagramFont, TextObject } from './DrawingObjects/TextObject/TextObject';
+import {
+  DiagramText, DiagramFont, TextObject,
+} from './DrawingObjects/TextObject/TextObject';
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
-import DiagramGLEquation from './DiagramElements/Equation/GLEquation';
+import {
+  EquationForm, createEquationElements, Equation,
+} from './DiagramElements/Equation/GLEquation';
+// import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
 import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // import { DiagramEquationNew } from './Equation';
 
@@ -47,49 +60,18 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 
 // eslint-disable-next-line no-use-before-define
 function equation(diagram: Diagram) {
-  function elements(elems: Object, colorOrFont: Array<number> | DiagramFont = []) {
-    let color = [1, 1, 1, 1];
-    if (Array.isArray(colorOrFont)) {
-      color = colorOrFont.slice();
-    }
-    let font = new DiagramFont(
-      'Times New Roman',
-      'italic',
-      0.2,
-      '200',
-      'left',
-      'alphabetic',
-      color,
-    );
-    if (colorOrFont instanceof DiagramFont) {
-      font = colorOrFont;
-      // color = font.color;
-    }
-
-    const equationElements = new DiagramElementCollection(
-      new Transform().scale(1, 1).translate(0, 0),
+  function elements(
+    elems: Object,
+    colorOrFont: Array<number> | DiagramFont = [],
+    firstTransform: Transform = new Transform(),
+  ): DiagramElementCollection {
+    return createEquationElements(
+      elems,
+      diagram.draw2D,
+      colorOrFont,
       diagram.limits,
+      firstTransform,
     );
-    Object.keys(elems).forEach((key) => {
-      if (typeof elems[key] === 'string') {
-        const dT = new DiagramText(new Point(0, 0), elems[key], font);
-        const to = new TextObject(diagram.draw2D, [dT]);
-        const p = new DiagramElementPrimative(
-          to,
-          new Transform().scale(1, 1).translate(0, 0),
-          color,
-          diagram.limits,
-        );
-        equationElements.add(key, p);
-      }
-      if (elems[key] instanceof DiagramElementPrimative) {
-        equationElements.add(key, elems[key]);
-      }
-      if (elems[key] instanceof DiagramElementCollection) {
-        equationElements.add(key, elems[key]);
-      }
-    });
-    return equationElements;
   }
 
   function vinculum(color: Array<number> = [1, 1, 1, 1]) {
@@ -115,18 +97,28 @@ function equation(diagram: Diagram) {
   }
 
   function make(equationCollection: DiagramElementCollection) {
-    return new DiagramGLEquation(equationCollection);
+    return new EquationForm(equationCollection);
   }
 
   function makeHTML(id: string = '', classes: string | Array<string> = []) {
     return new HTMLEquation(id, classes);
   }
+
+  function makeEqn() {
+    return new Equation(
+      diagram.draw2D,
+      diagram.limits,
+      diagram.diagramToGLSpaceTransform,
+    );
+  }
+
   return {
     elements,
     vinculum,
     integral,
     make,
     makeHTML,
+    makeEqn,
   };
 }
 
@@ -170,9 +162,9 @@ function shapes(diagram: Diagram) {
     );
   }
 
-  function htmlText(
-    textInput: string,
-    id: string = '',
+  function htmlElement(
+    elementToAdd: HTMLElement | Array<HTMLElement>,
+    id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
     classes: string = '',
     location: Point = new Point(0, 0),
     alignV: 'top' | 'bottom' | 'middle' = 'middle',
@@ -180,17 +172,17 @@ function shapes(diagram: Diagram) {
   ) {
     const element = document.createElement('div');
     if (classes && element) {
-      const classArray = classes.split(',');
+      const classArray = classes.split(' ');
       classArray.forEach(c => element.classList.add(c.trim()));
     }
-    const inside = document.createTextNode(textInput);
-    element.appendChild(inside);
+    if (Array.isArray(elementToAdd)) {
+      elementToAdd.forEach(e => element.appendChild(e));
+    } else {
+      element.appendChild(elementToAdd);
+    }
     element.style.position = 'absolute';
-    // element.style.left = '0px';
-    // element.style.top = '0px';
     element.setAttribute('id', id);
     diagram.htmlCanvas.appendChild(element);
-
     const hT = new HTMLObject(diagram.htmlCanvas, id, new Point(0, 0), alignV, alignH);
     const diagramElement = new DiagramElementPrimative(
       hT,
@@ -201,6 +193,21 @@ function shapes(diagram: Diagram) {
     // diagramElement.setFirstTransform();
     return diagramElement;
   }
+
+  function htmlText(
+    textInput: string,
+    id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
+    classes: string = '',
+    location: Point = new Point(0, 0),
+    alignV: 'top' | 'bottom' | 'middle' = 'middle',
+    alignH: 'left' | 'right' | 'center' = 'left',
+  ) {
+    // const inside = document.createTextNode(textInput);
+    const inside = document.createElement('div');
+    inside.innerHTML = textInput;
+    return this.htmlElement(inside, id, classes, location, alignV, alignH);
+  }
+
   function arrow(
     width: number = 1,
     legWidth: number = 0.5,
@@ -229,10 +236,11 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     const linePairs = [];
-    for (let x = bounds.left; x < bounds.right + xStep; x += xStep) {
+    // const xLimit = tools.roundNum(bounds.righ + xStep);
+    for (let x = bounds.left; tools.roundNum(x, 8) <= bounds.right; x += xStep) {
       linePairs.push([new Point(x, bounds.top), new Point(x, bounds.bottom)]);
     }
-    for (let y = bounds.bottom; y < bounds.top + yStep; y += yStep) {
+    for (let y = bounds.bottom; tools.roundNum(y, 8) <= bounds.top; y += yStep) {
       linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
     }
     return lines(linePairs, color, transform);
@@ -312,7 +320,7 @@ function shapes(diagram: Diagram) {
     if (transformOrPoint instanceof Point) {
       transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
     } else {
-      transform = transformOrPoint.copy();
+      transform = transformOrPoint._dup();
     }
     return new DiagramElementCollection(transform, diagram.limits);
   }
@@ -329,6 +337,7 @@ function shapes(diagram: Diagram) {
     color: Array<number> = [1, 1, 1, 0],
     gridColor: Array<number> = [1, 1, 1, 0],
     location: Transform | Point = new Transform(),
+    decimalPlaces: number = 1,
   ) {
     const lineWidth = 0.01;
     const xProps = new AxisProperties('x', 0);
@@ -353,7 +362,7 @@ function shapes(diagram: Diagram) {
       xProps.limits.min,
       xProps.limits.max,
       stepX,
-    ).map(v => v.toString()).map((v) => {
+    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
       if (v === yAxisLocation.toString() && yAxisLocation === xAxisLocation) {
         return `${v}     `;
       }
@@ -374,7 +383,7 @@ function shapes(diagram: Diagram) {
     const xAxis = new Axis(
       diagram.webgl, diagram.draw2D, xProps,
       new Transform().scale(1, 1).rotate(0)
-        .translate(0, xAxisLocation - limits.bottom),
+        .translate(0, xAxisLocation - limits.bottom * height / 2),
       diagram.limits,
     );
 
@@ -400,7 +409,7 @@ function shapes(diagram: Diagram) {
       yProps.limits.min,
       yProps.limits.max,
       stepY,
-    ).map(v => v.toString()).map((v) => {
+    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
       if (v === xAxisLocation.toString() && yAxisLocation === xAxisLocation) {
         return '';
       }
@@ -421,7 +430,7 @@ function shapes(diagram: Diagram) {
     const yAxis = new Axis(
       diagram.webgl, diagram.draw2D, yProps,
       new Transform().scale(1, 1).rotate(0)
-        .translate(yAxisLocation - limits.left, 0),
+        .translate(yAxisLocation - limits.left * width / 2, 0),
       diagram.limits,
     );
 
@@ -429,13 +438,14 @@ function shapes(diagram: Diagram) {
     if (location instanceof Point) {
       transform = transform.translate(location.x, location.y);
     } else {
-      transform = location.copy();
+      transform = location._dup();
     }
     const xy = collection(transform);
     if (showGrid) {
       const gridLines = grid(
         new Rect(0, 0, width, height),
-        stepX * width / limits.width, stepY * height / limits.height,
+        tools.roundNum(stepX * width / limits.width, 8),
+        tools.roundNum(stepY * height / limits.height, 8),
         gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
       );
       xy.add('grid', gridLines);
@@ -458,6 +468,7 @@ function shapes(diagram: Diagram) {
     text,
     radialLines,
     htmlText,
+    htmlElement,
     axes,
   };
 }
@@ -471,6 +482,12 @@ class Diagram {
   inTransition: boolean;
   beingMovedElements: Array<DiagramElementPrimative |
                       DiagramElementCollection>;
+
+  beingTouchedElements: Array<DiagramElementPrimative |
+                        DiagramElementCollection>;
+
+  moveTopElementOnly: boolean;
+
   limits: Rect;
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
@@ -479,6 +496,7 @@ class Diagram {
   equation: Object;
   backgroundColor: Array<number>;
   fontScale: number;
+  layout: Object;
 
   glToDiagramSpaceTransform: Transform;
   diagramToGLSpaceTransform: Transform;
@@ -486,8 +504,11 @@ class Diagram {
   diagramToPixelSpaceTransform: Transform;
   pixelToGLSpaceTransform: Transform;
   glToPixelSpaceTransform: Transform;
+  diagramToCSSPercentSpaceTransform: Transform;
 
   drawQueued: boolean;
+
+  isTouchDevice: boolean;
 
   constructor(
     // canvas: HTMLCanvasElement,
@@ -497,7 +518,11 @@ class Diagram {
     width: number = 2,
     height: number = 2,
     backgroundColor: Array<number> = [1, 1, 1, 1],
+    layout: Object = {},
+    vertexShader: string = 'simple',
+    fragmentShader: string = 'simple',
   ) {
+    this.layout = layout;
     if (typeof containerIdOrWebGLContext === 'string') {
       const container = document.getElementById(containerIdOrWebGLContext);
       if (container instanceof HTMLElement) {
@@ -518,7 +543,7 @@ class Diagram {
           }
         }
         this.backgroundColor = backgroundColor;
-        const shaders = getShaders('withTexture', 'withTexture');
+        const shaders = getShaders(vertexShader, fragmentShader);
         const webgl = new WebGLInstance(
           this.canvas,
           shaders.vertexSource,
@@ -554,6 +579,8 @@ class Diagram {
     this.inTransition = false;
     // console.log(this.limits)
     this.beingMovedElements = [];
+    this.beingTouchedElements = [];
+    this.moveTopElementOnly = true;
     this.globalAnimation = new GlobalAnimation();
     this.shapes = this.getShapes();
     this.equation = this.getEquations();
@@ -565,12 +592,14 @@ class Diagram {
     window.addEventListener('resize', this.resize.bind(this));
     this.sizeHtmlText();
     this.initialize();
+    this.isTouchDevice = isTouchDevice();
     this.animateNextFrame();
   }
 
   getShapes() {
     return shapes(this);
   }
+
   getEquations() {
     return equation(this);
   }
@@ -627,6 +656,11 @@ class Diagram {
       y: { bottomLeft: canvasRect.height, height: -canvasRect.height },
     };
 
+    const percentSpace = {
+      x: { bottomLeft: 0, width: 1 },
+      y: { bottomLeft: 1, height: -1 },
+    };
+
     this.diagramToGLSpaceTransform =
       spaceToSpaceTransform(diagramSpace, glSpace);
 
@@ -644,6 +678,9 @@ class Diagram {
 
     this.glToPixelSpaceTransform =
       spaceToSpaceTransform(glSpace, pixelSpace);
+
+    this.diagramToCSSPercentSpaceTransform =
+      spaceToSpaceTransform(diagramSpace, percentSpace);
   }
 
   initialize() {
@@ -652,7 +689,7 @@ class Diagram {
   }
 
   updateLimits(limits: Rect) {
-    this.limits = limits.copy();
+    this.limits = limits._dup();
     this.setSpaceTransforms();
   }
 
@@ -661,8 +698,10 @@ class Diagram {
     this.draw2D.resize();
     this.setSpaceTransforms();
     this.sizeHtmlText();
+    this.elements.resizeHtmlObject();
     this.animateNextFrame();
   }
+
   // Handle touch down, or mouse click events within the canvas.
   // The default behavior is to be able to move objects that are touched
   // and dragged, then when they are released, for them to move freely before
@@ -681,14 +720,20 @@ class Diagram {
 
     // Get all the diagram elements that were touched at this point (element
     // must have isTouchable = true to be considered)
-    const touchedElements = this.elements.getTouched(glPoint);
-    touchedElements.forEach(e => e.click());
-    // console.log(touchedElements)
+    this.beingTouchedElements = this.elements.getTouched(glPoint);
+
+    if (this.moveTopElementOnly) {
+      if (this.beingTouchedElements.length > 0) {
+        this.beingTouchedElements[0].click();
+      }
+    } else {
+      this.beingTouchedElements.forEach(e => e.click());
+    }
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];
-    for (let i = 0; i < touchedElements.length; i += 1) {
-      const element = touchedElements[i];
+    for (let i = 0; i < this.beingTouchedElements.length; i += 1) {
+      const element = this.beingTouchedElements[i];
       if (element.isMovable) {
         this.beingMovedElements.push(element);
         element.startBeingMoved();
@@ -697,7 +742,7 @@ class Diagram {
     if (this.beingMovedElements.length > 0) {
       this.animateNextFrame();
     }
-    if (touchedElements.length > 0) {
+    if (this.beingTouchedElements.length > 0) {
       return true;
     }
     return false;
@@ -711,11 +756,78 @@ class Diagram {
     // console.log(this.beingMovedElements)
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
-      element.stopBeingMoved();
-      element.startMovingFreely();
+      if (element.state.isBeingMoved) {
+        element.stopBeingMoved();
+        element.startMovingFreely();
+      }
     }
     this.beingMovedElements = [];
+    this.beingTouchedElements = [];
     // console.log("after", this.elements._circle.transform.t())
+  }
+
+  rotateElement(
+    element: DiagramElementPrimative | DiagramElementCollection,
+    previousClientPoint: Point,
+    currentClientPoint: Point,
+  ) {
+    let center = element.getDiagramPosition();
+    if (center == null) {
+      center = new Point(0, 0);
+    }
+    const previousPixelPoint = this.clientToPixel(previousClientPoint);
+    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+    const previousDiagramPoint =
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+    const currentDiagramPoint =
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+    const currentAngle = Math.atan2(
+      currentDiagramPoint.y - center.y,
+      currentDiagramPoint.x - center.x,
+    );
+    const previousAngle = Math.atan2(
+      previousDiagramPoint.y - center.y,
+      previousDiagramPoint.x - center.x,
+    );
+    const diffAngle = minAngleDiff(previousAngle, currentAngle);
+    const transform = element.transform._dup();
+    let rot = transform.r();
+    if (rot == null) {
+      rot = 0;
+    }
+    const newAngle = rot - diffAngle;
+    // if (newAngle < 0) {
+    //   newAngle += 2 * Math.PI;
+    // }
+    // if (newAngle > 2 * Math.PI) {
+    //   newAngle -= 2 * Math.PI;
+    // }
+    transform.updateRotation(newAngle);
+    element.moved(transform._dup());
+  }
+
+  translateElement(
+    element: DiagramElementPrimative | DiagramElementCollection,
+    previousClientPoint: Point,
+    currentClientPoint: Point,
+  ) {
+    const previousPixelPoint = this.clientToPixel(previousClientPoint);
+    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+    const previousDiagramPoint =
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+    const currentDiagramPoint =
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+
+    const delta = currentDiagramPoint.sub(previousDiagramPoint);
+    const currentTransform = element.transform._dup();
+    const currentTranslation = currentTransform.t();
+    if (currentTranslation != null) {
+      const newTranslation = currentTranslation.add(delta);
+      currentTransform.updateTranslation(newTranslation);
+      element.moved(currentTransform);
+    }
   }
 
   // Handle touch/mouse move events in the canvas. These events will only be
@@ -733,37 +845,43 @@ class Diagram {
     if (this.beingMovedElements.length === 0) {
       return false;
     }
-    // Get the previous, current and delta between touch points in clip space
+
     const previousPixelPoint = this.clientToPixel(previousClientPoint);
-    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+    // const currentPixelPoint = this.clientToPixel(currentClientPoint);
 
     const previousGLPoint =
       previousPixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
-    // const currentGLPoint =
-    //   currentPixelPoint.transformBy(this.pixelToGLSpaceTransformMatrix);
-
-    const previousDiagramPoint =
-      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-    const currentDiagramPoint =
-      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
-
-    // const previousClipPoint = this.clientToClip(previousClientPoint);
-    // const currentClipPoint = this.clientToClip(currentClientPoint);
-    const delta = currentDiagramPoint.sub(previousDiagramPoint);
 
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];
       if (element !== this.elements) {
-        const currentTransform = element.transform.copy();
-        const currentTranslation = currentTransform.t();
-        if (currentTranslation
-          && (element.isBeingTouched(previousGLPoint)
-              || element.move.canBeMovedAfterLoosingTouch)) {
-          const newTranslation = currentTranslation.add(delta);
-          currentTransform.updateTranslation(newTranslation);
-          element.moved(currentTransform);
+        if (element.isBeingTouched(previousGLPoint)
+              || element.move.canBeMovedAfterLoosingTouch) {
+          const elementToMove = element.move.element == null ? element : element.move.element;
+          if (elementToMove.state.isBeingMoved === false) {
+            elementToMove.startBeingMoved();
+          }
+          if (this.beingMovedElements.indexOf(elementToMove) === -1) {
+            this.beingMovedElements.push(elementToMove);
+          }
+          if (element.move.type === 'rotation') {
+            this.rotateElement(
+              elementToMove,
+              previousClientPoint,
+              currentClientPoint,
+            );
+          } else {
+            this.translateElement(
+              elementToMove,
+              previousClientPoint,
+              currentClientPoint,
+            );
+          }
         }
+      }
+      if (this.moveTopElementOnly) {
+        i = this.beingMovedElements.length;
       }
     }
     this.animateNextFrame();
@@ -788,11 +906,13 @@ class Diagram {
   ) {
     this.elements.add(name, diagramElement);
   }
-  clearContext() {
-    const bc = this.backgroundColor;
-    this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
-    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
 
+  clearContext() {
+    // const bc = this.backgroundColor;
+    // this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
+
+    this.webgl.gl.clearColor(0, 0, 0, 0);
+    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
     if (this.draw2D) {
       this.draw2D.ctx.clearRect(0, 0, this.draw2D.ctx.canvas.width, this.draw2D.ctx.canvas.height);
     }

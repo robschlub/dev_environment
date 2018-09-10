@@ -10,15 +10,15 @@ class DrawContext2D {
     this.ctx = this.canvas.getContext('2d');
 
     /* $FlowFixMe */
-    const bsr = this.ctx.webkitBackingStorePixelRatio ||
+    const bsr = this.ctx.webkitBackingStorePixelRatio
               /* $FlowFixMe */
-              this.ctx.mozBackingStorePixelRatio ||
+              || this.ctx.mozBackingStorePixelRatio
               /* $FlowFixMe */
-              this.ctx.msBackingStorePixelRatio ||
+              || this.ctx.msBackingStorePixelRatio
               /* $FlowFixMe */
-              this.ctx.oBackingStorePixelRatio ||
+              || this.ctx.oBackingStorePixelRatio
               /* $FlowFixMe */
-              this.ctx.backingStorePixelRatio || 1;
+              || this.ctx.backingStorePixelRatio || 1;
 
     let dpr = window.devicePixelRatio || 1;
     if (dpr === 1) {
@@ -34,6 +34,10 @@ class DrawContext2D {
     this.canvas.width = this.canvas.clientWidth * this.ratio;
     this.canvas.height = this.canvas.clientHeight * this.ratio;
     this.ctx.scale(this.ratio, this.ratio);
+  }
+
+  _dup() {
+    return this;
   }
 }
 

@@ -1,4 +1,7 @@
-import { round, decelerate, easeinout, clipMag, clipValue } from './mathtools';
+import {
+  round, decelerate, easeinout, clipMag, clipValue, randInt, rand,
+  randElement, removeRandElement,
+} from './mathtools';
 
 describe('Math tools testing', () => {
   // Rounding a value
@@ -198,6 +201,93 @@ describe('Math tools testing', () => {
     test('On min clipping negative', () => {
       expect(clipMag(-0.1, 0.1, 2)).toBe(0);
       expect(clipMag(-0.1, -0.1, -2)).toBe(0);
+    });
+  });
+  describe('Random Int', () => {
+    test('0 to max', () => {
+      let expected = true;
+      const min = 0;
+      const max = 20;
+      for (let i = 0; i < 1000; i += 1) {
+        const result = randInt(max);
+        if (result < min || result > max - 1) {
+          expected = false;
+        }
+      }
+      expect(expected).toBe(true);
+    });
+    test('Range', () => {
+      let expected = true;
+      const min = 10;
+      const max = 20;
+      for (let i = 0; i < 1000; i += 1) {
+        const result = randInt(min, max);
+        if (result < min || result > max - 1) {
+          expected = false;
+        }
+      }
+      expect(expected).toBe(true);
+    });
+  });
+  describe('Random Float', () => {
+    test('0 to max', () => {
+      let expected = true;
+      const min = 0;
+      const max = 3.5;
+      for (let i = 0; i < 1000; i += 1) {
+        const result = rand(max);
+        if (result < min || result >= max) {
+          expected = false;
+        }
+      }
+      expect(expected).toBe(true);
+    });
+    test('Range', () => {
+      let expected = true;
+      const min = 1.2;
+      const max = 3.5;
+      for (let i = 0; i < 1000; i += 1) {
+        const result = rand(min, max);
+        if (result < min || result >= max) {
+          expected = false;
+        }
+      }
+      expect(expected).toBe(true);
+    });
+  });
+  describe('Random Element in Array', () => {
+    test('Get Element', () => {
+      let expected = true;
+      const inputArray = [1, 2, 3, 4, 5, 6, 7];
+      const min = 1;
+      const max = 7;
+      for (let i = 0; i < 100; i += 1) {
+        const result = randElement(inputArray);
+        if (result < min || result > max) {
+          expected = false;
+        }
+      }
+      expect(expected).toBe(true);
+    });
+    test('Range', () => {
+      let expected = true;
+      const inputArray = [1, 2, 3, 4, 5, 6, 7];
+      const len = inputArray.length;
+      const min = 1;
+      const max = 7;
+      for (let i = 0; i < len; i += 1) {
+        const result = removeRandElement(inputArray);
+        if (result < min || result > max) {
+          expected = false;
+        }
+        if (inputArray.length !== len - 1 - i) {
+          expected = false;
+        }
+        if (inputArray.indexOf(result) !== -1) {
+          expected = false;
+        }
+      }
+      expect(expected).toBe(true);
     });
   });
 });

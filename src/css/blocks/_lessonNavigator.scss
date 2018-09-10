@@ -62,7 +62,7 @@
 }
 
 .navigator__lesson_tile_containter {
-  background: color(site, 'primary');
+  background: color('site', 'primary');
   padding-top: var(--navigator__tile_padding_vertical);
   padding-bottom: var(--navigator__tile_padding_vertical);
   padding-left: var(--navigator__tile_padding_horizontal);
@@ -75,7 +75,7 @@
 }
 
 .navigator__lesson_tile_containter:hover {
-  background: color(site, 'primary', 'light');
+  background: color('site', 'primary', 'light');
 }
 
 .navigator__lesson_tile_title_container {
@@ -91,19 +91,19 @@
 }
 
 .navigator__lesson_tile_disabled {
-  background-color: color(site, 'disabled', 'lighter');
+  background-color: color('site', 'disabled', 'lighter');
 }
 
 .navigator__lesson_tile_disabled:hover {
-  background-color: color(site, 'disabled', 'light');
+  background-color: color('site', 'disabled', 'light');
 }
 
 .navigator__lesson_tile_selected {
-  background-color: color(site, 'safe', 'dark');
+  background-color: color('site', 'safe', 'dark');
 }
 
 .navigator__lesson_tile_selected:hover {
-  background: color(site, 'safe');
+  background: color('site', 'safe');
 }
 
 .navigator__lesson_shadow {
@@ -195,4 +195,9 @@
   // margin-top: var(--navigator__tile_padding_vertical);
   margin-right: var(--navigator__tile_img_text_space);
   float: left;
+}
+
+.navigator__lesson_tile_path_container {
+  display: table;
+  height: 100%;
 }

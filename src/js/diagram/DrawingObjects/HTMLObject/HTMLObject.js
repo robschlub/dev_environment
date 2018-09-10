@@ -1,7 +1,9 @@
 // @flow
 
 // import * as m2 from '../tools/m2';
-import { Point, spaceToSpaceTransform } from '../../tools/g2';
+import {
+  Point, spaceToSpaceTransform,
+} from '../../tools/g2';
 import DrawingObject from '../DrawingObject';
 
 
@@ -15,6 +17,8 @@ class HTMLObject extends DrawingObject {
   alignH: 'left' | 'right' | 'center';
   alignV: 'top' | 'bottom' | 'middle';
   show: boolean;
+
+  copy: () => HTMLObject;
 
   constructor(
     parentDiv: HTMLElement,
@@ -33,6 +37,16 @@ class HTMLObject extends DrawingObject {
     this.alignH = alignH;
     this.parentDiv = parentDiv;
     this.show = true;
+  }
+
+  _dup() {
+    const c = new HTMLObject(
+      this.parentDiv, this.id,
+      this.location._dup(), this.alignV, this.alignH,
+    );
+    c.show = this.show;
+    c.border = this.border.map(b => b.map(p => p._dup()));
+    return c;
   }
 
   getGLBoundaries(): Array<Array<Point>> {
@@ -98,6 +112,7 @@ class HTMLObject extends DrawingObject {
       this.element.style.top = '-10000px';
     }
   }
+
   drawWithTransformMatrix(transformMatrix: Array<number>) {
     this.transformHtml(transformMatrix);
   }

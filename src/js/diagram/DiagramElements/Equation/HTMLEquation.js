@@ -198,6 +198,7 @@ class Root extends HTMLElementProperties {
     super(id, classes);
     this.content = content;
   }
+
   render(indent: number = 0) {
     const s = ' '.repeat(indent + 2);
     let out = '';
@@ -231,8 +232,8 @@ function contentToElement(content: EquationInput): HTMLElements {
   if (content instanceof HTMLElements) {
     return content;
   }
-  if (content instanceof HTMLElement ||
-      content instanceof HTMLElementProperties) {
+  if (content instanceof HTMLElement
+      || content instanceof HTMLElementProperties) {
     return new HTMLElements([content]);
   }
   if (typeof content === 'string') {
@@ -280,6 +281,15 @@ export default class HTMLEquation extends HTMLElements {
       }
     });
     return element;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  el(
+    content: 'string',
+    id: string = '',
+    classes: string | Array<string> = [],
+  ) {
+    return new HTMLElement(content, id, classes);
   }
 
   // eslint-disable-next-line class-methods-use-this

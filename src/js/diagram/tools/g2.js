@@ -6,7 +6,9 @@
 //  - minAngleDiff
 //  - normAngle
 
-import { roundNum, decelerate, clipMag, clipValue } from './mathtools';
+import {
+  roundNum, decelerate, clipMag, clipValue,
+} from './mathtools';
 import { Console } from '../../tools/tools';
 import * as m2 from './m2';
 
@@ -20,7 +22,7 @@ import * as m2 from './m2';
 // export type PointType = {
 //   x: number;
 //   y: number;
-//   copy(): PointType;
+//   _dup(): PointType;
 //   // sub(): PointType;
 //   // add(): PointType;
 //   // distance(): number;
@@ -55,7 +57,7 @@ class Rect {
     this.right = left + width;
   }
 
-  copy() {
+  _dup() {
     return new Rect(this.left, this.bottom, this.width, this.height);
   }
 }
@@ -68,31 +70,38 @@ class Point {
   static zero() {
     return new Point(0, 0);
   }
+
   static Unity() {
     return new Point(1, 1);
   }
+
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
-  copy() {
+
+  _dup() {
     return new Point(this.x, this.y);
   }
+
   scale(scalar: number) {
     return new Point(this.x * scalar, this.y * scalar);
   }
+
   sub(qOrX: Point, y: number = 0) {
     if (qOrX instanceof Point) {
       return new Point(this.x - qOrX.x, this.y - qOrX.y);
     }
     return new Point(this.x - qOrX, this.y - y);
   }
+
   add(qOrX: Point | number, y: number = 0) {
     if (qOrX instanceof Point) {
       return new Point(this.x + qOrX.x, this.y + qOrX.y);
     }
     return new Point(this.x + qOrX, this.y + y);
   }
+
   distance() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
@@ -148,6 +157,7 @@ class Point {
       matrix[2] * pt.x + matrix[3] * pt.y + centerPoint.y
     );
   }
+
   /* eslint-enable comma-dangle */
   isEqualTo(q: Point, precision?: number) {
     let pr = this;
@@ -162,16 +172,20 @@ class Point {
     }
     return false;
   }
+
   isNotEqualTo(q: Point, precision?: number) {
     return !this.isEqualTo(q, precision);
   }
+
   /* eslint-disable no-use-before-define */
   isOnLine(l: Line, precision?: number) {
     return l.hasPointOn(this, precision);
   }
+
   isOnUnboundLine(l: Line, precision?: number) {
     return l.hasPointAlong(this, precision);
   }
+
   /* eslint-enable no-use-before-define */
   console(text?: string) {
     Console(`${text || ''} + ${this.x}, ${this.y}`);
@@ -265,17 +279,17 @@ function point(x: number, y: number) {
 
 function pointinRect(q: Point, p1: Point, p2: Point, precision?: number) {
   if (precision === undefined || precision === null) {
-    if (q.x >= Math.min(p1.x, p2.x) &&
-       q.x <= Math.max(p1.x, p2.x) &&
-       q.y >= Math.min(p1.y, p2.y) &&
-       q.y <= Math.max(p1.y, p2.y)) {
+    if (q.x >= Math.min(p1.x, p2.x)
+      && q.x <= Math.max(p1.x, p2.x)
+      && q.y >= Math.min(p1.y, p2.y)
+      && q.y <= Math.max(p1.y, p2.y)) {
       return true;
     }
   } else if (
-    roundNum(q.x, precision) >= roundNum(Math.min(p1.x, p2.x), precision) &&
-    roundNum(q.x, precision) <= roundNum(Math.max(p1.x, p2.x), precision) &&
-    roundNum(q.y, precision) >= roundNum(Math.min(p1.y, p2.y), precision) &&
-    roundNum(q.y, precision) <= roundNum(Math.max(p1.y, p2.y), precision)) {
+    roundNum(q.x, precision) >= roundNum(Math.min(p1.x, p2.x), precision)
+    && roundNum(q.x, precision) <= roundNum(Math.max(p1.x, p2.x), precision)
+    && roundNum(q.y, precision) >= roundNum(Math.min(p1.y, p2.y), precision)
+    && roundNum(q.y, precision) <= roundNum(Math.max(p1.y, p2.y), precision)) {
     return true;
   }
   return false;
@@ -306,9 +320,81 @@ function normAngle(angle: number) {
   return newAngle;
 }
 
+function normAngleTo90(angle: number) {
+  let newAngle = normAngle(angle);
+  if (newAngle > Math.PI / 2 && newAngle < Math.PI) {
+    newAngle += Math.PI;
+  }
+  if (newAngle === Math.PI) {
+    newAngle = 0;
+  }
+  if (newAngle > Math.PI && newAngle < Math.PI * 3 / 2) {
+    newAngle -= Math.PI;
+  }
+  return newAngle;
+}
+
+export type TypeRotationDirection = 0 | 1 | 2 | -1;
+
+function getDeltaAngle(
+  startAngle: number,
+  targetAngle: number,
+  rotDirection: TypeRotationDirection = 0,
+) {
+  const start = normAngle(startAngle);
+  const target = normAngle(targetAngle);
+  let dir = rotDirection;
+
+  if (start === target) {
+    return 0;
+  }
+
+  if (dir === 2) {
+    if (start > target) {
+      dir = -1;
+    } else {
+      dir = 1;
+    }
+  }
+
+  if (rotDirection === 0) {
+    return minAngleDiff(target, start);
+  }
+
+  if (rotDirection === 1) {
+    if (start > target) {
+      return Math.PI * 2 - start + target;
+    }
+  }
+
+  if (rotDirection === -1) {
+    if (target > start) {
+      return -start - (Math.PI * 2 - target);
+    }
+  }
+
+  return target - start;
+
+  // if (rotDirection === 2) {
+  //   if (target > start) {
+  //     return target - start;
+  //   }
+  // }
+  // if (rotDirection === 2) {
+  //   if (start + rotDiff < 0) {
+  //     rotDiff = Math.PI * 2 + rotDiff;
+  //   } else if (start + rotDiff > Math.PI * 2) {
+  //     rotDiff = -(Math.PI * 2 - rotDiff);
+  //   }
+  // } else if (rotDiff * rotDirection < 0) {
+  //   rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+  // }
+  // return rotDiff;
+}
+
 function Line(p1: Point, p2: Point) {
-  this.p1 = p1.copy();
-  this.p2 = p2.copy();
+  this.p1 = p1._dup();
+  this.p2 = p2._dup();
   this.A = p2.y - p1.y;
   this.B = p1.x - p2.x;
   this.C = this.A * p1.x + this.B * p1.y;
@@ -348,6 +434,12 @@ Line.prototype.hasPointAlong = function linehasPointAlong(p: Point, precision?: 
     return true;
   }
   return false;
+};
+Line.prototype.distanceToPoint = function distanceToPoint(p: Point, precision?: number) {
+  return roundNum(
+    Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),
+    precision,
+  );
 };
 
 Line.prototype.hasPointOn = function linehasPointOn(p: Point, precision?: number) {
@@ -393,8 +485,7 @@ Line.prototype.isOnSameLineAs = function lineisOnSameLineAs(line2: Line, precisi
   const l2 = line2.round(precision);
   // If A and B are zero, then this is not a line
   if ((l1.A === 0 && l1.B === 0)
-    ||
-    (l2.A === 0 && l2.B === 0)) {
+    || (l2.A === 0 && l2.B === 0)) {
     return false;
   }
   // If A is 0, then it must be 0 on the other line. Similar with B
@@ -451,8 +542,7 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     i.y = (l1.A * l2.C - l2.A * l1.C) / det;
     if (
       pointinRect(i, l1.p1, l1.p2, precision)
-      &&
-      pointinRect(i, l2.p1, l2.p2, precision)
+      && pointinRect(i, l2.p1, l2.p2, precision)
     ) {
       return {
         onLine: true,
@@ -476,10 +566,10 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     //   - if not overlapping, the intersect point is halfway between the nearest ends
     // let l1 = this;
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       const line11 = new Line(l1.p1, l2.p1);
       const line12 = new Line(l1.p1, l2.p2);
@@ -508,15 +598,14 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     }
     if (
       (
-        l1.p1.isOnLine(l2, precision) &&
-        l1.p2.isOnLine(l2, precision) &&
-        (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
+        l1.p1.isOnLine(l2, precision)
+        && l1.p2.isOnLine(l2, precision)
+        && (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
       )
-      ||
-      (
-        l2.p1.isOnLine(l1, precision) &&
-        l2.p2.isOnLine(l1, precision) &&
-        (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
+      || (
+        l2.p1.isOnLine(l1, precision)
+        && l2.p2.isOnLine(l1, precision)
+        && (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
       )
     ) {
       const midLine = new Line(l1.midpoint(), l2.midpoint());
@@ -528,34 +617,34 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     }
     let midLine;
     if (
-      l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p1, l2.p1);
     }
     if (
-      l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      l2.p2.isOnLine(l1, precision)
+      l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p1, l2.p2);
     }
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      l1.p2.isOnLine(l2, precision) &&
-      l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && l1.p2.isOnLine(l2, precision)
+      && l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p2, l2.p1);
     }
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p2, l2.p2);
     }
@@ -588,9 +677,11 @@ class Rotation {
   constructor(angle: number) {
     this.r = angle;
   }
+
   matrix(): Array<number> {
     return m2.rotationMatrix(this.r);
   }
+
   sub(rotToSub: Rotation = new Rotation(0)): Rotation {
     return new Rotation(this.r - rotToSub.r);
   }
@@ -606,7 +697,8 @@ class Rotation {
   mul(rotToMul: Rotation = new Rotation(1)): Rotation {
     return new Rotation(this.r * rotToMul.r);
   }
-  copy() {
+
+  _dup() {
     return new Rotation(this.r);
   }
 }
@@ -626,6 +718,7 @@ class Translation extends Point {
       // this.y = ty;
     }
   }
+
   matrix(): Array<number> {
     return m2.translationMatrix(this.x, this.y);
   }
@@ -676,7 +769,7 @@ class Translation extends Point {
     );
   }
 
-  copy() {
+  _dup() {
     return new Translation(this.x, this.y);
   }
 }
@@ -696,9 +789,11 @@ class Scale extends Point {
       // this.y = sy;
     }
   }
+
   matrix(): Array<number> {
     return m2.scaleMatrix(this.x, this.y);
   }
+
   sub(
     scaleToSub: Scale | Point | number = new Scale(0, 0),
     y: number = 0,
@@ -751,7 +846,7 @@ class Scale extends Point {
     );
   }
 
-  copy() {
+  _dup() {
     return new Scale(this.x, this.y);
   }
 }
@@ -835,7 +930,8 @@ function translationPath(
 ) {
   if (pathType === 'linear') {
     return linearPath(start, delta, percent);
-  } else if (pathType === 'curved') {
+  }
+  if (pathType === 'curved') {
     return curvedPath(start, delta, percent, options);
   }
   return new Point(0, 0);
@@ -855,6 +951,10 @@ class TransformLimit {
     this.rotation = rotation;
     this.translation = translation;
   }
+
+  _dup() {
+    return new TransformLimit(this.scale, this.rotation, this.translation);
+  }
 }
 
 class Transform {
@@ -863,7 +963,8 @@ class Transform {
   index: number;
 
   constructor(order: Array<Translation | Rotation | Scale> = []) {
-    this.order = order.slice();
+    this.order = order.map(t => t._dup());
+    // this.order = order.slice();
     this.index = this.order.length;
     this.calcMatrix();
   }
@@ -988,7 +1089,7 @@ class Transform {
     // mag: number = 0.5,
     // offset: number = 0.5,
   ) {
-    const calcTransform = this.copy();
+    const calcTransform = this._dup();
     for (let i = 0; i < this.order.length; i += 1) {
       const stepStart = this.order[i];
       const stepDelta = delta.order[i];
@@ -1079,6 +1180,32 @@ class Transform {
     return true;
   }
 
+  isEqualTo(transformToCompare: Transform): boolean {
+    if (transformToCompare.order.length !== this.order.length) {
+      return false;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      if (this.order[i].constructor.name !==
+          transformToCompare.order[i].constructor.name) {
+        return false;
+      }
+      if (this.order[i] instanceof Translation || this.order[i] instanceof Scale) {
+        if (transformToCompare.order[i].x !== this.order[i].x) {
+          return false;
+        }
+        if (transformToCompare.order[i].y !== this.order[i].y) {
+          return false;
+        }
+      }
+      if (this.order[i] instanceof Rotation) {
+        if (transformToCompare.r !== this.order[i].r) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // Subtract a transform from the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
@@ -1149,26 +1276,26 @@ class Transform {
     maxTransform: Transform,
   ) {
     if (!this.isSimilarTo(minTransform) || !this.isSimilarTo(maxTransform)) {
-      return this.copy();
+      return this._dup();
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
       const min = minTransform.order[i];
       const max = maxTransform.order[i];
-      if (t instanceof Translation &&
-          min instanceof Translation &&
-          max instanceof Translation) {
+      if (t instanceof Translation
+          && min instanceof Translation
+          && max instanceof Translation) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
         order.push(new Translation(x, y));
-      } else if (t instanceof Rotation &&
-                 min instanceof Rotation &&
-                 max instanceof Rotation) {
+      } else if (t instanceof Rotation
+                 && min instanceof Rotation
+                 && max instanceof Rotation) {
         order.push(new Rotation(clipValue(t.r, min.r, max.r)));
-      } else if (t instanceof Scale &&
-                 min instanceof Scale &&
-                 max instanceof Scale) {
+      } else if (t instanceof Scale
+                 && min instanceof Scale
+                 && max instanceof Scale) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
         order.push(new Scale(x, y));
@@ -1268,8 +1395,11 @@ class Transform {
     }
     return true;
   }
-  copy(): Transform {
-    return new Transform(this.order);
+
+  _dup(): Transform {
+    const t = new Transform(this.order);
+    t.index = this.index;
+    return t;
   }
 
   decelerate(
@@ -1341,7 +1471,7 @@ class Transform {
     //   z = this.constant(0);
     // }
     // if (!this.isSimilarTo(maxTransform)) {
-    //   m = v.copy();
+    //   m = v._dup();
     // }
     return v.clipMag(zeroThreshold, maxTransform);
   }
@@ -1390,6 +1520,30 @@ function comparePoints(
   return { min, max };
 }
 
+function polarToRect(mag: number, angle: number) {
+  return new Point(
+    mag * Math.cos(angle),
+    mag * Math.sin(angle),
+  );
+}
+
+function rectToPolar(x: number | Point, y: number = 0) {
+  let rect;
+  if (typeof x === 'number') {
+    rect = new Point(x, y);
+  } else {
+    rect = x;
+  }
+  const mag = rect.distance();
+  let angle = Math.atan2(rect.y, rect.x);
+  if (angle < 0) {
+    angle += Math.PI * 2;
+  }
+  return {
+    mag,
+    angle,
+  };
+}
 // $FlowFixMe
 function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   let firstPoint = true;
@@ -1435,4 +1589,8 @@ export {
   curvedPath,
   quadraticBezier,
   translationPath,
+  polarToRect,
+  rectToPolar,
+  getDeltaAngle,
+  normAngleTo90,
 };
