@@ -97,16 +97,5 @@ export default function getLessonIndex() {
       'parallel_lines',
     ],
   ));
-  lessonIndex.push(new LessonDescription(
-    'Sine',
-    '/Lessons/Math/Sine',
-    'sine',
-    [
-      '1',
-    ],
-    [
-      'adjacent_angles',
-    ],
-  ));
   return lessonIndex;
 }
