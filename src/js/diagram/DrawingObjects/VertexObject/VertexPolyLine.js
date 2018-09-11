@@ -3,7 +3,7 @@
 import { Point } from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from './VertexObject';
-import polyLineTriangles3 from './PolyLineTriangles2';
+import polyLineTriangles3 from './PolyLineTriangles3';
 
 
 class VertexPolyLine extends VertexObject {

@@ -15,26 +15,26 @@ import {
 //   * coords: an array of points that will define the center of the line
 export default function polyLineTriangles3(coords: Array<Point>, close: boolean, width: number) {
   const points = [];
-  // const innerBorder = [];
-  // const outerBorder = [];
-  // const line1Pairs = [];
-  // const line2Pairs = [];
-  // const midLinePairs = [];
   const border1 = [];
   const border2 = [];
   // const halfWidth = width / 2;
 
-  let p;
-  let q;
-  let r;
-  if (close) {
-    coords.push(coords[0]);
-  }
+  // let p;
+  // let q;
+  // let r;
+  // if (close) {
+  //   coords.push(coords[0]);
+  // }
 
 
   // got through the points that define the outside border of the line, and generate
   // offset lines on one side of them (named Line1 and Line2).
-  const findCornerPoints = (pre: Point | null, mid: Point, post: Point | null) => {
+  function findCornerPoints(
+    pre: Point | null,
+    mid: Point,
+    post: Point | null,
+    show: boolean = true,
+  ) {
     // const angle = threePointAngle(p, q, r);
     let innerAngle = 0;
     let innerAngleDirection = 0;
@@ -62,27 +62,30 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
 
     let corner1;
     let corner2;
-    if (innerAngleDirection > 0) {
+    // if (innerAngleDirection > 0) {
       corner1 = polarToRect(width / 2, innerAngle).add(mid);
       corner2 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
-    } else {
-      corner2 = polarToRect(width / 2, innerAngle).add(mid);
-      corner1 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
+    // } else {
+    //   corner2 = polarToRect(width / 2, innerAngle).add(mid);
+    //   corner1 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
+    // }
+    if(show) {
+      console.log("mid", mid, "c1", corner1, "c2", corner2)
     }
     border1.push(corner1);
     border2.push(corner2);
   };
 
   if (close) {
-    findCornerPoints(coords[coords.length - 1], coords[0], coords[1]);
+    findCornerPoints(coords[coords.length - 1], coords[0], coords[1], true);
   } else {
     findCornerPoints(null, coords[0], coords[1]);
   }
 
   for (let i = 1; i < coords.length - 1; i += 1) {
-    p = coords[i - 1];    // point 1
-    q = coords[i];        // point 2
-    r = coords[i + 1];
+    const p = coords[i - 1];    // point 1
+    const q = coords[i];        // point 2
+    const r = coords[i + 1];
     findCornerPoints(p, q, r);
   }
 
