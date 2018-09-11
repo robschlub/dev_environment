@@ -1581,6 +1581,7 @@ export {
   Point,
   line,
   Line,
+  distance,
   minAngleDiff,
   deg,
   normAngle,

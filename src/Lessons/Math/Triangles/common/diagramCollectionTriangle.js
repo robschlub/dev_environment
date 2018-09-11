@@ -25,6 +25,7 @@ export default class TriangleCollection extends CommonDiagramCollection {
     point.isMovable = true;
     point.move.limitToDiagram = true;
     point.setTransformCallback = this.updatePoints.bind(this);
+    point.move.canBeMovedAfterLoosingTouch = true;
     return point;
   }
 
