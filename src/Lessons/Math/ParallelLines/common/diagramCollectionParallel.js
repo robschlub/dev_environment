@@ -116,7 +116,11 @@ export default class ParallelCollection extends CommonDiagramCollection {
     const velocity = this._line1.transform.constant(0);
     velocity.updateRotation(2 * Math.PI / 6);
     if (r1 != null && r2 != null) {
-      this._line1.animateRotationTo(r2, 0, velocity, this.pulseParallel.bind(this));
+      if (checkElementsForParallel(this._line1, this._line2, false, this.layout.line.width * 1.1)) {
+        this.pulseParallel();
+      } else {
+        this._line1.animateRotationTo(r2, 0, velocity, this.pulseParallel.bind(this));
+      }
     }
     this.diagram.animateNextFrame();
   }
