@@ -31,7 +31,7 @@ export default class TriangleCollection extends CommonDiagramCollection {
 
   makeLine() {
     const p = this.layout.pointPositions;
-    const line = this.diagram.shapes.polyLine([p.p1, p.p2, p.p3], true, this.layout.lineWidth, this.layout.colors.line);
+    const line = this.diagram.shapes.polyLine([p.p1, p.p2, p.p3, p.p4, p.p5], true, this.layout.lineWidth, this.layout.colors.line);
     return line;
   }
 
@@ -39,10 +39,10 @@ export default class TriangleCollection extends CommonDiagramCollection {
     const p1 = this._p1.transform.t();
     const p2 = this._p2.transform.t();
     const p3 = this._p3.transform.t();
-    // const p4 = this._p4.transform.t();
-    // const p5 = this._p5.transform.t();
+    const p4 = this._p4.transform.t();
+    const p5 = this._p5.transform.t();
     if (p1 != null && p2 != null && p3 != null) {
-      this._line.vertices.change([p1, p2, p3]);
+      this._line.vertices.change([p1, p2, p3, p4, p5]);
     }
   }
 
@@ -56,8 +56,8 @@ export default class TriangleCollection extends CommonDiagramCollection {
     this.add('p1', this.makePoint('p1'));
     this.add('p2', this.makePoint('p2'));
     this.add('p3', this.makePoint('p3'));
-    // this.add('p4', this.makePoint('p4'));
-    // this.add('p5', this.makePoint('p5'));
+    this.add('p4', this.makePoint('p4'));
+    this.add('p5', this.makePoint('p5'));
     this.add('line', this.makeLine());
     // this.add('l23', this.makeLine());
     // this.add('l13', this.makeLine());

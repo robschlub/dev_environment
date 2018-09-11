@@ -13,7 +13,7 @@ function simpleIntersect(p1: Point, p2: Point, q1: Point, q2: Point) {
 // Generate a thick line assuming gl.TRIANGLES where corners are sharp.
 // Input:
 //   * coords: an array of points that will define the center of the line
-export default function polyLineTriangles2(coords: Array<Point>, close: boolean, width: number) {
+export default function polyLineTriangles3(coords: Array<Point>, close: boolean, width: number) {
   const points = [];
   const innerBorder = [];
   const outerBorder = [];
@@ -24,6 +24,7 @@ export default function polyLineTriangles2(coords: Array<Point>, close: boolean,
 
   let p;
   let q;
+  let r;
   if (close) {
     coords.push(coords[0]);
   }
@@ -31,9 +32,19 @@ export default function polyLineTriangles2(coords: Array<Point>, close: boolean,
 
   // got through the points that define the outside border of the line, and generate
   // offset lines on one side of them (named Line1 and Line2).
-  for (let i = 1; i < coords.length; i += 1) {
+  for (let i = 1; i < coords.length - 1; i += 1) {
     p = coords[i - 1];    // point 1
     q = coords[i];        // point 2
+    r = corrds[i + 1];
+    const angle = threePointAngle(p, q, r);
+    const PQ = q.sub(p).toPolar();
+    const QR = r.sub(q).toPolar();
+    const innerAngle = QR.angle - PQ.angle
+
+
+    const QP = p.sub(q).toPolar();
+
+    const angleInside = QP.angle + angle / 2;
     const angle = Math.atan2(q.y - p.y, q.x - p.x);
     const offset1 = new Point(
       width * Math.cos(angle + Math.PI / 2),

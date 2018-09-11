@@ -3,7 +3,7 @@
 import { Point } from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from './VertexObject';
-import polyLineTriangles2 from './PolyLineTriangles2';
+import polyLineTriangles3 from './PolyLineTriangles2';
 
 
 class VertexPolyLine extends VertexObject {
@@ -29,7 +29,7 @@ class VertexPolyLine extends VertexObject {
   }
 
   setupPoints(coords: Array<Point>) {
-    const lineTriangles = polyLineTriangles2(coords, this.close, this.width);
+    const lineTriangles = polyLineTriangles3(coords, this.close, this.width);
     this.points = lineTriangles.points;
     this.border[0] = lineTriangles.border;
   }

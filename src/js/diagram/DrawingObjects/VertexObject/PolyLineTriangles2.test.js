@@ -131,6 +131,7 @@ describe('PolygonFilled', () => {
     //   new Point(0, 0.05),
     // ];
     console.log(corner.border);
+    // console.log(corner.points);
     expect(true).toBe(false);
     // expect(round(corner.points)).toEqual(round(points));
     // expect(corner.border.map(x => x.round())).toEqual(border.map(x => x.round()));
