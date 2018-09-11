@@ -1569,6 +1569,13 @@ function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   );
 }
 
+function threePointAngle(p2: Point, p1: Point, p3: Point) {
+  const p12 = distance(p1, p2);
+  const p13 = distance(p1, p3);
+  const p23 = distance(p2, p3);
+  return Math.acos((p12 ** 2 + p13 ** 2 - p23 ** 2) / (2 * p12 * p13));
+}
+
 export {
   point,
   Point,
@@ -1593,4 +1600,5 @@ export {
   rectToPolar,
   getDeltaAngle,
   normAngleTo90,
+  threePointAngle,
 };

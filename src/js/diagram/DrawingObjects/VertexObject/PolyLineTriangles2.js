@@ -1,9 +1,10 @@
+// @flow
 import {
-  Point, Line,
+  Point, Line, threePointAngle,
 } from '../../tools/g2';
 
 
-function simpleIntersect(p1, p2, q1, q2) {
+function simpleIntersect(p1: Point, p2: Point, q1: Point, q2: Point) {
   const lineP = new Line(p1, p2);
   const lineQ = new Line(q1, q2);
   return lineP.intersectsWith(lineQ).intersect;
@@ -12,7 +13,7 @@ function simpleIntersect(p1, p2, q1, q2) {
 // Generate a thick line assuming gl.TRIANGLES where corners are sharp.
 // Input:
 //   * coords: an array of points that will define the center of the line
-export default function polyLineTriangles2(coords, close, width) {
+export default function polyLineTriangles2(coords: Array<Point>, close: boolean, width: number) {
   const points = [];
   const innerBorder = [];
   const outerBorder = [];
@@ -38,12 +39,13 @@ export default function polyLineTriangles2(coords, close, width) {
       width * Math.cos(angle + Math.PI / 2),
       width * Math.sin(angle + Math.PI / 2),
     );
-    // const offset2 = new Point(
-    //   width * Math.cos(angle - Math.PI / 2),
-    //   width * Math.sin(angle - Math.PI / 2),
-    // );
-    line1Pairs.push([p, q]);    // Offset line 1
-    line2Pairs.push([p.add(offset1), q.add(offset1)]);    // Offset line 2
+    const offset2 = new Point(
+      width * Math.cos(angle - Math.PI / 2),
+      width * Math.sin(angle - Math.PI / 2),
+    );
+    line1Pairs.push([p.add(offset1), q.add(offset1)]);    // Offset line 1
+    line2Pairs.push([p.add(offset2), q.add(offset2)]);    // Offset line 2
+    midLinePairs.push([p, q]);    // Offset line 1
   }
 
   // If the line closes on itself, then find the intersection point of
@@ -118,6 +120,7 @@ export default function polyLineTriangles2(coords, close, width) {
     points.push(p.y);
   }
 
+
   // Calculate the last end points
   let endp;
   let endq;
@@ -154,6 +157,58 @@ export default function polyLineTriangles2(coords, close, width) {
     coords.pop();
   }
 
+  function makeOuter(
+    midPre: Point,
+    mid: Point,
+    midPost: Point,
+    midIndex: number,
+  ) {
+    const i = midIndex;
+    const n = i * 12;
+    const midAngle = threePointAngle(midPre, mid, midPost);
+    const innerAngle = threePointAngle(midPre, innerBorder[i], midPost);
+    const outerAngle = threePointAngle(midPre, outerBorder[i], midPost);
+    const replace = (index, replacementPoint) => {
+      let normIndex = index;
+      if (index < 0) {
+        normIndex += points.length;
+      }
+      if (index > points.length - 1) {
+        normIndex -= points.length;
+      }
+      points[normIndex] = replacementPoint.x;
+      points[normIndex + 1] = replacementPoint.y;
+    };
+    if (innerAngle < midAngle) {
+      replace(n - 1 * 2, mid);
+      replace(n, mid);
+      replace(n + 3 * 2, mid);
+      innerBorder[i] = mid;
+    } else if (outerAngle < midAngle) {
+      replace(n - 4 * 2, mid);
+      replace(n - 2 * 2, mid);
+      replace(n + 1 * 2, mid);
+      outerBorder[i] = mid;
+    }
+  }
+  for (let i = 1; i < coords.length - 1; i += 1) {
+    makeOuter(coords[i - 1], coords[i], coords[i + 1], i);
+  }
+
+  if (close) {
+    makeOuter(
+      coords[line1Pairs.length - 2],
+      coords[line1Pairs.length - 1],
+      coords[0],
+      line1Pairs.length - 1,
+    );
+    makeOuter(
+      coords[line1Pairs.length - 1],
+      coords[0],
+      coords[1],
+      0,
+    );
+  }
   // Form the border array
   let border = [];
 
@@ -174,6 +229,8 @@ export default function polyLineTriangles2(coords, close, width) {
       border.push(innerBorder[i]);
     }
   }
+
+
   return {
     points,
     border,
