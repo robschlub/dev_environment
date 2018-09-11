@@ -527,6 +527,7 @@ class Content extends LessonContent {
         Moving: highlight(colors.line),
       },
       setSteadyState: () => {
+        commonCorresponding.setSteadyState();
         threeLines.correspondingToggleAngles(true);
       },
     });
