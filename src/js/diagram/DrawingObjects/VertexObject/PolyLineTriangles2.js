@@ -179,30 +179,58 @@ export default function polyLineTriangles2(coords: Array<Point>, close: boolean,
       points[normIndex] = replacementPoint.x;
       points[normIndex + 1] = replacementPoint.y;
     };
-    if (innerAngle < midAngle) {
-      replace(n - 1 * 2, mid);
-      replace(n, mid);
-      replace(n + 3 * 2, mid);
-      innerBorder[i] = mid;
-      if (midAngle < 0.1) {
-        if (distance(outerBorder[i], mid) > distance(midPre, mid)) {
-          replace(n - 4 * 2, midPre);
-          replace(n - 2 * 2, midPre);
-          replace(n + 1 * 2, midPre);
-        }
-      }
-    } else if (outerAngle < midAngle) {
-      replace(n - 4 * 2, mid);
-      replace(n - 2 * 2, mid);
-      replace(n + 1 * 2, mid);
-      outerBorder[i] = mid;
-      if (midAngle < 0.1) {
-        if (distance(innerBorder[i], mid) > distance(midPre, mid)) {
-          replace(n - 1 * 2, midPre);
-          replace(n, midPre);
-          replace(n + 3 * 2, midPre);
-        }
-      }
+
+    const minDistance = Math.min(distance(midPre, mid), distance(midPost, mid));
+    let newInnerBorder;
+    let newOuterBorder;
+    if (innerAngle < midAngle || innerAngle === midAngle) {
+      newInnerBorder = mid;
+    }
+    if (outerAngle < midAngle || outerAngle === midAngle) {
+      newOuterBorder = mid;
+    }
+    if (newOuterBorder) {
+      replace(n - 4 * 2, newOuterBorder);
+      replace(n - 2 * 2, newOuterBorder);
+      replace(n + 1 * 2, newOuterBorder);
+      outerBorder[i] = newOuterBorder;
+    }
+
+    if (newInnerBorder) {
+      replace(n - 1 * 2, newInnerBorder);
+      replace(n, newInnerBorder);
+      replace(n + 3 * 2, newInnerBorder);
+      innerBorder[i] = newInnerBorder;
+    }
+
+    let midToBorderVector = innerBorder[i].sub(mid).toPolar();
+    if (midToBorderVector.mag > minDistance) {
+      newInnerBorder = mid.add(new Point(
+        minDistance * Math.cos(midToBorderVector.angle),
+        minDistance * Math.sin(midToBorderVector.angle),
+      ));
+    }
+
+    midToBorderVector = outerBorder[i].sub(mid).toPolar();
+    if (midToBorderVector.mag > minDistance) {
+      newOuterBorder = mid.add(new Point(
+        minDistance * Math.cos(midToBorderVector.angle),
+        minDistance * Math.sin(midToBorderVector.angle),
+      ));
+    }
+
+    if (newOuterBorder) {
+      replace(n - 4 * 2, newOuterBorder);
+      replace(n - 2 * 2, newOuterBorder);
+      replace(n + 1 * 2, newOuterBorder);
+      outerBorder[i] = newOuterBorder;
+    }
+
+    if (newInnerBorder) {
+      replace(n - 1 * 2, newInnerBorder);
+      replace(n, newInnerBorder);
+      replace(n + 3 * 2, newInnerBorder);
+      innerBorder[i] = newInnerBorder;
     }
   }
   for (let i = 1; i < coords.length - 1; i += 1) {
