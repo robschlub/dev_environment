@@ -9,10 +9,16 @@ describe('PolygonFilled', () => {
   let square;
   let square2;
   beforeEach(() => {
+    // const cornerLine = [
+    //   new Point(0, 0),
+    //   new Point(1, 0),
+    //   new Point(0, 1),
+    // ];
     const cornerLine = [
-      new Point(0, 0),
-      new Point(1, 0),
       new Point(0, 1),
+      new Point(-1, -1),
+      new Point(0, 0),
+      new Point(1, -1),
     ];
     const squareLine = [
       new Point(0, 0),
@@ -131,6 +137,7 @@ describe('PolygonFilled', () => {
     //   new Point(0, 0.05),
     // ];
     console.log(corner.border.map(x =>x.round()));
+    // console.log(corner.points.map(p => round(p)));
     // console.log(corner.points);
     expect(true).toBe(false);
     // expect(round(corner.points)).toEqual(round(points));

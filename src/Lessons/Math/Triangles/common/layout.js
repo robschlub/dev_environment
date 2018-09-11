@@ -19,9 +19,9 @@ export default function commonLessonLayout() {
   layout.pointRadius = 0.2;
   layout.pointPositions = {
     p1: new Point(0, 1),
-    p2: new Point(-0.5, -1),
+    p2: new Point(-1, -1),
     p3: new Point(0, 0),
-    p4: new Point(0.5, -1),
+    p4: new Point(1, -1),
     // p5: new Point(1.4, 0),
   };
   layout.pointSides = 50;
