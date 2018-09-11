@@ -34,12 +34,12 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     postAngle: ?number;
     preLength: ?number;
     postLength: ?number;
-    preBorderAngle: ?number;
-    postBorderAngle: ?number;
-    preInnerBorderLine: ?Line;
-    postInnerBorderLine: ?Line;
-    preVertexBorderLine: ?Line;
-    postVertexBorderLine: ?Line;
+    // preBorderAngle: ?number;
+    // postBorderAngle: ?number;
+    // preInnerBorderLine: ?Line;
+    // postInnerBorderLine: ?Line;
+    // preVertexBorderLine: ?Line;
+    // postVertexBorderLine: ?Line;
 
     constructor(point) {
       this.point = point;
@@ -50,12 +50,12 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       this.postAngle = null;
       this.preLength = null;
       this.postLength = null;
-      this.preBorderAngle = null;
-      this.postBorderAngle = null;
-      this.preInnerBorderLine = null;
-      this.postInnerBorderLine = null;
-      this.preVertexBorderLine = null;
-      this.postVertexBorderLine = null;
+      // this.preBorderAngle = null;
+      // this.postBorderAngle = null;
+      // this.preInnerBorderLine = null;
+      // this.postInnerBorderLine = null;
+      // this.preVertexBorderLine = null;
+      // this.postVertexBorderLine = null;
     }
   }
 
@@ -82,11 +82,11 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     vertex.preLength = midPre.mag;
     vertex.postLength = midPost.mag;
     vertices.push(vertex);
-    angleDir.push(direction);
-    preLineAngle.push(midPre.angle);
-    postLineAngle.push(midPost.angle);
-    preLineLength.push(midPre.mag);
-    postLineLength.push(midPost.mag);
+    // angleDir.push(direction);
+    // preLineAngle.push(midPre.angle);
+    // postLineAngle.push(midPost.angle);
+    // preLineLength.push(midPre.mag);
+    // postLineLength.push(midPost.mag);
   }
   if (close) {
     calcAngleDir(coords[coords.length - 1], coords[0], coords[1]);
@@ -213,7 +213,7 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       }
       v.preBorderAngle = preBorderAngle;
       v.postBorderAngle = postBorderAngle;
-      console.log("border angles", preBorderAngle * 180 / Math.PI, postBorderAngle * 180 / Math.PI);
+      // console.log("border angles", preBorderAngle * 180 / Math.PI, postBorderAngle * 180 / Math.PI);
 
       v.preVertextBorderLine = new Line(vertex, 1, preBorderAngle);
       v.postVertextBorderLine = new Line(vertex, 1, postBorderAngle);
@@ -231,13 +231,16 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       const pointOnPostInnerLine
         = vertex.add(polarToRect(width, postBorderAngle - angleDelta))
       v.postInnerBorderLine = new Line(pointOnPostInnerLine, 1, postBorderAngle);
-      console.log("Inner Point on line", pointOnPreInnerLine, 
-        pointOnPostInnerLine)
-      console.log(v.preInnerBorderLine)
+      // console.log("Inner Point on line", pointOnPreInnerLine, 
+      //   pointOnPostInnerLine)
+      // console.log(v.preInnerBorderLine)
       const intersection = v.postInnerBorderLine.intersectsWith(v.preInnerBorderLine);
-      const innerCoord = intersection.intersect;
+      const intersectVector = intersection.intersect.sub(vertex).toPolar();
+      const intersectMag = Math.min(intersectVector.mag, v.preLength, v.postLength)
+      // const innerCoord = intersection.intersect;
+      const innerCoord = vertex.add(polarToRect(intersectMag, intersectVector.angle));
 
-      console.log("coords", vertex, innerCoord)
+      // console.log("coords", vertex, innerCoord)
 
       if (dir === -1) {
         border1.push(vertex);
