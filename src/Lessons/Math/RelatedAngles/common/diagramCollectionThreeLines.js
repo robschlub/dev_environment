@@ -447,7 +447,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     if (typeof singleLabels === 'boolean' && singleLabels === true) {
       color2 = this.layout.colors.angleB;
     }
-    let labels = [['a', 'b', 'c', 'd'], ['c', 'd', 'a', 'b']];
+    let labels = [['a', 'b', 'c', 'd'], ['a', 'b', 'c', 'd']];
     if (typeof singleLabels === 'boolean' && singleLabels === true) {
       labels = [['a', 'b', 'c', 'd'], ['g', 'h', 'e', 'f']];
     }
