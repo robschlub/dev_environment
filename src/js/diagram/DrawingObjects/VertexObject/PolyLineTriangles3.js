@@ -4,11 +4,11 @@ import {
 } from '../../tools/g2';
 
 
-// function simpleIntersect(p1: Point, p2: Point, q1: Point, q2: Point) {
-//   const lineP = new Line(p1, p2);
-//   const lineQ = new Line(q1, q2);
-//   return lineP.intersectsWith(lineQ).intersect;
-// }
+function simpleIntersect(p1: Point, p2: Point, q1: Point, q2: Point) {
+  const lineP = new Line(p1, p2);
+  const lineQ = new Line(q1, q2);
+  return lineP.intersectsWith(lineQ).intersect;
+}
 
 // Generate a thick line assuming gl.TRIANGLES where corners are sharp.
 // Input:
@@ -17,67 +17,99 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
   const points = [];
   const border1 = [];
   const border2 = [];
-  // const halfWidth = width / 2;
-
-  // let p;
-  // let q;
-  // let r;
-  // if (close) {
-  //   coords.push(coords[0]);
-  // }
-
 
   // got through the points that define the outside border of the line, and generate
   // offset lines on one side of them (named Line1 and Line2).
-  function findCornerPoints(
+  function findCornerPointsConstantCornerWidth(
     pre: Point | null,
     mid: Point,
     post: Point | null,
-    show: boolean = true,
   ) {
-    // const angle = threePointAngle(p, q, r);
     let innerAngle = 0;
-    let innerAngleDirection = 0;
     if (pre != null && post != null) {
       const midPost = post.sub(mid).toPolar();
       const midPre = pre.sub(mid).toPolar();
       const midPostUnit = polarToRect(1, midPost.angle);
       const midPreUnit = polarToRect(1, midPre.angle);
       innerAngle = midPostUnit.add(midPreUnit).toPolar().angle || 0.00001;
-      if (innerAngle !== 0) {
-        innerAngleDirection = innerAngle / Math.abs(innerAngle);
-      } else {
-        innerAngleDirection = 1;
-      }
     } else if (pre == null && post != null) {
       const midPost = post.sub(mid).toPolar();
       innerAngle = midPost.angle - Math.PI / 2;
-      innerAngleDirection = 1;
     } else if (post == null && pre != null) {
       const midPre = pre.sub(mid).toPolar();
       innerAngle = midPre.angle - Math.PI / 2;
-      innerAngleDirection = 1;
     }
 
-
-    let corner1;
-    let corner2;
-    // if (innerAngleDirection > 0) {
-      corner1 = polarToRect(width / 2, innerAngle).add(mid);
-      corner2 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
-    // } else {
-    //   corner2 = polarToRect(width / 2, innerAngle).add(mid);
-    //   corner1 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
-    // }
-    if(show) {
-      console.log("mid", mid, "c1", corner1, "c2", corner2)
-    }
+    const corner1 = polarToRect(width / 2, innerAngle).add(mid);
+    const corner2 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
     border1.push(corner1);
     border2.push(corner2);
-  };
+  }
+
+  function findCornerPointsConstantBorderWidth(
+    pre: Point | null,
+    mid: Point,
+    post: Point | null,
+  ) {
+    let innerAngle = 0;
+    let cornerR = width / 2;
+    if (pre != null && post != null) {
+      const midPost = post.sub(mid).toPolar();
+      const midPre = pre.sub(mid).toPolar();
+      const midPostUnit = polarToRect(1, midPost.angle);
+      const midPreUnit = polarToRect(1, midPre.angle);
+      innerAngle = midPostUnit.add(midPreUnit).toPolar().angle || 0.00001;
+      cornerR = Math.abs(width / 2 / Math.sin(innerAngle - midPost.angle));
+    } else if (pre == null && post != null) {
+      const midPost = post.sub(mid).toPolar();
+      innerAngle = midPost.angle - Math.PI / 2;
+      cornerR = Math.abs(width / 2 / Math.sin(innerAngle - midPost.angle));
+    } else if (post == null && pre != null) {
+      const midPre = pre.sub(mid).toPolar();
+      innerAngle = midPre.angle - Math.PI / 2;
+      cornerR = Math.abs(width / 2 / Math.sin(innerAngle - midPre.angle));
+    }
+    const corner1 = polarToRect(cornerR, innerAngle).add(mid);
+    const corner2 = polarToRect(cornerR, innerAngle + Math.PI).add(mid);
+    border1.push(corner1);
+    border2.push(corner2);
+  }
+
+  function findCornerPoints(
+    pre: Point | null,
+    mid: Point,
+    post: Point | null,
+  ) {
+    let innerAngle = 0;
+    let cornerR = width / 2;
+    if (pre != null && post != null) {
+      const midPost = post.sub(mid).toPolar();
+      const midPre = pre.sub(mid).toPolar();
+      const midPostUnit = polarToRect(1, midPost.angle);
+      const midPreUnit = polarToRect(1, midPre.angle);
+      innerAngle = midPostUnit.add(midPreUnit).toPolar().angle || 0.00001;
+      cornerR = Math.abs(width / Math.sin(innerAngle - midPost.angle));
+      cornerR = Math.min(cornerR, midPost.mag, midPre.mag);
+    } else if (pre == null && post != null) {
+      const midPost = post.sub(mid).toPolar();
+      innerAngle = midPost.angle - Math.PI / 2;
+      cornerR = Math.abs(width / Math.sin(innerAngle - midPost.angle));
+      cornerR = Math.min(cornerR, midPost.mag);
+    } else if (post == null && pre != null) {
+      const midPre = pre.sub(mid).toPolar();
+      innerAngle = midPre.angle - Math.PI / 2;
+      cornerR = Math.abs(width / Math.sin(innerAngle - midPre.angle));
+      cornerR = Math.min(cornerR, midPre.mag);
+    }
+    const corner1 = polarToRect(cornerR, innerAngle).add(mid);
+    const corner2 = polarToRect(0, innerAngle + Math.PI).add(mid);
+    border1.push(corner1);
+    border2.push(corner2);
+  }
+
 
   if (close) {
-    findCornerPoints(coords[coords.length - 1], coords[0], coords[1], true);
+    findCornerPoints(coords[coords.length - 1], coords[0], coords[1]);
   } else {
     findCornerPoints(null, coords[0], coords[1]);
   }
