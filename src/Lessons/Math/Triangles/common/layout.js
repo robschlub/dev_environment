@@ -18,10 +18,10 @@ export default function commonLessonLayout() {
   layout.lineWidth = 0.1;
   layout.pointRadius = 0.2;
   layout.pointPositions = {
-    p1: new Point(2.5, 0),
-    p2: new Point(-1, 0.2),
-    p3: new Point(-1, -0.2),
-    p4: new Point(0.5, -1.3),
+    p1: new Point(0, 1),
+    p2: new Point(-0.5, -1),
+    p3: new Point(0, 0),
+    p4: new Point(0.5, -1),
     // p5: new Point(1.4, 0),
   };
   layout.pointSides = 50;

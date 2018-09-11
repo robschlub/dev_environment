@@ -108,6 +108,9 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       cornerR = Math.abs(width / Math.sin(innerAngle - midPost.angle));
       cornerR = Math.min(cornerR, midPost.mag, midPre.mag);
       direction = Math.sin(midPost.angle - midPre.angle);
+      // if (direction < 0) {
+        
+      // }
     } else if (pre == null && post != null) {
       const midPost = post.sub(mid).toPolar();
       innerAngle = midPost.angle - Math.PI / 2;
