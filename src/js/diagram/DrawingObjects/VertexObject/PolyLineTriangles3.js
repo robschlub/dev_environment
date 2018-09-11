@@ -20,18 +20,20 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
 
   // got through the points that define the outside border of the line, and generate
   // offset lines on one side of them (named Line1 and Line2).
-  function findCornerPointsConstantCornerWidth(
+  function findCornerPoints(
     pre: Point | null,
     mid: Point,
     post: Point | null,
   ) {
     let innerAngle = 0;
+    let direction = 0;
     if (pre != null && post != null) {
       const midPost = post.sub(mid).toPolar();
       const midPre = pre.sub(mid).toPolar();
       const midPostUnit = polarToRect(1, midPost.angle);
       const midPreUnit = polarToRect(1, midPre.angle);
       innerAngle = midPostUnit.add(midPreUnit).toPolar().angle || 0.00001;
+      )
     } else if (pre == null && post != null) {
       const midPost = post.sub(mid).toPolar();
       innerAngle = midPost.angle - Math.PI / 2;
@@ -40,8 +42,12 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       innerAngle = midPre.angle - Math.PI / 2;
     }
 
-    const corner1 = polarToRect(width / 2, innerAngle).add(mid);
-    const corner2 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
+    let corner1 = polarToRect(width / 2, innerAngle).add(mid);
+    let corner2 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
+    if (Math.cos(innerAngle + ) > 0) {
+      corner2 = polarToRect(width / 2, innerAngle).add(mid);
+      corner1 = polarToRect(width / 2, innerAngle + Math.PI).add(mid);
+    }
     border1.push(corner1);
     border2.push(corner2);
   }
@@ -75,7 +81,7 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     border2.push(corner2);
   }
 
-  function findCornerPoints(
+  function findCornerPoints1(
     pre: Point | null,
     mid: Point,
     post: Point | null,
