@@ -392,12 +392,19 @@ function getDeltaAngle(
   // return rotDiff;
 }
 
-function Line(p1: Point, p2: Point) {
+function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
   this.p1 = p1._dup();
-  this.p2 = p2._dup();
-  this.A = p2.y - p1.y;
-  this.B = p1.x - p2.x;
-  this.C = this.A * p1.x + this.B * p1.y;
+  if (p2OrMag instanceof Point) {
+    this.p2 = p2OrMag._dup();
+  } else {
+    this.p2 = this.p1.add(
+      p2OrMag * Math.cos(angle),
+      p2OrMag * Math.sin(angle),
+    );
+  }
+  this.A = this.p2.y - this.p1.y;
+  this.B = this.p1.x - this.p2.x;
+  this.C = this.A * this.p1.x + this.B * this.p1.y;
 }
 Line.prototype.round = function lineround(precision?: number = 8) {
   const lineRounded = new Line(this.p1, this.p2);
