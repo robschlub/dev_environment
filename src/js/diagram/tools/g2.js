@@ -396,16 +396,23 @@ function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
   this.p1 = p1._dup();
   if (p2OrMag instanceof Point) {
     this.p2 = p2OrMag._dup();
+    this.ang = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
   } else {
     this.p2 = this.p1.add(
       p2OrMag * Math.cos(angle),
       p2OrMag * Math.sin(angle),
     );
+    this.ang = angle;
   }
   this.A = this.p2.y - this.p1.y;
   this.B = this.p1.x - this.p2.x;
   this.C = this.A * this.p1.x + this.B * this.p1.y;
 }
+
+Line.prototype.angle = function angle() {
+  return this.ang;
+};
+
 Line.prototype.round = function lineround(precision?: number = 8) {
   const lineRounded = new Line(this.p1, this.p2);
   lineRounded.A = roundNum(lineRounded.A, precision);

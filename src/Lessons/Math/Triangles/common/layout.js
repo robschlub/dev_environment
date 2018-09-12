@@ -83,6 +83,20 @@ export default function commonLessonLayout() {
       lineWidth: 0.015,
       arrowHeight: 0.1,
       arrowWidth: 0.1,
+      locations: [
+        {
+          triIndex: [0, 1],
+          offset: 0.1,
+        },
+        {
+          triIndex: [1, 2],
+          offset: 0.1,
+        },
+        {
+          triIndex: [2, 0],
+          offset: 0.1,
+        },
+      ],
     },
     triangle: {
       points: [

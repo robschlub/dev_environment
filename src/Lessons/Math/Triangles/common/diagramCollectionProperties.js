@@ -52,37 +52,24 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
   makeDimension(index: number) {
     const layout = this.layout.properties.dimension;
     const line = makeLine(
-      this.diagram, new Point(-1, 0), 2, layout.lineWidth,
-      this.layout.colors.line, {
+      this.diagram, 'end', 2, layout.lineWidth,
+      this.layout.colors.point, {
         width: layout.arrowWidth,
         height: layout.arrowHeight,
         end1: true,
         end2: true,
       },
     );
-    line.setLength(2);
-    console.log(line)
+    const { triIndex, offset } = layout.locations[index];
+    let triPoints = this.layout.properties.triangle.points;
+    triPoints = triPoints.map(p => p.add(this.layout.properties.triangle.position));
+    line.setEndPoints(triPoints[triIndex[0]], triPoints[triIndex[1]], offset);
     return line;
-    // const arrow1 = this.diagram.shapes.arrow(
-    //   layout.arrowWidth,
-    //   0,
-    //   layout.arrowHeight,
-    //   0,
-    //   this.layout.colors.line,
-    //   new Transform().translate(0, 0),
-    //   new Point(0, 0),
-    //   Math.PI / 2,
-    // );
-    // const arrow2 = this.diagram.shapes.arrow(
-    //   layout.arrowWidth,
-    //   0,
-    //   layout.arrowHeight,
-    //   0,
-    //   this.layout.colors.line,
-    //   new Transform().translate(0, 0),
-    //   new Point(0, 0),
-    //   -Math.PI / 2,
-    // );
+  }
+
+  growDimensions() {
+    this._dim1.grow(0.2, 1, true);
+    this.diagram.animateNextFrame();
   }
 
   constructor(
@@ -96,6 +83,8 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
     this.add('angle1', this.makeAngle(0));
     this.add('angle2', this.makeAngle(1));
     this.add('angle3', this.makeAngle(2));
-    this.add('dim1', this.makeDimension('sdf'));
+    this.add('dim1', this.makeDimension(0));
+    this.add('dim2', this.makeDimension(1));
+    this.add('dim3', this.makeDimension(2));
   }
 }

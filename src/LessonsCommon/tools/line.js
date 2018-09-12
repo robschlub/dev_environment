@@ -2,7 +2,7 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
-  Transform, Point, Rect,
+  Transform, Point, Rect, distance, Line, polarToRect,
 } from '../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -192,7 +192,7 @@ export function makeLabeledLine(
 
 export function makeLine(
   diagram: Diagram,
-  start: Point,
+  reference: 'center' | 'end' = 'center',
   length: number,
   width: number,
   color: Array<number>,
@@ -208,75 +208,111 @@ export function makeLine(
     .rotate(0)
     .translate(0, 0));
 
-  // let lineLength = length;
-  // if (arrow) {
-  //   if (arrow.end1) {
-  //     lineLength -= arrow.height;
-  //   }
-  //   if (arrow.end2) {
-  //     lineLength -= arrow.height;
-  //   }
-  // }
-  // const startToUse = start._dup();
-  // let lengthToUse = length;
-  // const start = new Point(0, 0);
+  let start = -0.5;
+  if (reference === 'end') {
+    start = 0;
+  }
+  const vertexLength = 1;
 
-  // let lengthToUse = 1;
   if (arrow) {
     if (arrow.end1) {
       const a = diagram.shapes.arrow(
         arrow.width, 0, arrow.height, 0,
-        color, new Transform().translate(0, 0), new Point(0, 0), Math.PI / 2,
+        color, new Transform().translate(start, 0), new Point(0, 0), Math.PI / 2,
       );
       line.add('arrow1', a);
-      // startToUse.x += arrow.height;
-      // lengthToUse -= arrow.height;
     }
     if (arrow.end2) {
       const a = diagram.shapes.arrow(
         arrow.width, 0, arrow.height, 0,
-        color, new Transform().translate(1, 0), new Point(0, 0), -Math.PI / 2,
+        color, new Transform().translate(start + vertexLength, 0),
+        new Point(0, 0), -Math.PI / 2,
       );
       line.add('arrow2', a);
-      // lengthToUse -= arrow.height;
     }
   }
 
   const straightLine = diagram.shapes.horizontalLine(
     new Point(0, 0),
-    1, width,
+    vertexLength, width,
     0, color, new Transform().scale(1, 1).translate(0, 0),
   );
-  // straightLine.setPosition(startToUse);
   line.add('line', straightLine);
 
+  line.currentLength = 1;
+  // line.offset = 0;
+
   line.setLength = (newLength: number) => {
-    // const scale = newLength / length;
-
     let straightLineLength = newLength;
-
-    // const newStart = new Point(start.x * scale, start.y);
-    // const newEnd = newStart.add(new Point(newLength, 0));
-    // const straightLineStart = newStart._dup();
-    let straightLineStart = 0;
+    let straightLineStart = start * newLength;
 
     if (arrow) {
       if (arrow.end1) {
         straightLineLength -= arrow.height;
-        // line._arrow1.setPosition(newStart);
         straightLineStart += arrow.height;
+        line._arrow1.setPosition(start * newLength);
       }
       if (arrow.end2) {
         straightLineLength -= arrow.height;
-        line._arrow2.setPosition(newLength, 0);
+        line._arrow2.setPosition(start * newLength + newLength, 0);
       }
     }
-    // console.log(scale, straightLineLength, newStart, newEnd)
     straightLine.transform.updateScale(straightLineLength, 1);
     straightLine.setPosition(straightLineStart, 0);
+    line.currentLength = newLength;
   };
 
-  line.setLength(1);
+  line.setEndPoints = (p, q, offset: number = 0) => {
+    const newLength = distance(q, p);
+    line.setLength(newLength);
+    const pq = new Line(p, q);
+    line.transform.updateRotation(pq.angle());
+    const offsetdelta = polarToRect(offset, pq.angle() + Math.PI / 2);
+    if (reference === 'center') {
+      line.transform.updateTranslation(pq.midpoint().add(offsetdelta));
+    } else {
+      line.transform.updateTranslation(p.add(offsetdelta));
+    }
+    line.currentLength = newLength;
+    // line.offset = offset;
+  };
+
+  line.animateToLength = function animateToLength(
+    toLength: number = 1,
+    time: number = 1,
+    finishOnCancel: boolean = true,
+    callback: ?() => void = null,
+  ) {
+    line.stop();
+    const initialLength = line.currentLength;
+    const deltaLength = toLength - line.currentLength;
+    const func = (percent) => {
+      line.setLength(initialLength + deltaLength * percent);
+    };
+    const done = () => {
+      if (finishOnCancel) {
+        line.setLength(initialLength + deltaLength);
+      }
+      if (typeof callback === 'function' && callback) {
+        callback();
+      }
+    };
+    line.animateCustomTo(func, time, 0, done);
+  };
+
+  line.grow = function grow(
+    fromLength: number = 0,
+    time: number = 1,
+    finishOnCancel: boolean = true,
+    callback: ?() => void = null,
+  ) {
+    line.stop();
+    const target = line.currentLength;
+    line.setLength(fromLength);
+    line.animateToLength(target, time, finishOnCancel, callback);
+  };
+
+  line.setLength(length);
 
   return line;
 }

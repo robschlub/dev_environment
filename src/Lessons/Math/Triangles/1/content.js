@@ -81,9 +81,12 @@ class Content extends LessonContent {
       title: 'Properties',
       setContent: `
         <p>
-          We use properties to describe a shape. Some good first properties are the length of the lines, and size of the angles.
+          We use properties to describe a shape. Some good first properties are the |length| of the lines, and size of the angles.
         </p>
       `,
+      modifiers: {
+        length: click(properties.growDimensions, [properties], colors.diagram.action),
+      },
       showOnly: [
         diag,
       ],
