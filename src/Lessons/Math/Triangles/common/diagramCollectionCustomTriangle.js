@@ -11,12 +11,16 @@ import {
 } from '../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
+import makeTriangle from '../../../../LessonsCommon/tools/triangle';
+import type { TypeTriangle, TypeTriangleAngle } from '../../../../LessonsCommon/tools/triangle';
+
 export default class CustomTriangleCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _line: DiagramElementPrimative;
+  // _line: DiagramElementPrimative;
   _p1: DiagramElementPrimative;
   _p2: DiagramElementPrimative;
   _p3: DiagramElementPrimative;
+  _triangle: TypeTriangle & TypeTriangleAngle;
 
   makePoint(name: string) {
     const layout = this.layout.custom;
@@ -41,14 +45,32 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
     return point;
   }
 
-  makeLine() {
+  makeTri() {
     const layout = this.layout.custom;
     const p = layout.pointPositions;
-    const line = this.diagram.shapes.polyLine(
-      [p.p1, p.p2, p.p3], true,
-      layout.lineWidth, this.layout.colors.line,
+    // const line = this.diagram.shapes.polyLine(
+    //   [p.p1, p.p2, p.p3], true,
+    //   layout.lineWidth, this.layout.colors.line,
+    // );
+    const triangle = makeTriangle(
+      this.diagram,
+      p.p1,
+      p.p2,
+      p.p3,
+      layout.lineWidth,
+      this.layout.colors.line,
     );
-    return line;
+    triangle.addAngles({
+      arc: {
+        radius: 0.2,
+        width: 0.01,
+        sides: 100,
+      },
+      label: {
+        radius: 0.3,
+      },
+    });
+    return triangle;
   }
 
   updatePoints() {
@@ -56,7 +78,8 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
     const p2 = this._p2.transform.t();
     const p3 = this._p3.transform.t();
     if (p1 != null && p2 != null && p3 != null) {
-      this._line.vertices.change([p1, p2, p3]);
+      // this._line.vertices.change([p1, p2, p3]);
+      this._triangle.updatePoints(p1, p2, p3);
     }
   }
 
@@ -70,7 +93,7 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
     this.add('p1', this.makePoint('p1'));
     this.add('p2', this.makePoint('p2'));
     this.add('p3', this.makePoint('p3'));
-    this.add('line', this.makeLine());
+    this.add('triangle', this.makeTri());
 
     this.hasTouchableElements = true;
   }

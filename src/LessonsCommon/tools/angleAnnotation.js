@@ -15,8 +15,10 @@ export type TypeAngleAnnotationLayout = {
     width: number;
     sides: number;
   };
+  // color: Array<number>;
   label: {
     radius: number;
+    //text: string | Equation;
   };
 };
 
