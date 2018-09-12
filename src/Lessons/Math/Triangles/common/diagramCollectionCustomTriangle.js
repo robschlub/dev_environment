@@ -62,8 +62,8 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
     );
     triangle.addAngles({
       arc: {
-        radius: 0.2,
-        width: 0.01,
+        radius: 0.3,
+        width: 0.03,
         sides: 100,
       },
       label: {
