@@ -53,12 +53,12 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          Another way to make a triangle is to draw lines between any three points.
+          Another way to make a triangle is to draw lines between |any| three points.
         </p>
       `,
-      // showOnly: [
-      //   tri,
-      // ],
+      modifiers: {
+        any: click(custom.newTriangle, [custom], colors.diagram.action),
+      },
       show: [
         custom,
       ],

@@ -1,12 +1,14 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
-
+import {
+  removeRandElement, rand,
+} from '../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
 export default class CustomTriangleCollection extends CommonDiagramCollection {
@@ -74,10 +76,33 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
   }
 
   calculateFuturePositions() {
+    this.futurePositions = [];
+    const layout = this.layout.custom;
     const quadrants = [0, 1, 2, 3];
-    
+    const points = [this._p1, this._p2, this._p3];
+    points.forEach((p) => {
+      const quadrant = removeRandElement(quadrants);
+      let x = rand(layout.randomBoundary.left, layout.randomBoundary.right);
+      let y = rand(layout.randomBoundary.bottom, layout.randomBoundary.top);
+      if (quadrant === 1 || quadrant === 2) {
+        x *= -1;
+      }
+      if (quadrant === 2 || quadrant === 3) {
+        y *= -1;
+      }
+      this.futurePositions.push({
+        element: p,
+        scenario: {
+          position: new Point(x, y),
+          rotation: 0,
+        },
+      });
+    });
+  }
 
-    this.futurePositions = [
-    ]
+  newTriangle() {
+    this.calculateFuturePositions();
+    this.moveToFuturePositions(1.5);
+    this.diagram.animateNextFrame();
   }
 }

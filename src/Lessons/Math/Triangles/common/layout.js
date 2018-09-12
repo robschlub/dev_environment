@@ -32,6 +32,12 @@ export default function commonLessonLayout() {
       3.5 - pointRadius * 2,
     ),
     pointSides: 50,
+    randomBoundary: new Rect(
+      0.2,
+      0.2,
+      1.5,
+      0.5,
+    ),
   };
 
   layout.examples = {
