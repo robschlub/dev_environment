@@ -15,15 +15,60 @@ export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
   layout.position = new Point(0, 0);
-  layout.lineWidth = 0.05;
-  layout.pointRadius = 0.2;
-  layout.pointPositions = {
-    p1: new Point(0, 1),
-    p2: new Point(-1, -1),
-    p3: new Point(0, 0),
-    p4: new Point(1, -1),
-    // p5: new Point(1.4, 0),
+
+  const pointRadius = 0.15;
+  layout.custom = {
+    lineWidth: 0.05,
+    pointRadius,
+    pointPositions: {
+      p1: new Point(0, 0.7),
+      p2: new Point(-1.4, -0.7),
+      p3: new Point(1.4, -0.7),
+    },
+    boundary: new Rect(
+      -3 + pointRadius,
+      -2 + pointRadius,
+      6 - pointRadius * 2,
+      3.5 - pointRadius * 2,
+    ),
+    pointSides: 50,
   };
-  layout.pointSides = 50;
+
+  layout.examples = {
+    lineWidth: 0.02,
+    tri1: {
+      points: [
+        new Point(-0.5, 0),
+        new Point(0, 1),
+        new Point(0.5, 0),
+      ],
+      position: {
+        position: new Point(-2, -1),
+        rotation: 0,
+      },
+    },
+    tri2: {
+      points: [
+        new Point(-0.5, 0),
+        new Point(0.7, 1),
+        new Point(0.7, 0),
+      ],
+      position: {
+        position: new Point(-0.1, -1),
+        rotation: 0,
+      },
+    },
+    tri3: {
+      points: [
+        new Point(1, 0),
+        new Point(0.3, 0),
+        new Point(-0.5, 1),
+      ],
+      position: {
+        position: new Point(1.7, -1),
+        rotation: 0,
+      },
+    },
+  };
   return layout;
 }

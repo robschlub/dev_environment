@@ -7,11 +7,13 @@ import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
-import TriangleCollection from '../common/diagramCollectionTriangle';
+import TriangleExamplesCollection from '../common/diagramCollectionTriangleExamples';
+import CustomTriangleCollection from '../common/diagramCollectionCustomTriangle';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
-  _triangle: TriangleCollection;
+  _examples: TriangleExamplesCollection;
+  _custom: CustomTriangleCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -20,6 +22,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const layout = lessonLayout();
     super(diagram, layout, transform);
 
-    this.add('triangle', new TriangleCollection(diagram, this.layout));
+    this.add('examples', new TriangleExamplesCollection(diagram, this.layout));
+    this.add('custom', new CustomTriangleCollection(diagram, this.layout));
   }
 }

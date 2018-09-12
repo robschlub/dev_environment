@@ -24,20 +24,45 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    const tri = diag._triangle;
+    const examples = diag._examples;
+    const custom = diag._custom;
 
     this.addSection({
       title: 'Introduction',
       setContent: `
         <p>
-          Make a triangle.
+          A triangle is a shape formed by |three straight lines| connected at |three corners| (or angles). 
+        </p>
+        <p>
+          Hence the name |tri| (three) |angle| (corner).
         </p>
       `,
+      showOnly: [
+        diag,
+      ],
       show: [
-        tri,
+        examples,
       ],
       setSteadyState: () => {
-        console.log(tri)
+        examples.setScenario(examples._tri1, layout.examples.tri1.position);
+        examples.setScenario(examples._tri2, layout.examples.tri2.position);
+        examples.setScenario(examples._tri3, layout.examples.tri3.position);
+      },
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          Another way to make a triangle is to draw lines between any three points.
+        </p>
+      `,
+      // showOnly: [
+      //   tri,
+      // ],
+      show: [
+        custom,
+      ],
+      setSteadyState: () => {
       },
     });
   }

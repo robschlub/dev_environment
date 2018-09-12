@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point,
+  Transform,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
@@ -9,7 +9,7 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class TriangleCollection extends CommonDiagramCollection {
+export default class CustomTriangleCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _line: DiagramElementPrimative;
   _p1: DiagramElementPrimative;
@@ -17,21 +17,35 @@ export default class TriangleCollection extends CommonDiagramCollection {
   _p3: DiagramElementPrimative;
 
   makePoint(name: string) {
+    const layout = this.layout.custom;
     const point = this.diagram.shapes.polygonFilled(
-      this.layout.pointSides, this.layout.pointRadius, 0,
-      this.layout.pointSides, this.colors.point, this.layout.pointPositions[name],
+      layout.pointSides, layout.pointRadius, 0,
+      layout.pointSides, this.colors.point, layout.pointPositions[name],
     );
     point.isTouchable = true;
     point.isMovable = true;
-    point.move.limitToDiagram = true;
     point.setTransformCallback = this.updatePoints.bind(this);
     point.move.canBeMovedAfterLoosingTouch = true;
+    point.move.maxTransform = point.transform._dup();
+    point.move.maxTransform.updateTranslation(
+      layout.boundary.right,
+      layout.boundary.top,
+    );
+    point.move.minTransform = point.transform._dup();
+    point.move.minTransform.updateTranslation(
+      layout.boundary.left,
+      layout.boundary.bottom,
+    );
     return point;
   }
 
   makeLine() {
-    const p = this.layout.pointPositions;
-    const line = this.diagram.shapes.polyLine([p.p1, p.p2, p.p3], true, this.layout.lineWidth, this.layout.colors.line);
+    const layout = this.layout.custom;
+    const p = layout.pointPositions;
+    const line = this.diagram.shapes.polyLine(
+      [p.p1, p.p2, p.p3], true,
+      layout.lineWidth, this.layout.colors.line,
+    );
     return line;
   }
 
@@ -39,8 +53,6 @@ export default class TriangleCollection extends CommonDiagramCollection {
     const p1 = this._p1.transform.t();
     const p2 = this._p2.transform.t();
     const p3 = this._p3.transform.t();
-    // const p4 = this._p4.transform.t();
-    // const p5 = this._p5.transform.t();
     if (p1 != null && p2 != null && p3 != null) {
       this._line.vertices.change([p1, p2, p3]);
     }
@@ -56,12 +68,16 @@ export default class TriangleCollection extends CommonDiagramCollection {
     this.add('p1', this.makePoint('p1'));
     this.add('p2', this.makePoint('p2'));
     this.add('p3', this.makePoint('p3'));
-    // this.add('p4', this.makePoint('p4'));
-    // this.add('p5', this.makePoint('p5'));
     this.add('line', this.makeLine());
-    // this.add('l23', this.makeLine());
-    // this.add('l13', this.makeLine());
 
     this.hasTouchableElements = true;
+  }
+
+  calculateFuturePositions() {
+    const quadrants = [0, 1, 2, 3];
+    
+
+    this.futurePositions = [
+    ]
   }
 }
