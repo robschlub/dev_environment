@@ -62,7 +62,17 @@ class Content extends LessonContent {
       show: [
         custom,
       ],
+      setEnterState: () => {
+        custom.calculateFuturePositions();
+        custom._p1.setPosition(0.1, 0.1);
+        custom._p2.setPosition(0.1, -0.1);
+        custom._p3.setPosition(-0.1, 0.1);
+      },
+      transitionFromAny: (done) => {
+        custom.moveToFuturePositions(1.5, done);
+      },
       setSteadyState: () => {
+        custom.setFuturePositions();
       },
     });
   }
