@@ -21,7 +21,8 @@ $geometry_colors: (
   angleC:       color(5, 'base'),
   angleD:       color(6, 'lighter'),
   //
-  dimensions:   color('diagram', 'primary', 'light'),
+  dimensions:   color('diagram', 'disabled', 'light'),
+  length:       color('diagram', 'warning', 'light'),
   radialLines:  color('diagram', 'disabled', 'light'),
   circle:       color('diagram', 'warning'),
   arc:          color('diagram', 'warning'),

@@ -58,7 +58,7 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        three_points: click(custom.newTriangle, [custom], colors.diagram.point),
+        three_points: click(custom.newTriangle, [custom], colors.point),
       },
       show: [
         custom,
@@ -81,11 +81,12 @@ class Content extends LessonContent {
       title: 'Properties',
       setContent: `
         <p>
-          We use properties to describe a shape. Some good first properties are the |length| of the lines, and size of the angles.
+          We use properties to describe a shape. Some good first properties are the |side_lengths|, and |angle_sizes|.
         </p>
       `,
       modifiers: {
-        length: click(properties.growDimensions, [properties], colors.diagram.action),
+        side_lengths: click(properties.growDimensions, [properties], colors.dimensions),
+        angle_sizes: click(properties.pulseAngles, [properties], colors.angleText),
       },
       showOnly: [
         diag,

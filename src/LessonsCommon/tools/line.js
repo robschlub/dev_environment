@@ -190,6 +190,16 @@ export function makeLabeledLine(
   return line;
 }
 
+export type TypeLine = {
+  _arrow1: DiagramElementPrimative;
+  _arrow2: DiagramElementPrimative;
+  _straightLine: DiagramElementPrimative;
+  setLength: (number) => void;
+  setEndPoints: (Point, Point, number) => void;
+  animateLengthTo: (number, number, boolean, ?() => void) => void;
+  grow: (number, number, boolean, ?() => void) => void;
+} & DiagramElementCollection;
+
 export function makeLine(
   diagram: Diagram,
   reference: 'center' | 'end' = 'center',
@@ -262,7 +272,7 @@ export function makeLine(
     line.currentLength = newLength;
   };
 
-  line.setEndPoints = (p, q, offset: number = 0) => {
+  line.setEndPoints = (p: Point, q: Point, offset: number = 0) => {
     const newLength = distance(q, p);
     line.setLength(newLength);
     const pq = new Line(p, q);
@@ -277,7 +287,7 @@ export function makeLine(
     // line.offset = offset;
   };
 
-  line.animateToLength = function animateToLength(
+  line.animateLengthTo = function animateToLength(
     toLength: number = 1,
     time: number = 1,
     finishOnCancel: boolean = true,
@@ -309,7 +319,7 @@ export function makeLine(
     line.stop();
     const target = line.currentLength;
     line.setLength(fromLength);
-    line.animateToLength(target, time, finishOnCancel, callback);
+    line.animateLengthTo(target, time, finishOnCancel, callback);
   };
 
   line.setLength(length);

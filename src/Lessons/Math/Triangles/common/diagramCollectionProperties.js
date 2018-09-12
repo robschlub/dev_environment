@@ -14,13 +14,14 @@ import type { TypeAngleAnnotation } from '../../../../LessonsCommon/tools/angleA
 import makeAnnotatedAngle from '../../../../LessonsCommon/tools/angleAnnotation';
 
 import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class TrianglePropertiesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _tri: DiagramElementPrimative;
-  // _len1: DiagramCollection;
-  // _len2: DiagramCollection;
-  // _len3: DiagramCollection;
+  _dim1: TypeLine;
+  _dim2: TypeLine;
+  _dim3: TypeLine;
   _angle1: TypeAngleAnnotation;
   _angle2: TypeAngleAnnotation;
   _angle3: TypeAngleAnnotation;
@@ -41,7 +42,7 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
     const angle = makeAnnotatedAngle(
       this.diagram,
       layout.angleAnnotation,
-      this.layout.colors.point,
+      this.layout.colors.angle,
       '',
     );
     angle.setPosition(layout.triangle.points[index].add(layout.triangle.position));
@@ -52,8 +53,8 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
   makeDimension(index: number) {
     const layout = this.layout.properties.dimension;
     const line = makeLine(
-      this.diagram, 'end', 2, layout.lineWidth,
-      this.layout.colors.point, {
+      this.diagram, 'center', 2, layout.lineWidth,
+      this.layout.colors.dimensions, {
         width: layout.arrowWidth,
         height: layout.arrowHeight,
         end1: true,
@@ -69,6 +70,15 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
 
   growDimensions() {
     this._dim1.grow(0.2, 1, true);
+    this._dim2.grow(0.2, 1, true);
+    this._dim3.grow(0.2, 1, true);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseAngles() {
+    this._angle1.pulseScaleNow(1, 1.5);
+    this._angle2.pulseScaleNow(1, 1.5);
+    this._angle3.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
 

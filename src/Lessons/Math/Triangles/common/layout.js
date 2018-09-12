@@ -8,6 +8,9 @@ const cssColorNames = [
   'latin',
   'line',
   'point',
+  'angle',
+  'angleText',
+  'dimensions',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -80,21 +83,21 @@ export default function commonLessonLayout() {
   layout.properties = {
     lineWidth: 0.02,
     dimension: {
-      lineWidth: 0.015,
-      arrowHeight: 0.1,
-      arrowWidth: 0.1,
+      lineWidth: 0.01,
+      arrowHeight: 0.08,
+      arrowWidth: 0.08,
       locations: [
         {
           triIndex: [0, 1],
-          offset: 0.1,
+          offset: 0.2,
         },
         {
           triIndex: [1, 2],
-          offset: 0.1,
+          offset: 0.2,
         },
         {
           triIndex: [2, 0],
-          offset: 0.1,
+          offset: 0.2,
         },
       ],
     },
@@ -114,7 +117,7 @@ export default function commonLessonLayout() {
     angleAnnotation: {
       arc: {
         radius: 0.3,
-        width: 0.02,
+        width: 0.01,
         sides: 50,
       },
       label: {

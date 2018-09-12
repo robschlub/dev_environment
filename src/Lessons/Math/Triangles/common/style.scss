@@ -4,6 +4,9 @@ $colors: (
   latin:            color('diagram', 'text-latin'),
   line:             map-get($geometry_colors, lines),
   point:            map-get($geometry_colors, point),
+  angle:            map-get($geometry_colors, angle),
+  angleText:        map-get($geometry_colors, angleText),
+  dimensions:       map-get($geometry_colors, length),
 );
 
 body {
