@@ -93,11 +93,14 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
   // console.log(preLineLength)
   // got through the points that define the outside border of the line, and generate
   // offset lines on one side of them (named Line1 and Line2).
-  function findCornerPointsConstantCornerWidth(
-    pre: Point | null,
-    mid: Point,
-    post: Point | null,
+  function findBorderAngles(
+    preIndex: Point | null,
+    midIndex: Point,
+    postIndex: Point | null,
   ) {
+    const post = coords[postIndex];
+    const mid = coords[midIndex];
+    const pre = coords[preIndex];
     let innerAngle = 0;
     let direction = 0;
     if (pre != null && post != null) {
@@ -164,7 +167,7 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     border2.push(corner2);
   }
 
-  function findBorderAngles(
+  function findBorderAngles1(
     preIndex: number | null,
     midIndex: number,
     postIndex: number | null,
@@ -211,6 +214,16 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
         const offset = width / 2 * Math.cos(v.minAngle);
         vertex = vertex.add(polarToRect(offset, intersectVector.angle));
         innerCoord = innerCoord.add(polarToRect(offset, intersectVector.angle));
+      }
+
+      if (intersectMag < intersectVector.mag) {
+        if (intersectMag === v.postLength) {
+          const postBorderLine = new Line(vertex, 1, postBorderAngle);
+          innerCoord = preInnerBorderLine.intersectsWith(postBorderLine).intersect;
+        } else {
+          const preBorderLine = new Line(vertex, 1, preBorderAngle);
+          innerCoord = postInnerBorderLine.intersectsWith(preBorderLine).intersect;
+        }
       }
 
       if (dir === -1) {
