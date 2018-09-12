@@ -93,7 +93,7 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
   // console.log(preLineLength)
   // got through the points that define the outside border of the line, and generate
   // offset lines on one side of them (named Line1 and Line2).
-  function findBorderAngles(
+  function findBorderAnglesConstantCornerWidth(
     preIndex: Point | null,
     midIndex: Point,
     postIndex: Point | null,
@@ -130,11 +130,14 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     border2.push(corner2);
   }
 
-  function findCornerPointsConstantBorderWidth(
-    pre: Point | null,
-    mid: Point,
-    post: Point | null,
+  function findBorderAngles(
+    preIndex: Point | null,
+    midIndex: Point,
+    postIndex: Point | null,
   ) {
+    const post = coords[postIndex];
+    const mid = coords[midIndex];
+    const pre = coords[preIndex];
     let innerAngle = 0;
     let cornerR = width / 2;
     let direction = 0;
@@ -157,17 +160,18 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       cornerR = Math.abs(width / 2 / Math.sin(innerAngle - midPre.angle));
       direction = 1;
     }
-    let corner1 = polarToRect(cornerR, innerAngle).add(mid);
-    let corner2 = polarToRect(cornerR, innerAngle + Math.PI).add(mid);
+    // cornerR = Math.min(cornerR, width * 2)
+    let corner1 = polarToRect(Math.min(cornerR, width * 6), innerAngle).add(mid);
+    let corner2 = polarToRect(Math.min(cornerR, width * 2), innerAngle + Math.PI).add(mid);
     if (direction < 0) {
-      corner2 = polarToRect(cornerR, innerAngle).add(mid);
-      corner1 = polarToRect(cornerR, innerAngle + Math.PI).add(mid);
+      corner2 = polarToRect(Math.min(cornerR, width * 6), innerAngle).add(mid);
+      corner1 = polarToRect(Math.min(cornerR, width * 2), innerAngle + Math.PI).add(mid);
     }
     border1.push(corner1);
     border2.push(corner2);
   }
 
-  function findBorderAngles1(
+  function findBorderAnglesOutsideVertexFixed(
     preIndex: number | null,
     midIndex: number,
     postIndex: number | null,
