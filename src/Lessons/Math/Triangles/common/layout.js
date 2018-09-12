@@ -76,5 +76,32 @@ export default function commonLessonLayout() {
       },
     },
   };
+
+  layout.properties = {
+    lineWidth: 0.02,
+    triangle: {
+      points: [
+        new Point(-1, 0),
+        new Point(0, Math.sin(Math.PI / 3) * 2),
+        new Point(1, 0),
+      ],
+      position: new Point(0, -1.2),
+    },
+    angleRotations: [
+      0,
+      Math.PI / 3 * 4,
+      Math.PI / 3 * 2,
+    ],
+    angleAnnotation: {
+      arc: {
+        radius: 0.3,
+        width: 0.02,
+        sides: 50,
+      },
+      label: {
+        radius: 0.4,
+      },
+    },
+  };
   return layout;
 }

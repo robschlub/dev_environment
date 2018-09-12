@@ -2,6 +2,9 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../js/diagram/Element';
+import {
   Transform, Point, polarToRect,
 } from '../../js/diagram/tools/g2';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
@@ -16,6 +19,17 @@ export type TypeAngleAnnotationLayout = {
     radius: number;
   };
 };
+
+export type TypeAngleAnnotation = {
+  eqn: Equation;
+  _arc: DiagramElementPrimative;
+  _label: {
+    _base: DiagramElementPrimative
+  } & DiagramElementCollection;
+  updateAngle: (number, number, number) => void;
+  setLabel: (string) => void;
+  showForm: (string) => void;
+} & DiagramElementCollection;
 
 export default function makeAnnotatedAngle(
   diagram: Diagram,

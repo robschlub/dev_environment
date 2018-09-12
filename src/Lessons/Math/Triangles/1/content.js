@@ -26,6 +26,7 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     const examples = diag._examples;
     const custom = diag._custom;
+    const properties = diag._properties;
 
     this.addSection({
       title: 'Introduction',
@@ -53,11 +54,11 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          Another way to make a triangle is to draw lines between |any| three points.
+          Another way to make a triangle is to draw lines between any |three_points|.
         </p>
       `,
       modifiers: {
-        any: click(custom.newTriangle, [custom], colors.diagram.action),
+        three_points: click(custom.newTriangle, [custom], colors.diagram.point),
       },
       show: [
         custom,
@@ -73,6 +74,23 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         custom.setFuturePositions();
+      },
+    });
+
+    this.addSection({
+      title: 'Properties',
+      setContent: `
+        <p>
+          We use properties to describe a shape. Some good first properties are the length of the lines, and size of the angles.
+        </p>
+      `,
+      showOnly: [
+        diag,
+      ],
+      show: [
+        properties,
+      ],
+      setSteadyState: () => {
       },
     });
   }

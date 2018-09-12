@@ -9,6 +9,7 @@ import LessonDiagram from './diagram';
 
 import TriangleExamplesCollection from '../common/diagramCollectionTriangleExamples';
 import CustomTriangleCollection from '../common/diagramCollectionCustomTriangle';
+import TrianglePropertiesCollection from '../common/diagramCollectionProperties';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
@@ -24,5 +25,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
 
     this.add('examples', new TriangleExamplesCollection(diagram, this.layout));
     this.add('custom', new CustomTriangleCollection(diagram, this.layout));
+    this.add('properties', new TrianglePropertiesCollection(diagram, this.layout));
   }
 }
