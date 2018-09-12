@@ -46,7 +46,14 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
       '',
     );
     angle.setPosition(layout.triangle.points[index].add(layout.triangle.position));
-    angle.updateAngle(layout.angleRotations[index], Math.PI / 3);
+
+    const corner = layout.corners[index];
+    const triPoints = layout.triangle.points;
+    angle.setToCorner(
+      triPoints[corner[0]].add(layout.triangle.position),
+      triPoints[corner[1]].add(layout.triangle.position),
+      triPoints[corner[2]].add(layout.triangle.position),
+    );
     return angle;
   }
 

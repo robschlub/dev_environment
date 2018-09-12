@@ -103,12 +103,17 @@ export default function commonLessonLayout() {
     },
     triangle: {
       points: [
-        new Point(-1, 0),
-        new Point(0, Math.sin(Math.PI / 3) * 2),
-        new Point(1, 0),
+        new Point(-2, 0),
+        new Point(-1, 1.5),
+        new Point(2, 0),
       ],
-      position: new Point(0, -1.2),
+      position: new Point(0, -0.85),
     },
+    corners: [
+      [1, 2, 0],
+      [2, 0, 1],
+      [0, 1, 2],
+    ],
     angleRotations: [
       0,
       Math.PI / 3 * 4,
@@ -118,7 +123,7 @@ export default function commonLessonLayout() {
       arc: {
         radius: 0.3,
         width: 0.01,
-        sides: 50,
+        sides: 100,
       },
       label: {
         radius: 0.4,

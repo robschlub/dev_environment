@@ -29,6 +29,7 @@ export type TypeAngleAnnotation = {
   updateAngle: (number, number, number) => void;
   setLabel: (string) => void;
   showForm: (string) => void;
+  setToCorner: (Point, Point, Point) => void;
 } & DiagramElementCollection;
 
 export default function makeAnnotatedAngle(
@@ -94,6 +95,17 @@ export default function makeAnnotatedAngle(
     if (start != null) {
       angle.updateAngle(start, size);
     }
+  };
+
+  angle.setToCorner = (p: Point, q: Point, r: Point) => {
+    angle.setPosition(q);
+    const angleQP = p.sub(q).toPolar().angle;
+    const angleQR = r.sub(q).toPolar().angle;
+    let delta = angleQR - angleQP;
+    if (delta < 0) {
+      delta = Math.PI * 2 + delta;
+    }
+    angle.updateAngle(angleQP, delta);
   };
 
   angle.showForm();
