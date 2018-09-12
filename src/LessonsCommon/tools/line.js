@@ -217,61 +217,66 @@ export function makeLine(
   //     lineLength -= arrow.height;
   //   }
   // }
-  const startToUse = start._dup();
-  let lengthToUse = length;
+  // const startToUse = start._dup();
+  // let lengthToUse = length;
+  // const start = new Point(0, 0);
 
+  // let lengthToUse = 1;
   if (arrow) {
     if (arrow.end1) {
       const a = diagram.shapes.arrow(
         arrow.width, 0, arrow.height, 0,
-        color, new Transform().translate(start.x, 0), new Point(0, 0), Math.PI / 2,
+        color, new Transform().translate(0, 0), new Point(0, 0), Math.PI / 2,
       );
       line.add('arrow1', a);
-      startToUse.x += arrow.height;
-      lengthToUse -= arrow.height;
+      // startToUse.x += arrow.height;
+      // lengthToUse -= arrow.height;
     }
     if (arrow.end2) {
       const a = diagram.shapes.arrow(
         arrow.width, 0, arrow.height, 0,
-        color, new Transform().translate(length, 0), new Point(0, 0), -Math.PI / 2,
+        color, new Transform().translate(1, 0), new Point(0, 0), -Math.PI / 2,
       );
       line.add('arrow2', a);
-      lengthToUse -= arrow.height;
+      // lengthToUse -= arrow.height;
     }
   }
 
   const straightLine = diagram.shapes.horizontalLine(
-    startToUse,
-    lengthToUse, width,
+    new Point(0, 0),
+    1, width,
     0, color, new Transform().scale(1, 1).translate(0, 0),
   );
+  // straightLine.setPosition(startToUse);
   line.add('line', straightLine);
 
   line.setLength = (newLength: number) => {
-    const scale = newLength / length;
+    // const scale = newLength / length;
 
-    let straightLineLength = newLength / length;
+    let straightLineLength = newLength;
 
-    const newStart = new Point(start.x * scale, start.y);
-    const newEnd = newStart.add(new Point(newLength, 0));
-    const straightLineStart = newStart._dup();
-
+    // const newStart = new Point(start.x * scale, start.y);
+    // const newEnd = newStart.add(new Point(newLength, 0));
+    // const straightLineStart = newStart._dup();
+    let straightLineStart = 0;
 
     if (arrow) {
       if (arrow.end1) {
         straightLineLength -= arrow.height;
-        line._arrow1.setPosition(newStart);
-        straightLineStart.x += arrow.height;
+        // line._arrow1.setPosition(newStart);
+        straightLineStart += arrow.height;
       }
       if (arrow.end2) {
         straightLineLength -= arrow.height;
-        line._arrow2.setPosition(newEnd);
+        line._arrow2.setPosition(newLength, 0);
       }
     }
-    console.log(scale, straightLineLength, newStart, newEnd)
+    // console.log(scale, straightLineLength, newStart, newEnd)
     straightLine.transform.updateScale(straightLineLength, 1);
-    straightLine.setPosition(straightLineStart.x, start.y);
+    straightLine.setPosition(straightLineStart, 0);
   };
+
+  line.setLength(1);
 
   return line;
 }

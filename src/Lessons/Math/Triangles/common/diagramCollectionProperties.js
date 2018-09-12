@@ -52,7 +52,7 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
   makeDimension(index: number) {
     const layout = this.layout.properties.dimension;
     const line = makeLine(
-      this.diagram, new Point(0, 0), 1, layout.lineWidth,
+      this.diagram, new Point(-1, 0), 2, layout.lineWidth,
       this.layout.colors.line, {
         width: layout.arrowWidth,
         height: layout.arrowHeight,
