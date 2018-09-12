@@ -4,11 +4,11 @@ import {
 } from '../../tools/g2';
 
 
-function simpleIntersect(p1: Point, p2: Point, q1: Point, q2: Point) {
-  const lineP = new Line(p1, p2);
-  const lineQ = new Line(q1, q2);
-  return lineP.intersectsWith(lineQ).intersect;
-}
+// function simpleIntersect(p1: Point, p2: Point, q1: Point, q2: Point) {
+//   const lineP = new Line(p1, p2);
+//   const lineQ = new Line(q1, q2);
+//   return lineP.intersectsWith(lineQ).intersect;
+// }
 
 // Generate a thick line assuming gl.TRIANGLES where corners are sharp.
 // Input:
@@ -18,12 +18,8 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
   const border1 = [];     // outside (vertex) when anticlockwise
   const border2 = [];     // outside (vertex) when clockwise
   const angleDir = [];    // -1 is anti-clockwise, +1 clockwise
-  const preLineAngle = [];
-  const preLineLength = [];
-  const postLineLength = [];
-  const postLineAngle = [];
 
-  const vertices = []
+  const vertices = [];
 
   class Vertex {
     point: Point;
@@ -34,12 +30,7 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     postAngle: ?number;
     preLength: ?number;
     postLength: ?number;
-    // preBorderAngle: ?number;
-    // postBorderAngle: ?number;
-    // preInnerBorderLine: ?Line;
-    // postInnerBorderLine: ?Line;
-    // preVertexBorderLine: ?Line;
-    // postVertexBorderLine: ?Line;
+    innerAngle: ?number
 
     constructor(point) {
       this.point = point;
@@ -50,12 +41,7 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       this.postAngle = null;
       this.preLength = null;
       this.postLength = null;
-      // this.preBorderAngle = null;
-      // this.postBorderAngle = null;
-      // this.preInnerBorderLine = null;
-      // this.postInnerBorderLine = null;
-      // this.preVertexBorderLine = null;
-      // this.postVertexBorderLine = null;
+      this.minAngle = null;
     }
   }
 
@@ -66,6 +52,8 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
   ) {
     const midPost = post.sub(mid).toPolar();
     const midPre = pre.sub(mid).toPolar();
+    const midPostUnit = polarToRect(1, midPost.angle);
+    const midPreUnit = polarToRect(1, midPre.angle);
     const minAngle = minAngleDiff(midPost.angle, midPre.angle);
     let direction = Math.sin(minAngle);
     if (direction < 0) {
@@ -74,19 +62,13 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       direction = 1;
     }
     const vertex = new Vertex(mid);
-    // vertex.pre = pre;
-    // vertex.post = post;
     vertex.dir = direction;
     vertex.preAngle = midPre.angle;
     vertex.postAngle = midPost.angle;
     vertex.preLength = midPre.mag;
     vertex.postLength = midPost.mag;
+    vertex.minAngle = minAngle;
     vertices.push(vertex);
-    // angleDir.push(direction);
-    // preLineAngle.push(midPre.angle);
-    // postLineAngle.push(midPost.angle);
-    // preLineLength.push(midPre.mag);
-    // postLineLength.push(midPost.mag);
   }
   if (close) {
     calcAngleDir(coords[coords.length - 1], coords[0], coords[1]);
@@ -104,9 +86,9 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     angleDir.push(0);
   }
 
-  console.log("Direction", vertices.map(v => v.dir))
-  console.log("PreLine Angle", vertices.map(v => v.preAngle).map(a => a * 180 / Math.PI))
-  console.log("PostLine Angle", vertices.map(v => v.postAngle).map(a => a * 180 / Math.PI))
+  // console.log("Direction", vertices.map(v => v.dir))
+  // console.log("PreLine Angle", vertices.map(v => v.preAngle).map(a => a * 180 / Math.PI))
+  // console.log("PostLine Angle", vertices.map(v => v.postAngle).map(a => a * 180 / Math.PI))
   // console.log("InnerAngle", cornerAngle.map(a => a * 180 / Math.PI))
   // console.log(preLineLength)
   // got through the points that define the outside border of the line, and generate
@@ -187,18 +169,12 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
     midIndex: number,
     postIndex: number | null,
   ) {
-    // let innerAngle = 0;
-    // let cornerR = width / 2;
-    // let direction = 0;
-    let corner1;
-    let corner2;
     if (preIndex != null && postIndex != null) {
       const v = vertices[midIndex];
       v.pre = vertices[preIndex];
       v.post = vertices[postIndex];
-      // const mid = coords[midIndex];
       const { dir } = v;
-      const vertex = v.point;
+      let vertex = v.point;
       const preDir = vertices[preIndex].dir;
       const postDir = vertices[postIndex].dir;
       let preBorderAngle = v.preAngle || 0;
@@ -211,36 +187,31 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
         const midToBorderAngleDelta = Math.asin(width / v.postLength);
         postBorderAngle += dir * midToBorderAngleDelta;
       }
-      v.preBorderAngle = preBorderAngle;
-      v.postBorderAngle = postBorderAngle;
-      // console.log("border angles", preBorderAngle * 180 / Math.PI, postBorderAngle * 180 / Math.PI);
 
-      v.preVertextBorderLine = new Line(vertex, 1, preBorderAngle);
-      v.postVertextBorderLine = new Line(vertex, 1, postBorderAngle);
-
-      let preInnerBorderLine;
-      let postInnerBorderLine;
       let angleDelta = Math.PI / 2;
       if (dir === -1) {
         angleDelta = -Math.PI / 2;
       }
       const pointOnPreInnerLine
-        = vertex.add(polarToRect(width, preBorderAngle + angleDelta))
-      v.preInnerBorderLine = new Line(pointOnPreInnerLine, 1, preBorderAngle);
-      
-      const pointOnPostInnerLine
-        = vertex.add(polarToRect(width, postBorderAngle - angleDelta))
-      v.postInnerBorderLine = new Line(pointOnPostInnerLine, 1, postBorderAngle);
-      // console.log("Inner Point on line", pointOnPreInnerLine, 
-      //   pointOnPostInnerLine)
-      // console.log(v.preInnerBorderLine)
-      const intersection = v.postInnerBorderLine.intersectsWith(v.preInnerBorderLine);
-      const intersectVector = intersection.intersect.sub(vertex).toPolar();
-      const intersectMag = Math.min(intersectVector.mag, v.preLength, v.postLength)
-      // const innerCoord = intersection.intersect;
-      const innerCoord = vertex.add(polarToRect(intersectMag, intersectVector.angle));
+        = vertex.add(polarToRect(width, preBorderAngle + angleDelta));
+      const preInnerBorderLine = new Line(pointOnPreInnerLine, 1, preBorderAngle);
 
-      // console.log("coords", vertex, innerCoord)
+      const pointOnPostInnerLine
+        = vertex.add(polarToRect(width, postBorderAngle - angleDelta));
+      const postInnerBorderLine = new Line(pointOnPostInnerLine, 1, postBorderAngle);
+
+      const intersection = postInnerBorderLine.intersectsWith(preInnerBorderLine);
+      const intersectVector = intersection.intersect.sub(vertex).toPolar();
+
+      const intersectMag = Math.min(intersectVector.mag, v.preLength, v.postLength);
+
+      let innerCoord = vertex.add(polarToRect(intersectMag, intersectVector.angle));
+
+      if (Math.abs(v.minAngle) > Math.PI / 2) {
+        const offset = width / 2 * Math.cos(v.minAngle);
+        vertex = vertex.add(polarToRect(offset, intersectVector.angle));
+        innerCoord = innerCoord.add(polarToRect(offset, intersectVector.angle));
+      }
 
       if (dir === -1) {
         border1.push(vertex);
@@ -251,84 +222,6 @@ export default function polyLineTriangles3(coords: Array<Point>, close: boolean,
       }
     }
   }
-  //   function functionCornerPoints(index: number) {
-  //     const v = vertices[index];
-  //     let innerCoord;
-  //     if (v.dir === v.pre.dir) {
-  //       intersection = v.preInnerBorderLine.intersectsWith(v.pre.postInnerBorderLine);
-  //       innerCoord = intersection.intersect;
-  //     } else {
-  //       innerCoord
-  //     }
-
-  //     const preVertexBorderLine = new Line(vertex, 1, preBorderAngle);
-  //     const preInnerBorderLine = new Line(coords[preIndex], 1, preBorderAngle);
-
-  //     const postVertexBorderLine = new Line(vertex, 1, postBorderAngle);
-  //     const postInnerBorderLine = new Line(coords[postIndex], 1, postBorderAngle);
-
-  //     let preLine1;
-  //     let preLine2;
-  //     let postLine1;
-  //     let postLine2;
-  //     if (dir === -1) {
-  //       preLine1 = preVertexBorderLine;
-  //       preLine2 = preInnerBorderLine;
-  //       postLine1 = postVertexBorderLine;
-  //       postLine2 = postInnerBorderLine;
-  //     } else {
-  //       preLine1 = preInnerBorderLine;
-  //       preLine2 = preVertexBorderLine;
-  //       postLine1 = postInnerBorderLine;
-  //       postLine2 = postVertexBorderLine;
-  //     }
-  //     // At this point, we know the border will go through mid,
-  //     // and have an angle of borderAngle
-  //     // const cornerWidth = Math.min(
-  //     //   Math.abs(width / Math.sin(cornerAngle[midIndex] - borderAngle)),
-  //     //   preLineLength[midIndex],
-  //     //   postLineLength[midIndex],
-  //     // );
-
-  //     // const innerCorner = polarToRect(cornerWidth, cornerAngle[midIndex]).add(mid);
-  //     const innerCorner = vertex;
-
-  //     if (dir === 1) {
-  //       corner1 = (vertex);
-  //       corner2 = (innerCorner);
-  //     } else {
-  //       corner1 = (innerCorner);
-  //       corner2 = (vertex);
-  //     }
-  //   }
-  //   // else if (preIndex == null && postIndex != null) {
-  //   //   const dir = angleDir[postIndex];
-  //   //   if (dir === 1) {
-  //   //     corner1 = (vertex);
-  //   //     corner2 = (innerCorner);
-  //   //   } else {
-  //   //     corner1 = (innerCorner);
-  //   //     corner2 = (vertex);
-  //   //   }
-  //   // } else if (post == null && pre != null) {
-  //   //   const midPre = pre.sub(mid).toPolar();
-  //   //   innerAngle = midPre.angle - Math.PI / 2;
-  //   //   cornerR = Math.abs(width / Math.sin(innerAngle - midPre.angle));
-  //   //   cornerR = Math.min(cornerR, midPre.mag);
-  //   //   direction = 1;
-  //   // }
-  //   // let corner1 = polarToRect(cornerR, innerAngle).add(mid);
-  //   // let corner2 = polarToRect(0, innerAngle + Math.PI).add(mid);
-  //   // if (direction < 0) {
-  //   //   corner2 = polarToRect(cornerR, innerAngle).add(mid);
-  //   //   corner1 = polarToRect(0, innerAngle + Math.PI).add(mid);
-  //   // }
-  //   // const corner1 = polarToRect(cornerR, innerAngle).add(mid);
-  //   // const corner2 = polarToRect(0, innerAngle + Math.PI).add(mid);
-  //   border1.push(corner1);
-  //   border2.push(corner2);
-  //   // angleDir.push(direction);
-  // }
 
   if (close) {
     findBorderAngles(coords.length - 1, 0, 1);
