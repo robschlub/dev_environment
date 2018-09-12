@@ -189,3 +189,68 @@ export function makeLabeledLine(
 
   return line;
 }
+
+export function makeLine(
+  diagram: Diagram,
+  start: Point,
+  length: number,
+  width: number,
+  color: Array<number>,
+  arrow: ?{
+    width: number,
+    height: number,
+    end1: boolean,
+    end2: boolean,
+  } = null,
+) {
+  const line = diagram.shapes.collection(new Transform()
+    .scale(1, 1)
+    .rotate(0)
+    .translate(0, 0));
+
+  let lineLength = length;
+  if (arrow) {
+    if (arrow.end1) {
+      lineLength -= arrow.height;
+    }
+    if (arrow.end2) {
+      lineLength -= arrow.height;
+    }
+  }
+
+  const straightLine = diagram.shapes.horizontalLine(
+    start,
+    lineLength, width,
+    0, color, new Transform().scale(1, 1),
+  );
+  line.add('line', straightLine);
+  if (arrow) {
+    if (arrow.end1) {
+      const a = diagram.shapes.arrow(
+        arrow.width, 0, arrow.height, 0,
+        color, new Transform().translate(0, 0), start, Math.PI / 2,
+      );
+      this.add('arrow1', a);
+    }
+    if (arrow.end2) {
+      const a = diagram.shapes.arrow(
+        arrow.width, 0, arrow.height, 0,
+        color, new Transform().translate(0, 0), start.add(length, 0), Math.PI / 2,
+      );
+      this.add('arrow2', a);
+    }
+  }
+  line.setLength = (newLength: number) {
+    let straightLineLength = newLength;
+    if (arrow) {
+    if (arrow.end1) {
+      straightLineLength -= arrow.height;
+    }
+    if (arrow.end2) {
+      straightLineLength -= arrow.height;
+    }
+
+  }
+  }
+  return line;
+}

@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
@@ -45,6 +45,30 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
     angle.setPosition(layout.triangle.points[index].add(layout.triangle.position));
     angle.updateAngle(layout.angleRotations[index], Math.PI / 3);
     return angle;
+  }
+
+  makeArrowedLine(index: number) {
+    const layout = layout.properties.dimension;
+    const arrow1 = this.diagram.shapes.arrow(
+      layout.arrowWidth,
+      0,
+      layout.arrowHeight,
+      0,
+      this.layout.colors.line,
+      new Transform().translate(0, 0),
+      new Point(0, 0),
+      Math.PI / 2,
+    );
+    const arrow2 = this.diagram.shapes.arrow(
+      layout.arrowWidth,
+      0,
+      layout.arrowHeight,
+      0,
+      this.layout.colors.line,
+      new Transform().translate(0, 0),
+      new Point(0, 0),
+      -Math.PI / 2,
+    );
   }
 
   constructor(

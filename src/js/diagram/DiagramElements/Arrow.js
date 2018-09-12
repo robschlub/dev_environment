@@ -14,6 +14,7 @@ export default function Arrow(
   height: number = 1,
   legHeight: number = 0.5,
   tip: Point = new Point(0, 0),
+  rotation: number = 0,
   color: Array<number> = [1, 1, 1, 1],
   transformOrLocation: Transform | Point = new Point(0, 0),
   diagramLimits: Rect = new Rect(-1, -1, 2, 2),
@@ -25,6 +26,7 @@ export default function Arrow(
     height,
     legHeight,
     tip,
+    rotation,
   );
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {

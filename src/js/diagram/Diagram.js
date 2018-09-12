@@ -215,10 +215,12 @@ function shapes(diagram: Diagram) {
     legHeight: number = 0.5,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
+    tip: Point = new Point(0, 0),
+    rotation: number = 0,
   ) {
     return Arrow(
       diagram.webgl, width, legWidth, height, legHeight,
-      new Point(0, 0), color, transform, diagram.limits,
+      tip, rotation, color, transform, diagram.limits,
     );
   }
   function lines(
