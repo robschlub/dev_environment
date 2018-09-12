@@ -81,8 +81,8 @@ export default function commonLessonLayout() {
     lineWidth: 0.02,
     dimension: {
       lineWidth: 0.015,
-      arrowHeight: 0.03,
-      arrowWidth: 0.02,
+      arrowHeight: 0.1,
+      arrowWidth: 0.1,
     },
     triangle: {
       points: [
