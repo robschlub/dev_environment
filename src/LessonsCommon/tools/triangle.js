@@ -11,6 +11,8 @@ import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import makeAngle from './angle';
 import type { TypeAngle } from './angle';
 import makeEquationLabel from './equationLabel';
+import { makeLine } from './line';
+import type { TypeLine } from './line';
 
 export type TypeTriangle = {
   p1: Point;
@@ -66,9 +68,9 @@ export default function makeTriangle(
     .rotate(0)
     .translate(0, 0));
 
-  triangle.p1 = p1._dup();
-  triangle.p2 = p2._dup();
-  triangle.p3 = p3._dup();
+  // triangle.p1 = p1._dup();
+  // triangle.p2 = p2._dup();
+  // triangle.p3 = p3._dup();
   triangle.hasAngles = false;
   triangle.hasDimensions = false;
   triangle.hasLabels = false;
@@ -109,53 +111,90 @@ export default function makeTriangle(
     }
 
     triangle.updateAngles();
-    triangle.updateLabels();
+    triangle.updateDimensions();
+    // triangle.updateLabels();
   };
 
-  triangle.addSideLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
-    const addEqn = (index1: number, index2: number, labelText: string) => {
-      const { eqn } = makeEquationLabel(diagram, labelText, color);
-      triangle.add(`label${index1}${index2}`, eqn.collection);
-      triangle[`labelEqn${index1}${index2}`] = eqn;
+  triangle.addDimension = function addDimension(
+    index1: number,
+    index2: number,
+    // dimensionText: string,
+    dimensionColor: Array<number>,
+    offset: number = 0,
+    showLine: boolean = false,
+    dimensionLineWidth: number = 0.01,
+  ) {
+    const dimension = makeLine(
+      diagram, 'center', 1,
+      dimensionLineWidth, dimensionColor, showLine,
+    );
+    const point1 = triangle[`p${index1}`];
+    const point2 = triangle[`p${index2}`];
+    dimension.setEndPoints(point1, point2, offset);
+    dimension.offset = offset;
+    triangle.add(`dimension${index1}${index2}`, dimension);
+  };
+
+  triangle.updateDimensions = () => {
+    const updateDimension = (index1: number, index2: number) => {
+      const dimension = triangle[`_dimension${index1}${index2}`];
+      // console.log(dimension)
+      if (dimension) {
+        const point1 = triangle[`p${index1}`];
+        const point2 = triangle[`p${index2}`];
+        // console.log(triangle)
+        dimension.setEndPoints(point1, point2, dimension.offset);
+      }
     };
-    addEqn(1, 2, label12);
-    addEqn(2, 3, label23);
-    addEqn(3, 1, label31);
-    triangle.hasLabels = true;
-    triangle.labelOffset = offset;
+    updateDimension(1, 2);
+    updateDimension(2, 3);
+    updateDimension(3, 1);
   };
 
-  triangle.updateLabels = () => {
-    if (triangle.hasLabels) {
-      const updateLabel = (index1: number, index2: number) => {
-        const borderLine = triangle[`b${index1}${index2}`];
-        let offset = triangle.labelOffset;
-        if (triangle.labelsAlwaysOutside) {
-          if (triangle.clockwise) {
-            offset = Math.abs(offset) * -1;
-          } else {
-            offset = Math.abs(offset);
-          }
-        }
-        const offsetdelta = polarToRect(offset, borderLine.angle() + Math.PI / 2);
-        const labelElement = triangle[`_label${index1}${index2}`];
-        labelElement.setPosition(borderLine.midpoint().add(offsetdelta));
-        if (triangle.labelsAlignedWithLines) {
-          let rotAngle = borderLine.angle();
-          if (rotAngle < -Math.PI / 2) {
-            rotAngle += Math.PI;
-          }
-          if (rotAngle > Math.PI / 2 && rotAngle < Math.PI * 3 / 2) {
-            rotAngle -= Math.PI;
-          }
-          labelElement.transform.updateRotation(rotAngle);
-        }
-      };
-      updateLabel(1, 2);
-      updateLabel(2, 3);
-      updateLabel(3, 1);
-    }
-  };
+  // triangle.addSideLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
+  //   const addEqn = (index1: number, index2: number, labelText: string) => {
+  //     const { eqn } = makeEquationLabel(diagram, labelText, color);
+  //     triangle.add(`label${index1}${index2}`, eqn.collection);
+  //     triangle[`labelEqn${index1}${index2}`] = eqn;
+  //   };
+  //   addEqn(1, 2, label12);
+  //   addEqn(2, 3, label23);
+  //   addEqn(3, 1, label31);
+  //   triangle.hasLabels = true;
+  //   triangle.labelOffset = offset;
+  // };
+
+  // triangle.updateLabels = () => {
+  //   if (triangle.hasLabels) {
+  //     const updateLabel = (index1: number, index2: number) => {
+  //       const borderLine = triangle[`b${index1}${index2}`];
+  //       let offset = triangle.labelOffset;
+  //       if (triangle.labelsAlwaysOutside) {
+  //         if (triangle.clockwise) {
+  //           offset = Math.abs(offset) * -1;
+  //         } else {
+  //           offset = Math.abs(offset);
+  //         }
+  //       }
+  //       const offsetdelta = polarToRect(offset, borderLine.angle() + Math.PI / 2);
+  //       const labelElement = triangle[`_label${index1}${index2}`];
+  //       labelElement.setPosition(borderLine.midpoint().add(offsetdelta));
+  //       if (triangle.labelsAlignedWithLines) {
+  //         let rotAngle = borderLine.angle();
+  //         if (rotAngle < -Math.PI / 2) {
+  //           rotAngle += Math.PI;
+  //         }
+  //         if (rotAngle > Math.PI / 2 && rotAngle < Math.PI * 3 / 2) {
+  //           rotAngle -= Math.PI;
+  //         }
+  //         labelElement.transform.updateRotation(rotAngle);
+  //       }
+  //     };
+  //     updateLabel(1, 2);
+  //     updateLabel(2, 3);
+  //     updateLabel(3, 1);
+  //   }
+  // };
 
   triangle.addAngle = function addAngle(
     index: number,
@@ -233,5 +272,6 @@ export default function makeTriangle(
     }
   };
 
+  triangle.updatePoints(p1, p2, p3);
   return triangle;
 }

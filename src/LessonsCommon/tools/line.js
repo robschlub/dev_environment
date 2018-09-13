@@ -259,6 +259,7 @@ export function makeLine(
   length: number,
   width: number,
   color: Array<number>,
+  showLine: boolean = true,
 ) {
   const line = diagram.shapes.collection(new Transform()
     .scale(1, 1)
@@ -272,12 +273,15 @@ export function makeLine(
   }
   const vertexSpaceLength = 1;
 
-  const straightLine = diagram.shapes.horizontalLine(
-    new Point(0, 0),
-    vertexSpaceLength, width,
-    0, color, new Transform().scale(1, 1).translate(0, 0),
-  );
-  line.add('line', straightLine);
+  let straightLine = null;
+  if (showLine) {
+    straightLine = diagram.shapes.horizontalLine(
+      new Point(0, 0),
+      vertexSpaceLength, width,
+      0, color, new Transform().scale(1, 1).translate(0, 0),
+    );
+    line.add('line', straightLine);
+  }
   line.currentLength = 1;
   line.label = null;
   line.arrow1 = null;
@@ -427,8 +431,11 @@ export function makeLine(
       straightLineLength -= line.arrow2.height;
       line._arrow2.setPosition(start * newLength + newLength, 0);
     }
-    straightLine.transform.updateScale(straightLineLength, 1);
-    straightLine.setPosition(straightLineStart, 0);
+    if (straightLine) {
+      // console.log("Asdf")
+      straightLine.transform.updateScale(straightLineLength, 1);
+      straightLine.setPosition(straightLineStart, 0);
+    }
     line.currentLength = newLength;
     line.updateLabel();
   };
