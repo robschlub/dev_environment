@@ -231,6 +231,7 @@ export type TypeLine = {
     location: TypeLineLabelLocation;
     subLocation: TypeLineLabelSubLocation;
     orientation: TypeLineLabelOrientation;
+    linePosition: number;
   };
 } & DiagramElementCollection;
 
@@ -312,6 +313,7 @@ export function makeLine(
     location: TypeLineLabelLocation,
     subLocation: TypeLineLabelSubLocation,
     orientation: TypeLineLabelOrientation,
+    linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
   ) {
     const eqn = makeEquationLabel(diagram, labelText, color);
     line.add('label', eqn.collection);
@@ -321,6 +323,7 @@ export function makeLine(
       location,
       subLocation,
       orientation,
+      linePosition,
     };
     line.updateLabel();
   };
@@ -332,7 +335,7 @@ export function makeLine(
     const lineAngle = normAngle(line.transform.r() || 0);
     let labelAngle = 0;
     const offsetPosition = new Point(
-      start * line.currentLength + line.currentLength / 2,
+      start * line.currentLength + line.label.linePosition * line.currentLength,
       0,
     );
     if (line.label.location === 'end1' || line.label.location === 'end2') {
@@ -343,7 +346,7 @@ export function makeLine(
         offsetPosition.x = start * line.currentLength + line.currentLength + line.label.offset;
       }
     } else {
-      const { offset } = line.label
+      const { offset } = line.label;
       const offsetTop = Math.cos(lineAngle) < 0 ? -offset : offset;
       const offsetBottom = -offsetTop;
       const offsetLeft = Math.sin(lineAngle) > 0 ? offset : -offset;
