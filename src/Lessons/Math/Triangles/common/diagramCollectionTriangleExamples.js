@@ -24,6 +24,9 @@ export default class TriangleExamplesCollection extends CommonDiagramCollection 
       'onSharpAnglesOnly',
       new Transform().rotate(0).translate(0),
     );
+    line.cannotTouchHole = true;
+    line.isTouchable = true;
+    line.isMovable = true;
     return line;
   }
 

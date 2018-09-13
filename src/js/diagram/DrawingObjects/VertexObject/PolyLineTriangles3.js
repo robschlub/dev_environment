@@ -522,6 +522,7 @@ export default function polyLineTriangles3(
   // }
   // // Form the border array
   let border = [];
+  let holeBorder = [];
   // console.log(innerBorder)
   // console.log(outerBorder)
   // If the poly line is closed, only one of the offset lines is the outside
@@ -529,8 +530,10 @@ export default function polyLineTriangles3(
   if (close) {
     if (border1[0].isInPolygon(border2)) {
       border = border2;
+      holeBorder = border1;
     } else {
       border = border1;
+      holeBorder = border2;
     }
   } else {
     border.push(border1[0]);
@@ -546,6 +549,7 @@ export default function polyLineTriangles3(
   return {
     points,
     border,
+    holeBorder,
   };
 }
 

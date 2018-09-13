@@ -1828,6 +1828,7 @@ class DiagramElementPrimative extends DiagramElement {
   color: Array<number>;
   pointsToDraw: number;
   angleToDraw: number;
+  cannotTouchHole: boolean;
 
   constructor(
     drawingObject: DrawingObject,
@@ -1840,6 +1841,7 @@ class DiagramElementPrimative extends DiagramElement {
     this.color = color.slice();
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
+    this.cannotTouchHole = false;
     // this.setMoveBoundaryToDiagram();
   }
 
@@ -1849,11 +1851,24 @@ class DiagramElementPrimative extends DiagramElement {
     }
     const boundaries =
       this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
-
+    const holeBoundaries =
+      this.vertices.getGLBoundaryHoles(this.lastDrawTransform.matrix());
     for (let i = 0; i < boundaries.length; i += 1) {
       const boundary = boundaries[i];
       if (glLocation.isInPolygon(boundary)) {
-        return true;
+        let isTouched = true;
+        if (this.cannotTouchHole) {
+          for (let j = 0; j < holeBoundaries.length; j += 1) {
+            const holeBoundary = holeBoundaries[j];
+            if (glLocation.isInPolygon(holeBoundary)) {
+              isTouched = false;
+              j = holeBoundaries.length;
+            }
+          }
+        }
+        if (isTouched) {
+          return true;
+        }
       }
     }
     return false;

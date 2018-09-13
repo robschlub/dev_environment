@@ -42,6 +42,7 @@ class VertexPolyLine extends VertexObject {
     );
     this.points = lineTriangles.points;
     this.border[0] = lineTriangles.border;
+    this.holeBorder[0] = lineTriangles.holeBorder;
   }
 }
 
