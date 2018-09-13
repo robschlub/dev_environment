@@ -79,13 +79,24 @@ export default function makeTriangle(
         const qr = r.sub(q).toPolar().angle;
         let start = qp;
         let delta = qr - qp;
-        if (delta < 0) {
-          start = qr;
-          delta *= -1;
-        }
-        if (delta > Math.PI) {
-          start = qp;
-          delta = Math.PI * 2 - delta;
+        if (qp > qr) {
+          if (delta < 0) {
+            start = qr;
+            delta *= -1;
+          }
+          if (delta > Math.PI) {
+            start = qp;
+            delta = Math.PI * 2 - delta;
+          }
+        } else {
+          if (delta < 0) {
+            start = qp;
+            delta *= -1;
+          }
+          if (delta > Math.PI) {
+            start = qr;
+            delta = Math.PI * 2 - delta;
+          }
         }
         const angleElement = triangle[`_angle${ind}`];
         angleElement.setPosition(q);
