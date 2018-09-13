@@ -8,8 +8,8 @@ import {
   DiagramElementCollection,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
-import makeAngle from './angleAnnotation';
-import type { TypeAngle } from './angleAnnotation';
+import makeAngle from './angle';
+import type { TypeAngle } from './angle';
 import makeEquationLabel from './equationLabel';
 
 export type TypeTriangle = {
