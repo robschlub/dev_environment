@@ -2,7 +2,7 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
-  Transform, Point, Rect, distance, Line, polarToRect,
+  Transform, Point, Rect, distance, Line, polarToRect, normAngle, minAngleDiff,
 } from '../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -26,6 +26,9 @@ export type TypeTriangle = {
   hasDimensions: boolean;
   hasLabels: boolean;
   labelOffset: number;
+  labelsAlignedWithLines: boolean;
+  labelsAlwaysOutside: boolean;
+  clockwise: boolean;
   updatePoints: (Point, Point, Point) => void;
   updateAngles: () => void;
   addAngles: (TypeAngleAnnotationLayout, ?TypeAngleAnnotationLayout,
@@ -66,6 +69,9 @@ export default function makeTriangle(
   triangle.hasAngles = false;
   triangle.hasDimensions = false;
   triangle.hasLabels = false;
+  triangle.labelsAlignedWithLines = true;
+  triangle.clockwise = true;
+  triangle.labelsAlwaysOutside = true;
 
   const line = diagram.shapes.polyLine([p1, p2, p3], true, lineWidth, color);
   triangle.add('line', line);
@@ -82,6 +88,15 @@ export default function makeTriangle(
     triangle.b12 = new Line(triangle.b2, triangle.b1);
     triangle.b23 = new Line(triangle.b3, triangle.b2);
     triangle.b31 = new Line(triangle.b1, triangle.b3);
+
+    const a13 = normAngle(triangle.b31.angle() + Math.PI);
+    const a12 = normAngle(triangle.b12.angle());
+    if (minAngleDiff(a12, a13) > 0) {
+      triangle.clockwise = true;
+    } else {
+      triangle.clockwise = false;
+    }
+
     triangle.updateAngles();
     triangle.updateLabels();
   };
@@ -103,9 +118,27 @@ export default function makeTriangle(
     if (triangle.hasLabels) {
       const updateLabel = (index1: number, index2: number) => {
         const borderLine = triangle[`b${index1}${index2}`];
-        const offsetdelta = polarToRect(triangle.labelOffset, borderLine.angle() + Math.PI / 2);
+        let offset = triangle.labelOffset;
+        if (triangle.labelsAlwaysOutside) {
+          if (triangle.clockwise) {
+            offset = Math.abs(offset) * -1;
+          } else {
+            offset = Math.abs(offset);
+          }
+        }
+        const offsetdelta = polarToRect(offset, borderLine.angle() + Math.PI / 2);
         const labelElement = triangle[`_label${index1}${index2}`];
         labelElement.setPosition(borderLine.midpoint().add(offsetdelta));
+        if (triangle.labelsAlignedWithLines) {
+          let rotAngle = borderLine.angle();
+          if (rotAngle < -Math.PI / 2) {
+            rotAngle += Math.PI;
+          }
+          if (rotAngle > Math.PI / 2 && rotAngle < Math.PI * 3 / 2) {
+            rotAngle -= Math.PI;
+          }
+          labelElement.transform.updateRotation(rotAngle);
+        }
       };
       updateLabel(1, 2);
       updateLabel(2, 3);
