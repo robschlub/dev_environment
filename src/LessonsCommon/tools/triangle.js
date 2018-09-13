@@ -56,15 +56,21 @@ export default function makeTriangle(
     triangle.updateAngles();
   };
 
+
   triangle.addAngles = function addAngles(
+    angleColor: Array<number>,
     angle1Layout: TypeAngleAnnotationLayout,
     angle2Layout: ?TypeAngleAnnotationLayout,
     angle3Layout: ?TypeAngleAnnotationLayout,
   ) {
-    const makeAng = (angleLayout: TypeAngleAnnotationLayout) => makeAnnotatedAngle(diagram, angleLayout, color, '');
-    triangle.add('angle1', makeAng(angle1Layout))
+    const makeAng = (angleLayout: TypeAngleAnnotationLayout) => makeAnnotatedAngle(diagram, angleLayout, angleColor, '');
+    triangle.add('angle1', makeAng(angle1Layout));
     triangle.add('angle2', makeAng(angle2Layout || angle1Layout));
     triangle.add('angle3', makeAng(angle3Layout || angle1Layout));
+    triangle.order = [
+      ...triangle.order.slice(-3),
+      ...triangle.order.slice(0, -3),
+    ];
     triangle.hasAngles = true;
   };
 

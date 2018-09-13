@@ -60,16 +60,20 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
       layout.lineWidth,
       this.layout.colors.line,
     );
-    triangle.addAngles({
-      arc: {
-        radius: 0.3,
-        width: 0.03,
-        sides: 100,
+    triangle.addAngles(
+      this.layout.colors.angle,
+      {
+        arc: {
+          radius: 0.3,
+          width: 0.03,
+          sides: 100,
+        },
+        label: {
+          radius: 0.3,
+        },
       },
-      label: {
-        radius: 0.3,
-      },
-    });
+    );
+    triangle._angle1.autoRightAngle = true;
     return triangle;
   }
 
