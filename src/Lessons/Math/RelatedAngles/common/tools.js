@@ -8,7 +8,7 @@ import {
   DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
 // import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
-import { makeAngle } from '../../../../LessonsCommon/tools/angleAnnotation';
+import makeAngle from '../../../../LessonsCommon/tools/angleAnnotation';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angleAnnotation';
 
 export type TypeLabeledAngle = { } & TypeAngle;

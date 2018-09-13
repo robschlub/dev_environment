@@ -11,7 +11,7 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angleAnnotation';
 
-import { makeAngle } from '../../../../LessonsCommon/tools/angleAnnotation';
+import makeAngle from '../../../../LessonsCommon/tools/angleAnnotation';
 
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
