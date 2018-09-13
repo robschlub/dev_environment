@@ -2,8 +2,11 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
-  Transform, Point, Rect, distance, Line, polarToRect,
+  Transform, Point, Rect, distance, Line, polarToRect, normAngle,
 } from '../../js/diagram/tools/g2';
+import {
+  roundNum,
+} from '../../js/diagram/tools/mathTools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
@@ -191,12 +194,27 @@ export function makeLabeledLine(
   return line;
 }
 
+
+export type TypeLineLabelLocation = 'top' | 'left' | 'bottom' | 'right'
+                                    | 'end1' | 'end2' | 'outside' | 'inside';
+export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
+export type TypeLineLabelOrientation = 'horiztonal' | 'baseToLine' | 'baseAway';
+
 export type TypeLine = {
   _straightLine: DiagramElementPrimative;
+  currentLength: number;
   setLength: (number) => void;
   setEndPoints: (Point, Point, number) => void;
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
+  reference: 'center' | 'end';
+  label: null | {
+    eqn: Equation;
+    offset: number;
+    location: TypeLineLabelLocation;
+    subLocation: TypeLineLabelSubLocation;
+    orientation: TypeLineLabelOrientation;
+  };
 } & DiagramElementCollection;
 
 export type TypeArrow1 = {
@@ -233,6 +251,7 @@ export function makeLine(
     .translate(0, 0));
 
   let start = -0.5;
+  line.reference = reference;
   if (reference === 'end') {
     start = 0;
   }
@@ -245,6 +264,7 @@ export function makeLine(
   );
   line.add('line', straightLine);
   line.currentLength = 1;
+  line.label = null;
 
   line.addArrows = (arrow: TypeArrowsLayout) => {
     if (arrow.end1) {
@@ -266,14 +286,122 @@ export function makeLine(
     }
   };
 
-  line.addLabel = (labelText: string, offset: number) => {
+  // label location: top, left, bottom right, end1, end2, outside, inside
+  // label subLocation: top, left, bottom, right,
+  // label orientation: horiztonal, baseToLine, baseAwayFromLine
+  line.addLabel = function addLabel(
+    labelText: string,
+    offset: number,
+    location: TypeLineLabelLocation,
+    subLocation: TypeLineLabelSubLocation,
+    orientation: TypeLineLabelOrientation,
+  ) {
     const eqn = makeEquationLabel(diagram, labelText, color);
     line.add('label', eqn.collection);
-    line.labelEqn = eqn;
-    line.hasLabel = true;
-    line.labelOffset = offset;
-    line.labelOrientation = 'horizontal, withLine'
-    line.labelLocation = 'top, right, left, bottom'
+    line.label = {
+      eqn,
+      offset,
+      location,
+      subLocation,
+      orientation,
+    };
+    line.updateLabel();
+  };
+
+  line.updateLabel = () => {
+    if (line.label == null) {
+      return;
+    }
+    const lineAngle = normAngle(line.transform.r() || 0);
+    const offsetAngle = lineAngle;
+    const offsetPosition = new Point(
+      start * line.currentLength + line.currentLength / 2,
+      0,
+    );
+    if (line.label.location === 'end1' || line.label.location === 'end2') {
+      if (line.label.location === 'end1') {
+        offsetPosition.x = start * line.currentLength - line.label.offset;
+      }
+      if (line.label.location === 'end2') {
+        offsetPosition.x = start * line.currentLength + line.currentLength + line.label.offset;
+      }
+    } else {
+      const { offset } = line.label
+      const offsetTop = Math.cos(lineAngle) < 0 ? -offset : offset;
+      const offsetBottom = -offsetTop;
+      const offsetLeft = Math.sin(lineAngle) > 0 ? offset : -offset;
+      const offsetRight = -offsetLeft;
+
+      if (line.label.location === 'top') {
+        offsetPosition.y = offsetTop;
+        // if (Math.cos(lineAngle) < 0) {
+        //   offsetPosition.y = -line.label.offset;
+        // } else {
+        //   offsetPosition.y = line.label.offset;
+        // }
+      }
+      if (line.label.location === 'bottom') {
+        if (Math.cos(lineAngle) < 0) {
+          offsetPosition.y = line.label.offset;
+        } else {
+          offsetPosition.y = -line.label.offset;
+        }
+      }
+      if (line.label.location === 'right') {
+        if (Math.sin(lineAngle) < 0) {
+          offsetPosition.y = line.label.offset;
+        } else {
+          offsetPosition.y = -line.label.offset;
+        }
+      }
+      if (line.label.location === 'left') {
+        if (Math.sin(lineAngle) > 0) {
+          offsetPosition.y = line.label.offset;
+        } else {
+          offsetPosition.y = -line.label.offset;
+        }
+      }
+      if (roundNum(Math.cos(lineAngle), 4) === 0
+        && (line.label.location === 'left' || line.label.location === 'right')
+      ) {
+        if (line.label.subLocation === 'top') {
+          if (Math.cos(lineAngle) < 0) {
+            offsetPosition.y = -line.label.offset;
+          } else {
+            offsetPosition.y = line.label.offset;
+          }
+        }
+        if (line.label.location === 'bottom') {
+          if (Math.cos(lineAngle) < 0) {
+            offsetPosition.y = line.label.offset;
+          } else {
+            offsetPosition.y = -line.label.offset;
+          }
+        }
+      }
+      if (roundNum(Math.cos(lineAngle), 4) === 0
+        && (line.label.location === 'top' || line.label.location === 'bottom')
+      ) {
+        if (line.label.location === 'right') {
+          if (Math.sin(lineAngle) < 0) {
+            offsetPosition.y = line.label.offset;
+          } else {
+            offsetPosition.y = -line.label.offset;
+          }
+        }
+        if (line.label.location === 'left') {
+          if (Math.sin(lineAngle) > 0) {
+            offsetPosition.y = line.label.offset;
+          } else {
+            offsetPosition.y = -line.label.offset;
+          }
+        }
+      }
+    }
+    line._label.setPosition(offsetPosition);
+    if (line.label.orientation === 'horizontal') {
+      line._label.transform.updateRotation(-offsetAngle);
+    }
   };
 
   line.setLength = (newLength: number) => {
@@ -292,11 +420,11 @@ export function makeLine(
     straightLine.transform.updateScale(straightLineLength, 1);
     straightLine.setPosition(straightLineStart, 0);
     line.currentLength = newLength;
+    line.updateLabel();
   };
 
   line.setEndPoints = (p: Point, q: Point, offset: number = 0) => {
     const newLength = distance(q, p);
-    line.setLength(newLength);
     const pq = new Line(p, q);
     line.transform.updateRotation(pq.angle());
     const offsetdelta = polarToRect(offset, pq.angle() + Math.PI / 2);
@@ -305,7 +433,7 @@ export function makeLine(
     } else {
       line.transform.updateTranslation(p.add(offsetdelta));
     }
-    line.currentLength = newLength;
+    line.setLength(newLength);
   };
 
   line.animateLengthTo = function animateToLength(

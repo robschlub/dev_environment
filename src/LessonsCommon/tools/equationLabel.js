@@ -2,7 +2,7 @@
 import Diagram from '../../js/diagram/Diagram';
 
 import {
-  Point,
+  Point, Transform,
 } from '../../js/diagram/tools/g2';
 // import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 
@@ -13,6 +13,7 @@ export default function makeEquationLabel(
 ) {
   const eqn = diagram.equation.makeEqn();
   eqn.createElements({ base: label }, color);
+  eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(0, 0);
   eqn.formAlignment.fixTo = new Point(0, 0);
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'middle';
