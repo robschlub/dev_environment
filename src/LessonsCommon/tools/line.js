@@ -235,28 +235,23 @@ export type TypeLine = {
     orientation: TypeLineLabelOrientation;
     linePosition: number;
   } & TypeEquationLabel;
+  arrow1: null | {
+    height: number;
+  };
+  arrow2: null | {
+    height: number;
+  };
+
+  addArrow1: (number, number) => void;
+  addArrow2: (number, number) => void;
+  addLabel: (string, number, TypeLineLabelLocation,
+             TypeLineLabelSubLocation, TypeLineLabelOrientation, number
+            ) => void;
+  setEndPoints: (Point, Point, number) => void;
+  animateLengthTo: (number, number, boolean, ?() => void) => void;
+  grow: (number, number, boolean, ?() => void) => void;
+
 } & DiagramElementCollection;
-
-export type TypeArrow1 = {
-  _arrow1: {
-    height: number;
-  } & DiagramElementPrimative
-};
-
-export type TypeArrow2 = {
-  _arrow2: {
-    height: number;
-  } & DiagramElementPrimative
-};
-
-export type TypeArrows = TypeArrow2 & TypeArrow1;
-
-export type TypeArrowsLayout = {
-  width: number,
-  height: number,
-  end1: boolean,
-  end2: boolean
-};
 
 export function makeLine(
   diagram: Diagram,
@@ -285,25 +280,26 @@ export function makeLine(
   line.add('line', straightLine);
   line.currentLength = 1;
   line.label = null;
+  line.arrow1 = null;
+  line.arrow2 = null;
 
-  line.addArrows = (arrow: TypeArrowsLayout) => {
-    if (arrow.end1) {
-      const a = diagram.shapes.arrow(
-        arrow.width, 0, arrow.height, 0,
-        color, new Transform().translate(start, 0), new Point(0, 0), Math.PI / 2,
-      );
-      a.height = arrow.height;
-      line.add('arrow1', a);
-    }
-    if (arrow.end2) {
-      const a = diagram.shapes.arrow(
-        arrow.width, 0, arrow.height, 0,
-        color, new Transform().translate(start + vertexSpaceLength, 0),
-        new Point(0, 0), -Math.PI / 2,
-      );
-      a.height = arrow.height;
-      line.add('arrow2', a);
-    }
+  line.addArrow1 = (arrowHeight: number, arrowWidth: number) => {
+    const a = diagram.shapes.arrow(
+      arrowWidth, 0, arrowHeight, 0,
+      color, new Transform().translate(start, 0), new Point(0, 0), Math.PI / 2,
+    );
+    line.arrow1 = { height: arrowHeight };
+    line.add('arrow1', a);
+  };
+
+  line.addArrow2 = (arrowHeight: number, arrowWidth: number) => {
+    const a = diagram.shapes.arrow(
+      arrowWidth, 0, arrowHeight, 0,
+      color, new Transform().translate(start + vertexSpaceLength, 0),
+      new Point(0, 0), -Math.PI / 2,
+    );
+    line.arrow2 = { height: arrowHeight };
+    line.add('arrow2', a);
   };
 
   line.addLabel = function addLabel(
@@ -422,13 +418,13 @@ export function makeLine(
     let straightLineLength = newLength;
     let straightLineStart = start * newLength;
 
-    if (line._arrow1) {
-      straightLineLength -= line._arrow1.height;
-      straightLineStart += line._arrow1.height;
+    if (line.arrow1) {
+      straightLineLength -= line.arrow1.height;
+      straightLineStart += line.arrow1.height;
       line._arrow1.setPosition(start * newLength);
     }
-    if (line._arrow2) {
-      straightLineLength -= line._arrow2.height;
+    if (line.arrow2) {
+      straightLineLength -= line.arrow2.height;
       line._arrow2.setPosition(start * newLength + newLength, 0);
     }
     straightLine.transform.updateScale(straightLineLength, 1);
