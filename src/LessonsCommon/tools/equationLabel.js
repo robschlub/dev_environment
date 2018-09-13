@@ -13,18 +13,23 @@ export type TypeEquationLabel = {
 
 export default function makeEquationLabel(
   diagram: Diagram,
-  labelText: string = '',
+  labelTextOrEquation: string | Equation = '',
   color: Array<number>,
 ) {
-  const eqn = diagram.equation.makeEqn();
-  eqn.createElements({ base: labelText }, color);
-  eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(0, 0);
-  eqn.formAlignment.fixTo = new Point(0, 0);
-  eqn.formAlignment.hAlign = 'center';
-  eqn.formAlignment.vAlign = 'middle';
-  eqn.formAlignment.scale = 0.7;
-  eqn.addForm('base', ['base']);
-  eqn.setCurrentForm('base');
+  let eqn;
+  if (typeof labelTextOrEquation === 'string') {
+    eqn = diagram.equation.makeEqn();
+    eqn.createElements({ base: labelTextOrEquation }, color);
+    eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(0, 0);
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+    eqn.addForm('base', ['base']);
+    eqn.setCurrentForm('base');
+  } else {
+    eqn = labelTextOrEquation;
+  }
 
   function updateRotation(
     labelAngle: number,

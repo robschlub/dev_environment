@@ -74,15 +74,15 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       ? arcLayout.radius : arcLayout.radius * 1.0;
     const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.eqn.addForm('b_equals', ['_180', 'minus', 'a'], 'deg');
-    angle.eqn.addForm('b_equals', ['pi', 'minus', 'a'], 'rad');
-    angle.eqn.addForm('a_equals', ['_180', 'minus', 'b'], 'deg');
-    angle.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
-    angle.eqn.addForm('c_equals', ['_180', 'minus', 'c'], 'deg');
-    angle.eqn.addForm('c_equals', ['pi', 'minus', 'c'], 'rad');
-    angle.eqn.addForm('d_equals', ['_180', 'minus', 'd'], 'deg');
-    angle.eqn.addForm('d_equals', ['pi', 'minus', 'd'], 'rad');
-    angle.eqn.showForm(name);
+    angle.label.eqn.addForm('b_equals', ['_180', 'minus', 'a'], 'deg');
+    angle.label.eqn.addForm('b_equals', ['pi', 'minus', 'a'], 'rad');
+    angle.label.eqn.addForm('a_equals', ['_180', 'minus', 'b'], 'deg');
+    angle.label.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
+    angle.label.eqn.addForm('c_equals', ['_180', 'minus', 'c'], 'deg');
+    angle.label.eqn.addForm('c_equals', ['pi', 'minus', 'c'], 'rad');
+    angle.label.eqn.addForm('d_equals', ['_180', 'minus', 'd'], 'deg');
+    angle.label.eqn.addForm('d_equals', ['pi', 'minus', 'd'], 'rad');
+    angle.label.eqn.showForm(name);
 
     angle.lineIndex = lineIndex;
     angle.angleIndex = angleIndex;
@@ -240,8 +240,12 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   }
 
   setUnits(units: 'deg' | 'rad') {
-    this._angleA2.eqn.setUnits(units);
-    this._angleB2.eqn.setUnits(units);
+    if (this._angleA2.label) {
+      this._angleA2.label.eqn.setUnits(units);
+    }
+    if (this._angleB2.label) {
+      this._angleB2.label.eqn.setUnits(units);
+    }
   }
 
   // ***********************************************************************
@@ -267,7 +271,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
 
     angles.forEach((angle) => {
       const [element, form, color] = angle;
-      element.eqn.showForm(form);
+      element.label.eqn.showForm(form);
       element.show();
       element._arc.show();
       element.setColor(color);

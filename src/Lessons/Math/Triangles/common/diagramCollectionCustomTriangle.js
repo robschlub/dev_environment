@@ -48,10 +48,6 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
   makeTri() {
     const layout = this.layout.custom;
     const p = layout.pointPositions;
-    // const line = this.diagram.shapes.polyLine(
-    //   [p.p1, p.p2, p.p3], true,
-    //   layout.lineWidth, this.layout.colors.line,
-    // );
     const triangle = makeTriangle(
       this.diagram,
       p.p1,
@@ -60,21 +56,10 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
       layout.lineWidth,
       this.layout.colors.line,
     );
-    triangle.addAngles(
-      this.layout.colors.angle,
-      {
-        arc: {
-          radius: 0.3,
-          width: 0.03,
-          sides: 100,
-        },
-        label: {
-          radius: 0.35,
-        },
-      },
-      'a', 'b', 'c',
-    );
-    triangle.addLabels(
+    triangle.addAngle(1, 0.3, 0.03, 100, this.layout.colors.angle, 'a', 0.35);
+    triangle.addAngle(2, 0.3, 0.03, 100, this.layout.colors.angle, 'b', 0.35);
+    triangle.addAngle(3, 0.3, 0.03, 100, this.layout.colors.angle, 'c', 0.35);
+    triangle.addSideLabels(
       'AB',
       'BC',
       'CA',

@@ -11,7 +11,7 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 
 import type { TypeAngleAnnotation } from '../../../../LessonsCommon/tools/angleAnnotation';
 
-import makeAnnotatedAngle from '../../../../LessonsCommon/tools/angleAnnotation';
+import { makeAngle } from '../../../../LessonsCommon/tools/angleAnnotation';
 
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine, TypeArrows } from '../../../../LessonsCommon/tools/line';
@@ -39,11 +39,12 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
 
   makeAngle(index: number) {
     const layout = this.layout.properties;
-    const angle = makeAnnotatedAngle(
+    const angle = makeAngle(
       this.diagram,
-      layout.angleAnnotation,
+      layout.angleAnnotation.arc.radius,
+      layout.angleAnnotation.arc.width,
+      layout.angleAnnotation.arc.sides,
       this.layout.colors.angle,
-      '',
     );
     angle.setPosition(layout.triangle.points[index].add(layout.triangle.position));
 
@@ -64,7 +65,7 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
       this.layout.colors.dimensions,
     );
     line.addArrow1(layout.arrowHeight, layout.arrowWidth);
-    // line.addArrow2(layout.arrowHeight, layout.arrowWidth);
+    line.addArrow2(layout.arrowHeight, layout.arrowWidth);
     line.addLabel(`${index}a this`, 0.1, 'outside', 'left', 'horizontal', 0);
     const { triIndex, offset } = layout.locations[index];
     let triPoints = this.layout.properties.triangle.points;

@@ -8,8 +8,8 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
-import makeAnnotatedAngle from './angleAnnotation';
-import type { TypeAngleAnnotationLayout, TypeAngleAnnotation } from './angleAnnotation';
+import { makeAngle } from './angleAnnotation';
+import type { TypeAngle } from './angleAnnotation';
 import makeEquationLabel from './equationLabel';
 
 export type TypeTriangle = {
@@ -103,7 +103,7 @@ export default function makeTriangle(
     triangle.updateLabels();
   };
 
-  triangle.addLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
+  triangle.addSideLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
     const addEqn = (index1: number, index2: number, labelText: string) => {
       const eqn = makeEquationLabel(diagram, labelText, color).eqn;
       triangle.add(`label${index1}${index2}`, eqn.collection);
@@ -148,67 +148,70 @@ export default function makeTriangle(
     }
   };
 
-  triangle.addAngles = function addAngles(
+  triangle.addAngle = function addAngle(
+    index: number,
+    radius: number,
+    width: number,
+    sides: number,
     angleColor: Array<number>,
-    angleLayout: TypeAngleAnnotationLayout,
-    angle1Label: string = '',
-    angle2Label: string = '',
-    angle3Label: string = '',
+    labelText: string | Equation = '',
+    labelRadius: number = radius,
   ) {
-    const makeAng = (layout: TypeAngleAnnotationLayout, label: string) => makeAnnotatedAngle(diagram, layout, angleColor, label);
-    triangle.add('angle1', makeAng(angleLayout, angle1Label));
-    triangle.add('angle2', makeAng(angleLayout, angle2Label));
-    triangle.add('angle3', makeAng(angleLayout, angle3Label));
+    const ang = makeAngle(diagram, radius, width, sides, angleColor);
+
+    ang.addLabel(labelText, labelRadius);
+    triangle.add(`angle${index}`, ang);
     triangle.order = [
-      ...triangle.order.slice(-3),
-      ...triangle.order.slice(0, -3),
+      ...triangle.order.slice(-1),
+      ...triangle.order.slice(0, -1),
     ];
     triangle.hasAngles = true;
-    // triangle.angleArcRadius = angleLayout.arc.radius;
   };
 
   triangle.updateAngles = () => {
     if (triangle.hasAngles) {
       const updateAngle = (ind: number) => {
-        const index = ind - 1;
-        const q = triangle[`p${index + 1}`];
-        const r = triangle[`p${(index + 1) % 3 + 1}`];
-        const p = triangle[`p${(index + 2) % 3 + 1}`];
-        const qp = p.sub(q).toPolar().angle;
-        const qr = r.sub(q).toPolar().angle;
-        let start = qp;
-        let delta = qr - qp;
-        if (qp > qr) {
-          if (delta < 0) {
-            start = qr;
-            delta *= -1;
-          }
-          if (delta > Math.PI) {
-            start = qp;
-            delta = Math.PI * 2 - delta;
-          }
-        } else {
-          if (delta < 0) {
-            start = qp;
-            delta *= -1;
-          }
-          if (delta > Math.PI) {
-            start = qr;
-            delta = Math.PI * 2 - delta;
-          }
-        }
         const angleElement = triangle[`_angle${ind}`];
-        angleElement.setPosition(q);
-        angleElement.updateAngle(start, delta);
-        if (triangle.autoShowAngles) {
-          const rp = q.sub(p).toPolar();
-          const rq = r.sub(p).toPolar();
-          const angle = minAngleDiff(rp.angle, rq.angle);
-          const height = rp.mag * Math.sin(angle);
-          if (Math.abs(height) < angleElement.radius) {
-            angleElement.hide();
+        if (angleElement) {
+          const index = ind - 1;
+          const q = triangle[`p${index + 1}`];
+          const r = triangle[`p${(index + 1) % 3 + 1}`];
+          const p = triangle[`p${(index + 2) % 3 + 1}`];
+          const qp = p.sub(q).toPolar().angle;
+          const qr = r.sub(q).toPolar().angle;
+          let start = qp;
+          let delta = qr - qp;
+          if (qp > qr) {
+            if (delta < 0) {
+              start = qr;
+              delta *= -1;
+            }
+            if (delta > Math.PI) {
+              start = qp;
+              delta = Math.PI * 2 - delta;
+            }
           } else {
-            angleElement.show();
+            if (delta < 0) {
+              start = qp;
+              delta *= -1;
+            }
+            if (delta > Math.PI) {
+              start = qr;
+              delta = Math.PI * 2 - delta;
+            }
+          }
+          angleElement.setPosition(q);
+          angleElement.updateAngle(start, delta);
+          if (triangle.autoShowAngles) {
+            const rp = q.sub(p).toPolar();
+            const rq = r.sub(p).toPolar();
+            const angle = minAngleDiff(rp.angle, rq.angle);
+            const height = rp.mag * Math.sin(angle);
+            if (Math.abs(height) < angleElement.radius) {
+              angleElement.hide();
+            } else {
+              angleElement.show();
+            }
           }
         }
       };
