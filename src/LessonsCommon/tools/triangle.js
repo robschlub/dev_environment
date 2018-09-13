@@ -12,7 +12,10 @@ import makeAngle from './angle';
 import type { TypeAngle } from './angle';
 import makeEquationLabel from './equationLabel';
 import { makeLine } from './line';
-import type { TypeLine } from './line';
+import type {
+  TypeLine, TypeLineLabelLocation, TypeLineLabelSubLocation,
+  TypeLineLabelOrientation,
+} from './line';
 
 export type TypeTriangle = {
   p1: Point;
@@ -38,6 +41,8 @@ export type TypeTriangle = {
   updateAngles: () => void;
   addAngle: (number, number, number, number, Array<string>, string, number) => void;
   autoShowAngles: boolean;
+
+  dimensionList: Array<Array<number>>;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -78,6 +83,7 @@ export default function makeTriangle(
   triangle.clockwise = true;
   triangle.labelsAlwaysOutside = true;
   triangle.autoShowAngles = false;
+  triangle.dimensionList = [];
 
   const line = diagram.shapes.polyLine(
     [p1, p2, p3], true, lineWidth,
@@ -115,7 +121,7 @@ export default function makeTriangle(
     // triangle.updateLabels();
   };
 
-  triangle.addDimension = function addDimension(
+  triangle.addSideDimension = function addDimension(
     index1: number,
     index2: number,
     // dimensionText: string,
@@ -133,6 +139,22 @@ export default function makeTriangle(
     dimension.setEndPoints(point1, point2, offset);
     dimension.offset = offset;
     triangle.add(`dimension${index1}${index2}`, dimension);
+    triangle.dimensionList.push([index1, index2]);
+    return dimension;
+  };
+
+  triangle.addSideLabel = function addSideLabel(
+    index1: number, index2: number,
+    labelColor: Array<number>,
+    labelText: string,
+    offset: number,
+    location: TypeLineLabelLocation = 'outside',
+    subLocation: TypeLineLabelSubLocation = 'left',
+    orientation: TypeLineLabelOrientation = 'baseUpright',
+    linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
+  ) {
+    const dimension = triangle.addSideDimension(index1, index2, labelColor, 0, false);
+    dimension.addLabel(labelText, offset, location, subLocation, orientation, linePosition);
   };
 
   triangle.updateDimensions = () => {
@@ -146,9 +168,12 @@ export default function makeTriangle(
         dimension.setEndPoints(point1, point2, dimension.offset);
       }
     };
-    updateDimension(1, 2);
-    updateDimension(2, 3);
-    updateDimension(3, 1);
+    triangle.dimensionList.forEach((dim) => {
+      updateDimension(dim[0], dim[1]);
+    });
+    // updateDimension(1, 2);
+    // updateDimension(2, 3);
+    // updateDimension(3, 1);
   };
 
   // triangle.addSideLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
