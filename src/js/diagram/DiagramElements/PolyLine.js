@@ -1,6 +1,7 @@
 // @flow
 
 import VertexPolyLine from '../DrawingObjects/VertexObject/VertexPolyLine';
+import type { TypeVertexPolyLineBorderToPoint } from '../DrawingObjects/VertexObject/VertexPolyLine';
 import VertexPolyLineCorners from '../DrawingObjects/VertexObject/VertexPolyLineCorners';
 import { DiagramElementPrimative } from '../Element';
 import {
@@ -8,16 +9,19 @@ import {
 } from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 
+export type TypePolyLineBorderToPoint = TypeVertexPolyLineBorderToPoint;
+
 function PolyLine(
   webgl: WebGLInstance,
   points: Array<Point>,
   close: boolean,
   lineWidth: number,
   color: Array<number>,
+  borderToPoint: TypeVertexPolyLineBorderToPoint,
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
 ) {
-  const vertexLine = new VertexPolyLine(webgl, points, close, lineWidth);
+  const vertexLine = new VertexPolyLine(webgl, points, close, lineWidth, borderToPoint);
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {
     transform = transform.translate(transformOrLocation.x, transformOrLocation.y);

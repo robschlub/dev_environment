@@ -9,7 +9,7 @@ import {
 //   const lineQ = new Line(q1, q2);
 //   return lineP.intersectsWith(lineQ).intersect;
 // }
-
+export type TypeBorderToPoint = 'alwaysOn' | 'onSharpAnglesOnly' | 'never';
 // Generate a thick line assuming gl.TRIANGLES where corners are sharp.
 // Input:
 //   * coords: an array of points that will define the center of the line
@@ -17,7 +17,7 @@ export default function polyLineTriangles3(
   coords: Array<Point>,
   close: boolean,
   width: number,
-  borderToPoint: 'alwaysOn' | 'onSharpAnglesOnly' | 'never' = 'onSharpAnglesOnly',
+  borderToPoint: TypeBorderToPoint,
 ) {
   const points = [];
   const border1 = [];     // outside (vertex) when anticlockwise

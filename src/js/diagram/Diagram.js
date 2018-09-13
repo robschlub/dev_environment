@@ -20,6 +20,9 @@ import DrawContext2D from './DrawContext2D';
 import {
   PolyLine, PolyLineCorners,
 } from './DiagramElements/PolyLine';
+import type {
+  TypePolyLineBorderToPoint,
+} from './DiagramElements/PolyLine';
 import {
   Polygon, PolygonFilled,
 } from './DiagramElements/Polygon';
@@ -129,9 +132,13 @@ function shapes(diagram: Diagram) {
     close: boolean,
     lineWidth: number,
     color: Array<number>,
+    borderToPoint: TypePolyLineBorderToPoint = 'never',
     transform: Transform | Point = new Transform(),
   ) {
-    return PolyLine(diagram.webgl, points, close, lineWidth, color, transform, diagram.limits);
+    return PolyLine(
+      diagram.webgl, points, close, lineWidth,
+      color, borderToPoint, transform, diagram.limits,
+    );
   }
 
   function text(

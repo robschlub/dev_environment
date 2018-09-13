@@ -21,6 +21,7 @@ export default class TriangleExamplesCollection extends CommonDiagramCollection 
     const line = this.diagram.shapes.polyLine(
       tri.points, true,
       this.layout.examples.lineWidth, this.layout.colors.line,
+      'onSharpAnglesOnly',
       new Transform().rotate(0).translate(0),
     );
     return line;

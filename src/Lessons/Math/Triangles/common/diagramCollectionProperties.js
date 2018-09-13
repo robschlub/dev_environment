@@ -31,7 +31,7 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
 
     const line = this.diagram.shapes.polyLine(
       layout.triangle.points, true,
-      layout.lineWidth, this.layout.colors.line,
+      layout.lineWidth, this.layout.colors.line, 'onSharpAnglesOnly',
       layout.triangle.position,
     );
     return line;

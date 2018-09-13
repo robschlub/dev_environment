@@ -74,7 +74,10 @@ export default function makeTriangle(
   triangle.labelsAlwaysOutside = true;
   triangle.autoShowAngles = false;
 
-  const line = diagram.shapes.polyLine([p1, p2, p3], true, lineWidth, color);
+  const line = diagram.shapes.polyLine(
+    [p1, p2, p3], true, lineWidth,
+    color, 'onSharpAnglesOnly',
+  );
   triangle.add('line', line);
 
   triangle.updatePoints = (newP1: Point, newP2: Point, newP3: Point) => {
