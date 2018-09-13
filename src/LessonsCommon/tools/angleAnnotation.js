@@ -33,6 +33,7 @@ export type TypeAngleAnnotation = {
   showForm: (string) => void;
   setToCorner: (Point, Point, Point) => void;
   autoRightAngle: boolean;
+  radius: number;
 } & DiagramElementCollection;
 
 export default function makeAnnotatedAngle(
@@ -84,6 +85,7 @@ export default function makeAnnotatedAngle(
   angle.curve = curve;
   angle.right = right;
   angle.autoRightAngle = false;
+  angle.radius = layout.arc.radius + layout.arc.width / 2;
 
   angle.updateAngle = (start: number, size: number, labelRotationOffset: number = 0) => {
     if (angle.autoRightAngle

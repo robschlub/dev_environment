@@ -33,6 +33,7 @@ export type TypeTriangle = {
   updateAngles: () => void;
   addAngles: (TypeAngleAnnotationLayout, ?TypeAngleAnnotationLayout,
               ?TypeAngleAnnotationLayout) => void;
+  autoShowAngles: boolean;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -72,6 +73,7 @@ export default function makeTriangle(
   triangle.labelsAlignedWithLines = true;
   triangle.clockwise = true;
   triangle.labelsAlwaysOutside = true;
+  triangle.autoShowAngles = true;
 
   const line = diagram.shapes.polyLine([p1, p2, p3], true, lineWidth, color);
   triangle.add('line', line);
@@ -148,20 +150,21 @@ export default function makeTriangle(
 
   triangle.addAngles = function addAngles(
     angleColor: Array<number>,
-    angle1Layout: TypeAngleAnnotationLayout,
+    angleLayout: TypeAngleAnnotationLayout,
     angle1Label: string = '',
     angle2Label: string = '',
     angle3Label: string = '',
   ) {
-    const makeAng = (angleLayout: TypeAngleAnnotationLayout, label: string) => makeAnnotatedAngle(diagram, angleLayout, angleColor, label);
-    triangle.add('angle1', makeAng(angle1Layout, angle1Label));
-    triangle.add('angle2', makeAng(angle1Layout, angle2Label));
-    triangle.add('angle3', makeAng(angle1Layout, angle3Label));
+    const makeAng = (layout: TypeAngleAnnotationLayout, label: string) => makeAnnotatedAngle(diagram, layout, angleColor, label);
+    triangle.add('angle1', makeAng(angleLayout, angle1Label));
+    triangle.add('angle2', makeAng(angleLayout, angle2Label));
+    triangle.add('angle3', makeAng(angleLayout, angle3Label));
     triangle.order = [
       ...triangle.order.slice(-3),
       ...triangle.order.slice(0, -3),
     ];
     triangle.hasAngles = true;
+    // triangle.angleArcRadius = angleLayout.arc.radius;
   };
 
   triangle.updateAngles = () => {
@@ -197,6 +200,17 @@ export default function makeTriangle(
         const angleElement = triangle[`_angle${ind}`];
         angleElement.setPosition(q);
         angleElement.updateAngle(start, delta);
+        if (triangle.autoShowAngles) {
+          const rp = q.sub(p).toPolar();
+          const rq = r.sub(p).toPolar();
+          const angle = minAngleDiff(rp.angle, rq.angle);
+          const height = rp.mag * Math.sin(angle);
+          if (Math.abs(height) < angleElement.radius) {
+            angleElement.hide();
+          } else {
+            angleElement.show();
+          }
+        }
       };
       updateAngle(1);
       updateAngle(2);
