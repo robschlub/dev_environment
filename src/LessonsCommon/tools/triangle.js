@@ -73,7 +73,7 @@ export default function makeTriangle(
   triangle.labelsAlignedWithLines = true;
   triangle.clockwise = true;
   triangle.labelsAlwaysOutside = true;
-  triangle.autoShowAngles = true;
+  triangle.autoShowAngles = false;
 
   const line = diagram.shapes.polyLine([p1, p2, p3], true, lineWidth, color);
   triangle.add('line', line);

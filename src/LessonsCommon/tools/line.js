@@ -191,8 +191,8 @@ export function makeLabeledLine(
 }
 
 export type TypeLine = {
-  _arrow1: DiagramElementPrimative;
-  _arrow2: DiagramElementPrimative;
+  // _arrow1: DiagramElementPrimative;
+  // _arrow2: DiagramElementPrimative;
   _straightLine: DiagramElementPrimative;
   setLength: (number) => void;
   setEndPoints: (Point, Point, number) => void;
@@ -200,18 +200,31 @@ export type TypeLine = {
   grow: (number, number, boolean, ?() => void) => void;
 } & DiagramElementCollection;
 
+export type TypeArrow1 = {
+  _arrow1: {
+    height: number;
+  } & DiagramElementPrimative
+};
+
+export type TypeArrow2 = {
+  _arrow2: {
+    height: number;
+  } & DiagramElementPrimative
+};
+
+export type TypeArrowsLayout = {
+  width: number,
+  height: number,
+  end1: boolean,
+  end2: boolean
+}
+
 export function makeLine(
   diagram: Diagram,
   reference: 'center' | 'end' = 'center',
   length: number,
   width: number,
   color: Array<number>,
-  arrow: ?{
-    width: number,
-    height: number,
-    end1: boolean,
-    end2: boolean,
-  } = null,
 ) {
   const line = diagram.shapes.collection(new Transform()
     .scale(1, 1)
@@ -224,12 +237,13 @@ export function makeLine(
   }
   const vertexLength = 1;
 
-  if (arrow) {
+  line.addArrows = (arrow: TypeArrowsLayout) => {
     if (arrow.end1) {
       const a = diagram.shapes.arrow(
         arrow.width, 0, arrow.height, 0,
         color, new Transform().translate(start, 0), new Point(0, 0), Math.PI / 2,
       );
+      a.height = arrow.height;
       line.add('arrow1', a);
     }
     if (arrow.end2) {
@@ -238,9 +252,10 @@ export function makeLine(
         color, new Transform().translate(start + vertexLength, 0),
         new Point(0, 0), -Math.PI / 2,
       );
+      a.height = arrow.height;
       line.add('arrow2', a);
     }
-  }
+  };
 
   const straightLine = diagram.shapes.horizontalLine(
     new Point(0, 0),
@@ -256,16 +271,14 @@ export function makeLine(
     let straightLineLength = newLength;
     let straightLineStart = start * newLength;
 
-    if (arrow) {
-      if (arrow.end1) {
-        straightLineLength -= arrow.height;
-        straightLineStart += arrow.height;
-        line._arrow1.setPosition(start * newLength);
-      }
-      if (arrow.end2) {
-        straightLineLength -= arrow.height;
-        line._arrow2.setPosition(start * newLength + newLength, 0);
-      }
+    if (line._arrow1) {
+      straightLineLength -= line._arrow1.height;
+      straightLineStart += line._arrow1.height;
+      line._arrow1.setPosition(start * newLength);
+    }
+    if (line._arrow2) {
+      straightLineLength -= line._arrow2.height;
+      line._arrow2.setPosition(start * newLength + newLength, 0);
     }
     straightLine.transform.updateScale(straightLineLength, 1);
     straightLine.setPosition(straightLineStart, 0);

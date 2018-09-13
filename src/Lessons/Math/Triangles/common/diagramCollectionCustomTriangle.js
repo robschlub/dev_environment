@@ -81,6 +81,7 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
       0.15,
     );
     triangle._angle1.autoRightAngle = true;
+    triangle.autoShowAngles = true;
     return triangle;
   }
 

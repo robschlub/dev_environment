@@ -14,14 +14,14 @@ import type { TypeAngleAnnotation } from '../../../../LessonsCommon/tools/angleA
 import makeAnnotatedAngle from '../../../../LessonsCommon/tools/angleAnnotation';
 
 import { makeLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine, TypeArrows } from '../../../../LessonsCommon/tools/line';
 
 export default class TrianglePropertiesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _tri: DiagramElementPrimative;
-  _dim1: TypeLine;
-  _dim2: TypeLine;
-  _dim3: TypeLine;
+  _dim1: TypeLine & TypeArrows;
+  _dim2: TypeLine & TypeArrows;
+  _dim3: TypeLine & TypeArrows;
   _angle1: TypeAngleAnnotation;
   _angle2: TypeAngleAnnotation;
   _angle3: TypeAngleAnnotation;
@@ -61,13 +61,14 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
     const layout = this.layout.properties.dimension;
     const line = makeLine(
       this.diagram, 'center', 2, layout.lineWidth,
-      this.layout.colors.dimensions, {
-        width: layout.arrowWidth,
-        height: layout.arrowHeight,
-        end1: true,
-        end2: true,
-      },
+      this.layout.colors.dimensions,
     );
+    line.addArrows({
+      width: layout.arrowWidth,
+      height: layout.arrowHeight,
+      end1: true,
+      end2: true,
+    });
     const { triIndex, offset } = layout.locations[index];
     let triPoints = this.layout.properties.triangle.points;
     triPoints = triPoints.map(p => p.add(this.layout.properties.triangle.position));
