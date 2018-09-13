@@ -334,67 +334,34 @@ export function makeLine(
 
       if (line.label.location === 'top') {
         offsetPosition.y = offsetTop;
-        // if (Math.cos(lineAngle) < 0) {
-        //   offsetPosition.y = -line.label.offset;
-        // } else {
-        //   offsetPosition.y = line.label.offset;
-        // }
       }
       if (line.label.location === 'bottom') {
-        if (Math.cos(lineAngle) < 0) {
-          offsetPosition.y = line.label.offset;
-        } else {
-          offsetPosition.y = -line.label.offset;
-        }
+        offsetPosition.y = offsetBottom;
       }
       if (line.label.location === 'right') {
-        if (Math.sin(lineAngle) < 0) {
-          offsetPosition.y = line.label.offset;
-        } else {
-          offsetPosition.y = -line.label.offset;
-        }
+        offsetPosition.y = offsetRight;
       }
       if (line.label.location === 'left') {
-        if (Math.sin(lineAngle) > 0) {
-          offsetPosition.y = line.label.offset;
-        } else {
-          offsetPosition.y = -line.label.offset;
-        }
+        offsetPosition.y = offsetLeft;
       }
-      if (roundNum(Math.cos(lineAngle), 4) === 0
+      if (roundNum(Math.sin(lineAngle), 4) === 0
         && (line.label.location === 'left' || line.label.location === 'right')
       ) {
         if (line.label.subLocation === 'top') {
-          if (Math.cos(lineAngle) < 0) {
-            offsetPosition.y = -line.label.offset;
-          } else {
-            offsetPosition.y = line.label.offset;
-          }
+          offsetPosition.y = offsetTop;
         }
-        if (line.label.location === 'bottom') {
-          if (Math.cos(lineAngle) < 0) {
-            offsetPosition.y = line.label.offset;
-          } else {
-            offsetPosition.y = -line.label.offset;
-          }
+        if (line.label.subLocation === 'bottom') {
+          offsetPosition.y = offsetBottom;
         }
       }
       if (roundNum(Math.cos(lineAngle), 4) === 0
         && (line.label.location === 'top' || line.label.location === 'bottom')
       ) {
-        if (line.label.location === 'right') {
-          if (Math.sin(lineAngle) < 0) {
-            offsetPosition.y = line.label.offset;
-          } else {
-            offsetPosition.y = -line.label.offset;
-          }
+        if (line.label.subLocation === 'right') {
+          offsetPosition.y = offsetRight;
         }
-        if (line.label.location === 'left') {
-          if (Math.sin(lineAngle) > 0) {
-            offsetPosition.y = line.label.offset;
-          } else {
-            offsetPosition.y = -line.label.offset;
-          }
+        if (line.label.subLocation === 'left') {
+          offsetPosition.y = offsetLeft;
         }
       }
     }

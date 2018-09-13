@@ -104,7 +104,7 @@ export default function commonLessonLayout() {
     triangle: {
       points: [
         new Point(-2, 0),
-        new Point(-1, 1.5),
+        new Point(-2, 1.5),
         new Point(2, 0),
       ],
       position: new Point(0, -0.85),
