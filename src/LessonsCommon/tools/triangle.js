@@ -105,7 +105,7 @@ export default function makeTriangle(
 
   triangle.addLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
     const addEqn = (index1: number, index2: number, labelText: string) => {
-      const eqn = makeEquationLabel(diagram, labelText, color);
+      const eqn = makeEquationLabel(diagram, labelText, color).eqn;
       triangle.add(`label${index1}${index2}`, eqn.collection);
       triangle[`labelEqn${index1}${index2}`] = eqn;
     };

@@ -202,7 +202,9 @@ export function makeLabeledLine(
 // end1 - text is on first end of line
 // end2 - text is on second end of line
 // outside - text is on left of line when line is vertical from 0 to 1
+//           or, if a polygon is defined clockwise, outside will be outside.
 // inside - text is on right of line when line is vertical from 0 to 1
+//           or, if a polygon is defined anti-clockwise, outside will be outside.
 export type TypeLineLabelLocation = 'top' | 'left' | 'bottom' | 'right'
                                     | 'end1' | 'end2' | 'outside' | 'inside';
 // top - text is on top of line if line is horiztonal
@@ -304,9 +306,6 @@ export function makeLine(
     }
   };
 
-  // label location: top, left, bottom right, end1, end2, outside, inside
-  // label subLocation: top, left, bottom, right,
-  // label orientation: horiztonal, baseToLine, baseAwayFromLine
   line.addLabel = function addLabel(
     labelText: string,
     offset: number,
@@ -315,16 +314,15 @@ export function makeLine(
     orientation: TypeLineLabelOrientation,
     linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
   ) {
-    const eqn = makeEquationLabel(diagram, labelText, color);
-    line.add('label', eqn.collection);
-    line.label = {
-      eqn,
+    const eqnLabel = makeEquationLabel(diagram, labelText, color);
+    line.add('label', eqnLabel.eqn.collection);
+    line.label = Object.assign({}, eqnLabel, {
       offset,
       location,
       subLocation,
       orientation,
       linePosition,
-    };
+    });
     line.updateLabel();
   };
 
@@ -334,22 +332,22 @@ export function makeLine(
     }
     const lineAngle = normAngle(line.transform.r() || 0);
     let labelAngle = 0;
-    const offsetPosition = new Point(
+    const labelPosition = new Point(
       start * line.currentLength + line.label.linePosition * line.currentLength,
       0,
     );
     let labelOffsetAngle = Math.PI / 2;
+    const labelOffsetMag = line.label.offset;
     if (line.label.location === 'end1' || line.label.location === 'end2') {
       if (line.label.location === 'end1') {
-        offsetPosition.x = start * line.currentLength - line.label.offset;
+        labelPosition.x = start * line.currentLength - line.label.offset;
         labelOffsetAngle = -Math.PI;
       }
       if (line.label.location === 'end2') {
-        offsetPosition.x = start * line.currentLength + line.currentLength + line.label.offset;
+        labelPosition.x = start * line.currentLength + line.currentLength + line.label.offset;
         labelOffsetAngle = 0;
       }
     } else {
-      // const { offset } = line.label;
       const offsetTop = Math.cos(lineAngle) < 0 ? -Math.PI / 2 : Math.PI / 2;
       const offsetBottom = -offsetTop;
       const offsetLeft = Math.sin(lineAngle) > 0 ? Math.PI / 2 : -Math.PI / 2;
@@ -399,12 +397,12 @@ export function makeLine(
       labelAngle = -lineAngle;
     }
     if (line.label.orientation === 'baseToLine') {
-      if (offsetPosition.y < 0) {
+      if (labelPosition.y < 0) {
         labelAngle = Math.PI;
       }
     }
     if (line.label.orientation === 'baseAway') {
-      if (offsetPosition.y > 0) {
+      if (labelPosition.y > 0) {
         labelAngle = Math.PI;
       }
     }
@@ -416,20 +414,8 @@ export function makeLine(
       //   labelAngle = -lineAngle;
       // }
     }
-    let labelWidth = 0;
-    let labelHeight = 0;
-    if (line.label.eqn.currentForm != null) {
-      labelWidth = line.label.eqn.currentForm.width / 2 + 0.04;
-      labelHeight = line.label.eqn.currentForm.height / 2 + 0.04;
-    }
 
-    const a = labelWidth + line.label.offset;
-    const b = labelHeight + line.label.offset;
-    const r = a * b / Math.sqrt((b * Math.cos(labelAngle + Math.PI / 2)) ** 2
-      + (a * Math.sin(labelAngle + Math.PI / 2)) ** 2);
-    console.log(r, labelWidth, labelHeight, labelAngle)
-    line._label.setPosition(offsetPosition.add(polarToRect(r, labelOffsetAngle)));
-    line._label.transform.updateRotation(labelAngle);
+    line.label.updateRotation(labelAngle, labelPosition, labelOffsetMag, labelOffsetAngle);
   };
 
   line.setLength = (newLength: number) => {

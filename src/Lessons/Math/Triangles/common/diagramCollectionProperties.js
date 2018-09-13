@@ -69,7 +69,7 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
       end1: true,
       end2: true,
     });
-    line.addLabel(`${index}a this`, 0.1, 'bottom', 'left', 'horizontal', 0.5);
+    line.addLabel(`${index}a this`, 0.1, 'outside', 'left', 'horizontal', 0.5);
     const { triIndex, offset } = layout.locations[index];
     let triPoints = this.layout.properties.triangle.points;
     triPoints = triPoints.map(p => p.add(this.layout.properties.triangle.position));
