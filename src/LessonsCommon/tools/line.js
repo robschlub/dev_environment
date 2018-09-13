@@ -338,60 +338,63 @@ export function makeLine(
       start * line.currentLength + line.label.linePosition * line.currentLength,
       0,
     );
+    let labelOffsetAngle = Math.PI / 2;
     if (line.label.location === 'end1' || line.label.location === 'end2') {
       if (line.label.location === 'end1') {
         offsetPosition.x = start * line.currentLength - line.label.offset;
+        labelOffsetAngle = -Math.PI;
       }
       if (line.label.location === 'end2') {
         offsetPosition.x = start * line.currentLength + line.currentLength + line.label.offset;
+        labelOffsetAngle = 0;
       }
     } else {
-      const { offset } = line.label;
-      const offsetTop = Math.cos(lineAngle) < 0 ? -offset : offset;
+      // const { offset } = line.label;
+      const offsetTop = Math.cos(lineAngle) < 0 ? -Math.PI / 2 : Math.PI / 2;
       const offsetBottom = -offsetTop;
-      const offsetLeft = Math.sin(lineAngle) > 0 ? offset : -offset;
+      const offsetLeft = Math.sin(lineAngle) > 0 ? Math.PI / 2 : -Math.PI / 2;
       const offsetRight = -offsetLeft;
 
       if (line.label.location === 'top') {
-        offsetPosition.y = offsetTop;
+        labelOffsetAngle = offsetTop;
       }
       if (line.label.location === 'bottom') {
-        offsetPosition.y = offsetBottom;
+        labelOffsetAngle = offsetBottom;
       }
       if (line.label.location === 'right') {
-        offsetPosition.y = offsetRight;
+        labelOffsetAngle = offsetRight;
       }
       if (line.label.location === 'left') {
-        offsetPosition.y = offsetLeft;
+        labelOffsetAngle = offsetLeft;
       }
       if (roundNum(Math.sin(lineAngle), 4) === 0
         && (line.label.location === 'left' || line.label.location === 'right')
       ) {
         if (line.label.subLocation === 'top') {
-          offsetPosition.y = offsetTop;
+          labelOffsetAngle = offsetTop;
         }
         if (line.label.subLocation === 'bottom') {
-          offsetPosition.y = offsetBottom;
+          labelOffsetAngle = offsetBottom;
         }
       }
       if (roundNum(Math.cos(lineAngle), 4) === 0
         && (line.label.location === 'top' || line.label.location === 'bottom')
       ) {
         if (line.label.subLocation === 'right') {
-          offsetPosition.y = offsetRight;
+          labelOffsetAngle = offsetRight;
         }
         if (line.label.subLocation === 'left') {
-          offsetPosition.y = offsetLeft;
+          labelOffsetAngle = offsetLeft;
         }
       }
       if (line.label.location === 'inside') {
-        offsetPosition.y = -offset;
+        labelOffsetAngle = -Math.PI / 2;
       }
       if (line.label.location === 'outside') {
-        offsetPosition.y = offset;
+        labelOffsetAngle = Math.PI / 2;
       }
     }
-    line._label.setPosition(offsetPosition);
+
     if (line.label.orientation === 'horizontal') {
       labelAngle = -lineAngle;
     }
@@ -413,6 +416,19 @@ export function makeLine(
       //   labelAngle = -lineAngle;
       // }
     }
+    let labelWidth = 0;
+    let labelHeight = 0;
+    if (line.label.eqn.currentForm != null) {
+      labelWidth = line.label.eqn.currentForm.width / 2 + 0.04;
+      labelHeight = line.label.eqn.currentForm.height / 2 + 0.04;
+    }
+
+    const a = labelWidth + line.label.offset;
+    const b = labelHeight + line.label.offset;
+    const r = a * b / Math.sqrt((b * Math.cos(labelAngle + Math.PI / 2)) ** 2
+      + (a * Math.sin(labelAngle + Math.PI / 2)) ** 2);
+    console.log(r, labelWidth, labelHeight, labelAngle)
+    line._label.setPosition(offsetPosition.add(polarToRect(r, labelOffsetAngle)));
     line._label.transform.updateRotation(labelAngle);
   };
 

@@ -19,5 +19,6 @@ export default function makeEquationLabel(
   eqn.formAlignment.vAlign = 'middle';
   eqn.formAlignment.scale = 0.7;
   eqn.addForm('base', ['base']);
+  eqn.setCurrentForm('base');
   return eqn;
 }
