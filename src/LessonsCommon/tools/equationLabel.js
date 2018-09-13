@@ -4,7 +4,12 @@ import Diagram from '../../js/diagram/Diagram';
 import {
   Point, Transform, polarToRect,
 } from '../../js/diagram/tools/g2';
-// import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+
+export type TypeEquationLabel = {
+  eqn: Equation;
+  updateRotation: (number, Point, number, number) => void;
+};
 
 export default function makeEquationLabel(
   diagram: Diagram,

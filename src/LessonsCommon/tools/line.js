@@ -6,12 +6,13 @@ import {
 } from '../../js/diagram/tools/g2';
 import {
   roundNum,
-} from '../../js/diagram/tools/mathTools';
+} from '../../js/diagram/tools/mathtools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import makeEquationLabel from './equationLabel';
+import type { TypeEquationLabel } from './equationLabel';
 
 export type MoveableLineType = {
   _end1: DiagramElementPrimative;
@@ -228,13 +229,12 @@ export type TypeLine = {
   grow: (number, number, boolean, ?() => void) => void;
   reference: 'center' | 'end';
   label: null | {
-    eqn: Equation;
     offset: number;
     location: TypeLineLabelLocation;
     subLocation: TypeLineLabelSubLocation;
     orientation: TypeLineLabelOrientation;
     linePosition: number;
-  };
+  } & TypeEquationLabel;
 } & DiagramElementCollection;
 
 export type TypeArrow1 = {
