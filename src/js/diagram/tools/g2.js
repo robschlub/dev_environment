@@ -407,6 +407,7 @@ function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
   this.A = this.p2.y - this.p1.y;
   this.B = this.p1.x - this.p2.x;
   this.C = this.A * this.p1.x + this.B * this.p1.y;
+  this.distance = distance(this.p1, this.p2);
 }
 
 Line.prototype.angle = function angle() {
@@ -423,7 +424,7 @@ Line.prototype.round = function lineround(precision?: number = 8) {
 
 Line.prototype.length = function linelength() {
   // return this.p1.sub(this.p2).distance();
-  return distance(this.p1, this.p2);
+  return this.distance;
 };
 /* eslint-disable comma-dangle */
 Line.prototype.midpoint = function linemidpoint() {

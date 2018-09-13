@@ -74,6 +74,12 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
       },
       'A', 'B', 'C',
     );
+    triangle.addLabels(
+      'AB',
+      'BC',
+      'CA this is a really long test',
+      0.15,
+    );
     triangle._angle1.autoRightAngle = true;
     return triangle;
   }
