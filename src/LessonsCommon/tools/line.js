@@ -195,10 +195,27 @@ export function makeLabeledLine(
 }
 
 
+// top - text is on top of line (except when line is vertical)
+// bottom - text is on bottom of line (except when line is vertical)
+// left - text is to left of line (except when line is horiztonal)
+// right - text is to right of line (except when line is horiztonal)
+// end1 - text is on first end of line
+// end2 - text is on second end of line
+// outside - text is on left of line when line is vertical from 0 to 1
+// inside - text is on right of line when line is vertical from 0 to 1
 export type TypeLineLabelLocation = 'top' | 'left' | 'bottom' | 'right'
                                     | 'end1' | 'end2' | 'outside' | 'inside';
+// top - text is on top of line if line is horiztonal
+// bottom - text is on bottom of line if line is horiztonal
+// left - text is to left of line if line is vertical
+// right - text is to right of line if line is vertical
 export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
-export type TypeLineLabelOrientation = 'horiztonal' | 'baseToLine' | 'baseAway';
+// horizontal - text is always horizontal;
+// baseToLine - text angle is same as line, with baseline toward line
+// baseToLine - text angle is same as line, with baseline away from line
+// baseToLine - text angle is same as line, with text upright
+export type TypeLineLabelOrientation = 'horiztonal' | 'baseToLine' | 'baseAway'
+                                      | 'baseUpright';
 
 export type TypeLine = {
   _straightLine: DiagramElementPrimative;
@@ -313,7 +330,7 @@ export function makeLine(
       return;
     }
     const lineAngle = normAngle(line.transform.r() || 0);
-    const offsetAngle = lineAngle;
+    let labelAngle = 0;
     const offsetPosition = new Point(
       start * line.currentLength + line.currentLength / 2,
       0,
@@ -364,11 +381,36 @@ export function makeLine(
           offsetPosition.y = offsetLeft;
         }
       }
+      if (line.label.location === 'inside') {
+        offsetPosition.y = -offset;
+      }
+      if (line.label.location === 'outside') {
+        offsetPosition.y = offset;
+      }
     }
     line._label.setPosition(offsetPosition);
     if (line.label.orientation === 'horizontal') {
-      line._label.transform.updateRotation(-offsetAngle);
+      labelAngle = -lineAngle;
     }
+    if (line.label.orientation === 'baseToLine') {
+      if (offsetPosition.y < 0) {
+        labelAngle = Math.PI;
+      }
+    }
+    if (line.label.orientation === 'baseAway') {
+      if (offsetPosition.y > 0) {
+        labelAngle = Math.PI;
+      }
+    }
+    if (line.label.orientation === 'baseUpright') {
+      if (Math.cos(lineAngle) < 0) {
+        labelAngle = Math.PI;
+      }
+      // if (roundNum(Math.cos(lineAngle), 4) === 0) {
+      //   labelAngle = -lineAngle;
+      // }
+    }
+    line._label.transform.updateRotation(labelAngle);
   };
 
   line.setLength = (newLength: number) => {
