@@ -8,6 +8,7 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import makeEquationLabel from './equationLabel';
 
 export type MoveableLineType = {
   _end1: DiagramElementPrimative;
@@ -191,8 +192,6 @@ export function makeLabeledLine(
 }
 
 export type TypeLine = {
-  // _arrow1: DiagramElementPrimative;
-  // _arrow2: DiagramElementPrimative;
   _straightLine: DiagramElementPrimative;
   setLength: (number) => void;
   setEndPoints: (Point, Point, number) => void;
@@ -212,12 +211,14 @@ export type TypeArrow2 = {
   } & DiagramElementPrimative
 };
 
+export type TypeArrows = TypeArrow2 & TypeArrow1;
+
 export type TypeArrowsLayout = {
   width: number,
   height: number,
   end1: boolean,
   end2: boolean
-}
+};
 
 export function makeLine(
   diagram: Diagram,
@@ -235,7 +236,15 @@ export function makeLine(
   if (reference === 'end') {
     start = 0;
   }
-  const vertexLength = 1;
+  const vertexSpaceLength = 1;
+
+  const straightLine = diagram.shapes.horizontalLine(
+    new Point(0, 0),
+    vertexSpaceLength, width,
+    0, color, new Transform().scale(1, 1).translate(0, 0),
+  );
+  line.add('line', straightLine);
+  line.currentLength = 1;
 
   line.addArrows = (arrow: TypeArrowsLayout) => {
     if (arrow.end1) {
@@ -249,7 +258,7 @@ export function makeLine(
     if (arrow.end2) {
       const a = diagram.shapes.arrow(
         arrow.width, 0, arrow.height, 0,
-        color, new Transform().translate(start + vertexLength, 0),
+        color, new Transform().translate(start + vertexSpaceLength, 0),
         new Point(0, 0), -Math.PI / 2,
       );
       a.height = arrow.height;
@@ -257,15 +266,15 @@ export function makeLine(
     }
   };
 
-  const straightLine = diagram.shapes.horizontalLine(
-    new Point(0, 0),
-    vertexLength, width,
-    0, color, new Transform().scale(1, 1).translate(0, 0),
-  );
-  line.add('line', straightLine);
-
-  line.currentLength = 1;
-  // line.offset = 0;
+  line.addLabel = (labelText: string, offset: number) => {
+    const eqn = makeEquationLabel(diagram, labelText, color);
+    line.add('label', eqn.collection);
+    line.labelEqn = eqn;
+    line.hasLabel = true;
+    line.labelOffset = offset;
+    line.labelOrientation = 'horizontal, withLine'
+    line.labelLocation = 'top, right, left, bottom'
+  };
 
   line.setLength = (newLength: number) => {
     let straightLineLength = newLength;
@@ -297,7 +306,6 @@ export function makeLine(
       line.transform.updateTranslation(p.add(offsetdelta));
     }
     line.currentLength = newLength;
-    // line.offset = offset;
   };
 
   line.animateLengthTo = function animateToLength(
