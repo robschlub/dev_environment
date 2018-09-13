@@ -160,66 +160,20 @@ export default function makeTriangle(
   triangle.updateDimensions = () => {
     const updateDimension = (index1: number, index2: number) => {
       const dimension = triangle[`_dimension${index1}${index2}`];
-      // console.log(dimension)
       if (dimension) {
-        const point1 = triangle[`p${index1}`];
-        const point2 = triangle[`p${index2}`];
-        // console.log(triangle)
+        let point1 = triangle[`p${index1}`];
+        let point2 = triangle[`p${index2}`];
+        if ((!triangle.clockwise)) {
+          point2 = triangle[`p${index1}`];
+          point1 = triangle[`p${index2}`];
+        }
         dimension.setEndPoints(point1, point2, dimension.offset);
       }
     };
     triangle.dimensionList.forEach((dim) => {
       updateDimension(dim[0], dim[1]);
     });
-    // updateDimension(1, 2);
-    // updateDimension(2, 3);
-    // updateDimension(3, 1);
   };
-
-  // triangle.addSideLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
-  //   const addEqn = (index1: number, index2: number, labelText: string) => {
-  //     const { eqn } = makeEquationLabel(diagram, labelText, color);
-  //     triangle.add(`label${index1}${index2}`, eqn.collection);
-  //     triangle[`labelEqn${index1}${index2}`] = eqn;
-  //   };
-  //   addEqn(1, 2, label12);
-  //   addEqn(2, 3, label23);
-  //   addEqn(3, 1, label31);
-  //   triangle.hasLabels = true;
-  //   triangle.labelOffset = offset;
-  // };
-
-  // triangle.updateLabels = () => {
-  //   if (triangle.hasLabels) {
-  //     const updateLabel = (index1: number, index2: number) => {
-  //       const borderLine = triangle[`b${index1}${index2}`];
-  //       let offset = triangle.labelOffset;
-  //       if (triangle.labelsAlwaysOutside) {
-  //         if (triangle.clockwise) {
-  //           offset = Math.abs(offset) * -1;
-  //         } else {
-  //           offset = Math.abs(offset);
-  //         }
-  //       }
-  //       const offsetdelta = polarToRect(offset, borderLine.angle() + Math.PI / 2);
-  //       const labelElement = triangle[`_label${index1}${index2}`];
-  //       labelElement.setPosition(borderLine.midpoint().add(offsetdelta));
-  //       if (triangle.labelsAlignedWithLines) {
-  //         let rotAngle = borderLine.angle();
-  //         if (rotAngle < -Math.PI / 2) {
-  //           rotAngle += Math.PI;
-  //         }
-  //         if (rotAngle > Math.PI / 2 && rotAngle < Math.PI * 3 / 2) {
-  //           rotAngle -= Math.PI;
-  //         }
-  //         labelElement.transform.updateRotation(rotAngle);
-  //       }
-  //     };
-  //     updateLabel(1, 2);
-  //     updateLabel(2, 3);
-  //     updateLabel(3, 1);
-  //   }
-  // };
 
   triangle.addAngle = function addAngle(
     index: number,

@@ -60,8 +60,6 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
     triangle.addAngle(2, 0.3, 0.03, 50, this.layout.colors.angle, 'b', 0.35);
     triangle.addAngle(3, 0.3, 0.03, 50, this.layout.colors.angle, 'c', 0.35);
     // triangle.addSideDimension(1, 2, this.layout.colors.angle, 0, true, 0.01);
-    // // triangle.addSideDimension(2, 3, this.layout.colors.angle, 0, true, 0.01);
-    // // triangle.addSideDimension(3, 1, this.layout.colors.angle, 0, true, 0.01);
     // triangle._dimension12.addLabel('AB', 0.05, 'outside', 'left', 'baseUpright', 0.5);
     triangle.addSideLabel(
       1, 2, this.layout.colors.angle,
@@ -75,8 +73,6 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
       3, 1, this.layout.colors.angle,
       'CA', 0.05, 'outside', 'right', 'horizontal', 0.5,
     );
-    // triangle._dimension23.addLabel('BC', 0.05, 'top', 'right', 'horizontal', 0.5);
-    // triangle._dimension31.addLabel('CA', 0.05, 'bottom', 'left', 'horizontal', 0.5);
     triangle._angle1.autoRightAngle = true;
     triangle.autoShowAngles = true;
     return triangle;
@@ -87,7 +83,6 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
     const p2 = this._p2.transform.t();
     const p3 = this._p3.transform.t();
     if (p1 != null && p2 != null && p3 != null) {
-      // this._line.vertices.change([p1, p2, p3]);
       this._triangle.updatePoints(p1, p2, p3);
     }
   }
