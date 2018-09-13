@@ -16,9 +16,12 @@ export type TypeTriangle = {
   p1: Point;
   p2: Point;
   p3: Point;
-  b1: Point;
-  b2: Point;
-  b3: Point;
+  b1: Point;      // outer border at point 1
+  b2: Point;      // outer border at point 1
+  b3: Point;      // outer border at point 1
+  ib1: Point;     // inner border at point 1
+  ib2: Point;     // inner border at point 2
+  ib3: Point;     // inner border at point 3
   b12: Line;
   b23: Line;
   b31: Line;
@@ -89,6 +92,10 @@ export default function makeTriangle(
     triangle.b1 = b1;
     triangle.b2 = b2;
     triangle.b3 = b3;
+    const [ib1, ib2, ib3] = line.vertices.holeBorder[0];
+    triangle.ib1 = ib1;
+    triangle.ib2 = ib2;
+    triangle.ib3 = ib3;
     triangle.b12 = new Line(triangle.b2, triangle.b1);
     triangle.b23 = new Line(triangle.b3, triangle.b2);
     triangle.b31 = new Line(triangle.b1, triangle.b3);
@@ -202,7 +209,10 @@ export default function makeTriangle(
               delta = Math.PI * 2 - delta;
             }
           }
-          angleElement.setPosition(q);
+          const lineWidthAngle = lineWidth / angleElement.radius * 0.9;
+          delta += lineWidthAngle;
+          const innerBorderQ = triangle[`ib${index + 1}`];
+          angleElement.setPosition(innerBorderQ);
           angleElement.updateAngle(start, delta);
           if (triangle.autoShowAngles) {
             const rp = q.sub(p).toPolar();

@@ -56,9 +56,9 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
       layout.lineWidth,
       this.layout.colors.line,
     );
-    triangle.addAngle(1, 0.3, 0.03, 100, this.layout.colors.angle, 'a', 0.35);
-    triangle.addAngle(2, 0.3, 0.03, 100, this.layout.colors.angle, 'b', 0.35);
-    triangle.addAngle(3, 0.3, 0.03, 100, this.layout.colors.angle, 'c', 0.35);
+    triangle.addAngle(1, 0.3, 0.03, 50, this.layout.colors.angle, 'a', 0.35);
+    triangle.addAngle(2, 0.3, 0.03, 50, this.layout.colors.angle, 'b', 0.35);
+    triangle.addAngle(3, 0.3, 0.03, 50, this.layout.colors.angle, 'c', 0.35);
     triangle.addSideLabels(
       'AB',
       'BC',
