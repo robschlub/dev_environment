@@ -9,22 +9,22 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-import type { TypeAngleAnnotation } from '../../../../LessonsCommon/tools/angleAnnotation';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angleAnnotation';
 
 import { makeAngle } from '../../../../LessonsCommon/tools/angleAnnotation';
 
 import { makeLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLine, TypeArrows } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class TrianglePropertiesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _tri: DiagramElementPrimative;
-  _dim1: TypeLine & TypeArrows;
-  _dim2: TypeLine & TypeArrows;
-  _dim3: TypeLine & TypeArrows;
-  _angle1: TypeAngleAnnotation;
-  _angle2: TypeAngleAnnotation;
-  _angle3: TypeAngleAnnotation;
+  _dim1: TypeLine;
+  _dim2: TypeLine;
+  _dim3: TypeLine;
+  _angle1: TypeAngle;
+  _angle2: TypeAngle;
+  _angle3: TypeAngle;
 
   makeTriangle() {
     const layout = this.layout.properties;

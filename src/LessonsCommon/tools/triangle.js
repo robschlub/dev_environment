@@ -2,10 +2,10 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
-  Transform, Point, Rect, distance, Line, polarToRect, normAngle, minAngleDiff,
+  Transform, Point, Line, polarToRect, normAngle, minAngleDiff,
 } from '../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementCollection,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import { makeAngle } from './angleAnnotation';
@@ -31,15 +31,14 @@ export type TypeTriangle = {
   clockwise: boolean;
   updatePoints: (Point, Point, Point) => void;
   updateAngles: () => void;
-  addAngles: (TypeAngleAnnotationLayout, ?TypeAngleAnnotationLayout,
-              ?TypeAngleAnnotationLayout) => void;
+  addAngle: (number, number, number, number, Array<string>, string, number) => void;
   autoShowAngles: boolean;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
-  _angle1: TypeAngleAnnotation;
-  _angle2: TypeAngleAnnotation;
-  _angle3: TypeAngleAnnotation;
+  _angle1: TypeAngle;
+  _angle2: TypeAngle;
+  _angle3: TypeAngle;
 };
 
 export type TypeTriangleLabel = {
@@ -105,7 +104,7 @@ export default function makeTriangle(
 
   triangle.addSideLabels = (label12: string = '', label23: string = '', label31: string = '', offset: number) => {
     const addEqn = (index1: number, index2: number, labelText: string) => {
-      const eqn = makeEquationLabel(diagram, labelText, color).eqn;
+      const { eqn } = makeEquationLabel(diagram, labelText, color);
       triangle.add(`label${index1}${index2}`, eqn.collection);
       triangle[`labelEqn${index1}${index2}`] = eqn;
     };
