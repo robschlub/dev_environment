@@ -69,9 +69,10 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
           sides: 100,
         },
         label: {
-          radius: 0.3,
+          radius: 0.35,
         },
       },
+      'A', 'B', 'C',
     );
     triangle._angle1.autoRightAngle = true;
     return triangle;
