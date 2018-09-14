@@ -19,67 +19,61 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   _description: DiagramElementPrimative;
 
   // eslint-disable-next-line class-methods-use-this
-  toggleInfo(toState: ?boolean = null) {
-    const infoButton = document.getElementById('id_lesson__info_button');
-    const infoBox = document.getElementById('id_lesson__info_box');
-    if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
+  toggleInfo(id: string, toState: ?boolean = null) {
+    const infoBox = document.getElementById(`id_lesson__popup_box__${id}`);
+    if (infoBox instanceof HTMLElement) {
       if (typeof toState === 'boolean' && toState === true) {
-        infoButton.classList.add('lesson__info_button_show');
-        infoBox.classList.remove('lesson__info_hide');
+        infoBox.classList.remove('lesson__popup_hide');
       } else if (typeof toState === 'boolean' && toState === false) {
-        infoButton.classList.remove('lesson__info_button_show');
-        infoBox.classList.add('lesson__info_hide');
+        infoBox.classList.add('lesson__popup_hide');
       } else {
-        infoButton.classList.toggle('lesson__info_button_show');
-        infoBox.classList.toggle('lesson__info_hide');
+        infoBox.classList.toggle('lesson__popup_hide');
       }
     }
-    // if (infoBox instanceof HTMLElement) {
-    //   infoBox.classList.toggle('lesson__info_hide');
-    // }
   }
 
-  addQRBox() {
+  addPopupBox(id: string, title: string, body: string) {
     const container = document.createElement('div');
-    container.classList.add('lesson__info_box');
-    container.classList.add('lesson__info_hide');
-    container.id = 'id_lesson__info_box';
+    container.id = `id_lesson__popup_box__${id}`;
+    container.classList.add('lesson__popup_box');
+    container.classList.add('lesson__popup_hide');
 
-    const title = document.createElement('div');
-    title.classList.add('lesson__info_box__title');
-    container.appendChild(title);
+    const titleElement = document.createElement('div');
+    titleElement.classList.add('lesson__popup_box__title');
+    container.appendChild(titleElement);
 
     const infoSymbol = document.createElement('div');
-    infoSymbol.classList.add('lesson__info_box__title_i');
+    infoSymbol.classList.add('lesson__popup_box__title_i');
     infoSymbol.innerHTML = 'i';
-    title.appendChild(infoSymbol);
+    titleElement.appendChild(infoSymbol);
 
     const close = document.createElement('div');
-    close.classList.add('lesson__info_box__close');
-    close.id = 'id_lesson__info_box__close';
+    close.classList.add('lesson__popup_box__close');
+    close.id = 'id_lesson__popup_box__close';
     close.innerHTML = 'X';
-    close.onclick = this.toggleInfo.bind(this);
-    title.appendChild(close);
+    close.onclick = this.toggleInfo.bind(this, id, null);
+    titleElement.appendChild(close);
 
     const titleText = document.createElement('div');
-    titleText.classList.add('lesson__info_box__title_text');
-    titleText.innerHTML = 'What can you do on this page?';
-    title.appendChild(titleText);
+    titleText.classList.add('lesson__popup_box__title_text');
+    titleText.innerHTML = title;
+    titleElement.appendChild(titleText);
 
     const text = document.createElement('div');
-    text.classList.add('lesson__info_box__text');
-    text.id = ('id_lesson__info_box__text');
+    text.classList.add('lesson__popup_box__text');
+    text.id = `id_lesson__popup_box__text__${id}`;
+    text.innerHTML = body;
     container.appendChild(text);
 
     this.diagram.htmlCanvas.appendChild(container);
   }
 
-  makeBackground(width: number, height: number) {
-    const background = this.diagram.shapes.rectangleFilled(
-      'center', width, height, 0.2, 20, [0.2, 0.2, 0.2, 1.0], new Transform().translate(0, 0),
-    );
-    return background;
-  }
+  // makeBackground(width: number, height: number) {
+  //   const background = this.diagram.shapes.rectangleFilled(
+  //     'center', width, height, 0.2, 20, [0.2, 0.2, 0.2, 1.0], new Transform().translate(0, 0),
+  //   );
+  //   return background;
+  // }
 
   makeTitle(text: string) {
     const element = document.createElement('div');
@@ -113,7 +107,8 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   ) {
     const layout = lessonLayout();
     super(diagram, layout, transform);
-    this.add('background', this.makeBackground(2, 2.5));
+    // this.add('background', this.makeBackground(2, 2.5));
+    this.addPopupBox('test', 'title', 'this is the body');
     this.diagram.shapes = this.diagram.shapesHigh;
     this.add('title', this.makeTitle('Alternate Angles'));
     this.add('description', this.makeDescription('Alternate angles are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.'));
@@ -130,7 +125,8 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
     this._threeLines.setPosition(0, 0.3);
     this._threeLines.transform.updateRotation(0);
     this.show();
-    this._background.show();
+    this.toggleInfo('test', true);
+    // this._background.show();
     this._title.show();
     this._description.show();
     this._threeLines.show();
