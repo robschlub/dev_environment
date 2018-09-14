@@ -27,6 +27,7 @@ class Content extends LessonContent {
     const examples = diag._examples;
     const custom = diag._custom;
     const properties = diag._properties;
+    const qr = diag._qr;
 
     this.addSection({
       title: 'Introduction',
@@ -38,9 +39,9 @@ class Content extends LessonContent {
           Hence the name |tri| (three) |angle| (corner).
         </p>
       `,
-      showOnly: [
-        diag,
-      ],
+      // showOnly: [
+      //   diag,
+      // ],
       show: [
         examples,
       ],
@@ -81,20 +82,17 @@ class Content extends LessonContent {
       title: 'Properties',
       setContent: `
         <p>
-          What properties does a triangle have? Well, its definition gives us the first properties of three |side_lengths|, and three |angle_sizes|.
+          What properties does a triangle have? Well, its definition gives us some, |three_side_lengths|, and |three_angle_sizes|.
         </p>
       `,
       modifiers: {
-        side_lengths: click(properties.growDimensions, [properties], colors.dimensions),
-        angle_sizes: click(properties.pulseAngles, [properties], colors.angleText),
+        three_side_lengths: click(properties.growDimensions, [properties], colors.dimensions),
+        three_angle_sizes: click(properties.pulseAngles, [properties], colors.angleText),
       },
       setEnterState: () => {
         if (this.comingFrom === 'prev') {
-          properties._triangle.updatePoints(
-            custom._triangle.p1,
-            custom._triangle.p2,
-            custom._triangle.p3,
-          );
+          const tri = custom._triangle;
+          properties._triangle.updatePoints(tri.p1, tri.p2, tri.p3);
         }
         properties.calculateFuturePositions();
       },
@@ -118,6 +116,45 @@ class Content extends LessonContent {
         properties.setFuturePositions();
         properties._triangle.showDimensions(false);
         properties._triangle.showAngles(false);
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          Once properties are identified, the next question is |are they related?|
+        </p>
+        <p>
+          If they are, then future analysis of the shape is simplified as you only need to know some properties to calculate the rest.
+        </p>
+
+      `),
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          In fact, a triangle's side lengths and angles |are all related|. If you know any three, you can calculate the other three!
+        </p>
+        <p>
+          In this lesson we will focus on the |relationship between angles|. The relationship to sides requires knowledge of the sine function, which which is in a later lesson.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: `
+        <p>
+          To find this relationship, we need to have knowledge of |supplementary angles| and |adjacent angles|.
+        </p>
+      `,
+      showOnly: [
+        qr,
+      ],
+      // show: [
+      //   qr,
+      // ],
+      setSteadyState: () => {
+        qr._alternateAngles.showInitial();
       },
     });
   }

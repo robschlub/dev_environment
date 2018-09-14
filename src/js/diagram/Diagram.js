@@ -28,6 +28,7 @@ import {
 } from './DiagramElements/Polygon';
 import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
+import RectangleFilled from './DiagramElements/RectangleFilled';
 import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
@@ -311,6 +312,20 @@ function shapes(diagram: Diagram) {
       rotation, color, transform, diagram.limits,
     );
   }
+  function rectangleFilled(
+    topLeft: Point,
+    width: number,
+    height: number,
+    cornerRadius: number,
+    cornerSides: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return RectangleFilled(
+      diagram.webgl, topLeft, width, height,
+      cornerRadius, cornerSides, color, transform, diagram.limits,
+    );
+  }
   function radialLines(
     innerRadius: number = 0,
     outerRadius: number = 1,
@@ -479,6 +494,7 @@ function shapes(diagram: Diagram) {
     htmlText,
     htmlElement,
     axes,
+    rectangleFilled,
   };
 }
 

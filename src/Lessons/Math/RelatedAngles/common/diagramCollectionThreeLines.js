@@ -102,6 +102,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     line3.transform.updateRotation(Math.PI / 2);
     line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 3.7);
     line3.move.minTransform.updateRotation(Math.PI / 3.7);
+    console.log(this.layout.colors)
     line3.setColor(this.layout.colors.intersectingLine);
 
     line1._end1.move.element = this;
@@ -115,7 +116,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   constructor(
     diagram: Diagram,
     layout: Object,
-    transform: Transform = new Transform().rotate(0).translate(0, 0),
+    transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.setPosition(this.layout.position);
