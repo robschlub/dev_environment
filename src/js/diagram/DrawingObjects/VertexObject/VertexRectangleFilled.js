@@ -6,11 +6,13 @@ import {
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from './VertexObject';
 
+export type TypeVertexRectangleFilledReference = 'topLeft' | 'center';
+
 export default class VertexRectangleFilled extends VertexObject {
   start: Point;
   constructor(
     webgl: WebGLInstance,
-    topLeft: Point = new Point(0, 0),
+    reference: TypeVertexRectangleFilledReference,
     width: number = 1,
     height: number = 1,
     cornerRadius: number = 0,
@@ -62,7 +64,9 @@ export default class VertexRectangleFilled extends VertexObject {
       ...makeCorner(rad, sides, Math.PI / 2 * 3, new Point(width / 2 - rad, -height / 2 + rad)),
     ];
 
-    points = points.map(p => p.add(new Point(width / 2, -height / 2)).add(topLeft));
+    if (reference === 'topLeft') {
+      points = points.map(p => p.add(new Point(width / 2, -height / 2)));
+    }
 
     points.forEach((p) => {
       this.points.push(p.x);
@@ -72,34 +76,6 @@ export default class VertexRectangleFilled extends VertexObject {
     this.points.push(this.points[3]);
 
     this.border[0] = points.slice(1);
-    // const cx = 0;
-    // const cy = 0 - width / 2.0;
-    // this.points = [
-    //   cx, cy,
-    //   cx, cy + width,
-    //   cx + length, cy,
-    //   cx + length, cy + width,
-    // ];
-    // // rotate points
-    // const t = new Transform().rotate(rotation).translate(start.x, start.y);
-    // for (let i = 0; i < this.points.length; i += 2) {
-    //   const p = (new Point(this.points[i], this.points[i + 1]))
-    //     .transformBy(t.matrix());
-    //   this.points[i] = p.x;
-    //   this.points[i + 1] = p.y;
-    // }
-
-    // const p = this.points;
-    // this.border[0] = [
-    //   new Point(p[0], p[1]),
-    //   new Point(p[2], p[3]),
-    //   new Point(p[6], p[7]),
-    //   new Point(p[4], p[5]),
-    // ];
-    // // for (let i = 0; i < this.points.length; i += 2) {
-    // //   this.border[0].push(new Point(this.points[i], this.points[i + 1]));
-    // // }
-    // this.border[0].push(this.border[0][0]._dup());
     this.setupBuffer();
   }
 }

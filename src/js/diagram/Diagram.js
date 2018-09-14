@@ -29,6 +29,7 @@ import {
 import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
 import RectangleFilled from './DiagramElements/RectangleFilled';
+import type { TypeRectangleFilledReference } from './DiagramElements/RectangleFilled';
 import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
@@ -313,7 +314,7 @@ function shapes(diagram: Diagram) {
     );
   }
   function rectangleFilled(
-    topLeft: Point,
+    topLeft: TypeRectangleFilledReference,
     width: number,
     height: number,
     cornerRadius: number,
@@ -876,7 +877,6 @@ class Diagram {
 
     const previousGLPoint =
       previousPixelPoint.transformBy(this.pixelToGLSpaceTransform.matrix());
-
     // Go through each element being moved, get the current translation
     for (let i = 0; i < this.beingMovedElements.length; i += 1) {
       const element = this.beingMovedElements[i];

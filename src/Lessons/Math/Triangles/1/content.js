@@ -142,6 +142,7 @@ class Content extends LessonContent {
       `),
     });
     this.addSection({
+      title: 'asdf',
       setContent: `
         <p>
           To find this relationship, we need to have knowledge of |supplementary angles| and |adjacent angles|.
@@ -156,6 +157,9 @@ class Content extends LessonContent {
       setSteadyState: () => {
         qr._alternateAngles.showInitial();
       },
+      setLeaveState: () => {
+        qr._alternateAngles.hideAll();
+      }
     });
   }
 }

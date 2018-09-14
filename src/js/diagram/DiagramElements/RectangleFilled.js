@@ -1,15 +1,18 @@
 // @flow
 
 import VertexRectangleFilled from '../DrawingObjects/VertexObject/VertexRectangleFilled';
+import type { TypeVertexRectangleFilledReference } from '../DrawingObjects/VertexObject/VertexRectangleFilled';
 import { DiagramElementPrimative } from '../Element';
 import {
   Point, Transform, Rect,
 } from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 
+export type TypeRectangleFilledReference = TypeVertexRectangleFilledReference;
+
 export default function RectangleFilled(
   webgl: WebGLInstance,
-  topLeft: Point,
+  topLeft: TypeRectangleFilledReference,
   width: number,
   height: number,
   cornerRadius: number,

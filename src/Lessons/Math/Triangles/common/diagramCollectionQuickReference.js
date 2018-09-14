@@ -25,10 +25,11 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
   constructor(
     diagram: LessonDiagram,
     layout: Object,
-    transform: Transform = new Transform().translate(0, 0),
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.add('alternateAngles', new AlternateAnglesQR(this.diagram));
+    this._alternateAngles.setPosition(0, -0.5);
     this.hasTouchableElements = true;
   }
 }

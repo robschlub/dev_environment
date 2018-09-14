@@ -14,22 +14,52 @@ import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   _threeLines: ThreeLinesCollection;
-  _tile: DiagramElementPrimative;
+  _background: DiagramElementPrimative;
+  _title: DiagramElementPrimative;
+  _description: DiagramElementPrimative;
 
-  makeTile(width: number, height: number) {
-    const tile = this.diagram.shapes.rectangleFilled(
-      new Point(-3, 1), width, height, 0.3, 10, [1, 0, 0, 1],
+  makeBackground(width: number, height: number) {
+    const background = this.diagram.shapes.rectangleFilled(
+      'center', width, height, 0.2, 20, [0.2, 0.2, 0.2, 0.9], new Transform().translate(0, 0),
     );
-    return tile;
+    return background;
+  }
+
+  makeTitle(text: string) {
+    const element = document.createElement('div');
+    element.innerHTML = text;
+    return this.diagram.shapes.htmlElement(
+      element,
+      'id_lesson__reference_tile__title__alternate_angles',
+      'lesson__reference_tile_title',
+      new Point(0, 1.05),
+      'middle',
+      'center',
+    );
+  }
+
+  makeDescription(text: string) {
+    const element = document.createElement('div');
+    element.innerHTML = text;
+    return this.diagram.shapes.htmlElement(
+      element,
+      'id_lesson__reference_tile__description__alternating_angles',
+      'lesson__reference_tile_description',
+      new Point(0, -0.35),
+      'top',
+      'center',
+    );
   }
 
   constructor(
     diagram: CommonLessonDiagram,
-    transform: Transform = new Transform(),
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
     const layout = lessonLayout();
     super(diagram, layout, transform);
-    this.add('tile', this.makeTile(2, 1));
+    this.add('background', this.makeBackground(2, 2.5));
+    this.add('title', this.makeTitle('Alternate Angles'));
+    this.add('description', this.makeDescription('Alternate angles are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.'));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
     this._threeLines.calculateFuturePositions('corresponding');
     this._threeLines.setFuturePositions();
@@ -38,10 +68,13 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   }
 
   showInitial() {
-    this._threeLines.transform.updateScale(0.7, 0.7);
-
+    this._threeLines.transform.updateScale(0.5, 0.5);
+    this._threeLines.setPosition(0, 0.3);
+    this._threeLines.transform.updateRotation(0);
     this.show();
-    this._tile.show();
+    this._background.show();
+    this._title.show();
+    this._description.show();
     this._threeLines.show();
     this._threeLines._line1.show();
     this._threeLines._line1._end1.show();
