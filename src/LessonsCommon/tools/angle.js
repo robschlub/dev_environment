@@ -78,10 +78,10 @@ export default function makeAngle(
     // angle.updateLabel();
   };
 
-  angle.updateAngle = (start: number, size: number, labelRotationOffset: number = 0) => {
+  angle.updateAngle = (start: number, size: number, labelRotationOffset: number, angleToTestRightAngle: number = size) => {
     if (angle.autoRightAngle
-      && size >= Math.PI / 2 * 0.995
-      && size <= Math.PI / 2 * 1.005
+      && angleToTestRightAngle >= Math.PI / 2 * 0.995
+      && angleToTestRightAngle <= Math.PI / 2 * 1.005
     ) {
       if (angle._arc.isShown && angle._arc === angle.curve) {
         angle._arc = angle.right;

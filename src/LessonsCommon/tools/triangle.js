@@ -228,10 +228,10 @@ export default function makeTriangle(
             }
           }
           const lineWidthAngle = lineWidth / angleElement.radius * 0.9;
-          delta += lineWidthAngle;
+          // delta += lineWidthAngle;
           const innerBorderQ = triangle[`ib${index + 1}`];
           angleElement.setPosition(innerBorderQ);
-          angleElement.updateAngle(start, delta);
+          angleElement.updateAngle(start, delta + lineWidthAngle, 0, delta);
           if (triangle.autoShowAngles) {
             const rp = q.sub(p).toPolar();
             const rq = r.sub(p).toPolar();
