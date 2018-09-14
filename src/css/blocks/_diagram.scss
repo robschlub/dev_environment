@@ -54,16 +54,14 @@
   pointer-events: none;
 }
 
-#id_diagram__text__overlay {
+#id_diagram__text__high {
   pointer-events: none;
+  z-index: 2;
 }
 
-#id_diagram__gl__overlay {
+#id_diagram__gl__high {
   pointer-events: none;
-}
-
-#id_diagram__html__overlay {
-  // pointer-events: none;
+  z-index: 2;
 }
 
 .diagram__gesture {

@@ -67,7 +67,7 @@
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.5);
   max-height: calc(var(--lesson__content-height) * 0.4);
   overflow: scroll;
-  font-size: calc(var(--lesson__diagram-font-size) * 0.7);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
 }
 
 .lesson__popup_hide {
@@ -77,4 +77,17 @@
   border: 0;
   height: 0;
   width: 0;
+}
+
+// :root {
+//   --lesson__popup_box__width: 8;
+//   --lesson__popup_box__height: 5;
+// }
+
+.lesson__popup_box__diagram {
+  margin-left: auto;
+  margin-right: auto;
+  width: calc(var(--lesson__diagram-font-size) * 1);
+  height: calc(var(--lesson__diagram-font-size) * 1);
+  background-color: green;
 }

@@ -542,6 +542,8 @@ class Diagram {
   shapesLow: Object;
   shapesHigh: Object;
   equation: Object;
+  equationLow: Object;
+  equationHigh: Object;
   backgroundColor: Array<number>;
   fontScale: number;
   layout: Object;
@@ -655,7 +657,9 @@ class Diagram {
     this.shapesLow = this.getShapes(false);
     this.shapesHigh = this.getShapes(true);
     this.shapes = this.shapesLow;
-    this.equation = this.getEquations();
+    this.equationLow = this.getEquations(false);
+    this.equationHigh = this.getEquations(true);
+    this.equation = this.equationLow
     this.createDiagramElements();
     if (this.elements.name === '') {
       this.elements.name = 'diagramRoot';
@@ -672,8 +676,8 @@ class Diagram {
     return shapes(this, high);
   }
 
-  getEquations() {
-    return equation(this);
+  getEquations(high: boolean = false) {
+    return equation(this, high);
   }
 
   sizeHtmlText() {
