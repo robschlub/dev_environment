@@ -22,12 +22,16 @@ describe('Diagram', () => {
   beforeEach(() => {
     document.body.innerHTML =
       '<div id="c">'
-      + '  <canvas class="diagram__gl">'
+      + '  <canvas class="diagram__gl" id="id_diagram__gl__low">'
       + '  </canvas>'
-      + '  <canvas class="diagram__text">'
+      + '  <canvas class="diagram__text" id="id_diagram__text__low">'
       + '  </canvas>'
       + '  <div class="diagram__html">'
       + '  </div>'
+      + '  <canvas class="diagram__gl" id="id_diagram__gl__high">'
+      + '  </canvas>'
+      + '  <canvas class="diagram__text" id="id_diagram__text__high">'
+      + '  </canvas>'
       + '</div>';
     // canvas = document.getElementById('c');
     const diagramDefinitions = {
@@ -117,11 +121,14 @@ describe('Diagram', () => {
       };
       const { limits } = definition;
       const diagram = new Diagram('c', limits);
-      diagram.webgl = webgl;
-      diagram.canvas = canvasMock;
+      diagram.webglLow = webgl;
+      diagram.webglHigh = webgl;
+      diagram.canvasLow = canvasMock;
+      diagram.canvasHigh = canvasMock;
       diagram.htmlCanvas = htmlCanvasMock;
       diagram.isTouchDevice = false;
-      diagram.draw2D = new DrawContext2D(definition.width, definition.height);
+      diagram.draw2DLow = new DrawContext2D(definition.width, definition.height);
+      diagram.draw2DHigh = new DrawContext2D(definition.width, definition.height);
       diagram.setSpaceTransforms();
       // create squares:
       const squares = {};
@@ -129,7 +136,7 @@ describe('Diagram', () => {
       Object.keys(squareDefinitions).forEach((sKey) => {
         const def = squareDefinitions[sKey];
         const square = new VertexPolygon(
-          diagram.webgl,
+          diagram.webglLow,
           4,
           (def.sideLength / 2) * Math.sqrt(2), 0.05 * Math.sqrt(2),
           def.rotation, def.center,
@@ -154,7 +161,7 @@ describe('Diagram', () => {
       diagram.dToP = (p) => {
         const pixel = p
           .transformBy(diagram.diagramToPixelSpaceTransform.matrix());
-        return pixel.add(new Point(diagram.canvas.left, diagram.canvas.top));
+        return pixel.add(new Point(diagram.canvasLow.left, diagram.canvasLow.top));
       };
       diagrams[key] = diagram;
     });
@@ -166,9 +173,9 @@ describe('Diagram', () => {
   });
   test('Diagram API', () => {
     const d = new Diagram('c', 0, 0, 4, 4);
-    d.webgl = webgl;      // needed for mocking only
+    d.webglLow = webgl;      // needed for mocking only
     const squareVertices = new VertexPolygon(
-      d.webgl,            // gl instance
+      d.webglLow,            // gl instance
       4,                  // number of sides in polygon
       1,                  // radius to center of corner
       0.05,               // thickness of polygon border
