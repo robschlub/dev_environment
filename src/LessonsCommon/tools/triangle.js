@@ -306,6 +306,18 @@ export default function makeTriangle(
     }
   };
 
+  triangle.showDimensions = (includeLabels: boolean = false) => {
+    triangle.dimensionList.forEach((dim) => {
+      const element = triangle[`_dimension${dim[0]}${dim[1]}`];
+      element.show();
+      if (!includeLabels) {
+        if (element.label) {
+          element._label.hide();
+        }
+      }
+    });
+  };
+
   triangle.updatePoints(p1, p2, p3);
   return triangle;
 }

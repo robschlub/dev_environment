@@ -119,7 +119,7 @@ class Content extends LessonContent {
         }
       },
       setSteadyState: () => {
-        properties.showAll();
+        properties._triangle.showDimensions(false);
         properties.setFuturePositions();
       },
     });

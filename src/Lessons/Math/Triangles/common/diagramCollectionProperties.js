@@ -66,9 +66,9 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
     dim31.addArrow2(d.arrowWidth, d.arrowHeight);
 
     const { boundary } = layout;
-    triangle.addPoint(1, 0.15, this.layout.colors.point, true, boundary);
-    triangle.addPoint(2, 0.15, this.layout.colors.point, true, boundary);
-    triangle.addPoint(3, 0.15, this.layout.colors.point, true, boundary);
+    triangle.addPoint(1, 0.3, this.layout.colors.diagram.background, true, boundary);
+    triangle.addPoint(2, 0.3, this.layout.colors.diagram.background, true, boundary);
+    triangle.addPoint(3, 0.3, this.layout.colors.diagram.background, true, boundary);
 
     triangle.hasTouchableElements = true;
     triangle.autoShowAngles = true;
