@@ -717,6 +717,7 @@ class LessonContent {
   title: string;
   sections: Array<Section>;
   diagram: Object;
+  overlayDiagram: Object;
   diagramHtmlId: string;
   goingTo: 'next' | 'prev' | 'goto';
   comingFrom: 'next' | 'prev' | 'goto';

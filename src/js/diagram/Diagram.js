@@ -547,8 +547,10 @@ class Diagram {
     layout: Object = {},
     vertexShader: string = 'simple',
     fragmentShader: string = 'simple',
+    id: string = 'main',
   ) {
     this.layout = layout;
+    console.log(id)
     if (typeof containerIdOrWebGLContext === 'string') {
       const container = document.getElementById(containerIdOrWebGLContext);
       if (container instanceof HTMLElement) {
@@ -556,14 +558,17 @@ class Diagram {
         for (let i = 0; i < children.length; i += 1) {
           const child = children[i];
           if (child instanceof HTMLCanvasElement
-            && child.classList.contains('diagram__gl')) {
+            && child.classList.contains('diagram__gl')
+            && child.id === `id_diagram__gl__${id}`) {
             this.canvas = child;
           }
           if (child instanceof HTMLCanvasElement
-            && child.classList.contains('diagram__text')) {
+            && child.classList.contains('diagram__text')
+            && child.id === `id_diagram__text__${id}`) {
             this.textCanvas = child;
           }
           if (child.classList.contains('diagram__html')
+            && child.id === `id_diagram__html__${id}`
           ) {
             this.htmlCanvas = child;
           }

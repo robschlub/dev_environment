@@ -3,7 +3,7 @@ import {
   LessonContent, click, centerV, highlight,
 } from '../../../../js/Lesson/LessonContent';
 
-import LessonDiagram from './diagram';
+import { LessonDiagram, OverlayLessonDiagram} from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
@@ -19,6 +19,8 @@ class Content extends LessonContent {
   }
 
   setDiagram(htmlId: string = '') {
+    
+    this.overlayDiagram = new OverlayLessonDiagram(htmlId, layout);
     this.diagram = new LessonDiagram(htmlId, layout);
   }
 
@@ -27,7 +29,8 @@ class Content extends LessonContent {
     const examples = diag._examples;
     const custom = diag._custom;
     const properties = diag._properties;
-    const qr = diag._qr;
+    const qr = this.overlayDiagram.elements._qr;
+    // const qr = this.diagram.elements;
 
     this.addSection({
       title: 'Introduction',
@@ -159,7 +162,7 @@ class Content extends LessonContent {
       },
       setLeaveState: () => {
         qr._alternateAngles.hideAll();
-      }
+      },
     });
   }
 }

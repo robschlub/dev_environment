@@ -42,6 +42,7 @@ class Lesson {
 
   currentSectionIndex: number;
   diagram: Diagram | null;
+  overlayDiagram: Diagram | null;
   state: Object;
   inTransition: boolean;
   transitionCancelled: boolean;
@@ -56,6 +57,7 @@ class Lesson {
     this.content = content;
     // this.content = new Content(this.diagram);
     this.diagram = null;
+    this.overlayDiagram = null;
     this.currentSectionIndex = 0;
     this.state = {};
     this.inTransition = false;
@@ -219,6 +221,10 @@ class Lesson {
     if (diagram) {
       section.setEnterState(this.state);
       section.currentInteractiveItem = -1;
+      if (this.overlayDiagram) {
+        this.overlayDiagram.elements.hideAll();
+        console.log("hide")
+      }
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {
@@ -321,6 +327,7 @@ class Lesson {
     this.closeDiagram();
     this.content.initialize();
     this.diagram = this.content.diagram;
+    this.overlayDiagram = this.content.overlayDiagram;
     this.diagram.lesson = this;
   }
 }

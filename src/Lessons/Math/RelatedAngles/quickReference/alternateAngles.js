@@ -20,7 +20,7 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
 
   makeBackground(width: number, height: number) {
     const background = this.diagram.shapes.rectangleFilled(
-      'center', width, height, 0.2, 20, [0.2, 0.2, 0.2, 0.9], new Transform().translate(0, 0),
+      'center', width, height, 0.2, 20, [0.2, 0.2, 0.2, 0.1], new Transform().translate(0, 0),
     );
     return background;
   }
