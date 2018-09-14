@@ -56,25 +56,25 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
       layout.lineWidth,
       this.layout.colors.line,
     );
-    triangle.addAngle(1, 0.3, 0.03, 50, this.layout.colors.angle, 'a', 0.35);
-    triangle.addAngle(2, 0.3, 0.03, 50, this.layout.colors.angle, 'b', 0.35);
-    triangle.addAngle(3, 0.3, 0.03, 50, this.layout.colors.angle, 'c', 0.35);
+    // triangle.addAngle(1, 0.3, 0.03, 50, this.layout.colors.angle, 'a', 0.35);
+    // triangle.addAngle(2, 0.3, 0.03, 50, this.layout.colors.angle, 'b', 0.35);
+    // triangle.addAngle(3, 0.3, 0.03, 50, this.layout.colors.angle, 'c', 0.35);
     // triangle.addSideDimension(1, 2, this.layout.colors.angle, 0, true, 0.01);
     // triangle._dimension12.addLabel('AB', 0.05, 'outside', 'left', 'baseUpright', 0.5);
-    triangle.addSideLabel(
-      1, 2, this.layout.colors.angle,
-      'AB', 0.05, 'outside', 'right', 'horizontal', 0.5,
-    );
-    triangle.addSideLabel(
-      2, 3, this.layout.colors.angle,
-      'BC', 0.05, 'outside', 'right', 'horizontal', 0.5,
-    );
-    triangle.addSideLabel(
-      3, 1, this.layout.colors.angle,
-      'CA', 0.05, 'outside', 'right', 'horizontal', 0.5,
-    );
-    triangle._angle1.autoRightAngle = true;
-    triangle.autoShowAngles = true;
+    // triangle.addSideLabel(
+    //   1, 2, this.layout.colors.angle,
+    //   'AB', 0.05, 'outside', 'right', 'horizontal', 0.5,
+    // );
+    // triangle.addSideLabel(
+    //   2, 3, this.layout.colors.angle,
+    //   'BC', 0.05, 'outside', 'right', 'horizontal', 0.5,
+    // );
+    // triangle.addSideLabel(
+    //   3, 1, this.layout.colors.angle,
+    //   'CA', 0.05, 'outside', 'right', 'horizontal', 0.5,
+    // );
+    // triangle._angle1.autoRightAngle = true;
+    // triangle.autoShowAngles = true;
     return triangle;
   }
 

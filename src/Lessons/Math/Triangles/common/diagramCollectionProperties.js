@@ -10,81 +10,66 @@ import {
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
-
-import makeAngle from '../../../../LessonsCommon/tools/angle';
-
-import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+// import makeAngle from '../../../../LessonsCommon/tools/angle';
+
+import makeTriangle from '../../../../LessonsCommon/tools/triangle';
+import type {
+  TypeTriangle, TypeTriangleAngle,
+} from '../../../../LessonsCommon/tools/triangle';
 
 export default class TrianglePropertiesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _tri: DiagramElementPrimative;
-  _dim1: TypeLine;
-  _dim2: TypeLine;
-  _dim3: TypeLine;
-  _angle1: TypeAngle;
-  _angle2: TypeAngle;
-  _angle3: TypeAngle;
+  _triangle: {
+    _dimension12: TypeLine;
+    _dimension23: TypeLine;
+    _dimension31: TypeLine;
+  } & TypeTriangle & TypeTriangleAngle;
 
-  makeTriangle() {
+  makeTriangleWithDimensions() {
     const layout = this.layout.properties;
 
-    const line = this.diagram.shapes.polyLine(
-      layout.triangle.points, true,
-      layout.lineWidth, this.layout.colors.line, 'onSharpAnglesOnly',
-      layout.triangle.position,
-    );
-    return line;
-  }
-
-  makeAngle(index: number) {
-    const layout = this.layout.properties;
-    const angle = makeAngle(
+    const triangle = makeTriangle(
       this.diagram,
-      layout.angleAnnotation.arc.radius,
-      layout.angleAnnotation.arc.width,
-      layout.angleAnnotation.arc.sides,
-      this.layout.colors.angle,
+      layout.triangle.points[0],
+      layout.triangle.points[1],
+      layout.triangle.points[2],
+      layout.lineWidth,
+      this.layout.colors.line,
     );
-    angle.setPosition(layout.triangle.points[index].add(layout.triangle.position));
+    triangle.setPosition(layout.triangle.position);
 
-    const corner = layout.corners[index];
-    const triPoints = layout.triangle.points;
-    angle.setToCorner(
-      triPoints[corner[0]].add(layout.triangle.position),
-      triPoints[corner[1]].add(layout.triangle.position),
-      triPoints[corner[2]].add(layout.triangle.position),
-    );
-    return angle;
-  }
+    triangle.addAngle(1, 0.3, 0.03, 100, this.layout.colors.angle);
+    triangle.addAngle(2, 0.3, 0.03, 100, this.layout.colors.angle);
+    triangle.addAngle(3, 0.3, 0.03, 100, this.layout.colors.angle);
+    const dim12 = triangle.addSideDimension(1, 2, this.layout.colors.angle, 0.15, true, 0.01);
+    dim12.addLabel('AB', 0.01, 'outside', 'left', 'horizontal', 0.5);
+    dim12.addArrow1(0.05, 0.05);
+    dim12.addArrow2(0.05, 0.05);
 
-  makeDimension(index: number) {
-    const layout = this.layout.properties.dimension;
-    const line = makeLine(
-      this.diagram, 'center', 2, layout.lineWidth,
-      this.layout.colors.dimensions,
-    );
-    line.addArrow1(layout.arrowHeight, layout.arrowWidth);
-    line.addArrow2(layout.arrowHeight, layout.arrowWidth);
-    line.addLabel(`${index}a this`, 0.1, 'outside', 'left', 'horizontal', 0);
-    const { triIndex, offset } = layout.locations[index];
-    let triPoints = this.layout.properties.triangle.points;
-    triPoints = triPoints.map(p => p.add(this.layout.properties.triangle.position));
-    line.setEndPoints(triPoints[triIndex[0]], triPoints[triIndex[1]], offset);
-    return line;
+    const dim23 = triangle.addSideDimension(2, 3, this.layout.colors.angle, 0.15, true, 0.01);
+    dim23.addLabel('BC', 0.01, 'outside', 'left', 'horizontal', 0.5);
+    dim23.addArrow1(0.05, 0.05);
+    dim23.addArrow2(0.05, 0.05);
+
+    const dim31 = triangle.addSideDimension(3, 1, this.layout.colors.angle, 0.15, true, 0.01);
+    dim31.addLabel('CA', 0.01, 'outside', 'left', 'horizontal', 0.5);
+    dim31.addArrow1(0.05, 0.05);
+    dim31.addArrow2(0.05, 0.05);
+    return triangle;
   }
 
   growDimensions() {
-    this._dim1.grow(0.2, 1, true);
-    this._dim2.grow(0.2, 1, true);
-    this._dim3.grow(0.2, 1, true);
+    this._triangle._dimension12.grow(0.2, 1.5, true);
+    this._triangle._dimension23.grow(0.2, 1.5, true);
+    this._triangle._dimension31.grow(0.2, 1.5, true);
     this.diagram.animateNextFrame();
   }
 
   pulseAngles() {
-    this._angle1.pulseScaleNow(1, 1.5);
-    this._angle2.pulseScaleNow(1, 1.5);
-    this._angle3.pulseScaleNow(1, 1.5);
+    this._triangle._angle1.pulseScaleNow(1, 1.5);
+    this._triangle._angle2.pulseScaleNow(1, 1.5);
+    this._triangle._angle3.pulseScaleNow(1, 1.5);
     this.diagram.animateNextFrame();
   }
 
@@ -95,12 +80,6 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
   ) {
     super(diagram, layout, transform);
     this.setPosition(this.layout.position);
-    this.add('triangle', this.makeTriangle());
-    this.add('angle1', this.makeAngle(0));
-    this.add('angle2', this.makeAngle(1));
-    this.add('angle3', this.makeAngle(2));
-    this.add('dim1', this.makeDimension(0));
-    this.add('dim2', this.makeDimension(1));
-    this.add('dim3', this.makeDimension(2));
+    this.add('triangle', this.makeTriangleWithDimensions());
   }
 }

@@ -294,6 +294,7 @@ export function makeLine(
     );
     line.arrow1 = { height: arrowHeight };
     line.add('arrow1', a);
+    line.setLength(line.currentLength);
   };
 
   line.addArrow2 = (arrowHeight: number, arrowWidth: number) => {
@@ -304,6 +305,7 @@ export function makeLine(
     );
     line.arrow2 = { height: arrowHeight };
     line.add('arrow2', a);
+    line.setLength(line.currentLength);
   };
 
   line.addLabel = function addLabel(

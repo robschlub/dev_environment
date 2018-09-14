@@ -84,23 +84,26 @@ export default function commonLessonLayout() {
     lineWidth: 0.02,
     dimension: {
       lineWidth: 0.01,
-      arrowHeight: 0.08,
-      arrowWidth: 0.08,
-      locations: [
-        {
-          triIndex: [0, 1],
-          offset: 0.2,
-        },
-        {
-          triIndex: [1, 2],
-          offset: 0.2,
-        },
-        {
-          triIndex: [2, 0],
-          offset: 0.2,
-        },
-      ],
+      arrowHeight: 0.06,
+      arrowWidth: 0.06,
+      // locations: [
+      //   {
+      //     triIndex: [0, 1],
+      //     offset: 0.2,
+      //   },
+      //   {
+      //     triIndex: [1, 2],
+      //     offset: 0.2,
+      //   },
+      //   {
+      //     triIndex: [2, 0],
+      //     offset: 0.2,
+      //   },
+      // ],
     },
+    angle: {
+      
+    }
     triangle: {
       points: [
         new Point(-2, 0),
@@ -109,16 +112,16 @@ export default function commonLessonLayout() {
       ],
       position: new Point(0, -0.85),
     },
-    corners: [
-      [1, 2, 0],
-      [2, 0, 1],
-      [0, 1, 2],
-    ],
-    angleRotations: [
-      0,
-      Math.PI / 3 * 4,
-      Math.PI / 3 * 2,
-    ],
+    // corners: [
+    //   [1, 2, 0],
+    //   [2, 0, 1],
+    //   [0, 1, 2],
+    // ],
+    // angleRotations: [
+    //   0,
+    //   Math.PI / 3 * 4,
+    //   Math.PI / 3 * 2,
+    // ],
     angleAnnotation: {
       arc: {
         radius: 0.3,

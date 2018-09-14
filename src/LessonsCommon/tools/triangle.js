@@ -193,6 +193,7 @@ export default function makeTriangle(
       ...triangle.order.slice(0, -1),
     ];
     triangle.hasAngles = true;
+    triangle.updateAngles();
   };
 
   triangle.updateAngles = () => {
