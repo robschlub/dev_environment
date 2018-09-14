@@ -312,15 +312,15 @@ export default class LessonComponent extends React.Component
   }
 
   // eslint-disable-next-line class-methods-use-this
-  addInfoBox() {
-    return <div
-      id="id_lesson__info_box"
-      className="lesson__info_box lesson__info_hide">
-      <div className="lesson__info_box__close">{'X'}</div>
-      <div id="id_lesson__info_box__text"
-           className="lesson__info_box__text"></div>
-    </div>;
-  }
+  // addInfoBox() {
+  //   return <div
+  //     id="id_lesson__info_box"
+  //     className="lesson__info_box lesson__info_hide">
+  //     <div className="lesson__info_box__close">{'X'}</div>
+  //     <div id="id_lesson__info_box__text"
+  //          className="lesson__info_box__text"></div>
+  //   </div>;
+  // }
 
   // eslint-disable-next-line class-methods-use-this
   addInteractiveElementButton() {

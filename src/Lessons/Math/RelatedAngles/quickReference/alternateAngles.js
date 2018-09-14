@@ -18,6 +18,62 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   _title: DiagramElementPrimative;
   _description: DiagramElementPrimative;
 
+  // eslint-disable-next-line class-methods-use-this
+  toggleInfo(toState: ?boolean = null) {
+    const infoButton = document.getElementById('id_lesson__info_button');
+    const infoBox = document.getElementById('id_lesson__info_box');
+    if (infoButton instanceof HTMLElement && infoBox instanceof HTMLElement) {
+      if (typeof toState === 'boolean' && toState === true) {
+        infoButton.classList.add('lesson__info_button_show');
+        infoBox.classList.remove('lesson__info_hide');
+      } else if (typeof toState === 'boolean' && toState === false) {
+        infoButton.classList.remove('lesson__info_button_show');
+        infoBox.classList.add('lesson__info_hide');
+      } else {
+        infoButton.classList.toggle('lesson__info_button_show');
+        infoBox.classList.toggle('lesson__info_hide');
+      }
+    }
+    // if (infoBox instanceof HTMLElement) {
+    //   infoBox.classList.toggle('lesson__info_hide');
+    // }
+  }
+
+  addQRBox() {
+    const container = document.createElement('div');
+    container.classList.add('lesson__info_box');
+    container.classList.add('lesson__info_hide');
+    container.id = 'id_lesson__info_box';
+
+    const title = document.createElement('div');
+    title.classList.add('lesson__info_box__title');
+    container.appendChild(title);
+
+    const infoSymbol = document.createElement('div');
+    infoSymbol.classList.add('lesson__info_box__title_i');
+    infoSymbol.innerHTML = 'i';
+    title.appendChild(infoSymbol);
+
+    const close = document.createElement('div');
+    close.classList.add('lesson__info_box__close');
+    close.id = 'id_lesson__info_box__close';
+    close.innerHTML = 'X';
+    close.onclick = this.toggleInfo.bind(this);
+    title.appendChild(close);
+
+    const titleText = document.createElement('div');
+    titleText.classList.add('lesson__info_box__title_text');
+    titleText.innerHTML = 'What can you do on this page?';
+    title.appendChild(titleText);
+
+    const text = document.createElement('div');
+    text.classList.add('lesson__info_box__text');
+    text.id = ('id_lesson__info_box__text');
+    container.appendChild(text);
+
+    this.diagram.htmlCanvas.appendChild(container);
+  }
+
   makeBackground(width: number, height: number) {
     const background = this.diagram.shapes.rectangleFilled(
       'center', width, height, 0.2, 20, [0.2, 0.2, 0.2, 1.0], new Transform().translate(0, 0),
@@ -58,6 +114,7 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
     const layout = lessonLayout();
     super(diagram, layout, transform);
     this.add('background', this.makeBackground(2, 2.5));
+    this.diagram.shapes = this.diagram.shapesHigh;
     this.add('title', this.makeTitle('Alternate Angles'));
     this.add('description', this.makeDescription('Alternate angles are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.'));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
@@ -65,6 +122,7 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
     this._threeLines.setFuturePositions();
     this._threeLines.alternateToggleAngles();
     this.hasTouchableElements = true;
+    this.diagram.shapes = this.diagram.shapesLow;
   }
 
   showInitial() {

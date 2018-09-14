@@ -539,6 +539,7 @@ class Diagram {
 
   // gestureElement: HTMLElement;
   shapes: Object;
+  shapesLow: Object;
   shapesHigh: Object;
   equation: Object;
   backgroundColor: Array<number>;
@@ -651,8 +652,9 @@ class Diagram {
     this.beingTouchedElements = [];
     this.moveTopElementOnly = true;
     this.globalAnimation = new GlobalAnimation();
-    this.shapes = this.getShapes(false);
+    this.shapesLow = this.getShapes(false);
     this.shapesHigh = this.getShapes(true);
+    this.shapes = this.shapesLow;
     this.equation = this.getEquations();
     this.createDiagramElements();
     if (this.elements.name === '') {

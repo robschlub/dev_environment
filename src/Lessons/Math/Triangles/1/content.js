@@ -148,11 +148,11 @@ class Content extends LessonContent {
     });
     this.addSection({
       title: 'asdf',
-      setContent: `
+      setContent: centerV(`
         <p>
           To find this relationship, we need to have knowledge of |supplementary angles| and |adjacent angles|.
         </p>
-      `,
+      `),
       showOnly: [
         qr,
       ],
