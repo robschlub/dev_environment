@@ -64,7 +64,13 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // it is then transformed into GL Space
 
 // eslint-disable-next-line no-use-before-define
-function equation(diagram: Diagram) {
+function equation(diagram: Diagram, high: boolean = false) {
+  let webgl = diagram.webglLow;
+  let draw2D = diagram.draw2DLow;
+  if (high) {
+    webgl = diagram.webglHigh;
+    draw2D = diagram.draw2DHigh;
+  }
   function elements(
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],
@@ -72,7 +78,7 @@ function equation(diagram: Diagram) {
   ): DiagramElementCollection {
     return createEquationElements(
       elems,
-      diagram.draw2D,
+      draw2D,
       colorOrFont,
       diagram.limits,
       firstTransform,
@@ -93,7 +99,7 @@ function equation(diagram: Diagram) {
     color: Array<number> = [1, 1, 1, 1],
   ) {
     return new Integral(
-      diagram.webgl,
+      webgl,
       color,
       numLines,
       new Transform().scale(1, 1).translate(0, 0),
@@ -111,7 +117,7 @@ function equation(diagram: Diagram) {
 
   function makeEqn() {
     return new Equation(
-      diagram.draw2D,
+      draw2D,
       diagram.limits,
       diagram.diagramToGLSpaceTransform,
     );
@@ -128,7 +134,14 @@ function equation(diagram: Diagram) {
 }
 
 // eslint-disable-next-line no-use-before-define
-function shapes(diagram: Diagram) {
+function shapes(diagram: Diagram, high: boolean = false) {
+  let webgl = diagram.webglLow;
+  let draw2D = diagram.draw2DLow;
+  if (high) {
+    webgl = diagram.webglHigh;
+    draw2D = diagram.draw2DHigh;
+  }
+
   function polyLine(
     points: Array<Point>,
     close: boolean,
@@ -138,7 +151,7 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     return PolyLine(
-      diagram.webgl, points, close, lineWidth,
+      webgl, points, close, lineWidth,
       color, borderToPoint, transform, diagram.limits,
     );
   }
@@ -162,7 +175,7 @@ function shapes(diagram: Diagram) {
       font = fontInput;
     }
     const dT = new DiagramText(new Point(0, 0), textInput, font);
-    const to = new TextObject(diagram.draw2D, [dT]);
+    const to = new TextObject(draw2D, [dT]);
     return new DiagramElementPrimative(
       to,
       new Transform().scale(1, 1).translate(location.x, location.y),
@@ -228,7 +241,7 @@ function shapes(diagram: Diagram) {
     rotation: number = 0,
   ) {
     return Arrow(
-      diagram.webgl, width, legWidth, height, legHeight,
+      webgl, width, legWidth, height, legHeight,
       tip, rotation, color, transform, diagram.limits,
     );
   }
@@ -237,7 +250,7 @@ function shapes(diagram: Diagram) {
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return Lines(diagram.webgl, linePairs, color, transform, diagram.limits);
+    return Lines(webgl, linePairs, color, transform, diagram.limits);
   }
   function grid(
     bounds: Rect,
@@ -266,7 +279,7 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     return PolyLineCorners(
-      diagram.webgl, points, close,
+      webgl, points, close,
       cornerLength, lineWidth, color, transform, diagram.limits,
     );
   }
@@ -281,7 +294,7 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     return Polygon(
-      diagram.webgl, numSides, radius, lineWidth,
+      webgl, numSides, radius, lineWidth,
       rotation, direction, numSidesToDraw, color, transform, diagram.limits,
     );
   }
@@ -296,7 +309,7 @@ function shapes(diagram: Diagram) {
     textureCoords: Rect = new Rect(0, 0, 1, 1),
   ) {
     return PolygonFilled(
-      diagram.webgl, numSides, radius,
+      webgl, numSides, radius,
       rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation, textureCoords,
     );
   }
@@ -309,7 +322,7 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     return HorizontalLine(
-      diagram.webgl, start, length, width,
+      webgl, start, length, width,
       rotation, color, transform, diagram.limits,
     );
   }
@@ -323,7 +336,7 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     return RectangleFilled(
-      diagram.webgl, topLeft, width, height,
+      webgl, topLeft, width, height,
       cornerRadius, cornerSides, color, transform, diagram.limits,
     );
   }
@@ -336,7 +349,7 @@ function shapes(diagram: Diagram) {
     transform: Transform | Point = new Transform(),
   ) {
     return RadialLines(
-      diagram.webgl, innerRadius, outerRadius, width,
+      webgl, innerRadius, outerRadius, width,
       dAngle, color, transform, diagram.limits,
     );
   }
@@ -406,7 +419,7 @@ function shapes(diagram: Diagram) {
     xProps.majorTicks.fontWeight = '400';
 
     const xAxis = new Axis(
-      diagram.webgl, diagram.draw2D, xProps,
+      webgl, draw2D, xProps,
       new Transform().scale(1, 1).rotate(0)
         .translate(0, xAxisLocation - limits.bottom * height / 2),
       diagram.limits,
@@ -453,7 +466,7 @@ function shapes(diagram: Diagram) {
     yProps.majorTicks.fontWeight = xProps.majorTicks.fontWeight;
 
     const yAxis = new Axis(
-      diagram.webgl, diagram.draw2D, yProps,
+      webgl, draw2D, yProps,
       new Transform().scale(1, 1).rotate(0)
         .translate(yAxisLocation - limits.left * width / 2, 0),
       diagram.limits,
@@ -500,8 +513,16 @@ function shapes(diagram: Diagram) {
 }
 
 class Diagram {
-  canvas: HTMLCanvasElement;
-  webgl: WebGLInstance;
+  canvasLow: HTMLCanvasElement;
+  canvasHigh: HTMLCanvasElement;
+  textCanvasLow: HTMLCanvasElement;
+  textCanvasHigh: HTMLCanvasElement;
+  draw2DLow: DrawContext2D;
+  draw2DHigh: DrawContext2D;
+  htmlCanvas: HTMLElement;
+  webglLow: WebGLInstance;
+  webglHigh: WebGLInstance;
+
   +elements: DiagramElementCollection;
   globalAnimation: GlobalAnimation;
   gesture: Gesture;
@@ -515,11 +536,10 @@ class Diagram {
   moveTopElementOnly: boolean;
 
   limits: Rect;
-  draw2D: DrawContext2D;
-  textCanvas: HTMLCanvasElement;
-  htmlCanvas: HTMLElement;
+
   // gestureElement: HTMLElement;
   shapes: Object;
+  shapesHigh: Object;
   equation: Object;
   backgroundColor: Array<number>;
   fontScale: number;
@@ -548,10 +568,8 @@ class Diagram {
     layout: Object = {},
     vertexShader: string = 'simple',
     fragmentShader: string = 'simple',
-    id: string = 'main',
   ) {
     this.layout = layout;
-    console.log(id)
     if (typeof containerIdOrWebGLContext === 'string') {
       const container = document.getElementById(containerIdOrWebGLContext);
       if (container instanceof HTMLElement) {
@@ -559,14 +577,22 @@ class Diagram {
         for (let i = 0; i < children.length; i += 1) {
           const child = children[i];
           if (child instanceof HTMLCanvasElement
-            && child.classList.contains('diagram__gl')
-            && child.id === `id_diagram__gl__${id}`) {
-            this.canvas = child;
+            && child.classList.contains('diagram__gl')) {
+            if (child.id === 'id_diagram__gl__low') {
+              this.canvasLow = child;
+            }
+            if (child.id === 'id_diagram__gl__high') {
+              this.canvasHigh = child;
+            }
           }
           if (child instanceof HTMLCanvasElement
-            && child.classList.contains('diagram__text')
-            && child.id === `id_diagram__text__${id}`) {
-            this.textCanvas = child;
+            && child.classList.contains('diagram__text')) {
+            if (child.id === 'id_diagram__text__low') {
+              this.textCanvasLow = child;
+            }
+            if (child.id === 'id_diagram__text__high') {
+              this.textCanvasHigh = child;
+            }
           }
           if (child.classList.contains('diagram__html')
           ) {
@@ -578,24 +604,33 @@ class Diagram {
         }
         this.backgroundColor = backgroundColor;
         const shaders = getShaders(vertexShader, fragmentShader);
-        const webgl = new WebGLInstance(
-          this.canvas,
+        const webglLow = new WebGLInstance(
+          this.canvasLow,
           shaders.vertexSource,
           shaders.fragmentSource,
           shaders.varNames,
           this.backgroundColor,
         );
-        this.webgl = webgl;
+        const webglHigh = new WebGLInstance(
+          this.canvasHigh,
+          shaders.vertexSource,
+          shaders.fragmentSource,
+          shaders.varNames,
+          this.backgroundColor,
+        );
+        this.webglLow = webglLow;
+        this.webglHigh = webglHigh;
         // const draw2D = this.textCanvas.getContext('2d');
-        this.draw2D = new DrawContext2D(this.textCanvas);
+        this.draw2DLow = new DrawContext2D(this.textCanvasLow);
+        this.draw2DHigh = new DrawContext2D(this.textCanvasHigh);
       }
     }
     if (containerIdOrWebGLContext instanceof WebGLInstance) {
-      this.webgl = containerIdOrWebGLContext;
+      this.webglLow = containerIdOrWebGLContext;
     }
-    if (this.textCanvas instanceof HTMLCanvasElement) {
-      this.draw2D = new DrawContext2D(this.textCanvas);
-    }
+    // if (this.textCanvas instanceof HTMLCanvasElement) {
+    //   this.draw2D = new DrawContext2D(this.textCanvas);
+    // }
     if (this instanceof Diagram) {
       this.gesture = new Gesture(this);
     }
@@ -616,7 +651,8 @@ class Diagram {
     this.beingTouchedElements = [];
     this.moveTopElementOnly = true;
     this.globalAnimation = new GlobalAnimation();
-    this.shapes = this.getShapes();
+    this.shapes = this.getShapes(false);
+    this.shapesHigh = this.getShapes(true);
     this.equation = this.getEquations();
     this.createDiagramElements();
     if (this.elements.name === '') {
@@ -630,8 +666,8 @@ class Diagram {
     this.animateNextFrame();
   }
 
-  getShapes() {
-    return shapes(this);
+  getShapes(high: boolean = false) {
+    return shapes(this, high);
   }
 
   getEquations() {
@@ -655,7 +691,8 @@ class Diagram {
 
   destroy() {
     this.gesture.destroy();
-    this.webgl.gl.getExtension('WEBGL_lose_context').loseContext();
+    this.webglLow.gl.getExtension('WEBGL_lose_context').loseContext();
+    this.webglHigh.gl.getExtension('WEBGL_lose_context').loseContext();
   }
 
   // setGLDiagramSpaceTransforms() {
@@ -684,7 +721,7 @@ class Diagram {
       y: { bottomLeft: this.limits.bottom, height: this.limits.height },
     };
 
-    const canvasRect = this.canvas.getBoundingClientRect();
+    const canvasRect = this.canvasLow.getBoundingClientRect();
     const pixelSpace = {
       x: { bottomLeft: 0, width: canvasRect.width },
       y: { bottomLeft: canvasRect.height, height: -canvasRect.height },
@@ -728,8 +765,10 @@ class Diagram {
   }
 
   resize() {
-    this.webgl.resize();
-    this.draw2D.resize();
+    this.webglLow.resize();
+    this.webglHigh.resize();
+    this.draw2DLow.resize();
+    this.draw2DHigh.resize();
     this.setSpaceTransforms();
     this.sizeHtmlText();
     this.elements.resizeHtmlObject();
@@ -944,10 +983,21 @@ class Diagram {
     // const bc = this.backgroundColor;
     // this.webgl.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
 
-    this.webgl.gl.clearColor(0, 0, 0, 0);
-    this.webgl.gl.clear(this.webgl.gl.COLOR_BUFFER_BIT);
-    if (this.draw2D) {
-      this.draw2D.ctx.clearRect(0, 0, this.draw2D.ctx.canvas.width, this.draw2D.ctx.canvas.height);
+    this.webglLow.gl.clearColor(0, 0, 0, 0);
+    this.webglLow.gl.clear(this.webglLow.gl.COLOR_BUFFER_BIT);
+    this.webglHigh.gl.clearColor(0, 0, 0, 0);
+    this.webglHigh.gl.clear(this.webglHigh.gl.COLOR_BUFFER_BIT);
+    if (this.draw2DLow) {
+      this.draw2DLow.ctx.clearRect(
+        0, 0, this.draw2DLow.ctx.canvas.width,
+        this.draw2DLow.ctx.canvas.height,
+      );
+    }
+    if (this.draw2DHigh) {
+      this.draw2DHigh.ctx.clearRect(
+        0, 0, this.draw2DHigh.ctx.canvas.width,
+        this.draw2DHigh.ctx.canvas.height,
+      );
     }
   }
 
@@ -988,104 +1038,13 @@ class Diagram {
     return this.elements.state.isAnimating;
   }
 
-  // // clipToPage = function(x,y) { return {
-  // //     x: canvasL + canvasW*(x - clipL)/clipW,
-  // //     y: canvasT + canvasH*(clipT - y)/clipH,
-  // // }}
-  // clipToClient(clip: Point): Point {
-  //   const canvas = this.canvas.getBoundingClientRect();
-  //   return new Point(
-  //     canvas.left + canvas.width *
-  //       (clip.x - this.limits.left) / this.limits.width,
-  //     canvas.top + canvas.height *
-  //       (this.limits.top - clip.y) / this.limits.height,
-  //   );
-  // }
-
-  // clipToPage(clip: Point): Point {
-  //   const canvas = this.canvas.getBoundingClientRect();
-  //   const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
-  //   const scrollTop = window.pageYOffset || this.canvas.scrollTop;
-  //   const canvasPage = {
-  //     top: canvas.top + scrollTop,
-  //     left: canvas.left + scrollLeft,
-  //   };
-
-  //   return new Point(
-  //     canvasPage.left + canvas.width *
-  //       (clip.x - this.limits.left) / this.limits.width,
-  //     canvasPage.top + canvas.height *
-  //       (this.limits.top - clip.y) / this.limits.height,
-  //   );
-  // }
-
-  // pageToClip = function(x, y) { return {
-  //    x: (x - canvasL)/canvasW * clipW + clipL,
-  //    y: clipT - (y - canvasT)/canvasH * clipH,
-  // }}
   clientToPixel(clientLocation: Point): Point {
-    const canvas = this.canvas.getBoundingClientRect();
+    const canvas = this.canvasLow.getBoundingClientRect();
     return new Point(
       clientLocation.x - canvas.left,
       clientLocation.y - canvas.top,
     );
   }
-
-  // clientToClip(clientLocation: Point): Point {
-  //   const canvas = this.canvas.getBoundingClientRect();
-  //   return new Point(
-  //     (clientLocation.x - canvas.left) / canvas.width *
-  //       this.limits.width + this.limits.left,
-  //     this.limits.top - (clientLocation.y - canvas.top) /
-  //       canvas.height * this.limits.height,
-  //   );
-  // }
-
-  // pageToClip(pageLocation: Point): Point {
-  //   const canvas = this.canvas.getBoundingClientRect();
-  //   const scrollLeft = window.pageXOffset || this.canvas.scrollLeft;
-  //   const scrollTop = window.pageYOffset || this.canvas.scrollTop;
-  //   const canvasPage = {
-  //     top: canvas.top + scrollTop,
-  //     left: canvas.left + scrollLeft,
-  //   };
-  //   return new Point(
-  //     (pageLocation.x - canvasPage.left) / this.canvas.offsetWidth *
-  //       this.limits.width + this.limits.left,
-  //     this.limits.top - (pageLocation.y - canvasPage.top) /
-  //       this.canvas.offsetHeight * this.limits.height,
-  //   );
-  // }
-
-  // clipPerPixel(): Point {
-  //   const x = this.limits.width / this.canvas.offsetWidth / window.devicePixelRatio;
-  //   const y = this.limits.height / this.canvas.offsetHeight / window.devicePixelRatio;
-  //   return new Point(x, y);
-  // }
-
-  /* eslint-disable */
-  // autoResize() {
-  //   this.canvas.width = this.canvas.clientWidth * this.devicePixelRatio;
-  //   this.canvas.height = this.canvas.clientHeight * this.devicePixelRatio;
-  //   this.webgl.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-
-  //   this.canvasRect = this.canvas.getBoundingClientRect();
-  //   this.targetRect = this.getTargetRect();
-
-  //   let newZeroX = this.targetRect.left-this.canvasRect.left+this.targetRect.width / 2;
-  //   let newZeroY = this.targetRect.top-this.canvasRect.top+this.targetRect.height/2;
-  //   let scale = d2.point(this.globals.dimensions['canvas-width']/this.canvasRect.width,
-  //                      this.globals.dimensions['canvas-width']/this.canvasRect.height)
-  //   this.geometry.setTransform(tools.Transform(d2.point(newZeroX/this.canvasRect.width*2-1,
-  //                             newZeroY/this.canvasRect.height*-2+1),
-  //                         scale));
-  //   this.geometry.updateBias(scale, 
-  //                d2.point(newZeroX/this.canvasRect.width*2-1,
-  //                      newZeroY/this.canvasRect.height*-2+1));  
-  //   this.globals.updateCanvas(this.canvas);
-  //   this.globals.animateNextFrame();
-  // }
-  /* eslint-enable */
 }
 
 export default Diagram;

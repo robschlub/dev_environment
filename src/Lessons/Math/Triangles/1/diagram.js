@@ -1,13 +1,11 @@
 // @flow
-import { CommonLessonDiagram, CommonOverlayLessonDiagram } from '../common/diagram';
+import CommonLessonDiagram from '../common/diagram';
 
 // eslint-disable-next-line import/no-cycle
-import {
-  DiagramCollection, OverlayDiagramCollection,
-} from './diagramCollection';
+import DiagramCollection from './diagramCollection';
 import { Transform } from '../../../../js/diagram/tools/g2';
 
-export class LessonDiagram extends CommonLessonDiagram {
+export default class LessonDiagram extends CommonLessonDiagram {
   elements: DiagramCollection;
 
   createDiagramElements() {
@@ -18,17 +16,17 @@ export class LessonDiagram extends CommonLessonDiagram {
   }
 }
 
-export class OverlayLessonDiagram extends CommonOverlayLessonDiagram {
-  elements: OverlayDiagramCollection;
+// export class OverlayLessonDiagram extends CommonOverlayLessonDiagram {
+//   elements: OverlayDiagramCollection;
 
-  createDiagramElements() {
-    super.createDiagramElements();
+//   createDiagramElements() {
+//     super.createDiagramElements();
 
-    this.elements = new OverlayDiagramCollection(this, new Transform().translate(0, 0));
+//     this.elements = new OverlayDiagramCollection(this, new Transform().translate(0, 0));
 
-    this.elements.hasTouchableElements = true;
-    // this.elements = new DiagramCollection(this, new Transform().translate(0, 0));
+//     this.elements.hasTouchableElements = true;
+//     // this.elements = new DiagramCollection(this, new Transform().translate(0, 0));
 
-    // this.elements.hasTouchableElements = true;
-  }
-}
+//     // this.elements.hasTouchableElements = true;
+//   }
+// }

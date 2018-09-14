@@ -1,9 +1,9 @@
 // @flow
 import {
-  LessonContent, click, centerV, highlight,
+  LessonContent, click, centerV,
 } from '../../../../js/Lesson/LessonContent';
 
-import { LessonDiagram, OverlayLessonDiagram} from './diagram';
+import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
@@ -19,8 +19,7 @@ class Content extends LessonContent {
   }
 
   setDiagram(htmlId: string = '') {
-    
-    this.overlayDiagram = new OverlayLessonDiagram(htmlId, layout);
+    // this.overlayDiagram = new OverlayLessonDiagram(htmlId, layout);
     this.diagram = new LessonDiagram(htmlId, layout);
   }
 
@@ -29,7 +28,7 @@ class Content extends LessonContent {
     const examples = diag._examples;
     const custom = diag._custom;
     const properties = diag._properties;
-    const qr = this.overlayDiagram.elements._qr;
+    const qr = diag._qr;
     // const qr = this.diagram.elements;
 
     this.addSection({
@@ -57,6 +56,9 @@ class Content extends LessonContent {
 
     this.addSection({
       setContent: `
+        <p>
+          Another way to make a triangle is to draw lines between any |three_points|.
+        </p>
         <p>
           Another way to make a triangle is to draw lines between any |three_points|.
         </p>
