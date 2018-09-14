@@ -9,7 +9,7 @@ import LessonDiagram from './diagram';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
-  _triangle: TriangleCollection;
+  // _triangle: TriangleCollection;
 
   constructor(
     diagram: LessonDiagram,

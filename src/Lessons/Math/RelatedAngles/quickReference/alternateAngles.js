@@ -5,7 +5,7 @@ import lessonLayout from './layout';
 
 // import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
 // eslint-disable-next-line import/no-cycle
-import CommonLessonDiagram from '../common/diagram';
+// import CommonLessonDiagram from '../common/diagram';
 
 // import OppositeCollection from '../common/diagramCollectionOpposite';
 import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
@@ -52,7 +52,7 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   }
 
   constructor(
-    diagram: CommonLessonDiagram,
+    diagram: Object,
     transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
     const layout = lessonLayout();

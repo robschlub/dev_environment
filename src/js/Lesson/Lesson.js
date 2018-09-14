@@ -223,7 +223,6 @@ class Lesson {
       section.currentInteractiveItem = -1;
       if (this.overlayDiagram) {
         this.overlayDiagram.elements.hideAll();
-        console.log("hide")
       }
       section.setVisible();
       this.renderDiagrams();

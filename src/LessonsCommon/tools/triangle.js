@@ -13,7 +13,7 @@ import type { TypeAngle } from './angle';
 // import makeEquationLabel from './equationLabel';
 import { makeLine } from './line';
 import type {
-  TypeLine, TypeLineLabelLocation, TypeLineLabelSubLocation,
+  TypeLineLabelLocation, TypeLineLabelSubLocation,
   TypeLineLabelOrientation,
 } from './line';
 

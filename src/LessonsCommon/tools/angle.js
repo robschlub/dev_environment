@@ -25,7 +25,7 @@ export type TypeAngle = {
   autoRightAngle: boolean;
   radius: number;
   addLabel: (string | Equation, number) => void;
-  updateAngle: (number, number, number) => void;
+  updateAngle: (number, number, ?number) => void;
   setLabel: (string) => void;
   showForm: (string) => void;
   setToCorner: (Point, Point, Point) => void;
@@ -78,21 +78,26 @@ export default function makeAngle(
     // angle.updateLabel();
   };
 
-  angle.updateAngle = (start: number, size: number, labelRotationOffset: number, angleToTestRightAngle: number = size) => {
+  angle.updateAngle = function updateAngle(
+    start: number,
+    size: number,
+    labelRotationOffset: number,
+    angleToTestRightAngle: number = size,
+  ) {
     if (angle.autoRightAngle
       && angleToTestRightAngle >= Math.PI / 2 * 0.995
       && angleToTestRightAngle <= Math.PI / 2 * 1.005
     ) {
       if (angle._arc.isShown && angle._arc === angle.curve) {
         angle._arc = angle.right;
-        angle.elements['arc'] = angle.right;
+        angle.elements.arc = angle.right;
         angle.right.show();
         angle.curve.hide();
         diagram.animateNextFrame();
       }
     } else if (angle._arc.isShown && angle._arc === angle.right) {
       angle._arc = angle.curve;
-      angle.elements['arc'] = angle.curve;
+      angle.elements.arc = angle.curve;
       angle.curve.show();
       angle.right.hide();
       diagram.animateNextFrame();

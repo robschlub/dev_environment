@@ -2148,7 +2148,7 @@ class DiagramElementCollection extends DiagramElement {
     this.elements[name].name = name;
     // $FlowFixMe
     this[`_${name}`] = this.elements[name];
-    if (index != -1) {
+    if (index !== -1) {
       this.order = [
         ...this.order.slice(0, index),
         name,

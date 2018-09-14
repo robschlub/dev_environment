@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Rect,
+  Transform,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
@@ -9,9 +9,7 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-// import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-// import makeAngle from '../../../../LessonsCommon/tools/angle';
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
 import type {

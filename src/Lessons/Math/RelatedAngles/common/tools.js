@@ -11,7 +11,7 @@ import {
 import makeAngle from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
-export type TypeLabeledAngle = { } & TypeAngle;
+export type TypeLabeledAngle = TypeAngle;
 
 export type TypeIndexAngle = {
   lineIndex: number;

@@ -9,7 +9,7 @@ import imgLink from '../tile.png';
 import details from '../details';
 
 const layout = lessonLayout();
-const { colors } = layout;
+// const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -22,7 +22,7 @@ class Content extends LessonContent {
   }
 
   addSections() {
-    const diag = this.diagram.elements;
+    // const diag = this.diagram.elements;
 
     this.addSection({
     });

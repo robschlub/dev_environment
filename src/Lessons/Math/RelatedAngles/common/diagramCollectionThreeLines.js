@@ -9,8 +9,9 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import { makeLabeledAngle } from './tools';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import type {
-  TypeAngle, TypeIndexAngle, TypeSupplementaryAngle,
+  TypeIndexAngle, TypeSupplementaryAngle,
 } from './tools';
 import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
@@ -271,7 +272,9 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
 
     angles.forEach((angle) => {
       const [element, form, color] = angle;
-      element.label.eqn.showForm(form);
+      if (element.label) {
+        element.label.eqn.showForm(form);
+      }
       element.show();
       element._arc.show();
       element.setColor(color);
