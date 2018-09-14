@@ -573,6 +573,8 @@ export default class LessonComponent extends React.Component
                 <div id="id_diagram__html__overlay" className='diagram__html'>
                 </div>
                 
+                <div className='diagram__gesture'>
+                </div>
               </div>
               {this.addGoToButton()}
               {this.addNextButton()}

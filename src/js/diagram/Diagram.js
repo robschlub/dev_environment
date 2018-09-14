@@ -518,6 +518,7 @@ class Diagram {
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
   htmlCanvas: HTMLElement;
+  gestureElement: HTMLElement;
   shapes: Object;
   equation: Object;
   backgroundColor: Array<number>;
@@ -571,6 +572,9 @@ class Diagram {
             && child.id === `id_diagram__html__${id}`
           ) {
             this.htmlCanvas = child;
+          }
+          if (child.classList.contains('diagram__gesture')) {
+            this.gestureElement = child;
           }
         }
         this.backgroundColor = backgroundColor;
