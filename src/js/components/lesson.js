@@ -563,18 +563,14 @@ export default class LessonComponent extends React.Component
                 <div id="id_diagram__html__main" className='diagram__html'>
                   {this.renderContent(this.state.htmlText)}
                 </div>
-                
                 <canvas id="id_diagram__text__overlay" className='diagram__text'>
                 </canvas>
-                
                 <canvas id="id_diagram__gl__overlay" className='diagram__gl'>
                 </canvas>
-                
-                <div id="id_diagram__html__overlay" className='diagram__html'>
+                {/*<div id="id_diagram__html__overlay" className='diagram__html'>
                 </div>
-                
                 <div className='diagram__gesture'>
-                </div>
+                </div>*/}
               </div>
               {this.addGoToButton()}
               {this.addNextButton()}

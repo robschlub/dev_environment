@@ -518,7 +518,7 @@ class Diagram {
   draw2D: DrawContext2D;
   textCanvas: HTMLCanvasElement;
   htmlCanvas: HTMLElement;
-  gestureElement: HTMLElement;
+  // gestureElement: HTMLElement;
   shapes: Object;
   equation: Object;
   backgroundColor: Array<number>;
@@ -569,13 +569,12 @@ class Diagram {
             this.textCanvas = child;
           }
           if (child.classList.contains('diagram__html')
-            && child.id === `id_diagram__html__${id}`
           ) {
             this.htmlCanvas = child;
           }
-          if (child.classList.contains('diagram__gesture')) {
-            this.gestureElement = child;
-          }
+          // if (child.classList.contains('diagram__gesture')) {
+          //   this.gestureElement = child;
+          // }
         }
         this.backgroundColor = backgroundColor;
         const shaders = getShaders(vertexShader, fragmentShader);

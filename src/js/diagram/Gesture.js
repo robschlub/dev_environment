@@ -47,7 +47,7 @@ class Gesture {
   }
 
   addEvent(event: string, method: Object, flag: boolean) {
-    this.diagram.gestureElement.addEventListener(
+    this.diagram.htmlCanvas.addEventListener(
       event,
       method.bind(this),
       flag,
@@ -55,7 +55,7 @@ class Gesture {
   }
 
   removeEvent(event: string, method: Object, flag: boolean) {
-    this.diagram.gestureElement.removeEventListener(
+    this.diagram.htmlCanvas.removeEventListener(
       event,
       method.bind(this),
       flag,
@@ -63,7 +63,6 @@ class Gesture {
   }
 
   startHandler(point: Point) {
-    console.log("Asdf");
     if (this.enable) {
       this.mouseDown = true;
       this.previousPoint = point;
