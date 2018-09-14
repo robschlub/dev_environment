@@ -117,6 +117,10 @@ export default function makeTriangle(
     }
 
     triangle.updateAngles();
+    triangle.dimensionList.forEach((dim) => {
+      const element = triangle[`_dimension${dim[0]}${dim[1]}`];
+      element.stop();
+    });
     triangle.updateDimensions();
   };
 
