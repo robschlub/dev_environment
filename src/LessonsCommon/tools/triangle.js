@@ -2,15 +2,15 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
-  Transform, Point, Line, polarToRect, normAngle, minAngleDiff,
+  Transform, Point, Line, Rect, normAngle, minAngleDiff,
 } from '../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection,
+  DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import makeAngle from './angle';
 import type { TypeAngle } from './angle';
-import makeEquationLabel from './equationLabel';
+// import makeEquationLabel from './equationLabel';
 import { makeLine } from './line';
 import type {
   TypeLine, TypeLineLabelLocation, TypeLineLabelSubLocation,
@@ -30,6 +30,9 @@ export type TypeTriangle = {
   b12: Line;
   b23: Line;
   b31: Line;
+  point1: DiagramElementPrimative;
+  point2: DiagramElementPrimative;
+  point3: DiagramElementPrimative;
   hasAngles: boolean;
   hasDimensions: boolean;
   hasLabels: boolean;
@@ -41,7 +44,7 @@ export type TypeTriangle = {
   updateAngles: () => void;
   addAngle: (number, number, number, number, Array<string>, string, number) => void;
   autoShowAngles: boolean;
-
+  _line: DiagramElementPrimative;
   dimensionList: Array<Array<number>>;
 } & DiagramElementCollection;
 
@@ -85,22 +88,19 @@ export default function makeTriangle(
   triangle.autoShowAngles = false;
   triangle.dimensionList = [];
 
-  const line = diagram.shapes.polyLine(
-    [p1, p2, p3], true, lineWidth,
-    color, 'onSharpAnglesOnly',
-  );
-  triangle.add('line', line);
-
   triangle.updatePoints = (newP1: Point, newP2: Point, newP3: Point) => {
     triangle.p1 = newP1._dup();
     triangle.p2 = newP2._dup();
     triangle.p3 = newP3._dup();
-    line.vertices.change([newP1, newP2, newP3]);
-    const [b1, b2, b3] = line.vertices.border[0];
+    triangle.point1.transform.updateTranslation(newP1._dup());
+    triangle.point2.transform.updateTranslation(newP2._dup());
+    triangle.point3.transform.updateTranslation(newP3._dup());
+    triangle._line.vertices.change([newP1, newP2, newP3]);
+    const [b1, b2, b3] = triangle._line.vertices.border[0];
     triangle.b1 = b1;
     triangle.b2 = b2;
     triangle.b3 = b3;
-    const [ib1, ib2, ib3] = line.vertices.holeBorder[0];
+    const [ib1, ib2, ib3] = triangle._line.vertices.holeBorder[0];
     triangle.ib1 = ib1;
     triangle.ib2 = ib2;
     triangle.ib3 = ib3;
@@ -118,8 +118,62 @@ export default function makeTriangle(
 
     triangle.updateAngles();
     triangle.updateDimensions();
-    // triangle.updateLabels();
   };
+
+  triangle.makePoint = (index: number) => {
+    const point = diagram.shapes.polygonFilled(
+      100, 1, 0,
+      100, [1, 0, 0, 1], new Transform().scale(1, 1).translate(0, 0),
+    );
+    const update = () => {
+      const t1 = triangle.point1.transform.t();
+      const t2 = triangle.point2.transform.t();
+      const t3 = triangle.point3.transform.t();
+      if (t1 != null && t2 != null && t3 != null) {
+        triangle.updatePoints(t1, t2, t3);
+      }
+    };
+    point.setTransformCallback = update.bind(triangle);
+    triangle[`point${index}`] = point;
+  };
+
+  triangle.makePoint(1);
+  triangle.makePoint(2);
+  triangle.makePoint(3);
+
+  triangle.addPoint = function addPoint(
+    index: number,
+    radius: number,
+    pointColor: Array<number>,
+    movable: boolean = false,
+    moveBoundary: Rect = diagram.limits,
+  ) {
+    const point = triangle[`point${index}`];
+    point.setColor(pointColor);
+    point.transform.updateScale(radius, radius);
+    if (movable) {
+      point.isTouchable = true;
+      point.isMovable = true;
+      point.move.canBeMovedAfterLoosingTouch = true;
+      point.move.maxTransform = point.transform._dup();
+      point.move.maxTransform.updateTranslation(
+        moveBoundary.right,
+        moveBoundary.top,
+      );
+      point.move.minTransform = point.transform._dup();
+      point.move.minTransform.updateTranslation(
+        moveBoundary.left,
+        moveBoundary.bottom,
+      );
+    }
+    triangle.add(`point${index}`, point, 0);
+  };
+
+  const line = diagram.shapes.polyLine(
+    [p1, p2, p3], true, lineWidth,
+    color, 'onSharpAnglesOnly',
+  );
+  triangle.add('line', line);
 
   triangle.addSideDimension = function addDimension(
     index1: number,

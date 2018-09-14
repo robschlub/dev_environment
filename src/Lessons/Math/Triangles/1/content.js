@@ -81,20 +81,46 @@ class Content extends LessonContent {
       title: 'Properties',
       setContent: `
         <p>
-          We use properties to describe a shape. Some good first properties are the |side_lengths|, and |angle_sizes|.
+          What properties does a triangle have? Well, its definition gives us the first properties of three |side_lengths|, and three |angle_sizes|.
         </p>
       `,
       modifiers: {
         side_lengths: click(properties.growDimensions, [properties], colors.dimensions),
         angle_sizes: click(properties.pulseAngles, [properties], colors.angleText),
       },
+      setEnterState: () => {
+        if (this.comingFrom === 'prev') {
+          properties._triangle.updatePoints(
+            custom._triangle.p1,
+            custom._triangle.p2,
+            custom._triangle.p3,
+          );
+        }
+        properties.calculateFuturePositions();
+        console.log(properties.futurePositions)
+      },
       showOnly: [
         diag,
-      ],
-      show: [
         properties,
+        properties._triangle,
+        properties._triangle._line,
+        properties._triangle._point1,
+        properties._triangle._point2,
+        properties._triangle._point3,
       ],
+      // show: [
+      //   properties,
+      // ],
+      transitionFromAny: (done) => {
+        if (this.comingFrom === 'prev') {
+          properties.moveToFuturePositions(2, done);
+        } else {
+          done();
+        }
+      },
       setSteadyState: () => {
+        properties.showAll();
+        properties.setFuturePositions();
       },
     });
   }

@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point,
+  Transform, Rect,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
@@ -9,7 +9,7 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
+// import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 // import makeAngle from '../../../../LessonsCommon/tools/angle';
 
@@ -24,6 +24,9 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
     _dimension12: TypeLine;
     _dimension23: TypeLine;
     _dimension31: TypeLine;
+    _point1: DiagramElementPrimative;
+    _point2: DiagramElementPrimative;
+    _point3: DiagramElementPrimative;
   } & TypeTriangle & TypeTriangleAngle;
 
   makeTriangleWithDimensions() {
@@ -37,25 +40,38 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
       layout.lineWidth,
       this.layout.colors.line,
     );
-    triangle.setPosition(layout.triangle.position);
+    // triangle.setPosition(layout.triangle.position);
 
-    triangle.addAngle(1, 0.3, 0.03, 100, this.layout.colors.angle);
-    triangle.addAngle(2, 0.3, 0.03, 100, this.layout.colors.angle);
-    triangle.addAngle(3, 0.3, 0.03, 100, this.layout.colors.angle);
-    const dim12 = triangle.addSideDimension(1, 2, this.layout.colors.angle, 0.15, true, 0.01);
-    dim12.addLabel('AB', 0.01, 'outside', 'left', 'horizontal', 0.5);
-    dim12.addArrow1(0.05, 0.05);
-    dim12.addArrow2(0.05, 0.05);
+    const a = layout.angle;
+    const aColor = this.layout.colors.angle;
+    triangle.addAngle(1, a.radius, a.lineWidth, a.sides, aColor);
+    triangle.addAngle(2, a.radius, a.lineWidth, a.sides, aColor);
+    triangle.addAngle(3, a.radius, a.lineWidth, a.sides, aColor);
 
-    const dim23 = triangle.addSideDimension(2, 3, this.layout.colors.angle, 0.15, true, 0.01);
-    dim23.addLabel('BC', 0.01, 'outside', 'left', 'horizontal', 0.5);
-    dim23.addArrow1(0.05, 0.05);
-    dim23.addArrow2(0.05, 0.05);
+    const d = layout.dimension;
+    const dColor = this.layout.colors.dimensions;
+    const dim12 = triangle.addSideDimension(1, 2, dColor, d.offset, true, d.lineWidth);
+    dim12.addLabel('AB', d.labelOffset, 'outside', 'left', 'baseUpright', 0.5);
+    dim12.addArrow1(d.arrowWidth, d.arrowHeight);
+    dim12.addArrow2(d.arrowWidth, d.arrowHeight);
 
-    const dim31 = triangle.addSideDimension(3, 1, this.layout.colors.angle, 0.15, true, 0.01);
-    dim31.addLabel('CA', 0.01, 'outside', 'left', 'horizontal', 0.5);
-    dim31.addArrow1(0.05, 0.05);
-    dim31.addArrow2(0.05, 0.05);
+    const dim23 = triangle.addSideDimension(2, 3, dColor, d.offset, true, d.lineWidth);
+    dim23.addLabel('BC', d.labelOffset, 'outside', 'left', 'baseUpright', 0.5);
+    dim23.addArrow1(d.arrowWidth, d.arrowHeight);
+    dim23.addArrow2(d.arrowWidth, d.arrowHeight);
+
+    const dim31 = triangle.addSideDimension(3, 1, dColor, d.offset, true, d.lineWidth);
+    dim31.addLabel('CA', d.labelOffset, 'outside', 'left', 'horizontal', 0.5);
+    dim31.addArrow1(d.arrowWidth, d.arrowHeight);
+    dim31.addArrow2(d.arrowWidth, d.arrowHeight);
+
+    const { boundary } = layout;
+    triangle.addPoint(1, 0.15, this.layout.colors.point, true, boundary);
+    triangle.addPoint(2, 0.15, this.layout.colors.point, true, boundary);
+    triangle.addPoint(3, 0.15, this.layout.colors.point, true, boundary);
+
+    triangle.hasTouchableElements = true;
+    triangle.autoShowAngles = true;
     return triangle;
   }
 
@@ -81,5 +97,25 @@ export default class TrianglePropertiesCollection extends CommonDiagramCollectio
     super(diagram, layout, transform);
     this.setPosition(this.layout.position);
     this.add('triangle', this.makeTriangleWithDimensions());
+    this.hasTouchableElements = true;
+  }
+
+  calculateFuturePositions() {
+    this.futurePositions = [];
+    const { points } = this.layout.properties.triangle;
+    const elements = [
+      this._triangle._point1,
+      this._triangle._point2,
+      this._triangle._point3,
+    ];
+    points.forEach((p, index) => {
+      this.futurePositions.push({
+        element: elements[index],
+        scenario: {
+          position: p,
+          rotation: 0,
+        },
+      });
+    });
   }
 }

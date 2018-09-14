@@ -2142,12 +2142,21 @@ class DiagramElementCollection extends DiagramElement {
   add(
     name: string,
     diagramElement: DiagramElementPrimative | DiagramElementCollection,
+    index: number = -1,
   ) {
     this.elements[name] = diagramElement;
     this.elements[name].name = name;
     // $FlowFixMe
     this[`_${name}`] = this.elements[name];
-    this.order.push(name);
+    if (index != -1) {
+      this.order = [
+        ...this.order.slice(0, index),
+        name,
+        ...this.order.slice(index),
+      ];
+    } else {
+      this.order.push(name);
+    }
   }
 
   draw(parentTransform: Transform = new Transform(), now: number = 0) {

@@ -21,7 +21,7 @@ export default function commonLessonLayout() {
 
   const pointRadius = 0.15;
   layout.custom = {
-    lineWidth: 0.05,
+    lineWidth: 0.02,
     pointRadius,
     pointPositions: {
       p1: new Point(0, 0.7),
@@ -29,10 +29,7 @@ export default function commonLessonLayout() {
       p3: new Point(1.4, -0.7),
     },
     boundary: new Rect(
-      -3 + pointRadius,
-      -2 + pointRadius,
-      6 - pointRadius * 2,
-      3.5 - pointRadius * 2,
+      -2.5, -1.5, 5, 2.3,
     ),
     pointSides: 50,
     randomBoundary: new Rect(
@@ -82,55 +79,28 @@ export default function commonLessonLayout() {
 
   layout.properties = {
     lineWidth: 0.02,
+    boundary: new Rect(
+      -2.5, -1.5, 5, 2.3,
+    ),
     dimension: {
       lineWidth: 0.01,
       arrowHeight: 0.06,
       arrowWidth: 0.06,
-      // locations: [
-      //   {
-      //     triIndex: [0, 1],
-      //     offset: 0.2,
-      //   },
-      //   {
-      //     triIndex: [1, 2],
-      //     offset: 0.2,
-      //   },
-      //   {
-      //     triIndex: [2, 0],
-      //     offset: 0.2,
-      //   },
-      // ],
+      labelOffset: 0.01,
+      offset: 0.3,
     },
     angle: {
-      
-    }
+      radius: 0.3,
+      lineWidth: 0.03,
+      sides: 100,
+    },
     triangle: {
       points: [
-        new Point(-2, 0),
-        new Point(-2, 1.5),
-        new Point(2, 0),
+        new Point(-2, -1),
+        new Point(-1, 0.5),
+        new Point(2, -1),
       ],
       position: new Point(0, -0.85),
-    },
-    // corners: [
-    //   [1, 2, 0],
-    //   [2, 0, 1],
-    //   [0, 1, 2],
-    // ],
-    // angleRotations: [
-    //   0,
-    //   Math.PI / 3 * 4,
-    //   Math.PI / 3 * 2,
-    // ],
-    angleAnnotation: {
-      arc: {
-        radius: 0.3,
-        width: 0.01,
-        sides: 100,
-      },
-      label: {
-        radius: 0.4,
-      },
     },
   };
   return layout;

@@ -93,7 +93,7 @@ export default class CustomTriangleCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.setPosition(this.layout.position);
+    // this.setPosition(this.layout.position);
     this.add('p1', this.makePoint('p1'));
     this.add('p2', this.makePoint('p2'));
     this.add('p3', this.makePoint('p3'));
