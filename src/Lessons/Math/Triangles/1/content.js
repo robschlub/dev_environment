@@ -58,7 +58,7 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        three_points: click(custom.newTriangle, [custom], colors.point),
+        three_points: click(custom.newTriangle, [custom], colors.pointText),
       },
       show: [
         custom,
@@ -97,7 +97,6 @@ class Content extends LessonContent {
           );
         }
         properties.calculateFuturePositions();
-        console.log(properties.futurePositions)
       },
       showOnly: [
         diag,
@@ -108,9 +107,6 @@ class Content extends LessonContent {
         properties._triangle._point2,
         properties._triangle._point3,
       ],
-      // show: [
-      //   properties,
-      // ],
       transitionFromAny: (done) => {
         if (this.comingFrom === 'prev') {
           properties.moveToFuturePositions(2, done);
@@ -119,8 +115,9 @@ class Content extends LessonContent {
         }
       },
       setSteadyState: () => {
-        properties._triangle.showDimensions(false);
         properties.setFuturePositions();
+        properties._triangle.showDimensions(false);
+        properties._triangle.showAngles(false);
       },
     });
   }

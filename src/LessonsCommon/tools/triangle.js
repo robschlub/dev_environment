@@ -309,7 +309,19 @@ export default function makeTriangle(
   triangle.showDimensions = (includeLabels: boolean = false) => {
     triangle.dimensionList.forEach((dim) => {
       const element = triangle[`_dimension${dim[0]}${dim[1]}`];
-      element.show();
+      element.showAll();
+      if (!includeLabels) {
+        if (element.label) {
+          element._label.hide();
+        }
+      }
+    });
+  };
+
+  triangle.showAngles = (includeLabels: boolean = false) => {
+    const elements = [triangle._angle1, triangle._angle2, triangle._angle3];
+    elements.forEach((element) => {
+      element.showAll();
       if (!includeLabels) {
         if (element.label) {
           element._label.hide();

@@ -8,6 +8,7 @@ const cssColorNames = [
   'latin',
   'line',
   'point',
+  'pointText',
   'angle',
   'angleText',
   'dimensions',
