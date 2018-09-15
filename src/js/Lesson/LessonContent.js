@@ -430,8 +430,9 @@ class Section {
 
     // Go through all text, and replace all characters between | | with
     // with default keywords
-    const r = RegExp(/\|([^|]*)\|/, 'gi');
-    return htmlText.replace(r, '<span class="highlight_word">$1</span>');
+    // const r = RegExp(/\|([^|]*)\|/, 'gi');
+    // return htmlText.replace(r, '<span class="highlight_word">$1</span>');
+    return htmlText;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -496,8 +497,9 @@ class Section {
 
     // Go through all text, and replace all characters between | | with
     // with default keywords
-    const r = RegExp(/\|([^|]*)\|/, 'gi');
-    return htmlText.replace(r, '<span class="highlight_word">$1</span>');
+    // const r = RegExp(/\|([^|]*)\|/, 'gi');
+    // return htmlText.replace(r, '<span class="highlight_word">$1</span>');
+    return htmlText;
   }
 
   /* eslint-disable no-unused-vars */

@@ -240,7 +240,8 @@ function applyModifiers(text: string, modifiers: Object) {
     const mod = modifiers[key];
     outText = modifyText(outText, key, mod);
   });
-  return outText;
+  const r = RegExp(/\|([^|]*)\|/, 'gi');
+  return outText.replace(r, '<span class="highlight_word">$1</span>');
 }
 
 function setOnClicks(modifiers: Object) {

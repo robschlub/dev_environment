@@ -2,7 +2,7 @@
 import { Transform, Point } from '../../../../js/diagram/tools/g2';
 import { DiagramElementPrimative } from '../../../../js/diagram/Element';
 import lessonLayout from './layout';
-
+import * as html from '../../../../js/tools/htmlGenerator';
 // import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
 // eslint-disable-next-line import/no-cycle
 // import CommonLessonDiagram from '../common/diagram';
@@ -15,8 +15,11 @@ import CommonLessonDiagramCollection from '../common/diagramCollection';
 class PopupBox {
   id: string;
   modifiers: {};
-  body: string;
+  description: string;
   title: string;
+  titleElement: HTMLElement;
+  descriptionElement: HTMLElement;
+  spaceForDiagramElement: HTMLElement;
 
   toggle(toState: ?boolean = null) {
     const box = document
@@ -32,20 +35,26 @@ class PopupBox {
     }
   }
 
-  // setTitle(title: string, modifiers: Object | null) {
+  setTitle(title: string, modifiers: Object = {}) {
+    const modifiedText = html.applyModifiers(title, modifiers);
+    this.titleElement.innerHTML = modifiedText;
+  }
 
-  // }
+  setDescription(title: string, modifiers: Object = {}) {
+    const modifiedText = html.applyModifiers(title, modifiers);
+    this.titleElement.innerHTML = modifiedText;
+  }
 
   constructor(
     diagram: Object,
     id: string,
     title: string = '',
-    body: string = '',
+    description: string = '',
     modifiers: Object = {},
   ) {
     this.id = id;
     this.title = title;
-    this.body = body;
+    this.description = description;
     this.modifiers = modifiers;
 
     const container = document.createElement('div');
@@ -61,6 +70,7 @@ class PopupBox {
     infoSymbol.classList.add('lesson__popup_box__title_i');
     infoSymbol.innerHTML = 'i';
     titleElement.appendChild(infoSymbol);
+    this.titleElement = titleElement;
 
     const close = document.createElement('div');
     close.classList.add('lesson__popup_box__close');
@@ -71,19 +81,21 @@ class PopupBox {
 
     const titleText = document.createElement('div');
     titleText.classList.add('lesson__popup_box__title_text');
-    titleText.innerHTML = title;
+    titleText.innerHTML = html.applyModifiers(title, modifiers);
     titleElement.appendChild(titleText);
 
     const spaceForDiagram = document.createElement('div');
     spaceForDiagram.classList.add('lesson__popup_box__diagram');
     spaceForDiagram.id = (`id_lesson__popup_box__diagram__${id}`);
+    this.spaceForDiagramElement = spaceForDiagram;
     container.appendChild(spaceForDiagram);
 
-    const text = document.createElement('div');
-    text.classList.add('lesson__popup_box__text');
-    text.id = `id_lesson__popup_box__text__${id}`;
-    text.innerHTML = body;
-    container.appendChild(text);
+    const descriptionElement = document.createElement('div');
+    descriptionElement.classList.add('lesson__popup_box__text');
+    descriptionElement.id = `id_lesson__popup_box__text__${id}`;
+    descriptionElement.innerHTML = html.applyModifiers(description, modifiers);
+    this.descriptionElement = descriptionElement;
+    container.appendChild(descriptionElement);
 
     diagram.htmlCanvas.appendChild(container);
   }
