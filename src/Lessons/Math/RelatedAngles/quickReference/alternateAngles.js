@@ -1,6 +1,6 @@
 // @flow
 import { Transform, Point } from '../../../../js/diagram/tools/g2';
-import { DiagramElementPrimative } from '../../../../js/diagram/Element';
+// import { DiagramElementPrimative } from '../../../../js/diagram/Element';
 import lessonLayout from './layout';
 import * as html from '../../../../js/tools/htmlGenerator';
 // import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
@@ -35,6 +35,45 @@ class PopupBox {
         box.classList.toggle('lesson__popup_hide');
       }
     }
+  }
+
+  setPosition(position: Point, reference: 'center' | 'topLeft' = 'center') {
+    const cssSpace = position
+      .transformBy(this.diagram.diagramToCSSPercentSpaceTransform.matrix());
+    this.container.style.left = `${cssSpace.x * 100}%`;
+    this.container.style.top = `${cssSpace.y * 100}%`;
+    if (reference === 'topLeft') {
+      this.container.style.transform = 'none';
+    }
+    if (reference === 'center') {
+      this.container.style.transform = 'translate(-50%, -50%)';
+    }
+  }
+
+  getDiagramSpacePosition(reference: 'topLeft' | 'center') {
+    const matrix = this.diagram.pixelToDiagramSpaceTransform.matrix();
+
+    const dBound = this.spaceForDiagramElement.getBoundingClientRect();
+    const cBound = this.diagram.htmlCanvas.getBoundingClientRect();
+    const pixelTopLeft = new Point(
+      dBound.left - cBound.left,
+      dBound.top - cBound.top,
+    );
+    const pixelBottomRight = new Point(
+      dBound.right - cBound.left,
+      dBound.bottom - cBound.top,
+    );
+
+    const topLeft = pixelTopLeft.transformBy(matrix);
+    const bottomRight = pixelBottomRight.transformBy(matrix);
+
+    if (reference === 'topLeft') {
+      return topLeft;
+    }
+
+    const width = bottomRight.x - topLeft.x;
+    const height = topLeft.y - bottomRight.y;
+    return new Point(topLeft.x + width / 2, bottomRight.y + height / 2);
   }
 
   setDiagramSize(width: number, height: number) {
@@ -91,7 +130,6 @@ class PopupBox {
     infoSymbol.classList.add('lesson__popup_box__title_i');
     infoSymbol.innerHTML = 'i';
     titleElement.appendChild(infoSymbol);
-    this.titleElement = titleElement;
 
     const close = document.createElement('div');
     close.classList.add('lesson__popup_box__close');
@@ -102,7 +140,7 @@ class PopupBox {
 
     const titleText = document.createElement('div');
     titleText.classList.add('lesson__popup_box__title_text');
-    // titleText.innerHTML = html.applyModifiers(title, modifiers);
+    this.titleElement = titleText;
     this.setTitle(title);
     titleElement.appendChild(titleText);
 
@@ -115,7 +153,6 @@ class PopupBox {
     const descriptionElement = document.createElement('div');
     descriptionElement.classList.add('lesson__popup_box__text');
     descriptionElement.id = `id_lesson__popup_box__text__${id}`;
-    // descriptionElement.innerHTML = html.applyModifiers(description, modifiers);
     this.descriptionElement = descriptionElement;
     this.setDescription(description);
 
@@ -128,116 +165,6 @@ class PopupBox {
 export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   _threeLines: ThreeLinesCollection;
   qrBox: PopupBox;
-  // _background: DiagramElementPrimative;
-  // _title: DiagramElementPrimative;
-  // _description: DiagramElementPrimative;
-
-  // eslint-disable-next-line class-methods-use-this
-  // toggleInfo(id: string, toState: ?boolean = null) {
-  //   const infoBox = document.getElementById(`id_lesson__popup_box__${id}`);
-  //   if (infoBox instanceof HTMLElement) {
-  //     if (typeof toState === 'boolean' && toState === true) {
-  //       infoBox.classList.remove('lesson__popup_hide');
-  //     } else if (typeof toState === 'boolean' && toState === false) {
-  //       infoBox.classList.add('lesson__popup_hide');
-  //     } else {
-  //       infoBox.classList.toggle('lesson__popup_hide');
-  //     }
-  //   }
-  // }
-
-  // addPopupBox(id: string, title: string, body: string) {
-  //   const container = document.createElement('div');
-  //   container.id = `id_lesson__popup_box__${id}`;
-  //   container.classList.add('lesson__popup_box');
-  //   container.classList.add('lesson__popup_hide');
-
-  //   const titleElement = document.createElement('div');
-  //   titleElement.classList.add('lesson__popup_box__title');
-  //   container.appendChild(titleElement);
-
-  //   const infoSymbol = document.createElement('div');
-  //   infoSymbol.classList.add('lesson__popup_box__title_i');
-  //   infoSymbol.innerHTML = 'i';
-  //   titleElement.appendChild(infoSymbol);
-
-  //   const close = document.createElement('div');
-  //   close.classList.add('lesson__popup_box__close');
-  //   close.id = 'id_lesson__popup_box__close';
-  //   close.innerHTML = 'X';
-  //   close.onclick = this.toggleInfo.bind(this, id, null);
-  //   titleElement.appendChild(close);
-
-  //   const titleText = document.createElement('div');
-  //   titleText.classList.add('lesson__popup_box__title_text');
-  //   titleText.innerHTML = title;
-  //   titleElement.appendChild(titleText);
-
-  //   const diagram = document.createElement('div');
-  //   diagram.classList.add('lesson__popup_box__diagram');
-  //   diagram.id = (`id_lesson__popup_box__diagram__${id}`);
-  //   container.appendChild(diagram);
-
-  //   const text = document.createElement('div');
-  //   text.classList.add('lesson__popup_box__text');
-  //   text.id = `id_lesson__popup_box__text__${id}`;
-  //   text.innerHTML = body;
-  //   container.appendChild(text);
-
-  //   this.diagram.htmlCanvas.appendChild(container);
-  // }
-
-  // setDiagramSize(id: string, width: number, height: number) {
-  //   // As css 0, 0 is in top left and we are converting a relative dimension,
-  //   // not absolute, then first make a point of the relavent dimension relative
-  //   // to the top left of the diagram
-  //   const diagramSpace = new Point(
-  //     this.diagram.limits.left + width,
-  //     this.diagram.limits.top - height,
-  //   );
-  //   const cssSpace = diagramSpace
-  //     .transformBy(this.diagram.diagramToCSSPercentSpaceTransform.matrix());
-  //   const popupBox = document.getElementById(`id_lesson__popup_box__diagram__${id}`);
-  //   if (popupBox) {
-  //     // popupBox.style.width = `${cssSpace.x * 100}%`;
-  //     // popupBox.style.height = `${cssSpace.y * 100}%`;
-  //     // popupBox.style.height = 'calc(var(--lesson__content-height) * 0.4)';
-  //     popupBox.style.width = `calc(var(--lesson__content-width) * ${cssSpace.x})`;
-  //     popupBox.style.height = `calc(var(--lesson__content-height) * ${cssSpace.y})`;
-  //   }
-  // }
-  // // makeBackground(width: number, height: number) {
-  // //   const background = this.diagram.shapes.rectangleFilled(
-  // //     'center', width, height, 0.2, 20, [0.2, 0.2, 0.2, 1.0], new Transform().translate(0, 0),
-  // //   );
-  // //   return background;
-  // // }
-
-  // makeTitle(text: string) {
-  //   const element = document.createElement('div');
-  //   element.innerHTML = text;
-  //   return this.diagram.shapes.htmlElement(
-  //     element,
-  //     'id_lesson__reference_tile__title__alternate_angles',
-  //     'lesson__reference_tile_title',
-  //     new Point(0, 1.05),
-  //     'middle',
-  //     'center',
-  //   );
-  // }
-
-  // makeDescription(text: string) {
-  //   const element = document.createElement('div');
-  //   element.innerHTML = text;
-  //   return this.diagram.shapes.htmlElement(
-  //     element,
-  //     'id_lesson__reference_tile__description__alternating_angles',
-  //     'lesson__reference_tile_description',
-  //     new Point(0, -0.35),
-  //     'top',
-  //     'center',
-  //   );
-  // }
 
   makeBox() {
     const box = new PopupBox(this.diagram, 'alternate_angles');
@@ -252,14 +179,10 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   ) {
     const layout = lessonLayout();
     super(diagram, layout, transform);
-    // this.add('background', this.makeBackground(2, 2.5));
-    // this.addPopupBox('test', 'title', 'Alternate angles are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.');
     this.diagram.shapes = this.diagram.shapesHigh;
     this.diagram.equation = this.diagram.equationHigh;
-    this.qrBox = this.makeBox();
-    // this.add('title', this.makeTitle('Alternate Angles'));
-    // this.add('description', this.makeDescription('Alternate angles are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.'));
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
+    this.qrBox = this.makeBox();
     this._threeLines.calculateFuturePositions('corresponding');
     this._threeLines.setFuturePositions();
     this._threeLines.alternateToggleAngles();
@@ -270,14 +193,12 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
 
   showInitial() {
     this._threeLines.transform.updateScale(0.7, 0.7);
-    this._threeLines.setPosition(0, 0.3);
+    this._threeLines.setPosition(0, 0.55);
     this._threeLines.transform.updateRotation(0);
     this.show();
     this.qrBox.toggle(true);
-    this.qrBox.setDiagramSize(3, 1);
-    // this._background.show();
-    // this._title.show();
-    // this._description.show();
+    this.qrBox.setDiagramSize(2.5, 1.85);
+    this.qrBox.setPosition(new Point(0, 0), 'center');
     this._threeLines.show();
     this._threeLines._line1.show();
     this._threeLines._line1._end1.show();
