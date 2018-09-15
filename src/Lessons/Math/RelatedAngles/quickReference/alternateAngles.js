@@ -1,16 +1,10 @@
 // @flow
 import { Transform, Point } from '../../../../js/diagram/tools/g2';
-// import { DiagramElementPrimative } from '../../../../js/diagram/Element';
+import { DiagramElementCollection } from '../../../../js/diagram/Element';
 import lessonLayout from './layout';
 import * as html from '../../../../js/tools/htmlGenerator';
-// import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
-// eslint-disable-next-line import/no-cycle
-// import CommonLessonDiagram from '../common/diagram';
-
-// import OppositeCollection from '../common/diagramCollectionOpposite';
 import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
-// import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
 class PopupBox {
   id: string;
@@ -22,31 +16,48 @@ class PopupBox {
   spaceForDiagramElement: HTMLElement;
   container: HTMLElement;
   diagram: Object;
+  collection: DiagramElementCollection | null;
 
   toggle(toState: ?boolean = null) {
-    const box = document
-      .getElementById(`id_lesson__popup_box__${this.id}`);
+    const box = this.container;
     if (box instanceof HTMLElement) {
       if (typeof toState === 'boolean' && toState === true) {
         box.classList.remove('lesson__popup_hide');
       } else if (typeof toState === 'boolean' && toState === false) {
         box.classList.add('lesson__popup_hide');
+        if (this.collection) {
+          this.collection.hideAll();
+          this.diagram.animateNextFrame();
+        }
+        this.setPosition(-10000, -10000, 'topLeft');
       } else {
         box.classList.toggle('lesson__popup_hide');
       }
     }
   }
 
-  setPosition(position: Point, reference: 'center' | 'topLeft' = 'center') {
-    const cssSpace = position
-      .transformBy(this.diagram.diagramToCSSPercentSpaceTransform.matrix());
-    this.container.style.left = `${cssSpace.x * 100}%`;
-    this.container.style.top = `${cssSpace.y * 100}%`;
-    if (reference === 'topLeft') {
-      this.container.style.transform = 'none';
+  setPosition(
+    xOrPoint: Point | number,
+    yOrReference: 'center' | 'topLeft' | number = 'center',
+    reference: 'center' | 'topLeft' = 'center',
+  ) {
+    let point = xOrPoint;
+    let ref = yOrReference;
+    if (typeof xOrPoint === 'number' && typeof yOrReference === 'number') {
+      point = new Point(xOrPoint, yOrReference);
+      ref = reference;
     }
-    if (reference === 'center') {
-      this.container.style.transform = 'translate(-50%, -50%)';
+    if (point instanceof Point) {
+      const cssSpace = point
+        .transformBy(this.diagram.diagramToCSSPercentSpaceTransform.matrix());
+      this.container.style.left = `${cssSpace.x * 100}%`;
+      this.container.style.top = `${cssSpace.y * 100}%`;
+      if (ref === 'topLeft') {
+        this.container.style.transform = 'none';
+      }
+      if (ref === 'center') {
+        this.container.style.transform = 'translate(-50%, -50%)';
+      }
     }
   }
 
@@ -109,12 +120,14 @@ class PopupBox {
     title: string = '',
     description: string = '',
     modifiers: Object = {},
+    collection: DiagramElementCollection | null = null,
   ) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.modifiers = modifiers;
     this.diagram = diagram;
+    this.collection = collection;
 
     const container = document.createElement('div');
     container.id = `id_lesson__popup_box__${this.id}`;
@@ -168,8 +181,17 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
 
   makeBox() {
     const box = new PopupBox(this.diagram, 'alternate_angles');
+
+    const modifiers = {
+      Alternate_angles: html.click(
+        this._threeLines.alternateToggleAngles,
+        [this, null], this.layout.colors.angleA,
+      ),
+    };
+
     box.setTitle('Alternate Angles');
-    box.setDescription('Alternate angles are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.');
+    box.setDescription('|Alternate_angles| are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.', modifiers);
+
     return box;
   }
 
@@ -183,6 +205,7 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
     this.diagram.equation = this.diagram.equationHigh;
     this.add('threeLines', new ThreeLinesCollection(diagram, this.layout));
     this.qrBox = this.makeBox();
+    this.qrBox.collection = this._threeLines;
     this._threeLines.calculateFuturePositions('corresponding');
     this._threeLines.setFuturePositions();
     this._threeLines.alternateToggleAngles();
@@ -191,11 +214,11 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
     this.diagram.equation = this.diagram.equationLow;
   }
 
-  showInitial() {
+  show() {
     this._threeLines.transform.updateScale(0.7, 0.7);
     this._threeLines.setPosition(0, 0.55);
     this._threeLines.transform.updateRotation(0);
-    this.show();
+    super.show();
     this.qrBox.toggle(true);
     this.qrBox.setDiagramSize(2.5, 1.85);
     this.qrBox.setPosition(new Point(0, 0), 'center');

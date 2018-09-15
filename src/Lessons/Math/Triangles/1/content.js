@@ -162,7 +162,7 @@ class Content extends LessonContent {
       //   qr,
       // ],
       setSteadyState: () => {
-        qr._alternateAngles.showInitial();
+        qr._alternateAngles.show();
       },
       setLeaveState: () => {
         qr._alternateAngles.hideAll();
