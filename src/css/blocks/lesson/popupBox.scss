@@ -38,6 +38,7 @@
 .lesson__popup_box__close:hover {
   color: color('diagram', 'disabled', 'darker');
   font-weight: light;
+  cursor: pointer;
 }
 
 .lesson__popup_box__title {

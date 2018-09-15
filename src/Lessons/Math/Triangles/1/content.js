@@ -165,7 +165,8 @@ class Content extends LessonContent {
         qr._alternateAngles.show();
       },
       setLeaveState: () => {
-        qr._alternateAngles.hideAll();
+        // qr._alternateAngles.hideAll();
+        qr._alternateAngles.qrBox.toggle(false);
       },
     });
   }

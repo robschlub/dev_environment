@@ -107,11 +107,15 @@ class PopupBox {
   setTitle(title: string, modifiers: Object = {}) {
     const modifiedText = html.applyModifiers(title, modifiers);
     this.titleElement.innerHTML = modifiedText;
+    html.setOnClicks(modifiers);
+    this.modifiers = modifiers;
   }
 
   setDescription(description: string, modifiers: Object = {}) {
     const modifiedText = html.applyModifiers(description, modifiers);
     this.descriptionElement.innerHTML = modifiedText;
+    html.setOnClicks(modifiers);
+    this.modifiers = modifiers;
   }
 
   constructor(
@@ -185,7 +189,7 @@ export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
     const modifiers = {
       Alternate_angles: html.click(
         this._threeLines.alternateToggleAngles,
-        [this, null], this.layout.colors.angleA,
+        [this._threeLines, null], this.layout.colors.angleA,
       ),
     };
 
