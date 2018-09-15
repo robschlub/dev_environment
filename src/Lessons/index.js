@@ -133,7 +133,7 @@ export default function getLessonIndex() {
       'summary',
     ],
     [
-      'adjacent_angles',
+      'related_angles',
     ],
   ));
   return lessonIndex;
