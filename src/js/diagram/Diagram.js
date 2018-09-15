@@ -659,7 +659,7 @@ class Diagram {
     this.shapes = this.shapesLow;
     this.equationLow = this.getEquations(false);
     this.equationHigh = this.getEquations(true);
-    this.equation = this.equationLow
+    this.equation = this.equationLow;
     this.createDiagramElements();
     if (this.elements.name === '') {
       this.elements.name = 'diagramRoot';
