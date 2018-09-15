@@ -2,9 +2,9 @@
 .lesson__popup_box {
   z-index: 2;
   position: absolute;
-  top: 96%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -100%);
+  // transform: translate(-50%, -100%);
   // background-color: rgba(255, 255, 255, 0.95);
   background-color: color('diagram', 'background', 'darkest');
   color: color('diagram', 'disabled', 'darker');
