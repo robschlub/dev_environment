@@ -5,11 +5,11 @@ import {
 } from '../../../../js/diagram/tools/g2';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 // import AlternateAnglesQR from '../../RelatedAngles/quickReference/alternateAngles';
-import { QRInteriorAngles } from '../../RelatedAngles/quickReference/quickReference';
+import { QROppositeAngles } from '../../RelatedAngles/quickReference/quickReference';
 
 export default class QuickReferenceCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _alternateAngles: QRInteriorAngles;
+  _alternateAngles: QROppositeAngles;
 
   constructor(
     diagram: LessonDiagram,
@@ -17,7 +17,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.add('alternateAngles', new QRInteriorAngles(this.diagram));
+    this.add('alternateAngles', new QROppositeAngles(this.diagram));
     this._alternateAngles.setPosition(0, 0);
     this.hasTouchableElements = true;
   }

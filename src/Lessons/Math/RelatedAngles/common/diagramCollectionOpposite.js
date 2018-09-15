@@ -160,7 +160,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
   constructor(
     diagram: Diagram,
     layout: Object,
-    transform: Transform = new Transform().translate(0, 0),
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     // this.diagram = diagram;
@@ -265,7 +265,6 @@ export default class OppositeCollection extends CommonDiagramCollection {
         angle.hide();
       });
     }
-
     angles.forEach((angle) => {
       const [element, form] = angle;
       if (element.label) {
