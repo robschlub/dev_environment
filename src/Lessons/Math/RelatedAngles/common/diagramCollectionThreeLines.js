@@ -498,6 +498,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       labels = [['d', 'c'], ['e', 'f']];
       colors = [[c1, c1], [c2, c2]];
     }
+
     this.toggleAngles(
       [['D1', 'C1'], ['A2', 'B2']],
       labels,

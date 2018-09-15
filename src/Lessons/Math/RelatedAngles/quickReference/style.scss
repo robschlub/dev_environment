@@ -1,23 +1,10 @@
 @import '../common/style';
 
 $colors: (
-  latin:            color('diagram', 'text-latin'),
   line:             darken(map-get($geometry_colors, lines), 30),
   intersectingLine: lighten(map-get($geometry_colors, lines), 0),
 );
 
 body {
   @include color_vars($colors);
-}
-
-.lesson__reference_tile_title {
-  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
-  color: color('diagram', 'disabled', 'lighter');
-}
-
-.lesson__reference_tile_description {
-  font-size: calc(var(--lesson__diagram-font-size) * 0.5);
-  color: color('diagram', 'disabled', 'lighter');
-  width: calc(var(--lesson__diagram-font-size) * 8);
-  // width: 250px;
 }

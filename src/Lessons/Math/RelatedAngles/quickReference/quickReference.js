@@ -1,0 +1,155 @@
+// @flow
+
+import { Transform } from '../../../../js/diagram/tools/g2';
+import lessonLayout from './layout';
+import * as html from '../../../../js/tools/htmlGenerator';
+import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
+import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
+
+function showThreeLines(
+  threeLines: ThreeLinesCollection,
+  toggleFunction: Function,
+  color: Array<number>,
+) {
+  threeLines.transform.updateScale(0.7, 0.7);
+  threeLines.transform.updateRotation(0);
+  threeLines.calculateFuturePositions('corresponding');
+  threeLines.setFuturePositions();
+  threeLines.setPosition(0, 0.1);
+  threeLines.show();
+  threeLines._line1.show();
+  threeLines._line1._end1.show();
+  threeLines._line1._end2.show();
+  threeLines._line1._mid.show();
+  threeLines._line2.show();
+  threeLines._line2._end1.show();
+  threeLines._line2._end2.show();
+  threeLines._line2._mid.show();
+  threeLines._line3.show();
+  threeLines._line3._end1.show();
+  threeLines._line3._end2.show();
+  threeLines._line3._mid.show();
+
+  toggleFunction();
+  threeLines._line1.setColor(color);
+  threeLines._line2.setColor(color);
+}
+
+export class QRCorrespondingAngles extends PopupBoxCollection {
+  _threeLines: ThreeLinesCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'threeLines',
+      ThreeLinesCollection,
+    );
+    this.hasTouchableElements = true;
+
+    const modifiers = {
+      Corresponding_Angles: html.click(
+        this._threeLines.correspondingToggleAngles,
+        [this._threeLines, null], this.layout.colors.angleA,
+      ),
+    };
+
+    this.setTitle('Corresponding Angles');
+    this.setDescription('|Corresponding_Angles| are angles in the same relative position at the intersection of two lines and an intersecting line. When the two lines are parallel, |corresponding angles are equal|.', modifiers);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.85);
+    super.show();
+    showThreeLines(
+      this._threeLines,
+      this._threeLines.correspondingToggleAngles.bind(this._threeLines),
+      this.layout.colors.line,
+    );
+  }
+}
+
+export class QRAlternateAngles extends PopupBoxCollection {
+  _threeLines: ThreeLinesCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'threeLines',
+      ThreeLinesCollection,
+    );
+    this.hasTouchableElements = true;
+
+    const modifiers = {
+      Alternate_angles: html.click(
+        this._threeLines.alternateToggleAngles,
+        [this._threeLines, null], this.layout.colors.angleA,
+      ),
+    };
+
+    this.setTitle('Alternate Angles');
+    this.setDescription('|Alternate_angles| are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.', modifiers);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.85);
+    super.show();
+    showThreeLines(
+      this._threeLines,
+      this._threeLines.alternateToggleAngles.bind(this._threeLines),
+      this.layout.colors.line,
+    );
+  }
+}
+
+
+export class QRInteriorAngles extends PopupBoxCollection {
+  _threeLines: ThreeLinesCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'threeLines',
+      ThreeLinesCollection,
+    );
+    this.hasTouchableElements = true;
+
+    const modifiers = {
+      Interior_angles: html.click(
+        this._threeLines.interiorToggleAngles,
+        [this._threeLines, false], this.layout.colors.angleA,
+      ),
+    };
+
+    this.setTitle('Interior Angles');
+    this.setDescription('|Interior_angles| are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |interior angles add up to 180º (π radians)|.', modifiers);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.85);
+    super.show();
+    this._threeLines.setUnits('deg');
+    showThreeLines(
+      this._threeLines,
+      this._threeLines.interiorToggleAngles.bind(this._threeLines, false),
+      this.layout.colors.line,
+    );
+  }
+}

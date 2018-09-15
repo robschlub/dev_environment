@@ -16,13 +16,11 @@ export default function lessonLayout() {
     label: {
       length: len / 2,
     },
-    width: 0.02,
+    width: 0.03,
     boundary: new Rect(-3, -1.7, 6, 3),
   };
   layout.minAngleThreshold = 1;
-
-  layout.equation2 = {
-    b: new Point(1, 1.85),
-  };
+  layout.intersectingLine.width = 0.03;
+  layout.angle.arc.width = 0.03;
   return layout;
 }
