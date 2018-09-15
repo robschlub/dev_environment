@@ -1,8 +1,10 @@
 // @flow
 import {
-  LessonContent, click, centerH, interactiveItem,
+  LessonContent, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
-
+import {
+  click, centerH,
+} from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';

@@ -1,9 +1,12 @@
 // @flow
 
 import {
-  LessonContent, clickWord, onClickId, centerV,
-  click, highlightWord, initializeItemSelector, itemSelector,
+  LessonContent, initializeItemSelector,
 } from '../../../../js/Lesson/LessonContent';
+import {
+  clickWord, onClickId, centerV,
+  click, highlightWord, itemSelector,
+} from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 import imgLink from '../tile.png';

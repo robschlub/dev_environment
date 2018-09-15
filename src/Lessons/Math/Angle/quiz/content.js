@@ -1,8 +1,11 @@
 // @flow
 import {
-  LessonContent, actionWord, onClickId,
-  highlightWord, centerVH, centerV,
+  LessonContent,
 } from '../../../../js/Lesson/LessonContent';
+import {
+  actionWord, onClickId,
+  highlightWord, centerVH, centerV,
+} from '../../../../js/tools/htmlGenerator';
 
 import LessonDiagram from './diagram';
 import { Transform } from '../../../../js/diagram/tools/g2';

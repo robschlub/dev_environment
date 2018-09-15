@@ -1,8 +1,10 @@
 // @flow
 import {
-  LessonContent, click,
+  LessonContent,
 } from '../../../../js/Lesson/LessonContent';
-
+import {
+  click,
+} from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';

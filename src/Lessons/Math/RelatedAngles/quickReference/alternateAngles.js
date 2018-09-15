@@ -12,6 +12,83 @@ import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 // import type { TypeUnits } from '../../../../LessonsCommon/DiagramCollection';
 
+class PopupBox {
+  id: string;
+  modifiers: {};
+  body: string;
+  title: string;
+
+  toggle(toState: ?boolean = null) {
+    const box = document
+      .getElementById(`id_lesson__popup_box__${this.id}`);
+    if (box instanceof HTMLElement) {
+      if (typeof toState === 'boolean' && toState === true) {
+        box.classList.remove('lesson__popup_hide');
+      } else if (typeof toState === 'boolean' && toState === false) {
+        box.classList.add('lesson__popup_hide');
+      } else {
+        box.classList.toggle('lesson__popup_hide');
+      }
+    }
+  }
+
+  // setTitle(title: string, modifiers: Object | null) {
+
+  // }
+
+  constructor(
+    diagram: Object,
+    id: string,
+    title: string = '',
+    body: string = '',
+    modifiers: Object = {},
+  ) {
+    this.id = id;
+    this.title = title;
+    this.body = body;
+    this.modifiers = modifiers;
+
+    const container = document.createElement('div');
+    container.id = `id_lesson__popup_box__${this.id}`;
+    container.classList.add('lesson__popup_box');
+    container.classList.add('lesson__popup_hide');
+
+    const titleElement = document.createElement('div');
+    titleElement.classList.add('lesson__popup_box__title');
+    container.appendChild(titleElement);
+
+    const infoSymbol = document.createElement('div');
+    infoSymbol.classList.add('lesson__popup_box__title_i');
+    infoSymbol.innerHTML = 'i';
+    titleElement.appendChild(infoSymbol);
+
+    const close = document.createElement('div');
+    close.classList.add('lesson__popup_box__close');
+    close.id = 'id_lesson__popup_box__close';
+    close.innerHTML = 'X';
+    close.onclick = this.toggle.bind(this, false);
+    titleElement.appendChild(close);
+
+    const titleText = document.createElement('div');
+    titleText.classList.add('lesson__popup_box__title_text');
+    titleText.innerHTML = title;
+    titleElement.appendChild(titleText);
+
+    const spaceForDiagram = document.createElement('div');
+    spaceForDiagram.classList.add('lesson__popup_box__diagram');
+    spaceForDiagram.id = (`id_lesson__popup_box__diagram__${id}`);
+    container.appendChild(spaceForDiagram);
+
+    const text = document.createElement('div');
+    text.classList.add('lesson__popup_box__text');
+    text.id = `id_lesson__popup_box__text__${id}`;
+    text.innerHTML = body;
+    container.appendChild(text);
+
+    diagram.htmlCanvas.appendChild(container);
+  }
+}
+
 export default class AlternateAnglesQR extends CommonLessonDiagramCollection {
   _threeLines: ThreeLinesCollection;
   _background: DiagramElementPrimative;

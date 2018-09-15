@@ -1,9 +1,12 @@
 // @flow
 
 import {
-  LessonContent, actionWord, onClickId,
-  highlightWord, centerVH, centerV,
+  LessonContent,
 } from '../../../../js/Lesson/LessonContent';
+import {
+  actionWord, onClickId,
+  highlightWord, centerVH, centerV,
+} from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import { Point } from '../../../../js/diagram/tools/g2';
 // import { easeinout } from '../../../js/diagram/tools/mathtools';
