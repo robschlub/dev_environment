@@ -26,6 +26,7 @@ export default function commonLessonLayout() {
     radius: 0.3,
     labelRadius: 0.35,
     width: 0.02,
+    sides: 50,
   };
   layout.line1 = {
     adjacent: {

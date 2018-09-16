@@ -12,8 +12,9 @@ import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
-import { makeAngle } from '../../../../LessonsCommon/tools/angle';
+import makeAngle from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
+
 // type TypeAdjacentAngle = 'adjacent' | 'supplementary' | 'complementary' | 'reflex' | 'right' | 'full';
 
 export default class AdjacentCollection extends CommonDiagramCollection {
@@ -38,6 +39,16 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     return line;
   }
 
+  makeAdjacentAngle(color: Array<number>) {
+    return makeAngle(
+      this.diagram,
+      this.layout.angle.radius,
+      this.layout.angle.width,
+      this.layout.angle.sides,
+      color,
+    );
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -48,11 +59,11 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     this.add('line2', this.makeAdjacentLine(this.layout.colors.line));
     this.add('line3', this.makeAdjacentLine(this.layout.colors.line));
     this.add('line4', this.makeAdjacentLine(this.layout.colors.line));
-
+    this.add('angle1', this.makeAdjacentAngle(this.layout.colors.angle));
     this.hasTouchableElements = true;
   }
 
-  calculateFuturePositions(scenario: TypeScenario) {
+  calculateFuturePositions(scenario: TypeScenario = 'adjacent') {
     this.futurePositions = [];
     this.addFuturePosition(this._line1, scenario);
     this.addFuturePosition(this._line2, scenario);
