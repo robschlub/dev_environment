@@ -1790,6 +1790,12 @@ class DiagramElement {
     }
   }
 
+  setMovable(movable: boolean = true) {
+    if (movable) {
+      this.isTouchable = true;
+      this.isMovable = true;
+    }
+  }
 
   // processParentTransform(parentTransform: Transform): Transform {
   //   let newTransform;
@@ -2530,6 +2536,13 @@ class DiagramElementCollection extends DiagramElement {
         e.classList.remove('lesson__item_selector_selected');
       }
     });
+  }
+
+  setMovable(movable: boolean = true) {
+    if (movable) {
+      this.hasTouchableElements = true;
+      this.isMovable = true;
+    }
   }
 }
 

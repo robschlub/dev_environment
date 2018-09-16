@@ -12,6 +12,8 @@ import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
+import { makeAngle } from '../../../../LessonsCommon/tools/angle';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 // type TypeAdjacentAngle = 'adjacent' | 'supplementary' | 'complementary' | 'reflex' | 'right' | 'full';
 
 export default class AdjacentCollection extends CommonDiagramCollection {
@@ -20,6 +22,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   _line2: TypeLine;
   _line3: TypeLine;
   _line4: TypeLine;
+  _angle1: TypeAngle;
 
   makeAdjacentLine(color: Array<number>) {
     const line = makeLine(
@@ -30,7 +33,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       color,
       true,
     );
-    line.makeMovable();
+    line.setMovable();
     line.move.type = 'rotation';
     return line;
   }

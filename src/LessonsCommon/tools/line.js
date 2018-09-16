@@ -309,7 +309,7 @@ export function makeLine(
     line.setLength(line.currentLength);
   };
 
-  line.makeMovable = (movable: boolean = true) => {
+  line.setMovable = (movable: boolean = true) => {
     if (movable) {
       line.isTouchable = true;
       line.isMovable = true;
