@@ -808,6 +808,7 @@ class Diagram {
     } else {
       this.beingTouchedElements.forEach(e => e.click());
     }
+
     // Make a list of, and start moving elements that are being moved
     // (element must be touched and have isMovable = true to be in list)
     this.beingMovedElements = [];

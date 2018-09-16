@@ -241,6 +241,7 @@ export type TypeLine = {
   arrow2: null | {
     height: number;
   };
+  makeMovable: (?boolean) => void;
 
   addArrow1: (number, number) => void;
   addArrow2: (number, number) => void;
@@ -306,6 +307,27 @@ export function makeLine(
     line.arrow2 = { height: arrowHeight };
     line.add('arrow2', a);
     line.setLength(line.currentLength);
+  };
+
+  line.makeMovable = (movable: boolean = true) => {
+    if (movable) {
+      line.isTouchable = true;
+      line.isMovable = true;
+      line.hasTouchableElements = true;
+      if (straightLine != null) {
+        straightLine.isTouchable = true;
+        const multiplier = diagram.isTouchDevice ? 16 : 8;
+        const increaseBorderSize = (element: DiagramElementPrimative) => {
+          for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+            // eslint-disable-next-line no-param-reassign
+            element.vertices.border[0][i].y *= multiplier;
+          }
+        };
+        increaseBorderSize(straightLine);
+      }
+    } else {
+      line.isMovable = false;
+    }
   };
 
   line.addLabel = function addLabel(

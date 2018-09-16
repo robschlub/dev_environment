@@ -15,6 +15,17 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
+    'Adjacent Angles New',
+    '/Lessons/Math/AdjacentAnglesNew',
+    'adjacent_angles_new',
+    [
+      '1',
+    ],
+    [
+      'important_angles',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
     'Angles',
     '/Lessons/Math/Angle',
     'angles',

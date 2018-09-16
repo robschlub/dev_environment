@@ -159,6 +159,10 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   calculateFuturePositions() {
   }
 
+  addFuturePosition(element: DiagramElement, scenario: TypeScenario) {
+    this.futurePositions.push({ element, scenario });
+  }
+
   setFuturePositions() {
     this.futurePositions.forEach((futurePosition) => {
       const { element, scenario } = futurePosition;
