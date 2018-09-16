@@ -45,6 +45,7 @@ export default function makeAngle(
     0, 1, sides, color,
     new Transform(),
   );
+  // curve.angleToDraw = 0;
   const right = diagram.shapes.collection();
   const rightLength = radius / Math.sqrt(2);
   right.add('line1', diagram.shapes.horizontalLine(
@@ -70,18 +71,21 @@ export default function makeAngle(
 
   angle.addLabel = (labelTextOrEquation: string | Equation = '', labelRadius: number) => {
     const eqnLabel = makeEquationLabel(diagram, labelTextOrEquation, color);
+    // console.log(eqnLabel.eqn.collection.transform.matrix())
     angle.label = Object.assign({}, eqnLabel, {
       radius: labelRadius,
     });
     angle.add('label', eqnLabel.eqn.collection);
+    // console.log(angle._label.transform.matrix())
     angle.showForm();
+    // console.log(angle._label.transform.matrix())
     // angle.updateLabel();
   };
 
   angle.updateAngle = function updateAngle(
     start: number,
     size: number,
-    labelRotationOffset: number,
+    labelRotationOffset: number = 0,
     angleToTestRightAngle: number = size,
   ) {
     if (angle.autoRightAngle

@@ -184,6 +184,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
       supplementary: 3,
     };
     this.hasTouchableElements = true;
+
   }
 
   updateOppositeAngles() {
@@ -283,9 +284,9 @@ export default class OppositeCollection extends CommonDiagramCollection {
 
   toggleOppositeAngles() {
     if (this._angleA.isShown) {
-      this.showAngles([[this._angleB, 'b'], [this._angleD, 'b']]);
+      this.showAngles([[this._angleB, 'b', this.layout.colors.angleA], [this._angleD, 'b', this.layout.colors.angleA]]);
     } else {
-      this.showAngles([[this._angleA, 'a'], [this._angleC, 'c']]);
+      this.showAngles([[this._angleA, 'a', this.layout.colors.angleA], [this._angleC, 'a', this.layout.colors.angleA]]);
     }
     this.diagram.animateNextFrame();
   }

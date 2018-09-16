@@ -69,7 +69,9 @@ export function makeLabeledAngle(
     layout.angle.arc.sides,
     color,
   );
+
   angle.addLabel(eqn, layout.angle.label.radius);
+  // console.log(angle._label.transform.matrix())
   return angle;
 }
 
