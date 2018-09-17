@@ -44,10 +44,8 @@ class Content extends LessonContent {
           [adjacent._lines._angleB, 'b', colors.angleB],
         ]);
         adjacent._eqn.hideAll();
+        diag._unitsSelector.hide();
       },
-      // hide: [
-      //   adjacent._eqn,
-      // ],
       transitionFromAny: (done) => {
         adjacent.moveToFuturePositions(null, done, 2);
       },
@@ -83,7 +81,10 @@ class Content extends LessonContent {
       modifiers: {
         adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
         larger_angle: click(adjacent.pulseAngleC, [adjacent], colors.angleC),
-        calculate_the_other: click(adjacent.adjacentNextEquationform, [adjacent], colors.diagram.action),
+        calculate_the_other: click(
+          adjacent.adjacentNextEquationform, [adjacent],
+          colors.diagram.action,
+        ),
       },
       setEnterState: () => {
         commonAdjacent.setEnterState();

@@ -52,6 +52,7 @@ class Lesson {
   // refreshPageOnly: (number) => void;
   // blank: () => void;
   goToSectionIndex: number;
+  firstPageShown: boolean;
 
   constructor(content: Object) {
     this.content = content;
@@ -59,6 +60,7 @@ class Lesson {
     this.diagram = null;
     this.overlayDiagram = null;
     this.currentSectionIndex = 0;
+    this.firstPageShown = true;
     this.state = {};
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
@@ -78,18 +80,21 @@ class Lesson {
 
   nextSection() {
     const { diagram } = this;
+
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
       // If in transition, then cancel the transition.
       if (this.inTransition) {
+        const { firstPageShown } = this;
         const { comingFrom } = this;
         this.stopTransition();
-        if (comingFrom === 'prev') {
+        if (comingFrom === 'prev' || firstPageShown) {
           return;
         }
       } else {
         // Stop diagrams if not in transition to stop any animations.
         this.stopDiagrams();
       }
+      this.firstPageShown = false;
       if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
@@ -108,14 +113,15 @@ class Lesson {
     if (this.currentSectionIndex > 0 && diagram) {
       if (this.inTransition) {
         const { comingFrom } = this;
+        const { firstPageShown } = this;
         this.stopTransition();
-        if (comingFrom === 'next') {
+        if (comingFrom === 'next' || firstPageShown) {
           return;
         }
       } else {
         this.stopDiagrams();
       }
-
+      this.firstPageShown = false;
       if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
@@ -140,9 +146,13 @@ class Lesson {
         }
       });
     }
+    // this.firstPageShown = false;
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       if (this.inTransition) {
         this.stopTransition();
+        if (this.firstPageShown) {
+          this.firstPageShown = false;
+        }
       } else {
         this.stopDiagrams();
       }
@@ -208,7 +218,6 @@ class Lesson {
      || (this.comingFrom === 'goto' && this.currentSection().blankTransition.fromGoto)) {
       contentHTML = '';
     }
-
     this.refresh(
       contentHTML, this.currentSectionIndex,
       this.setState.bind(this),
@@ -260,6 +269,7 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     section.setOnClicks();
     section.setSteadyState(this.state);
+    this.firstPageShown = false;
     section.setInfoButton();
     section.setInteractiveElements();
     section.setInteractiveElementsButton();
