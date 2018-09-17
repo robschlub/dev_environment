@@ -16,7 +16,10 @@ export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
   layout.position = new Point(0, -0.3);
-
+  layout.equationPosition = new Point(-1.7, -0.6);
+  layout.units = {
+    position: new Point(2, -1.6),
+  };
   layout.line = {
     width: 0.03,
     length: 1.3,

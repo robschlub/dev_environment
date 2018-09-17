@@ -43,12 +43,41 @@ class Content extends LessonContent {
       show: [
         adjacent,
       ],
+      hide: [
+        adjacent._eqn,
+      ],
       setSteadyState: () => {
         adjacent.setFuturePositions();
         adjacent.showAngles([
-          [adjacent._angleA, 'a', colors.angleA],
-          [adjacent._angleB, 'b', colors.angleB],
+          [adjacent._lines._angleA, 'a', colors.angleA],
+          [adjacent._lines._angleB, 'b', colors.angleB],
         ]);
+      },
+    });
+    this.addSection({
+      title: 'Introduction',
+      setContent: `
+        <p>
+          Supplementary
+        </p>
+      `,
+      // ],
+      setEnterState: () => {
+        adjacent.calculateFuturePositions('supplementary');
+        diag._unitsSelector.select(diag.units);
+        adjacent.angleType = 'supplementary';
+      },
+      show: [
+        adjacent,
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        adjacent.setFuturePositions();
+        adjacent.showAngles([
+          [adjacent._lines._angleA, 'a', colors.angleA],
+          [adjacent._lines._angleB, 'b', colors.angleB],
+        ]);
+        adjacent.eqn.showForm('sup_add');
       },
     });
   }

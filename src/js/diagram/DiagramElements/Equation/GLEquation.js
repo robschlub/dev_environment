@@ -1472,6 +1472,27 @@ export class Equation {
     }
   }
 
+  getForm(
+    formOrName: string,
+    formType: ?string,
+  ): null | EquationForm {
+    if (formOrName in this.form) {
+      let formTypeToUse = formType;
+      if (formTypeToUse == null) {
+        const possibleFormTypes
+          = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
+        if (possibleFormTypes.length) {
+          // eslint-disable-next-line prefer-destructuring
+          formTypeToUse = possibleFormTypes[0];
+        }
+      }
+      if (formTypeToUse != null) {
+        return this.form[formOrName][formTypeToUse];
+      }
+    }
+    return null;
+  }
+
   frac(
     numerator: TypeEquationInput,
     denominator: TypeEquationInput,
