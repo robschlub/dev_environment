@@ -17,13 +17,16 @@ export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
   layout.position = new Point(0, -0.6);
-  layout.equationPosition = new Point(0, 1.45);
+  layout.equationPosition = new Point(-0.5, 1.45);
   layout.units = {
     position: new Point(2, -1.6),
   };
+  layout.lines = {
+    rotation: 0,
+  };
   layout.line = {
     width: 0.03,
-    length: 1.3,
+    length: 1.25,
   };
   layout.angle = {
     radius: 0.3,
@@ -65,7 +68,7 @@ export default function commonLessonLayout() {
       rotation: 1,
     },
     complementary: {
-      rotation: 1,
+      rotation: Math.PI / 6,
     },
     explemenetary: {
       rotation: 2,

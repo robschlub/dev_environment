@@ -318,7 +318,12 @@ class Section {
     // Overwrite or add single elements
     if ('interactiveElements' in this) {
       this.interactiveElements.forEach((element) => {
-        this.replaceOrAddInteractiveElement(element.element, element.location);
+        if (element instanceof DiagramElementCollection
+          || element instanceof DiagramElementPrimative) {
+          this.replaceOrAddInteractiveElement(element, 'center');
+        } else {
+          this.replaceOrAddInteractiveElement(element.element, element.location);
+        }
       });
     }
 

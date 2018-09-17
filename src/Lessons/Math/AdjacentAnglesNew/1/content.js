@@ -3,7 +3,7 @@ import {
   LessonContent,
 } from '../../../../js/Lesson/LessonContent';
 import {
-  click, centerV,
+  click, centerV, unit,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
@@ -29,9 +29,10 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     const adjacent = diag._adjacent;
 
-    const commonAdjacent = {
+    const common = {
       setEnterState: () => {
-        adjacent.angleType = 'adjacent';
+        adjacent.calculateFuturePositions(adjacent.angleType);
+        diag._unitsSelector.select(diag.units);
       },
       showOnly: () => {
         adjacent.show();
@@ -57,7 +58,7 @@ class Content extends LessonContent {
         ]);
       },
     };
-    this.addSection(commonAdjacent, {
+    this.addSection(common, {
       title: 'Adjacent Angles',
       setContent: `
         <p>
@@ -68,11 +69,15 @@ class Content extends LessonContent {
         Adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
       },
       setEnterState: () => {
-        commonAdjacent.setEnterState();
-        adjacent.calculateFuturePositions('adjacent');
+        adjacent.angleType = 'adjacent';
+        common.setEnterState();
+      },
+      setSteadyState: () => {
+        common.setSteadyState();
+        adjacent._lines._line3.move.element = adjacent._lines._line3;
       },
     });
-    this.addSection(commonAdjacent, {
+    this.addSection(common, {
       setContent: `
         <p>
           The sum of |adjacent_angles|, is the |larger_angle|. When you know any two angles, you can |calculate_the_other|.
@@ -86,17 +91,54 @@ class Content extends LessonContent {
           colors.diagram.action,
         ),
       },
+      interactiveElements: [
+        adjacent._eqn._a,
+        adjacent._eqn._b,
+        adjacent._eqn._c,
+      ],
       setEnterState: () => {
-        commonAdjacent.setEnterState();
-        adjacent.calculateFuturePositions('adjacentAdd');
+        adjacent.angleType = 'adjacentAdd';
+        common.setEnterState();
       },
       setSteadyState: () => {
-        commonAdjacent.setSteadyState();
+        common.setSteadyState();
         adjacent.showAngles([
           [adjacent._lines._angleC, 'c', colors.angleC],
         ], false);
         adjacent._eqn.show();
         adjacent.eqn.showForm('adj_add');
+        adjacent._lines._line3.move.element = adjacent._lines._line3;
+      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          This lesson examines adjacent angles that make up |common larger angles|. 
+        </p>
+        <p>
+          Even though the adjacent angle's names are different for each case, the concept is always the same: |adjacent angles add up to the larger angle|.
+        </p>
+      `),
+    });
+    this.addSection(common, {
+      setContent: `
+        <p>
+          |Complementary angles| add up to be a right angle (${unit('|90&deg;|', '|&pi;/2 radians|')}). 
+        </p>
+      `,
+      setEnterState: () => {
+        adjacent.angleType = 'complementary';
+        common.setEnterState();
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        common.setSteadyState();
+        adjacent._eqn.show();
+        adjacent.eqn.showForm('com_add');
+        adjacent._lines._line3.move.element = adjacent._lines;
       },
     });
 

@@ -152,7 +152,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   makeMainEqn() {
-    const eqn = this.makeEqn();
+    const eqn = this.makeEqn('equals', 'left', 'baseline', 1.2);
     eqn.setPosition(this.layout.equationPosition);
     eqn.setElem('a', this.colors.angleA, true, 'up', 0.65);
     eqn.setElem('b', this.colors.angleB, true, 'up', 0.85);
@@ -216,7 +216,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   updateAngles() {
-    const r1 = this._lines.transform.r();
+    let r1 = this._lines.transform.r();
     let r2 = this._lines._line2.transform.r();
     let r3 = this._lines._line3.transform.r();
     if (r2 != null && r3 != null && r1 != null) {
@@ -232,6 +232,13 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       if (r3 < 0) {
         r3 = 0;
       }
+      if (r1 > Math.PI * 2) {
+        r1 -= Math.PI * 2;
+      }
+      if (r1 < 0) {
+        r1 += Math.PI * 2;
+      }
+      this._lines.transform.updateRotation(r1);
       this._lines._line2.transform.updateRotation(r2);
       this._lines._line3.transform.updateRotation(r3);
       this._lines._angleA.updateAngle(0, r2, r1);
@@ -292,7 +299,6 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   adjacentNextEquationform() {
-    console.log(this.eqn.currentForm)
     if (this.eqn.currentForm.name === 'adj_a') {
       this.eqn.collection._b.onClick();
     } else if (this.eqn.currentForm.name === 'adj_b') {
@@ -304,6 +310,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
 
   calculateFuturePositions(scenario: TypeScenario = 'adjacent') {
     this.futurePositions = [];
+    this.addFuturePosition(this._lines, this.layout.lines);
     this.addFuturePosition(this._lines._line3, scenario);
     this.addFuturePosition(this._lines._line2, scenario);
     this.addFuturePosition(this._lines._line1, scenario);
