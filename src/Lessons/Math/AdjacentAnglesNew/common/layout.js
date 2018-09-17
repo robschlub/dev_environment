@@ -53,7 +53,7 @@ export default function commonLessonLayout() {
     complementary: {
       rotation: 0,
     },
-    explemenetary: {
+    explementary: {
       rotation: 0,
     },
   };
@@ -70,7 +70,7 @@ export default function commonLessonLayout() {
     complementary: {
       rotation: Math.PI / 6,
     },
-    explemenetary: {
+    explementary: {
       rotation: 2,
     },
   };
@@ -87,8 +87,8 @@ export default function commonLessonLayout() {
     complementary: {
       rotation: Math.PI / 2,
     },
-    explemenetary: {
-      rotation: Math.PI * 2,
+    explementary: {
+      rotation: Math.PI * 2 * 0.9999,
     },
   };
   return layout;

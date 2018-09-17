@@ -122,11 +122,22 @@ class Content extends LessonContent {
       `),
     });
     this.addSection(common, {
+      title: 'Complementary Angles',
       setContent: `
         <p>
-          |Complementary angles| add up to be a right angle (${unit('|90&deg;|', '|&pi;/2 radians|')}). 
+          |Complementary_angles| add up to be a right angle, which is ${unit('|90&deg;|', '|&pi;/2 radians|')}. 
         </p>
       `,
+      modifiers: {
+        Complementary_angles: click(
+          adjacent.goToRandomComplementaryAngle,
+          [adjacent], colors.diagram.action),
+      },
+      interactiveElements: [
+        adjacent._eqn._a,
+        adjacent._eqn._b,
+        adjacent._eqn._c,
+      ],
       setEnterState: () => {
         adjacent.angleType = 'complementary';
         common.setEnterState();
@@ -142,55 +153,69 @@ class Content extends LessonContent {
       },
     });
 
-    // this.addSection(commonAdjacent, {
-    //   setContent: `
-    //     <p>
-    //       A smaller angle is the difference between the larger angle and the other smaller angle.
-    //     </p>
-    //   `,
-    //   modifiers: {
-    //     adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
-    //     larger_angle: click(adjacent.pulseAngleC, [adjacent], colors.angleC),
-    //   },
-    //   setEnterState: () => {
-    //     commonAdjacent.setEnterState();
-    //     adjacent.calculateFuturePositions('adjacentAdd');
-    //   },
-    //   setSteadyState: () => {
-    //     commonAdjacent.setSteadyState();
-    //     adjacent.showAngles([
-    //       [adjacent._lines._angleC, 'c', colors.angleC],
-    //     ], false);
-    //     adjacent._eqn.show();
-    //     adjacent.eqn.showForm('adj_add');
-    //     adjacent._eqn.hasTouchableElements = false;
-    //   },
-    // });
-
-    this.addSection({
-      title: 'Introduction',
+    this.addSection(common, {
+      title: 'Supplementary Angles',
       setContent: `
         <p>
-          Supplementary
+          |Supplementary_angles| add up to be a straight angle, which is ${unit('|180&deg;|', '|&pi; radians|')}. 
         </p>
       `,
-      // ],
+      modifiers: {
+        Supplementary_angles: click(
+          adjacent.goToRandomSupplementaryAngle,
+          [adjacent], colors.diagram.action,
+        ),
+      },
+      interactiveElements: [
+        adjacent._eqn._a,
+        adjacent._eqn._b,
+        adjacent._eqn._c,
+      ],
       setEnterState: () => {
-        adjacent.calculateFuturePositions('supplementary');
-        diag._unitsSelector.select(diag.units);
         adjacent.angleType = 'supplementary';
+        common.setEnterState();
       },
       show: [
-        adjacent,
         diag._unitsSelector,
       ],
       setSteadyState: () => {
-        adjacent.setFuturePositions();
-        adjacent.showAngles([
-          [adjacent._lines._angleA, 'a', colors.angleA],
-          [adjacent._lines._angleB, 'b', colors.angleB],
-        ]);
+        common.setSteadyState();
+        adjacent._eqn.show();
         adjacent.eqn.showForm('sup_add');
+        adjacent._lines._line3.move.element = adjacent._lines;
+      },
+    });
+
+    this.addSection(common, {
+      title: 'Explementary Angles',
+      setContent: `
+        <p>
+          |Explementary_angles| add up to be a full angle, which is ${unit('|360&deg;|', '|2&pi; radians|')}. 
+        </p>
+      `,
+      modifiers: {
+        Explementary_angles: click(
+          adjacent.goToRandomExplementaryAngle,
+          [adjacent], colors.diagram.action,
+        ),
+      },
+      interactiveElements: [
+        adjacent._eqn._a,
+        adjacent._eqn._b,
+        adjacent._eqn._c,
+      ],
+      setEnterState: () => {
+        adjacent.angleType = 'explementary';
+        common.setEnterState();
+      },
+      show: [
+        diag._unitsSelector,
+      ],
+      setSteadyState: () => {
+        common.setSteadyState();
+        adjacent._eqn.show();
+        adjacent.eqn.showForm('exp_add');
+        adjacent._lines._line3.move.element = adjacent._lines;
       },
     });
   }

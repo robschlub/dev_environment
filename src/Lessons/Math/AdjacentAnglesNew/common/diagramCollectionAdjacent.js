@@ -102,11 +102,11 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     eqn.addForm('sup_add', ['pi', 'equals', 'a', 'plus', 'b'], 'rad');
 
     eqn.addForm('com_a', ['a', 'equals', '_90', 'minus', 'b'], 'deg');
-    eqn.addForm('com_a', ['a', 'equals', eqn.frac('pi', '2', 'v'), 'minus', 'b'], 'rad');
+    eqn.addForm('com_a', ['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b'], 'rad');
     eqn.addForm('com_b', ['b', 'equals', '_90', 'minus', 'a'], 'deg');
-    eqn.addForm('com_b', ['b', 'equals', eqn.frac('pi', '2', 'v'), 'minus', 'a'], 'rad');
+    eqn.addForm('com_b', ['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a'], 'rad');
     eqn.addForm('com_add', ['_90', 'equals', 'a', 'plus', 'b'], 'deg');
-    eqn.addForm('com_add', [eqn.frac('pi', '2', 'v'), 'equals', 'a', 'plus', 'b'], 'rad');
+    eqn.addForm('com_add', [eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b'], 'rad');
 
     eqn.addForm('exp_a', ['a', 'equals', '_360', 'minus', 'b'], 'deg');
     eqn.addForm('exp_a', ['a', 'equals', '2', 'pi', 'minus', 'b'], 'rad');
@@ -290,7 +290,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   goToRandomExplementaryAngle() {
-    this.goToRandomAngle(Math.PI * 2);
+    this.goToRandomAngle(Math.PI * 2*0.999);
   }
 
   pulseAngleC() {
