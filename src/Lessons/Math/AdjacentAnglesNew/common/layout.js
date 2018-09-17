@@ -8,6 +8,7 @@ const cssColorNames = [
   'latin',
   'angleA',
   'angleB',
+  'angleC',
   'line',
 ];
 
@@ -26,7 +27,7 @@ export default function commonLessonLayout() {
   };
   layout.angle = {
     radius: 0.3,
-    labelRadius: 0.35,
+    labelRadiusOffset: 0.05,
     width: 0.03,
     sides: 300,
   };

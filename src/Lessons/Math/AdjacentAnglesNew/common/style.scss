@@ -5,6 +5,7 @@ $colors: (
   line:             map-get($geometry_colors, lines),
   angleA:           map-get($geometry_colors, angleA),
   angleB:           map-get($geometry_colors, angleB),
+  angleC:           map-get($geometry_colors, angleC),
 );
 
 body {

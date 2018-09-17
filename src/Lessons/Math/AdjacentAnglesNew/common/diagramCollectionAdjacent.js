@@ -4,6 +4,9 @@ import {
   Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
+  rand,
+} from '../../../../js/diagram/tools/mathtools';
+import {
   DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 
@@ -14,8 +17,8 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
 import { makeAngle, showAngles } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
-
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+
 type TypeAdjacentAngle = 'adjacent' | 'supplementary' | 'complementary' | 'explementary';
 type TypeEquationForm = 'add' | 'a' | 'b';
 
@@ -28,6 +31,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     _line3: TypeLine;
     _angleA: TypeAngle;
     _angleB: TypeAngle;
+    _angleC: TypeAngle;
   } & DiagramElementCollection;
 
   eqn: Equation;
@@ -61,6 +65,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       {
         a: 'a',
         b: 'b',
+        c: 'c',
         equals: ' = ',
         minus: ' \u2212 ',
         plus: ' + ',
@@ -85,6 +90,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
 
     eqn.addForm('a', ['a']);
     eqn.addForm('b', ['b']);
+    eqn.addForm('c', ['c']);
     eqn.addForm('sup_a', ['a', 'equals', '_180', 'minus', 'b'], 'deg');
     eqn.addForm('sup_a', ['a', 'equals', 'pi', 'minus', 'b'], 'rad');
     eqn.addForm('sup_b', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
@@ -108,29 +114,35 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     return eqn;
   }
 
-  makeAdjacentAngle(color: Array<number>) {
+  makeAdjacentAngle(radius: number, color: Array<number>) {
     const angle = makeAngle(
       this.diagram,
-      this.layout.angle.radius,
+      radius,
       this.layout.angle.width,
       this.layout.angle.sides,
       color,
     );
     const eqn = this.makeEqn('middle', 'center', new Point(0, 0), 0.7);
-    angle.addLabel(eqn, this.layout.angle.labelRadius);
+    angle.addLabel(eqn, this.layout.angle.labelRadiusOffset + radius);
     angle.label.autoHideMag = 0.2;
     return angle;
   }
 
   makeLines() {
     const lines = this.diagram.shapes.collection(new Transform().rotate(0).translate(0, 0));
-    lines.add('angleA', this.makeAdjacentAngle(this.layout.colors.angleA));
-    lines.add('angleB', this.makeAdjacentAngle(this.layout.colors.angleB));
+    lines.add('angleA', this.makeAdjacentAngle(this.layout.angle.radius, this.layout.colors.angleA));
+    lines.add('angleB', this.makeAdjacentAngle(this.layout.angle.radius, this.layout.colors.angleB));
+    lines.add('line2', this.makeAdjacentLine(2, this.layout.colors.line));
+
+    lines.add('angleC', this.makeAdjacentAngle(this.layout.angle.radius * 3, this.layout.colors.angleC));
     lines.add('line1', this.makeAdjacentLine(1, this.layout.colors.line));
     lines._line1.move.element = lines;
-    lines.add('line2', this.makeAdjacentLine(2, this.layout.colors.line));
     lines.add('line3', this.makeAdjacentLine(3, this.layout.colors.line));
     lines.setTransformCallback = this.updateAngles.bind(this);
+
+    lines._angleA.showForm('a');
+    lines._angleB.showForm('b');
+    lines._angleC.showForm('c');
     lines.hasTouchableElements = true;
     return lines;
   }
@@ -211,6 +223,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       this._lines._line3.transform.updateRotation(r3);
       this._lines._angleA.updateAngle(0, r2, r1);
       this._lines._angleB.updateAngle(r2, r3 - r2, r1);
+      this._lines._angleC.updateAngle(0, r3, r1);
     }
   }
 
@@ -219,7 +232,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
             | [TypeAngle, string, Array<number>, boolean]>,
     showOnly: boolean = true,
   ) {
-    const allAngles = [this._lines._angleA, this._lines._angleB];
+    const allAngles = [this._lines._angleA, this._lines._angleB, this._lines._angleC];
     showAngles(allAngles, angles, showOnly);
     this.updateAngles();
     this.diagram.animateNextFrame();
@@ -233,6 +246,36 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     if (this._lines._angleB.label) {
       this._lines._angleB.label.eqn.setUnits(units);
     }
+  }
+
+  goToRandomAngle(r3: number) {
+    const r2 = rand(Math.PI / 6, r3 * 0.7);
+    this.futurePositions = [];
+    this.addFuturePosition(this._lines._line2, { rotation: r2 });
+    this.addFuturePosition(this._lines._line3, { rotation: r3 });
+    this.moveToFuturePositions(1, null, 2);
+    this.diagram.animateNextFrame();
+  }
+
+  goToRandomAdjacentAngle() {
+    this.goToRandomAngle(rand(Math.PI / 3, 5 * Math.PI / 3));
+  }
+
+  goToRandomSupplementaryAngle() {
+    this.goToRandomAngle(Math.PI);
+  }
+
+  goToRandomComplementaryAngle() {
+    this.goToRandomAngle(Math.PI / 2);
+  }
+
+  goToRandomExplementaryAngle() {
+    this.goToRandomAngle(Math.PI * 2);
+  }
+
+  pulseAngleC() {
+    this._lines._angleC.pulseScaleNow(1, 1.3);
+    this.diagram.animateNextFrame();
   }
 
   calculateFuturePositions(scenario: TypeScenario = 'adjacent') {

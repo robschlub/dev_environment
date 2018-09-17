@@ -57,8 +57,18 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   layout: Object;
   colors: Object;
   +diagram: Diagram;
-  moveToScenario: (DiagramElement, TypeScenario, ?number, ?(() => void)) => number;
-  getTimeToMoveToScenario: (DiagramElement, TypeScenario) => number;
+  moveToScenario: (
+    DiagramElement,
+    TypeScenario,
+    ?number,
+    ?(() => void),
+    ?(-1 | 1 | 0 | 2)) => number;
+
+  getTimeToMoveToScenario: (
+    DiagramElement,
+    TypeScenario,
+    ?(-1 | 1 | 0 | 2)) => number;
+
   setScenario: (DiagramElement, TypeScenario) => void;
   futurePositions: Array<TypeFuturePosition>;
   +calculateFuturePositions: (?TypeScenario) => void;
@@ -78,13 +88,14 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   getTimeToMoveToScenario(
     element: DiagramElement,
     scenario: TypeScenario = null,
+    rotDirection: -1 | 1 | 0 | 2 = 0,
   ) {
     const target = getTarget(element, scenario, this.layout);
     const velocity = element.transform.constant(0);
     velocity.updateTranslation(new Point(1 / 2, 1 / 2));
     velocity.updateRotation(2 * Math.PI / 6);
     velocity.updateScale(1, 1);
-    const time = getMaxTimeFromVelocity(element.transform._dup(), target, velocity, 0);
+    const time = getMaxTimeFromVelocity(element.transform._dup(), target, velocity, rotDirection);
     return time;
   }
 
@@ -102,17 +113,18 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     scenario: TypeScenario = null,
     animationTime: ?number = null,
     callback: ?() => void = null,
+    rotDirection: -1 | 1 | 0 | 2 = 0,
   ) {
     element.stop();
     const target = getTarget(element, scenario, this.layout);
     let time = 1;
     if (animationTime == null) {
-      time = this.getTimeToMoveToScenario(element, scenario);
+      time = this.getTimeToMoveToScenario(element, scenario, rotDirection);
     } else {
       time = animationTime;
     }
     time = time === 0 ? 0.001 : time;
-    element.animateTo(target, time, 0, callback);
+    element.animateTo(target, time, rotDirection, callback);
     return time;
   }
 
@@ -173,6 +185,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   moveToFuturePositions(
     timeOrCallback: ?number | () => void = null,
     done: ?() => void = null,
+    rotDirection: -1 | 1 | 0 | 2 = 0,
   ) {
     let maxTime: number = 0;
     if (typeof timeOrCallback !== 'number'
@@ -181,7 +194,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     ) {
       this.futurePositions.forEach((futurePosition) => {
         const { element, scenario } = futurePosition;
-        const thisTime = this.getTimeToMoveToScenario(element, scenario);
+        const thisTime = this.getTimeToMoveToScenario(element, scenario, rotDirection);
         maxTime = Math.max(maxTime, thisTime);
       });
     } else {
@@ -195,7 +208,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     this.futurePositions.forEach((futurePosition, index) => {
       const callback = index === this.futurePositions.length - 1 ? callbackToUse : null;
       const { element, scenario } = futurePosition;
-      this.moveToScenario(element, scenario, maxTime, callback);
+      this.moveToScenario(element, scenario, maxTime, callback, rotDirection);
     });
   }
 }

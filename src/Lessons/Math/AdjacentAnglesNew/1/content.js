@@ -29,23 +29,28 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     const adjacent = diag._adjacent;
 
-    this.addSection({
-      title: 'Introduction',
-      setContent: `
-        <p>
-          A triangle is a shape formed by |three straight lines| connected at |three corners| (or angles). 
-        </p>
-      `,
-      // ],
+    const commonAdjacent = {
       setEnterState: () => {
         adjacent.calculateFuturePositions('adjacent');
       },
-      show: [
-        adjacent,
-      ],
-      hide: [
-        adjacent._eqn,
-      ],
+      showOnly: () => {
+        adjacent.show();
+        adjacent._lines.show();
+        adjacent._lines._line1.showAll();
+        adjacent._lines._line2.showAll();
+        adjacent._lines._line3.showAll();
+        adjacent.showAngles([
+          [adjacent._lines._angleA, 'a', colors.angleA],
+          [adjacent._lines._angleB, 'b', colors.angleB],
+        ]);
+        adjacent._eqn.hideAll();
+      },
+      // hide: [
+      //   adjacent._eqn,
+      // ],
+      transitionFromAny: (done) => {
+        adjacent.moveToFuturePositions(null, done, 2);
+      },
       setSteadyState: () => {
         adjacent.setFuturePositions();
         adjacent.showAngles([
@@ -53,7 +58,36 @@ class Content extends LessonContent {
           [adjacent._lines._angleB, 'b', colors.angleB],
         ]);
       },
+    };
+    this.addSection(commonAdjacent, {
+      title: 'Adjacent Angles',
+      setContent: `
+        <p>
+          |Adjacent_angles| are any angles that share a common vertex and edge.
+        </p>
+      `,
+      modifiers: {
+        Adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
+      },
     });
+    this.addSection(commonAdjacent, {
+      setContent: `
+        <p>
+          The sum of |adjacent_angles|, is the |larger_angle|.
+        </p>
+      `,
+      modifiers: {
+        adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
+        larger_angle: click(adjacent.pulseAngleC, [adjacent], colors.angleC),
+      },
+      setSteadyState: () => {
+        commonAdjacent.setSteadyState();
+        adjacent.showAngles([
+          [adjacent._lines._angleC, 'c', colors.angleC],
+        ], false);
+      },
+    });
+
     this.addSection({
       title: 'Introduction',
       setContent: `
