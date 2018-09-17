@@ -3,11 +3,8 @@
 $colors: (
   latin:            color('diagram', 'text-latin'),
   line:             map-get($geometry_colors, lines),
-  point:            map-get($geometry_colors, length),
-  pointText:        map-get($geometry_colors, length),
-  angle:            map-get($geometry_colors, angle),
-  angleText:        map-get($geometry_colors, angleText),
-  dimensions:       map-get($geometry_colors, length),
+  angleA:           map-get($geometry_colors, angleA),
+  angleB:           map-get($geometry_colors, angleB),
 );
 
 body {

@@ -20,6 +20,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     super(diagram, layout, transform);
 
     this.add('adjacent', new AdjacentCollection(diagram, this.layout));
+    this._adjacent.setPosition(this.layout.position);
     this.hasTouchableElements = true;
   }
 }

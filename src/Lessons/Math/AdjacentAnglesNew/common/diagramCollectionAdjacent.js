@@ -22,10 +22,10 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   _line1: TypeLine;
   _line2: TypeLine;
   _line3: TypeLine;
-  _line4: TypeLine;
   _angle1: TypeAngle;
+  _angle2: TypeAngle;
 
-  makeAdjacentLine(color: Array<number>) {
+  makeAdjacentLine(index: number, color: Array<number>) {
     const line = makeLine(
       this.diagram,
       'end',
@@ -36,6 +36,9 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     );
     line.setMovable();
     line.move.type = 'rotation';
+    if (index > 1) {
+      line.setTransformCallback = this.updateAngles.bind(this);
+    }
     return line;
   }
 
@@ -52,22 +55,45 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   constructor(
     diagram: LessonDiagram,
     layout: Object,
-    transform: Transform = new Transform().translate(0, 0),
+    transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.add('line1', this.makeAdjacentLine(this.layout.colors.line));
-    this.add('line2', this.makeAdjacentLine(this.layout.colors.line));
-    this.add('line3', this.makeAdjacentLine(this.layout.colors.line));
-    this.add('line4', this.makeAdjacentLine(this.layout.colors.line));
-    this.add('angle1', this.makeAdjacentAngle(this.layout.colors.angle));
+    this.add('angle1', this.makeAdjacentAngle(this.layout.colors.angleA));
+    this.add('angle2', this.makeAdjacentAngle(this.layout.colors.angleB));
+    this.add('line1', this.makeAdjacentLine(1, this.layout.colors.line));
+    this._line1.move.element = this;
+    this.add('line2', this.makeAdjacentLine(2, this.layout.colors.line));
+    this.add('line3', this.makeAdjacentLine(3, this.layout.colors.line));
     this.hasTouchableElements = true;
+  }
+
+  updateAngles() {
+    let r2 = this._line2.transform.r();
+    let r3 = this._line3.transform.r();
+    if (r2 != null && r3 != null) {
+      if (r3 > Math.PI * 2) {
+        r3 = Math.PI * 2;
+      }
+      if (r2 > r3) {
+        r2 = r3;
+      }
+      if (r2 < 0) {
+        r2 = 0;
+      }
+      if (r3 < 0) {
+        r3 = 0;
+      }
+      this._line2.transform.updateRotation(r2);
+      this._line3.transform.updateRotation(r3);
+      this._angle1.updateAngle(0, r2);
+      this._angle2.updateAngle(r2, r3 - r2);
+    }
   }
 
   calculateFuturePositions(scenario: TypeScenario = 'adjacent') {
     this.futurePositions = [];
-    this.addFuturePosition(this._line1, scenario);
-    this.addFuturePosition(this._line2, scenario);
     this.addFuturePosition(this._line3, scenario);
-    this.addFuturePosition(this._line4, scenario);
+    this.addFuturePosition(this._line2, scenario);
+    this.addFuturePosition(this._line1, scenario);
   }
 }

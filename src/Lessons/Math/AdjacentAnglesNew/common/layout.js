@@ -6,9 +6,8 @@ import baseLayout from '../../../../LessonsCommon/layout';
 
 const cssColorNames = [
   'latin',
-  'angle',
-  'angleText',
-  'dimensions',
+  'angleA',
+  'angleB',
   'line',
 ];
 
@@ -16,40 +15,49 @@ const cssColorNames = [
 export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
-  layout.position = new Point(0, 0);
+  layout.position = new Point(0, -0.3);
 
   layout.line = {
-    width: 0.02,
-    length: 1,
+    width: 0.03,
+    length: 1.3,
   };
   layout.angle = {
     radius: 0.3,
     labelRadius: 0.35,
-    width: 0.02,
-    sides: 50,
+    width: 0.03,
+    sides: 300,
   };
   layout.line1 = {
     adjacent: {
-      position: new Point(0,0),
+      rotation: 0,
+    },
+    supplementary: {
+      rotation: 0,
+    },
+    complementary: {
       rotation: 0,
     },
   };
   layout.line2 = {
     adjacent: {
-      position: new Point(0,0),
+      rotation: 1,
+    },
+    supplementary: {
+      rotation: 1,
+    },
+    complementary: {
       rotation: 1,
     },
   };
   layout.line3 = {
     adjacent: {
-      position: new Point(0,0),
       rotation: 2,
     },
-  };
-  layout.line4 = {
-    adjacent: {
-      position: new Point(0,0),
-      rotation: 3,
+    supplementary: {
+      rotation: Math.PI,
+    },
+    complementary: {
+      rotation: Math.PI,
     },
   };
   return layout;
