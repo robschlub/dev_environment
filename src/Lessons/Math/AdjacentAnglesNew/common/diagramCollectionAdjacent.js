@@ -42,7 +42,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     return line;
   }
 
-  makeAdjacentAngle(color: Array<number>) {
+  makeEqn(fixtTo) {
     const eqn = this.diagram.equation.makeEqn();
     eqn.createElements(
       {
@@ -67,7 +67,22 @@ export default class AdjacentCollection extends CommonDiagramCollection {
 
     eqn.addForm('a', ['a']);
     eqn.addForm('b', ['b']);
+    eqn.addForm('supp_a_equals', ['a', 'equals', '_180', 'minus', 'b'], 'deg');
+    eqn.addForm('supp_a_equals', ['a', 'equals', 'pi', 'minus', 'b'], 'rad');
+    eqn.addForm('supp_b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
+    eqn.addForm('supp_b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
+    eqn.addForm('comp_a_equals', ['a', 'equals', '_90', 'minus', 'b'], 'deg');
+    eqn.addForm('comp_a_equals', ['a', 'equals', eqn.frac('pi', '2', 'v'), 'minus', 'b'], 'rad');
+    eqn.addForm('comp_b_equals', ['b', 'equals', '_90', 'minus', 'a'], 'deg');
+    eqn.addForm('comp_b_equals', ['b', 'equals', eqn.frac('pi', '2', 'v'), 'minus', 'a'], 'rad');
+    eqn.addForm('exp_a_equals', ['a', 'equals', '_360', 'minus', 'b'], 'deg');
+    eqn.addForm('exp_a_equals', ['a', 'equals', '2', 'pi', 'minus', 'b'], 'rad');
+    eqn.addForm('exp_b_equals', ['b', 'equals', '_360', 'minus', 'a'], 'deg');
+    eqn.addForm('exp_b_equals', ['b', 'equals', '2', 'pi', 'minus', 'a'], 'rad');
+    return eqn;
+  }
 
+  makeAdjacentAngle(color: Array<number>) {
     const angle = makeAngle(
       this.diagram,
       this.layout.angle.radius,
@@ -75,6 +90,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       this.layout.angle.sides,
       color,
     );
+    const eqn = this.makeEqn();
     angle.addLabel(eqn, this.layout.angle.labelRadius);
     angle.label.autoHideMag = 0.2;
     return angle;

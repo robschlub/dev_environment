@@ -1313,6 +1313,11 @@ export class Equation {
       this.formAlignment.vAlign,
       this.formAlignment.fixTo,
     );
+    // make the first form added also equal to the base form as always
+    // need a base form for some functions
+    if (this.form[name].base === undefined) {
+      this.addForm(name, content, 'base');
+    }
   }
 
   reArrangeCurrentForm() {
