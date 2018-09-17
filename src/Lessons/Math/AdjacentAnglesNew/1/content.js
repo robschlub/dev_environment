@@ -31,7 +31,7 @@ class Content extends LessonContent {
 
     const commonAdjacent = {
       setEnterState: () => {
-        adjacent.calculateFuturePositions('adjacent');
+        adjacent.angleType = 'adjacent';
       },
       showOnly: () => {
         adjacent.show();
@@ -69,24 +69,60 @@ class Content extends LessonContent {
       modifiers: {
         Adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
       },
+      setEnterState: () => {
+        commonAdjacent.setEnterState();
+        adjacent.calculateFuturePositions('adjacent');
+      },
     });
     this.addSection(commonAdjacent, {
       setContent: `
         <p>
-          The sum of |adjacent_angles|, is the |larger_angle|.
+          The sum of |adjacent_angles|, is the |larger_angle|. When you know any two angles, you can |calculate_the_other|.
         </p>
       `,
       modifiers: {
         adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
         larger_angle: click(adjacent.pulseAngleC, [adjacent], colors.angleC),
+        calculate_the_other: click(adjacent.adjacentNextEquationform, [adjacent], colors.diagram.action),
+      },
+      setEnterState: () => {
+        commonAdjacent.setEnterState();
+        adjacent.calculateFuturePositions('adjacentAdd');
       },
       setSteadyState: () => {
         commonAdjacent.setSteadyState();
         adjacent.showAngles([
           [adjacent._lines._angleC, 'c', colors.angleC],
         ], false);
+        adjacent._eqn.show();
+        adjacent.eqn.showForm('adj_add');
       },
     });
+
+    // this.addSection(commonAdjacent, {
+    //   setContent: `
+    //     <p>
+    //       A smaller angle is the difference between the larger angle and the other smaller angle.
+    //     </p>
+    //   `,
+    //   modifiers: {
+    //     adjacent_angles: click(adjacent.goToRandomAdjacentAngle, [adjacent], colors.diagram.action),
+    //     larger_angle: click(adjacent.pulseAngleC, [adjacent], colors.angleC),
+    //   },
+    //   setEnterState: () => {
+    //     commonAdjacent.setEnterState();
+    //     adjacent.calculateFuturePositions('adjacentAdd');
+    //   },
+    //   setSteadyState: () => {
+    //     commonAdjacent.setSteadyState();
+    //     adjacent.showAngles([
+    //       [adjacent._lines._angleC, 'c', colors.angleC],
+    //     ], false);
+    //     adjacent._eqn.show();
+    //     adjacent.eqn.showForm('adj_add');
+    //     adjacent._eqn.hasTouchableElements = false;
+    //   },
+    // });
 
     this.addSection({
       title: 'Introduction',
