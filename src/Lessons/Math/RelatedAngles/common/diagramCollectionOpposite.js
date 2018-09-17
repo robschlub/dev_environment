@@ -186,7 +186,6 @@ export default class OppositeCollection extends CommonDiagramCollection {
       supplementary: 3,
     };
     this.hasTouchableElements = true;
-
   }
 
   updateOppositeAngles() {

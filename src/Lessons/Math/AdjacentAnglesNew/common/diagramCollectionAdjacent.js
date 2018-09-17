@@ -7,7 +7,7 @@ import {
   rand,
 } from '../../../../js/diagram/tools/mathtools';
 import {
-  DiagramElementCollection,
+  DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -32,6 +32,18 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     _angleA: TypeAngle;
     _angleB: TypeAngle;
     _angleC: TypeAngle;
+  } & DiagramElementCollection;
+
+  _eqn: {
+    _a: {
+      onClick: (?string) => void;
+    } & DiagramElementPrimative;
+    _b: {
+      onClick: (?string) => void;
+    } & DiagramElementPrimative;
+    _c: {
+      onClick: (?string) => void;
+    } & DiagramElementPrimative;
   } & DiagramElementCollection;
 
   eqn: Equation;
@@ -167,7 +179,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       eqn.showForm(`${angleType.slice(0, 2)}_${eqnForm}`);
     };
 
-    const onclickEqn = (form: TypeEquationForm) => {
+    const onclickEqn = (form: TypeEquationForm = 'add') => {
       const eqnForm = eqn.getForm(`${this.angleType.slice(0, 3)}_${form}`);
       eqn.setCurrentForm(eqnForm);
       eqnForm.animateTo(1, 1.5, eqn.collection._equals);
@@ -290,7 +302,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   goToRandomExplementaryAngle() {
-    this.goToRandomAngle(Math.PI * 2*0.999);
+    this.goToRandomAngle(Math.PI * 2 * 0.999);
   }
 
   pulseAngleC() {
@@ -299,12 +311,14 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   adjacentNextEquationform() {
-    if (this.eqn.currentForm.name === 'adj_a') {
-      this.eqn.collection._b.onClick();
-    } else if (this.eqn.currentForm.name === 'adj_b') {
-      this.eqn.collection._c.onClick();
-    } else if (this.eqn.currentForm.name === 'adj_add') {
-      this.eqn.collection._a.onClick();
+    if (this.eqn.currentForm) {
+      if (this.eqn.currentForm.name === 'adj_a') {
+        this._eqn._b.onClick();
+      } else if (this.eqn.currentForm.name === 'adj_b') {
+        this._eqn._c.onClick();
+      } else if (this.eqn.currentForm.name === 'adj_add') {
+        this._eqn._a.onClick();
+      }
     }
   }
 

@@ -100,7 +100,6 @@ class Content extends LessonContent {
         four_angles: highlight(colors.angleA),
       },
       setEnterState: () => {
-
         oppCommon.setEnterState();
         opp.calculateFuturePositions();
       },

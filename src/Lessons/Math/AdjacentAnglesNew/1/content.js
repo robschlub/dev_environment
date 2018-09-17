@@ -131,7 +131,8 @@ class Content extends LessonContent {
       modifiers: {
         Complementary_angles: click(
           adjacent.goToRandomComplementaryAngle,
-          [adjacent], colors.diagram.action),
+          [adjacent], colors.diagram.action,
+        ),
       },
       interactiveElements: [
         adjacent._eqn._a,

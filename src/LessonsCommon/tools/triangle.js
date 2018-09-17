@@ -8,7 +8,7 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
-import makeAngle from './angle';
+import { makeAngle } from './angle';
 import type { TypeAngle } from './angle';
 // import makeEquationLabel from './equationLabel';
 import { makeLine } from './line';
