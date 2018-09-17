@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
@@ -15,6 +15,7 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle, showAngles } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
+import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // type TypeAdjacentAngle = 'adjacent' | 'supplementary' | 'complementary' | 'reflex' | 'right' | 'full';
 
 export default class AdjacentCollection extends CommonDiagramCollection {
@@ -24,6 +25,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   _line3: TypeLine;
   _angleA: TypeAngle;
   _angleB: TypeAngle;
+  eqn: Equation;
 
   makeAdjacentLine(index: number, color: Array<number>) {
     const line = makeLine(
@@ -42,7 +44,12 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     return line;
   }
 
-  makeEqn(fixtTo) {
+  makeEqn(
+    vAlign: string = 'baseline',
+    hAlign: string = 'left',
+    fixTo: string | Point = 'equals',
+    scale: number = 1,
+  ) {
     const eqn = this.diagram.equation.makeEqn();
     eqn.createElements(
       {
@@ -56,14 +63,19 @@ export default class AdjacentCollection extends CommonDiagramCollection {
         _360: '360º',
         pi: 'π',
         _2: '2',
-        v: this.diagram.equation.vinculum(color),
+        v: this.diagram.equation.vinculum(this.layout.colors.diagram.text),
       },
-      color,
+      this.layout.colors.diagram.text,
     );
 
-    eqn.formAlignment.hAlign = 'center';
-    eqn.formAlignment.vAlign = 'middle';
-    eqn.formAlignment.scale = 0.7;
+    eqn.formAlignment.hAlign = vAlign;
+    eqn.formAlignment.vAlign = hAlign;
+    eqn.formAlignment.scale = scale;
+    if (fixTo instanceof Point) {
+      eqn.formAlignment.fixTo = fixTo;
+    } else {
+      eqn.formAlignment.fixTo = eqn.collection[`_${fixTo}`];
+    }
 
     eqn.addForm('a', ['a']);
     eqn.addForm('b', ['b']);
@@ -90,7 +102,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       this.layout.angle.sides,
       color,
     );
-    const eqn = this.makeEqn();
+    const eqn = this.makeEqn('middle', 'center', new Point(0, 0), 0.7);
     angle.addLabel(eqn, this.layout.angle.labelRadius);
     angle.label.autoHideMag = 0.2;
     return angle;
@@ -108,6 +120,9 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     this._line1.move.element = this;
     this.add('line2', this.makeAdjacentLine(2, this.layout.colors.line));
     this.add('line3', this.makeAdjacentLine(3, this.layout.colors.line));
+
+    this.eqn = this.makeEqn();
+    this.add('eqn', this.eqn.collection);
     this.hasTouchableElements = true;
   }
 
