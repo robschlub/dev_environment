@@ -45,10 +45,10 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         adjacent.setFuturePositions();
-        // console.log(diag, adjacent._tr1, layout.examples.tri1.position)
-        // adjacent.setScenario(adjacent._tri1, layout.examples.tri1.position);
-        // adjacent.setScenario(adjacent._tri2, layout.examples.tri2.position);
-        // adjacent.setScenario(adjacent._tri3, layout.examples.tri3.position);
+        adjacent.showAngles([
+          [adjacent._angleA, 'a', colors.angleA],
+          [adjacent._angleB, 'b', colors.angleB],
+        ]);
       },
     });
   }

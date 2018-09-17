@@ -71,15 +71,12 @@ export function makeAngle(
 
   angle.addLabel = (labelTextOrEquation: string | Equation = '', labelRadius: number) => {
     const eqnLabel = makeEquationLabel(diagram, labelTextOrEquation, color);
-    // console.log(eqnLabel.eqn.collection.transform.matrix())
     angle.label = Object.assign({}, eqnLabel, {
       radius: labelRadius,
+      autoHideMag: -1,
     });
     angle.add('label', eqnLabel.eqn.collection);
-    // console.log(angle._label.transform.matrix())
     angle.showForm();
-    // console.log(angle._label.transform.matrix())
-    // angle.updateLabel();
   };
 
   angle.updateAngle = function updateAngle(
@@ -110,13 +107,17 @@ export function makeAngle(
     angle.transform.updateRotation(start);
     if (angle.label) {
       const labelPosition = new Point(0, 0);
-      // angle._label.setPosition(labelPosition);
       angle.label.updateRotation(
         -start - labelRotationOffset,
         labelPosition,
         angle.label.radius,
         size / 2,
       );
+      if (Math.abs(size) < angle.label.autoHideMag) {
+        angle._label.hide();
+      } else {
+        angle._label.show();
+      }
     }
   };
 
@@ -161,7 +162,6 @@ export function showAngles(
       angle.hide();
     });
   }
-
   angles.forEach((angle) => {
     const [element, form, color] = angle;
     if (element.label) {

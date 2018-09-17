@@ -12,7 +12,7 @@ import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
-import { makeAngle } from '../../../../LessonsCommon/tools/angle';
+import { makeAngle, showAngles } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
 // type TypeAdjacentAngle = 'adjacent' | 'supplementary' | 'complementary' | 'reflex' | 'right' | 'full';
@@ -22,8 +22,8 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   _line1: TypeLine;
   _line2: TypeLine;
   _line3: TypeLine;
-  _angle1: TypeAngle;
-  _angle2: TypeAngle;
+  _angleA: TypeAngle;
+  _angleB: TypeAngle;
 
   makeAdjacentLine(index: number, color: Array<number>) {
     const line = makeLine(
@@ -76,6 +76,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       color,
     );
     angle.addLabel(eqn, this.layout.angle.labelRadius);
+    angle.label.autoHideMag = 0.2;
     return angle;
   }
 
@@ -85,8 +86,8 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.add('angle1', this.makeAdjacentAngle(this.layout.colors.angleA));
-    this.add('angle2', this.makeAdjacentAngle(this.layout.colors.angleB));
+    this.add('angleA', this.makeAdjacentAngle(this.layout.colors.angleA));
+    this.add('angleB', this.makeAdjacentAngle(this.layout.colors.angleB));
     this.add('line1', this.makeAdjacentLine(1, this.layout.colors.line));
     this._line1.move.element = this;
     this.add('line2', this.makeAdjacentLine(2, this.layout.colors.line));
@@ -112,9 +113,20 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       }
       this._line2.transform.updateRotation(r2);
       this._line3.transform.updateRotation(r3);
-      this._angle1.updateAngle(0, r2);
-      this._angle2.updateAngle(r2, r3 - r2);
+      this._angleA.updateAngle(0, r2);
+      this._angleB.updateAngle(r2, r3 - r2);
     }
+  }
+
+  showAngles(
+    angles: Array<[TypeAngle, string, Array<number>]
+            | [TypeAngle, string, Array<number>, boolean]>,
+    showOnly: boolean = true,
+  ) {
+    const allAngles = [this._angleA, this._angleB];
+    showAngles(allAngles, angles, showOnly);
+    this.updateAngles();
+    this.diagram.animateNextFrame();
   }
 
   calculateFuturePositions(scenario: TypeScenario = 'adjacent') {
