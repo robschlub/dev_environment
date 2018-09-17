@@ -16,12 +16,14 @@ const cssColorNames = [
 export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
-  layout.position = new Point(0, -0.6);
+  // layout.position = new Point(0, -0.6);
   layout.equationPosition = new Point(-0.5, 1.45);
+  layout.equationScale = 1.2;
   layout.units = {
     position: new Point(2, -1.6),
   };
   layout.lines = {
+    position: new Point(0, -0.6),
     rotation: 0,
   };
   layout.line = {

@@ -144,6 +144,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
 
   makeLines() {
     const lines = this.diagram.shapes.collection(new Transform().rotate(0).translate(0, 0));
+    lines.setPosition(this.layout.lines.position);
     let { angle } = this.layout;
     lines.add('angleA', this.makeAdjacentAngle(angle.radius, angle.width, angle.sides, this.layout.colors.angleA));
     lines.add('angleB', this.makeAdjacentAngle(angle.radius, angle.width, angle.sides, this.layout.colors.angleB));
@@ -155,7 +156,6 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     lines._line1.move.element = lines;
     lines.add('line3', this.makeAdjacentLine(3, this.layout.colors.line));
     lines.setTransformCallback = this.updateAngles.bind(this);
-
     lines._angleA.showForm('a');
     lines._angleB.showForm('b');
     lines._angleC.showForm('c');
@@ -164,17 +164,17 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   makeMainEqn() {
-    const eqn = this.makeEqn('equals', 'left', 'baseline', 1.2);
+    const eqn = this.makeEqn('baseline', 'left', 'equals', this.layout.equationScale);
     eqn.setPosition(this.layout.equationPosition);
-    eqn.setElem('a', this.colors.angleA, true, 'up', 0.65);
-    eqn.setElem('b', this.colors.angleB, true, 'up', 0.85);
-    eqn.setElem('c', this.colors.angleC, true, 'up', 0.85);
-    eqn.setElem('pi', null, true, 'down', 1);
-    eqn.setElem('v', null, true, 'down', 1);
-    eqn.setElem('_2', null, true, 'down', 1);
-    eqn.setElem('_90', null, true, 'down', 0.7);
-    eqn.setElem('_180', null, true, 'down', 0.7);
-    eqn.setElem('_360', null, true, 'down', 0.7);
+    eqn.setElem('a', this.colors.angleA, true, 'up', 0.85);
+    eqn.setElem('b', this.colors.angleB, true, 'up', 1.05);
+    eqn.setElem('c', this.colors.angleC, true, 'up', 1.05);
+    eqn.setElem('pi', null, true, 'down', 1.2);
+    eqn.setElem('v', null, true, 'down', 1.2);
+    eqn.setElem('_2', null, true, 'down', 1.2);
+    eqn.setElem('_90', null, true, 'down', 1);
+    eqn.setElem('_180', null, true, 'down', 1);
+    eqn.setElem('_360', null, true, 'down', 1);
     eqn.showEqn = (angleType: TypeAdjacentAngle, eqnForm: TypeEquationForm) => {
       eqn.showForm(`${angleType.slice(0, 2)}_${eqnForm}`);
     };
@@ -182,7 +182,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     const onclickEqn = (form: TypeEquationForm = 'add') => {
       const eqnForm = eqn.getForm(`${this.angleType.slice(0, 3)}_${form}`);
       eqn.setCurrentForm(eqnForm);
-      eqnForm.animateTo(1, 1.5, eqn.collection._equals);
+      eqnForm.animateTo(this.layout.equationScale, 1.5, eqn.collection._equals);
       if (form === 'a') {
         this._lines._angleA.pulseScaleNow(1, 1.5);
         this._lines._angleB.showForm('b');

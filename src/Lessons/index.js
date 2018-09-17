@@ -20,6 +20,7 @@ export default function getLessonIndex() {
     'adjacent_angles_new',
     [
       '1',
+      'summary',
     ],
     [
       'important_angles',
