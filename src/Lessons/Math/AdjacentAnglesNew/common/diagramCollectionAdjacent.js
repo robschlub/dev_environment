@@ -74,8 +74,8 @@ export default class AdjacentCollection extends CommonDiagramCollection {
       this.layout.colors.diagram.text.base,
     );
 
-    eqn.formAlignment.hAlign = vAlign;
-    eqn.formAlignment.vAlign = hAlign;
+    eqn.formAlignment.hAlign = hAlign;
+    eqn.formAlignment.vAlign = vAlign;
     eqn.formAlignment.scale = scale;
     if (fixTo instanceof Point) {
       eqn.formAlignment.fixTo = fixTo;
@@ -163,6 +163,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
         this._lines._angleA.showForm('a');
         this._lines._angleB.showForm(`${this.angleType.slice(0, 3)}_${form}`);
       }
+      this.updateAngles();
       this.diagram.animateNextFrame();
     };
 
