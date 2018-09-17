@@ -156,7 +156,7 @@ class Content extends LessonContent {
         </p>
       `),
       modifiers: {
-        adjacent_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+        adjacent_angles: click(qr._complementary.show, [qr._complementary], colors.line),
       },
       showOnly: [
         qr,

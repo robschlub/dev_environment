@@ -182,7 +182,9 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     const onclickEqn = (form: TypeEquationForm = 'add') => {
       const eqnForm = eqn.getForm(`${this.angleType.slice(0, 3)}_${form}`);
       eqn.setCurrentForm(eqnForm);
+
       eqnForm.animateTo(this.layout.equationScale, 1.5, eqn.collection._equals);
+      console.log(this.layout.equationScale)
       if (form === 'a') {
         this._lines._angleA.pulseScaleNow(1, 1.5);
         this._lines._angleB.showForm('b');
@@ -281,8 +283,10 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   goToRandomAngle(r3: number) {
+    // const r1 = rand(0, Math.PI * 2);
     const r2 = rand(Math.PI / 6, r3 * 0.7);
     this.futurePositions = [];
+    // this.addFuturePosition(this._lines, { rotation: r1 });
     this.addFuturePosition(this._lines._line2, { rotation: r2 });
     this.addFuturePosition(this._lines._line3, { rotation: r3 });
     this.moveToFuturePositions(1, null, 2);
