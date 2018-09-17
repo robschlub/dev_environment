@@ -37,6 +37,9 @@ export default function commonLessonLayout() {
     complementary: {
       rotation: 0,
     },
+    explemenetary: {
+      rotation: 0,
+    },
   };
   layout.line2 = {
     adjacent: {
@@ -48,6 +51,9 @@ export default function commonLessonLayout() {
     complementary: {
       rotation: 1,
     },
+    explemenetary: {
+      rotation: 2,
+    },
   };
   layout.line3 = {
     adjacent: {
@@ -57,7 +63,10 @@ export default function commonLessonLayout() {
       rotation: Math.PI,
     },
     complementary: {
-      rotation: Math.PI,
+      rotation: Math.PI / 2,
+    },
+    explemenetary: {
+      rotation: Math.PI * 2,
     },
   };
   return layout;

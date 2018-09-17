@@ -14,6 +14,7 @@ import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledAngle, TypeSupplementaryAngle } from './tools';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import { showAngles } from '../../../../LessonsCommon/tools/angle';
 
 export default class OppositeCollection extends CommonDiagramCollection {
   layout: Object;
@@ -259,25 +260,26 @@ export default class OppositeCollection extends CommonDiagramCollection {
     showOnly: boolean = true,
   ) {
     const allAngles = [this._angleA, this._angleB, this._angleC, this._angleD];
-    if (showOnly) {
-      const anglesToShow = angles.map(angle => angle[0]);
-      const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
-      anglesToHide.forEach((angle) => {
-        angle.hide();
-      });
-    }
-    angles.forEach((angle) => {
-      const [element, form] = angle;
-      if (element.label) {
-        element.label.eqn.showForm(form);
-      }
-      element.show();
-      element._arc.show();
-      if (angle.length === 3) {
-        // $FlowFixMe
-        element.setColor(angle[2]);
-      }
-    });
+    showAngles(allAngles, angles, showOnly);
+    // if (showOnly) {
+    //   const anglesToShow = angles.map(angle => angle[0]);
+    //   const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
+    //   anglesToHide.forEach((angle) => {
+    //     angle.hide();
+    //   });
+    // }
+    // angles.forEach((angle) => {
+    //   const [element, form] = angle;
+    //   if (element.label) {
+    //     element.label.eqn.showForm(form);
+    //   }
+    //   element.show();
+    //   element._arc.show();
+    //   if (angle.length === 3) {
+    //     // $FlowFixMe
+    //     element.setColor(angle[2]);
+    //   }
+    // });
     this.updateOppositeAngles();
     this.diagram.animateNextFrame();
   }

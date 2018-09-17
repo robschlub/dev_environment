@@ -17,6 +17,7 @@ import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import { showAngles } from '../../../../LessonsCommon/tools/angle';
 
 export default class ThreeLinesCollection extends CommonDiagramCollection {
   layout: Object;
@@ -262,30 +263,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       this._angleA1, this._angleB1, this._angleC1, this._angleD1,
       this._angleA2, this._angleB2, this._angleC2, this._angleD2,
     ];
-    if (showOnly) {
-      const anglesToShow = angles.map(angle => angle[0]);
-      const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
-      anglesToHide.forEach((angle) => {
-        angle.hide();
-      });
-    }
-
-    angles.forEach((angle) => {
-      const [element, form, color] = angle;
-      if (element.label) {
-        element.label.eqn.showForm(form);
-      }
-      element.show();
-      element._arc.show();
-      element.setColor(color);
-
-      if (angle.length === 4) {
-        // $FlowFixMe
-        if (angle[3]) {
-          element.pulseScaleNow(1, 1.2);
-        }
-      }
-    });
+    showAngles(allAngles, angles, showOnly);
     this.updateIntersectingLineAngle();
     this.diagram.animateNextFrame();
   }

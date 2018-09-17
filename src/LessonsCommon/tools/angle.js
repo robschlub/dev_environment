@@ -33,7 +33,7 @@ export type TypeAngle = {
   radius: number;
 } & DiagramElementCollection;
 
-export default function makeAngle(
+export function makeAngle(
   diagram: Diagram,
   radius: number,
   lineWidth: number,
@@ -146,4 +146,36 @@ export default function makeAngle(
     angle.updateAngle(angleQP, delta);
   };
   return angle;
+}
+
+export function showAngles(
+  allAngles: Array<DiagramElementCollection | DiagramElementPrimative>,
+  angles: Array<[TypeAngle, string, Array<number>]
+          | [TypeAngle, string, Array<number>, boolean]>,
+  showOnly: boolean = true,
+) {
+  if (showOnly) {
+    const anglesToShow = angles.map(angle => angle[0]);
+    const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
+    anglesToHide.forEach((angle) => {
+      angle.hide();
+    });
+  }
+
+  angles.forEach((angle) => {
+    const [element, form, color] = angle;
+    if (element.label) {
+      element.label.eqn.showForm(form);
+    }
+    element.show();
+    element._arc.show();
+    element.setColor(color);
+
+    if (angle.length === 4) {
+      // $FlowFixMe
+      if (angle[3]) {
+        element.pulseScaleNow(1, 1.2);
+      }
+    }
+  });
 }

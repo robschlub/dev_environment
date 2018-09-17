@@ -12,7 +12,7 @@ import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
-import makeAngle from '../../../../LessonsCommon/tools/angle';
+import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
 // type TypeAdjacentAngle = 'adjacent' | 'supplementary' | 'complementary' | 'reflex' | 'right' | 'full';
@@ -43,13 +43,40 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   makeAdjacentAngle(color: Array<number>) {
-    return makeAngle(
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements(
+      {
+        a: 'a',
+        b: 'b',
+        equals: ' = ',
+        minus: ' \u2212 ',
+        plus: ' + ',
+        _180: '180º',
+        _90: '90º',
+        _360: '360º',
+        pi: 'π',
+        _2: '2',
+        v: this.diagram.equation.vinculum(color),
+      },
+      color,
+    );
+
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+
+    eqn.addForm('a', ['a']);
+    eqn.addForm('b', ['b']);
+
+    const angle = makeAngle(
       this.diagram,
       this.layout.angle.radius,
       this.layout.angle.width,
       this.layout.angle.sides,
       color,
     );
+    angle.addLabel(eqn, this.layout.angle.labelRadius);
+    return angle;
   }
 
   constructor(
