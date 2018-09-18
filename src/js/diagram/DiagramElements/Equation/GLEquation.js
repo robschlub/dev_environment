@@ -1049,6 +1049,7 @@ export class EquationForm extends Elements {
 
     const currentTransforms = this.collection.getElementTransforms();
     this.arrange(scale, xAlign, yAlign, fixElement);
+    console.log(this, this.collection.getElementTransforms())
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
     this.dissolveElements(elementsToHide, false, 0.001, 0.01, null);
