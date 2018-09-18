@@ -20,9 +20,9 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const eqn = this.diagram.equation.makeEqn();
     eqn.createElements(
       {
-        a: 'a',
+        a: 'g',
         b: 'b',
-        c: 'c',
+        c: 'AbDp',
         equals: ' = ',
         v: this.diagram.equation.vinculum(),
       },
@@ -38,8 +38,10 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
       eqn.formAlignment.fixTo = eqn.collection[`_${fixTo}`];
     }
     // eqn.formAlignment.fixTo = new Point(0, 0);
-    eqn.addForm('a', [eqn.frac('a', 'b', 'v'), 'equals', 'c']);
-    eqn.addForm('b', [eqn.frac('b', 'c', 'v'), 'equals', 'a']);
+    eqn.addForm('a', [eqn.sfrac('a', 'b', 'v', 0.5), 'equals', 'c']);
+    // eqn.addForm('a', ['a', 'equals', 'c']);
+    eqn.addForm('b', [eqn.sfrac('b', 'c', 'v', 1.2), 'equals', 'a']);
+    eqn.addForm('c', [eqn.sfrac('c', 'a', 'v', 1), 'equals', 'b']);
     return eqn;
   }
 
@@ -47,6 +49,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const eqn = this.makeEqn('baseline', 'left', 'equals', 2);
     eqn.setElem('a', this.colors.angleA, true, 'up', 0.85);
     eqn.setElem('b', this.colors.angleB, true, 'up', 1.05);
+    eqn.setElem('c', this.colors.angleB, true, 'down', 1.05);
     eqn.showEqn = (angleType: TypeAdjacentAngle, eqnForm: TypeEquationForm) => {
       eqn.showForm(`${eqnForm}`);
     };
@@ -54,12 +57,13 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const onclickEqn = (form: TypeEquationForm = 'add') => {
       const eqnForm = eqn.getForm(`${form}`);
       eqn.setCurrentForm(eqnForm);
-      eqnForm.animateTo(0.5, 1.5, eqn.collection._equals);
+      eqnForm.animateTo(2, 1.5, eqn.collection._equals);
       this.diagram.animateNextFrame();
     };
 
     eqn.collection._a.onClick = onclickEqn.bind(this, 'a');
     eqn.collection._b.onClick = onclickEqn.bind(this, 'b');
+    eqn.collection._c.onClick = onclickEqn.bind(this, 'c');
     return eqn;
   }
 
@@ -73,6 +77,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.eqn = this.makeMainEqn();
     this.add('eqn', this.eqn.collection);
     this.transform.updateScale(2, 2)
+    // this.transform.updateRotation(Math.PI / 2)
     // this.transform.updateTranslation(-1, -1);
     // this.transform.updateRotation(Math.PI / 2)
     // this._eqn.setPosition(0, 0);

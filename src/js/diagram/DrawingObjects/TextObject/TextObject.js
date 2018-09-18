@@ -294,29 +294,29 @@ class TextObject extends DrawingObject {
     const aWidth = ctx.measureText('a').width;
 
     // Estimations of FONT ascent and descent for a baseline of "alphabetic"
-    const ascent = aWidth * 1.9;
-    const descent = aWidth * 0.5;
+    let ascent = aWidth * 1.8;
+    let descent = aWidth * 0;
 
     // Uncomment below and change above consts to lets if more resolution on
     // actual text boundaries is needed
 
     // const maxAscentRe =
     //   /[ABCDEFGHIJKLMNOPRSTUVWXYZ1234567890!#%^&()@$Qbdtfhiklj]/g;
-    // const midAscentRe = /[acemnorsuvwxz*gyqp]/g;
-    // const maxDescentRe = /[gjyqp@$Q]/g;
+    const midAscentRe = /[acemnorsuvwxz*gyqp]/g;
+    const maxDescentRe = /[gjyqp@$Q]/g;
 
-    // const midAscentMatches = text.text.match(midAscentRe);
-    // if (Array.isArray(midAscentMatches)) {
-    //   if (midAscentMatches.length === text.text.length) {
-    //     ascent = aWidth * 1.2;
-    //   }
-    // }
-    // const maxDescentMatches = text.text.match(maxDescentRe);
-    // if (Array.isArray(maxDescentMatches)) {
-    //   if (maxDescentMatches.length > 0) {
-    //     descent = aWidth * 0.8;
-    //   }
-    // }
+    const midAscentMatches = text.text.match(midAscentRe);
+    if (Array.isArray(midAscentMatches)) {
+      if (midAscentMatches.length === text.text.length) {
+        ascent = aWidth * 1.2;
+      }
+    }
+    const maxDescentMatches = text.text.match(maxDescentRe);
+    if (Array.isArray(maxDescentMatches)) {
+      if (maxDescentMatches.length > 0) {
+        descent = aWidth * 0.5;
+      }
+    }
 
     const height = ascent + descent;
 
