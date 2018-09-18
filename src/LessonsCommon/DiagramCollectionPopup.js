@@ -15,6 +15,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
   container: HTMLElement;
   _box: DiagramElementPrimative;
   linkElement: HTMLElement;
+  interactiveButtonMethod: Function | null;
 
   setTitle(title: string, modifiers: Object = {}) {
     const modifiedText = html.applyModifiers(title, modifiers);
@@ -113,6 +114,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
       this.diagram.shapes = this.diagram.shapesLow;
       this.diagram.equation = this.diagram.equationLow;
     }
+    this.interactiveButtonMethod = null;
   }
 
   setLink(link: string) {
@@ -185,12 +187,20 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     //     console.log(element.name)
     //   }
     // })
-    console.log(this.diagram.htmlCanvas.children)
+    const interactiveButton = document.getElementById('id_lesson__interactive_element_button__container');
+    if (interactiveButton instanceof HTMLElement) {
+      interactiveButton.classList.add('lesson__interactive_element_button__disable');
+    }
+
     this._box.show();
   }
 
   hideAll() {
     super.hideAll();
+    const interactiveButton = document.getElementById('id_lesson__interactive_element_button__container');
+    if (interactiveButton instanceof HTMLElement) {
+      interactiveButton.classList.remove('lesson__interactive_element_button__disable');
+    }
     this.diagram.animateNextFrame();
   }
 }
