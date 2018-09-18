@@ -37,12 +37,12 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     }
     eqn.formAlignment.fixTo = new Point(0, 0);
     eqn.addForm('a', ['a', 'equals', 'b']);
-    eqn.addForm('b', ['b', 'equals', 'a']);
+    // eqn.addForm('b', ['b', 'equals', 'a']);
     return eqn;
   }
 
   makeMainEqn() {
-    const eqn = this.makeEqn('baseline', 'left', 'equals', this.layout.equationScale);
+    const eqn = this.makeEqn('baseline', 'left', 'equals', 1);
     eqn.setElem('a', this.colors.angleA, true, 'up', 0.85);
     eqn.setElem('b', this.colors.angleB, true, 'up', 1.05);
     eqn.showEqn = (angleType: TypeAdjacentAngle, eqnForm: TypeEquationForm) => {
@@ -52,12 +52,12 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const onclickEqn = (form: TypeEquationForm = 'add') => {
       const eqnForm = eqn.getForm(`${form}`);
       eqn.setCurrentForm(eqnForm);
-      eqnForm.animateTo(this.layout.equationScale, 1.5, eqn.collection._equals);
+      eqnForm.animateTo(1, 1.5, eqn.collection._equals);
       this.diagram.animateNextFrame();
     };
 
     eqn.collection._a.onClick = onclickEqn.bind(this, 'a');
-    eqn.collection._b.onClick = onclickEqn.bind(this, 'b');
+    // eqn.collection._b.onClick = onclickEqn.bind(this, 'b');
     return eqn;
   }
 
@@ -70,7 +70,9 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.angleType = 'complementary'
     this.eqn = this.makeMainEqn();
     this.add('eqn', this.eqn.collection);
-    this.transform.updateScale(1.7, 1.7)
+    this.transform.updateScale(2, 2)
+    // this.transform.updateTranslation(-1, -1);
+    // this.transform.updateRotation(Math.PI / 2)
     // this._eqn.setPosition(0, 0);
     // this.add('triangle', new TriangleCollection(diagram, this.layout));
   }

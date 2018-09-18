@@ -2075,12 +2075,24 @@ class DiagramElementPrimative extends DiagramElement {
     return this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
   }
 
+  getVertexSpaceBoundaries() {
+    return this.vertices.border;
+  }
+
   getGLBoundingRect() {
     return this.vertices.getGLBoundingRect(this.lastDrawTransform.matrix());
   }
 
+  getVertexSpaceBoundingRect() {
+    return this.vertices.getVertexSpaceBoundingRect();
+  }
+
   getRelativeGLBoundingRect(): Rect {
     return this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+  }
+
+  getRelativeVertexSpaceBoundingRect(): Rect {
+    return this.vertices.getRelativeVertexSpaceBoundingRect();
   }
 }
 

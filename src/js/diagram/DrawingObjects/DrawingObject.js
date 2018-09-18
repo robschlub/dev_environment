@@ -41,8 +41,6 @@ class DrawingObject {
   setText(text: string) {
   }
 
-  /* eslint-disable class-methods-use-this, no-unused-vars */
-  // glToDiagramTransformMatrix: Array<number>,
   getGLBoundaries(lastDrawTransformMatrix: Array<number>): Array<Array<Point>> {
     const glBoundaries = [];
     this.border.forEach((boundary) => {
@@ -103,6 +101,10 @@ class DrawingObject {
     return getBoundingRect(boundaries);
   }
 
+  getVertexSpaceBoundingRect() {
+    return getBoundingRect(this.border);
+  }
+
   getLocation(): Point {
     return this.location;
   }
@@ -123,6 +125,18 @@ class DrawingObject {
       glAbsoluteBoundaries.height,
     );
     return glRelativeBoundaries;
+  }
+
+  getRelativeVertexSpaceBoundingRect() {
+    const absoluteBoundaries =
+      this.getVertexSpaceBoundingRect();
+    const relativeBoundaries = new Rect(
+      absoluteBoundaries.left - this.location.x,
+      absoluteBoundaries.bottom - this.location.y,
+      absoluteBoundaries.width,
+      absoluteBoundaries.height,
+    );
+    return relativeBoundaries;
   }
 }
 

@@ -10,7 +10,7 @@ class LessonDiagram extends CommonLessonDiagram {
 
   createDiagramElements() {
     super.createDiagramElements();
-    this.elements = new DiagramCollection(this, new Transform().scale(1, 1).translate(0, 0));
+    this.elements = new DiagramCollection(this, new Transform('Summary').scale(1, 1).rotate(0).translate(0, 0));
 
     this.elements.hasTouchableElements = true;
   }

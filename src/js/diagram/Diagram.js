@@ -119,7 +119,7 @@ function equation(diagram: Diagram, high: boolean = false) {
     return new Equation(
       draw2D,
       diagram.limits,
-      diagram.diagramToGLSpaceTransform,
+      // diagram.diagramToGLSpaceTransform,
     );
   }
 

@@ -231,7 +231,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
 
     this.add('eqn', this.eqn.collection);
     this.hasTouchableElements = true;
-    console.log('add', this._eqn.lastDrawTransform._dup());
+    // console.log('add', this._eqn.lastDrawTransform._dup());
   }
 
   updateAngles() {

@@ -29,6 +29,7 @@ class Content extends LessonContent {
         diag.show();
         diag._eqn.showAll();
         diag.eqn.showForm('a');
+        console.log(diag._eqn._a)
       },
     });
   }

@@ -47,16 +47,19 @@ class Element {
       content.updateLastDrawTransform();
 
       // Get the boundaries of element
+      // const t = content.lastDrawTransform._dup();
+      // content.lastDrawTransform = content.transform._dup();
       const r = content.getRelativeDiagramBoundingRect();
+      // content.lastDrawTransform = t;
       this.location = location._dup();
       this.scale = scale;
       this.ascent = r.top;
       this.descent = -r.bottom;
       this.height = r.height;
       this.width = r.width;
-      if (this.content.name === '_90') {
-        console.log(this.width, this.content.name, content.transform.m(), content.lastDrawTransform._dup())
-      }
+      // if (this.content.name === 'a') {
+        console.log(this.content.name, this.width, this.height, content.transform.m(), content.lastDrawTransform._dup())
+      // }
     }
   }
 

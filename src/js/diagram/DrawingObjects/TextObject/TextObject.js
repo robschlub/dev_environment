@@ -126,6 +126,7 @@ class TextObject extends DrawingObject {
         this.scalingFactor = 10 ** power;
       }
     }
+    this.setBorder();
   }
 
   setText(text: string, index: number = 0) {
@@ -277,6 +278,14 @@ class TextObject extends DrawingObject {
     return glBoundaries;
   }
 
+  setBorder() {
+    this.border = [];
+    this.text.forEach((t) => {
+      this.border.push(this.getBoundaryOfText(t));
+    });
+    // return glBoundaries;
+  }
+
   // This method is used instead of the actual ctx.measureText because
   // Firefox and Chrome don't yet support it's advanced features.
   // Estimates are made for height based on width.
@@ -351,11 +360,8 @@ class TextObject extends DrawingObject {
     };
   }
 
-  getGLBoundaryOfText(
-    text: DiagramText,
-    lastDrawTransformMatrix: Array<number>,
-  ): Array<Point> {
-    const glBoundary = [];
+  getBoundaryOfText(text: DiagramText): Array<Point> {
+    const boundary = [];
 
     const { scalingFactor } = this;
 
@@ -383,6 +389,45 @@ class TextObject extends DrawingObject {
         -textMetrics.fontBoundingBoxDescent / scalingFactor,
       ).add(location),
     ];
+    box.forEach((p) => {
+      boundary.push(p);
+    });
+    return boundary;
+  }
+
+  getGLBoundaryOfText(
+    text: DiagramText,
+    lastDrawTransformMatrix: Array<number>,
+  ): Array<Point> {
+    const glBoundary = [];
+
+    // const { scalingFactor } = this;
+
+    // // Measure the text
+    // text.font.set(this.drawContext2D.ctx, scalingFactor);
+    // // const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+    // const textMetrics = this.measureText(this.drawContext2D.ctx, text);
+    // // Create a box around the text
+    // const { location } = text;
+    // const box = [
+    //   new Point(
+    //     -textMetrics.actualBoundingBoxLeft / scalingFactor,
+    //     textMetrics.fontBoundingBoxAscent / scalingFactor,
+    //   ).add(location),
+    //   new Point(
+    //     textMetrics.actualBoundingBoxRight / scalingFactor,
+    //     textMetrics.fontBoundingBoxAscent / scalingFactor,
+    //   ).add(location),
+    //   new Point(
+    //     textMetrics.actualBoundingBoxRight / scalingFactor,
+    //     -textMetrics.fontBoundingBoxDescent / scalingFactor,
+    //   ).add(location),
+    //   new Point(
+    //     -textMetrics.actualBoundingBoxLeft / scalingFactor,
+    //     -textMetrics.fontBoundingBoxDescent / scalingFactor,
+    //   ).add(location),
+    // ];
+    const box = this.getBoundaryOfText(text);
     box.forEach((p) => {
       glBoundary.push(p.transformBy(lastDrawTransformMatrix));
     });
