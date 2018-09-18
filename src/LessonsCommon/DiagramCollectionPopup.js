@@ -14,6 +14,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
   spaceForDiagramElement: HTMLElement;
   container: HTMLElement;
   _box: DiagramElementPrimative;
+  linkElement: HTMLElement;
 
   setTitle(title: string, modifiers: Object = {}) {
     const modifiedText = html.applyModifiers(title, modifiers);
@@ -76,8 +77,13 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     descriptionElement.id = `id_lesson__popup_box__text__${id}`;
     this.descriptionElement = descriptionElement;
     this.setDescription(description);
-
     container.appendChild(descriptionElement);
+
+    const linkElement = document.createElement('div');
+    linkElement.classList.add('lesson__popup_box__link');
+    this.linkElement = linkElement;
+    container.appendChild(linkElement);
+
 
     const element = this.diagram.shapesHigh.htmlElement(
       container,
@@ -107,6 +113,10 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
       this.diagram.shapes = this.diagram.shapesLow;
       this.diagram.equation = this.diagram.equationLow;
     }
+  }
+
+  setLink(link: string) {
+    this.linkElement.innerHTML = `<a href=${link}>Go to lesson</a>`;
   }
 
   getDiagramSpacePosition(reference: 'topLeft' | 'center') {

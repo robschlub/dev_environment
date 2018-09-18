@@ -129,6 +129,7 @@ export class QRExplementaryAngles extends PopupBoxCollection {
 
     this.setTitle('Explementary Angles');
     this.setDescription('|Explementary_Angles| add up to 360º or 2&pi; radians.', modifiers);
+    this.setLink('/Lessons/Math/AdjacentAngles/1');
   }
 
   show() {

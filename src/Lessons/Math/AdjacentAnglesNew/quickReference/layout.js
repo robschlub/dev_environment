@@ -18,7 +18,7 @@ export default function lessonLayout() {
   };
   layout.explementary = {
     linesPosition: new Point(0, -0.2),
-    equationPosition: new Point(0, 1.15),
+    equationPosition: new Point(-0.3, 1.15),
   };
   return layout;
 }
