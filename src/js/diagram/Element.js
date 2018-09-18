@@ -2333,15 +2333,45 @@ class DiagramElementCollection extends DiagramElement {
     return boundaries;
   }
 
+  getVertexSpaceBoundaries() {
+    let boundaries = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element.isShown) {
+        const elementBoundaries = element.getVertexSpaceBoundaries();
+        boundaries = boundaries.concat(elementBoundaries);
+      }
+    }
+    return boundaries;
+  }
+
   getGLBoundingRect() {
     const glAbsoluteBoundaries = this.getGLBoundaries();
     return getBoundingRect(glAbsoluteBoundaries);
+  }
+
+  getVertexSpaceBoundingRect() {
+    const boundaries = this.getVertexSpaceBoundaries();
+    return getBoundingRect(boundaries);
   }
 
   getRelativeGLBoundingRect() {
     const boundingRect = this.getGLBoundingRect();
 
     const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
+
+    return new Rect(
+      boundingRect.left - location.x,
+      boundingRect.bottom - location.y,
+      boundingRect.width,
+      boundingRect.height,
+    );
+  }
+
+  getRelativeVertexSpaceBoundingRect(): Rect {
+    const boundingRect = this.getVertexSpaceBoundingRect();
+
+    const location = new Point(0, 0);
 
     return new Rect(
       boundingRect.left - location.x,

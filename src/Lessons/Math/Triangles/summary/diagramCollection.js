@@ -22,7 +22,9 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
       {
         a: 'a',
         b: 'b',
+        c: 'c',
         equals: ' = ',
+        v: this.diagram.equation.vinculum(),
       },
       this.layout.colors.diagram.text.base,
     );
@@ -35,14 +37,14 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     } else {
       eqn.formAlignment.fixTo = eqn.collection[`_${fixTo}`];
     }
-    eqn.formAlignment.fixTo = new Point(0, 0);
-    eqn.addForm('a', ['a', 'equals', 'b']);
-    // eqn.addForm('b', ['b', 'equals', 'a']);
+    // eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.addForm('a', [eqn.frac('a', 'b', 'v'), 'equals', 'c']);
+    eqn.addForm('b', [eqn.frac('b', 'c', 'v'), 'equals', 'a']);
     return eqn;
   }
 
   makeMainEqn() {
-    const eqn = this.makeEqn('baseline', 'left', 'equals', 1);
+    const eqn = this.makeEqn('baseline', 'left', 'equals', 2);
     eqn.setElem('a', this.colors.angleA, true, 'up', 0.85);
     eqn.setElem('b', this.colors.angleB, true, 'up', 1.05);
     eqn.showEqn = (angleType: TypeAdjacentAngle, eqnForm: TypeEquationForm) => {
@@ -52,12 +54,12 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const onclickEqn = (form: TypeEquationForm = 'add') => {
       const eqnForm = eqn.getForm(`${form}`);
       eqn.setCurrentForm(eqnForm);
-      eqnForm.animateTo(1, 1.5, eqn.collection._equals);
+      eqnForm.animateTo(0.5, 1.5, eqn.collection._equals);
       this.diagram.animateNextFrame();
     };
 
     eqn.collection._a.onClick = onclickEqn.bind(this, 'a');
-    // eqn.collection._b.onClick = onclickEqn.bind(this, 'b');
+    eqn.collection._b.onClick = onclickEqn.bind(this, 'b');
     return eqn;
   }
 

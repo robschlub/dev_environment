@@ -49,16 +49,16 @@ class Element {
       // Get the boundaries of element
       // const t = content.lastDrawTransform._dup();
       // content.lastDrawTransform = content.transform._dup();
-      const r = content.getRelativeDiagramBoundingRect();
+      const r = content.getRelativeVertexSpaceBoundingRect();
       // content.lastDrawTransform = t;
       this.location = location._dup();
       this.scale = scale;
-      this.ascent = r.top;
-      this.descent = -r.bottom;
-      this.height = r.height;
-      this.width = r.width;
+      this.ascent = r.top * scale;
+      this.descent = -r.bottom * scale;
+      this.height = r.height * scale;
+      this.width = r.width * scale;
       // if (this.content.name === 'a') {
-        console.log(this.content.name, this.width, this.height, content.transform.m(), content.lastDrawTransform._dup())
+        console.log(this.content.name, this.width, this.height, content.transform)
       // }
     }
   }
@@ -237,7 +237,7 @@ class Fraction extends Elements {
     this.vSpaceNum = scale * 0.05;
     this.vSpaceDenom = scale * 0.02;
     this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
-    this.lineWidth = scale * 0.02;
+    this.lineWidth = scale * 0.01;
 
     const yNumerator = this.numerator.descent
                         + this.vSpaceNum + this.lineVAboveBaseline;
@@ -600,7 +600,8 @@ class Integral extends Elements {
       this.glyphLocation = integralSymbolLocation;
       this.glyphScale = height;
       const bounds = integralGlyph.vertices
-        .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
+        .getRelativeVertexSpaceBoundingRect();
+        // .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
       integralGlyphBounds.width = bounds.width;
       integralGlyphBounds.height = -bounds.bottom + bounds.top;
       integralGlyphBounds.ascent = bounds.top;
