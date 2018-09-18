@@ -28,7 +28,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag.show();
         diag._eqn.showAll();
-        diag.eqn.showForm('com_add');
+        diag.eqn.showForm('a');
       },
     });
   }
