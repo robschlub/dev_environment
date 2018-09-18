@@ -61,9 +61,6 @@ class Content extends LessonContent {
         <p>
           Another way to make a triangle is to draw lines between any |three_points|.
         </p>
-        <p>
-          Another way to make a triangle is to draw lines between any |three_points|.
-        </p>
       `,
       modifiers: {
         three_points: click(custom.newTriangle, [custom], colors.pointText),

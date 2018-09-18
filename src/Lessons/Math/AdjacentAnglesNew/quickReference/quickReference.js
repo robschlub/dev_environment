@@ -27,7 +27,15 @@ function showAdjacent(
     [adjacent._lines._angleB, 'b', colorB],
   ]);
   // eslint-disable-next-line no-param-reassign
+  adjacent._lines._line3.isTouchable = false;
+  // eslint-disable-next-line no-param-reassign
+  adjacent._lines._line3.hasTouchableElements = false;
+  // eslint-disable-next-line no-param-reassign
   adjacent._lines._line3.isMovable = false;
+  // eslint-disable-next-line no-param-reassign
+  adjacent._lines._line1.isTouchable = false;
+  // eslint-disable-next-line no-param-reassign
+  adjacent._lines._line1.hasTouchableElements = false;
   // eslint-disable-next-line no-param-reassign
   adjacent._lines._line1.isMovable = false;
   adjacent._lines.setPosition(position);

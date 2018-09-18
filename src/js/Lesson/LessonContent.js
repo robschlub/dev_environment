@@ -34,6 +34,11 @@ type TypeInteractiveElements = Array<{
     location: TypeInteractiveElementLocation,
   }>;
 
+type TypeInteractiveItem = {
+  element: TypeInteractiveElement;
+  location: TypeInteractiveElementLocation;
+};
+
 function interactiveItem(
   element: TypeInteractiveElement,
   location: TypeInteractiveElementLocation = '',
@@ -183,12 +188,49 @@ class Section {
       .getElementById('id_lesson__interactive_element_button');
     // const infoBox = document.getElementById('id_lesson__info_box__text');
     if (button instanceof HTMLElement) {
-      if (this.interactiveElementList.length > 0) {
+      if (this.interactiveElementList.length > 0 && this.getNextInteractiveItem()) {
+        this.currentInteractiveItem = -1;
         button.classList.remove('lesson__interactive_element_button__hide');
       } else {
         button.classList.add('lesson__interactive_element_button__hide');
       }
     }
+  }
+
+  getNextInteractiveItem(): null | TypeInteractiveItem {
+    if (this.interactiveElementList.length > 0) {
+      let index = this.currentInteractiveItem + 1;
+      let counter = 0;
+      while (counter < this.interactiveElementList.length) {
+        if (index > this.interactiveElementList.length - 1) {
+          index = 0;
+        }
+        const { element } = this.interactiveElementList[index];
+        let elementIsVisible = false;
+        if (element instanceof HTMLElement) {
+          const rect = element.getBoundingClientRect();
+          if (rect.left > 0 && rect.width > 0) {
+            elementIsVisible = true;
+          }
+        } else if (element.isShown) {
+          if (element.isMovable || element.isTouchable) {
+            elementIsVisible = true;
+          }
+        }
+        if (elementIsVisible) {
+          // this.content.highlightInteractiveElement(element, location);
+          this.currentInteractiveItem = index;
+          // break;
+          return this.interactiveElementList[index];
+        }
+        index += 1;
+        if (index > this.interactiveElementList.length - 1) {
+          index = 0;
+        }
+        counter += 1;
+      }
+    }
+    return null;
   }
 
   getContent(): string {

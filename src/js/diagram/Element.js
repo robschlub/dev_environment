@@ -2514,19 +2514,22 @@ class DiagramElementCollection extends DiagramElement {
     return elements;
   }
 
+  // Get all ineractive elemnts, but only go as deep as a
+  // DiagramElementColleciton if it is touchable or movable
   getAllCurrentlyInteractiveElements() {
     let elements = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      if (element.isShown) {
-        if (element instanceof DiagramElementCollection
-          && (element.isTouchable || element.hasTouchableElements)) {
+      // if (element.isShown) {
+      if (element instanceof DiagramElementCollection) {
+        if (!element.isTouchable && !element.isMovable && element.hasTouchableElements) {
           elements = [...elements, ...element.getAllCurrentlyInteractiveElements()];
         }
-        if (element.isTouchable && element.isMovable) {
-          elements.push(element);
-        }
       }
+      if (element.isTouchable || element.isMovable) {
+        elements.push(element);
+      }
+      // }
     }
     return elements;
   }

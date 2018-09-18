@@ -50,7 +50,7 @@ export function makeMoveableLine(
     .rotate(0)
     .translate(0, 0));
   line.hasTouchableElements = true;
-  line.isTouchable = true;
+  // line.isTouchable = true;
   const bounds = layout.boundary;
 
   line.updateTransform = (t: Transform) => {

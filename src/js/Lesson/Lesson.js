@@ -296,14 +296,10 @@ class Lesson {
 
   highlightNextInteractiveItem() {
     const section = this.content.sections[this.currentSectionIndex];
-    if (section.interactiveElementList.length > 0) {
-      let index = section.currentInteractiveItem + 1;
-      if (index > section.interactiveElementList.length - 1) {
-        index = 0;
-      }
-      const { element, location } = section.interactiveElementList[index];
+    const interactiveItem = section.getNextInteractiveItem();
+    if (interactiveItem) {
+      const { element, location } = interactiveItem;
       this.content.highlightInteractiveElement(element, location);
-      section.currentInteractiveItem = index;
     }
   }
 

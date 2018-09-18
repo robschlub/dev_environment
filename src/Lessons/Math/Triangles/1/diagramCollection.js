@@ -29,5 +29,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.add('custom', new CustomTriangleCollection(diagram, this.layout));
     this.add('properties', new TrianglePropertiesCollection(diagram, this.layout));
     this.add('qr', new QuickReferenceCollection(diagram, this.layout));
+    this._qr.hideAll();
   }
 }
