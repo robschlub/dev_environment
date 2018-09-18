@@ -17,8 +17,8 @@ export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
   // layout.position = new Point(0, -0.6);
-  layout.equationPosition = new Point(-0.5, 1.45);
-  layout.equationScale = 1.2;
+  layout.equationPosition = new Point(-0.2, 0.85);
+  layout.equationScale = 1.4;
   layout.units = {
     position: new Point(2, -1.6),
   };
@@ -32,7 +32,7 @@ export default function commonLessonLayout() {
   };
   layout.angle = {
     radius: 0.3,
-    labelRadiusOffset: 0.05,
+    labelRadiusOffset: 0.07,
     width: 0.03,
     sides: 300,
   };

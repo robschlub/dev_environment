@@ -103,29 +103,29 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     eqn.addForm('a', ['a']);
     eqn.addForm('b', ['b']);
     eqn.addForm('c', ['c']);
-    eqn.addForm('adj_add', ['c', 'equals', 'a', 'plus', 'b']);
+    eqn.addForm('adj_add', ['a', 'plus', 'b', 'equals', 'c']);
     eqn.addForm('adj_a', ['a', 'equals', 'c', 'minus', 'b']);
     eqn.addForm('adj_b', ['b', 'equals', 'c', 'minus', 'a']);
     eqn.addForm('sup_a', ['a', 'equals', '_180', 'minus', 'b'], 'deg');
     eqn.addForm('sup_a', ['a', 'equals', 'pi', 'minus', 'b'], 'rad');
     eqn.addForm('sup_b', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
     eqn.addForm('sup_b', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
-    eqn.addForm('sup_add', ['_180', 'equals', 'a', 'plus', 'b'], 'deg');
-    eqn.addForm('sup_add', ['pi', 'equals', 'a', 'plus', 'b'], 'rad');
+    eqn.addForm('sup_add', ['a', 'plus', 'b', 'equals', '_180'], 'deg');
+    eqn.addForm('sup_add', ['a', 'plus', 'b', 'equals', 'pi'], 'rad');
 
     eqn.addForm('com_a', ['a', 'equals', '_90', 'minus', 'b'], 'deg');
     eqn.addForm('com_a', ['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b'], 'rad');
     eqn.addForm('com_b', ['b', 'equals', '_90', 'minus', 'a'], 'deg');
     eqn.addForm('com_b', ['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a'], 'rad');
-    eqn.addForm('com_add', ['_90', 'equals', 'a', 'plus', 'b'], 'deg');
-    eqn.addForm('com_add', [eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b'], 'rad');
+    eqn.addForm('com_add', ['a', 'plus', 'b', 'equals', '_90'], 'deg');
+    eqn.addForm('com_add', ['a', 'plus', 'b', 'equals', eqn.frac('pi', '_2', 'v')], 'rad');
 
     eqn.addForm('exp_a', ['a', 'equals', '_360', 'minus', 'b'], 'deg');
     eqn.addForm('exp_a', ['a', 'equals', '2', 'pi', 'minus', 'b'], 'rad');
     eqn.addForm('exp_b', ['b', 'equals', '_360', 'minus', 'a'], 'deg');
     eqn.addForm('exp_b', ['b', 'equals', '2', 'pi', 'minus', 'a'], 'rad');
-    eqn.addForm('exp_add', ['_360', 'equals', 'a', 'plus', 'b'], 'deg');
-    eqn.addForm('exp_add', ['2', 'pi', 'equals', 'a', 'plus', 'b'], 'rad');
+    eqn.addForm('exp_add', ['a', 'plus', 'b', 'equals', '_360'], 'deg');
+    eqn.addForm('exp_add', ['a', 'plus', 'b', 'equals', '2', 'pi'], 'rad');
     return eqn;
   }
 
@@ -197,7 +197,6 @@ export default class AdjacentCollection extends CommonDiagramCollection {
         this._lines._angleB.showForm(`${this.angleType.slice(0, 3)}_${form}`);
       }
       if (form === 'add') {
-        console.log('add', this._eqn.lastDrawTransform._dup());
         this._lines._angleC.pulseScaleNow(1, 1.3);
         this._lines._angleA.showForm('a');
         this._lines._angleB.showForm('b');
