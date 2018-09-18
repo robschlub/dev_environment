@@ -687,5 +687,5 @@ class LessonContent {
 
 export {
   Section, LessonContent, diagramCanvas, initializeItemSelector,
-  applyModifiers, setOnClicks, interactiveItem,
+  applyModifiers, interactiveItem,
 };

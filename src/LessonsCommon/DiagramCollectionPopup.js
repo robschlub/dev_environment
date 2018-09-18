@@ -20,14 +20,14 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
   setTitle(title: string, modifiers: Object = {}) {
     const modifiedText = html.applyModifiers(title, modifiers);
     this.titleElement.innerHTML = modifiedText;
-    html.setOnClicks(modifiers);
+    html.setOnClicks(modifiers, 'lesson__popup_box__action_word');
     this.modifiers = modifiers;
   }
 
   setDescription(description: string, modifiers: Object = {}) {
     const modifiedText = html.applyModifiers(description, modifiers);
     this.descriptionElement.innerHTML = modifiedText;
-    html.setOnClicks(modifiers);
+    html.setOnClicks(modifiers, 'lesson__popup_box__action_word');
     this.modifiers = modifiers;
   }
 
@@ -191,6 +191,15 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     if (interactiveButton instanceof HTMLElement) {
       interactiveButton.classList.add('lesson__interactive_element_button__disable');
     }
+    const actionElements = document.getElementsByClassName('action_word_enabled');
+    if (actionElements) {
+      for (let i = 0; i < actionElements.length; i += 1) {
+        const element = actionElements[i];
+        if (!element.classList.contains('lesson__popup_box__action_word')) {
+          element.classList.add('lesson__action_word_disabled_by_popup');
+        }
+      }
+    }
 
     this._box.show();
   }
@@ -200,6 +209,15 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     const interactiveButton = document.getElementById('id_lesson__interactive_element_button__container');
     if (interactiveButton instanceof HTMLElement) {
       interactiveButton.classList.remove('lesson__interactive_element_button__disable');
+    }
+    const actionElements = document.getElementsByClassName('action_word_enabled');
+    if (actionElements) {
+      for (let i = 0; i < actionElements.length; i += 1) {
+        const element = actionElements[i];
+        if (!element.classList.contains('lesson__popup_box__action_word')) {
+          element.classList.remove('lesson__action_word_disabled_by_popup');
+        }
+      }
     }
     this.diagram.animateNextFrame();
   }

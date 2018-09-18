@@ -313,6 +313,11 @@ $diagram_ratio: 1.5;
   font-weight: bold;
 }
 
+.lesson__action_word_disabled_by_popup {
+  pointer-events: none;
+  cursor: auto;
+}
+
 .action_word_enabled {
   // text-decoration: underline;
   cursor: pointer;

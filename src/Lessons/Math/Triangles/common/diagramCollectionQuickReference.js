@@ -5,12 +5,13 @@ import {
 } from '../../../../js/diagram/tools/g2';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 // import AlternateAnglesQR from '../../RelatedAngles/quickReference/alternateAngles';
-// import { QROppositeAngles } from '../../RelatedAngles/quickReference/quickReference';
-import { QRExplementaryAngles } from '../../AdjacentAnglesNew/quickReference/quickReference';
+import { QRAlternateAngles } from '../../RelatedAngles/quickReference/quickReference';
+import { QRSupplementaryAngles } from '../../AdjacentAnglesNew/quickReference/quickReference';
 
 export default class QuickReferenceCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _complementary: QRExplementaryAngles;
+  _supplementary: QRSupplementaryAngles;
+  _alternateAngles: QRAlternateAngles;
 
   constructor(
     diagram: LessonDiagram,
@@ -18,8 +19,10 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
     transform: Transform = new Transform('QR Collection').scale(1, 1).translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.add('complementary', new QRExplementaryAngles(this.diagram));
-    this._complementary.setPosition(0, 0);
+    this.add('supplementary', new QRSupplementaryAngles(this.diagram));
+    this.add('alternateAngles', new QRAlternateAngles(this.diagram));
+    this._supplementary.setPosition(0, 0);
+    this._alternateAngles.setPosition(0, 0);
     this.hasTouchableElements = true;
   }
 }

@@ -149,11 +149,12 @@ class Content extends LessonContent {
       title: 'asdf',
       setContent: centerV(`
         <p>
-          To find this relationship, we need to have knowledge of |supplementary angles| and |adjacent_angles|.
+          To find this relationship, we need to have knowledge of |supplementary_angles| and |alternate_angles|.
         </p>
       `),
       modifiers: {
-        adjacent_angles: click(qr._complementary.show, [qr._complementary], colors.line),
+        alternate_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+        supplementary_angles: click(qr._supplementary.show, [qr._supplementary], colors.line),
       },
       showOnly: [
         qr,

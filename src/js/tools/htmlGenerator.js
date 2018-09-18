@@ -203,10 +203,16 @@ function onClickId(
   id: string,
   actionMethod: Function,
   bind: Array<mixed>,
+  additionalClassesToAdd: string = '',
 ) {
   const element = document.getElementById(id);
   if (element) {
     element.classList.add('action_word_enabled');
+    additionalClassesToAdd.split(' ').forEach((classString) => {
+      if (classString) {
+        element.classList.add(classString);
+      }
+    });
     if (bind.length === 1) {
       element.onclick = actionMethod.bind(bind[0]);
     }
@@ -244,11 +250,11 @@ function applyModifiers(text: string, modifiers: Object) {
   return outText.replace(r, '<span class="highlight_word">$1</span>');
 }
 
-function setOnClicks(modifiers: Object) {
+function setOnClicks(modifiers: Object, additionalClassesToAdd: string = '') {
   Object.keys(modifiers).forEach((key) => {
     const mod = modifiers[key];
     if ('actionMethod' in mod) {
-      onClickId(mod.id(key), mod.actionMethod, mod.bind);
+      onClickId(mod.id(key), mod.actionMethod, mod.bind, additionalClassesToAdd);
     }
   });
 }
