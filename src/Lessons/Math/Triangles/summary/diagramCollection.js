@@ -22,16 +22,16 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
       {
         a: 'a',
         b: 'b',
-        c: 'c',
+        // c: 'c',
         equals: ' = ',
-        minus: ' \u2212 ',
-        plus: ' + ',
-        _180: '180º',
-        _90: '90º',
-        _360: '360º',
-        pi: 'π',
-        _2: '2',
-        v: this.diagram.equation.vinculum(this.layout.colors.diagram.text.base),
+        // minus: ' \u2212 ',
+        // plus: ' + ',
+        // _180: '180º',
+        // _90: '90º',
+        // _360: '360º',
+        // pi: 'π',
+        // _2: '2',
+        // v: this.diagram.equation.vinculum(this.layout.colors.diagram.text.base),
       },
       this.layout.colors.diagram.text.base,
     );
@@ -45,32 +45,32 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
       eqn.formAlignment.fixTo = eqn.collection[`_${fixTo}`];
     }
 
-    eqn.addForm('a', ['a']);
-    eqn.addForm('b', ['b']);
-    eqn.addForm('c', ['c']);
-    eqn.addForm('adj_add', ['c', 'equals', 'a', 'plus', 'b']);
-    eqn.addForm('adj_a', ['a', 'equals', 'c', 'minus', 'b']);
-    eqn.addForm('adj_b', ['b', 'equals', 'c', 'minus', 'a']);
-    eqn.addForm('sup_a', ['a', 'equals', '_180', 'minus', 'b'], 'deg');
-    eqn.addForm('sup_a', ['a', 'equals', 'pi', 'minus', 'b'], 'rad');
-    eqn.addForm('sup_b', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
-    eqn.addForm('sup_b', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
-    eqn.addForm('sup_add', ['_180', 'equals', 'a', 'plus', 'b'], 'deg');
-    eqn.addForm('sup_add', ['pi', 'equals', 'a', 'plus', 'b'], 'rad');
+    // eqn.addForm('a', ['a']);
+    // eqn.addForm('b', ['b']);
+    // eqn.addForm('c', ['c']);
+    // eqn.addForm('adj_add', ['c', 'equals', 'a', 'plus', 'b']);
+    // eqn.addForm('adj_a', ['a', 'equals', 'c', 'minus', 'b']);
+    // eqn.addForm('adj_b', ['b', 'equals', 'c', 'minus', 'a']);
+    // eqn.addForm('sup_a', ['a', 'equals', '_180', 'minus', 'b'], 'deg');
+    // eqn.addForm('sup_a', ['a', 'equals', 'pi', 'minus', 'b'], 'rad');
+    // eqn.addForm('sup_b', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
+    // eqn.addForm('sup_b', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
+    // eqn.addForm('sup_add', ['_180', 'equals', 'a', 'plus', 'b'], 'deg');
+    // eqn.addForm('sup_add', ['pi', 'equals', 'a', 'plus', 'b'], 'rad');
 
-    eqn.addForm('com_a', ['a', 'equals', '_90', 'minus', 'b'], 'deg');
-    eqn.addForm('com_a', ['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b'], 'rad');
-    eqn.addForm('com_b', ['b', 'equals', '_90', 'minus', 'a'], 'deg');
-    eqn.addForm('com_b', ['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a'], 'rad');
-    eqn.addForm('com_add', ['_90', 'equals', 'a', 'plus', 'b'], 'deg');
-    eqn.addForm('com_add', [eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b'], 'rad');
+    eqn.addForm('com_a', ['a', 'equals', 'b']);
+    // eqn.addForm('com_a', ['a', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'b'], 'rad');
+    eqn.addForm('com_b', ['b', 'equals', 'a']);
+    // eqn.addForm('com_b', ['b', 'equals', eqn.frac('pi', '_2', 'v'), 'minus', 'a'], 'rad');
+    // eqn.addForm('com_add', ['_90', 'equals', 'a', 'plus', 'b'], 'deg');
+    // eqn.addForm('com_add', [eqn.frac('pi', '_2', 'v'), 'equals', 'a', 'plus', 'b'], 'rad');
 
-    eqn.addForm('exp_a', ['a', 'equals', '_360', 'minus', 'b'], 'deg');
-    eqn.addForm('exp_a', ['a', 'equals', '2', 'pi', 'minus', 'b'], 'rad');
-    eqn.addForm('exp_b', ['b', 'equals', '_360', 'minus', 'a'], 'deg');
-    eqn.addForm('exp_b', ['b', 'equals', '2', 'pi', 'minus', 'a'], 'rad');
-    eqn.addForm('exp_add', ['_360', 'equals', 'a', 'plus', 'b'], 'deg');
-    eqn.addForm('exp_add', ['2', 'pi', 'equals', 'a', 'plus', 'b'], 'rad');
+    // eqn.addForm('exp_a', ['a', 'equals', '_360', 'minus', 'b'], 'deg');
+    // eqn.addForm('exp_a', ['a', 'equals', '2', 'pi', 'minus', 'b'], 'rad');
+    // eqn.addForm('exp_b', ['b', 'equals', '_360', 'minus', 'a'], 'deg');
+    // eqn.addForm('exp_b', ['b', 'equals', '2', 'pi', 'minus', 'a'], 'rad');
+    // eqn.addForm('exp_add', ['_360', 'equals', 'a', 'plus', 'b'], 'deg');
+    // eqn.addForm('exp_add', ['2', 'pi', 'equals', 'a', 'plus', 'b'], 'rad');
     return eqn;
   }
 
@@ -79,13 +79,13 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     // eqn.setPosition(this.layout.equationPosition);
     eqn.setElem('a', this.colors.angleA, true, 'up', 0.85);
     eqn.setElem('b', this.colors.angleB, true, 'up', 1.05);
-    eqn.setElem('c', this.colors.angleC, true, 'up', 1.05);
-    eqn.setElem('pi', null, true, 'down', 1.2);
-    eqn.setElem('v', null, true, 'down', 1.2);
-    eqn.setElem('_2', null, true, 'down', 1.2);
-    eqn.setElem('_90', null, true, 'down', 1);
-    eqn.setElem('_180', null, true, 'down', 1);
-    eqn.setElem('_360', null, true, 'down', 1);
+    // eqn.setElem('c', this.colors.angleC, true, 'up', 1.05);
+    // eqn.setElem('pi', null, true, 'down', 1.2);
+    // eqn.setElem('v', null, true, 'down', 1.2);
+    // eqn.setElem('_2', null, true, 'down', 1.2);
+    // eqn.setElem('_90', null, true, 'down', 1);
+    // eqn.setElem('_180', null, true, 'down', 1);
+    // eqn.setElem('_360', null, true, 'down', 1);
     eqn.showEqn = (angleType: TypeAdjacentAngle, eqnForm: TypeEquationForm) => {
       eqn.showForm(`${angleType.slice(0, 2)}_${eqnForm}`);
     };
@@ -117,13 +117,13 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
 
     eqn.collection._a.onClick = onclickEqn.bind(this, 'a');
     eqn.collection._b.onClick = onclickEqn.bind(this, 'b');
-    eqn.collection._c.onClick = onclickEqn.bind(this, 'add');
-    eqn.collection._pi.onClick = onclickEqn.bind(this, 'add');
-    eqn.collection.__90.onClick = onclickEqn.bind(this, 'add');
-    eqn.collection.__180.onClick = onclickEqn.bind(this, 'add');
-    eqn.collection.__360.onClick = onclickEqn.bind(this, 'add');
-    eqn.collection.__2.onClick = onclickEqn.bind(this, 'add');
-    eqn.collection._v.onClick = onclickEqn.bind(this, 'add');
+    // eqn.collection._c.onClick = onclickEqn.bind(this, 'add');
+    // eqn.collection._pi.onClick = onclickEqn.bind(this, 'add');
+    // eqn.collection.__90.onClick = onclickEqn.bind(this, 'add');
+    // eqn.collection.__180.onClick = onclickEqn.bind(this, 'add');
+    // eqn.collection.__360.onClick = onclickEqn.bind(this, 'add');
+    // eqn.collection.__2.onClick = onclickEqn.bind(this, 'add');
+    // eqn.collection._v.onClick = onclickEqn.bind(this, 'add');
     return eqn;
   }
 
