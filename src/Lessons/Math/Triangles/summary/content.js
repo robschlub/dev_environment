@@ -22,9 +22,14 @@ class Content extends LessonContent {
   }
 
   addSections() {
-    // const diag = this.diagram.elements;
+    const diag = this.diagram.elements;
 
     this.addSection({
+      setSteadyState: () => {
+        diag.show();
+        diag._eqn.showAll();
+        diag.eqn.showForm('com_add');
+      },
     });
   }
 }
