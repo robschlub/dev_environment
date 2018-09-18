@@ -116,7 +116,12 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
   }
 
   setLink(link: string) {
-    this.linkElement.innerHTML = `<a href=${link}>Go to lesson</a>`;
+    const a = document.createElement('a');
+    a.classList.add('interactive_word');
+    a.href = link;
+    a.innerHTML = 'Go to lesson';
+    this.linkElement.appendChild(a);
+    // this.linkElement.innerHTML = `<a href=${link}>Go to lesson</a>`;
   }
 
   getDiagramSpacePosition(reference: 'topLeft' | 'center') {
@@ -173,6 +178,14 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
   show() {
     super.show();
     // this.toggle(true);
+    // console.log(this.diagram.elements.elements)
+    // Object.keys(this.diagram.elements.elements).forEach((key) => {
+    //   const element = this.diagram.elements.elements[key];
+    //   if (element.name !== this.name) {
+    //     console.log(element.name)
+    //   }
+    // })
+    console.log(this.diagram.htmlCanvas.children)
     this._box.show();
   }
 
