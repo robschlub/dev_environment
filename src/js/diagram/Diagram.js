@@ -74,7 +74,7 @@ function equation(diagram: Diagram, high: boolean = false) {
   function elements(
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],
-    firstTransform: Transform = new Transform(),
+    firstTransform: Transform = new Transform('elements'),
   ): DiagramElementCollection {
     return createEquationElements(
       elems,
@@ -90,7 +90,7 @@ function equation(diagram: Diagram, high: boolean = false) {
       new Point(0, 0),
       1, 1, 0,
       color,
-      new Transform().scale(1, 1).translate(0, 0),
+      new Transform('vinculum').scale(1, 1).translate(0, 0),
     );
   }
 
@@ -102,7 +102,7 @@ function equation(diagram: Diagram, high: boolean = false) {
       webgl,
       color,
       numLines,
-      new Transform().scale(1, 1).translate(0, 0),
+      new Transform('integral').scale(1, 1).translate(0, 0),
       diagram.limits,
     );
   }
@@ -739,7 +739,7 @@ class Diagram {
     };
 
     this.diagramToGLSpaceTransform =
-      spaceToSpaceTransform(diagramSpace, glSpace);
+      spaceToSpaceTransform(diagramSpace, glSpace, 'Diagram');
 
     this.glToDiagramSpaceTransform =
       spaceToSpaceTransform(glSpace, diagramSpace);

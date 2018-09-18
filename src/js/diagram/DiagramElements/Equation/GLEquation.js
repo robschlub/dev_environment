@@ -18,7 +18,7 @@ import DrawContext2D from '../../DrawContext2D';
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
 
-
+let flag = false;
 class Element {
   content: DiagramElementPrimative | DiagramElementCollection;
   ascent: number;
@@ -54,6 +54,9 @@ class Element {
       this.descent = -r.bottom;
       this.height = r.height;
       this.width = r.width;
+      if (this.content.name === '_90') {
+        console.log(this.width, this.content.name, content.transform.m(), content.lastDrawTransform._dup())
+      }
     }
   }
 
@@ -690,7 +693,7 @@ export function createEquationElements(
   }
 
   const collection = new DiagramElementCollection(
-    new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    new Transform('Equation Elements Collection').scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits,
   );
   Object.keys(elems).forEach((key) => {
@@ -699,7 +702,7 @@ export function createEquationElements(
       const to = new TextObject(drawContext2D, [dT]);
       const p = new DiagramElementPrimative(
         to,
-        new Transform().scale(1, 1).translate(0, 0),
+        new Transform('Equation Element').scale(1, 1).translate(0, 0),
         color,
         diagramLimits,
       );
@@ -840,6 +843,10 @@ export class EquationForm extends Elements {
     alignV: TypeVAlign | null = 'baseline',
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
+    // if (this.name === 'com_add') {
+    //   console.log(this.name, 'start')
+    //   flag = true;
+    // }
     // const elementsInEqn = this.getAllElements();
     const elementsInCollection = this.collection.getAllElements();
     const elementsCurrentlyShowing = elementsInCollection.filter(e => e.isShown);
@@ -861,6 +868,10 @@ export class EquationForm extends Elements {
     let a = this.ascent;
     let d = this.descent;
     let p = this.location._dup();
+    // if (this.name === 'com_add') {
+    //   console.log(this.name, 'stop')
+    //   flag = false;
+    // }
     // let { height } = this;
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
@@ -1037,7 +1048,6 @@ export class EquationForm extends Elements {
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
 
     const currentTransforms = this.collection.getElementTransforms();
-
     this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
@@ -1183,7 +1193,7 @@ export class Equation {
   constructor(
     drawContext2D: DrawContext2D,
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
-    firstTransform: Transform = new Transform()
+    firstTransform: Transform = new Transform('Equation')
       .scale(1, 1).rotate(0).translate(0, 0),
   ) {
     this.drawContext2D = drawContext2D;

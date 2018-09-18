@@ -20,7 +20,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
 
   constructor(
     diagram: LessonDiagram,
-    transform: Transform = new Transform(),
+    transform: Transform = new Transform('1 DiagramCollection'),
   ) {
     const layout = lessonLayout();
     super(diagram, layout, transform);

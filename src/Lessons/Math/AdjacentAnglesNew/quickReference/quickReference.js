@@ -39,10 +39,12 @@ export class QRComplementaryAngles extends PopupBoxCollection {
 
   constructor(
     diagram: Object,
-    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+    transform: Transform = new Transform('QRComplementaryAngles').scale(1, 1).translate(0, 0),
   ) {
     const layout = lessonLayout();
     super(diagram, layout, transform, 'adjacent', AdjacentCollection);
+    console.log("QR", this.transform._dup());
+    console.log("QR Last Draw", this.lastDrawTransform._dup());
     this.hasTouchableElements = true;
     const modifiers = {
       Complementary_Angles: html.click(
@@ -67,6 +69,8 @@ export class QRComplementaryAngles extends PopupBoxCollection {
       this.layout.colors.angleB,
       this.layout.complementary.linesPosition,
     );
+    console.log("QR Show", this.transform._dup());
+    console.log("QR Last Draw", this.lastDrawTransform._dup());
   }
 }
 

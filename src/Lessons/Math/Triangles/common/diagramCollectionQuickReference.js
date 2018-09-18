@@ -15,7 +15,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
   constructor(
     diagram: LessonDiagram,
     layout: Object,
-    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+    transform: Transform = new Transform('QR Collection').scale(1, 1).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.add('complementary', new QRComplementaryAngles(this.diagram));

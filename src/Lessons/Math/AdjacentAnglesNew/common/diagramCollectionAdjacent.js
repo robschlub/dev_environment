@@ -143,14 +143,17 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   }
 
   makeLines() {
-    const lines = this.diagram.shapes.collection(new Transform().rotate(0).translate(0, 0));
+    const lines = this.diagram.shapes.collection(new Transform('lines').rotate(0).translate(0, 0));
     lines.setPosition(this.layout.lines.position);
     let { angle } = this.layout;
+    // console.log("1 - ****************************")
     lines.add('angleA', this.makeAdjacentAngle(angle.radius, angle.width, angle.sides, this.layout.colors.angleA));
+    // console.log("2 - ****************************")
     lines.add('angleB', this.makeAdjacentAngle(angle.radius, angle.width, angle.sides, this.layout.colors.angleB));
     lines.add('line2', this.makeAdjacentLine(2, this.layout.colors.line));
 
     angle = this.layout.largerAngle;
+    // console.log("3 - ****************************")
     lines.add('angleC', this.makeAdjacentAngle(angle.radius, angle.width, angle.sides, this.layout.colors.angleC));
     lines.add('line1', this.makeAdjacentLine(1, this.layout.colors.line));
     lines._line1.move.element = lines;
@@ -182,9 +185,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
     const onclickEqn = (form: TypeEquationForm = 'add') => {
       const eqnForm = eqn.getForm(`${this.angleType.slice(0, 3)}_${form}`);
       eqn.setCurrentForm(eqnForm);
-
       eqnForm.animateTo(this.layout.equationScale, 1.5, eqn.collection._equals);
-      console.log(this.layout.equationScale)
       if (form === 'a') {
         this._lines._angleA.pulseScaleNow(1, 1.5);
         this._lines._angleB.showForm('b');
@@ -196,6 +197,7 @@ export default class AdjacentCollection extends CommonDiagramCollection {
         this._lines._angleB.showForm(`${this.angleType.slice(0, 3)}_${form}`);
       }
       if (form === 'add') {
+        console.log('add', this._eqn.lastDrawTransform._dup());
         this._lines._angleC.pulseScaleNow(1, 1.3);
         this._lines._angleA.showForm('a');
         this._lines._angleB.showForm('b');
@@ -220,13 +222,16 @@ export default class AdjacentCollection extends CommonDiagramCollection {
   constructor(
     diagram: LessonDiagram,
     layout: Object,
-    transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    transform: Transform = new Transform('adjacent angles collection').scale(1, 1).rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.add('lines', this.makeLines());
+    // console.log("4 - ****************************")
     this.eqn = this.makeMainEqn();
+
     this.add('eqn', this.eqn.collection);
     this.hasTouchableElements = true;
+    console.log('add', this._eqn.lastDrawTransform._dup());
   }
 
   updateAngles() {

@@ -11,7 +11,7 @@ export default function lessonLayout() {
     linesPosition: new Point(-0.5, -0.25),
     equationPosition: new Point(1.5, 0.4),
   };
-  layout.equationScale = 1;
+  layout.equationScale = 0.7;
   layout.supplementary = {
     linesPosition: new Point(0, -0.45),
     equationPosition: new Point(0, -0.7),
