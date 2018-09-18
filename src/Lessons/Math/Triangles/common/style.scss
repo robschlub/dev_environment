@@ -6,7 +6,11 @@ $colors: (
   point:            map-get($geometry_colors, length),
   pointText:        map-get($geometry_colors, length),
   angle:            map-get($geometry_colors, angle),
+  angleA:            map-get($geometry_colors, angleA),
+  angleB:            map-get($geometry_colors, angleB),
+  angleC:            map-get($geometry_colors, angleC),
   angleText:        map-get($geometry_colors, angleText),
+  parallelLines:    color('cyan', 'base', 'light'),
   dimensions:       map-get($geometry_colors, length),
 );
 

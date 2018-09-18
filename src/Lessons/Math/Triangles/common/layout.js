@@ -12,6 +12,10 @@ const cssColorNames = [
   'angle',
   'angleText',
   'dimensions',
+  'angleA',
+  'angleB',
+  'angleC',
+  'parallelLines',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -39,6 +43,35 @@ export default function commonLessonLayout() {
       1.5,
       0.5,
     ),
+  };
+  layout.totalAngle = {
+    lineWidth: 0.02,
+    // pointRadius,
+    pointPositions: {
+      p1: new Point(-1.5, -1),
+      p2: new Point(0, -1),
+      p3: new Point(1, 0.7),
+    },
+    parallelLine: {
+      length: 5,
+      width: 0.015,
+    },
+    // boundary: new Rect(
+    //   -2.5, -1.5, 5, 2.3,
+    // ),
+    // pointSides: 50,
+    // randomBoundary: new Rect(
+    //   0.2,
+    //   0.2,
+    //   1.5,
+    //   0.5,
+    // ),
+    angle: {
+      radius: 0.3,
+      lineWidth: 0.03,
+      sides: 200,
+      labelRadius: 0.35,
+    },
   };
 
   layout.examples = {

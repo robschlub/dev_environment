@@ -30,6 +30,7 @@ class Content extends LessonContent {
     const examples = diag._examples;
     const custom = diag._custom;
     const properties = diag._properties;
+    const totalAngle = diag._totalAngle;
     const qr = diag._qr;
     // const qr = this.diagram.elements;
 
@@ -146,10 +147,9 @@ class Content extends LessonContent {
       `),
     });
     this.addSection({
-      title: 'asdf',
       setContent: centerV(`
         <p>
-          To find this relationship, we need to have knowledge of |supplementary_angles| and |alternate_angles|.
+          To find this relationship, we can use knowledge of |supplementary_angles| and |alternate_angles| when a line intersects parallel lines.
         </p>
       `),
       modifiers: {
@@ -158,6 +158,37 @@ class Content extends LessonContent {
       },
       showOnly: [
         qr,
+      ],
+    });
+    this.addSection({
+      title: 'Total Angle',
+      setContent: `
+        <p>
+          Take |any| triangle and draw parallel lines that enclose the shape and align with one of the sides
+        </p>
+      `,
+      showOnly: [
+        qr,
+      ],
+      show: [
+        totalAngle,
+      ],
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          We know |alternate_angles| are equal, and so we can identify the alternate angle of |a|.
+        </p>
+      `,
+      modifiers: {
+        alternate_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+      },
+      showOnly: [
+        qr,
+      ],
+      show: [
+        totalAngle,
       ],
     });
   }

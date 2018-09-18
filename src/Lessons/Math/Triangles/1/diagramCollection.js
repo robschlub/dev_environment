@@ -12,11 +12,14 @@ import CustomTriangleCollection from '../common/diagramCollectionCustomTriangle'
 import TrianglePropertiesCollection from '../common/diagramCollectionProperties';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 import QuickReferenceCollection from '../common/diagramCollectionQuickReference';
+import TotalAngleTriangleCollection from '../common/diagramCollectionTotalAngleTriangle';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _examples: TriangleExamplesCollection;
   _custom: CustomTriangleCollection;
   _properties: TrianglePropertiesCollection;
+  _totalAngle: TotalAngleTriangleCollection;
+  _qr: QuickReferenceCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -28,6 +31,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.add('examples', new TriangleExamplesCollection(diagram, this.layout));
     this.add('custom', new CustomTriangleCollection(diagram, this.layout));
     this.add('properties', new TrianglePropertiesCollection(diagram, this.layout));
+    this.add('totalAngle', new TotalAngleTriangleCollection(diagram, this.layout));
     this.add('qr', new QuickReferenceCollection(diagram, this.layout));
     this._qr.hideAll();
   }
