@@ -5,6 +5,7 @@ import lessonLayout from './layout';
 import * as html from '../../../../js/tools/htmlGenerator';
 import AdjacentCollection from '../common/diagramCollectionAdjacent';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
+import details from '../details';
 
 function showAdjacent(
   adjacent: AdjacentCollection,
@@ -59,6 +60,7 @@ export class QRComplementaryAngles extends PopupBoxCollection {
     };
     this.setTitle('Complementary Angles');
     this.setDescription('|Complementary_Angles| add up to 90º or &pi;/2 radians.', modifiers);
+    this.setLink(details.details.uid);
   }
 
   show() {
@@ -98,6 +100,7 @@ export class QRSupplementaryAngles extends PopupBoxCollection {
 
     this.setTitle('Supplementary Angles');
     this.setDescription('|Supplementary_Angles| add up to 180º or &pi; radians.', modifiers);
+    this.setLink(details.details.uid);
   }
 
   show() {
@@ -137,7 +140,7 @@ export class QRExplementaryAngles extends PopupBoxCollection {
 
     this.setTitle('Explementary Angles');
     this.setDescription('|Explementary_Angles| add up to 360º or 2&pi; radians.', modifiers);
-    this.setLink('/Lessons/Math/AdjacentAngles/1');
+    this.setLink(details.details.uid);
   }
 
   show() {

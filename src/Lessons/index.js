@@ -9,18 +9,7 @@ export default function getLessonIndex() {
     'adjacent_angles',
     [
       '1',
-    ],
-    [
-      'important_angles',
-    ],
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Adjacent Angles New',
-    '/Lessons/Math/AdjacentAnglesNew',
-    'adjacent_angles_new',
-    [
-      '1',
-      'Summary',
+      'summary',
     ],
     [
       'important_angles',

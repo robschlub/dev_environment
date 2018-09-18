@@ -6,6 +6,7 @@ import * as html from '../../../../js/tools/htmlGenerator';
 import ThreeLinesCollection from '../common/diagramCollectionThreeLines';
 import OppositeCollection from '../common/diagramCollectionOpposite';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
+import details from '../details';
 
 function showThreeLines(
   threeLines: ThreeLinesCollection,
@@ -62,6 +63,7 @@ export class QRCorrespondingAngles extends PopupBoxCollection {
 
     this.setTitle('Corresponding Angles');
     this.setDescription('|Corresponding_Angles| are angles in the same relative position at the intersection of two lines and an intersecting line. When the two lines are parallel, |corresponding angles are equal|.', modifiers);
+    this.setLink(details.details.uid);
   }
 
   show() {
@@ -101,6 +103,7 @@ export class QRAlternateAngles extends PopupBoxCollection {
 
     this.setTitle('Alternate Angles');
     this.setDescription('|Alternate_angles| are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |alternate angles are equal|.', modifiers);
+    this.setLink(details.details.uid);
   }
 
   show() {
@@ -141,6 +144,7 @@ export class QRInteriorAngles extends PopupBoxCollection {
 
     this.setTitle('Interior Angles');
     this.setDescription('|Interior_angles| are angles on opposite sides of an intersecting line crossing two lines. When the two lines are parallel, |interior angles add up to 180º (π radians)|.', modifiers);
+    this.setLink(details.details.uid);
   }
 
   show() {
@@ -181,6 +185,7 @@ export class QROppositeAngles extends PopupBoxCollection {
 
     this.setTitle('Opposite Angles');
     this.setDescription('When two lines intersect, the |opposite_angles| at the intersection are always equal.', modifiers);
+    this.setLink(details.details.uid);
   }
 
   show() {

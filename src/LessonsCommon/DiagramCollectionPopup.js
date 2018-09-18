@@ -3,6 +3,7 @@ import { Transform, Point } from '../js/diagram/tools/g2';
 import { DiagramElementPrimative } from '../js/diagram/Element';
 import * as html from '../js/tools/htmlGenerator';
 import CommonDiagramCollection from './DiagramCollection';
+import getLessonIndex from '../Lessons/index';
 
 export default class PopupBoxCollection extends CommonDiagramCollection {
   id: string;
@@ -117,12 +118,30 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     this.interactiveButtonMethod = null;
   }
 
-  setLink(link: string) {
+  // eslint-disable-next-line class-methods-use-this
+  getLinkFromString(linkOrLessonID: string) {
+    if (linkOrLessonID.startsWith('/')) {
+      return linkOrLessonID;
+    }
+    const index = getLessonIndex();
+    let link = '';
+    index.forEach((lessonDescription) => {
+      if (lessonDescription.uid === linkOrLessonID) {
+        link = `${lessonDescription.link}/${lessonDescription.paths[0]}`;
+      }
+    });
+    return link;
+  }
+
+  setLink(linkOrLessonID: string) {
     const a = document.createElement('a');
     a.classList.add('interactive_word');
-    a.href = link;
-    a.innerHTML = 'Go to lesson';
-    this.linkElement.appendChild(a);
+    const link = this.getLinkFromString(linkOrLessonID);
+    if (link) {
+      a.href = link;
+      a.innerHTML = 'Go to lesson';
+      this.linkElement.appendChild(a);
+    }
     // this.linkElement.innerHTML = `<a href=${link}>Go to lesson</a>`;
   }
 

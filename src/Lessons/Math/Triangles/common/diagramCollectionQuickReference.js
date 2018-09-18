@@ -6,7 +6,7 @@ import {
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 // import AlternateAnglesQR from '../../RelatedAngles/quickReference/alternateAngles';
 import { QRAlternateAngles } from '../../RelatedAngles/quickReference/quickReference';
-import { QRSupplementaryAngles } from '../../AdjacentAnglesNew/quickReference/quickReference';
+import { QRSupplementaryAngles } from '../../AdjacentAngles/quickReference/quickReference';
 
 export default class QuickReferenceCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
