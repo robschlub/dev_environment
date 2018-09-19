@@ -2,7 +2,7 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
-  Transform, Point, Line, Rect, normAngle, minAngleDiff,
+  Transform, Point, Line, Rect, normAngle, minAngleDiff, threePointAngle
 } from '../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -48,7 +48,14 @@ export type TypeTriangle = {
   dimensionList: Array<Array<number>>;
   updatePointsCallback: () => void | null;
   angleRadiusToInnerBorder: boolean;
-  centerTriangleToPoints: () => void;
+  getCenter: () => Point;
+  getLongestSide: () => [number, number];
+  getPoint: (number) => void;
+  getSideLine: (number, number) => void;
+  setTriangleCollectionPositionTo: (Point) => void;
+  setTriangleCollectionRotationTo: (number) => void;
+  getRotationToSide: (number, number) => number;
+  getHeight: (number, number) => void;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -380,15 +387,20 @@ export default function makeTriangle(
 
   triangle.getSideLine = (q: number, r: number) => triangle[`b${q}${r}`];
 
+  triangle.getPoint = (q: number) => triangle[`p${q}`];
+  
   triangle.getHeight = (q: number, r: number) => {
-    const mid = triangle[`b${q}${r}`].midpoint();
     const pointIndeces = [1, 2, 3];
     const topPoint = pointIndeces.reduce(
       (tp, p) => (p === q || p === r ? tp : p),
       1,
     );
-    const heightLine = new Line(mid, triangle[`p${topPoint}`]);
-    return heightLine.length();
+    const point1 = triangle.getPoint(q);
+    const point2 = triangle.getPoint(r);
+    const point3 = triangle.getPoint(topPoint);
+    const rAngle = threePointAngle(point1, point2, point3);
+    const sideLength = triangle.getSideLine(r, topPoint).length();
+    return Math.abs(sideLength * Math.sin(rAngle));
   };
 
   triangle.getRotationToSide = (q: number, r: number) => {

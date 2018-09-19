@@ -215,7 +215,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         totalAngle.setFuturePositions();
-        totalAngle.resetTrianglePointsToRotation();
+        totalAngle.resetTrianglePoints();
         // console.log('steady: ', totalAngle._triangle.transform.t())
       },
     });
