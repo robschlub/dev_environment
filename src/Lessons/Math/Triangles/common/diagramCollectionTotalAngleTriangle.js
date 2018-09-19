@@ -107,7 +107,6 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   resetColors() {
     this._angleA.setColor(this.layout.colors.angleA);
     this._angleB.setColor(this.layout.colors.angleB);
-    // this._angleC.setColor(this.layout.colors.angleC);
     this._triangle._angle1.setColor(this.layout.colors.angleA);
     this._triangle._angle2.setColor(this.layout.colors.angleB);
     this._triangle._angle3.setColor(this.layout.colors.angleC);
@@ -140,14 +139,8 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
       this.layout.colors.angleB,
     );
     angleB.addLabel('b', layout.labelRadius);
-    // const angleC = makeAngle(
-    //   this.diagram, layout.radius, layout.lineWidth, layout.sides,
-    //   this.layout.colors.angleC,
-    // );
-    // angleC.addLabel('c', layout.labelRadius);
     this.add('angleA', angleA);
     this.add('angleB', angleB);
-    // this.add('angleC', angleC);
   }
 
   updatePositions() {
@@ -159,10 +152,10 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     const angleC = Math.PI - (angle13 + Math.PI - angle23);
     this._angleA.updateAngle(Math.PI, angle13);
     this._angleB.updateAngle(Math.PI + angle13 + angleC, Math.PI - angle23);
-    // this._angleC.updateAngle(Math.PI + angle13, angleC);
-    this._angleA.setPosition(this._triangle.p3);
-    this._angleB.setPosition(this._triangle.p3);
-    // this._angleC.setPosition(this._triangle.p3);
+    const t = this._triangle.transform.t() || new Point(0, 0);
+    const p3Position = this._triangle.p3.add(t);
+    this._angleA.setPosition(p3Position);
+    this._angleB.setPosition(p3Position);
   }
 
   updatePoints() {
@@ -183,6 +176,7 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     const minX = points.reduce((minXp, p) => (p.x < minXp.x && p !== maxY ? p : minXp));
     const maxX = points.reduce((maxXp, p) => (p.x > maxXp.x && p !== maxY ? p : maxXp));
     tri.updatePoints(minX, maxX, maxY);
+    this.updatePositions();
     this.diagram.animateNextFrame();
   }
 
@@ -220,7 +214,6 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     const width = tri.getSideLine(...longestLine)
       .length();
     const rotation = tri.getRotationToSide(...longestLine);
-
     tri.setTriangleCollectionPositionTo(center);
     tri.setTriangleCollectionRotationTo(rotation);
 
@@ -232,7 +225,7 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     this.futurePositions.push({
       element: this._triangle,
       scenario: {
-        position: new Point(offset, -height / 2),
+        position: new Point(offset, -0.5),
         rotation: 0,
       },
     });
