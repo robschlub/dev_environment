@@ -130,6 +130,11 @@ class Lesson {
       this.content.toggleInfo(false);
       this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
+      if (this.content.sections[this.currentSectionIndex - 1].skipWhenComingFromNext) {
+        if (this.currentSectionIndex - 1 > 0) {
+          this.goToSectionIndex = this.currentSectionIndex - 2;
+        }
+      }
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
     }
     this.renderDiagrams();

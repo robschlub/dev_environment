@@ -73,6 +73,7 @@ class Section {
   hint: Array<string> | string;
   blank: Array<string>;
   diagram: Diagram;
+  skipWhenComingFromNext: boolean;
   infoElements: Array<DiagramElementCollection | DiagramElementPrimative>;
   showOnly: Array<DiagramElementPrimative | DiagramElementCollection>
            | () => {};
@@ -117,6 +118,7 @@ class Section {
     };
     this.interactiveElementList = [];
     this.currentInteractiveItem = -1;
+    this.skipWhenComingFromNext = false;
   }
 
   setContent(): Array<string> | string {

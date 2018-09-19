@@ -200,6 +200,7 @@ class Content extends LessonContent {
         totalAngle._line1.grow(0, 1, true, null);
         totalAngle._line2.grow(0, 1, true, done);
       },
+      skipWhenComingFromNext: true,
     });
 
 
