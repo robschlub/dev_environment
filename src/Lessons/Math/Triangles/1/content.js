@@ -161,20 +161,56 @@ class Content extends LessonContent {
         qr,
       ],
     });
+
     this.addSection({
       title: 'Total Angle',
       setContent: `
         <p>
-          Take |any| triangle and for convenience orient it so one side is horizontal.
+          Start with |any| triangle that has angles |a|, |b|, and |c|.
         </p>
       `,
+      modifiers: {
+        b: highlight(colors.angleB),
+        a: highlight(colors.angleA),
+        c: highlight(colors.angleC),
+      },
+      setEnterState: () => {
+        totalAngle._triangle.hasTouchableElements = true;
+      },
       showOnly: [
         totalAngle,
       ],
       show: [
         totalAngle._triangle,
-        totalAngle._angleC,
+        // totalAngle._angleC,
       ],
+      setLeaveState: () => {
+        totalAngle._triangle.hasTouchableElements = false;
+      },
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          For convenience orient it so one side is horizontal.
+        </p>
+      `,
+      setEnterState: () => {
+        totalAngle.calculateTriangleFuturePositions();
+      },
+      showOnly: [
+        totalAngle,
+      ],
+      show: [
+        totalAngle._triangle,
+      ],
+      transitionFromAny: (done) => {
+        totalAngle.moveToFuturePositions(1, done);
+      },
+      setSteadyState: () => {
+        totalAngle.setFuturePositions();
+        totalAngle.resetTrianglePointsToRotation();
+      },
     });
 
     common = {
@@ -188,7 +224,7 @@ class Content extends LessonContent {
       ],
       show: [
         totalAngle._triangle,
-        totalAngle._angleC,
+        // totalAngle._angleC,
       ],
     };
     this.addSection(common, {
@@ -230,7 +266,7 @@ class Content extends LessonContent {
         totalAngle._triangle,
         totalAngle._line1,
         totalAngle._line2,
-        totalAngle._angleC,
+        // totalAngle._angleC,
       ],
       setLeaveState: () => {
         totalAngle.resetColors();
@@ -239,7 +275,8 @@ class Content extends LessonContent {
     const greyLines = {
       setEnterState: () => {
         totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
-        totalAngle._angleC.setColor(colors.diagram.disabled);
+        totalAngle._triangle._angle3.setColor(colors.diagram.disabled);
+        // totalAngle._angleC.setColor(colors.diagram.disabled);
         totalAngle._line1.setColor(colors.diagram.disabled);
         totalAngle._line2.setColor(colors.diagram.disabled);
         totalAngle._triangle._line.setColor(colors.diagram.disabled);
@@ -273,7 +310,8 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         totalAngle._triangle._angle1.setColor(colors.diagram.disabled);
-        totalAngle._angleC.setColor(colors.diagram.disabled);
+        totalAngle._triangle._angle3.setColor(colors.diagram.disabled);
+        // totalAngle._angleC.setColor(colors.diagram.disabled);
         totalAngle._angleA.setColor(colors.diagram.disabled);
         totalAngle._triangle._line.setColor(colors.diagram.disabled);
       },
@@ -285,7 +323,7 @@ class Content extends LessonContent {
         totalAngle._triangle,
         totalAngle._line1,
         totalAngle._line2,
-        totalAngle._angleC,
+        // totalAngle._angleC,
         totalAngle._angleA,
       ],
       setLeaveState: () => {
@@ -323,7 +361,7 @@ class Content extends LessonContent {
         totalAngle._triangle,
         totalAngle._line1,
         totalAngle._line2,
-        totalAngle._angleC,
+        // totalAngle._angleC,
         totalAngle._angleA,
         totalAngle._angleB,
       ],
@@ -342,9 +380,9 @@ class Content extends LessonContent {
       `,
       modifiers: {
         supplementary_angles: click(qr._supplementary.show, [qr._supplementary], colors.line),
-        b: click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB),
-        a: click(totalAngle.pulseAlternateA, [totalAngle], colors.angleA),
-        c: click(totalAngle.pulseAlternateC, [totalAngle], colors.angleC),
+        b: highlight(colors.angleB),
+        a: highlight(colors.angleA),
+        c: highlight(colors.angleC),
       },
       setSteadyState: () => {},
     });
@@ -368,7 +406,7 @@ class Content extends LessonContent {
       },
       show: [
         totalAngle._triangle,
-        totalAngle._angleC,
+        // totalAngle._angleC,
       ],
       setSteadyState: () => {
         totalAngle.eqn.showForm('base');
@@ -387,7 +425,7 @@ class Content extends LessonContent {
       ],
       show: [
         totalAngle._triangle,
-        totalAngle._angleC,
+        // totalAngle._angleC,
       ],
       setSteadyState: () => {
         totalAngle.eqn.showForm('base');

@@ -46,6 +46,8 @@ export type TypeTriangle = {
   autoShowAngles: boolean;
   _line: DiagramElementPrimative;
   dimensionList: Array<Array<number>>;
+  updatePointsCallback: () => void | null;
+  angleRadiusToInnerBorder: boolean;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -87,6 +89,8 @@ export default function makeTriangle(
   triangle.labelsAlwaysOutside = true;
   triangle.autoShowAngles = false;
   triangle.dimensionList = [];
+  triangle.updatePointsCallback = null;
+  triangle.angleRadiusToInnerBorder = true;
 
   triangle.updatePoints = (newP1: Point, newP2: Point, newP3: Point) => {
     triangle.p1 = newP1._dup();
@@ -122,6 +126,9 @@ export default function makeTriangle(
       element.stop();
     });
     triangle.updateDimensions();
+    if (triangle.updatePointsCallback != null) {
+      triangle.updatePointsCallback();
+    }
   };
 
   triangle.makePoint = (index: number) => {
@@ -286,11 +293,21 @@ export default function makeTriangle(
               delta = Math.PI * 2 - delta;
             }
           }
-          const lineWidthAngle = lineWidth / angleElement.radius * 0.9;
           // delta += lineWidthAngle;
-          const innerBorderQ = triangle[`ib${index + 1}`];
-          angleElement.setPosition(innerBorderQ);
-          angleElement.updateAngle(start, delta + lineWidthAngle, 0, delta);
+          let triangleRotation = triangle.transform.r();
+          if (triangleRotation == null) {
+            triangleRotation = 0;
+          }
+          if (triangle.angleRadiusToInnerBorder) {
+            const lineWidthAngle = lineWidth / angleElement.radius * 0.9;
+            const innerBorderQ = triangle[`ib${index + 1}`];
+            angleElement.setPosition(innerBorderQ);
+            angleElement.updateAngle(start, delta + lineWidthAngle, triangleRotation, delta);
+          } else {
+            angleElement.setPosition(triangle[`p${index + 1}`]);
+            angleElement.updateAngle(start, delta, triangleRotation, delta);
+          }
+
           if (triangle.autoShowAngles) {
             const rp = q.sub(p).toPolar();
             const rq = r.sub(p).toPolar();
@@ -333,7 +350,7 @@ export default function makeTriangle(
       }
     });
   };
-
+  triangle.setTransformCallback = triangle.updateAngles.bind(triangle);
   triangle.updatePoints(p1, p2, p3);
   return triangle;
 }

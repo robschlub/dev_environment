@@ -25,7 +25,7 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   _line2: TypeLine;
   _angleA: TypeAngle;
   _angleB: TypeAngle;
-  _angleC: TypeAngle;
+  // _angleC: TypeAngle;
   eqn: Equation;
   _eqn: DiagramElementCollection;
   _triangle: {
@@ -45,14 +45,22 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
       layout.lineWidth,
       this.layout.colors.line,
     );
-
+    triangle.angleRadiusToInnerBorder = false;
     const a = layout.angle;
     const aColor = this.layout.colors.angleA;
     const bColor = this.layout.colors.angleB;
-    // const cColor = this.layout.colors.angleC;
+    const cColor = this.layout.colors.angleC;
     triangle.addAngle(1, a.radius, a.lineWidth, a.sides, aColor, 'a');
     triangle.addAngle(2, a.radius, a.lineWidth, a.sides, bColor, 'b');
-    // triangle.addAngle(3, a.radius, a.lineWidth, a.sides, cColor, 'c');
+    triangle.addAngle(3, a.radius, a.lineWidth, a.sides, cColor, 'c');
+    const { boundary } = layout;
+    // const pointColor = this.layout.colors.diagram.background;
+    const pointColor = this.layout.colors.point;
+    triangle.addPoint(1, layout.pointRadius, pointColor, true, boundary);
+    triangle.addPoint(2, layout.pointRadius, pointColor, true, boundary);
+    triangle.addPoint(3, layout.pointRadius, pointColor, true, boundary);
+    // triangle.hasTouchableElements = true;
+    // triangle.updatePointsCallback = this.updatePositions.bind(this);
     return triangle;
   }
 
@@ -91,17 +99,18 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     this.diagram.animateNextFrame();
   }
 
-  pulseAlternateC() {
-    this._angleC.pulseScaleNow(1, 1.5);
-    this.diagram.animateNextFrame();
-  }
+  // pulseAlternateC() {
+  //   this._angleC.pulseScaleNow(1, 1.5);
+  //   this.diagram.animateNextFrame();
+  // }
 
   resetColors() {
     this._angleA.setColor(this.layout.colors.angleA);
     this._angleB.setColor(this.layout.colors.angleB);
-    this._angleC.setColor(this.layout.colors.angleC);
+    // this._angleC.setColor(this.layout.colors.angleC);
     this._triangle._angle1.setColor(this.layout.colors.angleA);
     this._triangle._angle2.setColor(this.layout.colors.angleB);
+    this._triangle._angle3.setColor(this.layout.colors.angleC);
     this._triangle._line.setColor(this.layout.colors.line);
   }
 
@@ -131,14 +140,14 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
       this.layout.colors.angleB,
     );
     angleB.addLabel('b', layout.labelRadius);
-    const angleC = makeAngle(
-      this.diagram, layout.radius, layout.lineWidth, layout.sides,
-      this.layout.colors.angleC,
-    );
-    angleC.addLabel('c', layout.labelRadius);
+    // const angleC = makeAngle(
+    //   this.diagram, layout.radius, layout.lineWidth, layout.sides,
+    //   this.layout.colors.angleC,
+    // );
+    // angleC.addLabel('c', layout.labelRadius);
     this.add('angleA', angleA);
     this.add('angleB', angleB);
-    this.add('angleC', angleC);
+    // this.add('angleC', angleC);
   }
 
   updatePositions() {
@@ -150,10 +159,10 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     const angleC = Math.PI - (angle13 + Math.PI - angle23);
     this._angleA.updateAngle(Math.PI, angle13);
     this._angleB.updateAngle(Math.PI + angle13 + angleC, Math.PI - angle23);
-    this._angleC.updateAngle(Math.PI + angle13, angleC);
+    // this._angleC.updateAngle(Math.PI + angle13, angleC);
     this._angleA.setPosition(this._triangle.p3);
     this._angleB.setPosition(this._triangle.p3);
-    this._angleC.setPosition(this._triangle.p3);
+    // this._angleC.setPosition(this._triangle.p3);
   }
 
   updatePoints() {
@@ -163,6 +172,19 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     if (p1 != null && p2 != null && p3 != null) {
       this._triangle.updatePoints(p1, p2, p3);
     }
+  }
+
+  resetTrianglePointsToRotation() {
+    const p1 = this._triangle._point1.getDiagramPosition();
+    const p2 = this._triangle._point2.getDiagramPosition();
+    const p3 = this._triangle._point3.getDiagramPosition();
+    console.log(p1, p2, p3, this._triangle.transform.r() * 180 / Math.PI)
+    
+    // this._triangle.updatePoints(p1, p2, p3);
+    this._triangle.transform.updateRotation(1);
+    this._triangle.updateAngles();
+    console.log(p1, p2, p3, this._triangle.transform.r() * 180 / Math.PI)
+    this.diagram.animateNextFrame();
   }
 
   constructor(
@@ -188,6 +210,19 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     this.futurePositions.push({
       element: this._line2,
       scenario: { position: new Point(-2.5, this._triangle.p3.y) },
+    });
+  }
+
+  calculateTriangleFuturePositions() {
+    const angle12 = this._triangle.p2.sub(this._triangle.p1).toPolar().angle;
+    let toRotate = -angle12;
+    if (this._triangle.clockwise) {
+      toRotate = Math.PI - angle12;
+    }
+    this.futurePositions = [];
+    this.futurePositions.push({
+      element: this._triangle,
+      scenario: { rotation: toRotate },
     });
   }
 

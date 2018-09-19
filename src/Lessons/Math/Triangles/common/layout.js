@@ -46,7 +46,7 @@ export default function commonLessonLayout() {
   };
   layout.totalAngle = {
     lineWidth: 0.02,
-    // pointRadius,
+    pointRadius: 0.4,
     pointPositions: {
       p1: new Point(-2, -1),
       p2: new Point(2, -1),
@@ -64,9 +64,9 @@ export default function commonLessonLayout() {
       position: new Point(-1.6, 0.8),
       scale: 1.2,
     },
-    // boundary: new Rect(
-    //   -2.5, -1.5, 5, 2.3,
-    // ),
+    boundary: new Rect(
+      -2.5, -1.5, 5, 2.3,
+    ),
     // pointSides: 50,
     // randomBoundary: new Rect(
     //   0.2,
@@ -75,10 +75,10 @@ export default function commonLessonLayout() {
     //   0.5,
     // ),
     angle: {
-      radius: 0.3,
+      radius: 0.4,
       lineWidth: 0.03,
       sides: 200,
-      labelRadius: 0.35,
+      labelRadius: 0.45,
     },
   };
 
