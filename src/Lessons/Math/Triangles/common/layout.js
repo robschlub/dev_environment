@@ -56,6 +56,10 @@ export default function commonLessonLayout() {
       length: 5,
       width: 0.015,
     },
+    equation: {
+      position: new Point(-0.7, 1),
+      scale: 1.2,
+    },
     // boundary: new Rect(
     //   -2.5, -1.5, 5, 2.3,
     // ),

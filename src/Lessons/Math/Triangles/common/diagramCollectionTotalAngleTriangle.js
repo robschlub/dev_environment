@@ -4,7 +4,7 @@ import {
   Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  DiagramElementPrimative,
+  DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 import {
   removeRandElement, rand,
@@ -17,6 +17,7 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
+import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 
 export default class TotalAngleTriangleCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -25,6 +26,8 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   _angleA: TypeAngle;
   _angleB: TypeAngle;
   _angleC: TypeAngle;
+  eqn: Equation;
+  _eqn: DiagramElementCollection;
   _triangle: {
     _point1: DiagramElementPrimative;
     _point2: DiagramElementPrimative;
@@ -51,6 +54,31 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     triangle.addAngle(2, a.radius, a.lineWidth, a.sides, bColor, 'b');
     // triangle.addAngle(3, a.radius, a.lineWidth, a.sides, cColor, 'c');
     return triangle;
+  }
+
+  addEquation(
+  ) {
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements(
+      {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+        equals: ' = ',
+        plus: ' + ',
+        plus2: ' + ',
+        _180: '180º',
+      },
+      this.layout.colors.diagram.text.base,
+    );
+    eqn.formAlignment.scale = this.layout.totalAngle.equation.scale;
+    eqn.addForm('base', ['a', 'plus', 'b', 'plus2', 'c', 'equals', '_180']);
+    eqn.setElem('a', this.colors.angleA, false);
+    eqn.setElem('b', this.colors.angleB, false);
+    eqn.setElem('c', this.colors.angleC, false);
+    eqn.collection.setPosition(this.layout.totalAngle.equation.position);
+    this.add('eqn', eqn.collection);
+    this.eqn = eqn;
   }
 
   pulseAlternateA() {
@@ -145,6 +173,7 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     this.add('triangle', this.makeTri());
     this.addParallelLines();
     this.addAlternateAngles();
+    this.addEquation();
     this.updatePositions();
     this.hasTouchableElements = true;
   }

@@ -1413,6 +1413,7 @@ export class Equation {
     const form = this.currentForm;
     if (form != null) {
       form.showHide();
+      this.collection.show();
       form.setPositions();
     }
   }
@@ -1459,7 +1460,7 @@ export class Equation {
 
   showForm(
     formOrName: EquationForm | string,
-    formType: ?string,
+    formType: ?string = null,
   ) {
     if (typeof formOrName === 'string') {
       if (formOrName in this.form) {

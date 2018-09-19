@@ -259,7 +259,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-          Now, |a|, |b| and |c| around the top point are |supplementary_angles|. They add up to |180º or π radians|.
+          Now, |a|, |b| and |c| around the top point are |supplementary_angles|, so:
         </p>
       `,
       modifiers: {
@@ -275,6 +275,7 @@ class Content extends LessonContent {
       showOnly: [
         qr,
         totalAngle,
+        totalAngle._eqn,
       ],
       show: [
         totalAngle._triangle,
@@ -284,6 +285,9 @@ class Content extends LessonContent {
         totalAngle._angleA,
         totalAngle._angleB,
       ],
+      setSteadyState: () => {
+        totalAngle.eqn.showForm('base');
+      },
       setLeaveState: () => {
         totalAngle.resetColors();
       },
@@ -292,7 +296,11 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-         So, we know |a| + |b| + |c| = 180º, on in other words, all the angles in a triangle add up to 180º or π radians.
+         Therefore, we know |a|, |b| and |c| are angles in the triangle and
+        </p>
+
+         <p style="margin-top:85%">
+         Therefore, all the angles in a triangle add up to 180º.
         </p>
       `,
       modifiers: {
@@ -317,6 +325,9 @@ class Content extends LessonContent {
         // totalAngle._angleA,
         // totalAngle._angleB,
       ],
+      setSteadyState: () => {
+        totalAngle.eqn.showForm('base');
+      },
       setLeaveState: () => {
         totalAngle.resetColors();
       },
