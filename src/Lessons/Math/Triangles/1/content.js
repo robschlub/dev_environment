@@ -166,14 +166,9 @@ class Content extends LessonContent {
       title: 'Total Angle',
       setContent: `
         <p>
-          Start with |any| triangle that has angles |a|, |b|, and |c|.
+          Start with |any| triangle.
         </p>
       `,
-      modifiers: {
-        b: highlight(colors.angleB),
-        a: highlight(colors.angleA),
-        c: highlight(colors.angleC),
-      },
       setEnterState: () => {
         totalAngle._triangle.hasTouchableElements = true;
       },
@@ -183,6 +178,11 @@ class Content extends LessonContent {
       show: [
         totalAngle._triangle,
         // totalAngle._angleC,
+      ],
+      hide: [
+        totalAngle._triangle._angle1,
+        totalAngle._triangle._angle2,
+        totalAngle._triangle._angle3,
       ],
       setLeaveState: () => {
         totalAngle._triangle.hasTouchableElements = false;
@@ -204,12 +204,18 @@ class Content extends LessonContent {
       show: [
         totalAngle._triangle,
       ],
+      hide: [
+        totalAngle._triangle._angle1,
+        totalAngle._triangle._angle2,
+        totalAngle._triangle._angle3,
+      ],
       transitionFromAny: (done) => {
         totalAngle.moveToFuturePositions(1, done);
       },
       setSteadyState: () => {
         totalAngle.setFuturePositions();
         totalAngle.resetTrianglePointsToRotation();
+        console.log(totalAngle._triangle.transform.t())
       },
     });
 

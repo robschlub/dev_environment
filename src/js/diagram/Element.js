@@ -788,8 +788,8 @@ class DiagramElement {
         // the animation plan (incase a callback is used to start another
         // animation)
         const endTransform = this.calcNextAnimationTransform(phase.time);
-        this.stopAnimating(true);
         this.setTransform(endTransform);
+        this.stopAnimating(true);
         return;
       }
       // If we are here, that means the time elapsed is not more than the

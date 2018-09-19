@@ -178,12 +178,21 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     const p1 = this._triangle._point1.getDiagramPosition();
     const p2 = this._triangle._point2.getDiagramPosition();
     const p3 = this._triangle._point3.getDiagramPosition();
-    console.log(p1, p2, p3, this._triangle.transform.r() * 180 / Math.PI)
-    
-    // this._triangle.updatePoints(p1, p2, p3);
-    this._triangle.transform.updateRotation(1);
-    this._triangle.updateAngles();
-    console.log(p1, p2, p3, this._triangle.transform.r() * 180 / Math.PI)
+    const points = [p1, p2, p3];
+    const indexOfXMin = points.reduce((iMin, p, i, arr) => (p.x < arr[iMin].x ? i : iMin), 0);
+    const indexOfXMax = points.reduce((iMax, p, i, arr) => (p.x > arr[iMax].x ? i : iMax), 0);
+    const indexOfYMax = points.reduce((iMax, p, i, arr) => (p.y > arr[iMax].y ? i : iMax), 0);
+
+    const q1 = points[indexOfXMin];
+    const q2 = points[indexOfXMax];
+    const q3 = points[indexOfYMax];
+    // this._triangle.transform.updateRotation(0);
+    // this._triangle.updatePoints(q1, q2, q3);
+
+    // const t = this._triangle.transform.t() || new Point(0, 0);
+    // this._triangle.transform.updateTranslation(0, 0);
+    // this._triangle.updatePoints(q1.sub(t), q2.sub(t), q3.sub(t));
+    // this._triangle.updateAngles();
     this.diagram.animateNextFrame();
   }
 
@@ -214,15 +223,41 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   }
 
   calculateTriangleFuturePositions() {
-    const angle12 = this._triangle.p2.sub(this._triangle.p1).toPolar().angle;
-    let toRotate = -angle12;
-    if (this._triangle.clockwise) {
-      toRotate = Math.PI - angle12;
-    }
+    // console.log('start', this._triangle.transform.t())
+    const tri = this._triangle;
+    // console.log((this._triangle.transform.t() || new Point(0, 0))._dup(), tri.p1._dup(), tri.p2._dup(), tri.p3._dup());
+    this._triangle.centerTriangleToPoints();
+    this._triangle.zeroRotationToLongestEdge();
+    // this._triangle.transform.updateRotation(0);
+    // const length12 = tri.p2.sub(tri.p1).distance();
+    // const length13 = tri.p3.sub(tri.p1).distance();
+    // const length23 = tri.p3.sub(tri.p2).distance();
+    // const triCenter = this._triangle.transform.t() || new Point(0, 0);
+    // console.log(triCenter._dup(), tri.p1._dup(), tri.p2._dup(), tri.p3._dup());
+    // const center = tri.getCenter();
+    // console.log(center, new Point(0, 0).sub(center))
+    // const maxLength = Math.max(length12, length13, length23);
+    // let p = tri.p1;
+    // let q = tri.p2;
+    // if (length13 === maxLength) {
+    //   q = tri.p3;
+    // }
+    // if (length23 === maxLength) {
+    //   p = tri.p2;
+    //   q = tri.p3;
+    // }
+    // const anglePQ = q.sub(p).toPolar().angle;
+    // let toRotate = -anglePQ;
+    // if (this._triangle.clockwise) {
+    //   toRotate = Math.PI - anglePQ;
+    // }
     this.futurePositions = [];
     this.futurePositions.push({
       element: this._triangle,
-      scenario: { rotation: toRotate },
+      scenario: {
+        position: new Point(0, 0),
+        rotation: 0,
+      },
     });
   }
 

@@ -48,6 +48,7 @@ export type TypeTriangle = {
   dimensionList: Array<Array<number>>;
   updatePointsCallback: () => void | null;
   angleRadiusToInnerBorder: boolean;
+  centerTriangleToPoints: () => void;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -73,7 +74,7 @@ export default function makeTriangle(
   lineWidth: number,
   color: Array<number>,
 ) {
-  const triangle = diagram.shapes.collection(new Transform()
+  const triangle = diagram.shapes.collection(new Transform('Triangle')
     .scale(1, 1)
     .rotate(0)
     .translate(0, 0));
@@ -350,6 +351,46 @@ export default function makeTriangle(
       }
     });
   };
+
+  triangle.centerTriangleToPoints = () => {
+    const mid12 = triangle.b12.midpoint();
+    const mid13 = triangle.b31.midpoint();
+    const lineMid12To3 = new Line(mid12, triangle.p3);
+    const lineMid13To2 = new Line(mid13, triangle.p2);
+    const center = lineMid12To3.intersectsWith(lineMid13To2).intersect;
+    triangle.transform.updateTranslation(center);
+    triangle.updatePoints(
+      triangle.p1.sub(center),
+      triangle.p2.sub(center),
+      triangle.p3.sub(center),
+    );
+  };
+
+  triangle.zeroRotationToLongestEdge = () => {
+    const maxLength = Math.max(triangle.b12.length(), triangle.b31.length(), triangle.b23.length());
+    let q = triangle.p1;
+    let r = triangle.p2;
+    if (triangle.b31.length() === maxLength) {
+      q = triangle.p3;
+      r = triangle.p1;
+    } else if (triangle.b23.length() === maxLength) {
+      q = triangle.p2;
+      r = triangle.p3;
+    }
+    const angleQR = r.sub(q).toPolar().angle;
+    let toRotate = angleQR;
+    if (triangle.clockwise) {
+      toRotate = Math.PI + angleQR;
+    }
+    const rotMatrix = new Transform().rotate(-toRotate).m();
+    triangle.updatePoints(
+      triangle.p1.transformBy(rotMatrix),
+      triangle.p2.transformBy(rotMatrix),
+      triangle.p3.transformBy(rotMatrix),
+    );
+    triangle.transform.updateRotation(toRotate);
+  };
+
   triangle.setTransformCallback = triangle.updateAngles.bind(triangle);
   triangle.updatePoints(p1, p2, p3);
   return triangle;
