@@ -67,6 +67,14 @@ class Content extends LessonContent {
       modifiers: {
         three_points: click(custom.newTriangle, [custom], colors.pointText),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Drag the points or touch the |three_points| text to change the triangle.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        three_points: highlight(colors.pointText),
+      },
       show: [
         custom,
       ],
@@ -94,6 +102,16 @@ class Content extends LessonContent {
       modifiers: {
         three_side_lengths: click(properties.growDimensions, [properties], colors.dimensions),
         three_angle_sizes: click(properties.pulseAngles, [properties], colors.angleText),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Drag the triangle corners to change the triangle.</li>',
+        '<li>Touch the |three_side_lengths| and |three_angle_sizes| text to highlight the side lengths and angles.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        three_side_lengths: highlight(colors.dimensions),
+        three_angle_sizes: highlight(colors.angleText),
       },
       setEnterState: () => {
         if (this.comingFrom === 'prev') {
@@ -184,6 +202,14 @@ class Content extends LessonContent {
       `,
       modifiers: {
         any: click(totalAngle.randomize, [totalAngle], colors.diagram.action),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Drag the corners or touch the |any| text to change the triangle.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        any: highlight(colors.diagram.action),
       },
       setEnterState: () => {
         totalAngle._triangle.hasTouchableElements = true;
@@ -477,7 +503,6 @@ class Content extends LessonContent {
       ],
       show: [
         totalAngle._triangle,
-        // totalAngle._angleC,
       ],
     });
 

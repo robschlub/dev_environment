@@ -231,9 +231,20 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     });
   }
 
-  randomize() {
+  randomize(hideAngles: boolean = false) {
     this.calculateFuturePositions();
-    this.moveToFuturePositions(1);
+    let done = null;
+    if (hideAngles) {
+      this._triangle._angle1.hideAll();
+      this._triangle._angle2.hideAll();
+      this._triangle._angle3.hideAll();
+      done = () => {
+        this._triangle._angle1.showAll();
+        this._triangle._angle2.showAll();
+        this._triangle._angle3.showAll();
+      };
+    }
+    this.moveToFuturePositions(1, done);
     this.diagram.animateNextFrame();
   }
 
