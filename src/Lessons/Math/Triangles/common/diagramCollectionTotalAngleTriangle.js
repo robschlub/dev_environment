@@ -175,17 +175,17 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   }
 
   resetTrianglePointsToRotation() {
-    const p1 = this._triangle._point1.getDiagramPosition();
-    const p2 = this._triangle._point2.getDiagramPosition();
-    const p3 = this._triangle._point3.getDiagramPosition();
-    const points = [p1, p2, p3];
-    const indexOfXMin = points.reduce((iMin, p, i, arr) => (p.x < arr[iMin].x ? i : iMin), 0);
-    const indexOfXMax = points.reduce((iMax, p, i, arr) => (p.x > arr[iMax].x ? i : iMax), 0);
-    const indexOfYMax = points.reduce((iMax, p, i, arr) => (p.y > arr[iMax].y ? i : iMax), 0);
+    // const p1 = this._triangle._point1.getDiagramPosition();
+    // const p2 = this._triangle._point2.getDiagramPosition();
+    // const p3 = this._triangle._point3.getDiagramPosition();
+    // const points = [p1, p2, p3];
+    // const indexOfXMin = points.reduce((iMin, p, i, arr) => (p.x < arr[iMin].x ? i : iMin), 0);
+    // const indexOfXMax = points.reduce((iMax, p, i, arr) => (p.x > arr[iMax].x ? i : iMax), 0);
+    // const indexOfYMax = points.reduce((iMax, p, i, arr) => (p.y > arr[iMax].y ? i : iMax), 0);
 
-    const q1 = points[indexOfXMin];
-    const q2 = points[indexOfXMax];
-    const q3 = points[indexOfYMax];
+    // const q1 = points[indexOfXMin];
+    // const q2 = points[indexOfXMax];
+    // const q3 = points[indexOfYMax];
     // this._triangle.transform.updateRotation(0);
     // this._triangle.updatePoints(q1, q2, q3);
 
@@ -193,6 +193,8 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     // this._triangle.transform.updateTranslation(0, 0);
     // this._triangle.updatePoints(q1.sub(t), q2.sub(t), q3.sub(t));
     // this._triangle.updateAngles();
+    this._triangle.setTriangleCollectionPositionTo(new Point(0, 0));
+    this._triangle.setTriangleCollectionRotationTo(0);
     this.diagram.animateNextFrame();
   }
 
@@ -231,9 +233,17 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     const width = tri.getSideLine(...longestLine)
       .length();
     const rotation = tri.getRotationToSide(...longestLine);
-
+    const longSide = tri.getSideLine(...longestLine);
+    
+    // need to center points in triangle around 0, 0 first so rotation is
+    // is clean.
     tri.setTriangleCollectionPositionTo(center);
     tri.setTriangleCollectionRotationTo(rotation);
+
+    const points = [tri.p1.x, tri.p2.x, tri.p3.x];
+    const minX = Math.min(...points);
+    // const maxX = Math.max(...points);
+    const offset = -width / 2 - minX;
 
     // this._triangle.centerPointsTo(new Point(0, 0));
     // this._triangle.zeroRotationToLongestEdge();
@@ -261,11 +271,12 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     // if (this._triangle.clockwise) {
     //   toRotate = Math.PI - anglePQ;
     // }
+    // const offset = (this.diagram.limits.width - width) / 2;
     this.futurePositions = [];
     this.futurePositions.push({
       element: this._triangle,
       scenario: {
-        position: new Point(0, 0),
+        position: new Point(offset, -height / 3),
         rotation: 0,
       },
     });

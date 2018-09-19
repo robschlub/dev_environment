@@ -442,30 +442,30 @@ export default function makeTriangle(
   //   );
   // };
 
-  triangle.zeroRotationToLongestEdge = () => {
-    const maxLength = Math.max(triangle.b12.length(), triangle.b31.length(), triangle.b23.length());
-    let q = triangle.p1;
-    let r = triangle.p2;
-    if (triangle.b31.length() === maxLength) {
-      q = triangle.p3;
-      r = triangle.p1;
-    } else if (triangle.b23.length() === maxLength) {
-      q = triangle.p2;
-      r = triangle.p3;
-    }
-    const angleQR = r.sub(q).toPolar().angle;
-    let toRotate = angleQR;
-    if (triangle.clockwise) {
-      toRotate = Math.PI + angleQR;
-    }
-    const rotMatrix = new Transform().rotate(-toRotate).m();
-    triangle.updatePoints(
-      triangle.p1.transformBy(rotMatrix),
-      triangle.p2.transformBy(rotMatrix),
-      triangle.p3.transformBy(rotMatrix),
-    );
-    triangle.transform.updateRotation(toRotate);
-  };
+  // triangle.zeroRotationToLongestEdge = () => {
+  //   const maxLength = Math.max(triangle.b12.length(), triangle.b31.length(), triangle.b23.length());
+  //   let q = triangle.p1;
+  //   let r = triangle.p2;
+  //   if (triangle.b31.length() === maxLength) {
+  //     q = triangle.p3;
+  //     r = triangle.p1;
+  //   } else if (triangle.b23.length() === maxLength) {
+  //     q = triangle.p2;
+  //     r = triangle.p3;
+  //   }
+  //   const angleQR = r.sub(q).toPolar().angle;
+  //   let toRotate = angleQR;
+  //   if (triangle.clockwise) {
+  //     toRotate = Math.PI + angleQR;
+  //   }
+  //   const rotMatrix = new Transform().rotate(-toRotate).m();
+  //   triangle.updatePoints(
+  //     triangle.p1.transformBy(rotMatrix),
+  //     triangle.p2.transformBy(rotMatrix),
+  //     triangle.p3.transformBy(rotMatrix),
+  //   );
+  //   triangle.transform.updateRotation(toRotate);
+  // };
 
   triangle.setTransformCallback = triangle.updateAngles.bind(triangle);
   triangle.updatePoints(p1, p2, p3);
