@@ -180,7 +180,7 @@ class Content extends LessonContent {
     common = {
       setContent: `
         <p>
-          Draw parallel lines that enclose the triangle and align with the bottom side of the sides
+          Draw parallel lines that enclose the triangle and align with the bottom side of the triangle.
         </p>
       `,
       showOnly: [
@@ -195,28 +195,32 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
+      setEnterState: () => {
+        const { offScreen } = layout.totalAngle.parallelLine;
+        totalAngle.calculateParallelLineFuturePositions();
+        totalAngle._line1.setPosition(offScreen.line1);
+        totalAngle._line2.setPosition(offScreen.line2);
+      },
       show: [...common.show, totalAngle._line1, totalAngle._line2],
       transitionFromAny: (done) => {
-        totalAngle._line1.grow(0, 1, true, null);
-        totalAngle._line2.grow(0, 1, true, done);
+        totalAngle.moveToFuturePositions(1.5, done);
       },
       skipWhenComingFromNext: true,
+      setSteadyState: () => {
+        totalAngle.setFuturePositions();
+      },
     });
 
 
     common = {
       setContent: `
         <p>
-          In a system of one line intersecting two parallel lines, the |alternate_angles| are equal, so we can identify the alternate angle of |a|.
+          When one line intersects two parallel lines, the |alternate_angles| are equal, so we can identify the alternate angle of |a|.
         </p>
       `,
       modifiers: {
         alternate_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
-        a: click(totalAngle.pulseAlternateA, [totalAngle], colors.angleA),
-      },
-      setEnterState: () => {
-        totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
-        totalAngle._angleC.setColor(colors.diagram.disabled);
+        a: highlight(colors.angleA),
       },
       showOnly: [
         qr,
@@ -232,9 +236,22 @@ class Content extends LessonContent {
         totalAngle.resetColors();
       },
     };
-    this.addSection(common, {
-    });
-    this.addSection(common, {
+    const greyLines = {
+      setEnterState: () => {
+        totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
+        totalAngle._angleC.setColor(colors.diagram.disabled);
+        totalAngle._line1.setColor(colors.diagram.disabled);
+        totalAngle._line2.setColor(colors.diagram.disabled);
+        totalAngle._triangle._line.setColor(colors.diagram.disabled);
+      },
+    };
+    this.addSection(common);
+    this.addSection(common, greyLines);
+    this.addSection(common, greyLines, {
+      modifiers: {
+        alternate_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+        a: click(totalAngle.pulseAlternateA, [totalAngle], colors.angleA),
+      },
       show: [
         ...common.show,
         totalAngle._angleA,
@@ -244,21 +261,21 @@ class Content extends LessonContent {
       },
     });
 
-
     common = {
       setContent: `
         <p>
-          We can similarly identify the alternate angle of |b|.
+          We can similarly identify the |alternate_angle| of |b|.
         </p>
       `,
       modifiers: {
-        alternate_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
-        b: click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB),
+        alternate_angle: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+        b: highlight(colors.angleB),
       },
       setEnterState: () => {
         totalAngle._triangle._angle1.setColor(colors.diagram.disabled);
         totalAngle._angleC.setColor(colors.diagram.disabled);
         totalAngle._angleA.setColor(colors.diagram.disabled);
+        totalAngle._triangle._line.setColor(colors.diagram.disabled);
       },
       showOnly: [
         qr,
@@ -278,7 +295,7 @@ class Content extends LessonContent {
 
     this.addSection(common, {
     });
-
+    common.modifiers.b = click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB);
     this.addSection(common, {
       show: [...common.show, totalAngle._angleB],
       setSteadyState: () => {
@@ -286,21 +303,16 @@ class Content extends LessonContent {
       },
     });
 
-    this.addSection({
+    common = {
       setContent: `
         <p>
-          Around the triangle's top point, |a|, |b| and |c| form a straight angle and are therefore |supplementary_angles|.
+          Therefore:
         </p>
       `,
-      modifiers: {
-        supplementary_angles: click(qr._supplementary.show, [qr._supplementary], colors.line),
-        b: click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB),
-        a: click(totalAngle.pulseAlternateA, [totalAngle], colors.angleA),
-        c: click(totalAngle.pulseAlternateC, [totalAngle], colors.angleC),
-      },
       setEnterState: () => {
         totalAngle._triangle._angle1.setColor(colors.diagram.disabled);
         totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
+        totalAngle._triangle._line.setColor(colors.diagram.disabled);
       },
       showOnly: [
         qr,
@@ -321,45 +333,64 @@ class Content extends LessonContent {
       setLeaveState: () => {
         totalAngle.resetColors();
       },
+    };
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Around the triangle's top point, |a|, |b| and |c| form a straight angle and are therefore |supplementary_angles|.
+        </p>
+      `,
+      modifiers: {
+        supplementary_angles: click(qr._supplementary.show, [qr._supplementary], colors.line),
+        b: click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB),
+        a: click(totalAngle.pulseAlternateA, [totalAngle], colors.angleA),
+        c: click(totalAngle.pulseAlternateC, [totalAngle], colors.angleC),
+      },
+      setSteadyState: () => {},
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        totalAngle.eqn.showForm('base');
+      },
+    });
+    this.addSection(common, {
+      setEnterState: () => {
+        totalAngle._angleA.setColor(colors.diagram.disabled);
+        totalAngle._angleB.setColor(colors.diagram.disabled);
+        totalAngle._triangle._line.setColor(colors.diagram.disabled);
+      },
+      setSteadyState: () => {
+        totalAngle.eqn.showForm('base');
+      },
+    });
+    this.addSection(common, {
+      setEnterState: () => {
+      },
+      show: [
+        totalAngle._triangle,
+        totalAngle._angleC,
+      ],
+      setSteadyState: () => {
+        totalAngle.eqn.showForm('base');
+      },
     });
 
     this.addSection({
       setContent: `
         <p>
-         Therefore, we know |a|, |b| and |c| are angles in the triangle and
-        </p>
-
-         <p style="margin-top:85%">
-         Therefore, all the angles in a triangle add up to 180º.
+         And therefore we can see the angles in a triangle add up to 180º (π radians).
         </p>
       `,
-      modifiers: {
-        supplementary_angles: click(qr._supplementary.show, [qr._supplementary], colors.line),
-        b: highlight(colors.angleB),
-        a: highlight(colors.angleA),
-        c: highlight(colors.angleC),
-      },
-      setEnterState: () => {
-        // totalAngle._triangle._angle1.setColor(colors.diagram.disabled);
-        // totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
-      },
       showOnly: [
         qr,
         totalAngle,
       ],
       show: [
         totalAngle._triangle,
-        // totalAngle._line1,
-        // totalAngle._line2,
         totalAngle._angleC,
-        // totalAngle._angleA,
-        // totalAngle._angleB,
       ],
       setSteadyState: () => {
         totalAngle.eqn.showForm('base');
-      },
-      setLeaveState: () => {
-        totalAngle.resetColors();
       },
     });
   }

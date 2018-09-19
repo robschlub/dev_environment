@@ -102,6 +102,7 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     this._angleC.setColor(this.layout.colors.angleC);
     this._triangle._angle1.setColor(this.layout.colors.angleA);
     this._triangle._angle2.setColor(this.layout.colors.angleB);
+    this._triangle._line.setColor(this.layout.colors.line);
   }
 
   addParallelLines() {
@@ -176,6 +177,18 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     this.addEquation();
     this.updatePositions();
     this.hasTouchableElements = true;
+  }
+
+  calculateParallelLineFuturePositions() {
+    this.futurePositions = [];
+    this.futurePositions.push({
+      element: this._line1,
+      scenario: { position: new Point(-2.5, this._triangle.p1.y) },
+    });
+    this.futurePositions.push({
+      element: this._line2,
+      scenario: { position: new Point(-2.5, this._triangle.p3.y) },
+    });
   }
 
   calculateFuturePositions() {

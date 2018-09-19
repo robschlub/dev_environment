@@ -1155,17 +1155,6 @@ class DiagramElement {
     easeFunction: (number) => number = tools.easeinout,
     // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
-    // let translationPathMethod = this.animate.transform.translation.path;
-    // if (translationPath !== null && translationPath !== undefined) {
-    //   translationPathMethod = translationPath;
-    // }
-    // let time = 1;
-    // if (typeof timeOrVelocity === 'number') {
-    //   time = timeOrVelocity;
-    // } else {
-
-    // }
-
     const phase = new AnimationPhase(
       transform, timeOrVelocity, rotDirection,
       easeFunction, this.animate.transform.translation.style,
@@ -1174,6 +1163,19 @@ class DiagramElement {
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
     }
+  }
+
+  animateFrom(
+    transform: Transform,
+    timeOrVelocity: number | Transform = 1,
+    rotDirection: TypeRotationDirection = 0,
+    callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+    // translationPath: ?(Point, Point, number) => Point = null,
+  ): void {
+    const target = this.transform._dup();
+    this.transform = transform._dup();
+    this.animateTo(target, timeOrVelocity, rotDirection, callback, easeFunction);
   }
 
   animateColorTo(
@@ -1299,6 +1301,18 @@ class DiagramElement {
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
     }
+  }
+
+  // Will update only first instace of translation in the transform order
+  animateTranslationFrom(
+    translation: Point,
+    timeOrVelocity: number | Transform = 1,
+    callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+  ): void {
+    const target = this.transform._dup();
+    this.transform.updateTranslation(translation);
+    this.animateTo(target, timeOrVelocity, 0, callback, easeFunction);
   }
 
   animateTranslationToWithDelay(

@@ -55,9 +55,13 @@ export default function commonLessonLayout() {
     parallelLine: {
       length: 5,
       width: 0.015,
+      offScreen: {
+        line1: new Point(-2.5, -2),
+        line2: new Point(-2.5, 2),
+      },
     },
     equation: {
-      position: new Point(-0.7, 1),
+      position: new Point(-1.6, 0.8),
       scale: 1.2,
     },
     // boundary: new Rect(
