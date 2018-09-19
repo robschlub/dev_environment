@@ -3,7 +3,7 @@ import {
   LessonContent,
 } from '../../../../js/Lesson/LessonContent';
 import {
-  click, centerV,
+  click, centerV, highlight,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
@@ -164,14 +164,32 @@ class Content extends LessonContent {
       title: 'Total Angle',
       setContent: `
         <p>
-          Take |any| triangle and draw parallel lines that enclose the shape and align with one of the sides
+          Take |any| triangle and for convenience orient it so one side is horizontal.
         </p>
       `,
       showOnly: [
-        qr,
+        totalAngle,
       ],
       show: [
+        totalAngle._triangle,
+        totalAngle._angleC,
+      ],
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          Draw parallel lines that enclose the triangle and align with the bottom side of the sides
+        </p>
+      `,
+      showOnly: [
         totalAngle,
+      ],
+      show: [
+        totalAngle._triangle,
+        totalAngle._line1,
+        totalAngle._line2,
+        totalAngle._angleC,
       ],
     });
 
@@ -183,13 +201,125 @@ class Content extends LessonContent {
       `,
       modifiers: {
         alternate_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+        a: click(totalAngle.pulseAlternateA, [totalAngle], colors.angleA),
+      },
+      setEnterState: () => {
+        totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
+        totalAngle._angleC.setColor(colors.diagram.disabled);
+        // totalAngle._triangle._angle3.setColor(colors.diagram.disabled);
       },
       showOnly: [
         qr,
-      ],
-      show: [
         totalAngle,
       ],
+      show: [
+        totalAngle._triangle,
+        totalAngle._line1,
+        totalAngle._line2,
+        totalAngle._angleC,
+        totalAngle._angleA,
+      ],
+      setLeaveState: () => {
+        totalAngle.resetColors();
+      },
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          We can also identify the alternate angle of |b|.
+        </p>
+      `,
+      modifiers: {
+        alternate_angles: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+        b: click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB),
+      },
+      setEnterState: () => {
+        totalAngle._triangle._angle1.setColor(colors.diagram.disabled);
+        totalAngle._angleC.setColor(colors.diagram.disabled);
+        totalAngle._angleA.setColor(colors.diagram.disabled);
+      },
+      showOnly: [
+        qr,
+        totalAngle,
+      ],
+      show: [
+        totalAngle._triangle,
+        totalAngle._line1,
+        totalAngle._line2,
+        totalAngle._angleC,
+        totalAngle._angleA,
+        totalAngle._angleB,
+      ],
+      setLeaveState: () => {
+        totalAngle.resetColors();
+      },
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+          Now, |a|, |b| and |c| around the top point are |supplementary_angles|. They add up to |180º or π radians|.
+        </p>
+      `,
+      modifiers: {
+        supplementary_angles: click(qr._supplementary.show, [qr._supplementary], colors.line),
+        b: click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB),
+        a: click(totalAngle.pulseAlternateA, [totalAngle], colors.angleA),
+        c: click(totalAngle.pulseAlternateC, [totalAngle], colors.angleC),
+      },
+      setEnterState: () => {
+        totalAngle._triangle._angle1.setColor(colors.diagram.disabled);
+        totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
+      },
+      showOnly: [
+        qr,
+        totalAngle,
+      ],
+      show: [
+        totalAngle._triangle,
+        totalAngle._line1,
+        totalAngle._line2,
+        totalAngle._angleC,
+        totalAngle._angleA,
+        totalAngle._angleB,
+      ],
+      setLeaveState: () => {
+        totalAngle.resetColors();
+      },
+    });
+
+    this.addSection({
+      setContent: `
+        <p>
+         So, we know |a| + |b| + |c| = 180º, on in other words, all the angles in a triangle add up to 180º or π radians.
+        </p>
+      `,
+      modifiers: {
+        supplementary_angles: click(qr._supplementary.show, [qr._supplementary], colors.line),
+        b: highlight(colors.angleB),
+        a: highlight(colors.angleA),
+        c: highlight(colors.angleC),
+      },
+      setEnterState: () => {
+        // totalAngle._triangle._angle1.setColor(colors.diagram.disabled);
+        // totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
+      },
+      showOnly: [
+        qr,
+        totalAngle,
+      ],
+      show: [
+        totalAngle._triangle,
+        // totalAngle._line1,
+        // totalAngle._line2,
+        totalAngle._angleC,
+        // totalAngle._angleA,
+        // totalAngle._angleB,
+      ],
+      setLeaveState: () => {
+        totalAngle.resetColors();
+      },
     });
   }
 }
