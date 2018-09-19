@@ -231,6 +231,12 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     });
   }
 
+  randomize() {
+    this.calculateFuturePositions();
+    this.moveToFuturePositions(1);
+    this.diagram.animateNextFrame();
+  }
+
   calculateFuturePositions() {
     this.futurePositions = [];
     const layout = this.layout.totalAngle;

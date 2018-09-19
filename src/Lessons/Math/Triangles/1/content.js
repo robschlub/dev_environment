@@ -162,34 +162,38 @@ class Content extends LessonContent {
       ],
     });
 
-    this.addSection({
-      title: 'Total Angle',
-      setContent: `
-        <p>
-          Start with |any| triangle.
-        </p>
-      `,
-      setEnterState: () => {
-        totalAngle._triangle.hasTouchableElements = true;
-      },
+    common = {
       showOnly: [
         totalAngle,
       ],
       show: [
         totalAngle._triangle,
-        // totalAngle._angleC,
       ],
       hide: [
         totalAngle._triangle._angle1,
         totalAngle._triangle._angle2,
         totalAngle._triangle._angle3,
       ],
+    };
+    this.addSection(common, {
+      title: 'Total Angle',
+      setContent: `
+        <p>
+          Start with |any| triangle.
+        </p>
+      `,
+      modifiers: {
+        any: click(totalAngle.randomize, [totalAngle], colors.diagram.action),
+      },
+      setEnterState: () => {
+        totalAngle._triangle.hasTouchableElements = true;
+      },
       setLeaveState: () => {
         totalAngle._triangle.hasTouchableElements = false;
       },
     });
 
-    this.addSection({
+    this.addSection(common, {
       setContent: `
         <p>
           For convenience orient it so one side is horizontal.
@@ -198,25 +202,44 @@ class Content extends LessonContent {
       setEnterState: () => {
         totalAngle.calculateTriangleFuturePositions();
       },
-      showOnly: [
-        totalAngle,
-      ],
-      show: [
-        totalAngle._triangle,
-      ],
-      hide: [
-        totalAngle._triangle._angle1,
-        totalAngle._triangle._angle2,
-        totalAngle._triangle._angle3,
-      ],
       transitionFromAny: (done) => {
-        // console.log('transition', totalAngle._triangle.transform.t())
         totalAngle.moveToFuturePositions(1, done);
       },
       setSteadyState: () => {
         totalAngle.setFuturePositions();
         totalAngle.resetTrianglePoints();
-        // console.log('steady: ', totalAngle._triangle.transform.t())
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Label the angles |a|, |b| and |c|.
+        </p>
+      `,
+      modifiers: {
+        a: highlight(colors.angleA),
+        b: highlight(colors.angleB),
+        c: highlight(colors.angleC),
+      },
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Label the angles |a|, |b| and |c|.
+        </p>
+      `,
+      modifiers: {
+        a: highlight(colors.angleA),
+        b: highlight(colors.angleB),
+        c: highlight(colors.angleC),
+      },
+      hide: [],
+      setSteadyState: () => {
+        totalAngle._triangle._angle1.pulseScaleNow(1, 1.2);
+        totalAngle._triangle._angle2.pulseScaleNow(1, 1.2);
+        totalAngle._triangle._angle3.pulseScaleNow(1, 1.2);
       },
     });
 
@@ -399,13 +422,35 @@ class Content extends LessonContent {
       },
     });
     this.addSection(common, {
+      setContent: `
+        <p>
+          Remember, angles |a| and |b| originally come from the triangle.
+        </p>
+      `,
+      modifiers: {
+        b: highlight(colors.angleB),
+        a: highlight(colors.angleA),
+      },
+      setSteadyState: () => {},
+    });
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Remember, angles |a| and |b| originally come from the triangle.
+        </p>
+      `,
+      modifiers: {
+        b: highlight(colors.angleB),
+        a: highlight(colors.angleA),
+      },
       setEnterState: () => {
         totalAngle._angleA.setColor(colors.diagram.disabled);
         totalAngle._angleB.setColor(colors.diagram.disabled);
-        totalAngle._triangle._line.setColor(colors.diagram.disabled);
+        // totalAngle._triangle._line.setColor(colors.diagram.disabled);
       },
       setSteadyState: () => {
-        totalAngle.eqn.showForm('base');
+        totalAngle._triangle._angle1.pulseScaleNow(1, 1.2);
+        totalAngle._triangle._angle2.pulseScaleNow(1, 1.2);
       },
     });
     this.addSection(common, {
@@ -423,7 +468,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: `
         <p>
-         And therefore we can see the angles in a triangle add up to 180º (π radians).
+         So angles in a triangle add up to |180º| or |π radians|.
         </p>
       `,
       showOnly: [
@@ -434,9 +479,14 @@ class Content extends LessonContent {
         totalAngle._triangle,
         // totalAngle._angleC,
       ],
-      setSteadyState: () => {
-        totalAngle.eqn.showForm('base');
-      },
+    });
+
+    this.addSection({
+      setContent: centerV(`
+        <p>
+         |All triangles| have this property. This means if you know two angles, you can always calculate the third!
+        </p>
+      `),
     });
   }
 }

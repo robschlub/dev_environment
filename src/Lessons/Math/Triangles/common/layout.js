@@ -61,19 +61,19 @@ export default function commonLessonLayout() {
       },
     },
     equation: {
-      position: new Point(-1.6, 0.8),
+      position: new Point(-1.3, 1.57),
       scale: 1.2,
     },
     boundary: new Rect(
       -2.5, -1.5, 5, 2.3,
     ),
     // pointSides: 50,
-    // randomBoundary: new Rect(
-    //   0.2,
-    //   0.2,
-    //   1.5,
-    //   0.5,
-    // ),
+    randomBoundary: new Rect(
+      1,
+      0.5,
+      1.5,
+      1,
+    ),
     angle: {
       radius: 0.4,
       lineWidth: 0.03,
