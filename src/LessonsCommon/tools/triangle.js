@@ -352,19 +352,95 @@ export default function makeTriangle(
     });
   };
 
-  triangle.centerTriangleToPoints = () => {
+  triangle.getCenter = () => {
     const mid12 = triangle.b12.midpoint();
     const mid13 = triangle.b31.midpoint();
     const lineMid12To3 = new Line(mid12, triangle.p3);
     const lineMid13To2 = new Line(mid13, triangle.p2);
-    const center = lineMid12To3.intersectsWith(lineMid13To2).intersect;
-    triangle.transform.updateTranslation(center);
-    triangle.updatePoints(
-      triangle.p1.sub(center),
-      triangle.p2.sub(center),
-      triangle.p3.sub(center),
-    );
+    return lineMid12To3.intersectsWith(lineMid13To2).intersect;
   };
+
+  triangle.getLongestSide = () => {
+    const max = Math.max(
+      triangle.b12.length(),
+      triangle.b31.length(),
+      triangle.b23.length(),
+    );
+    let q = 1;
+    let r = 2;
+    if (triangle.b31.length() === max) {
+      q = 3;
+      r = 1;
+    } else if (triangle.b23.length() === max) {
+      q = 2;
+      r = 3;
+    }
+    return [q, r];
+  };
+
+  triangle.getSideLine = (q: number, r: number) => triangle[`b${q}${r}`];
+
+  triangle.getHeight = (q: number, r: number) => {
+    const mid = triangle[`b${q}${r}`].midpoint();
+    const pointIndeces = [1, 2, 3];
+    const topPoint = pointIndeces.reduce(
+      (tp, p) => (p === q || p === r ? tp : p),
+      1,
+    );
+    const heightLine = new Line(mid, triangle[`p${topPoint}`]);
+    return heightLine.length();
+  };
+
+  triangle.getRotationToSide = (q: number, r: number) => {
+    const angleQR = triangle[`p${r}`].sub(triangle[`p${q}`]).toPolar().angle;
+    let rotation = angleQR;
+    if (triangle.clockwise) {
+      rotation = Math.PI + angleQR;
+    }
+    return rotation;
+  };
+
+  triangle.setTriangleCollectionPositionTo = (newPosition: Point) => {
+    const t = triangle.transform.t();
+    if (t != null) {
+      const delta = t.sub(newPosition);
+      triangle.transform.updateTranslation(newPosition);
+      triangle.updatePoints(
+        triangle.p1.add(delta),
+        triangle.p2.add(delta),
+        triangle.p3.add(delta),
+      );
+    }
+  };
+
+  triangle.setTriangleCollectionRotationTo = (newRotation: number) => {
+    const r = triangle.transform.r();
+    if (r != null) {
+      const delta = r - newRotation;
+      const deltaMatrix = new Transform().rotate(delta).m();
+      triangle.updatePoints(
+        triangle.p1.transformBy(deltaMatrix),
+        triangle.p2.transformBy(deltaMatrix),
+        triangle.p3.transformBy(deltaMatrix),
+      );
+      triangle.transform.updateRotation(newRotation);
+    }
+  };
+  // triangle.centerPointsTo = (newCenter: Point = new Point(0, 0)) => {
+  //   const mid12 = triangle.b12.midpoint();
+  //   const mid13 = triangle.b31.midpoint();
+  //   const lineMid12To3 = new Line(mid12, triangle.p3);
+  //   const lineMid13To2 = new Line(mid13, triangle.p2);
+  //   const center = lineMid12To3.intersectsWith(lineMid13To2).intersect;
+  //   const delta = center.sub(newCenter);
+  //   console.log('center: ', center, 'delta:', delta)
+  //   triangle.transform.updateTranslation(newCenter);
+  //   triangle.updatePoints(
+  //     triangle.p1.sub(delta),
+  //     triangle.p2.sub(delta),
+  //     triangle.p3.sub(delta),
+  //   );
+  // };
 
   triangle.zeroRotationToLongestEdge = () => {
     const maxLength = Math.max(triangle.b12.length(), triangle.b31.length(), triangle.b23.length());

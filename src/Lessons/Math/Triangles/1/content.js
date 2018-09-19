@@ -210,12 +210,13 @@ class Content extends LessonContent {
         totalAngle._triangle._angle3,
       ],
       transitionFromAny: (done) => {
+        console.log('transition', totalAngle._triangle.transform.t())
         totalAngle.moveToFuturePositions(1, done);
       },
       setSteadyState: () => {
         totalAngle.setFuturePositions();
         totalAngle.resetTrianglePointsToRotation();
-        console.log(totalAngle._triangle.transform.t())
+        console.log('steady: ', totalAngle._triangle.transform.t())
       },
     });
 

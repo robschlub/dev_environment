@@ -225,9 +225,19 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   calculateTriangleFuturePositions() {
     // console.log('start', this._triangle.transform.t())
     const tri = this._triangle;
-    // console.log((this._triangle.transform.t() || new Point(0, 0))._dup(), tri.p1._dup(), tri.p2._dup(), tri.p3._dup());
-    this._triangle.centerTriangleToPoints();
-    this._triangle.zeroRotationToLongestEdge();
+    const center = tri.getCenter();
+    const longestLine = tri.getLongestSide();
+    const height = tri.getHeight(...longestLine);
+    const width = tri.getSideLine(...longestLine)
+      .length();
+    const rotation = tri.getRotationToSide(...longestLine);
+
+    tri.setTriangleCollectionPositionTo(center);
+    tri.setTriangleCollectionRotationTo(rotation);
+
+    // this._triangle.centerPointsTo(new Point(0, 0));
+    // this._triangle.zeroRotationToLongestEdge();
+    
     // this._triangle.transform.updateRotation(0);
     // const length12 = tri.p2.sub(tri.p1).distance();
     // const length13 = tri.p3.sub(tri.p1).distance();
