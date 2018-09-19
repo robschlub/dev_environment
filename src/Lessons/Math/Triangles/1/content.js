@@ -33,6 +33,7 @@ class Content extends LessonContent {
     const totalAngle = diag._totalAngle;
     const qr = diag._qr;
     // const qr = this.diagram.elements;
+    let common = {};
 
     this.addSection({
       title: 'Introduction',
@@ -176,7 +177,7 @@ class Content extends LessonContent {
       ],
     });
 
-    this.addSection({
+    common = {
       setContent: `
         <p>
           Draw parallel lines that enclose the triangle and align with the bottom side of the sides
@@ -187,16 +188,25 @@ class Content extends LessonContent {
       ],
       show: [
         totalAngle._triangle,
-        totalAngle._line1,
-        totalAngle._line2,
         totalAngle._angleC,
       ],
+    };
+    this.addSection(common, {
     });
 
-    this.addSection({
+    this.addSection(common, {
+      show: [...common.show, totalAngle._line1, totalAngle._line2],
+      transitionFromAny: (done) => {
+        totalAngle._line1.grow(0, 1, true, null);
+        totalAngle._line2.grow(0, 1, true, done);
+      },
+    });
+
+
+    common = {
       setContent: `
         <p>
-          We know |alternate_angles| are equal, and so we can identify the alternate angle of |a|.
+          In a system of one line intersecting two parallel lines, the |alternate_angles| are equal, so we can identify the alternate angle of |a|.
         </p>
       `,
       modifiers: {
@@ -206,7 +216,6 @@ class Content extends LessonContent {
       setEnterState: () => {
         totalAngle._triangle._angle2.setColor(colors.diagram.disabled);
         totalAngle._angleC.setColor(colors.diagram.disabled);
-        // totalAngle._triangle._angle3.setColor(colors.diagram.disabled);
       },
       showOnly: [
         qr,
@@ -217,17 +226,28 @@ class Content extends LessonContent {
         totalAngle._line1,
         totalAngle._line2,
         totalAngle._angleC,
-        totalAngle._angleA,
       ],
       setLeaveState: () => {
         totalAngle.resetColors();
       },
+    };
+    this.addSection(common, {
+    });
+    this.addSection(common, {
+      show: [
+        ...common.show,
+        totalAngle._angleA,
+      ],
+      setSteadyState: () => {
+        totalAngle.pulseAlternateA();
+      },
     });
 
-    this.addSection({
+
+    common = {
       setContent: `
         <p>
-          We can also identify the alternate angle of |b|.
+          We can similarly identify the alternate angle of |b|.
         </p>
       `,
       modifiers: {
@@ -249,17 +269,26 @@ class Content extends LessonContent {
         totalAngle._line2,
         totalAngle._angleC,
         totalAngle._angleA,
-        totalAngle._angleB,
       ],
       setLeaveState: () => {
         totalAngle.resetColors();
+      },
+    };
+
+    this.addSection(common, {
+    });
+
+    this.addSection(common, {
+      show: [...common.show, totalAngle._angleB],
+      setSteadyState: () => {
+        totalAngle.pulseAlternateB();
       },
     });
 
     this.addSection({
       setContent: `
         <p>
-          Now, |a|, |b| and |c| around the top point are |supplementary_angles|, so:
+          Around the triangle's top point, |a|, |b| and |c| form a straight angle and are therefore |supplementary_angles|.
         </p>
       `,
       modifiers: {

@@ -48,9 +48,9 @@ export default function commonLessonLayout() {
     lineWidth: 0.02,
     // pointRadius,
     pointPositions: {
-      p1: new Point(-1.5, -1),
-      p2: new Point(0, -1),
-      p3: new Point(1, 0.7),
+      p1: new Point(-2, -1),
+      p2: new Point(2, -1),
+      p3: new Point(-1, 0.5),
     },
     parallelLine: {
       length: 5,

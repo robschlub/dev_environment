@@ -107,11 +107,11 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   addParallelLines() {
     const layout = this.layout.totalAngle.parallelLine;
     const line1 = makeLine(
-      this.diagram, 'center', layout.length, layout.width,
+      this.diagram, 'end', layout.length, layout.width,
       this.layout.colors.parallelLines, true,
     );
     const line2 = makeLine(
-      this.diagram, 'center', layout.length, layout.width,
+      this.diagram, 'end', layout.length, layout.width,
       this.layout.colors.parallelLines, true,
     );
     this.add('line1', line1);
@@ -141,8 +141,8 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
   }
 
   updatePositions() {
-    this._line1.setPosition(0, this._triangle.p1.y);
-    this._line2.setPosition(0, this._triangle.p3.y);
+    this._line1.setPosition(-2.5, this._triangle.p1.y);
+    this._line2.setPosition(-2.5, this._triangle.p3.y);
 
     const angle13 = this._triangle.p3.sub(this._triangle.p1).toPolar().angle;
     const angle23 = this._triangle.p3.sub(this._triangle.p2).toPolar().angle;
