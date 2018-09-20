@@ -47,9 +47,6 @@ class Content extends LessonContent {
         <p>
           In mathematics, two shapes are |congruent| if they have the |same size and shape|.
         </p>
-        <p>
-          Congruent shapes include those which are mirror images of each other.
-        </p>
       `),
     });
 
@@ -84,7 +81,7 @@ class Content extends LessonContent {
         const lay = layout.triangles.congruent;
         const { scenario } = lay.tri1;
         tri.setTriangleScenarios(lay.points, lay.points, scenario, scenario);
-        tri.calculateFuturePositions(scenario, lay.tri2.scenario);
+        tri.calcTriFuturePositions(scenario, lay.tri2.scenario);
       },
       transitionFromAny: (done) => {
         tri.moveToFuturePositions(1.5, done);
@@ -111,7 +108,7 @@ class Content extends LessonContent {
         const lay = layout.triangles.congruentRot;
         const { scenario } = lay.tri1;
         tri.setTriangleScenarios(lay.points, lay.points, scenario, scenario);
-        tri.calculateFuturePositions(scenario, lay.tri2.scenario);
+        tri.calcTriFuturePositions(scenario, lay.tri2.scenario);
       },
       transitionFromAny: (done) => {
         tri.moveToFuturePositions(1.5, done);
@@ -134,12 +131,11 @@ class Content extends LessonContent {
       },
     });
     this.addSection(common, {
-      title: 'adsf',
       setEnterState: () => {
         const lay = layout.triangles.congruentFlip;
         const { scenario } = lay.tri1;
         tri.setTriangleScenarios(lay.points, lay.points, scenario, scenario);
-        tri.calculateFuturePositions(scenario, lay.tri2.scenario);
+        tri.calcTriFuturePositions(scenario, lay.tri2.scenario);
       },
       transitionFromAny: (done) => {
         tri.moveToFuturePositions(1.5, done);
@@ -148,6 +144,28 @@ class Content extends LessonContent {
         tri.setFuturePositions();
         tri._tri2.setTriangleCollectionScaleTo(new Point(1, 1));
       },
+    });
+
+    this.addSection({
+      title: 'Determining Congruency',
+      setContent: centerV(`
+        <p>
+          So |how| can you figure out if two triangles are congruent?
+        </p>
+        <p>
+          One way is to measure all the angles and sides and see if they are equal.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          But sometimes, it is even easier. There are some combinations of just |three properties|, that when they are the same on both triangles can guarantee the triangles are congruent.
+        </p>
+        <p>
+          We will look at different combinations of properties, and see how many triangles can be formed with those combinations. If just one can be formed, this will tell us that if two triangles share those same properties, then they must be congruent.
+        </p>
+      `),
     });
   }
 }

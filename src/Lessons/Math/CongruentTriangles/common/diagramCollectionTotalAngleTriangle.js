@@ -3,9 +3,9 @@ import LessonDiagram from './diagram';
 import {
   Transform, Point,
 } from '../../../../js/diagram/tools/g2';
-import {
-  DiagramElementPrimative, DiagramElementCollection,
-} from '../../../../js/diagram/Element';
+// import {
+//   DiagramElementPrimative, DiagramElementCollection,
+// } from '../../../../js/diagram/Element';
 // import {
 //   removeRandElement, rand,
 // } from '../../../../js/diagram/tools/mathtools';
@@ -21,6 +21,7 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 // import { makeLine } from '../../../../LessonsCommon/tools/line';
 // import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 // import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
+
 
 export default class TriangleCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -96,7 +97,7 @@ export default class TriangleCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  calculateFuturePositions(
+  calcTriFuturePositions(
     scenario1: TypeScenario, scenario2: TypeScenario,
   ) {
     this.futurePositions = [
