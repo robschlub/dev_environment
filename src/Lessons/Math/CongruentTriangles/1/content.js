@@ -6,10 +6,10 @@ import {
   Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  click, centerV, highlight,
+  click, centerV,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
-import Definition from '../../../../LessonsCommon/tools/definition';
+// import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import details from '../details';

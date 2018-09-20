@@ -1,6 +1,6 @@
 // @flow
 
-import { Rect, Point } from '../../../../js/diagram/tools/g2';
+import { Point } from '../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 

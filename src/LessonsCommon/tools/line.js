@@ -441,7 +441,10 @@ export function makeLine(
       // }
     }
 
-    line.label.updateRotation(labelAngle - parentRotationOffset, labelPosition, labelOffsetMag, labelOffsetAngle);
+    line.label.updateRotation(
+      labelAngle - parentRotationOffset,
+      labelPosition, labelOffsetMag, labelOffsetAngle,
+    );
   };
 
   line.setLength = (newLength: number) => {
