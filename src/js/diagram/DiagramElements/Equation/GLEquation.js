@@ -56,6 +56,7 @@ class Element {
       this.descent = -r.bottom * scale;
       this.height = r.height * scale;
       this.width = r.width * scale;
+      // console.log(this.height)
     }
   }
 
@@ -877,7 +878,7 @@ export class EquationForm extends Elements {
         || fixTo instanceof DiagramElementCollection) {
       const t = fixTo.transform.t();
       if (t != null) {
-        const rect = fixTo.getRelativeDiagramBoundingRect();
+        const rect = fixTo.getVertexSpaceBoundingRect();
         w = rect.width;
         h = rect.height;
         a = rect.top - t.y;
