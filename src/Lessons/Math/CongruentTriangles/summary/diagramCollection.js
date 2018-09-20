@@ -7,7 +7,7 @@ import LessonDiagram from './diagram';
 
 // import TriangleCollection from '../common/diagramCollectionTriangle';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
-import TotalAngleTriangleCollection from '../common/diagramCollectionTotalAngleTriangle';
+import TotalAngleTriangleCollection from '../common/diagramCollectionTriangles';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _triangle: TotalAngleTriangleCollection;

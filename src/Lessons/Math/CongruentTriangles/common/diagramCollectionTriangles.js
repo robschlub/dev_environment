@@ -23,7 +23,7 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 // import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
 
-export default class SASCollection extends CommonDiagramCollection {
+export default class TriangleCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _line1: TypeLine;
   _line2: TypeLine;
@@ -52,30 +52,16 @@ export default class SASCollection extends CommonDiagramCollection {
     return triangle;
   }
 
-  makeCorner() {
-    const corner = this.diagram.shapes.collection(new Transform('Corner')
-      .scale(1, 1)
-      .rotate(0)
-      .translate(0, 0));
-
-    const line = this.diagram.shapes.polyLine(
-      [new Point(1, -1+ 0.5), new Point(-1, -1), new Point(-1+0.5, 1)], false,
-      this.layout.triangle.lineWidth * 10, this.layout.colors.line,
-      'onSharpAnglesOnly',
-    );
-    corner.add('line', line);
-    return corner;
+  updateTriangle(
+    element: TypeTriangleAngle & TypeTriangle,
+    points: Array<Point>,
+    scenario: TypeScenario,
+  ) {
+    // console.log(element, points, scenario)
+    element.updatePoints(...points);
+    this.setScenario(element, scenario);
+    this.diagram.animateNextFrame();
   }
-  // updateTriangle(
-  //   element: TypeTriangleAngle & TypeTriangle,
-  //   points: Array<Point>,
-  //   scenario: TypeScenario,
-  // ) {
-  //   // console.log(element, points, scenario)
-  //   element.updatePoints(...points);
-  //   this.setScenario(element, scenario);
-  //   this.diagram.animateNextFrame();
-  // }
 
   showLineLabels(show: boolean | null = true) {
     let toShow = true;
@@ -111,22 +97,22 @@ export default class SASCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  // calcTriFuturePositions(
-  //   scenario1: TypeScenario, scenario2: TypeScenario,
-  // ) {
-  //   this.futurePositions = [
-  //     { element: this._tri1, scenario: scenario1 },
-  //     { element: this._tri2, scenario: scenario2 },
-  //   ];
-  // }
+  calcTriFuturePositions(
+    scenario1: TypeScenario, scenario2: TypeScenario,
+  ) {
+    this.futurePositions = [
+      { element: this._tri1, scenario: scenario1 },
+      { element: this._tri2, scenario: scenario2 },
+    ];
+  }
 
-  // setTriangleScenarios(
-  //   points1: Array<Point>, points2: Array<Point>,
-  //   scenario1: TypeScenario, scenario2: TypeScenario,
-  // ) {
-  //   this.updateTriangle(this._tri1, points1, scenario1);
-  //   this.updateTriangle(this._tri2, points2, scenario2);
-  // }
+  setTriangleScenarios(
+    points1: Array<Point>, points2: Array<Point>,
+    scenario1: TypeScenario, scenario2: TypeScenario,
+  ) {
+    this.updateTriangle(this._tri1, points1, scenario1);
+    this.updateTriangle(this._tri2, points2, scenario2);
+  }
 
   constructor(
     diagram: LessonDiagram,
@@ -134,8 +120,8 @@ export default class SASCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    // this.add('tri', this.makeTri());
-    this.add('corner1', this.makeCorner());
+    this.add('tri1', this.makeTri());
+    this.add('tri2', this.makeTri());
     this.hasTouchableElements = true;
   }
 }

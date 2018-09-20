@@ -436,9 +436,6 @@ export function makeLine(
       if (Math.cos(lineAngle) < 0) {
         labelAngle = Math.PI;
       }
-      // if (roundNum(Math.cos(lineAngle), 4) === 0) {
-      //   labelAngle = -lineAngle;
-      // }
     }
 
     line.label.updateRotation(

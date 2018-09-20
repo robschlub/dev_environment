@@ -10,7 +10,7 @@ import LessonDiagram from './diagram';
 
 // import TriangleCollection from '../common/diagramCollectionTriangle';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import TotalAngleTriangleCollection from '../common/diagramCollectionTotalAngleTriangle';
+import TotalAngleTriangleCollection from '../common/diagramCollectionTriangles';
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 // import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 

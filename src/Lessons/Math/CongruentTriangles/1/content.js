@@ -30,6 +30,7 @@ class Content extends LessonContent {
   addSections() {
     const diag = this.diagram.elements;
     const tri = diag._triangle;
+    const sas = diag._sas;
     // const examples = diag._examples;
     // const custom = diag._custom;
     // const properties = diag._properties;
@@ -166,6 +167,17 @@ class Content extends LessonContent {
           We will look at different combinations of properties, and see how many triangles can be formed with those combinations. If just one can be formed, this will tell us that if two triangles share those same properties, then they must be congruent.
         </p>
       `),
+    });
+    this.addSection({
+      title: 'sas',
+      setContent: `
+        <p>
+          First consider the scenario where you know all three angles. How many triangles can you make from this?
+        </p>
+      `,
+      show: [
+        sas,
+      ],
     });
   }
 }
