@@ -6,7 +6,7 @@ import {
   click, centerV, highlight,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
-import Definition from '../../../../LessonsCommon/tools/definition';
+// import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import details from '../details';
@@ -44,7 +44,6 @@ class Content extends LessonContent {
         <p>
           Hence the name |tri| (three) |angle| (corner).
         </p>
-        ${new Definition('Triangle', 'Latin', ['triangulus', '', 'tri', 'three', 'angulus', 'corner, angle']).html('id_lesson__related_angles_definition')}
       `,
       // showOnly: [
       //   diag,

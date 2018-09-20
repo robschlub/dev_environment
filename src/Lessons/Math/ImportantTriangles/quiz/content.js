@@ -1,11 +1,10 @@
 // @flow
 import {
-  LessonContent,
+  LessonContent, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
 import {
   click, highlight,
 } from '../../../../js/tools/htmlGenerator';
-import Definition from '../../../../LessonsCommon/tools/definition';
 import LessonDiagram from './diagram';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
@@ -32,24 +31,15 @@ class Content extends LessonContent {
       title: 'Summary',
       setContent: `
         <p>
-          A |Triangle| is a shape with |three sides|, and |three angles|. All the angles within a triangle add up to 180º.
+          Find the unknown angle in the triangle.
         </p>
-        ${new Definition('Triangle', 'Latin', ['triangulus', '', 'tri', 'three', 'angulus', 'corner, angle']).html('id_lesson__related_angles_definition', 'lesson__definition_low')}
       `,
-      modifiers: {
-        Triangle: click(tri.randomize, [tri], colors.line),
-      },
-      setInfo: [
-        '<ul>',
-        '<li>Drag the triangle corners or touch the |Triangle| text to change the triangle\'s shape.</li>',
-        '</ul>',
-      ],
-      infoModifiers: {
-        Triangle: highlight(colors.line),
-      },
+      setInfo: 'Touch the grey box to enter the angle',
       setEnterState: () => {
         tri._triangle.hasTouchableElements = true;
         tri._triangle.autoShowAngles = true;
+        diag._input.setValue('');
+        diag.randomizeFuturePositions();
       },
       show: [tri],
       hide: [
@@ -57,7 +47,17 @@ class Content extends LessonContent {
         tri._line2,
         tri._angleA,
         tri._angleB,
+        tri._eqn,
       ],
+      transitionFromAny: (done) => {
+        tri.moveToFuturePositions(1, done);
+      },
+      setSteadyState: () => {
+        tri.setFuturePositions();
+        diag._input.enable();
+        diag._check.show();
+        diag.showAngles();
+      },
     });
   }
 }

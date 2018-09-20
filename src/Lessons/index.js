@@ -53,6 +53,19 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
+    'Important Triangles',
+    '/Lessons/Math/ImportantTriangles',
+    'important_triangles',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'triangle_introduction',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
     'Why Study Shapes?',
     '/Lessons/Math/Introduction',
     'why_study_shapes',
