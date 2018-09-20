@@ -12,6 +12,7 @@ import { makeAngle } from './angle';
 import type { TypeAngle } from './angle';
 // import makeEquationLabel from './equationLabel';
 import { makeLine } from './line';
+import type { TypeLine } from './line';
 import type {
   TypeLineLabelLocation, TypeLineLabelSubLocation,
   TypeLineLabelOrientation,
@@ -65,9 +66,9 @@ export type TypeTriangleAngle = {
 };
 
 export type TypeTriangleLabel = {
-  _label12: DiagramElementCollection;
-  _label23: DiagramElementCollection;
-  _label31: DiagramElementCollection;
+  _dimension12: TypeLine;
+  _dimension23: TypeLine;
+  _dimension31: TypeLine;
   labelEqn12: Equation;
   labelEqn23: Equation;
   labelEqn31: Equation;
@@ -198,7 +199,7 @@ export default function makeTriangle(
     index1: number,
     index2: number,
     // dimensionText: string,
-    dimensionColor: Array<number>,
+    dimensionColor: Array<number> = [0.5, 0.5, 0.5, 0.5],
     offset: number = 0,
     showLine: boolean = false,
     dimensionLineWidth: number = 0.01,
@@ -345,6 +346,13 @@ export default function makeTriangle(
         }
       }
     });
+    triangle.updateDimensions();
+  };
+  triangle.hideDimensions = () => {
+    triangle.dimensionList.forEach((dim) => {
+      const element = triangle[`_dimension${dim[0]}${dim[1]}`];
+      element.hide();
+    });
   };
 
   triangle.showAngles = (includeLabels: boolean = false) => {
@@ -356,6 +364,13 @@ export default function makeTriangle(
           element._label.hide();
         }
       }
+    });
+  };
+
+  triangle.hidAngles = () => {
+    const elements = [triangle._angle1, triangle._angle2, triangle._angle3];
+    elements.forEach((element) => {
+      element.hide();
     });
   };
 

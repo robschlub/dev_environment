@@ -217,7 +217,7 @@ export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
 // baseToLine - text angle is same as line, with baseline toward line
 // baseToLine - text angle is same as line, with baseline away from line
 // baseToLine - text angle is same as line, with text upright
-export type TypeLineLabelOrientation = 'horiztonal' | 'baseToLine' | 'baseAway'
+export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
                                       | 'baseUpright';
 
 export type TypeLine = {
@@ -235,6 +235,7 @@ export type TypeLine = {
     orientation: TypeLineLabelOrientation;
     linePosition: number;
   } & TypeEquationLabel;
+  _label: DiagramElementCollection;
   arrow1: null | {
     height: number;
   };
@@ -287,6 +288,7 @@ export function makeLine(
   line.label = null;
   line.arrow1 = null;
   line.arrow2 = null;
+  line._label = diagram.shapes.collection(new Transform());
 
   line.addArrow1 = (arrowHeight: number, arrowWidth: number) => {
     const a = diagram.shapes.arrow(
@@ -475,6 +477,7 @@ export function makeLine(
       line.transform.updateTranslation(p.add(offsetdelta));
     }
     line.setLength(newLength);
+    line.updateLabel();
   };
 
   line.animateLengthTo = function animateToLength(

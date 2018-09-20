@@ -24,6 +24,7 @@ function getTarget(
 ) {
   const target = element.transform._dup();
   let scenarioObject;
+
   if (scenario == null || scenario === '') {
     scenarioObject = layout[element.name];
   } else if (typeof scenario === 'string') {
