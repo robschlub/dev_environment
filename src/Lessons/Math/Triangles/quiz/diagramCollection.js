@@ -56,8 +56,13 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       const angleValue = roundNum(angle.angle * 180 / Math.PI, 0);
       angle.element.setLabel(`${angleValue}º`);
       unknownAngle -= angleValue;
+      console.log('before:', angleValue, angle.element.label.eqn.currentForm.width)
+      angle.element.label.eqn.showForm('base');
+      angle.element.label.eqn.reArrangeCurrentForm();
+      console.log('after:',angleValue,  angle.element.label.eqn.currentForm.width)
     });
     unknown.element.setLabel('?');
+    unknown.element.label.eqn.reArrangeCurrentForm();
     tri.updateAngles();
     this.angleToFind = unknownAngle;
     this._input.show();

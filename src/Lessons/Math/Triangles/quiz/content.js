@@ -67,6 +67,7 @@ class Content extends LessonContent {
         diag._input.enable();
         diag._check.show();
         diag.showAngles();
+        console.log(diag)
       },
     });
   }

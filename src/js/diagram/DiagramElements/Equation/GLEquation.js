@@ -1333,6 +1333,7 @@ export class Equation {
 
   reArrangeCurrentForm() {
     const form = this.currentForm;
+    console.log(form)
     if (form == null) {
       return;
     }
