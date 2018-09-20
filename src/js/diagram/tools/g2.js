@@ -735,7 +735,7 @@ class Translation extends Point {
       // this.x = tx;
       // this.y = ty;
     }
-    this.name = name
+    this.name = name;
   }
 
   matrix(): Array<number> {

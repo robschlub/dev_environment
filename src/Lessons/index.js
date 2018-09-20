@@ -53,19 +53,6 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
-    'Important Triangles',
-    '/Lessons/Math/ImportantTriangles',
-    'important_triangles',
-    [
-      '1',
-      'quiz',
-      'summary',
-    ],
-    [
-      'triangle_introduction',
-    ],
-  ));
-  lessonIndex.push(new LessonDescription(
     'Why Study Shapes?',
     '/Lessons/Math/Introduction',
     'why_study_shapes',
@@ -98,19 +85,6 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
-    'Rectangles',
-    '/Lessons/Math/Rectangles',
-    'rectangle_introduction',
-    [
-      '1',
-      'quiz',
-      'summary',
-    ],
-    [
-      'square_introduction',
-    ],
-  ));
-  lessonIndex.push(new LessonDescription(
     'Related Angles',
     '/Lessons/Math/RelatedAngles',
     'related_angles',
@@ -122,19 +96,6 @@ export default function getLessonIndex() {
     ],
     [
       'parallel_lines',
-    ],
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Squares',
-    '/Lessons/Math/Squares',
-    'square_introduction',
-    [
-      '1',
-      'quiz',
-      'summary',
-    ],
-    [
-      'adjacent_angles',
     ],
   ));
   lessonIndex.push(new LessonDescription(

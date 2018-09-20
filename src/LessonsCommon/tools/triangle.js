@@ -2,7 +2,7 @@
 
 import Diagram from '../../js/diagram/Diagram';
 import {
-  Transform, Point, Line, Rect, normAngle, minAngleDiff, threePointAngle
+  Transform, Point, Line, Rect, normAngle, minAngleDiff, threePointAngle,
 } from '../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -50,8 +50,8 @@ export type TypeTriangle = {
   angleRadiusToInnerBorder: boolean;
   getCenter: () => Point;
   getLongestSide: () => [number, number];
-  getPoint: (number) => void;
   getSideLine: (number, number) => void;
+  getPoint: (number) => void;
   setTriangleCollectionPositionTo: (Point) => void;
   setTriangleCollectionRotationTo: (number) => void;
   getRotationToSide: (number, number) => number;
@@ -388,7 +388,7 @@ export default function makeTriangle(
   triangle.getSideLine = (q: number, r: number) => triangle[`b${q}${r}`];
 
   triangle.getPoint = (q: number) => triangle[`p${q}`];
-  
+
   triangle.getHeight = (q: number, r: number) => {
     const pointIndeces = [1, 2, 3];
     const topPoint = pointIndeces.reduce(
@@ -438,46 +438,6 @@ export default function makeTriangle(
       triangle.transform.updateRotation(newRotation);
     }
   };
-  // triangle.centerPointsTo = (newCenter: Point = new Point(0, 0)) => {
-  //   const mid12 = triangle.b12.midpoint();
-  //   const mid13 = triangle.b31.midpoint();
-  //   const lineMid12To3 = new Line(mid12, triangle.p3);
-  //   const lineMid13To2 = new Line(mid13, triangle.p2);
-  //   const center = lineMid12To3.intersectsWith(lineMid13To2).intersect;
-  //   const delta = center.sub(newCenter);
-  //   console.log('center: ', center, 'delta:', delta)
-  //   triangle.transform.updateTranslation(newCenter);
-  //   triangle.updatePoints(
-  //     triangle.p1.sub(delta),
-  //     triangle.p2.sub(delta),
-  //     triangle.p3.sub(delta),
-  //   );
-  // };
-
-  // triangle.zeroRotationToLongestEdge = () => {
-  //   const maxLength = Math.max(triangle.b12.length(), triangle.b31.length(), triangle.b23.length());
-  //   let q = triangle.p1;
-  //   let r = triangle.p2;
-  //   if (triangle.b31.length() === maxLength) {
-  //     q = triangle.p3;
-  //     r = triangle.p1;
-  //   } else if (triangle.b23.length() === maxLength) {
-  //     q = triangle.p2;
-  //     r = triangle.p3;
-  //   }
-  //   const angleQR = r.sub(q).toPolar().angle;
-  //   let toRotate = angleQR;
-  //   if (triangle.clockwise) {
-  //     toRotate = Math.PI + angleQR;
-  //   }
-  //   const rotMatrix = new Transform().rotate(-toRotate).m();
-  //   triangle.updatePoints(
-  //     triangle.p1.transformBy(rotMatrix),
-  //     triangle.p2.transformBy(rotMatrix),
-  //     triangle.p3.transformBy(rotMatrix),
-  //   );
-  //   triangle.transform.updateRotation(toRotate);
-  // };
 
   triangle.setTransformCallback = triangle.updateAngles.bind(triangle);
   triangle.updatePoints(p1, p2, p3);

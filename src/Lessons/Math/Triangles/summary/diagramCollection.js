@@ -1,5 +1,5 @@
 // @flow
-import { Transform, Point } from '../../../../js/diagram/tools/g2';
+import { Transform } from '../../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
 
 // eslint-disable-next-line import/no-cycle

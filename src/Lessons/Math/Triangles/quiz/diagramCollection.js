@@ -1,5 +1,5 @@
 // @flow
-import { Transform, Point, threePointAngle } from '../../../../js/diagram/tools/g2';
+import { Transform, threePointAngle } from '../../../../js/diagram/tools/g2';
 import {
   removeRandElement, roundNum,
 } from '../../../../js/diagram/tools/mathtools';
@@ -55,11 +55,16 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       const angleValue = roundNum(angle.angle * 180 / Math.PI, 0);
       angle.element.setLabel(`${angleValue}º`);
       unknownAngle -= angleValue;
-      angle.element.label.eqn.showForm('base');
-      angle.element.label.eqn.reArrangeCurrentForm();
+      const { label } = angle.element;
+      if (label != null) {
+        label.eqn.showForm('base');
+        label.eqn.reArrangeCurrentForm();
+      }
     });
     unknown.element.setLabel('?');
-    unknown.element.label.eqn.reArrangeCurrentForm();
+    if (unknown.element.label != null) {
+      unknown.element.label.eqn.reArrangeCurrentForm();
+    }
     tri.updateAngles();
     this.angleToFind = unknownAngle;
     this._input.show();

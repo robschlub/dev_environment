@@ -1,17 +1,17 @@
 // @flow
 import {
-  LessonContent, interactiveItem,
+  LessonContent,
 } from '../../../../js/Lesson/LessonContent';
-import {
-  click, highlight,
-} from '../../../../js/tools/htmlGenerator';
+// import {
+//   click, highlight,
+// } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import details from '../details';
 
 const layout = lessonLayout();
-const { colors } = layout;
+// const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {

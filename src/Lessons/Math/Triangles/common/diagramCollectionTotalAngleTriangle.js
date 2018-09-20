@@ -32,7 +32,7 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     _point1: DiagramElementPrimative;
     _point2: DiagramElementPrimative;
     _point3: DiagramElementPrimative;
-  } & TypeTriangle & TypeTriangleAngle;
+  } & TypeTriangleAngle & TypeTriangle;
 
   makeTri() {
     const layout = this.layout.totalAngle;
@@ -210,9 +210,9 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
     const tri = this._triangle;
     const center = tri.getCenter();
     const longestLine = tri.getLongestSide();
-    const height = tri.getHeight(...longestLine);
-    const width = tri.getSideLine(...longestLine)
-      .length();
+    // $FlowFixMe
+    const line = tri.getSideLine(...longestLine);
+    const width = line.length();
     const rotation = tri.getRotationToSide(...longestLine);
     tri.setTriangleCollectionPositionTo(center);
     tri.setTriangleCollectionRotationTo(rotation);

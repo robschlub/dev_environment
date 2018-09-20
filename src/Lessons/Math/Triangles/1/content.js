@@ -159,7 +159,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p>
-          In fact, a triangle's side lengths and angles |are all related|. If you know any three, you can calculate the other three!
+          In fact, a triangle's side lengths and angles |are all related|. If you know any four (and sometimes three), you can calculate the remainder!
         </p>
         <p>
           In this lesson we will focus on the |relationship between angles|. The relationship to sides requires knowledge of the sine function, which which is in a later lesson.
