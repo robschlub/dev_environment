@@ -201,7 +201,7 @@ class Content extends LessonContent {
         </p>
       `,
       modifiers: {
-        any: click(totalAngle.randomize, [totalAngle], colors.diagram.action),
+        any: click(totalAngle.randomize, [totalAngle, false], colors.diagram.action),
       },
       setInfo: [
         '<ul>',
