@@ -122,7 +122,7 @@ export function makeAngle(
   };
 
   angle.setLabel = (newLabel: string) => {
-    if (angle._lable._base) {
+    if (angle._label._base) {
       angle._label._base.vertices.setText(newLabel);
     }
   };
