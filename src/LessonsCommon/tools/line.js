@@ -352,7 +352,7 @@ export function makeLine(
     line.updateLabel();
   };
 
-  line.updateLabel = () => {
+  line.updateLabel = (parentRotationOffset: number = 0) => {
     if (line.label == null) {
       return;
     }
@@ -441,7 +441,7 @@ export function makeLine(
       // }
     }
 
-    line.label.updateRotation(labelAngle, labelPosition, labelOffsetMag, labelOffsetAngle);
+    line.label.updateRotation(labelAngle - parentRotationOffset, labelPosition, labelOffsetMag, labelOffsetAngle);
   };
 
   line.setLength = (newLength: number) => {

@@ -73,8 +73,8 @@ export default class TriangleCollection extends CommonDiagramCollection {
       this._tri1.showDimensions(true);
       this._tri2.showDimensions(true);
     } else {
-      this._tri1.hideDimensions(false);
-      this._tri2.hideDimensions(false);
+      this._tri1.hideDimensions();
+      this._tri2.hideDimensions();
     }
     this.diagram.animateNextFrame();
   }
@@ -89,21 +89,9 @@ export default class TriangleCollection extends CommonDiagramCollection {
     if (toShow) {
       this._tri1.showAngles(true);
       this._tri2.showAngles(true);
-      // this._tri1._angle1.showAll();
-      // this._tri1._angle2.showAll();
-      // this._tri1._angle3.showAll();
-      // this._tri2._angle1.showAll();
-      // this._tri2._angle2.showAll();
-      // this._tri2._angle3.showAll();
     } else {
       this._tri1.hideAngles();
       this._tri2.hideAngles();
-      // this._tri1._angle1.hide();
-      // this._tri1._angle2.hide();
-      // this._tri1._angle3.hide();
-      // this._tri2._angle1.hide();
-      // this._tri2._angle2.hide();
-      // this._tri2._angle3.hide();
     }
     this.diagram.animateNextFrame();
   }

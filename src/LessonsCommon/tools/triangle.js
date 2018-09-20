@@ -57,6 +57,10 @@ export type TypeTriangle = {
   setTriangleCollectionRotationTo: (number) => void;
   getRotationToSide: (number, number) => number;
   getHeight: (number, number) => void;
+  hideAngles: () => void;
+  showAngles: (?boolean) => void;
+  hideDimensions: () => void;
+  showDimensions: (?boolean) => void;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -242,6 +246,10 @@ export default function makeTriangle(
           point1 = triangle[`p${index2}`];
         }
         dimension.setEndPoints(point1, point2, dimension.offset);
+        const r = triangle.transform.r();
+        if (r != null) {
+          dimension.updateLabel(r);
+        }
       }
     };
     triangle.dimensionList.forEach((dim) => {
@@ -367,7 +375,7 @@ export default function makeTriangle(
     });
   };
 
-  triangle.hidAngles = () => {
+  triangle.hideAngles = () => {
     const elements = [triangle._angle1, triangle._angle2, triangle._angle3];
     elements.forEach((element) => {
       element.hide();
