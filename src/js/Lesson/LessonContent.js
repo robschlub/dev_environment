@@ -337,7 +337,15 @@ class Section {
   setInteractiveElements() {
     this.interactiveElementList = [];
     if ('interactiveElementsOnly' in this) {
-      this.interactiveElementList = this.interactiveElementsOnly;
+      // this.interactiveElementList = this.interactiveElementsOnly;
+      this.interactiveElementsOnly.forEach((element) => {
+        if (element instanceof DiagramElementCollection
+          || element instanceof DiagramElementPrimative) {
+          this.replaceOrAddInteractiveElement(element, 'center');
+        } else {
+          this.replaceOrAddInteractiveElement(element.element, element.location);
+        }
+      });
     } else {
       // Get all action words
       const elements = document.getElementsByClassName('interactive_word');
@@ -370,7 +378,6 @@ class Section {
         }
       });
     }
-
     // Remove elements
     if ('interactiveElementsRemove' in this) {
       this.interactiveElementsRemove.forEach((element) => {

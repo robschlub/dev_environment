@@ -236,6 +236,7 @@ const CommonQuizMixin = superclass => class extends superclass {
       'middle',
       'center',
     );
+    html.isTouchable = true;
     html.getValue = () => input.value;
     html.setValue = (value: number | string) => {
       if (typeof value === 'number') {
@@ -246,10 +247,12 @@ const CommonQuizMixin = superclass => class extends superclass {
     };
     html.disable = () => {
       input.disabled = true;
+      html.isTouchable = false;
       input.classList.add('lesson__quiz_input_disabled');
     };
     html.enable = () => {
       input.disabled = false;
+      html.isTouchable = true;
       input.classList.remove('lesson__quiz_input_disabled');
     };
 

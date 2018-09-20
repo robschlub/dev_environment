@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent,
+  LessonContent, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
 import {
   click, highlight,
@@ -34,17 +34,7 @@ class Content extends LessonContent {
           Find the unknown angle in the triangle.
         </p>
       `,
-      // modifiers: {
-      //   Triangle: click(tri.randomize, [tri], colors.line),
-      // },
-      // setInfo: [
-      //   '<ul>',
-      //   '<li>Drag the triangle corners or touch the |Triangle| text to change the triangle\'s shape.</li>',
-      //   '</ul>',
-      // ],
-      // infoModifiers: {
-      //   Triangle: highlight(colors.line),
-      // },
+      setInfo: 'Touch the grey box to enter the angle',
       setEnterState: () => {
         tri._triangle.hasTouchableElements = true;
         tri._triangle.autoShowAngles = true;
@@ -67,7 +57,6 @@ class Content extends LessonContent {
         diag._input.enable();
         diag._check.show();
         diag.showAngles();
-        console.log(diag)
       },
     });
   }

@@ -18,7 +18,6 @@ import DrawContext2D from '../../DrawContext2D';
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
 
-let flag = false;
 class Element {
   content: DiagramElementPrimative | DiagramElementCollection;
   ascent: number;
@@ -1333,7 +1332,6 @@ export class Equation {
 
   reArrangeCurrentForm() {
     const form = this.currentForm;
-    console.log(form)
     if (form == null) {
       return;
     }

@@ -41,7 +41,6 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   showAngles() {
     const tri = this._triangle._triangle;
     const points = [tri.p1, tri.p2, tri.p3];
-    console.log(points)
     const angle1 = threePointAngle(points[2], points[0], points[1]);
     const angle2 = threePointAngle(points[0], points[1], points[2]);
     const angle3 = threePointAngle(points[1], points[2], points[0]);
@@ -56,10 +55,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       const angleValue = roundNum(angle.angle * 180 / Math.PI, 0);
       angle.element.setLabel(`${angleValue}º`);
       unknownAngle -= angleValue;
-      console.log('before:', angleValue, angle.element.label.eqn.currentForm.width)
       angle.element.label.eqn.showForm('base');
       angle.element.label.eqn.reArrangeCurrentForm();
-      console.log('after:',angleValue,  angle.element.label.eqn.currentForm.width)
     });
     unknown.element.setLabel('?');
     unknown.element.label.eqn.reArrangeCurrentForm();
@@ -72,6 +69,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   tryAgain() {
     super.tryAgain();
     this._input.enable();
+    this._input.setValue('');
   }
 
   randomizeFuturePositions() {
@@ -83,6 +81,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     // this.resetLines();
     this.randomizeFuturePositions();
     this._triangle.moveToFuturePositions(1, this.showAngles.bind(this));
+    this._input.enable();
+    this._input.setValue('');
     this.diagram.animateNextFrame();
   }
 

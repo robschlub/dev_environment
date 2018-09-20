@@ -131,6 +131,7 @@ class TextObject extends DrawingObject {
 
   setText(text: string, index: number = 0) {
     this.text[index].text = text;
+    this.setBorder();
   }
 
   _dup() {
@@ -145,6 +146,7 @@ class TextObject extends DrawingObject {
     for (let i = 0; i < this.text.length; i += 1) {
       this.text[i].font.size = fontSize;
     }
+    this.setBorder();
   }
 
   setColor(color: Array<number>) {
@@ -392,6 +394,7 @@ class TextObject extends DrawingObject {
     box.forEach((p) => {
       boundary.push(p);
     });
+    // console.log('boundary', boundary.width, text.text)
     return boundary;
   }
 
