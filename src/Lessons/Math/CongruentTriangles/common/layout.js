@@ -56,6 +56,19 @@ export default function commonLessonLayout() {
         scenario: { position: new Point(1.4, -0.6), rotation: Math.PI },
       },
     },
+    congruentFlip: {
+      points: [
+        new Point(-1.2, -1),
+        new Point(1, -1),
+        new Point(0.7, 0.5),
+      ],
+      tri1: {
+        scenario: { position: new Point(-1.5, -0.2), rotation: 0 },
+      },
+      tri2: {
+        scenario: { position: new Point(1.3, -0.2), rotation: 0, scale: new Point(-1, 1) },
+      },
+    },
   };
 
   return layout;

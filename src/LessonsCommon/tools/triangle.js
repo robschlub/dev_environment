@@ -12,10 +12,9 @@ import { makeAngle } from './angle';
 import type { TypeAngle } from './angle';
 // import makeEquationLabel from './equationLabel';
 import { makeLine } from './line';
-import type { TypeLine } from './line';
 import type {
   TypeLineLabelLocation, TypeLineLabelSubLocation,
-  TypeLineLabelOrientation,
+  TypeLineLabelOrientation, TypeLine,
 } from './line';
 
 export type TypeTriangle = {
@@ -55,6 +54,7 @@ export type TypeTriangle = {
   getPoint: (number) => void;
   setTriangleCollectionPositionTo: (Point) => void;
   setTriangleCollectionRotationTo: (number) => void;
+  setTriangleCollectionScaleTo: (Point) => void;
   getRotationToSide: (number, number) => number;
   getHeight: (number, number) => void;
   hideAngles: () => void;
@@ -459,6 +459,20 @@ export default function makeTriangle(
         triangle.p3.transformBy(deltaMatrix),
       );
       triangle.transform.updateRotation(newRotation);
+    }
+  };
+
+  triangle.setTriangleCollectionScaleTo = (newScale: Point) => {
+    const s = triangle.transform.s();
+    if (s != null) {
+      const delta = new Point(newScale.x / s.x, newScale.y / s.y);
+      const newTransform = new Transform().scale(delta);
+      triangle.transform.updateScale(newScale);
+      triangle.updatePoints(
+        triangle.p1.transformBy(newTransform.m()),
+        triangle.p2.transformBy(newTransform.m()),
+        triangle.p3.transformBy(newTransform.m()),
+      );
     }
   };
 

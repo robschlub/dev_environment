@@ -96,6 +96,23 @@ export default class TriangleCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
+  calculateFuturePositions(
+    scenario1: TypeScenario, scenario2: TypeScenario,
+  ) {
+    this.futurePositions = [
+      { element: this._tri1, scenario: scenario1 },
+      { element: this._tri2, scenario: scenario2 },
+    ];
+  }
+
+  setTriangleScenarios(
+    points1: Array<Point>, points2: Array<Point>,
+    scenario1: TypeScenario, scenario2: TypeScenario,
+  ) {
+    this.updateTriangle(this._tri1, points1, scenario1);
+    this.updateTriangle(this._tri2, points2, scenario2);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
