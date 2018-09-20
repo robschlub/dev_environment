@@ -11,9 +11,11 @@ import {
 import { makeLabeledAngle, makeSupplementaryAngle } from './tools';
 import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeAngle, TypeSupplementaryAngle } from './tools';
+import type { TypeLabeledAngle, TypeSupplementaryAngle } from './tools';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import { showAngles } from '../../../../LessonsCommon/tools/angle';
 
 export default class OppositeCollection extends CommonDiagramCollection {
   layout: Object;
@@ -21,10 +23,10 @@ export default class OppositeCollection extends CommonDiagramCollection {
   diagram: Diagram;
   _line1: TypeLabeledLine;
   _line2: TypeLabeledLine;
-  _angleA: TypeAngle;
-  _angleB: TypeAngle;
-  _angleC: TypeAngle;
-  _angleD: TypeAngle;
+  _angleA: TypeLabeledAngle;
+  _angleB: TypeLabeledAngle;
+  _angleC: TypeLabeledAngle;
+  _angleD: TypeLabeledAngle;
   _supplementary: TypeSupplementaryAngle;
   varState: {
     supplementary: number;
@@ -122,10 +124,18 @@ export default class OppositeCollection extends CommonDiagramCollection {
     this._equation1.eqn.setUnits(units);
     this._equation2.eqn.setUnits(units);
     this._equation3.eqn.setUnits(units);
-    this._angleA.eqn.setUnits(units);
-    this._angleB.eqn.setUnits(units);
-    this._angleC.eqn.setUnits(units);
-    this._angleD.eqn.setUnits(units);
+    if (this._angleA.label) {
+      this._angleA.label.eqn.setUnits(units);
+    }
+    if (this._angleB.label) {
+      this._angleB.label.eqn.setUnits(units);
+    }
+    if (this._angleC.label) {
+      this._angleC.label.eqn.setUnits(units);
+    }
+    if (this._angleD.label) {
+      this._angleD.label.eqn.setUnits(units);
+    }
   }
 
   makeAngle(name: 'a' | 'b' | 'c' | 'd') {
@@ -135,16 +145,16 @@ export default class OppositeCollection extends CommonDiagramCollection {
       ? arcLayout.radius : arcLayout.radius * 1.0;
     const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
-    angle.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
-    angle.eqn.addForm('b_silent', ['_180', 'minus', 'a'], 'deg');
-    angle.eqn.addForm('b_silent', ['pi', 'minus', 'a'], 'rad');
-    angle.eqn.addForm('d_silent', ['_180', 'minus', 'a'], 'deg');
-    angle.eqn.addForm('d_silent', ['pi', 'minus', 'a'], 'rad');
-    angle.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
-    angle.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
-    angle.eqn.addForm('c_equals', ['c', 'equals', 'a']);
-    angle.eqn.showForm(name);
+    angle.label.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
+    angle.label.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.label.eqn.addForm('b_silent', ['_180', 'minus', 'a'], 'deg');
+    angle.label.eqn.addForm('b_silent', ['pi', 'minus', 'a'], 'rad');
+    angle.label.eqn.addForm('d_silent', ['_180', 'minus', 'a'], 'deg');
+    angle.label.eqn.addForm('d_silent', ['pi', 'minus', 'a'], 'rad');
+    angle.label.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
+    angle.label.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+    angle.label.eqn.addForm('c_equals', ['c', 'equals', 'a']);
+    angle.label.eqn.showForm(name);
     angle.setPosition(this.layout.line1.opposite.position);
     return angle;
   }
@@ -152,7 +162,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
   constructor(
     diagram: Diagram,
     layout: Object,
-    transform: Transform = new Transform().translate(0, 0),
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     // this.diagram = diagram;
@@ -246,37 +256,21 @@ export default class OppositeCollection extends CommonDiagramCollection {
   }
 
   showAngles(
-    angles: Array<[TypeAngle, string, Array<number>] | [TypeAngle, string]>,
+    angles: Array<[TypeAngle, string, Array<number>]
+          | [TypeAngle, string, Array<number>, boolean]>,
     showOnly: boolean = true,
   ) {
     const allAngles = [this._angleA, this._angleB, this._angleC, this._angleD];
-    if (showOnly) {
-      const anglesToShow = angles.map(angle => angle[0]);
-      const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
-      anglesToHide.forEach((angle) => {
-        angle.hide();
-      });
-    }
-
-    angles.forEach((angle) => {
-      const [element, form] = angle;
-      element.eqn.showForm(form);
-      element.show();
-      element._arc.show();
-      if (angle.length === 3) {
-        // $FlowFixMe
-        element.setColor(angle[2]);
-      }
-    });
+    showAngles(allAngles, angles, showOnly);
     this.updateOppositeAngles();
     this.diagram.animateNextFrame();
   }
 
   toggleOppositeAngles() {
     if (this._angleA.isShown) {
-      this.showAngles([[this._angleB, 'b'], [this._angleD, 'b']]);
+      this.showAngles([[this._angleB, 'b', this.layout.colors.angleA], [this._angleD, 'b', this.layout.colors.angleA]]);
     } else {
-      this.showAngles([[this._angleA, 'a'], [this._angleC, 'c']]);
+      this.showAngles([[this._angleA, 'a', this.layout.colors.angleA], [this._angleC, 'a', this.layout.colors.angleA]]);
     }
     this.diagram.animateNextFrame();
   }

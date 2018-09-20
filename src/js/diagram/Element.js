@@ -788,8 +788,8 @@ class DiagramElement {
         // the animation plan (incase a callback is used to start another
         // animation)
         const endTransform = this.calcNextAnimationTransform(phase.time);
-        this.stopAnimating(true);
         this.setTransform(endTransform);
+        this.stopAnimating(true);
         return;
       }
       // If we are here, that means the time elapsed is not more than the
@@ -1155,17 +1155,6 @@ class DiagramElement {
     easeFunction: (number) => number = tools.easeinout,
     // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
-    // let translationPathMethod = this.animate.transform.translation.path;
-    // if (translationPath !== null && translationPath !== undefined) {
-    //   translationPathMethod = translationPath;
-    // }
-    // let time = 1;
-    // if (typeof timeOrVelocity === 'number') {
-    //   time = timeOrVelocity;
-    // } else {
-
-    // }
-
     const phase = new AnimationPhase(
       transform, timeOrVelocity, rotDirection,
       easeFunction, this.animate.transform.translation.style,
@@ -1174,6 +1163,19 @@ class DiagramElement {
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
     }
+  }
+
+  animateFrom(
+    transform: Transform,
+    timeOrVelocity: number | Transform = 1,
+    rotDirection: TypeRotationDirection = 0,
+    callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+    // translationPath: ?(Point, Point, number) => Point = null,
+  ): void {
+    const target = this.transform._dup();
+    this.transform = transform._dup();
+    this.animateTo(target, timeOrVelocity, rotDirection, callback, easeFunction);
   }
 
   animateColorTo(
@@ -1299,6 +1301,18 @@ class DiagramElement {
     if (phase instanceof AnimationPhase) {
       this.animatePlan([phase], checkCallback(callback));
     }
+  }
+
+  // Will update only first instace of translation in the transform order
+  animateTranslationFrom(
+    translation: Point,
+    timeOrVelocity: number | Transform = 1,
+    callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+  ): void {
+    const target = this.transform._dup();
+    this.transform.updateTranslation(translation);
+    this.animateTo(target, timeOrVelocity, 0, callback, easeFunction);
   }
 
   animateTranslationToWithDelay(
@@ -1790,6 +1804,12 @@ class DiagramElement {
     }
   }
 
+  setMovable(movable: boolean = true) {
+    if (movable) {
+      this.isTouchable = true;
+      this.isMovable = true;
+    }
+  }
 
   // processParentTransform(parentTransform: Transform): Transform {
   //   let newTransform;
@@ -1828,6 +1848,7 @@ class DiagramElementPrimative extends DiagramElement {
   color: Array<number>;
   pointsToDraw: number;
   angleToDraw: number;
+  cannotTouchHole: boolean;
 
   constructor(
     drawingObject: DrawingObject,
@@ -1840,6 +1861,7 @@ class DiagramElementPrimative extends DiagramElement {
     this.color = color.slice();
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
+    this.cannotTouchHole = false;
     // this.setMoveBoundaryToDiagram();
   }
 
@@ -1849,11 +1871,24 @@ class DiagramElementPrimative extends DiagramElement {
     }
     const boundaries =
       this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
-
+    const holeBoundaries =
+      this.vertices.getGLBoundaryHoles(this.lastDrawTransform.matrix());
     for (let i = 0; i < boundaries.length; i += 1) {
       const boundary = boundaries[i];
       if (glLocation.isInPolygon(boundary)) {
-        return true;
+        let isTouched = true;
+        if (this.cannotTouchHole) {
+          for (let j = 0; j < holeBoundaries.length; j += 1) {
+            const holeBoundary = holeBoundaries[j];
+            if (glLocation.isInPolygon(holeBoundary)) {
+              isTouched = false;
+              j = holeBoundaries.length;
+            }
+          }
+        }
+        if (isTouched) {
+          return true;
+        }
       }
     }
     return false;
@@ -2054,12 +2089,24 @@ class DiagramElementPrimative extends DiagramElement {
     return this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
   }
 
+  getVertexSpaceBoundaries() {
+    return this.vertices.border;
+  }
+
   getGLBoundingRect() {
     return this.vertices.getGLBoundingRect(this.lastDrawTransform.matrix());
   }
 
+  getVertexSpaceBoundingRect() {
+    return this.vertices.getVertexSpaceBoundingRect();
+  }
+
   getRelativeGLBoundingRect(): Rect {
     return this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+  }
+
+  getRelativeVertexSpaceBoundingRect(): Rect {
+    return this.vertices.getRelativeVertexSpaceBoundingRect();
   }
 }
 
@@ -2127,12 +2174,21 @@ class DiagramElementCollection extends DiagramElement {
   add(
     name: string,
     diagramElement: DiagramElementPrimative | DiagramElementCollection,
+    index: number = -1,
   ) {
     this.elements[name] = diagramElement;
     this.elements[name].name = name;
     // $FlowFixMe
     this[`_${name}`] = this.elements[name];
-    this.order.push(name);
+    if (index !== -1) {
+      this.order = [
+        ...this.order.slice(0, index),
+        name,
+        ...this.order.slice(index),
+      ];
+    } else {
+      this.order.push(name);
+    }
   }
 
   draw(parentTransform: Transform = new Transform(), now: number = 0) {
@@ -2291,15 +2347,45 @@ class DiagramElementCollection extends DiagramElement {
     return boundaries;
   }
 
+  getVertexSpaceBoundaries() {
+    let boundaries = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      if (element.isShown) {
+        const elementBoundaries = element.getVertexSpaceBoundaries();
+        boundaries = boundaries.concat(elementBoundaries);
+      }
+    }
+    return boundaries;
+  }
+
   getGLBoundingRect() {
     const glAbsoluteBoundaries = this.getGLBoundaries();
     return getBoundingRect(glAbsoluteBoundaries);
+  }
+
+  getVertexSpaceBoundingRect() {
+    const boundaries = this.getVertexSpaceBoundaries();
+    return getBoundingRect(boundaries);
   }
 
   getRelativeGLBoundingRect() {
     const boundingRect = this.getGLBoundingRect();
 
     const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
+
+    return new Rect(
+      boundingRect.left - location.x,
+      boundingRect.bottom - location.y,
+      boundingRect.width,
+      boundingRect.height,
+    );
+  }
+
+  getRelativeVertexSpaceBoundingRect(): Rect {
+    const boundingRect = this.getVertexSpaceBoundingRect();
+
+    const location = new Point(0, 0);
 
     return new Rect(
       boundingRect.left - location.x,
@@ -2442,19 +2528,22 @@ class DiagramElementCollection extends DiagramElement {
     return elements;
   }
 
+  // Get all ineractive elemnts, but only go as deep as a
+  // DiagramElementColleciton if it is touchable or movable
   getAllCurrentlyInteractiveElements() {
     let elements = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      if (element.isShown) {
-        if (element instanceof DiagramElementCollection
-          && (element.isTouchable || element.hasTouchableElements)) {
+      // if (element.isShown) {
+      if (element instanceof DiagramElementCollection) {
+        if (!element.isTouchable && !element.isMovable && element.hasTouchableElements) {
           elements = [...elements, ...element.getAllCurrentlyInteractiveElements()];
         }
-        if (element.isTouchable && element.isMovable) {
-          elements.push(element);
-        }
       }
+      if (element.isTouchable || element.isMovable) {
+        elements.push(element);
+      }
+      // }
     }
     return elements;
   }
@@ -2506,6 +2595,13 @@ class DiagramElementCollection extends DiagramElement {
         e.classList.remove('lesson__item_selector_selected');
       }
     });
+  }
+
+  setMovable(movable: boolean = true) {
+    if (movable) {
+      this.hasTouchableElements = true;
+      this.isMovable = true;
+    }
   }
 }
 

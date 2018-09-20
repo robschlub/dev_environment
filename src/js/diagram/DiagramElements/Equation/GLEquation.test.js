@@ -11,7 +11,7 @@ import DrawContext2D from '../../../__mocks__/DrawContext2DMock';
 describe('Equation Form', () => {
   describe('Create collection', () => {
     test('One element collection', () => {
-      const collection = createEquationElements({ a: 'a' }, DrawContext2D);
+      const collection = createEquationElements({ a: 'a' }, new DrawContext2D());
       expect(collection.order).toHaveLength(1);
       expect(collection._a).not.toBe(undefined);
       expect(collection._a).toBeInstanceOf(DiagramElementPrimative);
@@ -22,7 +22,7 @@ describe('Equation Form', () => {
         a: 'a',
         b: 'b',
         c: 'c',
-      }, DrawContext2D);
+      }, new DrawContext2D());
       expect(collection.order).toHaveLength(3);
       expect(collection._a).not.toBe(undefined);
       expect(collection._b).not.toBe(undefined);
@@ -79,34 +79,34 @@ describe('Equation Form', () => {
         eqn.createEq(['a', 'b', 'c']);
         eqn.arrange(1, 'center', 'middle');
         const c = eqn.content;
-        expect(c[0].location.round(4)).toEqual(new Point(-0.06, -0.028));
-        expect(c[1].location.round(4)).toEqual(new Point(-0.02, -0.028));
-        expect(c[2].location.round(4)).toEqual(new Point(0.02, -0.028));
-        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.06, -0.028));
-        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.02, -0.028));
-        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0.02, -0.028));
+        expect(c[0].location.round(4)).toEqual(new Point(-0.06, -0.036));
+        expect(c[1].location.round(4)).toEqual(new Point(-0.02, -0.036));
+        expect(c[2].location.round(4)).toEqual(new Point(0.02, -0.036));
+        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.06, -0.036));
+        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.02, -0.036));
+        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0.02, -0.036));
       });
       test('Fixed to right bottom', () => {
         eqn.createEq(['a', 'b', 'c']);
         eqn.arrange(1, 'right', 'bottom');
         const c = eqn.content;
-        expect(c[0].location.round(4)).toEqual(new Point(-0.12, 0.02));
-        expect(c[1].location.round(4)).toEqual(new Point(-0.08, 0.02));
-        expect(c[2].location.round(4)).toEqual(new Point(-0.04, 0.02));
-        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.12, 0.02));
-        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.08, 0.02));
-        expect(c[2].content.transform.t().round(4)).toEqual(new Point(-0.04, 0.02));
+        expect(c[0].location.round(4)).toEqual(new Point(-0.12, 0));
+        expect(c[1].location.round(4)).toEqual(new Point(-0.08, 0));
+        expect(c[2].location.round(4)).toEqual(new Point(-0.04, 0));
+        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.12, 0));
+        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.08, 0));
+        expect(c[2].content.transform.t().round(4)).toEqual(new Point(-0.04, 0));
       });
       test('Fixed to right top', () => {
         eqn.createEq(['a', 'b', 'c']);
         eqn.arrange(1, 'right', 'top');
         const c = eqn.content;
-        expect(c[0].location.round(4)).toEqual(new Point(-0.12, -0.076));
-        expect(c[1].location.round(4)).toEqual(new Point(-0.08, -0.076));
-        expect(c[2].location.round(4)).toEqual(new Point(-0.04, -0.076));
-        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.12, -0.076));
-        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.08, -0.076));
-        expect(c[2].content.transform.t().round(4)).toEqual(new Point(-0.04, -0.076));
+        expect(c[0].location.round(4)).toEqual(new Point(-0.12, -0.072));
+        expect(c[1].location.round(4)).toEqual(new Point(-0.08, -0.072));
+        expect(c[2].location.round(4)).toEqual(new Point(-0.04, -0.072));
+        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.12, -0.072));
+        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.08, -0.072));
+        expect(c[2].content.transform.t().round(4)).toEqual(new Point(-0.04, -0.072));
       });
       test('fixed to element left, baseline', () => {
         eqn.createEq(['a', 'b', 'c']);
@@ -123,45 +123,45 @@ describe('Equation Form', () => {
         eqn.createEq(['a', 'b', 'c']);
         eqn.arrange(1, 'center', 'middle', collection._b);
         const c = eqn.content;
-        expect(c[0].location.round(4)).toEqual(new Point(-0.06, -0.028));
-        expect(c[1].location.round(4)).toEqual(new Point(-0.02, -0.028));
-        expect(c[2].location.round(4)).toEqual(new Point(0.02, -0.028));
-        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.06, -0.028));
-        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.02, -0.028));
-        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0.02, -0.028));
+        expect(c[0].location.round(4)).toEqual(new Point(-0.06, -0.036));
+        expect(c[1].location.round(4)).toEqual(new Point(-0.02, -0.036));
+        expect(c[2].location.round(4)).toEqual(new Point(0.02, -0.036));
+        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.06, -0.036));
+        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.02, -0.036));
+        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0.02, -0.036));
       });
       test('fixed to element right, top', () => {
         eqn.createEq(['a', 'b', 'c']);
         eqn.arrange(1, 'right', 'top', collection._b);
         const c = eqn.content;
-        expect(c[0].location.round(4)).toEqual(new Point(-0.08, -0.076));
-        expect(c[1].location.round(4)).toEqual(new Point(-0.04, -0.076));
-        expect(c[2].location.round(4)).toEqual(new Point(0, -0.076));
-        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.08, -0.076));
-        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.04, -0.076));
-        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0, -0.076));
+        expect(c[0].location.round(4)).toEqual(new Point(-0.08, -0.072));
+        expect(c[1].location.round(4)).toEqual(new Point(-0.04, -0.072));
+        expect(c[2].location.round(4)).toEqual(new Point(0, -0.072));
+        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.08, -0.072));
+        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.04, -0.072));
+        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0, -0.072));
       });
       test('fixed to element right, bottom', () => {
         eqn.createEq(['a', 'b', 'c']);
         eqn.arrange(1, 'right', 'bottom', collection._b);
         const c = eqn.content;
-        expect(c[0].location.round(4)).toEqual(new Point(-0.08, 0.02));
-        expect(c[1].location.round(4)).toEqual(new Point(-0.04, 0.02));
-        expect(c[2].location.round(4)).toEqual(new Point(0, 0.02));
-        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.08, 0.02));
-        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.04, 0.02));
-        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0, 0.02));
+        expect(c[0].location.round(4)).toEqual(new Point(-0.08, 0));
+        expect(c[1].location.round(4)).toEqual(new Point(-0.04, 0));
+        expect(c[2].location.round(4)).toEqual(new Point(0, 0));
+        expect(c[0].content.transform.t().round(4)).toEqual(new Point(-0.08, 0));
+        expect(c[1].content.transform.t().round(4)).toEqual(new Point(-0.04, 0));
+        expect(c[2].content.transform.t().round(4)).toEqual(new Point(0, 0));
       });
       test('fixed to point', () => {
         eqn.createEq(['a', 'b', 'c']);
         eqn.arrange(1, 'left', 'bottom', new Point(-1, -1));
         const c = eqn.content;
-        expect(c[0].location.round(4)).toEqual(new Point(1, 1.02));
-        expect(c[1].location.round(4)).toEqual(new Point(1.04, 1.02));
-        expect(c[2].location.round(4)).toEqual(new Point(1.08, 1.02));
-        expect(c[0].content.transform.t().round(4)).toEqual(new Point(1, 1.02));
-        expect(c[1].content.transform.t().round(4)).toEqual(new Point(1.04, 1.02));
-        expect(c[2].content.transform.t().round(4)).toEqual(new Point(1.08, 1.02));
+        expect(c[0].location.round(4)).toEqual(new Point(1, 1));
+        expect(c[1].location.round(4)).toEqual(new Point(1.04, 1));
+        expect(c[2].location.round(4)).toEqual(new Point(1.08, 1));
+        expect(c[0].content.transform.t().round(4)).toEqual(new Point(1, 1));
+        expect(c[1].content.transform.t().round(4)).toEqual(new Point(1.04, 1));
+        expect(c[2].content.transform.t().round(4)).toEqual(new Point(1.08, 1));
       });
     });
     describe('duplicate', () => {

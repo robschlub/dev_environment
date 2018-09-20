@@ -42,6 +42,7 @@ class Lesson {
 
   currentSectionIndex: number;
   diagram: Diagram | null;
+  overlayDiagram: Diagram | null;
   state: Object;
   inTransition: boolean;
   transitionCancelled: boolean;
@@ -51,12 +52,15 @@ class Lesson {
   // refreshPageOnly: (number) => void;
   // blank: () => void;
   goToSectionIndex: number;
+  firstPageShown: boolean;
 
   constructor(content: Object) {
     this.content = content;
     // this.content = new Content(this.diagram);
     this.diagram = null;
+    this.overlayDiagram = null;
     this.currentSectionIndex = 0;
+    this.firstPageShown = true;
     this.state = {};
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
@@ -76,18 +80,21 @@ class Lesson {
 
   nextSection() {
     const { diagram } = this;
+
     if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
       // If in transition, then cancel the transition.
       if (this.inTransition) {
+        const { firstPageShown } = this;
         const { comingFrom } = this;
         this.stopTransition();
-        if (comingFrom === 'prev') {
+        if (comingFrom === 'prev' || firstPageShown) {
           return;
         }
       } else {
         // Stop diagrams if not in transition to stop any animations.
         this.stopDiagrams();
       }
+      this.firstPageShown = false;
       if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
@@ -106,14 +113,15 @@ class Lesson {
     if (this.currentSectionIndex > 0 && diagram) {
       if (this.inTransition) {
         const { comingFrom } = this;
+        const { firstPageShown } = this;
         this.stopTransition();
-        if (comingFrom === 'next') {
+        if (comingFrom === 'next' || firstPageShown) {
           return;
         }
       } else {
         this.stopDiagrams();
       }
-
+      this.firstPageShown = false;
       if (this.currentSection().blankTransition.toNext) {
         this.refresh('', this.currentSectionIndex);
       }
@@ -122,6 +130,11 @@ class Lesson {
       this.content.toggleInfo(false);
       this.transitionStart('next');
       this.goToSectionIndex = this.currentSectionIndex - 1;
+      if (this.content.sections[this.currentSectionIndex - 1].skipWhenComingFromNext) {
+        if (this.currentSectionIndex - 1 > 0) {
+          this.goToSectionIndex = this.currentSectionIndex - 2;
+        }
+      }
       this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
     }
     this.renderDiagrams();
@@ -138,9 +151,13 @@ class Lesson {
         }
       });
     }
+    // this.firstPageShown = false;
     if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
       if (this.inTransition) {
         this.stopTransition();
+        if (this.firstPageShown) {
+          this.firstPageShown = false;
+        }
       } else {
         this.stopDiagrams();
       }
@@ -206,7 +223,6 @@ class Lesson {
      || (this.comingFrom === 'goto' && this.currentSection().blankTransition.fromGoto)) {
       contentHTML = '';
     }
-
     this.refresh(
       contentHTML, this.currentSectionIndex,
       this.setState.bind(this),
@@ -219,6 +235,9 @@ class Lesson {
     if (diagram) {
       section.setEnterState(this.state);
       section.currentInteractiveItem = -1;
+      if (this.overlayDiagram) {
+        this.overlayDiagram.elements.hideAll();
+      }
       section.setVisible();
       this.renderDiagrams();
       if (this.transitionCancelled) {
@@ -255,6 +274,7 @@ class Lesson {
     const section = this.content.sections[this.currentSectionIndex];
     section.setOnClicks();
     section.setSteadyState(this.state);
+    this.firstPageShown = false;
     section.setInfoButton();
     section.setInteractiveElements();
     section.setInteractiveElementsButton();
@@ -281,14 +301,10 @@ class Lesson {
 
   highlightNextInteractiveItem() {
     const section = this.content.sections[this.currentSectionIndex];
-    if (section.interactiveElementList.length > 0) {
-      let index = section.currentInteractiveItem + 1;
-      if (index > section.interactiveElementList.length - 1) {
-        index = 0;
-      }
-      const { element, location } = section.interactiveElementList[index];
+    const interactiveItem = section.getNextInteractiveItem();
+    if (interactiveItem) {
+      const { element, location } = interactiveItem;
       this.content.highlightInteractiveElement(element, location);
-      section.currentInteractiveItem = index;
     }
   }
 
@@ -321,6 +337,7 @@ class Lesson {
     this.closeDiagram();
     this.content.initialize();
     this.diagram = this.content.diagram;
+    this.overlayDiagram = this.content.overlayDiagram;
     this.diagram.lesson = this;
   }
 }

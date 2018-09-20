@@ -312,23 +312,26 @@ export default class LessonComponent extends React.Component
   }
 
   // eslint-disable-next-line class-methods-use-this
-  addInfoBox() {
-    return <div
-      id="id_lesson__info_box"
-      className="lesson__info_box lesson__info_hide">
-      <div className="lesson__info_box__close">{'X'}</div>
-      <div id="id_lesson__info_box__text"
-           className="lesson__info_box__text"></div>
-    </div>;
-  }
+  // addInfoBox() {
+  //   return <div
+  //     id="id_lesson__info_box"
+  //     className="lesson__info_box lesson__info_hide">
+  //     <div className="lesson__info_box__close">{'X'}</div>
+  //     <div id="id_lesson__info_box__text"
+  //          className="lesson__info_box__text"></div>
+  //   </div>;
+  // }
 
   // eslint-disable-next-line class-methods-use-this
   addInteractiveElementButton() {
-    return <img
-      id="id_lesson__interactive_element_button"
-      className="lesson__interactive_element_button lesson__interactive_element_button__hide"
-      onClick={this.lesson.highlightNextInteractiveItem.bind(this.lesson)}
-      src="/static/star.png"/>;
+    return <div id="id_lesson__interactive_element_button__container"
+      className="lesson__interactive_element_button__container">
+        <img
+          id="id_lesson__interactive_element_button"
+          className="lesson__interactive_element_button lesson__interactive_element_button__hide"
+          onClick={this.lesson.highlightNextInteractiveItem.bind(this.lesson)}
+          src="/static/star.png"/>
+      </div>;
   }
 
   addGoToButton() {
@@ -556,13 +559,17 @@ export default class LessonComponent extends React.Component
         <div id="lesson__container_name" className="lesson__container">
               {this.addPrevButton()}
               <div id={this.lesson.content.diagramHtmlId} className="diagram__container lesson__diagram">
-                <canvas className='diagram__text'>
+                <canvas id="id_diagram__text__low" className='diagram__text'>
                 </canvas>
-                <canvas className='diagram__gl'>
+                <canvas id="id_diagram__gl__low" className='diagram__gl'>
                 </canvas>
-                <div id="dd" className='diagram__html'>
+                <div id="id_diagram__html" className='diagram__html'>
                   {this.renderContent(this.state.htmlText)}
                 </div>
+                <canvas id="id_diagram__text__high" className='diagram__text'>
+                </canvas>
+                <canvas id="id_diagram__gl__high" className='diagram__gl'>
+                </canvas>
               </div>
               {this.addGoToButton()}
               {this.addNextButton()}

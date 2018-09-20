@@ -18,7 +18,6 @@ import DrawContext2D from '../../DrawContext2D';
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
 
-
 class Element {
   content: DiagramElementPrimative | DiagramElementCollection;
   ascent: number;
@@ -47,13 +46,17 @@ class Element {
       content.updateLastDrawTransform();
 
       // Get the boundaries of element
-      const r = content.getRelativeDiagramBoundingRect();
+      // const t = content.lastDrawTransform._dup();
+      // content.lastDrawTransform = content.transform._dup();
+      const r = content.getRelativeVertexSpaceBoundingRect();
+      // content.lastDrawTransform = t;
       this.location = location._dup();
       this.scale = scale;
-      this.ascent = r.top;
-      this.descent = -r.bottom;
-      this.height = r.height;
-      this.width = r.width;
+      this.ascent = r.top * scale;
+      this.descent = -r.bottom * scale;
+      this.height = r.height * scale;
+      this.width = r.width * scale;
+      // console.log(this.height)
     }
   }
 
@@ -231,7 +234,7 @@ class Fraction extends Elements {
     this.vSpaceNum = scale * 0.05;
     this.vSpaceDenom = scale * 0.02;
     this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
-    this.lineWidth = scale * 0.02;
+    this.lineWidth = scale * 0.01;
 
     const yNumerator = this.numerator.descent
                         + this.vSpaceNum + this.lineVAboveBaseline;
@@ -594,7 +597,8 @@ class Integral extends Elements {
       this.glyphLocation = integralSymbolLocation;
       this.glyphScale = height;
       const bounds = integralGlyph.vertices
-        .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
+        .getRelativeVertexSpaceBoundingRect();
+        // .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
       integralGlyphBounds.width = bounds.width;
       integralGlyphBounds.height = -bounds.bottom + bounds.top;
       integralGlyphBounds.ascent = bounds.top;
@@ -690,7 +694,7 @@ export function createEquationElements(
   }
 
   const collection = new DiagramElementCollection(
-    new Transform().scale(1, 1).rotate(0).translate(0, 0),
+    new Transform('Equation Elements Collection').scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits,
   );
   Object.keys(elems).forEach((key) => {
@@ -699,7 +703,7 @@ export function createEquationElements(
       const to = new TextObject(drawContext2D, [dT]);
       const p = new DiagramElementPrimative(
         to,
-        new Transform().scale(1, 1).translate(0, 0),
+        new Transform('Equation Element').scale(1, 1).translate(0, 0),
         color,
         diagramLimits,
       );
@@ -840,6 +844,10 @@ export class EquationForm extends Elements {
     alignV: TypeVAlign | null = 'baseline',
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point = new Point(0, 0),
   ) {
+    // if (this.name === 'com_add') {
+    //   console.log(this.name, 'start')
+    //   flag = true;
+    // }
     // const elementsInEqn = this.getAllElements();
     const elementsInCollection = this.collection.getAllElements();
     const elementsCurrentlyShowing = elementsInCollection.filter(e => e.isShown);
@@ -861,12 +869,16 @@ export class EquationForm extends Elements {
     let a = this.ascent;
     let d = this.descent;
     let p = this.location._dup();
+    // if (this.name === 'com_add') {
+    //   console.log(this.name, 'stop')
+    //   flag = false;
+    // }
     // let { height } = this;
     if (fixTo instanceof DiagramElementPrimative
         || fixTo instanceof DiagramElementCollection) {
       const t = fixTo.transform.t();
       if (t != null) {
-        const rect = fixTo.getRelativeDiagramBoundingRect();
+        const rect = fixTo.getVertexSpaceBoundingRect();
         w = rect.width;
         h = rect.height;
         a = rect.top - t.y;
@@ -1037,7 +1049,6 @@ export class EquationForm extends Elements {
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
 
     const currentTransforms = this.collection.getElementTransforms();
-
     this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
@@ -1183,7 +1194,7 @@ export class Equation {
   constructor(
     drawContext2D: DrawContext2D,
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
-    firstTransform: Transform = new Transform()
+    firstTransform: Transform = new Transform('Equation')
       .scale(1, 1).rotate(0).translate(0, 0),
   ) {
     this.drawContext2D = drawContext2D;
@@ -1313,6 +1324,11 @@ export class Equation {
       this.formAlignment.vAlign,
       this.formAlignment.fixTo,
     );
+    // make the first form added also equal to the base form as always
+    // need a base form for some functions
+    if (this.form[name].base === undefined) {
+      this.addForm(name, content, 'base');
+    }
   }
 
   reArrangeCurrentForm() {
@@ -1397,6 +1413,7 @@ export class Equation {
     const form = this.currentForm;
     if (form != null) {
       form.showHide();
+      this.collection.show();
       form.setPositions();
     }
   }
@@ -1443,7 +1460,7 @@ export class Equation {
 
   showForm(
     formOrName: EquationForm | string,
-    formType: ?string,
+    formType: ?string = null,
   ) {
     if (typeof formOrName === 'string') {
       if (formOrName in this.form) {
@@ -1465,6 +1482,27 @@ export class Equation {
       this.setCurrentForm(formOrName);
       this.render();
     }
+  }
+
+  getForm(
+    formOrName: string,
+    formType: ?string,
+  ): null | EquationForm {
+    if (formOrName in this.form) {
+      let formTypeToUse = formType;
+      if (formTypeToUse == null) {
+        const possibleFormTypes
+          = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
+        if (possibleFormTypes.length) {
+          // eslint-disable-next-line prefer-destructuring
+          formTypeToUse = possibleFormTypes[0];
+        }
+      }
+      if (formTypeToUse != null) {
+        return this.form[formOrName][formTypeToUse];
+      }
+    }
+    return null;
   }
 
   frac(

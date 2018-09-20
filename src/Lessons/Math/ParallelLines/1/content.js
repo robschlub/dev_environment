@@ -1,8 +1,10 @@
 // @flow
 import {
-  LessonContent, click, centerV, highlight,
+  LessonContent,
 } from '../../../../js/Lesson/LessonContent';
-
+import {
+  click, centerV, highlight,
+} from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
@@ -83,7 +85,7 @@ class Content extends LessonContent {
       setContent: `
         <p>
           Lines are |parallel| if they never meet.
-          They have the same rotation, and do not touch (even if made longer).
+          They have the same rotation, and are not on top of each other (even if made longer).
         </p>
         ${new Definition('Parallel', 'Greek', ['para', 'beside', 'allelois', 'each other']).html('id_lesson__related_angles_definition')}
       `,

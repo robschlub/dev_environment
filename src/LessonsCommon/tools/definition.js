@@ -53,9 +53,9 @@ export default class Definition {
     });
   }
 
-  html(id: string) {
+  html(id: string, classes: string = '') {
     let outStr = '';
-    outStr += `<div id="${id}" class="lesson__definition_container">`;
+    outStr += `<div id="${id}" class="lesson__definition_container ${classes}">`;
     outStr += '<span class="lesson__definition_word">';
     outStr += this.word;
     outStr += '</span>';
@@ -63,10 +63,12 @@ export default class Definition {
       outStr += ` - from ${fromLanguage.language}`;
       fromLanguage.roots.forEach((root, index) => {
         outStr += '<span class="lesson__definition_root">';
-        outStr += `${root.root}: `;
+        outStr += `${root.root}`;
         outStr += '</span>';
         outStr += '<span class="lesson__definition_meaning">';
-        outStr += `"${root.meaning}"`;
+        if (root.meaning) {
+          outStr += `: "${root.meaning}"`;
+        }
         outStr += '</span>';
         if (fromLanguage.roots.length > index + 1) {
           outStr += ', ';

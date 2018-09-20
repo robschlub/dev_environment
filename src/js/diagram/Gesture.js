@@ -26,7 +26,6 @@ class Gesture {
     this.addEvent('touchstart', this.touchStartHandler, false);
     this.addEvent('touchend', this.touchEndHandler, false);
     this.addEvent('touchmove', this.touchMoveHandler, false);
-
     // this.diagram.canvas.addEventListener(
     //   'touchstart',
     //   this.touchStartHandler.bind(this), false,

@@ -56,6 +56,8 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       this.normalizeAngle(line);
     };
     line._mid.move.type = 'translation';
+    line._end1.move.type = 'translation';
+    line._end2.move.type = 'translation';
     line.selected = false;
     line.onClick = () => {
       line.selected = !line.selected;

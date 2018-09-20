@@ -109,7 +109,7 @@ function makePlot(diagram: Diagram) {
   plotProps.axes = [xProps, yProps];
   plotProps.traces = [trace];
   const plot = new CartesianPlot(
-    diagram.webgl, diagram.draw2D, plotProps,
+    diagram.webglLow, diagram.draw2DLow, plotProps,
     new Transform().translate(-1.5, -1),
     diagram.limits,
   );
@@ -282,7 +282,7 @@ class ShapesCollection extends DiagramElementCollection {
       new DiagramText(new Point(0, -1), '-i', font),
     ];
 
-    const to = new TextObject(this.diagram.draw2D, dText);
+    const to = new TextObject(this.diagram.draw2DLow, dText);
 
     const text = new DiagramElementPrimative(
       to,

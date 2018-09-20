@@ -9,6 +9,7 @@ export default function getLessonIndex() {
     'adjacent_angles',
     [
       '1',
+      'summary',
     ],
     [
       'important_angles',
@@ -95,6 +96,19 @@ export default function getLessonIndex() {
     ],
     [
       'parallel_lines',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Triangles',
+    '/Lessons/Math/Triangles',
+    'triangle_introduction',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'related_angles',
     ],
   ));
   return lessonIndex;

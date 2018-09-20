@@ -2,8 +2,11 @@
 
 // import { Lesson } from '../../../js/Lesson/Lesson';
 import {
-  LessonContent, actionWord, onClickId,
+  LessonContent,
 } from '../../../../js/Lesson/LessonContent';
+import {
+  actionWord, onClickId,
+} from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import { Point } from '../../../../js/diagram/tools/g2';
 // import CircleDiagram from './diagramCircle';

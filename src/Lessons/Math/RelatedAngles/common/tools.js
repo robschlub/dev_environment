@@ -5,17 +5,13 @@ import {
   Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
-import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
-import makeAngleAnnotation from '../../../../LessonsCommon/tools/angleAnnotation';
+// import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { makeAngle } from '../../../../LessonsCommon/tools/angle';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
-export type TypeAngle = {
-  _label: DiagramElementCollection;
-  _arc: DiagramElementPrimative;
-  eqn: Equation;
-  updateAngle: (number, number, ?number) => void;
-} & DiagramElementCollection;
+export type TypeLabeledAngle = TypeAngle;
 
 export type TypeIndexAngle = {
   lineIndex: number;
@@ -66,7 +62,16 @@ export function makeLabeledAngle(
   eqn.addForm('g', ['g']);
   eqn.addForm('h', ['h']);
 
-  const angle = makeAngleAnnotation(diagram, layout.angle, color, eqn);
+  const angle = makeAngle(
+    diagram,
+    layout.angle.arc.radius,
+    layout.angle.arc.width,
+    layout.angle.arc.sides,
+    color,
+  );
+
+  angle.addLabel(eqn, layout.angle.label.radius);
+  // console.log(angle._label.transform.matrix())
   return angle;
 }
 

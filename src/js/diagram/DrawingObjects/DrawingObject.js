@@ -24,11 +24,13 @@ class DrawingObject {
   // numPoints: number;           // Number of primative vertices
   border: Array<Array<Point>>; // Border vertices
   location: Point;
+  holeBorder: Array<Array<Point>>;  // Border of any holes inside of main border
 
   constructor() {
     // this.numPoints = 0;
     this.location = new Point(0, 0);
     this.border = [[]];
+    this.holeBorder = [[]];
   }
 
   _dup() {
@@ -39,11 +41,21 @@ class DrawingObject {
   setText(text: string) {
   }
 
-  /* eslint-disable class-methods-use-this, no-unused-vars */
-  // glToDiagramTransformMatrix: Array<number>,
   getGLBoundaries(lastDrawTransformMatrix: Array<number>): Array<Array<Point>> {
     const glBoundaries = [];
     this.border.forEach((boundary) => {
+      const glBorder = [];
+      boundary.forEach((point) => {
+        glBorder.push(point.transformBy(lastDrawTransformMatrix));
+      });
+      glBoundaries.push(glBorder);
+    });
+    return glBoundaries;
+  }
+
+  getGLBoundaryHoles(lastDrawTransformMatrix: Array<number>): Array<Array<Point>> {
+    const glBoundaries = [];
+    this.holeBorder.forEach((boundary) => {
       const glBorder = [];
       boundary.forEach((point) => {
         glBorder.push(point.transformBy(lastDrawTransformMatrix));
@@ -89,6 +101,10 @@ class DrawingObject {
     return getBoundingRect(boundaries);
   }
 
+  getVertexSpaceBoundingRect() {
+    return getBoundingRect(this.border);
+  }
+
   getLocation(): Point {
     return this.location;
   }
@@ -109,6 +125,18 @@ class DrawingObject {
       glAbsoluteBoundaries.height,
     );
     return glRelativeBoundaries;
+  }
+
+  getRelativeVertexSpaceBoundingRect() {
+    const absoluteBoundaries =
+      this.getVertexSpaceBoundingRect();
+    const relativeBoundaries = new Rect(
+      absoluteBoundaries.left - this.location.x,
+      absoluteBoundaries.bottom - this.location.y,
+      absoluteBoundaries.width,
+      absoluteBoundaries.height,
+    );
+    return relativeBoundaries;
   }
 }
 

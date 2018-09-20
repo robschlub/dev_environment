@@ -72,6 +72,7 @@ class ShapesCollection extends DiagramElementCollection {
       ],
       false,
       0.1,
+      'never',
     );
 
     const radialVertices = new VertexRadialLines(
@@ -264,8 +265,8 @@ class Diagram1 extends Diagram {
 
   createDiagramElements() {
     this.elements = new ShapesCollection(
-      this.webgl,
-      this.draw2D,
+      this.webglLow,
+      this.draw2DLow,
       new Transform().rotate(0).translate(0, 0),
       this.limits,
     );

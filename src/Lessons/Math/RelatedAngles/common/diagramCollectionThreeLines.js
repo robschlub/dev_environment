@@ -9,13 +9,15 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import { makeLabeledAngle } from './tools';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import type {
-  TypeAngle, TypeIndexAngle, TypeSupplementaryAngle,
+  TypeIndexAngle, TypeSupplementaryAngle,
 } from './tools';
 import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import { showAngles } from '../../../../LessonsCommon/tools/angle';
 
 export default class ThreeLinesCollection extends CommonDiagramCollection {
   layout: Object;
@@ -74,15 +76,15 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       ? arcLayout.radius : arcLayout.radius * 1.0;
     const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.eqn.addForm('b_equals', ['_180', 'minus', 'a'], 'deg');
-    angle.eqn.addForm('b_equals', ['pi', 'minus', 'a'], 'rad');
-    angle.eqn.addForm('a_equals', ['_180', 'minus', 'b'], 'deg');
-    angle.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
-    angle.eqn.addForm('c_equals', ['_180', 'minus', 'c'], 'deg');
-    angle.eqn.addForm('c_equals', ['pi', 'minus', 'c'], 'rad');
-    angle.eqn.addForm('d_equals', ['_180', 'minus', 'd'], 'deg');
-    angle.eqn.addForm('d_equals', ['pi', 'minus', 'd'], 'rad');
-    angle.eqn.showForm(name);
+    angle.label.eqn.addForm('b_equals', ['_180', 'minus', 'a'], 'deg');
+    angle.label.eqn.addForm('b_equals', ['pi', 'minus', 'a'], 'rad');
+    angle.label.eqn.addForm('a_equals', ['_180', 'minus', 'b'], 'deg');
+    angle.label.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
+    angle.label.eqn.addForm('c_equals', ['_180', 'minus', 'c'], 'deg');
+    angle.label.eqn.addForm('c_equals', ['pi', 'minus', 'c'], 'rad');
+    angle.label.eqn.addForm('d_equals', ['_180', 'minus', 'd'], 'deg');
+    angle.label.eqn.addForm('d_equals', ['pi', 'minus', 'd'], 'rad');
+    angle.label.eqn.showForm(name);
 
     angle.lineIndex = lineIndex;
     angle.angleIndex = angleIndex;
@@ -115,7 +117,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   constructor(
     diagram: Diagram,
     layout: Object,
-    transform: Transform = new Transform().rotate(0).translate(0, 0),
+    transform: Transform = new Transform().scale(1, 1).rotate(0).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.setPosition(this.layout.position);
@@ -240,8 +242,12 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   }
 
   setUnits(units: 'deg' | 'rad') {
-    this._angleA2.eqn.setUnits(units);
-    this._angleB2.eqn.setUnits(units);
+    if (this._angleA2.label) {
+      this._angleA2.label.eqn.setUnits(units);
+    }
+    if (this._angleB2.label) {
+      this._angleB2.label.eqn.setUnits(units);
+    }
   }
 
   // ***********************************************************************
@@ -257,28 +263,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       this._angleA1, this._angleB1, this._angleC1, this._angleD1,
       this._angleA2, this._angleB2, this._angleC2, this._angleD2,
     ];
-    if (showOnly) {
-      const anglesToShow = angles.map(angle => angle[0]);
-      const anglesToHide = allAngles.filter(angle => anglesToShow.indexOf(angle) === -1);
-      anglesToHide.forEach((angle) => {
-        angle.hide();
-      });
-    }
-
-    angles.forEach((angle) => {
-      const [element, form, color] = angle;
-      element.eqn.showForm(form);
-      element.show();
-      element._arc.show();
-      element.setColor(color);
-
-      if (angle.length === 4) {
-        // $FlowFixMe
-        if (angle[3]) {
-          element.pulseScaleNow(1, 1.2);
-        }
-      }
-    });
+    showAngles(allAngles, angles, showOnly);
     this.updateIntersectingLineAngle();
     this.diagram.animateNextFrame();
   }
@@ -447,7 +432,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     if (typeof singleLabels === 'boolean' && singleLabels === true) {
       color2 = this.layout.colors.angleB;
     }
-    let labels = [['a', 'b', 'c', 'd'], ['c', 'd', 'a', 'b']];
+    let labels = [['a', 'b', 'c', 'd'], ['a', 'b', 'c', 'd']];
     if (typeof singleLabels === 'boolean' && singleLabels === true) {
       labels = [['a', 'b', 'c', 'd'], ['g', 'h', 'e', 'f']];
     }
@@ -491,6 +476,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       labels = [['d', 'c'], ['e', 'f']];
       colors = [[c1, c1], [c2, c2]];
     }
+
     this.toggleAngles(
       [['D1', 'C1'], ['A2', 'B2']],
       labels,

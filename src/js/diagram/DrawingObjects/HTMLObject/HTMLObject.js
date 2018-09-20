@@ -37,6 +37,7 @@ class HTMLObject extends DrawingObject {
     this.alignH = alignH;
     this.parentDiv = parentDiv;
     this.show = true;
+    this.setBorder();
   }
 
   _dup() {
@@ -47,6 +48,23 @@ class HTMLObject extends DrawingObject {
     c.show = this.show;
     c.border = this.border.map(b => b.map(p => p._dup()));
     return c;
+  }
+
+  setBorder() {
+    const parentRect = this.parentDiv.getBoundingClientRect();
+    const elementRect = this.element.getBoundingClientRect();
+    const left = elementRect.left - parentRect.left;
+    const right = left + elementRect.width;
+    const top = elementRect.top - parentRect.top;
+    const bottom = top + elementRect.height;
+
+    const boundary = [];
+    boundary.push(new Point(left, top));
+    boundary.push(new Point(right, top));
+    boundary.push(new Point(right, bottom));
+    boundary.push(new Point(left, bottom));
+    this.border = [];
+    this.border.push(boundary);
   }
 
   getGLBoundaries(): Array<Array<Point>> {
@@ -110,6 +128,7 @@ class HTMLObject extends DrawingObject {
       this.element.style.position = 'absolute';
       this.element.style.left = '-10000px';
       this.element.style.top = '-10000px';
+      // console.trace()
     }
   }
 

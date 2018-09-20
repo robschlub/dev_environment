@@ -392,13 +392,28 @@ function getDeltaAngle(
   // return rotDiff;
 }
 
-function Line(p1: Point, p2: Point) {
+function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
   this.p1 = p1._dup();
-  this.p2 = p2._dup();
-  this.A = p2.y - p1.y;
-  this.B = p1.x - p2.x;
-  this.C = this.A * p1.x + this.B * p1.y;
+  if (p2OrMag instanceof Point) {
+    this.p2 = p2OrMag._dup();
+    this.ang = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
+  } else {
+    this.p2 = this.p1.add(
+      p2OrMag * Math.cos(angle),
+      p2OrMag * Math.sin(angle),
+    );
+    this.ang = angle;
+  }
+  this.A = this.p2.y - this.p1.y;
+  this.B = this.p1.x - this.p2.x;
+  this.C = this.A * this.p1.x + this.B * this.p1.y;
+  this.distance = distance(this.p1, this.p2);
 }
+
+Line.prototype.angle = function angle() {
+  return this.ang;
+};
+
 Line.prototype.round = function lineround(precision?: number = 8) {
   const lineRounded = new Line(this.p1, this.p2);
   lineRounded.A = roundNum(lineRounded.A, precision);
@@ -409,7 +424,7 @@ Line.prototype.round = function lineround(precision?: number = 8) {
 
 Line.prototype.length = function linelength() {
   // return this.p1.sub(this.p2).distance();
-  return distance(this.p1, this.p2);
+  return this.distance;
 };
 /* eslint-disable comma-dangle */
 Line.prototype.midpoint = function linemidpoint() {
@@ -674,40 +689,43 @@ function line(p1: Point, p2: Point) {
 
 class Rotation {
   r: number;
-  constructor(angle: number) {
+  name: string;
+  constructor(angle: number, name: string = '') {
     this.r = angle;
+    this.name = name;
   }
 
   matrix(): Array<number> {
     return m2.rotationMatrix(this.r);
   }
 
-  sub(rotToSub: Rotation = new Rotation(0)): Rotation {
-    return new Rotation(this.r - rotToSub.r);
+  sub(rotToSub: Rotation = new Rotation(0, this.name)): Rotation {
+    return new Rotation(this.r - rotToSub.r, this.name);
   }
 
   round(precision: number = 8): Rotation {
-    return new Rotation(roundNum(this.r, precision));
+    return new Rotation(roundNum(this.r, precision), this.name);
   }
 
-  add(rotToAdd: Rotation = new Rotation(0)): Rotation {
-    return new Rotation(this.r + rotToAdd.r);
+  add(rotToAdd: Rotation = new Rotation(0, this.name)): Rotation {
+    return new Rotation(this.r + rotToAdd.r, this.name);
   }
 
-  mul(rotToMul: Rotation = new Rotation(1)): Rotation {
-    return new Rotation(this.r * rotToMul.r);
+  mul(rotToMul: Rotation = new Rotation(1, this.name)): Rotation {
+    return new Rotation(this.r * rotToMul.r, this.name);
   }
 
   _dup() {
-    return new Rotation(this.r);
+    return new Rotation(this.r, this.name);
   }
 }
 
 class Translation extends Point {
   x: number;
   y: number;
+  name: string;
 
-  constructor(tx: Point | number, ty: number = 0) {
+  constructor(tx: Point | number, ty: number = 0, name: string = '') {
     if (tx instanceof Point) {
       super(tx.x, tx.y);
       // this.x = tx.x;
@@ -717,6 +735,7 @@ class Translation extends Point {
       // this.x = tx;
       // this.y = ty;
     }
+    this.name = name;
   }
 
   matrix(): Array<number> {
@@ -736,6 +755,7 @@ class Translation extends Point {
     return new Translation(
       this.x - t.x,
       this.y - t.y,
+      this.name,
     );
   }
 
@@ -752,6 +772,7 @@ class Translation extends Point {
     return new Translation(
       this.x + t.x,
       this.y + t.y,
+      this.name,
     );
   }
 
@@ -759,6 +780,7 @@ class Translation extends Point {
     return new Translation(
       this.x * translationToMul.x,
       this.y * translationToMul.y,
+      this.name,
     );
   }
 
@@ -766,19 +788,21 @@ class Translation extends Point {
     return new Translation(
       roundNum(this.x, precision),
       roundNum(this.y, precision),
+      this.name,
     );
   }
 
   _dup() {
-    return new Translation(this.x, this.y);
+    return new Translation(this.x, this.y, this.name);
   }
 }
 
 class Scale extends Point {
   x: number;
   y: number;
+  name: string;
 
-  constructor(sx: Point | number, sy: number) {
+  constructor(sx: Point | number, sy: number, name: string = '') {
     if (sx instanceof Point) {
       super(sx.x, sx.y);
       // this.x = sx.x;
@@ -788,6 +812,7 @@ class Scale extends Point {
       // this.x = sx;
       // this.y = sy;
     }
+    this.name = name;
   }
 
   matrix(): Array<number> {
@@ -807,6 +832,7 @@ class Scale extends Point {
     return new Scale(
       this.x - s.x,
       this.y - s.y,
+      this.name,
     );
   }
 
@@ -814,6 +840,7 @@ class Scale extends Point {
     return new Scale(
       roundNum(this.x, precision),
       roundNum(this.y, precision),
+      this.name,
     );
   }
 
@@ -830,6 +857,7 @@ class Scale extends Point {
     return new Scale(
       this.x + s.x,
       this.y + s.y,
+      this.name,
     );
   }
 
@@ -843,11 +871,12 @@ class Scale extends Point {
     return new Scale(
       this.x * scaleToMul,
       this.y * scaleToMul,
+      this.name,
     );
   }
 
   _dup() {
-    return new Scale(this.x, this.y);
+    return new Scale(this.x, this.y, this.name);
   }
 }
 
@@ -961,16 +990,23 @@ class Transform {
   order: Array<Translation | Rotation | Scale>;
   mat: Array<number>;
   index: number;
+  name: string;
 
-  constructor(order: Array<Translation | Rotation | Scale> = []) {
-    this.order = order.map(t => t._dup());
+  constructor(orderOrName: Array<Translation | Rotation | Scale> | string = [], name: string = '') {
+    if (typeof orderOrName === 'string') {
+      this.order = [];
+      this.name = orderOrName;
+    } else {
+      this.order = orderOrName.map(t => t._dup());
+      this.name = name;
+    }
     // this.order = order.slice();
     this.index = this.order.length;
     this.calcMatrix();
   }
 
   translate(x: number | Point, y: number = 0) {
-    const translation = new Translation(x, y);
+    const translation = new Translation(x, y, this.name);
     const order = this.order.slice();
 
     if (this.index === this.order.length) {
@@ -981,11 +1017,12 @@ class Transform {
       this.calcMatrix();
       return this;
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   rotate(r: number) {
-    const rotation = new Rotation(r);
+    const rotation = new Rotation(r, this.name);
+    rotation.name = this.name;
     const order = this.order.slice();
     if (this.index === this.order.length) {
       order.push(rotation);
@@ -997,11 +1034,11 @@ class Transform {
     }
     // this.order.push(new Rotation(r));
     // this.calcMatrix();
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   scale(x: number | Point, y: number = 0) {
-    const scale = new Scale(x, y);
+    const scale = new Scale(x, y, this.name);
     const order = this.order.slice();
 
     if (this.index === this.order.length) {
@@ -1012,7 +1049,7 @@ class Transform {
       this.calcMatrix();
       return this;
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   calcMatrix() {
@@ -1056,7 +1093,7 @@ class Transform {
       const t = this.order[i];
       if (t instanceof Translation) {
         if (count === actualIndex) {
-          this.order[i] = new Translation(x, yOrIndex);
+          this.order[i] = new Translation(x, yOrIndex, this.name);
           this.calcMatrix();
           return;
         }
@@ -1121,7 +1158,7 @@ class Transform {
       const t = this.order[i];
       if (t instanceof Scale) {
         if (count === actualIndex) {
-          this.order[i] = new Scale(x, yOrIndex);
+          this.order[i] = new Scale(x, yOrIndex, this.name);
           this.calcMatrix();
           return;
         }
@@ -1150,7 +1187,7 @@ class Transform {
       const t = this.order[i];
       if (t instanceof Rotation) {
         if (count === index) {
-          this.order[i] = new Rotation(r);
+          this.order[i] = new Rotation(r, this.name);
           this.calcMatrix();
           return;
         }
@@ -1211,14 +1248,14 @@ class Transform {
   // the current transform.
   sub(transformToSubtract: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToSubtract)) {
-      return new Transform(this.order);
+      return new Transform(this.order, this.name);
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       // $FlowFixMe (this is already fixed in isSimilarTo check above)
       order.push(this.order[i].sub(transformToSubtract.order[i]));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   // Add a transform to the current one.
@@ -1226,38 +1263,38 @@ class Transform {
   // the current transform.
   add(transformToAdd: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToAdd)) {
-      return new Transform(this.order);
+      return new Transform(this.order, this.name);
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       // $FlowFixMe (this is already fixed in isSimilarTo check above)
       order.push(this.order[i].add(transformToAdd.order[i]));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   // transform step wise multiplication
   mul(transformToMul: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToMul)) {
-      return new Transform(this.order);
+      return new Transform(this.order, this.name);
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       // $FlowFixMe (this is already fixed in isSimilarTo check above)
       order.push(this.order[i].mul(transformToMul.order[i]));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   transform(transform: Transform) {
-    const t = new Transform();
+    const t = new Transform([], this.name);
     t.order = transform.order.concat(this.order);
     t.mat = m2.mul(this.matrix(), transform.matrix());
     return t;
   }
 
   transformBy(transform: Transform): Transform {
-    const t = new Transform();
+    const t = new Transform([], this.name);
     t.order = this.order.concat(transform.order);
     t.mat = m2.mul(transform.matrix(), this.matrix());
     return t;
@@ -1268,7 +1305,7 @@ class Transform {
     for (let i = 0; i < this.order.length; i += 1) {
       order.push(this.order[i].round(precision));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   clip(
@@ -1288,20 +1325,20 @@ class Transform {
           && max instanceof Translation) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
-        order.push(new Translation(x, y));
+        order.push(new Translation(x, y, this.name));
       } else if (t instanceof Rotation
                  && min instanceof Rotation
                  && max instanceof Rotation) {
-        order.push(new Rotation(clipValue(t.r, min.r, max.r)));
+        order.push(new Rotation(clipValue(t.r, min.r, max.r), this.name));
       } else if (t instanceof Scale
                  && min instanceof Scale
                  && max instanceof Scale) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
-        order.push(new Scale(x, y));
+        order.push(new Scale(x, y, this.name));
       }
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   clipMag(
@@ -1334,15 +1371,16 @@ class Transform {
           order.push(new Translation(
             clipM * Math.cos(angle),
             clipM * Math.sin(angle),
+            this.name,
           ));
         } else {
           const x = clipMag(t.x, z.translation, max.translation);
           const y = clipMag(t.y, z.translation, max.translation);
-          order.push(new Translation(x, y));
+          order.push(new Translation(x, y, this.name));
         }
       } else if (t instanceof Rotation) {
         const r = clipMag(t.r, z.rotation, max.rotation);
-        order.push(new Rotation(r));
+        order.push(new Rotation(r, this.name));
       } else if (t instanceof Scale) {
         if (vector) {
           const { mag, angle } = t.toPolar();
@@ -1350,15 +1388,16 @@ class Transform {
           order.push(new Scale(
             clipM * Math.cos(angle),
             clipM * Math.sin(angle),
+            this.name,
           ));
         } else {
           const x = clipMag(t.x, z.scale, max.scale);
           const y = clipMag(t.y, z.scale, max.scale);
-          order.push(new Scale(x, y));
+          order.push(new Scale(x, y, this.name));
         }
       }
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   constant(constant: number = 0): Transform {
@@ -1366,14 +1405,14 @@ class Transform {
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
       if (t instanceof Translation) {
-        order.push(new Translation(constant, constant));
+        order.push(new Translation(constant, constant, this.name));
       } else if (t instanceof Rotation) {
-        order.push(new Rotation(constant));
+        order.push(new Rotation(constant, this.name));
       } else if (t instanceof Scale) {
-        order.push(new Scale(constant, constant));
+        order.push(new Scale(constant, constant, this.name));
       }
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   zero(): Transform {
@@ -1397,7 +1436,7 @@ class Transform {
   }
 
   _dup(): Transform {
-    const t = new Transform(this.order);
+    const t = new Transform(this.order, this.name);
     t.index = this.index;
     return t;
   }
@@ -1486,10 +1525,11 @@ function spaceToSpaceTransform(
     x: {bottomLeft: number, width: number},
     y: {bottomLeft: number, height: number}
   },
+  name: string = '',
 ) {
   const xScale = s2.x.width / s1.x.width;
   const yScale = s2.y.height / s1.y.height;
-  const t = new Transform()
+  const t = new Transform(name)
     .scale(xScale, yScale)
     .translate(
       s2.x.bottomLeft - s1.x.bottomLeft * xScale,
@@ -1569,11 +1609,19 @@ function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   );
 }
 
+function threePointAngle(p2: Point, p1: Point, p3: Point) {
+  const p12 = distance(p1, p2);
+  const p13 = distance(p1, p3);
+  const p23 = distance(p2, p3);
+  return Math.acos((p12 ** 2 + p13 ** 2 - p23 ** 2) / (2 * p12 * p13));
+}
+
 export {
   point,
   Point,
   line,
   Line,
+  distance,
   minAngleDiff,
   deg,
   normAngle,
@@ -1593,4 +1641,5 @@ export {
   rectToPolar,
   getDeltaAngle,
   normAngleTo90,
+  threePointAngle,
 };

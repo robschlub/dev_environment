@@ -1,8 +1,10 @@
 // @flow
 import {
-  LessonContent, click, highlight, centerV, unit,
+  LessonContent,
 } from '../../../../js/Lesson/LessonContent';
-
+import {
+  click, highlight, centerV, unit,
+} from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
@@ -527,6 +529,7 @@ class Content extends LessonContent {
         Moving: highlight(colors.line),
       },
       setSteadyState: () => {
+        commonCorresponding.setSteadyState();
         threeLines.correspondingToggleAngles(true);
       },
     });
