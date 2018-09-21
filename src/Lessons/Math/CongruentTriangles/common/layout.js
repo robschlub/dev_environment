@@ -88,15 +88,17 @@ export default function commonLessonLayout() {
         angle: Math.PI / 6,
         scenario: { position: new Point(-2, -1), rotation: 0 },
         side: 3,
-        // limitLine: new Line(new Point(-2, -1), new Point(0.5, 2)),
         limitLine: null,
+        // limitLine: new Line(new Point(-2, -1), new Point(0.5, 2)),
+        // limitLine: new Line(new Point(-2.2, -1), new Point(-0.8, -1)),
       },
       c2: {
         angle: Math.PI / 3,
         scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
         side: 2,
-        // limitLine: new Line(new Point(0, -1), new Point(2.5, -1)),
         limitLine: null,
+        // limitLine: new Line(new Point(0, -1), new Point(2.5, -1)),
+        // limitLine: new Line(new Point(2.2, -1), new Point(0.8, -1)),
       },
       c3: {
         angle: Math.PI / 2,
@@ -106,6 +108,7 @@ export default function commonLessonLayout() {
         },
         side: 0.5,
         limitLine: null,
+        // boundary: new Rect(1.7, )
       },
     },
   };

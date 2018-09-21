@@ -61,6 +61,7 @@ export type TypeTriangle = {
   showAngles: (?boolean) => void;
   hideDimensions: () => void;
   showDimensions: (?boolean) => void;
+  showRealDimensions: boolean;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -104,6 +105,7 @@ export default function makeTriangle(
   triangle.dimensionList = [];
   triangle.updatePointsCallback = null;
   triangle.angleRadiusToInnerBorder = true;
+  triangle.showRealDimensions = false;
 
   triangle.updatePoints = (newP1: Point, newP2: Point, newP3: Point) => {
     triangle.p1 = newP1._dup();

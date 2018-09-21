@@ -183,19 +183,8 @@ class Content extends LessonContent {
         // sas._corner1._side2.grow(0, 2);
         sas.setCornerScenarios('AAA');
         sas._corner1.setTransformCallback = sas.recalculateTriangle.bind(sas, 1);
-        sas._corner2.setTransformCallback = sas.recalculateTriangle.bind(sas, 2);
-        sas._corner3.setTransformCallback = sas.recalculateTriangle.bind(sas, 3);
-        // const p1 = layout.corner.AAA.c1.scenario.position;
-        // const p2 = layout.corner.AAA.c2.scenario.position;
-        // const p3 = layout.corner.AAA.c3.scenario.position;
-        // sas._corner1.move.maxTransform.updateTranslation(p1.add(0.5, 0.5));
-        // sas._corner1.move.minTransform.updateTranslation(p1.sub(0.5, 0.5));
-        // sas._corner2.move.maxTransform.updateTranslation(p2.add(0.5, 0.5));
-        // sas._corner2.move.minTransform.updateTranslation(p2.sub(0.5, 0.5));
-        // sas._corner3.move.maxTransform.updateTranslation(p3.add(0.5, 0.5));
-        // sas._corner3.move.minTransform.updateTranslation(p3.sub(0.5, 0.5));
-        // console.log(sas._corner1.move)
-    // sas._corner1.move.minTransform = corner.transform._dup().updateTranslation(-2.5, -1.9);
+        // sas._corner2.setTransformCallback = sas.recalculateTriangle.bind(sas, 2);
+        // sas._corner3.setTransformCallback = sas.recalculateTriangle.bind(sas, 3);
       },
     });
   }

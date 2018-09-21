@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, polarToRect, Line,
+  Transform, Point, polarToRect, Line, Rect,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -48,13 +48,16 @@ export default class SASCollection extends CommonDiagramCollection {
     );
     // const a = layout.angle;
     // const aColor = this.layout.colors.angleLabels;
-    // const lColor = this.layout.colors.lineLabels;
+    const lColor = this.layout.colors.diagram.disabled;
     // triangle.addAngle(1, a.radius, a.lineWidth, a.sides, aColor, 'a');
     // triangle.addAngle(2, a.radius, a.lineWidth, a.sides, aColor, 'b');
     // triangle.addAngle(3, a.radius, a.lineWidth, a.sides, aColor, 'c');
-    // triangle.addSideLabel(2, 3, lColor, 'A', 0.05, 'outside', '', 'horizontal');
-    // triangle.addSideLabel(3, 1, lColor, 'B', 0.05, 'outside', '', 'horizontal');
-    // triangle.addSideLabel(1, 2, lColor, 'C', 0.05, 'outside', '', 'horizontal');
+    triangle.addSideLabel(2, 3, lColor, 'A', 0.05, 'outside', '', 'horizontal');
+    triangle.addSideLabel(3, 1, lColor, 'B', 0.05, 'outside', '', 'horizontal');
+    triangle.addSideLabel(1, 2, lColor, 'C', 0.05, 'outside', '', 'horizontal');
+    triangle._dimension12.showRealLength = true;
+    triangle._dimension31.showRealLength = true;
+    triangle._dimension23.showRealLength = true;
     return triangle;
   }
 
@@ -74,15 +77,17 @@ export default class SASCollection extends CommonDiagramCollection {
       this.layout.colors.angleA,
     );
     const touchPoint = this.diagram.shapes.polygonFilled(
-      10, 0.4, 0, 10, [0, 0, 1, 1], new Transform().translate(0, 0),
+      10, 0.4, 0, 10, [0, 0, 0, 0], new Transform().translate(0, 0),
     );
-    touchPoint.isMovable = true;
-    touchPoint.isTouchable = true;
+    // touchPoint.isMovable = true;
+    // touchPoint.isTouchable = true;
     touchPoint.move.element = corner;
     touchPoint.move.canBeMovedAfterLoosingTouch = true;
     corner.hasTouchableElements = true;
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
+    angle.showRealAngle = true;
+    angle.addLabel('', 0.5);
     corner.add('touchPoint', touchPoint);
     corner.add('angle', angle);
     corner.add('line', line);
@@ -95,9 +100,9 @@ export default class SASCollection extends CommonDiagramCollection {
     const c = [this._corner1, this._corner2, this._corner3];
     const l = this.layout.corner.AAA;
     const layout = [l.c1, l.c2, l.c3];
-    const t1 = c[0].transform.t();
-    const t2 = c[1].transform.t();
-    const t3 = c[2].transform.t();
+    let t1 = c[0].transform.t();
+    let t2 = c[1].transform.t();
+    let t3 = c[2].transform.t();
     const r1 = c[0].transform.r();
     const r2 = c[1].transform.r();
     const r3 = c[2].transform.r();
@@ -113,6 +118,12 @@ export default class SASCollection extends CommonDiagramCollection {
       const side2 = new Line(t[index - 1], 1, r[index - 1] + layout[index - 1].angle);
       const intersect2 = side2.intersectsWith(oppLine).intersect;
       c[(index + 1) % 3].transform.updateTranslation(intersect2);
+    }
+    t1 = c[0].transform.t();
+    t2 = c[1].transform.t();
+    t3 = c[2].transform.t();
+    if (t1 != null && t2 != null && t3 != null) {
+      this._tri.updatePoints(t1, t2, t3);
     }
   }
 
@@ -164,8 +175,8 @@ export default class SASCollection extends CommonDiagramCollection {
     const points = [];
     [this._corner1, this._corner2, this._corner3].forEach((c, index) => {
       const { angle, scenario, limitLine } = this.layout.corner[scenarioName][`c${index + 1}`];
-      this.updateCornerAngle(c, angle);
       this.setScenario(c, scenario);
+      this.updateCornerAngle(c, angle);
       points.push(scenario.position);
       c.move.limitLine = limitLine;
       // c._side1.setLength(side);
@@ -192,7 +203,10 @@ export default class SASCollection extends CommonDiagramCollection {
     this.add('corner1', this.makeCorner());
     this.add('corner2', this.makeCorner());
     this.add('corner3', this.makeCorner());
-    
+    this._corner1._touchPoint.isTouchable = true;
+    this._corner1._touchPoint.isMovable = true;
+    this._corner1.move.maxTransform.updateTranslation(new Point(0, -0.5));
+    this._corner1.move.minTransform.updateTranslation(new Point(-2.2, -1.5));
     this.hasTouchableElements = true;
   }
 }

@@ -7,6 +7,9 @@ import {
 import {
   Transform, Point,
 } from '../../js/diagram/tools/g2';
+import {
+  roundNum,
+} from '../../js/diagram/tools/mathtools';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import makeEquationLabel from './equationLabel';
 import type { TypeEquationLabel } from './equationLabel';
@@ -31,6 +34,7 @@ export type TypeAngle = {
   setToCorner: (Point, Point, Point) => void;
   autoRightAngle: boolean;
   radius: number;
+  showRealAngle: boolean;
 } & DiagramElementCollection;
 
 export function makeAngle(
@@ -68,6 +72,7 @@ export function makeAngle(
   angle.autoRightAngle = false;
   angle.radius = radius + lineWidth / 2;
   angle.label = null;
+  angle.showRealAngle = false;
 
   angle.addLabel = (labelTextOrEquation: string | Equation = '', labelRadius: number) => {
     const eqnLabel = makeEquationLabel(diagram, labelTextOrEquation, color);
@@ -85,6 +90,10 @@ export function makeAngle(
     labelRotationOffset: number = 0,
     angleToTestRightAngle: number = size,
   ) {
+    if (angle.showRealAngle) {
+      angle._label._base.vertices.setText(roundNum(size * 180 / Math.PI, 2).toString());
+      angle.label.eqn.reArrangeCurrentForm();
+    }
     if (angle.autoRightAngle
       && angleToTestRightAngle >= Math.PI / 2 * 0.995
       && angleToTestRightAngle <= Math.PI / 2 * 1.005

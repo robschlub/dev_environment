@@ -228,6 +228,7 @@ export type TypeLine = {
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
   reference: 'center' | 'end';
+  showRealLength: boolean;
   label: null | {
     offset: number;
     location: TypeLineLabelLocation;
@@ -289,6 +290,7 @@ export function makeLine(
   line.arrow1 = null;
   line.arrow2 = null;
   line._label = diagram.shapes.collection(new Transform());
+  line.showRealLength = false;
 
   line.addArrow1 = (arrowHeight: number, arrowWidth: number) => {
     const a = diagram.shapes.arrow(
@@ -358,6 +360,10 @@ export function makeLine(
     }
     const lineAngle = normAngle(line.transform.r() || 0);
     let labelAngle = 0;
+    if (line.showRealLength) {
+      line._label._base.vertices.setText(roundNum(line.currentLength, 2).toString());
+      line.label.eqn.reArrangeCurrentForm();
+    }
     const labelPosition = new Point(
       start * line.currentLength + line.label.linePosition * line.currentLength,
       0,
