@@ -142,6 +142,16 @@ export default class SASCollection extends CommonDiagramCollection {
       c.move.limitLine = limitLine;
     });
     this._tri.updatePoints(...points);
+    // this._tri2.updatePoints(...points);
+  }
+
+  calcAAAFuturePositions() {
+    const layout = this.layout.corner.AAA;
+    this.futurePositions = [
+      { element: this._corner1, scenario: layout.c1.scenario },
+      { element: this._corner2, scenario: layout.c2.scenario },
+      { element: this._corner3, scenario: layout.c3.scenario },
+    ];
   }
 
   constructor(
@@ -150,13 +160,11 @@ export default class SASCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    
     this.add('corner1', this.makeCorner());
     this.add('corner2', this.makeCorner());
     this.add('corner3', this.makeCorner());
     this.add('tri', this.makeTri());
-    // this._corner1.move.maxTransform.updateTranslation(new Point(0, -0.5));
-    // this._corner1.move.minTransform.updateTranslation(new Point(-2.2, -1.5));
+    // this.add('tri2', this.makeTri());
     this.hasTouchableElements = true;
   }
 }

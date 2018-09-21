@@ -169,10 +169,10 @@ class Content extends LessonContent {
       `),
     });
     this.addSection({
-      title: 'sas',
+      title: 'Three Angles',
       setContent: `
         <p>
-          First consider the scenario where you know all three angles. Is there more than one size of triangle that can be made with these same angles?
+          First consider the scenario where you know all three angles. Can triangles of different sizes be created that have the same angles?
         </p>
       `,
       showOnly: [
@@ -194,10 +194,9 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      title: 'sas',
       setContent: `
         <p>
-          You can move the bottom left corner of the triangle to see.
+          You can move the bottom corners of the triangle to see the same angles can make triangles of different sizes.
         </p>
       `,
       show: [
@@ -207,6 +206,9 @@ class Content extends LessonContent {
         sas._corner1._line,
         sas._corner2._line,
         sas._corner3._line,
+        sas._tri._dimension12,
+        sas._tri._dimension23,
+        sas._tri._dimension31,
       ],
       setSteadyState: () => {
         sas.setCornerScenarios('AAA');
@@ -223,6 +225,16 @@ class Content extends LessonContent {
         sas._corner2._touchPoint.isTouchable = false;
         sas._corner2._touchPoint.isMovable = false;
       },
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          So triangles with the same angles, can have different side lengths.
+        </p>
+        <p>
+          Knowing two triangles have the same angle, is |not enough to know they are congruent|.
+        </p>
+      `),
     });
   }
 }
