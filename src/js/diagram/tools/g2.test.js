@@ -352,9 +352,40 @@ describe('g2 tests', () => {
       });
     });
     describe('x can be found from y', () => {
-      test('Line from 0, 0 to 1, 0', () => {
-        const l = new Line(new Point(0, 0), new Point(1, 0));
-        expect(l.getX())
+      test('Line from 0, 0 to 1, 1', () => {
+        const l = new Line(new Point(0, 0), new Point(1, 1));
+        const xResult = l.getXFromY(0.5);
+        const yResult = l.getYFromX(0.5);
+        expect(xResult).toBe(0.5);
+        expect(yResult).toBe(0.5);
+      });
+      test('Line from 0, 0 to 2, 1', () => {
+        const l = new Line(new Point(0, 0), new Point(2, 1));
+        const xResult = l.getXFromY(0.5);
+        const yResult = l.getYFromX(1);
+        expect(xResult).toBe(1);
+        expect(yResult).toBe(0.5);
+      });
+      test('Line from 1, 0 to 1, 1', () => {
+        const l = new Line(new Point(1, 0), new Point(1, 1));
+        const xResult = l.getXFromY(10);
+        const yResult = l.getYFromX(10);
+        expect(xResult).toBe(1);
+        expect(yResult).toBe(null);
+      });
+      test('Line from 0, 1 to 1, 1', () => {
+        const l = new Line(new Point(0, 1), new Point(1, 1));
+        const xResult = l.getXFromY(10);
+        const yResult = l.getYFromX(10);
+        expect(xResult).toBe(null);
+        expect(yResult).toBe(1);
+      });
+      test('Line from 0, 1 to 2, 0', () => {
+        const l = new Line(new Point(0, 1), new Point(2, 0));
+        const xResult = l.getXFromY(0.5);
+        const yResult = l.getYFromX(1);
+        expect(xResult).toBe(1);
+        expect(yResult).toBe(0.5);
       });
     });
     describe('Lines can have a length', () => {
