@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, polarToRect,
+  Transform, Point, polarToRect, Line,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -74,7 +74,7 @@ export default class SASCollection extends CommonDiagramCollection {
       this.layout.colors.angleA,
     );
     const touchPoint = this.diagram.shapes.polygonFilled(
-      10, 0.4, 0, 10, [0, 0, 0, 0], new Transform().translate(0, 0),
+      10, 0.4, 0, 10, [0, 0, 1, 1], new Transform().translate(0, 0),
     );
     touchPoint.isMovable = true;
     touchPoint.isTouchable = true;
@@ -91,8 +91,30 @@ export default class SASCollection extends CommonDiagramCollection {
 
   recalculateTriangle(index: number) {
     const indeces = [1, 2, 3];
-    const opp = indeces.filter(i => indeces.indexOf(i) > -1);
-    console.log(opp)
+    const opp = indeces.filter(i => i !== index);
+    const c = [this._corner1, this._corner2, this._corner3];
+    const l = this.layout.corner.AAA;
+    const layout = [l.c1, l.c2, l.c3];
+    const t1 = c[0].transform.t();
+    const t2 = c[1].transform.t();
+    const t3 = c[2].transform.t();
+    const r1 = c[0].transform.r();
+    const r2 = c[1].transform.r();
+    const r3 = c[2].transform.r();
+    if (t1 != null && t2 != null && t3 != null
+      && r1 != null && r2 != null && r3 != null) {
+      const t = [t1, t2, t3];
+      const r = [r1, r2, r3];
+      const oppLine = new Line(t[opp[0] - 1], t[opp[1] - 1]);
+      // console.log(t[opp[0] - 1], t[opp[1] - 1], t);
+      const side1 = new Line(t[index - 1], 1, r[index - 1]);
+      const intersect1 = side1.intersectsWith(oppLine).intersect;
+      c[index % 3].transform.updateTranslation(intersect1);
+
+      const side2 = new Line(t[index - 1], 1, r[index - 1] + layout[index - 1].angle);
+      const intersect2 = side2.intersectsWith(oppLine).intersect;
+      c[(index + 1) % 3].transform.updateTranslation(intersect2);
+    }
   }
 
   updateCornerAngle(corner: TypeCorner, newAngle: number) {
@@ -171,7 +193,7 @@ export default class SASCollection extends CommonDiagramCollection {
     this.add('corner1', this.makeCorner());
     this.add('corner2', this.makeCorner());
     this.add('corner3', this.makeCorner());
-    this._corner1.setTransformCallback(this.recalculateTriangle.bind(this, 1))
+    
     this.hasTouchableElements = true;
   }
 }
