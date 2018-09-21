@@ -76,7 +76,7 @@ export default function commonLessonLayout() {
     length,
     sideWidth: 0.01,
     angleWidth: 0.02,
-    angleRadius: 0.4,
+    angleRadius: 0.37,
     width: 0.04,
     points: [
       new Point(length, 0),

@@ -34,10 +34,10 @@ export default class SASCollection extends CommonDiagramCollection {
   _corner1: TypeCorner;
   _corner2: TypeCorner;
   _corner3: TypeCorner;
-  _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
+  _tri: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
 
   makeTri() {
-    const layout = this.layout.triangle;
+    // const layout = this.layout.triangle;
     const triangle = makeTriangle(
       this.diagram,
       new Point(-1, -1),
@@ -74,28 +74,22 @@ export default class SASCollection extends CommonDiagramCollection {
       this.layout.corner.angleWidth, this.layout.triangle.angle.sides,
       this.layout.colors.angleA,
     );
-    // const side1 = makeLine(
-    //   this.diagram, 'end', 1,
-    //   this.layout.corner.width, this.layout.colors.diagram.disabled, true,
-    // );
-    // side1.setLength(0);
-    // const side2 = makeLine(
-    //   this.diagram, 'end', 1,
-    //   this.layout.corner.width, this.layout.colors.diagram.disabled, true,
-    // );
-    // side2.setLength(0);
-    // side2.transform.updateRotation(Math.PI / 2);
-
+    const touchPoint = this.diagram.shapes.polygonFilled(
+      10, 0.4, 0, 10, [0, 0, 0, 0], new Transform().translate(0, 0),
+    );
+    touchPoint.isMovable = true;
+    touchPoint.isTouchable = true;
+    touchPoint.move.element = corner;
+    corner.hasTouchableElements = true;
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
-    // corner.add('side1', side1);
-    // corner.add('side2', side2);
+    corner.add('touchPoint', touchPoint);
     corner.add('angle', angle);
     corner.add('line', line);
     return corner;
   }
 
-  updateCorner(corner: TypeCorner, newAngle: number) {
+  updateCornerAngle(corner: TypeCorner, newAngle: number) {
     const newPoint = polarToRect(this.layout.corner.length, newAngle);
     // const corners = [this._corner1, this._corner2, this._corner3];
     corner._line.vertices.change([
@@ -143,7 +137,7 @@ export default class SASCollection extends CommonDiagramCollection {
     const points = [];
     [this._corner1, this._corner2, this._corner3].forEach((c, index) => {
       const { angle, scenario } = this.layout.corner[scenarioName][`c${index + 1}`];
-      this.updateCorner(c, angle);
+      this.updateCornerAngle(c, angle);
       this.setScenario(c, scenario);
       points.push(scenario.position);
       // c._side1.setLength(side);

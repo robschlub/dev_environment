@@ -28,5 +28,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.add('sas', new SASCollection(diagram, this.layout));
     this.add('qr', new QuickReferenceCollection(diagram, this.layout));
     this._qr.hideAll();
+    this.hasTouchableElements = true;
   }
 }

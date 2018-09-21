@@ -182,6 +182,7 @@ class Content extends LessonContent {
         // sas.updateCorner(1, Math.PI / 3);
         // sas._corner1._side2.grow(0, 2);
         sas.setCornerScenarios('AAA');
+        console.log(diag)
       },
     });
   }
