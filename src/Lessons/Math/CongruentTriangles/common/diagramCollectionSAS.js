@@ -1,11 +1,11 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point,
+  Transform, Point, polarToRect,
 } from '../../../../js/diagram/tools/g2';
-// import {
-//   DiagramElementPrimative, DiagramElementCollection,
-// } from '../../../../js/diagram/Element';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../../../../js/diagram/Element';
 // import {
 //   removeRandElement, rand,
 // } from '../../../../js/diagram/tools/mathtools';
@@ -13,22 +13,25 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
-import type {
-  TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
-} from '../../../../LessonsCommon/tools/triangle';
+// import type {
+//   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
+// } from '../../../../LessonsCommon/tools/triangle';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
-// import { makeLine } from '../../../../LessonsCommon/tools/line';
-// import { makeAngle } from '../../../../LessonsCommon/tools/angle';
-// import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
+import { makeLine } from '../../../../LessonsCommon/tools/line';
+import { makeAngle } from '../../../../LessonsCommon/tools/angle';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
 
 export default class SASCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _line1: TypeLine;
-  _line2: TypeLine;
-  _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
-  _tri2: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
+  _corner1: {
+    _angle: TypeAngle;
+    _line: DiagramElementPrimative;
+    _side1: TypeLine;
+    _side2: TypeLine;
+  } & DiagramElementCollection;
+  // _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
 
   makeTri() {
     const layout = this.layout.triangle;
@@ -59,57 +62,78 @@ export default class SASCollection extends CommonDiagramCollection {
       .translate(0, 0));
 
     const line = this.diagram.shapes.polyLine(
-      [new Point(1, -1+ 0.5), new Point(-1, -1), new Point(-1+0.5, 1)], false,
-      this.layout.triangle.lineWidth * 10, this.layout.colors.line,
-      'onSharpAnglesOnly',
+      this.layout.corner.points, false,
+      this.layout.corner.width, this.layout.colors.line,
+      'never',
     );
+    const angle = makeAngle(
+      this.diagram, this.layout.triangle.angle.radius,
+      this.layout.triangle.angle.lineWidth, this.layout.triangle.angle.sides,
+      this.layout.colors.angleA,
+    );
+    const side1 = makeLine(
+      this.diagram, 'end', 1,
+      this.layout.corner.width, this.layout.colors.angleB, true,
+    );
+    const side2 = makeLine(
+      this.diagram, 'end', 1,
+      this.layout.corner.width, this.layout.colors.angleB, true,
+    );
+    // const { width } = this.layout.corner;
+    side2.transform.updateRotation(Math.PI / 2);
+    // side2.transform.updateTranslation(0, width / 2);
+    // side1.transform.updateTranslation(0, width / 2);
+    angle.updateAngle(0, Math.PI / 2);
+    angle.setPosition(this.layout.corner.points[1]);
+    corner.add('side1', side1);
+    corner.add('side2', side2);
+    corner.add('angle', angle);
     corner.add('line', line);
     return corner;
   }
-  // updateTriangle(
-  //   element: TypeTriangleAngle & TypeTriangle,
-  //   points: Array<Point>,
-  //   scenario: TypeScenario,
-  // ) {
-  //   // console.log(element, points, scenario)
-  //   element.updatePoints(...points);
-  //   this.setScenario(element, scenario);
+
+  updateAngle(newAngle: number) {
+    const newPoint = polarToRect(this.layout.corner.length, newAngle);
+    this._corner1._line.vertices.change([
+      ...this.layout.corner.points.slice(0, 2),
+      newPoint,
+    ]);
+    const rotation = this._corner1.transform.r();
+    if (rotation != null) {
+      this._corner1._angle.updateAngle(0, newAngle, rotation);
+    }
+    this._corner1._side2.transform.updateRotation(newAngle);
+  }
+
+  // showLineLabels(show: boolean | null = true) {
+  //   let toShow = true;
+  //   if (show === null || typeof show !== 'boolean') {
+  //     if (this._tri1._dimension12.isShown) {
+  //       toShow = false;
+  //     }
+  //   }
+  //   if (toShow) {
+  //     this._tri1.showDimensions(true);
+  //   } else {
+  //     this._tri1.hideDimensions();
+  //   }
   //   this.diagram.animateNextFrame();
   // }
 
-  showLineLabels(show: boolean | null = true) {
-    let toShow = true;
-    if (show === null || typeof show !== 'boolean') {
-      if (this._tri1._dimension12.isShown) {
-        toShow = false;
-      }
-    }
-    if (toShow) {
-      this._tri1.showDimensions(true);
-      this._tri2.showDimensions(true);
-    } else {
-      this._tri1.hideDimensions();
-      this._tri2.hideDimensions();
-    }
-    this.diagram.animateNextFrame();
-  }
-
-  showAngleLabels(show: boolean = true) {
-    let toShow = true;
-    if (show === null || typeof show !== 'boolean') {
-      if (this._tri1._angle1.isShown) {
-        toShow = false;
-      }
-    }
-    if (toShow) {
-      this._tri1.showAngles(true);
-      this._tri2.showAngles(true);
-    } else {
-      this._tri1.hideAngles();
-      this._tri2.hideAngles();
-    }
-    this.diagram.animateNextFrame();
-  }
+  // showAngleLabels(show: boolean = true) {
+  //   let toShow = true;
+  //   if (show === null || typeof show !== 'boolean') {
+  //     if (this._tri1._angle1.isShown) {
+  //       toShow = false;
+  //     }
+  //   }
+  //   if (toShow) {
+  //     this._tri1.showAngles(true);
+  //   } else {
+  //     this._tri1.hideAngles();
+  //   }
+  //   this.diagram.animateNextFrame();
+  // }
 
   // calcTriFuturePositions(
   //   scenario1: TypeScenario, scenario2: TypeScenario,

@@ -178,6 +178,10 @@ class Content extends LessonContent {
       show: [
         sas,
       ],
+      setSteadyState: () => {
+        sas.updateAngle(Math.PI / 3);
+        sas._corner1._side2.grow(0, 2);
+      },
     });
   }
 }

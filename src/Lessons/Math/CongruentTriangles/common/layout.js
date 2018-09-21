@@ -71,5 +71,15 @@ export default function commonLessonLayout() {
     },
   };
 
+  const length = 0.4;
+  layout.corner = {
+    length,
+    width: 0.02,
+    points: [
+      new Point(length, 0),
+      new Point(0, 0),
+      new Point(0, length),
+    ],
+  };
   return layout;
 }
