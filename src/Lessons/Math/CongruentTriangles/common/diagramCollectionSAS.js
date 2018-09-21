@@ -106,7 +106,6 @@ export default class SASCollection extends CommonDiagramCollection {
       const t = [t1, t2, t3];
       const r = [r1, r2, r3];
       const oppLine = new Line(t[opp[0] - 1], t[opp[1] - 1]);
-      // console.log(t[opp[0] - 1], t[opp[1] - 1], t);
       const side1 = new Line(t[index - 1], 1, r[index - 1]);
       const intersect1 = side1.intersectsWith(oppLine).intersect;
       c[index % 3].transform.updateTranslation(intersect1);

@@ -351,6 +351,12 @@ describe('g2 tests', () => {
         expect(l.C).toEqual(22);
       });
     });
+    describe('x can be found from y', () => {
+      test('Line from 0, 0 to 1, 0', () => {
+        const l = new Line(new Point(0, 0), new Point(1, 0));
+        expect(l.getX())
+      });
+    });
     describe('Lines can have a length', () => {
       test('Line from 0, 0 to 0, 1 has length 1', () => {
         const l = new Line(new Point(0, 0), new Point(0, 1));

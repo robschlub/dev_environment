@@ -419,6 +419,10 @@ function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
   this.distance = distance(this.p1, this.p2);
 }
 
+Line.prototype.getX = function getX(x: number) {
+  return (-this.C - this.A * x ) / this.B;
+}
+
 Line.prototype.angle = function angle() {
   return this.ang;
 };
