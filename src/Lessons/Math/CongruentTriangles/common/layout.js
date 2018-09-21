@@ -80,6 +80,23 @@ export default function commonLessonLayout() {
       new Point(0, 0),
       new Point(0, length),
     ],
+    AAA: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
+      },
+      c3: {
+        angle: Math.PI / 2,
+        scenario: {
+          position: new Point(1, 2 * (Math.sqrt(3) / 2 - 0.5)),
+          rotation: Math.PI / 6 * ,
+        },
+      },
+    },
   };
   return layout;
 }

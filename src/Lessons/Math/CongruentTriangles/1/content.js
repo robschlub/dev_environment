@@ -179,8 +179,9 @@ class Content extends LessonContent {
         sas,
       ],
       setSteadyState: () => {
-        sas.updateAngle(Math.PI / 3);
-        sas._corner1._side2.grow(0, 2);
+        // sas.updateCorner(1, Math.PI / 3);
+        // sas._corner1._side2.grow(0, 2);
+        sas.setCornerScenarios('AAA');
       },
     });
   }

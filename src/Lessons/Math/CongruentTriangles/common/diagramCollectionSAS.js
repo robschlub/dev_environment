@@ -22,15 +22,18 @@ import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
+type TypeCorner = {
+  _angle: TypeAngle;
+  _line: DiagramElementPrimative;
+  _side1: TypeLine;
+  _side2: TypeLine;
+} & DiagramElementCollection;
 
 export default class SASCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _corner1: {
-    _angle: TypeAngle;
-    _line: DiagramElementPrimative;
-    _side1: TypeLine;
-    _side2: TypeLine;
-  } & DiagramElementCollection;
+  _corner1: TypeCorner;
+  _corner2: TypeCorner;
+  _corner3: TypeCorner;
   // _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
 
   makeTri() {
@@ -75,10 +78,12 @@ export default class SASCollection extends CommonDiagramCollection {
       this.diagram, 'end', 1,
       this.layout.corner.width, this.layout.colors.angleB, true,
     );
+    side1.setLength(0);
     const side2 = makeLine(
       this.diagram, 'end', 1,
       this.layout.corner.width, this.layout.colors.angleB, true,
     );
+    side2.setLength(0);
     // const { width } = this.layout.corner;
     side2.transform.updateRotation(Math.PI / 2);
     // side2.transform.updateTranslation(0, width / 2);
@@ -92,17 +97,18 @@ export default class SASCollection extends CommonDiagramCollection {
     return corner;
   }
 
-  updateAngle(newAngle: number) {
+  updateCorner(corner: TypeCorner, newAngle: number) {
     const newPoint = polarToRect(this.layout.corner.length, newAngle);
-    this._corner1._line.vertices.change([
+    // const corners = [this._corner1, this._corner2, this._corner3];
+    corner._line.vertices.change([
       ...this.layout.corner.points.slice(0, 2),
       newPoint,
     ]);
-    const rotation = this._corner1.transform.r();
+    const rotation = corner.transform.r();
     if (rotation != null) {
-      this._corner1._angle.updateAngle(0, newAngle, rotation);
+      corner._angle.updateAngle(0, newAngle, rotation);
     }
-    this._corner1._side2.transform.updateRotation(newAngle);
+    corner._side2.transform.updateRotation(newAngle);
   }
 
   // showLineLabels(show: boolean | null = true) {
@@ -135,14 +141,14 @@ export default class SASCollection extends CommonDiagramCollection {
   //   this.diagram.animateNextFrame();
   // }
 
-  // calcTriFuturePositions(
-  //   scenario1: TypeScenario, scenario2: TypeScenario,
-  // ) {
-  //   this.futurePositions = [
-  //     { element: this._tri1, scenario: scenario1 },
-  //     { element: this._tri2, scenario: scenario2 },
-  //   ];
-  // }
+  setCornerScenarios(scenarioName: string) {
+    [this._corner1, this._corner2, this._corner3].forEach((c, index) => {
+      const { angle, scenario } = this.layout.corner[scenarioName][`c${index + 1}`];
+      console.log(c)
+      this.updateCorner(c, angle);
+      this.setScenario(c, scenario);
+    });
+  }
 
   // setTriangleScenarios(
   //   points1: Array<Point>, points2: Array<Point>,
@@ -160,6 +166,8 @@ export default class SASCollection extends CommonDiagramCollection {
     super(diagram, layout, transform);
     // this.add('tri', this.makeTri());
     this.add('corner1', this.makeCorner());
+    this.add('corner2', this.makeCorner());
+    this.add('corner3', this.makeCorner());
     this.hasTouchableElements = true;
   }
 }
