@@ -88,7 +88,8 @@ export default function commonLessonLayout() {
         angle: Math.PI / 6,
         scenario: { position: new Point(-2, -1), rotation: 0 },
         side: 3,
-        limitLine: new Line(new Point(-2, -1), new Point(0.5, 2)),
+        // limitLine: new Line(new Point(-2, -1), new Point(0.5, 2)),
+        limitLine: null,
       },
       c2: {
         angle: Math.PI / 3,

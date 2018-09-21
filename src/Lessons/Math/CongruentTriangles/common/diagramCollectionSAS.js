@@ -89,6 +89,12 @@ export default class SASCollection extends CommonDiagramCollection {
     return corner;
   }
 
+  recalculateTriangle(index: number) {
+    const indeces = [1, 2, 3];
+    const opp = indeces.filter(i => indeces.indexOf(i) > -1);
+    console.log(opp)
+  }
+
   updateCornerAngle(corner: TypeCorner, newAngle: number) {
     const newPoint = polarToRect(this.layout.corner.length, newAngle);
     // const corners = [this._corner1, this._corner2, this._corner3];
@@ -165,6 +171,7 @@ export default class SASCollection extends CommonDiagramCollection {
     this.add('corner1', this.makeCorner());
     this.add('corner2', this.makeCorner());
     this.add('corner3', this.makeCorner());
+    this._corner1.setTransformCallback(this.recalculateTriangle.bind(this, 1))
     this.hasTouchableElements = true;
   }
 }
