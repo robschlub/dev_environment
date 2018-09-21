@@ -26,6 +26,7 @@ class VertexObject extends DrawingObject {
   z: number;
   textureLocation: string;
   texturePoints: Array<number>;
+  +change: (Array<g2.Point>) => void;
 
   constructor(webgl: WebGLInstance) {
     super();

@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, polarToRect, Line, Rect,
+  Transform, Point, polarToRect, Line,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -10,7 +10,7 @@ import {
 //   removeRandElement, rand,
 // } from '../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
+// import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
 import type {
@@ -18,7 +18,7 @@ import type {
 } from '../../../../LessonsCommon/tools/triangle';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
@@ -29,12 +29,12 @@ type TypeCorner = {
   _side2: TypeLine;
 } & DiagramElementCollection;
 
-export default class SASCollection extends CommonDiagramCollection {
+export default class AAACollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _corner1: TypeCorner;
   _corner2: TypeCorner;
   _corner3: TypeCorner;
-  _tri: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
+  _tri: TypeTriangle & TypeTriangleAngle & TypeTriangleLabel;
 
   makeTri() {
     const triangle = makeTriangle(
@@ -139,10 +139,29 @@ export default class SASCollection extends CommonDiagramCollection {
       this.setScenario(c, scenario);
       this.updateCornerAngle(c, angle);
       points.push(scenario.position);
+      // eslint-disable-next-line no-param-reassign
       c.move.limitLine = limitLine;
     });
+    // $FlowFixMe
     this._tri.updatePoints(...points);
-    // this._tri2.updatePoints(...points);
+  }
+
+  changeTriangleSize(callback: Function) {
+    const p1 = this._corner1.transform.t();
+    let callbackToUse = null;
+    if (typeof callback === 'function') {
+      callbackToUse = callback;
+    }
+    if (p1 != null) {
+      const layout = this.layout.corner.AAA.c1.limitLine;
+      const limitLineCenterX = (layout.p2.x - layout.p1.x) / 2 + layout.p1.x;
+      let targetP1 = layout.p2.x;
+      if (p1.x > limitLineCenterX) {
+        targetP1 = layout.p1.x;
+      }
+      this._corner1.animateTranslationTo(new Point(targetP1, layout.p1.y), 1.5, callbackToUse);
+    }
+    this.diagram.animateNextFrame();
   }
 
   calcAAAFuturePositions() {
@@ -164,7 +183,6 @@ export default class SASCollection extends CommonDiagramCollection {
     this.add('corner2', this.makeCorner());
     this.add('corner3', this.makeCorner());
     this.add('tri', this.makeTri());
-    // this.add('tri2', this.makeTri());
     this.hasTouchableElements = true;
   }
 }

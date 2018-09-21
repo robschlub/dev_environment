@@ -30,13 +30,7 @@ class Content extends LessonContent {
   addSections() {
     const diag = this.diagram.elements;
     const tri = diag._triangle;
-    const sas = diag._sas;
-    // const examples = diag._examples;
-    // const custom = diag._custom;
-    // const properties = diag._properties;
-    // const totalAngle = diag._totalAngle;
-    // const qr = diag._qr;
-    // // const qr = this.diagram.elements;
+    const aaa = diag._aaa;
     let common = {};
 
     this.addSection({
@@ -176,54 +170,57 @@ class Content extends LessonContent {
         </p>
       `,
       showOnly: [
-        sas,
-        sas._tri,
-        sas._tri._line,
-        sas._corner1,
-        sas._corner2,
-        sas._corner3,
+        aaa,
+        aaa._tri,
+        aaa._tri._line,
+        aaa._corner1,
+        aaa._corner2,
+        aaa._corner3,
       ],
       show: [
-        sas._corner1._angle,
-        sas._corner2._angle,
-        sas._corner3._angle,
+        aaa._corner1._angle,
+        aaa._corner2._angle,
+        aaa._corner3._angle,
       ],
       setSteadyState: () => {
-        sas.setCornerScenarios('AAA');
-        sas._corner1.setTransformCallback = sas.recalculateTriangle.bind(sas, 1);
+        aaa.setCornerScenarios('AAA');
+        aaa._corner1.setTransformCallback = aaa.recalculateTriangle.bind(aaa, 1);
       },
     });
     this.addSection({
       setContent: `
         <p>
-          You can move the bottom corners of the triangle to see the same angles can make triangles of different sizes.
+          Yes. You can |move| the bottom corners of the triangle to see the same angles can make triangles of different sizes.
         </p>
       `,
+      modifiers: {
+        move: click(aaa.changeTriangleSize, [aaa, null], colors.diagram.action),
+      },
       show: [
-        sas,
+        aaa,
       ],
       hide: [
-        sas._corner1._line,
-        sas._corner2._line,
-        sas._corner3._line,
-        sas._tri._dimension12,
-        sas._tri._dimension23,
-        sas._tri._dimension31,
+        aaa._corner1._line,
+        aaa._corner2._line,
+        aaa._corner3._line,
+        aaa._tri._dimension12,
+        aaa._tri._dimension23,
+        aaa._tri._dimension31,
       ],
       setSteadyState: () => {
-        sas.setCornerScenarios('AAA');
-        sas._corner1.setTransformCallback = sas.recalculateTriangle.bind(sas, 1);
-        sas._corner2.setTransformCallback = sas.recalculateTriangle.bind(sas, 2);
-        sas._corner1._touchPoint.isTouchable = true;
-        sas._corner1._touchPoint.isMovable = true;
-        sas._corner2._touchPoint.isTouchable = true;
-        sas._corner2._touchPoint.isMovable = true;
+        aaa.setCornerScenarios('AAA');
+        aaa._corner1.setTransformCallback = aaa.recalculateTriangle.bind(aaa, 1);
+        aaa._corner2.setTransformCallback = aaa.recalculateTriangle.bind(aaa, 2);
+        aaa._corner1._touchPoint.isTouchable = true;
+        aaa._corner1._touchPoint.isMovable = true;
+        aaa._corner2._touchPoint.isTouchable = true;
+        aaa._corner2._touchPoint.isMovable = true;
       },
       setLeaveState: () => {
-        sas._corner1._touchPoint.isTouchable = false;
-        sas._corner1._touchPoint.isMovable = false;
-        sas._corner2._touchPoint.isTouchable = false;
-        sas._corner2._touchPoint.isMovable = false;
+        aaa._corner1._touchPoint.isTouchable = false;
+        aaa._corner1._touchPoint.isMovable = false;
+        aaa._corner2._touchPoint.isTouchable = false;
+        aaa._corner2._touchPoint.isMovable = false;
       },
     });
     this.addSection({
@@ -232,7 +229,7 @@ class Content extends LessonContent {
           So triangles with the same angles, can have different side lengths.
         </p>
         <p>
-          Knowing two triangles have the same angle, is |not enough to know they are congruent|.
+          |Only knowing two triangles have the same angles, is not enough to know they are congruent.|
         </p>
       `),
     });
