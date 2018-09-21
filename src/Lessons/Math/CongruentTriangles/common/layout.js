@@ -74,7 +74,10 @@ export default function commonLessonLayout() {
   const length = 0.4;
   layout.corner = {
     length,
-    width: 0.02,
+    sideWidth: 0.01,
+    angleWidth: 0.02,
+    angleRadius: 0.4,
+    width: 0.04,
     points: [
       new Point(length, 0),
       new Point(0, 0),
@@ -84,17 +87,20 @@ export default function commonLessonLayout() {
       c1: {
         angle: Math.PI / 6,
         scenario: { position: new Point(-2, -1), rotation: 0 },
+        side: 3,
       },
       c2: {
         angle: Math.PI / 3,
         scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
+        side: 2,
       },
       c3: {
         angle: Math.PI / 2,
         scenario: {
           position: new Point(1, 2 * (Math.sqrt(3) / 2 - 0.5)),
-          rotation: Math.PI / 6 * ,
+          rotation: Math.PI / 6 * 7,
         },
+        side: 0.5,
       },
     },
   };

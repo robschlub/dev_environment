@@ -13,9 +13,9 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
-// import type {
-//   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
-// } from '../../../../LessonsCommon/tools/triangle';
+import type {
+  TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
+} from '../../../../LessonsCommon/tools/triangle';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
 import { makeLine } from '../../../../LessonsCommon/tools/line';
@@ -34,7 +34,7 @@ export default class SASCollection extends CommonDiagramCollection {
   _corner1: TypeCorner;
   _corner2: TypeCorner;
   _corner3: TypeCorner;
-  // _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
+  _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
 
   makeTri() {
     const layout = this.layout.triangle;
@@ -43,18 +43,18 @@ export default class SASCollection extends CommonDiagramCollection {
       new Point(-1, -1),
       new Point(1, -1),
       new Point(0, 1),
-      layout.lineWidth,
-      this.layout.colors.line,
+      this.layout.corner.sideWidth,
+      this.layout.colors.diagram.disabled,
     );
-    const a = layout.angle;
-    const aColor = this.layout.colors.angleLabels;
-    const lColor = this.layout.colors.lineLabels;
-    triangle.addAngle(1, a.radius, a.lineWidth, a.sides, aColor, 'a');
-    triangle.addAngle(2, a.radius, a.lineWidth, a.sides, aColor, 'b');
-    triangle.addAngle(3, a.radius, a.lineWidth, a.sides, aColor, 'c');
-    triangle.addSideLabel(2, 3, lColor, 'A', 0.05, 'outside', '', 'horizontal');
-    triangle.addSideLabel(3, 1, lColor, 'B', 0.05, 'outside', '', 'horizontal');
-    triangle.addSideLabel(1, 2, lColor, 'C', 0.05, 'outside', '', 'horizontal');
+    // const a = layout.angle;
+    // const aColor = this.layout.colors.angleLabels;
+    // const lColor = this.layout.colors.lineLabels;
+    // triangle.addAngle(1, a.radius, a.lineWidth, a.sides, aColor, 'a');
+    // triangle.addAngle(2, a.radius, a.lineWidth, a.sides, aColor, 'b');
+    // triangle.addAngle(3, a.radius, a.lineWidth, a.sides, aColor, 'c');
+    // triangle.addSideLabel(2, 3, lColor, 'A', 0.05, 'outside', '', 'horizontal');
+    // triangle.addSideLabel(3, 1, lColor, 'B', 0.05, 'outside', '', 'horizontal');
+    // triangle.addSideLabel(1, 2, lColor, 'C', 0.05, 'outside', '', 'horizontal');
     return triangle;
   }
 
@@ -67,31 +67,29 @@ export default class SASCollection extends CommonDiagramCollection {
     const line = this.diagram.shapes.polyLine(
       this.layout.corner.points, false,
       this.layout.corner.width, this.layout.colors.line,
-      'never',
+      'onSharpAnglesOnly',
     );
     const angle = makeAngle(
-      this.diagram, this.layout.triangle.angle.radius,
-      this.layout.triangle.angle.lineWidth, this.layout.triangle.angle.sides,
+      this.diagram, this.layout.corner.angleRadius,
+      this.layout.corner.angleWidth, this.layout.triangle.angle.sides,
       this.layout.colors.angleA,
     );
-    const side1 = makeLine(
-      this.diagram, 'end', 1,
-      this.layout.corner.width, this.layout.colors.angleB, true,
-    );
-    side1.setLength(0);
-    const side2 = makeLine(
-      this.diagram, 'end', 1,
-      this.layout.corner.width, this.layout.colors.angleB, true,
-    );
-    side2.setLength(0);
-    // const { width } = this.layout.corner;
-    side2.transform.updateRotation(Math.PI / 2);
-    // side2.transform.updateTranslation(0, width / 2);
-    // side1.transform.updateTranslation(0, width / 2);
+    // const side1 = makeLine(
+    //   this.diagram, 'end', 1,
+    //   this.layout.corner.width, this.layout.colors.diagram.disabled, true,
+    // );
+    // side1.setLength(0);
+    // const side2 = makeLine(
+    //   this.diagram, 'end', 1,
+    //   this.layout.corner.width, this.layout.colors.diagram.disabled, true,
+    // );
+    // side2.setLength(0);
+    // side2.transform.updateRotation(Math.PI / 2);
+
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
-    corner.add('side1', side1);
-    corner.add('side2', side2);
+    // corner.add('side1', side1);
+    // corner.add('side2', side2);
     corner.add('angle', angle);
     corner.add('line', line);
     return corner;
@@ -108,7 +106,7 @@ export default class SASCollection extends CommonDiagramCollection {
     if (rotation != null) {
       corner._angle.updateAngle(0, newAngle, rotation);
     }
-    corner._side2.transform.updateRotation(newAngle);
+    // corner._side2.transform.updateRotation(newAngle);
   }
 
   // showLineLabels(show: boolean | null = true) {
@@ -142,12 +140,16 @@ export default class SASCollection extends CommonDiagramCollection {
   // }
 
   setCornerScenarios(scenarioName: string) {
+    const points = [];
     [this._corner1, this._corner2, this._corner3].forEach((c, index) => {
       const { angle, scenario } = this.layout.corner[scenarioName][`c${index + 1}`];
-      console.log(c)
       this.updateCorner(c, angle);
       this.setScenario(c, scenario);
+      points.push(scenario.position);
+      // c._side1.setLength(side);
+      // c._side2.setLength(side);
     });
+    this._tri.updatePoints(...points);
   }
 
   // setTriangleScenarios(
@@ -164,7 +166,7 @@ export default class SASCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    // this.add('tri', this.makeTri());
+    this.add('tri', this.makeTri());
     this.add('corner1', this.makeCorner());
     this.add('corner2', this.makeCorner());
     this.add('corner3', this.makeCorner());
