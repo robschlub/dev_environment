@@ -172,19 +172,56 @@ class Content extends LessonContent {
       title: 'sas',
       setContent: `
         <p>
-          First consider the scenario where you know all three angles. How many triangles can you make from this?
+          First consider the scenario where you know all three angles. Is there more than one size of triangle that can be made with these same angles?
+        </p>
+      `,
+      showOnly: [
+        sas,
+        sas._tri,
+        sas._tri._line,
+        sas._corner1,
+        sas._corner2,
+        sas._corner3,
+      ],
+      show: [
+        sas._corner1._angle,
+        sas._corner2._angle,
+        sas._corner3._angle,
+      ],
+      setSteadyState: () => {
+        sas.setCornerScenarios('AAA');
+        sas._corner1.setTransformCallback = sas.recalculateTriangle.bind(sas, 1);
+      },
+    });
+    this.addSection({
+      title: 'sas',
+      setContent: `
+        <p>
+          You can move the bottom left corner of the triangle to see.
         </p>
       `,
       show: [
         sas,
       ],
+      hide: [
+        sas._corner1._line,
+        sas._corner2._line,
+        sas._corner3._line,
+      ],
       setSteadyState: () => {
-        // sas.updateCorner(1, Math.PI / 3);
-        // sas._corner1._side2.grow(0, 2);
         sas.setCornerScenarios('AAA');
         sas._corner1.setTransformCallback = sas.recalculateTriangle.bind(sas, 1);
-        // sas._corner2.setTransformCallback = sas.recalculateTriangle.bind(sas, 2);
-        // sas._corner3.setTransformCallback = sas.recalculateTriangle.bind(sas, 3);
+        sas._corner2.setTransformCallback = sas.recalculateTriangle.bind(sas, 2);
+        sas._corner1._touchPoint.isTouchable = true;
+        sas._corner1._touchPoint.isMovable = true;
+        sas._corner2._touchPoint.isTouchable = true;
+        sas._corner2._touchPoint.isMovable = true;
+      },
+      setLeaveState: () => {
+        sas._corner1._touchPoint.isTouchable = false;
+        sas._corner1._touchPoint.isMovable = false;
+        sas._corner2._touchPoint.isTouchable = false;
+        sas._corner2._touchPoint.isMovable = false;
       },
     });
   }

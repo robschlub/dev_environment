@@ -37,21 +37,15 @@ export default class SASCollection extends CommonDiagramCollection {
   _tri: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
 
   makeTri() {
-    // const layout = this.layout.triangle;
     const triangle = makeTriangle(
       this.diagram,
       new Point(-1, -1),
       new Point(1, -1),
       new Point(0, 1),
       this.layout.corner.sideWidth,
-      this.layout.colors.diagram.disabled,
+      this.layout.colors.line,
     );
-    // const a = layout.angle;
-    // const aColor = this.layout.colors.angleLabels;
     const lColor = this.layout.colors.diagram.disabled;
-    // triangle.addAngle(1, a.radius, a.lineWidth, a.sides, aColor, 'a');
-    // triangle.addAngle(2, a.radius, a.lineWidth, a.sides, aColor, 'b');
-    // triangle.addAngle(3, a.radius, a.lineWidth, a.sides, aColor, 'c');
     triangle.addSideLabel(2, 3, lColor, 'A', 0.05, 'outside', '', 'horizontal');
     triangle.addSideLabel(3, 1, lColor, 'B', 0.05, 'outside', '', 'horizontal');
     triangle.addSideLabel(1, 2, lColor, 'C', 0.05, 'outside', '', 'horizontal');
@@ -79,15 +73,14 @@ export default class SASCollection extends CommonDiagramCollection {
     const touchPoint = this.diagram.shapes.polygonFilled(
       10, 0.4, 0, 10, [0, 0, 0, 0], new Transform().translate(0, 0),
     );
-    // touchPoint.isMovable = true;
-    // touchPoint.isTouchable = true;
     touchPoint.move.element = corner;
     touchPoint.move.canBeMovedAfterLoosingTouch = true;
     corner.hasTouchableElements = true;
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
     angle.showRealAngle = true;
-    angle.addLabel('', 0.5);
+    angle.addLabel('', this.layout.corner.angleLabelRadius);
+    angle.autoRightAngle = true;
     corner.add('touchPoint', touchPoint);
     corner.add('angle', angle);
     corner.add('line', line);
@@ -129,7 +122,6 @@ export default class SASCollection extends CommonDiagramCollection {
 
   updateCornerAngle(corner: TypeCorner, newAngle: number) {
     const newPoint = polarToRect(this.layout.corner.length, newAngle);
-    // const corners = [this._corner1, this._corner2, this._corner3];
     corner._line.vertices.change([
       ...this.layout.corner.points.slice(0, 2),
       newPoint,
@@ -138,38 +130,7 @@ export default class SASCollection extends CommonDiagramCollection {
     if (rotation != null) {
       corner._angle.updateAngle(0, newAngle, rotation);
     }
-    // corner._side2.transform.updateRotation(newAngle);
   }
-
-  // showLineLabels(show: boolean | null = true) {
-  //   let toShow = true;
-  //   if (show === null || typeof show !== 'boolean') {
-  //     if (this._tri1._dimension12.isShown) {
-  //       toShow = false;
-  //     }
-  //   }
-  //   if (toShow) {
-  //     this._tri1.showDimensions(true);
-  //   } else {
-  //     this._tri1.hideDimensions();
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
-
-  // showAngleLabels(show: boolean = true) {
-  //   let toShow = true;
-  //   if (show === null || typeof show !== 'boolean') {
-  //     if (this._tri1._angle1.isShown) {
-  //       toShow = false;
-  //     }
-  //   }
-  //   if (toShow) {
-  //     this._tri1.showAngles(true);
-  //   } else {
-  //     this._tri1.hideAngles();
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 
   setCornerScenarios(scenarioName: string) {
     const points = [];
@@ -179,19 +140,9 @@ export default class SASCollection extends CommonDiagramCollection {
       this.updateCornerAngle(c, angle);
       points.push(scenario.position);
       c.move.limitLine = limitLine;
-      // c._side1.setLength(side);
-      // c._side2.setLength(side);
     });
     this._tri.updatePoints(...points);
   }
-
-  // setTriangleScenarios(
-  //   points1: Array<Point>, points2: Array<Point>,
-  //   scenario1: TypeScenario, scenario2: TypeScenario,
-  // ) {
-  //   this.updateTriangle(this._tri1, points1, scenario1);
-  //   this.updateTriangle(this._tri2, points2, scenario2);
-  // }
 
   constructor(
     diagram: LessonDiagram,
@@ -199,14 +150,13 @@ export default class SASCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.add('tri', this.makeTri());
+    
     this.add('corner1', this.makeCorner());
     this.add('corner2', this.makeCorner());
     this.add('corner3', this.makeCorner());
-    this._corner1._touchPoint.isTouchable = true;
-    this._corner1._touchPoint.isMovable = true;
-    this._corner1.move.maxTransform.updateTranslation(new Point(0, -0.5));
-    this._corner1.move.minTransform.updateTranslation(new Point(-2.2, -1.5));
+    this.add('tri', this.makeTri());
+    // this._corner1.move.maxTransform.updateTranslation(new Point(0, -0.5));
+    // this._corner1.move.minTransform.updateTranslation(new Point(-2.2, -1.5));
     this.hasTouchableElements = true;
   }
 }

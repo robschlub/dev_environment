@@ -74,10 +74,11 @@ export default function commonLessonLayout() {
   const length = 0.4;
   layout.corner = {
     length,
-    sideWidth: 0.01,
+    sideWidth: 0.02,
     angleWidth: 0.02,
     angleRadius: 0.37,
-    width: 0.04,
+    angleLabelRadius: 0.39,
+    width: 0.02,
     points: [
       new Point(length, 0),
       new Point(0, 0),
@@ -90,15 +91,15 @@ export default function commonLessonLayout() {
         side: 3,
         limitLine: null,
         // limitLine: new Line(new Point(-2, -1), new Point(0.5, 2)),
-        // limitLine: new Line(new Point(-2.2, -1), new Point(-0.8, -1)),
+        limitLine: new Line(new Point(-2.2, -1), new Point(-1, -1)),
       },
       c2: {
         angle: Math.PI / 3,
         scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
         side: 2,
-        limitLine: null,
+        // limitLine: null,
         // limitLine: new Line(new Point(0, -1), new Point(2.5, -1)),
-        // limitLine: new Line(new Point(2.2, -1), new Point(0.8, -1)),
+        limitLine: new Line(new Point(2.2, -1), new Point(1, -1)),
       },
       c3: {
         angle: Math.PI / 2,
