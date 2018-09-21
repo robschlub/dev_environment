@@ -182,6 +182,15 @@ class Point {
     return l.hasPointOn(this, precision);
   }
 
+  shaddowIsOnLine(l: Line, precision?: number) {
+    const shaddow = new Line(this, 1, l.angle() + Math.PI / 2);
+    const { intersect } = shaddow.intersectsWith(l);
+    if (intersect != null) {
+      return intersect.isOnLine(l, precision);
+    }
+    return false;
+  }
+
   isOnUnboundLine(l: Line, precision?: number) {
     return l.hasPointAlong(this, precision);
   }
@@ -1311,6 +1320,7 @@ class Transform {
   clip(
     minTransform: Transform,
     maxTransform: Transform,
+    limitLine: null | Line,
   ) {
     if (!this.isSimilarTo(minTransform) || !this.isSimilarTo(maxTransform)) {
       return this._dup();
@@ -1338,7 +1348,27 @@ class Transform {
         order.push(new Scale(x, y, this.name));
       }
     }
-    return new Transform(order, this.name);
+
+    const clippedTransform = new Transform(order, this.name);
+    if (limitLine != null) {
+      const t = clippedTransform.t();
+      if (t != null) {
+        const perpLine = new Line(t, 1, limitLine.angle() + Math.PI / 2);
+        const { intersect } = perpLine.intersectsWith(limitLine);
+        if (intersect.isOnLine(limitLine, 4)) {
+          clippedTransform.updateTranslation(intersect);
+        } else {
+          const p1Dist = distance(intersect, limitLine.p1);
+          const p2Dist = distance(intersect, limitLine.p2);
+          if (p1Dist < p2Dist) {
+            clippedTransform.updateTranslation(limitLine.p1);
+          } else {
+            clippedTransform.updateTranslation(limitLine.p2);
+          }
+        }
+      }
+    }
+    return clippedTransform;
   }
 
   clipMag(

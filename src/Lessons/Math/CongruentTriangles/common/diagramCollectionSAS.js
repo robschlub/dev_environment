@@ -63,7 +63,6 @@ export default class SASCollection extends CommonDiagramCollection {
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0));
-
     const line = this.diagram.shapes.polyLine(
       this.layout.corner.points, false,
       this.layout.corner.width, this.layout.colors.line,
@@ -80,6 +79,7 @@ export default class SASCollection extends CommonDiagramCollection {
     touchPoint.isMovable = true;
     touchPoint.isTouchable = true;
     touchPoint.move.element = corner;
+    touchPoint.move.canBeMovedAfterLoosingTouch = true;
     corner.hasTouchableElements = true;
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
@@ -136,10 +136,11 @@ export default class SASCollection extends CommonDiagramCollection {
   setCornerScenarios(scenarioName: string) {
     const points = [];
     [this._corner1, this._corner2, this._corner3].forEach((c, index) => {
-      const { angle, scenario } = this.layout.corner[scenarioName][`c${index + 1}`];
+      const { angle, scenario, limitLine } = this.layout.corner[scenarioName][`c${index + 1}`];
       this.updateCornerAngle(c, angle);
       this.setScenario(c, scenario);
       points.push(scenario.position);
+      c.move.limitLine = limitLine;
       // c._side1.setLength(side);
       // c._side2.setLength(side);
     });

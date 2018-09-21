@@ -3,7 +3,7 @@
 import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
-  Scale, Rotation, getDeltaAngle,
+  Scale, Rotation, getDeltaAngle, Line,
 } from './tools/g2';
 import * as m2 from './tools/m2';
 import type { pathOptionsType, TypeRotationDirection } from './tools/g2';
@@ -388,6 +388,7 @@ class DiagramElement {
     maxTransform: Transform,
     minTransform: Transform,
     limitToDiagram: boolean,
+    limitLine: null | Line,
     maxVelocity: TransformLimit;            // Maximum velocity allowed
     // When moving freely, the velocity decelerates until it reaches a threshold,
   // then it is considered 0 - at which point moving freely ends.
@@ -513,6 +514,7 @@ class DiagramElement {
       canBeMovedAfterLoosingTouch: false,
       type: 'translation',
       element: null,
+      limitLine: null,
     };
 
     this.pulse = {
@@ -730,6 +732,7 @@ class DiagramElement {
     this.transform = transform._dup().clip(
       this.move.minTransform,
       this.move.maxTransform,
+      this.move.limitLine,
     );
     if (this.setTransformCallback) {
       this.setTransformCallback(this.transform);
@@ -971,14 +974,18 @@ class DiagramElement {
           && max instanceof Translation
           && min instanceof Translation
       ) {
-        if (min.x >= t.x || max.x <= t.x) {
+        let onLine = true;
+        if (this.move.limitLine != null) {
+          onLine = t.shaddowIsOnLine(this.move.limitLine, 4);
+        }
+        if (min.x >= t.x || max.x <= t.x || !onLine) {
           if (this.move.bounce) {
             v.x = -v.x * 0.5;
           } else {
             v.x = 0;
           }
         }
-        if (min.y >= t.y || max.y <= t.y) {
+        if (min.y >= t.y || max.y <= t.y || !onLine) {
           if (this.move.bounce) {
             v.y = -v.y * 0.5;
           } else {

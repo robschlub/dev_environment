@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../../../js/diagram/tools/g2';
+import { Point, Line } from '../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -88,11 +88,14 @@ export default function commonLessonLayout() {
         angle: Math.PI / 6,
         scenario: { position: new Point(-2, -1), rotation: 0 },
         side: 3,
+        limitLine: new Line(new Point(-2, -1), new Point(0.5, 2)),
       },
       c2: {
         angle: Math.PI / 3,
         scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
         side: 2,
+        // limitLine: new Line(new Point(0, -1), new Point(2.5, -1)),
+        limitLine: null,
       },
       c3: {
         angle: Math.PI / 2,
@@ -101,6 +104,7 @@ export default function commonLessonLayout() {
           rotation: Math.PI / 6 * 7,
         },
         side: 0.5,
+        limitLine: null,
       },
     },
   };
