@@ -10,16 +10,7 @@ import {
   rand,
 } from '../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-// import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 
-// import makeTriangle from '../../../../LessonsCommon/tools/triangle';
-// import type {
-//   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
-// } from '../../../../LessonsCommon/tools/triangle';
-// import { makeLine } from '../../../../LessonsCommon/tools/line';
-// import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-
-// import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
@@ -28,34 +19,13 @@ type TypeCorner = {
   _line: DiagramElementPrimative;
   side1: number;
   side2: number;
-  points: Array<Point>;
+  // points: Array<Point>;
 } & DiagramElementCollection;
 
 export default class SASCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _corner1: TypeCorner;
   _corner2: TypeCorner;
-  // _corner3: TypeCorner;
-  // _tri: TypeTriangle & TypeTriangleAngle & TypeTriangleLabel;
-
-  // makeTri() {
-  //   const triangle = makeTriangle(
-  //     this.diagram,
-  //     new Point(-1, -1),
-  //     new Point(1, -1),
-  //     new Point(0, 1),
-  //     this.layout.corner.sideWidth,
-  //     this.layout.colors.line,
-  //   );
-  //   const lColor = this.layout.colors.diagram.disabled;
-  //   triangle.addSideLabel(2, 3, lColor, 'A', 0.05, 'outside', '', 'horizontal');
-  //   triangle.addSideLabel(3, 1, lColor, 'B', 0.05, 'outside', '', 'horizontal');
-  //   triangle.addSideLabel(1, 2, lColor, 'C', 0.05, 'outside', '', 'horizontal');
-  //   triangle._dimension12.showRealLength = true;
-  //   triangle._dimension31.showRealLength = true;
-  //   triangle._dimension23.showRealLength = true;
-  //   return triangle;
-  // }
 
   makeCorner() {
     const corner = this.diagram.shapes.collection(new Transform('Corner')
@@ -74,57 +44,16 @@ export default class SASCollection extends CommonDiagramCollection {
     );
     corner.side1 = 1;
     corner.side2 = 1;
-    corner.points = this.layout.corner.points.slice();
-    // const touchPoint = this.diagram.shapes.polygonFilled(
-    //   10, 0.4, 0, 10, [0, 0, 0, 0], new Transform().translate(0, 0),
-    // );
-    // touchPoint.move.element = corner;
-    // touchPoint.move.canBeMovedAfterLoosingTouch = true;
+    // corner.points = this.layout.corner.points.slice();
     corner.hasTouchableElements = true;
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
     angle.showRealAngle = true;
     angle.addLabel('', this.layout.corner.angleLabelRadius);
-    angle.autoRightAngle = true;
-    // corner.add('touchPoint', touchPoint);
     corner.add('angle', angle);
     corner.add('line', line);
     return corner;
   }
-
-  // recalculateTriangle(index: number) {
-  //   const indeces = [1, 2, 3];
-  //   const opp = indeces.filter(i => i !== index);
-  //   const c = [this._corner1, this._corner2, this._corner3];
-  //   const l = this.layout.corner.AAA;
-  //   const layout = [l.c1, l.c2, l.c3];
-  //   let t1 = c[0].transform.t();
-  //   let t2 = c[1].transform.t();
-  //   let t3 = c[2].transform.t();
-  //   const r1 = c[0].transform.r();
-  //   const r2 = c[1].transform.r();
-  //   const r3 = c[2].transform.r();
-  //   if (t1 != null && t2 != null && t3 != null
-  //     && r1 != null && r2 != null && r3 != null) {
-  //     const t = [t1, t2, t3];
-  //     const r = [r1, r2, r3];
-  //     const oppLine = new Line(t[opp[0] - 1], t[opp[1] - 1]);
-  //     const side1 = new Line(t[index - 1], 1, r[index - 1]);
-  //     const intersect1 = side1.intersectsWith(oppLine).intersect;
-  //     c[index % 3].transform.updateTranslation(intersect1);
-
-  //     const side2 = new Line(t[index - 1], 1, r[index - 1] + layout[index - 1].angle);
-  //     const intersect2 = side2.intersectsWith(oppLine).intersect;
-  //     c[(index + 1) % 3].transform.updateTranslation(intersect2);
-  //   }
-  //   t1 = c[0].transform.t();
-  //   t2 = c[1].transform.t();
-  //   t3 = c[2].transform.t();
-  //   if (t1 != null && t2 != null && t3 != null) {
-  //     this._tri.updatePoints(t1, t2, t3);
-  //   }
-  // }
-
 
   updateCorner(corner: TypeCorner, angle: number, side1: number, side2: number) {
     const newP1 = polarToRect(side1, 0);
@@ -135,7 +64,7 @@ export default class SASCollection extends CommonDiagramCollection {
     // eslint-disable-next-line no-param-reassign
     corner.side2 = newP3.sub(p2).distance();
     corner._line.vertices.change([newP1, p2, newP3]);
-    corner.points = [newP1, p2, newP3];
+    // corner.points = [newP1, p2, newP3];
     const rotation = corner.transform.r();
     if (rotation != null) {
       corner._angle.updateAngle(0, angle, rotation);
@@ -174,10 +103,6 @@ export default class SASCollection extends CommonDiagramCollection {
       toLengthToUse = toLength;
     }
     const { currentAngle } = this._corner2._angle;
-    // let currentR = this._corner2.transform.r();
-    // if (currentR == null) {
-    //   currentR = 0;
-    // }
     const func = (percent) => {
       const side1 = percent * (toLengthToUse - fromLengthToUse) + fromLengthToUse;
       this.updateCorner(
@@ -191,10 +116,6 @@ export default class SASCollection extends CommonDiagramCollection {
       } else {
         this._corner2._angle.showAll();
       }
-      // if (percent >= 1) {
-      //   this._corner2._angle.showAll();
-      //   this._corner2._angle.pulseScaleNow(1, 1.5);
-      // }
     };
     const done = () => {
       if (finishOnCancel) {
@@ -204,7 +125,6 @@ export default class SASCollection extends CommonDiagramCollection {
         callback();
       }
     };
-    // this._corner2._angle.hideAll();
     this._corner2.animateCustomTo(func, time, 0, done);
     this.diagram.animateNextFrame();
   }
@@ -222,7 +142,7 @@ export default class SASCollection extends CommonDiagramCollection {
     }
     let toAngleToUse;
     if (toAngle == null) {
-      toAngleToUse = rand(Math.PI / 6, Math.PI / 2);
+      toAngleToUse = rand(Math.PI / 8, Math.PI / 6 * 4);
     } else {
       toAngleToUse = toAngle;
     }
@@ -256,10 +176,8 @@ export default class SASCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.add('corner1', this.makeCorner());
     this.add('corner2', this.makeCorner());
-    // this.add('corner3', this.makeCorner());
-    // this.add('tri', this.makeTri());
+    this.add('corner1', this.makeCorner());
     this.hasTouchableElements = true;
   }
 }

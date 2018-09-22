@@ -256,21 +256,21 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-         How many triangles can be made with these constraints?
+         How many triangles can be made with these constraints? There is only |one_line| that can be drawn that connects the two end points.
         </p>
       `,
+      modifiers: {
+        one_line: click(
+          sas.growCorner2, [sas, 0, layout.corner.SAS.c2.side1, 1, false],
+          colors.diagram.safe,
+        ),
+      },
     });
+
     this.addSection(common, {
       setContent: `
-        <p>
-         Well, there is only |one line| that can be drawn that connects the two end points.
-        </p>
-      `,
-    });
-    this.addSection(common, {
-      setContent: `
-        <p>
-         Well, there is only |one_line| that can be drawn that connects the two end points.
+         <p>
+         How many triangles can be made with these constraints? There is only |one_line| that can be drawn that connects the two end points.
         </p>
       `,
       modifiers: {
@@ -289,10 +289,15 @@ class Content extends LessonContent {
         sas.growCorner2(0, layout.corner.SAS.c2.side1, 1, false);
       },
     });
+    common = {
+      show: [
+        sas,
+      ],
+    };
     this.addSection(common, {
       setContent: `
         <p>
-         The side can only have one |length| and |angle|. If the side were a |different_length| or had a |different_angle|, it would not be a triangle. 
+         Therefore, the remaining side can only have one |length| and |angle|. If it were a |different_length| or had a |different_angle|, it would not form a triangle. 
         </p>
       `,
       modifiers: {
@@ -312,121 +317,7 @@ class Content extends LessonContent {
       setEnterState: () => {
         sas.setCornerScenarios('SAS');
       },
-      // hide: [
-      //   sas._corner2._angle,
-      // ],
     });
-    common = {
-      show: [
-        sas,
-      ],
-    };
-    // this.addSection(common, {
-    //   setContent: `
-    //     <p>
-    //      The side can only have one angle.
-    //     </p>
-    //   `,
-    //   setEnterState: () => {
-    //     if (this.comingFrom !== 'prev' && this.comingFrom !== 'next') {
-    //       sas.setCornerScenarios('SAS');
-    //     }
-    //   },
-    //   hide: [
-    //     sas._corner2._angle,
-    //   ],
-    //   transitionFromAny: (done) => {
-    //     if (sas._corner2.side1 !== 1.5) {
-    //       sas.growCorner2(null, 1.5, 1, false, done);
-    //     } else {
-    //       done();
-    //     }
-    //   },
-    //   setSteadyState: () => {
-    //     sas.setCornerScenarios('SAS');
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setContent: `
-    //     <p>
-    //      The side can also only have |one angle|.
-    //     </p>
-    //   `,
-    //   setEnterState: () => {
-    //     if (this.comingFrom !== 'prev' || this.comingFrom !== 'next') {
-    //       sas.setCornerScenarios('SAS');
-    //     }
-    //   },
-    //   // hide: [
-    //   //   sas._corner2._angle,
-    //   // ],
-    //   transitionFromAny: (done) => {
-    //     if (sas._corner2.side1 !== 1.5) {
-    //       sas.growCorner2(null, 1.5, 1, false, done);
-    //     } else {
-    //       done();
-    //     }
-    //   },
-    //   setSteadyState: () => {
-    //     sas._corner2._angle.showAll();
-    //     sas._corner2._angle.pulseScaleNow(1, 1.2);
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setContent: `
-    //     <p>
-    //      If the line were at a |different| angle, it would not be a triangle.
-    //     </p>
-    //   `,
-    //   setEnterState: () => {
-    //     sas.setCornerScenarios('SAS');
-    //   },
-    //   // hide: [
-    //   //   sas._corner2._angle,
-    //   // ],
-    // });
-    // this.addSection(common, {
-    //   setContent: `
-    //     <p>
-    //      If the line were at a |different| angle, it would not be a triangle.
-    //     </p>
-    //   `,
-    //   modifiers: {
-    //     different: click(
-    //       sas.rotateCorner2, [sas, null, 0.5, false, null],
-    //       colors.diagram.action,
-    //     ),
-    //   },
-    //   setEnterState: () => {
-    //     if (this.comingFrom !== 'prev' && this.comingFrom !== 'next') {
-    //       sas.setCornerScenarios('SAS');
-    //     }
-    //   },
-    //   transitionFromAny: (done) => {
-    //     sas.rotateCorner2(null, 1, false, done);
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setContent: `
-    //     <p>
-    //      Well, there is only |one_line| that can be drawn that connects the two end points. It has only one length, and only one angle.
-    //     </p>
-    //   `,
-    //   setModifiers: {
-    //     one_line: click(
-    //       sas.growCorner2,
-    //       [sas.growCorner2, 0, layout.corner.SAS.c2.side1, 1.5, false],
-    //       colors.action,
-    //     ),
-    //   },
-    //   setEnterState: () => {
-    //     sas.setCornerScenarios('SAS');
-    //   },
-    //   hide: [],
-    //   setSteadyState: () => {
-    //     sas.growCorner2(0, layout.corner.SAS.c2.side1, 1.5, false);
-    //   },
-    // });
   }
 }
 
