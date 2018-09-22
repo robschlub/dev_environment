@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, polarToRect,
+  Transform, Point, polarToRect, getDeltaAngle,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -28,6 +28,7 @@ type TypeCorner = {
   _line: DiagramElementPrimative;
   side1: number;
   side2: number;
+  points: Array<Point>;
 } & DiagramElementCollection;
 
 export default class SASCollection extends CommonDiagramCollection {
@@ -73,6 +74,7 @@ export default class SASCollection extends CommonDiagramCollection {
     );
     corner.side1 = 1;
     corner.side2 = 1;
+    corner.points = this.layout.corner.points.slice();
     // const touchPoint = this.diagram.shapes.polygonFilled(
     //   10, 0.4, 0, 10, [0, 0, 0, 0], new Transform().translate(0, 0),
     // );
@@ -133,6 +135,7 @@ export default class SASCollection extends CommonDiagramCollection {
     // eslint-disable-next-line no-param-reassign
     corner.side2 = newP3.sub(p2).distance();
     corner._line.vertices.change([newP1, p2, newP3]);
+    corner.points = [newP1, p2, newP3];
     const rotation = corner.transform.r();
     if (rotation != null) {
       corner._angle.updateAngle(0, angle, rotation);
@@ -153,7 +156,7 @@ export default class SASCollection extends CommonDiagramCollection {
 
   growCorner2(
     fromLength: number | null,
-    toLength: number,
+    toLength: number | null,
     time: number = 1.5,
     finishOnCancel: boolean = true,
     callback: ?() => void = null,
@@ -164,14 +167,30 @@ export default class SASCollection extends CommonDiagramCollection {
     } else {
       fromLengthToUse = this._corner2.side1;
     }
+    let toLengthToUse;
+    if (toLength == null) {
+      toLengthToUse = rand(0.5, 2);
+    } else {
+      toLengthToUse = toLength;
+    }
+    const { currentAngle } = this._corner2._angle;
+    // let currentR = this._corner2.transform.r();
+    // if (currentR == null) {
+    //   currentR = 0;
+    // }
     const func = (percent) => {
-      const side1 = percent * (toLength - fromLengthToUse) + fromLengthToUse;
+      const side1 = percent * (toLengthToUse - fromLengthToUse) + fromLengthToUse;
       this.updateCorner(
-        this._corner2, this.layout.corner.SAS.c2.angle,
+        this._corner2, currentAngle,
         side1,
         this.layout.corner.SAS.c2.side2,
       );
       this._corner2.side1 = side1;
+      if (side1 < this.layout.corner.angleRadius) {
+        this._corner2._angle.hideAll();
+      } else {
+        this._corner2._angle.showAll();
+      }
       // if (percent >= 1) {
       //   this._corner2._angle.showAll();
       //   this._corner2._angle.pulseScaleNow(1, 1.5);
@@ -185,7 +204,7 @@ export default class SASCollection extends CommonDiagramCollection {
         callback();
       }
     };
-    this._corner2._angle.hideAll();
+    // this._corner2._angle.hideAll();
     this._corner2.animateCustomTo(func, time, 0, done);
     this.diagram.animateNextFrame();
   }
@@ -197,19 +216,26 @@ export default class SASCollection extends CommonDiagramCollection {
     callback: ?() => void = null,
   ) {
     const { currentAngle } = this._corner2._angle;
+    let currentR = this._corner2.transform.r();
+    if (currentR == null) {
+      currentR = 0;
+    }
     let toAngleToUse;
     if (toAngle == null) {
-      toAngleToUse = rand(0, Math.PI * 2);
+      toAngleToUse = rand(Math.PI / 6, Math.PI / 2);
     } else {
       toAngleToUse = toAngle;
     }
+    const delta = getDeltaAngle(toAngleToUse, currentAngle, 0);
     const func = (percent) => {
-      const angle = percent * (toAngleToUse - currentAngle) + currentAngle;
+      const angle = percent * delta;
+
       this.updateCorner(
-        this._corner2, angle,
-        this.layout.corner.SAS.c2.side1,
-        this.layout.corner.SAS.c2.side2,
+        this._corner2, currentAngle - angle,
+        this._corner2.side1,
+        this._corner2.side2,
       );
+      this._corner2.transform.updateRotation(currentR + angle);
     };
     const done = () => {
       if (finishOnCancel) {

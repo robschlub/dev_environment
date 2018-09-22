@@ -276,7 +276,7 @@ class Content extends LessonContent {
       modifiers: {
         one_line: click(
           sas.growCorner2, [sas, 0, layout.corner.SAS.c2.side1, 1, false],
-          colors.diagram.action,
+          colors.diagram.safe,
         ),
       },
       setEnterState: () => {
@@ -292,117 +292,120 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-         The side can only be one |length|. If the line were |shorter|, or |longer|, it would not be a triangle.
+         The side can only have one |length| and |angle|. If the side were a |different_length| or had a |different_angle|, it would not be a triangle. 
         </p>
       `,
       modifiers: {
         length: click(
-          sas.growCorner2, [sas, null, 1.5, 1, false], colors.diagram.action,
+          sas.growCorner2, [sas, null, 1.5, 0.5, false], colors.diagram.safe,
         ),
-        shorter: click(
-          sas.growCorner2, [sas, null, 1, 1, false], colors.diagram.action,
+        angle: click(
+          sas.rotateCorner2, [sas, Math.PI / 3, 0.5, false], colors.diagram.safe,
         ),
-        longer: click(
-          sas.growCorner2, [sas, null, 2, 1, false], colors.diagram.action,
+        different_length: click(
+          sas.growCorner2, [sas, null, null, 0.5, false], colors.diagram.warning,
+        ),
+        different_angle: click(
+          sas.rotateCorner2, [sas, null, 0.5, false], colors.diagram.warning,
         ),
       },
       setEnterState: () => {
         sas.setCornerScenarios('SAS');
       },
-      hide: [
-        sas._corner2._angle,
-      ],
+      // hide: [
+      //   sas._corner2._angle,
+      // ],
     });
     common = {
       show: [
         sas,
       ],
     };
-    this.addSection(common, {
-      setContent: `
-        <p>
-         The side can only have one angle.
-        </p>
-      `,
-      setEnterState: () => {
-        if (this.comingFrom !== 'prev' && this.comingFrom !== 'next') {
-          sas.setCornerScenarios('SAS');
-        }
-      },
-      hide: [
-        sas._corner2._angle,
-      ],
-      transitionFromAny: (done) => {
-        if (sas._corner2.side1 !== 1.5) {
-          sas.growCorner2(null, 1.5, 1, false, done);
-        } else {
-          done();
-        }
-      },
-      setSteadyState: () => {
-        sas.setCornerScenarios('SAS');
-      },
-    });
-    this.addSection(common, {
-      setContent: `
-        <p>
-         The side can also only have |one angle|.
-        </p>
-      `,
-      setEnterState: () => {
-        if (this.comingFrom !== 'prev' || this.comingFrom !== 'next') {
-          sas.setCornerScenarios('SAS');
-        }
-      },
-      // hide: [
-      //   sas._corner2._angle,
-      // ],
-      transitionFromAny: (done) => {
-        if (sas._corner2.side1 !== 1.5) {
-          sas.growCorner2(null, 1.5, 1, false, done);
-        } else {
-          done();
-        }
-      },
-      setSteadyState: () => {
-        sas._corner2._angle.showAll();
-        sas._corner2._angle.pulseScaleNow(1, 1.2);
-      },
-    });
-    this.addSection(common, {
-      setContent: `
-        <p>
-         If the line were at a |different| angle, it would not be a triangle.
-        </p>
-      `,
-      setEnterState: () => {
-        sas.setCornerScenarios('SAS');
-      },
-      // hide: [
-      //   sas._corner2._angle,
-      // ],
-    });
-    this.addSection(common, {
-      setContent: `
-        <p>
-         If the line were at a |different| angle, it would not be a triangle.
-        </p>
-      `,
-      modifiers: {
-        different: click(
-          sas.rotateCorner2, [sas, null, 1, false, null],
-          colors.diagram.action,
-        ),
-      },
-      setEnterState: () => {
-        if (this.comingFrom !== 'prev' && this.comingFrom !== 'next') {
-          sas.setCornerScenarios('SAS');
-        }
-      },
-      transitionFromAny: (done) => {
-        sas.rotateCorner2(null, 1, false, done);
-      },
-    });
+    // this.addSection(common, {
+    //   setContent: `
+    //     <p>
+    //      The side can only have one angle.
+    //     </p>
+    //   `,
+    //   setEnterState: () => {
+    //     if (this.comingFrom !== 'prev' && this.comingFrom !== 'next') {
+    //       sas.setCornerScenarios('SAS');
+    //     }
+    //   },
+    //   hide: [
+    //     sas._corner2._angle,
+    //   ],
+    //   transitionFromAny: (done) => {
+    //     if (sas._corner2.side1 !== 1.5) {
+    //       sas.growCorner2(null, 1.5, 1, false, done);
+    //     } else {
+    //       done();
+    //     }
+    //   },
+    //   setSteadyState: () => {
+    //     sas.setCornerScenarios('SAS');
+    //   },
+    // });
+    // this.addSection(common, {
+    //   setContent: `
+    //     <p>
+    //      The side can also only have |one angle|.
+    //     </p>
+    //   `,
+    //   setEnterState: () => {
+    //     if (this.comingFrom !== 'prev' || this.comingFrom !== 'next') {
+    //       sas.setCornerScenarios('SAS');
+    //     }
+    //   },
+    //   // hide: [
+    //   //   sas._corner2._angle,
+    //   // ],
+    //   transitionFromAny: (done) => {
+    //     if (sas._corner2.side1 !== 1.5) {
+    //       sas.growCorner2(null, 1.5, 1, false, done);
+    //     } else {
+    //       done();
+    //     }
+    //   },
+    //   setSteadyState: () => {
+    //     sas._corner2._angle.showAll();
+    //     sas._corner2._angle.pulseScaleNow(1, 1.2);
+    //   },
+    // });
+    // this.addSection(common, {
+    //   setContent: `
+    //     <p>
+    //      If the line were at a |different| angle, it would not be a triangle.
+    //     </p>
+    //   `,
+    //   setEnterState: () => {
+    //     sas.setCornerScenarios('SAS');
+    //   },
+    //   // hide: [
+    //   //   sas._corner2._angle,
+    //   // ],
+    // });
+    // this.addSection(common, {
+    //   setContent: `
+    //     <p>
+    //      If the line were at a |different| angle, it would not be a triangle.
+    //     </p>
+    //   `,
+    //   modifiers: {
+    //     different: click(
+    //       sas.rotateCorner2, [sas, null, 0.5, false, null],
+    //       colors.diagram.action,
+    //     ),
+    //   },
+    //   setEnterState: () => {
+    //     if (this.comingFrom !== 'prev' && this.comingFrom !== 'next') {
+    //       sas.setCornerScenarios('SAS');
+    //     }
+    //   },
+    //   transitionFromAny: (done) => {
+    //     sas.rotateCorner2(null, 1, false, done);
+    //   },
+    // });
     // this.addSection(common, {
     //   setContent: `
     //     <p>
