@@ -89,16 +89,12 @@ export default function commonLessonLayout() {
         angle: Math.PI / 6,
         scenario: { position: new Point(-2, -1), rotation: 0 },
         side: 3,
-        // limitLine: null,
-        // limitLine: new Line(new Point(-2, -1), new Point(0.5, 2)),
         limitLine: new Line(new Point(-2.2, -1), new Point(-1, -1)),
       },
       c2: {
         angle: Math.PI / 3,
         scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
         side: 2,
-        // limitLine: null,
-        // limitLine: new Line(new Point(0, -1), new Point(2.5, -1)),
         limitLine: new Line(new Point(2.2, -1), new Point(1, -1)),
       },
       c3: {
@@ -108,9 +104,49 @@ export default function commonLessonLayout() {
           rotation: Math.PI / 6 * 7,
         },
         side: 0.5,
-        // limitLine: null,
-        // limitLine: new Line(new Point(1, 0.5), new Point(1, 1.5)),
-        // boundary: new Rect(1.7, )
+        limitLine: null,
+      },
+    },
+    SASStart: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 3,
+        side2: 2.598,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
+        side1: 2,
+        side2: 2,
+      },
+    },
+    SASZero: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 1.5,
+        side2: 2.598,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 0,
+        side2: 2,
+      },
+    },
+    SAS: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 1.5,
+        side2: 2.598,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 1.5,
+        side2: 2,
       },
     },
   };

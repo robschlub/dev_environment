@@ -35,6 +35,7 @@ export type TypeAngle = {
   autoRightAngle: boolean;
   radius: number;
   showRealAngle: boolean;
+  currentAngle: number;
 } & DiagramElementCollection;
 
 export function makeAngle(
@@ -73,6 +74,7 @@ export function makeAngle(
   angle.radius = radius + lineWidth / 2;
   angle.label = null;
   angle.showRealAngle = false;
+  angle.currentAngle = 0;
 
   angle.addLabel = (labelTextOrEquation: string | Equation = '', labelRadius: number) => {
     const eqnLabel = makeEquationLabel(diagram, labelTextOrEquation, color);
@@ -90,6 +92,7 @@ export function makeAngle(
     labelRotationOffset: number = 0,
     angleToTestRightAngle: number = size,
   ) {
+    angle.currentAngle = size;
     if (angle.showRealAngle) {
       angle._label._base.vertices.setText(roundNum(size * 180 / Math.PI, 2).toString());
       angle.label.eqn.reArrangeCurrentForm();
