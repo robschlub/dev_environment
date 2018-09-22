@@ -324,6 +324,16 @@ class Content extends LessonContent {
         sas.setCornerScenarios('SAS');
       },
     });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+         Therefore, triangles are congruent if they have two sides, and the angle formed by those two sides, the same.
+        </p>
+        <p>
+          This case is often called the |Side-Angle-Side| case.
+        </p> 
+      `),
+    });
   }
 }
 

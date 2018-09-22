@@ -98,7 +98,11 @@ export default class SASCollection extends CommonDiagramCollection {
     }
     let toLengthToUse;
     if (toLength == null) {
-      toLengthToUse = rand(0.5, 2);
+      if (this._corner2.side1 < 1.5) {
+        toLengthToUse = rand(1.7, 2);
+      } else {
+        toLengthToUse = rand(0.5, 1.2);
+      }
     } else {
       toLengthToUse = toLength;
     }
@@ -142,7 +146,11 @@ export default class SASCollection extends CommonDiagramCollection {
     }
     let toAngleToUse;
     if (toAngle == null) {
-      toAngleToUse = rand(Math.PI / 8, Math.PI / 6 * 4);
+      if (currentAngle < Math.PI / 3) {
+        toAngleToUse = rand(Math.PI / 3 * 1.2, Math.PI / 3 * 2.2);
+      } else {
+        toAngleToUse = rand(Math.PI / 3 * 0.4, Math.PI / 3 * 0.8);
+      }
     } else {
       toAngleToUse = toAngle;
     }
