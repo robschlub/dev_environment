@@ -84,6 +84,8 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         tri.setFuturePositions();
+        tri._tri1.showAll();
+        tri._tri2.showAll();
       },
     });
 
@@ -111,6 +113,8 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         tri.setFuturePositions();
+        tri._tri1.showAll();
+        tri._tri2.showAll();
       },
     });
 
@@ -139,6 +143,8 @@ class Content extends LessonContent {
       setSteadyState: () => {
         tri.setFuturePositions();
         tri._tri2.setTriangleCollectionScaleTo(new Point(1, 1));
+        tri._tri1.showAll();
+        tri._tri2.showAll();
       },
     });
 
