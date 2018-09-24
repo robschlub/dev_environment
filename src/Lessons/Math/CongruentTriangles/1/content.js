@@ -6,7 +6,7 @@ import {
   Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  click, centerV,
+  click, centerV, highlight,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
@@ -380,6 +380,7 @@ class Content extends LessonContent {
       ],
       hide: [
         sss._circ2, sss._circ3,
+        sss._circ2Shaddow, sss._circ3Shaddow,
         sss._symmetry,
         sss._intersectUp, sss._intersectDown,
       ],
@@ -436,10 +437,16 @@ class Content extends LessonContent {
     };
     this.addSection(common);
     this.addSection(common, {
-      hide: [sss._symmetry, sss._intersectUp, sss._intersectDown],
+      hide: [
+        sss._symmetry, sss._intersectUp, sss._intersectDown,
+        sss._circ2Shaddow, sss._circ3Shaddow,
+      ],
     });
 
-    common.hide = [sss._symmetry, sss._intersectUp, sss._intersectDown];
+    common.hide = [
+      sss._symmetry, sss._intersectUp, sss._intersectDown,
+      sss._circ2Shaddow, sss._circ3Shaddow,
+    ];
     common.setContent = `
       <p>
         There are only |two| locations where the traces meet, and therefore two possible triangles.
@@ -448,16 +455,32 @@ class Content extends LessonContent {
       two: click(sss.moveLinesToIntersect, [sss, null], colors.intersect),
     };
     this.addSection(common);
-    common.hide = [sss._symmetry];
+    common.hide = [sss._symmetry, sss._circ2Shaddow, sss._circ3Shaddow];
     this.addSection(common);
     common.setContent = `
       <p>
-        Now, note that the horizontal line, and circles have symmetry.
+        Now, you might also see that the horizontal line, and circles have |symmetry|.
       </p>
       `;
+    common.modifiers = {
+      symmetry: highlight(colors.diagram.action),
+    };
     this.addSection(common);
     this.addSection(common, {
-      hide: [sss._line2, sss._line3],
+      hide: [sss._circ2Shaddow, sss._circ3Shaddow],
+    });
+    this.addSection(common, {
+      hide: [sss._line2, sss._line3, sss._intersectUp, sss._intersectDown, sss._circ2Shaddow, sss._circ3Shaddow],
+    });
+    // this.addSection(common);
+    common.modifiers = {
+      symmetry: click(sss.pulseSymmetry, [sss], colors.diagram.action),
+    };
+    this.addSection(common, {
+      hide: [sss._line2, sss._line3, sss._intersectUp, sss._intersectDown],
+      transitionFromAny: (done) => {
+        sss.pulseSymmetry(done);
+      },
     });
   }
 }

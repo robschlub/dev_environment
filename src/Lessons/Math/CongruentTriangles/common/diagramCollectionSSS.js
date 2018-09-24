@@ -34,6 +34,8 @@ export default class SSSCollection extends CommonDiagramCollection {
   _line3: TypeLine;
   _circ2: DiagramElementPrimative;
   _circ3: DiagramElementPrimative;
+  _circ2Shaddow: DiagramElementPrimative;
+  _circ3Shaddow: DiagramElementPrimative;
   _intersectUp: DiagramElementPrimative;
   _intersectDown: DiagramElementPrimative;
   _symmetry: TypeLine;
@@ -69,10 +71,16 @@ export default class SSSCollection extends CommonDiagramCollection {
       1,
       this.layout.corner.SSSProps.circleSides,
       color,
-      new Transform('circle').rotate(0).translate(0, 0),
+      new Transform('circle').scale(1, 1).rotate(0).translate(0, 0),
     );
     const circ2 = make(this.layout.corner.SSSProps.length2, this.layout.colors.angleA);
     const circ3 = make(this.layout.corner.SSSProps.length3, this.layout.colors.angleA);
+    const circ2Shaddow = make(this.layout.corner.SSSProps.length2, this.layout.colors.angleA);
+    const circ3Shaddow = make(this.layout.corner.SSSProps.length3, this.layout.colors.angleA);
+    circ2Shaddow.angleToDraw = Math.PI;
+    circ3Shaddow.angleToDraw = Math.PI;
+    this.add('circ2Shaddow', circ2Shaddow);
+    this.add('circ3Shaddow', circ3Shaddow);
     this.add('circ2', circ2);
     this.add('circ3', circ3);
   }
@@ -108,6 +116,31 @@ export default class SSSCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
+  pulseSymmetry(callback: () => void | null) {
+    this._circ2.transform.updateRotation(0);
+    this._circ3.transform.updateRotation(0);
+    this._circ2.angleToDraw = Math.PI;
+    this._circ3.angleToDraw = Math.PI;
+    const custom = (percent) => {
+      const scale = percent * -2 + 1;
+      this._circ2.transform.updateScale(1, scale);
+      this._circ3.transform.updateScale(1, scale);
+    };
+    const finish = () => {
+      const yScale = this._circ2.transform.s() || 0;
+      if (yScale === -1) {
+        this._circ2.angleToDraw = -1;
+        this._circ3.angleToDraw = -1;
+        this._circ2.transform.updateScale(1, 1);
+        this._circ3.transform.updateScale(1, 1);
+      }
+      if (callback != null && typeof callback === 'function') {
+        callback();
+      }
+    };
+    this.animateCustomTo(custom, 1.5, 0, finish);
+    this.diagram.animateNextFrame();
+  }
 
   drawCircle(index: number) {
     const line = this[`_line${index}`];
@@ -163,6 +196,8 @@ export default class SSSCollection extends CommonDiagramCollection {
     fp(this._line3, cornerScenario.l3);
     fp(this._circ2, { position: cornerScenario.l2.position });
     fp(this._circ3, { position: cornerScenario.l3.position });
+    fp(this._circ2Shaddow, { position: cornerScenario.l2.position });
+    fp(this._circ3Shaddow, { position: cornerScenario.l3.position });
     fp(this._symmetry, {
       position: cornerScenario.l1.position
         .add(this.layout.corner.SSSProps.length1 / 2, 0),
