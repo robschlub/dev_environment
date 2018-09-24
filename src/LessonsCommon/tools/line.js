@@ -263,6 +263,7 @@ export function makeLine(
   width: number,
   color: Array<number>,
   showLine: boolean = true,
+  largerTouchBorder: boolean = true,
 ) {
   const line = diagram.shapes.collection(new Transform()
     .scale(1, 1)
@@ -283,6 +284,16 @@ export function makeLine(
       vertexSpaceLength, width,
       0, color, new Transform().scale(1, 1).translate(0, 0),
     );
+    if (largerTouchBorder) {
+      const multiplier = diagram.isTouchDevice ? 16 : 8;
+      const increaseBorderSize = (element: DiagramElementPrimative) => {
+        for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+          // eslint-disable-next-line no-param-reassign
+          element.vertices.border[0][i].y *= multiplier;
+        }
+      };
+      increaseBorderSize(straightLine);
+    }
     line.add('line', straightLine);
   }
   line.currentLength = 1;
@@ -320,14 +331,14 @@ export function makeLine(
       line.hasTouchableElements = true;
       if (straightLine != null) {
         straightLine.isTouchable = true;
-        const multiplier = diagram.isTouchDevice ? 16 : 8;
-        const increaseBorderSize = (element: DiagramElementPrimative) => {
-          for (let i = 0; i < element.vertices.border[0].length; i += 1) {
-            // eslint-disable-next-line no-param-reassign
-            element.vertices.border[0][i].y *= multiplier;
-          }
-        };
-        increaseBorderSize(straightLine);
+        // const multiplier = diagram.isTouchDevice ? 16 : 8;
+        // const increaseBorderSize = (element: DiagramElementPrimative) => {
+        //   for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+        //     // eslint-disable-next-line no-param-reassign
+        //     element.vertices.border[0][i].y *= multiplier;
+        //   }
+        // };
+        // increaseBorderSize(straightLine);
       }
     } else {
       line.isMovable = false;
