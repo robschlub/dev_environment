@@ -149,15 +149,46 @@ export default function commonLessonLayout() {
         side2: 0.1,
       },
     },
-    SSSProps: {
-      l1: 1.2,
-      l2: 0.6,
-      l3: 1.1,
-      l3: 1.1 ** 2 - 0.6 ** 2 - 1.2 ** 2 
-    }
-    SSSStart: {
-      l1: 
-    }
+  };
+  const l1 = 1.8;
+  const l2 = 0.9;
+  const l3 = 1.3;
+  layout.corner.SSSProps = {
+    length1: l1,
+    length2: l2,
+    length3: l3,
+    angle1: 0,
+    angle3: Math.acos((l1 * l1 + l2 * l2 - l3 * l3) / (2 * l1 * l2)),
+    angle2: Math.acos((l1 * l1 + l3 * l3 - l2 * l2) / (2 * l1 * l3)),
+    circleSides: 300,
+  };
+  layout.corner.SSSStart = {
+    l1: {
+      position: new Point(-0.8, -0.5),
+      rotation: layout.corner.SSSProps.angle1,
+    },
+    l2: {
+      position: new Point(-0.8, 0),
+      rotation: 0,
+    },
+    l3: {
+      position: new Point(-0.8 + l3, 0.5),
+      rotation: Math.PI,
+    },
+  };
+  layout.corner.SSSConnected = {
+    l1: {
+      position: new Point(-0.8, -0.5),
+      rotation: layout.corner.SSSProps.angle1,
+    },
+    l2: {
+      position: new Point(-0.8, -0.5),
+      rotation: Math.PI / 3 * 2,
+    },
+    l3: {
+      position: new Point(-0.8 + l1, -0.5),
+      rotation: Math.PI / 3,
+    },
   };
   return layout;
 }
