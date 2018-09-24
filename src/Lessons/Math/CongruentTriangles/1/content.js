@@ -366,11 +366,7 @@ class Content extends LessonContent {
     /* ********************************************************************* */
     /* ********************************************************************* */
     common = {
-      setContent: `
-        <p>
-          Next consider the case where only the |three side lengths| are known. How many triangles can be created with just this knowledge?
-        </p>
-      `,
+      setContent: '',
       modifiers: {},
       setEnterState: () => {
         sss.calcFutureLinePositions('SSSStart');
@@ -381,15 +377,6 @@ class Content extends LessonContent {
       show: [
         sss._line1, sss._line2, sss._line3,
       ],
-      // show: [
-      //   sss,
-      // ],
-      // hide: [
-      //   sss._circ2, sss._circ3,
-      //   sss._circ2Shaddow, sss._circ3Shaddow,
-      //   sss._symmetry,
-      //   sss._intersectUp, sss._intersectDown,
-      // ],
       setSteadyState: () => {
         sss.resetDiagram();
         sss.setFuturePositions();
@@ -398,9 +385,16 @@ class Content extends LessonContent {
         sss.resetDiagram();
       },
     };
+
+    common.setContent = `
+        <p>
+          Next consider the case where only the |three side lengths| are known. How many triangles can be created with just this knowledge?
+        </p>
+      `;
     this.addSection(common, {
       title: 'Side-Side-Side',
     });
+
 
     common.setContent = `
         <p>
@@ -416,6 +410,7 @@ class Content extends LessonContent {
         sss.moveToFuturePositions(1.5, done);
       },
     });
+
 
     common.setContent = `
         <p>
@@ -437,6 +432,8 @@ class Content extends LessonContent {
       sss._line3.setMovable(false);
     };
     this.addSection(common);
+
+
     common.setContent = `
       <p>
         One way to see this is to trace all the possible end locations of the |left| and |right| line.
@@ -447,18 +444,10 @@ class Content extends LessonContent {
       right: click(sss.drawCircle, [sss, 3], colors.diagram.action),
     };
     this.addSection(common);
-    common.show = [...common.show, sss._circ2, sss._circ3]
-    this.addSection(common, {
-      // hide: [
-      //   sss._symmetry, sss._intersectUp, sss._intersectDown,
-      //   sss._circ2Shaddow, sss._circ3Shaddow,
-      // ],
-    });
+    common.show = [...common.show, sss._circ2, sss._circ3];
+    this.addSection(common);
 
-    // common.hide = [
-    //   sss._symmetry, sss._intersectUp, sss._intersectDown,
-    //   sss._circ2Shaddow, sss._circ3Shaddow,
-    // ];
+
     common.setContent = `
       <p>
         There are only |two| locations where the traces meet, and therefore two triangles are possible.
@@ -469,6 +458,8 @@ class Content extends LessonContent {
     this.addSection(common);
     common.show = [...common.show, sss._intersectUp, sss._intersectDown];
     this.addSection(common);
+
+
     common.setContent = `
       <p>
         Now, you might also see that the horizontal line, and circles have |symmetry|.
@@ -479,20 +470,19 @@ class Content extends LessonContent {
     };
     this.addSection(common);
     this.addSection(common, { show: [...common.show, sss._symmetry] });
-
     common.show = [sss._circ2, sss._circ3, sss._symmetry, sss._line1];
-    this.addSection(common, {
-    });
+    this.addSection(common);
     common.modifiers = {
       symmetry: click(sss.pulseSymmetry, [sss], colors.diagram.action),
     };
     common.show = [...common.show, sss._circ2Shaddow, sss._circ3Shaddow];
     this.addSection(common, {
-      title: 'asdf',
       transitionFromAny: (done) => {
         sss.pulseSymmetry(done);
       },
     });
+
+
     common.setContent = `
       <p>
         This means that the upper triangle is also symmetric with the lower triangle.
@@ -508,6 +498,27 @@ class Content extends LessonContent {
       transitionFromAny: (done) => {
         sss.pulseSymmetry(done);
       },
+    });
+
+    common.setContent = `
+      <p>
+        Symmetric triangles have the same side lengths and angles, and are therefore |congruent|.
+      </p>
+    `;
+    this.addSection(common);
+
+    this.addSection({
+      setContent: centerV(`
+      <p>
+        So for a fixed three side lengths, there is only one set of angles that can form the sides into a triangle.
+      </p>
+      <p>
+        Therefore, when two triangles have the same side lengths, they will also have the same angles, and therefore be congruent.
+      </p>
+      <p>
+        This method of testing for congruency, is often referred to as the |Side-Side-Side| method.
+      </p>
+      `),
     });
   }
 }
