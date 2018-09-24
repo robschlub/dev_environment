@@ -1676,4 +1676,10 @@ describe('g2 tests', () => {
       expect(normAngleTo90(Math.PI / 4 * 7)).toBe(Math.PI / 4 * 7);
     });
   });
+  // describe('Three point angle', () => {
+  //   test('right angle at origin', () => {
+  //     const points = [new Point(1, 0), new Point(0, 0), new Point(0, 1)];
+  //     expect(roundNum(threePointAngle(...points))).toBe(roundNum(Math.PI / 2))
+  //   });
+  // })
 });

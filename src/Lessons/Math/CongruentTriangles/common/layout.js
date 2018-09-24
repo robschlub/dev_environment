@@ -149,6 +149,15 @@ export default function commonLessonLayout() {
         side2: 0.1,
       },
     },
+    SSSProps: {
+      l1: 1.2,
+      l2: 0.6,
+      l3: 1.1,
+      l3: 1.1 ** 2 - 0.6 ** 2 - 1.2 ** 2 
+    }
+    SSSStart: {
+      l1: 
+    }
   };
   return layout;
 }

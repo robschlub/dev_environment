@@ -32,6 +32,7 @@ class Content extends LessonContent {
     const tri = diag._triangle;
     const aaa = diag._aaa;
     const sas = diag._sas;
+    const sss = diag._sss;
     let common = {};
 
     this.addSection({
@@ -115,6 +116,8 @@ class Content extends LessonContent {
         tri.setFuturePositions();
         tri._tri1.showAll();
         tri._tri2.showAll();
+        tri._tri1.showDimensions(true);
+        tri._tri2.showDimensions(true);
       },
     });
 
@@ -169,6 +172,11 @@ class Content extends LessonContent {
         </p>
       `),
     });
+
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
     this.addSection({
       title: 'Three Angles',
       setContent: `
@@ -251,6 +259,11 @@ class Content extends LessonContent {
         sas._corner2,
       ],
     };
+
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
     this.addSection(common, {
       title: 'Side-Angle-Side',
       setContent: `
@@ -333,6 +346,19 @@ class Content extends LessonContent {
           This case is often called the |Side-Angle-Side| case.
         </p> 
       `),
+    });
+
+
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    common = {};
+    this.addSection({
+      title: 'Side-Side-Side',
+      show: [
+        sss,
+      ],
     });
   }
 }
