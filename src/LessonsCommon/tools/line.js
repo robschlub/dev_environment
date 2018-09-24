@@ -243,7 +243,7 @@ export type TypeLine = {
   arrow2: null | {
     height: number;
   };
-  makeMovable: (?boolean) => void;
+  setMovable: (?boolean) => void;
 
   addArrow1: (number, number) => void;
   addArrow2: (number, number) => void;

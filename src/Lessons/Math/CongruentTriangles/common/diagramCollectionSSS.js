@@ -48,8 +48,8 @@ export default class SSSCollection extends CommonDiagramCollection {
     const line3 = make(this.layout.corner.SSSProps.length3);
     line2.move.type = 'rotation';
     line3.move.type = 'rotation';
-    line2.setMovable();
-    line3.setMovable();
+    // line2.setMovable();
+    // line3.setMovable();
     line2.move.canBeMovedAfterLoosingTouch = true;
     line3.move.canBeMovedAfterLoosingTouch = true;
 
@@ -67,12 +67,46 @@ export default class SSSCollection extends CommonDiagramCollection {
       1,
       this.layout.corner.SSSProps.circleSides,
       color,
-      new Transform('circle').translate(0, 0),
+      new Transform('circle').rotate(0).translate(0, 0),
     );
     const circ2 = make(this.layout.corner.SSSProps.length2, this.layout.colors.angleA);
     const circ3 = make(this.layout.corner.SSSProps.length3, this.layout.colors.angleA);
     this.add('circ2', circ2);
     this.add('circ3', circ3);
+  }
+
+  drawCircle(index: number) {
+    const line = this[`_line${index}`];
+    const circ = this[`_circ${index}`];
+    const startR = line.transform.r() || 0;
+    circ.transform.updateRotation(startR);
+    circ.angleToDraw = 0;
+    circ.show();
+    const originalCallback = line.setTransformCallback;
+    line.setTransformCallback = (transform: Transform) => {
+      const tr = transform.r() || 0;
+      let angleToDraw = tr - startR;
+      if (angleToDraw < 0) {
+        angleToDraw += Math.PI * 2;
+      }
+      circ.angleToDraw = angleToDraw;
+    };
+    line.setMovable(false);
+    const complete = (result: boolean) => {
+      if (result) {
+        line.setTransformCallback = originalCallback;
+        circ.angleToDraw = -1;
+        circ.transform.updateRotation(0);
+        line.setMovable(true);
+      }
+      this.diagram.animateNextFrame();
+    };
+    let targetRotation = startR - 0.0001;
+    if (targetRotation < 0) {
+      targetRotation += Math.PI * 2;
+    }
+    line.animateRotationTo(targetRotation, 1, 1.5, complete);
+    this.diagram.animateNextFrame();
   }
 
   addSymmetryLine() {

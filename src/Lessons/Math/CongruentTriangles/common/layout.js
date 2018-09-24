@@ -190,5 +190,16 @@ export default function commonLessonLayout() {
       rotation: Math.PI / 3,
     },
   };
+  layout.corner.SSSConnectedNoRot = {
+    l1: {
+      position: layout.corner.SSSConnected.l1.position,
+    },
+    l2: {
+      position: layout.corner.SSSConnected.l2.position,
+    },
+    l3: {
+      position: layout.corner.SSSConnected.l3.position,
+    },
+  };
   return layout;
 }

@@ -365,9 +365,13 @@ class Content extends LessonContent {
     /* ********************************************************************* */
     /* ********************************************************************* */
     /* ********************************************************************* */
-    common = {};
-    this.addSection({
-      title: 'Side-Side-Side',
+    common = {
+      setContent: `
+        <p>
+          Next consider the case where only the |three side lengths| are known. How many triangles can be created with just this knowledge?
+        </p>
+      `,
+      modifiers: {},
       setEnterState: () => {
         sss.calcFutureLinePositions('SSSStart');
       },
@@ -378,20 +382,57 @@ class Content extends LessonContent {
       setSteadyState: () => {
         sss.setFuturePositions();
       },
+      setLeaveState: () => {},
+    };
+    this.addSection(common, {
+      title: 'Side-Side-Side',
     });
-    this.addSection({
+
+    common.setContent = `
+        <p>
+          We know a triangle is formed by connecting the three lines together, so we can start by connecting one line's ends to the other two lines.
+        </p>
+    `;
+    this.addSection(common);
+    this.addSection(common, {
       setEnterState: () => {
         sss.calcFutureLinePositions('SSSConnected');
       },
-      show: [
-        sss,
-      ],
-      transitionFromPrev: (done) => {
-        sss.moveToFuturePositions(1, done);
+      transitionFromAny: (done) => {
+        sss.moveToFuturePositions(1.5, done);
       },
-      setSteadyState: () => {
-        sss.setFuturePositions();
-      },
+    });
+
+    common.setContent = `
+        <p>
+          Now, how many angles can the end lines be rotated, to form a triangle?
+        </p>
+    `;
+    common.setEnterState = () => {
+      sss.calcFutureLinePositions('SSSConnectedNoRot');
+    };
+    common.setSteadyState = () => {
+      sss.setFuturePositions();
+      sss._line2.setMovable(true);
+      sss._line3.setMovable(true);
+    };
+    common.setLeaveState = () => {
+      sss._line2.setMovable(false);
+      sss._line3.setMovable(false);
+    };
+    this.addSection(common);
+    common.setContent = `
+      <p>
+        One way to see this quickly is to draw all the possible end locations of the |left| and |right| line.
+      </p>
+    `;
+    common.modifiers = {
+      left: click(sss.drawCircle, [sss, 2], colors.diagram.action),
+      right: click(sss.drawCircle, [sss, 3], colors.diagram.action),
+    };
+    this.addSection(common);
+    this.addSection(common, {
+      hide: [sss._symmetry],
     });
   }
 }
