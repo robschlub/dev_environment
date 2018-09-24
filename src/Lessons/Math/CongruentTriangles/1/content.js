@@ -288,7 +288,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         one_line: click(
-          sas.growCorner2, [sas, 0, layout.corner.SAS.c2.side1, 1, false],
+          sas.growCorner, [sas, 2, 0, layout.corner.SAS.c2.side1, 1, false],
           colors.diagram.safe,
         ),
       },
@@ -302,7 +302,7 @@ class Content extends LessonContent {
       `,
       modifiers: {
         one_line: click(
-          sas.growCorner2, [sas, 0, layout.corner.SAS.c2.side1, 1, false],
+          sas.growCorner, [sas, 2, 0, layout.corner.SAS.c2.side1, 1, false],
           colors.diagram.safe,
         ),
       },
@@ -313,7 +313,7 @@ class Content extends LessonContent {
         sas._corner2._angle,
       ],
       setSteadyState: () => {
-        sas.growCorner2(0, layout.corner.SAS.c2.side1, 1, false);
+        sas.growCorner(2, 0, layout.corner.SAS.c2.side1, 1, false);
       },
     });
     common = {
@@ -329,13 +329,13 @@ class Content extends LessonContent {
       `,
       modifiers: {
         length: click(
-          sas.growCorner2, [sas, null, 1.5, 0.5, false], colors.diagram.safe,
+          sas.growCorner, [sas, 2, null, 1.5, 0.5, false], colors.diagram.safe,
         ),
         angle: click(
           sas.rotateCorner2, [sas, Math.PI / 3, 0.5, false], colors.diagram.safe,
         ),
         different_length: click(
-          sas.growCorner2, [sas, null, null, 0.5, false], colors.diagram.warning,
+          sas.growCorner, [sas, 2, null, null, 0.5, false], colors.diagram.warning,
         ),
         different_angle: click(
           sas.rotateCorner2, [sas, null, 0.5, false], colors.diagram.warning,
@@ -562,6 +562,74 @@ class Content extends LessonContent {
     `;
     this.addSection(common, {
       title: 'Angle-Side-Angle',
+    });
+
+    common.setContent = `
+      <p>
+        As the two angles are fixed, the only way to complete the triangle is to |extend| the sides till they meet.
+      </p>
+    `;
+    this.addSection(common, {
+      modifiers: { extend: highlight(colors.diagram.action) },
+    });
+    this.addSection(common, {
+      modifiers: {
+        extend: click(
+          sas.growBothCorners, [
+            sas, 0.5, layout.corner.SAS.c1.side2, 0.5,
+            layout.corner.SAS.c2.side1,
+          ], colors.diagram.action,
+        ),
+      },
+      setSteadyState: () => {
+        sas.growBothCorners(0.5, layout.corner.SAS.c1.side2, 0.5, layout.corner.SAS.c2.side1);
+      },
+    });
+
+    common.setContent = `
+      <p>
+        Only |one_length| for each side will form the triangle. Different lengths of the |left| or |right| side will not result in a triangle shape. 
+      </p>
+    `;
+    common.setEnterState = () => {
+      sas.setCornerScenarios('ASA');
+    };
+    this.addSection(common, {
+      modifiers: {
+        one_length: click(
+          sas.growBothCorners, [
+            sas, null, layout.corner.SAS.c1.side2, null,
+            layout.corner.SAS.c2.side1,
+          ], colors.diagram.action,
+        ),
+        left: click(
+          sas.growCorner, [
+            sas, 1, null, null, 1, false, null, 2, 2.598,
+          ], colors.diagram.action,
+        ),
+        right: click(
+          sas.growCorner, [
+            sas, 2, null, null, 1, false, null, 2, 1.5,
+          ], colors.diagram.action,
+        ),
+      },
+    });
+    this.addSection(common, {
+      setContent: `
+        <p>
+          So for a |fixed side between two fixed angles|, there is only one set of side lengths possible. From the Side-Side-Side congruency test method, we saw for one set of side lengths, there is only one set of angles possible.
+        </p>
+      `,
+    });
+    this.addSection({
+      setContent: centerV(`
+      <p>
+        Therefore, when two triangles have a two angles and the side between them being equal, then they will be congruent.
+      </p>
+      <p>
+        This method of testing for congruency, is often referred to as the |Angle-Side-Angle| method.
+      </p>
+      `),
     });
   }
 }

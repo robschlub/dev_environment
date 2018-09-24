@@ -154,13 +154,27 @@ export default function commonLessonLayout() {
       c1: {
         angle: Math.PI / 6,
         scenario: { position: new Point(-2, -1), rotation: 0 },
-        side1: 3,
+        side1: 2,
         side2: 0.5,
       },
       c2: {
         angle: Math.PI / 3,
-        scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
         side1: 0.5,
+        side2: 2,
+      },
+    },
+    ASA: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 2.95,
+        side2: 2.598,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 1.5,
         side2: 2,
       },
     },

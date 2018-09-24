@@ -83,42 +83,64 @@ export default class SASCollection extends CommonDiagramCollection {
     });
   }
 
-  growCorner2(
+  growBothCorners(
+    corner1From: number | null,
+    corner1Side2: number | null,
+    corner2From: number | null,
+    corner2Side1: number | null,
+  ) {
+    this.growCorner(1, corner1From, corner1Side2, 1, false, null, 2, 2.598);
+    this.growCorner(2, corner2From, corner2Side1, 1, false, null, 2, 1.5);
+  }
+
+  growCorner(
+    index: number,
     fromLength: number | null,
     toLength: number | null,
     time: number = 1.5,
     finishOnCancel: boolean = true,
     callback: ?() => void = null,
+    otherSideLength: number = this.layout.corner.SAS.c2.side2,
+    randThreshold: number = 1.5,
   ) {
+    // $FlowFixMe
+    const corner = this[`_corner${index}`];
+    const side = index === 1 ? 'side2' : 'side1';
     let fromLengthToUse;
     if (fromLength != null) {
       fromLengthToUse = fromLength;
     } else {
-      fromLengthToUse = this._corner2.side1;
+      fromLengthToUse = corner[side];
     }
     let toLengthToUse;
     if (toLength == null) {
-      if (this._corner2.side1 < 1.5) {
-        toLengthToUse = rand(1.7, 2);
+      if (corner[side] < randThreshold) {
+        toLengthToUse = rand(randThreshold * 1.1, randThreshold * 1.4);
       } else {
-        toLengthToUse = rand(0.5, 1.2);
+        toLengthToUse = rand(randThreshold * 0.6, randThreshold * 0.9);
       }
     } else {
       toLengthToUse = toLength;
     }
-    const { currentAngle } = this._corner2._angle;
+    const { currentAngle } = corner._angle;
     const func = (percent) => {
-      const side1 = percent * (toLengthToUse - fromLengthToUse) + fromLengthToUse;
+      const sideLength = percent * (toLengthToUse - fromLengthToUse) + fromLengthToUse;
+      let side1 = sideLength;
+      let side2 = otherSideLength;
+      if (index === 1) {
+        side2 = side1;
+        side1 = otherSideLength;
+      }
       this.updateCorner(
-        this._corner2, currentAngle,
+        corner, currentAngle,
         side1,
-        this.layout.corner.SAS.c2.side2,
+        side2,
       );
-      this._corner2.side1 = side1;
-      if (side1 < this.layout.corner.angleRadius) {
-        this._corner2._angle.hideAll();
+      corner[side] = sideLength;
+      if (sideLength < this.layout.corner.angleRadius) {
+        corner._angle.hideAll();
       } else {
-        this._corner2._angle.showAll();
+        corner._angle.showAll();
       }
     };
     const done = () => {
@@ -129,7 +151,7 @@ export default class SASCollection extends CommonDiagramCollection {
         callback();
       }
     };
-    this._corner2.animateCustomTo(func, time, 0, done);
+    corner.animateCustomTo(func, time, 0, done);
     this.diagram.animateNextFrame();
   }
 

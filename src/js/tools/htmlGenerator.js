@@ -237,6 +237,18 @@ function onClickId(
         bind[5], bind[6],
       );
     }
+    if (bind.length === 8) {
+      element.onclick = actionMethod.bind(
+        bind[0], bind[1], bind[2], bind[3], bind[4],
+        bind[5], bind[6], bind[7],
+      );
+    }
+    if (bind.length === 9) {
+      element.onclick = actionMethod.bind(
+        bind[0], bind[1], bind[2], bind[3], bind[4],
+        bind[5], bind[6], bind[7], bind[8],
+      );
+    }
   }
 }
 
