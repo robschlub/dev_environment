@@ -17,6 +17,8 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
+import makeTriangle from '../../../../LessonsCommon/tools/triangle';
+import type { TypeTriangle } from '../../../../LessonsCommon/tools/triangle';
 // type TypeCorner = {
 //   _angle: TypeAngle;
 //   _line: DiagramElementPrimative;
@@ -39,6 +41,8 @@ export default class SSSCollection extends CommonDiagramCollection {
   _intersectUp: DiagramElementPrimative;
   _intersectDown: DiagramElementPrimative;
   _symmetry: TypeLine;
+  _triangle: TypeTriangle;
+  _triangleShaddow: TypeTriangle;
 
   addLines() {
     const make = length => makeLine(
@@ -60,6 +64,23 @@ export default class SSSCollection extends CommonDiagramCollection {
     this.add('line2', line2);
     this.add('line3', line3);
     this.add('line1', line1);
+  }
+
+  addTriangle() {
+    const makeTri = () => makeTriangle(
+      this.diagram,
+      this.layout.corner.SSSConnectedNoRot.l2.position,
+      this.layout.corner.SSSConnectedNoRot.l3.position,
+      this.layout.corner.SSSConnectedNoRot.iUp.position,
+      this.layout.corner.width,
+      this.layout.colors.line,
+    );
+    const tri = makeTri();
+    tri.setTriangleCollectionPositionTo(this.layout.corner.SSSConnectedNoRot.l3.position);
+
+    const triShaddow = makeTri();
+    this.add('triangle', tri);
+    this.add('triangleShaddow', triShaddow);
   }
 
   addCircles() {
@@ -125,6 +146,7 @@ export default class SSSCollection extends CommonDiagramCollection {
       const scale = percent * -2 + 1;
       this._circ2.transform.updateScale(1, scale);
       this._circ3.transform.updateScale(1, scale);
+      this._triangle.transform.updateScale(1, scale);
     };
     const finish = () => {
       const yScale = this._circ2.transform.s() || 0;
@@ -133,12 +155,22 @@ export default class SSSCollection extends CommonDiagramCollection {
         this._circ3.angleToDraw = -1;
         this._circ2.transform.updateScale(1, 1);
         this._circ3.transform.updateScale(1, 1);
+        // this._triangle.transform.updateScale(1, 1);
       }
       if (callback != null && typeof callback === 'function') {
         callback();
       }
     };
-    this.animateCustomTo(custom, 1.5, 0, finish);
+    this.animateCustomTo(custom, 2, 0, finish);
+    this.diagram.animateNextFrame();
+  }
+
+  resetDiagram() {
+    this._circ2.angleToDraw = -1;
+    this._circ3.angleToDraw = -1;
+    this._circ2.transform.updateScale(1, 1);
+    this._circ3.transform.updateScale(1, 1);
+    this._triangle.transform.updateScale(1, -1);
     this.diagram.animateNextFrame();
   }
 
@@ -218,6 +250,7 @@ export default class SSSCollection extends CommonDiagramCollection {
     this.addIntersects();
     this.addCircles();
     this.addLines();
+    this.addTriangle();
     this.hasTouchableElements = true;
   }
 }

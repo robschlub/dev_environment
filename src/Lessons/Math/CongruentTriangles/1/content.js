@@ -375,19 +375,28 @@ class Content extends LessonContent {
       setEnterState: () => {
         sss.calcFutureLinePositions('SSSStart');
       },
-      show: [
+      showOnly: [
         sss,
       ],
-      hide: [
-        sss._circ2, sss._circ3,
-        sss._circ2Shaddow, sss._circ3Shaddow,
-        sss._symmetry,
-        sss._intersectUp, sss._intersectDown,
+      show: [
+        sss._line1, sss._line2, sss._line3,
       ],
+      // show: [
+      //   sss,
+      // ],
+      // hide: [
+      //   sss._circ2, sss._circ3,
+      //   sss._circ2Shaddow, sss._circ3Shaddow,
+      //   sss._symmetry,
+      //   sss._intersectUp, sss._intersectDown,
+      // ],
       setSteadyState: () => {
+        sss.resetDiagram();
         sss.setFuturePositions();
       },
-      setLeaveState: () => {},
+      setLeaveState: () => {
+        sss.resetDiagram();
+      },
     };
     this.addSection(common, {
       title: 'Side-Side-Side',
@@ -410,18 +419,20 @@ class Content extends LessonContent {
 
     common.setContent = `
         <p>
-          Now, how many angles can the end lines be rotated, to form a triangle?
+          Now, how can the end lines be rotated, to form a triangle, and can only one triangle be formed?
         </p>
     `;
     common.setEnterState = () => {
       sss.calcFutureLinePositions('SSSConnectedNoRot');
     };
     common.setSteadyState = () => {
+      sss.resetDiagram();
       sss.setFuturePositions();
       sss._line2.setMovable(true);
       sss._line3.setMovable(true);
     };
     common.setLeaveState = () => {
+      sss.resetDiagram();
       sss._line2.setMovable(false);
       sss._line3.setMovable(false);
     };
@@ -436,26 +447,27 @@ class Content extends LessonContent {
       right: click(sss.drawCircle, [sss, 3], colors.diagram.action),
     };
     this.addSection(common);
+    common.show = [...common.show, sss._circ2, sss._circ3]
     this.addSection(common, {
-      hide: [
-        sss._symmetry, sss._intersectUp, sss._intersectDown,
-        sss._circ2Shaddow, sss._circ3Shaddow,
-      ],
+      // hide: [
+      //   sss._symmetry, sss._intersectUp, sss._intersectDown,
+      //   sss._circ2Shaddow, sss._circ3Shaddow,
+      // ],
     });
 
-    common.hide = [
-      sss._symmetry, sss._intersectUp, sss._intersectDown,
-      sss._circ2Shaddow, sss._circ3Shaddow,
-    ];
+    // common.hide = [
+    //   sss._symmetry, sss._intersectUp, sss._intersectDown,
+    //   sss._circ2Shaddow, sss._circ3Shaddow,
+    // ];
     common.setContent = `
       <p>
-        There are only |two| locations where the traces meet, and therefore two possible triangles.
+        There are only |two| locations where the traces meet, and therefore two triangles are possible.
       </p>`;
     common.modifiers = {
       two: click(sss.moveLinesToIntersect, [sss, null], colors.intersect),
     };
     this.addSection(common);
-    common.hide = [sss._symmetry, sss._circ2Shaddow, sss._circ3Shaddow];
+    common.show = [...common.show, sss._intersectUp, sss._intersectDown];
     this.addSection(common);
     common.setContent = `
       <p>
@@ -466,18 +478,33 @@ class Content extends LessonContent {
       symmetry: highlight(colors.diagram.action),
     };
     this.addSection(common);
+    this.addSection(common, { show: [...common.show, sss._symmetry] });
+
+    common.show = [sss._circ2, sss._circ3, sss._symmetry, sss._line1];
     this.addSection(common, {
-      hide: [sss._circ2Shaddow, sss._circ3Shaddow],
     });
-    this.addSection(common, {
-      hide: [sss._line2, sss._line3, sss._intersectUp, sss._intersectDown, sss._circ2Shaddow, sss._circ3Shaddow],
-    });
-    // this.addSection(common);
     common.modifiers = {
       symmetry: click(sss.pulseSymmetry, [sss], colors.diagram.action),
     };
+    common.show = [...common.show, sss._circ2Shaddow, sss._circ3Shaddow];
     this.addSection(common, {
-      hide: [sss._line2, sss._line3, sss._intersectUp, sss._intersectDown],
+      title: 'asdf',
+      transitionFromAny: (done) => {
+        sss.pulseSymmetry(done);
+      },
+    });
+    common.setContent = `
+      <p>
+        This means that the upper triangle is also symmetric with the lower triangle.
+      </p>
+    `;
+    this.addSection(common);
+    common.show = [
+      sss._circ2, sss._circ3, sss._symmetry, sss._triangle,
+      sss._circ2Shaddow, sss._circ3Shaddow, sss._triangleShaddow,
+    ];
+    this.addSection(common);
+    this.addSection(common, {
       transitionFromAny: (done) => {
         sss.pulseSymmetry(done);
       },
