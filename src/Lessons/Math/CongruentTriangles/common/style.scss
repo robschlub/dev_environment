@@ -8,6 +8,7 @@ $colors: (
   angleA:            map-get($geometry_colors, angleA),
   angleB:            map-get($geometry_colors, angleB),
   angleC:            map-get($geometry_colors, angleC),
+  intersect:         map-get($geometry_colors, anchor),
 );
 
 body {

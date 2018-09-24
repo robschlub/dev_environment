@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect, getDeltaAngle,
+  Transform, polarToRect, getDeltaAngle, normAngle,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -34,6 +34,8 @@ export default class SSSCollection extends CommonDiagramCollection {
   _line3: TypeLine;
   _circ2: DiagramElementPrimative;
   _circ3: DiagramElementPrimative;
+  _intersectUp: DiagramElementPrimative;
+  _intersectDown: DiagramElementPrimative;
   _symmetry: TypeLine;
 
   addLines() {
@@ -74,6 +76,38 @@ export default class SSSCollection extends CommonDiagramCollection {
     this.add('circ2', circ2);
     this.add('circ3', circ3);
   }
+
+  addIntersects() {
+    const { SSSProps } = this.layout.corner;
+    const makeIntersectPoint = () => this.diagram.shapes.polygonFilled(
+      SSSProps.intersectPointSides,
+      SSSProps.intersectPointRadius, 0, SSSProps.intersectPointSides,
+      this.layout.colors.intersect,
+      new Transform('intersect').translate(0, 0),
+    );
+    this.add('intersectUp', makeIntersectPoint());
+    this.add('intersectDown', makeIntersectPoint());
+  }
+
+  moveLinesToIntersect(intersect: 'up' | 'down' | null) {
+    let intersectPlan = intersect;
+    if (intersectPlan === null) {
+      const r = normAngle(this._line2.transform.r() || 0);
+      if (r > 0 && r < Math.PI / 2) {
+        intersectPlan = 'down';
+      }
+    }
+    let a2 = this.layout.corner.SSSProps.angle2;
+    let a3 = Math.PI - this.layout.corner.SSSProps.angle3;
+    if (intersectPlan === 'down') {
+      a2 = -a2;
+      a3 = -a3;
+    }
+    this._line2.animateRotationTo(a2, 0, 1);
+    this._line3.animateRotationTo(a3, 0, 1);
+    this.diagram.animateNextFrame();
+  }
+
 
   drawCircle(index: number) {
     const line = this[`_line${index}`];
@@ -123,15 +157,20 @@ export default class SSSCollection extends CommonDiagramCollection {
     const fp = (element, scenario) => {
       this.futurePositions.push({ element, scenario });
     };
-    fp(this._line1, this.layout.corner[scenarioName].l1);
-    fp(this._line2, this.layout.corner[scenarioName].l2);
-    fp(this._line3, this.layout.corner[scenarioName].l3);
-    fp(this._circ2, { position: this.layout.corner[scenarioName].l2.position });
-    fp(this._circ3, { position: this.layout.corner[scenarioName].l3.position });
+    const cornerScenario = this.layout.corner[scenarioName];
+    fp(this._line1, cornerScenario.l1);
+    fp(this._line2, cornerScenario.l2);
+    fp(this._line3, cornerScenario.l3);
+    fp(this._circ2, { position: cornerScenario.l2.position });
+    fp(this._circ3, { position: cornerScenario.l3.position });
     fp(this._symmetry, {
-      position: this.layout.corner[scenarioName].l1.position
+      position: cornerScenario.l1.position
         .add(this.layout.corner.SSSProps.length1 / 2, 0),
     });
+    if (scenarioName === 'SSSConnectedNoRot') {
+      fp(this._intersectUp, cornerScenario.iUp);
+      fp(this._intersectDown, cornerScenario.iDown);
+    }
   }
 
   constructor(
@@ -141,6 +180,7 @@ export default class SSSCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addSymmetryLine();
+    this.addIntersects();
     this.addCircles();
     this.addLines();
     this.hasTouchableElements = true;

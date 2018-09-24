@@ -378,7 +378,11 @@ class Content extends LessonContent {
       show: [
         sss,
       ],
-      hide: [sss._circ2, sss._circ3, sss._symmetry],
+      hide: [
+        sss._circ2, sss._circ3,
+        sss._symmetry,
+        sss._intersectUp, sss._intersectDown,
+      ],
       setSteadyState: () => {
         sss.setFuturePositions();
       },
@@ -423,7 +427,7 @@ class Content extends LessonContent {
     this.addSection(common);
     common.setContent = `
       <p>
-        One way to see this quickly is to draw all the possible end locations of the |left| and |right| line.
+        One way to see this is to trace all the possible end locations of the |left| and |right| line.
       </p>
     `;
     common.modifiers = {
@@ -432,7 +436,28 @@ class Content extends LessonContent {
     };
     this.addSection(common);
     this.addSection(common, {
-      hide: [sss._symmetry],
+      hide: [sss._symmetry, sss._intersectUp, sss._intersectDown],
+    });
+
+    common.hide = [sss._symmetry, sss._intersectUp, sss._intersectDown];
+    common.setContent = `
+      <p>
+        There are only |two| locations where the traces meet, and therefore two possible triangles.
+      </p>`;
+    common.modifiers = {
+      two: click(sss.moveLinesToIntersect, [sss, null], colors.intersect),
+    };
+    this.addSection(common);
+    common.hide = [sss._symmetry];
+    this.addSection(common);
+    common.setContent = `
+      <p>
+        Now, note that the horizontal line, and circles have symmetry.
+      </p>
+      `;
+    this.addSection(common);
+    this.addSection(common, {
+      hide: [sss._line2, sss._line3],
     });
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import { Point, Line } from '../../../../js/diagram/tools/g2';
+import { Point, Line, polarToRect } from '../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -11,6 +11,7 @@ const cssColorNames = [
   'angleA',
   'angleB',
   'angleC',
+  'intersect',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -153,14 +154,20 @@ export default function commonLessonLayout() {
   const l1 = 1.8;
   const l2 = 0.9;
   const l3 = 1.3;
+  const a1 = 0;
+  const a2 = Math.acos((l1 * l1 + l2 * l2 - l3 * l3) / (2 * l1 * l2));
+  const a3 = Math.acos((l1 * l1 + l3 * l3 - l2 * l2) / (2 * l1 * l3));
+  const p23Delta = polarToRect(l2, a2);
   layout.corner.SSSProps = {
     length1: l1,
     length2: l2,
     length3: l3,
-    angle1: 0,
-    angle3: Math.acos((l1 * l1 + l2 * l2 - l3 * l3) / (2 * l1 * l2)),
-    angle2: Math.acos((l1 * l1 + l3 * l3 - l2 * l2) / (2 * l1 * l3)),
+    angle1: a1,
+    angle2: a2,
+    angle3: a3,
     circleSides: 300,
+    intersectPointRadius: 0.1,
+    intersectPointSides: 30,
   };
   layout.corner.SSSStart = {
     l1: {
@@ -172,7 +179,7 @@ export default function commonLessonLayout() {
       rotation: 0,
     },
     l3: {
-      position: new Point(-0.8 + l3, 0.5),
+      position: new Point(-0.8 + l3, -1),
       rotation: Math.PI,
     },
   };
@@ -199,6 +206,14 @@ export default function commonLessonLayout() {
     },
     l3: {
       position: layout.corner.SSSConnected.l3.position,
+    },
+    iUp: {
+      position: layout.corner.SSSConnected.l2.position
+        .add(p23Delta),
+    },
+    iDown: {
+      position: layout.corner.SSSConnected.l2.position
+        .add(p23Delta.x, -p23Delta.y),
     },
   };
   return layout;
