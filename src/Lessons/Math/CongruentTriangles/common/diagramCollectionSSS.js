@@ -1,14 +1,11 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect, getDeltaAngle, normAngle,
+  Transform, normAngle,
 } from '../../../../js/diagram/tools/g2';
 import {
-  DiagramElementPrimative, DiagramElementCollection,
+  DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
-import {
-  rand,
-} from '../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
 // import { makeAngle } from '../../../../LessonsCommon/tools/angle';
@@ -175,7 +172,9 @@ export default class SSSCollection extends CommonDiagramCollection {
   }
 
   drawCircle(index: number) {
+    // $FlowFixMe
     const line = this[`_line${index}`];
+    // $FlowFixMe
     const circ = this[`_circ${index}`];
     const startR = line.transform.r() || 0;
     circ.transform.updateRotation(startR);
