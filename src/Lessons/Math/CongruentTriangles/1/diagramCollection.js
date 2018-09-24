@@ -13,6 +13,7 @@ import TriangleCollection from '../common/diagramCollectionTriangles';
 import AAACollection from '../common/diagramCollectionAAA';
 import SASCollection from '../common/diagramCollectionSAS';
 import SSSCollection from '../common/diagramCollectionSSS';
+// import ASACollection from '../common/diagramCollectionASA';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _triangle: TriangleCollection;
@@ -20,6 +21,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
   _aaa: AAACollection;
   _sas: SASCollection;
   _sss: SSSCollection;
+  // _asa: ASACollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -32,6 +34,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.add('aaa', new AAACollection(diagram, this.layout));
     this.add('sas', new SASCollection(diagram, this.layout));
     this.add('sss', new SSSCollection(diagram, this.layout));
+    // this.add('asa', new ASACollection(diagram, this.layout));
     this.add('qr', new QuickReferenceCollection(diagram, this.layout));
     this._qr.hideAll();
     this.hasTouchableElements = true;

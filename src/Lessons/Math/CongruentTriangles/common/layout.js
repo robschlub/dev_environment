@@ -150,6 +150,20 @@ export default function commonLessonLayout() {
         side2: 0.1,
       },
     },
+    ASAStart: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 3,
+        side2: 0.5,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(2, -1), rotation: Math.PI / 3 * 2 },
+        side1: 0.5,
+        side2: 2,
+      },
+    },
   };
   const l1 = 1.8;
   const l2 = 0.9;
@@ -175,12 +189,12 @@ export default function commonLessonLayout() {
       rotation: layout.corner.SSSProps.angle1,
     },
     l2: {
-      position: new Point(-0.8, 0),
-      rotation: 0,
+      position: new Point(-1.2, -0.8),
+      rotation: Math.PI / 3,
     },
     l3: {
-      position: new Point(-0.8 + l3, -1),
-      rotation: Math.PI,
+      position: new Point(1.3, -0.8),
+      rotation: Math.PI - Math.PI / 3,
     },
   };
   layout.corner.SSSConnected = {
