@@ -485,9 +485,10 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        This means that the upper triangle is also symmetric with the lower triangle.
+        This means that the upper triangle is also |symmetric| with the lower triangle.
       </p>
     `;
+    common.modifiers = { symmetric: highlight(colors.diagram.action) };
     this.addSection(common);
     common.show = [
       sss._circ2, sss._circ3, sss._symmetry, sss._triangle,
@@ -495,6 +496,9 @@ class Content extends LessonContent {
     ];
     this.addSection(common);
     this.addSection(common, {
+      modifiers: {
+        symmetric: click(sss.pulseSymmetry, [sss], colors.diagram.action),
+      },
       transitionFromAny: (done) => {
         sss.pulseSymmetry(done);
       },
