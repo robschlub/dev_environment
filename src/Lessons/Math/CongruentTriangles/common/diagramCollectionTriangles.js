@@ -130,8 +130,8 @@ export default class TriangleCollection extends CommonDiagramCollection {
   toggleCongruentRotate() {
     const lay = this.layout.triangles;
     // const tri = this._triangle;
-    const tri1 = Object.assign({}, lay.congruentRot.tri1.scenario);
-    const tri2 = Object.assign({}, lay.congruentRot.tri2.scenario);
+    const tri1 = Object.assign({}, lay.congruent.tri1.scenario);
+    const tri2 = Object.assign({}, lay.congruent.tri2.scenario);
     const r = this._tri2.transform.r();
     if (r != null) {
       tri2.rotation = r + normAngle(rand(Math.PI));

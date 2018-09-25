@@ -6,7 +6,7 @@ import {
   Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  click, centerV, highlight,
+  click, centerV, highlight, clickWord,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
@@ -664,7 +664,7 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        We know two angles, and we know the angles in |triangles| always add up to 180º. Therefore, we can calculate the third angle.
+        First, we know the angles in |triangles| always add up to 180º. Therefore, we can calculate the third angle.
       </p>
       `;
     common.modifiers = {
@@ -676,11 +676,11 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        Now, we also know that if we know two angles and the side between them (|Angle_Side_Angle| congruceny test), then there can only be one solution for the remaining side lengths.
+        Now, we also know from the |Angle_Side_Angle| congruency test that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths.
       </p>
     `;
     common.modifiers = {
-      Angle_Side_Angle: click(qr._asa.show, [qr._asa], colors.line),
+      Angle_Side_Angle: clickWord('Angle-Side-Angle', 'id_angle_side_angle', qr._asa.show, [qr._asa], colors.line),
     };
     this.addSection(common);
     // common.setContent = `
