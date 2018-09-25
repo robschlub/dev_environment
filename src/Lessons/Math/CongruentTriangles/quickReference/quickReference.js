@@ -209,3 +209,60 @@ export class QRAas extends QRCongruent {
   }
 }
 
+
+export class QRAaa extends PopupBoxCollection {
+  _triangle: TriangleCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'triangle',
+      TriangleCollection,
+    );
+
+    const modifiers = {
+      // side_not_between: html.highlight(this.layout.colors.lineLabels),
+      // two_angles: html.highlight(this.layout.colors.angleLabels),
+    };
+
+    this.setTitle('Angle-Angle-Angle Ambiguity');
+    this.setDescription(`
+      <p>
+        If only three angles of a triangle are known, the |sides cannot be calculated|.
+      </p>
+      <p>
+        For example, if you scale a triangle larger or smaller, its angles will remain the same. Therefore, knowing just the angles of two triangles is |not enough information to determine that they are congruent| (the same size and shape).
+      </p>`, modifiers);
+
+    this.setLink(details.details.uid);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.2);
+    super.show();
+    const tri = this._triangle;
+    const lay = this.layout.triangles.aaa;
+
+    tri.setTriangleScenarios(lay.points, lay.points, lay.tri1.scenario, lay.tri2.scenario);
+    tri.show();
+    tri._tri1.show();
+    tri._tri2.show();
+    tri._tri1._line.show();
+    tri._tri2._line.show();
+    tri._tri1._angle1.showAll();
+    tri._tri1._angle2.showAll();
+    tri._tri1._angle3.showAll();
+    tri._tri2._angle1.showAll();
+    tri._tri2._angle2.showAll();
+    tri._tri2._angle3.showAll();
+    tri.transform.updateScale(0.7, 0.7);
+    tri.setPosition(0, 0.6);
+    this.diagram.animateNextFrame();
+  }
+}
