@@ -1,14 +1,14 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point,
+  Transform, Point, normAngle,
 } from '../../../../js/diagram/tools/g2';
 // import {
 //   DiagramElementPrimative, DiagramElementCollection,
 // } from '../../../../js/diagram/Element';
-// import {
-//   removeRandElement, rand,
-// } from '../../../../js/diagram/tools/mathtools';
+import {
+  removeRandElement, rand,
+} from '../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
 
@@ -29,6 +29,7 @@ export default class TriangleCollection extends CommonDiagramCollection {
   _line2: TypeLine;
   _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
   _tri2: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel;
+  last: string;
 
   makeTri() {
     const layout = this.layout.triangle;
@@ -123,5 +124,65 @@ export default class TriangleCollection extends CommonDiagramCollection {
     this.add('tri1', this.makeTri());
     this.add('tri2', this.makeTri());
     this.hasTouchableElements = true;
+    this.last = 'flip';
+  }
+
+  toggleCongruentRotate() {
+    const lay = this.layout.triangles;
+    // const tri = this._triangle;
+    const tri1 = Object.assign({}, lay.congruentRot.tri1.scenario);
+    const tri2 = Object.assign({}, lay.congruentRot.tri2.scenario);
+    const r = this._tri2.transform.r();
+    if (r != null) {
+      tri2.rotation = r + normAngle(rand(Math.PI));
+    }
+    this.calcTriFuturePositions(tri1, tri2);
+    this.moveToFuturePositions(1);
+    this.diagram.animateNextFrame();
+  }
+
+  toggleCongruentFlip() {
+    const lay = this.layout.triangles;
+    // const tri = this._triangle;
+    const tri1 = lay.congruent.tri1.scenario;
+    const tri2 = Object.assign({}, lay.congruent.tri2.scenario);
+    let s = this._tri2.transform.s();
+    const r = this._tri2.transform.r();
+    if (s != null && r != null) {
+      s = s.x / Math.abs(s.x) * -1;
+      tri2.scale = new Point(s, 1);
+      tri2.rotation = r;
+      this.calcTriFuturePositions(tri1, tri2);
+      const done = () => {
+        this._tri2.setTriangleCollectionScaleTo(new Point(1, 1));
+        this._tri2._angle1.showAll();
+        this._tri2._angle2.showAll();
+        this._tri2._dimension12.showAll();
+      };
+      this._tri2._angle1.hide();
+      this._tri2._angle2.hide();
+      this._tri2._dimension12.hide();
+      this.moveToFuturePositions(1, done);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  toggleCongruent() {
+    const chooseFrom = ['flip', 'rotate'];
+    if (this.last === 'flip') {
+      chooseFrom.push('rotate');
+      chooseFrom.push('rotate');
+    } else {
+      chooseFrom.push('flip');
+      chooseFrom.push('flip');
+    }
+    const next = removeRandElement(chooseFrom);
+    this.last = next;
+
+    if (next === 'flip') {
+      this.toggleCongruentFlip();
+    } else {
+      this.toggleCongruentRotate();
+    }
   }
 }
