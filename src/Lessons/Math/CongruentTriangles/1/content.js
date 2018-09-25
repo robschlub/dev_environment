@@ -631,7 +631,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-          So for a |fixed side between two fixed angles|, there is only one set of side lengths and angles possible. 
+          So for a |fixed side between two fixed angles|, there is only one set of side lengths and and one set of angles possible. 
         </p>
       `,
     });
@@ -639,7 +639,7 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
       <p>
-        Therefore, when two triangles have a two angles and the side between them being equal, then they will be congruent.
+        Therefore, when two triangles share the same two angles and the side between them, then they will be congruent.
       </p>
       <p>
         This method of testing for congruency, is often referred to as the |Angle-Side-Angle| method.
@@ -705,6 +705,26 @@ class Content extends LessonContent {
       </p>
     `;
     this.addSection(common);
+    this.addSection({
+      setContent: centerV(`
+      <p>
+        Therefore, when two triangles share the same two angles and the side connected to only one, then they will be congruent.
+      </p>
+      <p>
+        This method of testing for congruency, is often referred to as the |Angle-Angle-Side| method.
+      </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+      <p>
+        The |Angle-Side-Angle| and |Angle-Angle-Side| congruency tests can be combined to be more general as when you know two angles, the side is either between the angles, or touching just one. There are no other combinations.
+      </p>
+      <p>
+        So in general, if two triangles have the share the same |two angles| and |relative side|, then the |triangles are congruent|.
+      </p>
+      `),
+    });
     // common.setContent = `
     //   <p>
     //     First, the angles need to be lined up as a side needs to connect them.
