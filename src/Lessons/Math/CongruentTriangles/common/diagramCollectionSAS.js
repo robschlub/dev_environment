@@ -47,10 +47,12 @@ export default class SASCollection extends CommonDiagramCollection {
     corner.side2 = 1;
     // corner.points = this.layout.corner.points.slice();
     corner.hasTouchableElements = true;
+    
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
     angle.showRealAngle = true;
     angle.addLabel('', this.layout.corner.angleLabelRadius);
+    angle.autoRightAngle = true;
     corner.add('angle', angle);
     corner.add('line', line);
     return corner;

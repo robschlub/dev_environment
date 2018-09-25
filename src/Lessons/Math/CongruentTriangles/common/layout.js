@@ -177,6 +177,12 @@ export default function commonLessonLayout() {
         side1: 1.5,
         side2: 2,
       },
+      c3: {
+        angle: Math.PI / 2,
+        scenario: { position: new Point(0.25, 0.3), rotation: Math.PI + Math.PI / 6 },
+        side1: 0.5,
+        side2: 0.5,
+      },
     },
     AASStart: {
       c1: {

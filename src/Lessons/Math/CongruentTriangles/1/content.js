@@ -547,7 +547,7 @@ class Content extends LessonContent {
         sas.setCornerScenarios('ASAStart');
       },
       showOnly: [
-        sas,
+        sas, qr,
       ],
       show: [
         sas._corner1, sas._corner2,
@@ -613,16 +613,29 @@ class Content extends LessonContent {
         ),
       },
     });
+    common.setContent = `
+      <p>
+        In addition, the remaining unknown angle can be calculated as a |triangles| angles always add up to 180º.
+      </p>
+    `;
+    common.modifiers = {
+      triangles: clickWord(
+        'triangle\'s', 'id_triangles_angles',
+        qr._tri.show, [qr._tri], colors.line,
+      ),
+    };
+    this.addSection(common);
+    common.show = [sas._corner1, sas._corner2, sas._corner3];
+    this.addSection(common);
+
     this.addSection(common, {
       setContent: `
         <p>
-          So for a |fixed side between two fixed angles|, there is only one set of side lengths possible. From the |Side_Side_Side| congruency test method, we saw for one set of side lengths, there is only one set of angles possible.
+          So for a |fixed side between two fixed angles|, there is only one set of side lengths and angles possible. 
         </p>
       `,
-      modifiers: {
-        Side_Side_Side: clickWord('Side-Side-Side', 'id_side_side_side', qr._sss.show, [qr._sss], colors.line),
-      },
     });
+
     this.addSection({
       setContent: centerV(`
       <p>

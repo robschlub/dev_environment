@@ -101,18 +101,22 @@ export function makeAngle(
       && angleToTestRightAngle >= Math.PI / 2 * 0.995
       && angleToTestRightAngle <= Math.PI / 2 * 1.005
     ) {
-      if (angle._arc.isShown && angle._arc === angle.curve) {
+      if (angle._arc === angle.curve) {
         angle._arc = angle.right;
         angle.elements.arc = angle.right;
-        angle.right.show();
-        angle.curve.hide();
+        if (angle._arc.isShown) {
+          angle.right.show();
+          angle.curve.hide();
+        }
         diagram.animateNextFrame();
       }
-    } else if (angle._arc.isShown && angle._arc === angle.right) {
+    } else if (angle._arc === angle.right) {
       angle._arc = angle.curve;
       angle.elements.arc = angle.curve;
-      angle.curve.show();
-      angle.right.hide();
+      if (angle._arc.isShown) {
+        angle.curve.show();
+        angle.right.hide();
+      }
       diagram.animateNextFrame();
     }
     angle._arc.angleToDraw = size;
