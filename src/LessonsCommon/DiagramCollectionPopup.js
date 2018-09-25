@@ -107,7 +107,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     Collection: Function | null = null,
   ) {
     super(diagram, layout, transform);
-    this.add('box', this.makeBox(collectionName));
+    
     if (Collection) {
       this.diagram.shapes = this.diagram.shapesHigh;
       this.diagram.equation = this.diagram.equationHigh;
@@ -115,6 +115,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
       this.diagram.shapes = this.diagram.shapesLow;
       this.diagram.equation = this.diagram.equationLow;
     }
+    this.add('box', this.makeBox(collectionName));
     this.interactiveButtonMethod = null;
   }
 

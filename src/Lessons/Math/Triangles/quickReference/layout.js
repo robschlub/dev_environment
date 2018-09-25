@@ -13,7 +13,7 @@ export default function lessonLayout() {
     p3: new Point(-0.5, 0.7),
   };
   layout.totalAngle.equation = {
-    position: new Point(-0.5, 1),
+    position: new Point(-0.5, 0.85),
     scale: 0.7,
   };
   layout.totalAngle.boundary = new Rect(

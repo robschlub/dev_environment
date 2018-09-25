@@ -129,7 +129,6 @@ export default class TriangleCollection extends CommonDiagramCollection {
 
   toggleCongruentRotate() {
     const lay = this.layout.triangles;
-    // const tri = this._triangle;
     const tri1 = Object.assign({}, lay.congruent.tri1.scenario);
     const tri2 = Object.assign({}, lay.congruent.tri2.scenario);
     const r = this._tri2.transform.r();
@@ -143,7 +142,6 @@ export default class TriangleCollection extends CommonDiagramCollection {
 
   toggleCongruentFlip() {
     const lay = this.layout.triangles;
-    // const tri = this._triangle;
     const tri1 = lay.congruent.tri1.scenario;
     const tri2 = Object.assign({}, lay.congruent.tri2.scenario);
     let s = this._tri2.transform.s();
@@ -153,15 +151,17 @@ export default class TriangleCollection extends CommonDiagramCollection {
       tri2.scale = new Point(s, 1);
       tri2.rotation = r;
       this.calcTriFuturePositions(tri1, tri2);
+      const properties = [
+        this._tri2._angle1, this._tri2._angle2, this._tri2._angle3,
+        this._tri2._dimension12, this._tri2._dimension23,
+        this._tri2._dimension31,
+      ];
+      const shown = properties.filter(e => e.isShown);
       const done = () => {
         this._tri2.setTriangleCollectionScaleTo(new Point(1, 1));
-        this._tri2._angle1.showAll();
-        this._tri2._angle2.showAll();
-        this._tri2._dimension12.showAll();
+        shown.forEach((e) => { e.showAll(); });
       };
-      this._tri2._angle1.hide();
-      this._tri2._angle2.hide();
-      this._tri2._dimension12.hide();
+      shown.forEach((e) => { e.hide(); });
       this.moveToFuturePositions(1, done);
     }
     this.diagram.animateNextFrame();
