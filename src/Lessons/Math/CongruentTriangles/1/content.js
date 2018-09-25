@@ -546,13 +546,6 @@ class Content extends LessonContent {
       show: [
         sas._corner1, sas._corner2,
       ],
-      // setSteadyState: () => {
-      //   sss.resetDiagram();
-      //   sss.setFuturePositions();
-      // },
-      // setLeaveState: () => {
-      //   sss.resetDiagram();
-      // },
     };
 
     common.setContent = `
@@ -630,6 +623,122 @@ class Content extends LessonContent {
         This method of testing for congruency, is often referred to as the |Angle-Side-Angle| method.
       </p>
       `),
+    });
+
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    common = {
+      setContent: '',
+      modifiers: {},
+      setEnterState: () => {
+        sas.setCornerScenarios('AASStart');
+      },
+      showOnly: [
+        sas,
+      ],
+      show: [
+        sas._corner1, sas._corner2,
+      ],
+      setSteadyState: () => {},
+    };
+    common.setContent = `
+      <p>
+        The next case is when two angles and a side not between them is known.
+      </p>
+    `;
+    this.addSection(common, {
+      title: 'Angle-Angle-Side',
+    });
+
+    common.setContent = `
+      <p>
+        First, the angles need to be lined up as a side needs to connect them.
+      </p>
+    `;
+    this.addSection(common);
+    common.setSteadyState = () => { sas.setCornerScenarios('AASAlign'); };
+    this.addSection(common, {
+      setEnterState: () => {
+        sas.futurePositions = [{
+          element: sas._corner1,
+          scenario: layout.corner.AASAlign.c1.scenario,
+        }];
+        sas._corner1.setTransformCallback = sas.updateCornerTextForRotation.bind(sas, sas._corner1);
+      },
+      transitionFromPrev: (done) => {
+        sas.moveToFuturePositions(1.5, done);
+      },
+    });
+
+    common.setContent = `
+      <p>
+        Now, for each unknown side length, is there more than one side length that can be used to make a triangle?
+      </p>
+    `;
+    this.addSection(common);
+
+    common.setContent = `
+      <p>
+        Well, the left angle can have its side |extended| to intersect with the known side.
+      </p>
+    `;
+    this.addSection(common, {
+      modifiers: { extended: highlight(colors.diagram.action) },
+    });
+    this.addSection(common, {
+      modifiers: {
+        extended: click(sas.growC1S2ToC2S1, [sas], colors.diagram.action),
+      },
+      setEnterState: () => {
+        sas.setCornerScenarios('AASAlign');
+      },
+      setSteadyState: () => {
+        sas.growCorner(1, 0.5, sas.calcC1S2ToIntersectWithC2S1(), 1, false, null, 0.5);
+      },
+    });
+    common.setContent = `
+      <p>
+        Now the left angle can be moved to |intersect| with the known side.
+      </p>
+    `;
+    this.addSection(common, {
+      modifiers: {
+        intersect: click(sas.moveC1ToAASPosition, [sas, () => {}], colors.diagram.action),
+      },
+      setEnterState: () => { sas.setCornerScenarios('AASAlignJoin'); },
+      setSteadyState: () => {
+        sas.setCornerScenarios('AASAlignJoin');
+        sas._corner1.isTouchable = true;
+        sas._corner1.isMovable = true;
+        sas._corner1.touchInBoundingRect = true;
+        sas._corner1.setTransformCallback = sas.updateC1SideLength.bind(sas);
+        sas._corner1.move.limitLine = layout.corner.AAS.c1.limitLine;
+      },
+      transitionToNext: (done) => {
+        sas.moveC1ToAASPosition(done);
+      },
+    });
+
+    common.setContent = `
+      <p>
+        And finally the final side is completed.
+      </p>
+    `;
+    this.addSection(common, {
+      setSteadyState: () => {
+        sas.setCornerScenarios('AAS');
+      },
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        sas.setCornerScenarios('AASComplete');
+      },
     });
   }
 }

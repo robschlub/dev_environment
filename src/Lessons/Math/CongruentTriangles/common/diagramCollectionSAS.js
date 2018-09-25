@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect, getDeltaAngle,
+  Transform, polarToRect, getDeltaAngle, Line,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -53,6 +53,14 @@ export default class SASCollection extends CommonDiagramCollection {
     corner.add('angle', angle);
     corner.add('line', line);
     return corner;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  updateCornerTextForRotation(corner: TypeCorner) {
+    const rotation = corner.transform.r();
+    if (rotation != null) {
+      corner._angle.updateAngle(0, corner._angle.currentAngle, rotation);
+    }
   }
 
   updateCorner(corner: TypeCorner, angle: number, side1: number, side2: number) {
@@ -152,6 +160,49 @@ export default class SASCollection extends CommonDiagramCollection {
       }
     };
     corner.animateCustomTo(func, time, 0, done);
+    this.diagram.animateNextFrame();
+  }
+
+  calcC1S2ToIntersectWithC2S1() {
+    const p2 = this._corner2.transform.t();
+    const p1 = this._corner1.transform.t();
+    const r2 = this._corner2.transform.r();
+    const a1 = this._corner1._angle.currentAngle;
+    if (p2 != null && p1 != null && r2 != null) {
+      const lineC1S2 = new Line(p1, 1, a1);
+      const lineC2S1 = new Line(p2, 1, r2);
+      const { intersect } = lineC1S2.intersectsWith(lineC2S1);
+      return intersect.sub(p1).distance();
+    }
+    return 0;
+  }
+
+  growC1S2ToC2S1() {
+    this.growCorner(1, 0.5, this.calcC1S2ToIntersectWithC2S1(), 1, false, null, 0.5);
+  }
+
+  updateC1SideLength() {
+    this.updateCorner(
+      this._corner1, this.layout.corner.AAS.c1.angle,
+      this.layout.corner.AAS.c1.side1, this.calcC1S2ToIntersectWithC2S1(),
+    );
+    this.diagram.animateNextFrame();
+  }
+
+  moveC1ToAASPosition(callback: () => void = () => {}) {
+    this.futurePositions = [{
+      element: this._corner1,
+      scenario: this.layout.corner.AAS.c1.scenario,
+    }];
+    this._corner1.setTransformCallback = this.updateC1SideLength.bind(this);
+    const p2 = this._corner1.transform.t();
+    if (p2 != null) {
+      if (p2.sub(this.layout.corner.AAS.c1.scenario.position).distance() > 0.1) {
+        this.moveToFuturePositions(1, callback);
+      } else {
+        callback();
+      }
+    }
     this.diagram.animateNextFrame();
   }
 

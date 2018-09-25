@@ -178,6 +178,78 @@ export default function commonLessonLayout() {
         side2: 2,
       },
     },
+    AASStart: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-1, -0.5), rotation: Math.PI / 6 },
+        side1: 0.5,
+        side2: 0.5,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 1.5,
+        side2: 0.5,
+      },
+    },
+    AASAlign: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-1, -1), rotation: 0 },
+        side1: 0.5,
+        side2: 0.5,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 1.5,
+        side2: 0.5,
+      },
+    },
+    AASAlignJoin: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-1, -1), rotation: 0 },
+        side1: 0.5,
+        side2: 1.732,
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 1.5,
+        side2: 0.5,
+      },
+    },
+    AAS: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 0.5,
+        side2: 2.598,
+        limitLine: new Line(new Point(-1, -1), new Point(-2.4, -1)),
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 1.5,
+        side2: 0.5,
+      },
+    },
+    AASComplete: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 2.95,
+        side2: 2.598,
+        limitLine: new Line(new Point(-1, -1), new Point(-2.4, -1)),
+      },
+      c2: {
+        angle: Math.PI / 3,
+        scenario: { position: new Point(1, -1), rotation: Math.PI / 3 * 2 },
+        side1: 1.5,
+        side2: 0.5,
+      },
+    },
   };
   const l1 = 1.8;
   const l2 = 0.9;
