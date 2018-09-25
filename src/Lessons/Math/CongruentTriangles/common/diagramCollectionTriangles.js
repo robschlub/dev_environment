@@ -128,7 +128,6 @@ export default class TriangleCollection extends CommonDiagramCollection {
   }
 
   toggleCongruentRotate() {
-    console.log(this.asdf)
     const lay = this.layout.triangles;
     const tri1 = Object.assign({}, lay.congruent.tri1.scenario);
     const tri2 = Object.assign({}, lay.congruent.tri2.scenario);
@@ -159,6 +158,13 @@ export default class TriangleCollection extends CommonDiagramCollection {
       ];
       const shown = properties.filter(e => e.isShown);
       const done = () => {
+        const s = this._tri2.transform.s();
+        if (s != null) {
+          this._tri2.transform.updateScale(
+            s.x / Math.abs(s.x),
+            s.y / Math.abs(s.y),
+          );
+        }
         this._tri2.setTriangleCollectionScaleTo(new Point(1, 1));
         shown.forEach((e) => { e.showAll(); });
       };

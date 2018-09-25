@@ -24,6 +24,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
     super(diagram, layout, transform);
     this.add('tri', new QRTriangle(this.diagram));
     this.add('asa', new QRAsa(this.diagram));
+    // this.add('sss', diagram.shapes.collection());
     this.add('sss', new QRSss(this.diagram));
     this.hasTouchableElements = true;
   }

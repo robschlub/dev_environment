@@ -9,6 +9,7 @@ import details from '../details';
 
 class QRCongruent extends PopupBoxCollection {
   _triangle: TriangleCollection;
+  name: string;
 
   constructor(
     diagram: Object,
@@ -24,6 +25,7 @@ class QRCongruent extends PopupBoxCollection {
       TriangleCollection,
       name,
     );
+    this.name = name;
 
     this.setLink(details.details.uid);
   }
@@ -39,11 +41,15 @@ class QRCongruent extends PopupBoxCollection {
     const modifiers = Object.assign({}, {
       angles: html.highlight(this.layout.colors.angleLabels),
       side_lengths: html.highlight(this.layout.colors.lineLabels),
-      rotated: html.click(
+      rotated: html.clickWord(
+        'rotated',
+        `id_lesson__qr_congruent_triangles_${this.name}__rotated`,
         this._triangle.toggleCongruentRotate, [this._triangle],
         this.layout.colors.line,
       ),
-      mirrored: html.click(
+      mirrored: html.clickWord(
+        'mirrored',
+        `id_lesson__qr_congruent_triangles__${this.name}__mirrored`,
         this._triangle.toggleCongruentFlip, [this._triangle],
         this.layout.colors.line,
       ),
@@ -73,8 +79,6 @@ class QRCongruent extends PopupBoxCollection {
     tri.transform.updateScale(0.7, 0.7);
     tri.setPosition(0, 0.75);
     this.diagram.animateNextFrame();
-    this._triangle.asdf = 1;
-    console.log("0", this._triangle.asdf)
   }
 }
 
@@ -90,6 +94,10 @@ export class QRAsa extends QRCongruent {
     const modifiers = {
       two_angles: html.highlight(this.layout.colors.angleLabels),
       side_between_them: html.highlight(this.layout.colors.lineLabels),
+      // rotated: html.click(
+      //   this._triangle.toggleCongruentRotate, [this._triangle],
+      //   this.layout.colors.line,
+      // ),
     };
 
     this.setTitle('Congruent by Angle-Side-Angle');
@@ -109,7 +117,6 @@ export class QRAsa extends QRCongruent {
     tri._tri1._dimension12.showAll();
     tri._tri2._dimension12.showAll();
     this.diagram.animateNextFrame();
-    console.log("1", this._triangle.asdf)
   }
 }
 
