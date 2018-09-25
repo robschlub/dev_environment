@@ -218,7 +218,9 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     };
     this.futurePositions.forEach((futurePosition) => {
       const { element, scenario } = futurePosition;
+      console.log(element.name, element.isShown)
       if (element.isShown) {
+
         this.moveToScenario(element, scenario, maxTime, elementDone, rotDirection);
         toBeDoneCount += 1;
         // callbackToUse = null;

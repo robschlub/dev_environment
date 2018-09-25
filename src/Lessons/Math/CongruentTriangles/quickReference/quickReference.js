@@ -73,6 +73,8 @@ class QRCongruent extends PopupBoxCollection {
     tri.transform.updateScale(0.7, 0.7);
     tri.setPosition(0, 0.75);
     this.diagram.animateNextFrame();
+    this._triangle.asdf = 1;
+    console.log("0", this._triangle.asdf)
   }
 }
 
@@ -107,6 +109,7 @@ export class QRAsa extends QRCongruent {
     tri._tri1._dimension12.showAll();
     tri._tri2._dimension12.showAll();
     this.diagram.animateNextFrame();
+    console.log("1", this._triangle.asdf)
   }
 }
 
