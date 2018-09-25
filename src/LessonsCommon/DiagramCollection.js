@@ -207,9 +207,10 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       callbackToUse = timeOrCallback;
     }
     let doneCount = 0;
+    let toBeDoneCount = 0;
     const elementDone = () => {
       doneCount += 1;
-      if (doneCount === this.futurePositions.length) {
+      if (doneCount === toBeDoneCount) {
         if (callbackToUse != null) {
           callbackToUse();
         }
@@ -219,6 +220,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       const { element, scenario } = futurePosition;
       if (element.isShown) {
         this.moveToScenario(element, scenario, maxTime, elementDone, rotDirection);
+        toBeDoneCount += 1;
         // callbackToUse = null;
       }
     });

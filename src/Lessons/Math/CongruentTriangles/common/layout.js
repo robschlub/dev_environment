@@ -204,6 +204,50 @@ export default function commonLessonLayout() {
         side2: 0.5,
       },
     },
+    SSAStart: {
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 3,
+        side2: 0.5,
+      },
+      line: {
+        length: 1.9,
+        scenario: { position: new Point(1.2, -0.6), rotation: Math.PI / 6 * 5},
+      },
+    },
+    SSAJoin: {
+      circleSides: 400,
+      c1: {
+        angle: Math.PI / 6,
+        scenario: { position: new Point(-2, -1), rotation: 0 },
+        side1: 3,
+        side2: 0.5,
+      },
+      line: {
+        length: 1.9,
+        scenario: { position: new Point(1, -0.99), rotation: Math.PI / 6 * 5 },
+      },
+      line2: {
+        length: 0.1,
+        finalLength: 4,
+        scenario: {
+          position: new Point(-1.96, -0.99),
+          rotation: Math.PI / 6,
+        },
+        largeAngle: 2.766,
+        smallAngle: 1.416,
+      },
+      circ: {
+        scenario: { position: new Point(1, -0.99), rotation: 0 },
+      },
+      // intersect1: {
+      //   scenario: { position: new Point(0.393 - 1, 1.637 - 1) },
+      // },
+      // intersect2: {
+      //   scenario: { position: new Point(-2.213 + 1, 0.38 - 1) },
+      // },
+    },
     // AASAlign: {
     //   c1: {
     //     angle: Math.PI / 6,

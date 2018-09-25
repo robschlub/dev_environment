@@ -28,7 +28,6 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
     // this.add('alternateAngles', new QRAlternateAngles(this.diagram));
     // this._supplementary.setPosition(0, 0);
     // this._alternateAngles.setPosition(0, 0);
-    console.log(this)
     this.hasTouchableElements = true;
   }
 }

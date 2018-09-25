@@ -33,6 +33,7 @@ class Content extends LessonContent {
     const aaa = diag._aaa;
     const sas = diag._sas;
     const sss = diag._sss;
+    const ssa = diag._ssa;
     const qr = diag._qr;
     let common = {};
 
@@ -720,90 +721,115 @@ class Content extends LessonContent {
       </p>
       `),
     });
-    // common.setContent = `
-    //   <p>
-    //     First, the angles need to be lined up as a side needs to connect them.
-    //   </p>
-    // `;
-    // this.addSection(common);
-    // common.setSteadyState = () => { sas.setCornerScenarios('AASAlign'); };
-    // this.addSection(common, {
-    //   setEnterState: () => {
-    //     sas.futurePositions = [{
-    //       element: sas._corner1,
-    //       scenario: layout.corner.AASAlign.c1.scenario,
-    //     }];
-    //     sas._corner1.setTransformCallback = sas.updateCornerTextForRotation.bind(sas, sas._corner1);
-    //   },
-    //   transitionFromPrev: (done) => {
-    //     sas.moveToFuturePositions(1.5, done);
-    //   },
-    // });
 
-    // common.setContent = `
-    //   <p>
-    //     Now, for each unknown side length, is there more than one side length that can be used to make a triangle?
-    //   </p>
-    // `;
-    // this.addSection(common);
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    /* ********************************************************************* */
+    common = {
+      setContent: '',
+      modifiers: {},
+      setEnterState: () => {
+        // ssa.setCornerScenarios('AASStart');
+        ssa.calcFuturePositions('SSAStart');
+        ssa.setFuturePositions();
+      },
+      showOnly: [
+        ssa, qr,
+      ],
+      show: [
+        ssa._corner, ssa._line,
+      ],
+      setSteadyState: () => {},
+      setLeaveState: () => {},
+    };
+    common.setContent = `
+      <p>
+        Finally, we can consider the case where |two sides|, and an |angle not between the two sides| are known.
+      </p>
+    `;
+    this.addSection(common, {
+      title: 'Side-Side-Angle',
+    });
 
-    // common.setContent = `
-    //   <p>
-    //     Well, the left angle can have its side |extended| to intersect with the known side.
-    //   </p>
-    // `;
-    // this.addSection(common, {
-    //   modifiers: { extended: highlight(colors.diagram.action) },
-    // });
-    // this.addSection(common, {
-    //   modifiers: {
-    //     extended: click(sas.growC1S2ToC2S1, [sas], colors.diagram.action),
-    //   },
-    //   setEnterState: () => {
-    //     sas.setCornerScenarios('AASAlign');
-    //   },
-    //   setSteadyState: () => {
-    //     sas.growCorner(1, 0.5, sas.calcC1S2ToIntersectWithC2S1(), 1, false, null, 0.5);
-    //   },
-    // });
-    // common.setContent = `
-    //   <p>
-    //     Now the left angle can be moved to |intersect| with the known side.
-    //   </p>
-    // `;
-    // this.addSection(common, {
-    //   modifiers: {
-    //     intersect: click(sas.moveC1ToAASPosition, [sas, () => {}], colors.diagram.action),
-    //   },
-    //   setEnterState: () => { sas.setCornerScenarios('AASAlignJoin'); },
-    //   setSteadyState: () => {
-    //     sas.setCornerScenarios('AASAlignJoin');
-    //     sas._corner1.isTouchable = true;
-    //     sas._corner1.isMovable = true;
-    //     sas._corner1.touchInBoundingRect = true;
-    //     sas._corner1.setTransformCallback = sas.updateC1SideLength.bind(sas);
-    //     sas._corner1.move.limitLine = layout.corner.AAS.c1.limitLine;
-    //   },
-    //   transitionToNext: (done) => {
-    //     sas.moveC1ToAASPosition(done);
-    //   },
-    // });
+    common.setContent = `
+      <p>
+        First we know the lines must connect at the corner with an unknown angle.
+      </p>
+    `;
+    this.addSection(common);
+    common.setEnterState = () => { ssa.calcFuturePositions('SSAJoin'); };
+    common.setSteadyState = () => { ssa.setFuturePositions(); };
+    this.addSection(common, {
+      transitionFromPrev: (done) => { ssa.moveToFuturePositions(1, done); },
+    });
 
-    // common.setContent = `
-    //   <p>
-    //     And finally the final side is completed.
-    //   </p>
-    // `;
-    // this.addSection(common, {
-    //   setSteadyState: () => {
-    //     sas.setCornerScenarios('AAS');
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setSteadyState: () => {
-    //     sas.setCornerScenarios('AASComplete');
-    //   },
-    // });
+    common.setContent = `
+      <p>
+        We can also draw in the remaining side with a temporary length as we don't know it yet.
+      </p>
+    `;
+    this.addSection(common);
+    common.show = [ssa._corner, ssa._line, ssa._line2];
+    common.setSteadyState = () => {
+      ssa.setFuturePositions();
+      ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
+    };
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        ssa._line2.setLength(0.1);
+        ssa._line2.animateLengthTo(layout.corner.SSAJoin.line2.finalLength, 1, true, done);
+      },
+    });
+
+    common.setContent = `
+      <p>
+        Now, how can the right side be rotated to form a triangle?
+      </p>
+    `;
+    common.setSteadyState = () => {
+      ssa.setFuturePositions();
+      ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
+      ssa._line.setMovable(true);
+    };
+    common.setLeaveState = () => {
+      ssa._line.setMovable(false);
+    };
+    this.addSection(common);
+
+    common.setContent = `
+      <p>
+        One way to quickly see this is to |trace| out all the possible locations, and see which ones intersect with the left line.
+      </p>
+    `;
+    common.modifiers = { trace: click(ssa.drawCircle, [ssa], colors.diagram.action) };
+    this.addSection(common);
+    common.show = [ssa._corner, ssa._line, ssa._line2, ssa._circ];
+    this.addSection(common);
+
+    common.setContent = `
+      <p>
+        There are two |intersection_points|, and therefore, two different triangles are possible.
+      </p>
+    `;
+    common.modifiers = {
+      intersection_points: click(ssa.toggleTriangle, [ssa], colors.diagram.action),
+    };
+    this.addSection(common);
+    this.addSection({
+      setContent: centerV(`
+      <p>
+        Therefore, if |two sides| and an |angle not between the sides| is known, there are two possible triangles.
+      </p>
+      <p>
+        If these are the known dimensions of two triangles, |it cannot be determined if they are congruent|.
+      </p>
+      `),
+    });
   }
 }
 
