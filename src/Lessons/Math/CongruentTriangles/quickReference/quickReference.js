@@ -13,6 +13,7 @@ class QRCongruent extends PopupBoxCollection {
   constructor(
     diagram: Object,
     transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+    name: string = 'triangle',
   ) {
     const layout = lessonLayout();
     super(
@@ -21,6 +22,7 @@ class QRCongruent extends PopupBoxCollection {
       transform,
       'triangle',
       TriangleCollection,
+      name,
     );
 
     this.setLink(details.details.uid);
@@ -82,7 +84,7 @@ export class QRAsa extends QRCongruent {
     diagram: Object,
     transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
-    super(diagram, transform);
+    super(diagram, transform, 'triangle_asa');
     const modifiers = {
       two_angles: html.highlight(this.layout.colors.angleLabels),
       side_between_them: html.highlight(this.layout.colors.lineLabels),
@@ -116,7 +118,7 @@ export class QRSss extends QRCongruent {
     diagram: Object,
     transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
-    super(diagram, transform);
+    super(diagram, transform, 'triangle_sss');
     const modifiers = {
       three_side_lengths: html.highlight(this.layout.colors.lineLabels),
     };
@@ -149,7 +151,7 @@ export class QRSas extends QRCongruent {
     diagram: Object,
     transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
-    super(diagram, transform);
+    super(diagram, transform, 'triangle_sas');
     const modifiers = {
       two_sides: html.highlight(this.layout.colors.lineLabels),
       angle_between_them: html.highlight(this.layout.colors.angleLabels),
@@ -183,7 +185,7 @@ export class QRAas extends QRCongruent {
     diagram: Object,
     transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
-    super(diagram, transform);
+    super(diagram, transform, 'triangle_aas');
     const modifiers = {
       side_not_between: html.highlight(this.layout.colors.lineLabels),
       two_angles: html.highlight(this.layout.colors.angleLabels),
@@ -222,14 +224,9 @@ export class QRAaa extends PopupBoxCollection {
       diagram,
       layout,
       transform,
-      'triangle',
+      'triangle_aaa',
       TriangleCollection,
     );
-
-    const modifiers = {
-      // side_not_between: html.highlight(this.layout.colors.lineLabels),
-      // two_angles: html.highlight(this.layout.colors.angleLabels),
-    };
 
     this.setTitle('Angle-Angle-Angle Ambiguity');
     this.setDescription(`
@@ -238,7 +235,7 @@ export class QRAaa extends PopupBoxCollection {
       </p>
       <p>
         For example, if you scale a triangle larger or smaller, its angles will remain the same. Therefore, knowing just the angles of two triangles is |not enough information to determine that they are congruent| (the same size and shape).
-      </p>`, modifiers);
+      </p>`, {});
 
     this.setLink(details.details.uid);
   }

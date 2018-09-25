@@ -616,9 +616,12 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-          So for a |fixed side between two fixed angles|, there is only one set of side lengths possible. From the Side-Side-Side congruency test method, we saw for one set of side lengths, there is only one set of angles possible.
+          So for a |fixed side between two fixed angles|, there is only one set of side lengths possible. From the |Side_Side_Side| congruency test method, we saw for one set of side lengths, there is only one set of angles possible.
         </p>
       `,
+      modifiers: {
+        Side_Side_Side: clickWord('Side-Side-Side', 'id_side_side_side', qr._sss.show, [qr._sss], colors.line),
+      },
     });
     this.addSection({
       setContent: centerV(`
@@ -676,12 +679,18 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        Now, we also know from the |Angle_Side_Angle| congruency test that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths.
+        We also know from the |Angle_Side_Angle| congruency test, that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths.
       </p>
     `;
     common.modifiers = {
       Angle_Side_Angle: clickWord('Angle-Side-Angle', 'id_angle_side_angle', qr._asa.show, [qr._asa], colors.line),
     };
+    this.addSection(common);
+    common.setContent = `
+      <p>
+        We also know from the |Angle_Side_Angle| congruency test, that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths.
+      </p>
+    `;
     this.addSection(common);
     // common.setContent = `
     //   <p>
