@@ -265,11 +265,9 @@ class Content extends LessonContent {
       setEnterState: () => {
         sas.setCornerScenarios('SASStart');
       },
+      showOnly: [sas],
       show: [
-        sas,
-      ],
-      hide: [
-        sas._corner2,
+        sas._corner1,
       ],
     };
     this.addSection(common, {
@@ -294,6 +292,12 @@ class Content extends LessonContent {
       },
     });
 
+    common = {
+      showOnly: [sas],
+      show: [
+        sas._corner1, sas._corner2,
+      ],
+    };
     this.addSection(common, {
       setContent: `
          <p>
@@ -316,11 +320,12 @@ class Content extends LessonContent {
         sas.growCorner(2, 0, layout.corner.SAS.c2.side1, 1, false);
       },
     });
-    common = {
-      show: [
-        sas,
-      ],
-    };
+    // common = {
+    //   showOnly: [sas],
+    //   show: [
+    //     sas._corner1, sas._corner2,
+    //   ],
+    // };
     this.addSection(common, {
       setContent: `
         <p>
@@ -658,88 +663,103 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        First, the angles need to be lined up as a side needs to connect them.
+        We know two angles, and we know a triangles angles always add up to 180º. Therefore, we can calculate the third angle.
       </p>
     `;
     this.addSection(common);
-    common.setSteadyState = () => { sas.setCornerScenarios('AASAlign'); };
-    this.addSection(common, {
-      setEnterState: () => {
-        sas.futurePositions = [{
-          element: sas._corner1,
-          scenario: layout.corner.AASAlign.c1.scenario,
-        }];
-        sas._corner1.setTransformCallback = sas.updateCornerTextForRotation.bind(sas, sas._corner1);
-      },
-      transitionFromPrev: (done) => {
-        sas.moveToFuturePositions(1.5, done);
-      },
-    });
-
-    common.setContent = `
-      <p>
-        Now, for each unknown side length, is there more than one side length that can be used to make a triangle?
-      </p>
-    `;
+    common.show = [sas._corner1, sas._corner2, sas._corner3];
     this.addSection(common);
 
     common.setContent = `
       <p>
-        Well, the left angle can have its side |extended| to intersect with the known side.
+        Now, we also know that if we know two angles and the side between them (Angle-Side-Angle congruceny test), then there can only be one solution for the remaining side lengths.
       </p>
     `;
-    this.addSection(common, {
-      modifiers: { extended: highlight(colors.diagram.action) },
-    });
-    this.addSection(common, {
-      modifiers: {
-        extended: click(sas.growC1S2ToC2S1, [sas], colors.diagram.action),
-      },
-      setEnterState: () => {
-        sas.setCornerScenarios('AASAlign');
-      },
-      setSteadyState: () => {
-        sas.growCorner(1, 0.5, sas.calcC1S2ToIntersectWithC2S1(), 1, false, null, 0.5);
-      },
-    });
-    common.setContent = `
-      <p>
-        Now the left angle can be moved to |intersect| with the known side.
-      </p>
-    `;
-    this.addSection(common, {
-      modifiers: {
-        intersect: click(sas.moveC1ToAASPosition, [sas, () => {}], colors.diagram.action),
-      },
-      setEnterState: () => { sas.setCornerScenarios('AASAlignJoin'); },
-      setSteadyState: () => {
-        sas.setCornerScenarios('AASAlignJoin');
-        sas._corner1.isTouchable = true;
-        sas._corner1.isMovable = true;
-        sas._corner1.touchInBoundingRect = true;
-        sas._corner1.setTransformCallback = sas.updateC1SideLength.bind(sas);
-        sas._corner1.move.limitLine = layout.corner.AAS.c1.limitLine;
-      },
-      transitionToNext: (done) => {
-        sas.moveC1ToAASPosition(done);
-      },
-    });
+    this.addSection(common);
+    // common.setContent = `
+    //   <p>
+    //     First, the angles need to be lined up as a side needs to connect them.
+    //   </p>
+    // `;
+    // this.addSection(common);
+    // common.setSteadyState = () => { sas.setCornerScenarios('AASAlign'); };
+    // this.addSection(common, {
+    //   setEnterState: () => {
+    //     sas.futurePositions = [{
+    //       element: sas._corner1,
+    //       scenario: layout.corner.AASAlign.c1.scenario,
+    //     }];
+    //     sas._corner1.setTransformCallback = sas.updateCornerTextForRotation.bind(sas, sas._corner1);
+    //   },
+    //   transitionFromPrev: (done) => {
+    //     sas.moveToFuturePositions(1.5, done);
+    //   },
+    // });
 
-    common.setContent = `
-      <p>
-        And finally the final side is completed.
-      </p>
-    `;
-    this.addSection(common, {
-      setSteadyState: () => {
-        sas.setCornerScenarios('AAS');
-      },
-    });
-    this.addSection(common, {
-      setSteadyState: () => {
-        sas.setCornerScenarios('AASComplete');
-      },
-    });
+    // common.setContent = `
+    //   <p>
+    //     Now, for each unknown side length, is there more than one side length that can be used to make a triangle?
+    //   </p>
+    // `;
+    // this.addSection(common);
+
+    // common.setContent = `
+    //   <p>
+    //     Well, the left angle can have its side |extended| to intersect with the known side.
+    //   </p>
+    // `;
+    // this.addSection(common, {
+    //   modifiers: { extended: highlight(colors.diagram.action) },
+    // });
+    // this.addSection(common, {
+    //   modifiers: {
+    //     extended: click(sas.growC1S2ToC2S1, [sas], colors.diagram.action),
+    //   },
+    //   setEnterState: () => {
+    //     sas.setCornerScenarios('AASAlign');
+    //   },
+    //   setSteadyState: () => {
+    //     sas.growCorner(1, 0.5, sas.calcC1S2ToIntersectWithC2S1(), 1, false, null, 0.5);
+    //   },
+    // });
+    // common.setContent = `
+    //   <p>
+    //     Now the left angle can be moved to |intersect| with the known side.
+    //   </p>
+    // `;
+    // this.addSection(common, {
+    //   modifiers: {
+    //     intersect: click(sas.moveC1ToAASPosition, [sas, () => {}], colors.diagram.action),
+    //   },
+    //   setEnterState: () => { sas.setCornerScenarios('AASAlignJoin'); },
+    //   setSteadyState: () => {
+    //     sas.setCornerScenarios('AASAlignJoin');
+    //     sas._corner1.isTouchable = true;
+    //     sas._corner1.isMovable = true;
+    //     sas._corner1.touchInBoundingRect = true;
+    //     sas._corner1.setTransformCallback = sas.updateC1SideLength.bind(sas);
+    //     sas._corner1.move.limitLine = layout.corner.AAS.c1.limitLine;
+    //   },
+    //   transitionToNext: (done) => {
+    //     sas.moveC1ToAASPosition(done);
+    //   },
+    // });
+
+    // common.setContent = `
+    //   <p>
+    //     And finally the final side is completed.
+    //   </p>
+    // `;
+    // this.addSection(common, {
+    //   setSteadyState: () => {
+    //     sas.setCornerScenarios('AAS');
+    //   },
+    // });
+    // this.addSection(common, {
+    //   setSteadyState: () => {
+    //     sas.setCornerScenarios('AASComplete');
+    //   },
+    // });
   }
 }
 
