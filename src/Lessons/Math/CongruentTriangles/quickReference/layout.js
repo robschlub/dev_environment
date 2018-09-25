@@ -31,6 +31,24 @@ export default function lessonLayout() {
       scenario: { position: new Point(0.9, 0), rotation: 0, scale: new Point(0.7, 0.7) },
     },
   };
+  layout.triangles.saa = {
+    tri1: {
+      scenario: { position: new Point(-0.2, 0), rotation: 0, scale: (0.9, 0.9) },
+      points: [
+        new Point(-1.5, 0),
+        new Point(0, 0),
+        new Point(0, 1),
+      ],
+    },
+    tri2: {
+      points: [
+        new Point(-1.5, 0),
+        new Point(0, 0),
+        new Point(-0.923, 0.384),
+      ],
+      scenario: { position: new Point(1.4, 0), rotation: 0, scale: (0.9, 0.9) },
+    },
+  };
   // layout.triangles.congruentRot = {
   //   tri1: {
   //     scenario: { position: new Point(-1.05, 0.4), rotation: 0 },
