@@ -337,3 +337,68 @@ export class QRSsa extends PopupBoxCollection {
   }
 }
 
+export class QRCongruentTriangles extends PopupBoxCollection {
+  _triangle: TriangleCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'triangle',
+      TriangleCollection,
+      'triangle_congruent',
+    );
+
+    this.setTitle('Congruent Triangles');
+    const modifiers = {
+      side_lengths: html.highlight(this.layout.colors.lineLabels),
+      angles: html.highlight(this.layout.colors.angleLabels),
+      rotated: html.clickWord(
+        'rotated', 'id_lesson__QRCongruentTriangles__rotated',
+        this._triangle.toggleCongruentRotate, [this._triangle],
+        this.layout.colors.diagram.action,
+      ),
+      flipped: html.clickWord(
+        'flipped', 'id_lesson__QRCongruentTriangles__flipped',
+        this._triangle.toggleCongruentFlip, [this._triangle],
+        this.layout.colors.diagram.action,
+      ),
+    };
+    this.setDescription(`
+      <p>
+        Shapes are |congruent| when they are the |same size and shape|. Triangles are congruent when they have the same set of |side_lengths| and |angles|.
+      </p>
+      <p>
+        Shapes remain |congruent| if one is |rotated| or |flipped|.
+      </p>`, modifiers);
+
+    this.setLink(details.details.uid);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.3);
+    super.show();
+    const tri = this._triangle;
+    const lay = this.layout.triangles.congruent;
+    tri.setTriangleScenarios(
+      lay.points, lay.points,
+      lay.tri1.scenario, lay.tri2.scenario,
+    );
+    tri.showAll();
+    tri._tri2.isMovable = true;
+    tri._tri2.isTouchable = true;
+    tri._tri2.touchInBoundingRect = true;
+    tri._tri2.move.type = 'rotation';
+    this.hasTouchableElements = true;
+    tri.hasTouchableElements = true;
+    tri.transform.updateScale(0.7, 0.7);
+    tri.setPosition(0, 0.4);
+    this.diagram.animateNextFrame();
+  }
+}
+

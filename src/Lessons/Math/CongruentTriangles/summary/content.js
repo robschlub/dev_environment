@@ -32,32 +32,41 @@ class Content extends LessonContent {
       title: 'Summary',
       setContent: `
         <p>
-          A |Triangle| is a shape with |three sides|, and |three angles|. All the angles within a triangle add up to 180º.
+          Shapes are |congruent| when they are the |same size and shape|. Triangles are congruent when they have the same set of |side_lengths| and |angles|.
         </p>
-        ${new Definition('Triangle', 'Latin', ['triangulus', '', 'tri', 'three', 'angulus', 'corner, angle']).html('id_lesson__related_angles_definition', 'lesson__definition_low')}
+        <p>
+          Shapes remain |congruent| if one is |rotated| or |flipped|.
+        </p>
+        ${new Definition('Congruent', 'Latin', ['congruent', 'agreeing, meeting together']).html('id_lesson__congruent_angles_definition', 'lesson__definition_low')}
       `,
       modifiers: {
-        Triangle: click(tri.randomize, [tri], colors.line),
+        rotated: click(tri.toggleCongruentRotate, [tri], colors.diagram.action),
+        flipped: click(tri.toggleCongruentFlip, [tri], colors.diagram.action),
+        side_lengths: highlight(colors.lineLabels),
+        angles: highlight(colors.angleLabels),
       },
       setInfo: [
         '<ul>',
-        '<li>Drag the triangle corners or touch the |Triangle| text to change the triangle\'s shape.</li>',
+        '<li>Drag the right triangle or touch the |rotated| text to rotate the triangle and see the angles and sides stay the same.</li>',
+        '<li>Touch the |flipped| text to flip the triangle and see the angles and sides stay the same.</li>',
         '</ul>',
       ],
       infoModifiers: {
-        Triangle: highlight(colors.line),
+        rotated: highlight(colors.diagram.action),
+        flipped: highlight(colors.diagram.action),
       },
       setEnterState: () => {
-        tri._triangle.hasTouchableElements = true;
-        tri._triangle.autoShowAngles = true;
+        const lay = layout.triangles.congruent;
+        tri.setTriangleScenarios(
+          lay.points, lay.points,
+          lay.tri1.scenario, lay.tri2.scenario,
+        );
+        tri._tri2.isMovable = true;
+        tri._tri2.isTouchable = true;
+        tri._tri2.touchInBoundingRect = true;
+        tri._tri2.move.type = 'rotation';
       },
       show: [tri],
-      hide: [
-        tri._line1,
-        tri._line2,
-        tri._angleA,
-        tri._angleB,
-      ],
     });
   }
 }

@@ -221,7 +221,6 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       if (element.isShown) {
         this.moveToScenario(element, scenario, maxTime, elementDone, rotDirection);
         toBeDoneCount += 1;
-        // callbackToUse = null;
       }
     });
   }
