@@ -117,7 +117,7 @@ export default class TriangleCollection extends CommonDiagramCollection {
   constructor(
     diagram: LessonDiagram,
     layout: Object,
-    transform: Transform = new Transform().translate(0, 0),
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
   ) {
     super(diagram, layout, transform);
     this.add('tri1', this.makeTri());

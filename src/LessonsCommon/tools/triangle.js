@@ -62,6 +62,7 @@ export type TypeTriangle = {
   hideDimensions: () => void;
   showDimensions: (?boolean) => void;
   showRealDimensions: boolean;
+  update: () => void;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -478,7 +479,12 @@ export default function makeTriangle(
     }
   };
 
-  triangle.setTransformCallback = triangle.updateAngles.bind(triangle);
+  triangle.update = () => {
+    triangle.updateAngles();
+    triangle.updateDimensions();
+  };
+
+  triangle.setTransformCallback = triangle.update.bind(triangle);
   triangle.updatePoints(p1, p2, p3);
   return triangle;
 }

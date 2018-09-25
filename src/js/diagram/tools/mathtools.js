@@ -250,7 +250,7 @@ function rand(minOrMax: number, max: ?number = null) {
 }
 
 function randElement(inputArray: Array<any>) {
-  const index = rand(inputArray.length);
+  const index = randInt(inputArray.length);
   return randElement[index];
 }
 

@@ -676,9 +676,12 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        Now, we also know that if we know two angles and the side between them (Angle-Side-Angle congruceny test), then there can only be one solution for the remaining side lengths.
+        Now, we also know that if we know two angles and the side between them (|Angle_Side_Angle| congruceny test), then there can only be one solution for the remaining side lengths.
       </p>
     `;
+    common.modifiers = {
+      Angle_Side_Angle: click(qr._asa.show, [qr._asa], colors.line),
+    };
     this.addSection(common);
     // common.setContent = `
     //   <p>
