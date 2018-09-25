@@ -9,7 +9,7 @@ import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 export type TypeEquationLabel = {
   eqn: Equation;
   updateRotation: (number, Point, number, number) => void;
-  updateScale: (Point) => void;
+  // updateScale: (Point) => void;
 };
 
 export default function makeEquationLabel(
@@ -32,12 +32,12 @@ export default function makeEquationLabel(
     eqn = labelTextOrEquation;
   }
 
-  function updateScale(parentScale: Point) {
-    eqn.collection.transform.updateScale(
-      parentScale.x / Math.abs(parentScale.x),
-      parentScale.y / Math.abs(parentScale.y),
-    );
-  }
+  // function updateScale(parentScale: Point) {
+  //   eqn.collection.transform.updateScale(
+  //     parentScale.x / Math.abs(parentScale.x),
+  //     parentScale.y / Math.abs(parentScale.y),
+  //   );
+  // }
 
   function updateRotation(
     labelAngle: number,
@@ -66,7 +66,7 @@ export default function makeEquationLabel(
   const label = {
     eqn,
     updateRotation,
-    updateScale,
+    // updateScale,
   };
 
   return label;

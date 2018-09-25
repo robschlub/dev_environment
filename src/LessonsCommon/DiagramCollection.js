@@ -206,11 +206,20 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     if (typeof timeOrCallback === 'function') {
       callbackToUse = timeOrCallback;
     }
+    let doneCount = 0;
+    const elementDone = () => {
+      doneCount += 1;
+      if (doneCount === this.futurePositions.length) {
+        if (callbackToUse != null) {
+          callbackToUse();
+        }
+      }
+    };
     this.futurePositions.forEach((futurePosition) => {
       const { element, scenario } = futurePosition;
       if (element.isShown) {
-        this.moveToScenario(element, scenario, maxTime, callbackToUse, rotDirection);
-        callbackToUse = null;
+        this.moveToScenario(element, scenario, maxTime, elementDone, rotDirection);
+        // callbackToUse = null;
       }
     });
   }

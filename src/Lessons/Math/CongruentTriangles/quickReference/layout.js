@@ -12,18 +12,18 @@ export default function lessonLayout() {
       new Point(0.5, 0.5),
     ],
     tri1: {
-      scenario: { position: new Point(-1.2, 0.4), rotation: 0 },
+      scenario: { position: new Point(-1.05, 0.4), rotation: 0 },
     },
     tri2: {
-      scenario: { position: new Point(1.2, 0.4), rotation: 0 },
+      scenario: { position: new Point(1.05, 0.4), rotation: 0 },
     },
   };
   layout.triangles.congruentRot = {
     tri1: {
-      scenario: { position: new Point(-1.2, 0.4), rotation: 0 },
+      scenario: { position: new Point(-1.05, 0.4), rotation: 0 },
     },
     tri2: {
-      scenario: { position: new Point(1.2, 0.4), rotation: Math.PI },
+      scenario: { position: new Point(1.05, 0.4), rotation: Math.PI },
     },
   };
   return layout;

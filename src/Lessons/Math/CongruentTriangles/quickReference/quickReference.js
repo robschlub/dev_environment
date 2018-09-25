@@ -13,6 +13,7 @@ import {
 
 export default class QRAsa extends PopupBoxCollection {
   _triangle: TriangleCollection;
+  last: string;
 
   constructor(
     diagram: Object,
@@ -37,16 +38,17 @@ export default class QRAsa extends PopupBoxCollection {
     this.setTitle('Congruent by Angle-Side-Angle');
     this.setDescription('When two triangles have |two_angles_that_are_equal| , and the |side_between_the_two_angles_is_also_equal|, then the triangles are |congruent|.', modifiers);
     this.setLink(details.details.uid);
+    this.last = 'rotate';
   }
 
   toggleCongruentRotate() {
     const lay = this.layout.triangles;
     const tri = this._triangle;
-    const tri1 = lay.congruentRot.tri1.scenario;
-    const tri2 = lay.congruentRot.tri2.scenario;
+    const tri1 = Object.assign({}, lay.congruentRot.tri1.scenario);
+    const tri2 = Object.assign({}, lay.congruentRot.tri2.scenario);
     const r = tri._tri2.transform.r();
     if (r != null) {
-      tri2.rotation = normAngle(r + rand(Math.PI));
+      tri2.rotation = r + normAngle(rand(Math.PI));
     }
     tri.calcTriFuturePositions(tri1, tri2);
     tri.moveToFuturePositions(1);
@@ -57,27 +59,45 @@ export default class QRAsa extends PopupBoxCollection {
     const lay = this.layout.triangles;
     const tri = this._triangle;
     const tri1 = lay.congruent.tri1.scenario;
-    const tri2 = lay.congruent.tri2.scenario;
-    const r = tri._tri2.transform.r();
-    if (r != null) {
-      tri2.rotation = r;
-    }
+    const tri2 = Object.assign({}, lay.congruent.tri2.scenario);
     let s = tri._tri2.transform.s();
-    if (s != null) {
+    const r = tri._tri2.transform.r();
+    if (s != null && r != null) {
       s = s.x / Math.abs(s.x) * -1;
       tri2.scale = new Point(s, 1);
+      tri2.rotation = r;
+      tri.calcTriFuturePositions(tri1, tri2);
+      const done = () => {
+        tri._tri2.setTriangleCollectionScaleTo(new Point(1, 1));
+        tri._tri2._angle1.showAll();
+        tri._tri2._angle2.showAll();
+        tri._tri2._dimension12.showAll();
+      };
+      tri._tri2._angle1.hide();
+      tri._tri2._angle2.hide();
+      tri._tri2._dimension12.hide();
+      tri.moveToFuturePositions(1, done);
     }
-    tri.calcTriFuturePositions(tri1, tri2);
-    tri.moveToFuturePositions(1);
     this.diagram.animateNextFrame();
   }
 
   toggleCongruent() {
-    const next = removeRandElement([
-      this.toggleCongruentFlip.bind(this),
-      this.toggleCongruentRotate.bind(this),
-    ]);
-    next.call(this);
+    const chooseFrom = ['flip', 'rotate'];
+    if (this.last === 'flip') {
+      chooseFrom.push('rotate');
+      chooseFrom.push('rotate');
+    } else {
+      chooseFrom.push('flip');
+      chooseFrom.push('flip');
+    }
+    const next = removeRandElement(chooseFrom);
+    this.last = next;
+
+    if (next === 'flip') {
+      this.toggleCongruentFlip();
+    } else {
+      this.toggleCongruentRotate();
+    }
   }
 
   show() {
@@ -99,19 +119,6 @@ export default class QRAsa extends PopupBoxCollection {
     tri._tri1._line.show();
     tri._tri2._line.show();
     tri.transform.updateScale(0.7, 0.7);
-    tri._tri2.update = () => {
-      
-      const s = tri._tri2.transform.s();
-      if (s != null) {
-        tri._tri2._angle1.label.updateScale(s);
-        tri._tri2._angle2.label.updateScale(s);
-        tri._tri2._angle3.label.updateScale(s);
-        tri._tri2._dimension12.label.updateScale(s);
-      }
-      tri._tri2.updateAngles();
-      tri._tri2.updateDimensions();
-    };
-    tri._tri2.setTransformCallback = tri._tri2.update.bind(tri._tri2);
     this.diagram.animateNextFrame();
   }
 }
