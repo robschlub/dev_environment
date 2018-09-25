@@ -275,22 +275,17 @@ class Content extends LessonContent {
       title: 'Side-Angle-Side',
       setContent: `
         <p>
-          Now consider if you know |two side lengths| and the |angle between| those two sides.
+          Now consider if you know |two side lengths| and the |angle between| those two sides. How many triangles can be made with these constraints?
         </p>
       `,
     });
     this.addSection(common, {
       setContent: `
         <p>
-         How many triangles can be made with these constraints? There is only |one_line| that can be drawn that connects the two end points.
+         Well, there is only |one_line| that can be drawn that connects the two end points.
         </p>
       `,
-      modifiers: {
-        one_line: click(
-          sas.growCorner, [sas, 2, 0, layout.corner.SAS.c2.side1, 1, false],
-          colors.diagram.safe,
-        ),
-      },
+      modifiers: { one_line: highlight(colors.diagram.safe) },
     });
 
     common = {
@@ -302,7 +297,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
          <p>
-         How many triangles can be made with these constraints? There is only |one_line| that can be drawn that connects the two end points.
+         Well there is only |one_line| that can be drawn that connects the two end points.
         </p>
       `,
       modifiers: {
@@ -631,7 +626,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-          So for a |fixed side between two fixed angles|, there is only one set of side lengths and and one set of angles possible. 
+          So for a |fixed side between two fixed angles|, there is only one set of side lengths and one set of angles possible. 
         </p>
       `,
     });
@@ -701,14 +696,14 @@ class Content extends LessonContent {
     this.addSection(common);
     common.setContent = `
       <p>
-        We also know from the |Angle_Side_Angle| congruency test, that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths.
+        We also know from the |Angle_Side_Angle| congruency test, that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths. By calculating the third angle, we now have that scenario.
       </p>
     `;
     this.addSection(common);
     this.addSection({
       setContent: centerV(`
       <p>
-        Therefore, when two triangles share the same two angles and the side connected to only one, then they will be congruent.
+        Therefore, when two triangles share the same two angles and relative side, then they will be congruent.
       </p>
       <p>
         This method of testing for congruency, is often referred to as the |Angle-Angle-Side| method.
