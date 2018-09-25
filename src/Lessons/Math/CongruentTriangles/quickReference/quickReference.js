@@ -32,7 +32,7 @@ class QRCongruent extends PopupBoxCollection {
       </p>
       ${specificText}
       <p>
-        Triangles will be congruent even if |rotated| or |mirrored|.
+        Triangles are congruent even if |rotated| or |mirrored|.
       </p>`;
     const modifiers = Object.assign({}, {
       angles: html.highlight(this.layout.colors.angleLabels),
@@ -54,7 +54,7 @@ class QRCongruent extends PopupBoxCollection {
     super.show();
     const tri = this._triangle;
     const lay = this.layout.triangles.congruent;
-    
+
     this.hasTouchableElements = true;
     tri.hasTouchableElements = true;
     tri._tri2.isMovable = true;
@@ -137,6 +137,74 @@ export class QRSss extends QRCongruent {
     tri._tri2._dimension23.showAll();
     tri._tri1._dimension31.showAll();
     tri._tri2._dimension31.showAll();
+    this.diagram.animateNextFrame();
+  }
+}
+
+export class QRSas extends QRCongruent {
+  _triangle: TriangleCollection;
+  last: string;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    super(diagram, transform);
+    const modifiers = {
+      two_sides: html.highlight(this.layout.colors.lineLabels),
+      angle_between_them: html.highlight(this.layout.colors.angleLabels),
+    };
+
+    this.setTitle('Congruent by Side-Angle-Side');
+    this.setDescription(`
+      <p>
+        All angles and side lengths of a triangle can be calculated if only |two_sides| and the |angle_between_them| is known (|Side-Angle-Side configuration|). Therefore, if two triangles share the same two side lengths and enclosed angle, the triangles will be congruent.
+      </p>`, modifiers);
+  }
+
+  show() {
+    super.show();
+    const tri = this._triangle;
+    tri._tri1._dimension12.showAll();
+    tri._tri2._dimension12.showAll();
+    tri._tri1._dimension31.showAll();
+    tri._tri2._dimension31.showAll();
+    tri._tri1._angle1.showAll();
+    tri._tri2._angle1.showAll();
+    this.diagram.animateNextFrame();
+  }
+}
+
+export class QRAas extends QRCongruent {
+  _triangle: TriangleCollection;
+  last: string;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    super(diagram, transform);
+    const modifiers = {
+      side_not_between: html.highlight(this.layout.colors.lineLabels),
+      two_angles: html.highlight(this.layout.colors.angleLabels),
+    };
+
+    this.setTitle('Congruent by Angle-Angle-Side');
+    this.setDescription(`
+      <p>
+        All angles and side lengths of a triangle can be calculated if only |two_angles| and a |side_not_between| them is known (|Angle-Angle-Side configuration|). Therefore, if two triangles share the same two angles and adjacent side length, the triangles will be congruent.
+      </p>`, modifiers);
+  }
+
+  show() {
+    super.show();
+    const tri = this._triangle;
+    tri._tri1._dimension23.showAll();
+    tri._tri2._dimension23.showAll();
+    tri._tri1._angle1.showAll();
+    tri._tri2._angle1.showAll();
+    tri._tri1._angle2.showAll();
+    tri._tri2._angle2.showAll();
     this.diagram.animateNextFrame();
   }
 }
