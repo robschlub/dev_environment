@@ -158,11 +158,11 @@ export default class TriangleCollection extends CommonDiagramCollection {
       ];
       const shown = properties.filter(e => e.isShown);
       const done = () => {
-        const s = this._tri2.transform.s();
-        if (s != null) {
+        const currentS = this._tri2.transform.s();
+        if (currentS != null) {
           this._tri2.transform.updateScale(
-            s.x / Math.abs(s.x),
-            s.y / Math.abs(s.y),
+            currentS.x / Math.abs(currentS.x),
+            currentS.y / Math.abs(currentS.y),
           );
         }
         this._tri2.setTriangleCollectionScaleTo(new Point(1, 1));
