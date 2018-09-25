@@ -54,8 +54,15 @@ class QRCongruent extends PopupBoxCollection {
     super.show();
     const tri = this._triangle;
     const lay = this.layout.triangles.congruent;
-    tri.setTriangleScenarios(lay.points, lay.points, lay.tri1.scenario, lay.tri2.scenario);
+    
+    this.hasTouchableElements = true;
+    tri.hasTouchableElements = true;
+    tri._tri2.isMovable = true;
+    tri._tri2.isTouchable = true;
+    tri._tri2.touchInBoundingRect = true;
+    tri._tri2.move.type = 'rotation';
 
+    tri.setTriangleScenarios(lay.points, lay.points, lay.tri1.scenario, lay.tri2.scenario);
     tri.show();
     tri._tri1.show();
     tri._tri2.show();
