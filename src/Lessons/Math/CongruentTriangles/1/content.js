@@ -33,6 +33,7 @@ class Content extends LessonContent {
     const aaa = diag._aaa;
     const sas = diag._sas;
     const sss = diag._sss;
+    const qr = diag._qr;
     let common = {};
 
     this.addSection({
@@ -645,7 +646,7 @@ class Content extends LessonContent {
         sas.setCornerScenarios('AASStart');
       },
       showOnly: [
-        sas,
+        sas, qr,
       ],
       show: [
         sas._corner1, sas._corner2,
@@ -663,9 +664,12 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        We know two angles, and we know a triangles angles always add up to 180º. Therefore, we can calculate the third angle.
+        We know two angles, and we know the angles in |triangles| always add up to 180º. Therefore, we can calculate the third angle.
       </p>
-    `;
+      `;
+    common.modifiers = {
+      triangles: click(qr._tri.show, [qr._tri], colors.line),
+    };
     this.addSection(common);
     common.show = [sas._corner1, sas._corner2, sas._corner3];
     this.addSection(common);
