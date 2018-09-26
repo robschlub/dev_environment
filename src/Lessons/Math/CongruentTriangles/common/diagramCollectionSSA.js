@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect,
+  Transform, polarToRect, normAngle,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -112,6 +112,7 @@ export default class SSACollection extends CommonDiagramCollection {
     const { smallAngle, largeAngle } = this.layout.corner.SSAJoin.line2;
     const midAngle = (largeAngle - smallAngle) / 2 + smallAngle;
     if (r != null) {
+      this._line.transform.updateRotation(normAngle(r));
       let goToAngle = smallAngle;
       if (r < midAngle) {
         goToAngle = largeAngle;

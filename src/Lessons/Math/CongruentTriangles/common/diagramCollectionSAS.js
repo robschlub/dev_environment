@@ -102,8 +102,8 @@ export default class SASCollection extends CommonDiagramCollection {
     corner2From: number | null,
     corner2Side1: number | null,
   ) {
-    this.growCorner(1, corner1From, corner1Side2, 1, false, null, 2, 2.598);
-    this.growCorner(2, corner2From, corner2Side1, 1, false, null, 2, 1.5);
+    this.growCorner(1, corner1From, corner1Side2, 0.5, false, null, 2, 2.598);
+    this.growCorner(2, corner2From, corner2Side1, 0.5, false, null, 2, 1.5);
   }
 
   growCorner(

@@ -290,7 +290,7 @@ class Content extends LessonContent {
       ],
     };
     this.addSection(common, {
-      title: 'Side-Angle-Side',
+      title: 'Side Angle Side',
       setContent: `
         <p>
           Now consider if you know |two side lengths| and the |angle between| those two sides. How many triangles can be made with these constraints?
@@ -390,7 +390,7 @@ class Content extends LessonContent {
          Therefore, triangles are congruent if they have two sides, and the angle formed by those two sides, the same.
         </p>
         <p>
-          This case is often called the |Side-Angle-Side| case.
+          This case is often called the |Side Angle Side| case.
         </p> 
       `),
     });
@@ -433,7 +433,7 @@ class Content extends LessonContent {
         </p>
       `;
     this.addSection(common, {
-      title: 'Side-Side-Side',
+      title: 'Side Side Side',
     });
 
 
@@ -605,7 +605,7 @@ class Content extends LessonContent {
         Therefore, when two triangles have the same side lengths, they will also have the same angles, and therefore be congruent.
       </p>
       <p>
-        This method of testing for congruency, is often referred to as the |Side-Side-Side| method.
+        This method of testing for congruency, is often referred to as the |Side Side Side| method.
       </p>
       `),
     });
@@ -622,6 +622,8 @@ class Content extends LessonContent {
     common = {
       setContent: '',
       modifiers: {},
+      setInfo: [],
+      infoModifiers: {},
       setEnterState: () => {
         sas.setCornerScenarios('ASAStart');
       },
@@ -639,7 +641,7 @@ class Content extends LessonContent {
       </p>
     `;
     this.addSection(common, {
-      title: 'Angle-Side-Angle',
+      title: 'Angle Side Angle',
     });
 
     common.setContent = `
@@ -658,6 +660,14 @@ class Content extends LessonContent {
             layout.corner.SAS.c2.side1,
           ], colors.diagram.action,
         ),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the |extend| text to extend the sides.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        extend: highlight(colors.diagram.action),
       },
       setSteadyState: () => {
         sas.growBothCorners(0.5, layout.corner.SAS.c1.side2, 0.5, layout.corner.SAS.c2.side1);
@@ -682,14 +692,25 @@ class Content extends LessonContent {
         ),
         left: click(
           sas.growCorner, [
-            sas, 1, null, null, 1, false, null, 2, 2.598,
+            sas, 1, null, null, 0.5, false, null, 2, 2.598,
           ], colors.diagram.action,
         ),
         right: click(
           sas.growCorner, [
-            sas, 2, null, null, 1, false, null, 2, 1.5,
+            sas, 2, null, null, 0.5, false, null, 2, 1.5,
           ], colors.diagram.action,
         ),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the |one_length| text to make the sides the correct length.</li>',
+        '<li>Touch the |left| and |right| text to make the sides the incorrect length.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        one_length: highlight(colors.diagram.action),
+        left: highlight(colors.diagram.action),
+        right: highlight(colors.diagram.action),
       },
     });
     common.setContent = `
@@ -703,10 +724,20 @@ class Content extends LessonContent {
         qr._tri.show, [qr._tri], colors.line,
       ),
     };
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch the |triangles| text to show a reference tile explaining the concept and a link to the lesson.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      triangles: highlight(colors.line),
+    };
     this.addSection(common);
     common.show = [sas._corner1, sas._corner2, sas._corner3];
     this.addSection(common);
 
+    common.setInfo = [];
+    common.infoModifiers = {};
     this.addSection(common, {
       setContent: `
         <p>
@@ -721,7 +752,7 @@ class Content extends LessonContent {
         Therefore, when two triangles share the same two angles and the side between them, then they will be congruent.
       </p>
       <p>
-        This method of testing for congruency, is often referred to as the |Angle-Side-Angle| method.
+        This method of testing for congruency, is often referred to as the |Angle Side Angle| method.
       </p>
       `),
     });
@@ -737,6 +768,8 @@ class Content extends LessonContent {
     common = {
       setContent: '',
       modifiers: {},
+      setInfo: [],
+      infoModifiers: {},
       setEnterState: () => {
         sas.setCornerScenarios('AASStart');
       },
@@ -754,7 +787,7 @@ class Content extends LessonContent {
       </p>
     `;
     this.addSection(common, {
-      title: 'Angle-Angle-Side',
+      title: 'Angle Angle Side',
     });
 
     common.setContent = `
@@ -765,39 +798,51 @@ class Content extends LessonContent {
     common.modifiers = {
       triangles: click(qr._tri.show, [qr._tri], colors.line),
     };
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch the |triangles| text to show a reference tile explaining the concept and a link to the lesson.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      triangles: highlight(colors.line),
+    };
     this.addSection(common);
     common.show = [sas._corner1, sas._corner2, sas._corner3];
     this.addSection(common);
 
     common.setContent = `
       <p>
-        We also know from the |Angle_Side_Angle| congruency test, that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths.
-      </p>
-    `;
-    common.modifiers = {
-      Angle_Side_Angle: clickWord('Angle-Side-Angle', 'id_angle_side_angle', qr._asa.show, [qr._asa], colors.line),
-    };
-    this.addSection(common);
-    common.setContent = `
-      <p>
         We also know from the |Angle_Side_Angle| congruency test, that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths. By calculating the third angle, we now have that scenario.
       </p>
     `;
+    common.modifiers = {
+      Angle_Side_Angle: clickWord('Angle Side Angle', 'id_angle_side_angle', qr._asa.show, [qr._asa], colors.line),
+    };
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch the |Angle_Side_Angle| text to show a reference tile explaining the concept and a link to the lesson.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      Angle_Side_Angle: highlight(colors.line),
+    };
     this.addSection(common);
+    common.setInfo = [];
+    common.infoModifiers = {};
     this.addSection({
       setContent: centerV(`
       <p>
         Therefore, when two triangles share the same two angles and relative side, then they will be congruent.
       </p>
       <p>
-        This method of testing for congruency, is often referred to as the |Angle-Angle-Side| method.
+        This method of testing for congruency, is often referred to as the |Angle Angle Side| method.
       </p>
       `),
     });
     this.addSection({
       setContent: centerV(`
       <p>
-        The |Angle-Side-Angle| and |Angle-Angle-Side| congruency tests can be combined to be more general as when you know two angles, the side is either between the angles, or touching just one. There are no other combinations.
+        The |Angle Side Angle| and |Angle Angle Side| congruency tests can be combined to be more general as when you know two angles, the side is either between the angles, or touching just one. There are no other combinations.
       </p>
       <p>
         So in general, if two triangles have the share the same |two angles| and |relative side|, then the |triangles are congruent|.
@@ -816,6 +861,8 @@ class Content extends LessonContent {
     common = {
       setContent: '',
       modifiers: {},
+      setInfo: [],
+      infoModifiers: {},
       setEnterState: () => {
         // ssa.setCornerScenarios('AASStart');
         ssa.calcFuturePositions('SSAStart');
@@ -836,7 +883,7 @@ class Content extends LessonContent {
       </p>
     `;
     this.addSection(common, {
-      title: 'Side-Side-Angle',
+      title: 'Side Side Angle',
     });
 
     common.setContent = `
@@ -874,6 +921,11 @@ class Content extends LessonContent {
         Now, how can the right side be rotated to form a triangle?
       </p>
     `;
+    common.setInfo = [
+      '<ul>',
+      '<li>Rotate the right side to see what triangles can be formed.</li>',
+      '</ul>',
+    ];
     common.setSteadyState = () => {
       ssa.setFuturePositions();
       ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
@@ -890,6 +942,15 @@ class Content extends LessonContent {
       </p>
     `;
     common.modifiers = { trace: click(ssa.drawCircle, [ssa], colors.diagram.action) };
+    common.setInfo = [
+      '<ul>',
+      '<li>Rotate the right side to see what triangles can be formed.</li>',
+      '<li>Touch the |trace| text to trace out the possibilities.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      trace: highlight(colors.diagram.action),
+    };
     this.addSection(common);
     common.show = [ssa._corner, ssa._line, ssa._line2, ssa._circ];
     this.addSection(common);
@@ -902,7 +963,18 @@ class Content extends LessonContent {
     common.modifiers = {
       intersection_points: click(ssa.toggleTriangle, [ssa], colors.diagram.action),
     };
+    common.setInfo = [
+      '<ul>',
+      '<li>Rotate the right side to see what triangles can be formed.</li>',
+      '<li>Touch the |intersection_points| text to show the possible triangles.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      intersection_points: highlight(colors.diagram.action),
+    };
     this.addSection(common);
+    common.setInfo = [];
+    common.infoModifiers = {};
     this.addSection({
       setContent: centerV(`
       <p>

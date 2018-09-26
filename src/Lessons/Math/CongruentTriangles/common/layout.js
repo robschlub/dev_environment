@@ -226,7 +226,7 @@ export default function commonLessonLayout() {
       },
       line: {
         length: 1.9,
-        scenario: { position: new Point(1, -0.99), rotation: Math.PI / 6 * 5 },
+        scenario: { position: new Point(1, -0.99)},
       },
       line2: {
         length: 0.1,
