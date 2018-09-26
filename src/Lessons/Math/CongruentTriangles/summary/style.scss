@@ -3,3 +3,20 @@
 .diagram__html {
   z-index: 1;
 }
+
+.lesson__congruent_angles_summary__list {
+  color: color('diagram', 'text-base');
+  list-style: none;
+  // margin-left: calc(var(--lesson__text-margin) * 1.2);
+}
+
+.lesson__congruent_angles_summary__sub_title {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  color: color('diagram', 'disabled');
+  margin-left: calc(var(--lesson__text-margin) * 1.2);
+  margin-top: calc(var(--lesson__text-margin) * 2);
+}
+
+.lesson__congruent_angles_summary__cannot_list {
+  color: color('diagram', 'warning', 'light');
+}

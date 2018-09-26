@@ -11,10 +11,13 @@ export default function lessonLayout() {
       new Point(0.5, 0.5),
     ],
     tri1: {
-      scenario: { position: new Point(-1.2, -0.8), rotation: 0 },
+      scenario: { position: new Point(-1.2, -0.6), rotation: 0 },
     },
     tri2: {
-      scenario: { position: new Point(1.2, -0.8), rotation: 0 },
+      scenario: { position: new Point(1.2, -0.6), rotation: 0 },
+    },
+    tri1CongruencyTests: {
+      scenario: { position: new Point(1.4, -0.3), rotation: 0, scale: new Point(1.2, 1.2) },
     },
   };
   return layout;

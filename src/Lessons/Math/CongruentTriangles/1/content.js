@@ -44,7 +44,7 @@ class Content extends LessonContent {
           The word |congruent| is originally Latin and means |"agreeing, meeting together"|.
         </p>
         <p>
-          In mathematics, two shapes are |congruent| if they have the |same size and shape|.
+          In mathematics, if |two shapes are the same size and shape|, then they are said to be |congruent|.
         </p>
       `),
     });
