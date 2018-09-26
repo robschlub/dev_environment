@@ -126,7 +126,7 @@ class Content extends LessonContent {
         );
       },
       showOnly: [tri],
-      show: [tri._tri1],
+      show: [tri._tri1, diag._label],
     });
   }
 }

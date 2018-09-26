@@ -20,5 +20,8 @@ export default function lessonLayout() {
       scenario: { position: new Point(1.4, -0.3), rotation: 0, scale: new Point(1.2, 1.2) },
     },
   };
+  layout.label = {
+    position: new Point(1.2, -1.3),
+  };
   return layout;
 }

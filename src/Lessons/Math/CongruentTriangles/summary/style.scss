@@ -20,3 +20,20 @@
 .lesson__congruent_angles_summary__cannot_list {
   color: color('diagram', 'warning', 'light');
 }
+
+.lesson__diagram_text ul {
+  margin-left: calc(var(--lesson__text-margin) * 1);
+  padding-left: calc(var(--lesson__diagram-font-size) * 0.8);
+  padding-right: calc(var(--lesson__diagram-font-size) * 0.8);
+  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+}
+
+.lesson__congruent_angles_summary__label {
+  color: color('diagram', 'text-base');
+  font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  max-width: calc(var(--lesson__diagram-font-size) * 10);
+}
+
+.lesson__congruent_angles_summary__label_warning {
+  color: color('diagram', 'warning');
+}
