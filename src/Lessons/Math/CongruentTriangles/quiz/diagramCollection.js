@@ -40,6 +40,11 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this.hasTouchableElements = true;
     this._triangle.hasTouchableElements = true;
     this._triangle._tri1.hasTouchableElements = true;
+
+    this.add('answerBox', this.makeMultipleChoice(
+      'congruent_tri_1',
+      ['Yanswer1', 'answer2'],
+    ));
   }
 
   // eslint-disable-next-line class-methods-use-this

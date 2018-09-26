@@ -255,7 +255,85 @@ const CommonQuizMixin = superclass => class extends superclass {
       html.isTouchable = true;
       input.classList.remove('lesson__quiz_input_disabled');
     };
+    return html;
+  }
 
+  // eslint-disable-next-line class-methods-use-this
+  selectMultipleChoice(id: string, index: number) {
+    const indexStr = 'id_lesson__quiz_multiple_choice_box_';
+    const answerSelected = 'lesson__quiz_multiple_choice_box_answer__selected';
+    const circleSelected = 'lesson__quiz_multiple_choice_box_circle__selected';
+    const elementSelected = 'lesson__quiz_multiple_choice_box__selected';
+
+    const selected = document.getElementsByClassName(elementSelected);
+    const selectedLength = selected.length;
+    if (selected) {
+      for (let i = 0; i < selectedLength; i += 1) {
+        const element = selected[0];
+        element.classList.remove(answerSelected);
+        element.classList.remove(circleSelected);
+        element.classList.remove(elementSelected);
+      }
+    }
+    const circle = document.getElementById(`${indexStr}circle__${id}_${index}`);
+    const answer = document.getElementById(`${indexStr}answer__${id}_${index}`);
+    if (circle instanceof HTMLElement && answer instanceof HTMLElement) {
+      circle.classList.add(circleSelected);
+      circle.classList.add(elementSelected);
+      answer.classList.add(answerSelected);
+      answer.classList.add(elementSelected);
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getMultipleChoiceSelection(id: string) {
+    const elementSelected = 'lesson__quiz_multiple_choice_box__selected';
+    const selected = document.getElementsByClassName(elementSelected);
+    for (let i = 0; i < selected.length; i += 1) {
+      const idIndex = selected[i].id.replace('id_lesson__quiz_multiple_choice_box_circle__', '');
+      const idString = idIndex.replace(/_[0-9]*$/, '');
+      if (idString === id) {
+        return parseInt(idIndex.replace(`${idString}_`, ''), 10);
+      }
+    }
+    return -1;
+  }
+
+  makeMultipleChoice(
+    id: string,
+    answers: Array<string>,
+  ) {
+    const table = document.createElement('table');
+    table.classList.add('lesson__quiz_multiple_choice_box_lesson__quiz_multiple_choice_box_table')
+    answers.forEach((answer, index) => {
+      const row = document.createElement('tr');
+      row.classList.add('lesson__quiz_multiple_choice_box_row');
+      row.onclick = this.selectMultipleChoice.bind(this, id, index);
+      const col1 = document.createElement('td');
+      col1.classList.add('lesson__quiz_multiple_choice_box_col1');
+      const col2 = document.createElement('td');
+      col2.classList.add('lesson__quiz_multiple_choice_box_col2');
+      const circle = document.createElement('div');
+      circle.classList.add('lesson__quiz_multiple_choice_box_circle');
+      circle.id = `id_lesson__quiz_multiple_choice_box_circle__${id}_${index}`;
+      const answerText = document.createElement('div');
+      answerText.classList.add('lesson__quiz_multiple_choice_box_answer');
+      answerText.id = `id_lesson__quiz_multiple_choice_box_answer__${id}_${index}`;
+      answerText.innerHTML = answer;
+      row.appendChild(col1);
+      row.appendChild(col2);
+      col1.appendChild(circle);
+      col2.appendChild(answerText);
+      table.appendChild(row);
+    });
+    const html = this.diagram.shapes.htmlElement(
+      table,
+      `id__quiz_multiple_choice_box__${id}`,
+      '',
+      new Point(0, 0),
+      'left',
+      'top',
+    );
     return html;
   }
 };

@@ -43,6 +43,7 @@ class Content extends LessonContent {
         tri._tri1._point1, tri._tri1._point2, tri._tri1._point3,
         tri._tri2, tri._tri2._line,
         tri._tri2._point1, tri._tri2._point2, tri._tri2._point3,
+        diag._answerBox,
       ],
       transitionFromAny: (done) => {
         diag.moveToFuturePositions(1, done);

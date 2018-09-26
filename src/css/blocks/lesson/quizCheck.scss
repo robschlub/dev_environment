@@ -86,3 +86,44 @@
 .lesson__quiz_input_disabled:hover {
   background-color: color('diagram', 'disabled', 'darker');
 }
+
+.lesson__quiz_multiple_choice_box_table {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.8);
+}
+
+.lesson__quiz_multiple_choice_box_row {
+  cursor: pointer;
+}
+
+.lesson__quiz_multiple_choice_box_col1 {
+  padding: calc(var(--lesson__diagram-font-size) * 0.1);
+  padding-right: calc(var(--lesson__diagram-font-size) * 0.4);
+}
+
+.lesson__quiz_multiple_choice_box_col2 {
+  padding-right: calc(var(--lesson__diagram-font-size) * 1);
+}
+
+.lesson__quiz_multiple_choice_box_circle {
+  width: calc(var(--lesson__diagram-font-size) * 0.5);
+  height: calc(var(--lesson__diagram-font-size) * 0.5);
+  border-radius: calc(var(--lesson__diagram-font-size) * 0.25);
+  border: calc(var(--lesson__diagram-font-size) * 0.08) solid;
+}
+
+.lesson__quiz_multiple_choice_box_answer {
+}
+
+.lesson__quiz_multiple_choice_box__selected {
+
+}
+
+.lesson__quiz_multiple_choice_box_circle__selected {
+  background-color: red;
+  color: red;
+}
+
+.lesson__quiz_multiple_choice_box_answer__selected {
+  color: red;
+}
+
