@@ -11,17 +11,17 @@ export default function lessonLayout() {
       new Point(0.5, 0.5),
     ],
     tri1: {
-      scenario: { position: new Point(-1.2, -0.6), rotation: 0 },
+      scenario: { position: new Point(-1.2, -0.2), rotation: 0 },
     },
     tri2: {
-      scenario: { position: new Point(1.2, -0.6), rotation: 0 },
+      scenario: { position: new Point(1.2, -0.2), rotation: 0 },
     },
     tri1CongruencyTests: {
-      scenario: { position: new Point(1.4, -0.3), rotation: 0, scale: new Point(1.2, 1.2) },
+      scenario: { position: new Point(1, 0), rotation: 0, scale: new Point(1.2, 1.2) },
     },
   };
   layout.label = {
-    position: new Point(1.7, -1.3),
+    position: new Point(1, -1),
   };
   return layout;
 }
