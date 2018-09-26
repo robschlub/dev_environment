@@ -41,10 +41,10 @@ class Content extends LessonContent {
       title: 'Introduction',
       setContent: centerV(`
         <p>
-          The word |congruent| is originally Latin and means |"agreeing, meeting together"|.
+          In mathematics, if |two shapes are the same size and shape|, then they are said to be |congruent|.
         </p>
         <p>
-          In mathematics, if |two shapes are the same size and shape|, then they are said to be |congruent|.
+          The word |congruent| is originally Latin and meant |"agreeing, meeting together"|.
         </p>
       `),
     });
@@ -59,6 +59,15 @@ class Content extends LessonContent {
       modifiers: {
         side_lengths: click(tri.showLineLabels, [tri, null], colors.lineLabels),
         angles: click(tri.showAngleLabels, [tri, null], colors.angleLabels),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the touch the |side_lengths| and |angles| text toggle the side and angle annotations.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        side_lengths: highlight(colors.lineLabels),
+        angles: highlight(colors.angleLabels),
       },
       showOnly: [
         tri,
@@ -217,6 +226,14 @@ class Content extends LessonContent {
       modifiers: {
         move: click(aaa.changeTriangleSize, [aaa, null], colors.diagram.action),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the |move| text, or drag the triangle\'s bottom corners to change the triangle size.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        move: highlight(colors.diagram.action),
+      },
       show: [
         aaa,
       ],
@@ -298,7 +315,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
          <p>
-         Well there is only |one_line| that can be drawn that connects the two end points.
+         Well, there is only |one_line| that can be drawn that connects the two end points.
         </p>
       `,
       modifiers: {
@@ -306,6 +323,14 @@ class Content extends LessonContent {
           sas.growCorner, [sas, 2, 0, layout.corner.SAS.c2.side1, 1, false],
           colors.diagram.safe,
         ),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the |one_line| text to draw the unknown side.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        one_line: highlight(colors.diagram.safe),
       },
       setEnterState: () => {
         sas.setCornerScenarios('SASZero');
@@ -343,6 +368,18 @@ class Content extends LessonContent {
           sas.rotateCorner2, [sas, null, 0.5, false], colors.diagram.warning,
         ),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the |length| or |angle| text to make the triangle side the correct length or angle.</li>',
+        '<li>Touch the |different_length| and |different_angle| text to make the triangle the incorrect length or angle.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        length: highlight(colors.diagram.safe),
+        angle: highlight(colors.diagram.safe),
+        different_length: highlight(colors.diagram.warning),
+        different_angle: highlight(colors.diagram.warning),
+      },
       setEnterState: () => {
         sas.setCornerScenarios('SAS');
       },
@@ -373,6 +410,8 @@ class Content extends LessonContent {
       setEnterState: () => {
         sss.calcFutureLinePositions('SSSStart');
       },
+      setInfo: [],
+      infoModifiers: {},
       showOnly: [
         sss,
       ],
@@ -419,6 +458,11 @@ class Content extends LessonContent {
           Now, how can the end lines be rotated, to form a triangle, and can only one triangle be formed?
         </p>
     `;
+    common.setInfo = [
+      '<ul>',
+      '<li>Drag the left and right lines to rotate them and see where triangles are formed.',
+      '</ul>',
+    ];
     common.setEnterState = () => {
       sss.calcFutureLinePositions('SSSConnectedNoRot');
     };
@@ -445,6 +489,16 @@ class Content extends LessonContent {
       left: click(sss.drawCircle, [sss, 2], colors.diagram.action),
       right: click(sss.drawCircle, [sss, 3], colors.diagram.action),
     };
+    common.setInfo = [
+      '<ul>',
+      '<li>Drag the left and right lines to rotate them and see where triangles are formed.',
+      '<li>Touch the |left| and |right| text to trace out the possibilities.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      left: highlight(colors.diagram.action),
+      right: highlight(colors.diagram.action),
+    };
     this.addSection(common);
     common.show = [...common.show, sss._circ2, sss._circ3];
     this.addSection(common);
@@ -456,6 +510,15 @@ class Content extends LessonContent {
       </p>`;
     common.modifiers = {
       two: click(sss.moveLinesToIntersect, [sss, null], colors.intersect),
+    };
+    common.setInfo = [
+      '<ul>',
+      '<li>Drag the left and right lines to rotate them and see where triangles are formed.',
+      '<li>Touch the |two| text to show the locations.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      two: highlight(colors.intersect),
     };
     this.addSection(common);
     common.show = [...common.show, sss._intersectUp, sss._intersectDown];
@@ -470,12 +533,22 @@ class Content extends LessonContent {
     common.modifiers = {
       symmetry: highlight(colors.diagram.action),
     };
+    common.setInfo = [];
+    common.infoModifiers = {};
     this.addSection(common);
     this.addSection(common, { show: [...common.show, sss._symmetry] });
     common.show = [sss._circ2, sss._circ3, sss._symmetry, sss._line1];
     this.addSection(common);
     common.modifiers = {
       symmetry: click(sss.pulseSymmetry, [sss], colors.diagram.action),
+    };
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch the |symmetry| text to show the symmetry.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      two: highlight(colors.diagram.action),
     };
     common.show = [...common.show, sss._circ2Shaddow, sss._circ3Shaddow];
     this.addSection(common, {
@@ -491,6 +564,8 @@ class Content extends LessonContent {
       </p>
     `;
     common.modifiers = { symmetric: highlight(colors.diagram.action) };
+    common.setInfo = [];
+    common.infoModifiers = {};
     this.addSection(common);
     common.show = [
       sss._circ2, sss._circ3, sss._symmetry, sss._triangle,
@@ -500,6 +575,14 @@ class Content extends LessonContent {
     this.addSection(common, {
       modifiers: {
         symmetric: click(sss.pulseSymmetry, [sss], colors.diagram.action),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the |symmetric| text to show the triangle symmetry.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        two: highlight(colors.diagram.action),
       },
       transitionFromAny: (done) => {
         sss.pulseSymmetry(done);
