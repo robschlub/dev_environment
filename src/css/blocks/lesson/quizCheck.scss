@@ -101,7 +101,7 @@
 }
 
 .lesson__quiz_multiple_choice_box_row:hover {
-  background-color: color('diagram', 'disabled', 'darker');
+  background-color: color('diagram', 'background', 'darker');
 }
 
 .lesson__quiz_multiple_choice_box_col1 {
@@ -136,5 +136,6 @@
 
 .lesson__quiz_multiple_choice_box_answer__selected {
   color: color('diagram', 'primary', 'base');
+  font-weight: bold;
 }
 

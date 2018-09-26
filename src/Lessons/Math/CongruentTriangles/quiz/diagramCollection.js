@@ -43,8 +43,9 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
 
     this.add('answerBox', this.makeMultipleChoice(
       'congruent_tri_1',
-      ['Yanswer1', 'answer2'],
+      ['Yes', 'No'],
     ));
+    this._answerBox.setPosition(this.layout.answerBox);
   }
 
   // eslint-disable-next-line class-methods-use-this

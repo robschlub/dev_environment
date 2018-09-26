@@ -31,7 +31,7 @@ class Content extends LessonContent {
       title: 'Quiz',
       setContent: `
         <p>
-          Can you say for sure if the triangles are congruent based on the properities that are known?
+          Can you determine if the triangles are congruent based on the properities shown?
         </p>
       `,
       // setInfo: 'Touch the grey box to enter the angle',
@@ -43,7 +43,7 @@ class Content extends LessonContent {
         tri._tri1._point1, tri._tri1._point2, tri._tri1._point3,
         tri._tri2, tri._tri2._line,
         tri._tri2._point1, tri._tri2._point2, tri._tri2._point3,
-        diag._answerBox,
+        diag._answerBox, diag._check,
       ],
       transitionFromAny: (done) => {
         diag.moveToFuturePositions(1, done);
