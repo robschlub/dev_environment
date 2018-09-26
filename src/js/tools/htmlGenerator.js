@@ -271,9 +271,21 @@ function setOnClicks(modifiers: Object, additionalClassesToAdd: string = '') {
   });
 }
 
+function setHTML(
+  element: HTMLElement,
+  text: string,
+  modifiers: Object = {},
+  classesToAdd: string = '',
+) {
+  const modifiedText = applyModifiers(text, modifiers);
+  // eslint-disable-next-line no-param-reassign
+  element.innerHTML = modifiedText;
+  setOnClicks(modifiers, classesToAdd);
+}
+
 export {
   actionWord, click, highlight, addClass, addId,
   onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
   clickWord, itemSelector, unit, applyModifiers,
-  setOnClicks,
+  setOnClicks, setHTML,
 };

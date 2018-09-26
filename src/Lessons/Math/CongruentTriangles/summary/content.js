@@ -32,12 +32,9 @@ class Content extends LessonContent {
       title: 'Congruent Triangles',
       setContent: `
         <p class="lesson__font_0p9">
-          Shapes are |congruent| when they are the |same size and shape|. Triangles are congruent when they have the same set of |side_lengths| and |angles|.
+          Shapes are |congruent| when they are the |same size and shape|. Triangles are congruent when they have the same set of |side_lengths| and |angles|. Shapes remain |congruent| if one is |rotated| or |flipped|.
         </p>
-        <p class="lesson__font_0p9">
-          Shapes remain |congruent| if one is |rotated| or |flipped|.
-        </p>
-        ${new Definition('Congruent', 'Latin', ['congruent', 'agreeing, meeting together']).html('id_lesson__congruent_angles_definition', 'lesson__definition_low')}
+        ${new Definition('Congruent', 'Latin', ['congruent', 'agreeing, meeting together']).html('id_lesson__congruent_angles_definition')}
       `,
       modifiers: {
         rotated: click(tri.toggleCongruentRotate, [tri], colors.diagram.action),
@@ -73,10 +70,10 @@ class Content extends LessonContent {
       title: 'Congruency Tests',
       setContent: `
         <p class="lesson__font_0p9">
-          |Not all sides and angles need to be measured| to show two triangles are congruent. There are some combinations of |three properties| that can show congruency. If both triangles have the same property combination, then they are congruent.
+          |All sides and angles can be measured| to show two triangles are congruent. There are also some combinations of |three properties| that can show congruency.
         </p>
-        <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40">
-        Combinations that <b>CAN</b> show congruency.
+        <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40" style="margin-top: 7%">
+        <b>CAN</b> show congruency.
         </div>
           <ul class="lesson__congruent_angles_summary__list">
             <li>|SAS|</li>
@@ -85,7 +82,7 @@ class Content extends LessonContent {
             <li>|AAS|</li>
           </ul>
         <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40">
-        Combinations that <b>CANNOT</b> show congruency.
+        <b>CANNOT</b> show congruency.
         </div>
           <ul class="lesson__congruent_angles_summary__list lesson__congruent_angles_summary__cannot_list">
             <li>|AAA|</li>
@@ -111,13 +108,18 @@ class Content extends LessonContent {
         ),
         AAA: clickWord(
           'Angle Angle Angle', 'id_lesson__congruent_AAA',
-          diag.showCombination, [diag, 'aaa'], colors.diagram.text.warning,
+          diag.showCombination, [diag, 'aaa'], colors.diagram.disabled,
         ),
         SSA: clickWord(
           'Side Side Angle', 'id_lesson__congruent_SSA',
-          diag.showCombination, [diag, 'ssa'], colors.diagram.text.warning,
+          diag.showCombination, [diag, 'ssa'], colors.diagram.disabled,
         ),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the property combinations to see more explanation.</li>',
+        '</ul>',
+      ],
       setEnterState: () => {
         const lay = layout.triangles.congruent;
         tri.setTriangleScenarios(
