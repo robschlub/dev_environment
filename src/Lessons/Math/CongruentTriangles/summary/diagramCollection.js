@@ -17,10 +17,12 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
   label: HTMLElement;
 
   makeLabel() {
+    const container = document.createElement('div');
     this.label = document.createElement('div');
-    this.label.classList.add('lesson__congruent_angles_summary__label');
+    container.classList.add('lesson__congruent_angles_summary__label');
+    container.appendChild(this.label);
     return this.diagram.shapes.htmlElement(
-      this.label,
+      container,
       'id_lesson__congruent_angles_summary__label',
       '',
       this.layout.label.position, 'top', 'center',

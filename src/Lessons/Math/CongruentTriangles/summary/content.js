@@ -73,9 +73,9 @@ class Content extends LessonContent {
       title: 'Congruency Tests',
       setContent: `
         <p class="lesson__font_0p9">
-          |Not all sides and angles need to be measured| to show two triangles are congruent. There are some combinations of |three properties| that can show congruency. If both triangles have the same property combination, then they are congruent.
+          |All sides and angles can be measured| to show two triangles are congruent. There are also some combinations of |three properties| that can show congruency.
         </p>
-        <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40">
+        <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40" style="margin-top: 10%">
         Combinations that <b>CAN</b> show congruency.
         </div>
           <ul class="lesson__congruent_angles_summary__list">
