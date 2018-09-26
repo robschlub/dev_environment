@@ -1,6 +1,6 @@
 import {
   round, decelerate, easeinout, clipMag, clipValue, randInt, rand,
-  randElement, removeRandElement,
+  randElement, removeRandElement, randElements,
 } from './mathtools';
 
 describe('Math tools testing', () => {
@@ -286,6 +286,41 @@ describe('Math tools testing', () => {
         if (inputArray.indexOf(result) !== -1) {
           expected = false;
         }
+      }
+      expect(expected).toBe(true);
+    });
+  });
+  describe('Random Elements', () => {
+    test('Get Element', () => {
+      let expected = true;
+      const inputArray = [1, 2, 3, 4, 5, 6, 7];
+      let max = 1;
+      let min = 8;
+      for (let i = 0; i < 200; i += 1) {
+        const result = randElements(4, inputArray);
+        if (result.length !== 4) {
+          expected = false;
+        }
+        if (inputArray.length !== 7) {
+          expected = false;
+        }
+        const check = [];
+        for (let j = 0; j < result.length; j += 1) {
+          if (check.indexOf(result[j]) !== -1) {
+            expected = false;
+          }
+          check.push(result[j]);
+        }
+        const resultMax = Math.max(...result);
+        const resultMin = Math.min(...result);
+        min = resultMin < min ? resultMin : min;
+        max = resultMax > max ? resultMax : max;
+      }
+      if (max !== 7) {
+        expected = false;
+      }
+      if (min !== 1) {
+        expected = false;
       }
       expect(expected).toBe(true);
     });

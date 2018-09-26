@@ -63,6 +63,7 @@ export type TypeTriangle = {
   showDimensions: (?boolean) => void;
   showRealDimensions: boolean;
   update: () => void;
+  addPoint: (number, number, ?Array<number>, ?boolean, ?Rect) => void;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -78,6 +79,12 @@ export type TypeTriangleLabel = {
   labelEqn12: Equation;
   labelEqn23: Equation;
   labelEqn31: Equation;
+};
+
+export type TypeTrianglePoints = {
+  _point1: DiagramElementPrimative;
+  _point2: DiagramElementPrimative;
+  _point3: DiagramElementPrimative;
 };
 
 export default function makeTriangle(
@@ -171,7 +178,7 @@ export default function makeTriangle(
   triangle.addPoint = function addPoint(
     index: number,
     radius: number,
-    pointColor: Array<number>,
+    pointColor: Array<number> = [0, 0, 0, 0.001],
     movable: boolean = false,
     moveBoundary: Rect = diagram.limits,
   ) {

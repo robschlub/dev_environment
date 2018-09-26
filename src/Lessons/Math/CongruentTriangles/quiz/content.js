@@ -28,35 +28,27 @@ class Content extends LessonContent {
     const tri = diag._triangle;
 
     this.addSection({
-      title: 'Summary',
+      title: 'Quiz',
       setContent: `
         <p>
-          Find the unknown angle in the triangle.
+          Can you say for sure if the triangles are congruent based on the properities that are known?
         </p>
       `,
-      setInfo: 'Touch the grey box to enter the angle',
+      // setInfo: 'Touch the grey box to enter the angle',
       setEnterState: () => {
-        tri._triangle.hasTouchableElements = true;
-        tri._triangle.autoShowAngles = true;
-        diag._input.setValue('');
-        diag.randomizeFuturePositions();
+        diag.calcRandomTriangles();
       },
-      show: [tri],
-      hide: [
-        tri._line1,
-        tri._line2,
-        tri._angleA,
-        tri._angleB,
-        tri._eqn,
+      showOnly: [tri,
+        tri._tri1, tri._tri1._line,
+        tri._tri1._point1, tri._tri1._point2, tri._tri1._point3,
+        tri._tri2, tri._tri2._line,
+        tri._tri2._point1, tri._tri2._point2, tri._tri2._point3,
       ],
       transitionFromAny: (done) => {
-        tri.moveToFuturePositions(1, done);
+        diag.moveToFuturePositions(1, done);
       },
       setSteadyState: () => {
-        tri.setFuturePositions();
-        diag._input.enable();
-        diag._check.show();
-        diag.showAngles();
+        diag.setFuturePositions();
       },
     });
   }

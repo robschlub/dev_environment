@@ -259,6 +259,16 @@ function removeRandElement<T>(inputArray: Array<T>): T {
   return inputArray.splice(index, 1)[0];
 }
 
+function randElements<T>(num: number, inputArray: Array<T>): Array<T> {
+  const possibleIndeces = range(0, inputArray.length - 1, 1);
+  const elements = [];
+  for (let i = 0; i < num; i += 1) {
+    const index = removeRandElement(possibleIndeces);
+    elements.push(inputArray[index]);
+  }
+  return elements;
+}
+
 export {
   round,
   roundNum,
@@ -275,5 +285,6 @@ export {
   rand,
   randElement,
   removeRandElement,
+  randElements,
 };
 
