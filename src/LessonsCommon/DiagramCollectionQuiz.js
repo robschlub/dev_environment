@@ -259,7 +259,7 @@ const CommonQuizMixin = superclass => class extends superclass {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  selectMultipleChoice(id: string, index: number) {
+  selectMultipleChoice(id: string, index: number = -1) {
     const indexStr = 'id_lesson__quiz_multiple_choice_box_';
     const answerSelected = 'lesson__quiz_multiple_choice_box_answer__selected';
     const circleSelected = 'lesson__quiz_multiple_choice_box_circle__selected';
@@ -275,13 +275,15 @@ const CommonQuizMixin = superclass => class extends superclass {
         element.classList.remove(elementSelected);
       }
     }
-    const circle = document.getElementById(`${indexStr}circle__${id}_${index}`);
-    const answer = document.getElementById(`${indexStr}answer__${id}_${index}`);
-    if (circle instanceof HTMLElement && answer instanceof HTMLElement) {
-      circle.classList.add(circleSelected);
-      circle.classList.add(elementSelected);
-      answer.classList.add(answerSelected);
-      answer.classList.add(elementSelected);
+    if (index > -1) {
+      const circle = document.getElementById(`${indexStr}circle__${id}_${index}`);
+      const answer = document.getElementById(`${indexStr}answer__${id}_${index}`);
+      if (circle instanceof HTMLElement && answer instanceof HTMLElement) {
+        circle.classList.add(circleSelected);
+        circle.classList.add(elementSelected);
+        answer.classList.add(answerSelected);
+        answer.classList.add(elementSelected);
+      }
     }
   }
 
