@@ -1,6 +1,8 @@
 // @flow
 import { Transform, Point } from '../../../../js/diagram/tools/g2';
-import { randElements, rand } from '../../../../js/diagram/tools/mathtools';
+import {
+  randElements, rand, removeRandElement,
+} from '../../../../js/diagram/tools/mathtools';
 import lessonLayout from './layout';
 // import * as html from '../../../../js/tools/htmlGenerator';
 
@@ -22,6 +24,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel & TypeTrianglePoints;
     _tri2: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel & TypeTrianglePoints;
   } & TotalAngleTriangleCollection;
+
+  answer: 'possible' | 'not possible';
 
   constructor(
     diagram: LessonDiagram,
@@ -51,7 +55,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   // eslint-disable-next-line class-methods-use-this
   randomTriangle(
     maxQuadrantBounds: Point = new Point(1, 1),
-    minQuadrantBounds: Point = new Point(0.25, 0.25),
+    minQuadrantBounds: Point = new Point(0.3, 0.3),
   ): Array<Point> {
     const possibleQuads = [0, 1, 2, 3];
     const quadrants = randElements(3, possibleQuads);
@@ -75,8 +79,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     const points = this.randomTriangle();
     const rotation1 = rand(0, Math.PI * 2);
     const rotation2 = rand(0, Math.PI * 2);
-    const position1 = new Point(-1.2, 0);
-    const position2 = new Point(1.2, 0);
+    const position1 = new Point(-1.2, -0.3);
+    const position2 = new Point(1.2, -0.3);
     const transform1 = new Transform().rotate(rotation1).translate(position1);
     const transform2 = new Transform().rotate(rotation2).translate(position2);
     const points1 = points.map(p => p.transformBy(transform1.m()));
@@ -96,10 +100,105 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     fp(this._triangle._tri2._point3, points2[2]);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  isPropertySet(propertySets: Array<Array<string>>, compare: Array<string>) {
+    let answer = false;
+    propertySets.forEach((set) => {
+      let same = true;
+      for (let i = 0; i < set.length; i += 1) {
+        if (set[i] !== compare[i]) {
+          same = false;
+        }
+      }
+      if (same) {
+        answer = true;
+      }
+    });
+    return answer;
+  }
+
+  showAnglesAndSides() {
+    this._triangle._tri1.hideDimensions();
+    this._triangle._tri1.hideAngles();
+    this._triangle._tri2.hideDimensions();
+    this._triangle._tri2.hideAngles();
+    const possible = ['angle', 'angle', 'angle', 'side', 'side', 'side'];
+    const propertiesToShow = randElements(3, possible);
+    const possibleAngles = ['1', '2', '3'];
+    const possibleSides = ['12', '23', '31'];
+    const order = ['1', '12', '2', '23', '3', '31'];
+    const selectedAnnotations = [];
+    let answer = 'possible';
+    propertiesToShow.forEach((p) => {
+      let elementId;
+      if (p === 'angle') {
+        const angleId = removeRandElement(possibleAngles);
+        elementId = `_angle${angleId}`;
+        selectedAnnotations.push(angleId);
+      } else {
+        const sideId = removeRandElement(possibleSides);
+        elementId = `_dimension${sideId}`;
+        selectedAnnotations.push(sideId);
+      }
+      const element1 = this._triangle._tri1[elementId];
+      const element2 = this._triangle._tri2[elementId];
+      element1.showAll();
+      element2.showAll();
+    });
+    const sortedAnnotations = selectedAnnotations.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+    const AAA = [
+      ['1', '2', '3'],
+      ['1', '2', '3'],
+    ];
+    const SAA = [
+      ['1', '12', '23'],
+      ['1', '23', '31'],
+      ['2', '23', '31'],
+      ['12', '2', '31'],
+      ['12', '3', '31'],
+      ['12', '23', '3'],
+    ];
+    if (this.isPropertySet(AAA, sortedAnnotations)) {
+      answer = 'not possible';
+    }
+    if (this.isPropertySet(SAA, sortedAnnotations)) {
+      let angleIndex = sortedAnnotations.filter(p => p.length === 1)[0];
+      angleIndex = parseInt(angleIndex, 10);
+      const angle = this._triangle._tri1[`_angle${angleIndex}`].currentAngle;
+      if (angle < Math.PI / 2) {
+        answer = 'not possible';
+      }
+    }
+    // const notPossible = [
+    //   ['1', '2', '3'],    // AAA
+    //   ['1', '2', '3'],    // AAA
+    //   // SSA
+    // ];
+    // console.log(sortedAnnotations)
+    // let answer = 'possible';
+    // notPossible.forEach((test) => {
+    //   let same = true;
+    //   for (let i = 0; i < test.length; i += 1) {
+    //     if (test[i] !== sortedAnnotations[i]) {
+    //       same = false;
+    //     }
+    //   }
+    //   console.log(same, test, sortedAnnotations)
+    //   if (same) {
+    //     answer = 'not possible';
+    //   }
+    // });
+    console.log(answer);
+    this.answer = answer;
+    this._check.show();
+    this.diagram.animateNextFrame();
+  }
+
   tryAgain() {
     super.tryAgain();
     // this._input.enable();
     // this._input.setValue('');
+    this.selectMultipleChoice('congruent_tri_1', -1);
   }
 
   randomizeFuturePositions() {
@@ -109,7 +208,12 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   newProblem() {
     super.newProblem();
     this.calcRandomTriangles();
-    this._triangle.moveToFuturePositions(1, this.showAnglesAndSides.bind(this));
+    this._triangle._tri1.hideDimensions();
+    this._triangle._tri1.hideAngles();
+    this._triangle._tri2.hideDimensions();
+    this._triangle._tri2.hideAngles();
+    this.moveToFuturePositions(1, this.showAnglesAndSides.bind(this));
+    this.selectMultipleChoice('congruent_tri_1', -1);
     // this.resetLines();
     // this.randomizeFuturePositions();
     // this._triangle.moveToFuturePositions(1, this.showAngles.bind(this));
@@ -126,10 +230,11 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   }
 
   findAnswer() {
-  //   this._input.disable();
-  //   if (this._input.getValue() === this.angleToFind.toString()) {
-  //     return 'correct';
-  //   }
+    const selection = this.getMultipleChoiceSelection('congruent_tri_1');
+    if ((selection === 0 && this.answer === 'possible')
+      || (selection === 1 && this.answer === 'not possible')) {
+      return 'correct';
+    }
     return 'incorrect';
   }
 }

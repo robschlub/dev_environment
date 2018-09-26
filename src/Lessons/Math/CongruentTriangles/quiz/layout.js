@@ -28,5 +28,8 @@ export default function lessonLayout() {
     check: new Point(0, -1.7),
   };
   layout.answerBox = new Point(-2.7, 1.2);
+
+  layout.triangle.angle.radius = 0.2;
+  layout.triangle.angle.labelRadius = 0.25; 
   return layout;
 }
