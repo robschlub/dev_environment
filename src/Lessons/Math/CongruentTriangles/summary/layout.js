@@ -21,7 +21,7 @@ export default function lessonLayout() {
     },
   };
   layout.label = {
-    position: new Point(1.2, -1.3),
+    position: new Point(1.3, -1.3),
   };
   return layout;
 }
