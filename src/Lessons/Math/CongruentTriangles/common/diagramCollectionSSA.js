@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect, normAngle,
+  Transform, polarToRect, normAngle, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -30,22 +30,57 @@ export default class SSACollection extends CommonDiagramCollection {
   _angle: TypeAngle;
 
   addLines() {
-    const make = length => makeLine(
+    const make = (length, width) => makeLine(
       this.diagram,
       'end',
-      length, this.layout.corner.width,
+      length, width,
       this.layout.colors.line, true,
     );
-    const line1 = make(1);
-    const line2 = make(1);
-    const line3 = make(1);
+    const line1 = make(1, this.layout.corner.width);
+    const line2 = make(1, this.layout.corner.width);
+    const line3 = make(1, this.layout.corner.width * 0.8);
     line2.move.type = 'rotation';
     line3.move.type = 'rotation';
     line2.move.canBeMovedAfterLoosingTouch = true;
     line3.move.canBeMovedAfterLoosingTouch = true;
+    line1.setLength(this.layout.SSA.line1.length);
+    line2.setLength(this.layout.SSA.line2.length);
+    line3.setLength(this.layout.SSA.line3.length);
+    line3.setColor(this.colors.construction);
+    line2.setTransformCallback = this.update.bind(this);
+    line3.setTransformCallback = this.update.bind(this);
+    this.add('line3', line3);
     this.add('line1', line1);
     this.add('line2', line2);
-    this.add('line3', line3);
+  }
+
+  addAngle() {
+    const angle = makeAngle(
+      this.diagram,
+      this.layout.SSA.angleRadius,
+      this.layout.corner.width,
+      this.layout.SSA.angleSides,
+      this.layout.angleA,
+    );
+    angle.addLabel('a', this.layout.SSA.labelRadius);
+    angle.showRealAngle = true;
+    angle.autoRightAngle = true;
+    this.add('angle', angle);
+  }
+
+  update() {
+    const p1 = this._line1.transform.t();
+    const l1 = this._line1.currentLength;
+    const l2 = this._line2.currentLength;
+    const r3 = this._line3.transform.r();
+    if (p1 != null && r3 != null) {
+      const p2 = p1.add(new Point(l1, 0));
+      this._line2.transform.updateTranslation(p2);
+      this._line3.transform.updateTranslation(p1);
+      this._circ.setPosition(p2);
+      this._circ.transform.updateScale(l2, l2); // as circle radius is 1
+      this._angle.updateAngle(0, r3);
+    }
   }
 
   // addCorner() {
@@ -98,10 +133,10 @@ export default class SSACollection extends CommonDiagramCollection {
   addCircle() {
     const circle = this.diagram.shapes.polygonLine(
       this.layout.SSA.circleSides, 1, 0, 1, this.layout.SSA.circleSides,
-      2, this.layout.colors.angleA,
+      2, this.layout.colors.construction1,
       new Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
     );
-    this.add('circ1', circle1);
+    this.add('circ', circle);
   }
 
   // toggleTriangle() {
@@ -155,19 +190,21 @@ export default class SSACollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  // calcFuturePositions(scenarioName: string) {
-  //   const fp = (element, scenario) => {
-  //     if (scenario) {
-  //       this.futurePositions.push({ element, scenario: scenario.scenario });
-  //     }
-  //   };
-  //   this.futurePositions = [];
-  //   const cornerScenario = this.layout.corner[scenarioName];
-  //   fp(this._line, cornerScenario.line);
-  //   fp(this._corner, cornerScenario.c1);
-  //   fp(this._line2, cornerScenario.line2);
-  //   fp(this._circ, cornerScenario.circ);
-  // }
+  calcFuturePositions(scenarioName: string) {
+    const fp = (element, scenario) => {
+      if (scenario) {
+        if (scenario.scenario) {
+          this.futurePositions.push({ element, scenario: scenario.scenario });
+        }
+      }
+    };
+    this.futurePositions = [];
+    const cornerScenario = this.layout[scenarioName];
+    fp(this._line1, cornerScenario.line1);
+    fp(this._line2, cornerScenario.line2);
+    fp(this._line3, cornerScenario.line3);
+    fp(this._circ, cornerScenario.circ);
+  }
 
   constructor(
     diagram: LessonDiagram,
@@ -176,7 +213,9 @@ export default class SSACollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addCircle();
+    this.addAngle();
     this.addLines();
+    // this._line2.setTransformCallback = this.update.bind(this);
     // this.addCorner();
     this.hasTouchableElements = true;
   }

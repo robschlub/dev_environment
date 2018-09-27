@@ -864,9 +864,9 @@ class Content extends LessonContent {
       setInfo: [],
       infoModifiers: {},
       setEnterState: () => {
-        // ssa.setCornerScenarios('AASStart');
-        // ssa.calcFuturePositions('SSAStart');
-        // ssa.setFuturePositions();
+        // ssa.setCornerScenarios('SSA');
+        ssa.calcFuturePositions('SSA');
+        ssa.setFuturePositions();
       },
       showOnly: [
         ssa, qr,
@@ -874,7 +874,13 @@ class Content extends LessonContent {
       show: [
         ssa,
       ],
-      setSteadyState: () => {},
+      setSteadyState: () => {
+        ssa._line2.setMovable(true);
+        ssa._line3.setMovable(true);
+        // ssa._line2.isTouchable = true;
+        // ssa._line2.isMovable = true;
+        console.log(diag)
+      },
       setLeaveState: () => {},
     };
     common.setContent = `

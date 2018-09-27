@@ -9,7 +9,8 @@ $colors: (
   angleB:            map-get($geometry_colors, angleB),
   angleC:            map-get($geometry_colors, angleC),
   intersect:         map-get($geometry_colors, anchor),
-  construction:      color('diagram', 'safe', 'light'),
+  construction:      color('diagram', 'safe', 'darker'),
+  construction1:      color('diagram', 'warning', 'darker'),
 );
 
 body {

@@ -13,6 +13,7 @@ const cssColorNames = [
   'angleC',
   'intersect',
   'construction',
+  'construction1',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -378,24 +379,22 @@ export default function commonLessonLayout() {
     circleSides: 300,
     line1: {
       scenario: {
-        position: new Point(-1, 0),
+        position: new Point(-1, -0.5),
         rotation: 0,
       },
-      length: 2,
+      length: 1,
     },
     line2: {
       scenario: {
-        position: new Point(2, 0),
         rotation: Math.PI / 3,
       },
-      length: 1.5,
+      length: 1.4,
     },
     line3: {
       scenario: {
-        position: new Point(-1, 0),
         rotation: Math.PI / 6,
       },
-      length: 4,
+      length: 3,
     },
   };
   return layout;
