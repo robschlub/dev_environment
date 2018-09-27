@@ -5,7 +5,7 @@ import {
 } from '../../../../js/diagram/tools/g2';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import QRTriangle from '../../Triangles/quickReference/quickReference';
-import { QRAsa, QRSss } from '../quickReference/quickReference';
+import { QRAsa, QRSss, QRAas } from '../quickReference/quickReference';
 // import { QRAlternateAngles } from '../../RelatedAngles/quickReference/quickReference';
 // import { QRSupplementaryAngles } from '../../AdjacentAngles/quickReference/quickReference';
 
@@ -14,6 +14,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
   _tri: QRTriangle;
   _asa: QRAsa;
   _sss: QRSss;
+  _aas: QRAas;
   // _alternateAngles: QRAlternateAngles;
 
   constructor(
@@ -26,6 +27,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
     this.add('asa', new QRAsa(this.diagram));
     // this.add('sss', diagram.shapes.collection());
     this.add('sss', new QRSss(this.diagram));
+    this.add('aas', new QRAas(this.diagram));
     this.hasTouchableElements = true;
   }
 }

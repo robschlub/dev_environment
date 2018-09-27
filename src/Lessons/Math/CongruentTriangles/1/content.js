@@ -878,7 +878,11 @@ class Content extends LessonContent {
         ssa._line1.setMovable(false);
         ssa._line3.setMovable(false);
       },
-      setLeaveState: () => {},
+      setLeaveState: () => {
+        ssa._line1.setMovable(false);
+        ssa._line2.setMovable(false);
+        ssa._line3.setMovable(false);
+      },
     };
     common.setContent = `
       <p>
@@ -934,10 +938,6 @@ class Content extends LessonContent {
       ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
       ssa._circ,
     ];
-    common.setEnterState = () => {
-      ssa.calcFuturePositions('SSA');
-      ssa.setFuturePositions();
-    };
     common.setSteadyState = () => {
       ssa._line2.setMovable(true);
       ssa.update();
@@ -960,9 +960,17 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        But what happens when we change the known length or angle of the first side? How many |triangles| can be formed?
+        But what happens when we change the known |length| or |angle| of the first side? How many |triangles| can be formed?
       </p>
     `;
+    common.modifiers = {
+      length: click(ssa._line1.pulseWidth, [ssa], colors.line),
+      angle: click(ssa.pulseAngle, [ssa], colors.angleA),
+    };
+    common.setEnterState = () => {
+      ssa.calcFuturePositions('SSA');
+      ssa.setFuturePositions();
+    };
     this.addSection(common);
 
     common.setContent = `
@@ -987,128 +995,75 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        When the |bottom_side| is |shorter| than the |right_side|, only |one triangle| can ever be formed.
+        When the |bottom| side is |shorter| than or equal to the |right| side, only |one triangle| can ever be formed.
       </p>
     `;
     common.modifiers = {
-      bottom_side: click(ssa._line1.pulseWidth, [ssa], colors.line),
-      right_side: click(ssa._line2.pulseWidth, [ssa], colors.line),
+      bottom: click(ssa._line1.pulseWidth, [ssa], colors.line),
+      right: click(ssa._line2.pulseWidth, [ssa], colors.line),
       shorter: click(ssa.calcNewScenario, [ssa, 'short'], colors.diagram.action),
     };
     this.addSection(common);
 
     common.setContent = `
       <p>
-        When the |bottom_side| is |longer| than the |right_side|, it there is most often either |two_triangles|, |one_triangle| or |no_triangles| possible.
+        When the |bottom| side is |longer| than the |right| side, then either |two|, |one| or |no| triangles are possible.
       </p>
     `;
     common.modifiers = {
-      bottom_side: click(ssa._line1.pulseWidth, [ssa], colors.line),
-      right_side: click(ssa._line2.pulseWidth, [ssa], colors.line),
-      two_triangles: click(ssa.calcNewScenario, [ssa, 'long2'], colors.diagram.action),
-      one_triangle: click(ssa.calcNewScenario, [ssa, 'long1'], colors.diagram.action),
-      no_triangles: click(ssa.calcNewScenario, [ssa, 'long0'], colors.diagram.action),
+      bottom: click(ssa._line1.pulseWidth, [ssa], colors.line),
+      right: click(ssa._line2.pulseWidth, [ssa], colors.line),
+      two: click(ssa.calcNewScenario, [ssa, 'long2'], colors.diagram.action),
+      one: click(ssa.calcNewScenario, [ssa, 'long1'], colors.diagram.action),
+      no: click(ssa.calcNewScenario, [ssa, 'long0'], colors.diagram.action),
     };
     this.addSection(common);
-    // common.setContent = `
-    //   <p>
-    //     First we know the lines must connect at the corner with an unknown angle.
-    //   </p>
-    // `;
-    // this.addSection(common);
-    // common.setEnterState = () => { ssa.calcFuturePositions('SSAJoin'); };
-    // common.setSteadyState = () => { ssa.setFuturePositions(); };
-    // this.addSection(common, {
-    //   transitionFromPrev: (done) => { ssa.moveToFuturePositions(1, done); },
-    // });
 
-    // common.setContent = `
-    //   <p>
-    //     We can also draw in the remaining side with a temporary length as we don't know it yet.
-    //   </p>
-    // `;
-    // this.addSection(common);
-    // common.show = [ssa._corner, ssa._line, ssa._line2];
-    // common.setSteadyState = () => {
-    //   ssa.setFuturePositions();
-    //   ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
-    // };
-    // this.addSection(common, {
-    //   transitionFromPrev: (done) => {
-    //     ssa._line2.setLength(0.1);
-    //     ssa._line2.animateLengthTo(layout.corner.SSAJoin.line2.finalLength, 1, true, done);
-    //   },
-    // });
+    common.setContent = `
+      <p>
+        Specifically, when the |bottom| side is |longer| than the |right| side, |one| triangle is only possible when the third angle is a right angle.
+      </p>
+    `;
+    common.modifiers = {
+      bottom: click(ssa._line1.pulseWidth, [ssa], colors.line),
+      right: click(ssa._line2.pulseWidth, [ssa], colors.line),
+      two: click(ssa.calcNewScenario, [ssa, 'long2'], colors.diagram.action),
+      one: click(ssa.calcNewScenario, [ssa, 'long1'], colors.diagram.action),
+      no: click(ssa.calcNewScenario, [ssa, 'long0'], colors.diagram.action),
+    };
+    common.show = [
+      ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
+      ssa._circ,
+    ];
+    this.addSection(common);
 
-    // common.setContent = `
-    //   <p>
-    //     Now, how can the right side be rotated to form a triangle?
-    //   </p>
-    // `;
-    // common.setInfo = [
-    //   '<ul>',
-    //   '<li>Rotate the right side to see what triangles can be formed.</li>',
-    //   '</ul>',
-    // ];
-    // common.setSteadyState = () => {
-    //   ssa.setFuturePositions();
-    //   ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
-    //   ssa._line.setMovable(true);
-    // };
-    // common.setLeaveState = () => {
-    //   ssa._line.setMovable(false);
-    // };
-    // this.addSection(common);
 
-    // common.setContent = `
-    //   <p>
-    //     One way to quickly see this is to |trace| out all the possible locations, and see which ones intersect with the left line.
-    //   </p>
-    // `;
-    // common.modifiers = { trace: click(ssa.drawCircle, [ssa], colors.diagram.action) };
-    // common.setInfo = [
-    //   '<ul>',
-    //   '<li>Rotate the right side to see what triangles can be formed.</li>',
-    //   '<li>Touch the |trace| text to trace out the possibilities.</li>',
-    //   '</ul>',
-    // ];
-    // common.infoModifiers = {
-    //   trace: highlight(colors.diagram.action),
-    // };
-    // this.addSection(common);
-    // common.show = [ssa._corner, ssa._line, ssa._line2, ssa._circ];
-    // this.addSection(common);
+    common.setContent = `
+      <p>
+        But if two angles and two sides are known, then the |Angle_Angle_Side| congruency test can also be used.
+      </p>
+    `;
+    common.modifiers = {
+      Angle_Angle_Side: clickWord('Angle Angle Side', 'id_angle_angle_side', qr._aas.show, [qr._aas], colors.line),
+    };
+    common.show = [
+      ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
+      ssa._circ,
+    ];
+    this.addSection(common);
 
-    // common.setContent = `
-    //   <p>
-    //     There are two |intersection_points|, and therefore, two different triangles are possible.
-    //   </p>
-    // `;
-    // common.modifiers = {
-    //   intersection_points: click(ssa.toggleTriangle, [ssa], colors.diagram.action),
-    // };
-    // common.setInfo = [
-    //   '<ul>',
-    //   '<li>Rotate the right side to see what triangles can be formed.</li>',
-    //   '<li>Touch the |intersection_points| text to show the possible triangles.</li>',
-    //   '</ul>',
-    // ];
-    // common.infoModifiers = {
-    //   intersection_points: highlight(colors.diagram.action),
-    // };
-    // this.addSection(common);
-    // common.setInfo = [];
-    // common.infoModifiers = {};
-    // this.addSection({
-    //   setContent: centerV(`
-    //   <p>
-    //     Therefore, if |two sides| and an |angle not between the sides| is known, there are two possible triangles.
-    //   </p>
-    //   <p>
-    //     If these are the known dimensions of two triangles, |it cannot be determined if they are congruent|.
-    //   </p>
-    //   `),
-    // });
+    this.addSection({
+      setContent: `
+      <p>
+        So we can summarize by saying knowing the property combination of |Side Side Angle| produces only one triangle if the side opposite the known angle is longer than or equal to the other known side, but up to two triangles when it is shorter.
+      </p>
+    `});
+    this.addSection({
+      setContent: `
+      <p>
+        Therefore, if there are two triangles with the |same relative two side lenghts| and |one angle not between| the sides then |they will be congruent if the side opposite the known angle is longer than or equal to the other known side|, and they only |might be congruent if it is less|.
+      </p>
+    `});
   }
 }
 

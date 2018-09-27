@@ -385,6 +385,7 @@ export default function commonLessonLayout() {
       scenario: {
         position: new Point(0, -0.5),
         rotation: Math.PI,
+        scale: 1,
       },
       length: 2,
       maxScale: 1,
