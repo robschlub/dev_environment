@@ -100,6 +100,62 @@ export default class SSACollection extends CommonDiagramCollection {
     }
   }
 
+  calculateInterseptAngles() {
+    const s1 = this._line1.transform.s();
+    const l2 = this.layout.SSA.line2.length;
+    const r3 = this._line3.transform.r();
+    const interceptAngles = [];
+    if (s1 != null && r3 != null) {
+      const l1 = this.layout.SSA.line1.length * s1.x;
+      const angleThreshold = Math.asin(l2 / l1);
+      const b = Math.asin(l1 * Math.sin(r3) / l2);
+      const c = r3 + b;
+      if (l1 <= l2) {
+        // one root
+        interceptAngles.push(c);
+      } else if (r3 < angleThreshold) {
+        // two roots
+        interceptAngles.push(c);
+        interceptAngles.push(r3 + (Math.PI - b));
+      } else if (r3 === angleThreshold) {
+        // one root
+        interceptAngles.push(c);
+      }
+    }
+    return interceptAngles;
+  }
+
+  toggleInterceptAngles() {
+    const interceptAngles = this.calculateInterseptAngles();
+    let r2 = this._line2.transform.r();
+    let targetAngle: null | number = null;
+    if (r2 != null) {
+      r2 = normAngle(r2);
+      this._line2.transform.updateRotation(r2);
+      if (interceptAngles.length === 2) {
+        const min = Math.min(...interceptAngles);
+        const max = Math.max(...interceptAngles);
+        const midAngle = (max - min) / 2 + min;
+        if (r2 > midAngle) {
+          targetAngle = min;
+        } else {
+          targetAngle = max;
+        }
+      } else if (interceptAngles.length === 1) {
+        if (r2 !== interceptAngles[0]) {
+          [targetAngle] = interceptAngles;
+        }
+      }
+      if (targetAngle != null) {
+        this._line2.animateRotationTo(
+          targetAngle, 0,
+          new Transform().scale(5, 5).rotate(2).translate(5, 5),
+        );
+        this.diagram.animateNextFrame();
+      }
+    }
+  }
+
   // addCorner() {
   //   const corner = this.diagram.shapes.collection(new Transform('Corner')
   //     .scale(1, 1)

@@ -883,9 +883,12 @@ class Content extends LessonContent {
     };
     common.setContent = `
       <p>
-        Finally, we can consider the case where |two sides|, and an |angle not between the two sides| are known.
+        Finally, we |can| consider the case where |two sides|, and an |angle not between the two sides| are known.
       </p>
     `;
+    common.modifiers = {
+      can: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
+    }
     this.addSection(common, {
       title: 'Side Side Angle',
     });
