@@ -133,8 +133,10 @@ export default class SSACollection extends CommonDiagramCollection {
         this._line3Temp.setLength(l3);
 
         this._line3Temp.showAll();
+        this._lineCorner.hide();
       } else {
         this._line3Temp.hide();
+        this._lineCorner.showAll();
       }
     }
   }

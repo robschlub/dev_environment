@@ -934,14 +934,40 @@ class Content extends LessonContent {
       ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
       ssa._circ,
     ];
+    common.setSteadyState = () => ssa._line2.setMovable(true);
     this.addSection(common, {
       modifiers: {
         intersect: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
       },
-      setSteadyState: () => {
-        ssa._line2.setMovable(true);
+    });
+
+    common.setContent = `
+      <p>
+        In this case, there are two possible |triangles|.
+      </p>
+    `;
+    this.addSection(common, {
+      modifiers: {
+        triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
       },
     });
+
+    common.setContent = `
+      <p>
+        But what happens when we change the known length or angle of the first side? How many |triangles| can be formed?
+      </p>
+    `;
+    this.addSection(common, {
+      modifiers: {
+        triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
+      },
+      setEnterState: () => {
+        ssa._line1.setMovable(true);
+        ssa._line2.setMovable(true);
+        ssa._line3.setMovable(true);
+      },
+    });
+
     // common.setContent = `
     //   <p>
     //     First we know the lines must connect at the corner with an unknown angle.
