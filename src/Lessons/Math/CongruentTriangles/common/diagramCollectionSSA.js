@@ -33,6 +33,7 @@ export default class SSACollection extends CommonDiagramCollection {
   _lineCorner: TypeLine;
   _circ: DiagramElementPrimative;
   _angle: TypeAngle;
+  long2Flag: boolean;
 
   addLines() {
     const ssa = this.layout.SSAInitial;
@@ -145,33 +146,45 @@ export default class SSACollection extends CommonDiagramCollection {
   }
 
   calcNewScenario(scenario: 'short' | 'long0' | 'long2' | 'long1') {
+    let s1 = rand(this.layout.SSAInitial.line1.minScale, 0.6);
+    let r3 = rand(Math.PI / 4, 3 * Math.PI / 4);
+    const l2 = this.layout.SSAInitial.line2.length;
     if (scenario === 'short') {
-      const s1 = rand(this.layout.SSAInitial.line1.minScale, 0.6);
-      const r3 = rand(Math.PI / 4, 3 * Math.PI / 4);
       const interceptAngles = this.calculateInterseptAngles(s1, r3);
-      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
-      this._line3.animateRotationTo(r3, 0, 0.8);
       this._line2.animateRotationTo(interceptAngles[0], 0, 0.8);
+      this.long2Flag = true;
     } else if (scenario === 'long0') {
-      const s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
-      const minAngle = Math.asin(this.layout.SSAInitial.line2.length / (s1 * this.layout.SSAInitial.line1.length));
-      const r3 = rand(minAngle, 3 * Math.PI / 4);
-      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
-      this._line3.animateRotationTo(r3, 0, 0.8);
+      s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
+      const l1 = s1 * this.layout.SSAInitial.line1.length;
+      const tangentAngle = Math.asin(l2 / l1);
+      r3 = rand(tangentAngle, 3 * Math.PI / 4);
+      this.long2Flag = true;
     } else if (scenario === 'long2') {
-      const s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
-      const minAngle = Math.asin(this.layout.SSAInitial.line2.length / (s1 * this.layout.SSAInitial.line1.length));
-      const r3 = rand(Math.PI / 10, minAngle * 0.9);
-      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
-      this._line3.animateRotationTo(r3, 0, 0.8);
+      if (this.long2Flag) {
+        s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
+        const l1 = s1 * this.layout.SSAInitial.line1.length;
+        const tangentAngle = Math.asin(l2 / l1);
+        r3 = rand(Math.PI / 10, tangentAngle * 0.9);
+        const interceptAngles = this.calculateInterseptAngles(s1, r3);
+        this._line2.animateRotationTo(interceptAngles[0], 0, 0.8);
+        this.long2Flag = false;
+      } else {
+        const interceptAngles = this.calculateInterseptAngles();
+        this._line2.animateRotationTo(interceptAngles[1], 0, 0.8);
+        this.long2Flag = true;
+        this.diagram.animateNextFrame();
+        return;
+      }
     } else if (scenario === 'long1') {
-      const s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
-      const minAngle = Math.asin(this.layout.SSAInitial.line2.length / (s1 * this.layout.SSAInitial.line1.length));
-      const r3 = minAngle;
-      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
-      this._line3.animateRotationTo(r3, 0, 0.8);
-      this._line2.animateRotationTo(Math.PI - (Math.PI - Math.PI / 2 - minAngle), 0, 0.8);
+      s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
+      const l1 = s1 * this.layout.SSAInitial.line1.length;
+      const tangentAngle = Math.asin(l2 / l1);
+      r3 = tangentAngle;
+      this._line2.animateRotationTo(Math.PI - (Math.PI - Math.PI / 2 - tangentAngle), 0, 0.8);
+      this.long2Flag = true;
     }
+    this._line1.animateScaleTo(new Point(s1, 1), 0.8);
+    this._line3.animateRotationTo(r3, 0, 0.8);
     this.diagram.animateNextFrame();
   }
 
@@ -323,5 +336,6 @@ export default class SSACollection extends CommonDiagramCollection {
     this.addAngle();
     this.addLines();
     this.hasTouchableElements = true;
+    this.long2Flag = true;
   }
 }
