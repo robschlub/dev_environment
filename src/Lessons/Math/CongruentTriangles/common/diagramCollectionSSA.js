@@ -23,12 +23,11 @@ type TypeCorner = {
 
 export default class SSACollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _line: TypeLine;
+  _line1: TypeLine;
   _line2: TypeLine;
+  _line3: TypeLine;
   _circ: DiagramElementPrimative;
-  _intersect1: DiagramElementPrimative;
-  _intersect2: DiagramElementPrimative;
-  _corner: TypeCorner;
+  _angle: TypeAngle;
 
   addLines() {
     const make = length => makeLine(
@@ -37,60 +36,64 @@ export default class SSACollection extends CommonDiagramCollection {
       length, this.layout.corner.width,
       this.layout.colors.line, true,
     );
-    const line = make(this.layout.corner.SSAStart.line.length);
-    line.move.type = 'rotation';
-    line.move.canBeMovedAfterLoosingTouch = true;
+    const line1 = make(1);
     const line2 = make(1);
-    this.add('line', line);
+    const line3 = make(1);
+    line2.move.type = 'rotation';
+    line3.move.type = 'rotation';
+    line2.move.canBeMovedAfterLoosingTouch = true;
+    line3.move.canBeMovedAfterLoosingTouch = true;
+    this.add('line1', line1);
     this.add('line2', line2);
+    this.add('line3', line3);
   }
 
-  addCorner() {
-    const corner = this.diagram.shapes.collection(new Transform('Corner')
-      .scale(1, 1)
-      .rotate(0)
-      .translate(0, 0));
-    const line = this.diagram.shapes.polyLine(
-      this.layout.corner.points, false,
-      this.layout.corner.width, this.layout.colors.line,
-      'onSharpAnglesOnly',
-    );
-    const angle = makeAngle(
-      this.diagram, this.layout.corner.angleRadius,
-      this.layout.corner.angleWidth, this.layout.triangle.angle.sides,
-      this.layout.colors.angleA,
-    );
-    corner.side1 = 1;
-    corner.side2 = 1;
-    corner.hasTouchableElements = true;
-    angle.updateAngle(0, Math.PI / 2);
-    angle.setPosition(this.layout.corner.points[1]);
-    angle.showRealAngle = true;
-    angle.addLabel('', this.layout.corner.angleLabelRadius);
-    angle.autoRightAngle = true;
-    corner.add('angle', angle);
-    corner.add('line', line);
-    this.updateCorner(
-      corner,
-      this.layout.corner.SSAStart.c1.angle,
-      this.layout.corner.SSAStart.c1.side1,
-      this.layout.corner.SSAStart.c1.side2,
-    );
-    this.add('corner', corner);
-  }
+  // addCorner() {
+  //   const corner = this.diagram.shapes.collection(new Transform('Corner')
+  //     .scale(1, 1)
+  //     .rotate(0)
+  //     .translate(0, 0));
+  //   const line = this.diagram.shapes.polyLine(
+  //     this.layout.corner.points, false,
+  //     this.layout.corner.width, this.layout.colors.line,
+  //     'onSharpAnglesOnly',
+  //   );
+  //   const angle = makeAngle(
+  //     this.diagram, this.layout.corner.angleRadius,
+  //     this.layout.corner.angleWidth, this.layout.triangle.angle.sides,
+  //     this.layout.colors.angleA,
+  //   );
+  //   corner.side1 = 1;
+  //   corner.side2 = 1;
+  //   corner.hasTouchableElements = true;
+  //   angle.updateAngle(0, Math.PI / 2);
+  //   angle.setPosition(this.layout.corner.points[1]);
+  //   angle.showRealAngle = true;
+  //   angle.addLabel('', this.layout.corner.angleLabelRadius);
+  //   angle.autoRightAngle = true;
+  //   corner.add('angle', angle);
+  //   corner.add('line', line);
+  //   this.updateCorner(
+  //     corner,
+  //     this.layout.corner.SSAStart.c1.angle,
+  //     this.layout.corner.SSAStart.c1.side1,
+  //     this.layout.corner.SSAStart.c1.side2,
+  //   );
+  //   this.add('corner', corner);
+  // }
 
-  updateCorner(corner: TypeCorner, angle: number, side1: number, side2: number) {
-    const newP1 = polarToRect(side1, 0);
-    const newP3 = polarToRect(side2, angle);
-    const p2 = this.layout.corner.points[1];
-    corner.side1 = newP1.sub(p2).distance();
-    corner.side2 = newP3.sub(p2).distance();
-    corner._line.vertices.change([newP1, p2, newP3]);
-    const rotation = corner.transform.r();
-    if (rotation != null) {
-      corner._angle.updateAngle(0, angle, rotation);
-    }
-  }
+  // updateCorner(corner: TypeCorner, angle: number, side1: number, side2: number) {
+  //   const newP1 = polarToRect(side1, 0);
+  //   const newP3 = polarToRect(side2, angle);
+  //   const p2 = this.layout.corner.points[1];
+  //   corner.side1 = newP1.sub(p2).distance();
+  //   corner.side2 = newP3.sub(p2).distance();
+  //   corner._line.vertices.change([newP1, p2, newP3]);
+  //   const rotation = corner.transform.r();
+  //   if (rotation != null) {
+  //     corner._angle.updateAngle(0, angle, rotation);
+  //   }
+  // }
 
   addCircle() {
     const make = (radius, color) => this.diagram.shapes.polygon(
@@ -158,19 +161,19 @@ export default class SSACollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  calcFuturePositions(scenarioName: string) {
-    const fp = (element, scenario) => {
-      if (scenario) {
-        this.futurePositions.push({ element, scenario: scenario.scenario });
-      }
-    };
-    this.futurePositions = [];
-    const cornerScenario = this.layout.corner[scenarioName];
-    fp(this._line, cornerScenario.line);
-    fp(this._corner, cornerScenario.c1);
-    fp(this._line2, cornerScenario.line2);
-    fp(this._circ, cornerScenario.circ);
-  }
+  // calcFuturePositions(scenarioName: string) {
+  //   const fp = (element, scenario) => {
+  //     if (scenario) {
+  //       this.futurePositions.push({ element, scenario: scenario.scenario });
+  //     }
+  //   };
+  //   this.futurePositions = [];
+  //   const cornerScenario = this.layout.corner[scenarioName];
+  //   fp(this._line, cornerScenario.line);
+  //   fp(this._corner, cornerScenario.c1);
+  //   fp(this._line2, cornerScenario.line2);
+  //   fp(this._circ, cornerScenario.circ);
+  // }
 
   constructor(
     diagram: LessonDiagram,
@@ -180,7 +183,7 @@ export default class SSACollection extends CommonDiagramCollection {
     super(diagram, layout, transform);
     this.addCircle();
     this.addLines();
-    this.addCorner();
+    // this.addCorner();
     this.hasTouchableElements = true;
   }
 }
