@@ -998,6 +998,19 @@ class DiagramElement {
         }
         next.v.order[i] = v;
       }
+      if (t instanceof Rotation
+          && v instanceof Rotation
+          && max instanceof Rotation
+          && min instanceof Rotation) {
+        if (min.r >= t.r || max.r <= t.r) {
+          if (this.move.bounce) {
+            v.r = -v.r * 0.5;
+          } else {
+            v.r = 0;
+          }
+        }
+        next.v.order[i] = v;
+      }
     }
     next.v.calcMatrix();
 

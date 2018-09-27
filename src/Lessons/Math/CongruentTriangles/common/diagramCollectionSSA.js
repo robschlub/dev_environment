@@ -57,6 +57,8 @@ export default class SSACollection extends CommonDiagramCollection {
     line3.setTransformCallback = this.update.bind(this);
     line1.move.maxTransform.updateScale(ssa.line1.maxScale, 1);
     line1.move.minTransform.updateScale(ssa.line1.minScale, 1);
+    line3.move.minTransform.updateRotation(Math.PI / 9);
+    line3.move.maxTransform.updateRotation(Math.PI / 9 * 8);
     this.add('line3', line3);
     this.add('line1', line1);
     this.add('line2', line2);
@@ -148,7 +150,7 @@ export default class SSACollection extends CommonDiagramCollection {
   addCircle() {
     const circle = this.diagram.shapes.polygonLine(
       this.layout.SSA.circleSides, 1, 0, 1, this.layout.SSA.circleSides,
-      3, this.layout.colors.construction1,
+      2, this.layout.colors.construction,
       new Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
     );
     this.add('circ', circle);
