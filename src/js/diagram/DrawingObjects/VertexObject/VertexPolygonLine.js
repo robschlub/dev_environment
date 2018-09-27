@@ -18,6 +18,7 @@ class VertexPolygonLine extends VertexObject {
     center: Point = new Point(0, 0),
     numSidesToDraw: number = numSides, // Must be <= numSides (def: numSides if greater)
     direction: -1 | 1 = 1,
+    thickness: number = 1,
   ) {
     // setup webgl stuff
     super(webgl);
@@ -44,9 +45,16 @@ class VertexPolygonLine extends VertexObject {
 
     // const lines = [];
     const points = [];
+    const thickPoints = [];
+    for (let j = 1; j < thickness; j += 1) {
+      thickPoints.push([]);
+    }
     for (let i = 0; i <= sidesToDraw; i += 1) {
       const angle = i * this.dAngle * direction + rotation * direction;
       points.push(polarToRect(radius, angle));
+      for (let j = 1; j < thickness; j += 1) {
+        thickPoints[j - 1].push(polarToRect(radius * (1 - j * 0.005), angle))
+      }
     }
 
     for (let i = 1; i <= sidesToDraw; i += 1) {
@@ -55,6 +63,12 @@ class VertexPolygonLine extends VertexObject {
       this.points.push(points[i - 1].y);
       this.points.push(points[i].x);
       this.points.push(points[i].y);
+      for (let j = 1; j < thickness; j += 1) {
+        this.points.push(thickPoints[j - 1][i - 1].x);
+        this.points.push(thickPoints[j - 1][i - 1].y);
+        this.points.push(thickPoints[j - 1][i].x);
+        this.points.push(thickPoints[j - 1][i].y);
+      }
     }
 
     this.border[0] = points;

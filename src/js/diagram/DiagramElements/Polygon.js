@@ -78,6 +78,7 @@ function PolygonLine(
   rotation: number,
   direction: -1 | 1,
   numSidesToDraw: number,
+  numLines: number,
   color: Array<number>,
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
@@ -90,6 +91,7 @@ function PolygonLine(
     new Point(0, 0),
     numSidesToDraw,
     direction,
+    numLines,
   );
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {

@@ -98,11 +98,9 @@ export default class SSACollection extends CommonDiagramCollection {
   addCircle() {
     const circle = this.diagram.shapes.polygonLine(
       this.layout.SSA.circleSides, 1, 0, 1, this.layout.SSA.circleSides,
-      this.layout.colors.angleA,
-      new Transform().scale(1, 1).rotate(0).translate(0, 0),
+      2, this.layout.colors.angleA,
+      new Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
     );
-    this.add('circ', circle);
-    const circle1 = new DiagramElementPrimative(circle.vertices, new Transform().scale(0.98, 0.98).rotate(0).translate(0, 0), this.layout.colors.angleA, this.diagram.limits);
     this.add('circ1', circle1);
   }
 

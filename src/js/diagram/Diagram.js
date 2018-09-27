@@ -319,12 +319,13 @@ function shapes(diagram: Diagram, high: boolean = false) {
     rotation: number,
     direction: -1 | 1,
     numSidesToDraw: number,
+    numLines: number,     // equivalent to thickness - integer
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
     return PolygonLine(
       webgl, numSides, radius,
-      rotation, direction, numSidesToDraw, color, transform, diagram.limits,
+      rotation, direction, numSidesToDraw, numLines, color, transform, diagram.limits,
     );
   }
   function horizontalLine(
