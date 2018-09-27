@@ -925,6 +925,39 @@ class Diagram {
     }
   }
 
+  scaleElement(
+    element: DiagramElementPrimative | DiagramElementCollection,
+    previousClientPoint: Point,
+    currentClientPoint: Point,
+    type: 'x' | 'y' | '' = '',
+  ) {
+    const previousPixelPoint = this.clientToPixel(previousClientPoint);
+    const currentPixelPoint = this.clientToPixel(currentClientPoint);
+
+    const previousDiagramPoint =
+      previousPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+    const currentDiagramPoint =
+      currentPixelPoint.transformBy(this.pixelToDiagramSpaceTransform.matrix());
+
+    const center = element.getDiagramPosition();
+    const previousMag = previousDiagramPoint.sub(center).distance();
+    const currentMag = currentDiagramPoint.sub(center).distance();
+    const currentScale = element.transform.s();
+    if (currentScale != null) {
+      const currentTransform = element.transform._dup();
+      const newScaleX = currentScale.x * currentMag / previousMag;
+      const newScaleY = currentScale.y * currentMag / previousMag;
+      if (type === 'x') {
+        currentTransform.updateScale(newScaleX, 1);
+      } else if (type === 'y') {
+        currentTransform.updateScale(1, newScaleY);
+      } else {
+        currentTransform.updateScale(newScaleX, newScaleY);
+      }
+      element.moved(currentTransform);
+    }
+  }
+
   // Handle touch/mouse move events in the canvas. These events will only be
   // sent if the initial touch down happened in the canvas.
   // The default behavior is to drag (move) any objects that were touched in
@@ -964,6 +997,26 @@ class Diagram {
               elementToMove,
               previousClientPoint,
               currentClientPoint,
+            );
+          } else if (element.move.type === 'scale') {
+            this.scaleElement(
+              elementToMove,
+              previousClientPoint,
+              currentClientPoint,
+            );
+          } else if (element.move.type === 'scaleX') {
+            this.scaleElement(
+              elementToMove,
+              previousClientPoint,
+              currentClientPoint,
+              'x',
+            );
+          } else if (element.move.type === 'scaleY') {
+            this.scaleElement(
+              elementToMove,
+              previousClientPoint,
+              currentClientPoint,
+              'y',
             );
           } else {
             this.translateElement(

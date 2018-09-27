@@ -14,12 +14,12 @@ import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
-type TypeCorner = {
-  _angle: TypeAngle;
-  _line: DiagramElementPrimative;
-  side1: number;
-  side2: number;
-} & DiagramElementCollection;
+// type TypeCorner = {
+//   _angle: TypeAngle;
+//   _line: DiagramElementPrimative;
+//   side1: number;
+//   side2: number;
+// } & DiagramElementCollection;
 
 export default class SSACollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -39,7 +39,7 @@ export default class SSACollection extends CommonDiagramCollection {
     const line1 = make(1, this.layout.corner.width);
     const line2 = make(1, this.layout.corner.width);
     const line3 = make(1, this.layout.corner.width * 0.8);
-    line2.move.type = 'rotation';
+    line2.move.type = 'scale';
     line3.move.type = 'rotation';
     line2.move.canBeMovedAfterLoosingTouch = true;
     line3.move.canBeMovedAfterLoosingTouch = true;
