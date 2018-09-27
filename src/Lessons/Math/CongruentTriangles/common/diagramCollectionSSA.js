@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect, normAngle, Point,
+  Transform, polarToRect, normAngle, Point, minAngleDiff,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -64,8 +64,8 @@ export default class SSACollection extends CommonDiagramCollection {
     this.add('line3', line3);
     this.add('line1', line1);
     this.add('line2', line2);
-    this.add('line3Temp', line3Temp);
     this.add('lineCorner', lineCorner);
+    this.add('line3Temp', line3Temp);
   }
 
   addAngle() {
@@ -102,7 +102,8 @@ export default class SSACollection extends CommonDiagramCollection {
     // const l1 = this._line1.currentLength;
     const s1 = this._line1.transform.s();
     const r3 = this._line3.transform.r();
-    if (p1 != null && r3 != null && s1 != null) {
+    const r2 = this._line2.transform.r();
+    if (p1 != null && r3 != null && s1 != null && r2 != null) {
       const p3 = p1.add(new Point(-this.layout.SSA.line1.length * s1.x, 0));
       this._line2.transform.updateTranslation(p1);
       this._line3.transform.updateTranslation(p3);
@@ -114,6 +115,27 @@ export default class SSACollection extends CommonDiagramCollection {
       this._circ.transform.updateScale(circRadius, circRadius); // as circle radius is 1
       this._angle.setPosition(p3);
       this._angle.updateAngle(0, r3);
+
+      const interceptAngles = this.calculateInterseptAngles();
+      let showLine3Temp = false;
+      if (interceptAngles.length > 0) {
+        interceptAngles.forEach((angle) => {
+          if (Math.abs(minAngleDiff(angle, r2)) < 0.01) {
+            showLine3Temp = true;
+          }
+        });
+      }
+      if (showLine3Temp) {
+        const l2 = this.layout.SSA.line2.length;
+        this._line3Temp.transform.updateRotation(r3);
+        this._line3Temp.transform.updateTranslation(p3);
+        const l3 = (polarToRect(l2, r2).add(p1).sub(p3)).distance();
+        this._line3Temp.setLength(l3);
+
+        this._line3Temp.showAll();
+      } else {
+        this._line3Temp.hide();
+      }
     }
   }
 
@@ -164,9 +186,28 @@ export default class SSACollection extends CommonDiagramCollection {
         }
       }
       if (targetAngle != null) {
+        const showLine3Temp = () => {
+          // const l2 = this.layout.SSA.line2.length;
+          // const p3 = this._line3.transform.t();
+          // const p2 = this._line2.transform.t();
+          // const r3 = this._line3.transform.r();
+          // if (p3 != null && targetAngle != null && r3 != null && p2 != null) {
+          //   this._line3Temp.transform.updateRotation(r3);
+          //   this._line3Temp.transform.updateTranslation(p3);
+          //   const l3 = (polarToRect(l2, targetAngle).add(p2).sub(p3)).distance();
+          //   console.log("asdf", l3);
+          //   this._line3Temp.setLength(l3);
+          //   this._line3Temp.showAll();
+          //   // this._line3Temp.setColor(this.layout.colors.line);
+          //   this._line3Temp.disolveOut(2);
+          //   console.log(this._line3Temp)
+          // }
+        };
+
         this._line2.animateRotationTo(
           targetAngle, 0,
           new Transform().scale(5, 5).rotate(1).translate(5, 5),
+          showLine3Temp,
         );
         this.diagram.animateNextFrame();
       }
