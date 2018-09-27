@@ -12,6 +12,7 @@ const cssColorNames = [
   'angleB',
   'angleC',
   'intersect',
+  'construction',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -204,50 +205,50 @@ export default function commonLessonLayout() {
         side2: 0.5,
       },
     },
-    SSAStart: {
-      c1: {
-        angle: Math.PI / 6,
-        scenario: { position: new Point(-2, -1), rotation: 0 },
-        side1: 3,
-        side2: 0.5,
-      },
-      line: {
-        length: 1.9,
-        scenario: { position: new Point(1.2, -0.6), rotation: Math.PI / 6 * 5},
-      },
-    },
-    SSAJoin: {
-      circleSides: 400,
-      c1: {
-        angle: Math.PI / 6,
-        scenario: { position: new Point(-2, -1), rotation: 0 },
-        side1: 3,
-        side2: 0.5,
-      },
-      line: {
-        length: 1.9,
-        scenario: { position: new Point(1, -0.99)},
-      },
-      line2: {
-        length: 0.1,
-        finalLength: 4,
-        scenario: {
-          position: new Point(-1.96, -0.99),
-          rotation: Math.PI / 6,
-        },
-        largeAngle: 2.766,
-        smallAngle: 1.416,
-      },
-      circ: {
-        scenario: { position: new Point(1, -0.99), rotation: 0 },
-      },
-      // intersect1: {
-      //   scenario: { position: new Point(0.393 - 1, 1.637 - 1) },
-      // },
-      // intersect2: {
-      //   scenario: { position: new Point(-2.213 + 1, 0.38 - 1) },
-      // },
-    },
+    // SSAStart: {
+    //   c1: {
+    //     angle: Math.PI / 6,
+    //     scenario: { position: new Point(-2, -1), rotation: 0 },
+    //     side1: 3,
+    //     side2: 0.5,
+    //   },
+    //   line: {
+    //     length: 1.9,
+    //     scenario: { position: new Point(1.2, -0.6), rotation: Math.PI / 6 * 5},
+    //   },
+    // },
+    // SSAJoin: {
+    //   circleSides: 400,
+    //   c1: {
+    //     angle: Math.PI / 6,
+    //     scenario: { position: new Point(-2, -1), rotation: 0 },
+    //     side1: 3,
+    //     side2: 0.5,
+    //   },
+    //   line: {
+    //     length: 1.9,
+    //     scenario: { position: new Point(1, -0.99)},
+    //   },
+    //   line2: {
+    //     length: 0.1,
+    //     finalLength: 4,
+    //     scenario: {
+    //       position: new Point(-1.96, -0.99),
+    //       rotation: Math.PI / 6,
+    //     },
+    //     largeAngle: 2.766,
+    //     smallAngle: 1.416,
+    //   },
+    //   circ: {
+    //     scenario: { position: new Point(1, -0.99), rotation: 0 },
+    //   },
+    //   // intersect1: {
+    //   //   scenario: { position: new Point(0.393 - 1, 1.637 - 1) },
+    //   // },
+    //   // intersect2: {
+    //   //   scenario: { position: new Point(-2.213 + 1, 0.38 - 1) },
+    //   // },
+    // },
     // AASAlign: {
     //   c1: {
     //     angle: Math.PI / 6,
@@ -370,6 +371,30 @@ export default function commonLessonLayout() {
     iDown: {
       position: layout.corner.SSSConnected.l2.position
         .add(p23Delta.x, -p23Delta.y),
+    },
+  };
+
+  layout.SSA = {
+    line1: {
+      scenario: {
+        position: new Point(-1, 0),
+        rotation: 0,
+      },
+      length: 2,
+    },
+    line2: {
+      scenario: {
+        position: new Point(2, 0),
+        rotation: Math.PI / 3,
+      },
+      length: 1.5,
+    },
+    line3: {
+      scenario: {
+        position: new Point(-1, 0),
+        rotation: Math.PI / 6,
+      },
+      length: 4,
     },
   };
   return layout;
