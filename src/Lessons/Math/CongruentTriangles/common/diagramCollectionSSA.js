@@ -26,6 +26,7 @@ export default class SSACollection extends CommonDiagramCollection {
   _line1: TypeLine;
   _line2: TypeLine;
   _line3: TypeLine;
+  _line3Temp: TypeLine;
   _lineCorner: TypeLine;
   _circ: DiagramElementPrimative;
   _angle: TypeAngle;
@@ -41,6 +42,7 @@ export default class SSACollection extends CommonDiagramCollection {
     const line1 = make(1, this.layout.corner.width);
     const line2 = make(1, this.layout.corner.width);
     const line3 = make(1, this.layout.corner.width * 0.5);
+    const line3Temp = make(1, this.layout.corner.width);
     const lineCorner = make(1, this.layout.corner.width);
     line1.move.type = 'scaleX';
     line3.move.type = 'rotation';
@@ -62,6 +64,7 @@ export default class SSACollection extends CommonDiagramCollection {
     this.add('line3', line3);
     this.add('line1', line1);
     this.add('line2', line2);
+    this.add('line3Temp', line3Temp);
     this.add('lineCorner', lineCorner);
   }
 
@@ -80,6 +83,20 @@ export default class SSACollection extends CommonDiagramCollection {
     this.add('angle', angle);
   }
 
+  growLine3(callback: ?(?mixed) => void = null) {
+    this._line3.setLength(0.1);
+    this._line3.animateLengthTo(this.getTargetLine3Length(), 1, true, callback);
+    this.diagram.animateNextFrame();
+  }
+
+  getTargetLine3Length() {
+    const r3 = this._line3.transform.r();
+    if (r3 != null) {
+      return 1.7 / Math.sin(r3);
+    }
+    return 0;
+  }
+
   update() {
     const p1 = this._line1.transform.t();
     // const l1 = this._line1.currentLength;
@@ -89,7 +106,7 @@ export default class SSACollection extends CommonDiagramCollection {
       const p3 = p1.add(new Point(-this.layout.SSA.line1.length * s1.x, 0));
       this._line2.transform.updateTranslation(p1);
       this._line3.transform.updateTranslation(p3);
-      this._line3.setLength(1.7 / Math.sin(r3));
+      this._line3.setLength(this.getTargetLine3Length());
       this._lineCorner.transform.updateTranslation(p3);
       this._lineCorner.transform.updateRotation(r3);
       this._circ.setPosition(p1);
@@ -149,7 +166,7 @@ export default class SSACollection extends CommonDiagramCollection {
       if (targetAngle != null) {
         this._line2.animateRotationTo(
           targetAngle, 0,
-          new Transform().scale(5, 5).rotate(2).translate(5, 5),
+          new Transform().scale(5, 5).rotate(1).translate(5, 5),
         );
         this.diagram.animateNextFrame();
       }
@@ -229,7 +246,7 @@ export default class SSACollection extends CommonDiagramCollection {
 
   drawCircle() {
     // $FlowFixMe
-    const line = this._line;
+    const line = this._line2;
     // $FlowFixMe
     const circ = this._circ;
     const startR = line.transform.r() || 0;
@@ -246,13 +263,11 @@ export default class SSACollection extends CommonDiagramCollection {
       circ.angleToDraw = angleToDraw;
     };
     line.setMovable(false);
-    const complete = (result: boolean = false) => {
-      if (result) {
-        line.setTransformCallback = originalCallback;
-        circ.angleToDraw = -1;
-        circ.transform.updateRotation(0);
-        line.setMovable(true);
-      }
+    const complete = () => {
+      line.setTransformCallback = originalCallback;
+      circ.angleToDraw = -1;
+      circ.transform.updateRotation(0);
+      line.setMovable(true);
       this.diagram.animateNextFrame();
     };
     let targetRotation = startR - 0.0001;

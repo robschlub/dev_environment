@@ -864,7 +864,6 @@ class Content extends LessonContent {
       setInfo: [],
       infoModifiers: {},
       setEnterState: () => {
-        // ssa.setCornerScenarios('SSA');
         ssa.calcFuturePositions('SSA');
         ssa.setFuturePositions();
       },
@@ -872,27 +871,77 @@ class Content extends LessonContent {
         ssa, qr,
       ],
       show: [
-        ssa,
+        ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle,
       ],
       setSteadyState: () => {
-        ssa._line2.setMovable(true);
-        ssa._line1.setMovable(true);
-        ssa._line3.setMovable(true);
+        ssa._line2.setMovable(false);
+        ssa._line1.setMovable(false);
+        ssa._line3.setMovable(false);
       },
       setLeaveState: () => {},
     };
     common.setContent = `
       <p>
-        Finally, we |can| consider the case where |two sides|, and an |angle not between the two sides| are known.
+        Finally, consider the case where |two sides|, and an |angle not between the two sides| are known.
       </p>
     `;
-    common.modifiers = {
-      can: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
-    }
+    // common.modifiers = {
+    //   can: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
+    // };
     this.addSection(common, {
       title: 'Side Side Angle',
     });
 
+    common.setContent = `
+      <p>
+        How many triangles can be made with this set of constraints?
+      </p>
+    `;
+
+    this.addSection(common);
+
+    common.setContent = `
+      <p>
+        To help visualise, we can |extend| the unknown line, and rotate the right line while |tracing| its end.
+      </p>
+    `;
+    this.addSection(common);
+    this.addSection(common, {
+      modifiers: {
+        extend: click(ssa.growLine3, [ssa], colors.diagram.action),
+        tracing: click(ssa.drawCircle, [ssa], colors.diagram.action),
+      },
+      show: [
+        ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
+      ],
+      transitionFromAny: (done) => {
+        ssa.growLine3(done);
+      },
+      setSteadyState: () => {
+        ssa.drawCircle();
+      },
+      setLeaveState: () => {
+        ssa._circ.angleToDraw = -1;
+      },
+    });
+
+    common.setContent = `
+      <p>
+        The |intersect| points are then the possible triangles.
+      </p>
+    `;
+    common.show = [
+      ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
+      ssa._circ,
+    ];
+    this.addSection(common, {
+      modifiers: {
+        intersect: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
+      },
+      setSteadyState: () => {
+        ssa._line2.setMovable(true);
+      },
+    });
     // common.setContent = `
     //   <p>
     //     First we know the lines must connect at the corner with an unknown angle.

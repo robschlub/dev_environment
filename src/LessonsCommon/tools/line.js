@@ -526,7 +526,6 @@ export function makeLine(
     finishOnCancel: boolean = true,
     callback: ?() => void = null,
   ) {
-    console.log("starting", time)
     line.stop();
     const target = line.currentLength;
     line.setLength(fromLength);
