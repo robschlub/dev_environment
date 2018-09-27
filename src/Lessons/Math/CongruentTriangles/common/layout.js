@@ -380,12 +380,15 @@ export default function commonLessonLayout() {
     angleRadius: 0.3,
     labelRadius: 0.35,
     angleSides: 100,
+    cornerLength: 0.4,
     line1: {
       scenario: {
         position: new Point(0, -0.5),
         rotation: Math.PI,
       },
-      length: 1,
+      length: 1.5,
+      maxScale: 1.5,
+      minScale: 0.5,
     },
     line2: {
       scenario: {

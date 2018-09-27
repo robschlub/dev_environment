@@ -969,10 +969,14 @@ class DiagramElement {
       const min = this.move.minTransform.order[i];
       const max = this.move.maxTransform.order[i];
       const v = next.v.order[i];
-      if (t instanceof Translation
+      if ((t instanceof Translation
           && v instanceof Translation
           && max instanceof Translation
-          && min instanceof Translation
+          && min instanceof Translation)
+        || (t instanceof Scale
+          && v instanceof Scale
+          && max instanceof Scale
+          && min instanceof Scale)
       ) {
         let onLine = true;
         if (this.move.limitLine != null) {

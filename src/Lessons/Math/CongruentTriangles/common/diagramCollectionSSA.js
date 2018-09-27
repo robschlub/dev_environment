@@ -26,10 +26,12 @@ export default class SSACollection extends CommonDiagramCollection {
   _line1: TypeLine;
   _line2: TypeLine;
   _line3: TypeLine;
+  _lineCorner: TypeLine;
   _circ: DiagramElementPrimative;
   _angle: TypeAngle;
 
   addLines() {
+    const ssa = this.layout.SSA;
     const make = (length, width) => makeLine(
       this.diagram,
       'end',
@@ -38,7 +40,8 @@ export default class SSACollection extends CommonDiagramCollection {
     );
     const line1 = make(1, this.layout.corner.width);
     const line2 = make(1, this.layout.corner.width);
-    const line3 = make(1, this.layout.corner.width * 0.8);
+    const line3 = make(1, this.layout.corner.width * 0.5);
+    const lineCorner = make(1, this.layout.corner.width);
     line1.move.type = 'scaleX';
     line3.move.type = 'rotation';
     line2.move.type = 'rotation';
@@ -47,13 +50,17 @@ export default class SSACollection extends CommonDiagramCollection {
     line1.setLength(this.layout.SSA.line1.length);
     line2.setLength(this.layout.SSA.line2.length);
     line3.setLength(this.layout.SSA.line3.length);
+    lineCorner.setLength(this.layout.SSA.cornerLength);
     line3.setColor(this.colors.construction);
     line1.setTransformCallback = this.update.bind(this);
     line2.setTransformCallback = this.update.bind(this);
     line3.setTransformCallback = this.update.bind(this);
+    line1.move.maxTransform.updateScale(ssa.line1.maxScale, 1);
+    line1.move.minTransform.updateScale(ssa.line1.minScale, 1);
     this.add('line3', line3);
     this.add('line1', line1);
     this.add('line2', line2);
+    this.add('lineCorner', lineCorner);
   }
 
   addAngle() {
@@ -81,6 +88,8 @@ export default class SSACollection extends CommonDiagramCollection {
       this._line2.transform.updateTranslation(p1);
       this._line3.transform.updateTranslation(p3);
       this._line3.setLength(1.7 / Math.sin(r3));
+      this._lineCorner.transform.updateTranslation(p3);
+      this._lineCorner.transform.updateRotation(r3);
       this._circ.setPosition(p1);
       const circRadius = this.layout.SSA.line2.length;
       this._circ.transform.updateScale(circRadius, circRadius); // as circle radius is 1

@@ -53,7 +53,7 @@ class VertexPolygonLine extends VertexObject {
       const angle = i * this.dAngle * direction + rotation * direction;
       points.push(polarToRect(radius, angle));
       for (let j = 1; j < thickness; j += 1) {
-        thickPoints[j - 1].push(polarToRect(radius * (1 - j * 0.005), angle))
+        thickPoints[j - 1].push(polarToRect(radius * (1 - j * 0.003), angle))
       }
     }
 
