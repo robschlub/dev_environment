@@ -166,6 +166,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       angleIndex = parseInt(angleIndex, 10);
       const angle = this._triangle._tri1[`_angle${angleIndex}`].currentAngle;
       if (angle < Math.PI / 2) {
+        console.log('this needs to be fixed to be relative to length, not angle') 
         answer = 'not possible';
       }
     }
