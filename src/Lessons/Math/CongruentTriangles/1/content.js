@@ -865,14 +865,14 @@ class Content extends LessonContent {
       infoModifiers: {},
       setEnterState: () => {
         // ssa.setCornerScenarios('AASStart');
-        ssa.calcFuturePositions('SSAStart');
-        ssa.setFuturePositions();
+        // ssa.calcFuturePositions('SSAStart');
+        // ssa.setFuturePositions();
       },
       showOnly: [
         ssa, qr,
       ],
       show: [
-        ssa._corner, ssa._line,
+        ssa,
       ],
       setSteadyState: () => {},
       setLeaveState: () => {},
@@ -886,105 +886,105 @@ class Content extends LessonContent {
       title: 'Side Side Angle',
     });
 
-    common.setContent = `
-      <p>
-        First we know the lines must connect at the corner with an unknown angle.
-      </p>
-    `;
-    this.addSection(common);
-    common.setEnterState = () => { ssa.calcFuturePositions('SSAJoin'); };
-    common.setSteadyState = () => { ssa.setFuturePositions(); };
-    this.addSection(common, {
-      transitionFromPrev: (done) => { ssa.moveToFuturePositions(1, done); },
-    });
+    // common.setContent = `
+    //   <p>
+    //     First we know the lines must connect at the corner with an unknown angle.
+    //   </p>
+    // `;
+    // this.addSection(common);
+    // common.setEnterState = () => { ssa.calcFuturePositions('SSAJoin'); };
+    // common.setSteadyState = () => { ssa.setFuturePositions(); };
+    // this.addSection(common, {
+    //   transitionFromPrev: (done) => { ssa.moveToFuturePositions(1, done); },
+    // });
 
-    common.setContent = `
-      <p>
-        We can also draw in the remaining side with a temporary length as we don't know it yet.
-      </p>
-    `;
-    this.addSection(common);
-    common.show = [ssa._corner, ssa._line, ssa._line2];
-    common.setSteadyState = () => {
-      ssa.setFuturePositions();
-      ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
-    };
-    this.addSection(common, {
-      transitionFromPrev: (done) => {
-        ssa._line2.setLength(0.1);
-        ssa._line2.animateLengthTo(layout.corner.SSAJoin.line2.finalLength, 1, true, done);
-      },
-    });
+    // common.setContent = `
+    //   <p>
+    //     We can also draw in the remaining side with a temporary length as we don't know it yet.
+    //   </p>
+    // `;
+    // this.addSection(common);
+    // common.show = [ssa._corner, ssa._line, ssa._line2];
+    // common.setSteadyState = () => {
+    //   ssa.setFuturePositions();
+    //   ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
+    // };
+    // this.addSection(common, {
+    //   transitionFromPrev: (done) => {
+    //     ssa._line2.setLength(0.1);
+    //     ssa._line2.animateLengthTo(layout.corner.SSAJoin.line2.finalLength, 1, true, done);
+    //   },
+    // });
 
-    common.setContent = `
-      <p>
-        Now, how can the right side be rotated to form a triangle?
-      </p>
-    `;
-    common.setInfo = [
-      '<ul>',
-      '<li>Rotate the right side to see what triangles can be formed.</li>',
-      '</ul>',
-    ];
-    common.setSteadyState = () => {
-      ssa.setFuturePositions();
-      ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
-      ssa._line.setMovable(true);
-    };
-    common.setLeaveState = () => {
-      ssa._line.setMovable(false);
-    };
-    this.addSection(common);
+    // common.setContent = `
+    //   <p>
+    //     Now, how can the right side be rotated to form a triangle?
+    //   </p>
+    // `;
+    // common.setInfo = [
+    //   '<ul>',
+    //   '<li>Rotate the right side to see what triangles can be formed.</li>',
+    //   '</ul>',
+    // ];
+    // common.setSteadyState = () => {
+    //   ssa.setFuturePositions();
+    //   ssa._line2.setLength(layout.corner.SSAJoin.line2.finalLength);
+    //   ssa._line.setMovable(true);
+    // };
+    // common.setLeaveState = () => {
+    //   ssa._line.setMovable(false);
+    // };
+    // this.addSection(common);
 
-    common.setContent = `
-      <p>
-        One way to quickly see this is to |trace| out all the possible locations, and see which ones intersect with the left line.
-      </p>
-    `;
-    common.modifiers = { trace: click(ssa.drawCircle, [ssa], colors.diagram.action) };
-    common.setInfo = [
-      '<ul>',
-      '<li>Rotate the right side to see what triangles can be formed.</li>',
-      '<li>Touch the |trace| text to trace out the possibilities.</li>',
-      '</ul>',
-    ];
-    common.infoModifiers = {
-      trace: highlight(colors.diagram.action),
-    };
-    this.addSection(common);
-    common.show = [ssa._corner, ssa._line, ssa._line2, ssa._circ];
-    this.addSection(common);
+    // common.setContent = `
+    //   <p>
+    //     One way to quickly see this is to |trace| out all the possible locations, and see which ones intersect with the left line.
+    //   </p>
+    // `;
+    // common.modifiers = { trace: click(ssa.drawCircle, [ssa], colors.diagram.action) };
+    // common.setInfo = [
+    //   '<ul>',
+    //   '<li>Rotate the right side to see what triangles can be formed.</li>',
+    //   '<li>Touch the |trace| text to trace out the possibilities.</li>',
+    //   '</ul>',
+    // ];
+    // common.infoModifiers = {
+    //   trace: highlight(colors.diagram.action),
+    // };
+    // this.addSection(common);
+    // common.show = [ssa._corner, ssa._line, ssa._line2, ssa._circ];
+    // this.addSection(common);
 
-    common.setContent = `
-      <p>
-        There are two |intersection_points|, and therefore, two different triangles are possible.
-      </p>
-    `;
-    common.modifiers = {
-      intersection_points: click(ssa.toggleTriangle, [ssa], colors.diagram.action),
-    };
-    common.setInfo = [
-      '<ul>',
-      '<li>Rotate the right side to see what triangles can be formed.</li>',
-      '<li>Touch the |intersection_points| text to show the possible triangles.</li>',
-      '</ul>',
-    ];
-    common.infoModifiers = {
-      intersection_points: highlight(colors.diagram.action),
-    };
-    this.addSection(common);
-    common.setInfo = [];
-    common.infoModifiers = {};
-    this.addSection({
-      setContent: centerV(`
-      <p>
-        Therefore, if |two sides| and an |angle not between the sides| is known, there are two possible triangles.
-      </p>
-      <p>
-        If these are the known dimensions of two triangles, |it cannot be determined if they are congruent|.
-      </p>
-      `),
-    });
+    // common.setContent = `
+    //   <p>
+    //     There are two |intersection_points|, and therefore, two different triangles are possible.
+    //   </p>
+    // `;
+    // common.modifiers = {
+    //   intersection_points: click(ssa.toggleTriangle, [ssa], colors.diagram.action),
+    // };
+    // common.setInfo = [
+    //   '<ul>',
+    //   '<li>Rotate the right side to see what triangles can be formed.</li>',
+    //   '<li>Touch the |intersection_points| text to show the possible triangles.</li>',
+    //   '</ul>',
+    // ];
+    // common.infoModifiers = {
+    //   intersection_points: highlight(colors.diagram.action),
+    // };
+    // this.addSection(common);
+    // common.setInfo = [];
+    // common.infoModifiers = {};
+    // this.addSection({
+    //   setContent: centerV(`
+    //   <p>
+    //     Therefore, if |two sides| and an |angle not between the sides| is known, there are two possible triangles.
+    //   </p>
+    //   <p>
+    //     If these are the known dimensions of two triangles, |it cannot be determined if they are congruent|.
+    //   </p>
+    //   `),
+    // });
   }
 }
 

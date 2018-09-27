@@ -375,6 +375,7 @@ export default function commonLessonLayout() {
   };
 
   layout.SSA = {
+    circleSides: 300,
     line1: {
       scenario: {
         position: new Point(-1, 0),

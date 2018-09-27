@@ -96,34 +96,28 @@ export default class SSACollection extends CommonDiagramCollection {
   // }
 
   addCircle() {
-    const make = (radius, color) => this.diagram.shapes.polygon(
-      this.layout.corner.SSAJoin.circleSides,
-      radius,
-      this.layout.corner.width / 2,
-      0,
-      1,
-      this.layout.corner.SSAJoin.circleSides,
-      color,
-      new Transform('circle').scale(1, 1).rotate(0).translate(0, 0),
+    const circle = this.diagram.shapes.polygonLine(
+      this.layout.SSA.circleSides, 1, 0, 1, this.layout.SSA.circleSides,
+      this.layout.colors.angleA,
+      new Transform().scale(1, 1).rotate(0).translate(0, 0),
     );
-    const circ = make(this.layout.corner.SSAJoin.line.length, this.layout.colors.angleA);
-    this.add('circ', circ);
+    this.add('circ', circle);
   }
 
-  toggleTriangle() {
-    const r = this._line.transform.r();
-    const { smallAngle, largeAngle } = this.layout.corner.SSAJoin.line2;
-    const midAngle = (largeAngle - smallAngle) / 2 + smallAngle;
-    if (r != null) {
-      this._line.transform.updateRotation(normAngle(r));
-      let goToAngle = smallAngle;
-      if (r < midAngle) {
-        goToAngle = largeAngle;
-      }
-      this._line.animateRotationTo(goToAngle, 0, new Transform().rotate(4));
-    }
-    this.diagram.animateNextFrame();
-  }
+  // toggleTriangle() {
+  //   const r = this._line.transform.r();
+  //   const { smallAngle, largeAngle } = this.layout.corner.SSAJoin.line2;
+  //   const midAngle = (largeAngle - smallAngle) / 2 + smallAngle;
+  //   if (r != null) {
+  //     this._line.transform.updateRotation(normAngle(r));
+  //     let goToAngle = smallAngle;
+  //     if (r < midAngle) {
+  //       goToAngle = largeAngle;
+  //     }
+  //     this._line.animateRotationTo(goToAngle, 0, new Transform().rotate(4));
+  //   }
+  //   this.diagram.animateNextFrame();
+  // }
 
   drawCircle() {
     // $FlowFixMe

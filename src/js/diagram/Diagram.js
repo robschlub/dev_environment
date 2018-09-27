@@ -24,7 +24,7 @@ import type {
   TypePolyLineBorderToPoint,
 } from './DiagramElements/PolyLine';
 import {
-  Polygon, PolygonFilled,
+  Polygon, PolygonFilled, PolygonLine,
 } from './DiagramElements/Polygon';
 import RadialLines from './DiagramElements/RadialLines';
 import HorizontalLine from './DiagramElements/HorizontalLine';
@@ -313,6 +313,20 @@ function shapes(diagram: Diagram, high: boolean = false) {
       rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation, textureCoords,
     );
   }
+  function polygonLine(
+    numSides: number,
+    radius: number,
+    rotation: number,
+    direction: -1 | 1,
+    numSidesToDraw: number,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return PolygonLine(
+      webgl, numSides, radius,
+      rotation, direction, numSidesToDraw, color, transform, diagram.limits,
+    );
+  }
   function horizontalLine(
     start: Point,
     length: number,
@@ -498,6 +512,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
     polyLineCorners,
     polygon,
     polygonFilled,
+    polygonLine,
     horizontalLine,
     arrow,
     collection,
