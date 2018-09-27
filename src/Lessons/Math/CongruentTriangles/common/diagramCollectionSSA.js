@@ -4,6 +4,9 @@ import {
   Transform, polarToRect, normAngle, Point, minAngleDiff,
 } from '../../../../js/diagram/tools/g2';
 import {
+  rand,
+} from '../../../../js/diagram/tools/mathtools';
+import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -32,7 +35,7 @@ export default class SSACollection extends CommonDiagramCollection {
   _angle: TypeAngle;
 
   addLines() {
-    const ssa = this.layout.SSA;
+    const ssa = this.layout.SSAInitial;
     const make = (length, width) => makeLine(
       this.diagram,
       'end',
@@ -49,10 +52,10 @@ export default class SSACollection extends CommonDiagramCollection {
     line2.move.type = 'rotation';
     line2.move.canBeMovedAfterLoosingTouch = true;
     line3.move.canBeMovedAfterLoosingTouch = true;
-    line1.setLength(this.layout.SSA.line1.length);
-    line2.setLength(this.layout.SSA.line2.length);
-    line3.setLength(this.layout.SSA.line3.length);
-    lineCorner.setLength(this.layout.SSA.cornerLength);
+    line1.setLength(ssa.line1.length);
+    line2.setLength(ssa.line2.length);
+    line3.setLength(ssa.line3.length);
+    lineCorner.setLength(ssa.cornerLength);
     line3.setColor(this.colors.construction);
     line1.setTransformCallback = this.update.bind(this);
     line2.setTransformCallback = this.update.bind(this);
@@ -71,12 +74,12 @@ export default class SSACollection extends CommonDiagramCollection {
   addAngle() {
     const angle = makeAngle(
       this.diagram,
-      this.layout.SSA.angleRadius,
+      this.layout.SSAInitial.angleRadius,
       this.layout.corner.width,
-      this.layout.SSA.angleSides,
+      this.layout.SSAInitial.angleSides,
       this.layout.colors.angleA,
     );
-    angle.addLabel('a', this.layout.SSA.labelRadius);
+    angle.addLabel('a', this.layout.SSAInitial.labelRadius);
     angle.showRealAngle = true;
     angle.autoRightAngle = true;
     angle.realAngleDecimals = 0;
@@ -104,14 +107,14 @@ export default class SSACollection extends CommonDiagramCollection {
     const r3 = this._line3.transform.r();
     const r2 = this._line2.transform.r();
     if (p1 != null && r3 != null && s1 != null && r2 != null) {
-      const p3 = p1.add(new Point(-this.layout.SSA.line1.length * s1.x, 0));
+      const p3 = p1.add(new Point(-this.layout.SSAInitial.line1.length * s1.x, 0));
       this._line2.transform.updateTranslation(p1);
       this._line3.transform.updateTranslation(p3);
       this._line3.setLength(this.getTargetLine3Length());
       this._lineCorner.transform.updateTranslation(p3);
       this._lineCorner.transform.updateRotation(r3);
       this._circ.setPosition(p1);
-      const circRadius = this.layout.SSA.line2.length;
+      const circRadius = this.layout.SSAInitial.line2.length;
       this._circ.transform.updateScale(circRadius, circRadius); // as circle radius is 1
       this._angle.setPosition(p3);
       this._angle.updateAngle(0, r3);
@@ -126,7 +129,7 @@ export default class SSACollection extends CommonDiagramCollection {
         });
       }
       if (showLine3Temp) {
-        const l2 = this.layout.SSA.line2.length;
+        const l2 = this.layout.SSAInitial.line2.length;
         this._line3Temp.transform.updateRotation(r3);
         this._line3Temp.transform.updateTranslation(p3);
         const l3 = (polarToRect(l2, r2).add(p1).sub(p3)).distance();
@@ -141,13 +144,47 @@ export default class SSACollection extends CommonDiagramCollection {
     }
   }
 
-  calculateInterseptAngles() {
-    const s1 = this._line1.transform.s();
-    const l2 = this.layout.SSA.line2.length;
-    const r3 = this._line3.transform.r();
+  calcNewScenario(scenario: 'short' | 'long0' | 'long2' | 'long1') {
+    if (scenario === 'short') {
+      const s1 = rand(this.layout.SSAInitial.line1.minScale, 0.6);
+      const r3 = rand(Math.PI / 4, 3 * Math.PI / 4);
+      const interceptAngles = this.calculateInterseptAngles(s1, r3);
+      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
+      this._line3.animateRotationTo(r3, 0, 0.8);
+      this._line2.animateRotationTo(interceptAngles[0], 0, 0.8);
+    } else if (scenario === 'long0') {
+      const s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
+      const minAngle = Math.asin(this.layout.SSAInitial.line2.length / (s1 * this.layout.SSAInitial.line1.length));
+      const r3 = rand(minAngle, 3 * Math.PI / 4);
+      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
+      this._line3.animateRotationTo(r3, 0, 0.8);
+    } else if (scenario === 'long2') {
+      const s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
+      const minAngle = Math.asin(this.layout.SSAInitial.line2.length / (s1 * this.layout.SSAInitial.line1.length));
+      const r3 = rand(Math.PI / 10, minAngle * 0.9);
+      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
+      this._line3.animateRotationTo(r3, 0, 0.8);
+    } else if (scenario === 'long1') {
+      const s1 = rand(0.75, this.layout.SSAInitial.line1.maxScale);
+      const minAngle = Math.asin(this.layout.SSAInitial.line2.length / (s1 * this.layout.SSAInitial.line1.length));
+      const r3 = minAngle;
+      this._line1.animateScaleTo(new Point(s1, 1), 0.8);
+      this._line3.animateRotationTo(r3, 0, 0.8);
+      this._line2.animateRotationTo(Math.PI - (Math.PI - Math.PI / 2 - minAngle), 0, 0.8);
+    }
+    this.diagram.animateNextFrame();
+  }
+
+  calculateInterseptAngles(
+    scale1: null | number = null,
+    rot3: null | number = null,
+  ) {
+    const s1 = scale1 === null ? this._line1.transform.s() : new Point(scale1, 1);
+    const l2 = this.layout.SSAInitial.line2.length;
+    const r3 = rot3 === null ? this._line3.transform.r() : rot3;
     const interceptAngles = [];
     if (s1 != null && r3 != null) {
-      const l1 = this.layout.SSA.line1.length * s1.x;
+      const l1 = this.layout.SSAInitial.line1.length * s1.x;
       const angleThreshold = Math.asin(l2 / l1);
       const b = Math.asin(l1 * Math.sin(r3) / l2);
       const c = r3 + b;
@@ -216,76 +253,15 @@ export default class SSACollection extends CommonDiagramCollection {
     }
   }
 
-  // addCorner() {
-  //   const corner = this.diagram.shapes.collection(new Transform('Corner')
-  //     .scale(1, 1)
-  //     .rotate(0)
-  //     .translate(0, 0));
-  //   const line = this.diagram.shapes.polyLine(
-  //     this.layout.corner.points, false,
-  //     this.layout.corner.width, this.layout.colors.line,
-  //     'onSharpAnglesOnly',
-  //   );
-  //   const angle = makeAngle(
-  //     this.diagram, this.layout.corner.angleRadius,
-  //     this.layout.corner.angleWidth, this.layout.triangle.angle.sides,
-  //     this.layout.colors.angleA,
-  //   );
-  //   corner.side1 = 1;
-  //   corner.side2 = 1;
-  //   corner.hasTouchableElements = true;
-  //   angle.updateAngle(0, Math.PI / 2);
-  //   angle.setPosition(this.layout.corner.points[1]);
-  //   angle.showRealAngle = true;
-  //   angle.addLabel('', this.layout.corner.angleLabelRadius);
-  //   angle.autoRightAngle = true;
-  //   corner.add('angle', angle);
-  //   corner.add('line', line);
-  //   this.updateCorner(
-  //     corner,
-  //     this.layout.corner.SSAStart.c1.angle,
-  //     this.layout.corner.SSAStart.c1.side1,
-  //     this.layout.corner.SSAStart.c1.side2,
-  //   );
-  //   this.add('corner', corner);
-  // }
-
-  // updateCorner(corner: TypeCorner, angle: number, side1: number, side2: number) {
-  //   const newP1 = polarToRect(side1, 0);
-  //   const newP3 = polarToRect(side2, angle);
-  //   const p2 = this.layout.corner.points[1];
-  //   corner.side1 = newP1.sub(p2).distance();
-  //   corner.side2 = newP3.sub(p2).distance();
-  //   corner._line.vertices.change([newP1, p2, newP3]);
-  //   const rotation = corner.transform.r();
-  //   if (rotation != null) {
-  //     corner._angle.updateAngle(0, angle, rotation);
-  //   }
-  // }
 
   addCircle() {
     const circle = this.diagram.shapes.polygonLine(
-      this.layout.SSA.circleSides, 1, 0, 1, this.layout.SSA.circleSides,
+      this.layout.SSAInitial.circleSides, 1, 0, 1, this.layout.SSAInitial.circleSides,
       2, this.layout.colors.construction,
       new Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
     );
     this.add('circ', circle);
   }
-
-  // toggleTriangle() {
-  //   const r = this._line.transform.r();
-  //   const { smallAngle, largeAngle } = this.layout.corner.SSAJoin.line2;
-  //   const midAngle = (largeAngle - smallAngle) / 2 + smallAngle;
-  //   if (r != null) {
-  //     this._line.transform.updateRotation(normAngle(r));
-  //     let goToAngle = smallAngle;
-  //     if (r < midAngle) {
-  //       goToAngle = largeAngle;
-  //     }
-  //     this._line.animateRotationTo(goToAngle, 0, new Transform().rotate(4));
-  //   }
-  //   this.diagram.animateNextFrame();
-  // }
 
   drawCircle() {
     // $FlowFixMe
@@ -346,8 +322,6 @@ export default class SSACollection extends CommonDiagramCollection {
     this.addCircle();
     this.addAngle();
     this.addLines();
-    // this._line2.setTransformCallback = this.update.bind(this);
-    // this.addCorner();
     this.hasTouchableElements = true;
   }
 }

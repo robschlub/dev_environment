@@ -864,7 +864,7 @@ class Content extends LessonContent {
       setInfo: [],
       infoModifiers: {},
       setEnterState: () => {
-        ssa.calcFuturePositions('SSA');
+        ssa.calcFuturePositions('SSAInitial');
         ssa.setFuturePositions();
       },
       showOnly: [
@@ -934,7 +934,14 @@ class Content extends LessonContent {
       ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
       ssa._circ,
     ];
-    common.setSteadyState = () => ssa._line2.setMovable(true);
+    common.setEnterState = () => {
+      ssa.calcFuturePositions('SSA');
+      ssa.setFuturePositions();
+    };
+    common.setSteadyState = () => {
+      ssa._line2.setMovable(true);
+      ssa.update();
+    };
     this.addSection(common, {
       modifiers: {
         intersect: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
@@ -946,28 +953,63 @@ class Content extends LessonContent {
         In this case, there are two possible |triangles|.
       </p>
     `;
-    this.addSection(common, {
-      modifiers: {
-        triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
-      },
-    });
+    common.modifiers = {
+      triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action)
+    };
+    this.addSection(common);
 
     common.setContent = `
       <p>
         But what happens when we change the known length or angle of the first side? How many |triangles| can be formed?
       </p>
     `;
-    this.addSection(common, {
-      modifiers: {
-        triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
-      },
-      setEnterState: () => {
-        ssa._line1.setMovable(true);
-        ssa._line2.setMovable(true);
-        ssa._line3.setMovable(true);
-      },
-    });
+    this.addSection(common);
 
+    common.setContent = `
+      <p>
+        Experiment with this by rotating the unknown side and sliding the known angle.
+      </p>
+    `;
+    common.setSteadyState = () => {
+      ssa._line1.setMovable(true);
+      ssa._line2.setMovable(true);
+      ssa._line3.setMovable(true);
+      ssa.update();
+    };
+    this.addSection(common);
+
+    common.setContent = `
+      <p>
+        You might see different scenarios where two, one or no triangles can be formed.
+      </p>
+    `;
+    this.addSection(common);
+
+    common.setContent = `
+      <p>
+        When the |bottom_side| is |shorter| than the |right_side|, only |one triangle| can ever be formed.
+      </p>
+    `;
+    common.modifiers = {
+      bottom_side: click(ssa._line1.pulseWidth, [ssa], colors.line),
+      right_side: click(ssa._line2.pulseWidth, [ssa], colors.line),
+      shorter: click(ssa.calcNewScenario, [ssa, 'short'], colors.diagram.action),
+    };
+    this.addSection(common);
+
+    common.setContent = `
+      <p>
+        When the |bottom_side| is |longer| than the |right_side|, it there is most often either |two_triangles|, |one_triangle| or |no_triangles| possible.
+      </p>
+    `;
+    common.modifiers = {
+      bottom_side: click(ssa._line1.pulseWidth, [ssa], colors.line),
+      right_side: click(ssa._line2.pulseWidth, [ssa], colors.line),
+      two_triangles: click(ssa.calcNewScenario, [ssa, 'long2'], colors.diagram.action),
+      one_triangle: click(ssa.calcNewScenario, [ssa, 'long1'], colors.diagram.action),
+      no_triangles: click(ssa.calcNewScenario, [ssa, 'long0'], colors.diagram.action),
+    };
+    this.addSection(common);
     // common.setContent = `
     //   <p>
     //     First we know the lines must connect at the corner with an unknown angle.

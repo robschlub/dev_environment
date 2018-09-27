@@ -1327,6 +1327,22 @@ class DiagramElement {
     }
   }
 
+  // With update only first instace of translation in the transform order
+  animateScaleTo(
+    scale: Point,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+  ): void {
+    const transform = this.transform._dup();
+    transform.updateScale(scale);
+    // transform.translation = translation._dup();
+    const phase = new AnimationPhase(transform, time, 0, easeFunction);
+    if (phase instanceof AnimationPhase) {
+      this.animatePlan([phase], checkCallback(callback));
+    }
+  }
+
   // Will update only first instace of translation in the transform order
   animateTranslationFrom(
     translation: Point,

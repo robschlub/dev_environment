@@ -96,7 +96,8 @@ export function makeAngle(
   ) {
     angle.currentAngle = size;
     if (angle.showRealAngle) {
-      angle._label._base.vertices.setText(roundNum(size * 180 / Math.PI, angle.realAngleDecimals).toString());
+      const angleText = roundNum(size * 180 / Math.PI, angle.realAngleDecimals).toString();
+      angle._label._base.vertices.setText(`${angleText}º`);
       angle.label.eqn.reArrangeCurrentForm();
     }
     if (angle.autoRightAngle
