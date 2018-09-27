@@ -39,14 +39,16 @@ export default class SSACollection extends CommonDiagramCollection {
     const line1 = make(1, this.layout.corner.width);
     const line2 = make(1, this.layout.corner.width);
     const line3 = make(1, this.layout.corner.width * 0.8);
-    line2.move.type = 'scale';
+    line1.move.type = 'scaleX';
     line3.move.type = 'rotation';
+    line2.move.type = 'rotation';
     line2.move.canBeMovedAfterLoosingTouch = true;
     line3.move.canBeMovedAfterLoosingTouch = true;
     line1.setLength(this.layout.SSA.line1.length);
     line2.setLength(this.layout.SSA.line2.length);
     line3.setLength(this.layout.SSA.line3.length);
     line3.setColor(this.colors.construction);
+    line1.setTransformCallback = this.update.bind(this);
     line2.setTransformCallback = this.update.bind(this);
     line3.setTransformCallback = this.update.bind(this);
     this.add('line3', line3);
@@ -60,25 +62,29 @@ export default class SSACollection extends CommonDiagramCollection {
       this.layout.SSA.angleRadius,
       this.layout.corner.width,
       this.layout.SSA.angleSides,
-      this.layout.angleA,
+      this.layout.colors.angleA,
     );
     angle.addLabel('a', this.layout.SSA.labelRadius);
     angle.showRealAngle = true;
     angle.autoRightAngle = true;
+    angle.realAngleDecimals = 0;
     this.add('angle', angle);
   }
 
   update() {
     const p1 = this._line1.transform.t();
-    const l1 = this._line1.currentLength;
-    const l2 = this._line2.currentLength;
+    // const l1 = this._line1.currentLength;
+    const s1 = this._line1.transform.s();
     const r3 = this._line3.transform.r();
-    if (p1 != null && r3 != null) {
-      const p2 = p1.add(new Point(l1, 0));
-      this._line2.transform.updateTranslation(p2);
-      this._line3.transform.updateTranslation(p1);
-      this._circ.setPosition(p2);
-      this._circ.transform.updateScale(l2, l2); // as circle radius is 1
+    if (p1 != null && r3 != null && s1 != null) {
+      const p3 = p1.add(new Point(-this.layout.SSA.line1.length * s1.x, 0));
+      this._line2.transform.updateTranslation(p1);
+      this._line3.transform.updateTranslation(p3);
+      this._line3.setLength(1.7 / Math.sin(r3));
+      this._circ.setPosition(p1);
+      const circRadius = this.layout.SSA.line2.length;
+      this._circ.transform.updateScale(circRadius, circRadius); // as circle radius is 1
+      this._angle.setPosition(p3);
       this._angle.updateAngle(0, r3);
     }
   }
@@ -133,7 +139,7 @@ export default class SSACollection extends CommonDiagramCollection {
   addCircle() {
     const circle = this.diagram.shapes.polygonLine(
       this.layout.SSA.circleSides, 1, 0, 1, this.layout.SSA.circleSides,
-      2, this.layout.colors.construction1,
+      3, this.layout.colors.construction1,
       new Transform().scale(0.5, 0.5).rotate(0).translate(0, 0),
     );
     this.add('circ', circle);

@@ -377,10 +377,13 @@ export default function commonLessonLayout() {
 
   layout.SSA = {
     circleSides: 300,
+    angleRadius: 0.3,
+    labelRadius: 0.35,
+    angleSides: 100,
     line1: {
       scenario: {
-        position: new Point(-1, -0.5),
-        rotation: 0,
+        position: new Point(0, -0.5),
+        rotation: Math.PI,
       },
       length: 1,
     },

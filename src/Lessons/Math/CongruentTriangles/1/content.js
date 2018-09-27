@@ -876,10 +876,8 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         ssa._line2.setMovable(true);
+        ssa._line1.setMovable(true);
         ssa._line3.setMovable(true);
-        // ssa._line2.isTouchable = true;
-        // ssa._line2.isMovable = true;
-        console.log(diag)
       },
       setLeaveState: () => {},
     };
