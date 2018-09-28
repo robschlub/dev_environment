@@ -298,8 +298,14 @@ export class QRSsa extends PopupBoxCollection {
     this.setTitle('Side-Side-Angle Ambiguity');
     const modifiers = {
       angle: html.highlightWord('angle (a)', this.layout.colors.angleLabels),
-      adjacent_side: html.highlightWord('adjacent side (C)',this.layout.colors.lineLabels),
-      opposite_side: html.highlightWord('opposite side (A)',this.layout.colors.lineLabels),
+      adjacent_side: html.highlightWord(
+        'adjacent side (C)',
+        this.layout.colors.lineLabels,
+      ),
+      opposite_side: html.highlightWord(
+        'opposite side (A)',
+        this.layout.colors.lineLabels,
+      ),
       angle_not_between_the_sides: html.highlight(this.layout.colors.angleLabels),
     };
     this.setDescription(`
@@ -307,7 +313,7 @@ export class QRSsa extends PopupBoxCollection {
         If an |angle|, |adjacent_side| and |opposite_side| of a triangle is known, the remaining angles and side can be calculated with certainty only if the |opposite side is longer than or equal to the adjancent side or C >= A|.
       </p>
       <p>
-        Therefore, if two triangles share the same angle, adjancent side and opposite is, and the opposite side is not shorter than the adjacent side, then the triangles will be congruent.
+        Therefore, if two triangles share the same angle, adjancent side and opposite side, and the opposite side longer than or equal to the adjacent side, then the triangles will be congruent.
       </p>`, modifiers);
 
     this.setLink(details.details.uid);

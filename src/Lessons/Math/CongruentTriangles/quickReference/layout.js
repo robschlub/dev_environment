@@ -36,15 +36,15 @@ export default function lessonLayout() {
       scenario: { position: new Point(-0.2, 0), rotation: 0, scale: (0.9, 0.9) },
       points: [
         new Point(-1.5, 0),
-        new Point(0, 0),
+        new Point(-0.5, 0),
         new Point(0, 1),
       ],
     },
     tri2: {
       points: [
         new Point(-1.5, 0),
-        new Point(0, 0),
-        new Point(-0.923, 0.384),
+        new Point(-0.5, 0),
+        new Point(0, 1),
       ],
       scenario: { position: new Point(1.4, 0), rotation: 0, scale: (0.9, 0.9) },
     },
