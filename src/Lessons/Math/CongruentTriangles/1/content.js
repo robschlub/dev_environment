@@ -62,7 +62,7 @@ class Content extends LessonContent {
       },
       setInfo: [
         '<ul>',
-        '<li>Touch the touch the |side_lengths| and |angles| text toggle the side and angle annotations.</li>',
+        '<li>Touch the |side_lengths| and |angles| text toggle the side and angle annotations.</li>',
         '</ul>',
       ],
       infoModifiers: {
@@ -917,8 +917,8 @@ class Content extends LessonContent {
       },
       setInfo: [
         '<ul>',
-        '<li>Touch the touch the |extend| text to draw the unknown side construction line.</li>',
-        '<li>Touch the touch the |tracing| text to possibilities for the opposite side.</li>',
+        '<li>Touch the |extend| text to draw the unknown side construction line.</li>',
+        '<li>Touch the |tracing| text to possibilities for the opposite side.</li>',
         '</ul>',
       ],
       infoModifiers: {
@@ -962,7 +962,7 @@ class Content extends LessonContent {
       },
       setInfo: [
         '<ul>',
-        '<li>Touch the touch the |intersect| text to show the possible triangles.</li>',
+        '<li>Touch the |intersect| text to show the possible triangles.</li>',
         '</ul>',
       ],
       infoModifiers: {
@@ -981,7 +981,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setInfo: [
         '<ul>',
-        '<li>Touch the touch the |triangles| text to show the possible triangles.</li>',
+        '<li>Touch the |triangles| text to show the possible triangles.</li>',
         '</ul>',
       ],
       infoModifiers: {
@@ -1005,12 +1005,13 @@ class Content extends LessonContent {
     this.addSection(common, {
       setInfo: [
         '<ul>',
-        '<li>Touch the touch the |length| text to highlight the known adjacent side.</li>',
-        '<li>Touch the touch the |angle| text to highlight the known angle side.</li>',
+        '<li>Touch the |length| text to highlight the known adjacent side.</li>',
+        '<li>Touch the |angle| text to highlight the known angle side.</li>',
         '</ul>',
       ],
       infoModifiers: {
-        intersect: highlight(colors.diagram.action),
+        length: highlight(colors.diagram.line),
+        angle: highlight(colors.diagram.angleA),
       },
     });
 
@@ -1025,6 +1026,13 @@ class Content extends LessonContent {
       ssa._line3.setMovable(true);
       ssa.update();
     };
+    common.setInfo = [
+      '<ul>',
+      '<li>Drag the adjacent side to change its length.</li>',
+      '<li>Drag the unknown side to rotate it and change the known angle.</li>',
+      '<li>Drag the opposite side to rotate it and change the known angle.</li>',
+      '</ul>',
+    ];
     this.addSection(common);
 
     common.setContent = `
@@ -1045,6 +1053,18 @@ class Content extends LessonContent {
       shorter: click(ssa.calcNewScenario, [ssa, 'short'], colors.diagram.action),
     };
     this.addSection(common, {
+      setInfo: [
+        common.setInfo[0],
+        '<li>Touch the |adjacent| text to highlight the adjacent side.</li>',
+        '<li>Touch the |shorter| text to observe examples.</li>',
+        '<li>Touch the |opposite| text to highlight the opposite side.</li>',
+        ...common.setInfo.slice(1),
+      ],
+      infoModifiers: {
+        adjacent: highlight(colors.line),
+        opposite: highlight(colors.line),
+        shorter: highlight(colors.diagram.action),
+      },
       setSteadyState: () => {
         ssa._line1.setMovable(true);
         ssa._line2.setMovable(true);
@@ -1056,7 +1076,7 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        When the |adjacent| side is |longer| than the |opposite| side, then either |two|, |one| or |no| triangles are possible.
+        When the |adjacent| side is |longer| than the |opposite| side, then either |two|, |one| or |zero| triangles are possible.
       </p>
     `;
     common.modifiers = {
@@ -1064,9 +1084,25 @@ class Content extends LessonContent {
       opposite: click(ssa._line2.pulseWidth, [ssa], colors.line),
       two: click(ssa.calcNewScenario, [ssa, 'long2'], colors.diagram.action),
       one: click(ssa.calcNewScenario, [ssa, 'long1'], colors.diagram.action),
-      no: click(ssa.calcNewScenario, [ssa, 'long0'], colors.diagram.action),
+      zero: click(ssa.calcNewScenario, [ssa, 'long0'], colors.diagram.action),
     };
     this.addSection(common, {
+      setInfo: [
+        common.setInfo[0],
+        '<li>Touch the |adjacent| text to highlight the adjacent side.</li>',
+        '<li>Touch the |opposite| text to highlight the opposite side.</li>',
+        '<li>Touch the |two| text to show examples of two triangles.</li>',
+        '<li>Touch the |one| text to show examples of one triangles.</li>',
+        '<li>Touch the |zero| text to show examples of no triangles.</li>',
+        ...common.setInfo.slice(1),
+      ],
+      infoModifiers: {
+        adjacent: highlight(colors.line),
+        opposite: highlight(colors.line),
+        two: highlight(colors.diagram.action),
+        one: highlight(colors.diagram.action),
+        zero: highlight(colors.diagram.action),
+      },
       setSteadyState: () => {
         ssa._line1.setMovable(true);
         ssa._line2.setMovable(true);
@@ -1084,15 +1120,25 @@ class Content extends LessonContent {
     common.modifiers = {
       adjacent: click(ssa._line1.pulseWidth, [ssa], colors.line),
       opposite: click(ssa._line2.pulseWidth, [ssa], colors.line),
-      two: click(ssa.calcNewScenario, [ssa, 'long2'], colors.diagram.action),
       one: click(ssa.calcNewScenario, [ssa, 'long1'], colors.diagram.action),
-      no: click(ssa.calcNewScenario, [ssa, 'long0'], colors.diagram.action),
     };
     common.show = [
       ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
       ssa._circ,
     ];
     this.addSection(common, {
+      setInfo: [
+        common.setInfo[0],
+        '<li>Touch the |adjacent| text to highlight the adjacent side.</li>',
+        '<li>Touch the |opposite| text to highlight the opposite side.</li>',
+        '<li>Touch the |one| text to show examples of one triangles.</li>',
+        ...common.setInfo.slice(1),
+      ],
+      infoModifiers: {
+        adjacent: highlight(colors.line),
+        opposite: highlight(colors.line),
+        one: highlight(colors.diagram.action),
+      },
       setSteadyState: () => {
         ssa._line1.setMovable(true);
         ssa._line2.setMovable(true);

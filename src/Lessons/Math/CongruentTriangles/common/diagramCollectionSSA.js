@@ -265,28 +265,9 @@ export default class SSACollection extends CommonDiagramCollection {
         }
       }
       if (targetAngle != null) {
-        const showLine3Temp = () => {
-          // const l2 = this.layout.SSA.line2.length;
-          // const p3 = this._line3.transform.t();
-          // const p2 = this._line2.transform.t();
-          // const r3 = this._line3.transform.r();
-          // if (p3 != null && targetAngle != null && r3 != null && p2 != null) {
-          //   this._line3Temp.transform.updateRotation(r3);
-          //   this._line3Temp.transform.updateTranslation(p3);
-          //   const l3 = (polarToRect(l2, targetAngle).add(p2).sub(p3)).distance();
-          //   console.log("asdf", l3);
-          //   this._line3Temp.setLength(l3);
-          //   this._line3Temp.showAll();
-          //   // this._line3Temp.setColor(this.layout.colors.line);
-          //   this._line3Temp.disolveOut(2);
-          //   console.log(this._line3Temp)
-          // }
-        };
-
         this._line2.animateRotationTo(
           targetAngle, 0,
           new Transform().scale(5, 5).rotate(1).translate(5, 5),
-          showLine3Temp,
         );
         this.diagram.animateNextFrame();
       }
