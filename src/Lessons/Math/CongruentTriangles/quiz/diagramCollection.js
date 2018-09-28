@@ -123,12 +123,15 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   }
 
   // eslint-disable-next-line class-methods-use-this
-  isPropertySet(propertySets: Array<Array<string>>, compare: Array<string>) {
+  getKnownPropertiesType(
+    propertyPossibilities: Array<Array<string>>,
+    knownProperties: Array<string>,
+  ) {
     let answer = false;
-    propertySets.forEach((set) => {
+    propertyPossibilities.forEach((possibility) => {
       let same = true;
-      for (let i = 0; i < set.length; i += 1) {
-        if (set[i] !== compare[i]) {
+      for (let i = 0; i < possibility.length; i += 1) {
+        if (possibility[i] !== knownProperties[i]) {
           same = false;
         }
       }
@@ -137,6 +140,60 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       }
     });
     return answer;
+  }
+
+  getPropertiesType(knownProperties: Array<string>) {
+    const AAA = [
+      ['1', '2', '3'],
+    ];
+    const SSA = [
+      ['1', '12', '23'],
+      ['1', '23', '31'],
+      ['2', '23', '31'],
+      ['12', '2', '31'],
+      ['12', '3', '31'],
+      ['12', '23', '3'],
+    ];
+    const SSS = [
+      ['12', '23', '31'],
+    ];
+    const SAA = [
+      ['12', '2', '3'],
+      ['1', '12', '3'],
+      ['1', '23', '3'],
+      ['1', '2', '23'],
+      ['1', '2', '31'],
+      ['1', '3', '31'],
+    ];
+    const ASA = [
+      ['1', '12', '2'],
+      ['2', '23', '3'],
+      ['1', '3', '31'],
+    ];
+    const SAS = [
+      ['12', '2', '23'],
+      ['23', '3', '31'],
+      ['1', '12', '31'],
+    ];
+    if (this.getKnownPropertiesType(AAA, knownProperties)) {
+      return 'AAA';
+    }
+    if (this.getKnownPropertiesType(SSS, knownProperties)) {
+      return 'SSS';
+    }
+    if (this.getKnownPropertiesType(SSA, knownProperties)) {
+      return 'SSA';
+    }
+    if (this.getKnownPropertiesType(SAA, knownProperties)) {
+      return 'SAA';
+    }
+    if (this.getKnownPropertiesType(ASA, knownProperties)) {
+      return 'ASA';
+    }
+    if (this.getKnownPropertiesType(SAS, knownProperties)) {
+      return 'SAS';
+    }
+    return 'unknown';
   }
 
   showAnglesAndSides() {
@@ -149,47 +206,36 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     const possibleAngles = ['1', '2', '3'];
     const possibleSides = ['12', '23', '31'];
     const order = ['1', '12', '2', '23', '3', '31'];
-    const selectedAnnotations = [];
+    const knownProperties = [];
     let answer = 'possible';
     propertiesToShow.forEach((p) => {
       let elementId;
       if (p === 'angle') {
         const angleId = removeRandElement(possibleAngles);
         elementId = `_angle${angleId}`;
-        selectedAnnotations.push(angleId);
+        knownProperties.push(angleId);
       } else {
         const sideId = removeRandElement(possibleSides);
         elementId = `_dimension${sideId}`;
-        selectedAnnotations.push(sideId);
+        knownProperties.push(sideId);
       }
       const element1 = this._triangle._tri1[elementId];
       const element2 = this._triangle._tri2[elementId];
       element1.showAll();
       element2.showAll();
     });
-    const sortedAnnotations = selectedAnnotations
+    const sortedKnownProperties = knownProperties
       .sort((a, b) => order.indexOf(a) - order.indexOf(b));
-    const AAA = [
-      ['1', '2', '3'],
-      ['1', '2', '3'],
-    ];
-    const SAA = [
-      ['1', '12', '23'],
-      ['1', '23', '31'],
-      ['2', '23', '31'],
-      ['12', '2', '31'],
-      ['12', '3', '31'],
-      ['12', '23', '3'],
-    ];
-    if (this.isPropertySet(AAA, sortedAnnotations)) {
+    const propertiesType = this.getPropertiesType(sortedKnownProperties);
+    if (propertiesType === 'AAA') {
       answer = 'not possible';
     }
-    if (this.isPropertySet(SAA, sortedAnnotations)) {
-      let angleIndex = sortedAnnotations.filter(p => p.length === 1)[0];
+    if (propertiesType === 'SSA') {
+      let angleIndex = sortedKnownProperties.filter(p => p.length === 1)[0];
       angleIndex = parseInt(angleIndex, 10);
       let oppositeSide = '';
       let adjacentSide = '';
-      sortedAnnotations.forEach((p) => {
+      sortedKnownProperties.forEach((p) => {
         if (p.length === 2) {
           if (p.includes(angleIndex.toString())) {
             adjacentSide = p;
@@ -206,6 +252,10 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
         }
       }
     }
+    // const trick = rand(0, 1);
+    // if (trick < 0.3) {
+    //   answer = 'not possible'
+    // }
     this.answer = answer;
     this._check.show();
     this.diagram.animateNextFrame();
