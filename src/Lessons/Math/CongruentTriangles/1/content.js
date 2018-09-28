@@ -44,7 +44,7 @@ class Content extends LessonContent {
           In mathematics, if |two shapes are the same size and shape|, then they are said to be |congruent|.
         </p>
         <p>
-          The word |congruent| is originally Latin and meant |"agreeing, meeting together"|.
+          The word |congruent| comes from |Latin|, where it means |"agreeing, meeting together"|.
         </p>
       `),
     });
@@ -52,7 +52,7 @@ class Content extends LessonContent {
     common = {
       setContent: `
         <p>
-          For two triangles to be the same size and shape, and therefore |congruent|, the |side_lengths| and |angles| and of each triangle must be the same as the other.
+          For two triangles to be the same size and shape, and therefore |congruent|, the corresponding |side_lengths| and |angles| and of each triangle must be the same as the other.
         </p>
       `,
       setEnterState: () => {},
@@ -103,7 +103,7 @@ class Content extends LessonContent {
 
     common.setContent = `
         <p>
-           If one triangle is |rotated|, the triangles are congruent as the |side_lengths| and |angles| are the same.
+           If one triangle is |rotated|, the triangles are still congruent as the |side_lengths| and |angles| are the same.
         </p>
       `;
     this.addSection(common, {
@@ -134,7 +134,7 @@ class Content extends LessonContent {
 
     common.setContent = `
         <p>
-          If one triangle is |flipped|, the triangles are congruent as the |side_lengths| and |angles| are the same.
+          If one triangle is |flipped|, the triangles are still congruent as the |side_lengths| and |angles| are the same.
         </p>
       `;
     this.addSection(common, {
@@ -166,6 +166,16 @@ class Content extends LessonContent {
       title: 'Determining Congruency',
       setContent: centerV(`
         <p>
+          Showing two triangles are congruent can sometimes be beneficial in calculating a geometric problem.
+        </p>
+        <p>
+          When |two triangles are known to be congruent|, unknown angles and lengths of one triangle, can be |inferred| from the other triangle.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
           So |how| can you figure out if two triangles are congruent?
         </p>
         <p>
@@ -176,10 +186,23 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p>
-          But sometimes, it is even easier. There are some combinations of just |three properties|, that when they are the same on both triangles can guarantee the triangles are congruent.
+        But this means the advantage of knowing triangles are congruent is reduced as you already know the angles and lengths of both triangles.
         </p>
         <p>
-          We will look at different combinations of properties, and see how many triangles can be formed with those combinations. If just one can be formed, this will tell us that if two triangles share those same properties, then they must be congruent.
+          In addition, |sometimes all properties cannot be measured or known|, so such a comparison is not practical.
+        </p>
+        <p>
+          Therefore, it's important to explore how many side lengths and angles of a triangle really need to be known to guarantee two triangles are congruent.
+        </p>
+      `),
+    });
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          One way to do this is to take a set of known properties, then figure out how many triangles can be created from them.
+        </p>
+        <p>
+          If |more than one size and shape of triangle| can be created, then the selected properties are |not enough| to guarantee two triangles that share those properties are congruent.
         </p>
       `),
     });
@@ -193,10 +216,10 @@ class Content extends LessonContent {
     /* ********************************************************************* */
     /* ********************************************************************* */
     this.addSection({
-      title: 'Three Angles',
+      title: 'Angle Angle Angle',
       setContent: `
         <p>
-          First consider the scenario where you know all three angles. Can triangles of different sizes be created that have the same angles?
+          First consider when only the three angles are known. Do triangles of different sizes exist that have the same angles?
         </p>
       `,
       showOnly: [
@@ -264,10 +287,10 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p>
-          So triangles with the same angles, can have different side lengths.
+          So triangles with the |same angles|, can have |different side lengths|.
         </p>
         <p>
-          |Only knowing two triangles have the same angles, is not enough to know they are congruent.|
+          Only knowing two triangles have the same angles, is |not enough| to know they are congruent.
         </p>
       `),
     });
@@ -300,7 +323,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-         Well, there is only |one_line| that can be drawn that connects the two end points.
+         Well, there is |one_line| that can be drawn that connects the two end points.
         </p>
       `,
       modifiers: { one_line: highlight(colors.diagram.safe) },
@@ -315,7 +338,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
          <p>
-         Well, there is only |one_line| that can be drawn that connects the two end points.
+         Well, there is |one_line| that can be drawn that connects the two end points.
         </p>
       `,
       modifiers: {
@@ -351,7 +374,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-         Therefore, the remaining side can only have one |length| and |angle|. If it were a |different_length| or had a |different_angle|, it would not form a triangle. 
+        If this line had a |different_length| or had a |different_angle|, it would not form a triangle. Therefore, the remaining side can only have one |length| and |angle|, and so there is |only one possible triangle| from this combination of properties.
         </p>
       `,
       modifiers: {
@@ -385,14 +408,29 @@ class Content extends LessonContent {
       },
     });
     this.addSection({
-      setContent: centerV(`
+      setContent: `
         <p>
-         Therefore, triangles are congruent if they have two sides, and the angle formed by those two sides, the same.
+         Therefore if two triangles share |two sides of the same length|, and the |angle between| those two sides is also the same on both triangles, then they |are congruent|.
         </p>
         <p>
           This case is often called the |Side Angle Side| case.
         </p> 
-      `),
+      `,
+      setEnterState: () => {
+        const lay = layout.triangles.congruentLow;
+        tri.setTriangleScenarios(
+          lay.points, lay.points,
+          lay.tri1.scenario, lay.tri2.scenario,
+        );
+      },
+      showOnly: [
+        tri,
+        tri._tri1, tri._tri1._line, tri._tri2, tri._tri2._line,
+      ],
+      show: [
+        tri._tri1._angle1, tri._tri1._dimension12, tri._tri1._dimension31,
+        tri._tri2._angle1, tri._tri2._dimension12, tri._tri2._dimension31,
+      ],
     });
 
 
@@ -591,23 +629,35 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        Symmetric triangles have the same side lengths and angles, and are therefore |congruent|.
+        Symmetric triangles have the same side lengths and angles, and are therefore |congruent|, so actually there is |only one| size and shape of triangle possible given three side lengths.
       </p>
     `;
     this.addSection(common);
 
     this.addSection({
-      setContent: centerV(`
+      setContent: `
       <p>
-        So for a fixed three side lengths, there is only one set of angles that can form the sides into a triangle.
+        Therefore, when two triangles have the |same side lengths|, they will also have the same angles, and therefore be |congruent|.
       </p>
       <p>
-        Therefore, when two triangles have the same side lengths, they will also have the same angles, and therefore be congruent.
+        This case is often referred to as the |Side Side Side| case.
       </p>
-      <p>
-        This method of testing for congruency, is often referred to as the |Side Side Side| method.
-      </p>
-      `),
+      `,
+      setEnterState: () => {
+        const lay = layout.triangles.congruentLow;
+        tri.setTriangleScenarios(
+          lay.points, lay.points,
+          lay.tri1.scenario, lay.tri2.scenario,
+        );
+      },
+      showOnly: [
+        tri,
+        tri._tri1, tri._tri1._line, tri._tri2, tri._tri2._line,
+      ],
+      show: [
+        tri._tri1._dimension23, tri._tri1._dimension12, tri._tri1._dimension31,
+        tri._tri2._dimension23, tri._tri2._dimension12, tri._tri2._dimension31,
+      ],
     });
 
 
@@ -676,7 +726,7 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        Only |one_length| for each side will form the triangle. Different lengths of the |left| or |right| side will not result in a triangle shape. 
+        Different lengths of the |left| or |right| side will not result in a triangle. Only |one_length| for each side will form the triangle. 
       </p>
     `;
     common.setEnterState = () => {
@@ -721,7 +771,7 @@ class Content extends LessonContent {
     common.modifiers = {
       triangles: clickWord(
         'triangle\'s', 'id_triangles_angles',
-        qr._tri.show, [qr._tri], colors.line,
+        qr._tri.show, [qr._tri], colors.diagram.action,
       ),
     };
     common.setInfo = [
@@ -747,14 +797,29 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setContent: centerV(`
+      setContent: `
       <p>
-        Therefore, when two triangles share the same two angles and the side between them, then they will be congruent.
+        Therefore, when two triangles share the same |two angles| and the |side between| them, then they will be |congruent|.
       </p>
       <p>
-        This method of testing for congruency, is often referred to as the |Angle Side Angle| method.
+        This case is often referred to as the |Angle Side Angle| case.
       </p>
-      `),
+      `,
+      setEnterState: () => {
+        const lay = layout.triangles.congruentLow;
+        tri.setTriangleScenarios(
+          lay.points, lay.points,
+          lay.tri1.scenario, lay.tri2.scenario,
+        );
+      },
+      showOnly: [
+        tri,
+        tri._tri1, tri._tri1._line, tri._tri2, tri._tri2._line,
+      ],
+      show: [
+        tri._tri1._angle1, tri._tri1._dimension12, tri._tri1._angle2,
+        tri._tri2._angle1, tri._tri2._dimension12, tri._tri2._angle2,
+      ],
     });
 
     /* ********************************************************************* */

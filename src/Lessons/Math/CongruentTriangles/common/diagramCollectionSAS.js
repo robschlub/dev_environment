@@ -250,6 +250,7 @@ export default class SASCollection extends CommonDiagramCollection {
       if (typeof callback === 'function' && callback) {
         callback();
       }
+      this.diagram.animateNextFrame();
     };
     this._corner2._angle.showAll();
     this._corner2._angle.animateCustomTo(func, time, 0, done);
