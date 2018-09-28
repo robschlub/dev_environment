@@ -73,7 +73,7 @@ class Content extends LessonContent {
           |All sides and angles can be measured| to show two triangles are congruent. There are also some combinations of |three properties| that can show congruency.
         </p>
         <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40" style="margin-top: 7%">
-        <b>CAN</b> show congruency.
+        <b>CAN</b> guarantee congruency.
         </div>
           <ul class="lesson__congruent_angles_summary__list">
             <li>|SAS|</li>
@@ -82,9 +82,9 @@ class Content extends LessonContent {
             <li>|AAS|</li>
           </ul>
         <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40">
-        <b>CANNOT</b> show congruency.
+        <b>CANNOT</b> guarantee congruency.
         </div>
-          <ul class="lesson__congruent_angles_summary__list lesson__congruent_angles_summary__cannot_list">
+          <ul class="lesson__congruent_angles_summary__list">
             <li>|AAA|</li>
             <li>|SSA|</li>
           </ul>
@@ -108,11 +108,11 @@ class Content extends LessonContent {
         ),
         AAA: clickWord(
           'Angle Angle Angle', 'id_lesson__congruent_AAA',
-          diag.showCombination, [diag, 'aaa'], colors.diagram.disabled,
+          diag.showCombination, [diag, 'aaa'], colors.diagram.text.base,
         ),
         SSA: clickWord(
           'Side Side Angle', 'id_lesson__congruent_SSA',
-          diag.showCombination, [diag, 'ssa'], colors.diagram.disabled,
+          diag.showCombination, [diag, 'ssa'], colors.diagram.text.base,
         ),
       },
       setInfo: [

@@ -119,7 +119,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
       side31.hide();
       html.setHTML(
         this.label,
-        '|Side-Side-Angle|. Knowing just |two sides| and an |angle not between the sides| of two triangles is |not enough information| to determine that they are congruent',
+        '|Side-Side-Angle|. If two triangles share the same |angle|, |adjacent side| and |opposite side|, the two triangles are only |confgruent if the opposite side is longer than or equal to the adjacent side|.',
       );
     }
     this.diagram.animateNextFrame();

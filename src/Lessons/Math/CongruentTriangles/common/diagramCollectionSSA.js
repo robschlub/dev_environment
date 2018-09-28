@@ -198,13 +198,16 @@ export default class SSACollection extends CommonDiagramCollection {
       const l1 = s1 * this.layout.SSAInitial.line1.length;
       const tangentAngle = Math.asin(l2 / l1);
       r3 = tangentAngle;
-      this._line2.animateRotationTo(Math.PI - (Math.PI - Math.PI / 2 - tangentAngle), 0, 0.8, (result) => {
-        console.log(result)
+      const done = (result) => {
         if (result) {
           this._angle3.showAll();
           this.diagram.animateNextFrame();
         }
-      });
+      };
+      this._line2.animateRotationTo(
+        Math.PI - (Math.PI - Math.PI / 2 - tangentAngle),
+        0, 0.8, done,
+      );
       this.long2Flag = true;
     }
     this._line1.animateScaleTo(new Point(s1, 1), 0.8);
