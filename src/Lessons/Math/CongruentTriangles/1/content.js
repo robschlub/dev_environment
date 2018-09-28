@@ -915,6 +915,16 @@ class Content extends LessonContent {
         extend: click(ssa.growLine3, [ssa], colors.diagram.action),
         tracing: click(ssa.drawCircle, [ssa], colors.diagram.action),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the touch the |extend| text to draw the unknown side construction line.</li>',
+        '<li>Touch the touch the |tracing| text to possibilities for the opposite side.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        extend: highlight(colors.diagram.action),
+        tracing: highlight(colors.diagram.action),
+      },
       show: [
         ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
       ],
@@ -950,6 +960,14 @@ class Content extends LessonContent {
       modifiers: {
         intersect: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch the touch the |intersect| text to show the possible triangles.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        intersect: highlight(colors.diagram.action),
+      },
     });
 
     common.setContent = `
@@ -960,11 +978,20 @@ class Content extends LessonContent {
     common.modifiers = {
       triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
     };
-    this.addSection(common);
+    this.addSection(common, {
+      setInfo: [
+        '<ul>',
+        '<li>Touch the touch the |triangles| text to show the possible triangles.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        intersect: highlight(colors.diagram.action),
+      },
+    });
 
     common.setContent = `
       <p>
-        But what happens when we change the known |length| or |angle| of the first side? How many |triangles| can be formed?
+        But what happens when we change the known |length| or |angle| of the adjacent side? How many |triangles| can be formed?
       </p>
     `;
     common.modifiers = {
@@ -975,7 +1002,17 @@ class Content extends LessonContent {
       ssa.calcFuturePositions('SSA');
       ssa.setFuturePositions();
     };
-    this.addSection(common);
+    this.addSection(common, {
+      setInfo: [
+        '<ul>',
+        '<li>Touch the touch the |length| text to highlight the known adjacent side.</li>',
+        '<li>Touch the touch the |angle| text to highlight the known angle side.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        intersect: highlight(colors.diagram.action),
+      },
+    });
 
     common.setContent = `
       <p>
