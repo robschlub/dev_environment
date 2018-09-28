@@ -116,7 +116,7 @@ export default class SSACollection extends CommonDiagramCollection {
   }
 
   update() {
-    this._angle3.hide();
+    this._angle3._arc.hide();
     const p1 = this._line1.transform.t();
     // const l1 = this._line1.currentLength;
     const s1 = this._line1.transform.s();
@@ -200,7 +200,7 @@ export default class SSACollection extends CommonDiagramCollection {
       r3 = tangentAngle;
       const done = (result) => {
         if (result) {
-          this._angle3.showAll();
+          this._angle3._arc.show();
           this.diagram.animateNextFrame();
         }
       };

@@ -1010,8 +1010,8 @@ class Content extends LessonContent {
         '</ul>',
       ],
       infoModifiers: {
-        length: highlight(colors.diagram.line),
-        angle: highlight(colors.diagram.angleA),
+        length: highlight(colors.line),
+        angle: highlight(colors.angleA),
       },
     });
 
@@ -1124,7 +1124,7 @@ class Content extends LessonContent {
     };
     common.show = [
       ssa._line1, ssa._line2, ssa._lineCorner, ssa._angle, ssa._line3,
-      ssa._circ,
+      ssa._circ, ssa._angle3,
     ];
     this.addSection(common, {
       setInfo: [
