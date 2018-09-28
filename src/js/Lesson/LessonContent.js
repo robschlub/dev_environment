@@ -535,6 +535,11 @@ class LessonContent {
         infoButton.classList.toggle('lesson__info_button_show');
         infoBox.classList.toggle('lesson__info_hide');
       }
+      if (infoBox.classList.contains('lesson__info_hide')) {
+        this.diagram.elements.hasTouchableElements = true;
+      } else {
+        this.diagram.elements.hasTouchableElements = false;
+      }
     }
     // if (infoBox instanceof HTMLElement) {
     //   infoBox.classList.toggle('lesson__info_hide');
