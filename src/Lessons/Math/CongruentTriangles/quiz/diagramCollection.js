@@ -1,7 +1,7 @@
 // @flow
 import { Transform, Point } from '../../../../js/diagram/tools/g2';
 import {
-  randElements, rand, removeRandElement,
+  randElements, rand, removeRandElement, randElement,
 } from '../../../../js/diagram/tools/mathtools';
 import lessonLayout from './layout';
 // import * as html from '../../../../js/tools/htmlGenerator';
@@ -41,6 +41,24 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this._triangle._tri2.addPoint(1, 0.1, [0, 0, 0, 0.01], true);
     this._triangle._tri2.addPoint(2, 0.1, [0, 0, 0, 0.01], true);
     this._triangle._tri2.addPoint(3, 0.1, [0, 0, 0, 0.01], true);
+    this._triangle._tri1._dimension12.showRealLength = true;
+    this._triangle._tri1._dimension23.showRealLength = true;
+    this._triangle._tri1._dimension31.showRealLength = true;
+    this._triangle._tri2._dimension12.showRealLength = true;
+    this._triangle._tri2._dimension23.showRealLength = true;
+    this._triangle._tri2._dimension31.showRealLength = true;
+    this._triangle._tri1._angle1.showRealAngle = true;
+    this._triangle._tri1._angle2.showRealAngle = true;
+    this._triangle._tri1._angle3.showRealAngle = true;
+    this._triangle._tri2._angle1.showRealAngle = true;
+    this._triangle._tri2._angle2.showRealAngle = true;
+    this._triangle._tri2._angle3.showRealAngle = true;
+    this._triangle._tri1._angle1.realAngleDecimals = 0;
+    this._triangle._tri1._angle2.realAngleDecimals = 0;
+    this._triangle._tri1._angle3.realAngleDecimals = 0;
+    this._triangle._tri2._angle1.realAngleDecimals = 0;
+    this._triangle._tri2._angle2.realAngleDecimals = 0;
+    this._triangle._tri2._angle3.realAngleDecimals = 0;
     this.hasTouchableElements = true;
     this._triangle.hasTouchableElements = true;
     this._triangle._tri1.hasTouchableElements = true;
@@ -55,7 +73,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   // eslint-disable-next-line class-methods-use-this
   randomTriangle(
     maxQuadrantBounds: Point = new Point(1, 1),
-    minQuadrantBounds: Point = new Point(0.3, 0.3),
+    minQuadrantBounds: Point = new Point(0.4, 0.4),
   ): Array<Point> {
     const possibleQuads = [0, 1, 2, 3];
     const quadrants = randElements(3, possibleQuads);
@@ -81,8 +99,12 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     const rotation2 = rand(0, Math.PI * 2);
     const position1 = new Point(-1.2, -0.3);
     const position2 = new Point(1.2, -0.3);
-    const transform1 = new Transform().rotate(rotation1).translate(position1);
-    const transform2 = new Transform().rotate(rotation2).translate(position2);
+    const scale1 = randElement([-1, 1]);
+    const scale2 = randElement([-1, 1]);
+    const transform1 = new Transform().scale(scale1, 1)
+      .rotate(rotation1).translate(position1);
+    const transform2 = new Transform().scale(scale2, 1)
+      .rotate(rotation2).translate(position2);
     const points1 = points.map(p => p.transformBy(transform1.m()));
     const points2 = points.map(p => p.transformBy(transform2.m()));
     const fp = (element, position) => {
@@ -145,7 +167,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       element1.showAll();
       element2.showAll();
     });
-    const sortedAnnotations = selectedAnnotations.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+    const sortedAnnotations = selectedAnnotations
+      .sort((a, b) => order.indexOf(a) - order.indexOf(b));
     const AAA = [
       ['1', '2', '3'],
       ['1', '2', '3'],
@@ -164,32 +187,25 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     if (this.isPropertySet(SAA, sortedAnnotations)) {
       let angleIndex = sortedAnnotations.filter(p => p.length === 1)[0];
       angleIndex = parseInt(angleIndex, 10);
-      const angle = this._triangle._tri1[`_angle${angleIndex}`].currentAngle;
-      if (angle < Math.PI / 2) {
-        console.log('this needs to be fixed to be relative to length, not angle') 
-        answer = 'not possible';
+      let oppositeSide = '';
+      let adjacentSide = '';
+      sortedAnnotations.forEach((p) => {
+        if (p.length === 2) {
+          if (p.includes(angleIndex.toString())) {
+            adjacentSide = p;
+          } else {
+            oppositeSide = p;
+          }
+        }
+      });
+      if (oppositeSide && adjacentSide) {
+        const lengthOpp = this._triangle._tri1[`b${oppositeSide}`].length();
+        const lengthAdj = this._triangle._tri1[`b${adjacentSide}`].length();
+        if (lengthAdj > lengthOpp) {
+          answer = 'not possible';
+        }
       }
     }
-    // const notPossible = [
-    //   ['1', '2', '3'],    // AAA
-    //   ['1', '2', '3'],    // AAA
-    //   // SSA
-    // ];
-    // console.log(sortedAnnotations)
-    // let answer = 'possible';
-    // notPossible.forEach((test) => {
-    //   let same = true;
-    //   for (let i = 0; i < test.length; i += 1) {
-    //     if (test[i] !== sortedAnnotations[i]) {
-    //       same = false;
-    //     }
-    //   }
-    //   console.log(same, test, sortedAnnotations)
-    //   if (same) {
-    //     answer = 'not possible';
-    //   }
-    // });
-    console.log(answer);
     this.answer = answer;
     this._check.show();
     this.diagram.animateNextFrame();
@@ -197,8 +213,6 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
 
   tryAgain() {
     super.tryAgain();
-    // this._input.enable();
-    // this._input.setValue('');
     this.selectMultipleChoice('congruent_tri_1', -1);
   }
 
@@ -215,18 +229,16 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this._triangle._tri2.hideAngles();
     this.moveToFuturePositions(1, this.showAnglesAndSides.bind(this));
     this.selectMultipleChoice('congruent_tri_1', -1);
-    // this.resetLines();
-    // this.randomizeFuturePositions();
-    // this._triangle.moveToFuturePositions(1, this.showAngles.bind(this));
-    // this._input.enable();
-    // this._input.setValue('');
     this.diagram.animateNextFrame();
   }
 
   showAnswer() {
     super.showAnswer();
-    // this._input.setValue(this.angleToFind);
-    // this._input.disable();
+    if (this.answer === 'possible') {
+      this.selectMultipleChoice('congruent_tri_1', 0);
+    } else {
+      this.selectMultipleChoice('congruent_tri_1', 1);
+    }
     this.diagram.animateNextFrame();
   }
 

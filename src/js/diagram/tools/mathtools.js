@@ -249,9 +249,9 @@ function rand(minOrMax: number, max: ?number = null) {
   return Math.random() * minOrMax;
 }
 
-function randElement(inputArray: Array<any>) {
+function randElement<T>(inputArray: Array<T>): T {
   const index = randInt(inputArray.length);
-  return randElement[index];
+  return inputArray[index];
 }
 
 function removeRandElement<T>(inputArray: Array<T>): T {

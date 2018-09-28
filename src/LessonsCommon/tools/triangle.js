@@ -491,6 +491,15 @@ export default function makeTriangle(
     triangle.updateDimensions();
   };
 
+  triangle.flip = (x: number = -1, y: number = 1) => {
+    const flipTransform = new Transform().scale(x, y);
+    this.updatePoints(
+      p1.transformBy(flipTransform.m()),
+      p2.transformBy(flipTransform.m()),
+      p3.transformBy(flipTransform.m()),
+    );
+  };
+
   triangle.setTransformCallback = triangle.update.bind(triangle);
   triangle.updatePoints(p1, p2, p3);
   return triangle;
