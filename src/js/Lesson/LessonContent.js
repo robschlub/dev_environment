@@ -1,6 +1,7 @@
 // @flow
 
 import Diagram from '../diagram/Diagram';
+import HTMLObject from '../diagram/DrawingObjects/HTMLObject/HTMLObject';
 import { Point } from '../diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
@@ -212,6 +213,11 @@ class Section {
         if (element instanceof HTMLElement) {
           const rect = element.getBoundingClientRect();
           if (rect.left > 0 && rect.width > 0) {
+            elementIsVisible = true;
+          }
+        } else if (element instanceof DiagramElementPrimative
+                   && element.vertices instanceof HTMLObject) {
+          if (element.isShown) {
             elementIsVisible = true;
           }
         } else if (element.isShown) {

@@ -26,13 +26,21 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   } & TotalAngleTriangleCollection;
 
   answer: 'possible' | 'not possible';
+  hint: 'checkDimensions' | 'incorrect';
 
   constructor(
     diagram: LessonDiagram,
     transform: Transform = new Transform('1 DiagramCollection'),
   ) {
     const layout = lessonLayout();
-    super(diagram, layout, 'q1', {}, transform);
+    super(
+      diagram, layout, 'q1', {
+        checkDimensions: {
+          answer: 'Incorrect',
+          details: 'Make sure to check the dimensions are the same',
+        },
+      }, transform,
+    );
 
     this.add('triangle', new TotalAngleTriangleCollection(diagram, this.layout));
     this._triangle._tri1.addPoint(1, 0.1, [0, 0, 0, 0.01], true);
@@ -59,15 +67,16 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this._triangle._tri2._angle1.realAngleDecimals = 0;
     this._triangle._tri2._angle2.realAngleDecimals = 0;
     this._triangle._tri2._angle3.realAngleDecimals = 0;
-    this.hasTouchableElements = true;
-    this._triangle.hasTouchableElements = true;
-    this._triangle._tri1.hasTouchableElements = true;
+    // this.hasTouchableElements = true;
+    // this._triangle.hasTouchableElements = true;
+    // this._triangle._tri1.hasTouchableElements = false;
 
     this.add('answerBox', this.makeMultipleChoice(
       'congruent_tri_1',
       ['Yes', 'No'],
     ));
     this._answerBox.setPosition(this.layout.answerBox);
+    this.hint = 'incorrect';
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -241,6 +250,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     const possibleSides = ['12', '23', '31'];
     const order = ['1', '12', '2', '23', '3', '31'];
     const knownProperties = [];
+    this.hint = 'incorrect';
     let answer = 'possible';
     propertiesToShow.forEach((p) => {
       let elementId;
@@ -286,15 +296,21 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
         }
       }
     }
-    // const trick = rand(0, 1);
-    // if (trick < 0.3) {
-    //   answer = 'not possible';
-    //   if (propertiesType === 'ASA') {
-    //     const knownAngle = this.getKnownAngles(sortedKnownProperties)[0];
-    //     const unknownAngle = this.getUnknownAngles(sortedKnownProperties)[0];
-        
-    //   }
-    // }
+    const trick = rand(0, 1);
+    if (trick < 0.3) {
+      answer = 'not possible';
+      this._triangle._tri2.updatePoints(
+        this._triangle._tri2.p1.add(0.05, 0),
+        this._triangle._tri2.p2,
+        this._triangle._tri2.p3,
+      );
+      this.hint = 'checkDimensions';
+      // if (propertiesType === 'ASA') {
+      //   const knownAngle = this.getKnownAngles(sortedKnownProperties)[0];
+      //   const unknownAngle = this.getUnknownAngles(sortedKnownProperties)[0];
+
+      // }
+    }
     this.answer = answer;
     this._check.show();
     this.diagram.animateNextFrame();
@@ -343,6 +359,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       || (selection === 1 && this.answer === 'not possible')) {
       return 'correct';
     }
-    return 'incorrect';
+    return this.hint;
+    // return 'incorrect';
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent,
+  LessonContent, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
 // import {
 //   click, highlight,
@@ -34,10 +34,14 @@ class Content extends LessonContent {
           Can you determine if the triangles are congruent based on the properities shown?
         </p>
       `,
-      setInfo: 'Select |Yes| or |No| then touch the |check| box',
+      setInfo: 'Select |Yes| or |No| then touch the |Check| box',
       setEnterState: () => {
         diag.calcRandomTriangles();
       },
+      interactiveElements: [
+        interactiveItem(diag._check),
+        interactiveItem(diag._answerBox, 'center'),
+      ],
       showOnly: [tri,
         tri._tri1, tri._tri1._line,
         tri._tri1._point1, tri._tri1._point2, tri._tri1._point3,
