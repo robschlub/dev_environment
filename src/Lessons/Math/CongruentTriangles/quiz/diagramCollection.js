@@ -196,6 +196,40 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     return 'unknown';
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  getUnknownAngles(knownProperties: Array<string>) {
+    const possibleAngles = ['1', '2', '3'];
+    const unknownAngles = [];
+    possibleAngles.forEach((angle) => {
+      if (knownProperties.indexOf(angle) === -1) {
+        unknownAngles.push(angle);
+      }
+    });
+    return unknownAngles;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getKnownAngles(knownProperties: Array<string>): Array<string> {
+    return knownProperties.filter(p => p.length === 1);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getKnownSides(knownProperties: Array<string>): Array<string> {
+    return knownProperties.filter(p => p.length === 2);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getUnknownSides(knownProperties: Array<string>) {
+    const possibleSides = ['12', '23', '31'];
+    const unknownASides = [];
+    possibleSides.forEach((side) => {
+      if (knownProperties.indexOf(side) === -1) {
+        unknownASides.push(side);
+      }
+    });
+    return unknownASides;
+  }
+
   showAnglesAndSides() {
     this._triangle._tri1.hideDimensions();
     this._triangle._tri1.hideAngles();
@@ -254,7 +288,12 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     }
     // const trick = rand(0, 1);
     // if (trick < 0.3) {
-    //   answer = 'not possible'
+    //   answer = 'not possible';
+    //   if (propertiesType === 'ASA') {
+    //     const knownAngle = this.getKnownAngles(sortedKnownProperties)[0];
+    //     const unknownAngle = this.getUnknownAngles(sortedKnownProperties)[0];
+        
+    //   }
     // }
     this.answer = answer;
     this._check.show();
