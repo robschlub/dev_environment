@@ -227,7 +227,12 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this._triangle._tri1.hideAngles();
     this._triangle._tri2.hideDimensions();
     this._triangle._tri2.hideAngles();
-    this.moveToFuturePositions(1, this.showAnglesAndSides.bind(this));
+    const moveDone = () => {
+      this.showAnglesAndSides();
+      this._answerBox.enable();
+    };
+    this._answerBox.disable();
+    this.moveToFuturePositions(1, moveDone);
     this.selectMultipleChoice('congruent_tri_1', -1);
     this.diagram.animateNextFrame();
   }
@@ -239,6 +244,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     } else {
       this.selectMultipleChoice('congruent_tri_1', 1);
     }
+    this._answerBox.disable();
     this.diagram.animateNextFrame();
   }
 

@@ -46,11 +46,13 @@ class Content extends LessonContent {
         diag._answerBox,
       ],
       transitionFromAny: (done) => {
+        diag._answerBox.disable();
         diag.moveToFuturePositions(1, done);
       },
       setSteadyState: () => {
         diag.setFuturePositions();
         diag.showAnglesAndSides();
+        diag._answerBox.enable();
       },
     });
   }

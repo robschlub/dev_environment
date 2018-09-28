@@ -301,12 +301,15 @@ const CommonQuizMixin = superclass => class extends superclass {
     return -1;
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  
+
   makeMultipleChoice(
     id: string,
     answers: Array<string>,
   ) {
     const table = document.createElement('table');
-    table.classList.add('lesson__quiz_multiple_choice_box_lesson__quiz_multiple_choice_box_table')
+    table.classList.add('lesson__quiz_multiple_choice_box_table');
     answers.forEach((answer, index) => {
       const row = document.createElement('tr');
       row.classList.add('lesson__quiz_multiple_choice_box_row');
@@ -336,6 +339,16 @@ const CommonQuizMixin = superclass => class extends superclass {
       'left',
       'top',
     );
+    html.enable = (doEnable: boolean = true) => {
+      const { element } = html.vertices;
+      const classStr = 'lesson__quiz_multiple_choice_box_answer__disable';
+      if (doEnable) {
+        element.classList.remove(classStr);
+      } else {
+        element.classList.add(classStr);
+      }
+    };
+    html.disable = () => { html.enable(false); };
     return html;
   }
 };

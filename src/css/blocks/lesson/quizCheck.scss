@@ -126,8 +126,8 @@
   color: color('diagram', 'disabled', 'base');
 }
 
-.lesson__quiz_multiple_choice_box__selected {
-}
+// .lesson__quiz_multiple_choice_box__selected {
+// }
 
 .lesson__quiz_multiple_choice_box_circle__selected {
   background-color: color('diagram', 'primary', 'base');
@@ -137,5 +137,9 @@
 .lesson__quiz_multiple_choice_box_answer__selected {
   color: color('diagram', 'primary', 'base');
   font-weight: bold;
+}
+
+.lesson__quiz_multiple_choice_box_answer__disable {
+  pointer-events: none;
 }
 
