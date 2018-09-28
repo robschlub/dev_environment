@@ -119,7 +119,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
       side31.hide();
       html.setHTML(
         this.label,
-        '|Side-Side-Angle|. If two triangles share the same |angle (a)|, |adjacent side (C)| and |opposite side (A)|, the two triangles are only |congruent if the opposite side is longer than or equal to the adjacent side, or A >= C|.',
+        '|Side-Side-Angle|. If two triangles share the same |angle (a)|, |adjacent side (C)| and |opposite side (A)|, the two triangles are only |congruent if the opposite side is longer than or equal to the adjacent side, or A ≥ C|.',
       );
     }
     this.diagram.animateNextFrame();

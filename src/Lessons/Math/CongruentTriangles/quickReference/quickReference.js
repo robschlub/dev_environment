@@ -310,7 +310,7 @@ export class QRSsa extends PopupBoxCollection {
     };
     this.setDescription(`
       <p>
-        If an |angle|, |adjacent_side| and |opposite_side| of a triangle is known, the remaining angles and side can be calculated with certainty only if the |opposite side is longer than or equal to the adjancent side or C >= A|.
+        If an |angle|, |adjacent_side| and |opposite_side| of a triangle is known, the remaining angles and side can be calculated with certainty only if the |opposite side is longer than or equal to the adjancent side or A ≥ C|.
       </p>
       <p>
         Therefore, if two triangles share the same angle, adjancent side and opposite side, and the opposite side longer than or equal to the adjacent side, then the triangles will be congruent.

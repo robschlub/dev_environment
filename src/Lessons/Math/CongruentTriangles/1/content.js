@@ -861,7 +861,7 @@ class Content extends LessonContent {
       </p>
       `;
     common.modifiers = {
-      triangles: click(qr._tri.show, [qr._tri], colors.line),
+      triangles: click(qr._tri.show, [qr._tri], colors.diagram.action),
     };
     common.setInfo = [
       '<ul>',
@@ -877,7 +877,7 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        We also know from the |Angle_Side_Angle| congruency test, that if we know two angles and the side between them, then there can only be one solution for the remaining side lengths. By calculating the third angle, we now have that scenario.
+        The third angle has now given us the |Angle_Side_Angle| case. With this established, we know only one triangle can be formed.
       </p>
     `;
     common.modifiers = {
@@ -895,22 +895,37 @@ class Content extends LessonContent {
     common.setInfo = [];
     common.infoModifiers = {};
     this.addSection({
-      setContent: centerV(`
+      setContent: `
       <p>
-        Therefore, when two triangles share the same two angles and relative side, then they will be congruent.
+        Therefore, when two triangles share the same |two angles| and |relatively positioned side| not between those angles, then the triangles will be |congruent|.
       </p>
       <p>
-        This method of testing for congruency, is often referred to as the |Angle Angle Side| method.
+        This case is often referred to as the |Angle Angle Side| case.
       </p>
-      `),
+      `,
+      setEnterState: () => {
+        const lay = layout.triangles.congruentLow;
+        tri.setTriangleScenarios(
+          lay.points, lay.points,
+          lay.tri1.scenario, lay.tri2.scenario,
+        );
+      },
+      showOnly: [
+        tri,
+        tri._tri1, tri._tri1._line, tri._tri2, tri._tri2._line,
+      ],
+      show: [
+        tri._tri1._angle1, tri._tri1._dimension12, tri._tri1._angle3,
+        tri._tri2._angle1, tri._tri2._dimension12, tri._tri2._angle3,
+      ],
     });
     this.addSection({
       setContent: centerV(`
       <p>
-        The |Angle Side Angle| and |Angle Angle Side| congruency tests can be combined to be more general as when you know two angles, the side is either between the angles, or touching just one. There are no other combinations.
+        The |Angle Side Angle| and |Angle Angle Side| cases can be combined to be more general as all combinations of two angles and one side is covered between them.
       </p>
       <p>
-        So in general, if two triangles have the share the same |two angles| and |relative side|, then the |triangles are congruent|.
+        Therefore, if two triangles share the same |two angles| and |relatively positioned side|, then the |triangles are congruent|.
       </p>
       `),
     });
@@ -1056,7 +1071,7 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        But what happens when we change the known |length| or |angle| of the adjacent side? How many |triangles| can be formed?
+        But what happens when we start with a different known |length| or |angle| of the adjacent side? How many |triangles| can be formed then?
       </p>
     `;
     common.modifiers = {
@@ -1102,7 +1117,7 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        You might see different scenarios where two, one or no triangles can be formed.
+        You might see different scenarios where |two|, |one| or |zero| triangles can be formed.
       </p>
     `;
     this.addSection(common);
@@ -1225,14 +1240,29 @@ class Content extends LessonContent {
       `),
     });
     this.addSection({
-      setContent: centerV(`
+      setContent: `
       <p>
-        This set of properties is often referred to as the |Side Side Angle| property set. 
+        This case is often referred to as the |Side Side Angle| case. 
       </p>
       <p>
-        If two triangles have the same angle, adjacent side and opposite side, then we can only be sure they are |congruent if the adjacent side is not longer than the opposite side|.
+        If two triangles have the same |angle (a)|, |adjacent side (C)| and |opposite side (A)|, then we can only be sure they are |congruent| if the |opposite side is longer than or equal to the adjacent side, or A ≥ C|.
       </p>
-      `),
+      `,
+      setEnterState: () => {
+        const lay = layout.triangles.congruentLow;
+        tri.setTriangleScenarios(
+          lay.points, lay.points,
+          lay.tri1.scenario, lay.tri2.scenario,
+        );
+      },
+      showOnly: [
+        tri,
+        tri._tri1, tri._tri1._line, tri._tri2, tri._tri2._line,
+      ],
+      show: [
+        tri._tri1._angle1, tri._tri1._dimension12, tri._tri1._dimension23,
+        tri._tri2._angle1, tri._tri2._dimension12, tri._tri2._dimension23,
+      ],
     });
   }
 }
