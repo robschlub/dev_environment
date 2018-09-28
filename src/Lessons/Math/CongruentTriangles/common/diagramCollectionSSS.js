@@ -91,10 +91,10 @@ export default class SSSCollection extends CommonDiagramCollection {
       color,
       new Transform('circle').scale(1, 1).rotate(0).translate(0, 0),
     );
-    const circ2 = make(this.layout.corner.SSSProps.length2, this.layout.colors.angleA);
-    const circ3 = make(this.layout.corner.SSSProps.length3, this.layout.colors.angleA);
-    const circ2Shaddow = make(this.layout.corner.SSSProps.length2, this.layout.colors.angleA);
-    const circ3Shaddow = make(this.layout.corner.SSSProps.length3, this.layout.colors.angleA);
+    const circ2 = make(this.layout.corner.SSSProps.length2, this.layout.colors.construction);
+    const circ3 = make(this.layout.corner.SSSProps.length3, this.layout.colors.construction);
+    const circ2Shaddow = make(this.layout.corner.SSSProps.length2, this.layout.colors.construction);
+    const circ3Shaddow = make(this.layout.corner.SSSProps.length3, this.layout.colors.construction);
     circ2Shaddow.angleToDraw = Math.PI;
     circ3Shaddow.angleToDraw = Math.PI;
     this.add('circ2Shaddow', circ2Shaddow);

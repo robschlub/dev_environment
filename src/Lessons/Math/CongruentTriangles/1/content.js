@@ -958,7 +958,7 @@ class Content extends LessonContent {
       </p>
     `;
     common.modifiers = {
-      triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action)
+      triangles: click(ssa.toggleInterceptAngles, [ssa], colors.diagram.action),
     };
     this.addSection(common);
 

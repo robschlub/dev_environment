@@ -47,7 +47,7 @@ export default class SASCollection extends CommonDiagramCollection {
     corner.side2 = 1;
     // corner.points = this.layout.corner.points.slice();
     corner.hasTouchableElements = true;
-    
+
     angle.updateAngle(0, Math.PI / 2);
     angle.setPosition(this.layout.corner.points[1]);
     angle.showRealAngle = true;

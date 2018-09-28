@@ -7,7 +7,7 @@ import {
   rand,
 } from '../../../../js/diagram/tools/mathtools';
 import {
-  DiagramElementPrimative, DiagramElementCollection,
+  DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 

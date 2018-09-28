@@ -301,8 +301,6 @@ const CommonQuizMixin = superclass => class extends superclass {
     return -1;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  
 
   makeMultipleChoice(
     id: string,
