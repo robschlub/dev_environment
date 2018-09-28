@@ -34,7 +34,7 @@ class Content extends LessonContent {
           Can you determine if the triangles are congruent based on the properities shown?
         </p>
       `,
-      // setInfo: 'Touch the grey box to enter the angle',
+      setInfo: 'Select |Yes| or |No| then touch the |check| box',
       setEnterState: () => {
         diag.calcRandomTriangles();
       },
