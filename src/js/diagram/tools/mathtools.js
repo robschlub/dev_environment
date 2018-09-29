@@ -199,6 +199,7 @@ function easeout(percentTime: number) {
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return (percentDistance - 0.5) * 2;
 }
+
 function easein(percentTime: number) {
   const x = percentTime / 2;
   const power = 2;

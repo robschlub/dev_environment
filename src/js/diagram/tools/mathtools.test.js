@@ -1,6 +1,6 @@
 import {
   round, decelerate, easeinout, clipMag, clipValue, randInt, rand,
-  randElement, removeRandElement, randElements,
+  randElement, removeRandElement, randElements, easein,
 } from './mathtools';
 
 describe('Math tools testing', () => {
@@ -140,6 +140,23 @@ describe('Math tools testing', () => {
     });
     test('0.75', () => {
       expect(easeinout(0.75)).toBe(0.9);
+    });
+  });
+  describe('easein', () => {
+    test('0', () => {
+      expect(easein(0)).toBe(0);
+    });
+    test('1', () => {
+      expect(easein(1)).toBe(1);
+    });
+    test('0.5', () => {
+      expect(easein(0.5)).toBe(0.5);
+    });
+    test('0.25', () => {
+      expect(easein(0.25)).toBe(0.1);
+    });
+    test('0.75', () => {
+      expect(easein(0.75)).toBe(0.75);
     });
   });
   describe('Clip Value', () => {
