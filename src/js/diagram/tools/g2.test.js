@@ -23,6 +23,10 @@ describe('g2 tests', () => {
         const p = Point.zero();
         expect(p).toEqual(new Point(0, 0));
       });
+      test('unity point', () => {
+        const p = Point.Unity();
+        expect(p).toEqual(new Point(1, 1));
+      });
     });
 
     describe('Points can be added to each other', () => {
@@ -278,6 +282,27 @@ describe('g2 tests', () => {
         const l = new Line(new Point(-1, 0), new Point(1, 0));
         const p = new Point(2, 2);
         expect(p.isOnUnboundLine(l)).toEqual(false);
+      });
+    });
+
+    describe('Points can have a shaddow on a line', () => {
+      test('(1, 1) has a shaddow on line (0, 0) to (2, 0)', () => {
+        const l = new Line(new Point(0, 0), new Point(2, 0));
+        const p = new Point(1, 1);
+        expect(p.getShaddowOnLine(l).round()).toEqual(new Point(1, 0));
+        expect(p.shaddowIsOnLine(l)).toBe(true);
+      });
+      test('(3, 1) does not have a shaddow on line (0, 0) to (2, 0)', () => {
+        const l = new Line(new Point(0, 0), new Point(2, 0));
+        const p = new Point(3, 1);
+        expect(p.getShaddowOnLine(l)).toBe(null);
+        expect(p.shaddowIsOnLine(l)).toBe(false);
+      });
+      test('(-1, 0) has a shaddow on line (1, 0) to (0, -1)', () => {
+        const l = new Line(new Point(1, 0), new Point(0, -1));
+        const p = new Point(-1, 0);
+        expect(p.getShaddowOnLine(l).round()).toEqual(new Point(0, -1));
+        expect(p.shaddowIsOnLine(l)).toBe(true);
       });
     });
 

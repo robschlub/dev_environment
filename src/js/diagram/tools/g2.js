@@ -182,11 +182,20 @@ class Point {
     return l.hasPointOn(this, precision);
   }
 
-  shaddowIsOnLine(l: Line, precision?: number) {
+  getShaddowOnLine(l: Line, precision: number = 8) {
     const shaddow = new Line(this, 1, l.angle() + Math.PI / 2);
     const { intersect } = shaddow.intersectsWith(l);
+    // console.log(intersect, inLine, onLine, )
+    if (intersect != null && intersect.isOnLine(l, precision)) {
+      return intersect;
+    }
+    return null;
+  }
+
+  shaddowIsOnLine(l: Line, precision: number = 8) {
+    const intersect = this.getShaddowOnLine(l, precision);
     if (intersect != null) {
-      return intersect.isOnLine(l, precision);
+      return true;
     }
     return false;
   }
