@@ -218,6 +218,7 @@ class Section {
         } else if (element instanceof DiagramElementPrimative
                    && element.vertices instanceof HTMLObject) {
           if (element.isShown) {
+            console.log(element)
             elementIsVisible = true;
           }
         } else if (element.isShown) {
