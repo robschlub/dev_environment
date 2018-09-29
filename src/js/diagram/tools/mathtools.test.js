@@ -1,12 +1,20 @@
 import {
   round, decelerate, easeinout, clipMag, clipValue, randInt, rand,
   randElement, removeRandElement, randElements, easein, easeout,
+  sinusoid, roundNum,
 } from './mathtools';
 
 describe('Math tools testing', () => {
+  test('Round Num default precision', () => {
+    expect(roundNum(10.123456)).toBe(10.12346);
+  });
   // Rounding a value
   test('Round a value that doesn\'t need rounding', () => {
     expect(round(10.0)).toEqual(10.0);
+  });
+
+  test('Round a -0', () => {
+    expect(round(-0)).toEqual(0);
   });
 
   test('Round a value up to nearest whole number', () => {
@@ -30,6 +38,14 @@ describe('Math tools testing', () => {
     expect(round([0.2])).toEqual([0.2]);
   });
   describe('decelerate', () => {
+    test('zero case', () => {
+      const r = decelerate(1, 0, 1, 1, 0.1);
+      expect(r).toEqual({ v: 0, p: 1 });
+    });
+    test('null cases', () => {
+      const r = decelerate(0, 1, null, 1, null);
+      expect(r).toEqual({ v: 1, p: 1 });
+    });
     test('initial: 0m, 10m/s - dec 1m/s/s for 1s', () => {
       const p1 = 0;           // m
       const v1 = 10;          // m/s
@@ -146,6 +162,17 @@ describe('Math tools testing', () => {
     test('0.25', () => { expect(round(easeout(0.25), 2)).toBe(0.39); });
     test('0.75', () => { expect(round(easeout(0.75), 2)).toBe(0.91); });
   });
+  describe('sinusoid', () => {
+    test('0', () => {
+      expect(sinusoid(0, 1, 0, 0, 0)).toBe(0);
+    });
+    test('0.5', () => {
+      expect(round(sinusoid(0.5, 2.1, -1, 0.5, -0.2), 2)).toBe(-0.94);
+    });
+    test('defaults', () => {
+      expect(round(sinusoid(), 2)).toBe(0);
+    });
+  });
   describe('Clip Value', () => {
     test('No clipping', () => {
       expect(clipValue(1, 0.5, 1.5)).toBe(1);
@@ -161,6 +188,9 @@ describe('Math tools testing', () => {
       expect(clipValue(-1, -0.5, 1.5)).toBe(-0.5);
       expect(clipValue(1, -1, 0)).toBe(0);
       expect(clipValue(-1, 0, 1)).toBe(0);
+    });
+    test('Null case', () => {
+      expect(clipValue(1, null, null)).toBe(1);
     });
   });
   describe('Clip Mag', () => {
@@ -205,6 +235,9 @@ describe('Math tools testing', () => {
     test('On min clipping negative', () => {
       expect(clipMag(-0.1, 0.1, 2)).toBe(0);
       expect(clipMag(-0.1, -0.1, -2)).toBe(0);
+    });
+    test('On zeroT and max is null', () => {
+      expect(clipMag(1, null, null)).toBe(1);
     });
   });
   describe('Random Int', () => {
