@@ -1,7 +1,7 @@
 import {
   round, decelerate, easeinout, clipMag, clipValue, randInt, rand,
   randElement, removeRandElement, randElements, easein, easeout,
-  sinusoid, roundNum,
+  sinusoid, roundNum, linear,
 } from './mathtools';
 
 describe('Math tools testing', () => {
@@ -165,6 +165,17 @@ describe('Math tools testing', () => {
   describe('sinusoid', () => {
     test('0', () => {
       expect(sinusoid(0, 1, 0, 0, 0)).toBe(0);
+    });
+    test('0.5', () => {
+      expect(round(sinusoid(0.5, 2.1, -1, 0.5, -0.2), 2)).toBe(-0.94);
+    });
+    test('defaults', () => {
+      expect(round(sinusoid(), 2)).toBe(0);
+    });
+  });
+  describe('linear', () => {
+    test('default', () => {
+      expect(linear(0.5)).toBe(0.5);
     });
     test('0.5', () => {
       expect(round(sinusoid(0.5, 2.1, -1, 0.5, -0.2), 2)).toBe(-0.94);

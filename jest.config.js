@@ -6,4 +6,5 @@ module.exports = {
     '^.+\\.(css|scss|sass)$': '<rootDir>/src/js/__mocks__/styleMock.js',
   },
   testPathIgnorePatterns: ['/node_modules/', '\\.snap$'],
+  coverageDirectory: './reports',
 };
