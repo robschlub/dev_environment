@@ -270,10 +270,16 @@ class Point {
       /* eslint-disable-next-line  no-use-before-define */
       const l = line(v[i], v[i + 1]);
       if (p.isOnLine(l)) {
+        if (popLastPoint) {
+          v.pop();
+        }
         return true;
       }
     }
     if (p.isInPolygon(polygonVertices)) {
+      if (popLastPoint) {
+        v.pop();
+      }
       return true;
     }
 

@@ -2,7 +2,7 @@ import {
   Point, Transform, Line, minAngleDiff, normAngle,
   TransformLimit, spaceToSpaceTransform, Rect,
   getBoundingRect, polarToRect, rectToPolar, getDeltaAngle,
-  normAngleTo90,
+  normAngleTo90, deg,
 } from './g2';
 import { round } from './mathtools';
 
@@ -328,6 +328,10 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         expect(p.isInPolygon(closedSquare)).toEqual(true);
       });
+      test('(2, 2) is not within the closed unit square', () => {
+        const p = new Point(2, 2);
+        expect(p.isInPolygon(closedSquare)).toEqual(false);
+      });
       test('(0, 0) is within the open unit square', () => {
         const poly = [
           new Point(-1, -1),
@@ -352,6 +356,26 @@ describe('g2 tests', () => {
       test('1, 0 is on the side of the open unit square', () => {
         const p = new Point(1, 0);
         expect(p.isOnPolygon(square)).toEqual(true);
+      });
+      test('1, 0 is on the side of the closed unit square', () => {
+        const p = new Point(1, 0);
+        expect(p.isOnPolygon(closedSquare)).toEqual(true);
+      });
+      test('isOnPolygon when actually in open square', () => {
+        const p = new Point(0, 0);
+        expect(p.isOnPolygon(square)).toEqual(true);
+      });
+      test('isOnPolygon when actually in closed square', () => {
+        const p = new Point(0, 0);
+        expect(p.isOnPolygon(closedSquare)).toEqual(true);
+      });
+      test('isOnPolygon when not actually in open square', () => {
+        const p = new Point(2, 2);
+        expect(p.isOnPolygon(square)).toEqual(false);
+      });
+      test('isOnPolygon when not actually in closed square', () => {
+        const p = new Point(2, 2);
+        expect(p.isOnPolygon(closedSquare)).toEqual(false);
       });
     });
   });
@@ -1699,6 +1723,11 @@ describe('g2 tests', () => {
     });
     test('315 = 315', () => {
       expect(normAngleTo90(Math.PI / 4 * 7)).toBe(Math.PI / 4 * 7);
+    });
+  });
+  describe('deg', () => {
+    test('pi to 180', () => {
+      expect(round(deg(Math.PI), 2)).toBe(180);
     });
   });
   // describe('Three point angle', () => {
