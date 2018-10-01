@@ -205,9 +205,9 @@ class Point {
   }
 
   /* eslint-enable no-use-before-define */
-  console(text?: string) {
-    Console(`${text || ''} + ${this.x}, ${this.y}`);
-  }
+  // console(text?: string) {
+  //   Console(`${text || ''} + ${this.x}, ${this.y}`);
+  // }
 
   static isLeft(p0: Point, p1: Point, p2: Point) {
     return (
@@ -457,6 +457,8 @@ Line.prototype.round = function lineround(precision?: number = 8) {
   lineRounded.A = roundNum(lineRounded.A, precision);
   lineRounded.B = roundNum(lineRounded.B, precision);
   lineRounded.C = roundNum(lineRounded.C, precision);
+  lineRounded.ang = roundNum(lineRounded.ang, precision);
+  lineRounded.distance = roundNum(lineRounded.distance, precision);
   return lineRounded;
 };
 
@@ -488,6 +490,8 @@ Line.prototype.hasPointAlong = function linehasPointAlong(p: Point, precision?: 
   }
   return false;
 };
+
+// perpendicular distance of line to point
 Line.prototype.distanceToPoint = function distanceToPoint(p: Point, precision?: number) {
   return roundNum(
     Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),

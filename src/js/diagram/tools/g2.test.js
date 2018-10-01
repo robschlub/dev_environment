@@ -491,6 +491,7 @@ describe('g2 tests', () => {
         const l = new Line(new Point(0, 0), new Point(2, 2));
         const p = new Point(0, 3);
         expect(l.hasPointAlong(p)).toEqual(false);
+        expect(l.hasPointAlong(p, 8)).toEqual(false);
       });
     });
     describe('Lines can be compared to other lines', () => {
@@ -537,6 +538,26 @@ describe('g2 tests', () => {
         const l2 = new Line(new Point(0, 1), new Point(1, 2));
         const res = l1.isOnSameLineAs(l2);
         expect(res).not.toEqual(true);
+      });
+      test('Line1 is offset to line 2 in y', () => {
+        const l1 = new Line(new Point(0, 0), new Point(1, 1));
+        const l2 = new Line(new Point(0, 1), new Point(1, 2));
+        const res = l1.isEqualTo(l2);
+        expect(res).toEqual(false);
+      });
+      test('Line1 has different end points to line 2', () => {
+        const l1 = new Line(new Point(0, 0), new Point(1, 1));
+        const l2 = new Line(new Point(0, 0), new Point(1, 1));
+        l2.p1 = new Point(0.5, 0.5);
+        const res = l1.isEqualTo(l2);
+        expect(res).toEqual(false);
+      });
+      test('Line2 has different end points to line 1', () => {
+        const l1 = new Line(new Point(0, 0), new Point(1, 1));
+        const l2 = new Line(new Point(0, 0), new Point(1, 1));
+        l2.p2 = new Point(0.5, 0.5);
+        const res = l1.isEqualTo(l2);
+        expect(res).toEqual(false);
       });
     });
     describe('Lines can intersect with other lines', () => {
@@ -617,6 +638,20 @@ describe('g2 tests', () => {
         expect(res.onLine).toEqual(true);
         expect(res.inLine).toEqual(true);
         expect(res.intersect).toEqual(new Point(0.804, 0.05036621488721111));
+      });
+    });
+    describe('Lines Misc', () => {
+      test('Line rounding', () => {
+        const l = new Line(new Point(0, 0), 1, Math.PI / 3).round();
+        expect(l.ang).toBe(1.04719755);
+        expect(l.A).toBe(0.8660254);
+        expect(l.B).toBe(-0.5);
+        expect(l.C).toBe(0);
+        expect(l.distance).toBe(1);
+      });
+      test('Line distance to point', () => {
+        const l = new Line(new Point(0, 0), 1, 0);
+        expect(l.distanceToPoint(new Point(2, 2))).toBe(2);
       });
     });
   });
@@ -1715,6 +1750,16 @@ describe('g2 tests', () => {
         const diff = round(getDeltaAngle(-1, 1, dir), 3);
         const expected = round(2 - Math.PI * 2, 3);
         expect(diff).toBe(expected);
+      });
+    });
+    describe('Special cases', () => {
+      test('0 to 1 default values', () => {
+        const diff = round(getDeltaAngle(0, 1), 3);
+        expect(diff).toBe(1);
+      });
+      test('Start and Target the same', () => {
+        const diff = round(getDeltaAngle(1, 1), 3);
+        expect(diff).toBe(0);
       });
     });
   });
