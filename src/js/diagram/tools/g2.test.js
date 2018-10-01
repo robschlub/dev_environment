@@ -2,7 +2,7 @@ import {
   Point, Transform, Line, minAngleDiff, normAngle,
   TransformLimit, spaceToSpaceTransform, Rect,
   getBoundingRect, polarToRect, rectToPolar, getDeltaAngle,
-  normAngleTo90, deg,
+  normAngleTo90, deg, curvedPath,
 } from './g2';
 import { round } from './mathtools';
 
@@ -913,6 +913,25 @@ describe('g2 tests', () => {
       expect(t.s(1)).toEqual({ x: 1, y: 1 });
       expect(t.s(2)).toEqual(null);
     });
+    test('isEqualTo', () => {
+      const t1 = new Transform().scale(1, 1).rotate(1).translate(1, 1);
+      const e1 = new Transform().scale(1, 1).rotate(1).translate(1, 1);
+      const ne1 = new Transform().scale(1, 2).rotate(1).translate(1, 1);
+      const ne2 = new Transform().scale(2, 1).rotate(1).translate(1, 1);
+      const ne3 = new Transform().scale(1, 1).rotate(2).translate(1, 1);
+      const ne4 = new Transform().scale(1, 1).rotate(1).translate(2, 1);
+      const ne5 = new Transform().scale(1, 1).rotate(1).translate(1, 2);
+      const ne6 = new Transform().rotate(1).translate(1, 1).scale(1, 1);
+      const ne7 = new Transform().rotate(1).translate(1, 1);
+      expect(t1.isEqualTo(e1)).toBe(true);
+      expect(t1.isEqualTo(ne1)).toBe(false);
+      expect(t1.isEqualTo(ne2)).toBe(false);
+      expect(t1.isEqualTo(ne3)).toBe(false);
+      expect(t1.isEqualTo(ne4)).toBe(false);
+      expect(t1.isEqualTo(ne5)).toBe(false);
+      expect(t1.isEqualTo(ne6)).toBe(false);
+      expect(t1.isEqualTo(ne7)).toBe(false);
+    });
     test('Update scale', () => {
       const t = new Transform()
         .scale(0, 0).translate(2, 2).rotate(1)
@@ -1728,6 +1747,58 @@ describe('g2 tests', () => {
   describe('deg', () => {
     test('pi to 180', () => {
       expect(round(deg(Math.PI), 2)).toBe(180);
+    });
+  });
+  describe('curvedPath', () => {
+    let options;
+    beforeEach(() => {
+      options = {
+        rot: 1,
+        magnitude: 0.5,
+        offset: 0.5,
+        controlPoint: null,
+        direction: 'up',
+      };
+    });
+    test('up', () => {
+      const start = new Point(0, 0);
+      const stop = new Point(2, 0);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(1, 0.5));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('down', () => {
+      options.direction = 'down';
+      const start = new Point(0, 0);
+      const stop = new Point(2, 0);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(1, -0.5));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('left', () => {
+      options.direction = 'left';
+      const start = new Point(0, 0);
+      const stop = new Point(0, 2);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(-0.5, 1));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('right', () => {
+      options.direction = 'right';
+      const start = new Point(0, 0);
+      const stop = new Point(0, 2);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(0.5, 1));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('control', () => {
+      options.direction = 'right';
+      options.controlPoint = new Point(1, 1);
+      const start = new Point(0, 0);
+      const stop = new Point(2, 0);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(1, 0.5));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
     });
   });
   // describe('Three point angle', () => {

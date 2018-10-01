@@ -1273,7 +1273,7 @@ class Transform {
         }
       }
       if (this.order[i] instanceof Rotation) {
-        if (transformToCompare.r !== this.order[i].r) {
+        if (transformToCompare.order[i].r !== this.order[i].r) {
           return false;
         }
       }
