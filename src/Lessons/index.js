@@ -98,6 +98,19 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
+    'Quads, Rectangles and Squares',
+    '/Lessons/Math/Quadrilaterals',
+    'quadrilateral',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'congruent_triangles',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
     'Related Angles',
     '/Lessons/Math/RelatedAngles',
     'related_angles',
