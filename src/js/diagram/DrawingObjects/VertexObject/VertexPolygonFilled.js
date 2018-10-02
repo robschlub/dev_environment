@@ -1,6 +1,8 @@
 // @flow
 
-import { Point } from '../../tools/g2';
+import {
+  Point, Rect,
+} from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from './VertexObject';
 
@@ -17,6 +19,8 @@ class PolygonFilled extends VertexObject {
     rotation: number = 0,
     center: Point = new Point(0, 0),
     numSidesToDraw: number = numSides,
+    textureLocation: string = '',
+    textureCoords: Rect = new Rect(0, 0, 1, 1),
   ) {
     super(webgl);
     this.glPrimative = webgl.gl.TRIANGLE_FAN;
@@ -47,7 +51,7 @@ class PolygonFilled extends VertexObject {
 
     // Make the encapsulating border
     if (sidesToDraw < sides) {
-      this.border[0].push(center.copy());
+      this.border[0].push(center._dup());
       // b = 1;
     }
     for (i = 0; i < sidesToDraw + 1; i += 1) {
@@ -58,8 +62,18 @@ class PolygonFilled extends VertexObject {
       j += 2;
     }
     if (sidesToDraw < sides) {
-      this.border[0].push(center.copy());
+      this.border[0].push(center._dup());
     }
+    this.textureLocation = textureLocation;
+
+    this.createTextureMap(
+      -this.radius * 1.01 + center.x,
+      this.radius * 1.01 + center.x,
+      -this.radius * 1.01 + center.y,
+      this.radius * 1.01 + center.y,
+      textureCoords.left, textureCoords.right,
+      textureCoords.bottom, textureCoords.top,
+    );
 
     this.setupBuffer();
   }
@@ -77,6 +91,7 @@ class PolygonFilled extends VertexObject {
     }
     this.draw(offset, rotate, scale, count, color);
   }
+
   getPointCountForAngle(drawAngle: number = Math.PI * 2) {
     let count = Math.floor(drawAngle / this.dAngle) + 1;
     if (drawAngle >= Math.PI * 2.0) {

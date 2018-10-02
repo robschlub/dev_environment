@@ -1,11 +1,14 @@
 const path = require('path');
+const entryPoints = require('./getLessons.js');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-line import/no-unresolved
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
-const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved
+const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
+
+entryPoints.makeLessonIndex();
 
 const envConfig = {
   prod: {
@@ -109,14 +112,10 @@ module.exports = (env) => {
     clean].filter(elem => elem !== '');
 
   return {
-    entry: {
-      main: ['whatwg-fetch', 'babel-polyfill', './src/js/main.js'],
-      entry2: './src/js/entry2.js',
-      entry3: './src/js/entry3.js',
-    },
+    entry: entryPoints.entryPoints(),
     output: {
       path: buildPath,
-      filename: '[name].bundle.js',
+      filename: '[name].js',
     },
     module: {
       rules: [
@@ -151,6 +150,28 @@ module.exports = (env) => {
             },
           ],
         },
+        {
+          test: /\.(png|jpg|gif)$/,
+          use: [
+            {
+              loader: 'file-loader',
+              // options: {
+              //   name: '[path][hash].[ext]'
+              // }
+              options: {
+                name (file) {
+                  // if (env === 'development') {
+                  //   return '[path][name].[ext]'
+                  // }
+                  let newPath = file.replace('/opt/app/src/', '');
+                  // newPath = newPath.replace('/tile.png', '');
+                  newPath = newPath.replace(/\/[^/]*$/, '');
+                  return `${newPath}/[name].[ext]`;
+                },
+              },
+            },
+          ],
+        }
       ],
     },
     plugins: pluginArray,
@@ -163,7 +184,7 @@ module.exports = (env) => {
         minSize: 30000,
         cacheGroups: {
           default: {
-            minChunks: 2,
+            minChunks: 2000,
             priority: -20,
             reuseExistingChunk: true,
           },
@@ -172,7 +193,7 @@ module.exports = (env) => {
             minChunks: 2,
             priority: -10,
             reuseExistingChunk: true,
-            test: /js\/tools/,
+            test: /js\/(diagram|Lesson|tools|components)/,
             name: 'tools',
           },
           // commoncss: {
@@ -180,11 +201,11 @@ module.exports = (env) => {
           //   minChunks: 2,
           //   priority: -10,
           //   reuseExistingChunk: true,
-          //   test: /\.(css|scss|sass)$/,
-          //   name: 'common',
-          // },
+          //   test: /css\/*\.(css|scss|sass)$/,
+          //   name: 'commoncss',
+          // // },
           // bootstrap: {
-          //   test: /bootstrap\.css/,
+          //   test: /css\/bootstrap\*.css/,
           //   name: 'bootstrap',
           //   minChunks: 1,
           //   minSize: 10,

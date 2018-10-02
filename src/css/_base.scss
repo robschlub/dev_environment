@@ -1,5 +1,6 @@
 
 body {
-  background-color: $color_background;
-  color: $color_text;
+  background-color: color('site', 'background');
+  // color: color('site', 'text');
+  color: color('site', 'text');
 }

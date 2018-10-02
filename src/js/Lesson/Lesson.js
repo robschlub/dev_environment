@@ -1,157 +1,344 @@
 // @flow
-import { Content } from './LessonContent';
-// import WebGLInstance from './webgl/webgl';
-// import getShaders from './webgl/shaders';
+import { LessonContent } from './LessonContent';
+import Diagram from '../diagram/Diagram';
 
-type LessonType = 'multiPage' | 'singlePage';
+function hideInfoButton() {
+  const infoButton = document.getElementById('id_lesson__info_button');
+  if (infoButton instanceof HTMLElement) {
+    infoButton.classList.add('lesson__info_hide');
+  }
+}
+
+function hideInteractiveHighlightButton() {
+  const interactiveHighlightButton = document
+    .getElementById('id_lesson__interactive_element_button');
+  if (interactiveHighlightButton instanceof HTMLElement) {
+    interactiveHighlightButton.classList.add('lesson__interactive_element_button__hide');
+  }
+}
+
+// Flow:
+//
+//  Coming from any section
+//    - setEnterState               Guaranteed
+//    - showOnly                    Guaranteed
+//    - hideOnly                    Guaranteed
+//    - show                        Guaranteed
+//    - hide                        Guaranteed
+//    - transitionFromPrev/Next     Can be cancelled
+//    - transitionFromAny           Can be cancelled / skipped
+//    - setPlannedPositions?        Can be cancelled / skipped
+//    - setSteadyState              Can be skipped
+//
+//  Go to next, prev or goTo
+//    - transitionToPrev/Next       Can be cancelled / skipped
+//    - transitionToAny             Can be cancelled / skipped
+//    - saveState                   Guaranteed
+//    - setLeaveState               Guaranteed
 
 class Lesson {
-  content: Content;
-  type: LessonType;
+  // ContentClass: Object;
+  content: LessonContent;
 
   currentSectionIndex: number;
-  currentDiagrams: Object;
+  diagram: Diagram | null;
+  overlayDiagram: Diagram | null;
   state: Object;
   inTransition: boolean;
+  transitionCancelled: boolean;
+  comingFrom: 'next' | 'prev' | 'goto' | '' ;
+  goingTo: 'next' | 'prev' | 'goto' | '' ;
+  refresh: (string, number, ?() => void) => void;
+  // refreshPageOnly: (number) => void;
+  // blank: () => void;
+  goToSectionIndex: number;
+  firstPageShown: boolean;
 
-  refresh: (string) => void;
-
-  constructor(content: Content, lessonType: LessonType) {
+  constructor(content: Object) {
     this.content = content;
-    this.type = lessonType;
-    this.currentDiagrams = {};
+    // this.content = new Content(this.diagram);
+    this.diagram = null;
+    this.overlayDiagram = null;
     this.currentSectionIndex = 0;
+    this.firstPageShown = true;
     this.state = {};
     this.inTransition = false;
     this.refresh = function () {}; // eslint-disable-line func-names
+    // this.refreshPageOnly = function () {}; // eslint-disable-line func-names
+    // this.blank = () => {};
+    this.comingFrom = '';
+    this.transitionCancelled = false;
+    this.goToSectionIndex = 0;
   }
 
   getContentHtml(): string {
     let htmlText = '';
-    if (this.type === 'multiPage') {
-      const section = this.content.sections[this.currentSectionIndex];
-      htmlText = section.getContent(this.type);
-    } else {
-      this.content.sections.forEach((section) => {
-        htmlText = `${htmlText}${section.getContent(this.type)}`;
-      });
-    }
+    const section = this.content.sections[this.currentSectionIndex];
+    htmlText = section.getContent();
     return htmlText;
   }
 
-  goToSection(sectionIndex: number) {
-    if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
+  nextSection() {
+    const { diagram } = this;
+
+    if (this.currentSectionIndex < this.content.sections.length - 1 && diagram) {
+      // If in transition, then cancel the transition.
       if (this.inTransition) {
+        const { firstPageShown } = this;
+        const { comingFrom } = this;
+        this.stopTransition();
+        if (comingFrom === 'prev' || firstPageShown) {
+          return;
+        }
+      } else {
+        // Stop diagrams if not in transition to stop any animations.
         this.stopDiagrams();
       }
-      this.saveState();
-      this.currentSectionIndex = sectionIndex;
-      this.refresh(this.getContentHtml());
+      this.firstPageShown = false;
+      if (this.currentSection().blankTransition.toNext) {
+        this.refresh('', this.currentSectionIndex);
+      }
+      this.content.toggleInfo(false);
+      // this.currentSection().goingTo = 'next';
+      // this.sections.[this.currentSectionIndex + 1].comingFrom = 'prev';
+      this.transitionStart('prev');
+      this.goToSectionIndex = this.currentSectionIndex + 1;
+      this.currentSection().transitionToNext(this.finishTransToNextOrPrev.bind(this));
     }
-    // return false;
+    this.renderDiagrams();
+  }
+
+  prevSection() {
+    const { diagram } = this;
+    if (this.currentSectionIndex > 0 && diagram) {
+      if (this.inTransition) {
+        const { comingFrom } = this;
+        const { firstPageShown } = this;
+        this.stopTransition();
+        if (comingFrom === 'next' || firstPageShown) {
+          return;
+        }
+      } else {
+        this.stopDiagrams();
+      }
+      this.firstPageShown = false;
+      if (this.currentSection().blankTransition.toNext) {
+        this.refresh('', this.currentSectionIndex);
+      }
+      // this.currentSection().goingTo = 'prev';
+      // this.sections.[this.currentSectionIndex + 1].comingFrom = 'next';
+      this.content.toggleInfo(false);
+      this.transitionStart('next');
+      this.goToSectionIndex = this.currentSectionIndex - 1;
+      if (this.content.sections[this.currentSectionIndex - 1].skipWhenComingFromNext) {
+        if (this.currentSectionIndex - 1 > 0) {
+          this.goToSectionIndex = this.currentSectionIndex - 2;
+        }
+      }
+      this.currentSection().transitionToPrev(this.finishTransToNextOrPrev.bind(this));
+    }
+    this.renderDiagrams();
+  }
+
+  goToSection(sectionId: number | string) {
+    let sectionIndex = 0;
+    if (typeof sectionId === 'number') {
+      sectionIndex = sectionId;
+    } else {
+      this.content.sections.forEach((section, index) => {
+        if (section.title === sectionId) {
+          sectionIndex = index;
+        }
+      });
+    }
+    // this.firstPageShown = false;
+    if (sectionIndex >= 0 && sectionIndex < this.content.sections.length) {
+      if (this.inTransition) {
+        this.stopTransition();
+        if (this.firstPageShown) {
+          this.firstPageShown = false;
+        }
+      } else {
+        this.stopDiagrams();
+      }
+      // this.currentSection().goingTo = 'goto';
+      // this.sections.[this.currentSectionIndex + 1].comingFrom = 'goto';
+      if (this.currentSection().blankTransition.toGoto) {
+        this.refresh('', this.currentSectionIndex);
+      }
+      this.content.toggleInfo(false);
+      this.transitionStart('goto');
+      this.goToSectionIndex = sectionIndex;
+      this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
+    }
+    this.renderDiagrams();
+  }
+
+  transitionStart(direction: 'next' | 'prev' | 'goto' | '' = '') {
+    this.inTransition = true;
+    this.comingFrom = direction;
+    if (direction === 'prev') {
+      this.content.goingTo = 'next';
+      this.content.comingFrom = 'prev';
+    } else if (direction === 'next') {
+      this.content.goingTo = 'prev';
+      this.content.comingFrom = 'next';
+    } else {
+      this.content.goingTo = 'goto';
+      this.content.comingFrom = 'goto';
+    }
+    const { diagram } = this;
+    if (diagram) {
+      diagram.inTransition = true;
+    }
+  }
+
+  finishTransToNextOrPrev(flag: boolean = true) {
+    if (flag === false) {
+      this.finishTransToAny();
+    } else {
+      this.currentSection().transitionToAny(this.finishTransToAny.bind(this));
+    }
+  }
+
+  finishTransToAny() {
+    this.setLeaveStateAndMoveToNextSection();
+  }
+
+  setLeaveStateAndMoveToNextSection() {
+    hideInfoButton();
+    hideInteractiveHighlightButton();
+
+    const possibleState = this.currentSection().setLeaveState();
+    if (possibleState !== null && possibleState !== undefined) {
+      this.state = possibleState;
+    }
+
+    this.currentSectionIndex = this.goToSectionIndex;
+    this.currentSection().setBlanks();
+
+    let contentHTML = this.getContentHtml();
+    if ((this.comingFrom === 'prev' && this.currentSection().blankTransition.fromPrev)
+     || (this.comingFrom === 'next' && this.currentSection().blankTransition.fromNext)
+     || (this.comingFrom === 'goto' && this.currentSection().blankTransition.fromGoto)) {
+      contentHTML = '';
+    }
+    this.refresh(
+      contentHTML, this.currentSectionIndex,
+      this.setState.bind(this),
+    );
+  }
+
+  setState() {
+    const { diagram } = this;
+    const section = this.content.sections[this.currentSectionIndex];
+    if (diagram) {
+      section.setEnterState(this.state);
+      section.currentInteractiveItem = -1;
+      if (this.overlayDiagram) {
+        this.overlayDiagram.elements.hideAll();
+      }
+      section.setVisible();
+      this.renderDiagrams();
+      if (this.transitionCancelled) {
+        this.finishTransitionFromAny();
+      }
+      if (this.comingFrom === 'next') {
+        section.transitionFromNext(this.finishTransFromNextOrPrev.bind(this));
+      } else if (this.comingFrom === 'prev') {
+        section.transitionFromPrev(this.finishTransFromNextOrPrev.bind(this));
+      } else {
+        section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+      }
+    }
+  }
+
+  finishTransFromNextOrPrev(flag: boolean = true) {
+    if (flag === false) {
+      this.finishTransitionFromAny();
+    } else {
+      const section = this.content.sections[this.currentSectionIndex];
+      section.transitionFromAny(this.finishTransitionFromAny.bind(this));
+    }
+  }
+
+  finishTransitionFromAny() {
+    this.refresh(
+      this.getContentHtml(),
+      this.currentSectionIndex,
+      this.componentUpdateComplete.bind(this),
+    );
+  }
+
+  componentUpdateComplete() {
+    const section = this.content.sections[this.currentSectionIndex];
+    section.setOnClicks();
+    section.setSteadyState(this.state);
+    this.firstPageShown = false;
+    section.setInfoButton();
+    section.setInteractiveElements();
+    section.setInteractiveElementsButton();
+    this.inTransition = false;
+    const { diagram } = this;
+    if (diagram) {
+      diagram.inTransition = false;
+    }
+    this.comingFrom = '';
+    this.transitionCancelled = false;
+    this.renderDiagrams();
   }
 
   currentSection() {
     return this.content.sections[this.currentSectionIndex];
   }
 
-  saveState() {
-    if (this.type === 'multiPage') {
-      this.state = this.currentSection().getState(this.currentDiagrams);
-    }
-  }
-
   stopDiagrams() {
-    Object.keys(this.currentDiagrams).forEach((key) => {
-      const diagram = this.currentDiagrams[key];
-      diagram.stop();
-    });
+    const { diagram } = this;
+    if (diagram) {
+      diagram.stop(false);
+    }
   }
 
-  nextSection() {
-    if (this.currentSectionIndex < this.content.sections.length - 1) {
-      if (this.inTransition) {
-        this.stopDiagrams();
-      }
-      this.inTransition = true;
-      this.currentSection().transitionNext(
-        this.currentDiagrams,
-        this.finishTransNext.bind(this),
-      );
-      // this.renderDiagrams();
+  highlightNextInteractiveItem() {
+    const section = this.content.sections[this.currentSectionIndex];
+    const interactiveItem = section.getNextInteractiveItem();
+    if (interactiveItem) {
+      const { element, location } = interactiveItem;
+      this.content.highlightInteractiveElement(element, location);
     }
+  }
+
+  stopTransition() {
+    const { diagram } = this;
+    this.transitionCancelled = true;
+    if (diagram) {
+      diagram.inTransition = false;
+      diagram.stop(false);
+    }
+    this.inTransition = false;
   }
 
   renderDiagrams() {
-    Object.keys(this.currentDiagrams).forEach((key) => {
-      this.currentDiagrams[key].animateNextFrame();
-    });
-  }
-
-  finishTransNext() {
-    this.inTransition = false;
-    this.goToSection(this.currentSectionIndex + 1);
-  }
-
-  finishTransPrev() {
-    this.inTransition = false;
-    this.goToSection(this.currentSectionIndex - 1);
-  }
-
-  prevSection() {
-    if (this.currentSectionIndex > 0) {
-      if (this.inTransition) {
-        this.stopDiagrams();
-      }
-      this.inTransition = true;
-      this.currentSection().transitionPrev(
-        this.currentDiagrams,
-        this.finishTransPrev.bind(this),
-      );
+    const { diagram } = this;
+    if (diagram) {
+      diagram.animateNextFrame();
     }
   }
 
-  closeDiagrams() {
-    Object.keys(this.currentDiagrams).forEach((key) => {
-      const diagram = this.currentDiagrams[key];
+  closeDiagram() {
+    const { diagram } = this;
+    if (diagram) {
       diagram.destroy();
-    });
-    this.currentDiagrams = {};
+    }
+    this.diagram = null;
   }
 
-  setState() {
-    let { sections } = this.content;
-    if (this.type === 'multiPage') {
-      sections = [this.content.sections[this.currentSectionIndex]];
-    }
-
-    sections.forEach((section) => {
-      section.setState(this.currentDiagrams, this.state, this.type);
-    });
-    this.renderDiagrams();
-  }
-
-  createDiagrams() {
-    this.closeDiagrams();
-    let { sections } = this.content;
-    // If multi page, only going to create one diagram
-    if (this.type === 'multiPage') {
-      sections = [this.content.sections[this.currentSectionIndex]];
-      const id = 'multipage_diagram';
-      // $FlowFixMe
-      this.currentDiagrams[id] = new this.content.DiagramClass(id);
-    }
-    if (this.type === 'singlePage') {
-      // If single page, may create many diagrams
-      sections.forEach((section) => {
-        const sectionDiagrams = section.getDiagramList(this.type);
-        sectionDiagrams.forEach((d) => {
-          if (!(d.id in this.currentDiagrams)) {
-            this.currentDiagrams[d.id] = new d.DiagramClass(d.id);
-          }
-        });
-      });
-    }
+  initialize() {
+    this.closeDiagram();
+    this.content.initialize();
+    this.diagram = this.content.diagram;
+    this.overlayDiagram = this.content.overlayDiagram;
+    this.diagram.lesson = this;
   }
 }
 

@@ -29,7 +29,7 @@ class IsoTriangle extends VertexObject {
       this.points[i + 1] = point.y;
       this.border[0].push(point);
     }
-    this.border[0].push(this.border[0][0].copy());
+    this.border[0].push(this.border[0][0]._dup());
     this.setupBuffer();
   }
 }

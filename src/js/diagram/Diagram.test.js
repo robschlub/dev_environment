@@ -4,32 +4,35 @@ import {
   // AnimationPhase,
 } from './Element';
 import Diagram from './Diagram';
-import { Point, Transform, TransformLimit, Rect } from './tools/g2';
+import {
+  Point, Transform, TransformLimit, Rect,
+} from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import DrawContext2D from '../__mocks__/DrawContext2DMock';
 import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
-// import { linear, round } from './mathtools';
-// import Gesture from './Gesture';
-// import WebGLInstance from './webgl';
-// import * as m2 from './m2';
 
 jest.mock('./Gesture');
 jest.mock('./webgl/webgl');
 jest.mock('./DrawContext2D');
+jest.mock('../tools/tools');
 
 describe('Diagram', () => {
   let diagrams;
 
   beforeEach(() => {
     document.body.innerHTML =
-      '<div id="c">' +
-      '  <canvas class="diagram__gl">' +
-      '  </canvas>' +
-      '  <canvas class="diagram__text">' +
-      '  </canvas>' +
-      '  <div class="diagram__html">' +
-      '  </div>' +
-      '</div>';
+      '<div id="c">'
+      + '  <canvas class="diagram__gl" id="id_diagram__gl__low">'
+      + '  </canvas>'
+      + '  <canvas class="diagram__text" id="id_diagram__text__low">'
+      + '  </canvas>'
+      + '  <div class="diagram__html">'
+      + '  </div>'
+      + '  <canvas class="diagram__gl" id="id_diagram__gl__high">'
+      + '  </canvas>'
+      + '  <canvas class="diagram__text" id="id_diagram__text__high">'
+      + '  </canvas>'
+      + '</div>';
     // canvas = document.getElementById('c');
     const diagramDefinitions = {
       landscapeCenter: {
@@ -118,10 +121,14 @@ describe('Diagram', () => {
       };
       const { limits } = definition;
       const diagram = new Diagram('c', limits);
-      diagram.webgl = webgl;
-      diagram.canvas = canvasMock;
+      diagram.webglLow = webgl;
+      diagram.webglHigh = webgl;
+      diagram.canvasLow = canvasMock;
+      diagram.canvasHigh = canvasMock;
       diagram.htmlCanvas = htmlCanvasMock;
-      diagram.draw2D = new DrawContext2D(definition.width, definition.height);
+      diagram.isTouchDevice = false;
+      diagram.draw2DLow = new DrawContext2D(definition.width, definition.height);
+      diagram.draw2DHigh = new DrawContext2D(definition.width, definition.height);
       diagram.setSpaceTransforms();
       // create squares:
       const squares = {};
@@ -129,7 +136,7 @@ describe('Diagram', () => {
       Object.keys(squareDefinitions).forEach((sKey) => {
         const def = squareDefinitions[sKey];
         const square = new VertexPolygon(
-          diagram.webgl,
+          diagram.webglLow,
           4,
           (def.sideLength / 2) * Math.sqrt(2), 0.05 * Math.sqrt(2),
           def.rotation, def.center,
@@ -140,10 +147,12 @@ describe('Diagram', () => {
         );
         squareElement.isMovable = true;
         squareElement.isTouchable = true;
+        squareElement.move.limitToDiagram = true;
         squares[sKey] = squareElement;
         collection.add(sKey, squareElement);
         collection.isTouchable = true;
       });
+      diagram.moveTopElementOnly = false;
       diagram.elements = collection;
       diagram.dToGL = (x, y) => new Point(x, y)
         .transformBy(diagram.diagramToGLSpaceTransform.matrix());
@@ -152,7 +161,7 @@ describe('Diagram', () => {
       diagram.dToP = (p) => {
         const pixel = p
           .transformBy(diagram.diagramToPixelSpaceTransform.matrix());
-        return pixel.add(new Point(diagram.canvas.left, diagram.canvas.top));
+        return pixel.add(new Point(diagram.canvasLow.left, diagram.canvasLow.top));
       };
       diagrams[key] = diagram;
     });
@@ -164,9 +173,9 @@ describe('Diagram', () => {
   });
   test('Diagram API', () => {
     const d = new Diagram('c', 0, 0, 4, 4);
-    d.webgl = webgl;      // needed for mocking only
+    d.webglLow = webgl;      // needed for mocking only
     const squareVertices = new VertexPolygon(
-      d.webgl,            // gl instance
+      d.webglLow,            // gl instance
       4,                  // number of sides in polygon
       1,                  // radius to center of corner
       0.05,               // thickness of polygon border
@@ -390,8 +399,8 @@ describe('Diagram', () => {
       expect(d.beingMovedElements).toHaveLength(0);
       d.touchDownHandler(new Point(601, 449));          // Touch 0.01, 0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
     });
     test('Touch on B and C square', () => {
       // canvasW=1000, canvasH=500, clipL=-1, clipW=2, clipT=1, clipH=2
@@ -400,8 +409,8 @@ describe('Diagram', () => {
       expect(d.beingMovedElements).toHaveLength(0);
       d.touchDownHandler(new Point(1099, 201));         // Touch 0.99, 0.99
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._b);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._b);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
     });
     test('Touch on B and C square LandscapeOffset', () => {
       const d = diagrams.landscapeOffset;
@@ -409,8 +418,8 @@ describe('Diagram', () => {
       expect(d.beingMovedElements).toHaveLength(0);
       d.touchDownHandler(new Point(349, 451));           // Touch 0.99, 0.99
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._b);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._b);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
     });
   });
   describe('Touch move', () => {
@@ -475,8 +484,8 @@ describe('Diagram', () => {
 
       d.touchDownHandler(t1);          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
       d.draw(1);
 
       // Move to 0.25, 0.25
@@ -525,8 +534,8 @@ describe('Diagram', () => {
 
       d.touchDownHandler(t0);          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
       expect(d.elements._a.transform.t().round(2)).toEqual(a0);
       expect(d.elements._c.transform.t().round(2)).toEqual(c0);
       d.draw(0.1);
@@ -583,8 +592,8 @@ describe('Diagram', () => {
 
       d.touchDownHandler(t0);          // Touch -0.01, -0.01
       expect(d.beingMovedElements).toHaveLength(2);
-      expect(d.beingMovedElements[0]).toBe(d.elements._a);
-      expect(d.beingMovedElements[1]).toBe(d.elements._c);
+      expect(d.beingMovedElements[1]).toBe(d.elements._a);
+      expect(d.beingMovedElements[0]).toBe(d.elements._c);
       expect(d.elements._a.transform.t().round(2)).toEqual(a0);
       expect(d.elements._c.transform.t().round(2)).toEqual(c0);
       d.draw(0.1);

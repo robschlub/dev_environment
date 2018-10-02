@@ -134,12 +134,13 @@ class WebGLInstance {
       // this.gl.viewport(0, 500, 500, 500);   // Tell WebGL how to convert from clip space to pixels
 
       // Clear the canvas
-      const bc = backgroundColor;
-      this.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
+      // const bc = backgroundColor;
+      // this.gl.clearColor(bc[0], bc[1], bc[2], bc[3]);
+      this.gl.clearColor(0, 0, 0, 0);
       this.gl.clear(this.gl.COLOR_BUFFER_BIT);
       this.gl.disable(this.gl.DEPTH_TEST);
-      // gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
-      // gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+      gl.enable(gl.BLEND);
       this.gl.useProgram(this.program);
 
       // window.addEventListener('resize', autoResize.bind(this, event));
@@ -158,8 +159,8 @@ class WebGLInstance {
       Math.floor(this.gl.canvas.clientHeight * realToCSSPixels);
 
     // Check if the canvas is not the same size.
-    if (this.gl.canvas.width  !== displayWidth ||
-        this.gl.canvas.height !== displayHeight) {
+    if (this.gl.canvas.width  !== displayWidth
+        || this.gl.canvas.height !== displayHeight) {
 
       // Make the canvas the same size
       this.gl.canvas.width  = displayWidth;

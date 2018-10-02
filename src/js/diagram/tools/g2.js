@@ -6,8 +6,10 @@
 //  - minAngleDiff
 //  - normAngle
 
-import { roundNum, decelerate, clipMag, clipValue } from './mathtools';
-import { Console } from '../../tools/tools';
+import {
+  roundNum, decelerate, clipMag, clipValue,
+} from './mathtools';
+// import { Console } from '../../tools/tools';
 import * as m2 from './m2';
 
 // function nullDefaultNum(input: number | null, defaultValue: number): number {
@@ -20,7 +22,7 @@ import * as m2 from './m2';
 // export type PointType = {
 //   x: number;
 //   y: number;
-//   copy(): PointType;
+//   _dup(): PointType;
 //   // sub(): PointType;
 //   // add(): PointType;
 //   // distance(): number;
@@ -34,6 +36,10 @@ import * as m2 from './m2';
 //   // isInPolygon: boolean;
 //   // isOnPolygon: boolean;
 // };
+function quadraticBezier(P0: number, P1: number, P2: number, t: number) {
+  return (1 - t) * ((1 - t) * P0 + t * P1) + t * ((1 - t) * P1 + t * P2);
+}
+
 class Rect {
   left: number;
   top: number;
@@ -51,7 +57,7 @@ class Rect {
     this.right = left + width;
   }
 
-  copy() {
+  _dup() {
     return new Rect(this.left, this.bottom, this.width, this.height);
   }
 }
@@ -64,25 +70,38 @@ class Point {
   static zero() {
     return new Point(0, 0);
   }
+
   static Unity() {
     return new Point(1, 1);
   }
+
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
-  copy() {
+
+  _dup() {
     return new Point(this.x, this.y);
   }
+
   scale(scalar: number) {
     return new Point(this.x * scalar, this.y * scalar);
   }
-  sub(q: Point) {
-    return new Point(this.x - q.x, this.y - q.y);
+
+  sub(qOrX: Point, y: number = 0) {
+    if (qOrX instanceof Point) {
+      return new Point(this.x - qOrX.x, this.y - qOrX.y);
+    }
+    return new Point(this.x - qOrX, this.y - y);
   }
-  add(q: Point) {
-    return new Point(this.x + q.x, this.y + q.y);
+
+  add(qOrX: Point | number, y: number = 0) {
+    if (qOrX instanceof Point) {
+      return new Point(this.x + qOrX.x, this.y + qOrX.y);
+    }
+    return new Point(this.x + qOrX, this.y + y);
   }
+
   distance() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
@@ -120,6 +139,12 @@ class Point {
     return new Point(transformedPoint[0], transformedPoint[1]);
   }
 
+  quadraticBezier(p1: Point, p2: Point, t: number) {
+    const bx = quadraticBezier(this.x, p1.x, p2.x, t);
+    const by = quadraticBezier(this.y, p1.y, p2.y, t);
+    return new Point(bx, by);
+  }
+
   rotate(angle: number, center?: Point) {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
@@ -132,6 +157,7 @@ class Point {
       matrix[2] * pt.x + matrix[3] * pt.y + centerPoint.y
     );
   }
+
   /* eslint-enable comma-dangle */
   isEqualTo(q: Point, precision?: number) {
     let pr = this;
@@ -146,20 +172,42 @@ class Point {
     }
     return false;
   }
+
   isNotEqualTo(q: Point, precision?: number) {
     return !this.isEqualTo(q, precision);
   }
+
   /* eslint-disable no-use-before-define */
   isOnLine(l: Line, precision?: number) {
     return l.hasPointOn(this, precision);
   }
+
+  getShaddowOnLine(l: Line, precision: number = 8) {
+    const shaddow = new Line(this, 1, l.angle() + Math.PI / 2);
+    const { intersect } = shaddow.intersectsWith(l);
+    // console.log(intersect, inLine, onLine, )
+    if (intersect != null && intersect.isOnLine(l, precision)) {
+      return intersect;
+    }
+    return null;
+  }
+
+  shaddowIsOnLine(l: Line, precision: number = 8) {
+    const intersect = this.getShaddowOnLine(l, precision);
+    if (intersect != null) {
+      return true;
+    }
+    return false;
+  }
+
   isOnUnboundLine(l: Line, precision?: number) {
     return l.hasPointAlong(this, precision);
   }
+
   /* eslint-enable no-use-before-define */
-  console(text?: string) {
-    Console(`${text || ''} + ${this.x}, ${this.y}`);
-  }
+  // console(text?: string) {
+  //   Console(`${text || ''} + ${this.x}, ${this.y}`);
+  // }
 
   static isLeft(p0: Point, p1: Point, p2: Point) {
     return (
@@ -222,10 +270,16 @@ class Point {
       /* eslint-disable-next-line  no-use-before-define */
       const l = line(v[i], v[i + 1]);
       if (p.isOnLine(l)) {
+        if (popLastPoint) {
+          v.pop();
+        }
         return true;
       }
     }
     if (p.isInPolygon(polygonVertices)) {
+      if (popLastPoint) {
+        v.pop();
+      }
       return true;
     }
 
@@ -249,17 +303,17 @@ function point(x: number, y: number) {
 
 function pointinRect(q: Point, p1: Point, p2: Point, precision?: number) {
   if (precision === undefined || precision === null) {
-    if (q.x >= Math.min(p1.x, p2.x) &&
-       q.x <= Math.max(p1.x, p2.x) &&
-       q.y >= Math.min(p1.y, p2.y) &&
-       q.y <= Math.max(p1.y, p2.y)) {
+    if (q.x >= Math.min(p1.x, p2.x)
+      && q.x <= Math.max(p1.x, p2.x)
+      && q.y >= Math.min(p1.y, p2.y)
+      && q.y <= Math.max(p1.y, p2.y)) {
       return true;
     }
   } else if (
-    roundNum(q.x, precision) >= roundNum(Math.min(p1.x, p2.x), precision) &&
-    roundNum(q.x, precision) <= roundNum(Math.max(p1.x, p2.x), precision) &&
-    roundNum(q.y, precision) >= roundNum(Math.min(p1.y, p2.y), precision) &&
-    roundNum(q.y, precision) <= roundNum(Math.max(p1.y, p2.y), precision)) {
+    roundNum(q.x, precision) >= roundNum(Math.min(p1.x, p2.x), precision)
+    && roundNum(q.x, precision) <= roundNum(Math.max(p1.x, p2.x), precision)
+    && roundNum(q.y, precision) >= roundNum(Math.min(p1.y, p2.y), precision)
+    && roundNum(q.y, precision) <= roundNum(Math.max(p1.y, p2.y), precision)) {
     return true;
   }
   return false;
@@ -290,24 +344,127 @@ function normAngle(angle: number) {
   return newAngle;
 }
 
-function Line(p1: Point, p2: Point) {
-  this.p1 = p1.copy();
-  this.p2 = p2.copy();
-  this.A = p2.y - p1.y;
-  this.B = p1.x - p2.x;
-  this.C = this.A * p1.x + this.B * p1.y;
+function normAngleTo90(angle: number) {
+  let newAngle = normAngle(angle);
+  if (newAngle > Math.PI / 2 && newAngle < Math.PI) {
+    newAngle += Math.PI;
+  }
+  if (newAngle === Math.PI) {
+    newAngle = 0;
+  }
+  if (newAngle > Math.PI && newAngle < Math.PI * 3 / 2) {
+    newAngle -= Math.PI;
+  }
+  return newAngle;
 }
+
+export type TypeRotationDirection = 0 | 1 | 2 | -1;
+
+function getDeltaAngle(
+  startAngle: number,
+  targetAngle: number,
+  rotDirection: TypeRotationDirection = 0,
+) {
+  const start = normAngle(startAngle);
+  const target = normAngle(targetAngle);
+  let dir = rotDirection;
+
+  if (start === target) {
+    return 0;
+  }
+
+  if (dir === 2) {
+    if (start > target) {
+      dir = -1;
+    } else {
+      dir = 1;
+    }
+  }
+
+  if (rotDirection === 0) {
+    return minAngleDiff(target, start);
+  }
+
+  if (rotDirection === 1) {
+    if (start > target) {
+      return Math.PI * 2 - start + target;
+    }
+  }
+
+  if (rotDirection === -1) {
+    if (target > start) {
+      return -start - (Math.PI * 2 - target);
+    }
+  }
+
+  return target - start;
+
+  // if (rotDirection === 2) {
+  //   if (target > start) {
+  //     return target - start;
+  //   }
+  // }
+  // if (rotDirection === 2) {
+  //   if (start + rotDiff < 0) {
+  //     rotDiff = Math.PI * 2 + rotDiff;
+  //   } else if (start + rotDiff > Math.PI * 2) {
+  //     rotDiff = -(Math.PI * 2 - rotDiff);
+  //   }
+  // } else if (rotDiff * rotDirection < 0) {
+  //   rotDiff = rotDirection * Math.PI * 2.0 + rotDiff;
+  // }
+  // return rotDiff;
+}
+
+function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
+  this.p1 = p1._dup();
+  if (p2OrMag instanceof Point) {
+    this.p2 = p2OrMag._dup();
+    this.ang = Math.atan2(this.p2.y - this.p1.y, this.p2.x - this.p1.x);
+  } else {
+    this.p2 = this.p1.add(
+      p2OrMag * Math.cos(angle),
+      p2OrMag * Math.sin(angle),
+    );
+    this.ang = angle;
+  }
+  this.A = this.p2.y - this.p1.y;
+  this.B = this.p1.x - this.p2.x;
+  this.C = this.A * this.p1.x + this.B * this.p1.y;
+  this.distance = distance(this.p1, this.p2);
+}
+
+Line.prototype.getYFromX = function getX(x: number) {
+  if (this.B !== 0) {
+    return (this.C - this.A * x) / this.B;
+  }
+  return null;
+};
+
+Line.prototype.getXFromY = function getY(y: number) {
+  if (this.A !== 0) {
+    return (this.C - this.B * y) / this.A;
+  }
+  return null;
+};
+
+Line.prototype.angle = function angle() {
+  return this.ang;
+};
+
 Line.prototype.round = function lineround(precision?: number = 8) {
   const lineRounded = new Line(this.p1, this.p2);
   lineRounded.A = roundNum(lineRounded.A, precision);
   lineRounded.B = roundNum(lineRounded.B, precision);
   lineRounded.C = roundNum(lineRounded.C, precision);
+  lineRounded.ang = roundNum(lineRounded.ang, precision);
+  lineRounded.distance = roundNum(lineRounded.distance, precision);
   return lineRounded;
 };
 
 Line.prototype.length = function linelength() {
   // return this.p1.sub(this.p2).distance();
-  return distance(this.p1, this.p2);
+  return this.distance;
 };
 /* eslint-disable comma-dangle */
 Line.prototype.midpoint = function linemidpoint() {
@@ -332,6 +489,14 @@ Line.prototype.hasPointAlong = function linehasPointAlong(p: Point, precision?: 
     return true;
   }
   return false;
+};
+
+// perpendicular distance of line to point
+Line.prototype.distanceToPoint = function distanceToPoint(p: Point, precision?: number) {
+  return roundNum(
+    Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),
+    precision,
+  );
 };
 
 Line.prototype.hasPointOn = function linehasPointOn(p: Point, precision?: number) {
@@ -377,8 +542,7 @@ Line.prototype.isOnSameLineAs = function lineisOnSameLineAs(line2: Line, precisi
   const l2 = line2.round(precision);
   // If A and B are zero, then this is not a line
   if ((l1.A === 0 && l1.B === 0)
-    ||
-    (l2.A === 0 && l2.B === 0)) {
+    || (l2.A === 0 && l2.B === 0)) {
     return false;
   }
   // If A is 0, then it must be 0 on the other line. Similar with B
@@ -435,8 +599,7 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     i.y = (l1.A * l2.C - l2.A * l1.C) / det;
     if (
       pointinRect(i, l1.p1, l1.p2, precision)
-      &&
-      pointinRect(i, l2.p1, l2.p2, precision)
+      && pointinRect(i, l2.p1, l2.p2, precision)
     ) {
       return {
         onLine: true,
@@ -460,10 +623,10 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     //   - if not overlapping, the intersect point is halfway between the nearest ends
     // let l1 = this;
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       const line11 = new Line(l1.p1, l2.p1);
       const line12 = new Line(l1.p1, l2.p2);
@@ -492,15 +655,14 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     }
     if (
       (
-        l1.p1.isOnLine(l2, precision) &&
-        l1.p2.isOnLine(l2, precision) &&
-        (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
+        l1.p1.isOnLine(l2, precision)
+        && l1.p2.isOnLine(l2, precision)
+        && (!l2.p1.isOnLine(l1, precision) || !l2.p2.isOnLine(l1, precision))
       )
-      ||
-      (
-        l2.p1.isOnLine(l1, precision) &&
-        l2.p2.isOnLine(l1, precision) &&
-        (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
+      || (
+        l2.p1.isOnLine(l1, precision)
+        && l2.p2.isOnLine(l1, precision)
+        && (!l1.p1.isOnLine(l2, precision) || !l1.p2.isOnLine(l2, precision))
       )
     ) {
       const midLine = new Line(l1.midpoint(), l2.midpoint());
@@ -512,34 +674,34 @@ Line.prototype.intersectsWith = function lineintersectsWith(line2: Line, precisi
     }
     let midLine;
     if (
-      l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p1, l2.p1);
     }
     if (
-      l1.p1.isOnLine(l2, precision) &&
-      !l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      l2.p2.isOnLine(l1, precision)
+      l1.p1.isOnLine(l2, precision)
+      && !l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p1, l2.p2);
     }
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      l1.p2.isOnLine(l2, precision) &&
-      l2.p1.isOnLine(l1, precision) &&
-      !l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && l1.p2.isOnLine(l2, precision)
+      && l2.p1.isOnLine(l1, precision)
+      && !l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p2, l2.p1);
     }
     if (
-      !l1.p1.isOnLine(l2, precision) &&
-      l1.p2.isOnLine(l2, precision) &&
-      !l2.p1.isOnLine(l1, precision) &&
-      l2.p2.isOnLine(l1, precision)
+      !l1.p1.isOnLine(l2, precision)
+      && l1.p2.isOnLine(l2, precision)
+      && !l2.p1.isOnLine(l1, precision)
+      && l2.p2.isOnLine(l1, precision)
     ) {
       midLine = new Line(l1.p2, l2.p2);
     }
@@ -569,37 +731,43 @@ function line(p1: Point, p2: Point) {
 
 class Rotation {
   r: number;
-  constructor(angle: number) {
+  name: string;
+  constructor(angle: number, name: string = '') {
     this.r = angle;
+    this.name = name;
   }
+
   matrix(): Array<number> {
     return m2.rotationMatrix(this.r);
   }
-  sub(rotToSub: Rotation = new Rotation(0)): Rotation {
-    return new Rotation(this.r - rotToSub.r);
+
+  sub(rotToSub: Rotation = new Rotation(0, this.name)): Rotation {
+    return new Rotation(this.r - rotToSub.r, this.name);
   }
 
   round(precision: number = 8): Rotation {
-    return new Rotation(roundNum(this.r, precision));
+    return new Rotation(roundNum(this.r, precision), this.name);
   }
 
-  add(rotToAdd: Rotation = new Rotation(0)): Rotation {
-    return new Rotation(this.r + rotToAdd.r);
+  add(rotToAdd: Rotation = new Rotation(0, this.name)): Rotation {
+    return new Rotation(this.r + rotToAdd.r, this.name);
   }
 
-  mul(rotToMul: Rotation = new Rotation(1)): Rotation {
-    return new Rotation(this.r * rotToMul.r);
+  mul(rotToMul: Rotation = new Rotation(1, this.name)): Rotation {
+    return new Rotation(this.r * rotToMul.r, this.name);
   }
-  copy() {
-    return new Rotation(this.r);
+
+  _dup() {
+    return new Rotation(this.r, this.name);
   }
 }
 
 class Translation extends Point {
   x: number;
   y: number;
+  name: string;
 
-  constructor(tx: Point | number, ty: number) {
+  constructor(tx: Point | number, ty: number = 0, name: string = '') {
     if (tx instanceof Point) {
       super(tx.x, tx.y);
       // this.x = tx.x;
@@ -609,22 +777,44 @@ class Translation extends Point {
       // this.x = tx;
       // this.y = ty;
     }
+    this.name = name;
   }
+
   matrix(): Array<number> {
     return m2.translationMatrix(this.x, this.y);
   }
 
-  sub(translationToSub: Translation | Point = new Translation(0, 0)): Translation {
+  sub(
+    translationToSub: Translation | Point | number = new Translation(0, 0),
+    y: number = 0,
+  ): Translation {
+    let t = new Point(0, 0);
+    if (typeof translationToSub === 'number') {
+      t = new Translation(translationToSub, y);
+    } else {
+      t = translationToSub;
+    }
     return new Translation(
-      this.x - translationToSub.x,
-      this.y - translationToSub.y,
+      this.x - t.x,
+      this.y - t.y,
+      this.name,
     );
   }
 
-  add(translationToAdd: Translation | Point = new Translation(0, 0)): Translation {
+  add(
+    translationToAdd: Translation | Point | number = new Translation(0, 0),
+    y: number = 0,
+  ): Translation {
+    let t = new Point(0, 0);
+    if (typeof translationToAdd === 'number') {
+      t = new Translation(translationToAdd, y);
+    } else {
+      t = translationToAdd;
+    }
     return new Translation(
-      this.x + translationToAdd.x,
-      this.y + translationToAdd.y,
+      this.x + t.x,
+      this.y + t.y,
+      this.name,
     );
   }
 
@@ -632,6 +822,7 @@ class Translation extends Point {
     return new Translation(
       this.x * translationToMul.x,
       this.y * translationToMul.y,
+      this.name,
     );
   }
 
@@ -639,19 +830,21 @@ class Translation extends Point {
     return new Translation(
       roundNum(this.x, precision),
       roundNum(this.y, precision),
+      this.name,
     );
   }
 
-  copy() {
-    return new Translation(this.x, this.y);
+  _dup() {
+    return new Translation(this.x, this.y, this.name);
   }
 }
 
 class Scale extends Point {
   x: number;
   y: number;
+  name: string;
 
-  constructor(sx: Point | number, sy: number) {
+  constructor(sx: Point | number, sy: number, name: string = '') {
     if (sx instanceof Point) {
       super(sx.x, sx.y);
       // this.x = sx.x;
@@ -661,14 +854,27 @@ class Scale extends Point {
       // this.x = sx;
       // this.y = sy;
     }
+    this.name = name;
   }
+
   matrix(): Array<number> {
     return m2.scaleMatrix(this.x, this.y);
   }
-  sub(scaleToSub: Scale | Point = new Scale(0, 0)): Scale {
+
+  sub(
+    scaleToSub: Scale | Point | number = new Scale(0, 0),
+    y: number = 0,
+  ): Scale {
+    let s = new Point(0, 0);
+    if (typeof scaleToSub === 'number') {
+      s = new Scale(scaleToSub, y);
+    } else {
+      s = scaleToSub;
+    }
     return new Scale(
-      this.x - scaleToSub.x,
-      this.y - scaleToSub.y,
+      this.x - s.x,
+      this.y - s.y,
+      this.name,
     );
   }
 
@@ -676,27 +882,132 @@ class Scale extends Point {
     return new Scale(
       roundNum(this.x, precision),
       roundNum(this.y, precision),
+      this.name,
     );
   }
 
-  add(scaleToAdd: Scale | Point = new Scale(0, 0)): Scale {
+  add(
+    scaleToAdd: Scale | Point | number = new Scale(0, 0),
+    y: number = 0,
+  ): Scale {
+    let s = new Point(0, 0);
+    if (typeof scaleToAdd === 'number') {
+      s = new Scale(scaleToAdd, y);
+    } else {
+      s = scaleToAdd;
+    }
     return new Scale(
-      this.x + scaleToAdd.x,
-      this.y + scaleToAdd.y,
+      this.x + s.x,
+      this.y + s.y,
+      this.name,
     );
   }
 
-  mul(scaleToMul: Scale = new Scale(1, 1)): Scale {
+  mul(scaleToMul: Scale | Point | number = new Scale(1, 1)): Scale {
+    if (scaleToMul instanceof Scale || scaleToMul instanceof Point) {
+      return new Scale(
+        this.x * scaleToMul.x,
+        this.y * scaleToMul.y,
+      );
+    }
     return new Scale(
-      this.x * scaleToMul.x,
-      this.y * scaleToMul.y,
+      this.x * scaleToMul,
+      this.y * scaleToMul,
+      this.name,
     );
   }
 
-  copy() {
-    return new Scale(this.x, this.y);
+  _dup() {
+    return new Scale(this.x, this.y, this.name);
   }
 }
+
+
+function linearPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+) {
+  return start.add(delta.x * percent, delta.y * percent);
+}
+
+type linearPathOptionsType = {
+};
+type curvedPathOptionsType = {
+  // path: '(Point, Point, number) => Point';
+  rot: number;
+  magnitude: number;
+  offset: number;
+  controlPoint: Point | null;
+  direction: '' | 'up' | 'left' | 'down' | 'right';
+};
+export type pathOptionsType = curvedPathOptionsType & linearPathOptionsType;
+
+function curvedPath(
+  start: Point,
+  delta: Point,
+  percent: number,
+  options: pathOptionsType,
+) {
+  const o = options;
+  const angle = Math.atan2(delta.y, delta.x);
+  const midPoint = start.add(new Point(delta.x * o.offset, delta.y * o.offset));
+  const dist = delta.toPolar().mag * o.magnitude;
+  let { controlPoint } = options;
+  if (controlPoint == null) {
+    const { direction } = options;
+    let xDelta = Math.cos(angle + o.rot * Math.PI / 2);
+    let yDelta = Math.sin(angle + o.rot * Math.PI / 2);
+    if (direction === 'up') {
+      if (yDelta < 0) {
+        yDelta = Math.sin(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'down') {
+      if (yDelta > 0) {
+        yDelta = Math.sin(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'left') {
+      if (xDelta > 0) {
+        xDelta = Math.cos(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    } else if (direction === 'right') {
+      if (xDelta < 0) {
+        xDelta = Math.cos(angle + o.rot * Math.PI / 2 + Math.PI);
+      }
+    }
+
+    controlPoint = new Point(
+      midPoint.x + dist * xDelta,
+      midPoint.y + dist * yDelta,
+    );
+  }
+
+  const p0 = start;
+  const p1 = controlPoint;
+  const p2 = start.add(delta);
+  const t = percent;
+  const bx = quadraticBezier(p0.x, p1.x, p2.x, t);
+  const by = quadraticBezier(p0.y, p1.y, p2.y, t);
+  return new Point(bx, by);
+}
+
+
+function translationPath(
+  pathType: 'linear' | 'curved' = 'linear',
+  start: Point,
+  delta: Point,
+  percent: number,
+  options: pathOptionsType,
+) {
+  if (pathType === 'linear') {
+    return linearPath(start, delta, percent);
+  }
+  if (pathType === 'curved') {
+    return curvedPath(start, delta, percent, options);
+  }
+  return new Point(0, 0);
+}
+
 
 class TransformLimit {
   rotation: number | null;
@@ -711,21 +1022,33 @@ class TransformLimit {
     this.rotation = rotation;
     this.translation = translation;
   }
+
+  _dup() {
+    return new TransformLimit(this.scale, this.rotation, this.translation);
+  }
 }
 
 class Transform {
   order: Array<Translation | Rotation | Scale>;
   mat: Array<number>;
   index: number;
+  name: string;
 
-  constructor(order: Array<Translation | Rotation | Scale> = []) {
-    this.order = order.slice();
+  constructor(orderOrName: Array<Translation | Rotation | Scale> | string = [], name: string = '') {
+    if (typeof orderOrName === 'string') {
+      this.order = [];
+      this.name = orderOrName;
+    } else {
+      this.order = orderOrName.map(t => t._dup());
+      this.name = name;
+    }
+    // this.order = order.slice();
     this.index = this.order.length;
     this.calcMatrix();
   }
 
-  translate(x: number, y: number) {
-    const translation = new Translation(x, y);
+  translate(x: number | Point, y: number = 0) {
+    const translation = new Translation(x, y, this.name);
     const order = this.order.slice();
 
     if (this.index === this.order.length) {
@@ -736,11 +1059,12 @@ class Transform {
       this.calcMatrix();
       return this;
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   rotate(r: number) {
-    const rotation = new Rotation(r);
+    const rotation = new Rotation(r, this.name);
+    rotation.name = this.name;
     const order = this.order.slice();
     if (this.index === this.order.length) {
       order.push(rotation);
@@ -752,11 +1076,11 @@ class Transform {
     }
     // this.order.push(new Rotation(r));
     // this.calcMatrix();
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
-  scale(x: number, y: number) {
-    const scale = new Scale(x, y);
+  scale(x: number | Point, y: number = 0) {
+    const scale = new Scale(x, y, this.name);
     const order = this.order.slice();
 
     if (this.index === this.order.length) {
@@ -767,7 +1091,7 @@ class Transform {
       this.calcMatrix();
       return this;
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   calcMatrix() {
@@ -811,7 +1135,7 @@ class Transform {
       const t = this.order[i];
       if (t instanceof Translation) {
         if (count === actualIndex) {
-          this.order[i] = new Translation(x, yOrIndex);
+          this.order[i] = new Translation(x, yOrIndex, this.name);
           this.calcMatrix();
           return;
         }
@@ -834,6 +1158,38 @@ class Transform {
     return null;
   }
 
+  toDelta(
+    delta: Transform,
+    percent: number,
+    translationStyle: 'linear' | 'curved',
+    translationOptions: pathOptionsType,
+    // translationPath: (Point, Point, number, ?number, ?number) => Point,
+    // direction: number = 1,
+    // mag: number = 0.5,
+    // offset: number = 0.5,
+  ) {
+    const calcTransform = this._dup();
+    for (let i = 0; i < this.order.length; i += 1) {
+      const stepStart = this.order[i];
+      const stepDelta = delta.order[i];
+      if (stepStart instanceof Scale && stepDelta instanceof Scale) {
+        calcTransform.order[i] = stepStart.add(stepDelta.mul(percent));
+      }
+      if (stepStart instanceof Rotation && stepDelta instanceof Rotation) {
+        calcTransform.order[i] = new Rotation(stepStart.r + stepDelta.r * percent);
+      }
+      if (stepStart instanceof Translation && stepDelta instanceof Translation) {
+        calcTransform.order[i] =
+          new Translation(translationPath(
+            translationStyle,
+            stepStart, stepDelta, percent,
+            translationOptions,
+          ));
+      }
+    }
+    return calcTransform;
+  }
+
   updateScale(x: number | Point, yOrIndex: number = 0, index: number = 0) {
     let count = 0;
     let actualIndex = index;
@@ -844,7 +1200,7 @@ class Transform {
       const t = this.order[i];
       if (t instanceof Scale) {
         if (count === actualIndex) {
-          this.order[i] = new Scale(x, yOrIndex);
+          this.order[i] = new Scale(x, yOrIndex, this.name);
           this.calcMatrix();
           return;
         }
@@ -873,7 +1229,7 @@ class Transform {
       const t = this.order[i];
       if (t instanceof Rotation) {
         if (count === index) {
-          this.order[i] = new Rotation(r);
+          this.order[i] = new Rotation(r, this.name);
           this.calcMatrix();
           return;
         }
@@ -903,19 +1259,45 @@ class Transform {
     return true;
   }
 
+  isEqualTo(transformToCompare: Transform): boolean {
+    if (transformToCompare.order.length !== this.order.length) {
+      return false;
+    }
+    for (let i = 0; i < this.order.length; i += 1) {
+      if (this.order[i].constructor.name !==
+          transformToCompare.order[i].constructor.name) {
+        return false;
+      }
+      if (this.order[i] instanceof Translation || this.order[i] instanceof Scale) {
+        if (transformToCompare.order[i].x !== this.order[i].x) {
+          return false;
+        }
+        if (transformToCompare.order[i].y !== this.order[i].y) {
+          return false;
+        }
+      }
+      if (this.order[i] instanceof Rotation) {
+        if (transformToCompare.order[i].r !== this.order[i].r) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // Subtract a transform from the current one.
   // If the two transforms have different order types, then just return
   // the current transform.
   sub(transformToSubtract: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToSubtract)) {
-      return new Transform(this.order);
+      return new Transform(this.order, this.name);
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       // $FlowFixMe (this is already fixed in isSimilarTo check above)
       order.push(this.order[i].sub(transformToSubtract.order[i]));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   // Add a transform to the current one.
@@ -923,38 +1305,38 @@ class Transform {
   // the current transform.
   add(transformToAdd: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToAdd)) {
-      return new Transform(this.order);
+      return new Transform(this.order, this.name);
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       // $FlowFixMe (this is already fixed in isSimilarTo check above)
       order.push(this.order[i].add(transformToAdd.order[i]));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   // transform step wise multiplication
   mul(transformToMul: Transform = new Transform()): Transform {
     if (!this.isSimilarTo(transformToMul)) {
-      return new Transform(this.order);
+      return new Transform(this.order, this.name);
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       // $FlowFixMe (this is already fixed in isSimilarTo check above)
       order.push(this.order[i].mul(transformToMul.order[i]));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   transform(transform: Transform) {
-    const t = new Transform();
+    const t = new Transform([], this.name);
     t.order = transform.order.concat(this.order);
     t.mat = m2.mul(this.matrix(), transform.matrix());
     return t;
   }
 
   transformBy(transform: Transform): Transform {
-    const t = new Transform();
+    const t = new Transform([], this.name);
     t.order = this.order.concat(transform.order);
     t.mat = m2.mul(transform.matrix(), this.matrix());
     return t;
@@ -965,40 +1347,61 @@ class Transform {
     for (let i = 0; i < this.order.length; i += 1) {
       order.push(this.order[i].round(precision));
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   clip(
     minTransform: Transform,
     maxTransform: Transform,
+    limitLine: null | Line,
   ) {
     if (!this.isSimilarTo(minTransform) || !this.isSimilarTo(maxTransform)) {
-      return this.copy();
+      return this._dup();
     }
     const order = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
       const min = minTransform.order[i];
       const max = maxTransform.order[i];
-      if (t instanceof Translation &&
-          min instanceof Translation &&
-          max instanceof Translation) {
+      if (t instanceof Translation
+          && min instanceof Translation
+          && max instanceof Translation) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
-        order.push(new Translation(x, y));
-      } else if (t instanceof Rotation &&
-                 min instanceof Rotation &&
-                 max instanceof Rotation) {
-        order.push(new Rotation(clipValue(t.r, min.r, max.r)));
-      } else if (t instanceof Scale &&
-                 min instanceof Scale &&
-                 max instanceof Scale) {
+        order.push(new Translation(x, y, this.name));
+      } else if (t instanceof Rotation
+                 && min instanceof Rotation
+                 && max instanceof Rotation) {
+        order.push(new Rotation(clipValue(t.r, min.r, max.r), this.name));
+      } else if (t instanceof Scale
+                 && min instanceof Scale
+                 && max instanceof Scale) {
         const x = clipValue(t.x, min.x, max.x);
         const y = clipValue(t.y, min.y, max.y);
-        order.push(new Scale(x, y));
+        order.push(new Scale(x, y, this.name));
       }
     }
-    return new Transform(order);
+
+    const clippedTransform = new Transform(order, this.name);
+    if (limitLine != null) {
+      const t = clippedTransform.t();
+      if (t != null) {
+        const perpLine = new Line(t, 1, limitLine.angle() + Math.PI / 2);
+        const { intersect } = perpLine.intersectsWith(limitLine);
+        if (intersect.isOnLine(limitLine, 4)) {
+          clippedTransform.updateTranslation(intersect);
+        } else {
+          const p1Dist = distance(intersect, limitLine.p1);
+          const p2Dist = distance(intersect, limitLine.p2);
+          if (p1Dist < p2Dist) {
+            clippedTransform.updateTranslation(limitLine.p1);
+          } else {
+            clippedTransform.updateTranslation(limitLine.p2);
+          }
+        }
+      }
+    }
+    return clippedTransform;
   }
 
   clipMag(
@@ -1031,15 +1434,16 @@ class Transform {
           order.push(new Translation(
             clipM * Math.cos(angle),
             clipM * Math.sin(angle),
+            this.name,
           ));
         } else {
           const x = clipMag(t.x, z.translation, max.translation);
           const y = clipMag(t.y, z.translation, max.translation);
-          order.push(new Translation(x, y));
+          order.push(new Translation(x, y, this.name));
         }
       } else if (t instanceof Rotation) {
         const r = clipMag(t.r, z.rotation, max.rotation);
-        order.push(new Rotation(r));
+        order.push(new Rotation(r, this.name));
       } else if (t instanceof Scale) {
         if (vector) {
           const { mag, angle } = t.toPolar();
@@ -1047,15 +1451,16 @@ class Transform {
           order.push(new Scale(
             clipM * Math.cos(angle),
             clipM * Math.sin(angle),
+            this.name,
           ));
         } else {
           const x = clipMag(t.x, z.scale, max.scale);
           const y = clipMag(t.y, z.scale, max.scale);
-          order.push(new Scale(x, y));
+          order.push(new Scale(x, y, this.name));
         }
       }
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   constant(constant: number = 0): Transform {
@@ -1063,14 +1468,14 @@ class Transform {
     for (let i = 0; i < this.order.length; i += 1) {
       const t = this.order[i];
       if (t instanceof Translation) {
-        order.push(new Translation(constant, constant));
+        order.push(new Translation(constant, constant, this.name));
       } else if (t instanceof Rotation) {
-        order.push(new Rotation(constant));
+        order.push(new Rotation(constant, this.name));
       } else if (t instanceof Scale) {
-        order.push(new Scale(constant, constant));
+        order.push(new Scale(constant, constant, this.name));
       }
     }
-    return new Transform(order);
+    return new Transform(order, this.name);
   }
 
   zero(): Transform {
@@ -1092,8 +1497,11 @@ class Transform {
     }
     return true;
   }
-  copy(): Transform {
-    return new Transform(this.order);
+
+  _dup(): Transform {
+    const t = new Transform(this.order, this.name);
+    t.index = this.index;
+    return t;
   }
 
   decelerate(
@@ -1165,7 +1573,7 @@ class Transform {
     //   z = this.constant(0);
     // }
     // if (!this.isSimilarTo(maxTransform)) {
-    //   m = v.copy();
+    //   m = v._dup();
     // }
     return v.clipMag(zeroThreshold, maxTransform);
   }
@@ -1180,10 +1588,11 @@ function spaceToSpaceTransform(
     x: {bottomLeft: number, width: number},
     y: {bottomLeft: number, height: number}
   },
+  name: string = '',
 ) {
   const xScale = s2.x.width / s1.x.width;
   const yScale = s2.y.height / s1.y.height;
-  const t = new Transform()
+  const t = new Transform(name)
     .scale(xScale, yScale)
     .translate(
       s2.x.bottomLeft - s1.x.bottomLeft * xScale,
@@ -1214,6 +1623,30 @@ function comparePoints(
   return { min, max };
 }
 
+function polarToRect(mag: number, angle: number) {
+  return new Point(
+    mag * Math.cos(angle),
+    mag * Math.sin(angle),
+  );
+}
+
+function rectToPolar(x: number | Point, y: number = 0) {
+  let rect;
+  if (typeof x === 'number') {
+    rect = new Point(x, y);
+  } else {
+    rect = x;
+  }
+  const mag = rect.distance();
+  let angle = Math.atan2(rect.y, rect.x);
+  if (angle < 0) {
+    angle += Math.PI * 2;
+  }
+  return {
+    mag,
+    angle,
+  };
+}
 // $FlowFixMe
 function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   let firstPoint = true;
@@ -1239,11 +1672,19 @@ function getBoundingRect(pointArrays: Array<Point> | Array<Array<Point>>) {
   );
 }
 
+function threePointAngle(p2: Point, p1: Point, p3: Point) {
+  const p12 = distance(p1, p2);
+  const p13 = distance(p1, p3);
+  const p23 = distance(p2, p3);
+  return Math.acos((p12 ** 2 + p13 ** 2 - p23 ** 2) / (2 * p12 * p13));
+}
+
 export {
   point,
   Point,
   line,
   Line,
+  distance,
   minAngleDiff,
   deg,
   normAngle,
@@ -1255,4 +1696,13 @@ export {
   Rotation,
   spaceToSpaceTransform,
   getBoundingRect,
+  linearPath,
+  curvedPath,
+  quadraticBezier,
+  translationPath,
+  polarToRect,
+  rectToPolar,
+  getDeltaAngle,
+  normAngleTo90,
+  threePointAngle,
 };

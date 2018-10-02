@@ -38,13 +38,14 @@ class TickProperties extends GridProperties {
   color: Array<number>;
   labelMode: 'on' | 'off' | 'auto';
   labels: Array<string>;
-  labelsHAlign: 'start' | 'end' | 'left' | 'center' | 'right';
+  labelsHAlign: 'left' | 'center' | 'right';
   labelsVAlign: 'top' | 'middle' | 'bottom';
   mode: 'on' | 'off' | 'auto';
 
   fontFamily: string;
   fontWeight: string;
-  fontSize: string;
+  fontSize: number;
+  fontColor: Array<number>
 
   constructor() {
     super();
@@ -63,8 +64,9 @@ class TickProperties extends GridProperties {
     this.labelsVAlign = 'middle';
     this.mode = 'on';
     this.fontFamily = 'Helvetica Neue';
-    this.fontWeight = '200';
-    this.fontSize = '14px';
+    this.fontWeight = '400';
+    this.fontSize = 0.1;
+    this.fontColor = defaultColor;
   }
 }
 
@@ -87,7 +89,8 @@ class AxisProperties {
 
   titleFontFamily: string;
   titleFontWeight: string;
-  titleFontSize: string;
+  titleFontSize: number;
+  titleFontColor: Array<number>;
 
 
   constructor(name: string = '', rotation: number = 0) {
@@ -115,18 +118,22 @@ class AxisProperties {
 
     this.titleFontFamily = 'Helvetica Neue';
     this.titleFontWeight = '400';
-    this.titleFontSize = '16px';
+    this.titleFontSize = 0.13;
+    this.titleFontColor = defaultColor;
   }
+
   getNum(start: number, step: number) {
-    return Math.floor((this.limits.max - start) /
-          step) + 1;
+    return Math.floor((this.limits.max - start) / step) + 1;
   }
+
   getMajorNum() {
     return this.getNum(this.majorTicks.start, this.majorTicks.step);
   }
+
   getMinorNum() {
     return this.getNum(this.minorTicks.start, this.minorTicks.step);
   }
+
   generateAuto(approximateNum: number = 10) {
     // const approximateNum = 10;
     const range = this.limits.max - this.limits.min;
@@ -142,23 +149,28 @@ class AxisProperties {
     }
     return { start, step };
   }
+
   generateAutoMajorTicks(approximateNum: number = 10) {
     const { start, step } = this.generateAuto(approximateNum);
     this.majorTicks.start = start;
     this.majorTicks.step = step;
   }
+
   generateAutoMinorTicks(approximateNum: number = 50) {
     const { start, step } = this.generateAuto(approximateNum);
     this.minorTicks.start = start;
     this.minorTicks.step = step;
   }
+
   toClip(value: number) {
     const ratio = this.length / (this.limits.max - this.limits.min);
     return value * ratio;
   }
+
   valueToClip(value: number) {
     return this.toClip(value - this.limits.min) + this.start.x;
   }
+
   getMajorLabels() {
     const labels = [];
     for (let i = 0, j = this.getMajorNum(); i < j; i += 1) {
@@ -167,9 +179,11 @@ class AxisProperties {
     }
     return labels;
   }
+
   generateMajorLabels() {
     this.majorTicks.labels = this.getMajorLabels();
   }
+
   getMinorLabels() {
     const labels = [];
     for (let i = 0, j = this.getMinorNum(); i < j; i += 1) {
@@ -178,6 +192,7 @@ class AxisProperties {
     }
     return labels;
   }
+
   generateMinorLabels() {
     this.minorTicks.labels = this.getMinorLabels();
   }

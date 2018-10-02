@@ -1,24 +1,51 @@
 
 // Set the color theme here
-$_color-theme: $_color-theme_dark2;
+$_color_theme: $_color_theme-standard-dark;
+$_color_palette: map-get($_color_theme, palette);
 
-$color_primary:                map-get($_color-theme, primary);
-$color_secondary:              map-get($_color-theme, secondary);
-$color_danger:                 map-get($_color-theme, danger);
-$color_safe:                   map-get($_color-theme, safe);
-$color_passive:                map-get($_color-theme, passive);
-$color_highlight:              map-get($_color-theme, highlight);
-$color_background:             map-get($_color-theme, background);
-$color_navbar:                 map-get($_color-theme, navbar);
-$color_text:                   map-get($_color-theme, text);
-$color_diagram-text:           map-get($_color-theme, diagram-text);
-$color_negative-text:          map-get($_color-theme, negative-text);
-$color_navigation-buttons:     map-get($_color-theme, navigation-buttons);
-$color_diagram:                map-get($_color-theme, diagram-background);
-$color_navbar-background:      map-get($_color-theme, navbar-background-color);
-$color_navbar:                 map-get($_color-theme, navbar-color);
-$color_navbar-hover:           map-get($_color-theme, navbar-hover-color);
-$color_navbar-active:          map-get($_color-theme, navbar-active-color);
-$color_navbar-disabled:        map-get($_color-theme, navbar-disabled-color);
-$color_navbar-toggler-border:  map-get($_color-theme, navbar-toggler-border-color);
-$icon_navbar-toggler:          map-get($_color-theme, navbar-toggler-icon);
+$icon_navbar-toggler:          map-get(map-get($_color_theme, navbar), 'toggler-icon');
+
+@mixin to_vars($color-map, $prefix) {
+  @each $var, $value in $color-map {
+    @if type-of($value) == "map" {
+      @each $subvar, $subvalue in $value {
+        @if type-of($subvalue) == "map" {
+          @each $subsubvar, $subsubvalue in $subvalue {
+            #{$prefix}-#{$var}-#{$subvar}-#{$subsubvar}: #{$subsubvalue};
+          }
+        }
+
+        @else {
+          #{$prefix}-#{$var}-#{$subvar}: #{$subvalue};
+        }
+      }
+    }
+
+    @else {
+      #{$prefix}-#{$var}: #{$value};
+    }
+  }
+}
+
+@mixin color_vars($color-map) {
+  @include to_vars($color-map, '--colors');
+}
+
+@function convertToColors($theme-map) {
+  $map: ();
+
+  @each $key, $value in $theme-map {
+    $col: palette-color(map-get($value, color), map-get($value, shade));
+    $map: map-merge($map, ($key: $col));
+  }
+
+  @return $map;
+}
+
+$diagram-map: map-get($_color_theme, diagram);
+
+body {
+  @include to_vars(map-get($_color_theme, palette), '--palette');
+  @include to_vars(convertToColors($diagram-map), '--diagram');
+}
+

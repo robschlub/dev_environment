@@ -3,10 +3,14 @@ import {
   DiagramElementCollection,
   AnimationPhase,
 } from './Element';
-import { Point, Transform, TransformLimit } from './tools/g2';
+import {
+  Point, Transform, TransformLimit,
+} from './tools/g2';
 import webgl from '../__mocks__/WebGLInstanceMock';
 import VertexPolygon from './DrawingObjects/VertexObject/VertexPolygon';
-import { linear, round } from './tools/mathtools';
+import {
+  linear, round,
+} from './tools/mathtools';
 import * as m2 from './tools/m2';
 
 describe('Animationa and Movement', () => {
@@ -41,7 +45,7 @@ describe('Animationa and Movement', () => {
           expect(element.state.isAnimating).toBe(false);
           expect(element.isMoving()).toBe(false);
 
-          element.animateRotationTo(1, 1, 1, linear);
+          element.animateRotationTo(1, 1, 1, null, linear);
           const t = element.transform;
           expect(t).toEqual(new Transform().scale(1, 1).rotate(0).translate(0, 0));
 
@@ -78,7 +82,7 @@ describe('Animationa and Movement', () => {
           expect(element.isMoving()).toBe(false);
 
           // Setup the animation
-          element.animateTranslationTo(new Point(1, 0), 1, linear);
+          element.animateTranslationTo(new Point(1, 0), 1, null, linear);
           const t = element.transform;
           expect(t).toEqual(new Transform().scale(1, 1).rotate(0).translate(0, 0));
           const phase = element.state.animation.currentPhase;
@@ -111,7 +115,7 @@ describe('Animationa and Movement', () => {
         test('Callback', () => {
           const callback = jest.fn();         // Callback mock
           // Setup the animation
-          element.animateRotationTo(1, 1, 1, linear, callback);
+          element.animateRotationTo(1, 1, 1, callback, linear);
           element.draw(new Transform(), 0);     // Initial draw setting start time
           element.draw(new Transform(), 2);   // Draw half way through
           element.stopAnimating();            // Stop animating
@@ -122,7 +126,7 @@ describe('Animationa and Movement', () => {
         test('Stop animating during animation', () => {
           const callback = jest.fn();         // Callback mock
           // Setup the animation
-          element.animateRotationTo(1, 1, 1, linear, callback);
+          element.animateRotationTo(1, 1, 1, callback, linear);
           element.draw(new Transform(), 0);     // Initial draw setting start time
           element.draw(new Transform(), 0.5);   // Draw half way through
           element.stopAnimating();            // Stop animating
@@ -479,7 +483,7 @@ describe('Animationa and Movement', () => {
       });
     });
     describe('Default move max/min transforms', () => {
-      test('updateMoveTranslationBoundary no transform', () => {
+      test('setMoveBoundaryToDiagram no transform', () => {
         const sq = new VertexPolygon(
           webgl,
           4,
@@ -491,15 +495,15 @@ describe('Animationa and Movement', () => {
           new Transform().scale(1, 1).rotate(0).translate(0, 0),
         );
         square.isMovable = true;
-
-        square.updateMoveTranslationBoundary();
+        square.move.limitToDiagram = true;
+        square.setMoveBoundaryToDiagram();
         expect(square.move.maxTransform.t()).toEqual(new Point(0.895, 0.895));
         expect(square.move.minTransform.t()).toEqual(new Point(-0.895, -0.895));
-        square.updateMoveTranslationBoundary([-2, -1, 2, 1]);
+        square.setMoveBoundaryToDiagram([-2, -1, 2, 1]);
         expect(square.move.maxTransform.t()).toEqual(new Point(1.895, 0.895));
         expect(square.move.minTransform.t()).toEqual(new Point(-1.895, -0.895));
       });
-      test('updateMoveTranslationBoundary with transform', () => {
+      test('setMoveBoundaryToDiagram with transform', () => {
         const sq = new VertexPolygon(
           webgl,
           4,
@@ -511,96 +515,52 @@ describe('Animationa and Movement', () => {
           new Transform().scale(2, 2).rotate(0).translate(0, 0),
         );
         square.isMovable = true;
+        square.move.limitToDiagram = true;
 
         expect(square.move.maxTransform.t().round()).toEqual(new Point(1000, 1000));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-1000, -1000));
 
-        square.updateMoveTranslationBoundary();
+        square.setMoveBoundaryToDiagram();
         expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 0.79));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -0.79));
 
-        square.updateMoveTranslationBoundary([-1, -2, 1, 2]);
+        square.setMoveBoundaryToDiagram([-1, -2, 1, 2]);
         expect(square.move.maxTransform.t().round()).toEqual(new Point(0.79, 1.79));
         expect(square.move.minTransform.t().round()).toEqual(new Point(-0.79, -1.79));
       });
     });
-    // describe('vertexToClip', () => {
-    //   let e;
-    //   beforeEach(() => {
-    //     const square = new VertexPolygon(webgl, 4, 1.01, 0.01, 0, Point.zero());
-    //     const element = new DiagramElementPrimative(
-    //       square,
-    //       new Transform(),
-    //       [0, 0, 1, 1],
-    //       new Rect(-1, -1, 2, 2),
-    //     );
-    //     element.draw();
-    //     e = element;
-    //   });
-    //   test('No transform', () => {
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(1, 1));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-1, -1));
-    //   });
-    //   test('Scaling up tranform', () => {
-    //     e.transform = new Transform().scale(2, 2);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-2, -2));
-    //   });
-    //   test('Scaling down tranform', () => {
-    //     e.transform = new Transform().scale(0.5, 0.5);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(0, 0));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(0.5, 0.5));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(-0.5, -0.5));
-    //   });
-    //   test('Translation tranform', () => {
-    //     e.transform = new Transform().translate(1, 1);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(1, 1));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(2, 2));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
-    //   });
-    //   test('Landscape', () => {
-    //     // First perform transform in element space, then squish element
-    //     // space to diagram space.
-    //     e.diagramLimits = new Rect(0, 0, 4, 2);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(2, 1));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(4, 2));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 0));
-    //   });
-    //   test('Landscape with offset', () => {
-    //     // First perform transform in element space, then squish element
-    //     // space to diagram space.
-    //     e.diagramLimits = new Rect(0, 0, 4, 2);
-    //     e.transform = new Transform().translate(1, 1);
-    //     e.draw();
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(6, 3));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(2, 1));
-    //   });
-    //   test('Landscape with scale and offset', () => {
-    //     e.diagramLimits = new Rect(0, 0, 4, 2);
-    //     e.transform = new Transform().scale(2, 0.5).translate(1, 1);
-    //     e.draw();
-    //     // 1. scale point by 2, 0.5
-    //     // 2. offset point by 1, 1
-    //     // 3. Squish/stretch point into diagram space
-    //     //
-    //     // e.g. (1, 1)
-    //     //  1. (2, 0.5)
-    //     //  2. (3, 1.5)
-    //     //  3. <(-1, -1), (1, 1)> goes to <(0, 0), (4, 2)>
-    //     //     scale x by 2, scale y by 1: (6, 1.5)
-    //     //     offset x by +2, y by +1: (8, 2.5)
-    //     expect(e.vertexToClip(new Point(0, 0))).toEqual(new Point(4, 2));
-    //     expect(e.vertexToClip(new Point(1, 1))).toEqual(new Point(8, 2.5));
-    //     expect(e.vertexToClip(new Point(-1, -1))).toEqual(new Point(0, 1.5));
-    //   });
-    // });
+    describe('Copy', () => {
+      test('Vertex Object', () => {
+        const sq = new VertexPolygon(
+          webgl,
+          4,
+          Math.sqrt(2) * 0.105, Math.sqrt(2) * 0.01,
+          Math.PI / 4, new Point(0, 0),
+        );
+        const square = new DiagramElementPrimative(
+          sq,
+          new Transform().scale(1, 1).rotate(0).translate(0, 0),
+        );
+        // change a default value DiagramElement base class
+        square.isShown = true;
+        // change a default value in DiagramElementPrimative class
+        square.color = [0.5, 0.4, 0.3, 0.2];
+
+        const copy = square._dup();
+        expect(copy).toEqual(square);
+        expect(copy).not.toBe(square);
+        expect(copy.vertices).toBe(square.vertices);
+
+        // change a default value DiagramElement base class
+        square.isShown = false;
+        // change a default value in DiagramElementPrimative class
+        square.color = [0.6, 0.5, 0.4, 0.3];
+        expect(square.color).toEqual([0.6, 0.5, 0.4, 0.3]);
+        expect(copy.color).toEqual([0.5, 0.4, 0.3, 0.2]);
+        expect(square.isShown).toBe(false);
+        expect(copy.isShown).toBe(true);
+      });
+    });
   });
   describe('DiagramElementCollection', () => {
     let squareElement;
@@ -647,7 +607,7 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isMovingFreely).toBe(false);
 
       // Move translation to (0.5, 0)
-      collection.animateTranslationTo(new Point(1, 0), 1, linear, callbackAnim);
+      collection.animateTranslationTo(new Point(1, 0), 1, callbackAnim, linear);
       expect(collection.state.isAnimating).toBe(true);
       expect(collection.state.isBeingMoved).toBe(false);
       expect(collection.state.isMovingFreely).toBe(false);
@@ -719,35 +679,35 @@ describe('Animationa and Movement', () => {
         /* eslint-enable no-underscore-dangle */
       });
       test('Show and Hide all', () => {
-        expect(square.show).toBe(true);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(true);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
 
         collection.hideAll();
-        expect(square.show).toBe(false);
-        expect(tri.show).toBe(false);
-        expect(collection.show).toBe(false);
+        expect(square.isShown).toBe(false);
+        expect(tri.isShown).toBe(false);
+        expect(collection.isShown).toBe(false);
 
         collection.showAll();
-        expect(square.show).toBe(true);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(true);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
       });
       test('Show and Hide only', () => {
-        expect(square.show).toBe(true);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(true);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
 
         collection.hideOnly([square]);
-        expect(square.show).toBe(false);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(false);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
 
         collection.hideAll();
         collection.showOnly([tri]);
-        expect(square.show).toBe(false);
-        expect(tri.show).toBe(true);
-        expect(collection.show).toBe(true);
+        expect(square.isShown).toBe(false);
+        expect(tri.isShown).toBe(true);
+        expect(collection.isShown).toBe(true);
       });
     });
     describe('Get and Is being touched', () => {
@@ -800,19 +760,37 @@ describe('Animationa and Movement', () => {
         );
         collection.add('square2', squareElement2);
         let touched = collection.getTouched(new Point(0, 0));
+        // console.log(touched)
         expect(touched).toHaveLength(2);
-        expect(touched.includes(collection)).toBe(true);
+        // expect(touched.includes(collection)).toBe(true);
         expect(touched.includes(squareElement)).toBe(true);
         expect(touched.includes(squareElement2)).toBe(false);
 
-        squareElement.show = false;
+        squareElement.hide();
         touched = collection.getTouched(new Point(0, 0));
         expect(touched).toHaveLength(0);
 
-        squareElement.show = true;
+        squareElement.show();
         squareElement.isTouchable = false;
         touched = collection.getTouched(new Point(0, 0));
         expect(touched).toHaveLength(0);
+      });
+    });
+    describe('Copy', () => {
+      test('Vertex Objects', () => {
+        const copy = collection._dup();
+        expect(collection).toEqual(copy);
+        expect(collection).not.toBe(copy);
+        expect(collection.elements).toEqual(copy.elements);
+        expect(collection.elements).not.toBe(copy.elements);
+        expect(collection.order).toEqual(copy.order);
+        expect(collection.order).not.toBe(copy.order);
+        expect(collection._square).toEqual(copy._square);
+        expect(collection._square).not.toBe(copy._square);
+        expect(collection._square.vertices).toBe(copy._square.vertices);
+        expect(collection.transform).toEqual(copy.transform);
+        expect(collection.transform).not.toBe(copy.transform);
+        expect(collection._square).toBe(collection.elements.square);
       });
     });
   });

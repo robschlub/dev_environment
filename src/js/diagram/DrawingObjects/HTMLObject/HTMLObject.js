@@ -1,7 +1,9 @@
 // @flow
 
 // import * as m2 from '../tools/m2';
-import { Point, spaceToSpaceTransform } from '../../tools/g2';
+import {
+  Point, spaceToSpaceTransform,
+} from '../../tools/g2';
 import DrawingObject from '../DrawingObject';
 
 
@@ -14,6 +16,9 @@ class HTMLObject extends DrawingObject {
   parentDiv: HTMLElement;
   alignH: 'left' | 'right' | 'center';
   alignV: 'top' | 'bottom' | 'middle';
+  show: boolean;
+
+  copy: () => HTMLObject;
 
   constructor(
     parentDiv: HTMLElement,
@@ -31,6 +36,35 @@ class HTMLObject extends DrawingObject {
     this.alignV = alignV;
     this.alignH = alignH;
     this.parentDiv = parentDiv;
+    this.show = true;
+    this.setBorder();
+  }
+
+  _dup() {
+    const c = new HTMLObject(
+      this.parentDiv, this.id,
+      this.location._dup(), this.alignV, this.alignH,
+    );
+    c.show = this.show;
+    c.border = this.border.map(b => b.map(p => p._dup()));
+    return c;
+  }
+
+  setBorder() {
+    const parentRect = this.parentDiv.getBoundingClientRect();
+    const elementRect = this.element.getBoundingClientRect();
+    const left = elementRect.left - parentRect.left;
+    const right = left + elementRect.width;
+    const top = elementRect.top - parentRect.top;
+    const bottom = top + elementRect.height;
+
+    const boundary = [];
+    boundary.push(new Point(left, top));
+    boundary.push(new Point(right, top));
+    boundary.push(new Point(right, bottom));
+    boundary.push(new Point(left, bottom));
+    this.border = [];
+    this.border.push(boundary);
   }
 
   getGLBoundaries(): Array<Array<Point>> {
@@ -67,29 +101,37 @@ class HTMLObject extends DrawingObject {
   }
 
   transformHtml(transformMatrix: Array<number>) {
-    const glLocation = this.location.transformBy(transformMatrix);
-    const pixelLocation = this.glToPixelSpace(glLocation);
-    const w = this.element.offsetWidth;
-    const h = this.element.offsetHeight;
-    let left = 0;
-    let top = 0;
-    if (this.alignH === 'center') {
-      left = -w / 2;
-    } else if (this.alignH === 'right') {
-      left = -w;
+    if (this.show) {
+      const glLocation = this.location.transformBy(transformMatrix);
+      const pixelLocation = this.glToPixelSpace(glLocation);
+
+      const w = this.element.offsetWidth;
+      const h = this.element.offsetHeight;
+      let left = 0;
+      let top = 0;
+      if (this.alignH === 'center') {
+        left = -w / 2;
+      } else if (this.alignH === 'right') {
+        left = -w;
+      }
+      if (this.alignV === 'middle') {
+        top = -h / 2;
+      } else if (this.alignV === 'bottom') {
+        top = -h;
+      }
+      const x = pixelLocation.x + left;
+      const y = pixelLocation.y + top;
+      this.element.style.position = 'absolute';
+      this.element.style.left = `${x}px`;
+      this.element.style.top = `${y}px`;
+    } else {
+      this.element.style.position = 'absolute';
+      this.element.style.left = '-10000px';
+      this.element.style.top = '-10000px';
+      // console.trace()
     }
-    if (this.alignV === 'middle') {
-      top = -h / 2;
-    } else if (this.alignV === 'bottom') {
-      top = -h;
-    }
-    const x = pixelLocation.x + left;
-    const y = pixelLocation.y + top;
-    this.element.style.position = 'absolute';
-    this.element.style.left = `${x}px`;
-    this.element.style.top = `${y}px`;
-    // this.element.style = `position:absolute; left:${x}px; top:${y}px;`;
   }
+
   drawWithTransformMatrix(transformMatrix: Array<number>) {
     this.transformHtml(transformMatrix);
   }

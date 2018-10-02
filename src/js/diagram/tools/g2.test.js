@@ -1,7 +1,8 @@
 import {
   Point, Transform, Line, minAngleDiff, normAngle,
   TransformLimit, spaceToSpaceTransform, Rect,
-  getBoundingRect,
+  getBoundingRect, polarToRect, rectToPolar, getDeltaAngle,
+  normAngleTo90, deg, curvedPath,
 } from './g2';
 import { round } from './mathtools';
 
@@ -22,6 +23,10 @@ describe('g2 tests', () => {
         const p = Point.zero();
         expect(p).toEqual(new Point(0, 0));
       });
+      test('unity point', () => {
+        const p = Point.Unity();
+        expect(p).toEqual(new Point(1, 1));
+      });
     });
 
     describe('Points can be added to each other', () => {
@@ -29,6 +34,11 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         const q = new Point(1, 1);
         const s = p.add(q);
+        expect(s).toEqual(new Point(1, 1));
+      });
+      test('(0, 0) + (1, 1) = (1, 1) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.add(1, 1);
         expect(s).toEqual(new Point(1, 1));
       });
       test('(0, 0) + (1, -1) = (1, -1)', () => {
@@ -43,6 +53,11 @@ describe('g2 tests', () => {
         const s = p.add(q).add(q);
         expect(s).toEqual(new Point(2, 2));
       });
+      test('(0, 0) + (1, 1) = (2, 2) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.add(1, 1).add(1, 1);
+        expect(s).toEqual(new Point(2, 2));
+      });
     });
 
     describe('Points can be subtracted from each other', () => {
@@ -50,6 +65,11 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         const q = new Point(1, 1);
         const s = p.sub(q);
+        expect(s).toEqual(new Point(-1, -1));
+      });
+      test('(0, 0) - (1, 1) = (-1, -1) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.sub(1, 1);
         expect(s).toEqual(new Point(-1, -1));
       });
       test('(0, 0) - (1, -1) = (-1, 1)', () => {
@@ -62,6 +82,11 @@ describe('g2 tests', () => {
         const p = new Point(0, 0);
         const q = new Point(1, 1);
         const s = p.sub(q).sub(q);
+        expect(s).toEqual(new Point(-2, -2));
+      });
+      test('(0, 0) - (1, 1) - (1, 1) = (-2, -2) using numbers', () => {
+        const p = new Point(0, 0);
+        const s = p.sub(1, 1).sub(1, 1);
         expect(s).toEqual(new Point(-2, -2));
       });
     });
@@ -260,6 +285,27 @@ describe('g2 tests', () => {
       });
     });
 
+    describe('Points can have a shaddow on a line', () => {
+      test('(1, 1) has a shaddow on line (0, 0) to (2, 0)', () => {
+        const l = new Line(new Point(0, 0), new Point(2, 0));
+        const p = new Point(1, 1);
+        expect(p.getShaddowOnLine(l).round()).toEqual(new Point(1, 0));
+        expect(p.shaddowIsOnLine(l)).toBe(true);
+      });
+      test('(3, 1) does not have a shaddow on line (0, 0) to (2, 0)', () => {
+        const l = new Line(new Point(0, 0), new Point(2, 0));
+        const p = new Point(3, 1);
+        expect(p.getShaddowOnLine(l)).toBe(null);
+        expect(p.shaddowIsOnLine(l)).toBe(false);
+      });
+      test('(-1, 0) has a shaddow on line (1, 0) to (0, -1)', () => {
+        const l = new Line(new Point(1, 0), new Point(0, -1));
+        const p = new Point(-1, 0);
+        expect(p.getShaddowOnLine(l).round()).toEqual(new Point(0, -1));
+        expect(p.shaddowIsOnLine(l)).toBe(true);
+      });
+    });
+
     describe('Points can be checked to be on or within a polygon', () => {
       let closedSquare;
       let square;
@@ -281,6 +327,10 @@ describe('g2 tests', () => {
       test('(0, 0) is within the closed unit square', () => {
         const p = new Point(0, 0);
         expect(p.isInPolygon(closedSquare)).toEqual(true);
+      });
+      test('(2, 2) is not within the closed unit square', () => {
+        const p = new Point(2, 2);
+        expect(p.isInPolygon(closedSquare)).toEqual(false);
       });
       test('(0, 0) is within the open unit square', () => {
         const poly = [
@@ -307,6 +357,26 @@ describe('g2 tests', () => {
         const p = new Point(1, 0);
         expect(p.isOnPolygon(square)).toEqual(true);
       });
+      test('1, 0 is on the side of the closed unit square', () => {
+        const p = new Point(1, 0);
+        expect(p.isOnPolygon(closedSquare)).toEqual(true);
+      });
+      test('isOnPolygon when actually in open square', () => {
+        const p = new Point(0, 0);
+        expect(p.isOnPolygon(square)).toEqual(true);
+      });
+      test('isOnPolygon when actually in closed square', () => {
+        const p = new Point(0, 0);
+        expect(p.isOnPolygon(closedSquare)).toEqual(true);
+      });
+      test('isOnPolygon when not actually in open square', () => {
+        const p = new Point(2, 2);
+        expect(p.isOnPolygon(square)).toEqual(false);
+      });
+      test('isOnPolygon when not actually in closed square', () => {
+        const p = new Point(2, 2);
+        expect(p.isOnPolygon(closedSquare)).toEqual(false);
+      });
     });
   });
   describe('Lines', () => {
@@ -328,6 +398,43 @@ describe('g2 tests', () => {
         expect(l.A).toEqual(6);
         expect(l.B).toEqual(-2);
         expect(l.C).toEqual(22);
+      });
+    });
+    describe('x can be found from y', () => {
+      test('Line from 0, 0 to 1, 1', () => {
+        const l = new Line(new Point(0, 0), new Point(1, 1));
+        const xResult = l.getXFromY(0.5);
+        const yResult = l.getYFromX(0.5);
+        expect(xResult).toBe(0.5);
+        expect(yResult).toBe(0.5);
+      });
+      test('Line from 0, 0 to 2, 1', () => {
+        const l = new Line(new Point(0, 0), new Point(2, 1));
+        const xResult = l.getXFromY(0.5);
+        const yResult = l.getYFromX(1);
+        expect(xResult).toBe(1);
+        expect(yResult).toBe(0.5);
+      });
+      test('Line from 1, 0 to 1, 1', () => {
+        const l = new Line(new Point(1, 0), new Point(1, 1));
+        const xResult = l.getXFromY(10);
+        const yResult = l.getYFromX(10);
+        expect(xResult).toBe(1);
+        expect(yResult).toBe(null);
+      });
+      test('Line from 0, 1 to 1, 1', () => {
+        const l = new Line(new Point(0, 1), new Point(1, 1));
+        const xResult = l.getXFromY(10);
+        const yResult = l.getYFromX(10);
+        expect(xResult).toBe(null);
+        expect(yResult).toBe(1);
+      });
+      test('Line from 0, 1 to 2, 0', () => {
+        const l = new Line(new Point(0, 1), new Point(2, 0));
+        const xResult = l.getXFromY(0.5);
+        const yResult = l.getYFromX(1);
+        expect(xResult).toBe(1);
+        expect(yResult).toBe(0.5);
       });
     });
     describe('Lines can have a length', () => {
@@ -384,6 +491,7 @@ describe('g2 tests', () => {
         const l = new Line(new Point(0, 0), new Point(2, 2));
         const p = new Point(0, 3);
         expect(l.hasPointAlong(p)).toEqual(false);
+        expect(l.hasPointAlong(p, 8)).toEqual(false);
       });
     });
     describe('Lines can be compared to other lines', () => {
@@ -430,6 +538,26 @@ describe('g2 tests', () => {
         const l2 = new Line(new Point(0, 1), new Point(1, 2));
         const res = l1.isOnSameLineAs(l2);
         expect(res).not.toEqual(true);
+      });
+      test('Line1 is offset to line 2 in y', () => {
+        const l1 = new Line(new Point(0, 0), new Point(1, 1));
+        const l2 = new Line(new Point(0, 1), new Point(1, 2));
+        const res = l1.isEqualTo(l2);
+        expect(res).toEqual(false);
+      });
+      test('Line1 has different end points to line 2', () => {
+        const l1 = new Line(new Point(0, 0), new Point(1, 1));
+        const l2 = new Line(new Point(0, 0), new Point(1, 1));
+        l2.p1 = new Point(0.5, 0.5);
+        const res = l1.isEqualTo(l2);
+        expect(res).toEqual(false);
+      });
+      test('Line2 has different end points to line 1', () => {
+        const l1 = new Line(new Point(0, 0), new Point(1, 1));
+        const l2 = new Line(new Point(0, 0), new Point(1, 1));
+        l2.p2 = new Point(0.5, 0.5);
+        const res = l1.isEqualTo(l2);
+        expect(res).toEqual(false);
       });
     });
     describe('Lines can intersect with other lines', () => {
@@ -510,6 +638,20 @@ describe('g2 tests', () => {
         expect(res.onLine).toEqual(true);
         expect(res.inLine).toEqual(true);
         expect(res.intersect).toEqual(new Point(0.804, 0.05036621488721111));
+      });
+    });
+    describe('Lines Misc', () => {
+      test('Line rounding', () => {
+        const l = new Line(new Point(0, 0), 1, Math.PI / 3).round();
+        expect(l.ang).toBe(1.04719755);
+        expect(l.A).toBe(0.8660254);
+        expect(l.B).toBe(-0.5);
+        expect(l.C).toBe(0);
+        expect(l.distance).toBe(1);
+      });
+      test('Line distance to point', () => {
+        const l = new Line(new Point(0, 0), 1, 0);
+        expect(l.distanceToPoint(new Point(2, 2))).toBe(2);
       });
     });
   });
@@ -806,6 +948,25 @@ describe('g2 tests', () => {
       expect(t.s(1)).toEqual({ x: 1, y: 1 });
       expect(t.s(2)).toEqual(null);
     });
+    test('isEqualTo', () => {
+      const t1 = new Transform().scale(1, 1).rotate(1).translate(1, 1);
+      const e1 = new Transform().scale(1, 1).rotate(1).translate(1, 1);
+      const ne1 = new Transform().scale(1, 2).rotate(1).translate(1, 1);
+      const ne2 = new Transform().scale(2, 1).rotate(1).translate(1, 1);
+      const ne3 = new Transform().scale(1, 1).rotate(2).translate(1, 1);
+      const ne4 = new Transform().scale(1, 1).rotate(1).translate(2, 1);
+      const ne5 = new Transform().scale(1, 1).rotate(1).translate(1, 2);
+      const ne6 = new Transform().rotate(1).translate(1, 1).scale(1, 1);
+      const ne7 = new Transform().rotate(1).translate(1, 1);
+      expect(t1.isEqualTo(e1)).toBe(true);
+      expect(t1.isEqualTo(ne1)).toBe(false);
+      expect(t1.isEqualTo(ne2)).toBe(false);
+      expect(t1.isEqualTo(ne3)).toBe(false);
+      expect(t1.isEqualTo(ne4)).toBe(false);
+      expect(t1.isEqualTo(ne5)).toBe(false);
+      expect(t1.isEqualTo(ne6)).toBe(false);
+      expect(t1.isEqualTo(ne7)).toBe(false);
+    });
     test('Update scale', () => {
       const t = new Transform()
         .scale(0, 0).translate(2, 2).rotate(1)
@@ -1027,7 +1188,8 @@ describe('g2 tests', () => {
     });
     test('Copy', () => {
       const t = new Transform().scale(1, 1).rotate(1).translate(1, 1);
-      const b = t.copy();
+      t.index = 0;
+      const b = t._dup();
       expect(t).toEqual(b);
       expect(t).not.toBe(b);
       expect(t.order).not.toBe(b.order);
@@ -1127,7 +1289,7 @@ describe('g2 tests', () => {
       //     .rotate(100001)
       //     .translate(0.1, 100001);
       //   v = t1.velocity(t0, deltaTime, zero, max);
-      //   const vExpected = t1.copy();
+      //   const vExpected = t1._dup();
       //   vExpected.updateTranslation(0, 100001);
       //   expect(v).toEqual(vExpected);
       // });
@@ -1331,7 +1493,7 @@ describe('g2 tests', () => {
     });
     test('copy', () => {
       const r = new Rect(0, 0, 4, 2);
-      const c = r.copy();
+      const c = r._dup();
       expect(r).toEqual(c);
       expect(r).not.toBe(c);
     });
@@ -1373,4 +1535,321 @@ describe('g2 tests', () => {
       // expect(result.max).toEqual(new Point(4, 3));
     });
   });
+  describe('Quadratic Bezier', () => {
+    test('flat case', () => {
+      const p0 = new Point(0, 0);
+      const p1 = new Point(0.5, 0.5);
+      const p2 = new Point(1, 0);
+      let b = p0.quadraticBezier(p1, p2, 0);
+      expect(b).toEqual(p0);
+
+      b = p0.quadraticBezier(p1, p2, 0.5);
+      expect(b).toEqual(new Point(0.5, 0.25));
+
+      b = p0.quadraticBezier(p1, p2, 1);
+      expect(b).toEqual(p2);
+    });
+    test('flat 90 deg case', () => {
+      const p0 = new Point(1, 1);
+      const p1 = new Point(0.5, 1.5);
+      const p2 = new Point(1, 2);
+      let b = p0.quadraticBezier(p1, p2, 0);
+      expect(b).toEqual(p0);
+
+      b = p0.quadraticBezier(p1, p2, 0.5);
+      expect(b).toEqual(new Point(0.75, 1.5));
+
+      b = p0.quadraticBezier(p1, p2, 1);
+      expect(b).toEqual(p2);
+    });
+  });
+  describe('Rect to Polar', () => {
+    test('1, 0 as x, y', () => {
+      const p = rectToPolar(1, 0);
+      expect(p.mag).toBe(1);
+      expect(p.angle).toBe(0);
+    });
+    test('1, 0 as Point', () => {
+      const p = rectToPolar(new Point(1, 0));
+      expect(p.mag).toBe(1);
+      expect(p.angle).toBe(0);
+    });
+    test('Quadrant 1', () => {
+      const p = rectToPolar(1, 1);
+      expect(round(p.mag, 3)).toBe(round(Math.sqrt(2), 3));
+      expect(round(p.angle, 3)).toBe(round(Math.PI / 4, 3));
+    });
+    test('Quadrant 2', () => {
+      const p = rectToPolar(-1, 1);
+      expect(round(p.mag, 3)).toBe(round(Math.sqrt(2), 3));
+      expect(round(p.angle, 3)).toBe(round(3 * Math.PI / 4, 3));
+    });
+    test('Quadrant 3', () => {
+      const p = rectToPolar(-1, -1);
+      expect(round(p.mag, 3)).toBe(round(Math.sqrt(2), 3));
+      expect(round(p.angle, 3)).toBe(round(5 * Math.PI / 4, 3));
+    });
+    test('Quadrant 4', () => {
+      const p = rectToPolar(1, -1);
+      expect(round(p.mag, 3)).toBe(round(Math.sqrt(2), 3));
+      expect(round(p.angle, 3)).toBe(round(7 * Math.PI / 4, 3));
+    });
+  });
+  describe('Polar to Rect', () => {
+    test('Quadrant 1', () => {
+      const r = polarToRect(Math.sqrt(2), Math.PI / 4).round(3);
+      expect(r).toEqual(new Point(1, 1));
+    });
+    test('Quadrant 2', () => {
+      const r = polarToRect(Math.sqrt(2), 3 * Math.PI / 4).round(3);
+      expect(r).toEqual(new Point(-1, 1));
+    });
+    test('Quadrant 3', () => {
+      const r = polarToRect(Math.sqrt(2), 5 * Math.PI / 4).round(3);
+      expect(r).toEqual(new Point(-1, -1));
+    });
+    test('Quadrant 4', () => {
+      const r = polarToRect(Math.sqrt(2), 7 * Math.PI / 4).round(3);
+      expect(r).toEqual(new Point(1, -1));
+    });
+    test('-x axis', () => {
+      const r = polarToRect(1, Math.PI).round(3);
+      expect(r).toEqual(new Point(-1, 0));
+    });
+    test('-y axis', () => {
+      const r = polarToRect(1, 3 * Math.PI / 2).round(3);
+      expect(r).toEqual(new Point(0, -1));
+    });
+  });
+  describe('getDeltaAngle', () => {
+    let dir;
+    describe('1 - clockwise', () => {
+      beforeEach(() => { dir = 1; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        expect(diff).toBe(1);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(Math.PI * 2 - 1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+    describe('-1 - Anti-clockwise', () => {
+      beforeEach(() => { dir = -1; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        const expected = round(1 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(-2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+    describe('0 - fastest', () => {
+      beforeEach(() => { dir = 0; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        expect(diff).toBe(1);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(-2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+    describe('2 - not through 0', () => {
+      beforeEach(() => { dir = 2; });
+      test('0 to 1', () => {
+        const diff = round(getDeltaAngle(0, 1, dir), 3);
+        expect(diff).toBe(1);
+      });
+      test('1 to 0', () => {
+        const diff = round(getDeltaAngle(1, 0, dir), 3);
+        const expected = round(-1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('0 to -1', () => {
+        const diff = round(getDeltaAngle(0, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 1, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 0', () => {
+        const diff = round(getDeltaAngle(-1, 0, dir), 3);
+        const expected = round(1 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('1 to -1', () => {
+        const diff = round(getDeltaAngle(1, -1, dir), 3);
+        const expected = round(Math.PI * 2 - 2, 3);
+        expect(diff).toBe(expected);
+      });
+      test('-1 to 1', () => {
+        const diff = round(getDeltaAngle(-1, 1, dir), 3);
+        const expected = round(2 - Math.PI * 2, 3);
+        expect(diff).toBe(expected);
+      });
+    });
+    describe('Special cases', () => {
+      test('0 to 1 default values', () => {
+        const diff = round(getDeltaAngle(0, 1), 3);
+        expect(diff).toBe(1);
+      });
+      test('Start and Target the same', () => {
+        const diff = round(getDeltaAngle(1, 1), 3);
+        expect(diff).toBe(0);
+      });
+    });
+  });
+  describe('normAngleTo90', () => {
+    test('0 = 0', () => {
+      expect(normAngleTo90(0)).toBe(0);
+    });
+    test('45 = 45', () => {
+      expect(normAngleTo90(Math.PI / 4)).toBe(Math.PI / 4);
+    });
+    test('90 = 90', () => {
+      expect(normAngleTo90(Math.PI / 2)).toBe(Math.PI / 2);
+    });
+    test('135 = 315', () => {
+      expect(normAngleTo90(Math.PI / 4 * 3)).toBe(Math.PI / 4 * 7);
+    });
+    test('180 = 0', () => {
+      expect(normAngleTo90(Math.PI)).toBe(0);
+    });
+    test('225 = 45', () => {
+      expect(normAngleTo90(Math.PI / 4 * 5)).toBe(Math.PI / 4);
+    });
+    test('270 = 270', () => {
+      expect(normAngleTo90(Math.PI / 4 * 6)).toBe(Math.PI / 4 * 6);
+    });
+    test('315 = 315', () => {
+      expect(normAngleTo90(Math.PI / 4 * 7)).toBe(Math.PI / 4 * 7);
+    });
+  });
+  describe('deg', () => {
+    test('pi to 180', () => {
+      expect(round(deg(Math.PI), 2)).toBe(180);
+    });
+  });
+  describe('curvedPath', () => {
+    let options;
+    beforeEach(() => {
+      options = {
+        rot: 1,
+        magnitude: 0.5,
+        offset: 0.5,
+        controlPoint: null,
+        direction: 'up',
+      };
+    });
+    test('up', () => {
+      const start = new Point(0, 0);
+      const stop = new Point(2, 0);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(1, 0.5));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('down', () => {
+      options.direction = 'down';
+      const start = new Point(0, 0);
+      const stop = new Point(2, 0);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(1, -0.5));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('left', () => {
+      options.direction = 'left';
+      const start = new Point(0, 0);
+      const stop = new Point(0, 2);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(-0.5, 1));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('right', () => {
+      options.direction = 'right';
+      const start = new Point(0, 0);
+      const stop = new Point(0, 2);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(0.5, 1));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+    test('control', () => {
+      options.direction = 'right';
+      options.controlPoint = new Point(1, 1);
+      const start = new Point(0, 0);
+      const stop = new Point(2, 0);
+      expect(curvedPath(start, stop, 0, options)).toEqual(start);
+      expect(curvedPath(start, stop, 0.5, options)).toEqual(new Point(1, 0.5));
+      expect(curvedPath(start, stop, 1, options)).toEqual(stop);
+    });
+  });
+  // describe('Three point angle', () => {
+  //   test('right angle at origin', () => {
+  //     const points = [new Point(1, 0), new Point(0, 0), new Point(0, 1)];
+  //     expect(roundNum(threePointAngle(...points))).toBe(roundNum(Math.PI / 2))
+  //   });
+  // })
 });

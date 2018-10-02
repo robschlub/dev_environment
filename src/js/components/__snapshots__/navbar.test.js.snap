@@ -42,39 +42,9 @@ exports[`Navbar Make "About" item active 1`] = `
         >
           <a
             className="nav-link "
-            href="/introduction"
+            href=""
           >
-            Introduction
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link active"
-            href="/about"
-          >
-            About
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/single"
-          >
-            Single
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/multi"
-          >
-            Multi
+            Login
           </a>
         </li>
         <li
@@ -89,7 +59,7 @@ exports[`Navbar Make "About" item active 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Go to
+            Learn
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -97,30 +67,36 @@ exports[`Navbar Make "About" item active 1`] = `
           >
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Introduction"
             >
-              Chapter 1 - shapes
+              1 - Why study shapes?
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Circle"
             >
-              Chapter 2 - circles
+              2 - Circle
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Angle"
             >
-              Chapter 3 - abstraction
+              3 - Angles
+            </a>
+            <a
+              className="dropdown-item"
+              href="/Lessons/Math/MeasuringAngles"
+            >
+              4 - Measuring Angles
             </a>
             <div
               className="dropdown-divider"
             />
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/ShapesAndCornersTest"
             >
-              Glossary
+              Test
             </a>
           </div>
         </li>
@@ -181,40 +157,10 @@ exports[`Navbar Make "Introduction" item active 1`] = `
           className="nav-item"
         >
           <a
-            className="nav-link active"
-            href="/introduction"
-          >
-            Introduction
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
             className="nav-link "
-            href="/about"
+            href=""
           >
-            About
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/single"
-          >
-            Single
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/multi"
-          >
-            Multi
+            Login
           </a>
         </li>
         <li
@@ -229,7 +175,7 @@ exports[`Navbar Make "Introduction" item active 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Go to
+            Learn
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -237,30 +183,36 @@ exports[`Navbar Make "Introduction" item active 1`] = `
           >
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Introduction"
             >
-              Chapter 1 - shapes
+              1 - Why study shapes?
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Circle"
             >
-              Chapter 2 - circles
+              2 - Circle
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Angle"
             >
-              Chapter 3 - abstraction
+              3 - Angles
+            </a>
+            <a
+              className="dropdown-item"
+              href="/Lessons/Math/MeasuringAngles"
+            >
+              4 - Measuring Angles
             </a>
             <div
               className="dropdown-divider"
             />
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/ShapesAndCornersTest"
             >
-              Glossary
+              Test
             </a>
           </div>
         </li>
@@ -322,39 +274,9 @@ exports[`Navbar No props 1`] = `
         >
           <a
             className="nav-link "
-            href="/introduction"
+            href=""
           >
-            Introduction
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/about"
-          >
-            About
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/single"
-          >
-            Single
-          </a>
-        </li>
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href="/multi"
-          >
-            Multi
+            Login
           </a>
         </li>
         <li
@@ -369,7 +291,7 @@ exports[`Navbar No props 1`] = `
             id="navbarDropdown"
             role="button"
           >
-            Go to
+            Learn
           </a>
           <div
             aria-labelledby="navbarDropdown"
@@ -377,30 +299,36 @@ exports[`Navbar No props 1`] = `
           >
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Introduction"
             >
-              Chapter 1 - shapes
+              1 - Why study shapes?
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Circle"
             >
-              Chapter 2 - circles
+              2 - Circle
             </a>
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/Angle"
             >
-              Chapter 3 - abstraction
+              3 - Angles
+            </a>
+            <a
+              className="dropdown-item"
+              href="/Lessons/Math/MeasuringAngles"
+            >
+              4 - Measuring Angles
             </a>
             <div
               className="dropdown-divider"
             />
             <a
               className="dropdown-item"
-              href="#"
+              href="/Lessons/Math/ShapesAndCornersTest"
             >
-              Glossary
+              Test
             </a>
           </div>
         </li>

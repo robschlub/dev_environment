@@ -12,6 +12,7 @@ const roundNum = (value: number, precision: number = 5) => {
 const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
   let result = 0;
   if (arrayOrValue instanceof Array) {
+    // $FlowFixMe
     result = arrayOrValue.map(elem => round(elem, precision));
   // } else if (arrayOrValue.constructor == d2.point(0,0).constructor){
   //     result = roundPoint(arrayOrValue, precision);
@@ -194,13 +195,14 @@ const easeinout = (percentTime: number) => {
 
 function easeout(percentTime: number) {
   const x = 0.5 + percentTime / 2;
-  const power = 2;
+  const power = 1.6;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return (percentDistance - 0.5) * 2;
 }
+
 function easein(percentTime: number) {
   const x = percentTime / 2;
-  const power = 2;
+  const power = 1.6;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return percentDistance * 2;
 }
@@ -214,14 +216,59 @@ function sinusoid(
 ) {
   return bias + mag * Math.sin(deltaTime * frequency * 2.0 * Math.PI + phaseOffset);
 }
+
 // const animationPhase = (transform, time, rotDirection = 0, animationStyle = easeinout) => {
 //     return {
-//         transform: transform.copy(),
+//         transform: transform._dup(),
 //         time: time,
 //         rotDirection: rotDirection,
 //         animationStyle: animationStyle,
 //     }
 // }
+
+function range(start: number, stop: number, step: number) {
+  const out = [];
+  for (let i = start; i <= stop + step * 0.5; i += step) {
+    out.push(i);
+  }
+  return out;
+}
+
+function randInt(minOrMax: number, max: ?number = null) {
+  if (max != null) {
+    const min = minOrMax;
+    return Math.floor(Math.random() * Math.floor((max - min)) + Math.floor(min));
+  }
+  return Math.floor(Math.random() * Math.floor(minOrMax));
+}
+
+function rand(minOrMax: number, max: ?number = null) {
+  if (max != null) {
+    const min = minOrMax;
+    return Math.random() * (max - min) + min;
+  }
+  return Math.random() * minOrMax;
+}
+
+function randElement<T>(inputArray: Array<T>): T {
+  const index = randInt(inputArray.length);
+  return inputArray[index];
+}
+
+function removeRandElement<T>(inputArray: Array<T>): T {
+  const index = rand(inputArray.length);
+  return inputArray.splice(index, 1)[0];
+}
+
+function randElements<T>(num: number, inputArray: Array<T>): Array<T> {
+  const possibleIndeces = range(0, inputArray.length - 1, 1);
+  const elements = [];
+  for (let i = 0; i < num; i += 1) {
+    const index = removeRandElement(possibleIndeces);
+    elements.push(inputArray[index]);
+  }
+  return elements;
+}
 
 export {
   round,
@@ -234,5 +281,11 @@ export {
   linear,
   clipMag,
   clipValue,
+  range,
+  randInt,
+  rand,
+  randElement,
+  removeRandElement,
+  randElements,
 };
 
