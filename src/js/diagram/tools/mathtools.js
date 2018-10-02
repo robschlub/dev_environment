@@ -195,13 +195,14 @@ const easeinout = (percentTime: number) => {
 
 function easeout(percentTime: number) {
   const x = 0.5 + percentTime / 2;
-  const power = 2;
+  const power = 1.6;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return (percentDistance - 0.5) * 2;
 }
+
 function easein(percentTime: number) {
   const x = percentTime / 2;
-  const power = 2;
+  const power = 1.6;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return percentDistance * 2;
 }
@@ -249,14 +250,24 @@ function rand(minOrMax: number, max: ?number = null) {
   return Math.random() * minOrMax;
 }
 
-function randElement(inputArray: Array<any>) {
-  const index = rand(inputArray.length);
-  return randElement[index];
+function randElement<T>(inputArray: Array<T>): T {
+  const index = randInt(inputArray.length);
+  return inputArray[index];
 }
 
 function removeRandElement<T>(inputArray: Array<T>): T {
   const index = rand(inputArray.length);
   return inputArray.splice(index, 1)[0];
+}
+
+function randElements<T>(num: number, inputArray: Array<T>): Array<T> {
+  const possibleIndeces = range(0, inputArray.length - 1, 1);
+  const elements = [];
+  for (let i = 0; i < num; i += 1) {
+    const index = removeRandElement(possibleIndeces);
+    elements.push(inputArray[index]);
+  }
+  return elements;
 }
 
 export {
@@ -275,5 +286,6 @@ export {
   rand,
   randElement,
   removeRandElement,
+  randElements,
 };
 

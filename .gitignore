@@ -7,3 +7,4 @@ app/app/static/build
 app/app/static/dist
 node_modules/
 dev_environment.sublime*
+reports

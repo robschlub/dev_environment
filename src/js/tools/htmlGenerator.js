@@ -237,6 +237,18 @@ function onClickId(
         bind[5], bind[6],
       );
     }
+    if (bind.length === 8) {
+      element.onclick = actionMethod.bind(
+        bind[0], bind[1], bind[2], bind[3], bind[4],
+        bind[5], bind[6], bind[7],
+      );
+    }
+    if (bind.length === 9) {
+      element.onclick = actionMethod.bind(
+        bind[0], bind[1], bind[2], bind[3], bind[4],
+        bind[5], bind[6], bind[7], bind[8],
+      );
+    }
   }
 }
 
@@ -259,9 +271,21 @@ function setOnClicks(modifiers: Object, additionalClassesToAdd: string = '') {
   });
 }
 
+function setHTML(
+  element: HTMLElement,
+  text: string,
+  modifiers: Object = {},
+  classesToAdd: string = '',
+) {
+  const modifiedText = applyModifiers(text, modifiers);
+  // eslint-disable-next-line no-param-reassign
+  element.innerHTML = modifiedText;
+  setOnClicks(modifiers, classesToAdd);
+}
+
 export {
   actionWord, click, highlight, addClass, addId,
   onClickId, highlightWord, centerV, centerH, centerVH, toHTML,
   clickWord, itemSelector, unit, applyModifiers,
-  setOnClicks,
+  setOnClicks, setHTML,
 };

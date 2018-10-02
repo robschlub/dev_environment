@@ -9,7 +9,7 @@
 import {
   roundNum, decelerate, clipMag, clipValue,
 } from './mathtools';
-import { Console } from '../../tools/tools';
+// import { Console } from '../../tools/tools';
 import * as m2 from './m2';
 
 // function nullDefaultNum(input: number | null, defaultValue: number): number {
@@ -182,14 +182,32 @@ class Point {
     return l.hasPointOn(this, precision);
   }
 
+  getShaddowOnLine(l: Line, precision: number = 8) {
+    const shaddow = new Line(this, 1, l.angle() + Math.PI / 2);
+    const { intersect } = shaddow.intersectsWith(l);
+    // console.log(intersect, inLine, onLine, )
+    if (intersect != null && intersect.isOnLine(l, precision)) {
+      return intersect;
+    }
+    return null;
+  }
+
+  shaddowIsOnLine(l: Line, precision: number = 8) {
+    const intersect = this.getShaddowOnLine(l, precision);
+    if (intersect != null) {
+      return true;
+    }
+    return false;
+  }
+
   isOnUnboundLine(l: Line, precision?: number) {
     return l.hasPointAlong(this, precision);
   }
 
   /* eslint-enable no-use-before-define */
-  console(text?: string) {
-    Console(`${text || ''} + ${this.x}, ${this.y}`);
-  }
+  // console(text?: string) {
+  //   Console(`${text || ''} + ${this.x}, ${this.y}`);
+  // }
 
   static isLeft(p0: Point, p1: Point, p2: Point) {
     return (
@@ -252,10 +270,16 @@ class Point {
       /* eslint-disable-next-line  no-use-before-define */
       const l = line(v[i], v[i + 1]);
       if (p.isOnLine(l)) {
+        if (popLastPoint) {
+          v.pop();
+        }
         return true;
       }
     }
     if (p.isInPolygon(polygonVertices)) {
+      if (popLastPoint) {
+        v.pop();
+      }
       return true;
     }
 
@@ -410,6 +434,20 @@ function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
   this.distance = distance(this.p1, this.p2);
 }
 
+Line.prototype.getYFromX = function getX(x: number) {
+  if (this.B !== 0) {
+    return (this.C - this.A * x) / this.B;
+  }
+  return null;
+};
+
+Line.prototype.getXFromY = function getY(y: number) {
+  if (this.A !== 0) {
+    return (this.C - this.B * y) / this.A;
+  }
+  return null;
+};
+
 Line.prototype.angle = function angle() {
   return this.ang;
 };
@@ -419,6 +457,8 @@ Line.prototype.round = function lineround(precision?: number = 8) {
   lineRounded.A = roundNum(lineRounded.A, precision);
   lineRounded.B = roundNum(lineRounded.B, precision);
   lineRounded.C = roundNum(lineRounded.C, precision);
+  lineRounded.ang = roundNum(lineRounded.ang, precision);
+  lineRounded.distance = roundNum(lineRounded.distance, precision);
   return lineRounded;
 };
 
@@ -450,6 +490,8 @@ Line.prototype.hasPointAlong = function linehasPointAlong(p: Point, precision?: 
   }
   return false;
 };
+
+// perpendicular distance of line to point
 Line.prototype.distanceToPoint = function distanceToPoint(p: Point, precision?: number) {
   return roundNum(
     Math.abs(this.A * p.x + this.B * p.y - this.C) / Math.sqrt(this.A ** 2 + this.B ** 2),
@@ -1235,7 +1277,7 @@ class Transform {
         }
       }
       if (this.order[i] instanceof Rotation) {
-        if (transformToCompare.r !== this.order[i].r) {
+        if (transformToCompare.order[i].r !== this.order[i].r) {
           return false;
         }
       }
@@ -1311,6 +1353,7 @@ class Transform {
   clip(
     minTransform: Transform,
     maxTransform: Transform,
+    limitLine: null | Line,
   ) {
     if (!this.isSimilarTo(minTransform) || !this.isSimilarTo(maxTransform)) {
       return this._dup();
@@ -1338,7 +1381,27 @@ class Transform {
         order.push(new Scale(x, y, this.name));
       }
     }
-    return new Transform(order, this.name);
+
+    const clippedTransform = new Transform(order, this.name);
+    if (limitLine != null) {
+      const t = clippedTransform.t();
+      if (t != null) {
+        const perpLine = new Line(t, 1, limitLine.angle() + Math.PI / 2);
+        const { intersect } = perpLine.intersectsWith(limitLine);
+        if (intersect.isOnLine(limitLine, 4)) {
+          clippedTransform.updateTranslation(intersect);
+        } else {
+          const p1Dist = distance(intersect, limitLine.p1);
+          const p2Dist = distance(intersect, limitLine.p2);
+          if (p1Dist < p2Dist) {
+            clippedTransform.updateTranslation(limitLine.p1);
+          } else {
+            clippedTransform.updateTranslation(limitLine.p2);
+          }
+        }
+      }
+    }
+    return clippedTransform;
   }
 
   clipMag(

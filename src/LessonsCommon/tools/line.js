@@ -217,7 +217,7 @@ export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
 // baseToLine - text angle is same as line, with baseline toward line
 // baseToLine - text angle is same as line, with baseline away from line
 // baseToLine - text angle is same as line, with text upright
-export type TypeLineLabelOrientation = 'horiztonal' | 'baseToLine' | 'baseAway'
+export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
                                       | 'baseUpright';
 
 export type TypeLine = {
@@ -228,6 +228,7 @@ export type TypeLine = {
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
   reference: 'center' | 'end';
+  showRealLength: boolean;
   label: null | {
     offset: number;
     location: TypeLineLabelLocation;
@@ -235,13 +236,14 @@ export type TypeLine = {
     orientation: TypeLineLabelOrientation;
     linePosition: number;
   } & TypeEquationLabel;
+  _label: DiagramElementCollection;
   arrow1: null | {
     height: number;
   };
   arrow2: null | {
     height: number;
   };
-  makeMovable: (?boolean) => void;
+  setMovable: (?boolean) => void;
 
   addArrow1: (number, number) => void;
   addArrow2: (number, number) => void;
@@ -261,6 +263,7 @@ export function makeLine(
   width: number,
   color: Array<number>,
   showLine: boolean = true,
+  largerTouchBorder: boolean = true,
 ) {
   const line = diagram.shapes.collection(new Transform()
     .scale(1, 1)
@@ -281,12 +284,24 @@ export function makeLine(
       vertexSpaceLength, width,
       0, color, new Transform().scale(1, 1).translate(0, 0),
     );
+    if (largerTouchBorder) {
+      const multiplier = diagram.isTouchDevice ? 16 : 8;
+      const increaseBorderSize = (element: DiagramElementPrimative) => {
+        for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+          // eslint-disable-next-line no-param-reassign
+          element.vertices.border[0][i].y *= multiplier;
+        }
+      };
+      increaseBorderSize(straightLine);
+    }
     line.add('line', straightLine);
   }
   line.currentLength = 1;
   line.label = null;
   line.arrow1 = null;
   line.arrow2 = null;
+  line._label = diagram.shapes.collection(new Transform());
+  line.showRealLength = false;
 
   line.addArrow1 = (arrowHeight: number, arrowWidth: number) => {
     const a = diagram.shapes.arrow(
@@ -316,14 +331,14 @@ export function makeLine(
       line.hasTouchableElements = true;
       if (straightLine != null) {
         straightLine.isTouchable = true;
-        const multiplier = diagram.isTouchDevice ? 16 : 8;
-        const increaseBorderSize = (element: DiagramElementPrimative) => {
-          for (let i = 0; i < element.vertices.border[0].length; i += 1) {
-            // eslint-disable-next-line no-param-reassign
-            element.vertices.border[0][i].y *= multiplier;
-          }
-        };
-        increaseBorderSize(straightLine);
+        // const multiplier = diagram.isTouchDevice ? 16 : 8;
+        // const increaseBorderSize = (element: DiagramElementPrimative) => {
+        //   for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+        //     // eslint-disable-next-line no-param-reassign
+        //     element.vertices.border[0][i].y *= multiplier;
+        //   }
+        // };
+        // increaseBorderSize(straightLine);
       }
     } else {
       line.isMovable = false;
@@ -350,12 +365,16 @@ export function makeLine(
     line.updateLabel();
   };
 
-  line.updateLabel = () => {
+  line.updateLabel = (parentRotationOffset: number = 0) => {
     if (line.label == null) {
       return;
     }
     const lineAngle = normAngle(line.transform.r() || 0);
     let labelAngle = 0;
+    if (line.showRealLength) {
+      line._label._base.vertices.setText(roundNum(line.currentLength, 2).toString());
+      line.label.eqn.reArrangeCurrentForm();
+    }
     const labelPosition = new Point(
       start * line.currentLength + line.label.linePosition * line.currentLength,
       0,
@@ -434,12 +453,12 @@ export function makeLine(
       if (Math.cos(lineAngle) < 0) {
         labelAngle = Math.PI;
       }
-      // if (roundNum(Math.cos(lineAngle), 4) === 0) {
-      //   labelAngle = -lineAngle;
-      // }
     }
 
-    line.label.updateRotation(labelAngle, labelPosition, labelOffsetMag, labelOffsetAngle);
+    line.label.updateRotation(
+      labelAngle - parentRotationOffset,
+      labelPosition, labelOffsetMag, labelOffsetAngle,
+    );
   };
 
   line.setLength = (newLength: number) => {
@@ -475,6 +494,7 @@ export function makeLine(
       line.transform.updateTranslation(p.add(offsetdelta));
     }
     line.setLength(newLength);
+    line.updateLabel();
   };
 
   line.animateLengthTo = function animateToLength(
@@ -511,6 +531,14 @@ export function makeLine(
     line.setLength(fromLength);
     line.animateLengthTo(target, time, finishOnCancel, callback);
   };
+
+  line.pulse.transformMethod = s => new Transform().scale(1, s);
+
+  line.pulseWidth = () => {
+    line.pulseScaleNow(1, 3);
+    diagram.animateNextFrame();
+  };
+
 
   line.setLength(length);
 

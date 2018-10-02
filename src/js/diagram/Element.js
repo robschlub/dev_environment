@@ -3,7 +3,7 @@
 import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
-  Scale, Rotation, getDeltaAngle,
+  Scale, Rotation, getDeltaAngle, Line,
 } from './tools/g2';
 import * as m2 from './tools/m2';
 import type { pathOptionsType, TypeRotationDirection } from './tools/g2';
@@ -388,6 +388,7 @@ class DiagramElement {
     maxTransform: Transform,
     minTransform: Transform,
     limitToDiagram: boolean,
+    limitLine: null | Line,
     maxVelocity: TransformLimit;            // Maximum velocity allowed
     // When moving freely, the velocity decelerates until it reaches a threshold,
   // then it is considered 0 - at which point moving freely ends.
@@ -513,6 +514,7 @@ class DiagramElement {
       canBeMovedAfterLoosingTouch: false,
       type: 'translation',
       element: null,
+      limitLine: null,
     };
 
     this.pulse = {
@@ -730,6 +732,7 @@ class DiagramElement {
     this.transform = transform._dup().clip(
       this.move.minTransform,
       this.move.maxTransform,
+      this.move.limitLine,
     );
     if (this.setTransformCallback) {
       this.setTransformCallback(this.transform);
@@ -966,23 +969,44 @@ class DiagramElement {
       const min = this.move.minTransform.order[i];
       const max = this.move.maxTransform.order[i];
       const v = next.v.order[i];
-      if (t instanceof Translation
+      if ((t instanceof Translation
           && v instanceof Translation
           && max instanceof Translation
-          && min instanceof Translation
+          && min instanceof Translation)
+        || (t instanceof Scale
+          && v instanceof Scale
+          && max instanceof Scale
+          && min instanceof Scale)
       ) {
-        if (min.x >= t.x || max.x <= t.x) {
+        let onLine = true;
+        if (this.move.limitLine != null) {
+          onLine = t.shaddowIsOnLine(this.move.limitLine, 4);
+        }
+        if (min.x >= t.x || max.x <= t.x || !onLine) {
           if (this.move.bounce) {
             v.x = -v.x * 0.5;
           } else {
             v.x = 0;
           }
         }
-        if (min.y >= t.y || max.y <= t.y) {
+        if (min.y >= t.y || max.y <= t.y || !onLine) {
           if (this.move.bounce) {
             v.y = -v.y * 0.5;
           } else {
             v.y = 0;
+          }
+        }
+        next.v.order[i] = v;
+      }
+      if (t instanceof Rotation
+          && v instanceof Rotation
+          && max instanceof Rotation
+          && min instanceof Rotation) {
+        if (min.r >= t.r || max.r <= t.r) {
+          if (this.move.bounce) {
+            v.r = -v.r * 0.5;
+          } else {
+            v.r = 0;
           }
         }
         next.v.order[i] = v;
@@ -1296,6 +1320,22 @@ class DiagramElement {
   ): void {
     const transform = this.transform._dup();
     transform.updateTranslation(translation);
+    // transform.translation = translation._dup();
+    const phase = new AnimationPhase(transform, time, 0, easeFunction);
+    if (phase instanceof AnimationPhase) {
+      this.animatePlan([phase], checkCallback(callback));
+    }
+  }
+
+  // With update only first instace of translation in the transform order
+  animateScaleTo(
+    scale: Point,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.easeinout,
+  ): void {
+    const transform = this.transform._dup();
+    transform.updateScale(scale);
     // transform.translation = translation._dup();
     const phase = new AnimationPhase(transform, time, 0, easeFunction);
     if (phase instanceof AnimationPhase) {

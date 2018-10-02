@@ -7,6 +7,9 @@ import {
 import {
   Transform, Point,
 } from '../../js/diagram/tools/g2';
+import {
+  roundNum,
+} from '../../js/diagram/tools/mathtools';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
 import makeEquationLabel from './equationLabel';
 import type { TypeEquationLabel } from './equationLabel';
@@ -31,6 +34,9 @@ export type TypeAngle = {
   setToCorner: (Point, Point, Point) => void;
   autoRightAngle: boolean;
   radius: number;
+  showRealAngle: boolean;
+  realAngleDecimals: number;
+  currentAngle: number;
 } & DiagramElementCollection;
 
 export function makeAngle(
@@ -68,6 +74,9 @@ export function makeAngle(
   angle.autoRightAngle = false;
   angle.radius = radius + lineWidth / 2;
   angle.label = null;
+  angle.showRealAngle = false;
+  angle.currentAngle = 0;
+  angle.realAngleDecimals = 2;
 
   angle.addLabel = (labelTextOrEquation: string | Equation = '', labelRadius: number) => {
     const eqnLabel = makeEquationLabel(diagram, labelTextOrEquation, color);
@@ -85,22 +94,32 @@ export function makeAngle(
     labelRotationOffset: number = 0,
     angleToTestRightAngle: number = size,
   ) {
+    angle.currentAngle = size;
+    if (angle.showRealAngle) {
+      const angleText = roundNum(size * 180 / Math.PI, angle.realAngleDecimals).toString();
+      angle._label._base.vertices.setText(`${angleText}º`);
+      angle.label.eqn.reArrangeCurrentForm();
+    }
     if (angle.autoRightAngle
       && angleToTestRightAngle >= Math.PI / 2 * 0.995
       && angleToTestRightAngle <= Math.PI / 2 * 1.005
     ) {
-      if (angle._arc.isShown && angle._arc === angle.curve) {
+      if (angle._arc === angle.curve) {
         angle._arc = angle.right;
         angle.elements.arc = angle.right;
-        angle.right.show();
-        angle.curve.hide();
+        if (angle.curve.isShown) {
+          angle.right.show();
+          angle.curve.hide();
+        }
         diagram.animateNextFrame();
       }
-    } else if (angle._arc.isShown && angle._arc === angle.right) {
+    } else if (angle._arc === angle.right) {
       angle._arc = angle.curve;
       angle.elements.arc = angle.curve;
-      angle.curve.show();
-      angle.right.hide();
+      if (angle.right.isShown) {
+        angle.curve.show();
+        angle.right.hide();
+      }
       diagram.animateNextFrame();
     }
     angle._arc.angleToDraw = size;

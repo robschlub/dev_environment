@@ -161,6 +161,14 @@ $diagram_ratio: 1.5;
   width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.6);
 }
 
+.lesson__diagram_text_p_width_70 {
+  width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.7);
+}
+
+.lesson__diagram_text_p_width_80 {
+  width: calc((var(--lesson__content-width) - var(--lesson__text-margin) * 2) * 0.8);
+}
+
 .lesson__diagram_text_p_right {
   float: right;
 }

@@ -24,6 +24,7 @@ function getTarget(
 ) {
   const target = element.transform._dup();
   let scenarioObject;
+
   if (scenario == null || scenario === '') {
     scenarioObject = layout[element.name];
   } else if (typeof scenario === 'string') {
@@ -205,10 +206,22 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     if (typeof timeOrCallback === 'function') {
       callbackToUse = timeOrCallback;
     }
-    this.futurePositions.forEach((futurePosition, index) => {
-      const callback = index === this.futurePositions.length - 1 ? callbackToUse : null;
+    let doneCount = 0;
+    let toBeDoneCount = 0;
+    const elementDone = () => {
+      doneCount += 1;
+      if (doneCount === toBeDoneCount) {
+        if (callbackToUse != null) {
+          callbackToUse();
+        }
+      }
+    };
+    this.futurePositions.forEach((futurePosition) => {
       const { element, scenario } = futurePosition;
-      this.moveToScenario(element, scenario, maxTime, callback, rotDirection);
+      if (element.isShown) {
+        this.moveToScenario(element, scenario, maxTime, elementDone, rotDirection);
+        toBeDoneCount += 1;
+      }
     });
   }
 }

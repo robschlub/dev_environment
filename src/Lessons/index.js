@@ -42,6 +42,19 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
+    'Congruent Triangles',
+    '/Lessons/Math/CongruentTriangles',
+    'congruent_triangles',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'triangle_introduction',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
     'Important Angles',
     '/Lessons/Math/ImportantAngles',
     'important_angles',
@@ -90,7 +103,6 @@ export default function getLessonIndex() {
     'related_angles',
     [
       '1',
-      '2',
       'quiz',
       'summary',
     ],

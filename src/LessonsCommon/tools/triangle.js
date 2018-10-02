@@ -14,7 +14,7 @@ import type { TypeAngle } from './angle';
 import { makeLine } from './line';
 import type {
   TypeLineLabelLocation, TypeLineLabelSubLocation,
-  TypeLineLabelOrientation,
+  TypeLineLabelOrientation, TypeLine,
 } from './line';
 
 export type TypeTriangle = {
@@ -54,8 +54,16 @@ export type TypeTriangle = {
   getPoint: (number) => void;
   setTriangleCollectionPositionTo: (Point) => void;
   setTriangleCollectionRotationTo: (number) => void;
+  setTriangleCollectionScaleTo: (Point) => void;
   getRotationToSide: (number, number) => number;
   getHeight: (number, number) => void;
+  hideAngles: () => void;
+  showAngles: (?boolean) => void;
+  hideDimensions: () => void;
+  showDimensions: (?boolean) => void;
+  showRealDimensions: boolean;
+  update: () => void;
+  addPoint: (number, number, ?Array<number>, ?boolean, ?Rect) => void;
 } & DiagramElementCollection;
 
 export type TypeTriangleAngle = {
@@ -65,12 +73,18 @@ export type TypeTriangleAngle = {
 };
 
 export type TypeTriangleLabel = {
-  _label12: DiagramElementCollection;
-  _label23: DiagramElementCollection;
-  _label31: DiagramElementCollection;
+  _dimension12: TypeLine;
+  _dimension23: TypeLine;
+  _dimension31: TypeLine;
   labelEqn12: Equation;
   labelEqn23: Equation;
   labelEqn31: Equation;
+};
+
+export type TypeTrianglePoints = {
+  _point1: DiagramElementPrimative;
+  _point2: DiagramElementPrimative;
+  _point3: DiagramElementPrimative;
 };
 
 export default function makeTriangle(
@@ -99,6 +113,7 @@ export default function makeTriangle(
   triangle.dimensionList = [];
   triangle.updatePointsCallback = null;
   triangle.angleRadiusToInnerBorder = true;
+  triangle.showRealDimensions = false;
 
   triangle.updatePoints = (newP1: Point, newP2: Point, newP3: Point) => {
     triangle.p1 = newP1._dup();
@@ -163,7 +178,7 @@ export default function makeTriangle(
   triangle.addPoint = function addPoint(
     index: number,
     radius: number,
-    pointColor: Array<number>,
+    pointColor: Array<number> = [0, 0, 0, 0.001],
     movable: boolean = false,
     moveBoundary: Rect = diagram.limits,
   ) {
@@ -198,7 +213,7 @@ export default function makeTriangle(
     index1: number,
     index2: number,
     // dimensionText: string,
-    dimensionColor: Array<number>,
+    dimensionColor: Array<number> = [0.5, 0.5, 0.5, 0.5],
     offset: number = 0,
     showLine: boolean = false,
     dimensionLineWidth: number = 0.01,
@@ -241,6 +256,10 @@ export default function makeTriangle(
           point1 = triangle[`p${index2}`];
         }
         dimension.setEndPoints(point1, point2, dimension.offset);
+        const r = triangle.transform.r();
+        if (r != null) {
+          dimension.updateLabel(r);
+        }
       }
     };
     triangle.dimensionList.forEach((dim) => {
@@ -345,6 +364,13 @@ export default function makeTriangle(
         }
       }
     });
+    triangle.updateDimensions();
+  };
+  triangle.hideDimensions = () => {
+    triangle.dimensionList.forEach((dim) => {
+      const element = triangle[`_dimension${dim[0]}${dim[1]}`];
+      element.hide();
+    });
   };
 
   triangle.showAngles = (includeLabels: boolean = false) => {
@@ -356,6 +382,13 @@ export default function makeTriangle(
           element._label.hide();
         }
       }
+    });
+  };
+
+  triangle.hideAngles = () => {
+    const elements = [triangle._angle1, triangle._angle2, triangle._angle3];
+    elements.forEach((element) => {
+      element.hide();
     });
   };
 
@@ -439,7 +472,35 @@ export default function makeTriangle(
     }
   };
 
-  triangle.setTransformCallback = triangle.updateAngles.bind(triangle);
+  triangle.setTriangleCollectionScaleTo = (newScale: Point) => {
+    const s = triangle.transform.s();
+    if (s != null) {
+      const delta = new Point(newScale.x / s.x, newScale.y / s.y);
+      const newTransform = new Transform().scale(delta);
+      triangle.transform.updateScale(newScale);
+      triangle.updatePoints(
+        triangle.p1.transformBy(newTransform.m()),
+        triangle.p2.transformBy(newTransform.m()),
+        triangle.p3.transformBy(newTransform.m()),
+      );
+    }
+  };
+
+  triangle.update = () => {
+    triangle.updateAngles();
+    triangle.updateDimensions();
+  };
+
+  triangle.flip = (x: number = -1, y: number = 1) => {
+    const flipTransform = new Transform().scale(x, y);
+    this.updatePoints(
+      p1.transformBy(flipTransform.m()),
+      p2.transformBy(flipTransform.m()),
+      p3.transformBy(flipTransform.m()),
+    );
+  };
+
+  triangle.setTransformCallback = triangle.update.bind(triangle);
   triangle.updatePoints(p1, p2, p3);
   return triangle;
 }

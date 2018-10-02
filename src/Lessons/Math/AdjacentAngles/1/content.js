@@ -45,7 +45,7 @@ class Content extends LessonContent {
           [adjacent._lines._angleB, 'b', colors.angleB],
         ]);
         adjacent._eqn.hideAll();
-        diag._unitsSelector.hide();
+        diag._unitsSelector.hideAll();
       },
       transitionFromAny: (done) => {
         adjacent.moveToFuturePositions(null, done, 2);

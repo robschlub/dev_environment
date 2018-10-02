@@ -1,12 +1,20 @@
 import {
   round, decelerate, easeinout, clipMag, clipValue, randInt, rand,
-  randElement, removeRandElement,
+  randElement, removeRandElement, randElements, easein, easeout,
+  sinusoid, roundNum, linear,
 } from './mathtools';
 
 describe('Math tools testing', () => {
+  test('Round Num default precision', () => {
+    expect(roundNum(10.123456)).toBe(10.12346);
+  });
   // Rounding a value
   test('Round a value that doesn\'t need rounding', () => {
     expect(round(10.0)).toEqual(10.0);
+  });
+
+  test('Round a -0', () => {
+    expect(round(-0)).toEqual(0);
   });
 
   test('Round a value up to nearest whole number', () => {
@@ -30,6 +38,14 @@ describe('Math tools testing', () => {
     expect(round([0.2])).toEqual([0.2]);
   });
   describe('decelerate', () => {
+    test('zero case', () => {
+      const r = decelerate(1, 0, 1, 1, 0.1);
+      expect(r).toEqual({ v: 0, p: 1 });
+    });
+    test('null cases', () => {
+      const r = decelerate(0, 1, null, 1, null);
+      expect(r).toEqual({ v: 1, p: 1 });
+    });
     test('initial: 0m, 10m/s - dec 1m/s/s for 1s', () => {
       const p1 = 0;           // m
       const v1 = 10;          // m/s
@@ -126,20 +142,46 @@ describe('Math tools testing', () => {
     });
   });
   describe('easeinout', () => {
+    test('0', () => { expect(easeinout(0)).toBe(0); });
+    test('1', () => { expect(easeinout(1)).toBe(1); });
+    test('0.5', () => { expect(easeinout(0.5)).toBe(0.5); });
+    test('0.25', () => { expect(easeinout(0.25)).toBe(0.1); });
+    test('0.75', () => { expect(easeinout(0.75)).toBe(0.9); });
+  });
+  describe('easein', () => {
+    test('0', () => { expect(easein(0)).toBe(0); });
+    test('1', () => { expect(easein(1)).toBe(1); });
+    test('0.5', () => { expect(round(easein(0.5), 2)).toBe(0.29); });
+    test('0.25', () => { expect(round(easein(0.25), 2)).toBe(0.09); });
+    test('0.75', () => { expect(round(easein(0.75), 2)).toBe(0.61); });
+  });
+  describe('easeout', () => {
+    test('0', () => { expect(easeout(0)).toBe(0); });
+    test('1', () => { expect(easeout(1)).toBe(1); });
+    test('0.5', () => { expect(round(easeout(0.5), 2)).toBe(0.71); });
+    test('0.25', () => { expect(round(easeout(0.25), 2)).toBe(0.39); });
+    test('0.75', () => { expect(round(easeout(0.75), 2)).toBe(0.91); });
+  });
+  describe('sinusoid', () => {
     test('0', () => {
-      expect(easeinout(0)).toBe(0);
-    });
-    test('1', () => {
-      expect(easeinout(1)).toBe(1);
+      expect(sinusoid(0, 1, 0, 0, 0)).toBe(0);
     });
     test('0.5', () => {
-      expect(easeinout(0.5)).toBe(0.5);
+      expect(round(sinusoid(0.5, 2.1, -1, 0.5, -0.2), 2)).toBe(-0.94);
     });
-    test('0.25', () => {
-      expect(easeinout(0.25)).toBe(0.1);
+    test('defaults', () => {
+      expect(round(sinusoid(), 2)).toBe(0);
     });
-    test('0.75', () => {
-      expect(easeinout(0.75)).toBe(0.9);
+  });
+  describe('linear', () => {
+    test('default', () => {
+      expect(linear(0.5)).toBe(0.5);
+    });
+    test('0.5', () => {
+      expect(round(sinusoid(0.5, 2.1, -1, 0.5, -0.2), 2)).toBe(-0.94);
+    });
+    test('defaults', () => {
+      expect(round(sinusoid(), 2)).toBe(0);
     });
   });
   describe('Clip Value', () => {
@@ -157,6 +199,9 @@ describe('Math tools testing', () => {
       expect(clipValue(-1, -0.5, 1.5)).toBe(-0.5);
       expect(clipValue(1, -1, 0)).toBe(0);
       expect(clipValue(-1, 0, 1)).toBe(0);
+    });
+    test('Null case', () => {
+      expect(clipValue(1, null, null)).toBe(1);
     });
   });
   describe('Clip Mag', () => {
@@ -201,6 +246,9 @@ describe('Math tools testing', () => {
     test('On min clipping negative', () => {
       expect(clipMag(-0.1, 0.1, 2)).toBe(0);
       expect(clipMag(-0.1, -0.1, -2)).toBe(0);
+    });
+    test('On zeroT and max is null', () => {
+      expect(clipMag(1, null, null)).toBe(1);
     });
   });
   describe('Random Int', () => {
@@ -286,6 +334,41 @@ describe('Math tools testing', () => {
         if (inputArray.indexOf(result) !== -1) {
           expected = false;
         }
+      }
+      expect(expected).toBe(true);
+    });
+  });
+  describe('Random Elements', () => {
+    test('Get Element', () => {
+      let expected = true;
+      const inputArray = [1, 2, 3, 4, 5, 6, 7];
+      let max = 1;
+      let min = 8;
+      for (let i = 0; i < 200; i += 1) {
+        const result = randElements(4, inputArray);
+        if (result.length !== 4) {
+          expected = false;
+        }
+        if (inputArray.length !== 7) {
+          expected = false;
+        }
+        const check = [];
+        for (let j = 0; j < result.length; j += 1) {
+          if (check.indexOf(result[j]) !== -1) {
+            expected = false;
+          }
+          check.push(result[j]);
+        }
+        const resultMax = Math.max(...result);
+        const resultMin = Math.min(...result);
+        min = resultMin < min ? resultMin : min;
+        max = resultMax > max ? resultMax : max;
+      }
+      if (max !== 7) {
+        expected = false;
+      }
+      if (min !== 1) {
+        expected = false;
       }
       expect(expected).toBe(true);
     });
