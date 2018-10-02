@@ -18,7 +18,7 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 // } from '../../../../LessonsCommon/tools/triangle';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
-// import { makeLine } from '../../../../LessonsCommon/tools/line';
+import { makeLine } from '../../../../LessonsCommon/tools/line';
 // import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 // import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
@@ -27,11 +27,14 @@ export default class QuadCollection extends CommonDiagramCollection {
   _quad1: DiagramElementPrimative;
   _quad2: DiagramElementPrimative;
   _quad3: DiagramElementPrimative;
+  _line1: TypeLine;
+  _line2: TypeLine;
+  _line3: TypeLine;
 
   addQuads() {
     const makeQuad = points => this.diagram.shapes.polyLine(
       points, true, this.layout.lineWidth, this.layout.colors.lines,
-      'onSharpAnglesOnly', new Transform('quad').scale(1, 1).translate(0, 0),
+      'none', new Transform('quad').scale(1, 1).translate(0, 0),
     );
     console.log(this.layout.quads.quad1)
     const quad1 = makeQuad(this.layout.quads.quad1.points);
@@ -47,6 +50,29 @@ export default class QuadCollection extends CommonDiagramCollection {
     this.add('quad3', quad3);
   }
 
+  addLines() {
+    const makeL = (p1, p2) => {
+      const l = makeLine(
+        this.diagram, 'end', 1, this.layout.lineWidth / 2,
+        this.layout.colors.lines,
+      );
+      l.setEndPoints(p1, p2);
+      return l;
+    };
+    const lay = this.layout.quads;
+    const line1 = makeL(lay.quad1.points[0], lay.quad1.points[2])
+    const line2 = makeL(lay.quad2.points[0], lay.quad2.points[2])
+    const line3 = makeL(lay.quad3.points[0], lay.quad3.points[2])
+
+    line1.setPosition(this.layout.quads.quad1.position.add(lay.quad1.points[0]));
+    line2.setPosition(this.layout.quads.quad2.position.add(lay.quad2.points[0]));
+    line3.setPosition(this.layout.quads.quad3.position.add(lay.quad3.points[0]));
+
+
+    this.add('line1', line1);
+    this.add('line2', line2);
+    this.add('line3', line3);
+  }
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -54,5 +80,6 @@ export default class QuadCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addQuads();
+    this.addLines();
   }
 }

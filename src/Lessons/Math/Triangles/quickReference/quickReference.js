@@ -38,7 +38,7 @@ export default class QRTriangle extends PopupBoxCollection {
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.85);
+    this.setDiagramSize(2.5, 1.5);
     super.show();
     const tri = this._tri;
     tri.showAll();

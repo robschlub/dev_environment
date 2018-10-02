@@ -28,10 +28,10 @@ export default function commonLessonLayout() {
     },
     quad2: {
       points: [
-        new Point(-0.6, 0.4),
         new Point(0.2, -0.6),
         new Point(0.6, 0.7),
         new Point(0.1, 0.1),
+        new Point(-0.6, 0.4),
       ],
       position: new Point(0, -0.2),
     },

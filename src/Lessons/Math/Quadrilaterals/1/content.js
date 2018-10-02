@@ -9,7 +9,7 @@ import {
   click, centerV, highlight, clickWord,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
-// import Definition from '../../../../LessonsCommon/tools/definition';
+import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import details from '../details';
@@ -33,15 +33,40 @@ class Content extends LessonContent {
     const qr = diag._qr;
     let common = {};
 
-    this.addSection({
-      title: 'Introduction',
+    common = {
+      showOnly: [
+        quad, quad._quad1, quad._quad2, quad._quad3,
+      ],
+    }
+    this.addSection(common, {
+      title: 'Quadrilateral',
       setContent: `
         <p>
-          A |quadrilateral| is a shape with four straight sides and four angles.
+          A |quadrilateral| is a shape with |four sides| and |four angles|.
+        </p>
+        ${new Definition('Quadrelateral', 'Latin', ['quadri', 'four', 'latus, later', 'side']).html('id_lesson__congruent_angles_definition')}
+      `,
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          The four side lengths and four angles are |properties| of a quadrilateral. 
         </p>
       `,
-      show: [
-        quad,
+    });
+
+    this.addSection(common, {
+      setContent: `
+        <p>
+          Similar to a |triangle|, all the angles in a quadrilateral are related to each other as they will always add up to the same angle.
+        </p>
+      `,
+      modifiers: {
+        triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
+      },
+      showOnly: [
+        quad, quad._quad1, quad._quad2, quad._quad3, qr
       ],
     });
 
