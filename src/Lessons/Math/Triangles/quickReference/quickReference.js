@@ -33,7 +33,7 @@ export default class QRTriangle extends PopupBoxCollection {
     };
 
     this.setTitle('Triangle');
-    this.setDescription('A |Triangle| is a shape with |three sides|, and |three angles|. All the angles within a triangle add up to 180º.', modifiers);
+    this.setDescription('A |Triangle| is a shape with |three sides|, and |three angles|. All the angles within a triangle add up to |180º| (|π radians|).', modifiers);
     this.setLink(details.details.uid);
   }
 

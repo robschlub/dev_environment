@@ -34,8 +34,9 @@ class Content extends LessonContent {
     let common = {};
 
     common = {
+      setContent: '',
       showOnly: [
-        quad, quad._quad1, quad._quad2, quad._quad3,
+        quad, quad._quad1, quad._quad2, quad._quad3, qr,
       ],
     }
     this.addSection(common, {
@@ -44,7 +45,7 @@ class Content extends LessonContent {
         <p>
           A |quadrilateral| is a shape with |four sides| and |four angles|.
         </p>
-        ${new Definition('Quadrelateral', 'Latin', ['quadri', 'four', 'latus, later', 'side']).html('id_lesson__congruent_angles_definition')}
+        ${new Definition('Quadrilateral', 'Latin', ['quadri', 'four', 'latus, later', 'side']).html('id_lesson__congruent_angles_definition')}
       `,
     });
 
@@ -57,18 +58,53 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
+      title: 'Total Angle',
       setContent: `
         <p>
-          Similar to a |triangle|, all the angles in a quadrilateral are related to each other as they will always add up to the same angle.
+          Similar to a |triangle|, all the angles in a quadrilateral are related to each other and will |always add up to the same angle|.
         </p>
       `,
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
       },
-      showOnly: [
-        quad, quad._quad1, quad._quad2, quad._quad3, qr
-      ],
     });
+
+    common.setContent = `
+      <p>
+        We can show this by drawing a line between opposite corners of a quadrilateral.
+      </p>
+    `;
+    this.addSection(common);
+
+    common.showOnly = [qr];
+    common.show = [quad];
+    this.addSection(common);
+
+    this.addSection(common, {
+      setContent: `<p>
+        A quadrilateral can always be split into two triangles.
+      </p>`,
+    })
+
+    this.addSection(common, {
+      setContent: `<p>
+        As each |triangle|, has a total angle of 180º, the the total angle of a quadrilateral must be two times that, or |360º|.
+      </p>`,
+      modifiers: {
+        triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
+      },
+    })
+
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          So to summarize, a |quadrilateral| is a shape with |four sides| and |four angles|.
+        </p>
+        <p>
+          A quadrilateral's angles will |always add up to 360º| (|2π radians|).
+        </p>
+      `),
+    })
 
     // common = {
     //   setContent: `
