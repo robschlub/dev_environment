@@ -6,21 +6,10 @@ import {
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../js/diagram/Element';
-// import {
-//   removeRandElement, rand,
-// } from '../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-// import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
-
-// import makeTriangle from '../../../../LessonsCommon/tools/triangle';
-// import type {
-//   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
-// } from '../../../../LessonsCommon/tools/triangle';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 
 import { makeLine } from '../../../../LessonsCommon/tools/line';
-// import { makeAngle } from '../../../../LessonsCommon/tools/angle';
-// import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
 export default class QuadCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;

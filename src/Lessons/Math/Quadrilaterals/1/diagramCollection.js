@@ -10,11 +10,13 @@ import LessonDiagram from './diagram';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 import QuickReferenceCollection from '../common/diagramCollectionQuickReference';
 import QuadCollection from '../common/diagramCollectionQuad';
+import RectCollection from '../common/diagramCollectionRect';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _triangle: TriangleCollection;
   _qr: QuickReferenceCollection;
   _quad: QuadCollection;
+  _rect: RectCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -24,6 +26,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     super(diagram, layout, transform);
 
     this.add('quad', new QuadCollection(diagram, this.layout));
+    this.add('rect', new RectCollection(diagram, this.layout));
     this.add('qr', new QuickReferenceCollection(diagram, this.layout));
     this._qr.hideAll();
     this.hasTouchableElements = true;
