@@ -5,17 +5,14 @@ import {
 } from '../../../../js/diagram/tools/g2';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import QRTriangle from '../../Triangles/quickReference/quickReference';
-import { QRAsa, QRSss, QRAas } from '../quickReference/quickReference';
-// import { QRAlternateAngles } from '../../RelatedAngles/quickReference/quickReference';
-// import { QRSupplementaryAngles } from '../../AdjacentAngles/quickReference/quickReference';
+import { QRAsa } from '../../CongruentTriangles/quickReference/quickReference';
+import { QRComplementaryAngles } from '../../AdjacentAngles/quickReference/quickReference';
 
 export default class QuickReferenceCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _tri: QRTriangle;
   _asa: QRAsa;
-  _sss: QRSss;
-  _aas: QRAas;
-  // _alternateAngles: QRAlternateAngles;
+  _comp: QRComplementaryAngles;
 
   constructor(
     diagram: LessonDiagram,
@@ -25,9 +22,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
     super(diagram, layout, transform);
     this.add('tri', new QRTriangle(this.diagram));
     this.add('asa', new QRAsa(this.diagram));
-    // this.add('sss', diagram.shapes.collection());
-    this.add('sss', new QRSss(this.diagram));
-    this.add('aas', new QRAas(this.diagram));
+    this.add('comp', new QRComplementaryAngles(this.diagram));
     this.hasTouchableElements = true;
   }
 }

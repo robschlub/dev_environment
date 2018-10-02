@@ -10,7 +10,7 @@ import {
 } from '../../../../js/diagram/Element';
 // import TriangleCollection from '../common/diagramCollectionTriangle';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
-import TotalAngleTriangleCollection from '../common/diagramCollectionTriangles';
+// import TotalAngleTriangleCollection from '../common/diagramCollectionTriangles';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _triangle: TotalAngleTriangleCollection;
@@ -37,7 +37,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const layout = lessonLayout();
     super(diagram, layout, transform);
 
-    this.add('triangle', new TotalAngleTriangleCollection(diagram, this.layout));
+    // this.add('triangle', new TotalAngleTriangleCollection(diagram, this.layout));
     this.add('label', this.makeLabel());
   }
 

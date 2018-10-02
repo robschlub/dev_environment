@@ -98,7 +98,7 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
-    'Quads, Rectangles and Squares',
+    'Quadrilaterals',
     '/Lessons/Math/Quadrilaterals',
     'quadrilateral',
     [
