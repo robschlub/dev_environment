@@ -429,6 +429,30 @@ class StrikeOut extends Elements {
 }
 
 
+class AnnotationInformation {
+  annotation: Elements;
+  xPosition: 'left' | 'right' | 'center' | number;
+  yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number;
+  xAlign: 'left' | 'right' | 'center' | number;
+  yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number;
+  annotationScale: number;
+
+  constructor(
+    annotation: Elements,
+    xPosition: 'left' | 'right' | 'center' = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
+    xAlign: 'left' | 'right' | 'center' = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
+    annotationScale: number = 0.5,
+  ) {
+    this.annotation = annotation;
+    this.xPosition = xPosition;
+    this.yPosition = yPosition;
+    this.xAlign = xAlign;
+    this.yAlign = yAlign;
+    this.annotationScale = annotationScale;
+  }
+}
 // Create an annotation to a set of Elements
 // x/yPosition: annotation location relative to mainContent
 // x/yAlign: annotation alignment relative to its location
