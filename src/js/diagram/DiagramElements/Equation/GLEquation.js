@@ -1,6 +1,6 @@
 // @flow
 import {
-  Point, Rect, Transform,
+  Point, Rect, Transform, Line,
 } from '../../tools/g2';
 import { roundNum } from '../../tools/mathtools';
 import { RGBToArray, duplicateFromTo } from '../../../tools/tools';
@@ -349,62 +349,43 @@ class StrikeOut extends Elements {
     const scale = incomingScale * this.scaleModifier;
     this.location = location._dup();
     this.mainContent.calcSize(location, scale);
-
-    this.width = Math.max(this.mainContent.width, this.mainContent.width);
-
-    // const xNumerator = (this.width - this.numerator.width) / 2;
-    // const xDenominator = (this.width - this.denominator.width) / 2;
-    // this.vSpaceNum = scale * 0.05;
-    // this.vSpaceDenom = scale * 0.02;
-    // this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
     this.lineWidth = scale * 0.02;
+    const lineExtension = this.lineWidth * 2;
+    const bottomLeft = new Point(
+      location.x,
+      location.y - this.mainContent.descent,
+    );
+    const topRight = new Point(
+      location.x + this.mainContent.width,
+      location.y + this.mainContent.ascent * 0.8,
+    );
+    const strikeLine = new Line(bottomLeft, topRight);
+    const strikeBottomLeft = new Line(
+      bottomLeft, lineExtension,
+      strikeLine.angle() + Math.PI,
+    ).getPoint(2);
+    // const strikeTopRight = (new Line(topRight, lineExtension, strikeLine.ang)).p2;
+    const strikeLength = strikeLine.length() + lineExtension * 2;
 
-    // const yNumerator = this.numerator.descent
-    //                     + this.vSpaceNum + this.lineVAboveBaseline;
-
-    // const yDenominator = this.denominator.ascent
-    //                      + this.vSpaceDenom - this.lineVAboveBaseline;
-
-    // const yScale = 1;
-
-    const loc = this.location;
-    // this.numerator.calcSize(
-    //   new Point(loc.x + xNumerator, loc.y + yScale * yNumerator),
-    //   scale,
-    // );
-
-    // this.denominator.calcSize(
-    //   new Point(loc.x + xDenominator, loc.y - yScale * yDenominator),
-    //   scale,
-    // );
-
-    this.descent = this.mainContent.descent;
+    // this.width = strikeTopRight.x - strikeBottomLeft.x;
+    this.location.x = strikeBottomLeft.x;
+    this.width = this.mainContent.width;
     this.ascent = this.mainContent.ascent;
+    this.descent = this.mainContent.descent;
+    this.lineWidth = scale * 0.02;
 
     const { strike } = this;
     if (strike) {
-      const bottomLeft = new Point(loc.x, loc.y - this.descent);
-      const topRight = new Point(loc.x + this.width, loc.y + this.ascent);
-      const length = topRight.sub(bottomLeft).distance();
-      const angle = topRight.sub(bottomLeft).toPolar().angle;
-      this.strikePosition = bottomLeft._dup();
-      this.strikeScale = new Point(length, this.lineWidth)
-      this.strikeRotation = angle;
-      console.log(angle)
+      this.strikePosition = strikeBottomLeft._dup();
+      this.strikeScale = new Point(strikeLength, this.lineWidth);
+      this.strikeRotation = strikeLine.angle();
       strike.transform.updateScale(this.strikeScale);
       strike.transform.updateTranslation(this.strikePosition);
       strike.transform.updateRotation(this.strikeRotation);
-      // this.vinculumPosition = new Point(
-      //   this.location.x,
-      //   this.location.y + this.lineVAboveBaseline,
-      // );
-      // this.vinculumScale = new Point(this.width, this.lineWidth);
-      // vinculum.transform.updateScale(this.vinculumScale);
-      // vinculum.transform.updateTranslation(this.vinculumPosition);
-
       strike.show();
     }
   }
+
   getAllElements() {
     let elements = [];
     if (this.mainContent) {
