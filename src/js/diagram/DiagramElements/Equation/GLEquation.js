@@ -354,7 +354,7 @@ class StrikeOut extends Elements {
     this.location = location._dup();
     this.mainContent.calcSize(location, scale);
     this.lineWidth = scale * 0.02;
-    const lineExtension = this.lineWidth * 2;
+    const lineExtension = this.lineWidth * 10;
     const bottomLeft = new Point(
       location.x,
       location.y - this.mainContent.descent,
@@ -378,7 +378,12 @@ class StrikeOut extends Elements {
       this.width = strikeTopRight.x - strikeBottomLeft.x;
       this.ascent = Math.max(this.mainContent.ascent, topRight.y - location.y);
       this.descent = Math.max(this.mainContent.descent, bottomLeft.y - location.y);
-      this.location.x = bottomLeft.x;
+      const xOffset = this.mainContent.location.x - strikeBottomLeft.x;
+      console.log(xOffset);
+      this.mainContent.offsetLocation(new Point(xOffset, 0));
+      strikeBottomLeft.x += xOffset;
+      // this.location.x += xOffset;
+      // this.location.x = bottomLeft.x;
     } else {
       // this.location.x = strikeBottomLeft.x;
       this.width = this.mainContent.width;
@@ -1828,10 +1833,12 @@ export class Equation {
   strike(
     content: TypeEquationInput,
     strike: string | DiagramElementPrimative | DiagramElementCollection,
+    strikeInSize: boolean = false,
   ) {
     return new StrikeOut(
       contentToElement(this.collection, content),
       getDiagramElement(this.collection, strike),
+      strikeInSize,
     );
   }
 
@@ -1843,7 +1850,7 @@ export class Equation {
     xAlign: 'left' | 'right' | 'center' = 'left',
     yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
     annotationScale: number = 0.5,
-    annotationInSize: boolean = true,
+    annotationInSize: boolean = false,
   ) {
     return new Annotation(
       contentToElement(this.collection, content),
