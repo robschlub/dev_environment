@@ -354,7 +354,7 @@ class StrikeOut extends Elements {
     this.location = location._dup();
     this.mainContent.calcSize(location, scale);
     this.lineWidth = scale * 0.02;
-    const lineExtension = this.lineWidth * 10;
+    const lineExtension = this.lineWidth * 2;
     const bottomLeft = new Point(
       location.x,
       location.y - this.mainContent.descent,
@@ -428,6 +428,21 @@ class StrikeOut extends Elements {
   }
 }
 
+
+// Create an annotation to a set of Elements
+// x/yPosition: annotation location relative to mainContent
+// x/yAlign: annotation alignment relative to its location
+// Position and Align can be words or numbers where:
+//    left: 0
+//    right: 1
+//    center: 0.5
+//    bottom: 0
+//    top: 1
+//    middle: 0.5
+//    baseline: descent / height
+//    numbers can be anything (not just between 0 and 1)
+//      For example, xPosition of -1 would position the annotation
+//      one mainContent width to the left of the mainContent left point
 class Annotation extends Elements {
   mainContent: Elements;
   annotation: Elements;
@@ -501,27 +516,14 @@ class Annotation extends Elements {
     let xOffset = 0;
     let yOffset = this.annotation.descent / this.annotation.height;
     
-    if (this.xAlign === 'right') {
-      xOffset = 1;
-      // annotationOffset.x -= this.annotation.width;
-    } else if (this.xAlign === 'middle') {
-      xOffset = 0.5;
-      // annotationOffset.x -= this.annotation.width / 2;
-    } else if (typeof this.xAlign === 'number') {
-      xOffset = this.xAlign;
-    }
-    if (this.yAlign === 'bottom') {
-      // annotationOffset.y += this.annotation.descent;
-      yOffset = 0;
-    } else if (this.yAlign === 'top') {
-      yOffset = 1;
-      // annotationOffset.y -= this.annotation.ascent;
-    } else if (this.yAlign === 'middle') {
-      yOffset = 0.5;
-      // annotationOffset.y += this.annotation.descent - this.annotation.height / 2;
-    } else if (typeof this.yAlign === 'number') {
-      yOffset = this.yAlign;
-    }
+    if (this.xAlign === 'right') { xOffset = 1; }
+    else if (this.xAlign === 'middle') { xOffset = 0.5; }
+    else if (typeof this.xAlign === 'number') { xOffset = this.xAlign; }
+
+    if (this.yAlign === 'bottom') { yOffset = 0; }
+    else if (this.yAlign === 'top') { yOffset = 1; }
+    else if (this.yAlign === 'middle') { yOffset = 0.5; }
+    else if (typeof this.yAlign === 'number') { yOffset = this.yAlign; }
 
     const annotationOffset = new Point(
       -xOffset * this.annotation.width,
@@ -567,48 +569,6 @@ class Annotation extends Elements {
       this.descent = this.mainContent.descent;
     }
     this.height = this.descent + this.ascent;
-    // const lineExtension = this.lineWidth * 2;
-    // const bottomLeft = new Point(
-    //   location.x,
-    //   location.y - this.mainContent.descent,
-    // );
-    // const topRight = new Point(
-    //   location.x + this.mainContent.width,
-    //   location.y + this.mainContent.ascent * 0.8,
-    // );
-    // const strikeLine = new Line(bottomLeft, topRight);
-    // const strikeBottomLeft = new Line(
-    //   bottomLeft, lineExtension,
-    //   strikeLine.angle() + Math.PI,
-    // ).getPoint(2);
-
-    // const strikeLength = strikeLine.length() + lineExtension * 2;
-    // if (this.strikeInSize) {
-    //   const strikeTopRight = new Line(
-    //     topRight, lineExtension,
-    //     strikeLine.angle(),
-    //   ).getPoint(2);
-    //   this.width = strikeTopRight.x - strikeBottomLeft.x;
-    //   this.ascent = Math.max(this.mainContent.ascent, topRight.y - location.y);
-    //   this.descent = Math.max(this.mainContent.descent, bottomLeft.y - location.y);
-    //   this.location.x = bottomLeft.x;
-    // } else {
-      // this.location.x = strikeBottomLeft.x;
-      // this.width = this.mainContent.width;
-      // this.ascent = this.mainContent.ascent;
-      // this.descent = this.mainContent.descent;
-    // }
-
-    // const { strike } = this;
-    // if (strike) {
-    //   this.strikePosition = strikeBottomLeft._dup();
-    //   this.strikeScale = new Point(strikeLength, this.lineWidth);
-    //   this.strikeRotation = strikeLine.angle();
-    //   strike.transform.updateScale(this.strikeScale);
-    //   strike.transform.updateTranslation(this.strikePosition);
-    //   strike.transform.updateRotation(this.strikeRotation);
-    //   strike.show();
-    // }
   }
 
   getAllElements() {
