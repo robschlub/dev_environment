@@ -88,31 +88,47 @@ export default class RectCollection extends CommonDiagramCollection {
 
   addEqn() {
     const eqn = this.diagram.equation.makeEqn();
+    const strikeColor = this.layout.colors.diagram.warning;
     eqn.createElements(
       {
         a: 'a',
-        a_1: 'a',
         b: 'b',
+        _90: '90º',
+        _180: '180º',
+        plus1: '  + ',
+        plus2: '  + ',
+        equals: ' = ',
+
+        m90l: '- 90º',
+        m90r: '- 90º',
+
+        strike1: this.diagram.equation.strike(strikeColor),
+        strike2: this.diagram.equation.strike(strikeColor),
+
+        calc0: '0',
+        calc90: '90',
+
+        a_1: 'a',
         b_1: 'b',
-        test: 'test',
-        n: 'n',
-        v: this.diagram.equation.vinculum(),
+        // test: 'test',
+        // n: 'n',
+        // v: this.diagram.equation.vinculum(),
         _90: '90º',
         _90_1: '90º',
         _90_2: '90º',
         _90_3: '90º',
         _180: '180º',
         _180_1: '180º',
-        equals: ' = ',
+        
         m: ' \u2212 ',
         m1: ' \u2212 ',
         p: ' + ',
         p1: ' + ',
         p2: ' + ',
-        s: this.diagram.equation.strike(this.layout.colors.diagram.warning),
-        s1: this.diagram.equation.strike(this.layout.colors.diagram.warning),
-        s2: this.diagram.equation.strike(this.layout.colors.diagram.warning),
-        s3: this.diagram.equation.strike(),
+        // s: 
+        // s1: this.diagram.equation.strike(this.layout.colors.diagram.warning),
+        // s2: this.diagram.equation.strike(this.layout.colors.diagram.warning),
+        // s3: this.diagram.equation.strike(),
       },
       this.layout.colors.diagram.text.base,
     );
@@ -122,23 +138,58 @@ export default class RectCollection extends CommonDiagramCollection {
     eqn.formAlignment.vAlign = 'middle';
     eqn.formAlignment.scale = 1.0;
 
-    eqn.addForm('1', ['a', 'p', 'b', 'p1', '_90', 'equals', '_180']);
-    eqn.addForm('2', [eqn.strike('a', 's'), eqn.strike(['p', 'b'], 's1'), 'p1', '_90', 'equals', '_180']);
-    eqn.addForm('3', [
-      eqn.annotation(
-        eqn.strike('a', 's', true),
-        eqn.frac('test', 'n', 'v'),
-        1, 0,
-        0, -0.5,
-        0.5, true,
-      ),
-      '_180_1',
-      eqn.strike(['p', 'b'], 's1', true),
-      '_90_3', 'p1', '_90', 'equals', '_180',
+    eqn.addForm('1', ['a', 'plus1', 'b', 'plus2', '_90', 'equals', '_180']);
+
+    eqn.addForm('2', [
+      'a', 'plus1', 'b', 'plus2',
+      eqn.annotation('_90', 'm90l', 'center', -0.4, 'center', 'top'),
+      'equals',
+      eqn.annotation('_180', 'm90r', 'center', -0.4, 'center', 'top'),
     ]);
-    eqn.addForm('4', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1', '_90',
-      'equals', '_180', 'm1', '_90_2']);
-    eqn.addForm('5', ['a', 'p', 'b', 'equals', '_90_3']);
+
+    eqn.addForm('3', [
+      'a', 'plus1', 'b', 'plus2',
+      eqn.annotation(
+        eqn.strike('_90', 'strike1'), 'm90l',
+        'center', -0.4, 'center', 'top',
+      ),
+      'equals',
+      eqn.annotation(
+        eqn.strike('_180', 'strike2'), 'm90r',
+        'center', -0.4, 'center', 'top',
+      ),
+    ]);
+
+
+    // eqn.addForm('3', [
+    //   'a', 'plus1', 'b', 'plus2',
+    //   eqn.annotation(
+    //     eqn.strike('_90', 'strike1'), 'm90l',
+    //     'center', -0.4, 'center', 'top',
+    //   ),
+    //   'equals',
+    //   eqn.annotation(
+    //     eqn.strike('_180', 'strike2'), 'm90r',
+    //     'center', -0.4, 'center', 'top',
+    //   ),
+    // ]);
+
+    // eqn.addForm('2', [eqn.strike('a', 's'), eqn.strike(['p', 'b'], 's1'), 'p1', '_90', 'equals', '_180']);
+    // eqn.addForm('3', [
+    //   eqn.annotation(
+    //     eqn.strike('a', 's', true),
+    //     eqn.frac('test', 'n', 'v'),
+    //     1, 0,
+    //     0, -0.5,
+    //     0.5, true,
+    //   ),
+    //   '_180_1',
+    //   eqn.strike(['p', 'b'], 's1', true),
+    //   '_90_3', 'p1', '_90', 'equals', '_180',
+    // ]);
+    // eqn.addForm('4', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1', '_90',
+    //   'equals', '_180', 'm1', '_90_2']);
+    // eqn.addForm('5', ['a', 'p', 'b', 'equals', '_90_3']);
     eqn.setFormSeries(['1', '2', '3']);
     const nextForm = () => {
       eqn.nextForm();

@@ -517,7 +517,7 @@ class Annotation extends Elements {
     let yOffset = this.annotation.descent / this.annotation.height;
     
     if (this.xAlign === 'right') { xOffset = 1; }
-    else if (this.xAlign === 'middle') { xOffset = 0.5; }
+    else if (this.xAlign === 'center') { xOffset = 0.5; }
     else if (typeof this.xAlign === 'number') { xOffset = this.xAlign; }
 
     if (this.yAlign === 'bottom') { yOffset = 0; }
