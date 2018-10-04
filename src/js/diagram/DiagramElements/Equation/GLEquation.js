@@ -376,16 +376,12 @@ class StrikeOut extends Elements {
         strikeLine.angle(),
       ).getPoint(2);
       this.width = strikeTopRight.x - strikeBottomLeft.x;
-      this.ascent = Math.max(this.mainContent.ascent, topRight.y - location.y);
-      this.descent = Math.max(this.mainContent.descent, bottomLeft.y - location.y);
+      this.ascent = Math.max(this.mainContent.ascent, strikeTopRight.y - location.y);
+      this.descent = Math.max(this.mainContent.descent, location.y - strikeBottomLeft.y);
       const xOffset = this.mainContent.location.x - strikeBottomLeft.x;
-      console.log(xOffset);
       this.mainContent.offsetLocation(new Point(xOffset, 0));
       strikeBottomLeft.x += xOffset;
-      // this.location.x += xOffset;
-      // this.location.x = bottomLeft.x;
     } else {
-      // this.location.x = strikeBottomLeft.x;
       this.width = this.mainContent.width;
       this.ascent = this.mainContent.ascent;
       this.descent = this.mainContent.descent;
@@ -491,6 +487,7 @@ class Annotation extends Elements {
     }
 
     if (this.yPosition === 'bottom') {
+      console.log("bottom", this.mainContent.descent)
       annotationLoc.y -= this.mainContent.descent;
     } else if (this.yPosition === 'top') {
       annotationLoc.y += this.mainContent.ascent;

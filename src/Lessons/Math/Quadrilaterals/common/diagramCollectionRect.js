@@ -124,19 +124,21 @@ export default class RectCollection extends CommonDiagramCollection {
 
     eqn.addForm('1', ['a', 'p', 'b', 'p1', '_90', 'equals', '_180']);
     eqn.addForm('2', [eqn.strike('a', 's'), eqn.strike(['p', 'b'], 's1'), 'p1', '_90', 'equals', '_180']);
-    eqn.addForm('2', [
+    eqn.addForm('3', [
       eqn.annotation(
         eqn.strike('a', 's', true),
         eqn.frac('test', 'n', 'v'),
-        'right', 'bottom', 'left', 'top', 0.5, true,
+        'right', 'bottom',
+        'left', 'top',
+        0.5, true,
       ),
       '_180_1',
       eqn.strike(['p', 'b'], 's1', true),
       '_90_3', 'p1', '_90', 'equals', '_180',
     ]);
-    eqn.addForm('3', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1', '_90',
+    eqn.addForm('4', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1', '_90',
       'equals', '_180', 'm1', '_90_2']);
-    eqn.addForm('4', ['a', 'p', 'b', 'equals', '_90_3']);
+    eqn.addForm('5', ['a', 'p', 'b', 'equals', '_90_3']);
     eqn.setFormSeries(['1', '2', '3']);
     const nextForm = () => {
       eqn.nextForm();
