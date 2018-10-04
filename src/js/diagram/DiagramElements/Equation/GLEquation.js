@@ -430,7 +430,7 @@ class StrikeOut extends Elements {
 
 
 class AnnotationInformation {
-  annotation: Elements;
+  content: Elements;
   xPosition: 'left' | 'right' | 'center' | number;
   yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number;
   xAlign: 'left' | 'right' | 'center' | number;
@@ -438,14 +438,14 @@ class AnnotationInformation {
   annotationScale: number;
 
   constructor(
-    annotation: Elements,
+    content: Elements,
     xPosition: 'left' | 'right' | 'center' = 'right',
     yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
     xAlign: 'left' | 'right' | 'center' = 'left',
     yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
     annotationScale: number = 0.5,
   ) {
-    this.annotation = annotation;
+    this.content = content;
     this.xPosition = xPosition;
     this.yPosition = yPosition;
     this.xAlign = xAlign;
@@ -469,7 +469,7 @@ class AnnotationInformation {
 //      one mainContent width to the left of the mainContent left point
 class Annotation extends Elements {
   mainContent: Elements;
-  annotation: Elements;
+  annotations: Array<AnnotationInformation>;
   xPosition: 'left' | 'right' | 'center' | number;
   yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number;
   xAlign: 'left' | 'right' | 'center' | number;
@@ -479,105 +479,123 @@ class Annotation extends Elements {
 
   constructor(
     mainContent: Elements,
-    annotation: Elements,
-    xPosition: 'left' | 'right' | 'center' = 'right',
+    annotationOrAnnotationArray: Elements | Array<AnnotationInformation>,
+    xPositionOrAnnotationInSize: 'left' | 'right' | 'center' | boolean = 'right',
     yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
     xAlign: 'left' | 'right' | 'center' = 'left',
     yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
     annotationScale: number = 0.5,
     annotationInSize: boolean = false,
   ) {
-    super([mainContent, annotation]);
+    if (Array.isArray(annotationOrAnnotationArray)) {
+      const annotationElements = [mainContent];
+      annotationOrAnnotationArray.forEach((annotationinfo) => {
+        annotationElements.push(annotationInfo.content);
+      });
+      super(annotationElements);
+    } else {
+      super([mainContent, annotationOrAnnotationArray]);
+    }
+    // super([mainContent, annotation]);
     this.mainContent = mainContent;
-    this.annotation = annotation;
-    this.xPosition = xPosition;
-    this.yPosition = yPosition;
-    this.xAlign = xAlign;
-    this.yAlign = yAlign;
-    this.annotationInSize = annotationInSize;
-    this.annotationScale = annotationScale;
+    this.annotations = [];
+    if (Array.isArray(annotationOrAnnotationArray)) {
+      this.annotations = annotationOrAnnotationArray;
+      this.annotationInSize = xPositionOrAnnotationInSize;
+    } else {
+      this.annotations = [new AnnotationInformation(
+        annotationOrAnnotationArray,
+        xPositionOrAnnotationInSize,
+        yPosition,
+        yAlign,
+        annotationScale,
+        )];
+      this.annotationInSize = annotationInSize;
+    }
   }
 
   _dup(namedCollection: Object) {
+    // const annotationsCopy = [];
+    const annotationsCopy = this.annotations.map(annotationInfo => new AnnotationInformation(
+      annotationInfo.content._dup(namedCollection),
+      annotationInfo.xPosition,
+      annotationInfo.yPosition,
+      annotationInfo.xAlign,
+      annotationInfo.yAlign,
+      annotationInfo.annotationScale,
+      annotationInfo.annotationInSize,
+    ));
     const annotationCopy = new Annotation(
       this.mainContent._dup(namedCollection),
-      this.annotation._dup(namedCollection),
-      this.xPosition,
-      this.yPosition,
-      this.xAlign,
-      this.yAlign,
-      this.annotationScale,
+      annotationsCopy,
       this.annotationInSize,
     );
-    duplicateFromTo(this, annotationCopy, ['mainContent', 'annotation']);
+    duplicateFromTo(this, annotationCopy, ['mainContent', 'annotations']);
     return annotationCopy;
   }
 
   calcSize(location: Point, incomingScale: number) {
     this.location = location._dup();
     this.mainContent.calcSize(location, incomingScale);
-    this.annotation.calcSize(location, incomingScale * this.annotationScale);
+    let minX = this.mainContent.location.x;
+    let minY = this.mainContent.location.y - this.mainContent.location.descent;
+    let maxX = this.mainContent.location.x + location.width;
+    let maxY = this.mainContent.location.y + this.mainContent.location.ascent;
+    this.annotations.forEach((annotationInfo) => {
+      const annotation = annotationInfo.content;
+      const { xPosition, yPosition, xAlign, yAlign, annotationScale } = annotationInfo;
+      annotation.calcSize(location, incomingScale * annotationScale)
+      console.log(annotation.width)
+      const annotationLoc = this.location._dup();
+      let xPos = 0;
+      let yPos = this.mainContent.descent / this.mainContent.height;
+      if (xPosition === 'right') { xPos = 1; }
+      else if (xPosition === 'center') { xPos = 0.5; }
+      else if (typeof xPosition === 'number') { xPos = xPosition; }
+      annotationLoc.x += this.mainContent.width * xPos;
+      console.log(xPos)
+      if (yPosition === 'bottom') { yPos = 0; }
+      else if (yPosition === 'top') { yPos = 1; } 
+      else if (yPosition === 'middle') { yPos = 0.5; }
+      else if (typeof yPosition === 'number') { yPos = yPosition; }
 
-    const annotationLoc = this.location._dup();
-    let xPos = 0;
-    let yPos = this.mainContent.descent / this.mainContent.height;
-    if (this.xPosition === 'right') { xPos = 1; }
-    else if (this.xPosition === 'center') { xPos = 0.5; }
-    else if (typeof this.xPosition === 'number') { xPos = this.xPosition; }
-    annotationLoc.x += this.mainContent.width * xPos;
+      annotationLoc.y += -this.mainContent.descent + this.mainContent.height * yPos;
+      // console.log(annotationLoc)
 
-    if (this.yPosition === 'bottom') { yPos = 0; }
-    else if (this.yPosition === 'top') { yPos = 1; } 
-    else if (this.yPosition === 'middle') {
-      yPos = 0.5
-      annotationLoc.y += -this.mainContent.descent + this.mainContent.height / 2;
-    } else if (typeof this.yPosition === 'number') {
-      yPos = this.yPosition;
-    }
+      let xOffset = 0;
+      let yOffset = annotation.descent / annotation.height;
+      
+      if (xAlign === 'right') { xOffset = 1; }
+      else if (xAlign === 'center') { xOffset = 0.5; }
+      else if (typeof xAlign === 'number') { xOffset = xAlign; }
 
-    annotationLoc.y += -this.mainContent.descent + this.mainContent.height * yPos;
+      if (yAlign === 'bottom') { yOffset = 0; }
+      else if (yAlign === 'top') { yOffset = 1; }
+      else if (yAlign === 'middle') { yOffset = 0.5; }
+      else if (typeof yAlign === 'number') { yOffset = yAlign; }
 
-    let xOffset = 0;
-    let yOffset = this.annotation.descent / this.annotation.height;
-    
-    if (this.xAlign === 'right') { xOffset = 1; }
-    else if (this.xAlign === 'center') { xOffset = 0.5; }
-    else if (typeof this.xAlign === 'number') { xOffset = this.xAlign; }
+      const annotationOffset = new Point(
+        -xOffset * annotation.width,
+        annotation.descent - yOffset * annotation.height,
+      );
+      // console.log(annotationOffset, xOffset, annotation.width)
+      annotation.calcSize(annotationLoc, incomingScale * annotationScale);
+      annotation.offsetLocation(annotationOffset);
 
-    if (this.yAlign === 'bottom') { yOffset = 0; }
-    else if (this.yAlign === 'top') { yOffset = 1; }
-    else if (this.yAlign === 'middle') { yOffset = 0.5; }
-    else if (typeof this.yAlign === 'number') { yOffset = this.yAlign; }
-
-    const annotationOffset = new Point(
-      -xOffset * this.annotation.width,
-      this.annotation.descent - yOffset * this.annotation.height,
-    );
-
-    this.annotation.calcSize(annotationLoc, incomingScale * this.annotationScale);
-    this.annotation.offsetLocation(annotationOffset);
+      const annotationMaxX = annotation.location.x + annotation.width;
+      const annotationMaxY = annotation.location.y + annotation.ascent;
+      const annotationMinX = annotation.location.x;
+      const annotationMinY = annotation.location.y - annotation.descent;
+      maxX = annotationMaxX > maxX ? annotationMaxX : maxX;
+      maxY = annotationMaxY > maxY ? annotationMaxY : maxY;
+      maxX = annotationMinX < minX ? annotationMinX : minX;
+      maxY = annotationMinY < minY ? annotationMinY : minY;
+      // console.log(annotation.location)
+    })
 
     if (this.annotationInSize) {
-      const bottomLeft = new Point(
-        Math.min(
-          this.annotation.location.x,
-          this.mainContent.location.x,
-        ),
-        Math.min(
-          this.annotation.location.y - this.annotation.descent,
-          this.mainContent.location.y - this.mainContent.descent,
-        ),
-      );
-      const topRight = new Point(
-        Math.max(
-          this.annotation.location.x + this.annotation.width,
-          this.mainContent.location.x + this.mainContent.width,
-        ),
-        Math.min(
-          this.annotation.location.y + this.annotation.ascent,
-          this.mainContent.location.y + this.mainContent.ascent,
-        ),
-      );
+      const bottomLeft = new Point(minX, minY);
+      const topRight = new Point(maxX, maxY);
       this.width = topRight.x - bottomLeft.x;
       this.ascent = topRight.y - this.mainContent.location.y;
       this.descent = this.mainContent.location.y - bottomLeft.y;
@@ -585,7 +603,10 @@ class Annotation extends Elements {
       const xOffset = this.mainContent.location.x - bottomLeft;
       if (xOffset) {
         this.mainContent.offsetLocation(new Point(xOffset, 0));
-        this.annotation.offsetLocation(new Point(xOffset, 0));
+        this.annotations = this.annotations.map((annotationInfo) => {
+          annotationInfo.content.offsetLocation(new Point(xOffset, 0));
+        })
+        // this.annotation.offsetLocation(new Point(xOffset, 0));
       }
     } else {
       this.width = this.mainContent.width;
@@ -600,21 +621,27 @@ class Annotation extends Elements {
     if (this.mainContent) {
       elements = [...elements, ...this.mainContent.getAllElements()];
     }
-    if (this.annotation) {
-      elements = [...elements, ...this.annotation.getAllElements()];
-    }
+    this.annotations.forEach((annotationInfo) => {
+      elements = [...elements, ...annotationInfo.content.getAllElements()];
+    });
     return elements;
   }
 
   setPositions() {
     this.mainContent.setPositions();
-    this.annotation.setPositions();
+    this.annotations.forEach((annotationInfo) => {
+      annotationInfo.content.setPositions();
+    });
+    // this.annotation.setPositions();
   }
 
   offsetLocation(offset: Point = new Point(0, 0)) {
     this.location = this.location.add(offset);
     this.mainContent.offsetLocation(offset);
-    this.annotation.offsetLocation(offset);
+    this.annotations.forEach((annotationInfo) => {
+      annotationInfo.content.offsetLocation(offset);
+    });
+    // this.annotation.offsetLocation(offset);
   }
 }
 
