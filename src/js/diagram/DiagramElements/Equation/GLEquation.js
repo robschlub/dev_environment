@@ -316,10 +316,12 @@ class StrikeOut extends Elements {
   strikeScale: Point;
   strikeRotation: number;
   strikePosition: Point;
+  strikeInSize: boolean;
 
   constructor(
     mainContent: Elements,
     strike: DiagramElementPrimative | null | DiagramElementCollection,
+    strikeInSize: boolean = false,
   ) {
     if (strike) {
       super([mainContent, new Element(strike)]);
@@ -330,6 +332,7 @@ class StrikeOut extends Elements {
     this.scaleModifier = 1;
     this.lineWidth = 0.1;
     this.mainContent = mainContent;
+    this.strikeInSize = strikeInSize;
   }
 
   _dup(namedCollection: Object) {
@@ -364,15 +367,23 @@ class StrikeOut extends Elements {
       bottomLeft, lineExtension,
       strikeLine.angle() + Math.PI,
     ).getPoint(2);
-    // const strikeTopRight = (new Line(topRight, lineExtension, strikeLine.ang)).p2;
-    const strikeLength = strikeLine.length() + lineExtension * 2;
 
-    // this.width = strikeTopRight.x - strikeBottomLeft.x;
-    this.location.x = strikeBottomLeft.x;
-    this.width = this.mainContent.width;
-    this.ascent = this.mainContent.ascent;
-    this.descent = this.mainContent.descent;
-    this.lineWidth = scale * 0.02;
+    const strikeLength = strikeLine.length() + lineExtension * 2;
+    if (this.strikeInSize) {
+      const strikeTopRight = new Line(
+        topRight, lineExtension,
+        strikeLine.angle(),
+      ).getPoint(2);
+      this.width = strikeTopRight.x - strikeBottomLeft.x;
+      this.ascent = Math.max(this.mainContent.ascent, topRight.y - location.y);
+      this.descent = Math.max(this.mainContent.descent, bottomLeft.y - location.y);
+      this.location.x = bottomLeft.x;
+    } else {
+      this.location.x = strikeBottomLeft.x;
+      this.width = this.mainContent.width;
+      this.ascent = this.mainContent.ascent;
+      this.descent = this.mainContent.descent;
+    }
 
     const { strike } = this;
     if (strike) {
