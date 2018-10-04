@@ -481,47 +481,52 @@ class Annotation extends Elements {
 
     const annotationLoc = this.location._dup();
     let xPos = 0;
-    let yPos = 0;
-    if (this.xPosition === 'right') {
-      xPos = 1;
-    } else if (this.xPosition === 'center') {
-      xPos = 0.5;
-    } else if (typeof this.xPosition === 'number') {
-      xPos = this.xPosition;
-    }
-
+    let yPos = this.mainContent.descent / this.mainContent.height;
+    if (this.xPosition === 'right') { xPos = 1; }
+    else if (this.xPosition === 'center') { xPos = 0.5; }
+    else if (typeof this.xPosition === 'number') { xPos = this.xPosition; }
     annotationLoc.x += this.mainContent.width * xPos;
 
-
-    if (this.yPosition === 'bottom') {
-      yPos = 0;
-    } else if (this.yPosition === 'top') {
-      yPos = 1;
-    } else if (this.yPosition === 'middle') {
+    if (this.yPosition === 'bottom') { yPos = 0; }
+    else if (this.yPosition === 'top') { yPos = 1; } 
+    else if (this.yPosition === 'middle') {
       yPos = 0.5
       annotationLoc.y += -this.mainContent.descent + this.mainContent.height / 2;
-    } else if (this.yPosition === 'baseline') {
-      yPos = this.mainContent.descent / this.mainContent.height;
     } else if (typeof this.yPosition === 'number') {
       yPos = this.yPosition;
     }
 
     annotationLoc.y += -this.mainContent.descent + this.mainContent.height * yPos;
 
-    const annotationOffset = new Point(0, 0);
+    let xOffset = 0;
+    let yOffset = this.annotation.descent / this.annotation.height;
+    
     if (this.xAlign === 'right') {
-      annotationOffset.x -= this.annotation.width;
+      xOffset = 1;
+      // annotationOffset.x -= this.annotation.width;
     } else if (this.xAlign === 'middle') {
-      annotationOffset.x -= this.annotation.width / 2;
+      xOffset = 0.5;
+      // annotationOffset.x -= this.annotation.width / 2;
+    } else if (typeof this.xAlign === 'number') {
+      xOffset = this.xAlign;
+    }
+    if (this.yAlign === 'bottom') {
+      // annotationOffset.y += this.annotation.descent;
+      yOffset = 0;
+    } else if (this.yAlign === 'top') {
+      yOffset = 1;
+      // annotationOffset.y -= this.annotation.ascent;
+    } else if (this.yAlign === 'middle') {
+      yOffset = 0.5;
+      // annotationOffset.y += this.annotation.descent - this.annotation.height / 2;
+    } else if (typeof this.yAlign === 'number') {
+      yOffset = this.yAlign;
     }
 
-    if (this.yAlign === 'bottom') {
-      annotationOffset.y += this.annotation.descent;
-    } else if (this.yAlign === 'top') {
-      annotationOffset.y -= this.annotation.ascent;
-    } else if (this.yAlign === 'middle') {
-      annotationOffset.y += this.annotation.descent - this.annotation.height / 2;
-    }
+    const annotationOffset = new Point(
+      -xOffset * this.annotation.width,
+      this.annotation.descent - yOffset * this.annotation.height,
+    );
 
     this.annotation.calcSize(annotationLoc, incomingScale * this.annotationScale);
     this.annotation.offsetLocation(annotationOffset);

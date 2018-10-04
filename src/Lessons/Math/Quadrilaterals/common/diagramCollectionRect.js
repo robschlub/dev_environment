@@ -128,8 +128,8 @@ export default class RectCollection extends CommonDiagramCollection {
       eqn.annotation(
         eqn.strike('a', 's', true),
         eqn.frac('test', 'n', 'v'),
-        0.3, 1,
-        'right', 'middle',
+        1, 0,
+        0, -0.5,
         0.5, true,
       ),
       '_180_1',
