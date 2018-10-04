@@ -309,22 +309,27 @@ class Fraction extends Elements {
 }
 
 class StrikeOut extends Elements {
+  mainContent: Elements;
   strike: DiagramElementPrimative | null | DiagramElementCollection;
   scaleModifier: number;
   lineWidth: number;
+  strikeScale: Point;
+  strikeRotation: number;
+  strikePosition: Point;
 
   constructor(
-    content: Elements,
+    mainContent: Elements,
     strike: DiagramElementPrimative | null | DiagramElementCollection,
   ) {
     if (strike) {
-      super([content, new Element(strike)]);
+      super([mainContent, new Element(strike)]);
     } else {
-      super([content]);
+      super([mainContent]);
     }
     this.strike = strike;
     this.scaleModifier = 1;
     this.lineWidth = 0.1;
+    this.mainContent = mainContent;
   }
 
   _dup(namedCollection: Object) {
@@ -333,26 +338,26 @@ class StrikeOut extends Elements {
       strike = namedCollection[this.strike.name];
     }
     const strikeOutCopy = new StrikeOut(
-      this.content._dup(namedCollection),
+      this.mainContent._dup(namedCollection),
       strike,
     );
-    duplicateFromTo(this, strikeOutCopy, ['strike', 'content']);
+    duplicateFromTo(this, strikeOutCopy, ['strike', 'mainContent']);
     return strikeOutCopy;
   }
 
   calcSize(location: Point, incomingScale: number) {
     const scale = incomingScale * this.scaleModifier;
     this.location = location._dup();
-    this.content.calcSize(location, scale);
+    this.mainContent.calcSize(location, scale);
 
-    this.width = Math.max(this.content.width, this.content.width);
+    this.width = Math.max(this.mainContent.width, this.mainContent.width);
 
     // const xNumerator = (this.width - this.numerator.width) / 2;
     // const xDenominator = (this.width - this.denominator.width) / 2;
     // this.vSpaceNum = scale * 0.05;
     // this.vSpaceDenom = scale * 0.02;
     // this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
-    this.lineWidth = scale * 0.01;
+    this.lineWidth = scale * 0.02;
 
     // const yNumerator = this.numerator.descent
     //                     + this.vSpaceNum + this.lineVAboveBaseline;
@@ -373,8 +378,8 @@ class StrikeOut extends Elements {
     //   scale,
     // );
 
-    this.descent = this.content.descent;
-    this.ascent = this.content.ascent;
+    this.descent = this.mainContent.descent;
+    this.ascent = this.mainContent.ascent;
 
     const { strike } = this;
     if (strike) {
@@ -382,19 +387,51 @@ class StrikeOut extends Elements {
       const topRight = new Point(loc.x + this.width, loc.y + this.ascent);
       const length = topRight.sub(bottomLeft).distance();
       const angle = topRight.sub(bottomLeft).toPolar().angle;
-      strike.transform.updateScale(length, this.lineWidth);
-      strike.transform.updateTranslation(bottomLeft);
-      strike.transform.
-      this.vinculumPosition = new Point(
-        this.location.x,
-        this.location.y + this.lineVAboveBaseline,
-      );
-      this.vinculumScale = new Point(this.width, this.lineWidth);
-      vinculum.transform.updateScale(this.vinculumScale);
-      vinculum.transform.updateTranslation(this.vinculumPosition);
+      this.strikePosition = bottomLeft._dup();
+      this.strikeScale = new Point(length, this.lineWidth)
+      this.strikeRotation = angle;
+      console.log(angle)
+      strike.transform.updateScale(this.strikeScale);
+      strike.transform.updateTranslation(this.strikePosition);
+      strike.transform.updateRotation(this.strikeRotation);
+      // this.vinculumPosition = new Point(
+      //   this.location.x,
+      //   this.location.y + this.lineVAboveBaseline,
+      // );
+      // this.vinculumScale = new Point(this.width, this.lineWidth);
+      // vinculum.transform.updateScale(this.vinculumScale);
+      // vinculum.transform.updateTranslation(this.vinculumPosition);
 
-      vinculum.show();
+      strike.show();
     }
+  }
+  getAllElements() {
+    let elements = [];
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    if (this.strike) {
+      elements = [...elements, this.strike];
+    }
+    return elements;
+  }
+
+  setPositions() {
+    console.log(this)
+    this.mainContent.setPositions();
+    // this.denominator.setPositions();
+    const { strike } = this;
+    if (strike) {
+      strike.transform.updateScale(this.strikeScale);
+      strike.transform.updateTranslation(this.strikePosition);
+      strike.transform.updateRotation(this.strikeRotation);
+    }
+  }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    this.mainContent.offsetLocation(offset);
+    this.strikePosition = this.strikePosition.add(offset);
   }
 }
 
@@ -1603,6 +1640,16 @@ export class Equation {
       contentToElement(this.collection, numerator),
       contentToElement(this.collection, denominator),
       getDiagramElement(this.collection, vinculum),
+    );
+  }
+
+  strike(
+    content: TypeEquationInput,
+    strike: string | DiagramElementPrimative | DiagramElementCollection,
+  ) {
+    return new StrikeOut(
+      contentToElement(this.collection, content),
+      getDiagramElement(this.collection, strike),
     );
   }
 

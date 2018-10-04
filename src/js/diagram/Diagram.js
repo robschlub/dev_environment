@@ -99,7 +99,7 @@ function equation(diagram: Diagram, high: boolean = false) {
       new Point(0, 0),
       1, 1, 0,
       color,
-      new Transform('strike').scale(1, 1).translate(0, 0),
+      new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
     );
   }
 
@@ -111,7 +111,7 @@ function equation(diagram: Diagram, high: boolean = false) {
       webgl,
       color,
       numLines,
-      new Transform('integral').scale(1, 1).rotate(0),translate(0, 0),
+      new Transform('integral').scale(1, 1).translate(0, 0),
       diagram.limits,
     );
   }
@@ -139,6 +139,7 @@ function equation(diagram: Diagram, high: boolean = false) {
     make,
     makeHTML,
     makeEqn,
+    strike,
   };
 }
 

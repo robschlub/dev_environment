@@ -106,6 +106,7 @@ export default class RectCollection extends CommonDiagramCollection {
         p: ' + ',
         p1: ' + ',
         p2: ' + ',
+        s: this.diagram.equation.strike(),
       },
       this.layout.colors.diagram.text.base,
     );
@@ -115,7 +116,7 @@ export default class RectCollection extends CommonDiagramCollection {
     eqn.formAlignment.vAlign = 'middle';
     eqn.formAlignment.scale = 1.0;
 
-    eqn.addForm('1', ['a', 'p', 'b', 'p1','_90', 'equals', '_180']);
+    eqn.addForm('1', [eqn.strike('a', 's'), 'p', 'b', 'p1','_90', 'equals', '_180']);
     eqn.addForm('2', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1','_90',
       'equals', '_180', 'm1', '_90_2']);
     eqn.addForm('3', ['a', 'p', 'b', 'equals', '_90_3']);
