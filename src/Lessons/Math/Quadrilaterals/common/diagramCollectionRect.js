@@ -94,6 +94,9 @@ export default class RectCollection extends CommonDiagramCollection {
         a_1: 'a',
         b: 'b',
         b_1: 'b',
+        test: 'test',
+        n: 'n',
+        v: this.diagram.equation.vinculum(),
         _90: '90º',
         _90_1: '90º',
         _90_2: '90º',
@@ -120,8 +123,8 @@ export default class RectCollection extends CommonDiagramCollection {
     eqn.formAlignment.scale = 1.0;
 
     eqn.addForm('1', ['a', 'p', 'b', 'p1', '_90', 'equals', '_180']);
-    
     eqn.addForm('2', [eqn.strike('a', 's'), eqn.strike(['p', 'b'], 's1'), 'p1', '_90', 'equals', '_180']);
+    eqn.addForm('2', [eqn.annotation(eqn.strike('a', 's'), eqn.frac('test', 'n', 'v'), 'left', 'bottom', 'right','top'), eqn.strike(['p', 'b'], 's1'), 'p1', '_90', 'equals', '_180']);
     eqn.addForm('3', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1', '_90',
       'equals', '_180', 'm1', '_90_2']);
     eqn.addForm('4', ['a', 'p', 'b', 'equals', '_90_3']);

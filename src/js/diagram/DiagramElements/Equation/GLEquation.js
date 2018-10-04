@@ -261,6 +261,7 @@ class Fraction extends Elements {
     this.ascent = this.vSpaceNum + this.lineWidth / 2
                   + this.lineVAboveBaseline + this.numerator.ascent
                   + this.numerator.descent;
+    this.height = this.descent + this.ascent;
 
     const { vinculum } = this;
     if (vinculum) {
@@ -379,11 +380,12 @@ class StrikeOut extends Elements {
       this.descent = Math.max(this.mainContent.descent, bottomLeft.y - location.y);
       this.location.x = bottomLeft.x;
     } else {
-      this.location.x = strikeBottomLeft.x;
+      // this.location.x = strikeBottomLeft.x;
       this.width = this.mainContent.width;
       this.ascent = this.mainContent.ascent;
       this.descent = this.mainContent.descent;
     }
+    this.height = this.descent + this.ascent;
 
     const { strike } = this;
     if (strike) {
@@ -422,6 +424,193 @@ class StrikeOut extends Elements {
     this.location = this.location.add(offset);
     this.mainContent.offsetLocation(offset);
     this.strikePosition = this.strikePosition.add(offset);
+  }
+}
+
+class Annotation extends Elements {
+  mainContent: Elements;
+  annotation: Elements;
+  xPosition: 'left' | 'right' | 'center';
+  yPosition: 'bottom' | 'top' | 'middle' | 'baseline';
+  xAlign: 'left' | 'right' | 'center';
+  yAlign: 'bottom' | 'top' | 'middle' | 'baseline';
+  annotationInSize: boolean;
+  annotationScale: number;
+
+  constructor(
+    mainContent: Elements,
+    annotation: Elements,
+    xPosition: 'left' | 'right' | 'center' = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
+    xAlign: 'left' | 'right' | 'center' = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
+    annotationScale: number = 0.5,
+    annotationInSize: boolean = false,
+  ) {
+    super([mainContent, annotation]);
+    this.mainContent = mainContent;
+    this.annotation = annotation;
+    this.xPosition = xPosition;
+    this.yPosition = yPosition;
+    this.xAlign = xAlign;
+    this.yAlign = yAlign;
+    this.annotationInSize = annotationInSize;
+    this.annotationScale = annotationScale;
+  }
+
+  _dup(namedCollection: Object) {
+    const annotationCopy = new Annotation(
+      this.mainContent._dup(namedCollection),
+      this.annotation._dup(namedCollection),
+      this.xPosition,
+      this.yPosition,
+      this.xAlign,
+      this.yAlign,
+      this.annotationScale,
+      this.annotationInSize,
+    );
+    duplicateFromTo(this, annotationCopy, ['mainContent', 'annotation']);
+    return annotationCopy;
+  }
+
+  calcSize(location: Point, incomingScale: number) {
+    this.location = location._dup();
+    this.mainContent.calcSize(location, incomingScale);
+    this.annotation.calcSize(location, incomingScale * this.annotationScale);
+
+    const annotationLoc = this.location._dup();
+    if (this.xPosition === 'right') {
+      annotationLoc.x += this.mainContent.width;
+    } else if (this.xPosition === 'center') {
+      annotationLoc.x += this.mainContent.width / 2;
+    }
+
+    if (this.yPosition === 'bottom') {
+      annotationLoc.y -= this.mainContent.descent;
+    } else if (this.yPosition === 'top') {
+      annotationLoc.y += this.mainContent.ascent;
+    } else if (this.yPosition === 'middle') {
+      annotationLoc.y += -this.mainContent.descent + this.mainContent.height / 2;
+    }
+
+    const annotationOffset = new Point(0, 0);
+    if (this.xAlign === 'right') {
+      annotationOffset.x -= this.annotation.width;
+    } else if (this.xAlign === 'middle') {
+      annotationOffset.x -= this.annotation.width / 2;
+    }
+
+    if (this.yAlign === 'bottom') {
+      annotationOffset.y += this.annotation.descent;
+    } else if (this.yAlign === 'top') {
+      annotationOffset.y -= this.annotation.ascent;
+    } else if (this.yAlign === 'middle') {
+      annotationOffset.y += this.annotation.descent - this.annotation.height / 2;
+    }
+
+    this.annotation.calcSize(annotationLoc, incomingScale * this.annotationScale);
+    this.annotation.offsetLocation(annotationOffset);
+
+    if (this.annotationInSize) {
+      const bottomLeft = new Point(
+        Math.min(
+          this.annotation.location.x,
+          this.mainContent.location.x,
+        ),
+        Math.min(
+          this.annotation.location.y - this.annotation.descent,
+          this.mainContent.location.y - this.mainContent.descent,
+        ),
+      );
+      const topRight = new Point(
+        Math.max(
+          this.annotation.location.x + this.annotation.width,
+          this.mainContent.location.x + this.mainContent.width,
+        ),
+        Math.min(
+          this.annotation.location.y + this.annotation.ascent,
+          this.mainContent.location.y + this.mainContent.ascent,
+        ),
+      );
+      this.width = topRight.x - bottomLeft.x;
+      this.ascent = topRight.y - this.mainContent.location.y;
+      this.descent = this.mainContent.location.y - bottomLeft.y;
+
+      const xOffset = this.mainContent.location.x - bottomLeft;
+      if (xOffset) {
+        this.mainContent.offsetLocation(new Point(xOffset, 0));
+        this.annotation.offsetLocation(new Point(xOffset, 0));
+      }
+    } else {
+      this.width = this.mainContent.width;
+      this.ascent = this.mainContent.ascent;
+      this.descent = this.mainContent.descent;
+    }
+    this.height = this.descent + this.ascent;
+    // const lineExtension = this.lineWidth * 2;
+    // const bottomLeft = new Point(
+    //   location.x,
+    //   location.y - this.mainContent.descent,
+    // );
+    // const topRight = new Point(
+    //   location.x + this.mainContent.width,
+    //   location.y + this.mainContent.ascent * 0.8,
+    // );
+    // const strikeLine = new Line(bottomLeft, topRight);
+    // const strikeBottomLeft = new Line(
+    //   bottomLeft, lineExtension,
+    //   strikeLine.angle() + Math.PI,
+    // ).getPoint(2);
+
+    // const strikeLength = strikeLine.length() + lineExtension * 2;
+    // if (this.strikeInSize) {
+    //   const strikeTopRight = new Line(
+    //     topRight, lineExtension,
+    //     strikeLine.angle(),
+    //   ).getPoint(2);
+    //   this.width = strikeTopRight.x - strikeBottomLeft.x;
+    //   this.ascent = Math.max(this.mainContent.ascent, topRight.y - location.y);
+    //   this.descent = Math.max(this.mainContent.descent, bottomLeft.y - location.y);
+    //   this.location.x = bottomLeft.x;
+    // } else {
+      // this.location.x = strikeBottomLeft.x;
+      // this.width = this.mainContent.width;
+      // this.ascent = this.mainContent.ascent;
+      // this.descent = this.mainContent.descent;
+    // }
+
+    // const { strike } = this;
+    // if (strike) {
+    //   this.strikePosition = strikeBottomLeft._dup();
+    //   this.strikeScale = new Point(strikeLength, this.lineWidth);
+    //   this.strikeRotation = strikeLine.angle();
+    //   strike.transform.updateScale(this.strikeScale);
+    //   strike.transform.updateTranslation(this.strikePosition);
+    //   strike.transform.updateRotation(this.strikeRotation);
+    //   strike.show();
+    // }
+  }
+
+  getAllElements() {
+    let elements = [];
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    if (this.annotation) {
+      elements = [...elements, ...this.annotation.getAllElements()];
+    }
+    return elements;
+  }
+
+  setPositions() {
+    this.mainContent.setPositions();
+    this.annotation.setPositions();
+  }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    this.mainContent.offsetLocation(offset);
+    this.annotation.offsetLocation(offset);
   }
 }
 
@@ -508,6 +697,7 @@ class SuperSub extends Elements {
     this.width = w;
     this.ascent = asc;
     this.descent = des;
+    this.height = this.descent + this.ascent;
   }
 
   getAllElements() {
@@ -764,6 +954,8 @@ class Integral extends Elements {
       limitMinBounds.descent + this.location.y - minLimitLocation.y,
       contentBounds.ascent + this.location.y - contentLocation.y,
     );
+
+    this.height = this.descent + this.ascent;
   }
 }
 
@@ -1640,6 +1832,25 @@ export class Equation {
     return new StrikeOut(
       contentToElement(this.collection, content),
       getDiagramElement(this.collection, strike),
+    );
+  }
+
+  annotation(
+    content: TypeEquationInput,
+    annotation: TypeEquationInput,
+    xPosition: 'left' | 'right' | 'center' = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
+    xAlign: 'left' | 'right' | 'center' = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
+    annotationScale: number = 0.5,
+    annotationInSize: boolean = true,
+  ) {
+    return new Annotation(
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, annotation),
+      xPosition, yPosition,
+      xAlign, yAlign,
+      annotationScale, annotationInSize,
     );
   }
 
