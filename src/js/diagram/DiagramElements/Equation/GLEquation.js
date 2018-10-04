@@ -409,9 +409,7 @@ class StrikeOut extends Elements {
   }
 
   setPositions() {
-    console.log(this)
     this.mainContent.setPositions();
-    // this.denominator.setPositions();
     const { strike } = this;
     if (strike) {
       strike.transform.updateScale(this.strikeScale);

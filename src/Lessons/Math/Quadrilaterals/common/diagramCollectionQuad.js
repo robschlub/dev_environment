@@ -1,10 +1,10 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, polarToRect, Line,
+  Transform,
 } from '../../../../js/diagram/tools/g2';
 import {
-  DiagramElementPrimative, DiagramElementCollection,
+  DiagramElementPrimative,
 } from '../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
@@ -25,7 +25,6 @@ export default class QuadCollection extends CommonDiagramCollection {
       points, true, this.layout.lineWidth, this.layout.colors.lines,
       'none', new Transform('quad').scale(1, 1).translate(0, 0),
     );
-    console.log(this.layout.quads.quad1)
     const quad1 = makeQuad(this.layout.quads.quad1.points);
     const quad2 = makeQuad(this.layout.quads.quad2.points);
     const quad3 = makeQuad(this.layout.quads.quad3.points);
@@ -49,9 +48,9 @@ export default class QuadCollection extends CommonDiagramCollection {
       return l;
     };
     const lay = this.layout.quads;
-    const line1 = makeL(lay.quad1.points[0], lay.quad1.points[2])
-    const line2 = makeL(lay.quad2.points[0], lay.quad2.points[2])
-    const line3 = makeL(lay.quad3.points[0], lay.quad3.points[2])
+    const line1 = makeL(lay.quad1.points[0], lay.quad1.points[2]);
+    const line2 = makeL(lay.quad2.points[0], lay.quad2.points[2]);
+    const line3 = makeL(lay.quad3.points[0], lay.quad3.points[2]);
 
     line1.setPosition(this.layout.quads.quad1.position.add(lay.quad1.points[0]));
     line2.setPosition(this.layout.quads.quad2.position.add(lay.quad2.points[0]));
@@ -62,6 +61,7 @@ export default class QuadCollection extends CommonDiagramCollection {
     this.add('line2', line2);
     this.add('line3', line3);
   }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
