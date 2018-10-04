@@ -94,6 +94,15 @@ function equation(diagram: Diagram, high: boolean = false) {
     );
   }
 
+  function strike(color: Array<number> = [1, 1, 1, 1]) {
+    return diagram.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform('strike').scale(1, 1).translate(0, 0),
+    );
+  }
+
   function integral(
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
@@ -102,7 +111,7 @@ function equation(diagram: Diagram, high: boolean = false) {
       webgl,
       color,
       numLines,
-      new Transform('integral').scale(1, 1).translate(0, 0),
+      new Transform('integral').scale(1, 1).rotate(0),translate(0, 0),
       diagram.limits,
     );
   }

@@ -116,6 +116,9 @@ class Content extends LessonContent {
       </p>
       ${new Definition('Rectangle', 'Latin', ['rectus', 'right', 'angulus', 'corner, angle']).html('id_lesson__rectangle_definition')}
       `,
+      setSteadyState: () => {
+        rect._eqn.eqn.showForm('1');
+      }
     })
   }
 }

@@ -308,6 +308,96 @@ class Fraction extends Elements {
   }
 }
 
+class StrikeOut extends Elements {
+  strike: DiagramElementPrimative | null | DiagramElementCollection;
+  scaleModifier: number;
+  lineWidth: number;
+
+  constructor(
+    content: Elements,
+    strike: DiagramElementPrimative | null | DiagramElementCollection,
+  ) {
+    if (strike) {
+      super([content, new Element(strike)]);
+    } else {
+      super([content]);
+    }
+    this.strike = strike;
+    this.scaleModifier = 1;
+    this.lineWidth = 0.1;
+  }
+
+  _dup(namedCollection: Object) {
+    let strike = null;
+    if (this.strike != null) {
+      strike = namedCollection[this.strike.name];
+    }
+    const strikeOutCopy = new StrikeOut(
+      this.content._dup(namedCollection),
+      strike,
+    );
+    duplicateFromTo(this, strikeOutCopy, ['strike', 'content']);
+    return strikeOutCopy;
+  }
+
+  calcSize(location: Point, incomingScale: number) {
+    const scale = incomingScale * this.scaleModifier;
+    this.location = location._dup();
+    this.content.calcSize(location, scale);
+
+    this.width = Math.max(this.content.width, this.content.width);
+
+    // const xNumerator = (this.width - this.numerator.width) / 2;
+    // const xDenominator = (this.width - this.denominator.width) / 2;
+    // this.vSpaceNum = scale * 0.05;
+    // this.vSpaceDenom = scale * 0.02;
+    // this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
+    this.lineWidth = scale * 0.01;
+
+    // const yNumerator = this.numerator.descent
+    //                     + this.vSpaceNum + this.lineVAboveBaseline;
+
+    // const yDenominator = this.denominator.ascent
+    //                      + this.vSpaceDenom - this.lineVAboveBaseline;
+
+    // const yScale = 1;
+
+    const loc = this.location;
+    // this.numerator.calcSize(
+    //   new Point(loc.x + xNumerator, loc.y + yScale * yNumerator),
+    //   scale,
+    // );
+
+    // this.denominator.calcSize(
+    //   new Point(loc.x + xDenominator, loc.y - yScale * yDenominator),
+    //   scale,
+    // );
+
+    this.descent = this.content.descent;
+    this.ascent = this.content.ascent;
+
+    const { strike } = this;
+    if (strike) {
+      const bottomLeft = new Point(loc.x, loc.y - this.descent);
+      const topRight = new Point(loc.x + this.width, loc.y + this.ascent);
+      const length = topRight.sub(bottomLeft).distance();
+      const angle = topRight.sub(bottomLeft).toPolar().angle;
+      strike.transform.updateScale(length, this.lineWidth);
+      strike.transform.updateTranslation(bottomLeft);
+      strike.transform.
+      this.vinculumPosition = new Point(
+        this.location.x,
+        this.location.y + this.lineVAboveBaseline,
+      );
+      this.vinculumScale = new Point(this.width, this.lineWidth);
+      vinculum.transform.updateScale(this.vinculumScale);
+      vinculum.transform.updateTranslation(this.vinculumPosition);
+
+      vinculum.show();
+    }
+  }
+}
+
 class SuperSub extends Elements {
   superscript: Elements | null;
   subscript: Elements | null;
@@ -1404,8 +1494,7 @@ export class Equation {
         }
       });
     }
-
-    this.formSeries[nextIndex].animatePositionsTo(2);
+    this.formSeries[nextIndex].base.animatePositionsTo(2);
     this.setCurrentForm(this.formSeries[nextIndex]);
   }
 

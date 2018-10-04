@@ -86,8 +86,49 @@ export default class RectCollection extends CommonDiagramCollection {
     this.add('rightAngle4', rightAngle4);
   }
 
-  addAngles() {
-    
+  addEqn() {
+    const eqn = this.diagram.equation.makeEqn();
+    eqn.createElements(
+      {
+        a: 'a',
+        a_1: 'a',
+        b: 'b',
+        b_1: 'b',
+        _90: '90º',
+        _90_1: '90º',
+        _90_2: '90º',
+        _90_3: '90º',
+        _180: '180º',
+        _180_1: '180º',
+        equals: ' = ',
+        m: ' \u2212 ',
+        m1: ' \u2212 ',
+        p: ' + ',
+        p1: ' + ',
+        p2: ' + ',
+      },
+      this.layout.colors.diagram.text.base,
+    );
+
+    eqn.formAlignment.fixTo = eqn.collection._equals;
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 1.0;
+
+    eqn.addForm('1', ['a', 'p', 'b', 'p1','_90', 'equals', '_180']);
+    eqn.addForm('2', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1','_90',
+      'equals', '_180', 'm1', '_90_2']);
+    eqn.addForm('3', ['a', 'p', 'b', 'equals', '_90_3']);
+    eqn.setFormSeries(['1', '2', '3']);
+    const nextForm = () => {
+      eqn.nextForm();
+      this.diagram.animateNextFrame();
+    }
+    eqn.collection.onClick = nextForm.bind(this);
+    eqn.collection.isTouchable = true;
+    eqn.collection._a.isTouchable = true;
+    this.add('eqn', eqn.collection);
+    this._eqn.eqn = eqn;
   }
 
   constructor(
@@ -99,5 +140,7 @@ export default class RectCollection extends CommonDiagramCollection {
     this.addRightAngles();
     this.addRect();
     this.addLine();
+    this.addEqn();
+    this.hasTouchableElements = true;
   }
 }
