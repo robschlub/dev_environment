@@ -431,10 +431,10 @@ class StrikeOut extends Elements {
 class Annotation extends Elements {
   mainContent: Elements;
   annotation: Elements;
-  xPosition: 'left' | 'right' | 'center';
-  yPosition: 'bottom' | 'top' | 'middle' | 'baseline';
-  xAlign: 'left' | 'right' | 'center';
-  yAlign: 'bottom' | 'top' | 'middle' | 'baseline';
+  xPosition: 'left' | 'right' | 'center' | number;
+  yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number;
+  xAlign: 'left' | 'right' | 'center' | number;
+  yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number;
   annotationInSize: boolean;
   annotationScale: number;
 
@@ -480,20 +480,33 @@ class Annotation extends Elements {
     this.annotation.calcSize(location, incomingScale * this.annotationScale);
 
     const annotationLoc = this.location._dup();
+    let xPos = 0;
+    let yPos = 0;
     if (this.xPosition === 'right') {
-      annotationLoc.x += this.mainContent.width;
+      xPos = 1;
     } else if (this.xPosition === 'center') {
-      annotationLoc.x += this.mainContent.width / 2;
+      xPos = 0.5;
+    } else if (typeof this.xPosition === 'number') {
+      xPos = this.xPosition;
     }
 
+    annotationLoc.x += this.mainContent.width * xPos;
+
+
     if (this.yPosition === 'bottom') {
-      console.log("bottom", this.mainContent.descent)
-      annotationLoc.y -= this.mainContent.descent;
+      yPos = 0;
     } else if (this.yPosition === 'top') {
-      annotationLoc.y += this.mainContent.ascent;
+      yPos = 1;
     } else if (this.yPosition === 'middle') {
+      yPos = 0.5
       annotationLoc.y += -this.mainContent.descent + this.mainContent.height / 2;
+    } else if (this.yPosition === 'baseline') {
+      yPos = this.mainContent.descent / this.mainContent.height;
+    } else if (typeof this.yPosition === 'number') {
+      yPos = this.yPosition;
     }
+
+    annotationLoc.y += -this.mainContent.descent + this.mainContent.height * yPos;
 
     const annotationOffset = new Point(0, 0);
     if (this.xAlign === 'right') {
