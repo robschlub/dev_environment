@@ -1778,7 +1778,6 @@ export class Equation {
     });
   }
 
-  // TODO add formType
   nextForm(name: ?string) {
     this.collection.stop();
     this.collection.stop();
@@ -1802,8 +1801,24 @@ export class Equation {
         }
       });
     }
-    this.formSeries[nextIndex].base.animatePositionsTo(2);
-    this.setCurrentForm(this.formSeries[nextIndex]);
+
+    let form = null;
+    let formTypeToUse = null;
+    const possibleFormTypes
+          = this.formTypeOrder.filter(fType => fType in this.formSeries[nextIndex]);
+    if (possibleFormTypes.length) {
+      // eslint-disable-next-line prefer-destructuring
+      formTypeToUse = possibleFormTypes[0];
+    }
+    if (formTypeToUse != null) {
+      // $FlowFixMe
+      form = this.formSeries[nextIndex][formTypeToUse];
+      form.animatePositionsTo(2);
+      this.setCurrentForm(this.formSeries[nextIndex]);
+    }
+
+    // this.formSeries[nextIndex].base.animatePositionsTo(2);
+    // this.setCurrentForm(this.formSeries[nextIndex]);
   }
 
   render() {
@@ -1859,26 +1874,34 @@ export class Equation {
     formOrName: EquationForm | string,
     formType: ?string = null,
   ) {
+    let form = formOrName;
     if (typeof formOrName === 'string') {
-      if (formOrName in this.form) {
-        let formTypeToUse = formType;
-        if (formTypeToUse == null) {
-          const possibleFormTypes
-            = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
-          if (possibleFormTypes.length) {
-            // eslint-disable-next-line prefer-destructuring
-            formTypeToUse = possibleFormTypes[0];
-          }
-        }
-        if (formTypeToUse != null) {
-          this.setCurrentForm(formOrName, formTypeToUse);
-        }
-        this.render();
-      }
-    } else {
+      // if (formOrName in this.form) {
+      //   let formTypeToUse = formType;
+      //   if (formTypeToUse == null) {
+      //     const possibleFormTypes
+      //       = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
+      //     if (possibleFormTypes.length) {
+      //       // eslint-disable-next-line prefer-destructuring
+      //       formTypeToUse = possibleFormTypes[0];
+      //     }
+      //   }
+      //   if (formTypeToUse != null) {
+      //     this.setCurrentForm(formOrName, formTypeToUse);
+      //   }
+      //   this.render();
+      // }
+      form = this.getForm(formOrName, formType);
+      // if (form) {
+      //   this.setCurrentForm(form);
+      //   this.render();
+    }
+    // } else {
+    if (form) {
       this.setCurrentForm(formOrName);
       this.render();
     }
+    // }
   }
 
   getForm(
