@@ -78,7 +78,7 @@ export default class RectCollection extends CommonDiagramCollection {
     rightAngle3.updateAngle(Math.PI / 2 * 1, Math.PI / 2);
 
     const rightAngle4 = makeA();
-    rightAngle4.setPosition(this.layout.rect.points[3])
+    rightAngle4.setPosition(this.layout.rect.points[3]);
     rightAngle4.updateAngle(Math.PI / 2 * 2, Math.PI / 2);
 
     this.add('rightAngle1', rightAngle1);
@@ -102,30 +102,32 @@ export default class RectCollection extends CommonDiagramCollection {
 
         m90l: '- 90º',
         m90r: '- 90º',
+        mal: '- a',
+        mar: '  - a',
 
         strike1: this.diagram.equation.strike(strikeColor),
         strike2: this.diagram.equation.strike(strikeColor),
 
         calc0: '0',
-        calc90: '90',
+        calc90: '90º',
 
-        a_1: 'a',
+        // a_1: 'a',
         b_1: 'b',
         // test: 'test',
         // n: 'n',
         // v: this.diagram.equation.vinculum(),
-        _90: '90º',
-        _90_1: '90º',
-        _90_2: '90º',
-        _90_3: '90º',
-        _180: '180º',
-        _180_1: '180º',
+        // _90: '90º',
+        // _90_1: '90º',
+        // _90_2: '90º',
+        // _90_3: '90º',
+        // _180: '180º',
+        // _180_1: '180º',
         
-        m: ' \u2212 ',
-        m1: ' \u2212 ',
-        p: ' + ',
-        p1: ' + ',
-        p2: ' + ',
+        // m: ' \u2212 ',
+        // m1: ' \u2212 ',
+        // p: ' + ',
+        // p1: ' + ',
+        // p2: ' + ',
         // s: 
         // s1: this.diagram.equation.strike(this.layout.colors.diagram.warning),
         // s2: this.diagram.equation.strike(this.layout.colors.diagram.warning),
@@ -139,32 +141,27 @@ export default class RectCollection extends CommonDiagramCollection {
     eqn.formAlignment.vAlign = 'middle';
     eqn.formAlignment.scale = 1.0;
 
-    eqn.addForm('1', ['a', 'plus1', 'b', 'plus2', '_90', 'equals', '_180']);
-
-    eqn.addForm('2', [
-      'a', 'plus1', 'b', 'plus2',
-      eqn.annotation('_90', 'm90l', 'center', -0.4, 'center', 'top'),
+    eqn.addForm('1', [
+      'a', 'plus1', 'b', 'plus2', '_90',
       'equals',
-      eqn.annotation('_180', 'm90r', 'center', -0.4, 'center', 'top'),
+      '_180',
     ]);
 
-    // eqn.addForm('3', [
-    //   'a', 'plus1', 'b', 'plus2',
-    //   eqn.annotation(
-    //     eqn.strike('_90', 'strike1'), 'm90l',
-    //     'center', -0.4, 'center', 'top',
-    //   ),
-    //   'equals',
-    //   eqn.annotation(
-    //     eqn.strike('_180', 'strike2'), 'm90r',
-    //     'center', -0.4, 'center', 'top',
-    //   ),
-    // ]);
+    eqn.addForm('2', [
+      eqn.annotation(
+        ['a', 'plus1', 'b', 'plus2', '_90'],
+        [eqn.annotationInformation('m90l', 'center', -0.4, 'center', 'top')],
+      ),
+      'equals',
+      eqn.annotation(
+        '_180',
+        [eqn.annotationInformation('m90r', 'center', -0.4, 'center', 'top')],
+      ),
+    ]);
 
     eqn.addForm('3', [
-      'a', 'plus1', 'b', 'plus2',
       eqn.annotation(
-        eqn.strike('_90', 'strike1'),
+        ['a', 'plus1', 'b', 'plus2', eqn.strike('_90', 'strike1')],
         [
           eqn.annotationInformation(
             'm90l',
@@ -192,6 +189,42 @@ export default class RectCollection extends CommonDiagramCollection {
       ),
     ]);
 
+    eqn.addForm('4', [
+      'a', 'plus1', 'b',
+      'equals',
+      'calc90',
+    ]);
+
+    eqn.addForm('5', [
+      eqn.annotation(
+        ['a', 'plus1', 'b'],
+        [eqn.annotationInformation('mal', 'center', -0.4, 'center', 'top')],
+      ),
+      'equals',
+      eqn.annotation(
+        'calc90',
+        [eqn.annotationInformation('mar', 'center', -0.4, 'center', 'top')],
+      ),
+    ]);
+
+    eqn.addForm('6', [
+      eqn.annotation(
+        [eqn.strike('a', 'strike1'), 'plus1', 'b'],
+        [eqn.annotationInformation('mal', 'center', -0.4, 'center', 'top')],
+      ),
+      'equals',
+      eqn.annotation(
+        'calc90',
+        [eqn.annotationInformation('mar', 'center', -0.4, 'center', 'top')],
+      ),
+    ]);
+
+    eqn.addForm('7', [
+      'b',
+      'equals',
+      'calc90',
+      'mar',
+    ]);
 
     // eqn.addForm('3', [
     //   'a', 'plus1', 'b', 'plus2',
@@ -222,11 +255,11 @@ export default class RectCollection extends CommonDiagramCollection {
     // eqn.addForm('4', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1', '_90',
     //   'equals', '_180', 'm1', '_90_2']);
     // eqn.addForm('5', ['a', 'p', 'b', 'equals', '_90_3']);
-    eqn.setFormSeries(['1', '2', '3']);
+    eqn.setFormSeries(['1', '2', '3', '4', '5', '6', '7']);
     const nextForm = () => {
       eqn.nextForm();
       this.diagram.animateNextFrame();
-    }
+    };
     eqn.collection.onClick = nextForm.bind(this);
     eqn.collection.isTouchable = true;
     eqn.collection._a.isTouchable = true;
