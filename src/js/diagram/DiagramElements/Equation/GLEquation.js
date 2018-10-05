@@ -507,6 +507,7 @@ class Annotation extends Elements {
         annotationOrAnnotationArray,
         xPositionOrAnnotationInSize,
         yPosition,
+        xAlign,
         yAlign,
         annotationScale,
         )];
@@ -553,7 +554,7 @@ class Annotation extends Elements {
       else if (xPosition === 'center') { xPos = 0.5; }
       else if (typeof xPosition === 'number') { xPos = xPosition; }
       annotationLoc.x += this.mainContent.width * xPos;
-      console.log(xPos)
+      // console.log(xPos)
       if (yPosition === 'bottom') { yPos = 0; }
       else if (yPosition === 'top') { yPos = 1; } 
       else if (yPosition === 'middle') { yPos = 0.5; }
@@ -568,7 +569,7 @@ class Annotation extends Elements {
       if (xAlign === 'right') { xOffset = 1; }
       else if (xAlign === 'center') { xOffset = 0.5; }
       else if (typeof xAlign === 'number') { xOffset = xAlign; }
-
+      console.log(xAlign)
       if (yAlign === 'bottom') { yOffset = 0; }
       else if (yAlign === 'top') { yOffset = 1; }
       else if (yAlign === 'middle') { yOffset = 0.5; }
@@ -578,6 +579,7 @@ class Annotation extends Elements {
         -xOffset * annotation.width,
         annotation.descent - yOffset * annotation.height,
       );
+      console.log(annotationOffset, xOffset)
       // console.log(annotationOffset, xOffset, annotation.width)
       annotation.calcSize(annotationLoc, incomingScale * annotationScale);
       annotation.offsetLocation(annotationOffset);
