@@ -92,27 +92,29 @@ export default class RectCollection extends CommonDiagramCollection {
     const strikeColor = this.layout.colors.diagram.warning;
 
     const colAngle = this.layout.colors.angles;
+    const colText = this.layout.colors.diagram.text.base;
+    const colDis = this.layout.colors.diagram.disabled;
     eqn.createElements(
       {
-        a: ['a', colAngle, true],
-        b: ['b', colAngle, true],
-        _90: '90º',
+        a: ['a', colAngle],
+        b: ['b', colAngle],
+        _90: ['90º', colText],
         _180: '180º',
         plus1: '  + ',
         plus2: '  + ',
         equals: ' = ',
 
-        m90l: '- 90º',
-        m90r: '- 90º',
-        mal: '- a',
-        mar: '  - a',
+        m90l: ['- 90º', colText],
+        m90r: ['- 90º', colText],
+        mal: ['- a', colAngle],
+        mar: ['  - a', colAngle],
 
         strike1: this.diagram.equation.strike(strikeColor),
         strike2: this.diagram.equation.strike(strikeColor),
         strike3: this.diagram.equation.strike(strikeColor),
         strike4: this.diagram.equation.strike(strikeColor),
 
-        calc0: '0',
+        calc0: ['0', colDis],
         calc90: '90º',
       },
       this.layout.colors.diagram.text.base,
@@ -218,6 +220,7 @@ export default class RectCollection extends CommonDiagramCollection {
     };
     eqn.collection.onClick = nextForm.bind(this);
     eqn.collection.isTouchable = true;
+    eqn.collection.touchInBoundingRect = true;
     this.add('eqn', eqn.collection);
     this._eqn.eqn = eqn;
   }
