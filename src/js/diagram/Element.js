@@ -2533,7 +2533,6 @@ class DiagramElementCollection extends DiagramElement {
       if (element.name in elementTransforms) {
         if (element.isShown) {
           if (!elementTransforms[element.name].isEqualTo(element.transform)) {
-            console.log(element.name, elementTransforms[element.name], element.transform)
             element.animateTo(
               elementTransforms[element.name],
               time,
