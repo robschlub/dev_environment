@@ -1839,6 +1839,7 @@ class DiagramElement {
   }
 
   click(): void {
+    console.log(this.name, this.onClick)
     if (this.onClick !== null && this.onClick !== undefined) {
       this.onClick(this);
     }

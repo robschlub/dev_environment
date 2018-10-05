@@ -90,10 +90,12 @@ export default class RectCollection extends CommonDiagramCollection {
   addEqn() {
     const eqn = this.diagram.equation.makeEqn();
     const strikeColor = this.layout.colors.diagram.warning;
+
+    const colAngle = this.layout.colors.angles;
     eqn.createElements(
       {
-        a: 'a',
-        b: 'b',
+        a: ['a', colAngle, true],
+        b: ['b', colAngle, true],
         _90: '90º',
         _180: '180º',
         plus1: '  + ',
@@ -115,7 +117,6 @@ export default class RectCollection extends CommonDiagramCollection {
       },
       this.layout.colors.diagram.text.base,
     );
-
     eqn.formAlignment.fixTo = eqn.collection._equals;
     eqn.formAlignment.hAlign = 'center';
     eqn.formAlignment.vAlign = 'middle';
@@ -130,12 +131,12 @@ export default class RectCollection extends CommonDiagramCollection {
     eqn.addForm('2', [
       eqn.annotation(
         ['a', 'plus1', 'b', 'plus2', '_90'],
-        [eqn.annotationInformation('m90l', 'center', -0.4, 'center', 'top')],
+        [eqn.ann('m90l', 'center', -0.4, 'center', 'top')],
       ),
       'equals',
       eqn.annotation(
         '_180',
-        [eqn.annotationInformation('m90r', 'center', -0.4, 'center', 'top')],
+        [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
       ),
     ]);
 
@@ -143,11 +144,11 @@ export default class RectCollection extends CommonDiagramCollection {
       eqn.annotation(
         ['a', 'plus1', 'b', 'plus2', eqn.strike('_90', 'strike1')],
         [
-          eqn.annotationInformation(
+          eqn.ann(
             eqn.strike('m90l', 'strike3'),
             'center', -0.4, 'center', 'top',
           ),
-          eqn.annotationInformation(
+          eqn.ann(
             'calc0',
             'right', 1.4, 'left', 'bottom',
           ),
@@ -157,11 +158,11 @@ export default class RectCollection extends CommonDiagramCollection {
       eqn.annotation(
         eqn.strike('_180', 'strike2'),
         [
-          eqn.annotationInformation(
+          eqn.ann(
             eqn.strike('m90r', 'strike4'),
             'center', -0.4, 'center', 'top',
           ),
-          eqn.annotationInformation(
+          eqn.ann(
             'calc90',
             'right', 1.4, 'left', 'bottom',
           ),
@@ -178,19 +179,19 @@ export default class RectCollection extends CommonDiagramCollection {
     eqn.addForm('5', [
       eqn.annotation(
         ['a', 'plus1', 'b'],
-        [eqn.annotationInformation('mal', 'center', -0.4, 'center', 'top')],
+        [eqn.ann('mal', 'center', -0.4, 'center', 'top')],
       ),
       'equals',
       eqn.annotation(
         'calc90',
-        [eqn.annotationInformation('mar', 'center', -0.4, 'center', 'top')],
+        [eqn.ann('mar', 'center', -0.4, 'center', 'top')],
       ),
     ]);
 
     eqn.addForm('6', [
       eqn.annotation(
         [eqn.strike('a', 'strike1'), 'plus1', 'b'],
-        [eqn.annotationInformation(
+        [eqn.ann(
           eqn.strike('mal', 'strike2'),
           'center', -0.4, 'center', 'top',
         )],
@@ -198,7 +199,7 @@ export default class RectCollection extends CommonDiagramCollection {
       'equals',
       eqn.annotation(
         'calc90',
-        [eqn.annotationInformation('mar', 'center', -0.4, 'center', 'top')],
+        [eqn.ann('mar', 'center', -0.4, 'center', 'top')],
       ),
     ]);
 
@@ -210,13 +211,13 @@ export default class RectCollection extends CommonDiagramCollection {
     ]);
 
     eqn.setFormSeries(['1', '2', '3', '4', '5', '6', '7']);
+
     const nextForm = () => {
       eqn.nextForm();
       this.diagram.animateNextFrame();
     };
     eqn.collection.onClick = nextForm.bind(this);
     eqn.collection.isTouchable = true;
-    eqn.collection._a.isTouchable = true;
     this.add('eqn', eqn.collection);
     this._eqn.eqn = eqn;
   }

@@ -1063,23 +1063,55 @@ export function createEquationElements(
     new Transform('Equation Elements Collection').scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits,
   );
+  const makeElem = (text) => {
+    const dT = new DiagramText(new Point(0, 0), text, font);
+    const to = new TextObject(drawContext2D, [dT]);
+    const p = new DiagramElementPrimative(
+      to,
+      new Transform('Equation Element').scale(1, 1).translate(0, 0),
+      color,
+      diagramLimits,
+    );
+    return p;
+  };
   Object.keys(elems).forEach((key) => {
     if (typeof elems[key] === 'string') {
-      const dT = new DiagramText(new Point(0, 0), elems[key], font);
-      const to = new TextObject(drawContext2D, [dT]);
-      const p = new DiagramElementPrimative(
-        to,
-        new Transform('Equation Element').scale(1, 1).translate(0, 0),
-        color,
-        diagramLimits,
-      );
-      collection.add(key, p);
+      // const dT = new DiagramText(new Point(0, 0), elems[key], font);
+      // const to = new TextObject(drawContext2D, [dT]);
+      // const p = new DiagramElementPrimative(
+      //   to,
+      //   new Transform('Equation Element').scale(1, 1).translate(0, 0),
+      //   color,
+      //   diagramLimits,
+      // );
+      collection.add(key, makeElem(elems[key]));
     }
     if (elems[key] instanceof DiagramElementPrimative) {
       collection.add(key, elems[key]);
     }
     if (elems[key] instanceof DiagramElementCollection) {
       collection.add(key, elems[key]);
+    }
+    if (Array.isArray(elems[key])) {
+      const [text, col, isTouchable, onClick] = elems[key];
+      const elem = makeElem(text);
+      if (col) {
+        elem.setColor(col);
+      }
+      if (isTouchable) {
+        elem.isTouchable = isTouchable;
+      }
+      if (onClick) {
+        elem.onClick = onClick;
+      }
+      // const elem = makeElem(elems[key][0]);
+      // if (elems[key].length > 1) {
+      //   elem.setColor(elems[key][1]);
+      // }
+      // if (elems[key].length > 2) {
+      //   elem.isTouchable = elems[key][2];
+      // }
+      collection.add(key, elem);
     }
   });
 
@@ -1928,7 +1960,7 @@ export class Equation {
     );
   }
 
-  annotationInformation(
+  ann(
     content: TypeEquationInput,
     xPosition: 'left' | 'right' | 'center' = 'right',
     yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
