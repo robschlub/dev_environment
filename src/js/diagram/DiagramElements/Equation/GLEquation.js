@@ -439,10 +439,10 @@ export class AnnotationInformation {
 
   constructor(
     content: Elements,
-    xPosition: 'left' | 'right' | 'center' = 'right',
-    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
-    xAlign: 'left' | 'right' | 'center' = 'left',
-    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
+    xPosition: 'left' | 'right' | 'center' | number = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
+    xAlign: 'left' | 'right' | 'center' | number = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
     annotationScale: number = 0.5,
   ) {
     this.content = content;
@@ -480,16 +480,16 @@ class Annotation extends Elements {
   constructor(
     mainContent: Elements,
     annotationOrAnnotationArray: Elements | Array<AnnotationInformation>,
-    xPositionOrAnnotationInSize: 'left' | 'right' | 'center' | boolean = 'right',
-    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
-    xAlign: 'left' | 'right' | 'center' = 'left',
-    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
+    xPositionOrAnnotationInSize: 'left' | 'right' | 'center' | number | boolean = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
+    xAlign: 'left' | 'right' | 'center' | number = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
     annotationScale: number = 0.5,
     annotationInSize: boolean = false,
   ) {
     if (Array.isArray(annotationOrAnnotationArray)) {
       const annotationElements = [mainContent];
-      annotationOrAnnotationArray.forEach((annotationinfo) => {
+      annotationOrAnnotationArray.forEach((annotationInfo) => {
         annotationElements.push(annotationInfo.content);
       });
       super(annotationElements);
@@ -501,31 +501,39 @@ class Annotation extends Elements {
     this.annotations = [];
     if (Array.isArray(annotationOrAnnotationArray)) {
       this.annotations = annotationOrAnnotationArray;
-      this.annotationInSize = xPositionOrAnnotationInSize;
+      if (typeof xPositionOrAnnotationInSize === 'boolean') {
+        this.annotationInSize = xPositionOrAnnotationInSize;
+      } else {
+        this.annotationInSize = false;
+      }
     } else {
+      let xPosition = 'right';
+      if (typeof xPositionOrAnnotationInSize !== 'boolean') {
+        xPosition = xPositionOrAnnotationInSize;
+      }
       this.annotations = [new AnnotationInformation(
         annotationOrAnnotationArray,
-        xPositionOrAnnotationInSize,
+        xPosition,
         yPosition,
         xAlign,
         yAlign,
         annotationScale,
-        )];
+      )];
       this.annotationInSize = annotationInSize;
     }
   }
 
   _dup(namedCollection: Object) {
     // const annotationsCopy = [];
-    const annotationsCopy = this.annotations.map(annotationInfo => new AnnotationInformation(
-      annotationInfo.content._dup(namedCollection),
-      annotationInfo.xPosition,
-      annotationInfo.yPosition,
-      annotationInfo.xAlign,
-      annotationInfo.yAlign,
-      annotationInfo.annotationScale,
-      annotationInfo.annotationInSize,
-    ));
+    const annotationsCopy =
+      this.annotations.map(annotationInfo => new AnnotationInformation(
+        annotationInfo.content._dup(namedCollection),
+        annotationInfo.xPosition,
+        annotationInfo.yPosition,
+        annotationInfo.xAlign,
+        annotationInfo.yAlign,
+        annotationInfo.annotationScale,
+      ));
     const annotationCopy = new Annotation(
       this.mainContent._dup(namedCollection),
       annotationsCopy,
@@ -539,48 +547,66 @@ class Annotation extends Elements {
     this.location = location._dup();
     this.mainContent.calcSize(location, incomingScale);
     let minX = this.mainContent.location.x;
-    let minY = this.mainContent.location.y - this.mainContent.location.descent;
-    let maxX = this.mainContent.location.x + location.width;
-    let maxY = this.mainContent.location.y + this.mainContent.location.ascent;
+    let minY = this.mainContent.location.y - this.mainContent.descent;
+    let maxX = this.mainContent.location.x + this.mainContent.width;
+    let maxY = this.mainContent.location.y + this.mainContent.ascent;
     this.annotations.forEach((annotationInfo) => {
       const annotation = annotationInfo.content;
-      const { xPosition, yPosition, xAlign, yAlign, annotationScale } = annotationInfo;
-      annotation.calcSize(location, incomingScale * annotationScale)
-      console.log(annotation.width)
+      const {
+        xPosition, yPosition, xAlign,
+        yAlign, annotationScale,
+      } = annotationInfo;
+      annotation.calcSize(location, incomingScale * annotationScale);
+
       const annotationLoc = this.location._dup();
       let xPos = 0;
       let yPos = this.mainContent.descent / this.mainContent.height;
-      if (xPosition === 'right') { xPos = 1; }
-      else if (xPosition === 'center') { xPos = 0.5; }
-      else if (typeof xPosition === 'number') { xPos = xPosition; }
+      if (xPosition === 'right') {
+        xPos = 1;
+      } else if (xPosition === 'center') {
+        xPos = 0.5;
+      } else if (typeof xPosition === 'number') {
+        xPos = xPosition;
+      }
       annotationLoc.x += this.mainContent.width * xPos;
-      // console.log(xPos)
-      if (yPosition === 'bottom') { yPos = 0; }
-      else if (yPosition === 'top') { yPos = 1; } 
-      else if (yPosition === 'middle') { yPos = 0.5; }
-      else if (typeof yPosition === 'number') { yPos = yPosition; }
+
+      if (yPosition === 'bottom') {
+        yPos = 0;
+      } else if (yPosition === 'top') {
+        yPos = 1;
+      } else if (yPosition === 'middle') {
+        yPos = 0.5;
+      } else if (typeof yPosition === 'number') {
+        yPos = yPosition;
+      }
 
       annotationLoc.y += -this.mainContent.descent + this.mainContent.height * yPos;
-      // console.log(annotationLoc)
 
       let xOffset = 0;
       let yOffset = annotation.descent / annotation.height;
-      
-      if (xAlign === 'right') { xOffset = 1; }
-      else if (xAlign === 'center') { xOffset = 0.5; }
-      else if (typeof xAlign === 'number') { xOffset = xAlign; }
-      console.log(xAlign)
-      if (yAlign === 'bottom') { yOffset = 0; }
-      else if (yAlign === 'top') { yOffset = 1; }
-      else if (yAlign === 'middle') { yOffset = 0.5; }
-      else if (typeof yAlign === 'number') { yOffset = yAlign; }
+      if (xAlign === 'right') {
+        xOffset = 1;
+      } else if (xAlign === 'center') {
+        xOffset = 0.5;
+      } else if (typeof xAlign === 'number') {
+        xOffset = xAlign;
+      }
+
+      if (yAlign === 'bottom') {
+        yOffset = 0;
+      } else if (yAlign === 'top') {
+        yOffset = 1;
+      } else if (yAlign === 'middle') {
+        yOffset = 0.5;
+      } else if (typeof yAlign === 'number') {
+        yOffset = yAlign;
+      }
 
       const annotationOffset = new Point(
         -xOffset * annotation.width,
         annotation.descent - yOffset * annotation.height,
       );
-      console.log(annotationOffset, xOffset)
-      // console.log(annotationOffset, xOffset, annotation.width)
+
       annotation.calcSize(annotationLoc, incomingScale * annotationScale);
       annotation.offsetLocation(annotationOffset);
 
@@ -590,10 +616,9 @@ class Annotation extends Elements {
       const annotationMinY = annotation.location.y - annotation.descent;
       maxX = annotationMaxX > maxX ? annotationMaxX : maxX;
       maxY = annotationMaxY > maxY ? annotationMaxY : maxY;
-      maxX = annotationMinX < minX ? annotationMinX : minX;
-      maxY = annotationMinY < minY ? annotationMinY : minY;
-      // console.log(annotation.location)
-    })
+      minX = annotationMinX < minX ? annotationMinX : minX;
+      minY = annotationMinY < minY ? annotationMinY : minY;
+    });
 
     if (this.annotationInSize) {
       const bottomLeft = new Point(minX, minY);
@@ -607,8 +632,7 @@ class Annotation extends Elements {
         this.mainContent.offsetLocation(new Point(xOffset, 0));
         this.annotations = this.annotations.map((annotationInfo) => {
           annotationInfo.content.offsetLocation(new Point(xOffset, 0));
-        })
-        // this.annotation.offsetLocation(new Point(xOffset, 0));
+        });
       }
     } else {
       this.width = this.mainContent.width;
@@ -1872,20 +1896,53 @@ export class Equation {
 
   annotation(
     content: TypeEquationInput,
-    annotation: TypeEquationInput,
+    annotationOrAnnotationArray: TypeEquationInput | Array<AnnotationInformation>,
+    xPositionOrAnnotationInSize: 'left' | 'right' | 'center' | number | boolean = 'right',
+    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
+    xAlign: 'left' | 'right' | 'center' | number = 'left',
+    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
+    annotationScale: number = 0.5,
+    annotationInSize: boolean = false,
+  ) {
+    if (Array.isArray(annotationOrAnnotationArray)) {
+      let inSize = false;
+      if (typeof xPositionOrAnnotationInSize === 'boolean') {
+        inSize = xPositionOrAnnotationInSize;
+      }
+      return new Annotation(
+        contentToElement(this.collection, content),
+        annotationOrAnnotationArray,
+        inSize,
+      );
+    }
+    let xPosition = 'right';
+    if (typeof xPositionOrAnnotationInSize !== 'boolean') {
+      xPosition = xPositionOrAnnotationInSize;
+    }
+    return new Annotation(
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, annotationOrAnnotationArray),
+      xPosition, yPosition,
+      xAlign, yAlign,
+      annotationScale, annotationInSize,
+    );
+  }
+
+  annotationInformation(
+    content: TypeEquationInput,
     xPosition: 'left' | 'right' | 'center' = 'right',
     yPosition: 'bottom' | 'top' | 'middle' | 'baseline' = 'top',
     xAlign: 'left' | 'right' | 'center' = 'left',
     yAlign: 'bottom' | 'top' | 'middle' | 'baseline' = 'bottom',
     annotationScale: number = 0.5,
-    annotationInSize: boolean = false,
   ) {
-    return new Annotation(
+    return new AnnotationInformation(
       contentToElement(this.collection, content),
-      contentToElement(this.collection, annotation),
-      xPosition, yPosition,
-      xAlign, yAlign,
-      annotationScale, annotationInSize,
+      xPosition,
+      yPosition,
+      xAlign,
+      yAlign,
+      annotationScale,
     );
   }
 

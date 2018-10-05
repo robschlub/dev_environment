@@ -6,7 +6,7 @@ import {
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../js/diagram/Element';
-import { AnnotationInformation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+// import { AnnotationInformation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import {
 //   removeRandElement, rand,
 // } from '../../../../js/diagram/tools/mathtools';
@@ -148,34 +148,47 @@ export default class RectCollection extends CommonDiagramCollection {
       eqn.annotation('_180', 'm90r', 'center', -0.4, 'center', 'top'),
     ]);
 
+    // eqn.addForm('3', [
+    //   'a', 'plus1', 'b', 'plus2',
+    //   eqn.annotation(
+    //     eqn.strike('_90', 'strike1'), 'm90l',
+    //     'center', -0.4, 'center', 'top',
+    //   ),
+    //   'equals',
+    //   eqn.annotation(
+    //     eqn.strike('_180', 'strike2'), 'm90r',
+    //     'center', -0.4, 'center', 'top',
+    //   ),
+    // ]);
+
     eqn.addForm('3', [
       'a', 'plus1', 'b', 'plus2',
       eqn.annotation(
-        eqn.strike('_90', 'strike1'), 'm90l',
-        'center', -0.4, 'center', 'top',
-      ),
-      'equals',
-      eqn.annotation(
-        eqn.strike('_180', 'strike2'), 'm90r',
-        'center', -0.4, 'center', 'top',
-      ),
-    ]);
-
-    eqn.addForm('4', [
-      'a', 'plus1', 'b', 'plus2',
-      eqn.annotation(
         eqn.strike('_90', 'strike1'),
-        [ new AnnotationInformation(
-          'm90l',
-          'center', -0.4, 'center', 'top',
-        ),
-
-        
+        [
+          eqn.annotationInformation(
+            'm90l',
+            'center', -0.4, 'center', 'top',
+          ),
+          eqn.annotationInformation(
+            'calc0',
+            'right', 1.4, 'left', 'bottom',
+          ),
+        ],
       ),
       'equals',
       eqn.annotation(
-        eqn.strike('_180', 'strike2'), 'm90r',
-        'center', -0.4, 'center', 'top',
+        eqn.strike('_180', 'strike2'),
+        [
+          eqn.annotationInformation(
+            'm90r',
+            'center', -0.4, 'center', 'top',
+          ),
+          eqn.annotationInformation(
+            'calc90',
+            'right', 1.4, 'left', 'bottom',
+          ),
+        ],
       ),
     ]);
 
@@ -209,7 +222,7 @@ export default class RectCollection extends CommonDiagramCollection {
     // eqn.addForm('4', ['m', '_90_1', 'p2', 'a', 'p', 'b', 'p1', '_90',
     //   'equals', '_180', 'm1', '_90_2']);
     // eqn.addForm('5', ['a', 'p', 'b', 'equals', '_90_3']);
-    eqn.setFormSeries(['1', '2', '3', '4']);
+    eqn.setFormSeries(['1', '2', '3']);
     const nextForm = () => {
       eqn.nextForm();
       this.diagram.animateNextFrame();
