@@ -1263,25 +1263,29 @@ class Transform {
     return true;
   }
 
-  isEqualTo(transformToCompare: Transform): boolean {
-    if (transformToCompare.order.length !== this.order.length) {
+  isEqualTo(transformToCompare: Transform, precision: number = 8): boolean {
+    // if (transformToCompare.order.length !== this.order.length) {
+    //   return false;
+    // }
+    if (!this.isSimilarTo(transformToCompare)) {
       return false;
     }
     for (let i = 0; i < this.order.length; i += 1) {
-      if (this.order[i].constructor.name !==
-          transformToCompare.order[i].constructor.name) {
+      const compare = transformToCompare.order[i];
+      const thisTrans = this.order[i];
+      if (thisTrans.constructor.name !== compare.constructor.name) {
         return false;
       }
-      if (this.order[i] instanceof Translation || this.order[i] instanceof Scale) {
-        if (transformToCompare.order[i].x !== this.order[i].x) {
-          return false;
-        }
-        if (transformToCompare.order[i].y !== this.order[i].y) {
+      if ((thisTrans instanceof Translation && compare instanceof Translation
+      ) || (
+        thisTrans instanceof Scale && compare instanceof Scale
+      )) {
+        if (compare.isNotEqualTo(thisTrans, precision)) {
           return false;
         }
       }
-      if (this.order[i] instanceof Rotation) {
-        if (transformToCompare.order[i].r !== this.order[i].r) {
+      if (thisTrans instanceof Rotation) {
+        if (compare.r !== thisTrans.r) {
           return false;
         }
       }
