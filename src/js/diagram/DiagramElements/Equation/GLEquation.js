@@ -429,7 +429,7 @@ class StrikeOut extends Elements {
 }
 
 
-class AnnotationInformation {
+export class AnnotationInformation {
   content: Elements;
   xPosition: 'left' | 'right' | 'center' | number;
   yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number;
