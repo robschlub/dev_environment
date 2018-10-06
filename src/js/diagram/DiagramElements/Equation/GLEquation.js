@@ -1860,14 +1860,6 @@ export class Equation {
         this.showForm(form.name);
       }
     }
-    // if (this.currentForm != null) {
-    //   if (units === 'deg' && this.currentForm.name.startsWith('rad')) {
-    //     this.showForm(`deg${this.currentForm.name.slice(3)}`);
-    //   }
-    //   if (units === 'rad' && this.currentForm.name.startsWith('deg')) {
-    //     this.showForm(`rad${this.currentForm.name.slice(3)}`);
-    //   }
-    // }
   }
 
   showForm(
