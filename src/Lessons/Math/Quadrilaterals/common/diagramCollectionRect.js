@@ -89,6 +89,7 @@ export default class RectCollection extends CommonDiagramCollection {
 
   addEqn() {
     const eqn = this.diagram.equation.makeEqn();
+    const eqnDescription = this.diagram.equation.makeDescription();
     const strikeColor = this.layout.colors.diagram.warning;
 
     const colAngle = this.layout.colors.angles;
@@ -118,6 +119,7 @@ export default class RectCollection extends CommonDiagramCollection {
         calc90: '90º',
       },
       this.layout.colors.diagram.text.base,
+      eqnDescription,
     );
     eqn.formAlignment.fixTo = eqn.collection._equals;
     eqn.formAlignment.hAlign = 'center';
@@ -140,7 +142,7 @@ export default class RectCollection extends CommonDiagramCollection {
         '_180',
         [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
       ),
-    ], 'base', 'Subtract 90º from both sides of the equation.');
+    ], 'base', '|Subtract| 90º from both sides of the equation.');
 
     eqn.addForm('3', [
       eqn.annotation(
@@ -214,23 +216,23 @@ export default class RectCollection extends CommonDiagramCollection {
 
     eqn.setFormSeries(['1', '2', '3', '4', '5', '6', '7']);
 
-    const description = this.diagram.shapes.htmlElement(
-      document.createElement('div'),
-      'id__rectangles_equation_desctription',
-      '',
-      new Point(1, 0), 'middle', 'left',
-    );
-    description.vertices.element.innerHTML = eqn.getForm('1').description;
+    // const description = this.diagram.shapes.htmlElement(
+    //   document.createElement('div'),
+    //   'id__rectangles_equation_desctription',
+    //   '',
+    //   new Point(1, 0), 'middle', 'left',
+    // );
+    // description.vertices.element.innerHTML = eqn.getForm('1').description;
     const nextForm = () => {
       eqn.nextForm();
-      description.vertices.element.innerHTML = eqn.currentForm.base.description;
+      // description.vertices.element.innerHTML = eqn.currentForm.base.description;
       this.diagram.animateNextFrame();
     };
     eqn.collection.onClick = nextForm.bind(this);
     eqn.collection.isTouchable = true;
     eqn.collection.touchInBoundingRect = true;
     this.add('eqn', eqn.collection);
-    this.add('eqnDescription', description);
+    this.add('eqnDescription', eqnDescription);
     this._eqn.eqn = eqn;
   }
 

@@ -132,6 +132,15 @@ function equation(diagram: Diagram, high: boolean = false) {
     );
   }
 
+  function makeDescription(id: string) {
+    return diagram.shapes.htmlElement(
+      document.createElement('div'),
+      id,
+      'lesson__equation_description',
+      new Point(0, 0), 'middle', 'left',
+    );
+  }
+
   return {
     elements,
     vinculum,
@@ -140,6 +149,7 @@ function equation(diagram: Diagram, high: boolean = false) {
     makeHTML,
     makeEqn,
     strike,
+    makeDescription,
   };
 }
 

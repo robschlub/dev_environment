@@ -11,8 +11,9 @@ import {
   DiagramText, DiagramFont, TextObject,
 } from '../../DrawingObjects/TextObject/TextObject';
 import DrawContext2D from '../../DrawContext2D';
+import * as html from '../../../tools/htmlGenerator';
 // import { TextObject } from './DrawingObjects/TextObject/TextObject';
-// import { HTMLObject } from './DrawingObjects/HTMLObject/HTMLObject';
+import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 
 // Equation is a class that takes a set of drawing objects (TextObjects,
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
@@ -1183,15 +1184,21 @@ export type TypeEquationForm = {
     'left' | 'center' | 'right', 'top' | 'bottom' | 'middle' | 'baseline',
   ) => void;
   animatePositionsTo: (number, ?(?mixed) => void) => void;
+  description: string | null;
+  modifiers: Object;
 } & Elements;
 
 export class EquationForm extends Elements {
   collection: DiagramElementCollection;
   name: string;
+  description: string | null;
+  modifiers: Object;
 
   constructor(collection: DiagramElementCollection) {
     super([]);
     this.collection = collection;
+    this.description = null;
+    this.modifiers = {};
   }
 
   _dup(collection: DiagramElementCollection) {
@@ -1587,6 +1594,8 @@ export class Equation {
     scale: number;
   };
 
+  descriptionElement: DiagramElementPrimative | null;
+
   +showForm: (EquationForm | string, ?string) => {};
 
   constructor(
@@ -1656,6 +1665,7 @@ export class Equation {
   createElements(
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],
+    descriptionElement: DiagramElementPrimative | null = null,
   ) {
     this.collection = createEquationElements(
       elems,
@@ -1664,6 +1674,7 @@ export class Equation {
       this.diagramLimits,
       this.firstTransform,
     );
+    this.descriptionElement = descriptionElement;
   }
 
   setPosition(position: Point) {
@@ -1705,6 +1716,7 @@ export class Equation {
     content: Array<Elements | Element | string>,
     formType: string = 'base',
     description: string = '',
+    modifiers: Object = {},
   ) {
     if (!(name in this.form)) {
       this.form[name] = {};
@@ -1713,7 +1725,8 @@ export class Equation {
     this.form[name][formType] = new EquationForm(this.collection);
     this.form[name].name = name;
     this.form[name][formType].name = name;
-    this.form[name][formType].description = description;
+    this.form[name][formType].description = html.applyModifiers(description, modifiers);
+    this.form[name][formType].modifiers = modifiers;
 
     const form = this.form[name][formType];
     form.createEq(content);
@@ -1728,7 +1741,8 @@ export class Equation {
     // need a base form for some functions
     if (this.form[name].base === undefined) {
       this.addForm(name, content, 'base');
-      this.form[name].base.description = description;
+      this.form[name].base.description = html.applyModifiers(description, modifiers);
+      this.form[name].base.modifiers = modifiers;
     }
   }
 
@@ -1818,10 +1832,47 @@ export class Equation {
       form = this.formSeries[nextIndex][formTypeToUse];
       form.animatePositionsTo(2);
       this.setCurrentForm(this.formSeries[nextIndex]);
+      this.updateDescription();
     }
 
     // this.formSeries[nextIndex].base.animatePositionsTo(2);
     // this.setCurrentForm(this.formSeries[nextIndex]);
+  }
+
+  updateDescription(
+    formOrName: EquationForm | string | null = null,
+    formType: string = 'base',
+  ) {
+    console.log(1)
+    if (this.descriptionElement == null) {
+      return;
+    }
+    console.log(2)
+    if (this.descriptionElement.isShown === false) {
+      return;
+    }
+    console.log(3)
+    let form = null;
+    if (formOrName == null) {
+      form = this.currentForm;
+    } else if (typeof formOrName === 'string') {
+      form = this.getForm(formOrName, formType);
+    } else {
+      form = formOrName;
+    }
+    if (form == null) {
+      return;
+    }
+    console.log(form)
+    if (form.description == null) {
+      return;
+    }
+    console.log(5)
+    if (this.descriptionElement.vertices instanceof HTMLObject) {
+      this.descriptionElement.vertices.element.innerHTML = form.description;
+      html.setOnClicks(form.modifiers);
+      console.log(6)
+    }
   }
 
   render() {
@@ -1830,6 +1881,7 @@ export class Equation {
       form.showHide();
       this.collection.show();
       form.setPositions();
+      this.updateDescription();
     }
   }
 
