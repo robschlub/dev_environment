@@ -1748,8 +1748,6 @@ export class Equation {
     // need a base form for some functions
     if (this.form[name].base === undefined) {
       this.addForm(name, content, 'base', description, modifiers);
-      // this.form[name].base.description = html.applyModifiers(description, modifiers);
-      // this.form[name].base.modifiers = modifiers;
     }
   }
 
@@ -1800,7 +1798,6 @@ export class Equation {
     });
   }
 
-  // TODO add formType
   setFormSeries(series: Array<string | EquationForm>) {
     this.formSeries = [];
     series.forEach((form) => {
@@ -1849,13 +1846,9 @@ export class Equation {
       // $FlowFixMe
       form = this.formSeries[nextIndex][formTypeToUse];
       form.animatePositionsTo(2);
-      // this.setCurrentForm(this.formSeries[nextIndex]);
       this.setCurrentForm(form);
       this.updateDescription();
     }
-
-    // this.formSeries[nextIndex].base.animatePositionsTo(2);
-    // this.setCurrentForm(this.formSeries[nextIndex]);
   }
 
   updateDescription(
@@ -1899,13 +1892,6 @@ export class Equation {
     }
   }
 
-  // getFormName(form: EquationForm) {
-  //   Object.keys(this.form).forEach((formName) => {
-  //     const formGroup = this.form[formName];
-  //     Object.keys(formGroup)
-  //   });
-  // }
-
   setCurrentForm(
     formOrName: EquationForm | string,
     formType: string = 'base',
@@ -1947,32 +1933,12 @@ export class Equation {
   ) {
     let form = formOrName;
     if (typeof formOrName === 'string') {
-      // if (formOrName in this.form) {
-      //   let formTypeToUse = formType;
-      //   if (formTypeToUse == null) {
-      //     const possibleFormTypes
-      //       = this.formTypeOrder.filter(fType => fType in this.form[formOrName]);
-      //     if (possibleFormTypes.length) {
-      //       // eslint-disable-next-line prefer-destructuring
-      //       formTypeToUse = possibleFormTypes[0];
-      //     }
-      //   }
-      //   if (formTypeToUse != null) {
-      //     this.setCurrentForm(formOrName, formTypeToUse);
-      //   }
-      //   this.render();
-      // }
       form = this.getForm(formOrName, formType);
-      // if (form) {
-      //   this.setCurrentForm(form);
-      //   this.render();
     }
-    // } else {
     if (form) {
       this.setCurrentForm(formOrName);
       this.render();
     }
-    // }
   }
 
   getForm(
