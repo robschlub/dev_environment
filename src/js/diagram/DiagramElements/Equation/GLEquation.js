@@ -1186,11 +1186,13 @@ export type TypeEquationForm = {
   animatePositionsTo: (number, ?(?mixed) => void) => void;
   description: string | null;
   modifiers: Object;
+  type: string;
 } & Elements;
 
 export class EquationForm extends Elements {
   collection: DiagramElementCollection;
   name: string;
+  type: string;
   description: string | null;
   modifiers: Object;
 
@@ -1583,7 +1585,10 @@ export class Equation {
   form: Object;
   formSeries: Array<EquationForm>;
   drawContext2D: DrawContext2D;
-  currentForm: ?EquationForm;
+  // currentForm: ?EquationForm;
+  currentForm: string;
+  currentFormType: string;
+  getCurrentForm: () => ?EquationForm;
   formTypeOrder: Array<string>;
   // currentFormName: string;
   // currentFormType: string;
@@ -1614,7 +1619,8 @@ export class Equation {
       fixTo: new Point(0, 0),
       scale: 1,
     };
-    this.currentForm = null;
+    this.currentForm = '';
+    this.currentFormType = '';
     this.formTypeOrder = ['base'];
   }
 
@@ -1727,6 +1733,7 @@ export class Equation {
     this.form[name][formType].name = name;
     this.form[name][formType].description = html.applyModifiers(description, modifiers);
     this.form[name][formType].modifiers = modifiers;
+    this.form[name][formType].type = formType;
 
     const form = this.form[name][formType];
     form.createEq(content);
@@ -1740,14 +1747,24 @@ export class Equation {
     // make the first form added also equal to the base form as always
     // need a base form for some functions
     if (this.form[name].base === undefined) {
-      this.addForm(name, content, 'base');
-      this.form[name].base.description = html.applyModifiers(description, modifiers);
-      this.form[name].base.modifiers = modifiers;
+      this.addForm(name, content, 'base', description, modifiers);
+      // this.form[name].base.description = html.applyModifiers(description, modifiers);
+      // this.form[name].base.modifiers = modifiers;
     }
   }
 
+  getCurrentForm() {
+    if (this.form[this.currentForm] == null) {
+      return null;
+    }
+    if (this.form[this.currentForm][this.currentFormType] == null) {
+      return null;
+    }
+    return this.form[this.currentForm][this.currentFormType];
+  }
+
   reArrangeCurrentForm() {
-    const form = this.currentForm;
+    const form = this.getCurrentForm();
     if (form == null) {
       return;
     }
@@ -1801,8 +1818,9 @@ export class Equation {
     let nextIndex = 0;
     if (name == null) {
       let index = 0;
-      if (this.currentForm != null) {
-        index = this.formSeries.indexOf(this.currentForm);
+      const currentForm = this.getCurrentForm();
+      if (currentForm != null) {
+        index = this.formSeries.indexOf(currentForm);
         if (index < 0) {
           index = 0;
         }
@@ -1831,7 +1849,8 @@ export class Equation {
       // $FlowFixMe
       form = this.formSeries[nextIndex][formTypeToUse];
       form.animatePositionsTo(2);
-      this.setCurrentForm(this.formSeries[nextIndex]);
+      // this.setCurrentForm(this.formSeries[nextIndex]);
+      this.setCurrentForm(form);
       this.updateDescription();
     }
 
@@ -1885,19 +1904,29 @@ export class Equation {
     }
   }
 
+  // getFormName(form: EquationForm) {
+  //   Object.keys(this.form).forEach((formName) => {
+  //     const formGroup = this.form[formName];
+  //     Object.keys(formGroup)
+  //   });
+  // }
+
   setCurrentForm(
     formOrName: EquationForm | string,
     formType: string = 'base',
   ) {
     if (typeof formOrName === 'string') {
-      this.currentForm = null;
+      this.currentForm = '';
+      this.currentFormType = '';
       if (formOrName in this.form) {
+        this.currentForm = formOrName;
         if (formType in this.form[formOrName]) {
-          this.currentForm = this.form[formOrName][formType];
+          this.currentFormType = formType;
         }
       }
     } else {
-      this.currentForm = formOrName;
+      this.currentForm = formOrName.name;
+      this.currentFormType = formOrName.type;
     }
   }
 
