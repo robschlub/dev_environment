@@ -1898,6 +1898,11 @@ export class Equation {
     }
     if (element.vertices instanceof HTMLObject) {
       element.vertices.element.innerHTML = form.description;
+      // element.vertices.element.transformHtml(element.vertices.element.parentTransform)
+      // debugger;
+      const parentLastDrawTransform = element.getParentLastDrawTransform();
+      // debugger;
+      element.vertices.transformHtml(parentLastDrawTransform);
       html.setOnClicks(form.modifiers);
     }
   }

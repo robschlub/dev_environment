@@ -1029,6 +1029,11 @@ class DiagramElement {
     this.lastDrawTransform.calcMatrix();
   }
 
+  getParentLastDrawTransform() {
+    const { parentCount } = this.lastDrawElementTransformPosition;
+    return new Transform(this.lastDrawTransform.order.slice(-parentCount));
+  }
+
   // Start an animation plan of phases ending in a callback
   animatePlan(
     phases: Array<AnimationPhase>,
