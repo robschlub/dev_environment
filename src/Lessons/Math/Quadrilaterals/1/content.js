@@ -118,8 +118,8 @@ class Content extends LessonContent {
       `,
       setSteadyState: () => {
         rect._eqn.eqn.showForm('1');
-      }
-    })
+      },
+    });
   }
 }
 

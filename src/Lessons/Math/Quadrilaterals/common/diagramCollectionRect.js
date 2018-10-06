@@ -128,7 +128,7 @@ export default class RectCollection extends CommonDiagramCollection {
       'a', 'plus1', 'b', 'plus2', '_90',
       'equals',
       '_180',
-    ]);
+    ], 'base', 'All angles in a triangle add to 180º.');
 
     eqn.addForm('2', [
       eqn.annotation(
@@ -140,7 +140,7 @@ export default class RectCollection extends CommonDiagramCollection {
         '_180',
         [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
       ),
-    ]);
+    ], 'base', 'Subtract 90º from both sides of the equation.');
 
     eqn.addForm('3', [
       eqn.annotation(
@@ -170,7 +170,7 @@ export default class RectCollection extends CommonDiagramCollection {
           ),
         ],
       ),
-    ]);
+    ], 'base', 'Peform subtraction');
 
     eqn.addForm('4', [
       'a', 'plus1', 'b',
@@ -214,14 +214,23 @@ export default class RectCollection extends CommonDiagramCollection {
 
     eqn.setFormSeries(['1', '2', '3', '4', '5', '6', '7']);
 
+    const description = this.diagram.shapes.htmlElement(
+      document.createElement('div'),
+      'id__rectangles_equation_desctription',
+      '',
+      new Point(1, 0), 'middle', 'left',
+    );
+    description.vertices.element.innerHTML = eqn.getForm('1').description;
     const nextForm = () => {
       eqn.nextForm();
+      description.vertices.element.innerHTML = eqn.currentForm.base.description;
       this.diagram.animateNextFrame();
     };
     eqn.collection.onClick = nextForm.bind(this);
     eqn.collection.isTouchable = true;
     eqn.collection.touchInBoundingRect = true;
     this.add('eqn', eqn.collection);
+    this.add('eqnDescription', description);
     this._eqn.eqn = eqn;
   }
 

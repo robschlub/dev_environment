@@ -1704,6 +1704,7 @@ export class Equation {
     name: string,
     content: Array<Elements | Element | string>,
     formType: string = 'base',
+    description: string = '',
   ) {
     if (!(name in this.form)) {
       this.form[name] = {};
@@ -1712,6 +1713,7 @@ export class Equation {
     this.form[name][formType] = new EquationForm(this.collection);
     this.form[name].name = name;
     this.form[name][formType].name = name;
+    this.form[name][formType].description = description;
 
     const form = this.form[name][formType];
     form.createEq(content);
@@ -1726,6 +1728,7 @@ export class Equation {
     // need a base form for some functions
     if (this.form[name].base === undefined) {
       this.addForm(name, content, 'base');
+      this.form[name].base.description = description;
     }
   }
 
