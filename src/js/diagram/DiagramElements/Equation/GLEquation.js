@@ -1820,7 +1820,7 @@ export class Equation {
       let index = 0;
       const currentForm = this.getCurrentForm();
       if (currentForm != null) {
-        index = this.formSeries.indexOf(currentForm);
+        index = this.formSeries.indexOf(this.form[currentForm.name]);
         if (index < 0) {
           index = 0;
         }
@@ -1862,18 +1862,16 @@ export class Equation {
     formOrName: EquationForm | string | null = null,
     formType: string = 'base',
   ) {
-    console.log(1)
-    if (this.descriptionElement == null) {
+    const element = this.descriptionElement;
+    if (element == null) {
       return;
     }
-    console.log(2)
-    if (this.descriptionElement.isShown === false) {
+    if (element.isShown === false) {
       return;
     }
-    console.log(3)
     let form = null;
     if (formOrName == null) {
-      form = this.currentForm;
+      form = this.getCurrentForm();
     } else if (typeof formOrName === 'string') {
       form = this.getForm(formOrName, formType);
     } else {
@@ -1882,20 +1880,17 @@ export class Equation {
     if (form == null) {
       return;
     }
-    console.log(form)
     if (form.description == null) {
       return;
     }
-    console.log(5)
-    if (this.descriptionElement.vertices instanceof HTMLObject) {
-      this.descriptionElement.vertices.element.innerHTML = form.description;
+    if (element.vertices instanceof HTMLObject) {
+      element.vertices.element.innerHTML = form.description;
       html.setOnClicks(form.modifiers);
-      console.log(6)
     }
   }
 
   render() {
-    const form = this.currentForm;
+    const form = this.getCurrentForm();
     if (form != null) {
       form.showHide();
       this.collection.show();
@@ -1939,9 +1934,9 @@ export class Equation {
       this.formTypeOrder = ['rad', 'base'];
     }
     if (this.collection.isShown) {
-      const form = this.currentForm;
+      const form = this.getCurrentForm();
       if (form != null) {
-        this.showForm(form.name);
+        this.showForm(form);
       }
     }
   }
