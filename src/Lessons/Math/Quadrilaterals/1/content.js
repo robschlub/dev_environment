@@ -109,6 +109,7 @@ class Content extends LessonContent {
 
     common.showOnly = [qr];
     common.show = [rect];
+    // common.hide = [rect._eqnDescription]
     this.addSection(common, {
       title: 'Rectangle',
       setContent: `<p>
