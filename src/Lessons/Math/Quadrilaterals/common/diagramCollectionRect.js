@@ -120,6 +120,7 @@ export default class RectCollection extends CommonDiagramCollection {
       },
       this.layout.colors.diagram.text.base,
       eqnDescription,
+      new Point(0.7, 0),
     );
     eqn.formAlignment.fixTo = eqn.collection._equals;
     eqn.formAlignment.hAlign = 'center';

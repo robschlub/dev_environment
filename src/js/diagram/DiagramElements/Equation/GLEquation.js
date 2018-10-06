@@ -1600,6 +1600,7 @@ export class Equation {
   };
 
   descriptionElement: DiagramElementPrimative | null;
+  descriptionPosition: Point;
 
   +showForm: (EquationForm | string, ?string) => {};
 
@@ -1622,6 +1623,7 @@ export class Equation {
     this.currentForm = '';
     this.currentFormType = '';
     this.formTypeOrder = ['base'];
+    this.descriptionPosition = new Point(0, 0);
   }
 
   _dup() {
@@ -1672,6 +1674,7 @@ export class Equation {
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],
     descriptionElement: DiagramElementPrimative | null = null,
+    descriptionPosition: Point = new Point(0, 0),
   ) {
     this.collection = createEquationElements(
       elems,
@@ -1680,11 +1683,28 @@ export class Equation {
       this.diagramLimits,
       this.firstTransform,
     );
+    this.addDescriptionElement(descriptionElement, descriptionPosition);
+  }
+
+  addDescriptionElement(
+    descriptionElement: DiagramElementPrimative | null = null,
+    descriptionPosition: Point = new Point(0, 0),
+  ) {
     this.descriptionElement = descriptionElement;
+    this.descriptionPosition = descriptionPosition;
+    if (this.descriptionElement) {
+      this.descriptionElement
+        .setPosition(this.collection
+          .getDiagramPosition()
+          .add(descriptionPosition));
+    }
   }
 
   setPosition(position: Point) {
     this.collection.setPosition(position);
+    if (this.descriptionElement) {
+      this.descriptionElement.setPosition(position.add(this.descriptionPosition));
+    }
   }
 
   stop() {
