@@ -1896,13 +1896,10 @@ export class Equation {
     if (form.description == null) {
       return;
     }
-    if (element.vertices instanceof HTMLObject) {
-      element.vertices.element.innerHTML = form.description;
-      // element.vertices.element.transformHtml(element.vertices.element.parentTransform)
-      // debugger;
-      const parentLastDrawTransform = element.getParentLastDrawTransform();
-      // debugger;
-      element.vertices.transformHtml(parentLastDrawTransform);
+
+    const drawingObject = element.vertices;
+    if (drawingObject instanceof HTMLObject) {
+      drawingObject.change(form.description, element.lastDrawTransform.m());
       html.setOnClicks(form.modifiers);
     }
   }

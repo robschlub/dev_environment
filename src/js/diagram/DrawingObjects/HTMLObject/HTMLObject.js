@@ -19,6 +19,7 @@ class HTMLObject extends DrawingObject {
   show: boolean;
 
   copy: () => HTMLObject;
+  change: (string | HTMLObject, Array<number>) => void;
 
   constructor(
     parentDiv: HTMLElement,
@@ -98,6 +99,19 @@ class HTMLObject extends DrawingObject {
     const x = (p.x - -1) / 2 * this.parentDiv.offsetWidth;
     const y = (1 - p.y) / 2 * this.parentDiv.offsetHeight;
     return new Point(x, y);
+  }
+
+  change(newHtml: string | HTMLElement, lastDrawTransformMatrix: Array<number>) {
+    let element = newHtml;
+    if (typeof newHtml === 'string') {
+      element = document.createElement('div');
+      element.innerHTML = newHtml;
+    }
+    if (element instanceof HTMLElement) {
+      this.element.innerHTML = '';
+      this.element.appendChild(element);
+      this.transformHtml(lastDrawTransformMatrix);
+    }
   }
 
   transformHtml(transformMatrix: Array<number>) {
