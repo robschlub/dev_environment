@@ -25,7 +25,7 @@ class DrawingObject {
   border: Array<Array<Point>>; // Border vertices
   location: Point;
   holeBorder: Array<Array<Point>>;  // Border of any holes inside of main border
-  +change: (Array<Point>) => void | (string | HTMLElement, Array<number>) => void;
+  +change: (Array<Point>) => void;
 
   constructor() {
     // this.numPoints = 0;
