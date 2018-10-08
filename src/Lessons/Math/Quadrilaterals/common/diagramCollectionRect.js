@@ -35,6 +35,10 @@ export default class RectCollection extends CommonDiagramCollection {
   _rightAngle2: TypeAngle;
   _rightAngle3: TypeAngle;
   _rightAngle4: TypeAngle;
+  _lineA: TypeLine;
+  _lineB: TypeLine;
+  _lineC: TypeLine;
+  _lineD: TypeLine;
 
   addRect() {
     const rect = this.diagram.shapes.polyLine(

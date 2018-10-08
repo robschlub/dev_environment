@@ -6,7 +6,7 @@ import {
   Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  click, centerV, highlight, clickWord,
+  click, centerV, highlight, clickWord, highlightWord,
 } from '../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';
@@ -39,7 +39,8 @@ class Content extends LessonContent {
       showOnly: [
         quad, quad._quad1, quad._quad2, quad._quad3, qr,
       ],
-    }
+      show: [],
+    };
     this.addSection(common, {
       title: 'Quadrilateral',
       setContent: `
@@ -107,24 +108,46 @@ class Content extends LessonContent {
       `),
     });
 
-    common.showOnly = [qr];
-    common.show = [rect];
+    common = {
+      setContent: '',
+      setEnterState: () => {},
+      showOnly: [
+        qr, rect, rect._rect,
+      ],
+      show: [
+        rect._rightAngle1, rect._rightAngle2,
+        rect._rightAngle3, rect._rightAngle4,
+      ],
+      setSteadyState: () => {},
+    };
+    // common.show = [rect];
     // common.hide = [rect._eqnDescription]
     this.addSection(common, {
       title: 'Rectangle',
       setContent: `<p>
-        A special type of quadrilateral is one where all the angles are equal to 90º. This shape is called a rectangle.
+        A special type of quadrilateral is one where all the |angles are equal to 90º|. This shape is called a |rectangle|.
       </p>
-      ${new Definition('Rectangle', 'Latin', ['rectus', 'right', 'angulus', 'corner, angle']).html('id_lesson__rectangle_definition')}
+      ${new Definition('Rectangle', 'Latin', ['rectus', 'right', 'angulus', 'corner, angle']).html('id_lesson__rectangle_definition', 'lesson__definition_low')}
       `,
+      // modifiers: {
+      //   angles_are_equal_to_90: higlight(
+      //     'angles are equal to 90º',
+      //     colors.angles,
+      //   ),
+      // },
       setSteadyState: () => {
-        rect._eqn.eqn.showForm('1');
-        rect._angleB.showForm('0');
-        rect._angleC.showForm('0');
-        rect._angleD.showForm('0');
-        // rect._angleB.updateAngle()
-        console.log(rect)
+        // rect._eqn.eqn.showForm('1');
+        // rect._angleB.showForm('0');
+        // rect._angleC.showForm('0');
+        // rect._angleD.showForm('0');
       },
+    });
+
+    this.addSection(common, {
+      setContent: `<p>
+        The first properties to note are the side lengths and angles. We know that all the angles are 90º. Are the side lengths related to each other?
+      </p>`,
+      show: [...common.show, rect._lineA, rect._lineB, rect._lineC, rect._lineD],
     });
   }
 }
