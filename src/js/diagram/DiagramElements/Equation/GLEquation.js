@@ -1411,6 +1411,7 @@ export class EquationForm extends Elements {
   animatePositionsTo(
     // location: Point,
     time: number = 1,
+    delay: number = 0,
     callback: ?(?mixed) => void = null,
   ) {
     const allElements = this.collection.getAllElements();
