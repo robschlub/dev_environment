@@ -135,12 +135,12 @@ class Content extends LessonContent {
       //     colors.angles,
       //   ),
       // },
-      setSteadyState: () => {
-        // rect._eqn.eqn.showForm('1');
-        // rect._angleB.showForm('0');
-        // rect._angleC.showForm('0');
-        // rect._angleD.showForm('0');
-      },
+      // setSteadyState: () => {
+      //   rect.rectEqn.showForm('1');
+      //   rect._angleB.showForm('0');
+      //   rect._angleC.showForm('0');
+      //   rect._angleD.showForm('0');
+      // },
     });
 
     this.addSection(common, {
