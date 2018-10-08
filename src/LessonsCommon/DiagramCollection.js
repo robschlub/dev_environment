@@ -125,7 +125,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       time = animationTime;
     }
     time = time === 0 ? 0.001 : time;
-    element.animateTo(target, time, rotDirection, callback);
+    element.animateTo(target, time, 0, rotDirection, callback);
     return time;
   }
 

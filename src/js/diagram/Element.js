@@ -1179,18 +1179,29 @@ class DiagramElement {
   animateTo(
     transform: Transform,
     timeOrVelocity: number | Transform = 1,
+    delay: number = 0,
     rotDirection: TypeRotationDirection = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
     // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
-    const phase = new AnimationPhase(
+    const phase1 = new AnimationPhase(
+      this.transform._dup(), delay, rotDirection,
+      easeFunction, this.animate.transform.translation.style,
+      this.animate.transform.translation.options,
+    );
+    const phase2 = new AnimationPhase(
       transform, timeOrVelocity, rotDirection,
       easeFunction, this.animate.transform.translation.style,
       this.animate.transform.translation.options,
     );
-    if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], checkCallback(callback));
+    if (delay === 0 && phase2 instanceof AnimationPhase) {
+      this.animatePlan([phase2], checkCallback(callback));
+    } else if (phase1 instanceof AnimationPhase
+               && phase2 instanceof AnimationPhase
+               && delay > 0
+    ) {
+      this.animatePlan([phase1, phase2], checkCallback(callback));
     }
   }
 
@@ -1204,7 +1215,7 @@ class DiagramElement {
   ): void {
     const target = this.transform._dup();
     this.transform = transform._dup();
-    this.animateTo(target, timeOrVelocity, rotDirection, callback, easeFunction);
+    this.animateTo(target, timeOrVelocity, 0, rotDirection, callback, easeFunction);
   }
 
   animateColorTo(
@@ -1357,7 +1368,7 @@ class DiagramElement {
   ): void {
     const target = this.transform._dup();
     this.transform.updateTranslation(translation);
-    this.animateTo(target, timeOrVelocity, 0, callback, easeFunction);
+    this.animateTo(target, timeOrVelocity, 0, 0, callback, easeFunction);
   }
 
   animateTranslationToWithDelay(
@@ -2526,6 +2537,7 @@ class DiagramElementCollection extends DiagramElement {
   animateToTransforms(
     elementTransforms: Object,
     time: number = 1,
+    delay: number = 0,
     rotDirection: number = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
@@ -2541,13 +2553,14 @@ class DiagramElementCollection extends DiagramElement {
             element.animateTo(
               elementTransforms[element.name],
               time,
+              delay,
               rotDirection,
               callbackMethod,
               easeFunction,
             );
             // only want to send callback once
             callbackMethod = null;
-            timeToAnimate = time;
+            timeToAnimate = time + delay;
           }
         } else {
           element.transform = elementTransforms[element.name]._dup();

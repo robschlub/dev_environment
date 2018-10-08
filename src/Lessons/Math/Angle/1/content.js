@@ -112,7 +112,7 @@ class Content extends LessonContent {
 
         circle._reference.animateTo(new Transform()
           .rotate(Math.PI / 2)
-          .translate(1, 0), 1, 0, done);
+          .translate(1, 0), 1, 0, 0, done);
       },
       transitionFromPrev: (done) => {
         circle._fakeRadius.transform.updateTranslation(-4.5, 1);
@@ -168,7 +168,7 @@ class Content extends LessonContent {
           .translate(0, 0), 1);
         circle._radius.animateTo(new Transform()
           .rotate(0)
-          .translate(0, 0), 1.3, 0, done);
+          .translate(0, 0), 1.3, 0, 0, done);
 
         if (circle._anchor.color[3] === 0.01) {
           circle._anchor.color[3] = 1;
@@ -222,7 +222,7 @@ class Content extends LessonContent {
             .translate(0, 0), Math.PI / 6);
           circle._radius.animateTo(new Transform()
             .rotate(0.5)
-            .translate(0, 0), Math.PI / 6, 0, done);
+            .translate(0, 0), Math.PI / 6, 0, 0, done);
         } else {
           done();
         }
