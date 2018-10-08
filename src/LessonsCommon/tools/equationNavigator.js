@@ -24,6 +24,8 @@ function makeArrow(
     width, 0, height, 0, color,
     new Transform().translate(0, spacing * Math.cos(rotation)), new Point(0, 0), rotation,
   );
+  arrow.isTouchable = true;
+  arrow.touchInBoundingBox = true;
   return arrow;
 }
 
@@ -39,6 +41,8 @@ function makeRefresh(
     .translate(0, 0));
   const refreshTop = diagram.shapes.collection(new Transform('Triangle')
     .rotate(0).translate(0, 0));
+  // refreshTop.hasTouchableElements = true;
+  // refreshTop.isTouchable = true;
 
   const refreshLine = diagram.shapes.polygon(
     sides, radius,
@@ -46,6 +50,7 @@ function makeRefresh(
     1, Math.floor(sides * angle / Math.PI / 2),
     color, new Transform().translate(0, 0),
   );
+  // refreshLine.isTouchable = true;
   refreshTop.add('line', refreshLine);
 
   const refreshArrow = diagram.shapes.arrow(
@@ -55,6 +60,7 @@ function makeRefresh(
       (radius + lineWidth) * Math.sin((Math.PI - angle) / 2),
     ), new Point(0, -lineWidth * 3), (Math.PI - angle) / 2 + Math.PI,
   );
+  // refreshArrow.isTouchable = true;
   refreshTop.add('arrow', refreshArrow);
 
   const refreshBottom = refreshTop._dup();
@@ -62,6 +68,8 @@ function makeRefresh(
 
   refresh.add('top', refreshTop);
   refresh.add('bottom', refreshBottom);
+  refresh.isTouchable = true;
+  refresh.touchInBoundingRect = true;
   return refresh;
 }
 
@@ -69,6 +77,7 @@ export default function makeEquationNavigator(
   diagram: Diagram,
   equation: eqn,
   size: number,
+  offset: Point,
   color: Array<number>,
 ) {
   const arrowWidth = size * 1.5;
@@ -90,8 +99,35 @@ export default function makeEquationNavigator(
     diagram, refreshSides, refreshRadius, refreshLineWidth,
     refreshAngle, color,
   );
+
   navigator.add('prev', prev);
   navigator.add('next', next);
   navigator.add('refresh', refresh);
+  navigator.add('eqn', equation.collection);
+  navigator.add('currentStep', equation.descriptionElement);
+
+  const clickNext = () => {
+    equation.nextForm(1.5);
+    diagram.animateNextFrame();
+  };
+  const clickPrev = () => {
+    equation.prevForm(1.5);
+    diagram.animateNextFrame();
+  };
+  const clickRefresh = () => {
+    const currentForm = equation.getCurrentForm();
+    if (currentForm != null) {
+      const index = equation.getFormIndex(currentForm);
+      if (index > 0) {
+        equation.replayCurrentForm(1.5);
+        diagram.animateNextFrame();
+      }
+    }
+  };
+  prev.onClick = clickPrev;
+  next.onClick = clickNext;
+  refresh.onClick = clickRefresh;
+
+  navigator.hasTouchableElements = true;
   return navigator;
 }

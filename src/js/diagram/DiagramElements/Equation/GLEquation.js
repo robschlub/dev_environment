@@ -1901,6 +1901,9 @@ export class Equation {
   }
 
   replayCurrentForm(time: number) {
+    this.collection.stop(true, true);
+    this.collection.stop(true, true);
+    this.isAnimating = false;
     this.prevForm(0);
     this.nextForm(time, 0.5);
   }
