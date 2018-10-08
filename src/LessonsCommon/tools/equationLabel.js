@@ -48,9 +48,10 @@ export default function makeEquationLabel(
     if (offsetMag !== 0) {
       let labelWidth = 0;
       let labelHeight = 0;
-      if (eqn.currentForm != null) {
-        labelWidth = eqn.currentForm.width / 2 + 0.04;
-        labelHeight = eqn.currentForm.height / 2 + 0.04;
+      const currentForm = eqn.getCurrentForm();
+      if (currentForm != null) {
+        labelWidth = currentForm.width / 2 + 0.04;
+        labelHeight = currentForm.height / 2 + 0.04;
       }
       const a = labelWidth + offsetMag;
       const b = labelHeight + offsetMag;

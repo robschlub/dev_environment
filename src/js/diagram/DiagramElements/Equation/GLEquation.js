@@ -631,9 +631,10 @@ class Annotation extends Elements {
       const xOffset = this.mainContent.location.x - bottomLeft;
       if (xOffset) {
         this.mainContent.offsetLocation(new Point(xOffset, 0));
-        this.annotations = this.annotations.map((annotationInfo) => {
-          annotationInfo.content.offsetLocation(new Point(xOffset, 0));
-        });
+        this.annotations = this.annotations.map(
+          annotationInfo => annotationInfo.content
+            .offsetLocation(new Point(xOffset, 0)),
+        );
       }
     } else {
       this.width = this.mainContent.width;
@@ -2010,35 +2011,13 @@ export class Equation {
 
   annotation(
     content: TypeEquationInput,
-    annotationOrAnnotationArray: TypeEquationInput | Array<AnnotationInformation>,
-    xPositionOrAnnotationInSize: 'left' | 'right' | 'center' | number | boolean = 'right',
-    yPosition: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'top',
-    xAlign: 'left' | 'right' | 'center' | number = 'left',
-    yAlign: 'bottom' | 'top' | 'middle' | 'baseline' | number = 'bottom',
-    annotationScale: number = 0.5,
+    annotationOrAnnotationArray: Array<AnnotationInformation>,
     annotationInSize: boolean = false,
   ) {
-    if (Array.isArray(annotationOrAnnotationArray)) {
-      let inSize = false;
-      if (typeof xPositionOrAnnotationInSize === 'boolean') {
-        inSize = xPositionOrAnnotationInSize;
-      }
-      return new Annotation(
-        contentToElement(this.collection, content),
-        annotationOrAnnotationArray,
-        inSize,
-      );
-    }
-    let xPosition = 'right';
-    if (typeof xPositionOrAnnotationInSize !== 'boolean') {
-      xPosition = xPositionOrAnnotationInSize;
-    }
     return new Annotation(
       contentToElement(this.collection, content),
-      contentToElement(this.collection, annotationOrAnnotationArray),
-      xPosition, yPosition,
-      xAlign, yAlign,
-      annotationScale, annotationInSize,
+      annotationOrAnnotationArray,
+      annotationInSize,
     );
   }
 

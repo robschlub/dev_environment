@@ -1,12 +1,12 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, polarToRect, Line,
+  Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../js/diagram/Element';
-// import { AnnotationInformation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import {
 //   removeRandElement, rand,
 // } from '../../../../js/diagram/tools/mathtools';
@@ -25,6 +25,10 @@ import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
 export default class RectCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
+  _eqn: {
+    eqn: Equation;
+  } & DiagramElementCollection;
+
   _rect: DiagramElementPrimative;
   _line: TypeLine;
   _rightAngle1: TypeAngle;
