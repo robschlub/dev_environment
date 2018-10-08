@@ -119,7 +119,9 @@ class Content extends LessonContent {
       `,
       setSteadyState: () => {
         rect._eqn.eqn.showForm('1');
-        rect._angleB.showForm('1');
+        rect._angleB.showForm('0');
+        rect._angleC.showForm('0');
+        rect._angleD.showForm('0');
         // rect._angleB.updateAngle()
         console.log(rect)
       },
