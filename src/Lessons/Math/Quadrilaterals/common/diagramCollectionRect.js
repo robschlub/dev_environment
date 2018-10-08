@@ -88,7 +88,7 @@ export default class RectCollection extends CommonDiagramCollection {
 
   addEqn() {
     const eqn = this.diagram.equation.makeEqn();
-    const eqnDescription = this.diagram.equation.makeDescription();
+    const eqnDescription = this.diagram.equation.makeDescription('id__rectangles_equation_desctription');
     const strikeColor = this.layout.colors.diagram.warning;
 
     const colAngle = this.layout.colors.angles;
@@ -119,7 +119,7 @@ export default class RectCollection extends CommonDiagramCollection {
       },
       this.layout.colors.diagram.text.base,
       eqnDescription,
-      new Point(0.7, 0),
+      new Point(0.7, -0.052),
     );
     eqn.formAlignment.fixTo = eqn.collection._equals;
     eqn.formAlignment.hAlign = 'center';
