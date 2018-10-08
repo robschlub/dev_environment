@@ -169,7 +169,7 @@ class Content extends LessonContent {
     });
 
     common.setContent = `<p>
-        To examine the relationship between side lengths, we can |split| the rectangle into two triangles.
+        To examine the relationship between side lengths, we can |split| the rectangle into |two triangles|.
       </p>`;
     this.addSection(common);
 
@@ -178,6 +178,32 @@ class Content extends LessonContent {
       rect._rightAngle4, rect._lineA, rect._lineB, rect._lineC, rect._lineD,
       rect._lineE,
     ];
+    this.addSection(common);
+
+    this.addSection(common, {
+      setContent: `<p>
+        These triangles |look| the same. If they are |congruent|, then opposite sides in a rectangle are equal. Let's see.
+      </p>`,
+      modifiers: {
+        congruent: click(qr._congruent.show, [qr._congruent], colors.diagram.action),
+      },
+    });
+
+    common.setContent = `<p>
+      Let's start by looking at just the two triangle's angles.
+    </p>`;
+    this.addSection(common);
+
+    common.show = [
+      rect._rightAngle2, rect._rightAngle4,
+      rect._angleA, rect._angleB, rect._angleC, rect._angleD,
+      rect._lineE,
+    ];
+    common.setSteadyState = () => {
+      rect._angleB.showForm('0');
+      rect._angleC.showForm('0');
+      rect._angleD.showForm('0');
+    };
     this.addSection(common);
   }
 }
