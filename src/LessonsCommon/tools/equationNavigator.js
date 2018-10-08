@@ -90,34 +90,6 @@ export default function makeEquationNavigator(
     diagram, refreshSides, refreshRadius, refreshLineWidth,
     refreshAngle, color,
   );
-  // const refresh = diagram.shapes.collection(new Transform('Triangle')
-  //   .translate(0, 0));
-  // const refreshTop = diagram.shapes.collection(new Transform('Triangle')
-  //   .rotate(0).translate(0, 0));
-
-  // const refreshLine = diagram.shapes.polygon(
-  //   refreshSides, refreshRadius,
-  //   refreshLineWidth, (Math.PI - refreshAngle) / 2,
-  //   1, Math.floor(refreshSides * refreshAngle / Math.PI / 2),
-  //   color, new Transform().translate(0, 0),
-  // );
-  // refreshTop.add('line', refreshLine);
-
-  // const refreshArrow = diagram.shapes.arrow(
-  //   refreshLineWidth * 3, 0, refreshLineWidth * 3, 0,
-  //   color, new Transform().translate(
-  //     (refreshRadius + refreshLineWidth) * Math.cos((Math.PI - refreshAngle) / 2),
-  //     (refreshRadius + refreshLineWidth) * Math.sin((Math.PI - refreshAngle) / 2),
-  //   ), new Point(0, -refreshLineWidth * 3), (Math.PI - refreshAngle) / 2 + Math.PI,
-  // );
-  // refreshTop.add('arrow', refreshArrow);
-
-  // const refreshBottom = refreshTop._dup();
-  // refreshBottom.transform.updateRotation(Math.PI);
-
-  // refresh.add('top', refreshTop);
-  // refresh.add('bottom', refreshBottom);
-
   navigator.add('prev', prev);
   navigator.add('next', next);
   navigator.add('refresh', refresh);
