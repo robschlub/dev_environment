@@ -1330,6 +1330,7 @@ export class EquationForm extends Elements {
         callback();
       }
     }
+    // console.log(delay, appear)
     // const delayToUse = delay === 0 ? 0.001 : delay;
     elements.forEach((e) => {
       // console.log(e.name, e.color.slice())
@@ -1427,7 +1428,6 @@ export class EquationForm extends Elements {
     // time: number = 1,
     callback: ?(?mixed) => void = null,
   ) {
-    console.log(delay, disolveOutTime, moveTime, disolveInTime)
     const allElements = this.collection.getAllElements();
     this.collection.stop();
     const elementsShown = allElements.filter(e => e.isShown);
@@ -1443,10 +1443,10 @@ export class EquationForm extends Elements {
     const animateToTransforms = this.collection.getElementTransforms();
 
     this.collection.setElementTransforms(currentTransforms);
-    let cumTime = 0;
-    if (elementsToHide) {
+    let cumTime = delay;
+    if (elementsToHide.length > 0) {
       this.dissolveElements(elementsToHide, false, delay, disolveOutTime, null);
-      cumTime += delay + disolveOutTime;
+      cumTime += disolveOutTime;
     }
     const t = this.collection.animateToTransforms(
       animateToTransforms,
@@ -1455,13 +1455,17 @@ export class EquationForm extends Elements {
       0,
       // this.dissolveElements.bind(this, elementsToShow, true, 0, 0.5, callback),
     );
-    if (elementsToShow) {
-      this.dissolveElements(elementsToShow, true, t + 0.001, disolveInTime, callback);
+    if (t > 0) {
+      cumTime = t;
+    }
+    if (elementsToShow.length > 0) {
+      this.dissolveElements(elementsToShow, true, cumTime, disolveInTime, callback);
       cumTime += disolveInTime + 0.001;
     }
     return cumTime;
   }
 
+  // deprecate
   animateTo(
     // location: Point,
     scale: number = 1,
@@ -1895,6 +1899,7 @@ export class Equation {
 
   replayCurrentForm(time: number) {
     this.prevForm(0);
+    console.log('next form');
     this.nextForm(time, 0.5);
   }
 
