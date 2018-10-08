@@ -17,7 +17,7 @@ export default function commonLessonLayout() {
   layout.position = new Point(0, 0);
   layout.lineWidth = 0.02;
   layout.angleRadius = 0.4;
-  layout.angleLabelRadius = 0.45;
+  layout.angleLabelRadiusOffset = 0.03;
   layout.angleSides = 200;
   layout.quads = {
     quad1: {

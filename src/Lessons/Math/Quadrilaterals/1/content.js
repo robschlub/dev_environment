@@ -190,21 +190,26 @@ class Content extends LessonContent {
     });
 
     common.setContent = `<p>
-      Let's start by looking at just the two triangle's angles.
+      Let's start by looking at just one triangle's angles, which we can label.
     </p>`;
     this.addSection(common);
 
+    common.showOnly = [qr, rect, rect._rect, rect._lineE, rect._lineE._line];
     common.show = [
-      rect._rightAngle2, rect._rightAngle4,
-      rect._angleA, rect._angleB, rect._angleC, rect._angleD,
-      rect._lineE,
+      rect._rightAngle2,
+      rect._angleA, rect._angleB,
     ];
     common.setSteadyState = () => {
       rect._angleB.showForm('0');
-      rect._angleC.showForm('0');
-      rect._angleD.showForm('0');
     };
     this.addSection(common);
+
+    common.setContent = `<p>
+      First, we can find angle |b| in terms of angle |a| as we know the third angle is a right angle.
+    </p>`;
+    this.addSection(common, {
+      show
+    });
   }
 }
 

@@ -102,12 +102,12 @@ export default class RectCollection extends CommonDiagramCollection {
   }
 
   addAngles() {
-    const makeA = (position: Point, start: number, size: number, label: string | Array<string>) => {
+    const makeA = (position: Point, start: number, size: number, label: string | Array<string>, radius: number) => {
       const angle = makeAngle(
-        this.diagram, this.layout.angleRadius,
+        this.diagram, radius,
         this.layout.lineWidth, this.layout.angleSides, this.layout.colors.angles,
       );
-      angle.addLabel(label, this.layout.angleLabelRadius);
+      angle.addLabel(label, this.layout.angleLabelRadiusOffset + radius);
       angle.setPosition(position);
       angle.updateAngle(start, size);
       return angle;
@@ -118,22 +118,22 @@ export default class RectCollection extends CommonDiagramCollection {
     const angleA = makeA(
       points[0], Math.PI / 2 * 3,
       Math.atan(width / height),
-      'a',
+      'a', this.layout.angleRadius,
     );
     const angleB = makeA(
       points[2], Math.PI - Math.atan(height / width),
       Math.atan(height / width),
-      ['b', 'a - 90º'],
+      ['b', 'a - 90º'], this.layout.angleRadius * 1.1,
     );
     const angleC = makeA(
       points[0], Math.PI * 2 - Math.atan(height / width),
       Math.atan(height / width),
-      ['d', '90º - a'],
+      ['d', '90º - a'], this.layout.angleRadius * 1.1,
     );
     const angleD = makeA(
       points[2], Math.PI / 2,
       Math.atan(width / height),
-      ['c', 'a'],
+      ['c', 'a'], this.layout.angleRadius,
     );
     this.add('angleA', angleA);
     this.add('angleB', angleB);
