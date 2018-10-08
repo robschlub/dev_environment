@@ -40,7 +40,6 @@ export default class RectCollection extends CommonDiagramCollection {
     );
 
     rect.setPosition(this.layout.rect.position);
-    
     this.add('rect', rect);
   }
 
@@ -60,21 +59,21 @@ export default class RectCollection extends CommonDiagramCollection {
       const angle = makeAngle(
         this.diagram, this.layout.angleRadius,
         this.layout.lineWidth, this.layout.angleSides, this.layout.colors.angles,
-        )
+      );
       angle.addLabel('', this.layout.angleLabelRadius);
       angle.autoRightAngle = true;
       return angle;
     };
     const rightAngle1 = makeA();
-    rightAngle1.setPosition(this.layout.rect.points[0])
+    rightAngle1.setPosition(this.layout.rect.points[0]);
     rightAngle1.updateAngle(Math.PI / 2 * 3, Math.PI / 2);
 
     const rightAngle2 = makeA();
-    rightAngle2.setPosition(this.layout.rect.points[1])
+    rightAngle2.setPosition(this.layout.rect.points[1]);
     rightAngle2.updateAngle(0, Math.PI / 2);
 
     const rightAngle3 = makeA();
-    rightAngle3.setPosition(this.layout.rect.points[2])
+    rightAngle3.setPosition(this.layout.rect.points[2]);
     rightAngle3.updateAngle(Math.PI / 2 * 1, Math.PI / 2);
 
     const rightAngle4 = makeA();
