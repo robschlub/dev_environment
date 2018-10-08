@@ -30,7 +30,7 @@ export default class RectCollection extends CommonDiagramCollection {
   rectEqn: TypeAnglesEquation;
   _rectEqn: TypeAnglesEquationCollection;
   _rectEqnDescription: DiagramElementPrimative;
-  _rect: DiagramElementPrimative;
+  // _rect: DiagramElementPrimative;
   _rightAngle1: TypeAngle;
   _rightAngle2: TypeAngle;
   _rightAngle3: TypeAngle;
@@ -40,16 +40,20 @@ export default class RectCollection extends CommonDiagramCollection {
   _lineC: TypeLine;
   _lineD: TypeLine;
   _lineE: TypeLine;
+  _angleA: TypeAngle;
+  _angleB: TypeAngle;
+  _angleC: TypeAngle;
+  _angleD: TypeAngle;
 
   addRect() {
-    const rect = this.diagram.shapes.polyLine(
-      this.layout.rect.points, true, this.layout.lineWidth,
-      this.layout.colors.lines,
-      'none', new Transform('rect').scale(1, 1).translate(0, 0),
-    );
+    // const rect = this.diagram.shapes.polyLine(
+    //   this.layout.rect.points, true, this.layout.lineWidth,
+    //   this.layout.colors.lines,
+    //   'none', new Transform('rect').scale(1, 1).translate(0, 0),
+    // );
 
-    rect.setPosition(this.layout.rect.position);
-    this.add('rect', rect);
+    // rect.setPosition(this.layout.rect.position);
+    // this.add('rect', rect);
 
     const makeL = (p1, p2, labelText, show) => {
       const line = makeLine(
@@ -62,10 +66,11 @@ export default class RectCollection extends CommonDiagramCollection {
       this.add(`line${labelText}`, line);
     };
     const { points } = this.layout.rect;
-    makeL(points[0], points[1], 'A', true);
-    makeL(points[1], points[2], 'B', true);
-    makeL(points[2], points[3], 'C', true);
-    makeL(points[3], points[0], 'D', true);
+    const halfLine = this.layout.lineWidth / 2;
+    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), 'C', true);
+    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), 'D', true);
+    makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A', true);
+    makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B', true);
     makeL(points[0], points[2], 'E', true);
   }
 
@@ -177,5 +182,20 @@ export default class RectCollection extends CommonDiagramCollection {
     this.addRect();
     this.addEqn();
     this.hasTouchableElements = true;
+  }
+
+  resetColors() {
+    this._lineA.setColor(this.layout.colors.lines);
+    this._lineB.setColor(this.layout.colors.lines);
+    this._lineC.setColor(this.layout.colors.lines);
+    this._lineD.setColor(this.layout.colors.lines);
+    this._angleA.setColor(this.layout.colors.angles);
+    this._angleB.setColor(this.layout.colors.angles);
+    this._angleC.setColor(this.layout.colors.angles);
+    this._angleD.setColor(this.layout.colors.angles);
+    this._rightAngle1.setColor(this.layout.colors.angles);
+    this._rightAngle2.setColor(this.layout.colors.angles);
+    this._rightAngle3.setColor(this.layout.colors.angles);
+    this._rightAngle4.setColor(this.layout.colors.angles);
   }
 }

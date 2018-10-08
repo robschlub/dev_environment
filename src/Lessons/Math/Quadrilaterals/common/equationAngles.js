@@ -7,6 +7,7 @@ import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
+import * as html from '../../../../js/tools/htmlGenerator';
 
 export type TypeAnglesEquationCollection = {
   _a: DiagramElementPrimative;
@@ -65,20 +66,19 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     },
     layout.colors.diagram.text.base,
     eqnDescription,
-    new Point(0.7, -0.052),
+    new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
   eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'middle';
   eqn.formAlignment.scale = 1.0;
-
-  eqn.addForm('1', [
+  eqn.addForm('0', [
     'a', 'plus1', 'b', 'plus2', '_90',
     'equals',
     '_180',
-  ], 'base', 'All angles in a triangle add to 180º.');
+  ]);
 
-  eqn.addForm('2', [
+  eqn.addForm('1', [
     eqn.annotation(
       ['a', 'plus1', 'b', 'plus2', '_90'],
       [eqn.ann('m90l', 'center', -0.4, 'center', 'top')],
@@ -88,9 +88,9 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
       '_180',
       [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
     ),
-  ], 'base', '|Subtract| 90º from both sides of the equation.');
+  ]);
 
-  eqn.addForm('3', [
+  eqn.addForm('2', [
     eqn.annotation(
       ['a', 'plus1', 'b', 'plus2', eqn.strike('_90', 'strike1')],
       [
@@ -118,15 +118,15 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
         ),
       ],
     ),
-  ], 'base', 'Peform subtraction');
+  ]);
 
-  eqn.addForm('4', [
+  eqn.addForm('3', [
     'a', 'plus1', 'b',
     'equals',
     'calc90',
   ]);
 
-  eqn.addForm('5', [
+  eqn.addForm('4', [
     eqn.annotation(
       ['a', 'plus1', 'b'],
       [eqn.ann('mal', 'center', -0.4, 'center', 'top')],
@@ -138,7 +138,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     ),
   ]);
 
-  eqn.addForm('6', [
+  eqn.addForm('5', [
     eqn.annotation(
       [eqn.strike('a', 'strike1'), 'plus1', 'b'],
       [eqn.ann(
@@ -153,14 +153,14 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     ),
   ]);
 
-  eqn.addForm('7', [
+  eqn.addForm('6', [
     'b',
     'equals',
     'calc90',
     'mar',
   ]);
 
-  eqn.setFormSeries(['1', '2', '3', '4', '5', '6', '7']);
+  eqn.setFormSeries(['0', '1', '2', '3', '4', '5', '6']);
 
   const nextForm = () => {
     eqn.nextForm();
@@ -169,6 +169,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
   eqn.collection.onClick = nextForm.bind(this);
   eqn.collection.isTouchable = true;
   eqn.collection.touchInBoundingRect = true;
+  eqn.collection.setPosition(layout.rectEqnPosition);
   // eqn.description = eqnDescription;
   return eqn;
   // this.add('eqn', eqn.collection);

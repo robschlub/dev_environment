@@ -13,7 +13,7 @@ import QuadCollection from '../common/diagramCollectionQuad';
 import RectCollection from '../common/diagramCollectionRect';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
-  _triangle: TriangleCollection;
+  // _triangle: TriangleCollection;
   _qr: QuickReferenceCollection;
   _quad: QuadCollection;
   _rect: RectCollection;

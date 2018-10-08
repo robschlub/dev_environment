@@ -110,9 +110,14 @@ class Content extends LessonContent {
 
     common = {
       setContent: '',
-      setEnterState: () => {},
+      modifiers: {},
+      setEnterState: () => {
+        rect.resetColors();
+      },
       showOnly: [
-        qr, rect, rect._rect,
+        qr, rect,
+        rect._lineA, rect._lineA._line, rect._lineB, rect._lineB._line,
+        rect._lineC, rect._lineC._line, rect._lineD, rect._lineD._line,
       ],
       show: [
         rect._rightAngle1, rect._rightAngle2,
@@ -190,25 +195,62 @@ class Content extends LessonContent {
     });
 
     common.setContent = `<p>
-      Let's start by looking at just one triangle's angles, which we can label.
+      Let's start by looking at just one triangle's angles, labelling the unknown angles.
     </p>`;
     this.addSection(common);
 
-    common.showOnly = [qr, rect, rect._rect, rect._lineE, rect._lineE._line];
+    common.showOnly = [
+      qr, rect, rect._lineE, rect._lineE._line,
+      rect._lineA, rect._lineA._line, rect._lineB, rect._lineB._line,
+      rect._lineC, rect._lineC._line, rect._lineD, rect._lineD._line,
+    ];
     common.show = [
       rect._rightAngle2,
       rect._angleA, rect._angleB,
     ];
     common.setSteadyState = () => {
       rect._angleB.showForm('0');
+      rect._lineC.setColor(colors.diagram.disabledDark);
+      rect._lineD.setColor(colors.diagram.disabledDark);
     };
     this.addSection(common);
 
     common.setContent = `<p>
       First, we can find angle |b| in terms of angle |a| as we know the third angle is a right angle.
     </p>`;
+    common.modifiers = {
+      b: highlight(colors.angles),
+      a: highlight(colors.angles),
+    };
+    common.setSteadyState = () => {
+      rect._angleB.showForm('0');
+      rect.rectEqn.showForm('0');
+      rect._lineC.setColor(colors.diagram.disabledDark);
+      rect._lineD.setColor(colors.diagram.disabledDark);
+    };
+
+    rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', {
+      add_up_to_180: clickWord('add up to 180º', 'add_up_to_180', qr._tri.show, [qr._tri], colors.diagram.disabled),
+    });
+    rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
+    rect.rectEqn.changeDescription('2', 'Simplify common terms.');
+    rect.rectEqn.changeDescription('3', 'Clean up into one line.');
+    rect.rectEqn.changeDescription('4', 'Subtract angle |a| from both sides of the equation.', {
+      a: highlight(colors.diagram.disabled),
+    });
+    rect.rectEqn.changeDescription('5', 'Simplify common terms.');
+    rect.rectEqn.changeDescription('6', 'Simplify into one line. End result is |b| in terms of |a|.', {
+      a: highlight(colors.diagram.disabled),
+      b: highlight(colors.diagram.disabled),
+    });
+
     this.addSection(common, {
-      show
+      title: 'adsf',
+      show: [
+        rect._rightAngle2,
+        rect._angleA, rect._angleB,
+        rect._rectEqn, rect._rectEqnDescription,
+      ],
     });
   }
 }

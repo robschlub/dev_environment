@@ -1872,6 +1872,19 @@ export class Equation {
     }
   }
 
+  changeDescription(
+    formOrName: EquationForm | string,
+    description: string = '',
+    modifiers: Object = {},
+    formType: string = 'base',
+  ) {
+    const form = this.getForm(formOrName, formType);
+    if (form != null) {
+      form.description = html.applyModifiers(description, modifiers);
+      form.modifiers = modifiers;
+    }
+  }
+
   updateDescription(
     formOrName: EquationForm | string | null = null,
     formType: string = 'base',
@@ -1965,9 +1978,12 @@ export class Equation {
   }
 
   getForm(
-    formOrName: string,
+    formOrName: string | EquationForm,
     formType: ?string,
   ): null | EquationForm {
+    if (formOrName instanceof EquationForm) {
+      return formOrName;
+    }
     if (formOrName in this.form) {
       let formTypeToUse = formType;
       if (formTypeToUse == null) {

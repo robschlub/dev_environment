@@ -16,9 +16,10 @@ export default function commonLessonLayout() {
   layout.colors = getCssColors(cssColorNames);
   layout.position = new Point(0, 0);
   layout.lineWidth = 0.02;
-  layout.angleRadius = 0.4;
+  layout.angleRadius = 0.3;
   layout.angleLabelRadiusOffset = 0.03;
   layout.angleSides = 200;
+  layout.rectEqnPosition = new Point(0, 0.8);
   layout.quads = {
     quad1: {
       points: [
@@ -51,10 +52,10 @@ export default function commonLessonLayout() {
 
   layout.rect = {
     points: [
-      new Point(-2, 0.2),
-      new Point(-2, -1.3),
-      new Point(2, -1.3),
-      new Point(2, 0.2),
+      new Point(-1.5, 0.2),
+      new Point(-1.5, -1.3),
+      new Point(1.5, -1.3),
+      new Point(1.5, 0.2),
     ],
     position: new Point(0, 0),
   };
