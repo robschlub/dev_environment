@@ -24,6 +24,7 @@ import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import makeAnglesEquation from './equationAngles';
 import type { TypeAnglesEquationCollection, TypeAnglesEquation } from './equationAngles';
+import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -169,6 +170,12 @@ export default class RectCollection extends CommonDiagramCollection {
     this.add('rectEqn', eqn.collection);
     this.add('rectEqnDescription', eqn.descriptionElement);
     this.rectEqn = eqn;
+
+    const nav = makeEquationNavigator(
+      this.diagram, eqn, 0.1,
+      this.layout.colors.diagram.disabledDark,
+    );
+    this.add('nav', nav);
   }
 
   constructor(

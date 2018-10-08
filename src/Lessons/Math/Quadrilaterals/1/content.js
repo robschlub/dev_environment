@@ -250,6 +250,7 @@ class Content extends LessonContent {
         rect._rightAngle2,
         rect._angleA, rect._angleB,
         rect._rectEqn, rect._rectEqnDescription,
+        rect._nav,
       ],
     });
   }
