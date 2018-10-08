@@ -1330,19 +1330,28 @@ export class EquationForm extends Elements {
         callback();
       }
     }
-    const delayToUse = delay === 0 ? 0.001 : delay;
+    // const delayToUse = delay === 0 ? 0.001 : delay;
     elements.forEach((e) => {
       // console.log(e.name, e.color.slice())
       if (appear) {
-        if (delay > 0) {
-          e.disolveInWithDelay(delayToUse, time, callbackToUse);
+        if (delay > 0 || time > 0) {
+          e.disolveInWithDelay(delay, time, callbackToUse);
           callbackToUse = null;
+        } else if (e instanceof DiagramElementPrimative) {
+          e.show();
+        } else {
+          e.showAll();
         }
-      } else {
-        e.disolveOutWithDelay(delayToUse, time, callbackToUse);
+      } else if (delay > 0 || time > 0) {
+        e.disolveOutWithDelay(delay, time, callbackToUse);
         callbackToUse = null;
+      } else {
+        e.hide();
       }
     });
+    if (callbackToUse != null) {
+      callbackToUse();
+    }
   }
 
   getElementsToShowAndHide() {
@@ -1933,7 +1942,7 @@ export class Equation {
       if (time === 0) {
         this.showForm(form);
       } else {
-        form.animatePositionsTo(delay, 0.5, time, 0.5);
+        form.animatePositionsTo(delay, 1, time, 0.5);
         this.setCurrentForm(form);
       }
       this.updateDescription();
