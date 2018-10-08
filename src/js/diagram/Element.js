@@ -1237,28 +1237,44 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.linear,
   ): void {
-    const phase = new CustomAnimationPhase(phaseCallback, time, startPercent, easeFunction);
-    if (phase instanceof CustomAnimationPhase) {
-      this.animateCustomPlan([phase], checkCallback(callback));
-    }
+    // const phase = new CustomAnimationPhase(phaseCallback, time, startPercent, easeFunction);
+    // if (phase instanceof CustomAnimationPhase) {
+    //   this.animateCustomPlan([phase], checkCallback(callback));
+    // }
+    this.animateCustomToWithDelay(0, phaseCallback, time, startPercent, callback, easeFunction);
   }
 
   animateCustomToWithDelay(
     delay: number,
     phaseCallback: (number) => void,
     time: number = 1,
+    startPercent: number = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
-    const phase1 = new CustomAnimationPhase(() => {}, delay, 0, easeFunction);
-    const phase2 = new CustomAnimationPhase(phaseCallback, time, 0, easeFunction);
-    // if (phase instanceof CustomAnimationPhase) {
-    // console.log(phase1.animationCallback)
-    // console.log(phase2.animationCallback)
-    // console.log(phase2)
-    // phase2.animationCallback(0);
-    this.animateCustomPlan([phase1, phase2], checkCallback(callback));
-    // }
+    if (delay === 0 && time === 0) {
+      if (callback != null) {
+        callback();
+      }
+      return;
+    }
+    let timeToUse = time;
+    if (time === 0) {
+      timeToUse = 0.0001;
+    }
+
+    const phaseDelay = new CustomAnimationPhase(() => {}, delay, 0, easeFunction);
+
+    const phaseMove = new CustomAnimationPhase(
+      phaseCallback, timeToUse,
+      startPercent, easeFunction,
+    );
+
+    if (delay === 0) {
+      this.animateCustomPlan([phaseMove], checkCallback(callback));
+    } else {
+      this.animateCustomPlan([phaseDelay, phaseMove], checkCallback(callback));
+    }
   }
 
   disolveIn(
@@ -1266,17 +1282,6 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.disolveInWithDelay(0, time, callback);
-    // this.show();
-    // // const targetColor = this.color.slice();
-    // const targetColor = this.color.slice();
-    // this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
-    // // this.color[3] = 0.01;
-    // const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
-    // if (phase instanceof ColorAnimationPhase) {
-    //   this.animate.color.toDisolve = 'in';
-    //   // this.state.disolving = 'in';
-    //   this.animateColorPlan([phase], checkCallback(callback));
-    // }
   }
 
   disolveInWithDelay(
@@ -1311,15 +1316,6 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
   ): void {
     this.disolveOutWithDelay(0, time, callback);
-    // const targetColor = this.color.slice();
-    // targetColor[3] = 0;
-    // const phase = new ColorAnimationPhase(targetColor, time, tools.linear);
-    // if (phase instanceof ColorAnimationPhase) {
-    //   this.animate.color.toDisolve = 'out';
-    //   // this.state.disolving = 'out';
-    //   this.animateColorPlan([phase], checkCallback(callback));
-    // }
-    // // console.log("disolve out", targetColor, this.color)
   }
 
   disolveOutWithDelay(
@@ -1337,7 +1333,6 @@ class DiagramElement {
 
     const targetColor = this.color.slice();
     targetColor[3] = 0;
-    // this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
     const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
     this.animate.color.toDisolve = 'out';
