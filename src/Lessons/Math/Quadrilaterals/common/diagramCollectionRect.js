@@ -115,8 +115,20 @@ export default class RectCollection extends CommonDiagramCollection {
       Math.atan(height / width),
       'b',
     );
+    const angleC = makeA(
+      points[0], Math.PI * 2 - Math.atan(height / width),
+      Math.atan(height / width),
+      'd',
+    );
+    const angleD = makeA(
+      points[2], Math.PI / 2,
+      Math.atan(width / height),
+      'c',
+    );
     this.add('angleA', angleA);
     this.add('angleB', angleB);
+    this.add('angleC', angleC);
+    this.add('angleD', angleD);
   }
 
   addEqn() {
