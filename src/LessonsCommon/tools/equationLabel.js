@@ -14,7 +14,7 @@ export type TypeEquationLabel = {
 
 export default function makeEquationLabel(
   diagram: Diagram,
-  labelTextOrEquation: string | Equation = '',
+  labelTextOrEquation: string | Equation | Array<string> = '',
   color: Array<number>,
 ) {
   let eqn;
@@ -28,8 +28,25 @@ export default function makeEquationLabel(
     eqn.formAlignment.scale = 0.7;
     eqn.addForm('base', ['base']);
     eqn.setCurrentForm('base');
-  } else {
+  } else if (labelTextOrEquation instanceof Equation) {
     eqn = labelTextOrEquation;
+  } else {
+    eqn = diagram.equation.makeEqn();
+    const elements = {};
+    labelTextOrEquation.forEach((labelText, index) => {
+      elements[`_${index}`] = labelText;
+    });
+    eqn.createElements(elements, color);
+    eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(0, 0);
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+    labelTextOrEquation.forEach((labelText, index) => {
+      eqn.addForm(`${index}`, [`_${index}`]);
+    });
+    // eqn.addForm('base', ['base']);
+    eqn.setCurrentForm('0');
   }
 
   // function updateScale(parentScale: Point) {

@@ -91,7 +91,7 @@ export default class RectCollection extends CommonDiagramCollection {
   }
 
   addAngles() {
-    const makeA = (position: Point, start: number, size: number, label: string) => {
+    const makeA = (position: Point, start: number, size: number, label: string | Array<string>) => {
       const angle = makeAngle(
         this.diagram, this.layout.angleRadius,
         this.layout.lineWidth, this.layout.angleSides, this.layout.colors.angles,
@@ -113,7 +113,7 @@ export default class RectCollection extends CommonDiagramCollection {
     const angleB = makeA(
       points[2], Math.PI - Math.atan(height / width),
       Math.atan(height / width),
-      'b',
+      ['b', 'a - 90º'],
     );
     const angleC = makeA(
       points[0], Math.PI * 2 - Math.atan(height / width),

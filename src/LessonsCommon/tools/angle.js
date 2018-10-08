@@ -78,7 +78,7 @@ export function makeAngle(
   angle.currentAngle = 0;
   angle.realAngleDecimals = 2;
 
-  angle.addLabel = (labelTextOrEquation: string | Equation = '', labelRadius: number) => {
+  angle.addLabel = (labelTextOrEquation: string | Equation | Array<string> = '', labelRadius: number) => {
     const eqnLabel = makeEquationLabel(diagram, labelTextOrEquation, color);
     angle.label = Object.assign({}, eqnLabel, {
       radius: labelRadius,
