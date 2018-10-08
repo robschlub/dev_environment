@@ -17,8 +17,8 @@ export default function commonLessonLayout() {
   layout.position = new Point(0, 0);
   layout.lineWidth = 0.02;
   layout.angleRadius = 0.4;
-  layout.angleLabelRadius = 0.5;
-  layout.angleSides = 100;
+  layout.angleLabelRadius = 0.45;
+  layout.angleSides = 200;
   layout.quads = {
     quad1: {
       points: [
@@ -51,12 +51,12 @@ export default function commonLessonLayout() {
 
   layout.rect = {
     points: [
-      new Point(-2, 0.7),
+      new Point(-2, 0.2),
       new Point(-2, -1.3),
       new Point(2, -1.3),
-      new Point(2, 0.7),
+      new Point(2, 0.2),
     ],
     position: new Point(0, 0),
-  }
+  };
   return layout;
 }

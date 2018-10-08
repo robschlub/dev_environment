@@ -90,6 +90,35 @@ export default class RectCollection extends CommonDiagramCollection {
     this.add('rightAngle4', rightAngle4);
   }
 
+  addAngles() {
+    const makeA = (position: Point, start: number, size: number, label: string) => {
+      const angle = makeAngle(
+        this.diagram, this.layout.angleRadius,
+        this.layout.lineWidth, this.layout.angleSides, this.layout.colors.angles,
+      );
+      angle.addLabel(label, this.layout.angleLabelRadius);
+      // angle.autoRightAngle = true;
+      angle.setPosition(position);
+      angle.updateAngle(start, size);
+      return angle;
+    };
+    const { points } = this.layout.rect;
+    const width = points[2].x - points[0].x;
+    const height = points[0].y - points[1].y;
+    const angleA = makeA(
+      points[0], Math.PI / 2 * 3,
+      Math.atan(width / height),
+      'a',
+    );
+    const angleB = makeA(
+      points[2], Math.PI - Math.atan(height / width),
+      Math.atan(height / width),
+      'b',
+    );
+    this.add('angleA', angleA);
+    this.add('angleB', angleB);
+  }
+
   addEqn() {
     const eqn = this.diagram.equation.makeEqn();
     const eqnDescription = this.diagram.equation.makeDescription('id__rectangles_equation_desctription');
@@ -220,16 +249,8 @@ export default class RectCollection extends CommonDiagramCollection {
 
     eqn.setFormSeries(['1', '2', '3', '4', '5', '6', '7']);
 
-    // const description = this.diagram.shapes.htmlElement(
-    //   document.createElement('div'),
-    //   'id__rectangles_equation_desctription',
-    //   '',
-    //   new Point(1, 0), 'middle', 'left',
-    // );
-    // description.vertices.element.innerHTML = eqn.getForm('1').description;
     const nextForm = () => {
       eqn.nextForm();
-      // description.vertices.element.innerHTML = eqn.currentForm.base.description;
       this.diagram.animateNextFrame();
     };
     eqn.collection.onClick = nextForm.bind(this);
@@ -247,6 +268,7 @@ export default class RectCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addRightAngles();
+    this.addAngles();
     this.addRect();
     this.addLine();
     this.addEqn();
