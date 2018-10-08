@@ -142,13 +142,43 @@ class Content extends LessonContent {
       //   rect._angleD.showForm('0');
       // },
     });
+    common.show = [
+      rect._rightAngle1, rect._rightAngle2, rect._rightAngle3,
+      rect._rightAngle4, rect._lineA, rect._lineB, rect._lineC, rect._lineD,
+    ];
+    this.addSection(common, {
+      setContent: `<p>
+        The first properties to note are the four |side_lengths| and four |angles|. When properties are identified, the next question is are they related to each other?
+      </p>`,
+      modifiers: {
+        side_lengths: click(rect.pulseSideLabels, [rect], colors.lines),
+        angles: click(rect.pulseRightAngles, [rect], colors.angles),
+      },
+    });
 
     this.addSection(common, {
       setContent: `<p>
-        The first properties to note are the side lengths and angles. We know that all the angles are 90º. Are the side lengths related to each other?
+        When properties are identified, the next question is are they related to each other?
       </p>`,
-      show: [...common.show, rect._lineA, rect._lineB, rect._lineC, rect._lineD],
     });
+
+    this.addSection(common, {
+      setContent: `<p>
+        We know that all the angles are equal and 90º.
+      </p>`,
+    });
+
+    common.setContent = `<p>
+        To examine the relationship between side lengths, we can |split| the rectangle into two triangles.
+      </p>`;
+    this.addSection(common);
+
+    common.show = [
+      rect._rightAngle1, rect._rightAngle2, rect._rightAngle3,
+      rect._rightAngle4, rect._lineA, rect._lineB, rect._lineC, rect._lineD,
+      rect._lineE,
+    ];
+    this.addSection(common);
   }
 }
 

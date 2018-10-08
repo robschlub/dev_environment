@@ -31,7 +31,6 @@ export default class RectCollection extends CommonDiagramCollection {
   _rectEqn: TypeAnglesEquationCollection;
   _rectEqnDescription: DiagramElementPrimative;
   _rect: DiagramElementPrimative;
-  // _line: TypeLine;
   _rightAngle1: TypeAngle;
   _rightAngle2: TypeAngle;
   _rightAngle3: TypeAngle;
@@ -109,7 +108,6 @@ export default class RectCollection extends CommonDiagramCollection {
         this.layout.lineWidth, this.layout.angleSides, this.layout.colors.angles,
       );
       angle.addLabel(label, this.layout.angleLabelRadius);
-      // angle.autoRightAngle = true;
       angle.setPosition(position);
       angle.updateAngle(start, size);
       return angle;
@@ -143,145 +141,26 @@ export default class RectCollection extends CommonDiagramCollection {
     this.add('angleD', angleD);
   }
 
+  pulseSideLabels() {
+    const scale = 1.8;
+    this._lineA._label.pulseScaleNow(1, scale);
+    this._lineB._label.pulseScaleNow(1, scale);
+    this._lineC._label.pulseScaleNow(1, scale);
+    this._lineD._label.pulseScaleNow(1, scale);
+    this.diagram.animateNextFrame();
+  }
+
+  pulseRightAngles() {
+    const scale = 1.5;
+    this._rightAngle1.pulseScaleNow(1, scale);
+    this._rightAngle2.pulseScaleNow(1, scale);
+    this._rightAngle3.pulseScaleNow(1, scale);
+    this._rightAngle4.pulseScaleNow(1, scale);
+    this.diagram.animateNextFrame();
+  }
+
   addEqn() {
-    // const eqn = this.diagram.equation.makeEqn();
-    // const eqnDescription = this.diagram.equation.makeDescription('id__rectangles_equation_desctription');
-    // const strikeColor = this.layout.colors.diagram.warning;
-
-    // const colAngle = this.layout.colors.angles;
-    // const colText = this.layout.colors.diagram.text.base;
-    // const colDis = this.layout.colors.diagram.disabled;
-    // eqn.createElements(
-    //   {
-    //     a: ['a', colAngle],
-    //     b: ['b', colAngle],
-    //     _90: ['90º', colText],
-    //     _180: '180º',
-    //     plus1: '  + ',
-    //     plus2: '  + ',
-    //     equals: ' = ',
-
-    //     m90l: ['- 90º', colText],
-    //     m90r: ['- 90º', colText],
-    //     mal: ['- a', colAngle],
-    //     mar: ['  - a', colAngle],
-
-    //     strike1: this.diagram.equation.strike(strikeColor),
-    //     strike2: this.diagram.equation.strike(strikeColor),
-    //     strike3: this.diagram.equation.strike(strikeColor),
-    //     strike4: this.diagram.equation.strike(strikeColor),
-
-    //     calc0: ['0', colDis],
-    //     calc90: '90º',
-    //   },
-    //   this.layout.colors.diagram.text.base,
-    //   eqnDescription,
-    //   new Point(0.7, -0.052),
-    // );
-    // eqn.formAlignment.fixTo = eqn.collection._equals;
-    // eqn.formAlignment.hAlign = 'center';
-    // eqn.formAlignment.vAlign = 'middle';
-    // eqn.formAlignment.scale = 1.0;
-
-    // eqn.addForm('1', [
-    //   'a', 'plus1', 'b', 'plus2', '_90',
-    //   'equals',
-    //   '_180',
-    // ], 'base', 'All angles in a triangle add to 180º.');
-
-    // eqn.addForm('2', [
-    //   eqn.annotation(
-    //     ['a', 'plus1', 'b', 'plus2', '_90'],
-    //     [eqn.ann('m90l', 'center', -0.4, 'center', 'top')],
-    //   ),
-    //   'equals',
-    //   eqn.annotation(
-    //     '_180',
-    //     [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
-    //   ),
-    // ], 'base', '|Subtract| 90º from both sides of the equation.');
-
-    // eqn.addForm('3', [
-    //   eqn.annotation(
-    //     ['a', 'plus1', 'b', 'plus2', eqn.strike('_90', 'strike1')],
-    //     [
-    //       eqn.ann(
-    //         eqn.strike('m90l', 'strike3'),
-    //         'center', -0.4, 'center', 'top',
-    //       ),
-    //       eqn.ann(
-    //         'calc0',
-    //         'right', 1.4, 'left', 'bottom',
-    //       ),
-    //     ],
-    //   ),
-    //   'equals',
-    //   eqn.annotation(
-    //     eqn.strike('_180', 'strike2'),
-    //     [
-    //       eqn.ann(
-    //         eqn.strike('m90r', 'strike4'),
-    //         'center', -0.4, 'center', 'top',
-    //       ),
-    //       eqn.ann(
-    //         'calc90',
-    //         'right', 1.4, 'left', 'bottom',
-    //       ),
-    //     ],
-    //   ),
-    // ], 'base', 'Peform subtraction');
-
-    // eqn.addForm('4', [
-    //   'a', 'plus1', 'b',
-    //   'equals',
-    //   'calc90',
-    // ]);
-
-    // eqn.addForm('5', [
-    //   eqn.annotation(
-    //     ['a', 'plus1', 'b'],
-    //     [eqn.ann('mal', 'center', -0.4, 'center', 'top')],
-    //   ),
-    //   'equals',
-    //   eqn.annotation(
-    //     'calc90',
-    //     [eqn.ann('mar', 'center', -0.4, 'center', 'top')],
-    //   ),
-    // ]);
-
-    // eqn.addForm('6', [
-    //   eqn.annotation(
-    //     [eqn.strike('a', 'strike1'), 'plus1', 'b'],
-    //     [eqn.ann(
-    //       eqn.strike('mal', 'strike2'),
-    //       'center', -0.4, 'center', 'top',
-    //     )],
-    //   ),
-    //   'equals',
-    //   eqn.annotation(
-    //     'calc90',
-    //     [eqn.ann('mar', 'center', -0.4, 'center', 'top')],
-    //   ),
-    // ]);
-
-    // eqn.addForm('7', [
-    //   'b',
-    //   'equals',
-    //   'calc90',
-    //   'mar',
-    // ]);
-
-    // eqn.setFormSeries(['1', '2', '3', '4', '5', '6', '7']);
-
-    // const nextForm = () => {
-    //   eqn.nextForm();
-    //   this.diagram.animateNextFrame();
-    // };
-    // eqn.collection.onClick = nextForm.bind(this);
-    // eqn.collection.isTouchable = true;
-    // eqn.collection.touchInBoundingRect = true;
     const eqn = makeAnglesEquation(this.diagram, this.layout);
-    // console.log(eqn)
     this.add('rectEqn', eqn.collection);
     this.add('rectEqnDescription', eqn.descriptionElement);
     this.rectEqn = eqn;
@@ -296,7 +175,6 @@ export default class RectCollection extends CommonDiagramCollection {
     this.addRightAngles();
     this.addAngles();
     this.addRect();
-    // this.addLine();
     this.addEqn();
     this.hasTouchableElements = true;
   }
