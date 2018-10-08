@@ -45,18 +45,35 @@ export default class RectCollection extends CommonDiagramCollection {
 
     rect.setPosition(this.layout.rect.position);
     this.add('rect', rect);
+
+    const makeL = (p1, p2, labelText, show) => {
+      const line = makeLine(
+        this.diagram, 'end', 1, this.layout.lineWidth,
+        this.layout.colors.lines, show,
+      );
+      line.setEndPoints(p1, p2);
+      line.setPosition(this.layout.rect.position.add(p1));
+      line.addLabel(labelText, 0.05, 'inside', 'top', 'horizontal');
+      this.add(`line${labelText}`, line);
+    };
+    const { points } = this.layout.rect;
+    makeL(points[0], points[1], 'A', true);
+    makeL(points[1], points[2], 'B', true);
+    makeL(points[2], points[3], 'C', true);
+    makeL(points[3], points[0], 'D', true);
+    makeL(points[0], points[2], 'E', true);
   }
 
-  addLine() {
-    const line = makeLine(
-      this.diagram, 'end', 1, this.layout.lineWidth / 2,
-      this.layout.colors.lines,
-    );
-    line.setEndPoints(this.layout.rect.points[0], this.layout.rect.points[2]);
-    line.setPosition(this.layout.rect.position.add(this.layout.rect.points[0]));
+  // addLine() {
+  //   const line = makeLine(
+  //     this.diagram, 'end', 1, this.layout.lineWidth / 2,
+  //     this.layout.colors.lines,
+  //   );
+  //   line.setEndPoints(this.layout.rect.points[0], this.layout.rect.points[2]);
+  //   line.setPosition(this.layout.rect.position.add(this.layout.rect.points[0]));
 
-    this.add('line', line);
-  }
+  //   this.add('line', line);
+  // }
 
   addRightAngles() {
     const makeA = () => {
@@ -282,7 +299,7 @@ export default class RectCollection extends CommonDiagramCollection {
     this.addRightAngles();
     this.addAngles();
     this.addRect();
-    this.addLine();
+    // this.addLine();
     this.addEqn();
     this.hasTouchableElements = true;
   }

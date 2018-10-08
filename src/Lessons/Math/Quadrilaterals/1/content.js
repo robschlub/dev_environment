@@ -85,7 +85,7 @@ class Content extends LessonContent {
       setContent: `<p>
         A quadrilateral can always be split into two triangles.
       </p>`,
-    })
+    });
 
     this.addSection(common, {
       setContent: `<p>
@@ -94,7 +94,7 @@ class Content extends LessonContent {
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
       },
-    })
+    });
 
     this.addSection({
       setContent: centerV(`
@@ -105,7 +105,7 @@ class Content extends LessonContent {
           A quadrilateral's angles will |always add up to 360º| (|2π radians|).
         </p>
       `),
-    })
+    });
 
     common.showOnly = [qr];
     common.show = [rect];
