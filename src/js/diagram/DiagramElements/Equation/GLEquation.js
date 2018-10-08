@@ -1830,7 +1830,51 @@ export class Equation {
     });
   }
 
-  nextForm(name: ?string) {
+  getFormIndex(formToGet: EquationForm | string) {
+    const form = this.getForm(formToGet);
+    let index = -1;
+    if (form != null) {
+      index = this.formSeries.indexOf(this.form[form.name]);
+    }
+    return index;
+  }
+
+  prevForm(time: number) {
+    const currentForm = this.getCurrentForm();
+    if (currentForm == null) {
+      return;
+    }
+    let index = this.getFormIndex(currentForm);
+    if (index > -1) {
+      index -= 1;
+      if (index < 0) {
+        index = this.formSeries.length - 1;
+      }
+      this.goToForm(index, time);
+    }
+  }
+
+  nextForm(time: number) {
+    const currentForm = this.getCurrentForm();
+    if (currentForm == null) {
+      return;
+    }
+    let index = this.getFormIndex(currentForm);
+    if (index > -1) {
+      index += 1;
+      if (index > this.formSeries.length - 1) {
+        index = 0;
+      }
+      this.goToForm(index, time);
+    }
+  }
+
+  replayCurrentForm(time: number) {
+    this.prevForm(0);
+    this.nextForm(time);
+  }
+
+  goToForm(name: ?string | number = null, time: number = 2) {
     this.collection.stop();
     this.collection.stop();
     let nextIndex = 0;
@@ -1847,6 +1891,8 @@ export class Equation {
       if (nextIndex === this.formSeries.length) {
         nextIndex = 0;
       }
+    } else if (typeof name === 'number') {
+      nextIndex = name;
     } else {
       this.formSeries.forEach((form, index) => {
         if (form.name === name) {
@@ -1854,7 +1900,6 @@ export class Equation {
         }
       });
     }
-
     let form = null;
     let formTypeToUse = null;
     const possibleFormTypes
@@ -1866,8 +1911,12 @@ export class Equation {
     if (formTypeToUse != null) {
       // $FlowFixMe
       form = this.formSeries[nextIndex][formTypeToUse];
-      form.animatePositionsTo(2);
-      this.setCurrentForm(form);
+      if (time === 0) {
+        this.showForm(form);
+      } else {
+        form.animatePositionsTo(time);
+        this.setCurrentForm(form);
+      }
       this.updateDescription();
     }
   }
