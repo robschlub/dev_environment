@@ -1603,6 +1603,7 @@ export type TypeEquation = {
   setPosition: (Point) => void;
   stop: () => void;
   scale: (number) => void;
+  isAnimating: boolean;
 
   +showForm: (EquationForm | string, ?string) => {};
 };
@@ -1627,6 +1628,7 @@ export class Equation {
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
     scale: number;
   };
+  isAnimating: boolean;
 
   descriptionElement: DiagramElementPrimative | null;
   descriptionPosition: Point;
@@ -1653,6 +1655,7 @@ export class Equation {
     this.currentFormType = '';
     this.formTypeOrder = ['base'];
     this.descriptionPosition = new Point(0, 0);
+    this.isAnimating = false;
   }
 
   _dup() {
@@ -1899,7 +1902,6 @@ export class Equation {
 
   replayCurrentForm(time: number) {
     this.prevForm(0);
-    console.log('next form');
     this.nextForm(time, 0.5);
   }
 
@@ -1908,8 +1910,20 @@ export class Equation {
     time: number = 2,
     delay: number = 0,
   ) {
+    if (this.isAnimating) {
+      this.collection.stop(true, true);
+      this.collection.stop(true, true);
+      this.isAnimating = false;
+      const currentForm = this.getCurrentForm();
+      if (currentForm != null) {
+        this.showForm(currentForm);
+      }
+      return;
+    }
+
     this.collection.stop();
     this.collection.stop();
+    this.isAnimating = false;
     let nextIndex = 0;
     if (name == null) {
       let index = 0;
@@ -1947,7 +1961,11 @@ export class Equation {
       if (time === 0) {
         this.showForm(form);
       } else {
-        form.animatePositionsTo(delay, 1, time, 0.5);
+        this.isAnimating = true;
+        const end = () => {
+          this.isAnimating = false;
+        };
+        form.animatePositionsTo(delay, 1, time, 0.5, end);
         this.setCurrentForm(form);
       }
       this.updateDescription();

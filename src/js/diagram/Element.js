@@ -1115,7 +1115,12 @@ class DiagramElement {
 
   // When animation is stopped, any callback associated with the animation
   // needs to be called, with whatever is passed to stopAnimating.
-  stopAnimating(result: ?mixed): void {
+  stopAnimating(result: ?mixed, setToEndOfPlan: boolean = false): void {
+    if (setToEndOfPlan && this.state.isAnimating) {
+      const lastPhase = this.animate.transform.plan.slice(-1)[0];
+      const endTransform = this.calcNextAnimationTransform(lastPhase.time);
+      this.setTransform(endTransform);
+    }
     this.animate.transform.plan = [];
     this.state.isAnimating = false;
     const { callback } = this.animate.transform;
@@ -1129,7 +1134,7 @@ class DiagramElement {
     }
   }
 
-  stopAnimatingColor(result: ?mixed): void {
+  stopAnimatingColor(result: ?mixed, setToEndOfPlan: boolean = false): void {
     this.state.isAnimatingColor = false;
     if (this.animate.color.plan.length) {
       if (this.state.disolving === 'in') {
@@ -1143,9 +1148,14 @@ class DiagramElement {
         // disolving state will be lost.
         // console.log(this.name, this.animate.color.plan.slice(-1)[0].startColor.slice())
         this.state.disolving = '';
+      } else if (setToEndOfPlan && this.state.isAnimatingColor) {
+        const lastPhase = this.animate.color.plan.slice(-1)[0];
+        const endColor = this.calcNextAnimationColor(lastPhase.time);
+        this.setColor(endColor);
       }
     }
     this.animate.color.plan = [];
+    this.state.isAnimatingColor = false;
     const { callback } = this.animate.color;
     this.animate.color.callback = null;
     if (callback) {
@@ -1157,7 +1167,11 @@ class DiagramElement {
     }
   }
 
-  stopAnimatingCustom(result: ?mixed): void {
+  stopAnimatingCustom(result: ?mixed, setToEndOfPlan: boolean = false): void {
+    if (setToEndOfPlan && this.state.isAnimatingCustom) {
+      const lastPhase = this.animate.custom.plan.slice(-1)[0];
+      lastPhase.animationCallback(1);
+    }
     this.animate.custom.plan = [];
     this.state.isAnimatingCustom = false;
     const { callback } = this.animate.custom;
@@ -1665,10 +1679,10 @@ class DiagramElement {
     }
   }
 
-  stop(flag: ?mixed) {
-    this.stopAnimating(flag);
-    this.stopAnimatingColor(flag);
-    this.stopAnimatingCustom(flag);
+  stop(flag: ?mixed, setToEndOfPlan: boolean = false) {
+    this.stopAnimating(flag, setToEndOfPlan);
+    this.stopAnimatingColor(flag, setToEndOfPlan);
+    this.stopAnimatingCustom(flag, setToEndOfPlan);
     this.stopMovingFreely(flag);
     this.stopBeingMoved();
     this.stopPulsing(flag);
@@ -2512,11 +2526,11 @@ class DiagramElementCollection extends DiagramElement {
     return touched;
   }
 
-  stop(flag: ?mixed) {
+  stop(flag: ?mixed, setToEndOfPlan: boolean = false) {
     super.stop(flag);
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      element.stop(flag);
+      element.stop(flag, setToEndOfPlan);
     }
   }
 
