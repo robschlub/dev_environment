@@ -44,6 +44,7 @@ const diagramColorNames = [
   '--diagram-passive',
   '--diagram-disabled',
   '--diagram-disabledDark',
+  '--diagram-disabledDarkest',
   '--diagram-push',
   '--diagram-action',
   '--diagram-text-base',

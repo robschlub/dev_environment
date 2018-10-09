@@ -210,8 +210,8 @@ class Content extends LessonContent {
     ];
     common.setSteadyState = () => {
       rect._angleB.showForm('0');
-      rect._lineC.setColor(colors.diagram.disabledDark);
-      rect._lineD.setColor(colors.diagram.disabledDark);
+      rect._lineC.setColor(colors.diagram.disabledDarkest);
+      rect._lineD.setColor(colors.diagram.disabledDarkest);
     };
     this.addSection(common);
 
@@ -225,8 +225,8 @@ class Content extends LessonContent {
     common.setSteadyState = () => {
       rect._angleB.showForm('0');
       rect.rectEqn.showForm('0');
-      rect._lineC.setColor(colors.diagram.disabledDark);
-      rect._lineD.setColor(colors.diagram.disabledDark);
+      rect._lineC.setColor(colors.diagram.disabledDarkest);
+      rect._lineD.setColor(colors.diagram.disabledDarkest);
     };
 
     rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', {
@@ -241,8 +241,12 @@ class Content extends LessonContent {
       a: highlight(colors.angles),
     });
     rect.rectEqn.changeDescription('5', '|a| cancels on the left side', { a: highlight(colors.angles) });
-    rect.rectEqn.changeDescription('5a', 'No |a| remaining, so can be removed', { a: highlight(colors.angles) });
-    rect.rectEqn.changeDescription('6', '-|a| remains on right, so simplify into one line.', { a: highlight(colors.angles) });
+    rect.rectEqn.changeDescription('5a', 'No |a| remaining on left side, so can be removed', { a: highlight(colors.angles) });
+    rect.rectEqn.changeDescription('6', 'End with |b| in terms of |a|.',
+      { 
+        a: highlight(colors.angles),
+        b: highlight(colors.angles),
+      });
 
     this.addSection(common, {
       title: 'adsf',
