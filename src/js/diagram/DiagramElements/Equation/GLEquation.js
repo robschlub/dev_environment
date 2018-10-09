@@ -1444,6 +1444,16 @@ export class EquationForm extends Elements {
 
     this.collection.setElementTransforms(currentTransforms);
     let cumTime = delay;
+
+    let moveCallback = null;
+    let disolveInCallback = null;
+
+    if (elementsToShow.length === 0) {
+      moveCallback = callback;
+    } else {
+      disolveInCallback = callback;
+    }
+
     if (elementsToHide.length > 0) {
       this.dissolveElements(elementsToHide, false, delay, disolveOutTime, null);
       cumTime += disolveOutTime;
@@ -1453,13 +1463,14 @@ export class EquationForm extends Elements {
       moveTime,
       cumTime,
       0,
+      moveCallback,
       // this.dissolveElements.bind(this, elementsToShow, true, 0, 0.5, callback),
     );
     if (t > 0) {
       cumTime = t;
     }
     if (elementsToShow.length > 0) {
-      this.dissolveElements(elementsToShow, true, cumTime, disolveInTime, callback);
+      this.dissolveElements(elementsToShow, true, cumTime, disolveInTime, disolveInCallback);
       cumTime += disolveInTime + 0.001;
     }
     return cumTime;
@@ -1774,6 +1785,7 @@ export class Equation {
     name: string,
     content: Array<Elements | Element | string>,
     formType: string = 'base',
+    addToSeries: boolean = true,
     description: string = '',
     modifiers: Object = {},
   ) {
@@ -1797,10 +1809,16 @@ export class Equation {
       this.formAlignment.vAlign,
       this.formAlignment.fixTo,
     );
+    if (addToSeries) {
+      if (this.formSeries == null) {
+        this.formSeries = [];
+      }
+      this.formSeries.push(this.form[name]);
+    }
     // make the first form added also equal to the base form as always
     // need a base form for some functions
     if (this.form[name].base === undefined) {
-      this.addForm(name, content, 'base', description, modifiers);
+      this.addForm(name, content, 'base', false, description, modifiers);
     }
   }
 
@@ -1967,6 +1985,7 @@ export class Equation {
       } else {
         this.isAnimating = true;
         const end = () => {
+          console.log('ended')
           this.isAnimating = false;
         };
         form.animatePositionsTo(delay, 1, time, 0.5, end);

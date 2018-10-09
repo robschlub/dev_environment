@@ -233,7 +233,9 @@ class Content extends LessonContent {
       add_up_to_180: clickWord('add up to 180º', 'add_up_to_180', qr._tri.show, [qr._tri], colors.diagram.disabled),
     });
     rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
-    rect.rectEqn.changeDescription('2', 'Simplify common terms.');
+    rect.rectEqn.changeDescription('2a', '90º is cancelled on left side.');
+    rect.rectEqn.changeDescription('2b', '0 remaining so can be removed');
+    rect.rectEqn.changeDescription('2c', '180º is reduced to 90º on right side.');
     rect.rectEqn.changeDescription('3', 'Clean up into one line.');
     rect.rectEqn.changeDescription('4', 'Subtract angle |a| from both sides of the equation.', {
       a: highlight(colors.diagram.disabled),

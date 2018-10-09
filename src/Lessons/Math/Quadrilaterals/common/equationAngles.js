@@ -91,7 +91,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     ),
   ]);
 
-  eqn.addForm('2', [
+  eqn.addForm('2a', [
     eqn.annotation(
       ['a', 'plus1', 'b', 'plus2', eqn.strike('_90', 'strike1')],
       [
@@ -106,6 +106,22 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
       ],
     ),
     'equals',
+    eqn.annotation(
+      '_180',
+      [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('2b', [
+    'a', 'plus1', 'b', 'equals',
+    eqn.annotation(
+      '_180',
+      [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('2c', [
+    'a', 'plus1', 'b', 'equals',
     eqn.annotation(
       eqn.strike('_180', 'strike2'),
       [
@@ -161,16 +177,16 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     'mar',
   ]);
 
-  eqn.setFormSeries(['0', '1', '2', '3', '4', '5', '6']);
-
+  // eqn.setFormSeries(['0', '1', '2', '3', '4', '5', '6']);
+  // console.log(eqn.formSeries)
   const nextForm = () => {
     eqn.nextForm(2);
     diagram.animateNextFrame();
   };
-  const currentForm = () => {
-    eqn.replayCurrentForm(1);
-    diagram.animateNextFrame();
-  };
+  // const currentForm = () => {
+  //   eqn.replayCurrentForm(1);
+  //   diagram.animateNextFrame();
+  // };
   // eqn.descriptionElement.onClick = currentForm.bind(this);
   eqn.collection.onClick = nextForm.bind(this);
   eqn.collection.isTouchable = true;
