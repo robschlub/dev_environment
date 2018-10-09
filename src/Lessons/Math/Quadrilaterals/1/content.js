@@ -230,7 +230,7 @@ class Content extends LessonContent {
     };
 
     rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', {
-      add_up_to_180: clickWord('add up to 180º', 'add_up_to_180', qr._tri.show, [qr._tri], colors.diagram.disabled),
+      add_up_to_180: clickWord('add up to 180º', 'add_up_to_180', qr._tri.show, [qr._tri], colors.diagram.action),
     });
     rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
     rect.rectEqn.changeDescription('2a', '90º is cancelled on left side.');
@@ -238,13 +238,11 @@ class Content extends LessonContent {
     rect.rectEqn.changeDescription('2c', '180º is reduced to 90º on right side.');
     rect.rectEqn.changeDescription('3', 'Clean up into one line.');
     rect.rectEqn.changeDescription('4', 'Subtract angle |a| from both sides of the equation.', {
-      a: highlight(colors.diagram.disabled),
+      a: highlight(colors.angles),
     });
-    rect.rectEqn.changeDescription('5', 'Simplify common terms.');
-    rect.rectEqn.changeDescription('6', 'Simplify into one line. End result is |b| in terms of |a|.', {
-      a: highlight(colors.diagram.disabled),
-      b: highlight(colors.diagram.disabled),
-    });
+    rect.rectEqn.changeDescription('5', '|a| cancels on the left side', { a: highlight(colors.angles) });
+    rect.rectEqn.changeDescription('5a', 'No |a| remaining, so can be removed', { a: highlight(colors.angles) });
+    rect.rectEqn.changeDescription('6', '-|a| remains on right, so simplify into one line.', { a: highlight(colors.angles) });
 
     this.addSection(common, {
       title: 'adsf',

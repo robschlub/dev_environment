@@ -1983,7 +1983,6 @@ export class Equation {
       } else {
         this.isAnimating = true;
         const end = () => {
-          console.log('ended')
           this.isAnimating = false;
         };
         form.animatePositionsTo(delay, 1, time, 0.5, end);

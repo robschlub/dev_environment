@@ -37,7 +37,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
   const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
   // eqnDescription.isTouchable = true;
-  const strikeColor = layout.colors.diagram.warning;
+  const strikeColor = layout.colors.diagram.disabledDark;
 
   const colAngle = layout.colors.angles;
   const colText = layout.colors.diagram.text.base;
@@ -54,8 +54,10 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
 
       m90l: ['- 90º', colText],
       m90r: ['- 90º', colText],
-      mal: ['- a', colAngle],
-      mar: [' - a', colAngle],
+      ml: ['- ', colText],
+      al: ['a', colAngle],
+      mr: [' - ', colText],
+      ar: ['a', colAngle],
 
       strike1: diagram.equation.strike(strikeColor),
       strike2: diagram.equation.strike(strikeColor),
@@ -146,12 +148,12 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
   eqn.addForm('4', [
     eqn.annotation(
       ['a', 'plus1', 'b'],
-      [eqn.ann('mal', 'center', -0.4, 'center', 'top')],
+      [eqn.ann(['ml', 'al'], 'center', -0.4, 'center', 'top')],
     ),
     'equals',
     eqn.annotation(
       'calc90',
-      [eqn.ann('mar', 'center', -0.4, 'center', 'top')],
+      [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
     ),
   ]);
 
@@ -159,14 +161,23 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     eqn.annotation(
       [eqn.strike('a', 'strike1'), 'plus1', 'b'],
       [eqn.ann(
-        eqn.strike('mal', 'strike2'),
+        eqn.strike(['ml', 'al'], 'strike2'),
         'center', -0.4, 'center', 'top',
       )],
     ),
     'equals',
     eqn.annotation(
       'calc90',
-      [eqn.ann('mar', 'center', -0.4, 'center', 'top')],
+      [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('5a', [
+    'b',
+    'equals',
+    eqn.annotation(
+      'calc90',
+      [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
     ),
   ]);
 
@@ -174,7 +185,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     'b',
     'equals',
     'calc90',
-    'mar',
+    'mr', 'ar',
   ]);
 
   // eqn.setFormSeries(['0', '1', '2', '3', '4', '5', '6']);
