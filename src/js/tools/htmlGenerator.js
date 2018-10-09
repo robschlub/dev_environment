@@ -268,6 +268,8 @@ function applyModifiers(
   if (monochrome) {
     const c = RegExp(/style="color:rgba\([^)]*\);"/);
     outText = outText.replace(c, '');
+    const h = RegExp(/highlight_word/);
+    outText = outText.replace(h, '');
   }
   return outText;
 }
