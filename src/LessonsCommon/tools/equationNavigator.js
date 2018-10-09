@@ -137,12 +137,15 @@ export default function makeEquationNavigator(
 
   const nextDescription = diagram.equation.makeDescription('id__rectangles_equation_next_desctription');
 
+  const prevDescription = diagram.equation.makeDescription('id__rectangles_equation_prev_desctription');
+
   navigator.add('prev', prev);
   navigator.add('next', next);
   navigator.add('refresh', refresh);
   navigator.add('eqn', equation.collection);
   navigator.add('currentStep', equation.descriptionElement);
   navigator.add('nextDescription', nextDescription);
+  navigator.add('prevDescription', prevDescription);
 
   const updateButtons = () => {
     const currentForm = equation.getCurrentForm();
@@ -171,6 +174,13 @@ export default function makeEquationNavigator(
         nextIndex = 0;
       }
       updateDescription(equation, 'base', nextDescription, nextIndex, false);
+
+      const prevIndex = index - 1;
+      if (prevIndex >= 0) {
+        updateDescription(equation, 'base', prevDescription, prevIndex, false);
+      } else {
+        prevDescription.vertices.change('', prevDescription.lastDrawTransform.m());
+      }
     }
   };
 
@@ -183,7 +193,6 @@ export default function makeEquationNavigator(
     equation.prevForm(1.5);
     updateButtons();
     diagram.animateNextFrame();
-    console.log(diagram.elements)
   };
   const clickRefresh = () => {
     const currentForm = equation.getCurrentForm();
@@ -206,6 +215,7 @@ export default function makeEquationNavigator(
     equation.descriptionElement.setPosition(offset.add(size * 3, 0));
   }
   nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
+  prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
   refresh.setPosition(offset);
   next.setPosition(offset.add(0, -spacing));
   prev.setPosition(offset.add(0, spacing));
