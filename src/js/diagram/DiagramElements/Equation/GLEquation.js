@@ -1438,7 +1438,6 @@ export class EquationForm extends Elements {
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
 
     const currentTransforms = this.collection.getElementTransforms();
-    // this.arrange(scale, xAlign, yAlign, fixElement);
     this.setPositions();
     const animateToTransforms = this.collection.getElementTransforms();
 
@@ -1464,7 +1463,6 @@ export class EquationForm extends Elements {
       cumTime,
       0,
       moveCallback,
-      // this.dissolveElements.bind(this, elementsToShow, true, 0, 0.5, callback),
     );
     if (t > 0) {
       cumTime = t;
