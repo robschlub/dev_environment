@@ -38,6 +38,9 @@ body {
   // padding-left: calc(var(--lesson__diagram-font-size) * 0.8);
 }
 
+.lesson__equation_nav__touchable:hover {
+  cursor: pointer;
+}
 // .lesson__equation_next_prev:hover,
 // #id__rectangles_equation_next_desctription:hover,
 // #id__rectangles_equation_prev_desctription:hover {

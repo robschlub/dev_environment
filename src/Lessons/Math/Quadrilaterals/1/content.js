@@ -256,6 +256,14 @@ class Content extends LessonContent {
         // rect._rectEqn, rect._rectEqnDescription,
         rect._nav,
       ],
+      interactiveElements: [
+        rect._nav._prev,
+        rect._nav._prevDescription,
+      ],
+      setSteadyState: () => {
+        common.setSteadyState();
+        rect._nav.updateButtons();
+      },
     });
   }
 }

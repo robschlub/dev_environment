@@ -71,7 +71,7 @@ function makeRefresh(
     1, Math.floor(sides * angle / Math.PI / 2),
     color, new Transform().translate(0, 0),
   );
-  refreshLine.vertices.border[0] = refreshLine.vertices.border[0].map(p => new Point(p.x * 1.2, p.y * 1.2));
+  refreshLine.vertices.border[0] = refreshLine.vertices.border[0].map(p => new Point(p.x * 2, p.y * 2));
   refreshTop.add('line', refreshLine);
 
   const refreshArrow = diagram.shapes.arrow(
@@ -162,8 +162,10 @@ export default function makeEquationNavigator(
   );
 
   const nextDescription = diagram.equation.makeDescription('id__rectangles_equation_next_desctription');
+  nextDescription.isTouchable = true;
 
   const prevDescription = diagram.equation.makeDescription('id__rectangles_equation_prev_desctription');
+  prevDescription.isTouchable = true;
 
   navigator.add('prev', prev);
   navigator.add('next', next);
@@ -173,7 +175,7 @@ export default function makeEquationNavigator(
   navigator.add('nextDescription', nextDescription);
   navigator.add('prevDescription', prevDescription);
 
-  const updateButtons = () => {
+  navigator.updateButtons = () => {
     const currentForm = equation.getCurrentForm();
     if (currentForm != null) {
       const index = equation.getFormIndex(currentForm);
@@ -182,18 +184,36 @@ export default function makeEquationNavigator(
         prev.setColor(colorDisabled);
         refresh.isTouchable = false;
         prev.isTouchable = false;
+        prevDescription.isTouchable = false;
+        prev.vertices.element.classList
+          .remove('lesson__equation_nav__touchable');
+        prevDescription.vertices.element.classList
+          .remove('lesson__equation_nav__touchable');
       } else {
         refresh.setColor(color);
         prev.setColor(color);
         refresh.isTouchable = true;
         prev.isTouchable = true;
+        prevDescription.isTouchable = true;
+        prev.vertices.element.classList
+          .add('lesson__equation_nav__touchable');
+        prevDescription.vertices.element.classList
+          .add('lesson__equation_nav__touchable');
       }
       if (equation.formSeries.length > 1) {
         next.setColor(color);
         next.isTouchable = true;
+        nextDescription.isTouchable = true;
+        next.vertices.element.classList.add('lesson__equation_nav__touchable');
+        nextDescription.vertices.element.classList.add('lesson__equation_nav__touchable');
       } else {
         next.setColor(colorDisabled);
-        next.isTouchable = false;
+        nextDescription.isTouchable = false;
+        nextDescription.isTouchable = false;
+        nextDescription.vertices.element.classList
+          .remove('lesson__equation_nav__touchable');
+        nextDescription.vertices.element.classList
+          .remove('lesson__equation_nav__touchable');
       }
       let nextIndex = index + 1;
       if (nextIndex > equation.formSeries.length - 1) {
@@ -212,12 +232,12 @@ export default function makeEquationNavigator(
 
   const clickNext = () => {
     equation.nextForm(1.5);
-    updateButtons();
+    navigator.updateButtons();
     diagram.animateNextFrame();
   };
   const clickPrev = () => {
     equation.prevForm(1.5);
-    updateButtons();
+    navigator.updateButtons();
     diagram.animateNextFrame();
   };
   const clickRefresh = () => {
@@ -229,14 +249,14 @@ export default function makeEquationNavigator(
         diagram.animateNextFrame();
       }
     }
-    updateButtons();
+    navigator.updateButtons();
   };
 
   prev.onClick = clickPrev;
   next.onClick = clickNext;
   refresh.onClick = clickRefresh;
   nextDescription.onClick = clickNext;
-  prevDescription.onClick = clickNext;
+  prevDescription.onClick = clickPrev;
 
   equation.collection.setPosition(0, 0);
   if (equation.descriptionElement != null) {
@@ -248,6 +268,6 @@ export default function makeEquationNavigator(
   next.setPosition(offset.add(0, -spacing + arrowHeight / 2));
   prev.setPosition(offset.add(0, spacing - arrowHeight / 2));
   navigator.hasTouchableElements = true;
-  updateButtons();
+  // updateButtons();
   return navigator;
 }
