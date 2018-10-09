@@ -1382,7 +1382,18 @@ export class EquationForm extends Elements {
   getElementsToShowAndHide() {
     const allElements = this.collection.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
-    const elementsShownTarget = this.getAllElements();
+    const elementsShownTargetWithoutCollectionElements = this.getAllElements();
+    const elementsShownTarget = [];
+    elementsShownTargetWithoutCollectionElements.forEach((e) => {
+      if (e instanceof DiagramElementPrimative) {
+        elementsShownTarget.push(e);
+      } else {
+        const collectionElements = e.getAllElements();
+        collectionElements.forEach((ce) => {
+          elementsShownTarget.push(ce);
+        });
+      }
+    });
     const elementsToHide =
       elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
     const elementsToShow =
@@ -1408,7 +1419,13 @@ export class EquationForm extends Elements {
     this.collection.show();
     const { show, hide } = this.getElementsToShowAndHide();
     if (showTime === 0) {
-      show.forEach(e => e.show());
+      show.forEach((e) => {
+        if (e instanceof DiagramElementCollection) {
+          e.showAll();
+        } else {
+          e.show();
+        }
+      });
     } else {
       this.dissolveElements(show, true, 0.01, showTime, null);
     }
@@ -1434,7 +1451,13 @@ export class EquationForm extends Elements {
       this.dissolveElements(hide, false, 0.01, hideTime, null);
     }
     if (showTime === 0) {
-      show.forEach(e => e.show());
+      show.forEach((e) => {
+        if (e instanceof DiagramElementCollection) {
+          e.showAll();
+        } else {
+          e.show();
+        }
+      });
       if (callback != null) {
         callback();
       }

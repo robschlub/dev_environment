@@ -1069,6 +1069,7 @@ class DiagramElement {
       if (callback) {
         this.animate.color.callback = callback;
       }
+      // console.log(this.animate.color.toDisolve, this.name)
       this.state.disolving = this.animate.color.toDisolve;
       this.animate.color.toDisolve = '';
       this.state.isAnimatingColor = true;
@@ -1136,8 +1137,14 @@ class DiagramElement {
 
   stopAnimatingColor(result: ?mixed, setToEndOfPlan: boolean = false): void {
     this.state.isAnimatingColor = false;
+    // if (this.name === 'strike1') {
+    //   console.log(this.animate.color.plan.length, this.state.disolving, this.state.isAnimatingColor)
+    // }
+    // const a = Math.random();
+    // console.log(this.name, this.state.disolving, this.state.isAnimatingColor)
     if (this.animate.color.plan.length) {
       if (this.state.disolving === 'in') {
+        // console.log('in', this.name)
         this.setColor(this.animate.color.plan.slice(-1)[0].targetColor.slice());
         this.state.disolving = '';
       } else if (this.state.disolving === 'out') {
@@ -1149,11 +1156,13 @@ class DiagramElement {
         // console.log(this.name, this.animate.color.plan.slice(-1)[0].startColor.slice())
         this.state.disolving = '';
       } else if (setToEndOfPlan && this.state.isAnimatingColor) {
+        // console.log(2);
         const lastPhase = this.animate.color.plan.slice(-1)[0];
         const endColor = this.calcNextAnimationColor(lastPhase.time);
         this.setColor(endColor);
       }
     }
+    // console.log(this.name, this.color, this.isShown)
     this.animate.color.plan = [];
     this.state.isAnimatingColor = false;
     const { callback } = this.animate.color;
@@ -2660,6 +2669,7 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
+  // deprecate
   disolveElementsOut(
     time: number = 1,
     callback: ?(?mixed) => void = null,
@@ -2674,6 +2684,7 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
+  // deprecate
   disolveElementsIn(
     time: number = 1,
     callback: ?(?mixed) => void = null,
