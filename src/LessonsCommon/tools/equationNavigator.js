@@ -91,7 +91,6 @@ function updateDescription(
   }
   let form = null;
   form = eqn.formSeries[index][formType];
-  console.log(form, eqn.formSeries[index], formType)
   if (form == null) {
     return;
   }
@@ -136,7 +135,7 @@ export default function makeEquationNavigator(
     refreshAngle, color,
   );
 
-  const nextDescription = diagram.equation.makeDescription('next_description');
+  const nextDescription = diagram.equation.makeDescription('id__rectangles_equation_next_desctription');
 
   navigator.add('prev', prev);
   navigator.add('next', next);
@@ -167,7 +166,11 @@ export default function makeEquationNavigator(
         next.setColor(colorDisabled);
         next.isTouchable = false;
       }
-      updateDescription(equation, 'base', nextDescription, index, false);
+      let nextIndex = index + 1;
+      if (nextIndex > equation.formSeries.length - 1) {
+        nextIndex = 0;
+      }
+      updateDescription(equation, 'base', nextDescription, nextIndex, false);
     }
   };
 
@@ -201,6 +204,7 @@ export default function makeEquationNavigator(
   if (equation.descriptionElement != null) {
     equation.descriptionElement.setPosition(offset.add(size * 3, 0));
   }
+  nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
   refresh.setPosition(offset);
   next.setPosition(offset.add(0, -spacing));
   prev.setPosition(offset.add(0, spacing));
