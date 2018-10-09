@@ -138,7 +138,7 @@ export default function makeEquationNavigator(
   color: Array<number>,
   colorDisabled: Array<number>,
 ) {
-  const arrowWidth = size * 1.5;
+  // const arrowWidth = size * 1.5;
   const arrowHeight = size * 1.5;
   const refreshRadius = size;
   const refreshAngle = Math.PI / 3 * 2;
@@ -215,11 +215,12 @@ export default function makeEquationNavigator(
         nextDescription.vertices.element.classList
           .remove('lesson__equation_nav__touchable');
       }
-      let nextIndex = index + 1;
+      const nextIndex = index + 1;
       if (nextIndex > equation.formSeries.length - 1) {
-        nextIndex = 0;
+        nextDescription.vertices.change('RESTART from begining', nextDescription.lastDrawTransform.m());
+      } else {
+        updateDescription(equation, 'base', nextDescription, nextIndex, false);
       }
-      updateDescription(equation, 'base', nextDescription, nextIndex, false);
 
       const prevIndex = index - 1;
       if (prevIndex >= 0) {

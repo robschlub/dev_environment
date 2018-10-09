@@ -46,7 +46,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     {
       a: ['a', colAngle],
       b: ['b', colAngle],
-      _90: ['90º', colText],
+      _90: ['90º', colAngle],
       _180: '180º',
       plus1: '  + ',
       plus2: '  + ',

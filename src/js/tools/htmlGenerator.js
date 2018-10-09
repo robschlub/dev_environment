@@ -266,13 +266,13 @@ function applyModifiers(
   const r = RegExp(/\|([^|]*)\|/, 'gi');
   outText = outText.replace(r, `<span class="${highlightClass}">$1</span>`);
   if (monochrome) {
-    const c = RegExp(/style="color:rgba\([^)]*\);"/);
+    const c = RegExp(/style="color:rgba\([^)]*\);"/, 'gi');
     outText = outText.replace(c, '');
-    const h = RegExp(/highlight_word/);
+    const h = RegExp(/highlight_word/, 'gi');
     outText = outText.replace(h, '');
-    const i = RegExp(/interactive_word/);
+    const i = RegExp(/interactive_word/, 'gi');
     outText = outText.replace(i, '');
-    const id = RegExp(/id="[^"]*"/);
+    const id = RegExp(/id="[^"]*"/, 'gi');
     outText = outText.replace(id, '');
   }
   return outText;

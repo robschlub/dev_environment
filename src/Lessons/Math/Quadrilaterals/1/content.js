@@ -216,7 +216,7 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.setContent = `<p>
-      First, we can find angle |b| in terms of angle |a| as we know the third angle is a right angle.
+      First, we can find angle |b| in terms of angle |a|.
     </p>`;
     common.modifiers = {
       b: highlight(colors.angles),
