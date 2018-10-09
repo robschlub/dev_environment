@@ -243,7 +243,7 @@ class Content extends LessonContent {
     rect.rectEqn.changeDescription('5', '|a| cancels on the left side', { a: highlight(colors.angles) });
     rect.rectEqn.changeDescription('5a', 'No |a| remaining on left side, so can be removed', { a: highlight(colors.angles) });
     rect.rectEqn.changeDescription('6', 'End with |b| in terms of |a|.',
-      { 
+      {
         a: highlight(colors.angles),
         b: highlight(colors.angles),
       });

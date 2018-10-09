@@ -31,6 +31,28 @@ function makeArrow(
   return arrow;
 }
 
+function makeNextPrevText(
+  diagram: Diagram,
+  next: boolean,
+  spacing: number,
+) {
+  // let spacingToUse = spacing;
+  let textToUse = 'Prev';
+  if (next) {
+    // spacingToUse *= -1;
+    textToUse = 'Next';
+  }
+
+  const text = diagram.shapes.htmlText(
+    textToUse, `id__lesson__equation_navigator__${textToUse.toLowerCase()}_${Math.floor(Math.random() * 100000)}`,
+    'lesson__equation_next_prev',
+    new Point(0, spacing), 'middle', 'center',
+  );
+  text.isTouchable = true;
+  text.touchInBoundingBox = true;
+  return text;
+}
+
 function makeRefresh(
   diagram: Diagram,
   sides: number,
@@ -132,8 +154,11 @@ export default function makeEquationNavigator(
     .scale(1, 1)
     .translate(0, 0));
 
-  const prev = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, 0);
-  const next = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, Math.PI);
+  // const prev = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, 0);
+  // const next = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, Math.PI);
+
+  const prev = makeNextPrevText(diagram, false, spacing - arrowHeight / 2);
+  const next = makeNextPrevText(diagram, true, -spacing + arrowHeight / 2);
 
   const refresh = makeRefresh(
     diagram, refreshSides, refreshRadius, refreshLineWidth,
@@ -222,8 +247,8 @@ export default function makeEquationNavigator(
   nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
   prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
   refresh.setPosition(offset);
-  next.setPosition(offset.add(0, -spacing));
-  prev.setPosition(offset.add(0, spacing));
+  next.setPosition(offset.add(0, -spacing + arrowHeight / 2));
+  prev.setPosition(offset.add(0, spacing - arrowHeight / 2));
   navigator.hasTouchableElements = true;
   updateButtons();
   return navigator;
