@@ -14,37 +14,36 @@ import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 export type TypeEquationNavigator = {
 } & DiagramElementCollection;
 
-function makeArrow(
-  diagram: Diagram,
-  width: number,
-  height: number,
-  spacing: number,
-  color: Array<number>,
-  rotation: number,
-) {
-  const arrow = diagram.shapes.arrow(
-    width, 0, height, 0, color,
-    new Transform().translate(0, spacing * Math.cos(rotation)), new Point(0, 0), rotation,
-  );
-  arrow.isTouchable = true;
-  arrow.touchInBoundingBox = true;
-  return arrow;
-}
+// function makeArrow(
+//   diagram: Diagram,
+//   width: number,
+//   height: number,
+//   spacing: number,
+//   color: Array<number>,
+//   rotation: number,
+// ) {
+//   const arrow = diagram.shapes.arrow(
+//     width, 0, height, 0, color,
+//     new Transform().translate(0, spacing * Math.cos(rotation)), new Point(0, 0), rotation,
+//   );
+//   arrow.isTouchable = true;
+//   arrow.touchInBoundingBox = true;
+//   return arrow;
+// }
 
 function makeNextPrevText(
   diagram: Diagram,
   next: boolean,
   spacing: number,
 ) {
-  // let spacingToUse = spacing;
   let textToUse = 'Prev';
   if (next) {
-    // spacingToUse *= -1;
     textToUse = 'Next';
   }
 
   const text = diagram.shapes.htmlText(
-    textToUse, `id__lesson__equation_navigator__${textToUse.toLowerCase()}_${Math.floor(Math.random() * 100000)}`,
+    textToUse,
+    `id__lesson__equation_navigator__${textToUse.toLowerCase()}_${Math.floor(Math.random() * 100000)}`,
     'lesson__equation_next_prev',
     new Point(0, spacing), 'middle', 'center',
   );
@@ -65,8 +64,6 @@ function makeRefresh(
     .translate(0, 0));
   const refreshTop = diagram.shapes.collection(new Transform('Triangle')
     .rotate(0).translate(0, 0));
-  // refreshTop.hasTouchableElements = true;
-  // refreshTop.isTouchable = true;
 
   const refreshLine = diagram.shapes.polygon(
     sides, radius,
@@ -74,7 +71,7 @@ function makeRefresh(
     1, Math.floor(sides * angle / Math.PI / 2),
     color, new Transform().translate(0, 0),
   );
-  // refreshLine.isTouchable = true;
+  refreshLine.vertices.border[0] = refreshLine.vertices.border[0].map(p => new Point(p.x * 1.2, p.y * 1.2));
   refreshTop.add('line', refreshLine);
 
   const refreshArrow = diagram.shapes.arrow(
@@ -84,7 +81,6 @@ function makeRefresh(
       (radius + lineWidth) * Math.sin((Math.PI - angle) / 2),
     ), new Point(0, -lineWidth * 3), (Math.PI - angle) / 2 + Math.PI,
   );
-  // refreshArrow.isTouchable = true;
   refreshTop.add('arrow', refreshArrow);
 
   const refreshBottom = refreshTop._dup();
@@ -239,6 +235,8 @@ export default function makeEquationNavigator(
   prev.onClick = clickPrev;
   next.onClick = clickNext;
   refresh.onClick = clickRefresh;
+  nextDescription.onClick = clickNext;
+  prevDescription.onClick = clickNext;
 
   equation.collection.setPosition(0, 0);
   if (equation.descriptionElement != null) {
