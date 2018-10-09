@@ -100,14 +100,15 @@ function updateDescription(
 
   const drawingObject = element.vertices;
   if (drawingObject instanceof HTMLObject) {
-    const modifiersToUse = setClicks ? form.modifiers : {};
+    // const modifiersToUse = setClicks ? form.modifiers : {};
+    const monochrome = !setClicks;
     drawingObject.change(
-      html.applyModifiers(form.description, modifiersToUse),
+      html.applyModifiers(form.description, form.modifiers, '', monochrome),
       element.lastDrawTransform.m(),
     );
-    // if (setClicks) {
-    html.setOnClicks(form.modifiers);
-    // }
+    if (setClicks) {
+      html.setOnClicks(form.modifiers);
+    }
   }
 }
 

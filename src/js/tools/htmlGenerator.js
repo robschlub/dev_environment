@@ -252,14 +252,24 @@ function onClickId(
   }
 }
 
-function applyModifiers(text: string, modifiers: Object) {
+function applyModifiers(
+  text: string,
+  modifiers: Object,
+  highlightClass: string = 'highlight_word',
+  monochrome: boolean = false,
+) {
   let outText = text;
   Object.keys(modifiers).forEach((key) => {
     const mod = modifiers[key];
     outText = modifyText(outText, key, mod);
   });
   const r = RegExp(/\|([^|]*)\|/, 'gi');
-  return outText.replace(r, '<span class="highlight_word">$1</span>');
+  outText = outText.replace(r, `<span class="${highlightClass}">$1</span>`);
+  if (monochrome) {
+    const c = RegExp(/style="color:rgba\([^)]*\);"/);
+    outText = outText.replace(c, '');
+  }
+  return outText;
 }
 
 function setOnClicks(modifiers: Object, additionalClassesToAdd: string = '') {
