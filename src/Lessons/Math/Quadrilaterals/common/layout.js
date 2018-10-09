@@ -52,12 +52,16 @@ export default function commonLessonLayout() {
 
   layout.rect = {
     points: [
-      new Point(-1.5, 0.2),
-      new Point(-1.5, -1.3),
-      new Point(1.5, -1.3),
-      new Point(1.5, 0.2),
+      new Point(-1.5, 0.75),
+      new Point(-1.5, -0.75),
+      new Point(1.5, -0.75),
+      new Point(1.5, 0.75),
     ],
-    position: new Point(0, 0),
+    // position: new Point(0, 0.5),
+    scenarios: {
+      start: { position: new Point( 0, -0.2) },
+      analysis: { position: new Point( 0, -0.8) },
+    },
   };
   return layout;
 }

@@ -34,6 +34,27 @@ class Content extends LessonContent {
     const qr = diag._qr;
     let common = {};
 
+
+    rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', {
+      add_up_to_180: clickWord('add up to 180º', 'add_up_to_180', qr._tri.show, [qr._tri], colors.diagram.action),
+    });
+    rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
+    rect.rectEqn.changeDescription('2a', '90º is cancelled and goes to 0º on left side.');
+    rect.rectEqn.changeDescription('2b', '0º on left side can be removed');
+    rect.rectEqn.changeDescription('2c', '180º is reduced to 90º on right side.');
+    rect.rectEqn.changeDescription('3', 'Right side remainder is 90º.');
+    rect.rectEqn.changeDescription('4', 'Subtract angle |a| from both sides of the equation.', {
+      a: highlight(colors.angles),
+    });
+    rect.rectEqn.changeDescription('5', '|a| cancels on the left side', { a: highlight(colors.angles) });
+    rect.rectEqn.changeDescription('5a', 'No |a| remaining on left side, so can be removed', { a: highlight(colors.angles) });
+    rect.rectEqn.changeDescription('6', 'End with |b| in terms of |a|.',
+      {
+        a: highlight(colors.angles),
+        b: highlight(colors.angles),
+      });
+
+
     common = {
       setContent: '',
       showOnly: [
@@ -115,15 +136,20 @@ class Content extends LessonContent {
         rect.resetColors();
       },
       showOnly: [
-        qr, rect,
-        rect._lineA, rect._lineA._line, rect._lineB, rect._lineB._line,
-        rect._lineC, rect._lineC._line, rect._lineD, rect._lineD._line,
+        qr, rect, rect._rect,
+        rect._rect._lineA, rect._rect._lineA._line, rect._rect._lineB, rect._rect._lineB._line,
+        rect._rect._lineC, rect._rect._lineC._line, rect._rect._lineD, rect._rect._lineD._line,
       ],
       show: [
-        rect._rightAngle1, rect._rightAngle2,
-        rect._rightAngle3, rect._rightAngle4,
+        rect._rect._rightAngle1, rect._rect._rightAngle2,
+        rect._rect._rightAngle3, rect._rect._rightAngle4,
       ],
-      setSteadyState: () => {},
+      transitionFromAny: (done) => {
+        rect.moveToScenario(rect._rect, layout.rect.scenarios.start, 1, done);
+      },
+      setSteadyState: () => {
+        rect.setScenario(rect._rect, layout.rect.scenarios.start);
+      },
     };
     // common.show = [rect];
     // common.hide = [rect._eqnDescription]
@@ -134,6 +160,12 @@ class Content extends LessonContent {
       </p>
       ${new Definition('Rectangle', 'Latin', ['rectus', 'right', 'angulus', 'corner, angle']).html('id_lesson__rectangle_definition', 'lesson__definition_low')}
       `,
+      setEnterState: () => {
+        common.setEnterState();
+        if (this.comingFrom === 'prev') {
+          this.rect.setScenario(this.rect._rect, )
+        }
+      }
       // modifiers: {
       //   angles_are_equal_to_90: higlight(
       //     'angles are equal to 90º',
@@ -148,8 +180,8 @@ class Content extends LessonContent {
       // },
     });
     common.show = [
-      rect._rightAngle1, rect._rightAngle2, rect._rightAngle3,
-      rect._rightAngle4, rect._lineA, rect._lineB, rect._lineC, rect._lineD,
+      rect._rect._rightAngle1, rect._rect._rightAngle2, rect._rect._rightAngle3,
+      rect._rect._rightAngle4, rect._rect._lineA, rect._rect._lineB, rect._rect._lineC, rect._rect._lineD,
     ];
     this.addSection(common, {
       setContent: `<p>
@@ -179,9 +211,9 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.show = [
-      rect._rightAngle1, rect._rightAngle2, rect._rightAngle3,
-      rect._rightAngle4, rect._lineA, rect._lineB, rect._lineC, rect._lineD,
-      rect._lineE,
+      rect._rect._rightAngle1, rect._rect._rightAngle2, rect._rect._rightAngle3,
+      rect._rect._rightAngle4, rect._rect._lineA, rect._rect._lineB, rect._rect._lineC, rect._rect._lineD,
+      rect._rect._lineE,
     ];
     this.addSection(common);
 
@@ -200,18 +232,23 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.showOnly = [
-      qr, rect, rect._lineE, rect._lineE._line,
-      rect._lineA, rect._lineA._line, rect._lineB, rect._lineB._line,
-      rect._lineC, rect._lineC._line, rect._lineD, rect._lineD._line,
+      qr, rect, rect._rect, rect._rect._lineE, rect._rect._lineE._line,
+      rect._rect._lineA, rect._rect._lineA._line, rect._rect._lineB, rect._rect._lineB._line,
+      // rect._lineC, rect._lineC._line, rect._lineD, rect._lineD._line,
     ];
     common.show = [
-      rect._rightAngle2,
-      rect._angleA, rect._angleB,
+      rect._rect._rightAngle2,
+      rect._rect._angleA, rect._rect._angleB,
     ];
+    // common.transitionFromAny = (done) => {
+    //   rect.moveToScenario(rect._rect, layout.rect.scenarios.start, 1, done);
+    // };
+    common.setEnterState = () => {
+      rect._rect._angleB.showForm('0');
+    };
     common.setSteadyState = () => {
-      rect._angleB.showForm('0');
-      rect._lineC.setColor(colors.diagram.disabledDarkest);
-      rect._lineD.setColor(colors.diagram.disabledDarkest);
+      rect._rect._angleB.showForm('0');
+      rect.setScenario(rect._rect, layout.rect.scenarios.start);
     };
     this.addSection(common);
 
@@ -223,38 +260,21 @@ class Content extends LessonContent {
       a: highlight(colors.angles),
     };
     common.setSteadyState = () => {
-      rect._angleB.showForm('0');
+      rect._rect._angleB.showForm('0');
       rect.rectEqn.showForm('0');
-      rect._lineC.setColor(colors.diagram.disabledDarkest);
-      rect._lineD.setColor(colors.diagram.disabledDarkest);
+      rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
     };
-
-    rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', {
-      add_up_to_180: clickWord('add up to 180º', 'add_up_to_180', qr._tri.show, [qr._tri], colors.diagram.action),
-    });
-    rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
-    rect.rectEqn.changeDescription('2a', '90º is cancelled and goes to 0º on left side.');
-    rect.rectEqn.changeDescription('2b', '0º on left side can be removed');
-    rect.rectEqn.changeDescription('2c', '180º is reduced to 90º on right side.');
-    rect.rectEqn.changeDescription('3', 'Right side remainder is 90º.');
-    rect.rectEqn.changeDescription('4', 'Subtract angle |a| from both sides of the equation.', {
-      a: highlight(colors.angles),
-    });
-    rect.rectEqn.changeDescription('5', '|a| cancels on the left side', { a: highlight(colors.angles) });
-    rect.rectEqn.changeDescription('5a', 'No |a| remaining on left side, so can be removed', { a: highlight(colors.angles) });
-    rect.rectEqn.changeDescription('6', 'End with |b| in terms of |a|.',
-      {
-        a: highlight(colors.angles),
-        b: highlight(colors.angles),
-      });
+    common.transitionFromAny = (done) => {
+      rect.moveToScenario(rect._rect, layout.rect.scenarios.analysis, 1, done);
+    };
 
     this.addSection(common, {
       title: 'adsf',
       show: [
-        rect._rightAngle2,
-        rect._angleA, rect._angleB,
+        rect._rect._rightAngle2,
+        rect._rect._angleA, rect._rect._angleB,
         // rect._rectEqn, rect._rectEqnDescription,
-        rect._nav,
+        // rect._nav,
       ],
       interactiveElements: [
         rect._nav._prev,
@@ -262,6 +282,7 @@ class Content extends LessonContent {
         rect._nav._refresh,
       ],
       setSteadyState: () => {
+        rect._nav.showAll();
         common.setSteadyState();
         rect._nav.updateButtons();
       },

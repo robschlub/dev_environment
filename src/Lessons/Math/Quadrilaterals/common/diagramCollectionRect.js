@@ -32,19 +32,26 @@ export default class RectCollection extends CommonDiagramCollection {
   _rectEqn: TypeAnglesEquationCollection;
   _rectEqnDescription: DiagramElementPrimative;
   // _rect: DiagramElementPrimative;
-  _rightAngle1: TypeAngle;
-  _rightAngle2: TypeAngle;
-  _rightAngle3: TypeAngle;
-  _rightAngle4: TypeAngle;
-  _lineA: TypeLine;
-  _lineB: TypeLine;
-  _lineC: TypeLine;
-  _lineD: TypeLine;
-  _lineE: TypeLine;
-  _angleA: TypeAngle;
-  _angleB: TypeAngle;
-  _angleC: TypeAngle;
-  _angleD: TypeAngle;
+  _rect: {
+    _rightAngle1: TypeAngle;
+    _rightAngle2: TypeAngle;
+    _rightAngle3: TypeAngle;
+    _rightAngle4: TypeAngle;
+    _lineA: TypeLine;
+    _lineB: TypeLine;
+    _lineC: TypeLine;
+    _lineD: TypeLine;
+    _lineE: TypeLine;
+    _angleA: TypeAngle;
+    _angleB: TypeAngle;
+    _angleC: TypeAngle;
+    _angleD: TypeAngle;
+  } & DiagramElementCollection;
+
+  addRectangle() {
+    const rect = this.diagram.shapes.collection(new Transform('rectangle').scale(1, 1).translate(0, 0));
+    this.add('rect', rect);
+  }
 
   addRect() {
     // const rect = this.diagram.shapes.polyLine(
@@ -62,9 +69,9 @@ export default class RectCollection extends CommonDiagramCollection {
         this.layout.colors.lines, show,
       );
       line.setEndPoints(p1, p2);
-      line.setPosition(this.layout.rect.position.add(p1));
+      line.setPosition(p1);
       line.addLabel(labelText, 0.05, 'inside', 'top', 'horizontal');
-      this.add(`line${labelText}`, line);
+      this._rect.add(`line${labelText}`, line);
     };
     const { points } = this.layout.rect;
     const halfLine = this.layout.lineWidth / 2;
@@ -101,10 +108,10 @@ export default class RectCollection extends CommonDiagramCollection {
     rightAngle4.setPosition(this.layout.rect.points[3]);
     rightAngle4.updateAngle(Math.PI / 2 * 2, Math.PI / 2);
 
-    this.add('rightAngle1', rightAngle1);
-    this.add('rightAngle2', rightAngle2);
-    this.add('rightAngle3', rightAngle3);
-    this.add('rightAngle4', rightAngle4);
+    this._rect.add('rightAngle1', rightAngle1);
+    this._rect.add('rightAngle2', rightAngle2);
+    this._rect.add('rightAngle3', rightAngle3);
+    this._rect.add('rightAngle4', rightAngle4);
   }
 
   addAngles() {
@@ -141,27 +148,27 @@ export default class RectCollection extends CommonDiagramCollection {
       Math.atan(width / height),
       ['c', 'a'], this.layout.angleRadius,
     );
-    this.add('angleA', angleA);
-    this.add('angleB', angleB);
-    this.add('angleC', angleC);
-    this.add('angleD', angleD);
+    this._rect.add('angleA', angleA);
+    this._rect.add('angleB', angleB);
+    this._rect.add('angleC', angleC);
+    this._rect.add('angleD', angleD);
   }
 
   pulseSideLabels() {
     const scale = 1.8;
-    this._lineA._label.pulseScaleNow(1, scale);
-    this._lineB._label.pulseScaleNow(1, scale);
-    this._lineC._label.pulseScaleNow(1, scale);
-    this._lineD._label.pulseScaleNow(1, scale);
+    this._rect._lineA._label.pulseScaleNow(1, scale);
+    this._rect._lineB._label.pulseScaleNow(1, scale);
+    this._rect._lineC._label.pulseScaleNow(1, scale);
+    this._rect._lineD._label.pulseScaleNow(1, scale);
     this.diagram.animateNextFrame();
   }
 
   pulseRightAngles() {
     const scale = 1.5;
-    this._rightAngle1.pulseScaleNow(1, scale);
-    this._rightAngle2.pulseScaleNow(1, scale);
-    this._rightAngle3.pulseScaleNow(1, scale);
-    this._rightAngle4.pulseScaleNow(1, scale);
+    this._rect._rightAngle1.pulseScaleNow(1, scale);
+    this._rect._rightAngle2.pulseScaleNow(1, scale);
+    this._rect._rightAngle3.pulseScaleNow(1, scale);
+    this._rect._rightAngle4.pulseScaleNow(1, scale);
     this.diagram.animateNextFrame();
   }
 
@@ -186,6 +193,7 @@ export default class RectCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
+    this.addRectangle();
     this.addRightAngles();
     this.addAngles();
     this.addRect();
@@ -194,17 +202,17 @@ export default class RectCollection extends CommonDiagramCollection {
   }
 
   resetColors() {
-    this._lineA.setColor(this.layout.colors.lines);
-    this._lineB.setColor(this.layout.colors.lines);
-    this._lineC.setColor(this.layout.colors.lines);
-    this._lineD.setColor(this.layout.colors.lines);
-    this._angleA.setColor(this.layout.colors.angles);
-    this._angleB.setColor(this.layout.colors.angles);
-    this._angleC.setColor(this.layout.colors.angles);
-    this._angleD.setColor(this.layout.colors.angles);
-    this._rightAngle1.setColor(this.layout.colors.angles);
-    this._rightAngle2.setColor(this.layout.colors.angles);
-    this._rightAngle3.setColor(this.layout.colors.angles);
-    this._rightAngle4.setColor(this.layout.colors.angles);
+    this._rect._lineA.setColor(this.layout.colors.lines);
+    this._rect._lineB.setColor(this.layout.colors.lines);
+    this._rect._lineC.setColor(this.layout.colors.lines);
+    this._rect._lineD.setColor(this.layout.colors.lines);
+    this._rect._angleA.setColor(this.layout.colors.angles);
+    this._rect._angleB.setColor(this.layout.colors.angles);
+    this._rect._angleC.setColor(this.layout.colors.angles);
+    this._rect._angleD.setColor(this.layout.colors.angles);
+    this._rect._rightAngle1.setColor(this.layout.colors.angles);
+    this._rect._rightAngle2.setColor(this.layout.colors.angles);
+    this._rect._rightAngle3.setColor(this.layout.colors.angles);
+    this._rect._rightAngle4.setColor(this.layout.colors.angles);
   }
 }
