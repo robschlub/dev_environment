@@ -61,6 +61,9 @@ class Content extends LessonContent {
         quad, quad._quad1, quad._quad2, quad._quad3, qr,
       ],
       show: [],
+      hide: [],
+      setEnterState: () => {},
+      setSteadyState: () => {},
     };
     this.addSection(common, {
       title: 'Quadrilateral',
@@ -146,6 +149,7 @@ class Content extends LessonContent {
         rect._rect._rightAngle1, rect._rect._rightAngle2,
         rect._rect._rightAngle3, rect._rect._rightAngle4,
       ],
+      hide: [],
       transitionFromAny: (done) => {
         rect.moveToScenario(rect._rect, layout.rect.scenarios.start, 1, done);
       },
@@ -153,7 +157,7 @@ class Content extends LessonContent {
         rect.setScenario(rect._rect, layout.rect.scenarios.start);
       },
     };
-    
+
     this.addSection(common, {
       title: 'Rectangle',
       setContent: `<p>
@@ -181,12 +185,14 @@ class Content extends LessonContent {
       // },
     });
     common.show = [
-      rect._rect._rightAngle1, rect._rect._rightAngle2, rect._rect._rightAngle3,
-      rect._rect._rightAngle4, rect._rect._lineA, rect._rect._lineB, rect._rect._lineC, rect._rect._lineD,
+      rect._rect._rightAngle1, rect._rect._rightAngle2,
+      rect._rect._rightAngle3, rect._rect._rightAngle4,
+      rect._rect._lineA, rect._rect._lineB,
+      rect._rect._lineC, rect._rect._lineD,
     ];
     this.addSection(common, {
       setContent: `<p>
-        The first properties to note are the four |side_lengths| and four |angles|. When properties are identified, the next question is are they related to each other?
+        The first properties to note are the four |side_lengths| and four |angles|.
       </p>`,
       modifiers: {
         side_lengths: click(rect.pulseSideLabels, [rect], colors.lines),
@@ -212,15 +218,17 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.show = [
-      rect._rect._rightAngle1, rect._rect._rightAngle2, rect._rect._rightAngle3,
-      rect._rect._rightAngle4, rect._rect._lineA, rect._rect._lineB, rect._rect._lineC, rect._rect._lineD,
+      rect._rect._rightAngle1, rect._rect._rightAngle2,
+      rect._rect._rightAngle3, rect._rect._rightAngle4,
+      rect._rect._lineA, rect._rect._lineB,
+      rect._rect._lineC, rect._rect._lineD,
       rect._rect._lineE,
     ];
     this.addSection(common);
 
     this.addSection(common, {
       setContent: `<p>
-        These triangles |look| the same. If they are |congruent|, then opposite sides in a rectangle are equal. Let's see.
+        These triangles |look| the same, or in other words look |congruent|. If they are, then that will tell us some of the sides will be equal to others.
       </p>`,
       modifiers: {
         congruent: click(qr._congruent.show, [qr._congruent], colors.diagram.action),
@@ -234,18 +242,22 @@ class Content extends LessonContent {
 
     common.showOnly = [
       qr, rect, rect._rect, rect._rect._lineE, rect._rect._lineE._line,
-      rect._rect._lineA, rect._rect._lineA._line, rect._rect._lineB, rect._rect._lineB._line,
-      // rect._lineC, rect._lineC._line, rect._lineD, rect._lineD._line,
+      rect._rect._lineA, rect._rect._lineA._line,
+      rect._rect._lineB, rect._rect._lineB._line,
+      rect._rect._lineC, rect._rect._lineC._line,
+      rect._rect._lineD, rect._rect._lineD._line,
     ];
     common.show = [
       rect._rect._rightAngle2,
       rect._rect._angleA, rect._rect._angleB,
     ];
-    // common.transitionFromAny = (done) => {
-    //   rect.moveToScenario(rect._rect, layout.rect.scenarios.start, 1, done);
-    // };
+    common.hide = [
+      rect._rect._angleB._label.__1,
+    ];
     common.setEnterState = () => {
       rect._rect._angleB.showForm('0');
+      rect._rect._lineC.setColor(colors.diagram.disabledDark);
+      rect._rect._lineD.setColor(colors.diagram.disabledDark);
     };
     common.setSteadyState = () => {
       rect._rect._angleB.showForm('0');
@@ -274,8 +286,6 @@ class Content extends LessonContent {
       show: [
         rect._rect._rightAngle2,
         rect._rect._angleA, rect._rect._angleB,
-        // rect._rectEqn, rect._rectEqnDescription,
-        // rect._nav,
       ],
       interactiveElements: [
         rect._nav._prev,
@@ -286,6 +296,7 @@ class Content extends LessonContent {
         rect._nav.showAll();
         common.setSteadyState();
         rect._nav.updateButtons();
+        // console.log(rect)
       },
     });
   }
