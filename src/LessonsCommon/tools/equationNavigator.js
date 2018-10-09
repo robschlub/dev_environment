@@ -100,10 +100,14 @@ function updateDescription(
 
   const drawingObject = element.vertices;
   if (drawingObject instanceof HTMLObject) {
-    drawingObject.change(form.description, element.lastDrawTransform.m());
-    if (setClicks) {
-      html.setOnClicks(form.modifiers);
-    }
+    const modifiersToUse = setClicks ? form.modifiers : {};
+    drawingObject.change(
+      html.applyModifiers(form.description, modifiersToUse),
+      element.lastDrawTransform.m(),
+    );
+    // if (setClicks) {
+    html.setOnClicks(form.modifiers);
+    // }
   }
 }
 

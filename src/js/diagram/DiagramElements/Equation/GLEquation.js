@@ -1818,7 +1818,7 @@ export class Equation {
     this.form[name][formType] = new EquationForm(this.collection);
     this.form[name].name = name;
     this.form[name][formType].name = name;
-    this.form[name][formType].description = html.applyModifiers(description, modifiers);
+    this.form[name][formType].description = description;
     this.form[name][formType].modifiers = modifiers;
     this.form[name][formType].type = formType;
 
@@ -2024,7 +2024,7 @@ export class Equation {
   ) {
     const form = this.getForm(formOrName, formType);
     if (form != null) {
-      form.description = html.applyModifiers(description, modifiers);
+      form.description = description;
       form.modifiers = modifiers;
     }
   }
@@ -2057,7 +2057,10 @@ export class Equation {
 
     const drawingObject = element.vertices;
     if (drawingObject instanceof HTMLObject) {
-      drawingObject.change(form.description, element.lastDrawTransform.m());
+      drawingObject.change(
+        html.applyModifiers(form.description, form.modifiers),
+        element.lastDrawTransform.m(),
+      );
       html.setOnClicks(form.modifiers);
     }
   }
