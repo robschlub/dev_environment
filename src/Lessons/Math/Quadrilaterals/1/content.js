@@ -57,7 +57,7 @@ class Content extends LessonContent {
       a: highlight(colors.angles),
       d: highlight(colors.angles),
     };
-    rect.adEqn.changeDescription('0', '|Complementary| angles add to 90º.', mods);
+    rect.adEqn.changeDescription('0', 'Angles |a| and |d| combine to make the rectangle corner, which is 90º.', mods);
     rect.adEqn.changeDescription('1', 'Subtract |a| from both sides.', mods);
     rect.adEqn.changeDescription('2', '|a| cancels on the left side', mods);
     rect.adEqn.changeDescription('3', 'No |a| remaining on left side, so can be removed.', mods);
@@ -263,7 +263,7 @@ class Content extends LessonContent {
 
     this.addSection(common);
     common.setContent = `<p>
-      Unknown angles can then be labelled |a| and |b|.
+      Unknown angles can be labelled |a| and |b|.
     </p>`;
     this.addSection(common);
     common.show = [
@@ -280,10 +280,13 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.setContent = `<p>
-      We know the third angle is a right angle, so we can find angle |b| in terms of angle |a|.
+      We know the |third_angle| is a |right angle|, or |90º|, so we can find angle |b| in terms of angle |a|.
     </p>`;
+    common.modifiers = Object.assign(common.modifiers, {
+      third_angle: click(rect.pulseRightAngles, [rect], colors.angles),
+    });
     this.addSection(common);
-    
+
     // common.setSteadyState = () => {
     //   rect._rect._angleB.showForm('0');
     //   rect.rectEqn.showForm('0');
@@ -330,8 +333,10 @@ class Content extends LessonContent {
       Next we consider the second triangle that forms the rectangle.
     </p>`;
     common.modifiers = {
-      d: highlight(colors.angles),
       a: highlight(colors.angles),
+      b: highlight(colors.angles),
+      c: highlight(colors.angles),
+      d: highlight(colors.angles),
     };
     common.setSteadyState = () => {
       rect._rect._angleB.showForm('1');
@@ -349,7 +354,7 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.setContent = `<p>
-      Once again, start by labelling all the angles.
+      Once again, start by labelling all the angles. Unknown angles are labelled |c| and |d|.
     </p>`;
     // this.addSection(common);
     common.show = [
@@ -377,9 +382,15 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.setContent = `<p>
-      We know |a| and |d| add to a right angle, so we can get |d| in terms of |a|.
+    Angles |a| and |d| are unknown, but form the rectangle corner, which is 90º.
     </p>`;
     this.addSection(common);
+
+    common.setContent = `<p>
+    Therefore, we can show angle |d| in terms of angle |a|.
+    </p>`;
+    this.addSection(common);
+
 
     common.setEnterState = () => {
       rect._nav.setEquation(rect.adEqn);
