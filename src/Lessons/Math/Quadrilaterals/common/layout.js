@@ -16,7 +16,7 @@ export default function commonLessonLayout() {
   layout.colors = getCssColors(cssColorNames);
   layout.position = new Point(0, 0);
   layout.lineWidth = 0.02;
-  layout.angleRadius = 0.3;
+  layout.angleRadius = 0.4;
   layout.angleLabelRadiusOffset = 0.03;
   layout.angleSides = 200;
   layout.rectEqnPosition = new Point(-0.7, 0.8);

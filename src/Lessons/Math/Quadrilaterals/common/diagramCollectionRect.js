@@ -22,15 +22,15 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
-import makeAnglesEquation from './equationAngles';
-import type { TypeAnglesEquationCollection, TypeAnglesEquation } from './equationAngles';
+import { makeABEquation, makeADEquation } from './equationAngles';
+import type { TypeABEquationCollection, TypeABEquation } from './equationAngles';
 import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  rectEqn: TypeAnglesEquation;
-  _rectEqn: TypeAnglesEquationCollection;
-  _rectEqnDescription: DiagramElementPrimative;
+  abEqn: TypeABEquation;
+  _abEqn: TypeABEquationCollection;
+  _abEqnDescription: DiagramElementPrimative;
   // _rect: DiagramElementPrimative;
   _rect: {
     _rightAngle1: TypeAngle;
@@ -138,12 +138,12 @@ export default class RectCollection extends CommonDiagramCollection {
       Math.atan(height / width),
       ['b', '90º - a'], this.layout.angleRadius * 1.1,
     );
-    const angleC = makeA(
+    const angleD = makeA(
       points[0], Math.PI * 2 - Math.atan(height / width),
       Math.atan(height / width),
       ['d', '90º - a'], this.layout.angleRadius * 1.1,
     );
-    const angleD = makeA(
+    const angleC = makeA(
       points[2], Math.PI / 2,
       Math.atan(width / height),
       ['c', 'a'], this.layout.angleRadius,
@@ -176,14 +176,17 @@ export default class RectCollection extends CommonDiagramCollection {
     this._rect._angleB.pulseScaleNow(1, 1.5);
   }
 
+  pulseAngleD() {
+    this._rect._angleD.pulseScaleNow(1, 1.5);
+  }
+
   addEqn() {
-    const eqn = makeAnglesEquation(this.diagram, this.layout);
-    // this.add('rectEqn', eqn.collection);
-    // this.add('rectEqnDescription', eqn.descriptionElement);
-    this.rectEqn = eqn;
+    this.abEqn = makeABEquation(this.diagram, this.layout);
+    this.adEqn = makeADEquation(this.diagram, this.layout);
+    // this.rectEqn = this.eqnAB;
 
     const nav = makeEquationNavigator(
-      this.diagram, eqn, 0.07, new Point(1.1, 0),
+      this.diagram, this.abEqn, 0.07, new Point(1.1, 0),
       this.layout.colors.diagram.disabled,
       this.layout.colors.diagram.disabledDark,
     );

@@ -9,7 +9,7 @@ import {
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import * as html from '../../../../js/tools/htmlGenerator';
 
-export type TypeAnglesEquationCollection = {
+export type TypeABEquationCollection = {
   _a: DiagramElementPrimative;
   _b: DiagramElementPrimative;
   __90: DiagramElementPrimative;
@@ -29,11 +29,11 @@ export type TypeAnglesEquationCollection = {
   _calc90: DiagramElementPrimative;
 } & DiagramElementCollection;
 
-export type TypeAnglesEquation = {
-  collection: TypeAnglesEquationCollection;
+export type TypeABEquation = {
+  collection: TypeABEquationCollection;
 } & Equation;
 
-export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
+export function makeABEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
   const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
   // eqnDescription.isTouchable = true;
@@ -188,25 +188,108 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     'mr', 'ar',
   ]);
 
-  // eqn.setFormSeries(['0', '1', '2', '3', '4', '5', '6']);
-  // console.log(eqn.formSeries)
   const nextForm = () => {
     eqn.nextForm(2);
     diagram.animateNextFrame();
   };
-  // const currentForm = () => {
-  //   eqn.replayCurrentForm(1);
-  //   diagram.animateNextFrame();
-  // };
-  // eqn.descriptionElement.onClick = currentForm.bind(this);
+
   eqn.collection.onClick = nextForm.bind(this);
   eqn.collection.isTouchable = true;
   eqn.collection.touchInBoundingRect = true;
   eqn.collection.setPosition(layout.rectEqnPosition);
   eqn.setCurrentForm('0');
-  // eqn.description = eqnDescription;
   return eqn;
-  // this.add('eqn', eqn.collection);
-  // this.add('eqnDescription', eqnDescription);
-  // this._eqn.eqn = eqn;
+}
+
+export function makeADEquation(diagram: Diagram, layout: Object) {
+  const eqn = diagram.equation.makeEqn();
+  const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
+  const strikeColor = layout.colors.diagram.disabledDark;
+
+  const colAngle = layout.colors.angles;
+  const colText = layout.colors.diagram.text.base;
+  eqn.createElements(
+    {
+      a: ['a', colAngle],
+      d: ['d', colAngle],
+      _90: '90º',
+      plus1: '  + ',
+      equals: ' = ',
+
+      ml: ['- ', colText],
+      al: ['a', colAngle],
+      mr: [' - ', colText],
+      ar: ['a', colAngle],
+
+      strike1: diagram.equation.xStrike(strikeColor),
+      strike2: diagram.equation.xStrike(strikeColor),
+    },
+    layout.colors.diagram.text.base,
+    eqnDescription,
+    new Point(0.9, -0.052).add(layout.rectEqnPosition),
+  );
+  eqn.formAlignment.fixTo = eqn.collection._equals;
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'middle';
+  eqn.formAlignment.scale = 1.0;
+
+  eqn.addForm('0', [
+    'a', 'plus1', 'd',
+    'equals',
+    '_90',
+  ]);
+
+  eqn.addForm('1', [
+    eqn.annotation(
+      ['a', 'plus1', 'd'],
+      [eqn.ann(['ml', 'al'], 'center', -0.4, 'center', 'top')],
+    ),
+    'equals',
+    eqn.annotation(
+      '_90',
+      [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('2', [
+    eqn.annotation(
+      [eqn.strike('a', 'strike1'), 'plus1', 'd'],
+      [eqn.ann(
+        eqn.strike(['ml', 'al'], 'strike2'),
+        'center', -0.4, 'center', 'top',
+      )],
+    ),
+    'equals',
+    eqn.annotation(
+      '_90',
+      [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('3', [
+    'd',
+    'equals',
+    eqn.annotation(
+      '_90',
+      [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('4', [
+    'd',
+    'equals',
+    '_90', 'mr', 'ar',
+  ]);
+
+  const nextForm = () => {
+    eqn.nextForm(2);
+    diagram.animateNextFrame();
+  };
+
+  eqn.collection.onClick = nextForm.bind(this);
+  eqn.collection.isTouchable = true;
+  eqn.collection.touchInBoundingRect = true;
+  eqn.collection.setPosition(layout.rectEqnPosition);
+  eqn.setCurrentForm('0');
+  return eqn;
 }

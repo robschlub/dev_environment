@@ -176,11 +176,13 @@ export default function makeEquationNavigator(
     .translate(0, 0));
   navigator.setEquation = (eqn: Equation) => {
     navigator.eqn = eqn;
-    navigator.add('eqn', equation.collection);
+    navigator._eqn = [];
+    navigator.add('eqn', eqn.collection);
     if (navigator.eqn.descriptionElement != null) {
-      navigator.add('currentStep', equation.descriptionElement);
+      navigator.add('currentStep', eqn.descriptionElement);
       navigator.eqn.descriptionElement.setPosition(offset.add(size * 3, 0));
     }
+    navigator.eqn.collection.setPosition(0, 0);
   };
   navigator.setEquation(equation);
   // const prev = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, 0);
@@ -298,7 +300,7 @@ export default function makeEquationNavigator(
   nextDescription.onClick = clickNext;
   prevDescription.onClick = clickPrev;
 
-  navigator.eqn.collection.setPosition(0, 0);
+  
 
   nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
   prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
