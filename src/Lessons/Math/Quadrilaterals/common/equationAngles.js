@@ -59,10 +59,10 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
       mr: [' - ', colText],
       ar: ['a', colAngle],
 
-      strike1: diagram.equation.strike(strikeColor),
-      strike2: diagram.equation.strike(strikeColor),
-      strike3: diagram.equation.strike(strikeColor),
-      strike4: diagram.equation.strike(strikeColor),
+      strike1: diagram.equation.xStrike(strikeColor),
+      strike2: diagram.equation.xStrike(strikeColor),
+      strike3: diagram.equation.xStrike(strikeColor),
+      strike4: diagram.equation.xStrike(strikeColor),
 
       calc0: ['0', colDis],
       calc90: '90º',

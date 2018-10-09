@@ -391,13 +391,27 @@ class StrikeOut extends Elements {
 
     const { strike } = this;
     if (strike) {
-      this.strikePosition = strikeBottomLeft._dup();
-      this.strikeScale = new Point(strikeLength, this.lineWidth);
-      this.strikeRotation = strikeLine.angle();
-      strike.transform.updateScale(this.strikeScale);
-      strike.transform.updateTranslation(this.strikePosition);
-      strike.transform.updateRotation(this.strikeRotation);
-      strike.show();
+      if (strike instanceof DiagramElementCollection) {
+        this.strikePosition = strikeBottomLeft._dup();
+        this.strikeScale = new Point(strikeLength, this.lineWidth * 0.8);
+        this.strikeRotation = strikeLine.angle();
+        const width = this.strikeScale.x * Math.cos(this.strikeRotation);
+        strike._s1.transform.updateScale(this.strikeScale);
+        strike._s1.transform.updateTranslation(this.strikePosition);
+        strike._s1.transform.updateRotation(this.strikeRotation);
+        strike._s2.transform.updateScale(this.strikeScale);
+        strike._s2.transform.updateTranslation(this.strikePosition.add(width, 0));
+        strike._s2.transform.updateRotation(Math.PI - this.strikeRotation);
+        strike.showAll();
+      } else {
+        this.strikePosition = strikeBottomLeft._dup();
+        this.strikeScale = new Point(strikeLength, this.lineWidth);
+        this.strikeRotation = strikeLine.angle();
+        strike.transform.updateScale(this.strikeScale);
+        strike.transform.updateTranslation(this.strikePosition);
+        strike.transform.updateRotation(this.strikeRotation);
+        strike.show();
+      }
     }
   }
 
@@ -416,9 +430,19 @@ class StrikeOut extends Elements {
     this.mainContent.setPositions();
     const { strike } = this;
     if (strike) {
-      strike.transform.updateScale(this.strikeScale);
-      strike.transform.updateTranslation(this.strikePosition);
-      strike.transform.updateRotation(this.strikeRotation);
+      if (strike instanceof DiagramElementCollection) {
+        const width = this.strikeScale.x * Math.cos(this.strikeRotation);
+        strike._s1.transform.updateScale(this.strikeScale);
+        strike._s1.transform.updateTranslation(this.strikePosition);
+        strike._s1.transform.updateRotation(this.strikeRotation);
+        strike._s2.transform.updateScale(this.strikeScale);
+        strike._s2.transform.updateTranslation(this.strikePosition.add(width, 0));
+        strike._s2.transform.updateRotation(Math.PI - this.strikeRotation)
+      } else {
+        strike.transform.updateScale(this.strikeScale);
+        strike.transform.updateTranslation(this.strikePosition);
+        strike.transform.updateRotation(this.strikeRotation);
+      }
     }
   }
 

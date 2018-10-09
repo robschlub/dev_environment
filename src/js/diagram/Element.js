@@ -2638,6 +2638,28 @@ class DiagramElementCollection extends DiagramElement {
     return elements;
   }
 
+  disolveInWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.disolveInWithDelay(delay, time, callback);
+    }
+  }
+
+  disolveOutWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.disolveOutWithDelay(delay, time, callback);
+    }
+  }
+
   disolveElementsOut(
     time: number = 1,
     callback: ?(?mixed) => void = null,

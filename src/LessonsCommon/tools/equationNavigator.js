@@ -135,14 +135,14 @@ export default function makeEquationNavigator(
     refreshAngle, color,
   );
 
-  // const nextDescription = diagram.equation.makeDescription('id__rectangles_equation_next_desctription');
+  const nextDescription = diagram.equation.makeDescription('id__rectangles_equation_next_desctription');
 
   navigator.add('prev', prev);
   navigator.add('next', next);
   navigator.add('refresh', refresh);
   navigator.add('eqn', equation.collection);
   navigator.add('currentStep', equation.descriptionElement);
-  // navigator.add('nextDescription', nextDescription);
+  navigator.add('nextDescription', nextDescription);
 
   const updateButtons = () => {
     const currentForm = equation.getCurrentForm();
@@ -166,11 +166,11 @@ export default function makeEquationNavigator(
         next.setColor(colorDisabled);
         next.isTouchable = false;
       }
-      // let nextIndex = index + 1;
-      // if (nextIndex > equation.formSeries.length - 1) {
-      //   nextIndex = 0;
-      // }
-      // updateDescription(equation, 'base', nextDescription, nextIndex, false);
+      let nextIndex = index + 1;
+      if (nextIndex > equation.formSeries.length - 1) {
+        nextIndex = 0;
+      }
+      updateDescription(equation, 'base', nextDescription, nextIndex, false);
     }
   };
 
@@ -183,6 +183,7 @@ export default function makeEquationNavigator(
     equation.prevForm(1.5);
     updateButtons();
     diagram.animateNextFrame();
+    console.log(diagram.elements)
   };
   const clickRefresh = () => {
     const currentForm = equation.getCurrentForm();
@@ -204,7 +205,7 @@ export default function makeEquationNavigator(
   if (equation.descriptionElement != null) {
     equation.descriptionElement.setPosition(offset.add(size * 3, 0));
   }
-  // nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
+  nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
   refresh.setPosition(offset);
   next.setPosition(offset.add(0, -spacing));
   prev.setPosition(offset.add(0, spacing));
