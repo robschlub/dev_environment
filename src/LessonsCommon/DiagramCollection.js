@@ -119,13 +119,17 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     element.stop();
     const target = getTarget(element, scenario, this.layout);
     let time = 1;
+    const estimatedTime = this.getTimeToMoveToScenario(element, scenario, rotDirection);
     if (animationTime == null) {
-      time = this.getTimeToMoveToScenario(element, scenario, rotDirection);
+      time = estimatedTime;
     } else {
       time = animationTime;
     }
-    time = time === 0 ? 0.001 : time;
-    element.animateTo(target, time, 0, rotDirection, callback);
+    if (time > 0 && estimatedTime !== 0) {
+      element.animateTo(target, time, 0, rotDirection, callback);
+    } else if (callback != null) {
+      callback();
+    }
     return time;
   }
 

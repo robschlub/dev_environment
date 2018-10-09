@@ -49,7 +49,7 @@ export default class RectCollection extends CommonDiagramCollection {
   } & DiagramElementCollection;
 
   addRectangle() {
-    const rect = this.diagram.shapes.collection(new Transform('rectangle').scale(1, 1).translate(0, 0));
+    const rect = this.diagram.shapes.collection(new Transform('rectangle').scale(1, 1).translate(this.layout.rect.scenarios.start.position));
     this.add('rect', rect);
   }
 

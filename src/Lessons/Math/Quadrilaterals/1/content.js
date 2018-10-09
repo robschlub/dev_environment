@@ -137,8 +137,10 @@ class Content extends LessonContent {
       },
       showOnly: [
         qr, rect, rect._rect,
-        rect._rect._lineA, rect._rect._lineA._line, rect._rect._lineB, rect._rect._lineB._line,
-        rect._rect._lineC, rect._rect._lineC._line, rect._rect._lineD, rect._rect._lineD._line,
+        rect._rect._lineA, rect._rect._lineA._line,
+        rect._rect._lineB, rect._rect._lineB._line,
+        rect._rect._lineC, rect._rect._lineC._line,
+        rect._rect._lineD, rect._rect._lineD._line,
       ],
       show: [
         rect._rect._rightAngle1, rect._rect._rightAngle2,
@@ -151,8 +153,7 @@ class Content extends LessonContent {
         rect.setScenario(rect._rect, layout.rect.scenarios.start);
       },
     };
-    // common.show = [rect];
-    // common.hide = [rect._eqnDescription]
+    
     this.addSection(common, {
       title: 'Rectangle',
       setContent: `<p>
@@ -163,9 +164,9 @@ class Content extends LessonContent {
       setEnterState: () => {
         common.setEnterState();
         if (this.comingFrom === 'prev') {
-          this.rect.setScenario(this.rect._rect, )
+          rect.setScenario(rect._rect, layout.rect.scenarios.start);
         }
-      }
+      },
       // modifiers: {
       //   angles_are_equal_to_90: higlight(
       //     'angles are equal to 90º',
