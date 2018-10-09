@@ -35,15 +35,18 @@ function makeNextPrevText(
   diagram: Diagram,
   next: boolean,
   spacing: number,
+  id: string,
 ) {
   let textToUse = 'Prev';
+  let idToUse = 'prev';
   if (next) {
     textToUse = 'Next';
+    idToUse = 'next';
   }
 
   const text = diagram.shapes.htmlText(
     textToUse,
-    `id__lesson__equation_navigator__${textToUse.toLowerCase()}_${Math.floor(Math.random() * 100000)}`,
+    `${id}_${idToUse}`,
     'lesson__equation_next_prev',
     new Point(0, spacing), 'middle', 'center',
   );
@@ -93,6 +96,27 @@ function makeRefresh(
   return refresh;
 }
 
+function makeRefreshHtml(
+  diagram: Diagram,
+  radius: number,
+  id: string,
+) {
+  const element = document.createElement('div');
+  // console.log(radius / diagram.limits.width)
+  element.style.width = '100%';
+  element.style.height = '100%';
+  // element.style.backgroundColor = 'red';
+  const htmlElement = diagram.shapes.htmlElement(
+    element,
+    `${id}_refresh`,
+    '',
+    new Point(0, 0), 'middle', 'center',
+  );
+  htmlElement.vertices.element.style.width = `${radius * 3 / diagram.limits.width * 100}%`;
+  htmlElement.vertices.element.style.height = `${radius * 3 / diagram.limits.height * 100}%`;
+  return htmlElement;
+}
+
 function updateDescription(
   eqn: Equation,
   formType: string,
@@ -137,6 +161,7 @@ export default function makeEquationNavigator(
   offset: Point,
   color: Array<number>,
   colorDisabled: Array<number>,
+  id: string = `id_lesson__equation_navigator_${Math.floor(Math.random()*10000)}`,
 ) {
   // const arrowWidth = size * 1.5;
   const arrowHeight = size * 1.5;
@@ -153,13 +178,15 @@ export default function makeEquationNavigator(
   // const prev = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, 0);
   // const next = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, Math.PI);
 
-  const prev = makeNextPrevText(diagram, false, spacing - arrowHeight / 2);
-  const next = makeNextPrevText(diagram, true, -spacing + arrowHeight / 2);
+  const prev = makeNextPrevText(diagram, false, spacing - arrowHeight / 2, id);
+  const next = makeNextPrevText(diagram, true, -spacing + arrowHeight / 2, id);
 
   const refresh = makeRefresh(
     diagram, refreshSides, refreshRadius, refreshLineWidth,
     refreshAngle, color,
   );
+
+  const refreshHtml = makeRefreshHtml(diagram, refreshRadius, id);
 
   const nextDescription = diagram.equation.makeDescription('id__rectangles_equation_next_desctription');
   nextDescription.isTouchable = true;
@@ -174,6 +201,7 @@ export default function makeEquationNavigator(
   navigator.add('currentStep', equation.descriptionElement);
   navigator.add('nextDescription', nextDescription);
   navigator.add('prevDescription', prevDescription);
+  navigator.add('refreshHtml', refreshHtml);
 
   navigator.updateButtons = () => {
     const currentForm = equation.getCurrentForm();
@@ -185,6 +213,8 @@ export default function makeEquationNavigator(
         refresh.isTouchable = false;
         prev.isTouchable = false;
         prevDescription.isTouchable = false;
+        refreshHtml.vertices.element.classList
+          .remove('lesson__equation_nav__touchable');
         prev.vertices.element.classList
           .remove('lesson__equation_nav__touchable');
         prevDescription.vertices.element.classList
@@ -195,6 +225,8 @@ export default function makeEquationNavigator(
         refresh.isTouchable = true;
         prev.isTouchable = true;
         prevDescription.isTouchable = true;
+        refreshHtml.vertices.element.classList
+          .add('lesson__equation_nav__touchable');
         prev.vertices.element.classList
           .add('lesson__equation_nav__touchable');
         prevDescription.vertices.element.classList
@@ -266,6 +298,7 @@ export default function makeEquationNavigator(
   nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
   prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
   refresh.setPosition(offset);
+  refreshHtml.setPosition(offset);
   next.setPosition(offset.add(0, -spacing + arrowHeight / 2));
   prev.setPosition(offset.add(0, spacing - arrowHeight / 2));
   navigator.hasTouchableElements = true;
