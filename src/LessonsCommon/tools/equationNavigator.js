@@ -174,7 +174,15 @@ export default function makeEquationNavigator(
   const navigator = diagram.shapes.collection(new Transform('Triangle')
     .scale(1, 1)
     .translate(0, 0));
-
+  navigator.setEquation = (eqn: Equation) => {
+    navigator.eqn = eqn;
+    navigator.add('eqn', equation.collection);
+    if (navigator.eqn.descriptionElement != null) {
+      navigator.add('currentStep', equation.descriptionElement);
+      navigator.eqn.descriptionElement.setPosition(offset.add(size * 3, 0));
+    }
+  };
+  navigator.setEquation(equation);
   // const prev = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, 0);
   // const next = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, Math.PI);
 
@@ -197,16 +205,15 @@ export default function makeEquationNavigator(
   navigator.add('prev', prev);
   navigator.add('next', next);
   navigator.add('refresh', refresh);
-  navigator.add('eqn', equation.collection);
-  navigator.add('currentStep', equation.descriptionElement);
+
   navigator.add('nextDescription', nextDescription);
   navigator.add('prevDescription', prevDescription);
   navigator.add('refreshHtml', refreshHtml);
 
   navigator.updateButtons = () => {
-    const currentForm = equation.getCurrentForm();
+    const currentForm = navigator.eqn.getCurrentForm();
     if (currentForm != null) {
-      const index = equation.getFormIndex(currentForm);
+      const index = navigator.eqn.getFormIndex(currentForm);
       if (index === 0) {
         refresh.setColor(colorDisabled);
         prev.setColor(colorDisabled);
@@ -232,7 +239,7 @@ export default function makeEquationNavigator(
         prevDescription.vertices.element.classList
           .add('lesson__equation_nav__touchable');
       }
-      if (equation.formSeries.length > 1) {
+      if (navigator.eqn.formSeries.length > 1) {
         next.setColor(color);
         next.isTouchable = true;
         nextDescription.isTouchable = true;
@@ -248,15 +255,15 @@ export default function makeEquationNavigator(
           .remove('lesson__equation_nav__touchable');
       }
       const nextIndex = index + 1;
-      if (nextIndex > equation.formSeries.length - 1) {
+      if (nextIndex > navigator.eqn.formSeries.length - 1) {
         nextDescription.vertices.change('RESTART from begining', nextDescription.lastDrawTransform.m());
       } else {
-        updateDescription(equation, 'base', nextDescription, nextIndex, false);
+        updateDescription(navigator.eqn, 'base', nextDescription, nextIndex, false);
       }
 
       const prevIndex = index - 1;
       if (prevIndex >= 0) {
-        updateDescription(equation, 'base', prevDescription, prevIndex, false);
+        updateDescription(navigator.eqn, 'base', prevDescription, prevIndex, false);
       } else {
         prevDescription.vertices.change('', prevDescription.lastDrawTransform.m());
       }
@@ -264,21 +271,21 @@ export default function makeEquationNavigator(
   };
 
   const clickNext = () => {
-    equation.nextForm(1.5);
+    navigator.eqn.nextForm(1.5);
     navigator.updateButtons();
     diagram.animateNextFrame();
   };
   const clickPrev = () => {
-    equation.prevForm(1.5);
+    navigator.eqn.prevForm(1.5);
     navigator.updateButtons();
     diagram.animateNextFrame();
   };
   const clickRefresh = () => {
-    const currentForm = equation.getCurrentForm();
+    const currentForm = navigator.eqn.getCurrentForm();
     if (currentForm != null) {
-      const index = equation.getFormIndex(currentForm);
+      const index = navigator.eqn.getFormIndex(currentForm);
       if (index > 0) {
-        equation.replayCurrentForm(1.5);
+        navigator.eqn.replayCurrentForm(1.5);
         diagram.animateNextFrame();
       }
     }
@@ -291,10 +298,8 @@ export default function makeEquationNavigator(
   nextDescription.onClick = clickNext;
   prevDescription.onClick = clickPrev;
 
-  equation.collection.setPosition(0, 0);
-  if (equation.descriptionElement != null) {
-    equation.descriptionElement.setPosition(offset.add(size * 3, 0));
-  }
+  navigator.eqn.collection.setPosition(0, 0);
+
   nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
   prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
   refresh.setPosition(offset);
