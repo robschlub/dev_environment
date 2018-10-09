@@ -259,6 +259,7 @@ class Content extends LessonContent {
       interactiveElements: [
         rect._nav._prev,
         rect._nav._prevDescription,
+        rect._nav._refresh,
       ],
       setSteadyState: () => {
         common.setSteadyState();

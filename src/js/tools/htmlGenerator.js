@@ -270,6 +270,10 @@ function applyModifiers(
     outText = outText.replace(c, '');
     const h = RegExp(/highlight_word/);
     outText = outText.replace(h, '');
+    const i = RegExp(/interactive_word/);
+    outText = outText.replace(i, '');
+    const id = RegExp(/id="[^"]*"/);
+    outText = outText.replace(id, '');
   }
   return outText;
 }
