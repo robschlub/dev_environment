@@ -300,8 +300,6 @@ export default function makeEquationNavigator(
   nextDescription.onClick = clickNext;
   prevDescription.onClick = clickPrev;
 
-  
-
   nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
   prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
   refresh.setPosition(offset);
