@@ -136,7 +136,7 @@ export default class RectCollection extends CommonDiagramCollection {
     const angleB = makeA(
       points[2], Math.PI - Math.atan(height / width),
       Math.atan(height / width),
-      ['b', 'a - 90º'], this.layout.angleRadius * 1.1,
+      ['b', '90º - a'], this.layout.angleRadius * 1.1,
     );
     const angleC = makeA(
       points[0], Math.PI * 2 - Math.atan(height / width),
@@ -170,6 +170,10 @@ export default class RectCollection extends CommonDiagramCollection {
     this._rect._rightAngle3.pulseScaleNow(1, scale);
     this._rect._rightAngle4.pulseScaleNow(1, scale);
     this.diagram.animateNextFrame();
+  }
+
+  pulseAngleB() {
+    this._rect._angleB.pulseScaleNow(1, 1.5);
   }
 
   addEqn() {

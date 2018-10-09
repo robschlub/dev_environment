@@ -136,7 +136,7 @@ class Content extends LessonContent {
       setContent: '',
       modifiers: {},
       setEnterState: () => {
-        rect.resetColors();
+        // rect.resetColors();
       },
       showOnly: [
         qr, rect, rect._rect,
@@ -155,6 +155,9 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         rect.setScenario(rect._rect, layout.rect.scenarios.start);
+      },
+      setLeaveState: () => {
+        rect.resetColors();
       },
     };
 
@@ -272,21 +275,18 @@ class Content extends LessonContent {
       b: highlight(colors.angles),
       a: highlight(colors.angles),
     };
-    common.setSteadyState = () => {
-      rect._rect._angleB.showForm('0');
-      rect.rectEqn.showForm('0');
-      rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-    };
+    // common.setSteadyState = () => {
+    //   rect._rect._angleB.showForm('0');
+    //   rect.rectEqn.showForm('0');
+    //   console.log("asdf");
+    //   rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
+    // };
     common.transitionFromAny = (done) => {
       rect.moveToScenario(rect._rect, layout.rect.scenarios.analysis, 1, done);
     };
 
     this.addSection(common, {
       title: 'adsf',
-      show: [
-        rect._rect._rightAngle2,
-        rect._rect._angleA, rect._rect._angleB,
-      ],
       interactiveElements: [
         rect._nav._prev,
         rect._nav._prevDescription,
@@ -294,11 +294,53 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         rect._nav.showAll();
-        common.setSteadyState();
+        rect._rect._angleB.showForm('0');
+        rect.rectEqn.showForm('0');
+        rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
         rect._nav.updateButtons();
-        // console.log(rect)
       },
     });
+
+    this.addSection(common, {
+      interactiveElements: [
+        rect._nav._prev,
+        rect._nav._prevDescription,
+        rect._nav._refresh,
+      ],
+      setSteadyState: () => {
+        rect._nav.showAll();
+        rect._rect._angleB.showForm('1');
+        rect.rectEqn.showForm('6');
+        rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
+        rect._nav.updateButtons();
+        rect.pulseAngleB();
+      },
+    });
+
+    common.setContent = `<p>
+      Now we consider the second triangle, once again labelling the unknown angles.
+    </p>`;
+    common.setEnterState = () => {
+      // rect._rect._angleB.showForm('1');
+    };
+    common.show = [
+      rect._rect._rightAngle2, rect._rect._rightAngle4,
+      rect._rect._angleA, rect._rect._angleB,
+      rect._rect._angleC, rect._rect._angleD,
+    ];
+    common.hide = [
+      rect._rect._angleB._label.__0,
+      rect._rect._angleC._label.__1,
+      rect._rect._angleD._label.__1,
+    ];
+    common.setSteadyState = () => {
+      rect._rect._angleB.showForm('1');
+      rect._rect._angleC.showForm('0');
+      rect._rect._angleD.showForm('0');
+      // rect.rectEqn.showForm('0');
+      rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
+    };
+    this.addSection(common);
   }
 }
 
