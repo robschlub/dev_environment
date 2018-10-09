@@ -8,6 +8,8 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 import { Equation } from '../../js/diagram/DiagramElements/Equation/GLEquation';
+import * as html from '../../js/tools/htmlGenerator';
+import HTMLObject from '../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 
 export type TypeEquationNavigator = {
 } & DiagramElementCollection;
@@ -73,6 +75,39 @@ function makeRefresh(
   return refresh;
 }
 
+function updateDescription(
+  eqn: Equation,
+  formType: string,
+  descriptionElement: DiagramElementPrimative,
+  index: number,
+  setClicks: boolean = false,
+) {
+  const element = descriptionElement;
+  if (element == null) {
+    return;
+  }
+  if (element.isShown === false) {
+    return;
+  }
+  let form = null;
+  form = eqn.formSeries[index][formType];
+  console.log(form, eqn.formSeries[index], formType)
+  if (form == null) {
+    return;
+  }
+  if (form.description == null) {
+    return;
+  }
+
+  const drawingObject = element.vertices;
+  if (drawingObject instanceof HTMLObject) {
+    drawingObject.change(form.description, element.lastDrawTransform.m());
+    if (setClicks) {
+      html.setOnClicks(form.modifiers);
+    }
+  }
+}
+
 export default function makeEquationNavigator(
   diagram: Diagram,
   equation: Equation,
@@ -101,11 +136,14 @@ export default function makeEquationNavigator(
     refreshAngle, color,
   );
 
+  const nextDescription = diagram.equation.makeDescription('next_description');
+
   navigator.add('prev', prev);
   navigator.add('next', next);
   navigator.add('refresh', refresh);
   navigator.add('eqn', equation.collection);
   navigator.add('currentStep', equation.descriptionElement);
+  navigator.add('nextDescription', nextDescription);
 
   const updateButtons = () => {
     const currentForm = equation.getCurrentForm();
@@ -129,6 +167,7 @@ export default function makeEquationNavigator(
         next.setColor(colorDisabled);
         next.isTouchable = false;
       }
+      updateDescription(equation, 'base', nextDescription, index, false);
     }
   };
 
@@ -160,7 +199,7 @@ export default function makeEquationNavigator(
 
   equation.collection.setPosition(0, 0);
   if (equation.descriptionElement != null) {
-    equation.descriptionElement.setPosition(offset.add(size * 2, 0));
+    equation.descriptionElement.setPosition(offset.add(size * 3, 0));
   }
   refresh.setPosition(offset);
   next.setPosition(offset.add(0, -spacing));

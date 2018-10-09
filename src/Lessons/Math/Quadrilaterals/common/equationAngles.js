@@ -36,7 +36,7 @@ export type TypeAnglesEquation = {
 export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
   const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
-  eqnDescription.isTouchable = true;
+  // eqnDescription.isTouchable = true;
   const strikeColor = layout.colors.diagram.warning;
 
   const colAngle = layout.colors.angles;
@@ -171,7 +171,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
     eqn.replayCurrentForm(1);
     diagram.animateNextFrame();
   };
-  eqn.descriptionElement.onClick = currentForm.bind(this);
+  // eqn.descriptionElement.onClick = currentForm.bind(this);
   eqn.collection.onClick = nextForm.bind(this);
   eqn.collection.isTouchable = true;
   eqn.collection.touchInBoundingRect = true;
