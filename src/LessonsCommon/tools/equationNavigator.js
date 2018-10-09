@@ -75,10 +75,11 @@ function makeRefresh(
 
 export default function makeEquationNavigator(
   diagram: Diagram,
-  equation: eqn,
+  equation: Equation,
   size: number,
   offset: Point,
   color: Array<number>,
+  colorDisabled: Array<number>,
 ) {
   const arrowWidth = size * 1.5;
   const arrowHeight = size * 1.5;
@@ -86,7 +87,7 @@ export default function makeEquationNavigator(
   const refreshAngle = Math.PI / 3 * 2;
   const refreshSides = 100;
   const refreshLineWidth = size / 5;
-  const spacing = size * 3.5;
+  const spacing = size * 5;
 
   const navigator = diagram.shapes.collection(new Transform('Triangle')
     .scale(1, 1)
@@ -106,12 +107,39 @@ export default function makeEquationNavigator(
   navigator.add('eqn', equation.collection);
   navigator.add('currentStep', equation.descriptionElement);
 
+  const updateButtons = () => {
+    const currentForm = equation.getCurrentForm();
+    if (currentForm != null) {
+      const index = equation.getFormIndex(currentForm);
+      if (index === 0) {
+        refresh.setColor(colorDisabled);
+        prev.setColor(colorDisabled);
+        refresh.isTouchable = false;
+        prev.isTouchable = false;
+      } else {
+        refresh.setColor(color);
+        prev.setColor(color);
+        refresh.isTouchable = true;
+        prev.isTouchable = true;
+      }
+      if (equation.formSeries.length > 1) {
+        next.setColor(color);
+        next.isTouchable = true;
+      } else {
+        next.setColor(colorDisabled);
+        next.isTouchable = false;
+      }
+    }
+  };
+
   const clickNext = () => {
     equation.nextForm(1.5);
+    updateButtons();
     diagram.animateNextFrame();
   };
   const clickPrev = () => {
     equation.prevForm(1.5);
+    updateButtons();
     diagram.animateNextFrame();
   };
   const clickRefresh = () => {
@@ -123,11 +151,21 @@ export default function makeEquationNavigator(
         diagram.animateNextFrame();
       }
     }
+    updateButtons();
   };
+
   prev.onClick = clickPrev;
   next.onClick = clickNext;
   refresh.onClick = clickRefresh;
 
+  equation.collection.setPosition(0, 0);
+  if (equation.descriptionElement != null) {
+    equation.descriptionElement.setPosition(offset.add(size * 2, 0));
+  }
+  refresh.setPosition(offset);
+  next.setPosition(offset.add(0, -spacing));
+  prev.setPosition(offset.add(0, spacing));
   navigator.hasTouchableElements = true;
+  updateButtons();
   return navigator;
 }

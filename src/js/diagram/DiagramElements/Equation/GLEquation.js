@@ -1628,6 +1628,7 @@ export class Equation {
     fixTo: DiagramElementPrimative | DiagramElementCollection | Point;
     scale: number;
   };
+
   isAnimating: boolean;
 
   descriptionElement: DiagramElementPrimative | null;

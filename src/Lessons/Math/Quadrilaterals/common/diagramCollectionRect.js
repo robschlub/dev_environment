@@ -172,9 +172,11 @@ export default class RectCollection extends CommonDiagramCollection {
     this.rectEqn = eqn;
 
     const nav = makeEquationNavigator(
-      this.diagram, eqn, 0.1, new Point(0.6, 0),
+      this.diagram, eqn, 0.07, new Point(0.9, 0),
+      this.layout.colors.diagram.disabled,
       this.layout.colors.diagram.disabledDark,
     );
+    nav.setPosition(this.layout.rectEqnPosition);
     this.add('nav', nav);
   }
 

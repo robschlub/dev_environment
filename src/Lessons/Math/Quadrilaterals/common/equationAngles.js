@@ -176,6 +176,7 @@ export default function makeAnglesEquation(diagram: Diagram, layout: Object) {
   eqn.collection.isTouchable = true;
   eqn.collection.touchInBoundingRect = true;
   eqn.collection.setPosition(layout.rectEqnPosition);
+  eqn.setCurrentForm('0');
   // eqn.description = eqnDescription;
   return eqn;
   // this.add('eqn', eqn.collection);

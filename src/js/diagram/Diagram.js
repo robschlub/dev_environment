@@ -260,7 +260,6 @@ function shapes(diagram: Diagram, high: boolean = false) {
     tip: Point = new Point(0, 0),
     rotation: number = 0,
   ) {
-    console.log(color)
     return Arrow(
       webgl, width, legWidth, height, legHeight,
       tip, rotation, color, transform, diagram.limits,
