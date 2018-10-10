@@ -78,9 +78,10 @@ class Content extends LessonContent {
       title: 'Quadrilateral',
       setContent: `
         <p>
-          A |quadrilateral| is a shape with |four sides| and |four angles|.
+          A |quadrangle| is a shape with |four sides| and |four angles|. This shape is also somtimes called a |quadrilateral|.
         </p>
-        ${new Definition('Quadrilateral', 'Latin', ['quadri', 'four', 'latus, later', 'side']).html('id_lesson__quadrilateral_definition')}
+        ${new Definition('Quadrangle', 'Latin', ['quattuor', 'four', 'angulus', 'angle, corner']).html('id_lesson__quadrilateral_definition')}
+        ${new Definition('Quadrilateral', 'Latin', ['quattuor', 'four', 'latus, later', 'side']).html('id_lesson__quadrilateral_definition', 'lesson__definition_low')}
       `,
     });
 
@@ -96,7 +97,7 @@ class Content extends LessonContent {
       title: 'Total Angle',
       setContent: `
         <p>
-          Similar to a |triangle|, all the angles in a quadrilateral are related to each other and will |always add up to the same angle|.
+          Similar to a |triangle|, all the angles in a quadrangle are related to each other and will |always add up to the same angle|.
         </p>
       `,
       modifiers: {
@@ -106,7 +107,7 @@ class Content extends LessonContent {
 
     common.setContent = `
       <p>
-        We can show this by drawing a line between opposite corners of a quadrilateral.
+        We can show this by drawing a line between opposite corners of a quadrangle.
       </p>
     `;
     this.addSection(common);
@@ -117,13 +118,13 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: `<p>
-        A quadrilateral can always be split into two triangles.
+        A quadrangle can always be split into two triangles.
       </p>`,
     });
 
     this.addSection(common, {
       setContent: `<p>
-        As each |triangle|, has a total angle of 180º, the the total angle of a quadrilateral must be two times that, or |360º|.
+        As each |triangle|, has a total angle of 180º, the the total angle of a quadrangle must be two times that, or |360º|.
       </p>`,
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
@@ -133,10 +134,10 @@ class Content extends LessonContent {
     this.addSection({
       setContent: centerV(`
         <p>
-          So to summarize, a |quadrilateral| is a shape with |four sides| and |four angles|.
+          So to summarize, a |quadrangle| is a shape with |four sides| and |four angles|.
         </p>
         <p>
-          A quadrilateral's angles will |always add up to 360º| (|2π radians|).
+          A quadrangle's angles will |always add up to 360º| (|2π radians|).
         </p>
       `),
     });
@@ -173,7 +174,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: 'Rectangle',
       setContent: `<p>
-        A special type of quadrilateral is one where all the |angles are equal to 90º|. This shape is called a |rectangle|.
+        A special type of quadrangle is one where all the |angles are equal to 90º|. This shape is called a |rectangle|.
       </p>
       ${new Definition('Rectangle', 'Latin', ['rectus', 'right', 'angulus', 'corner, angle']).html('id_lesson__rectangle_definition', 'lesson__definition_low')}
       `,
