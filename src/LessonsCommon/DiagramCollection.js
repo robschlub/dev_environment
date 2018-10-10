@@ -221,10 +221,16 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       }
     };
     this.futurePositions.forEach((futurePosition) => {
+      const { element } = futurePosition;
+      if (element.isShown) {
+        toBeDoneCount += 1;
+      }
+    });
+    this.futurePositions.forEach((futurePosition) => {
       const { element, scenario } = futurePosition;
       if (element.isShown) {
         this.moveToScenario(element, scenario, maxTime, elementDone, rotDirection);
-        toBeDoneCount += 1;
+        // toBeDoneCount += 1;
       }
     });
   }
