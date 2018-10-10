@@ -7,6 +7,7 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import QRTriangle from '../../Triangles/quickReference/quickReference';
 import { QRAsa, QRCongruentTriangles } from '../../CongruentTriangles/quickReference/quickReference';
 import { QRComplementaryAngles } from '../../AdjacentAngles/quickReference/quickReference';
+import { QRInteriorAngles } from '../../RelatedAngles/quickReference/quickReference';
 
 export default class QuickReferenceCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -14,6 +15,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
   _asa: QRAsa;
   _comp: QRComplementaryAngles;
   _congruent: QRCongruentTriangles;
+  _interor: QRInteriorAngles;
 
   constructor(
     diagram: LessonDiagram,
@@ -25,6 +27,7 @@ export default class QuickReferenceCollection extends CommonDiagramCollection {
     this.add('asa', new QRAsa(this.diagram));
     this.add('comp', new QRComplementaryAngles(this.diagram));
     this.add('congruent', new QRCongruentTriangles(this.diagram));
+    this.add('interior', new QRInteriorAngles(this.diagram));
     this.hasTouchableElements = true;
   }
 }

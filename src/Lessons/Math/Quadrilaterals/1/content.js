@@ -241,6 +241,63 @@ class Content extends LessonContent {
       </p>`,
     });
 
+
+    common.setContent = `<p>
+      The |sides are also related| to each other. The first relationship can be seen from looking at the |angle two opposite sides make with a third side|.
+    </p>`;
+    common.setEnterState = () => {
+      rect._rect._lineD.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle1.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
+    };
+    this.addSection(common);
+
+    common.modifiers = {
+      interior_angles: click(qr._interior.show, [qr._interior], colors.diagram.action),
+    };
+
+    common.setContent = `<p>
+      This configuration is a form of |interior_angles| formed between a |line| intersecting |two_lines|.
+    </p>`;
+    this.addSection(common, {
+      modifiers: {
+        interior_angles: click(qr._interior.show, [qr._interior], colors.diagram.action),
+        line: click(rect.pulseLine, [rect, 'B'], colors.lines),
+        two_lines: click(rect.pulseLine, [rect, ['A', 'C']], colors.lines),
+      },
+    });
+
+    common.setContent = `<p>
+      The |interior_angles| of two |parallel lines| intersected by a third line will always add to |180º|.
+    </p>`;
+    this.addSection(common);
+
+    common.setContent = `<p>
+      The reverse of this is, if the |interior_angles| of two lines intersected by a third line |add to 180º|, then the lines |must be parallel|.
+    </p>`;
+    this.addSection(common);
+
+    common.setContent = `<p>
+      Therefore, lines |A| and |C| are parallel.
+    </p>`;
+    this.addSection(common);
+
+    common.setEnterState = () => {
+      rect._rect._lineC.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle3.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
+    };
+    common.setContent = `<p>
+      Similarly, lines |B| and |D| are parallel.
+    </p>`;
+    this.addSection(common);
+
+    common.setEnterState = () => {};
+    common.setContent = `<p>
+      This can be generalized to |opposite sides| in a rectangle are |parallel|.
+    </p>`;
+    this.addSection(common);
+
     common.setContent = `<p>
         To examine the relationship between side lengths, we can |split| the rectangle into |two triangles|.
       </p>`;

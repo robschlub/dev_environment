@@ -197,6 +197,18 @@ export default class RectCollection extends CommonDiagramCollection {
     this._rect._lineE.pulseWidth();
   }
 
+  pulseLine(names: Array<string> | string) {
+    if (Array.isArray(names)) {
+      names.forEach((name) => {
+        const line = this._rect[`_line${name}`];
+        line.pulseWidth();
+      });
+    } else {
+      const line = this._rect[`_line${names}`];
+      line.pulseWidth();
+    }
+  }
+
   showASA1Colors() {
     const disabled = this.layout.colors.diagram.disabledDark;
     const line = this.layout.colors.lines;
