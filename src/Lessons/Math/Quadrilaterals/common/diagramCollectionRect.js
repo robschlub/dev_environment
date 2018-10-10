@@ -182,6 +182,10 @@ export default class RectCollection extends CommonDiagramCollection {
     this._rect._angleD.pulseScaleNow(1, 1.5);
   }
 
+  pulseAngleC() {
+    this._rect._angleC.pulseScaleNow(1, 1.5);
+  }
+
   addEqn() {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);
