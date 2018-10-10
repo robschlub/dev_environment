@@ -26,114 +26,56 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    const tri = diag._triangle;
+    const quad = diag._quad;
+    const rect = diag._rect;
+    const square = diag._square;
 
     this.addSection({
-      title: 'Congruent Triangles',
+      setTitle: 'Quadrangle',
       setContent: `
-        <p class="lesson__font_0p9">
-          Shapes are |congruent| when they are the |same size and shape|. Triangles are congruent when they have the same set of |side_lengths| and |angles|. Shapes remain |congruent| if one is |rotated| or |flipped|.
+        <p>
+          A |quadrangle|, or |quadrilateral| is a shape with |four sides| and |four angles|. A quadrangle's angles always add up to 360º.
         </p>
-        ${new Definition('Congruent', 'Latin', ['congruent', 'agreeing, meeting together']).html('id_lesson__congruent_angles_definition')}
+        ${new Definition('Quadrangle', 'Latin', ['quattuor', 'four', 'angulus', 'angle, corner']).html('id_lesson__quadrilateral_definition')}
+        ${new Definition('Quadrilateral', 'Latin', ['quattuor', 'four', 'latus, later', 'side']).html('id_lesson__quadrilateral_definition', 'lesson__definition_low')}
       `,
-      modifiers: {
-        rotated: click(tri.toggleCongruentRotate, [tri], colors.diagram.action),
-        flipped: click(tri.toggleCongruentFlip, [tri], colors.diagram.action),
-        side_lengths: highlight(colors.lineLabels),
-        angles: highlight(colors.angleLabels),
-      },
-      setInfo: [
-        '<ul>',
-        '<li>Drag the right triangle or touch the |rotated| text to rotate the triangle and see the angles and sides stay the same.</li>',
-        '<li>Touch the |flipped| text to flip the triangle and see the angles and sides stay the same.</li>',
-        '</ul>',
+      showOnly: [
+        quad, quad._quad1, quad._quad2, quad._quad3,
       ],
-      infoModifiers: {
-        rotated: highlight(colors.diagram.action),
-        flipped: highlight(colors.diagram.action),
-      },
-      setEnterState: () => {
-        const lay = layout.triangles.congruent;
-        tri.setTriangleScenarios(
-          lay.points, lay.points,
-          lay.tri1.scenario, lay.tri2.scenario,
-        );
-        tri._tri2.isMovable = true;
-        tri._tri2.isTouchable = true;
-        tri._tri2.touchInBoundingRect = true;
-        tri._tri2.move.type = 'rotation';
-      },
-      show: [tri],
     });
 
     this.addSection({
-      title: 'Congruency Tests',
+      setTitle: 'Rectangle',
       setContent: `
-        <p class="lesson__font_0p9">
-          |All sides and angles can be measured| to show two triangles are congruent. There are also some combinations of |three properties| that can show congruency.
+        <p>
+          A |rectangle|, is a quadrangle with |all angles equal to 90º|. A rectangle's |opposite sides are parallel and equal length|.
         </p>
-        <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40" style="margin-top: 7%">
-        <b>CAN</b> guarantee congruency.
-        </div>
-          <ul class="lesson__congruent_angles_summary__list">
-            <li>|SAS|</li>
-            <li>|SSS|</li>
-            <li>|ASA|</li>
-            <li>|AAS|</li>
-          </ul>
-        <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40">
-        Can <b>SOMETIMES</b> guarantee congruency.
-        </div>
-          <ul class="lesson__congruent_angles_summary__list">
-            <li>|SSA|</li>
-          </ul>
-        <div class="lesson__congruent_angles_summary__sub_title lesson__diagram_text_p_width_40">
-        <b>CANNOT</b> guarantee congruency.
-        </div>
-          <ul class="lesson__congruent_angles_summary__list">
-            <li>|AAA|</li>
-          </ul>
+        ${new Definition('Rectangle', 'Latin', ['rectus', 'right', 'angulus', 'corner, angle']).html('id_lesson__rectangle_definition', 'lesson__definition_low')}
       `,
-      modifiers: {
-        SAS: clickWord(
-          'Side Angle Side', 'id_lesson__congruent_SAS',
-          diag.showCombination, [diag, 'sas'], colors.diagram.text.base,
-        ),
-        SSS: clickWord(
-          'Side Side Side', 'id_lesson__congruent_SSS',
-          diag.showCombination, [diag, 'sss'], colors.diagram.text.base,
-        ),
-        ASA: clickWord(
-          'Angle Side Angle', 'id_lesson__congruent_ASA',
-          diag.showCombination, [diag, 'asa'], colors.diagram.text.base,
-        ),
-        AAS: clickWord(
-          'Angle Angle Side', 'id_lesson__congruent_AAS',
-          diag.showCombination, [diag, 'aas'], colors.diagram.text.base,
-        ),
-        AAA: clickWord(
-          'Angle Angle Angle', 'id_lesson__congruent_AAA',
-          diag.showCombination, [diag, 'aaa'], colors.diagram.text.base,
-        ),
-        SSA: clickWord(
-          'Side Side Angle', 'id_lesson__congruent_SSA',
-          diag.showCombination, [diag, 'ssa'], colors.diagram.text.base,
-        ),
-      },
-      setInfo: [
-        '<ul>',
-        '<li>Touch the property combinations to see more explanation.</li>',
-        '</ul>',
+      showOnly: [
+        rect, rect._rect,
       ],
-      setEnterState: () => {
-        const lay = layout.triangles.congruent;
-        tri.setTriangleScenarios(
-          lay.points, lay.points,
-          lay.tri1CongruencyTests.scenario, lay.tri1CongruencyTests.scenario,
-        );
-      },
-      showOnly: [tri],
-      show: [tri._tri1, diag._label],
+      show: [
+        rect._rect._rightAngle1, rect._rect._rightAngle2,
+        rect._rect._rightAngle3, rect._rect._rightAngle4,
+        rect._rect._lineA, rect._rect._lineB,
+        rect._rect._lineC, rect._rect._lineD,
+      ],
+      hide: [
+        rect._rect._lineC._label.__0,
+        rect._rect._lineD._label.__0,
+      ],
+    });
+
+    this.addSection({
+      setTitle: 'Square',
+      setContent: `
+        <p>
+          A |square|, is a |rectangle with all sides equal|. Therefore a squares's angles are all 90º and its opposite sides are parallel.
+        </p>
+        ${new Definition('Square', 'Old French', ['esquare', 'square'], 'Latin', ['quadra', 'square']).html('id_lesson__square_definition', 'lesson__definition_low')}
+      `,
+      show: [square],
     });
   }
 }

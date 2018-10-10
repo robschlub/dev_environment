@@ -51,7 +51,6 @@ export default class SquareCollection extends CommonDiagramCollection {
     makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), 'D', true);
     makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A', true);
     makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B', true);
-    makeL(points[0], points[2], 'E', true);
   }
 
   addRightAngles() {
