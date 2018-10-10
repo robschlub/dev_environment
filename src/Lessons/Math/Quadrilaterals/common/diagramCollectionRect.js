@@ -190,6 +190,10 @@ export default class RectCollection extends CommonDiagramCollection {
     this._rect._angleA.pulseScaleNow(1, 1.5);
   }
 
+  pulseDiagonalLine() {
+    this._rect._lineE.pulseWidth();
+  }
+
   showASA1Colors() {
     const disabled = this.layout.colors.diagram.disabledDark;
     const line = this.layout.colors.lines;
@@ -232,7 +236,6 @@ export default class RectCollection extends CommonDiagramCollection {
 
   toggleASAColors() {
     const disabled = this.layout.colors.diagram.disabledDark;
-    console.log(this._rect._angleA._arc.color, disabled)
     if (this._rect._angleA._arc.color[0] === disabled[0]
       && this._rect._angleA._arc.color[1] === disabled[1]
       && this._rect._angleA._arc.color[2] === disabled[2]

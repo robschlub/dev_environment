@@ -509,10 +509,11 @@ class Content extends LessonContent {
     this.addSection(common, {title: 'adsf'});
 
     common.setContent = `<p>
-      In particular, there is a |similarity| in the diagonal line and the angles on either side.
+      In particular, there is a similarity in the |diagonal_line| and the |angles| on either side.
     </p>`;
     common.modifiers = {
-      similarity: click(rect.toggleASAColors, [rect], colors.diagram.action),
+      angles: click(rect.toggleASAColors, [rect], colors.angles),
+      diagonal_line: click(rect.pulseDiagonalLine, [rect], colors.lines),
     };
     this.addSection(common);
 
