@@ -242,6 +242,13 @@ class Content extends LessonContent {
     });
 
 
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
     common.setContent = `<p>
       The |sides are also related| to each other. The first relationship can be seen from looking at the |angle two opposite sides make with a third side|.
     </p>`;
@@ -250,7 +257,9 @@ class Content extends LessonContent {
       rect._rect._rightAngle1.setColor(colors.diagram.disabledDark);
       rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
     };
-    this.addSection(common);
+    this.addSection(common, {
+      title: 'Parallel Sides',
+    });
 
     common.modifiers = {
       interior_angles: click(qr._interior.show, [qr._interior], colors.diagram.action),
@@ -298,10 +307,19 @@ class Content extends LessonContent {
     </p>`;
     this.addSection(common);
 
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
     common.setContent = `<p>
         To examine the relationship between side lengths, we can |split| the rectangle into |two triangles|.
       </p>`;
-    this.addSection(common);
+    this.addSection(common, {
+      title: 'Equal Sides',
+    });
 
     common.showOnly = [
       qr, rect, rect._rect,
@@ -577,7 +595,7 @@ class Content extends LessonContent {
       rect._rect._angleC.showForm('1');
       rect._rect._angleD.showForm('1');
     };
-    this.addSection(common, {title: 'adsf'});
+    this.addSection(common);
 
     common.setContent = `<p>
       In particular, there is a similarity in the |diagonal_line| and the |angles| on either side.
@@ -653,6 +671,17 @@ class Content extends LessonContent {
       opposite_sides: click(rect.toggleOppositeSides, [rect], colors.diagram.action),
     };
     this.addSection(common);
+
+    this.addSection({
+      setContent: centerV(`
+        <p>
+          So, a |rectangle| is a quadrangle with |all angles equal to 90º|.
+        </p>
+        <p>
+          |Opposite sides| of a rectangle are |parallel|, and |equal in length|.
+        </p>
+        `),
+    });
   }
 }
 
