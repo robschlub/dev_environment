@@ -74,7 +74,8 @@ function makeRefresh(
     1, Math.floor(sides * angle / Math.PI / 2),
     color, new Transform().translate(0, 0),
   );
-  refreshLine.vertices.border[0] = refreshLine.vertices.border[0].map(p => new Point(p.x * 2, p.y * 2));
+  refreshLine.vertices.border[0] =
+    refreshLine.vertices.border[0].map(p => new Point(p.x * 2, p.y * 2));
   refreshTop.add('line', refreshLine);
 
   const refreshArrow = diagram.shapes.arrow(
@@ -132,6 +133,7 @@ function updateDescription(
     return;
   }
   let form = null;
+  // $FlowFixMe
   form = eqn.formSeries[index][formType];
   if (form == null) {
     return;
@@ -161,7 +163,7 @@ export default function makeEquationNavigator(
   offset: Point,
   color: Array<number>,
   colorDisabled: Array<number>,
-  id: string = `id_lesson__equation_navigator_${Math.floor(Math.random()*10000)}`,
+  id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
 ) {
   // const arrowWidth = size * 1.5;
   const arrowHeight = size * 1.5;

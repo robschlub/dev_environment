@@ -320,11 +320,11 @@ export default class AdjacentCollection extends CommonDiagramCollection {
 
   adjacentNextEquationform() {
     if (this.eqn.currentForm) {
-      if (this.eqn.currentForm.name === 'adj_a') {
+      if (this.eqn.currentForm === 'adj_a') {
         this._eqn._b.onClick();
-      } else if (this.eqn.currentForm.name === 'adj_b') {
+      } else if (this.eqn.currentForm === 'adj_b') {
         this._eqn._c.onClick();
-      } else if (this.eqn.currentForm.name === 'adj_add') {
+      } else if (this.eqn.currentForm === 'adj_add') {
         this._eqn._a.onClick();
       }
     }

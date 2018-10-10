@@ -396,11 +396,17 @@ class StrikeOut extends Elements {
         this.strikeScale = new Point(strikeLength, this.lineWidth * 0.8);
         this.strikeRotation = strikeLine.angle();
         const width = this.strikeScale.x * Math.cos(this.strikeRotation);
+        // $FlowFixMe
         strike._s1.transform.updateScale(this.strikeScale);
+        // $FlowFixMe
         strike._s1.transform.updateTranslation(this.strikePosition);
+        // $FlowFixMe
         strike._s1.transform.updateRotation(this.strikeRotation);
+        // $FlowFixMe
         strike._s2.transform.updateScale(this.strikeScale);
+        // $FlowFixMe
         strike._s2.transform.updateTranslation(this.strikePosition.add(width, 0));
+        // $FlowFixMe
         strike._s2.transform.updateRotation(Math.PI - this.strikeRotation);
         strike.showAll();
       } else {
@@ -432,11 +438,17 @@ class StrikeOut extends Elements {
     if (strike) {
       if (strike instanceof DiagramElementCollection) {
         const width = this.strikeScale.x * Math.cos(this.strikeRotation);
+        // $FlowFixMe
         strike._s1.transform.updateScale(this.strikeScale);
+        // $FlowFixMe
         strike._s1.transform.updateTranslation(this.strikePosition);
+        // $FlowFixMe
         strike._s1.transform.updateRotation(this.strikeRotation);
+        // $FlowFixMe
         strike._s2.transform.updateScale(this.strikeScale);
+        // $FlowFixMe
         strike._s2.transform.updateTranslation(this.strikePosition.add(width, 0));
+        // $FlowFixMe
         strike._s2.transform.updateRotation(Math.PI - this.strikeRotation)
       } else {
         strike.transform.updateScale(this.strikeScale);
@@ -1949,7 +1961,7 @@ export class Equation {
     }
   }
 
-  nextForm(time: number, delay: number = 0) {
+  nextForm(time: number = 1, delay: number = 0) {
     const currentForm = this.getCurrentForm();
     if (currentForm == null) {
       return;
