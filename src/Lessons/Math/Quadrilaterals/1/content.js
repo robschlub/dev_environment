@@ -221,7 +221,7 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {
       setContent: `<p>
-        The first properties to note are the four |side_lengths| and four |angles|.
+        Some properties of the rectangle include its four |side_lengths| and four |angles|.
       </p>`,
       modifiers: {
         side_lengths: click(rect.pulseSideLabels, [rect], colors.lines),
@@ -231,13 +231,13 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: `<p>
-        When properties are identified, the next question is are they related to each other?
+        Are these properties |related| to each other? If so, some can be used to calculate others.
       </p>`,
     });
 
     this.addSection(common, {
       setContent: `<p>
-        The angles are, as they are all equal to each other at 90º.
+        The |angles| are all equal to each other (90º) from the definition of a rectangle, so they |are related|.
       </p>`,
     });
 
