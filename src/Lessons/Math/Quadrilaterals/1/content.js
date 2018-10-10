@@ -413,7 +413,10 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setSteadyState: () => {
-        common.setSteadyState();
+        rect._rect._angleA.showForm('0');
+        rect._rect._angleB.showForm('1');
+        rect._rect._angleC.showForm('0');
+        rect._rect._angleD.showForm('0');
         rect._navAD.showAll();
         rect._navAD.updateButtons();
         rect.adEqn.showForm('0');
@@ -422,7 +425,10 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setSteadyState: () => {
-        common.setSteadyState();
+        rect._rect._angleA.showForm('0');
+        rect._rect._angleB.showForm('1');
+        rect._rect._angleC.showForm('0');
+        rect._rect._angleD.showForm('1');
         rect._navAD.showAll();
         rect.adEqn.showForm('4');
         rect._rect._angleD.showForm('1');
@@ -435,6 +441,7 @@ class Content extends LessonContent {
       Next consider angle |c|. It forms a rectangle corner with angle |_90ma|.
     </p>`;
     common.setSteadyState = () => {
+      rect._rect._angleA.showForm('0');
       rect._rect._angleB.showForm('1');
       rect._rect._angleC.showForm('0');
       rect._rect._angleD.showForm('1');
@@ -468,9 +475,7 @@ class Content extends LessonContent {
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
         rect._navBC.showAll();
         rect.bcEqn.showForm('0');
-        // rect._rect._angleD.showForm('1');
         rect._navBC.updateButtons();
-        // rect.pulseAngleD();
       },
     });
 
