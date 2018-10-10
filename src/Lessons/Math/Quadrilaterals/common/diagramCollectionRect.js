@@ -50,6 +50,8 @@ export default class RectCollection extends CommonDiagramCollection {
     _angleD: TypeAngle;
   } & DiagramElementCollection;
 
+  oppositeSidesFlag: boolean;
+
   addRectangle() {
     const rect = this.diagram.shapes.collection(new Transform('rectangle').scale(1, 1).translate(this.layout.rect.scenarios.start.position));
     this.add('rect', rect);
@@ -73,12 +75,13 @@ export default class RectCollection extends CommonDiagramCollection {
       line.setEndPoints(p1, p2);
       line.setPosition(p1);
       line.addLabel(labelText, 0.05, 'inside', 'top', 'horizontal');
-      this._rect.add(`line${labelText}`, line);
+      const name = Array.isArray(labelText) ? labelText[0] : labelText;
+      this._rect.add(`line${name}`, line);
     };
     const { points } = this.layout.rect;
     const halfLine = this.layout.lineWidth / 2;
-    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), 'C', true);
-    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), 'D', true);
+    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), ['C', 'A'], true);
+    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), ['D', 'B'], true);
     makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A', true);
     makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B', true);
     makeL(points[0], points[2], 'E', true);
@@ -247,6 +250,23 @@ export default class RectCollection extends CommonDiagramCollection {
     }
   }
 
+  toggleOppositeSides() {
+    if (this.oppositeSidesFlag) {
+      this._rect._lineA._label.pulseScaleNow(1, 2);
+      this._rect._lineC._label.pulseScaleNow(1, 2);
+      this._rect._lineA.pulseWidth();
+      this._rect._lineC.pulseWidth();
+      this.oppositeSidesFlag = false;
+    } else {
+      this._rect._lineB._label.pulseScaleNow(1, 2);
+      this._rect._lineD._label.pulseScaleNow(1, 2);
+      this._rect._lineB.pulseWidth();
+      this._rect._lineD.pulseWidth();
+      this.oppositeSidesFlag = true;
+    }
+    this.diagram.animateNextFrame();
+  }
+
   addEqn() {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);
@@ -282,6 +302,7 @@ export default class RectCollection extends CommonDiagramCollection {
     this.addRect();
     this.addEqn();
     this.hasTouchableElements = true;
+    this.oppositeSidesFlag = false;
   }
 
   resetColors() {

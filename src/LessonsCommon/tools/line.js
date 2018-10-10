@@ -532,10 +532,14 @@ export function makeLine(
     line.animateLengthTo(target, time, finishOnCancel, callback);
   };
 
-  line.pulse.transformMethod = s => new Transform().scale(1, s);
+  if (straightLine != null) {
+    straightLine.pulse.transformMethod = s => new Transform().scale(1, s);
+  }
 
   line.pulseWidth = () => {
-    line.pulseScaleNow(1, 3);
+    if (straightLine != null) {
+      straightLine.pulseScaleNow(1, 3);
+    }
     diagram.animateNextFrame();
   };
 

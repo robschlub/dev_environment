@@ -159,6 +159,13 @@ class Content extends LessonContent {
       `),
     });
 
+    // **********************************************************************
+    // **********************************************************************
+    // **********************************************************************
+    // **********************************************************************
+    // **********************************************************************
+    // **********************************************************************
+    // **********************************************************************
     common = {
       setContent: '',
       modifiers: {},
@@ -176,7 +183,10 @@ class Content extends LessonContent {
         rect._rect._rightAngle1, rect._rect._rightAngle2,
         rect._rect._rightAngle3, rect._rect._rightAngle4,
       ],
-      hide: [],
+      hide: [
+        rect._rect._lineC._label.__1,
+        rect._rect._lineD._label.__1,
+      ],
       transitionFromAny: (done) => {
         rect.moveToScenario(rect._rect, layout.rect.scenarios.start, 1, done);
       },
@@ -236,23 +246,15 @@ class Content extends LessonContent {
       </p>`;
     this.addSection(common);
 
-    common.show = [
-      rect._rect._rightAngle1, rect._rect._rightAngle2,
-      rect._rect._rightAngle3, rect._rect._rightAngle4,
-      rect._rect._lineA, rect._rect._lineB,
-      rect._rect._lineC, rect._rect._lineD,
-      rect._rect._lineE,
+    common.showOnly = [
+      qr, rect, rect._rect,
+      rect._rect._lineA, rect._rect._lineA._line,
+      rect._rect._lineB, rect._rect._lineB._line,
+      rect._rect._lineC, rect._rect._lineC._line,
+      rect._rect._lineD, rect._rect._lineD._line,
+      rect._rect._lineE, rect._rect._lineE._line,
     ];
     this.addSection(common);
-
-    // this.addSection(common, {
-    //   setContent: `<p>
-    //     These triangles |look| the same, or in other words look |congruent|. If they are, then that will tell us some of the sides will be equal to others.
-    //   </p>`,
-    //   modifiers: {
-    //     congruent: click(qr._congruent.show, [qr._congruent], colors.diagram.action),
-    //   },
-    // });
 
     common.setContent = `<p>
       Let's start by looking at just one triangle.
@@ -478,6 +480,13 @@ class Content extends LessonContent {
       },
     });
 
+    common.hide = [
+      rect._rect._angleB._label.__0,
+      rect._rect._angleC._label.__0,
+      rect._rect._angleD._label.__0,
+      rect._rect._lineC._label.__0,
+      rect._rect._lineD._label.__0,
+    ];
     this.addSection(common, {
       setSteadyState: () => {
         rect._rect._angleA.showForm('0');
@@ -493,7 +502,7 @@ class Content extends LessonContent {
     });
 
     common.setContent = `<p>
-      The reason we expressed all the unknown angles in terms of angle |a| is to see similarities between the two triangles.
+      All unknown angles are in terms of angle |a|, so it is easier to see similarities between the two triangles.
     </p>`;
     common.setSteadyState = () => {
       rect._rect._angleA.showForm('0');
@@ -505,7 +514,12 @@ class Content extends LessonContent {
     common.transitionFromAny = (done) => {
       rect.moveToScenario(rect._rect, layout.rect.scenarios.start, 1, done);
     };
-    common.setEnterState = () => {};
+    common.setEnterState = () => {
+      rect._rect._angleA.showForm('0');
+      rect._rect._angleB.showForm('1');
+      rect._rect._angleC.showForm('1');
+      rect._rect._angleD.showForm('1');
+    };
     this.addSection(common, {title: 'adsf'});
 
     common.setContent = `<p>
@@ -515,20 +529,72 @@ class Content extends LessonContent {
       angles: click(rect.toggleASAColors, [rect], colors.angles),
       diagonal_line: click(rect.pulseDiagonalLine, [rect], colors.lines),
     };
+    common.setEnterState = () => {
+      rect._rect._lineA.setColor(colors.diagram.disabledDark);
+      rect._rect._lineB.setColor(colors.diagram.disabledDark);
+      rect._rect._lineC.setColor(colors.diagram.disabledDark);
+      rect._rect._lineD.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle2.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
+      rect._navBC.setPosition(layout.adEqnPosition);
+    };
     this.addSection(common);
 
     common.setContent = `<p>
-      When |two_triangles| have a side and adjacent angles that are equal, then they are |congruent|.
+      When two triangles have |two_angles_and_side_between| them the same, then they are |congruent|.
     </p>`;
     common.modifiers = {
       congruent: click(qr._asa.show, [qr._asa], colors.diagram.action),
-      two_triangles: click(rect.toggleASAColors, [rect], colors.diagram.action),
+      two_angles_and_side_between: click(rect.toggleASAColors, [rect], colors.diagram.action),
     };
     this.addSection(common);
 
     common.setContent = `<p>
       As the triangles are congruent, then one triangle's sides lengths are the same as the other triangle.
     </p>`;
+    this.addSection(common);
+
+    common.setEnterState = () => {
+      rect._rect._angleA.setColor(colors.diagram.disabledDark);
+      rect._rect._angleB.setColor(colors.diagram.disabledDark);
+      rect._rect._angleC.setColor(colors.diagram.disabledDark);
+      rect._rect._angleD.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle1.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle2.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle3.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
+      rect._navBC.setPosition(layout.adEqnPosition);
+    };
+
+    common.show = [
+      rect._rect._rightAngle2,
+      rect._rect._rightAngle4,
+      rect._rect._lineA, rect._rect._lineB,
+      rect._rect._lineC, rect._rect._lineD,
+      rect._rect._angleA, rect._rect._angleB,
+      rect._rect._angleC, rect._rect._angleD,
+    ];
+    this.addSection(common);
+
+    common.showOnly = [
+      qr, rect, rect._rect,
+    ];
+    common.show = [
+      rect._rect._rightAngle1,
+      rect._rect._rightAngle2,
+      rect._rect._rightAngle3,
+      rect._rect._rightAngle4,
+      rect._rect._lineA, rect._rect._lineB,
+      rect._rect._lineC, rect._rect._lineD,
+    ];
+    this.addSection(common);
+
+    common.setContent = `<p>
+      And so, it can be seen that in a rectangle the |opposite_sides| are |equal|.
+    </p>`;
+    common.modifiers = {
+      opposite_sides: click(rect.toggleOppositeSides, [rect], colors.diagram.action),
+    };
     this.addSection(common);
   }
 }
