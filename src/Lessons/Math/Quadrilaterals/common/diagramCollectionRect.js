@@ -4,7 +4,7 @@ import {
   Transform, Point,
 } from '../../../../js/diagram/tools/g2';
 import {
-  DiagramElementPrimative, DiagramElementCollection,
+  DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 // import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import {
@@ -120,6 +120,7 @@ export default class RectCollection extends CommonDiagramCollection {
   }
 
   addAngles() {
+    // eslint-disable-next-line max-len
     const makeA = (position: Point, start: number, size: number, label: string | Array<string>, radius: number) => {
       const angle = makeAngle(
         this.diagram, radius,

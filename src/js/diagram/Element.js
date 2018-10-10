@@ -1137,11 +1137,6 @@ class DiagramElement {
 
   stopAnimatingColor(result: ?mixed, setToEndOfPlan: boolean = false): void {
     this.state.isAnimatingColor = false;
-    // if (this.name === 'strike1') {
-    //   console.log(this.animate.color.plan.length, this.state.disolving, this.state.isAnimatingColor)
-    // }
-    // const a = Math.random();
-    // console.log(this.name, this.state.disolving, this.state.isAnimatingColor)
     if (this.animate.color.plan.length) {
       if (this.state.disolving === 'in') {
         // console.log('in', this.name)

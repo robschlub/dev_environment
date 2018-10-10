@@ -449,7 +449,7 @@ class StrikeOut extends Elements {
         // $FlowFixMe
         strike._s2.transform.updateTranslation(this.strikePosition.add(width, 0));
         // $FlowFixMe
-        strike._s2.transform.updateRotation(Math.PI - this.strikeRotation)
+        strike._s2.transform.updateRotation(Math.PI - this.strikeRotation);
       } else {
         strike.transform.updateScale(this.strikeScale);
         strike.transform.updateTranslation(this.strikePosition);
