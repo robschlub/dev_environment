@@ -31,6 +31,7 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     const quad = diag._quad;
     const rect = diag._rect;
+    const square = diag._square;
     const qr = diag._qr;
     let common = {};
 
@@ -681,6 +682,49 @@ class Content extends LessonContent {
           |Opposite sides| of a rectangle are |parallel|, and |equal in length|.
         </p>
         `),
+    });
+
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    common = {
+      setContent: '',
+      modifiers: {},
+      setEnterState: () => {},
+      showOnly: [
+        qr, square, square._square,
+      ],
+      show: [
+        square._square._rightAngle1, square._square._rightAngle2,
+        square._square._rightAngle3, square._square._rightAngle4,
+        square._square._lineA, square._square._lineB,
+        square._square._lineC, square._square._lineD,
+      ],
+      hide: [],
+      setSteadyState: () => {
+        rect.setScenario(square._square, layout.square.scenarios.start);
+      },
+      setLeaveState: () => {
+        rect.resetColors();
+      },
+    };
+
+    this.addSection(common, {
+      title: 'Square',
+      setContent: `<p>
+        A special type of rectangle is one where all the |sides are equal|. This shape is called a |square|.
+      </p>
+      ${new Definition('Square', 'Old French', ['esquare', 'square'], 'Latin', ['quadra', 'square']).html('id_lesson__square_definition', 'lesson__definition_low')}
+      `,
+    });
+    this.addSection(common, {
+      setContent: `<p>
+        As a square is a rectangle, it also shares the same relationships between properties. All |angles are 90º|, and |opposite sides are parallel|.
+      </p>`,
     });
   }
 }

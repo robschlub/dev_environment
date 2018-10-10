@@ -58,15 +58,6 @@ export default class RectCollection extends CommonDiagramCollection {
   }
 
   addRect() {
-    // const rect = this.diagram.shapes.polyLine(
-    //   this.layout.rect.points, true, this.layout.lineWidth,
-    //   this.layout.colors.lines,
-    //   'none', new Transform('rect').scale(1, 1).translate(0, 0),
-    // );
-
-    // rect.setPosition(this.layout.rect.position);
-    // this.add('rect', rect);
-
     const makeL = (p1, p2, labelText, show) => {
       const line = makeLine(
         this.diagram, 'end', 1, this.layout.lineWidth,

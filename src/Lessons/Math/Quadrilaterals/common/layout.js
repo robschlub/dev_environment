@@ -59,10 +59,21 @@ export default function commonLessonLayout() {
       new Point(1.5, -0.75),
       new Point(1.5, 0.75),
     ],
-    // position: new Point(0, 0.5),
     scenarios: {
       start: { position: new Point( 0, -0.2) },
       analysis: { position: new Point( 0, -0.8) },
+    },
+  };
+
+  layout.square = {
+    points: [
+      new Point(-0.75, 0.75),
+      new Point(-0.75, -0.75),
+      new Point(0.75, -0.75),
+      new Point(0.75, 0.75),
+    ],
+    scenarios: {
+      start: { position: new Point( 0, -0.2) },
     },
   };
   return layout;
