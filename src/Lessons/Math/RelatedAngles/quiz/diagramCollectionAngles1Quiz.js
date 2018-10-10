@@ -138,20 +138,20 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
     // $FlowFixMe
     const knownAngleElement = this._lines[`_angle${knownAngle}`];
     knownAngleElement._label._a.vertices.setText(`${knownAngleValue}º`);
-    knownAngleElement.eqn.showForm('a');
+    knownAngleElement.label.eqn.showForm('a');
     knownAngleElement._arc.show();
     knownAngleElement.show();
     knownAngleElement.setColor(this.layout.colors.angleB);
-    knownAngleElement.eqn.reArrangeCurrentForm();
+    knownAngleElement.label.eqn.reArrangeCurrentForm();
 
     // $FlowFixMe
     const unknownAngleElement = this._lines[`_angle${unknownAngle}`];
     unknownAngleElement._label._a.vertices.setText('?º');
-    unknownAngleElement.eqn.showForm('a');
+    unknownAngleElement.label.eqn.showForm('a');
     unknownAngleElement._arc.show();
     unknownAngleElement.show();
     unknownAngleElement.setColor(this.layout.colors.angleA);
-    unknownAngleElement.eqn.reArrangeCurrentForm();
+    unknownAngleElement.label.eqn.reArrangeCurrentForm();
     this._lines.updateIntersectingLineAngle();
 
     this._input.show();
