@@ -25,15 +25,24 @@ import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import {
   makeABEquation, makeADEquation, makeBCEquation,
 } from './equationAngles';
-import type { TypeABEquationCollection, TypeABEquation } from './equationAngles';
+import type {
+  TypeABEquationCollection, TypeABEquation,
+  TypeADEquationCollection, TypeADEquation,
+  TypeBCEquationCollection, TypeBCEquation,
+} from './equationAngles';
 import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   abEqn: TypeABEquation;
+  adEqn: TypeADEquation;
+  bcEqn: TypeBCEquation;
   _abEqn: TypeABEquationCollection;
-  _abEqnDescription: DiagramElementPrimative;
-  // _rect: DiagramElementPrimative;
+  // _abEqnDescription: DiagramElementPrimative;
+  _adEqn: TypeADEquationCollection;
+  // _adEqnDescription: DiagramElementPrimative;
+  _bcEqn: TypeBCEquationCollection;
+  // _bcEqnDescription: DiagramElementPrimative;
   _rect: {
     _rightAngle1: TypeAngle;
     _rightAngle2: TypeAngle;
@@ -274,14 +283,11 @@ export default class RectCollection extends CommonDiagramCollection {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);
     this.bcEqn = makeBCEquation(this.diagram, this.layout);
-    // this.rectEqn = this.eqnAB;
-    const makeNav = (eqn) => {
-      return makeEquationNavigator(
-        this.diagram, eqn, 0.07, new Point(1.1, 0),
-        this.layout.colors.diagram.disabled,
-        this.layout.colors.diagram.disabledDark,
-      );
-    };
+    const makeNav = eqn => makeEquationNavigator(
+      this.diagram, eqn, 0.07, new Point(1.1, 0),
+      this.layout.colors.diagram.disabled,
+      this.layout.colors.diagram.disabledDark,
+    );
     const navAB = makeNav(this.abEqn);
     const navAD = makeNav(this.adEqn);
     const navBC = makeNav(this.bcEqn);

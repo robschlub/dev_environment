@@ -7,7 +7,7 @@ import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../js/diagram/Element';
 import { Equation } from '../../../../js/diagram/DiagramElements/Equation/GLEquation';
-import * as html from '../../../../js/tools/htmlGenerator';
+// import * as html from '../../../../js/tools/htmlGenerator';
 
 export type TypeABEquationCollection = {
   _a: DiagramElementPrimative;
@@ -19,8 +19,10 @@ export type TypeABEquationCollection = {
   _equals: DiagramElementPrimative;
   _m90l: DiagramElementPrimative;
   _m90r: DiagramElementPrimative;
-  _mal: DiagramElementPrimative;
-  _mar: DiagramElementPrimative;
+  _ml: DiagramElementPrimative;
+  _al: DiagramElementPrimative;
+  _mr: DiagramElementPrimative;
+  _ar: DiagramElementPrimative;
   _strike1: DiagramElementPrimative;
   _strike2: DiagramElementPrimative;
   _strike3: DiagramElementPrimative;
@@ -36,7 +38,6 @@ export type TypeABEquation = {
 export function makeABEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
   const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
-  // eqnDescription.isTouchable = true;
   const strikeColor = layout.colors.diagram.disabledDark;
 
   const colAngle = layout.colors.angles;
@@ -201,6 +202,25 @@ export function makeABEquation(diagram: Diagram, layout: Object) {
   return eqn;
 }
 
+
+export type TypeADEquationCollection = {
+  _a: DiagramElementPrimative;
+  _d: DiagramElementPrimative;
+  __90: DiagramElementPrimative;
+  _plus1: DiagramElementPrimative;
+  _equals: DiagramElementPrimative;
+  _ml: DiagramElementPrimative;
+  _al: DiagramElementPrimative;
+  _mr: DiagramElementPrimative;
+  _ar: DiagramElementPrimative;
+  _strike1: DiagramElementPrimative;
+  _strike2: DiagramElementPrimative;
+} & DiagramElementCollection;
+
+export type TypeADEquation = {
+  collection: TypeABEquationCollection;
+} & Equation;
+
 export function makeADEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
   const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
@@ -294,6 +314,29 @@ export function makeADEquation(diagram: Diagram, layout: Object) {
   return eqn;
 }
 
+export type TypeBCEquationCollection = {
+  _a: DiagramElementPrimative;
+  _c: DiagramElementPrimative;
+  _l90: DiagramElementPrimative;
+  _r90: DiagramElementPrimative;
+  _minus: DiagramElementPrimative;
+  _plus: DiagramElementPrimative;
+  _equals: DiagramElementPrimative;
+  _lm90: DiagramElementPrimative;
+  _rm90: DiagramElementPrimative;
+  _lcalc0: DiagramElementPrimative;
+  _rcalc0: DiagramElementPrimative;
+  _lplus: DiagramElementPrimative;
+  _la: DiagramElementPrimative;
+  _rplus: DiagramElementPrimative;
+  _ra: DiagramElementPrimative;
+  _strike1: DiagramElementPrimative;
+  _strike2: DiagramElementPrimative;
+} & DiagramElementCollection;
+
+export type TypeBCEquation = {
+  collection: TypeABEquationCollection;
+} & Equation;
 
 export function makeBCEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();

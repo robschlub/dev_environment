@@ -253,6 +253,7 @@ export type TypeLine = {
   setEndPoints: (Point, Point, number) => void;
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
+  pulseWidth: () => void;
 
 } & DiagramElementCollection;
 

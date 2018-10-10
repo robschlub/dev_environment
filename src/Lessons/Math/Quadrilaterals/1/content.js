@@ -2,9 +2,9 @@
 import {
   LessonContent,
 } from '../../../../js/Lesson/LessonContent';
-import {
-  Point,
-} from '../../../../js/diagram/tools/g2';
+// import {
+//   Point,
+// } from '../../../../js/diagram/tools/g2';
 import {
   click, centerV, highlight, clickWord, highlightWord,
 } from '../../../../js/tools/htmlGenerator';
