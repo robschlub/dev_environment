@@ -253,6 +253,24 @@ function duplicateFromTo(
   });
 }
 
+function generateUniqueId(seed: string = '') {
+  const randomString = s => `${s}${Math.floor(Math.random() * 1000000)}`;
+  let seedToUse = seed;
+  if (seedToUse.length === 0) {
+    seedToUse = 'id_random_';
+  }
+  let idExists = true;
+  let newId = randomString(seedToUse);
+  while (idExists) {
+    newId = randomString(seedToUse);
+    const element = document.getElementById(newId);
+    if (element == null) {
+      idExists = false;
+    }
+  }
+  return newId;
+}
+
 function isTouchDevice() {
   const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
   const mq = query => window.matchMedia(query).matches;
@@ -275,4 +293,5 @@ export {
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
   colorArrayToRGBA, addToObject, duplicateFromTo, isTouchDevice,
+  generateUniqueId,
 };
