@@ -56,6 +56,9 @@ class Content extends LessonContent {
       //   diag._answerBox.disable();
       //   diag.moveToFuturePositions(1, done);
       // },
+      setSteadyState: () => {
+        diag.showCheck();
+      }
       // setSteadyState: () => {
       //   diag.setFuturePositions();
       //   diag.showAnglesAndSides();
