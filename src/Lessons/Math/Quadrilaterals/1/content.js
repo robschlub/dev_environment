@@ -63,6 +63,23 @@ class Content extends LessonContent {
     rect.adEqn.changeDescription('3', 'No |a| remaining on left side, so can be removed.', mods);
     rect.adEqn.changeDescription('4', 'End with |d| in terms of |a|.', mods);
 
+    mods = {
+      _90ma: highlightWord('90º - a', colors.angles),
+      c: highlight(colors.angles),
+      a: highlight(colors.angles),
+    };
+    rect.bcEqn.changeDescription('0', 'Angles |_90ma| and |c| combine to make the rectangle corner, which is 90º.', mods);
+    rect.bcEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
+    rect.bcEqn.changeDescription('2', '90º is cancelled and goes to 0º on the left side of the equation.');
+    rect.bcEqn.changeDescription('3', 'The left side has other terms, so the 0º can be removed.');
+    rect.bcEqn.changeDescription('4', '90º is cancelled and goes to 0º on the right side of the equation.');
+    rect.bcEqn.changeDescription('5', 'The right side has no other terms, so it is just 0º.');
+    rect.bcEqn.changeDescription('6', 'Add |a| to both sides of the equation.', mods);
+    rect.bcEqn.changeDescription('7', '|a| cancels on left side of equation.', mods);
+    rect.bcEqn.changeDescription('8', 'No |a| remaining on left side, so can be removed.', mods);
+    rect.bcEqn.changeDescription('9', 'Right side simplifies to one line.');
+    rect.bcEqn.changeDescription('10', 'Remove 0º on right side, as it adds nothing.');
+    rect.bcEqn.changeDescription('11', 'Results in |c| being equal to |a|.', mods);
 
     common = {
       setContent: '',
@@ -260,6 +277,9 @@ class Content extends LessonContent {
     common.modifiers = {
       b: highlight(colors.angles),
       a: highlight(colors.angles),
+      c: highlight(colors.angles),
+      d: highlight(colors.angles),
+      _90ma: highlightWord('90º - a', colors.angles),
     };
 
     this.addSection(common);
@@ -294,7 +314,6 @@ class Content extends LessonContent {
     };
 
     this.addSection(common, {
-      title: 'adsf',
       interactiveElements: [
         rect._navAB._prev,
         rect._navAB._prevDescription,
@@ -328,12 +347,6 @@ class Content extends LessonContent {
     common.setContent = `<p>
       Next, consider the |second triangle| that forms the rectangle.
     </p>`;
-    common.modifiers = {
-      a: highlight(colors.angles),
-      b: highlight(colors.angles),
-      c: highlight(colors.angles),
-      d: highlight(colors.angles),
-    };
     common.setSteadyState = () => {
       rect._rect._angleB.showForm('1');
       rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
@@ -415,6 +428,48 @@ class Content extends LessonContent {
         rect._rect._angleD.showForm('1');
         rect._navAD.updateButtons();
         rect.pulseAngleD();
+      },
+    });
+
+    common.setContent = `<p>
+      Next consider angle |c|. It forms a rectangle corner with angle |_90ma|.
+    </p>`;
+    common.setSteadyState = () => {
+      rect._rect._angleB.showForm('1');
+      rect._rect._angleC.showForm('0');
+      rect._rect._angleD.showForm('1');
+      rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
+    };
+    this.addSection(common);
+
+    common.setEnterState = () => {
+      rect._rect._angleA.setColor(colors.diagram.disabledDark);
+      rect._rect._angleD.setColor(colors.diagram.disabledDark);
+      rect._rect._lineA.setColor(colors.diagram.disabledDark);
+      rect._rect._lineD.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle2.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
+      rect._navBC.setPosition(layout.adEqnPosition);
+    };
+    this.addSection(common);
+
+    common.setContent = `<p>
+      Similar to the other angles, we will find |c| in terms of angle |a|.
+    </p>`;
+    this.addSection(common);
+
+    this.addSection(common, {
+      title: 'adsf',
+      setSteadyState: () => {
+        rect._rect._angleB.showForm('1');
+        rect._rect._angleC.showForm('0');
+        rect._rect._angleD.showForm('1');
+        rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
+        rect._navBC.showAll();
+        rect.bcEqn.showForm('0');
+        // rect._rect._angleD.showForm('1');
+        rect._navBC.updateButtons();
+        // rect.pulseAngleD();
       },
     });
   }

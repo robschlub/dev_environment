@@ -293,3 +293,205 @@ export function makeADEquation(diagram: Diagram, layout: Object) {
   eqn.setCurrentForm('0');
   return eqn;
 }
+
+
+export function makeBCEquation(diagram: Diagram, layout: Object) {
+  const eqn = diagram.equation.makeEqn();
+  const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
+  const strikeColor = layout.colors.diagram.disabledDark;
+
+  const colAngle = layout.colors.angles;
+  const colText = layout.colors.diagram.text.base;
+  eqn.createElements(
+    {
+      a: ['a', colAngle],
+      c: ['c', colAngle],
+      l90: ['90º', colAngle],
+      r90: '90º',
+      minus: [' - ', colAngle],
+      plus: ' + ',
+      equals: ' = ',
+
+      lm90: '- 90º',
+      rm90: '- 90º',
+
+      lcalc0: '0º',
+      rcalc0: '0º',
+
+      lplus: ['+ ', colText],
+      la: ['a', colAngle],
+      rplus: [' + ', colText],
+      ra: ['a', colAngle],
+
+      strike1: diagram.equation.xStrike(strikeColor),
+      strike2: diagram.equation.xStrike(strikeColor),
+    },
+    layout.colors.diagram.text.base,
+    eqnDescription,
+    new Point(0.9, -0.052).add(layout.rectEqnPosition),
+  );
+  eqn.formAlignment.fixTo = eqn.collection._equals;
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'middle';
+  eqn.formAlignment.scale = 1.0;
+
+  eqn.addForm('0', [
+    'l90', 'minus', 'a', 'plus', 'c',
+    'equals',
+    'r90',
+  ]);
+
+  eqn.addForm('1', [
+    eqn.annotation(
+      ['l90', 'minus', 'a', 'plus', 'c'],
+      [eqn.ann('lm90', 'center', -0.4, 'center', 'top')],
+    ),
+    'equals',
+    eqn.annotation(
+      'r90',
+      [eqn.ann('rm90', 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('2', [
+    eqn.annotation(
+      [eqn.annotation(
+        eqn.strike('l90', 'strike1'),
+        [eqn.ann(
+          'lcalc0',
+          'right', 1.4, 'left', 'bottom',
+        )],
+      ), 'minus', 'a', 'plus', 'c'],
+      [eqn.ann(
+        eqn.strike('lm90', 'strike2'),
+        'center', -0.4, 'center', 'top',
+      )],
+    ),
+    'equals',
+    eqn.annotation(
+      'r90',
+      [eqn.ann('rm90', 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('3', [
+    'minus', 'a', 'plus', 'c',
+    'equals',
+    eqn.annotation(
+      'r90',
+      [eqn.ann('rm90', 'center', -0.4, 'center', 'top')],
+    ),
+  ]);
+
+  eqn.addForm('4', [
+    'minus', 'a', 'plus', 'c',
+    'equals',
+    eqn.annotation(
+      eqn.annotation(
+        eqn.strike('r90', 'strike1'),
+        [eqn.ann(
+          'rcalc0',
+          'right', 1.4, 'left', 'bottom',
+        )],
+      ),
+      [eqn.ann(
+        eqn.strike('rm90', 'strike2'),
+        'center', -0.4, 'center', 'top',
+      )],
+    ),
+  ]);
+
+  eqn.addForm('5', [
+    'minus', 'a', 'plus', 'c',
+    'equals',
+    'rcalc0',
+  ]);
+
+  eqn.addForm('6', [
+    eqn.annotation(
+      ['minus', 'a', 'plus', 'c'],
+      [
+        eqn.ann(
+          ['lplus', 'la'],
+          'center', -0.4, 'center', 'top',
+        ),
+      ],
+    ),
+    'equals',
+    eqn.annotation(
+      'rcalc0',
+      [
+        eqn.ann(
+          ['rplus', 'ra'],
+          'center', -0.4, 'center', 'top',
+        ),
+      ],
+    ),
+  ]);
+
+  eqn.addForm('7', [
+    eqn.annotation(
+      [eqn.strike(['minus', 'a'], 'strike1'), 'plus', 'c'],
+      [
+        eqn.ann(
+          eqn.strike(['lplus', 'la'], 'strike2'),
+          'center', -0.4, 'center', 'top',
+        ),
+      ],
+    ),
+    'equals',
+    eqn.annotation(
+      'rcalc0',
+      [
+        eqn.ann(
+          ['rplus', 'ra'],
+          'center', -0.4, 'center', 'top',
+        ),
+      ],
+    ),
+  ]);
+
+  eqn.addForm('8', [
+    'c',
+    'equals',
+    eqn.annotation(
+      'rcalc0',
+      [
+        eqn.ann(
+          ['rplus', 'ra'],
+          'center', -0.4, 'center', 'top',
+        ),
+      ],
+    ),
+  ]);
+
+  eqn.addForm('9', [
+    'c',
+    'equals',
+    'rcalc0', 'rplus', 'ra',
+  ]);
+
+  eqn.addForm('10', [
+    'c',
+    'equals',
+    'ra',
+  ]);
+
+  eqn.addForm('11', [
+    'c',
+    'equals',
+    'ra',
+  ]);
+
+  const nextForm = () => {
+    eqn.nextForm(2);
+    diagram.animateNextFrame();
+  };
+
+  eqn.collection.onClick = nextForm.bind(this);
+  eqn.collection.isTouchable = true;
+  eqn.collection.touchInBoundingRect = true;
+  eqn.collection.setPosition(layout.rectEqnPosition);
+  eqn.setCurrentForm('0');
+  return eqn;
+}

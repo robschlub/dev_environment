@@ -22,7 +22,9 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
-import { makeABEquation, makeADEquation } from './equationAngles';
+import {
+  makeABEquation, makeADEquation, makeBCEquation,
+} from './equationAngles';
 import type { TypeABEquationCollection, TypeABEquation } from './equationAngles';
 import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
@@ -183,6 +185,7 @@ export default class RectCollection extends CommonDiagramCollection {
   addEqn() {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);
+    this.bcEqn = makeBCEquation(this.diagram, this.layout);
     // this.rectEqn = this.eqnAB;
     const makeNav = (eqn) => {
       return makeEquationNavigator(
@@ -193,10 +196,13 @@ export default class RectCollection extends CommonDiagramCollection {
     };
     const navAB = makeNav(this.abEqn);
     const navAD = makeNav(this.adEqn);
+    const navBC = makeNav(this.bcEqn);
     navAB.setPosition(this.layout.rectEqnPosition);
     navAD.setPosition(this.layout.adEqnPosition);
+    navBC.setPosition(this.layout.bcEqnPosition);
     this.add('navAB', navAB);
     this.add('navAD', navAD);
+    this.add('navBC', navBC);
   }
 
   constructor(
