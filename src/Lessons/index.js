@@ -98,9 +98,9 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
-    'Quadrilaterals',
-    '/Lessons/Math/Quadrilaterals',
-    'quadrilateral',
+    'Quadrangles',
+    '/Lessons/Math/Quadrangles',
+    'quadrangles',
     [
       '1',
       'quiz',

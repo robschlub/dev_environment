@@ -1240,7 +1240,7 @@ export class EquationForm extends Elements {
     this.modifiers = {};
   }
 
-  _dup(collection: DiagramElementCollection) {
+  _dup(collection: DiagramElementCollection = this.collection) {
     const equationCopy = new EquationForm(collection);
     // equationCopy.collection = collection;
 

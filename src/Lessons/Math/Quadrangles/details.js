@@ -2,8 +2,8 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Quadrilaterals',
-  uid: 'quadrilateral',
+  title: 'Quadrangles',
+  uid: 'quadrangles',
   dependencies: ['congruent_triangles'],
 };
 
