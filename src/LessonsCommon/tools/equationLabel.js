@@ -45,16 +45,25 @@ export default function makeEquationLabel(
     labelTextOrEquation.forEach((labelText, index) => {
       eqn.addForm(`${index}`, [`_${index}`]);
     });
-    // eqn.addForm('base', ['base']);
     eqn.setCurrentForm('0');
   }
 
-  // function updateScale(parentScale: Point) {
-  //   eqn.collection.transform.updateScale(
-  //     parentScale.x / Math.abs(parentScale.x),
-  //     parentScale.y / Math.abs(parentScale.y),
-  //   );
-  // }
+  function setText(text: string) {
+    const form = eqn.getCurrentForm();
+    if (form != null) {
+      const key = Object.keys(form.collection.elements)[0];
+      const textObject = form.collection.elements[key].vertices;
+      if (textObject != null) {
+        textObject.setText(text);
+      }
+      form.arrange(
+        eqn.formAlignment.scale,
+        eqn.formAlignment.hAlign,
+        eqn.formAlignment.vAlign,
+        eqn.formAlignment.fixTo,
+      );
+    }
+  }
 
   function updateRotation(
     labelAngle: number,
@@ -84,6 +93,7 @@ export default function makeEquationLabel(
   const label = {
     eqn,
     updateRotation,
+    setText,
     // updateScale,
   };
 

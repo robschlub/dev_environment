@@ -5,7 +5,7 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 import {
-  Transform, Point,
+  Transform, Point, Line,
 } from '../../js/diagram/tools/g2';
 import {
   roundNum,
@@ -18,7 +18,7 @@ export type TypeAngle = {
   eqn: Equation;
   _arc: DiagramElementPrimative;
   _label: {
-    _base: DiagramElementPrimative
+    _base: DiagramElementPrimative;
   } & DiagramElementCollection;
   label: null | {
     radius: number;
@@ -37,6 +37,8 @@ export type TypeAngle = {
   showRealAngle: boolean;
   realAngleDecimals: number;
   currentAngle: number;
+  updateLabel: (?number) => void;
+  updateAngleFromPoints: (Point, Point, Point, ?boolean, ?number, ?number) => void;
 } & DiagramElementCollection;
 
 export function makeAngle(
@@ -86,6 +88,47 @@ export function makeAngle(
     });
     angle.add('label', eqnLabel.eqn.collection);
     angle.showForm();
+  };
+
+  angle.updateAngleFromPoints = function updateAngleFromPoints(
+    p1: Point,
+    p2: Point,
+    p3: Point,
+    updatePosition: boolean = true,
+    labelRotationOffset: number = 0,
+    angleToTestRightAngle: number | null = null,
+  ) {
+    const startLine = new Line(p2, p1);
+    const start = startLine.angle();
+    const stopLine = new Line(p2, p3);
+    const stopAngle = stopLine.angle();
+    let size = stopAngle - start;
+    if (size < 0) {
+      size += Math.PI * 2;
+    }
+    let angleToTestRightAngleToUse = angleToTestRightAngle;
+    if (angleToTestRightAngleToUse == null) {
+      angleToTestRightAngleToUse = size;
+    }
+    angle.updateAngle(
+      start, size, labelRotationOffset,
+      angleToTestRightAngleToUse,
+    );
+    if (updatePosition) {
+      angle.setPosition(p2);
+    }
+  };
+
+  angle.updateLabel = function updateLabels(labelRotationOffset: number | null = null) {
+    const start = this.transform.r();
+    const size = this.currentAngle;
+    let labelRot = labelRotationOffset;
+    if (labelRot == null) {
+      labelRot = angle._label.transform.r();
+    }
+    if (start != null && labelRot != null) {
+      angle.updateAngle(start, size, -labelRot - start);
+    }
   };
 
   angle.updateAngle = function updateAngle(
@@ -142,7 +185,7 @@ export function makeAngle(
 
   angle.setLabel = (newLabel: string) => {
     if (angle._label._base) {
-      angle._label._base.vertices.setText(newLabel);
+      angle.label.setText(newLabel);
     }
   };
 

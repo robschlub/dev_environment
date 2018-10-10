@@ -7,7 +7,7 @@
 //  - normAngle
 
 import {
-  roundNum, decelerate, clipMag, clipValue,
+  roundNum, decelerate, clipMag, clipValue, rand2D,
 } from './mathtools';
 // import { Console } from '../../tools/tools';
 import * as m2 from './m2';
@@ -1687,6 +1687,16 @@ function threePointAngle(p2: Point, p1: Point, p3: Point) {
   return Math.acos((p12 ** 2 + p13 ** 2 - p23 ** 2) / (2 * p12 * p13));
 }
 
+function randomPoint(withinRect: Rect) {
+  const randPoint = rand2D(
+    withinRect.left,
+    withinRect.bottom,
+    withinRect.right,
+    withinRect.top,
+  );
+  return new Point(randPoint.x, randPoint.y);
+}
+
 export {
   point,
   Point,
@@ -1713,4 +1723,5 @@ export {
   getDeltaAngle,
   normAngleTo90,
   threePointAngle,
+  randomPoint,
 };

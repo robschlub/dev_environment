@@ -1,16 +1,16 @@
 // @flow
-import { Transform, Point } from '../../../../js/diagram/tools/g2';
+import { Transform, Point, Rect, randomPoint } from '../../../../js/diagram/tools/g2';
 import {
-  randElements, rand, removeRandElement, randElement,
+  randElements, rand, removeRandElement, randElement, roundNum,
 } from '../../../../js/diagram/tools/mathtools';
 import lessonLayout from './layout';
 // import * as html from '../../../../js/tools/htmlGenerator';
 
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
-// import {
-//   DiagramElementPrimative,
-// } from '../../../../js/diagram/Element';
+import {
+  DiagramElementPrimative, DiagramElementCollection,
+} from '../../../../js/diagram/Element';
 // import TriangleCollection from '../common/diagramCollectionTriangle';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 // import TotalAngleTriangleCollection from '../common/diagramCollectionTriangles';
@@ -18,15 +18,89 @@ import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 // import type {
 //   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel, TypeTrianglePoints,
 // } from '../../../../LessonsCommon/tools/triangle';
+import { makeAngle } from '../../../../LessonsCommon/tools/angle';
+import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
 export default class DiagramCollection extends CommonQuizMixin(CommonDiagramCollection) {
-  // _triangle: {
-  //   _tri1: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel & TypeTrianglePoints;
-  //   _tri2: TypeTriangleAngle & TypeTriangle & TypeTriangleLabel & TypeTrianglePoints;
-  // } & TotalAngleTriangleCollection;
 
-  answer: 'possible' | 'not possible';
+  _quad: {
+    _angle1: TypeAngle;
+    _angle2: TypeAngle;
+    _angle3: TypeAngle;
+    _angle4: TypeAngle;
+    _line: DiagramElementPrimative;
+  } & DiagramElementCollection;
+
+  answer: number;
   hint: 'checkDimensions' | 'incorrect';
+  p1: Point;
+  p2: Point;
+  p3: Point;
+  p4: Point;
+
+  randomQuadPoints() {
+    this.p1 = randomPoint(this.layout.pointRects.quad1);
+    this.p2 = randomPoint(this.layout.pointRects.quad2);
+    this.p3 = randomPoint(this.layout.pointRects.quad3);
+    this.p4 = randomPoint(this.layout.pointRects.quad4);
+  }
+
+  updateQuad() {
+    this._quad._line.vertices.change([this.p1, this.p2, this.p3, this.p4]);
+  }
+
+  makeQuad() {
+    const quad = this.diagram.shapes.collection(new Transform('quad')
+      .rotate(0).translate(0, 0));
+    const line = this.diagram.shapes.polyLine(
+      [new Point(-1, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1)],
+      true, this.layout.lineWidth,
+      this.layout.colors.lines, 'onSharpAnglesOnly',
+    );
+
+    const makeA = () => {
+      const angle = makeAngle(
+        this.diagram, this.layout.angleRadius,
+        this.layout.lineWidth, this.layout.angleSides,
+        this.layout.colors.angles,
+      );
+      angle.addLabel('', this.layout.angleRadius + this.layout.angleLabelOffset);
+      return angle;
+    };
+    quad.add('angle1', makeA());
+    quad.add('angle2', makeA());
+    quad.add('angle3', makeA());
+    quad.add('angle4', makeA());
+    quad.add('line', line);
+    quad.setPosition(this.layout.quadPosition);
+    return quad;
+  }
+
+  updateAngles() {
+    const {
+      p1, p2, p3, p4,
+    } = this;
+    const quadRot = this._quad.transform.r();
+    if (quadRot != null) {
+      this._quad._angle1.updateAngleFromPoints(p2, p1, p4, true, quadRot);
+      this._quad._angle2.updateAngleFromPoints(p3, p2, p1, true, quadRot);
+      this._quad._angle3.updateAngleFromPoints(p4, p3, p2, true, quadRot);
+      this._quad._angle4.updateAngleFromPoints(p1, p4, p3, true, quadRot);
+    }
+    const knownAngles = [
+      this._quad._angle1, this._quad._angle2,
+      this._quad._angle3, this._quad._angle4,
+    ];
+    const unknownAngle = removeRandElement(knownAngles);
+    this.answer = roundNum(unknownAngle.currentAngle * 180 / Math.PI, 0);
+    knownAngles.forEach((angle) => {
+      angle.setLabel(`${roundNum(angle.currentAngle * 180 / Math.PI, 0)}º`);
+      angle.updateLabel();
+    });
+    unknownAngle.setLabel('?');
+    unknownAngle.updateLabel();
+    unknownAngle.setColor(this.layout.colors.diagram.passive)
+  }
 
   constructor(
     diagram: LessonDiagram,
@@ -34,13 +108,14 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   ) {
     const layout = lessonLayout();
     super(
-      diagram, layout, 'q1', {
-        checkDimensions: {
-          answer: 'Incorrect',
-          details: 'Make sure to check the dimensions are the same',
-        },
-      }, transform,
+      diagram, layout, 'q1', {}, transform,
     );
+    this.add('quad', this.makeQuad());
+    this.randomQuadPoints();
+    this.updateQuad();
+    this.updateAngles();
+    this.add('input', this.makeEntryBox('a1', '?', 3));
+    this._input.setPosition(this.layout.input);
 
     // this.add('triangle', new TotalAngleTriangleCollection(diagram, this.layout));
     // this._triangle._tri1.addPoint(1, 0.1, [0, 0, 0, 0.01], true);
@@ -71,11 +146,11 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     // this._triangle.hasTouchableElements = true;
     // this._triangle._tri1.hasTouchableElements = false;
 
-    this.add('answerBox', this.makeMultipleChoice(
-      'congruent_tri_1',
-      ['Yes', 'No'],
-    ));
-    this._answerBox.setPosition(this.layout.answerBox);
+    // this.add('answerBox', this.makeMultipleChoice(
+    //   'congruent_tri_1',
+    //   ['Yes', 'No'],
+    // ));
+    // this._answerBox.setPosition(this.layout.answerBox);
     this.hint = 'incorrect';
   }
 
