@@ -209,7 +209,7 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: `<p>
-        We know that all the angles are equal and 90º.
+        The angles are, as they are all equal to each other at 90º.
       </p>`,
     });
 
@@ -227,14 +227,14 @@ class Content extends LessonContent {
     ];
     this.addSection(common);
 
-    this.addSection(common, {
-      setContent: `<p>
-        These triangles |look| the same, or in other words look |congruent|. If they are, then that will tell us some of the sides will be equal to others.
-      </p>`,
-      modifiers: {
-        congruent: click(qr._congruent.show, [qr._congruent], colors.diagram.action),
-      },
-    });
+    // this.addSection(common, {
+    //   setContent: `<p>
+    //     These triangles |look| the same, or in other words look |congruent|. If they are, then that will tell us some of the sides will be equal to others.
+    //   </p>`,
+    //   modifiers: {
+    //     congruent: click(qr._congruent.show, [qr._congruent], colors.diagram.action),
+    //   },
+    // });
 
     common.setContent = `<p>
       Let's start by looking at just one triangle.
@@ -248,7 +248,7 @@ class Content extends LessonContent {
       rect._rect._lineD, rect._rect._lineD._line,
     ];
     common.setEnterState = () => {
-      rect._nav.setEquation(rect.abEqn);
+      // rect._navAB.setEquation(rect.abEqn);
       rect._rect._angleB.showForm('0');
       rect._rect._lineC.setColor(colors.diagram.disabledDark);
       rect._rect._lineD.setColor(colors.diagram.disabledDark);
@@ -280,19 +280,14 @@ class Content extends LessonContent {
     this.addSection(common);
 
     common.setContent = `<p>
-      We know the |third_angle| is a |right angle|, or |90º|, so we can find angle |b| in terms of angle |a|.
+      The |third_angle| is a |right angle|, and all angles add up to |_180|, so we can find angle |b| in terms of |a|.
     </p>`;
     common.modifiers = Object.assign(common.modifiers, {
       third_angle: click(rect.pulseRightAngles, [rect], colors.angles),
+      _180: clickWord('180º', 'id__lesson__rectangle_180', qr._tri.show, [qr._tri], colors.diagram.action),
     });
     this.addSection(common);
 
-    // common.setSteadyState = () => {
-    //   rect._rect._angleB.showForm('0');
-    //   rect.rectEqn.showForm('0');
-    //   console.log("asdf");
-    //   rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-    // };
     common.transitionFromAny = (done) => {
       rect.moveToScenario(rect._rect, layout.rect.scenarios.analysis, 1, done);
     };
@@ -300,37 +295,37 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: 'adsf',
       interactiveElements: [
-        rect._nav._prev,
-        rect._nav._prevDescription,
-        rect._nav._refresh,
+        rect._navAB._prev,
+        rect._navAB._prevDescription,
+        rect._navAB._refresh,
       ],
       setSteadyState: () => {
-        rect._nav.showAll();
+        rect._navAB.showAll();
         rect._rect._angleB.showForm('0');
         rect.abEqn.showForm('0');
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-        rect._nav.updateButtons();
+        rect._navAB.updateButtons();
       },
     });
 
     this.addSection(common, {
       interactiveElements: [
-        rect._nav._prev,
-        rect._nav._prevDescription,
-        rect._nav._refresh,
+        rect._navAB._prev,
+        rect._navAB._prevDescription,
+        rect._navAB._refresh,
       ],
       setSteadyState: () => {
-        rect._nav.showAll();
+        rect._navAB.showAll();
         rect._rect._angleB.showForm('1');
         rect.abEqn.showForm('6');
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-        rect._nav.updateButtons();
+        rect._navAB.updateButtons();
         rect.pulseAngleB();
       },
     });
 
     common.setContent = `<p>
-      Next we consider the second triangle that forms the rectangle.
+      Next, consider the |second triangle| that forms the rectangle.
     </p>`;
     common.modifiers = {
       a: highlight(colors.angles),
@@ -386,25 +381,27 @@ class Content extends LessonContent {
     </p>`;
     this.addSection(common);
 
+    common.setEnterState = () => {
+      rect._rect._angleB.setColor(colors.diagram.disabledDark);
+      rect._rect._angleC.setColor(colors.diagram.disabledDark);
+      rect._rect._lineB.setColor(colors.diagram.disabledDark);
+      rect._rect._lineC.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle2.setColor(colors.diagram.disabledDark);
+      rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
+      rect._navAD.setPosition(layout.adEqnPosition);
+    };
+    this.addSection(common);
+
     common.setContent = `<p>
     Therefore, we can show angle |d| in terms of angle |a|.
     </p>`;
     this.addSection(common);
 
-
-    common.setEnterState = () => {
-      rect._nav.setEquation(rect.adEqn);
-      rect._rect._angleA.setColor(colors.diagram.disabledDark);
-      rect._rect._angleB.setColor(colors.diagram.disabledDark);
-      rect._rect._lineA.setColor(colors.diagram.disabledDark);
-      rect._rect._lineB.setColor(colors.diagram.disabledDark);
-      rect._rect._rightAngle2.setColor(colors.diagram.disabledDark);
-    };
     this.addSection(common, {
       setSteadyState: () => {
         common.setSteadyState();
-        rect._nav.showAll();
-        rect._nav.updateButtons();
+        rect._navAD.showAll();
+        rect._navAD.updateButtons();
         rect.adEqn.showForm('0');
       },
     });
@@ -412,10 +409,10 @@ class Content extends LessonContent {
     this.addSection(common, {
       setSteadyState: () => {
         common.setSteadyState();
-        rect._nav.showAll();
+        rect._navAD.showAll();
         rect.adEqn.showForm('4');
         rect._rect._angleD.showForm('1');
-        rect._nav.updateButtons();
+        rect._navAD.updateButtons();
         rect.pulseAngleD();
       },
     });

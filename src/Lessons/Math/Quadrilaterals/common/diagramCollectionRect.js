@@ -184,14 +184,19 @@ export default class RectCollection extends CommonDiagramCollection {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);
     // this.rectEqn = this.eqnAB;
-
-    const nav = makeEquationNavigator(
-      this.diagram, this.abEqn, 0.07, new Point(1.1, 0),
-      this.layout.colors.diagram.disabled,
-      this.layout.colors.diagram.disabledDark,
-    );
-    nav.setPosition(this.layout.rectEqnPosition);
-    this.add('nav', nav);
+    const makeNav = (eqn) => {
+      return makeEquationNavigator(
+        this.diagram, eqn, 0.07, new Point(1.1, 0),
+        this.layout.colors.diagram.disabled,
+        this.layout.colors.diagram.disabledDark,
+      );
+    };
+    const navAB = makeNav(this.abEqn);
+    const navAD = makeNav(this.adEqn);
+    navAB.setPosition(this.layout.rectEqnPosition);
+    navAD.setPosition(this.layout.adEqnPosition);
+    this.add('navAB', navAB);
+    this.add('navAD', navAD);
   }
 
   constructor(
