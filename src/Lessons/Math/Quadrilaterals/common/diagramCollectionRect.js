@@ -186,6 +186,64 @@ export default class RectCollection extends CommonDiagramCollection {
     this._rect._angleC.pulseScaleNow(1, 1.5);
   }
 
+  pulseAngleA() {
+    this._rect._angleA.pulseScaleNow(1, 1.5);
+  }
+
+  showASA1Colors() {
+    const disabled = this.layout.colors.diagram.disabledDark;
+    const line = this.layout.colors.lines;
+    const angle = this.layout.colors.angles;
+    this._rect._rightAngle2.setColor(disabled);
+    this._rect._rightAngle4.setColor(disabled);
+    this._rect._lineA.setColor(disabled);
+    this._rect._lineB.setColor(disabled);
+    this._rect._lineC.setColor(disabled);
+    this._rect._lineD.setColor(disabled);
+    this._rect._lineE.setColor(line);
+    this._rect._angleA.setColor(angle);
+    this._rect._angleB.setColor(angle);
+    this._rect._angleC.setColor(disabled);
+    this._rect._angleD.setColor(disabled);
+    this.pulseAngleA();
+    this.pulseAngleB();
+    this.diagram.animateNextFrame();
+  }
+
+  showASA2Colors() {
+    const disabled = this.layout.colors.diagram.disabledDark;
+    const line = this.layout.colors.lines;
+    const angle = this.layout.colors.angles;
+    this._rect._rightAngle2.setColor(disabled);
+    this._rect._rightAngle4.setColor(disabled);
+    this._rect._lineA.setColor(disabled);
+    this._rect._lineB.setColor(disabled);
+    this._rect._lineC.setColor(disabled);
+    this._rect._lineD.setColor(disabled);
+    this._rect._lineE.setColor(line);
+    this._rect._angleA.setColor(disabled);
+    this._rect._angleB.setColor(disabled);
+    this._rect._angleC.setColor(angle);
+    this._rect._angleD.setColor(angle);
+    this.pulseAngleC();
+    this.pulseAngleD();
+    this.diagram.animateNextFrame();
+  }
+
+  toggleASAColors() {
+    const disabled = this.layout.colors.diagram.disabledDark;
+    console.log(this._rect._angleA._arc.color, disabled)
+    if (this._rect._angleA._arc.color[0] === disabled[0]
+      && this._rect._angleA._arc.color[1] === disabled[1]
+      && this._rect._angleA._arc.color[2] === disabled[2]
+      && this._rect._angleA._arc.color[3] === disabled[3]
+    ) {
+      this.showASA1Colors();
+    } else {
+      this.showASA2Colors();
+    }
+  }
+
   addEqn() {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);

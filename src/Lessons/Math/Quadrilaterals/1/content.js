@@ -280,6 +280,8 @@ class Content extends LessonContent {
       c: highlight(colors.angles),
       d: highlight(colors.angles),
       _90ma: highlightWord('90º - a', colors.angles),
+      third_angle: click(rect.pulseRightAngles, [rect], colors.angles),
+      _180: clickWord('180º', 'id__lesson__rectangle_180', qr._tri.show, [qr._tri], colors.diagram.action),
     };
 
     this.addSection(common);
@@ -303,10 +305,8 @@ class Content extends LessonContent {
     common.setContent = `<p>
       The |third_angle| is a |right angle|, and all angles add up to |_180|, so we can find angle |b| in terms of |a|.
     </p>`;
-    common.modifiers = Object.assign(common.modifiers, {
-      third_angle: click(rect.pulseRightAngles, [rect], colors.angles),
-      _180: clickWord('180º', 'id__lesson__rectangle_180', qr._tri.show, [qr._tri], colors.diagram.action),
-    });
+    // common.modifiers = Object.assign(common.modifiers, {
+    // });
     this.addSection(common);
 
     common.transitionFromAny = (done) => {
@@ -466,7 +466,6 @@ class Content extends LessonContent {
     this.addSection(common);
 
     this.addSection(common, {
-      title: 'adsf',
       setSteadyState: () => {
         rect._rect._angleA.showForm('0');
         rect._rect._angleB.showForm('1');
@@ -492,6 +491,44 @@ class Content extends LessonContent {
         rect.pulseAngleC();
       },
     });
+
+    common.setContent = `<p>
+      The reason we expressed all the unknown angles in terms of angle |a| is to see similarities between the two triangles.
+    </p>`;
+    common.setSteadyState = () => {
+      rect._rect._angleA.showForm('0');
+      rect._rect._angleB.showForm('1');
+      rect._rect._angleC.showForm('1');
+      rect._rect._angleD.showForm('1');
+      rect.setScenario(rect._rect, layout.rect.scenarios.start);
+    };
+    common.transitionFromAny = (done) => {
+      rect.moveToScenario(rect._rect, layout.rect.scenarios.start, 1, done);
+    };
+    common.setEnterState = () => {};
+    this.addSection(common, {title: 'adsf'});
+
+    common.setContent = `<p>
+      In particular, there is a |similarity| in the diagonal line and the angles on either side.
+    </p>`;
+    common.modifiers = {
+      similarity: click(rect.toggleASAColors, [rect], colors.diagram.action),
+    };
+    this.addSection(common);
+
+    common.setContent = `<p>
+      When |two_triangles| have a side and adjacent angles that are equal, then they are |congruent|.
+    </p>`;
+    common.modifiers = {
+      congruent: click(qr._asa.show, [qr._asa], colors.diagram.action),
+      two_triangles: click(rect.toggleASAColors, [rect], colors.diagram.action),
+    };
+    this.addSection(common);
+
+    common.setContent = `<p>
+      As the triangles are congruent, then one triangle's sides lengths are the same as the other triangle.
+    </p>`;
+    this.addSection(common);
   }
 }
 
