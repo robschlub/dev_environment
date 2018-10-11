@@ -33,7 +33,7 @@ export default function lessonLayout() {
   const width = 1.6;
   const height = 0.8;
   layout.quadPosition = new Point(0, -0.2);
-  layout.angleRadius = 0.2;
+  layout.angleRadius = 0.25;
   layout.angleLabelOffset = 0.05;
   layout.angleSides = 200;
   layout.pointRects = {
