@@ -241,7 +241,8 @@ class Section {
         }
         let elementIsTouchable = false;
         if (element instanceof DiagramElementCollection) {
-          if (element.isTouchable || element.isMovable || element.hasTouchableElements || element.isInteractive) {
+          if (element.isTouchable || element.isMovable
+            || element.hasTouchableElements || element.isInteractive) {
             elementIsTouchable = true;
           }
         } else if (element instanceof DiagramElementPrimative) {

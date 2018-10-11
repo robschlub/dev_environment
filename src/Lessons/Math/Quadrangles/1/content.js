@@ -106,7 +106,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-          The four side lengths and four angles are |properties| of a quadrilateral. 
+          The four side lengths and four angles are |properties| of a quadrangle. 
         </p>
       `,
     });
@@ -150,7 +150,7 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: `<p>
-        As each |triangle|, has a total angle of 180º, the the total angle of a quadrangle must be two times that, or |360º|.
+        As each |triangle|, has a total angle of 180º, the total angle of a quadrangle must be two times that, or |360º|.
       </p>`,
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
@@ -238,7 +238,7 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {
       setContent: `<p>
-        Some properties of the rectangle are its four |side_lengths| and four |angles|.
+        As a quadrangle, the rectangle also has properties of four |side_lengths| and four |angles|.
       </p>`,
       modifiers: {
         side_lengths: click(rect.pulseSideLabels, [rect], colors.lines),
