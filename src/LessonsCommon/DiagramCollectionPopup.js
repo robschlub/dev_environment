@@ -143,7 +143,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     const link = this.getLinkFromString(linkOrLessonID);
     if (link) {
       a.href = link;
-      a.innerHTML = 'Go to lesson';
+      a.innerHTML = 'Go to lesson to see why';
       this.linkElement.appendChild(a);
     }
     // this.linkElement.innerHTML = `<a href=${link}>Go to lesson</a>`;
