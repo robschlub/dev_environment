@@ -21,10 +21,6 @@ export default function getLessonIndex() {
     'angles',
     [
       '1',
-      '2',
-      '3',
-      'quiz',
-      'summary',
     ],
     [
       'circles',
