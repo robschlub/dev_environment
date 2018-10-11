@@ -78,6 +78,10 @@
   background: color('site', 'primary', 'light');
 }
 
+.navigator__lesson_tile_containter_title {
+  border: none;
+}
+
 .navigator__lesson_tile_title_container {
   display: table;
   height: 100%;
@@ -104,6 +108,10 @@
 
 .navigator__lesson_tile_selected:hover {
   background: color('site', 'safe');
+}
+
+.navigator__lesson_tile_containter_title:hover {
+  background: color('site', 'safe', 'dark');
 }
 
 .navigator__lesson_shadow {
