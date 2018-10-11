@@ -329,24 +329,15 @@ export default class LessonNavigator extends React.Component
     const lessonsContainer =
       document.getElementById('id_navigator__lessons_positions_container');
     if (lessonsContainer != null && navigatorContainer != null) {
-      // const xMargin = nav.clientWidth / 2 - 180 / 2;
       const navRect = navigatorContainer.getBoundingClientRect();
       const navHeight = navRect.height;
-      const xMargin = navRect.width / 2 - this.tileWidth / 2;
-      // const xMargin = this.tileWidth
-      // const yMargin = navHeight / 2;
-      // const yMargin = window.innerHeight * 0.6 / 2;
+      // const xMargin = navRect.width / 2 - this.tileWidth / 2;
+      const xMargin = Math.min(this.tileWidth, navRect.width / 2 - this.tileWidth / 2);
       lessonsContainer.style.left = `${xMargin}px`;
-      // lessonsContainer.style.top = `${yMargin - this.tileHeight / 2}px`;
       lessonsContainer.style.top = `${(navHeight - this.lessonTilesBounds.height) / 2}px`;
       lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
-      // lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + this.tileHeight / 2}px`;
       lessonsContainer.style.height = `${this.lessonTilesBounds.height}px`;
-      console.log(navHeight)
     }
-
-    console.log(this.lessonIndex)
-    console.log(this.lessonTilesBounds.height)
   }
 
   getLessonTilesBounds() {
