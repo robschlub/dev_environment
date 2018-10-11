@@ -121,6 +121,14 @@ class Content extends LessonContent {
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch |triangle| to see more details on the triangle lesson.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        triangle: highlight(colors.diagram.action),
+      },
     });
 
     common.setContent = `
@@ -147,6 +155,14 @@ class Content extends LessonContent {
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch |triangle| to see more details on the triangle lesson.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        triangle: highlight(colors.diagram.action),
+      },
     });
 
     this.addSection({
@@ -170,6 +186,8 @@ class Content extends LessonContent {
     common = {
       setContent: '',
       modifiers: {},
+      setInfo: [],
+      infoModifiers: {},
       setEnterState: () => {
         // rect.resetColors();
       },
@@ -222,11 +240,21 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {
       setContent: `<p>
-        Some properties of the rectangle include its four |side_lengths| and four |angles|.
+        Some properties of the rectangle are its four |side_lengths| and four |angles|.
       </p>`,
       modifiers: {
         side_lengths: click(rect.pulseSideLabels, [rect], colors.lines),
         angles: click(rect.pulseRightAngles, [rect], colors.angles),
+      },
+      setInfo: [
+        '<ul>',
+        '<li>Touch |side_lengths| to highlight the sides.</li>',
+        '<li>Touch |angles| to highlight the angles.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        side_lengths: highlight(colors.lines),
+        angles: highlight(colors.angles),
       },
     });
 
@@ -275,17 +303,43 @@ class Content extends LessonContent {
         line: click(rect.pulseLine, [rect, 'B'], colors.lines),
         two_lines: click(rect.pulseLine, [rect, ['A', 'C']], colors.lines),
       },
+      setInfo: [
+        '<ul>',
+        '<li>Touch |interior_angles| to show more details on the lesson.</li>',
+        '<li>Touch |line| to highlight the intersecting line.</li>',
+        '<li>Touch |two_lines| to highlight the two lines intersected.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        interior_angles: highlight(colors.diagram.action),
+        line: highlight(colors.lines),
+        two_lines: highlight(colors.lines),
+      },
     });
 
     common.setContent = `<p>
       The |interior_angles| of two |parallel lines| intersected by a third line will always add to |180º|.
     </p>`;
-    this.addSection(common);
+    this.addSection(common, {
+      setInfo: [
+        '<ul>',
+        '<li>Touch |interior_angles| to show more details on the lesson.</li>',
+        '</ul>',
+      ],
+      infoModifiers: { interior_angles: highlight(colors.diagram.action) },
+    });
 
     common.setContent = `<p>
       The reverse of this is, if the |interior_angles| of two lines intersected by a third line |add to 180º|, then the lines |must be parallel|.
     </p>`;
-    this.addSection(common);
+    this.addSection(common, {
+      setInfo: [
+        '<ul>',
+        '<li>Touch |interior_angles| to show more details on the lesson.</li>',
+        '</ul>',
+      ],
+      infoModifiers: { interior_angles: highlight(colors.diagram.action) },
+    });
 
     common.setContent = `<p>
       Therefore, lines |A| and |C| are parallel.
@@ -385,8 +439,26 @@ class Content extends LessonContent {
     </p>`;
     // common.modifiers = Object.assign(common.modifiers, {
     // });
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch |third_angle| to highlight the right angle.</li>',
+      '<li>Touch |_180| to show information on the Triangles lesson.</li>',
+      '</ul>',
+    ];
+    common.infoModifiers = {
+      third_angle: highlight(colors.angles),
+      _180: highlightWord('180º', colors.diagram.action),
+    };
+
     this.addSection(common);
 
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch |third_angle| to highlight the right angle.</li>',
+      '<li>Touch |_180| to show information on the Triangles lesson.</li>',
+      '<li>Touch the equation and equation description to step through its progression</li>',
+      '</ul>',
+    ];
     common.transitionFromAny = (done) => {
       rect.moveToScenario(rect._rect, layout.rect.scenarios.analysis, 1, done);
     };
@@ -422,6 +494,8 @@ class Content extends LessonContent {
       },
     });
 
+    common.setInfo = [];
+    common.infoModifiers = {};
     common.setContent = `<p>
       Next, consider the |second triangle| that forms the rectangle.
     </p>`;
@@ -489,6 +563,11 @@ class Content extends LessonContent {
     </p>`;
     this.addSection(common);
 
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch the equation and equation description to step through its progression</li>',
+      '</ul>',
+    ];
     this.addSection(common, {
       setSteadyState: () => {
         rect._rect._angleA.showForm('0');
@@ -515,6 +594,7 @@ class Content extends LessonContent {
       },
     });
 
+    common.setInfo = [];
     common.setContent = `<p>
       Next consider angle |c|. It forms a rectangle corner with angle |_90ma|.
     </p>`;
@@ -543,6 +623,11 @@ class Content extends LessonContent {
     </p>`;
     this.addSection(common);
 
+    common.setInfo = [
+      '<ul>',
+      '<li>Touch the equation and equation description to step through its progression</li>',
+      '</ul>',
+    ];
     this.addSection(common, {
       setSteadyState: () => {
         rect._rect._angleA.showForm('0');
@@ -577,6 +662,7 @@ class Content extends LessonContent {
       },
     });
 
+    common.setInfo = [];
     common.setContent = `<p>
       All unknown angles are in terms of angle |a|, so it is easier to see similarities between the two triangles.
     </p>`;
@@ -614,7 +700,18 @@ class Content extends LessonContent {
       rect._rect._rightAngle4.setColor(colors.diagram.disabledDark);
       rect._navBC.setPosition(layout.adEqnPosition);
     };
-    this.addSection(common);
+    this.addSection(common, {
+      setInfo: [
+        '<ul>',
+        '<li>Touch |diagonal_line| to highlight the line.</li>',
+        '<li>Touch |angles| to toggle highlighting the angle pairs.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        diagonal_line: highlight(colors.lines),
+        angles: highlight(colors.angles),
+      },
+    });
 
     common.setContent = `<p>
       When two triangles have |two_angles_and_side_between| them the same, then they are |congruent|.
@@ -623,7 +720,18 @@ class Content extends LessonContent {
       congruent: click(qr._asa.show, [qr._asa], colors.diagram.action),
       two_angles_and_side_between: click(rect.toggleASAColors, [rect], colors.diagram.action),
     };
-    this.addSection(common);
+    this.addSection(common, {
+      setInfo: [
+        '<ul>',
+        '<li>Touch |two_angles_and_side_between| to toggle highlighting the angle pairs around the side of interest.</li>',
+        '<li>Touch |congruent| to show more information on the Angle-Side-Angle congruency test.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        diagonal_line: highlight(colors.diagram.action),
+        congruent: highlight(colors.diagram.action),
+      },
+    });
 
     common.setContent = `<p>
       As the triangles are congruent, then one triangle's sides lengths are the same as the other triangle.
@@ -671,7 +779,16 @@ class Content extends LessonContent {
     common.modifiers = {
       opposite_sides: click(rect.toggleOppositeSides, [rect], colors.diagram.action),
     };
-    this.addSection(common);
+    this.addSection(common, {
+      setInfo: [
+        '<ul>',
+        '<li>Touch |opposite_sides| to toggle highlighting the opposite sides.</li>',
+        '</ul>',
+      ],
+      infoModifiers: {
+        opposite_sides: highlight(colors.diagram.action),
+      },
+    });
 
     this.addSection({
       setContent: centerV(`
