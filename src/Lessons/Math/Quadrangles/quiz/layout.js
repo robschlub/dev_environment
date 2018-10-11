@@ -38,11 +38,9 @@ export default function lessonLayout() {
   layout.angleSides = 200;
   layout.pointRects = {
     quad1: new Rect(0, 0, width, height),
-    quad2: new Rect(-min - width, min, width, height),
+    quad2: new Rect(-min - width, min + height / 2, width, height / 2),
     quad3: new Rect(-min - width, -min - height, width, height),
-    quad4: new Rect(min, -min - height, width, height),
+    quad4: new Rect(min + width / 2, -min - height, width / 2, height),
   };
-  // layout.triangle.angle.radius = 0.2;
-  // layout.triangle.angle.labelRadius = 0.25;
   return layout;
 }

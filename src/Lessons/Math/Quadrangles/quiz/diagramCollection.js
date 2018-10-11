@@ -1,7 +1,7 @@
 // @flow
 import { Transform, Point, randomPoint } from '../../../../js/diagram/tools/g2';
 import {
-  removeRandElement, roundNum,
+  removeRandElement, roundNum, rand,
 } from '../../../../js/diagram/tools/mathtools';
 import lessonLayout from './layout';
 
@@ -36,11 +36,22 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   p4: Point;
 
   randomQuadPoints() {
+    const points = [
+      randomPoint(this.layout.pointRects.quad1),
+      randomPoint(this.layout.pointRects.quad2),
+      randomPoint(this.layout.pointRects.quad3),
+      randomPoint(this.layout.pointRects.quad4),
+    ];
+    const index = removeRandElement([0, 1, 2, 3]);
+    const newPoints = [];
+    for (let i = 0; i < 4; i += 1) {
+      newPoints.push(points[(i + index) % 4]);
+    }
     return {
-      p1: randomPoint(this.layout.pointRects.quad1),
-      p2: randomPoint(this.layout.pointRects.quad2),
-      p3: randomPoint(this.layout.pointRects.quad3),
-      p4: randomPoint(this.layout.pointRects.quad4),
+      p1: newPoints[0],
+      p2: newPoints[1],
+      p3: newPoints[2],
+      p4: newPoints[3],
     };
   }
 
