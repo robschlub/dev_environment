@@ -4,7 +4,7 @@
 var details = {
   title: 'Quadrangles',
   uid: 'quadrangles',
-  dependencies: ['triangle_introduction'],
+  dependencies: ['congruent_triangles'],
 };
 
 module.exports = {

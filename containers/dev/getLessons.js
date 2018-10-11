@@ -59,6 +59,7 @@ export default function getLessonIndex() {
     let title = '';
     let dependencies = [];
     let uid = '';
+    let enabled = true;
     const paths = getAllPaths(lessonPath);
     if (fs.existsSync(detailsPath)) {
       // const detailsPath = `./${lessonPath}/details.js`;
@@ -67,6 +68,12 @@ export default function getLessonIndex() {
       ({ title } = details.details);
       ({ dependencies } = details.details);
       ({ uid } = details.details);
+      ({ enabled } = details.details);
+      if (enabled != null && enabled === false) {
+        enabled = false;
+      } else {
+        enabled = true;
+      }
     }
     if (title !== '') {
       outStr = `${outStr}\n  lessonIndex.push(new LessonDescription(`;
@@ -79,13 +86,14 @@ export default function getLessonIndex() {
         outStr = `${outStr}\n      '${shortP}',`;
       });
       outStr = `${outStr}\n    ],`;
+      outStr = `${outStr}\n    [`;
       if (dependencies.length > 0) {
-        outStr = `${outStr}\n    [`;
         dependencies.forEach((dependency) => {
           outStr = `${outStr}\n      '${dependency}',`;
         });
-        outStr = `${outStr}\n    ],`;
       }
+      outStr = `${outStr}\n    ],`;
+      outStr = `${outStr}\n    ${enabled},`;
       outStr = `${outStr}\n  ));`;
     }
   });

@@ -224,7 +224,7 @@ export default class LessonNavigator extends React.Component
       state = 'selected';
       this.selectedLesson = lesson;
     }
-    if (lesson.link === '') {
+    if (lesson.enabled === false) {
       state = 'disabled';
     }
     return <LessonTile

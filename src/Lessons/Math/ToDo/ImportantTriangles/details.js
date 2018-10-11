@@ -2,9 +2,9 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Area',
-  uid: 'area_introduction',
-  dependencies: ['quadrangles'],
+  title: 'Important Triangles',
+  uid: 'important_triangles',
+  dependencies: ['congruent_triangles'],
   enabled: false,
 };
 

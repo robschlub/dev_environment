@@ -2,9 +2,9 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Area',
-  uid: 'area_introduction',
-  dependencies: ['quadrangles'],
+  title: 'Calculating Pi',
+  uid: 'calculating_pi',
+  dependencies: ['right_angle_triangles'],
   enabled: false,
 };
 

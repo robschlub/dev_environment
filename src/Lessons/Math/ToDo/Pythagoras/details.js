@@ -2,9 +2,9 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Area',
-  uid: 'area_introduction',
-  dependencies: ['quadrangles'],
+  title: 'Pythagorean Theorm',
+  uid: 'pythagoras',
+  dependencies: ['right_angle_triangles'],
   enabled: false,
 };
 
