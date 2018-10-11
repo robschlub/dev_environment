@@ -120,6 +120,17 @@ export default function getLessonIndex() {
     ],
   ));
   lessonIndex.push(new LessonDescription(
+    'Area',
+    '/Lessons/Math/ToDo/Area',
+    'area_introduction',
+    [
+      '1',
+    ],
+    [
+      'congruent_triangles',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
     'Triangles',
     '/Lessons/Math/Triangles',
     'triangle_introduction',

@@ -33,46 +33,12 @@ export default class LessonNavigator extends React.Component
     this.lessonIndex = makeLessonTree();
     this.getVariables();
     this.layoutLessonTiles();
-    // let viewPortWidth = 0;
-    // const doc = document.documentElement;
-    // if (doc) {
-    //   viewPortWidth = doc.clientWidth;
-    // }
-    // const y = 200;
-    // const width = 200;
-    // const height = 40;
-    // const vSpace = 10;
-    // let x = viewPortWidth / 2 - 180 / 2;
-    // this.lessonArray = [];
-    // this.lessonIndex.forEach((lesson) => {
-    //   if (Array.isArray(lesson)) {
-    //     const len = lesson.length;
-    //     const totalHeight = len * height + (len - 1) * vSpace;
-    //     let yStart = y - totalHeight / 2 + height / 2;
-    //     if (yStart < y - 2 * height - 2 * vSpace) {
-    //       yStart = y - 2 * height - 2 * vSpace;
-    //     }
-    //     lesson.forEach((parallelLesson, index) => {
-    //       const yLocation = yStart + index * (height + vSpace);
-    //       // eslint-disable-next-line no-param-reassign
-    //       parallelLesson.location = new Point(x, yLocation);
-    //       this.lessonArray.push(parallelLesson);
-    //     });
-    //   } else {
-    //     // eslint-disable-next-line no-param-reassign
-    //     lesson.location = new Point(x, y);
-    //     this.lessonArray.push(lesson);
-    //   }
-    //   x += width;
-    // });
     this.key = 0;
     this.selected = props.selected || '';
     this.asTitle = false;
     if (this.selected !== '') {
       this.asTitle = true;
     }
-    // this.tileWidth = 180;
-    // this.tileHeight = 56;
   }
 
   getVariables() {
@@ -140,11 +106,6 @@ export default class LessonNavigator extends React.Component
 
     this.getLessonTilesBounds();
   }
-  // componentDidUpdate() {
-  //   if (this.asTitle) {
-  //     this.hideAllTilesButSelected();
-  //   }
-  // }
 
   showNavigator() {
     // console.log("showing")
@@ -262,11 +223,6 @@ export default class LessonNavigator extends React.Component
     if (lesson.name === this.selected) {
       state = 'selected';
       this.selectedLesson = lesson;
-      // const nav = document.getElementById('id_navigator__scroll_container');
-      // if (nav) {
-      //   x = `${nav.scrollLeft + nav.clientWidth / 2 - 125}px`;
-      //   y = `${nav.scrollTop + 90 / 2 - 28}px`;
-      // }
     }
     if (lesson.link === '') {
       state = 'disabled';
@@ -292,6 +248,7 @@ export default class LessonNavigator extends React.Component
           lessons.push(this.createLessonJsx(parallelLesson));
         });
       } else {
+        console.log(lesson)
         lessons.push(this.createLessonJsx(lesson));
       }
     });
@@ -323,8 +280,6 @@ export default class LessonNavigator extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   centerLessons() {
-    // const nav =
-    //   document.getElementById('id_lesson__title_navigator_container');
     const navigatorContainer = document.getElementById('id_navigator__container');
     const lessonsContainer =
       document.getElementById('id_navigator__lessons_positions_container');
@@ -371,29 +326,10 @@ export default class LessonNavigator extends React.Component
     xMax += this.tileHSpace;
     this.lessonTilesBounds = new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
   }
-  // componentDidMount() {
-  //   const navigator = document.getElementById('id_navigator__container');
-
-  //   if (navigator) {
-  //   //   navigator.scrollLeft = 100;
-  //   //   navigator.addEventListener('mousedown', this.mdh.bind(this), false);
-  //   //   navigator.addEventListener('mousemove', this.mdh.bind(this), false);
-  //     // navigator.scrollWidth = 1500;
-  //   }
-  //   // const navigator1 = document.getElementById('master_containter');
-  //   // if (navigator1) {
-  //   //   navigator1.addEventListener('mousedown', this.mdh.bind(this), false);
-  //   //   navigator1.addEventListener('mousemove', this.mdh.bind(this), false);
-  //   // }
-  // }
 
   // eslint-disable-next-line class-methods-use-this
   render() {
     const classStr = 'naviagator__container navigator__container_with_shadow';
-    // if (this.asTitle) {
-    //   classStr = `${classStr} navigator__container_with_shadow`;
-    //   // classStr = `${classStr}`;
-    // }
     return <div id="id_navigator__container" className={classStr}>
       <div className="navigator__left_side" />
       <div className="navigator__right_side" />

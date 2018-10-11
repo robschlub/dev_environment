@@ -40,6 +40,7 @@ function entryPoints() {
     const p = lessonPath.replace(/src\/Lessons\//, '');
     points[`Lessons/${p}/lesson`] = `./${lessonPath}/lesson.js`;
   });
+  // console.log(points)
   return points;
 }
 
