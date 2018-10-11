@@ -235,17 +235,17 @@ class Section {
         } else if ((element instanceof DiagramElementPrimative
           || element instanceof DiagramElementCollection)
           && element.isShown) {
-          if (element.isMovable || element.isTouchable) {
+          if (element.isMovable || element.isTouchable || element.isInteractive) {
             elementIsVisible = true;
           }
         }
         let elementIsTouchable = false;
         if (element instanceof DiagramElementCollection) {
-          if (element.isTouchable || element.isMovable || element.hasTouchableElements) {
+          if (element.isTouchable || element.isMovable || element.hasTouchableElements || element.isInteractive) {
             elementIsTouchable = true;
           }
         } else if (element instanceof DiagramElementPrimative) {
-          if (element.isTouchable || element.isMovable) {
+          if (element.isTouchable || element.isMovable || element.isInteractive) {
             elementIsTouchable = true;
           }
         } else if (element instanceof HTMLElement) {
