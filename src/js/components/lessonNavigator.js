@@ -125,6 +125,7 @@ export default class LessonNavigator extends React.Component
         if (yStart < y - 2 * height - 2 * vSpace) {
           yStart = y - 2 * height - 2 * vSpace;
         }
+        console.log(yStart, y)
         lesson.forEach((parallelLesson, index) => {
           const yLocation = yStart + index * (height + vSpace);
           // eslint-disable-next-line no-param-reassign
@@ -279,6 +280,7 @@ export default class LessonNavigator extends React.Component
               state={state}
               left={`${x}px`}
               top={`${y}px`}
+              title={false}
             />;
   }
 
@@ -323,18 +325,23 @@ export default class LessonNavigator extends React.Component
   centerLessons() {
     // const nav =
     //   document.getElementById('id_lesson__title_navigator_container');
+    const navigatorContainer = document.getElementById('id_navigator__container');
     const lessonsContainer =
       document.getElementById('id_navigator__lessons_positions_container');
-    if (lessonsContainer) {
+    if (lessonsContainer != null && navigatorContainer != null) {
       // const xMargin = nav.clientWidth / 2 - 180 / 2;
+      const navHeight = navigatorContainer.getBoundingClientRect().height;
       const xMargin = 200;
-      const yMargin = 80;
+      // const yMargin = navHeight / 2;
       // const yMargin = window.innerHeight * 0.6 / 2;
       lessonsContainer.style.left = `${xMargin}px`;
-      lessonsContainer.style.top = `${yMargin - this.tileHeight / 2}px`;
+      // lessonsContainer.style.top = `${yMargin - this.tileHeight / 2}px`;
+      lessonsContainer.style.top = `${(navHeight - this.lessonTilesBounds.height) / 2}px`;
       lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
-      lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + this.tileHeight / 2}px`;
+      // lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + this.tileHeight / 2}px`;
+      lessonsContainer.style.height = `${this.lessonTilesBounds.height}px`;
     }
+    console.log(this.lessonTilesBounds.height)
   }
 
   getLessonTilesBounds() {

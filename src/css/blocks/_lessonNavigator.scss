@@ -12,7 +12,7 @@
 
 .naviagator__container {
   width: 100%;
-  height: var(--lesson__container-height);
+  height: calc(var(--lesson__container-height) / 3 * 2);
   max-height: 95vh;
   position: relative;
   background: white;
