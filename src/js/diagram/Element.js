@@ -1146,7 +1146,7 @@ class DiagramElement {
         this.state.disolving = '';
       } else if (this.state.disolving === 'out') {
         this.hide();
-        this.setColor(this.animate.color.plan.slice(-1)[0].startColor.slice());
+        this.setColor(this.animate.color.plan[0].startColor.slice());
         // Do not move this reset out of the if statement as stopAnimatingColor
         // is called at the start of an new animation and therefore the
         // disolving state will be lost.
