@@ -4,6 +4,7 @@ import * as m2 from '../../tools/m2';
 import { Point } from '../../tools/g2';
 import DrawingObject from '../DrawingObject';
 import DrawContext2D from '../../DrawContext2D';
+import { duplicateFromTo } from '../../../tools/tools';
 
 function colorArrayToString(color: Array<number>) {
   return `rgba(${
@@ -37,18 +38,29 @@ class DiagramFont {
     this.weight = weight;
     this.alignH = alignH;
     this.alignV = alignV;
+    this.setColor(color);
+    // if (Array.isArray(color)) {
+    //   this.color = colorArrayToString(color);
+    // } else {
+    //   this.color = color;
+    // }
+  }
+
+  setColor(color: Array<number> | null | string = null) {
     if (Array.isArray(color)) {
       this.color = colorArrayToString(color);
     } else {
       this.color = color;
     }
   }
+
   set(ctx: CanvasRenderingContext2D, scalingFactor: number = 1) {
     ctx.font = `${this.style} ${this.weight} ${this.size * scalingFactor}px ${this.family}`;
     ctx.textAlign = this.alignH;
     ctx.textBaseline = this.alignV;
   }
-  copy() {
+
+  _dup() {
     return new DiagramFont(
       this.family,
       this.style,
@@ -73,9 +85,13 @@ class DiagramText {
     text: string = '',
     font: DiagramFont = new DiagramFont(),
   ) {
-    this.location = location.copy();
-    this.text = text;
-    this.font = font.copy();
+    this.location = location._dup();
+    this.text = text.slice();
+    this.font = font._dup();
+  }
+
+  _dup() {
+    return new DiagramText(this.location._dup(), this.text, this.font._dup());
   }
 }
 
@@ -110,12 +126,27 @@ class TextObject extends DrawingObject {
         this.scalingFactor = 10 ** power;
       }
     }
+    this.setBorder();
+  }
+
+  setText(text: string, index: number = 0) {
+    this.text[index].text = text;
+    this.setBorder();
+  }
+
+  _dup() {
+    const c = new TextObject(this.drawContext2D, this.text);
+    duplicateFromTo(this, c);
+    c.scalingFactor = this.scalingFactor;
+    c.border = this.border.map(b => b.map(p => p._dup()));
+    return c;
   }
 
   setFont(fontSize: number) {
     for (let i = 0; i < this.text.length; i += 1) {
       this.text[i].font.size = fontSize;
     }
+    this.setBorder();
   }
 
   setColor(color: Array<number>) {
@@ -179,7 +210,6 @@ class TextObject extends DrawingObject {
     color: Array<number> = [1, 1, 1, 1],
   ) {
     const { ctx } = this.drawContext2D;
-
     // Arbitrary scaling factor used to ensure font size is >> 1 pixel
     // const scalingFactor = this.drawContext2D.canvas.offsetHeight /
     //                       (this.diagramLimits.height / 1000);
@@ -250,6 +280,14 @@ class TextObject extends DrawingObject {
     return glBoundaries;
   }
 
+  setBorder() {
+    this.border = [];
+    this.text.forEach((t) => {
+      this.border.push(this.getBoundaryOfText(t));
+    });
+    // return glBoundaries;
+  }
+
   // This method is used instead of the actual ctx.measureText because
   // Firefox and Chrome don't yet support it's advanced features.
   // Estimates are made for height based on width.
@@ -258,34 +296,33 @@ class TextObject extends DrawingObject {
     const aWidth = ctx.measureText('a').width;
 
     // Estimations of FONT ascent and descent for a baseline of "alphabetic"
-    const ascent = aWidth * 1.9;
-    const descent = aWidth * 0.5;
+    let ascent = aWidth * 1.8;
+    let descent = aWidth * 0;
 
     // Uncomment below and change above consts to lets if more resolution on
     // actual text boundaries is needed
 
     // const maxAscentRe =
     //   /[ABCDEFGHIJKLMNOPRSTUVWXYZ1234567890!#%^&()@$Qbdtfhiklj]/g;
-    // const midAscentRe = /[acemnorsuvwxz*gyqp]/g;
-    // const maxDescentRe = /[gjyqp@$Q]/g;
+    const midAscentRe = /[acemnorsuvwxz*gyqp]/g;
+    const maxDescentRe = /[gjyqp@$Q]/g;
 
-    // const midAscentMatches = text.text.match(midAscentRe);
-    // if (Array.isArray(midAscentMatches)) {
-    //   if (midAscentMatches.length === text.text.length) {
-    //     ascent = aWidth * 1.2;
-    //   }
-    // }
-    // const maxDescentMatches = text.text.match(maxDescentRe);
-    // if (Array.isArray(maxDescentMatches)) {
-    //   if (maxDescentMatches.length > 0) {
-    //     descent = aWidth * 0.8;
-    //   }
-    // }
+    const midAscentMatches = text.text.match(midAscentRe);
+    if (Array.isArray(midAscentMatches)) {
+      if (midAscentMatches.length === text.text.length) {
+        ascent = aWidth * 1.2;
+      }
+    }
+    const maxDescentMatches = text.text.match(maxDescentRe);
+    if (Array.isArray(maxDescentMatches)) {
+      if (maxDescentMatches.length > 0) {
+        descent = aWidth * 0.5;
+      }
+    }
 
     const height = ascent + descent;
 
     const { width } = ctx.measureText(text.text);
-
     let asc = 0;
     let des = 0;
     let left = 0;
@@ -324,11 +361,9 @@ class TextObject extends DrawingObject {
       fontBoundingBoxDescent: des,
     };
   }
-  getGLBoundaryOfText(
-    text: DiagramText,
-    lastDrawTransformMatrix: Array<number>,
-  ): Array<Point> {
-    const glBoundary = [];
+
+  getBoundaryOfText(text: DiagramText): Array<Point> {
+    const boundary = [];
 
     const { scalingFactor } = this;
 
@@ -336,7 +371,6 @@ class TextObject extends DrawingObject {
     text.font.set(this.drawContext2D.ctx, scalingFactor);
     // const textMetrics = this.drawContext2D.ctx.measureText(text.text);
     const textMetrics = this.measureText(this.drawContext2D.ctx, text);
-
     // Create a box around the text
     const { location } = text;
     const box = [
@@ -357,11 +391,49 @@ class TextObject extends DrawingObject {
         -textMetrics.fontBoundingBoxDescent / scalingFactor,
       ).add(location),
     ];
+    box.forEach((p) => {
+      boundary.push(p);
+    });
+    // console.log('boundary', boundary.width, text.text)
+    return boundary;
+  }
 
+  getGLBoundaryOfText(
+    text: DiagramText,
+    lastDrawTransformMatrix: Array<number>,
+  ): Array<Point> {
+    const glBoundary = [];
+
+    // const { scalingFactor } = this;
+
+    // // Measure the text
+    // text.font.set(this.drawContext2D.ctx, scalingFactor);
+    // // const textMetrics = this.drawContext2D.ctx.measureText(text.text);
+    // const textMetrics = this.measureText(this.drawContext2D.ctx, text);
+    // // Create a box around the text
+    // const { location } = text;
+    // const box = [
+    //   new Point(
+    //     -textMetrics.actualBoundingBoxLeft / scalingFactor,
+    //     textMetrics.fontBoundingBoxAscent / scalingFactor,
+    //   ).add(location),
+    //   new Point(
+    //     textMetrics.actualBoundingBoxRight / scalingFactor,
+    //     textMetrics.fontBoundingBoxAscent / scalingFactor,
+    //   ).add(location),
+    //   new Point(
+    //     textMetrics.actualBoundingBoxRight / scalingFactor,
+    //     -textMetrics.fontBoundingBoxDescent / scalingFactor,
+    //   ).add(location),
+    //   new Point(
+    //     -textMetrics.actualBoundingBoxLeft / scalingFactor,
+    //     -textMetrics.fontBoundingBoxDescent / scalingFactor,
+    //   ).add(location),
+    // ];
+    const box = this.getBoundaryOfText(text);
     box.forEach((p) => {
       glBoundary.push(p.transformBy(lastDrawTransformMatrix));
     });
-
     return glBoundary;
   }
 }

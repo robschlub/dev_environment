@@ -52,22 +52,22 @@ const introPage = () => {
       const textColor = getTextColor(color);
       reactKey += 1;
       diagramCols.push(<div className="col-1" key={reactKey} style={{
-          backgroundColor: colorArrayToRGB(color),
-          color: colorArrayToRGB(textColor),
-          padding: '10px',
-          fontSize: '10px',
-        }}>{element}</div>);
+        backgroundColor: colorArrayToRGB(color),
+        color: colorArrayToRGB(textColor),
+        padding: '10px',
+        fontSize: '10px',
+      }}>{element}</div>);
     } else if (typeof element === 'object') {
       element.forEach((e) => {
         const color = colors.diagram[e];
         const textColor = getTextColor(color);
         reactKey += 1;
         diagramCols.push(<div className="col-1" key={reactKey} style={{
-            backgroundColor: colorArrayToRGB(color),
-            color: colorArrayToRGB(textColor),
-            padding: '10px',
-            fontSize: '10px',
-          }}>{e}</div>);
+          backgroundColor: colorArrayToRGB(color),
+          color: colorArrayToRGB(textColor),
+          padding: '10px',
+          fontSize: '10px',
+        }}>{e}</div>);
       });
     }
   });

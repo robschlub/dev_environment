@@ -1,6 +1,7 @@
 // @flow
 
 import { Point } from './tools/g2';
+// eslint-disable-next-line import/no-cycle
 import Diagram from './Diagram';
 
 class Gesture {
@@ -25,7 +26,6 @@ class Gesture {
     this.addEvent('touchstart', this.touchStartHandler, false);
     this.addEvent('touchend', this.touchEndHandler, false);
     this.addEvent('touchmove', this.touchMoveHandler, false);
-
     // this.diagram.canvas.addEventListener(
     //   'touchstart',
     //   this.touchStartHandler.bind(this), false,
@@ -94,6 +94,7 @@ class Gesture {
       event.preventDefault();
     }
   }
+
   mouseDownHandler(event: MouseEvent) {
     this.startHandler(new Point(event.clientX, event.clientY));
   }
@@ -102,6 +103,7 @@ class Gesture {
     const touch = event.touches[0];
     this.moveHandler(event, new Point(touch.clientX, touch.clientY));
   }
+
   mouseMoveHandler(event: MouseEvent) {
     this.moveHandler(event, new Point(event.clientX, event.clientY));
   }
@@ -109,6 +111,7 @@ class Gesture {
   mouseUpHandler() {
     this.endHandler();
   }
+
   touchEndHandler() {
     this.endHandler();
   }

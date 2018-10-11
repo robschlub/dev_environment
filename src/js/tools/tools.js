@@ -17,9 +17,8 @@ const divide = (a: number, b: number): number => a / b;
 
 const classify = (key: string, value: string) => {
   const nonEmpty = value || key;
-  const withKey = nonEmpty[0] === '-' || nonEmpty.startsWith(`${key}-`) ?
-    `${key} ${nonEmpty}` :
-    nonEmpty;
+  const withKey = nonEmpty[0] === '-' || nonEmpty.startsWith(`${key}-`)
+    ? `${key} ${nonEmpty}` : nonEmpty;
   const joinStr = ` ${key}-`;
   return `${withKey.split(' -').join(joinStr)}`;
 };
@@ -35,17 +34,20 @@ class ObjectKeyPointer {
       this.key = key;
     }
   }
+
   setValue(value: mixed) {
     if (this.key) {
       this.object[this.key] = value;
     }
   }
+
   execute(...args: mixed) {
     if (this.key) {
       return this.object[this.key].apply(null, args);
     }
     return undefined;
   }
+
   value() {
     if (this.key) {
       return this.object[this.key];
@@ -76,7 +78,9 @@ function extractFrom(
       }
     }
     return undefined;
-  } else if (Array.isArray(keyValues)) {
+  }
+
+  if (Array.isArray(keyValues)) {
     keyValues.forEach((kv) => {
       const result = extractFrom(objectToExtractFrom, kv, keyPrefix);
       if (result !== undefined) {
@@ -111,10 +115,14 @@ function RGBToArray(color: string): Array<number> {
   let colString: string = color;
   colString = colString.replace(/.*\(/i, '');
   colString = colString.replace(/\)/i, '');
-  const strArray = colString.split(', ');
-
+  const strArray = colString.split(',');
   // Go through each rgb(a) value and normalize to 1.0
-  const value: Array<number> = strArray.map(x => parseInt(x, 10) / 255.0);
+  const value: Array<number> = strArray.map((x, index) => {
+    if (index < 3) {
+      return parseInt(x, 10) / 255.0;
+    }
+    return parseFloat(x);
+  });
 
   // If an alpha value isn't included, then include it with default value 1.0
   if (value.length === 3) {
@@ -205,9 +213,85 @@ function addToObject(
   });
 }
 
+function duplicateFromTo(
+  fromObject: Object,
+  toObject: Object,
+  exceptKeys: Array<string> = [],
+) {
+  const copyValue = (value) => {
+    if (typeof value === 'number'
+        || typeof value === 'boolean'
+        || typeof value === 'string'
+        || value == null
+        || typeof value === 'function') {
+      return value;
+    }
+    if (typeof value._dup === 'function') {
+      return value._dup();
+    }
+    if (Array.isArray(value)) {
+      const arrayCopy = [];
+      value.forEach(arrayElement => arrayCopy.push(copyValue(arrayElement)));
+      return arrayCopy;
+    }
+    if (typeof value === 'object') {
+      const objectCopy = {};
+      Object.keys(value).forEach((key) => {
+        const v = copyValue(value[key]);
+        objectCopy[key] = v;
+      });
+      return objectCopy;
+    }
+    return value;
+  };
+
+  Object.keys(fromObject).forEach((key) => {
+    if (exceptKeys.indexOf(key) === -1) {
+      // eslint-disable-next-line no-param-reassign
+      toObject[key] = copyValue(fromObject[key]);
+    }
+  });
+}
+
+function generateUniqueId(seed: string = '') {
+  const randomString = s => `${s}${Math.floor(Math.random() * 1000000)}`;
+  let seedToUse = seed;
+  if (seedToUse.length === 0) {
+    seedToUse = 'id_random_';
+  }
+  let idExists = true;
+  let newId = randomString(seedToUse);
+  while (idExists) {
+    newId = randomString(seedToUse);
+    const element = document.getElementById(newId);
+    if (element == null) {
+      idExists = false;
+    }
+  }
+  return newId;
+}
+
+function isTouchDevice() {
+  const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
+  const mq = query => window.matchMedia(query).matches;
+
+  /* eslint-disable no-undef, no-mixed-operators */
+  // $FlowFixMe
+  if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+    return true;
+  }
+  /* eslint-enable no-undef, no-mixed-operators */
+
+  // include the 'heartz' as a way to have a non matching MQ to help terminate the join
+  // https://git.io/vznFH
+  const query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
+  return mq(query);
+}
+
 export {
   divide, mulToString, add, Console,
   classify, extractFrom, ObjectKeyPointer, getElement,
   RGBToArray, HexToArray, cssColorToArray, colorArrayToRGB,
-  colorArrayToRGBA, addToObject,
+  colorArrayToRGBA, addToObject, duplicateFromTo, isTouchDevice,
+  generateUniqueId,
 };

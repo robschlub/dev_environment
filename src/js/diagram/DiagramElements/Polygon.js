@@ -2,8 +2,11 @@
 
 import VertexPolygon from '../DrawingObjects/VertexObject/VertexPolygon';
 import VertexPolygonFilled from '../DrawingObjects/VertexObject/VertexPolygonFilled';
+import VertexPolygonLine from '../DrawingObjects/VertexObject/VertexPolygonLine';
 import { DiagramElementPrimative } from '../Element';
-import { Point, Transform, Rect } from '../tools/g2';
+import {
+  Point, Transform, Rect,
+} from '../tools/g2';
 import WebGLInstance from '../webgl/webgl';
 
 function Polygon(
@@ -32,7 +35,7 @@ function Polygon(
   if (transformOrLocation instanceof Point) {
     transform = transform.translate(transformOrLocation.x, transformOrLocation.y);
   } else {
-    transform = transformOrLocation.copy();
+    transform = transformOrLocation._dup();
   }
   return new DiagramElementPrimative(vertexLine, transform, color, diagramLimits);
 }
@@ -63,9 +66,39 @@ function PolygonFilled(
   if (transformOrLocation instanceof Point) {
     transform = transform.translate(transformOrLocation.x, transformOrLocation.y);
   } else {
-    transform = transformOrLocation.copy();
+    transform = transformOrLocation._dup();
   }
   return new DiagramElementPrimative(vertexLineCorners, transform, color, diagramLimits);
 }
 
-export { Polygon, PolygonFilled };
+function PolygonLine(
+  webgl: WebGLInstance,
+  numSides: number,
+  radius: number,
+  rotation: number,
+  direction: -1 | 1,
+  numSidesToDraw: number,
+  numLines: number,
+  color: Array<number>,
+  transformOrLocation: Transform | Point,
+  diagramLimits: Rect,
+) {
+  const vertexLine = new VertexPolygonLine(
+    webgl,
+    numSides,
+    radius,
+    rotation,
+    new Point(0, 0),
+    numSidesToDraw,
+    direction,
+    numLines,
+  );
+  let transform = new Transform();
+  if (transformOrLocation instanceof Point) {
+    transform = transform.translate(transformOrLocation.x, transformOrLocation.y);
+  } else {
+    transform = transformOrLocation._dup();
+  }
+  return new DiagramElementPrimative(vertexLine, transform, color, diagramLimits);
+}
+export { Polygon, PolygonFilled, PolygonLine };

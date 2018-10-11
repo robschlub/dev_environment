@@ -1,5 +1,7 @@
 import HTMLObject from './HTMLObject';
-import { Point, Transform, Rect } from '../../tools/g2';
+import {
+  Point, Transform, Rect,
+} from '../../tools/g2';
 
 describe('Diagram HTML Object', () => {
   let parentDiv;

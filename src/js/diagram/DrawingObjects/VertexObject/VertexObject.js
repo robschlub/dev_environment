@@ -4,7 +4,7 @@
 import * as m2 from '../../tools/m2';
 import WebGLInstance from '../../webgl/webgl';
 import * as g2 from '../../tools/g2';
-import DrawingObject from '../../DrawingObjects/DrawingObject';
+import DrawingObject from '../DrawingObject';
 
 // Base clase of all shape objects made from verteces for webgl.
 // The job of a VertexObject is to:
@@ -26,6 +26,7 @@ class VertexObject extends DrawingObject {
   z: number;
   textureLocation: string;
   texturePoints: Array<number>;
+  +change: (Array<g2.Point>) => void;
 
   constructor(webgl: WebGLInstance) {
     super();
@@ -97,6 +98,21 @@ class VertexObject extends DrawingObject {
     this.buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.points), this.gl.STATIC_DRAW);
+  }
+
+  resetBuffer(numPoints: number = 0) {
+    if (this.textureLocation) {
+      this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+      this.gl.deleteTexture(this.textureBuffer);
+    }
+    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+    this.gl.deleteBuffer(this.buffer);
+    this.setupBuffer(numPoints);
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  change(coords: Array<g2.Point>) {
+    this.resetBuffer();
   }
 
   // Abstract method - should be reimplemented for any vertexObjects that

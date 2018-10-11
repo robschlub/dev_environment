@@ -2,7 +2,9 @@
 
 import TRIHorizontalLine from '../../../DrawingObjects/VertexObject/Triangles/TRIHoriztonalLine';
 import { AxisProperties } from '../AxisProperties';
-import { Point, Transform } from '../../../tools/g2';
+import {
+  Point, Transform,
+} from '../../../tools/g2';
 import WebGLInstance from '../../../webgl/webgl';
 import VertexObject from '../../../DrawingObjects/VertexObject/VertexObject';
 

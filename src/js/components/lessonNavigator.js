@@ -3,8 +3,11 @@
 import * as React from 'react';
 import '../../css/style.scss';
 import LessonTile from './lessonTile';
-import { lessonIndex, LessonDescription } from '../../Lessons/lessonIndex';
-import { Point, Rect } from '../diagram/tools/g2';
+import LessonDescription from '../../Lessons/lessonDescription';
+import makeLessonTree from '../../Lessons/lessonTree';
+import {
+  Point, Rect,
+} from '../diagram/tools/g2';
 import { getDefinedCSSVariables } from '../tools/getCssVariables';
 
 type Props = {
@@ -14,7 +17,7 @@ type Props = {
 export default class LessonNavigator extends React.Component
                                     <Props> {
   selected: string;
-  lessonIndex: Array<Array<LessonDescription> | LessonDescription>;
+  lessonIndex: Array<Array<LessonDescription>>;
   key: number;
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
@@ -22,13 +25,14 @@ export default class LessonNavigator extends React.Component
   lessonTilesBounds: Rect;
   tileWidth: number;
   tileHeight: number;
+  tileVSpace: number;
+  tileHSpace: number;
 
   constructor(props: Props) {
     super(props);
-    this.lessonIndex = lessonIndex;
+    this.lessonIndex = makeLessonTree();
     this.getVariables();
     this.layoutLessonTiles();
-    this.getLessonTilesBounds();
     // let viewPortWidth = 0;
     // const doc = document.documentElement;
     // if (doc) {
@@ -67,8 +71,8 @@ export default class LessonNavigator extends React.Component
     if (this.selected !== '') {
       this.asTitle = true;
     }
-    this.tileWidth = 180;
-    this.tileHeight = 56;
+    // this.tileWidth = 180;
+    // this.tileHeight = 56;
   }
 
   getVariables() {
@@ -79,57 +83,69 @@ export default class LessonNavigator extends React.Component
         [
           '--navigator__tile_width',
           '--navigator__tile_height',
-          // '--navigator__tile_font_size',
-          // '--navigator__tile_img_width',
-          // '--navigator__large_screen_height',
-          // '--navigator__tile_padding_vertical',
-          // '--navigator__tile_padding_horizontal',
-          // '--navigator__tile_border_radius',
-          // '--navigator__tile_img_text_space',
+          '--navigator__tile_vSpace',
+          '--navigator__tile_hSpace',
         ],
         '--navigator__',
       );
       this.tileWidth = vars.tileWidth;
       this.tileHeight = vars.tileHeight;
+      this.tileVSpace = vars.tileVSpace;
+      this.tileHSpace = vars.tileHSpace;
     }
   }
 
   layoutLessonTiles() {
     this.lessonArray = [];
     // const y = this.tileHeight * 2 + vSpace * 2;
-    const width = this.tileWidth + 20;
+    const width = this.tileWidth;
     const height = this.tileHeight;
-    const vSpace = 10;
-    const y = this.tileHeight * 2 + vSpace * 2;
-    let x = 0;
+    const vSpace = this.tileVSpace;
+    const hSpace = this.tileHSpace;
+    let x = hSpace;
     this.lessonArray = [];
+    let maxParallel = 1;
+    this.lessonIndex.forEach((lesson) => {
+      if (Array.isArray(lesson)) {
+        if (lesson.length > maxParallel) {
+          maxParallel = lesson.length;
+        }
+      }
+    });
+    const yMiddle = (maxParallel * this.tileHeight
+                    + (maxParallel - 1) * vSpace
+                    + vSpace * 2) / 2;
+
     this.lessonIndex.forEach((lesson) => {
       if (Array.isArray(lesson)) {
         const len = lesson.length;
         const totalHeight = len * height + (len - 1) * vSpace;
-        let yStart = y - totalHeight / 2 + height / 2;
-        if (yStart < y - 2 * height - 2 * vSpace) {
-          yStart = y - 2 * height - 2 * vSpace;
+        let yStart = yMiddle - totalHeight / 2 + height / 2;
+        if (yStart < yMiddle - 2 * height - 2 * vSpace) {
+          yStart = yMiddle - 2 * height - 2 * vSpace;
         }
         lesson.forEach((parallelLesson, index) => {
           const yLocation = yStart + index * (height + vSpace);
           // eslint-disable-next-line no-param-reassign
-          parallelLesson.location = new Point(x, yLocation);
+          parallelLesson.location = new Point(x, yLocation - this.tileHeight / 2);
           this.lessonArray.push(parallelLesson);
         });
       } else {
         // eslint-disable-next-line no-param-reassign
-        lesson.location = new Point(x, y);
+        lesson.location = new Point(x, yMiddle - this.tileHeight / 2);
         this.lessonArray.push(lesson);
       }
-      x += width;
+      x += width + hSpace;
     });
+
+    this.getLessonTilesBounds();
   }
   // componentDidUpdate() {
   //   if (this.asTitle) {
   //     this.hideAllTilesButSelected();
   //   }
   // }
+
   showNavigator() {
     // console.log("showing")
     this.enableTransitions();
@@ -145,6 +161,7 @@ export default class LessonNavigator extends React.Component
       nav.style.overflow = 'scroll';
     }
   }
+
   // eslint-disable-next-line class-methods-use-this
   enableTransition(id: string, enable: boolean = false) {
     const element = document.getElementById(id);
@@ -256,12 +273,14 @@ export default class LessonNavigator extends React.Component
     }
     return <LessonTile
               id={lesson.id}
-              link={lesson.link}
+              link={`${lesson.link}/1`}
+              imgLink={lesson.imgLink}
               key={this.key}
               label={lesson.name}
               state={state}
               left={`${x}px`}
               top={`${y}px`}
+              title={false}
             />;
   }
 
@@ -301,34 +320,35 @@ export default class LessonNavigator extends React.Component
       }
     }
   }
+
   // eslint-disable-next-line class-methods-use-this
   centerLessons() {
     // const nav =
     //   document.getElementById('id_lesson__title_navigator_container');
+    const navigatorContainer = document.getElementById('id_navigator__container');
     const lessonsContainer =
       document.getElementById('id_navigator__lessons_positions_container');
-    if (lessonsContainer) {
-      // const xMargin = nav.clientWidth / 2 - 180 / 2;
-      const xMargin = 200;
-      const yMargin = 100;
-      // const yMargin = window.innerHeight * 0.6 / 2;
+    if (lessonsContainer != null && navigatorContainer != null) {
+      const navRect = navigatorContainer.getBoundingClientRect();
+      const navHeight = navRect.height;
+      // const xMargin = navRect.width / 2 - this.tileWidth / 2;
+      const xMargin = Math.min(this.tileWidth, navRect.width / 2 - this.tileWidth / 2);
       lessonsContainer.style.left = `${xMargin}px`;
-      lessonsContainer.style.top = `${yMargin - this.tileHeight / 2}px`;
+      lessonsContainer.style.top = `${(navHeight - this.lessonTilesBounds.height) / 2}px`;
       lessonsContainer.style.width = `${this.lessonTilesBounds.width + xMargin}px`;
-      lessonsContainer.style.height = `${this.lessonTilesBounds.height + yMargin + this.tileHeight / 2}px`;
+      lessonsContainer.style.height = `${this.lessonTilesBounds.height}px`;
     }
   }
 
   getLessonTilesBounds() {
-    // const elem =
-    //   document.getElementById('id_navigator__lessons_positions_container');
-    // if (elem) {
     let xMax = 0;
     let yMax = 0;
     let yMin = 0;
+    let xMin = 0;
     let firstElement = true;
     this.lessonArray.forEach((lesson) => {
       if (firstElement) {
+        xMin = lesson.location.x;
         xMax = lesson.location.x + this.tileWidth;
         yMin = lesson.location.y;
         yMax = lesson.location.y + this.tileHeight;
@@ -340,15 +360,16 @@ export default class LessonNavigator extends React.Component
         if (lesson.location.y + this.tileHeight > yMax) {
           yMax = lesson.location.y + this.tileHeight;
         }
-        if (lesson.location.y + this.tileHeight < yMin) {
-          yMin = lesson.location.y + this.tileHeight;
+        if (lesson.location.y < yMin) {
+          yMin = lesson.location.y;
         }
       }
     });
-    this.lessonTilesBounds = new Rect(0, yMin, xMax, yMax - yMin);
-    // } else {
-    //   this.lessonTilesBounds = new Rect(0, 0, 1, 1);
-    // }
+    yMin -= this.tileVSpace;
+    yMax += this.tileVSpace;
+    xMin -= this.tileHSpace;
+    xMax += this.tileHSpace;
+    this.lessonTilesBounds = new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
   }
   // componentDidMount() {
   //   const navigator = document.getElementById('id_navigator__container');

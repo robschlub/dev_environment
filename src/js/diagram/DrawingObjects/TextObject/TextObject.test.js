@@ -1,6 +1,10 @@
 
-import { TextObject, DiagramFont, DiagramText } from './TextObject';
-import { Point, Transform } from '../../tools/g2';
+import {
+  TextObject, DiagramFont, DiagramText,
+} from './TextObject';
+import {
+  Point, Transform,
+} from '../../tools/g2';
 import * as m2 from '../../tools/m2';
 import { round } from '../../tools/mathtools';
 import DrawContext2D from '../../../__mocks__/DrawContext2DMock';
@@ -43,7 +47,7 @@ describe('Diagram Text Object', () => {
       expect(ctx.textBaseline).toBe('middle');
     });
     test('Copy', () => {
-      const f2 = font.copy();
+      const f2 = font._dup();
       expect(font).not.toBe(f2);
       expect(font).toEqual(f2);
       const oldSize = font.size;
@@ -129,10 +133,10 @@ describe('Diagram Text Object', () => {
         const to = new TextObject(draw2D, textArray);
         const b = to.getGLBoundaryOfText(textArray[0], m2.identity());
         expect(b).toEqual([
-          new Point(-10, 24),
-          new Point(10, 24),
-          new Point(10, -24),
-          new Point(-10, -24),
+          new Point(-10, 18),
+          new Point(10, 18),
+          new Point(10, -18),
+          new Point(-10, -18),
         ]);
       });
       test('Text Boundary for 1, 1 location, no scaling, 0.5 transformation sacle', () => {
@@ -142,10 +146,10 @@ describe('Diagram Text Object', () => {
           new Transform().scale(0.5, 0.5).matrix(),
         );
         expect(b).toEqual([
-          new Point(-4.5, 12.5),
-          new Point(5.5, 12.5),
-          new Point(5.5, -11.5),
-          new Point(-4.5, -11.5),
+          new Point(-4.5, 9.5),
+          new Point(5.5, 9.5),
+          new Point(5.5, -8.5),
+          new Point(-4.5, -8.5),
         ]);
       });
       test('All Text Boundaries', () => {
@@ -153,16 +157,16 @@ describe('Diagram Text Object', () => {
         const b = to.getGLBoundaries(new Transform().scale(0.5, 0.5).translate(1, 1).matrix());
         expect(b).toEqual([
           [
-            new Point(-4, 13),
-            new Point(6, 13),
-            new Point(6, -11),
-            new Point(-4, -11),
+            new Point(-4, 10),
+            new Point(6, 10),
+            new Point(6, -8),
+            new Point(-4, -8),
           ],
           [
-            new Point(-3.5, 13.5),
-            new Point(6.5, 13.5),
-            new Point(6.5, -10.5),
-            new Point(-3.5, -10.5),
+            new Point(-3.5, 10.5),
+            new Point(6.5, 10.5),
+            new Point(6.5, -7.5),
+            new Point(-3.5, -7.5),
           ],
         ]);
       });

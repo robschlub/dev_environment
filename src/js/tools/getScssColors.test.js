@@ -46,8 +46,8 @@ describe('Get colors from scss', () => {
     });
 
     test('rgba', () => {
-      const result = round(getColors('rgb( 77,  120 , 161 , 12)').red, 5);
-      const exp = round([77, 120, 161, 12].map(x => x / 255.0), 5);
+      const result = round(getColors('rgb( 77,  120 , 161 , 0.1)').red, 5);
+      const exp = round([77, 120, 161, 0.1 * 255].map(x => x / 255.0), 5);
       expect(result).toEqual(exp);
     });
   });

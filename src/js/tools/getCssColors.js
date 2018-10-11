@@ -43,14 +43,19 @@ const diagramColorNames = [
   '--diagram-safe',
   '--diagram-passive',
   '--diagram-disabled',
+  '--diagram-disabledDark',
+  '--diagram-disabledDarkest',
   '--diagram-push',
+  '--diagram-action',
   '--diagram-text-base',
+  '--diagram-text-warning',
   '--diagram-text-plot',
   '--diagram-text-keyword',
   '--diagram-text-keyword2',
   '--diagram-text-latin',
   '--diagram-text-greek',
   '--diagram-text-english',
+  '--diagram-quizCheck',
 ];
 
 export default function getCSSColors(customColorNames: Array<string> = []): Object {
