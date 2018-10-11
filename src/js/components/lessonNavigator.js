@@ -30,7 +30,7 @@ export default class LessonNavigator extends React.Component
 
   constructor(props: Props) {
     super(props);
-    this.lessonIndex = makeLessonTree();
+    this.lessonIndex = makeLessonTree()['Geometry_1'];
     this.getVariables();
     this.layoutLessonTiles();
     this.key = 0;

@@ -27,43 +27,49 @@ function splitIndexIntoTopics(lessonIndex: Object, pathDepth: number = 3) {
 export default function makeLessonTree() {
   const lessonIndex = getLessonIndex();
   const lessonTopics = splitIndexIntoTopics(lessonIndex);
-  console.log(lessonTopics);
-  const lessonTree = [];
-  const remainingUIDs = {};
-  let existingUIDs = {};
-  lessonTopics['Geometry_1'].forEach((lesson) => {
-    remainingUIDs[lesson.uid] = lesson;
-  });
+  // console.log(lessonTopics);
+  const lessonTrees = {};
+  Object.keys(lessonTopics).forEach((topic) => {
+    const topicIndex = lessonTopics[topic];
+    const lessonTree = [];
+    const remainingUIDs = {};
+    let existingUIDs = {};
+    topicIndex.forEach((lesson) => {
+      remainingUIDs[lesson.uid] = lesson;
+    });
 
-  let index = 0;
-  const max = lessonTopics['Geometry_1'].length;
-  while (Object.keys(remainingUIDs).length > 0 && index < max) {
-    const lessonTreeNode = [];
-    const newExisting = {};
-    // eslint-disable-next-line no-loop-func
-    Object.keys(remainingUIDs).forEach((uid) => {
-      const lesson = remainingUIDs[uid];
-      let canAddToExisting = true;
-      lesson.dependencies.forEach((dependency) => {
-        if (!(dependency in existingUIDs)) {
-          canAddToExisting = false;
+    let index = 0;
+    const max = topicIndex.length;
+    while (Object.keys(remainingUIDs).length > 0 && index < max) {
+      const lessonTreeNode = [];
+      const newExisting = {};
+      // eslint-disable-next-line no-loop-func
+      Object.keys(remainingUIDs).forEach((uid) => {
+        const lesson = remainingUIDs[uid];
+        let canAddToExisting = true;
+        lesson.dependencies.forEach((dependency) => {
+          if (!(dependency in existingUIDs)) {
+            canAddToExisting = false;
+          }
+        });
+        if (canAddToExisting) {
+          newExisting[uid] = uid;
+          lessonTreeNode.push(lesson);
+          delete remainingUIDs[uid];
         }
       });
-      if (canAddToExisting) {
-        newExisting[uid] = uid;
-        lessonTreeNode.push(lesson);
-        delete remainingUIDs[uid];
-      }
-    });
-    existingUIDs = Object.assign(newExisting, existingUIDs);
-    lessonTree.push(lessonTreeNode);
-    index += 1;
+      existingUIDs = Object.assign(newExisting, existingUIDs);
+      lessonTree.push(lessonTreeNode);
+      index += 1;
 
-    // let outStr = ''
-    // lessonTreeNode.forEach((lesson) => {
-    //   outStr += lesson.name + ', ';
-    // })
-    // console.log(outStr);
-  }
-  return lessonTree;
+      // let outStr = ''
+      // lessonTreeNode.forEach((lesson) => {
+      //   outStr += lesson.name + ', ';
+      // })
+      // console.log(outStr);
+    }
+    lessonTrees[topic] = lessonTree;
+  });
+
+  return lessonTrees;
 }
