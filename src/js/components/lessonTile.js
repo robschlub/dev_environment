@@ -62,7 +62,7 @@ export default class LessonTile extends React.Component
 
     if (isTitle) {
       return <div
-      id={id}
+        id={id}
         style={style}
         className="navigator__lesson_tile">
         {content}
