@@ -94,7 +94,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     quad._p4.setTransformCallback = () => {
       this.updatePoints();
       this.updateQuad();
-      this.updateAngles();
+      // this.updateAngles();
     };
     quad.add('angle1', makeA());
     quad.add('angle2', makeA());
@@ -106,6 +106,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   }
 
   updateAngles() {
+    this.showAngles(true);
     const {
       p1, p2, p3, p4,
     } = this;
@@ -200,7 +201,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this.resetColors();
     this.calculateFuturePositions();
     this.showAngles(false);
-    this.moveToFuturePositions(1, this.showAngles.bind(this, true));
+    this.moveToFuturePositions(1, this.updateAngles.bind(this));
     this._input.enable();
     this._input.setValue('');
     this.diagram.animateNextFrame();

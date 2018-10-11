@@ -62,6 +62,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         diag.showCheck();
         diag.setFuturePositions();
+        diag.updateAngles();
       },
       // setSteadyState: () => {
       //   diag.setFuturePositions();
