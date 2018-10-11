@@ -103,7 +103,7 @@ export default function getLessonIndex() {
       'summary',
     ],
     [
-      'congruent_triangles',
+      'triangle_introduction',
     ],
   ));
   lessonIndex.push(new LessonDescription(

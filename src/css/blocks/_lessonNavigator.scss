@@ -1,6 +1,8 @@
 :root {
   --navigator__tile_width: 180px;
   --navigator__tile_height: 56px;
+  --navigator__tile_vSpace: 10px;
+  --navigator__tile_hSpace: 10px;
   --navigator__tile_font_size: 13px;
   --navigator__large_screen_height: 400px;
   --navigator__tile_padding_vertical: 10px;
@@ -12,18 +14,18 @@
 
 .naviagator__container {
   width: 100%;
-  height: calc(var(--lesson__container-height) / 3 * 2);
+  height: calc(var(--navigator__tile_height) * 3 + var(--navigator__tile_vSpace) * 6);
   max-height: 95vh;
   position: relative;
   background: white;
   z-index: 0;
 }
 
-@media screen and (min-width: 600px) {
-  .naviagator__container {
-    height: var(--navigator__large_screen_height);
-  }
-}
+// @media screen and (min-width: 600px) {
+//   .naviagator__container {
+//     height: var(--navigator__large_screen_height);
+//   }
+// }
 
 .navigator__left_side,
 .navigator__right_side {
