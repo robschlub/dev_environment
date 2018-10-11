@@ -549,11 +549,12 @@ export default class LessonComponent extends React.Component
         </div>
         <LessonTile
           id={'id_lesson__title_container'}
-          link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '')}`}
+          link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '/1')}`}
           imgLink={`/${this.lesson.content.iconLink}`}
           key='1'
           label={this.lesson.content.title}
-          state={'selected'}/>
+          state={'selected'}
+          title={true}/>
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">

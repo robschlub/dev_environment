@@ -25,7 +25,7 @@ class DrawingObject {
   border: Array<Array<Point>>; // Border vertices
   location: Point;
   holeBorder: Array<Array<Point>>;  // Border of any holes inside of main border
-  +change: (Array<Point>) => void;
+  +change: (any, any) => void;
 
   constructor() {
     // this.numPoints = 0;
@@ -141,7 +141,7 @@ class DrawingObject {
   }
 
   // eslint-disable-next-line no-unused-vars, class-methods-use-this
-  change(points: Array<Point>) {
+  change() {
   }
 }
 

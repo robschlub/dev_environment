@@ -767,8 +767,8 @@ class CircleCollection extends DiagramElementCollection {
   }
 
   spinRadius() {
-    const angle = this._circle._radius.transform.r() + Math.PI * 2;
-    this._circle._radius.animateRotationTo(angle, 1, 4, null);
+    const angle = this._circle._radius.transform.r() + Math.PI * 1.999;
+    this._circle._radius.animateRotationTo(angle, 1, 2, null);
     this.diagram.animateNextFrame();
   }
 

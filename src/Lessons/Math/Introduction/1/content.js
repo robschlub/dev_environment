@@ -168,7 +168,7 @@ class Content extends LessonContent {
         circle._diameterDimension.appear(0.5);
         circle._diameterDimension.animateCustomTo(
           circle._diameterDimension.grow.bind(circle),
-          tDiameter,
+          tDiameter, 0,
         );
 
         const makeEquation = () => {
@@ -190,6 +190,7 @@ class Content extends LessonContent {
           tDiameter,
           circle._circumferenceDimension.grow.bind(circle),
           1.5,
+          0,
           makeEquation.bind(circle),
         );
       },

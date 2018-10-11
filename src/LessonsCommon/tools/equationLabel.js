@@ -14,7 +14,7 @@ export type TypeEquationLabel = {
 
 export default function makeEquationLabel(
   diagram: Diagram,
-  labelTextOrEquation: string | Equation = '',
+  labelTextOrEquation: string | Equation | Array<string> = '',
   color: Array<number>,
 ) {
   let eqn;
@@ -28,16 +28,42 @@ export default function makeEquationLabel(
     eqn.formAlignment.scale = 0.7;
     eqn.addForm('base', ['base']);
     eqn.setCurrentForm('base');
-  } else {
+  } else if (labelTextOrEquation instanceof Equation) {
     eqn = labelTextOrEquation;
+  } else {
+    eqn = diagram.equation.makeEqn();
+    const elements = {};
+    labelTextOrEquation.forEach((labelText, index) => {
+      elements[`_${index}`] = labelText;
+    });
+    eqn.createElements(elements, color);
+    eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(0, 0);
+    eqn.formAlignment.fixTo = new Point(0, 0);
+    eqn.formAlignment.hAlign = 'center';
+    eqn.formAlignment.vAlign = 'middle';
+    eqn.formAlignment.scale = 0.7;
+    labelTextOrEquation.forEach((labelText, index) => {
+      eqn.addForm(`${index}`, [`_${index}`]);
+    });
+    eqn.setCurrentForm('0');
   }
 
-  // function updateScale(parentScale: Point) {
-  //   eqn.collection.transform.updateScale(
-  //     parentScale.x / Math.abs(parentScale.x),
-  //     parentScale.y / Math.abs(parentScale.y),
-  //   );
-  // }
+  function setText(text: string) {
+    const form = eqn.getCurrentForm();
+    if (form != null) {
+      const key = Object.keys(form.collection.elements)[0];
+      const textObject = form.collection.elements[key].vertices;
+      if (textObject != null) {
+        textObject.setText(text);
+      }
+      form.arrange(
+        eqn.formAlignment.scale,
+        eqn.formAlignment.hAlign,
+        eqn.formAlignment.vAlign,
+        eqn.formAlignment.fixTo,
+      );
+    }
+  }
 
   function updateRotation(
     labelAngle: number,
@@ -48,9 +74,10 @@ export default function makeEquationLabel(
     if (offsetMag !== 0) {
       let labelWidth = 0;
       let labelHeight = 0;
-      if (eqn.currentForm != null) {
-        labelWidth = eqn.currentForm.width / 2 + 0.04;
-        labelHeight = eqn.currentForm.height / 2 + 0.04;
+      const currentForm = eqn.getCurrentForm();
+      if (currentForm != null) {
+        labelWidth = currentForm.width / 2 + 0.04;
+        labelHeight = currentForm.height / 2 + 0.04;
       }
       const a = labelWidth + offsetMag;
       const b = labelHeight + offsetMag;
@@ -66,6 +93,7 @@ export default function makeEquationLabel(
   const label = {
     eqn,
     updateRotation,
+    setText,
     // updateScale,
   };
 

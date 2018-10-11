@@ -7,7 +7,7 @@
 //  - normAngle
 
 import {
-  roundNum, decelerate, clipMag, clipValue,
+  roundNum, decelerate, clipMag, clipValue, rand2D,
 } from './mathtools';
 // import { Console } from '../../tools/tools';
 import * as m2 from './m2';
@@ -433,6 +433,10 @@ function Line(p1: Point, p2OrMag: Point | number, angle: number = 0) {
   this.C = this.A * this.p1.x + this.B * this.p1.y;
   this.distance = distance(this.p1, this.p2);
 }
+
+Line.prototype.getPoint = function getPoint(index: number = 1) {
+  return this[`p${index}`];
+};
 
 Line.prototype.getYFromX = function getX(x: number) {
   if (this.B !== 0) {
@@ -1259,25 +1263,29 @@ class Transform {
     return true;
   }
 
-  isEqualTo(transformToCompare: Transform): boolean {
-    if (transformToCompare.order.length !== this.order.length) {
+  isEqualTo(transformToCompare: Transform, precision: number = 8): boolean {
+    // if (transformToCompare.order.length !== this.order.length) {
+    //   return false;
+    // }
+    if (!this.isSimilarTo(transformToCompare)) {
       return false;
     }
     for (let i = 0; i < this.order.length; i += 1) {
-      if (this.order[i].constructor.name !==
-          transformToCompare.order[i].constructor.name) {
+      const compare = transformToCompare.order[i];
+      const thisTrans = this.order[i];
+      if (thisTrans.constructor.name !== compare.constructor.name) {
         return false;
       }
-      if (this.order[i] instanceof Translation || this.order[i] instanceof Scale) {
-        if (transformToCompare.order[i].x !== this.order[i].x) {
-          return false;
-        }
-        if (transformToCompare.order[i].y !== this.order[i].y) {
+      if ((thisTrans instanceof Translation && compare instanceof Translation
+      ) || (
+        thisTrans instanceof Scale && compare instanceof Scale
+      )) {
+        if (compare.isNotEqualTo(thisTrans, precision)) {
           return false;
         }
       }
-      if (this.order[i] instanceof Rotation) {
-        if (transformToCompare.order[i].r !== this.order[i].r) {
+      if (thisTrans instanceof Rotation) {
+        if (compare.r !== thisTrans.r) {
           return false;
         }
       }
@@ -1679,6 +1687,16 @@ function threePointAngle(p2: Point, p1: Point, p3: Point) {
   return Math.acos((p12 ** 2 + p13 ** 2 - p23 ** 2) / (2 * p12 * p13));
 }
 
+function randomPoint(withinRect: Rect) {
+  const randPoint = rand2D(
+    withinRect.left,
+    withinRect.bottom,
+    withinRect.right,
+    withinRect.top,
+  );
+  return new Point(randPoint.x, randPoint.y);
+}
+
 export {
   point,
   Point,
@@ -1705,4 +1723,5 @@ export {
   getDeltaAngle,
   normAngleTo90,
   threePointAngle,
+  randomPoint,
 };

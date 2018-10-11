@@ -270,6 +270,13 @@ function randElements<T>(num: number, inputArray: Array<T>): Array<T> {
   return elements;
 }
 
+function rand2D(minX: number, minY: number, maxX: number, maxY: number) {
+  return {
+    x: rand(minX, maxX),
+    y: rand(minY, maxY),
+  };
+}
+
 export {
   round,
   roundNum,
@@ -287,5 +294,6 @@ export {
   randElement,
   removeRandElement,
   randElements,
+  rand2D,
 };
 

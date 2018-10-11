@@ -94,6 +94,29 @@ function equation(diagram: Diagram, high: boolean = false) {
     );
   }
 
+  function strike(color: Array<number> = [1, 1, 1, 1]) {
+    return diagram.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
+    );
+  }
+
+  function xStrike(color: Array<number> = [1, 1, 1, 1]) {
+    const cross = diagram.shapes.collection(new Transform('strike').scale(1, 1).rotate(0).translate(0, 0));
+    const strike1 = diagram.shapes.horizontalLine(
+      new Point(0, 0),
+      1, 1, 0,
+      color,
+      new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
+    );
+    const strike2 = strike1._dup();
+    cross.add('s1', strike1);
+    cross.add('s2', strike2);
+    return cross;
+  }
+
   function integral(
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
@@ -123,6 +146,15 @@ function equation(diagram: Diagram, high: boolean = false) {
     );
   }
 
+  function makeDescription(id: string) {
+    return diagram.shapes.htmlElement(
+      document.createElement('div'),
+      id,
+      'lesson__equation_description',
+      new Point(0, 0), 'middle', 'left',
+    );
+  }
+
   return {
     elements,
     vinculum,
@@ -130,6 +162,9 @@ function equation(diagram: Diagram, high: boolean = false) {
     make,
     makeHTML,
     makeEqn,
+    strike,
+    xStrike,
+    makeDescription,
   };
 }
 

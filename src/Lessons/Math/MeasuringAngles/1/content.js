@@ -675,7 +675,7 @@ class Content extends LessonContent {
       setContent: centerV(`
         
         <p>
-          One way to make it easier work with, is to substitue the approximate value |3.14159...| with a |symbol| when showing or writing angles. 
+          One way to make it easier to work with, is to substitue the approximate value |3.14159...| with a |symbol| when showing or writing angles. 
         </p>
         <p>
           Most commonly, the Greek letter |&pi;| is used as this symbol (pronounced pi).

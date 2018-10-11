@@ -34,7 +34,7 @@ class Content extends LessonContent {
         <p>
           A |Triangle| is a shape with |three sides|, and |three angles|. All the angles within a triangle add up to 180º.
         </p>
-        ${new Definition('Triangle', 'Latin', ['triangulus', '', 'tri', 'three', 'angulus', 'corner, angle']).html('id_lesson__related_angles_definition', 'lesson__definition_low')}
+        ${new Definition('Triangle', 'Latin', ['triangulus', '', 'tri', 'three', 'angulus', 'corner, angle']).html('id_lesson__related_angles_definition', 'lesson__definition_lowest')}
       `,
       modifiers: {
         Triangle: click(tri.randomize, [tri], colors.line),

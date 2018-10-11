@@ -21,10 +21,6 @@ export default function getLessonIndex() {
     'angles',
     [
       '1',
-      '2',
-      '3',
-      'quiz',
-      'summary',
     ],
     [
       'circles',
@@ -95,6 +91,19 @@ export default function getLessonIndex() {
     ],
     [
       'adjacent_angles',
+    ],
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Quadrangles',
+    '/Lessons/Math/Quadrangles',
+    'quadrangles',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'triangle_introduction',
     ],
   ));
   lessonIndex.push(new LessonDescription(

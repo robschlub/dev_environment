@@ -159,6 +159,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
         angle.updateAngle(r + Math.PI, Math.PI - r, threeLinesRotation);
       }
     }
+    // console.log(angle, intersect, r)
   }
 
   xOfLine3AtY(y: number = 0) {

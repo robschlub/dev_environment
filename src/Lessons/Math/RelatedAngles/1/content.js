@@ -52,7 +52,7 @@ class Content extends LessonContent {
       ],
       setInfo: [
         '<ul>',
-        '<li>Drag the lines to rotate and see the a different perspective.</li>',
+        '<li>Drag the lines to rotate and see a different perspective.</li>',
         '</ul>',
       ],
       setEnterState: () => {
@@ -299,7 +299,7 @@ class Content extends LessonContent {
       ],
       setInfo: [
         '<ul>',
-        '<li>Drag the different lines see the a different perspective.</li>',
+        '<li>Drag the different lines see a different perspective.</li>',
         '</ul>',
       ],
       setEnterState: () => {
@@ -440,6 +440,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         threeLines.correspondingToggleAngles(true);
         threeLines._line1.isMovable = true;
+        threeLines._line1.isTouchable = true;
         threeLines._line1.move.maxTransform.updateTranslation(
           10,
           layout.line1.corresponding.position.y,
@@ -458,6 +459,7 @@ class Content extends LessonContent {
       },
       setLeaveState: () => {
         threeLines._line1.isMovable = false;
+        threeLines._line1.isTouchable = false;
         threeLines._line2.isTouchable = true;
         threeLines._line2.hasTouchableElements = true;
       },

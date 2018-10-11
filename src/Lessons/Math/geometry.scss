@@ -1,7 +1,6 @@
 @import '../../css/style';
 
 $geometry_colors: (
-  lines:        color('diagram', 'primary'),
   point:        color('diagram', 'warning'),
   corners:      color('diagram', 'primary', 'light'),
   moreSharp:    color('diagram', 'warning', 'light'),
@@ -32,4 +31,11 @@ $geometry_colors: (
   disabled:     color('diagram', 'disabled', 'dark'),
   degrees:      color('diagram', 'primary', 'light'),
   radians:      color('diagram', 'primary', 'light'),
+  //
+  angles:         color('diagram', 'warning', 'base'),
+  angleLabels:    color('diagram', 'warning', 'base'),
+  lines:          color('diagram', 'primary'),
+  lineLabels:     color('diagram', 'primary'),
+  construction:      color('yellow', 'darkest'),
+  construction1:     color('diagram', 'warning', 'darker'),
 );

@@ -50,6 +50,33 @@ function interactiveItem(
   };
 }
 
+function infoList(listItems: Array<string>) {
+  const out = ['<ul>'];
+  listItems.forEach((item) => {
+    out.push(`<li>${item}</li>`);
+  });
+  out.push(['</ul>']);
+  return out.join(' ');
+}
+
+// function contentParagraphs(listItems: Array<string> | string) {
+//   const out = [];
+//   if (Array.isArray(listItems)) {
+//     listItems.forEach((item) => {
+//       if (item.charAt(0) !== '<') {
+//         out.push(`<p>${item}</p>`);
+//       } else {
+//         out.push(item);
+//       }
+//     });
+//   } else if (listItems.charAt(0) !== '<') {
+//     out.push(`<p>${listItems}</p>`);
+//   } else {
+//     out.push(listItems);
+//   }
+//   return out.join(' ');
+// }
+
 function diagramCanvas(
   id: string,
   DiagramClass: Object,
@@ -208,7 +235,10 @@ class Section {
         if (index > this.interactiveElementList.length - 1) {
           index = 0;
         }
-        const { element } = this.interactiveElementList[index];
+        let { element } = this.interactiveElementList[index];
+        if (typeof element === 'string') {
+          element = document.getElementById(element);
+        }
         let elementIsVisible = false;
         if (element instanceof HTMLElement) {
           const rect = element.getBoundingClientRect();
@@ -220,16 +250,34 @@ class Section {
           if (element.isShown) {
             elementIsVisible = true;
           }
-        } else if (element.isShown) {
-          if (element.isMovable || element.isTouchable) {
+        } else if ((element instanceof DiagramElementPrimative
+          || element instanceof DiagramElementCollection)
+          && element.isShown) {
+          if (element.isMovable || element.isTouchable || element.isInteractive) {
             elementIsVisible = true;
           }
         }
-        if (elementIsVisible) {
+        let elementIsTouchable = false;
+        if (element instanceof DiagramElementCollection) {
+          if (element.isTouchable || element.isMovable
+            || element.hasTouchableElements || element.isInteractive) {
+            elementIsTouchable = true;
+          }
+        } else if (element instanceof DiagramElementPrimative) {
+          if (element.isTouchable || element.isMovable || element.isInteractive) {
+            elementIsTouchable = true;
+          }
+        } else if (element instanceof HTMLElement) {
+          elementIsTouchable = true;
+        }
+        if (elementIsVisible && elementIsTouchable && element != null) {
           // this.content.highlightInteractiveElement(element, location);
           this.currentInteractiveItem = index;
           // break;
-          return this.interactiveElementList[index];
+          return {
+            element,
+            location: this.interactiveElementList[index].location,
+          };
         }
         index += 1;
         if (index > this.interactiveElementList.length - 1) {
@@ -253,7 +301,15 @@ class Section {
     if (typeof content === 'string') {
       content = [content];
     }
-    content.forEach((element) => {
+    const contentInParagraphs = [];
+    content.forEach((line) => {
+      if (line.charAt(0) !== '<') {
+        contentInParagraphs.push(`<p>${line}</p>`);
+      } else {
+        contentInParagraphs.push(line);
+      }
+    });
+    contentInParagraphs.forEach((element) => {
       htmlText = `${htmlText}${element}`;
     });
     // htmlText += '\n';
@@ -357,10 +413,17 @@ class Section {
       const elements = document.getElementsByClassName('interactive_word');
       for (let i = 0; i < elements.length; i += 1) {
         const element = elements[i];
-        this.interactiveElementList.push({
-          element,
-          location: 'topleft',
-        });
+        if (element.id != null) {
+          this.interactiveElementList.push({
+            element: element.id,
+            location: 'topleft',
+          });
+        } else {
+          this.interactiveElementList.push({
+            element,
+            location: 'topleft',
+          });
+        }
       }
 
       // Get all movable diagram elements
@@ -707,5 +770,5 @@ class LessonContent {
 
 export {
   Section, LessonContent, diagramCanvas, initializeItemSelector,
-  applyModifiers, interactiveItem,
+  applyModifiers, interactiveItem, infoList,
 };

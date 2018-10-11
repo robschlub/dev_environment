@@ -113,7 +113,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
       this.diagram.equation = this.diagram.equationHigh;
       this.add(collectionName, new Collection(
         diagram, layout,
-        new Transform(id).scale(1, 1).translate(0, 0),
+        new Transform(id).scale(1, 1).rotate(0).translate(0, 0),
       ));
       this.diagram.shapes = this.diagram.shapesLow;
       this.diagram.equation = this.diagram.equationLow;
@@ -143,7 +143,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     const link = this.getLinkFromString(linkOrLessonID);
     if (link) {
       a.href = link;
-      a.innerHTML = 'Go to lesson';
+      a.innerHTML = 'Go to lesson to see why';
       this.linkElement.appendChild(a);
     }
     // this.linkElement.innerHTML = `<a href=${link}>Go to lesson</a>`;
