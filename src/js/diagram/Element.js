@@ -467,7 +467,7 @@ class DiagramElement {
     this.name = ''; // This is updated when an element is added to a collection
     this.isMovable = false;
     this.isTouchable = false;
-    this.isInteractive =false;
+    this.isInteractive = false;
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
     this.onClick = null;
