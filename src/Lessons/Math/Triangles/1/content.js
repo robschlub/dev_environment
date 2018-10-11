@@ -390,7 +390,11 @@ class Content extends LessonContent {
 
     this.addSection(common, {
     });
-    common.modifiers.b = click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB);
+    common.modifiers = {
+      alternate_angle: click(qr._alternateAngles.show, [qr._alternateAngles], colors.line),
+      b: click(totalAngle.pulseAlternateB, [totalAngle], colors.angleB),
+    };
+
     this.addSection(common, {
       show: [...common.show, totalAngle._angleB],
       setSteadyState: () => {
