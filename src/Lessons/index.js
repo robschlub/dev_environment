@@ -5,7 +5,7 @@ export default function getLessonIndex() {
 
   lessonIndex.push(new LessonDescription(
     'Adjacent Angles',
-    '/Lessons/Math/Geometry1/AdjacentAngles',
+    '/Lessons/Math/Geometry_1/AdjacentAngles',
     'adjacent_angles',
     [
       '1',
@@ -18,7 +18,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Angles',
-    '/Lessons/Math/Geometry1/Angle',
+    '/Lessons/Math/Geometry_1/Angle',
     'angles',
     [
       '1',
@@ -30,7 +30,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Circles',
-    '/Lessons/Math/Geometry1/Circle',
+    '/Lessons/Math/Geometry_1/Circle',
     'circles',
     [
       '1',
@@ -42,7 +42,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Congruent Triangles',
-    '/Lessons/Math/Geometry1/CongruentTriangles',
+    '/Lessons/Math/Geometry_1/CongruentTriangles',
     'congruent_triangles',
     [
       '1',
@@ -56,7 +56,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Important Angles',
-    '/Lessons/Math/Geometry1/ImportantAngles',
+    '/Lessons/Math/Geometry_1/ImportantAngles',
     'important_angles',
     [
       '1',
@@ -68,7 +68,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Why Study Shapes?',
-    '/Lessons/Math/Geometry1/Introduction',
+    '/Lessons/Math/Geometry_1/Introduction',
     'why_study_shapes',
     [
       '1',
@@ -79,7 +79,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Measuring Angles',
-    '/Lessons/Math/Geometry1/MeasuringAngles',
+    '/Lessons/Math/Geometry_1/MeasuringAngles',
     'measuring_angles',
     [
       '1',
@@ -91,7 +91,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Parallel Lines',
-    '/Lessons/Math/Geometry1/ParallelLines',
+    '/Lessons/Math/Geometry_1/ParallelLines',
     'parallel_lines',
     [
       '1',
@@ -105,7 +105,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Quadrangles',
-    '/Lessons/Math/Geometry1/Quadrangles',
+    '/Lessons/Math/Geometry_1/Quadrangles',
     'quadrangles',
     [
       '1',
@@ -119,7 +119,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Related Angles',
-    '/Lessons/Math/Geometry1/RelatedAngles',
+    '/Lessons/Math/Geometry_1/RelatedAngles',
     'related_angles',
     [
       '1',
@@ -133,7 +133,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Area',
-    '/Lessons/Math/Geometry1/ToDo/Area',
+    '/Lessons/Math/Geometry_1/ToDo/Area',
     'area_introduction',
     [
       '1',
@@ -145,7 +145,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Calculating Pi',
-    '/Lessons/Math/Geometry1/ToDo/Calculating Pi',
+    '/Lessons/Math/Geometry_1/ToDo/Calculating Pi',
     'calculating_pi',
     [
       '1',
@@ -157,7 +157,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Important Triangles',
-    '/Lessons/Math/Geometry1/ToDo/ImportantTriangles',
+    '/Lessons/Math/Geometry_1/ToDo/ImportantTriangles',
     'important_triangles',
     [
       '1',
@@ -169,7 +169,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Pythagorean Theorm',
-    '/Lessons/Math/Geometry1/ToDo/Pythagoras',
+    '/Lessons/Math/Geometry_1/ToDo/Pythagoras',
     'pythagoras',
     [
       '1',
@@ -181,7 +181,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Right Angle Triangles',
-    '/Lessons/Math/Geometry1/ToDo/RightAngleTriangles',
+    '/Lessons/Math/Geometry_1/ToDo/RightAngleTriangles',
     'right_angle_triangles',
     [
       '1',
@@ -194,7 +194,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Similar Triangles',
-    '/Lessons/Math/Geometry1/ToDo/SimilarTriangles',
+    '/Lessons/Math/Geometry_1/ToDo/SimilarTriangles',
     'area_introduction',
     [
       '1',
@@ -206,7 +206,7 @@ export default function getLessonIndex() {
   ));
   lessonIndex.push(new LessonDescription(
     'Triangles',
-    '/Lessons/Math/Geometry1/Triangles',
+    '/Lessons/Math/Geometry_1/Triangles',
     'triangle_introduction',
     [
       '1',
@@ -217,6 +217,79 @@ export default function getLessonIndex() {
       'related_angles',
     ],
     true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Area',
+    '/Lessons/Math/Trigonometry_1/Area',
+    'area_introduction',
+    [
+      '1',
+    ],
+    [
+      'quadrangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Calculating Pi',
+    '/Lessons/Math/Trigonometry_1/Calculating Pi',
+    'calculating_pi',
+    [
+      '1',
+    ],
+    [
+      'right_angle_triangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Important Triangles',
+    '/Lessons/Math/Trigonometry_1/ImportantTriangles',
+    'important_triangles',
+    [
+      '1',
+    ],
+    [
+      'congruent_triangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Pythagorean Theorm',
+    '/Lessons/Math/Trigonometry_1/Pythagoras',
+    'pythagoras',
+    [
+      '1',
+    ],
+    [
+      'right_angle_triangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Right Angle Triangles',
+    '/Lessons/Math/Trigonometry_1/RightAngleTriangles',
+    'right_angle_triangles',
+    [
+      '1',
+    ],
+    [
+      'important_triangles',
+      'area_introduction',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Similar Triangles',
+    '/Lessons/Math/Trigonometry_1/SimilarTriangles',
+    'area_introduction',
+    [
+      '1',
+    ],
+    [
+      'congruent_triangles',
+    ],
+    false,
   ));
   return lessonIndex;
 }

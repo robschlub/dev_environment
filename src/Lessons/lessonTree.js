@@ -4,17 +4,39 @@ import getLessonIndex from './index';
 // first array of arrays: all uids with no dependencies
 // second array of arrays: all uids with dependencies alreay in the done list
 
+function splitIndexIntoTopics(lessonIndex: Object, pathDepth: number = 3) {
+  const topics = {};
+  lessonIndex.forEach((lesson) => {
+    let topic = lesson.link;
+    for (let i = 0; i < pathDepth; i += 1) {
+      topic = topic.replace(/\/[^/]*/, '');
+    }
+    topic = lesson.link.replace(topic, '');
+    for (let i = 0; i < pathDepth - 1; i += 1) {
+      topic = topic.replace(/\/[^/]*/, '');
+    }
+    topic = topic.slice(1);
+    if (!(topic in topics)) {
+      topics[topic] = [];
+    }
+    topics[topic].push(lesson);
+  });
+  return topics;
+}
+
 export default function makeLessonTree() {
   const lessonIndex = getLessonIndex();
+  const lessonTopics = splitIndexIntoTopics(lessonIndex);
+  console.log(lessonTopics);
   const lessonTree = [];
   const remainingUIDs = {};
   let existingUIDs = {};
-  lessonIndex.forEach((lesson) => {
+  lessonTopics['Geometry_1'].forEach((lesson) => {
     remainingUIDs[lesson.uid] = lesson;
   });
 
   let index = 0;
-  const max = lessonIndex.length;
+  const max = lessonTopics['Geometry_1'].length;
   while (Object.keys(remainingUIDs).length > 0 && index < max) {
     const lessonTreeNode = [];
     const newExisting = {};
