@@ -20,7 +20,7 @@ export default class HomeBanner extends React.Component
           <tr>
             <td>Interact</td>
             <td>•</td>
-            <td>Intuit</td>
+            <td>Understand</td>
             <td>•</td>
             <td>Learn</td>
           </tr>

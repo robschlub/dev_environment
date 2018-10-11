@@ -14,10 +14,10 @@ class GlobalAnimation {
     // If it doesn't, then setup some default values.
     if (!GlobalAnimation.instance) {
       this.requestNextAnimationFrame = (
-        window.requestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.msRequestAnimationFrame
+        window.requestAnimationFrame
+        || window.mozRequestAnimationFrame
+        || window.webkitRequestAnimationFrame
+        || window.msRequestAnimationFrame
       );
       GlobalAnimation.instance = this;
       this.drawQueue = [];

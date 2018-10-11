@@ -177,7 +177,7 @@ if [ $2 ];
       docker push registry.heroku.com/$APP_NAME/web
       if [ $IN_TRAVIS ];
         then
-          /usr/local/heroku/bin/heroku container:release web --app $APP_NAME
+          /usr/local/bin/heroku container:release web --app $APP_NAME
         else
           heroku container:release web --app $APP_NAME
       fi

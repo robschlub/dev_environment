@@ -1,9 +1,11 @@
 // Define a contrasts map, mapping the shade of color to a contrast
 $_color_contrasts: (
+  'highest': 'darkest',
   'higher': 'darker',
   'high': 'dark',
   'low': 'light',
-  'lower': 'lighter'
+  'lower': 'lighter',
+  'lowest': 'lightest'
 );
 
 // Get a final palette with contrasts added
@@ -32,41 +34,57 @@ $_color_theme-standard-light: (
   'hue7':             (color: 'orange', shade: 'base'),
   'hue8':             (color: 'violet', shade: 'base'),
   'hue9':             (color: 'brown',  shade: 'base'),
-  diagram: (
+  'hue10':            (color: 'grey',   shade: 'base'),
+  'black':            (color: 'black',  shade: 'base'),
+  'white':            (color: 'white',  shade: 'base'),
+  'blue':             (color: 'blue',   shade: 'base'),
+  'red':              (color: 'red',    shade: 'base'),
+  'green':            (color: 'green',  shade: 'base'),
+  'yellow':           (color: 'yellow', shade: 'base'),
+  'cyan':             (color: 'cyan',   shade: 'base'),
+  'orange':           (color: 'green',  shade: 'base'),
+  'violet':           (color: 'violet', shade: 'base'),
+  'brown':            (color: 'brown',  shade: 'base'),
+  'grey':             (color: 'grey',   shade: 'base'),
+  'diagram': (
     'background':     (color: 'white',  shade: 'base'),
     'primary':        (color: 'blue',   shade: 'base'),
     'warning':        (color: 'red',    shade: 'base'),
     'safe':           (color: 'green',  shade: 'base'),
     'passive':        (color: 'yellow', shade: 'base'),
     'disabled':       (color: 'grey',   shade: 'base'),
+    'disabledDark':   (color: 'grey',   shade: 'darker'),
+    'disabledDarkest': (color: 'grey',   shade: 'darkest'),
     'push':           (color: 'red',    shade: 'base'),
+    'action':         (color: 'cyan',   shade: 'base'),
     'text-base':      (color: 'grey',   shade: 'dark'),
+    'text-warning':   (color: 'red',    shade: 'lighter'),
     'text-plot':      (color: 'blue',   shade: 'light'),
     'text-keyword':   (color: 'blue',   shade: 'light'),
-    'text-keyword2':  (color: 'green',   shade: 'light'),
+    'text-keyword2':  (color: 'green',  shade: 'light'),
     'text-latin':     (color: 'blue',   shade: 'light'),
-    'text-greek':     (color: 'orange',   shade: 'light'),
+    'text-greek':     (color: 'orange', shade: 'light'),
     'text-english':   (color: 'blue',   shade: 'light'),
-    'action':         (color: 'violet', shade: 'lighter'),
+    'quizCheck':      (color: 'violet', shade: 'base'),
   ),
-  lesson: (
+  'lesson': (
     'background':       (color: 'grey',   shade: 'lighter'),
     'text-title':       (color: 'blue',   shade: 'dark'),
     'title-background': (color: 'white',  shade: 'base'),
     'text':             (color: 'grey',   shade: 'darker'),
     'navigation':       (color: 'grey',   shade: 'base'),
   ),
-  site: (
+  'site': (
     'primary':          (color: 'blue',   shade: 'base'),
     'secondary':        (color: 'blue',   shade: 'light'),
     'text':             (color: 'grey',   shade: 'darker'),
-    'background':       (color: 'grey',  shade: 'darker'),
-    'disabled':       (color: 'grey',   shade: 'base'),
+    'background':       (color: 'grey',   shade: 'darker'),
+    'disabled':         (color: 'grey',   shade: 'base'),
     'safe':             (color: 'green',  shade: 'base'),
-    'menus':            (color: 'grey',  shade: 'darker'),
+    'menus':            (color: 'grey',   shade: 'darker'),
   ),
-  navbar: (
-    'button':           (color: 'white',   shade: 'lighter'),
+  'navbar': (
+    'button':           (color: 'white',  shade: 'lighter'),
     'background':       (color: 'grey',   shade: 'darker'),
     'base':             (color: 'white',  shade: 'light'),
     'hover':            (color: 'white',  shade: 'lighter'),
@@ -75,5 +93,5 @@ $_color_theme-standard-light: (
     'toggler-border':   (color: 'white',  shade: 'light'),
     'toggler-icon':     $navbar-dark-toggler-icon-bg
   ),
-  palette: $_color_standard-light-theme-palette,
+  'palette': $_color_standard-light-theme-palette,
 );

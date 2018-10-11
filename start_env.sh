@@ -1,6 +1,7 @@
 DOCKERFILE='Dockerfile_prod'
 HOST_PORT=5000
 CMD=''
+PROJECT_PATH=`pwd`
 
 stop_dev_server() {
   SERVER_RUNNING=`docker ps --format {{.Names}} \
@@ -60,17 +61,20 @@ if [ $1 = 'prod' ];
     devenv-$1
 else
   docker run -it --rm \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/tests:/opt/app/tests \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/app:/opt/app/app \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/src:/opt/app/src \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/webpack.config.js:/opt/app/webpack.config.js \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/lessons.js:/opt/app/lessons.js \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/update_paths.py:/opt/app/update_paths.py \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.eslintrc.json:/opt/app/.eslintrc.json \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.flake8:/opt/app/.flake8 \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/jest.config.js:/opt/app/jest.config.js \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/.stylelintrc:/opt/app/.stylelintrc \
-    -v /Users/rob/Dropbox/Programming/Repositories/Test_Projects/dev_environment/containers/dev/pytest.ini:/opt/app/pytest.ini \
+    -v $PROJECT_PATH/tests:/opt/app/tests \
+    -v $PROJECT_PATH/app:/opt/app/app \
+    -v $PROJECT_PATH/src:/opt/app/src \
+    -v $PROJECT_PATH/reports:/opt/app/reports \
+    -v $PROJECT_PATH/containers/dev/webpack.config.js:/opt/app/webpack.config.js \
+    -v $PROJECT_PATH/containers/dev/getLessons.js:/opt/app/getLessons.js \
+    -v $PROJECT_PATH/containers/dev/lessons.js:/opt/app/lessons.js \
+    -v $PROJECT_PATH/containers/dev/update_paths.py:/opt/app/update_paths.py \
+    -v $PROJECT_PATH/.eslintrc.json:/opt/app/.eslintrc.json \
+    -v $PROJECT_PATH/.flake8:/opt/app/.flake8 \
+    -v $PROJECT_PATH/.babelrc:/opt/app/.babelrc \
+    -v $PROJECT_PATH/jest.config.js:/opt/app/jest.config.js \
+    -v $PROJECT_PATH/.stylelintrc:/opt/app/.stylelintrc \
+    -v $PROJECT_PATH/containers/dev/pytest.ini:/opt/app/pytest.ini \
     --name devenv-$1 \
     -p $HOST_PORT:$CONTAINTER_PORT \
     devenv-$1 $CMD

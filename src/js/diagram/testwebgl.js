@@ -5,12 +5,18 @@ import VertexPolyLineCorners from './DrawingObjects/VertexObject/VertexPolyLineC
 import VertexPolyLine from './DrawingObjects/VertexObject/VertexPolyLine';
 import VertexArrow from './DrawingObjects/VertexObject/VertexArrow';
 import VertexRadialLines from './DrawingObjects/VertexObject/VertexRadialLines';
-import { Transform, Point, TransformLimit } from './tools/g2';
-import { DiagramElementCollection, DiagramElementPrimative, AnimationPhase } from './Element';
+import {
+  Transform, Point, TransformLimit,
+} from './tools/g2';
+import {
+  DiagramElementCollection, DiagramElementPrimative, AnimationPhase,
+} from './Element';
 import Diagram from './Diagram';
 import * as tools from './tools/mathtools';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
-import { CartesianPlotProperties, TraceProperties } from './DiagramElements/Plot/CartesianPlotProperties';
+import {
+  CartesianPlotProperties, TraceProperties,
+} from './DiagramElements/Plot/CartesianPlotProperties';
 import CartesianPlot from './DiagramElements/Plot/CartesianPlot';
 import getScssColors from '../tools/getScssColors';
 import styles from '../../css/style.scss';
@@ -66,6 +72,7 @@ class ShapesCollection extends DiagramElementCollection {
       ],
       false,
       0.1,
+      'never',
     );
 
     const radialVertices = new VertexRadialLines(
@@ -258,8 +265,8 @@ class Diagram1 extends Diagram {
 
   createDiagramElements() {
     this.elements = new ShapesCollection(
-      this.webgl,
-      this.draw2D,
+      this.webglLow,
+      this.draw2DLow,
       new Transform().rotate(0).translate(0, 0),
       this.limits,
     );

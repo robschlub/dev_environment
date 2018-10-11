@@ -1,6 +1,8 @@
 // @flow
 
-import { Point, Transform } from '../../tools/g2';
+import {
+  Point, Transform,
+} from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from '../../DrawingObjects/VertexObject/VertexObject';
 
@@ -37,9 +39,8 @@ class VertexIntegral extends VertexObject {
     const bias = 0.01 * mul;
     const xArray = range(-0.18, 0.18, 0.01);
     const yArray = xArray.map(x => L / (1 + Math.exp(-k * x)));
-    const normDist = xArray.map(x => a /
-      Math.sqrt(2 * Math.PI * sigma ** 2) *
-      Math.exp(-(x ** 2) / (2 * sigma ** 2)));
+    const normDist = xArray.map(x => a / Math.sqrt(2 * Math.PI * sigma ** 2)
+                                     * Math.exp(-(x ** 2) / (2 * sigma ** 2)));
     const xLeft = xArray.map((x, index) => x - normDist[index] - bias);
     const xRight = xArray.map((x, index) => x + normDist[index] + bias);
     const serifRadius = 0.03 * mul;
@@ -91,8 +92,8 @@ class VertexIntegral extends VertexObject {
       this.points.push(pRight.y);
       this.points.push(pLeft.x);
       this.points.push(pLeft.y);
-      borderLeft.push(pLeft.copy());
-      borderRight.push(pRight.copy());
+      borderLeft.push(pLeft._dup());
+      borderRight.push(pRight._dup());
       return undefined;
     });
 
@@ -113,7 +114,7 @@ class VertexIntegral extends VertexObject {
     }
 
     this.border[0] = borderLeft.concat(borderRight.reverse());
-    this.border[0].push(this.border[0][0].copy());
+    this.border[0].push(this.border[0][0]._dup());
 
     // normalize all points to have bottom left corner at 0,0
     // and height to be 1.
