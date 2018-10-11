@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent,
+  LessonContent, interactiveItem,
 } from '../../../../js/Lesson/LessonContent';
 // import {
 //   click, highlight,
@@ -34,7 +34,14 @@ class Content extends LessonContent {
           Find the unknown angle in the triangle.
         </p>
       `,
-      setInfo: 'Touch the grey box to enter the angle',
+      setInfo: [
+        '<ul>',
+        '<li>Touch the grey box to enter the angle, then touch the |check| button to check the answer.</li>',
+        '</ul>',
+      ],
+      interactiveElements: [
+        interactiveItem(diag._check),
+      ],
       setEnterState: () => {
         tri._triangle.hasTouchableElements = true;
         tri._triangle.autoShowAngles = true;

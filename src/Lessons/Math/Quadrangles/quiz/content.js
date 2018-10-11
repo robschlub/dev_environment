@@ -30,6 +30,14 @@ class Content extends LessonContent {
           Calculate the unknown angle in the quadrangle.
         </p>
       `,
+      setInfo: [
+        '<ul>',
+        '<li>Touch the grey box to enter the angle, then touch the |check| button to check the answer.</li>',
+        '</ul>',
+      ],
+      interactiveElements: [
+        interactiveItem(diag._check),
+      ],
       show: [
         diag._input, diag._quad,
       ],

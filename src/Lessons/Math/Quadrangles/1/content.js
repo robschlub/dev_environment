@@ -728,7 +728,7 @@ class Content extends LessonContent {
         '</ul>',
       ],
       infoModifiers: {
-        diagonal_line: highlight(colors.diagram.action),
+        two_angles_and_side_between: highlight(colors.diagram.action),
         congruent: highlight(colors.diagram.action),
       },
     });

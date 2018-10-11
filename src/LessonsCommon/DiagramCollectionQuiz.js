@@ -174,6 +174,7 @@ const CommonQuizMixin = superclass => class extends superclass {
       'middle',
       'center',
     );
+    html.isTouchable = true;
     return html;
   }
 
