@@ -22,6 +22,10 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     _angle3: TypeAngle;
     _angle4: TypeAngle;
     _line: DiagramElementPrimative;
+    _p1: DiagramElementPrimative;
+    _p2: DiagramElementPrimative;
+    _p3: DiagramElementPrimative;
+    _p4: DiagramElementPrimative;
   } & DiagramElementCollection;
 
   answer: number;
@@ -32,14 +36,29 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   p4: Point;
 
   randomQuadPoints() {
-    this.p1 = randomPoint(this.layout.pointRects.quad1);
-    this.p2 = randomPoint(this.layout.pointRects.quad2);
-    this.p3 = randomPoint(this.layout.pointRects.quad3);
-    this.p4 = randomPoint(this.layout.pointRects.quad4);
+    return {
+      p1: randomPoint(this.layout.pointRects.quad1),
+      p2: randomPoint(this.layout.pointRects.quad2),
+      p3: randomPoint(this.layout.pointRects.quad3),
+      p4: randomPoint(this.layout.pointRects.quad4),
+    };
   }
 
   updateQuad() {
     this._quad._line.vertices.change([this.p1, this.p2, this.p3, this.p4]);
+  }
+
+  updatePoints() {
+    const p1 = this._quad._p1.transform.t();
+    const p2 = this._quad._p2.transform.t();
+    const p3 = this._quad._p3.transform.t();
+    const p4 = this._quad._p4.transform.t();
+    if (p1 != null && p2 != null && p3 != null && p4 != null) {
+      this.p1 = p1;
+      this.p2 = p2;
+      this.p3 = p3;
+      this.p4 = p4;
+    }
   }
 
   makeQuad() {
@@ -59,6 +78,23 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       );
       angle.addLabel('', this.layout.angleRadius + this.layout.angleLabelOffset);
       return angle;
+    };
+
+    const makeP = () => {
+      const point = this.diagram.shapes.polygon(
+        4, 0.1, 0.01, 0, 1, 4, [0, 0, 0, 0.01],
+        new Transform().translate(0, 0),
+      );
+      return point;
+    };
+    quad.add('p1', makeP());
+    quad.add('p2', makeP());
+    quad.add('p3', makeP());
+    quad.add('p4', makeP());
+    quad._p4.setTransformCallback = () => {
+      this.updatePoints();
+      this.updateQuad();
+      this.updateAngles();
     };
     quad.add('angle1', makeA());
     quad.add('angle2', makeA());
@@ -107,6 +143,20 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this._quad._angle4.setColor(this.layout.colors.angles);
   }
 
+  showAngles(show: boolean = true) {
+    if (show === true) {
+      this._quad._angle1.show();
+      this._quad._angle2.show();
+      this._quad._angle3.show();
+      this._quad._angle4.show();
+    } else {
+      this._quad._angle1.hide();
+      this._quad._angle2.hide();
+      this._quad._angle3.hide();
+      this._quad._angle4.hide();
+    }
+  }
+
   constructor(
     diagram: LessonDiagram,
     transform: Transform = new Transform('1 DiagramCollection'),
@@ -116,32 +166,41 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       diagram, layout, 'q1', {}, transform,
     );
     this.add('quad', this.makeQuad());
-    this.randomQuadPoints();
-    this.updateQuad();
-    this.updateAngles();
     this.add('input', this.makeEntryBox('a1', '?', 3));
     this._input.setPosition(this.layout.input);
+  }
+
+  calculateFuturePositions() {
+    this.futurePositions = [];
+    const futurePos = (element, position) => ({
+      element,
+      scenario: {
+        position,
+      },
+    });
+    const {
+      p1, p2,
+      p3, p4,
+    } = this.randomQuadPoints();
+    this.futurePositions.push(futurePos(this._quad._p1, p1));
+    this.futurePositions.push(futurePos(this._quad._p2, p2));
+    this.futurePositions.push(futurePos(this._quad._p3, p3));
+    this.futurePositions.push(futurePos(this._quad._p4, p4));
   }
 
   tryAgain() {
     super.tryAgain();
     this._input.enable();
     this._input.setValue('');
-    // this.selectMultipleChoice('congruent_tri_1', -1);
   }
 
-  // randomizeFuturePositions() {
-  //   this._triangle.calculateFuturePositions();
-  // }
 
   newProblem() {
     super.newProblem();
     this.resetColors();
-    this.randomQuadPoints();
-    this.updateQuad();
-    this.updateAngles();
-    // this.randomizeFuturePositions();
-    // this._quad.moveToFuturePositions(1, this.showAngles.bind(this));
+    this.calculateFuturePositions();
+    this.showAngles(false);
+    this.moveToFuturePositions(1, this.showAngles.bind(this, true));
     this._input.enable();
     this._input.setValue('');
     this.diagram.animateNextFrame();

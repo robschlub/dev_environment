@@ -31,7 +31,7 @@ class Content extends LessonContent {
       title: 'Quiz',
       setContent: `
         <p>
-          Find the unknown angle.
+          Find the unknown angle in the quadrangle.
         </p>
       `,
       // setInfo: 'Select |Yes| or |No| then touch the |Check| box',
@@ -56,9 +56,13 @@ class Content extends LessonContent {
       //   diag._answerBox.disable();
       //   diag.moveToFuturePositions(1, done);
       // },
+      setEnterState: () => {
+        diag.calculateFuturePositions();
+      },
       setSteadyState: () => {
         diag.showCheck();
-      }
+        diag.setFuturePositions();
+      },
       // setSteadyState: () => {
       //   diag.setFuturePositions();
       //   diag.showAnglesAndSides();
