@@ -248,7 +248,6 @@ export default class LessonNavigator extends React.Component
           lessons.push(this.createLessonJsx(parallelLesson));
         });
       } else {
-        console.log(lesson)
         lessons.push(this.createLessonJsx(lesson));
       }
     });
