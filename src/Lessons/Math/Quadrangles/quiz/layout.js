@@ -34,7 +34,7 @@ export default function lessonLayout() {
   const height = 0.8;
   layout.quadPosition = new Point(0, -0.2);
   layout.angleRadius = 0.25;
-  layout.angleLabelOffset = 0.05;
+  layout.angleLabelOffset = 0.02;
   layout.angleSides = 200;
   layout.pointRects = {
     quad1: new Rect(0, 0, width, height),
