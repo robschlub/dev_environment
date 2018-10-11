@@ -1,7 +1,7 @@
 // @flow
 import { Transform, Point, randomPoint } from '../../../../js/diagram/tools/g2';
 import {
-  removeRandElement, roundNum, rand,
+  removeRandElement, roundNum,
 } from '../../../../js/diagram/tools/mathtools';
 import lessonLayout from './layout';
 

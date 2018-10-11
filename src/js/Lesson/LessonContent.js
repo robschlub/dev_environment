@@ -54,7 +54,7 @@ function infoList(listItems: Array<string>) {
   const out = ['<ul>'];
   listItems.forEach((item) => {
     out.push(`<li>${item}</li>`);
-  })
+  });
   out.push(['</ul>']);
   return out.join(' ');
 }
