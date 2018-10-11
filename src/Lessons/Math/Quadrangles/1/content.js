@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent,
+  LessonContent, infoList,
 } from '../../../../js/Lesson/LessonContent';
 // import {
 //   Point,
@@ -155,11 +155,9 @@ class Content extends LessonContent {
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
       },
-      setInfo: [
-        '<ul>',
-        '<li>Touch |triangle| to see more details on the triangle lesson.</li>',
-        '</ul>',
-      ],
+      setInfo: infoList([
+        'Touch |triangle| to see more details on the triangle lesson.',
+      ]),
       infoModifiers: {
         triangle: highlight(colors.diagram.action),
       },
@@ -246,12 +244,10 @@ class Content extends LessonContent {
         side_lengths: click(rect.pulseSideLabels, [rect], colors.lines),
         angles: click(rect.pulseRightAngles, [rect], colors.angles),
       },
-      setInfo: [
-        '<ul>',
-        '<li>Touch |side_lengths| to highlight the sides.</li>',
-        '<li>Touch |angles| to highlight the angles.</li>',
-        '</ul>',
-      ],
+      setInfo: infoList([
+        'Touch |side_lengths| to highlight the sides.',
+        'Touch |angles| to highlight the angles.',
+      ]),
       infoModifiers: {
         side_lengths: highlight(colors.lines),
         angles: highlight(colors.angles),

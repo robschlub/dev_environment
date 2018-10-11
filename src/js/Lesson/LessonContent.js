@@ -50,6 +50,15 @@ function interactiveItem(
   };
 }
 
+function infoList(listItems: Array<string>) {
+  const out = ['<ul>'];
+  listItems.forEach((item) => {
+    out.push(`<li>${item}</li>`);
+  })
+  out.push(['</ul>']);
+  return out.join(' ');
+}
+
 function diagramCanvas(
   id: string,
   DiagramClass: Object,
@@ -734,5 +743,5 @@ class LessonContent {
 
 export {
   Section, LessonContent, diagramCanvas, initializeItemSelector,
-  applyModifiers, interactiveItem,
+  applyModifiers, interactiveItem, infoList,
 };
