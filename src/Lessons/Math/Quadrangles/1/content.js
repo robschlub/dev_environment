@@ -93,31 +93,25 @@ class Content extends LessonContent {
       setSteadyState: () => {},
     };
     this.addSection(common, {
-      title: 'Quadrilateral',
-      setContent: `
-        <p>
-          A |quadrangle| is a shape with |four sides| and |four angles|. This shape is also somtimes called a |quadrilateral|.
-        </p>
-        ${new Definition('Quadrangle', 'Latin', ['quattuor', 'four', 'angulus', 'angle, corner']).html('id_lesson__quadrilateral_definition')}
-        ${new Definition('Quadrilateral', 'Latin', ['quattuor', 'four', 'latus, later', 'side']).html('id_lesson__quadrilateral_definition', 'lesson__definition_low')}
-      `,
+      title: 'Quadrangle',
+      setContent: [
+        'A |quadrangle| is a shape with |four sides| and |four angles|. This shape is also somtimes called a |quadrilateral|.',
+        `${new Definition('Quadrangle', 'Latin', ['quattuor', 'four', 'angulus', 'angle, corner']).html('id_lesson__quadrilateral_definition')}
+        ${new Definition('Quadrilateral', 'Latin', ['quattuor', 'four', 'latus, later', 'side']).html('id_lesson__quadrilateral_definition', 'lesson__definition_low')}`,
+      ],
     });
 
     this.addSection(common, {
-      setContent: `
-        <p>
-          The four side lengths and four angles are |properties| of a quadrangle. 
-        </p>
-      `,
+      setContent: [
+        'The four side lengths and four angles are |properties| of a quadrangle.',
+      ],
     });
 
     this.addSection(common, {
       title: 'Total Angle',
-      setContent: `
-        <p>
-          Similar to a |triangle|, all the angles in a quadrangle are related to each other and will |always add up to the same angle|.
-        </p>
-      `,
+      setContent: [
+        'Similar to a |triangle|, all the angles in a quadrangle are related to each other and will |always add up to the same angle|.',
+      ],
       modifiers: {
         triangle: click(qr._tri.show, [qr._tri], colors.diagram.action),
       },

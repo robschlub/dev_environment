@@ -59,6 +59,24 @@ function infoList(listItems: Array<string>) {
   return out.join(' ');
 }
 
+// function contentParagraphs(listItems: Array<string> | string) {
+//   const out = [];
+//   if (Array.isArray(listItems)) {
+//     listItems.forEach((item) => {
+//       if (item.charAt(0) !== '<') {
+//         out.push(`<p>${item}</p>`);
+//       } else {
+//         out.push(item);
+//       }
+//     });
+//   } else if (listItems.charAt(0) !== '<') {
+//     out.push(`<p>${listItems}</p>`);
+//   } else {
+//     out.push(listItems);
+//   }
+//   return out.join(' ');
+// }
+
 function diagramCanvas(
   id: string,
   DiagramClass: Object,
@@ -283,7 +301,15 @@ class Section {
     if (typeof content === 'string') {
       content = [content];
     }
-    content.forEach((element) => {
+    const contentInParagraphs = [];
+    content.forEach((line) => {
+      if (line.charAt(0) !== '<') {
+        contentInParagraphs.push(`<p>${line}</p>`);
+      } else {
+        contentInParagraphs.push(line);
+      }
+    });
+    contentInParagraphs.forEach((element) => {
       htmlText = `${htmlText}${element}`;
     });
     // htmlText += '\n';
