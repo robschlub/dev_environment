@@ -159,19 +159,20 @@ module.exports = (env) => {
               //   name: '[path][hash].[ext]'
               // }
               options: {
-                name (file) {
+                name(file) {
                   // if (env === 'development') {
                   //   return '[path][name].[ext]'
                   // }
                   let newPath = file.replace('/opt/app/src/', '');
                   // newPath = newPath.replace('/tile.png', '');
                   newPath = newPath.replace(/\/[^/]*$/, '');
+                  // console.log(newPath)
                   return `${newPath}/[name].[ext]`;
                 },
               },
             },
           ],
-        }
+        },
       ],
     },
     plugins: pluginArray,

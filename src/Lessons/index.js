@@ -14,6 +14,7 @@ export default function getLessonIndex() {
     [
       'important_angles',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Angles',
@@ -25,6 +26,7 @@ export default function getLessonIndex() {
     [
       'circles',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Circles',
@@ -36,6 +38,7 @@ export default function getLessonIndex() {
     [
       'why_study_shapes',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Congruent Triangles',
@@ -49,6 +52,7 @@ export default function getLessonIndex() {
     [
       'triangle_introduction',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Important Angles',
@@ -60,6 +64,7 @@ export default function getLessonIndex() {
     [
       'measuring_angles',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Why Study Shapes?',
@@ -68,6 +73,9 @@ export default function getLessonIndex() {
     [
       '1',
     ],
+    [
+    ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Measuring Angles',
@@ -79,6 +87,7 @@ export default function getLessonIndex() {
     [
       'angles',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Parallel Lines',
@@ -92,6 +101,7 @@ export default function getLessonIndex() {
     [
       'adjacent_angles',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Quadrangles',
@@ -103,8 +113,9 @@ export default function getLessonIndex() {
       'summary',
     ],
     [
-      'triangle_introduction',
+      'congruent_triangles',
     ],
+    true,
   ));
   lessonIndex.push(new LessonDescription(
     'Related Angles',
@@ -118,6 +129,80 @@ export default function getLessonIndex() {
     [
       'parallel_lines',
     ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Area',
+    '/Lessons/Math/ToDo/Area',
+    'area_introduction',
+    [
+      '1',
+    ],
+    [
+      'quadrangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Calculating Pi',
+    '/Lessons/Math/ToDo/Calculating Pi',
+    'calculating_pi',
+    [
+      '1',
+    ],
+    [
+      'right_angle_triangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Important Triangles',
+    '/Lessons/Math/ToDo/ImportantTriangles',
+    'important_triangles',
+    [
+      '1',
+    ],
+    [
+      'congruent_triangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Pythagorean Theorm',
+    '/Lessons/Math/ToDo/Pythagoras',
+    'pythagoras',
+    [
+      '1',
+    ],
+    [
+      'right_angle_triangles',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Right Angle Triangles',
+    '/Lessons/Math/ToDo/RightAngleTriangles',
+    'right_angle_triangles',
+    [
+      '1',
+    ],
+    [
+      'important_triangles',
+      'area_introduction',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Similar Triangles',
+    '/Lessons/Math/ToDo/SimilarTriangles',
+    'area_introduction',
+    [
+      '1',
+    ],
+    [
+      'congruent_triangles',
+    ],
+    false,
   ));
   lessonIndex.push(new LessonDescription(
     'Triangles',
@@ -131,6 +216,7 @@ export default function getLessonIndex() {
     [
       'related_angles',
     ],
+    true,
   ));
   return lessonIndex;
 }

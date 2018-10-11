@@ -2,9 +2,10 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Quadrangles',
-  uid: 'quadrangles',
-  dependencies: ['congruent_triangles'],
+  title: 'Area',
+  uid: 'area_introduction',
+  dependencies: ['quadrangles'],
+  enabled: false,
 };
 
 module.exports = {
