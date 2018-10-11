@@ -62,7 +62,7 @@ class Content extends LessonContent {
       },
       setInfo: [
         '<ul>',
-        '<li>Touch the |side_lengths| and |angles| text toggle the side and angle annotations.</li>',
+        '<li>Touch the |side_lengths| and |angles| text to toggle the side and angle annotations.</li>',
         '</ul>',
       ],
       infoModifiers: {
