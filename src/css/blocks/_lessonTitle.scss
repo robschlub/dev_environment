@@ -4,7 +4,7 @@ $title-width: 350px;
 .lesson__title_container {
   position: absolute;
   left: calc(50% - #{$title-width} / 2);
-  top: calc(var(--lesson__title_space) / 2 - #{$title-height} / 2);
+  top: calc(var(--lesson__title_space) / 3 - #{$title-height} / 2);
   width: $title-width;
   height: $title-height;
   font-size: var(--navigator__tile_font_size);
@@ -36,7 +36,14 @@ $title-width: 350px;
 .lesson__title_text {
   display: table-cell;
   vertical-align: middle;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 200;
   padding-left: 10px;
+  color: color('grey', 'base');
+}
+
+@media screen and (min-width: $tablet) {
+  .lesson__title_container {
+    top: calc(var(--lesson__title_space) / 2 - #{$title-height} / 2);
+  }
 }

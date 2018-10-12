@@ -18,13 +18,15 @@
   min-width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: color('site', 'primary', 'base');
+  // background-color: color('site', 'primary', 'base');
   display: inline-block;
   // margin-top: 110px;
   margin-right: 5px;
   margin-left: 5px;
   padding-left: 10px;
   padding-right: 10px;
+  background-color: white;
+  border: 1px solid color('grey', 'base');
 }
 
 .lesson__path_tile_right {
@@ -61,7 +63,8 @@
 }
 
 .lesson__path_tile_label {
-  color: white;
+  color: color('grey', 'base');
+  font-weight: 200;
   display: table-cell;
   vertical-align: middle;
   width: 100%;
