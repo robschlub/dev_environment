@@ -272,16 +272,24 @@ export default class LessonNavigator extends React.Component
   scrollToSelected() {
     const navScroll = document
       .getElementById(`id_navigator__scroll_container_${this.topic}`);
-    if (navScroll) {
+    const navigatorContainer = document
+      .getElementById(`id_navigator__container_${this.topic}`);
+    if (navScroll != null && navigatorContainer != null) {
+      const navRect = navigatorContainer.getBoundingClientRect();
+      const xMargin = Math.min(
+        this.tileWidth,
+        navRect.width / 2 - this.tileWidth / 2,
+      );
+      const yMargin = (navRect.height - this.lessonTilesBounds.height) / 2;
       if (this.selected !== '') {
-        navScroll.scrollLeft = this.selectedLesson.location.x + 200
+        navScroll.scrollLeft = this.selectedLesson.location.x + xMargin
                                - navScroll.clientWidth / 2 + this.tileWidth / 2;
-        navScroll.scrollTop = this.selectedLesson.location.y + 100
+        navScroll.scrollTop = this.selectedLesson.location.y + yMargin
                                - navScroll.clientHeight / 2 + this.tileHeight / 2;
       } else {
-        navScroll.scrollLeft = this.lessonArray[0].location.x + 200
+        navScroll.scrollLeft = this.lessonArray[0].location.x + xMargin
                                - navScroll.clientWidth / 2 + this.tileWidth / 2;
-        navScroll.scrollTop = this.lessonArray[0].location.y + 100
+        navScroll.scrollTop = this.lessonArray[0].location.y + yMargin
                                - navScroll.clientHeight / 2 + this.tileHeight / 2;
       }
     }

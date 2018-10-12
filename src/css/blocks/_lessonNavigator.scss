@@ -246,13 +246,14 @@
 }
 
 .navigator__topic_title_text {
-  display: tabel-cell;
+  display: table-cell;
   vertical-align: middle;
 }
 
 @media screen and (min-width: 600px) {
-  // .navigator__topic_title {
-  //   text-align: left;
-  //   // padding-left: calc(var(--navigator__tile_width) / 3);
-  // }
+  .navigator__topic_title_container {
+    // background-color: white;
+    // padding: 15px;
+    text-align: center;
+  }
 }
