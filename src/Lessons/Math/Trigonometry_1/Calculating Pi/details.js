@@ -4,7 +4,7 @@
 var details = {
   title: 'Calculating Pi',
   uid: 'calculating_pi',
-  dependencies: ['right_angle_triangles'],
+  dependencies: ['area_introduction'],
   enabled: false,
 };
 

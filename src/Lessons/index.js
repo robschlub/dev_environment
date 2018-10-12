@@ -238,7 +238,7 @@ export default function getLessonIndex() {
       '1',
     ],
     [
-      'right_angle_triangles',
+      'area_introduction',
     ],
     false,
   ));
@@ -250,7 +250,7 @@ export default function getLessonIndex() {
       '1',
     ],
     [
-      'congruent_triangles',
+      'calculating_pi',
     ],
     false,
   ));
@@ -262,7 +262,7 @@ export default function getLessonIndex() {
       '1',
     ],
     [
-      'right_angle_triangles',
+      'important_triangles',
     ],
     false,
   ));
@@ -274,8 +274,7 @@ export default function getLessonIndex() {
       '1',
     ],
     [
-      'important_triangles',
-      'area_introduction',
+      'pythagoras',
     ],
     false,
   ));
@@ -287,7 +286,7 @@ export default function getLessonIndex() {
       '1',
     ],
     [
-      'congruent_triangles',
+      'right_angle_triangles',
     ],
     false,
   ));

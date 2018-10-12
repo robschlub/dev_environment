@@ -18,8 +18,10 @@ const homePage = () => {
         <div className="navbar__spacer"/>
         <HomeBanner/>
         <div className='lesson__white_spacer'/>
+        <div className='navigator__topic_title'>Geometry 1</div>
         <LessonNavigator topic={'Geometry_1'}/>
         <div className='lesson__white_spacer'/>
+        <div className='navigator__topic_title'>Trigonometry 1</div>
         <LessonNavigator topic={'Trigonometry_1'}/>
         <div className='lesson__white_spacer'/>
         <Footer/>

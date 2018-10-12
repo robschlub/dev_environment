@@ -4,7 +4,7 @@
 var details = {
   title: 'Pythagorean Theorm',
   uid: 'pythagoras',
-  dependencies: ['right_angle_triangles'],
+  dependencies: ['important_triangles'],
   enabled: false,
 };
 
