@@ -336,12 +336,15 @@ export default class LessonNavigator extends React.Component
   // eslint-disable-next-line class-methods-use-this
   render() {
     const classStr = 'naviagator__container navigator__container_with_shadow';
-    return <div id={`id_navigator__container_${this.topic}`} className={classStr}>
-      <div className="navigator__left_side" />
-      <div className="navigator__right_side" />
-      <div id={`id_navigator__scroll_container_${this.topic}`} className="navigator__scroll_container">
-        <div id={`id_navigator__lessons_positions_container_${this.topic}`} className="navigator__lessons_positions_container">
-            {this.lessons()}
+    return <div>
+      <div className='navigator__topic_title'>{this.topic.replace(/_/, ' ')}</div>
+      <div id={`id_navigator__container_${this.topic}`} className={classStr}>
+        <div className="navigator__left_side" />
+        <div className="navigator__right_side" />
+        <div id={`id_navigator__scroll_container_${this.topic}`} className="navigator__scroll_container">
+          <div id={`id_navigator__lessons_positions_container_${this.topic}`} className="navigator__lessons_positions_container">
+              {this.lessons()}
+          </div>
         </div>
       </div>
     </div>;

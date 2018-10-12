@@ -222,4 +222,8 @@
 
 .navigator__topic_title {
   background-color: white;
+  text-align: center;
+  font-size: calc(var(--navigator__tile_font_size) * 2);
+  padding: calc(var(--navigator__tile_font_size) * 1);
+  // padding-left: var(--navigator__tile_width);
 }
