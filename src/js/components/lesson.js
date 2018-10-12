@@ -437,6 +437,21 @@ export default class LessonComponent extends React.Component
     return output;
   }
 
+  calcTitleHeight() {
+    const { lessonDescription } = this;
+    let count = 0;
+    if (lessonDescription != null) {
+      count = lessonDescription.paths.length;
+    }
+    if (count === 1) {
+      return ' lesson__title_bar_force_low';
+    }
+    if (count > 2) {
+      return ' lesson__title_bar_force_high';
+    }
+    return '';
+  }
+
   addLessonPaths() {
     const output = [];
     const { lessonDescription } = this;
@@ -538,7 +553,7 @@ export default class LessonComponent extends React.Component
   render() {
     // console.log(this.lesson.content.iconLink)
     return <div>
-      <div className='lesson__title'>
+      <div className={`lesson__title_bar${this.calcTitleHeight()}`}>
         <div className="lesson__path_container">
           <div className="lesson__path_left_tiles">
             {this.addLessonPaths()}

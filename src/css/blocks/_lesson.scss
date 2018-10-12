@@ -16,10 +16,13 @@ $goto_button-font-size: 1.4;
 // Content area aspect ratio
 $diagram_ratio: 1.5;
 
+$title_bar_space_high: 145px;
+$title_bar_space_low: 90px;
+
 // Default variable values
 @media (min-aspect-ratio: 1/100) {
   :root {
-    --lesson__title_space: 145px;
+    --lesson__title_space: #{$title_bar_space_high};
     --lesson__container-width: 90vw;
     --lesson__container-height: calc(var(--lesson__container-width) / #{$diagram_ratio});
     --lesson__title-height: calc(#{$title-height} * 1vw);
@@ -422,13 +425,13 @@ $diagram_ratio: 1.5;
   width: 100%;
 }
 
-.lesson__title {
-  height: var(--lesson__title_space);
-  text-align: center;
-  // font-weight: bold;
-  width: 100%;
-  background-color: color('lesson', 'title-background');
-}
+// .lesson__title {
+//   height: var(--lesson__title_space);
+//   text-align: center;
+//   // font-weight: bold;
+//   width: 100%;
+//   background-color: color('lesson', 'title-background');
+// }
 
 @media screen and (min-width: $mobile) {
   :root {
@@ -447,12 +450,12 @@ $diagram_ratio: 1.5;
     --lesson__title_tile_font_size: 20px;
     --lesson__title_tile_border_radius: 22px;
     --lesson__title_tile_top: 20px;
-    --lesson__title_space: 90px;
+    --lesson__title_space: #{$title_bar_space_low};
   }
 
-  .lesson__title {
-    height: 90px;
-  }
+  // .lesson__title {
+  //   height: 90px;
+  // }
 }
 
 .lesson__title_tile {
