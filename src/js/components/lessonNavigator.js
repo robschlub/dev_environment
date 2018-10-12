@@ -11,6 +11,7 @@ import {
 import { getDefinedCSSVariables } from '../tools/getCssVariables';
 
 type Props = {
+  topic: string;
   selected?: ?string;
 };
 
@@ -18,6 +19,7 @@ export default class LessonNavigator extends React.Component
                                     <Props> {
   selected: string;
   lessonIndex: Array<Array<LessonDescription>>;
+  lessonTrees: Object;
   key: number;
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
@@ -30,7 +32,8 @@ export default class LessonNavigator extends React.Component
 
   constructor(props: Props) {
     super(props);
-    this.lessonIndex = makeLessonTree()['Geometry_1'];
+    this.lessonTrees = makeLessonTree();
+    this.lessonIndex = this.lessonTrees[props.topic];
     this.getVariables();
     this.layoutLessonTiles();
     this.key = 0;

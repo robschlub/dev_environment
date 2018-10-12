@@ -195,7 +195,7 @@ export default function getLessonIndex() {
   lessonIndex.push(new LessonDescription(
     'Similar Triangles',
     '/Lessons/Math/Geometry_1/ToDo/SimilarTriangles',
-    'area_introduction',
+    'similar_triangles',
     [
       '1',
     ],
@@ -282,7 +282,7 @@ export default function getLessonIndex() {
   lessonIndex.push(new LessonDescription(
     'Similar Triangles',
     '/Lessons/Math/Trigonometry_1/SimilarTriangles',
-    'area_introduction',
+    'similar_triangles',
     [
       '1',
     ],

@@ -27,15 +27,16 @@ function splitIndexIntoTopics(lessonIndex: Object, pathDepth: number = 3) {
 export default function makeLessonTree() {
   const lessonIndex = getLessonIndex();
   const lessonTopics = splitIndexIntoTopics(lessonIndex);
-  // console.log(lessonTopics);
   const lessonTrees = {};
   Object.keys(lessonTopics).forEach((topic) => {
     const topicIndex = lessonTopics[topic];
     const lessonTree = [];
     const remainingUIDs = {};
     let existingUIDs = {};
+    const allUIDs = [];
     topicIndex.forEach((lesson) => {
       remainingUIDs[lesson.uid] = lesson;
+      allUIDs.push(lesson.uid);
     });
 
     let index = 0;
@@ -48,7 +49,7 @@ export default function makeLessonTree() {
         const lesson = remainingUIDs[uid];
         let canAddToExisting = true;
         lesson.dependencies.forEach((dependency) => {
-          if (!(dependency in existingUIDs)) {
+          if (!(dependency in existingUIDs) && (allUIDs.indexOf(dependency) > -1)) {
             canAddToExisting = false;
           }
         });
@@ -61,12 +62,6 @@ export default function makeLessonTree() {
       existingUIDs = Object.assign(newExisting, existingUIDs);
       lessonTree.push(lessonTreeNode);
       index += 1;
-
-      // let outStr = ''
-      // lessonTreeNode.forEach((lesson) => {
-      //   outStr += lesson.name + ', ';
-      // })
-      // console.log(outStr);
     }
     lessonTrees[topic] = lessonTree;
   });
