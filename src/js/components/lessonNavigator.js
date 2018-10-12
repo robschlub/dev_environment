@@ -344,7 +344,11 @@ export default class LessonNavigator extends React.Component
         <div className="navigator__topic_title_container">
           <img src={`/static/dist/${this.topicPath}/topic.png`}
                className="navigator__topic_title_img"/>
-          <div className='navigator__topic_title'>{this.topicName}</div>
+          <div className='navigator__topic_title'>
+            <div className='navigator__topic_title_text'>
+              {this.topicName}
+            </div>
+          </div>
         </div>
         <div id={`id_navigator__container_${this.topic}`} className={classStr}>
         <div className="navigator__left_side" />
