@@ -226,12 +226,13 @@
 }
 
 .navigator__topic_title_img {
-  display: table-cell;
-  vertical-align: middle;
+  // display: table-cell;
+  // vertical-align: middle;
   float: left;
   width: 45px;
   height: 45px;
   background-color: red;
+  // padding: 5px;
 }
 
 .navigator__topic_title {
