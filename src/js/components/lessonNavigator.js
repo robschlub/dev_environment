@@ -340,9 +340,8 @@ export default class LessonNavigator extends React.Component
   // eslint-disable-next-line class-methods-use-this
   render() {
     const classStr = 'naviagator__container navigator__container_with_shadow';
-    console.log(this.topicPath)
     return <div>
-      <div className='navigator__topic_title'>{this.topicName}</div>
+      <img src={`/static/dist/${this.topicPath}/topic.png`}/><div className='navigator__topic_title'>{this.topicName}</div>
       <div id={`id_navigator__container_${this.topic}`} className={classStr}>
         <div className="navigator__left_side" />
         <div className="navigator__right_side" />
