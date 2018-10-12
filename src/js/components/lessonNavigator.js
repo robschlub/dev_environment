@@ -30,11 +30,15 @@ export default class LessonNavigator extends React.Component
   tileVSpace: number;
   tileHSpace: number;
   topic: string;
+  topicPath: string;
+  topicName: string;
 
   constructor(props: Props) {
     super(props);
     this.lessonTrees = makeLessonTree();
-    this.lessonIndex = this.lessonTrees[props.topic];
+    this.lessonIndex = this.lessonTrees[props.topic].tree;
+    this.topicPath = this.lessonTrees[props.topic].path;
+    this.topicName = this.lessonTrees[props.topic].name;
     this.getVariables();
     this.layoutLessonTiles();
     this.key = 0;
@@ -128,17 +132,17 @@ export default class LessonNavigator extends React.Component
   //   }
   // }
 
-  // eslint-disable-next-line class-methods-use-this
-  enableTransition(id: string, enable: boolean = false) {
-    const element = document.getElementById(id);
-    if (element) {
-      if (enable) {
-        element.style.transition = 'all 1.0s ease';
-      } else {
-        element.style.transition = 'none';
-      }
-    }
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // enableTransition(id: string, enable: boolean = false) {
+  //   const element = document.getElementById(id);
+  //   if (element) {
+  //     if (enable) {
+  //       element.style.transition = 'all 1.0s ease';
+  //     } else {
+  //       element.style.transition = 'none';
+  //     }
+  //   }
+  // }
 
   // disableTransitions() {
   //   this.enableTransition('id_lesson__title_navigator_container', false);
@@ -336,8 +340,9 @@ export default class LessonNavigator extends React.Component
   // eslint-disable-next-line class-methods-use-this
   render() {
     const classStr = 'naviagator__container navigator__container_with_shadow';
+    console.log(this.topicPath)
     return <div>
-      <div className='navigator__topic_title'>{this.topic.replace(/_/, ' ')}</div>
+      <div className='navigator__topic_title'>{this.topicName}</div>
       <div id={`id_navigator__container_${this.topic}`} className={classStr}>
         <div className="navigator__left_side" />
         <div className="navigator__right_side" />

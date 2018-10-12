@@ -8,19 +8,26 @@ function splitIndexIntoTopics(lessonIndex: Object, pathDepth: number = 3) {
   const topics = {};
   lessonIndex.forEach((lesson) => {
     let topic = lesson.link;
+    let lessonName = lesson.link;
     for (let i = 0; i < pathDepth; i += 1) {
-      topic = topic.replace(/\/[^/]*/, '');
+      lessonName = lessonName.replace(/\/[^/]*/, '');
     }
-    topic = lesson.link.replace(topic, '');
+    const topicPath = lesson.link.replace(lessonName, '');
+    topic = topicPath;
     for (let i = 0; i < pathDepth - 1; i += 1) {
       topic = topic.replace(/\/[^/]*/, '');
     }
     topic = topic.slice(1);
     if (!(topic in topics)) {
-      topics[topic] = [];
+      topics[topic] = {
+        path: topicPath,
+        lessons: [],
+        name: topic.replace(/_/, ' '),
+      };
     }
-    topics[topic].push(lesson);
+    topics[topic].lessons.push(lesson);
   });
+
   return topics;
 }
 
@@ -29,7 +36,7 @@ export default function makeLessonTree() {
   const lessonTopics = splitIndexIntoTopics(lessonIndex);
   const lessonTrees = {};
   Object.keys(lessonTopics).forEach((topic) => {
-    const topicIndex = lessonTopics[topic];
+    const topicIndex = lessonTopics[topic].lessons;
     const lessonTree = [];
     const remainingUIDs = {};
     let existingUIDs = {};
@@ -63,7 +70,11 @@ export default function makeLessonTree() {
       lessonTree.push(lessonTreeNode);
       index += 1;
     }
-    lessonTrees[topic] = lessonTree;
+    lessonTrees[topic] = {
+      tree: lessonTree,
+      name: lessonTopics[topic].name,
+      path: lessonTopics[topic].path,
+    };
   });
 
   return lessonTrees;
