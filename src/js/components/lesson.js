@@ -446,7 +446,7 @@ export default class LessonComponent extends React.Component
     if (count === 1) {
       return ' lesson__title_bar_force_low';
     }
-    if (count > 2) {
+    if (count > 8) {
       return ' lesson__title_bar_force_high';
     }
     return '';

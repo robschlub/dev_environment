@@ -65,7 +65,7 @@ $title-width: 350px;
 .lesson__title_text {
   display: table-cell;
   vertical-align: middle;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 200;
   padding-left: 10px;
   color: color('grey', 'base');
@@ -74,5 +74,9 @@ $title-width: 350px;
 @media screen and (min-width: $tablet) {
   .lesson__title_container {
     top: calc(var(--lesson__title_space) / 2 - #{$title-height} / 2);
+  }
+
+  .lesson__title_text {
+    font-size: 30px;
   }
 }
