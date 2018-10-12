@@ -101,7 +101,7 @@
 }
 
 .navigator__lesson_tile_disabled:hover {
-  background-color: color('site', 'disabled', 'light');
+  background-color: color('site', 'disabled', 'lighter');
 }
 
 .navigator__lesson_tile_selected {
@@ -160,7 +160,15 @@
 //   width: 2px;
 // }
 
-#id_navigator__lessons_positions_container {
+// #id_navigator__lessons_positions_container {
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+//   width: 0;
+//   height: 0;
+// }
+
+.navigator__lessons_positions_container {
   position: absolute;
   left: 0;
   top: 0;

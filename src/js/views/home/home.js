@@ -21,6 +21,7 @@ const homePage = () => {
         <LessonNavigator topic={'Geometry_1'}/>
         <div className='lesson__white_spacer'/>
         <LessonNavigator topic={'Trigonometry_1'}/>
+        <div className='lesson__white_spacer'/>
         <Footer/>
       </div>,
       id,
