@@ -19,6 +19,7 @@ $diagram_ratio: 1.5;
 // Default variable values
 @media (min-aspect-ratio: 1/100) {
   :root {
+    --lesson__title_space: 145px;
     --lesson__container-width: 90vw;
     --lesson__container-height: calc(var(--lesson__container-width) / #{$diagram_ratio});
     --lesson__title-height: calc(#{$title-height} * 1vw);
@@ -422,7 +423,7 @@ $diagram_ratio: 1.5;
 }
 
 .lesson__title {
-  height: 145px;
+  height: var(--lesson__title_space);
   text-align: center;
   // font-weight: bold;
   width: 100%;

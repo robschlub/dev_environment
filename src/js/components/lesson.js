@@ -6,7 +6,7 @@ import Lesson from '../Lesson/Lesson';
 import Button from './button';
 import LessonNavigator from './lessonNavigator';
 import LessonTilePath from './lessonPathTile';
-import LessonTile from './lessonTile';
+import LessonTitle from './lessonTitle';
 import getLessonIndex from '../../Lessons/index';
 import LessonDescription from '../../Lessons/lessonDescription';
 
@@ -547,14 +547,11 @@ export default class LessonComponent extends React.Component
             {this.addQuizSummary()}
           </div>
         </div>
-        <LessonTile
-          id={'id_lesson__title_container'}
-          link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '/1')}`}
+        <LessonTitle
           imgLink={`/${this.lesson.content.iconLinkGrey}`}
           key='1'
           label={this.lesson.content.title}
-          state={'selected'}
-          title={true}/>
+          />
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
