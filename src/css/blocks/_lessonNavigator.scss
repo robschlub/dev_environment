@@ -222,8 +222,16 @@
 
 .navigator__topic_title {
   background-color: white;
+  color: color('grey', 'light');
   text-align: center;
+  font-weight: 200;
   font-size: calc(var(--navigator__tile_font_size) * 2);
   padding: calc(var(--navigator__tile_font_size) * 1);
-  // padding-left: var(--navigator__tile_width);
+}
+
+@media screen and (min-width: 600px) {
+  .navigator__topic_title {
+    text-align: left;
+    padding-left: calc(var(--navigator__tile_width) / 3);
+  }
 }
