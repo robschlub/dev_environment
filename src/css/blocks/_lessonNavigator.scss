@@ -64,7 +64,7 @@
 }
 
 .navigator__lesson_tile_containter {
-  background: color('site', 'primary');
+  background: color('site', 'primary', 'light');
   padding-top: var(--navigator__tile_padding_vertical);
   padding-bottom: var(--navigator__tile_padding_vertical);
   padding-left: var(--navigator__tile_padding_horizontal);
@@ -105,11 +105,11 @@
 }
 
 .navigator__lesson_tile_selected {
-  background-color: color('site', 'safe', 'dark');
+  background-color: color('site', 'safe');
 }
 
 .navigator__lesson_tile_selected:hover {
-  background: color('site', 'safe');
+  background: color('site', 'safe', 'light');
 }
 
 .navigator__lesson_tile_containter_title:hover {
