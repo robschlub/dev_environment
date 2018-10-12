@@ -134,7 +134,7 @@ export default function commonLessonLayout() {
     angle: {
       radius: 0.3,
       lineWidth: 0.03,
-      sides: 100,
+      sides: 200,
     },
     triangle: {
       points: [
