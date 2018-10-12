@@ -9,6 +9,7 @@ import {
 import LessonDiagram from './diagram';
 // import HTMLEquation from '../../../../js/diagram/DiagramElements/Equation/HTMLEquation';
 import imgLink from '../tile.png';
+import imgLinkGrey from '../tile-grey.png';
 import lessonLayout from './layout';
 import details from '../details';
 
@@ -31,6 +32,7 @@ class Content extends LessonContent {
   setTitle() {
     this.title = details.details.title;
     this.iconLink = imgLink;
+    this.iconLinkGrey = imgLinkGrey;
   }
 
   setDiagram(htmlId: string = '') {

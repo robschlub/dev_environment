@@ -219,74 +219,134 @@ export default function getLessonIndex() {
     true,
   ));
   lessonIndex.push(new LessonDescription(
-    'Area',
-    '/Lessons/Math/Trigonometry_1/Area',
-    'area_introduction',
+    'Chord',
+    '/Lessons/Math/Trigonometry_1/Chord',
+    'chord',
+    [
+      '1',
+    ],
+    [
+      'sine_introduction',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Cosecant',
+    '/Lessons/Math/Trigonometry_1/Cosecant',
+    'cosecant_introduction',
+    [
+      '1',
+    ],
+    [
+      'secant_introduction',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Cosine',
+    '/Lessons/Math/Trigonometry_1/Cosine',
+    'consine_introduction',
+    [
+      '1',
+    ],
+    [
+      'sine_introduction',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Cotangent',
+    '/Lessons/Math/Trigonometry_1/Cotangent',
+    'cotangent_introduction',
+    [
+      '1',
+    ],
+    [
+      'pythagorean_identity',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Law of Cosines',
+    '/Lessons/Math/Trigonometry_1/Law of Cosines',
+    'law_of_cosines',
+    [
+      '1',
+    ],
+    [
+      'law_of_sines',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Law of Sines',
+    '/Lessons/Math/Trigonometry_1/Law of Sines',
+    'law_of_sines',
+    [
+      '1',
+    ],
+    [
+      'pythagorean_identity',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Pythagorean Identity',
+    '/Lessons/Math/Trigonometry_1/Pythagoras',
+    'pythagorean_identity',
+    [
+      '1',
+    ],
+    [
+      'tangent_introduction',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Secant',
+    '/Lessons/Math/Trigonometry_1/Secant',
+    'secant_introduction',
+    [
+      '1',
+    ],
+    [
+      'pythagorean_identity',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Sine',
+    '/Lessons/Math/Trigonometry_1/Sine',
+    'sine_introduction',
+    [
+      '1',
+    ],
+    [
+      'unit_circle',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Tangent',
+    '/Lessons/Math/Trigonometry_1/Tangent',
+    'tangent_introduction',
+    [
+      '1',
+    ],
+    [
+      'chord',
+    ],
+    false,
+  ));
+  lessonIndex.push(new LessonDescription(
+    'Unit Circle',
+    '/Lessons/Math/Trigonometry_1/UnitCircle',
+    'unit_circle',
     [
       '1',
     ],
     [
       'quadrangles',
-    ],
-    false,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Calculating Pi',
-    '/Lessons/Math/Trigonometry_1/Calculating Pi',
-    'calculating_pi',
-    [
-      '1',
-    ],
-    [
-      'area_introduction',
-    ],
-    false,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Important Triangles',
-    '/Lessons/Math/Trigonometry_1/ImportantTriangles',
-    'important_triangles',
-    [
-      '1',
-    ],
-    [
-      'calculating_pi',
-    ],
-    false,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Pythagorean Theorm',
-    '/Lessons/Math/Trigonometry_1/Pythagoras',
-    'pythagoras',
-    [
-      '1',
-    ],
-    [
-      'important_triangles',
-    ],
-    false,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Right Angle Triangles',
-    '/Lessons/Math/Trigonometry_1/RightAngleTriangles',
-    'right_angle_triangles',
-    [
-      '1',
-    ],
-    [
-      'pythagoras',
-    ],
-    false,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Similar Triangles',
-    '/Lessons/Math/Trigonometry_1/SimilarTriangles',
-    'similar_triangles',
-    [
-      '1',
-    ],
-    [
-      'right_angle_triangles',
     ],
     false,
   ));

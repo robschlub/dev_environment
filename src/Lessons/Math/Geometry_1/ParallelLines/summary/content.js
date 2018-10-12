@@ -9,6 +9,7 @@ import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
+import imgLinkGrey from '../tile-grey.png';
 import details from '../details';
 
 const layout = lessonLayout();
@@ -18,6 +19,7 @@ class Content extends LessonContent {
   setTitle() {
     this.title = details.details.title;
     this.iconLink = imgLink;
+    this.iconLinkGrey = imgLinkGrey;
   }
 
   setDiagram(htmlId: string = '') {

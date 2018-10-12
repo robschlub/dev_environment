@@ -550,7 +550,7 @@ export default class LessonComponent extends React.Component
         <LessonTile
           id={'id_lesson__title_container'}
           link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '/1')}`}
-          imgLink={`/${this.lesson.content.iconLink}`}
+          imgLink={`/${this.lesson.content.iconLinkGrey}`}
           key='1'
           label={this.lesson.content.title}
           state={'selected'}
