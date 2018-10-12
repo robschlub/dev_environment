@@ -108,17 +108,17 @@ module.exports = (env) => {
   const copy = new CopyWebpackPlugin(
     [
       {
-        from: '*topic.png',
-        to: '[1][name].[ext]',
+        from: '/opt/app/src/Lessons/*/*/topic.png',
+        to: '/opt/app/app/app/static/dist/[1][name].[ext]',
         test: /\/opt\/app\/src\/(.*)topic\.png$/,
       },
-      {
-        from: '/opt/app/src/Lessons/Math/Geometry_1/topic.png',
-        to: '/opt/app/app/app/static/dist/Lessons/Math/Geometry_1/topic.png',
-        // test: /\/opt\/app\/src\/(.*)topic\.png$/,
-      },
+      // {
+      //   from: '/opt/app/src/Lessons/Math/Geometry_1/topic.png',
+      //   to: '/opt/app/app/app/static/dist/Lessons/Math/Geometry_1/topic.png',
+      //   // test: /\/opt\/app\/src\/(.*)topic\.png$/,
+      // },
     ],
-    { debug: 'debug' },
+    // { debug: 'debug' },
   );
 
   // Make the plugin array filtering out those plugins that are null
