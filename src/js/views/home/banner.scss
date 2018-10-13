@@ -80,7 +80,6 @@ $home-image-xl: $bark-blurred-lg;
   width: 100%;
 }
 
-
 @media screen and (min-width: 600px) {
   // .home__banner_logo_text {
   //   font-size: 70px;
@@ -94,7 +93,6 @@ $home-image-xl: $bark-blurred-lg;
   //   height: 50px;
   // }
 }
-
 
 // Home Banner Sub Title *****************************************
 .home__banner_sub_title {
@@ -117,20 +115,22 @@ $home-image-xl: $bark-blurred-lg;
   vertical-align: middle;
   color: white;
   font-size: 20px;
-  width: 50px;
+  // width: 50px;
 }
 
 .home__banner_sub_title td:nth-child(2) {
   width: 10px;
 }
+
 .home__banner_sub_title td:nth-child(4) {
   width: 10px;
 }
 
 @media screen and (min-width: 600px) {
-  .home__banner_sub_title td {
-    width: 80px;
-  }
+  // .home__banner_sub_title td {
+  //   width: 80px;
+  // }
+
   .home__banner_sub_title table {
     width: 600px;
   }
@@ -139,4 +139,14 @@ $home-image-xl: $bark-blurred-lg;
   // }
 }
 
+.home__banner_end_text {
+  width: 75px;
+}
 
+.home__banner_middle_text {
+  width: 105px;
+}
+
+.home__banner_bullet {
+  width: 10px;
+}

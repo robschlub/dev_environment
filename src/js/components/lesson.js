@@ -6,7 +6,7 @@ import Lesson from '../Lesson/Lesson';
 import Button from './button';
 import LessonNavigator from './lessonNavigator';
 import LessonTilePath from './lessonPathTile';
-import LessonTile from './lessonTile';
+import LessonTitle from './lessonTitle';
 import getLessonIndex from '../../Lessons/index';
 import LessonDescription from '../../Lessons/lessonDescription';
 
@@ -174,68 +174,68 @@ export default class LessonComponent extends React.Component
     this.centerLesson();
   }
 
-  showHideNavigator() {
-    if (this.showNavigator) {
-      if (this.lessonNavigator) {
-        this.lessonNavigator.selectTitle();
-      }
-      this.showNavigator = false;
-    } else {
-      if (this.lessonNavigator) {
-        this.lessonNavigator.showNavigator();
-      }
-      this.showNavigator = true;
-    }
-  }
+  // showHideNavigator() {
+  //   if (this.showNavigator) {
+  //     if (this.lessonNavigator) {
+  //       this.lessonNavigator.selectTitle();
+  //     }
+  //     this.showNavigator = false;
+  //   } else {
+  //     if (this.lessonNavigator) {
+  //       this.lessonNavigator.showNavigator();
+  //     }
+  //     this.showNavigator = true;
+  //   }
+  // }
 
-  test() {
-    const { lessonNavigator } = this;
-    if (lessonNavigator) {
-      lessonNavigator.selectTitle();
-      setTimeout(() => { lessonNavigator.showNavigator(); }, 2000);
-      // this.lessonNavigator.zoomInSelected();
-    }
-    // console.log("1");
-  }
+  // test() {
+  //   const { lessonNavigator } = this;
+  //   if (lessonNavigator) {
+  //     lessonNavigator.selectTitle();
+  //     setTimeout(() => { lessonNavigator.showNavigator(); }, 2000);
+  //     // this.lessonNavigator.zoomInSelected();
+  //   }
+  //   // console.log("1");
+  // }
 
-  // eslint-disable-next-line class-methods-use-this
-  titleScaleDown() {
-    const title = document.getElementById('id_lesson__title_tile');
-    if (title) {
-      title.style.borderRadius = '13px';
-      title.style.width = '180px';
-      title.style.height = '40px';
-      title.style.fontSize = '12px';
-      title.style.left = 'calc(50% - 90px)';
-    }
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // titleScaleDown() {
+  //   const title = document.getElementById('id_lesson__title_tile');
+  //   if (title) {
+  //     title.style.borderRadius = '13px';
+  //     title.style.width = '180px';
+  //     title.style.height = '40px';
+  //     title.style.fontSize = '12px';
+  //     title.style.left = 'calc(50% - 90px)';
+  //   }
+  // }
 
-  // eslint-disable-next-line class-methods-use-this
-  titleToNav() {
-    this.titleScaleDown();
-    setTimeout(this.expandLessonNavigator, 1000);
-    const nav = document.getElementById('id_navigator__scroll_container');
-    // const title_container = document.getElementById('id_lesson__title_container');
-    // const title = document.getElementById('id_lesson__title_tile');
-    if (this.lessonNavigator && nav) {
-      const { x, y } = this.lessonNavigator.selectedLesson.location;
-      nav.scrollTop = y;
-      nav.scrollLeft = x - nav.clientWidth / 2 + 90;
-      // title.style.height = '0';
-      // title_container.style.height = '0';
-    }
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // titleToNav() {
+  //   this.titleScaleDown();
+  //   setTimeout(this.expandLessonNavigator, 1000);
+  //   const nav = document.getElementById('id_navigator__scroll_container');
+  //   // const title_container = document.getElementById('id_lesson__title_container');
+  //   // const title = document.getElementById('id_lesson__title_tile');
+  //   if (this.lessonNavigator && nav) {
+  //     const { x, y } = this.lessonNavigator.selectedLesson.location;
+  //     nav.scrollTop = y;
+  //     nav.scrollLeft = x - nav.clientWidth / 2 + 90;
+  //     // title.style.height = '0';
+  //     // title_container.style.height = '0';
+  //   }
+  // }
 
-  // eslint-disable-next-line class-methods-use-this
-  expandLessonNavigator() {
-    const nav = document.getElementById('master_containter');
-    const container =
-      document.getElementById('id_lesson__title_navigator_container');
-    if (nav && container) {
-      nav.style.height = '30vh';
-      container.style.height = '30vh';
-    }
-  }
+  // // eslint-disable-next-line class-methods-use-this
+  // expandLessonNavigator() {
+  //   const nav = document.getElementById('master_containter');
+  //   const container =
+  //     document.getElementById('id_lesson__title_navigator_container');
+  //   if (nav && container) {
+  //     nav.style.height = '30vh';
+  //     container.style.height = '30vh';
+  //   }
+  // }
 
   orientationChange() {
     const doc = document.documentElement;
@@ -437,6 +437,21 @@ export default class LessonComponent extends React.Component
     return output;
   }
 
+  calcTitleHeight() {
+    const { lessonDescription } = this;
+    let count = 0;
+    if (lessonDescription != null) {
+      count = lessonDescription.paths.length;
+    }
+    if (count === 1) {
+      return ' lesson__title_bar_force_low';
+    }
+    if (count > 8) {
+      return ' lesson__title_bar_force_high';
+    }
+    return '';
+  }
+
   addLessonPaths() {
     const output = [];
     const { lessonDescription } = this;
@@ -538,7 +553,7 @@ export default class LessonComponent extends React.Component
   render() {
     // console.log(this.lesson.content.iconLink)
     return <div>
-      <div className='lesson__title'>
+      <div className={`lesson__title_bar${this.calcTitleHeight()}`}>
         <div className="lesson__path_container">
           <div className="lesson__path_left_tiles">
             {this.addLessonPaths()}
@@ -547,14 +562,11 @@ export default class LessonComponent extends React.Component
             {this.addQuizSummary()}
           </div>
         </div>
-        <LessonTile
-          id={'id_lesson__title_container'}
-          link={`/${this.lesson.content.iconLink.replace(/\/tile.png/, '/1')}`}
-          imgLink={`/${this.lesson.content.iconLink}`}
+        <LessonTitle
+          imgLink={`/${this.lesson.content.iconLinkGrey}`}
           key='1'
           label={this.lesson.content.title}
-          state={'selected'}
-          title={true}/>
+          />
       </div>
       <div className="lesson__widescreen_backdrop">
         <div id="lesson__container_name" className="lesson__container">
@@ -581,6 +593,7 @@ export default class LessonComponent extends React.Component
       <div className='lesson__white_spacer'/>
       <LessonNavigator
           selected={this.lesson.content.title}
+          topic={'Geometry_1'}
           ref={(lessonNavigator) => { this.lessonNavigator = lessonNavigator; }}
         />
       <div className='lesson__white_spacer'/>

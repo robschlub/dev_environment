@@ -64,7 +64,7 @@
 }
 
 .navigator__lesson_tile_containter {
-  background: color('site', 'primary');
+  background: color('site', 'primary', 'light');
   padding-top: var(--navigator__tile_padding_vertical);
   padding-bottom: var(--navigator__tile_padding_vertical);
   padding-left: var(--navigator__tile_padding_horizontal);
@@ -101,15 +101,15 @@
 }
 
 .navigator__lesson_tile_disabled:hover {
-  background-color: color('site', 'disabled', 'light');
+  background-color: color('site', 'disabled', 'lighter');
 }
 
 .navigator__lesson_tile_selected {
-  background-color: color('site', 'safe', 'dark');
+  background-color: color('site', 'safe');
 }
 
 .navigator__lesson_tile_selected:hover {
-  background: color('site', 'safe');
+  background: color('site', 'safe', 'light');
 }
 
 .navigator__lesson_tile_containter_title:hover {
@@ -160,7 +160,15 @@
 //   width: 2px;
 // }
 
-#id_navigator__lessons_positions_container {
+// #id_navigator__lessons_positions_container {
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+//   width: 0;
+//   height: 0;
+// }
+
+.navigator__lessons_positions_container {
   position: absolute;
   left: 0;
   top: 0;
@@ -210,4 +218,53 @@
 .navigator__lesson_tile_path_container {
   display: table;
   height: 100%;
+}
+
+.navigator__topic_title_container {
+  background-color: white;
+  padding-left: 15px;
+  padding-bottom: 15px;
+  padding-top: 5px;
+}
+
+.navigator__topic_title_img {
+  // display: table-cell;
+  // vertical-align: middle;
+  float: left;
+  width: 40px;
+  height: 40px;
+  // background-color: red;
+  // padding: 5px;
+}
+
+.navigator__topic_title {
+  display: table;
+  background-color: white;
+  color: color('grey', 'light');
+  // text-align: center;
+  font-weight: 200;
+  font-size: calc(var(--navigator__tile_font_size) * 2);
+  padding-left: calc(var(--navigator__tile_font_size) * 1);
+}
+
+.navigator__topic_title_text {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.navigator__topic_title_subtext {
+  font-size: 12px;
+  background: white;
+  padding-left: 20px;
+  background-color: white;
+  font-weight: 100;
+  color: color('grey', 'lighter');
+}
+
+@media screen and (min-width: 600px) {
+  .navigator__topic_title_container {
+    // background-color: white;
+    // padding: 15px;
+    text-align: center;
+  }
 }

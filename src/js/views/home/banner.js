@@ -18,11 +18,11 @@ export default class HomeBanner extends React.Component
         <table>
           <tbody>
           <tr>
-            <td>Interact</td>
-            <td>•</td>
-            <td>Understand</td>
-            <td>•</td>
-            <td>Learn</td>
+            <td className="home__banner_end_text">Interact</td>
+            <td className="home__banner_bullet">•</td>
+            <td className="home__banner_middle_text">Understand</td>
+            <td className="home__banner_bullet">•</td>
+            <td className="home__banner_end_text">Learn</td>
           </tr>
           </tbody>
         </table>

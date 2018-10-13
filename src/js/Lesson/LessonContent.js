@@ -568,6 +568,7 @@ class LessonContent {
   goingTo: 'next' | 'prev' | 'goto';
   comingFrom: 'next' | 'prev' | 'goto';
   iconLink: string;
+  iconLinkGrey: string;
   toggleInfo: (?boolean) => void;
   animationEnd: string;
   // questions
@@ -576,6 +577,7 @@ class LessonContent {
     this.diagramHtmlId = htmlId;
     this.sections = [];
     this.iconLink = '/';
+    this.iconLinkGrey = '/';
     this.setTitle();
 
     this.animationEnd = whichAnimationEvent();
