@@ -187,7 +187,7 @@ const CommonQuizMixin = superclass => class extends superclass {
       newProblem,
       `id__related_angles_new_problem_${id}`,
       '',
-      this.layout.quiz.check,
+      this.layout.quiz.newProblem,
       'middle',
       'center',
     );
