@@ -349,6 +349,9 @@ export default class LessonNavigator extends React.Component
   render() {
     const classStr = 'naviagator__container navigator__container_with_shadow';
     return <div>
+        <div className='navigator__topic_title_subtext'>
+                {'Learning path'}
+        </div>
         <div className="navigator__topic_title_container">
           <img src={`/static/dist/${this.topicPath}/topic.png`}
                className="navigator__topic_title_img"/>

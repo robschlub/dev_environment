@@ -222,7 +222,9 @@
 
 .navigator__topic_title_container {
   background-color: white;
-  padding: 15px;
+  padding-left: 15px;
+  padding-bottom: 15px;
+  padding-top: 5px;
 }
 
 .navigator__topic_title_img {
@@ -248,6 +250,15 @@
 .navigator__topic_title_text {
   display: table-cell;
   vertical-align: middle;
+}
+
+.navigator__topic_title_subtext {
+  font-size: 12px;
+  background: white;
+  padding-left: 20px;
+  background-color: white;
+  font-weight: 100;
+  color: color('grey', 'lighter');
 }
 
 @media screen and (min-width: 600px) {
