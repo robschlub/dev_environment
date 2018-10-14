@@ -1,90 +1,110 @@
 
-.nav__home-icon {
-  margin-right: 5px;
+.navbar-container {
+  background-color: grey;
+  height: 60px;
+  padding: 10px;
 }
 
-@include media-breakpoint-up(md) {
-  .nav-responsive {
-    // position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: $zindex-fixed;
-  }
+.navbar-icon-container {
+  height: 40px;
+  width: 40px;
+  float: left;
 }
 
-@include media-breakpoint-up(xl) {
-  .nav-responsive {
-    // position: fixed;
-  }
+.navbar-icon {
+  height: 100%;
+  width: 100%;
 }
 
-// Navbar themes
-//
-// Styles for switching between navbars with light or dark background.
+.navbar-login {
 
-// Dark links against a light background
-$navbar-color:                 color('navbar', 'base');
-$navbar-hover-color:           color('navbar', 'hover');
-$navbar-active-color:          color('navbar', 'active');
-$navbar-disabled-color:        color('navbar', 'disabled');
-$navbar-toggler-border-color:  color('navbar', 'toggler-border');
-
-// .navbar-default {
-//   background-color: #F00;
-//   background-image: none;
+}
+// .nav__home-icon {
+//   margin-right: 5px;
 // }
 
-.navbar-color {
-  background-color: color('navbar', 'background');
+// @include media-breakpoint-up(md) {
+//   .nav-responsive {
+//     // position: fixed;
+//     top: 0;
+//     right: 0;
+//     left: 0;
+//     z-index: $zindex-fixed;
+//   }
+// }
 
-  .navbar-brand {
-    color: $navbar-active-color;
+// @include media-breakpoint-up(xl) {
+//   .nav-responsive {
+//     // position: fixed;
+//   }
+// }
 
-    @include hover-focus {
-      color: $navbar-active-color;
-    }
-  }
+// // Navbar themes
+// //
+// // Styles for switching between navbars with light or dark background.
 
-  .navbar-nav {
-    .nav-link {
-      color: $navbar-color;
+// // Dark links against a light background
+// $navbar-color:                 color('navbar', 'base');
+// $navbar-hover-color:           color('navbar', 'hover');
+// $navbar-active-color:          color('navbar', 'active');
+// $navbar-disabled-color:        color('navbar', 'disabled');
+// $navbar-toggler-border-color:  color('navbar', 'toggler-border');
 
-      @include hover-focus {
-        color: $navbar-hover-color;
-      }
+// // .navbar-default {
+// //   background-color: #F00;
+// //   background-image: none;
+// // }
 
-      &.disabled {
-        color: $navbar-disabled-color;
-      }
-    }
+// .navbar-color {
+//   background-color: color('navbar', 'background');
 
-    .show > .nav-link,
-    .active > .nav-link,
-    .nav-link.show,
-    .nav-link.active {
-      color: $navbar-active-color;
-    }
-  }
+//   .navbar-brand {
+//     color: $navbar-active-color;
 
-  .navbar-toggler {
-    color: $navbar-color;
-    border-color: $navbar-toggler-border-color;
-  }
+//     @include hover-focus {
+//       color: $navbar-active-color;
+//     }
+//   }
 
-  .navbar-toggler-icon {
-    background-image: $icon_navbar-toggler;
-  }
+//   .navbar-nav {
+//     .nav-link {
+//       color: $navbar-color;
 
-  .navbar-text {
-    color: $navbar-color;
+//       @include hover-focus {
+//         color: $navbar-hover-color;
+//       }
 
-    a {
-      color: $navbar-active-color;
+//       &.disabled {
+//         color: $navbar-disabled-color;
+//       }
+//     }
 
-      @include hover-focus {
-        color: $navbar-active-color;
-      }
-    }
-  }
-}
+//     .show > .nav-link,
+//     .active > .nav-link,
+//     .nav-link.show,
+//     .nav-link.active {
+//       color: $navbar-active-color;
+//     }
+//   }
+
+//   .navbar-toggler {
+//     color: $navbar-color;
+//     border-color: $navbar-toggler-border-color;
+//   }
+
+//   .navbar-toggler-icon {
+//     background-image: $icon_navbar-toggler;
+//   }
+
+//   .navbar-text {
+//     color: $navbar-color;
+
+//     a {
+//       color: $navbar-active-color;
+
+//       @include hover-focus {
+//         color: $navbar-active-color;
+//       }
+//     }
+//   }
+// }

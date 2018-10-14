@@ -90,8 +90,8 @@ $_color_theme-standard-dark: (
     'hover':            (color: 'white',  shade: 'lighter'),
     'active':           (color: 'white',  shade: 'base'),
     'disabled':         (color: 'white',  shade: 'darker'),
-    'toggler-border':   (color: 'white',  shade: 'light'),
-    'toggler-icon':     $navbar-dark-toggler-icon-bg
+    // 'toggler-border':   (color: 'white',  shade: 'light'),
+    // 'icon':             $navbardark,
   ),
   'palette': $_color_standard-dark-theme-palette,
 );
