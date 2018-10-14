@@ -1,19 +1,25 @@
 
 .navbar-container {
   background-color: grey;
-  height: 60px;
+  height: 50px;
   padding: 10px;
 }
 
 .navbar-icon-container {
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
   float: left;
 }
 
 .navbar-icon {
   height: 100%;
   width: 100%;
+}
+
+.navbar-text {
+  display: inline-block;
+  padding-top: 0.25rem;
+  padding-left: 1em;
 }
 
 .navbar-login {
