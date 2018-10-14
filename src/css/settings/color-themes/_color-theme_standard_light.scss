@@ -86,8 +86,9 @@ $_color_theme-standard-light: (
   'navbar': (
     'text':             (color: 'grey',   shade: 'light'),
     'text-hover':       (color: 'grey',   shade: 'lighter'),
-    'button':           (color: 'white',  shade: 'lighter'),
+    'text-input':       (color: 'grey',   shade: 'lighter'),
     'background':       (color: 'grey',   shade: 'darker'),
+    'button':           (color: 'white',  shade: 'lighter'),
     'base':             (color: 'white',  shade: 'light'),
     'hover':            (color: 'white',  shade: 'lighter'),
     'active':           (color: 'white',  shade: 'base'),
