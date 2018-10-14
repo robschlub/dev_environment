@@ -1,6 +1,6 @@
 
 .navbar-container {
-  background-color: grey;
+  background-color: color('navbar', 'background');
   height: 50px;
   padding: 10px;
 }
@@ -20,10 +20,15 @@
   display: inline-block;
   padding-top: 0.25rem;
   padding-left: 1em;
+  color: color('navbar', 'text');
+  font-size: 14px;
+}
+
+.navbar-text:hover {
+  color: color('navbar', 'text-hover');
 }
 
 .navbar-login {
-
 }
 // .nav__home-icon {
 //   margin-right: 5px;

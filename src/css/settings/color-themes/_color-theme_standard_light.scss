@@ -84,6 +84,8 @@ $_color_theme-standard-light: (
     'menus':            (color: 'grey',   shade: 'darker'),
   ),
   'navbar': (
+    'text':             (color: 'grey',   shade: 'light'),
+    'text-hover':       (color: 'grey',   shade: 'lighter'),
     'button':           (color: 'white',  shade: 'lighter'),
     'background':       (color: 'grey',   shade: 'darker'),
     'base':             (color: 'white',  shade: 'light'),

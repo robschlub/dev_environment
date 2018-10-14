@@ -84,8 +84,10 @@ $_color_theme-standard-dark: (
     'menus':            (color: 'grey',  shade: 'darker'),
   ),
   'navbar': (
-    'button':           (color: 'grey',   shade: 'base'),
+    'text':             (color: 'grey',   shade: 'light'),
+    'text-hover':       (color: 'grey',   shade: 'lighter'),
     'background':       (color: 'grey',   shade: 'darker'),
+    'button':           (color: 'grey',   shade: 'base'),
     'base':             (color: 'white',  shade: 'light'),
     'hover':            (color: 'white',  shade: 'lighter'),
     'active':           (color: 'white',  shade: 'base'),
