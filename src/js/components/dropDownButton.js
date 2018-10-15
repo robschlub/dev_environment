@@ -26,7 +26,7 @@ export default class DropDownButton extends React.Component
       <div className="dropdownbutton_label">
         {label}
       </div>
-      <div className="dropdownbutton_arrow">
+      <div className="dropdownbutton_arrow dropdownbutton_arrow_up">
       </div>
     </div>;
   }

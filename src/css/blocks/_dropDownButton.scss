@@ -1,7 +1,10 @@
 .dropdownbutton_container {
   background-color: red;
   color: black;
-  padding: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
   border-radius: 5px;
   display: inline-block;
 }
@@ -11,27 +14,50 @@
 }
 
 .dropdownbutton_arrow {
-  border: 1px solid;
   display: inline-block;
-  border-width: 0 2px 2px 0;
-  padding: 3px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid;
   margin-left: 10px;
-  transform: rotate(45deg) translate(-5px, 0);
-  -webkit-transform: rotate(45deg) translate(-5px, 0);
+  transform: translate(0, -3px);
+  -webkit-transform: translate(0, -3px);
 }
 
-.dropdownbutton_arrow_right {
-  transform: rotate(-45deg) translate(-3px, -5px)
-  -webkit-transform: rotate(-45deg) translate(-3px, -5px)
-}
-
-.dropdownbutton_arrow_left {
-  margin-left: 15px;
-  transform: rotate(135deg) translate(3px, 5px);
-  -webkit-transform: rotate(135deg) translate(3px, 5px);
+.dropdownbutton_arrow_down {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid;
+  border-bottom: 0;
+  transform: translate(0, -3px);
+  -webkit-transform: translate(0, -3px);
 }
 
 .dropdownbutton_arrow_up {
-  transform: rotate(-135deg) translate(3px, -2px);
-  -webkit-transform: rotate(-135deg) translate(3px, -2px);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid;
+  border-top: 0;
+  transform: translate(0, -3px);
+  -webkit-transform: translate(0, -3px);
 }
+
+.dropdownbutton_arrow_right {
+  border-left: 5px solid;
+  border-right: 0;
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid transparent;
+  padding-right: 5px;
+  transform: translate(3px, 0);
+  -webkit-transform: translate(3px, 0);
+}
+
+.dropdownbutton_arrow_left {
+  border-left: 0;
+  border-right: 5px solid;
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid transparent;
+  padding-right: 5px;
+  transform: none;
+  -webkit-transform: none;
+}
+
