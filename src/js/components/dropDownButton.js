@@ -9,7 +9,7 @@ type Props = {
   label?: string;
   id?: string;
   direction?: 'up' | 'down';
-  xAlign?: 'left' | 'right' | 'middle';
+  xAlign?: 'left' | 'right' | 'center';
   list?: Array<{
     label: string;
     link: string;
@@ -23,7 +23,7 @@ export default class DropDownButton extends React.Component
   buttonElement: HTMLElement;
   bodyElement: HTMLElement;
   itemList: HTMLElement;
-  xAlign:  'left' | 'right' | 'middle';
+  xAlign: 'left' | 'right' | 'center';
   direction: 'up' | 'down';
   constructor(props: Props) {
     super(props);
@@ -49,8 +49,19 @@ export default class DropDownButton extends React.Component
   toggle() {
     this.itemList.classList.toggle('drop_down_button_list_show');
     const rect = this.buttonElement.getBoundingClientRect();
-    this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
-    this.itemList.style.left = `${window.scrollX + rect.left}px`;
+    const listRect = this.itemList.getBoundingClientRect();
+    if (this.direction === 'down') {
+      this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
+    } else {
+      this.itemList.style.top = `${window.scrollY + rect.top - listRect.height}px`;
+    }
+    if (this.xAlign === 'left') {
+      this.itemList.style.left = `${window.scrollX + rect.left}px`;
+    } else if (this.xAlign === 'right') {
+      this.itemList.style.left = `${window.scrollX + rect.right - listRect.width}px`;
+    } else if (this.xAlign === 'center') {
+      this.itemList.style.left = `${window.scrollX + rect.right - rect.width / 2 - listRect.width / 2}px`;
+    }
   }
 
   componentDidMount() {
@@ -71,6 +82,10 @@ export default class DropDownButton extends React.Component
     const label = props.label || '';
     this.xAlign = props.xAlign || 'left';
     this.direction = props.direction || 'down';
+    let arrowDirectionClass = ' drop_down_button_arrow_down';
+    if (this.direction === 'up') {
+      arrowDirectionClass = ' drop_down_button_arrow_up';
+    }
     this.id = props.id || generateUniqueId('id__drop_down_button');
     const listContent = [];
     props.list.forEach((listItem, index) => {
@@ -89,13 +104,13 @@ export default class DropDownButton extends React.Component
       );
     });
 
-    return <div className="drop_down_button_container">
+    return <div className='drop_down_button_container'>
       <div className="drop_down_button_button_container"
            id={this.id}>
         <div className="drop_down_button_label">
           {label}
         </div>
-        <div className="drop_down_button_arrow drop_down_button_arrow_up">
+        <div className={`drop_down_button_arrow${arrowDirectionClass}`}>
         </div>
       </div>
       <div className="drop_down_button_list"

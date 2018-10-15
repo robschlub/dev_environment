@@ -554,7 +554,7 @@ export default class LessonComponent extends React.Component
   render() {
     // console.log(this.lesson.content.iconLink)
     return <div>
-    <DropDownButton label="test"
+    <DropDownButton label="test" direction="down" xAlign="center"
         list={[
           { label: 'item 1 this is long', link: '/' },
           { label: 'item 2', link: '/' },
