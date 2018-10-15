@@ -9,6 +9,7 @@ import LessonTilePath from './lessonPathTile';
 import LessonTitle from './lessonTitle';
 import getLessonIndex from '../../Lessons/index';
 import LessonDescription from '../../Lessons/lessonDescription';
+import DropDownButton from './DropDownButton';
 
 type Props = {
   lesson: Lesson;
@@ -553,6 +554,13 @@ export default class LessonComponent extends React.Component
   render() {
     // console.log(this.lesson.content.iconLink)
     return <div>
+    <DropDownButton label="test"
+        list={[
+          { label: 'item 1', link: '/' },
+          { label: 'item 2', link: '/' },
+          { label: 'item 3', link: '/', active: true },
+          { label: 'item 4', link: '/' },
+        ]}/>
       <div className={`lesson__title_bar${this.calcTitleHeight()}`}>
         <div className="lesson__path_container">
           <div className="lesson__path_left_tiles">
@@ -590,6 +598,7 @@ export default class LessonComponent extends React.Component
               {this.addInteractiveElementButton()}
         </div>
       </div>
+      
       <div className='lesson__white_spacer'/>
       <LessonNavigator
           selected={this.lesson.content.title}
