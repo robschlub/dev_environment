@@ -6,6 +6,7 @@ const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
 const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
@@ -121,13 +122,25 @@ module.exports = (env) => {
     // { debug: 'debug' },
   );
 
+  let cssMini = '';
+  if (e.uglify) {
+    cssMini = new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      // cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }],
+      },
+      canPrint: true,
+    });
+  }
   // Make the plugin array filtering out those plugins that are null
   const pluginArray = [
     uglify,
     define,
     extract,
     copy,
-    clean].filter(elem => elem !== '');
+    clean,
+    cssMini].filter(elem => elem !== '');
 
   return {
     entry: entryPoints.entryPoints(),
