@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import '../../css/style.scss';
+// import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
 import Button from './button';
 import LessonNavigator from './lessonNavigator';
@@ -9,7 +9,7 @@ import LessonTilePath from './lessonPathTile';
 import LessonTitle from './lessonTitle';
 import getLessonIndex from '../../Lessons/index';
 import LessonDescription from '../../Lessons/lessonDescription';
-import DropDownButton from './DropDownButton';
+import DropDownButton from './dropDownButton';
 
 type Props = {
   lesson: Lesson;

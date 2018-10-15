@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../../css/style.scss';
+// import '../../../css/style.scss';
 import Navbar from '../../components/navbar';
 import LessonComponent from '../../components/lesson';
 import Lesson from '../../Lesson/Lesson';
