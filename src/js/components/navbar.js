@@ -28,16 +28,23 @@ export default class Navbar extends React.Component
     const body =
     <div>
       <div className="navbar-container">
-        <div className="navbar-icon-container">
+        <a className="navbar-icon-container"
+           href="/">
           <img className="navbar-icon"
                src="/static/icon-lg.png"/>
-        </div>
+        </a>
         <div className="navbar-text navbar-left">
           Login
         </div>
-        <input className="navbar-input navbar-right"
-               type="text"
-               placeholder="search lessons"/>
+        <div className="navbar-search-container">
+          <div className="navbar-search-icon-container">
+            <img className="navbar-search-icon-image"
+                 src="/static/searchdark.png"/>
+          </div>
+          <input className="navbar-input navbar-right"
+                 type="text"
+                 placeholder="search lessons"/>
+        </div>
       </div>
     </div>;
       // <nav className="navbar navbar-expand-md nav-responsive navbar-color">

@@ -2,13 +2,17 @@
 .navbar-container {
   background-color: color('navbar', 'background');
   height: 50px;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .navbar-icon-container {
-  height: 30px;
-  width: 30px;
+  height: 25px;
+  width: 25px;
   float: left;
+  margin-top: 2px;
 }
 
 .navbar-icon {
@@ -61,6 +65,8 @@
 
 .navbar-input:focus {
   border: 1px solid color('navbar', 'background', 'light');
+  // border: none;
+  outline: none;
 }
 
 .navbar-text:hover {
@@ -68,7 +74,7 @@
 }
 
 .navbar-left {
-  padding-left: 1em;
+  padding-left: 1.5em;
 }
 
 .navbar-right {
@@ -78,6 +84,22 @@
 
 .navbar-login {
 }
+
+.navbar-search-container {
+  float: right;
+}
+
+.navbar-search-icon-container {
+  display: inline-block;
+  margin-top: 2px;
+  margin-right: 5px;
+}
+
+.navbar-search-icon-image {
+  width: 25px;
+  height: 25px;
+}
+
 // .nav__home-icon {
 //   margin-right: 5px;
 // }
