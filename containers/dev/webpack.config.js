@@ -228,14 +228,14 @@ module.exports = (env) => {
             test: /js\/(diagram|Lesson|tools|components)/,
             name: 'tools',
           },
-          // commoncss: {
-          //   minSize: 10,
-          //   minChunks: 2,
-          //   priority: -10,
-          //   reuseExistingChunk: true,
-          //   test: /css\/*\.(css|scss|sass)$/,
-          //   name: 'commoncss',
-          // // },
+          commoncss: {
+            minSize: 10,
+            minChunks: 2,
+            priority: -10,
+            reuseExistingChunk: true,
+            test: /css\/*\.(css|scss|sass)$/,
+            name: 'commoncss',
+          },
           // bootstrap: {
           //   test: /css\/bootstrap\*.css/,
           //   name: 'bootstrap',

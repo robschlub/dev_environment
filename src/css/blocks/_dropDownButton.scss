@@ -1,8 +1,8 @@
-.dropdownbutton_container {
+.drop_down_button_container {
 
 }
 
-.dropdownbutton_button_container {
+.drop_down_button_button_container {
   background-color: red;
   color: black;
   padding-top: 5px;
@@ -13,11 +13,12 @@
   display: inline-block;
 }
 
-.dropdownbutton_label {
+.drop_down_button_label {
   display: inline-block;
+  pointer-events: none;
 }
 
-.dropdownbutton_arrow {
+.drop_down_button_arrow {
   display: inline-block;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
@@ -25,9 +26,10 @@
   margin-left: 10px;
   transform: translate(0, -3px);
   -webkit-transform: translate(0, -3px);
+  pointer-events: none;
 }
 
-.dropdownbutton_arrow_down {
+.drop_down_button_arrow_down {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 5px solid;
@@ -36,7 +38,7 @@
   -webkit-transform: translate(0, -3px);
 }
 
-.dropdownbutton_arrow_up {
+.drop_down_button_arrow_up {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-bottom: 5px solid;
@@ -45,7 +47,7 @@
   -webkit-transform: translate(0, -3px);
 }
 
-.dropdownbutton_arrow_right {
+.drop_down_button_arrow_right {
   border-left: 5px solid;
   border-right: 0;
   border-bottom: 5px solid transparent;
@@ -55,7 +57,7 @@
   -webkit-transform: translate(3px, 0);
 }
 
-.dropdownbutton_arrow_left {
+.drop_down_button_arrow_left {
   border-left: 0;
   border-right: 5px solid;
   border-bottom: 5px solid transparent;
@@ -65,7 +67,7 @@
   -webkit-transform: none;
 }
 
-.drowdownbutton_list {
+.drop_down_button_list {
   width: 0;
   height: 0;
   font-size: 0;
@@ -79,41 +81,41 @@
   padding-bottom: 5px;
 }
 
-.drowdownbutton_list_show {
+.drop_down_button_list_show {
   width: auto;
   height: auto;
   font-size: 14px;
 }
 
-.dropdownbutton_list_item {
+.drop_down_button_list_item {
   color: color('grey', 'base');
   background-color: white;
 }
 
-.dropdownbutton_list_item a,
-.dropdownbutton_list_item:visited {
+.drop_down_button_list_item a,
+.drop_down_button_list_item:visited {
   color: color('grey', 'base');
   display: block;
   text-decoration: none;
   padding: 3px 20px 3px 20px;
 }
 
-.dropdownbutton_list_item:hover {
+.drop_down_button_list_item:hover {
   background-color: color('white', 'lighter');
 }
 
-.dropdownbutton_list_item_active {
+.drop_down_button_list_item_active {
   background-color: color('blue', 'light');
 }
 
-.dropdownbutton_list_item_active:hover {
+.drop_down_button_list_item_active:hover {
   background-color: color('blue', 'dark');
 }
 
-.dropdownbutton_list_item_active a {
+.drop_down_button_list_item_active a {
   color: color('white', 'base');
 }
 
-.dropdownbutton_list_item a:hover {
+.drop_down_button_list_item a:hover {
   color: color('white', 'base');
 }

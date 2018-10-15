@@ -20,84 +20,67 @@ type Props = {
 export default class DropDownButton extends React.Component
                                     <Props> {
   id: string;
+  buttonElement: HTMLElement;
+  bodyElement: HTMLElement;
+  itemList: HTMLElement;
+  xAlign:  'left' | 'right' | 'middle';
+  direction: 'up' | 'down';
   constructor(props: Props) {
     super(props);
     this.id = '';
   }
 
-  toggle(event: MouseEvent | TouchEvent) {
-    // console.log(event)
-    const itemList = document.getElementById(`${this.id}_list`);
-    const button = document.getElementById(this.id);
-    if (itemList && button) {
-      itemList.classList.toggle('drowdownbutton_list_show');
-      const rect = button.getBoundingClientRect();
-      itemList.style.top = `${rect.bottom}px`;
-      const { body } = document;
-      if (body) {
-        if (itemList.classList.contains('drowdownbutton_list_show')) {
-          console.log('adding')
-          body.addEventListener('mousedown', this.toggle.bind(this), true);
-          // body.addEventListener('touchstart', toggle, true);
-        } else {
-          console.log('removing')
-          body.removeEventListener('mousedown', this.toggle.bind(this), true);
-          // body.removeEventListener('touchstart', toggle, true);
+  offButtonEvent(event: MouseEvent | TouchEvent) {
+    if (event.target instanceof HTMLElement) {
+      if (event.target.parentElement instanceof HTMLElement) {
+        if (event.target !== this.buttonElement
+          && event.target.parentElement.parentElement !== this.itemList
+        ) {
+          this.close();
         }
       }
     }
-    event.preventDefault();
-  };
+  }
+
+  close() {
+    this.itemList.classList.remove('drop_down_button_list_show');
+  }
+
+  toggle() {
+    this.itemList.classList.toggle('drop_down_button_list_show');
+    const rect = this.buttonElement.getBoundingClientRect();
+    this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
+    this.itemList.style.left = `${window.scrollX + rect.left}px`;
+  }
 
   componentDidMount() {
     const button = document.getElementById(this.id);
-    if (button) {
+    const { body } = document;
+    const itemList = document.getElementById(`${this.id}_list`);
+    if (button != null && body != null && itemList != null) {
+      this.buttonElement = button;
+      this.bodyElement = body;
+      this.itemList = itemList;
       button.addEventListener('mousedown', this.toggle.bind(this));
+      body.addEventListener('mousedown', this.offButtonEvent.bind(this), true);
     }
   }
 
   render() {
     const props = Object.assign({}, this.props);
-    // const Tag = props.href ? 'a' : 'button';
     const label = props.label || '';
-    const xAlign = props.xAlign || 'left';
-    const direction = props.direction || 'down';
+    this.xAlign = props.xAlign || 'left';
+    this.direction = props.direction || 'down';
     this.id = props.id || generateUniqueId('id__drop_down_button');
-    // const toggle = (event) => {
-    //   console.log(event)
-    //   const itemList = document.getElementById(`${id}_list`);
-    //   const button = document.getElementById(id);
-    //   if (itemList && button) {
-    //     itemList.classList.toggle('drowdownbutton_list_show');
-    //     const rect = button.getBoundingClientRect();
-    //     itemList.style.top = `${rect.bottom}px`;
-    //     const { body } = document;
-    //     if (body) {
-    //       if (itemList.classList.contains('drowdownbutton_list_show')) {
-    //         console.log('adding')
-    //         body.addEventListener('mousedown', toggle, true);
-    //         // body.addEventListener('touchstart', toggle, true);
-    //       } else {
-    //         console.log('removing')
-    //         body.removeEventListener('mousedown', toggle, true);
-    //         // body.removeEventListener('touchstart', toggle, true);
-    //       }
-    //     }
-    //   }
-    //   return true;
-    // };
-    // const className = classify('btn', props.className || '');
-    // delete props.label;
     const listContent = [];
-    // let key = 0;
     props.list.forEach((listItem, index) => {
       let activeClass = '';
       if (listItem.active) {
-        activeClass = ' dropdownbutton_list_item_active';
+        activeClass = ' drop_down_button_list_item_active';
       }
 
       listContent.push(
-        <div className={`dropdownbutton_list_item${activeClass}`}
+        <div className={`drop_down_button_list_item${activeClass}`}
              key={index}>
           <a href={listItem.link}>
             {listItem.label}
@@ -106,16 +89,16 @@ export default class DropDownButton extends React.Component
       );
     });
 
-    return <div className="dropdownbutton_container">
-      <div className="dropdownbutton_button_container"
+    return <div className="drop_down_button_container">
+      <div className="drop_down_button_button_container"
            id={this.id}>
-        <div className="dropdownbutton_label">
+        <div className="drop_down_button_label">
           {label}
         </div>
-        <div className="dropdownbutton_arrow dropdownbutton_arrow_up">
+        <div className="drop_down_button_arrow drop_down_button_arrow_up">
         </div>
       </div>
-      <div className="drowdownbutton_list"
+      <div className="drop_down_button_list"
            id={`${this.id}_list`}>
         {listContent}
       </div>
