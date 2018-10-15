@@ -36,6 +36,7 @@ export default class Navbar extends React.Component
         <div className="navbar-text navbar-left">
           Login
         </div>
+        {/*
         <div className="navbar-search-container">
           <div className="navbar-search-icon-container">
             <img className="navbar-search-icon-image"
@@ -45,6 +46,7 @@ export default class Navbar extends React.Component
                  type="text"
                  placeholder="search lessons"/>
         </div>
+      */}
       </div>
     </div>;
       // <nav className="navbar navbar-expand-md nav-responsive navbar-color">
