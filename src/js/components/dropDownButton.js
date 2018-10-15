@@ -21,12 +21,34 @@ export default class DropDownButton extends React.Component
     const label = props.label || '';
     // const className = classify('btn', props.className || '');
     // delete props.label;
+    const listContent = [];
+    // let key = 0;
+    props.list.forEach((listItem, index) => {
+      let activeClass = '';
+      if (listItem.active) {
+        activeClass = ' dropdownbutton_list_item_active';
+      }
+
+      listContent.push(
+        <div className={`dropdownbutton_list_item${activeClass}`}
+             key={index}>
+          <a href={listItem.link}>
+            {listItem.label}
+          </a>
+        </div>,
+      );
+    });
 
     return <div className="dropdownbutton_container">
-      <div className="dropdownbutton_label">
-        {label}
+      <div className="dropdownbutton_button_container">
+        <div className="dropdownbutton_label">
+          {label}
+        </div>
+        <div className="dropdownbutton_arrow dropdownbutton_arrow_up">
+        </div>
       </div>
-      <div className="dropdownbutton_arrow dropdownbutton_arrow_up">
+      <div className="drowdownbutton_list drowdownbutton_list_show">
+        {listContent}
       </div>
     </div>;
   }

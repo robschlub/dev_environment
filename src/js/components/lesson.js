@@ -556,7 +556,7 @@ export default class LessonComponent extends React.Component
     return <div>
     <DropDownButton label="test"
         list={[
-          { label: 'item 1', link: '/' },
+          { label: 'item 1 this is long', link: '/' },
           { label: 'item 2', link: '/' },
           { label: 'item 3', link: '/', active: true },
           { label: 'item 4', link: '/' },
@@ -598,7 +598,7 @@ export default class LessonComponent extends React.Component
               {this.addInteractiveElementButton()}
         </div>
       </div>
-      
+
       <div className='lesson__white_spacer'/>
       <LessonNavigator
           selected={this.lesson.content.title}
