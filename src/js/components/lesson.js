@@ -343,7 +343,7 @@ export default class LessonComponent extends React.Component
     return <div className="lesson__button-goto_container">
       <DropDownButton
       label={`${this.state.page + 1} / ${this.state.numPages}`}
-      direction="down"
+      direction="up"
       xAlign="center"
       list={this.state.listOfSections}/>
     </div>;

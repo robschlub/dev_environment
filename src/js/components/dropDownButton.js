@@ -12,7 +12,7 @@ type Props = {
   xAlign?: 'left' | 'right' | 'center';
   list?: Array<{
     label: string;
-    link: Function;
+    link: Function | string;
     active?: boolean;
   }>;
 };
@@ -50,17 +50,23 @@ export default class DropDownButton extends React.Component
     this.itemList.classList.toggle('drop_down_button_list_show');
     const rect = this.buttonElement.getBoundingClientRect();
     const listRect = this.itemList.getBoundingClientRect();
+    console.log(rect)
     if (this.direction === 'down') {
-      this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
+      // this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
+      this.itemList.style.top = `${rect.height}px`
     } else {
-      this.itemList.style.top = `${window.scrollY + rect.top - listRect.height}px`;
+      // this.itemList.style.top = `${window.scrollY + rect.top - listRect.height}px`;
+      this.itemList.style.top = `${-listRect.height}px`;
     }
     if (this.xAlign === 'left') {
-      this.itemList.style.left = `${window.scrollX + rect.left}px`;
+      // this.itemList.style.left = `${window.scrollX + rect.left}px`;
+      this.itemList.style.left = '0px';
     } else if (this.xAlign === 'right') {
-      this.itemList.style.left = `${window.scrollX + rect.right - listRect.width}px`;
+      // this.itemList.style.left = `${window.scrollX + rect.right - listRect.width}px`;
+      this.itemList.style.left = `${rect.width - listRect.width}px`;
     } else if (this.xAlign === 'center') {
-      this.itemList.style.left = `${window.scrollX + rect.right - rect.width / 2 - listRect.width / 2}px`;
+      // this.itemList.style.left = `${window.scrollX + rect.right - rect.width / 2 - listRect.width / 2}px`;
+      this.itemList.style.left = `${rect.width / 2 - listRect.width / 2}px`;
     }
   }
 
@@ -93,13 +99,19 @@ export default class DropDownButton extends React.Component
       if (listItem.active) {
         activeClass = ' drop_down_button_list_item_active';
       }
+      let link = <div onClick={listItem.link}>
+        {listItem.label}
+        </div>;
+      if (typeof listItem.link === 'string') {
+        link = <a href={listItem.link}>
+          {listItem.label}
+        </a>;
+      }
 
       listContent.push(
         <div className={`drop_down_button_list_item${activeClass}`}
              key={index}>
-          <div onClick={listItem.link}>
-            {listItem.label}
-          </div>
+          {link}
         </div>,
       );
     });
