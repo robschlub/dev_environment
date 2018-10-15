@@ -17,31 +17,31 @@ $home-image-xl: $bark-blurred-lg;
   // border-bottom: solid 2px #777;
 }
 
-@include media-breakpoint-up(xs) {
+@media screen and (min-width: $mobile) {
   .home__banner {
     background-image: $home-image-xs;
   }
 }
 
-@include media-breakpoint-up(sm) {
+@media screen and (min-width: $small-tablet) {
   .home__banner {
     background-image: $home-image-sm;
   }
 }
 
-@include media-breakpoint-up(md) {
+@media screen and (min-width: $tablet) {
   .home__banner {
     background-image: $home-image-md;
   }
 }
 
-@include media-breakpoint-up(lg) {
+@media screen and (min-width: $desktop) {
   .home__banner {
     background-image: $home-image-lg;
   }
 }
 
-@include media-breakpoint-up(xl) {
+@media screen and (min-width: $large-desktop) {
   .home__banner {
     background-image: $home-image-xl;
   }

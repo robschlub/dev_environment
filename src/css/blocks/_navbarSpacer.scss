@@ -6,7 +6,7 @@
   background-color: color('lesson', 'title-background');
 }
 
-@include media-breakpoint-up(xl) {
+@media screen and (min-width: $large-desktop) {
   .navbar__spacer {
     // height: 56px;
     width: 100%;
