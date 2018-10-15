@@ -12,7 +12,7 @@ type Props = {
   xAlign?: 'left' | 'right' | 'center';
   list?: Array<{
     label: string;
-    link: string;
+    link: Function;
     active?: boolean;
   }>;
 };
@@ -97,9 +97,9 @@ export default class DropDownButton extends React.Component
       listContent.push(
         <div className={`drop_down_button_list_item${activeClass}`}
              key={index}>
-          <a href={listItem.link}>
+          <div onClick={listItem.link}>
             {listItem.label}
-          </a>
+          </div>
         </div>,
       );
     });
