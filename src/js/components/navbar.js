@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 // import '../../css/style.scss';
+import DropDownButton from './dropDownButton';
 
 type Props = {
   // className?: string,
@@ -33,18 +34,24 @@ export default class Navbar extends React.Component
           <img className="navbar-icon"
                src="/static/icon-lg.png"/>
         </a>
+        {/*
         <div className="navbar-text navbar-left">
           Login
         </div>
-        {/*
-        <div className="navbar-search-container">
-          <div className="navbar-search-icon-container">
-            <img className="navbar-search-icon-image"
-                 src="/static/searchdark.png"/>
-          </div>
-          <input className="navbar-input navbar-right"
-                 type="text"
-                 placeholder="search lessons"/>
+        <div className="navbar-text navbar-left">
+          Plus
+        </div>
+        <div className="navbar-text navbar-left">
+         <DropDownButton
+          className="navbar_lessons_dropdown"
+          label="lessons"
+          direction="down"
+          xAlign="left"
+          list={[
+            { label: 'item 1', link: '/' },
+            { label: 'item 2', link: '/' },
+            { label: 'item 3', link: '/' },
+          ]}/>
         </div>
       */}
       </div>
