@@ -61,7 +61,7 @@ class Content extends LessonContent {
         opp._line1.setColor(colors.line);
         opp._line2.setColor(colors.line);
         diag._unitsSelector.select(diag.units);
-        diag.setUnits(diag.units);
+        // diag.setUnits(diag.units);
       },
       showOnly: [
         opp,
@@ -137,8 +137,8 @@ class Content extends LessonContent {
           [opp._angleA, 'a', colors.angleA],
           [opp._angleB, 'b', colors.angleB],
         ]);
-        diag._unitsSelector.select('rad');
-        diag.setUnits('rad');
+        // diag._unitsSelector.select('rad');
+        // diag.setUnits('rad');
       },
     });
 
