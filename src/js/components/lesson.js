@@ -84,6 +84,10 @@ export default class LessonComponent extends React.Component
   }
 
   refreshText(htmlText: string, page: number, callback: ?() => void = null) {
+    // this.setState({
+    //   listOfSections: this.addListOfSections(),
+    // });
+    this.updateGoToButtonListHighlight();
     if (htmlText !== this.state.htmlText || page !== this.state.page) {
       this.componentUpdateCallback = callback;
       this.setState({ htmlText, page });
@@ -108,10 +112,6 @@ export default class LessonComponent extends React.Component
         prevButton.classList.remove('lesson__button-prev-disabled');
       }
     }
-    
-    // this.setState({
-    //   listOfSections: this.addListOfSections(),
-    // });
   }
 
   goToNext() {
@@ -344,8 +344,11 @@ export default class LessonComponent extends React.Component
   }
 
   addGoToButton() {
-    return <div className="lesson__button-goto_container">
+    return <div
+      className="lesson__button-goto_container"
+      id="id__lesson__button-goto_container">
       <DropDownButton
+      id="id__lesson__goto_button"
       label={`${this.state.page + 1} / ${this.state.numPages}`}
       direction="up"
       xAlign="right"
@@ -369,12 +372,32 @@ export default class LessonComponent extends React.Component
     this.lesson.goToSection(index);
   }
 
+  updateGoToButtonListHighlight() {
+    const activeItems = document.getElementsByClassName('drop_down_button_list_item_active');
+    [].forEach.call(activeItems, item => item.classList.remove('drop_down_button_list_item_active'));
+    const listItems = document.getElementById('id__lesson__goto_button_list');
+    const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
+    const titleIndeces = this.lesson.content.sections.map((section, index) => {
+      if (section.title) {
+        return index;
+      }
+      return -1;
+    }).filter(index => index !== -1);
+    const listIndex = titleIndeces.indexOf(activeSection);
+
+    if (listItems) {
+      const { children } = listItems;
+      if (children.length > 0) {
+        children[listIndex].classList.add('drop_down_button_list_item_active');
+      }
+    }
+  }
+
   addListOfSections() {
     const output = [];
     const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
     this.lesson.content.sections.forEach((section, index) => {
       if (section.title) {
-        // let classNames = 'dropdown-item';
         let isActive = false;
         if (index === activeSection) {
           isActive = true;

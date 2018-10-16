@@ -154,6 +154,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
         [].forEach.call(degSpans, degSpan => degSpan.classList.add('lesson__unit_hide'));
         // console.log('after', degSpans[0].classList.contains('lesson__unit_hide'));
         [].forEach.call(radSpans, radSpan => radSpan.classList.remove('lesson__unit_hide'));
+        console.log("hiding");
       }
       if (selectedUnits === 'deg') {
         // console.log("asdf");
