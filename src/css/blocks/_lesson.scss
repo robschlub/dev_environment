@@ -32,8 +32,8 @@ $title_bar_space_low: 90px;
     --lesson__np_button-hspace: calc(#{$np_button-hspace} * 1vw);
     --lesson__text-margin: 1em;
     --lesson__text-p-spacing: calc(#{$text-p-top-margin} * 1vw);
-    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1.5);
-    --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw * 1.5);
+    --lesson__goto_button-width: calc(#{$goto_button-width} * 1vw * 1);
+    --lesson__goto_button-height: calc(#{$goto_button-height} * 1vw * 1);
     --lesson__goto_button-font-size: calc(#{$goto_button-font-size} * 1vw);
   }
 }
@@ -238,20 +238,28 @@ $title_bar_space_low: 90px;
   height: var(--lesson__goto_button-height);
   width: var(--lesson__goto_button-width);
   font-size: var(--lesson__goto_button-font-size);
-}
-
-.lesson__button-goto {
-  position: absolute;
-  border: 0;
-  background-color: color('diagram', 'background');
-  font-size: var(--lesson__goto_button-font-size);
   color: color('lesson', 'text');
-  width: var(--lesson__goto_button-width);
+  background-color: color('diagram', 'background');
+  border-radius: 0.3em;
 }
 
-#lesson__button-goto:hover {
+.lesson__button-goto_container:hover {
   background-color: color('diagram', 'background', 'darker');
 }
+
+// .lesson__button-goto {
+//   position: absolute;
+//   border: 0;
+//   background-color: color('diagram', 'background');
+//   font-size: var(--lesson__goto_button-font-size);
+//   color: color('lesson', 'text');
+//   width: var(--lesson__goto_button-width);
+//   border-radius: 0.3em;
+// }
+
+// #lesson__button-goto:hover {
+//   background-color: color('diagram', 'background', 'darker');
+// }
 
 // #lesson__page_number {
 //   position: absolute;
