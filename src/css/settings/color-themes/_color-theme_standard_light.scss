@@ -73,6 +73,8 @@ $_color_theme-standard-light: (
     'title-background': (color: 'white',  shade: 'base'),
     'text':             (color: 'grey',   shade: 'darker'),
     'navigation':       (color: 'grey',   shade: 'base'),
+    'button':           (color: 'grey',   shade: 'base'),
+    'button-highlight': (color: 'grey',   shade: 'darker'),
   ),
   'site': (
     'primary':          (color: 'blue',   shade: 'base'),
@@ -88,13 +90,6 @@ $_color_theme-standard-light: (
     'text-hover':       (color: 'grey',   shade: 'lighter'),
     'text-input':       (color: 'grey',   shade: 'lighter'),
     'background':       (color: 'grey',   shade: 'darker'),
-    'button':           (color: 'white',  shade: 'lighter'),
-    'base':             (color: 'white',  shade: 'light'),
-    'hover':            (color: 'white',  shade: 'lighter'),
-    'active':           (color: 'white',  shade: 'base'),
-    'disabled':         (color: 'white',  shade: 'darker'),
-    // 'toggler-border':   (color: 'white',  shade: 'light'),
-    // 'icon':             $navbardark,
   ),
   'palette': $_color_standard-light-theme-palette,
 );

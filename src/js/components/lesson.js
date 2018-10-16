@@ -23,7 +23,7 @@ type State = {
   page: number,
   listOfSections: Array<{
     label: string;
-    link: Function;
+    link: Function | string;
     active?: boolean;
   }>;
 };
@@ -351,14 +351,6 @@ export default class LessonComponent extends React.Component
       xAlign="right"
       list={this.state.listOfSections}/>
     </div>;
-    // return <div className="dropdown lesson__button-goto_container">
-    //   <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    //       {`${this.state.page + 1} / ${this.state.numPages}`}
-    //   </button>
-    //   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-    //   {this.state.listOfSections}
-    //   </div>
-    // </div>;
   }
 
   belongsTo(index: number) {
