@@ -32,11 +32,14 @@ export default class DropDownButton extends React.Component
 
   offButtonEvent(event: MouseEvent | TouchEvent) {
     if (event.target instanceof HTMLElement) {
-      if (event.target.parentElement instanceof HTMLElement) {
-        if (event.target !== this.buttonElement
-          && event.target.parentElement.parentElement !== this.itemList
-        ) {
+      const parent = event.target.parentElement;
+      if (parent instanceof HTMLElement) {
+        if (event.target !== this.buttonElement) {
           this.close();
+          if (event.target instanceof HTMLElement
+            && parent.parentElement === this.itemList) {
+            event.target.click();
+          }
         }
       }
     }
