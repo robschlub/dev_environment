@@ -43,30 +43,38 @@ export default class DropDownButton extends React.Component
   }
 
   close() {
-    this.itemList.classList.remove('drop_down_button_list_show');
+    this.itemList.classList.add('drop_down_button_list_hide');
+    this.itemList.style.left = '-200px';
+    this.itemList.style.top = '-200px';
   }
 
   toggle() {
-    this.itemList.classList.toggle('drop_down_button_list_show');
+    this.itemList.classList.toggle('drop_down_button_list_hide');
     const rect = this.buttonElement.getBoundingClientRect();
     const listRect = this.itemList.getBoundingClientRect();
-    console.log(rect)
-    if (this.direction === 'down') {
-      // this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
-      this.itemList.style.top = `${rect.height}px`
+    console.log(this.itemList.classList.contains('drop_down_button_list_hide'))
+    if (!this.itemList.classList.contains('drop_down_button_list_hide')) {
+      if (this.direction === 'down') {
+        // this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
+        this.itemList.style.top = `${rect.height}px`;
+      } else {
+        // this.itemList.style.top = `${window.scrollY + rect.top - listRect.height}px`;
+        console.log(listRect)
+        this.itemList.style.top = `${-listRect.height}px`;
+      }
+      if (this.xAlign === 'left') {
+        // this.itemList.style.left = `${window.scrollX + rect.left}px`;
+        this.itemList.style.left = '0px';
+      } else if (this.xAlign === 'right') {
+        // this.itemList.style.left = `${window.scrollX + rect.right - listRect.width}px`;
+        this.itemList.style.left = `${rect.width - listRect.width}px`;
+      } else if (this.xAlign === 'center') {
+        // this.itemList.style.left = `${window.scrollX + rect.right - rect.width / 2 - listRect.width / 2}px`;
+        this.itemList.style.left = `${rect.width / 2 - listRect.width / 2}px`;
+      }
     } else {
-      // this.itemList.style.top = `${window.scrollY + rect.top - listRect.height}px`;
-      this.itemList.style.top = `${-listRect.height}px`;
-    }
-    if (this.xAlign === 'left') {
-      // this.itemList.style.left = `${window.scrollX + rect.left}px`;
-      this.itemList.style.left = '0px';
-    } else if (this.xAlign === 'right') {
-      // this.itemList.style.left = `${window.scrollX + rect.right - listRect.width}px`;
-      this.itemList.style.left = `${rect.width - listRect.width}px`;
-    } else if (this.xAlign === 'center') {
-      // this.itemList.style.left = `${window.scrollX + rect.right - rect.width / 2 - listRect.width / 2}px`;
-      this.itemList.style.left = `${rect.width / 2 - listRect.width / 2}px`;
+      this.itemList.style.left = '-200px';
+      this.itemList.style.top = '-200px';
     }
   }
 
@@ -125,7 +133,7 @@ export default class DropDownButton extends React.Component
         <div className={`drop_down_button_arrow${arrowDirectionClass}`}>
         </div>
       </div>
-      <div className="drop_down_button_list"
+      <div className="drop_down_button_list drop_down_button_list_hide"
            id={`${this.id}_list`}>
         {listContent}
       </div>
