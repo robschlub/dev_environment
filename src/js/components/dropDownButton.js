@@ -81,8 +81,6 @@ export default class DropDownButton extends React.Component
       this.itemList = itemList;
       button.addEventListener('mousedown', this.toggle.bind(this));
       body.addEventListener('mousedown', this.offButtonEvent.bind(this), true);
-      button.addEventListener('touchstart', this.toggle.bind(this));
-      body.addEventListener('touchstart', this.offButtonEvent.bind(this), true);
     }
   }
 

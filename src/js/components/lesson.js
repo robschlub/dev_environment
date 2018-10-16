@@ -108,6 +108,10 @@ export default class LessonComponent extends React.Component
         prevButton.classList.remove('lesson__button-prev-disabled');
       }
     }
+
+    this.setState({
+      listOfSections: this.addListOfSections(),
+    });
   }
 
   goToNext() {
@@ -344,7 +348,7 @@ export default class LessonComponent extends React.Component
       <DropDownButton
       label={`${this.state.page + 1} / ${this.state.numPages}`}
       direction="up"
-      xAlign="center"
+      xAlign="right"
       list={this.state.listOfSections}/>
     </div>;
     // return <div className="dropdown lesson__button-goto_container">
