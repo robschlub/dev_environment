@@ -52,23 +52,17 @@ export default class DropDownButton extends React.Component
     this.itemList.classList.toggle('drop_down_button_list_hide');
     const rect = this.buttonElement.getBoundingClientRect();
     const listRect = this.itemList.getBoundingClientRect();
-    console.log(this.itemList.classList.contains('drop_down_button_list_hide'))
     if (!this.itemList.classList.contains('drop_down_button_list_hide')) {
       if (this.direction === 'down') {
-        // this.itemList.style.top = `${window.scrollY + rect.bottom}px`;
         this.itemList.style.top = `${rect.height}px`;
       } else {
-        // this.itemList.style.top = `${window.scrollY + rect.top - listRect.height}px`;
         this.itemList.style.top = `${-listRect.height}px`;
       }
       if (this.xAlign === 'left') {
-        // this.itemList.style.left = `${window.scrollX + rect.left}px`;
         this.itemList.style.left = '0px';
       } else if (this.xAlign === 'right') {
-        // this.itemList.style.left = `${window.scrollX + rect.right - listRect.width}px`;
         this.itemList.style.left = `${rect.width - listRect.width}px`;
       } else if (this.xAlign === 'center') {
-        // this.itemList.style.left = `${window.scrollX + rect.right - rect.width / 2 - listRect.width / 2}px`;
         this.itemList.style.left = `${rect.width / 2 - listRect.width / 2}px`;
       }
     } else {
@@ -87,6 +81,8 @@ export default class DropDownButton extends React.Component
       this.itemList = itemList;
       button.addEventListener('mousedown', this.toggle.bind(this));
       body.addEventListener('mousedown', this.offButtonEvent.bind(this), true);
+      button.addEventListener('touchstart', this.toggle.bind(this));
+      body.addEventListener('touchstart', this.offButtonEvent.bind(this), true);
     }
   }
 

@@ -237,6 +237,7 @@ $title_bar_space_low: 90px;
   top: calc(100% - (100% - var(--lesson__content-height)) / 2 - var(--lesson__goto_button-height) / 2);
   height: var(--lesson__goto_button-height);
   width: var(--lesson__goto_button-width);
+  font-size: var(--lesson__goto_button-font-size);
 }
 
 .lesson__button-goto {
