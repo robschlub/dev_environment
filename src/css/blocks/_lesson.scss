@@ -313,7 +313,7 @@ $title_bar_space_low: 90px;
 
   .lesson__button-goto_container {
     left: calc(100% - var(--lesson__np_button-width) / 2 - var(--lesson__goto_button-width) / 2);
-    top: calc(85% + var(--lesson__goto_button-font-size) * 2);
+    top: calc(93% - var(--lesson__goto_button-height) / 2);
   }
 }
 
