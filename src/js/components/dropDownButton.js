@@ -44,8 +44,8 @@ export default class DropDownButton extends React.Component
 
   close() {
     this.itemList.classList.add('drop_down_button_list_hide');
-    this.itemList.style.left = '-200px';
-    this.itemList.style.top = '-200px';
+    this.itemList.style.left = '';
+    this.itemList.style.top = '';
   }
 
   toggle() {
@@ -59,7 +59,6 @@ export default class DropDownButton extends React.Component
         this.itemList.style.top = `${rect.height}px`;
       } else {
         // this.itemList.style.top = `${window.scrollY + rect.top - listRect.height}px`;
-        console.log(listRect)
         this.itemList.style.top = `${-listRect.height}px`;
       }
       if (this.xAlign === 'left') {
@@ -73,8 +72,8 @@ export default class DropDownButton extends React.Component
         this.itemList.style.left = `${rect.width / 2 - listRect.width / 2}px`;
       }
     } else {
-      this.itemList.style.left = '-200px';
-      this.itemList.style.top = '-200px';
+      this.itemList.style.left = '';
+      this.itemList.style.top = '';
     }
   }
 

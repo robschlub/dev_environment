@@ -77,9 +77,9 @@
   z-index: 1;
   background-color: white;
   // padding: 0;\
-  width: auto;
-  height: auto;
-  font-size: 14px;
+  // width: auto;
+  // height: auto;
+  // font-size: 14px;
   border-radius: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -95,13 +95,14 @@
 // }
 
 .drop_down_button_list_hide {
-  // left: -10000px;
-  // top: -10000px;
+  left: -10000px;
+  top: -10000px;
 }
 
 .drop_down_button_list_item {
   color: color('grey', 'base');
   background-color: white;
+  white-space: nowrap;
 }
 
 .drop_down_button_list_item,
