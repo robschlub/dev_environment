@@ -108,10 +108,10 @@ export default class LessonComponent extends React.Component
         prevButton.classList.remove('lesson__button-prev-disabled');
       }
     }
-
-    this.setState({
-      listOfSections: this.addListOfSections(),
-    });
+    
+    // this.setState({
+    //   listOfSections: this.addListOfSections(),
+    // });
   }
 
   goToNext() {

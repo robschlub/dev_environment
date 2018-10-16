@@ -144,13 +144,25 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
       const degSpans = document.getElementsByClassName('lesson__unit_deg');
       const radSpans = document.getElementsByClassName('lesson__unit_rad');
       if (selectedUnits === 'rad') {
+        // // console.log("asdf", degSpans);
+        // for (let i = 0; i < degSpans.length; i += 1) {
+        //   console.log('before', degSpans[i].classList.contains('lesson__unit_hide'));
+        //   degSpans[i].classList.add('lesson__unit_hide');
+        //   console.log('after', degSpans[i].classList.contains('lesson__unit_hide'));
+        // }
+        // console.log('before', degSpans[0].classList.contains('lesson__unit_hide'));
         [].forEach.call(degSpans, degSpan => degSpan.classList.add('lesson__unit_hide'));
+        // console.log('after', degSpans[0].classList.contains('lesson__unit_hide'));
         [].forEach.call(radSpans, radSpan => radSpan.classList.remove('lesson__unit_hide'));
       }
       if (selectedUnits === 'deg') {
+        // console.log("asdf");
         [].forEach.call(degSpans, degSpan => degSpan.classList.remove('lesson__unit_hide'));
         [].forEach.call(radSpans, radSpan => radSpan.classList.add('lesson__unit_hide'));
       }
+      // console.log(degSpans)
+      // console.log('done', degSpans[0].classList.contains('lesson__unit_hide'));
+
       this.setUnits(selectedUnits);
     };
     const selector = makeSelectorText(

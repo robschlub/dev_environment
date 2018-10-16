@@ -61,6 +61,7 @@ class Content extends LessonContent {
         opp._line1.setColor(colors.line);
         opp._line2.setColor(colors.line);
         diag._unitsSelector.select(diag.units);
+        diag.setUnits(diag.units);
       },
       showOnly: [
         opp,
@@ -104,7 +105,11 @@ class Content extends LessonContent {
       setEnterState: () => {
         oppCommon.setEnterState();
         opp.calculateFuturePositions();
+        // diag._unitsSelector.select(diag.units);
       },
+      hide: [
+        diag._unitsSelector,
+      ],
       transitionFromAny: (done) => {
         opp.moveToFuturePositions(done);
       },
@@ -124,14 +129,16 @@ class Content extends LessonContent {
         a: highlight(colors.angleA),
         b: highlight(colors.angleB),
       },
-      show: [
-        diag._unitsSelector,
-      ],
+      // show: [
+      //   diag._unitsSelector,
+      // ],
       setSteadyState: () => {
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
           [opp._angleB, 'b', colors.angleB],
         ]);
+        diag._unitsSelector.select('rad');
+        diag.setUnits('rad');
       },
     });
 
