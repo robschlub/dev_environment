@@ -77,7 +77,7 @@
 }
 
 .navigator__lesson_tile_containter:hover {
-  background: color('site', 'primary', 'light');
+  background: color('site', 'primary', 'base');
 }
 
 .navigator__lesson_tile_containter_title {
@@ -109,7 +109,7 @@
 }
 
 .navigator__lesson_tile_selected:hover {
-  background: color('site', 'safe', 'light');
+  background: color('site', 'safe', 'dark');
 }
 
 .navigator__lesson_tile_containter_title:hover {
