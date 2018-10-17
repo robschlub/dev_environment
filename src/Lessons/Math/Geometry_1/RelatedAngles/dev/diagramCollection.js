@@ -6,16 +6,9 @@ import lessonLayout from '../quickReference/layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import {
-  QRCorrespondingAngles, QRAlternateAngles,
-  QRInteriorAngles, QROppositeAngles,
-} from '../quickReference/quickReference';
+import * as qr from '../quickReference/quickReference';
 
 export default class DiagramCollection extends CommonDiagramCollection {
-  _corresponding: QRCorrespondingAngles;
-  _alternate: QRAlternateAngles;
-  _interior: QRInteriorAngles;
-  _opposite: QROppositeAngles;
 
   constructor(
     diagram: LessonDiagram,
@@ -23,10 +16,9 @@ export default class DiagramCollection extends CommonDiagramCollection {
   ) {
     const layout = lessonLayout();
     super(diagram, layout, transform);
-    this.add('corresponding', new QRCorrespondingAngles(diagram, transform));
-    this.add('alternate', new QRAlternateAngles(diagram, transform));
-    this.add('interior', new QRInteriorAngles(diagram, transform));
-    this.add('opposite', new QROppositeAngles(diagram, transform));
+    Object.keys(qr).forEach((key) => {
+      this.add(key, new qr[key](diagram, transform));
+    });
     this.hasTouchableElements = true;
   }
 }

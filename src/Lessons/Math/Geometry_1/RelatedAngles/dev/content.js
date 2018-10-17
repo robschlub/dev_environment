@@ -1,6 +1,6 @@
 // @flow
 import { LessonContent } from '../../../../../js/Lesson/LessonContent';
-import { click } from '../../../../../js/tools/htmlGenerator';
+import { click, centerH } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import lessonLayout from '../quickReference/layout';
 import details from '../details';
@@ -25,17 +25,19 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'QR Test',
-      setContent: `
-        <p>|corresponding|</p>
-        <p>|alternate|</p>
-        <p>|interior|</p>
-        <p>|opposite|</p>
-      `,
-      modifiers: {
-        corresponding: click(diag._corresponding.show, [diag._corresponding]),
-        alternate: click(diag._alternate.show, [diag._alternate]),
-        interior: click(diag._interior.show, [diag._interior]),
-        opposite: click(diag._opposite.show, [diag._opposite]),
+      setContent: () => {
+        let out = '<p>Quick Reference Popups</p><p></p>';
+        Object.keys(diag.elements).forEach((key) => {
+          out = `${out}<p style="margin-top:0%">|${key}|</p>`;
+        });
+        return centerH(out);
+      },
+      modifiers: () => {
+        const out = {};
+        Object.keys(diag.elements).forEach((key) => {
+          out[key] = click(diag.elements[`${key}`].show, [diag.elements[`${key}`]]);
+        });
+        return out;
       },
     });
   }
