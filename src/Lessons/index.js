@@ -111,7 +111,6 @@ export default function getLessonIndex() {
     'quadrangles',
     [
       '1',
-      'dev',
       'quiz',
       'summary',
     ],
