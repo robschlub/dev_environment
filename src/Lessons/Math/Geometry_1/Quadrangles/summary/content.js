@@ -33,7 +33,7 @@ class Content extends LessonContent {
     const square = diag._square;
 
     this.addSection({
-      setTitle: 'Quadrangle',
+      title: 'Quadrangle',
       setContent: `
         <p>
           A |quadrangle|, or |quadrilateral| is a shape with |four sides| and |four angles|. A quadrangle's angles always add up to 360º.
@@ -47,7 +47,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setTitle: 'Rectangle',
+      title: 'Rectangle',
       setContent: `
         <p>
           A |rectangle|, is a quadrangle with |all angles equal to 90º|. A rectangle's |opposite sides are parallel and equal length|.
@@ -70,7 +70,7 @@ class Content extends LessonContent {
     });
 
     this.addSection({
-      setTitle: 'Square',
+      title: 'Square',
       setContent: `
         <p>
           A |square|, is a |rectangle with all sides equal|. Therefore a squares's angles are all 90º and its opposite sides are parallel.

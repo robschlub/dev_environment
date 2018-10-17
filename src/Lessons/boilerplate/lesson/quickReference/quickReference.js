@@ -10,7 +10,7 @@ import TODOCollection from '../common/diagramCollectionTODO';
 
 
 export default class QRQuadrangle extends PopupBoxCollection {
-  _todo: TODOCollection;
+  _collection: TODOCollection;
 
   constructor(
     diagram: Object,
@@ -21,7 +21,7 @@ export default class QRQuadrangle extends PopupBoxCollection {
       diagram,
       layout,
       transform,
-      'todo',
+      'collection',
       TODOCollection,
     );
     this.hasTouchableElements = true;
@@ -36,8 +36,8 @@ export default class QRQuadrangle extends PopupBoxCollection {
   show() {
     this.setDiagramSize(2.5, 1.3);
     super.show();
-    const collection = this._todo;
-    collection.show();
+    const collection = this._collection;
+    collection.showAll();
     collection.transform.updateScale(0.7, 0.7);
     // collection.setPosition(this.layout.position);
     this.diagram.animateNextFrame();
