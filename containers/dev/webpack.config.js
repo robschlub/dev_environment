@@ -10,8 +10,6 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
 
-entryPoints.makeLessonIndex();
-
 const envConfig = {
   prod: {
     name: 'production',
@@ -53,6 +51,7 @@ module.exports = (env) => {
       e = envConfig.dev;
     }
   }
+  entryPoints.makeLessonIndex(e.name);
 
   console.log(`Building for ${e.name}`); // eslint-disable-line no-console
 
@@ -143,7 +142,7 @@ module.exports = (env) => {
     cssMini].filter(elem => elem !== '');
 
   return {
-    entry: entryPoints.entryPoints(),
+    entry: entryPoints.entryPoints(e.name),
     output: {
       path: buildPath,
       filename: '[name].js',

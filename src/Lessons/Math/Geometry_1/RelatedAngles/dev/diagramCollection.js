@@ -9,7 +9,6 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import * as qr from '../quickReference/quickReference';
 
 export default class DiagramCollection extends CommonDiagramCollection {
-
   constructor(
     diagram: LessonDiagram,
     transform: Transform = new Transform('Dev'),
