@@ -27,6 +27,7 @@ body {
   padding-bottom: calc(var(--lesson__diagram-font-size) * 0.4);
   // padding-left: calc(var(--lesson__diagram-font-size) * 0.4);
   padding-right: calc(var(--lesson__diagram-font-size) * 0.4);
+  color: color('diagram', 'disabled', 'dark');
 }
 
 .lesson__equation_next_prev {
