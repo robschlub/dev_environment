@@ -6,11 +6,11 @@ import * as html from '../../../../../js/tools/htmlGenerator';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
 import details from '../details';
 
-import QuadCollection from '../common/diagramCollectionQuad';
+import TODOCollection from '../common/diagramCollectionTODO';
 
 
 export default class QRQuadrangle extends PopupBoxCollection {
-  _quad: QuadCollection;
+  _todo: TODOCollection;
 
   constructor(
     diagram: Object,
@@ -21,28 +21,25 @@ export default class QRQuadrangle extends PopupBoxCollection {
       diagram,
       layout,
       transform,
-      'quad',
-      QuadCollection,
+      'todo',
+      TODOCollection,
     );
     this.hasTouchableElements = true;
 
     const modifiers = {};
 
-    this.setTitle('Quadrangle');
-    this.setDescription('A |Quadrangle| is a shape with |four sides|, and |four angles|. All the angles within a quadrangle add up to |360º| (|2π radians|).', modifiers);
+    this.setTitle('TODO');
+    this.setDescription('TODO', modifiers);
     this.setLink(details.details.uid);
   }
 
   show() {
     this.setDiagramSize(2.5, 1.3);
     super.show();
-    const quad = this._quad;
-    quad.show();
-    quad._quad1.show();
-    quad._quad2.show();
-    quad._quad3.show();
-    quad.transform.updateScale(0.7, 0.7);
-    quad.setPosition(this.layout.quadPosition);
+    const collection = this._todo;
+    collection.show();
+    collection.transform.updateScale(0.7, 0.7);
+    // collection.setPosition(this.layout.position);
     this.diagram.animateNextFrame();
   }
 }
