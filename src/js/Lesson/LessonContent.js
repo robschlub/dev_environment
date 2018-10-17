@@ -96,7 +96,7 @@ function diagramCanvas(
 
 class Section {
   title: string;
-  modifiers: Object;
+  modifiers: Object | Function;
   infoModifiers: Object;
   hint: Array<string> | string;
   blank: Array<string>;
@@ -290,6 +290,9 @@ class Section {
   }
 
   getContent(): string {
+    if (typeof this.modifiers === 'function') {
+      this.modifiers = this.modifiers();
+    }
     let htmlText = '';
     let content = '';
     if (typeof this.setContent === 'string'
@@ -568,6 +571,7 @@ class LessonContent {
   goingTo: 'next' | 'prev' | 'goto';
   comingFrom: 'next' | 'prev' | 'goto';
   iconLink: string;
+  iconLinkGrey: string;
   toggleInfo: (?boolean) => void;
   animationEnd: string;
   // questions
@@ -576,6 +580,7 @@ class LessonContent {
     this.diagramHtmlId = htmlId;
     this.sections = [];
     this.iconLink = '/';
+    this.iconLinkGrey = '/';
     this.setTitle();
 
     this.animationEnd = whichAnimationEvent();

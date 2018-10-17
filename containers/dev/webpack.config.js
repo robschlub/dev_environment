@@ -5,10 +5,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin'); // eslint-disable-li
 const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
 const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
-
-entryPoints.makeLessonIndex();
 
 const envConfig = {
   prod: {
@@ -51,6 +51,7 @@ module.exports = (env) => {
       e = envConfig.dev;
     }
   }
+  entryPoints.makeLessonIndex(e.name);
 
   console.log(`Building for ${e.name}`); // eslint-disable-line no-console
 
@@ -104,15 +105,44 @@ module.exports = (env) => {
   //   allChunks: true,
   // });
 
+  const copy = new CopyWebpackPlugin(
+    [
+      {
+        from: '/opt/app/src/Lessons/*/*/topic.png',
+        to: '/opt/app/app/app/static/dist/[1][name].[ext]',
+        test: /\/opt\/app\/src\/(.*)topic\.png$/,
+      },
+      // {
+      //   from: '/opt/app/src/Lessons/Math/Geometry_1/topic.png',
+      //   to: '/opt/app/app/app/static/dist/Lessons/Math/Geometry_1/topic.png',
+      //   // test: /\/opt\/app\/src\/(.*)topic\.png$/,
+      // },
+    ],
+    // { debug: 'debug' },
+  );
+
+  let cssMini = '';
+  if (e.uglify) {
+    cssMini = new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      // cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }],
+      },
+      canPrint: true,
+    });
+  }
   // Make the plugin array filtering out those plugins that are null
   const pluginArray = [
     uglify,
     define,
     extract,
-    clean].filter(elem => elem !== '');
+    copy,
+    clean,
+    cssMini].filter(elem => elem !== '');
 
   return {
-    entry: entryPoints.entryPoints(),
+    entry: entryPoints.entryPoints(e.name),
     output: {
       path: buildPath,
       filename: '[name].js',
@@ -159,19 +189,20 @@ module.exports = (env) => {
               //   name: '[path][hash].[ext]'
               // }
               options: {
-                name (file) {
+                name(file) {
                   // if (env === 'development') {
                   //   return '[path][name].[ext]'
                   // }
                   let newPath = file.replace('/opt/app/src/', '');
                   // newPath = newPath.replace('/tile.png', '');
                   newPath = newPath.replace(/\/[^/]*$/, '');
+                  // console.log(newPath)
                   return `${newPath}/[name].[ext]`;
                 },
               },
             },
           ],
-        }
+        },
       ],
     },
     plugins: pluginArray,
@@ -196,14 +227,14 @@ module.exports = (env) => {
             test: /js\/(diagram|Lesson|tools|components)/,
             name: 'tools',
           },
-          // commoncss: {
-          //   minSize: 10,
-          //   minChunks: 2,
-          //   priority: -10,
-          //   reuseExistingChunk: true,
-          //   test: /css\/*\.(css|scss|sass)$/,
-          //   name: 'commoncss',
-          // // },
+          commoncss: {
+            minSize: 10,
+            minChunks: 2,
+            priority: -10,
+            reuseExistingChunk: true,
+            test: /css\/*\.(css|scss|sass)$/,
+            name: 'commoncss',
+          },
           // bootstrap: {
           //   test: /css\/bootstrap\*.css/,
           //   name: 'bootstrap',

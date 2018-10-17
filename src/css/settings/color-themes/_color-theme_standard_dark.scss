@@ -73,6 +73,8 @@ $_color_theme-standard-dark: (
     'title-background': (color: 'white',  shade: 'base'),
     'text':             (color: 'grey',   shade: 'lighter'),
     'navigation':       (color: 'grey',   shade: 'base'),
+    'button':           (color: 'grey',   shade: 'base'),
+    'button-highlight': (color: 'grey',   shade: 'darker'),
   ),
   'site': (
     'primary':          (color: 'blue',   shade: 'base'),
@@ -84,14 +86,10 @@ $_color_theme-standard-dark: (
     'menus':            (color: 'grey',  shade: 'darker'),
   ),
   'navbar': (
-    'button':           (color: 'grey',   shade: 'base'),
+    'text':             (color: 'grey',   shade: 'light'),
+    'text-hover':       (color: 'grey',   shade: 'lighter'),
+    'text-input':       (color: 'grey',   shade: 'lighter'),
     'background':       (color: 'grey',   shade: 'darker'),
-    'base':             (color: 'white',  shade: 'light'),
-    'hover':            (color: 'white',  shade: 'lighter'),
-    'active':           (color: 'white',  shade: 'base'),
-    'disabled':         (color: 'white',  shade: 'darker'),
-    'toggler-border':   (color: 'white',  shade: 'light'),
-    'toggler-icon':     $navbar-dark-toggler-icon-bg
   ),
   'palette': $_color_standard-dark-theme-palette,
 );

@@ -2148,10 +2148,7 @@ export class Equation {
       this.formTypeOrder = ['rad', 'base'];
     }
     if (this.collection.isShown) {
-      const form = this.getCurrentForm();
-      if (form != null) {
-        this.showForm(form);
-      }
+      this.showForm(this.currentForm);
     }
   }
 
@@ -2164,7 +2161,7 @@ export class Equation {
       form = this.getForm(formOrName, formType);
     }
     if (form) {
-      this.setCurrentForm(formOrName);
+      this.setCurrentForm(form);
       this.render();
     }
   }

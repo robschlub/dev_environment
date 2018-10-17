@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import '../../css/style.scss';
+// import '../../css/style.scss';
 import LessonTile from './lessonTile';
 import LessonDescription from '../../Lessons/lessonDescription';
 import makeLessonTree from '../../Lessons/lessonTree';
@@ -11,6 +11,7 @@ import {
 import { getDefinedCSSVariables } from '../tools/getCssVariables';
 
 type Props = {
+  topic: string;
   selected?: ?string;
 };
 
@@ -18,6 +19,7 @@ export default class LessonNavigator extends React.Component
                                     <Props> {
   selected: string;
   lessonIndex: Array<Array<LessonDescription>>;
+  lessonTrees: Object;
   key: number;
   selectedLesson: LessonDescription;
   lessonArray: Array<LessonDescription>;
@@ -27,52 +29,25 @@ export default class LessonNavigator extends React.Component
   tileHeight: number;
   tileVSpace: number;
   tileHSpace: number;
+  topic: string;
+  topicPath: string;
+  topicName: string;
 
   constructor(props: Props) {
     super(props);
-    this.lessonIndex = makeLessonTree();
+    this.lessonTrees = makeLessonTree();
+    this.lessonIndex = this.lessonTrees[props.topic].tree;
+    this.topicPath = this.lessonTrees[props.topic].path;
+    this.topicName = this.lessonTrees[props.topic].name;
     this.getVariables();
     this.layoutLessonTiles();
-    // let viewPortWidth = 0;
-    // const doc = document.documentElement;
-    // if (doc) {
-    //   viewPortWidth = doc.clientWidth;
-    // }
-    // const y = 200;
-    // const width = 200;
-    // const height = 40;
-    // const vSpace = 10;
-    // let x = viewPortWidth / 2 - 180 / 2;
-    // this.lessonArray = [];
-    // this.lessonIndex.forEach((lesson) => {
-    //   if (Array.isArray(lesson)) {
-    //     const len = lesson.length;
-    //     const totalHeight = len * height + (len - 1) * vSpace;
-    //     let yStart = y - totalHeight / 2 + height / 2;
-    //     if (yStart < y - 2 * height - 2 * vSpace) {
-    //       yStart = y - 2 * height - 2 * vSpace;
-    //     }
-    //     lesson.forEach((parallelLesson, index) => {
-    //       const yLocation = yStart + index * (height + vSpace);
-    //       // eslint-disable-next-line no-param-reassign
-    //       parallelLesson.location = new Point(x, yLocation);
-    //       this.lessonArray.push(parallelLesson);
-    //     });
-    //   } else {
-    //     // eslint-disable-next-line no-param-reassign
-    //     lesson.location = new Point(x, y);
-    //     this.lessonArray.push(lesson);
-    //   }
-    //   x += width;
-    // });
     this.key = 0;
     this.selected = props.selected || '';
     this.asTitle = false;
     if (this.selected !== '') {
       this.asTitle = true;
     }
-    // this.tileWidth = 180;
-    // this.tileHeight = 56;
+    this.topic = props.topic;
   }
 
   getVariables() {
@@ -140,120 +115,115 @@ export default class LessonNavigator extends React.Component
 
     this.getLessonTilesBounds();
   }
-  // componentDidUpdate() {
-  //   if (this.asTitle) {
-  //     this.hideAllTilesButSelected();
+
+  // showNavigator() {
+  //   // console.log("showing")
+  //   this.enableTransitions();
+  //   this.showAllTiles();
+  //   this.zoomOutSelected();
+  //   const nav2 = document.getElementById('id_navigator__container');
+
+  //   if (nav2) {
+  //     nav2.style.height = '60vh';
+  //   }
+  //   const nav = document.getElementById('id_navigator__scroll_container');
+  //   if (nav) {
+  //     nav.style.overflow = 'scroll';
   //   }
   // }
 
-  showNavigator() {
-    // console.log("showing")
-    this.enableTransitions();
-    this.showAllTiles();
-    this.zoomOutSelected();
-    const nav2 = document.getElementById('id_navigator__container');
+  // // eslint-disable-next-line class-methods-use-this
+  // enableTransition(id: string, enable: boolean = false) {
+  //   const element = document.getElementById(id);
+  //   if (element) {
+  //     if (enable) {
+  //       element.style.transition = 'all 1.0s ease';
+  //     } else {
+  //       element.style.transition = 'none';
+  //     }
+  //   }
+  // }
 
-    if (nav2) {
-      nav2.style.height = '60vh';
-    }
-    const nav = document.getElementById('id_navigator__scroll_container');
-    if (nav) {
-      nav.style.overflow = 'scroll';
-    }
-  }
+  // disableTransitions() {
+  //   this.enableTransition('id_lesson__title_navigator_container', false);
+  //   this.enableTransition('id_navigator__container', false);
+  //   this.enableTransition('id_navigator__scroll_container', false);
+  //   // this.enableTransition('navigator__lesson_tile', false);
+  // }
 
-  // eslint-disable-next-line class-methods-use-this
-  enableTransition(id: string, enable: boolean = false) {
-    const element = document.getElementById(id);
-    if (element) {
-      if (enable) {
-        element.style.transition = 'all 1.0s ease';
-      } else {
-        element.style.transition = 'none';
-      }
-    }
-  }
+  // enableTransitions() {
+  //   // this.enableTransition('id_lesson__title_navigator_container', true);
+  //   this.enableTransition('id_navigator__container', true);
+  //   // this.enableTransition('id_navigator__scroll_container', true);
+  //   // this.enableTransition('navigator__lesson_tile', true);
+  // }
 
-  disableTransitions() {
-    this.enableTransition('id_lesson__title_navigator_container', false);
-    this.enableTransition('id_navigator__container', false);
-    this.enableTransition('id_navigator__scroll_container', false);
-    // this.enableTransition('navigator__lesson_tile', false);
-  }
+  // selectTitle() {
+  //   this.hideAllTilesButSelected();
+  //   this.zoomInSelected();
 
-  enableTransitions() {
-    // this.enableTransition('id_lesson__title_navigator_container', true);
-    this.enableTransition('id_navigator__container', true);
-    // this.enableTransition('id_navigator__scroll_container', true);
-    // this.enableTransition('navigator__lesson_tile', true);
-  }
+  //   const nav2 = document.getElementById('id_navigator__container');
+  //   if (nav2) {
+  //     nav2.style.height = '90px';
+  //   }
+  // }
 
-  selectTitle() {
-    this.hideAllTilesButSelected();
-    this.zoomInSelected();
+  // showSelectedImediately() {
+  //   this.disableTransitions();
+  //   // this.hideAllTilesButSelected();
+  //   this.selectTitle();
+  //   // this.enableTransitions();
+  //   // setTimeout(this.enableTransitions.bind(this), 100);
+  // }
 
-    const nav2 = document.getElementById('id_navigator__container');
-    if (nav2) {
-      nav2.style.height = '90px';
-    }
-  }
+  // hideAllTilesButSelected() {
+  //   this.lessonArray.forEach((lesson) => {
+  //     const elem = document.getElementById(lesson.id);
+  //     if (elem) {
+  //       if (lesson.id !== this.selectedLesson.id) {
+  //         elem.style.opacity = '0';
+  //       }
+  //       elem.style.pointerEvents = 'none';
+  //     }
+  //   });
+  //   const nav = document.getElementById('id_navigator__scroll_container');
+  //   if (nav) {
+  //     nav.style.overflow = 'hidden';
+  //   }
+  // }
 
-  showSelectedImediately() {
-    this.disableTransitions();
-    // this.hideAllTilesButSelected();
-    this.selectTitle();
-    // this.enableTransitions();
-    // setTimeout(this.enableTransitions.bind(this), 100);
-  }
+  // zoomOutSelected() {
+  //   const nav = document.getElementById('id_navigator__scroll_container');
+  //   if (nav) {
+  //     const { x, y } = this.selectedLesson.location;
+  //     // nav.style.transform = 'scale(1, 1)';
+  //     nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * this.tileWidth / 2;
+  //     nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * this.tileHeight / 2.7;
+  //   }
+  // }
 
-  hideAllTilesButSelected() {
-    this.lessonArray.forEach((lesson) => {
-      const elem = document.getElementById(lesson.id);
-      if (elem) {
-        if (lesson.id !== this.selectedLesson.id) {
-          elem.style.opacity = '0';
-        }
-        elem.style.pointerEvents = 'none';
-      }
-    });
-    const nav = document.getElementById('id_navigator__scroll_container');
-    if (nav) {
-      nav.style.overflow = 'hidden';
-    }
-  }
+  // zoomInSelected() {
+  //   const nav = document.getElementById('id_navigator__scroll_container');
+  //   const lessonsContainer =
+  //     document.getElementById('id_navigator__lessons_positions_container');
 
-  zoomOutSelected() {
-    const nav = document.getElementById('id_navigator__scroll_container');
-    if (nav) {
-      const { x, y } = this.selectedLesson.location;
-      // nav.style.transform = 'scale(1, 1)';
-      nav.scrollLeft = x - nav.clientWidth / 2 + 1.39 * this.tileWidth / 2;
-      nav.scrollTop = y - nav.clientHeight / 2 + 1.39 * this.tileHeight / 2.7;
-    }
-  }
+  //   if (nav && lessonsContainer) {
+  //     const { x, y } = this.selectedLesson.location;
+  //     nav.scrollLeft = x - nav.clientWidth / 2 + 1 * this.tileWidth / 2
+  //                      + parseInt(lessonsContainer.style.left, 10);
+  //     nav.scrollTop = y + parseInt(lessonsContainer.style.top, 10);
+  //   }
+  // }
 
-  zoomInSelected() {
-    const nav = document.getElementById('id_navigator__scroll_container');
-    const lessonsContainer =
-      document.getElementById('id_navigator__lessons_positions_container');
-
-    if (nav && lessonsContainer) {
-      const { x, y } = this.selectedLesson.location;
-      nav.scrollLeft = x - nav.clientWidth / 2 + 1 * this.tileWidth / 2
-                       + parseInt(lessonsContainer.style.left, 10);
-      nav.scrollTop = y + parseInt(lessonsContainer.style.top, 10);
-    }
-  }
-
-  showAllTiles() {
-    this.lessonArray.forEach((lesson) => {
-      const elem = document.getElementById(lesson.id);
-      if (elem && lesson.id !== this.selectedLesson.id) {
-        elem.style.opacity = '1';
-        elem.style.pointerEvents = 'auto';
-      }
-    });
-  }
+  // showAllTiles() {
+  //   this.lessonArray.forEach((lesson) => {
+  //     const elem = document.getElementById(lesson.id);
+  //     if (elem && lesson.id !== this.selectedLesson.id) {
+  //       elem.style.opacity = '1';
+  //       elem.style.pointerEvents = 'auto';
+  //     }
+  //   });
+  // }
 
   createLessonJsx(lesson: LessonDescription) {
     this.key += 1;
@@ -262,13 +232,8 @@ export default class LessonNavigator extends React.Component
     if (lesson.name === this.selected) {
       state = 'selected';
       this.selectedLesson = lesson;
-      // const nav = document.getElementById('id_navigator__scroll_container');
-      // if (nav) {
-      //   x = `${nav.scrollLeft + nav.clientWidth / 2 - 125}px`;
-      //   y = `${nav.scrollTop + 90 / 2 - 28}px`;
-      // }
     }
-    if (lesson.link === '') {
+    if (lesson.enabled === false) {
       state = 'disabled';
     }
     return <LessonTile
@@ -305,17 +270,26 @@ export default class LessonNavigator extends React.Component
   }
 
   scrollToSelected() {
-    const navScroll = document.getElementById('id_navigator__scroll_container');
-    if (navScroll) {
+    const navScroll = document
+      .getElementById(`id_navigator__scroll_container_${this.topic}`);
+    const navigatorContainer = document
+      .getElementById(`id_navigator__container_${this.topic}`);
+    if (navScroll != null && navigatorContainer != null) {
+      const navRect = navigatorContainer.getBoundingClientRect();
+      const xMargin = Math.min(
+        this.tileWidth,
+        navRect.width / 2 - this.tileWidth / 2,
+      );
+      const yMargin = (navRect.height - this.lessonTilesBounds.height) / 2;
       if (this.selected !== '') {
-        navScroll.scrollLeft = this.selectedLesson.location.x + 200
+        navScroll.scrollLeft = this.selectedLesson.location.x + xMargin
                                - navScroll.clientWidth / 2 + this.tileWidth / 2;
-        navScroll.scrollTop = this.selectedLesson.location.y + 100
+        navScroll.scrollTop = this.selectedLesson.location.y + yMargin
                                - navScroll.clientHeight / 2 + this.tileHeight / 2;
       } else {
-        navScroll.scrollLeft = this.lessonArray[0].location.x + 200
+        navScroll.scrollLeft = this.lessonArray[0].location.x + xMargin
                                - navScroll.clientWidth / 2 + this.tileWidth / 2;
-        navScroll.scrollTop = this.lessonArray[0].location.y + 100
+        navScroll.scrollTop = this.lessonArray[0].location.y + yMargin
                                - navScroll.clientHeight / 2 + this.tileHeight / 2;
       }
     }
@@ -323,11 +297,10 @@ export default class LessonNavigator extends React.Component
 
   // eslint-disable-next-line class-methods-use-this
   centerLessons() {
-    // const nav =
-    //   document.getElementById('id_lesson__title_navigator_container');
-    const navigatorContainer = document.getElementById('id_navigator__container');
+    const navigatorContainer = document
+      .getElementById(`id_navigator__container_${this.topic}`);
     const lessonsContainer =
-      document.getElementById('id_navigator__lessons_positions_container');
+      document.getElementById(`id_navigator__lessons_positions_container_${this.topic}`);
     if (lessonsContainer != null && navigatorContainer != null) {
       const navRect = navigatorContainer.getBoundingClientRect();
       const navHeight = navRect.height;
@@ -371,35 +344,30 @@ export default class LessonNavigator extends React.Component
     xMax += this.tileHSpace;
     this.lessonTilesBounds = new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
   }
-  // componentDidMount() {
-  //   const navigator = document.getElementById('id_navigator__container');
-
-  //   if (navigator) {
-  //   //   navigator.scrollLeft = 100;
-  //   //   navigator.addEventListener('mousedown', this.mdh.bind(this), false);
-  //   //   navigator.addEventListener('mousemove', this.mdh.bind(this), false);
-  //     // navigator.scrollWidth = 1500;
-  //   }
-  //   // const navigator1 = document.getElementById('master_containter');
-  //   // if (navigator1) {
-  //   //   navigator1.addEventListener('mousedown', this.mdh.bind(this), false);
-  //   //   navigator1.addEventListener('mousemove', this.mdh.bind(this), false);
-  //   // }
-  // }
 
   // eslint-disable-next-line class-methods-use-this
   render() {
     const classStr = 'naviagator__container navigator__container_with_shadow';
-    // if (this.asTitle) {
-    //   classStr = `${classStr} navigator__container_with_shadow`;
-    //   // classStr = `${classStr}`;
-    // }
-    return <div id="id_navigator__container" className={classStr}>
-      <div className="navigator__left_side" />
-      <div className="navigator__right_side" />
-      <div id="id_navigator__scroll_container" className="navigator__scroll_container">
-        <div id='id_navigator__lessons_positions_container'>
-            {this.lessons()}
+    return <div>
+        <div className='navigator__topic_title_subtext'>
+                {'Learning path'}
+        </div>
+        <div className="navigator__topic_title_container">
+          <img src={`/static/dist/${this.topicPath}/topic.png`}
+               className="navigator__topic_title_img"/>
+          <div className='navigator__topic_title'>
+            <div className='navigator__topic_title_text'>
+              {this.topicName}
+            </div>
+          </div>
+        </div>
+        <div id={`id_navigator__container_${this.topic}`} className={classStr}>
+        <div className="navigator__left_side" />
+        <div className="navigator__right_side" />
+        <div id={`id_navigator__scroll_container_${this.topic}`} className="navigator__scroll_container">
+          <div id={`id_navigator__lessons_positions_container_${this.topic}`} className="navigator__lessons_positions_container">
+              {this.lessons()}
+          </div>
         </div>
       </div>
     </div>;
