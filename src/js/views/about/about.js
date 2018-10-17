@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import '../../../../css/style.scss';
-import './about.scss';
+// import './about.scss';
 import Button from '../../components/button';
 import Jumbotron from '../../jumbotron';
 import Navbar from '../../components/navbar';

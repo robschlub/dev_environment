@@ -6,8 +6,14 @@ function walkSync(currentDirPath, fileIdentifier, callback) {
     const filePath = path.join(currentDirPath, name);
     const stat = fs.statSync(filePath);
     if (stat.isFile()) {
-      if (name === fileIdentifier) {
-        callback(currentDirPath);
+      if (Array.isArray(fileIdentifier)) {
+        fileIdentifier.forEach((id) => {
+          if (id === name) {
+            callback(currentDirPath, id);
+          }
+        });
+      } else if (name === fileIdentifier) {
+        callback(currentDirPath, fileIdentifier);
       }
     } else if (stat.isDirectory()) {
       walkSync(filePath, fileIdentifier, callback);
@@ -15,10 +21,14 @@ function walkSync(currentDirPath, fileIdentifier, callback) {
   });
 }
 
-function getAllPaths(lessonsPath) {
+function getAllPaths(lessonsPath, buildMode) {
   const lessons = [];
-  walkSync(lessonsPath, 'lesson.js', (lessonPath) => {
-    lessons.push(lessonPath);
+  let fileId = 'lesson.js';
+  if (buildMode === 'development') {
+    fileId = ['lesson.js', 'lesson-dev.js'];
+  }
+  walkSync(lessonsPath, fileId, (lessonPath, fileName) => {
+    lessons.push({ path: lessonPath, name: fileName });
   });
   return lessons;
 }
@@ -31,20 +41,20 @@ function getAllLessons(lessonsPath) {
   return lessons;
 }
 
-function entryPoints() {
+function entryPoints(buildMode) {
   const points = {
     main: ['whatwg-fetch', 'babel-polyfill', './src/js/main.js'],
   };
-  const lessons = getAllPaths('./src/Lessons');
-  lessons.forEach((lessonPath) => {
-    const p = lessonPath.replace(/src\/Lessons\//, '');
-    points[`Lessons/${p}/lesson`] = `./${lessonPath}/lesson.js`;
+  const lessons = getAllPaths('./src/Lessons', buildMode);
+  lessons.forEach((lesson) => {
+    const p = lesson.path.replace(/src\/Lessons\//, '');
+    points[`Lessons/${p}/lesson`] = `./${lesson.path}/${lesson.name}`;
   });
   // console.log(points)
   return points;
 }
 
-function makeLessonIndex() {
+function makeLessonIndex(buildMode) {
   const lessons = getAllLessons('./src/Lessons');
   // const lessonDescriptions = [];
   let outStr =
@@ -60,7 +70,7 @@ export default function getLessonIndex() {
     let dependencies = [];
     let uid = '';
     let enabled = true;
-    const paths = getAllPaths(lessonPath);
+    const lessonPaths = getAllPaths(lessonPath, buildMode);
     if (fs.existsSync(detailsPath)) {
       // const detailsPath = `./${lessonPath}/details.js`;
       // eslint-disable-next-line global-require, import/no-dynamic-require
@@ -81,8 +91,8 @@ export default function getLessonIndex() {
       outStr = `${outStr}\n    '${shortPath}',`;
       outStr = `${outStr}\n    '${uid}',`;
       outStr = `${outStr}\n    [`;
-      paths.forEach((p) => {
-        const shortP = p.replace(`${lessonPath}/`, '');
+      lessonPaths.forEach((lesson) => {
+        const shortP = lesson.path.replace(`${lessonPath}/`, '');
         outStr = `${outStr}\n      '${shortP}',`;
       });
       outStr = `${outStr}\n    ],`;

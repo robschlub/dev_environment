@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import '../../css/style.scss';
+// import '../../css/style.scss';
 // import img from '../../tile.png';
 
 type Props = {

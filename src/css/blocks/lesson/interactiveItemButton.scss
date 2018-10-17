@@ -14,6 +14,7 @@
   // left: calc(90% - var(--lesson__goto_button-font-size) * 6);
   // top: calc(100% - (100% - var(--lesson__content-height)) / 2 - var(--lesson__goto_button-font-size) * 1.5);
   // border: calc(var(--lesson__goto_button-font-size) * 0.2) solid color('diagram', 'background', 'darker');
+  position: absolute;
   border: 0;
   border-radius: calc(var(--lesson__goto_button-font-size) * 1.5);
   padding: calc(var(--lesson__goto_button-font-size) * 0.25);
@@ -33,7 +34,7 @@
 @media (min-aspect-ratio: 3/2) {
   .lesson__interactive_element_button__container {
     left: calc(100% - var(--lesson__np_button-width) / 2 - calc(var(--lesson__goto_button-font-size) * 1.5));
-    top: calc(66% + var(--lesson__goto_button-font-size));
+    top: calc(70% - var(--lesson__goto_button-font-size) * 1.5);
   }
 }
 
