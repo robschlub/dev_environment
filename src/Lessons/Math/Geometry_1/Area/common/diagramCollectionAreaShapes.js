@@ -9,7 +9,7 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-export default class XCollection extends CommonDiagramCollection {
+export default class AreaShapesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
 
   constructor(

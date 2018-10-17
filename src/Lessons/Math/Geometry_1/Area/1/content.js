@@ -28,7 +28,7 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    const x = diag._x;
+    const areaShapes = diag._areaShapes;
 
     let common = {
       setContent: '',
@@ -43,8 +43,32 @@ class Content extends LessonContent {
       setLeaveState: () => {},
     };
     this.addSection(common, {
-      title: 'Enter_title_here',
-      setContent: ['Enter_content_here'],
+      title: 'Introduction',
+      setContent: centerV(`
+        <p>The properties examined so far for |circles|, |triangles| and |quadrangles| have been their |side lengths|, |angle sizes|, |width| and the |relationships| between them.<p>
+      `),
+    });
+
+    this.addSection(common, {
+      title: 'Introduction',
+      setContent: centerV(`
+        <p>
+          An important property of shapes is |how much space they take up|.
+        </p>
+        <p>
+          For instance, if you want to |cover| a large rectangle wall with small square tiles, then the amount of space the two shapes take up will tell you |how many| tiles you need to cover the wall.
+        </p>
+      `),
+    });
+    this.addSection(common, {
+      setContent: centerV(`
+        <p>
+          This property is named |area|.
+        </p>
+        <p>
+          The word comes from |Latin| where it means a |vacant piece of level ground|. In the mid 16th century, the word was used to describe a |space allocated for a specific purpose|. And so today, we use it to describe how much space a shape takes up.
+        </p>
+      `),
     });
   }
 }
