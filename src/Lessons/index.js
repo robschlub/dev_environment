@@ -123,6 +123,7 @@ export default function getLessonIndex() {
     'related_angles',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],
