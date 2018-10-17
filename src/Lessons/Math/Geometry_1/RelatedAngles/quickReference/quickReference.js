@@ -17,7 +17,7 @@ function showThreeLines(
   threeLines.transform.updateRotation(0);
   threeLines.calculateFuturePositions('corresponding');
   threeLines.setFuturePositions();
-  threeLines.setPosition(0, 0.1);
+  threeLines.setPosition(0, 0.22);
   threeLines.show();
   threeLines._line1.show();
   threeLines._line1._end1.show();
@@ -67,7 +67,7 @@ export class QRCorrespondingAngles extends PopupBoxCollection {
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.85);
+    this.setDiagramSize(2.5, 1.55);
     super.show();
     showThreeLines(
       this._threeLines,
@@ -107,7 +107,7 @@ export class QRAlternateAngles extends PopupBoxCollection {
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.85);
+    this.setDiagramSize(2.5, 1.55);
     super.show();
     showThreeLines(
       this._threeLines,
@@ -148,7 +148,7 @@ export class QRInteriorAngles extends PopupBoxCollection {
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.85);
+    this.setDiagramSize(2.5, 1.55);
     super.show();
     this._threeLines.setUnits('deg');
     showThreeLines(
@@ -189,7 +189,7 @@ export class QROppositeAngles extends PopupBoxCollection {
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.85);
+    this.setDiagramSize(2.5, 1.55);
     super.show();
     const opp = this._opposite;
     opp.transform.updateScale(0.7, 0.7);
@@ -198,11 +198,11 @@ export class QROppositeAngles extends PopupBoxCollection {
     opp._angleB.setColor(this.layout.colors.angleB);
     opp._angleC.setColor(this.layout.colors.angleA);
     opp._angleD.setColor(this.layout.colors.angleB);
-    opp._line1.setColor(this.layout.colors.line);
-    opp._line2.setColor(this.layout.colors.line);
+    opp._line1.setColor(this.layout.colors.intersectingLine);
+    opp._line2.setColor(this.layout.colors.intersectingLine);
 
     opp.calculateFuturePositions();
-    opp.setPosition(0, 0.05);
+    opp.setPosition(0, 0.15);
 
     opp.show();
     opp._angleA.show();

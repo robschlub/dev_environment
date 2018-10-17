@@ -221,7 +221,7 @@ export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
                                       | 'baseUpright';
 
 export type TypeLine = {
-  _straightLine: DiagramElementPrimative;
+  _line: DiagramElementPrimative;
   currentLength: number;
   setLength: (number) => void;
   setEndPoints: (Point, Point, number) => void;

@@ -58,7 +58,7 @@ class QRCongruent extends PopupBoxCollection {
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.5);
+    this.setDiagramSize(2.5, 1.2);
     super.show();
     const tri = this._triangle;
     const lay = this.layout.triangles.congruent;

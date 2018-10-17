@@ -12,10 +12,10 @@ export default function lessonLayout() {
       new Point(0.5, 0.5),
     ],
     tri1: {
-      scenario: { position: new Point(-0.9, 0), rotation: 0 },
+      scenario: { position: new Point(-0.9, -0.1), rotation: 0 },
     },
     tri2: {
-      scenario: { position: new Point(0.9, 0), rotation: 0 },
+      scenario: { position: new Point(0.9, -0.1), rotation: 0 },
     },
   };
   layout.triangles.aaa = {
@@ -25,15 +25,15 @@ export default function lessonLayout() {
       new Point(0.5, 0.5),
     ],
     tri1: {
-      scenario: { position: new Point(-0.9, 0), rotation: 0 },
+      scenario: { position: new Point(-0.9, -0.1), rotation: 0 },
     },
     tri2: {
-      scenario: { position: new Point(0.9, 0), rotation: 0, scale: new Point(0.7, 0.7) },
+      scenario: { position: new Point(0.9, -0.1), rotation: 0, scale: new Point(0.7, 0.7) },
     },
   };
   layout.triangles.saa = {
     tri1: {
-      scenario: { position: new Point(-0.2, 0), rotation: 0, scale: (0.9, 0.9) },
+      scenario: { position: new Point(-0.2, -0.2), rotation: 0, scale: (0.9, 0.9) },
       points: [
         new Point(-1.5, 0),
         new Point(-0.5, 0),
@@ -46,7 +46,7 @@ export default function lessonLayout() {
         new Point(-0.5, 0),
         new Point(0, 1),
       ],
-      scenario: { position: new Point(1.4, 0), rotation: 0, scale: (0.9, 0.9) },
+      scenario: { position: new Point(1.4, -0.2), rotation: 0, scale: (0.9, 0.9) },
     },
   };
   // layout.triangles.congruentRot = {

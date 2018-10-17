@@ -42,6 +42,7 @@ export default function lessonLayout() {
     answer: new Point(0, -1.7),
     nextSteps: new Point(0, -1.9),
     check: new Point(0, -1.7),
+    newProblem: new Point(0, -1.7),
   };
   layout.quizA1 = {
     minSeparation: 0.6,

@@ -457,7 +457,6 @@ class Content extends LessonContent {
     };
 
     this.addSection(common, {
-      title: 'asdfa',
       interactiveElements: [
         rect._navAB._prev,
         rect._navAB._prevDescription,
