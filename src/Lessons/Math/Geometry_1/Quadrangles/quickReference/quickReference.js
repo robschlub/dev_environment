@@ -2,12 +2,13 @@
 
 import { Transform } from '../../../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
-import * as html from '../../../../../js/tools/htmlGenerator';
+// import * as html from '../../../../../js/tools/htmlGenerator';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
 import details from '../details';
 
 import QuadCollection from '../common/diagramCollectionQuad';
-import RectCollection from '../common/diagramCollectionRect'
+import RectCollection from '../common/diagramCollectionRect';
+import SquareCollection from '../common/diagramCollectionSquare';
 
 export class QRQuadrangle extends PopupBoxCollection {
   _quad: QuadCollection;
@@ -91,6 +92,54 @@ export class QRRectangle extends PopupBoxCollection {
     collection._rect._rightAngle4.showAll();
     collection.transform.updateScale(0.7, 0.7);
     collection.setPosition(this.layout.rectPosition);
+    this.diagram.animateNextFrame();
+  }
+}
+
+export class QRSquare extends PopupBoxCollection {
+  _collection: SquareCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'collection',
+      SquareCollection,
+    );
+    this.hasTouchableElements = true;
+
+    const modifiers = {};
+
+    this.setTitle('Square');
+    this.setDescription('A |Square| is a special type of rectangle where all |angles are 90º|, all |sides have equal length|, and |opposite sides are parallel|.', modifiers);
+    this.setLink(details.details.uid);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.3);
+    super.show();
+    const collection = this._collection;
+    collection.show();
+    collection._square.show();
+    collection._square._lineA.show();
+    collection._square._lineA._line.show();
+    collection._square._lineB.show();
+    collection._square._lineB._line.show();
+    collection._square._lineC.show();
+    collection._square._lineC._line.show();
+    collection._square._lineD.show();
+    collection._square._lineD._line.show();
+    collection._square._rightAngle1.showAll();
+    collection._square._rightAngle2.showAll();
+    collection._square._rightAngle3.showAll();
+    collection._square._rightAngle4.showAll();
+    collection.transform.updateScale(0.7, 0.7);
+    collection.setPosition(this.layout.squarePosition);
     this.diagram.animateNextFrame();
   }
 }
