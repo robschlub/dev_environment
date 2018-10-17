@@ -8,4 +8,3 @@ app/app/static/dist
 node_modules/
 dev_environment.sublime*
 reports
-src/Lessons/index.js
