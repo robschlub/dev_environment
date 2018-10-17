@@ -28,7 +28,9 @@ function getAllPaths(lessonsPath, buildMode) {
     fileId = ['lesson.js', 'lesson-dev.js'];
   }
   walkSync(lessonsPath, fileId, (lessonPath, fileName) => {
-    lessons.push({ path: lessonPath, name: fileName });
+    if (!lessonPath.includes('boilerplate')) {
+      lessons.push({ path: lessonPath, name: fileName });
+    }
   });
   return lessons;
 }
@@ -36,7 +38,9 @@ function getAllPaths(lessonsPath, buildMode) {
 function getAllLessons(lessonsPath) {
   const lessons = [];
   walkSync(lessonsPath, 'details.js', (lessonPath) => {
-    lessons.push(lessonPath);
+    if (!lessonPath.includes('boilerplate')) {
+      lessons.push(lessonPath);
+    }
   });
   return lessons;
 }
