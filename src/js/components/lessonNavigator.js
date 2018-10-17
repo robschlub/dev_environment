@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import '../../css/style.scss';
+// import '../../css/style.scss';
 import LessonTile from './lessonTile';
 import LessonDescription from '../../Lessons/lessonDescription';
 import makeLessonTree from '../../Lessons/lessonTree';

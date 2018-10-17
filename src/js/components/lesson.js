@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import '../../css/style.scss';
+// import '../../css/style.scss';
 import Lesson from '../Lesson/Lesson';
 import Button from './button';
 import LessonNavigator from './lessonNavigator';
@@ -9,6 +9,7 @@ import LessonTilePath from './lessonPathTile';
 import LessonTitle from './lessonTitle';
 import getLessonIndex from '../../Lessons/index';
 import LessonDescription from '../../Lessons/lessonDescription';
+import DropDownButton from './dropDownButton';
 
 type Props = {
   lesson: Lesson;
@@ -20,7 +21,11 @@ type State = {
   htmlText: string,
   numPages: number,
   page: number,
-  listOfSections: Array<React.Node>,
+  listOfSections: Array<{
+    label: string;
+    link: Function | string;
+    active?: boolean;
+  }>;
 };
 
 function getLessonDescription(uid: string) {
@@ -79,6 +84,10 @@ export default class LessonComponent extends React.Component
   }
 
   refreshText(htmlText: string, page: number, callback: ?() => void = null) {
+    // this.setState({
+    //   listOfSections: this.addListOfSections(),
+    // });
+    this.updateGoToButtonListHighlight();
     if (htmlText !== this.state.htmlText || page !== this.state.page) {
       this.componentUpdateCallback = callback;
       this.setState({ htmlText, page });
@@ -335,13 +344,15 @@ export default class LessonComponent extends React.Component
   }
 
   addGoToButton() {
-    return <div className="dropdown lesson__button-goto_container">
-      <button className="btn btn-secondary dropdown-toggle lesson__button-goto" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {`${this.state.page + 1} / ${this.state.numPages}`}
-      </button>
-      <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-      {this.state.listOfSections}
-      </div>
+    return <div
+      className="lesson__button-goto_container"
+      id="id__lesson__button-goto_container">
+      <DropDownButton
+      id="id__lesson__goto_button"
+      label={`${this.state.page + 1} / ${this.state.numPages}`}
+      direction="up"
+      xAlign="right"
+      list={this.state.listOfSections}/>
     </div>;
   }
 
@@ -361,22 +372,48 @@ export default class LessonComponent extends React.Component
     this.lesson.goToSection(index);
   }
 
+  updateGoToButtonListHighlight() {
+    const activeItems = document.getElementsByClassName('drop_down_button_list_item_active');
+    [].forEach.call(activeItems, item => item.classList.remove('drop_down_button_list_item_active'));
+    const listItems = document.getElementById('id__lesson__goto_button_list');
+    const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
+    const titleIndeces = this.lesson.content.sections.map((section, index) => {
+      if (section.title) {
+        return index;
+      }
+      return -1;
+    }).filter(index => index !== -1);
+    const listIndex = titleIndeces.indexOf(activeSection);
+
+    if (listItems) {
+      const { children } = listItems;
+      if (children.length > 0) {
+        children[listIndex].classList.add('drop_down_button_list_item_active');
+      }
+    }
+  }
+
   addListOfSections() {
     const output = [];
     const activeSection = this.belongsTo(this.lesson.currentSectionIndex);
     this.lesson.content.sections.forEach((section, index) => {
       if (section.title) {
-        let classNames = 'dropdown-item';
+        let isActive = false;
         if (index === activeSection) {
-          classNames += ' active';
+          isActive = true;
         }
         this.key += 1;
-        output.push(<div
-          className={classNames}
-          onClick={this.clickList.bind(this, index)}
-          key={this.key}>
-            {section.title}
-          </div>);
+        output.push({
+          label: section.title,
+          link: this.clickList.bind(this, index),
+          active: isActive,
+        });
+        // <div
+        // className={classNames}
+        // onClick={this.clickList.bind(this, index)}
+        // key={this.key}>
+        //   {section.title}
+        // </div>);
       }
     });
     return output;
@@ -491,67 +528,7 @@ export default class LessonComponent extends React.Component
     return output;
   }
 
-  // addLessonPaths() {
-  //   const output = [];
-  //   const { lessonDescription } = this;
-  //   if (lessonDescription != null) {
-  //     let remainingPaths = lessonDescription.paths.slice();
-  //     const quiz = remainingPaths.indexOf('quiz');
-  //     const summary = remainingPaths.indexOf('summary');
-  //     if (summary !== -1) {
-  //       this.key += 1;
-  //       output.push(
-  //         <LessonTilePath
-  //           id='id_lesson__tile_path_summary'
-  //           link={`${lessonDescription.link}/summary`}
-  //           key={this.key}
-  //           label='Summary'
-  //           state=''
-  //           right={true}/>,
-  //       );
-  //       remainingPaths = remainingPaths.splice(summary, 1);
-  //     }
-  //     if (quiz !== -1) {
-  //       this.key += 1;
-  //       output.push(
-  //         <LessonTilePath
-  //           id='id_lesson__tile_path_quiz'
-  //           link={`${lessonDescription.link}/quiz`}
-  //           key={this.key}
-  //           label='Quiz'
-  //           state=''
-  //           right={true}/>,
-  //       );
-  //       remainingPaths = remainingPaths.splice(quiz, 1);
-  //     }
-  //     remainingPaths = remainingPaths.sort((a, b) => {
-  //       const upperA = a.toUpperCase();
-  //       const upperB = b.toUpperCase();
-  //       if (upperA < upperB) {
-  //         return -1;
-  //       }
-  //       if (upperA > upperB) {
-  //         return 1;
-  //       }
-  //       return 0;
-  //     });
-  //     remainingPaths.forEach((path) => {
-  //       this.key += 1;
-  //       output.push(
-  //         <LessonTilePath
-  //           id={`id_lesson__tile_path_${path}`}
-  //           link={`${lessonDescription.link}/${path}`}
-  //           key={this.key}
-  //           label={path}
-  //           state='selected'
-  //           right={false}/>,
-  //       );
-  //     });
-  //   }
-  // }
-
   render() {
-    // console.log(this.lesson.content.iconLink)
     return <div>
       <div className={`lesson__title_bar${this.calcTitleHeight()}`}>
         <div className="lesson__path_container">
@@ -590,6 +567,7 @@ export default class LessonComponent extends React.Component
               {this.addInteractiveElementButton()}
         </div>
       </div>
+
       <div className='lesson__white_spacer'/>
       <LessonNavigator
           selected={this.lesson.content.title}

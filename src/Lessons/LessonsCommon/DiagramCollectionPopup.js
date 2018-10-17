@@ -4,6 +4,7 @@ import { DiagramElementPrimative } from '../../js/diagram/Element';
 import * as html from '../../js/tools/htmlGenerator';
 import CommonDiagramCollection from './DiagramCollection';
 import getLessonIndex from '../index';
+import { generateUniqueId } from '../../js/tools/tools';
 
 export default class PopupBoxCollection extends CommonDiagramCollection {
   id: string;
@@ -105,7 +106,7 @@ export default class PopupBoxCollection extends CommonDiagramCollection {
     transform: Transform = new Transform(),
     collectionName: string,
     Collection: Function | null = null,
-    id: string = collectionName,
+    id: string = generateUniqueId(),
   ) {
     super(diagram, layout, transform);
     if (Collection) {

@@ -96,7 +96,7 @@ function diagramCanvas(
 
 class Section {
   title: string;
-  modifiers: Object;
+  modifiers: Object | Function;
   infoModifiers: Object;
   hint: Array<string> | string;
   blank: Array<string>;
@@ -290,6 +290,9 @@ class Section {
   }
 
   getContent(): string {
+    if (typeof this.modifiers === 'function') {
+      this.modifiers = this.modifiers();
+    }
     let htmlText = '';
     let content = '';
     if (typeof this.setContent === 'string'

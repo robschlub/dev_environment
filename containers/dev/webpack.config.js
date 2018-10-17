@@ -6,10 +6,9 @@ const webpack = require('webpack'); // eslint-disable-line import/no-unresolved
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // eslint-disable-line import/no-unresolved
 const Autoprefixer = require('autoprefixer'); // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const buildPath = path.resolve(__dirname, 'app', 'app', 'static', 'dist');
-
-entryPoints.makeLessonIndex();
 
 const envConfig = {
   prod: {
@@ -52,6 +51,7 @@ module.exports = (env) => {
       e = envConfig.dev;
     }
   }
+  entryPoints.makeLessonIndex(e.name);
 
   console.log(`Building for ${e.name}`); // eslint-disable-line no-console
 
@@ -121,16 +121,28 @@ module.exports = (env) => {
     // { debug: 'debug' },
   );
 
+  let cssMini = '';
+  if (e.uglify) {
+    cssMini = new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      // cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }],
+      },
+      canPrint: true,
+    });
+  }
   // Make the plugin array filtering out those plugins that are null
   const pluginArray = [
     uglify,
     define,
     extract,
     copy,
-    clean].filter(elem => elem !== '');
+    clean,
+    cssMini].filter(elem => elem !== '');
 
   return {
-    entry: entryPoints.entryPoints(),
+    entry: entryPoints.entryPoints(e.name),
     output: {
       path: buildPath,
       filename: '[name].js',
@@ -215,14 +227,14 @@ module.exports = (env) => {
             test: /js\/(diagram|Lesson|tools|components)/,
             name: 'tools',
           },
-          // commoncss: {
-          //   minSize: 10,
-          //   minChunks: 2,
-          //   priority: -10,
-          //   reuseExistingChunk: true,
-          //   test: /css\/*\.(css|scss|sass)$/,
-          //   name: 'commoncss',
-          // // },
+          commoncss: {
+            minSize: 10,
+            minChunks: 2,
+            priority: -10,
+            reuseExistingChunk: true,
+            test: /css\/*\.(css|scss|sass)$/,
+            name: 'commoncss',
+          },
           // bootstrap: {
           //   test: /css\/bootstrap\*.css/,
           //   name: 'bootstrap',
