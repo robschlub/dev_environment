@@ -9,7 +9,7 @@ import details from '../details';
 import TODOCollection from '../common/diagramCollectionTODO';
 
 
-export default class QRQuadrangle extends PopupBoxCollection {
+export default class QR_TODO extends PopupBoxCollection {
   _collection: TODOCollection;
 
   constructor(

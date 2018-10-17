@@ -27,7 +27,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     layout: Object,
     transform: Transform = new Transform().translate(0, 0),
   ) {
-    console.log(layout)
     super(
       diagram,
       layout,
