@@ -4,7 +4,7 @@
 // import ReactDOM from 'react-dom';
 
 // Styles
-// import '../../../css/style.scss';
+// import '../../../../css/style.scss';
 // import './lessonMultiPage.scss';
 
 // Components

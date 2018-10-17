@@ -11,6 +11,7 @@ export default class LessonDescription {
   uid: string;
   dependencies: Array<string>;
   paths: Array<string>;
+  enabled: boolean;
 
   constructor(
     name: string,
@@ -18,6 +19,7 @@ export default class LessonDescription {
     uid: string = '',
     paths: Array<string> = [],
     dependencies: Array<string> = [],
+    enabled: boolean = true,
     id: string = '',
   ) {
     this.name = name;
@@ -34,6 +36,7 @@ export default class LessonDescription {
     this.dependencies = dependencies;
     this.uid = uid;
     this.paths = paths;
+    this.enabled = enabled;
   }
 }
 

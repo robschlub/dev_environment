@@ -2,348 +2,60 @@
 
 exports[`Navbar Make "About" item active 1`] = `
 <div>
-  <nav
-    className="navbar navbar-expand-md nav-responsive navbar-color"
-  >
-    <a
-      className="navbar-brand"
-      href="/"
-    >
-      <img
-        alt=""
-        className="d-inline-block align-top nav__home-icon"
-        height="30"
-        src="/static/icon-lg.png"
-        width="30"
-      />
-    </a>
-    <button
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-      className="navbar-toggler"
-      data-target="#navbarSupportedContent"
-      data-toggle="collapse"
-      type="button"
-    >
-      <span
-        className="navbar-toggler-icon"
-      />
-    </button>
+  <div>
     <div
-      className="collapse navbar-collapse"
-      id="navbarSupportedContent"
+      className="navbar-container"
     >
-      <ul
-        className="navbar-nav mr-auto"
+      <a
+        className="navbar-icon-container"
+        href="/"
       >
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href=""
-          >
-            Login
-          </a>
-        </li>
-        <li
-          className="nav-item dropdown"
-        >
-          <a
-            aria-expanded="false"
-            aria-haspopup="true"
-            className="nav-link dropdown-toggle"
-            data-toggle="dropdown"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-          >
-            Learn
-          </a>
-          <div
-            aria-labelledby="navbarDropdown"
-            className="dropdown-menu"
-          >
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Introduction"
-            >
-              1 - Why study shapes?
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Circle"
-            >
-              2 - Circle
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Angle"
-            >
-              3 - Angles
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/MeasuringAngles"
-            >
-              4 - Measuring Angles
-            </a>
-            <div
-              className="dropdown-divider"
-            />
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/ShapesAndCornersTest"
-            >
-              Test
-            </a>
-          </div>
-        </li>
-      </ul>
-      <form
-        className="form-inline"
-      >
-        <input
-          aria-label="Search"
-          className="form-control mr-sm-2"
-          placeholder="Search"
-          type="search"
+        <img
+          className="navbar-icon"
+          src="/static/icon-lg.png"
         />
-      </form>
+      </a>
     </div>
-  </nav>
+  </div>
 </div>
 `;
 
 exports[`Navbar Make "Introduction" item active 1`] = `
 <div>
-  <nav
-    className="navbar navbar-expand-md nav-responsive navbar-color"
-  >
-    <a
-      className="navbar-brand"
-      href="/"
-    >
-      <img
-        alt=""
-        className="d-inline-block align-top nav__home-icon"
-        height="30"
-        src="/static/icon-lg.png"
-        width="30"
-      />
-    </a>
-    <button
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-      className="navbar-toggler"
-      data-target="#navbarSupportedContent"
-      data-toggle="collapse"
-      type="button"
-    >
-      <span
-        className="navbar-toggler-icon"
-      />
-    </button>
+  <div>
     <div
-      className="collapse navbar-collapse"
-      id="navbarSupportedContent"
+      className="navbar-container"
     >
-      <ul
-        className="navbar-nav mr-auto"
+      <a
+        className="navbar-icon-container"
+        href="/"
       >
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href=""
-          >
-            Login
-          </a>
-        </li>
-        <li
-          className="nav-item dropdown"
-        >
-          <a
-            aria-expanded="false"
-            aria-haspopup="true"
-            className="nav-link dropdown-toggle"
-            data-toggle="dropdown"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-          >
-            Learn
-          </a>
-          <div
-            aria-labelledby="navbarDropdown"
-            className="dropdown-menu"
-          >
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Introduction"
-            >
-              1 - Why study shapes?
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Circle"
-            >
-              2 - Circle
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Angle"
-            >
-              3 - Angles
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/MeasuringAngles"
-            >
-              4 - Measuring Angles
-            </a>
-            <div
-              className="dropdown-divider"
-            />
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/ShapesAndCornersTest"
-            >
-              Test
-            </a>
-          </div>
-        </li>
-      </ul>
-      <form
-        className="form-inline"
-      >
-        <input
-          aria-label="Search"
-          className="form-control mr-sm-2"
-          placeholder="Search"
-          type="search"
+        <img
+          className="navbar-icon"
+          src="/static/icon-lg.png"
         />
-      </form>
+      </a>
     </div>
-  </nav>
+  </div>
 </div>
 `;
 
 exports[`Navbar No props 1`] = `
 <div>
-  <nav
-    className="navbar navbar-expand-md nav-responsive navbar-color"
-  >
-    <a
-      className="navbar-brand"
-      href="/"
-    >
-      <img
-        alt=""
-        className="d-inline-block align-top nav__home-icon"
-        height="30"
-        src="/static/icon-lg.png"
-        width="30"
-      />
-    </a>
-    <button
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-      className="navbar-toggler"
-      data-target="#navbarSupportedContent"
-      data-toggle="collapse"
-      type="button"
-    >
-      <span
-        className="navbar-toggler-icon"
-      />
-    </button>
+  <div>
     <div
-      className="collapse navbar-collapse"
-      id="navbarSupportedContent"
+      className="navbar-container"
     >
-      <ul
-        className="navbar-nav mr-auto"
+      <a
+        className="navbar-icon-container"
+        href="/"
       >
-        <li
-          className="nav-item"
-        >
-          <a
-            className="nav-link "
-            href=""
-          >
-            Login
-          </a>
-        </li>
-        <li
-          className="nav-item dropdown"
-        >
-          <a
-            aria-expanded="false"
-            aria-haspopup="true"
-            className="nav-link dropdown-toggle"
-            data-toggle="dropdown"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-          >
-            Learn
-          </a>
-          <div
-            aria-labelledby="navbarDropdown"
-            className="dropdown-menu"
-          >
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Introduction"
-            >
-              1 - Why study shapes?
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Circle"
-            >
-              2 - Circle
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/Angle"
-            >
-              3 - Angles
-            </a>
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/MeasuringAngles"
-            >
-              4 - Measuring Angles
-            </a>
-            <div
-              className="dropdown-divider"
-            />
-            <a
-              className="dropdown-item"
-              href="/Lessons/Math/ShapesAndCornersTest"
-            >
-              Test
-            </a>
-          </div>
-        </li>
-      </ul>
-      <form
-        className="form-inline"
-      >
-        <input
-          aria-label="Search"
-          className="form-control mr-sm-2"
-          placeholder="Search"
-          type="search"
+        <img
+          className="navbar-icon"
+          src="/static/icon-lg.png"
         />
-      </form>
+      </a>
     </div>
-  </nav>
+  </div>
 </div>
 `;

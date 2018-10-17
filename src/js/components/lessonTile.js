@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import '../../css/style.scss';
+// import '../../css/style.scss';
 // import img from '../../tile.png';
 
 type Props = {
@@ -23,6 +23,7 @@ export default class LessonTile extends React.Component
     if (props.title != null) {
       isTitle = props.title;
     }
+
     // const Tag = props.href ? 'a' : 'button';
     const label = props.label || '';
     const id = props.id || '';
@@ -60,7 +61,7 @@ export default class LessonTile extends React.Component
         </div>
       </div>;
 
-    if (isTitle) {
+    if (isTitle || props.state === 'disabled') {
       return <div
         id={id}
         style={style}
