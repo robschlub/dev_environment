@@ -110,6 +110,17 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.add('angle', angleMeasure);
   }
 
+  addCircles() {
+    const circle = this.diagram.shapes.polygon(
+      100, 0.2, 0.01, 0, 1, 100, [1, 0, 0, 1],
+      new Point(-1, 0),
+    );
+    const pattern = this.diagram.shapes.repeatPattern(
+      circle, 5, 5, 0.41, 0.41,
+    );
+    this.add('circles', pattern);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -119,6 +130,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.addShapes();
     this.addLengthMeasure();
     this.addAngleMeasure();
+    this.addCircles();
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
   }

@@ -287,6 +287,27 @@ function shapes(diagram: Diagram, high: boolean = false) {
   ) {
     return Lines(webgl, linePairs, color, transform, diagram.limits);
   }
+
+  function repeatPattern(
+    element: DiagramElementPrimative,
+    xNum: number,
+    yNum: number,
+    xStep: number,
+    yStep: number,
+    transform: Transform | Point = new Transform(),
+  ) {
+    const group = collection(transform);
+    for (let i = 0; i < xNum; i += 1) {
+      const copy = element._dup();
+      const t = element.transform.t();
+      if (t) {
+        element.transform.updateTranslation(t.x + xStep, t.y);
+      }
+      group.add(`x${i}`, copy);
+    }
+    return group;
+  }
+
   function grid(
     bounds: Rect,
     xStep: number,
@@ -564,6 +585,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
     htmlElement,
     axes,
     rectangleFilled,
+    repeatPattern,
   };
 }
 
