@@ -30,6 +30,7 @@ class Content extends LessonContent {
     const diag = this.diagram.elements;
     const shapes = diag._shapes;
     const meas = diag._measure;
+    const size = diag._size;
 
     let common = {
       setContent: [],
@@ -106,6 +107,13 @@ class Content extends LessonContent {
       `),
     });
 
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // Measure
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
     common.showOnly = [meas];
     this.addSection(common, {
       setContent: [
@@ -211,7 +219,6 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
-      title: 'asdf',
       setContent: [
         'Therefore |area| is most often measured in |squares|.',
       ],
@@ -219,6 +226,42 @@ class Content extends LessonContent {
         meas._squareGrid, meas._squareA,
         meas._circleA, meas._triangleA,
         meas._triLabel, meas._squareLabel, meas._circleLabel,
+      ],
+    });
+
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // Size
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    common.showOnly = [size];
+    this.addSection(common, {
+      setContent: centerV(`
+        <p>
+          What |size| are the reference squares used to measure area?
+        </p>
+        <p>
+          Similar to |length|, there are several common sizes used depending on the size of the shape you are measuring.
+        </p>
+        `),
+    });
+    this.addSection(common, {
+      title: 'asdf',
+      setContent: [
+        'A square with side |1mm| would be used for small areas, like the size of silicon chips.',
+      ],
+      show: [
+        size._mm,
+      ],
+    });
+    this.addSection(common, {
+      setContent: [
+        'A square with side |1m| would be used for larger areas, like a house.',
+      ],
+      show: [
+        size._m,
       ],
     });
   }

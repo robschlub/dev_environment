@@ -344,7 +344,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     this.addEmptyShapes();
     this.addLabels();
 
-    this.setPosition(this.layout.shapesPosition);
+    this.setPosition(this.layout.measurePosition);
     this.hasTouchableElements = true;
   }
 

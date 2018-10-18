@@ -18,6 +18,10 @@ const cssColorNames = [
 export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
+
+  // //////////////////////////////////////////////////////
+  //     Shapes
+  // //////////////////////////////////////////////////////
   layout.shapesPosition = new Point(0, -0.5);
   layout.square1 = {
     position: new Point(-1, 0),
@@ -32,6 +36,11 @@ export default function commonLessonLayout() {
     radius: 1,
     numSides: 300,
   };
+
+  // //////////////////////////////////////////////////////
+  //     Measure
+  // //////////////////////////////////////////////////////
+  layout.measurePosition = new Point(0, -0.5);
   layout.lengthMeasure = {
     position: new Point(0, -0.5),
     length: 4,
@@ -101,5 +110,29 @@ export default function commonLessonLayout() {
     width: 0.03,
     length: 1,
   };
+
+  // //////////////////////////////////////////////////////
+  //     Size
+  // //////////////////////////////////////////////////////
+  layout.sizePosition = new Point(0, -0.5);
+  layout.mmSquare = {
+    position: new Point(0, 0.3),
+    sideLength: 0.25,
+    width: 0.01,
+    lineOffset: 0.15,
+    labelOffset: 0.05,
+  };
+  layout.mSquare = {
+    position: new Point(0, 0.3),
+    sideLength: 2,
+    width: 0.01,
+    lineOffset: 0.2,
+    labelOffset: 0.05,
+  };
+  layout.arrow = {
+    width: 0.05,
+    height: 0.05,
+  };
+
   return layout;
 }
