@@ -8,6 +8,7 @@ $colors: (
   line:                color('diagram', 'primary', 'base'),
   grid:                color('diagram', 'disabled', 'darker'),
   cross:               color('diagram', 'warning', 'base'),
+  row:                 color('diagram', 'warning', 'base'),
 );
 
 body {

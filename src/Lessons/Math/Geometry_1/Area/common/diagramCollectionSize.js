@@ -1,11 +1,8 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, Rect, polarToRect,
+  Transform, Point,
 } from '../../../../../js/diagram/tools/g2';
-import {
-  range, roundNum,
-} from '../../../../../js/diagram/tools/mathtools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
@@ -14,6 +11,17 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class SizeCollection extends CommonDiagramCollection {
+  _mm: {
+    _yLine: TypeLine;
+    _xLine: TypeLine;
+    _square: DiagramElementPrimative;
+  } & DiagramElementCollection;
+
+  _m: {
+    _yLine: TypeLine;
+    _xLine: TypeLine;
+    _square: DiagramElementPrimative;
+  } & DiagramElementCollection;
 
   addSquareSize(name: string, label: string, layout: {
     position: Point,

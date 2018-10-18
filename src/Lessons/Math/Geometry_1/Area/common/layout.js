@@ -12,6 +12,7 @@ const cssColorNames = [
   'line',
   'grid',
   'cross',
+  'row',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -132,6 +133,25 @@ export default function commonLessonLayout() {
   layout.arrow = {
     width: 0.05,
     height: 0.05,
+  };
+
+  // //////////////////////////////////////////////////////
+  //     Size
+  // //////////////////////////////////////////////////////
+  layout.rectPosition = new Point(0, -0.5);
+  layout.gridRect = {
+    position: new Point(0, 0),
+    smallPosition: new Point(0, 0),
+    spacing: 0.25,
+    length: 3.5,
+    height: 2,
+  };
+
+  layout.rect = {
+    position: new Point(0, 0),
+    length: 2.5,
+    height: 1.5,
+    width: 0.03,
   };
 
   return layout;

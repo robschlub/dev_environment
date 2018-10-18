@@ -31,6 +31,7 @@ class Content extends LessonContent {
     const shapes = diag._shapes;
     const meas = diag._measure;
     const size = diag._size;
+    const rect = diag._rect;
 
     let common = {
       setContent: [],
@@ -248,7 +249,6 @@ class Content extends LessonContent {
         `),
     });
     this.addSection(common, {
-      title: 'asdf',
       setContent: [
         'A square with side |1mm| would be used for small areas, like the size of silicon chips.',
       ],
@@ -263,6 +263,35 @@ class Content extends LessonContent {
       show: [
         size._m,
       ],
+    });
+
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // Size
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    common.showOnly = [rect];
+    this.addSection(common, {
+      title: 'Rectangle',
+      setContent: centerV(`
+        <p>
+          We can now examine the area of a |rectangle|, |square| and |triangle| and see if it is |related| to any other properties of the shape.
+        </p>
+        `),
+    });
+    this.addSection(common, {
+      setContent: [
+        'Using reference squares |as| the unit of area makes it particularly convenient to examine the area of a rectangle.',
+      ],
+      modifiers: {
+        as: click(rect.toggleRow, [rect, null], colors.diagram.action),
+      },
+      show: [rect],
+      setEnterState: () => {
+        rect.toggleRow(0);
+      }
     });
   }
 }

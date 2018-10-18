@@ -10,12 +10,14 @@ import LessonDiagram from './diagram';
 import ShapesCollection from '../common/diagramCollectionShapes';
 import MeasureCollection from '../common/diagramCollectionMeasure';
 import SizeCollection from '../common/diagramCollectionSize';
+import RectAreaCollection from '../common/diagramCollectionRect';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _shapes: ShapesCollection;
   _measure: MeasureCollection;
   _size: SizeCollection;
+  _rect: RectAreaCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -27,5 +29,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.add('shapes', new ShapesCollection(diagram, this.layout));
     this.add('measure', new MeasureCollection(diagram, this.layout));
     this.add('size', new SizeCollection(diagram, this.layout));
+    this.add('rect', new RectAreaCollection(diagram, this.layout));
   }
 }
