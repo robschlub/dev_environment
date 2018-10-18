@@ -79,20 +79,23 @@ export default function commonLessonLayout() {
   };
 
   layout.squareA = {
-    position: new Point(0, 0.05),
+    position: new Point(-1.95, 0.05),
     sideLength: 1.2,
     width: 0.03,
+    labelOffset: -0.8,
   };
   layout.circleA = {
-    position: new Point(1.8, 0.05),
+    position: new Point(0, 0.05),
     radius: 0.6,
     width: 0.03,
     numSides: 100,
+    labelOffset: -0.8,
   };
   layout.triangleA = {
-    position: new Point(-1.8, -0.15),
+    position: new Point(1.8, -0.15),
     sideLength: 1.39,
     width: 0.03,
+    labelOffset: -0.6,
   };
   layout.cross = {
     width: 0.03,

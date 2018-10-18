@@ -7,6 +7,9 @@ import {
   range, roundNum,
 } from '../../../../../js/diagram/tools/mathtools';
 import {
+  generateUniqueId,
+} from '../../../../../js/tools/tools';
+import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -284,9 +287,42 @@ export default class MeasureCollection extends CommonDiagramCollection {
       cross.setPosition(position);
       return cross;
     };
-    // this.add('crossSquare', makeCross(this.layout.squareGrid.smallPosition));
     this.add('crossCircle', makeCross(this.layout.circles.smallPosition.sub(new Point(this.layout.circles.radius, this.layout.circles.radius))));
     this.add('crossGeneric', makeCross(this.layout.genericGrid.smallPosition));
+  }
+
+  addLabels() {
+    const unitArea = this.layout.squareGrid.sideLength ** 2;
+
+    const tri = this.layout.triangleA;
+    const triArea = 0.5 * tri.sideLength * tri.sideLength * Math.sin(Math.PI / 3) / unitArea;
+    const triLabel = this.diagram.shapes.htmlText(
+      `Area = ${roundNum(triArea, 1)} squares`,
+      generateUniqueId('id_label1'),
+      'lesson__area_intro__area_label', new Point(0, 0), 'middle', 'center',
+    );
+    triLabel.setPosition(tri.position.add(new Point(0, tri.labelOffset)));
+    this.add('triLabel', triLabel);
+
+    const square = this.layout.squareA;
+    const squareArea = square.sideLength ** 2 / unitArea;
+    const squareLabel = this.diagram.shapes.htmlText(
+      `Area = ${roundNum(squareArea, 1)} squares`,
+      generateUniqueId('id_label2'),
+      'lesson__area_intro__area_label', new Point(0, 0), 'middle', 'center',
+    );
+    squareLabel.setPosition(square.position.add(new Point(0, square.labelOffset)));
+    this.add('squareLabel', squareLabel);
+
+    const circle = this.layout.circleA;
+    const circleArea = circle.radius ** 2 * Math.PI / unitArea;
+    const circleLabel = this.diagram.shapes.htmlText(
+      `Area = ${roundNum(circleArea, 1)} squares`,
+      generateUniqueId('id_label3'),
+      'lesson__area_intro__area_label', new Point(0, 0), 'middle', 'center',
+    );
+    circleLabel.setPosition(circle.position.add(new Point(0, circle.labelOffset)));
+    this.add('circleLabel', circleLabel);
   }
 
   constructor(
@@ -306,6 +342,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     this.addLengthMeasure();
     this.addAngleMeasure();
     this.addEmptyShapes();
+    this.addLabels();
 
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;

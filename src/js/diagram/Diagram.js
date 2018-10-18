@@ -34,7 +34,7 @@ import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import Axis from './DiagramElements/Plot/Axis';
-
+import { generateUniqueId } from '../tools/tools';
 import {
   DiagramText, DiagramFont, TextObject,
 } from './DrawingObjects/TextObject/TextObject';
@@ -253,7 +253,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
 
   function htmlText(
     textInput: string,
-    id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
+    id: string = generateUniqueId('id__html_text_'),
     classes: string = '',
     location: Point = new Point(0, 0),
     alignV: 'top' | 'bottom' | 'middle' = 'middle',

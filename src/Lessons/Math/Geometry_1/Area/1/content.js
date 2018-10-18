@@ -209,6 +209,18 @@ class Content extends LessonContent {
         meas._crossGeneric,
       ],
     });
+
+    this.addSection(common, {
+      title: 'asdf',
+      setContent: [
+        'Therefore |area| is most often measured in |squares|.',
+      ],
+      show: [
+        meas._squareGrid, meas._squareA,
+        meas._circleA, meas._triangleA,
+        meas._triLabel, meas._squareLabel, meas._circleLabel,
+      ],
+    });
   }
 }
 
