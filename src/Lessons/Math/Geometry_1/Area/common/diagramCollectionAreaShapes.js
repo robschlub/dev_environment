@@ -111,12 +111,14 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
   }
 
   addCircles() {
+    const lay = this.layout.circles;
+    const col = this.layout.colors;
     const circle = this.diagram.shapes.polygon(
-      100, 0.2, 0.01, 0, 1, 100, [1, 0, 0, 1],
-      new Point(-1, 0),
+      lay.sides, lay.radius, lay.width, 0, 1, lay.sides, col.reference,
+      lay.position,
     );
     const pattern = this.diagram.shapes.repeatPattern(
-      circle, 5, 5, 0.41, 0.41,
+      circle, lay.num, lay.num, lay.radius * 2, lay.radius * 2,
     );
     this.add('circles', pattern);
   }

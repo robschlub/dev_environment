@@ -46,5 +46,12 @@ export default function commonLessonLayout() {
     majorTickLength: 0.1,
     minorTickLength: 0.05,
   };
+  layout.circles = {
+    position: new Point(2, 0),
+    radius: 0.2,
+    num: 3,
+    sides: 50,
+    width: 0.01,
+  };
   return layout;
 }
