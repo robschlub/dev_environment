@@ -293,6 +293,28 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.add('smallSquareGrid', squares);
   }
 
+  addCrosses() {
+    const lay = this.layout.cross;
+    const col = this.layout.colors.cross;
+    const makeCross = (position) => {
+      const cross = this.diagram.shapes.collection(new Transform().translate(0, 0));
+      const line1 = makeLine(this.diagram, 'center', 1, lay.width, col);
+      line1.setLength(lay.length);
+      line1.transform.updateRotation(Math.PI / 3);
+      cross.add('line1', line1);
+
+      const line2 = makeLine(this.diagram, 'center', 1, lay.width, col);
+      line2.setLength(lay.length);
+      line2.transform.updateRotation(Math.PI / 3 * 2);
+      cross.add('line2', line2);
+      cross.setPosition(position);
+      return cross;
+    };
+    // this.add('crossSquare', makeCross(this.layout.squareGrid.smallPosition));
+    this.add('crossCircle', makeCross(this.layout.circles.smallPosition.sub(new Point(this.layout.circles.radius, this.layout.circles.radius))));
+    this.add('crossGeneric', makeCross(this.layout.genericGrid.smallPosition));
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -305,6 +327,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.addSmallGenericGrid();
     this.addSquareGrid();
     this.addSmallSquareGrid();
+    this.addCrosses();
 
     this.addFilledShapes();
     this.addLengthMeasure();

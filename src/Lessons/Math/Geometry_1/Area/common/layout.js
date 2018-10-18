@@ -11,6 +11,7 @@ const cssColorNames = [
   'reference',
   'line',
   'grid',
+  'cross',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -92,6 +93,10 @@ export default function commonLessonLayout() {
     position: new Point(-1.8, -0.2),
     sideLength: 1.39,
     width: 0.03,
+  };
+  layout.cross = {
+    width: 0.03,
+    length: 1,
   };
   return layout;
 }

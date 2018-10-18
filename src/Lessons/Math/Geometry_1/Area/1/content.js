@@ -163,6 +163,43 @@ class Content extends LessonContent {
         areaShapes._circleA, areaShapes._triangleA,
       ],
     });
+    this.addSection(common, {
+      setContent: [
+        'Well, |any shape| will work, but some will be more |convenient|.',
+      ],
+      showOnly: [
+        areaShapes,
+      ],
+      show: [
+        areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,
+        areaShapes._smallCircleGrid,
+      ],
+    });
+    this.addSection(common, {
+      setContent: [
+        'For instance, selecting a shape that |completely fills in the space|  will be simpler and more representative.',
+      ],
+      showOnly: [
+        areaShapes,
+      ],
+      show: [
+        areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,
+        areaShapes._smallCircleGrid, areaShapes._crossCircle,
+      ],
+    });
+    this.addSection(common, {
+      setContent: [
+        'Selecting a shape that is |simple|, |symmetric| and |easy to analyze| will also be more convenient.',
+      ],
+      showOnly: [
+        areaShapes,
+      ],
+      show: [
+        areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,
+        areaShapes._smallCircleGrid, areaShapes._crossCircle,
+        areaShapes._crossGeneric,
+      ],
+    });
   }
 }
 
