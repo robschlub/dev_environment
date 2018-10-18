@@ -31,7 +31,7 @@ class Content extends LessonContent {
     const areaShapes = diag._areaShapes;
 
     let common = {
-      setContent: '',
+      setContent: [],
       setInfo: '',
       modifiers: {},
       infoModifiers: {},
@@ -165,7 +165,7 @@ class Content extends LessonContent {
     });
     this.addSection(common, {
       setContent: [
-        'Well, |any shape| will work, but some will be more |convenient|.',
+        'There are many shapes to choose from, but some will be more |convenient|.',
       ],
       showOnly: [
         areaShapes,
@@ -175,24 +175,45 @@ class Content extends LessonContent {
         areaShapes._smallCircleGrid,
       ],
     });
+
+    common.showOnly = [areaShapes];
+    common.setContent = [
+      'For instance, selecting a shape that |completely fills in the space|  will be simpler and more representative.',
+      'In this case, the circles do not fill in all the space.',
+    ];
     this.addSection(common, {
-      setContent: [
-        'For instance, selecting a shape that |completely fills in the space|  will be simpler and more representative.',
+      show: [
+        areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,
+        areaShapes._smallCircleGrid,
       ],
-      showOnly: [
-        areaShapes,
+    });
+    this.addSection(common, {
+      show: [
+        areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,
+        areaShapes._smallCircleGrid, areaShapes._crossCircle,
       ],
+    });
+
+    common.setContent = [
+      'Selecting a shape that is |simple|, |symmetric| and |easy to analyze| will also be more convenient. The wavy shape will be hard analyze.',
+    ];
+    this.addSection(common, {
       show: [
         areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,
         areaShapes._smallCircleGrid, areaShapes._crossCircle,
       ],
     });
     this.addSection(common, {
-      setContent: [
-        'Selecting a shape that is |simple|, |symmetric| and |easy to analyze| will also be more convenient.',
+      show: [
+        areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,
+        areaShapes._smallCircleGrid, areaShapes._crossCircle,
+        areaShapes._crossGeneric,
       ],
-      showOnly: [
-        areaShapes,
+    });
+
+    this.addSection(common, {
+      setContent: [
+        'Doing this analysis with any other shape would still result in |squares as the most convenient|, and so they are |used to measure area|.',
       ],
       show: [
         areaShapes._smallSquareGrid, areaShapes._smallGenericGrid,

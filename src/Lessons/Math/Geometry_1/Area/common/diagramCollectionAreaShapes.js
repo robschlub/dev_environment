@@ -114,7 +114,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
       lay.referenceOffset - lay.tickLength / 2,
       lay.length,
       lay.tickLength,
-    ), lay.length / lay.sections, 0, col.reference);
+    ), lay.length / lay.sections, 0, 2, col.reference);
     lengthMeasure.add('ticks', grid);
     this.add('length', lengthMeasure);
   }
@@ -137,10 +137,10 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     ];
     const minorTickLines = range(1, 59)
       .map(a => tick(a * Math.PI / 180, lay.length, lay.minorTickLength));
-    const minorTicks = this.diagram.shapes.lines(minorTickLines, col.reference);
+    const minorTicks = this.diagram.shapes.lines(minorTickLines, 1, col.reference);
     const majorTickLines = range(10, 50, 10)
       .map(a => tick(a * Math.PI / 180, lay.length, lay.majorTickLength));
-    const majorTicks = this.diagram.shapes.lines(majorTickLines, col.reference);
+    const majorTicks = this.diagram.shapes.lines(majorTickLines, 1, col.reference);
     angleMeasure.add('minorTicks', minorTicks);
     angleMeasure.add('majorTicks', majorTicks);
     this.add('angle', angleMeasure);
@@ -151,8 +151,8 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     const col = this.layout.colors.grid;
     const length = xNum * radius * 2;
     const height = yNum * radius * 2;
-    const circle = this.diagram.shapes.polygonLine(
-      lay.sides, radius, 0, 1, lay.sides, 1, col,
+    const circle = this.diagram.shapes.polygon(
+      lay.sides, radius, lay.width, 0, 1, lay.sides, col,
       new Point(-length / 2, -height / 2),
     );
     const circles = this.diagram.shapes.repeatPattern(
@@ -271,7 +271,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
         -grid.length / 2, -grid.height / 2,
         grid.length, grid.height,
       ),
-      lay.sideLength, lay.sideLength, this.layout.colors.grid,
+      lay.sideLength, lay.sideLength, 2, this.layout.colors.grid,
       new Transform().translate(lay.position),
     );
     this.add('squareGrid', squares);
@@ -287,7 +287,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
         -length / 2, -height / 2,
         length, height,
       ),
-      lay.sideLength, lay.sideLength, this.layout.colors.grid,
+      lay.sideLength, lay.sideLength, 3, this.layout.colors.grid,
       new Transform().translate(lay.smallPosition),
     );
     this.add('smallSquareGrid', squares);

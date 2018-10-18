@@ -282,16 +282,18 @@ function shapes(diagram: Diagram, high: boolean = false) {
   }
   function lines(
     linePairs: Array<Array<Point>>,
+    numLinesThick: number = 1,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return Lines(webgl, linePairs, color, transform, diagram.limits);
+    return Lines(webgl, linePairs, numLinesThick, color, transform, diagram.limits);
   }
 
   function grid(
     bounds: Rect,
     xStep: number,
     yStep: number,
+    numLinesThick: number,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
@@ -307,7 +309,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
         linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
       }
     }
-    return lines(linePairs, color, transform);
+    return lines(linePairs, numLinesThick, color, transform);
   }
 
   function polyLineCorners(

@@ -61,21 +61,21 @@ export default function commonLessonLayout() {
     smallPosition: new Point(2, 0.15),
     radius: 0.15,
     sides: 25,
-    width: 0.007,
+    width: 0.01,
   };
   layout.genericGrid = {
     position: new Point(0, 0.2),
     smallPosition: new Point(-2, 0),
     sideLength: 0.3,
     waveMag: 0.015,
-    width: 0.007,
+    width: 0.01,
     segments: 20,
   };
   layout.squareGrid = {
     position: new Point(0, 0.2),
     smallPosition: new Point(0, 0),
     sideLength: 0.3,
-    width: 0.07,
+    // width: 0.07,
   };
 
   layout.squareA = {
