@@ -70,6 +70,31 @@ class Content extends LessonContent {
         </p>
       `),
     });
+    this.addSection(common, {
+      setContent: [
+        'Shapes with |large_area| take up more space than shapes with |small_area|.',
+      ],
+      modifiers: {
+        large_area: highlight(colors.square1),
+        small_area: highlight(colors.square2),
+      },
+      showOnly: [
+        areaShapes, areaShapes._square1, areaShapes._square2,
+      ],
+    });
+    this.addSection(common, {
+      title: 'asdf',
+      setContent: [
+        'Area is a property that any shape can have. So circles with |large_area|, take up more space than squares with |small_area|.',
+      ],
+      modifiers: {
+        large_area: highlight(colors.square1),
+        small_area: highlight(colors.square2),
+      },
+      showOnly: [
+        areaShapes, areaShapes._circle, areaShapes._square2,
+      ],
+    });
   }
 }
 
