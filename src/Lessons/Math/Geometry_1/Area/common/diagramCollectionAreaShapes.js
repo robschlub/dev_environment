@@ -15,12 +15,13 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
   _square1: DiagramElementPrimative;
   _square2: DiagramElementPrimative;
   _circle: DiagramElementPrimative;
-  _lineLength: {
-    line: TypeLine;
-    line1: TypeLine;
-    line2: TypeLine;
-    line3: TypeLine;
-    line4: TypeLine;
+  _length: {
+    _line: TypeLine;
+    _line1: TypeLine;
+    _line2: TypeLine;
+    _line3: TypeLine;
+    _line4: TypeLine;
+    _ticks: DiagramElementPrimative;
   } & DiagramElementCollection;
 
   addShapes() {
@@ -46,10 +47,10 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.add('circle', circle);
   }
 
-  addLineLength() {
-    const lay = this.layout.lineLength;
+  addLengthMeasure() {
+    const lay = this.layout.lengthMeasure;
     const col = this.layout.colors;
-    const lineLength = this.diagram.shapes.collection(new Transform('lineLength')
+    const lengthMeasure = this.diagram.shapes.collection(new Transform('lengthMeasure')
       .translate(lay.position));
 
     const makeL = (position, length, labelText, name, labelPos, color, width) => {
@@ -57,7 +58,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
       line.setPosition(position);
       line.setLength(length);
       line.addLabel(labelText, 0.05, 'labelPos', '', 'horizontal');
-      lineLength.add(`line${name}`, line);
+      lengthMeasure.add(`line${name}`, line);
     };
     makeL(new Point(0, 0), lay.length, '4m', '', 'bottom', col.line, lay.width);
     const sectionLength = lay.length / lay.sections;
@@ -77,13 +78,23 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
       lay.length,
       lay.tickLength,
     ), lay.length / lay.sections, 0, col.reference);
-    lineLength.add('ticks', grid);
-    this.add('lineLength', lineLength);
+    lengthMeasure.add('ticks', grid);
+    this.add('length', lengthMeasure);
   }
 
-  // addAngleMeasure() {
-    
-  // }
+  addAngleMeasure() {
+    const lay = this.layout.angleMeasure;
+    const angleMeasure = this.diagram.shapes.collection(new Transform('angleM')
+      .translate(lay.position));
+    const col = this.layout.colors;
+    const line = this.diagram.shapes.polyLine([
+      new Point(lay.length, 0),
+      new Point(0, 0),
+      new Point(lay.length * Math.cos(lay.angle), lay.length * Math.sin(lay.angle)),
+    ], false, lay.width, col.line);
+    angleMeasure.add('line', line);
+    this.add('angle', angleMeasure);
+  }
 
   constructor(
     diagram: LessonDiagram,
@@ -92,7 +103,8 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addShapes();
-    this.addLineLength();
+    this.addLengthMeasure();
+    this.addAngleMeasure();
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
   }

@@ -30,13 +30,21 @@ export default function commonLessonLayout() {
     radius: 1,
     numSides: 300,
   };
-  layout.lineLength = {
+  layout.lengthMeasure = {
     position: new Point(0, -0.5),
     length: 4,
     width: 0.02,
     sections: 4,
     referenceOffset: 0.5,
     tickLength: 0.1,
+  };
+  layout.angleMeasure = {
+    position: new Point(0, -0.5),
+    length: 2,
+    width: 0.02,
+    angle: Math.PI / 3,
+    majorTickLength: 0.1,
+    minorTickLength: 0.05,
   };
   return layout;
 }

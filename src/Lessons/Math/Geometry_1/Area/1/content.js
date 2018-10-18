@@ -117,7 +117,23 @@ class Content extends LessonContent {
         areaShapes,
       ],
       show: [
-        areaShapes._lineLength,
+        areaShapes._length,
+      ],
+    });
+    this.addSection(common, {
+      setContent: [
+        'Similarly, |angle| is measured by counting |reference angles|.',
+        'An angle of 60º, has sixty 1º reference angles.',
+      ],
+      modifiers: {
+        _4_meters: highlight(colors.line),
+        _1_meter: highlight(colors.reference),
+      },
+      showOnly: [
+        areaShapes,
+      ],
+      show: [
+        areaShapes._angle,
       ],
     });
   }
