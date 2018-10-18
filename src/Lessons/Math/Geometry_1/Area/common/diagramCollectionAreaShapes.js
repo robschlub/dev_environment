@@ -4,13 +4,12 @@ import {
   Transform, Point, Rect, polarToRect,
 } from '../../../../../js/diagram/tools/g2';
 import {
-  roundNum,
+  range, roundNum,
 } from '../../../../../js/diagram/tools/mathtools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import { range } from '../../../../../js/diagram/tools/mathtools';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 
