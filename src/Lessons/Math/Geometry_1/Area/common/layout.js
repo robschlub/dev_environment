@@ -31,11 +31,12 @@ export default function commonLessonLayout() {
     numSides: 300,
   };
   layout.lineLength = {
-    position: new Point(0, -1),
+    position: new Point(0, -0.5),
     length: 4,
-    width: 0.01,
+    width: 0.02,
     sections: 4,
     referenceOffset: 0.5,
+    tickLength: 0.1,
   };
   return layout;
 }

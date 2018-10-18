@@ -296,11 +296,15 @@ function shapes(diagram: Diagram, high: boolean = false) {
   ) {
     const linePairs = [];
     // const xLimit = tools.roundNum(bounds.righ + xStep);
-    for (let x = bounds.left; tools.roundNum(x, 8) <= bounds.right; x += xStep) {
-      linePairs.push([new Point(x, bounds.top), new Point(x, bounds.bottom)]);
+    if (xStep !== 0) {
+      for (let x = bounds.left; tools.roundNum(x, 8) <= bounds.right; x += xStep) {
+        linePairs.push([new Point(x, bounds.top), new Point(x, bounds.bottom)]);
+      }
     }
-    for (let y = bounds.bottom; tools.roundNum(y, 8) <= bounds.top; y += yStep) {
-      linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
+    if (yStep !== 0) {
+      for (let y = bounds.bottom; tools.roundNum(y, 8) <= bounds.top; y += yStep) {
+        linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
+      }
     }
     return lines(linePairs, color, transform);
   }

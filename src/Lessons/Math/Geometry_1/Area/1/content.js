@@ -106,13 +106,13 @@ class Content extends LessonContent {
     });
     this.addSection(common, {
       setContent: [
-        'Well, length is measured by counting the number of |reference lengths| there are.',
-        'A line of length 4 meters, has four |1 meter| reference lengths.',
+        'Well, |length| is measured by counting |reference lengths|.',
+        'A line of length |_4_meters|, has four |_1_meter| reference lengths.',
       ],
-      // modifiers: {
-      //   large_area: highlight(colors.square1),
-      //   small_area: highlight(colors.square2),
-      // },
+      modifiers: {
+        _4_meters: highlight(colors.line),
+        _1_meter: highlight(colors.reference),
+      },
       showOnly: [
         areaShapes,
       ],

@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point,
+  Transform, Point, Rect,
 } from '../../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -52,26 +52,38 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     const lineLength = this.diagram.shapes.collection(new Transform('lineLength')
       .translate(lay.position));
 
-    const makeL = (position, length, labelText, name, labelPos, color) => {
-      const line = makeLine(this.diagram, 'center', 1, lay.width, color);
+    const makeL = (position, length, labelText, name, labelPos, color, width) => {
+      const line = makeLine(this.diagram, 'center', 1, width, color);
       line.setPosition(position);
       line.setLength(length);
       line.addLabel(labelText, 0.05, 'labelPos', '', 'horizontal');
       lineLength.add(`line${name}`, line);
     };
-    makeL(new Point(0, 0), lay.length, '4m', '', 'bottom', col.line);
+    makeL(new Point(0, 0), lay.length, '4m', '', 'bottom', col.line, lay.width);
     const sectionLength = lay.length / lay.sections;
-    const start = -lay.length / 2 + sectionLength / 2;
+    let start = -lay.length / 2 + sectionLength / 2;
     for (let i = 0; i < lay.sections; i += 1) {
       const label = i === 0 ? '1m' : '';
       makeL(
         new Point(start + i * sectionLength, lay.referenceOffset),
-        sectionLength * 0.99,
-        label, `${i}`, 'top', col.reference,
+        sectionLength,
+        label, `${i}`, 'top', col.reference, lay.width / 2,
       );
     }
+    start = -lay.length / 2;
+    const grid = this.diagram.shapes.grid(new Rect(
+      start,
+      lay.referenceOffset - lay.tickLength / 2,
+      lay.length,
+      lay.tickLength,
+    ), lay.length / lay.sections, 0, col.reference);
+    lineLength.add('ticks', grid);
     this.add('lineLength', lineLength);
   }
+
+  // addAngleMeasure() {
+    
+  // }
 
   constructor(
     diagram: LessonDiagram,
