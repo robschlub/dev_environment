@@ -1,16 +1,27 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, Point,
 } from '../../../../../js/diagram/tools/g2';
-// import {
-//   DiagramElementCollection,
-// } from '../../../../../js/diagram/Element';
-
+import {
+  DiagramElementCollection, DiagramElementPrimative,
+} from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class AreaShapesCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
+  _square1: DiagramElementPrimative;
+  _square2: DiagramElementPrimative;
+  _circle: DiagramElementPrimative;
+  _lineLength: {
+    line: TypeLine;
+    line1: TypeLine;
+    line2: TypeLine;
+    line3: TypeLine;
+    line4: TypeLine;
+  } & DiagramElementCollection;
 
   addShapes() {
     const square1 = this.diagram.shapes.polygonFilled(
@@ -35,6 +46,33 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.add('circle', circle);
   }
 
+  addLineLength() {
+    const lay = this.layout.lineLength;
+    const col = this.layout.colors;
+    const lineLength = this.diagram.shapes.collection(new Transform('lineLength')
+      .translate(lay.position));
+
+    const makeL = (position, length, labelText, name, labelPos, color) => {
+      const line = makeLine(this.diagram, 'center', 1, lay.width, color);
+      line.setPosition(position);
+      line.setLength(length);
+      line.addLabel(labelText, 0.05, 'labelPos', '', 'horizontal');
+      lineLength.add(`line${name}`, line);
+    };
+    makeL(new Point(0, 0), lay.length, '4m', '', 'bottom', col.line);
+    const sectionLength = lay.length / lay.sections;
+    const start = -lay.length / 2 + sectionLength / 2;
+    for (let i = 0; i < lay.sections; i += 1) {
+      const label = i === 0 ? '1m' : '';
+      makeL(
+        new Point(start + i * sectionLength, lay.referenceOffset),
+        sectionLength * 0.99,
+        label, `${i}`, 'top', col.reference,
+      );
+    }
+    this.add('lineLength', lineLength);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -42,6 +80,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addShapes();
+    this.addLineLength();
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
   }

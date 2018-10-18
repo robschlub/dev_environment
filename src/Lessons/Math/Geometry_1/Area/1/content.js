@@ -50,7 +50,6 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
-      title: 'Introduction',
       setContent: centerV(`
         <p>
           An important property of shapes is |how much space they take up|.
@@ -83,7 +82,6 @@ class Content extends LessonContent {
       ],
     });
     this.addSection(common, {
-      title: 'asdf',
       setContent: [
         'Area is a property that any shape can have. So circles with |large_area|, take up more space than squares with |small_area|.',
       ],
@@ -93,6 +91,33 @@ class Content extends LessonContent {
       },
       showOnly: [
         areaShapes, areaShapes._circle, areaShapes._square2,
+      ],
+    });
+    this.addSection(common, {
+      title: 'Measurement',
+      setContent: centerV(`
+        <p>
+          |Area| is a property that has now been |identified| and |named|.
+        </p>
+        <p>
+          How can we |measure| it?
+        </p>
+      `),
+    });
+    this.addSection(common, {
+      setContent: [
+        'Well, length is measured by counting the number of |reference lengths| there are.',
+        'A line of length 4 meters, has four |1 meter| reference lengths.',
+      ],
+      // modifiers: {
+      //   large_area: highlight(colors.square1),
+      //   small_area: highlight(colors.square2),
+      // },
+      showOnly: [
+        areaShapes,
+      ],
+      show: [
+        areaShapes._lineLength,
       ],
     });
   }

@@ -1,9 +1,11 @@
 @import '../../geometry';
 
 $colors: (
-  square1:             color('red', 'base'),
-  square2:             color('blue', 'base'),
-  circle:              color('red', 'base'),
+  square1:             color('diagram', 'warning', 'base'),
+  square2:             color('diagram', 'primary', 'base'),
+  circle:              color('diagram', 'warning', 'base'),
+  reference:           color('diagram', 'disabled', 'base'),
+  line:                color('diagram', 'primary', 'base')
 );
 
 body {

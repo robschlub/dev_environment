@@ -8,6 +8,8 @@ const cssColorNames = [
   'square1',
   'square2',
   'circle',
+  'reference',
+  'line',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -27,6 +29,13 @@ export default function commonLessonLayout() {
     position: new Point(-1, 0),
     radius: 1,
     numSides: 300,
+  };
+  layout.lineLength = {
+    position: new Point(0, -1),
+    length: 4,
+    width: 0.01,
+    sections: 4,
+    referenceOffset: 0.5,
   };
   return layout;
 }
