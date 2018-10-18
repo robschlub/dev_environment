@@ -315,10 +315,6 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.add('crossGeneric', makeCross(this.layout.genericGrid.smallPosition));
   }
 
-  addAreaLabels() {
-    
-  }
-
   constructor(
     diagram: LessonDiagram,
     layout: Object,

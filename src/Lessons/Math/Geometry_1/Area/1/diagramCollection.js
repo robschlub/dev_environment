@@ -7,11 +7,12 @@ import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
-import AreaShapesCollection from '../common/diagramCollectionAreaShapes';
+import ShapesCollection from '../common/diagramCollectionShapes';
+import MeasureCollection from '../common/diagramCollectionMeasure';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
-  _x: AreaShapesCollection;
+  _shapes: ShapesCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -20,6 +21,7 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const layout = lessonLayout();
     super(diagram, layout, transform);
 
-    this.add('areaShapes', new AreaShapesCollection(diagram, this.layout));
+    this.add('shapes', new ShapesCollection(diagram, this.layout));
+    this.add('measure', new MeasureCollection(diagram, this.layout));
   }
 }
