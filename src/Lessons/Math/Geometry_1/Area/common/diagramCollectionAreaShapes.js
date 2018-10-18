@@ -110,17 +110,35 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.add('angle', angleMeasure);
   }
 
+  makeCircleGrid(xNum: number, yNum: number, radius: number) {
+    const lay = this.layout.circles;
+    const col = this.layout.colors.grid;
+    const length = xNum * radius * 2;
+    const height = yNum * radius * 2;
+    const circle = this.diagram.shapes.polygon(
+      lay.sides, radius, lay.width, 0, 1, lay.sides, col,
+      new Point(-length / 2, -height / 2),
+    );
+    const circles = this.diagram.shapes.repeatPattern(
+      circle,
+      xNum, yNum,
+      radius * 2, radius * 2, new Transform().translate(0, 0),
+    );
+    return circles;
+  }
+
+  addSmallCircles() {
+    const lay = this.layout.circles;
+    const circles = this.makeCircleGrid(4, 4, lay.radius);
+    circles.setPosition(lay.smallPosition);
+    this.add('circles', circles);
+  }
+
   addCircles() {
     const lay = this.layout.circles;
-    const col = this.layout.colors;
-    const circle = this.diagram.shapes.polygon(
-      lay.sides, lay.radius, lay.width, 0, 1, lay.sides, col.grid,
-      lay.position,
-    );
-    const pattern = this.diagram.shapes.repeatPattern(
-      circle, lay.num, lay.num, lay.radius * 2, lay.radius * 2,
-    );
-    this.add('circles', pattern);
+    const circles = this.makeCircleGrid(6 / lay.radius / 2, 2 / lay.radius / 2, lay.radius);
+    circles.setPosition(lay.position);
+    this.add('circles', circles);
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -48,10 +48,10 @@ export default function commonLessonLayout() {
     minorTickLength: 0.05,
   };
   layout.circles = {
-    position: new Point(2, 0),
+    position: new Point(0.15, 0),
+    smallPosition: new Point(2, 0),
     radius: 0.15,
-    num: 4,
-    sides: 50,
+    sides: 30,
     width: 0.007,
   };
   layout.genericGrid = {
