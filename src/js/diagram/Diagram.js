@@ -426,11 +426,17 @@ function shapes(diagram: Diagram, high: boolean = false) {
     transform: Transform | Point = new Transform(),
   ) {
     const group = collection(transform);
-    const t = element.transform.t();
+    let t = element.transform.t();
+    let transformToUse = element.transform._dup();
+    if (t === null) {
+      t = new Point(0, 0);
+      transformToUse = transformToUse.translate(0, 0);
+    }
     if (t) {
       for (let x = 0; x < xNum; x += 1) {
         for (let y = 0; y < yNum; y += 1) {
           const copy = element._dup();
+          copy.transform = transformToUse._dup();
           copy.transform.updateTranslation(t.x + xStep * x, t.y + yStep * y);
           group.add(`xy${x}${y}`, copy);
         }
@@ -448,6 +454,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
   ) {
     const copy = element._dup();
     const drawingObject = element.vertices;
+    // console.log(element.vertices.points)
     if (drawingObject instanceof VertexObject) {
       copy.transform = transform._dup();
       const newPoints = [];
@@ -459,10 +466,12 @@ function shapes(diagram: Diagram, high: boolean = false) {
               points[p] + x * xStep,
               points[p + 1] + y * yStep,
             ));
+            // console.log(points[p], points[p+1], newPoints.slice(-1))
           }
         }
       }
-      copy.vertices.change(newPoints);
+      // console.log(newPoints)
+      copy.vertices.changeVertices(newPoints);
     }
     return copy;
   }

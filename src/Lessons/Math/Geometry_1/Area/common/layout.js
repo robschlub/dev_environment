@@ -53,12 +53,14 @@ export default function commonLessonLayout() {
     sides: 50,
     width: 0.01,
   };
-  layout.generic = {
-    position: new Point(0, 0),
+  layout.genericGrid = {
+    position: new Point(-1, 0),
     sideLength: 0.5,
     waveMag: 0.05,
-    width: 0.02,
-    segments: 20,
+    width: 0.01,
+    segments: 25,
+    length: 4,
+    spacing: 0.25,
   };
   return layout;
 }

@@ -123,27 +123,48 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.add('circles', pattern);
   }
 
-  makeWaveSegment(length: number, mag: number, width: number, segments: number) {
+  // eslint-disable-next-line class-methods-use-this
+  makeWaveSegment(
+    length: number,
+    mag: number,
+    // width: number,
+    segments: number,
+    start: Point = new Point(0, 0),
+    rotation: number = 0,
+    // color: Array<number>,
+  ) {
     const step = length / segments;
     const xPoints = range(0, length, step);
     const points = xPoints.map(x => new Point(
       x,
       mag * Math.cos(x / length * 2 * Math.PI),
     ));
-    const segment = this.diagram.shapes.polyLine(
-      points, false, width, this.layout.colors.reference,
-      'never',
-    );
-    return segment;
+    const transform = new Transform().rotate(rotation).translate(start);
+    const tPoints = points.map(p => p.transformBy(transform.m()));
+    // const segment = this.diagram.shapes.polyLine(
+    //   points, false, width, color,
+    //   'never',
+    // );
+    return tPoints;
   }
 
   addGenericGrid() {
-    const lay = this.layout.generic;
-    const segment = this.makeWaveSegment(
+    const lay = this.layout.genericGrid;
+    const points = this.makeWaveSegment(
       lay.sideLength, lay.waveMag,
-      lay.width, lay.segments,
+      lay.segments, new Point(-lay.length / 2, 0),
     );
-    this.add('generic', segment);
+    const segment = this.diagram.shapes.polyLine(
+      points, false, lay.width, this.layout.colors.reference,
+      'never',
+    );
+    const hLine = this.diagram.shapes.repeatPatternVertex(
+      segment, lay.length / lay.sideLength, 1, lay.sideLength, 0,
+    );
+    const hLines = this.diagram.shapes.repeatPattern(
+      hLine, 1, 5, 0, lay.spacing,
+    );
+    this.add('generic', hLines);
   }
 
   constructor(

@@ -112,6 +112,10 @@ class VertexObject extends DrawingObject {
 
   // eslint-disable-next-line no-unused-vars
   change(coords: Array<g2.Point>) {
+    this.resetBuffer();
+  }
+
+  changeVertices(coords: Array<g2.Point>) {
     this.points = [];
     this.border = [];
     let minX = null;
