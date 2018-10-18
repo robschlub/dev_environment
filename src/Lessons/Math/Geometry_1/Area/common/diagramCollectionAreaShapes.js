@@ -150,21 +150,40 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
 
   addGenericGrid() {
     const lay = this.layout.genericGrid;
-    const points = this.makeWaveSegment(
+    const hPoints = this.makeWaveSegment(
       lay.sideLength, lay.waveMag,
-      lay.segments, new Point(-lay.length / 2, 0),
+      lay.segments, new Point(-lay.length / 2, -lay.height / 2 - lay.waveMag),
     );
-    const segment = this.diagram.shapes.polyLine(
-      points, false, lay.width, this.layout.colors.reference,
+    const hSegment = this.diagram.shapes.polyLine(
+      hPoints, false, lay.width, this.layout.colors.reference,
       'never',
     );
-    const hLine = this.diagram.shapes.repeatPatternVertex(
-      segment, lay.length / lay.sideLength, 1, lay.sideLength, 0,
+    const hLines = this.diagram.shapes.repeatPatternVertex(
+      hSegment,
+      lay.length / lay.sideLength, lay.height / lay.spacing + 1,
+      lay.sideLength, lay.spacing,
     );
-    const hLines = this.diagram.shapes.repeatPattern(
-      hLine, 1, 5, 0, lay.spacing,
+
+    const vPoints = this.makeWaveSegment(
+      lay.sideLength, lay.waveMag,
+      lay.segments, new Point(-lay.length / 2 + lay.waveMag, -lay.height / 2), Math.PI / 2,
     );
-    this.add('generic', hLines);
+    const vSegment = this.diagram.shapes.polyLine(
+      vPoints, false, lay.width, this.layout.colors.reference,
+      'never',
+    );
+    const vLines = this.diagram.shapes.repeatPatternVertex(
+      vSegment, lay.length / lay.spacing + 1,
+      lay.height / lay.sideLength, lay.spacing, lay.sideLength,
+    );
+
+    const group = this.diagram.shapes.collection();
+    group.add('vLines', vLines);
+    group.add('hLines', hLines);
+    // const hLines = this.diagram.shapes.repeatPattern(
+    //   hLine, 1, 5, 0, lay.spacing,
+    // );
+    this.add('generic', group);
   }
 
   constructor(
