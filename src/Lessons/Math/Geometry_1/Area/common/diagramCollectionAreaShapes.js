@@ -117,10 +117,33 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
       lay.sides, lay.radius, lay.width, 0, 1, lay.sides, col.reference,
       lay.position,
     );
-    const pattern = this.diagram.shapes.repeatPatternVertex(
+    const pattern = this.diagram.shapes.repeatPattern(
       circle, lay.num, lay.num, lay.radius * 2, lay.radius * 2,
     );
     this.add('circles', pattern);
+  }
+
+  makeWaveSegment(length: number, mag: number, width: number, segments: number) {
+    const step = length / segments;
+    const xPoints = range(0, length, step);
+    const points = xPoints.map(x => new Point(
+      x,
+      mag * Math.cos(x / length * 2 * Math.PI),
+    ));
+    const segment = this.diagram.shapes.polyLine(
+      points, false, width, this.layout.colors.reference,
+      'never',
+    );
+    return segment;
+  }
+
+  addGenericGrid() {
+    const lay = this.layout.generic;
+    const segment = this.makeWaveSegment(
+      lay.sideLength, lay.waveMag,
+      lay.width, lay.segments,
+    );
+    this.add('generic', segment);
   }
 
   constructor(
@@ -133,6 +156,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.addLengthMeasure();
     this.addAngleMeasure();
     this.addCircles();
+    this.addGenericGrid();
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
   }

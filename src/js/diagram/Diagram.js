@@ -462,9 +462,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
           }
         }
       }
-      console.log(newPoints)
       copy.vertices.change(newPoints);
-      console.log(copy)
     }
     return copy;
   }

@@ -50,8 +50,15 @@ export default function commonLessonLayout() {
     position: new Point(2, 0),
     radius: 0.2,
     num: 3,
-    sides: 6,
+    sides: 50,
     width: 0.01,
+  };
+  layout.generic = {
+    position: new Point(0, 0),
+    sideLength: 0.5,
+    waveMag: 0.05,
+    width: 0.02,
+    segments: 20,
   };
   return layout;
 }
