@@ -112,6 +112,36 @@ class VertexObject extends DrawingObject {
 
   // eslint-disable-next-line no-unused-vars
   change(coords: Array<g2.Point>) {
+    this.points = [];
+    this.border = [];
+    let minX = null;
+    let minY = null;
+    let maxX = null;
+    let maxY = null;
+    coords.forEach((p) => {
+      this.points.push(p.x);
+      this.points.push(p.y);
+      if (minX === null || p.x < minX) {
+        minX = p.x;
+      }
+      if (minY === null || p.y < minY) {
+        minY = p.y;
+      }
+      if (maxY === null || p.y > maxY) {
+        maxY = p.y;
+      }
+      if (maxX === null || p.x > maxX) {
+        maxX = p.x;
+      }
+    });
+    if (minX != null && minY != null && maxX != null && maxY != null) {
+      this.border[0] = [
+        new g2.Point(minX, minY),
+        new g2.Point(minX, maxY),
+        new g2.Point(maxX, maxY),
+        new g2.Point(maxX, minY),
+      ];
+    }
     this.resetBuffer();
   }
 

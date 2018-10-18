@@ -117,7 +117,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
       lay.sides, lay.radius, lay.width, 0, 1, lay.sides, col.reference,
       lay.position,
     );
-    const pattern = this.diagram.shapes.repeatPattern(
+    const pattern = this.diagram.shapes.repeatPatternVertex(
       circle, lay.num, lay.num, lay.radius * 2, lay.radius * 2,
     );
     this.add('circles', pattern);

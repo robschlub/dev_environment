@@ -50,7 +50,7 @@ export default function commonLessonLayout() {
     position: new Point(2, 0),
     radius: 0.2,
     num: 3,
-    sides: 50,
+    sides: 6,
     width: 0.01,
   };
   return layout;

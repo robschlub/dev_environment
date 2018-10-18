@@ -16,7 +16,7 @@ import GlobalAnimation from './webgl/GlobalAnimation';
 // eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
-
+import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import {
   PolyLine, PolyLineCorners,
 } from './DiagramElements/PolyLine';
@@ -438,6 +438,36 @@ function shapes(diagram: Diagram, high: boolean = false) {
     }
     return group;
   }
+  function repeatPatternVertex(
+    element: DiagramElementPrimative,
+    xNum: number,
+    yNum: number,
+    xStep: number,
+    yStep: number,
+    transform: Transform | Point = new Transform(),
+  ) {
+    const copy = element._dup();
+    const drawingObject = element.vertices;
+    if (drawingObject instanceof VertexObject) {
+      copy.transform = transform._dup();
+      const newPoints = [];
+      const { points } = drawingObject;
+      for (let x = 0; x < xNum; x += 1) {
+        for (let y = 0; y < yNum; y += 1) {
+          for (let p = 0; p < points.length; p += 2) {
+            newPoints.push(new Point(
+              points[p] + x * xStep,
+              points[p + 1] + y * yStep,
+            ));
+          }
+        }
+      }
+      console.log(newPoints)
+      copy.vertices.change(newPoints);
+      console.log(copy)
+    }
+    return copy;
+  }
   function axes(
     width: number = 1,
     height: number = 1,
@@ -587,6 +617,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
     axes,
     rectangleFilled,
     repeatPattern,
+    repeatPatternVertex,
   };
 }
 
