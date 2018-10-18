@@ -115,8 +115,8 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     const col = this.layout.colors.grid;
     const length = xNum * radius * 2;
     const height = yNum * radius * 2;
-    const circle = this.diagram.shapes.polygon(
-      lay.sides, radius, lay.width, 0, 1, lay.sides, col,
+    const circle = this.diagram.shapes.polygonLine(
+      lay.sides, radius, 0, 1, lay.sides, 1, col,
       new Point(-length / 2, -height / 2),
     );
     const circles = this.diagram.shapes.repeatPattern(
@@ -127,18 +127,24 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     return circles;
   }
 
-  addSmallCircles() {
+  addSmallCircleGrid() {
     const lay = this.layout.circles;
-    const circles = this.makeCircleGrid(4, 4, lay.radius);
+    const grid = this.layout.smallGrid;
+    const circles = this.makeCircleGrid(grid.xNum, grid.yNum, lay.radius);
     circles.setPosition(lay.smallPosition);
-    this.add('circles', circles);
+    this.add('smallCircleGrid', circles);
   }
 
-  addCircles() {
+  addCircleGrid() {
     const lay = this.layout.circles;
-    const circles = this.makeCircleGrid(6 / lay.radius / 2, 2 / lay.radius / 2, lay.radius);
+    const { grid } = this.layout;
+    const circles = this.makeCircleGrid(
+      grid.length / lay.radius / 2,
+      grid.height / lay.radius / 2,
+      lay.radius,
+    );
     circles.setPosition(lay.position);
-    this.add('circles', circles);
+    this.add('circleGrid', circles);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -191,7 +197,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
       height / sideLength, sideLength, lay.sideLength,
     );
 
-    const group = this.diagram.shapes.collection();
+    const group = this.diagram.shapes.collection(new Transform().translate(0, 0));
     group.add('vLines', vLines);
     group.add('hLines', hLines);
     return group;
@@ -199,22 +205,56 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
 
   addGenericGrid() {
     const lay = this.layout.genericGrid;
+    const { grid } = this.layout;
     const group = this.makeGenericGrid(
-      lay.length / lay.sideLength + 1,
-      lay.height / lay.sideLength + 1,
+      grid.length / lay.sideLength + 1,
+      grid.height / lay.sideLength + 1,
       lay.sideLength,
     );
-    this.add('generic', group);
+    group.setPosition(lay.position);
+    this.add('genericGrid', group);
   }
 
   addSmallGenericGrid() {
     const lay = this.layout.genericGrid;
+    const grid = this.layout.smallGrid;
     const group = this.makeGenericGrid(
-      4,
-      4,
+      grid.xNum,
+      grid.yNum,
       lay.sideLength,
     );
-    this.add('smallGeneric', group);
+    group.setPosition(lay.smallPosition);
+    this.add('smallGenericGrid', group);
+  }
+
+  addSquareGrid() {
+    const lay = this.layout.squareGrid;
+    const { grid } = this.layout;
+    const squares = this.diagram.shapes.grid(
+      new Rect(
+        -grid.length / 2, -grid.height / 2,
+        grid.length, grid.height,
+      ),
+      lay.sideLength, lay.sideLength, this.layout.colors.grid,
+      new Transform().translate(lay.position),
+    );
+    this.add('squareGrid', squares);
+  }
+
+  addSmallSquareGrid() {
+    const lay = this.layout.squareGrid;
+    const grid = this.layout.smallGrid;
+    const length = grid.xNum * lay.sideLength;
+    const height = grid.yNum * lay.sideLength;
+    const squares = this.diagram.shapes.grid(
+      new Rect(
+        -length / 2, -height / 2,
+        length, height,
+      ),
+      lay.sideLength, lay.sideLength, this.layout.colors.grid,
+      new Transform().translate(lay.smallPosition),
+    );
+    this.add('smallSquareGrid', squares);
   }
 
   constructor(
@@ -223,12 +263,17 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
+    this.addCircleGrid();
+    this.addSmallCircleGrid();
+    this.addGenericGrid();
+    this.addSmallGenericGrid();
+    this.addSquareGrid();
+    this.addSmallSquareGrid();
+
     this.addShapes();
     this.addLengthMeasure();
     this.addAngleMeasure();
-    this.addCircles();
-    this.addGenericGrid();
-    this.addSmallGenericGrid();
+
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
   }
