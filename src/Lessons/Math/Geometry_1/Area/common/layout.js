@@ -48,22 +48,22 @@ export default function commonLessonLayout() {
     minorTickLength: 0.05,
   };
   layout.grid = {
-    length: 6,
-    height: 2.1,
+    length: 5.7,
+    height: 2.7,
   };
   layout.smallGrid = {
     xNum: 4,
     yNum: 4,
   };
   layout.circles = {
-    position: new Point(0.15, 0.15),
+    position: new Point(0.15, 0.35),
     smallPosition: new Point(2, 0.15),
     radius: 0.15,
     sides: 25,
     width: 0.007,
   };
   layout.genericGrid = {
-    position: new Point(0, 0),
+    position: new Point(0, 0.2),
     smallPosition: new Point(-2, 0),
     sideLength: 0.3,
     waveMag: 0.015,
@@ -71,7 +71,7 @@ export default function commonLessonLayout() {
     segments: 20,
   };
   layout.squareGrid = {
-    position: new Point(0, 0),
+    position: new Point(0, 0.2),
     smallPosition: new Point(0, 0),
     sideLength: 0.3,
     width: 0.07,

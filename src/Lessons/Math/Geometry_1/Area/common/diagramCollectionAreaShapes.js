@@ -4,6 +4,9 @@ import {
   Transform, Point, Rect, polarToRect,
 } from '../../../../../js/diagram/tools/g2';
 import {
+  roundNum,
+} from '../../../../../js/diagram/tools/mathtools';
+import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -16,6 +19,12 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
   _square1: DiagramElementPrimative;
   _square2: DiagramElementPrimative;
   _circle: DiagramElementPrimative;
+  _circleGrid: DiagramElementCollection;
+  _squareGrid: DiagramElementPrimative;
+  _genericGrid: DiagramElementCollection;
+  _smallGenericGrid: DiagramElementCollection;
+  _smallSquareGrid: DiagramElementPrimative;
+  _smallCircleGrid: DiagramElementPrimative;
   _length: {
     _line: TypeLine;
     _line1: TypeLine;
@@ -167,8 +176,8 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     const lay = this.layout.circles;
     const { grid } = this.layout;
     const circles = this.makeCircleGrid(
-      grid.length / lay.radius / 2,
-      grid.height / lay.radius / 2,
+      roundNum(grid.length / lay.radius / 2, 4),
+      roundNum(grid.height / lay.radius / 2, 4),
       lay.radius,
     );
     circles.setPosition(lay.position);
@@ -235,8 +244,8 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     const lay = this.layout.genericGrid;
     const { grid } = this.layout;
     const group = this.makeGenericGrid(
-      grid.length / lay.sideLength + 1,
-      grid.height / lay.sideLength + 1,
+      roundNum(grid.length / lay.sideLength, 4),
+      roundNum(grid.height / lay.sideLength, 4),
       lay.sideLength,
     );
     group.setPosition(lay.position);
@@ -305,5 +314,22 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
 
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
+  }
+
+  toggleGrid() {
+    if (this._squareGrid.isShown) {
+      this._squareGrid.hide();
+      this._genericGrid.showAll();
+      this._circleGrid.hideAll();
+    } else if (this._genericGrid.isShown) {
+      this._squareGrid.hide();
+      this._genericGrid.hideAll();
+      this._circleGrid.showAll();
+    } else {
+      this._squareGrid.show();
+      this._genericGrid.hideAll();
+      this._circleGrid.hideAll();
+    }
+    this.diagram.animateNextFrame();
   }
 }

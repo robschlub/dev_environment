@@ -133,7 +133,34 @@ class Content extends LessonContent {
         areaShapes,
       ],
       show: [
-        areaShapes._angle, areaShapes._genericGrid, areaShapes._squareA, areaShapes._circleA, areaShapes._triangleA,
+        areaShapes._angle,
+      ],
+    });
+    this.addSection(common, {
+      setContent: [
+        '|Area| is is also measured by counting |reference areas|.',
+      ],
+      showOnly: [
+        areaShapes,
+      ],
+      show: [
+        areaShapes._squareGrid, areaShapes._squareA,
+        areaShapes._circleA, areaShapes._triangleA,
+      ],
+    });
+    this.addSection(common, {
+      setContent: [
+        'But what reference |shape| should be used?',
+      ],
+      modifiers: {
+        shape: click(areaShapes.toggleGrid, [areaShapes], colors.diagram.action),
+      },
+      showOnly: [
+        areaShapes,
+      ],
+      show: [
+        areaShapes._squareGrid, areaShapes._squareA,
+        areaShapes._circleA, areaShapes._triangleA,
       ],
     });
   }
