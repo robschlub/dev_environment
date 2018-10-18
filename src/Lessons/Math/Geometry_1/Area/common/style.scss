@@ -5,7 +5,8 @@ $colors: (
   square2:             color('diagram', 'primary', 'base'),
   circle:              color('diagram', 'warning', 'base'),
   reference:           color('diagram', 'disabled', 'base'),
-  line:                color('diagram', 'primary', 'base')
+  line:                color('diagram', 'primary', 'base'),
+  grid:                color('diagram', 'disabled', 'darker'),
 );
 
 body {

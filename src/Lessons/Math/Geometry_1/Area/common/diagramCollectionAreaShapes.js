@@ -114,7 +114,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     const lay = this.layout.circles;
     const col = this.layout.colors;
     const circle = this.diagram.shapes.polygon(
-      lay.sides, lay.radius, lay.width, 0, 1, lay.sides, col.reference,
+      lay.sides, lay.radius, lay.width, 0, 1, lay.sides, col.grid,
       lay.position,
     );
     const pattern = this.diagram.shapes.repeatPattern(
@@ -127,11 +127,9 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
   makeWaveSegment(
     length: number,
     mag: number,
-    // width: number,
     segments: number,
     start: Point = new Point(0, 0),
     rotation: number = 0,
-    // color: Array<number>,
   ) {
     const step = length / segments;
     const xPoints = range(0, length, step);
@@ -141,49 +139,64 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     ));
     const transform = new Transform().rotate(rotation).translate(start);
     const tPoints = points.map(p => p.transformBy(transform.m()));
-    // const segment = this.diagram.shapes.polyLine(
-    //   points, false, width, color,
-    //   'never',
-    // );
     return tPoints;
   }
 
-  addGenericGrid() {
+  makeGenericGrid(xNum: number, yNum: number, sideLength: number) {
     const lay = this.layout.genericGrid;
+    const length = xNum * sideLength;
+    const height = yNum * sideLength;
     const hPoints = this.makeWaveSegment(
-      lay.sideLength, lay.waveMag,
-      lay.segments, new Point(-lay.length / 2, -lay.height / 2 - lay.waveMag),
+      sideLength, lay.waveMag,
+      lay.segments, new Point(-length / 2, -height / 2 - lay.waveMag),
     );
     const hSegment = this.diagram.shapes.polyLine(
-      hPoints, false, lay.width, this.layout.colors.reference,
+      hPoints, false, lay.width, this.layout.colors.grid,
       'never',
     );
     const hLines = this.diagram.shapes.repeatPatternVertex(
       hSegment,
-      lay.length / lay.sideLength, lay.height / lay.spacing + 1,
-      lay.sideLength, lay.spacing,
+      length / sideLength, height / sideLength + 1,
+      sideLength, sideLength,
     );
 
     const vPoints = this.makeWaveSegment(
-      lay.sideLength, lay.waveMag,
-      lay.segments, new Point(-lay.length / 2 + lay.waveMag, -lay.height / 2), Math.PI / 2,
+      sideLength, lay.waveMag,
+      lay.segments, new Point(-length / 2 + lay.waveMag, -height / 2), Math.PI / 2,
     );
     const vSegment = this.diagram.shapes.polyLine(
-      vPoints, false, lay.width, this.layout.colors.reference,
+      vPoints, false, lay.width, this.layout.colors.grid,
       'never',
     );
     const vLines = this.diagram.shapes.repeatPatternVertex(
-      vSegment, lay.length / lay.spacing + 1,
-      lay.height / lay.sideLength, lay.spacing, lay.sideLength,
+      vSegment, length / sideLength + 1,
+      height / sideLength, sideLength, lay.sideLength,
     );
 
     const group = this.diagram.shapes.collection();
     group.add('vLines', vLines);
     group.add('hLines', hLines);
-    // const hLines = this.diagram.shapes.repeatPattern(
-    //   hLine, 1, 5, 0, lay.spacing,
-    // );
+    return group;
+  }
+
+  addGenericGrid() {
+    const lay = this.layout.genericGrid;
+    const group = this.makeGenericGrid(
+      lay.length / lay.sideLength + 1,
+      lay.height / lay.sideLength + 1,
+      lay.sideLength,
+    );
     this.add('generic', group);
+  }
+
+  addSmallGenericGrid() {
+    const lay = this.layout.genericGrid;
+    const group = this.makeGenericGrid(
+      4,
+      4,
+      lay.sideLength,
+    );
+    this.add('smallGeneric', group);
   }
 
   constructor(
@@ -197,6 +210,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.addAngleMeasure();
     this.addCircles();
     this.addGenericGrid();
+    this.addSmallGenericGrid();
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
   }

@@ -133,7 +133,7 @@ class Content extends LessonContent {
         areaShapes,
       ],
       show: [
-        areaShapes._angle, areaShapes._circles, areaShapes._generic,
+        areaShapes._angle, areaShapes._circles, areaShapes._smallGeneric,
       ],
     });
   }

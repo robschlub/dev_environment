@@ -10,6 +10,7 @@ const cssColorNames = [
   'circle',
   'reference',
   'line',
+  'grid',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -48,10 +49,10 @@ export default function commonLessonLayout() {
   };
   layout.circles = {
     position: new Point(2, 0),
-    radius: 0.2,
-    num: 3,
+    radius: 0.15,
+    num: 4,
     sides: 50,
-    width: 0.01,
+    width: 0.007,
   };
   layout.genericGrid = {
     position: new Point(-2, 0),
@@ -59,9 +60,9 @@ export default function commonLessonLayout() {
     waveMag: 0.03,
     width: 0.007,
     segments: 20,
-    length: 4,
+    length: 6,
     height: 2,
-    spacing: 0.3,
+    // spacing: 0.3,
   };
   return layout;
 }
