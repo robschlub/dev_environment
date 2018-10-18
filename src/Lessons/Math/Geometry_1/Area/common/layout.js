@@ -76,5 +76,22 @@ export default function commonLessonLayout() {
     sideLength: 0.3,
     width: 0.07,
   };
+
+  layout.squareA = {
+    position: new Point(0, 0),
+    sideLength: 1.2,
+    width: 0.03,
+  };
+  layout.circleA = {
+    position: new Point(1.8, 0),
+    radius: 0.6,
+    width: 0.03,
+    numSides: 100,
+  };
+  layout.triangleA = {
+    position: new Point(-1.8, -0.2),
+    sideLength: 1.39,
+    width: 0.03,
+  };
   return layout;
 }

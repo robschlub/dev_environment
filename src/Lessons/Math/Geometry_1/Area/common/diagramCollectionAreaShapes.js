@@ -25,7 +25,7 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     _ticks: DiagramElementPrimative;
   } & DiagramElementCollection;
 
-  addShapes() {
+  addFilledShapes() {
     const square1 = this.diagram.shapes.polygonFilled(
       4, Math.sqrt(((this.layout.square1.sideLength / 2) ** 2) * 2),
       Math.PI / 4, 4, this.layout.colors.square1,
@@ -47,6 +47,34 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     );
     this.add('circle', circle);
   }
+
+  addEmptyShapes() {
+    const sq = this.layout.squareA;
+    const circ = this.layout.circleA;
+    const tri = this.layout.triangleA;
+    const col = this.layout.colors.line;
+    const square = this.diagram.shapes.polygon(
+      4, Math.sqrt(((sq.sideLength / 2) ** 2) * 2), sq.width,
+      Math.PI / 4, 1, 4, col,
+      new Transform('sA').translate(sq.position),
+    );
+    this.add('squareA', square);
+
+    const circle = this.diagram.shapes.polygon(
+      circ.numSides, circ.radius, circ.width,
+      0, 1, circ.numSides, col,
+      new Transform('cA').translate(circ.position),
+    );
+    this.add('circleA', circle);
+
+    const triangle = this.diagram.shapes.polygon(
+      3, tri.sideLength / 2 / Math.cos(Math.PI / 6), tri.width,
+      -Math.PI / 6, 1, 3, col,
+      new Transform('cA').translate(tri.position),
+    );
+    this.add('triangleA', triangle);
+  }
+
 
   addLengthMeasure() {
     const lay = this.layout.lengthMeasure;
@@ -270,9 +298,10 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
     this.addSquareGrid();
     this.addSmallSquareGrid();
 
-    this.addShapes();
+    this.addFilledShapes();
     this.addLengthMeasure();
     this.addAngleMeasure();
+    this.addEmptyShapes();
 
     this.setPosition(this.layout.shapesPosition);
     this.hasTouchableElements = true;
