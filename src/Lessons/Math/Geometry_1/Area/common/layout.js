@@ -39,7 +39,7 @@ export default function commonLessonLayout() {
     tickLength: 0.1,
   };
   layout.angleMeasure = {
-    position: new Point(0, -0.5),
+    position: new Point(-1, -0.7),
     length: 2,
     width: 0.02,
     angle: Math.PI / 3,

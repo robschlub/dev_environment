@@ -1,12 +1,13 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, Rect,
+  Transform, Point, Rect, polarToRect,
 } from '../../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import { range } from '../../../../../js/diagram/tools/mathtools';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 
@@ -93,6 +94,19 @@ export default class AreaShapesCollection extends CommonDiagramCollection {
       new Point(lay.length * Math.cos(lay.angle), lay.length * Math.sin(lay.angle)),
     ], false, lay.width, col.line);
     angleMeasure.add('line', line);
+
+    const tick = (angle, radius, length) => [
+      polarToRect(radius, angle),
+      polarToRect(radius - length, angle),
+    ];
+    const minorTickLines = range(1, 59)
+      .map(a => tick(a * Math.PI / 180, lay.length, lay.minorTickLength));
+    const minorTicks = this.diagram.shapes.lines(minorTickLines, col.reference);
+    const majorTickLines = range(10, 50, 10)
+      .map(a => tick(a * Math.PI / 180, lay.length, lay.majorTickLength));
+    const majorTicks = this.diagram.shapes.lines(majorTickLines, col.reference);
+    angleMeasure.add('minorTicks', minorTicks);
+    angleMeasure.add('majorTicks', majorTicks);
     this.add('angle', angleMeasure);
   }
 

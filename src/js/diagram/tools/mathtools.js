@@ -226,7 +226,7 @@ function sinusoid(
 //     }
 // }
 
-function range(start: number, stop: number, step: number) {
+function range(start: number, stop: number, step: number = 1) {
   const out = [];
   for (let i = start; i <= stop + step * 0.5; i += step) {
     out.push(i);

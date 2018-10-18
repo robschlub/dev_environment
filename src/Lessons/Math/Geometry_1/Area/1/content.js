@@ -3,10 +3,10 @@ import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
 import {
-  click, centerV, highlight,
+  click, centerV, highlight, highlightWord,
 } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
-import Definition from '../../../../LessonsCommon/tools/definition';
+// import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import imgLinkGrey from '../tile-grey.png';
@@ -123,11 +123,11 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: [
         'Similarly, |angle| is measured by counting |reference angles|.',
-        'An angle of 60º, has sixty 1º reference angles.',
+        'An angle of |_60deg|, has sixty |_1deg| reference angles.',
       ],
       modifiers: {
-        _4_meters: highlight(colors.line),
-        _1_meter: highlight(colors.reference),
+        _60deg: highlightWord('60º', colors.line),
+        _1deg: highlightWord('1º', colors.reference),
       },
       showOnly: [
         areaShapes,
