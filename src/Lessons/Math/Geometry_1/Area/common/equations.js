@@ -48,16 +48,16 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
       _6: '6',
       _10: '10',
       _60: '60',
-      _1_1: '1',
-      _1_2: '1',
+      _1: '1',
+      _1_: '1',
       _2: '2',
-      m1: ['m', colUnit],
-      m2: ['m', colUnit],
+      m: ['m', colUnit],
+      m_: ['m', colUnit],
       mul: '  \u00D7  ',
-      mul1: ' \u00D7 ',
-      mul2: ' \u00D7 ',
-      s1: diagram.equation.xStrike(strikeColor),
-      s2: diagram.equation.xStrike(strikeColor),
+      mul_: ' \u00D7 ',
+      mul__: ' \u00D7 ',
+      x: diagram.equation.xStrike(strikeColor),
+      x_: diagram.equation.xStrike(strikeColor),
       equals: ' = ',
     },
     colText,
@@ -72,94 +72,81 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
   eqn.addForm('0', [
     'Area',
     'equals',
-    '_6', 'm1', 'mul', '_10', 'm2',
+    '_6', 'm', 'mul_', '_10', 'm_',
   ]);
 
   eqn.addForm('1', [
     'Area',
     'equals',
-    '_6', 'mul1', '_1_1', 'm1', 'mul', '_10', 'mul2', '_1_2', 'm2',
+    '_6', 'mul', '_1', 'm', 'mul_', '_10', 'mul__', '_1_', 'm_',
   ], 'base', true, {
-    m1: [null, 'linear'],
-    _1_1: [null, 'linear'],
-    mul1: [null, 'linear'],
+    m: [null, 'linear'],
+    _1: [null, 'linear'],
+    mul: [null, 'linear'],
   }, '1');
 
   eqn.addForm('2', [
     'Area',
     'equals',
-    '_6', 'mul', '_10', 'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
+    '_6', 'mul_', '_10', 'mul__', '_1_', 'm_', 'mul', '_1', 'm',
   ], 'base', true, {
-    m1: [colUnit, 'curved', 'up', 0.7],
-    _1_1: [null, 'curved', 'up', 0.7],
-    mul1: [null, 'curved', 'up', 0.7],
+    m: [colUnit, 'curved', 'up', 0.7],
+    _1: [null, 'curved', 'up', 0.7],
+    mul: [null, 'curved', 'up', 0.7],
   }, '2');
 
   eqn.addForm('3', [
     'Area',
     'equals',
     eqn.annotation(
-      eqn.strike(['_6', 'mul', '_10'], 's1'),
+      eqn.strike(['_6', 'mul_', '_10'], 'x'),
       [eqn.ann('_60', 'center', 'top', 'center', 'bottom')],
     ),
-    'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
+    'mul__', '_1_', 'm_', 'mul', '_1', 'm',
   ], 'base', true, {
-    m1: [null, 'linear'],
-    _1_1: [null, 'linear'],
-    mul1: [null, 'linear'],
-  }, '2a');
+    m: [null, 'linear'],
+    _1: [null, 'linear'],
+    mul: [null, 'linear'],
+  }, '3');
 
   eqn.addForm('4', [
     'Area',
     'equals',
-    '_60', 'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
+    '_60', 'mul__', '_1_', 'm_', 'mul', '_1', 'm',
   ]);
 
   eqn.addForm('5', [
     'Area',
     'equals',
     '_60',
-    'mul2',
-    eqn.strike('_1_2', 's1'),
-    'm2',
-    'mul1',
-    eqn.strike('_1_1', 's2'),
-    'm1',
-  ], 'base', true, {
-    m1: [null, 'linear'],
-    _1_1: [null, 'linear'],
-    mul1: [null, 'linear'],
-  }, '3');
+    'mul__',
+    eqn.strike('_1_', 'x'),
+    'm_',
+    'mul',
+    eqn.strike('_1', 'x_'),
+    'm',
+  ]);
 
   eqn.addForm('6', [
     'Area',
     'equals',
-    '_60', 'mul2',
-    'm2', 'mul1', 'm1',
-  ], 'base', true, {
-    m1: [null, 'linear'],
-    _1_1: [null, 'linear'],
-  }, '4');
+    '_60', 'mul__',
+    'm_', 'mul', 'm',
+  ]);
 
   eqn.addForm('7', [
     'Area',
     'equals',
-    '_60', 'mul2',
-    eqn.strike('m2', 's2'), 'mul1', eqn.sup('m1', '_2'),
-  ], 'base', true, {
-    m1: [null, 'linear'],
-    _1_1: [null, 'linear'],
-  }, '5');
+    '_60', 'mul__',
+    eqn.strike('m_', 'x_'), 'mul', eqn.sup('m', '_2'),
+  ]);
 
   eqn.addForm('8', [
     'Area',
     'equals',
     '_60',
-    eqn.sup('m1', '_2'),
-  ], 'base', true, {
-    m1: [null, 'linear'],
-    _1_1: [null, 'linear'],
-  });
+    eqn.sup('m', '_2'),
+  ]);
 
   const nextForm = () => {
     eqn.nextForm(2);
