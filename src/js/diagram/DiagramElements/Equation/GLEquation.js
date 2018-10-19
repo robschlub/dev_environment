@@ -1487,13 +1487,26 @@ export class EquationForm extends Elements {
     delay: number = 0,
     hideTime: number = 0.5,
     showTime: number = 0.5,
+    blankTime: number = 0.5,
     callback: ?(boolean) => void = null,
   ) {
     this.collection.stop();
     const allElements = this.collection.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
     const elementsToShow = this.getAllElements();
+    const elementsToDelayShowing = elementsToShow.filter(e => !e.isShown);
+    const elementsToShowAfterDisolve = elementsToShow.filter(e => e.isShown);
     let cumTime = delay;
+
+    if (elementsToShow.length === 0 && elementsShown.length === 0) {
+      if (callback != null) {
+        callback(false);
+        return;
+      }
+    }
+    // disolve out
+    // set positions
+    // disolve in
 
     let disolveOutCallback = () => {
       this.setPositions.bind(this);
@@ -1509,28 +1522,45 @@ export class EquationForm extends Elements {
 
     if (elementsShown.length > 0) {
       this.dissolveElements(
-        elementsShown, 'out', delay, hideTime,
-        disolveOutCallback,
+        elementsShown, 'out', delay, hideTime, disolveOutCallback,
       );
-      cumTime += hideTime + 0.5;
+      cumTime += hideTime;
     } else {
       this.setPositions();
     }
-    // console.log(cumTime, showTime, elementsToShow)
+
+    let count = 0;
+    if (elementsToDelayShowing.length > 0) {
+      count += 1;
+    }
+    if (elementsToShowAfterDisolve.length > 0) {
+      count += 1;
+    }
+    let completed = 0;
     const end = (cancelled: boolean) => {
-      if (callback != null) {
-        callback(cancelled);
+      completed += 1;
+      if (completed === count - 1) {
+        if (callback) {
+          callback(cancelled);
+        }
       }
     };
-    if (elementsToShow.length > 0) {
+
+    if (elementsToDelayShowing.length > 0) {
       this.dissolveElements(
-        elementsToShow, 'in', cumTime, showTime, end,
+        elementsToDelayShowing, 'in', cumTime + blankTime, showTime, end,
       );
     }
-    if (elementsToShow.length === 0 && elementsShown.length === 0) {
-      if (callback != null) {
-        callback(false);
-      }
+    // console.log(cumTime, showTime, elementsToShow)
+    // const end = (cancelled: boolean) => {
+    //   if (callback != null) {
+    //     callback(cancelled);
+    //   }
+    // };
+    if (elementsToShowAfterDisolve.length > 0) {
+      this.dissolveElements(
+        elementsToShowAfterDisolve, 'in', blankTime, showTime, end,
+      );
     }
   }
 
@@ -2103,7 +2133,7 @@ export class Equation {
     name: ?string | number = null,
     time: number = 2,
     delay: number = 0,
-    animate: boolean = true,
+    animate: boolean = false,
   ) {
     if (this.isAnimating) {
       this.collection.stop(true, true);
