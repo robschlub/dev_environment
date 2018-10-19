@@ -1493,6 +1493,52 @@ export class EquationForm extends Elements {
     }
   }
 
+  allHideShow(
+    delay: number = 0,
+    hideTime: number = 0.5,
+    showTime: number = 0.5,
+    callback: ?(?mixed) => void = null,
+  ) {
+    this.collection.stop();
+    const allElements = this.collection.getAllElements();
+    const elementsShown = allElements.filter(e => e.isShown);
+    const elementsToShow = this.getAllElements();
+    let cumTime = delay;
+
+    let disolveOutCallback = this.setPositions.bind(this);
+    if (elementsToShow.length === 0) {
+      disolveOutCallback = () => {
+        this.setPositions();
+        if (callback != null) {
+          callback();
+        }
+      };
+    }
+
+    if (elementsShown.length > 0) {
+      this.dissolveElements(
+        elementsShown, false, delay, hideTime,
+        disolveOutCallback,
+      );
+      cumTime += hideTime;
+    } else {
+      this.setPositions();
+    }
+
+    if (elementsToShow.length > 0) {
+      this.dissolveElements(
+        elementsToShow, true, cumTime, showTime,
+        callback,
+      );
+    }
+
+    if (elementsToShow.length === 0 && elementsShown.length === 0) {
+      if (callback != null) {
+        callback();
+      }
+    }
+  }
+
   animatePositionsTo(
     // location: Point,
     delay: number,
@@ -2049,6 +2095,7 @@ export class Equation {
     name: ?string | number = null,
     time: number = 2,
     delay: number = 0,
+    animate: boolean = true,
   ) {
     if (this.isAnimating) {
       this.collection.stop(true, true);
@@ -2105,7 +2152,11 @@ export class Equation {
         const end = () => {
           this.isAnimating = false;
         };
-        form.animatePositionsTo(delay, 1, time, 0.5, end);
+        if (animate) {
+          form.animatePositionsTo(delay, 1, time, 0.5, end);
+        } else {
+          form.allHideShow(delay, 0.5, 0.5, end);
+        }
         this.setCurrentForm(form);
       }
       this.updateDescription();
