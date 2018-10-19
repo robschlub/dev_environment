@@ -33,6 +33,22 @@ class Content extends LessonContent {
     const size = diag._size;
     const rect = diag._rect;
 
+    const mods = {
+      a: highlight(colors.angles),
+      b: highlight(colors.angles),
+    };
+    rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', mods);
+    // rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
+    // rect.rectEqn.changeDescription('2a', '90º is cancelled and goes to 0º on left side.');
+    // rect.rectEqn.changeDescription('2b', '0º on left side can be removed');
+    // rect.rectEqn.changeDescription('2c', '180º is reduced to 90º on right side.');
+    // rect.rectEqn.changeDescription('3', 'Right side remainder is 90º.');
+    // rect.rectEqn.changeDescription('4', 'Subtract angle |a| from both sides of the equation.', mods);
+    // rect.rectEqn.changeDescription('5', '|a| cancels on the left side', mods);
+    // rect.rectEqn.changeDescription('5a', 'No |a| remaining on left side, so can be removed', mods);
+    // rect.rectEqn.changeDescription('6', 'End with |b| in terms of |a|.', mods);
+
+
     let common = {
       setContent: [],
       setInfo: '',
@@ -291,7 +307,25 @@ class Content extends LessonContent {
       show: [rect],
       setEnterState: () => {
         rect.toggleRow(0);
-      }
+        rect.rectEqn.showForm('0');
+      },
+    });
+
+    this.addSection(common, {
+      title: 'asdf',
+      setContent: [
+        'Using reference squares |as| the unit of area makes it particularly convenient to examine the area of a rectangle.',
+      ],
+      modifiers: {
+        as: click(rect.toggleRow, [rect, null], colors.diagram.action),
+      },
+      show: [rect._navRect],
+      setEnterState: () => {
+        rect._navRect.showAll();
+        rect._navRect.eqn.showForm('0');
+        rect._navRect.updateButtons();
+        console.log(rect)
+      },
     });
   }
 }

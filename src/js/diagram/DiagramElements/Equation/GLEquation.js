@@ -1131,7 +1131,7 @@ export function createEquationElements(
       collection.add(key, elems[key]);
     }
     if (Array.isArray(elems[key])) {
-      const [text, col, isTouchable, onClick] = elems[key];
+      const [text, col, isTouchable, onClick, direction, mag] = elems[key];
       const elem = makeElem(text);
       if (col) {
         elem.setColor(col);
@@ -1142,6 +1142,16 @@ export function createEquationElements(
       if (onClick) {
         elem.onClick = onClick;
       }
+      if (direction) {
+        elem.animate.transform.translation.style = 'curved';
+        elem.animate.transform.translation.options.direction = direction;
+      }
+
+      if (mag) {
+        elem.animate.transform.translation.style = 'curved';
+        elem.animate.transform.translation.options.magnitude = mag;
+      }
+
       // const elem = makeElem(elems[key][0]);
       // if (elems[key].length > 1) {
       //   elem.setColor(elems[key][1]);
@@ -2253,5 +2263,39 @@ export class Equation {
     const f = this.frac(numerator, denominator, vinculum);
     f.scaleModifier = scaleModifier;
     return f;
+  }
+
+  sub(
+    content: TypeEquationInput,
+    subscript: TypeEquationInput,
+  ) {
+    return new SuperSub(
+      contentToElement(this.collection, content),
+      null,
+      contentToElement(this.collection, subscript),
+    );
+  }
+
+  sup(
+    content: TypeEquationInput,
+    superscript: TypeEquationInput,
+  ) {
+    return new SuperSub(
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, superscript),
+      null,
+    );
+  }
+
+  supsub(
+    content: TypeEquationInput,
+    superscript: TypeEquationInput,
+    subscript: TypeEquationInput,
+  ) {
+    return new SuperSub(
+      contentToElement(this.collection, content),
+      contentToElement(this.collection, superscript),
+      contentToElement(this.collection, subscript),
+    );
   }
 }

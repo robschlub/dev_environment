@@ -3,22 +3,29 @@ import LessonDiagram from './diagram';
 import {
   Transform, Point, Rect, polarToRect,
 } from '../../../../../js/diagram/tools/g2';
-import {
-  range, roundNum,
-} from '../../../../../js/diagram/tools/mathtools';
+// import {
+//   range, roundNum,
+// } from '../../../../../js/diagram/tools/mathtools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+// import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
+import { makeRectEquation } from './equations';
+import type { TypeRectEquation } from './equations';
+import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
+import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   rowIndex: number;
   _row: DiagramElementPrimative;
   _grid: DiagramElementPrimative;
-  _rect: DiagramCollection;
+  _rect: DiagramElementCollection;
+  rectEqn: TypeRectEquation;
+  _navRect: TypeEquationNavigator;
+  _line: DiagramElementPrimative;
 
   addGrid() {
     const lay = this.layout.gridRect;
@@ -60,6 +67,18 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.add('line', line);
   }
 
+  addEqn() {
+    this.rectEqn = makeRectEquation(this.diagram, this.layout);
+    const makeNav = eqn => makeEquationNavigator(
+      this.diagram, eqn, 0.07, new Point(2.5, 0),
+      this.layout.colors.diagram.disabled,
+      this.layout.colors.diagram.disabledDark,
+    );
+    const navRect = makeNav(this.rectEqn);
+    navRect.setPosition(this.layout.rectEqnPosition);
+    this.add('navRect', navRect);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -70,6 +89,7 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.addGrid();
     this.addRect();
     this.addRow();
+    this.addEqn();
 
     this.setPosition(this.layout.rectPosition);
     this.hasTouchableElements = true;

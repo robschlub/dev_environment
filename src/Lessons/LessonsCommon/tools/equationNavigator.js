@@ -11,26 +11,6 @@ import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquatio
 import * as html from '../../../js/tools/htmlGenerator';
 import HTMLObject from '../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 
-export type TypeEquationNavigator = {
-} & DiagramElementCollection;
-
-// function makeArrow(
-//   diagram: Diagram,
-//   width: number,
-//   height: number,
-//   spacing: number,
-//   color: Array<number>,
-//   rotation: number,
-// ) {
-//   const arrow = diagram.shapes.arrow(
-//     width, 0, height, 0, color,
-//     new Transform().translate(0, spacing * Math.cos(rotation)), new Point(0, 0), rotation,
-//   );
-//   arrow.isTouchable = true;
-//   arrow.touchInBoundingBox = true;
-//   return arrow;
-// }
-
 function makeNextPrevText(
   diagram: Diagram,
   next: boolean,
@@ -54,6 +34,17 @@ function makeNextPrevText(
   text.touchInBoundingBox = true;
   return text;
 }
+
+type TypeRefresh = {
+  _top: {
+    _line: DiagramElementPrimative;
+    _arrow: DiagramElementPrimative;
+  } & DiagramElementCollection;
+  _bottom: {
+    _line: DiagramElementPrimative;
+    _arrow: DiagramElementPrimative;
+  } & DiagramElementCollection;
+} & DiagramElementCollection;
 
 function makeRefresh(
   diagram: Diagram,
@@ -155,6 +146,19 @@ function updateDescription(
     }
   }
 }
+
+export type TypeEquationNavigator = {
+  setEquation: (Equation) => void;
+  _next: DiagramElementPrimative;
+  _prev: DiagramElementPrimative;
+  _refresh: TypeRefresh;
+  _nextDescription: DiagramElementPrimative;
+  _prevDescription: DiagramElementPrimative;
+  refreshHtml: DiagramElementPrimative;
+  updateButtons: () => void;
+  eqn: Equation;
+  _eqn: DiagramElementCollection;
+} & DiagramElementCollection;
 
 export default function makeEquationNavigator(
   diagram: Diagram,
