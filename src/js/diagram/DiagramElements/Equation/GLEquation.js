@@ -1596,7 +1596,7 @@ export class EquationForm extends Elements {
       } = mods;
       if (element != null) {
         if (color != null) {
-          element.animateColorToWithDelay(cumTime, color, moveTime);
+          element.animateColorToWithDelay(color, cumTime, moveTime);
         }
         if (style != null) {
           element.animate.transform.translation.style = style;

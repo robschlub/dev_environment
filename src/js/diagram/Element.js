@@ -283,6 +283,7 @@ class ColorAnimationPhase {
     // console.log(element.name, this.disolve)
     if (this.disolve === 'in') {
       this.startColor[3] = 0.01;
+      element.setColor(this.startColor.slice());
       element.show();
     }
     this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
