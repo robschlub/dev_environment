@@ -1367,6 +1367,8 @@ class DiagramElement {
       return;
     }
     const targetColor = this.color.slice();
+    if (this.name === 'Area') { console.log("A", this.isShown, targetColor) }
+    if (this.name === '_1') { console.log("1", this.isShown, targetColor) }
     this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
     const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);

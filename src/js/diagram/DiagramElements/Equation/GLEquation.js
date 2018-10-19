@@ -1505,13 +1505,17 @@ export class EquationForm extends Elements {
     const elementsToShow = this.getAllElements();
     let cumTime = delay;
 
-    let disolveOutCallback = this.setPositions.bind(this);
+    let disolveOutCallback = () => {
+      this.setPositions.bind(this)
+      console.log(this.collection._Area.isShown, this.collection.__1.isShown)
+    };
     if (elementsToShow.length === 0) {
       disolveOutCallback = () => {
         this.setPositions();
         if (callback != null) {
           callback();
         }
+
       };
     }
 
@@ -1520,15 +1524,22 @@ export class EquationForm extends Elements {
         elementsShown, false, delay, hideTime,
         disolveOutCallback,
       );
-      cumTime += hideTime;
+      cumTime += hideTime + 0.5;
     } else {
       this.setPositions();
     }
-
+    console.log(cumTime, showTime, elementsToShow)
+    const end = () => {
+      console.log('asdf')
+      if (callback != null) {
+        callback();
+      }
+      
+    }
     if (elementsToShow.length > 0) {
       this.dissolveElements(
         elementsToShow, true, cumTime, showTime,
-        callback,
+        end,
       );
     }
 
@@ -2095,7 +2106,7 @@ export class Equation {
     name: ?string | number = null,
     time: number = 2,
     delay: number = 0,
-    animate: boolean = true,
+    animate: boolean = false,
   ) {
     if (this.isAnimating) {
       this.collection.stop(true, true);
