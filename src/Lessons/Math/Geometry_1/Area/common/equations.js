@@ -66,9 +66,9 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     eqnDescription,
     new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
-  // eqn.setElem('_1_1', null, false, 'up', 0.5);
-  // eqn.setElem('m1', null, false, 'up', 0.5);
-  // eqn.setElem('mul1', null, false, 'up', 0.5);
+  eqn.setElem('_1_1', null, false, 'up', 0.5);
+  eqn.setElem('m1', null, false, 'up', 0.5);
+  eqn.setElem('mul1', null, false, 'up', 0.5);
   eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'middle';
@@ -83,41 +83,62 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     'Area',
     'equals',
     '_6', 'mul1', '_1_1', 'm1', 'mul', '_10', 'mul2', '_1_2', 'm2',
-  ]);
+  ], 'base', true, {
+    m1: [null, 'linear'],
+    _1_1: [null, 'linear'],
+    mul1: [null, 'linear'],
+  }, '1');
 
   eqn.addForm('2', [
     'Area',
     'equals',
     '_6', 'mul', '_10', 'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
-  ]);
+  ], 'base', true, {
+    m1: [null, 'curved', 'up', 0.5],
+    _1_1: [null, 'curved', 'up', 0.5],
+    mul1: [null, 'curved', 'up', 0.5],
+  }, '2');
 
   eqn.addForm('3', [
     'Area',
     'equals',
     '_6', 'mul', '_10', 'mul2',
     eqn.strike('_1_2', 's1'), 'm2', 'mul1', eqn.strike('_1_1', 's2'), 'm1',
-  ]);
+  ], 'base', true, {
+    m1: [null, 'linear'],
+    _1_1: [null, 'linear'],
+    mul1: [null, 'linear'],
+  }, '3');
 
   eqn.addForm('4', [
     'Area',
     'equals',
     '_6', 'mul', '_10', 'mul2',
     'm2', 'mul1', 'm1',
-  ]);
+  ], 'base', true, {
+    m1: [null, 'linear'],
+    _1_1: [null, 'linear'],
+  }, '4');
 
   eqn.addForm('5', [
     'Area',
     'equals',
     '_6', 'mul', '_10', 'mul2',
-    eqn.sup('m2', '_2'), eqn.strike(['mul1', 'm1'], 's2'),
-  ]);
+    eqn.sup('m2', '_2'), eqn.strike(['mul1', 'm1'], 's2', false),
+  ], 'base', true, {
+    m1: [null, 'linear'],
+    _1_1: [null, 'linear'],
+  });
 
   eqn.addForm('6', [
     'Area',
     'equals',
     '_6', 'mul', '_10', 'mul2',
     eqn.sup('m2', '_2'),
-  ]);
+  ], 'base', true, {
+    m1: [null, 'linear'],
+    _1_1: [null, 'linear'],
+  });
 
   // eqn.addForm('1', [
   //   eqn.annotation(

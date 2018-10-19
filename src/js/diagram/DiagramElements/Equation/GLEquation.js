@@ -1234,6 +1234,7 @@ export type TypeEquationForm = {
   description: string | null;
   modifiers: Object;
   type: string;
+  elementMods: Object;
 } & Elements;
 
 export class EquationForm extends Elements {
@@ -1242,12 +1243,14 @@ export class EquationForm extends Elements {
   type: string;
   description: string | null;
   modifiers: Object;
+  elementMods: Object;
 
   constructor(collection: DiagramElementCollection) {
     super([]);
     this.collection = collection;
     this.description = null;
     this.modifiers = {};
+    this.elementMods = {};
   }
 
   _dup(collection: DiagramElementCollection = this.collection) {
@@ -1521,6 +1524,28 @@ export class EquationForm extends Elements {
     } else {
       disolveInCallback = callback;
     }
+
+    Object.keys(this.elementMods).forEach((elementName) => {
+      const mods = this.elementMods[elementName];
+      const {
+        element, color, style, direction, mag,
+      } = mods;
+      if (element != null) {
+        if (color != null) {
+          element.setColor(color);
+        }
+        if (style != null) {
+          element.animate.transform.translation.style = style;
+        }
+        if (direction != null) {
+          element.animate.transform.translation.options.direction = direction;
+        }
+        if (mag != null) {
+          element.animate.transform.translation.options.magnitude = mag;
+        }
+      }
+      console.log(element, element.animate.transform.translation)
+    });
 
     if (elementsToHide.length > 0) {
       this.dissolveElements(elementsToHide, false, delay, disolveOutTime, null);
@@ -1853,6 +1878,7 @@ export class Equation {
     content: Array<Elements | Element | string>,
     formType: string = 'base',
     addToSeries: boolean = true,
+    elementMods: Object = {},
     description: string = '',
     modifiers: Object = {},
   ) {
@@ -1866,7 +1892,20 @@ export class Equation {
     this.form[name][formType].description = description;
     this.form[name][formType].modifiers = modifiers;
     this.form[name][formType].type = formType;
-
+    this.form[name][formType].elementMods = {};
+    Object.keys(elementMods).forEach((elementName) => {
+      const diagramElement = getDiagramElement(this.collection, elementName);
+      if (diagramElement) {
+        const [color, style, direction, mag] = elementMods[elementName];
+        this.form[name][formType].elementMods[elementName] = {
+          element: diagramElement,
+          color,
+          style,
+          direction,
+          mag,
+        };
+      }
+    });
     const form = this.form[name][formType];
     form.createEq(content);
     form.type = formType;
