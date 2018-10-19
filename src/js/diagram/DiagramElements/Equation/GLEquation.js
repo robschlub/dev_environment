@@ -1222,7 +1222,7 @@ export type TypeEquationForm = {
   ) => void;
   dissolveElements: (
     Array<DiagramElementPrimative | DiagramElementCollection>,
-    boolean, number, number, ?(?mixed)) => void;
+    boolean, number, number, ?(?boolean)) => void;
   getElementsToShowAndHide: () => void;
   showHide: (number, number, ?(?mixed)) => void;
   hideShow: (number, number, ?(?mixed)) => void;
@@ -1370,40 +1370,30 @@ export class EquationForm extends Elements {
   // eslint-disable-next-line class-methods-use-this
   dissolveElements(
     elements: Array<DiagramElementPrimative | DiagramElementCollection>,
-    appear: boolean = true,
+    disolve: 'in' | 'out' = 'in',
     delay: number = 0.01,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ) {
-    let callbackToUse = callback;
     if (elements.length === 0) {
       if (callback) {
-        callback();
+        callback(false);
+        return;
       }
     }
-    // console.log(delay, appear)
-    // const delayToUse = delay === 0 ? 0.001 : delay;
-    elements.forEach((e) => {
-      // console.log(e.name, e.color.slice())
-      if (appear) {
-        if (delay > 0 || time > 0) {
-          e.disolveInWithDelay(delay, time, callbackToUse);
-          callbackToUse = null;
-        } else if (e instanceof DiagramElementPrimative) {
-          e.show();
-        } else {
-          e.showAll();
+    const count = elements.length;
+    let completed = 0;
+    const end = (cancelled: boolean) => {
+      completed += 1;
+      if (completed === count - 1) {
+        if (callback) {
+          callback(cancelled);
         }
-      } else if (delay > 0 || time > 0) {
-        e.disolveOutWithDelay(delay, time, callbackToUse);
-        callbackToUse = null;
-      } else {
-        e.hide();
       }
+    };
+    elements.forEach((e) => {
+      e.disolveWithDelay(delay, time, disolve, end);
     });
-    if (callbackToUse != null) {
-      callbackToUse();
-    }
   }
 
   getElementsToShowAndHide() {
@@ -1454,13 +1444,13 @@ export class EquationForm extends Elements {
         }
       });
     } else {
-      this.dissolveElements(show, true, 0.01, showTime, null);
+      this.dissolveElements(show, 'in', 0.01, showTime, null);
     }
 
     if (hideTime === 0) {
       hide.forEach(e => e.hide());
     } else {
-      this.dissolveElements(hide, false, showTime, hideTime, callback);
+      this.dissolveElements(hide, 'out', showTime, hideTime, callback);
     }
   }
 
@@ -1475,7 +1465,7 @@ export class EquationForm extends Elements {
     if (hideTime === 0) {
       hide.forEach(e => e.hide());
     } else {
-      this.dissolveElements(hide, false, 0.01, hideTime, null);
+      this.dissolveElements(hide, 'out', 0.01, hideTime, null);
     }
     if (showTime === 0) {
       show.forEach((e) => {
@@ -1489,7 +1479,7 @@ export class EquationForm extends Elements {
         callback();
       }
     } else {
-      this.dissolveElements(show, true, hideTime, showTime, callback);
+      this.dissolveElements(show, 'in', hideTime, showTime, callback);
     }
   }
 
@@ -1497,7 +1487,7 @@ export class EquationForm extends Elements {
     delay: number = 0,
     hideTime: number = 0.5,
     showTime: number = 0.5,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ) {
     this.collection.stop();
     const allElements = this.collection.getAllElements();
@@ -1506,46 +1496,40 @@ export class EquationForm extends Elements {
     let cumTime = delay;
 
     let disolveOutCallback = () => {
-      this.setPositions.bind(this)
-      console.log(this.collection._Area.isShown, this.collection.__1.isShown)
+      this.setPositions.bind(this);
     };
     if (elementsToShow.length === 0) {
-      disolveOutCallback = () => {
+      disolveOutCallback = (cancelled: boolean) => {
         this.setPositions();
         if (callback != null) {
-          callback();
+          callback(cancelled);
         }
-
       };
     }
 
     if (elementsShown.length > 0) {
       this.dissolveElements(
-        elementsShown, false, delay, hideTime,
+        elementsShown, 'out', delay, hideTime,
         disolveOutCallback,
       );
       cumTime += hideTime + 0.5;
     } else {
       this.setPositions();
     }
-    console.log(cumTime, showTime, elementsToShow)
-    const end = () => {
-      console.log('asdf')
+    // console.log(cumTime, showTime, elementsToShow)
+    const end = (cancelled: boolean) => {
       if (callback != null) {
-        callback();
+        callback(cancelled);
       }
-      
-    }
+    };
     if (elementsToShow.length > 0) {
       this.dissolveElements(
-        elementsToShow, true, cumTime, showTime,
-        end,
+        elementsToShow, 'in', cumTime, showTime, end,
       );
     }
-
     if (elementsToShow.length === 0 && elementsShown.length === 0) {
       if (callback != null) {
-        callback();
+        callback(false);
       }
     }
   }
@@ -1585,7 +1569,7 @@ export class EquationForm extends Elements {
     }
 
     if (elementsToHide.length > 0) {
-      this.dissolveElements(elementsToHide, false, delay, disolveOutTime, null);
+      this.dissolveElements(elementsToHide, 'out', delay, disolveOutTime, null);
       cumTime += disolveOutTime;
     }
 
@@ -1620,8 +1604,9 @@ export class EquationForm extends Elements {
     if (t > 0) {
       cumTime = t;
     }
+
     if (elementsToShow.length > 0) {
-      this.dissolveElements(elementsToShow, true, cumTime, disolveInTime, disolveInCallback);
+      this.dissolveElements(elementsToShow, 'in', cumTime, disolveInTime, disolveInCallback);
       cumTime += disolveInTime + 0.001;
     }
     return cumTime;
@@ -1650,9 +1635,9 @@ export class EquationForm extends Elements {
     this.arrange(scale, xAlign, yAlign, fixElement);
     const animateToTransforms = this.collection.getElementTransforms();
     this.collection.setElementTransforms(currentTransforms);
-    this.dissolveElements(elementsToHide, false, 0.001, 0.01, null);
+    this.dissolveElements(elementsToHide, 'out', 0.001, 0.01, null);
     this.collection.animateToTransforms(animateToTransforms, time, 0);
-    this.dissolveElements(elementsToShow, true, time, 0.5, callback);
+    this.dissolveElements(elementsToShow, 'in', time, 0.5, callback);
   }
 
   sfrac(

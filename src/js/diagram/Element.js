@@ -14,7 +14,7 @@ import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import { TextObject } from './DrawingObjects/TextObject/TextObject';
 import { colorArrayToRGBA, duplicateFromTo } from '../tools/tools';
 
-function checkCallback(callback: ?(?mixed) => void): (?mixed) => void {
+function checkCallback(callback: ?(?mixed | boolean) => void): (?mixed) => void {
   let callbackToUse = () => {};
   if (typeof callback === 'function') {
     callbackToUse = callback;
@@ -226,28 +226,29 @@ class ColorAnimationPhase {
   animationStyle: (number) => number; // Animation style
 
   startTime: number;                 // Time when phase started
-  startColor: Array<number>;
+  startColor: Array<number> | null;
   deltaColor: Array<number>;
   disolve: 'in' | 'out' | null;
   finishOnCancel: boolean;
   // callbackOnCancel: boolean;
 
-  callback: ?(?boolean) => void;
+  callback: ?(boolean) => void;
   endColor: Array<number>;
 
   constructor(
-    color: Array<number> = [0, 0, 0, 1],
+    startColor: Array<number> | null = null,
+    targetColor: Array<number> = [0, 0, 0, 1],
     time: number = 1,
     disolve: 'in' | 'out' | null = null,
-    callback: ?(?boolean) => void = null,
+    callback: ?(boolean) => void = null,
     finishOnCancel: boolean = true,
     // callbackOnCancel: boolean = true,
     animationStyle: (number) => number = tools.linear,
   ) {
-    this.targetColor = color.slice();
-    this.endColor = color.slice();
+    this.targetColor = targetColor.slice();
+    this.endColor = targetColor.slice();
     if (disolve === 'out') {
-      this.targetColor[3] = 0;
+      this.targetColor[3] = 0.01;
     }
     this.time = time;
     this.animationStyle = animationStyle;
@@ -256,13 +257,14 @@ class ColorAnimationPhase {
     // this.callbackOnCancel = callbackOnCancel;
 
     this.startTime = -1;
-    this.startColor = [0, 0, 0, 1];
+    this.startColor = startColor;
     this.deltaColor = [0, 0, 0, 1];
     this.callback = callback;
   }
 
   _dup() {
     const c = new ColorAnimationPhase(
+      this.startColor,
       this.targetColor,
       this.time,
       this.disolve,
@@ -272,14 +274,16 @@ class ColorAnimationPhase {
       this.animationStyle,
     );
     c.startTime = this.startTime;
-    this.startColor = this.startColor.slice();
-    this.deltaColor = this.deltaColor.slice();
+    // this.startColor = this.startColor.slice();
+    c.deltaColor = this.deltaColor.slice();
     return c;
   }
 
   // eslint-disable-next-line no-use-before-define
   start(element: DiagramElement) {
-    this.startColor = element.color.slice();
+    if (this.startColor === null) {
+      this.startColor = element.color.slice();
+    }
     // console.log(element.name, this.disolve)
     if (this.disolve === 'in') {
       this.startColor[3] = 0.01;
@@ -435,7 +439,7 @@ class DiagramElement {
     color: {
       toDisolve: '' | 'in' | 'out';
       plan: Array<ColorAnimationPhase>;
-      callback: ?(?mixed) => void;
+      callback: ?(?boolean) => void;
     };
   }
 
@@ -979,7 +983,6 @@ class DiagramElement {
           // this.setColor(this.calcNextAnimationColor(phase.time));
           // Phase callback
           phase.finish(this);
-
           // Get the amount of time that has elapsed in the next phase
           const nextPhaseDeltaTime = deltaTime - phase.time;
 
@@ -1308,7 +1311,7 @@ class DiagramElement {
   animateColorTo(
     color: Array<number>,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(?boolean) => void = null,
     finishOnCancel: boolean = true,
     easeFunction: (number) => number = tools.linear,
     // callbackOnCancel: boolean = true,
@@ -1330,7 +1333,7 @@ class DiagramElement {
     delay: number,
     time: number = 1,
     disolve: 'in' | 'out' | null = null,
-    callback: ?(?boolean) => void = null,
+    callback: ?(boolean) => void = null,
     finishOnCancel: boolean = true,
     easeFunction: (number) => number = tools.linear,
     addToExistingPlan: boolean = true,
@@ -1349,7 +1352,7 @@ class DiagramElement {
     let delayCallback = null;
     let colorCallback = callbackToUse;
     if (time === 0) {
-      delayCallback = (cancelled: ?boolean) => {
+      delayCallback = (cancelled: boolean) => {
         if (!cancelled && finishOnCancel) {
           this.setColor(color);
         }
@@ -1358,14 +1361,17 @@ class DiagramElement {
       colorCallback = null;
     }
     if (delay > 0) {
-      const delayColor = this.color.slice();
+      let delayColor = this.color.slice();
+      if (addToExistingPlan && this.animate.color.plan.length > 0) {
+        delayColor = this.animate.color.plan.slice(-1)[0].targetColor.slice();
+      }
       if (disolve === 'in') {
         delayColor[3] = 0.01;
         this.setColor(delayColor);
         this.show();
       }
       phaseDelay = new ColorAnimationPhase(
-        delayColor, delay, null, delayCallback,
+        delayColor, delayColor, delay, null, delayCallback,
         finishOnCancel, tools.linear,
       );
       phases.push(phaseDelay);
@@ -1373,7 +1379,7 @@ class DiagramElement {
 
     if (time > 0) {
       phaseColor = new ColorAnimationPhase(
-        color, time, disolve, colorCallback,
+        null, color, time, disolve, colorCallback,
         finishOnCancel, easeFunction,
       );
       phases.push(phaseColor);
@@ -1391,63 +1397,32 @@ class DiagramElement {
   disolveOutWithDelay(
     delay: number = 1,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     this.animateColorToWithDelay(
       this.color, delay, time, 'out', callback,
     );
-    // if (time === 0 && delay === 0) {
-    //   this.hide();
-    //   if (callback != null) {
-    //     callback();
-    //   }
-    //   return;
-    // }
-
-    // const targetColor = this.color.slice();
-    // targetColor[3] = 0;
-    // const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
-    // const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
-    // this.animate.color.toDisolve = 'out';
-    // if (delay === 0 && time > 0) {
-    //   this.animateColorPlan([phaseMove], checkCallback(callback));
-    // } else if (delay > 0 && time === 0) {
-    //   this.animateColorPlan([phaseDelay], checkCallback(callback));
-    // } else {
-    //   this.animateColorPlan([phaseDelay, phaseMove], checkCallback(callback));
-    // }
   }
 
   disolveInWithDelay(
     delay: number = 1,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     this.animateColorToWithDelay(
       this.color, delay, time, 'in', callback,
     );
-    // this.show();
-    // if (delay === 0 && time === 0) {
-    //   if (callback != null) {
-    //     callback();
-    //   }
-    //   return;
-    // }
-    // const targetColor = this.color.slice();
-    // // if (this.name === 'Area') { console.log("A", this.isShown, targetColor) }
-    // // if (this.name === '_1') { console.log("1", this.isShown, targetColor) }
-    // this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
-    // const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
-    // const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
-    // this.animate.color.toDisolve = 'in';
+  }
 
-    // if (delay === 0 && time > 0) {
-    //   this.animateColorPlan([phaseMove], checkCallback(callback));
-    // } else if (delay > 0 && time === 0) {
-    //   this.animateColorPlan([phaseDelay], checkCallback(callback));
-    // } else {
-    //   this.animateColorPlan([phaseDelay, phaseMove], checkCallback(callback));
-    // }
+  disolveWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    disolve: 'in' | 'out' = 'in',
+    callback: ?(boolean) => void = null,
+  ): void {
+    this.animateColorToWithDelay(
+      this.color, delay, time, disolve, callback,
+    );
   }
 
   // disolveWithDelay(
@@ -2803,10 +2778,23 @@ class DiagramElementCollection extends DiagramElement {
     return elements;
   }
 
+
+  disolveWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    disolve: 'in' | 'out' = 'in',
+    callback: ?(boolean) => void = null,
+  ): void {
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      element.disolveInWithDelay(delay, time, disolve, callback);
+    }
+  }
+
   disolveInWithDelay(
     delay: number = 1,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
@@ -2817,7 +2805,7 @@ class DiagramElementCollection extends DiagramElement {
   disolveOutWithDelay(
     delay: number = 1,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
@@ -2828,7 +2816,7 @@ class DiagramElementCollection extends DiagramElement {
   // deprecate
   disolveElementsOut(
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
@@ -2843,7 +2831,7 @@ class DiagramElementCollection extends DiagramElement {
   // deprecate
   disolveElementsIn(
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];

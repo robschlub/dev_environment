@@ -68,16 +68,11 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'middle';
   eqn.formAlignment.scale = 1.0;
-
+  eqn.collection.__1.asdf = true;
   eqn.addForm('0', [
     'Area',
     'equals',
     '_6', 'm', 'mul_', '_10', 'm_',
-  ]);
-  eqn.addForm('0a', [
-    'Area',
-    'equals',
-    '_6', 'm', 'mul_', '_10', 'm_', 'mul__',
   ]);
 
   eqn.addForm('1', [
