@@ -103,38 +103,36 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
   eqn.addForm('2a', [
     'Area',
     'equals',
-    eqn.strike('_6', 's1'),
-    'mul',
-    eqn.strike('_10'),
+    eqn.annotation(
+      eqn.strike(['_6', 'mul', '_10'], 's1'),
+      [eqn.ann('_60', 'center', 'top', 'center', 'bottom')],
+    ),
     'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
   ], 'base', true, {
-    m1: [colUnit, 'curved', 'up', 0.5],
-    _1_1: [null, 'curved', 'up', 0.5],
-    mul1: [null, 'curved', 'up', 0.5],
+    m1: [null, 'linear'],
+    _1_1: [null, 'linear'],
+    mul1: [null, 'linear'],
   }, '2a');
 
-  eqn.addForm('2b', [
-    'Area',
-    'equals',
-    eqn.strike('_6', 's1'),
-    'mul',
-    eqn.strike('_10'),
-    'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
-  ], 'base', true, {
-    m1: [colUnit, 'curved', 'up', 0.5],
-    _1_1: [null, 'curved', 'up', 0.5],
-    mul1: [null, 'curved', 'up', 0.5],
-  }, '2b');
+  // eqn.addForm('2b', [
+  //   'Area',
+  //   'equals',
+  //   eqn.annotation(
+  //     eqn.strike(['_6', 'mul', '_10'], 's1'),
+  //     [eqn.ann('_60', 'center', 'top', 'center', 'bottom')],
+  //   ),
+  //   'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
+  // ], 'base', true, {
+  //   m1: [colUnit, 'curved', 'up', 0.5],
+  //   _1_1: [null, 'curved', 'up', 0.5],
+  //   mul1: [null, 'curved', 'up', 0.5],
+  // }, '2b');
 
   eqn.addForm('2c', [
     'Area',
     'equals',
     '_60', 'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
-  ], 'base', true, {
-    m1: [colUnit, 'curved', 'up', 0.5],
-    _1_1: [null, 'curved', 'up', 0.5],
-    mul1: [null, 'curved', 'up', 0.5],
-  }, '2');
+  ]);
 
   eqn.addForm('3', [
     'Area',
