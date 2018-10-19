@@ -42,23 +42,20 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
 
   const colUnit = layout.colors.unit;
   const colText = layout.colors.diagram.text.base;
-  const colDis = layout.colors.diagram.disabled;
   eqn.createElements(
     {
       Area: ['Area', colUnit],
       _6: '6',
       _10: '10',
       _60: '60',
-      _1_1: ['1', colText, false, null, 'up', 0.5],
+      _1_1: '1',
       _1_2: '1',
       _2: '2',
-      m1: ['m', colUnit, false, null, 'up', 0.5],
+      m1: ['m', colUnit],
       m2: ['m', colUnit],
       mul: '  \u00D7  ',
-      mul1: [' \u00D7 ', colText, false, null, 'up', 0.5],
+      mul1: ' \u00D7 ',
       mul2: ' \u00D7 ',
-      // plus1: '  + ',
-      // plus2: '  + ',
       s1: diagram.equation.xStrike(strikeColor),
       s2: diagram.equation.xStrike(strikeColor),
       equals: ' = ',
@@ -67,13 +64,11 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     eqnDescription,
     new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
-  eqn.setElem('_1_1', null, false, 'up', 0.5);
-  eqn.setElem('m1', null, false, 'up', 0.5);
-  eqn.setElem('mul1', null, false, 'up', 0.5);
   eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'middle';
   eqn.formAlignment.scale = 1.0;
+
   eqn.addForm('0', [
     'Area',
     'equals',
@@ -95,12 +90,12 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     'equals',
     '_6', 'mul', '_10', 'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
   ], 'base', true, {
-    m1: [colUnit, 'curved', 'up', 0.5],
-    _1_1: [null, 'curved', 'up', 0.5],
-    mul1: [null, 'curved', 'up', 0.5],
+    m1: [colUnit, 'curved', 'up', 0.7],
+    _1_1: [null, 'curved', 'up', 0.7],
+    mul1: [null, 'curved', 'up', 0.7],
   }, '2');
 
-  eqn.addForm('2a', [
+  eqn.addForm('3', [
     'Area',
     'equals',
     eqn.annotation(
@@ -114,27 +109,13 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     mul1: [null, 'linear'],
   }, '2a');
 
-  // eqn.addForm('2b', [
-  //   'Area',
-  //   'equals',
-  //   eqn.annotation(
-  //     eqn.strike(['_6', 'mul', '_10'], 's1'),
-  //     [eqn.ann('_60', 'center', 'top', 'center', 'bottom')],
-  //   ),
-  //   'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
-  // ], 'base', true, {
-  //   m1: [colUnit, 'curved', 'up', 0.5],
-  //   _1_1: [null, 'curved', 'up', 0.5],
-  //   mul1: [null, 'curved', 'up', 0.5],
-  // }, '2b');
-
-  eqn.addForm('2c', [
+  eqn.addForm('4', [
     'Area',
     'equals',
     '_60', 'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
   ]);
 
-  eqn.addForm('3', [
+  eqn.addForm('5', [
     'Area',
     'equals',
     '_60',
@@ -150,7 +131,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     mul1: [null, 'linear'],
   }, '3');
 
-  eqn.addForm('4', [
+  eqn.addForm('6', [
     'Area',
     'equals',
     '_60', 'mul2',
@@ -160,7 +141,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     _1_1: [null, 'linear'],
   }, '4');
 
-  eqn.addForm('5', [
+  eqn.addForm('7', [
     'Area',
     'equals',
     '_60', 'mul2',
@@ -170,7 +151,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     _1_1: [null, 'linear'],
   }, '5');
 
-  eqn.addForm('6', [
+  eqn.addForm('8', [
     'Area',
     'equals',
     '_60',
@@ -179,123 +160,6 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     m1: [null, 'linear'],
     _1_1: [null, 'linear'],
   });
-
-  // eqn.addForm('7', [
-  //   'Area',
-  //   'equals',
-  //   '_60',
-  //   eqn.sup('m1', '_2'),
-  // ], 'base', true, {
-  //   m1: [null, 'linear'],
-  //   _1_1: [null, 'linear'],
-  // });
-
-  // eqn.addForm('1', [
-  //   eqn.annotation(
-  //     ['a', 'plus1', 'b', 'plus2', '_90'],
-  //     [eqn.ann('m90l', 'center', -0.4, 'center', 'top')],
-  //   ),
-  //   'equals',
-  //   eqn.annotation(
-  //     '_180',
-  //     [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
-  //   ),
-  // ]);
-
-  // eqn.addForm('2a', [
-  //   eqn.annotation(
-  //     ['a', 'plus1', 'b', 'plus2', eqn.strike('_90', 'strike1')],
-  //     [
-  //       eqn.ann(
-  //         eqn.strike('m90l', 'strike3'),
-  //         'center', -0.4, 'center', 'top',
-  //       ),
-  //       eqn.ann(
-  //         'calc0',
-  //         'right', 1.4, 'left', 'bottom',
-  //       ),
-  //     ],
-  //   ),
-  //   'equals',
-  //   eqn.annotation(
-  //     '_180',
-  //     [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
-  //   ),
-  // ]);
-
-  // eqn.addForm('2b', [
-  //   'a', 'plus1', 'b', 'equals',
-  //   eqn.annotation(
-  //     '_180',
-  //     [eqn.ann('m90r', 'center', -0.4, 'center', 'top')],
-  //   ),
-  // ]);
-
-  // eqn.addForm('2c', [
-  //   'a', 'plus1', 'b', 'equals',
-  //   eqn.annotation(
-  //     eqn.strike('_180', 'strike2'),
-  //     [
-  //       eqn.ann(
-  //         eqn.strike('m90r', 'strike4'),
-  //         'center', -0.4, 'center', 'top',
-  //       ),
-  //       eqn.ann(
-  //         'calc90',
-  //         'right', 1.4, 'left', 'bottom',
-  //       ),
-  //     ],
-  //   ),
-  // ]);
-
-  // eqn.addForm('3', [
-  //   'a', 'plus1', 'b',
-  //   'equals',
-  //   'calc90',
-  // ]);
-
-  // eqn.addForm('4', [
-  //   eqn.annotation(
-  //     ['a', 'plus1', 'b'],
-  //     [eqn.ann(['ml', 'al'], 'center', -0.4, 'center', 'top')],
-  //   ),
-  //   'equals',
-  //   eqn.annotation(
-  //     'calc90',
-  //     [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
-  //   ),
-  // ]);
-
-  // eqn.addForm('5', [
-  //   eqn.annotation(
-  //     [eqn.strike('a', 'strike1'), 'plus1', 'b'],
-  //     [eqn.ann(
-  //       eqn.strike(['ml', 'al'], 'strike2'),
-  //       'center', -0.4, 'center', 'top',
-  //     )],
-  //   ),
-  //   'equals',
-  //   eqn.annotation(
-  //     'calc90',
-  //     [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
-  //   ),
-  // ]);
-
-  // eqn.addForm('5a', [
-  //   'b',
-  //   'equals',
-  //   eqn.annotation(
-  //     'calc90',
-  //     [eqn.ann(['mr', 'ar'], 'center', -0.4, 'center', 'top')],
-  //   ),
-  // ]);
-
-  // eqn.addForm('6', [
-  //   'b',
-  //   'equals',
-  //   'calc90',
-  //   'mr', 'ar',
-  // ]);
 
   const nextForm = () => {
     eqn.nextForm(2);
