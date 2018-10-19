@@ -102,8 +102,15 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
   eqn.addForm('3', [
     'Area',
     'equals',
-    '_6', 'mul', '_10', 'mul2',
-    eqn.strike('_1_2', 's1'), 'm2', 'mul1', eqn.strike('_1_1', 's2'), 'm1',
+    '_6',
+    'mul',
+    '_10',
+    'mul2',
+    eqn.strike('_1_2', 's1'),
+    'm2',
+    'mul1',
+    eqn.strike('_1_1', 's2'),
+    'm1',
   ], 'base', true, {
     m1: [null, 'linear'],
     _1_1: [null, 'linear'],

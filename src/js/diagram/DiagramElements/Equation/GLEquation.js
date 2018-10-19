@@ -758,7 +758,7 @@ class SuperSub extends Elements {
     if (superscript !== null) {
       const superLoc = new Point(
         this.location.x + this.mainContent.width + this.xBias,
-        this.location.y + this.mainContent.ascent - scale / 3,
+        this.location.y + this.mainContent.ascent * 0.8,
       );
       superscript.calcSize(superLoc, scale / 2);
       w = Math.max(
@@ -777,9 +777,11 @@ class SuperSub extends Elements {
 
     const { subscript } = this;
     if (subscript !== null) {
+      // TODO - y location should be minus the height of an "m" or "a" not
+      // the height of the main content.
       const subLoc = new Point(
         this.location.x + this.mainContent.width - this.subscriptXBias + this.xBias,
-        this.location.y - this.mainContent.descent,
+        this.location.y - this.mainContent.height * 0.5,
       );
       subscript.calcSize(subLoc, scale / 2);
       w = Math.min(
