@@ -228,25 +228,39 @@ class ColorAnimationPhase {
   startTime: number;                 // Time when phase started
   startColor: Array<number>;
   deltaColor: Array<number>;
+  disolve: 'in' | 'out' | null;
+
+  callback: ?(?mixed) => void;
+  endColor: Array<number>;
 
   constructor(
     color: Array<number> = [0, 0, 0, 1],
     time: number = 1,
-    animationStyle: (number) => number = tools.easeinout,
+    disolve: 'in' | 'out' | null = null,
+    callback: ?(?mixed) => void = null,
+    animationStyle: (number) => number = tools.linear,
   ) {
     this.targetColor = color.slice();
+    this.endColor = color.slice();
+    if (disolve === 'out') {
+      this.targetColor[3] = 0;
+    }
     this.time = time;
     this.animationStyle = animationStyle;
+    this.disolve = disolve;
 
     this.startTime = -1;
     this.startColor = [0, 0, 0, 1];
     this.deltaColor = [0, 0, 0, 1];
+    this.callback = callback;
   }
 
   _dup() {
     const c = new ColorAnimationPhase(
       this.targetColor,
       this.time,
+      this.disolve,
+      this.callback,
       this.animationStyle,
     );
     c.startTime = this.startTime;
@@ -255,10 +269,28 @@ class ColorAnimationPhase {
     return c;
   }
 
-  start(currentColor: Array<number>) {
-    this.startColor = currentColor.slice();
+  // eslint-disable-next-line no-use-before-define
+  start(element: DiagramElement) {
+    this.startColor = element.color.slice();
+    if (this.disolve === 'in') {
+      this.startColor[3] = 0.01;
+    }
     this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
     this.startTime = -1;
+  }
+
+  // eslint-disable-next-line no-use-before-define
+  finish(element: DiagramElement) {
+    if (this.callback != null) {
+      this.callback();
+    }
+    element.setColor(this.endColor);
+    if (this.disolve === 'in') {
+      element.show();
+    }
+    if (this.disolve === 'out') {
+      element.hide();
+    }
   }
 }
 
@@ -923,6 +955,8 @@ class DiagramElement {
         if (this.state.colorAnimation.currentPhaseIndex < this.animate.color.plan.length - 1) {
           // Set current transform to the end of the current phase
           this.setColor(this.calcNextAnimationColor(phase.time));
+          // Phase callback
+          phase.finish();
 
           // Get the amount of time that has elapsed in the next phase
           const nextPhaseDeltaTime = deltaTime - phase.time;
@@ -1108,7 +1142,7 @@ class DiagramElement {
 
   animateColorPhase(index: number): void {
     this.state.colorAnimation.currentPhase = this.animate.color.plan[index];
-    this.state.colorAnimation.currentPhase.start(this.color.slice());
+    this.state.colorAnimation.currentPhase.start(this);
   }
 
   animateCustomPhase(index: number): void {
@@ -1245,10 +1279,12 @@ class DiagramElement {
     easeFunction: (number) => number = tools.linear,
     finishOnCancel: boolean = true,
   ): void {
-    const phase = new ColorAnimationPhase(color, time, easeFunction);
-    if (finishOnCancel) {
-      this.animate.color.toDisolve = 'in';
-    }
+    const phase = new ColorAnimationPhase(
+      color, time, null, callback, easeFunction,
+    );
+    // if (finishOnCancel) {
+    //   this.animate.color.toDisolve = 'in';
+    // }
     if (phase instanceof ColorAnimationPhase) {
       this.animateColorPlan([phase], checkCallback(callback));
     }
@@ -1261,6 +1297,7 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.linear,
     finishOnCancel: boolean = true,
+    addToExistingPlan: boolean = false,
   ): void {
     if (delay === 0 && time === 0) {
       if (callback != null) {
@@ -1347,6 +1384,17 @@ class DiagramElement {
     }
   }
 
+  disolveWithDelay(
+    disolve: 'in' | 'out',
+    delay: number,
+    time: number,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    if (disolve === 'in') {
+
+    }
+  }
+
   disolveIn(
     time: number = 1,
     callback: ?(?mixed) => void = null,
@@ -1367,8 +1415,8 @@ class DiagramElement {
       return;
     }
     const targetColor = this.color.slice();
-    if (this.name === 'Area') { console.log("A", this.isShown, targetColor) }
-    if (this.name === '_1') { console.log("1", this.isShown, targetColor) }
+    // if (this.name === 'Area') { console.log("A", this.isShown, targetColor) }
+    // if (this.name === '_1') { console.log("1", this.isShown, targetColor) }
     this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
     const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
     const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
