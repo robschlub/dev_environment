@@ -232,14 +232,14 @@ class ColorAnimationPhase {
   finishOnCancel: boolean;
   // callbackOnCancel: boolean;
 
-  callback: ?(?mixed) => void;
+  callback: ?(?boolean) => void;
   endColor: Array<number>;
 
   constructor(
     color: Array<number> = [0, 0, 0, 1],
     time: number = 1,
     disolve: 'in' | 'out' | null = null,
-    callback: ?(?mixed) => void = null,
+    callback: ?(?boolean) => void = null,
     finishOnCancel: boolean = true,
     // callbackOnCancel: boolean = true,
     animationStyle: (number) => number = tools.linear,
@@ -282,26 +282,34 @@ class ColorAnimationPhase {
     this.startColor = element.color.slice();
     if (this.disolve === 'in') {
       this.startColor[3] = 0.01;
+      element.show();
     }
     this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
     this.startTime = -1;
   }
 
-  // eslint-disable-next-line no-use-before-define
-  finish(element: DiagramElement, cancelled: boolean = false) {
+  finish(
+    // eslint-disable-next-line no-use-before-define
+    element: DiagramElement,
+    cancelled: boolean = false,
+    forceSetToEnd: ?boolean = null,
+  ) {
     if (this.callback != null) {
-      // if (!cancelled || this.callbackOnCancel) {
       this.callback(cancelled);
-      // }
     }
-    if (!cancelled || this.finishOnCancel) {
+    const setToEnd = () => {
       element.setColor(this.endColor);
-      if (this.disolve === 'in') {
-        element.show();
-      }
       if (this.disolve === 'out') {
         element.hide();
       }
+    };
+    if (forceSetToEnd === null) {
+      if (!cancelled || this.finishOnCancel) {
+        setToEnd();
+      }
+    }
+    if (forceSetToEnd === true) {
+      setToEnd();
     }
   }
 }
@@ -1186,6 +1194,7 @@ class DiagramElement {
 
   stopAnimatingColor(
     cancelled: boolean = true,
+    forceSetToEnd: ?boolean = null,   // null means use phase default
   ): void {
     if (this.animate.color.plan.length > 1
       && this.state.isAnimatingColor
@@ -1195,8 +1204,8 @@ class DiagramElement {
       const currentIndex = this.state.colorAnimation.currentPhaseIndex;
       const endIndex = this.animate.color.plan.length - 1;
       for (let i = currentIndex; i <= endIndex; i += 1) {
-        const phase = this.animateColorPlan[i];
-        phase.finish(this, cancelled);
+        const phase = this.animate.color.plan[i];
+        phase.finish(this, cancelled, forceSetToEnd);
       }
       // this.animateColorPhase(this.state.colorAnimation.currentPhaseIndex);
 
@@ -1302,64 +1311,143 @@ class DiagramElement {
     easeFunction: (number) => number = tools.linear,
     // callbackOnCancel: boolean = true,
   ): void {
-    const phase = new ColorAnimationPhase(
-      color, time, null, callback,
-      finishOnCancel, easeFunction,
-    );
-    if (phase instanceof ColorAnimationPhase) {
-      this.animateColorPlan([phase], checkCallback(callback));
-    }
-  }
-
-  animateColorToWithDelay(
-    delay: number,
-    color: Array<number>,
-    time: number = 1,
-    callback: ?(?mixed) => void = null,
-    easeFunction: (number) => number = tools.linear,
-    finishOnCancel: boolean = true,
-    // addToExistingPlan: boolean = false,
-  ): void {
-    if (delay === 0 && time === 0) {
-      if (callback != null) {
-        callback();
-      }
-      return;
-    }
-
-    let timeToUse = time;
-    if (time === 0) {
-      timeToUse = 0.0001;
-    }
-
-    const phaseDelay = new ColorAnimationPhase(
-      this.color.slice(), delay, null, null,
-      finishOnCancel, tools.linear,
-    );
-
-    const phaseChangeColor = new ColorAnimationPhase(
-      color, timeToUse, null, callback,
-      finishOnCancel, easeFunction,
-    );
-
-    // if (finishOnCancel) {
-    //   this.animate.color.toDisolve = 'in';
-    // }
-
-    if (delay === 0) {
-      this.animateColorPlan([phaseChangeColor]);
-    } else {
-      this.animateColorPlan([phaseDelay, phaseChangeColor]);
-    }
-
-    // const phase = new ColorAnimationPhase(color, time, easeFunction);
-    // if (finishOnCancel) {
-    //   this.animate.color.toDisolve = 'in';
-    // }
+    // const phase = new ColorAnimationPhase(
+    //   color, time, null, callback,
+    //   finishOnCancel, easeFunction,
+    // );
     // if (phase instanceof ColorAnimationPhase) {
     //   this.animateColorPlan([phase], checkCallback(callback));
     // }
+    this.animateColorToWithDelay(
+      color, 0, time, null, callback, finishOnCancel, easeFunction,
+    );
   }
+
+  animateColorToWithDelay(
+    color: Array<number>,
+    delay: number,
+    time: number = 1,
+    disolve: 'in' | 'out' | null = null,
+    callback: ?(?boolean) => void = null,
+    finishOnCancel: boolean = true,
+    easeFunction: (number) => number = tools.linear,
+    // addToExistingPlan: boolean = false,
+  ): void {
+    const callbackToUse = checkCallback(callback);
+    if (delay === 0 && time === 0) {
+      this.setColor(color);
+      callbackToUse(false);
+      return;
+    }
+
+    let phaseDelay = null;
+    let phaseColor = null;
+    const phases = [];
+
+    let delayCallback = null;
+    let colorCallback = callbackToUse;
+    if (time === 0) {
+      delayCallback = (cancelled: ?boolean) => {
+        if (!cancelled && finishOnCancel) {
+          this.setColor(color);
+        }
+        callbackToUse(cancelled);
+      };
+      colorCallback = null;
+    }
+    if (delay > 0) {
+      phaseDelay = new ColorAnimationPhase(
+        this.color.slice(), delay, null, delayCallback,
+        finishOnCancel, tools.linear,
+      );
+      phases.push(phaseDelay);
+    }
+
+    if (time > 0) {
+      phaseColor = new ColorAnimationPhase(
+        color, time, disolve, colorCallback,
+        finishOnCancel, easeFunction,
+      );
+      phases.push(phaseColor);
+    }
+
+    if (phases.length > 0) {
+      this.animateColorPlan(phases);
+    }
+  }
+
+  disolveOutWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    this.animateColorToWithDelay(
+      this.color, delay, time, 'out', callback,
+    );
+    // if (time === 0 && delay === 0) {
+    //   this.hide();
+    //   if (callback != null) {
+    //     callback();
+    //   }
+    //   return;
+    // }
+
+    // const targetColor = this.color.slice();
+    // targetColor[3] = 0;
+    // const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
+    // const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
+    // this.animate.color.toDisolve = 'out';
+    // if (delay === 0 && time > 0) {
+    //   this.animateColorPlan([phaseMove], checkCallback(callback));
+    // } else if (delay > 0 && time === 0) {
+    //   this.animateColorPlan([phaseDelay], checkCallback(callback));
+    // } else {
+    //   this.animateColorPlan([phaseDelay, phaseMove], checkCallback(callback));
+    // }
+  }
+
+  disolveInWithDelay(
+    delay: number = 1,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+  ): void {
+    this.animateColorToWithDelay(
+      this.color, delay, time, 'in', callback,
+    );
+    // this.show();
+    // if (delay === 0 && time === 0) {
+    //   if (callback != null) {
+    //     callback();
+    //   }
+    //   return;
+    // }
+    // const targetColor = this.color.slice();
+    // // if (this.name === 'Area') { console.log("A", this.isShown, targetColor) }
+    // // if (this.name === '_1') { console.log("1", this.isShown, targetColor) }
+    // this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
+    // const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
+    // const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
+    // this.animate.color.toDisolve = 'in';
+
+    // if (delay === 0 && time > 0) {
+    //   this.animateColorPlan([phaseMove], checkCallback(callback));
+    // } else if (delay > 0 && time === 0) {
+    //   this.animateColorPlan([phaseDelay], checkCallback(callback));
+    // } else {
+    //   this.animateColorPlan([phaseDelay, phaseMove], checkCallback(callback));
+    // }
+  }
+
+  // disolveWithDelay(
+  //   disolve: 'in' | 'out',
+  //   delay: number,
+  //   time: number,
+  //   callback: ?(?mixed) => void = null,
+  // ): void {
+  //   if (disolve === 'in') {
+
+  //   }
+  // }
 
   animateCustomTo(
     phaseCallback: (number) => void,
@@ -1408,17 +1496,6 @@ class DiagramElement {
     }
   }
 
-  disolveWithDelay(
-    disolve: 'in' | 'out',
-    delay: number,
-    time: number,
-    callback: ?(?mixed) => void = null,
-  ): void {
-    if (disolve === 'in') {
-
-    }
-  }
-
   disolveIn(
     time: number = 1,
     callback: ?(?mixed) => void = null,
@@ -1426,67 +1503,11 @@ class DiagramElement {
     this.disolveInWithDelay(0, time, callback);
   }
 
-  disolveInWithDelay(
-    delay: number = 1,
-    time: number = 1,
-    callback: ?(?mixed) => void = null,
-  ): void {
-    this.show();
-    if (delay === 0 && time === 0) {
-      if (callback != null) {
-        callback();
-      }
-      return;
-    }
-    const targetColor = this.color.slice();
-    // if (this.name === 'Area') { console.log("A", this.isShown, targetColor) }
-    // if (this.name === '_1') { console.log("1", this.isShown, targetColor) }
-    this.setColor([this.color[0], this.color[1], this.color[2], 0.01]);
-    const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
-    const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
-    this.animate.color.toDisolve = 'in';
-
-    if (delay === 0 && time > 0) {
-      this.animateColorPlan([phaseMove], checkCallback(callback));
-    } else if (delay > 0 && time === 0) {
-      this.animateColorPlan([phaseDelay], checkCallback(callback));
-    } else {
-      this.animateColorPlan([phaseDelay, phaseMove], checkCallback(callback));
-    }
-  }
-
   disolveOut(
     time: number = 1,
     callback: ?(?mixed) => void = null,
   ): void {
     this.disolveOutWithDelay(0, time, callback);
-  }
-
-  disolveOutWithDelay(
-    delay: number = 1,
-    time: number = 1,
-    callback: ?(?mixed) => void = null,
-  ): void {
-    if (time === 0 && delay === 0) {
-      this.hide();
-      if (callback != null) {
-        callback();
-      }
-      return;
-    }
-
-    const targetColor = this.color.slice();
-    targetColor[3] = 0;
-    const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
-    const phaseMove = new ColorAnimationPhase(targetColor, time, tools.linear);
-    this.animate.color.toDisolve = 'out';
-    if (delay === 0 && time > 0) {
-      this.animateColorPlan([phaseMove], checkCallback(callback));
-    } else if (delay > 0 && time === 0) {
-      this.animateColorPlan([phaseDelay], checkCallback(callback));
-    } else {
-      this.animateColorPlan([phaseDelay, phaseMove], checkCallback(callback));
-    }
   }
 
   // With update only first instace of translation in the transform order
@@ -1809,10 +1830,10 @@ class DiagramElement {
     }
   }
 
-  stop(flag: ?mixed, setToEndOfPlan: boolean = false) {
-    this.stopAnimating(flag, setToEndOfPlan);
-    this.stopAnimatingColor(flag, setToEndOfPlan);
-    this.stopAnimatingCustom(flag, setToEndOfPlan);
+  stop(flag: ?mixed, forceSetToEndOfPlan: boolean = false) {
+    this.stopAnimating(flag, forceSetToEndOfPlan);
+    this.stopAnimatingColor(flag, forceSetToEndOfPlan);
+    this.stopAnimatingCustom(flag, forceSetToEndOfPlan);
     this.stopMovingFreely(flag);
     this.stopBeingMoved();
     this.stopPulsing(flag);
