@@ -124,7 +124,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     'Area',
     'equals',
     '_6', 'mul', '_10', 'mul2',
-    eqn.sup('m2', '_2'), eqn.strike(['mul1', 'm1'], 's2', false),
+    eqn.strike('m2', 's2'), 'mul1', eqn.sup('m1', '_2'),
   ], 'base', true, {
     m1: [null, 'linear'],
     _1_1: [null, 'linear'],
@@ -134,7 +134,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     'Area',
     'equals',
     '_6', 'mul', '_10', 'mul2',
-    eqn.sup('m2', '_2'),
+    eqn.sup('m1', '_2'),
   ], 'base', true, {
     m1: [null, 'linear'],
     _1_1: [null, 'linear'],
