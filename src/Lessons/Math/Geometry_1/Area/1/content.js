@@ -320,11 +320,10 @@ class Content extends LessonContent {
         as: click(rect.toggleRow, [rect, null], colors.diagram.action),
       },
       show: [rect._navRect],
-      setEnterState: () => {
+      setSteadyState: () => {
         rect._navRect.showAll();
         rect._navRect.eqn.showForm('0');
         rect._navRect.updateButtons();
-        console.log(rect)
       },
     });
   }
