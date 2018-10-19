@@ -72,6 +72,12 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
   eqn.addForm('0', [
     'Area',
     'equals',
+    '_6', 'm', 'mul_', '_10', 'm_', '_60',
+  ]);
+
+  eqn.addForm('0a', [
+    'Area',
+    'equals',
     '_6', 'm', 'mul_', '_10', 'm_',
   ]);
 

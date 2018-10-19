@@ -1556,20 +1556,32 @@ export class EquationForm extends Elements {
     this.setPositions();
     const animateToTransforms = this.collection.getElementTransforms();
 
+    const elementsToMove = [];
+    Object.keys(animateToTransforms).forEach((key) => {
+      const currentT = currentTransforms[key];
+      const nextT = animateToTransforms[key];
+      if (!currentT.isEqualTo(nextT)) {
+        elementsToMove.push(key);
+      }
+    });
+
     this.collection.setElementTransforms(currentTransforms);
     let cumTime = delay;
 
     let moveCallback = null;
     let disolveInCallback = null;
+    let disolveOutCallback = null;
 
-    if (elementsToShow.length === 0) {
+    if (elementsToMove.length === 0 && elementsToShow.length === 0) {
+      disolveOutCallback = callback;
+    } else if (elementsToShow.length === 0) {
       moveCallback = callback;
     } else {
       disolveInCallback = callback;
     }
 
     if (elementsToHide.length > 0) {
-      this.dissolveElements(elementsToHide, 'out', delay, disolveOutTime, null);
+      this.dissolveElements(elementsToHide, 'out', delay, disolveOutTime, disolveOutCallback);
       cumTime += disolveOutTime;
     }
 
@@ -2103,7 +2115,6 @@ export class Equation {
       }
       return;
     }
-
     this.collection.stop();
     this.collection.stop();
     this.isAnimating = false;

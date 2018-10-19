@@ -1338,7 +1338,6 @@ class DiagramElement {
     easeFunction: (number) => number = tools.linear,
     addToExistingPlan: boolean = true,
   ): void {
-    console.log(finishOnCancel)
     const callbackToUse = checkCallback(callback);
     if (delay === 0 && time === 0) {
       this.setColor(color);
