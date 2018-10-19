@@ -1201,7 +1201,7 @@ class DiagramElement {
     cancelled: boolean = true,
     forceSetToEnd: ?boolean = null,   // null means use phase default
   ): void {
-    if (this.animate.color.plan.length > 1
+    if (this.animate.color.plan.length > 0
       && this.state.isAnimatingColor
       && cancelled
     ) {
@@ -1338,6 +1338,7 @@ class DiagramElement {
     easeFunction: (number) => number = tools.linear,
     addToExistingPlan: boolean = true,
   ): void {
+    console.log(finishOnCancel)
     const callbackToUse = checkCallback(callback);
     if (delay === 0 && time === 0) {
       this.setColor(color);
