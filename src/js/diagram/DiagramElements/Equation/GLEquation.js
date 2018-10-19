@@ -2106,7 +2106,7 @@ export class Equation {
     name: ?string | number = null,
     time: number = 2,
     delay: number = 0,
-    animate: boolean = false,
+    animate: boolean = true,
   ) {
     if (this.isAnimating) {
       this.collection.stop(true, true);

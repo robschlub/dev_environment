@@ -280,6 +280,7 @@ class ColorAnimationPhase {
   // eslint-disable-next-line no-use-before-define
   start(element: DiagramElement) {
     this.startColor = element.color.slice();
+    // console.log(element.name, this.disolve)
     if (this.disolve === 'in') {
       this.startColor[3] = 0.01;
       element.show();
@@ -1331,7 +1332,7 @@ class DiagramElement {
     callback: ?(?boolean) => void = null,
     finishOnCancel: boolean = true,
     easeFunction: (number) => number = tools.linear,
-    // addToExistingPlan: boolean = false,
+    addToExistingPlan: boolean = true,
   ): void {
     const callbackToUse = checkCallback(callback);
     if (delay === 0 && time === 0) {
@@ -1356,8 +1357,14 @@ class DiagramElement {
       colorCallback = null;
     }
     if (delay > 0) {
+      const delayColor = this.color.slice();
+      if (disolve === 'in') {
+        delayColor[3] = 0.01;
+        this.setColor(delayColor);
+        this.show();
+      }
       phaseDelay = new ColorAnimationPhase(
-        this.color.slice(), delay, null, delayCallback,
+        delayColor, delay, null, delayCallback,
         finishOnCancel, tools.linear,
       );
       phases.push(phaseDelay);
@@ -1372,7 +1379,11 @@ class DiagramElement {
     }
 
     if (phases.length > 0) {
-      this.animateColorPlan(phases);
+      if (addToExistingPlan && this.state.isAnimatingColor) {
+        this.animate.color.plan = [...this.animate.color.plan, ...phases];
+      } else {
+        this.animateColorPlan(phases);
+      }
     }
   }
 
