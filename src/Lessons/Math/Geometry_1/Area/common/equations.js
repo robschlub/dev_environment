@@ -94,7 +94,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     'equals',
     '_6', 'mul', '_10', 'mul2', '_1_2', 'm2', 'mul1', '_1_1', 'm1',
   ], 'base', true, {
-    m1: [null, 'curved', 'up', 0.5],
+    m1: [colUnit, 'curved', 'up', 0.5],
     _1_1: [null, 'curved', 'up', 0.5],
     mul1: [null, 'curved', 'up', 0.5],
   }, '2');
@@ -128,7 +128,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
   ], 'base', true, {
     m1: [null, 'linear'],
     _1_1: [null, 'linear'],
-  });
+  }, '5');
 
   eqn.addForm('6', [
     'Area',

@@ -1525,6 +1525,11 @@ export class EquationForm extends Elements {
       disolveInCallback = callback;
     }
 
+    if (elementsToHide.length > 0) {
+      this.dissolveElements(elementsToHide, false, delay, disolveOutTime, null);
+      cumTime += disolveOutTime;
+    }
+
     Object.keys(this.elementMods).forEach((elementName) => {
       const mods = this.elementMods[elementName];
       const {
@@ -1532,7 +1537,7 @@ export class EquationForm extends Elements {
       } = mods;
       if (element != null) {
         if (color != null) {
-          element.setColor(color);
+          element.animateColorToWithDelay(cumTime, color, moveTime);
         }
         if (style != null) {
           element.animate.transform.translation.style = style;
@@ -1544,13 +1549,8 @@ export class EquationForm extends Elements {
           element.animate.transform.translation.options.magnitude = mag;
         }
       }
-      console.log(element, element.animate.transform.translation)
     });
 
-    if (elementsToHide.length > 0) {
-      this.dissolveElements(elementsToHide, false, delay, disolveOutTime, null);
-      cumTime += disolveOutTime;
-    }
     const t = this.collection.animateToTransforms(
       animateToTransforms,
       moveTime,

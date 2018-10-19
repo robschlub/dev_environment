@@ -1243,11 +1243,61 @@ class DiagramElement {
     time: number = 1,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.linear,
+    finishOnCancel: boolean = true,
   ): void {
     const phase = new ColorAnimationPhase(color, time, easeFunction);
+    if (finishOnCancel) {
+      this.animate.color.toDisolve = 'in';
+    }
     if (phase instanceof ColorAnimationPhase) {
       this.animateColorPlan([phase], checkCallback(callback));
     }
+  }
+
+  animateColorToWithDelay(
+    delay: number,
+    color: Array<number>,
+    time: number = 1,
+    callback: ?(?mixed) => void = null,
+    easeFunction: (number) => number = tools.linear,
+    finishOnCancel: boolean = true,
+  ): void {
+    if (delay === 0 && time === 0) {
+      if (callback != null) {
+        callback();
+      }
+      return;
+    }
+
+    let timeToUse = time;
+    if (time === 0) {
+      timeToUse = 0.0001;
+    }
+
+    const phaseDelay = new ColorAnimationPhase(this.color.slice(), delay, tools.linear);
+
+    const phaseTransition = new ColorAnimationPhase(
+      color, timeToUse,
+      easeFunction,
+    );
+
+    if (finishOnCancel) {
+      this.animate.color.toDisolve = 'in';
+    }
+
+    if (delay === 0) {
+      this.animateColorPlan([phaseTransition], checkCallback(callback));
+    } else {
+      this.animateColorPlan([phaseDelay, phaseTransition], checkCallback(callback));
+    }
+
+    // const phase = new ColorAnimationPhase(color, time, easeFunction);
+    // if (finishOnCancel) {
+    //   this.animate.color.toDisolve = 'in';
+    // }
+    // if (phase instanceof ColorAnimationPhase) {
+    //   this.animateColorPlan([phase], checkCallback(callback));
+    // }
   }
 
   animateCustomTo(
