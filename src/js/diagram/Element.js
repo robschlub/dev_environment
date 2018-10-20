@@ -1276,8 +1276,12 @@ class DiagramElement {
     // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
     const target = this.transform._dup();
-    this.transform = transform._dup();
-    this.animateTo(target, timeOrVelocity, 0, rotDirection, callback, easeFunction);
+    this.animateTransformToWithDelay(
+      target, 0, timeOrVelocity, rotDirection,
+      callback, true, easeFunction,
+    );
+    // this.transform = transform._dup();
+    // this.animateTo(target, timeOrVelocity, 0, rotDirection, callback, easeFunction);
   }
 
   animateColorTo(
@@ -1589,11 +1593,16 @@ class DiagramElement {
   ): void {
     const transform = this.transform._dup();
     transform.updateScale(scale);
+
+    this.animateTransformToWithDelay(
+      transform, 0, time, 0,
+      callback, true, easeFunction,
+    );
     // transform.translation = translation._dup();
-    const phase = new AnimationPhase(transform, time, 0, easeFunction);
-    if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], checkCallback(callback));
-    }
+    // const phase = new AnimationPhase(transform, time, 0, easeFunction);
+    // if (phase instanceof AnimationPhase) {
+    //   this.animatePlan([phase], checkCallback(callback));
+    // }
   }
 
   // Will update only first instace of translation in the transform order
@@ -1605,7 +1614,11 @@ class DiagramElement {
   ): void {
     const target = this.transform._dup();
     this.transform.updateTranslation(translation);
-    this.animateTo(target, timeOrVelocity, 0, 0, callback, easeFunction);
+    this.animateTransformToWithDelay(
+      target, 0, timeOrVelocity, 0,
+      callback, true, easeFunction,
+    );
+    // this.animateTo(target, timeOrVelocity, 0, 0, callback, easeFunction);
   }
 
   animateTranslationToWithDelay(
@@ -1617,12 +1630,16 @@ class DiagramElement {
   ): void {
     const transform = this.transform._dup();
     transform.updateTranslation(translation);
-    const phase1 = new AnimationPhase(
-      this.transform._dup(), delay, 0,
-      easeFunction,
+    this.animateTransformToWithDelay(
+      transform, delay, time, 0,
+      callback, true, easeFunction,
     );
-    const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
-    this.animatePlan([phase1, phase2], checkCallback(callback));
+    // const phase1 = new AnimationPhase(
+    //   this.transform._dup(), delay, 0,
+    //   easeFunction,
+    // );
+    // const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
+    // this.animatePlan([phase1, phase2], checkCallback(callback));
   }
 
   // With update only first instace of rotation in the transform order
@@ -1635,10 +1652,14 @@ class DiagramElement {
   ): void {
     const transform = this.transform._dup();
     transform.updateRotation(rotation);
-    const phase = new AnimationPhase(transform, timeOrVelocity, rotDirection, easeFunction);
-    if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], checkCallback(callback));
-    }
+    this.animateTransformToWithDelay(
+      transform, 0, timeOrVelocity, rotDirection,
+      callback, true, easeFunction,
+    );
+    // const phase = new AnimationPhase(transform, timeOrVelocity, rotDirection, easeFunction);
+    // if (phase instanceof AnimationPhase) {
+    //   this.animatePlan([phase], checkCallback(callback));
+    // }
   }
 
   // With update only first instace of rotation in the transform order
@@ -1653,10 +1674,14 @@ class DiagramElement {
     const transform = this.transform._dup();
     transform.updateRotation(rotation);
     transform.updateTranslation(translation._dup());
-    const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
-    if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], checkCallback(callback));
-    }
+    this.animateTransformToWithDelay(
+      transform, 0, time, rotDirection,
+      callback, true, easeFunction,
+    );
+    // const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
+    // if (phase instanceof AnimationPhase) {
+    //   this.animatePlan([phase], checkCallback(callback));
+    // }
   }
 
   animateTranslationAndScaleTo(
@@ -1674,11 +1699,16 @@ class DiagramElement {
     }
 
     transform.updateTranslation(translation._dup());
-    const phase = new AnimationPhase(transform, time, 0, easeFunction);
-    if (phase instanceof AnimationPhase) {
-      this.animatePlan([phase], checkCallback(callback));
-    }
+    this.animateTransformToWithDelay(
+      transform, 0, time, 0,
+      callback, true, easeFunction,
+    );
+    // const phase = new AnimationPhase(transform, time, 0, easeFunction);
+    // if (phase instanceof AnimationPhase) {
+    //   this.animatePlan([phase], checkCallback(callback));
+    // }
   }
+  // TODO - Got to here
   // **************************************************************
   // **************************************************************
 
