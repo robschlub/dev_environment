@@ -1261,6 +1261,7 @@ export class EquationForm extends Elements {
 
     // const allCollectionElements = collection.getAllElements();
     const namedElements = {};
+    //getAllPrimatives?
     collection.getAllElements().forEach((element) => {
       namedElements[element.name] = element;
     });
@@ -1399,23 +1400,11 @@ export class EquationForm extends Elements {
   getElementsToShowAndHide() {
     const allElements = this.collection.getAllElements();
     const elementsShown = allElements.filter(e => e.isShown);
-    const elementsShownTargetWithoutCollectionElements = this.getAllElements();
-    const elementsShownTarget = [];
-    elementsShownTargetWithoutCollectionElements.forEach((e) => {
-      if (e instanceof DiagramElementPrimative) {
-        elementsShownTarget.push(e);
-      } else {
-        const collectionElements = e.getAllElements();
-        collectionElements.forEach((ce) => {
-          elementsShownTarget.push(ce);
-        });
-      }
-    });
+    const elementsShownTarget = this.getAllElements();
     const elementsToHide =
       elementsShown.filter(e => elementsShownTarget.indexOf(e) === -1);
     const elementsToShow =
       elementsShownTarget.filter(e => elementsShown.indexOf(e) === -1);
-
     return {
       show: elementsToShow,
       hide: elementsToHide,
@@ -1545,9 +1534,6 @@ export class EquationForm extends Elements {
     elementsToShowAfterDisolve.forEach((e) => {
       e.disolveWithDelay(blankTime, showTime, 'in', end);
     });
-    // Collections (x) are not included in elementsToDelay
-    console.log(elementsToDelayShowing, elementsToShowAfterDisolve)
-    debugger;
   }
 
   animatePositionsTo(

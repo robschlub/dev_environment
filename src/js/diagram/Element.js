@@ -2757,7 +2757,7 @@ class DiagramElementCollection extends DiagramElement {
     return timeToAnimate;
   }
 
-  getAllElements() {
+  getAllPrimatives() {
     let elements = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
@@ -2766,6 +2766,15 @@ class DiagramElementCollection extends DiagramElement {
       } else {
         elements.push(element);
       }
+    }
+    return elements;
+  }
+
+  getAllElements() {
+    const elements = [];
+    for (let i = 0; i < this.order.length; i += 1) {
+      const element = this.elements[this.order[i]];
+      elements.push(element);
     }
     return elements;
   }
