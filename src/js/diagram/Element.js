@@ -2677,11 +2677,11 @@ class DiagramElementCollection extends DiagramElement {
     return touched;
   }
 
-  stop(flag: ?mixed, setToEndOfPlan: boolean = false) {
-    super.stop(flag);
+  stop(flag: ?mixed, forceSetToEndOfPlan: boolean = false) {
+    super.stop(flag, forceSetToEndOfPlan);
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      element.stop(flag, setToEndOfPlan);
+      element.stop(flag, forceSetToEndOfPlan);
     }
   }
 

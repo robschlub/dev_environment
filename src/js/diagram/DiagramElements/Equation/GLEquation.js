@@ -1386,7 +1386,7 @@ export class EquationForm extends Elements {
     let completed = 0;
     const end = (cancelled: boolean) => {
       completed += 1;
-      if (completed === count - 1) {
+      if (completed === count) {
         if (callback) {
           callback(cancelled);
         }
@@ -1426,11 +1426,12 @@ export class EquationForm extends Elements {
     const { show, hide } = this.getElementsToShowAndHide();
     if (showTime === 0) {
       show.forEach((e) => {
-        if (e instanceof DiagramElementCollection) {
-          e.showAll();
-        } else {
-          e.show();
-        }
+        e.showAll();
+        // if (e instanceof DiagramElementCollection) {
+        //   e.showAll();
+        // } else {
+        //   e.show();
+        // }
       });
     } else {
       this.dissolveElements(show, 'in', 0.01, showTime, null);
@@ -1458,11 +1459,12 @@ export class EquationForm extends Elements {
     }
     if (showTime === 0) {
       show.forEach((e) => {
-        if (e instanceof DiagramElementCollection) {
-          e.showAll();
-        } else {
-          e.show();
-        }
+        e.showAll();
+        // if (e instanceof DiagramElementCollection) {
+        //   e.showAll();
+        // } else {
+        //   e.show();
+        // }
       });
       if (callback != null) {
         callback();
@@ -2069,6 +2071,7 @@ export class Equation {
   }
 
   nextForm(time: number = 1, delay: number = 0) {
+    let animate = true;
     const currentForm = this.getCurrentForm();
     if (currentForm == null) {
       return;
@@ -2078,8 +2081,9 @@ export class Equation {
       index += 1;
       if (index > this.formSeries.length - 1) {
         index = 0;
+        animate = false;
       }
-      this.goToForm(index, time, delay);
+      this.goToForm(index, time, delay, animate);
     }
   }
 
@@ -2105,7 +2109,7 @@ export class Equation {
     name: ?string | number = null,
     time: number = 2,
     delay: number = 0,
-    animate: boolean = false,
+    animate: boolean = true,
   ) {
     if (this.isAnimating) {
       this.collection.stop(true, true);

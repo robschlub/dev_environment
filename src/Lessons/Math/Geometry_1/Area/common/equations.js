@@ -110,16 +110,20 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     ),
     'mul__', '_1_', 'm_', 'mul', '_1', 'm',
   ], 'base', true, {
-    m: [null, 'linear'],
-    _1: [null, 'linear'],
-    mul: [null, 'linear'],
+    m: [colUnit, 'curved', 'up', 0.7],
+    _1: [null, 'curved', 'up', 0.7],
+    mul: [null, 'curved', 'up', 0.7],
   }, '3');
 
   eqn.addForm('4', [
     'Area',
     'equals',
     '_60', 'mul__', '_1_', 'm_', 'mul', '_1', 'm',
-  ]);
+  ], 'base', true, {
+    m: [null, 'linear'],
+    _1: [null, 'linear'],
+    mul: [null, 'linear'],
+  }, '4');
 
   eqn.addForm('5', [
     'Area',
