@@ -1545,6 +1545,7 @@ export class EquationForm extends Elements {
     elementsToShowAfterDisolve.forEach((e) => {
       e.disolveWithDelay(blankTime, showTime, 'in', end);
     });
+    // Collections (x) are not included in elementsToDelay
     console.log(elementsToDelayShowing, elementsToShowAfterDisolve)
     debugger;
   }
