@@ -1365,13 +1365,18 @@ class DiagramElement {
       if (addToExistingPlan && this.animate.color.plan.length > 0) {
         delayColor = this.animate.color.plan.slice(-1)[0].targetColor.slice();
       }
+      let delayDisolve = null;
       if (disolve === 'in') {
         delayColor[3] = 0.01;
-        this.setColor(delayColor);
-        this.show();
+        delayDisolve = 'in';
       }
+      // if (disolve === 'in') {
+      //   delayColor[3] = 0.01;
+      //   this.setColor(delayColor);
+      //   this.show();
+      // }
       phaseDelay = new ColorAnimationPhase(
-        delayColor, delayColor, delay, null, delayCallback,
+        delayColor, delayColor, delay, delayDisolve, delayCallback,
         finishOnCancel, tools.linear,
       );
       phases.push(phaseDelay);

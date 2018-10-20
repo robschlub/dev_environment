@@ -1510,6 +1510,7 @@ export class EquationForm extends Elements {
 
     let disolveOutCallback = () => {
       this.setPositions.bind(this);
+      console.log('set')
     };
     if (elementsToShow.length === 0) {
       disolveOutCallback = (cancelled: boolean) => {
@@ -1529,13 +1530,13 @@ export class EquationForm extends Elements {
       this.setPositions();
     }
 
-    let count = 0;
-    if (elementsToDelayShowing.length > 0) {
-      count += 1;
-    }
-    if (elementsToShowAfterDisolve.length > 0) {
-      count += 1;
-    }
+    let count = elementsToShow.length;
+    // if (elementsToDelayShowing.length > 0) {
+    //   count += 1;
+    // }
+    // if (elementsToShowAfterDisolve.length > 0) {
+    //   count += 1;
+    // }
     let completed = 0;
     const end = (cancelled: boolean) => {
       completed += 1;
@@ -1545,23 +1546,31 @@ export class EquationForm extends Elements {
         }
       }
     };
-
-    if (elementsToDelayShowing.length > 0) {
-      this.dissolveElements(
-        elementsToDelayShowing, 'in', cumTime + blankTime, showTime, end,
-      );
-    }
+    console.log(cumTime + blankTime)
+    elementsToDelayShowing.forEach((e) => {
+      e.disolveWithDelay(cumTime + blankTime, showTime, 'in', end);
+    });
+    elementsToShowAfterDisolve.forEach((e) => {
+      e.disolveWithDelay(blankTime, showTime, 'in', end);
+    });
+    console.log(elementsToDelayShowing)
+    // debugger;
+    // if (elementsToDelayShowing.length > 0) {
+    //   this.dissolveElements(
+    //     elementsToDelayShowing, 'in', cumTime + blankTime, showTime, end,
+    //   );
+    // }
     // console.log(cumTime, showTime, elementsToShow)
     // const end = (cancelled: boolean) => {
     //   if (callback != null) {
     //     callback(cancelled);
     //   }
     // };
-    if (elementsToShowAfterDisolve.length > 0) {
-      this.dissolveElements(
-        elementsToShowAfterDisolve, 'in', blankTime, showTime, end,
-      );
-    }
+    // if (elementsToShowAfterDisolve.length > 0) {
+    //   this.dissolveElements(
+    //     elementsToShowAfterDisolve, 'in', blankTime, showTime, end,
+    //   );
+    // }
   }
 
   animatePositionsTo(
@@ -2192,7 +2201,7 @@ export class Equation {
         if (animate) {
           form.animatePositionsTo(delay, 1, time, 0.5, end);
         } else {
-          form.allHideShow(delay, 0.5, 0.5, end);
+          form.allHideShow(delay, 0.5, 0.5, 0.5, end);
         }
         this.setCurrentForm(form);
       }
