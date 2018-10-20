@@ -281,16 +281,18 @@ class ColorAnimationPhase {
 
   // eslint-disable-next-line no-use-before-define
   start(element: DiagramElement) {
-    if (this.startColor === null) {
+    if (this.startColor == null) {
       this.startColor = element.color.slice();
     }
-    // console.log(element.name, this.disolve)
-    if (this.disolve === 'in') {
-      this.startColor[3] = 0.01;
-      element.setColor(this.startColor.slice());
-      element.showAll();
+    const { startColor } = this;
+    if (startColor != null) {
+      if (this.disolve === 'in') {
+        this.startColor[3] = 0.01;
+        element.setColor(startColor.slice());
+        element.showAll();
+      }
+      this.deltaColor = this.targetColor.map((c, index) => c - startColor[index]);
     }
-    this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
     this.startTime = -1;
   }
 
@@ -761,11 +763,10 @@ class DiagramElement {
     const percentComplete = phase.animationStyle(percentTime);
 
     const p = percentComplete;
-    const next = start.map((c, index) => c + delta[index] * p);
-
-    // let next = delta._dup().constant(p);
-
-    // next = start.add(delta.mul(next));
+    let next = [0, 0, 0, 1];
+    if (start != null) {
+      next = start.map((c, index) => c + delta[index] * p);
+    }
     return next;
   }
 
@@ -2017,8 +2018,16 @@ class DiagramElement {
     this.isShown = true;
   }
 
+  showAll(): void {
+    this.show();
+  }
+
   hide(): void {
     this.isShown = false;
+  }
+
+  hideAll(): void {
+    this.hide();
   }
 
   toggleShow(): void {
@@ -2165,9 +2174,9 @@ class DiagramElementPrimative extends DiagramElement {
     }
   }
 
-  showAll() {
-    this.show();
-  }
+  // showAll() {
+  //   this.show();
+  // }
 
   hide() {
     super.hide();
@@ -2177,9 +2186,9 @@ class DiagramElementPrimative extends DiagramElement {
     }
   }
 
-  hideAll() {
-    this.hide();
-  }
+  // hideAll() {
+  //   this.hide();
+  // }
 
   getTouched(glLocation: Point): Array<DiagramElementPrimative> {
     if (!this.isTouchable) {
@@ -2815,59 +2824,35 @@ class DiagramElementCollection extends DiagramElement {
   //   }
   // }
 
-  // deprecate NOW
-  disolveInWithDelay(
-    delay: number = 1,
-    time: number = 1,
-    callback: ?(boolean) => void = null,
-  ): void {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
-      element.disolveInWithDelay(delay, time, callback);
-    }
-  }
+  // // deprecate
+  // disolveElementsOut(
+  //   time: number = 1,
+  //   callback: ?(boolean) => void = null,
+  // ): void {
+  //   for (let i = 0; i < this.order.length; i += 1) {
+  //     const element = this.elements[this.order[i]];
+  //     if (element instanceof DiagramElementCollection) {
+  //       element.disolveElementsOut(time, callback);
+  //     } else {
+  //       element.disolveOut(time, callback);
+  //     }
+  //   }
+  // }
 
-  // deprecate NOW
-  disolveOutWithDelay(
-    delay: number = 1,
-    time: number = 1,
-    callback: ?(boolean) => void = null,
-  ): void {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
-      element.disolveOutWithDelay(delay, time, callback);
-    }
-  }
-
-  // deprecate
-  disolveElementsOut(
-    time: number = 1,
-    callback: ?(boolean) => void = null,
-  ): void {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
-      if (element instanceof DiagramElementCollection) {
-        element.disolveElementsOut(time, callback);
-      } else {
-        element.disolveOut(time, callback);
-      }
-    }
-  }
-
-  // deprecate
-  disolveElementsIn(
-    time: number = 1,
-    callback: ?(boolean) => void = null,
-  ): void {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
-      if (element instanceof DiagramElementCollection) {
-        element.disolveElementsIn(time, callback);
-      } else {
-        element.disolveIn(time, callback);
-      }
-    }
-  }
+  // // deprecate
+  // disolveElementsIn(
+  //   time: number = 1,
+  //   callback: ?(boolean) => void = null,
+  // ): void {
+  //   for (let i = 0; i < this.order.length; i += 1) {
+  //     const element = this.elements[this.order[i]];
+  //     if (element instanceof DiagramElementCollection) {
+  //       element.disolveElementsIn(time, callback);
+  //     } else {
+  //       element.disolveIn(time, callback);
+  //     }
+  //   }
+  // }
 
   // This method is here as a convenience method for content item selectors
   // eslint-disable-next-line class-methods-use-this

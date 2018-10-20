@@ -488,9 +488,9 @@ class SineCollection extends SinCosCircle {
 
     const done = () => {
       this._circle._radius.hide();
-      this._circle._complimentarySineCollection.disolveElementsOut(1);
-      cosSym._compAngle._label.disolveElementsIn(1);
-      cosSym._cosine._label.disolveElementsIn(1);
+      this._circle._complimentarySineCollection.disolveOutWithDelay(0, 1);
+      cosSym._compAngle._label.disolveInWithDelay(0, 1);
+      cosSym._cosine._label.disolveInWithDelay(0, 1);
     };
 
     cosSym.animateCustomTo(mirror, 1.5, 0, done);
