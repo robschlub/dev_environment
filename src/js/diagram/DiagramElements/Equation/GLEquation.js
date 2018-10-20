@@ -1509,8 +1509,7 @@ export class EquationForm extends Elements {
     // disolve in
 
     let disolveOutCallback = () => {
-      this.setPositions.bind(this);
-      console.log('set')
+      this.setPositions();
     };
     if (elementsToShow.length === 0) {
       disolveOutCallback = (cancelled: boolean) => {
@@ -1530,13 +1529,7 @@ export class EquationForm extends Elements {
       this.setPositions();
     }
 
-    let count = elementsToShow.length;
-    // if (elementsToDelayShowing.length > 0) {
-    //   count += 1;
-    // }
-    // if (elementsToShowAfterDisolve.length > 0) {
-    //   count += 1;
-    // }
+    const count = elementsToShow.length;
     let completed = 0;
     const end = (cancelled: boolean) => {
       completed += 1;
@@ -1546,31 +1539,12 @@ export class EquationForm extends Elements {
         }
       }
     };
-    console.log(cumTime + blankTime)
     elementsToDelayShowing.forEach((e) => {
       e.disolveWithDelay(cumTime + blankTime, showTime, 'in', end);
     });
     elementsToShowAfterDisolve.forEach((e) => {
       e.disolveWithDelay(blankTime, showTime, 'in', end);
     });
-    console.log(elementsToDelayShowing)
-    // debugger;
-    // if (elementsToDelayShowing.length > 0) {
-    //   this.dissolveElements(
-    //     elementsToDelayShowing, 'in', cumTime + blankTime, showTime, end,
-    //   );
-    // }
-    // console.log(cumTime, showTime, elementsToShow)
-    // const end = (cancelled: boolean) => {
-    //   if (callback != null) {
-    //     callback(cancelled);
-    //   }
-    // };
-    // if (elementsToShowAfterDisolve.length > 0) {
-    //   this.dissolveElements(
-    //     elementsToShowAfterDisolve, 'in', blankTime, showTime, end,
-    //   );
-    // }
   }
 
   animatePositionsTo(
