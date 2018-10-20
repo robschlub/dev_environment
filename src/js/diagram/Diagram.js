@@ -105,6 +105,7 @@ function equation(diagram: Diagram, high: boolean = false) {
 
   function xStrike(color: Array<number> = [1, 1, 1, 1]) {
     const cross = diagram.shapes.collection(new Transform('strike').scale(1, 1).rotate(0).translate(0, 0));
+    cross.color = color;
     const strike1 = diagram.shapes.horizontalLine(
       new Point(0, 0),
       1, 1, 0,

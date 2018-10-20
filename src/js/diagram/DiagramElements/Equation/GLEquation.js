@@ -1545,6 +1545,8 @@ export class EquationForm extends Elements {
     elementsToShowAfterDisolve.forEach((e) => {
       e.disolveWithDelay(blankTime, showTime, 'in', end);
     });
+    console.log(elementsToDelayShowing, elementsToShowAfterDisolve)
+    debugger;
   }
 
   animatePositionsTo(

@@ -288,7 +288,7 @@ class ColorAnimationPhase {
     if (this.disolve === 'in') {
       this.startColor[3] = 0.01;
       element.setColor(this.startColor.slice());
-      element.show();
+      element.showAll();
     }
     this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
     this.startTime = -1;
@@ -2165,12 +2165,20 @@ class DiagramElementPrimative extends DiagramElement {
     }
   }
 
+  showAll() {
+    this.show();
+  }
+
   hide() {
     super.hide();
     if (this.vertices instanceof HTMLObject) {
       this.vertices.show = false;
       this.vertices.transformHtml(this.lastDrawTransform.matrix());
     }
+  }
+
+  hideAll() {
+    this.hide();
   }
 
   getTouched(glLocation: Point): Array<DiagramElementPrimative> {
@@ -2689,6 +2697,7 @@ class DiagramElementCollection extends DiagramElement {
       const element = this.elements[this.order[i]];
       element.setColor(color);
     }
+    this.color = color.slice();
   }
 
   getElementTransforms() {
@@ -2784,18 +2793,20 @@ class DiagramElementCollection extends DiagramElement {
   }
 
 
-  disolveWithDelay(
-    delay: number = 1,
-    time: number = 1,
-    disolve: 'in' | 'out' = 'in',
-    callback: ?(boolean) => void = null,
-  ): void {
-    for (let i = 0; i < this.order.length; i += 1) {
-      const element = this.elements[this.order[i]];
-      element.disolveInWithDelay(delay, time, disolve, callback);
-    }
-  }
+  // disolveWithDelay(
+  //   delay: number = 1,
+  //   time: number = 1,
+  //   disolve: 'in' | 'out' = 'in',
+  //   callback: ?(boolean) => void = null,
+  // ): void {
+  //   for (let i = 0; i < this.order.length; i += 1) {
+  //     const element = this.elements[this.order[i]];
+  //     console.log(element.name)
+  //     element.disolveWithDelay(delay, time, disolve, callback);
+  //   }
+  // }
 
+  // deprecate NOW
   disolveInWithDelay(
     delay: number = 1,
     time: number = 1,
@@ -2807,6 +2818,7 @@ class DiagramElementCollection extends DiagramElement {
     }
   }
 
+  // deprecate NOW
   disolveOutWithDelay(
     delay: number = 1,
     time: number = 1,
