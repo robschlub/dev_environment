@@ -184,9 +184,6 @@ class AnimationPhase {
     forceSetToEnd: ?boolean = null,
   ) {
     // console.log('finished', this.callback)
-    if (this.callback != null) {
-      this.callback(cancelled);
-    }
     const setToEnd = () => {
       element.setTransform(this.targetTransform);
     };
@@ -197,6 +194,9 @@ class AnimationPhase {
     }
     if (forceSetToEnd === true) {
       setToEnd();
+    }
+    if (this.callback != null) {
+      this.callback(cancelled);
     }
   }
 }
@@ -284,9 +284,6 @@ class ColorAnimationPhase {
     cancelled: boolean = false,
     forceSetToEnd: ?boolean = null,
   ) {
-    if (this.callback != null) {
-      this.callback(cancelled);
-    }
     const setToEnd = () => {
       element.setColor(this.endColor);
       if (this.disolve === 'out') {
@@ -301,6 +298,9 @@ class ColorAnimationPhase {
     if (forceSetToEnd === true) {
       setToEnd();
     }
+    if (this.callback != null) {
+      this.callback(cancelled);
+    }
   }
 }
 
@@ -311,11 +311,15 @@ class CustomAnimationPhase {
   plannedStartTime: number;
   animationCallback: (number) => void;
   animationStyle: (number) => number;
+  callback: ?(boolean) => void;
+  finishOnCancel: boolean;
 
   constructor(
     animationCallback: (number) => void,
     time: number = 1,
     startPercent: number = 0,
+    callback: ?(boolean) => void = null,
+    finishOnCancel: boolean = true,
     animationStyle: (number) => number = tools.easeinout,
   ) {
     this.time = time;
@@ -323,6 +327,8 @@ class CustomAnimationPhase {
     this.startTime = -1;
     this.animationStyle = animationStyle;
     this.plannedStartTime = startPercent * time;
+    this.callback = callback;
+    this.finishOnCancel = finishOnCancel;
   }
 
   _dup() {
@@ -330,6 +336,8 @@ class CustomAnimationPhase {
       this.animationCallback,
       this.time,
       this.plannedStartTime / this.time,
+      this.callback,
+      this.finishOnCancel,
       this.animationStyle,
     );
     c.startTime = this.startTime;
@@ -340,6 +348,27 @@ class CustomAnimationPhase {
     // this.startColor = currentColor.slice();
     // this.deltaColor = this.targetColor.map((c, index) => c - this.startColor[index]);
     this.startTime = -1;
+  }
+
+  finish(
+    // eslint-disable-next-line no-use-before-define
+    cancelled: boolean = false,
+    forceSetToEnd: ?boolean = null,
+  ) {
+    const setToEnd = () => {
+      this.animationCallback(1);
+    };
+    if (forceSetToEnd === null) {
+      if (!cancelled || this.finishOnCancel) {
+        setToEnd();
+      }
+    }
+    if (forceSetToEnd === true) {
+      setToEnd();
+    }
+    if (this.callback != null) {
+      this.callback(cancelled);
+    }
   }
 }
 
@@ -898,7 +927,8 @@ class DiagramElement {
         //   - start the next phase
         if (this.state.customAnimation.currentPhaseIndex < this.animate.custom.plan.length - 1) {
           // Set current transform to the end of the current phase
-          phase.animationCallback(1);
+          // phase.animationCallback(1);
+          phase.finish();
 
           // Get the amount of time that has elapsed in the next phase
           const nextPhaseDeltaTime = deltaTime - phase.time;
@@ -918,7 +948,7 @@ class DiagramElement {
 
         // this.setColor(endColor);
         // console.log("2")
-        phase.animationCallback(1);
+        // phase.animationCallback(1);
         this.stopAnimatingCustom(true);
         // console.log("3")
         return;
@@ -1161,10 +1191,10 @@ class DiagramElement {
     cancelled: boolean,
     forceSetToEnd: ?boolean,
     currentPhaseIndex: number,
-    animateString: 'transform' | 'color',
+    animateString: 'transform' | 'color' | 'custom',
     // plan: Array<Object>,
     // callback: ?(boolean) => void,
-    isState: 'isAnimating' | 'isAnimatingColor',
+    isState: 'isAnimating' | 'isAnimatingColor' | 'isAnimatingCustom',
   ) {
     // Animation state needs to be cleaned up before calling callbacks
     // as the last phase callback may trigger more animations which need
@@ -1201,7 +1231,11 @@ class DiagramElement {
       const endIndex = plan.length - 1;
       for (let i = currentPhaseIndex; i <= endIndex; i += 1) {
         const phase = plan[i];
-        phase.finish(this, cancelled, forceSetToEnd);
+        if (animateString !== 'custom') {
+          phase.finish(this, cancelled, forceSetToEnd);
+        } else {
+          phase.finish(cancelled, forceSetToEnd);
+        }
       }
     }
 
@@ -1209,7 +1243,11 @@ class DiagramElement {
     if (runLastPhase) {
       if (plan.length > 0) {
         const phase = plan.slice(-1)[0];
-        phase.finish(this, cancelled, forceSetToEnd);
+        if (animateString !== 'custom') {
+          phase.finish(this, cancelled, forceSetToEnd);
+        } else {
+          phase.finish(cancelled, forceSetToEnd);
+        }
       }
     }
 
@@ -1337,23 +1375,32 @@ class DiagramElement {
     // }
   }
 
-  stopAnimatingCustom(result: ?mixed, setToEndOfPlan: boolean = false): void {
-    if (setToEndOfPlan && this.state.isAnimatingCustom) {
-      const lastPhase = this.animate.custom.plan.slice(-1)[0];
-      lastPhase.animationCallback(1);
-    }
-    this.animate.custom.plan = [];
-    this.state.isAnimatingCustom = false;
-    const { callback } = this.animate.custom;
-    this.animate.custom.callback = null;
-    if (callback) {
-      if (result !== null && result !== undefined) {
-        callback(result);
-      } else {
-        callback();
-      }
-      // this.callback = null;
-    }
+  stopAnimatingCustom(
+    cancelled: boolean = true,
+    forceSetToEnd: ?boolean = null,   // null means use phase default
+  ): void {
+    this.stopAnimatingGeneric(
+      cancelled, forceSetToEnd,
+      this.state.colorAnimation.currentPhaseIndex,
+      'custom',
+      'isAnimatingCustom',
+    );
+    // if (setToEndOfPlan && this.state.isAnimatingCustom) {
+    //   const lastPhase = this.animate.custom.plan.slice(-1)[0];
+    //   lastPhase.animationCallback(1);
+    // }
+    // this.animate.custom.plan = [];
+    // this.state.isAnimatingCustom = false;
+    // const { callback } = this.animate.custom;
+    // this.animate.custom.callback = null;
+    // if (callback) {
+    //   if (result !== null && result !== undefined) {
+    //     callback(result);
+    //   } else {
+    //     callback();
+    //   }
+    //   // this.callback = null;
+    // }
   }
 
 
@@ -1575,10 +1622,13 @@ class DiagramElement {
     phaseCallback: (number) => void,
     time: number = 1,
     startPercent: number = 0,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.linear,
   ): void {
-    this.animateCustomToWithDelay(0, phaseCallback, time, startPercent, callback, easeFunction);
+    this.animateCustomToWithDelay(
+      0, phaseCallback, time, startPercent, callback,
+      true, easeFunction, true,
+    );
   }
 
   animateCustomToWithDelay(
@@ -1586,44 +1636,90 @@ class DiagramElement {
     phaseCallback: (number) => void,
     time: number = 1,
     startPercent: number = 0,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
+    finishOnCancel: boolean = true,
     easeFunction: (number) => number = tools.easeinout,
+    addToExistingPlan: boolean = true,
   ): void {
+    const callbackToUse = checkCallback(callback);
     if (delay === 0 && time === 0) {
-      if (callback != null) {
-        callback();
-      }
+      phaseCallback(1);
+      callbackToUse(false);
       return;
     }
-    let timeToUse = time;
+
+    let phaseDelay = null;
+    let phaseCustom = null;
+    const phases = [];
+
+    let delayCallback = null;
+    let customCallback = callbackToUse;
     if (time === 0) {
-      timeToUse = 0.0001;
+      delayCallback = (cancelled: boolean) => {
+        callbackToUse(cancelled);
+      };
+      customCallback = null;
     }
 
-    const phaseDelay = new CustomAnimationPhase(() => {}, delay, 0, easeFunction);
-
-    const phaseMove = new CustomAnimationPhase(
-      phaseCallback, timeToUse,
-      startPercent, easeFunction,
-    );
-
-    if (delay === 0) {
-      this.animateCustomPlan([phaseMove], checkCallback(callback));
-    } else {
-      this.animateCustomPlan([phaseDelay, phaseMove], checkCallback(callback));
+    if (delay > 0) {
+      phaseDelay = new CustomAnimationPhase(
+        () => {}, delay, 0, delayCallback,
+        finishOnCancel, tools.linear,
+      );
+      phases.push(phaseDelay);
     }
+
+    if (time > 0) {
+      phaseCustom = new CustomAnimationPhase(
+        phaseCallback, time, startPercent, customCallback,
+        finishOnCancel, easeFunction,
+      );
+      phases.push(phaseCustom);
+    }
+
+    if (phases.length > 0) {
+      if (addToExistingPlan && this.state.isAnimating) {
+        this.animate.custom.plan = [...this.animate.custom.plan, ...phases];
+      } else {
+        this.animateCustomPlan(phases);
+      }
+    }
+
+    // if (delay === 0 && time === 0) {
+    //   if (callback != null) {
+    //     callback();
+    //   }
+    //   return;
+    // }
+    // let timeToUse = time;
+    // if (time === 0) {
+    //   timeToUse = 0.0001;
+    // }
+
+    // const phaseDelay = new CustomAnimationPhase(() => {}, delay, 0, easeFunction);
+
+    // const phaseMove = new CustomAnimationPhase(
+    //   phaseCallback, timeToUse,
+    //   startPercent, easeFunction,
+    // );
+
+    // if (delay === 0) {
+    //   this.animateCustomPlan([phaseMove], checkCallback(callback));
+    // } else {
+    //   this.animateCustomPlan([phaseDelay, phaseMove], checkCallback(callback));
+    // }
   }
 
   disolveIn(
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     this.disolveInWithDelay(0, time, callback);
   }
 
   disolveOut(
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     this.disolveOutWithDelay(0, time, callback);
   }
@@ -1648,7 +1744,7 @@ class DiagramElement {
   animateScaleTo(
     scale: Point,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform._dup();
@@ -1664,7 +1760,7 @@ class DiagramElement {
   animateTranslationFrom(
     translation: Point,
     timeOrVelocity: number | Transform = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
     const target = this.transform._dup();
@@ -1680,7 +1776,7 @@ class DiagramElement {
     translation: Point,
     delay: number = 1,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform._dup();
@@ -1696,7 +1792,7 @@ class DiagramElement {
     rotation: number,
     rotDirection: TypeRotationDirection,
     timeOrVelocity: number | Transform = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform._dup();
@@ -1713,7 +1809,7 @@ class DiagramElement {
     rotation: number,
     rotDirection: TypeRotationDirection,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform._dup();
@@ -1729,7 +1825,7 @@ class DiagramElement {
     translation: Point,
     scale: Point | number,
     time: number = 1,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.easeinout,
   ): void {
     const transform = this.transform._dup();
