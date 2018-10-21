@@ -73,7 +73,11 @@ class Content extends LessonContent {
         );
         time = time > 2 ? 2 : time;
         diag.moveToScenario(parallel._line1, '', time);
-        diag.moveToScenario(parallel._line2, '', time, done);
+        const end = () => {
+          console.log('done');
+          done();
+        }
+        diag.moveToScenario(parallel._line2, '', time, end);
       },
       setSteadyState: () => {
         diag.isParallelHighlighting = true;

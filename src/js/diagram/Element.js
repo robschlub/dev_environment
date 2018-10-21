@@ -183,6 +183,7 @@ class AnimationPhase {
     cancelled: boolean = false,
     forceSetToEnd: ?boolean = null,
   ) {
+    // console.log('finished', this.callback)
     if (this.callback != null) {
       this.callback(cancelled);
     }
@@ -835,8 +836,10 @@ class DiagramElement {
         // animation)
         // const endTransform = this.calcNextAnimationTransform(phase.time);
         // this.setTransform(endTransform);
-        phase.finish(this);
-        this.stopAnimating(true);
+        // phase.finish(this);
+
+        // Note, stopAnimating will finish the last phase
+        this.stopAnimating(false);
         return;
       }
       // If we are here, that means the time elapsed is not more than the
@@ -867,7 +870,7 @@ class DiagramElement {
       // transform
       if (this.state.movement.velocity.isZero()) {
         this.state.movement.velocity = this.state.movement.velocity.zero();
-        this.stopMovingFreely();
+        this.stopMovingFreely(false);
       }
       this.setTransform(next.transform);
     }
@@ -1166,21 +1169,54 @@ class DiagramElement {
     cancelled: boolean = true,
     forceSetToEnd: ?boolean = null,
   ): void {
+    // Animation state needs to be cleaned up before calling callbacks
+    // as the last phase callback may trigger more animations which need
+    // to start from scratch (and not use the existing callback for example).
+    // Therefore, make some temporary variables to store the animation state.
+    let runRemainingPhases = false;
+    const currentIndex = this.state.animation.currentPhaseIndex;
+    let runLastPhase = false;
+    const { plan, callback } = this.animate.transform;
+
+    // If the animation was cancelled, then run finish on all unfinished
+    // phases.
     if (this.animate.transform.plan.length > 0
       && this.state.isAnimating
       && cancelled
     ) {
-      const currentIndex = this.state.animation.currentPhaseIndex;
-      const endIndex = this.animate.transform.plan.length - 1;
+      runRemainingPhases = true;
+    }
+
+    // If the animation finished without being cancelled, then just call
+    // the finish routine on the last phase as it hasn't been called yet
+    // by setNextTransform
+    if (!cancelled) {
+      runLastPhase = true;
+    }
+
+    // Reset the animation state, plan and callback
+    this.state.isAnimating = false;
+    this.animate.transform.plan = [];
+    this.animate.transform.callback = null;
+
+    // Finish remaining phases if required.
+    if (runRemainingPhases) {
+      const endIndex = plan.length - 1;
       for (let i = currentIndex; i <= endIndex; i += 1) {
-        const phase = this.animate.transform.plan[i];
+        const phase = plan[i];
         phase.finish(this, cancelled, forceSetToEnd);
       }
     }
-    this.animate.transform.plan = [];
-    this.state.isAnimating = false;
-    const { callback } = this.animate.transform;
-    this.animate.transform.callback = null;
+
+    // Finish last phases if required.
+    if (runLastPhase) {
+      if (plan.length > 0) {
+        const phase = plan.slice(-1)[0];
+        phase.finish(this, cancelled, forceSetToEnd);
+      }
+    }
+
+    // Run animation plan callback if it exists.
     if (callback != null) {
       callback(cancelled);
     }
@@ -1331,7 +1367,7 @@ class DiagramElement {
 
     let delayCallback = null;
     let moveCallback = callbackToUse;
-    if (typeof timeOrVelocity === 'number' && timeOrVelocity === 0) {
+    if (moveTime === 0) {
       delayCallback = (cancelled: boolean) => {
         callbackToUse(cancelled);
       };
@@ -1708,15 +1744,14 @@ class DiagramElement {
     //   this.animatePlan([phase], checkCallback(callback));
     // }
   }
-  // TODO - Got to here
   // **************************************************************
   // **************************************************************
 
 
   // Being Moved
   startBeingMoved(): void {
-    this.stopAnimating(false);
-    this.stopMovingFreely(false);
+    this.stopAnimating();
+    this.stopMovingFreely();
     this.state.movement.velocity = this.transform.zero();
     this.state.movement.previousTransform = this.transform._dup();
     this.state.movement.previousTime = Date.now() / 1000;
@@ -1763,8 +1798,8 @@ class DiagramElement {
   }
 
   // Moving Freely
-  startMovingFreely(callback: ?(?mixed) => void = null): void {
-    this.stopAnimating(false);
+  startMovingFreely(callback: ?(boolean) => void = null): void {
+    this.stopAnimating();
     this.stopBeingMoved();
     if (callback) {
       this.animate.transform.callback = callback;
@@ -1777,15 +1812,16 @@ class DiagramElement {
     );
   }
 
-  stopMovingFreely(result: ?mixed): void {
+  stopMovingFreely(result: boolean = true): void {
     this.state.isMovingFreely = false;
     this.state.movement.previousTime = -1;
     if (this.animate.transform.callback) {
-      if (result !== null && result !== undefined) {
-        this.animate.transform.callback(result);
-      } else {
-        this.animate.transform.callback();
-      }
+      this.animate.transform.callback(result);
+      // if (result !== null && result !== undefined) {
+      //   this.animate.transform.callback(result);
+      // } else {
+      //   this.animate.transform.callback();
+      // }
       this.animate.transform.callback = null;
     }
   }
@@ -1914,13 +1950,13 @@ class DiagramElement {
     }
   }
 
-  stop(flag: ?mixed, forceSetToEndOfPlan: boolean = false) {
-    this.stopAnimating(flag, forceSetToEndOfPlan);
-    this.stopAnimatingColor(flag, forceSetToEndOfPlan);
-    this.stopAnimatingCustom(flag, forceSetToEndOfPlan);
-    this.stopMovingFreely(flag);
+  stop(cancelled: boolean = true, forceSetToEndOfPlan: boolean = false) {
+    this.stopAnimating(cancelled, forceSetToEndOfPlan);
+    this.stopAnimatingColor(cancelled, forceSetToEndOfPlan);
+    this.stopAnimatingCustom(cancelled, forceSetToEndOfPlan);
+    this.stopMovingFreely(cancelled);
     this.stopBeingMoved();
-    this.stopPulsing(flag);
+    this.stopPulsing(cancelled);
   }
 
   updateLimits(limits: Rect) {
@@ -2777,11 +2813,11 @@ class DiagramElementCollection extends DiagramElement {
     return touched;
   }
 
-  stop(flag: ?mixed, forceSetToEndOfPlan: boolean = false) {
-    super.stop(flag, forceSetToEndOfPlan);
+  stop(cancelled: boolean = true, forceSetToEndOfPlan: boolean = false) {
+    super.stop(cancelled, forceSetToEndOfPlan);
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      element.stop(flag, forceSetToEndOfPlan);
+      element.stop(cancelled, forceSetToEndOfPlan);
     }
   }
 
