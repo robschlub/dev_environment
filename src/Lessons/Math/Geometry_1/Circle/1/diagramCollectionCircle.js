@@ -599,12 +599,6 @@ class CircleCollection extends DiagramElementCollection {
     if (s) {
       currentPercent = s.x;
     }
-    console.log('*******************************************')
-    console.log('*******************************************')
-    console.log('*******************************************')
-    console.log('*******************************************')
-    console.log('*******************************************')
-    console.log('*******************************************')
     if (!this.varState.straightening || this.varState.percentStraight === 0) {
       this.animateCustomToWithDelay(
         0, this.straighten.bind(this), 5, currentPercent, null, false,

@@ -72,7 +72,7 @@ class AnimationPhase {
   timeOrVelocity: number | Transform;
   time: number ;                         // animation time
   rotDirection: 0 | 1 | -1 | 2;               // Direction of rotation
-  animationStyle: (number) => number; // Animation style
+  animationStyle: (number, ?boolean) => number; // Animation style
   animationPath: (number) => number;
   translationStyle: 'linear' | 'curved';
   translationOptions: pathOptionsType;
@@ -91,7 +91,7 @@ class AnimationPhase {
     rotDirection: 0 | 1 | -1 | 2 = 0,
     callback: ?(boolean) => void = null,
     finishOnCancel: boolean = true,
-    animationStyle: (number) => number = tools.easeinout,
+    animationStyle: (number, ?boolean) => number = tools.easeinout,
     translationStyle: 'linear' | 'curved' = 'linear',
     translationOptions: pathOptionsType = {
       rot: 1,
@@ -225,7 +225,7 @@ class ColorAnimationPhase {
     callback: ?(boolean) => void = null,
     finishOnCancel: boolean = true,
     // callbackOnCancel: boolean = true,
-    animationStyle: (number) => number = tools.linear,
+    animationStyle: (number, ?boolean) => number = tools.linear,
   ) {
     this.targetColor = targetColor.slice();
     this.endColor = targetColor.slice();
@@ -310,7 +310,7 @@ class CustomAnimationPhase {
   startTime: number;                 // Time when phase started
   plannedStartTime: number;
   animationCallback: (number) => void;
-  animationStyle: (number) => number;
+  animationStyle: (number, ?boolean) => number;
   callback: ?(boolean) => void;
   finishOnCancel: boolean;
   startPercent: number;
@@ -321,7 +321,7 @@ class CustomAnimationPhase {
     startPercent: number = 0,
     callback: ?(boolean) => void = null,
     finishOnCancel: boolean = true,
-    animationStyle: (number) => number = tools.easeinout,
+    animationStyle: (number, ?boolean) => number = tools.easeinout,
   ) {
     this.time = time;
     this.startPercent = startPercent;
@@ -337,7 +337,7 @@ class CustomAnimationPhase {
     const c = new CustomAnimationPhase(
       this.animationCallback,
       this.time,
-      this.plannedStartTime / this.time,
+      this.startPercent,
       this.callback,
       this.finishOnCancel,
       this.animationStyle,

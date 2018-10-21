@@ -185,14 +185,14 @@ const decelerate = function getPositionVelocityFromDecAndTime(
 };
 
 
-const linear = (percentTime: number, invert: boolean = false) => {
+const linear = (percentTime: number, invert: ?boolean = false) => {
   if (invert) {
     return percentTime;
   }
   return percentTime;
 };
 
-const easeinout = (percentTime: number, invert: boolean = false) => {
+const easeinout = (percentTime: number, invert: ?boolean = false) => {
   if (invert) {
     const a = percentTime;
     return (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
@@ -203,7 +203,7 @@ const easeinout = (percentTime: number, invert: boolean = false) => {
 };
 
 // TODO fix invert
-function easeout(percentTime: number, invert: boolean = false) {
+function easeout(percentTime: number, invert: ?boolean = false) {
   if (invert) {
     const a = percentTime;
     const b = (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
@@ -217,7 +217,7 @@ function easeout(percentTime: number, invert: boolean = false) {
 }
 
 // TODO fix invert
-function easein(percentTime: number, invert: boolean = false) {
+function easein(percentTime: number, invert: ?boolean = false) {
   if (invert) {
     const a = percentTime;
     const b = (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
