@@ -1367,26 +1367,7 @@ class DiagramElement {
     rotDirection: TypeRotationDirection = 0,
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.easeinout,
-    // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
-    // const phase1 = new AnimationPhase(
-    //   this.transform._dup(), delay, rotDirection,
-    //   easeFunction, this.animate.transform.translation.style,
-    //   this.animate.transform.translation.options,
-    // );
-    // const phase2 = new AnimationPhase(
-    //   transform, timeOrVelocity, rotDirection,
-    //   easeFunction, this.animate.transform.translation.style,
-    //   this.animate.transform.translation.options,
-    // );
-    // if (delay === 0 && phase2 instanceof AnimationPhase) {
-    //   this.animatePlan([phase2], checkCallback(callback));
-    // } else if (phase1 instanceof AnimationPhase
-    //            && phase2 instanceof AnimationPhase
-    //            && delay > 0
-    // ) {
-    //   this.animatePlan([phase1, phase2], checkCallback(callback));
-    // }
     this.animateTransformToWithDelay(
       transform, delay, timeOrVelocity, rotDirection,
       callback, true, easeFunction,
@@ -1399,15 +1380,12 @@ class DiagramElement {
     rotDirection: TypeRotationDirection = 0,
     callback: ?(boolean) => void = null,
     easeFunction: (number) => number = tools.easeinout,
-    // translationPath: ?(Point, Point, number) => Point = null,
   ): void {
     const target = this.transform._dup();
     this.animateTransformToWithDelay(
       target, 0, timeOrVelocity, rotDirection,
       callback, true, easeFunction,
     );
-    // this.transform = transform._dup();
-    // this.animateTo(target, timeOrVelocity, 0, rotDirection, callback, easeFunction);
   }
 
   animateColorTo(
@@ -1494,24 +1472,6 @@ class DiagramElement {
         this.animatePlan(phases);
       }
     }
-    // const phase1 = new AnimationPhase(
-    //   this.transform._dup(), delay, rotDirection,
-    //   easeFunction, this.animate.transform.translation.style,
-    //   this.animate.transform.translation.options,
-    // );
-    // const phase2 = new AnimationPhase(
-    //   transform, timeOrVelocity, rotDirection,
-    //   easeFunction, this.animate.transform.translation.style,
-    //   this.animate.transform.translation.options,
-    // );
-    // if (delay === 0 && phase2 instanceof AnimationPhase) {
-    //   this.animatePlan([phase2], checkCallback(callback));
-    // } else if (phase1 instanceof AnimationPhase
-    //            && phase2 instanceof AnimationPhase
-    //            && delay > 0
-    // ) {
-    //   this.animatePlan([phase1, phase2], checkCallback(callback));
-    // }
   }
 
   animateColorToWithDelay(
@@ -1556,11 +1516,6 @@ class DiagramElement {
         delayColor[3] = 0.01;
         delayDisolve = 'in';
       }
-      // if (disolve === 'in') {
-      //   delayColor[3] = 0.01;
-      //   this.setColor(delayColor);
-      //   this.show();
-      // }
       phaseDelay = new ColorAnimationPhase(
         delayColor, delayColor, delay, delayDisolve, delayCallback,
         finishOnCancel, tools.linear,
@@ -1616,17 +1571,6 @@ class DiagramElement {
     );
   }
 
-  // disolveWithDelay(
-  //   disolve: 'in' | 'out',
-  //   delay: number,
-  //   time: number,
-  //   callback: ?(?mixed) => void = null,
-  // ): void {
-  //   if (disolve === 'in') {
-
-  //   }
-  // }
-
   animateCustomTo(
     phaseCallback: (number) => void,
     time: number = 1,
@@ -1634,10 +1578,6 @@ class DiagramElement {
     callback: ?(?mixed) => void = null,
     easeFunction: (number) => number = tools.linear,
   ): void {
-    // const phase = new CustomAnimationPhase(phaseCallback, time, startPercent, easeFunction);
-    // if (phase instanceof CustomAnimationPhase) {
-    //   this.animateCustomPlan([phase], checkCallback(callback));
-    // }
     this.animateCustomToWithDelay(0, phaseCallback, time, startPercent, callback, easeFunction);
   }
 
@@ -1702,12 +1642,6 @@ class DiagramElement {
       transform, 0, time, 0,
       callback, true, easeFunction,
     );
-
-    // // transform.translation = translation._dup();
-    // const phase = new AnimationPhase(transform, time, 0, easeFunction);
-    // if (phase instanceof AnimationPhase) {
-    //   this.animatePlan([phase], checkCallback(callback));
-    // }
   }
 
   // With update only first instace of translation in the transform order
@@ -1724,11 +1658,6 @@ class DiagramElement {
       transform, 0, time, 0,
       callback, true, easeFunction,
     );
-    // transform.translation = translation._dup();
-    // const phase = new AnimationPhase(transform, time, 0, easeFunction);
-    // if (phase instanceof AnimationPhase) {
-    //   this.animatePlan([phase], checkCallback(callback));
-    // }
   }
 
   // Will update only first instace of translation in the transform order
@@ -1760,12 +1689,6 @@ class DiagramElement {
       transform, delay, time, 0,
       callback, true, easeFunction,
     );
-    // const phase1 = new AnimationPhase(
-    //   this.transform._dup(), delay, 0,
-    //   easeFunction,
-    // );
-    // const phase2 = new AnimationPhase(transform, time, 0, easeFunction);
-    // this.animatePlan([phase1, phase2], checkCallback(callback));
   }
 
   // With update only first instace of rotation in the transform order
@@ -1782,10 +1705,6 @@ class DiagramElement {
       transform, 0, timeOrVelocity, rotDirection,
       callback, true, easeFunction,
     );
-    // const phase = new AnimationPhase(transform, timeOrVelocity, rotDirection, easeFunction);
-    // if (phase instanceof AnimationPhase) {
-    //   this.animatePlan([phase], checkCallback(callback));
-    // }
   }
 
   // With update only first instace of rotation in the transform order
@@ -1804,10 +1723,6 @@ class DiagramElement {
       transform, 0, time, rotDirection,
       callback, true, easeFunction,
     );
-    // const phase = new AnimationPhase(transform, time, rotDirection, easeFunction);
-    // if (phase instanceof AnimationPhase) {
-    //   this.animatePlan([phase], checkCallback(callback));
-    // }
   }
 
   animateTranslationAndScaleTo(
@@ -1829,10 +1744,6 @@ class DiagramElement {
       transform, 0, time, 0,
       callback, true, easeFunction,
     );
-    // const phase = new AnimationPhase(transform, time, 0, easeFunction);
-    // if (phase instanceof AnimationPhase) {
-    //   this.animatePlan([phase], checkCallback(callback));
-    // }
   }
   // **************************************************************
   // **************************************************************
