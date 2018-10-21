@@ -324,10 +324,11 @@ class CustomAnimationPhase {
     animationStyle: (number) => number = tools.easeinout,
   ) {
     this.time = time;
+    this.startPercent = startPercent;
     this.animationCallback = animationCallback;
     this.startTime = -1;
     this.animationStyle = animationStyle;
-    this.plannedStartTime = startPercent * time;
+    this.plannedStartTime = animationStyle(startPercent, true) * time;
     this.callback = callback;
     this.finishOnCancel = finishOnCancel;
   }

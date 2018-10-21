@@ -185,24 +185,47 @@ const decelerate = function getPositionVelocityFromDecAndTime(
 };
 
 
-const linear = (percentTime: number) => percentTime;
+const linear = (percentTime: number, invert: boolean = false) => {
+  if (invert) {
+    return percentTime;
+  }
+  return percentTime;
+};
 
-const easeinout = (percentTime: number) => {
+const easeinout = (percentTime: number, invert: boolean = false) => {
+  if (invert) {
+    const a = percentTime;
+    return (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
+  }
   const x = percentTime;
   const percentDistance = (x ** 2) / ((x ** 2) + ((1 - x) ** 2));
   return percentDistance;
 };
 
-function easeout(percentTime: number) {
+// TODO fix invert
+function easeout(percentTime: number, invert: boolean = false) {
+  if (invert) {
+    const a = percentTime;
+    const b = (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
+    // return (b - 0.5) * 2;
+    return b;
+  }
   const x = 0.5 + percentTime / 2;
-  const power = 1.6;
+  const power = 2;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return (percentDistance - 0.5) * 2;
 }
 
-function easein(percentTime: number) {
+// TODO fix invert
+function easein(percentTime: number, invert: boolean = false) {
+  if (invert) {
+    const a = percentTime;
+    const b = (2 * a - Math.sqrt(-4 * a * a + 4 * a)) / (4 * a - 2);
+    // return (b - 0.5) * 2;
+    return b;
+  }
   const x = percentTime / 2;
-  const power = 1.6;
+  const power = 2;
   const percentDistance = (x ** power) / ((x ** power) + ((1 - x) ** power));
   return percentDistance * 2;
 }
