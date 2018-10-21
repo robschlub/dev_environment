@@ -831,12 +831,6 @@ class DiagramElement {
           this.setNextTransform(now);
           return;
         }
-        // This needs to go before StopAnimating, as stopAnimating clears
-        // the animation plan (incase a callback is used to start another
-        // animation)
-        // const endTransform = this.calcNextAnimationTransform(phase.time);
-        // this.setTransform(endTransform);
-        // phase.finish(this);
 
         // Note, stopAnimating will finish the last phase
         this.stopAnimating(false);
@@ -986,7 +980,7 @@ class DiagramElement {
         // animation)
         // const endColor = this.calcNextAnimationColor(phase.time);
         // this.setColor(endColor);
-        phase.finish(this);
+        // phase.finish(this);
         this.stopAnimatingColor(false);
         return;
       }
@@ -1163,25 +1157,28 @@ class DiagramElement {
     this.state.customAnimation.currentPhase.start();
   }
 
-  // When animation is stopped, any callback associated with the animation
-  // needs to be called, with whatever is passed to stopAnimating.
-  stopAnimating(
-    cancelled: boolean = true,
-    forceSetToEnd: ?boolean = null,
-  ): void {
+  stopAnimatingGeneric(
+    cancelled: boolean,
+    forceSetToEnd: ?boolean,
+    currentPhaseIndex: number,
+    animateString: 'transform' | 'color',
+    // plan: Array<Object>,
+    // callback: ?(boolean) => void,
+    isState: 'isAnimating' | 'isAnimatingColor',
+  ) {
     // Animation state needs to be cleaned up before calling callbacks
     // as the last phase callback may trigger more animations which need
     // to start from scratch (and not use the existing callback for example).
     // Therefore, make some temporary variables to store the animation state.
     let runRemainingPhases = false;
-    const currentIndex = this.state.animation.currentPhaseIndex;
+    // const currentIndex = currentPhaseIndex;
     let runLastPhase = false;
-    const { plan, callback } = this.animate.transform;
+    const { plan, callback } = this.animate[animateString];
 
     // If the animation was cancelled, then run finish on all unfinished
     // phases.
-    if (this.animate.transform.plan.length > 0
-      && this.state.isAnimating
+    if (plan.length > 0
+      && this.state[isState]
       && cancelled
     ) {
       runRemainingPhases = true;
@@ -1195,14 +1192,14 @@ class DiagramElement {
     }
 
     // Reset the animation state, plan and callback
-    this.state.isAnimating = false;
-    this.animate.transform.plan = [];
-    this.animate.transform.callback = null;
+    this.state[isState] = false;
+    this.animate[animateString].plan = [];
+    this.animate[animateString].callback = null;
 
     // Finish remaining phases if required.
     if (runRemainingPhases) {
       const endIndex = plan.length - 1;
-      for (let i = currentIndex; i <= endIndex; i += 1) {
+      for (let i = currentPhaseIndex; i <= endIndex; i += 1) {
         const phase = plan[i];
         phase.finish(this, cancelled, forceSetToEnd);
       }
@@ -1222,29 +1219,122 @@ class DiagramElement {
     }
   }
 
+  // When animation is stopped, any callback associated with the animation
+  // needs to be called, with whatever is passed to stopAnimating.
+  stopAnimating(
+    cancelled: boolean = true,
+    forceSetToEnd: ?boolean = null,
+  ): void {
+    this.stopAnimatingGeneric(
+      cancelled, forceSetToEnd,
+      this.state.animation.currentPhaseIndex,
+      'transform',
+      'isAnimating',
+    );
+    // // Animation state needs to be cleaned up before calling callbacks
+    // // as the last phase callback may trigger more animations which need
+    // // to start from scratch (and not use the existing callback for example).
+    // // Therefore, make some temporary variables to store the animation state.
+    // let runRemainingPhases = false;
+    // const currentIndex = this.state.animation.currentPhaseIndex;
+    // let runLastPhase = false;
+    // const { plan, callback } = this.animate.transform;
+
+    // // If the animation was cancelled, then run finish on all unfinished
+    // // phases.
+    // if (this.animate.transform.plan.length > 0
+    //   && this.state.isAnimating
+    //   && cancelled
+    // ) {
+    //   runRemainingPhases = true;
+    // }
+
+    // // If the animation finished without being cancelled, then just call
+    // // the finish routine on the last phase as it hasn't been called yet
+    // // by setNextTransform
+    // if (!cancelled) {
+    //   runLastPhase = true;
+    // }
+
+    // // Reset the animation state, plan and callback
+    // this.state.isAnimating = false;
+    // this.animate.transform.plan = [];
+    // this.animate.transform.callback = null;
+
+    // // Finish remaining phases if required.
+    // if (runRemainingPhases) {
+    //   const endIndex = plan.length - 1;
+    //   for (let i = currentIndex; i <= endIndex; i += 1) {
+    //     const phase = plan[i];
+    //     phase.finish(this, cancelled, forceSetToEnd);
+    //   }
+    // }
+
+    // // Finish last phases if required.
+    // if (runLastPhase) {
+    //   if (plan.length > 0) {
+    //     const phase = plan.slice(-1)[0];
+    //     phase.finish(this, cancelled, forceSetToEnd);
+    //   }
+    // }
+
+    // // Run animation plan callback if it exists.
+    // if (callback != null) {
+    //   callback(cancelled);
+    // }
+  }
+
   stopAnimatingColor(
     cancelled: boolean = true,
     forceSetToEnd: ?boolean = null,   // null means use phase default
   ): void {
-    if (this.animate.color.plan.length > 0
-      && this.state.isAnimatingColor
-      && cancelled
-    ) {
-      const currentIndex = this.state.colorAnimation.currentPhaseIndex;
-      const endIndex = this.animate.color.plan.length - 1;
-      for (let i = currentIndex; i <= endIndex; i += 1) {
-        const phase = this.animate.color.plan[i];
-        phase.finish(this, cancelled, forceSetToEnd);
-      }
-    }
-    this.state.isAnimatingColor = false;
-    this.animate.color.plan = [];
-    this.state.isAnimatingColor = false;
-    const { callback } = this.animate.color;
-    this.animate.color.callback = null;
-    if (callback != null) {
-      callback(cancelled);
-    }
+    this.stopAnimatingGeneric(
+      cancelled, forceSetToEnd,
+      this.state.colorAnimation.currentPhaseIndex,
+      'color',
+      'isAnimatingColor',
+    );
+    // // If the animation was cancelled, then run finish on all unfinished
+    // // phases.
+    // if (this.animate.transform.plan.length > 0
+    //   && this.state.isAnimating
+    //   && cancelled
+    // ) {
+    //   runRemainingPhases = true;
+    // }
+
+    // // If the animation finished without being cancelled, then just call
+    // // the finish routine on the last phase as it hasn't been called yet
+    // // by setNextTransform
+    // if (!cancelled) {
+    //   runLastPhase = true;
+    // }
+
+    // // Reset the animation state, plan and callback
+    // this.state.isAnimating = false;
+    // this.animate.transform.plan = [];
+    // this.animate.transform.callback = null;
+
+
+    // if (this.animate.color.plan.length > 0
+    //   && this.state.isAnimatingColor
+    //   && cancelled
+    // ) {
+    //   const currentIndex = this.state.colorAnimation.currentPhaseIndex;
+    //   const endIndex = this.animate.color.plan.length - 1;
+    //   for (let i = currentIndex; i <= endIndex; i += 1) {
+    //     const phase = this.animate.color.plan[i];
+    //     phase.finish(this, cancelled, forceSetToEnd);
+    //   }
+    // }
+    // this.state.isAnimatingColor = false;
+    // this.animate.color.plan = [];
+    // this.state.isAnimatingColor = false;
+    // const { callback } = this.animate.color;
+    // this.animate.color.callback = null;
+    // if (callback != null) {
+    //   callback(cancelled);
+    // }
   }
 
   stopAnimatingCustom(result: ?mixed, setToEndOfPlan: boolean = false): void {
