@@ -8,7 +8,7 @@ import {
   spaceToSpaceTransform, minAngleDiff,
 } from './tools/g2';
 import * as tools from './tools/mathtools';
-import { isTouchDevice } from '../tools/tools';
+import { isTouchDevice, generateUniqueId } from '../tools/tools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from './Element';
@@ -34,7 +34,6 @@ import Lines from './DiagramElements/Lines';
 import Arrow from './DiagramElements/Arrow';
 import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
 import Axis from './DiagramElements/Plot/Axis';
-import { generateUniqueId } from '../tools/tools';
 import {
   DiagramText, DiagramFont, TextObject,
 } from './DrawingObjects/TextObject/TextObject';
@@ -1139,7 +1138,7 @@ class Diagram {
     return true;
   }
 
-  stop(flag: ?mixed) {
+  stop(flag: boolean = true) {
     this.elements.stop(flag);
   }
 

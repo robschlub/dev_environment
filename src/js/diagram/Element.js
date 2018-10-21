@@ -61,6 +61,7 @@ function getMaxTimeFromVelocity(
   });
   return time;
 }
+
 // Planned Animation
 class AnimationPhase {
   targetTransform: Transform;            // The target transform to animate to
@@ -444,11 +445,16 @@ class DiagramElement {
       callback: ?(boolean) => void;
     };
     custom: {
+      // This is happening I think because of the generic stopAnimation
+      // method. I think maybe in the future after a few flow updates this
+      // will fix itself.
+      // $FlowFixMe
       plan: Array<CustomAnimationPhase>;
       callback: ?(boolean) => void;
     };
     color: {
       toDisolve: '' | 'in' | 'out';
+      // $FlowFixMe
       plan: Array<ColorAnimationPhase>;
       callback: ?(boolean) => void;
     };
