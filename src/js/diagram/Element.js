@@ -1198,8 +1198,6 @@ class DiagramElement {
     forceSetToEnd: ?boolean,
     currentPhaseIndex: number,
     animateString: 'transform' | 'color' | 'custom',
-    // plan: Array<Object>,
-    // callback: ?(boolean) => void,
     isState: 'isAnimating' | 'isAnimatingColor' | 'isAnimatingCustom',
   ) {
     // Animation state needs to be cleaned up before calling callbacks
@@ -1243,11 +1241,6 @@ class DiagramElement {
         } else {
           phase.finish(this, cancelled, forceSetToEnd);
         }
-        // if (animateString !== 'custom') {
-        //   phase.finish(this, cancelled, forceSetToEnd);
-        // } else {
-        //   phase.finish(cancelled, forceSetToEnd);
-        // }
       }
     }
 
@@ -1260,11 +1253,6 @@ class DiagramElement {
         } else {
           phase.finish(this, cancelled, forceSetToEnd);
         }
-        // if (animateString !== 'custom') {
-        //   phase.finish(this, cancelled, forceSetToEnd);
-        // } else {
-        //   phase.finish(cancelled, forceSetToEnd);
-        // }
       }
     }
 
@@ -1286,57 +1274,6 @@ class DiagramElement {
       'transform',
       'isAnimating',
     );
-    // // Animation state needs to be cleaned up before calling callbacks
-    // // as the last phase callback may trigger more animations which need
-    // // to start from scratch (and not use the existing callback for example).
-    // // Therefore, make some temporary variables to store the animation state.
-    // let runRemainingPhases = false;
-    // const currentIndex = this.state.animation.currentPhaseIndex;
-    // let runLastPhase = false;
-    // const { plan, callback } = this.animate.transform;
-
-    // // If the animation was cancelled, then run finish on all unfinished
-    // // phases.
-    // if (this.animate.transform.plan.length > 0
-    //   && this.state.isAnimating
-    //   && cancelled
-    // ) {
-    //   runRemainingPhases = true;
-    // }
-
-    // // If the animation finished without being cancelled, then just call
-    // // the finish routine on the last phase as it hasn't been called yet
-    // // by setNextTransform
-    // if (!cancelled) {
-    //   runLastPhase = true;
-    // }
-
-    // // Reset the animation state, plan and callback
-    // this.state.isAnimating = false;
-    // this.animate.transform.plan = [];
-    // this.animate.transform.callback = null;
-
-    // // Finish remaining phases if required.
-    // if (runRemainingPhases) {
-    //   const endIndex = plan.length - 1;
-    //   for (let i = currentIndex; i <= endIndex; i += 1) {
-    //     const phase = plan[i];
-    //     phase.finish(this, cancelled, forceSetToEnd);
-    //   }
-    // }
-
-    // // Finish last phases if required.
-    // if (runLastPhase) {
-    //   if (plan.length > 0) {
-    //     const phase = plan.slice(-1)[0];
-    //     phase.finish(this, cancelled, forceSetToEnd);
-    //   }
-    // }
-
-    // // Run animation plan callback if it exists.
-    // if (callback != null) {
-    //   callback(cancelled);
-    // }
   }
 
   stopAnimatingColor(
@@ -1349,47 +1286,6 @@ class DiagramElement {
       'color',
       'isAnimatingColor',
     );
-    // // If the animation was cancelled, then run finish on all unfinished
-    // // phases.
-    // if (this.animate.transform.plan.length > 0
-    //   && this.state.isAnimating
-    //   && cancelled
-    // ) {
-    //   runRemainingPhases = true;
-    // }
-
-    // // If the animation finished without being cancelled, then just call
-    // // the finish routine on the last phase as it hasn't been called yet
-    // // by setNextTransform
-    // if (!cancelled) {
-    //   runLastPhase = true;
-    // }
-
-    // // Reset the animation state, plan and callback
-    // this.state.isAnimating = false;
-    // this.animate.transform.plan = [];
-    // this.animate.transform.callback = null;
-
-
-    // if (this.animate.color.plan.length > 0
-    //   && this.state.isAnimatingColor
-    //   && cancelled
-    // ) {
-    //   const currentIndex = this.state.colorAnimation.currentPhaseIndex;
-    //   const endIndex = this.animate.color.plan.length - 1;
-    //   for (let i = currentIndex; i <= endIndex; i += 1) {
-    //     const phase = this.animate.color.plan[i];
-    //     phase.finish(this, cancelled, forceSetToEnd);
-    //   }
-    // }
-    // this.state.isAnimatingColor = false;
-    // this.animate.color.plan = [];
-    // this.state.isAnimatingColor = false;
-    // const { callback } = this.animate.color;
-    // this.animate.color.callback = null;
-    // if (callback != null) {
-    //   callback(cancelled);
-    // }
   }
 
   stopAnimatingCustom(
@@ -1402,22 +1298,6 @@ class DiagramElement {
       'custom',
       'isAnimatingCustom',
     );
-    // if (setToEndOfPlan && this.state.isAnimatingCustom) {
-    //   const lastPhase = this.animate.custom.plan.slice(-1)[0];
-    //   lastPhase.animationCallback(1);
-    // }
-    // this.animate.custom.plan = [];
-    // this.state.isAnimatingCustom = false;
-    // const { callback } = this.animate.custom;
-    // this.animate.custom.callback = null;
-    // if (callback) {
-    //   if (result !== null && result !== undefined) {
-    //     callback(result);
-    //   } else {
-    //     callback();
-    //   }
-    //   // this.callback = null;
-    // }
   }
 
 

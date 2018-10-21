@@ -1656,6 +1656,7 @@ export class EquationForm extends Elements {
     this.dissolveElements(elementsToShow, 'in', time, 0.5, callback);
   }
 
+  // deprecate
   sfrac(
     numerator: TypeEquationInput,
     denominator: TypeEquationInput,
@@ -1667,6 +1668,7 @@ export class EquationForm extends Elements {
     return f;
   }
 
+  // deprecate
   frac(
     numerator: TypeEquationInput,
     denominator: TypeEquationInput,
@@ -1679,6 +1681,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   sub(
     content: TypeEquationInput,
     subscript: TypeEquationInput,
@@ -1690,6 +1693,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   sup(
     content: TypeEquationInput,
     superscript: TypeEquationInput,
@@ -1701,6 +1705,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   supsub(
     content: TypeEquationInput,
     superscript: TypeEquationInput,
@@ -1713,6 +1718,7 @@ export class EquationForm extends Elements {
     );
   }
 
+  // deprecate
   int(
     limitMin: TypeEquationInput,
     limitMax: TypeEquationInput,
