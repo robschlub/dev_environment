@@ -600,6 +600,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
         new Rect(0, 0, width, height),
         tools.roundNum(stepX * width / limits.width, 8),
         tools.roundNum(stepY * height / limits.height, 8),
+        1,
         gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
       );
       xy.add('grid', gridLines);

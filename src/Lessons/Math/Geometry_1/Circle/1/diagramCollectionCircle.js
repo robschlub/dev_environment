@@ -599,12 +599,21 @@ class CircleCollection extends DiagramElementCollection {
     if (s) {
       currentPercent = s.x;
     }
-
+    console.log('*******************************************')
+    console.log('*******************************************')
+    console.log('*******************************************')
+    console.log('*******************************************')
+    console.log('*******************************************')
+    console.log('*******************************************')
     if (!this.varState.straightening || this.varState.percentStraight === 0) {
-      this.animateCustomTo(this.straighten.bind(this), 2, currentPercent);
+      this.animateCustomToWithDelay(
+        0, this.straighten.bind(this), 5, currentPercent, null, false,
+      );
       this.varState.straightening = true;
     } else {
-      this.animateCustomTo(this.bend.bind(this), 2, 1 - currentPercent);
+      this.animateCustomToWithDelay(
+        0, this.bend.bind(this), 5, 1 - currentPercent, null, false,
+      );
       this.varState.straightening = false;
     }
     this.diagram.animateNextFrame();

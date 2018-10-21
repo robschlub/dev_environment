@@ -313,6 +313,7 @@ class CustomAnimationPhase {
   animationStyle: (number) => number;
   callback: ?(boolean) => void;
   finishOnCancel: boolean;
+  startPercent: number;
 
   constructor(
     animationCallback: (number) => void,
@@ -1153,7 +1154,7 @@ class DiagramElement {
 
   animateCustomPlan(
     phases: Array<CustomAnimationPhase>,
-    callback: ?(?mixed) => void = null,
+    callback: ?(boolean) => void = null,
   ): void {
     this.stopAnimatingCustom();
     this.animate.custom.plan = [];

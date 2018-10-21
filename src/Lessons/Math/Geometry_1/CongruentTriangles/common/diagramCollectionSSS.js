@@ -158,7 +158,7 @@ export default class SSSCollection extends CommonDiagramCollection {
         callback();
       }
     };
-    this.animateCustomTo(custom, 2, 0, finish);
+    this.animateCustomToWithDelay(0, custom, 2, 0, finish, false);
     this.diagram.animateNextFrame();
   }
 
