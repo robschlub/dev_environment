@@ -440,10 +440,6 @@ class DiagramElement {
       translation: {
         style: 'linear' | 'curved';
         options: pathOptionsType;
-        // path: (Point, Point, number) => Point;
-        // direction: number;
-        // magnitude: number;
-        // offset: number;
       };
       callback: ?(boolean) => void;
     };
@@ -751,6 +747,8 @@ class DiagramElement {
   // Calculate the next transform due to a progressing animation
   calcNextAnimationTransform(elapsedTime: number): Transform {
     const phase = this.state.animation.currentPhase;
+    // This flow error cannot happen as start is un-nulled in the phase start
+    // $FlowFixMe
     const start = phase.startTransform._dup();
     const delta = phase.deltaTransform._dup();
     const percentTime = elapsedTime / phase.time;
