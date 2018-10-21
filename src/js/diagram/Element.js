@@ -1225,6 +1225,7 @@ class DiagramElement {
 
     // Reset the animation state, plan and callback
     this.state[isState] = false;
+    // $FlowFixMe
     this.animate[animateString].plan = [];
     this.animate[animateString].callback = null;
 
@@ -1233,11 +1234,16 @@ class DiagramElement {
       const endIndex = plan.length - 1;
       for (let i = currentPhaseIndex; i <= endIndex; i += 1) {
         const phase = plan[i];
-        if (animateString !== 'custom') {
-          phase.finish(this, cancelled, forceSetToEnd);
-        } else {
+        if (phase instanceof CustomAnimationPhase) {
           phase.finish(cancelled, forceSetToEnd);
+        } else {
+          phase.finish(this, cancelled, forceSetToEnd);
         }
+        // if (animateString !== 'custom') {
+        //   phase.finish(this, cancelled, forceSetToEnd);
+        // } else {
+        //   phase.finish(cancelled, forceSetToEnd);
+        // }
       }
     }
 
@@ -1245,11 +1251,16 @@ class DiagramElement {
     if (runLastPhase) {
       if (plan.length > 0) {
         const phase = plan.slice(-1)[0];
-        if (animateString !== 'custom') {
-          phase.finish(this, cancelled, forceSetToEnd);
-        } else {
+        if (phase instanceof CustomAnimationPhase) {
           phase.finish(cancelled, forceSetToEnd);
+        } else {
+          phase.finish(this, cancelled, forceSetToEnd);
         }
+        // if (animateString !== 'custom') {
+        //   phase.finish(this, cancelled, forceSetToEnd);
+        // } else {
+        //   phase.finish(cancelled, forceSetToEnd);
+        // }
       }
     }
 
