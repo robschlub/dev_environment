@@ -89,7 +89,7 @@ function makeRefresh(
   return refresh;
 }
 
-function makeRefreshHtml(
+function makeDescriptionHTML(
   diagram: Diagram,
   radius: number,
   id: string,
@@ -155,7 +155,7 @@ export type TypeEquationNavigator = {
   _refresh: TypeRefresh;
   _nextDescription: DiagramElementPrimative;
   _prevDescription: DiagramElementPrimative;
-  _refreshHtml: DiagramElementPrimative;
+  _description: DiagramElementPrimative;
   updateButtons: () => void;
   eqn: Equation;
   _eqn: DiagramElementCollection;
@@ -209,13 +209,13 @@ function updateButtons(
       makeTouchable(nav._refresh, false, colorDisabled);
       makeTouchable(nav._prev, false, colorDisabled);
       makeTouchable(nav._prevDescription, false);
-      makeTouchable(nav._refreshHtml, false);
+      makeTouchable(nav._description, false);
       makeTouchable(nav._nextDescription, true);
     } else {
       makeTouchable(nav._refresh, true, color);
       makeTouchable(nav._prev, true, color);
       makeTouchable(nav._prevDescription, true);
-      makeTouchable(nav._refreshHtml, true);
+      makeTouchable(nav._description, true);
     }
     if (navigator.eqn.formSeries.length > 1) {
       makeTouchable(nav._next, true, color);
@@ -251,6 +251,7 @@ export default function makeEquationNavigator(
   color: Array<number>,
   colorDisabled: Array<number>,
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
+  type: string = '1',
 ) {
   // const arrowWidth = size * 1.5;
   const arrowHeight = size * 1.5;
@@ -276,92 +277,35 @@ export default function makeEquationNavigator(
   navigator.setEquation(equation);
   // const prev = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, 0);
   // const next = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, Math.PI);
+  let prev = null;
+  let next = null;
+  let refresh = null;
+  let description = null;
+  let nextDescription = null;
+  let prevDescription = null;
+  if (type === '1') {
+    prev = makeNextPrevText(diagram, false, spacing - arrowHeight / 2, id);
+    next = makeNextPrevText(diagram, true, -spacing + arrowHeight / 2, id);
+    refresh = makeRefresh(
+      diagram, refreshSides, refreshRadius, refreshLineWidth,
+      refreshAngle, color,
+    );
+    description = makeDescriptionHTML(diagram, refreshRadius, id);
+    nextDescription = diagram.equation
+      .makeDescription('id__rectangles_equation_next_desctription');
+    // nextDescription.isTouchable = true;
 
-  const prev = makeNextPrevText(diagram, false, spacing - arrowHeight / 2, id);
-  const next = makeNextPrevText(diagram, true, -spacing + arrowHeight / 2, id);
+    prevDescription = diagram.equation
+      .makeDescription('id__rectangles_equation_prev_desctription');
+    // prevDescription.isTouchable = true;
 
-  const refresh = makeRefresh(
-    diagram, refreshSides, refreshRadius, refreshLineWidth,
-    refreshAngle, color,
-  );
-
-  const refreshHtml = makeRefreshHtml(diagram, refreshRadius, id);
-
-  const nextDescription = diagram.equation.makeDescription('id__rectangles_equation_next_desctription');
-  nextDescription.isTouchable = true;
-
-  const prevDescription = diagram.equation.makeDescription('id__rectangles_equation_prev_desctription');
-  prevDescription.isTouchable = true;
-
-  navigator.add('prev', prev);
-  navigator.add('next', next);
-  navigator.add('refresh', refresh);
-
-  navigator.add('nextDescription', nextDescription);
-  navigator.add('prevDescription', prevDescription);
-  navigator.add('refreshHtml', refreshHtml);
-  navigator.updateButtons = () => {
-    updateButtons(navigator, color, colorDisabled);
-  };
-  // navigator.updateButtons = () => {
-  //   const currentForm = navigator.eqn.getCurrentForm();
-  //   if (currentForm != null) {
-  //     const index = navigator.eqn.getFormIndex(currentForm);
-  //     if (index === 0) {
-  //       refresh.setColor(colorDisabled);
-  //       prev.setColor(colorDisabled);
-  //       refresh.isTouchable = false;
-  //       prev.isTouchable = false;
-  //       prevDescription.isTouchable = false;
-  //       refreshHtml.vertices.element.classList
-  //         .remove('lesson__equation_nav__touchable');
-  //       prev.vertices.element.classList
-  //         .remove('lesson__equation_nav__touchable');
-  //       prevDescription.vertices.element.classList
-  //         .remove('lesson__equation_nav__touchable');
-  //     } else {
-  //       refresh.setColor(color);
-  //       prev.setColor(color);
-  //       refresh.isTouchable = true;
-  //       prev.isTouchable = true;
-  //       prevDescription.isTouchable = true;
-  //       refreshHtml.vertices.element.classList
-  //         .add('lesson__equation_nav__touchable');
-  //       prev.vertices.element.classList
-  //         .add('lesson__equation_nav__touchable');
-  //       prevDescription.vertices.element.classList
-  //         .add('lesson__equation_nav__touchable');
-  //     }
-  //     if (navigator.eqn.formSeries.length > 1) {
-  //       next.setColor(color);
-  //       next.isTouchable = true;
-  //       nextDescription.isTouchable = true;
-  //       next.vertices.element.classList.add('lesson__equation_nav__touchable');
-  //       nextDescription.vertices.element.classList.add('lesson__equation_nav__touchable');
-  //     } else {
-  //       next.setColor(colorDisabled);
-  //       nextDescription.isTouchable = false;
-  //       nextDescription.isTouchable = false;
-  //       nextDescription.vertices.element.classList
-  //         .remove('lesson__equation_nav__touchable');
-  //       nextDescription.vertices.element.classList
-  //         .remove('lesson__equation_nav__touchable');
-  //     }
-  //     const nextIndex = index + 1;
-  //     if (nextIndex > navigator.eqn.formSeries.length - 1) {
-  //       nextDescription.vertices.change('RESTART from begining', nextDescription.lastDrawTransform.m());
-  //     } else {
-  //       updateDescription(navigator.eqn, 'base', nextDescription, nextIndex, false);
-  //     }
-
-  //     const prevIndex = index - 1;
-  //     if (prevIndex >= 0) {
-  //       updateDescription(navigator.eqn, 'base', prevDescription, prevIndex, false);
-  //     } else {
-  //       prevDescription.vertices.change('', prevDescription.lastDrawTransform.m());
-  //     }
-  //   }
-  // };
+    nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
+    prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
+    refresh.setPosition(offset);
+    description.setPosition(offset);
+    next.setPosition(offset.add(0, -spacing + arrowHeight / 2));
+    prev.setPosition(offset.add(0, spacing - arrowHeight / 2));
+  }
 
   const clickNext = () => {
     navigator.eqn.nextForm(1.5);
@@ -385,18 +329,35 @@ export default function makeEquationNavigator(
     navigator.updateButtons();
   };
 
-  prev.onClick = clickPrev;
-  next.onClick = clickNext;
-  refresh.onClick = clickRefresh;
-  nextDescription.onClick = clickNext;
-  prevDescription.onClick = clickPrev;
+  if (prev) {
+    navigator.add('prev', prev);
+    prev.onClick = clickPrev;
+  }
+  if (next) {
+    navigator.add('next', next);
+    next.onClick = clickNext;
+  }
+  if (refresh) {
+    navigator.add('refresh', refresh);
+    refresh.onClick = clickRefresh;
+  }
+  if (description) {
+    navigator.add('refresh', refresh);
+    description.onClick = clickRefresh;
+  }
+  if (nextDescription) {
+    navigator.add('nextDescription', nextDescription);
+    nextDescription.onClick = clickNext;
+  }
+  if (prevDescription) {
+    navigator.add('prevDescription', prevDescription);
+    prevDescription.onClick = clickPrev;
+  }
 
-  nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
-  prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
-  refresh.setPosition(offset);
-  refreshHtml.setPosition(offset);
-  next.setPosition(offset.add(0, -spacing + arrowHeight / 2));
-  prev.setPosition(offset.add(0, spacing - arrowHeight / 2));
+  navigator.updateButtons = () => {
+    updateButtons(navigator, color, colorDisabled);
+  };
+
   navigator.hasTouchableElements = true;
   // updateButtons();
   return navigator;
