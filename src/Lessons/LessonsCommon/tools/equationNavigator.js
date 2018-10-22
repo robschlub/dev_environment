@@ -10,6 +10,7 @@ import {
 import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import * as html from '../../../js/tools/htmlGenerator';
 import HTMLObject from '../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
+// import { generateUniqueId } from '../../../js/diagram/tools/tools';
 
 function makeNextPrevText(
   diagram: Diagram,
@@ -154,11 +155,93 @@ export type TypeEquationNavigator = {
   _refresh: TypeRefresh;
   _nextDescription: DiagramElementPrimative;
   _prevDescription: DiagramElementPrimative;
-  refreshHtml: DiagramElementPrimative;
+  _refreshHtml: DiagramElementPrimative;
   updateButtons: () => void;
   eqn: Equation;
   _eqn: DiagramElementCollection;
 } & DiagramElementCollection;
+
+function makeTouchable(
+  element: DiagramElementPrimative | null | TypeRefresh | DiagramElementCollection,
+  touchable: boolean = true,
+  // touchableColor: Array<number> | null,
+  // disabledColor: Array<number> | null,
+  color: Array<number> | null = null,
+) {
+  if (element != null) {
+    if (touchable) {
+      if (color) {
+        element.setColor(color);
+      }
+      // eslint-disable-next-line no-param-reassign
+      element.isTouchable = true;
+      if (element instanceof DiagramElementPrimative) {
+        if (element.vertices instanceof HTMLObject) {
+          element.vertices.element.classList.add('lesson__equation_nav__touchable');
+        }
+      }
+    } else {
+      if (color) {
+        element.setColor(color);
+      }
+      // eslint-disable-next-line no-param-reassign
+      element.isTouchable = false;
+      if (element instanceof DiagramElementPrimative) {
+        if (element.vertices instanceof HTMLObject) {
+          element.vertices.element.classList
+            .remove('lesson__equation_nav__touchable');
+        }
+      }
+    }
+  }
+}
+
+function updateButtons(
+  navigator: TypeEquationNavigator,
+  color: Array<number>,
+  colorDisabled: Array<number>,
+) {
+  const nav = navigator;
+  const currentForm = nav.eqn.getCurrentForm();
+  if (currentForm != null) {
+    const index = navigator.eqn.getFormIndex(currentForm);
+    if (index === 0) {
+      makeTouchable(nav._refresh, false, colorDisabled);
+      makeTouchable(nav._prev, false, colorDisabled);
+      makeTouchable(nav._prevDescription, false);
+      makeTouchable(nav._refreshHtml, false);
+      makeTouchable(nav._nextDescription, true);
+    } else {
+      makeTouchable(nav._refresh, true, color);
+      makeTouchable(nav._prev, true, color);
+      makeTouchable(nav._prevDescription, true);
+      makeTouchable(nav._refreshHtml, true);
+    }
+    if (navigator.eqn.formSeries.length > 1) {
+      makeTouchable(nav._next, true, color);
+      makeTouchable(nav._nextDescription, true);
+    } else {
+      makeTouchable(nav._next, false, colorDisabled);
+      makeTouchable(nav._nextDescription, false);
+    }
+    const nextIndex = index + 1;
+    if (nextIndex > navigator.eqn.formSeries.length - 1) {
+      nav._nextDescription.vertices.change(
+        'RESTART from begining',
+        nav._nextDescription.lastDrawTransform.m(),
+      );
+    } else {
+      updateDescription(navigator.eqn, 'base', nav._nextDescription, nextIndex, false);
+    }
+
+    const prevIndex = index - 1;
+    if (prevIndex >= 0) {
+      updateDescription(navigator.eqn, 'base', nav._prevDescription, prevIndex, false);
+    } else {
+      nav._prevDescription.vertices.change('', nav._prevDescription.lastDrawTransform.m());
+    }
+  }
+}
 
 export default function makeEquationNavigator(
   diagram: Diagram,
@@ -217,66 +300,68 @@ export default function makeEquationNavigator(
   navigator.add('nextDescription', nextDescription);
   navigator.add('prevDescription', prevDescription);
   navigator.add('refreshHtml', refreshHtml);
-
   navigator.updateButtons = () => {
-    const currentForm = navigator.eqn.getCurrentForm();
-    if (currentForm != null) {
-      const index = navigator.eqn.getFormIndex(currentForm);
-      if (index === 0) {
-        refresh.setColor(colorDisabled);
-        prev.setColor(colorDisabled);
-        refresh.isTouchable = false;
-        prev.isTouchable = false;
-        prevDescription.isTouchable = false;
-        refreshHtml.vertices.element.classList
-          .remove('lesson__equation_nav__touchable');
-        prev.vertices.element.classList
-          .remove('lesson__equation_nav__touchable');
-        prevDescription.vertices.element.classList
-          .remove('lesson__equation_nav__touchable');
-      } else {
-        refresh.setColor(color);
-        prev.setColor(color);
-        refresh.isTouchable = true;
-        prev.isTouchable = true;
-        prevDescription.isTouchable = true;
-        refreshHtml.vertices.element.classList
-          .add('lesson__equation_nav__touchable');
-        prev.vertices.element.classList
-          .add('lesson__equation_nav__touchable');
-        prevDescription.vertices.element.classList
-          .add('lesson__equation_nav__touchable');
-      }
-      if (navigator.eqn.formSeries.length > 1) {
-        next.setColor(color);
-        next.isTouchable = true;
-        nextDescription.isTouchable = true;
-        next.vertices.element.classList.add('lesson__equation_nav__touchable');
-        nextDescription.vertices.element.classList.add('lesson__equation_nav__touchable');
-      } else {
-        next.setColor(colorDisabled);
-        nextDescription.isTouchable = false;
-        nextDescription.isTouchable = false;
-        nextDescription.vertices.element.classList
-          .remove('lesson__equation_nav__touchable');
-        nextDescription.vertices.element.classList
-          .remove('lesson__equation_nav__touchable');
-      }
-      const nextIndex = index + 1;
-      if (nextIndex > navigator.eqn.formSeries.length - 1) {
-        nextDescription.vertices.change('RESTART from begining', nextDescription.lastDrawTransform.m());
-      } else {
-        updateDescription(navigator.eqn, 'base', nextDescription, nextIndex, false);
-      }
-
-      const prevIndex = index - 1;
-      if (prevIndex >= 0) {
-        updateDescription(navigator.eqn, 'base', prevDescription, prevIndex, false);
-      } else {
-        prevDescription.vertices.change('', prevDescription.lastDrawTransform.m());
-      }
-    }
+    updateButtons(navigator, color, colorDisabled);
   };
+  // navigator.updateButtons = () => {
+  //   const currentForm = navigator.eqn.getCurrentForm();
+  //   if (currentForm != null) {
+  //     const index = navigator.eqn.getFormIndex(currentForm);
+  //     if (index === 0) {
+  //       refresh.setColor(colorDisabled);
+  //       prev.setColor(colorDisabled);
+  //       refresh.isTouchable = false;
+  //       prev.isTouchable = false;
+  //       prevDescription.isTouchable = false;
+  //       refreshHtml.vertices.element.classList
+  //         .remove('lesson__equation_nav__touchable');
+  //       prev.vertices.element.classList
+  //         .remove('lesson__equation_nav__touchable');
+  //       prevDescription.vertices.element.classList
+  //         .remove('lesson__equation_nav__touchable');
+  //     } else {
+  //       refresh.setColor(color);
+  //       prev.setColor(color);
+  //       refresh.isTouchable = true;
+  //       prev.isTouchable = true;
+  //       prevDescription.isTouchable = true;
+  //       refreshHtml.vertices.element.classList
+  //         .add('lesson__equation_nav__touchable');
+  //       prev.vertices.element.classList
+  //         .add('lesson__equation_nav__touchable');
+  //       prevDescription.vertices.element.classList
+  //         .add('lesson__equation_nav__touchable');
+  //     }
+  //     if (navigator.eqn.formSeries.length > 1) {
+  //       next.setColor(color);
+  //       next.isTouchable = true;
+  //       nextDescription.isTouchable = true;
+  //       next.vertices.element.classList.add('lesson__equation_nav__touchable');
+  //       nextDescription.vertices.element.classList.add('lesson__equation_nav__touchable');
+  //     } else {
+  //       next.setColor(colorDisabled);
+  //       nextDescription.isTouchable = false;
+  //       nextDescription.isTouchable = false;
+  //       nextDescription.vertices.element.classList
+  //         .remove('lesson__equation_nav__touchable');
+  //       nextDescription.vertices.element.classList
+  //         .remove('lesson__equation_nav__touchable');
+  //     }
+  //     const nextIndex = index + 1;
+  //     if (nextIndex > navigator.eqn.formSeries.length - 1) {
+  //       nextDescription.vertices.change('RESTART from begining', nextDescription.lastDrawTransform.m());
+  //     } else {
+  //       updateDescription(navigator.eqn, 'base', nextDescription, nextIndex, false);
+  //     }
+
+  //     const prevIndex = index - 1;
+  //     if (prevIndex >= 0) {
+  //       updateDescription(navigator.eqn, 'base', prevDescription, prevIndex, false);
+  //     } else {
+  //       prevDescription.vertices.change('', prevDescription.lastDrawTransform.m());
+  //     }
+  //   }
+  // };
 
   const clickNext = () => {
     navigator.eqn.nextForm(1.5);

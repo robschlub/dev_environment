@@ -10,25 +10,27 @@ import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLE
 // import * as html from '../../../../../js/tools/htmlGenerator';
 
 export type TypeRectquationCollection = {
-  _a: DiagramElementPrimative;
-  _b: DiagramElementPrimative;
-  __90: DiagramElementPrimative;
-  __180: DiagramElementPrimative;
-  _plus1: DiagramElementPrimative;
-  _plus2: DiagramElementPrimative;
-  _equals: DiagramElementPrimative;
-  _m90l: DiagramElementPrimative;
-  _m90r: DiagramElementPrimative;
-  _ml: DiagramElementPrimative;
-  _al: DiagramElementPrimative;
-  _mr: DiagramElementPrimative;
-  _ar: DiagramElementPrimative;
-  _strike1: DiagramElementPrimative;
-  _strike2: DiagramElementPrimative;
-  _strike3: DiagramElementPrimative;
-  _strike4: DiagramElementPrimative;
-  _calc0: DiagramElementPrimative;
-  _calc90: DiagramElementPrimative;
+  _Area: DiagramElementPrimative,
+  __6: DiagramElementPrimative,
+  __10: DiagramElementPrimative,
+  __60: DiagramElementPrimative,
+  __1: DiagramElementPrimative,
+  __1_: DiagramElementPrimative,
+  __2: DiagramElementPrimative,
+  _m: DiagramElementPrimative,
+  _m_: DiagramElementPrimative,
+  _mul: DiagramElementPrimative,
+  _mul_: DiagramElementPrimative,
+  _mul__: DiagramElementPrimative,
+  _x: {
+    _s1: DiagramElementPrimative;
+    _s2: DiagramElementPrimative;
+  } & DiagramElementCollection,
+  _x_: {
+    _s1: DiagramElementPrimative;
+    _s2: DiagramElementPrimative;
+  } & DiagramElementCollection,
+  _equals: DiagramElementPrimative,
 } & DiagramElementCollection;
 
 export type TypeRectEquation = {
@@ -68,7 +70,6 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'middle';
   eqn.formAlignment.scale = 1.0;
-  eqn.collection.__1.asdf = true;
   eqn.addForm('0', [
     'Area',
     'equals',
