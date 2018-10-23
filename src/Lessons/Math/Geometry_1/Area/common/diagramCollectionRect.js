@@ -12,8 +12,12 @@ import {
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 // import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 // import { makeLine } from '../../../../LessonsCommon/tools/line';
-import { makeRectEquation } from './equations';
-import type { TypeRectEquation } from './equations';
+import { makeRectEquation, addSimpleRectEquation } from './equations';
+import type {
+  TypeRectEquation,
+  TypeSimpleRectEquation,
+  TypeSimpleRectEquationCollection,
+} from './equations';
 import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
 
@@ -26,6 +30,8 @@ export default class RectAreaCollection extends CommonDiagramCollection {
   rectEqn: TypeRectEquation;
   _navRect: TypeEquationNavigator;
   _line: DiagramElementPrimative;
+  simpleRectEqn: TypeSimpleRectEquation;
+  _simpleRectEqn: TypeSimpleRectEquationCollection;
 
   addGrid() {
     const lay = this.layout.gridRect;
@@ -67,7 +73,13 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.add('line', line);
   }
 
-  addEqn() {
+  addEqns() {
+    addSimpleRectEquation(
+      this.diagram, this.layout, this, 'simpleRectEqn',
+    );
+    // addRectEquation(
+    //   this.diagram, this.layout, this, 'rectEqn',
+    // );
     this.rectEqn = makeRectEquation(this.diagram, this.layout);
     const makeNav = eqn => makeEquationNavigator(
       this.diagram, eqn, new Point(0, -0.5),
@@ -88,7 +100,7 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.addGrid();
     this.addRect();
     this.addRow();
-    this.addEqn();
+    this.addEqns();
 
     this.setPosition(this.layout.rectPosition);
     this.hasTouchableElements = true;
@@ -97,7 +109,7 @@ export default class RectAreaCollection extends CommonDiagramCollection {
   toggleRow(index: number | null = null) {
     const lay = this.layout.rect;
     const { spacing } = this.layout.gridRect;
-
+    this._row.showAll();
     if (index === null) {
       this.rowIndex = (this.rowIndex + 1) % (lay.height / spacing);
     } else {

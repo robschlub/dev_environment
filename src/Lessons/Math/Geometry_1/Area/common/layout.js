@@ -154,6 +154,7 @@ export default function commonLessonLayout() {
     height: 1.5,
     width: 0.03,
   };
+  layout.rectSimpleEqnPosition = new Point(0, 0.5);
   layout.rectEqnPosition = new Point(0, 0);
 
   return layout;

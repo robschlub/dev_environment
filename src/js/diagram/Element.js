@@ -2486,6 +2486,7 @@ class DiagramElementCollection extends DiagramElement {
   elements: Object;
   order: Array<string>;
   touchInBoundingRect: boolean;
+  eqns: {};
   // biasTransform: Array<number>;
 
   constructor(
@@ -2496,6 +2497,7 @@ class DiagramElementCollection extends DiagramElement {
     this.elements = {};
     this.order = [];
     this.touchInBoundingRect = false;
+    this.eqns = {};
   }
 
   _dup() {

@@ -294,19 +294,37 @@ class Content extends LessonContent {
         </p>
         `),
     });
+
+    common.show = [rect._grid, rect._line];
     this.addSection(common, {
       setContent: [
-        'Using reference squares |as| the unit of area makes it particularly convenient to examine the area of a rectangle.',
+        'Using reference squares as the unit of area makes it particularly convenient to examine the |area of a rectangle|.',
+      ],
+    });
+
+    this.addSection(common, {
+      setContent: [
+        'The squares can be aligned with the edges and it can be observed that there are |six_rows_of_ten| squares.',
       ],
       modifiers: {
-        as: click(rect.toggleRow, [rect, null], colors.diagram.action),
+        six_rows_of_ten: click(rect.toggleRow, [rect, null], colors.row),
       },
-      show: [rect],
-      setEnterState: () => {
-        rect.toggleRow(0);
-        rect.rectEqn.showForm('0');
+      setSteadyState: () => {
+        rect.rowIndex = 5;
       },
     });
+
+    this.addSection(common, {
+      setContent: [
+        'Therefore, the area of a rectangle can be calculated:',
+      ],
+      setSteadyState: () => {
+        rect._simpleRectEqn.showAll();
+        rect.eqns.simpleRectEqn.showForm('0');
+        console.log(rect)
+      },
+    });
+    
 
     this.addSection(common, {
       title: 'asdf',
