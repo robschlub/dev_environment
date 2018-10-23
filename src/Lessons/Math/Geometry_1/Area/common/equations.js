@@ -9,6 +9,8 @@ import {
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import * as html from '../../../../../js/tools/htmlGenerator';
 import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
+import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
+
 
 export type TypeRectEquationCollection = {
   _Area: DiagramElementPrimative,
@@ -37,6 +39,10 @@ export type TypeRectEquationCollection = {
 export type TypeRectEquation = {
   collection: TypeRectEquationCollection;
 } & Equation;
+
+export type TypeRectEquationNav = {
+  eqn: TypeRectEquation;
+} & TypeEquationNavigator;
 
 export function addRectEqn(
   diagram: Diagram,
@@ -172,10 +178,10 @@ export function addRectEqn(
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;
   const nav = makeEquationNavigator(
-    diagram, eqn, new Point(0, -0.5),
+    diagram, eqn, layout.rectEqnNavPosition,
     'twoLine', 'arrows', 'center',
   );
-  addToCollection.add(name, eqn.collection);
+  addToCollection.add(name, nav);
   return eqn;
 }
 

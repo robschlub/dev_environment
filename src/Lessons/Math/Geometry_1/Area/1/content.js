@@ -36,15 +36,15 @@ class Content extends LessonContent {
     const mods = {
       m: highlight(colors.unit),
     };
-    rect.rectEqn.changeDescription('0', 'Area equals product of two adjacent side lengths.', mods);
-    rect.rectEqn.changeDescription('1', '6|m| is the same as saying 6 lots of 1|m|. Expand both 6|m| and 10|m|.', mods);
-    rect.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
-    rect.rectEqn.changeDescription('3', 'Calculate 6 ⨉ 10', mods);
-    rect.rectEqn.changeDescription('4', 'Replace 6 ⨉ 10 with calculated result', mods);
-    rect.rectEqn.changeDescription('5', 'Multiplying anything by 1 doesn\'t change the result.', mods);
-    rect.rectEqn.changeDescription('6', 'Simplify by removing 1s', mods);
-    rect.rectEqn.changeDescription('7', 'Multiplying something by itself is the same as squaring it.', mods);
-    rect.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
+    rect.eqns.rectEqn.changeDescription('0', 'Area equals product of two adjacent side lengths.', mods);
+    rect.eqns.rectEqn.changeDescription('1', '6|m| is the same as saying 6 lots of 1|m|. Expand both 6|m| and 10|m|.', mods);
+    rect.eqns.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
+    rect.eqns.rectEqn.changeDescription('3', 'Calculate 6 ⨉ 10', mods);
+    rect.eqns.rectEqn.changeDescription('4', 'Replace 6 ⨉ 10 with calculated result', mods);
+    rect.eqns.rectEqn.changeDescription('5', 'Multiplying anything by 1 doesn\'t change the result.', mods);
+    rect.eqns.rectEqn.changeDescription('6', 'Simplify by removing 1s', mods);
+    rect.eqns.rectEqn.changeDescription('7', 'Multiplying something by itself is the same as squaring it.', mods);
+    rect.eqns.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
 
     let common = {
       setContent: [],
@@ -324,15 +324,15 @@ class Content extends LessonContent {
       },
     });
 
-    this.addSection(common, {
-      setContent: [
-        'When the reference squares have a specific size, say 1m side length, then we can look at the units of area more closely.',
-      ],
-      setSteadyState: () => {
-        rect._rectEqn.showAll();
-        rect.eqns.rectEqn.showForm('0');
-      },
-    });
+    // this.addSection(common, {
+    //   setContent: [
+    //     'When the reference squares have a specific size, say 1m side length, then we can look at the units of area more closely.',
+    //   ],
+    //   setSteadyState: () => {
+    //     rect._rectEqn.showAll();
+    //     rect.eqns.rectEqn.showForm('0');
+    //   },
+    // });
 
     this.addSection(common, {
       title: 'asdf',
@@ -342,11 +342,11 @@ class Content extends LessonContent {
       modifiers: {
         as: click(rect.toggleRow, [rect, null], colors.diagram.action),
       },
-      show: [rect._navRect],
+      show: [rect._rectEqn],
       setSteadyState: () => {
-        rect._navRect.showAll();
-        rect._navRect.eqn.showForm('0');
-        rect._navRect.updateButtons();
+        rect._rectEqn.showAll();
+        rect.eqns.rectEqn.showForm('0');
+        rect._rectEqn.updateButtons();
       },
     });
   }

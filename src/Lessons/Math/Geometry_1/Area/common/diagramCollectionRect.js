@@ -12,14 +12,14 @@ import {
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 // import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 // import { makeLine } from '../../../../LessonsCommon/tools/line';
-import { makeRectEquation, addSimpleRectEquation } from './equations';
+import { addRectEqn, addSimpleRectEquation } from './equations';
 import type {
+  TypeRectEquationNav,
   TypeRectEquation,
   TypeSimpleRectEquation,
   TypeSimpleRectEquationCollection,
+
 } from './equations';
-import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
-import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -27,11 +27,14 @@ export default class RectAreaCollection extends CommonDiagramCollection {
   _row: DiagramElementPrimative;
   _grid: DiagramElementPrimative;
   _rect: DiagramElementCollection;
-  rectEqn: TypeRectEquation;
-  _navRect: TypeEquationNavigator;
   _line: DiagramElementPrimative;
-  simpleRectEqn: TypeSimpleRectEquation;
+
   _simpleRectEqn: TypeSimpleRectEquationCollection;
+  _rectEqn: TypeRectEquationNav;
+  eqns: {
+    simpleRectEqn: TypeSimpleRectEquation;
+    rectEqn: TypeRectEquation;
+  };
 
   addGrid() {
     const lay = this.layout.gridRect;
@@ -77,17 +80,9 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     addSimpleRectEquation(
       this.diagram, this.layout, this, 'simpleRectEqn',
     );
-    // addRectEquation(
-    //   this.diagram, this.layout, this, 'rectEqn',
-    // );
-    this.rectEqn = makeRectEquation(this.diagram, this.layout);
-    const makeNav = eqn => makeEquationNavigator(
-      this.diagram, eqn, new Point(0, -0.5),
-      'twoLine', 'arrows', 'center',
+    addRectEqn(
+      this.diagram, this.layout, this, 'rectEqn',
     );
-    const navRect = makeNav(this.rectEqn);
-    navRect.setPosition(this.layout.rectEqnPosition);
-    this.add('navRect', navRect);
   }
 
   constructor(

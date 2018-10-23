@@ -2486,7 +2486,7 @@ class DiagramElementCollection extends DiagramElement {
   elements: Object;
   order: Array<string>;
   touchInBoundingRect: boolean;
-  eqns: {};
+  eqns: Object;
   // biasTransform: Array<number>;
 
   constructor(

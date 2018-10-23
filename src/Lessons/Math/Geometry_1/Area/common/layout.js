@@ -156,6 +156,7 @@ export default function commonLessonLayout() {
   };
   layout.rectSimpleEqnPosition = new Point(0, 1.5);
   layout.rectEqnPosition = new Point(0, 0);
+  layout.rectEqnNavPosition = new Point(0, -0.4);
 
   return layout;
 }
