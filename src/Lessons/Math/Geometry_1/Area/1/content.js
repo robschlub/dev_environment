@@ -321,10 +321,18 @@ class Content extends LessonContent {
       setSteadyState: () => {
         rect._simpleRectEqn.showAll();
         rect.eqns.simpleRectEqn.showForm('0');
-        console.log(rect)
       },
     });
-    
+
+    this.addSection(common, {
+      setContent: [
+        'When the reference squares have a specific size, say 1m side length, then we can look at the units of area more closely.',
+      ],
+      setSteadyState: () => {
+        rect._rectEqn.showAll();
+        rect.eqns.rectEqn.showForm('0');
+      },
+    });
 
     this.addSection(common, {
       title: 'asdf',

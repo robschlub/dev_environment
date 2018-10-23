@@ -8,6 +8,7 @@ import {
 } from '../../../../../js/diagram/Element';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import * as html from '../../../../../js/tools/htmlGenerator';
+import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
 export type TypeRectEquationCollection = {
   _Area: DiagramElementPrimative,
@@ -37,7 +38,12 @@ export type TypeRectEquation = {
   collection: TypeRectEquationCollection;
 } & Equation;
 
-export function makeRectEquation(diagram: Diagram, layout: Object) {
+export function addRectEqn(
+  diagram: Diagram,
+  layout: Object,
+  addToCollection: DiagramElementCollection,
+  name: string,
+) {
   const eqn = diagram.equation.makeEqn();
   // const eqnDescription = diagram.equation
   //   .makeDescription('id__rectangles_equation_desctription');
@@ -162,6 +168,14 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
 
   eqn.collection.setPosition(layout.rectEqnPosition);
   eqn.setCurrentForm('0');
+  // addToCollection.add(name, eqn.collection);
+  // eslint-disable-next-line no-param-reassign
+  addToCollection.eqns[name] = eqn;
+  const nav = makeEquationNavigator(
+    diagram, eqn, new Point(0, -0.5),
+    'twoLine', 'arrows', 'center',
+  );
+  addToCollection.add(name, eqn.collection);
   return eqn;
 }
 
