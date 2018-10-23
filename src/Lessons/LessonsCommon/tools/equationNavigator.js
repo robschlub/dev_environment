@@ -163,88 +163,6 @@ export type TypeEquationNavigator = {
   _eqn: DiagramElementCollection;
 } & DiagramElementCollection;
 
-// function makeTouchable(
-//   element: DiagramElementPrimative | null | TypeRefresh | DiagramElementCollection,
-//   touchable: boolean = true,
-//   // touchableColor: Array<number> | null,
-//   // disabledColor: Array<number> | null,
-//   color: Array<number> | null = null,
-// ) {
-//   if (element != null) {
-//     if (touchable) {
-//       if (color) {
-//         element.setColor(color);
-//       }
-//       // eslint-disable-next-line no-param-reassign
-//       element.isTouchable = true;
-//       if (element instanceof DiagramElementPrimative) {
-//         if (element.vertices instanceof HTMLObject) {
-//           element.vertices.element.classList.add('lesson__equation_nav__touchable');
-//         }
-//       }
-//     } else {
-//       if (color) {
-//         element.setColor(color);
-//       }
-//       // eslint-disable-next-line no-param-reassign
-//       element.isTouchable = false;
-//       if (element instanceof DiagramElementPrimative) {
-//         if (element.vertices instanceof HTMLObject) {
-//           element.vertices.element.classList
-//             .remove('lesson__equation_nav__touchable');
-//         }
-//       }
-//     }
-//   }
-// }
-
-// function updateButtonsOld(
-//   navigator: TypeEquationNavigator,
-//   color: Array<number>,
-//   colorDisabled: Array<number>,
-// ) {
-//   const nav = navigator;
-//   const currentForm = nav.eqn.getCurrentForm();
-//   if (currentForm != null) {
-//     const index = navigator.eqn.getFormIndex(currentForm);
-//     if (index === 0) {
-//       makeTouchable(nav._refresh, false, colorDisabled);
-//       makeTouchable(nav._prev, false, colorDisabled);
-//       makeTouchable(nav._prevDescription, false);
-//       makeTouchable(nav._description, false);
-//       makeTouchable(nav._nextDescription, true);
-//     } else {
-//       makeTouchable(nav._refresh, true, color);
-//       makeTouchable(nav._prev, true, color);
-//       makeTouchable(nav._prevDescription, true);
-//       makeTouchable(nav._description, true);
-//     }
-//     if (navigator.eqn.formSeries.length > 1) {
-//       makeTouchable(nav._next, true, color);
-//       makeTouchable(nav._nextDescription, true);
-//     } else {
-//       makeTouchable(nav._next, false, colorDisabled);
-//       makeTouchable(nav._nextDescription, false);
-//     }
-//     const nextIndex = index + 1;
-//     if (nextIndex > navigator.eqn.formSeries.length - 1) {
-//       nav._nextDescription.vertices.change(
-//         'RESTART from begining',
-//         nav._nextDescription.lastDrawTransform.m(),
-//       );
-//     } else {
-//       updateDescription(navigator.eqn, 'base', nav._nextDescription, nextIndex, false);
-//     }
-
-//     const prevIndex = index - 1;
-//     if (prevIndex >= 0) {
-//       updateDescription(navigator.eqn, 'base', nav._prevDescription, prevIndex, false);
-//     } else {
-//       nav._prevDescription.vertices.change('', nav._prevDescription.lastDrawTransform.m());
-//     }
-//   }
-// }
-
 function enableTouch(element: HTMLElement) {
   if (element) {
     element.classList.remove('lesson__eqn_nav__not_touchable');
@@ -309,11 +227,10 @@ function updateButtonsDescriptionOnly(nav: TypeEquationNavigator) {
 }
 
 function makeType3Line(
-  // id: string,
   prevMethod: () => void,
   refreshMethod: () => void,
   nextMethod: () => void,
-  options: string = '',  // can be: 'twoLines'
+  options: string | Array<string> = [],  // can be: 'twoLines'
 ) {
   const table = document.createElement('table');
   const prevGroup = document.createElement('tr');
@@ -347,7 +264,13 @@ function makeType3Line(
   description.classList.add('lesson__eqn_nav__description');
   nextDescription.classList.add('lesson__eqn_nav__3line__nextRow__description');
 
-  if (options === 'twoLines') {
+  let optionsToUse = options;
+  if (typeof optionsToUse === 'string') {
+    optionsToUse = [options];
+  }
+  // Use two lines to stop jittering when transitioning from one line to two
+  // lines
+  if (optionsToUse.indexOf('twoLines') > -1) {
     prevGroup.classList.add('lesson__eqn_nav__3line__prev_twoLines');
     currentGroup.classList.add('lesson__eqn_nav__3line__current_twoLines');
     nextGroup.classList.add('lesson__eqn_nav__3line__next_twoLines');
@@ -398,7 +321,7 @@ function makeType1Line(
   prevMethod: () => void,
   refreshMethod: () => void,
   nextMethod: () => void,
-  options: string = 'twoLine',  // can be: 'twoLines'
+  options: Array<string> | string = [],  // can be: 'twoLines'
 ) {
   const table = document.createElement('table');
   const currentGroup = document.createElement('tr');
@@ -417,9 +340,13 @@ function makeType1Line(
   description.classList.add('lesson__eqn_nav__1line__currentRow__description');
   description.classList.add('lesson__eqn_nav__description');
 
+  let optionsToUse = options;
+  if (typeof optionsToUse === 'string') {
+    optionsToUse = [options];
+  }
   // Use two lines to stop jittering when transitioning from one line to two
   // lines
-  if (options === 'twoLines') {
+  if (optionsToUse.indexOf('twoLines') > -1) {
     currentGroup.classList.add('lesson__eqn_nav__1line__current_twoLines');
   }
 
@@ -427,8 +354,19 @@ function makeType1Line(
   description.onclick = refreshMethod;
   next.onclick = nextMethod;
 
-  next.innerHTML = 'Next';
-  prev.innerHTML = 'Prev';
+  if (optionsToUse.indexOf('arrows') > -1) {
+    const nextArrow = document.createElement('div');
+    nextArrow.classList.add('lesson__eqn_nav__arrow_right');
+    next.appendChild(nextArrow);
+
+    const prevArrow = document.createElement('div');
+    prevArrow.classList.add('lesson__eqn_nav__arrow_left');
+    prev.appendChild(prevArrow);
+  } else {
+    next.innerHTML = 'Next';
+    prev.innerHTML = 'Prev';
+  }
+
   return {
     table,
     currentGroup,
@@ -443,7 +381,7 @@ export default function makeEquationNavigator(
   equation: Equation,
   offset: Point,
   navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' = 'threeLine',
-  options: string = '',
+  options: string | Array<string> = '',
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
 
 ) {
