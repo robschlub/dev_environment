@@ -302,6 +302,7 @@ function makeType2(
   prevMethod: () => void,
   refreshMethod: () => void,
   nextMethod: () => void,
+  options: string = '',  // can be: 'twoLines'
 ) {
   const table = document.createElement('table');
   const prevGroup = document.createElement('tr');
@@ -335,6 +336,12 @@ function makeType2(
   description.classList.add('lesson__eqn_nav__type2__currentRow__description');
   nextDescription.classList.add('lesson__eqn_nav__type2__nextRow__description');
 
+  if (options === 'twoLines') {
+    prevGroup.classList.add('lesson__eqn_nav__type2__prev_twoLines');
+    currentGroup.classList.add('lesson__eqn_nav__type2__current_twoLines');
+    nextGroup.classList.add('lesson__eqn_nav__type2__next_twoLines');
+  }
+
   prevGroup.onclick = prevMethod;
   currentGroup.onclick = refreshMethod;
   nextGroup.onclick = nextMethod;
@@ -359,21 +366,12 @@ function makeType2(
 export default function makeEquationNavigator(
   diagram: Diagram,
   equation: Equation,
-  size: number,
   offset: Point,
-  color: Array<number>,
-  colorDisabled: Array<number>,
+  navType: string = '1',
+  options: string = '',
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
-  type: string = '1',
-) {
-  // const arrowWidth = size * 1.5;
-  const arrowHeight = size * 1.5;
-  const refreshRadius = size;
-  const refreshAngle = Math.PI / 3 * 2;
-  const refreshSides = 100;
-  const refreshLineWidth = size / 5;
-  const spacing = size * 5;
 
+) {
   const navigator = diagram.shapes.collection(new Transform('Triangle')
     .scale(1, 1)
     .translate(0, 0));
@@ -381,15 +379,9 @@ export default function makeEquationNavigator(
     navigator.eqn = eqn;
     navigator._eqn = [];
     navigator.add('eqn', eqn.collection);
-    // if (navigator.eqn.descriptionElement != null) {
-    //   navigator.add('currentStep', eqn.descriptionElement);
-    //   navigator.eqn.descriptionElement.setPosition(offset.add(size * 3, 0));
-    // }
     navigator.eqn.collection.setPosition(0, 0);
   };
   navigator.setEquation(equation);
-  // const prev = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, 0);
-  // const next = makeArrow(diagram, arrowWidth, arrowHeight, spacing, color, Math.PI);
   navigator.prev = null;
   navigator.next = null;
   navigator.refresh = null;
@@ -400,30 +392,6 @@ export default function makeEquationNavigator(
   navigator.prevGroup = null;
   navigator.currentGroup = null;
   navigator.nextGroup = null;
-
-  // if (type === '1') {
-  //   prev = makeNextPrevText(diagram, false, spacing - arrowHeight / 2, id);
-  //   next = makeNextPrevText(diagram, true, -spacing + arrowHeight / 2, id);
-  //   refresh = makeRefresh(
-  //     diagram, refreshSides, refreshRadius, refreshLineWidth,
-  //     refreshAngle, color,
-  //   );
-  //   description = makeDescriptionHTML(diagram, refreshRadius, id);
-  //   nextDescription = diagram.equation
-  //     .makeDescription('id__rectangles_equation_next_desctription');
-  //   // nextDescription.isTouchable = true;
-
-  //   prevDescription = diagram.equation
-  //     .makeDescription('id__rectangles_equation_prev_desctription');
-  //   // prevDescription.isTouchable = true;
-
-  //   nextDescription.setPosition(offset.add(size * 3, -spacing + arrowHeight / 2));
-  //   prevDescription.setPosition(offset.add(size * 3, spacing - arrowHeight / 2));
-  //   refresh.setPosition(offset);
-  //   description.setPosition(offset);
-  //   next.setPosition(offset.add(0, -spacing + arrowHeight / 2));
-  //   prev.setPosition(offset.add(0, spacing - arrowHeight / 2));
-  // }
 
   const clickNext = () => {
     navigator.eqn.nextForm(1.5);
@@ -447,45 +415,24 @@ export default function makeEquationNavigator(
     navigator.updateButtons();
   };
 
-  const navigatorTable = makeType2(clickPrev, clickRefresh, clickNext);
-  Object.assign(navigator, navigatorTable);
-  const table = diagram.shapes.htmlElement(
-    navigatorTable.table,
-    `${id}_table`,
-    '',
-    offset, 'middle', 'left',
-  );
-  navigator.add('table', table);
-  // if (prev) {
-  //   navigator.add('prev', prev);
-  //   prev.onClick = clickPrev;
-  // }
-  // if (next) {
-  //   navigator.add('next', next);
-  //   next.onClick = clickNext;
-  // }
-  // if (refresh) {
-  //   navigator.add('refresh', refresh);
-  //   refresh.onClick = clickRefresh;
-  // }
-  // if (description) {
-  //   navigator.add('refresh', refresh);
-  //   description.onClick = clickRefresh;
-  // }
-  // if (nextDescription) {
-  //   navigator.add('nextDescription', nextDescription);
-  //   nextDescription.onClick = clickNext;
-  // }
-  // if (prevDescription) {
-  //   navigator.add('prevDescription', prevDescription);
-  //   prevDescription.onClick = clickPrev;
-  // }
-
+  let navigatorHTMLElement = null;
+  if (navType === '2') {
+    navigatorHTMLElement = makeType2(clickPrev, clickRefresh, clickNext, options);
+  }
+  if (navigatorHTMLElement != null) {
+    Object.assign(navigator, navigatorHTMLElement);
+    const table = diagram.shapes.htmlElement(
+      navigatorHTMLElement.table,
+      `${id}_table`,
+      '',
+      offset, 'middle', 'left',
+    );
+    navigator.add('table', table);
+  }
   navigator.updateButtons = () => {
     updateButtons(navigator);
   };
 
   navigator.hasTouchableElements = true;
-  // updateButtons();
   return navigator;
 }

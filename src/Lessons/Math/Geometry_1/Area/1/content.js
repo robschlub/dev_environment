@@ -45,16 +45,6 @@ class Content extends LessonContent {
     rect.rectEqn.changeDescription('6', 'Simplify by removing 1s', mods);
     rect.rectEqn.changeDescription('7', 'Multiplying something by itself is the same as squaring it.', mods);
     rect.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
-    // rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
-    // rect.rectEqn.changeDescription('2a', '90º is cancelled and goes to 0º on left side.');
-    // rect.rectEqn.changeDescription('2b', '0º on left side can be removed');
-    // rect.rectEqn.changeDescription('2c', '180º is reduced to 90º on right side.');
-    // rect.rectEqn.changeDescription('3', 'Right side remainder is 90º.');
-    // rect.rectEqn.changeDescription('4', 'Subtract angle |a| from both sides of the equation.', mods);
-    // rect.rectEqn.changeDescription('5', '|a| cancels on the left side', mods);
-    // rect.rectEqn.changeDescription('5a', 'No |a| remaining on left side, so can be removed', mods);
-    // rect.rectEqn.changeDescription('6', 'End with |b| in terms of |a|.', mods);
-
 
     let common = {
       setContent: [],

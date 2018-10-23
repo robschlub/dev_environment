@@ -14,10 +14,19 @@
 .lesson__eqn_nav__type2__nextRow {
   cursor: pointer;
   vertical-align: middle;
-  height: calc(var(--lesson__diagram-font-size) * 1.5);
+  height: calc(var(--lesson__diagram-font-size) * 1);
 }
 
 .lesson__eqn_nav__type2__currentRow {
+  height: calc(var(--lesson__diagram-font-size) * 1);
+}
+
+.lesson__eqn_nav__type2__prev_twoLines,
+.lesson__eqn_nav__type2__next_twoLines {
+  height: calc(var(--lesson__diagram-font-size) * 1.5);
+}
+
+.lesson__eqn_nav__type2__current_twoLines {
   height: calc(var(--lesson__diagram-font-size) * 2);
 }
 
@@ -36,8 +45,6 @@
   text-align: center;
   font-weight: 100;
   font-size: calc(var(--lesson__diagram-font-size) * 0.4);
-  // padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
-  // padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
 }
 
 .lesson__eqn_nav__type2__table td {
