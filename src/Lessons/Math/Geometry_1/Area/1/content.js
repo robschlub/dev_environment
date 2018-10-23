@@ -321,7 +321,6 @@ class Content extends LessonContent {
         rect._navRect.showAll();
         rect._navRect.eqn.showForm('0');
         rect._navRect.updateButtons();
-        console.log(rect)
       },
     });
   }

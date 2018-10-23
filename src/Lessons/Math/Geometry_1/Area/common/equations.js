@@ -154,14 +154,6 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     eqn.sup('m', '_2'),
   ]);
 
-  const nextForm = () => {
-    eqn.nextForm(2);
-    diagram.animateNextFrame();
-  };
-
-  eqn.collection.onClick = nextForm.bind(this);
-  eqn.collection.isTouchable = true;
-  eqn.collection.touchInBoundingRect = true;
   eqn.collection.setPosition(layout.rectEqnPosition);
   eqn.setCurrentForm('0');
   return eqn;

@@ -282,7 +282,9 @@ function updateButtons(nav: TypeEquationNavigator) {
     }
     const nextIndex = index + 1;
     if (nextIndex > nav.eqn.formSeries.length - 1) {
-      nav.nextDescription.innerHTML = 'RESTART from begining';
+      if (nav.nextDescription) {
+        nav.nextDescription.innerHTML = 'RESTART from begining';
+      }
     } else {
       updateDescription(nav.eqn, currentForm.type, nav.nextDescription, nextIndex, false);
     }
@@ -291,13 +293,22 @@ function updateButtons(nav: TypeEquationNavigator) {
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
       updateDescription(nav.eqn, currentForm.type, nav.prevDescription, prevIndex, false);
-    } else {
+    } else if (nav.prevDescription) {
       nav.prevDescription.innerHTML = '';
     }
   }
 }
 
-function makeType2(
+function updateButtonsDescriptionOnly(nav: TypeEquationNavigator) {
+  const currentForm = nav.eqn.getCurrentForm();
+  if (currentForm != null) {
+    const index = nav.eqn.getFormIndex(currentForm);
+    enableTouch(nav.description);
+    updateDescription(nav.eqn, currentForm.type, nav.description, index, true);
+  }
+}
+
+function makeType3Line(
   // id: string,
   prevMethod: () => void,
   refreshMethod: () => void,
@@ -324,22 +335,22 @@ function makeType2(
   table.appendChild(currentGroup);
   table.appendChild(nextGroup);
 
-  // table.id = `${id}__type2_table`;
-  table.classList.add('lesson__eqn_nav__type2__table');
-  prevGroup.classList.add('lesson__eqn_nav__type2__prevRow');
-  currentGroup.classList.add('lesson__eqn_nav__type2__currentRow');
-  nextGroup.classList.add('lesson__eqn_nav__type2__nextRow');
-  prev.classList.add('lesson__eqn_nav__type2__prevRow__button');
-  refresh.classList.add('lesson__eqn_nav__type2__currentRow__button');
-  next.classList.add('lesson__eqn_nav__type2__nextRow__button');
-  prevDescription.classList.add('lesson__eqn_nav__type2__prevRow__description');
-  description.classList.add('lesson__eqn_nav__type2__currentRow__description');
-  nextDescription.classList.add('lesson__eqn_nav__type2__nextRow__description');
+  table.classList.add('lesson__eqn_nav__table');
+  prevGroup.classList.add('lesson__eqn_nav__3line__prevRow');
+  currentGroup.classList.add('lesson__eqn_nav__3line__currentRow');
+  nextGroup.classList.add('lesson__eqn_nav__3line__nextRow');
+  prev.classList.add('lesson__eqn_nav__3line__prevRow__button');
+  refresh.classList.add('lesson__eqn_nav__3line__currentRow__button');
+  next.classList.add('lesson__eqn_nav__3line__nextRow__button');
+  prevDescription.classList.add('lesson__eqn_nav__3line__prevRow__description');
+  description.classList.add('lesson__eqn_nav__3line__currentRow__description');
+  description.classList.add('lesson__eqn_nav__description');
+  nextDescription.classList.add('lesson__eqn_nav__3line__nextRow__description');
 
   if (options === 'twoLines') {
-    prevGroup.classList.add('lesson__eqn_nav__type2__prev_twoLines');
-    currentGroup.classList.add('lesson__eqn_nav__type2__current_twoLines');
-    nextGroup.classList.add('lesson__eqn_nav__type2__next_twoLines');
+    prevGroup.classList.add('lesson__eqn_nav__3line__prev_twoLines');
+    currentGroup.classList.add('lesson__eqn_nav__3line__current_twoLines');
+    nextGroup.classList.add('lesson__eqn_nav__3line__next_twoLines');
   }
 
   prevGroup.onclick = prevMethod;
@@ -363,11 +374,31 @@ function makeType2(
   };
 }
 
+function makeTypeDescriptionOnly(
+  nextMethod: () => void,
+) {
+  const table = document.createElement('table');
+  const currentGroup = document.createElement('tr');
+  const description = document.createElement('td');
+  currentGroup.appendChild(description);
+  table.appendChild(currentGroup);
+  table.classList.add('lesson__eqn_nav__table');
+  currentGroup.classList.add('lesson__eqn_nav__description_only__currentRow');
+  description.classList.add('lesson__eqn_nav__description_only__currentRow__description');
+  description.classList.add('lesson__eqn_nav__description');
+  currentGroup.onclick = nextMethod;
+  return {
+    table,
+    currentGroup,
+    description,
+  };
+}
+
 export default function makeEquationNavigator(
   diagram: Diagram,
   equation: Equation,
   offset: Point,
-  navType: string = '1',
+  navType: 'threeLine' | 'descriptionOnly' = 'threeLine',
   options: string = '',
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
 
@@ -416,8 +447,11 @@ export default function makeEquationNavigator(
   };
 
   let navigatorHTMLElement = null;
-  if (navType === '2') {
-    navigatorHTMLElement = makeType2(clickPrev, clickRefresh, clickNext, options);
+  if (navType === 'threeLine') {
+    navigatorHTMLElement = makeType3Line(clickPrev, clickRefresh, clickNext, options);
+  }
+  if (navType === 'descriptionOnly') {
+    navigatorHTMLElement = makeTypeDescriptionOnly(clickNext);
   }
   if (navigatorHTMLElement != null) {
     Object.assign(navigator, navigatorHTMLElement);
@@ -430,9 +464,16 @@ export default function makeEquationNavigator(
     navigator.add('table', table);
   }
   navigator.updateButtons = () => {
-    updateButtons(navigator);
+    if (navType === 'descriptionOnly') {
+      updateButtonsDescriptionOnly(navigator);
+    } else {
+      updateButtons(navigator);
+    }
   };
 
+  navigator.eqn.collection.onClick = clickNext;
   navigator.hasTouchableElements = true;
+  navigator.eqn.collection.isTouchable = true;
+  navigator.eqn.collection.touchInBoundingRect = true;
   return navigator;
 }
