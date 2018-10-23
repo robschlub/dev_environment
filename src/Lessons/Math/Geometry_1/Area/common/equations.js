@@ -197,7 +197,7 @@ export function addSimpleRectEquation(
       _6: '6',
       _10: '10',
       _60: '60',
-      squares: ['squares', colUnit],
+      squares: [' squares', colUnit],
       mul: ' \u00D7 ',
       equals: ' = ',
       equals_: ' = ',
@@ -218,7 +218,7 @@ export function addSimpleRectEquation(
     '_60', 'squares',
   ]);
 
-  eqn.collection.setPosition(layout.rectEqnPosition);
+  eqn.collection.setPosition(layout.rectSimpleEqnPosition);
   eqn.setCurrentForm('0');
 
   addToCollection.add(name, eqn.collection);
