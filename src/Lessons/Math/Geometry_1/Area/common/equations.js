@@ -9,7 +9,7 @@ import {
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import * as html from '../../../../../js/tools/htmlGenerator';
 
-export type TypeRectquationCollection = {
+export type TypeRectEquationCollection = {
   _Area: DiagramElementPrimative,
   __6: DiagramElementPrimative,
   __10: DiagramElementPrimative,
@@ -34,12 +34,13 @@ export type TypeRectquationCollection = {
 } & DiagramElementCollection;
 
 export type TypeRectEquation = {
-  collection: TypeRectquationCollection;
+  collection: TypeRectEquationCollection;
 } & Equation;
 
 export function makeRectEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
-  // const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
+  // const eqnDescription = diagram.equation
+  //   .makeDescription('id__rectangles_equation_desctription');
   const strikeColor = layout.colors.diagram.disabledDark;
 
   const colUnit = layout.colors.unit;
@@ -111,6 +112,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     mul: [null, 'curved', 'up', 0.7],
   }, '3');
 
+  // Area = 60 x 1m x 1m
   eqn.addForm('4', [
     'Area',
     'equals',
@@ -121,6 +123,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     mul: [null, 'linear'],
   }, '4');
 
+  // Area = 60 x X1m x X1m
   eqn.addForm('5', [
     'Area',
     'equals',
@@ -133,6 +136,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     'm',
   ]);
 
+  // Area = 60 x m x m
   eqn.addForm('6', [
     'Area',
     'equals',
@@ -140,6 +144,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     'm_', 'mul', 'm',
   ]);
 
+  // Area = 60 x Xm x m^2
   eqn.addForm('7', [
     'Area',
     'equals',
@@ -147,6 +152,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     eqn.strike('m_', 'x_'), 'mul', eqn.sup('m', '_2'),
   ]);
 
+  // Area = 60m^2
   eqn.addForm('8', [
     'Area',
     'equals',
