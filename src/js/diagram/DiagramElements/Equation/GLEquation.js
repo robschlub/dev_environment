@@ -1477,8 +1477,8 @@ export class EquationForm extends Elements {
   allHideShow(
     delay: number = 0,
     hideTime: number = 0.5,
-    showTime: number = 0.5,
     blankTime: number = 0.5,
+    showTime: number = 0.5,
     callback: ?(boolean) => void = null,
   ) {
     this.collection.stop();
@@ -2174,7 +2174,7 @@ export class Equation {
         if (animate) {
           form.animatePositionsTo(delay, 1, time, 0.5, end);
         } else {
-          form.allHideShow(delay, 0.5, 0.5, 0.5, end);
+          form.allHideShow(delay, 0.5, 0.2, 0.5, end);
         }
         this.setCurrentForm(form);
       }

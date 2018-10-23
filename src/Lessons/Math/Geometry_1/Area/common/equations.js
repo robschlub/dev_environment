@@ -67,7 +67,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
     null,
     new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
-  eqn.formAlignment.fixTo = eqn.collection._equals;
+  // eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'middle';
   eqn.formAlignment.scale = 1.0;
