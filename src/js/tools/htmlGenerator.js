@@ -1,10 +1,14 @@
 // @flow
 import { colorArrayToRGBA } from './tools';
 
-function centerV(text: string = '') {
+function centerV(text: string | Array<string> = '') {
+  let textToUse = text;
+  if (Array.isArray(text)) {
+    textToUse = `<p>${text.join('</p><p>')}</p>`;
+  }
   return `<div style="display: table; height: 100%;">
         <div style="display: table-cell; vertical-align: middle">
-        ${text}</div></div>`;
+        ${textToUse}</div></div>`;
 }
 
 function centerVH(text: string = '') {

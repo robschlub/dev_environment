@@ -92,8 +92,10 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     };
     addSide(new Point(-x, -y), new Point(-x, y), 'A');
     addSide(new Point(-x, -y), new Point(-x, y), 'Height');
+    addSide(new Point(-x, -y), new Point(-x, y), '6m');
     addSide(new Point(x, -y), new Point(-x, -y), 'B');
     addSide(new Point(x, -y), new Point(-x, -y), 'Width');
+    addSide(new Point(x, -y), new Point(-x, -y), '10m');
   }
 
   addEqns() {

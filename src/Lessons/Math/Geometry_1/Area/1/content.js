@@ -36,8 +36,8 @@ class Content extends LessonContent {
     const mods = {
       m: highlight(colors.unit),
     };
-    rect.eqns.rectEqn.changeDescription('0', 'Area is 6 rows of 10 squares', mods);
-    // rect.eqns.rectEqn.changeDescription('0', 'Each square has a side length of 1m, therefore ', mods);
+    // rect.eqns.rectEqn.changeDescription('0', 'Area is 6 rows of 10 squares', mods);
+    rect.eqns.rectEqn.changeDescription('0', 'Rectangle area is product of width and height.', mods);
     rect.eqns.rectEqn.changeDescription('1', 'Expand both 6|m| and 10|m| as 6|m| is the same as saying 6 lots of 1|m|.', mods);
     rect.eqns.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
     rect.eqns.rectEqn.changeDescription('3', 'Calculate 6 ⨉ 10', mods);
@@ -399,7 +399,7 @@ class Content extends LessonContent {
       },
     });
     common.setContent = [
-      'And so the area of a rectangle is the multiple of its |width| and |height|',
+      'And so the area of a rectangle is the multiple of its |width| and |height|.',
     ];
     this.addSection(common, {
       transitionFromPrev: (done) => {
@@ -412,10 +412,29 @@ class Content extends LessonContent {
       },
     });
 
+    this.addSection({
+      title: 'Area Units',
+      setContent: centerV([
+        'So we know that |area of a rectangle| is the |product of two adjacent side lengths|.',
+        'We also know area is measured in |reference squares|, that can have a specific side length such as |meters|.',
+        'We can put these together to understand how the units for area are |normally written|.',
+      ]),
+    });
+
+    common.show = [rect._grid, rect._line, rect._side6m, rect._side10m];
     this.addSection(common, {
       setContent: [
-        'Now, if we give the reference squares a |size|, then we can make several observations from calculating area.',
+        'Lets assume the reference squares have |1m side| length. Therefore the rectangle\'s |height| is |6m| and |width| is |10m|.',
       ],
+    });
+
+    this.addSection(common, {
+      setContent: [
+        'Now we can calculate area.',
+      ],
+      setSteadyState: () => {
+        rect._rectEqn.showForm('0');
+      },
     });
 
     this.addSection(common, {
@@ -427,8 +446,8 @@ class Content extends LessonContent {
       },
     });
 
+
     this.addSection(common, {
-      
       setContent: [
         'Using reference squares |as| the unit of area makes it particularly convenient to examine the area of a rectangle.',
       ],

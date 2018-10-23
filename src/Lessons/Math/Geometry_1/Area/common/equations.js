@@ -76,8 +76,8 @@ export function addRectEqn(
       x: diagram.equation.xStrike(strikeColor),
       x_: diagram.equation.xStrike(strikeColor),
       equals: ' = ',
-      squares: [' squares ', colUnit],
-      rows: [' rows ', colUnit],
+      // squares: [' squares ', colUnit],
+      // rows: [' rows ', colUnit],
     },
     colText,
     // eqnDescription,
@@ -89,17 +89,17 @@ export function addRectEqn(
   eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
 
-  eqn.addForm('0', [
-    'Area',
-    'equals',
-    '_6', 'rows', 'mul_', '_10', 'squares',
-  ]);
-
   // eqn.addForm('0', [
   //   'Area',
   //   'equals',
-  //   '_6', 'm', 'mul_', '_10', 'm_',
+  //   '_6', 'rows', 'mul_', '_10', 'squares',
   // ]);
+
+  eqn.addForm('0', [
+    'Area',
+    'equals',
+    '_6', 'm', 'mul_', '_10', 'm_',
+  ]);
 
   eqn.addForm('1', [
     'Area',
