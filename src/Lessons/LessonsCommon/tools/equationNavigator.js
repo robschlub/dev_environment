@@ -385,10 +385,10 @@ export default function makeEquationNavigator(
     navigator.eqn = eqn;
     navigator._eqn = [];
     navigator.add('eqn', eqn.collection);
-    if (navigator.eqn.descriptionElement != null) {
-      navigator.add('currentStep', eqn.descriptionElement);
-      navigator.eqn.descriptionElement.setPosition(offset.add(size * 3, 0));
-    }
+    // if (navigator.eqn.descriptionElement != null) {
+    //   navigator.add('currentStep', eqn.descriptionElement);
+    //   navigator.eqn.descriptionElement.setPosition(offset.add(size * 3, 0));
+    // }
     navigator.eqn.collection.setPosition(0, 0);
   };
   navigator.setEquation(equation);
@@ -457,7 +457,7 @@ export default function makeEquationNavigator(
     navigatorTable.table,
     `${id}_table`,
     '',
-    new Point(0, 0), 'middle', 'left',
+    offset, 'middle', 'left',
   );
   navigator.add('table', table);
   // if (prev) {

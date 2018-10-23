@@ -39,7 +39,7 @@ export type TypeRectEquation = {
 
 export function makeRectEquation(diagram: Diagram, layout: Object) {
   const eqn = diagram.equation.makeEqn();
-  const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
+  // const eqnDescription = diagram.equation.makeDescription('id__rectangles_equation_desctription');
   const strikeColor = layout.colors.diagram.disabledDark;
 
   const colUnit = layout.colors.unit;
@@ -63,7 +63,8 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
       equals: ' = ',
     },
     colText,
-    eqnDescription,
+    // eqnDescription,
+    null,
     new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
   eqn.formAlignment.fixTo = eqn.collection._equals;
