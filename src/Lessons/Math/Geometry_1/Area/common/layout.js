@@ -144,8 +144,8 @@ export default function commonLessonLayout() {
     position: new Point(0, 0),
     smallPosition: new Point(0, 0),
     spacing: 0.25,
-    length: 6,
-    height: 2,
+    length: 2.5,
+    height: 1.5,
   };
 
   layout.rect = {
@@ -153,10 +153,11 @@ export default function commonLessonLayout() {
     length: 2.5,
     height: 1.5,
     width: 0.03,
+    labelOffset: 0.1,
   };
-  layout.rectSimpleEqnPosition = new Point(0, 1.5);
-  layout.rectEqnPosition = new Point(0, 1.7);
-  layout.rectEqnNavPosition = new Point(0, -0.4);
+  layout.rectSimpleEqnPosition = new Point(0, 1.4);
+  layout.rectEqnPosition = new Point(0, 1.5);
+  layout.rectEqnNavPosition = new Point(0, -0.25);
 
   return layout;
 }

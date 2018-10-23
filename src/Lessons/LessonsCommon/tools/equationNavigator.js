@@ -457,9 +457,11 @@ export default function makeEquationNavigator(
 
   navigator.showForm = (formOrName: EquationForm | string, formType: ?string = null) => {
     navigator.show();
-    navigator._table.show();
     navigator.eqn.showForm(formOrName, formType);
-    navigator.updateButtons();
+    if (navigator._table) {
+      navigator._table.show();
+      navigator.updateButtons();
+    }
   };
 
   navigator.eqn.collection.onClick = clickNext;

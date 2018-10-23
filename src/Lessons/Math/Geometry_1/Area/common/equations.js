@@ -25,6 +25,8 @@ export type TypeRectEquationCollection = {
   _mul: DiagramElementPrimative,
   _mul_: DiagramElementPrimative,
   _mul__: DiagramElementPrimative,
+  _squares: DiagramElementPrimative,
+  _squares_: DiagramElementPrimative,
   _x: {
     _s1: DiagramElementPrimative;
     _s2: DiagramElementPrimative;
@@ -74,6 +76,8 @@ export function addRectEqn(
       x: diagram.equation.xStrike(strikeColor),
       x_: diagram.equation.xStrike(strikeColor),
       equals: ' = ',
+      squares: [' squares ', colUnit],
+      rows: [' rows ', colUnit],
     },
     colText,
     // eqnDescription,
@@ -82,13 +86,20 @@ export function addRectEqn(
   );
   // eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
-  eqn.formAlignment.vAlign = 'middle';
+  eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
+
   eqn.addForm('0', [
     'Area',
     'equals',
-    '_6', 'm', 'mul_', '_10', 'm_',
+    '_6', 'rows', 'mul_', '_10', 'squares',
   ]);
+
+  // eqn.addForm('0', [
+  //   'Area',
+  //   'equals',
+  //   '_6', 'm', 'mul_', '_10', 'm_',
+  // ]);
 
   eqn.addForm('1', [
     'Area',
@@ -173,7 +184,6 @@ export function addRectEqn(
   ]);
 
   eqn.collection.setPosition(layout.rectEqnPosition);
-  console.log(eqn.collection.transform._dup())
   eqn.setCurrentForm('0');
   // addToCollection.add(name, eqn.collection);
   // eslint-disable-next-line no-param-reassign
@@ -245,4 +255,89 @@ export function addSimpleRectEquation(
   addToCollection.add(name, eqn.collection);
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;
+}
+
+
+export type TypeNumSquaresEquationCollection = {
+  _Area: DiagramElementPrimative,
+  __6: DiagramElementPrimative,
+  __10: DiagramElementPrimative,
+  __60: DiagramElementPrimative,
+  _mul: DiagramElementPrimative,
+  _equals: DiagramElementPrimative,
+  _equals_: DiagramElementPrimative,
+  _Squares: DiagramElementPrimative,
+} & DiagramElementCollection;
+
+export type TypeNumSquaresEquation = {
+  collection: TypeNumSquaresEquationCollection;
+} & Equation;
+
+
+export function addNumSquaresRectEquation(
+  diagram: Diagram,
+  layout: Object,
+  addToCollection: DiagramElementCollection,
+  name: string,
+) {
+  const eqn = diagram.equation.makeEqn();
+  // const strikeColor = layout.colors.diagram.disabledDark;
+  const colUnit = layout.colors.unit;
+  const colText = layout.colors.diagram.text.base;
+  eqn.createElements(
+    {
+      Area: ['Area', colUnit],
+      equals: ' = ',
+      numSquares: 'number of squares',
+      numSquares_: 'number of squares',
+      side: ' side ',
+      side_: ' side ',
+      length: 'length',
+      length_: 'length',
+      A: 'A',
+      B: 'B',
+      mul: '   \u00D7   ',
+    },
+    colText,
+    null,
+    new Point(0, 0).add(layout.rectSimpleEqnPosition),
+  );
+  // eqn.formAlignment.fixTo = eqn.collection._equals;
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'middle';
+  eqn.formAlignment.scale = 1.0;
+  eqn.addForm('0', [
+    'Area',
+    'equals',
+    'numSquares', 'side', 'A',
+    'mul',
+    'numSquares_', 'side_', 'B',
+  ]);
+
+  eqn.addForm('1', [
+    'Area',
+    'equals',
+    eqn.sub('A', 'numSquares'),
+    'mul',
+    eqn.sub('B', 'numSquares_'),
+  ]);
+
+  eqn.addForm('2', [
+    'Area',
+    'equals',
+    eqn.sub('A', 'length'),
+    'mul',
+    eqn.sub('B', 'length_'),
+  ]);
+
+  eqn.collection.setPosition(layout.rectSimpleEqnPosition);
+  eqn.setCurrentForm('0');
+
+  const nav = makeEquationNavigator(
+    diagram, eqn, layout.rectEqnNavPosition,
+    'equationOnly', '', 'center',
+  );
+  // eslint-disable-next-line no-param-reassign
+  addToCollection.eqns[name] = eqn;
+  addToCollection.add(name, nav);
 }

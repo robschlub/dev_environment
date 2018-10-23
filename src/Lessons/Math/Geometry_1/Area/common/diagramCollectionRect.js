@@ -10,9 +10,11 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-// import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-// import { makeLine } from '../../../../LessonsCommon/tools/line';
-import { addRectEqn, addSimpleRectEquation } from './equations';
+import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import { makeLine } from '../../../../LessonsCommon/tools/line';
+import {
+  addRectEqn, addSimpleRectEquation, addNumSquaresRectEquation
+} from './equations';
 import type {
   TypeRectEquationNav,
   TypeRectEquation,
@@ -76,12 +78,31 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.add('line', line);
   }
 
+  addSideLabels() {
+    const lay = this.layout.rect;
+    const x = lay.length / 2;
+    const y = lay.height / 2;
+    const addSide = (p1, p2, name) => {
+      const line = makeLine(
+        this.diagram, 'end', 1, 0.1, this.layout.colors.line, false,
+      );
+      line.setEndPoints(p1, p2);
+      line.addLabel(name, lay.labelOffset, 'outside', '', 'horizontal');
+      this.add(`side${name}`, line);
+    };
+    addSide(new Point(-x, -y), new Point(-x, y), 'A');
+    addSide(new Point(x, -y), new Point(-x, -y), 'B');
+  }
+
   addEqns() {
     addSimpleRectEquation(
       this.diagram, this.layout, this, 'simpleRectEqn',
     );
     addRectEqn(
       this.diagram, this.layout, this, 'rectEqn',
+    );
+    addNumSquaresRectEquation(
+      this.diagram, this.layout, this, 'numSquaresEqn',
     );
   }
 
@@ -94,6 +115,7 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.rowIndex = 0;
     this.addGrid();
     this.addRect();
+    this.addSideLabels();
     this.addRow();
     this.addEqns();
 

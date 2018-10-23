@@ -36,7 +36,8 @@ class Content extends LessonContent {
     const mods = {
       m: highlight(colors.unit),
     };
-    rect.eqns.rectEqn.changeDescription('0', 'Area equals product of two adjacent side lengths.', mods);
+    rect.eqns.rectEqn.changeDescription('0', 'Area is 6 rows of 10 squares', mods);
+    // rect.eqns.rectEqn.changeDescription('0', 'Each square has a side length of 1m, therefore ', mods);
     rect.eqns.rectEqn.changeDescription('1', 'Expand both 6|m| and 10|m| as 6|m| is the same as saying 6 lots of 1|m|.', mods);
     rect.eqns.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
     rect.eqns.rectEqn.changeDescription('3', 'Calculate 6 ⨉ 10', mods);
@@ -304,7 +305,7 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: [
-        'The squares can be aligned with the edges and it can be observed that there are |six_rows_of_ten| squares.',
+        'In this case, it can be observed that there are |six_rows_of_ten| squares.',
       ],
       modifiers: {
         six_rows_of_ten: click(rect.toggleRow, [rect, null], colors.row),
@@ -324,8 +325,25 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
+      title: 'asdf',
       setContent: [
-        'When the reference squares have a specific size, say 1m side length:',
+        'Another way to look at area, is it can be calculated by multiplying the number of squares for two adjacent sides.',
+      ],
+      show: [rect._grid, rect._line, rect._sideA, rect._sideB],
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('0');
+      },
+    });
+
+    this.addSection(common, {
+      setContent: [
+        'Now, if we give the reference squares a |size|, then we can make several observations from calculating area.',
+      ],
+    });
+
+    this.addSection(common, {
+      setContent: [
+        'Lets assume each reference square has a 1m side length.',
       ],
       setSteadyState: () => {
         rect._rectEqn.showForm('0');
@@ -333,7 +351,7 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
-      title: 'asdf',
+      
       setContent: [
         'Using reference squares |as| the unit of area makes it particularly convenient to examine the area of a rectangle.',
       ],
