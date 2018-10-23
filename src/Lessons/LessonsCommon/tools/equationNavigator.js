@@ -382,8 +382,9 @@ export default function makeEquationNavigator(
   offset: Point,
   navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' = 'threeLine',
   options: string | Array<string> = '',
+  xAlign: 'left' | 'right' | 'center' = 'left',
+  vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
-
 ) {
   const navigator = diagram.shapes.collection(new Transform('Triangle')
     .scale(1, 1)
@@ -444,7 +445,7 @@ export default function makeEquationNavigator(
       navigatorHTMLElement.table,
       `${id}_table`,
       '',
-      offset, 'middle', 'left',
+      offset, vAlign, xAlign,
     );
     navigator.add('table', table);
   }

@@ -70,8 +70,8 @@ export default class RectAreaCollection extends CommonDiagramCollection {
   addEqn() {
     this.rectEqn = makeRectEquation(this.diagram, this.layout);
     const makeNav = eqn => makeEquationNavigator(
-      this.diagram, eqn, new Point(0, -1),
-      'oneLine', 'arrows',
+      this.diagram, eqn, new Point(-2, -1),
+      'threeLine', 'twoLines', 'left',
     );
     const navRect = makeNav(this.rectEqn);
     navRect.setPosition(this.layout.rectEqnPosition);
