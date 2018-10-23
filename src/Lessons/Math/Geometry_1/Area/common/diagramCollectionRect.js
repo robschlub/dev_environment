@@ -13,14 +13,16 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import {
-  addRectEqn, addSimpleRectEquation, addNumSquaresRectEquation
+  addRectEqn, addSimpleRectEquation, addNumSquaresRectEquation,
+  addSimpleUnitsRectEquation,
 } from './equations';
 import type {
   TypeRectEquationNav,
   TypeRectEquation,
   TypeSimpleRectEquation,
   TypeSimpleRectEquationCollection,
-
+  TypeSimpleUnitsEquation,
+  TypeSimpleUnitsEquationCollection,
 } from './equations';
 
 export default class RectAreaCollection extends CommonDiagramCollection {
@@ -33,9 +35,11 @@ export default class RectAreaCollection extends CommonDiagramCollection {
 
   _simpleRectEqn: TypeSimpleRectEquationCollection;
   _rectEqn: TypeRectEquationNav;
+  _simpleUnitsEqn: TypeSimpleUnitsEquationCollection;
   eqns: {
     simpleRectEqn: TypeSimpleRectEquation;
     rectEqn: TypeRectEquation;
+    simpleUnitsEqn: TypeSimpleUnitsEquation;
   };
 
   addGrid() {
@@ -78,6 +82,18 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.add('line', line);
   }
 
+  addSquare() {
+    const lay = this.layout.rect;
+    const x = lay.height / 2;
+    const line = this.diagram.shapes.polyLine([
+      new Point(-x, -x),
+      new Point(-x, x),
+      new Point(x, x),
+      new Point(x, -x),
+    ], true, lay.width, this.layout.colors.line);
+    this.add('line', line);
+  }
+
   addSideLabels() {
     const lay = this.layout.rect;
     const x = lay.length / 2;
@@ -107,6 +123,9 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     );
     addNumSquaresRectEquation(
       this.diagram, this.layout, this, 'numSquaresEqn',
+    );
+    addSimpleUnitsRectEquation(
+      this.diagram, this.layout, this, 'simpleUnitsEqn',
     );
   }
 

@@ -439,30 +439,29 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: [
-        'Lets assume each reference square has a 1m side length.',
+        'So the short hand way of writing units is to use the mathematical |square notation|.',
       ],
       setSteadyState: () => {
-        rect._rectEqn.showForm('0');
+        rect.eqns.simpleUnitsEqn.showForm('0');
       },
     });
-
 
     this.addSection(common, {
       setContent: [
-        'Using reference squares |as| the unit of area makes it particularly convenient to examine the area of a rectangle.',
+        'If the reference squares have side length |1m|, then we would say the area unit is |meters squared| or |m<sup>2</sup>|.',
       ],
-      modifiers: {
-        as: click(rect.toggleRow, [rect, null], colors.diagram.action),
-      },
-      show: [rect._rectEqn],
       setSteadyState: () => {
-        // rect._rectEqn.showAll();
-        rect._rectEqn.showForm('0');
-        // rect.eqns.rectEqn.showForm('0');
-        // rect._rectEqn.updateButtons();
+        rect.eqns.simpleUnitsEqn.showForm('0');
       },
     });
   }
+
+  this.addSection({
+      title: 'Square',
+      setContent: [
+      'As a square is a special type of rectangle, area can be calculated the same way. Adjacent sides are multiplied.',
+      ]),
+    });
 }
 
 export default Content;
