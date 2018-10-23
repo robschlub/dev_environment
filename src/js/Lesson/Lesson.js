@@ -295,7 +295,7 @@ class Lesson {
   stopDiagrams() {
     const { diagram } = this;
     if (diagram) {
-      diagram.stop(false);
+      diagram.stop(true, true);
     }
   }
 
@@ -313,7 +313,8 @@ class Lesson {
     this.transitionCancelled = true;
     if (diagram) {
       diagram.inTransition = false;
-      diagram.stop(false);
+      // console.log('stopping')
+      diagram.stop(true, true);
     }
     this.inTransition = false;
   }

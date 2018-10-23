@@ -784,7 +784,7 @@ class SuperSub extends Elements {
         this.location.y - this.mainContent.height * 0.5,
       );
       subscript.calcSize(subLoc, scale / 2);
-      w = Math.min(
+      w = Math.max(
         w,
         subLoc.x - this.location.x + subscript.width,
       );

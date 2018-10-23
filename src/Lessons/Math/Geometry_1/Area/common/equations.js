@@ -239,7 +239,7 @@ export function addSimpleRectEquation(
   );
   // eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
-  eqn.formAlignment.vAlign = 'middle';
+  eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
   eqn.addForm('0', [
     'Area',
@@ -284,27 +284,26 @@ export function addNumSquaresRectEquation(
   // const strikeColor = layout.colors.diagram.disabledDark;
   const colUnit = layout.colors.unit;
   const colText = layout.colors.diagram.text.base;
+  const colLine = layout.colors.line;
   eqn.createElements(
     {
       Area: ['Area', colUnit],
       equals: ' = ',
-      numSquares: 'number of squares',
-      numSquares_: 'number of squares',
+      numSquares: 'num squares',
+      numSquares_: 'num squares',
       side: ' side ',
       side_: ' side ',
-      length: 'length',
-      length_: 'length',
-      A: 'A',
-      B: 'B',
-      mul: '   \u00D7   ',
+      length: 'length ',
+      length_: 'length ',
+      A: ['A', colLine],
+      B: ['B', colLine],
+      mul: '  \u00D7  ',
     },
     colText,
-    null,
-    new Point(0, 0).add(layout.rectSimpleEqnPosition),
   );
   // eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
-  eqn.formAlignment.vAlign = 'middle';
+  eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
   eqn.addForm('0', [
     'Area',
@@ -317,20 +316,20 @@ export function addNumSquaresRectEquation(
   eqn.addForm('1', [
     'Area',
     'equals',
-    eqn.sub('A', 'numSquares'),
+    'length', 'A',
     'mul',
-    eqn.sub('B', 'numSquares_'),
+    'length_', 'B',
   ]);
 
   eqn.addForm('2', [
     'Area',
     'equals',
-    eqn.sub('A', 'length'),
+    'A',
     'mul',
-    eqn.sub('B', 'length_'),
+    'B',
   ]);
 
-  eqn.collection.setPosition(layout.rectSimpleEqnPosition);
+  eqn.collection.setPosition(layout.rectNumSquaresEqnPosition);
   eqn.setCurrentForm('0');
 
   const nav = makeEquationNavigator(

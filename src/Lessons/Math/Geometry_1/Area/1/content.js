@@ -305,10 +305,11 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: [
-        'In this case, it can be observed that there are |six_rows_of_ten| squares.',
+        'In this case, there are |six_rows| of |ten_squares|.',
       ],
       modifiers: {
-        six_rows_of_ten: click(rect.toggleRow, [rect, null], colors.row),
+        six_rows: click(rect.toggleRow, [rect, null], colors.row),
+        ten_squares: click(rect.toggleRow, [rect, null], colors.row),
       },
       setSteadyState: () => {
         rect.rowIndex = 5;
@@ -324,14 +325,62 @@ class Content extends LessonContent {
       },
     });
 
+    common.setContent = [
+      'In other words, area can be calculated by multiplying the number of squares for two |adjacent sides|.',
+    ];
     this.addSection(common, {
-      title: 'asdf',
-      setContent: [
-        'Another way to look at area, is it can be calculated by multiplying the number of squares for two adjacent sides.',
-      ],
-      show: [rect._grid, rect._line, rect._sideA, rect._sideB],
+      setSteadyState: () => {
+        rect.eqns.simpleRectEqn.showForm('0');
+      },
+    });
+
+    common.show = [rect._grid, rect._line, rect._sideA, rect._sideB];
+    this.addSection(common, {
       setSteadyState: () => {
         rect._numSquaresEqn.showForm('0');
+      },
+    });
+
+    common.setContent = [
+      'As each square has a length, then the |number of squares in a rectangle side is the same as the side\'s length|.',
+    ];
+    this.addSection(common, {
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('0');
+      },
+    });
+
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        rect._numSquaresEqn.showForm('0');
+        rect.eqns.numSquaresEqn.getForm('1')
+          .animatePositionsTo(0, 0.5, 1, 0.5, done);
+      },
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('1');
+      },
+    });
+
+    this.addSection(common, {
+      setContent: [
+        'So the area of a rectangle is also equal to the product of |two adjacent side lengths|.',
+      ],
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('1');
+      },
+    });
+
+    this.addSection(common, {
+      setContent: [
+        '|Length| is usually assumed, and so it can be removed from the equation for simplicity.',
+      ],
+      transitionFromPrev: (done) => {
+        rect._numSquaresEqn.showForm('1');
+        rect.eqns.numSquaresEqn.getForm('2')
+          .animatePositionsTo(0, 0.5, 1, 0.5, done);
+      },
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('2');
       },
     });
 

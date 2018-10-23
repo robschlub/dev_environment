@@ -1509,9 +1509,10 @@ class DiagramElement {
     time: number = 1,
     disolve: 'in' | 'out' = 'in',
     callback: ?(boolean) => void = null,
+    finishOnCancel: boolean = true,
   ): void {
     this.animateColorToWithDelay(
-      this.color, delay, time, disolve, callback,
+      this.color, delay, time, disolve, callback, finishOnCancel,
     );
   }
 
