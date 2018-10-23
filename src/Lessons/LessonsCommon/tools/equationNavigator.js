@@ -288,20 +288,15 @@ function updateButtons(nav: TypeEquationNavigator) {
     const nextIndex = index + 1;
     if (nextIndex > nav.eqn.formSeries.length - 1) {
       nav.nextDescription.innerHTML = 'RESTART from begining';
-      // nav.nextDescription.vertices.change(
-      //   'RESTART from begining',
-      //   nav.nextDescription.lastDrawTransform.m(),
-      // );
     } else {
-      updateDescription(nav.eqn, 'base', nav.nextDescription, nextIndex, false);
+      updateDescription(nav.eqn, currentForm.type, nav.nextDescription, nextIndex, false);
     }
-
+    updateDescription(nav.eqn, currentForm.type, nav.description, index, true);
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
-      updateDescription(nav.eqn, 'base', nav.prevDescription, prevIndex, false);
+      updateDescription(nav.eqn, currentForm.type, nav.prevDescription, prevIndex, false);
     } else {
       nav.prevDescription.innerHTML = '';
-      // nav.prevDescription.vertices.change('', nav.prevDescription.lastDrawTransform.m());
     }
   }
 }
@@ -462,7 +457,7 @@ export default function makeEquationNavigator(
     navigatorTable.table,
     `${id}_table`,
     '',
-    new Point(0, 0), 'middle', 'center',
+    new Point(0, 0), 'middle', 'left',
   );
   navigator.add('table', table);
   // if (prev) {

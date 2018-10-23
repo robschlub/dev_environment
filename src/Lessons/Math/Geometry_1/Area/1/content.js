@@ -38,6 +38,14 @@ class Content extends LessonContent {
       b: highlight(colors.angles),
     };
     rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', mods);
+    rect.rectEqn.changeDescription('1', 'Step number 1', mods);
+    rect.rectEqn.changeDescription('2', 'Step number 2', mods);
+    rect.rectEqn.changeDescription('3', 'Step number 3', mods);
+    rect.rectEqn.changeDescription('4', 'Step number 4', mods);
+    rect.rectEqn.changeDescription('5', 'Step number 5', mods);
+    rect.rectEqn.changeDescription('6', 'Step number 6', mods);
+    rect.rectEqn.changeDescription('7', 'Step number 7', mods);
+    rect.rectEqn.changeDescription('8', 'Step number 8', mods);
     // rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
     // rect.rectEqn.changeDescription('2a', '90º is cancelled and goes to 0º on left side.');
     // rect.rectEqn.changeDescription('2b', '0º on left side can be removed');
