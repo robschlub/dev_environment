@@ -34,19 +34,17 @@ class Content extends LessonContent {
     const rect = diag._rect;
 
     const mods = {
-      a: highlight(colors.angles),
-      b: highlight(colors.angles),
-      add_up_to_180: highlight(colors.angles),
+      m: highlight(colors.unit),
     };
-    rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', mods);
-    rect.rectEqn.changeDescription('1', 'Step number 1', mods);
-    rect.rectEqn.changeDescription('2', 'Step number 2', mods);
-    rect.rectEqn.changeDescription('3', 'Step number 3', mods);
-    rect.rectEqn.changeDescription('4', 'Step number 4', mods);
-    rect.rectEqn.changeDescription('5', 'Step number 5', mods);
-    rect.rectEqn.changeDescription('6', 'Step number 6', mods);
-    rect.rectEqn.changeDescription('7', 'Step number 7', mods);
-    rect.rectEqn.changeDescription('8', 'Step number 8', mods);
+    rect.rectEqn.changeDescription('0', 'Area equals product of two adjacent side lengths.', mods);
+    rect.rectEqn.changeDescription('1', '6|m| is the same as saying 6 lots of 1|m|. Expand both 6|m| and 10|m|.', mods);
+    rect.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
+    rect.rectEqn.changeDescription('3', 'Calculate 6 ⨉ 10', mods);
+    rect.rectEqn.changeDescription('4', 'Replace 6 ⨉ 10 with calculated result', mods);
+    rect.rectEqn.changeDescription('5', 'Multiplying anything by 1 doesn\'t change the result.', mods);
+    rect.rectEqn.changeDescription('6', 'Simplify by removing 1s', mods);
+    rect.rectEqn.changeDescription('7', 'Multiplying something by itself is the same as squaring it.', mods);
+    rect.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
     // rect.rectEqn.changeDescription('1', 'Subtract 90º from both sides of the equation.');
     // rect.rectEqn.changeDescription('2a', '90º is cancelled and goes to 0º on left side.');
     // rect.rectEqn.changeDescription('2b', '0º on left side can be removed');

@@ -145,20 +145,6 @@ function updateDescription(
     descriptionElement.innerHTML = html
       .applyModifiers(form.description, form.modifiers, '', monochrome);
   }
-  // // const drawingObject = element.vertices;
-  // // if (drawingObject instanceof HTMLObject) {
-  // //   // const modifiersToUse = setClicks ? form.modifiers : {};
-  // //   const monochrome = !setClicks;
-  // //   drawingObject.change(
-  // //     html.applyModifiers(form.description, form.modifiers, '', monochrome),
-  // //     element.lastDrawTransform.m(),
-  // //   );
-  // if (setClicks) {
-  //   console.log(descriptionElement.innerHTML, form.modifiers)
-  //   html.setOnClicks(form.modifiers);
-  //   console.log(html)
-  // }
-  // }
 }
 
 export type TypeEquationNavigator = {
@@ -353,9 +339,9 @@ function makeType2(
   currentGroup.onclick = refreshMethod;
   nextGroup.onclick = nextMethod;
 
-  next.innerHTML = 'next';
-  prev.innerHTML = 'prev';
-  refresh.innerHTML = 'refresh';
+  next.innerHTML = 'Next';
+  prev.innerHTML = 'Prev';
+  refresh.innerHTML = 'Refresh';
   return {
     table,
     prevGroup,

@@ -55,7 +55,7 @@ export function makeRectEquation(diagram: Diagram, layout: Object) {
       _2: '2',
       m: ['m', colUnit],
       m_: ['m', colUnit],
-      mul: '  \u00D7  ',
+      mul: ' \u00D7 ',
       mul_: ' \u00D7 ',
       mul__: ' \u00D7 ',
       x: diagram.equation.xStrike(strikeColor),

@@ -1,10 +1,12 @@
 .lesson__eqn_nav__not_touchable {
   pointer-events: none;
   cursor: none;
+  color: color('diagram', 'disabled', 'darkest');
 }
 
 .lesson__eqn_nav__type2__table {
   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
+  color: color('diagram', 'disabled', 'base');
 }
 
 .lesson__eqn_nav__type2__prevRow,
@@ -12,6 +14,11 @@
 .lesson__eqn_nav__type2__nextRow {
   cursor: pointer;
   vertical-align: middle;
+  height: calc(var(--lesson__diagram-font-size) * 1.5);
+}
+
+.lesson__eqn_nav__type2__currentRow {
+  height: calc(var(--lesson__diagram-font-size) * 2);
 }
 
 .lesson__eqn_nav__type2__prevRow__description,
@@ -19,10 +26,18 @@
   font-size: calc(var(--lesson__diagram-font-size) * 0.4);
 }
 
+.lesson__eqn_nav__type2__currentRow__description {
+  color: color('diagram', 'text-base');
+}
+
 .lesson__eqn_nav__type2__prevRow__button,
 .lesson__eqn_nav__type2__currentRow__button,
 .lesson__eqn_nav__type2__nextRow__button {
   text-align: center;
+  font-weight: 100;
+  font-size: calc(var(--lesson__diagram-font-size) * 0.4);
+  // padding-top: calc(var(--lesson__diagram-font-size) * 0.3);
+  // padding-bottom: calc(var(--lesson__diagram-font-size) * 0.3);
 }
 
 .lesson__eqn_nav__type2__table td {
