@@ -384,6 +384,34 @@ class Content extends LessonContent {
       },
     });
 
+    common.setContent = [
+      'Often, a rectangle\'s sides are renamed to be something more |intuitive|. For example maybe |width| and |height| for this case.',
+    ];
+    this.addSection(common, {
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('2');
+      },
+    });
+    common.show = [rect._grid, rect._line, rect._sideWidth, rect._sideHeight];
+    this.addSection(common, {
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('2');
+      },
+    });
+    common.setContent = [
+      'And so the area of a rectangle is the multiple of its |width| and |height|',
+    ];
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        rect._numSquaresEqn.showForm('2');
+        rect.eqns.numSquaresEqn.getForm('3')
+          .animatePositionsTo(0, 0.5, 1, 0.5, done);
+      },
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('3');
+      },
+    });
+
     this.addSection(common, {
       setContent: [
         'Now, if we give the reference squares a |size|, then we can make several observations from calculating area.',

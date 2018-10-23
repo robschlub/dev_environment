@@ -91,7 +91,9 @@ export default class RectAreaCollection extends CommonDiagramCollection {
       this.add(`side${name}`, line);
     };
     addSide(new Point(-x, -y), new Point(-x, y), 'A');
+    addSide(new Point(-x, -y), new Point(-x, y), 'Height');
     addSide(new Point(x, -y), new Point(-x, -y), 'B');
+    addSide(new Point(x, -y), new Point(-x, -y), 'Width');
   }
 
   addEqns() {

@@ -295,6 +295,8 @@ export function addNumSquaresRectEquation(
       side_: ' side ',
       length: 'length ',
       length_: 'length ',
+      Width: ['Width', colLine],
+      Height: ['Height', colLine],
       A: ['A', colLine],
       B: ['B', colLine],
       mul: '  \u00D7  ',
@@ -327,6 +329,14 @@ export function addNumSquaresRectEquation(
     'A',
     'mul',
     'B',
+  ]);
+
+  eqn.addForm('3', [
+    'Area',
+    'equals',
+    'Width',
+    'mul',
+    'Height',
   ]);
 
   eqn.collection.setPosition(layout.rectNumSquaresEqnPosition);

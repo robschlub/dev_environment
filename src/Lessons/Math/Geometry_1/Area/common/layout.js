@@ -155,8 +155,8 @@ export default function commonLessonLayout() {
     width: 0.03,
     labelOffset: 0.1,
   };
-  layout.rectSimpleEqnPosition = new Point(0, 1.3);
-  layout.rectNumSquaresEqnPosition = new Point(0, 1.3);
+  layout.rectSimpleEqnPosition = new Point(0, 1.2);
+  layout.rectNumSquaresEqnPosition = new Point(0, 1.2);
   layout.rectEqnPosition = new Point(0, 1.5);
   layout.rectEqnNavPosition = new Point(0, -0.25);
 
