@@ -136,3 +136,46 @@
 .lesson__eqn_nav__1line__current_twoLines {
   height: calc(var(--lesson__eqn_nav__font_size) * 3.3);
 }
+
+// ******************************************
+// ******************************************
+// Two Lines
+// ******************************************
+// ******************************************
+
+.lesson__eqn_nav__2lines__nextRow,
+.lesson__eqn_nav__2lines__currentRow {
+  cursor: pointer;
+  vertical-align: middle;
+  font-size: calc(var(--lesson__eqn_nav__font_size));
+  text-align: center;
+}
+
+.lesson__eqn_nav__2lines__next__button {
+  padding-left: 1.2em;
+  cursor: pointer;
+  vertical-align: middle;
+  font-size: calc(var(--lesson__eqn_nav__font_size));
+  text-align: center;
+}
+
+.lesson__eqn_nav__2lines__prev__button {
+  padding-right: 1.2em;
+  cursor: pointer;
+  vertical-align: middle;
+  font-size: calc(var(--lesson__eqn_nav__font_size));
+  text-align: center;
+}
+
+.lesson__eqn_nav__2lines__next__button:hover,
+.lesson__eqn_nav__2lines_prev__button:hover {
+  color: color('diagram', 'disabled', 'lighter');
+}
+
+.lesson__eqn_nav__2lines__current_twoLines {
+  height: calc(var(--lesson__eqn_nav__font_size) * 3.3);
+}
+
+.lesson__eqn_nav__2lines__nextRow__description {
+  font-size: calc(var(--lesson__eqn_nav__font_size) * 0.7);
+}

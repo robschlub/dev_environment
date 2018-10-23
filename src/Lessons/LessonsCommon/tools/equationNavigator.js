@@ -12,104 +12,6 @@ import * as html from '../../../js/tools/htmlGenerator';
 import HTMLObject from '../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 // import { generateUniqueId } from '../../../js/diagram/tools/tools';
 
-// function makeNextPrevText(
-//   diagram: Diagram,
-//   next: boolean,
-//   spacing: number,
-//   id: string,
-// ) {
-//   let textToUse = 'Prev';
-//   let idToUse = 'prev';
-//   if (next) {
-//     textToUse = 'Next';
-//     idToUse = 'next';
-//   }
-
-//   const text = diagram.shapes.htmlText(
-//     textToUse,
-//     `${id}_${idToUse}`,
-//     'lesson__equation_next_prev',
-//     new Point(0, spacing), 'middle', 'center',
-//   );
-//   text.isTouchable = true;
-//   text.touchInBoundingBox = true;
-//   return text;
-// }
-
-// type TypeRefresh = {
-//   _top: {
-//     _line: DiagramElementPrimative;
-//     _arrow: DiagramElementPrimative;
-//   } & DiagramElementCollection;
-//   _bottom: {
-//     _line: DiagramElementPrimative;
-//     _arrow: DiagramElementPrimative;
-//   } & DiagramElementCollection;
-// } & DiagramElementCollection;
-
-// function makeRefresh(
-//   diagram: Diagram,
-//   sides: number,
-//   radius: number,
-//   lineWidth: number,
-//   angle: number,
-//   color: Array<number>,
-// ) {
-//   const refresh = diagram.shapes.collection(new Transform('Triangle')
-//     .translate(0, 0));
-//   const refreshTop = diagram.shapes.collection(new Transform('Triangle')
-//     .rotate(0).translate(0, 0));
-
-//   const refreshLine = diagram.shapes.polygon(
-//     sides, radius,
-//     lineWidth, (Math.PI - angle) / 2,
-//     1, Math.floor(sides * angle / Math.PI / 2),
-//     color, new Transform().translate(0, 0),
-//   );
-//   refreshLine.vertices.border[0] =
-//     refreshLine.vertices.border[0].map(p => new Point(p.x * 2, p.y * 2));
-//   refreshTop.add('line', refreshLine);
-
-//   const refreshArrow = diagram.shapes.arrow(
-//     lineWidth * 3, 0, lineWidth * 3, 0,
-//     color, new Transform().translate(
-//       (radius + lineWidth) * Math.cos((Math.PI - angle) / 2),
-//       (radius + lineWidth) * Math.sin((Math.PI - angle) / 2),
-//     ), new Point(0, -lineWidth * 3), (Math.PI - angle) / 2 + Math.PI,
-//   );
-//   refreshTop.add('arrow', refreshArrow);
-
-//   const refreshBottom = refreshTop._dup();
-//   refreshBottom.transform.updateRotation(Math.PI);
-
-//   refresh.add('top', refreshTop);
-//   refresh.add('bottom', refreshBottom);
-//   refresh.isTouchable = true;
-//   refresh.touchInBoundingRect = true;
-//   return refresh;
-// }
-
-// function makeDescriptionHTML(
-//   diagram: Diagram,
-//   radius: number,
-//   id: string,
-// ) {
-//   const element = document.createElement('div');
-//   // console.log(radius / diagram.limits.width)
-//   element.style.width = '100%';
-//   element.style.height = '100%';
-//   // element.style.backgroundColor = 'red';
-//   const htmlElement = diagram.shapes.htmlElement(
-//     element,
-//     `${id}_refresh`,
-//     '',
-//     new Point(0, 0), 'middle', 'center',
-//   );
-//   htmlElement.vertices.element.style.width = `${radius * 3 / diagram.limits.width * 100}%`;
-//   htmlElement.vertices.element.style.height = `${radius * 3 / diagram.limits.height * 100}%`;
-//   return htmlElement;
-// }
-
 function updateDescription(
   eqn: Equation,
   formType: string,
@@ -376,11 +278,86 @@ function makeType1Line(
   };
 }
 
+function makeType2Line(
+  prevMethod: () => void,
+  refreshMethod: () => void,
+  nextMethod: () => void,
+  options: Array<string> | string = [],  // can be: 'twoLines'
+) {
+  const table = document.createElement('table');
+  const row = document.createElement('tr');
+  const descriptionRows = document.createElement('tr');
+  const currentGroup = document.createElement('tr');
+  const prev = document.createElement('td');
+  const next = document.createElement('td');
+  const nextGroup = document.createElement('tr');
+  // const descriptionRows = document.createElement('td');
+  // const descriptionRow = document.createElement('tr');
+  // const nextDescriptionRow = document.createElement('tr');
+  const description = document.createElement('td');
+  const nextDescription = document.createElement('td');
+  currentGroup.appendChild(description);
+  nextGroup.appendChild(nextDescription);
+  descriptionRows.appendChild(currentGroup);
+  descriptionRows.appendChild(nextGroup);
+
+  row.appendChild(prev);
+  row.appendChild(descriptionRows);
+  row.appendChild(next);
+  table.appendChild(row);
+
+  table.classList.add('lesson__eqn_nav__table');
+  currentGroup.classList.add('lesson__eqn_nav__2lines__currentRow');
+  nextGroup.classList.add('lesson__eqn_nav__2lines__nextRow');
+  prev.classList.add('lesson__eqn_nav__2lines__prev__button');
+  next.classList.add('lesson__eqn_nav__2lines__next__button');
+  description.classList.add('lesson__eqn_nav__2lines__currentRow__description');
+  description.classList.add('lesson__eqn_nav__description');
+  nextDescription.classList.add('lesson__eqn_nav__2lines__nextRow__description');
+
+  let optionsToUse = options;
+  if (typeof optionsToUse === 'string') {
+    optionsToUse = [options];
+  }
+  // Use two lines to stop jittering when transitioning from one line to two
+  // lines
+  if (optionsToUse.indexOf('twoLines') > -1) {
+    currentGroup.classList.add('lesson__eqn_nav__2lines__current_twoLines');
+  }
+
+  prev.onclick = prevMethod;
+  description.onclick = refreshMethod;
+  next.onclick = nextMethod;
+
+  if (optionsToUse.indexOf('arrows') > -1) {
+    const nextArrow = document.createElement('div');
+    nextArrow.classList.add('lesson__eqn_nav__arrow_right');
+    next.appendChild(nextArrow);
+
+    const prevArrow = document.createElement('div');
+    prevArrow.classList.add('lesson__eqn_nav__arrow_left');
+    prev.appendChild(prevArrow);
+  } else {
+    next.innerHTML = 'Next';
+    prev.innerHTML = 'Prev';
+  }
+
+  return {
+    table,
+    currentGroup,
+    nextGroup,
+    prev,
+    next,
+    nextDescription,
+    description,
+  };
+}
+
 export default function makeEquationNavigator(
   diagram: Diagram,
   equation: Equation,
   offset: Point,
-  navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' = 'threeLine',
+  navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' | 'twoLine' = 'threeLine',
   options: string | Array<string> = '',
   xAlign: 'left' | 'right' | 'center' = 'left',
   vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
@@ -438,6 +415,9 @@ export default function makeEquationNavigator(
   }
   if (navType === 'oneLine') {
     navigatorHTMLElement = makeType1Line(clickPrev, clickRefresh, clickNext, options);
+  }
+  if (navType === 'twoLine') {
+    navigatorHTMLElement = makeType2Line(clickPrev, clickRefresh, clickNext, options);
   }
   if (navigatorHTMLElement != null) {
     Object.assign(navigator, navigatorHTMLElement);
