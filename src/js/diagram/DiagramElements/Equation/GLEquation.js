@@ -2190,7 +2190,7 @@ export class Equation {
   ) {
     const form = this.getForm(formOrName, formType);
     if (form != null) {
-      form.description = description;
+      form.description = `${description}`;
       form.modifiers = modifiers;
     }
   }

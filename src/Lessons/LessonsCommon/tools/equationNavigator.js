@@ -135,20 +135,29 @@ function updateDescription(
   }
 
   const monochrome = !setClicks;
-  // eslint-disable-next-line no-param-reassign
-  descriptionElement.innerHTML = html
-    .applyModifiers(form.description, form.modifiers, '', monochrome);
-  // const drawingObject = element.vertices;
-  // if (drawingObject instanceof HTMLObject) {
-  //   // const modifiersToUse = setClicks ? form.modifiers : {};
-  //   const monochrome = !setClicks;
-  //   drawingObject.change(
-  //     html.applyModifiers(form.description, form.modifiers, '', monochrome),
-  //     element.lastDrawTransform.m(),
-  //   );
   if (setClicks) {
+    // eslint-disable-next-line no-param-reassign
+    descriptionElement.innerHTML = html
+      .applyModifiers(form.description, form.modifiers);
     html.setOnClicks(form.modifiers);
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    descriptionElement.innerHTML = html
+      .applyModifiers(form.description, form.modifiers, '', monochrome);
   }
+  // // const drawingObject = element.vertices;
+  // // if (drawingObject instanceof HTMLObject) {
+  // //   // const modifiersToUse = setClicks ? form.modifiers : {};
+  // //   const monochrome = !setClicks;
+  // //   drawingObject.change(
+  // //     html.applyModifiers(form.description, form.modifiers, '', monochrome),
+  // //     element.lastDrawTransform.m(),
+  // //   );
+  // if (setClicks) {
+  //   console.log(descriptionElement.innerHTML, form.modifiers)
+  //   html.setOnClicks(form.modifiers);
+  //   console.log(html)
+  // }
   // }
 }
 
@@ -292,6 +301,7 @@ function updateButtons(nav: TypeEquationNavigator) {
       updateDescription(nav.eqn, currentForm.type, nav.nextDescription, nextIndex, false);
     }
     updateDescription(nav.eqn, currentForm.type, nav.description, index, true);
+    // nav.eqn.updateDescription(currentForm);
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
       updateDescription(nav.eqn, currentForm.type, nav.prevDescription, prevIndex, false);

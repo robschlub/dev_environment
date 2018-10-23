@@ -7,16 +7,16 @@
   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
 }
 
-.lesson__eqn_nav__type2__prevRow__description,
-.lesson__eqn_nav__type2__nextRow__description {
-  font-size: calc(var(--lesson__diagram-font-size) * 0.4);
-}
-
 .lesson__eqn_nav__type2__prevRow,
 .lesson__eqn_nav__type2__currentRow,
 .lesson__eqn_nav__type2__nextRow {
   cursor: pointer;
   vertical-align: middle;
+}
+
+.lesson__eqn_nav__type2__prevRow__description,
+.lesson__eqn_nav__type2__nextRow__description {
+  font-size: calc(var(--lesson__diagram-font-size) * 0.4);
 }
 
 .lesson__eqn_nav__type2__prevRow__button,

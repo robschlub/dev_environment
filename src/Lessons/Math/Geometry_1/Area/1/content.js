@@ -36,6 +36,7 @@ class Content extends LessonContent {
     const mods = {
       a: highlight(colors.angles),
       b: highlight(colors.angles),
+      add_up_to_180: highlight(colors.angles),
     };
     rect.rectEqn.changeDescription('0', 'Angles in a triangle |add_up_to_180|.', mods);
     rect.rectEqn.changeDescription('1', 'Step number 1', mods);
