@@ -328,6 +328,7 @@ function makeType2Line(
   prev.onclick = prevMethod;
   description.onclick = refreshMethod;
   next.onclick = nextMethod;
+  nextDescription.onclick = nextMethod;
 
   if (optionsToUse.indexOf('arrows') > -1) {
     const nextArrow = document.createElement('div');
