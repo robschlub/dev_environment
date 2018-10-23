@@ -394,11 +394,55 @@ function makeTypeDescriptionOnly(
   };
 }
 
+function makeType1Line(
+  prevMethod: () => void,
+  refreshMethod: () => void,
+  nextMethod: () => void,
+  options: string = 'twoLine',  // can be: 'twoLines'
+) {
+  const table = document.createElement('table');
+  const currentGroup = document.createElement('tr');
+  const prev = document.createElement('td');
+  const next = document.createElement('td');
+  const description = document.createElement('td');
+  currentGroup.appendChild(prev);
+  currentGroup.appendChild(description);
+  currentGroup.appendChild(next);
+  table.appendChild(currentGroup);
+
+  table.classList.add('lesson__eqn_nav__table');
+  currentGroup.classList.add('lesson__eqn_nav__1line__currentRow');
+  prev.classList.add('lesson__eqn_nav__1line__prev__button');
+  next.classList.add('lesson__eqn_nav__1line__next__button');
+  description.classList.add('lesson__eqn_nav__1line__currentRow__description');
+  description.classList.add('lesson__eqn_nav__description');
+
+  // Use two lines to stop jittering when transitioning from one line to two
+  // lines
+  if (options === 'twoLines') {
+    currentGroup.classList.add('lesson__eqn_nav__1line__current_twoLines');
+  }
+
+  prev.onclick = prevMethod;
+  description.onclick = refreshMethod;
+  next.onclick = nextMethod;
+
+  next.innerHTML = 'Next';
+  prev.innerHTML = 'Prev';
+  return {
+    table,
+    currentGroup,
+    prev,
+    next,
+    description,
+  };
+}
+
 export default function makeEquationNavigator(
   diagram: Diagram,
   equation: Equation,
   offset: Point,
-  navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' = 'threeLine',
+  navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' | 'oneLine' = 'threeLine',
   options: string = '',
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
 
@@ -452,6 +496,9 @@ export default function makeEquationNavigator(
   }
   if (navType === 'descriptionOnly') {
     navigatorHTMLElement = makeTypeDescriptionOnly(clickNext);
+  }
+  if (navType === 'oneLine') {
+    navigatorHTMLElement = makeType1Line(clickPrev, clickRefresh, clickNext, options);
   }
   if (navigatorHTMLElement != null) {
     Object.assign(navigator, navigatorHTMLElement);

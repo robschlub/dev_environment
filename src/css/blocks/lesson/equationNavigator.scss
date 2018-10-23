@@ -74,3 +74,26 @@
 //   font-size: calc(var(--lesson__diagram-font-size) * 0.6);
 //   color: color('diagram', 'disabled', 'base');
 // }
+
+// ******************************************
+// ******************************************
+// One Line
+// ******************************************
+// ******************************************
+
+.lesson__eqn_nav__1line__currentRow {
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.lesson__eqn_nav__1line__prev__button {
+  padding-right: 1.2em;
+}
+
+.lesson__eqn_nav__1line__next__button {
+  padding-left: 1.2em;
+}
+
+.lesson__eqn_nav__1line__current_twoLines {
+  height: calc(var(--lesson__diagram-font-size) * 2);
+}
