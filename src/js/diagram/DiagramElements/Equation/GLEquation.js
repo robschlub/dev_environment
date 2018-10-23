@@ -2277,6 +2277,7 @@ export class Equation {
     formOrName: EquationForm | string,
     formType: ?string = null,
   ) {
+    this.collection.show();
     let form = formOrName;
     if (typeof formOrName === 'string') {
       form = this.getForm(formOrName, formType);

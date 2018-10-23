@@ -2003,6 +2003,15 @@ class DiagramElement {
     );
   }
 
+  getPosition() {
+    const t = this.transform.t();
+    let position = new Point(0, 0);
+    if (t != null) {
+      position = t._dup();
+    }
+    return position;
+  }
+
   getVertexSpaceDiagramPosition(vertexSpacePoint: Point) {
     const location = vertexSpacePoint.transformBy(this.lastDrawTransform.matrix());
     const glSpace = {

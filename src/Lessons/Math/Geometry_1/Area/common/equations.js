@@ -77,8 +77,8 @@ export function addRectEqn(
     },
     colText,
     // eqnDescription,
-    null,
-    new Point(0.9, -0.052).add(layout.rectEqnPosition),
+    // null,
+    // new Point(0.9, -0.052).add(layout.rectEqnPosition),
   );
   // eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
@@ -173,6 +173,7 @@ export function addRectEqn(
   ]);
 
   eqn.collection.setPosition(layout.rectEqnPosition);
+  console.log(eqn.collection.transform._dup())
   eqn.setCurrentForm('0');
   // addToCollection.add(name, eqn.collection);
   // eslint-disable-next-line no-param-reassign

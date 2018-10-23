@@ -37,7 +37,7 @@ class Content extends LessonContent {
       m: highlight(colors.unit),
     };
     rect.eqns.rectEqn.changeDescription('0', 'Area equals product of two adjacent side lengths.', mods);
-    rect.eqns.rectEqn.changeDescription('1', '6|m| is the same as saying 6 lots of 1|m|. Expand both 6|m| and 10|m|.', mods);
+    rect.eqns.rectEqn.changeDescription('1', 'Expand both 6|m| and 10|m| as 6|m| is the same as saying 6 lots of 1|m|.', mods);
     rect.eqns.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
     rect.eqns.rectEqn.changeDescription('3', 'Calculate 6 ⨉ 10', mods);
     rect.eqns.rectEqn.changeDescription('4', 'Replace 6 ⨉ 10 with calculated result', mods);
@@ -319,20 +319,18 @@ class Content extends LessonContent {
         'Therefore, the area of a rectangle can be calculated:',
       ],
       setSteadyState: () => {
-        rect._simpleRectEqn.showAll();
         rect.eqns.simpleRectEqn.showForm('0');
       },
     });
 
-    // this.addSection(common, {
-    //   setContent: [
-    //     'When the reference squares have a specific size, say 1m side length, then we can look at the units of area more closely.',
-    //   ],
-    //   setSteadyState: () => {
-    //     rect._rectEqn.showAll();
-    //     rect.eqns.rectEqn.showForm('0');
-    //   },
-    // });
+    this.addSection(common, {
+      setContent: [
+        'When the reference squares have a specific size, say 1m side length:',
+      ],
+      setSteadyState: () => {
+        rect._rectEqn.showForm('0');
+      },
+    });
 
     this.addSection(common, {
       title: 'asdf',
@@ -344,9 +342,10 @@ class Content extends LessonContent {
       },
       show: [rect._rectEqn],
       setSteadyState: () => {
-        rect._rectEqn.showAll();
-        rect.eqns.rectEqn.showForm('0');
-        rect._rectEqn.updateButtons();
+        // rect._rectEqn.showAll();
+        rect._rectEqn.showForm('0');
+        // rect.eqns.rectEqn.showForm('0');
+        // rect._rectEqn.updateButtons();
       },
     });
   }

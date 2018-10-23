@@ -5,11 +5,11 @@ import {
   Transform, Point,
 } from '../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementCollection,
 } from '../../../js/diagram/Element';
-import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+import { Equation, EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import * as html from '../../../js/tools/htmlGenerator';
-import HTMLObject from '../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
+// import HTMLObject from '../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
 // import { generateUniqueId } from '../../../js/diagram/tools/tools';
 
 function updateDescription(
@@ -374,14 +374,14 @@ export default function makeEquationNavigator(
   vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
 ) {
-  const navigator = diagram.shapes.collection(new Transform('Triangle')
+  const navigator = diagram.shapes.collection(new Transform('Eqn Nav')
     .scale(1, 1)
     .translate(0, 0));
   navigator.setEquation = (eqn: Equation) => {
     navigator.eqn = eqn;
     navigator._eqn = [];
     navigator.add('eqn', eqn.collection);
-    navigator.eqn.collection.setPosition(0, 0);
+    // navigator.eqn.collection.setPosition(0, 0);
   };
   navigator.setEquation(equation);
   navigator.prev = null;
@@ -430,13 +430,15 @@ export default function makeEquationNavigator(
   if (navType === 'twoLine') {
     navigatorHTMLElement = makeType2Line(clickPrev, clickRefresh, clickNext, options);
   }
+
+  const eqnCollectionPosition = navigator.eqn.collection.getPosition();
   if (navigatorHTMLElement != null) {
     Object.assign(navigator, navigatorHTMLElement);
     const table = diagram.shapes.htmlElement(
       navigatorHTMLElement.table,
       `${id}_table`,
       '',
-      offset, vAlign, xAlign,
+      eqnCollectionPosition.add(offset), vAlign, xAlign,
     );
     navigator.add('table', table);
   }
@@ -451,6 +453,13 @@ export default function makeEquationNavigator(
     } else {
       updateButtons(navigator);
     }
+  };
+
+  navigator.showForm = (formOrName: EquationForm | string, formType: ?string = null) => {
+    navigator.show();
+    navigator._table.show();
+    navigator.eqn.showForm(formOrName, formType);
+    navigator.updateButtons();
   };
 
   navigator.eqn.collection.onClick = clickNext;
