@@ -398,7 +398,7 @@ export default function makeEquationNavigator(
   diagram: Diagram,
   equation: Equation,
   offset: Point,
-  navType: 'threeLine' | 'descriptionOnly' = 'threeLine',
+  navType: 'threeLine' | 'descriptionOnly' | 'equationOnly' = 'threeLine',
   options: string = '',
   id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
 
@@ -464,6 +464,9 @@ export default function makeEquationNavigator(
     navigator.add('table', table);
   }
   navigator.updateButtons = () => {
+    if (navType === 'equationOnly') {
+      return;
+    }
     if (navType === 'descriptionOnly') {
       updateButtonsDescriptionOnly(navigator);
     } else {
