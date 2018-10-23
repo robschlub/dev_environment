@@ -18,6 +18,7 @@ function updateDescription(
   descriptionElement: HTMLElement,
   index: number,
   setClicks: boolean = false,
+  prefix: string = '',
 ) {
   const element = descriptionElement;
   if (element == null) {
@@ -40,12 +41,12 @@ function updateDescription(
   if (setClicks) {
     // eslint-disable-next-line no-param-reassign
     descriptionElement.innerHTML = html
-      .applyModifiers(form.description, form.modifiers);
+      .applyModifiers(`${prefix}${form.description}`, form.modifiers);
     html.setOnClicks(form.modifiers);
   } else {
     // eslint-disable-next-line no-param-reassign
     descriptionElement.innerHTML = html
-      .applyModifiers(form.description, form.modifiers, '', monochrome);
+      .applyModifiers(`${prefix}${form.description}`, form.modifiers, '', monochrome);
   }
 }
 
@@ -77,7 +78,16 @@ function disableTouch(element: HTMLElement) {
   }
 }
 
-function updateButtons(nav: TypeEquationNavigator) {
+function updateButtons(
+  nav: TypeEquationNavigator,
+  includeNextPrevPrefix: boolean = false,
+) {
+  let nextPrefix = '';
+  let prevPrefix = '';
+  if (includeNextPrevPrefix) {
+    nextPrefix = 'NEXT: ';
+    prevPrefix = 'PREV: ';
+  }
   const currentForm = nav.eqn.getCurrentForm();
   if (currentForm != null) {
     const index = nav.eqn.getFormIndex(currentForm);
@@ -106,13 +116,13 @@ function updateButtons(nav: TypeEquationNavigator) {
         nav.nextDescription.innerHTML = 'RESTART from begining';
       }
     } else {
-      updateDescription(nav.eqn, currentForm.type, nav.nextDescription, nextIndex, false);
+      updateDescription(nav.eqn, currentForm.type, nav.nextDescription, nextIndex, false, nextPrefix);
     }
     updateDescription(nav.eqn, currentForm.type, nav.description, index, true);
     // nav.eqn.updateDescription(currentForm);
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
-      updateDescription(nav.eqn, currentForm.type, nav.prevDescription, prevIndex, false);
+      updateDescription(nav.eqn, currentForm.type, nav.prevDescription, prevIndex, false, prevPrefix);
     } else if (nav.prevDescription) {
       nav.prevDescription.innerHTML = '';
     }
@@ -436,6 +446,8 @@ export default function makeEquationNavigator(
     }
     if (navType === 'descriptionOnly') {
       updateButtonsDescriptionOnly(navigator);
+    } else if (navType === 'twoLine') {
+      updateButtons(navigator, true);
     } else {
       updateButtons(navigator);
     }
