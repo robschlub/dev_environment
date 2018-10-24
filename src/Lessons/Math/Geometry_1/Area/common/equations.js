@@ -525,9 +525,9 @@ export function addTri2AreaEquation(
   const strikeColor = layout.colors.diagram.disabledDark;
   eqn.createElements(
     {
-      Area: ['Area3', colLine],
+      Area: ['Area', colLine],
       triangle: ['triangle', colLine],
-      Area_: ['Area', colCon, null, null, null, null, 'normal'],
+      Area_: ['Area', colCon, null, null, null, null, 'italic'],
       Area__: ['Area', colCon1],
       _1: ['1', colCon],
       _1_: ['1', colCon],
@@ -546,13 +546,13 @@ export function addTri2AreaEquation(
       D: ['D', colCon1],
       x: diagram.equation.xStrike(strikeColor),
       x_: diagram.equation.xStrike(strikeColor),
-      // x__: diagram.equation.xStrike(strikeColor),
-      // x___: diagram.equation.xStrike(strikeColor),
       v: diagram.equation.vinculum(colCon),
       v_: diagram.equation.vinculum(colCon1),
       v__: diagram.equation.vinculum(colText),
       bl: diagram.equation.bracket('left', 1, colText),
       br: diagram.equation.bracket('right', 1, colText),
+      base: 'base',
+      height: 'height',
     },
     colText,
   );
@@ -608,11 +608,31 @@ export function addTri2AreaEquation(
   eqn.addForm('4', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__', 'lb',
-    'B',
-    'plus',
-    'D',
-    'rb',
+    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
+    eqn.brac(['B', 'plus', 'D'], 'lb', 'rb'),
+  ]);
+
+  eqn.addForm('4', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
+    eqn.strike(eqn.brac(['B', 'plus', 'D'], 'lb', 'rb'), 'x'),
+  ]);
+
+  eqn.addForm('5', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1___', '_2___', 'v__', fracSize),
+    'A__',
+    'base',
+  ]);
+
+  eqn.addForm('6', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1___', '_2___', 'v__', fracSize),
+    'height',
+    'base',
   ]);
 
   eqn.collection.setPosition(layout.tri2AreaEqnPosition);
