@@ -556,16 +556,26 @@ export function addTri2AreaEquation(
       v: diagram.equation.vinculum(colCon),
       v_: diagram.equation.vinculum(colCon1),
       v__: diagram.equation.vinculum(colText),
+      bl: diagram.equation.bracket('left', 1, colText),
+      br: diagram.equation.bracket('right', 1, colText),
     },
     colText,
   );
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
+  // eqn.addForm('0', [
+  //   eqn.sub('Area', 'triangle'),
+  //   'equals',
+  //   eqn.sub('Area_', '_1'),
+  //   'plus',
+  //   eqn.sub('Area__', '_2'),
+  // ]);
+
   eqn.addForm('0', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    eqn.sub('Area_', '_1'),
+    eqn.brac(eqn.sub('Area_', '_1'), 'bl', 'br'),
     'plus',
     eqn.sub('Area__', '_2'),
   ]);
