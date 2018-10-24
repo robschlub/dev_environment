@@ -36,6 +36,9 @@ $geometry_colors: (
   angleLabels:    color('diagram', 'warning', 'base'),
   lines:          color('diagram', 'primary'),
   lineLabels:     color('diagram', 'primary'),
-  construction:      color('yellow', 'darkest'),
+  construction:      color('diagram', 'passive', 'darkest'),
   construction1:     color('diagram', 'warning', 'darker'),
+  construction1Fill: color('diagram', 'warning', 'darkest'),
+  construction2:     color('diagram', 'safe', 'darker'),
+  construction2Fill: color('diagram', 'safe', 'darkest'),
 );

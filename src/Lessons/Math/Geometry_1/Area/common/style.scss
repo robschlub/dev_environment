@@ -11,7 +11,9 @@ $colors: (
   row:                 color('diagram', 'warning', 'base'),
   unit:                color('diagram', 'warning', 'base'),
   construction:        map-get($geometry_colors, construction1),
-  construction1:       map-get($geometry_colors, construction),
+  constructionFill:    map-get($geometry_colors, construction1Fill),
+  construction1:       map-get($geometry_colors, construction2),
+  construction1Fill:   map-get($geometry_colors, construction2Fill),
 );
 
 body {

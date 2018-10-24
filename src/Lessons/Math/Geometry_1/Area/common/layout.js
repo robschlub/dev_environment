@@ -16,6 +16,8 @@ const cssColorNames = [
   'unit',
   'construction',
   'construction1',
+  'constructionFill',
+  'construction1Fill',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -219,6 +221,32 @@ export default function commonLessonLayout() {
       layout.tri2.points[2],
     ],
     width: width / 3,
+  };
+  layout.tri2Rect1Tri = {
+    points: [
+      layout.tri2Rect1.points[0],
+      layout.tri2Rect1.points[1],
+      layout.tri2Rect1.points[2],
+    ],
+    midPoint: new Point(
+      (layout.tri2Rect1.points[1].x - layout.tri2Rect1.points[0].x) / 1.5
+        + layout.tri2Rect1.points[0].x,
+      (layout.tri2Rect1.points[2].y - layout.tri2Rect1.points[0].y) / 3
+        + layout.tri2Rect1.points[0].y,
+    ),
+  };
+  layout.tri2Rect2Tri = {
+    points: [
+      layout.tri2Rect2.points[0],
+      layout.tri2Rect2.points[1],
+      layout.tri2Rect2.points[3],
+    ],
+    midPoint: new Point(
+      (layout.tri2Rect2.points[1].x - layout.tri2Rect2.points[0].x)  / 3
+        + layout.tri2Rect2.points[0].x,
+      (layout.tri2Rect2.points[3].y - layout.tri2Rect2.points[0].y) / 3
+        + layout.tri2Rect2.points[0].y,
+    ),
   };
   return layout;
 }

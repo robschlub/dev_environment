@@ -559,6 +559,8 @@ class Content extends LessonContent {
       tri._tri2, tri._tri2Rect1, tri._tri2Rect2,
       tri._sideTriRect1A, tri._sideTriRect1B,
       tri._sideTriRect2A, tri._sideTriRect2B,
+      tri._tri2Rect1Tri, tri._tri2Rect2Tri,
+      tri._label1, tri._label2,
     ];
     this.addSection(common, {
       title: 'arbitrary',

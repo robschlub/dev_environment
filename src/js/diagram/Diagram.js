@@ -20,6 +20,7 @@ import VertexObject from './DrawingObjects/VertexObject/VertexObject';
 import {
   PolyLine, PolyLineCorners,
 } from './DiagramElements/PolyLine';
+import Fan from './DiagramElements/Fan';
 import type {
   TypePolyLineBorderToPoint,
 } from './DiagramElements/PolyLine';
@@ -188,6 +189,17 @@ function shapes(diagram: Diagram, high: boolean = false) {
     return PolyLine(
       webgl, points, close, lineWidth,
       color, borderToPoint, transform, diagram.limits,
+    );
+  }
+
+  function fan(
+    points: Array<Point>,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return Fan(
+      webgl, points,
+      color, transform, diagram.limits,
     );
   }
 
@@ -628,6 +640,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
     rectangleFilled,
     repeatPattern,
     repeatPatternVertex,
+    fan,
   };
 }
 
