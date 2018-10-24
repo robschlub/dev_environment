@@ -19,8 +19,22 @@ import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
 
+class BlankElement {
+  ascent: number;
+  descent: number;
+  width: number;
+  height: number;
+
+  constructor(width: number = 0.03, ascent: number = 0, descent: number = 0) {
+    this.width = width;
+    this.ascent = ascent;
+    this.descent = descent;
+    this.height = this.ascent + this.descent;
+  }
+}
+
 class Element {
-  content: DiagramElementPrimative | DiagramElementCollection;
+  content: DiagramElementPrimative | DiagramElementCollection | BlankElement;
   ascent: number;
   descent: number;
   width: number;
@@ -28,7 +42,7 @@ class Element {
   height: number;
   scale: number;
 
-  constructor(content: DiagramElementPrimative | DiagramElementCollection) {
+  constructor(content: DiagramElementPrimative | DiagramElementCollection | BlankElement) {
     this.content = content;
     this.ascent = 0;
     this.descent = 0;
@@ -39,6 +53,14 @@ class Element {
 
   calcSize(location: Point, scale: number) {
     const { content } = this;
+    if (content instanceof BlankElement) {
+      this.width = content.width * scale;
+      this.height = content.height * scale;
+      this.ascent = content.ascent * scale;
+      this.descent = content.descent * scale;
+      this.location = location._dup();
+      this.scale = scale;
+    }
     if (content instanceof DiagramElementCollection
         || content instanceof DiagramElementPrimative) {
       // Update translation and scale
@@ -62,7 +84,12 @@ class Element {
   }
 
   _dup(namedCollection: Object) {
-    const c = new Element(namedCollection[this.content.name]);
+    let c;
+    if (this.content instanceof BlankElement) {
+      c = new Element(this.content);
+    } else {
+      c = new Element(namedCollection[this.content.name]);
+    }
     c.ascent = this.ascent;
     c.descent = this.descent;
     c.width = this.width;
@@ -73,6 +100,9 @@ class Element {
   }
 
   getAllElements() {
+    if (this.content instanceof BlankElement) {
+      return [];
+    }
     return [this.content];
   }
 
@@ -148,11 +178,11 @@ class Elements {
   getAllElements() {
     let elements = [];
     this.content.forEach((e) => {
-      if (e instanceof Element) {
-        elements.push(e.content);
-      } else {
-        elements = [...elements, ...e.getAllElements()];
-      }
+      // if (e instanceof Element && !(e.content instanceof BlankElement)) {
+      //   elements.push(e.content);
+      // } else {
+      elements = [...elements, ...e.getAllElements()];
+      // }
     });
     return elements;
   }
@@ -1317,15 +1347,9 @@ export function createEquationElements(
   };
   Object.keys(elems).forEach((key) => {
     if (typeof elems[key] === 'string') {
-      // const dT = new DiagramText(new Point(0, 0), elems[key], font);
-      // const to = new TextObject(drawContext2D, [dT]);
-      // const p = new DiagramElementPrimative(
-      //   to,
-      //   new Transform('Equation Element').scale(1, 1).translate(0, 0),
-      //   color,
-      //   diagramLimits,
-      // );
-      collection.add(key, makeElem(elems[key], null));
+      if (key !== 'space') {
+        collection.add(key, makeElem(elems[key], null));
+      }
     }
     if (elems[key] instanceof DiagramElementPrimative) {
       collection.add(key, elems[key]);
@@ -1380,18 +1404,26 @@ export function contentToElement(
   // If the content is a string, then find the corresponding
   // DiagramElement associated with the string
   if (typeof content === 'string') {
-    const diagramElement = getDiagramElement(collection, content);
-    if (diagramElement) {
-      elementArray.push(new Element(diagramElement));
+    if (content === 'space') {
+      elementArray.push(new Element(new BlankElement()));
+    } else {
+      const diagramElement = getDiagramElement(collection, content);
+      if (diagramElement) {
+        elementArray.push(new Element(diagramElement));
+      }
     }
   // Otherwise, if the input content is an array, then process each element
   // and add it to the ElementArray
   } else if (Array.isArray(content)) {
     content.forEach((c) => {
       if (typeof c === 'string') {
-        const diagramElement = getDiagramElement(collection, c);
-        if (diagramElement) {
-          elementArray.push(new Element(diagramElement));
+        if (c === 'space') {
+          elementArray.push(new Element(new BlankElement()));
+        } else {
+          const diagramElement = getDiagramElement(collection, c);
+          if (diagramElement) {
+            elementArray.push(new Element(diagramElement));
+          }
         }
       } else if (c !== null) {
         elementArray.push(c);
@@ -1473,9 +1505,13 @@ export class EquationForm extends Elements {
     const elements = [];
     content.forEach((c) => {
       if (typeof c === 'string') {
-        const diagramElement = getDiagramElement(this.collection, c);
-        if (diagramElement) {
-          elements.push(new Element(diagramElement));
+        if (c === 'space') {
+          elements.push(new Element(new BlankElement()));
+        } else {
+          const diagramElement = getDiagramElement(this.collection, c);
+          if (diagramElement) {
+            elements.push(new Element(diagramElement));
+          }
         }
       } else {
         elements.push(c);
