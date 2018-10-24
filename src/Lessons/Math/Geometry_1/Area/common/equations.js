@@ -525,9 +525,9 @@ export function addTri2AreaEquation(
   const strikeColor = layout.colors.diagram.disabledDark;
   eqn.createElements(
     {
-      Area: ['Area', colLine],
+      Area: ['Area3', colLine],
       triangle: ['triangle', colLine],
-      Area_: ['Area', colCon],
+      Area_: ['Area', colCon, null, null, null, null, 'normal'],
       Area__: ['Area', colCon1],
       _1: ['1', colCon],
       _1_: ['1', colCon],
@@ -544,13 +544,6 @@ export function addTri2AreaEquation(
       A__: [' A ', colText],
       B: ['B', colCon],
       D: ['D', colCon1],
-      lb: '(',
-      rb: ')',
-      // mul: ' \u00D7 ',
-      // _1: '1',
-      // _2: '2',
-      // space: ' ',
-      // space_: ' ',
       x: diagram.equation.xStrike(strikeColor),
       x_: diagram.equation.xStrike(strikeColor),
       v: diagram.equation.vinculum(colCon),
@@ -564,21 +557,21 @@ export function addTri2AreaEquation(
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
-  // eqn.addForm('0', [
-  //   eqn.sub('Area', 'triangle'),
-  //   'equals',
-  //   eqn.sub('Area_', '_1'),
-  //   'plus',
-  //   eqn.sub('Area__', '_2'),
-  // ]);
-
   eqn.addForm('0', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    eqn.brac(eqn.sub('Area_', '_1'), 'bl', 'br'),
+    eqn.sub('Area_', '_1'),
     'plus',
     eqn.sub('Area__', '_2'),
   ]);
+
+  // eqn.addForm('0', [
+  //   eqn.sub('Area', 'triangle'),
+  //   'equals',
+  //   eqn.brac(eqn.sub('Area_', '_1'), 'bl', 'br'),
+  //   'plus',
+  //   eqn.sub('Area__', '_2'),
+  // ]);
 
   const fracSize = 0.45;
   eqn.addForm('1', [
@@ -600,11 +593,12 @@ export function addTri2AreaEquation(
   eqn.addForm('3', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__', 'lb',
-    eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'B',
-    'plus',
-    eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'D',
-    'rb',
+    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
+    eqn.brac([
+      eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'B',
+      'plus',
+      eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'D',
+    ], 'bl', 'br'),
   ]);
 
   eqn.addForm('4', [

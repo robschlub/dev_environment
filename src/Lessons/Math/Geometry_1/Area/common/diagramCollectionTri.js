@@ -152,6 +152,5 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.addEqns();
     this.setPosition(this.layout.triPosition);
     this.hasTouchableElements = true;
-    console.log(this)
   }
 }

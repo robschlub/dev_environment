@@ -1264,6 +1264,15 @@ export function createEquationElements(
   }
   let font = new DiagramFont(
     'Times New Roman',
+    'normal',
+    0.2,
+    '200',
+    'left',
+    'alphabetic',
+    color,
+  );
+  let fontItalic = new DiagramFont(
+    'Times New Roman',
     'italic',
     0.2,
     '200',
@@ -1272,7 +1281,10 @@ export function createEquationElements(
     color,
   );
   if (colorOrFont instanceof DiagramFont) {
-    font = colorOrFont;
+    font = colorOrFont._dup();
+    font.style = 'normal';
+    fontItalic = colorOrFont._dup();
+    fontItalic.style = 'italic';
     if (font.color != null) {
       color = RGBToArray(font.color);
     }
@@ -1282,8 +1294,18 @@ export function createEquationElements(
     new Transform('Equation Elements Collection').scale(1, 1).rotate(0).translate(0, 0),
     diagramLimits,
   );
-  const makeElem = (text) => {
-    const dT = new DiagramText(new Point(0, 0), text, font);
+  const makeElem = (text: string, fontOrStyle: DiagramFont | string | null) => {
+    let fontToUse: DiagramFont = font;
+    if (fontOrStyle instanceof DiagramFont) {
+      fontToUse = fontOrStyle;
+    } else if (fontOrStyle === 'italic') {
+      fontToUse = fontItalic;
+    } else if (fontOrStyle === 'normal') {
+      fontToUse = font;
+    } else if (text.match(/[A-Z,a-z]/)) {
+      fontToUse = fontItalic;
+    }
+    const dT = new DiagramText(new Point(0, 0), text, fontToUse);
     const to = new TextObject(drawContext2D, [dT]);
     const p = new DiagramElementPrimative(
       to,
@@ -1303,7 +1325,7 @@ export function createEquationElements(
       //   color,
       //   diagramLimits,
       // );
-      collection.add(key, makeElem(elems[key]));
+      collection.add(key, makeElem(elems[key], null));
     }
     if (elems[key] instanceof DiagramElementPrimative) {
       collection.add(key, elems[key]);
@@ -1312,8 +1334,8 @@ export function createEquationElements(
       collection.add(key, elems[key]);
     }
     if (Array.isArray(elems[key])) {
-      const [text, col, isTouchable, onClick, direction, mag] = elems[key];
-      const elem = makeElem(text);
+      const [text, col, isTouchable, onClick, direction, mag, fontOrStyle] = elems[key];
+      const elem = makeElem(text, fontOrStyle);
       if (col) {
         elem.setColor(col);
       }
@@ -1333,13 +1355,6 @@ export function createEquationElements(
         elem.animate.transform.translation.options.magnitude = mag;
       }
 
-      // const elem = makeElem(elems[key][0]);
-      // if (elems[key].length > 1) {
-      //   elem.setColor(elems[key][1]);
-      // }
-      // if (elems[key].length > 2) {
-      //   elem.isTouchable = elems[key][2];
-      // }
       collection.add(key, elem);
     }
   });
