@@ -1,13 +1,10 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point, Rect, polarToRect,
+  Transform, Point, Rect,
 } from '../../../../../js/diagram/tools/g2';
-// import {
-//   range, roundNum,
-// } from '../../../../../js/diagram/tools/mathtools';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
@@ -23,23 +20,40 @@ import type {
   TypeSimpleRectEquationCollection,
   TypeSimpleUnitsEquation,
   TypeSimpleUnitsEquationCollection,
+  TypeSquareEquation,
+  TypeSquareEquationCollection,
+  TypeNumSquaresEquation,
+  TypeNumSquaresEquationNav,
+
 } from './equations';
 
 export default class RectAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   rowIndex: number;
-  _row: DiagramElementPrimative;
   _grid: DiagramElementPrimative;
-  _rect: DiagramElementCollection;
+  _gridSquare: DiagramElementPrimative;
   _line: DiagramElementPrimative;
-
-  _simpleRectEqn: TypeSimpleRectEquationCollection;
+  _numSquaresEqn: TypeNumSquaresEquationNav;
   _rectEqn: TypeRectEquationNav;
+  _row: DiagramElementPrimative;
+  _side6m: TypeLine;
+  _side10m: TypeLine;
+  _sideA: TypeLine;
+  _sideB: TypeLine;
+  _sideHeight: TypeLine;
+  _sideSquareA: TypeLine;
+  _sideSquareB: TypeLine;
+  _sideWidth: TypeLine;
+  _simpleRectEqn: TypeSimpleRectEquationCollection;
   _simpleUnitsEqn: TypeSimpleUnitsEquationCollection;
+  _square: DiagramElementPrimative;
+  _squareEqn: TypeSquareEquationCollection;
   eqns: {
-    simpleRectEqn: TypeSimpleRectEquation;
+    numSquaresEqn: TypeNumSquaresEquation;
     rectEqn: TypeRectEquation;
+    simpleRectEqn: TypeSimpleRectEquation;
     simpleUnitsEqn: TypeSimpleUnitsEquation;
+    squareEqn: TypeSquareEquation
   };
 
   addGrid() {

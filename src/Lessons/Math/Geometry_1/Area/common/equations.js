@@ -273,6 +273,9 @@ export type TypeNumSquaresEquation = {
   collection: TypeNumSquaresEquationCollection;
 } & Equation;
 
+export type TypeNumSquaresEquationNav = {
+  eqn: TypeRectEquation;
+} & TypeEquationNavigator;
 
 export function addNumSquaresRectEquation(
   diagram: Diagram,
@@ -402,6 +405,21 @@ export function addSimpleUnitsRectEquation(
   addToCollection.eqns[name] = eqn;
   addToCollection.add(name, eqn.collection);
 }
+
+export type TypeSquareEquationCollection = {
+  _Area: DiagramElementPrimative,
+  __60: DiagramElementPrimative,
+  _equals: DiagramElementPrimative,
+  _A: DiagramElementPrimative,
+  _A_: DiagramElementPrimative,
+  _A__: DiagramElementPrimative,
+  __2: DiagramElementPrimative,
+  _mul: DiagramElementPrimative,
+} & DiagramElementCollection;
+
+export type TypeSquareEquation = {
+  collection: TypeSquareEquationCollection;
+} & Equation;
 
 export function addSquareEquation(
   diagram: Diagram,
