@@ -1056,6 +1056,184 @@ class Integral extends Elements {
   }
 }
 
+class Brackets extends Elements {
+  mainContent: Elements | null;
+  leftGlyph: DiagramElementPrimative | DiagramElementCollection | null;
+  rightGlyph: DiagramElementPrimative | DiagramElementCollection | null;
+  leftGlyphLocation: Point;
+  rightGlyphLocation: Point;
+  glyphScale: number;
+
+  constructor(
+    content: Elements | null,
+    leftGlyph: DiagramElementPrimative | null | DiagramElementCollection,
+    rightGlyph: DiagramElementPrimative | null | DiagramElementCollection,
+  ) {
+    const left = leftGlyph !== null ? new Element(leftGlyph) : null;
+    const right = rightGlyph !== null ? new Element(rightGlyph) : null;
+    super([left, content, right]);
+
+    this.leftGlyph = left;
+    this.rightGlyph = right;
+    this.mainContent = content;
+    this.leftGlyphLocation = new Point(0, 0);
+    this.rightGlyphLocation = new Point(0, 0);
+    this.glyphScale = 1;
+  }
+
+  _dup(namedCollection: Object) {
+    const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
+    const lglyph = this.leftGlyph == null ? null : namedCollection[this.leftGlyph.name];
+    const rglyph = this.rightGlyph == null ? null : namedCollection[this.rightGlyph.name];
+    const bracketCopy = new Brackets(
+      content,
+      lglyph,
+      rglyph,
+    );
+    duplicateFromTo(
+      this, bracketCopy,
+      ['content', 'leftGlyph', 'rightGlyph'],
+    );
+    return bracketCopy;
+  }
+
+  getAllElements() {
+    let elements = [];
+    if (this.mainContent) {
+      elements = [...elements, ...this.mainContent.getAllElements()];
+    }
+    if (this.leftGlyph) {
+      elements = [...elements, this.leftGlyph];
+    }
+    if (this.rightGlyph) {
+      elements = [...elements, this.rightGlyph];
+    }
+    return elements;
+  }
+
+  setPositions() {
+    const { leftGlyph, rightGlyph } = this;
+    if (leftGlyph != null) {
+      leftGlyph.transform.updateScale(this.glyphScale, this.glyphScale);
+      leftGlyph.transform.updateTranslation(
+        this.leftGlyphLocation.x,
+        this.leftGlyphLocation.y,
+      );
+    }
+    if (rightGlyph != null) {
+      rightGlyph.transform.updateScale(this.glyphScale, this.glyphScale);
+      rightGlyph.transform.updateTranslation(
+        this.rightGlyphLocation.x,
+        this.rightGlyphLocation.y,
+      );
+    }
+    if (this.mainContent) {
+      this.mainContent.setPositions();
+    }
+  }
+
+  offsetLocation(offset: Point = new Point(0, 0)) {
+    this.location = this.location.add(offset);
+    const { leftGlyph, rightGlyph } = this;
+    if (leftGlyph != null) {
+      this.leftGlyph = this.leftGlyphLocation.add(offset);
+    }
+    if (rightGlyph != null) {
+      this.rightGlyph = this.rightGlyphLocation.add(offset);
+    }
+    if (this.mainContent) {
+      this.mainContent.offsetLocation(offset);
+    }
+  }
+
+  calcSize(location: Point, scale: number) {
+    this.location = location._dup();
+    const loc = location._dup();
+    const contentBounds = new Bounds();
+    const leftGlyphBounds = new Bounds();
+    const rightGlyphBounds = new Bounds();
+
+    const { mainContent } = this;
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(loc._dup(), scale);
+      contentBounds.width = mainContent.width;
+      contentBounds.height = mainContent.ascent + mainContent.descent;
+      contentBounds.ascent = mainContent.ascent;
+      contentBounds.descent = mainContent.descent;
+    }
+
+    const heightScale = 1.2;
+    const glyphMinHeight = contentBounds.height;
+    const numLines = roundNum(glyphMinHeight / scale, 0);
+    const height = numLines * scale * heightScale;
+    const leftSymbolLocation = new Point(
+      loc.x,
+      loc.y - contentBounds.descent - contentBounds.height * heightScale / 2,
+    );
+
+    const { leftGlyph } = this;
+    if (leftGlyph instanceof DiagramElementPrimative) {
+      leftGlyph.show();
+      leftGlyph.transform.updateScale(
+        height,
+        height,
+      );
+      leftGlyph.transform.updateTranslation(
+        leftSymbolLocation.x,
+        leftSymbolLocation.y,
+      );
+      this.leftGlyphLocation = leftSymbolLocation;
+      this.glyphScale = height;
+      const bounds = leftGlyph.vertices
+        .getRelativeVertexSpaceBoundingRect();
+      leftGlyphBounds.width = bounds.width;
+      leftGlyphBounds.height = -bounds.bottom + bounds.top;
+      leftGlyphBounds.ascent = bounds.top;
+      leftGlyphBounds.descent = -bounds.bottom;
+    }
+
+    const rightSymbolLocation = new Point(
+      loc.x + contentBounds.width + leftGlyphBounds.width,
+      loc.y - contentBounds.descent - contentBounds.height * heightScale / 2,
+    );
+
+    const { rightGlyph } = this;
+    if (rightGlyph instanceof DiagramElementPrimative) {
+      rightGlyph.show();
+      rightGlyph.transform.updateScale(
+        height,
+        height,
+      );
+      rightGlyph.transform.updateTranslation(
+        rightSymbolLocation.x,
+        rightSymbolLocation.y,
+      );
+      this.rightGlyphLocation = leftSymbolLocation;
+      // this.glyphScale = height;
+      const bounds = rightGlyph.vertices
+        .getRelativeVertexSpaceBoundingRect();
+      rightGlyphBounds.width = bounds.width;
+      rightGlyphBounds.height = -bounds.bottom + bounds.top;
+      rightGlyphBounds.ascent = bounds.top;
+      rightGlyphBounds.descent = -bounds.bottom;
+    }
+
+    const contentLocation = new Point(
+      this.location.x + leftGlyphBounds.width,
+      this.location.y,
+    );
+
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(contentLocation, scale);
+    }
+
+    this.width = leftGlyphBounds.width + contentBounds.width + rightGlyphBounds.width;
+    this.ascent = leftGlyphBounds.ascent;
+    this.descent = rightGlyphBounds.ascent;
+    this.height = this.descent + this.ascent;
+  }
+}
+
 export function getDiagramElement(
   collection: DiagramElementCollection,
   name: string | DiagramElementPrimative | DiagramElementCollection,
