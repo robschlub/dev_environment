@@ -10,11 +10,11 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import {
-  addRectEqn,
+  addTriRectEquation,
 } from './equations';
-import type {
-  TypeRectEquationNav,
-} from './equations';
+// import type {
+//   TypeRectEquationNav,
+// } from './equations';
 
 export default class TriangleAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -54,33 +54,27 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.add('rectSplit', split);
   }
 
-  // addSideLabels() {
-  //   const lay = this.layout.rect;
-  //   const x = lay.length / 2;
-  //   const y = lay.height / 2;
-  //   const addSide = (p1, p2, name, label = '') => {
-  //     const line = makeLine(
-  //       this.diagram, 'end', 1, 0.1, this.layout.colors.line, false,
-  //     );
-  //     line.setEndPoints(p1, p2);
-  //     line.addLabel(label, lay.labelOffset, 'outside', '', 'horizontal');
-  //     this.add(`side${name}`, line);
-  //   };
-  //   addSide(new Point(-x, -y), new Point(-x, y), 'A', 'A');
-  //   addSide(new Point(-x, -y), new Point(-x, y), 'Height', 'Height');
-  //   addSide(new Point(-x, -y), new Point(-x, y), '6m', '6m');
-  //   addSide(new Point(x, -y), new Point(-x, -y), 'B', 'B');
-  //   addSide(new Point(x, -y), new Point(-x, -y), 'Width', 'Width');
-  //   addSide(new Point(x, -y), new Point(-x, -y), '10m', '10m');
-  //   addSide(new Point(-y, -y), new Point(-y, y), 'SquareA', 'A');
-  //   addSide(new Point(y, -y), new Point(-y, -y), 'SquareB', 'A');
-  // }
+  addSideLabels() {
+    const addSide = (p1, p2, name, label = '') => {
+      const line = makeLine(
+        this.diagram, 'end', 1, 0.1, this.layout.colors.line, false,
+      );
+      line.setEndPoints(p1, p2);
+      line.addLabel(
+        label, this.layout.triLabelOffset, 'outside', '', 'horizontal',
+      );
+      this.add(`side${name}`, line);
+    };
+    const lay = this.layout.triRect;
+    addSide(lay.points[0], lay.points[3], 'RectA', 'A');
+    addSide(lay.points[1], lay.points[0], 'RectB', 'B');
+  }
 
-  // addEqns() {
-  //   addSimpleRectEquation(
-  //     this.diagram, this.layout, this, 'simpleRectEqn',
-  //   );
-  // }
+  addEqns() {
+    addTriRectEquation(
+      this.diagram, this.layout, this, 'triRectEqn',
+    );
+  }
 
   constructor(
     diagram: LessonDiagram,
@@ -91,7 +85,9 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.addGrid();
     this.addTriIntro();
     this.addRect();
+    this.addSideLabels();
     this.setPosition(this.layout.triPosition);
     this.hasTouchableElements = true;
+    console.log(this)
   }
 }

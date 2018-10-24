@@ -508,7 +508,7 @@ class Content extends LessonContent {
         'However, we can use our knowledge of rectangles to help calculate the area of a triangle.',
       ],
       show: [
-        tri._grid, tri._rect, tri._rectSplit,
+        tri._grid, tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB,
       ],
       // setSteadyState: () => {
       //   rect.eqns.squareEqn.showForm('0');

@@ -461,3 +461,50 @@ export function addSquareEquation(
   addToCollection.eqns[name] = eqn;
   addToCollection.add(name, eqn.collection);
 }
+
+export function addTriRectEquation(
+  diagram: Diagram,
+  layout: Object,
+  addToCollection: DiagramElementCollection,
+  name: string,
+) {
+  const eqn = diagram.equation.makeEqn();
+  const colUnit = layout.colors.unit;
+  const colText = layout.colors.diagram.text.base;
+  const colLine = layout.colors.line;
+  eqn.createElements(
+    {
+      Area: ['Area', colUnit],
+      rectangle: 'rectangle',
+      triangle: 'triangle',
+      equals: ' = ',
+      A: ['A', colLine],
+      B: ['B', colLine],
+      mul: ' \u00D7 ',
+      _1: '1',
+      _2: '2',
+      v: diagram.shapes.vinculum(colText),
+    },
+    colText,
+  );
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'baseline';
+  eqn.formAlignment.scale = 1.0;
+  eqn.addForm('0', [
+    eqn.sub('Area', 'rectangle'),
+    'equals',
+    'A', 'mul', 'B',
+  ]);
+
+  eqn.addForm('1', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1', '_2', 'v'), 'A', 'mul', 'B',
+  ]);
+
+  eqn.collection.setPosition(layout.rectSquareEqnPosition);
+  eqn.setCurrentForm('0');
+  // eslint-disable-next-line no-param-reassign
+  addToCollection.eqns[name] = eqn;
+  addToCollection.add(name, eqn.collection);
+}
