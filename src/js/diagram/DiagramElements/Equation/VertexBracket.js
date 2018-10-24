@@ -25,12 +25,21 @@ class VertexBracket extends VertexObject {
   ) {
     super(webgl);
     this.glPrimative = this.gl.TRIANGLE_STRIP;
+    numLines = 2;
 
-    numLines = 3;
-    const r1 = 4 / 4 * numLines;
-    const r2 = 6 / 4 * numLines;
-    const w = 0.25 / 4 * numLines;
-    const mainHeight = 2;
+    let r1 = 1;
+    let r2 = 1.5;
+    let w = 1 / 16;
+
+    if (numLines === 2) {
+      r1 = 1.5;
+      r2 = 2;
+      w = 1 / 25;
+    }
+    // const r1 = 4 / 4 * numLines;
+    // const r2 = 6 / 4 * numLines;
+    // const w = 0.25 / 4 * widthMultiplier;
+    const mainHeight = 1;
     const p1 = new Point(r1, mainHeight / 2);
     const p2 = new Point(r2 + w, mainHeight / 2);
     const r1Angle = Math.asin(mainHeight / 2 / r1);
