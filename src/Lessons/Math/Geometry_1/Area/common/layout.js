@@ -137,7 +137,7 @@ export default function commonLessonLayout() {
   };
 
   // //////////////////////////////////////////////////////
-  //     Size
+  //     Rect Area
   // //////////////////////////////////////////////////////
   layout.rectPosition = new Point(0, -0.5);
   layout.gridRect = {
@@ -162,5 +162,33 @@ export default function commonLessonLayout() {
   layout.rectSimpleAreaEqnPosition = new Point(0, 1.2);
   layout.rectSquareEqnPosition = new Point(0, 1.2);
 
+  // //////////////////////////////////////////////////////
+  //     Triangle Area
+  // //////////////////////////////////////////////////////
+  layout.triPosition = new Point(0, -0.5);
+  layout.gridTri = {
+    position: new Point(0, 0),
+    smallPosition: new Point(0, 0),
+    spacing: 0.25,
+    length: 4,
+    height: 2,
+  };
+  layout.triIntro = {
+    points: [
+      new Point(-0.75, -0.75),
+      new Point(0.75, -0.75),
+      new Point(0, 0.75),
+    ],
+    width: 0.03,
+  };
+  layout.triRect = {
+    points: [
+      new Point(-1.25, -0.75),
+      new Point(1.25, -0.75),
+      new Point(1.25, 0.75),
+      new Point(-1.25, 0.75),
+    ],
+    width: 0.03,
+  };
   return layout;
 }

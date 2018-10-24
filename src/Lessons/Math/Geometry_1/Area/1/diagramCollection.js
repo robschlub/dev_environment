@@ -7,17 +7,19 @@ import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
+import CommonLessonDiagramCollection from '../common/diagramCollection';
 import ShapesCollection from '../common/diagramCollectionShapes';
 import MeasureCollection from '../common/diagramCollectionMeasure';
 import SizeCollection from '../common/diagramCollectionSize';
 import RectAreaCollection from '../common/diagramCollectionRect';
-import CommonLessonDiagramCollection from '../common/diagramCollection';
+import TriangleAreaCollection from '../common/diagramCollectionTri';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _shapes: ShapesCollection;
   _measure: MeasureCollection;
   _size: SizeCollection;
   _rect: RectAreaCollection;
+  _tri: TriangleAreaCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -30,5 +32,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     this.add('measure', new MeasureCollection(diagram, this.layout));
     this.add('size', new SizeCollection(diagram, this.layout));
     this.add('rect', new RectAreaCollection(diagram, this.layout));
+    this.add('tri', new TriangleAreaCollection(diagram, this.layout));
   }
 }
