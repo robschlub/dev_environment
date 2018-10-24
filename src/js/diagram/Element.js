@@ -3,7 +3,7 @@
 import {
   Transform, Point, TransformLimit, Rect,
   Translation, spaceToSpaceTransform, getBoundingRect,
-  Scale, Rotation, getDeltaAngle, Line,
+  Scale, Rotation, getDeltaAngle, Line, getMaxTimeFromVelocity,
 } from './tools/g2';
 import * as m2 from './tools/m2';
 import type { pathOptionsType, TypeRotationDirection } from './tools/g2';
@@ -22,45 +22,45 @@ function checkCallback(callback: ?(boolean) => void): (boolean) => void {
   return callbackToUse;
 }
 
-function getMaxTimeFromVelocity(
-  startTransform: Transform,
-  stopTransform: Transform,
-  velocityTransform: Transform,
-  rotDirection: 0 | 1 | -1 | 2,
-) {
-  const deltaTransform = stopTransform.sub(startTransform);
-  let time = 0;
-  deltaTransform.order.forEach((delta, index) => {
-    if (delta instanceof Translation || delta instanceof Scale) {
-      const v = velocityTransform.order[index];
-      if (
-        (v instanceof Translation || v instanceof Scale)
-        && v.x !== 0
-        && v.y !== 0
-      ) {
-        const xTime = Math.abs(delta.x) / v.x;
-        const yTime = Math.abs(delta.y) / v.y;
-        time = xTime > time ? xTime : time;
-        time = yTime > time ? yTime : time;
-      }
-    }
-    const start = startTransform.order[index];
-    const target = stopTransform.order[index];
-    if (delta instanceof Rotation
-        && start instanceof Rotation
-        && target instanceof Rotation) {
-      const rotDiff = getDeltaAngle(start.r, target.r, rotDirection);
-      // eslint-disable-next-line no-param-reassign
-      delta.r = rotDiff;
-      const v = velocityTransform.order[index];
-      if (v instanceof Rotation && v !== 0) {
-        const rTime = Math.abs(delta.r / v.r);
-        time = rTime > time ? rTime : time;
-      }
-    }
-  });
-  return time;
-}
+// function getMaxTimeFromVelocity(
+//   startTransform: Transform,
+//   stopTransform: Transform,
+//   velocityTransform: Transform,
+//   rotDirection: 0 | 1 | -1 | 2,
+// ) {
+//   const deltaTransform = stopTransform.sub(startTransform);
+//   let time = 0;
+//   deltaTransform.order.forEach((delta, index) => {
+//     if (delta instanceof Translation || delta instanceof Scale) {
+//       const v = velocityTransform.order[index];
+//       if (
+//         (v instanceof Translation || v instanceof Scale)
+//         && v.x !== 0
+//         && v.y !== 0
+//       ) {
+//         const xTime = Math.abs(delta.x) / v.x;
+//         const yTime = Math.abs(delta.y) / v.y;
+//         time = xTime > time ? xTime : time;
+//         time = yTime > time ? yTime : time;
+//       }
+//     }
+//     const start = startTransform.order[index];
+//     const target = stopTransform.order[index];
+//     if (delta instanceof Rotation
+//         && start instanceof Rotation
+//         && target instanceof Rotation) {
+//       const rotDiff = getDeltaAngle(start.r, target.r, rotDirection);
+//       // eslint-disable-next-line no-param-reassign
+//       delta.r = rotDiff;
+//       const v = velocityTransform.order[index];
+//       if (v instanceof Rotation && v !== 0) {
+//         const rTime = Math.abs(delta.r / v.r);
+//         time = rTime > time ? rTime : time;
+//       }
+//     }
+//   });
+//   return time;
+// }
 
 // Planned Animation
 class AnimationPhase {

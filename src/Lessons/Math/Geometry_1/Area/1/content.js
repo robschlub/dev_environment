@@ -632,8 +632,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: '234qer',
       setSteadyState: () => {
-        tri.eqns.tri2AreaEqn.showForm('0');
-        console.log(tri.eqns.tri2AreaEqn)
+        tri._tri2AreaEqn.showForm('0');
       },
     });
 

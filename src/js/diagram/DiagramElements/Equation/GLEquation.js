@@ -1,6 +1,6 @@
 // @flow
 import {
-  Point, Rect, Transform, Line,
+  Point, Rect, Transform, Line, getMoveTime,
 } from '../../tools/g2';
 import { roundNum } from '../../tools/mathtools';
 import { RGBToArray, duplicateFromTo } from '../../../tools/tools';
@@ -1772,7 +1772,7 @@ export class EquationForm extends Elements {
     // location: Point,
     delay: number,
     disolveOutTime: number,
-    moveTime: number,
+    moveTime: number | null,
     disolveInTime: number,
     // time: number = 1,
     callback: ?(?mixed) => void = null,
@@ -1791,13 +1791,25 @@ export class EquationForm extends Elements {
     const animateToTransforms = this.collection.getElementTransforms();
 
     const elementsToMove = [];
+    const toMoveStartTransforms = [];
+    const toMoveStopTransforms = [];
     Object.keys(animateToTransforms).forEach((key) => {
       const currentT = currentTransforms[key];
       const nextT = animateToTransforms[key];
       if (!currentT.isEqualTo(nextT)) {
         elementsToMove.push(key);
+        toMoveStartTransforms.push(currentT);
+        toMoveStopTransforms.push(nextT);
       }
     });
+
+    let moveTimeToUse;
+    if (moveTime === null) {
+      // const startTransforms = elementsToMove.map(currentTransforms)
+      moveTimeToUse = getMoveTime(toMoveStartTransforms, toMoveStopTransforms);
+    } else {
+      moveTimeToUse = moveTime;
+    }
 
     this.collection.setElementTransforms(currentTransforms);
     let cumTime = delay;
@@ -1826,7 +1838,7 @@ export class EquationForm extends Elements {
       } = mods;
       if (element != null) {
         if (color != null) {
-          element.animateColorToWithDelay(color, cumTime, moveTime);
+          element.animateColorToWithDelay(color, cumTime, moveTimeToUse);
         }
         if (style != null) {
           element.animate.transform.translation.style = style;
@@ -1842,7 +1854,7 @@ export class EquationForm extends Elements {
 
     const t = this.collection.animateToTransforms(
       animateToTransforms,
-      moveTime,
+      moveTimeToUse,
       cumTime,
       0,
       moveCallback,
@@ -2291,7 +2303,7 @@ export class Equation {
     return index;
   }
 
-  prevForm(time: number, delay: number = 0) {
+  prevForm(time: number | null = null, delay: number = 0) {
     const currentForm = this.getCurrentForm();
     if (currentForm == null) {
       return;
@@ -2306,7 +2318,7 @@ export class Equation {
     }
   }
 
-  nextForm(time: number = 1, delay: number = 0) {
+  nextForm(time: number | null = null, delay: number = 0) {
     let animate = true;
     const currentForm = this.getCurrentForm();
     if (currentForm == null) {
@@ -2343,7 +2355,7 @@ export class Equation {
 
   goToForm(
     name: ?string | number = null,
-    time: number = 2,
+    time: number | null = null,
     delay: number = 0,
     animate: boolean = true,
   ) {
@@ -2402,7 +2414,7 @@ export class Equation {
           this.isAnimating = false;
         };
         if (animate) {
-          form.animatePositionsTo(delay, 1, time, 0.5, end);
+          form.animatePositionsTo(delay, 0.4, null, 0.4, end);
         } else {
           form.allHideShow(delay, 0.5, 0.2, 0.5, end);
         }

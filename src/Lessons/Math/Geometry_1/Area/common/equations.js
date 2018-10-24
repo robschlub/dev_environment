@@ -612,14 +612,14 @@ export function addTri2AreaEquation(
     eqn.brac(['B', 'plus', 'D'], 'lb', 'rb'),
   ]);
 
-  eqn.addForm('4', [
+  eqn.addForm('5', [
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
     eqn.strike(eqn.brac(['B', 'plus', 'D'], 'lb', 'rb'), 'x'),
   ]);
 
-  eqn.addForm('5', [
+  eqn.addForm('6', [
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.sfrac('_1___', '_2___', 'v__', fracSize),
@@ -627,7 +627,7 @@ export function addTri2AreaEquation(
     'base',
   ]);
 
-  eqn.addForm('6', [
+  eqn.addForm('7', [
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.sfrac('_1___', '_2___', 'v__', fracSize),
@@ -639,5 +639,10 @@ export function addTri2AreaEquation(
   eqn.setCurrentForm('0');
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;
-  addToCollection.add(name, eqn.collection);
+  // addToCollection.add(name, eqn.collection);
+  const nav = makeEquationNavigator(
+    diagram, eqn, layout.tri2AreaEqnNavPosition,
+    'twoLine', 'arrows', 'center',
+  );
+  addToCollection.add(name, nav);
 }

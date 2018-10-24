@@ -250,5 +250,6 @@ export default function commonLessonLayout() {
     ),
   };
   layout.tri2AreaEqnPosition = new Point(0, 1.2);
+  layout.tri2AreaEqnNavPosition = new Point(0, -0.25);
   return layout;
 }

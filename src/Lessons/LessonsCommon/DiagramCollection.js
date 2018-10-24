@@ -1,10 +1,10 @@
 // @flow
 
 import {
-  Transform, Point,
+  Transform, Point, getMaxTimeFromVelocity,
 } from '../../js/diagram/tools/g2';
 import {
-  DiagramElement, DiagramElementCollection, getMaxTimeFromVelocity,
+  DiagramElement, DiagramElementCollection,
 } from '../../js/diagram/Element';
 import Diagram from '../../js/diagram/Diagram';
 
