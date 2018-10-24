@@ -355,7 +355,7 @@ class StrikeOut extends Elements {
     this.location = location._dup();
     this.mainContent.calcSize(location, scale);
     this.lineWidth = scale * 0.02;
-    const lineExtension = this.lineWidth * 2;
+    const lineExtension = this.lineWidth * 1;
     const bottomLeft = new Point(
       location.x,
       location.y - this.mainContent.descent,
