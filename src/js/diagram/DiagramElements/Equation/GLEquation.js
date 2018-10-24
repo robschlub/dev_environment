@@ -1185,7 +1185,7 @@ class Brackets extends Elements {
         leftSymbolLocation.y,
       );
       this.leftGlyphLocation = leftSymbolLocation;
-      this.glyphScale = bracketScale * 2;
+      this.glyphScale = bracketScale;
       const bounds = leftGlyph.vertices
         .getRelativeVertexSpaceBoundingRect();
       leftGlyphBounds.width = bounds.width * bracketScale;
