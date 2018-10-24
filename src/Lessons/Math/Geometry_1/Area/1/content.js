@@ -555,16 +555,58 @@ class Content extends LessonContent {
       setContent: centerV(['We can now use this to calculate the area of |any triangle|, not just one that is part of a rectangle.']),
     });
 
-    common.show = [
-      tri._tri2, tri._tri2Rect1, tri._tri2Rect2,
-      tri._sideTriRect1A, tri._sideTriRect1B,
-      tri._sideTriRect2A, tri._sideTriRect2B,
-      tri._tri2Rect1Tri, tri._tri2Rect2Tri,
-      tri._label1, tri._label2,
-    ];
+    // common.show = [
+    //   tri._tri2, tri._tri2Rect1, tri._tri2Rect2,
+    //   tri._sideTriRect1A, tri._sideTriRect1B,
+    //   tri._sideTriRect2A, tri._sideTriRect2B,
+    //   tri._tri2Rect1Tri, tri._tri2Rect2Tri,
+    //   tri._label1, tri._label2,
+    // ];
+    common.setSteadyState = () => {};
+    common.show = [tri._tri2];
     this.addSection(common, {
-      title: 'arbitrary',
-      setContent: ['Start with a triangle'],
+      title: 'asdf',
+      setContent: ['Start with any triangle.'],
+    });
+
+    common.setContent = ['Draw a |rectangle| with the two |left| most points of the triangle and label its sides.'];
+    this.addSection(common, {});
+    this.addSection(common, {
+      show: [tri._tri2, tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B],
+    });
+
+    common.setContent = ['Draw a |second rectangle| with the two |right| most points of the triangle and label its sides.'];
+    this.addSection(common, {
+      show: [
+        tri._tri2, tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+      ],
+    });
+    this.addSection(common, {
+      show: [
+        tri._tri2,
+        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2C, tri._sideTriRect2D,
+      ],
+    });
+
+    common.setContent = ['Sides |A| and |C| are both the |height| of the triangle, and are the same.'];
+    common.modifiers = {
+      A: highlight(colors.construction),
+      C: highlight(colors.construction1),
+    };
+    this.addSection(common, {
+      show: [
+        tri._tri2,
+        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2C, tri._sideTriRect2D,
+      ],
+    });
+    this.addSection(common, {
+      show: [
+        tri._tri2,
+        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      ],
     });
   }
 }
