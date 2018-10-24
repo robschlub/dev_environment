@@ -1003,10 +1003,10 @@ class Integral extends Elements {
       const bounds = integralGlyph.vertices
         .getRelativeVertexSpaceBoundingRect();
         // .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
-      integralGlyphBounds.width = bounds.width;
-      integralGlyphBounds.height = -bounds.bottom + bounds.top;
-      integralGlyphBounds.ascent = bounds.top;
-      integralGlyphBounds.descent = -bounds.bottom;
+      integralGlyphBounds.width = (bounds.width) * height;
+      integralGlyphBounds.height = (-bounds.bottom + bounds.top) * height;
+      integralGlyphBounds.ascent = bounds.top * height;
+      integralGlyphBounds.descent = (-bounds.bottom) * height;
     }
 
     const minLimitLocation = new Point(

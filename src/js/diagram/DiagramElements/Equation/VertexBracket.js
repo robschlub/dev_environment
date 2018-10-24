@@ -1,7 +1,7 @@
 // @flow
 
 import {
-  Point, Transform,
+  Point, Transform, polarToRect,
 } from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 import VertexObject from '../../DrawingObjects/VertexObject/VertexObject';
@@ -20,24 +20,61 @@ class VertexBracket extends VertexObject {
   constructor(
     webgl: WebGLInstance,
     side: 'left' | 'right',
-    lineHeight: number = 1,
+    numLines: number = 1,
     // serif: boolean = true,
   ) {
     super(webgl);
-    this.glPrimative = this.gl.TRIANGLE_FAN;
+    this.glPrimative = this.gl.TRIANGLE_STRIP;
 
-    const points = [
-      new Point(0, 0),
-      new Point(0.1, 0),
-      new Point(0.1, 1),
-      new Point(0, 1),
-    ];
+    numLines = 3;
+    const r1 = 4 / 4 * numLines;
+    const r2 = 6 / 4 * numLines;
+    const w = 0.25 / 4 * numLines;
+    const mainHeight = 2;
+    const p1 = new Point(r1, mainHeight / 2);
+    const p2 = new Point(r2 + w, mainHeight / 2);
+    const r1Angle = Math.asin(mainHeight / 2 / r1);
+    const r2Angle = Math.asin(mainHeight / 2 / r2);
+    const numSegments = 10;
+    const r1AngleStep = r1Angle * 2 / numSegments;
+    const r2AngleStep = r2Angle * 2 / numSegments;
+
+    const r1Points = [];
+    const r2Points = [];
+    for (let i = 0; i <= numSegments; i += 1) {
+      r1Points.push(polarToRect(r1, Math.PI - r1Angle + i * r1AngleStep).add(p1));
+      r2Points.push(polarToRect(r2, Math.PI - r2Angle + i * r2AngleStep).add(p2));
+    }
+    console.log(r1Points, r2Points)
     this.points = [];
-    points.forEach((p) => {
-      this.points.push(p.x);
-      this.points.push(p.y);
+    r1Points.forEach((r1p, index) => {
+      const r2p = r2Points[index];
+      this.points.push(r1p.x);
+      this.points.push(r1p.y);
+      this.points.push(r2p.x);
+      this.points.push(r2p.y);
+    });
+
+    this.border[0] = [];
+    r1Points.forEach((p) => {
       this.border[0].push(p);
     });
+    for (let i = r2Points.length - 1; i >= 0; i -= 1) {
+      this.border[0].push(r2Points[i]);
+    }
+
+    // const points = [
+    //   new Point(0, 0),
+    //   new Point(0.1, 0),
+    //   new Point(0.1, 1),
+    //   new Point(0, 1),
+    // ];
+    // this.points = [];
+    // points.forEach((p) => {
+    //   this.points.push(p.x);
+    //   this.points.push(p.y);
+    //   this.border[0].push(p);
+    // });
     // let mul = 0.5;
     // if (lineHeight === 1) {
     //   mul = 1;
