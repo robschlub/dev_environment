@@ -1093,6 +1093,7 @@ class Brackets extends Elements {
       this, bracketCopy,
       ['content', 'leftGlyph', 'rightGlyph'],
     );
+    // console.log(this.leftGlyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
     return bracketCopy;
   }
 
@@ -1107,6 +1108,7 @@ class Brackets extends Elements {
     if (this.rightGlyph) {
       elements = [...elements, this.rightGlyph];
     }
+    // console.log(this.leftGlyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
     return elements;
   }
 
@@ -1143,6 +1145,7 @@ class Brackets extends Elements {
     if (this.mainContent) {
       this.mainContent.offsetLocation(offset);
     }
+    // console.log(this.leftGlyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
   }
 
   calcSize(location: Point, scale: number) {
@@ -1162,11 +1165,8 @@ class Brackets extends Elements {
     }
 
     const heightScale = 1.2;
-    // const glyphMinHeight = contentBounds.height;
-    // const numLines = roundNum(glyphMinHeight / scale, 0);
-    // const height = numLines * scale * heightScale;
     const height = contentBounds.height * heightScale;
-    // console.log(glyphMinHeight)
+    const bracketScale = height;
 
     const leftSymbolLocation = new Point(
       loc.x,
@@ -1177,45 +1177,45 @@ class Brackets extends Elements {
     if (leftGlyph instanceof DiagramElementPrimative) {
       leftGlyph.show();
       leftGlyph.transform.updateScale(
-        height,
-        height,
+        bracketScale,
+        bracketScale,
       );
       leftGlyph.transform.updateTranslation(
         leftSymbolLocation.x,
         leftSymbolLocation.y,
       );
       this.leftGlyphLocation = leftSymbolLocation;
-      this.glyphScale = height;
+      this.glyphScale = bracketScale;
       const bounds = leftGlyph.vertices
         .getRelativeVertexSpaceBoundingRect();
-      leftGlyphBounds.width = bounds.width;
-      leftGlyphBounds.height = -bounds.bottom + bounds.top;
-      leftGlyphBounds.ascent = bounds.top;
-      leftGlyphBounds.descent = -bounds.bottom;
+      leftGlyphBounds.width = bounds.width * bracketScale;
+      leftGlyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
+      leftGlyphBounds.ascent = (bounds.top) * bracketScale;
+      leftGlyphBounds.descent = (-bounds.bottom) * bracketScale;
     }
 
     const rightSymbolLocation = new Point(
       loc.x + contentBounds.width + leftGlyphBounds.width,
-      leftSymbolLocation.x,
+      leftSymbolLocation.y,
     );
     const { rightGlyph } = this;
     if (rightGlyph instanceof DiagramElementPrimative) {
       rightGlyph.show();
       rightGlyph.transform.updateScale(
-        height,
-        height,
+        bracketScale,
+        bracketScale,
       );
       rightGlyph.transform.updateTranslation(
         rightSymbolLocation.x,
         rightSymbolLocation.y,
       );
-      this.rightGlyphLocation = leftSymbolLocation;
+      this.rightGlyphLocation = rightSymbolLocation;
       const bounds = rightGlyph.vertices
         .getRelativeVertexSpaceBoundingRect();
-      rightGlyphBounds.width = bounds.width;
-      rightGlyphBounds.height = -bounds.bottom + bounds.top;
-      rightGlyphBounds.ascent = bounds.top;
-      rightGlyphBounds.descent = -bounds.bottom;
+      rightGlyphBounds.width = bounds.width * bracketScale;
+      rightGlyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
+      rightGlyphBounds.ascent = (bounds.top) * bracketScale;
+      rightGlyphBounds.descent = (-bounds.bottom) * bracketScale;
     }
     const contentLocation = new Point(
       this.location.x + leftGlyphBounds.width,
@@ -1230,6 +1230,8 @@ class Brackets extends Elements {
     this.ascent = leftGlyphBounds.ascent;
     this.descent = rightGlyphBounds.ascent;
     this.height = this.descent + this.ascent;
+    // console.log(this.leftGlyphLocation, this.rightGlyphLocation)
+    // console.log(this.leftGlyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
   }
 }
 
