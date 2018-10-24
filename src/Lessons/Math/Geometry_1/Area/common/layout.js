@@ -18,6 +18,7 @@ const cssColorNames = [
   'construction1',
   'constructionFill',
   'construction1Fill',
+  'fillLabel',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -248,5 +249,6 @@ export default function commonLessonLayout() {
         + layout.tri2Rect2.points[0].y,
     ),
   };
+  layout.tri2AreaEqnPosition = new Point(0, 1.2);
   return layout;
 }

@@ -12,7 +12,7 @@ import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
 import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
 import {
-  addTriRectEquation,
+  addTriRectEquation, addTri2AreaEquation,
 } from './equations';
 // import type {
 //   TypeRectEquationNav,
@@ -118,20 +118,23 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
 
   addLabel(name: string, position: Point, color: Array<number>) {
     const label = new makeEquationLabel(this.diagram, name, color);
-    console.log(position)
     label.eqn.collection.setPosition(position);
     this.add(`label${name}`, label.eqn.collection);
   }
 
   addShapeLabels() {
-    this.addLabel('1', this.layout.tri2Rect1Tri.midPoint, [1,1,1,1]);
-    this.addLabel('2', this.layout.tri2Rect2Tri.midPoint, [1,1,1,1]);
+    const col = this.layout.colors.fillLabel;
+    this.addLabel('1', this.layout.tri2Rect1Tri.midPoint, col);
+    this.addLabel('2', this.layout.tri2Rect2Tri.midPoint, col);
   }
 
   addEqns() {
     addTriRectEquation(
       this.diagram, this.layout, this, 'triRectEqn',
     );
+    addTri2AreaEquation(
+      this.diagram, this.layout, this, 'tri2AreaEqn',
+    )
   }
 
   constructor(

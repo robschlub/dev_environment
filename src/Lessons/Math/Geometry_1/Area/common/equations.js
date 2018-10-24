@@ -509,3 +509,107 @@ export function addTriRectEquation(
   addToCollection.eqns[name] = eqn;
   addToCollection.add(name, eqn.collection);
 }
+
+export function addTri2AreaEquation(
+  diagram: Diagram,
+  layout: Object,
+  addToCollection: DiagramElementCollection,
+  name: string,
+) {
+  const eqn = diagram.equation.makeEqn();
+  const colUnit = layout.colors.unit;
+  const colText = layout.colors.diagram.text.base;
+  const colLine = layout.colors.line;
+  const colCon = layout.colors.construction;
+  const colCon1 = layout.colors.construction1;
+  const strikeColor = layout.colors.diagram.disabledDark;
+  eqn.createElements(
+    {
+      Area: ['Area', colLine],
+      triangle: ['triangle', colLine],
+      Area_: ['Area', colCon],
+      Area__: ['Area', colCon1],
+      _1: ['1', colCon],
+      _1_: '1',
+      _1__: '1',
+      _1___: '1',
+      _2: ['2', colCon1],
+      _2_: '2',
+      _2__: '2',
+      _2___: '2',
+      equals: ' = ',
+      plus: ' \u002B ',
+      A: [' A ', colText],
+      A_: [' A ', colText],
+      A__: [' A ', colText],
+      B: ['B', colText],
+      D: ['D', colText],
+      lb: '(',
+      rb: ')',
+      // mul: ' \u00D7 ',
+      // _1: '1',
+      // _2: '2',
+      // space: ' ',
+      // space_: ' ',
+      x: diagram.equation.xStrike(strikeColor),
+      x_: diagram.equation.xStrike(strikeColor),
+      v: diagram.equation.vinculum(colText),
+      v_: diagram.equation.vinculum(colText),
+      v__: diagram.equation.vinculum(colText),
+    },
+    colText,
+  );
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'baseline';
+  eqn.formAlignment.scale = 1.0;
+  eqn.addForm('0', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sub('Area_', '_1'),
+    'plus',
+    eqn.sub('Area__', '_2'),
+  ]);
+
+  const fracSize = 0.45;
+  eqn.addForm('1', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'B',
+    'plus',
+    eqn.sub('Area__', '_2'),
+  ]);
+
+  eqn.addForm('2', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'B',
+    'plus',
+    eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_', 'D',
+  ]);
+
+  eqn.addForm('3', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__', 'lb',
+    eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'B',
+    'plus',
+    eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'D',
+    'rb',
+  ]);
+
+  eqn.addForm('4', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__', 'lb',
+    'B',
+    'plus',
+    'D',
+    'rb',
+  ]);
+
+  eqn.collection.setPosition(layout.tri2AreaEqnPosition);
+  eqn.setCurrentForm('0');
+  // eslint-disable-next-line no-param-reassign
+  addToCollection.eqns[name] = eqn;
+  addToCollection.add(name, eqn.collection);
+}

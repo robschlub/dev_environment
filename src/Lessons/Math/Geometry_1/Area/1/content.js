@@ -608,6 +608,60 @@ class Content extends LessonContent {
         tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
       ],
     });
+
+    common.setContent = ['The |area of the triangle| is the |sum| of the areas of the |two smaller triangles|.'];
+    common.modifiers = {
+      A: highlight(colors.construction),
+      C: highlight(colors.construction1),
+    };
+    this.addSection(common, {
+      show: [
+        tri._tri2,
+        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      ],
+    });
+    common.show = [
+      tri._tri2,
+      tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+      tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      tri._tri2Rect1Tri, tri._tri2Rect2Tri,
+      tri._label1, tri._label2,
+    ];
+    this.addSection(common, {});
+    this.addSection(common, {
+      title: '234qer',
+      setSteadyState: () => {
+        tri.eqns.tri2AreaEqn.showForm('0');
+      },
+    });
+
+    common.setContent = ['The area of each smaller triangle is half the area of the rectangle it is in.'];
+    this.addSection(common, {
+      setSteadyState: () => {
+        tri.eqns.tri2AreaEqn.showForm('0');
+      },
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        tri.eqns.tri2AreaEqn.showForm('1');
+      },
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        tri.eqns.tri2AreaEqn.showForm('2');
+      },
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        tri.eqns.tri2AreaEqn.showForm('3');
+      },
+    });
+    this.addSection(common, {
+      setSteadyState: () => {
+        tri.eqns.tri2AreaEqn.showForm('4');
+      },
+    });
   }
 }
 
