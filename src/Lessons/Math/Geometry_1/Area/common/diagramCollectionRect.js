@@ -14,7 +14,7 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import {
   addRectEqn, addSimpleRectEquation, addNumSquaresRectEquation,
-  addSimpleUnitsRectEquation,
+  addSimpleUnitsRectEquation, addSquareEquation,
 } from './equations';
 import type {
   TypeRectEquationNav,
@@ -55,6 +55,19 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     this.add('grid', grid);
   }
 
+  addGridSquare() {
+    const lay = this.layout.gridRect;
+    const grid = this.diagram.shapes.grid(
+      new Rect(
+        -lay.height / 2, -lay.height / 2,
+        lay.height, lay.height,
+      ),
+      lay.spacing, lay.spacing, 2, this.layout.colors.grid,
+      new Transform().translate(lay.position),
+    );
+    this.add('gridSquare', grid);
+  }
+
   addRow() {
     const lay = this.layout.gridRect;
     const { length } = this.layout.rect;
@@ -91,27 +104,29 @@ export default class RectAreaCollection extends CommonDiagramCollection {
       new Point(x, x),
       new Point(x, -x),
     ], true, lay.width, this.layout.colors.line);
-    this.add('line', line);
+    this.add('square', line);
   }
 
   addSideLabels() {
     const lay = this.layout.rect;
     const x = lay.length / 2;
     const y = lay.height / 2;
-    const addSide = (p1, p2, name) => {
+    const addSide = (p1, p2, name, label = '') => {
       const line = makeLine(
         this.diagram, 'end', 1, 0.1, this.layout.colors.line, false,
       );
       line.setEndPoints(p1, p2);
-      line.addLabel(name, lay.labelOffset, 'outside', '', 'horizontal');
+      line.addLabel(label, lay.labelOffset, 'outside', '', 'horizontal');
       this.add(`side${name}`, line);
     };
-    addSide(new Point(-x, -y), new Point(-x, y), 'A');
-    addSide(new Point(-x, -y), new Point(-x, y), 'Height');
-    addSide(new Point(-x, -y), new Point(-x, y), '6m');
-    addSide(new Point(x, -y), new Point(-x, -y), 'B');
-    addSide(new Point(x, -y), new Point(-x, -y), 'Width');
-    addSide(new Point(x, -y), new Point(-x, -y), '10m');
+    addSide(new Point(-x, -y), new Point(-x, y), 'A', 'A');
+    addSide(new Point(-x, -y), new Point(-x, y), 'Height', 'Height');
+    addSide(new Point(-x, -y), new Point(-x, y), '6m', '6m');
+    addSide(new Point(x, -y), new Point(-x, -y), 'B', 'B');
+    addSide(new Point(x, -y), new Point(-x, -y), 'Width', 'Width');
+    addSide(new Point(x, -y), new Point(-x, -y), '10m', '10m');
+    addSide(new Point(-y, -y), new Point(-y, y), 'SquareA', 'A');
+    addSide(new Point(y, -y), new Point(-y, -y), 'SquareB', 'A');
   }
 
   addEqns() {
@@ -127,6 +142,9 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     addSimpleUnitsRectEquation(
       this.diagram, this.layout, this, 'simpleUnitsEqn',
     );
+    addSquareEquation(
+      this.diagram, this.layout, this, 'squareEqn',
+    );
   }
 
   constructor(
@@ -137,11 +155,12 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     super(diagram, layout, transform);
     this.rowIndex = 0;
     this.addGrid();
+    this.addGridSquare();
     this.addRect();
+    this.addSquare();
     this.addSideLabels();
     this.addRow();
     this.addEqns();
-
     this.setPosition(this.layout.rectPosition);
     this.hasTouchableElements = true;
   }

@@ -454,14 +454,18 @@ class Content extends LessonContent {
         rect.eqns.simpleUnitsEqn.showForm('0');
       },
     });
-  }
 
-  this.addSection({
+    this.addSection(common, {
       title: 'Square',
       setContent: [
-      'As a square is a special type of rectangle, area can be calculated the same way. Adjacent sides are multiplied.',
-      ]),
+        'As a |square| is a special type of rectangle, so area can be calculated the same way. |Adjacent sides are multiplied|.',
+      ],
+      show: [rect._gridSquare, rect._square, rect._sideSquareA, rect._sideSquareB],
+      setSteadyState: () => {
+        rect.eqns.squareEqn.showForm('0');
+      },
     });
+  }
 }
 
 export default Content;

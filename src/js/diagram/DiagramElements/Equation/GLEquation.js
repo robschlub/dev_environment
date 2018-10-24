@@ -758,7 +758,7 @@ class SuperSub extends Elements {
     if (superscript !== null) {
       const superLoc = new Point(
         this.location.x + this.mainContent.width + this.xBias,
-        this.location.y + this.mainContent.ascent * 0.8,
+        this.location.y + this.mainContent.ascent * 0.7,
       );
       superscript.calcSize(superLoc, scale / 2);
       w = Math.max(

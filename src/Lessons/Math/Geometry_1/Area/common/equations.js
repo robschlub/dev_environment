@@ -402,3 +402,44 @@ export function addSimpleUnitsRectEquation(
   addToCollection.eqns[name] = eqn;
   addToCollection.add(name, eqn.collection);
 }
+
+export function addSquareEquation(
+  diagram: Diagram,
+  layout: Object,
+  addToCollection: DiagramElementCollection,
+  name: string,
+) {
+  const eqn = diagram.equation.makeEqn();
+  const colUnit = layout.colors.unit;
+  const colText = layout.colors.diagram.text.base;
+  const colLine = layout.colors.line;
+  eqn.createElements(
+    {
+      Area: ['Area', colUnit],
+      equals: ' = ',
+      A: ['A', colLine],
+      A_: ['A', colLine],
+      A__: ['A', colLine],
+      _2: '2',
+      mul: ' \u00D7 ',
+      equals_: ' = ',
+    },
+    colText,
+  );
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'baseline';
+  eqn.formAlignment.scale = 1.0;
+  eqn.addForm('0', [
+    'Area',
+    'equals',
+    'A', 'mul', 'A_',
+    'equals_',
+    eqn.sup('A__', '_2'),
+  ]);
+
+  eqn.collection.setPosition(layout.rectSquareEqnPosition);
+  eqn.setCurrentForm('0');
+  // eslint-disable-next-line no-param-reassign
+  addToCollection.eqns[name] = eqn;
+  addToCollection.add(name, eqn.collection);
+}

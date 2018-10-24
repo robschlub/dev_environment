@@ -160,6 +160,7 @@ export default function commonLessonLayout() {
   layout.rectEqnPosition = new Point(0, 1.5);
   layout.rectEqnNavPosition = new Point(0, -0.25);
   layout.rectSimpleAreaEqnPosition = new Point(0, 1.2);
+  layout.rectSquareEqnPosition = new Point(0, 1.2);
 
   return layout;
 }
