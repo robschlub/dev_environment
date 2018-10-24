@@ -14,6 +14,8 @@ const cssColorNames = [
   'cross',
   'row',
   'unit',
+  'construction',
+  'construction1',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -24,6 +26,7 @@ export default function commonLessonLayout() {
   // //////////////////////////////////////////////////////
   //     Shapes
   // //////////////////////////////////////////////////////
+  const width = 0.03;
   layout.shapesPosition = new Point(0, -0.5);
   layout.square1 = {
     position: new Point(-1, 0),
@@ -92,24 +95,24 @@ export default function commonLessonLayout() {
   layout.squareA = {
     position: new Point(-1.95, 0.05),
     sideLength: 1.2,
-    width: 0.03,
+    width,
     labelOffset: -0.8,
   };
   layout.circleA = {
     position: new Point(0, 0.05),
     radius: 0.6,
-    width: 0.03,
+    width,
     numSides: 100,
     labelOffset: -0.8,
   };
   layout.triangleA = {
     position: new Point(1.8, -0.15),
     sideLength: 1.39,
-    width: 0.03,
+    width,
     labelOffset: -0.6,
   };
   layout.cross = {
-    width: 0.03,
+    width,
     length: 1,
   };
 
@@ -152,7 +155,7 @@ export default function commonLessonLayout() {
     position: new Point(0, 0),
     length: 2.5,
     height: 1.5,
-    width: 0.03,
+    width,
     labelOffset: 0.1,
   };
   layout.rectSimpleEqnPosition = new Point(0, 1.2);
@@ -180,7 +183,7 @@ export default function commonLessonLayout() {
       new Point(0.75, -0.75),
       new Point(0, 0.75),
     ],
-    width: 0.03,
+    width,
   };
   layout.triRect = {
     points: [
@@ -189,7 +192,33 @@ export default function commonLessonLayout() {
       new Point(1.25, 0.75),
       new Point(-1.25, 0.75),
     ],
-    width: 0.03,
+    width,
+  };
+  layout.tri2 = {
+    points: [
+      new Point(-1.5, -0.75),
+      new Point(1.5, -0.75),
+      new Point(0.6, 0.75),
+    ],
+    width,
+  };
+  layout.tri2Rect1 = {
+    points: [
+      layout.tri2.points[0],
+      new Point(layout.tri2.points[2].x, layout.tri2.points[0].y),
+      layout.tri2.points[2],
+      new Point(layout.tri2.points[0].x, layout.tri2.points[2].y),
+    ],
+    width: width / 3,
+  };
+  layout.tri2Rect2 = {
+    points: [
+      new Point(layout.tri2.points[2].x, layout.tri2.points[1].y),
+      layout.tri2.points[1],
+      new Point(layout.tri2.points[1].x, layout.tri2.points[2].y),
+      layout.tri2.points[2],
+    ],
+    width: width / 3,
   };
   return layout;
 }

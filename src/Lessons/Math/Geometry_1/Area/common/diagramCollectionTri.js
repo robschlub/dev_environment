@@ -34,12 +34,22 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.add('grid', grid);
   }
 
-  addTriIntro() {
-    const lay = this.layout.triIntro;
+  addPolyLine(
+    name: string,
+    color: Array<number> = this.layout.colors.line,
+  ) {
+    const lay = this.layout[name];
     const line = this.diagram.shapes.polyLine(
-      lay.points, true, lay.width, this.layout.colors.line,
+      lay.points, true, lay.width, color, 'alwaysOn',
     );
-    this.add('triIntro', line);
+    this.add(name, line);
+  }
+
+  addTriangles() {
+    this.addPolyLine('triIntro');
+    this.addPolyLine('tri2');
+    this.addPolyLine('tri2Rect1', this.layout.colors.construction);
+    this.addPolyLine('tri2Rect2', this.layout.colors.construction1);
   }
 
   addRect() {
@@ -54,20 +64,37 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.add('rectSplit', split);
   }
 
+  addSide(
+    p1: Point,
+    p2: Point,
+    name: string,
+    label: string = '',
+    color: Array<number> = this.layout.colors.line,
+  ) {
+    const line = makeLine(
+      this.diagram, 'end', 1, 0.1, color, false,
+    );
+    line.setEndPoints(p1, p2);
+    line.addLabel(
+      label, this.layout.triLabelOffset, 'outside', '', 'horizontal',
+    );
+    this.add(`side${name}`, line);
+  }
+
   addSideLabels() {
-    const addSide = (p1, p2, name, label = '') => {
-      const line = makeLine(
-        this.diagram, 'end', 1, 0.1, this.layout.colors.line, false,
-      );
-      line.setEndPoints(p1, p2);
-      line.addLabel(
-        label, this.layout.triLabelOffset, 'outside', '', 'horizontal',
-      );
-      this.add(`side${name}`, line);
-    };
-    const lay = this.layout.triRect;
-    addSide(lay.points[0], lay.points[3], 'RectA', 'A');
-    addSide(lay.points[1], lay.points[0], 'RectB', 'B');
+    let lay = this.layout.triRect;
+    this.addSide(lay.points[0], lay.points[3], 'RectA', 'A');
+    this.addSide(lay.points[1], lay.points[0], 'RectB', 'B');
+
+    lay = this.layout.tri2Rect1;
+    let col = this.layout.colors.construction;
+    this.addSide(lay.points[0], lay.points[3], 'TriRect1A', 'A', col);
+    this.addSide(lay.points[1], lay.points[0], 'TriRect1B', 'B', col);
+
+    lay = this.layout.tri2Rect2;
+    col = this.layout.colors.construction1;
+    this.addSide(lay.points[2], lay.points[1], 'TriRect2A', 'C', col);
+    this.addSide(lay.points[1], lay.points[0], 'TriRect2B', 'D', col);
   }
 
   addEqns() {
@@ -83,9 +110,10 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addGrid();
-    this.addTriIntro();
+    this.addTriangles();
     this.addRect();
     this.addSideLabels();
+    this.addEqns();
     this.setPosition(this.layout.triPosition);
     this.hasTouchableElements = true;
     console.log(this)

@@ -483,7 +483,8 @@ export function addTriRectEquation(
       mul: ' \u00D7 ',
       _1: '1',
       _2: '2',
-      v: diagram.shapes.vinculum(colText),
+      space: ' ',
+      v: diagram.equation.vinculum(colText),
     },
     colText,
   );
@@ -499,7 +500,7 @@ export function addTriRectEquation(
   eqn.addForm('1', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    eqn.sfrac('_1', '_2', 'v'), 'A', 'mul', 'B',
+    eqn.sfrac('_1', '_2', 'v', 0.6), 'space', 'A', 'mul', 'B',
   ]);
 
   eqn.collection.setPosition(layout.rectSquareEqnPosition);

@@ -10,6 +10,8 @@ $colors: (
   cross:               color('diagram', 'warning', 'base'),
   row:                 color('diagram', 'warning', 'base'),
   unit:                color('diagram', 'warning', 'base'),
+  construction:        map-get($geometry_colors, construction1),
+  construction1:       map-get($geometry_colors, construction),
 );
 
 body {

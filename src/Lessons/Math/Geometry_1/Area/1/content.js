@@ -495,24 +495,74 @@ class Content extends LessonContent {
       setContent: [
         'The area of a |triangle| is more challenging to calculate as squares do not fit nicely into triangles.',
       ],
-      show: [
-        tri._grid, tri._triIntro,
-      ],
-      // setSteadyState: () => {
-      //   rect.eqns.squareEqn.showForm('0');
-      // },
+      show: [tri._grid, tri._triIntro],
+    });
+
+    common.setContent = [
+      'However, we can use our knowledge of |rectangles| to help calculate the area of a triangle.',
+    ];
+    this.addSection(common, {
+      show: [tri._grid, tri._triIntro],
     });
 
     this.addSection(common, {
-      setContent: [
-        'However, we can use our knowledge of rectangles to help calculate the area of a triangle.',
-      ],
+      show: [tri._rect, tri._sideRectA, tri._sideRectB],
+    });
+
+    common.setContent = [
+      'We know the area of a rectangle is the |product of two adjacent sides|.',
+    ];
+    this.addSection(common, {
+      show: [tri._rect, tri._sideRectA, tri._sideRectB],
+      setSteadyState: () => {
+        tri.eqns.triRectEqn.showForm('0');
+      },
+    });
+
+    common.setContent = [
+      'We can halve the rectangle into two |equal triangles|.',
+    ];
+    common.setSteadyState = () => { tri.eqns.triRectEqn.showForm('0'); };
+    this.addSection(common, {
+      show: [tri._rect, tri._sideRectA, tri._sideRectB],
+    });
+
+    this.addSection(common, {
       show: [
-        tri._grid, tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB,
+        tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB,
       ],
-      // setSteadyState: () => {
-      //   rect.eqns.squareEqn.showForm('0');
-      // },
+    });
+
+    common.setContent = [
+      'Each triangle is |equal|, so each will have |half| the area of the rectangle.',
+    ];
+    common.show = [tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB];
+    this.addSection(common, {
+      show: [tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB],
+    });
+
+    this.addSection(common, {
+      show: [tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB],
+      transitionFromPrev: (done) => {
+        tri.eqns.triRectEqn.showForm('0');
+        tri.eqns.triRectEqn.getForm('1')
+          .animatePositionsTo(0, 0.5, 1, 0.5, done);
+      },
+      setSteadyState: () => { tri.eqns.triRectEqn.showForm('1'); },
+    });
+
+    this.addSection({
+      setContent: centerV(['We can now use this to calculate the area of |any triangle|, not just one that is part of a rectangle.']),
+    });
+
+    common.show = [
+      tri._tri2, tri._tri2Rect1, tri._tri2Rect2,
+      tri._sideTriRect1A, tri._sideTriRect1B,
+      tri._sideTriRect2A, tri._sideTriRect2B,
+    ];
+    this.addSection(common, {
+      title: 'arbitrary',
+      setContent: ['Start with a triangle'],
     });
   }
 }
