@@ -87,6 +87,7 @@ class VertexBracket extends VertexObject {
     for (let i = r2Points.length - 1; i >= 0; i -= 1) {
       this.border[0].push(r2Points[i]);
     }
+
     this.setupBuffer();
   }
 }

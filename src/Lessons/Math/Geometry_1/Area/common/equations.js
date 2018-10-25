@@ -553,7 +553,7 @@ export function addTri2AreaEquation(
       v__: diagram.equation.vinculum(colText),
       bl: diagram.equation.bracket('left', 1, colText),
       br: diagram.equation.bracket('right', 1, colText),
-      bt: diagram.equation.bracket('bottom', 3, colText),
+      bt: diagram.equation.bracket('top', 2, colText),
       base: 'base',
       height: 'height',
     },
@@ -566,10 +566,8 @@ export function addTri2AreaEquation(
   const fracSize = 0.45;
 
   eqn.addForm('0', [
-    eqn.bottomBar([
-      eqn.sub('Area', 'triangle'),
-      'equals',
-    ], 'bt'),
+    eqn.sub(eqn.topBar('Area', 'bt'), 'triangle'),
+    'equals',
     eqn.sub('Area_', 'AB'),
     'plus',
     eqn.sub('Area__', 'AC'),
@@ -599,12 +597,10 @@ export function addTri2AreaEquation(
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
-    'space',
     eqn.brac([
-      'space',
       eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'space', 'B',
       'plus',
-      eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D', 'space',
+      eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D',
     ], 'bl', 'br'),
   ]);
 
