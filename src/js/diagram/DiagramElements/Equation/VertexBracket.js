@@ -70,7 +70,6 @@ class VertexBracket extends VertexObject {
     } else {
       t = new Transform();
     }
-    console.log(side)
     points1 = leftPoints.map(p => p.transformBy(t.m()));
     points2 = rightPoints.map(p => p.transformBy(t.m()));
 
