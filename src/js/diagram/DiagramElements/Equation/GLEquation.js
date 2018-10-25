@@ -2851,4 +2851,30 @@ export class Equation {
       'bottom',
     );
   }
+
+  topComment(
+    content: TypeEquationInput,
+    comment: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+    space: number = 0.03,
+    outsideSpace: number = 0.03,
+  ) {
+    return this.annotation(
+      this.topBar(content, bar, space, outsideSpace),
+      [this.ann(comment, 'center', 'top', 'center', 'bottom')],
+    );
+  }
+
+  bottomComment(
+    content: TypeEquationInput,
+    comment: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+    space: number = 0.03,
+    outsideSpace: number = 0.03,
+  ) {
+    return this.annotation(
+      this.bottomBar(content, bar, space, outsideSpace),
+      [this.ann(comment, 'center', 'bottom', 'center', 'top')],
+    );
+  }
 }

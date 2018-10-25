@@ -553,7 +553,7 @@ export function addTri2AreaEquation(
       v__: diagram.equation.vinculum(colText),
       bl: diagram.equation.brace('left', 1, colText),
       br: diagram.equation.brace('right', 1, colText),
-      bt: diagram.equation.brace('top', 6, colText),
+      bt: diagram.equation.brace('bottom', 6, colText),
       base: 'base',
       height: 'height',
     },
@@ -566,7 +566,7 @@ export function addTri2AreaEquation(
   const fracSize = 0.45;
 
   eqn.addForm('0', [
-    eqn.topBar([
+    eqn.bottomComment([
       eqn.sub('Area', 'triangle'),
       'equals',
       eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
@@ -575,7 +575,7 @@ export function addTri2AreaEquation(
         'plus',
         eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D',
       ], 'bl', 'br'),
-    ], 'bt'),
+    ], 'base', 'bt'),
   ]);
 
   eqn.addForm('0a', [
