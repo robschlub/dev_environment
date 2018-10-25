@@ -2191,16 +2191,35 @@ export class Equation {
   addForm(
     name: string,
     content: Array<Elements | Element | string>,
-    formType: string = 'base',
-    addToSeries: boolean = true,
-    elementMods: Object = {},
-    time: number | null | { fromPrev?: number, fromNext?: number } = null,
-    description: string = '',
-    modifiers: Object = {},
+    options: {
+      formType?: string,
+      addToSeries?: boolean,
+      elementMods?: Object,
+      time?: number | null | { fromPrev?: number, fromNext?: number },
+      description?: string,
+      modifiers?: Object,
+    },
   ) {
     if (!(name in this.form)) {
       this.form[name] = {};
     }
+    const defaultOptions = {
+      formType: 'base',
+      addToSeries: true,
+      elementMods: {},
+      animationTime: null,          // use velocities instead of time
+      description: '',
+      modifiers: {},
+    };
+    let optionsToUse = defaultOptions;
+    if (options) {
+      optionsToUse = Object.assign({}, defaultOptions, options);
+    }
+    const {
+      formType, description, modifiers,
+      animationTime, elementMods, addToSeries,
+    } = optionsToUse;
+    const time = animationTime;
 
     this.form[name][formType] = new EquationForm(this.collection);
     this.form[name].name = name;

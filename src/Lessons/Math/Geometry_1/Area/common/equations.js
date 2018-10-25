@@ -105,21 +105,25 @@ export function addRectEqn(
     'Area',
     'equals',
     '_6', 'mul', '_1', 'm', 'mul_', '_10', 'mul__', '_1_', 'm_',
-  ], 'base', true, {
-    m: [null, 'linear'],
-    _1: [null, 'linear'],
-    mul: [null, 'linear'],
-  }, null, '1');
+  ], {
+    elementMods: {
+      m: [null, 'linear'],
+      _1: [null, 'linear'],
+      mul: [null, 'linear'],
+    },
+  });
 
   eqn.addForm('2', [
     'Area',
     'equals',
     '_6', 'mul_', '_10', 'mul__', '_1_', 'm_', 'mul', '_1', 'm',
-  ], 'base', true, {
-    m: [colUnit, 'curved', 'up', 0.7],
-    _1: [null, 'curved', 'up', 0.7],
-    mul: [null, 'curved', 'up', 0.7],
-  }, null, '2');
+  ], {
+    elementMods: {
+      m: [colUnit, 'curved', 'up', 0.7],
+      _1: [null, 'curved', 'up', 0.7],
+      mul: [null, 'curved', 'up', 0.7],
+    },
+  });
 
   eqn.addForm('3', [
     'Area',
@@ -129,21 +133,25 @@ export function addRectEqn(
       [eqn.ann('_60', 'center', 'top', 'center', 'bottom')],
     ),
     'mul__', '_1_', 'm_', 'mul', '_1', 'm',
-  ], 'base', true, {
-    m: [colUnit, 'curved', 'up', 0.7],
-    _1: [null, 'curved', 'up', 0.7],
-    mul: [null, 'curved', 'up', 0.7],
-  }, null, '3');
+  ], {
+    elementMods: {
+      m: [colUnit, 'curved', 'up', 0.7],
+      _1: [null, 'curved', 'up', 0.7],
+      mul: [null, 'curved', 'up', 0.7],
+    },
+  });
 
   // Area = 60 x 1m x 1m
   eqn.addForm('4', [
     'Area',
     'equals',
     '_60', 'mul__', '_1_', 'm_', 'mul', '_1', 'm',
-  ], 'base', true, {
-    m: [null, 'linear'],
-    _1: [null, 'linear'],
-    mul: [null, 'linear'],
+  ], {
+    elementMods: {
+      m: [null, 'linear'],
+      _1: [null, 'linear'],
+      mul: [null, 'linear'],
+    },
   });
 
   // Area = 60 x X1m x X1m
@@ -582,7 +590,9 @@ export function addTri2AreaEquation(
     eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'space', 'B',
     'plus',
     eqn.sub('Area__', '_2'),
-  ], 'base', true, {}, 0);
+  ], {
+    animationTime: { fromPrev: 0, fromNext: 0 },
+  });
 
   eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
@@ -590,7 +600,9 @@ export function addTri2AreaEquation(
     eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'space', 'B',
     'plus',
     eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_', 'space', 'D',
-  ], 'base', true, {}, { fromPrev: 0, fromNext: null });
+  ], {
+    animationTime: { fromPrev: 0, fromNext: null },
+  });
 
   eqn.addForm('3', [
     eqn.sub('Area', 'triangle'),
@@ -603,7 +615,7 @@ export function addTri2AreaEquation(
       'plus',
       eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D', 'space',
     ], 'bl', 'br'),
-  ], 'base', true, {}, null);
+  ]);
 
   eqn.addForm('4', [
     eqn.sub('Area', 'triangle'),
