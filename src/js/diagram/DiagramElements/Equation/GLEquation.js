@@ -263,9 +263,9 @@ class Fraction extends Elements {
     const xNumerator = (this.width - this.numerator.width) / 2;
     const xDenominator = (this.width - this.denominator.width) / 2;
     this.vSpaceNum = scale * 0.05;
-    this.vSpaceDenom = scale * 0.02;
+    this.vSpaceDenom = scale * 0.05;
     this.lineVAboveBaseline = scale * 0.07 / this.scaleModifier;
-    this.lineWidth = scale * 0.01;
+    this.lineWidth = Math.max(scale * 0.01, 0.008);
 
     const yNumerator = this.numerator.descent
                         + this.vSpaceNum + this.lineVAboveBaseline;
