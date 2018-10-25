@@ -123,9 +123,10 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
   }
 
   addShapeLabels() {
-    const col = this.layout.colors.fillLabel;
-    this.addLabel('1', this.layout.tri2Rect1Tri.midPoint, col);
-    this.addLabel('2', this.layout.tri2Rect2Tri.midPoint, col);
+    const colAD = this.layout.colors.construction;
+    const colAC = this.layout.colors.construction1;
+    this.addLabel('AD', this.layout.tri2Rect1Tri.midPoint, colAD);
+    this.addLabel('AC', this.layout.tri2Rect2Tri.midPoint, colAC);
   }
 
   addEqns() {
@@ -134,7 +135,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     );
     addTri2AreaEquation(
       this.diagram, this.layout, this, 'tri2AreaEqn',
-    )
+    );
   }
 
   constructor(

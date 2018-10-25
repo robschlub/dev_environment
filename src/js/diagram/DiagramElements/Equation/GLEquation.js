@@ -1085,7 +1085,9 @@ class Integral extends Elements {
     this.height = this.descent + this.ascent;
   }
 }
-
+// class TopBracket extends Elements {
+  
+// }
 class Brackets extends Elements {
   mainContent: Elements | null;
   leftGlyph: DiagramElementPrimative | DiagramElementCollection | null;

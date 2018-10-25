@@ -531,11 +531,11 @@ export function addTri2AreaEquation(
       triangle: ['triangle', colLine],
       Area_: ['Area', colCon, null, null, null, null, 'italic'],
       Area__: ['Area', colCon1],
-      _1: ['1', colCon],
+      AB: ['AB', colCon],
       _1_: ['1', colCon],
       _1__: ['1', colCon1],
       _1___: '1',
-      _2: ['2', colCon1],
+      AC: ['AC', colCon1],
       _2_: ['2', colCon],
       _2__: ['2', colCon1],
       _2___: '2',
@@ -567,9 +567,9 @@ export function addTri2AreaEquation(
   eqn.addForm('0', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    eqn.sub('Area_', '_1'),
+    eqn.sub('Area_', 'AB'),
     'plus',
-    eqn.sub('Area__', '_2'),
+    eqn.sub('Area__', 'AC'),
   ]);
 
   eqn.addForm('1', [
@@ -584,9 +584,9 @@ export function addTri2AreaEquation(
 
   eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
-    'equals', 'space', 
+    'equals', 'space',
     eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'space', 'B',
-    'plus', 'space', 
+    'plus', 'space',
     eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_', 'space', 'D',
   ], {
     animationTime: { fromPrev: 0, fromNext: null },

@@ -626,7 +626,7 @@ class Content extends LessonContent {
       tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
       tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
-      tri._label1, tri._label2,
+      // tri._labelAD, tri._labelAC,
     ];
     this.addSection(common, {});
     this.addSection(common, {
