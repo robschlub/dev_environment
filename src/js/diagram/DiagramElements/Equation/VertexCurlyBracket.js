@@ -6,17 +6,16 @@ import VertexBracket from './VertexBracket';
 
 class VertexCurlyBracket extends VertexBracket {
   getPoints() {
-    let w = 1 / 15;
+    let w = 1 / 17;
 
     if (this.numLines > 1) {
       w /= this.numLines;
     }
-    // w = 0.5;
-    const r1 = w * 2;
+    const r1 = w * 3;
     const r2 = r1 * 1.3;
     const p1 = new Point(r1, 0);
     const p2 = new Point(w + r2, 0);
-    const r1Angle = Math.PI / 2 * 0.8;
+    const r1Angle = Math.PI / 2 * 0.9;
     const h = r1 * Math.sin(r1Angle);
     const r2Angle = Math.asin(h / r2);
     const segments = 5;
@@ -40,10 +39,10 @@ class VertexCurlyBracket extends VertexBracket {
       .translate(width - w, height);
     const middleBottom = new Transform()
       .scale(-1, 1)
-      .translate(width, this.mainHeight / 2 - height);
+      .translate(width, this.mainHeight / 2 - height * 0.95);
     const middleTop = new Transform()
       .scale(-1, -1)
-      .translate(width, this.mainHeight / 2 + height);
+      .translate(width, this.mainHeight / 2 + height * 0.95);
 
 
     const leftPoints: Array<Point> = [

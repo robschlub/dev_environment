@@ -10,22 +10,25 @@ class VertexBracket extends VertexObject {
   numLines: number;
 
   getPoints() {
-    let r1 = 1;
-    let r2 = 1.5;
-    let w = 1 / 16;
+    const w = 1 / this.numLines / 16;
+    const r1 = w * 16 * this.numLines;
+    const r2 = r1 * (1.4 - 0.4 * (1 - 1 / this.numLines));
+    // let r1 = 1;
+    // let r2 = 1.5;
+    // let w = 1 / 16;
 
-    if (this.numLines === 2) {
-      r1 = 1.5;
-      r2 = 2;
-      w = 1 / 25;
-    }
+    // if (this.numLines === 2) {
+    //   r1 = 1.5;
+    //   r2 = 2;
+    //   w = 1 / 25;
+    // }
 
     const { mainHeight } = this;
     const p1 = new Point(r1, mainHeight / 2);
     const p2 = new Point(r2 + w, mainHeight / 2);
     const r1Angle = Math.asin(mainHeight / 2 / r1);
     const r2Angle = Math.asin(mainHeight / 2 / r2);
-    const numSegments = 10;
+    const numSegments = 10 * this.numLines;
     const r1AngleStep = r1Angle * 2 / numSegments;
     const r2AngleStep = r2Angle * 2 / numSegments;
 
