@@ -1203,10 +1203,11 @@ class Brackets extends Elements {
     const height = contentBounds.height * heightScale;
     const bracketScale = height;
 
+    const glyphDescent = contentBounds.descent
+        + contentBounds.height * (heightScale - 1) / 1.8;
     const leftSymbolLocation = new Point(
       loc.x + this.space * scale,
-      loc.y - contentBounds.descent
-        - contentBounds.height * (heightScale - 1) / 1.8,
+      loc.y - glyphDescent,
     );
     const { glyph } = this;
     if (glyph instanceof DiagramElementPrimative) {
@@ -1264,8 +1265,8 @@ class Brackets extends Elements {
 
     this.width = glyphBounds.width + contentBounds.width
       + rightGlyphBounds.width + this.space * scale * 4;
-    this.ascent = glyphBounds.ascent;
-    this.descent = rightGlyphBounds.ascent;
+    this.ascent = glyphBounds.height - glyphDescent;
+    this.descent = glyphDescent;
     this.height = this.descent + this.ascent;
     // console.log(this.glyphLocation, this.rightGlyphLocation)
     // console.log(this.glyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
@@ -2869,7 +2870,7 @@ export class Equation {
     content: TypeEquationInput,
     comment: TypeEquationInput,
     bar: DiagramElementPrimative | DiagramElementCollection | string,
-    space: number = 0.03,
+    space: number = 0.0,
     outsideSpace: number = 0.03,
   ) {
     return this.annotation(

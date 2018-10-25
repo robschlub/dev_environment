@@ -57,7 +57,7 @@ class VertexBrace extends VertexBracket {
       ...cornerR1Points.map(p => p.transformBy(middleTop.m())).reverse(),
       ...cornerR2Points.map(p => p.transformBy(top.m())),
     ];
-    return { leftPoints, rightPoints, maxX: width };
+    return { leftPoints, rightPoints, maxX: width * 2 - w };
   }
 }
 export default VertexBrace;
