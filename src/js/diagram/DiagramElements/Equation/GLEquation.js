@@ -1463,6 +1463,7 @@ export type TypeEquationForm = {
   modifiers: Object;
   type: string;
   elementMods: Object;
+  time: number | null;
 } & Elements;
 
 export class EquationForm extends Elements {
@@ -1479,6 +1480,7 @@ export class EquationForm extends Elements {
     this.description = null;
     this.modifiers = {};
     this.elementMods = {};
+    this.time = null;
   }
 
   _dup(collection: DiagramElementCollection = this.collection) {
@@ -1803,14 +1805,21 @@ export class EquationForm extends Elements {
       }
     });
 
+    // Find move time to use. If moveTime is null, then a velocity is used.
     let moveTimeToUse;
-    if (moveTime === null) {
-      // const startTransforms = elementsToMove.map(currentTransforms)
-      moveTimeToUse = getMoveTime(toMoveStartTransforms, toMoveStopTransforms);
+    if (this.time) {
+      moveTimeToUse = this.time;
+    } else if (moveTime === null) {
+      moveTimeToUse = getMoveTime(
+        toMoveStartTransforms, toMoveStopTransforms, 0,
+        new Point(0.25, 0.25),      // 0.25 diagram space per s
+        2 * Math.PI / 6,            // 60º per second
+        new Point(1, 1),            // 100% per second
+      );
     } else {
       moveTimeToUse = moveTime;
     }
-
+    console.log(moveTimeToUse, this.time)
     this.collection.setElementTransforms(currentTransforms);
     let cumTime = delay;
 
@@ -2187,6 +2196,7 @@ export class Equation {
     formType: string = 'base',
     addToSeries: boolean = true,
     elementMods: Object = {},
+    time: number | null = null,
     description: string = '',
     modifiers: Object = {},
   ) {
@@ -2201,6 +2211,10 @@ export class Equation {
     this.form[name][formType].modifiers = modifiers;
     this.form[name][formType].type = formType;
     this.form[name][formType].elementMods = {};
+    if (time !== 0 && time != null) {
+      console.log(time)
+    }
+    this.form[name][formType].time = time;
     Object.keys(elementMods).forEach((elementName) => {
       const diagramElement = getDiagramElement(this.collection, elementName);
       if (diagramElement) {
@@ -2232,7 +2246,7 @@ export class Equation {
     // make the first form added also equal to the base form as always
     // need a base form for some functions
     if (this.form[name].base === undefined) {
-      this.addForm(name, content, 'base', false, elementMods, description, modifiers);
+      this.addForm(name, content, 'base', false, elementMods, time, description, modifiers);
     }
   }
 

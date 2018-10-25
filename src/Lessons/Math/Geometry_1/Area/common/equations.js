@@ -109,7 +109,7 @@ export function addRectEqn(
     m: [null, 'linear'],
     _1: [null, 'linear'],
     mul: [null, 'linear'],
-  }, '1');
+  }, null, '1');
 
   eqn.addForm('2', [
     'Area',
@@ -119,7 +119,7 @@ export function addRectEqn(
     m: [colUnit, 'curved', 'up', 0.7],
     _1: [null, 'curved', 'up', 0.7],
     mul: [null, 'curved', 'up', 0.7],
-  }, '2');
+  }, null, '2');
 
   eqn.addForm('3', [
     'Area',
@@ -133,7 +133,7 @@ export function addRectEqn(
     m: [colUnit, 'curved', 'up', 0.7],
     _1: [null, 'curved', 'up', 0.7],
     mul: [null, 'curved', 'up', 0.7],
-  }, '3');
+  }, null, '3');
 
   // Area = 60 x 1m x 1m
   eqn.addForm('4', [
@@ -144,7 +144,7 @@ export function addRectEqn(
     m: [null, 'linear'],
     _1: [null, 'linear'],
     mul: [null, 'linear'],
-  }, '4');
+  });
 
   // Area = 60 x X1m x X1m
   eqn.addForm('5', [
@@ -517,7 +517,7 @@ export function addTri2AreaEquation(
   name: string,
 ) {
   const eqn = diagram.equation.makeEqn();
-  const colUnit = layout.colors.unit;
+  // const colUnit = layout.colors.unit;
   const colText = layout.colors.diagram.text.base;
   const colLine = layout.colors.line;
   const colCon = layout.colors.construction;
@@ -575,6 +575,7 @@ export function addTri2AreaEquation(
   //   eqn.sub('Area__', '_2'),
   // ]);
 
+  console.log('here')
   const fracSize = 0.45;
   eqn.addForm('1', [
     eqn.sub('Area', 'triangle'),
@@ -582,7 +583,8 @@ export function addTri2AreaEquation(
     eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'space', 'B',
     'plus',
     eqn.sub('Area__', '_2'),
-  ]);
+  ], 'base', true, {}, 0);
+  console.log('there')
 
   eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
