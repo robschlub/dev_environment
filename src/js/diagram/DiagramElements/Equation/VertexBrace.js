@@ -4,7 +4,7 @@ import {
 } from '../../tools/g2';
 import VertexBracket from './VertexBracket';
 
-class VertexCurlyBracket extends VertexBracket {
+class VertexBrace extends VertexBracket {
   getPoints() {
     let w = 1 / 20;
 
@@ -57,9 +57,8 @@ class VertexCurlyBracket extends VertexBracket {
       ...cornerR1Points.map(p => p.transformBy(middleTop.m())).reverse(),
       ...cornerR2Points.map(p => p.transformBy(top.m())),
     ];
-    console.log(cornerR1Points, leftPoints, rightPoints)
     return { leftPoints, rightPoints, maxX: width };
   }
 }
-export default VertexCurlyBracket;
+export default VertexBrace;
 

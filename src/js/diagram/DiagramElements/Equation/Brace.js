@@ -1,13 +1,13 @@
 // @flow
 
-import VertexCurlyBracket from './VertexCurlyBracket';
+import VertexBrace from './VertexBrace';
 import { DiagramElementPrimative } from '../../Element';
 import {
   Point, Transform, Rect,
 } from '../../tools/g2';
 import WebGLInstance from '../../webgl/webgl';
 
-export default function CurlyBracket(
+export default function Brace(
   webgl: WebGLInstance,
   color: Array<number>,
   side: 'left' | 'right' | 'top' | 'bottom',
@@ -15,7 +15,7 @@ export default function CurlyBracket(
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
 ) {
-  const vertices = new VertexCurlyBracket(webgl, side, numLines);
+  const vertices = new VertexBrace(webgl, side, numLines);
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {
     transform = transform.translate(transformOrLocation.x, transformOrLocation.y);
