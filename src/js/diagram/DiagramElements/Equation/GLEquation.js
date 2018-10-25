@@ -1306,10 +1306,10 @@ class Bar extends Brackets {
 
     const leftSymbolLocation = new Point(
       loc.x - (widthScale - 1) * width / 2,
-      loc.y + contentBounds.ascent,
+      loc.y + contentBounds.ascent + this.space * scale,
     );
     if (this.barPosition === 'bottom') {
-      leftSymbolLocation.y = loc.y - contentBounds.descent;
+      leftSymbolLocation.y = loc.y - contentBounds.descent - this.space * scale;
     }
     const { leftGlyph } = this;
     if (leftGlyph instanceof DiagramElementPrimative) {
@@ -1333,11 +1333,13 @@ class Bar extends Brackets {
     }
     this.width = contentBounds.width;
     if (this.barPosition === 'top') {
-      this.ascent = contentBounds.ascent + leftGlyphBounds.height;
+      this.ascent = contentBounds.ascent + leftGlyphBounds.height
+        + this.space * scale * 2;
       this.descent = contentBounds.descent;
     } else {
       this.ascent = contentBounds.ascent;
-      this.descent = contentBounds.descent + leftGlyphBounds.height;
+      this.descent = contentBounds.descent + leftGlyphBounds.height
+        + this.space * scale * 2;
     }
     this.height = this.descent + this.ascent;
   }
@@ -2781,12 +2783,12 @@ export class Equation {
 
   annotation(
     content: TypeEquationInput,
-    annotationOrAnnotationArray: Array<AnnotationInformation>,
+    annotationArray: Array<AnnotationInformation>,
     annotationInSize: boolean = false,
   ) {
     return new Annotation(
       contentToElement(this.collection, content),
-      annotationOrAnnotationArray,
+      annotationArray,
       annotationInSize,
     );
   }

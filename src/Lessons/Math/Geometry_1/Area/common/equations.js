@@ -527,7 +527,7 @@ export function addTri2AreaEquation(
   const strikeColor = layout.colors.diagram.disabledDark;
   eqn.createElements(
     {
-      Area: ['Area', colLine],
+      Area: ['areag', colLine],
       triangle: ['triangle', colLine],
       Area_: ['Area', colCon, null, null, null, null, 'italic'],
       Area__: ['Area', colCon1],
@@ -553,7 +553,7 @@ export function addTri2AreaEquation(
       v__: diagram.equation.vinculum(colText),
       bl: diagram.equation.bracket('left', 1, colText),
       br: diagram.equation.bracket('right', 1, colText),
-      bt: diagram.equation.bracket('top', 2, colText),
+      bt: diagram.equation.bracket('bottom', 2, colText),
       base: 'base',
       height: 'height',
     },
@@ -566,7 +566,13 @@ export function addTri2AreaEquation(
   const fracSize = 0.45;
 
   eqn.addForm('0', [
-    eqn.sub(eqn.topBar('Area', 'bt'), 'triangle'),
+    eqn.sub(
+      eqn.annotation(
+        eqn.bottomBar('Area', 'bt'),
+        [eqn.ann('base', 'center', 'bottom', 'center', 'top')],
+      ),
+      'triangle',
+    ),
     'equals',
     eqn.sub('Area_', 'AB'),
     'plus',
