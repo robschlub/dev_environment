@@ -1,7 +1,6 @@
 // @flow
 
-import VertexBracket from './VertexBracket';
-// import VertexPolygonFilled from '../../DrawingObjects/VertexObject/VertexPolygon';
+import VertexBar from './VertexBar';
 import { DiagramElementPrimative } from '../../Element';
 import {
   Point, Transform, Rect,
@@ -16,23 +15,12 @@ export default function Bracket(
   transformOrLocation: Transform | Point,
   diagramLimits: Rect,
 ) {
-  // const serifSides = 30;
-  // const serifRadius = 0.05;
-  const vertices = new VertexBracket(webgl, side, numLines);
-  // const serif = new VertexPolygonFilled(
-  //   webgl,
-  //   serifSides,
-  //   serifRadius,
-  //   0,
-  //   new Point(0, 0),
-  //   serifSides,
-  // );
+  const vertices = new VertexBar(webgl, side, numLines);
   let transform = new Transform();
   if (transformOrLocation instanceof Point) {
     transform = transform.translate(transformOrLocation.x, transformOrLocation.y);
   } else {
     transform = transformOrLocation._dup();
   }
-
   return new DiagramElementPrimative(vertices, transform, color, diagramLimits);
 }

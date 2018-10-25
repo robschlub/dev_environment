@@ -553,7 +553,7 @@ export function addTri2AreaEquation(
       v__: diagram.equation.vinculum(colText),
       bl: diagram.equation.bracket('left', 1, colText),
       br: diagram.equation.bracket('right', 1, colText),
-      bt: diagram.equation.bracket('top', 2, colText),
+      bt: diagram.equation.bar('top', 2, colText),
       base: 'base',
       height: 'height',
     },

@@ -41,6 +41,7 @@ import {
 import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
 import Integral from './DiagramElements/Equation/Integral';
 import Bracket from './DiagramElements/Equation/Bracket';
+import Bar from './DiagramElements/Equation/Bar';
 import {
   EquationForm, createEquationElements, Equation,
 } from './DiagramElements/Equation/GLEquation';
@@ -133,7 +134,7 @@ function equation(diagram: Diagram, high: boolean = false) {
   }
 
   function bracket(
-    side: 'left' | 'right',
+    side: 'left' | 'right' | 'top' | 'bottom',
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
   ) {
@@ -143,6 +144,18 @@ function equation(diagram: Diagram, high: boolean = false) {
       side,
       numLines,
       new Transform('bracket').scale(1, 1).translate(0, 0),
+      diagram.limits,
+    );
+  }
+
+  function bar(
+    side: 'left' | 'right' | 'top' | 'bottom',
+    numLines: number = 1,
+    color: Array<number> = [1, 1, 1, 1],
+  ) {
+    return new Bar(
+      webgl, color, side, numLines,
+      new Transform('bar').scale(1, 1).translate(0, 0),
       diagram.limits,
     );
   }
@@ -183,6 +196,7 @@ function equation(diagram: Diagram, high: boolean = false) {
     xStrike,
     makeDescription,
     bracket,
+    bar,
   };
 }
 

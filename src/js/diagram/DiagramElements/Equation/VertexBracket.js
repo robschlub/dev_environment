@@ -53,27 +53,26 @@ class VertexBracket extends VertexObject {
 
     let points1 = [];
     let points2 = [];
-    if (side === 'right' || side === 'top' || side === 'bottom') {
-      let t;
-      // const maxX = polarToRect(r2, Math.PI - r2Angle).add(p2).x;
-      if (side === 'right') {
-        t = new Transform().scale(-1, 1).translate(maxX, 0);
-      }
-      if (side === 'top') {
-        t = new Transform()
-          .translate(0, -this.mainHeight / 2)
-          .rotate(-Math.PI / 2)
-          .translate(this.mainHeight / 2, maxX);
-      }
-      if (side === 'bottom') {
-        t = new Transform()
-          .translate(0, -this.mainHeight / 2)
-          .rotate(Math.PI / 2)
-          .translate(this.mainHeight / 2, -maxX);
-      }
-      points1 = leftPoints.map(p => p.transformBy(t.m()));
-      points2 = rightPoints.map(p => p.transformBy(t.m()));
+    let t;
+    // const maxX = polarToRect(r2, Math.PI - r2Angle).add(p2).x;
+    if (side === 'right') {
+      t = new Transform().scale(-1, 1).translate(maxX, 0);
+    } else if (side === 'top') {
+      t = new Transform()
+        .translate(0, -this.mainHeight / 2)
+        .rotate(-Math.PI / 2)
+        .translate(this.mainHeight / 2, maxX);
+    } else if (side === 'bottom') {
+      t = new Transform()
+        .translate(0, -this.mainHeight / 2)
+        .rotate(Math.PI / 2)
+        .translate(this.mainHeight / 2, -maxX);
+    } else {
+      t = new Transform();
     }
+    console.log(side)
+    points1 = leftPoints.map(p => p.transformBy(t.m()));
+    points2 = rightPoints.map(p => p.transformBy(t.m()));
 
     this.points = [];
     points1.forEach((r1p, index) => {
@@ -83,7 +82,6 @@ class VertexBracket extends VertexObject {
       this.points.push(r2p.x);
       this.points.push(r2p.y);
     });
-
     this.border[0] = [];
     points1.forEach((p) => {
       this.border[0].push(p);
