@@ -1194,14 +1194,14 @@ class Brackets extends Elements {
       contentBounds.descent = mainContent.descent;
     }
 
-    const heightScale = 1.2;
+    const heightScale = 1.4;
     const height = contentBounds.height * heightScale;
     const bracketScale = height;
 
     const leftSymbolLocation = new Point(
       loc.x,
       loc.y - contentBounds.descent
-        - contentBounds.height * (heightScale - 1) / 2,
+        - contentBounds.height * (heightScale - 1) / 1.8,
     );
     const { leftGlyph } = this;
     if (leftGlyph instanceof DiagramElementPrimative) {
@@ -1771,6 +1771,29 @@ export class EquationForm extends Elements {
     });
   }
 
+  // setColors() {
+  //   Object.keys(this.elementMods).forEach((elementName) => {
+  //     const mods = this.elementMods[elementName];
+  //     const {
+  //       element, color, style, direction, mag,
+  //     } = mods;
+  //     if (element != null) {
+  //       if (color != null) {
+  //         element.animateColorToWithDelay(color, cumTime, moveTimeToUse);
+  //       }
+  //       if (style != null) {
+  //         element.animate.transform.translation.style = style;
+  //       }
+  //       if (direction != null) {
+  //         element.animate.transform.translation.options.direction = direction;
+  //       }
+  //       if (mag != null) {
+  //         element.animate.transform.translation.options.magnitude = mag;
+  //       }
+  //     }
+  //   });
+  // }
+
   animatePositionsTo(
     // location: Point,
     delay: number,
@@ -1811,9 +1834,9 @@ export class EquationForm extends Elements {
     if (moveTime === null) {
       moveTimeToUse = getMoveTime(
         toMoveStartTransforms, toMoveStopTransforms, 0,
-        new Point(0.25, 0.25),      // 0.25 diagram space per s
+        new Point(0.35, 0.35),      // 0.25 diagram space per s
         2 * Math.PI / 6,            // 60º per second
-        new Point(1, 1),            // 100% per second
+        new Point(0.4, 0.4),            // 100% per second
       );
     } else {
       moveTimeToUse = moveTime;
@@ -2238,7 +2261,17 @@ export class Equation {
     Object.keys(elementMods).forEach((elementName) => {
       const diagramElement = getDiagramElement(this.collection, elementName);
       if (diagramElement) {
-        const [color, style, direction, mag] = elementMods[elementName];
+        let color;
+        let style;
+        let direction;
+        let mag;
+        if (Array.isArray(elementMods[elementName])) {
+          [color, style, direction, mag] = elementMods[elementName];
+        } else {
+          ({
+            color, style, direction, mag,
+          } = elementMods[elementName]);
+        }
         this.form[name][formType].elementMods[elementName] = {
           element: diagramElement,
           color,
