@@ -18,7 +18,6 @@ import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 // Equation is a class that takes a set of drawing objects (TextObjects,
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
-let flag = false;
 class BlankElement {
   ascent: number;
   descent: number;
@@ -2436,10 +2435,6 @@ export class Equation {
     const form = this.form[name][formType];
     form.createEq(content);
     form.type = formType;
-    if (name === '2dd') {
-      flag = true;
-      console.log(form)
-    }
     form.arrange(
       this.formAlignment.scale,
       this.formAlignment.hAlign,
@@ -2455,7 +2450,7 @@ export class Equation {
     // make the first form added also equal to the base form as always
     // need a base form for some functions
     if (this.form[name].base === undefined) {
-      this.addForm(name, content, 'base', false, elementMods, time, description, modifiers);
+      this.addForm(name, content, options);
     }
   }
 

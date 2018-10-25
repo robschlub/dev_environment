@@ -551,8 +551,8 @@ export function addTri2AreaEquation(
       v: diagram.equation.vinculum(colCon),
       v_: diagram.equation.vinculum(colCon1),
       v__: diagram.equation.vinculum(colText),
-      bl: diagram.equation.brace('left', 1, colText),
-      br: diagram.equation.brace('right', 1, colText),
+      bl: diagram.equation.bracket('left', 1, colText),
+      br: diagram.equation.bracket('right', 1, colText),
       bt: diagram.equation.brace('top', 2, strikeColor),
       bt_: diagram.equation.brace('top', 2, strikeColor),
       base: 'base',
@@ -566,24 +566,9 @@ export function addTri2AreaEquation(
   eqn.formAlignment.scale = 1.0;
   const fracSize = 0.5;
 
-  // eqn.addForm('0', [
-  //   eqn.bottomComment([
-  //     eqn.sub('Area', 'triangle'),
-  //     'equals',
-  //     eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
-  //     eqn.brac([
-  //       eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'space', 'B',
-  //       'plus',
-  //       eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D',
-  //     ], 'bl', 'br'),
-  //   ], 'base', 'bt'),
-  // ]);
-
-
   const half = eqn.sfrac('_1', '_2', 'v', fracSize);
   const half1 = eqn.sfrac('_1_', '_2_', 'v_', fracSize);
   const half2 = eqn.sfrac('_1__', '_2__', 'v__', fracSize);
-
   const areaAB = eqn.phrase([half, 'A', 'space', 'B']);
   const areaAD = eqn.phrase([half1, 'A_', 'space', 'D']);
 
@@ -611,12 +596,24 @@ export function addTri2AreaEquation(
     ),
   ]);
 
-  eqn.addForm('2dd', [
+  eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
     'equals',
     areaAB,
     'plus',
-    half1, 'A_', 'space', 'D',
+    areaAD,
+  ], {
+    animationTime: { fromPrev: null, fromNext: null },
+  });
+
+  eqn.addForm('2a', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.brac([
+      areaAB,
+      'plus',
+      half1, 'A_', 'space', 'D',
+    ], 'bl', 'br'),
   ], {
     animationTime: { fromPrev: null, fromNext: null },
   });
