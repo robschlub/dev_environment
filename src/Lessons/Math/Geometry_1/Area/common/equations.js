@@ -527,18 +527,18 @@ export function addTri2AreaEquation(
   const strikeColor = layout.colors.diagram.disabledDark;
   eqn.createElements(
     {
-      Area: ['aåÅ', colLine],
+      Area: ['Area', colLine],
       triangle: ['triangle', colLine],
       Area_: ['Area', colCon, null, null, null, null, 'italic'],
       Area__: ['Area', colCon1],
       AB: ['AB', colCon],
-      _1_: ['1', colCon],
-      _1__: ['1', colCon1],
-      _1___: '1',
+      _1: ['1', colCon],
+      _1_: ['1', colCon1],
+      _1__: '1',
       AC: ['AC', colCon1],
-      _2_: ['2', colCon],
-      _2__: ['2', colCon1],
-      _2___: '2',
+      _2: ['2', colCon],
+      _2_: ['2', colCon1],
+      _2__: '2',
       equals: ' = ',
       plus: '  \u002B  ',
       A: [' A', colCon],
@@ -553,7 +553,8 @@ export function addTri2AreaEquation(
       v__: diagram.equation.vinculum(colText),
       bl: diagram.equation.brace('left', 1, colText),
       br: diagram.equation.brace('right', 1, colText),
-      bt: diagram.equation.roundedSquareBracket('bottom', 8, colText),
+      bt: diagram.equation.brace('top', 2, strikeColor),
+      bt_: diagram.equation.brace('top', 2, strikeColor),
       base: 'base',
       height: 'height',
     },
@@ -563,96 +564,104 @@ export function addTri2AreaEquation(
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
-  const fracSize = 0.45;
+  const fracSize = 0.5;
+
+  // eqn.addForm('0', [
+  //   eqn.bottomComment([
+  //     eqn.sub('Area', 'triangle'),
+  //     'equals',
+  //     eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
+  //     eqn.brac([
+  //       eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'space', 'B',
+  //       'plus',
+  //       eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D',
+  //     ], 'bl', 'br'),
+  //   ], 'base', 'bt'),
+  // ]);
+
+
+  const half = eqn.sfrac('_1', '_2', 'v', fracSize);
+  const half1 = eqn.sfrac('_1_', '_2_', 'v_', fracSize);
+  const half2 = eqn.sfrac('_1__', '_2__', 'v__', fracSize);
+
+  const areaAB = eqn.phrase([half, 'A', 'space', 'B']);
+  const areaAD = eqn.phrase([half1, 'A_', 'space', 'D']);
 
   eqn.addForm('0', [
-    eqn.bottomComment([
-      eqn.sub('Area', 'triangle'),
-      'equals',
-      eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
-      eqn.brac([
-        eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'space', 'B',
-        'plus',
-        eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D',
-      ], 'bl', 'br'),
-    ], 'base', 'bt'),
-  ]);
-
-  eqn.addForm('0a', [
-    eqn.sub(
-      eqn.annotation(
-        eqn.topBar('Area', 'bt', 0.00, 0.00),
-        [eqn.ann('base', 'center', 'top', 'center', 'bottom')],
-      ),
-      'triangle',
-    ),
+    eqn.sub('Area', 'triangle'),
     'equals',
     eqn.sub('Area_', 'AB'),
     'plus',
     eqn.sub('Area__', 'AC'),
   ]);
 
-  eqn.addForm('1', [
+  eqn.addForm('0a', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    'space', eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'space', 'B',
+    eqn.topComment(
+      eqn.sub('Area_', 'AB'),
+      areaAB,
+      'bt',
+    ),
     'plus',
-    eqn.sub('Area__', '_2'),
-  ], {
-    animationTime: { fromPrev: 0, fromNext: 0 },
-  });
+    eqn.topComment(
+      eqn.sub('Area__', 'AC'),
+      areaAD,
+      'bt_',
+    ),
+  ]);
 
-  eqn.addForm('2', [
+  eqn.addForm('2dd', [
     eqn.sub('Area', 'triangle'),
-    'equals', 'space',
-    eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'space', 'B',
-    'plus', 'space',
-    eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_', 'space', 'D',
+    'equals',
+    areaAB,
+    'plus',
+    half1, 'A_', 'space', 'D',
   ], {
-    animationTime: { fromPrev: 0, fromNext: null },
+    animationTime: { fromPrev: null, fromNext: null },
   });
 
   eqn.addForm('3', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
+    half2, 'A__',
     eqn.brac([
-      eqn.strike([eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A'], 'x'), 'space', 'B',
+      eqn.strike([half, 'A'], 'x'), 'space', 'B',
       'plus',
-      eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D',
+      eqn.strike([half1, 'A_'], 'x_'), 'space', 'D',
     ], 'bl', 'br'),
   ]);
 
-  eqn.addForm('4', [
-    eqn.sub('Area', 'triangle'),
-    'equals',
-    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
-    'space',
-    eqn.brac(['space', 'B', 'plus', 'D', 'space'], 'bl', 'br'),
-  ]);
+  // eqn.addForm('4', [
+  //   eqn.sub('Area', 'triangle'),
+  //   'equals',
+  //   half2, 'A__',
+  //   'space',
+  //   eqn.brac(['space', 'B', 'plus', 'D', 'space'], 'bl', 'br'),
+  // ]);
 
-  eqn.addForm('5', [
-    eqn.sub('Area', 'triangle'),
-    'equals',
-    eqn.sfrac('_1___', '_2___', 'v__', fracSize), 'A__',
-    eqn.strike(eqn.brac(['B', 'plus', 'D'], 'lb', 'rb'), 'x'),
-  ]);
+  // eqn.addForm('5', [
+  //   eqn.sub('Area', 'triangle'),
+  //   'equals',
+  //   eqn.sfrac('_1__', '_2__', 'v__', fracSize), 'A__',
+  //   eqn.strike(eqn.brac(['B', 'plus', 'D'], 'lb', 'rb'), 'x'),
+  // ]);
 
-  eqn.addForm('6', [
-    eqn.sub('Area', 'triangle'),
-    'equals',
-    eqn.sfrac('_1___', '_2___', 'v__', fracSize),
-    'A__',
-    'base',
-  ]);
+  // eqn.addForm('6', [
+  //   eqn.sub('Area', 'triangle'),
+  //   'equals',
+  //   eqn.sfrac('_1__', '_2__', 'v__', fracSize),
+  //   'A__',
+  //   'base',
+  // ]);
 
-  eqn.addForm('7', [
-    eqn.sub('Area', 'triangle'),
-    'equals',
-    eqn.sfrac('_1___', '_2___', 'v__', fracSize),
-    'height',
-    'base',
-  ]);
+  // eqn.addForm('7', [
+  //   eqn.sub('Area', 'triangle'),
+  //   'equals',
+  //   eqn.sfrac('_1__', '_2__', 'v__', fracSize),
+  //   'height',
+  //   'base',
+  // ]);
 
   eqn.collection.setPosition(layout.tri2AreaEqnPosition);
   eqn.setCurrentForm('0');

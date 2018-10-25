@@ -18,7 +18,7 @@ import HTMLObject from '../../DrawingObjects/HTMLObject/HTMLObject';
 // Equation is a class that takes a set of drawing objects (TextObjects,
 // DiagramElementPrimatives or DiagramElementCollections and HTML Objects
 // and arranges their size in a )
-
+let flag = false;
 class BlankElement {
   ascent: number;
   descent: number;
@@ -30,6 +30,10 @@ class BlankElement {
     this.ascent = ascent;
     this.descent = descent;
     this.height = this.ascent + this.descent;
+  }
+
+  _dup() {
+    return new BlankElement(this.width, this.ascent, this.descent);
   }
 }
 
@@ -83,12 +87,14 @@ class Element {
     }
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     let c;
     if (this.content instanceof BlankElement) {
       c = new Element(this.content);
-    } else {
+    } else if (namedCollection) {
       c = new Element(namedCollection[this.content.name]);
+    } else {
+      c = new Element(this.content);
     }
     c.ascent = this.ascent;
     c.descent = this.descent;
@@ -145,8 +151,9 @@ class Elements {
     this.height = 0;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     const contentCopy = [];
+    // console.log("Asdf", this.content, namedCollection)
     this.content.forEach(element => contentCopy.push(element._dup(namedCollection)));
     const c = new Elements(contentCopy);
     duplicateFromTo(this, c, ['content']);
@@ -168,6 +175,11 @@ class Elements {
         asc = element.ascent;
       }
     });
+    // if (this.content.length === 4 && this.content[0] instanceof Fraction) {
+    //   console.log(this.content)
+    //   console.log(this.content[0].location, this.content[1].location)
+    //   // debugger;
+    // }
     this.width = loc.x - location.x;
     this.ascent = asc;
     this.descent = des;
@@ -200,6 +212,14 @@ class Elements {
     });
   }
 }
+
+// class Phrase extends Elements {
+//   constructor(
+//     mainContent: Elements,
+//   ) {
+//     super([mainContent]);
+//   }
+// }
 
 class Fraction extends Elements {
   numerator: Elements;
@@ -238,9 +258,9 @@ class Fraction extends Elements {
     this.vinculumScale = new Point(1, 0.01);
   }
 
-  _dup(namedCollection: Object) {
-    let vinculum = null;
-    if (this.vinculum != null) {
+  _dup(namedCollection?: Object) {
+    let { vinculum } = this;
+    if (this.vinculum != null && namedCollection) {
       vinculum = namedCollection[this.vinculum.name];
     }
     const fractionCopy = new Fraction(
@@ -367,10 +387,12 @@ class StrikeOut extends Elements {
     this.strikeInSize = strikeInSize;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     let strike = null;
-    if (this.strike != null) {
+    if (this.strike != null && namedCollection) {
       strike = namedCollection[this.strike.name];
+    } else {
+      strike = this.strike;
     }
     const strikeOutCopy = new StrikeOut(
       this.mainContent._dup(namedCollection),
@@ -590,7 +612,7 @@ class Annotation extends Elements {
     }
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     // const annotationsCopy = [];
     const annotationsCopy =
       this.annotations.map(annotationInfo => new AnnotationInformation(
@@ -762,7 +784,7 @@ class SuperSub extends Elements {
     this.xBias = xBias;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     const superscript = this.superscript == null ? null : this.superscript._dup(namedCollection);
     const subscript = this.subscript == null ? null : this.subscript._dup(namedCollection);
     const superSubCopy = new SuperSub(
@@ -901,11 +923,17 @@ class Integral extends Elements {
     this.glyphScale = 1;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     const limitMin = this.limitMin == null ? null : this.limitMin._dup(namedCollection);
     const limitMax = this.limitMax == null ? null : this.limitMax._dup(namedCollection);
     const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
-    const glyph = this.integralGlyph == null ? null : namedCollection[this.integralGlyph.name];
+    let glyph = null;
+    if (this.integralGlyph != null && namedCollection) {
+      glyph = namedCollection[this.integralGlyph.name];
+    } else {
+      glyph = this.integralGlyph;
+    }
+    // const glyph = this.integralGlyph == null ? null : 
     const integralCopy = new Integral(
       limitMin,
       limitMax,
@@ -1114,10 +1142,16 @@ class Brackets extends Elements {
     this.space = space;
   }
 
-  _dup(namedCollection: Object) {
+  _dup(namedCollection?: Object) {
     const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
-    const lglyph = this.glyph == null ? null : namedCollection[this.glyph.name];
-    const rglyph = this.rightGlyph == null ? null : namedCollection[this.rightGlyph.name];
+    let lglyph = this.glyph;
+    if (this.glyph != null && namedCollection) {
+      lglyph = namedCollection[this.glyph.name];
+    }
+    let rglyph = this.rightGlyph;
+    if (this.rightGlyph != null && namedCollection) {
+      rglyph = namedCollection[this.rightGlyph.name];
+    }
     const bracketCopy = new Brackets(
       content,
       lglyph,
@@ -1347,6 +1381,28 @@ class Bar extends Brackets {
     }
     this.height = this.descent + this.ascent;
   }
+
+  // Must make a dup method in a subclass or else the parent class will
+  // create a new copy of its own class type
+  _dup(namedCollection?: Object) {
+    const content = this.mainContent == null ? null : this.mainContent._dup(namedCollection);
+    let { glyph } = this;
+    if (this.glyph != null && namedCollection) {
+      glyph = namedCollection[this.glyph.name];
+    }
+    const barCopy = new Bar(
+      content,
+      glyph,
+      this.space,
+      this.outsideSpace,
+      this.barPosition,
+    );
+    duplicateFromTo(
+      this, barCopy,
+      ['content', 'glyph'],
+    );
+    return barCopy;
+  }
 }
 
 export function getDiagramElement(
@@ -1478,7 +1534,11 @@ export function contentToElement(
 ): Elements {
   // If input is alread an Elements object, then return it
   if (content instanceof Elements) {
-    return content;
+    // const namedElements = {};
+    // collection.getAllElements().forEach((element) => {
+    //   namedElements[element.name] = element;
+    // });
+    return content._dup();
   }
 
   // If it is not an Elements object, then create an Element(s) array
@@ -1568,6 +1628,14 @@ export class EquationForm extends Elements {
     this.time = null;
   }
 
+  getNamedElements() {
+    const namedElements = {};
+    this.collection.getAllElements().forEach((element) => {
+      namedElements[element.name] = element;
+    });
+    return namedElements;
+  }
+
   _dup(collection: DiagramElementCollection = this.collection) {
     const equationCopy = new EquationForm(collection);
     // equationCopy.collection = collection;
@@ -1601,7 +1669,7 @@ export class EquationForm extends Elements {
           }
         }
       } else {
-        elements.push(c);
+        elements.push(c._dup());
       }
       this.content = elements;
     });
@@ -2368,6 +2436,10 @@ export class Equation {
     const form = this.form[name][formType];
     form.createEq(content);
     form.type = formType;
+    if (name === '2dd') {
+      flag = true;
+      console.log(form)
+    }
     form.arrange(
       this.formAlignment.scale,
       this.formAlignment.hAlign,
@@ -2708,6 +2780,10 @@ export class Equation {
       }
     }
     return null;
+  }
+
+  phrase(content: TypeEquationInput) {
+    return new Elements([contentToElement(this.collection, content)]);
   }
 
   frac(
