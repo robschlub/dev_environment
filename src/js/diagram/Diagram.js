@@ -44,6 +44,7 @@ import Bracket from './DiagramElements/Equation/Bracket';
 import Bar from './DiagramElements/Equation/Bar';
 import SquareBracket from './DiagramElements/Equation/SquareBracket';
 import Brace from './DiagramElements/Equation/Brace';
+import RoundedSquareBracket from './DiagramElements/Equation/RoundedSquareBracket';
 
 import {
   EquationForm, createEquationElements, Equation,
@@ -187,6 +188,18 @@ function equation(diagram: Diagram, high: boolean = false) {
     );
   }
 
+  function roundedSquareBracket(
+    side: 'left' | 'right' | 'top' | 'bottom',
+    numLines: number = 1,
+    color: Array<number> = [1, 1, 1, 1],
+  ) {
+    return new RoundedSquareBracket(
+      webgl, color, side, numLines,
+      new Transform('bar').scale(1, 1).translate(0, 0),
+      diagram.limits,
+    );
+  }
+
   function make(equationCollection: DiagramElementCollection) {
     return new EquationForm(equationCollection);
   }
@@ -226,6 +239,7 @@ function equation(diagram: Diagram, high: boolean = false) {
     bar,
     squareBracket,
     brace,
+    roundedSquareBracket,
   };
 }
 
