@@ -43,6 +43,8 @@ import Integral from './DiagramElements/Equation/Integral';
 import Bracket from './DiagramElements/Equation/Bracket';
 import Bar from './DiagramElements/Equation/Bar';
 import SquareBracket from './DiagramElements/Equation/SquareBracket';
+import CurlyBracket from './DiagramElements/Equation/CurlyBracket';
+
 import {
   EquationForm, createEquationElements, Equation,
 } from './DiagramElements/Equation/GLEquation';
@@ -173,6 +175,18 @@ function equation(diagram: Diagram, high: boolean = false) {
     );
   }
 
+  function curlyBracket(
+    side: 'left' | 'right' | 'top' | 'bottom',
+    numLines: number = 1,
+    color: Array<number> = [1, 1, 1, 1],
+  ) {
+    return new CurlyBracket(
+      webgl, color, side, numLines,
+      new Transform('bar').scale(1, 1).translate(0, 0),
+      diagram.limits,
+    );
+  }
+
   function make(equationCollection: DiagramElementCollection) {
     return new EquationForm(equationCollection);
   }
@@ -211,6 +225,7 @@ function equation(diagram: Diagram, high: boolean = false) {
     bracket,
     bar,
     squareBracket,
+    curlyBracket,
   };
 }
 
