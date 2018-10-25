@@ -575,7 +575,6 @@ export function addTri2AreaEquation(
   //   eqn.sub('Area__', '_2'),
   // ]);
 
-  console.log('here')
   const fracSize = 0.45;
   eqn.addForm('1', [
     eqn.sub('Area', 'triangle'),
@@ -584,7 +583,6 @@ export function addTri2AreaEquation(
     'plus',
     eqn.sub('Area__', '_2'),
   ], 'base', true, {}, 0);
-  console.log('there')
 
   eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
@@ -592,7 +590,7 @@ export function addTri2AreaEquation(
     eqn.sfrac('_1_', '_2_', 'v', fracSize), 'A', 'space', 'B',
     'plus',
     eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_', 'space', 'D',
-  ]);
+  ], 'base', true, {}, { fromPrev: 0, fromNext: null });
 
   eqn.addForm('3', [
     eqn.sub('Area', 'triangle'),
@@ -605,7 +603,7 @@ export function addTri2AreaEquation(
       'plus',
       eqn.strike([eqn.sfrac('_1__', '_2__', 'v_', fracSize), 'A_'], 'x_'), 'space', 'D', 'space',
     ], 'bl', 'br'),
-  ]);
+  ], 'base', true, {}, null);
 
   eqn.addForm('4', [
     eqn.sub('Area', 'triangle'),

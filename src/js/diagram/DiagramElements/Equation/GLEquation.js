@@ -1473,6 +1473,7 @@ export class EquationForm extends Elements {
   description: string | null;
   modifiers: Object;
   elementMods: Object;
+  time: number | null;
 
   constructor(collection: DiagramElementCollection) {
     super([]);
@@ -1807,9 +1808,7 @@ export class EquationForm extends Elements {
 
     // Find move time to use. If moveTime is null, then a velocity is used.
     let moveTimeToUse;
-    if (this.time) {
-      moveTimeToUse = this.time;
-    } else if (moveTime === null) {
+    if (moveTime === null) {
       moveTimeToUse = getMoveTime(
         toMoveStartTransforms, toMoveStopTransforms, 0,
         new Point(0.25, 0.25),      // 0.25 diagram space per s
@@ -1819,7 +1818,6 @@ export class EquationForm extends Elements {
     } else {
       moveTimeToUse = moveTime;
     }
-    console.log(moveTimeToUse, this.time)
     this.collection.setElementTransforms(currentTransforms);
     let cumTime = delay;
 
@@ -2196,7 +2194,7 @@ export class Equation {
     formType: string = 'base',
     addToSeries: boolean = true,
     elementMods: Object = {},
-    time: number | null = null,
+    time: number | null | { fromPrev?: number, fromNext?: number } = null,
     description: string = '',
     modifiers: Object = {},
   ) {
@@ -2211,10 +2209,13 @@ export class Equation {
     this.form[name][formType].modifiers = modifiers;
     this.form[name][formType].type = formType;
     this.form[name][formType].elementMods = {};
-    if (time !== 0 && time != null) {
-      console.log(time)
+    if (typeof time === 'number') {
+      this.form[name][formType].time = {
+        fromPrev: time, fromNext: time, fromAny: time,
+      };
+    } else {
+      this.form[name][formType].time = time;
     }
-    this.form[name][formType].time = time;
     Object.keys(elementMods).forEach((elementName) => {
       const diagramElement = getDiagramElement(this.collection, elementName);
       if (diagramElement) {
@@ -2328,7 +2329,7 @@ export class Equation {
       if (index < 0) {
         index = this.formSeries.length - 1;
       }
-      this.goToForm(index, time, delay);
+      this.goToForm(index, time, delay, 'fromNext');
     }
   }
 
@@ -2345,7 +2346,7 @@ export class Equation {
         index = 0;
         animate = false;
       }
-      this.goToForm(index, time, delay, animate);
+      this.goToForm(index, time, delay, 'fromPrev', animate);
     }
   }
 
@@ -2371,6 +2372,7 @@ export class Equation {
     name: ?string | number = null,
     time: number | null = null,
     delay: number = 0,
+    fromWhere: 'fromPrev' | 'fromNext' | 'fromAny' = 'fromAny',
     animate: boolean = true,
   ) {
     if (this.isAnimating) {
@@ -2428,7 +2430,11 @@ export class Equation {
           this.isAnimating = false;
         };
         if (animate) {
-          form.animatePositionsTo(delay, 0.4, null, 0.4, end);
+          let timeToUse = null;
+          if (form.time != null && form.time[fromWhere] != null) {
+            timeToUse = form.time[fromWhere];
+          }
+          form.animatePositionsTo(delay, 0.4, timeToUse, 0.4, end);
         } else {
           form.allHideShow(delay, 0.5, 0.2, 0.5, end);
         }
