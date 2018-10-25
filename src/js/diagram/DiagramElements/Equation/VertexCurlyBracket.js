@@ -6,14 +6,14 @@ import VertexBracket from './VertexBracket';
 
 class VertexCurlyBracket extends VertexBracket {
   getPoints() {
-    let w = 1 / 30;
+    let w = 1 / 15;
 
     if (this.numLines > 1) {
       w /= this.numLines;
     }
-
-    const r1 = w * 1.2;
-    const r2 = r1 * 2;
+    // w = 0.5;
+    const r1 = w * 2;
+    const r2 = r1 * 1.3;
     const p1 = new Point(r1, 0);
     const p2 = new Point(w + r2, 0);
     const r1Angle = Math.PI / 2 * 0.8;
@@ -26,8 +26,8 @@ class VertexCurlyBracket extends VertexBracket {
     const cornerR1Points = [];
     const cornerR2Points = [];
     for (let i = 0; i <= segments; i += 1) {
-      cornerR1Points.push(polarToRect(r1, Math.PI - r1Angle + i * r1AngleStep).add(p1));
-      cornerR2Points.push(polarToRect(r2, Math.PI - r2Angle + i * r2AngleStep).add(p2));
+      cornerR1Points.push(polarToRect(r1, Math.PI - i * r1AngleStep).add(p1));
+      cornerR2Points.push(polarToRect(r2, Math.PI - i * r2AngleStep).add(p2));
     }
 
     const width = polarToRect(r2, Math.PI - r2Angle).add(p2).x;
@@ -36,29 +36,29 @@ class VertexCurlyBracket extends VertexBracket {
     const top = new Transform()
       .translate(width - w, this.mainHeight - height);
     const bottom = new Transform()
-      .scale(0, -1)
+      .scale(1, -1)
       .translate(width - w, height);
-    const middleTop = new Transform()
-      .rotate(Math.PI)
-      .translate(-width, -height);
     const middleBottom = new Transform()
-      .rotate(Math.PI)
-      .translate(-width, -height)
-      .scale(0, -1);
+      .scale(-1, 1)
+      .translate(width, this.mainHeight / 2 - height);
+    const middleTop = new Transform()
+      .scale(-1, -1)
+      .translate(width, this.mainHeight / 2 + height);
 
 
     const leftPoints: Array<Point> = [
       ...cornerR1Points.map(p => p.transformBy(bottom.m())).reverse(),
-      ...cornerR2Points.map(p => p.transformBy(middleBottom.m())).reverse(),
+      ...cornerR2Points.map(p => p.transformBy(middleBottom.m())),
       ...cornerR2Points.map(p => p.transformBy(middleTop.m())).reverse(),
-      ...cornerR1Points.map(p => p.transformBy(top.m())).reverse(),
+      ...cornerR1Points.map(p => p.transformBy(top.m())),
     ];
     const rightPoints: Array<Point> = [
       ...cornerR2Points.map(p => p.transformBy(bottom.m())).reverse(),
-      ...cornerR1Points.map(p => p.transformBy(middleBottom.m())).reverse(),
+      ...cornerR1Points.map(p => p.transformBy(middleBottom.m())),
       ...cornerR1Points.map(p => p.transformBy(middleTop.m())).reverse(),
-      ...cornerR2Points.map(p => p.transformBy(top.m())).reverse(),
+      ...cornerR2Points.map(p => p.transformBy(top.m())),
     ];
+    console.log(cornerR1Points, leftPoints, rightPoints)
     return { leftPoints, rightPoints, maxX: width };
   }
 }
