@@ -18,7 +18,7 @@ class VertexBracket extends VertexObject {
 
   constructor(
     webgl: WebGLInstance,
-    side: 'left' | 'right',
+    side: 'left' | 'right' | 'top' | 'bottom',
     numLines: number = 1,
   ) {
     super(webgl);
@@ -49,9 +49,24 @@ class VertexBracket extends VertexObject {
       r2Points.push(polarToRect(r2, Math.PI - r2Angle + i * r2AngleStep).add(p2));
     }
 
-    if (side === 'right') {
+    if (side === 'right' || side === 'top' || side === 'bottom') {
+      let t;
       const maxX = polarToRect(r2, Math.PI - r2Angle).add(p2).x;
-      const t = new Transform().scale(-1, 1).translate(maxX, 0);
+      if (side === 'right') {
+        t = new Transform().scale(-1, 1).translate(maxX, 0);
+      }
+      if (side === 'top') {
+        t = new Transform()
+          .translate(0, -mainHeight / 2)
+          .rotate(-Math.PI / 2)
+          .translate(mainHeight / 2, maxX);
+      }
+      if (side === 'bottom') {
+        t = new Transform()
+          .translate(0, -mainHeight / 2)
+          .rotate(Math.PI / 2)
+          .translate(mainHeight / 2, -maxX);
+      }
       r1Points = r1Points.map(p => p.transformBy(t.m()));
       r2Points = r2Points.map(p => p.transformBy(t.m()));
     }

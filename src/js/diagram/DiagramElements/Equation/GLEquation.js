@@ -1085,9 +1085,8 @@ class Integral extends Elements {
     this.height = this.descent + this.ascent;
   }
 }
-// class TopBracket extends Elements {
-  
-// }
+
+
 class Brackets extends Elements {
   mainContent: Elements | null;
   leftGlyph: DiagramElementPrimative | DiagramElementCollection | null;
@@ -1264,6 +1263,108 @@ class Brackets extends Elements {
     this.height = this.descent + this.ascent;
     // console.log(this.leftGlyphLocation, this.rightGlyphLocation)
     // console.log(this.leftGlyph.getPosition()._dup(), this.rightGlyph.getPosition()._dup());
+  }
+}
+
+class TopBar extends Brackets {
+  calcSize(location: Point, scale: number) {
+    this.location = location._dup();
+    const loc = location._dup();
+    const contentBounds = new Bounds();
+    const leftGlyphBounds = new Bounds();
+
+    const { mainContent } = this;
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(loc._dup(), scale);
+      contentBounds.width = mainContent.width;
+      contentBounds.height = mainContent.ascent + mainContent.descent;
+      contentBounds.ascent = mainContent.ascent;
+      contentBounds.descent = mainContent.descent;
+    }
+
+    const widthScale = 1;
+    const width = contentBounds.width * widthScale;
+    const bracketScale = width;
+
+    const leftSymbolLocation = new Point(
+      loc.x - (widthScale - 1) * width / 2,
+      loc.y + contentBounds.ascent,
+    );
+    const { leftGlyph } = this;
+    if (leftGlyph instanceof DiagramElementPrimative) {
+      leftGlyph.show();
+      leftGlyph.transform.updateScale(
+        bracketScale,
+        bracketScale,
+      );
+      leftGlyph.transform.updateTranslation(
+        leftSymbolLocation.x,
+        leftSymbolLocation.y,
+      );
+      this.leftGlyphLocation = leftSymbolLocation;
+      this.glyphScale = bracketScale;
+      const bounds = leftGlyph.vertices
+        .getRelativeVertexSpaceBoundingRect();
+      leftGlyphBounds.width = bounds.width * bracketScale;
+      leftGlyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
+      leftGlyphBounds.ascent = (bounds.top) * bracketScale;
+      leftGlyphBounds.descent = (-bounds.bottom) * bracketScale;
+    }
+    this.width = contentBounds.width;
+    this.ascent = contentBounds.ascent + leftGlyphBounds.height;
+    this.descent = contentBounds.descent;
+    this.height = this.descent + this.ascent;
+  }
+}
+
+class BottomBar extends Brackets {
+  calcSize(location: Point, scale: number) {
+    this.location = location._dup();
+    const loc = location._dup();
+    const contentBounds = new Bounds();
+    const leftGlyphBounds = new Bounds();
+
+    const { mainContent } = this;
+    if (mainContent instanceof Elements) {
+      mainContent.calcSize(loc._dup(), scale);
+      contentBounds.width = mainContent.width;
+      contentBounds.height = mainContent.ascent + mainContent.descent;
+      contentBounds.ascent = mainContent.ascent;
+      contentBounds.descent = mainContent.descent;
+    }
+
+    const widthScale = 1;
+    const width = contentBounds.width * widthScale;
+    const bracketScale = width;
+
+    const leftSymbolLocation = new Point(
+      loc.x - (widthScale - 1) * width / 2,
+      loc.y - contentBounds.descent,
+    );
+    const { leftGlyph } = this;
+    if (leftGlyph instanceof DiagramElementPrimative) {
+      leftGlyph.show();
+      leftGlyph.transform.updateScale(
+        bracketScale,
+        bracketScale,
+      );
+      leftGlyph.transform.updateTranslation(
+        leftSymbolLocation.x,
+        leftSymbolLocation.y,
+      );
+      this.leftGlyphLocation = leftSymbolLocation;
+      this.glyphScale = bracketScale;
+      const bounds = leftGlyph.vertices
+        .getRelativeVertexSpaceBoundingRect();
+      leftGlyphBounds.width = bounds.width * bracketScale;
+      leftGlyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
+      leftGlyphBounds.ascent = (bounds.top) * bracketScale;
+      leftGlyphBounds.descent = (-bounds.bottom) * bracketScale;
+    }
+    this.width = contentBounds.width;
+    this.ascent = contentBounds.ascent + leftGlyphBounds.height;
+    this.descent = contentBounds.descent;
+    this.height = this.descent + this.ascent;
   }
 }
 
@@ -2736,6 +2837,26 @@ export class Equation {
       contentToElement(this.collection, content),
       getDiagramElement(this.collection, leftBracket),
       getDiagramElement(this.collection, rightBracket),
+    );
+  }
+
+  topBar(
+    content: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+  ) {
+    return new TopBar(
+      contentToElement(this.collection, content),
+      getDiagramElement(this.collection, bar),
+    );
+  }
+
+  bottomBar(
+    content: TypeEquationInput,
+    bar: DiagramElementPrimative | DiagramElementCollection | string,
+  ) {
+    return new BottomBar(
+      contentToElement(this.collection, content),
+      getDiagramElement(this.collection, bar),
     );
   }
 }
