@@ -531,11 +531,11 @@ export function addTri2AreaEquation(
       triangle: ['triangle', colLine],
       Area_: ['Area', colCon, null, null, null, null, 'italic'],
       Area__: ['Area', colCon1],
-      AB: ['AB', colCon],
+      AB: ['triangle AB', colCon],
       _1: ['1', colCon],
       _1_: ['1', colCon1],
       _1__: '1',
-      AC: ['AC', colCon1],
+      AC: ['triangle AC', colCon1],
       _2: ['2', colCon],
       _2_: ['2', colCon1],
       _2__: '2',
@@ -554,8 +554,8 @@ export function addTri2AreaEquation(
       v__: diagram.equation.vinculum(colText),
       bl: diagram.equation.bracket('left', 1, colText),
       br: diagram.equation.bracket('right', 1, colText),
-      bt: diagram.equation.brace('top', 2, strikeColor),
-      bt_: diagram.equation.brace('top', 2, strikeColor),
+      bt: diagram.equation.brace('top', 1.5, strikeColor),
+      bt_: diagram.equation.brace('top', 1.5, strikeColor),
       bt__: diagram.equation.brace('top', 1, strikeColor),
       base: 'base',
       height: ' height',
@@ -582,7 +582,7 @@ export function addTri2AreaEquation(
     eqn.sub('Area__', 'AC'),
   ]);
 
-  eqn.addForm('0a', [
+  eqn.addForm('1', [
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.topComment(

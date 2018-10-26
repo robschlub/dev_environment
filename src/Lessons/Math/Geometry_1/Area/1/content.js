@@ -48,6 +48,18 @@ class Content extends LessonContent {
     rect.eqns.rectEqn.changeDescription('7', 'Multiplying something by itself is the same as squaring it.', mods);
     rect.eqns.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
 
+
+    tri.eqns.tri2AreaEqn.changeDescription('0', 'Area of the triangle is the sum of the two smaller triangle areas.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('1', 'The smaller triangle areas are half the area of the rectangle they are in.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('2', 'The smaller triangle areas are half the area of the rectangles they are in.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('3', 'Prepare for factoring out common terms.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('4', 'Factor out common terms.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('5', 'Simplify the terms in the brackets.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('6', 'B and D sum to the base side length of the triangle.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('7', 'B and D sum to the base side length of the triangle.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('8', 'A is the height of the triangle.', mods);
+    tri.eqns.tri2AreaEqn.changeDescription('9', 'Area of a triangle is half the base times the height.', mods);
+
     let common = {
       setContent: [],
       setInfo: '',
