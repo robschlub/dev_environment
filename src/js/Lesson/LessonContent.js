@@ -7,6 +7,8 @@ import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../diagram/Element';
 import { setOnClicks, applyModifiers } from '../tools/htmlGenerator';
+// import type { TypeEquationNavigator } from '../'
+import { Equation } from '../diagram/DiagramElements/Equation/GLEquation';
 
 function initializeItemSelector(
   methodToExecute: Function,
@@ -770,6 +772,35 @@ class LessonContent {
       s[key] = section[key];
     });
     this.sections.push(s);
+  }
+
+  addEqnStep(
+    equationOrNavigator: { eqn: Equation } & Equation,
+    fromForm: string,
+    toForm: string,
+    ...sectionObjects: Array<Object>
+  ) {
+    const nav = equationOrNavigator;
+    let eqn = equationOrNavigator;
+    if (eqn.eqn) {
+      ({ eqn } = equationOrNavigator);
+    }
+    const eqnSection = {
+      transitionFromAny: (done) => {
+        nav.showForm(fromForm);
+        const nextForm = eqn.getForm(toForm);
+        if (nextForm != null && fromForm !== toForm) {
+          nextForm.animatePositionsTo(0, 0.5, null, 0.5, done);
+        } else {
+          done();
+        }
+      },
+      setSteadyState: () => {
+        nav.showForm(toForm);
+      },
+    };
+    const section = Object.assign({}, ...sectionObjects, eqnSection);
+    this.addSection(section);
   }
 }
 

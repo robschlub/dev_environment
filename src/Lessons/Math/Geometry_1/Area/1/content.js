@@ -659,42 +659,78 @@ class Content extends LessonContent {
       tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
       tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
-      // tri._labelAD, tri._labelAC,
     ];
     this.addSection(common, {});
-    this.addSection(common, {
-      title: '234qer',
-      setSteadyState: () => {
-        tri._tri2AreaEqn.showForm('0');
-      },
-    });
+    this.addEqnStep(tri._tri2AreaEqn, '0', '0', common);
+    this.addEqnStep(tri._tri2AreaEqn, '0', '1', common);
+    this.addEqnStep(tri._tri2AreaEqn, '1', '2', common);
 
-    common.setContent = ['The area of each smaller triangle is half the area of the rectangle it is in.'];
-    this.addSection(common, {
-      setSteadyState: () => {
-        tri.eqns.tri2AreaEqn.showForm('0');
-      },
-    });
-    this.addSection(common, {
-      setSteadyState: () => {
-        tri.eqns.tri2AreaEqn.showForm('1');
-      },
-    });
-    this.addSection(common, {
-      setSteadyState: () => {
-        tri.eqns.tri2AreaEqn.showForm('2');
-      },
-    });
-    this.addSection(common, {
-      setSteadyState: () => {
-        tri.eqns.tri2AreaEqn.showForm('3');
-      },
-    });
-    this.addSection(common, {
-      setSteadyState: () => {
-        tri.eqns.tri2AreaEqn.showForm('4');
-      },
-    });
+    common.setContent = ['We can rearrange the right hand side to separate the height |A|'];
+    this.addEqnStep(tri._tri2AreaEqn, '2', '2', common);
+    this.addEqnStep(tri._tri2AreaEqn, '2', '3', common);
+    this.addEqnStep(tri._tri2AreaEqn, '3', '4', common);
+    this.addEqnStep(tri._tri2AreaEqn, '4', '5', common);
+
+    common.setContent = ['Sides |B| and |D| form one side of the triangle. As it\'s the bottom side, we call it the |base|.'];
+    common.modifiers = {
+      B: highlight(colors.construction),
+      D: highlight(colors.construction1),
+    };
+    this.addEqnStep(tri._tri2AreaEqn, '5', '5', common);
+    this.addEqnStep(tri._tri2AreaEqn, '5', '6', common);
+    this.addEqnStep(tri._tri2AreaEqn, '6', '7', common);
+
+    common.setContent = ['Sides |A| is the same as the |height| of the triangle.'];
+    common.modifiers = {
+      A: highlight(colors.construction),
+    };
+    this.addEqnStep(tri._tri2AreaEqn, '7', '7', common);
+    this.addEqnStep(tri._tri2AreaEqn, '7', '8', common);
+    this.addEqnStep(tri._tri2AreaEqn, '8', '9', common);
+
+
+        // this.addSection(common, {
+    //   transitionFromPrev: (done) => {
+    //     tri._tri2AreaEqn.showForm('0');
+    //     tri.eqns.tri2AreaEqn.getForm('1')
+    //       .animatePositionsTo(0, 0.5, null, 0.5, done);
+    //   },
+    //   setSteadyState: () => {
+    //     tri._tri2AreaEqn.showForm('1');
+    //   },
+    // });
+    // this.addSection(common, {
+    //   transitionFromPrev: (done) => {
+    //     tri._tri2AreaEqn.showForm('1');
+    //     tri.eqns.tri2AreaEqn.getForm('2')
+    //       .animatePositionsTo(0, 0.5, null, 0.5, done);
+    //   },
+    //   setSteadyState: () => {
+    //     tri._tri2AreaEqn.showForm('2');
+    //   },
+    // });
+
+
+    // this.addSection(common, {
+    //   setSteadyState: () => {
+    //     tri.eqns.tri2AreaEqn.showForm('1');
+    //   },
+    // });
+    // this.addSection(common, {
+    //   setSteadyState: () => {
+    //     tri.eqns.tri2AreaEqn.showForm('2');
+    //   },
+    // });
+    // this.addSection(common, {
+    //   setSteadyState: () => {
+    //     tri.eqns.tri2AreaEqn.showForm('3');
+    //   },
+    // });
+    // this.addSection(common, {
+    //   setSteadyState: () => {
+    //     tri.eqns.tri2AreaEqn.showForm('4');
+    //   },
+    // });
   }
 }
 
