@@ -621,27 +621,6 @@ class Content extends LessonContent {
       ],
     });
 
-    // common.setContent = ['Sides |B| and |D| combine to be the |base| side of the triangle.'];
-    // common.modifiers = {
-    //   B: highlight(colors.construction),
-    //   D: highlight(colors.construction1),
-    // };
-    // this.addSection(common, {
-    //   show: [
-    //     tri._tri2,
-    //     tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-    //     tri._tri2Rect2, tri._sideTriRect2AH, tri._sideTriRect2D,
-    //   ],
-    // });
-    // this.addSection(common, {
-    //   show: [
-    //     tri._tri2,
-    //     tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-    //     tri._tri2Rect2, tri._sideTriRect2AH, tri._sideTriRect2D,
-    //     tri._sideTriRectBase,
-    //   ],
-    // });
-
     common.setContent = ['The |area of the triangle| is the |sum| of the areas of the |two smaller triangles|.'];
     common.modifiers = {
       A: highlight(colors.construction),
@@ -676,6 +655,13 @@ class Content extends LessonContent {
       B: highlight(colors.construction),
       D: highlight(colors.construction1),
     };
+    common.show = [
+      tri._tri2,
+      tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+      tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      tri._tri2Rect1Tri, tri._tri2Rect2Tri,
+      tri._sideTri2Base,
+    ];
     this.addEqnStep(tri._tri2AreaEqn, '5', '5', common);
     this.addEqnStep(tri._tri2AreaEqn, '5', '6', common);
     this.addEqnStep(tri._tri2AreaEqn, '6', '7', common);
@@ -684,53 +670,23 @@ class Content extends LessonContent {
     common.modifiers = {
       A: highlight(colors.construction),
     };
+    common.show = [
+      tri._tri2,
+      tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+      tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      tri._tri2Rect1Tri, tri._tri2Rect2Tri,
+      tri._sideTri2Base, tri._sideTri2Height,
+    ];
     this.addEqnStep(tri._tri2AreaEqn, '7', '7', common);
     this.addEqnStep(tri._tri2AreaEqn, '7', '8', common);
     this.addEqnStep(tri._tri2AreaEqn, '8', '9', common);
 
-
-        // this.addSection(common, {
-    //   transitionFromPrev: (done) => {
-    //     tri._tri2AreaEqn.showForm('0');
-    //     tri.eqns.tri2AreaEqn.getForm('1')
-    //       .animatePositionsTo(0, 0.5, null, 0.5, done);
-    //   },
-    //   setSteadyState: () => {
-    //     tri._tri2AreaEqn.showForm('1');
-    //   },
-    // });
-    // this.addSection(common, {
-    //   transitionFromPrev: (done) => {
-    //     tri._tri2AreaEqn.showForm('1');
-    //     tri.eqns.tri2AreaEqn.getForm('2')
-    //       .animatePositionsTo(0, 0.5, null, 0.5, done);
-    //   },
-    //   setSteadyState: () => {
-    //     tri._tri2AreaEqn.showForm('2');
-    //   },
-    // });
-
-
-    // this.addSection(common, {
-    //   setSteadyState: () => {
-    //     tri.eqns.tri2AreaEqn.showForm('1');
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setSteadyState: () => {
-    //     tri.eqns.tri2AreaEqn.showForm('2');
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setSteadyState: () => {
-    //     tri.eqns.tri2AreaEqn.showForm('3');
-    //   },
-    // });
-    // this.addSection(common, {
-    //   setSteadyState: () => {
-    //     tri.eqns.tri2AreaEqn.showForm('4');
-    //   },
-    // });
+    common.setContent = ['And so the area of a triangle is |half its base times its height|.'];
+    common.show = [
+      tri._tri2,
+      tri._sideTri2Base, tri._sideTri2Height,
+    ];
+    this.addEqnStep(tri._tri2AreaEqn, '9', '9', common);
   }
 }
 

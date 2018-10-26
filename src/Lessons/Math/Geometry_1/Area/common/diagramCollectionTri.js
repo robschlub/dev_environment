@@ -88,14 +88,19 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     name: string,
     label: string = '',
     color: Array<number> = this.layout.colors.line,
+    lineWithArrows: boolean = false,
   ) {
     const line = makeLine(
-      this.diagram, 'end', 1, 0.1, color, false,
+      this.diagram, 'end', 1, this.layout.tri2.width / 2, color, lineWithArrows,
     );
     line.setEndPoints(p1, p2);
     line.addLabel(
       label, this.layout.triLabelOffset, 'outside', '', 'horizontal',
     );
+    if (lineWithArrows) {
+      line.addArrow1(this.layout.tri2.width * 2, this.layout.tri2.width * 2);
+      line.addArrow2(this.layout.tri2.width * 2, this.layout.tri2.width * 2);
+    }
     this.add(`side${name}`, line);
   }
 
@@ -118,9 +123,18 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
 
     lay = this.layout.tri2;
     this.addSide(
-      lay.points[1].sub(0, this.layout.triLabelOffset * 2),
-      lay.points[0].sub(0, this.layout.triLabelOffset * 2),
-      'TriRectBase', 'B + D = base',
+      lay.points[1].sub(0, this.layout.triLabelOffset * 4),
+      lay.points[0].sub(0, this.layout.triLabelOffset * 4),
+      'Tri2Base', 'base', this.layout.colors.line,
+      true,
+    );
+
+    this.addSide(
+      new Point(lay.points[1].x, lay.points[2].y)
+        .add(this.layout.triLabelOffset * 4, 0),
+      lay.points[1].add(this.layout.triLabelOffset * 4, 0),
+      'Tri2Height', 'height', this.layout.colors.line,
+      true,
     );
   }
 

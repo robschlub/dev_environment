@@ -557,8 +557,8 @@ export function addTri2AreaEquation(
       bt: diagram.equation.brace('top', 1.5, strikeColor),
       bt_: diagram.equation.brace('top', 1.5, strikeColor),
       bt__: diagram.equation.brace('top', 1, strikeColor),
-      base: 'base',
-      height: ' height',
+      base: ['base', colLine],
+      height: [' height', colLine],
     },
     colText,
   );
