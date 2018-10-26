@@ -786,11 +786,15 @@ class LessonContent {
       ({ eqn } = equationOrNavigator);
     }
     const eqnSection = {
-      transitionFromAny: (done) => {
+      transitionFromPrev: (done) => {
+        const cleanup = () => {
+          eqn.collection.stop(true, true);
+          done();
+        };
         nav.showForm(fromForm);
         const nextForm = eqn.getForm(toForm);
         if (nextForm != null && fromForm !== toForm) {
-          nextForm.animatePositionsTo(0, 0.5, null, 0.5, done);
+          nextForm.animatePositionsTo(0, 0.5, null, 0.5, cleanup);
         } else {
           done();
         }
