@@ -720,7 +720,7 @@ export function addTri2AreaEquation(
   // addToCollection.add(name, eqn.collection);
   const nav = makeEquationNavigator(
     diagram, eqn, layout.tri2AreaEqnNavPosition,
-    'twoLine', 'arrows', 'center',
+    'equationOnly', 'arrows', 'center',
   );
   addToCollection.add(name, nav);
 }
