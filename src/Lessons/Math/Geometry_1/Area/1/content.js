@@ -617,7 +617,28 @@ class Content extends LessonContent {
       show: [
         tri._tri2,
         tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-        tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+        tri._tri2Rect2, tri._sideTriRect2AH, tri._sideTriRect2D,
+      ],
+    });
+
+    common.setContent = ['Sides |B| and |D| combine to be the |base| side of the triangle.'];
+    common.modifiers = {
+      B: highlight(colors.construction),
+      D: highlight(colors.construction1),
+    };
+    this.addSection(common, {
+      show: [
+        tri._tri2,
+        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2AH, tri._sideTriRect2D,
+      ],
+    });
+    this.addSection(common, {
+      show: [
+        tri._tri2,
+        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2AH, tri._sideTriRect2D,
+        tri._sideTriRectBase,
       ],
     });
 

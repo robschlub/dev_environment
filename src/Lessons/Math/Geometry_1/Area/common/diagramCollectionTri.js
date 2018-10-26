@@ -113,7 +113,15 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     col = this.layout.colors.construction1;
     this.addSide(lay.points[2], lay.points[1], 'TriRect2A', 'A', col);
     this.addSide(lay.points[2], lay.points[1], 'TriRect2C', 'C', col);
+    this.addSide(lay.points[2], lay.points[1], 'TriRect2AH', 'C = A = height', col);
     this.addSide(lay.points[1], lay.points[0], 'TriRect2D', 'D', col);
+
+    lay = this.layout.tri2;
+    this.addSide(
+      lay.points[1].sub(0, this.layout.triLabelOffset * 2),
+      lay.points[0].sub(0, this.layout.triLabelOffset * 2),
+      'TriRectBase', 'B + D = base',
+    );
   }
 
   addLabel(name: string, position: Point, color: Array<number>) {
