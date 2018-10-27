@@ -535,7 +535,7 @@ export function addTri2AreaEquation(
       _1: ['1', colCon],
       _1_: ['1', colCon1],
       _1__: '1',
-      AC: ['triangle AC', colCon1],
+      AD: ['triangle AD', colCon1],
       _2: ['2', colCon],
       _2_: ['2', colCon1],
       _2__: '2',
@@ -571,15 +571,19 @@ export function addTri2AreaEquation(
   const half = eqn.sfrac('_1', '_2', 'v', fracSize);
   const half1 = eqn.sfrac('_1_', '_2_', 'v_', fracSize);
   const half2 = eqn.sfrac('_1__', '_2__', 'v__', fracSize);
+  const largeHalf = eqn.sfrac('_1', '_2', 'v', fracSize * 1.7);
+  const largeHalf1 = eqn.sfrac('_1_', '_2_', 'v_', fracSize * 1.7);
   const areaAB = eqn.phrase([half, 'A', 'space', 'B']);
   const areaAD = eqn.phrase([half1, 'A_', 'space', 'D']);
+  const smallAreaAB = eqn.phrase([largeHalf, 'A', 'space', 'B']);
+  const smallAreaAD = eqn.phrase([largeHalf1, 'A_', 'space', 'D']);
 
   eqn.addForm('0', [
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.sub('Area_', 'AB'),
     'plus',
-    eqn.sub('Area__', 'AC'),
+    eqn.sub('Area__', 'AD'),
   ]);
 
   eqn.addForm('1', [
@@ -587,20 +591,20 @@ export function addTri2AreaEquation(
     'equals',
     eqn.topComment(
       eqn.sub('Area_', 'AB'),
-      areaAB,
+      smallAreaAB,
       'bt',
     ),
     'plus',
     eqn.topComment(
-      eqn.sub('Area__', 'AC'),
-      areaAD,
+      eqn.sub('Area__', 'AD'),
+      smallAreaAD,
       'bt_',
     ),
   ]);
 
   eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
-    'equals', 'space', 'space', 'space',
+    'equals', 'space_0.102',
     areaAB,
     'plus',
     areaAD,
@@ -617,7 +621,7 @@ export function addTri2AreaEquation(
       half1, 'A_', 'space', 'D',
     ], 'bl', 'br'),
   ], {
-    animationTime: { fromPrev: null, fromNext: null },
+    animationTime: { fromPrev: 0, fromNext: null },
   });
 
   eqn.addForm('4', [
@@ -667,14 +671,23 @@ export function addTri2AreaEquation(
     eqn.sub('Area', 'triangle'),
     'equals',
     half2,
-    'space', 'space',
-    eqn.topComment(['A__', 'space', 'space', 'space'], 'height', 'bt__'),
+    'space_0.06',
+    eqn.topComment(['A__', 'space_0.09'], 'height', 'bt__'),
     'mul',
     'base',
   ]);
 
   eqn.addForm('9', [
     eqn.sub('Area', 'triangle'),
+    'equals',
+    half2,
+    'height',
+    'mul',
+    'base',
+  ]);
+
+  eqn.addForm('10', [
+    'Area',
     'equals',
     half2,
     'height',

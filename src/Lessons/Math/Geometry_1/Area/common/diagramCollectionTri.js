@@ -125,7 +125,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.addSide(
       lay.points[1].sub(0, this.layout.triLabelOffset * 4),
       lay.points[0].sub(0, this.layout.triLabelOffset * 4),
-      'Tri2Base', 'base', this.layout.colors.line,
+      'Tri2Base', 'base', this.layout.colors.lineLabel,
       true,
     );
 
@@ -133,7 +133,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
       new Point(lay.points[1].x, lay.points[2].y)
         .add(this.layout.triLabelOffset * 4, 0),
       lay.points[1].add(this.layout.triLabelOffset * 4, 0),
-      'Tri2Height', 'height', this.layout.colors.line,
+      'Tri2Height', 'height', this.layout.colors.lineLabel,
       true,
     );
   }

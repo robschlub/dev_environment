@@ -1486,7 +1486,7 @@ export function createEquationElements(
   };
   Object.keys(elems).forEach((key) => {
     if (typeof elems[key] === 'string') {
-      if (key !== 'space') {
+      if (!key.startsWith('space')) {
         collection.add(key, makeElem(elems[key], null));
       }
     }
@@ -1547,8 +1547,9 @@ export function contentToElement(
   // If the content is a string, then find the corresponding
   // DiagramElement associated with the string
   if (typeof content === 'string') {
-    if (content === 'space') {
-      elementArray.push(new Element(new BlankElement()));
+    if (content.startsWith('space')) {
+      const spaceNum = parseFloat(content.replace(/space[_]*/, '')) || 0.03;
+      elementArray.push(new Element(new BlankElement(spaceNum)));
     } else {
       const diagramElement = getDiagramElement(collection, content);
       if (diagramElement) {
@@ -1560,8 +1561,9 @@ export function contentToElement(
   } else if (Array.isArray(content)) {
     content.forEach((c) => {
       if (typeof c === 'string') {
-        if (c === 'space') {
-          elementArray.push(new Element(new BlankElement()));
+        if (c.startsWith('space')) {
+          const spaceNum = parseFloat(c.replace(/space[_]*/, '')) || 0.03;
+          elementArray.push(new Element(new BlankElement(spaceNum)));
         } else {
           const diagramElement = getDiagramElement(collection, c);
           if (diagramElement) {
@@ -1659,8 +1661,9 @@ export class EquationForm extends Elements {
     const elements = [];
     content.forEach((c) => {
       if (typeof c === 'string') {
-        if (c === 'space') {
-          elements.push(new Element(new BlankElement()));
+        if (c.startsWith('space')) {
+          const spaceNum = parseFloat(c.replace(/space[_]*/, '')) || 0.03;
+          elements.push(new Element(new BlankElement(spaceNum)));
         } else {
           const diagramElement = getDiagramElement(this.collection, c);
           if (diagramElement) {
@@ -2032,7 +2035,6 @@ export class EquationForm extends Elements {
         }
       }
     });
-
     const t = this.collection.animateToTransforms(
       animateToTransforms,
       moveTimeToUse,

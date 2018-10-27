@@ -19,6 +19,7 @@ const cssColorNames = [
   'constructionFill',
   'construction1Fill',
   'fillLabel',
+  'lineLabel',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */

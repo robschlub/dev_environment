@@ -670,6 +670,7 @@ class Content extends LessonContent {
     common.modifiers = {
       A: highlight(colors.construction),
     };
+    this.addEqnStep(tri._tri2AreaEqn, '7', '7', common);
     common.show = [
       tri._tri2,
       tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
@@ -686,7 +687,9 @@ class Content extends LessonContent {
       tri._tri2,
       tri._sideTri2Base, tri._sideTri2Height,
     ];
-    this.addEqnStep(tri._tri2AreaEqn, '9', '9', common);
+    this.addEqnStep(tri._tri2AreaEqn, '9', '10', common, {
+      title: 'asdfdffd',
+    });
   }
 }
 

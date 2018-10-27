@@ -787,14 +787,22 @@ class LessonContent {
     }
     const eqnSection = {
       transitionFromPrev: (done) => {
+        let time = null;
+        nav.showForm(fromForm);
+        const nextForm = eqn.getForm(toForm);
+        if (nextForm != null && nextForm.time != null) {
+          if (typeof nextForm.time === 'number') {
+            ({ time } = nextForm);
+          } else if (nextForm.time.fromPrev != null) {
+            time = nextForm.time.fromPrev;
+          }
+        }
         const cleanup = () => {
           eqn.collection.stop(true, true);
           done();
         };
-        nav.showForm(fromForm);
-        const nextForm = eqn.getForm(toForm);
         if (nextForm != null && fromForm !== toForm) {
-          nextForm.animatePositionsTo(0, 0.5, null, 0.5, cleanup);
+          nextForm.animatePositionsTo(0, 0.5, time, 0.5, cleanup);
         } else {
           done();
         }
