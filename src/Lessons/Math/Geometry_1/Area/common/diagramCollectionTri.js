@@ -43,6 +43,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     const lay = this.layout[name];
     const line = this.diagram.shapes.polyLine(
       lay.points, true, lay.width, color, 'alwaysOn',
+      new Transform().rotate(0).translate(0, 0)
     );
     this.add(name, line);
   }

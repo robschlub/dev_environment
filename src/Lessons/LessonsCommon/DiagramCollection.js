@@ -30,7 +30,6 @@ function getTarget(
   } else if (typeof scenario === 'string') {
     scenarioObject = layout[element.name][scenario];
   } else {
-    console.log(scenario)
     scenarioObject = scenario;
   }
   if (scenarioObject.position != null) {
