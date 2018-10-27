@@ -203,7 +203,7 @@ export default function commonLessonLayout() {
     points: [
       new Point(-1.5, -0.75),
       new Point(1.5, -0.75),
-      new Point(0.3, 0.5),
+      new Point(0.3, 0.4),
     ],
     width,
   };

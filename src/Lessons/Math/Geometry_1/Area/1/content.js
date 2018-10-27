@@ -717,13 +717,26 @@ class Content extends LessonContent {
     common.setContent = ['Once again add two rectangles between different pairs of points and the base.'];
     this.addSection(common, {
       show: [
-        tri._tri3, tri._tri3Rect1, tri._tri3Rect1Tri,
+        tri._tri3,
+        tri._tri3Rect1, tri._tri3Rect1Tri,
         tri._sideTri3Rect1A, tri._sideTri3Rect1B,
+      ],
+    });
+    this.addSection(common, {
+      show: [
+        tri._tri3,
+        tri._tri3Rect2, tri._tri3Rect2Tri,
         tri._sideTri3Rect2A, tri._sideTri3Rect2C,
       ],
     });
     this.addSection(common, {
-      show: [tri._tri3, tri._tri3Rect1, tri._tri3Rect2, tri._tri3Rect2Tri],
+      show: [
+        tri._tri3,
+        tri._tri3Rect1, tri._tri3Rect1Tri,
+        tri._sideTri3Rect1A, tri._sideTri3Rect1B,
+        tri._tri3Rect2, tri._tri3Rect2Tri,
+        tri._sideTri3Rect2A, tri._sideTri3Rect2C,
+      ],
     });
 
     common.setContent = ['In this case, the |triangle_area| is the area of the |AC| triangle minus the area of the |AB| triangle.'];
