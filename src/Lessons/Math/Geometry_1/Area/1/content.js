@@ -691,6 +691,24 @@ class Content extends LessonContent {
     this.addEqnStep(tri._tri2AreaEqn, '9', '10', common, {
       title: 'asdfdffd',
     });
+
+    common.show = [
+      tri._tri2,
+    ];
+    this.addSection(common, {
+      title: '243',
+      setContent: ['This works for |any triangle|, no matter which side you call the |base|.'],
+    });
+
+    common.setContent = ['For example, if this triangle were rotated and we used a different side as base.'];
+    this.addSection(common, {
+    });
+    this.addSection(common, {
+      transitionFromPrev: (done) => {
+        console.log('here')
+        tri.moveToScenario(tri._tri2, layout.tri3Scenario, 1, done, 0);
+      },
+    });
   }
 }
 

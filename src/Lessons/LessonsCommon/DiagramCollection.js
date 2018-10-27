@@ -30,6 +30,7 @@ function getTarget(
   } else if (typeof scenario === 'string') {
     scenarioObject = layout[element.name][scenario];
   } else {
+    console.log(scenario)
     scenarioObject = scenario;
   }
   if (scenarioObject.position != null) {
@@ -112,7 +113,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   moveToScenario(
     element: DiagramElement,
     scenario: TypeScenario = null,
-    animationTime: ?number = null,
+    animationTimeOrVelocity: ?number = null,    // null uses velocity
     callback: ?() => void = null,
     rotDirection: -1 | 1 | 0 | 2 = 0,
   ) {
@@ -120,10 +121,10 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     const target = getTarget(element, scenario, this.layout);
     let time = 1;
     const estimatedTime = this.getTimeToMoveToScenario(element, scenario, rotDirection);
-    if (animationTime == null) {
+    if (animationTimeOrVelocity == null) {
       time = estimatedTime;
     } else {
-      time = animationTime;
+      time = animationTimeOrVelocity;
     }
     if (time > 0 && estimatedTime !== 0) {
       element.animateTo(target, time, 0, rotDirection, callback);

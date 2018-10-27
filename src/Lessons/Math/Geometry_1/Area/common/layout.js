@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../../../../js/diagram/tools/g2';
+import { Point, Line } from '../../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -202,10 +202,11 @@ export default function commonLessonLayout() {
     points: [
       new Point(-1.5, -0.75),
       new Point(1.5, -0.75),
-      new Point(0.6, 0.75),
+      new Point(0.5, 0.5),
     ],
     width,
   };
+
   layout.tri2Rect1 = {
     points: [
       layout.tri2.points[0],
@@ -252,5 +253,12 @@ export default function commonLessonLayout() {
   };
   layout.tri2AreaEqnPosition = new Point(-0.5, 1.2);
   layout.tri2AreaEqnNavPosition = new Point(0, -0.25);
+
+  const side = new Line(layout.tri2.points[1], layout.tri2.points[2]);
+  const angle = side.angle();
+  layout.tri3Scenario = {
+    rotation: -angle,
+    position: new Point(-1, -0.1),
+  };
   return layout;
 }
