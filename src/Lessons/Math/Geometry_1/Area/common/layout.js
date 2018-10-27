@@ -1,6 +1,6 @@
 // @flow
 
-import { Point, Line } from '../../../../../js/diagram/tools/g2';
+import { Point, Line, Transform } from '../../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -202,7 +202,7 @@ export default function commonLessonLayout() {
     points: [
       new Point(-1.5, -0.75),
       new Point(1.5, -0.75),
-      new Point(0.5, 0.5),
+      new Point(0.3, 0.5),
     ],
     width,
   };
@@ -231,12 +231,12 @@ export default function commonLessonLayout() {
       layout.tri2Rect1.points[1],
       layout.tri2Rect1.points[2],
     ],
-    midPoint: new Point(
-      (layout.tri2Rect1.points[1].x - layout.tri2Rect1.points[0].x) / 1.5
-        + layout.tri2Rect1.points[0].x,
-      (layout.tri2Rect1.points[2].y - layout.tri2Rect1.points[0].y) / 3
-        + layout.tri2Rect1.points[0].y,
-    ),
+    // midPoint: new Point(
+    //   (layout.tri2Rect1.points[1].x - layout.tri2Rect1.points[0].x) / 1.5
+    //     + layout.tri2Rect1.points[0].x,
+    //   (layout.tri2Rect1.points[2].y - layout.tri2Rect1.points[0].y) / 3
+    //     + layout.tri2Rect1.points[0].y,
+    // ),
   };
   layout.tri2Rect2Tri = {
     points: [
@@ -244,21 +244,70 @@ export default function commonLessonLayout() {
       layout.tri2Rect2.points[1],
       layout.tri2Rect2.points[3],
     ],
-    midPoint: new Point(
-      (layout.tri2Rect2.points[1].x - layout.tri2Rect2.points[0].x)  / 3
-        + layout.tri2Rect2.points[0].x,
-      (layout.tri2Rect2.points[3].y - layout.tri2Rect2.points[0].y) / 3
-        + layout.tri2Rect2.points[0].y,
-    ),
+    // midPoint: new Point(
+    //   (layout.tri2Rect2.points[1].x - layout.tri2Rect2.points[0].x)  / 3
+    //     + layout.tri2Rect2.points[0].x,
+    //   (layout.tri2Rect2.points[3].y - layout.tri2Rect2.points[0].y) / 3
+    //     + layout.tri2Rect2.points[0].y,
+    // ),
   };
   layout.tri2AreaEqnPosition = new Point(-0.5, 1.2);
   layout.tri2AreaEqnNavPosition = new Point(0, -0.25);
 
-  const side = new Line(layout.tri2.points[1], layout.tri2.points[2]);
-  const angle = side.angle();
+  // //////////////////////////////////////////////////////
+  //     Rotated triangle area
+  // //////////////////////////////////////////////////////
+  const side = new Line(layout.tri2.points[0], layout.tri2.points[2]);
+  const angle = side.angle() - Math.PI;
+  layout.tri2Scenario = {
+    rotation: 0,
+    position: new Point(0, 0),
+  };
   layout.tri3Scenario = {
     rotation: -angle,
-    position: new Point(-1, -0.1),
+    position: new Point(0.4, -0.5),
   };
+  const t = new Transform()
+    .rotate(layout.tri3Scenario.rotation)
+    .translate(layout.tri3Scenario.position);
+
+  layout.tri3 = {
+    points: layout.tri2.points.map(p => p.transformBy(t.m())),
+    width,
+  };
+  const delta = width / 3 / 2;
+  layout.tri3Rect1 = {
+    points: [
+      new Point(layout.tri3.points[2].x, layout.tri3.points[1].y - delta),
+      layout.tri3.points[1].add(delta, -delta),
+      new Point(layout.tri3.points[1].x + delta, layout.tri3.points[2].y + delta),
+      layout.tri3.points[2].add(0, delta),
+    ],
+    width: width / 3,
+  };
+  layout.tri3Rect2 = {
+    points: [
+      layout.tri3.points[0].add(0, -delta),
+      new Point(layout.tri3.points[1].x - delta, layout.tri3.points[0].y  - delta),
+      layout.tri3.points[1].add(-delta, delta),
+      new Point(layout.tri3.points[0].x, layout.tri3.points[1].y + delta),
+    ],
+    width: width / 3,
+  };
+  layout.tri3Rect1Tri = {
+    points: [
+      layout.tri3Rect1.points[3],
+      layout.tri3Rect1.points[1],
+      layout.tri3Rect1.points[2],
+    ],
+  };
+  layout.tri3Rect2Tri = {
+    points: [
+      layout.tri3Rect2.points[0],
+      layout.tri3Rect2.points[1],
+      layout.tri3Rect2.points[2],
+    ],
+  };
+
   return layout;
 }

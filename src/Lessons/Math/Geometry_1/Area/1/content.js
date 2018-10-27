@@ -502,6 +502,9 @@ class Content extends LessonContent {
     // ******************************************************************
     // common.show = [tri];
     common.showOnly = [tri];
+    common.setEnterState = () => {
+      tri.setScenario(tri._tri2, layout.tri2Scenario);
+    };
     this.addSection(common, {
       title: 'Triangle',
       setContent: [
@@ -701,13 +704,26 @@ class Content extends LessonContent {
     });
 
     common.setContent = ['For example, if this triangle were rotated and we used a different side as base.'];
-    this.addSection(common, {
-    });
+    this.addSection(common, {});
     this.addSection(common, {
       transitionFromPrev: (done) => {
-        console.log('here')
         tri.moveToScenario(tri._tri2, layout.tri3Scenario, 1, done, 0);
       },
+      setSteadyState: () => {
+        tri.setScenario(tri._tri2, layout.tri3Scenario);
+      },
+    });
+
+    common.setContent = ['Once again add two rectangles between different pairs of points and the base.'];
+    this.addSection(common, {
+      show: [
+        tri._tri3, tri._tri3Rect1, tri._tri3Rect1Tri,
+        tri._sideTri3Rect1A, tri._sideTri3Rect1B,
+        tri._sideTri3Rect2A, tri._sideTri3Rect2C,
+      ],
+    });
+    this.addSection(common, {
+      show: [tri._tri3, tri._tri3Rect1, tri._tri3Rect2, tri._tri3Rect2Tri],
     });
   }
 }

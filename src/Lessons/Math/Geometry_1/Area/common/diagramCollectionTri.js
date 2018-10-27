@@ -43,7 +43,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     const lay = this.layout[name];
     const line = this.diagram.shapes.polyLine(
       lay.points, true, lay.width, color, 'alwaysOn',
-      new Transform().rotate(0).translate(0, 0)
+      new Transform().rotate(0).translate(0, 0),
     );
     this.add(name, line);
   }
@@ -62,13 +62,18 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
   addTriangles() {
     this.addPolyLine('triIntro');
     this.addPolyLine('tri2');
+    this.addPolyLine('tri3');
     this.addPolyLine('tri2Rect1', this.layout.colors.construction);
     this.addPolyLine('tri2Rect2', this.layout.colors.construction1);
+    this.addPolyLine('tri3Rect1', this.layout.colors.construction);
+    this.addPolyLine('tri3Rect2', this.layout.colors.construction1);
   }
 
   addTriangleFills() {
     this.addFan('tri2Rect1Tri', this.layout.colors.constructionFill);
     this.addFan('tri2Rect2Tri', this.layout.colors.construction1Fill);
+    this.addFan('tri3Rect1Tri', this.layout.colors.constructionFill);
+    this.addFan('tri3Rect2Tri', this.layout.colors.construction1Fill);
   }
 
   addRect() {
@@ -137,20 +142,30 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
       'Tri2Height', 'height', this.layout.colors.lineLabel,
       true,
     );
+
+    lay = this.layout.tri3Rect1;
+    col = this.layout.colors.construction;
+    this.addSide(lay.points[2], lay.points[1], 'Tri3Rect1A', 'A', col);
+    this.addSide(lay.points[3], lay.points[2], 'Tri3Rect1B', 'B', col);
+
+    lay = this.layout.tri3Rect2;
+    col = this.layout.colors.construction1;
+    this.addSide(lay.points[3], lay.points[0], 'Tri3Rect2A', 'A', col);
+    this.addSide(lay.points[2], lay.points[3], 'Tri3Rect2C', 'C', col);
   }
 
-  addLabel(name: string, position: Point, color: Array<number>) {
-    const label = new makeEquationLabel(this.diagram, name, color);
-    label.eqn.collection.setPosition(position);
-    this.add(`label${name}`, label.eqn.collection);
-  }
+  // addLabel(name: string, position: Point, color: Array<number>) {
+  //   const label = new makeEquationLabel(this.diagram, name, color);
+  //   label.eqn.collection.setPosition(position);
+  //   this.add(`label${name}`, label.eqn.collection);
+  // }
 
-  addShapeLabels() {
-    const colAD = this.layout.colors.construction;
-    const colAC = this.layout.colors.construction1;
-    this.addLabel('AD', this.layout.tri2Rect1Tri.midPoint, colAD);
-    this.addLabel('AC', this.layout.tri2Rect2Tri.midPoint, colAC);
-  }
+  // addShapeLabels() {
+  //   const colAD = this.layout.colors.construction;
+  //   const colAC = this.layout.colors.construction1;
+  //   this.addLabel('AD', this.layout.tri2Rect1Tri.midPoint, colAD);
+  //   this.addLabel('AC', this.layout.tri2Rect2Tri.midPoint, colAC);
+  // }
 
   addEqns() {
     addTriRectEquation(
@@ -172,7 +187,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.addTriangles();
     this.addRect();
     this.addSideLabels();
-    this.addShapeLabels();
+    // this.addShapeLabels();
     this.addEqns();
     this.setPosition(this.layout.triPosition);
     this.hasTouchableElements = true;
