@@ -725,6 +725,19 @@ class Content extends LessonContent {
     this.addSection(common, {
       show: [tri._tri3, tri._tri3Rect1, tri._tri3Rect2, tri._tri3Rect2Tri],
     });
+
+    common.setContent = ['In this case, the |triangle_area| is the area of the |AC| triangle minus the area of the |AB| triangle.'];
+    common.modifiers = {
+      triangle_area: click(tri.showTri3Fill, [tri, tri._tri3Tri], colors.line),
+      AC: click(tri.showTri3Fill, [tri, tri._tri3Rect2Tri], colors.construction1),
+      AB: click(tri.showTri3Fill, [tri, tri._tri3Rect1Tri], colors.construction),
+    };
+    this.addSection(common, {
+      show: [tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
+        tri._sideTri3Rect1A, tri._sideTri3Rect1B,
+        tri._sideTri3Rect2A, tri._sideTri3Rect2C,
+      ],
+    });
   }
 }
 

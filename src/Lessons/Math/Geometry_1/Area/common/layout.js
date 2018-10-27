@@ -18,6 +18,7 @@ const cssColorNames = [
   'construction1',
   'constructionFill',
   'construction1Fill',
+  'construction2Fill',
   'fillLabel',
   'lineLabel',
 ];
@@ -293,6 +294,9 @@ export default function commonLessonLayout() {
       new Point(layout.tri3.points[0].x, layout.tri3.points[1].y + delta),
     ],
     width: width / 3,
+  };
+  layout.tri3Tri = {
+    points: layout.tri3.points,
   };
   layout.tri3Rect1Tri = {
     points: [

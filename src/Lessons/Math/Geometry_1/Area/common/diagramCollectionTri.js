@@ -74,6 +74,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.addFan('tri2Rect2Tri', this.layout.colors.construction1Fill);
     this.addFan('tri3Rect1Tri', this.layout.colors.constructionFill);
     this.addFan('tri3Rect2Tri', this.layout.colors.construction1Fill);
+    this.addFan('tri3Tri', this.layout.colors.construction2Fill);
   }
 
   addRect() {
@@ -86,6 +87,14 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
       [lay.points[1], lay.points[3]], false, lay.width, this.layout.colors.line,
     );
     this.add('rectSplit', split);
+  }
+
+  showTri3Fill(element: DiagramElementPrimative) {
+    this._tri3Rect1Tri.hide();
+    this._tri3Rect2Tri.hide();
+    this._tri3Tri.hide();
+    element.show();
+    this.diagram.animateNextFrame();
   }
 
   addSide(
