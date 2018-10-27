@@ -644,7 +644,7 @@ class Content extends LessonContent {
     this.addEqnStep(tri._tri2AreaEqn, '0', '1', common);
     this.addEqnStep(tri._tri2AreaEqn, '1', '2', common);
 
-    common.setContent = ['We can rearrange the right hand side to separate the height |A|'];
+    common.setContent = ['We can rearrange the right hand side to separate the height |A|.'];
     this.addEqnStep(tri._tri2AreaEqn, '2', '2', common);
     this.addEqnStep(tri._tri2AreaEqn, '2', '3', common);
     this.addEqnStep(tri._tri2AreaEqn, '3', '4', common);
@@ -655,6 +655,7 @@ class Content extends LessonContent {
       B: highlight(colors.construction),
       D: highlight(colors.construction1),
     };
+    this.addEqnStep(tri._tri2AreaEqn, '5', '5', common);
     common.show = [
       tri._tri2,
       tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
