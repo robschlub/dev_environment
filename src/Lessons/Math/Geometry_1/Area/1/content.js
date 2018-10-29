@@ -714,7 +714,7 @@ class Content extends LessonContent {
       },
     });
 
-    common.setContent = ['Once again add two rectangles between different pairs of points and the base.'];
+    common.setContent = ['Once again draw two rectangles between different pairs of points and the base.'];
     this.addSection(common, {
       show: [
         tri._tri3,
