@@ -730,18 +730,19 @@ export function addTri3AreaEquation(
       _1: ['1', colCon],
       _1_: ['1', colCon1],
       _1__: '1',
-      AD: ['triangle AD', colCon1],
+      AC: ['triangle AC', colCon1],
       _2: ['2', colCon],
       _2_: ['2', colCon1],
       _2__: '2',
       equals: ' = ',
       mul: ' \u00D7 ',
-      plus: '  \u002B  ',
+      // plus: '  \u002B  ',
+      minus: '  \u2212  ',
       A: [' A', colCon],
       A_: [' A', colCon1],
       A__: [' A', colText],
       B: ['B', colCon],
-      D: ['D', colCon1],
+      C: ['C', colCon1],
       x: diagram.equation.xStrike(strikeColor),
       x_: diagram.equation.xStrike(strikeColor),
       v: diagram.equation.vinculum(colCon),
@@ -769,30 +770,30 @@ export function addTri3AreaEquation(
   const largeHalf = eqn.sfrac('_1', '_2', 'v', fracSize * 1.7);
   const largeHalf1 = eqn.sfrac('_1_', '_2_', 'v_', fracSize * 1.7);
   const areaAB = eqn.phrase([half, 'A', 'space', 'B']);
-  const areaAD = eqn.phrase([half1, 'A_', 'space', 'D']);
+  const areaAC = eqn.phrase([half1, 'A_', 'space', 'C']);
   const smallAreaAB = eqn.phrase([largeHalf, 'A', 'space', 'B']);
-  const smallAreaAD = eqn.phrase([largeHalf1, 'A_', 'space', 'D']);
+  const smallAreaAC = eqn.phrase([largeHalf1, 'A_', 'space', 'C']);
 
   eqn.addForm('0', [
     eqn.sub('Area', 'triangle'),
     'equals',
+    eqn.sub('Area__', 'AC'),
+    'minus',
     eqn.sub('Area_', 'AB'),
-    'plus',
-    eqn.sub('Area__', 'AD'),
   ]);
 
   eqn.addForm('1', [
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.topComment(
-      eqn.sub('Area_', 'AB'),
-      smallAreaAB,
+      eqn.sub('Area__', 'AC'),
+      smallAreaAC,
       'bt',
     ),
-    'plus',
+    'minus',
     eqn.topComment(
-      eqn.sub('Area__', 'AD'),
-      smallAreaAD,
+      eqn.sub('Area_', 'AB'),
+      smallAreaAB,
       'bt_',
     ),
   ]);
@@ -800,9 +801,9 @@ export function addTri3AreaEquation(
   eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
     'equals', 'space_0.102',
+    areaAC,
+    'minus',
     areaAB,
-    'plus',
-    areaAD,
   ], {
     animationTime: { fromPrev: null, fromNext: null },
   });
@@ -811,9 +812,9 @@ export function addTri3AreaEquation(
     eqn.sub('Area', 'triangle'),
     'equals',
     eqn.brac([
+      areaAC,
+      'minus',
       areaAB,
-      'plus',
-      half1, 'A_', 'space', 'D',
     ], 'bl', 'br'),
   ], {
     animationTime: { fromPrev: 0, fromNext: null },
@@ -824,9 +825,9 @@ export function addTri3AreaEquation(
     'equals',
     half2, 'A__', 'mul',
     eqn.brac([
-      eqn.strike([half, 'A'], 'x'), 'space', 'B',
-      'plus',
-      eqn.strike([half1, 'A_'], 'x_'), 'space', 'D',
+      eqn.strike([half1, 'A_'], 'x'), 'space', 'C',
+      'minus',
+      eqn.strike([half, 'A'], 'x_'), 'space', 'B',
     ], 'bl', 'br'),
   ]);
 
@@ -835,9 +836,9 @@ export function addTri3AreaEquation(
     'equals',
     half2, 'A__', 'mul',
     eqn.brac([
+      'C',
+      'minus',
       'B',
-      'plus',
-      'D',
     ], 'bl', 'br'),
   ]);
 
@@ -847,9 +848,9 @@ export function addTri3AreaEquation(
     half2, 'A__', 'mul',
     eqn.topComment(
       eqn.brac([
+        'C',
+        'minus',
         'B',
-        'plus',
-        'D',
       ], 'bl', 'br'),
       'base', 'bt',
     ),
@@ -890,7 +891,7 @@ export function addTri3AreaEquation(
     'base',
   ]);
 
-  eqn.collection.setPosition(layout.tri2AreaEqnPosition);
+  eqn.collection.setPosition(layout.tri3AreaEqnPosition);
   eqn.setCurrentForm('0');
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;

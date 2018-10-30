@@ -266,7 +266,7 @@ export default function commonLessonLayout() {
   };
   layout.tri3Scenario = {
     rotation: -angle,
-    position: new Point(0.4, -0.5),
+    position: new Point(-0.3, -0.75),
   };
   const t = new Transform()
     .rotate(layout.tri3Scenario.rotation)
@@ -313,5 +313,7 @@ export default function commonLessonLayout() {
     ],
   };
 
+  layout.tri3AreaEqnPosition = new Point(-0.5, 1.2);
+  layout.tri3AreaEqnNavPosition = new Point(0, -0.25);
   return layout;
 }

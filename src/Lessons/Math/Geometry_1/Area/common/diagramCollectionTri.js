@@ -12,7 +12,7 @@ import { makeLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
 import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
 import {
-  addTriRectEquation, addTri2AreaEquation,
+  addTriRectEquation, addTri2AreaEquation, addTri3AreaEquation,
 } from './equations';
 // import type {
 //   TypeRectEquationNav,
@@ -160,7 +160,7 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     lay = this.layout.tri3Rect2;
     col = this.layout.colors.construction1;
     this.addSide(lay.points[3], lay.points[0], 'Tri3Rect2A', 'A', col);
-    this.addSide(lay.points[2], lay.points[3], 'Tri3Rect2C', 'C', col);
+    this.addSide(lay.points[3], lay.points[2], 'Tri3Rect2C', 'C', col);
   }
 
   // addLabel(name: string, position: Point, color: Array<number>) {
@@ -182,6 +182,9 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     );
     addTri2AreaEquation(
       this.diagram, this.layout, this, 'tri2AreaEqn',
+    );
+    addTri3AreaEquation(
+      this.diagram, this.layout, this, 'tri3AreaEqn',
     );
   }
 

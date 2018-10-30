@@ -718,13 +718,6 @@ class Content extends LessonContent {
     this.addSection(common, {
       show: [
         tri._tri3,
-        tri._tri3Rect1, tri._tri3Rect1Tri,
-        tri._sideTri3Rect1A, tri._sideTri3Rect1B,
-      ],
-    });
-    this.addSection(common, {
-      show: [
-        tri._tri3,
         tri._tri3Rect2, tri._tri3Rect2Tri,
         tri._sideTri3Rect2A, tri._sideTri3Rect2C,
       ],
@@ -750,6 +743,10 @@ class Content extends LessonContent {
         tri._sideTri3Rect1A, tri._sideTri3Rect1B,
         tri._sideTri3Rect2A, tri._sideTri3Rect2C,
       ],
+      setSteadyState: () => {
+        tri._tri3AreaEqn.show();
+        tri._tri3AreaEqn.showForm('0');
+      }
     });
   }
 }
