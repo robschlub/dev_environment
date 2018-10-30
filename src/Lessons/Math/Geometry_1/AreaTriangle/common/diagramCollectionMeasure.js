@@ -254,20 +254,6 @@ export default class MeasureCollection extends CommonDiagramCollection {
     this.add('squareGrid', squares);
   }
 
-  addMediumGrid() {
-    const lay = this.layout.squareGrid;
-    const grid = this.layout.mediumGrid;
-    const squares = this.diagram.shapes.grid(
-      new Rect(
-        -grid.length / 2, -grid.height / 2,
-        grid.length, grid.height,
-      ),
-      lay.sideLength, lay.sideLength, 2, this.layout.colors.grid,
-      new Transform().translate(lay.mediumPosition),
-    );
-    this.add('mediumGrid', squares);
-  }
-
   addSmallSquareGrid() {
     const lay = this.layout.squareGrid;
     const grid = this.layout.smallGrid;
@@ -317,13 +303,6 @@ export default class MeasureCollection extends CommonDiagramCollection {
     );
     triLabel.setPosition(tri.position.add(new Point(0, tri.labelOffset)));
     this.add('triLabel', triLabel);
-    const triLabelMeters = this.diagram.shapes.htmlText(
-      `Area = ${roundNum(triArea, 1)} m<sup>2</sup>`,
-      generateUniqueId('id_label1m'),
-      'lesson__area_intro__area_label', new Point(0, 0), 'middle', 'center',
-    );
-    triLabelMeters.setPosition(tri.position.add(new Point(0, tri.labelOffset)));
-    this.add('triLabelMeters', triLabelMeters);
 
     const square = this.layout.squareA;
     const squareArea = square.sideLength ** 2 / unitArea;
@@ -334,13 +313,6 @@ export default class MeasureCollection extends CommonDiagramCollection {
     );
     squareLabel.setPosition(square.position.add(new Point(0, square.labelOffset)));
     this.add('squareLabel', squareLabel);
-    const squareLabelMeters = this.diagram.shapes.htmlText(
-      `Area = ${roundNum(squareArea, 1)} m<sup>2</sup>`,
-      generateUniqueId('id_label2Meters'),
-      'lesson__area_intro__area_label', new Point(0, 0), 'middle', 'center',
-    );
-    squareLabelMeters.setPosition(square.position.add(new Point(0, square.labelOffset)));
-    this.add('squareLabelMeters', squareLabelMeters);
 
     const circle = this.layout.circleA;
     const circleArea = circle.radius ** 2 * Math.PI / unitArea;
@@ -351,13 +323,6 @@ export default class MeasureCollection extends CommonDiagramCollection {
     );
     circleLabel.setPosition(circle.position.add(new Point(0, circle.labelOffset)));
     this.add('circleLabel', circleLabel);
-    const circleLabelMeters = this.diagram.shapes.htmlText(
-      `Area = ${roundNum(circleArea, 1)} m<sup>2</sup>`,
-      generateUniqueId('id_label3Meters'),
-      'lesson__area_intro__area_label', new Point(0, 0), 'middle', 'center',
-    );
-    circleLabelMeters.setPosition(circle.position.add(new Point(0, circle.labelOffset)));
-    this.add('circleLabelMeters', circleLabelMeters);
   }
 
   constructor(
@@ -371,7 +336,6 @@ export default class MeasureCollection extends CommonDiagramCollection {
     this.addGenericGrid();
     this.addSmallGenericGrid();
     this.addSquareGrid();
-    this.addMediumGrid();
     this.addSmallSquareGrid();
     this.addCrosses();
 

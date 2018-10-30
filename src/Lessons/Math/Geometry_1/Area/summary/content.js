@@ -3,7 +3,7 @@ import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
 import {
-  click,
+  click, centerV, highlight, highlightWord,
 } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';
@@ -28,9 +28,43 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
+    const meas = diag._measure;
+    const rect = diag._rect;
 
-    this.addSection({
+
+    let common = {
+      setContent: [],
+      setInfo: '',
+      modifiers: {},
+      infoModifiers: {},
+      setEnterState: () => {},
+      showOnly: [],
+      show: [],
+      hide: [],
+      setSteadyState: () => {},
+      setLeaveState: () => {},
+    };
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // Measure
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    common.showOnly = [meas];
+    this.addSection(common, {
+      title: 'Area',
+      setContent: [
+        '|Area| is the |amount of space| a shape takes up and is measured in |squared length| units, such as |square meters| normally written as |m<sup>2</sup>|.',
+        `${new Definition('Area', 'Mid 16<sup>th</sup> century', ['area', 'space allocated for a specific purpose'], 'Latin', ['area', 'vacant piece of level ground']).html('id_lesson__area_definition', 'lesson__definition_low')}`,
+      ],
+      show: [
+        meas._mediumGrid, meas._squareA,
+        meas._circleA, meas._triangleA,
+        meas._triLabelMeters, meas._squareLabelMeters, meas._circleLabelMeters,
+      ],
     });
+
   }
 }
 
