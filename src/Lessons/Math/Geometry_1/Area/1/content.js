@@ -718,36 +718,63 @@ class Content extends LessonContent {
     this.addSection(common, {
       show: [
         tri._tri3,
-        tri._tri3Rect2, tri._tri3Rect2Tri,
+        tri._tri3Rect2,
         tri._sideTri3Rect2A, tri._sideTri3Rect2C,
       ],
     });
-    this.addSection(common, {
-      show: [
-        tri._tri3,
-        tri._tri3Rect1, tri._tri3Rect1Tri,
+    common.show = [
+      tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
         tri._sideTri3Rect1A, tri._sideTri3Rect1B,
-        tri._tri3Rect2, tri._tri3Rect2Tri,
         tri._sideTri3Rect2A, tri._sideTri3Rect2C,
-      ],
-    });
+      ]
+    this.addSection(common);
 
     common.setContent = ['In this case, the |triangle_area| is the area of the |AC| triangle minus the area of the |AB| triangle.'];
     common.modifiers = {
       triangle_area: click(tri.showTri3Fill, [tri, tri._tri3Tri], colors.line),
       AC: click(tri.showTri3Fill, [tri, tri._tri3Rect2Tri], colors.construction1),
       AB: click(tri.showTri3Fill, [tri, tri._tri3Rect1Tri], colors.construction),
+      C: highlight(colors.construction1),
+      B: highlight(colors.construction),
     };
-    this.addSection(common, {
-      show: [tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
-        tri._sideTri3Rect1A, tri._sideTri3Rect1B,
-        tri._sideTri3Rect2A, tri._sideTri3Rect2C,
-      ],
-      setSteadyState: () => {
-        tri._tri3AreaEqn.show();
-        tri._tri3AreaEqn.showForm('0');
-      }
-    });
+    this.addSection(common);
+    this.addEqnStep(tri._tri3AreaEqn, '0', '0', common);
+
+    common.setContent = ['Similar to before, we can work through similar steps to find the area.']
+    this.addEqnStep(tri._tri3AreaEqn, '0', '0', common);
+    this.addEqnStep(tri._tri3AreaEqn, '0', '1', common);
+    this.addEqnStep(tri._tri3AreaEqn, '1', '2', common);
+    this.addEqnStep(tri._tri3AreaEqn, '2', '3', common);
+    this.addEqnStep(tri._tri3AreaEqn, '3', '4', common);
+    this.addEqnStep(tri._tri3AreaEqn, '4', '5', common);
+
+    common.setContent = ['In this case, the |base| is length |C| minus length |B|'];
+    common.show = [
+      tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
+      tri._sideTri3Rect1A, tri._sideTri3Rect1B,
+      tri._sideTri3Rect2A, tri._sideTri3Rect2C,
+      tri._sideTri3Base,
+    ];
+    this.addEqnStep(tri._tri3AreaEqn, '5', '5', common);
+    this.addEqnStep(tri._tri3AreaEqn, '5', '6', common);
+    this.addEqnStep(tri._tri3AreaEqn, '6', '7', common);
+    
+    common.setContent = ['And |A| is |height|.'];
+    common.show = [
+      tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
+      tri._sideTri3Rect1A, tri._sideTri3Rect1B,
+      tri._sideTri3Rect2A, tri._sideTri3Rect2C,
+      tri._sideTri3Base, tri._sideTri3Height
+    ];
+    this.addEqnStep(tri._tri3AreaEqn, '7', '8', common);
+    this.addEqnStep(tri._tri3AreaEqn, '8', '9', common);
+
+    common.setContent = ['And so the area of a triangle is |half its base times its height|.'];
+    common.show = [
+      tri._tri3,
+      tri._sideTri3Base, tri._sideTri3Height
+    ];
+    this.addEqnStep(tri._tri3AreaEqn, '9', '10', common);
   }
 }
 
