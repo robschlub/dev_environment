@@ -27,12 +27,12 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    //const quiz = diag._quiz;
+    const quiz = diag._quiz;
 
-    this.addSection({
-      title: 'Enter_title_here',
-      setContent: ['Enter_content_here'],
-    });
+    // this.addSection({
+    //   title: 'Enter_title_here',
+    //   setContent: ['Enter_content_here'],
+    // });
     this.addSection({
       title: 'Enter_title_here',
       setContent: [
@@ -52,10 +52,13 @@ class Content extends LessonContent {
       setEnterState: () => {
       },
       showOnly: [
+        quiz, 
       ],
       show: [
+        quiz._rect,
       ],
       setSteadyState: () => {
+        console.log(quiz)
       },
     });
   }

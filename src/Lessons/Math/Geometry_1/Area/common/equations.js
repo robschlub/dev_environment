@@ -366,20 +366,17 @@ export function addSquareRectEquation(
   // const strikeColor = layout.colors.diagram.disabledDark;
   // const colUnit = layout.colors.unit;
   const colText = layout.colors.diagram.text.base;
-  const colLine = layout.colors.line;
+  // const colLine = layout.colors.line;
   eqn.createElements(
     {
-      Area: ['Area', colLine],
+      Area: 'Area',
       equals: ' = ',
-      equals_: ' = ',
       length: 'length ',
-      Width: ['Width', colLine],
-      Height: ['Height', colLine],
+      Width: 'Width',
+      Height: 'Height',
       mul: '  \u00D7  ',
-      A: ['A', colLine],
-      A_: ['A', colLine],
-      A__: ['A', colLine],
-      _2: ['2', colLine],
+      A: 'A',
+      _2: '2',
     },
     colText,
   );
@@ -397,11 +394,7 @@ export function addSquareRectEquation(
   eqn.addForm('1', [
     'Area',
     'equals',
-    // 'A',
-    // 'mul',
-    // 'A_',
-    // 'equals_',
-    eqn.sup('A__', '_2'),
+    eqn.sup('A', '_2'),
   ]);
 
   eqn.collection.setPosition(layout.rectNumSquaresEqnPosition);

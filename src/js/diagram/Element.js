@@ -1042,57 +1042,57 @@ class DiagramElement {
       deltaTime,
       this.move.freely.zeroVelocityThreshold,
     );
-
-    for (let i = 0; i < next.t.order.length; i += 1) {
-      const t = next.t.order[i];
-      const min = this.move.minTransform.order[i];
-      const max = this.move.maxTransform.order[i];
-      const v = next.v.order[i];
-      if ((t instanceof Translation
-          && v instanceof Translation
-          && max instanceof Translation
-          && min instanceof Translation)
-        || (t instanceof Scale
-          && v instanceof Scale
-          && max instanceof Scale
-          && min instanceof Scale)
-      ) {
-        let onLine = true;
-        if (this.move.limitLine != null) {
-          onLine = t.shaddowIsOnLine(this.move.limitLine, 4);
-        }
-        if (min.x >= t.x || max.x <= t.x || !onLine) {
-          if (this.move.bounce) {
-            v.x = -v.x * 0.5;
-          } else {
-            v.x = 0;
+    if (deltaTime > 0) {
+      for (let i = 0; i < next.t.order.length; i += 1) {
+        const t = next.t.order[i];
+        const min = this.move.minTransform.order[i];
+        const max = this.move.maxTransform.order[i];
+        const v = next.v.order[i];
+        if ((t instanceof Translation
+            && v instanceof Translation
+            && max instanceof Translation
+            && min instanceof Translation)
+          || (t instanceof Scale
+            && v instanceof Scale
+            && max instanceof Scale
+            && min instanceof Scale)
+        ) {
+          let onLine = true;
+          if (this.move.limitLine != null) {
+            onLine = t.shaddowIsOnLine(this.move.limitLine, 4);
           }
-        }
-        if (min.y >= t.y || max.y <= t.y || !onLine) {
-          if (this.move.bounce) {
-            v.y = -v.y * 0.5;
-          } else {
-            v.y = 0;
+          if (min.x >= t.x || max.x <= t.x || !onLine) {
+            if (this.move.bounce) {
+              v.x = -v.x * 0.5;
+            } else {
+              v.x = 0;
+            }
           }
+          if (min.y >= t.y || max.y <= t.y || !onLine) {
+            if (this.move.bounce) {
+              v.y = -v.y * 0.5;
+            } else {
+              v.y = 0;
+            }
+          }
+          next.v.order[i] = v;
         }
-        next.v.order[i] = v;
+        if (t instanceof Rotation
+            && v instanceof Rotation
+            && max instanceof Rotation
+            && min instanceof Rotation) {
+          if (min.r >= t.r || max.r <= t.r) {
+            if (this.move.bounce) {
+              v.r = -v.r * 0.5;
+            } else {
+              v.r = 0;
+            }
+          }
+          next.v.order[i] = v;
+        }
       }
-      if (t instanceof Rotation
-          && v instanceof Rotation
-          && max instanceof Rotation
-          && min instanceof Rotation) {
-        if (min.r >= t.r || max.r <= t.r) {
-          if (this.move.bounce) {
-            v.r = -v.r * 0.5;
-          } else {
-            v.r = 0;
-          }
-        }
-        next.v.order[i] = v;
-      }
+      next.v.calcMatrix();
     }
-    next.v.calcMatrix();
-
     return {
       velocity: next.v,
       transform: next.t,
