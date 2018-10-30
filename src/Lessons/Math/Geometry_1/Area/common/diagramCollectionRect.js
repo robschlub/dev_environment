@@ -11,7 +11,7 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 import {
   addRectEqn, addSimpleRectEquation, addNumSquaresRectEquation,
-  addSimpleUnitsRectEquation, addSquareEquation,
+  addSimpleUnitsRectEquation, addSquareEquation, addSquareRectEquation,
 } from './equations';
 import type {
   TypeRectEquationNav,
@@ -158,6 +158,9 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     );
     addSquareEquation(
       this.diagram, this.layout, this, 'squareEqn',
+    );
+    addSquareRectEquation(
+      this.diagram, this.layout, this, 'squareRectEqn',
     );
   }
 

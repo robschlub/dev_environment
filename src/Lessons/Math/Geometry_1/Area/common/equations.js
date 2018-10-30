@@ -356,6 +356,62 @@ export function addNumSquaresRectEquation(
   addToCollection.add(name, nav);
 }
 
+export function addSquareRectEquation(
+  diagram: Diagram,
+  layout: Object,
+  addToCollection: DiagramElementCollection,
+  name: string,
+) {
+  const eqn = diagram.equation.makeEqn();
+  // const strikeColor = layout.colors.diagram.disabledDark;
+  // const colUnit = layout.colors.unit;
+  const colText = layout.colors.diagram.text.base;
+  const colLine = layout.colors.line;
+  eqn.createElements(
+    {
+      Area: ['Area', colLine],
+      equals: ' = ',
+      equals_: ' = ',
+      length: 'length ',
+      Width: ['Width', colLine],
+      Height: ['Height', colLine],
+      mul: '  \u00D7  ',
+      A: ['A', colLine],
+      A_: ['A', colLine],
+      A__: ['A', colLine],
+      _2: ['2', colLine],
+    },
+    colText,
+  );
+  eqn.formAlignment.hAlign = 'center';
+  eqn.formAlignment.vAlign = 'baseline';
+  eqn.formAlignment.scale = 1.0;
+  eqn.addForm('0', [
+    'Area',
+    'equals',
+    'Width',
+    'mul',
+    'Height',
+  ]);
+
+  eqn.addForm('1', [
+    'Area',
+    'equals',
+    // 'A',
+    // 'mul',
+    // 'A_',
+    // 'equals_',
+    eqn.sup('A__', '_2'),
+  ]);
+
+  eqn.collection.setPosition(layout.rectNumSquaresEqnPosition);
+  eqn.setCurrentForm('0');
+
+  // eslint-disable-next-line no-param-reassign
+  addToCollection.eqns[name] = eqn;
+  addToCollection.add(name, eqn.collection);
+}
+
 
 export type TypeSimpleUnitsEquationCollection = {
   _Area: DiagramElementPrimative,
