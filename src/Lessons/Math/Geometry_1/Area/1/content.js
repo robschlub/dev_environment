@@ -584,13 +584,13 @@ class Content extends LessonContent {
       setContent: ['Start with any triangle.'],
     });
 
-    common.setContent = ['Draw a |rectangle| with the two |left| most points of the triangle and label its sides.'];
+    common.setContent = ['Draw a |rectangle| with the triangle\'s |top| point, and |left bottom| point and label its side lengths.'];
     this.addSection(common, {});
     this.addSection(common, {
       show: [tri._tri2, tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B],
     });
 
-    common.setContent = ['Draw a |second rectangle| with the two |right| most points of the triangle and label its sides.'];
+    common.setContent = ['Draw a |second rectangle| with the triangle\'s |top| point and |right bottom| point and label its side lengths.'];
     this.addSection(common, {
       show: [
         tri._tri2, tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
@@ -670,7 +670,7 @@ class Content extends LessonContent {
     this.addEqnStep(tri._tri2AreaEqn, '5', '6', common);
     this.addEqnStep(tri._tri2AreaEqn, '6', '7', common);
 
-    common.setContent = ['Sides |A| is the same as the |height| of the triangle.'];
+    common.setContent = ['Side |A| is the same as the |height| of the triangle.'];
     common.modifiers = {
       A: highlight(colors.construction),
     };
@@ -703,7 +703,7 @@ class Content extends LessonContent {
       setContent: ['This works for |any triangle|, no matter which side you call the |base|.'],
     });
 
-    common.setContent = ['For example, if this triangle were rotated and we used a different side as base.'];
+    common.setContent = ['For example, if this triangle were rotated and we used a |different side| as base.'];
     this.addSection(common, {});
     this.addSection(common, {
       transitionFromPrev: (done) => {
@@ -714,7 +714,7 @@ class Content extends LessonContent {
       },
     });
 
-    common.setContent = ['Once again draw two rectangles between different pairs of points and the base.'];
+    common.setContent = ['Once again draw |two rectangles| between the |top| point and the |two bottom| points.'];
     this.addSection(common, {
       show: [
         tri._tri3,
@@ -740,7 +740,7 @@ class Content extends LessonContent {
     this.addSection(common);
     this.addEqnStep(tri._tri3AreaEqn, '0', '0', common);
 
-    common.setContent = ['Similar to before, we can work through similar steps to find the area.']
+    common.setContent = ['We can now work through similar steps to before to find the area.']
     this.addEqnStep(tri._tri3AreaEqn, '0', '0', common);
     this.addEqnStep(tri._tri3AreaEqn, '0', '1', common);
     this.addEqnStep(tri._tri3AreaEqn, '1', '2', common);
