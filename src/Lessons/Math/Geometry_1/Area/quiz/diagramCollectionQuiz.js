@@ -34,41 +34,74 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
       line.setEndPoints(p1, p2);
       line.addLabel(label, lay.labelOffset, 'outside', '', 'horizontal');
       line.setMovable(true);
+      line.setTransformCallback = this.updateRectangle.bind(this);
       this.add(`side${name}`, line);
       return line;
     };
     const w = lay.width / 2;
-    const base = addSide(lay.points[0].add(0, w), lay.points[3].add(0, w));
+    const bottom = addSide(lay.points[0].add(0, w), lay.points[3].add(0, w));
     const left = addSide(lay.points[0].add(w, 0), lay.points[1].add(w, 0));
     const right = addSide(lay.points[3].sub(w, 0), lay.points[2].sub(w, 0));
     const top = addSide(lay.points[1].sub(0, w), lay.points[2].sub(0, w));
 
     const rect = this.diagram.shapes.collection();
     rect.hasTouchableElements = true;
-    rect.add('base', base);
+    rect.add('bottom', bottom);
     rect.add('left', left);
     rect.add('right', right);
     rect.add('top', top);
     this.add('rect', rect);
-    this.updateSideTransforms();
+    this.updateRectangle();
   }
 
-  udpateSideTransform(side: TypeLine, orientation: 'x' | 'y') {
-    const p = side.getPosition();
+  // udpateSideTransform(side: TypeLine, orientation: 'x' | 'y') {
+  //   const p = side.getPosition();
+  //   const { limits } = this.layout.adjustableRect;
+  //   if (orientation === 'y') {
+  //     side.move.minTransform.updateTranslation(limits.left, p.y);
+  //     side.move.maxTransform.updateTranslation(limits.right, p.y);
+  //   } else {
+  //     side.move.minTransform.updateTranslation(p.x, limits.bottom);
+  //     side.move.maxTransform.updateTranslation(p.x, limits.top);
+  //   }
+  // }
+  // updateSideTransforms() {
+  //   this.udpateSideTransform(this._rect._base, 'x');
+  //   this.udpateSideTransform(this._rect._top, 'x');
+  //   this.udpateSideTransform(this._rect._left, 'y');
+  //   this.udpateSideTransform(this._rect._right, 'y');
+  // }
+
+  updateRectangle() {
     const { limits } = this.layout.adjustableRect;
-    if (orientation === 'y') {
-      side.move.minTransform.updateTranslation(limits.left, p.y);
-      side.move.maxTransform.updateTranslation(limits.right, p.y);
-    } else {
-      side.move.minTransform.updateTranslation(p.x, limits.bottom);
-      side.move.maxTransform.updateTranslation(p.x, limits.top);
-    }
-  }
-  updateSideTransforms() {
-    this.udpateSideTransform(this._rect._base, 'x');
-    this.udpateSideTransform(this._rect._top, 'x');
-    this.udpateSideTransform(this._rect._left, 'y');
-    this.udpateSideTransform(this._rect._right, 'y');
+    const { minSide } = this.layout.adjustableRect;
+    const w = this.layout.adjustableRect.width / 2;
+
+    const left = this._rect._left.getPosition().x;
+    const right = this._rect._right.getPosition().x;
+    const top = this._rect._top.getPosition().y;
+    const bottom = this._rect._bottom.getPosition().y;
+
+    this._rect._bottom.transform.updateTranslation(left - w, bottom);
+    this._rect._left.transform.updateTranslation(left, bottom);
+    this._rect._right.transform.updateTranslation(right, bottom);
+    this._rect._top.transform.updateTranslation(left, top);
+
+    this._rect._bottom.transform.updateScale(right - left + w * 2, 1);
+    this._rect._top.transform.updateScale(right - left + w, 1);
+    this._rect._left.transform.updateScale(top - bottom + w, 1);
+    this._rect._right.transform.updateScale(top - bottom + w, 1);
+
+    this._rect._bottom.move.minTransform.updateTranslation(left, limits.bottom);
+    this._rect._bottom.move.maxTransform.updateTranslation(left, top - minSide);
+
+    this._rect._top.move.minTransform.updateTranslation(left, bottom + minSide);
+    this._rect._top.move.maxTransform.updateTranslation(left, limits.top);
+
+    this._rect._left.move.minTransform.updateTranslation(limits.left, bottom);
+    this._rect._left.move.maxTransform.updateTranslation(right - minSide, bottom);
+    this._rect._right.move.minTransform.updateTranslation(left + minSide, bottom);
+    this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
   }
 
   constructor(

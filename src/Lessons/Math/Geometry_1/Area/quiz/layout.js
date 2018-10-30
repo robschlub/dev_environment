@@ -19,6 +19,7 @@ export default function lessonLayout() {
     ],
     width: 0.03,
     limits: new Rect(-2, -1.5, 4, 2),
+    minSide: 0.1,
   }
   return layout;
 }
