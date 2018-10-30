@@ -37,7 +37,6 @@ class Content extends LessonContent {
     const mods = {
       m: highlight(colors.unit),
     };
-    // rect.eqns.rectEqn.changeDescription('0', 'Area is 6 rows of 10 squares', mods);
     rect.eqns.rectEqn.changeDescription('0', 'Rectangle area is product of width and height.', mods);
     rect.eqns.rectEqn.changeDescription('1', 'Expand both 6|m| and 10|m| as 6|m| is the same as saying 6 lots of 1|m|.', mods);
     rect.eqns.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
@@ -49,16 +48,16 @@ class Content extends LessonContent {
     rect.eqns.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
 
 
-    tri.eqns.tri2AreaEqn.changeDescription('0', 'Area of the triangle is the sum of the two smaller triangle areas.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('1', 'The smaller triangle areas are half the area of the rectangle they are in.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('2', 'The smaller triangle areas are half the area of the rectangles they are in.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('3', 'Prepare for factoring out common terms.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('4', 'Factor out common terms.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('5', 'Simplify the terms in the brackets.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('6', 'B and D sum to the base side length of the triangle.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('7', 'B and D sum to the base side length of the triangle.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('8', 'A is the height of the triangle.', mods);
-    tri.eqns.tri2AreaEqn.changeDescription('9', 'Area of a triangle is half the base times the height.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('0', 'Area of the triangle is the sum of the two smaller triangle areas.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('1', 'The smaller triangle areas are half the area of the rectangle they are in.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('2', 'The smaller triangle areas are half the area of the rectangles they are in.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('3', 'Prepare for factoring out common terms.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('4', 'Factor out common terms.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('5', 'Simplify the terms in the brackets.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('6', 'B and D sum to the base side length of the triangle.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('7', 'B and D sum to the base side length of the triangle.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('8', 'A is the height of the triangle.', mods);
+    // tri.eqns.tri2AreaEqn.changeDescription('9', 'Area of a triangle is half the base times the height.', mods);
 
     let common = {
       setContent: [],
@@ -738,15 +737,15 @@ class Content extends LessonContent {
       B: highlight(colors.construction),
     };
     this.addSection(common);
-    this.addEqnStep(tri._tri3AreaEqn, '0', '0', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '0', '0', common);
 
     common.setContent = ['We can now work through similar steps to before to find the area.']
-    this.addEqnStep(tri._tri3AreaEqn, '0', '0', common);
-    this.addEqnStep(tri._tri3AreaEqn, '0', '1', common);
-    this.addEqnStep(tri._tri3AreaEqn, '1', '2', common);
-    this.addEqnStep(tri._tri3AreaEqn, '2', '3', common);
-    this.addEqnStep(tri._tri3AreaEqn, '3', '4', common);
-    this.addEqnStep(tri._tri3AreaEqn, '4', '5', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '0', '0', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '0', '1', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '1', '2', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '2', '3', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '3', '4', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '4', '5', common);
 
     common.setContent = ['In this case, the |base| is length |C| minus length |B|'];
     common.show = [
@@ -755,9 +754,9 @@ class Content extends LessonContent {
       tri._sideTri3Rect2A, tri._sideTri3Rect2C,
       tri._sideTri3Base,
     ];
-    this.addEqnStep(tri._tri3AreaEqn, '5', '5', common);
-    this.addEqnStep(tri._tri3AreaEqn, '5', '6', common);
-    this.addEqnStep(tri._tri3AreaEqn, '6', '7', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '5', '5', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '5', '6', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '6', '7', common);
     
     common.setContent = ['And |A| is |height|.'];
     common.show = [
@@ -766,15 +765,15 @@ class Content extends LessonContent {
       tri._sideTri3Rect2A, tri._sideTri3Rect2C,
       tri._sideTri3Base, tri._sideTri3Height
     ];
-    this.addEqnStep(tri._tri3AreaEqn, '7', '8', common);
-    this.addEqnStep(tri._tri3AreaEqn, '8', '9', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '7', '8', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '8', '9', common);
 
     common.setContent = ['And so the area of a triangle is |half its base times its height|.'];
     common.show = [
       tri._tri3,
       tri._sideTri3Base, tri._sideTri3Height
     ];
-    this.addEqnStep(tri._tri3AreaEqn, '9', '10', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '9', '10', common);
   }
 }
 

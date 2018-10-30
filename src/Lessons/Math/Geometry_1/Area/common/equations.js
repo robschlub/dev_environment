@@ -896,9 +896,10 @@ export function addTri3AreaEquation(
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;
   // addToCollection.add(name, eqn.collection);
-  const nav = makeEquationNavigator(
-    diagram, eqn, layout.tri2AreaEqnNavPosition,
-    'equationOnly', 'arrows', 'center',
-  );
-  addToCollection.add(name, nav);
+  // const nav = makeEquationNavigator(
+  //   diagram, eqn, layout.tri2AreaEqnNavPosition,
+  //   'equationOnly', 'arrows', 'center',
+  // );
+  addToCollection.add(name, eqn.collection);
+  // addToCollection.add(name, nav);
 }
