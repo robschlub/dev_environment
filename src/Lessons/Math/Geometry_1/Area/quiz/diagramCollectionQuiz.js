@@ -5,6 +5,9 @@ import {
   Transform,
 } from '../../../../../js/diagram/tools/g2';
 import {
+  roundNum,
+} from '../../../../../js/diagram/tools/mathtools';
+import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 
@@ -44,6 +47,12 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     const right = addSide(lay.points[3].sub(w, 0), lay.points[2].sub(w, 0));
     const top = addSide(lay.points[1].sub(0, w), lay.points[2].sub(0, w));
 
+    bottom.addLabel('', lay.labelOffset, 'bottom', 'bottom', 'horizontal');
+    // bottom.showRealLength = true;
+
+    right.addLabel('', lay.labelOffset, 'right', 'right', 'horizontal');
+    // right.showRealLength = true;
+
     const rect = this.diagram.shapes.collection();
     rect.hasTouchableElements = true;
     rect.add('bottom', bottom);
@@ -53,24 +62,6 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this.add('rect', rect);
     this.updateRectangle();
   }
-
-  // udpateSideTransform(side: TypeLine, orientation: 'x' | 'y') {
-  //   const p = side.getPosition();
-  //   const { limits } = this.layout.adjustableRect;
-  //   if (orientation === 'y') {
-  //     side.move.minTransform.updateTranslation(limits.left, p.y);
-  //     side.move.maxTransform.updateTranslation(limits.right, p.y);
-  //   } else {
-  //     side.move.minTransform.updateTranslation(p.x, limits.bottom);
-  //     side.move.maxTransform.updateTranslation(p.x, limits.top);
-  //   }
-  // }
-  // updateSideTransforms() {
-  //   this.udpateSideTransform(this._rect._base, 'x');
-  //   this.udpateSideTransform(this._rect._top, 'x');
-  //   this.udpateSideTransform(this._rect._left, 'y');
-  //   this.udpateSideTransform(this._rect._right, 'y');
-  // }
 
   updateRectangle() {
     const { limits } = this.layout.adjustableRect;
@@ -87,10 +78,10 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.transform.updateTranslation(right, bottom);
     this._rect._top.transform.updateTranslation(left, top);
 
-    this._rect._bottom.transform.updateScale(right - left + w * 2, 1);
-    this._rect._top.transform.updateScale(right - left + w, 1);
-    this._rect._left.transform.updateScale(top - bottom + w, 1);
-    this._rect._right.transform.updateScale(top - bottom + w, 1);
+    this._rect._bottom.setLength(right - left + w * 2, 1);
+    this._rect._top.setLength(right - left + w, 1);
+    this._rect._left.setLength(top - bottom + w, 1);
+    this._rect._right.setLength(top - bottom + w, 1);
 
     this._rect._bottom.move.minTransform.updateTranslation(left, limits.bottom);
     this._rect._bottom.move.maxTransform.updateTranslation(left, top - minSide);
@@ -102,6 +93,12 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._left.move.maxTransform.updateTranslation(right - minSide, bottom);
     this._rect._right.move.minTransform.updateTranslation(left + minSide, bottom);
     this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
+
+    // this._rect._bottom.updateLabel();
+    this._rect._bottom.label.setText(`${roundNum((right - left) * 5, 1)}`)
+    this._rect._right.label.setText(`${roundNum((top - bottom) * 5, 1)}`)
+    this._rect._bottom.updateLabel();
+    this._rect._right.updateLabel();
   }
 
   constructor(
