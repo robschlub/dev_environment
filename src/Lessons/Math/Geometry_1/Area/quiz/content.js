@@ -48,7 +48,7 @@ class Content extends LessonContent {
       infoModifiers: {
       },
       interactiveElements: [
-        // interactiveItem(quiz._check),
+        interactiveItem(quiz._check),
       ],
       setEnterState: () => {
       },
@@ -56,7 +56,7 @@ class Content extends LessonContent {
         quiz, 
       ],
       show: [
-        quiz._rect, quiz._grid,
+        quiz._rect, quiz._grid, quiz._check, 
       ],
       setSteadyState: () => {
         console.log(quiz)

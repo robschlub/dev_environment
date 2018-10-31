@@ -5,7 +5,7 @@ import {
   Transform,
 } from '../../../../../js/diagram/tools/g2';
 import {
-  roundNum,
+  roundNum, rand,
 } from '../../../../../js/diagram/tools/mathtools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -132,6 +132,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
 
   tryAgain() {
     super.tryAgain();
+    this._check.show();
     // this._input.enable();
     // this._input.setValue('');
   }
@@ -147,6 +148,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     if (element) {
       element.innerHTML = newArea;
     }
+    this._check.show();
     // this.calculateFuturePositions();
     // this.moveToFuturePositions(1, this.updateAngles.bind(this));
     // this._input.enable();
@@ -162,10 +164,16 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
   }
 
   findAnswer() {
+    this._check.hide();
     // this._input.disable();
-    // if (this._input.getValue() === this.answer.toString()) {
-    //   return 'correct';
-    // }
+    const left = this._rect._left.getPosition().x;
+    const right = this._rect._right.getPosition().x;
+    const top = this._rect._top.getPosition().y;
+    const bottom = this._rect._bottom.getPosition().y;
+    const area = roundNum((right - left) * (top - bottom), 1);
+    if (area === this.answer) {
+      return 'correct';
+    }
     return 'incorrect';
   }
 }
