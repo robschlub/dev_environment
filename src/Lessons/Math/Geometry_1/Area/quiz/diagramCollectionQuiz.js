@@ -101,6 +101,16 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.updateLabel();
   }
 
+  addGrid() {
+    const lay = this.layout.adjustableRect;
+    const grid = this.diagram.shapes.grid(
+      lay.limits,
+      lay.minSide, lay.minSide, 2, this.layout.colors.grid,
+      new Transform().translate(lay.position),
+    );
+    this.add('grid', grid);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -115,6 +125,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     );
     // this.add('input', this.makeEntryBox('a1', '?', 3));
     // this._input.setPosition(this.layout.input);
+    this.addGrid();
     this.addRectangle();
     this.hasTouchableElements = true;
   }
@@ -128,6 +139,14 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
 
   newProblem() {
     super.newProblem();
+    const element = document.getElementById('id__lessons__area_quiz1');
+    const maxArea = this.layout.limits.width * this.layout.limits.height;
+    const minArea = 1;
+    const newArea = roundNum(rand(minArea, maxArea), 1);
+    this.answer = newArea;
+    if (element) {
+      element.innerHTML = newArea;
+    }
     // this.calculateFuturePositions();
     // this.moveToFuturePositions(1, this.updateAngles.bind(this));
     // this._input.enable();

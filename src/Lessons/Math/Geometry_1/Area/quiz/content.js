@@ -3,7 +3,7 @@ import {
   LessonContent, interactiveItem,
 } from '../../../../../js/Lesson/LessonContent';
 import {
-  click, centerH,
+  click, centerH, toHTML,
 } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import lessonLayout from './layout';
@@ -34,11 +34,12 @@ class Content extends LessonContent {
     //   setContent: ['Enter_content_here'],
     // });
     this.addSection({
-      title: 'Enter_title_here',
+      title: 'Area of rectangle and square.',
       setContent: [
-        'Enter_question_here',
+        'Create a rectangle or square that equals |area| squares',
       ],
       modifiers: {
+        area: toHTML('?', 'id__lessons__area_quiz1', '', colors.unit)
       },
       setInfo: `<ul>
           <li></li>
@@ -55,7 +56,7 @@ class Content extends LessonContent {
         quiz, 
       ],
       show: [
-        quiz._rect,
+        quiz._rect, quiz._grid,
       ],
       setSteadyState: () => {
         console.log(quiz)

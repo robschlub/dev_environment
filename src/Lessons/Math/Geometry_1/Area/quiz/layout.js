@@ -18,9 +18,10 @@ export default function lessonLayout() {
       new Point(1, -1),
     ],
     width: 0.03,
-    limits: new Rect(-2, -1.5, 4, 2),
+    limits: new Rect(-2.5, -1.5, 5, 2.6),
     minSide: 0.2,
     labelOffset: 0.08,
+    position: new Point(0, 0),
   }
   return layout;
 }
