@@ -14,15 +14,20 @@ import {
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollection) {
   diagram: LessonDiagram;
   _grid: DiagramElementPrimative;
   _rect: {
-    _bottom: TypeLine;
+    _bottom: {
+      label: TypeEquationLabel;
+    } & TypeLine;
     _left: TypeLine;
-    _right: TypeLine;
+    _right: {
+      label: TypeEquationLabel;
+    } & TypeLine;
     _top: TypeLine;
   } & DiagramElementCollection;
 
@@ -99,12 +104,9 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.move.minTransform.updateTranslation(left + minSide, bottom);
     this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
 
-    if (this._rect._bottom.label != null) {
-      this._rect._bottom.label.setText(`${round((right - left) * 5, 1).toString()}`);
-    }
-    if (this._rect._right.label != null) {
-      this._rect._right.label.setText(`${round((top - bottom) * 5, 1).toString()}`);
-    }
+    
+    this._rect._bottom.label.setText(`${round((right - left) * 5, 1).toString()}`);
+    this._rect._right.label.setText(`${round((top - bottom) * 5, 1).toString()}`);
     this._rect._bottom.updateLabel();
     this._rect._right.updateLabel();
   }

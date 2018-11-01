@@ -1745,15 +1745,15 @@ function getMoveTime(
   rotationVelocity: number = 2 * Math.PI / 6,    // 60º/s
   scaleVelocity: Point = new Point(1, 1),   // 100%/s
 ) {
-  let startTransforms;
+  let startTransforms: Array<Transform>;
   if (startTransform instanceof Transform) {
     startTransforms = [startTransform];
   } else {
     startTransforms = startTransform;
   }
-  let stopTransforms;
+  let stopTransforms: Array<Transform>;
   if (stopTransform instanceof Transform) {
-    stopTransforms = [startTransform];
+    stopTransforms = [stopTransform];
   } else {
     stopTransforms = stopTransform;
   }

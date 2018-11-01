@@ -2,9 +2,11 @@
 import { colorArrayToRGBA } from './tools';
 
 function centerV(text: string | Array<string> = '') {
-  let textToUse = text;
+  let textToUse = '';
   if (Array.isArray(text)) {
     textToUse = `<p>${text.join('</p><p>')}</p>`;
+  } else {
+    textToUse = text;
   }
   return `<div style="display: table; height: 100%;">
         <div style="display: table-cell; vertical-align: middle">

@@ -113,17 +113,25 @@ function updateButtons(
     const nextIndex = index + 1;
     if (nextIndex > nav.eqn.formSeries.length - 1) {
       if (nav.nextDescription) {
+        // eslint-disable-next-line no-param-reassign
         nav.nextDescription.innerHTML = 'RESTART from begining';
       }
     } else {
-      updateDescription(nav.eqn, currentForm.type, nav.nextDescription, nextIndex, false, nextPrefix);
+      updateDescription(
+        nav.eqn, currentForm.type, nav.nextDescription,
+        nextIndex, false, nextPrefix,
+      );
     }
     updateDescription(nav.eqn, currentForm.type, nav.description, index, true);
     // nav.eqn.updateDescription(currentForm);
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
-      updateDescription(nav.eqn, currentForm.type, nav.prevDescription, prevIndex, false, prevPrefix);
+      updateDescription(
+        nav.eqn, currentForm.type, nav.prevDescription,
+        prevIndex, false, prevPrefix,
+      );
     } else if (nav.prevDescription) {
+      // eslint-disable-next-line no-param-reassign
       nav.prevDescription.innerHTML = '';
     }
   }
@@ -177,7 +185,7 @@ function makeType3Line(
   nextDescription.classList.add('lesson__eqn_nav__3line__nextRow__description');
 
   let optionsToUse = options;
-  if (typeof optionsToUse === 'string') {
+  if (!Array.isArray(options)) {
     optionsToUse = [options];
   }
   // Use two lines to stop jittering when transitioning from one line to two
@@ -253,9 +261,10 @@ function makeType1Line(
   description.classList.add('lesson__eqn_nav__description');
 
   let optionsToUse = options;
-  if (typeof optionsToUse === 'string') {
+  if (!Array.isArray(options)) {
     optionsToUse = [options];
   }
+
   // Use two lines to stop jittering when transitioning from one line to two
   // lines
   if (optionsToUse.indexOf('twoLines') > -1) {
@@ -326,7 +335,7 @@ function makeType2Line(
   nextDescription.classList.add('lesson__eqn_nav__2lines__nextRow__description');
 
   let optionsToUse = options;
-  if (typeof optionsToUse === 'string') {
+  if (!Array.isArray(options)) {
     optionsToUse = [options];
   }
   // Use two lines to stop jittering when transitioning from one line to two
