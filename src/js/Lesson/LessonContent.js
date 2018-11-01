@@ -433,6 +433,7 @@ class Section {
 
       // Get all movable diagram elements
       const diagramElements = this.diagram.elements.getAllCurrentlyInteractiveElements();
+      console.log(diagramElements)
       diagramElements.forEach((element) => {
         this.interactiveElementList.push({
           element,
@@ -458,6 +459,7 @@ class Section {
         this.removeInteractiveElement(element);
       });
     }
+    console.log(this.interactiveElementList)
   }
 
   setVisible() {
