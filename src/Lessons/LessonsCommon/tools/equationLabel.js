@@ -9,6 +9,8 @@ import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquatio
 export type TypeEquationLabel = {
   eqn: Equation;
   updateRotation: (number, Point, number, number) => void;
+  setText: (string) => {};
+  getText: void => string;
   // updateScale: (Point) => void;
 };
 
@@ -65,7 +67,7 @@ export default function makeEquationLabel(
     }
   }
 
-  function getText() {
+  function getText(): string {
     let textToReturn = '';
     const form = eqn.getCurrentForm();
     if (form != null) {

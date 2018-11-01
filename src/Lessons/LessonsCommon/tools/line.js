@@ -254,6 +254,7 @@ export type TypeLine = {
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
   pulseWidth: () => void;
+  updateLabel: (?number) => {};
 
 } & DiagramElementCollection;
 

@@ -17,6 +17,7 @@ export type TypeMessages = {
 const CommonQuizMixin = superclass => class extends superclass {
   _check: DiagramElementPrimative;
   _newProblem: DiagramElementPrimative;
+  _showAnotherAnswer: DiagramElementPrimative;
   +_messages: TypeMessages;
   answers: any;
   answer: any;

@@ -2374,7 +2374,7 @@ export class Equation {
       time?: number | null | { fromPrev?: number, fromNext?: number },
       description?: string,
       modifiers?: Object,
-    },
+    } = {},
   ) {
     if (!(name in this.form)) {
       this.form[name] = {};

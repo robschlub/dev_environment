@@ -5,24 +5,26 @@ import {
   Transform, Point,
 } from '../../../../../js/diagram/tools/g2';
 import {
-  rand, range, round, randElement,
+  rand, range, round,
 } from '../../../../../js/diagram/tools/mathtools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
-import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollection) {
   diagram: LessonDiagram;
-  _messages: {
-    _touching: DiagramElementPrimative;
-    _rotation: DiagramElementPrimative;
-  } & TypeMessages;
+  _grid: DiagramElementPrimative;
+  _rect: {
+    _bottom: TypeLine;
+    _left: TypeLine;
+    _right: TypeLine;
+    _top: TypeLine;
+  } & DiagramElementCollection;
 
   answers: Array<Array<number>>;
   answer: number;
@@ -81,10 +83,10 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.transform.updateTranslation(right, bottom);
     this._rect._top.transform.updateTranslation(left, top);
 
-    this._rect._bottom.setLength(right - left + w * 2, 1);
-    this._rect._top.setLength(right - left + w, 1);
-    this._rect._left.setLength(top - bottom + w, 1);
-    this._rect._right.setLength(top - bottom + w, 1);
+    this._rect._bottom.setLength(right - left + w * 2);
+    this._rect._top.setLength(right - left + w);
+    this._rect._left.setLength(top - bottom + w);
+    this._rect._right.setLength(top - bottom + w);
 
     this._rect._bottom.move.minTransform.updateTranslation(left, limits.bottom);
     this._rect._bottom.move.maxTransform.updateTranslation(left, top - minSide);
@@ -97,8 +99,12 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.move.minTransform.updateTranslation(left + minSide, bottom);
     this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
 
-    this._rect._bottom.label.setText(`${round((right - left) * 5, 1).toString()}`);
-    this._rect._right.label.setText(`${round((top - bottom) * 5, 1).toString()}`);
+    if (this._rect._bottom.label != null) {
+      this._rect._bottom.label.setText(`${round((right - left) * 5, 1).toString()}`);
+    }
+    if (this._rect._right.label != null) {
+      this._rect._right.label.setText(`${round((top - bottom) * 5, 1).toString()}`);
+    }
     this._rect._bottom.updateLabel();
     this._rect._right.updateLabel();
   }
