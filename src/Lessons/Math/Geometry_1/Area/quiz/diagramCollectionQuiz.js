@@ -126,12 +126,10 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
       transform,
     );
     this.addGrid();
-    console.log("asdf1");
     this.addRectangle();
     this.hasTouchableElements = true;
     this.answers = [];
     this.answer = 0;
-    console.log("asdf");
   }
 
   tryAgain() {
@@ -190,7 +188,6 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
 
     this.answer = area;
     this.answers = answers;
-    console.log(this.answers)
 
     if (element) {
       element.innerHTML = area.toString();

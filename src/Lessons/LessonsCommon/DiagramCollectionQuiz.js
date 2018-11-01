@@ -82,8 +82,8 @@ const CommonQuizMixin = superclass => class extends superclass {
       this._input.disable();
       this._input.setValue(this.answer);
     }
+    this.answerIndex = (this.answerIndex + 1) % this.answers.length;
     if (this.answers.length > 1) {
-      this.answerIndex = (this.answerIndex + 1) % this.answers.length;
       this._showAnotherAnswer.show();
     }
   }
