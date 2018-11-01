@@ -17,7 +17,7 @@ export default function lessonLayout() {
     nextSteps: new Point(0, -1.9),
     check: new Point(0, -1.7),
     newProblem: new Point(0, -1.7),
-    showAnotherAnswer: new Point(-1, -1.7),
+    showAnotherAnswer: new Point(-1.5, -1.7),
   };
   layout.answerBox = new Point(0, 1.45);
 

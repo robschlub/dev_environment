@@ -18,8 +18,9 @@ const CommonQuizMixin = superclass => class extends superclass {
   _check: DiagramElementPrimative;
   _newProblem: DiagramElementPrimative;
   +_messages: TypeMessages;
-  answers: Array<mixed>;
-  answer: string | number;
+  answers: any;
+  answer: any;
+  answerIndex: number;
 
   tryAgain() {
     this._messages.hideAll();
@@ -39,7 +40,9 @@ const CommonQuizMixin = superclass => class extends superclass {
       this._input.enable();
       this._input.setValue('');
     }
+    this._showAnotherAnswer.hide();
     this.hasTouchableElements = true;
+    this.answerIndex = -1;
     this.diagram.animateNextFrame();
   }
 
@@ -79,6 +82,10 @@ const CommonQuizMixin = superclass => class extends superclass {
       this._input.disable();
       this._input.setValue(this.answer);
     }
+    if (this.answers.length > 1) {
+      this.answerIndex = (this.answerIndex + 1) % this.answers.length;
+      this._showAnotherAnswer.show();
+    }
   }
 
   constructor(
@@ -92,7 +99,11 @@ const CommonQuizMixin = superclass => class extends superclass {
     this.add('check', this.makeCheckButton(id));
     this.add('newProblem', this.makeNewProblemButton(id));
     this.add('messages', this.makeQuizAnswerMessages(id, messages));
+    this.add('showAnotherAnswer', this.makeShowAnotherAnswerButton(id));
     this._messages.hideAll();
+    this.answers = [];
+    this.answer = '';
+    // this.answerIndex = -1;
   }
 
   makeAnswerBox(
@@ -205,7 +216,7 @@ const CommonQuizMixin = superclass => class extends superclass {
 
   makeShowAnotherAnswerButton(id: string) {
     return this.makeButton(
-      `new_problem__${id}`, 'Show Another Answer', this.showAnswer.bind(this),
+      `show_another_answer__${id}`, 'Show Another Answer', this.showAnswer.bind(this),
       this.layout.quiz.showAnotherAnswer,
     );
   }

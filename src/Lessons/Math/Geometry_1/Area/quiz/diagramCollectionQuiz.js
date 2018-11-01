@@ -23,7 +23,9 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     _touching: DiagramElementPrimative;
     _rotation: DiagramElementPrimative;
   } & TypeMessages;
-  answers: Array<number>;
+
+  answers: Array<Array<number>>;
+  answer: number;
 
   // futurePositions: Object;
 
@@ -95,7 +97,6 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.move.minTransform.updateTranslation(left + minSide, bottom);
     this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
 
-    // this._rect._bottom.updateLabel();
     this._rect._bottom.label.setText(`${round((right - left) * 5, 1).toString()}`);
     this._rect._right.label.setText(`${round((top - bottom) * 5, 1).toString()}`);
     this._rect._bottom.updateLabel();
@@ -124,40 +125,53 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
       {},
       transform,
     );
-    // this.add('input', this.makeEntryBox('a1', '?', 3));
-    // this._input.setPosition(this.layout.input);
     this.addGrid();
+    console.log("asdf1");
     this.addRectangle();
     this.hasTouchableElements = true;
     this.answers = [];
+    this.answer = 0;
+    console.log("asdf");
   }
 
   tryAgain() {
     super.tryAgain();
     this._check.show();
-    // this._input.enable();
-    // this._input.setValue('');
+  }
+
+  addToAnswers(answers: Array<Array<number>>, answer: Array<number>) {
+    if (Array.isArray(this.answers)) {
+      for (let i = 0; i < answers.length; i += 1) {
+        const existing = answers[i];
+        if (answer[0] === existing[0]) {
+          if (answer[1] === existing[1]) {
+            return;
+          }
+        }
+      }
+      answers.push(answer);
+    }
   }
 
   getPossibleAnswers(area: number) {
     const lay = this.layout.adjustableRect;
-    const maxX = (lay.limits.width - lay.minSide * 2) * 5;
-    const maxY = (lay.limits.height - lay.minSide * 2) * 5;
+    const maxX = (lay.limits.width - lay.minSide * 0) * 5;
+    const maxY = (lay.limits.height - lay.minSide * 0) * 5;
     const answers = [];
     const potentialAnswers = round(range(1, 10, 0.1), 8);
-    potentialAnswers.forEach((a) => {
-      const factor = round(area / a, 1);
+    potentialAnswers.forEach((a: number) => {
+      const factor: number = round(area / a, 1);
       if (round(factor * a, 8) === area && factor > 1) {
         if (a <= maxX && factor <= maxY) {
-          answers.push([a, factor]);
+          this.addToAnswers(answers, [a, factor]);
         }
         if (a <= maxY && factor <= maxX) {
-          answers.push([factor, a]);
+          this.addToAnswers(answers, [factor, a]);
         }
       }
     });
     return answers;
-  } 
+  }
 
   newProblem() {
     super.newProblem();
@@ -173,18 +187,15 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
       area = round(rand(minArea, maxArea), 0);
       answers = this.getPossibleAnswers(area);
     }
-    
+
     this.answer = area;
     this.answers = answers;
+    console.log(this.answers)
 
     if (element) {
       element.innerHTML = area.toString();
     }
     this._check.show();
-    // this.calculateFuturePositions();
-    // this.moveToFuturePositions(1, this.updateAngles.bind(this));
-    // this._input.enable();
-    // this._input.setValue('');
     this.goToRectangle(10, 5);
     this.diagram.animateNextFrame();
   }
@@ -221,7 +232,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
 
   showAnswer() {
     super.showAnswer();
-    const answerToShow = randElement(this.answers);
+    const answerToShow = this.answers[this.answerIndex];
     const [width, height] = answerToShow;
     this.goToRectangle(width, height);
     this.diagram.animateNextFrame();
@@ -234,11 +245,12 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     const potentialAnswer = [width, height];
     let result = 'incorrect';
     this.answers.forEach((answer) => {
-      if (answer[0] === potentialAnswer[0] && answer[1] === potentialAnswer[1])
-      {
-        result = 'correct';  
+      if (answer[0] === potentialAnswer[0]
+          && answer[1] === potentialAnswer[1]
+      ) {
+        result = 'correct';
       }
-    })
+    });
     return result;
   }
 }
