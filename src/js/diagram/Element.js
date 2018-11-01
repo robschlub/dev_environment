@@ -537,17 +537,17 @@ class DiagramElement {
     transform: Transform = new Transform(),
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
-    this.uid = (Math.random() * 1e18).toString(36);
-    this.transform = transform._dup();
-    this.setTransformCallback = () => {};
-    this.isShown = true;
-    this.lastDrawTransform = this.transform._dup();
     this.name = ''; // This is updated when an element is added to a collection
+    this.uid = (Math.random() * 1e18).toString(36);
+    this.isShown = true;
+    this.transform = transform._dup();
     this.isMovable = false;
     this.isTouchable = false;
     this.isInteractive = false;
     this.hasTouchableElements = false;
     this.color = [1, 1, 1, 1];
+    this.setTransformCallback = () => {};
+    this.lastDrawTransform = this.transform._dup();
     this.onClick = null;
     this.lastDrawElementTransformPosition = {
       parentCount: 0,
@@ -2930,7 +2930,6 @@ class DiagramElementCollection extends DiagramElement {
     let elements = [];
     for (let i = 0; i < this.order.length; i += 1) {
       const element = this.elements[this.order[i]];
-      console.log(element.name, element.uid)
       // if (element.isShown) {
       if (element instanceof DiagramElementCollection) {
         if (!element.isTouchable && !element.isMovable

@@ -38,7 +38,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
       line.addLabel(label, lay.labelOffset, 'outside', '', 'horizontal');
       line.setMovable(true);
       line.setTransformCallback = this.updateRectangle.bind(this);
-      this.add(`side${name}`, line);
+      // this.add(`side${name}`, line);
       return line;
     };
     const w = lay.width / 2;
