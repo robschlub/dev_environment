@@ -3,7 +3,7 @@ import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
 import {
-  click, centerV, highlight, highlightWord,
+  click, centerV, highlight,
 } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
@@ -28,38 +28,9 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    // const shapes = diag._shapes;
-    // const meas = diag._measure;
-    // const size = diag._size;
-    // const rect = diag._rect;
     const tri = diag._tri;
 
-    // const mods = {
-    //   m: highlight(colors.unit),
-    // };
-    // rect.eqns.rectEqn.changeDescription('0', 'Rectangle area is product of width and height.', mods);
-    // rect.eqns.rectEqn.changeDescription('1', 'Expand both 6|m| and 10|m| as 6|m| is the same as saying 6 lots of 1|m|.', mods);
-    // rect.eqns.rectEqn.changeDescription('2', 'Reorder equation so all |m| terms are on the right.', mods);
-    // rect.eqns.rectEqn.changeDescription('3', 'Calculate 6 ⨉ 10', mods);
-    // rect.eqns.rectEqn.changeDescription('4', 'Replace 6 ⨉ 10 with calculated result', mods);
-    // rect.eqns.rectEqn.changeDescription('5', 'Multiplying anything by 1 doesn\'t change the result.', mods);
-    // rect.eqns.rectEqn.changeDescription('6', 'Simplify by removing 1s', mods);
-    // rect.eqns.rectEqn.changeDescription('7', 'Multiplying something by itself is the same as squaring it.', mods);
-    // rect.eqns.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
-
-
-    // tri.eqns.tri2AreaEqn.changeDescription('0', 'Area of the triangle is the sum of the two smaller triangle areas.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('1', 'The smaller triangle areas are half the area of the rectangle they are in.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('2', 'The smaller triangle areas are half the area of the rectangles they are in.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('3', 'Prepare for factoring out common terms.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('4', 'Factor out common terms.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('5', 'Simplify the terms in the brackets.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('6', 'B and D sum to the base side length of the triangle.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('7', 'B and D sum to the base side length of the triangle.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('8', 'A is the height of the triangle.', mods);
-    // tri.eqns.tri2AreaEqn.changeDescription('9', 'Area of a triangle is half the base times the height.', mods);
-
-    let common = {
+    const common = {
       setContent: [],
       setInfo: '',
       modifiers: {},
@@ -148,17 +119,10 @@ class Content extends LessonContent {
       setContent: centerV(['We can now use this to calculate the area of |any triangle|, not just one that is part of a rectangle.']),
     });
 
-    // common.show = [
-    //   tri._tri2, tri._tri2Rect1, tri._tri2Rect2,
-    //   tri._sideTriRect1A, tri._sideTriRect1B,
-    //   tri._sideTriRect2A, tri._sideTriRect2B,
-    //   tri._tri2Rect1Tri, tri._tri2Rect2Tri,
-    //   tri._label1, tri._label2,
-    // ];
     common.setSteadyState = () => {};
     common.show = [tri._tri2];
     this.addSection(common, {
-      title: 'asdf',
+      title: 'Calculate Area',
       setContent: ['Start with any triangle.'],
     });
 
@@ -270,14 +234,14 @@ class Content extends LessonContent {
       tri._sideTri2Base, tri._sideTri2Height,
     ];
     this.addEqnStep(tri._tri2AreaEqn, '9', '10', common, {
-      title: 'asdfdffd',
+      title: 'Calculation Result',
     });
 
     common.show = [
       tri._tri2,
     ];
     this.addSection(common, {
-      title: '243',
+      title: 'Rotate Triangle',
       setContent: ['This works for |any triangle|, no matter which side you call the |base|.'],
     });
 
@@ -302,9 +266,9 @@ class Content extends LessonContent {
     });
     common.show = [
       tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
-        tri._sideTri3Rect1A, tri._sideTri3Rect1B,
-        tri._sideTri3Rect2A, tri._sideTri3Rect2C,
-      ]
+      tri._sideTri3Rect1A, tri._sideTri3Rect1B,
+      tri._sideTri3Rect2A, tri._sideTri3Rect2C,
+    ];
     this.addSection(common);
 
     common.setContent = ['In this case, the |triangle_area| is the area of the |AC| triangle minus the area of the |AB| triangle.'];
@@ -318,7 +282,7 @@ class Content extends LessonContent {
     this.addSection(common);
     this.addEqnStep(tri.eqns.tri3AreaEqn, '0', '0', common);
 
-    common.setContent = ['We can now work through similar steps to before to find the area.']
+    common.setContent = ['We can now work through similar steps to before to find the area.'];
     this.addEqnStep(tri.eqns.tri3AreaEqn, '0', '0', common);
     this.addEqnStep(tri.eqns.tri3AreaEqn, '0', '1', common);
     this.addEqnStep(tri.eqns.tri3AreaEqn, '1', '2', common);
@@ -336,13 +300,13 @@ class Content extends LessonContent {
     this.addEqnStep(tri.eqns.tri3AreaEqn, '5', '5', common);
     this.addEqnStep(tri.eqns.tri3AreaEqn, '5', '6', common);
     this.addEqnStep(tri.eqns.tri3AreaEqn, '6', '7', common);
-    
+
     common.setContent = ['And |A| is |height|.'];
     common.show = [
       tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
       tri._sideTri3Rect1A, tri._sideTri3Rect1B,
       tri._sideTri3Rect2A, tri._sideTri3Rect2C,
-      tri._sideTri3Base, tri._sideTri3Height
+      tri._sideTri3Base, tri._sideTri3Height,
     ];
     this.addEqnStep(tri.eqns.tri3AreaEqn, '7', '8', common);
     this.addEqnStep(tri.eqns.tri3AreaEqn, '8', '9', common);
@@ -350,9 +314,11 @@ class Content extends LessonContent {
     common.setContent = ['And so the area of a triangle is |half its base times its height|.'];
     common.show = [
       tri._tri3,
-      tri._sideTri3Base, tri._sideTri3Height
+      tri._sideTri3Base, tri._sideTri3Height,
     ];
-    this.addEqnStep(tri.eqns.tri3AreaEqn, '9', '10', common);
+    this.addEqnStep(tri.eqns.tri3AreaEqn, '9', '10', common, {
+      title: 'Rotation Result',
+    });
   }
 }
 

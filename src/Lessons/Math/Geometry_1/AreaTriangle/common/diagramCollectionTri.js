@@ -4,23 +4,63 @@ import {
   Transform, Point, Rect,
 } from '../../../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
-import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
+// import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
+// import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
 import {
   addTriRectEquation, addTri2AreaEquation, addTri3AreaEquation,
 } from './equations';
-// import type {
-//   TypeRectEquationNav,
-// } from './equations';
+import type {
+  TypeTriRectEquation, TypeTriRectEquationCollection,
+  TypeTri3AreaEquation, TypeTri3AreaEquationCollection,
+  TypeTri2AreaEquation, TypeTri2AreaEquationCollection,
+} from './equations';
 
 export default class TriangleAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
+  _grid: DiagramElementPrimative;
+  _rect: DiagramElementPrimative;
+  _rectSplit: DiagramElementPrimative;
+  _sideRectA: TypeLine;
+  _sideRectB: TypeLine;
+  _sideTri2Base: TypeLine;
+  _sideTri2Height: TypeLine;
+  _sideTri3Base: TypeLine;
+  _sideTri3Height: TypeLine;
+  _sideTri3Rect1A: TypeLine;
+  _sideTri3Rect1B: TypeLine;
+  _sideTri3Rect2A: TypeLine;
+  _sideTri3Rect2C: TypeLine;
+  _sideTriRect1A: TypeLine;
+  _sideTriRect1B: TypeLine;
+  _sideTriRect2A: TypeLine;
+  _sideTriRect2AH: TypeLine;
+  _sideTriRect2C: TypeLine;
+  _sideTriRect2D: TypeLine;
+  _tri2: DiagramElementPrimative;
+  _tri2AreaEqn: TypeTri2AreaEquationCollection;
+  _tri2Rect1: DiagramElementPrimative;
+  _tri2Rect1Tri: DiagramElementPrimative;
+  _tri2Rect2: DiagramElementPrimative;
+  _tri2Rect2Tri: DiagramElementPrimative;
+  _tri3: DiagramElementPrimative;
+  _tri3AreaEqn: TypeTri3AreaEquationCollection
+  _tri3Rect1: DiagramElementPrimative;
+  _tri3Rect1Tri: DiagramElementPrimative;
+  _tri3Rect2: DiagramElementPrimative;
+  _tri3Rect2Tri: DiagramElementPrimative;
+  _tri3Tri: DiagramElementPrimative;
+  _triIntro: DiagramElementPrimative;
+  _triRectEqn: TypeTriRectEquationCollection;
+
   eqns: {
+    tri2AreaEqn: TypeTri2AreaEquation;
+    tri3AreaEqn: TypeTri3AreaEquation;
+    triRectEqn: TypeTriRectEquation;
   };
 
   addGrid() {
