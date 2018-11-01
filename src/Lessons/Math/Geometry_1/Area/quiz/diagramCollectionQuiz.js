@@ -2,10 +2,10 @@
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, Point,
 } from '../../../../../js/diagram/tools/g2';
 import {
-  roundNum, rand,
+  rand, range, round, randElement,
 } from '../../../../../js/diagram/tools/mathtools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -95,8 +95,8 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
 
     // this._rect._bottom.updateLabel();
-    this._rect._bottom.label.setText(`${roundNum((right - left) * 5, 1)}`)
-    this._rect._right.label.setText(`${roundNum((top - bottom) * 5, 1)}`)
+    this._rect._bottom.label.setText(`${round((right - left) * 5, 1)}`)
+    this._rect._right.label.setText(`${round((top - bottom) * 5, 1)}`)
     this._rect._bottom.updateLabel();
     this._rect._right.updateLabel();
   }
@@ -143,7 +143,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     const element = document.getElementById('id__lessons__area_quiz1');
     const maxArea = this.layout.limits.width * this.layout.limits.height;
     const minArea = 1;
-    const newArea = roundNum(rand(minArea, maxArea), 1);
+    const newArea = round(rand(minArea, maxArea), 1);
     this.answer = newArea;
     if (element) {
       element.innerHTML = newArea;
@@ -158,8 +158,44 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
 
   showAnswer() {
     super.showAnswer();
-    // this._input.setValue(this.answer);
-    // this._input.disable();
+    const yCenter = this.layout.adjustableRect.limits.height / 2 + this.layout.adjustableRect.limits.bottom;
+    const xCenter = this.layout.adjustableRect.limits.width / 2 + this.layout.adjustableRect.limits.left;
+    const maxX = this.layout.adjustableRect.limits.width * 5;
+    const maxY = this.layout.adjustableRect.limits.height * 5;
+
+    const answers = [];
+    const potentialAnswers = round(range(1, 10, 0.1), 8);
+    potentialAnswers.forEach((a) => {
+      const factor = round(this.answer / a, 1);
+      if ( round(factor * a, 8) === this.answer && factor > 1) {
+        if (a <= maxX && factor <= maxY) {
+          answers.push([a, factor]);
+        }
+        if (a <= maxY && factor <= maxX) {
+          answers.push([factor, a]);
+        }
+      }
+    })
+    console.log(answers)
+    const answerToShow = randElement(answers);
+    console.log(answerToShow)
+    const width = answerToShow[0] / 5;
+    const height = answerToShow[1] / 5;
+    console.log('width, height', width, height)
+    const futurePos = (element, x, y) => ({
+      element,
+      scenario: {
+        position: new Point(x, y),
+      },
+    });
+
+    this.futurePositions = [];
+    this.futurePositions.push(futurePos(this._rect._left, -width / 2, xCenter));
+    this.futurePositions.push(futurePos(this._rect._right, width / 2, xCenter));
+    this.futurePositions.push(futurePos(this._rect._bottom, yCenter, -height / 2));
+    this.futurePositions.push(futurePos(this._rect._top, yCenter, height / 2));
+    console.log(this.futurePositions)
+    this.moveToFuturePositions(1, this.updateRectangle.bind(this));
     this.diagram.animateNextFrame();
   }
 
@@ -170,7 +206,8 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     const right = this._rect._right.getPosition().x;
     const top = this._rect._top.getPosition().y;
     const bottom = this._rect._bottom.getPosition().y;
-    const area = roundNum((right - left) * (top - bottom), 1);
+    const area = round((right - left) * (top - bottom) * 25, 1);
+    console.log(area, this.answer)
     if (area === this.answer) {
       return 'correct';
     }
