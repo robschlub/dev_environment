@@ -32,6 +32,6 @@ export default function lessonLayout() {
     minSide: 0.2,
     labelOffset: 0.08,
     position: new Point(0, 0),
-  }
+  };
   return layout;
 }

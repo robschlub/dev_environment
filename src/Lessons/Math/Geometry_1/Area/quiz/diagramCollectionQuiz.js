@@ -24,7 +24,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     _rotation: DiagramElementPrimative;
   } & TypeMessages;
 
-  futurePositions: Object;
+  // futurePositions: Object;
 
   addRectangle() {
     const lay = this.layout.adjustableRect;
@@ -95,8 +95,8 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
 
     // this._rect._bottom.updateLabel();
-    this._rect._bottom.label.setText(`${round((right - left) * 5, 1)}`)
-    this._rect._right.label.setText(`${round((top - bottom) * 5, 1)}`)
+    this._rect._bottom.label.setText(`${round((right - left) * 5, 1).toString()}`);
+    this._rect._right.label.setText(`${round((top - bottom) * 5, 1).toString()}`);
     this._rect._bottom.updateLabel();
     this._rect._right.updateLabel();
   }
@@ -141,47 +141,29 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
   newProblem() {
     super.newProblem();
     const element = document.getElementById('id__lessons__area_quiz1');
-    const maxArea = this.layout.limits.width * this.layout.limits.height;
+    const lay = this.layout.adjustableRect;
+    const maxArea = (lay.limits.width - lay.minSide * 2)
+                  * (lay.limits.height - lay.minSide * 2);
     const minArea = 1;
     const newArea = round(rand(minArea, maxArea), 1);
     this.answer = newArea;
     if (element) {
-      element.innerHTML = newArea;
+      element.innerHTML = newArea.toString();
     }
     this._check.show();
     // this.calculateFuturePositions();
     // this.moveToFuturePositions(1, this.updateAngles.bind(this));
     // this._input.enable();
     // this._input.setValue('');
+    this.goToRectangle(1, 1);
     this.diagram.animateNextFrame();
   }
 
-  showAnswer() {
-    super.showAnswer();
-    const yCenter = this.layout.adjustableRect.limits.height / 2 + this.layout.adjustableRect.limits.bottom;
-    const xCenter = this.layout.adjustableRect.limits.width / 2 + this.layout.adjustableRect.limits.left;
-    const maxX = this.layout.adjustableRect.limits.width * 5;
-    const maxY = this.layout.adjustableRect.limits.height * 5;
-
-    const answers = [];
-    const potentialAnswers = round(range(1, 10, 0.1), 8);
-    potentialAnswers.forEach((a) => {
-      const factor = round(this.answer / a, 1);
-      if ( round(factor * a, 8) === this.answer && factor > 1) {
-        if (a <= maxX && factor <= maxY) {
-          answers.push([a, factor]);
-        }
-        if (a <= maxY && factor <= maxX) {
-          answers.push([factor, a]);
-        }
-      }
-    })
-    console.log(answers)
-    const answerToShow = randElement(answers);
-    console.log(answerToShow)
-    const width = answerToShow[0] / 5;
-    const height = answerToShow[1] / 5;
-    console.log('width, height', width, height)
+  goToRectangle(width: number, height: number) {
+    const yCenter = this.layout.adjustableRect.limits.height / 2
+                    + this.layout.adjustableRect.limits.bottom;
+    const xCenter = this.layout.adjustableRect.limits.width / 2
+                    + this.layout.adjustableRect.limits.left;
     const futurePos = (element, x, y) => ({
       element,
       scenario: {
@@ -190,12 +172,44 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     });
 
     this.futurePositions = [];
-    this.futurePositions.push(futurePos(this._rect._left, -width / 2, xCenter));
-    this.futurePositions.push(futurePos(this._rect._right, width / 2, xCenter));
-    this.futurePositions.push(futurePos(this._rect._bottom, yCenter, -height / 2));
-    this.futurePositions.push(futurePos(this._rect._top, yCenter, height / 2));
-    console.log(this.futurePositions)
+    this.futurePositions.push(futurePos(
+      this._rect._left, -width / 2 + xCenter, yCenter,
+    ));
+    this.futurePositions.push(futurePos(
+      this._rect._right, width / 2 + xCenter, yCenter,
+    ));
+    this.futurePositions.push(futurePos(
+      this._rect._bottom, xCenter, -height / 2 + yCenter,
+    ));
+    this.futurePositions.push(futurePos(
+      this._rect._top, xCenter, height / 2 + yCenter,
+    ));
     this.moveToFuturePositions(1, this.updateRectangle.bind(this));
+  }
+
+  showAnswer() {
+    super.showAnswer();
+    const lay = this.layout.adjustableRect;
+    const maxX = (lay.limits.width - lay.minSide * 2) * 5;
+    const maxY = (lay.limits.height - lay.minSide * 2) * 5;
+
+    const answers = [];
+    const potentialAnswers = round(range(1, 10, 0.1), 8);
+    potentialAnswers.forEach((a) => {
+      const factor = round(this.answer / a, 1);
+      if (round(factor * a, 8) === this.answer && factor > 1) {
+        if (a <= maxX && factor <= maxY) {
+          answers.push([a, factor]);
+        }
+        if (a <= maxY && factor <= maxX) {
+          answers.push([factor, a]);
+        }
+      }
+    });
+    const answerToShow = randElement(answers);
+    const width = answerToShow[0] / 5;
+    const height = answerToShow[1] / 5;
+    this.goToRectangle(width, height);
     this.diagram.animateNextFrame();
   }
 
@@ -207,7 +221,11 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     const top = this._rect._top.getPosition().y;
     const bottom = this._rect._bottom.getPosition().y;
     const area = round((right - left) * (top - bottom) * 25, 1);
-    console.log(area, this.answer)
+    console.log(
+      area,
+      (right - left) * (top - bottom) * 25,
+      round(round((right - left) * 5,1) * round((top - bottom) * 5, 1), 1),
+    );
     if (area === this.answer) {
       return 'correct';
     }

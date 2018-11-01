@@ -36,10 +36,10 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Area of rectangle and square.',
       setContent: [
-        'Create a rectangle or square that equals |area| squares',
+        'Create a rectangle or square that has an area of |area| squares',
       ],
       modifiers: {
-        area: toHTML('?', 'id__lessons__area_quiz1', '', colors.unit)
+        area: toHTML('?', 'id__lessons__area_quiz1', '', colors.unit),
       },
       setInfo: `<ul>
           <li></li>
@@ -53,13 +53,12 @@ class Content extends LessonContent {
       setEnterState: () => {
       },
       showOnly: [
-        quiz, 
+        quiz,
       ],
       show: [
-        quiz._rect, quiz._grid, quiz._check, 
+        quiz._rect, quiz._grid, quiz._check,
       ],
       setSteadyState: () => {
-        console.log(quiz)
         quiz.newProblem();
       },
     });

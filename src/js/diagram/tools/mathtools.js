@@ -1,6 +1,6 @@
 // @flow
 
-const roundNum = (value: number, precision: number = 5) => {
+const roundNum = (value: number, precision: number = 5): number => {
   const multiplier = 10 ** precision;
   let result = Math.round(value * multiplier) / multiplier;
   if (Object.is(result, -0)) {
@@ -9,18 +9,21 @@ const roundNum = (value: number, precision: number = 5) => {
   return result;
 };
 
-const round = (arrayOrValue: number | Array<number>, precision: number = 5) => {
+function round<T: number | Array<number>>(
+  arrayOrValue: T,
+  precision: number = 5,
+): T {
+  // let result = Array.isArray(arrayOrValue) ? [] : 0;
   let result = 0;
-  if (arrayOrValue instanceof Array) {
+  if (Array.isArray(arrayOrValue)) {
     // $FlowFixMe
     result = arrayOrValue.map(elem => round(elem, precision));
-  // } else if (arrayOrValue.constructor == d2.point(0,0).constructor){
-  //     result = roundPoint(arrayOrValue, precision);
-  } else {
+  }
+  if (typeof arrayOrValue === 'number') {
     result = roundNum(arrayOrValue, precision);
   }
   return result;
-};
+}
 
 
 // // clipValue clips a value to either 0 if it's small enough, or to a max value
