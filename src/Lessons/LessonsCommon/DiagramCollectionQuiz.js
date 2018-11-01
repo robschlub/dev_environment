@@ -7,8 +7,6 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../js/diagram/Element';
 
-// import CommonDiagramCollection from './DiagramCollection';
-
 export type TypeMessages = {
   _correct: DiagramElementPrimative;
   _incorrect: DiagramElementPrimative;
@@ -20,17 +18,27 @@ const CommonQuizMixin = superclass => class extends superclass {
   _check: DiagramElementPrimative;
   _newProblem: DiagramElementPrimative;
   +_messages: TypeMessages;
+  answers: Array<mixed>;
+  answer: string | number;
 
   tryAgain() {
     this._messages.hideAll();
     this._check.show();
     this.hasTouchableElements = true;
+    if (this._intput != null) {
+      this._input.enable();
+      this._input.setValue('');
+    }
     this.diagram.animateNextFrame();
   }
 
   newProblem() {
     this._messages.hideAll();
     this._newProblem.hide();
+    if (this._input != null) {
+      this._input.enable();
+      this._input.setValue('');
+    }
     this.hasTouchableElements = true;
     this.diagram.animateNextFrame();
   }
@@ -67,6 +75,10 @@ const CommonQuizMixin = superclass => class extends superclass {
     this._messages.hideAll();
     this._check.hide();
     this._newProblem.show();
+    if (this._input != null) {
+      this._input.disable();
+      this._input.setValue(this.answer);
+    }
   }
 
   constructor(
@@ -189,6 +201,17 @@ const CommonQuizMixin = superclass => class extends superclass {
       `new_problem__${id}`, 'New Problem', this.newProblem.bind(this),
       this.layout.quiz.newProblem,
     );
+  }
+
+  makeShowAnotherAnswerButton(id: string) {
+    return this.makeButton(
+      `new_problem__${id}`, 'Show Another Answer', this.showAnswer.bind(this),
+      this.layout.quiz.showAnotherAnswer,
+    );
+  }
+
+  addInput(id: string, defaultText: string = '', numDigits: number = 10) {
+    this.add('input', this.makeEntryBox('input1', defaultText, numDigits));
   }
 
   // eslint-disable-next-line class-methods-use-this

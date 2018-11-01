@@ -219,7 +219,6 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this.moveToFuturePositions(1, this.updateRectangle.bind(this));
   }
 
-
   showAnswer() {
     super.showAnswer();
     const answerToShow = randElement(this.answers);

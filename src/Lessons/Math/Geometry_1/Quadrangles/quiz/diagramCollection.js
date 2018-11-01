@@ -178,7 +178,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       diagram, layout, 'q1', {}, transform,
     );
     this.add('quad', this.makeQuad());
-    this.add('input', this.makeEntryBox('a1', '?', 3));
+    // this.add('input', this.makeEntryBox('a1', '?', 3));
+    this.addInput('a1', '?', 3);
     this._input.setPosition(this.layout.input);
   }
 
@@ -202,8 +203,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
 
   tryAgain() {
     super.tryAgain();
-    this._input.enable();
-    this._input.setValue('');
+    // this._input.enable();
+    // this._input.setValue('');
   }
 
 
@@ -213,15 +214,15 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this.calculateFuturePositions();
     this.showAngles(false);
     this.moveToFuturePositions(1, this.updateAngles.bind(this));
-    this._input.enable();
-    this._input.setValue('');
+    // this._input.enable();
+    // this._input.setValue('');
     this.diagram.animateNextFrame();
   }
 
   showAnswer() {
     super.showAnswer();
-    this._input.setValue(this.answer);
-    this._input.disable();
+    // this._input.setValue(this.answer);
+    // this._input.disable();
     this.diagram.animateNextFrame();
   }
 
