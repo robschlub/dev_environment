@@ -23,6 +23,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     _touching: DiagramElementPrimative;
     _rotation: DiagramElementPrimative;
   } & TypeMessages;
+  answers: Array<number>;
 
   // futurePositions: Object;
 
@@ -128,6 +129,7 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this.addGrid();
     this.addRectangle();
     this.hasTouchableElements = true;
+    this.answers = [];
   }
 
   tryAgain() {
@@ -137,6 +139,25 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     // this._input.setValue('');
   }
 
+  getPossibleAnswers(area: number) {
+    const lay = this.layout.adjustableRect;
+    const maxX = (lay.limits.width - lay.minSide * 2) * 5;
+    const maxY = (lay.limits.height - lay.minSide * 2) * 5;
+    const answers = [];
+    const potentialAnswers = round(range(1, 10, 0.1), 8);
+    potentialAnswers.forEach((a) => {
+      const factor = round(area / a, 1);
+      if (round(factor * a, 8) === area && factor > 1) {
+        if (a <= maxX && factor <= maxY) {
+          answers.push([a, factor]);
+        }
+        if (a <= maxY && factor <= maxX) {
+          answers.push([factor, a]);
+        }
+      }
+    });
+    return answers;
+  } 
 
   newProblem() {
     super.newProblem();
@@ -146,10 +167,18 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     const maxY = lay.limits.height / lay.minSide - 2;
     const maxArea = maxX * maxY;
     const minArea = lay.minSide * 3 * lay.minSide * 3;
-    const newArea = round(rand(minArea, maxArea), 0);
-    this.answer = newArea;
+    let answers = [];
+    let area = 0;
+    while (answers.length === 0) {
+      area = round(rand(minArea, maxArea), 0);
+      answers = this.getPossibleAnswers(area);
+    }
+    
+    this.answer = area;
+    this.answers = answers;
+
     if (element) {
-      element.innerHTML = newArea.toString();
+      element.innerHTML = area.toString();
     }
     this._check.show();
     // this.calculateFuturePositions();
@@ -190,28 +219,10 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this.moveToFuturePositions(1, this.updateRectangle.bind(this));
   }
 
+
   showAnswer() {
     super.showAnswer();
-    const lay = this.layout.adjustableRect;
-    const maxX = (lay.limits.width - lay.minSide * 2) * 5;
-    const maxY = (lay.limits.height - lay.minSide * 2) * 5;
-
-    const answers = [];
-    const potentialAnswers = round(range(1, 10, 0.1), 8);
-    potentialAnswers.forEach((a) => {
-      const factor = round(this.answer / a, 1);
-      if (round(factor * a, 8) === this.answer && factor > 1) {
-        if (a <= maxX && factor <= maxY) {
-          answers.push([a, factor]);
-        }
-        if (a <= maxY && factor <= maxX) {
-          answers.push([factor, a]);
-        }
-      }
-    });
-    const answerToShow = randElement(answers);
-    // const width = answerToShow[0] / 5;
-    // const height = answerToShow[1] / 5;
+    const answerToShow = randElement(this.answers);
     const [width, height] = answerToShow;
     this.goToRectangle(width, height);
     this.diagram.animateNextFrame();
@@ -219,23 +230,16 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
 
   findAnswer() {
     this._check.hide();
-    // this._input.disable();
-    // const lay = this.layout.adjustableRect;
-    // const left = this._rect._left.getPosition().x;
-    // const right = this._rect._right.getPosition().x;
-    // const top = this._rect._top.getPosition().y;
-    // const bottom = this._rect._bottom.getPosition().y;
     const width = parseFloat(this._rect._bottom.label.getText());
     const height = parseFloat(this._rect._right.label.getText());
-    const area = round(width * height, 1);
-    // console.log(
-    //   area,
-    //   (right - left) * (top - bottom) * 25,
-    //   round(round((right - left) * 5,1) * round((top - bottom) * 5, 1), 1),
-    // );
-    if (area === this.answer) {
-      return 'correct';
-    }
-    return 'incorrect';
+    const potentialAnswer = [width, height];
+    let result = 'incorrect';
+    this.answers.forEach((answer) => {
+      if (answer[0] === potentialAnswer[0] && answer[1] === potentialAnswer[1])
+      {
+        result = 'correct';  
+      }
+    })
+    return result;
   }
 }
