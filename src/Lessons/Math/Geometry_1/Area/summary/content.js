@@ -63,7 +63,6 @@ class Content extends LessonContent {
         meas._circleA, meas._triangleA,
         meas._triLabelMeters, meas._squareLabelMeters, meas._circleLabelMeters,
       ],
-      setSteadyState: () => {console.log(meas)}
     });
 
     this.addSection(common, {

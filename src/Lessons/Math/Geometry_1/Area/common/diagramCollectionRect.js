@@ -24,7 +24,8 @@ import type {
   TypeSquareEquationCollection,
   TypeNumSquaresEquation,
   TypeNumSquaresEquationNav,
-
+  TypeSquareRectEquationCollection,
+  TypeSquareRectEquation,
 } from './equations';
 
 export default class RectAreaCollection extends CommonDiagramCollection {
@@ -48,12 +49,14 @@ export default class RectAreaCollection extends CommonDiagramCollection {
   _simpleUnitsEqn: TypeSimpleUnitsEquationCollection;
   _square: DiagramElementPrimative;
   _squareEqn: TypeSquareEquationCollection;
+  _squareRectEqn: TypeSquareRectEquationCollection;
   eqns: {
     numSquaresEqn: TypeNumSquaresEquation;
     rectEqn: TypeRectEquation;
     simpleRectEqn: TypeSimpleRectEquation;
     simpleUnitsEqn: TypeSimpleUnitsEquation;
-    squareEqn: TypeSquareEquation
+    squareEqn: TypeSquareEquation;
+    squareRectEqn: TypeSquareRectEquation;
   };
 
   addGrid() {

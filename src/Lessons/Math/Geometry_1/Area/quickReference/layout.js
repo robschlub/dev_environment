@@ -12,5 +12,10 @@ export default function lessonLayout() {
   layout.circleA.labelOffset = -1.1;
   layout.triangleA.width = 0.07;
   layout.triangleA.labelOffset = -0.9;
+
+  layout.rectPosition = new Point(0, 0.3);
+  layout.rectNumSquaresEqnPosition = new Point(0, -0.05);
+
+  layout.squarePosition = new Point(0, 0.2);
   return layout;
 }

@@ -7,9 +7,10 @@ import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup
 import details from '../details';
 
 import MeasureCollection from '../common/diagramCollectionMeasure';
+import RectAreaCollection from '../common/diagramCollectionRect';
 
 
-export default class QRArea extends PopupBoxCollection {
+export class QRArea extends PopupBoxCollection {
   _collection: MeasureCollection;
 
   constructor(
@@ -54,6 +55,93 @@ export default class QRArea extends PopupBoxCollection {
     collection._triLabelMeters.show();
     collection.transform.updateScale(0.5, 0.5);
     collection.setPosition(this.layout.areaPosition);
+    this.diagram.animateNextFrame();
+  }
+}
+
+export class QRRect extends PopupBoxCollection {
+  _collection: RectAreaCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'collection',
+      RectAreaCollection,
+    );
+    this.hasTouchableElements = true;
+
+    const modifiers = {};
+
+    this.setTitle('Area of a Rectangle');
+    this.setDescription(`
+      <p>
+      The |area of a rectangle| is equal to its |width| times its |height|.
+      </p>
+    `, modifiers);
+    this.setLink(details.details.uid);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.5);
+    super.show();
+    const collection = this._collection;
+    collection.show();
+    collection._line.show();
+    collection._sideWidth.showAll();
+    collection._sideHeight.showAll();
+    collection.eqns.squareRectEqn.showForm('0');
+    collection.transform.updateScale(0.7, 0.7);
+    collection.setPosition(this.layout.rectPosition);
+    this.diagram.animateNextFrame();
+  }
+}
+
+
+export class QRSquare extends PopupBoxCollection {
+  _collection: RectAreaCollection;
+
+  constructor(
+    diagram: Object,
+    transform: Transform = new Transform().scale(1, 1).translate(0, 0),
+  ) {
+    const layout = lessonLayout();
+    super(
+      diagram,
+      layout,
+      transform,
+      'collection',
+      RectAreaCollection,
+    );
+    this.hasTouchableElements = true;
+
+    const modifiers = {};
+
+    this.setTitle('Area of a Rectangle');
+    this.setDescription(`
+      <p>
+      The |area of a square| is equal to its |side length squared|.
+      </p>
+    `, modifiers);
+    this.setLink(details.details.uid);
+  }
+
+  show() {
+    this.setDiagramSize(2.5, 1.5);
+    super.show();
+    const collection = this._collection;
+    collection.show();
+    collection._square.show();
+    collection._sideSquareA.showAll();
+    collection._sideSquareB.showAll();
+    collection.eqns.squareRectEqn.showForm('1');
+    collection.transform.updateScale(0.7, 0.7);
+    collection.setPosition(this.layout.squarePosition);
     this.diagram.animateNextFrame();
   }
 }

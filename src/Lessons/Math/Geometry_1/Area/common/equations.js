@@ -356,6 +356,21 @@ export function addNumSquaresRectEquation(
   addToCollection.add(name, nav);
 }
 
+export type TypeSquareRectEquationCollection = {
+  _Area: DiagramElementPrimative,
+  _equals: DiagramElementPrimative,
+  _length: DiagramElementPrimative,
+  _Width: DiagramElementPrimative,
+  _Height: DiagramElementPrimative,
+  _mul: DiagramElementPrimative,
+  _A: DiagramElementPrimative,
+  _2: DiagramElementPrimative,
+} & DiagramElementCollection;
+
+export type TypeSquareRectEquation = {
+  collection: TypeSquareRectEquationCollection;
+} & Equation;
+
 export function addSquareRectEquation(
   diagram: Diagram,
   layout: Object,
