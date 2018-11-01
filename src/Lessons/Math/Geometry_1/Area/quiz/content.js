@@ -61,7 +61,6 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         quiz.newProblem();
-        console.log(quiz)
       },
     });
   }

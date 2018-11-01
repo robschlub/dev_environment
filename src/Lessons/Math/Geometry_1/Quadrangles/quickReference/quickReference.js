@@ -42,7 +42,7 @@ export class QRQuadrangle extends PopupBoxCollection {
     quad._quad1.show();
     quad._quad2.show();
     quad._quad3.show();
-    quad.transform.updateScale(0.7, 0.7);
+    quad.transform.updateScale(0.6, 0.6);
     quad.setPosition(this.layout.quadPosition);
     this.diagram.animateNextFrame();
   }

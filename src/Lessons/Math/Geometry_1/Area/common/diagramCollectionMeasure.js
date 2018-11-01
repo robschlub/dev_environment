@@ -18,20 +18,51 @@ import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class MeasureCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
+  _angle: {
+    _line: DiagramElementPrimative;
+    _minorTicks: DiagramElementPrimative;
+    _majorTicks: DiagramElementPrimative;
+  } & DiagramElementCollection;
+
+  _circleA: DiagramElementPrimative;
   _circleGrid: DiagramElementCollection;
-  _squareGrid: DiagramElementPrimative;
-  _genericGrid: DiagramElementCollection;
-  _smallGenericGrid: DiagramElementCollection;
-  _smallSquareGrid: DiagramElementPrimative;
-  _smallCircleGrid: DiagramElementPrimative;
+  _circleLabel: DiagramElementPrimative;
+  _circleLabelMeters: DiagramElementPrimative;
+  _crossCircle: {
+    _line1: TypeLine;
+    _line2: TypeLine;
+  } & DiagramElementCollection;
+
+  _crossGeneric: {
+    _line1: TypeLine;
+    _line2: TypeLine;
+  } & DiagramElementCollection;
+
+  _genericGrid: {
+    _hLines: DiagramElementPrimative;
+    _vLines: DiagramElementPrimative;
+  } & DiagramElementCollection;
+
   _length: {
     _line: TypeLine;
+    _line0: TypeLine;
     _line1: TypeLine;
     _line2: TypeLine;
     _line3: TypeLine;
-    _line4: TypeLine;
     _ticks: DiagramElementPrimative;
   } & DiagramElementCollection;
+
+  _mediumGrid: DiagramElementPrimative;
+  _smallCircleGrid: DiagramElementCollection;
+  _smallGenericGrid: DiagramElementCollection;
+  _smallSquareGrid: DiagramElementPrimative;
+  _squareA: DiagramElementPrimative;
+  _squareGrid: DiagramElementPrimative;
+  _squareLabel: DiagramElementPrimative;
+  _squareLabelMeters: DiagramElementPrimative;
+  _triLabel: DiagramElementPrimative;
+  _triLabelMeters: DiagramElementPrimative;
+  _triangleA: DiagramElementPrimative;
 
   addEmptyShapes() {
     const sq = this.layout.squareA;

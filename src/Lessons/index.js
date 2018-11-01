@@ -35,6 +35,7 @@ export default function getLessonIndex() {
     'area_introduction',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],

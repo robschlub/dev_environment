@@ -31,8 +31,7 @@ class Content extends LessonContent {
     const meas = diag._measure;
     const rect = diag._rect;
 
-
-    let common = {
+    const common = {
       setContent: [],
       setInfo: '',
       modifiers: {},
@@ -64,13 +63,13 @@ class Content extends LessonContent {
         meas._circleA, meas._triangleA,
         meas._triLabelMeters, meas._squareLabelMeters, meas._circleLabelMeters,
       ],
+      setSteadyState: () => {console.log(meas)}
     });
 
-    
     this.addSection(common, {
       title: 'Rectangle',
       setContent: [
-      'The |area of a rectangle| is equal to its |width| multiplied by its |height|.',
+        'The |area of a rectangle| is equal to its |width| multiplied by its |height|.',
       ],
       showOnly: [rect],
       show: [rect._line, rect._sideWidth, rect._sideHeight],
@@ -82,15 +81,14 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: 'Square',
       setContent: [
-      'The |area of a square| is equal to its |side length squared|.',
+        'The |area of a square| is equal to its |side length squared|.',
       ],
       showOnly: [rect],
-      show: [ rect._square, rect._sideSquareA, rect._sideSquareB],
+      show: [rect._square, rect._sideSquareA, rect._sideSquareB],
       setSteadyState: () => {
         rect.eqns.squareRectEqn.showForm('1');
       },
     });
-
   }
 }
 
