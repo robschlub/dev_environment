@@ -50,6 +50,7 @@ export default function getLessonIndex() {
     'area_triangle',
     [
       '1',
+      'dev',
       'quiz',
       'summary',
     ],

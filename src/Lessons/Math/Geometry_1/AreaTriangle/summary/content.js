@@ -32,7 +32,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Area of a Triangle',
-      setContent: 'The |area of a triangle| is equal to |half its base times its height|. Any side can be the |base|.',
+      setContent: 'The |area of a triangle| is equal to |half its base times its height|. Any side can be the |base| if the height changes to be relative to the base.',
       showOnly: [tri],
       show: [
         tri._tri2,
