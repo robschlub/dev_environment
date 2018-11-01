@@ -161,16 +161,16 @@ const CommonQuizMixin = superclass => class extends superclass {
     return collection;
   }
 
-  makeCheckButton(id: string) {
-    const check = document.createElement('div');
-    check.classList.add('lesson__quiz__button');
-    check.innerHTML = 'Check';
-    check.onclick = this.checkAnswer.bind(this);
+  makeButton(id: string, label: string, callback: Function, position: Point) {
+    const button = document.createElement('div');
+    button.classList.add('lesson__quiz__button');
+    button.innerHTML = label;
+    button.onclick = callback;
     const html = this.diagram.shapes.htmlElement(
-      check,
-      `id__related_angles_check_${id}`,
+      button,
+      `id__lesson_quiz_button_${id}`,
       '',
-      this.layout.quiz.check,
+      position,
       'middle',
       'center',
     );
@@ -178,20 +178,17 @@ const CommonQuizMixin = superclass => class extends superclass {
     return html;
   }
 
-  makeNewProblemButton(id: string) {
-    const newProblem = document.createElement('div');
-    newProblem.classList.add('lesson__quiz__button');
-    newProblem.innerHTML = 'New Problem';
-    newProblem.onclick = this.newProblem.bind(this);
-    const html = this.diagram.shapes.htmlElement(
-      newProblem,
-      `id__related_angles_new_problem_${id}`,
-      '',
-      this.layout.quiz.newProblem,
-      'middle',
-      'center',
+  makeCheckButton(id: string) {
+    return this.makeButton(
+      `check__${id}`, 'Check', this.checkAnswer.bind(this), this.layout.quiz.check,
     );
-    return html;
+  }
+
+  makeNewProblemButton(id: string) {
+    return this.makeButton(
+      `new_problem__${id}`, 'New Problem', this.newProblem.bind(this),
+      this.layout.quiz.newProblem,
+    );
   }
 
   // eslint-disable-next-line class-methods-use-this
