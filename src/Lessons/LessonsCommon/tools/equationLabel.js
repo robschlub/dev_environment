@@ -65,6 +65,19 @@ export default function makeEquationLabel(
     }
   }
 
+  function getText() {
+    let textToReturn = '';
+    const form = eqn.getCurrentForm();
+    if (form != null) {
+      const key = Object.keys(form.collection.elements)[0];
+      const textObject = form.collection.elements[key].vertices;
+      if (textObject != null) {
+        textToReturn = textObject.text[0].text;
+      }
+    }
+    return textToReturn;
+  }
+
   function updateRotation(
     labelAngle: number,
     position: Point,
@@ -94,6 +107,7 @@ export default function makeEquationLabel(
     eqn,
     updateRotation,
     setText,
+    getText,
     // updateScale,
   };
 

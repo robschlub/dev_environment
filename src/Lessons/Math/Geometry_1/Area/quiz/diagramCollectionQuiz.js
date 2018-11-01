@@ -142,10 +142,11 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     super.newProblem();
     const element = document.getElementById('id__lessons__area_quiz1');
     const lay = this.layout.adjustableRect;
-    const maxArea = (lay.limits.width - lay.minSide * 2)
-                  * (lay.limits.height - lay.minSide * 2);
-    const minArea = 1;
-    const newArea = round(rand(minArea, maxArea), 1);
+    const maxX = lay.limits.width / lay.minSide - 2;
+    const maxY = lay.limits.height / lay.minSide - 2;
+    const maxArea = maxX * maxY;
+    const minArea = lay.minSide * 3 * lay.minSide * 3;
+    const newArea = round(rand(minArea, maxArea), 0);
     this.answer = newArea;
     if (element) {
       element.innerHTML = newArea.toString();
@@ -155,11 +156,13 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     // this.moveToFuturePositions(1, this.updateAngles.bind(this));
     // this._input.enable();
     // this._input.setValue('');
-    this.goToRectangle(1, 1);
+    this.goToRectangle(10, 5);
     this.diagram.animateNextFrame();
   }
 
-  goToRectangle(width: number, height: number) {
+  goToRectangle(widthInUnits: number, heightInUnits: number) {
+    const width = widthInUnits * this.layout.adjustableRect.minSide;
+    const height = heightInUnits * this.layout.adjustableRect.minSide;
     const yCenter = this.layout.adjustableRect.limits.height / 2
                     + this.layout.adjustableRect.limits.bottom;
     const xCenter = this.layout.adjustableRect.limits.width / 2
@@ -207,8 +210,9 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
       }
     });
     const answerToShow = randElement(answers);
-    const width = answerToShow[0] / 5;
-    const height = answerToShow[1] / 5;
+    // const width = answerToShow[0] / 5;
+    // const height = answerToShow[1] / 5;
+    const [width, height] = answerToShow;
     this.goToRectangle(width, height);
     this.diagram.animateNextFrame();
   }
@@ -216,16 +220,19 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
   findAnswer() {
     this._check.hide();
     // this._input.disable();
-    const left = this._rect._left.getPosition().x;
-    const right = this._rect._right.getPosition().x;
-    const top = this._rect._top.getPosition().y;
-    const bottom = this._rect._bottom.getPosition().y;
-    const area = round((right - left) * (top - bottom) * 25, 1);
-    console.log(
-      area,
-      (right - left) * (top - bottom) * 25,
-      round(round((right - left) * 5,1) * round((top - bottom) * 5, 1), 1),
-    );
+    // const lay = this.layout.adjustableRect;
+    // const left = this._rect._left.getPosition().x;
+    // const right = this._rect._right.getPosition().x;
+    // const top = this._rect._top.getPosition().y;
+    // const bottom = this._rect._bottom.getPosition().y;
+    const width = parseFloat(this._rect._bottom.label.getText());
+    const height = parseFloat(this._rect._right.label.getText());
+    const area = round(width * height, 1);
+    // console.log(
+    //   area,
+    //   (right - left) * (top - bottom) * 25,
+    //   round(round((right - left) * 5,1) * round((top - bottom) * 5, 1), 1),
+    // );
     if (area === this.answer) {
       return 'correct';
     }

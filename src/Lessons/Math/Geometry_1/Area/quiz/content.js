@@ -59,6 +59,7 @@ class Content extends LessonContent {
         quiz._rect, quiz._grid, quiz._check,
       ],
       setSteadyState: () => {
+        console.log(quiz)
         quiz.newProblem();
       },
     });
