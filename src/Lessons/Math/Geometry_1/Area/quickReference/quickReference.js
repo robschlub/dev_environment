@@ -41,7 +41,7 @@ export default class QRArea extends PopupBoxCollection {
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.2);
+    this.setDiagramSize(2.5, 1.4);
     super.show();
     const collection = this._collection;
     collection.show();
@@ -49,7 +49,7 @@ export default class QRArea extends PopupBoxCollection {
     collection._squareA.show();
     collection._squareLabelMeters.show();
     collection._circleA.showAll();
-    collection._circleLabel.show();
+    collection._circleLabelMeters.show();
     collection._triangleA.show();
     collection._triLabelMeters.show();
     collection.transform.updateScale(0.5, 0.5);
