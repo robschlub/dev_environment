@@ -186,22 +186,22 @@ class Content extends LessonContent {
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
     ];
     this.addSection(common, {});
-    this.addEqnStep(tri._tri2AreaEqn, '0', '0', common);
-    this.addEqnStep(tri._tri2AreaEqn, '0', '1', common);
-    this.addEqnStep(tri._tri2AreaEqn, '1', '2', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '0', '0', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '0', '1', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '1', '2', common);
 
     common.setContent = ['We can rearrange the right hand side to separate the height |h|.'];
-    this.addEqnStep(tri._tri2AreaEqn, '2', '2', common);
-    this.addEqnStep(tri._tri2AreaEqn, '2', '3', common);
-    this.addEqnStep(tri._tri2AreaEqn, '3', '4', common);
-    this.addEqnStep(tri._tri2AreaEqn, '4', '5', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '2', '2', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '2', '3', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '3', '4', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '4', '5', common);
 
     common.setContent = ['Sides |B| and |D| form one side of the triangle. As it\'s the bottom side, we call it the |base|.'];
     common.modifiers = {
       B: highlight(colors.construction),
       D: highlight(colors.construction1),
     };
-    this.addEqnStep(tri._tri2AreaEqn, '5', '5', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '5', '5', common);
     common.show = [
       tri._tri2,
       tri._tri2Rect1, tri._sideTriRect1h, tri._sideTriRect1B,
@@ -209,15 +209,15 @@ class Content extends LessonContent {
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
       tri._sideTri2Base,
     ];
-    this.addEqnStep(tri._tri2AreaEqn, '5', '5', common);
-    this.addEqnStep(tri._tri2AreaEqn, '5', '6', common);
-    this.addEqnStep(tri._tri2AreaEqn, '6', '7', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '5', '5', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '5', '6', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '6', '7', common);
 
     common.setContent = ['|h| is rewritten as the |height| of the triangle.'];
     // common.modifiers = {
     //   A: highlight(colors.construction),
     // };
-    this.addEqnStep(tri._tri2AreaEqn, '7', '7', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '7', '7', common);
     common.show = [
       tri._tri2,
       tri._tri2Rect1, tri._sideTriRect1h, tri._sideTriRect1B,
@@ -225,16 +225,16 @@ class Content extends LessonContent {
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
       tri._sideTri2Base, tri._sideTri2Height,
     ];
-    this.addEqnStep(tri._tri2AreaEqn, '7', '7', common);
-    this.addEqnStep(tri._tri2AreaEqn, '7', '8', common);
-    this.addEqnStep(tri._tri2AreaEqn, '8', '9', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '7', '7', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '7', '8', common);
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '8', '9', common);
 
     common.setContent = ['And so the area of a triangle is |half its base times its height|.'];
     common.show = [
       tri._tri2,
       tri._sideTri2Base, tri._sideTri2Height,
     ];
-    this.addEqnStep(tri._tri2AreaEqn, '9', '10', common, {
+    this.addEqnStep(tri.eqns.tri2AreaEqn, '9', '10', common, {
       title: 'Calculation Result',
     });
 
