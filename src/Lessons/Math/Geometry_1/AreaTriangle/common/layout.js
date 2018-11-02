@@ -344,7 +344,7 @@ export default function commonLessonLayout() {
       height: 2,
     },
     label: {
-      position: new Point(0, -1.5),
+      position: new Point(0, -1.2),
     },
   };
   return layout;

@@ -353,6 +353,10 @@ class Content extends LessonContent {
         all_triangles: click(same.moveTopPad, [same], colors.diagram.action),
       },
       show: [same],
+      hide: [
+        same._base,
+        same._height,
+      ],
     });
   }
 }

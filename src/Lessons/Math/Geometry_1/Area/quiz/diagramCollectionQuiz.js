@@ -104,7 +104,6 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     this._rect._right.move.minTransform.updateTranslation(left + minSide, bottom);
     this._rect._right.move.maxTransform.updateTranslation(limits.right, bottom);
 
-    
     this._rect._bottom.label.setText(`${round((right - left) * 5, 1).toString()}`);
     this._rect._right.label.setText(`${round((top - bottom) * 5, 1).toString()}`);
     this._rect._bottom.updateLabel();
