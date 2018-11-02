@@ -254,7 +254,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: centerV(`
         <p>
-          What |size| are the reference squares used to measure area?
+          What |size| are the |reference squares| used to measure area?
         </p>
         <p>
           Similar to |length|, there are several common sizes used depending on the size of the shape you are measuring.
@@ -278,6 +278,14 @@ class Content extends LessonContent {
       ],
     });
 
+    this.addSection(common, {
+      setContent: centerV([
+        'A |reference square| is typically a |unit square|.',
+        'This means its |side length has a length of 1|.',
+        'For example, a reference square would normally have a side length of |1m|, and |not 2m|.',
+      ]),
+    });
+
     // ******************************************************************
     // ******************************************************************
     // ******************************************************************
@@ -290,7 +298,7 @@ class Content extends LessonContent {
       title: 'Rectangle',
       setContent: centerV(`
         <p>
-          We can now examine the area of a |rectangle|, |square| and |triangle| and see if it is |related| to any other properties of the shape.
+          We can now examine the |area| of a |rectangle| and |square| and see if it is |related| to any other properties of the shape.
         </p>
         `),
     });
@@ -298,7 +306,7 @@ class Content extends LessonContent {
     common.show = [rect._grid, rect._line];
     this.addSection(common, {
       setContent: [
-        'Using reference squares as the unit of area makes it particularly convenient to examine the |area of a rectangle|.',
+        'Using reference squares to measure area makes it particularly convenient to examine the |area of a rectangle|.',
       ],
     });
 
@@ -325,7 +333,7 @@ class Content extends LessonContent {
     });
 
     common.setContent = [
-      'In other words, area can be calculated by multiplying the number of squares for two |adjacent sides|.',
+      '|Area| is calculated by |multiplying the number of squares| for two |adjacent sides|.',
     ];
     this.addSection(common, {
       setSteadyState: () => {
@@ -340,8 +348,19 @@ class Content extends LessonContent {
       },
     });
 
+    // this.addSection(common, {
+    //   setContent: '',
+    //   setSteadyState: () => {
+    //     rect._numSquaresEqn.showForm('0');
+    //   },
+    // });
+
     common.setContent = [
-      'As each square has a length, then the |number of squares in a rectangle side is the same as the side\'s length|.',
+      'Each reference square has a |side length of 1|. Therefore the length of a row of squares will be there lengths TODO then the |number of squares in a side equals the side\'s length|.',
+    ]; 
+
+    common.setContent = [
+      'As each square has a |length of 1|, then the |number of squares in a side equals the side\'s length|.',
     ];
     this.addSection(common, {
       setSteadyState: () => {
