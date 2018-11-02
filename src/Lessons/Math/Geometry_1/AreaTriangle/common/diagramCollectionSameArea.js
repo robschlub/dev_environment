@@ -14,12 +14,20 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 // import { makeLine } from '../../../../LessonsCommon/tools/line';
 // import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
 // import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
+const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
+  for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+    // eslint-disable-next-line no-param-reassign
+    element.vertices.border[0][i].y *= multiplier;
+  }
+};
 
 export default class SameAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _tri: DiagramElementPrimative;
   _grid: DiagramElementPrimative;
-  _topPoint: DiagramElementPrimative;
+  _topPad: DiagramElementPrimative;
+  _basePad: DiagramElementPrimative;
+  _label: DiagramElementPrimative;
 
   addLines() {
     const lay = this.layout.same;
@@ -29,41 +37,73 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     this.add('tri', tri);
   }
 
-
-  addTopPoint() {
+  makePad(position: Point) {
     const lay = this.layout.same.pad;
-    const topPoint = this.diagram.shapes.polygonFilled(
+    const pad = this.diagram.shapes.polygonFilled(
       lay.sides, lay.radius, 0, lay.sides, this.layout.colors.construction,
-      new Transform().translate(this.layout.same.points[2]),
+      new Transform().translate(position),
     );
-    topPoint.isTouchable = true;
-    topPoint.isMovable = true;
-    topPoint.move.minTransform.updateTranslation(
+    pad.isTouchable = true;
+    pad.isMovable = true;
+    increaseBorderSize(pad, 2);
+    pad.setTransformCallback = this.updateTriangle.bind(this);
+    return pad;
+  }
+
+  addTopPad() {
+    // const lay = this.layout.same.pad;
+    const topPad = this.makePad(this.layout.same.points[2]);
+    topPad.move.minTransform.updateTranslation(
       -this.layout.same.grid.length / 2,
       this.layout.same.points[2].y,
     );
-    topPoint.move.maxTransform.updateTranslation(
+    topPad.move.maxTransform.updateTranslation(
       this.layout.same.grid.length / 2,
       this.layout.same.points[2].y,
     );
-    const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
-      for (let i = 0; i < element.vertices.border[0].length; i += 1) {
-        // eslint-disable-next-line no-param-reassign
-        element.vertices.border[0][i].y *= multiplier;
-      }
-    };
-    increaseBorderSize(topPoint, 2);
-    topPoint.setTransformCallback = this.updateTriangle.bind(this);
-    this.add('topPoint', topPoint);
+    this.add('topPad', topPad);
+  }
+
+  addBasePad() {
+    const { points } = this.layout.same;
+    const baseLength = points[1].x - points[0].x;
+    const basePad = this.makePad(
+      new Point(baseLength / 2 + points[0].x, points[0].y),
+    );
+    basePad.move.maxTransform.updateTranslation(
+      this.layout.same.grid.length / 2 - baseLength / 2,
+      0,
+    );
+    basePad.move.minTransform.updateTranslation(
+      -this.layout.same.grid.length / 2 + baseLength / 2,
+      -this.layout.same.grid.height / 2,
+    );
+    // const basePad = this.diagram.shapes.fan([
+    //   lay.points[0].sub(0, lay.height / 2),
+    //   lay.points[0].add(0, lay.height / 2),
+    //   lay.points[1].add(0, lay.height / 2),
+    //   lay.points[1].sub(0, lay.height / 2),
+    // ], );
+    // this.layout.colors.diagram.background,
+    this.add('basePad', basePad);
   }
 
   updateTriangle() {
-    const p = this._topPoint.getPosition();
+    const p = this._topPad.getPosition();
+    const b = this._basePad.getPosition();
+    const baseLength = this.layout.same.points[1].x - this.layout.same.points[0].x;
     const points = [
-      this.layout.same.points[0],
-      this.layout.same.points[1],
+      b.sub(baseLength / 2, 0),
+      b.add(baseLength / 2, 0),
       p,
     ];
+    // console.log(points)
+    const height = p.y - b.y;
+    const area = height * baseLength * 0.5 / this.layout.same.grid.spacing / this.layout.same.grid.spacing;
+    this._label.vertices.change(
+      `Area = ${round(area, 1).toString()} squares`,
+      this._label.lastDrawTransform.m(),
+    );
     this._tri.vertices.change(points);
     this.diagram.animateNextFrame();
   }
@@ -81,15 +121,15 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     this.add('grid', grid);
   }
 
-  moveTopPoint() {
-    const p = this._topPoint.getPosition();
+  moveTopPad() {
+    const p = this._topPad.getPosition();
     const length = this.layout.same.grid.length / 2;
     let newX = rand(0, length);
     if (p.x > 0) {
       newX *= -1;
     }
     const scenario = { position: new Point(newX, p.x) };
-    this.moveToScenario(this._topPoint, scenario, null);
+    this.moveToScenario(this._topPad, scenario, null);
     this.diagram.animateNextFrame();
   }
 
@@ -113,7 +153,8 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.addTopPoint();
+    this.addTopPad();
+    this.addBasePad();
     this.addGrid();
     this.addLines();
     this.addAreaLabel();

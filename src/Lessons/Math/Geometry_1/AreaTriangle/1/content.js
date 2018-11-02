@@ -350,7 +350,7 @@ class Content extends LessonContent {
         'This means |all_triangles| with the |same base| and |height| will have the |same area|.',
       ],
       modifiers: {
-        all_triangles: click(same.moveTopPoint, [same], colors.diagram.action),
+        all_triangles: click(same.moveTopPad, [same], colors.diagram.action),
       },
       show: [same],
     });
