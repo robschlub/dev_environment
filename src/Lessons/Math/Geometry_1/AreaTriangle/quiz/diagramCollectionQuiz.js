@@ -24,81 +24,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
     _rotation: DiagramElementPrimative;
   } & TypeMessages;
 
-  updateTriangle() {
-    const lay = this.layout.same;
-    const p = this._topPad.getPosition();
-    const left = this._leftBasePad.getPosition();
-    const right = this._rightBasePad.getPosition();
-    const top = this._topPad.getPosition();
-    const separation = right.x - left.x;
-
-    if (this._leftBasePad.state.isBeingMoved || this._leftBasePad.state.isMovingFreely) {
-      let rightX = right.x;
-      if (separation < lay.basePadMinSeparation) {
-        rightX += lay.basePadMinSeparation - separation;
-      }
-      this._rightBasePad.transform.updateTranslation(rightX, left.y);
-      const height = top.y - left.y;
-      let topY = top.y;
-      if (height < lay.basePadMinSeparation) {
-        topY += lay.basePadMinSeparation - height;
-      }
-      this._topPad.transform.updateTranslation(top.x, topY);
-    }
-    if (this._rightBasePad.state.isBeingMoved || this._rightBasePad.state.isMovingFreely) {
-      let leftX = left.x;
-      if (separation < lay.basePadMinSeparation) {
-        leftX -= lay.basePadMinSeparation - separation;
-      }
-      this._leftBasePad.transform.updateTranslation(leftX, right.y);
-      const height = top.y - right.y;
-      let topY = top.y;
-      if (height < lay.basePadMinSeparation) {
-        topY += lay.basePadMinSeparation - height;
-      }
-      this._topPad.transform.updateTranslation(top.x, topY);
-    }
-    if (this._topPad.state.isBeingMoved || this._topPad.state.isMovingFreely) {
-      const height = top.y - left.y;
-      let baseY = left.y;
-      if (height < lay.basePadMinSeparation) {
-        baseY -= lay.basePadMinSeparation - height;
-      }
-      this._leftBasePad.transform.updateTranslation(left.x, baseY);
-      this._rightBasePad.transform.updateTranslation(right.x, baseY);
-    }
-
-    const points = [
-      left,
-      right,
-      p,
-    ];
-
-    this.base = round((right.x - left.x) / lay.grid.spacing, 1);
-    this.height = round((p.y - left.y) / lay.grid.spacing, 1);
-    this.area = round(this.height * this.base * 0.5, 1);
-
-    this._label.vertices.change(
-      `Area = ${round(this.area, 1).toString()} squares`,
-      this._label.lastDrawTransform.m(),
-    );
-    this._tri.vertices.change(points);
-    this._base.setEndPoints(
-      new Point(left.x, lay.baseY),
-      new Point(right.x, lay.baseY),
-    );
-    if (this._base.label != null) {
-      this._base.label.setText(this.base.toString());
-    }
-    this._height.setEndPoints(
-      new Point(lay.heightX, right.y),
-      new Point(lay.heightX, p.y),
-    );
-    if (this._height.label != null) {
-      this._height.label.setText(this.height.toString());
-    }
-    this.diagram.animateNextFrame();
-  }
 
   updateLimits() {
     const lay = this.layout.same;
@@ -143,7 +68,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
       transform,
     );
     this.setPosition(this.layout.samePosition);
-    this.updateLimits();
+    // this.updateLimits();
     this.hasTouchableElements = true;
   }
 
@@ -171,7 +96,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
     const maxHeight = (lay.grid.height - lay.pad.radius * 2) / lay.grid.spacing;
     const minBase = lay.basePadMinSeparation;
     const minHeight = lay.basePadMinSeparation;
-    console.log(minHeight, maxHeight)
     const answers = [];
     const potentialHeights = round(range(minHeight, maxHeight, 0.1), 8);
     potentialHeights.forEach((h: number) => {
