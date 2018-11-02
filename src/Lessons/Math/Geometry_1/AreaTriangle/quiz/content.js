@@ -43,7 +43,7 @@ class Content extends LessonContent {
       },
       setInfo: `<ul>
           <li>Move triangle points to change triangle base and height.</li>
-          <li>Press |Check| button when triangle is thought to have target area.</li>
+          <li>Press |Check| button when triangle has target area.</li>
           </ul>
       `,
       infoModifiers: {

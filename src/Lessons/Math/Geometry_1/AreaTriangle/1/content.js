@@ -147,7 +147,7 @@ class Content extends LessonContent {
       ],
     });
 
-    common.setContent = ['Sides |A| and |C| are both the |height| of the triangle, and are the same.'];
+    common.setContent = ['Sides |A| and |C| are both the |height| of the triangle, and are the same, so label them as |h|.'];
     common.modifiers = {
       A: highlight(colors.construction),
       C: highlight(colors.construction1),

@@ -66,7 +66,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
       transform,
     );
     this.setPosition(this.layout.samePosition);
-    // this.updateLimits();
     this.hasTouchableElements = true;
   }
 
@@ -149,7 +148,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
     const { area, answers } = this.getAnswers();
     this.answer = area;
     this.answers = answers;
-    console.log(this.answers);
 
     if (element) {
       element.innerHTML = area.toString();
