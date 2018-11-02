@@ -347,13 +347,13 @@ export function addNumSquaresRectEquation(
   eqn.collection.setPosition(layout.rectNumSquaresEqnPosition);
   eqn.setCurrentForm('0');
 
-  const nav = makeEquationNavigator(
-    diagram, eqn, layout.rectEqnNavPosition,
-    'equationOnly', '', 'center',
-  );
+  // const nav = makeEquationNavigator(
+  //   diagram, eqn, layout.rectEqnNavPosition,
+  //   'equationOnly', '', 'center',
+  // );
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;
-  addToCollection.add(name, nav);
+  addToCollection.add(name, eqn.collection);
 }
 
 export type TypeSquareRectEquationCollection = {

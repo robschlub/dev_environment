@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent,
+  LessonContent, interactiveItem,
 } from '../../../../../js/Lesson/LessonContent';
 import {
   click, centerV, highlight, highlightWord,
@@ -171,6 +171,13 @@ class Content extends LessonContent {
       modifiers: {
         shape: click(meas.toggleGrid, [meas], colors.diagram.action),
       },
+      setInfo: `<ul>
+          <li>Touch |shape| to see different examples of reference shapes.</li>
+          </ul>
+      `,
+      infoModifiers: {
+        shape: highlight(colors.diagram.action),
+      },
       show: [
         meas._squareGrid, meas._squareA,
         meas._circleA, meas._triangleA,
@@ -335,6 +342,14 @@ class Content extends LessonContent {
         six_rows: click(rect.toggleRow, [rect, null], colors.row),
         ten_squares: click(rect.toggleRow, [rect, null], colors.row),
       },
+      setInfo: `<ul>
+          <li>Touch |six_rows| or |ten_squares| to highlight the rows.</li>
+          </ul>
+      `,
+      infoModifiers: {
+        six_rows: highlight(colors.row),
+        ten_squares: highlight(colors.row),
+      },
       setSteadyState: () => {
         rect.rowIndex = 5;
       },
@@ -361,7 +376,7 @@ class Content extends LessonContent {
     common.show = [rect._grid, rect._line, rect._sideA, rect._sideB];
     this.addSection(common, {
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('0');
+        rect.eqns.numSquaresEqn.showForm('0');
       },
     });
 
@@ -370,18 +385,18 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('0');
+        rect.eqns.numSquaresEqn.showForm('0');
       },
     });
 
     this.addSection(common, {
       transitionFromPrev: (done) => {
-        rect._numSquaresEqn.showForm('0');
+        rect.eqns.numSquaresEqn.showForm('0');
         rect.eqns.numSquaresEqn.getForm('1')
           .animatePositionsTo(0, 0.5, 1, 0.5, done);
       },
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('1');
+        rect.eqns.numSquaresEqn.showForm('1');
       },
     });
 
@@ -390,7 +405,7 @@ class Content extends LessonContent {
         'So the area of a rectangle is also equal to the product of |two adjacent side lengths|.',
       ],
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('1');
+        rect.eqns.numSquaresEqn.showForm('1');
       },
     });
 
@@ -399,12 +414,12 @@ class Content extends LessonContent {
         '|Length| is usually assumed, and so it can be removed from the equation for simplicity.',
       ],
       transitionFromPrev: (done) => {
-        rect._numSquaresEqn.showForm('1');
+        rect.eqns.numSquaresEqn.showForm('1');
         rect.eqns.numSquaresEqn.getForm('2')
           .animatePositionsTo(0, 0.5, 1, 0.5, done);
       },
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('2');
+        rect.eqns.numSquaresEqn.showForm('2');
       },
     });
 
@@ -413,13 +428,13 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('2');
+        rect.eqns.numSquaresEqn.showForm('2');
       },
     });
     common.show = [rect._grid, rect._line, rect._sideWidth, rect._sideHeight];
     this.addSection(common, {
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('2');
+        rect.eqns.numSquaresEqn.showForm('2');
       },
     });
     common.setContent = [
@@ -427,26 +442,26 @@ class Content extends LessonContent {
     ];
     this.addSection(common, {
       transitionFromPrev: (done) => {
-        rect._numSquaresEqn.showForm('2');
+        rect.eqns.numSquaresEqn.showForm('2');
         rect.eqns.numSquaresEqn.getForm('3')
           .animatePositionsTo(0, 0.5, 1, 0.5, done);
       },
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('3');
+        rect.eqns.numSquaresEqn.showForm('3');
       },
     });
 
     this.addSection(common, {
       setContent: ['We have found a |relationship| between a rectangle\'s |area| and its |side lengths|.'],
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('3');
+        rect.eqns.numSquaresEqn.showForm('3');
       },
     });
 
     this.addSection(common, {
       setContent: ['If you |know two| of the three properties, you can |calculate the third|.'],
       setSteadyState: () => {
-        rect._numSquaresEqn.showForm('3');
+        rect.eqns.numSquaresEqn.showForm('3');
       },
     });
 
@@ -476,6 +491,16 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: [
         'Now we can |calculate area| and then rearrange the equation to see the |units| of area.',
+      ],
+      setInfo: `<ul>
+          <li>Touch equation, the equation's right arrow or the NEXT text under the equation to progress forwards.</li>
+          <li>Touch equation's left arrow to go to previous step.</li>
+          </ul>
+      `,
+      interactiveElements: [
+        interactiveItem(rect._rectEqn.next),
+        interactiveItem(rect._rectEqn.nextDescription),
+        interactiveItem(rect._rectEqn.prev),
       ],
       setSteadyState: () => {
         rect._rectEqn.showForm('0');
