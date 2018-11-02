@@ -170,6 +170,7 @@ export default function commonLessonLayout() {
   // layout.rectSimpleAreaEqnPosition = new Point(0, 1.2);
   // layout.rectSquareEqnPosition = new Point(0, 1.2);
 
+  layout.triRectEqnPosition = new Point(0, 1.2);
   // //////////////////////////////////////////////////////
   //     Triangle Area
   // //////////////////////////////////////////////////////

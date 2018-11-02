@@ -68,7 +68,7 @@ export function addTriRectEquation(
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space', 'A', 'mul', 'B',
   ]);
 
-  eqn.collection.setPosition(layout.rectSquareEqnPosition);
+  eqn.collection.setPosition(layout.triRectEqnPosition);
   eqn.setCurrentForm('0');
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;
