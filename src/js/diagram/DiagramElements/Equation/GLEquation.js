@@ -391,7 +391,7 @@ class StrikeOut extends Elements {
     if (this.strike != null && namedCollection) {
       strike = namedCollection[this.strike.name];
     } else {
-      strike = this.strike;
+      ({ strike } = this);
     }
     const strikeOutCopy = new StrikeOut(
       this.mainContent._dup(namedCollection),
@@ -932,7 +932,7 @@ class Integral extends Elements {
     } else {
       glyph = this.integralGlyph;
     }
-    // const glyph = this.integralGlyph == null ? null : 
+
     const integralCopy = new Integral(
       limitMin,
       limitMax,
@@ -1314,7 +1314,7 @@ class Bar extends Brackets {
     content: Elements | null,
     barGlyph: DiagramElementPrimative | null | DiagramElementCollection,
     space: number = 0.03,
-    outsideSpace: number = 0.03, 
+    outsideSpace: number = 0.03,
     barPosition: 'top' | 'bottom' = 'top',
   ) {
     super(content, barGlyph, null, space);

@@ -46,7 +46,7 @@ class Content extends LessonContent {
     rect.eqns.rectEqn.changeDescription('7', 'Multiplying something by itself is the same as squaring it.', mods);
     rect.eqns.rectEqn.changeDescription('8', 'Resulting area of rectangle', mods);
 
-    let common = {
+    const common = {
       setContent: [],
       setInfo: '',
       modifiers: {},
@@ -294,7 +294,7 @@ class Content extends LessonContent {
     });
 
     common.showOnly = [size, size._row, size._row._grid];
-    common.show = [size._row._square0]
+    common.show = [size._row._square0];
     this.addSection(common, {
       setContent: [
         'A |unit reference square| makes it easy to |relate number of squares and length|.',

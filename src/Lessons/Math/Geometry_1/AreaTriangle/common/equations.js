@@ -1,14 +1,14 @@
 // @flow
-import {
-  Point,
-} from '../../../../../js/diagram/tools/g2';
+// import {
+//   Point,
+// } from '../../../../../js/diagram/tools/g2';
 import Diagram from '../../../../../js/diagram/Diagram';
 import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../../js/diagram/Element';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import * as html from '../../../../../js/tools/htmlGenerator';
-import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
+// import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 // import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
 
 export type TypeTriRectEquationCollection = {

@@ -12,6 +12,7 @@ import {
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
+
 const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
   for (let i = 0; i < element.vertices.border[0].length; i += 1) {
     // eslint-disable-next-line no-param-reassign

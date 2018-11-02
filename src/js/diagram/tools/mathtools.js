@@ -16,7 +16,6 @@ function round<T: number | Array<number>>(
   // let result = Array.isArray(arrayOrValue) ? [] : 0;
   let result = 0;
   if (Array.isArray(arrayOrValue)) {
-    // $FlowFixMe
     result = arrayOrValue.map(elem => round(elem, precision));
   }
   if (typeof arrayOrValue === 'number') {

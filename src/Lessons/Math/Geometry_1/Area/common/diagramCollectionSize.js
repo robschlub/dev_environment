@@ -24,7 +24,8 @@ export default class SizeCollection extends CommonDiagramCollection {
   } & DiagramElementCollection;
 
   addRowLength() {
-    const row = this.diagram.shapes.collection(new Transform().translate(this.layout.countLength.position));
+    const row = this.diagram.shapes.collection(new Transform()
+      .translate(this.layout.countLength.position));
 
     const lay = this.layout.countLength;
     const length = lay.sideLength * lay.count;

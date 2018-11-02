@@ -2,9 +2,9 @@
 import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
-import {
-  click, centerV, highlight, highlightWord,
-} from '../../../../../js/tools/htmlGenerator';
+// import {
+//   click, centerV, highlight, highlightWord,
+// } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
@@ -13,7 +13,7 @@ import imgLinkGrey from '../tile-grey.png';
 import details from '../details';
 
 const layout = lessonLayout();
-const { colors } = layout;
+// const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {

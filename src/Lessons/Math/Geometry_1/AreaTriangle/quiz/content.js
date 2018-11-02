@@ -1,9 +1,9 @@
 // @flow
 import {
-  LessonContent, interactiveItem,
+  LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
 import {
-  click, centerH, toHTML,
+  toHTML,
 } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import lessonLayout from './layout';
