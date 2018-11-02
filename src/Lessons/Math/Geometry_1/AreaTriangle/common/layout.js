@@ -332,6 +332,7 @@ export default function commonLessonLayout() {
       sides: 50,
       radius: 0.15,
     },
+    basePadMinSeparation: 0.4,
     grid:{
       position: new Point(0, 0),
       smallPosition: new Point(0, 0),

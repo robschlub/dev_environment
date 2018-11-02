@@ -26,7 +26,8 @@ export default class SameAreaCollection extends CommonDiagramCollection {
   _tri: DiagramElementPrimative;
   _grid: DiagramElementPrimative;
   _topPad: DiagramElementPrimative;
-  _basePad: DiagramElementPrimative;
+  _leftBasePad: DiagramElementPrimative;
+  _rightBasePad: DiagramElementPrimative;
   _label: DiagramElementPrimative;
 
   addLines() {
@@ -64,42 +65,71 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     this.add('topPad', topPad);
   }
 
-  addBasePad() {
+  addLeftBasePad() {
     const { points } = this.layout.same;
-    const baseLength = points[1].x - points[0].x;
-    const basePad = this.makePad(
-      new Point(baseLength / 2 + points[0].x, points[0].y),
+    // const baseLength = points[1].x - points[0].x;
+    const leftBasePad = this.makePad(
+      this.layout.same.points[0],
     );
-    basePad.move.maxTransform.updateTranslation(
-      this.layout.same.grid.length / 2 - baseLength / 2,
+    leftBasePad.move.maxTransform.updateTranslation(
+      points[1].x - this.layout.same.basePadMinSeparation,
       0,
     );
-    basePad.move.minTransform.updateTranslation(
-      -this.layout.same.grid.length / 2 + baseLength / 2,
+    leftBasePad.move.minTransform.updateTranslation(
+      -this.layout.same.grid.length / 2 + this.layout.same.pad.radius,
       -this.layout.same.grid.height / 2,
     );
-    // const basePad = this.diagram.shapes.fan([
-    //   lay.points[0].sub(0, lay.height / 2),
-    //   lay.points[0].add(0, lay.height / 2),
-    //   lay.points[1].add(0, lay.height / 2),
-    //   lay.points[1].sub(0, lay.height / 2),
-    // ], );
-    // this.layout.colors.diagram.background,
-    this.add('basePad', basePad);
+    // console.log(leftBasePad.move.minTransform._dup(), leftBasePad.move.maxTransform._dup())
+    this.add('leftBasePad', leftBasePad);
+  }
+
+  addRightBasePad() {
+    const { points } = this.layout.same;
+    // const baseLength = points[1].x - points[0].x;
+    const rightBasePad = this.makePad(
+      this.layout.same.points[1],
+    );
+    rightBasePad.move.maxTransform.updateTranslation(
+      this.layout.same.grid.length / 2 - this.layout.same.pad.radius,
+      0,
+    );
+    rightBasePad.move.minTransform.updateTranslation(
+      points[0].x + this.layout.same.basePadMinSeparation,
+      -this.layout.same.grid.height / 2,
+    );
+    this.add('rightBasePad', rightBasePad);
   }
 
   updateTriangle() {
     const p = this._topPad.getPosition();
-    const b = this._basePad.getPosition();
-    const baseLength = this.layout.same.points[1].x - this.layout.same.points[0].x;
+    const left = this._leftBasePad.getPosition();
+    const right = this._rightBasePad.getPosition();
+
+    if (this._leftBasePad.state.isBeingMoved || this._leftBasePad.state.isMovingFreely) {
+      this._rightBasePad.transform.updateTranslation(right.x, left.y);
+      this._rightBasePad.move.minTransform.updateTranslation(
+        left.x + this.layout.same.basePadMinSeparation,
+        -this.layout.same.grid.height / 2,
+      );
+    }
+    if (this._rightBasePad.state.isBeingMoved || this._rightBasePad.state.isMovingFreely) {
+      this._leftBasePad.transform.updateTranslation(left.x, right.y);
+      this._leftBasePad.move.maxTransform.updateTranslation(
+        right.x - this.layout.same.basePadMinSeparation,
+        this.layout.same.grid.height / 2,
+      );
+    }
+
+    const baseLength = left.x - right.x;
     const points = [
-      b.sub(baseLength / 2, 0),
-      b.add(baseLength / 2, 0),
+      left,
+      right,
       p,
     ];
     // console.log(points)
-    const height = p.y - b.y;
-    const area = height * baseLength * 0.5 / this.layout.same.grid.spacing / this.layout.same.grid.spacing;
+    const height = p.y - left.y;
+    const area =
+      height * baseLength * 0.5 / this.layout.same.grid.spacing / this.layout.same.grid.spacing;
     this._label.vertices.change(
       `Area = ${round(area, 1).toString()} squares`,
       this._label.lastDrawTransform.m(),
@@ -154,7 +184,8 @@ export default class SameAreaCollection extends CommonDiagramCollection {
   ) {
     super(diagram, layout, transform);
     this.addTopPad();
-    this.addBasePad();
+    this.addRightBasePad();
+    this.addLeftBasePad();
     this.addGrid();
     this.addLines();
     this.addAreaLabel();
