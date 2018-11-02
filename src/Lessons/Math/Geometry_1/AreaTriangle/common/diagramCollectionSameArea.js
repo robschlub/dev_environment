@@ -17,6 +17,8 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
   for (let i = 0; i < element.vertices.border[0].length; i += 1) {
     // eslint-disable-next-line no-param-reassign
+    element.vertices.border[0][i].x *= multiplier;
+    // eslint-disable-next-line no-param-reassign
     element.vertices.border[0][i].y *= multiplier;
   }
 };
@@ -48,6 +50,7 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     pad.isMovable = true;
     increaseBorderSize(pad, 2);
     pad.setTransformCallback = this.updateTriangle.bind(this);
+    pad.move.canBeMovedAfterLoosingTouch = true;
     return pad;
   }
 
@@ -113,10 +116,6 @@ export default class SameAreaCollection extends CommonDiagramCollection {
         rightX += lay.basePadMinSeparation - separation;
       }
       this._rightBasePad.transform.updateTranslation(rightX, left.y);
-      // this._rightBasePad.move.minTransform.updateTranslation(
-      //   left.x + this.layout.same.basePadMinSeparation,
-      //   -this.layout.same.grid.height / 2,
-      // );
     }
     if (this._rightBasePad.state.isBeingMoved || this._rightBasePad.state.isMovingFreely) {
       let leftX = left.x;
@@ -124,13 +123,9 @@ export default class SameAreaCollection extends CommonDiagramCollection {
         leftX -= lay.basePadMinSeparation - separation;
       }
       this._leftBasePad.transform.updateTranslation(leftX, right.y);
-      // this._leftBasePad.move.maxTransform.updateTranslation(
-      //   right.x - this.layout.same.basePadMinSeparation,
-      //   this.layout.same.grid.height / 2,
-      // );
     }
 
-    const baseLength = left.x - right.x;
+    const baseLength = right.x - left.x;
     const points = [
       left,
       right,

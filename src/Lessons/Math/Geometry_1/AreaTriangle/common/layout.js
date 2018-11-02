@@ -320,7 +320,7 @@ export default function commonLessonLayout() {
   // //////////////////////////////////////////////////////
   //     Same Area Triangle
   // //////////////////////////////////////////////////////
-  layout.samePosition = new Point(0, -0.5);
+  layout.samePosition = new Point(0, -0.2);
   layout.same = {
     width: 0.03,
     points: [
