@@ -180,7 +180,7 @@ export default function commonLessonLayout() {
   // //////////////////////////////////////////////////////
   //     Same Area Triangle
   // //////////////////////////////////////////////////////
-  layout.samePosition = new Point(0, -0.2);
+  layout.samePosition = new Point(0, -0.1);
   layout.same = {
     width: 0.03,
     points: [
@@ -188,7 +188,7 @@ export default function commonLessonLayout() {
       new Point(0.5, -0.75),
       new Point(0, 0.75),
     ],
-    baseY: -1.1,
+    baseY: -1.25,
     heightX: 2.6,
     lineLabelOffset: 0.08,
     pad: {
@@ -201,11 +201,14 @@ export default function commonLessonLayout() {
       smallPosition: new Point(0, 0),
       spacing: 0.25,
       length: 5,
-      height: 2,
+      height: 2.25,
     },
     label: {
-      position: new Point(0, -1.2),
+      position: new Point(0, -1.7),
     },
   };
+  // layout.same.grid.height = 2.25;
+  // layout.same.baseY = -1.25;
+  // layout.samePosition = new Point(0, 0);
   return layout;
 }

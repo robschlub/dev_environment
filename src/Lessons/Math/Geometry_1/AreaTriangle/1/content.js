@@ -343,20 +343,22 @@ class Content extends LessonContent {
         'In this case, we have found that |triangle area| is calculated from |base side length| and |height|.',
         'Another way to say this, is |area is only dependent| on the base side length and height.',
       ]),
-      // show: [same],
     });
     this.addSection({
       setContent: [
-        'This means |all_triangles| with the |same base| and |height| will have the |same area|.',
+        'This means |all triangles| with the |same base| and |height| will have the |same_area|.',
       ],
       modifiers: {
-        all_triangles: click(same.moveTopPad, [same], colors.diagram.action),
+        same_area: click(same.moveTopPad, [same], colors.diagram.action),
+      },
+      setInfo: `<ul>
+          <li>Move triangle |points| to change triangle base and height to see how area changes.</li>
+          </ul>
+      `,
+      infoModifiers: {
+        points: highlight(colors.construction),
       },
       show: [same],
-      hide: [
-        same._base,
-        same._height,
-      ],
     });
   }
 }

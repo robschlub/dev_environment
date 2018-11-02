@@ -7,12 +7,12 @@ import {
 import {
   rand, range, round,
 } from '../../../../../js/diagram/tools/mathtools';
-import {
-  DiagramElementCollection, DiagramElementPrimative,
-} from '../../../../../js/diagram/Element';
+// import {
+//   DiagramElementCollection, DiagramElementPrimative,
+// } from '../../../../../js/diagram/Element';
 
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
-import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
+// import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
 // import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import SameAreaCollection from '../common/diagramCollectionSameArea';
 
@@ -23,35 +23,35 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
   answers: Array<Array<number>>;
   answer: number;
 
-  updateLimits() {
-    const lay = this.layout.same;
-    const { length, height } = lay.grid;
-    const minSeparation = lay.basePadMinSeparation;
-    this._leftBasePad.move.minTransform.updateTranslation(
-      -length / 2,
-      -height / 2,
-    );
-    this._leftBasePad.move.maxTransform.updateTranslation(
-      length / 2 - minSeparation,
-      height / 2 - minSeparation,
-    );
-    this._rightBasePad.move.minTransform.updateTranslation(
-      -length / 2 + minSeparation,
-      -height / 2,
-    );
-    this._rightBasePad.move.maxTransform.updateTranslation(
-      length / 2,
-      height / 2 - minSeparation,
-    );
-    this._topPad.move.minTransform.updateTranslation(
-      -length / 2,
-      -height / 2 + minSeparation,
-    );
-    this._topPad.move.maxTransform.updateTranslation(
-      length / 2,
-      height / 2,
-    );
-  }
+  // updateLimits() {
+  //   const lay = this.layout.same;
+  //   const { length, height } = lay.grid;
+  //   const minSeparation = lay.basePadMinSeparation;
+  //   this._leftBasePad.move.minTransform.updateTranslation(
+  //     -length / 2,
+  //     -height / 2,
+  //   );
+  //   this._leftBasePad.move.maxTransform.updateTranslation(
+  //     length / 2 - minSeparation,
+  //     height / 2 - minSeparation,
+  //   );
+  //   this._rightBasePad.move.minTransform.updateTranslation(
+  //     -length / 2 + minSeparation,
+  //     -height / 2,
+  //   );
+  //   this._rightBasePad.move.maxTransform.updateTranslation(
+  //     length / 2,
+  //     height / 2 - minSeparation,
+  //   );
+  //   this._topPad.move.minTransform.updateTranslation(
+  //     -length / 2,
+  //     -height / 2 + minSeparation,
+  //   );
+  //   this._topPad.move.maxTransform.updateTranslation(
+  //     length / 2,
+  //     height / 2,
+  //   );
+  // }
 
   constructor(
     diagram: LessonDiagram,

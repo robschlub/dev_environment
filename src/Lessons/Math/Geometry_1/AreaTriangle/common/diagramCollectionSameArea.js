@@ -57,6 +57,35 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     return pad;
   }
 
+  // updateLimits() {
+  //   const lay = this.layout.same;
+  //   const { length, height } = lay.grid;
+  //   const minSeparation = lay.basePadMinSeparation;
+  //   this._leftBasePad.move.minTransform.updateTranslation(
+  //     -length / 2,
+  //     -height / 2,
+  //   );
+  //   this._leftBasePad.move.maxTransform.updateTranslation(
+  //     length / 2 - minSeparation,
+  //     0,
+  //   );
+  //   this._rightBasePad.move.minTransform.updateTranslation(
+  //     -length / 2 + minSeparation,
+  //     -height / 2,
+  //   );
+  //   this._rightBasePad.move.maxTransform.updateTranslation(
+  //     length / 2,
+  //     0,
+  //   );
+  //   this._topPad.move.minTransform.updateTranslation(
+  //     -length / 2,
+  //     this.layout.same.points[2].y,
+  //   );
+  //   this._topPad.move.maxTransform.updateTranslation(
+  //     length / 2,
+  //     this.layout.same.points[2].y,
+  //   );
+  // }
   updateLimits() {
     const lay = this.layout.same;
     const { length, height } = lay.grid;
@@ -67,7 +96,7 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     );
     this._leftBasePad.move.maxTransform.updateTranslation(
       length / 2 - minSeparation,
-      0,
+      height / 2 - minSeparation,
     );
     this._rightBasePad.move.minTransform.updateTranslation(
       -length / 2 + minSeparation,
@@ -75,15 +104,15 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     );
     this._rightBasePad.move.maxTransform.updateTranslation(
       length / 2,
-      0,
+      height / 2 - minSeparation,
     );
     this._topPad.move.minTransform.updateTranslation(
       -length / 2,
-      this.layout.same.points[2].y,
+      -height / 2 + minSeparation,
     );
     this._topPad.move.maxTransform.updateTranslation(
       length / 2,
-      this.layout.same.points[2].y,
+      height / 2,
     );
   }
 
@@ -237,7 +266,7 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     if (p.x > 0) {
       newX *= -1;
     }
-    const scenario = { position: new Point(newX, p.x) };
+    const scenario = { position: new Point(newX, p.y) };
     this.moveToScenario(this._topPad, scenario, null);
     this.diagram.animateNextFrame();
   }
