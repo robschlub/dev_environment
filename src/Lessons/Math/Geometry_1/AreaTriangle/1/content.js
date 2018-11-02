@@ -161,8 +161,8 @@ class Content extends LessonContent {
     this.addSection(common, {
       show: [
         tri._tri2,
-        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-        tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+        tri._tri2Rect1, tri._sideTriRect1h, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2h, tri._sideTriRect2D,
       ],
     });
 
@@ -174,14 +174,14 @@ class Content extends LessonContent {
     this.addSection(common, {
       show: [
         tri._tri2,
-        tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-        tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+        tri._tri2Rect1, tri._sideTriRect1h, tri._sideTriRect1B,
+        tri._tri2Rect2, tri._sideTriRect2h, tri._sideTriRect2D,
       ],
     });
     common.show = [
       tri._tri2,
-      tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-      tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      tri._tri2Rect1, tri._sideTriRect1h, tri._sideTriRect1B,
+      tri._tri2Rect2, tri._sideTriRect2h, tri._sideTriRect2D,
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
     ];
     this.addSection(common, {});
@@ -189,7 +189,7 @@ class Content extends LessonContent {
     this.addEqnStep(tri._tri2AreaEqn, '0', '1', common);
     this.addEqnStep(tri._tri2AreaEqn, '1', '2', common);
 
-    common.setContent = ['We can rearrange the right hand side to separate the height |A|.'];
+    common.setContent = ['We can rearrange the right hand side to separate the height |h|.'];
     this.addEqnStep(tri._tri2AreaEqn, '2', '2', common);
     this.addEqnStep(tri._tri2AreaEqn, '2', '3', common);
     this.addEqnStep(tri._tri2AreaEqn, '3', '4', common);
@@ -203,8 +203,8 @@ class Content extends LessonContent {
     this.addEqnStep(tri._tri2AreaEqn, '5', '5', common);
     common.show = [
       tri._tri2,
-      tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-      tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      tri._tri2Rect1, tri._sideTriRect1h, tri._sideTriRect1B,
+      tri._tri2Rect2, tri._sideTriRect2h, tri._sideTriRect2D,
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
       tri._sideTri2Base,
     ];
@@ -212,15 +212,15 @@ class Content extends LessonContent {
     this.addEqnStep(tri._tri2AreaEqn, '5', '6', common);
     this.addEqnStep(tri._tri2AreaEqn, '6', '7', common);
 
-    common.setContent = ['Side |A| is the same as the |height| of the triangle.'];
-    common.modifiers = {
-      A: highlight(colors.construction),
-    };
+    common.setContent = ['|h| is rewritten as the |height| of the triangle.'];
+    // common.modifiers = {
+    //   A: highlight(colors.construction),
+    // };
     this.addEqnStep(tri._tri2AreaEqn, '7', '7', common);
     common.show = [
       tri._tri2,
-      tri._tri2Rect1, tri._sideTriRect1A, tri._sideTriRect1B,
-      tri._tri2Rect2, tri._sideTriRect2A, tri._sideTriRect2D,
+      tri._tri2Rect1, tri._sideTriRect1h, tri._sideTriRect1B,
+      tri._tri2Rect2, tri._sideTriRect2h, tri._sideTriRect2D,
       tri._tri2Rect1Tri, tri._tri2Rect2Tri,
       tri._sideTri2Base, tri._sideTri2Height,
     ];
@@ -271,11 +271,11 @@ class Content extends LessonContent {
     ];
     this.addSection(common);
 
-    common.setContent = ['In this case, the |triangle_area| is the area of the |AC| triangle minus the area of the |AB| triangle.'];
+    common.setContent = ['In this case, the |triangle_area| is the area of |triangle_hC| minus the area of |triangle_hB|.'];
     common.modifiers = {
       triangle_area: click(tri.showTri3Fill, [tri, tri._tri3Tri], colors.line),
-      AC: click(tri.showTri3Fill, [tri, tri._tri3Rect2Tri], colors.construction1),
-      AB: click(tri.showTri3Fill, [tri, tri._tri3Rect1Tri], colors.construction),
+      triangle_hC: click(tri.showTri3Fill, [tri, tri._tri3Rect2Tri], colors.construction1),
+      triangle_hB: click(tri.showTri3Fill, [tri, tri._tri3Rect1Tri], colors.construction),
       C: highlight(colors.construction1),
       B: highlight(colors.construction),
     };
@@ -301,7 +301,7 @@ class Content extends LessonContent {
     this.addEqnStep(tri.eqns.tri3AreaEqn, '5', '6', common);
     this.addEqnStep(tri.eqns.tri3AreaEqn, '6', '7', common);
 
-    common.setContent = ['And |A| is |height|.'];
+    common.setContent = ['And |h| is |height|.'];
     common.show = [
       tri._tri3, tri._tri3Rect1, tri._tri3Rect2,
       tri._sideTri3Rect1A, tri._sideTri3Rect1B,

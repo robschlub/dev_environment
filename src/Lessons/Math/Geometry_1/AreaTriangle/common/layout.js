@@ -182,7 +182,7 @@ export default function commonLessonLayout() {
     length: 4,
     height: 2,
   };
-  layout.triLabelOffset = 0.1;
+  layout.triLabelOffset = 0.07;
   layout.triIntro = {
     points: [
       new Point(-0.75, -0.75),
@@ -267,7 +267,7 @@ export default function commonLessonLayout() {
   };
   layout.tri3Scenario = {
     rotation: -angle,
-    position: new Point(-0.3, -0.75),
+    position: new Point(-0.3, -0.55),
   };
   const t = new Transform()
     .rotate(layout.tri3Scenario.rotation)
