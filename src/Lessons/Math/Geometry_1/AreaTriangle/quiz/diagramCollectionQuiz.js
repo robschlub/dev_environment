@@ -88,23 +88,30 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
     }
   }
 
-  getPossibleAnswers(area: number) {
+  getAnswers() {
     const lay = this.layout.same;
     const maxBase = lay.grid.length / lay.grid.spacing;
     const maxHeight = lay.grid.height / lay.grid.spacing;
     const minBase = lay.basePadMinSeparation;
     const minHeight = lay.basePadMinSeparation;
+    const maxArea = maxBase * maxHeight * 0.5;
+    const minArea = minBase * minHeight * 0.5;
     const answers = [];
+    let area = 0;
     const potentialHeights = round(range(minHeight, maxHeight, 0.1), 8);
-    potentialHeights.forEach((h: number) => {
-      const base: number = round(area / h * 2, 1);
-      if (round(base * h / 2, 8) === area && base > minBase) {
-        if (h <= maxHeight && base <= maxBase) {
-          this.addToAnswers(answers, [base, h]);
+    while (answers.length === 0) {
+      area = round(rand(minArea, maxArea), 0);
+      // eslint-disable-next-line no-loop-func
+      potentialHeights.forEach((h: number) => {
+        const base: number = round(area / h * 2, 1);
+        if (round(base * h / 2, 8) === area && base > minBase) {
+          if (h <= maxHeight && base <= maxBase) {
+            this.addToAnswers(answers, [base, h]);
+          }
         }
-      }
-    });
-    return answers;
+      });
+    }
+    return { area, answers };
   }
 
   goToTriangle(baseInUnits: number, heightInUnits: number) {
@@ -139,21 +146,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
   newProblem() {
     super.newProblem();
     const element = document.getElementById('id__lessons__area_quiz1');
-    const lay = this.layout.same;
-    const maxBase = lay.grid.length / lay.grid.spacing;
-    const maxHeight = lay.grid.height / lay.grid.spacing;
-    const minBase = lay.basePadMinSeparation / lay.grid.spacing;
-    const minHeight = lay.basePadMinSeparation / lay.grid.spacing;
-
-    const maxArea = maxBase * maxHeight * 0.5;
-    const minArea = minBase * minHeight * 0.5;
-    let answers = [];
-    let area = 0;
-    while (answers.length === 0) {
-      area = round(rand(minArea, maxArea), 0);
-      answers = this.getPossibleAnswers(area);
-    }
-
+    const { area, answers } = this.getAnswers();
     this.answer = area;
     this.answers = answers;
     console.log(this.answers);
