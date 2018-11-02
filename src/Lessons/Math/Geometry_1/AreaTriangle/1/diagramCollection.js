@@ -9,9 +9,11 @@ import LessonDiagram from './diagram';
 
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 import TriangleAreaCollection from '../common/diagramCollectionTri';
+import SameAreaCollection from '../common/diagramCollectionSameArea';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
   _tri: TriangleAreaCollection;
+  _same: SameAreaCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -21,5 +23,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     super(diagram, layout, transform);
 
     this.add('tri', new TriangleAreaCollection(diagram, this.layout));
+    this.add('same', new SameAreaCollection(diagram, this.layout));
   }
 }

@@ -260,8 +260,8 @@ export type TypeLine = {
 
 export function makeLine(
   diagram: Diagram,
-  reference: 'center' | 'end' = 'center',
-  length: number,
+  referenceOrP1: 'center' | 'end' | Point = 'center',
+  lengthOrP2: number | Point,
   width: number,
   color: Array<number>,
   showLine: boolean = true,
@@ -273,6 +273,15 @@ export function makeLine(
     .translate(0, 0));
 
   let start = -0.5;
+  let reference = 'end';
+  if (typeof referenceOrP1 === 'string') {
+    reference = referenceOrP1;
+  }
+  let length = 1;
+  if (typeof lengthOrP2 === 'number') {
+    length = lengthOrP2;
+  }
+
   line.reference = reference;
   if (reference === 'end') {
     start = 0;
@@ -547,6 +556,10 @@ export function makeLine(
 
 
   line.setLength(length);
+
+  if (lengthOrP2 instanceof Point && referenceOrP1 instanceof Point) {
+    line.setEndPoints(referenceOrP1, lengthOrP2);
+  }
 
   return line;
 }

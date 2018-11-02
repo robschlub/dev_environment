@@ -316,5 +316,32 @@ export default function commonLessonLayout() {
 
   layout.tri3AreaEqnPosition = new Point(-0.5, 1.2);
   layout.tri3AreaEqnNavPosition = new Point(0, -0.25);
+
+  // //////////////////////////////////////////////////////
+  //     Same Area Triangle
+  // //////////////////////////////////////////////////////
+  layout.samePosition = new Point(0, -0.5);
+  layout.same = {
+    width: 0.03,
+    points: [
+      new Point(-0.5, -0.75),
+      new Point(0.5, -0.75),
+      new Point(0, 0.75),
+    ],
+    pad: {
+      sides: 50,
+      radius: 0.15,
+    },
+    grid:{
+      position: new Point(0, 0),
+      smallPosition: new Point(0, 0),
+      spacing: 0.25,
+      length: 5.5,
+      height: 2,
+    },
+    label: {
+      position: new Point(0, -1.2),
+    },
+  };
   return layout;
 }

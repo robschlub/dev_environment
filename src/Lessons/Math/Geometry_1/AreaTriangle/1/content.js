@@ -29,6 +29,7 @@ class Content extends LessonContent {
   addSections() {
     const diag = this.diagram.elements;
     const tri = diag._tri;
+    const same = diag._same;
 
     const common = {
       setContent: [],
@@ -240,6 +241,14 @@ class Content extends LessonContent {
     common.show = [
       tri._tri2,
     ];
+
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // Rotate Triangle
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
     this.addSection(common, {
       title: 'Rotate Triangle',
       setContent: ['This works for |any triangle|, no matter which side you call the |base|.'],
@@ -318,6 +327,32 @@ class Content extends LessonContent {
     ];
     this.addEqnStep(tri.eqns.tri3AreaEqn, '9', '10', common, {
       title: 'Rotation Result',
+    });
+
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    // Same Area
+    // ******************************************************************
+    // ******************************************************************
+    // ******************************************************************
+    this.addSection({
+      title: 'Different triangles',
+      setContent: centerV([
+        'When we find a relationship, it can be useful to think about what some of the implications of the relationship are.',
+        'In this case, we have found that |triangle area| is calculated from |base side| length and |height|.',
+        'Another way to say this, is |area is dependent| on the base side length and height |only|.',
+      ]),
+      // show: [same],
+    });
+    this.addSection({
+      setContent: [
+        'This means |all_triangles| with the |same base| and |height| will have the |same area|.',
+      ],
+      modifiers: {
+        all_triangles: click(same.moveTopPoint, [same], colors.diagram.action),
+      },
+      show: [same],
     });
   }
 }
