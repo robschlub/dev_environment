@@ -123,10 +123,34 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
       lay.points, true, lay.width, this.layout.colors.line,
     );
     this.add('rect', line);
+
+    const points = [
+      lay.points[1],
+      lay.points[2],
+      lay.points[3],
+    ];
+    const mask = this.diagram.shapes.polyLine(
+      points, true, lay.width, this.layout.colors.grid,
+    );
+    this.add('rectMask', mask);
+
     const split = this.diagram.shapes.polyLine(
       [lay.points[1], lay.points[3]], false, lay.width, this.layout.colors.line,
     );
     this.add('rectSplit', split);
+  }
+
+  addRectMask() {
+    const lay = this.layout.triRect;
+    const points = [
+      lay.points[1],
+      lay.points[2],
+      lay.points[3],
+    ];
+    const line = this.diagram.shapes.polyLine(
+      points, true, lay.width, this.layout.colors.grid,
+    );
+    this.add('rectMask', line);
   }
 
   showTri3Fill(element: DiagramElementPrimative) {

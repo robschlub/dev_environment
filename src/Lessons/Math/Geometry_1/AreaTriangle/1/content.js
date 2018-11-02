@@ -69,9 +69,9 @@ class Content extends LessonContent {
       show: [tri._grid, tri._triIntro],
     });
 
-    this.addSection(common, {
-      show: [tri._rect, tri._sideRectA, tri._sideRectB],
-    });
+    // this.addSection(common, {
+    //   show: [tri._rect, tri._sideRectA, tri._sideRectB],
+    // });
 
     common.setContent = [
       'We know the area of a rectangle is the |product of two adjacent sides|.',
@@ -84,7 +84,7 @@ class Content extends LessonContent {
     });
 
     common.setContent = [
-      'We can halve the rectangle into two |equal triangles|.',
+      'We can halve the rectangle into |two equal triangles| by drawing a line between opposite corners.',
     ];
     common.setSteadyState = () => { tri.eqns.triRectEqn.showForm('0'); };
     this.addSection(common, {
@@ -106,7 +106,7 @@ class Content extends LessonContent {
     });
 
     this.addSection(common, {
-      show: [tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB],
+      show: [tri._rect, tri._rectSplit, tri._sideRectA, tri._sideRectB, tri._rectMask],
       transitionFromPrev: (done) => {
         tri.eqns.triRectEqn.showForm('0');
         tri.eqns.triRectEqn.getForm('1')
