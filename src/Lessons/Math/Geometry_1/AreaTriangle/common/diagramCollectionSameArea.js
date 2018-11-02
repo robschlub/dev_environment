@@ -66,58 +66,68 @@ export default class SameAreaCollection extends CommonDiagramCollection {
   }
 
   addLeftBasePad() {
-    const { points } = this.layout.same;
-    // const baseLength = points[1].x - points[0].x;
+    // const { points } = this.layout.same;
+    const lay = this.layout.same;
     const leftBasePad = this.makePad(
-      this.layout.same.points[0],
+      lay.points[0],
     );
     leftBasePad.move.maxTransform.updateTranslation(
-      points[1].x - this.layout.same.basePadMinSeparation,
+      lay.grid.length / 2 - lay.basePadMinSeparation - lay.pad.radius,
       0,
     );
     leftBasePad.move.minTransform.updateTranslation(
-      -this.layout.same.grid.length / 2 + this.layout.same.pad.radius,
-      -this.layout.same.grid.height / 2,
+      -lay.grid.length / 2 + lay.pad.radius,
+      -lay.grid.height / 2,
     );
-    // console.log(leftBasePad.move.minTransform._dup(), leftBasePad.move.maxTransform._dup())
     this.add('leftBasePad', leftBasePad);
   }
 
   addRightBasePad() {
-    const { points } = this.layout.same;
+    // const { points } = this.layout.same;
+    const lay = this.layout.same;
     // const baseLength = points[1].x - points[0].x;
     const rightBasePad = this.makePad(
-      this.layout.same.points[1],
+      lay.points[1],
     );
     rightBasePad.move.maxTransform.updateTranslation(
-      this.layout.same.grid.length / 2 - this.layout.same.pad.radius,
+      lay.grid.length / 2 - lay.pad.radius,
       0,
     );
     rightBasePad.move.minTransform.updateTranslation(
-      points[0].x + this.layout.same.basePadMinSeparation,
-      -this.layout.same.grid.height / 2,
+      -lay.grid.length / 2 + lay.basePadMinSeparation + lay.pad.radius,
+      -lay.grid.height / 2,
     );
     this.add('rightBasePad', rightBasePad);
   }
 
   updateTriangle() {
+    const lay = this.layout.same;
     const p = this._topPad.getPosition();
     const left = this._leftBasePad.getPosition();
     const right = this._rightBasePad.getPosition();
+    const separation = right.x - left.x;
 
     if (this._leftBasePad.state.isBeingMoved || this._leftBasePad.state.isMovingFreely) {
-      this._rightBasePad.transform.updateTranslation(right.x, left.y);
-      this._rightBasePad.move.minTransform.updateTranslation(
-        left.x + this.layout.same.basePadMinSeparation,
-        -this.layout.same.grid.height / 2,
-      );
+      let rightX = right.x;
+      if (separation < lay.basePadMinSeparation) {
+        rightX += lay.basePadMinSeparation - separation;
+      }
+      this._rightBasePad.transform.updateTranslation(rightX, left.y);
+      // this._rightBasePad.move.minTransform.updateTranslation(
+      //   left.x + this.layout.same.basePadMinSeparation,
+      //   -this.layout.same.grid.height / 2,
+      // );
     }
     if (this._rightBasePad.state.isBeingMoved || this._rightBasePad.state.isMovingFreely) {
-      this._leftBasePad.transform.updateTranslation(left.x, right.y);
-      this._leftBasePad.move.maxTransform.updateTranslation(
-        right.x - this.layout.same.basePadMinSeparation,
-        this.layout.same.grid.height / 2,
-      );
+      let leftX = left.x;
+      if (separation < lay.basePadMinSeparation) {
+        leftX -= lay.basePadMinSeparation - separation;
+      }
+      this._leftBasePad.transform.updateTranslation(leftX, right.y);
+      // this._leftBasePad.move.maxTransform.updateTranslation(
+      //   right.x - this.layout.same.basePadMinSeparation,
+      //   this.layout.same.grid.height / 2,
+      // );
     }
 
     const baseLength = left.x - right.x;
