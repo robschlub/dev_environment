@@ -19,11 +19,9 @@ import SameAreaCollection from '../common/diagramCollectionSameArea';
 export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCollection) {
 // export default class QuizParallel1Collection extends CommonQuizDiagramCollection {
   diagram: LessonDiagram;
-  _messages: {
-    _touching: DiagramElementPrimative;
-    _rotation: DiagramElementPrimative;
-  } & TypeMessages;
 
+  answers: Array<Array<number>>;
+  answer: number;
 
   updateLimits() {
     const lay = this.layout.same;
@@ -92,15 +90,15 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
 
   getPossibleAnswers(area: number) {
     const lay = this.layout.same;
-    const maxBase = (lay.grid.length - lay.pad.radius * 2) / lay.grid.spacing;
-    const maxHeight = (lay.grid.height - lay.pad.radius * 2) / lay.grid.spacing;
+    const maxBase = lay.grid.length / lay.grid.spacing;
+    const maxHeight = lay.grid.height / lay.grid.spacing;
     const minBase = lay.basePadMinSeparation;
     const minHeight = lay.basePadMinSeparation;
     const answers = [];
     const potentialHeights = round(range(minHeight, maxHeight, 0.1), 8);
     potentialHeights.forEach((h: number) => {
       const base: number = round(area / h * 2, 1);
-      if (round(base * h, 8) === area && base > minBase) {
+      if (round(base * h / 2, 8) === area && base > minBase) {
         if (h <= maxHeight && base <= maxBase) {
           this.addToAnswers(answers, [base, h]);
         }
@@ -142,24 +140,23 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
     super.newProblem();
     const element = document.getElementById('id__lessons__area_quiz1');
     const lay = this.layout.same;
-    const maxBase = (lay.grid.length - lay.pad.radius * 2) / lay.grid.spacing;
-    const maxHeight = (lay.grid.height - lay.pad.radius * 2) / lay.grid.spacing;
-    const minBase = lay.grid.basePadMinSeparation;
-    const minHeight = lay.grid.basePadMinSeparation;
+    const maxBase = lay.grid.length / lay.grid.spacing;
+    const maxHeight = lay.grid.height / lay.grid.spacing;
+    const minBase = lay.basePadMinSeparation / lay.grid.spacing;
+    const minHeight = lay.basePadMinSeparation / lay.grid.spacing;
 
     const maxArea = maxBase * maxHeight * 0.5;
     const minArea = minBase * minHeight * 0.5;
     let answers = [];
     let area = 0;
-    let i = 0;
-    while (answers.length === 0 && i < 5) {
+    while (answers.length === 0) {
       area = round(rand(minArea, maxArea), 0);
       answers = this.getPossibleAnswers(area);
-      i += 1;
     }
 
     this.answer = area;
     this.answers = answers;
+    console.log(this.answers);
 
     if (element) {
       element.innerHTML = area.toString();
@@ -171,14 +168,25 @@ export default class QuizParallel1Collection extends CommonQuizMixin(SameAreaCol
 
   showAnswer() {
     super.showAnswer();
+    const answerToShow = this.answers[this.answerIndex];
+    const [base, height] = answerToShow;
+    this.goToTriangle(base, height);
     this.diagram.animateNextFrame();
   }
 
   findAnswer() {
-    // this._input.disable();
-    // if (this._input.getValue() === this.answer.toString()) {
-    //   return 'correct';
-    // }
-    return 'incorrect';
+    this._check.hide();
+    const base = parseFloat(this._base.label.getText());
+    const height = parseFloat(this._height.label.getText());
+    const potentialAnswer = [base, height];
+    let result = 'incorrect';
+    this.answers.forEach((answer) => {
+      if (answer[0] === potentialAnswer[0]
+          && answer[1] === potentialAnswer[1]
+      ) {
+        result = 'correct';
+      }
+    });
+    return result;
   }
 }

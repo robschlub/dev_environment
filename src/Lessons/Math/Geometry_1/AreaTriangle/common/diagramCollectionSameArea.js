@@ -12,8 +12,6 @@ import {
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
-// import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
-// import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
 const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
   for (let i = 0; i < element.vertices.border[0].length; i += 1) {
     // eslint-disable-next-line no-param-reassign
@@ -90,51 +88,23 @@ export default class SameAreaCollection extends CommonDiagramCollection {
   }
 
   addTopPad() {
-    // const lay = this.layout.same.pad;
     const topPad = this.makePad(this.layout.same.points[2]);
-    // topPad.move.minTransform.updateTranslation(
-    //   -this.layout.same.grid.length / 2,
-    //   this.layout.same.points[2].y,
-    // );
-    // topPad.move.maxTransform.updateTranslation(
-    //   this.layout.same.grid.length / 2,
-    //   this.layout.same.points[2].y,
-    // );
     this.add('topPad', topPad);
   }
 
   addLeftBasePad() {
-    // const { points } = this.layout.same;
     const lay = this.layout.same;
     const leftBasePad = this.makePad(
       lay.points[0],
     );
-    // leftBasePad.move.maxTransform.updateTranslation(
-    //   lay.grid.length / 2 - lay.basePadMinSeparation - lay.pad.radius,
-    //   0,
-    // );
-    // leftBasePad.move.minTransform.updateTranslation(
-    //   -lay.grid.length / 2 + lay.pad.radius,
-    //   -lay.grid.height / 2,
-    // );
     this.add('leftBasePad', leftBasePad);
   }
 
   addRightBasePad() {
-    // const { points } = this.layout.same;
     const lay = this.layout.same;
-    // const baseLength = points[1].x - points[0].x;
     const rightBasePad = this.makePad(
       lay.points[1],
     );
-    // rightBasePad.move.maxTransform.updateTranslation(
-    //   lay.grid.length / 2 - lay.pad.radius,
-    //   0,
-    // );
-    // rightBasePad.move.minTransform.updateTranslation(
-    //   -lay.grid.length / 2 + lay.basePadMinSeparation + lay.pad.radius,
-    //   -lay.grid.height / 2,
-    // );
     this.add('rightBasePad', rightBasePad);
   }
 
