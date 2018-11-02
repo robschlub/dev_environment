@@ -142,8 +142,8 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     addSide(new Point(x, -y), new Point(-x, -y), 'B', 'B');
     addSide(new Point(x, -y), new Point(-x, -y), 'Width', 'Width');
     addSide(new Point(x, -y), new Point(-x, -y), '10m', '10m');
-    addSide(new Point(-y, -y), new Point(-y, y), 'SquareA', 'A');
-    addSide(new Point(y, -y), new Point(-y, -y), 'SquareB', 'A');
+    addSide(new Point(-y, -y), new Point(-y, y), 'SquareA', 'B');
+    addSide(new Point(y, -y), new Point(-y, -y), 'SquareB', 'B');
   }
 
   addEqns() {

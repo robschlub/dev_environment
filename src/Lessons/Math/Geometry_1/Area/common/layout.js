@@ -73,8 +73,8 @@ export default function commonLessonLayout() {
   };
   layout.mediumGrid = {
     length: 5.7,
-    height: 1.8
-  }
+    height: 1.8,
+  };
   layout.smallGrid = {
     xNum: 4,
     yNum: 4,
@@ -148,6 +148,13 @@ export default function commonLessonLayout() {
     width: 0.05,
     height: 0.05,
   };
+  layout.countLength = {
+    position: new Point(0, 0),
+    sideLength: 0.5,
+    count: 4,
+    width: 0.01,
+    labelOffset: 0.05,
+  };
 
   // //////////////////////////////////////////////////////
   //     Rect Area
@@ -170,8 +177,8 @@ export default function commonLessonLayout() {
   };
   layout.rectSimpleEqnPosition = new Point(0, 1.2);
   layout.rectNumSquaresEqnPosition = new Point(0, 1.2);
-  layout.rectEqnPosition = new Point(0, 1.5);
-  layout.rectEqnNavPosition = new Point(0, -0.25);
+  layout.rectEqnPosition = new Point(-0.2, 1.35);
+  layout.rectEqnNavPosition = new Point(0.2, -0.25);
   layout.rectSimpleAreaEqnPosition = new Point(0, 1.2);
   layout.rectSquareEqnPosition = new Point(0, 1.2);
   return layout;

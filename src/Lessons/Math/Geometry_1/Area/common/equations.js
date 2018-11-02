@@ -294,8 +294,8 @@ export function addNumSquaresRectEquation(
     {
       Area: ['Area', colUnit],
       equals: ' = ',
-      numSquares: 'num unit squares',
-      numSquares_: 'num unit squares',
+      numSquares: 'num squares',
+      numSquares_: 'num squares',
       side: ' ',
       side_: ' ',
       length: 'length ',
@@ -501,9 +501,9 @@ export function addSquareEquation(
     {
       Area: ['Area', colUnit],
       equals: ' = ',
-      A: ['A', colLine],
-      A_: ['A', colLine],
-      A__: ['A', colLine],
+      A: ['B', colLine],
+      A_: ['B', colLine],
+      A__: ['B', colLine],
       _2: '2',
       mul: ' \u00D7 ',
       equals_: ' = ',

@@ -91,7 +91,6 @@ export default class MeasureCollection extends CommonDiagramCollection {
     this.add('triangleA', triangle);
   }
 
-
   addLengthMeasure() {
     const lay = this.layout.lengthMeasure;
     const col = this.layout.colors;

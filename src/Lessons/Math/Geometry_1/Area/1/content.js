@@ -281,9 +281,26 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: centerV([
         'A |reference square| is typically a |unit square|.',
-        'This means its |side length has a length of 1|.',
+        'This means its |side has a length of 1|.',
         'For example, a reference square would normally have a side length of |1m|, and |not 2m|.',
       ]),
+    });
+
+    common.showOnly = [size, size._row, size._row._grid];
+    common.show = [size._row._square0]
+    this.addSection(common, {
+      setContent: [
+        'A |unit reference square| makes it easy to |relate number of squares and length|.',
+      ],
+    });
+
+    common.setContent = ['In this case, there are |four squares| with |1mm side| length, and therefore the total length is |4mm|.'];
+    this.addSection(common);
+    common.showOnly = [size];
+    common.show = [size._row];
+    this.addSection(common);
+    this.addSection(common, {
+      setContent: ['Therefore, the |number of squares| in a row, will be |equal| to the total |length| of the row.'],
     });
 
     // ******************************************************************
@@ -348,19 +365,8 @@ class Content extends LessonContent {
       },
     });
 
-    // this.addSection(common, {
-    //   setContent: '',
-    //   setSteadyState: () => {
-    //     rect._numSquaresEqn.showForm('0');
-    //   },
-    // });
-
     common.setContent = [
-      'Each reference square has a |side length of 1|. Therefore the length of a row of squares will be there lengths TODO then the |number of squares in a side equals the side\'s length|.',
-    ]; 
-
-    common.setContent = [
-      'As each square has a |length of 1|, then the |number of squares in a side equals the side\'s length|.',
+      'We know the |number of squares| in a side |equals| the side\'s |length|.',
     ];
     this.addSection(common, {
       setSteadyState: () => {
@@ -430,6 +436,20 @@ class Content extends LessonContent {
       },
     });
 
+    this.addSection(common, {
+      setContent: ['We have found a |relationship| between a rectangle\'s |area| and its |side lengths|.'],
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('3');
+      },
+    });
+
+    this.addSection(common, {
+      setContent: ['If you |know two| of the three properties, you can |calculate the third|.'],
+      setSteadyState: () => {
+        rect._numSquaresEqn.showForm('3');
+      },
+    });
+
     // ******************************************************************
     // ******************************************************************
     // ******************************************************************
@@ -455,7 +475,7 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       setContent: [
-        'Now we can calculate area.',
+        'Now we can |calculate area| and then rearrange the equation to see the |units| of area.',
       ],
       setSteadyState: () => {
         rect._rectEqn.showForm('0');

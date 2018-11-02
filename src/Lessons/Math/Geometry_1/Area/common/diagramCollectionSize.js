@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, Point,
+  Transform, Point, Rect,
 } from '../../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -22,6 +22,55 @@ export default class SizeCollection extends CommonDiagramCollection {
     _xLine: TypeLine;
     _square: DiagramElementPrimative;
   } & DiagramElementCollection;
+
+  addRowLength() {
+    const row = this.diagram.shapes.collection(new Transform().translate(this.layout.countLength.position));
+
+    const lay = this.layout.countLength;
+    const length = lay.sideLength * lay.count;
+    const gridColor = this.layout.colors.grid;
+    const grid = this.diagram.shapes.grid(
+      new Rect(
+        -length / 2, -lay.sideLength / 2,
+        length, lay.sideLength,
+      ),
+      lay.sideLength, lay.sideLength, 3, this.layout.colors.grid,
+      new Transform(),
+    );
+    row.add('grid', grid);
+
+    const addLine = (start: Point, len: number, label: string, name: string) => {
+      const line = makeLine(this.diagram, 'end', 1, lay.width, gridColor);
+      line.addArrow1(this.layout.arrow.width, this.layout.arrow.height);
+      line.addArrow2(this.layout.arrow.width, this.layout.arrow.height);
+      line.setPosition(start);
+      line.addLabel(label, lay.labelOffset, 'top', 'left', 'horizontal');
+      line.setLength(len);
+      row.add(name, line);
+    };
+
+    const start = new Point(
+      -length / 2,
+      lay.sideLength / 2 + lay.sideLength / 2,
+    );
+    // for (let i = 0; i < lay.count; i += 1) {
+    //   const label = i === 0 ? '1mm' : '';
+    //   addLine(
+    //     start.add(i * lay.sideLength, 0), lay.sideLength,
+    //     label, `square${i}`,
+    //   );
+    // }
+    addLine(
+      start, lay.sideLength,
+      '1mm', 'square0',
+    );
+    addLine(
+      start.add(0, lay.sideLength), lay.sideLength * lay.count,
+      `${lay.count.toString()}mm`, 'totalLength',
+    );
+
+    this.add('row', row);
+  }
 
   addSquareSize(name: string, label: string, layout: {
     position: Point,
@@ -67,6 +116,7 @@ export default class SizeCollection extends CommonDiagramCollection {
     super(diagram, layout, transform);
     this.addSquareSize('mm', '1mm', this.layout.mmSquare);
     this.addSquareSize('m', '1m', this.layout.mSquare);
+    this.addRowLength();
 
     this.setPosition(this.layout.sizePosition);
     this.hasTouchableElements = true;
