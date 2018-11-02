@@ -125,12 +125,12 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     this.add('rect', line);
 
     const points = [
-      lay.points[1],
+      lay.points[1].add(0, lay.width / 6),
       lay.points[2],
-      lay.points[3],
+      lay.points[3].add(lay.width / 6, 0),
     ];
     const mask = this.diagram.shapes.polyLine(
-      points, true, lay.width, this.layout.colors.grid,
+      points, false, lay.width, this.layout.colors.grid,
     );
     this.add('rectMask', mask);
 
