@@ -339,9 +339,9 @@ class Content extends LessonContent {
     this.addSection({
       title: 'Different triangles',
       setContent: centerV([
-        'When we find a relationship, it can be useful to think about what some of the implications of the relationship are.',
-        'In this case, we have found that |triangle area| is calculated from |base side| length and |height|.',
-        'Another way to say this, is |area is dependent| on the base side length and height |only|.',
+        'When we find a relationship, it can be useful to think about what some of the |implications| of the relationship are.',
+        'In this case, we have found that |triangle area| is calculated from |base side length| and |height|.',
+        'Another way to say this, is |area is only dependent| on the base side length and height.',
       ]),
       // show: [same],
     });
