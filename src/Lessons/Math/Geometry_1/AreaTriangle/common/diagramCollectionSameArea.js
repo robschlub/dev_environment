@@ -64,27 +64,27 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     const { length, height } = lay.grid;
     const minSeparation = lay.basePadMinSeparation;
     this._leftBasePad.move.minTransform.updateTranslation(
-      -lay.grid.length / 2 + lay.pad.radius,
-      -lay.grid.height / 2,
+      -length / 2,
+      -height / 2,
     );
     this._leftBasePad.move.maxTransform.updateTranslation(
-      lay.grid.length / 2 - lay.basePadMinSeparation - lay.pad.radius,
+      length / 2 - minSeparation,
       0,
     );
     this._rightBasePad.move.minTransform.updateTranslation(
-      -lay.grid.length / 2 + lay.basePadMinSeparation + lay.pad.radius,
-      -lay.grid.height / 2,
+      -length / 2 + minSeparation,
+      -height / 2,
     );
     this._rightBasePad.move.maxTransform.updateTranslation(
-      lay.grid.length / 2 - lay.pad.radius,
+      length / 2,
       0,
     );
     this._topPad.move.minTransform.updateTranslation(
-      -this.layout.same.grid.length / 2,
+      -length / 2,
       this.layout.same.points[2].y,
     );
     this._topPad.move.maxTransform.updateTranslation(
-      this.layout.same.grid.length / 2,
+      length / 2,
       this.layout.same.points[2].y,
     );
   }
