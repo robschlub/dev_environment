@@ -10,8 +10,8 @@ import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-// import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-// import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import { makeLine } from '../../../../LessonsCommon/tools/line';
 // import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
 // import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
 const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
@@ -31,6 +31,11 @@ export default class SameAreaCollection extends CommonDiagramCollection {
   _leftBasePad: DiagramElementPrimative;
   _rightBasePad: DiagramElementPrimative;
   _label: DiagramElementPrimative;
+  _base: TypeLine;
+  _height: TypeLine;
+  base: number;
+  height: number;
+  area: number;
 
   addLines() {
     const lay = this.layout.same;
@@ -125,21 +130,35 @@ export default class SameAreaCollection extends CommonDiagramCollection {
       this._leftBasePad.transform.updateTranslation(leftX, right.y);
     }
 
-    const baseLength = right.x - left.x;
     const points = [
       left,
       right,
       p,
     ];
-    // console.log(points)
-    const height = p.y - left.y;
-    const area =
-      height * baseLength * 0.5 / this.layout.same.grid.spacing / this.layout.same.grid.spacing;
+
+    this.base = round((right.x - left.x) / lay.grid.spacing, 1);
+    this.height = round((p.y - left.y) / lay.grid.spacing, 1);
+    this.area = round(this.height * this.base * 0.5, 1);
+
     this._label.vertices.change(
-      `Area = ${round(area, 1).toString()} squares`,
+      `Area = ${round(this.area, 1).toString()} squares`,
       this._label.lastDrawTransform.m(),
     );
     this._tri.vertices.change(points);
+    this._base.setEndPoints(
+      new Point(left.x, lay.baseY),
+      new Point(right.x, lay.baseY),
+    );
+    if (this._base.label != null) {
+      this._base.label.setText(this.base.toString());
+    }
+    this._height.setEndPoints(
+      new Point(lay.heightX, right.y),
+      new Point(lay.heightX, p.y),
+    );
+    if (this._height.label != null) {
+      this._height.label.setText(this.height.toString());
+    }
     this.diagram.animateNextFrame();
   }
 
@@ -182,6 +201,23 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     this.add('label', label);
   }
 
+  addBaseHeight() {
+    const lay = this.layout.same;
+    const addSide = (p1, p2, name, label = '') => {
+      const line = makeLine(
+        this.diagram, p1, p2, lay.width / 2, this.layout.colors.lineLabel, true,
+        true,
+      );
+      line.addLabel(label, lay.lineLabelOffset, 'right', 'bottom', 'horizontal');
+      line.addArrow1(lay.width * 2, lay.width * 2);
+      line.addArrow2(lay.width * 2, lay.width * 2);
+      this.add(name, line);
+      return line;
+    };
+    addSide(lay.points[0], lay.points[1], 'base', '');
+    addSide(lay.points[1], new Point(lay.points[1].x, lay.points[2].y), 'height', '');
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -193,7 +229,9 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     this.addLeftBasePad();
     this.addGrid();
     this.addLines();
+    this.addBaseHeight();
     this.addAreaLabel();
+    this.updateTriangle();
     this.setPosition(this.layout.samePosition);
     this.hasTouchableElements = true;
   }

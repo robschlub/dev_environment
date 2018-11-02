@@ -250,7 +250,7 @@ export type TypeLine = {
   addLabel: (string, number, TypeLineLabelLocation,
              TypeLineLabelSubLocation, TypeLineLabelOrientation, number
             ) => void;
-  setEndPoints: (Point, Point, number) => void;
+  setEndPoints: (Point, Point, ?number) => void;
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
   pulseWidth: () => void;

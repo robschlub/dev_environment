@@ -328,6 +328,9 @@ export default function commonLessonLayout() {
       new Point(0.5, -0.75),
       new Point(0, 0.75),
     ],
+    baseY: -1.1,
+    heightX: 2.6,
+    lineLabelOffset: 0.08,
     pad: {
       sides: 50,
       radius: 0.15,
@@ -337,11 +340,11 @@ export default function commonLessonLayout() {
       position: new Point(0, 0),
       smallPosition: new Point(0, 0),
       spacing: 0.25,
-      length: 5.5,
+      length: 5,
       height: 2,
     },
     label: {
-      position: new Point(0, -1.2),
+      position: new Point(0, -1.5),
     },
   };
   return layout;
