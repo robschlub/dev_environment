@@ -43,7 +43,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         tri._sideTri2Base.showAll();
         tri._sideTri2Height.showAll();
-        tri._tri2AreaEqn.showForm('10');
+        tri.eqns.tri2AreaEqn.showForm('10');
       },
     });
 
