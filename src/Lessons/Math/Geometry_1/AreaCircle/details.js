@@ -5,7 +5,7 @@ var details = {
   title: 'Area of a Circle',
   uid: 'area_circle',
   dependencies: ['area_triangle'],
-  enabled: false,
+  enabled: true,
 };
 
 module.exports = {

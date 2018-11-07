@@ -45,6 +45,20 @@ export default function getLessonIndex() {
     true,
   ));
   lessonIndex.push(new LessonDescription(
+    'Area of a Circle',
+    '/Lessons/Math/Geometry_1/AreaCircle',
+    'area_circle',
+    [
+      '1',
+      'quiz',
+      'summary',
+    ],
+    [
+      'area_triangle',
+    ],
+    true,
+  ));
+  lessonIndex.push(new LessonDescription(
     'Area of a Triangle',
     '/Lessons/Math/Geometry_1/AreaTriangle',
     'area_triangle',
@@ -164,18 +178,6 @@ export default function getLessonIndex() {
       'parallel_lines',
     ],
     true,
-  ));
-  lessonIndex.push(new LessonDescription(
-    'Area of a Circle',
-    '/Lessons/Math/Geometry_1/ToDo/AreaCircle',
-    'area_circle',
-    [
-      '1',
-    ],
-    [
-      'area_triangle',
-    ],
-    false,
   ));
   lessonIndex.push(new LessonDescription(
     'Calculating Pi',
