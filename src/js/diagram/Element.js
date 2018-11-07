@@ -1869,6 +1869,7 @@ class DiagramElement {
 // Geometry Object
 // ***************************************************************
 class DiagramElementPrimative extends DiagramElement {
+  drawingObject: DrawingObject;
   vertices: DrawingObject;
   color: Array<number>;
   pointsToDraw: number;
@@ -1882,7 +1883,8 @@ class DiagramElementPrimative extends DiagramElement {
     diagramLimits: Rect = new Rect(-1, -1, 2, 2),
   ) {
     super(transform, diagramLimits);
-    this.vertices = drawingObject;
+    this.drawingObject = drawingObject;
+    this.vertices = this.drawingObject;
     this.color = color.slice();
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
@@ -1895,9 +1897,9 @@ class DiagramElementPrimative extends DiagramElement {
       return false;
     }
     const boundaries =
-      this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
+      this.drawingObject.getGLBoundaries(this.lastDrawTransform.matrix());
     const holeBoundaries =
-      this.vertices.getGLBoundaryHoles(this.lastDrawTransform.matrix());
+      this.drawingObject.getGLBoundaryHoles(this.lastDrawTransform.matrix());
     for (let i = 0; i < boundaries.length; i += 1) {
       const boundary = boundaries[i];
       if (glLocation.isInPolygon(boundary)) {
@@ -1920,8 +1922,8 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   _dup(transform: Transform | null = null) {
-    // const vertices = this.vertices._dup();
-    const primative = new DiagramElementPrimative(this.vertices._dup());
+    // const vertices = this.drawingObject._dup();
+    const primative = new DiagramElementPrimative(this.drawingObject._dup());
     // const primative = new DiagramElementPrimative(
     //   vertices,
     //   transform,
@@ -1941,21 +1943,21 @@ class DiagramElementPrimative extends DiagramElement {
   setColor(color: Array<number>) {
     this.color = color.slice();
     if (this instanceof DiagramElementPrimative) {
-      if (this.vertices instanceof TextObject) {
-        this.vertices.setColor(this.color);
+      if (this.drawingObject instanceof TextObject) {
+        this.drawingObject.setColor(this.color);
       }
-      if (this.vertices instanceof HTMLObject) {
+      if (this.drawingObject instanceof HTMLObject) {
         // $FlowFixMe
-        this.vertices.element.style.color = colorArrayToRGBA(this.color);
+        this.drawingObject.element.style.color = colorArrayToRGBA(this.color);
       }
     }
   }
 
   show() {
     super.show();
-    if (this.vertices instanceof HTMLObject) {
-      this.vertices.show = true;
-      this.vertices.transformHtml(this.lastDrawTransform.matrix());
+    if (this.drawingObject instanceof HTMLObject) {
+      this.drawingObject.show = true;
+      this.drawingObject.transformHtml(this.lastDrawTransform.matrix());
     }
   }
 
@@ -1965,9 +1967,9 @@ class DiagramElementPrimative extends DiagramElement {
 
   hide() {
     super.hide();
-    if (this.vertices instanceof HTMLObject) {
-      this.vertices.show = false;
-      this.vertices.transformHtml(this.lastDrawTransform.matrix());
+    if (this.drawingObject instanceof HTMLObject) {
+      this.drawingObject.show = false;
+      this.drawingObject.transformHtml(this.lastDrawTransform.matrix());
     }
   }
 
@@ -1986,14 +1988,14 @@ class DiagramElementPrimative extends DiagramElement {
   }
 
   setFont(fontSize: number) {
-    if (this.vertices instanceof TextObject) {
-      this.vertices.setFont(fontSize);
+    if (this.drawingObject instanceof TextObject) {
+      this.drawingObject.setFont(fontSize);
     }
   }
 
   resizeHtmlObject() {
-    if (this.vertices instanceof HTMLObject) {
-      this.vertices.transformHtml(this.lastDrawTransform.matrix());
+    if (this.drawingObject instanceof HTMLObject) {
+      this.drawingObject.transformHtml(this.lastDrawTransform.matrix());
     }
   }
 
@@ -2024,17 +2026,17 @@ class DiagramElementPrimative extends DiagramElement {
       // this.lastDrawPulseTransform = pulseTransforms[0]._dup();
 
       let pointCount = -1;
-      if (this.vertices instanceof VertexObject) {
-        pointCount = this.vertices.numPoints;
+      if (this.drawingObject instanceof VertexObject) {
+        pointCount = this.drawingObject.numPoints;
         if (this.angleToDraw !== -1) {
-          pointCount = this.vertices.getPointCountForAngle(this.angleToDraw);
+          pointCount = this.drawingObject.getPointCountForAngle(this.angleToDraw);
         }
         if (this.pointsToDraw !== -1) {
           pointCount = this.pointsToDraw;
         }
       }
       pulseTransforms.forEach((t) => {
-        this.vertices.drawWithTransformMatrix(t.matrix(), this.color, pointCount);
+        this.drawingObject.drawWithTransformMatrix(t.matrix(), this.color, pointCount);
       });
     }
   }
@@ -2048,8 +2050,8 @@ class DiagramElementPrimative extends DiagramElement {
     const firstTransform = parentTransform.transform(this.transform);
     this.lastDrawTransform = firstTransform;
 
-    if (this.vertices instanceof HTMLObject) {
-      this.vertices.transformHtml(firstTransform.matrix());
+    if (this.drawingObject instanceof HTMLObject) {
+      this.drawingObject.transformHtml(firstTransform.matrix());
     }
     this.setMoveBoundaryToDiagram();
   }
@@ -2095,7 +2097,7 @@ class DiagramElementPrimative extends DiagramElement {
 
   //   const glToDiagramSpace = spaceToSpaceTransform(glSpace, diagramSpace);
 
-  //   const rect = this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+  //   const rect = this.drawingObject.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
 
   //   const minPoint = new Point(rect.left, rect.bottom).transformBy(glToDiagramSpace.matrix());
   //   const maxPoint = new Point(rect.right, rect.top).transformBy(glToDiagramSpace.matrix());
@@ -2119,27 +2121,27 @@ class DiagramElementPrimative extends DiagramElement {
   // }
 
   getGLBoundaries() {
-    return this.vertices.getGLBoundaries(this.lastDrawTransform.matrix());
+    return this.drawingObject.getGLBoundaries(this.lastDrawTransform.matrix());
   }
 
   getVertexSpaceBoundaries() {
-    return this.vertices.border;
+    return this.drawingObject.border;
   }
 
   getGLBoundingRect() {
-    return this.vertices.getGLBoundingRect(this.lastDrawTransform.matrix());
+    return this.drawingObject.getGLBoundingRect(this.lastDrawTransform.matrix());
   }
 
   getVertexSpaceBoundingRect() {
-    return this.vertices.getVertexSpaceBoundingRect();
+    return this.drawingObject.getVertexSpaceBoundingRect();
   }
 
   getRelativeGLBoundingRect(): Rect {
-    return this.vertices.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
+    return this.drawingObject.getRelativeGLBoundingRect(this.lastDrawTransform.matrix());
   }
 
   getRelativeVertexSpaceBoundingRect(): Rect {
-    return this.vertices.getRelativeVertexSpaceBoundingRect();
+    return this.drawingObject.getRelativeVertexSpaceBoundingRect();
   }
 }
 

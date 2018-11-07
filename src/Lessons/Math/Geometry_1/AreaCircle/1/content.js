@@ -2,18 +2,18 @@
 import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
-import {
-  click, centerV, highlight,
-} from '../../../../../js/tools/htmlGenerator';
+// import {
+//   click, centerV, highlight,
+// } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
-import Definition from '../../../../LessonsCommon/tools/definition';
+// import Definition from '../../../../LessonsCommon/tools/definition';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
 import imgLinkGrey from '../tile-grey.png';
 import details from '../details';
 
 const layout = lessonLayout();
-const { colors } = layout;
+// const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -60,7 +60,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         circ.setScenario(circ, layout.circle.scenarios.center);
-        console.log(circ)
+        // console.log(circ)
       },
     });
   }

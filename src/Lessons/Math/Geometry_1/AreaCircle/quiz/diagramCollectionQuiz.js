@@ -5,7 +5,7 @@ import {
   Transform,
 } from '../../../../../js/diagram/tools/g2';
 import {
-  DiagramElementCollection, DiagramElementPrimative,
+  DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
@@ -64,9 +64,9 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   findAnswer() {
     // this._input.disable();
-    // if (this._input.getValue() === this.answer.toString()) {
-    //   return 'correct';
-    // }
+    if (this.answer === true) {
+      return 'correct';
+    }
     return 'incorrect';
   }
 }

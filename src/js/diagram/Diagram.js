@@ -541,7 +541,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
     transform: Transform | Point = new Transform(),
   ) {
     const copy = element._dup();
-    const drawingObject = element.vertices;
+    const { drawingObject } = element;
     // console.log(element.vertices.points)
     if (drawingObject instanceof VertexObject) {
       copy.transform = transform._dup();
@@ -559,7 +559,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
         }
       }
       // console.log(newPoints)
-      copy.vertices.changeVertices(newPoints);
+      copy.drawingObject.changeVertices(newPoints);
     }
     return copy;
   }

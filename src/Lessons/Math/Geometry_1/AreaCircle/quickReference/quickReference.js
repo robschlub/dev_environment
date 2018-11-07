@@ -2,15 +2,15 @@
 
 import { Transform } from '../../../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
-import * as html from '../../../../../js/tools/htmlGenerator';
+// import * as html from '../../../../../js/tools/htmlGenerator';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
 import details from '../details';
 
-import TODOCollection from '../common/diagramCollectionTODO';
+import CircleAreaCollection from '../common/diagramCollectionCircleArea';
 
 
 export default class QR_TODO extends PopupBoxCollection {
-  _collection: TODOCollection;
+  _collection: CircleAreaCollection;
 
   constructor(
     diagram: Object,
@@ -22,7 +22,7 @@ export default class QR_TODO extends PopupBoxCollection {
       layout,
       transform,
       'collection',
-      TODOCollection,
+      CircleAreaCollection,
     );
     this.hasTouchableElements = true;
 
