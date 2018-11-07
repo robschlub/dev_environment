@@ -1,8 +1,8 @@
 import {
   DiagramElementPrimative,
   DiagramElementCollection,
-  AnimationPhase,
 } from './Element';
+import { AnimationPhase } from './AnimationPhase';
 import {
   Point, Transform, TransformLimit,
 } from './tools/g2';

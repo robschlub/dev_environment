@@ -48,6 +48,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     });
   }
 
+
   addSelector() {
     addSelectorHTML(
       this.diagram,
