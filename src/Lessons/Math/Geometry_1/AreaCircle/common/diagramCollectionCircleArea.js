@@ -13,8 +13,12 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _selector: DiagramElementPrimative;
   _circle: DiagramElementPrimative;
-  _poly0: DiagramElementPrimative;
-  _lines0: DiagramElementPrimative;
+  _poly6: DiagramElementPrimative;
+  _lines6: DiagramElementPrimative;
+  _poly9: DiagramElementPrimative;
+  _lines9: DiagramElementPrimative;
+  _poly25: DiagramElementPrimative;
+  _lines25: DiagramElementPrimative;
 
   addCircle() {
     const circle = this.diagram.shapes.polygon(
@@ -49,7 +53,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       this.diagram,
       this,
       'selector',
-      'lesson__related_angles_selector',
+      'lesson__circle_area_selector',
       this.selectorClicked.bind(this),
       'horizontal',
     );
@@ -62,7 +66,9 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
 
   showTriangles(numSides: number) {
     this.layout.polygons.sides.forEach((sides) => {
+      // $FlowFixMe
       const polygon = this[`_poly${sides}`];
+      // $FlowFixMe
       const lines = this[`_lines${sides}`];
       if (sides === numSides) {
         polygon.show();
