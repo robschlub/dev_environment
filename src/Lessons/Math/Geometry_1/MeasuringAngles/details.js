@@ -2,9 +2,9 @@
 
 // eslint-disable-next-line no-var
 var details = {
-  title: 'Area',
-  uid: 'area_introduction',
-  dependencies: ['quadrangles'],
+  title: 'Measuring Angles',
+  uid: 'measuring_angles',
+  dependencies: ['angles'],
 };
 
 module.exports = {
