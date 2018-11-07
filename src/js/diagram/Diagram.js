@@ -14,8 +14,8 @@ import GlobalAnimation from './webgl/GlobalAnimation';
 // eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
-import DiagramPrimatives from './DiagramPrimatives/shapes';
-import DiagramEquation from './DiagramEquations/equations';
+import DiagramPrimatives from './DiagramPrimatives/DiagramPrimatives';
+import DiagramEquation from './DiagramEquation/DiagramEquation';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -212,10 +212,7 @@ class Diagram {
       webgl = this.webglHigh;
       draw2D = this.draw2DHigh;
     }
-    return new DiagramEquation(
-      webgl, draw2D,
-      this.limits, this.shapes,
-    );
+    return new DiagramEquation(this.shapes);
   }
 
   sizeHtmlText() {

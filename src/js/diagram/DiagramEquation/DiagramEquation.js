@@ -10,7 +10,6 @@ import DrawContext2D from '../DrawContext2D';
 import {
   DiagramFont,
 } from '../DrawingObjects/TextObject/TextObject';
-
 import Integral from '../DiagramElements/Equation/Integral';
 import Bracket from '../DiagramElements/Equation/Bracket';
 import Bar from '../DiagramElements/Equation/Bar';
@@ -30,14 +29,11 @@ export default class DiagramEquation {
   shapes: Object;
 
   constructor(
-    webgl: WebGLInstance,
-    draw2D: DrawContext2D,
-    limits: Rect,
     shapes: Object,
   ) {
-    this.webgl = webgl;
-    this.draw2D = draw2D;
-    this.limits = limits;
+    this.webgl = shapes.webgl;
+    this.draw2D = shapes.draw2D;
+    this.limits = shapes.limits;
     this.shapes = shapes;
   }
 
@@ -190,21 +186,4 @@ export default class DiagramEquation {
       new Point(0, 0), 'middle', 'left',
     );
   }
-
-  // return {
-  //   elements,
-  //   vinculum,
-  //   integral,
-  //   make,
-  //   makeHTML,
-  //   makeEqn,
-  //   strike,
-  //   xStrike,
-  //   makeDescription,
-  //   bracket,
-  //   bar,
-  //   squareBracket,
-  //   brace,
-  //   roundedSquareBracket,
-  // };
 }
