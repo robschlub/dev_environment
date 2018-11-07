@@ -14,7 +14,7 @@ import GlobalAnimation from './webgl/GlobalAnimation';
 // eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
-import shapes from './DiagramPrimatives/shapes';
+import DiagramPrimatives from './DiagramPrimatives/shapes';
 import equation from './DiagramEquations/equations';
 
 // There are several coordinate spaces that need to be considered for a
@@ -193,7 +193,7 @@ class Diagram {
   }
 
   getShapes(high: boolean = false) {
-    return shapes(
+    return new DiagramPrimatives(
       this.webglLow, this.webglHigh, this.draw2DLow, this.draw2DHigh,
       this.limits, this.htmlCanvas,
       high,

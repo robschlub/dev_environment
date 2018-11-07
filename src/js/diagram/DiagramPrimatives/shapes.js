@@ -33,24 +33,197 @@ import {
 } from '../DrawingObjects/TextObject/TextObject';
 import HTMLObject from '../DrawingObjects/HTMLObject/HTMLObject';
 
-export default function shapes(
-  webglLow: WebGLInstance,
-  webglHigh: WebGLInstance,
-  draw2DLow: DrawContext2D,
-  draw2DHigh: DrawContext2D,
-  limits: Rect,
-  htmlCanvas: HTMLElement,
-  high: boolean = false,
-) {
-  // diagram: Diagram, high: boolean = false) {
-  let webgl = webglLow;
-  let draw2D = draw2DLow;
-  if (high) {
-    webgl = webglHigh;
-    draw2D = draw2DHigh;
+export type TypeDiagramPrimatives = {
+  polyLine: (
+    Array<Point>,               // Points
+    boolean,                    // close
+    number,                     // lineWidth
+    Array<number>,              // color
+    TypePolyLineBorderToPoint,  // borderToPoint
+    Transform | Point,          // transform
+  ) => DiagramElementPrimative;
+  // fan(
+  //   points: Array<Point>,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // text(
+  //   textInput: string,
+  //   location: Point,
+  //   color: Array<number>,
+  //   fontInput: DiagramFont | null = null,
+  // )
+  // htmlElement(
+  //   elementToAdd: HTMLElement | Array<HTMLElement>,
+  //   id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
+  //   classes: string = '',
+  //   location: Point = new Point(0, 0),
+  //   alignV: 'top' | 'bottom' | 'middle' = 'middle',
+  //   alignH: 'left' | 'right' | 'center' = 'left',
+  // )
+  // htmlText(
+  //   textInput: string,
+  //   id: string = generateUniqueId('id__html_text_'),
+  //   classes: string = '',
+  //   location: Point = new Point(0, 0),
+  //   alignV: 'top' | 'bottom' | 'middle' = 'middle',
+  //   alignH: 'left' | 'right' | 'center' = 'left',
+  // ) {
+  // arrow(
+  //   width: number = 1,
+  //   legWidth: number = 0.5,
+  //   height: number = 1,
+  //   legHeight: number = 0.5,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  //   tip: Point = new Point(0, 0),
+  //   rotation: number = 0,
+  // )
+  // lines(
+  //   linePairs: Array<Array<Point>>,
+  //   numLinesThick: number = 1,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // grid(
+  //   bounds: Rect,
+  //   xStep: number,
+  //   yStep: number,
+  //   numLinesThick: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // polyLineCorners(
+  //   points: Array<Point>,
+  //   close: boolean,
+  //   cornerLength: number,
+  //   lineWidth: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // polygon(
+  //   numSides: number,
+  //   radius: number,
+  //   lineWidth: number,
+  //   rotation: number,
+  //   direction: -1 | 1,
+  //   numSidesToDraw: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // polygonFilled(
+  //   numSides: number,
+  //   radius: number,
+  //   rotation: number,
+  //   numSidesToDraw: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  //   textureLocation: string = '',
+  //   textureCoords: Rect = new Rect(0, 0, 1, 1),
+  // )
+  // polygonLine(
+  //   numSides: number,
+  //   radius: number,
+  //   rotation: number,
+  //   direction: -1 | 1,
+  //   numSidesToDraw: number,
+  //   numLines: number,     // equivalent to thickness - integer
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // horizontalLine(
+  //   start: Point,
+  //   length: number,
+  //   width: number,
+  //   rotation: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // rectangleFilled(
+  //   topLeft: TypeRectangleFilledReference,
+  //   width: number,
+  //   height: number,
+  //   cornerRadius: number,
+  //   cornerSides: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // radialLines(
+  //   innerRadius: number = 0,
+  //   outerRadius: number = 1,
+  //   width: number = 0.05,
+  //   dAngle: number = Math.PI / 4,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // collection(transformOrPoint: Transform | Point = new Transform())
+  // repeatPattern(
+  //   element: DiagramElementPrimative,
+  //   xNum: number,
+  //   yNum: number,
+  //   xStep: number,
+  //   yStep: number,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // repeatPatternVertex(
+  //   element: DiagramElementPrimative,
+  //   xNum: number,
+  //   yNum: number,
+  //   xStep: number,
+  //   yStep: number,
+  //   transform: Transform | Point = new Transform(),
+  // )
+  // axes(
+  //   width: number = 1,
+  //   height: number = 1,
+  //   limits: Rect = new Rect(-1, -1, 2, 2),
+  //   yAxisLocation: number = 0,
+  //   xAxisLocation: number = 0,
+  //   stepX: number = 0.1,
+  //   stepY: number = 0.1,
+  //   fontSize: number = 0.13,
+  //   showGrid: boolean = true,
+  //   color: Array<number> = [1, 1, 1, 0],
+  //   gridColor: Array<number> = [1, 1, 1, 0],
+  //   location: Transform | Point = new Transform(),
+  //   decimalPlaces: number = 1,
+  // )
+};
+
+export default class DiagramPrimatives {
+  webgl: WebGLInstance;
+  draw2D: DrawContext2D;
+  limits: Rect;
+  htmlCanvas: HTMLElement;
+  high: boolean;
+  polyLine: (
+    Array<Point>,               // Points
+    boolean,                    // close
+    number,                     // lineWidth
+    Array<number>,              // color
+    TypePolyLineBorderToPoint,  // borderToPoint
+    Transform | Point,          // transform
+  ) => DiagramElementPrimative;
+
+  constructor(
+    webglLow: WebGLInstance,
+    webglHigh: WebGLInstance,
+    draw2DLow: DrawContext2D,
+    draw2DHigh: DrawContext2D,
+    limits: Rect,
+    htmlCanvas: HTMLElement,
+    high: boolean = false,
+  ) {
+    // diagram: Diagram, high: boolean = false) {
+    this.webgl = webglLow;
+    this.draw2D = draw2DLow;
+    if (high) {
+      this.webgl = webglHigh;
+      this.draw2D = draw2DHigh;
+    }
   }
 
-  function polyLine(
+  polyLine(
     points: Array<Point>,
     close: boolean,
     lineWidth: number,
@@ -59,23 +232,23 @@ export default function shapes(
     transform: Transform | Point = new Transform(),
   ) {
     return PolyLine(
-      webgl, points, close, lineWidth,
-      color, borderToPoint, transform, limits,
+      this.webgl, points, close, lineWidth,
+      color, borderToPoint, transform, this.limits,
     );
   }
 
-  function fan(
+  fan(
     points: Array<Point>,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
     return Fan(
-      webgl, points,
-      color, transform, limits,
+      this.webgl, points,
+      color, transform, this.limits,
     );
   }
 
-  function text(
+  text(
     textInput: string,
     location: Point,
     color: Array<number>,
@@ -94,16 +267,16 @@ export default function shapes(
       font = fontInput;
     }
     const dT = new DiagramText(new Point(0, 0), textInput, font);
-    const to = new TextObject(draw2D, [dT]);
+    const to = new TextObject(this.draw2D, [dT]);
     return new DiagramElementPrimative(
       to,
       new Transform().scale(1, 1).translate(location.x, location.y),
       color,
-      limits,
+      this.limits,
     );
   }
 
-  function htmlElement(
+  htmlElement(
     elementToAdd: HTMLElement | Array<HTMLElement>,
     id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
     classes: string = '',
@@ -123,19 +296,19 @@ export default function shapes(
     }
     element.style.position = 'absolute';
     element.setAttribute('id', id);
-    htmlCanvas.appendChild(element);
-    const hT = new HTMLObject(htmlCanvas, id, new Point(0, 0), alignV, alignH);
+    this.htmlCanvas.appendChild(element);
+    const hT = new HTMLObject(this.htmlCanvas, id, new Point(0, 0), alignV, alignH);
     const diagramElement = new DiagramElementPrimative(
       hT,
       new Transform().scale(1, 1).translate(location.x, location.y),
       [1, 1, 1, 1],
-      limits,
+      this.limits,
     );
     // diagramElement.setFirstTransform();
     return diagramElement;
   }
 
-  function htmlText(
+  htmlText(
     textInput: string,
     id: string = generateUniqueId('id__html_text_'),
     classes: string = '',
@@ -149,7 +322,7 @@ export default function shapes(
     return this.htmlElement(inside, id, classes, location, alignV, alignH);
   }
 
-  function arrow(
+  arrow(
     width: number = 1,
     legWidth: number = 0.5,
     height: number = 1,
@@ -160,20 +333,21 @@ export default function shapes(
     rotation: number = 0,
   ) {
     return Arrow(
-      webgl, width, legWidth, height, legHeight,
-      tip, rotation, color, transform, limits,
+      this.webgl, width, legWidth, height, legHeight,
+      tip, rotation, color, transform, this.limits,
     );
   }
-  function lines(
+
+  lines(
     linePairs: Array<Array<Point>>,
     numLinesThick: number = 1,
     color: Array<number>,
     transform: Transform | Point = new Transform(),
   ) {
-    return Lines(webgl, linePairs, numLinesThick, color, transform, limits);
+    return Lines(this.webgl, linePairs, numLinesThick, color, transform, this.limits);
   }
 
-  function grid(
+  grid(
     bounds: Rect,
     xStep: number,
     yStep: number,
@@ -193,10 +367,10 @@ export default function shapes(
         linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
       }
     }
-    return lines(linePairs, numLinesThick, color, transform);
+    return this.lines(linePairs, numLinesThick, color, transform);
   }
 
-  function polyLineCorners(
+  polyLineCorners(
     points: Array<Point>,
     close: boolean,
     cornerLength: number,
@@ -205,11 +379,12 @@ export default function shapes(
     transform: Transform | Point = new Transform(),
   ) {
     return PolyLineCorners(
-      webgl, points, close,
-      cornerLength, lineWidth, color, transform, limits,
+      this.webgl, points, close,
+      cornerLength, lineWidth, color, transform, this.limits,
     );
   }
-  function polygon(
+
+  polygon(
     numSides: number,
     radius: number,
     lineWidth: number,
@@ -220,11 +395,12 @@ export default function shapes(
     transform: Transform | Point = new Transform(),
   ) {
     return Polygon(
-      webgl, numSides, radius, lineWidth,
-      rotation, direction, numSidesToDraw, color, transform, limits,
+      this.webgl, numSides, radius, lineWidth,
+      rotation, direction, numSidesToDraw, color, transform, this.limits,
     );
   }
-  function polygonFilled(
+
+  polygonFilled(
     numSides: number,
     radius: number,
     rotation: number,
@@ -235,11 +411,12 @@ export default function shapes(
     textureCoords: Rect = new Rect(0, 0, 1, 1),
   ) {
     return PolygonFilled(
-      webgl, numSides, radius,
-      rotation, numSidesToDraw, color, transform, limits, textureLocation, textureCoords,
+      this.webgl, numSides, radius,
+      rotation, numSidesToDraw, color, transform, this.limits, textureLocation, textureCoords,
     );
   }
-  function polygonLine(
+
+  polygonLine(
     numSides: number,
     radius: number,
     rotation: number,
@@ -250,11 +427,12 @@ export default function shapes(
     transform: Transform | Point = new Transform(),
   ) {
     return PolygonLine(
-      webgl, numSides, radius,
-      rotation, direction, numSidesToDraw, numLines, color, transform, limits,
+      this.webgl, numSides, radius,
+      rotation, direction, numSidesToDraw, numLines, color, transform, this.limits,
     );
   }
-  function horizontalLine(
+
+  horizontalLine(
     start: Point,
     length: number,
     width: number,
@@ -263,11 +441,12 @@ export default function shapes(
     transform: Transform | Point = new Transform(),
   ) {
     return HorizontalLine(
-      webgl, start, length, width,
-      rotation, color, transform, limits,
+      this.webgl, start, length, width,
+      rotation, color, transform, this.limits,
     );
   }
-  function rectangleFilled(
+
+  rectangleFilled(
     topLeft: TypeRectangleFilledReference,
     width: number,
     height: number,
@@ -277,11 +456,12 @@ export default function shapes(
     transform: Transform | Point = new Transform(),
   ) {
     return RectangleFilled(
-      webgl, topLeft, width, height,
-      cornerRadius, cornerSides, color, transform, limits,
+      this.webgl, topLeft, width, height,
+      cornerRadius, cornerSides, color, transform, this.limits,
     );
   }
-  function radialLines(
+
+  radialLines(
     innerRadius: number = 0,
     outerRadius: number = 1,
     width: number = 0.05,
@@ -290,20 +470,22 @@ export default function shapes(
     transform: Transform | Point = new Transform(),
   ) {
     return RadialLines(
-      webgl, innerRadius, outerRadius, width,
-      dAngle, color, transform, limits,
+      this.webgl, innerRadius, outerRadius, width,
+      dAngle, color, transform, this.limits,
     );
   }
-  function collection(transformOrPoint: Transform | Point = new Transform()) {
+
+  collection(transformOrPoint: Transform | Point = new Transform()) {
     let transform = new Transform();
     if (transformOrPoint instanceof Point) {
       transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
     } else {
       transform = transformOrPoint._dup();
     }
-    return new DiagramElementCollection(transform, limits);
+    return new DiagramElementCollection(transform, this.limits);
   }
-  function repeatPattern(
+
+  repeatPattern(
     element: DiagramElementPrimative,
     xNum: number,
     yNum: number,
@@ -311,7 +493,7 @@ export default function shapes(
     yStep: number,
     transform: Transform | Point = new Transform(),
   ) {
-    const group = collection(transform);
+    const group = this.collection(transform);
     let t = element.transform.t();
     let transformToUse = element.transform._dup();
     if (t === null) {
@@ -330,7 +512,9 @@ export default function shapes(
     }
     return group;
   }
-  function repeatPatternVertex(
+
+  // eslint-disable-next-line class-methods-use-this
+  repeatPatternVertex(
     element: DiagramElementPrimative,
     xNum: number,
     yNum: number,
@@ -361,7 +545,8 @@ export default function shapes(
     }
     return copy;
   }
-  function axes(
+
+  axes(
     width: number = 1,
     height: number = 1,
     limits: Rect = new Rect(-1, -1, 2, 2),
@@ -418,10 +603,10 @@ export default function shapes(
     xProps.majorTicks.fontWeight = '400';
 
     const xAxis = new Axis(
-      webgl, draw2D, xProps,
+      this.webgl, this.draw2D, xProps,
       new Transform().scale(1, 1).rotate(0)
         .translate(0, xAxisLocation - limits.bottom * height / 2),
-      limits,
+      this.limits,
     );
 
     const yProps = new AxisProperties('x', 0);
@@ -465,10 +650,10 @@ export default function shapes(
     yProps.majorTicks.fontWeight = xProps.majorTicks.fontWeight;
 
     const yAxis = new Axis(
-      webgl, draw2D, yProps,
+      this.webgl, this.draw2D, yProps,
       new Transform().scale(1, 1).rotate(0)
         .translate(yAxisLocation - limits.left * width / 2, 0),
-      limits,
+      this.limits,
     );
 
     let transform = new Transform();
@@ -477,9 +662,9 @@ export default function shapes(
     } else {
       transform = location._dup();
     }
-    const xy = collection(transform);
+    const xy = this.collection(transform);
     if (showGrid) {
-      const gridLines = grid(
+      const gridLines = this.grid(
         new Rect(0, 0, width, height),
         tools.roundNum(stepX * width / limits.width, 8),
         tools.roundNum(stepY * height / limits.height, 8),
@@ -492,26 +677,4 @@ export default function shapes(
     xy.add('x', xAxis);
     return xy;
   }
-
-  return {
-    polyLine,
-    polyLineCorners,
-    polygon,
-    polygonFilled,
-    polygonLine,
-    horizontalLine,
-    arrow,
-    collection,
-    lines,
-    grid,
-    text,
-    radialLines,
-    htmlText,
-    htmlElement,
-    axes,
-    rectangleFilled,
-    repeatPattern,
-    repeatPatternVertex,
-    fan,
-  };
 }
