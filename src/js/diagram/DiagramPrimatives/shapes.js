@@ -33,194 +33,23 @@ import {
 } from '../DrawingObjects/TextObject/TextObject';
 import HTMLObject from '../DrawingObjects/HTMLObject/HTMLObject';
 
-export type TypeDiagramPrimatives = {
-  polyLine: (
-    Array<Point>,               // Points
-    boolean,                    // close
-    number,                     // lineWidth
-    Array<number>,              // color
-    TypePolyLineBorderToPoint,  // borderToPoint
-    Transform | Point,          // transform
-  ) => DiagramElementPrimative;
-  // fan(
-  //   points: Array<Point>,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // text(
-  //   textInput: string,
-  //   location: Point,
-  //   color: Array<number>,
-  //   fontInput: DiagramFont | null = null,
-  // )
-  // htmlElement(
-  //   elementToAdd: HTMLElement | Array<HTMLElement>,
-  //   id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
-  //   classes: string = '',
-  //   location: Point = new Point(0, 0),
-  //   alignV: 'top' | 'bottom' | 'middle' = 'middle',
-  //   alignH: 'left' | 'right' | 'center' = 'left',
-  // )
-  // htmlText(
-  //   textInput: string,
-  //   id: string = generateUniqueId('id__html_text_'),
-  //   classes: string = '',
-  //   location: Point = new Point(0, 0),
-  //   alignV: 'top' | 'bottom' | 'middle' = 'middle',
-  //   alignH: 'left' | 'right' | 'center' = 'left',
-  // ) {
-  // arrow(
-  //   width: number = 1,
-  //   legWidth: number = 0.5,
-  //   height: number = 1,
-  //   legHeight: number = 0.5,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  //   tip: Point = new Point(0, 0),
-  //   rotation: number = 0,
-  // )
-  // lines(
-  //   linePairs: Array<Array<Point>>,
-  //   numLinesThick: number = 1,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // grid(
-  //   bounds: Rect,
-  //   xStep: number,
-  //   yStep: number,
-  //   numLinesThick: number,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // polyLineCorners(
-  //   points: Array<Point>,
-  //   close: boolean,
-  //   cornerLength: number,
-  //   lineWidth: number,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // polygon(
-  //   numSides: number,
-  //   radius: number,
-  //   lineWidth: number,
-  //   rotation: number,
-  //   direction: -1 | 1,
-  //   numSidesToDraw: number,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // polygonFilled(
-  //   numSides: number,
-  //   radius: number,
-  //   rotation: number,
-  //   numSidesToDraw: number,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  //   textureLocation: string = '',
-  //   textureCoords: Rect = new Rect(0, 0, 1, 1),
-  // )
-  // polygonLine(
-  //   numSides: number,
-  //   radius: number,
-  //   rotation: number,
-  //   direction: -1 | 1,
-  //   numSidesToDraw: number,
-  //   numLines: number,     // equivalent to thickness - integer
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // horizontalLine(
-  //   start: Point,
-  //   length: number,
-  //   width: number,
-  //   rotation: number,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // rectangleFilled(
-  //   topLeft: TypeRectangleFilledReference,
-  //   width: number,
-  //   height: number,
-  //   cornerRadius: number,
-  //   cornerSides: number,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // radialLines(
-  //   innerRadius: number = 0,
-  //   outerRadius: number = 1,
-  //   width: number = 0.05,
-  //   dAngle: number = Math.PI / 4,
-  //   color: Array<number>,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // collection(transformOrPoint: Transform | Point = new Transform())
-  // repeatPattern(
-  //   element: DiagramElementPrimative,
-  //   xNum: number,
-  //   yNum: number,
-  //   xStep: number,
-  //   yStep: number,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // repeatPatternVertex(
-  //   element: DiagramElementPrimative,
-  //   xNum: number,
-  //   yNum: number,
-  //   xStep: number,
-  //   yStep: number,
-  //   transform: Transform | Point = new Transform(),
-  // )
-  // axes(
-  //   width: number = 1,
-  //   height: number = 1,
-  //   limits: Rect = new Rect(-1, -1, 2, 2),
-  //   yAxisLocation: number = 0,
-  //   xAxisLocation: number = 0,
-  //   stepX: number = 0.1,
-  //   stepY: number = 0.1,
-  //   fontSize: number = 0.13,
-  //   showGrid: boolean = true,
-  //   color: Array<number> = [1, 1, 1, 0],
-  //   gridColor: Array<number> = [1, 1, 1, 0],
-  //   location: Transform | Point = new Transform(),
-  //   decimalPlaces: number = 1,
-  // )
-};
-
 export default class DiagramPrimatives {
   webgl: WebGLInstance;
   draw2D: DrawContext2D;
-  limits: Rect;
   htmlCanvas: HTMLElement;
-  high: boolean;
-  polyLine: (
-    Array<Point>,               // Points
-    boolean,                    // close
-    number,                     // lineWidth
-    Array<number>,              // color
-    TypePolyLineBorderToPoint,  // borderToPoint
-    Transform | Point,          // transform
-  ) => DiagramElementPrimative;
+  limits: Rect;
 
   constructor(
-    webglLow: WebGLInstance,
-    webglHigh: WebGLInstance,
-    draw2DLow: DrawContext2D,
-    draw2DHigh: DrawContext2D,
-    limits: Rect,
+    webgl: WebGLInstance,
+    draw2D: DrawContext2D,
     htmlCanvas: HTMLElement,
-    high: boolean = false,
+    limits: Rect,
+    
   ) {
-    // diagram: Diagram, high: boolean = false) {
-    this.webgl = webglLow;
-    this.draw2D = draw2DLow;
-    if (high) {
-      this.webgl = webglHigh;
-      this.draw2D = draw2DHigh;
-    }
+    this.webgl = webgl;
+    this.draw2D = draw2D;
+    this.htmlCanvas = htmlCanvas;
+    this.limits = limits;
   }
 
   polyLine(
@@ -678,3 +507,5 @@ export default class DiagramPrimatives {
     return xy;
   }
 }
+
+export type TypeDiagramPrimatives = DiagramPrimatives;

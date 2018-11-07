@@ -24,20 +24,11 @@ import {
 import HTMLEquation from '../DiagramElements/Equation/HTMLEquation';
 
 export default function equation(
-  webglLow: WebGLInstance,
-  webglHigh: WebGLInstance,
-  draw2DLow: DrawContext2D,
-  draw2DHigh: DrawContext2D,
+  webgl: WebGLInstance,
+  draw2D: DrawContext2D,
   limits: Rect,
-  shapes: HTMLElement,
-  high: boolean = false,
+  shapes: Object,
 ) {
-  let webgl = webglLow;
-  let draw2D = draw2DLow;
-  if (high) {
-    webgl = webglHigh;
-    draw2D = draw2DHigh;
-  }
   function elements(
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],

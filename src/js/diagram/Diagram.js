@@ -193,18 +193,28 @@ class Diagram {
   }
 
   getShapes(high: boolean = false) {
+    let webgl = this.webglLow;
+    let draw2D = this.draw2DLow;
+    if (high) {
+      webgl = this.webglHigh;
+      draw2D = this.draw2DHigh;
+    }
     return new DiagramPrimatives(
-      this.webglLow, this.webglHigh, this.draw2DLow, this.draw2DHigh,
-      this.limits, this.htmlCanvas,
-      high,
+      webgl, draw2D,
+      this.htmlCanvas, this.limits,
     );
   }
 
   getEquations(high: boolean = false) {
+    let webgl = this.webglLow;
+    let draw2D = this.draw2DLow;
+    if (high) {
+      webgl = this.webglHigh;
+      draw2D = this.draw2DHigh;
+    }
     return equation(
-      this.webglLow, this.webglHigh, this.draw2DLow, this.draw2DHigh,
+      webgl, draw2D,
       this.limits, this.shapes,
-      high,
     );
   }
 
