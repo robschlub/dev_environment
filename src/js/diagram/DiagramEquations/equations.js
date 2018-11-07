@@ -23,28 +23,40 @@ import {
 } from '../DiagramElements/Equation/GLEquation';
 import HTMLEquation from '../DiagramElements/Equation/HTMLEquation';
 
-export default function equation(
-  webgl: WebGLInstance,
-  draw2D: DrawContext2D,
-  limits: Rect,
-  shapes: Object,
-) {
-  function elements(
+export default class DiagramEquation {
+  webgl: WebGLInstance;
+  draw2D: DrawContext2D;
+  limits: Rect;
+  shapes: Object;
+
+  constructor(
+    webgl: WebGLInstance,
+    draw2D: DrawContext2D,
+    limits: Rect,
+    shapes: Object,
+  ) {
+    this.webgl = webgl;
+    this.draw2D = draw2D;
+    this.limits = limits;
+    this.shapes = shapes;
+  }
+
+  elements(
     elems: Object,
     colorOrFont: Array<number> | DiagramFont = [],
     firstTransform: Transform = new Transform('elements'),
   ): DiagramElementCollection {
     return createEquationElements(
       elems,
-      draw2D,
+      this.draw2D,
       colorOrFont,
-      limits,
+      this.limits,
       firstTransform,
     );
   }
 
-  function vinculum(color: Array<number> = [1, 1, 1, 1]) {
-    return shapes.horizontalLine(
+  vinculum(color: Array<number> = [1, 1, 1, 1]) {
+    return this.shapes.horizontalLine(
       new Point(0, 0),
       1, 1, 0,
       color,
@@ -52,8 +64,8 @@ export default function equation(
     );
   }
 
-  function strike(color: Array<number> = [1, 1, 1, 1]) {
-    return shapes.horizontalLine(
+  strike(color: Array<number> = [1, 1, 1, 1]) {
+    return this.shapes.horizontalLine(
       new Point(0, 0),
       1, 1, 0,
       color,
@@ -61,10 +73,10 @@ export default function equation(
     );
   }
 
-  function xStrike(color: Array<number> = [1, 1, 1, 1]) {
-    const cross = shapes.collection(new Transform('strike').scale(1, 1).rotate(0).translate(0, 0));
+  xStrike(color: Array<number> = [1, 1, 1, 1]) {
+    const cross = this.shapes.collection(new Transform('strike').scale(1, 1).rotate(0).translate(0, 0));
     cross.color = color;
-    const strike1 = shapes.horizontalLine(
+    const strike1 = this.shapes.horizontalLine(
       new Point(0, 0),
       1, 1, 0,
       color,
@@ -76,100 +88,102 @@ export default function equation(
     return cross;
   }
 
-  function integral(
+  integral(
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
   ) {
     return new Integral(
-      webgl,
+      this.webgl,
       color,
       numLines,
       new Transform('integral').scale(1, 1).translate(0, 0),
-      limits,
+      this.limits,
     );
   }
 
-  function bracket(
+  bracket(
     side: 'left' | 'right' | 'top' | 'bottom',
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
   ) {
     return new Bracket(
-      webgl,
+      this.webgl,
       color,
       side,
       numLines,
       new Transform('bracket').scale(1, 1).translate(0, 0),
-      limits,
+      this.limits,
     );
   }
 
-  function bar(
+  bar(
     side: 'left' | 'right' | 'top' | 'bottom',
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
   ) {
     return new Bar(
-      webgl, color, side, numLines,
+      this.webgl, color, side, numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      limits,
+      this.limits,
     );
   }
 
-  function squareBracket(
+  squareBracket(
     side: 'left' | 'right' | 'top' | 'bottom',
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
   ) {
     return new SquareBracket(
-      webgl, color, side, numLines,
+      this.webgl, color, side, numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      limits,
+      this.limits,
     );
   }
 
-  function brace(
+  brace(
     side: 'left' | 'right' | 'top' | 'bottom',
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
   ) {
     return new Brace(
-      webgl, color, side, numLines,
+      this.webgl, color, side, numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      limits,
+      this.limits,
     );
   }
 
-  function roundedSquareBracket(
+  roundedSquareBracket(
     side: 'left' | 'right' | 'top' | 'bottom',
     numLines: number = 1,
     color: Array<number> = [1, 1, 1, 1],
   ) {
     return new RoundedSquareBracket(
-      webgl, color, side, numLines,
+      this.webgl, color, side, numLines,
       new Transform('bar').scale(1, 1).translate(0, 0),
-      limits,
+      this.limits,
     );
   }
 
-  function make(equationCollection: DiagramElementCollection) {
+  // eslint-disable-next-line class-methods-use-this
+  make(equationCollection: DiagramElementCollection) {
     return new EquationForm(equationCollection);
   }
 
-  function makeHTML(id: string = '', classes: string | Array<string> = []) {
+  // eslint-disable-next-line class-methods-use-this
+  makeHTML(id: string = '', classes: string | Array<string> = []) {
     return new HTMLEquation(id, classes);
   }
 
-  function makeEqn() {
+  makeEqn() {
     return new Equation(
-      draw2D,
-      limits,
+      this.draw2D,
+      this.limits,
       // diagram.diagramToGLSpaceTransform,
     );
   }
 
-  function makeDescription(id: string) {
-    return shapes.htmlElement(
+  makeDescription(id: string) {
+    return this.shapes.htmlElement(
       document.createElement('div'),
       id,
       'lesson__equation_description',
@@ -177,20 +191,20 @@ export default function equation(
     );
   }
 
-  return {
-    elements,
-    vinculum,
-    integral,
-    make,
-    makeHTML,
-    makeEqn,
-    strike,
-    xStrike,
-    makeDescription,
-    bracket,
-    bar,
-    squareBracket,
-    brace,
-    roundedSquareBracket,
-  };
+  // return {
+  //   elements,
+  //   vinculum,
+  //   integral,
+  //   make,
+  //   makeHTML,
+  //   makeEqn,
+  //   strike,
+  //   xStrike,
+  //   makeDescription,
+  //   bracket,
+  //   bar,
+  //   squareBracket,
+  //   brace,
+  //   roundedSquareBracket,
+  // };
 }

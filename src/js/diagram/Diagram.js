@@ -15,7 +15,7 @@ import GlobalAnimation from './webgl/GlobalAnimation';
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 import DiagramPrimatives from './DiagramPrimatives/shapes';
-import equation from './DiagramEquations/equations';
+import DiagramEquation from './DiagramEquations/equations';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -212,7 +212,7 @@ class Diagram {
       webgl = this.webglHigh;
       draw2D = this.draw2DHigh;
     }
-    return equation(
+    return new DiagramEquation(
       webgl, draw2D,
       this.limits, this.shapes,
     );

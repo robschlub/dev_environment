@@ -44,7 +44,7 @@ export default class DiagramPrimatives {
     draw2D: DrawContext2D,
     htmlCanvas: HTMLElement,
     limits: Rect,
-    
+
   ) {
     this.webgl = webgl;
     this.draw2D = draw2D;
