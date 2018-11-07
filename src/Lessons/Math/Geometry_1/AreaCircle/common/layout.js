@@ -30,8 +30,8 @@ export default function commonLessonLayout() {
     width: width / 2,
     borderWidth: width,
     sides: [
-      // 5,
-      // 10,
+      6,
+      9,
       25,
     ],
   };
