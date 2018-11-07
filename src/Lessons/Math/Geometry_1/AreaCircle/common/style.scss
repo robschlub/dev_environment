@@ -1,7 +1,7 @@
 @import '../../geometry';
 
 $colors: (
-  // line:             map-get($geometry_colors, lines),
+  lines:             map-get($geometry_colors, lines),
 );
 
 body {

@@ -7,11 +7,11 @@ import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
-import XCollection from '../common/diagramCollectionX';
+import CircleAreaCollection from '../common/diagramCollectionCircleArea';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
-  _x: XCollection;
+  circ: CircleAreaCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -20,6 +20,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const layout = lessonLayout();
     super(diagram, layout, transform);
 
-    this.add('x', new XCollection(diagram, this.layout));
+    this.add('circ', new CircleAreaCollection(diagram, this.layout));
   }
 }

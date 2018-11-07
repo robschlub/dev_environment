@@ -28,16 +28,16 @@ class Content extends LessonContent {
 
   addSections() {
     const diag = this.diagram.elements;
-    const x = diag._x;
+    const circ = diag._circ;
 
-    let common = {
+    const common = {
       setContent: '',
       setInfo: '',
       modifiers: {},
       infoModifiers: {},
       setEnterState: () => {},
       showOnly: [],
-      show: [],
+      show: [circ],
       hide: [],
       setSteadyState: () => {},
       setLeaveState: () => {},
@@ -45,6 +45,15 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: 'Enter_title_here',
       setContent: ['Enter_content_here'],
+      showOnly: [circ],
+      show: [circ],
+      transitionFromPrev: (done) => {
+        circ.moveToScenario(circ, layout.circle.scenarios.center, null, done);
+      },
+      setSteadyState: () => {
+        circ.setScenario(circ, layout.circle.scenarios.center);
+        console.log(circ)
+      },
     });
   }
 }
