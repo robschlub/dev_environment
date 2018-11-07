@@ -371,7 +371,7 @@ const CommonQuizMixin = superclass => class extends superclass {
       'top',
     );
     html.enable = (doEnable: boolean = true) => {
-      const { element } = html.vertices;
+      const { element } = html.drawingObject;
       const classStr = 'lesson__quiz_multiple_choice_box_answer__disable';
       if (doEnable) {
         element.classList.remove(classStr);

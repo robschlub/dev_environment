@@ -45,8 +45,8 @@ function makeRadius(shapes: Object, layout: Object) {
   radius.isMovable = true;
   radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
-  for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-    radius.vertices.border[0][i].y *= 10;
+  for (let i = 0; i < radius.drawingObject.border[0].length; i += 1) {
+    radius.drawingObject.border[0][i].y *= 10;
   }
   return radius;
 }

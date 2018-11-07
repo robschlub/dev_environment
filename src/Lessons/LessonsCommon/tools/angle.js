@@ -140,7 +140,7 @@ export function makeAngle(
     angle.currentAngle = size;
     if (angle.showRealAngle) {
       const angleText = roundNum(size * 180 / Math.PI, angle.realAngleDecimals).toString();
-      angle._label._base.vertices.setText(`${angleText}º`);
+      angle._label._base.drawingObject.setText(`${angleText}º`);
       angle.label.eqn.reArrangeCurrentForm();
     }
     if (angle.autoRightAngle

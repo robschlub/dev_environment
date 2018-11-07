@@ -248,7 +248,7 @@ class Section {
             elementIsVisible = true;
           }
         } else if (element instanceof DiagramElementPrimative
-                   && element.vertices instanceof HTMLObject) {
+                   && element.drawingObject instanceof HTMLObject) {
           if (element.isShown) {
             elementIsVisible = true;
           }

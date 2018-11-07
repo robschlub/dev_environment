@@ -1057,7 +1057,7 @@ class Integral extends Elements {
       );
       this.glyphLocation = integralSymbolLocation;
       this.glyphScale = height;
-      const bounds = integralGlyph.vertices
+      const bounds = integralGlyph.drawingObject
         .getRelativeVertexSpaceBoundingRect();
         // .getRelativeGLBoundingRect(integralGlyph.transform.matrix());
       integralGlyphBounds.width = (bounds.width) * height;
@@ -1255,7 +1255,7 @@ class Brackets extends Elements {
       );
       this.glyphLocation = leftSymbolLocation;
       this.glyphScale = bracketScale;
-      const bounds = glyph.vertices
+      const bounds = glyph.drawingObject
         .getRelativeVertexSpaceBoundingRect();
       glyphBounds.width = bounds.width * bracketScale;
       glyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
@@ -1280,7 +1280,7 @@ class Brackets extends Elements {
         rightSymbolLocation.y,
       );
       this.rightGlyphLocation = rightSymbolLocation;
-      const bounds = rightGlyph.vertices
+      const bounds = rightGlyph.drawingObject
         .getRelativeVertexSpaceBoundingRect();
       rightGlyphBounds.width = bounds.width * bracketScale;
       rightGlyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
@@ -1361,7 +1361,7 @@ class Bar extends Brackets {
       );
       this.glyphLocation = leftSymbolLocation;
       this.glyphScale = bracketScale;
-      const bounds = glyph.vertices
+      const bounds = glyph.drawingObject
         .getRelativeVertexSpaceBoundingRect();
       glyphBounds.width = bounds.width * bracketScale;
       glyphBounds.height = (-bounds.bottom + bounds.top) * bracketScale;
@@ -2688,7 +2688,7 @@ export class Equation {
       return;
     }
 
-    const drawingObject = element.vertices;
+    const { drawingObject } = element;
     if (drawingObject instanceof HTMLObject) {
       drawingObject.change(
         html.applyModifiers(form.description, form.modifiers),

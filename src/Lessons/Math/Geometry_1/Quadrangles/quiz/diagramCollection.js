@@ -56,7 +56,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   }
 
   updateQuad() {
-    this._quad._line.vertices.change([this.p1, this.p2, this.p3, this.p4]);
+    this._quad._line.drawingObject.change([this.p1, this.p2, this.p3, this.p4]);
   }
 
   updatePoints() {

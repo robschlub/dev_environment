@@ -253,7 +253,7 @@ export class SinCosCircle extends AngleCircle {
 
     // eslint-disable-next-line
     symmetry.setSineText = (newText: string) => {
-      // sine._label._sine.vertices.element.innerHTML = newText;
+      // sine._label._sine.drawingObject.element.innerHTML = newText;
     };
     return symmetry;
   }
@@ -316,7 +316,7 @@ export class SinCosCircle extends AngleCircle {
       }
     };
     angle.setAngleText = (newText: string) => {
-      angle._text.vertices.element.innerHTML = newText;
+      angle._text.drawingObject.element.innerHTML = newText;
     };
     return angle;
   }
@@ -338,11 +338,11 @@ export class SinCosCircle extends AngleCircle {
     ));
 
     sineText.setText = (newText: string) => {
-      sineText._text.vertices.element.innerHTML = newText;
+      sineText._text.drawingObject.element.innerHTML = newText;
     };
     sineText.updateRotation = (r: number) => {
       const value = Math.sin(r);
-      sineText._value.vertices.element.innerHTML = value.toFixed(2);
+      sineText._value.drawingObject.element.innerHTML = value.toFixed(2);
     };
     return sineText;
   }
@@ -387,7 +387,7 @@ export class SinCosCircle extends AngleCircle {
     };
 
     angle.setText = (newText: string) => {
-      angle._text.vertices.element.innerHTML = newText;
+      angle._text.drawingObject.element.innerHTML = newText;
     };
     return angle;
   }
@@ -507,7 +507,7 @@ export class SinCosCircle extends AngleCircle {
   //     }
   //   };
   //   sine.setText = (newText: string) => {
-  //     sine._text.vertices.element.innerHTML = newText;
+  //     sine._text.drawingObject.element.innerHTML = newText;
   //   };
   //   return sine;
   // }
@@ -545,7 +545,7 @@ export class SinCosCircle extends AngleCircle {
   //     }
   //   };
   //   cosine.setText = (newText: string) => {
-  //     cosine._text.vertices.element.innerHTML = newText;
+  //     cosine._text.drawingObject.element.innerHTML = newText;
   //   };
   //   return cosine;
   // }
@@ -599,7 +599,7 @@ export class SinCosCircle extends AngleCircle {
       }
     };
     sineCosine.setText = (newText: string) => {
-      sineCosine._label._text.vertices.text[0].text = newText;
+      sineCosine._label._text.drawingObject.text[0].text = newText;
       sineCosine._label.layout();
     };
     return sineCosine;

@@ -122,7 +122,7 @@ export default class AAACollection extends CommonDiagramCollection {
 
   updateCornerAngle(corner: TypeCorner, newAngle: number) {
     const newPoint = polarToRect(this.layout.corner.length, newAngle);
-    corner._line.vertices.change([
+    corner._line.drawingObject.change([
       ...this.layout.corner.points.slice(0, 2),
       newPoint,
     ]);

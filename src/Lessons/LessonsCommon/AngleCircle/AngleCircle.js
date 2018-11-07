@@ -120,8 +120,8 @@ class AngleCircle extends DiagramElementCollection {
     radius.isMovable = true;
     radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
-    for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-      radius.vertices.border[0][i].y *= 10;
+    for (let i = 0; i < radius.drawingObject.border[0].length; i += 1) {
+      radius.drawingObject.border[0][i].y *= 10;
     }
     return radius;
   }
@@ -330,10 +330,10 @@ class AngleCircle extends DiagramElementCollection {
       } else {
         angleText._units.transform.updateTranslation(this.layout.angleEqualsText.units.text, 0);
       }
-      angleText._units.vertices.element.innerHTML = units;
+      angleText._units.drawingObject.element.innerHTML = units;
     };
     angleText.setText = (newText: string) => {
-      angleText._text.vertices.element.innerHTML = newText;
+      angleText._text.drawingObject.element.innerHTML = newText;
     };
     return angleText;
   }
@@ -456,7 +456,7 @@ class AngleCircle extends DiagramElementCollection {
       angleInSections = angleInSections.toFixed(1);
     }
     // $FlowFixMe
-    this._angleText._angle.vertices.element.innerHTML = `${angleInSections}`;
+    this._angleText._angle.drawingObject.element.innerHTML = `${angleInSections}`;
   }
 
   pulseAngle() {

@@ -115,9 +115,9 @@ export function makeMoveableLine(
 
   const multiplier = diagram.isTouchDevice ? 16 : 8;
   const increaseBorderSize = (element: DiagramElementPrimative) => {
-    for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+    for (let i = 0; i < element.drawingObject.border[0].length; i += 1) {
       // eslint-disable-next-line no-param-reassign
-      element.vertices.border[0][i].y *= multiplier;
+      element.drawingObject.border[0][i].y *= multiplier;
     }
   };
 
@@ -298,9 +298,9 @@ export function makeLine(
     if (largerTouchBorder) {
       const multiplier = diagram.isTouchDevice ? 16 : 8;
       const increaseBorderSize = (element: DiagramElementPrimative) => {
-        for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+        for (let i = 0; i < element.drawingObject.border[0].length; i += 1) {
           // eslint-disable-next-line no-param-reassign
-          element.vertices.border[0][i].y *= multiplier;
+          element.drawingObject.border[0][i].y *= multiplier;
         }
       };
       increaseBorderSize(straightLine);
@@ -344,9 +344,9 @@ export function makeLine(
         straightLine.isTouchable = true;
         // const multiplier = diagram.isTouchDevice ? 16 : 8;
         // const increaseBorderSize = (element: DiagramElementPrimative) => {
-        //   for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+        //   for (let i = 0; i < element.drawingObject.border[0].length; i += 1) {
         //     // eslint-disable-next-line no-param-reassign
-        //     element.vertices.border[0][i].y *= multiplier;
+        //     element.drawingObject.border[0][i].y *= multiplier;
         //   }
         // };
         // increaseBorderSize(straightLine);
@@ -383,7 +383,7 @@ export function makeLine(
     const lineAngle = normAngle(line.transform.r() || 0);
     let labelAngle = 0;
     if (line.showRealLength) {
-      line._label._base.vertices.setText(roundNum(line.currentLength, 2).toString());
+      line._label._base.drawingObject.setText(roundNum(line.currentLength, 2).toString());
       line.label.eqn.reArrangeCurrentForm();
     }
     const labelPosition = new Point(

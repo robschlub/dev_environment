@@ -14,11 +14,11 @@ import type { TypeLine } from '../../../../LessonsCommon/tools/line';
 import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
-  for (let i = 0; i < element.vertices.border[0].length; i += 1) {
+  for (let i = 0; i < element.drawingObject.border[0].length; i += 1) {
     // eslint-disable-next-line no-param-reassign
-    element.vertices.border[0][i].x *= multiplier;
+    element.drawingObject.border[0][i].x *= multiplier;
     // eslint-disable-next-line no-param-reassign
-    element.vertices.border[0][i].y *= multiplier;
+    element.drawingObject.border[0][i].y *= multiplier;
   }
 };
 
@@ -224,11 +224,11 @@ export default class SameAreaCollection extends CommonDiagramCollection {
     this.area = round(this.height * this.base * 0.5, 1);
 
     // Update the area, base and height labels
-    this._label.vertices.change(
+    this._label.drawingObject.change(
       `Area = ${round(this.area, 1).toString()} squares`,
       this._label.lastDrawTransform.m(),
     );
-    this._tri.vertices.change(points);
+    this._tri.drawingObject.change(points);
     this._base.setEndPoints(
       new Point(left.x, lay.baseY),
       new Point(right.x, lay.baseY),

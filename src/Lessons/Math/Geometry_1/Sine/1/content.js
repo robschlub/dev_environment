@@ -334,7 +334,7 @@ class Content extends LessonContent {
       },
       setEnterState: () => {
         diag._angleText.setText('Angle');
-        diag._angleText._text.vertices.element.classList.remove('lesson__math_stye');
+        diag._angleText._text.drawingObject.element.classList.remove('lesson__math_stye');
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         circle._sineLine.setText('vertical');
         circle._cosineLine.setText('horizontal');
@@ -400,7 +400,7 @@ class Content extends LessonContent {
         diag._angleText.setText('θ');
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._sineText.setPosition(layout.angleEqualsText.bottomRight);
-        diag._angleText._text.vertices.element.classList.add('lesson__math_stye');
+        diag._angleText._text.drawingObject.element.classList.add('lesson__math_stye');
       },
       showOnly: [
         circle,
@@ -438,7 +438,7 @@ class Content extends LessonContent {
         diag._angleText.setText('θ');
         diag._angleText.setPosition(layout.angleEqualsText.bottomRight);
         diag._sineText.setPosition(layout.angleEqualsText.bottomRight);
-        diag._angleText._text.vertices.element.classList.add('lesson__math_stye');
+        diag._angleText._text.drawingObject.element.classList.add('lesson__math_stye');
       },
       showOnly: [
         circle,

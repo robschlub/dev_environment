@@ -84,8 +84,8 @@ function makeRadius(shapes: Object) {
   radius.isMovable = true;
   radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
-  for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-    radius.vertices.border[0][i].y *= 20;
+  for (let i = 0; i < radius.drawingObject.border[0].length; i += 1) {
+    radius.drawingObject.border[0][i].y *= 20;
   }
   return radius;
 }
@@ -109,9 +109,9 @@ function makeDiameter(shapes: Object) {
   diameter.isTouchable = true;
   diameter.isMovable = true;
   diameter.touchInBoundingRect = true;
-  for (let i = 0; i < diameter._radius2.vertices.border[0].length; i += 1) {
-    diameter._radius1.vertices.border[0][i].y *= 10;
-    diameter._radius2.vertices.border[0][i].y *= 10;
+  for (let i = 0; i < diameter._radius2.drawingObject.border[0].length; i += 1) {
+    diameter._radius1.drawingObject.border[0][i].y *= 10;
+    diameter._radius2.drawingObject.border[0][i].y *= 10;
   }
   return diameter;
 }
@@ -551,13 +551,13 @@ class CircleCollection extends DiagramElementCollection {
       const diameterText = (newRadius * 2).toFixed(2);
       const circumferenceText = tools.roundNum(newRadius * 2 * Math.PI, 2).toFixed(2);
       // $FlowFixMe
-      this._grid._radiusText._value.vertices.element.innerHTML =
+      this._grid._radiusText._value.drawingObject.element.innerHTML =
         `${radiusText}`;
       // $FlowFixMe
-      this._grid._diameterText._value.vertices.element.innerHTML =
+      this._grid._diameterText._value.drawingObject.element.innerHTML =
         `${diameterText}`;
       // $FlowFixMe
-      this._grid._circumferenceText._value.vertices.element.innerHTML =
+      this._grid._circumferenceText._value.drawingObject.element.innerHTML =
         `${circumferenceText}`;
 
       this.varState.scaledRadius = scale * layout.circle.radius;
@@ -577,10 +577,10 @@ class CircleCollection extends DiagramElementCollection {
     const s = this._circle.transform.s();
     if (t) {
       // $FlowFixMe
-      this._grid._locationText._x.vertices.element.innerHTML =
+      this._grid._locationText._x.drawingObject.element.innerHTML =
         `${tools.roundNum((t.x - layout.grid.position.x) / layout.grid.width * layout.grid.range.width, 1).toFixed(1)}`;
       // $FlowFixMe
-      this._grid._locationText._y.vertices.element.innerHTML =
+      this._grid._locationText._y.drawingObject.element.innerHTML =
         `${tools.roundNum((t.y - layout.grid.position.y) / layout.grid.height * layout.grid.range.height, 1).toFixed(1)}`;
 
       this._straightCircumference.transform.updateTranslation(

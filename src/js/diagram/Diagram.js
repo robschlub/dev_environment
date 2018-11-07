@@ -542,7 +542,7 @@ function shapes(diagram: Diagram, high: boolean = false) {
   ) {
     const copy = element._dup();
     const { drawingObject } = element;
-    // console.log(element.vertices.points)
+    // console.log(element.drawingObject.points)
     if (drawingObject instanceof VertexObject) {
       copy.transform = transform._dup();
       const newPoints = [];

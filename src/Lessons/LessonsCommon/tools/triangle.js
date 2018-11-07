@@ -122,12 +122,12 @@ export default function makeTriangle(
     triangle.point1.transform.updateTranslation(newP1._dup());
     triangle.point2.transform.updateTranslation(newP2._dup());
     triangle.point3.transform.updateTranslation(newP3._dup());
-    triangle._line.vertices.change([newP1, newP2, newP3]);
-    const [b1, b2, b3] = triangle._line.vertices.border[0];
+    triangle._line.drawingObject.change([newP1, newP2, newP3]);
+    const [b1, b2, b3] = triangle._line.drawingObject.border[0];
     triangle.b1 = b1;
     triangle.b2 = b2;
     triangle.b3 = b3;
-    const [ib1, ib2, ib3] = triangle._line.vertices.holeBorder[0];
+    const [ib1, ib2, ib3] = triangle._line.drawingObject.holeBorder[0];
     triangle.ib1 = ib1;
     triangle.ib2 = ib2;
     triangle.ib3 = ib3;

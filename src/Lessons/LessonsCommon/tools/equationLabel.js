@@ -54,7 +54,7 @@ export default function makeEquationLabel(
     const form = eqn.getCurrentForm();
     if (form != null) {
       const key = Object.keys(form.collection.elements)[0];
-      const textObject = form.collection.elements[key].vertices;
+      const textObject = form.collection.elements[key].drawingObject;
       if (textObject != null) {
         textObject.setText(text);
       }
@@ -72,7 +72,7 @@ export default function makeEquationLabel(
     const form = eqn.getCurrentForm();
     if (form != null) {
       const key = Object.keys(form.collection.elements)[0];
-      const textObject = form.collection.elements[key].vertices;
+      const textObject = form.collection.elements[key].drawingObject;
       if (textObject != null) {
         textToReturn = textObject.text[0].text;
       }

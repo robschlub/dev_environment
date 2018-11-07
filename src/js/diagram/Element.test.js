@@ -365,7 +365,7 @@ describe('Animationa and Movement', () => {
       });
       test('pulse thick', () => {
         const draw = jest.fn();
-        element.vertices.drawWithTransformMatrix = draw;
+        element.drawingObject.drawWithTransformMatrix = draw;
         element.pulseThickNow(1, 1.2, 5);
         element.draw(identity, 0.0);
         element.draw(identity, 0.5);
@@ -552,7 +552,7 @@ describe('Animationa and Movement', () => {
         const copy = square._dup();
         expect(copy).toEqual(square);
         expect(copy).not.toBe(square);
-        expect(copy.vertices).toBe(square.vertices);
+        expect(copy.drawingObject).toBe(square.drawingObject);
 
         // change a default value DiagramElement base class
         square.isShown = false;
@@ -790,7 +790,8 @@ describe('Animationa and Movement', () => {
         expect(collection.order).not.toBe(copy.order);
         expect(collection._square).toEqual(copy._square);
         expect(collection._square).not.toBe(copy._square);
-        expect(collection._square.vertices).toBe(copy._square.vertices);
+        expect(collection._square.drawingObject)
+          .toBe(copy._square.drawingObject);
         expect(collection.transform).toEqual(copy.transform);
         expect(collection.transform).not.toBe(copy.transform);
         expect(collection._square).toBe(collection.elements.square);

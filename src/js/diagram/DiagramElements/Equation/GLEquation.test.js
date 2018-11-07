@@ -224,11 +224,11 @@ describe('Equation', () => {
       expect(eqn.form.f4.base.content[0].content).toEqual(dup.form.f4.base.content[0].content);
       expect(eqn.form.f4.base.content[0].content).not.toBe(dup.form.f4.base.content[0].content);
 
-      expect(dup.collection._a.vertices.text).not.toBe(eqn.collection._a.vertices.text);
-      expect(dup.collection._a.vertices.text[0].location)
-        .not.toBe(eqn.collection._a.vertices.text[0].location);
-      expect(dup.collection._a.vertices.text[0].font)
-        .not.toBe(eqn.collection._a.vertices.text[0].font);
+      expect(dup.collection._a.drawingObject.text).not.toBe(eqn.collection._a.drawingObject.text);
+      expect(dup.collection._a.drawingObject.text[0].location)
+        .not.toBe(eqn.collection._a.drawingObject.text[0].location);
+      expect(dup.collection._a.drawingObject.text[0].font)
+        .not.toBe(eqn.collection._a.drawingObject.text[0].font);
     });
   });
   // describe('Create', () => {
