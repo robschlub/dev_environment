@@ -26,6 +26,14 @@ class Content extends LessonContent {
     this.diagram = new LessonDiagram(htmlId, layout);
   }
 
+  setElementContent() {
+    const { selector } = this.diagram.elements._circ._selector;
+    layout.polygons.sides.forEach((numSides) => {
+      selector.add(numSides.toString(), numSides.toString());
+    });
+    selector.selectWithoutExecution('1');
+  }
+
   addSections() {
     const diag = this.diagram.elements;
     const circ = diag._circ;

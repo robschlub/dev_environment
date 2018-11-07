@@ -35,5 +35,9 @@ export default function commonLessonLayout() {
       25,
     ],
   };
+
+  layout.selector = {
+    position: new Point(-1, 1.5),
+  };
   return layout;
 }
