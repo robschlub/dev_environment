@@ -10,6 +10,11 @@ import DrawContext2D from '../DrawContext2D';
 import EquationNavigator from './EquationNavigator';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 import Line from './Line';
+import type {
+  TypeLineLabelLocation,
+  TypeLineLabelSubLocation,
+  TypeLineLabelOrientation,
+} from './Line';
 
 export default class DiagramObjects {
   webgl: WebGLInstance;
@@ -32,6 +37,7 @@ export default class DiagramObjects {
     this.shapes = shapes;
     this.isTouchDevice = isTouchDevice;
     this.animateNextFrame = animateNextFrame;
+    this.equation = equation;
   }
 
   equationNavigator(
@@ -112,6 +118,8 @@ export default class DiagramObjects {
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       referenceOrP1, lengthOrP2, 0.001, color, false, false,
     );
-    line.addLabel(labelText, offset, location, subLocation, orientation, linePosition,)
+    line.addLabel(
+      labelText, offset, location, subLocation, orientation, linePosition,
+    );
   }
 }

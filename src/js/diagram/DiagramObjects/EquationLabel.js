@@ -25,6 +25,7 @@ export default class EquationLabel {
     // diagram: Diagram,
     labelTextOrEquation: string | Equation | Array<string> = '',
     color: Array<number>,
+    scale: number = 0.7,
   ) {
     let eqn;
     if (typeof labelTextOrEquation === 'string') {
@@ -34,7 +35,7 @@ export default class EquationLabel {
       eqn.formAlignment.fixTo = new Point(0, 0);
       eqn.formAlignment.hAlign = 'center';
       eqn.formAlignment.vAlign = 'middle';
-      eqn.formAlignment.scale = 0.7;
+      eqn.formAlignment.scale = scale;
       eqn.addForm('base', ['base']);
       eqn.setCurrentForm('base');
     } else if (labelTextOrEquation instanceof Equation) {
@@ -50,7 +51,7 @@ export default class EquationLabel {
       eqn.formAlignment.fixTo = new Point(0, 0);
       eqn.formAlignment.hAlign = 'center';
       eqn.formAlignment.vAlign = 'middle';
-      eqn.formAlignment.scale = 0.7;
+      eqn.formAlignment.scale = scale;
       labelTextOrEquation.forEach((labelText, index) => {
         eqn.addForm(`${index}`, [`_${index}`]);
       });

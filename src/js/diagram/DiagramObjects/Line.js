@@ -37,6 +37,32 @@ export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
 export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
                                       | 'baseUpright';
 
+class LineLabel extends EquationLabel {
+  offset: number;
+  location: TypeLineLabelLocation;
+  subLocation: TypeLineLabelSubLocation;
+  orientation: TypeLineLabelOrientation;
+  linePosition: number;
+
+  constructor(
+    equation: Object,
+    labelText: string,
+    color: Array<number>,
+    offset: number,
+    location: TypeLineLabelLocation = 'top',
+    subLocation: TypeLineLabelSubLocation = 'left',
+    orientation: TypeLineLabelOrientation = 'horizontal',
+    linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
+  ) {
+    super(equation, labelText, color);
+    this.offset = offset;
+    this.location = location;
+    this.subLocation = subLocation;
+    this.orientation = orientation;
+    this.linePosition = linePosition;
+  }
+}
+
 export type TypeLine = {
   _line: DiagramElementPrimative;
   currentLength: number;
@@ -46,13 +72,7 @@ export type TypeLine = {
   grow: (number, number, boolean, ?() => void) => void;
   reference: 'center' | 'end';
   showRealLength: boolean;
-  label: null | {
-    offset: number;
-    location: TypeLineLabelLocation;
-    subLocation: TypeLineLabelSubLocation;
-    orientation: TypeLineLabelOrientation;
-    linePosition: number;
-  } & EquationLabel;
+  label: ?LineLabel;
   _label: DiagramElementCollection;
   arrow1: null | {
     height: number;
@@ -84,14 +104,7 @@ export default class makeLine extends DiagramElementCollection {
   grow: (number, number, boolean, ?() => void) => void;
   reference: 'center' | 'end';
   showRealLength: boolean;
-  label: null | {
-    offset: number;
-    location: TypeLineLabelLocation;
-    subLocation: TypeLineLabelSubLocation;
-    orientation: TypeLineLabelOrientation;
-    linePosition: number;
-  } & EquationLabel;
-
+  label: ?LineLabel;
   _label: ?{
     _base: DiagramElementPrimative;
   } & DiagramElementCollection;
@@ -258,20 +271,25 @@ export default class makeLine extends DiagramElementCollection {
   addLabel(
     labelText: string,
     offset: number,
-    location: TypeLineLabelLocation,
-    subLocation: TypeLineLabelSubLocation,
-    orientation: TypeLineLabelOrientation,
+    location: TypeLineLabelLocation = 'top',
+    subLocation: TypeLineLabelSubLocation = 'left',
+    orientation: TypeLineLabelOrientation = 'horizontal',
     linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
   ) {
-    const eqnLabel = new EquationLabel(this.equation, labelText, this.color);
-    this.add('label', eqnLabel.eqn.collection);
-    this.label = Object.assign({}, {
-      offset,
-      location,
-      subLocation,
-      orientation,
-      linePosition,
-    }, eqnLabel);
+    // const eqnLabel = new EquationLabel(this.equation, labelText, this.color);
+    this.label = new LineLabel(
+      this.equation, labelText, this.color,
+      offset, location, subLocation, orientation, linePosition,
+    );
+    this.add('label', this.label.eqn.collection);
+    // this.label = Object.assign({}, {
+    //   offset,
+    //   location,
+    //   subLocation,
+    //   orientation,
+    //   linePosition,
+    // }, eqnLabel);
+    // console.log(this.label)
     this.updateLabel();
   }
 

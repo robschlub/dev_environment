@@ -218,9 +218,12 @@ export default function makeTriangle(
     showLine: boolean = false,
     dimensionLineWidth: number = 0.01,
   ) {
-    const dimension = makeLine(
-      diagram, 'center', 1,
-      dimensionLineWidth, dimensionColor, showLine,
+    // const dimension = makeLine(
+    //   diagram, 'center', 1,
+    //   dimensionLineWidth, dimensionColor, showLine,
+    // );
+    const dimension = diagram.objects.line(
+      'center', 1, dimensionLineWidth, dimensionColor, showLine,
     );
     const point1 = triangle[`p${index1}`];
     const point2 = triangle[`p${index2}`];
