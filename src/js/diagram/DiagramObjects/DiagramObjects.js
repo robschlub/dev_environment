@@ -9,7 +9,7 @@ import {
 import DrawContext2D from '../DrawContext2D';
 import EquationNavigator from './EquationNavigator';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
-import DiagramObjectLine from './Line';
+import { DiagramObjectLine } from './Line';
 import type {
   TypeLineLabelLocation,
   TypeLineLabelSubLocation,

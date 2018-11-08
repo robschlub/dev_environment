@@ -11,7 +11,7 @@ import {
 import {
   makeAnglesClose, checkElementsForParallel,
 } from './tools';
-
+// import { Line } from '../../../../../js/diagram/DiagramObjects/Line';
 import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
 import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
@@ -34,6 +34,7 @@ export default class ParallelCollection extends CommonDiagramCollection {
     );
     if (isParallel) {
       this._line1.setColor(this.layout.colors.line);
+      this._line1._midLine.setColor(this.layout.colors.angleA);
       this._line2.setColor(this.layout.colors.line);
     } else {
       this._line1.setColor(this.layout.colors.disabled);
@@ -53,15 +54,22 @@ export default class ParallelCollection extends CommonDiagramCollection {
   }
 
   makeLine() {
-    const line = makeMoveableLine(
-      this.diagram, this.layout.line,
+    const lay = this.layout.line;
+    const line = this.diagram.objects.line(
+      'end', lay.length.full, lay.width,
       this.layout.colors.line,
     );
+    line.setMultiMovable(0.33, lay.boundary);
+    // const line = makeMoveableLine(
+    //   this.diagram, this.layout.line,
+    //   this.layout.colors.line,
+    // );
     line.setTransformCallback = (t: Transform) => {
-      line.updateTransform(t);
+      line.updateMultiMoveTransform(t);
       this.normalizeAngle(line);
       this.checkForParallel();
     };
+    console.log(line)
     return line;
   }
 
