@@ -30,7 +30,7 @@ import type {
   TypeADEquationCollection, TypeADEquation,
   TypeBCEquationCollection, TypeBCEquation,
 } from './equationAngles';
-import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
+// import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -284,10 +284,9 @@ export default class RectCollection extends CommonDiagramCollection {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);
     this.bcEqn = makeBCEquation(this.diagram, this.layout);
-    const makeNav = eqn => makeEquationNavigator(
-      this.diagram, eqn, new Point(1.1, 0),
-      this.layout.colors.diagram.disabled,
-      this.layout.colors.diagram.disabledDark,
+    const makeNav = eqn => this.diagram.objects.equationNavigator(
+      eqn, new Point(1.1, 0), 'descriptionOnly',
+      '', 'left', 'middle',
     );
     const navAB = makeNav(this.abEqn);
     const navAD = makeNav(this.adEqn);

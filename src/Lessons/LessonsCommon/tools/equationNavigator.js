@@ -10,7 +10,7 @@ import {
 import { Equation, EquationForm } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import * as html from '../../../js/tools/htmlGenerator';
 // import HTMLObject from '../../../js/diagram/DrawingObjects/HTMLObject/HTMLObject';
-// import { generateUniqueId } from '../../../js/diagram/tools/tools';
+import { generateUniqueId } from '../../../js/diagram/tools/tools';
 
 function updateDescription(
   eqn: Equation,
@@ -381,7 +381,7 @@ export default function makeEquationNavigator(
   options: string | Array<string> = '',
   xAlign: 'left' | 'right' | 'center' = 'left',
   vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
-  id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
+  id: string = generateUniqueId('id_lesson__equation_navigator_'),
 ) {
   const navigator = diagram.shapes.collection(new Transform('Eqn Nav')
     .scale(1, 1)

@@ -458,16 +458,16 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       interactiveElements: [
-        rect._navAB._prev,
-        rect._navAB._prevDescription,
-        rect._navAB._refresh,
+        // rect._navAB._prev,
+        // rect._navAB._prevDescription,
+        // rect._navAB._refresh,
       ],
       setSteadyState: () => {
-        rect._navAB.showAll();
+        // rect._navAB.showAll();
         rect._rect._angleB.showForm('0');
-        rect.abEqn.showForm('0');
+        rect._navAB.showForm('0');
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-        rect._navAB.updateButtons();
+        // rect._navAB.updateButtons();
       },
     });
 
