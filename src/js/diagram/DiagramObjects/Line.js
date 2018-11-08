@@ -210,6 +210,16 @@ export default class makeLine extends DiagramElementCollection {
   //   .rotate(0)
   //   .translate(0, 0));
 
+  addArrow(index: 1 | 2, height: number, width: number) {
+    const a = this.shapes.arrow(
+      width, 0, height, 0,
+      this.color, new Transform().translate(this.start, 0), new Point(0, 0), Math.PI / 2,
+    );
+    // $FlowFixMe
+    this[`arrow${index}`] = { height };
+    this.add(`arrow${index}`, a);
+    this.setLength(this.currentLength);
+  }
 
   addArrow1(arrowHeight: number, arrowWidth: number) {
     const a = this.shapes.arrow(

@@ -62,4 +62,56 @@ export default class DiagramObjects {
       referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
     );
   }
+
+  lineArrow(
+    referenceOrP1: 'center' | 'end' | Point = 'center',
+    lengthOrP2: number | Point,
+    width: number,
+    color: Array<number>,
+    arrowHeight: number = width * 4,
+    arrowWidth: number = width * 4,
+    largerTouchBorder: boolean = true,
+  ) {
+    const line = new Line(
+      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      referenceOrP1, lengthOrP2, width, color, true, largerTouchBorder,
+    );
+    line.addArrow(2, arrowWidth, arrowHeight);
+    return line;
+  }
+
+  lineArrows(
+    referenceOrP1: 'center' | 'end' | Point = 'center',
+    lengthOrP2: number | Point,
+    width: number,
+    color: Array<number>,
+    arrowHeight: number = width * 4,
+    arrowWidth: number = width * 4,
+    largerTouchBorder: boolean = true,
+  ) {
+    const line = this.lineArrow(
+      referenceOrP1, lengthOrP2, width, color, arrowHeight, arrowWidth,
+      largerTouchBorder,
+    );
+    line.addArrow(1, arrowWidth, arrowHeight);
+    return line;
+  }
+
+  lineLabelOnly(
+    referenceOrP1: 'center' | 'end' | Point = 'center',
+    lengthOrP2: number | Point,
+    color: Array<number>,
+    labelText: string,
+    offset: number,
+    location: TypeLineLabelLocation = 'outside',
+    subLocation: TypeLineLabelSubLocation = 'left',
+    orientation: TypeLineLabelOrientation = 'horizontal',
+    linePosition: number = 0.5,
+  ) {
+    const line = new Line(
+      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      referenceOrP1, lengthOrP2, 0.001, color, false, false,
+    );
+    line.addLabel(labelText, offset, location, subLocation, orientation, linePosition,)
+  }
 }
