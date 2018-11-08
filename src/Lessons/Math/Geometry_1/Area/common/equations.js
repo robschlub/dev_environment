@@ -190,10 +190,14 @@ export function addRectEqn(
   // addToCollection.add(name, eqn.collection);
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;
-  const nav = makeEquationNavigator(
-    diagram, eqn, layout.rectEqnNavPosition,
+  const nav = diagram.objects.equationNavigator(
+    eqn, layout.rectEqnNavPosition,
     'twoLine', 'arrows', 'center',
   );
+  // const nav = makeEquationNavigator(
+  //   diagram, eqn, layout.rectEqnNavPosition,
+  //   'twoLine', 'arrows', 'center',
+  // );
   addToCollection.add(name, nav);
   return eqn;
 }

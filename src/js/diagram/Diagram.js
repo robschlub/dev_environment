@@ -16,6 +16,7 @@ import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
 import DiagramPrimatives from './DiagramPrimatives/DiagramPrimatives';
 import DiagramEquation from './DiagramEquation/DiagramEquation';
+import DiagramObjects from './DiagramObjects/DiagramObjects';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -64,6 +65,10 @@ class Diagram {
   equation: Object;
   equationLow: Object;
   equationHigh: Object;
+  objects: Object;
+  objectsLow: Object;
+  objectsHigh: Object;
+
   backgroundColor: Array<number>;
   fontScale: number;
   layout: Object;
@@ -180,6 +185,9 @@ class Diagram {
     this.equationLow = this.getEquations(false);
     this.equationHigh = this.getEquations(true);
     this.equation = this.equationLow;
+    this.objectsLow = this.getObjects(false);
+    this.objectsHigh = this.getObjects(true);
+    this.objects = this.objectsLow;
     this.createDiagramElements();
     if (this.elements.name === '') {
       this.elements.name = 'diagramRoot';
@@ -206,13 +214,19 @@ class Diagram {
   }
 
   getEquations(high: boolean = false) {
-    let webgl = this.webglLow;
-    let draw2D = this.draw2DLow;
+    let shapes = this.shapesLow;
     if (high) {
-      webgl = this.webglHigh;
-      draw2D = this.draw2DHigh;
+      shapes = this.shapesHigh;
     }
-    return new DiagramEquation(this.shapes);
+    return new DiagramEquation(shapes);
+  }
+
+  getObjects(high: boolean = false) {
+    let shapes = this.shapesLow;
+    if (high) {
+      shapes = this.shapesHigh;
+    }
+    return new DiagramObjects(shapes, this.animateNextFrame.bind(this));
   }
 
   sizeHtmlText() {
