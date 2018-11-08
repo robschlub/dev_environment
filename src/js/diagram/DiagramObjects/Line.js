@@ -219,6 +219,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     //    but are at this level for convenience
     // let p1 = position;
     this.position = position;
+    this.transform.updateTranslation(this.position);
     // let line = new Line(p1, length, angle);
     // if (reference === 'middle') {
     //   p1 = position.add(polarToRect(length / 2, angle + Math.PI));
@@ -233,6 +234,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.length = length;
     // this.currentLength = 1; // to deprecate?
     this.angle = angle;
+    this.transform.updateRotation(angle);
     // this.updateLineGeometry();
     // this.p1 = line.getPoint(1);
     // this.p2 = line.getPoint(2);

@@ -111,7 +111,6 @@ describe('Diagram', () => {
         vertexOrigin, true, true,
       );
     });
-
     test('End', () => {
       const line = makeLine('end');
       expect(line._line.drawingObject.points).toEqual([
@@ -158,15 +157,35 @@ describe('Diagram', () => {
       ]);
     });
   });
-  // test('Simple Line', () => {
-  //   const position = new Point(0, 0);
-  //   const length = 1;
-  //   const angle = 0;
-  //   const width = 0.2;
-  //   const vertexOrigin = 'end';
-  //   const line = diagram.objects.lineNew(
-  //     position, length, angle, width, [1, 0, 0, 1], vertexOrigin, true, true,
-  //   );
-  //   console.log(line._line.drawingObject)
-  // });
+  describe('Position, angle and length', () => {
+    let makeLine;
+    beforeEach(() => {
+      // const length = 2;
+      // const angle = 0;
+      const width = 0.2;
+      const vertexOrigin = 'start';
+      makeLine = (position, angle, length) => diagram.objects.lineNew(
+        position, length, angle, width, [1, 0, 0, 1],
+        vertexOrigin, true, true,
+      );
+    });
+    test('(0, 0)', () => {
+      const line = makeLine(new Point(0, 0), 0, 2);
+      expect(line._line.drawingObject.points).toEqual([
+        0, -0.1,
+        0, 0.1,
+        1, -0.1,
+        1, 0.1,
+      ]);
+      expect(line.transform.t().isEqualTo(new Point(0, 0))).toBe(true);
+      expect(line.transform.r()).toBe(0);
+      expect(line.length).toBe(2);
+    });
+    test('(1, 1)', () => {
+      const line = makeLine(new Point(1, 1), 1, 1);
+      expect(line.transform.t().isEqualTo(new Point(1, 1))).toBe(true);
+      expect(line.transform.r()).toBe(1);
+      expect(line.length).toBe(1);
+    });
+  });
 });
