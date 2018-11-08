@@ -79,13 +79,31 @@ describe('Diagram', () => {
     diagram.htmlCanvas = htmlCanvasMock;
     diagram.isTouchDevice = false;
     diagram.draw2DLow = new DrawContext2D(definition.width, definition.height);
-    diagram.draw2DHigh = new DrawContext2D(definition.width, definition.height)
+    diagram.draw2DHigh = new DrawContext2D(definition.width, definition.height);
     diagram.draw2D = diagram.draw2DLow;
+    diagram.shapesLow = diagram.getShapes(false);
+    diagram.shapesHigh = diagram.getShapes(true);
+    diagram.shapes = diagram.shapesLow;
+    diagram.equationLow = diagram.getEquations(false);
+    diagram.equationHigh = diagram.getEquations(true);
+    diagram.equation = diagram.equationLow;
+    diagram.objectsLow = diagram.getObjects(false);
+    diagram.objectsHigh = diagram.getObjects(true);
+    diagram.objects = diagram.objectsLow;
     diagram.setSpaceTransforms();
   });
   test('Diagram instantiation', () => {
-    // const d = diagram;
-    // expect(d.elements.order).toHaveLength(3);
     expect(diagram.limits).toEqual(new Rect(-1, -1, 2, 2));
+  });
+  test('Simple Line', () => {
+    const position = new Point(0, 0);
+    const length = 1;
+    const angle = 0;
+    const width = 0.1;
+    const vertexOrigin = 'end';
+    const line = diagram.objects.lineNew(
+      position, length, angle, width, [1, 0, 0, 1], vertexOrigin, true, true,
+    );
+    console.log(line)
   });
 });
