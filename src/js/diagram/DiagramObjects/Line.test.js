@@ -5,7 +5,7 @@
 // } from '../Element';
 import Diagram from '../Diagram';
 import {
-  Point, Transform, TransformLimit, Rect,
+  Point, Rect,
 } from '../tools/g2';
 import webgl from '../../__mocks__/WebGLInstanceMock';
 import DrawContext2D from '../../__mocks__/DrawContext2DMock';
@@ -95,15 +95,78 @@ describe('Diagram', () => {
   test('Diagram instantiation', () => {
     expect(diagram.limits).toEqual(new Rect(-1, -1, 2, 2));
   });
-  test('Simple Line', () => {
-    const position = new Point(0, 0);
-    const length = 1;
-    const angle = 0;
-    const width = 0.1;
-    const vertexOrigin = 'end';
-    const line = diagram.objects.lineNew(
-      position, length, angle, width, [1, 0, 0, 1], vertexOrigin, true, true,
-    );
-    console.log(line)
+  describe('Vertex Origin', () => {
+    let position;
+    let length;
+    let angle;
+    let width;
+    let makeLine;
+    beforeEach(() => {
+      position = new Point(1, 1);
+      length = 2;
+      angle = 5;
+      width = 0.2;
+      makeLine = vertexOrigin => diagram.objects.lineNew(
+        position, length, angle, width, [1, 0, 0, 1],
+        vertexOrigin, true, true,
+      );
+    });
+
+    test('End', () => {
+      const line = makeLine('end');
+      expect(line._line.drawingObject.points).toEqual([
+        -1, -0.1,
+        -1, 0.1,
+        0, -0.1,
+        0, 0.1,
+      ]);
+    });
+    test('start', () => {
+      const line = makeLine('start');
+      expect(line._line.drawingObject.points).toEqual([
+        0, -0.1,
+        0, 0.1,
+        1, -0.1,
+        1, 0.1,
+      ]);
+    });
+    test('center', () => {
+      const line = makeLine('center');
+      expect(line._line.drawingObject.points).toEqual([
+        -0.5, -0.1,
+        -0.5, 0.1,
+        0.5, -0.1,
+        0.5, 0.1,
+      ]);
+    });
+    test('40%', () => {
+      const line = makeLine(0.4);
+      expect(line._line.drawingObject.points).toEqual([
+        -0.4, -0.1,
+        -0.4, 0.1,
+        0.6, -0.1,
+        0.6, 0.1,
+      ]);
+    });
+    test('Point', () => {
+      const line = makeLine(new Point(-1, 2));
+      expect(line._line.drawingObject.points).toEqual([
+        -1, 1.9,
+        -1, 2.1,
+        0, 1.9,
+        0, 2.1,
+      ]);
+    });
   });
+  // test('Simple Line', () => {
+  //   const position = new Point(0, 0);
+  //   const length = 1;
+  //   const angle = 0;
+  //   const width = 0.2;
+  //   const vertexOrigin = 'end';
+  //   const line = diagram.objects.lineNew(
+  //     position, length, angle, width, [1, 0, 0, 1], vertexOrigin, true, true,
+  //   );
+  //   console.log(line._line.drawingObject)
+  // });
 });

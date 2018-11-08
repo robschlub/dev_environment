@@ -97,7 +97,7 @@ export default class DiagramObjects {
       // return line;
     } else if (referenceOrP1 instanceof Point && typeof lengthOrP2 === 'number') {
       line = this.lineNew(
-        referenceOrP1, lengthOrP2, 0, width, color, 'end', showLine,
+        referenceOrP1, lengthOrP2, 0, width, color, 'start', showLine,
         largerTouchBorder,
       );
       // return line;
@@ -117,7 +117,7 @@ export default class DiagramObjects {
       );
     } else {
       line = this.lineNew(
-        new Point(0, 0), 1, 0, 0.01, [1, 0, 0, 1], 'end', true, true,
+        new Point(0, 0), 1, 0, 0.01, [1, 0, 0, 1], 'start', true, true,
       );
     }
     return line;
@@ -145,7 +145,7 @@ export default class DiagramObjects {
   }
 
   lineArrows(
-    referenceOrP1: 'center' | 'end' | Point = 'center',
+    referenceOrP1: 'center' | 'start' | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,
