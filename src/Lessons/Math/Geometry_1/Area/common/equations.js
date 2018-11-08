@@ -7,9 +7,6 @@ import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../../../../../js/diagram/Element';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
-// import * as html from '../../../../../js/tools/htmlGenerator';
-// import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
-// import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
 import type {
   TypeEquationNavigator,
 } from '../../../../../js/diagram/DiagramObjects/EquationNavigator';

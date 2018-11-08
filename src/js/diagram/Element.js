@@ -1870,7 +1870,6 @@ class DiagramElement {
 // ***************************************************************
 class DiagramElementPrimative extends DiagramElement {
   drawingObject: DrawingObject;
-  vertices: DrawingObject;
   color: Array<number>;
   pointsToDraw: number;
   angleToDraw: number;
@@ -1884,7 +1883,6 @@ class DiagramElementPrimative extends DiagramElement {
   ) {
     super(transform, diagramLimits);
     this.drawingObject = drawingObject;
-    this.vertices = this.drawingObject;
     this.color = color.slice();
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
