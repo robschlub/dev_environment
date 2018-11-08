@@ -2,7 +2,7 @@
 
 // import Diagram from '../Diagram';
 import {
-  Transform, Point, distance, Line, polarToRect, normAngle, Rect,
+  Transform, Point, Line, polarToRect, normAngle, Rect,
 } from '../tools/g2';
 import {
   roundNum,
@@ -14,7 +14,7 @@ import EquationLabel from './EquationLabel';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 
 // p1, p2
-// p1, length, angle, 'end' | 'middle', 
+// p1, length, angle, 'end' | 'middle',
 
 // top - text is on top of line (except when line is vertical)
 // bottom - text is on bottom of line (except when line is vertical)
@@ -39,6 +39,7 @@ export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
 // baseToLine - text angle is same as line, with text upright
 export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
                                       | 'baseUpright';
+
 
 class LineLabel extends EquationLabel {
   offset: number;
@@ -124,43 +125,40 @@ function makeStraightLine(
 //   offset: number;
 // } & DiagramElementCollection;
 
+// A line is always defined as horiztonal with length 1 in vertex space
+// The line's position and rotation is the line collection transform
+// translation and rotation respectively.
+// The line's length is the _line primative x scale.
 export class DiagramObjectLine extends DiagramElementCollection {
-  _line: DiagramElementPrimative;
-  currentLength: number;
-  setLength: (number) => void;
-  setEndPoints: (Point, Point, number) => void;
-  animateLengthTo: (number, number, boolean, ?() => void) => void;
-  grow: (number, number, boolean, ?() => void) => void;
-  vertexOrigin: 'start' | 'end' | 'center' | number | Point;
-  showRealLength: boolean;
-  label: ?LineLabel;
-  _label: ?{
+  // Diagram elements
+  _line: ?DiagramElementPrimative;
+  _midLine: ?DiagramElementPrimative;
+  _arrow1: ?DiagramElementPrimative;
+  _arrow2: ?DiagramElementPrimative;
+  _label: null | {
     _base: DiagramElementPrimative;
   } & DiagramElementCollection;
 
-  _arrow1: ?DiagramElementPrimative;
-  _arrow2: ?DiagramElementPrimative;
-  arrow1: null | {
-    height: number;
-  };
+  // label and arrow objects that exist if labels and arrows exist
+  label: ?LineLabel;
+  arrow1: ?{ height: number; };
+  arrow2: ?{ height: number; };
 
-  arrow2: null | {
-    height: number;
-  };
+  // line properties - read only
+  line: Line;
+  length: number;
+  angle: number;
+  width: number;
+  p1: Point;
+  p2: Point;
+  position: Point;
+  currentLength: number;  // deprecate
+  vertexOrigin: 'start' | 'end' | 'center' | number | Point;
 
-  setMovable: (?boolean) => void;
+  // line properties - read/write
+  showRealLength: boolean;
 
-  addArrow1: (number, number) => void;
-  addArrow2: (number, number) => void;
-  addLabel: (string | Equation | Array<string>, number, TypeLineLabelLocation,
-             TypeLineLabelSubLocation, TypeLineLabelOrientation, number
-            ) => void;
-
-  setEndPoints: (Point, Point, ?number) => void;
-  animateLengthTo: (number, number, boolean, ?() => void) => void;
-  grow: (number, number, boolean, ?() => void) => void;
-  pulseWidth: () => void;
-  updateLabel: (?number) => {};
+  // line properties - private internal use only
   start: number;
   shapes: Object;
   equation: Object;
@@ -168,23 +166,30 @@ export class DiagramObjectLine extends DiagramElementCollection {
   vertexSpaceLength: number;
   vertexSpaceStart: Point;
   offset: number;
-  _midLine: ?DiagramElementPrimative;
-  width: number;
   isTouchDevice: boolean;
   largerTouchBorder: boolean;
+
+  // line methods
+  setLength: (number) => void;
+  setEndPoints: (Point, Point, ?number) => void;
+  animateLengthTo: (number, number, boolean, ?() => void) => void;
+  grow: (number, number, boolean, ?() => void) => void;
+  setMovable: (?boolean) => void;
+  addArrow1: (number, number) => void;
+  addArrow2: (number, number) => void;
+  addArrowStart: (number, number) => void;
+  addArrowEnd: (number, number) => void;
+  addArrow: (number, number, number) => void;
+  pulseWidth: () => void;
+  updateLabel: (?number) => {};
+  addLabel: (string | Equation | Array<string>, number, TypeLineLabelLocation,
+             TypeLineLabelSubLocation, TypeLineLabelOrientation, number
+            ) => void;
+
   multiMove: {
     vertexSpaceMidLength: number;
     bounds: Rect,
   };
-
-  line: Line;
-  length: number;
-  angle: number;
-  p1: Point;
-  p2: Point;
-  position: Point;
-  // p1: Point;
-  // p2: Point;
 
   constructor(
     shapes: Object,
@@ -217,28 +222,11 @@ export class DiagramObjectLine extends DiagramElementCollection {
     // Calculate and store the line geometry
     //    The length, angle, p1 and p2 properties also exist in this.line,
     //    but are at this level for convenience
-    // let p1 = position;
     this.position = position;
     this.transform.updateTranslation(this.position);
-    // let line = new Line(p1, length, angle);
-    // if (reference === 'middle') {
-    //   p1 = position.add(polarToRect(length / 2, angle + Math.PI));
-    //   line = new Line(p1, length, angle);
-    // } else if (reference === 'end') {
-    //   p1 = position.add(polarToRect(length, angle + Math.PI));
-    //   line = new Line(p1, length, angle);
-    // } else if (typeof reference === 'number') {
-    //   p1 = position.add(polarToRect(length * reference, angle + Math.PI));
-    //   line = new Line(p1, length, angle);
-    // }
     this.length = length;
-    // this.currentLength = 1; // to deprecate?
     this.angle = angle;
     this.transform.updateRotation(angle);
-    // this.updateLineGeometry();
-    // this.p1 = line.getPoint(1);
-    // this.p2 = line.getPoint(2);
-    // this.line = line;
 
     // Line is defined in vertex space as horiztonal along the x axis.
     // The reference will define how it is offset where:
@@ -269,6 +257,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this._midLine = null;
 
     // If the line is to be shown (and not just a label) then make it
+    this._line = null;
     if (showLine) {
       const straightLine = makeStraightLine(
         this.shapes, this.vertexSpaceLength, width,
@@ -281,31 +270,30 @@ export class DiagramObjectLine extends DiagramElementCollection {
     // Arrow related properties
     this.arrow1 = null;
     this.arrow2 = null;
+    this._arrow1 = null;
+    this._arrow2 = null;
 
     // Label related properties
     this.label = null;
     this.showRealLength = false;
-
-    // // For pulsing width
-    // if (this._line != null) {
-    //   this._line.pulse.transformMethod = s => new Transform().scale(1, s);
-    // }
+    this._label = null;
 
     this.setLength(length);
   }
 
   pulseWidth() {
-    if (this._line != null) {
-      this._line.stopPulsing();
-      const oldTransformMethod = this._line.pulse.transformMethod;
-      const oldPulseCallback = this._line.pulse.callback;
+    const line = this._line;
+    if (line != null) {
+      line.stopPulsing();
+      const oldTransformMethod = line.pulse.transformMethod;
+      const oldPulseCallback = line.pulse.callback;
       const finishPulsing = () => {
-        this._line.pulse.transformMethod = oldTransformMethod;
-        this._line.pulse.callback = oldPulseCallback;
+        line.pulse.transformMethod = oldTransformMethod;
+        line.pulse.callback = oldPulseCallback;
       };
-      this._line.pulse.callback = finishPulsing;
-      this._line.pulse.transformMethod = s => new Transform().scale(1, s);
-      this._line.pulseScaleNow(1, 3);
+      line.pulse.callback = finishPulsing;
+      line.pulse.transformMethod = s => new Transform().scale(1, s);
+      line.pulseScaleNow(1, 3);
     }
     this.animateNextFrame();
   }
@@ -428,20 +416,11 @@ export class DiagramObjectLine extends DiagramElementCollection {
     orientation: TypeLineLabelOrientation = 'horizontal',
     linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
   ) {
-    // const eqnLabel = new EquationLabel(this.equation, labelText, this.color);
     this.label = new LineLabel(
       this.equation, labelText, this.color,
       offset, location, subLocation, orientation, linePosition,
     );
     this.add('label', this.label.eqn.collection);
-    // this.label = Object.assign({}, {
-    //   offset,
-    //   location,
-    //   subLocation,
-    //   orientation,
-    //   linePosition,
-    // }, eqnLabel);
-    // console.log(this.label)
     this.updateLabel();
   }
 
@@ -557,10 +536,10 @@ export class DiagramObjectLine extends DiagramElementCollection {
       straightLineLength -= this.arrow2.height;
       this._arrow2.setPosition(lineStart + lineLength, 0);
     }
-    if (this._line) {
-      // console.log("Asdf")
-      this._line.transform.updateScale(straightLineLength, 1);
-      this._line.setPosition(straightLineStart, 0);
+    const line = this._line;
+    if (line) {
+      line.transform.updateScale(straightLineLength, 1);
+      line.setPosition(straightLineStart, 0);
     }
     if (this._midLine) {
       const midLine = this._midLine;
@@ -667,6 +646,22 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const target = this.currentLength;
     this.setLength(fromLength);
     this.animateLengthTo(target, time, finishOnCancel, callback);
+  }
+
+  showLineOnly() {
+    this.show();
+    if (this._line) {
+      this._line.show();
+    }
+    if (this._arrow1) {
+      this._arrow1.show();
+    }
+    if (this._arrow2) {
+      this._arrow2.show();
+    }
+    if (this._label) {
+      this._label.hideAll();
+    }
   }
 }
 

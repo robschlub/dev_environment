@@ -7,6 +7,9 @@ import Diagram from '../Diagram';
 import {
   Point, Rect,
 } from '../tools/g2';
+import {
+  round,
+} from '../tools/mathtools';
 import webgl from '../../__mocks__/WebGLInstanceMock';
 import DrawContext2D from '../../__mocks__/DrawContext2DMock';
 // import VertexPolygon from '../DrawingObjects/VertexObject/VertexPolygon';
@@ -186,6 +189,61 @@ describe('Diagram', () => {
       expect(line.transform.t().isEqualTo(new Point(1, 1))).toBe(true);
       expect(line.transform.r()).toBe(1);
       expect(line.length).toBe(1);
+    });
+  });
+  describe('Set End Points', () => {
+    let line;
+    let setEndPoints;
+    beforeEach(() => {
+      const position = new Point(0, 0);
+      const length = 2;
+      const angle = 0;
+      const width = 0.2;
+      const vertexOrigin = 'start';
+      line = diagram.objects.lineNew(
+        position, length, angle, width, [1, 0, 0, 1],
+        vertexOrigin, true, true,
+      );
+      setEndPoints = (px, py, qx, qy, offset = 0) => line
+        .setEndPoints(new Point(px, py), new Point(qx, qy), offset);
+    });
+    test('0,0 -> 0,2', () => {
+      setEndPoints(0, 0, 2, 0);
+      expect(line._line.drawingObject.points).toEqual([
+        0, -0.1,
+        0, 0.1,
+        1, -0.1,
+        1, 0.1,
+      ]);
+      expect(line._line.transform.s().isEqualTo(new Point(2, 1))).toBe(true);
+      expect(line.transform.r()).toBe(0);
+      expect(line.p1.isEqualTo(new Point(0, 0))).toBe(true);
+      expect(line.p2.isEqualTo(new Point(2, 0))).toBe(true);
+      expect(line.length === 2).toBe(true);
+      expect(round(line.angle, 6)).toBe(0);
+      expect(line.width).toBe(0.2);
+      expect(line.position.isEqualTo(new Point(0, 0))).toBe(true);
+      expect(line.vertexOrigin).toBe('start');
+    });
+    test('-1.5,-1.5 -> -1,-1', () => {
+      setEndPoints(-1.5, -1.5, -1, -1);
+      expect(line._line.drawingObject.points).toEqual([
+        0, -0.1,
+        0, 0.1,
+        1, -0.1,
+        1, 0.1,
+      ]);
+      expect(line._line.transform.s()
+        .isEqualTo(new Point(Math.sqrt(0.5), 1), 6)).toBe(true);
+      expect(round(line.transform.r(), 6)).toBe(round(Math.PI / 4, 6));
+      expect(line.transform.t().isEqualTo(new Point(-1.5, -1.5))).toBe(true);
+      expect(line.p1.isEqualTo(new Point(-1.5, -1.5))).toBe(true);
+      expect(line.p2.isEqualTo(new Point(-1, -1), 6)).toBe(true);
+      expect(round(line.length, 6)).toBe(round(Math.sqrt(0.5), 6));
+      expect(round(line.angle, 6)).toBe(round(Math.PI / 4, 6));
+      expect(line.width).toBe(0.2);
+      expect(line.position.isEqualTo(new Point(-1.5, -1.5))).toBe(true);
+      expect(line.vertexOrigin).toBe('start');
     });
   });
 });
