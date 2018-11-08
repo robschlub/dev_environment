@@ -86,15 +86,36 @@ export default class DiagramObjects {
     showLine: boolean = true,
     largerTouchBorder: boolean = true,
   ) {
-    if (referenceOrP1 instanceof Point) {
-      this.lineNew()
-    } else {
-      return new DiagramObjectLine(
+    if (referenceOrP1 instanceof Point && lengthOrP2 instanceof Point) {
+      const line = new DiagramObjectLine(
         this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-        referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
+        referenceOrP1, 1, 0, 'end', width, color, showLine,
+        largerTouchBorder,
+        );
+      line.setEndPoints(referenceOrP1, lengthOrP2);
+      return line;
+    } else if (referenceOrP1 instanceof Point && typeof lengthOrP2 === 'number') {
+      const line = this.lineNew(
+        referenceOrP1, lengthOrP2, 0, width, color, 'end', showLine,
+        largerTouchBorder,
       );
+      return line;
+      // const line = new DiagramObjectLine(
+      //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      //   referenceOrP1, lengthOrP2, width, 'end', width, color, showLine,
+      //   largerTouchBorder,
+      // )
+      // return new DiagramObjectLine(
+      //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      //   referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
+      // );
+    } else {
+      const line = this.lineNew(
+        new Point(0, 0), lengthOrP2, 0, width, color, referenceOrP1, showLine,
+        largerTouchBorder,
+      );
+      return line;
     }
-    
   }
 
   lineArrow(
@@ -106,10 +127,14 @@ export default class DiagramObjects {
     arrowWidth: number = width * 4,
     largerTouchBorder: boolean = true,
   ) {
-    const line = new DiagramObjectLine(
-      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      referenceOrP1, lengthOrP2, width, color, true, largerTouchBorder,
+    const line = this.line(
+      referenceOrP1, lengthOrP2, width, color,
+      true, largerTouchBorder,
     );
+    // const line = new DiagramObjectLine(
+    //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+    //   referenceOrP1, lengthOrP2, width, color, true, largerTouchBorder,
+    // );
     line.addArrow(2, arrowWidth, arrowHeight);
     return line;
   }
@@ -142,10 +167,14 @@ export default class DiagramObjects {
     orientation: TypeLineLabelOrientation = 'horizontal',
     linePosition: number = 0.5,
   ) {
-    const line = new DiagramObjectLine(
-      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      referenceOrP1, lengthOrP2, 0.001, color, false, false,
+    const line = this.line(
+      referenceOrP1, lengthOrP2, 0.001, color,
+      false, false,
     );
+    // const line = new DiagramObjectLine(
+    //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+    //   referenceOrP1, lengthOrP2, 0.001, color, false, false,
+    // );
     line.addLabel(
       labelText, offset, location, subLocation, orientation, linePosition,
     );
@@ -164,9 +193,13 @@ export default class DiagramObjects {
     orientation: TypeLineLabelOrientation = 'horizontal',
     linePosition: number = 0.5,
   ) {
-    const line = new DiagramObjectLine(
-      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      referenceOrP1, lengthOrP2, width, color, true, false,
+    // const line = new DiagramObjectLine(
+    //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+    //   referenceOrP1, lengthOrP2, width, color, true, false,
+    // );
+    const line = this.line(
+      referenceOrP1, lengthOrP2, width, color,
+      true, false,
     );
     line.addLabel(
       labelText, offset, location, subLocation, orientation, linePosition,
