@@ -63,39 +63,39 @@ class LineLabel extends EquationLabel {
   }
 }
 
-export type TypeLine = {
-  _line: DiagramElementPrimative;
-  currentLength: number;
-  setLength: (number) => void;
-  setEndPoints: (Point, Point, number) => void;
-  animateLengthTo: (number, number, boolean, ?() => void) => void;
-  grow: (number, number, boolean, ?() => void) => void;
-  reference: 'center' | 'end';
-  showRealLength: boolean;
-  label: ?LineLabel;
-  _label: DiagramElementCollection;
-  arrow1: null | {
-    height: number;
-  };
-  arrow2: null | {
-    height: number;
-  };
-  setMovable: (?boolean) => void;
+// export type TypeLine = {
+//   _line: DiagramElementPrimative;
+//   currentLength: number;
+//   setLength: (number) => void;
+//   setEndPoints: (Point, Point, number) => void;
+//   animateLengthTo: (number, number, boolean, ?() => void) => void;
+//   grow: (number, number, boolean, ?() => void) => void;
+//   reference: 'center' | 'end';
+//   showRealLength: boolean;
+//   label: ?LineLabel;
+//   _label: DiagramElementCollection;
+//   arrow1: null | {
+//     height: number;
+//   };
+//   arrow2: null | {
+//     height: number;
+//   };
+//   setMovable: (?boolean) => void;
 
-  addArrow1: (number, number) => void;
-  addArrow2: (number, number) => void;
-  addLabel: (string, number, TypeLineLabelLocation,
-             TypeLineLabelSubLocation, TypeLineLabelOrientation, number
-            ) => void;
-  setEndPoints: (Point, Point, ?number) => void;
-  animateLengthTo: (number, number, boolean, ?() => void) => void;
-  grow: (number, number, boolean, ?() => void) => void;
-  pulseWidth: () => void;
-  updateLabel: (?number) => {};
+//   addArrow1: (number, number) => void;
+//   addArrow2: (number, number) => void;
+//   addLabel: (string, number, TypeLineLabelLocation,
+//              TypeLineLabelSubLocation, TypeLineLabelOrientation, number
+//             ) => void;
+//   setEndPoints: (Point, Point, ?number) => void;
+//   animateLengthTo: (number, number, boolean, ?() => void) => void;
+//   grow: (number, number, boolean, ?() => void) => void;
+//   pulseWidth: () => void;
+//   updateLabel: (?number) => {};
+//   offset: number;
+// } & DiagramElementCollection;
 
-} & DiagramElementCollection;
-
-export default class makeLine extends DiagramElementCollection {
+export default class DiagramObjectLine extends DiagramElementCollection {
   _line: DiagramElementPrimative;
   currentLength: number;
   setLength: (number) => void;
@@ -137,6 +137,7 @@ export default class makeLine extends DiagramElementCollection {
   equation: Object;
   animateNextFrame: void => void;
   vertexSpaceLength: number;
+  offset: number;
 
   constructor(
     shapes: Object,
@@ -158,6 +159,8 @@ export default class makeLine extends DiagramElementCollection {
 
     this.shapes = shapes;
     this.equation = equation;
+
+    this.offset = 0;
 
     this.start = -0.5;
     let reference = 'end';
@@ -412,7 +415,8 @@ export default class makeLine extends DiagramElementCollection {
     this.updateLabel();
   }
 
-  setEndPoints(p: Point, q: Point, offset: number = 0) {
+  setEndPoints(p: Point, q: Point, offset: number = this.offset) {
+    this.offset = offset;
     const newLength = distance(q, p);
     const pq = new Line(p, q);
     this.transform.updateRotation(pq.angle());
@@ -461,3 +465,6 @@ export default class makeLine extends DiagramElementCollection {
     this.animateLengthTo(target, time, finishOnCancel, callback);
   }
 }
+
+export type TypeLine = DiagramObjectLine;
+

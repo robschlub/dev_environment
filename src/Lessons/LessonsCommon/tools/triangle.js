@@ -11,11 +11,11 @@ import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquatio
 import { makeAngle } from './angle';
 import type { TypeAngle } from './angle';
 // import makeEquationLabel from './equationLabel';
-import { makeLine } from './line';
+// import { makeLine } from './line';
 import type {
   TypeLineLabelLocation, TypeLineLabelSubLocation,
   TypeLineLabelOrientation, TypeLine,
-} from './line';
+} from '../../../js/diagram/DiagramObjects/Line';
 
 export type TypeTriangle = {
   p1: Point;
@@ -228,7 +228,7 @@ export default function makeTriangle(
     const point1 = triangle[`p${index1}`];
     const point2 = triangle[`p${index2}`];
     dimension.setEndPoints(point1, point2, offset);
-    dimension.offset = offset;
+    // dimension.offset = offset;
     triangle.add(`dimension${index1}${index2}`, dimension);
     triangle.dimensionList.push([index1, index2]);
     return dimension;

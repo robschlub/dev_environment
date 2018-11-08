@@ -9,7 +9,7 @@ import {
 import DrawContext2D from '../DrawContext2D';
 import EquationNavigator from './EquationNavigator';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
-import Line from './Line';
+import DiagramObjectLine from './Line';
 import type {
   TypeLineLabelLocation,
   TypeLineLabelSubLocation,
@@ -63,7 +63,7 @@ export default class DiagramObjects {
     showLine: boolean = true,
     largerTouchBorder: boolean = true,
   ) {
-    return new Line(
+    return new DiagramObjectLine(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
     );
@@ -78,7 +78,7 @@ export default class DiagramObjects {
     arrowWidth: number = width * 4,
     largerTouchBorder: boolean = true,
   ) {
-    const line = new Line(
+    const line = new DiagramObjectLine(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       referenceOrP1, lengthOrP2, width, color, true, largerTouchBorder,
     );
@@ -114,7 +114,7 @@ export default class DiagramObjects {
     orientation: TypeLineLabelOrientation = 'horizontal',
     linePosition: number = 0.5,
   ) {
-    const line = new Line(
+    const line = new DiagramObjectLine(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       referenceOrP1, lengthOrP2, 0.001, color, false, false,
     );
