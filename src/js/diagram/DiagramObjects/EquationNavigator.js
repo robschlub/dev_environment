@@ -10,6 +10,8 @@ import {
 import { Equation, EquationForm } from '../DiagramElements/Equation/GLEquation';
 import * as html from '../../tools/htmlGenerator';
 
+// eslint-disable-next-line no-use-before-define
+export type TypeEquationNavigator = EquationNavigator;
 
 function updateDescription(
   eqn: Equation,
@@ -523,5 +525,3 @@ export default class EquationNavigator extends DiagramElementCollection {
     }
   }
 }
-
-export type TypeEquationNavigator = EquationNavigator;
