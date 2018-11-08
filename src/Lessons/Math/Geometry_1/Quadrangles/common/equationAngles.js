@@ -1,7 +1,7 @@
 // @flow
-import {
-  Point,
-} from '../../../../../js/diagram/tools/g2';
+// import {
+//   Point,
+// } from '../../../../../js/diagram/tools/g2';
 import Diagram from '../../../../../js/diagram/Diagram';
 import {
   DiagramElementPrimative, DiagramElementCollection,
