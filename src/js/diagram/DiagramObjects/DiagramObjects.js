@@ -55,12 +55,29 @@ export default class DiagramObjects {
     );
   }
 
-  line(
-    p1OrPosition: Point,
-    p2OrLength: number | Point,
+  // line(
+  //   p1OrPosition: Point,
+  //   p2OrLength: number | Point,
+  //   angle: number,
+  //   reference: 
+  //   )
+  lineNew(
+    position: Point,
+    length: number,
     angle: number,
-    reference: 
-    )
+    width: number,
+    color: Array<number>,
+    vertexOrigin: 'start' | 'end' | 'center' | number | Point = 'start',
+    showLine: boolean,
+    largerTouchBorder: boolean,
+  ) {
+    return new DiagramObjectLine(
+      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      position, length, angle, vertexOrigin, width, color, showLine,
+      largerTouchBorder,
+    );
+  }
+
   line(
     referenceOrP1: 'center' | 'end' | Point = 'center',
     lengthOrP2: number | Point,
@@ -69,10 +86,15 @@ export default class DiagramObjects {
     showLine: boolean = true,
     largerTouchBorder: boolean = true,
   ) {
-    return new DiagramObjectLine(
-      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
-    );
+    if (referenceOrP1 instanceof Point) {
+      this.lineNew()
+    } else {
+      return new DiagramObjectLine(
+        this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+        referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
+      );
+    }
+    
   }
 
   lineArrow(

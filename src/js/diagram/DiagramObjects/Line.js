@@ -131,7 +131,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   setEndPoints: (Point, Point, number) => void;
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
-  vertexOrigin: 'start' | 'end' | 'middle' | number | Point;
+  vertexOrigin: 'start' | 'end' | 'center' | number | Point;
   showRealLength: boolean;
   label: ?LineLabel;
   _label: ?{
@@ -194,7 +194,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     position: Point,
     length: number,
     angle: number,
-    vertexOrigin: 'start' | 'end' | 'middle' | number | Point,
+    vertexOrigin: 'start' | 'end' | 'center' | number | Point,
     width: number,
     color: Array<number>,
     showLine: boolean = true,
@@ -248,7 +248,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.vertexSpaceStart = new Point(0, 0);
     if (vertexOrigin === 'end') {
       this.vertexSpaceStart = new Point(-1, 0);
-    } else if (vertexOrigin === 'middle') {
+    } else if (vertexOrigin === 'center') {
       this.vertexSpaceStart = new Point(-0.5, 0);
     } else if (typeof vertexOrigin === 'number') {
       this.vertexSpaceStart = new Point(-vertexOrigin, 0);
@@ -580,7 +580,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
       this.angle = r;
       let p1 = this.position;
       let line = new Line(p1, this.length, this.angle);
-      if (this.vertexOrigin === 'middle') {
+      if (this.vertexOrigin === 'center') {
         p1 = this.position
           .add(polarToRect(this.length / 2, this.angle + Math.PI));
         line = new Line(p1, this.length, this.angle);
@@ -608,7 +608,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.length = pq.length();
 
     this.position = p;
-    if (this.vertexOrigin === 'middle') {
+    if (this.vertexOrigin === 'center') {
       this.position = pq.midpoint();
     } else if (this.vertexOrigin === 'end') {
       this.position = q;
