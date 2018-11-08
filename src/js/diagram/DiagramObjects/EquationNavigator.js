@@ -7,6 +7,7 @@ import {
 } from '../Element';
 import { Equation, EquationForm } from '../DiagramElements/Equation/GLEquation';
 import * as html from '../../tools/htmlGenerator';
+import { generateUniqueId } from '../../tools/tools';
 
 // eslint-disable-next-line no-use-before-define
 export type TypeEquationNavigator = EquationNavigator;
@@ -384,7 +385,7 @@ export default class EquationNavigator extends DiagramElementCollection {
     options: string | Array<string> = '',
     xAlign: 'left' | 'right' | 'center' = 'left',
     vAlign: 'top' | 'bottom' | 'middle' | 'baseline' = 'middle',
-    id: string = `id_lesson__equation_navigator_${Math.floor(Math.random() * 10000)}`,
+    id: string = generateUniqueId('id_lesson__equation_navigator_'),
   ) {
     super(new Transform('Eqn Nav')
       .scale(1, 1)

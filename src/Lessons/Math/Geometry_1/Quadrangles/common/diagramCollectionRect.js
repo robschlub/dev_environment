@@ -285,8 +285,8 @@ export default class RectCollection extends CommonDiagramCollection {
     this.adEqn = makeADEquation(this.diagram, this.layout);
     this.bcEqn = makeBCEquation(this.diagram, this.layout);
     const makeNav = eqn => this.diagram.objects.equationNavigator(
-      eqn, new Point(1.1, 0), 'descriptionOnly',
-      '', 'left', 'middle',
+      eqn, new Point(1.1, 0), 'threeLine',
+      'twoLines', 'left', 'middle',
     );
     const navAB = makeNav(this.abEqn);
     const navAD = makeNav(this.adEqn);
