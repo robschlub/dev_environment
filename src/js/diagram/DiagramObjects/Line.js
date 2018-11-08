@@ -600,6 +600,11 @@ export class DiagramObjectLine extends DiagramElementCollection {
 
   setEndPoints(p: Point, q: Point, offset: number = this.offset) {
     this.offset = offset;
+    const pq = new Line(p, q);
+    this.angle = pq.angle();
+    this.length = pq.length();
+    
+
     const newLength = distance(q, p);
     const pq = new Line(p, q);
     this.transform.updateRotation(pq.angle());
