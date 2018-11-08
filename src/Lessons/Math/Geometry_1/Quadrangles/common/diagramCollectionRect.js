@@ -6,20 +6,8 @@ import {
 import {
   DiagramElementCollection,
 } from '../../../../../js/diagram/Element';
-// import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
-// import {
-//   removeRandElement, rand,
-// } from '../../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-// import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
-
-// import makeTriangle from '../../../../LessonsCommon/tools/triangle';
-// import type {
-//   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
-// } from '../../../../LessonsCommon/tools/triangle';
 import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
-
-// import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import {
@@ -30,7 +18,6 @@ import type {
   TypeADEquationCollection, TypeADEquation,
   TypeBCEquationCollection, TypeBCEquation,
 } from './equationAngles';
-// import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
