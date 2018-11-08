@@ -223,10 +223,17 @@ class Diagram {
 
   getObjects(high: boolean = false) {
     let shapes = this.shapesLow;
+    let equation = this.equationLow;
     if (high) {
       shapes = this.shapesHigh;
+      equation = this.equationHigh;
     }
-    return new DiagramObjects(shapes, this.animateNextFrame.bind(this));
+    return new DiagramObjects(
+      shapes,
+      equation,
+      this.isTouchDevice,
+      this.animateNextFrame.bind(this),
+    );
   }
 
   sizeHtmlText() {

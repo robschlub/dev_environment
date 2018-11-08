@@ -126,4 +126,4 @@ export default class EquationLabel {
   // return label;
 }
 
-export type TypeEquationLabel;
+export type TypeEquationLabel = EquationLabel;

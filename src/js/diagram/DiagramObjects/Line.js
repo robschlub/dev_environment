@@ -1,8 +1,8 @@
 // @flow
 
-import Diagram from '../Diagram';
+// import Diagram from '../Diagram';
 import {
-  Transform, Point, Rect, distance, Line, polarToRect, normAngle,
+  Transform, Point, distance, Line, polarToRect, normAngle,
 } from '../tools/g2';
 import {
   roundNum,
@@ -10,9 +10,7 @@ import {
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../Element';
-import { Equation } from '../DiagramElements/Equation/GLEquation';
 import EquationLabel from './EquationLabel';
-// import type { TypeEquationLabel } from './equationLabel';
 
 
 // top - text is on top of line (except when line is vertical)
@@ -77,7 +75,7 @@ export type TypeLine = {
 
 } & DiagramElementCollection;
 
-export class makeLine extends DiagramElementCollection {
+export default class makeLine extends DiagramElementCollection {
   _line: DiagramElementPrimative;
   currentLength: number;
   setLength: (number) => void;
@@ -93,13 +91,21 @@ export class makeLine extends DiagramElementCollection {
     orientation: TypeLineLabelOrientation;
     linePosition: number;
   } & EquationLabel;
-  _label: DiagramElementCollection;
+
+  _label: ?{
+    _base: DiagramElementPrimative;
+  } & DiagramElementCollection;
+
+  _arrow1: ?DiagramElementPrimative;
+  _arrow2: ?DiagramElementPrimative;
   arrow1: null | {
     height: number;
   };
+
   arrow2: null | {
     height: number;
   };
+
   setMovable: (?boolean) => void;
 
   addArrow1: (number, number) => void;
@@ -107,15 +113,23 @@ export class makeLine extends DiagramElementCollection {
   addLabel: (string, number, TypeLineLabelLocation,
              TypeLineLabelSubLocation, TypeLineLabelOrientation, number
             ) => void;
+
   setEndPoints: (Point, Point, ?number) => void;
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
   pulseWidth: () => void;
   updateLabel: (?number) => {};
+  start: number;
+  shapes: Object;
+  equation: Object;
+  animateNextFrame: void => void;
+  vertexSpaceLength: number;
 
   constructor(
     shapes: Object,
     equation: Object,
+    isTouchDevice: boolean,
+    animateNextFrame: void => void,
     referenceOrP1: 'center' | 'end' | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
@@ -127,8 +141,12 @@ export class makeLine extends DiagramElementCollection {
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0));
+    this.setColor(color);
 
-    let start = -0.5;
+    this.shapes = shapes;
+    this.equation = equation;
+
+    this.start = -0.5;
     let reference = 'end';
     if (typeof referenceOrP1 === 'string') {
       reference = referenceOrP1;
@@ -140,19 +158,19 @@ export class makeLine extends DiagramElementCollection {
 
     this.reference = reference;
     if (reference === 'end') {
-      start = 0;
+      this.start = 0;
     }
-    const vertexSpaceLength = 1;
+    this.vertexSpaceLength = 1;
 
     let straightLine = null;
     if (showLine) {
-      straightLine = diagram.shapes.horizontalLine(
+      straightLine = shapes.horizontalLine(
         new Point(0, 0),
-        vertexSpaceLength, width,
+        this.vertexSpaceLength, width,
         0, color, new Transform().scale(1, 1).translate(0, 0),
       );
       if (largerTouchBorder) {
-        const multiplier = diagram.isTouchDevice ? 16 : 8;
+        const multiplier = isTouchDevice ? 16 : 8;
         const increaseBorderSize = (element: DiagramElementPrimative) => {
           for (let i = 0; i < element.drawingObject.border[0].length; i += 1) {
             // eslint-disable-next-line no-param-reassign
@@ -161,65 +179,73 @@ export class makeLine extends DiagramElementCollection {
         };
         increaseBorderSize(straightLine);
       }
-      line.add('line', straightLine);
+      this.add('line', straightLine);
     }
     this.currentLength = 1;
     this.label = null;
     this.arrow1 = null;
     this.arrow2 = null;
-    this._label = diagram.shapes.collection(new Transform());
+    // this._label = shapes.collection(new Transform());
     this.showRealLength = false;
+
+    if (this._line != null) {
+      this._line.pulse.transformMethod = s => new Transform().scale(1, s);
+    }
+
+    this.setLength(length);
+
+    if (lengthOrP2 instanceof Point && referenceOrP1 instanceof Point) {
+      this.setEndPoints(referenceOrP1, lengthOrP2);
+    }
   }
 
+  pulseWidth() {
+    if (this._line != null) {
+      this._line.pulseScaleNow(1, 3);
+    }
+    this.animateNextFrame();
+  }
   // const line = diagram.shapes.collection(new Transform()
   //   .scale(1, 1)
   //   .rotate(0)
   //   .translate(0, 0));
 
-  
-  line.addArrow1 = (arrowHeight: number, arrowWidth: number) => {
-    const a = diagram.shapes.arrow(
-      arrowWidth, 0, arrowHeight, 0,
-      color, new Transform().translate(start, 0), new Point(0, 0), Math.PI / 2,
-    );
-    line.arrow1 = { height: arrowHeight };
-    line.add('arrow1', a);
-    line.setLength(line.currentLength);
-  };
 
-  line.addArrow2 = (arrowHeight: number, arrowWidth: number) => {
-    const a = diagram.shapes.arrow(
+  addArrow1(arrowHeight: number, arrowWidth: number) {
+    const a = this.shapes.arrow(
       arrowWidth, 0, arrowHeight, 0,
-      color, new Transform().translate(start + vertexSpaceLength, 0),
+      this.color, new Transform().translate(this.start, 0), new Point(0, 0), Math.PI / 2,
+    );
+    this.arrow1 = { height: arrowHeight };
+    this.add('arrow1', a);
+    this.setLength(this.currentLength);
+  }
+
+  addArrow2(arrowHeight: number, arrowWidth: number) {
+    const a = this.shapes.arrow(
+      arrowWidth, 0, arrowHeight, 0,
+      this.color, new Transform().translate(this.start + this.vertexSpaceLength, 0),
       new Point(0, 0), -Math.PI / 2,
     );
-    line.arrow2 = { height: arrowHeight };
-    line.add('arrow2', a);
-    line.setLength(line.currentLength);
-  };
+    this.arrow2 = { height: arrowHeight };
+    this.add('arrow2', a);
+    this.setLength(this.currentLength);
+  }
 
-  line.setMovable = (movable: boolean = true) => {
+  setMovable(movable: boolean = true) {
     if (movable) {
-      line.isTouchable = true;
-      line.isMovable = true;
-      line.hasTouchableElements = true;
-      if (straightLine != null) {
-        straightLine.isTouchable = true;
-        // const multiplier = diagram.isTouchDevice ? 16 : 8;
-        // const increaseBorderSize = (element: DiagramElementPrimative) => {
-        //   for (let i = 0; i < element.drawingObject.border[0].length; i += 1) {
-        //     // eslint-disable-next-line no-param-reassign
-        //     element.drawingObject.border[0][i].y *= multiplier;
-        //   }
-        // };
-        // increaseBorderSize(straightLine);
+      this.isTouchable = true;
+      this.isMovable = true;
+      this.hasTouchableElements = true;
+      if (this._line != null) {
+        this._line.isTouchable = true;
       }
     } else {
-      line.isMovable = false;
+      this.isMovable = false;
     }
-  };
+  }
 
-  line.addLabel = function addLabel(
+  addLabel(
     labelText: string,
     offset: number,
     location: TypeLineLabelLocation,
@@ -227,41 +253,42 @@ export class makeLine extends DiagramElementCollection {
     orientation: TypeLineLabelOrientation,
     linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
   ) {
-    const eqnLabel = new EquationLabel(diagram, labelText, color);
-    line.add('label', eqnLabel.eqn.collection);
-    line.label = Object.assign({}, eqnLabel, {
+    const eqnLabel = new EquationLabel(this.equation, labelText, this.color);
+    this.add('label', eqnLabel.eqn.collection);
+    this.label = Object.assign({}, {
       offset,
       location,
       subLocation,
       orientation,
       linePosition,
-    });
-    line.updateLabel();
-  };
+    }, eqnLabel);
+    this.updateLabel();
+  }
 
-  line.updateLabel = (parentRotationOffset: number = 0) => {
-    if (line.label == null) {
+  updateLabel(parentRotationOffset: number = 0) {
+    const { label } = this;
+    if (label == null) {
       return;
     }
-    const lineAngle = normAngle(line.transform.r() || 0);
+    const lineAngle = normAngle(this.transform.r() || 0);
     let labelAngle = 0;
-    if (line.showRealLength) {
-      line._label._base.drawingObject.setText(roundNum(line.currentLength, 2).toString());
-      line.label.eqn.reArrangeCurrentForm();
+    if (this.showRealLength && this._label) {
+      this._label._base.drawingObject.setText(roundNum(this.currentLength, 2).toString());
+      label.eqn.reArrangeCurrentForm();
     }
     const labelPosition = new Point(
-      start * line.currentLength + line.label.linePosition * line.currentLength,
+      this.start * this.currentLength + label.linePosition * this.currentLength,
       0,
     );
     let labelOffsetAngle = Math.PI / 2;
-    const labelOffsetMag = line.label.offset;
-    if (line.label.location === 'end1' || line.label.location === 'end2') {
-      if (line.label.location === 'end1') {
-        labelPosition.x = start * line.currentLength - line.label.offset;
+    const labelOffsetMag = label.offset;
+    if (label.location === 'end1' || label.location === 'end2') {
+      if (label.location === 'end1') {
+        labelPosition.x = this.start * this.currentLength - label.offset;
         labelOffsetAngle = -Math.PI;
       }
-      if (line.label.location === 'end2') {
-        labelPosition.x = start * line.currentLength + line.currentLength + line.label.offset;
+      if (label.location === 'end2') {
+        labelPosition.x = this.start * this.currentLength + this.currentLength + label.offset;
         labelOffsetAngle = 0;
       }
     } else {
@@ -270,159 +297,139 @@ export class makeLine extends DiagramElementCollection {
       const offsetLeft = Math.sin(lineAngle) > 0 ? Math.PI / 2 : -Math.PI / 2;
       const offsetRight = -offsetLeft;
 
-      if (line.label.location === 'top') {
+      if (label.location === 'top') {
         labelOffsetAngle = offsetTop;
       }
-      if (line.label.location === 'bottom') {
+      if (label.location === 'bottom') {
         labelOffsetAngle = offsetBottom;
       }
-      if (line.label.location === 'right') {
+      if (label.location === 'right') {
         labelOffsetAngle = offsetRight;
       }
-      if (line.label.location === 'left') {
+      if (label.location === 'left') {
         labelOffsetAngle = offsetLeft;
       }
       if (roundNum(Math.sin(lineAngle), 4) === 0
-        && (line.label.location === 'left' || line.label.location === 'right')
+        && (label.location === 'left' || label.location === 'right')
       ) {
-        if (line.label.subLocation === 'top') {
+        if (label.subLocation === 'top') {
           labelOffsetAngle = offsetTop;
         }
-        if (line.label.subLocation === 'bottom') {
+        if (label.subLocation === 'bottom') {
           labelOffsetAngle = offsetBottom;
         }
       }
       if (roundNum(Math.cos(lineAngle), 4) === 0
-        && (line.label.location === 'top' || line.label.location === 'bottom')
+        && (label.location === 'top' || label.location === 'bottom')
       ) {
-        if (line.label.subLocation === 'right') {
+        if (label.subLocation === 'right') {
           labelOffsetAngle = offsetRight;
         }
-        if (line.label.subLocation === 'left') {
+        if (label.subLocation === 'left') {
           labelOffsetAngle = offsetLeft;
         }
       }
-      if (line.label.location === 'inside') {
+      if (label.location === 'inside') {
         labelOffsetAngle = -Math.PI / 2;
       }
-      if (line.label.location === 'outside') {
+      if (label.location === 'outside') {
         labelOffsetAngle = Math.PI / 2;
       }
     }
 
-    if (line.label.orientation === 'horizontal') {
+    if (label.orientation === 'horizontal') {
       labelAngle = -lineAngle;
     }
-    if (line.label.orientation === 'baseToLine') {
+    if (label.orientation === 'baseToLine') {
       if (labelPosition.y < 0) {
         labelAngle = Math.PI;
       }
     }
-    if (line.label.orientation === 'baseAway') {
+    if (label.orientation === 'baseAway') {
       if (labelPosition.y > 0) {
         labelAngle = Math.PI;
       }
     }
-    if (line.label.orientation === 'baseUpright') {
+    if (label.orientation === 'baseUpright') {
       if (Math.cos(lineAngle) < 0) {
         labelAngle = Math.PI;
       }
     }
 
-    line.label.updateRotation(
+    label.updateRotation(
       labelAngle - parentRotationOffset,
       labelPosition, labelOffsetMag, labelOffsetAngle,
     );
-  };
+  }
 
-  line.setLength = (newLength: number) => {
+  setLength(newLength: number) {
     let straightLineLength = newLength;
-    let straightLineStart = start * newLength;
+    let straightLineStart = this.start * newLength;
 
-    if (line.arrow1) {
-      straightLineLength -= line.arrow1.height;
-      straightLineStart += line.arrow1.height;
-      line._arrow1.setPosition(start * newLength);
+    if (this.arrow1 && this._arrow1) {
+      straightLineLength -= this.arrow1.height;
+      straightLineStart += this.arrow1.height;
+      this._arrow1.setPosition(this.start * newLength);
     }
-    if (line.arrow2) {
-      straightLineLength -= line.arrow2.height;
-      line._arrow2.setPosition(start * newLength + newLength, 0);
+    if (this.arrow2 && this._arrow2) {
+      straightLineLength -= this.arrow2.height;
+      this._arrow2.setPosition(this.start * newLength + newLength, 0);
     }
-    if (straightLine) {
+    if (this._line) {
       // console.log("Asdf")
-      straightLine.transform.updateScale(straightLineLength, 1);
-      straightLine.setPosition(straightLineStart, 0);
+      this._line.transform.updateScale(straightLineLength, 1);
+      this._line.setPosition(straightLineStart, 0);
     }
-    line.currentLength = newLength;
-    line.updateLabel();
-  };
+    this.currentLength = newLength;
+    this.updateLabel();
+  }
 
-  line.setEndPoints = (p: Point, q: Point, offset: number = 0) => {
+  setEndPoints(p: Point, q: Point, offset: number = 0) {
     const newLength = distance(q, p);
     const pq = new Line(p, q);
-    line.transform.updateRotation(pq.angle());
+    this.transform.updateRotation(pq.angle());
     const offsetdelta = polarToRect(offset, pq.angle() + Math.PI / 2);
-    if (reference === 'center') {
-      line.transform.updateTranslation(pq.midpoint().add(offsetdelta));
+    if (this.reference === 'center') {
+      this.transform.updateTranslation(pq.midpoint().add(offsetdelta));
     } else {
-      line.transform.updateTranslation(p.add(offsetdelta));
+      this.transform.updateTranslation(p.add(offsetdelta));
     }
-    line.setLength(newLength);
-    line.updateLabel();
-  };
+    this.setLength(newLength);
+    this.updateLabel();
+  }
 
-  line.animateLengthTo = function animateToLength(
+  animateLengthTo(
     toLength: number = 1,
     time: number = 1,
     finishOnCancel: boolean = true,
     callback: ?() => void = null,
   ) {
-    line.stop();
-    const initialLength = line.currentLength;
-    const deltaLength = toLength - line.currentLength;
+    this.stop();
+    const initialLength = this.currentLength;
+    const deltaLength = toLength - this.currentLength;
     const func = (percent) => {
-      line.setLength(initialLength + deltaLength * percent);
+      this.setLength(initialLength + deltaLength * percent);
     };
     const done = () => {
       if (finishOnCancel) {
-        line.setLength(initialLength + deltaLength);
+        this.setLength(initialLength + deltaLength);
       }
       if (typeof callback === 'function' && callback) {
         callback();
       }
     };
-    line.animateCustomTo(func, time, 0, done);
-  };
+    this.animateCustomTo(func, time, 0, done);
+  }
 
-  line.grow = function grow(
+  grow(
     fromLength: number = 0,
     time: number = 1,
     finishOnCancel: boolean = true,
     callback: ?() => void = null,
   ) {
-    line.stop();
-    const target = line.currentLength;
-    line.setLength(fromLength);
-    line.animateLengthTo(target, time, finishOnCancel, callback);
-  };
-
-  if (straightLine != null) {
-    straightLine.pulse.transformMethod = s => new Transform().scale(1, s);
+    this.stop();
+    const target = this.currentLength;
+    this.setLength(fromLength);
+    this.animateLengthTo(target, time, finishOnCancel, callback);
   }
-
-  line.pulseWidth = () => {
-    if (straightLine != null) {
-      straightLine.pulseScaleNow(1, 3);
-    }
-    diagram.animateNextFrame();
-  };
-
-
-  line.setLength(length);
-
-  if (lengthOrP2 instanceof Point && referenceOrP1 instanceof Point) {
-    line.setEndPoints(referenceOrP1, lengthOrP2);
-  }
-
-  return line;
 }
