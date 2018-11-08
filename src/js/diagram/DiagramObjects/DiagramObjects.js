@@ -86,20 +86,21 @@ export default class DiagramObjects {
     showLine: boolean = true,
     largerTouchBorder: boolean = true,
   ) {
+    let line;
     if (referenceOrP1 instanceof Point && lengthOrP2 instanceof Point) {
-      const line = new DiagramObjectLine(
+      line = new DiagramObjectLine(
         this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
         referenceOrP1, 1, 0, 'end', width, color, showLine,
         largerTouchBorder,
-        );
+      );
       line.setEndPoints(referenceOrP1, lengthOrP2);
-      return line;
+      // return line;
     } else if (referenceOrP1 instanceof Point && typeof lengthOrP2 === 'number') {
-      const line = this.lineNew(
+      line = this.lineNew(
         referenceOrP1, lengthOrP2, 0, width, color, 'end', showLine,
         largerTouchBorder,
       );
-      return line;
+      // return line;
       // const line = new DiagramObjectLine(
       //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       //   referenceOrP1, lengthOrP2, width, 'end', width, color, showLine,
@@ -109,13 +110,17 @@ export default class DiagramObjects {
       //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       //   referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
       // );
-    } else {
-      const line = this.lineNew(
+    } else if (typeof lengthOrP2 === 'number') {
+      line = this.lineNew(
         new Point(0, 0), lengthOrP2, 0, width, color, referenceOrP1, showLine,
         largerTouchBorder,
       );
-      return line;
+    } else {
+      line = this.lineNew(
+        new Point(0, 0), 1, 0, 0.01, [1, 0, 0, 1], 'end', true, true,
+      );
     }
+    return line;
   }
 
   lineArrow(
