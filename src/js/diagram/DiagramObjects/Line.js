@@ -131,7 +131,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   setEndPoints: (Point, Point, number) => void;
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
-  reference: 'start' | 'end' | 'middle' | number;
+  vertexOrigin: 'start' | 'end' | 'middle' | number | Point;
   showRealLength: boolean;
   label: ?LineLabel;
   _label: ?{
@@ -166,7 +166,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   equation: Object;
   animateNextFrame: void => void;
   vertexSpaceLength: number;
-  vertexSpaceStart: number;
+  vertexSpaceStart: Point;
   offset: number;
   _midLine: ?DiagramElementPrimative;
   width: number;
@@ -194,9 +194,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     position: Point,
     length: number,
     angle: number,
-    reference: 'start' | 'end' | 'middle' | number,
-    // referenceOrP1: 'center' | 'end' | Point = 'center',
-    // lengthOrP2: number | Point,
+    vertexOrigin: 'start' | 'end' | 'middle' | number | Point,
     width: number,
     color: Array<number>,
     showLine: boolean = true,
@@ -247,15 +245,17 @@ export class DiagramObjectLine extends DiagramElementCollection {
     //    - middle: line extends from -length / 2 to length / 2
     //    - percent: line extends from -length * % to length * (1 - %)
     this.vertexSpaceLength = 1;
-    this.vertexSpaceStart = 0;
-    if (reference === 'end') {
-      this.vertexSpaceStart = -1;
-    } else if (reference === 'middle') {
-      this.vertexSpaceStart = -0.5;
-    } else if (typeof reference === 'number') {
-      this.vertexSpaceStart = -reference;
+    this.vertexSpaceStart = new Point(0, 0);
+    if (vertexOrigin === 'end') {
+      this.vertexSpaceStart = new Point(-1, 0);
+    } else if (vertexOrigin === 'middle') {
+      this.vertexSpaceStart = new Point(-0.5, 0);
+    } else if (typeof vertexOrigin === 'number') {
+      this.vertexSpaceStart = new Point(-vertexOrigin, 0);
+    } else if (vertexOrigin instanceof Point) {
+      this.vertexSpaceStart = vertexOrigin;
     }
-    this.reference = reference;
+    this.vertexOrigin = vertexOrigin;
 
     // MultiMove means the line has a middle section that when touched
     // translates the line collection, and when the rest of the line is
@@ -372,7 +372,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     );
     const midLine = makeStraightLine(
       this.shapes, this.multiMove.vertexSpaceMidLength, this.width,
-      start, [1, 0, 0, 1], //this.color,
+      start, [1, 0, 0, 1], // this.color,
       this.largerTouchBorder, this.isTouchDevice,
     );
     midLine.isTouchable = true;
@@ -541,7 +541,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   }
 
   setLength(newLength: number) {
-    const lineStart = this.vertexSpaceStart * newLength;
+    const lineStart = this.vertexSpaceStart.x * newLength;
     const lineLength = newLength;
     let straightLineLength = lineLength;
     let straightLineStart = lineStart;
@@ -580,16 +580,19 @@ export class DiagramObjectLine extends DiagramElementCollection {
       this.angle = r;
       let p1 = this.position;
       let line = new Line(p1, this.length, this.angle);
-      if (this.reference === 'middle') {
+      if (this.vertexOrigin === 'middle') {
         p1 = this.position
           .add(polarToRect(this.length / 2, this.angle + Math.PI));
         line = new Line(p1, this.length, this.angle);
-      } else if (this.reference === 'end') {
+      } else if (this.vertexOrigin === 'end') {
         p1 = this.position.add(polarToRect(this.length, this.angle + Math.PI));
         line = new Line(p1, this.length, this.angle);
-      } else if (typeof this.reference === 'number') {
+      } else if (typeof this.vertexOrigin === 'number') {
         p1 = this.position
-          .add(polarToRect(this.length * this.reference, this.angle + Math.PI));
+          .add(polarToRect(this.length * this.vertexOrigin, this.angle + Math.PI));
+        line = new Line(p1, this.length, this.angle);
+      } else if (this.vertexOrigin instanceof Point) {
+        p1 = this.position.add(this.vertexOrigin);
         line = new Line(p1, this.length, this.angle);
       }
       this.p1 = line.getPoint(1);
@@ -603,18 +606,29 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const pq = new Line(p, q);
     this.angle = pq.angle();
     this.length = pq.length();
-    
 
-    const newLength = distance(q, p);
-    const pq = new Line(p, q);
+    this.position = p;
+    if (this.vertexOrigin === 'middle') {
+      this.position = pq.midpoint();
+    } else if (this.vertexOrigin === 'end') {
+      this.position = q;
+    } else if (typeof this.vertexOrigin === 'number') {
+      this.position = p.add(polarToRect(this.vertexOrigin * this.length, this.angle));
+    } else if (this.vertexOrigin instanceof Point) {
+      this.position = p.add(this.vertexOrigin);
+    }
+    // this.updateLineGeometry();
+
+    // const newLength = distance(q, p);
+    // const pq = new Line(p, q);
     this.transform.updateRotation(pq.angle());
     const offsetdelta = polarToRect(offset, pq.angle() + Math.PI / 2);
-    if (this.reference === 'center') {
-      this.transform.updateTranslation(pq.midpoint().add(offsetdelta));
-    } else {
-      this.transform.updateTranslation(p.add(offsetdelta));
-    }
-    this.setLength(newLength);
+    // if (this.reference === 'center') {
+    this.transform.updateTranslation(this.position.add(offsetdelta));
+    // } else {
+    //   this.transform.updateTranslation(p.add(offsetdelta));
+    // }
+    this.setLength(this.length);
     this.updateLabel();
   }
 

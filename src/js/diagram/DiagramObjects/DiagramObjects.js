@@ -56,6 +56,12 @@ export default class DiagramObjects {
   }
 
   line(
+    p1OrPosition: Point,
+    p2OrLength: number | Point,
+    angle: number,
+    reference: 
+    )
+  line(
     referenceOrP1: 'center' | 'end' | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
