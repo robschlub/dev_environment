@@ -107,7 +107,7 @@ export default class DiagramObjects {
     referenceOrP1: 'center' | 'end' | Point = 'center',
     lengthOrP2: number | Point,
     color: Array<number>,
-    labelText: string,
+    labelText: string | Equation | Array<string>,
     offset: number,
     location: TypeLineLabelLocation = 'outside',
     subLocation: TypeLineLabelSubLocation = 'left',
@@ -121,5 +121,28 @@ export default class DiagramObjects {
     line.addLabel(
       labelText, offset, location, subLocation, orientation, linePosition,
     );
+    return line;
+  }
+
+  lineLabel(
+    referenceOrP1: 'center' | 'end' | Point = 'center',
+    lengthOrP2: number | Point,
+    width: number,
+    color: Array<number>,
+    labelText: string | Equation | Array<string>,
+    offset: number,
+    location: TypeLineLabelLocation = 'outside',
+    subLocation: TypeLineLabelSubLocation = 'left',
+    orientation: TypeLineLabelOrientation = 'horizontal',
+    linePosition: number = 0.5,
+  ) {
+    const line = new DiagramObjectLine(
+      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      referenceOrP1, lengthOrP2, width, color, true, false,
+    );
+    line.addLabel(
+      labelText, offset, location, subLocation, orientation, linePosition,
+    );
+    return line;
   }
 }

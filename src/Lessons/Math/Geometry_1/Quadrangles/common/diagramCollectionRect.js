@@ -67,24 +67,21 @@ export default class RectCollection extends CommonDiagramCollection {
   }
 
   addRect() {
-    const makeL = (p1, p2, labelText, show) => {
-      const line = makeLine(
-        this.diagram, 'end', 1, this.layout.lineWidth,
-        this.layout.colors.lines, show,
+    const makeL = (p1, p2, labelText) => {
+      const line = this.diagram.objects.lineLabel(
+        p1, p2, this.layout.lineWidth, this.layout.colors.lines,
+        labelText, 0.05, 'inside', 'top', 'horizontal',
       );
-      line.setEndPoints(p1, p2);
-      line.setPosition(p1);
-      line.addLabel(labelText, 0.05, 'inside', 'top', 'horizontal');
       const name = Array.isArray(labelText) ? labelText[0] : labelText;
       this._rect.add(`line${name}`, line);
     };
     const { points } = this.layout.rect;
     const halfLine = this.layout.lineWidth / 2;
-    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), ['C', 'A'], true);
-    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), ['D', 'B'], true);
-    makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A', true);
-    makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B', true);
-    makeL(points[0], points[2], 'E', true);
+    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), ['C', 'A']);
+    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), ['D', 'B']);
+    makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A');
+    makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B');
+    makeL(points[0], points[2], 'E');
   }
 
   addRightAngles() {

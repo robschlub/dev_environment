@@ -13,8 +13,8 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
 import type { TypeTriangle, TypeTriangleAngle } from '../../../../LessonsCommon/tools/triangle';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
@@ -115,12 +115,12 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
 
   addParallelLines() {
     const layout = this.layout.totalAngle.parallelLine;
-    const line1 = makeLine(
-      this.diagram, 'end', layout.length, layout.width,
+    const line1 = this.diagram.objects.line(
+      'end', layout.length, layout.width,
       this.layout.colors.parallelLines, true,
     );
-    const line2 = makeLine(
-      this.diagram, 'end', layout.length, layout.width,
+    const line2 = this.diagram.objects.line(
+      'end', layout.length, layout.width,
       this.layout.colors.parallelLines, true,
     );
     this.add('line1', line1);
