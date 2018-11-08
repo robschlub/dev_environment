@@ -65,9 +65,9 @@ class Diagram {
   equation: Object;
   equationLow: Object;
   equationHigh: Object;
-  objects: Object;
-  objectsLow: Object;
-  objectsHigh: Object;
+  objects: DiagramObjects;
+  objectsLow: DiagramObjects;
+  objectsHigh: DiagramObjects;
 
   backgroundColor: Array<number>;
   fontScale: number;

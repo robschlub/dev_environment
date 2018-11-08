@@ -1,6 +1,4 @@
 // @flow
-
-// import Diagram from '../Diagram';
 import {
   Transform, Point,
 } from '../tools/g2';
@@ -25,9 +23,6 @@ function updateDescription(
   if (element == null) {
     return;
   }
-  // if (element.isShown === false) {
-  //   return;
-  // }
   let form = null;
   // $FlowFixMe
   form = eqn.formSeries[index][formType];
@@ -52,22 +47,6 @@ function updateDescription(
     }
   }
 }
-
-// export type TypeEquationNavigator = {
-//   setEquation: (Equation) => void;
-//   next: ?HTMLElement;
-//   prev: ?HTMLElement;
-//   refresh: ?HTMLElement;
-//   nextDescription: ?HTMLElement;
-//   prevDescription: ?HTMLElement;
-//   description: ?HTMLElement;
-//   prevGroup: ?HTMLElement;
-//   nextGroup: ?HTMLElement;
-//   currentGroup: ?HTMLElement;
-//   updateButtons: () => void;
-//   eqn: Equation;
-//   _eqn: DiagramElementCollection;
-// } & DiagramElementCollection;
 
 function enableTouch(element: ?HTMLElement) {
   if (element) {
