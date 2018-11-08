@@ -458,11 +458,11 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       interactiveElements: [
-        rect._navAB.prev,
-        rect._navAB.prevDescription,
-        rect._navAB.refresh,
-        rect._navAB.nextDescription,
-        rect._navAB.next,
+        // rect._navAB.prev,
+        // rect._navAB.prevDescription,
+        // rect._navAB.refresh,
+        // rect._navAB.nextDescription,
+        // rect._navAB.next,
       ],
       setSteadyState: () => {
         // rect._navAB.showAll();
@@ -475,11 +475,11 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       interactiveElements: [
-        rect._navAB.prev,
-        rect._navAB.prevDescription,
-        rect._navAB.refresh,
-        rect._navAB.next,
-        rect._navAB.nextDescription,
+        // rect._navAB.prev,
+        // rect._navAB.prevDescription,
+        // rect._navAB.refresh,
+        // rect._navAB.next,
+        // rect._navAB.nextDescription,
       ],
       setSteadyState: () => {
         // rect._navAB.showAll();
