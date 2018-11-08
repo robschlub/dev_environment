@@ -529,11 +529,11 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const lineStart = this.vertexSpaceStart.x * newLength;
     const lineLength = newLength;
     let straightLineLength = lineLength;
-    let straightLineStart = lineStart;
+    let straightLineStart = 0;
 
     if (this.arrow1 && this._arrow1) {
       straightLineLength -= this.arrow1.height;
-      straightLineStart += this.arrow1.height;
+      straightLineStart = this.arrow1.height;
       this._arrow1.setPosition(lineStart);
     }
     if (this.arrow2 && this._arrow2) {
@@ -543,7 +543,13 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const line = this._line;
     if (line) {
       line.transform.updateScale(straightLineLength, 1);
-      line.setPosition(straightLineStart, 0);
+      if (this.vertexOrigin === 'start') {
+        line.setPosition(straightLineStart, 0);
+      } else if (this.vertexOrigin === 'end') {
+        line.setPosition(-straightLineStart, 0);
+      } else if (typeof this.vertexOrigin === 'number') {
+        line.setPosition(0, 0);
+      }
     }
     if (this._midLine) {
       const midLine = this._midLine;

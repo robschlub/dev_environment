@@ -216,6 +216,7 @@ describe('Diagram', () => {
         1, -0.1,
         1, 0.1,
       ]);
+      expect(line._line.transform.t().isEqualTo(new Point(0, 0))).toBe(true);
       expect(line._line.transform.s().isEqualTo(new Point(2, 1))).toBe(true);
       expect(line.transform.r()).toBe(0);
       expect(line.transform.t().isEqualTo(new Point(0, 0))).toBe(true);
@@ -235,6 +236,7 @@ describe('Diagram', () => {
         1, -0.1,
         1, 0.1,
       ]);
+      expect(line._line.transform.t().isEqualTo(new Point(0, 0))).toBe(true);
       expect(line._line.transform.s()
         .isEqualTo(new Point(Math.sqrt(0.5), 1), 6)).toBe(true);
       expect(round(line.transform.r(), 6)).toBe(round(Math.PI / 4, 6));
@@ -256,6 +258,7 @@ describe('Diagram', () => {
         0.5, -0.1,
         0.5, 0.1,
       ]);
+      expect(line._line.transform.t().isEqualTo(new Point(0, 0))).toBe(true);
       expect(line._line.transform.s()
         .isEqualTo(new Point(Math.sqrt(2) * 2, 1), 6)).toBe(true);
       expect(round(line.transform.r(), 6)).toBe(round(Math.PI / 4, 6));
