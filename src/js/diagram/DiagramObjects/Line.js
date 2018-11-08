@@ -303,9 +303,13 @@ export class DiagramObjectLine extends DiagramElementCollection {
     height: number = this.width * 4,
     width: number = height,
   ) {
+    let r = Math.PI / 2;
+    if (index === 2) {
+      r = Math.PI / 2 * 3;
+    }
     const a = this.shapes.arrow(
       width, 0, height, 0,
-      this.color, new Transform().translate(this.start, 0), new Point(0, 0), Math.PI / 2,
+      this.color, new Transform().translate(this.start, 0), new Point(0, 0), r,
     );
     // $FlowFixMe
     this[`arrow${index}`] = { height };

@@ -59,7 +59,7 @@ export default class DiagramObjects {
   //   p1OrPosition: Point,
   //   p2OrLength: number | Point,
   //   angle: number,
-  //   reference: 
+  //   reference:
   //   )
   lineNew(
     position: Point,
