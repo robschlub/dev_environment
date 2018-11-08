@@ -8,9 +8,9 @@ import {
 } from '../../../../../js/diagram/Element';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import * as html from '../../../../../js/tools/htmlGenerator';
-import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
+// import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
-
+import EquationNavigator from '../../../../../js/diagram/DiagramObjects/EquationNavigator';
 
 export type TypeRectEquationCollection = {
   _Area: DiagramElementPrimative,
@@ -44,7 +44,7 @@ export type TypeRectEquation = {
 
 export type TypeRectEquationNav = {
   eqn: TypeRectEquation;
-} & TypeEquationNavigator;
+} & EquationNavigator;
 
 export function addRectEqn(
   diagram: Diagram,
