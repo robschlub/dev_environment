@@ -23,7 +23,7 @@ import type {
   TypeSquareEquation,
   TypeSquareEquationCollection,
   TypeNumSquaresEquation,
-  TypeNumSquaresEquationNav,
+  TypeNumSquaresEquationCollection,
   TypeSquareRectEquationCollection,
   TypeSquareRectEquation,
 } from './equations';
@@ -34,7 +34,7 @@ export default class RectAreaCollection extends CommonDiagramCollection {
   _grid: DiagramElementPrimative;
   _gridSquare: DiagramElementPrimative;
   _line: DiagramElementPrimative;
-  _numSquaresEqn: TypeNumSquaresEquationNav;
+  _numSquaresEqn: TypeNumSquaresEquationCollection;
   _rectEqn: TypeRectEquationNav;
   _row: DiagramElementPrimative;
   _side6m: TypeLine;

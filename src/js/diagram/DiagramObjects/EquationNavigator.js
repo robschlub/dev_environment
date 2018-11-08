@@ -51,21 +51,21 @@ function updateDescription(
   }
 }
 
-export type TypeEquationNavigator = {
-  setEquation: (Equation) => void;
-  next: ?HTMLElement;
-  prev: ?HTMLElement;
-  refresh: ?HTMLElement;
-  nextDescription: ?HTMLElement;
-  prevDescription: ?HTMLElement;
-  description: ?HTMLElement;
-  prevGroup: ?HTMLElement;
-  nextGroup: ?HTMLElement;
-  currentGroup: ?HTMLElement;
-  updateButtons: () => void;
-  eqn: Equation;
-  _eqn: DiagramElementCollection;
-} & DiagramElementCollection;
+// export type TypeEquationNavigator = {
+//   setEquation: (Equation) => void;
+//   next: ?HTMLElement;
+//   prev: ?HTMLElement;
+//   refresh: ?HTMLElement;
+//   nextDescription: ?HTMLElement;
+//   prevDescription: ?HTMLElement;
+//   description: ?HTMLElement;
+//   prevGroup: ?HTMLElement;
+//   nextGroup: ?HTMLElement;
+//   currentGroup: ?HTMLElement;
+//   updateButtons: () => void;
+//   eqn: Equation;
+//   _eqn: DiagramElementCollection;
+// } & DiagramElementCollection;
 
 function enableTouch(element: ?HTMLElement) {
   if (element) {
@@ -523,3 +523,5 @@ export default class EquationNavigator extends DiagramElementCollection {
     }
   }
 }
+
+export type TypeEquationNavigator = EquationNavigator;

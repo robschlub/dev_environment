@@ -9,8 +9,10 @@ import {
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 // import * as html from '../../../../../js/tools/htmlGenerator';
 // import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
-import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
-import EquationNavigator from '../../../../../js/diagram/DiagramObjects/EquationNavigator';
+// import type { TypeEquationNavigator } from '../../../../LessonsCommon/tools/equationNavigator';
+import type {
+  TypeEquationNavigator,
+} from '../../../../../js/diagram/DiagramObjects/EquationNavigator';
 
 export type TypeRectEquationCollection = {
   _Area: DiagramElementPrimative,
@@ -44,7 +46,7 @@ export type TypeRectEquation = {
 
 export type TypeRectEquationNav = {
   eqn: TypeRectEquation;
-} & EquationNavigator;
+} & TypeEquationNavigator;
 
 export function addRectEqn(
   diagram: Diagram,
@@ -279,9 +281,9 @@ export type TypeNumSquaresEquation = {
   collection: TypeNumSquaresEquationCollection;
 } & Equation;
 
-export type TypeNumSquaresEquationNav = {
-  eqn: TypeRectEquation;
-} & TypeEquationNavigator;
+// export type TypeNumSquaresEquationNav = {
+//   eqn: TypeRectEquation;
+// } & TypeEquationNavigator;
 
 export function addNumSquaresRectEquation(
   diagram: Diagram,
