@@ -100,20 +100,22 @@ export default class OppositeCollection extends CommonDiagramCollection {
     eqn.setElem('c', this.layout.colors.angleC);
     eqn.setElem('d', this.layout.colors.angleD);
 
-    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', '_180', 'deg']);
-    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', 'pi'], 'rad');
+    const deg = { formType: 'deg' };
+    const rad = { formType: 'rad' };
+    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', '_180'], deg);
+    eqn.addForm('a_plus_b', ['a', 'plus', 'b', 'equals', 'pi'], rad);
 
-    eqn.addForm('b', ['b', 'equals', '_180', 'minus', 'a1'], 'deg');
-    eqn.addForm('b', ['b', 'equals', 'pi', 'minus', 'a1'], 'rad');
+    eqn.addForm('b', ['b', 'equals', '_180', 'minus', 'a1'], deg);
+    eqn.addForm('b', ['b', 'equals', 'pi', 'minus', 'a1'], rad);
 
-    eqn.addForm('c', ['c', 'equals', '_180', 'minus', 'b'], 'deg');
-    eqn.addForm('c', ['c', 'equals', 'pi', 'minus', 'b'], 'rad');
-    eqn.addForm('c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb'], 'deg');
-    eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], 'rad');
+    eqn.addForm('c', ['c', 'equals', '_180', 'minus', 'b'], deg);
+    eqn.addForm('c', ['c', 'equals', 'pi', 'minus', 'b'], rad);
+    eqn.addForm('c_equals_a_full', ['c', 'equals', '_180', 'minus', 'lb', '_1801', 'minus1', 'a', 'rb'], deg);
+    eqn.addForm('c_equals_a_full', ['c', 'equals', 'pi', 'minus', 'lb', 'pi1', 'minus1', 'a', 'rb'], rad);
     eqn.addForm('c_equals_a', ['c', 'equals', 'a']);
 
-    eqn.addForm('d', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
-    eqn.addForm('d', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+    eqn.addForm('d', ['d', 'equals', '_180', 'minus', 'a'], deg);
+    eqn.addForm('d', ['d', 'equals', 'pi', 'minus', 'a'], rad);
 
     eqn.addForm('d_equals_b', ['d', 'equals', 'b']);
 
@@ -128,6 +130,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
     this._equation1.eqn.setUnits(units);
     this._equation2.eqn.setUnits(units);
     this._equation3.eqn.setUnits(units);
+    // console.log(this._equation1.eqn)
     if (this._angleA.label) {
       this._angleA.label.eqn.setUnits(units);
     }
@@ -149,14 +152,16 @@ export default class OppositeCollection extends CommonDiagramCollection {
       ? arcLayout.radius : arcLayout.radius * 1.0;
     const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.label.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], 'rad');
-    angle.label.eqn.addForm('b_silent', ['_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('b_silent', ['pi', 'minus', 'a'], 'rad');
-    angle.label.eqn.addForm('d_silent', ['_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('d_silent', ['pi', 'minus', 'a'], 'rad');
-    angle.label.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], 'rad');
+    const deg = { formType: 'deg' };
+    const rad = { formType: 'rad' };
+    angle.label.eqn.addForm('b_equals', ['b', 'equals', '_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('b_equals', ['b', 'equals', 'pi', 'minus', 'a'], rad);
+    angle.label.eqn.addForm('b_silent', ['_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('b_silent', ['pi', 'minus', 'a'], rad);
+    angle.label.eqn.addForm('d_silent', ['_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('d_silent', ['pi', 'minus', 'a'], rad);
+    angle.label.eqn.addForm('d_equals', ['d', 'equals', '_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('d_equals', ['d', 'equals', 'pi', 'minus', 'a'], rad);
     angle.label.eqn.addForm('c_equals', ['c', 'equals', 'a']);
     angle.label.eqn.showForm(name);
     angle.setPosition(this.layout.line1.opposite.position);

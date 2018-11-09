@@ -2396,7 +2396,6 @@ export class Equation {
       animationTime, elementMods, addToSeries,
     } = optionsToUse;
     const time = animationTime;
-
     this.form[name][formType] = new EquationForm(this.collection);
     this.form[name].name = name;
     this.form[name][formType].name = name;
@@ -2452,7 +2451,9 @@ export class Equation {
     // make the first form added also equal to the base form as always
     // need a base form for some functions
     if (this.form[name].base === undefined) {
-      this.addForm(name, content, options);
+      const baseOptions = Object.assign({}, options);
+      baseOptions.formType = 'base';
+      this.addForm(name, content, baseOptions);
     }
   }
 
@@ -2762,6 +2763,7 @@ export class Equation {
     if (formOrName instanceof EquationForm) {
       return formOrName;
     }
+    // console.log(formType, this.form[formOrName])
     if (formOrName in this.form) {
       let formTypeToUse = formType;
       if (formTypeToUse == null) {
