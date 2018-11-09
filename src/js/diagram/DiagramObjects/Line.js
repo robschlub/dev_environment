@@ -567,10 +567,10 @@ export class DiagramObjectLine extends DiagramElementCollection {
         line.setPosition(delta, 0);
       }
     }
-    if (this._midLine) {
-      const midLine = this._midLine;
+
+    const midLine = this._midLine;
+    if (midLine) {
       midLine.transform.updateScale(newLength, 1);
-      midLine.setPosition(lineStart + lineLength / 2, 0);
     }
 
     this.length = newLength;

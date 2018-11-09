@@ -59,7 +59,7 @@ export default class ParallelCollection extends CommonDiagramCollection {
   makeLine() {
     const lay = this.layout.line;
     const line = this.diagram.objects.line(
-      'end', lay.length.full, lay.width,
+      'start', lay.length.full, lay.width,
       this.layout.colors.line,
     );
     line.setMultiMovable(0.33, lay.boundary);
