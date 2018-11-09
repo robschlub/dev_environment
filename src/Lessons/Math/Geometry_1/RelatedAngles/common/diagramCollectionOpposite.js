@@ -45,12 +45,18 @@ export default class OppositeCollection extends CommonDiagramCollection {
   } & DiagramElementCollection;
 
   makeLine(labelText: string) {
-    const line = makeLabeledLine(
-      this.diagram, this.layout.parallelLine,
-      this.layout.colors.line, labelText,
+    const lay = this.layout.parallelLine;
+    const line = this.diagram.objects.line(
+      'center', lay.length.full, lay.width,
+      this.layout.colors.line,
     );
+    // const line = makeLabeledLine(
+    //   this.diagram, this.layout.parallelLine,
+    //   this.layout.colors.line, labelText,
+    // );
+    line.setMovable(true, 'rotation');
     line.setTransformCallback = (t: Transform) => {
-      line.updateTransform(t);
+      line.updateMoveTransform(t);
       this.updateOppositeAngles();
     };
     return line;
@@ -168,9 +174,9 @@ export default class OppositeCollection extends CommonDiagramCollection {
     // this.diagram = diagram;
     // this.layout = layout;
     this.setPosition(this.layout.position);
-    this.add('line1', this.makeLine('1'));
+    this.add('line1', this.makeLine(''));
     this._line1.setPosition(this.layout.line1.opposite.position.x, 0);
-    this.add('line2', this.makeLine('2'));
+    this.add('line2', this.makeLine(''));
     this._line2.setPosition(this.layout.line2.opposite.position.x, 0);
     this.add('angleA', this.makeAngle('a'));
     this.add('angleB', this.makeAngle('b'));

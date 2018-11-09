@@ -51,9 +51,9 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       'center', lay.length.full, lay.width,
       this.layout.colors.line,
     );
-    line.setMultiMovable(0.33, lay.boundary);
+    line.setMovable(true, 'centerTranslateEndRotation', 0.33, lay.boundary);
     line.setTransformCallback = (t: Transform) => {
-      line.updateMultiMoveTransform(t);
+      line.updateMoveTransform(t);
       this.normalizeAngle(line);
     };
     if (line._midLine) {

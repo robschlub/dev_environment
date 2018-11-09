@@ -65,16 +65,10 @@ class Content extends LessonContent {
       },
       showOnly: [
         opp,
-        opp._line1,
-        opp._line1._end1,
-        opp._line1._end2,
-        opp._line1._mid,
-        opp._line2,
-        opp._line2._end1,
-        opp._line2._end2,
-        opp._line2._mid,
       ],
       show: [
+        opp._line1,
+        opp._line2,
         diag._unitsSelector,
       ],
     };
@@ -152,9 +146,9 @@ class Content extends LessonContent {
         a: highlight(colors.angleA),
         b: highlight(colors.angleB),
       },
-      show: [
-        diag._unitsSelector,
-      ],
+      // show: [
+      //   diag._unitsSelector,
+      // ],
       setSteadyState: () => {
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
@@ -175,9 +169,9 @@ class Content extends LessonContent {
         a: highlight(colors.angleA),
         d: highlight(colors.angleD),
       },
-      show: [
-        diag._unitsSelector,
-      ],
+      // show: [
+      //   diag._unitsSelector,
+      // ],
       setSteadyState: () => {
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
@@ -197,9 +191,9 @@ class Content extends LessonContent {
         a: highlight(colors.angleA),
         d: highlight(colors.angleD),
       },
-      show: [
-        diag._unitsSelector,
-      ],
+      // show: [
+      //   diag._unitsSelector,
+      // ],
       setSteadyState: () => {
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
@@ -221,9 +215,9 @@ class Content extends LessonContent {
         b: highlight(colors.angleB),
         d: highlight(colors.angleD),
       },
-      show: [
-        diag._unitsSelector,
-      ],
+      // show: [
+      //   diag._unitsSelector,
+      // ],
       setSteadyState: () => {
         opp.showAngles([
           [opp._angleA, 'a', colors.disabled],
@@ -245,9 +239,9 @@ class Content extends LessonContent {
         c: highlight(colors.angleC),
         d: highlight(colors.angleD),
       },
-      show: [
-        diag._unitsSelector,
-      ],
+      // show: [
+      //   diag._unitsSelector,
+      // ],
       setSteadyState: () => {
         opp.showAngles([
           [opp._angleA, 'a', colors.disabled],
@@ -264,6 +258,9 @@ class Content extends LessonContent {
         More generally, we can see that at the intersection of two lines, the |opposite angles are always equal|.
       </p>
       `,
+      hide: [
+        diag._unitsSelector,
+      ],
       setSteadyState: () => {
         opp.showAngles([
           [opp._angleA, 'a', colors.angleA],
@@ -284,6 +281,9 @@ class Content extends LessonContent {
         oppCommon.setEnterState();
         opp.calculateFuturePositions();
       },
+      hide: [
+        diag._unitsSelector,
+      ],
       transitionFromAny: (done) => {
         opp.moveToFuturePositions(done);
       },

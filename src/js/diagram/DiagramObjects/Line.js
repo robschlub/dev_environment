@@ -172,7 +172,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   setEndPoints: (Point, Point, ?number) => void;
   animateLengthTo: (number, number, boolean, ?() => void) => void;
   grow: (number, number, boolean, ?() => void) => void;
-  setMovable: (?boolean) => void;
+  setMovable: (?boolean, ?('translation' | 'rotation' | 'centerTranslateEndRotation'), ?number, ?Rect) => void;
   addArrow1: (number, number) => void;
   addArrow2: (number, number) => void;
   addArrowStart: (number, number) => void;
@@ -351,20 +351,35 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.addArrow2(arrowHeight, arrowWidth);
   }
 
-  setMovable(movable: boolean = true) {
+  setMovable(
+    movable: boolean = true,
+    moveType: 'translation' | 'rotation' | 'centerTranslateEndRotation' = 'translation',
+    middleLengthPercent: number = 0.333,
+    translationBounds: Rect = this.diagramLimits,
+  ) {
     if (movable) {
-      this.isTouchable = true;
-      this.isMovable = true;
-      this.hasTouchableElements = true;
-      if (this._line != null) {
-        this._line.isTouchable = true;
+      if (moveType === 'translation' || moveType === 'rotation') {
+        this.move.type = moveType;
+        this.isTouchable = true;
+        this.isMovable = true;
+        this.hasTouchableElements = true;
+        if (this._line != null) {
+          this._line.isTouchable = true;
+          this._line.isMovable = false;
+        }
+        if (this._midLine) {
+          this._midLine.isMovable = false;
+        }
+        this.multiMove.bounds = translationBounds;
+      } else {
+        this.setMultiMovable(middleLengthPercent, translationBounds);
       }
     } else {
       this.isMovable = false;
     }
   }
 
-  setMultiMovable(middleLengthPercent: number, bounds: Rect) {
+  setMultiMovable(middleLengthPercent: number, translationBounds: Rect) {
     this.multiMove.vertexSpaceMidLength = middleLengthPercent * this.vertexSpaceLength;
     const start = new Point(
       this.vertexSpaceStart.x + this.vertexSpaceLength / 2
@@ -373,7 +388,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     );
     const midLine = makeStraightLine(
       this.shapes, this.multiMove.vertexSpaceMidLength, this.width,
-      start, [1, 1, 1, 0], // this.color,
+      start, [1, 0, 0, 0], // this.color,
       this.largerTouchBorder, this.isTouchDevice,
     );
     midLine.isTouchable = true;
@@ -392,11 +407,11 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.hasTouchableElements = true;
     this.isTouchable = false;
     this.isMovable = false;
-    this.multiMove.bounds = bounds;
+    this.multiMove.bounds = translationBounds;
     this.setLength(this.currentLength);
   }
 
-  updateMultiMoveTransform(t: Transform) {
+  updateMoveTransform(t: Transform) {
     const r = t.r();
     const { bounds } = this.multiMove;
     if (r != null) {

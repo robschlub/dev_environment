@@ -21,12 +21,8 @@ export default function lessonLayout() {
   layout.minAngleThreshold = 1;
 
   layout.equation2 = {
-    b: new Point(1, 1.85),
+    b: new Point(1, 1.715),
   };
 
-  // layout.scenario = {
-  //   position: new Point(0, -0.5),
-  //   rotation: 0,
-  // };
   return layout;
 }

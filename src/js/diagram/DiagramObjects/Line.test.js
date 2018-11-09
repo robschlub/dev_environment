@@ -182,13 +182,13 @@ describe('Diagram', () => {
       ]);
       expect(line.transform.t().isEqualTo(new Point(0, 0))).toBe(true);
       expect(line.transform.r()).toBe(0);
-      expect(line.length).toBe(2);
+      expect(line.length === 2).toBe(true);
     });
     test('(1, 1)', () => {
       const line = makeLine(new Point(1, 1), 1, 1);
       expect(line.transform.t().isEqualTo(new Point(1, 1))).toBe(true);
       expect(line.transform.r()).toBe(1);
-      expect(line.length).toBe(1);
+      expect(line.length === 1).toBe(true);
     });
   });
   describe('Set End Points', () => {
