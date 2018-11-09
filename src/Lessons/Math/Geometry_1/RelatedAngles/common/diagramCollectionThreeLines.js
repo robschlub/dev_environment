@@ -89,14 +89,16 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       ? arcLayout.radius : arcLayout.radius * 1.0;
     const angle = makeLabeledAngle(this.diagram, this.layout, radius, color);
 
-    angle.label.eqn.addForm('b_equals', ['_180', 'minus', 'a'], 'deg');
-    angle.label.eqn.addForm('b_equals', ['pi', 'minus', 'a'], 'rad');
-    angle.label.eqn.addForm('a_equals', ['_180', 'minus', 'b'], 'deg');
-    angle.label.eqn.addForm('a_equals', ['pi', 'minus', 'b'], 'rad');
-    angle.label.eqn.addForm('c_equals', ['_180', 'minus', 'c'], 'deg');
-    angle.label.eqn.addForm('c_equals', ['pi', 'minus', 'c'], 'rad');
-    angle.label.eqn.addForm('d_equals', ['_180', 'minus', 'd'], 'deg');
-    angle.label.eqn.addForm('d_equals', ['pi', 'minus', 'd'], 'rad');
+    const deg = { formType: 'deg' };
+    const rad = { formType: 'rad' };
+    angle.label.eqn.addForm('b_equals', ['_180', 'minus', 'a'], deg);
+    angle.label.eqn.addForm('b_equals', ['pi', 'minus', 'a'], rad);
+    angle.label.eqn.addForm('a_equals', ['_180', 'minus', 'b'], deg);
+    angle.label.eqn.addForm('a_equals', ['pi', 'minus', 'b'], rad);
+    angle.label.eqn.addForm('c_equals', ['_180', 'minus', 'c'], deg);
+    angle.label.eqn.addForm('c_equals', ['pi', 'minus', 'c'], rad);
+    angle.label.eqn.addForm('d_equals', ['_180', 'minus', 'd'], deg);
+    angle.label.eqn.addForm('d_equals', ['pi', 'minus', 'd'], rad);
     angle.label.eqn.showForm(name);
 
     angle.lineIndex = lineIndex;
@@ -258,9 +260,11 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   setUnits(units: 'deg' | 'rad') {
     if (this._angleA2.label) {
       this._angleA2.label.eqn.setUnits(units);
+      this._angleA2.updateLabel();
     }
     if (this._angleB2.label) {
       this._angleB2.label.eqn.setUnits(units);
+      this._angleB2.updateLabel();
     }
   }
 

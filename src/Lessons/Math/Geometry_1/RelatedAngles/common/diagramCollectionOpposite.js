@@ -133,15 +133,19 @@ export default class OppositeCollection extends CommonDiagramCollection {
     // console.log(this._equation1.eqn)
     if (this._angleA.label) {
       this._angleA.label.eqn.setUnits(units);
+      this._angleA.updateLabel();
     }
     if (this._angleB.label) {
       this._angleB.label.eqn.setUnits(units);
+      this._angleB.updateLabel();
     }
     if (this._angleC.label) {
       this._angleC.label.eqn.setUnits(units);
+      this._angleC.updateLabel();
     }
     if (this._angleD.label) {
       this._angleD.label.eqn.setUnits(units);
+      this._angleD.updateLabel();
     }
   }
 
