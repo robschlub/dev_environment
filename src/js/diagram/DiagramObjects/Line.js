@@ -373,7 +373,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     );
     const midLine = makeStraightLine(
       this.shapes, this.multiMove.vertexSpaceMidLength, this.width,
-      start, [1, 0, 0, 1], // this.color,
+      start, [1, 1, 1, 0], // this.color,
       this.largerTouchBorder, this.isTouchDevice,
     );
     midLine.isTouchable = true;

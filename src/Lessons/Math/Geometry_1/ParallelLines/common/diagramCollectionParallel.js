@@ -11,9 +11,6 @@ import {
 import {
   makeAnglesClose, checkElementsForParallel,
 } from './tools';
-// import { Line } from '../../../../../js/diagram/DiagramObjects/Line';
-// import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
-// import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
@@ -63,10 +60,6 @@ export default class ParallelCollection extends CommonDiagramCollection {
       this.layout.colors.line,
     );
     line.setMultiMovable(0.33, lay.boundary);
-    // const line = makeMoveableLine(
-    //   this.diagram, this.layout.line,
-    //   this.layout.colors.line,
-    // );
     line.setTransformCallback = (t: Transform) => {
       line.updateMultiMoveTransform(t);
       this.normalizeAngle(line);
