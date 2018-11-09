@@ -13,8 +13,9 @@ import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import type {
   TypeIndexAngle, TypeSupplementaryAngle,
 } from './tools';
-import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
+// import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import { showAngles } from '../../../../LessonsCommon/tools/angle';
@@ -23,9 +24,9 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
-  _line1: TypeLabeledLine;
-  _line2: TypeLabeledLine;
-  _line3: TypeLabeledLine;
+  _line1: TypeLine;
+  _line2: TypeLine;
+  _line3: TypeLine;
   _angleA1: TypeIndexAngle;
   _angleB1: TypeIndexAngle;
   _angleC1: TypeIndexAngle;
@@ -44,24 +45,34 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
-  makeParallelLine(labelText: string) {
-    const line = makeLabeledLine(
-      this.diagram,
-      this.layout.parallelLine,
+  makeParallelLine() {
+    const lay = this.layout.parallelLine;
+    const line = this.diagram.objects.line(
+      'center', lay.length.full, lay.width,
       this.layout.colors.line,
-      labelText,
     );
-    line.isMovable = false;
+    // const line = makeLabeledLine(
+    //   this.diagram,
+    //   this.layout.parallelLine,
+    //   this.layout.colors.line,
+    //   labelText,
+    // );
+    // line.isMovable = false;
     return line;
   }
 
-  makeIntersectingLine(labelText: string) {
-    const line = makeLabeledLine(
-      this.diagram,
-      this.layout.intersectingLine,
+  makeIntersectingLine() {
+    const lay = this.layout.intersectingLine;
+    const line = this.diagram.objects.line(
+      'center', lay.length.full, lay.width,
       this.layout.colors.line,
-      labelText,
     );
+    // const line = makeLabeledLine(
+    //   this.diagram,
+    //   this.layout.intersectingLine,
+    //   this.layout.colors.line,
+    //   labelText,
+    // );
     return line;
   }
 
@@ -92,26 +103,26 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   }
 
   addThreeLines() {
-    const line1 = this.makeParallelLine('1');
-    const line2 = this.makeParallelLine('2');
-    const line3 = this.makeIntersectingLine('3');
+    const line1 = this.makeParallelLine();
+    const line2 = this.makeParallelLine();
+    const line3 = this.makeIntersectingLine();
     this.add('line2', line2);
     this.add('line1', line1);
     this.add('line3', line3);
     line1.setPosition(this.layout.line3.corresponding.position);
     line2.setPosition(this.layout.line3.corresponding.position);
+
+    line3.setMovable(true, 'rotation');
     line3.setPosition(this.layout.line3.corresponding.position);
     line3.transform.updateRotation(Math.PI / 2);
     line3.move.maxTransform.updateRotation(Math.PI - Math.PI / 3.7);
     line3.move.minTransform.updateRotation(Math.PI / 3.7);
     line3.setColor(this.layout.colors.intersectingLine);
 
-    line1._end1.move.element = this;
-    line1._end2.move.element = this;
-    line1._mid.move.element = this;
-    line2._end1.move.element = this;
-    line2._end2.move.element = this;
-    line2._mid.move.element = this;
+    line1.setMovable(true, 'rotation');
+    line1.move.element = this;
+    line2.setMovable(true, 'rotation');
+    line2.move.element = this;
   }
 
   constructor(
@@ -132,12 +143,12 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
     this.add('angleD1', this.makeAngle('d', 1, 3));
 
     this._line3.setTransformCallback = (t: Transform) => {
-      this._line3.updateTransform(t);
+      this._line3.updateMoveTransform(t);
       this.updateIntersectingLineAngle();
       this.updateParallelLineTranlsation();
     };
     this._line1.setTransformCallback = (t: Transform) => {
-      this._line3.updateTransform(t);
+      this._line3.updateMoveTransform(t);
       this.updateParallelLineTranlsation();
       this.updateIntersectingLineAngle();
     };
@@ -171,7 +182,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
   }
 
   updateParallelLineTranlsation() {
-    if (this._line1.isMovable) {
+    if (this._line1.move.type === 'translation') {
       const t1 = this._line1.transform.t();
       const t2 = this._line2.transform.t();
       const r = this._line3.transform.r();

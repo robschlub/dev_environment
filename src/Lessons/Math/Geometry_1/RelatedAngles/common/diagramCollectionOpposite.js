@@ -9,8 +9,9 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import { makeLabeledAngle, makeSupplementaryAngle } from './tools';
-import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
+// import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLabeledAngle, TypeSupplementaryAngle } from './tools';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
@@ -21,8 +22,8 @@ export default class OppositeCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
   diagram: Diagram;
-  _line1: TypeLabeledLine;
-  _line2: TypeLabeledLine;
+  _line1: TypeLine;
+  _line2: TypeLine;
   _angleA: TypeLabeledAngle;
   _angleB: TypeLabeledAngle;
   _angleC: TypeLabeledAngle;
@@ -44,16 +45,12 @@ export default class OppositeCollection extends CommonDiagramCollection {
     eqn: Equation;
   } & DiagramElementCollection;
 
-  makeLine(labelText: string) {
+  makeLine() {
     const lay = this.layout.parallelLine;
     const line = this.diagram.objects.line(
       'center', lay.length.full, lay.width,
       this.layout.colors.line,
     );
-    // const line = makeLabeledLine(
-    //   this.diagram, this.layout.parallelLine,
-    //   this.layout.colors.line, labelText,
-    // );
     line.setMovable(true, 'rotation');
     line.setTransformCallback = (t: Transform) => {
       line.updateMoveTransform(t);
@@ -174,9 +171,9 @@ export default class OppositeCollection extends CommonDiagramCollection {
     // this.diagram = diagram;
     // this.layout = layout;
     this.setPosition(this.layout.position);
-    this.add('line1', this.makeLine(''));
+    this.add('line1', this.makeLine());
     this._line1.setPosition(this.layout.line1.opposite.position.x, 0);
-    this.add('line2', this.makeLine(''));
+    this.add('line2', this.makeLine());
     this._line2.setPosition(this.layout.line2.opposite.position.x, 0);
     this.add('angleA', this.makeAngle('a'));
     this.add('angleB', this.makeAngle('b'));

@@ -320,17 +320,22 @@ class Content extends LessonContent {
       showOnly: [
         threeLines,
         threeLines._line1,
-        threeLines._line1._end1,
-        threeLines._line1._end2,
-        threeLines._line1._mid,
+        // threeLines._line1._end1,
+        // threeLines._line1._end2,
+        // threeLines._line1._mid,
         threeLines._line2,
-        threeLines._line2._end1,
-        threeLines._line2._end2,
-        threeLines._line2._mid,
+        // threeLines._line2._end1,
+        // threeLines._line2._end2,
+        // threeLines._line2._mid,
         threeLines._line3,
-        threeLines._line3._end1,
-        threeLines._line3._end2,
-        threeLines._line3._mid,
+        // threeLines._line3._end1,
+        // threeLines._line3._end2,
+        // threeLines._line3._mid,
+      ],
+      show: [
+        threeLines._line1,
+        threeLines._line2,
+        threeLines._line3,
       ],
     };
     this.addSection(common, {
@@ -441,15 +446,11 @@ class Content extends LessonContent {
       setEnterState: () => {
         threeLines._line1.setColor(layout.colors.line);
         threeLines._line2.setColor(layout.colors.disabled);
-        // threeLines.correspondingTranslateLine1(1, true);
       },
-      // hide: [
-      //   threeLines._line2,
-      // ],
       setSteadyState: () => {
         threeLines.correspondingToggleAngles(true);
-        threeLines._line1.isMovable = true;
-        threeLines._line1.isTouchable = true;
+        threeLines._line1.move.type = 'translation';
+        threeLines._line1.move.element = threeLines._line1;
         threeLines._line1.move.maxTransform.updateTranslation(
           10,
           layout.line1.corresponding.position.y,
@@ -458,17 +459,13 @@ class Content extends LessonContent {
           -10,
           layout.line2.corresponding.position.y,
         );
-        // threeLines.moveLine2ToLine1();
-        threeLines._line2.show();
-        threeLines._line2._end1.show();
-        threeLines._line2._end2.show();
-        threeLines._line2._mid.show();
+        threeLines._line2.showAll();
         threeLines._line2.isTouchable = false;
         threeLines._line2.hasTouchableElements = false;
       },
       setLeaveState: () => {
-        threeLines._line1.isMovable = false;
-        threeLines._line1.isTouchable = false;
+        threeLines._line1.move.type = 'rotation';
+        threeLines._line1.move.element = threeLines;
         threeLines._line2.isTouchable = true;
         threeLines._line2.hasTouchableElements = true;
       },

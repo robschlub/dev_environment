@@ -216,6 +216,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.width = width;
     this.largerTouchBorder = largerTouchBorder;
     this.isTouchDevice = isTouchDevice;
+    this.animateNextFrame = animateNextFrame;
 
     // Calculate and store the line geometry
     //    The length, angle, p1 and p2 properties also exist in this.line,
