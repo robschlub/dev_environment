@@ -409,7 +409,7 @@ class Section {
       this.interactiveElementsOnly.forEach((element) => {
         if (element instanceof DiagramElementCollection
           || element instanceof DiagramElementPrimative) {
-          this.replaceOrAddInteractiveElement(element, 'center');
+          this.replaceOrAddInteractiveElement(element, '');
         } else {
           this.replaceOrAddInteractiveElement(element.element, element.location);
         }
@@ -437,7 +437,7 @@ class Section {
       diagramElements.forEach((element) => {
         this.interactiveElementList.push({
           element,
-          location: 'center',
+          location: '',
         });
       });
     }
@@ -447,7 +447,7 @@ class Section {
       this.interactiveElements.forEach((element) => {
         if (element instanceof DiagramElementCollection
           || element instanceof DiagramElementPrimative) {
-          this.replaceOrAddInteractiveElement(element, 'center');
+          this.replaceOrAddInteractiveElement(element, '');
         } else {
           this.replaceOrAddInteractiveElement(element.element, element.location);
         }
@@ -703,7 +703,6 @@ class LessonContent {
         } else if (location === 'vertexLeft') {
           const borders = element.getVertexSpaceBoundaries();
           let minXPoint;
-          console.log(borders)
           borders.forEach((border) => {
             border.forEach((borderPoint) => {
               if (minXPoint == null) {
@@ -715,9 +714,7 @@ class LessonContent {
           });
           if (minXPoint) {
             minXPoint.y = 0;
-            console.log(minXPoint)
             diagramPosition = element.getVertexSpaceDiagramPosition(minXPoint);
-            console.log()
           } else {
             diagramPosition = new Point(0, 0);
           }
@@ -744,6 +741,11 @@ class LessonContent {
             cssPosition = new Point(
               rect.left - rectBase.left + rect.width * 0.95,
               rect.top - rectBase.top + rect.height * 0.25,
+            );
+          } else if (location === 'vertexLeft') {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * 0.05,
+              rect.top - rectBase.top + rect.height * 0.5,
             );
           } else {
             cssPosition = new Point(

@@ -1,7 +1,7 @@
 // @flow
 import Diagram from '../../../../../js/diagram/Diagram';
 import {
-  Transform, minAngleDiff,
+  Transform, minAngleDiff, Point,
 } from '../../../../../js/diagram/tools/g2';
 import {
   DiagramElementCollection,
@@ -56,6 +56,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
       line.updateMoveTransform(t);
       this.updateOppositeAngles();
     };
+    line.interactiveLocation = lay.interactive;
     return line;
   }
 

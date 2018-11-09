@@ -51,6 +51,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       'center', lay.length.full, lay.width,
       this.layout.colors.line,
     );
+    line.interactiveLocation = lay.interactive;
     // const line = makeLabeledLine(
     //   this.diagram,
     //   this.layout.parallelLine,
@@ -67,6 +68,7 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
       'center', lay.length.full, lay.width,
       this.layout.colors.line,
     );
+    line.interactiveLocation = lay.interactive;
     // const line = makeLabeledLine(
     //   this.diagram,
     //   this.layout.intersectingLine,

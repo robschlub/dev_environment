@@ -17,6 +17,7 @@ export default function lessonLayout() {
     },
     width: 0.02,
     boundary: new Rect(-3, -1.7, 6, 3),
+    interactive: new Point(-len / 3, 0),
   };
   layout.minAngleThreshold = 1;
 

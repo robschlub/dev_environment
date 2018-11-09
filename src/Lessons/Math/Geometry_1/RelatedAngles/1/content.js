@@ -48,14 +48,14 @@ class Content extends LessonContent {
     });
 
     const oppCommon = {
-      interactiveElementsRemove: [
-        opp._line1,
-        opp._line2,
-      ],
-      interactiveElements: [
-        interactiveItem(opp._line1._line, 'vertexLeft'),
-        interactiveItem(opp._line2._line, 'vertexLeft'),
-      ],
+      // interactiveElementsRemove: [
+      //   opp._line1,
+      //   opp._line2,
+      // ],
+      // interactiveElements: [
+      //   interactiveItem(opp._line1),
+      //   interactiveItem(opp._line2),
+      // ],
       setInfo: [
         '<ul>',
         '<li>Drag the lines to rotate and see a different perspective.</li>',
@@ -480,6 +480,9 @@ class Content extends LessonContent {
           When two lines intersect, an |angle| is formed. This angle doesn't change when one line is |moved| without rotation.
         </p>
       `,
+      interactiveElementsRemove: [
+        threeLines._line2,
+      ],
       modifiers: {
         angle: click(threeLines.correspondingToggleAngles, [threeLines, true], colors.angleA),
         moved: click(
@@ -539,6 +542,9 @@ class Content extends LessonContent {
       infoModifiers: {
         Moving: highlight(colors.line),
       },
+      interactiveElementsRemove: [
+        threeLines._line2,
+      ],
       setSteadyState: () => {
         commonCorresponding.setSteadyState();
         threeLines.correspondingToggleAngles(true);
@@ -565,6 +571,9 @@ class Content extends LessonContent {
       infoModifiers: {
         corresponding_angles: highlight(colors.angleA),
       },
+      interactiveElementsRemove: [
+        threeLines._line2,
+      ],
       setEnterState: () => {
         commonCorresponding.setEnterState();
         if (this.comingFrom !== 'prev') {
@@ -656,7 +665,7 @@ class Content extends LessonContent {
     this.addSection(common, {
       setContent: `
         <p>
-          How can you determine the relationship between |alternate_angles|?
+          How can relationship between |alternate_angles| be determined?
         </p>
       `,
       modifiers: {
@@ -864,7 +873,7 @@ class Content extends LessonContent {
         diag._unitsSelector.select(diag.units);
       },
       show: [
-        diag._unitsSelector,
+        diag._unitsSelector, ...common.show,
       ],
       setSteadyState: () => {
         threeLines.interiorShowSupplementary();
@@ -888,7 +897,7 @@ class Content extends LessonContent {
         diag._unitsSelector.select(diag.units);
       },
       show: [
-        diag._unitsSelector,
+        diag._unitsSelector, ...common.show,
       ],
       setSteadyState: () => {
         threeLines.interiorShowInterior();
@@ -920,7 +929,7 @@ class Content extends LessonContent {
         diag._unitsSelector.select(diag.units);
       },
       show: [
-        diag._unitsSelector,
+        diag._unitsSelector, ...common.show,
       ],
       transitionFromAny: (done) => {
         threeLines.moveToFuturePositions(done);
