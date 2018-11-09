@@ -72,7 +72,6 @@ export default class ParallelCollection extends CommonDiagramCollection {
       this.normalizeAngle(line);
       this.checkForParallel();
     };
-    console.log(line)
     return line;
   }
 
