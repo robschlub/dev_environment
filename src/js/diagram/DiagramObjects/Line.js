@@ -40,6 +40,7 @@ export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
 export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
                                       | 'baseUpright';
 
+export type TypeVertexOrigin = 'start' | 'end' | 'center' | number | Point;
 
 class LineLabel extends EquationLabel {
   offset: number;
@@ -369,7 +370,8 @@ export class DiagramObjectLine extends DiagramElementCollection {
   setMultiMovable(middleLengthPercent: number, bounds: Rect) {
     this.multiMove.vertexSpaceMidLength = middleLengthPercent * this.vertexSpaceLength;
     const start = new Point(
-      this.vertexSpaceStart.x + this.vertexSpaceLength / 2 - this.multiMove.vertexSpaceMidLength / 2,
+      this.vertexSpaceStart.x + this.vertexSpaceLength / 2
+      - this.multiMove.vertexSpaceMidLength / 2,
       0,
     );
     const midLine = makeStraightLine(
@@ -461,7 +463,8 @@ export class DiagramObjectLine extends DiagramElementCollection {
         labelOffsetAngle = -Math.PI;
       }
       if (label.location === 'end2') {
-        labelPosition.x = this.vertexSpaceStart.x * this.currentLength + this.currentLength + label.offset;
+        labelPosition.x = this.vertexSpaceStart.x * this.currentLength
+          + this.currentLength + label.offset;
         labelOffsetAngle = 0;
       }
     } else {

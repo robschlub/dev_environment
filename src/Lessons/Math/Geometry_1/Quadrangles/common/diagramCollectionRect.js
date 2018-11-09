@@ -146,10 +146,18 @@ export default class RectCollection extends CommonDiagramCollection {
 
   pulseSideLabels() {
     const scale = 1.8;
-    this._rect._lineA._label.pulseScaleNow(1, scale);
-    this._rect._lineB._label.pulseScaleNow(1, scale);
-    this._rect._lineC._label.pulseScaleNow(1, scale);
-    this._rect._lineD._label.pulseScaleNow(1, scale);
+    if (this._rect._lineA._label) {
+      this._rect._lineA._label.pulseScaleNow(1, scale);
+    }
+    if (this._rect._lineB._label) {
+      this._rect._lineB._label.pulseScaleNow(1, scale);
+    }
+    if (this._rect._lineC._label) {
+      this._rect._lineC._label.pulseScaleNow(1, scale);
+    }
+    if (this._rect._lineD._label) {
+      this._rect._lineD._label.pulseScaleNow(1, scale);
+    }
     this.diagram.animateNextFrame();
   }
 
@@ -249,14 +257,22 @@ export default class RectCollection extends CommonDiagramCollection {
 
   toggleOppositeSides() {
     if (this.oppositeSidesFlag) {
-      this._rect._lineA._label.pulseScaleNow(1, 2);
-      this._rect._lineC._label.pulseScaleNow(1, 2);
+      if (this._rect._lineA._label) {
+        this._rect._lineA._label.pulseScaleNow(1, 2);
+      }
+      if (this._rect._lineC._label) {
+        this._rect._lineC._label.pulseScaleNow(1, 2);
+      }
       this._rect._lineA.pulseWidth();
       this._rect._lineC.pulseWidth();
       this.oppositeSidesFlag = false;
     } else {
-      this._rect._lineB._label.pulseScaleNow(1, 2);
-      this._rect._lineD._label.pulseScaleNow(1, 2);
+      if (this._rect._lineB._label) {
+        this._rect._lineB._label.pulseScaleNow(1, 2);
+      }
+      if (this._rect._lineD._label) {
+        this._rect._lineD._label.pulseScaleNow(1, 2);
+      }
       this._rect._lineB.pulseWidth();
       this._rect._lineD.pulseWidth();
       this.oppositeSidesFlag = true;

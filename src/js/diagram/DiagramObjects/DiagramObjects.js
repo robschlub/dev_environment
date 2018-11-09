@@ -14,6 +14,7 @@ import type {
   TypeLineLabelLocation,
   TypeLineLabelSubLocation,
   TypeLineLabelOrientation,
+  TypeVertexOrigin,
 } from './Line';
 
 export default class DiagramObjects {
@@ -79,7 +80,7 @@ export default class DiagramObjects {
   }
 
   line(
-    referenceOrP1: 'center' | 'end' | Point = 'center',
+    referenceOrP1: TypeVertexOrigin | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,
@@ -124,7 +125,7 @@ export default class DiagramObjects {
   }
 
   lineArrow(
-    referenceOrP1: 'center' | 'end' | Point = 'center',
+    referenceOrP1: TypeVertexOrigin | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,
@@ -145,7 +146,7 @@ export default class DiagramObjects {
   }
 
   lineArrows(
-    referenceOrP1: 'center' | 'start' | Point = 'center',
+    referenceOrP1: TypeVertexOrigin | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,
@@ -162,7 +163,7 @@ export default class DiagramObjects {
   }
 
   lineLabelOnly(
-    referenceOrP1: 'center' | 'end' | Point = 'center',
+    referenceOrP1: TypeVertexOrigin | Point = 'center',
     lengthOrP2: number | Point,
     color: Array<number>,
     labelText: string | Equation | Array<string>,
@@ -187,7 +188,7 @@ export default class DiagramObjects {
   }
 
   lineLabel(
-    referenceOrP1: 'center' | 'end' | Point = 'center',
+    referenceOrP1: TypeVertexOrigin | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,

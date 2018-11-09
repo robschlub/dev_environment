@@ -12,17 +12,18 @@ import {
   makeAnglesClose, checkElementsForParallel,
 } from './tools';
 // import { Line } from '../../../../../js/diagram/DiagramObjects/Line';
-import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
-import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
+// import { makeMoveableLine } from '../../../../LessonsCommon/tools/line';
+// import type { MoveableLineType } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
 export default class ParallelCollection extends CommonDiagramCollection {
   layout: Object;
   colors: Object;
   diagram: LessonDiagram;
-  _line1: MoveableLineType;
-  _line2: MoveableLineType;
-  _line3: MoveableLineType;
+  _line1: TypeLine;
+  _line2: TypeLine;
+  _line3: TypeLine;
 
   checkForParallel(makeRotationEqual: boolean = false) {
     if (!this._line1 || !this._line2) {
@@ -34,7 +35,9 @@ export default class ParallelCollection extends CommonDiagramCollection {
     );
     if (isParallel) {
       this._line1.setColor(this.layout.colors.line);
-      this._line1._midLine.setColor(this.layout.colors.angleA);
+      if (this._line1._midLine) {
+        this._line1._midLine.setColor(this.layout.colors.angleA);
+      }
       this._line2.setColor(this.layout.colors.line);
     } else {
       this._line1.setColor(this.layout.colors.disabled);
