@@ -31,7 +31,8 @@ type TypeInteractiveElement = DiagramElementCollection
                               | string
                               | HTMLElement;
 type TypeInteractiveElementLocation = 'center' | 'zero' | ''
-                                      | 'topleft' | 'topright';
+                                      | 'topleft' | 'topright'
+                                      | 'vertexLeft';
 type TypeInteractiveElements = Array<{
     element: TypeInteractiveElement,
     location: TypeInteractiveElementLocation,
@@ -699,6 +700,27 @@ class LessonContent {
         } else if (location === 'topright') {
           const rect = element.getDiagramBoundingRect();
           diagramPosition = new Point(rect.right, rect.top);
+        } else if (location === 'vertexLeft') {
+          const borders = element.getVertexSpaceBoundaries();
+          let minXPoint;
+          console.log(borders)
+          borders.forEach((border) => {
+            border.forEach((borderPoint) => {
+              if (minXPoint == null) {
+                minXPoint = borderPoint._dup();
+              } else if (minXPoint.x > borderPoint.x) {
+                minXPoint = borderPoint._dup();
+              }
+            });
+          });
+          if (minXPoint) {
+            minXPoint.y = 0;
+            console.log(minXPoint)
+            diagramPosition = element.getVertexSpaceDiagramPosition(minXPoint);
+            console.log()
+          } else {
+            diagramPosition = new Point(0, 0);
+          }
         } else {
           diagramPosition = element
             .getVertexSpaceDiagramPosition(element.interactiveLocation);

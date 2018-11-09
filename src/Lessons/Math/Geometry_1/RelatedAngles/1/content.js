@@ -1,6 +1,6 @@
 // @flow
 import {
-  LessonContent,
+  LessonContent, interactiveItem,
 } from '../../../../../js/Lesson/LessonContent';
 import {
   click, highlight, centerV, unit,
@@ -49,8 +49,12 @@ class Content extends LessonContent {
 
     const oppCommon = {
       interactiveElementsRemove: [
-        opp._line1._mid,
-        opp._line2._mid,
+        opp._line1,
+        opp._line2,
+      ],
+      interactiveElements: [
+        interactiveItem(opp._line1._line, 'vertexLeft'),
+        interactiveItem(opp._line2._line, 'vertexLeft'),
       ],
       setInfo: [
         '<ul>',
@@ -61,7 +65,6 @@ class Content extends LessonContent {
         opp._line1.setColor(colors.line);
         opp._line2.setColor(colors.line);
         diag._unitsSelector.select(diag.units);
-        // diag.setUnits(diag.units);
       },
       showOnly: [
         opp,
