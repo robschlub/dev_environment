@@ -309,7 +309,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     }
     const a = this.shapes.arrow(
       width, 0, height, 0,
-      this.color, new Transform().translate(this.start, 0), new Point(0, 0), r,
+      this.color, new Transform().translate(this.vertexSpaceStart.x, 0), new Point(0, 0), r,
     );
     // $FlowFixMe
     this[`arrow${index}`] = { height };
@@ -369,7 +369,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   setMultiMovable(middleLengthPercent: number, bounds: Rect) {
     this.multiMove.vertexSpaceMidLength = middleLengthPercent * this.vertexSpaceLength;
     const start = new Point(
-      this.start + this.vertexSpaceLength / 2 - this.multiMove.vertexSpaceMidLength / 2,
+      this.vertexSpaceStart.x + this.vertexSpaceLength / 2 - this.multiMove.vertexSpaceMidLength / 2,
       0,
     );
     const midLine = makeStraightLine(
@@ -432,7 +432,9 @@ export class DiagramObjectLine extends DiagramElementCollection {
       this.equation, labelText, this.color,
       offset, location, subLocation, orientation, linePosition,
     );
-    this.add('label', this.label.eqn.collection);
+    if (this.label != null) {
+      this.add('label', this.label.eqn.collection);
+    }
     this.updateLabel();
   }
 
@@ -448,18 +450,18 @@ export class DiagramObjectLine extends DiagramElementCollection {
       label.eqn.reArrangeCurrentForm();
     }
     const labelPosition = new Point(
-      this.start * this.currentLength + label.linePosition * this.currentLength,
+      this.vertexSpaceStart.x * this.currentLength + label.linePosition * this.currentLength,
       0,
     );
     let labelOffsetAngle = Math.PI / 2;
     const labelOffsetMag = label.offset;
     if (label.location === 'end1' || label.location === 'end2') {
       if (label.location === 'end1') {
-        labelPosition.x = this.start * this.currentLength - label.offset;
+        labelPosition.x = this.vertexSpaceStart.x * this.currentLength - label.offset;
         labelOffsetAngle = -Math.PI;
       }
       if (label.location === 'end2') {
-        labelPosition.x = this.start * this.currentLength + this.currentLength + label.offset;
+        labelPosition.x = this.vertexSpaceStart.x * this.currentLength + this.currentLength + label.offset;
         labelOffsetAngle = 0;
       }
     } else {
@@ -526,7 +528,6 @@ export class DiagramObjectLine extends DiagramElementCollection {
         labelAngle = Math.PI;
       }
     }
-
     label.updateRotation(
       labelAngle - parentRotationOffset,
       labelPosition, labelOffsetMag, labelOffsetAngle,
