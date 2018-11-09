@@ -13,9 +13,6 @@ import {
 import EquationLabel from './EquationLabel';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 
-// p1, p2
-// p1, length, angle, 'end' | 'middle',
-
 // top - text is on top of line (except when line is vertical)
 // bottom - text is on bottom of line (except when line is vertical)
 // left - text is to left of line (except when line is horiztonal)
@@ -209,7 +206,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     super(new Transform('Line')
       .scale(1, 1)
       .rotate(0)
-      .translate(0, 0));
+      .translate(0, 0), shapes.limits);
     this.setColor(color);
 
     this.shapes = shapes;

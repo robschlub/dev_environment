@@ -231,7 +231,6 @@ class DiagramElement {
       },
     };
     this.diagramLimits = diagramLimits;
-
     this.move = {
       maxTransform: this.transform.constant(1000),
       minTransform: this.transform.constant(-1000),
@@ -1688,6 +1687,8 @@ class DiagramElement {
   }
 
   getDiagramPosition() {
+    // console.log(this.name, this.getVertexSpaceDiagramPosition(new Point(0, 0)))
+    // console.log(this.transform, this.lastDrawTransform)
     return this.getVertexSpaceDiagramPosition(new Point(0, 0));
     // const location = new Point(0, 0).transformBy(this.lastDrawTransform.matrix());
     // const glSpace = {
