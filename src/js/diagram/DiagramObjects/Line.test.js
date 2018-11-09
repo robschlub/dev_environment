@@ -271,4 +271,40 @@ describe('Diagram', () => {
       expect(line.vertexOrigin).toBe('center');
     });
   });
+  describe('Arrows', () => {
+    let line;
+    let setEndPoints;
+    beforeEach(() => {
+      const position = new Point(0, 0);
+      const length = 1;
+      const angle = 0;
+      const width = 0.2;
+      // const vertexOrigin = 'start';
+      setEndPoints = (px, py, qx, qy, vertexOrigin, offset = 0) => {
+        line = diagram.objects.lineNew(
+          position, length, angle, width, [1, 0, 0, 1],
+          vertexOrigin, true, true,
+        );
+        line.setEndPoints(new Point(px, py), new Point(qx, qy), offset);
+      };
+    });
+    test('0,0 -> 1,0 start', () => {
+      setEndPoints(0, 0, 1, 0, 'start');
+      line.addArrows(0.2, 0.2);
+      expect(line._line.transform.t().isEqualTo(new Point(0.2, 0), 6)).toBe(true);
+      expect(line._line.transform.s().isEqualTo(new Point(0.6, 1), 6)).toBe(true);
+    });
+    test('0,0 -> 1,0 center', () => {
+      setEndPoints(0, 0, 1, 0, 'center');
+      line.addArrows(0.2, 0.2);
+      expect(line._line.transform.t().isEqualTo(new Point(0, 0), 6)).toBe(true);
+      expect(line._line.transform.s().isEqualTo(new Point(0.6, 1), 6)).toBe(true);
+    });
+    test('0,0 -> 1,0 40%', () => {
+      setEndPoints(0, 0, 2, 0, 0.4);
+      line.addArrows(0.2, 0.2);
+      expect(line._line.transform.t().isEqualTo(new Point(0.04, 0), 6)).toBe(true);
+      expect(line._line.transform.s().isEqualTo(new Point(1.6, 1), 6)).toBe(true);
+    });
+  });
 });
