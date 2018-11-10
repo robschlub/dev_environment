@@ -43,7 +43,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   makeLine() {
     const lay = this.layout.line;
-    const line = this.diagram.objects.line(
+    const line = this.diagram.objects.lineOld(
       'center', lay.length.full, lay.width,
       this.layout.colors.line,
     );

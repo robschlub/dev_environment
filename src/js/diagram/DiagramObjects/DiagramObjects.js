@@ -79,7 +79,92 @@ export default class DiagramObjects {
     );
   }
 
+  // linePoints(
+  //   p1: Point,
+  //   p2: Point,
+  //   width: number,
+  //   color: Array<number>,
+  //   vertexOrigin: 'start' | 'end' | 'center' | number | Point = 'start',
+  //   showLine: boolean,
+  //   largerTouchBorder: boolean,
+  //   ) {
+
+  // }
+
+  length
+  width
+  color
+  vertexOrigin
+
+
   line(
+    p1OrPositionOrLength: Point | number,
+    p2OrLengthOrWidth: Point | number,
+    widthOrAngleOrColor: number | Array<number>,
+    colorOrWidthOrVertexOrigin: Array<number> | number | TypeVertexOrigin | null = null,
+    vertexOriginOrColor: TypeVertexOrigin | Array<number> | null = null,
+    showLineOrVertexOrigin: boolean | TypeVertexOrigin | null = null,
+    largerTouchBorderOrShowLine: boolean | null = null,
+    largerTouchBorder: boolean | null = null,
+  ) {
+    let position;
+    let length;
+    let angle;
+    let width;
+    let color;
+    let vertexOrigin;
+    let showLine;
+    let largerTouchBorderToUse;
+    if (p1OrPositionOrLength instanceof Point
+      && p2OrLengthOrWidth instanceof Point) {
+      const p1 = p1OrPositionOrLength;
+      const p2 = p2OrLengthOrWidth;
+      const line = new Line(p1, p2);
+      position = p1OrPositionOrLength;
+      length = line.length();
+      angle = line.angle();
+      width = widthOrAngleOrColor;
+      color = colorOrWidthOrVertexOrigin;
+      vertexOrigin = vertexOriginOrColor;
+      showLine = showLineOrVertexOrigin;
+      largerTouchBorderToUse = largerTouchBorderOrShowLine;
+    } else if (p1OrPositionOrLength instanceof Point
+      && typeof p2OrLengthOrWidth === 'number'
+    ) {
+      position = p1OrPositionOrLength;
+      length = p2OrLengthOrWidth;
+      angle = widthOrAngleOrColor;
+      width = colorOrWidthOrVertexOrigin;
+      color = vertexOriginOrColor;
+      vertexOrigin = showLineOrVertexOrigin;
+      showLine = largerTouchBorderOrShowLine;
+      largerTouchBorderToUse = largerTouchBorder;
+    } else {
+      position = new Point(0, 0);
+      length = p1OrPositionOrLength;
+      width = p2OrLengthOrWidth;
+      color = widthOrAngleOrColor;
+      vertexOrigin = colorOrWidthOrVertexOrigin;
+      showLine = true;
+      largerTouchBorderToUse = true;
+    }
+    if (vertexOrigin == null) {
+      vertexOrigin = 'start';
+    }
+    if (showLine == null) {
+      showLine = true;
+    }
+    if (largerTouchBorderToUse == null) {
+      largerTouchBorderToUse = true;
+    }
+    return new DiagramObjectLine(
+      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      position, length, angle, vertexOrigin, width, color, showLine,
+      largerTouchBorder,
+    );
+  }
+
+  lineOld(
     referenceOrP1: TypeVertexOrigin | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
@@ -133,7 +218,7 @@ export default class DiagramObjects {
     arrowWidth: number = width * 4,
     largerTouchBorder: boolean = true,
   ) {
-    const line = this.line(
+    const line = this.lineOld(
       referenceOrP1, lengthOrP2, width, color,
       true, largerTouchBorder,
     );
@@ -173,7 +258,7 @@ export default class DiagramObjects {
     orientation: TypeLineLabelOrientation = 'horizontal',
     linePosition: number = 0.5,
   ) {
-    const line = this.line(
+    const line = this.lineOld(
       referenceOrP1, lengthOrP2, 0.001, color,
       false, false,
     );
@@ -203,7 +288,7 @@ export default class DiagramObjects {
     //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
     //   referenceOrP1, lengthOrP2, width, color, true, false,
     // );
-    const line = this.line(
+    const line = this.lineOld(
       referenceOrP1, lengthOrP2, width, color,
       true, false,
     );

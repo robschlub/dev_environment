@@ -222,7 +222,7 @@ export default function makeTriangle(
     //   diagram, 'center', 1,
     //   dimensionLineWidth, dimensionColor, showLine,
     // );
-    const dimension = diagram.objects.line(
+    const dimension = diagram.objects.lineOld(
       'center', 1, dimensionLineWidth, dimensionColor, showLine,
     );
     const point1 = triangle[`p${index1}`];
