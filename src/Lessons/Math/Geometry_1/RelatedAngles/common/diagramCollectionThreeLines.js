@@ -13,8 +13,6 @@ import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import type {
   TypeIndexAngle, TypeSupplementaryAngle,
 } from './tools';
-// import { makeLabeledLine } from '../../../../LessonsCommon/tools/line';
-// import type { TypeLabeledLine } from '../../../../LessonsCommon/tools/line';
 import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
