@@ -206,18 +206,18 @@ import type { TypeEquationLabel } from './equationLabel';
 // //           or, if a polygon is defined clockwise, outside will be outside.
 // // inside - text is on right of line when line is vertical from 0 to 1
 // //           or, if a polygon is defined anti-clockwise, outside will be outside.
-// export type TypeLineLabelLocation = 'top' | 'left' | 'bottom' | 'right'
-//                                     | 'end1' | 'end2' | 'outside' | 'inside';
+export type TypeLineLabelLocation = 'top' | 'left' | 'bottom' | 'right'
+                                    | 'end1' | 'end2' | 'outside' | 'inside';
 // // top - text is on top of line if line is horiztonal
 // // bottom - text is on bottom of line if line is horiztonal
 // // left - text is to left of line if line is vertical
 // // right - text is to right of line if line is vertical
-// export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
+export type TypeLineLabelSubLocation = 'top' | 'left' | 'bottom' | 'right';
 // // horizontal - text is always horizontal;
 // // baseToLine - text angle is same as line, with baseline toward line
 // // baseToLine - text angle is same as line, with baseline away from line
 // // baseToLine - text angle is same as line, with text upright
-// export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
+export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
 //                                       | 'baseUpright';
 export const asdf = 6;
 
