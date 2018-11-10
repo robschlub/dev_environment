@@ -115,11 +115,11 @@ export default class TotalAngleTriangleCollection extends CommonDiagramCollectio
 
   addParallelLines() {
     const layout = this.layout.totalAngle.parallelLine;
-    const line1 = this.diagram.objects.line(
+    const line1 = this.diagram.objects.lineOld(
       'end', layout.length, layout.width,
       this.layout.colors.parallelLines, true,
     );
-    const line2 = this.diagram.objects.line(
+    const line2 = this.diagram.objects.lineOld(
       'end', layout.length, layout.width,
       this.layout.colors.parallelLines, true,
     );

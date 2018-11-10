@@ -45,7 +45,7 @@ export default class OppositeCollection extends CommonDiagramCollection {
 
   makeLine() {
     const lay = this.layout.parallelLine;
-    const line = this.diagram.objects.line(
+    const line = this.diagram.objects.lineOld(
       'center', lay.length.full, lay.width,
       this.layout.colors.line,
     );

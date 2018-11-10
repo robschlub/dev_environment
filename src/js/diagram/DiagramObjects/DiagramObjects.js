@@ -1,7 +1,7 @@
 // @flow
 import WebGLInstance from '../webgl/webgl';
 import {
-  Rect, Point,
+  Rect, Point, Line,
 } from '../tools/g2';
 // import {
 //   DiagramElementCollection,
@@ -157,6 +157,7 @@ export default class DiagramObjects {
     if (largerTouchBorderToUse == null) {
       largerTouchBorderToUse = true;
     }
+    console.log(color,)
     return new DiagramObjectLine(
       // $FlowFixMe
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
