@@ -91,10 +91,10 @@ export default class DiagramObjects {
 
   // }
 
-  length
-  width
-  color
-  vertexOrigin
+  // length
+  // width
+  // color
+  // vertexOrigin
 
 
   line(
@@ -158,8 +158,11 @@ export default class DiagramObjects {
       largerTouchBorderToUse = true;
     }
     return new DiagramObjectLine(
+      // $FlowFixMe
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      // $FlowFixMe
       position, length, angle, vertexOrigin, width, color, showLine,
+      // $FlowFixMe
       largerTouchBorder,
     );
   }
