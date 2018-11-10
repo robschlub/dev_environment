@@ -48,9 +48,9 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
 
     this.add('lines', new ThreeLinesCollection(diagram, this.layout));
     this._lines.setPosition(this.layout.quizA1.position);
-    this._lines._line1._label._label.drawingObject.setText('');
-    this._lines._line2._label._label.drawingObject.setText('');
-    this._lines._line3._label._label.drawingObject.setText('');
+    // this._lines._line1._label._label.drawingObject.setText('');
+    // this._lines._line2._label._label.drawingObject.setText('');
+    // this._lines._line3._label._label.drawingObject.setText('');
     this._lines._line1.isMovable = false;
     this._lines._line1.isTouchable = false;
     this._lines._line1.hasTouchableElements = false;
