@@ -273,16 +273,17 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.isTouchDevice = isTouchDevice;
     this.animateNextFrame = animateNextFrame;
 
-    this.offset = 0;
-    this.width = width;
-
     // Calculate and store the line geometry
     //    The length, angle, p1 and p2 properties also exist in this.line,
     //    but are at this level for convenience
+
+    this.offset = 0;
+    this.width = width;
     this.position = position;
-    this.transform.updateTranslation(this.position);
     this.length = length;
     this.angle = angle;
+
+    this.transform.updateTranslation(this.position);
     this.transform.updateRotation(angle);
 
     // Line is defined in vertex space as horiztonal along the x axis.
@@ -628,7 +629,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const line = this._line;
     if (line) {
       line.transform.updateScale(straightLineLength, 1);
-      line.setPosition(startOffset);
+      line.setPosition(startOffset / straightLineLength);
       // if (this.vertexOrigin === 'start') {
       //   line.setPosition(straightLineStart, 0);
       // } else if (this.vertexOrigin === 'end') {
@@ -657,8 +658,8 @@ export class DiagramObjectLine extends DiagramElementCollection {
     if (t != null && r != null) {
       this.position = t;
       this.angle = r;
-      let p1 = this.position;
-      let line = new Line(p1, this.length, this.angle);
+      const p1 = this.position;
+      const line = new Line(p1, this.length, this.angle);
       // if (this.vertexOrigin === 'center') {
       //   p1 = this.position
       //     .add(polarToRect(this.length / 2, this.angle + Math.PI));
@@ -680,35 +681,49 @@ export class DiagramObjectLine extends DiagramElementCollection {
     }
   }
 
-  setEndPoints(p: Point, q: Point, offset: number = this.offset) {
-    this.offset = offset;
-    const pq = new Line(p, q);
-    this.angle = pq.angle();
-    this.length = pq.length();
-
-    this.position = p;
-    if (this.vertexOrigin === 'center') {
-      this.position = pq.midpoint();
-    } else if (this.vertexOrigin === 'end') {
-      this.position = q;
-    } else if (typeof this.vertexOrigin === 'number') {
-      this.position = p.add(polarToRect(this.vertexOrigin * this.length, this.angle));
-    } else if (this.vertexOrigin instanceof Point) {
-      this.position = p.add(this.vertexOrigin);
-    }
-    // this.updateLineGeometry();
-
-    // const newLength = distance(q, p);
-    // const pq = new Line(p, q);
-    this.transform.updateRotation(pq.angle());
-    const offsetdelta = polarToRect(offset, pq.angle() + Math.PI / 2);
-    // if (this.reference === 'center') {
-    this.transform.updateTranslation(this.position.add(offsetdelta));
-    // } else {
-    //   this.transform.updateTranslation(p.add(offsetdelta));
-    // }
+  setLineDimensions() {
+    const offset = polarToRect(this.offset, this.angle + Math.PI / 2);
+    this.transform.updateTranslation(this.position.add(offset));
+    this.transform.updateRotation(this.angle);
     this.setLength(this.length);
     this.updateLabel();
+  }
+
+  setEndPoints(p: Point, q: Point, offset: number = this.offset) {
+    this.offset = offset;
+    const { length, angle, position } = this.calculateFromP1P2(p, q);
+    this.angle = angle;
+    this.length = length;
+    this.position = position;
+    this.setLineDimensions();
+
+    // const pq = new Line(p, q);
+    // this.angle = pq.angle();
+    // this.length = pq.length();
+
+    // this.position = p;
+    // if (this.vertexOrigin === 'center') {
+    //   this.position = pq.midpoint();
+    // } else if (this.vertexOrigin === 'end') {
+    //   this.position = q;
+    // } else if (typeof this.vertexOrigin === 'number') {
+    //   this.position = p.add(polarToRect(this.vertexOrigin * this.length, this.angle));
+    // } else if (this.vertexOrigin instanceof Point) {
+    //   this.position = p.add(this.vertexOrigin);
+    // }
+    // // this.updateLineGeometry();
+
+    // // const newLength = distance(q, p);
+    // // const pq = new Line(p, q);
+    // this.transform.updateRotation(pq.angle());
+    // const offsetdelta = polarToRect(offset, pq.angle() + Math.PI / 2);
+    // // if (this.reference === 'center') {
+    // this.transform.updateTranslation(this.position.add(offsetdelta));
+    // // } else {
+    // //   this.transform.updateTranslation(p.add(offsetdelta));
+    // // }
+    // this.setLength(this.length);
+    // this.updateLabel();
   }
 
   animateLengthTo(
