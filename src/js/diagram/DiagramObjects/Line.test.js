@@ -249,7 +249,7 @@ describe('Diagram', () => {
       expect(line.position.isEqualTo(new Point(-1.5, -1.5))).toBe(true);
       // expect(line.vertexOrigin).toBe('start');
     });
-    test.only('1,1 -> 3,3 with vertexOrigin = center', () => {
+    test('1,1 -> 3,3 with vertexOrigin = center', () => {
       setEndPoints(1, 1, 3, 3, 'center');
       expect(line._line.drawingObject.points).toEqual([
         -0.5, -0.1,

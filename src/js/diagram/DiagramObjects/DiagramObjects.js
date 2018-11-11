@@ -157,7 +157,6 @@ export default class DiagramObjects {
     if (largerTouchBorderToUse == null) {
       largerTouchBorderToUse = true;
     }
-    console.log(color,)
     return new DiagramObjectLine(
       // $FlowFixMe
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
