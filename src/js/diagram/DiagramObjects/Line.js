@@ -39,6 +39,40 @@ export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
 
 export type TypeVertexOrigin = 'start' | 'end' | 'center' | number | Point;
 
+// Line is a class that manages:
+//   A straight line
+//   Arrows
+//   Label
+//   Future: Dimension posts
+//
+// In vertex space, a line is defined as:
+//   - horizontal
+//   - length 1
+//   - width defined by user
+//   - left side (start) of line defined at a point by user
+//
+// To give the line a custom position, length and angle, the main
+// class's transform is used:
+//   - Translation for vertex space origin position
+//   - Scale for line length
+//   - Rotation for line angle
+//
+// In vertex space, a line would normally be positioned along the x axis.
+//
+//
+// A line can be defined in three ways:
+//   - p1, p2, width, vertexSpaceStart
+//      - width and vertexSpaceStart used to calculate vertex line
+//      - p1, p2 used to calculate length, angle, position
+//      - length, angle, position used to modify transform
+//   - Length, angle, width, vertexSpaceStart, position of vertexSpaceOrigin
+//      - width and vertexSpaceStart used to calculate vertex line
+//      - Length, angle, position used to modify transform
+//   - p1, length, angle, width, vertexSpaceStart
+//      - width and vertexSpaceStart used to calculate vertex line
+//      - p1 used to calculate position
+//      - length, angle, position used to modify transform
+
 class LineLabel extends EquationLabel {
   offset: number;
   location: TypeLineLabelLocation;
@@ -188,6 +222,30 @@ export class DiagramObjectLine extends DiagramElementCollection {
     vertexSpaceMidLength: number;
     bounds: Rect,
   };
+
+  calculateFromP1LengthAngle(
+    p1: Point,
+    length: number,
+    angle: number,
+  ) {
+    const t = new Transform().scale(length, 1).rotate(angle);
+    const startTransformed = this.vertexSpaceStart.transformBy(t.matrix());
+    const position = p1.sub(startTransformed);
+    return { length, angle, position };
+  }
+
+  calculateFromP1P2(
+    p1: Point,
+    p2: Point,
+  ) {
+    const line = new Line(p1, p2);
+    const length = line.length();
+    const angle = line.angle();
+    const t = new Transform().scale(length, 1).rotate(angle);
+    const startTransformed = this.vertexSpaceStart.transformBy(t.matrix());
+    const position = p1.sub(startTransformed);
+    return { length, angle, position };
+  }
 
   constructor(
     shapes: Object,
