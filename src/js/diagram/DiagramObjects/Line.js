@@ -629,7 +629,12 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const line = this._line;
     if (line) {
       line.transform.updateScale(straightLineLength, 1);
-      line.setPosition(startOffset / straightLineLength);
+      // if (this.vertexSpaceStart.x !== -0.5) {
+        // line.setPosition(startOffset / lineLength, 0);
+      const newStart = this.vertexSpaceStart.x * straightLineLength;
+      const delta = lineStart + startOffset - newStart;
+      line.setPosition(delta, 0);
+      // }
       // if (this.vertexOrigin === 'start') {
       //   line.setPosition(straightLineStart, 0);
       // } else if (this.vertexOrigin === 'end') {
