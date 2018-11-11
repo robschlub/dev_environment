@@ -630,7 +630,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     if (line) {
       line.transform.updateScale(straightLineLength, 1);
       // if (this.vertexSpaceStart.x !== -0.5) {
-        // line.setPosition(startOffset / lineLength, 0);
+      // line.setPosition(startOffset / lineLength, 0);
       const newStart = this.vertexSpaceStart.x * straightLineLength;
       const delta = lineStart + startOffset - newStart;
       line.setPosition(delta, 0);
@@ -663,7 +663,13 @@ export class DiagramObjectLine extends DiagramElementCollection {
     if (t != null && r != null) {
       this.position = t;
       this.angle = r;
-      const p1 = this.position;
+      const p1 = this.vertexSpaceStart.transformBy(new Transform()
+        .scale(this.length)
+        .rotate(this.angle)
+        .translate(this.position)
+        .m());
+      // const p2 = p1.add(polarToRect(this.length, this.angle));
+      // const p1 = this.position;
       const line = new Line(p1, this.length, this.angle);
       // if (this.vertexOrigin === 'center') {
       //   p1 = this.position

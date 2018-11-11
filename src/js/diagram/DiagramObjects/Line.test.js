@@ -261,8 +261,7 @@ describe('Diagram', () => {
       expect(line._line.transform.s()
         .isEqualTo(new Point(Math.sqrt(2) * 2, 1), 6)).toBe(true);
       expect(round(line.transform.r(), 6)).toBe(round(Math.PI / 4, 6));
-      console.log(line.transform.t())
-      expect(line.transform.t().isEqualTo(new Point(1, 1))).toBe(true);
+      expect(line.transform.t().isEqualTo(new Point(2, 2))).toBe(true);
       expect(line.p1.isEqualTo(new Point(1, 1), 6)).toBe(true);
       expect(line.p2.isEqualTo(new Point(3, 3), 6)).toBe(true);
       expect(round(line.length, 6)).toBe(round(Math.sqrt(2) * 2, 6));
