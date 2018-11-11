@@ -614,12 +614,10 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const lineLength = newLength;
     let straightLineLength = lineLength;
     let startOffset = 0;
-    // let arrow1 = 0;
 
     if (this.arrow1 && this._arrow1) {
       straightLineLength -= this.arrow1.height;
       startOffset = this.arrow1.height;
-      // arrow1 = this.arrow1.height;
       this._arrow1.setPosition(lineStart);
     }
     if (this.arrow2 && this._arrow2) {
@@ -629,21 +627,9 @@ export class DiagramObjectLine extends DiagramElementCollection {
     const line = this._line;
     if (line) {
       line.transform.updateScale(straightLineLength, 1);
-      // if (this.vertexSpaceStart.x !== -0.5) {
-      // line.setPosition(startOffset / lineLength, 0);
       const newStart = this.vertexSpaceStart.x * straightLineLength;
       const delta = lineStart + startOffset - newStart;
       line.setPosition(delta, 0);
-      // }
-      // if (this.vertexOrigin === 'start') {
-      //   line.setPosition(straightLineStart, 0);
-      // } else if (this.vertexOrigin === 'end') {
-      //   line.setPosition(-straightLineStart, 0);
-      // } else if (typeof this.vertexOrigin === 'number') {
-      //   const newStart = this.vertexSpaceStart.x * straightLineLength;
-      //   const delta = lineStart + arrow1 - newStart;
-      //   line.setPosition(delta, 0);
-      // }
     }
 
     const midLine = this._midLine;
@@ -668,24 +654,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
         .rotate(this.angle)
         .translate(this.position)
         .m());
-      // const p2 = p1.add(polarToRect(this.length, this.angle));
-      // const p1 = this.position;
       const line = new Line(p1, this.length, this.angle);
-      // if (this.vertexOrigin === 'center') {
-      //   p1 = this.position
-      //     .add(polarToRect(this.length / 2, this.angle + Math.PI));
-      //   line = new Line(p1, this.length, this.angle);
-      // } else if (this.vertexOrigin === 'end') {
-      //   p1 = this.position.add(polarToRect(this.length, this.angle + Math.PI));
-      //   line = new Line(p1, this.length, this.angle);
-      // } else if (typeof this.vertexOrigin === 'number') {
-      //   p1 = this.position
-      //     .add(polarToRect(this.length * this.vertexOrigin, this.angle + Math.PI));
-      //   line = new Line(p1, this.length, this.angle);
-      // } else if (this.vertexOrigin instanceof Point) {
-      //   p1 = this.position.add(this.vertexOrigin);
-      //   line = new Line(p1, this.length, this.angle);
-      // }
       this.p1 = line.getPoint(1);
       this.p2 = line.getPoint(2);
       this.line = line;
