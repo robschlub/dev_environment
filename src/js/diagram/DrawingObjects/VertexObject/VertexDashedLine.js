@@ -23,6 +23,9 @@ function makeDash(
 
 class VertexDashedLine extends VertexObject {
   start: Point;
+  dashCumLength: Array<number>;
+  maxLength: number;
+
   constructor(
     webgl: WebGLInstance,
     start: Point = new Point(0, 0),
@@ -33,7 +36,8 @@ class VertexDashedLine extends VertexObject {
   ): void {
     super(webgl);
     this.glPrimative = this.gl.TRIANGLES;
-
+    this.dashCumLength = [];
+    this.maxLength = maxLength;
     const cx = 0;
     const cy = 0 - width / 2.0;
     const points = [];
@@ -56,6 +60,7 @@ class VertexDashedLine extends VertexObject {
         cumLength += length;
         startVertex.x += length;
         isGap = !isGap;
+        this.dashCumLength.push(cumLength);
       }
     }
 
@@ -67,12 +72,6 @@ class VertexDashedLine extends VertexObject {
       this.points.push(p.x);
       this.points.push(p.y);
     });
-    // for (let i = 0; i < this.points.length; i += 2) {
-    //   const p = (new Point(this.points[i], this.points[i + 1]))
-    //     .transformBy(t.matrix());
-    //   this.points[i] = p.x;
-    //   this.points[i + 1] = p.y;
-    // }
 
     // const p = this.points;
     this.border[0] = [
@@ -80,16 +79,23 @@ class VertexDashedLine extends VertexObject {
       transformedPoints[1],
       transformedPoints[transformedPoints.length - 2],
       transformedPoints[transformedPoints.length - 1],
-      // new Point(p[0], p[1]),
-      // new Point(p[2], p[3]),
-      // new Point(p[6], p[7]),
-      // new Point(p[4], p[5]),
     ];
-    // for (let i = 0; i < this.points.length; i += 2) {
-    //   this.border[0].push(new Point(this.points[i], this.points[i + 1]));
-    // }
+
     this.border[0].push(this.border[0][0]._dup());
     this.setupBuffer();
+  }
+
+  getPointCountForLength(drawLength: number = this.maxLength) {
+    if (drawLength >= this.maxLength) {
+      return this.numPoints;
+    }
+    for (let i = 0; i < this.dashCumLength.length; i += 1) {
+      const cumLength = this.dashCumLength[i];
+      if (cumLength > drawLength) {
+        return i * 6;
+      }
+    }
+    return this.numPoints;
   }
 }
 

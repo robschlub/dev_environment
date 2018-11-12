@@ -154,6 +154,12 @@ class VertexObject extends DrawingObject {
     return this.numPoints * drawAngle / (Math.PI * 2);
   }
 
+  // Abstract method - should be reimplemented for any vertexObjects that
+  // eslint-disable-next-line no-unused-vars
+  getPointCountForLength(drawLength: number) {
+    return this.numPoints;
+  }
+
   createTextureMap(
     xMinGL: number = -1,
     xMaxGL: number = 1,

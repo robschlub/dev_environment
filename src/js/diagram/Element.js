@@ -1874,6 +1874,7 @@ class DiagramElementPrimative extends DiagramElement {
   color: Array<number>;
   pointsToDraw: number;
   angleToDraw: number;
+  lengthToDraw: number;
   cannotTouchHole: boolean;
 
   constructor(
@@ -1887,6 +1888,7 @@ class DiagramElementPrimative extends DiagramElement {
     this.color = color.slice();
     this.pointsToDraw = -1;
     this.angleToDraw = -1;
+    this.lengthToDraw = -1;
     this.cannotTouchHole = false;
     // this.setMoveBoundaryToDiagram();
   }
@@ -2029,6 +2031,9 @@ class DiagramElementPrimative extends DiagramElement {
         pointCount = this.drawingObject.numPoints;
         if (this.angleToDraw !== -1) {
           pointCount = this.drawingObject.getPointCountForAngle(this.angleToDraw);
+        }
+        if (this.lengthToDraw !== -1) {
+          pointCount = this.drawingObject.getPointCountForLength(this.lengthToDraw);
         }
         if (this.pointsToDraw !== -1) {
           pointCount = this.pointsToDraw;
