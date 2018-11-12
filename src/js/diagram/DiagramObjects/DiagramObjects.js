@@ -14,7 +14,8 @@ import type {
   TypeLineLabelLocation,
   TypeLineLabelSubLocation,
   TypeLineLabelOrientation,
-  TypeVertexOrigin,
+  TypeVertexSpaceStart,
+  TypeLineOptions,
 } from './Line';
 
 export default class DiagramObjects {
@@ -62,6 +63,13 @@ export default class DiagramObjects {
   //   angle: number,
   //   reference:
   //   )
+  line(options: TypeLineOptions = {}) {
+    return new DiagramObjectLine(
+      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+      options,
+    );
+  }
+
   lineNew(
     position: Point,
     length: number,
@@ -105,84 +113,84 @@ export default class DiagramObjects {
   // vertexOrigin
 
 
-  line(
-    p1OrPositionOrLength: Point | number,
-    p2OrLengthOrWidth: Point | number,
-    widthOrAngleOrColor: number | Array<number>,
-    colorOrWidthOrVertexOrigin: Array<number> | number | TypeVertexOrigin | null = null,
-    vertexOriginOrColor: TypeVertexOrigin | Array<number> | null = null,
-    showLineOrVertexOrigin: boolean | TypeVertexOrigin | null = null,
-    largerTouchBorderOrShowLine: boolean | null = null,
-    largerTouchBorder: boolean | null = null,
-  ) {
-    let position = new Point(0, 0);
-    let length = 1;
-    let angle = 0;
-    let width = 0.01;
-    let color = [1, 0, 0, 1];
-    let vertexOrigin = 'start';
-    let showLine = true;
-    let largerTouchBorderToUse = true;
-    if (p1OrPositionOrLength instanceof Point
-      && p2OrLengthOrWidth instanceof Point) {
-      const p1 = p1OrPositionOrLength;
-      const p2 = p2OrLengthOrWidth;
-      const line = new Line(p1, p2);
-      position = p1OrPositionOrLength;
-      length = line.length();
-      angle = line.angle();
-      width = widthOrAngleOrColor;
-      color = colorOrWidthOrVertexOrigin;
-      vertexOrigin = vertexOriginOrColor;
-      showLine = showLineOrVertexOrigin;
-      largerTouchBorderToUse = largerTouchBorderOrShowLine;
-    } else if (p1OrPositionOrLength instanceof Point
-      && typeof p2OrLengthOrWidth === 'number'
-    ) {
-      position = p1OrPositionOrLength;
-      length = p2OrLengthOrWidth;
-      angle = widthOrAngleOrColor;
-      width = colorOrWidthOrVertexOrigin;
-      color = vertexOriginOrColor;
-      vertexOrigin = showLineOrVertexOrigin;
-      showLine = largerTouchBorderOrShowLine;
-      largerTouchBorderToUse = largerTouchBorder;
-    } else {
-      position = new Point(0, 0);
-      length = p1OrPositionOrLength;
-      width = p2OrLengthOrWidth;
-      color = widthOrAngleOrColor;
-      vertexOrigin = colorOrWidthOrVertexOrigin;
-      showLine = true;
-      largerTouchBorderToUse = true;
-    }
-    if (vertexOrigin == null) {
-      vertexOrigin = 'start';
-    }
-    if (showLine == null) {
-      showLine = true;
-    }
-    if (largerTouchBorderToUse == null) {
-      largerTouchBorderToUse = true;
-    }
-    return new DiagramObjectLine(
-      // $FlowFixMe
-      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      {
-        position,
-        length,
-        angle,
-        vertexOrigin,
-        width,
-        color,
-        showLine,
-        largerTouchBorder,
-      },
-    );
-  }
+  // line(
+  //   p1OrPositionOrLength: Point | number,
+  //   p2OrLengthOrWidth: Point | number,
+  //   widthOrAngleOrColor: number | Array<number>,
+  //   colorOrWidthOrVertexOrigin: Array<number> | number | TypeVertexSpaceStart | null = null,
+  //   vertexOriginOrColor: TypeVertexOrigin | Array<number> | null = null,
+  //   showLineOrVertexOrigin: boolean | TypeVertexOrigin | null = null,
+  //   largerTouchBorderOrShowLine: boolean | null = null,
+  //   largerTouchBorder: boolean | null = null,
+  // ) {
+  //   let position = new Point(0, 0);
+  //   let length = 1;
+  //   let angle = 0;
+  //   let width = 0.01;
+  //   let color = [1, 0, 0, 1];
+  //   let vertexOrigin = 'start';
+  //   let showLine = true;
+  //   let largerTouchBorderToUse = true;
+  //   if (p1OrPositionOrLength instanceof Point
+  //     && p2OrLengthOrWidth instanceof Point) {
+  //     const p1 = p1OrPositionOrLength;
+  //     const p2 = p2OrLengthOrWidth;
+  //     const line = new Line(p1, p2);
+  //     position = p1OrPositionOrLength;
+  //     length = line.length();
+  //     angle = line.angle();
+  //     width = widthOrAngleOrColor;
+  //     color = colorOrWidthOrVertexOrigin;
+  //     vertexOrigin = vertexOriginOrColor;
+  //     showLine = showLineOrVertexOrigin;
+  //     largerTouchBorderToUse = largerTouchBorderOrShowLine;
+  //   } else if (p1OrPositionOrLength instanceof Point
+  //     && typeof p2OrLengthOrWidth === 'number'
+  //   ) {
+  //     position = p1OrPositionOrLength;
+  //     length = p2OrLengthOrWidth;
+  //     angle = widthOrAngleOrColor;
+  //     width = colorOrWidthOrVertexOrigin;
+  //     color = vertexOriginOrColor;
+  //     vertexOrigin = showLineOrVertexOrigin;
+  //     showLine = largerTouchBorderOrShowLine;
+  //     largerTouchBorderToUse = largerTouchBorder;
+  //   } else {
+  //     position = new Point(0, 0);
+  //     length = p1OrPositionOrLength;
+  //     width = p2OrLengthOrWidth;
+  //     color = widthOrAngleOrColor;
+  //     vertexOrigin = colorOrWidthOrVertexOrigin;
+  //     showLine = true;
+  //     largerTouchBorderToUse = true;
+  //   }
+  //   if (vertexOrigin == null) {
+  //     vertexOrigin = 'start';
+  //   }
+  //   if (showLine == null) {
+  //     showLine = true;
+  //   }
+  //   if (largerTouchBorderToUse == null) {
+  //     largerTouchBorderToUse = true;
+  //   }
+  //   return new DiagramObjectLine(
+  //     // $FlowFixMe
+  //     this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //     {
+  //       position,
+  //       length,
+  //       angle,
+  //       vertexOrigin,
+  //       width,
+  //       color,
+  //       showLine,
+  //       largerTouchBorder,
+  //     },
+  //   );
+  // }
 
   lineOld(
-    referenceOrP1: TypeVertexOrigin | Point = 'center',
+    referenceOrP1: TypeVertexSpaceStart | Point = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,
@@ -232,7 +240,7 @@ export default class DiagramObjects {
   }
 
   lineArrow(
-    referenceOrP1: TypeVertexOrigin | Point = 'center',
+    referenceOrP1: TypeVertexSpaceStart = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,
@@ -253,7 +261,7 @@ export default class DiagramObjects {
   }
 
   lineArrows(
-    referenceOrP1: TypeVertexOrigin | Point = 'center',
+    referenceOrP1: TypeVertexSpaceStart = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,
@@ -270,7 +278,7 @@ export default class DiagramObjects {
   }
 
   lineLabelOnly(
-    referenceOrP1: TypeVertexOrigin | Point = 'center',
+    referenceOrP1: TypeVertexSpaceStart = 'center',
     lengthOrP2: number | Point,
     color: Array<number>,
     labelText: string | Equation | Array<string>,
@@ -295,7 +303,7 @@ export default class DiagramObjects {
   }
 
   lineLabel(
-    referenceOrP1: TypeVertexOrigin | Point = 'center',
+    referenceOrP1: TypeVertexSpaceStart = 'center',
     lengthOrP2: number | Point,
     width: number,
     color: Array<number>,

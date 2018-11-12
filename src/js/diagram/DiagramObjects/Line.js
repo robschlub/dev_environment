@@ -40,6 +40,20 @@ export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
 export type TypeVertexOrigin = 'start' | 'end' | 'center' | number | Point;
 export type TypeVertexSpaceStart = 'start' | 'end' | 'center' | number | Point;
 
+export type TypeLineOptions = {
+  position?: Point,
+  length?: number,
+  angle?: number,
+  width?: number,
+  vertexSpaceStart?: 'start' | 'end' | 'center' | number | Point,
+  color?: Array<number>,
+  showLine?: boolean,
+  largerTouchBorder?: boolean,
+  offset?: number,
+  p1?: Point,
+  p2?: Point,
+};
+
 // Line is a class that manages:
 //   A straight line
 //   Arrows
@@ -253,25 +267,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     equation: Object,
     isTouchDevice: boolean,
     animateNextFrame: void => void,
-    options: {
-      position?: Point,
-      length?: number,
-      angle?: number,
-      width?: number,
-      vertexSpaceStart?: 'start' | 'end' | 'center' | number | Point,
-      color?: Array<number>,
-      showLine?: boolean,
-      largerTouchBorder?: boolean,
-      offset?: number,
-    } = {},
-    // position: Point,
-    // length: number,
-    // angle: number,
-    // vertexSpaceStart: 'start' | 'end' | 'center' | number | Point,
-    // width: number,
-    // color: Array<number>,
-    // showLine: boolean = true,
-    // largerTouchBorder: boolean = true,
+    options: TypeLineOptions = {},
   ) {
     const defaultOptions = {
       position: new Point(0, 0),
@@ -284,7 +280,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
       largerTouchBorder: true,
       offset: 0,
     };
-    const optionsToUse = Object.assign(defaultOptions, options);
+    const optionsToUse = Object.assign({}, defaultOptions, options);
 
     super(new Transform('Line')
       .scale(1, 1)
@@ -362,6 +358,10 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this._label = null;
 
     this.setLength(this.length);
+
+    if (optionsToUse.p1 != null && optionsToUse.p2 != null) {
+      this.setEndPoints(optionsToUse.p1, optionsToUse.p2);
+    }
   }
 
   pulseWidth() {

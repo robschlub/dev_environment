@@ -218,17 +218,18 @@ export default function makeTriangle(
     showLine: boolean = false,
     dimensionLineWidth: number = 0.01,
   ) {
-    // const dimension = makeLine(
-    //   diagram, 'center', 1,
-    //   dimensionLineWidth, dimensionColor, showLine,
-    // );
-    const dimension = diagram.objects.lineOld(
-      'center', 1, dimensionLineWidth, dimensionColor, showLine,
-    );
     const point1 = triangle[`p${index1}`];
     const point2 = triangle[`p${index2}`];
-    dimension.setEndPoints(point1, point2, offset);
-    // dimension.offset = offset;
+    const dimension = diagram.objects.line({
+      vertexSpaceStart: 'center',
+      p1: point1,
+      p2: point2,
+      width: dimensionLineWidth,
+      color: dimensionColor,
+      showLine,
+      offset,
+    });
+
     triangle.add(`dimension${index1}${index2}`, dimension);
     triangle.dimensionList.push([index1, index2]);
     return dimension;
