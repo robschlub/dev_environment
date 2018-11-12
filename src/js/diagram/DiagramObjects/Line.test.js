@@ -109,10 +109,16 @@ describe('Diagram', () => {
       length = 2;
       angle = 5;
       width = 0.2;
-      makeLine = vertexOrigin => diagram.objects.lineNew(
-        position, length, angle, width, [1, 0, 0, 1],
-        vertexOrigin, true, true,
-      );
+      makeLine = vertexOrigin => diagram.objects.line({
+        position,
+        length,
+        angle,
+        width,
+        color: [1, 0, 0, 1],
+        vertexSpaceStart: vertexOrigin,
+        showLine: true,
+        largerTouchBorder: true,
+      });
     });
     test('End', () => {
       const line = makeLine('end');
@@ -167,10 +173,16 @@ describe('Diagram', () => {
       // const angle = 0;
       const width = 0.2;
       const vertexOrigin = 'start';
-      makeLine = (position, angle, length) => diagram.objects.lineNew(
-        position, length, angle, width, [1, 0, 0, 1],
-        vertexOrigin, true, true,
-      );
+      makeLine = (position, angle, length) => diagram.objects.line({
+        position,
+        length,
+        angle,
+        width,
+        color: [1, 0, 0, 1],
+        vertexSpaceStart: vertexOrigin,
+        showLine: true,
+        largerTouchBorder: true,
+      });
     });
     test('(0, 0)', () => {
       const line = makeLine(new Point(0, 0), 0, 2);
@@ -201,10 +213,16 @@ describe('Diagram', () => {
       const width = 0.2;
       // const vertexOrigin = 'start';
       setEndPoints = (px, py, qx, qy, vertexOrigin, offset = 0) => {
-        line = diagram.objects.lineNew(
-          position, length, angle, width, [1, 0, 0, 1],
-          vertexOrigin, true, true,
-        );
+        line = diagram.objects.line({
+          position,
+          length,
+          angle,
+          width,
+          color: [1, 0, 0, 1],
+          vertexSpaceStart: vertexOrigin,
+          showLine: true,
+          largerTouchBorder: true,
+        });
         line.setEndPoints(new Point(px, py), new Point(qx, qy), offset);
       };
     });
@@ -280,10 +298,16 @@ describe('Diagram', () => {
       const width = 0.2;
       // const vertexOrigin = 'start';
       setEndPoints = (px, py, qx, qy, vertexOrigin, offset = 0) => {
-        line = diagram.objects.lineNew(
-          position, length, angle, width, [1, 0, 0, 1],
-          vertexOrigin, true, true,
-        );
+        line = diagram.objects.line({
+          position,
+          length,
+          angle,
+          width,
+          color: [1, 0, 0, 1],
+          vertexSpaceStart: vertexOrigin,
+          showLine: true,
+          largerTouchBorder: true,
+        });
         line.setEndPoints(new Point(px, py), new Point(qx, qy), offset);
       };
     });

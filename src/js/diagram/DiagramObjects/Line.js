@@ -123,6 +123,7 @@ function makeStraightLine(
   largerTouchBorder: boolean,
   isTouchDevice: boolean,
 ) {
+  console.log(color)
   const straightLine = shapes.horizontalLine(
     position,
     length, width,
@@ -473,9 +474,10 @@ export class DiagramObjectLine extends DiagramElementCollection {
     );
     const midLine = makeStraightLine(
       this.shapes, this.multiMove.vertexSpaceMidLength, this.width,
-      start, [1, 0, 0, 0], // this.color,
+      start, this.color,
       this.largerTouchBorder, this.isTouchDevice,
     );
+    // console.log(midLine)
     midLine.isTouchable = true;
     midLine.move.type = 'translation';
     midLine.move.element = this;

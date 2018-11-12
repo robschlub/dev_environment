@@ -55,10 +55,12 @@ export default class ParallelCollection extends CommonDiagramCollection {
 
   makeLine() {
     const lay = this.layout.line;
-    const line = this.diagram.objects.lineOld(
-      'center', lay.length.full, lay.width,
-      this.layout.colors.line,
-    );
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: lay.length.full,
+      width: lay.width,
+      color: this.layout.colors.line,
+    });
     // line.setMultiMovable(0.33, lay.boundary);
     line.setMovable(true, 'centerTranslateEndRotation', 0.33, lay.boundary);
     line.setTransformCallback = (t: Transform) => {
