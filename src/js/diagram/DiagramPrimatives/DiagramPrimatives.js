@@ -22,6 +22,7 @@ import {
 } from '../DiagramElements/Polygon';
 import RadialLines from '../DiagramElements/RadialLines';
 import HorizontalLine from '../DiagramElements/HorizontalLine';
+import DashedLine from '../DiagramElements/DashedLine';
 import RectangleFilled from '../DiagramElements/RectangleFilled';
 import type { TypeRectangleFilledReference } from '../DiagramElements/RectangleFilled';
 import Lines from '../DiagramElements/Lines';
@@ -272,6 +273,21 @@ export default class DiagramPrimatives {
     return HorizontalLine(
       this.webgl, start, length, width,
       rotation, color, transform, this.limits,
+    );
+  }
+
+  dashedLine(
+    start: Point,
+    length: number,
+    width: number,
+    rotation: number,
+    dashStyle: Array<number>,
+    color: Array<number>,
+    transform: Transform | Point = new Transform(),
+  ) {
+    return DashedLine(
+      this.webgl, start, length, width,
+      rotation, dashStyle, color, transform, this.limits,
     );
   }
 

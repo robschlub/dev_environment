@@ -143,10 +143,10 @@ function makeStraightLine(
   largerTouchBorder: boolean,
   isTouchDevice: boolean,
 ) {
-  const straightLine = shapes.horizontalLine(
+  const straightLine = shapes.dashedLine(
     position,
     length, width,
-    0, color, new Transform().scale(1, 1).translate(0, 0),
+    0, [0.02, 0.02, 0.2, 0.02], color, new Transform().scale(1, 1).translate(0, 0),
   );
   if (largerTouchBorder) {
     const multiplier = isTouchDevice ? 16 : 8;
