@@ -58,10 +58,13 @@ export default function makeSlider(
     0, options.colorNeg, new Transform().rotate(Math.PI).scale(1, 1).translate(options.length, 0),
   );
 
-  const circle = shapes.polygonFilled(
-    options.circleSides, options.circleWidth, 0,
-    options.circleSides, options.colorPos, new Point(0, 0),
-  );
+  const circle = shapes.polygonCustom({
+    fill: true,
+    sides: options.circleSides,
+    radius: options.circleWidth,
+    color: options.colorPos,
+    point: new Point(0, 0),
+  });
 
   circle.isTouchable = true;
   circle.isMovable = true;

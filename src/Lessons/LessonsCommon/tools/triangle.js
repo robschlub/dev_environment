@@ -155,10 +155,13 @@ export default function makeTriangle(
   };
 
   triangle.makePoint = (index: number) => {
-    const point = diagram.shapes.polygonFilled(
-      100, 1, 0,
-      100, [1, 0, 0, 1], new Transform().scale(1, 1).translate(0, 0),
-    );
+    const point = diagram.shapes.polygonCustom({
+      fill: true,
+      sides: 100,
+      radius: 1,
+      color: [1, 0, 0, 1],
+      transform: new Transform().scale(1, 1).translate(0, 0),
+    });
     const update = () => {
       const t1 = triangle.point1.transform.t();
       const t2 = triangle.point2.transform.t();

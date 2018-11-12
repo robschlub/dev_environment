@@ -46,10 +46,13 @@ export default class SameAreaCollection extends CommonDiagramCollection {
 
   makePad(position: Point) {
     const lay = this.layout.same.pad;
-    const pad = this.diagram.shapes.polygonFilled(
-      lay.sides, lay.radius, 0, lay.sides, this.layout.colors.construction,
-      new Transform().translate(position),
-    );
+    const pad = this.diagram.shapes.polygonCustom({
+      fill: true,
+      sides: lay.sides,
+      radius: lay.radius,
+      color: this.layout.colors.construction,
+      transform: new Transform().translate(position),
+    });
     pad.isTouchable = true;
     pad.isMovable = true;
     increaseBorderSize(pad, 2);

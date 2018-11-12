@@ -61,29 +61,41 @@ class ImportantAnglesCollection extends AngleCircle {
   }
 
   makeAcuteRange() {
-    return this.shapes.polygonFilled(
-      this.layout.anglePoints, this.layout.axes.length, 0,
-      this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
+    return this.shapes.polygonCustom({
+      fill: true,
+      sides: this.layout.anglePoints,
+      radius: this.layout.axes.length,
+      sidesToDraw:this.layout.anglePoints / 4,
+      color: this.colors.angleArea,
+      transform: new Transform()
         .translate(0, 0),
-    );
+    });
   }
 
   makeObtuseRange() {
-    return this.shapes.polygonFilled(
-      this.layout.anglePoints, this.layout.axes.length, 0,
-      this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
+    return this.shapes.polygonCustom({
+      fill: true,
+      sides: this.layout.anglePoints,
+      radius: this.layout.axes.length,
+      sidesToDraw: this.layout.anglePoints / 4,
+      color: this.colors.angleArea,
+      transform: new Transform()
         .rotate(Math.PI / 2)
         .translate(0, 0),
-    );
+    });
   }
 
   makeReflexRange() {
-    return this.shapes.polygonFilled(
-      this.layout.anglePoints, this.layout.axes.length, 0,
-      this.layout.anglePoints / 2, this.colors.angleArea, new Transform()
+    return this.shapes.polygonCustom({
+      fill: true,
+      sides: this.layout.anglePoints,
+      radius: this.layout.axes.length,
+      sidesToDraw: this.layout.anglePoints / 2,
+      color: this.colors.angleArea,
+      transform: new Transform()
         .rotate(Math.PI)
         .translate(0, 0),
-    );
+    });
   }
 
   addToCircle() {

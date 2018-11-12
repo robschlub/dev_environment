@@ -421,12 +421,6 @@ export class SinCosCircle extends AngleCircle {
   }
 
   makeQuad(num: number = 0) {
-    // return this.shapes.polygonFilled(
-    //   this.layout.anglePoints, this.layout.radius, 0,
-    //   this.layout.anglePoints / 4, this.colors.angleArea, new Transform()
-    //     .translate(0, 0)
-    //     .rotate((num - 1) * Math.PI / 2),
-    // );
     let xSign = 1;
     let ySign = 1;
     if (num === 1 || num === 2) {
@@ -437,15 +431,18 @@ export class SinCosCircle extends AngleCircle {
     }
     const color = this.colors.quadrant.slice();
     color[3] = 0.6;
-    return this.shapes.polygonFilled(
-      4, this.layout.radius / 2 * Math.sqrt(2), 0,
-      4, color, new Transform()
+    return this.shapes.polygonCustom({
+      fill: true,
+      sides: 4,
+      radius: this.layout.radius / 2 * Math.sqrt(2),
+      color,
+      transform: new Transform()
         .rotate(Math.PI / 4)
         .translate(
           xSign * this.layout.radius / 2,
           ySign * this.layout.radius / 2,
         ),
-    );
+    });
   }
 
   makeAxesAndGrid() {

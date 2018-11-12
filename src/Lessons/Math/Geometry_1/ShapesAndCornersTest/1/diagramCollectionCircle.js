@@ -52,10 +52,13 @@ function makeRadius(shapes: Object, layout: Object) {
 }
 
 function makeAnchor(shapes: Object, layout: Object) {
-  return shapes.polygonFilled(
-    anchorPoints, layout.linewidth * 2, 0,
-    anchorPoints, colors.anchor, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    fill: true,
+    sides: anchorPoints,
+    radius: layout.linewidth * 2,
+    color: colors.anchor,
+    point: new Point(0, 0),
+  });
 }
 
 function makeReference(shapes: Object, layout: Object) {
