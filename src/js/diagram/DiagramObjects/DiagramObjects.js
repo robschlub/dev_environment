@@ -63,10 +63,11 @@ export default class DiagramObjects {
   //   angle: number,
   //   reference:
   //   )
-  line(options: TypeLineOptions = {}) {
+  line(...options: Array<TypeLineOptions>) {
+    const optionsToUse = Object.assign({}, ...options);
     return new DiagramObjectLine(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      options,
+      optionsToUse,
     );
   }
 
