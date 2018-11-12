@@ -33,7 +33,7 @@ export default class ParallelCollection extends CommonDiagramCollection {
     if (isParallel) {
       this._line1.setColor(this.layout.colors.line);
       if (this._line1._midLine) {
-        this._line1._midLine.setColor(this.layout.colors.angleA);
+        this._line1._midLine.setColor(this.layout.colors.line);
       }
       this._line2.setColor(this.layout.colors.line);
     } else {

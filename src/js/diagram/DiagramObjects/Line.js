@@ -123,7 +123,6 @@ function makeStraightLine(
   largerTouchBorder: boolean,
   isTouchDevice: boolean,
 ) {
-  console.log(color)
   const straightLine = shapes.horizontalLine(
     position,
     length, width,
