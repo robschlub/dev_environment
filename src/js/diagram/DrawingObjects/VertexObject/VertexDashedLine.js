@@ -89,10 +89,13 @@ class VertexDashedLine extends VertexObject {
     if (drawLength >= this.maxLength) {
       return this.numPoints;
     }
+    if (drawLength < this.dashCumLength[0]) {
+      return 0;
+    }
     for (let i = 0; i < this.dashCumLength.length; i += 1) {
       const cumLength = this.dashCumLength[i];
       if (cumLength > drawLength) {
-        return i * 6;
+        return (Math.floor((i - 1) / 2) + 1) * 6;
       }
     }
     return this.numPoints;
