@@ -38,6 +38,7 @@ export type TypeLineLabelOrientation = 'horizontal' | 'baseToLine' | 'baseAway'
                                       | 'baseUpright';
 
 export type TypeVertexOrigin = 'start' | 'end' | 'center' | number | Point;
+export type TypeVertexSpaceStart = 'start' | 'end' | 'center' | number | Point;
 
 // Line is a class that manages:
 //   A straight line
@@ -252,24 +253,48 @@ export class DiagramObjectLine extends DiagramElementCollection {
     equation: Object,
     isTouchDevice: boolean,
     animateNextFrame: void => void,
-    position: Point,
-    length: number,
-    angle: number,
-    vertexSpaceStart: 'start' | 'end' | 'center' | number | Point,
-    width: number,
-    color: Array<number>,
-    showLine: boolean = true,
-    largerTouchBorder: boolean = true,
+    options: {
+      position?: Point,
+      length?: number,
+      angle?: number,
+      width?: number,
+      vertexSpaceStart?: 'start' | 'end' | 'center' | number | Point,
+      color?: Array<number>,
+      showLine?: boolean,
+      largerTouchBorder?: boolean,
+      offset?: number,
+    } = {},
+    // position: Point,
+    // length: number,
+    // angle: number,
+    // vertexSpaceStart: 'start' | 'end' | 'center' | number | Point,
+    // width: number,
+    // color: Array<number>,
+    // showLine: boolean = true,
+    // largerTouchBorder: boolean = true,
   ) {
+    const defaultOptions = {
+      position: new Point(0, 0),
+      length: 1,
+      angle: 0,
+      width: 0.01,
+      vertexSpaceStart: 'start',
+      color: [0, 0, 1, 1],
+      showLine: true,
+      largerTouchBorder: true,
+      offset: 0,
+    };
+    const optionsToUse = Object.assign(defaultOptions, options);
+
     super(new Transform('Line')
       .scale(1, 1)
       .rotate(0)
       .translate(0, 0), shapes.limits);
-    this.setColor(color);
+    this.setColor(optionsToUse.color);
 
     this.shapes = shapes;
     this.equation = equation;
-    this.largerTouchBorder = largerTouchBorder;
+    this.largerTouchBorder = optionsToUse.largerTouchBorder;
     this.isTouchDevice = isTouchDevice;
     this.animateNextFrame = animateNextFrame;
 
@@ -277,14 +302,14 @@ export class DiagramObjectLine extends DiagramElementCollection {
     //    The length, angle, p1 and p2 properties also exist in this.line,
     //    but are at this level for convenience
 
-    this.offset = 0;
-    this.width = width;
-    this.position = position;
-    this.length = length;
-    this.angle = angle;
+    this.offset = optionsToUse.offset;
+    this.width = optionsToUse.width;
+    this.position = optionsToUse.position;
+    this.length = optionsToUse.length;
+    this.angle = optionsToUse.angle;
 
     this.transform.updateTranslation(this.position);
-    this.transform.updateRotation(angle);
+    this.transform.updateRotation(this.angle);
 
     // Line is defined in vertex space as horiztonal along the x axis.
     // The reference will define how it is offset where:
@@ -294,14 +319,14 @@ export class DiagramObjectLine extends DiagramElementCollection {
     //    - percent: line extends from -length * % to length * (1 - %)
     this.vertexSpaceLength = 1;
     this.vertexSpaceStart = new Point(0, 0);
-    if (vertexSpaceStart === 'end') {
+    if (optionsToUse.vertexSpaceStart === 'end') {
       this.vertexSpaceStart = new Point(-1, 0);
-    } else if (vertexSpaceStart === 'center') {
+    } else if (optionsToUse.vertexSpaceStart === 'center') {
       this.vertexSpaceStart = new Point(-0.5, 0);
-    } else if (typeof vertexSpaceStart === 'number') {
-      this.vertexSpaceStart = new Point(-vertexSpaceStart, 0);
-    } else if (vertexSpaceStart instanceof Point) {
-      this.vertexSpaceStart = vertexSpaceStart;
+    } else if (typeof optionsToUse.vertexSpaceStart === 'number') {
+      this.vertexSpaceStart = new Point(-optionsToUse.vertexSpaceStart, 0);
+    } else if (optionsToUse.vertexSpaceStart instanceof Point) {
+      this.vertexSpaceStart = optionsToUse.vertexSpaceStart;
     }
     // this.vertexOrigin = vertexOrigin;
 
@@ -316,11 +341,11 @@ export class DiagramObjectLine extends DiagramElementCollection {
 
     // If the line is to be shown (and not just a label) then make it
     this._line = null;
-    if (showLine) {
+    if (optionsToUse.showLine) {
       const straightLine = makeStraightLine(
-        this.shapes, this.vertexSpaceLength, width,
+        this.shapes, this.vertexSpaceLength, this.width,
         this.vertexSpaceStart,
-        color, largerTouchBorder, isTouchDevice,
+        optionsToUse.color, optionsToUse.largerTouchBorder, isTouchDevice,
       );
       this.add('line', straightLine);
     }
@@ -336,7 +361,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.showRealLength = false;
     this._label = null;
 
-    this.setLength(length);
+    this.setLength(this.length);
   }
 
   pulseWidth() {

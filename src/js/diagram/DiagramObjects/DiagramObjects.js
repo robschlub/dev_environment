@@ -68,14 +68,22 @@ export default class DiagramObjects {
     angle: number,
     width: number,
     color: Array<number>,
-    vertexOrigin: 'start' | 'end' | 'center' | number | Point = 'start',
+    vertexSpaceStart: 'start' | 'end' | 'center' | number | Point = 'start',
     showLine: boolean,
     largerTouchBorder: boolean,
   ) {
     return new DiagramObjectLine(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      position, length, angle, vertexOrigin, width, color, showLine,
-      largerTouchBorder,
+      {
+        position,
+        length,
+        angle,
+        vertexSpaceStart,
+        width,
+        color,
+        showLine,
+        largerTouchBorder,
+      },
     );
   }
 
@@ -107,14 +115,14 @@ export default class DiagramObjects {
     largerTouchBorderOrShowLine: boolean | null = null,
     largerTouchBorder: boolean | null = null,
   ) {
-    let position;
-    let length;
-    let angle;
-    let width;
-    let color;
-    let vertexOrigin;
-    let showLine;
-    let largerTouchBorderToUse;
+    let position = new Point(0, 0);
+    let length = 1;
+    let angle = 0;
+    let width = 0.01;
+    let color = [1, 0, 0, 1];
+    let vertexOrigin = 'start';
+    let showLine = true;
+    let largerTouchBorderToUse = true;
     if (p1OrPositionOrLength instanceof Point
       && p2OrLengthOrWidth instanceof Point) {
       const p1 = p1OrPositionOrLength;
@@ -160,10 +168,16 @@ export default class DiagramObjects {
     return new DiagramObjectLine(
       // $FlowFixMe
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      // $FlowFixMe
-      position, length, angle, vertexOrigin, width, color, showLine,
-      // $FlowFixMe
-      largerTouchBorder,
+      {
+        position,
+        length,
+        angle,
+        vertexOrigin,
+        width,
+        color,
+        showLine,
+        largerTouchBorder,
+      },
     );
   }
 
@@ -179,8 +193,13 @@ export default class DiagramObjects {
     if (referenceOrP1 instanceof Point && lengthOrP2 instanceof Point) {
       line = new DiagramObjectLine(
         this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-        referenceOrP1, 1, 0, 'end', width, color, showLine,
-        largerTouchBorder,
+        {
+          position: referenceOrP1,
+          width,
+          color,
+          showLine,
+          largerTouchBorder,
+        },
       );
       line.setEndPoints(referenceOrP1, lengthOrP2);
       // return line;
