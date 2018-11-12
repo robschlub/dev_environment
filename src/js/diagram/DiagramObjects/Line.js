@@ -325,7 +325,6 @@ export class DiagramObjectLine extends DiagramElementCollection {
       optionsToUse.dashStyle = Object.assign({}, {
         maxLength: defaultMaxLength,
       }, options.dashStyle);
-      console.log(optionsToUse.dashStyle)
     }
     super(new Transform('Line')
       .scale(1, 1)
