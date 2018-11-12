@@ -55,10 +55,19 @@ export default class RectCollection extends CommonDiagramCollection {
 
   addRect() {
     const makeL = (p1, p2, labelText) => {
-      const line = this.diagram.objects.lineLabel(
-        p1, p2, this.layout.lineWidth, this.layout.colors.lines,
-        labelText, 0.05, 'inside', 'top', 'horizontal',
-      );
+      const line = this.diagram.objects.line({
+        p1,
+        p2,
+        width: this.layout.lineWidth,
+        color: this.layout.colors.lines,
+        label: {
+          text: labelText,
+          offset: 0.05,
+          location: 'inside',
+          subLocation: 'top',
+          orientation: 'horizontal',
+        },
+      });
       const name = Array.isArray(labelText) ? labelText[0] : labelText;
       this._rect.add(`line${name}`, line);
     };

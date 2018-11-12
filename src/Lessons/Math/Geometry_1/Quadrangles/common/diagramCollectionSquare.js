@@ -35,10 +35,22 @@ export default class SquareCollection extends CommonDiagramCollection {
 
   addSquareLines() {
     const makeL = (p1, p2, labelText) => {
-      const line = this.diagram.objects.lineLabel(
-        p1, p2, this.layout.lineWidth, this.layout.colors.lines,
-        'A', 0.05, 'inside', 'top', 'horizontal',
-      );
+      const line = this.diagram.objects.line({
+        p1,
+        p2,
+        width: this.layout.lineWidth,
+        color: this.layout.colors.lines,
+        label: {
+          text: 'A',
+          offset: 0.05,
+          location: 'inside',
+          subLocation: 'top',
+          orientation: 'horizontal',
+        },
+      });
+      //   p1, p2, this.layout.lineWidth, this.layout.colors.lines,
+      //   'A', 0.05, 'inside', 'top', 'horizontal',
+      // );
       const name = Array.isArray(labelText) ? labelText[0] : labelText;
       this._square.add(`line${name}`, line);
     };

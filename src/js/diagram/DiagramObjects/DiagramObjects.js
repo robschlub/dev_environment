@@ -70,30 +70,30 @@ export default class DiagramObjects {
     );
   }
 
-  lineNew(
-    position: Point,
-    length: number,
-    angle: number,
-    width: number,
-    color: Array<number>,
-    vertexSpaceStart: 'start' | 'end' | 'center' | number | Point = 'start',
-    showLine: boolean,
-    largerTouchBorder: boolean,
-  ) {
-    return new DiagramObjectLine(
-      this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      {
-        position,
-        length,
-        angle,
-        vertexSpaceStart,
-        width,
-        color,
-        showLine,
-        largerTouchBorder,
-      },
-    );
-  }
+  // lineNew(
+  //   position: Point,
+  //   length: number,
+  //   angle: number,
+  //   width: number,
+  //   color: Array<number>,
+  //   vertexSpaceStart: 'start' | 'end' | 'center' | number | Point = 'start',
+  //   showLine: boolean,
+  //   largerTouchBorder: boolean,
+  // ) {
+  //   return new DiagramObjectLine(
+  //     this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //     {
+  //       position,
+  //       length,
+  //       angle,
+  //       vertexSpaceStart,
+  //       width,
+  //       color,
+  //       showLine,
+  //       largerTouchBorder,
+  //     },
+  //   );
+  // }
 
   // linePoints(
   //   p1: Point,
@@ -189,142 +189,142 @@ export default class DiagramObjects {
   //   );
   // }
 
-  lineOld(
-    referenceOrP1: TypeVertexSpaceStart | Point = 'center',
-    lengthOrP2: number | Point,
-    width: number,
-    color: Array<number>,
-    showLine: boolean = true,
-    largerTouchBorder: boolean = true,
-  ) {
-    let line;
-    if (referenceOrP1 instanceof Point && lengthOrP2 instanceof Point) {
-      line = new DiagramObjectLine(
-        this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-        {
-          position: referenceOrP1,
-          width,
-          color,
-          showLine,
-          largerTouchBorder,
-        },
-      );
-      line.setEndPoints(referenceOrP1, lengthOrP2);
-      // return line;
-    } else if (referenceOrP1 instanceof Point && typeof lengthOrP2 === 'number') {
-      line = this.lineNew(
-        referenceOrP1, lengthOrP2, 0, width, color, 'start', showLine,
-        largerTouchBorder,
-      );
-      // return line;
-      // const line = new DiagramObjectLine(
-      //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      //   referenceOrP1, lengthOrP2, width, 'end', width, color, showLine,
-      //   largerTouchBorder,
-      // )
-      // return new DiagramObjectLine(
-      //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-      //   referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
-      // );
-    } else if (typeof lengthOrP2 === 'number') {
-      line = this.lineNew(
-        new Point(0, 0), lengthOrP2, 0, width, color, referenceOrP1, showLine,
-        largerTouchBorder,
-      );
-    } else {
-      line = this.lineNew(
-        new Point(0, 0), 1, 0, 0.01, [1, 0, 0, 1], 'start', true, true,
-      );
-    }
-    return line;
-  }
+  // lineOld(
+  //   referenceOrP1: TypeVertexSpaceStart | Point = 'center',
+  //   lengthOrP2: number | Point,
+  //   width: number,
+  //   color: Array<number>,
+  //   showLine: boolean = true,
+  //   largerTouchBorder: boolean = true,
+  // ) {
+  //   let line;
+  //   if (referenceOrP1 instanceof Point && lengthOrP2 instanceof Point) {
+  //     line = new DiagramObjectLine(
+  //       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //       {
+  //         position: referenceOrP1,
+  //         width,
+  //         color,
+  //         showLine,
+  //         largerTouchBorder,
+  //       },
+  //     );
+  //     line.setEndPoints(referenceOrP1, lengthOrP2);
+  //     // return line;
+  //   } else if (referenceOrP1 instanceof Point && typeof lengthOrP2 === 'number') {
+  //     line = this.lineNew(
+  //       referenceOrP1, lengthOrP2, 0, width, color, 'start', showLine,
+  //       largerTouchBorder,
+  //     );
+  //     // return line;
+  //     // const line = new DiagramObjectLine(
+  //     //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //     //   referenceOrP1, lengthOrP2, width, 'end', width, color, showLine,
+  //     //   largerTouchBorder,
+  //     // )
+  //     // return new DiagramObjectLine(
+  //     //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //     //   referenceOrP1, lengthOrP2, width, color, showLine, largerTouchBorder,
+  //     // );
+  //   } else if (typeof lengthOrP2 === 'number') {
+  //     line = this.lineNew(
+  //       new Point(0, 0), lengthOrP2, 0, width, color, referenceOrP1, showLine,
+  //       largerTouchBorder,
+  //     );
+  //   } else {
+  //     line = this.lineNew(
+  //       new Point(0, 0), 1, 0, 0.01, [1, 0, 0, 1], 'start', true, true,
+  //     );
+  //   }
+  //   return line;
+  // }
 
-  lineArrow(
-    referenceOrP1: TypeVertexSpaceStart = 'center',
-    lengthOrP2: number | Point,
-    width: number,
-    color: Array<number>,
-    arrowHeight: number = width * 4,
-    arrowWidth: number = width * 4,
-    largerTouchBorder: boolean = true,
-  ) {
-    const line = this.lineOld(
-      referenceOrP1, lengthOrP2, width, color,
-      true, largerTouchBorder,
-    );
-    // const line = new DiagramObjectLine(
-    //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-    //   referenceOrP1, lengthOrP2, width, color, true, largerTouchBorder,
-    // );
-    line.addArrow(2, arrowWidth, arrowHeight);
-    return line;
-  }
+  // lineArrow(
+  //   referenceOrP1: TypeVertexSpaceStart = 'center',
+  //   lengthOrP2: number | Point,
+  //   width: number,
+  //   color: Array<number>,
+  //   arrowHeight: number = width * 4,
+  //   arrowWidth: number = width * 4,
+  //   largerTouchBorder: boolean = true,
+  // ) {
+  //   const line = this.lineOld(
+  //     referenceOrP1, lengthOrP2, width, color,
+  //     true, largerTouchBorder,
+  //   );
+  //   // const line = new DiagramObjectLine(
+  //   //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //   //   referenceOrP1, lengthOrP2, width, color, true, largerTouchBorder,
+  //   // );
+  //   line.addArrow(2, arrowWidth, arrowHeight);
+  //   return line;
+  // }
 
-  lineArrows(
-    referenceOrP1: TypeVertexSpaceStart = 'center',
-    lengthOrP2: number | Point,
-    width: number,
-    color: Array<number>,
-    arrowHeight: number = width * 4,
-    arrowWidth: number = width * 4,
-    largerTouchBorder: boolean = true,
-  ) {
-    const line = this.lineArrow(
-      referenceOrP1, lengthOrP2, width, color, arrowHeight, arrowWidth,
-      largerTouchBorder,
-    );
-    line.addArrow(1, arrowWidth, arrowHeight);
-    return line;
-  }
+  // lineArrows(
+  //   referenceOrP1: TypeVertexSpaceStart = 'center',
+  //   lengthOrP2: number | Point,
+  //   width: number,
+  //   color: Array<number>,
+  //   arrowHeight: number = width * 4,
+  //   arrowWidth: number = width * 4,
+  //   largerTouchBorder: boolean = true,
+  // ) {
+  //   const line = this.lineArrow(
+  //     referenceOrP1, lengthOrP2, width, color, arrowHeight, arrowWidth,
+  //     largerTouchBorder,
+  //   );
+  //   line.addArrow(1, arrowWidth, arrowHeight);
+  //   return line;
+  // }
 
-  lineLabelOnly(
-    referenceOrP1: TypeVertexSpaceStart = 'center',
-    lengthOrP2: number | Point,
-    color: Array<number>,
-    labelText: string | Equation | Array<string>,
-    offset: number,
-    location: TypeLineLabelLocation = 'outside',
-    subLocation: TypeLineLabelSubLocation = 'left',
-    orientation: TypeLineLabelOrientation = 'horizontal',
-    linePosition: number = 0.5,
-  ) {
-    const line = this.lineOld(
-      referenceOrP1, lengthOrP2, 0.001, color,
-      false, false,
-    );
-    // const line = new DiagramObjectLine(
-    //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-    //   referenceOrP1, lengthOrP2, 0.001, color, false, false,
-    // );
-    line.addLabel(
-      labelText, offset, location, subLocation, orientation, linePosition,
-    );
-    return line;
-  }
+  // lineLabelOnly(
+  //   referenceOrP1: TypeVertexSpaceStart = 'center',
+  //   lengthOrP2: number | Point,
+  //   color: Array<number>,
+  //   labelText: string | Equation | Array<string>,
+  //   offset: number,
+  //   location: TypeLineLabelLocation = 'outside',
+  //   subLocation: TypeLineLabelSubLocation = 'left',
+  //   orientation: TypeLineLabelOrientation = 'horizontal',
+  //   linePosition: number = 0.5,
+  // ) {
+  //   const line = this.lineOld(
+  //     referenceOrP1, lengthOrP2, 0.001, color,
+  //     false, false,
+  //   );
+  //   // const line = new DiagramObjectLine(
+  //   //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //   //   referenceOrP1, lengthOrP2, 0.001, color, false, false,
+  //   // );
+  //   line.addLabel(
+  //     labelText, offset, location, subLocation, orientation, linePosition,
+  //   );
+  //   return line;
+  // }
 
-  lineLabel(
-    referenceOrP1: TypeVertexSpaceStart = 'center',
-    lengthOrP2: number | Point,
-    width: number,
-    color: Array<number>,
-    labelText: string | Equation | Array<string>,
-    offset: number,
-    location: TypeLineLabelLocation = 'outside',
-    subLocation: TypeLineLabelSubLocation = 'left',
-    orientation: TypeLineLabelOrientation = 'horizontal',
-    linePosition: number = 0.5,
-  ) {
-    // const line = new DiagramObjectLine(
-    //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
-    //   referenceOrP1, lengthOrP2, width, color, true, false,
-    // );
-    const line = this.lineOld(
-      referenceOrP1, lengthOrP2, width, color,
-      true, false,
-    );
-    line.addLabel(
-      labelText, offset, location, subLocation, orientation, linePosition,
-    );
-    return line;
-  }
+  // lineLabel(
+  //   referenceOrP1: TypeVertexSpaceStart = 'center',
+  //   lengthOrP2: number | Point,
+  //   width: number,
+  //   color: Array<number>,
+  //   labelText: string | Equation | Array<string>,
+  //   offset: number,
+  //   location: TypeLineLabelLocation = 'outside',
+  //   subLocation: TypeLineLabelSubLocation = 'left',
+  //   orientation: TypeLineLabelOrientation = 'horizontal',
+  //   linePosition: number = 0.5,
+  // ) {
+  //   // const line = new DiagramObjectLine(
+  //   //   this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
+  //   //   referenceOrP1, lengthOrP2, width, color, true, false,
+  //   // );
+  //   const line = this.lineOld(
+  //     referenceOrP1, lengthOrP2, width, color,
+  //     true, false,
+  //   );
+  //   line.addLabel(
+  //     labelText, offset, location, subLocation, orientation, linePosition,
+  //   );
+  //   return line;
+  // }
 }

@@ -45,10 +45,12 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
 
   makeParallelLine() {
     const lay = this.layout.parallelLine;
-    const line = this.diagram.objects.lineOld(
-      'center', lay.length.full, lay.width,
-      this.layout.colors.line,
-    );
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: lay.length.full,
+      width: lay.width,
+      color: this.layout.colors.line,
+    });
     line.interactiveLocation = lay.interactive;
     // const line = makeLabeledLine(
     //   this.diagram,
@@ -62,10 +64,12 @@ export default class ThreeLinesCollection extends CommonDiagramCollection {
 
   makeIntersectingLine() {
     const lay = this.layout.intersectingLine;
-    const line = this.diagram.objects.lineOld(
-      'center', lay.length.full, lay.width,
-      this.layout.colors.line,
-    );
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: lay.length.full,
+      width: lay.width,
+      color: this.layout.colors.line,
+    });
     line.interactiveLocation = lay.interactive;
     // const line = makeLabeledLine(
     //   this.diagram,

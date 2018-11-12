@@ -52,6 +52,26 @@ export type TypeLineOptions = {
   offset?: number,
   p1?: Point,
   p2?: Point,
+  arrowStart?: {
+    width?: number,
+    height?: number,
+  },
+  arrowStop?: {
+    width?: number,
+    height?: number,
+  },
+  arrows?: {
+    width?: number,
+    height?: number,
+  },
+  label?: {
+    text: string | Array<string>,
+    offset?: number,
+    location?: TypeLineLabelLocation,
+    subLocation?: TypeLineLabelSubLocation,
+    orientation?: TypeLineLabelOrientation,
+    linePosition?: number,
+  },
 };
 
 // Line is a class that manages:
@@ -361,6 +381,46 @@ export class DiagramObjectLine extends DiagramElementCollection {
 
     if (optionsToUse.p1 != null && optionsToUse.p2 != null) {
       this.setEndPoints(optionsToUse.p1, optionsToUse.p2);
+    }
+
+    const defaultArrowOptions = {
+      width: this.width * 4,
+      height: this.width * 4,
+    };
+    if (optionsToUse.arrowStart) {
+      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowStart);
+      this.addArrowStart(arrowOptions.height, arrowOptions.width);
+    }
+
+    if (optionsToUse.arrowEnd) {
+      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrowEnd);
+      this.addArrowEnd(arrowOptions.height, arrowOptions.width);
+    }
+
+    // Arrows overrides arrowStart or arrowEnd
+    if (optionsToUse.arrows) {
+      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrows);
+      this.addArrowEnd(arrowOptions.height, arrowOptions.width);
+    }
+
+    const defaultLabelOptions = {
+      text: '',
+      offset: 0,
+      location: 'top',
+      subLocation: 'left',
+      orientation: 'horizontal',
+      linePosition: 0.5,
+    };
+    if (optionsToUse.label) {
+      const labelOptions = Object.assign({}, defaultLabelOptions, optionsToUse.label);
+      this.addLabel(
+        labelOptions.text,
+        labelOptions.offset,
+        labelOptions.location,
+        labelOptions.subLocation,
+        labelOptions.orientation,
+        labelOptions.linePosition,
+      );
     }
   }
 

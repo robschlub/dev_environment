@@ -45,10 +45,12 @@ export default class OppositeCollection extends CommonDiagramCollection {
 
   makeLine() {
     const lay = this.layout.parallelLine;
-    const line = this.diagram.objects.lineOld(
-      'center', lay.length.full, lay.width,
-      this.layout.colors.line,
-    );
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: lay.length.full,
+      width: lay.width,
+      color: this.layout.colors.line,
+    });
     line.setMovable(true, 'rotation');
     line.setTransformCallback = (t: Transform) => {
       line.updateMoveTransform(t);
