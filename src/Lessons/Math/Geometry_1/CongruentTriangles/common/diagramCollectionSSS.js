@@ -11,8 +11,8 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 // import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 // import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
-import { makeLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
 import type { TypeTriangle } from '../../../../LessonsCommon/tools/triangle';
@@ -42,12 +42,12 @@ export default class SSSCollection extends CommonDiagramCollection {
   _triangleShaddow: TypeTriangle;
 
   addLines() {
-    const make = length => makeLine(
-      this.diagram,
-      'end',
-      length, this.layout.corner.width,
-      this.layout.colors.line, true,
-    );
+    const make = length => this.diagram.objects.line({
+      vertexSpaceStart: 'start',
+      length,
+      width: this.layout.corner.width,
+      color: this.layout.colors.line,
+    });
     const line1 = make(this.layout.corner.SSSProps.length1);
     const line2 = make(this.layout.corner.SSSProps.length2);
     const line3 = make(this.layout.corner.SSSProps.length3);
@@ -208,11 +208,12 @@ export default class SSSCollection extends CommonDiagramCollection {
   }
 
   addSymmetryLine() {
-    const line = makeLine(
-      this.diagram, 'center', this.diagram.limits.width,
-      this.layout.corner.width / 3, this.layout.colors.diagram.dimensions,
-      true,
-    );
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: this.diagram.limits.width,
+      width: this.layout.corner.width / 3,
+      color: this.layout.colors.diagram.disabled,
+    });
     this.add('symmetry', line);
   }
 
