@@ -6,11 +6,11 @@ import { round } from '../../tools/mathtools';
 
 describe('Dashed Line', () => {
   let makeLine;
-    beforeEach(() => {
-      makeLine = (dashStyle, maxLength = 1) => new VertexDashedLine(
-        webgl, new Point(0, 0), maxLength, 0.2, 0, dashStyle,
-      );
-    });
+  beforeEach(() => {
+    makeLine = (dashStyle, maxLength = 1) => new VertexDashedLine(
+      webgl, new Point(0, 0), maxLength, 0.2, 0, dashStyle,
+    );
+  });
   test('Default', () => {
     const line = new VertexDashedLine(webgl);
     const border = [
