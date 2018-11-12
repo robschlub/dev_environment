@@ -10,8 +10,8 @@ import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 const increaseBorderSize = (element: DiagramElementPrimative, multiplier: number) => {
   for (let i = 0; i < element.drawingObject.border[0].length; i += 1) {
@@ -289,10 +289,12 @@ export default class SameAreaCollection extends CommonDiagramCollection {
   addBaseHeight() {
     const lay = this.layout.same;
     const addSide = (p1, p2, name, label = '') => {
-      const line = makeLine(
-        this.diagram, p1, p2, lay.width / 2, this.layout.colors.lineLabel, true,
-        true,
-      );
+      const line = this.diagram.objects.line({
+        p1,
+        p2,
+        width: lay.width / 2,
+        color: this.layout.colors.lineLabel,
+      });
       line.addLabel(label, lay.lineLabelOffset, 'right', 'bottom', 'horizontal');
       line.addArrow1(lay.width * 2, lay.width * 2);
       line.addArrow2(lay.width * 2, lay.width * 2);

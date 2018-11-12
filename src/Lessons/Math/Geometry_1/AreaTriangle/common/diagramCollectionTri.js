@@ -7,8 +7,8 @@ import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 // import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
 // import makeEquationLabel from '../../../../LessonsCommon/tools/equationLabel';
 import {
@@ -169,12 +169,17 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     color: Array<number> = this.layout.colors.line,
     lineWithArrows: boolean = false,
   ) {
-    const line = makeLine(
-      this.diagram, 'end', 1, this.layout.tri2.width / 2, color, lineWithArrows,
-    );
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'start',
+      p1,
+      p2,
+      width: this.layout.tri2.width / 2,
+      color,
+      showLine: lineWithArrows,
+    });
     line.setEndPoints(p1, p2);
     line.addLabel(
-      label, this.layout.triLabelOffset, 'outside', '', 'horizontal',
+      label, this.layout.triLabelOffset, 'outside', 'top', 'horizontal',
     );
     if (lineWithArrows) {
       line.addArrow1(this.layout.tri2.width * 2, this.layout.tri2.width * 2);
