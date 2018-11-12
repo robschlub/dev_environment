@@ -229,8 +229,8 @@ export class DiagramObjectLine extends DiagramElementCollection {
   addArrow: (number, number, number) => void;
   pulseWidth: () => void;
   updateLabel: (?number) => {};
-  addLabel: (string | Equation | Array<string>, number, TypeLineLabelLocation,
-             TypeLineLabelSubLocation, TypeLineLabelOrientation, number
+  addLabel: (string | Equation | Array<string>, number, ?TypeLineLabelLocation,
+             ?TypeLineLabelSubLocation, ?TypeLineLabelOrientation, ?number
             ) => void;
 
   multiMove: {

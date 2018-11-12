@@ -7,8 +7,8 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class SizeCollection extends CommonDiagramCollection {
   _mm: {
@@ -41,12 +41,16 @@ export default class SizeCollection extends CommonDiagramCollection {
     row.add('grid', grid);
 
     const addLine = (start: Point, len: number, label: string, name: string) => {
-      const line = makeLine(this.diagram, 'end', 1, lay.width, gridColor);
+      const line = this.diagram.objects.line({
+        vertexSpaceStart: 'start',
+        length: len,
+        width: lay.width,
+        color: gridColor,
+        position: start,
+      });
       line.addArrow1(this.layout.arrow.width, this.layout.arrow.height);
       line.addArrow2(this.layout.arrow.width, this.layout.arrow.height);
-      line.setPosition(start);
       line.addLabel(label, lay.labelOffset, 'top', 'left', 'horizontal');
-      line.setLength(len);
       row.add(name, line);
     };
 
@@ -87,20 +91,33 @@ export default class SizeCollection extends CommonDiagramCollection {
       Math.PI / 4, 1, 4, color,
     );
 
-    const yLine = makeLine(this.diagram, 'center', 1, layout.width, color);
+    const yLine = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: layout.sideLength,
+      width: layout.width,
+      color,
+      position: new Point(-layout.sideLength / 2 - layout.lineOffset, 0),
+      angle: -Math.PI / 2,
+    });
     yLine.addArrow1(this.layout.arrow.width, this.layout.arrow.height);
     yLine.addArrow2(this.layout.arrow.width, this.layout.arrow.height);
-    yLine.setPosition(new Point(-layout.sideLength / 2 - layout.lineOffset, 0));
-    yLine.transform.updateRotation(-Math.PI / 2);
+    // yLine.setPosition(new Point(-layout.sideLength / 2 - layout.lineOffset, 0));
+    // yLine.transform.updateRotation(-Math.PI / 2);
     yLine.addLabel(label, layout.labelOffset, 'left', 'left', 'horizontal');
-    yLine.setLength(layout.sideLength);
+    // yLine.setLength(layout.sideLength);
 
-    const xLine = makeLine(this.diagram, 'center', 1, layout.width, color);
+    const xLine = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: layout.sideLength,
+      width: layout.width,
+      color,
+      position: new Point(0, -layout.sideLength / 2 - layout.lineOffset),
+    });
     xLine.addArrow1(this.layout.arrow.width, this.layout.arrow.height);
     xLine.addArrow2(this.layout.arrow.width, this.layout.arrow.height);
-    xLine.setPosition(new Point(0, -layout.sideLength / 2 - layout.lineOffset));
+    // xLine.setPosition(new Point(0, -layout.sideLength / 2 - layout.lineOffset));
     xLine.addLabel(label, layout.labelOffset, 'bottom', 'bottom', 'horizontal');
-    xLine.setLength(layout.sideLength);
+    // xLine.setLength(layout.sideLength);
 
     const group = this.diagram.shapes.collection(new Transform().translate(layout.position));
     group.add('square', square);

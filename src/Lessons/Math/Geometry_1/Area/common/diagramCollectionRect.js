@@ -7,8 +7,7 @@ import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import {
   addRectEqn, addSimpleRectEquation, addNumSquaresRectEquation,
   addSimpleUnitsRectEquation, addSquareEquation, addSquareRectEquation,
@@ -129,11 +128,15 @@ export default class RectAreaCollection extends CommonDiagramCollection {
     const x = lay.length / 2;
     const y = lay.height / 2;
     const addSide = (p1, p2, name, label = '') => {
-      const line = makeLine(
-        this.diagram, 'end', 1, 0.1, this.layout.colors.line, false,
-      );
-      line.setEndPoints(p1, p2);
-      line.addLabel(label, lay.labelOffset, 'outside', '', 'horizontal');
+      const line = this.diagram.objects.line({
+        vertexSpaceStart: 'end',
+        p1,
+        p2,
+        showLine: false,
+        color: this.layout.colors.line,
+      });
+      // line.setEndPoints(p1, p2);
+      line.addLabel(label, lay.labelOffset, 'outside', 'top', 'horizontal');
       this.add(`side${name}`, line);
     };
     addSide(new Point(-x, -y), new Point(-x, y), 'A', 'A');

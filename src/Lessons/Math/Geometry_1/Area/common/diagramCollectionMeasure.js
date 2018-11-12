@@ -13,8 +13,9 @@ import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+// import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class MeasureCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -98,10 +99,16 @@ export default class MeasureCollection extends CommonDiagramCollection {
       .translate(lay.position));
 
     const makeL = (position, length, labelText, name, labelPos, color, width) => {
-      const line = makeLine(this.diagram, 'center', 1, width, color);
-      line.setPosition(position);
-      line.setLength(length);
-      line.addLabel(labelText, 0.05, 'labelPos', '', 'horizontal');
+      const line = this.diagram.objects.line({
+        vertexSpaceStart: 'center',
+        position,
+        length,
+        width,
+        color,
+      });
+      // line.setPosition(position);
+      // line.setLength(length);
+      line.addLabel(labelText, 0.05, 'top', 'left', 'horizontal');
       lengthMeasure.add(`line${name}`, line);
     };
     makeL(new Point(0, 0), lay.length, '4m', '', 'bottom', col.line, lay.width);
@@ -319,14 +326,26 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const col = this.layout.colors.cross;
     const makeCross = (position) => {
       const cross = this.diagram.shapes.collection(new Transform().translate(0, 0));
-      const line1 = makeLine(this.diagram, 'center', 1, lay.width, col);
-      line1.setLength(lay.length);
-      line1.transform.updateRotation(Math.PI / 3);
+      const line1 = this.diagram.objects.line({
+        vertexSpaceStart: 'center',
+        length: lay.length,
+        width: lay.width,
+        color: col,
+        angle: Math.PI / 3,
+      });
+      // line1.setLength(lay.length);
+      // line1.transform.updateRotation(Math.PI / 3);
       cross.add('line1', line1);
 
-      const line2 = makeLine(this.diagram, 'center', 1, lay.width, col);
-      line2.setLength(lay.length);
-      line2.transform.updateRotation(Math.PI / 3 * 2);
+      const line2 = this.diagram.objects.line({
+        vertexSpaceStart: 'center',
+        length: lay.length,
+        width: lay.width,
+        color: col,
+        angle: Math.PI / 3 * 2,
+      });
+      // line2.setLength(lay.length);
+      // line2.transform.updateRotation(Math.PI / 3 * 2);
       cross.add('line2', line2);
       cross.setPosition(position);
       return cross;

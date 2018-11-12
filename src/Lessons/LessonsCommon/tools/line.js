@@ -2,7 +2,7 @@
 
 import Diagram from '../../../js/diagram/Diagram';
 import {
-  Transform, Point, Rect, distance, Line, polarToRect, normAngle,
+  Transform, Point, distance, Line, polarToRect, normAngle,
 } from '../../../js/diagram/tools/g2';
 import {
   roundNum,
@@ -10,7 +10,7 @@ import {
 import {
   DiagramElementCollection, DiagramElementPrimative,
 } from '../../../js/diagram/Element';
-import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
+// import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquation';
 import makeEquationLabel from './equationLabel';
 import type { TypeEquationLabel } from './equationLabel';
 

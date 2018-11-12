@@ -13,9 +13,9 @@ import {
 
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import type { TypeEquationLabel } from '../../../../LessonsCommon/tools/equationLabel';
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
 
 export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollection) {
   diagram: LessonDiagram;
@@ -40,12 +40,15 @@ export default class QuizCollection extends CommonQuizMixin(CommonDiagramCollect
     const lay = this.layout.adjustableRect;
 
     const addSide = (p1, p2, name, label = '') => {
-      const line = makeLine(
-        this.diagram, 'end', 1, lay.width, this.layout.colors.line, true,
-        true,
-      );
-      line.setEndPoints(p1, p2);
-      line.addLabel(label, lay.labelOffset, 'outside', '', 'horizontal');
+      const line = this.diagram.objects.line({
+        vertexSpaceStart: 'start',
+        p1,
+        p2,
+        width: lay.width,
+        color: this.layout.colors.line,
+      });
+      // line.setEndPoints(p1, p2);
+      line.addLabel(label, lay.labelOffset, 'outside', 'top', 'horizontal');
       line.setMovable(true);
       line.setTransformCallback = this.updateRectangle.bind(this);
       // this.add(`side${name}`, line);
