@@ -150,25 +150,43 @@ class AngleCircle extends DiagramElementCollection {
   }
 
   makeArc(radius: number, lineWidth: number = this.layout.arc.lineWidth) {
-    return this.shapes.polygon(
-      this.layout.anglePoints, radius, lineWidth, 0, 1,
-      this.layout.circlePoints, this.colors.arc, new Point(0, 0),
-    );
+    return this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius,
+      width: lineWidth,
+      color: this.colors.arc,
+      point: new Point(0, 0),
+    });
+    //   this.layout.anglePoints, radius, lineWidth, 0, 1,
+    //   this.layout.circlePoints, this.colors.arc, new Point(0, 0),
+    // );
   }
 
   makeCircumference() {
-    return this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radius,
-      this.layout.circumference.lineWidth, 0, 1,
-      this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
-    );
+    return this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius: this.layout.radius,
+      width: this.layout.circumference.lineWidth,
+      color: this.colors.arcLight,
+      point: new Point(0, 0),
+    });
+    //   this.layout.anglePoints, this.layout.radius,
+    //   this.layout.circumference.lineWidth, 0, 1,
+    //   this.layout.circlePoints, this.colors.arcLight, new Point(0, 0),
+    // );
   }
 
   makeAnchor() {
-    return this.shapes.polygonFilled(
-      this.layout.anchorPoints, this.layout.linewidth * 2, 0,
-      this.layout.anchorPoints, this.colors.anchor, new Point(0, 0),
-    );
+    return this.shapes.polygonCustom({
+      sides: this.layout.anchorPoints,
+      radius: this.layout.linewidth * 2,
+      fill: true,
+      color: this.colors.anchor,
+      point: new Point(0, 0),
+    });
+    //   this.layout.anchorPoints, this.layout.linewidth * 2, 0,
+    //   this.layout.anchorPoints, this.colors.anchor, new Point(0, 0),
+    // );
   }
 
   makeAngleLine() {
@@ -247,11 +265,17 @@ class AngleCircle extends DiagramElementCollection {
       label = angleText;
     }
 
-    const arc = this.shapes.polygon(
-      layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
-      layout.arc.sides, color,
-      new Transform(),
-    );
+    const arc = this.shapes.polygonCustom({
+      sides: layout.arc.sides,
+      radius: layout.arc.radius,
+      width: layout.arc.lineWidth,
+      rotation: angleStart,
+      color,
+    });
+    //   layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
+    //   layout.arc.sides, color,
+    //   new Transform(),
+    // );
 
     const angleAnnotation = this.shapes.collection(new Transform()
       .scale(1, 1).rotate(0));

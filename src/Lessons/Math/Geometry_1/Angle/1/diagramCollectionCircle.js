@@ -51,31 +51,43 @@ function makeRadius(shapes: Object) {
 }
 
 function makeArc(shapes: Object) {
-  return shapes.polygon(
-    layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
-    layout.anglePoints, colors.arc, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.anglePoints,
+    radius: layout.radius,
+    width: layout.linewidth,
+    color: colors.arc,
+    point: new Point(0, 0),
+  });
 }
 
 function makeCircle(shapes: Object) {
-  return shapes.polygon(
-    layout.anglePoints, layout.radius, layout.linewidth, 0, 1,
-    layout.anglePoints, colors.arc, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.anglePoints,
+    radius: layout.radius,
+    width: layout.linewidth,
+    color: colors.arc,
+    point: new Point(0, 0),
+  });
 }
 
 function makeAnchor(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.anchorPoints, layout.linewidth * 2, 0,
-    layout.anchorPoints, colors.anchor, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.anchorPoints,
+    radius: layout.linewidth * 2,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    fill: true,
+  });
 }
 
 function makeAngle(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.anglePoints, layout.angleRadius, 0,
-    layout.anglePoints, colors.angle, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.anglePoints,
+    radius: layout.angleRadius,
+    color: colors.angle,
+    point: new Point(0, 0),
+    fill: true,
+  });
 }
 
 function makeReference(shapes: Object) {

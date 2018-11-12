@@ -267,14 +267,24 @@ export class SinCosCircle extends AngleCircle {
     textOffset: number = 0.15,
   ) {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.shapes.polygon(
-      this.layout.anglePoints,
-      radius, this.layout.quadAngles.lineWidth,
-      startAngle, direction, this.layout.anglePoints,
-      this.layout.colors.quadAngles, new Transform()
+    const arc = this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius,
+      width: this.layout.quadAngles.lineWidth,
+      rotation: startAngle,
+      clockwise: direction === 1 ? false : true,
+      color: this.layout.colors.quadAngles,
+      transform: new Transform()
         .rotate(0)
-        .translate(0, 0),
-    );
+        .translate(0, 0), 
+    });
+    //   this.layout.anglePoints,
+    //   radius, this.layout.quadAngles.lineWidth,
+    //   startAngle, direction, this.layout.anglePoints,
+    //   this.layout.colors.quadAngles, new Transform()
+    //     .rotate(0)
+    //     .translate(0, 0),
+    // );
 
     const text = this.shapes.htmlText(
       label, `id_diagram_quadAngles_${name}`, 'diagram__quad_angles',
@@ -349,14 +359,15 @@ export class SinCosCircle extends AngleCircle {
 
   makeMainAngle() {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.shapes.polygon(
-      this.layout.anglePoints,
-      this.layout.mainAngle.radius, this.layout.mainAngle.lineWidth,
-      0, 1, this.layout.anglePoints,
-      this.layout.colors.angle, new Transform()
+    const arc = this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius: this.layout.mainAngle.radius,
+      width: this.layout.mainAngle.lineWidth,
+      color: this.layout.colors.angle,
+      transform: new Transform()
         .rotate(0)
         .translate(0, 0),
-    );
+    });
 
     const text = this.shapes.htmlText(
       'θ', 'id_diagram_main_angle_theta', '',

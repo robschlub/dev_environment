@@ -81,16 +81,13 @@ export default class SSSCollection extends CommonDiagramCollection {
   }
 
   addCircles() {
-    const make = (radius, color) => this.diagram.shapes.polygon(
-      this.layout.corner.SSSProps.circleSides,
+    const make = (radius, color) => this.diagram.shapes.polygonCustom({
+      sides: this.layout.corner.SSSProps.circleSides,
       radius,
-      this.layout.corner.width / 2,
-      0,
-      1,
-      this.layout.corner.SSSProps.circleSides,
+      width: this.layout.corner.width / 2,
       color,
-      new Transform('circle').scale(1, 1).rotate(0).translate(0, 0),
-    );
+      transform: new Transform('circle').scale(1, 1).rotate(0).translate(0, 0),
+    });
     const circ2 = make(this.layout.corner.SSSProps.length2, this.layout.colors.construction);
     const circ3 = make(this.layout.corner.SSSProps.length3, this.layout.colors.construction);
     const circ2Shaddow = make(this.layout.corner.SSSProps.length2, this.layout.colors.construction);
@@ -105,12 +102,13 @@ export default class SSSCollection extends CommonDiagramCollection {
 
   addIntersects() {
     const { SSSProps } = this.layout.corner;
-    const makeIntersectPoint = () => this.diagram.shapes.polygonFilled(
-      SSSProps.intersectPointSides,
-      SSSProps.intersectPointRadius, 0, SSSProps.intersectPointSides,
-      this.layout.colors.intersect,
-      new Transform('intersect').translate(0, 0),
-    );
+    const makeIntersectPoint = () => this.diagram.shapes.polygonCustom({
+      fill: true,
+      sides: SSSProps.intersectPointSides,
+      radius: SSSProps.intersectPointRadius,
+      color: this.layout.colors.intersect,
+      transform: new Transform('intersect').translate(0, 0),
+    });
     this.add('intersectUp', makeIntersectPoint());
     this.add('intersectDown', makeIntersectPoint());
   }

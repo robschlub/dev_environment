@@ -57,12 +57,6 @@ export default class DiagramObjects {
     );
   }
 
-  // line(
-  //   p1OrPosition: Point,
-  //   p2OrLength: number | Point,
-  //   angle: number,
-  //   reference:
-  //   )
   line(...options: Array<TypeLineOptions>) {
     const optionsToUse = Object.assign({}, ...options);
     return new DiagramObjectLine(

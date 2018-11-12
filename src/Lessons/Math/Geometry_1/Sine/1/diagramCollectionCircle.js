@@ -160,15 +160,17 @@ class SineCollection extends SinCosCircle {
   makeBow() {
     const bow = this.shapes.collection();
     const { angle } = this.layout.bow;
-    const handle = this.shapes.polygon(
-      this.layout.anglePoints,
-      this.layout.radius, this.layout.bow.lineWidth,
-      -angle / 2, 1,
-      this.layout.anglePoints * angle / Math.PI / 2,
-      this.layout.colors.bowHandle, new Transform()
+    const handle = this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius: this.layout.radius,
+      width: this.layout.bow.lineWidth,
+      rotation: -angle / 2,
+      sidesToDraw: this.layout.anglePoints * angle / Math.PI / 2,
+      color: this.layout.colors.bowHandle,
+      transform: new Transform()
         .rotate(0)
         .translate(0, 0),
-    );
+    });
     const offset = this.layout.radius * 0.05;
     const string = this.makeLine(
       new Point(0, 0),
@@ -198,12 +200,6 @@ class SineCollection extends SinCosCircle {
   //     layout.label.radiusOffset, angleStart + angleSize / 2);
   //   const label = angleText;
   //   label.transform.updateTranslation(labelPosition);
-
-  //   const arc = this.shapes.polygon(
-  //     layout.arc.sides, layout.arc.radius, layout.arc.lineWidth, angleStart, 1,
-  //     layout.arc.sides * angleFraction, color,
-  //     new Transform(),
-  //   );
 
   //   const angleAnnotation = this.shapes.collection(new Transform()
   //     .scale(1, 1).rotate(0));

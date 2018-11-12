@@ -86,10 +86,13 @@ export default class SizeCollection extends CommonDiagramCollection {
   }) {
     const color = this.layout.colors.reference;
 
-    const square = this.diagram.shapes.polygon(
-      4, Math.sqrt(((layout.sideLength / 2) ** 2) * 2), layout.width,
-      Math.PI / 4, 1, 4, color,
-    );
+    const square = this.diagram.shapes.polygonCustom({
+      sides: 4,
+      length: Math.sqrt(((layout.sideLength / 2) ** 2) * 2),
+      width: layout.width,
+      rotation: Math.PI / 4,
+      color,
+    });
 
     const yLine = this.diagram.objects.line({
       vertexSpaceStart: 'center',

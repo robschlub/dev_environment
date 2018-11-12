@@ -141,10 +141,13 @@ class CircleCollection extends AngleCircle {
   }
 
   makeAngle() {
-    return this.shapes.polygonFilled(
-      this.layout.anglePoints, this.layout.angleRadius, 0,
-      this.layout.anglePoints, this.colors.angle, new Point(0, 0),
-    );
+    return this.shapes.polygonCustom({
+      fill: true,
+      sides: this.layout.anglePoints,
+      radius: this.layout.angleRadius,
+      color: this.colors.angle,
+      point: new Point(0, 0),
+    });
   }
 
   makeRadiusToArc() {
@@ -153,12 +156,14 @@ class CircleCollection extends AngleCircle {
       .rotate(0)
       .translate(this.layout.radiusArc.radius - this.layout.linewidth / 2, 0));
 
-    const arc = this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radiusArc.radius, this.layout.linewidth, 0, 1,
-      Math.floor(this.layout.anglePoints / Math.PI / 2),
-      this.colors.radiusLight,
-      new Point(-this.layout.radiusArc.radius + this.layout.linewidth / 2, 0),
-    );
+    const arc = this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius: this.layout.radiusArc.radius,
+      width: this.layout.linewidth,
+      sidesToDraw: Math.floor(this.layout.anglePoints / Math.PI / 2),
+      color: this.colors.radiusLight,
+      point: new Point(-this.layout.radiusArc.radius + this.layout.linewidth / 2, 0),
+    });
 
     const line = this.makeLine(
       new Point(0, 0),
@@ -185,16 +190,22 @@ class CircleCollection extends AngleCircle {
 
   makeRadiusOnArc() {
     const radiusArc = this.shapes.collection(new Transform().translate(0, 0));
-    const r1 = this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radiusArc.radius, this.layout.linewidth, 0, 1,
-      Math.floor(this.layout.anglePoints / Math.PI / 2), this.colors.radiusLight,
-      new Transform().rotate(0),
-    );
-    const r2 = this.shapes.polygon(
-      this.layout.anglePoints, this.layout.radiusArc.radius, this.layout.linewidth, 0, 1,
-      Math.floor(this.layout.anglePoints / Math.PI / 2) - 1, this.colors.radiusLight,
-      new Transform().rotate(1.02),
-    );
+    const r1 = this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius: this.layout.radiusArc.radius,
+      width: this.layout.linewidth,
+      sidesToDraw: Math.floor(this.layout.anglePoints / Math.PI / 2),
+      color: this.colors.radiusLight,
+      transform: new Transform().rotate(0),
+    });
+    const r2 = this.shapes.polygonCustom({
+      sides: this.layout.anglePoints,
+      radius: this.layout.radiusArc.radius,
+      width: this.layout.linewidth,
+      sidesToDraw: Math.floor(this.layout.anglePoints / Math.PI / 2) - 1,
+      color: this.colors.radiusLight,
+      transform: new Transform().rotate(1.02),
+    });
     radiusArc.add('r1', r1);
     radiusArc.add('r2', r2);
     radiusArc.add('r3', r2._dup(new Transform().rotate(2.02)));

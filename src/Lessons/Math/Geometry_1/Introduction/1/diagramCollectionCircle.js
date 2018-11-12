@@ -53,10 +53,13 @@ function makeClock(shapes: Object) {
 }
 
 function makeWheelShape(shapes: Object) {
-  return shapes.polygon(
-    202, layout.wheelSize, layout.linewidth, 0, 1,
-    202, colors.circle, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: 202,
+    radius: layout.wheelSize,
+    width: layout.linewidth,
+    color: colors.circle,
+    point: new Point(0, 0),
+  });
 }
 
 function makeShade(shapes: Object) {
@@ -144,16 +147,20 @@ function makeCircumferenceDimension(shapes: Object) {
   const arrowWidth = lineWidth * 4;
   const arrowHeightInRadians = arrowHeight / radius;
 
-  const halfCircle1 = shapes.polygon(
-    layout.wheelPoints, radius, lineWidth, 0, 1,
-    layout.wheelPoints,
-    colors.dimensions, new Transform().rotate(0).translate(0, 0),
-  );
-  const halfCircle2 = shapes.polygon(
-    layout.wheelPoints, radius, lineWidth, 0, 1,
-    layout.wheelPoints,
-    colors.dimensions, new Transform().rotate(0).translate(0, 0),
-  );
+  const halfCircle1 = shapes.polygonCustom({
+    sides: layout.wheelPoints,
+    radius,
+    width: lineWidth,
+    color: colors.dimensions,
+    transform: new Transform().rotate(0).translate(0, 0),
+  });
+  const halfCircle2 = shapes.polygonCustom({
+    sides: layout.wheelPoints,
+    radius,
+    width: lineWidth,
+    color: colors.dimensions,
+    transform: new Transform().rotate(0).translate(0, 0),
+  });
   const arrow1 = shapes.arrow(
     arrowWidth, 0, arrowHeight, 0,
     colors.dimensions, new Transform().rotate(0).translate(0, 0),

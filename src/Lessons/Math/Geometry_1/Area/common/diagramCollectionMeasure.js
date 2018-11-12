@@ -70,25 +70,33 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const circ = this.layout.circleA;
     const tri = this.layout.triangleA;
     const col = this.layout.colors.line;
-    const square = this.diagram.shapes.polygon(
-      4, Math.sqrt(((sq.sideLength / 2) ** 2) * 2), sq.width,
-      Math.PI / 4, 1, 4, col,
-      new Transform('sA').translate(sq.position),
-    );
+    const square = this.diagram.shapes.polygonCustom({
+      sides: 4,
+      length: Math.sqrt(((sq.sideLength / 2) ** 2) * 2),
+      width: sq.width,
+      rotation: Math.PI / 4,
+      color: col,
+      transform: new Transform('sA').translate(sq.position),
+    });
     this.add('squareA', square);
 
-    const circle = this.diagram.shapes.polygon(
-      circ.numSides, circ.radius, circ.width,
-      0, 1, circ.numSides, col,
-      new Transform('cA').translate(circ.position),
-    );
+    const circle = this.diagram.shapes.polygonCustom({
+      sides: circ.numSides,
+      radius: circ.radius,
+      width: circ.width,
+      color: col,
+      transform: new Transform('cA').translate(circ.position),
+    });
     this.add('circleA', circle);
 
-    const triangle = this.diagram.shapes.polygon(
-      3, tri.sideLength / 2 / Math.cos(Math.PI / 6), tri.width,
-      -Math.PI / 6, 1, 3, col,
-      new Transform('cA').translate(tri.position),
-    );
+    const triangle = this.diagram.shapes.polygonCustom({
+      sides: 3,
+      length: tri.sideLength / 2 / Math.cos(Math.PI / 6),
+      width: tri.width,
+      rotation: -Math.PI / 6,
+      color: col,
+      transform: new Transform('cA').translate(tri.position),
+    });
     this.add('triangleA', triangle);
   }
 
@@ -165,10 +173,13 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const col = this.layout.colors.grid;
     const length = xNum * radius * 2;
     const height = yNum * radius * 2;
-    const circle = this.diagram.shapes.polygon(
-      lay.sides, radius, lay.width, 0, 1, lay.sides, col,
-      new Point(-length / 2, -height / 2),
-    );
+    const circle = this.diagram.shapes.polygonCustom({
+      sides: lay.sides,
+      radius: radius,
+      width: lay.width,
+      color: col,
+      point: new Point(-length / 2, -height / 2),
+    });
     const circles = this.diagram.shapes.repeatPattern(
       circle,
       xNum, yNum,

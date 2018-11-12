@@ -48,12 +48,12 @@ export function makeAngle(
   sides: number,
   color: Array<number>,
 ) {
-  const curve = diagram.shapes.polygon(
-    sides, radius, lineWidth,
-    0, 1, sides, color,
-    new Transform(),
-  );
-  // curve.angleToDraw = 0;
+  const curve = diagram.shapes.polygonCustom({
+    sides,
+    radius,
+    width: lineWidth,
+    color,
+  });
   const right = diagram.shapes.collection();
   const rightLength = radius / Math.sqrt(2);
   right.add('line1', diagram.shapes.horizontalLine(

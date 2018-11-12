@@ -36,42 +36,61 @@ function makeLine(
 }
 
 function makeWheel(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.wheel.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.3333, 0, 0.2222, 0.2222),
-  );
+  return shapes.polygonCustom({
+    sides: layout.circlePoints,
+    radius: layout.wheel.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.3333, 0, 0.2222, 0.2222),
+    fill: true,
+  });
 }
 
 function makeBall(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.ball.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.5555, 0, 0.1667, 0.1667),
-  );
+  return shapes.polygonCustom({
+    sides: layout.circlePoints,
+    radius: layout.ball.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.5555, 0, 0.1667, 0.1667),
+    fill: true,
+  });
 }
 
 function makeMoon(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.moon.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0, 0, 0.3333, 0.3333),
-  );
+  return shapes.polygonCustom({
+    sides: layout.circlePoints,
+    radius: layout.moon.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0, 0, 0.3333, 0.3333),
+    fill: true,
+  });
 }
 
 function makeRing(shapes: Object) {
-  return shapes.polygonFilled(
-    layout.circlePoints, layout.ring.radius, 0,
-    layout.circlePoints, colors.anchor, new Point(0, 0),
-    textureFile, new Rect(0.7222, 0.1481, 0.1481, 0.1481),
-  );
+  return shapes.polygonCustom({
+    side: layout.circlePoints,
+    radius: layout.ring.radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    textureLocation: textureFile,
+    textureCoords: new Rect(0.7222, 0.1481, 0.1481, 0.1481),
+    fill: true,
+  });
 }
 
 function makeCircleShape(shapes: Object, radius) {
-  return shapes.polygon(
-    layout.circlePoints, radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Transform().scale(1, 1).translate(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.circlePoints,
+    length: radius,
+    width: layout.linewidth,
+    color: colors.circle,
+    transform: new Transform().scale(1, 1).translate(0, 0),
+  });
 }
 
 
@@ -116,24 +135,33 @@ function makeDiameter(shapes: Object) {
   return diameter;
 }
 function makeArc(shapes: Object) {
-  return shapes.polygon(
-    layout.circlePoints, layout.circle.radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.circlePoints,
+    radius: layout.circle.radius,
+    width: layout.linewidth,
+    color: colors.circle,
+    point: new Point(0, 0),
+  });
 }
 
 function makeCircumference(shapes: Object, radius: number) {
-  return shapes.polygon(
-    layout.circlePoints, radius, layout.linewidth, 0, 1,
-    layout.circlePoints, colors.circle, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.circlePoints,
+    radius,
+    width: layout.linewidth,
+    color: colors.circle,
+    point: new Point(0, 0),
+  });
 }
 
 function makeAnchor(shapes: Object, radius: number = layout.linewidth * 2) {
-  return shapes.polygonFilled(
-    layout.anchorPoints, radius, 0,
-    layout.anchorPoints, colors.anchor, new Point(0, 0),
-  );
+  return shapes.polygonCustom({
+    sides: layout.anchorPoints,
+    radius,
+    color: colors.anchor,
+    point: new Point(0, 0),
+    fill: true,
+  });
 }
 
 type circleCollectionType = {
@@ -222,18 +250,27 @@ function makeStraightCircumference(shapes: Object) {
     shapes, new Point(0, -layout.linewidth / 2), layout.circle.radius * Math.PI, layout.linewidth,
     color, new Transform().scale(1, 1).rotate(Math.PI).translate(0, -layout.circle.radius),
   );
-  const leftArc = shapes.polygon(
-    layout.circlePoints, layout.circle.radius, layout.linewidth, 0, -1,
-    layout.circlePoints / 2, color, new Transform()
+  const leftArc = shapes.polygonCustom({
+    sides: layout.circlePoints,
+    radius: layout.circle.radius,
+    width: layout.linewidth,
+    clockwise: true,
+    sidesToDraw: layout.circlePoints / 2,
+    color,
+    transform: new Transform()
       .scale(1, 1).rotate(-Math.PI / 2)
       .translate(0, 0),
-  );
-  const rightArc = shapes.polygon(
-    layout.circlePoints, layout.circle.radius, layout.linewidth, 0, 1,
-    layout.circlePoints / 2, color, new Transform()
+  });
+  const rightArc = shapes.polygonCustom({
+    sides: layout.circlePoints,
+    radius: layout.circle.radius,
+    width: layout.linewidth,
+    sidesToDraw: layout.circlePoints / 2,
+    color,
+    transform: new Transform()
       .scale(1, 1).rotate(-Math.PI / 2)
       .translate(0, 0),
-  );
+  });
 
   const dullCircle = makeCircumference(shapes, layout.circle.radius);
   dullCircle.color = colors.grid;
