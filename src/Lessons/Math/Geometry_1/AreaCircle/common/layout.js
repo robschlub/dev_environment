@@ -1,6 +1,6 @@
 // @flow
 
-import { Point } from '../../../../../js/diagram/tools/g2';
+import { Point, Transform } from '../../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -16,9 +16,13 @@ export default function commonLessonLayout() {
   const width = 0.02;
 
   layout.circle = {
-    radius: 1.3,
-    numSides: 100,
-    width,
+    def: {
+      radius: 1.3,
+      sides: 100,
+      width: width,
+      color: layout.colors.diagram.disabled,
+      transform: new Transform('circle'),
+    },
     scenarios: {
       center: new Point(0, 0),
       left: new Point(-1, 0),
@@ -26,9 +30,13 @@ export default function commonLessonLayout() {
   };
 
   layout.polygons = {
-    radius: layout.circle.radius - layout.circle.width,
-    width: width / 2,
-    borderWidth: width,
+    def: {
+      radius: layout.circle.def.radius - layout.circle.def.width,
+      width,
+      transform: new Transform('poly'),
+      color: layout.colors.lines,
+    },
+    radiusWidth: width,
     sides: [
       6,
       9,

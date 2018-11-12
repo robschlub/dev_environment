@@ -13,20 +13,19 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _selector: DiagramElementPrimative;
   _circle: DiagramElementPrimative;
+  _fillCircle: DiagramElementPrimative;
   _poly6: DiagramElementPrimative;
+  _fill6: DiagramElementPrimative;
   _lines6: DiagramElementPrimative;
   _poly9: DiagramElementPrimative;
   _lines9: DiagramElementPrimative;
+  _fill9: DiagramElementPrimative;
   _poly25: DiagramElementPrimative;
   _lines25: DiagramElementPrimative;
+  _fill25: DiagramElementPrimative;
 
   addCircle() {
-    const circle = this.diagram.shapes.polygon(
-      this.layout.circle.numSides, this.layout.circle.radius,
-      this.layout.circle.width,
-      0, 1, this.layout.circle.numSides, this.layout.colors.diagram.disabled,
-      new Transform('cicle'),
-    );
+    const circle = this.diagram.shapes.polygonCustom(this.layout.circle.def);
     this.add('circle', circle);
   }
 
@@ -34,16 +33,15 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     const lay = this.layout.polygons;
     lay.sides.forEach((sideNum) => {
       const lines = this.diagram.shapes.radialLines(
-        0, lay.radius, lay.width, Math.PI * 2 / sideNum,
+        0, lay.def.radius, lay.radiusWidth, Math.PI * 2 / sideNum,
         this.layout.colors.lines, new Transform('lines'),
       );
       this.add(`lines${sideNum}`, lines);
-
-      const poly = this.diagram.shapes.polygon(
-        sideNum, lay.radius, lay.borderWidth,
-        0, 1, sideNum, this.layout.colors.lines,
-        new Transform('poly'),
-      );
+      const poly = this.diagram.shapes.polygonCustom(Object.assign(
+        {},
+        lay.def,
+        { sides: sideNum },
+      ));
       this.add(`poly${sideNum}`, poly);
     });
   }

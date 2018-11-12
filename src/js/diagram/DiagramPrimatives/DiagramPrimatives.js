@@ -246,6 +246,77 @@ export default class DiagramPrimatives {
     );
   }
 
+  polygonCustom(options: {
+    sides?: number,
+    radius?: number,
+    width?: number,
+    rotation?: number,
+    clockwise?: boolean,
+    sidesToDraw?: number,
+    color?: Array<number>,
+    fill?: boolean,
+    transform?: Transform,
+    location?: Point,
+    textureLocation?: string,
+    textureCoords?: Rect,
+  }) {
+    const defaultOptions = {
+      sides: 4,
+      radius: 1,
+      width: 0.01,
+      rotation: 0,
+      clockwise: false,
+      sidesToDraw: null,
+      color: [1, 0, 0, 1],
+      fill: false,
+      transform: null,
+      point: null,
+      textureLocation: '',
+      textureCoords: new Rect(0, 0, 1, 1),
+    };
+    const optionsToUse = Object.assign({}, defaultOptions, options);
+    const o = optionsToUse;
+    let { transform } = o;
+    if (transform == null && o.point != null) {
+      transform = new Transform('polygon').translate(o.point);
+    } else if (transform == null) {
+      transform = new Transform('polygon');
+    }
+    if (o.sidesToDraw == null) {
+      o.sidesToDraw = o.sides;
+    }
+    let direction = 1;
+    if (o.clockwise) {
+      direction = -1;
+    }
+    if (o.fill) {
+      return PolygonFilled(
+        this.webgl,
+        o.sides,
+        o.radius,
+        o.rotation,
+        o.sidesToDraw,
+        o.color,
+        transform,
+        this.limits,
+        o.textureLocation,
+        o.textureCoords,
+      );
+    }
+    return Polygon(
+      this.webgl,
+      o.sides,
+      o.radius,
+      o.width,
+      o.rotation,
+      direction,
+      o.sidesToDraw,
+      o.color,
+      transform,
+      this.limits,
+    );
+  }
+
   polygonLine(
     numSides: number,
     radius: number,
