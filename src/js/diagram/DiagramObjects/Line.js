@@ -73,7 +73,7 @@ export type TypeLineOptions = {
     linePosition?: number,
   },
   dashStyle?: {
-    style?: Array<number> | null,
+    style: Array<number>,
     maxLength?: number,
   }
 };
@@ -317,13 +317,15 @@ export class DiagramObjectLine extends DiagramElementCollection {
       dashStyle: null,
     };
     const optionsToUse = Object.assign({}, defaultOptions, options);
-    if (optionsToUse.dashStyle) {
+    let { dashStyle } = optionsToUse;
+    if (dashStyle) {
       let defaultMaxLength = optionsToUse.length;
       if (optionsToUse.p1 != null && optionsToUse.p2 != null) {
         defaultMaxLength = distance(optionsToUse.p1, optionsToUse.p2);
       }
-      optionsToUse.dashStyle = Object.assign({}, {
+      dashStyle = Object.assign({}, {
         maxLength: defaultMaxLength,
+        dashStyle: [0.1],
       }, options.dashStyle);
     }
     super(new Transform('Line')
@@ -337,7 +339,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.largerTouchBorder = optionsToUse.largerTouchBorder;
     this.isTouchDevice = isTouchDevice;
     this.animateNextFrame = animateNextFrame;
-    this.dashStyle = optionsToUse.dashStyle;
+    this.dashStyle = dashStyle;
 
     // Calculate and store the line geometry
     //    The length, angle, p1 and p2 properties also exist in this.line,
@@ -383,10 +385,14 @@ export class DiagramObjectLine extends DiagramElementCollection {
     // If the line is to be shown (and not just a label) then make it
     this._line = null;
     if (optionsToUse.showLine) {
+      // let dashStyleToUse = optionsToUse.dashStyle;
+      // if (dashStyleToUse == null) {  // If undefined, make null
+      //   dashStyleToUse = null;
+      // }
       const straightLine = makeStraightLine(
         this.shapes, this.vertexSpaceLength, this.width,
         this.vertexSpaceStart,
-        optionsToUse.color, optionsToUse.dashStyle,
+        optionsToUse.color, this.dashStyle,
         optionsToUse.largerTouchBorder, isTouchDevice,
       );
       this.add('line', straightLine);
@@ -743,7 +749,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     if (line) {
       if (this.dashStyle) {
         line.lengthToDraw = straightLineLength;
-        const newStart = this.vertexSpaceStart.x * straightLineLength;
+        // const newStart = this.vertexSpaceStart.x * straightLineLength;
         // const delta = lineStart + startOffset - newStart;
         line.setPosition(lineStart + startOffset - this.vertexSpaceStart.x, 0);
       } else {
