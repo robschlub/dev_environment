@@ -16,7 +16,7 @@ import makeTriangle from '../../../../LessonsCommon/tools/triangle';
 import type {
   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
 } from '../../../../LessonsCommon/tools/triangle';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
 // import { makeLine } from '../../../../LessonsCommon/tools/line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';

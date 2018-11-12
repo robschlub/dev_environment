@@ -9,7 +9,7 @@ import {
 
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
 import type {
