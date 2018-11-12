@@ -6,6 +6,7 @@ import baseLayout from '../../../../LessonsCommon/layout';
 
 const cssColorNames = [
   'lines',
+  'fill',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -19,9 +20,13 @@ export default function commonLessonLayout() {
     def: {
       radius: 1.3,
       sides: 100,
-      width: width,
+      width,
       color: layout.colors.diagram.disabled,
       transform: new Transform('circle'),
+    },
+    fill: {
+      fill: true,
+      color: layout.colors.fill,
     },
     scenarios: {
       center: new Point(0, 0),
@@ -35,6 +40,10 @@ export default function commonLessonLayout() {
       width,
       transform: new Transform('poly'),
       color: layout.colors.lines,
+    },
+    fill: {
+      fill: true,
+      color: layout.colors.fill,
     },
     radiusWidth: width,
     sides: [

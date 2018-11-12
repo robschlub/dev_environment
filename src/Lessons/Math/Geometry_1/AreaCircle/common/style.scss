@@ -2,6 +2,7 @@
 
 $colors: (
   lines:             map-get($geometry_colors, lines),
+  fill:              map-get($geometry_colors, construction1),
 );
 
 body {

@@ -25,23 +25,30 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   _fill25: DiagramElementPrimative;
 
   addCircle() {
-    const circle = this.diagram.shapes.polygonCustom(this.layout.circle.def);
+    const lay = this.layout.circle;
+    const circle = this.diagram.shapes.polygonCustom(lay.def);
+    const fill = this.diagram.shapes.polygonCustom(lay.def, lay.fill);
+    this.add('fillCircle', fill);
     this.add('circle', circle);
   }
 
   addTriangles() {
     const lay = this.layout.polygons;
     lay.sides.forEach((sideNum) => {
+      const fill = this.diagram.shapes.polygonCustom(
+        lay.def, lay.fill, { sides: sideNum },
+      );
+      this.add(`fill${sideNum}`, fill);
+
       const lines = this.diagram.shapes.radialLines(
         0, lay.def.radius, lay.radiusWidth, Math.PI * 2 / sideNum,
         this.layout.colors.lines, new Transform('lines'),
       );
       this.add(`lines${sideNum}`, lines);
-      const poly = this.diagram.shapes.polygonCustom(Object.assign(
-        {},
-        lay.def,
-        { sides: sideNum },
-      ));
+
+      const poly = this.diagram.shapes.polygonCustom(
+        lay.def, { sides: sideNum },
+      );
       this.add(`poly${sideNum}`, poly);
     });
   }
@@ -68,12 +75,16 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       // $FlowFixMe
       const polygon = this[`_poly${sides}`];
       // $FlowFixMe
+      const fill = this[`_fill${sides}`];
+      // $FlowFixMe
       const lines = this[`_lines${sides}`];
       if (sides === numSides) {
         polygon.show();
+        fill.show();
         lines.show();
       } else {
         polygon.hide();
+        fill.hide();
         lines.hide();
       }
     });

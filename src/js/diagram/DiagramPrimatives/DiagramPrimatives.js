@@ -34,6 +34,21 @@ import {
 } from '../DrawingObjects/TextObject/TextObject';
 import HTMLObject from '../DrawingObjects/HTMLObject/HTMLObject';
 
+export type TypePolygonOptions = {
+  sides?: number,
+  radius?: number,
+  width?: number,
+  rotation?: number,
+  clockwise?: boolean,
+  sidesToDraw?: number,
+  color?: Array<number>,
+  fill?: boolean,
+  transform?: Transform,
+  location?: Point,
+  textureLocation?: string,
+  textureCoords?: Rect,
+};
+
 export default class DiagramPrimatives {
   webgl: WebGLInstance;
   draw2D: DrawContext2D;
@@ -246,20 +261,7 @@ export default class DiagramPrimatives {
     );
   }
 
-  polygonCustom(options: {
-    sides?: number,
-    radius?: number,
-    width?: number,
-    rotation?: number,
-    clockwise?: boolean,
-    sidesToDraw?: number,
-    color?: Array<number>,
-    fill?: boolean,
-    transform?: Transform,
-    location?: Point,
-    textureLocation?: string,
-    textureCoords?: Rect,
-  }) {
+  polygonCustom(...options: Array<TypePolygonOptions>) {
     const defaultOptions = {
       sides: 4,
       radius: 1,
@@ -274,7 +276,7 @@ export default class DiagramPrimatives {
       textureLocation: '',
       textureCoords: new Rect(0, 0, 1, 1),
     };
-    const optionsToUse = Object.assign({}, defaultOptions, options);
+    const optionsToUse = Object.assign({}, defaultOptions, ...options);
     const o = optionsToUse;
     let { transform } = o;
     if (transform == null && o.point != null) {
