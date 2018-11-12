@@ -125,7 +125,7 @@ class DiagramElement {
     };
     bounce: boolean;
     canBeMovedAfterLoosingTouch: boolean;
-    type: 'rotation' | 'translation';
+    type: 'rotation' | 'translation' | 'scaleX' | 'scaleY' | 'scale';
     // eslint-disable-next-line no-use-before-define
     element: DiagramElementCollection | DiagramElementPrimative | null;
   };

@@ -1,7 +1,7 @@
 // @flow
 import WebGLInstance from '../webgl/webgl';
 import {
-  Rect, Point, Line,
+  Rect, Point, // Line,
 } from '../tools/g2';
 // import {
 //   DiagramElementCollection,

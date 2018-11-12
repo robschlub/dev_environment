@@ -438,12 +438,15 @@ export class DiagramObjectLine extends DiagramElementCollection {
 
   setMovable(
     movable: boolean = true,
-    moveType: 'translation' | 'rotation' | 'centerTranslateEndRotation' = 'translation',
+    moveType: 'translation' | 'rotation' | 'centerTranslateEndRotation' | 'scaleX' | 'scaleY' | 'scale' = this.move.type,
     middleLengthPercent: number = 0.333,
     translationBounds: Rect = this.diagramLimits,
   ) {
     if (movable) {
-      if (moveType === 'translation' || moveType === 'rotation') {
+      if (moveType === 'translation' || moveType === 'rotation'
+        || moveType === 'scale' || moveType === 'scaleX'
+        || moveType === 'scaleY'
+      ) {
         this.move.type = moveType;
         this.isTouchable = true;
         this.isMovable = true;
