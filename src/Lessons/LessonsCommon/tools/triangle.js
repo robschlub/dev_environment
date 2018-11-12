@@ -228,6 +228,9 @@ export default function makeTriangle(
       color: dimensionColor,
       showLine,
       offset,
+      dashStyle: {
+        style: [0.05, 0.02, 0.2, 0.02],
+      },
     });
 
     triangle.add(`dimension${index1}${index2}`, dimension);

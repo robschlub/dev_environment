@@ -2,7 +2,7 @@
 
 // import Diagram from '../Diagram';
 import {
-  Transform, Point, Line, polarToRect, normAngle, Rect,
+  Transform, Point, Line, polarToRect, normAngle, Rect, distance,
 } from '../tools/g2';
 import {
   roundNum,
@@ -72,6 +72,10 @@ export type TypeLineOptions = {
     orientation?: TypeLineLabelOrientation,
     linePosition?: number,
   },
+  dashStyle?: {
+    style?: Array<number> | null,
+    maxLength?: number,
+  }
 };
 
 // Line is a class that manages:
@@ -140,14 +144,24 @@ function makeStraightLine(
   width: number,
   position: Point,
   color: Array<number>,
+  dashStyle: {
+    style: Array<number>,
+    maxLength: number } | null,
   largerTouchBorder: boolean,
   isTouchDevice: boolean,
 ) {
-  const straightLine = shapes.dashedLine(
+  let straightLine = shapes.horizontalLine(
     position,
     length, width,
-    0, [0.02, 0.02, 0.2, 0.02], color, new Transform().scale(1, 1).translate(0, 0),
+    0, color, new Transform().scale(1, 1).translate(0, 0),
   );
+  if (dashStyle) {
+    straightLine = shapes.dashedLine(
+      position,
+      dashStyle.maxLength, width,
+      0, dashStyle.style, color, new Transform().scale(1, 1).translate(0, 0),
+    );
+  }
   if (largerTouchBorder) {
     const multiplier = isTouchDevice ? 16 : 8;
     const increaseBorderSize = (element: DiagramElementPrimative) => {
@@ -235,6 +249,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
   offset: number;
   isTouchDevice: boolean;
   largerTouchBorder: boolean;
+  dashStyle: { style: Array<number>, maxLength: number } | null;
 
   // line methods
   setLength: (number) => void;
@@ -299,9 +314,19 @@ export class DiagramObjectLine extends DiagramElementCollection {
       showLine: true,
       largerTouchBorder: true,
       offset: 0,
+      dashStyle: null,
     };
     const optionsToUse = Object.assign({}, defaultOptions, options);
-
+    if (optionsToUse.dashStyle) {
+      let defaultMaxLength = optionsToUse.length;
+      if (optionsToUse.p1 != null && optionsToUse.p2 != null) {
+        defaultMaxLength = distance(optionsToUse.p1, optionsToUse.p2);
+      }
+      optionsToUse.dashStyle = Object.assign({}, {
+        maxLength: defaultMaxLength,
+      }, options.dashStyle);
+      console.log(optionsToUse.dashStyle)
+    }
     super(new Transform('Line')
       .scale(1, 1)
       .rotate(0)
@@ -313,6 +338,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     this.largerTouchBorder = optionsToUse.largerTouchBorder;
     this.isTouchDevice = isTouchDevice;
     this.animateNextFrame = animateNextFrame;
+    this.dashStyle = optionsToUse.dashStyle;
 
     // Calculate and store the line geometry
     //    The length, angle, p1 and p2 properties also exist in this.line,
@@ -361,7 +387,8 @@ export class DiagramObjectLine extends DiagramElementCollection {
       const straightLine = makeStraightLine(
         this.shapes, this.vertexSpaceLength, this.width,
         this.vertexSpaceStart,
-        optionsToUse.color, optionsToUse.largerTouchBorder, isTouchDevice,
+        optionsToUse.color, optionsToUse.dashStyle,
+        optionsToUse.largerTouchBorder, isTouchDevice,
       );
       this.add('line', straightLine);
     }
@@ -536,7 +563,7 @@ export class DiagramObjectLine extends DiagramElementCollection {
     );
     const midLine = makeStraightLine(
       this.shapes, this.multiMove.vertexSpaceMidLength, this.width,
-      start, this.color,
+      start, this.color, null,
       this.largerTouchBorder, this.isTouchDevice,
     );
     // console.log(midLine)
@@ -715,10 +742,17 @@ export class DiagramObjectLine extends DiagramElementCollection {
     }
     const line = this._line;
     if (line) {
-      line.transform.updateScale(straightLineLength, 1);
-      const newStart = this.vertexSpaceStart.x * straightLineLength;
-      const delta = lineStart + startOffset - newStart;
-      line.setPosition(delta, 0);
+      if (this.dashStyle) {
+        line.lengthToDraw = straightLineLength;
+        const newStart = this.vertexSpaceStart.x * straightLineLength;
+        // const delta = lineStart + startOffset - newStart;
+        line.setPosition(lineStart + startOffset - this.vertexSpaceStart.x, 0);
+      } else {
+        line.transform.updateScale(straightLineLength, 1);
+        const newStart = this.vertexSpaceStart.x * straightLineLength;
+        const delta = lineStart + startOffset - newStart;
+        line.setPosition(delta, 0);
+      }
     }
 
     const midLine = this._midLine;
