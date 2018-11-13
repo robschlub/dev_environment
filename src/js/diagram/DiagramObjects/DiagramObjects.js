@@ -11,10 +11,6 @@ import EquationNavigator from './EquationNavigator';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
 import { DiagramObjectLine } from './Line';
 import type {
-  // TypeLineLabelLocation,
-  // TypeLineLabelSubLocation,
-  // TypeLineLabelOrientation,
-  // TypeVertexSpaceStart,
   TypeLineOptions,
 } from './Line';
 

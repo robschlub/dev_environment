@@ -28,7 +28,7 @@ class Content extends LessonContent {
 
   setElementContent() {
     const { selector } = this.diagram.elements._circ._selector;
-    layout.polygons.sides.forEach((numSides) => {
+    layout.polygonSides.forEach((numSides) => {
       selector.add(numSides.toString(), numSides.toString());
     });
     selector.selectWithoutExecution('1');
@@ -51,7 +51,7 @@ class Content extends LessonContent {
       setLeaveState: () => {},
     };
     common.setEnterState = () => {
-      circ.setScenario(circ, layout.circle.scenarios.center);
+      circ.setScenario(circ, layout.collection.scenarios.center);
       // circ._circle.setColor(colors.lines);
     };
     common.showOnly = [circ];
@@ -101,10 +101,10 @@ class Content extends LessonContent {
       showOnly: [circ],
       show: [circ],
       transitionFromPrev: (done) => {
-        circ.moveToScenario(circ, layout.circle.scenarios.center, null, done);
+        circ.moveToScenario(circ, layout.collection.scenarios.center, null, done);
       },
       setSteadyState: () => {
-        circ.setScenario(circ, layout.circle.scenarios.center);
+        circ.setScenario(circ, layout.collection.scenarios.center);
         circ.eqns.triRectEqn.showForm('6', 'base');
       },
     });

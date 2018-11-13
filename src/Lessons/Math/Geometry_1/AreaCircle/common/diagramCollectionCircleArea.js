@@ -42,32 +42,45 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
 
   addCircles() {
     const lay = this.layout.circle;
-    const circle = this.diagram.shapes.polygon(lay.def);
-    const backgroundCircle = this.diagram.shapes.polygon(lay.def, lay.back);
-    const fill = this.diagram.shapes.polygon(lay.def, lay.fill);
+    const circle = this.diagram.shapes.polygon(lay.default, lay.circle);
+    const backgroundCircle = this.diagram.shapes.polygon(lay.default, lay.back);
+    const fill = this.diagram.shapes.polygon(lay.default, lay.fill);
     this.add('fillCircle', fill);
     this.add('backgroundCircle', backgroundCircle);
     this.add('circle', circle);
   }
 
   addTriangles() {
-    const lay = this.layout.polygons;
-    lay.sides.forEach((sideNum) => {
+    const lay = this.layout.polygon;
+    this.layout.polygonSides.forEach((sideNum) => {
       const fill = this.diagram.shapes.polygon(
-        lay.def, lay.fill, { sides: sideNum },
+        lay.default, lay.fill, { sides: sideNum },
       );
       this.add(`fill${sideNum}`, fill);
 
+      const triFill = this.diagram.shapes.fan(this.layout.triangle.fill(sideNum));
+      this.add(`triFill${sideNum}`, triFill);
+
+      const radialLines = this.layout.radialLines.lines(sideNum);
       const lines = this.diagram.shapes.radialLines(
-        0, lay.def.radius, lay.radiusWidth, Math.PI * 2 / sideNum,
-        this.layout.colors.lines, new Transform('lines'),
+        radialLines.innerRadius,
+        radialLines.outerRadius,
+        radialLines.width,
+        radialLines.angleStep,
+        radialLines.color,
+        radialLines.transform,
       );
       this.add(`lines${sideNum}`, lines);
 
       const poly = this.diagram.shapes.polygon(
-        lay.def, { sides: sideNum },
+        lay.default, lay.polygon, { sides: sideNum },
       );
       this.add(`poly${sideNum}`, poly);
+
+      const border = this.diagram.shapes.polygon(
+        lay.default, lay.border, { sides: sideNum },
+      );
+      this.add(`border${sideNum}`, border);
 
       const height = this.diagram.objects.line(this.layout.triangle.height(sideNum));
       this.add(`height${sideNum}`, height);
@@ -98,9 +111,11 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   }
 
   showTriangles(numSides: number) {
-    this.layout.polygons.sides.forEach((sides) => {
+    this.layout.polygonSides.forEach((sides) => {
       // $FlowFixMe
       const polygon = this[`_poly${sides}`];
+      // $FlowFixMe
+      const border = this[`_border${sides}`];
       // $FlowFixMe
       const fill = this[`_fill${sides}`];
       // $FlowFixMe
@@ -109,18 +124,24 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       const base = this[`_base${sides}`];
       // $FlowFixMe
       const lines = this[`_lines${sides}`];
+      // $FlowFixMe
+      const triFill = this[`_triFill${sides}`];
       if (sides === numSides) {
         polygon.show();
         fill.show();
         lines.show();
         height.showAll();
         base.showAll();
+        border.show();
+        triFill.show();
       } else {
         polygon.hide();
         fill.hide();
         lines.hide();
         height.hideAll();
         base.hideAll();
+        border.hide();
+        triFill.hide();
       }
     });
     this.diagram.animateNextFrame();

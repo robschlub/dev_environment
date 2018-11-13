@@ -82,16 +82,38 @@ export default class DiagramPrimatives {
     );
   }
 
-  fan(
-    points: Array<Point>,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return Fan(
-      this.webgl, points,
-      color, transform, this.limits,
-    );
+  fan(...options: Array<{
+    points?: Array<Point>,
+    color?: Array<number>,
+    transform?: Transform | null,
+    position?: Point | null,
+  }>) {
+    const defaultOptions = {
+      points: [],
+      color: [1, 0, 0, 1],
+      transform: null,
+      position: null,
+    };
+    const optionsToUse = Object.assign({}, defaultOptions, ...options);
+    const o = optionsToUse;
+    let { transform } = o;
+    if (transform == null && o.position != null) {
+      transform = new Transform('fan').translate(o.position);
+    } else if (transform == null) {
+      transform = new Transform('fan');
+    }
+    return Fan(this.webgl, o.points, o.color, transform, this.limits);
   }
+  // fan(
+  //   points: Array<Point>,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // ) {
+  //   return Fan(
+  //     this.webgl, points,
+  //     color, transform, this.limits,
+  //   );
+  // }
 
   text(
     textInput: string,

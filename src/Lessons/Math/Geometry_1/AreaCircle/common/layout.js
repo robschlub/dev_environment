@@ -28,50 +28,71 @@ export default function commonLessonLayout() {
     height: 3,
   };
 
-  layout.circle = {
-    def: {
-      radius: 1.25,
-      sides: 100,
-      width: width * 2,
-      color: layout.colors.lines,
-      transform: new Transform('circle'),
-    },
-    back: {
-      color: layout.colors.diagram.disabled,
-      width,
-    },
-    fill: {
-      fill: true,
-      color: layout.colors.fill,
-    },
+  layout.collection = {
     scenarios: {
       center: new Point(0, 0),
       left: new Point(-1, 0),
     },
   };
 
-  layout.polygons = {
-    def: {
-      radius: layout.circle.def.radius - layout.circle.back.width,
-      width,
-      transform: new Transform('poly'),
+  layout.circle = {
+    default: {
+      radius: 1.25,
+      sides: 100,
+      width: width * 2,
+      transform: new Transform(),
+    },
+    circle: {
       color: layout.colors.lines,
     },
     fill: {
       fill: true,
       color: layout.colors.fill,
     },
-    radiusWidth: width,
-    sides: [
-      6,
-      9,
-      25,
-    ],
+    back: {
+      color: layout.colors.diagram.disabled,
+      width,
+    },
+  };
+
+  layout.polygonSides = [
+    6,
+    9,
+    25,
+  ];
+
+  layout.polygon = {
+    default: {
+      radius: layout.circle.default.radius - layout.circle.back.width,
+      width,
+      transform: new Transform('poly'),
+    },
+    polygon: {
+      color: layout.colors.lines,
+    },
+    border: {
+      color: layout.colors.border,
+    },
+    fill: {
+      fill: true,
+      color: layout.colors.fill,
+    },
+  };
+
+  layout.radialLines = {
+    lines: sideNum => ({
+      innerRadius: 0,
+      outerRadius: layout.circle.default.radius - layout.circle.back.width,
+      width,
+      angleStep: Math.PI * 2 / sideNum,
+      color: layout.colors.lines,
+      transform: new Transform('lines'),
+    }),
   };
 
   layout.triangle = {
     height: (sideNum) => {
-      const { radius } = layout.polygons.def;
+      const { radius } = layout.polygon.default;
       const heightDimension = radius * Math.cos(Math.PI * 2 / sideNum / 2);
       return {
         vertexSpaceStart: 'start',
@@ -84,13 +105,13 @@ export default function commonLessonLayout() {
           location: 'top',
           orientation: 'horizontal',
           offset: -0.02,
-          linePosition: 0.5 + 0.4 * sideNum / Math.max(...layout.polygons.sides),
+          linePosition: 0.5 + 0.4 * sideNum / Math.max(...layout.polygonSides),
         },
       };
     },
     base: (sideNum) => {
-      const { radius } = layout.polygons.def;
-      const w = layout.polygons.def.width;
+      const { radius } = layout.polygon.default;
+      const w = layout.polygon.default.width;
       const heightDimension = radius * Math.cos(Math.PI * 2 / sideNum / 2);
       return {
         vertexSpaceStart: 'start',
@@ -102,10 +123,22 @@ export default function commonLessonLayout() {
           text: 'b',
           location: 'right',
           orientation: 'horizontal',
-          offset: 0.05,
+          offset: 0.02,
         },
         arrows: {},
         offset: radius * 1.1 - heightDimension,
+      };
+    },
+    fill: (sideNum) => {
+      const { radius } = layout.polygon.default;
+      const w = layout.polygon.default.width;
+      return {
+        points: [
+          new Point(0, 0),
+          polarToRect(radius - w / 2, 0),
+          polarToRect(radius - w / 2, -Math.PI * 2 / sideNum),
+        ],
+        color: layout.colors.fill,
       };
     },
   };

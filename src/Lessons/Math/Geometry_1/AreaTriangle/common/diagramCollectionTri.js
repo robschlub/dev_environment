@@ -93,9 +93,10 @@ export default class TriangleAreaCollection extends CommonDiagramCollection {
     color: Array<number>,
   ) {
     const lay = this.layout[name];
-    const fan = this.diagram.shapes.fan(
-      lay.points, color,
-    );
+    const fan = this.diagram.shapes.fan({
+      points: lay.points,
+      color,
+    });
     this.add(name, fan);
   }
 

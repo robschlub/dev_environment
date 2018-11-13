@@ -34,7 +34,7 @@ export function addTriRectEquation(
   addToCollection: DiagramElementCollection,
   name: string,
 ) {
-  const { sides } = layout.polygons;
+  const sides = layout.polygonSides;
   const eqn = diagram.equation.makeEqn();
   const colHeight = layout.colors.height;
   const colBorder = layout.colors.border;
