@@ -69,36 +69,10 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       );
       this.add(`poly${sideNum}`, poly);
 
-      const heightDimension = lay.def.radius * Math.cos(Math.PI * 2 / sideNum / 2);
-      const height = this.diagram.objects.line({
-        vertexSpaceStart: 'start',
-        length: heightDimension,
-        angle: -Math.PI * 2 / sideNum / 2,
-        width: lay.def.width,
-        color: this.layout.colors.height,
-        label: {
-          text: 'h',
-          location: 'top',
-          orientation: 'horizontal',
-          offset: -0.02,
-          linePosition: 0.5 + 0.4 * sideNum / Math.max(...lay.sides),
-        },
-      });
+      const height = this.diagram.objects.line(this.layout.triangles.height(sideNum));
       this.add(`height${sideNum}`, height);
 
-      const base = this.diagram.objects.line({
-        vertexSpaceStart: 'start',
-        p1: polarToRect(lay.def.radius - lay.def.width / 2, 0),
-        p2: polarToRect(lay.def.radius - lay.def.width / 2, -Math.PI * 2 / sideNum),
-        width: lay.def.width,
-        color: this.layout.colors.border,
-        label: {
-          text: 'b',
-          location: 'right',
-          orientation: 'horizontal',
-          offset: -0.02,
-        },
-      });
+      const base = this.diagram.objects.line(this.layout.triangles.base(sideNum));
       this.add(`base${sideNum}`, base);
     });
   }

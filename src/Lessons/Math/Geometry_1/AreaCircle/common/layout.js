@@ -1,6 +1,8 @@
 // @flow
 
-import { Point, Transform } from '../../../../../js/diagram/tools/g2';
+import {
+  Point, Transform, polarToRect,
+} from '../../../../../js/diagram/tools/g2';
 import getCssColors from '../../../../../js/tools/getCssColors';
 import baseLayout from '../../../../LessonsCommon/layout';
 
@@ -65,6 +67,47 @@ export default function commonLessonLayout() {
       9,
       25,
     ],
+  };
+
+  layout.triangles = {
+    height: (sideNum) => {
+      const { radius } = layout.polygons.def;
+      const heightDimension = radius * Math.cos(Math.PI * 2 / sideNum / 2);
+      return {
+        vertexSpaceStart: 'start',
+        length: heightDimension,
+        angle: -Math.PI * 2 / sideNum / 2,
+        width,
+        color: layout.colors.height,
+        label: {
+          text: 'h',
+          location: 'top',
+          orientation: 'horizontal',
+          offset: -0.02,
+          linePosition: 0.5 + 0.4 * sideNum / Math.max(...layout.polygons.sides),
+        },
+      };
+    },
+    base: (sideNum) => {
+      const { radius } = layout.polygons.def;
+      const w = layout.polygons.def.width;
+      const heightDimension = radius * Math.cos(Math.PI * 2 / sideNum / 2);
+      return {
+        vertexSpaceStart: 'start',
+        p1: polarToRect(radius - w / 2, 0),
+        p2: polarToRect(radius - w / 2, -Math.PI * 2 / sideNum),
+        width,
+        color: layout.colors.border,
+        label: {
+          text: 'b',
+          location: 'right',
+          orientation: 'horizontal',
+          offset: -0.02,
+        },
+        arrows: {},
+        offset: radius * 1.1 - heightDimension,
+      };
+    },
   };
 
   layout.triangleAreaEquation = new Point(1, 0);

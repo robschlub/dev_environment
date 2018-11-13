@@ -63,7 +63,7 @@ export type TypeLineOptions = {
   arrows?: {
     width?: number,
     height?: number,
-  },
+  } | boolean,
   label?: {
     text: string | Array<string>,
     offset?: number,
@@ -431,8 +431,12 @@ export class DiagramObjectLine extends DiagramElementCollection {
 
     // Arrows overrides arrowStart or arrowEnd
     if (optionsToUse.arrows) {
-      const arrowOptions = Object.assign({}, defaultArrowOptions, optionsToUse.arrows);
-      this.addArrowEnd(arrowOptions.height, arrowOptions.width);
+      let arrows = {};
+      if (typeof optionsToUse.arrows === 'object') {
+        ({ arrows } = optionsToUse);
+      }
+      const arrowOptions = Object.assign({}, defaultArrowOptions, arrows);
+      this.addArrows(arrowOptions.height, arrowOptions.width);
     }
 
     const defaultLabelOptions = {
