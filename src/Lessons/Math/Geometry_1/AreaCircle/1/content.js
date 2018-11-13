@@ -58,10 +58,13 @@ class Content extends LessonContent {
     this.addSection(common, {
       title: 'Introduction',
       setContent: ['The area of a circle can initially seem challenging to calculate as its edge is |curved|.'],
-      show: [circ._grid, circ._circle],
+      show: [circ._circle],
     });
+    common.setContent = 'Curves don\'t align with straight lines';
+    this.addSection(common, { show: [circ._circle] });
+    this.addSection(common, { show: [circ._circle, circ._grid] });
     this.addSection(common, {
-      setContent: ['Curves don\'t align with straight lines, so we have to start by making an |approximation|.'],
+      setContent: ['So we have to start by making an |approximation|.'],
       show: [circ._grid, circ._circle],
     });
 
