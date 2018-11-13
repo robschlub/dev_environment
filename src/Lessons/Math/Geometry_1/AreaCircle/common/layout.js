@@ -148,6 +148,7 @@ export default function commonLessonLayout() {
           polarToRect(radius - w / 2, -Math.PI * 2 / sideNum),
         ],
         color: layout.colors.areaTri,
+        transform: new Transform().rotate(0),
       };
     },
   };
@@ -155,7 +156,7 @@ export default function commonLessonLayout() {
   layout.triangleAreaEquation = new Point(2.5, 0);
 
   layout.selector = {
-    position: new Point(-1, 1.5),
+    position: new Point(0, -1.4),
   };
   return layout;
 }

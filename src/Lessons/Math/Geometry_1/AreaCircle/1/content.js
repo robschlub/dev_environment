@@ -29,7 +29,7 @@ class Content extends LessonContent {
   setElementContent() {
     const { selector } = this.diagram.elements._circ._selector;
     layout.polygonSides.forEach((numSides) => {
-      selector.add(numSides.toString(), numSides.toString());
+      selector.add(numSides.toString(), `${numSides.toString()}`);
     });
     selector.selectWithoutExecution('1');
   }
@@ -55,9 +55,9 @@ class Content extends LessonContent {
     //   circ.setScenario(circ, layout.collection.scenarios.center);
     //   // circ._circle.setColor(colors.lines);
     // };
-    common.transitionFromAny = (done) => {
-      circ.moveToScenario(circ, layout.collection.scenarios.center, null, done);
-    };
+    // common.transitionFromPrev = (done) => {
+    //   circ.moveToScenario(circ, layout.collection.scenarios.center, null, done);
+    // };
     common.setSteadyState = () => {
       circ.setScenario(circ, layout.collection.scenarios.center);
     };
@@ -85,74 +85,84 @@ class Content extends LessonContent {
     this.addSection(common, { show: [circ._circle, circ._lines6, circ._poly6] });
     this.addSection(common, { show: [circ._backgroundCircle, circ._lines6, circ._poly6] });
 
-    common.setContent = 'Each triangle has a |height| and a |base|.';
+    common.setContent = 'Each triangle has the same |height| and |base|.';
     common.modifiers = {
       height: highlight(colors.height),
       base: highlight(colors.border),
       area: highlight(colors.area),
+      all: click(circ.rotateArea, [circ, 6], colors.diagram.action),
+      Each: click(circ.rotateArea, [circ, 6], colors.diagram.action),
+      each_: click(circ.rotateArea, [circ, 6], colors.diagram.action),
     };
     this.addSection(common, {
       show: [
         circ._backgroundCircle, circ._lines6, circ._poly6,
       ],
     });
+    common.setContent = '|Each| triangle has the same |height| and |base|.';
+    common.showOnly = [circ, circ._tri6];
     this.addSection(common, {
       show: [
         circ._backgroundCircle, circ._lines6, circ._poly6,
-        circ._height6, circ._base6,
+        circ._tri6._height, circ._tri6._base,
       ],
     });
 
-    common.setContent = 'And therefore each triangle has an |area|.';
+    common.setContent = 'And therefore |each_| triangle has the same |area|.';
     const show = [
       circ._backgroundCircle, circ._lines6, circ._poly6,
-      circ._height6, circ._base6,
+      circ._tri6._height, circ._tri6._base,
     ];
     this.addSection(common, {
       show: [
         circ._backgroundCircle, circ._lines6, circ._poly6,
-        circ._height6, circ._base6,
+        circ._tri6._height, circ._tri6._base,
       ],
     });
-    common.transitionFromAny = (done) => {
-      circ.moveToScenario(circ, layout.collection.scenarios.left, null, done);
-    };
     this.addSection(common, {
       show: [...show],
+      transitionFromPrev: (done) => {
+        circ.moveToScenario(circ, layout.collection.scenarios.left, null, done);
+      },
       setSteadyState: () => {
         circ.setScenario(circ, layout.collection.scenarios.left);
-        circ._triFill6.show();
+        circ._tri6._fill.show();
         circ.eqns.triRectEqn.showForm('0');
       },
     });
 
-    common.setContent = 'As all the triangles are |equal|, then all |height|, |base| and |area| properties are also |equal|.';
-    common.show = [...show, circ._triFill6];
+    // common.setContent = 'As |all| the triangles are |equal|, then all |height|, |base| and |area| properties are also |equal|.';
+    common.show = [...show, circ._tri6._fill];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
     };
-    this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common, {title: 'asdf'});
-    // this.addSection(common, {
-    //   show: [...show, circ._triFill6],
-    //   setSteadyState: () => {
-    //     circ.setScenario(circ, layout.collection.scenarios.left);
-    //     circ.eqns.triRectEqn.showForm('0', '0');
-    //   },
-    // });
+    // this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common, {title: 'asdf'});
 
-    common.setContent = 'And therefore the area of |all triangles| is |6 times one triangle|.';
+
+    common.setContent = 'The area of |all triangles| is |6 times one triangle|.';
     this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common);
     common.show = [...show, circ._fill6];
     this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
 
-    common.setContent = 'The area of the |triangles|, is an approximation to the area of the |circle|.';
-    common.modifiers = {
-      triangles: click(circ.showTriangles, [circ, 6, 'tris']),
-      circle: click(circ.showTriangles, [circ, 6, 'circle']),
+    common.setContent = 'The area of the |triangles|, is a rough |approximation| of the |circle| area.';
+    // common.modifiers = {
+    //   triangles: click(circ.showTriangles, [circ, 6, 'tris', false], colors.areaTriLabel),
+    //   circle: click(circ.showTriangles, [circ, 6, 'circle', false], colors.areaCircleLabel),
+    // };
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = 'Now, what happens when we |increase| the number of triangles?';
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = 'Touch the numbers near the circle to change the number of triangles.';
+    common.show = [...show, circ._fill6, circ._selector];
+    common.setEnterState = () => {
+      circ.setScenario(circ, layout.collection.scenarios.left);
+      circ._selector.selector.select('6');
+      // diag._selector.selector.selectWithoutExecution('corresponding');
+      // console.log(circ)
     };
-    this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common);
-    common.show = [...show, circ._fill6];
-    this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
     this.addSection(common, {
       title: 'Introduction',

@@ -812,10 +812,22 @@ class LessonContent {
     const eqnSection = {
       transitionFromPrev: (done) => {
         let time = null;
+        let formChange = true;
         if (Array.isArray(fromForm)) {
           nav.showForm(fromForm[0], fromForm[1]);
+          if (Array.isArray(toForm)) {
+            if (fromForm[0] === toForm[0]
+              && fromForm[1] === toForm[1]) {
+              formChange = false;
+            }
+          }
         } else {
           nav.showForm(fromForm);
+          if (typeof toForm === 'string') {
+            if (fromForm === toForm) {
+              formChange = false;
+            }
+          }
         }
         let nextForm;
         if (Array.isArray(toForm)) {
@@ -835,7 +847,8 @@ class LessonContent {
           eqn.collection.stop(true, true);
           done();
         };
-        if (nextForm != null && fromForm !== toForm) {
+
+        if (nextForm != null && formChange) {
           nextForm.animatePositionsTo(0, 0.5, time, 0.5, cleanup);
         } else {
           done();
