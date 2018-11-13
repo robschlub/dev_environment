@@ -58,7 +58,7 @@ export default function makeSlider(
     0, options.colorNeg, new Transform().rotate(Math.PI).scale(1, 1).translate(options.length, 0),
   );
 
-  const circle = shapes.polygonCustom({
+  const circle = shapes.polygon({
     fill: true,
     sides: options.circleSides,
     radius: options.circleWidth,

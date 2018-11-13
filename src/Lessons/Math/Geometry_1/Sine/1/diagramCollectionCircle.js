@@ -160,7 +160,7 @@ class SineCollection extends SinCosCircle {
   makeBow() {
     const bow = this.shapes.collection();
     const { angle } = this.layout.bow;
-    const handle = this.shapes.polygonCustom({
+    const handle = this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius: this.layout.radius,
       width: this.layout.bow.lineWidth,

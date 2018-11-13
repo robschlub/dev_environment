@@ -61,7 +61,7 @@ class ImportantAnglesCollection extends AngleCircle {
   }
 
   makeAcuteRange() {
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       fill: true,
       sides: this.layout.anglePoints,
       radius: this.layout.axes.length,
@@ -73,7 +73,7 @@ class ImportantAnglesCollection extends AngleCircle {
   }
 
   makeObtuseRange() {
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       fill: true,
       sides: this.layout.anglePoints,
       radius: this.layout.axes.length,
@@ -86,7 +86,7 @@ class ImportantAnglesCollection extends AngleCircle {
   }
 
   makeReflexRange() {
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       fill: true,
       sides: this.layout.anglePoints,
       radius: this.layout.axes.length,

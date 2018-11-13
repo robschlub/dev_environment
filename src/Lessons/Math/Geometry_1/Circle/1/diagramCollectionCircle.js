@@ -36,7 +36,7 @@ function makeLine(
 }
 
 function makeWheel(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.circlePoints,
     radius: layout.wheel.radius,
     color: colors.anchor,
@@ -48,7 +48,7 @@ function makeWheel(shapes: Object) {
 }
 
 function makeBall(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.circlePoints,
     radius: layout.ball.radius,
     color: colors.anchor,
@@ -60,7 +60,7 @@ function makeBall(shapes: Object) {
 }
 
 function makeMoon(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.circlePoints,
     radius: layout.moon.radius,
     color: colors.anchor,
@@ -72,7 +72,7 @@ function makeMoon(shapes: Object) {
 }
 
 function makeRing(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     side: layout.circlePoints,
     radius: layout.ring.radius,
     color: colors.anchor,
@@ -84,7 +84,7 @@ function makeRing(shapes: Object) {
 }
 
 function makeCircleShape(shapes: Object, radius) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.circlePoints,
     length: radius,
     width: layout.linewidth,
@@ -135,7 +135,7 @@ function makeDiameter(shapes: Object) {
   return diameter;
 }
 function makeArc(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.circlePoints,
     radius: layout.circle.radius,
     width: layout.linewidth,
@@ -145,7 +145,7 @@ function makeArc(shapes: Object) {
 }
 
 function makeCircumference(shapes: Object, radius: number) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.circlePoints,
     radius,
     width: layout.linewidth,
@@ -155,7 +155,7 @@ function makeCircumference(shapes: Object, radius: number) {
 }
 
 function makeAnchor(shapes: Object, radius: number = layout.linewidth * 2) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.anchorPoints,
     radius,
     color: colors.anchor,
@@ -250,7 +250,7 @@ function makeStraightCircumference(shapes: Object) {
     shapes, new Point(0, -layout.linewidth / 2), layout.circle.radius * Math.PI, layout.linewidth,
     color, new Transform().scale(1, 1).rotate(Math.PI).translate(0, -layout.circle.radius),
   );
-  const leftArc = shapes.polygonCustom({
+  const leftArc = shapes.polygon({
     sides: layout.circlePoints,
     radius: layout.circle.radius,
     width: layout.linewidth,
@@ -261,7 +261,7 @@ function makeStraightCircumference(shapes: Object) {
       .scale(1, 1).rotate(-Math.PI / 2)
       .translate(0, 0),
   });
-  const rightArc = shapes.polygonCustom({
+  const rightArc = shapes.polygon({
     sides: layout.circlePoints,
     radius: layout.circle.radius,
     width: layout.linewidth,

@@ -84,7 +84,7 @@ export function makeSupplementaryAngle(
   layout: Object,
 ) {
   const arcLayout = layout.angle.arc;
-  const arc = diagram.shapes.polygonCustom({
+  const arc = diagram.shapes.polygon({
     sides: arcLayout.sides,
     radius: arcLayout.radius,
     width: arcLayout.width * 2,

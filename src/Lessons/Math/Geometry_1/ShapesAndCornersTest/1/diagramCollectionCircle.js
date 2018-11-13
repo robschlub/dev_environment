@@ -52,7 +52,7 @@ function makeRadius(shapes: Object, layout: Object) {
 }
 
 function makeAnchor(shapes: Object, layout: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     fill: true,
     sides: anchorPoints,
     radius: layout.linewidth * 2,

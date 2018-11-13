@@ -245,7 +245,7 @@ class ShapesCollection extends DiagramElementCollection {
     const pent = makePent(shapes, locations.pent.center);
     this.add('pent', pent);
 
-    const anchor = shapes.polygonCustom({
+    const anchor = shapes.polygon({
       fill: true,
       sides: 12,
       radius: 0.5,
@@ -256,14 +256,14 @@ class ShapesCollection extends DiagramElementCollection {
     anchor.isMovable = true;
     this.add('anchor', anchor);
 
-    const s1 = shapes.polygonCustom({
+    const s1 = shapes.polygon({
       fill: true,
       radius: 8,
       width: 0.3,
       color: lineColor,
       point: new Point(0, 0),
     });
-    const s2 = shapes.polygonCustom({
+    const s2 = shapes.polygon({
       fill: true,
       sides: 8,
       radius: 0.2,

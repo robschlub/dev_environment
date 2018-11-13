@@ -92,7 +92,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     };
 
     const makeP = () => {
-      const point = this.diagram.shapes.polygonCustom({
+      const point = this.diagram.shapes.polygon({
         sides: 4,
         radius: 0.1,
         width: 0.01,

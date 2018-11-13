@@ -141,7 +141,7 @@ class CircleCollection extends AngleCircle {
   }
 
   makeAngle() {
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       fill: true,
       sides: this.layout.anglePoints,
       radius: this.layout.angleRadius,
@@ -156,7 +156,7 @@ class CircleCollection extends AngleCircle {
       .rotate(0)
       .translate(this.layout.radiusArc.radius - this.layout.linewidth / 2, 0));
 
-    const arc = this.shapes.polygonCustom({
+    const arc = this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius: this.layout.radiusArc.radius,
       width: this.layout.linewidth,
@@ -190,7 +190,7 @@ class CircleCollection extends AngleCircle {
 
   makeRadiusOnArc() {
     const radiusArc = this.shapes.collection(new Transform().translate(0, 0));
-    const r1 = this.shapes.polygonCustom({
+    const r1 = this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius: this.layout.radiusArc.radius,
       width: this.layout.linewidth,
@@ -198,7 +198,7 @@ class CircleCollection extends AngleCircle {
       color: this.colors.radiusLight,
       transform: new Transform().rotate(0),
     });
-    const r2 = this.shapes.polygonCustom({
+    const r2 = this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius: this.layout.radiusArc.radius,
       width: this.layout.linewidth,

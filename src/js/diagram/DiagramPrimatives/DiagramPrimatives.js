@@ -229,39 +229,39 @@ export default class DiagramPrimatives {
     );
   }
 
-  polygon(
-    numSides: number,
-    radius: number,
-    lineWidth: number,
-    rotation: number,
-    direction: -1 | 1,
-    numSidesToDraw: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return Polygon(
-      this.webgl, numSides, radius, lineWidth,
-      rotation, direction, numSidesToDraw, color, transform, this.limits,
-    );
-  }
+  // polygon(
+  //   numSides: number,
+  //   radius: number,
+  //   lineWidth: number,
+  //   rotation: number,
+  //   direction: -1 | 1,
+  //   numSidesToDraw: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  // ) {
+  //   return Polygon(
+  //     this.webgl, numSides, radius, lineWidth,
+  //     rotation, direction, numSidesToDraw, color, transform, this.limits,
+  //   );
+  // }
 
-  polygonFilled(
-    numSides: number,
-    radius: number,
-    rotation: number,
-    numSidesToDraw: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-    textureLocation: string = '',
-    textureCoords: Rect = new Rect(0, 0, 1, 1),
-  ) {
-    return PolygonFilled(
-      this.webgl, numSides, radius,
-      rotation, numSidesToDraw, color, transform, this.limits, textureLocation, textureCoords,
-    );
-  }
+  // polygonFilled(
+  //   numSides: number,
+  //   radius: number,
+  //   rotation: number,
+  //   numSidesToDraw: number,
+  //   color: Array<number>,
+  //   transform: Transform | Point = new Transform(),
+  //   textureLocation: string = '',
+  //   textureCoords: Rect = new Rect(0, 0, 1, 1),
+  // ) {
+  //   return PolygonFilled(
+  //     this.webgl, numSides, radius,
+  //     rotation, numSidesToDraw, color, transform, this.limits, textureLocation, textureCoords,
+  //   );
+  // }
 
-  polygonCustom(...options: Array<TypePolygonOptions>) {
+  polygon(...options: Array<TypePolygonOptions>) {
     const defaultOptions = {
       sides: 4,
       radius: 1,

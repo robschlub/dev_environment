@@ -15,7 +15,7 @@ export default class ShapesCollection extends CommonDiagramCollection {
   _circle: DiagramElementPrimative;
 
   addFilledShapes() {
-    const square1 = this.diagram.shapes.polygonCustom({
+    const square1 = this.diagram.shapes.polygon({
       fill: true,
       sides: 4,
       radius: Math.sqrt(((this.layout.square1.sideLength / 2) ** 2) * 2),
@@ -25,7 +25,7 @@ export default class ShapesCollection extends CommonDiagramCollection {
     });
     this.add('square1', square1);
 
-    const square2 = this.diagram.shapes.polygonCustom({
+    const square2 = this.diagram.shapes.polygon({
       fill: true,
       sides: 4,
       radius: Math.sqrt(((this.layout.square2.sideLength / 2) ** 2) * 2),
@@ -35,7 +35,7 @@ export default class ShapesCollection extends CommonDiagramCollection {
     });
     this.add('square2', square2);
 
-    const circle = this.diagram.shapes.polygonCustom({
+    const circle = this.diagram.shapes.polygon({
       fill: true,
       sides: this.layout.circle.numSides,
       radius: this.layout.circle.radius,

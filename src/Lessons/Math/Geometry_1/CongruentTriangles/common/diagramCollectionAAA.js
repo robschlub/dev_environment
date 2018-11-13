@@ -70,7 +70,7 @@ export default class AAACollection extends CommonDiagramCollection {
       this.layout.corner.angleWidth, this.layout.triangle.angle.sides,
       this.layout.colors.angleA,
     );
-    const touchPoint = this.diagram.shapes.polygonCustom({
+    const touchPoint = this.diagram.shapes.polygon({
       fill: true,
       sides: 10,
       radius: 0.4,

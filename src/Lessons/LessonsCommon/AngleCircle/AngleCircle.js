@@ -150,7 +150,7 @@ class AngleCircle extends DiagramElementCollection {
   }
 
   makeArc(radius: number, lineWidth: number = this.layout.arc.lineWidth) {
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius,
       width: lineWidth,
@@ -163,7 +163,7 @@ class AngleCircle extends DiagramElementCollection {
   }
 
   makeCircumference() {
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius: this.layout.radius,
       width: this.layout.circumference.lineWidth,
@@ -177,7 +177,7 @@ class AngleCircle extends DiagramElementCollection {
   }
 
   makeAnchor() {
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       sides: this.layout.anchorPoints,
       radius: this.layout.linewidth * 2,
       fill: true,
@@ -265,7 +265,7 @@ class AngleCircle extends DiagramElementCollection {
       label = angleText;
     }
 
-    const arc = this.shapes.polygonCustom({
+    const arc = this.shapes.polygon({
       sides: layout.arc.sides,
       radius: layout.arc.radius,
       width: layout.arc.lineWidth,

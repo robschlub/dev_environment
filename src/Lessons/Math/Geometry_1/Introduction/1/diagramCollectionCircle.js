@@ -21,7 +21,7 @@ const { colors } = layout;
 const textureFile = `/static/dist/${textureMap}`;
 
 function makeWheel(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     fill: true,
     sides: layout.wheelPoints,
     radius: layout.wheelSize,
@@ -33,7 +33,7 @@ function makeWheel(shapes: Object) {
 }
 
 function makeBall(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     fill: true,
     sides: layout.wheelPoints,
     radius: layout.wheelSize,
@@ -45,7 +45,7 @@ function makeBall(shapes: Object) {
 }
 
 function makeEarth(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     fill: true,
     sides: layout.wheelPoints,
     radius: layout.wheelSize,
@@ -57,7 +57,7 @@ function makeEarth(shapes: Object) {
 }
 
 function makeClock(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     fill: true,
     sides: layout.wheelPoints,
     radius: layout.wheelSize,
@@ -69,7 +69,7 @@ function makeClock(shapes: Object) {
 }
 
 function makeWheelShape(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: 202,
     radius: layout.wheelSize,
     width: layout.linewidth,
@@ -79,7 +79,7 @@ function makeWheelShape(shapes: Object) {
 }
 
 function makeShade(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     fill: true,
     sides: layout.wheelPoints,
     radius: layout.wheelSize,
@@ -166,14 +166,14 @@ function makeCircumferenceDimension(shapes: Object) {
   const arrowWidth = lineWidth * 4;
   const arrowHeightInRadians = arrowHeight / radius;
 
-  const halfCircle1 = shapes.polygonCustom({
+  const halfCircle1 = shapes.polygon({
     sides: layout.wheelPoints,
     radius,
     width: lineWidth,
     color: colors.dimensions,
     transform: new Transform().rotate(0).translate(0, 0),
   });
-  const halfCircle2 = shapes.polygonCustom({
+  const halfCircle2 = shapes.polygon({
     sides: layout.wheelPoints,
     radius,
     width: lineWidth,

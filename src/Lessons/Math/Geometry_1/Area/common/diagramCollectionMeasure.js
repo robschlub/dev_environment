@@ -70,7 +70,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const circ = this.layout.circleA;
     const tri = this.layout.triangleA;
     const col = this.layout.colors.line;
-    const square = this.diagram.shapes.polygonCustom({
+    const square = this.diagram.shapes.polygon({
       sides: 4,
       length: Math.sqrt(((sq.sideLength / 2) ** 2) * 2),
       width: sq.width,
@@ -80,7 +80,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     });
     this.add('squareA', square);
 
-    const circle = this.diagram.shapes.polygonCustom({
+    const circle = this.diagram.shapes.polygon({
       sides: circ.numSides,
       radius: circ.radius,
       width: circ.width,
@@ -89,7 +89,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     });
     this.add('circleA', circle);
 
-    const triangle = this.diagram.shapes.polygonCustom({
+    const triangle = this.diagram.shapes.polygon({
       sides: 3,
       length: tri.sideLength / 2 / Math.cos(Math.PI / 6),
       width: tri.width,
@@ -173,7 +173,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const col = this.layout.colors.grid;
     const length = xNum * radius * 2;
     const height = yNum * radius * 2;
-    const circle = this.diagram.shapes.polygonCustom({
+    const circle = this.diagram.shapes.polygon({
       sides: lay.sides,
       radius,
       width: lay.width,

@@ -26,8 +26,8 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
 
   addCircle() {
     const lay = this.layout.circle;
-    const circle = this.diagram.shapes.polygonCustom(lay.def);
-    const fill = this.diagram.shapes.polygonCustom(lay.def, lay.fill);
+    const circle = this.diagram.shapes.polygon(lay.def);
+    const fill = this.diagram.shapes.polygon(lay.def, lay.fill);
     this.add('fillCircle', fill);
     this.add('circle', circle);
   }
@@ -35,7 +35,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   addTriangles() {
     const lay = this.layout.polygons;
     lay.sides.forEach((sideNum) => {
-      const fill = this.diagram.shapes.polygonCustom(
+      const fill = this.diagram.shapes.polygon(
         lay.def, lay.fill, { sides: sideNum },
       );
       this.add(`fill${sideNum}`, fill);
@@ -46,7 +46,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       );
       this.add(`lines${sideNum}`, lines);
 
-      const poly = this.diagram.shapes.polygonCustom(
+      const poly = this.diagram.shapes.polygon(
         lay.def, { sides: sideNum },
       );
       this.add(`poly${sideNum}`, poly);

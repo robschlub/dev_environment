@@ -51,7 +51,7 @@ function makeRadius(shapes: Object) {
 }
 
 function makeArc(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.anglePoints,
     radius: layout.radius,
     width: layout.linewidth,
@@ -61,7 +61,7 @@ function makeArc(shapes: Object) {
 }
 
 function makeCircle(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.anglePoints,
     radius: layout.radius,
     width: layout.linewidth,
@@ -71,7 +71,7 @@ function makeCircle(shapes: Object) {
 }
 
 function makeAnchor(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.anchorPoints,
     radius: layout.linewidth * 2,
     color: colors.anchor,
@@ -81,7 +81,7 @@ function makeAnchor(shapes: Object) {
 }
 
 function makeAngle(shapes: Object) {
-  return shapes.polygonCustom({
+  return shapes.polygon({
     sides: layout.anglePoints,
     radius: layout.angleRadius,
     color: colors.angle,

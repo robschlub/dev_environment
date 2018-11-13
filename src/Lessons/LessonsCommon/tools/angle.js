@@ -48,7 +48,7 @@ export function makeAngle(
   sides: number,
   color: Array<number>,
 ) {
-  const curve = diagram.shapes.polygonCustom({
+  const curve = diagram.shapes.polygon({
     sides,
     radius,
     width: lineWidth,

@@ -86,7 +86,7 @@ export default class SizeCollection extends CommonDiagramCollection {
   }) {
     const color = this.layout.colors.reference;
 
-    const square = this.diagram.shapes.polygonCustom({
+    const square = this.diagram.shapes.polygon({
       sides: 4,
       length: Math.sqrt(((layout.sideLength / 2) ** 2) * 2),
       width: layout.width,

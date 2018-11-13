@@ -271,7 +271,7 @@ export class SinCosCircle extends AngleCircle {
       clockwise = true;
     }
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.shapes.polygonCustom({
+    const arc = this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius,
       width: this.layout.quadAngles.lineWidth,
@@ -363,7 +363,7 @@ export class SinCosCircle extends AngleCircle {
 
   makeMainAngle() {
     const angle = this.shapes.collection(new Transform().translate(0, 0));
-    const arc = this.shapes.polygonCustom({
+    const arc = this.shapes.polygon({
       sides: this.layout.anglePoints,
       radius: this.layout.mainAngle.radius,
       width: this.layout.mainAngle.lineWidth,
@@ -435,7 +435,7 @@ export class SinCosCircle extends AngleCircle {
     }
     const color = this.colors.quadrant.slice();
     color[3] = 0.6;
-    return this.shapes.polygonCustom({
+    return this.shapes.polygon({
       fill: true,
       sides: 4,
       radius: this.layout.radius / 2 * Math.sqrt(2),

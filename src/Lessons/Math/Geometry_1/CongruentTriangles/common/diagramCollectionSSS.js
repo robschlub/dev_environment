@@ -81,7 +81,7 @@ export default class SSSCollection extends CommonDiagramCollection {
   }
 
   addCircles() {
-    const make = (radius, color) => this.diagram.shapes.polygonCustom({
+    const make = (radius, color) => this.diagram.shapes.polygon({
       sides: this.layout.corner.SSSProps.circleSides,
       radius,
       width: this.layout.corner.width / 2,
@@ -102,7 +102,7 @@ export default class SSSCollection extends CommonDiagramCollection {
 
   addIntersects() {
     const { SSSProps } = this.layout.corner;
-    const makeIntersectPoint = () => this.diagram.shapes.polygonCustom({
+    const makeIntersectPoint = () => this.diagram.shapes.polygon({
       fill: true,
       sides: SSSProps.intersectPointSides,
       radius: SSSProps.intersectPointRadius,

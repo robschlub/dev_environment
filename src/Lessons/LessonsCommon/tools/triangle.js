@@ -155,7 +155,7 @@ export default function makeTriangle(
   };
 
   triangle.makePoint = (index: number) => {
-    const point = diagram.shapes.polygonCustom({
+    const point = diagram.shapes.polygon({
       fill: true,
       sides: 100,
       radius: 1,

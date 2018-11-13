@@ -46,7 +46,7 @@ export default class SameAreaCollection extends CommonDiagramCollection {
 
   makePad(position: Point) {
     const lay = this.layout.same.pad;
-    const pad = this.diagram.shapes.polygonCustom({
+    const pad = this.diagram.shapes.polygon({
       fill: true,
       sides: lay.sides,
       radius: lay.radius,
