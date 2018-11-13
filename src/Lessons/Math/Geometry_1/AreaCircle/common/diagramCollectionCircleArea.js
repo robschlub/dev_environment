@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform,
+  Transform, polarToRect,
 } from '../../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
@@ -33,7 +33,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   }
 
   addTriangles() {
-    const lay = this.layout.polygons;
+    let lay = this.layout.polygons;
     lay.sides.forEach((sideNum) => {
       const fill = this.diagram.shapes.polygon(
         lay.def, lay.fill, { sides: sideNum },
@@ -50,6 +50,38 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
         lay.def, { sides: sideNum },
       );
       this.add(`poly${sideNum}`, poly);
+
+      const heightDimension = lay.def.radius * Math.cos(Math.PI * 2 / sideNum / 2);
+      const height = this.diagram.objects.line({
+        vertexSpaceStart: 'start',
+        length: heightDimension,
+        angle: -Math.PI * 2 / sideNum / 2,
+        width: lay.def.width,
+        color: this.layout.colors.height,
+        label: {
+          text: 'h',
+          location: 'top',
+          orientation: 'horizontal',
+          offset: -0.02,
+          linePosition: 0.5 + 0.4 * sideNum / Math.max(...lay.sides),
+        },
+      });
+      this.add(`height${sideNum}`, height);
+
+      const base = this.diagram.objects.line({
+        vertexSpaceStart: 'start',
+        p1: polarToRect(lay.def.radius - lay.def.width / 2, 0),
+        p2: polarToRect(lay.def.radius - lay.def.width / 2, -Math.PI * 2 / sideNum),
+        width: lay.def.width,
+        color: this.layout.colors.border,
+        label: {
+          text: 'b',
+          location: 'right',
+          orientation: 'horizontal',
+          offset: -0.02,
+        },
+      });
+      this.add(`base${sideNum}`, base);
     });
   }
 
@@ -77,15 +109,23 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       // $FlowFixMe
       const fill = this[`_fill${sides}`];
       // $FlowFixMe
+      const height = this[`_height${sides}`];
+      // $FlowFixMe
+      const base = this[`_base${sides}`];
+      // $FlowFixMe
       const lines = this[`_lines${sides}`];
       if (sides === numSides) {
         polygon.show();
         fill.show();
         lines.show();
+        height.showAll();
+        base.showAll();
       } else {
         polygon.hide();
         fill.hide();
         lines.hide();
+        height.hideAll();
+        base.hideAll();
       }
     });
     this.diagram.animateNextFrame();
@@ -102,5 +142,6 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.addSelector();
     this.setPosition(this.layout.position);
     this.hasTouchableElements = true;
+    console.log(this)
   }
 }

@@ -7,6 +7,8 @@ import baseLayout from '../../../../LessonsCommon/layout';
 const cssColorNames = [
   'lines',
   'fill',
+  'height',
+  'border',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -14,7 +16,7 @@ export default function commonLessonLayout() {
   const layout: Object = baseLayout();
   layout.colors = getCssColors(cssColorNames);
   layout.position = new Point(0, -0.4);
-  const width = 0.02;
+  const width = 0.015;
 
   layout.circle = {
     def: {
