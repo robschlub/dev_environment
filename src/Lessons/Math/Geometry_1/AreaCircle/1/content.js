@@ -52,7 +52,7 @@ class Content extends LessonContent {
     };
     common.setEnterState = () => {
       circ.setScenario(circ, layout.circle.scenarios.center);
-      circ._circle.setColor(colors.lines);
+      // circ._circle.setColor(colors.lines);
     };
     common.showOnly = [circ];
     this.addSection(common, {
@@ -72,6 +72,12 @@ class Content extends LessonContent {
     this.addSection(common, { show: [circ._grid, circ._circle] });
     this.addSection(common, { show: [circ._circle] });
     this.addSection(common, { show: [circ._circle, circ._lines6] });
+
+    common.setContent = 'These pieces can be make into |6 equal triangles|.';
+    this.addSection(common, { show: [circ._circle, circ._lines6] });
+    this.addSection(common, { show: [circ._circle, circ._lines6, circ._poly6] });
+    this.addSection(common, { show: [circ._backgroundCircle, circ._lines6, circ._poly6] });
+
     this.addSection(common, {
       title: 'Introduction',
       setContent: ['The area of a circle can initially seem challenging to calculate as its edge is curved.'],

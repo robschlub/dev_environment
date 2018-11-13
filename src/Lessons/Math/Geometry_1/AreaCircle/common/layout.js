@@ -50,7 +50,7 @@ export default function commonLessonLayout() {
 
   layout.polygons = {
     def: {
-      radius: layout.circle.def.radius - layout.circle.def.width,
+      radius: layout.circle.def.radius - layout.circle.back.width,
       width,
       transform: new Transform('poly'),
       color: layout.colors.lines,
