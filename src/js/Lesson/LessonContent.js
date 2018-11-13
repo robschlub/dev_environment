@@ -800,8 +800,8 @@ class LessonContent {
 
   addEqnStep(
     equationOrNavigator: { eqn: Equation } & Equation,
-    fromForm: string,
-    toForm: string,
+    fromForm: string | Array<string>,
+    toForm: string | Array<string>,
     ...sectionObjects: Array<Object>
   ) {
     const nav = equationOrNavigator;
@@ -812,8 +812,18 @@ class LessonContent {
     const eqnSection = {
       transitionFromPrev: (done) => {
         let time = null;
-        nav.showForm(fromForm);
-        const nextForm = eqn.getForm(toForm);
+        if (Array.isArray(fromForm)) {
+          nav.showForm(fromForm[0], fromForm[1]);
+        } else {
+          nav.showForm(fromForm);
+        }
+        let nextForm;
+        if (Array.isArray(toForm)) {
+          nextForm = eqn.getForm(toForm[0], toForm[1]);
+        } else {
+          nextForm = eqn.getForm(toForm);
+        }
+        // const nextForm = eqn.getForm(toForm);
         if (nextForm != null && nextForm.time != null) {
           if (typeof nextForm.time === 'number') {
             ({ time } = nextForm);
@@ -832,7 +842,11 @@ class LessonContent {
         }
       },
       setSteadyState: () => {
-        nav.showForm(toForm);
+        if (Array.isArray(toForm)) {
+          nav.showForm(toForm[0], toForm[1]);
+        } else {
+          nav.showForm(toForm);
+        }
       },
     };
     const section = Object.assign({}, ...sectionObjects, eqnSection);

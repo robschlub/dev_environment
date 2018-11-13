@@ -46,7 +46,7 @@ export function addTriRectEquation(
     {
       Area: ['Area', colArea],
       triangle: ['triangle', colArea],
-      triangles: ['triangles', colArea],
+      triangles: ['all triangles', colArea],
       circle: 'circle',
       equals: ' = ',
       least: sides[0].toString(),
@@ -70,7 +70,7 @@ export function addTriRectEquation(
     },
     colText,
   );
-
+  eqn.formAlignment.fixTo = eqn.collection._equals;
   eqn.formAlignment.hAlign = 'center';
   eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
@@ -85,7 +85,7 @@ export function addTriRectEquation(
   ]);
 
   const trianglesArea = numSides => eqn.phrase([
-    eqn.sub('Area', 'triangles'),
+    eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -99,7 +99,7 @@ export function addTriRectEquation(
   eqn.addForm('1', [trianglesArea('most')], { formType: '2' });
 
   const triangleAreaRearranged = numSides => eqn.phrase([
-    eqn.sub('Area', 'triangles'),
+    eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -111,7 +111,7 @@ export function addTriRectEquation(
   eqn.addForm('2', [triangleAreaRearranged('most')], { formType: '2' });
 
   eqn.addForm('3', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -120,7 +120,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('4', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -129,7 +129,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('5', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
@@ -138,7 +138,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('6', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x_'), 'space',
     'r_',
@@ -147,7 +147,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('7', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     'pi', 'r',
     'mul',
@@ -155,14 +155,14 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('8', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     'pi', 'r', 'space',
     'r_',
   ]);
 
   eqn.addForm('9', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'triangle'),
     'equals',
     'pi',
     eqn.sup(['r', 'space'], '_2'),

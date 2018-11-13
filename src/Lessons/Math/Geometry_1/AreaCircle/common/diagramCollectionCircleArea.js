@@ -16,7 +16,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
   _selector: DiagramElementPrimative;
   _circle: DiagramElementPrimative;
-  _fillCircle: DiagramElementPrimative;
+  _circleFill: DiagramElementPrimative;
   _poly6: DiagramElementPrimative;
   _fill6: DiagramElementPrimative;
   _lines6: DiagramElementPrimative;
@@ -45,7 +45,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     const circle = this.diagram.shapes.polygon(lay.default, lay.circle);
     const backgroundCircle = this.diagram.shapes.polygon(lay.default, lay.back);
     const fill = this.diagram.shapes.polygon(lay.default, lay.fill);
-    this.add('fillCircle', fill);
+    this.add('circleFill', fill);
     this.add('backgroundCircle', backgroundCircle);
     this.add('circle', circle);
   }
@@ -107,10 +107,10 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   }
 
   selectorClicked(title: string) {
-    this.showTriangles(parseInt(title, 10));
+    this.showTriangles(parseInt(title, 10), 'tri');
   }
 
-  showTriangles(numSides: number) {
+  showTriangles(numSides: number, area: 'tri' | 'tris' | 'circle' | 'none') {
     this.layout.polygonSides.forEach((sides) => {
       // $FlowFixMe
       const polygon = this[`_poly${sides}`];
@@ -128,12 +128,16 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       const triFill = this[`_triFill${sides}`];
       if (sides === numSides) {
         polygon.show();
-        fill.show();
+        if (area === 'tris') {
+          fill.show();
+        }
         lines.show();
         height.showAll();
         base.showAll();
         border.show();
-        triFill.show();
+        if (area === 'tri') {
+          triFill.show();
+        }
       } else {
         polygon.hide();
         fill.hide();
@@ -144,6 +148,11 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
         triFill.hide();
       }
     });
+    if (area === 'circle') {
+      this._circleFill.show();
+    } else {
+      this._circleFill.hide();
+    }
     this.diagram.animateNextFrame();
   }
 
