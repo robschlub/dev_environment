@@ -4,7 +4,7 @@ $colors: (
   // latin:             color('diagram', 'text-latin'),
   lines:             map-get($geometry_colors, lines),
   angles:            map-get($geometry_colors, angleLabels),
-  construction:      map-get($geometry_colors, construction),
+  construction:      map-get($geometry_colors, const),
 );
 
 body {

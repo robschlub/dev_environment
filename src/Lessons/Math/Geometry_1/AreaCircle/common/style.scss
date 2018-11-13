@@ -2,10 +2,18 @@
 
 $colors: (
   lines:             map-get($geometry_colors, lines),
-  area:              map-get($geometry_colors, construction1),
-  areaFill:              map-get($geometry_colors, construction1Fill),
-  height:            map-get($geometry_colors, construction2),
-  border:            map-get($geometry_colors, construction1),
+  //
+  areaTri:           color('diagram', 'construction4', 'darker'),
+  areaTriLabel:      color('diagram', 'construction4'),
+  areaPoly:          color('diagram', 'construction2', 'darker'),
+  areaPolyLabel:     color('diagram', 'construction2'),
+  areaCircle:        color('diagram', 'construction3', 'darker'),
+  areaCircleLabel:   color('diagram', 'construction3'),
+  //
+  height:            color('diagram', 'construction5'),
+  border:            color('diagram', 'passive'),
+  //
+  grid:              color('diagram', 'disabled', 'darkest'),
 );
 
 body {

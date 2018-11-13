@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect, Rect,
+  Transform, Rect,
 } from '../../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,

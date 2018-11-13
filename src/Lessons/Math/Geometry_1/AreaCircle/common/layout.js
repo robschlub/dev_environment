@@ -8,8 +8,12 @@ import baseLayout from '../../../../LessonsCommon/layout';
 
 const cssColorNames = [
   'lines',
-  'areaFill',
-  'area',
+  'areaTri',
+  'areaTriLabel',
+  'areaPoly',
+  'areaPolyLabel',
+  'areaCircle',
+  'areaCircleLabel',
   'height',
   'border',
 ];
@@ -52,10 +56,10 @@ export default function commonLessonLayout() {
     },
     fill: {
       fill: true,
-      color: layout.colors.areaFill,
+      color: layout.colors.areaCircle,
     },
     back: {
-      color: layout.colors.diagram.disabled,
+      color: layout.colors.diagram.disabledDark,
       width,
     },
   };
@@ -80,7 +84,7 @@ export default function commonLessonLayout() {
     },
     fill: {
       fill: true,
-      color: layout.colors.areaFill,
+      color: layout.colors.areaPoly,
     },
   };
 
@@ -143,7 +147,7 @@ export default function commonLessonLayout() {
           polarToRect(radius - w / 2, 0),
           polarToRect(radius - w / 2, -Math.PI * 2 / sideNum),
         ],
-        color: layout.colors.areaFill,
+        color: layout.colors.areaTri,
       };
     },
   };

@@ -13,7 +13,6 @@ $geometry_colors: (
   background:   color('diagram', 'background'),
   arrow:        color('diagram', 'warning'),
   //
-  angle:        color('diagram', 'safe', 'lighter'),
   angleText:    color('diagram', 'safe', 'light'),
   angleA:       color(3, 'base'),
   angleB:       color(4, 'base'),
@@ -28,17 +27,58 @@ $geometry_colors: (
   arcLight:     color('diagram', 'warning', 'lighter'),
   rotation:     color('diagram', 'warning'),
   action:       color('diagram', 'action'),
-  disabled:     color('diagram', 'disabled', 'dark'),
   degrees:      color('diagram', 'primary', 'light'),
   radians:      color('diagram', 'primary', 'light'),
   //
   angles:         color('diagram', 'warning', 'base'),
   angleLabels:    color('diagram', 'warning', 'base'),
-  lines:          color('diagram', 'primary'),
-  lineLabels:     color('diagram', 'primary'),
-  construction:      color('diagram', 'passive', 'darkest'),
-  construction1:     color('diagram', 'warning', 'darker'),
-  construction1Fill: color('diagram', 'warning', 'darkest'),
-  construction2:     color('diagram', 'safe', 'darker'),
-  construction2Fill: color('diagram', 'safe', 'darkest'),
+  //
+  //
+  lines:                color('diagram', 'primary'),
+  linesDark:            color('diagram', 'primary', 'dark'),
+  linesDarker:          color('diagram', 'primary', 'darker'),
+  linesDarkest:         color('diagram', 'primary', 'darkest'),
+  //
+  disabled:             color('diagram', 'disabled', 'dark'),
+  disabledDark:         color('diagram', 'disabled', 'darker'),
+  disabledDarker:       color('diagram', 'disabled', 'darkest'),
+  //
+  highlight:            color('diagram', 'warning'),
+  highlightDark:        color('diagram', 'warning', 'dark'),
+  highlightDarker:      color('diagram', 'warning', 'darker'),
+  highlightDarkest:     color('diagram', 'warning', 'darkest'),
+  //
+  angleLight:           color('diagram', 'safe', 'light'),
+  angle:                color('diagram', 'safe'),
+  angleDark:            color('diagram', 'safe', 'dark'),
+  angleDarker:          color('diagram', 'safe', 'darker'),
+  angleDarkest:         color('diagram', 'safe', 'darkest'),
+  //
+  lineLabels:           color('diagram', 'primary'),
+  //
+  construction1:         color('diagram', 'primary'),
+  construction1Dark:     color('diagram', 'primary', 'dark'),
+  construction1Darker:   color('diagram', 'primary', 'darker'),
+  construction1Darkest:  color('diagram', 'primary', 'darkest'),
+  //
+  construction2:         color('diagram', 'warning'),
+  construction2Dark:     color('diagram', 'warning', 'dark'),
+  construction2Darker:   color('diagram', 'warning', 'darker'),
+  construction2Darkest:  color('diagram', 'warning', 'darkest'),
+  //
+  construction3:         color('diagram', 'safe',),
+  construction3Dark:     color('diagram', 'safe', 'dark'),
+  construction3Darker:   color('diagram', 'safe', 'darker'),
+  construction3Darkest:  color('diagram', 'safe', 'darkest'),
+  //
+  construction4:         color('diagram', 'passive',),
+  construction4Dark:     color('diagram', 'passive', 'dark'),
+  construction4Darker:   color('diagram', 'passive', 'darker'),
+  construction4Darkest:  color('diagram', 'passive', 'darkest'),
+  //
+  const:                color('diagram', 'passive', 'darkest'),
+  const1:               color('diagram', 'warning', 'darker'),
+  const1Fill:           color('diagram', 'warning', 'darkest'),
+  const2:               color('diagram', 'safe', 'darker'),
+  const2Fill:           color('diagram', 'safe', 'darkest'),
 );

@@ -3,7 +3,7 @@ import {
   LessonContent,
 } from '../../../../../js/Lesson/LessonContent';
 import {
-  highlight, //click, centerV,
+  highlight, click, // centerV,
 } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 // import Definition from '../../../../LessonsCommon/tools/definition';
@@ -141,6 +141,15 @@ class Content extends LessonContent {
     // });
 
     common.setContent = 'And therefore the area of |all triangles| is |6 times one triangle|.';
+    this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common);
+    common.show = [...show, circ._fill6];
+    this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
+
+    common.setContent = 'The area of the |triangles|, is an approximation to the area of the |circle|.';
+    common.modifiers = {
+      triangles: click(circ.showTriangles, [circ, 6, 'tris']),
+      circle: click(circ.showTriangles, [circ, 6, 'circle']),
+    };
     this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common);
     common.show = [...show, circ._fill6];
     this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
