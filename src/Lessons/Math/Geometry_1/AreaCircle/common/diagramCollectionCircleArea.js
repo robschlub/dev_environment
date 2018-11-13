@@ -1,7 +1,7 @@
 // @flow
 import LessonDiagram from './diagram';
 import {
-  Transform, polarToRect,
+  Transform, polarToRect, Rect,
 } from '../../../../../js/diagram/tools/g2';
 import {
   DiagramElementPrimative,
@@ -27,11 +27,26 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   _lines25: DiagramElementPrimative;
   _fill25: DiagramElementPrimative;
 
-  addCircle() {
+  addGrid() {
+    const lay = this.layout.grid;
+    const grid = this.diagram.shapes.grid(
+      new Rect(
+        -lay.length / 2, -lay.height / 2,
+        lay.length, lay.height,
+      ),
+      lay.spacing, lay.spacing, 2, this.layout.colors.grid,
+      new Transform().translate(lay.position),
+    );
+    this.add('grid', grid);
+  }
+
+  addCircles() {
     const lay = this.layout.circle;
     const circle = this.diagram.shapes.polygon(lay.def);
+    const backgroundCircle = this.diagram.shapes.polygon(lay.def, lay.back);
     const fill = this.diagram.shapes.polygon(lay.def, lay.fill);
     this.add('fillCircle', fill);
+    this.add('backgroundCircle', backgroundCircle);
     this.add('circle', circle);
   }
 
@@ -143,12 +158,12 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     transform: Transform = new Transform().translate(0, 0),
   ) {
     super(diagram, layout, transform);
-    this.addCircle();
+    this.addGrid();
+    this.addCircles();
     this.addTriangles();
     this.addSelector();
     this.setPosition(this.layout.position);
     this.addEquations();
     this.hasTouchableElements = true;
-    console.log(this)
   }
 }

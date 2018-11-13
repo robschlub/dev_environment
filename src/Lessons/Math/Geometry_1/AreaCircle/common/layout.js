@@ -18,13 +18,25 @@ export default function commonLessonLayout() {
   layout.position = new Point(0, -0.4);
   const width = 0.015;
 
+  layout.grid = {
+    position: new Point(0, 0),
+    smallPosition: new Point(0, 0),
+    spacing: 0.25,
+    length: 4,
+    height: 3,
+  };
+
   layout.circle = {
     def: {
-      radius: 1.3,
+      radius: 1.25,
       sides: 100,
-      width,
-      color: layout.colors.diagram.disabled,
+      width: width * 2,
+      color: layout.colors.lines,
       transform: new Transform('circle'),
+    },
+    back: {
+      color: layout.colors.diagram.disabled,
+      width,
     },
     fill: {
       fill: true,

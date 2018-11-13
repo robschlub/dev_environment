@@ -13,7 +13,7 @@ import imgLinkGrey from '../tile-grey.png';
 import details from '../details';
 
 const layout = lessonLayout();
-// const { colors } = layout;
+const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -50,9 +50,28 @@ class Content extends LessonContent {
       setSteadyState: () => {},
       setLeaveState: () => {},
     };
+    common.setEnterState = () => {
+      circ.setScenario(circ, layout.circle.scenarios.center);
+      circ._circle.setColor(colors.lines);
+    };
+    common.showOnly = [circ];
     this.addSection(common, {
-      title: 'Enter_title_here',
-      setContent: ['Enter_content_here'],
+      title: 'Introduction',
+      setContent: ['The area of a circle can initially seem challenging to calculate as its edge is |curved|.'],
+      show: [circ._grid, circ._circle],
+    });
+    this.addSection(common, {
+      setContent: ['Curves don\'t align with straight lines, so we have to start by making an |approximation|.'],
+      show: [circ._grid, circ._circle],
+    });
+
+    common.setContent = 'Start by splitting the circle into |6 equal pieces|.';
+    this.addSection(common, { show: [circ._grid, circ._circle] });
+    this.addSection(common, { show: [circ._circle] });
+    this.addSection(common, { show: [circ._circle, circ._lines6] });
+    this.addSection(common, {
+      title: 'Introduction',
+      setContent: ['The area of a circle can initially seem challenging to calculate as its edge is curved.'],
       showOnly: [circ],
       show: [circ],
       transitionFromPrev: (done) => {
@@ -60,9 +79,7 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         circ.setScenario(circ, layout.circle.scenarios.center);
-        console.log(circ)
-        circ.eqns.triRectEqn.showForm('8', 'base');
-        // console.log(circ)
+        circ.eqns.triRectEqn.showForm('6', 'base');
       },
     });
   }
