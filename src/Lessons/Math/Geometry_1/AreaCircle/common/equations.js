@@ -40,12 +40,13 @@ export function addTriRectEquation(
   const colBorder = layout.colors.border;
   const colText = layout.colors.diagram.text.base;
   const strikeColor = layout.colors.diagram.disabledDark;
+  const colArea = layout.colors.area;
 
   eqn.createElements(
     {
-      Area: 'Area',
-      triangle: 'triangle',
-      triangles: 'triangles',
+      Area: ['Area', colArea],
+      triangle: ['triangle', colArea],
+      triangles: ['triangles', colArea],
       circle: 'circle',
       equals: ' = ',
       least: sides[0].toString(),
@@ -75,10 +76,12 @@ export function addTriRectEquation(
   eqn.formAlignment.scale = 1.0;
 
   eqn.addForm('0', [
-    eqn.sub('Area', 'triangle'),
+    eqn.bottomComment('Area', 'triangle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
+    'mul_',
+    'b',
   ]);
 
   const trianglesArea = numSides => eqn.phrase([

@@ -49,10 +49,17 @@ class Content extends LessonContent {
       hide: [],
       setSteadyState: () => {},
       setLeaveState: () => {},
+      transitionFromAny: (done) => { done(); },
     };
-    common.setEnterState = () => {
+    // common.setEnterState = () => {
+    //   circ.setScenario(circ, layout.collection.scenarios.center);
+    //   // circ._circle.setColor(colors.lines);
+    // };
+    common.transitionFromAny = (done) => {
+      circ.moveToScenario(circ, layout.collection.scenarios.center, null, done);
+    };
+    common.setSteadyState = () => {
       circ.setScenario(circ, layout.collection.scenarios.center);
-      // circ._circle.setColor(colors.lines);
     };
     common.showOnly = [circ];
     this.addSection(common, {
@@ -95,16 +102,40 @@ class Content extends LessonContent {
       ],
     });
 
+    common.setContent = 'And therefore each triangle has an |area|.';
+    common.modifiers = {
+      area: highlight(colors.area),
+    };
+    this.addSection(common, {
+      show: [
+        circ._backgroundCircle, circ._lines6, circ._poly6,
+        circ._height6, circ._base6,
+      ],
+    });
+    common.transitionFromAny = (done) => {
+      circ.moveToScenario(circ, layout.collection.scenarios.left, null, done);
+    };
+    this.addSection(common, {
+      show: [
+        circ._backgroundCircle, circ._lines6, circ._poly6,
+        circ._height6, circ._base6, circ._triFill6,
+      ],
+      setSteadyState: () => {
+        circ.setScenario(circ, layout.collection.scenarios.left);
+        circ.eqns.triRectEqn.showForm('0');
+      },
+    });
+
     this.addSection(common, {
       title: 'Introduction',
       setContent: ['The area of a circle can initially seem challenging to calculate as its edge is curved.'],
       showOnly: [circ],
       show: [circ],
       transitionFromPrev: (done) => {
-        circ.moveToScenario(circ, layout.collection.scenarios.center, null, done);
+        circ.moveToScenario(circ, layout.collection.scenarios.left, null, done);
       },
       setSteadyState: () => {
-        circ.setScenario(circ, layout.collection.scenarios.center);
+        circ.setScenario(circ, layout.collection.scenarios.left);
         circ.eqns.triRectEqn.showForm('6', 'base');
       },
     });

@@ -8,7 +8,8 @@ import baseLayout from '../../../../LessonsCommon/layout';
 
 const cssColorNames = [
   'lines',
-  'fill',
+  'areaFill',
+  'area',
   'height',
   'border',
 ];
@@ -30,8 +31,12 @@ export default function commonLessonLayout() {
 
   layout.collection = {
     scenarios: {
-      center: new Point(0, 0),
-      left: new Point(-1, 0),
+      center: {
+        position: new Point(0, -0.4),
+      },
+      left: {
+        position: new Point(-1, -0.4),
+      },
     },
   };
 
@@ -47,7 +52,7 @@ export default function commonLessonLayout() {
     },
     fill: {
       fill: true,
-      color: layout.colors.fill,
+      color: layout.colors.areaFill,
     },
     back: {
       color: layout.colors.diagram.disabled,
@@ -75,7 +80,7 @@ export default function commonLessonLayout() {
     },
     fill: {
       fill: true,
-      color: layout.colors.fill,
+      color: layout.colors.areaFill,
     },
   };
 
@@ -138,12 +143,12 @@ export default function commonLessonLayout() {
           polarToRect(radius - w / 2, 0),
           polarToRect(radius - w / 2, -Math.PI * 2 / sideNum),
         ],
-        color: layout.colors.fill,
+        color: layout.colors.areaFill,
       };
     },
   };
 
-  layout.triangleAreaEquation = new Point(1, 0);
+  layout.triangleAreaEquation = new Point(2.5, 0);
 
   layout.selector = {
     position: new Point(-1, 1.5),
