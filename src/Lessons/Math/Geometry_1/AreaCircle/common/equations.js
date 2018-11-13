@@ -39,7 +39,8 @@ export function addTriRectEquation(
   const colHeight = layout.colors.height;
   const colBorder = layout.colors.border;
   const colText = layout.colors.diagram.text.base;
-  // const colLine = layout.colors.line;
+  const strikeColor = layout.colors.diagram.disabledDark;
+
   eqn.createElements(
     {
       Area: 'Area',
@@ -50,11 +51,18 @@ export function addTriRectEquation(
       most: sides[2].toString(),
       h: ['h', colHeight],
       b: ['b', colBorder],
+      border: ['border', colBorder],
+      _2_: ['2', colText],
+      pi: ['π ', colText],
+      r: ['r', colText],
+      r_: ['r ', colText],
       mul: ' \u00D7 ',
       mul_: ' \u00D7 ',
       _1: '1',
       _2: '2',
       v: diagram.equation.vinculum(colText),
+      x: diagram.equation.xStrike(strikeColor),
+      x_: diagram.equation.xStrike(strikeColor),
     },
     colText,
   );
@@ -63,38 +71,92 @@ export function addTriRectEquation(
   eqn.formAlignment.vAlign = 'baseline';
   eqn.formAlignment.scale = 1.0;
 
-  eqn.addForm('0', [
+  const triangleArea = numSides => eqn.phrase([
     eqn.sub('Area', 'triangle'),
     'equals',
-    'least',
+    numSides,
     'mul',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
     'mul_',
     'b',
   ]);
+  eqn.addForm('0', [triangleArea('least')], { formType: '0' });
+  eqn.addForm('0', [triangleArea('medium')], { formType: '1' });
+  eqn.addForm('0', [triangleArea('most')], { formType: '2' });
 
-  eqn.addForm('1', [
+  const triangleAreaRearranged = numSides => eqn.phrase([
     eqn.sub('Area', 'triangle'),
     'equals',
-    'medium',
+    numSides,
+    'mul_',
+    'b',
     'mul',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
-    'mul_',
-    'b',
   ]);
+  eqn.addForm('1', [triangleAreaRearranged('least')], { formType: '0' });
+  eqn.addForm('1', [triangleAreaRearranged('medium')], { formType: '1' });
+  eqn.addForm('1', [triangleAreaRearranged('most')], { formType: '2' });
 
   eqn.addForm('2', [
     eqn.sub('Area', 'triangle'),
     'equals',
-    'most',
+    'border',
     'mul',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
-    'mul_',
-    'b',
   ]);
+
+  eqn.addForm('3', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    '_2_', 'pi', 'r',
+    'mul',
+    eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
+    'h',
+  ]);
+
+  eqn.addForm('4', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    '_2_', 'pi', 'r',
+    'mul',
+    eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
+    'r_',
+  ]);
+
+  eqn.addForm('5', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    eqn.strike('_2_', 'x'), 'pi', 'r',
+    'mul',
+    eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x_'), 'space',
+    'r_',
+  ]);
+
+  eqn.addForm('6', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    'pi', 'r',
+    'mul',
+    'r_',
+  ]);
+
+  eqn.addForm('7', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    'pi', 'r', 'space',
+    'r_',
+  ]);
+
+  eqn.addForm('8', [
+    eqn.sub('Area', 'triangle'),
+    'equals',
+    'pi',
+    eqn.sup(['r', 'space'], '_2'),
+  ]);
+
 
   eqn.collection.setPosition(layout.triangleAreaEquation);
   eqn.setCurrentForm('0');

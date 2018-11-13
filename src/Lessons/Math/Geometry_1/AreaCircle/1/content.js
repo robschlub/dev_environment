@@ -61,7 +61,7 @@ class Content extends LessonContent {
       setSteadyState: () => {
         circ.setScenario(circ, layout.circle.scenarios.center);
         console.log(circ)
-        circ.eqns.triRectEqn.showForm('1');
+        circ.eqns.triRectEqn.showForm('8', 'base');
         // console.log(circ)
       },
     });
