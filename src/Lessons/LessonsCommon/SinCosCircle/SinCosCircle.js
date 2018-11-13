@@ -276,7 +276,7 @@ export class SinCosCircle extends AngleCircle {
       radius,
       width: this.layout.quadAngles.lineWidth,
       rotation: startAngle,
-      clockwise: direction,
+      clockwise,
       color: this.layout.colors.quadAngles,
       transform: new Transform()
         .rotate(0)
