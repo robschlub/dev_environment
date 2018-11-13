@@ -69,7 +69,7 @@ export default function commonLessonLayout() {
     ],
   };
 
-  layout.triangles = {
+  layout.triangle = {
     height: (sideNum) => {
       const { radius } = layout.polygons.def;
       const heightDimension = radius * Math.cos(Math.PI * 2 / sideNum / 2);
@@ -102,7 +102,7 @@ export default function commonLessonLayout() {
           text: 'b',
           location: 'right',
           orientation: 'horizontal',
-          offset: -0.02,
+          offset: 0.05,
         },
         arrows: {},
         offset: radius * 1.1 - heightDimension,

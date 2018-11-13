@@ -69,10 +69,10 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       );
       this.add(`poly${sideNum}`, poly);
 
-      const height = this.diagram.objects.line(this.layout.triangles.height(sideNum));
+      const height = this.diagram.objects.line(this.layout.triangle.height(sideNum));
       this.add(`height${sideNum}`, height);
 
-      const base = this.diagram.objects.line(this.layout.triangles.base(sideNum));
+      const base = this.diagram.objects.line(this.layout.triangle.base(sideNum));
       this.add(`base${sideNum}`, base);
     });
   }
