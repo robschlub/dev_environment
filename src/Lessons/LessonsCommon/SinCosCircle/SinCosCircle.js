@@ -266,17 +266,21 @@ export class SinCosCircle extends AngleCircle {
     direction: -1 | 1 = 1,
     textOffset: number = 0.15,
   ) {
+    let clockwise = false;
+    if (direction === -1) {
+      clockwise = true;
+    }
     const angle = this.shapes.collection(new Transform().translate(0, 0));
     const arc = this.shapes.polygonCustom({
       sides: this.layout.anglePoints,
       radius,
       width: this.layout.quadAngles.lineWidth,
       rotation: startAngle,
-      clockwise: direction === 1 ? false : true,
+      clockwise: direction,
       color: this.layout.colors.quadAngles,
       transform: new Transform()
         .rotate(0)
-        .translate(0, 0), 
+        .translate(0, 0),
     });
     //   this.layout.anglePoints,
     //   radius, this.layout.quadAngles.lineWidth,

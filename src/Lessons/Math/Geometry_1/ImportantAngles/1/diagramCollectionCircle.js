@@ -65,7 +65,7 @@ class ImportantAnglesCollection extends AngleCircle {
       fill: true,
       sides: this.layout.anglePoints,
       radius: this.layout.axes.length,
-      sidesToDraw:this.layout.anglePoints / 4,
+      sidesToDraw: this.layout.anglePoints / 4,
       color: this.colors.angleArea,
       transform: new Transform()
         .translate(0, 0),

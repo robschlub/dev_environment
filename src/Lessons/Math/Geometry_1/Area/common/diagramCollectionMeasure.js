@@ -175,7 +175,7 @@ export default class MeasureCollection extends CommonDiagramCollection {
     const height = yNum * radius * 2;
     const circle = this.diagram.shapes.polygonCustom({
       sides: lay.sides,
-      radius: radius,
+      radius,
       width: lay.width,
       color: col,
       point: new Point(-length / 2, -height / 2),
