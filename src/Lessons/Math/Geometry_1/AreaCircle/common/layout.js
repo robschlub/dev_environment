@@ -55,6 +55,8 @@ export default function commonLessonLayout() {
     ],
   };
 
+  layout.triangleAreaEquation = new Point(1, 0);
+
   layout.selector = {
     position: new Point(-1, 1.5),
   };

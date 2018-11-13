@@ -8,6 +8,9 @@ import {
 } from '../../../../../js/diagram/Element';
 import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import {
+  addTriRectEquation,
+} from './equations';
 
 export default class CircleAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -33,7 +36,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   }
 
   addTriangles() {
-    let lay = this.layout.polygons;
+    const lay = this.layout.polygons;
     lay.sides.forEach((sideNum) => {
       const fill = this.diagram.shapes.polygon(
         lay.def, lay.fill, { sides: sideNum },
@@ -85,6 +88,9 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     });
   }
 
+  addEquations() {
+    addTriRectEquation(this.diagram, this.layout, this, 'triRectEqn');
+  }
 
   addSelector() {
     addSelectorHTML(
@@ -141,6 +147,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.addTriangles();
     this.addSelector();
     this.setPosition(this.layout.position);
+    this.addEquations();
     this.hasTouchableElements = true;
     console.log(this)
   }
