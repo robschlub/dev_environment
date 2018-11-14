@@ -474,6 +474,14 @@ export class DiagramObjectLine extends DiagramElementCollection {
       line.pulse.transformMethod = s => new Transform().scale(1, s);
       line.pulseScaleNow(1, 3);
     }
+    const arrow1 = this._arrow1;
+    const arrow2 = this._arrow2;
+    if (arrow1 != null) {
+      arrow1.pulseScaleNow(1, 2);
+    }
+    if (arrow2 != null) {
+      arrow2.pulseScaleNow(1, 2);
+    }
     this.animateNextFrame();
   }
 
