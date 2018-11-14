@@ -117,8 +117,6 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     const sideNum = parseInt(title, 10);
     this.eqns.triRectEqn.showForm('1', sides.indexOf(sideNum));
     this.showTriangles(sideNum, 'tris', false);
-    
-    
   }
 
   rotateArea(numSides: number, toAngle: number | null) {

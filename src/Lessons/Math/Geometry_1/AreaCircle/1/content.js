@@ -169,10 +169,10 @@ class Content extends LessonContent {
     common.setContent = 'With just |25 triangles|, its quite |close|.';
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
-    common.setContent = 'Also note how the |height| changes. Its length gets closer to the |radius| of the circle as the number of triangles increases.';
+    common.setContent = 'Also the |height| gets closer to the |radius| length, and the outside |border| gets closer to the circle |circumference|.';
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
-    common.setContent = 'And finally note the outside border, as the triangles';
+    common.setContent = 'In addition, as the number of triangles increases, the outside border length gets closer to that of the circle circumference.';
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
     this.addSection(common, {
