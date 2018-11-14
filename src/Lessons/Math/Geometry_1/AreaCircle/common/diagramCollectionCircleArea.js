@@ -113,10 +113,15 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   }
 
   selectorClicked(title: string) {
-    this.showTriangles(parseInt(title, 10), 'tris', false);
+    const sides = this.layout.polygonSides;
+    const sideNum = parseInt(title, 10);
+    this.eqns.triRectEqn.showForm('1', sides.indexOf(sideNum));
+    this.showTriangles(sideNum, 'tris', false);
+    
+    
   }
 
-  rotateArea(numSides: number) {
+  rotateArea(numSides: number, toAngle: number | null) {
     // $FlowFixMe
     const tri = this[`_tri${numSides}`];
     // // $FlowFixMe
@@ -126,6 +131,9 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     const r = tri.transform.r();
     if (r != null) {
       let newR = r + Math.PI * 2 / numSides;
+      if (toAngle != null) {
+        newR = toAngle;
+      }
       if (newR > Math.PI * 2) {
         newR -= Math.PI * 2;
       }
@@ -160,6 +168,8 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       const lines = this[`_lines${sides}`];
       // $FlowFixMe
       const triFill = this[`_tri${sides}`]._fill;
+      // $FlowFixMe
+      const tri = this[`_tri${sides}`];
       if (sides === numSides) {
         polygon.show();
         if (area === 'tris') {
@@ -167,6 +177,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
         } else {
           fill.hide();
         }
+        tri.show();
         lines.show();
         height.showAll();
         base.showAll();
@@ -181,6 +192,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
           triFill.hide();
         }
       } else {
+        tri.hide();
         polygon.hide();
         fill.hide();
         lines.hide();
@@ -194,7 +206,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       this._circleFill.show();
     } else {
       this._circleFill.hide();
-    }
+    } 
     this.diagram.animateNextFrame();
   }
 
@@ -211,5 +223,6 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.setPosition(this.layout.position);
     this.addEquations();
     this.hasTouchableElements = true;
+    console.log(this)
   }
 }

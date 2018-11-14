@@ -80,7 +80,7 @@ class Content extends LessonContent {
     this.addSection(common, { show: [circ._circle] });
     this.addSection(common, { show: [circ._circle, circ._lines6] });
 
-    common.setContent = 'These pieces can be make into |6 equal triangles|.';
+    common.setContent = 'These pieces can be made into |6 equal triangles|.';
     this.addSection(common, { show: [circ._circle, circ._lines6] });
     this.addSection(common, { show: [circ._circle, circ._lines6, circ._poly6] });
     this.addSection(common, { show: [circ._backgroundCircle, circ._lines6, circ._poly6] });
@@ -159,9 +159,20 @@ class Content extends LessonContent {
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
       circ._selector.selector.select('6');
-      // diag._selector.selector.selectWithoutExecution('corresponding');
-      // console.log(circ)
+      circ.rotateArea(6, 0);
     };
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = 'As the number of triangles is |increased| the area appoximation becomes |better|.';
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = 'With just |25 triangles|, its quite |close|.';
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = 'Also note how the |height| changes. Its length gets closer to the |radius| of the circle as the number of triangles increases.';
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = 'And finally note the outside border, as the triangles';
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
     this.addSection(common, {
