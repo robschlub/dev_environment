@@ -482,7 +482,13 @@ export class DiagramObjectLine extends DiagramElementCollection {
     if (arrow2 != null) {
       arrow2.pulseScaleNow(1, 2);
     }
+
+    const label = this._label;
+    if (label != null) {
+      label.pulseScaleNow(1, 1.5);
+    }
     this.animateNextFrame();
+
   }
 
   addArrow(
