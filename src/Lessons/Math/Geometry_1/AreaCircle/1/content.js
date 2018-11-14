@@ -64,14 +64,14 @@ class Content extends LessonContent {
     common.showOnly = [circ];
     this.addSection(common, {
       title: 'Introduction',
-      setContent: ['The area of a circle can initially seem challenging to calculate as its |edge is curved|.'],
+      setContent: ['The |area of a circle| can seem challenging to find as its |edge is curved| and doesn\'t align with straight lines.'],
       show: [circ._circle, circ._grid],
     });
-    common.setContent = 'Curves don\'t line up with straight lines.';
-    this.addSection(common, { show: [circ._circle, circ._grid] });
-    common.setContent = 'So we have to start by making an |approximation|.';
+    // common.setContent = 'Curves don\'t line up with straight lines.';
+    // this.addSection(common, { show: [circ._circle, circ._grid] });
+    common.setContent = 'However, |we can do it| if we start by making an |approximation| of a circle, that we later |refine|.';
     this.addSection(common, { show: [circ._grid, circ._circle] });
-    this.addSection(common, { show: [circ._circle] });
+    // this.addSection(common, { show: [circ._circle] });
 
     const leastSides = layout.polygonSides[0];
     const mostSides = layout.polygonSides[2];

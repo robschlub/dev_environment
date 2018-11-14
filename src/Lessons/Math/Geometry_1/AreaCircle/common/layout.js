@@ -29,8 +29,8 @@ export default function commonLessonLayout() {
     position: new Point(0, 0),
     smallPosition: new Point(0, 0),
     spacing: 0.25,
-    length: 4,
-    height: 3,
+    length: 2.5,
+    height: 2.5,
   };
 
   layout.collection = {
