@@ -66,8 +66,8 @@ export default function commonLessonLayout() {
 
   layout.polygonSides = [
     6,
-    9,
-    25,
+    10,
+    50,
   ];
 
   layout.polygon = {
@@ -92,7 +92,7 @@ export default function commonLessonLayout() {
     lines: sideNum => ({
       innerRadius: 0,
       outerRadius: layout.circle.default.radius - layout.circle.back.width,
-      width,
+      width: width / 2,
       angleStep: Math.PI * 2 / sideNum,
       color: layout.colors.lines,
       transform: new Transform('lines'),

@@ -3,15 +3,15 @@
 $colors: (
   lines:             map-get($geometry_colors, lines),
   //
-  areaTri:           color('diagram', 'construction4', 'darker'),
-  areaTriLabel:      color('diagram', 'construction4'),
-  areaPoly:          color('diagram', 'construction4', 'darker'),
-  areaPolyLabel:     color('diagram', 'construction4'),
-  areaCircle:        color('diagram', 'construction2', 'darker'),
-  areaCircleLabel:   color('diagram', 'construction2'),
+  areaTri:           color('diagram', 'construction6', 'darkest'),
+  areaTriLabel:      color('diagram', 'construction6'),
+  areaPoly:          color('diagram', 'construction6', 'darkest'),
+  areaPolyLabel:     color('diagram', 'construction6'),
+  areaCircle:        color('diagram', 'construction6', 'darkest'),
+  areaCircleLabel:   color('diagram', 'construction6'),
   //
-  height:            color('diagram', 'construction5'),
-  border:            color('diagram', 'passive'),
+  height:            color('diagram', 'construction7'),
+  border:            color('diagram', 'construction8'),
   //
   grid:              color('diagram', 'disabled', 'darkest'),
 );

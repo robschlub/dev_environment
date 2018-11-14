@@ -73,53 +73,55 @@ class Content extends LessonContent {
     this.addSection(common, { show: [circ._grid, circ._circle] });
     this.addSection(common, { show: [circ._circle] });
 
-    common.setContent = 'Start by splitting the circle into |6 equal pieces|.';
+    const leastSides = layout.polygonSides[0];
+    const mostSides = layout.polygonSides[2];
+    common.setContent = `Start by splitting the circle into |${leastSides} equal pieces|.`;
     this.addSection(common, { show: [circ._circle] });
-    this.addSection(common, { show: [circ._circle, circ._lines6] });
+    this.addSection(common, { show: [circ._circle, circ._lines0] });
 
-    common.setContent = 'These pieces can be made into |6 equal triangles|.';
-    this.addSection(common, { show: [circ._circle, circ._lines6] });
-    this.addSection(common, { show: [circ._circle, circ._lines6, circ._poly6] });
-    this.addSection(common, { show: [circ._backgroundCircle, circ._lines6, circ._poly6] });
+    common.setContent = `These pieces can be made into |${leastSides} equal triangles|.`;
+    this.addSection(common, { show: [circ._circle, circ._lines0] });
+    this.addSection(common, { show: [circ._circle, circ._lines0, circ._poly0] });
+    this.addSection(common, { show: [circ._backgroundCircle, circ._lines0, circ._poly0] });
 
     common.setContent = 'Each triangle has the same |height| and |base|.';
     common.modifiers = {
       height: highlight(colors.height),
       base: highlight(colors.border),
       area: highlight(colors.area),
-      all: click(circ.rotateArea, [circ, 6, null], colors.diagram.action),
-      Each: click(circ.rotateArea, [circ, 6, null], colors.diagram.action),
-      each_: click(circ.rotateArea, [circ, 6, null], colors.diagram.action),
+      all: click(circ.rotateArea, [circ, leastSides, null], colors.diagram.action),
+      Each: click(circ.rotateArea, [circ, leastSides, null], colors.diagram.action),
+      each_: click(circ.rotateArea, [circ, leastSides, null], colors.diagram.action),
     };
     this.addSection(common, {
       show: [
-        circ._backgroundCircle, circ._lines6, circ._poly6,
+        circ._backgroundCircle, circ._lines0, circ._poly0,
       ],
     });
     common.setContent = '|Each| triangle has the same |height| and |base|.';
-    common.showOnly = [circ, circ._tri6];
+    common.showOnly = [circ, circ._tri0];
     common.setEnterState = () => {
-      circ.rotateArea(6, circ.triRotation);
+      circ.rotateArea(leastSides, circ.triRotation);
     };
     common.setLeaveState = () => {
-      circ.rotateArea(6, 0);
+      circ.rotateArea(leastSides, 0);
     };
     this.addSection(common, {
       show: [
-        circ._backgroundCircle, circ._lines6, circ._poly6,
-        circ._tri6._height, circ._tri6._base,
+        circ._backgroundCircle, circ._lines0, circ._poly0,
+        circ._tri0._height, circ._tri0._base,
       ],
     });
 
     common.setContent = 'And therefore |each_| triangle has the same |area|.';
     let show = [
-      circ._backgroundCircle, circ._lines6, circ._poly6,
-      circ._tri6._height, circ._tri6._base,
+      circ._backgroundCircle, circ._lines0, circ._poly0,
+      circ._tri0._height, circ._tri0._base,
     ];
     this.addSection(common, {
       show: [
-        circ._backgroundCircle, circ._lines6, circ._poly6,
-        circ._tri6._height, circ._tri6._base,
+        circ._backgroundCircle, circ._lines0, circ._poly0,
+        circ._tri0._height, circ._tri0._base,
       ],
     });
     this.addSection(common, {
@@ -129,19 +131,19 @@ class Content extends LessonContent {
       },
       setSteadyState: () => {
         circ.setScenario(circ, layout.collection.scenarios.left);
-        circ._tri6._fill.show();
+        circ._tri0._fill.show();
         circ.eqns.triRectEqn.showForm('0');
       },
     });
 
     common.setLeaveState = () => {};
-    common.show = [...show, circ._tri6._fill];
+    common.show = [...show, circ._tri0._fill];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
     };
-    common.setContent = 'The area of |all triangles| is |6 times one triangle|.';
+    common.setContent = `The area of |all triangles| is |${leastSides} times one triangle|.`;
     this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common);
-    common.show = [...show, circ._fill6];
+    common.show = [...show, circ._fill0];
     this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
 
     common.setContent = 'The area of the |triangles|, is a rough |approximation| of the |circle| area.';
@@ -155,25 +157,25 @@ class Content extends LessonContent {
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
     common.setContent = 'Touch the numbers near the circle to change the number of triangles.';
-    common.show = [...show, circ._fill6, circ._selector];
+    common.show = [...show, circ._fill0, circ._selector];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
-      circ._selector.selector.select('6');
-      circ.rotateArea(6, 0);
+      circ._selector.selector.select(leastSides.toString());
+      circ.rotateArea(leastSides, 0);
     };
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
     common.setContent = 'As the number of triangles is |increased| the area appoximation becomes |better|.';
-    common.showOnly = [circ, circ._tri25];
+    common.showOnly = [circ, circ._tri2];
     show = [
-      circ._backgroundCircle, circ._lines25, circ._poly25,
-      circ._tri25._height, circ._tri25._base, circ._fill25,
+      circ._backgroundCircle, circ._lines2, circ._poly2,
+      circ._tri2._height, circ._tri2._base, circ._fill2,
     ];
     common.show = [...show, circ._selector];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
-      circ._selector.selector.select('25');
-      circ.rotateArea(6, 0);
+      circ._selector.selector.select(mostSides.toString());
+      circ.rotateArea(leastSides, 0);
     };
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '2'], ['1', '2'], common);
 
@@ -204,23 +206,6 @@ class Content extends LessonContent {
     this.addEqnStep(circ.eqns.triRectEqn, ['9'], ['10'], common);
     this.addEqnStep(circ.eqns.triRectEqn, ['10'], ['11'], common);
     this.addEqnStep(circ.eqns.triRectEqn, ['11'], ['12'], common);
-
-    common.setContent = 'In addition, as the number of triangles increases, the outside border length gets closer to that of the circle circumference.';
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '2'], ['1', '2'], common);
-
-    this.addSection(common, {
-      title: 'Introduction',
-      setContent: ['The area of a circle can initially seem challenging to calculate as its edge is curved.'],
-      showOnly: [circ],
-      show: [circ],
-      transitionFromPrev: (done) => {
-        circ.moveToScenario(circ, layout.collection.scenarios.left, null, done);
-      },
-      setSteadyState: () => {
-        circ.setScenario(circ, layout.collection.scenarios.left);
-        circ.eqns.triRectEqn.showForm('6', 'base');
-      },
-    });
   }
 }
 
