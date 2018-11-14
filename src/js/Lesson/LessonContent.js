@@ -809,6 +809,8 @@ class LessonContent {
     if (eqn.eqn) {
       ({ eqn } = equationOrNavigator);
     }
+    const userSections = Object.assign({}, ...sectionObjects);
+
     const eqnSection = {
       transitionFromPrev: (done) => {
         let time = null;
@@ -855,6 +857,9 @@ class LessonContent {
         }
       },
       setSteadyState: () => {
+        if (userSections.setSteadyState != null) {
+          userSections.setSteadyState();
+        }
         if (Array.isArray(toForm)) {
           nav.showForm(toForm[0], toForm[1]);
         } else {

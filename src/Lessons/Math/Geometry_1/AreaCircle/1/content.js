@@ -143,23 +143,32 @@ class Content extends LessonContent {
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
     };
-    common.setContent = `The area of |all triangles| is |${leastSides} times one triangle|.`;
+    common.setSteadyState = () => {
+      circ.setScenario(circ, layout.collection.scenarios.left);
+    };
+    common.setContent = `The |area| of |all triangles| is then |${leastSides} | times the area of |one triangle|.`;
     this.addEqnStep(circ.eqns.triRectEqn, '0', '0', common);
     common.show = [...show, circ._fill0];
     this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
 
-    common.setContent = `In addition, the |border_| of the triangles consists of ${leastSides} base lengths.`;
+    common.setContent = `Similarly, the |border_| of |all triangles| is |${leastSides}| times the |base| lengths of |one triangle|.`;
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
     common.show = [...show, circ._fill0, circ._border0];
-    common.setContent = `In addition, the |border| of the triangles consists of ${leastSides} base lengths.`;
-    this.addSection(common, {
-      setSteadyState: () => {
-        circ.setScenario(circ, layout.collection.scenarios.left);
-        circ._tri0._fill.show();
-        circ.eqns.triRectEqn.showForm('1', '0');
-        circ.eqns.borderEqn.showForm('0', '0');
-      },
-    });
+    common.setContent = `Similarly, the |border| of |all triangles| is |${leastSides}| times the |base| lengths of |one triangle|.`;
+    common.setSteadyState = () => {
+      circ.setScenario(circ, layout.collection.scenarios.left);
+      circ.eqns.borderEqn.showForm('0', '0');
+    };
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = 'The |area| equation can be rewritten in terms of the |border| instead of the |base|.';
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['2', '0'], common);
+    this.addEqnStep(circ.eqns.triRectEqn, ['2', '0'], '3', common);
+
+    common.setSteadyState = () => {
+      circ.setScenario(circ, layout.collection.scenarios.left);
+    };
 
     common.setContent = 'The area of the |triangles|, is a rough |approximation| of the |circle| area.';
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
