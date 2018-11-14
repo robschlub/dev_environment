@@ -187,7 +187,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
         tri.show();
         lines.show();
         height.showAll();
-        base.showAll();
+        // base.showAll();
         if (showBorder) {
           border.show();
         } else {

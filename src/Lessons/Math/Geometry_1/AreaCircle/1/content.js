@@ -180,6 +180,11 @@ class Content extends LessonContent {
       circ.setScenario(circ, layout.collection.scenarios.left);
     };
 
+    show = [
+      circ._backgroundCircle, circ._lines0, circ._poly0,
+      circ._tri0._height,
+    ];
+    common.show = [...show, circ._fill0, circ._border0];
     common.setContent = 'The |area| of the |triangles|, is a rough |approximation| of the |circle area|.';
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
 
@@ -202,7 +207,7 @@ class Content extends LessonContent {
     common.showOnly = [circ, circ._tri2];
     show = [
       circ._backgroundCircle, circ._lines2, circ._poly2,
-      circ._tri2._height, circ._tri2._base, circ._fill2, circ._border2,
+      circ._tri2._height, circ._fill2, circ._border2,
     ];
     common.show = [...show];
     common.setEnterState = () => {

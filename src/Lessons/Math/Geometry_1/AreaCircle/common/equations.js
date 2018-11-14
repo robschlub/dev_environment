@@ -46,9 +46,9 @@ export function addTriRectEquation(
 
   eqn.createElements(
     {
-      AreaTri: ['Area', colAreaTri],
-      AreaPoly: ['Area', colAreaPoly],
-      AreaCircle: ['Area', colAreaCircle],
+      AreaTri: ['area', colAreaTri],
+      AreaPoly: ['area', colAreaPoly],
+      // AreaCircle: ['area', colAreaCircle],
       triangle: ['triangle', colAreaTri],
       triangles: ['all triangles', colAreaPoly],
       circle: ['circle', colAreaCircle],
@@ -58,7 +58,7 @@ export function addTriRectEquation(
       most: sides[2].toString(),
       h: [' h ', colHeight],
       b: ['b', colBorder],
-      border: ['Border', colBorder],
+      border: ['border', colBorder],
       _2_: ['2', colText],
       pi: ['π', colText],
       r: ['r', colText],
@@ -236,7 +236,7 @@ export function addBorderEquation(
   // const colLine = layout.colors.line;
   eqn.createElements(
     {
-      border: ['Border', colBorder],
+      border: ['border', colBorder],
       triangles: ['all triangles', colBorder],
       equals: '  =  ',
       least: sides[0].toString(),
