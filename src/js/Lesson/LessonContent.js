@@ -801,16 +801,11 @@ class LessonContent {
   addEqnsStep(
     equations: Array<[
       { eqn: Equation } & Equation,  // or navigator
-      string | Array<string>,
-      string | Array<string>,
+      string | Array<string>,        // From form
+      string | Array<string>,        // To Form
     ]>,
     ...sectionObjects: Array<Object>
   ) {
-    // const nav = equationOrNavigator;
-    // let eqn = equationOrNavigator;
-    // if (eqn.eqn) {
-    //   ({ eqn } = equationOrNavigator);
-    // }
     const userSections = Object.assign({}, ...sectionObjects);
 
     const eqnSection = {
@@ -827,9 +822,6 @@ class LessonContent {
         equations.forEach((equation) => {
           const [nav, fromForm, toForm] = equation;
           console.log(equation)
-          // const fromForm = equation.fromForm;
-          // const toForm = equation.toForm;
-          // const nav = equation.eqnOrNav;
           let eqn = nav;
           if (eqn.eqn) {
             ({ eqn } = nav);

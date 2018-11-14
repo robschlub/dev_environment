@@ -165,7 +165,7 @@ class Content extends LessonContent {
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['1', '0'], ['1', '0']],
       [circ.eqns.borderEqn, '0', '0'],
-      ], common);
+      ], common, {title: 'qwreq'});
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['1', '0'], ['2', '0']],
       [circ.eqns.borderEqn, '0', '0'],
@@ -174,18 +174,19 @@ class Content extends LessonContent {
       [circ.eqns.triRectEqn, ['2', '0'], '3'],
       [circ.eqns.borderEqn, '0', '0'],
       ], common);
-    // this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['2', '0'], common);
-    // this.addEqnStep(circ.eqns.triRectEqn, ['2', '0'], '3', common);
 
     common.setSteadyState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
     };
 
-    common.setContent = 'The area of the |triangles|, is a rough |approximation| of the |circle| area.';
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+    common.setContent = 'The |area| of the |triangles|, is a rough |approximation| of the |circle area|.';
+    this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
+
+    common.setContent = 'The |border| of the |triangles|, is a rough |approximation| of the |circle circumference|.';
+    this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
 
     common.setContent = 'Now, what happens when we |increase| the number of triangles?';
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+    this.addEqnStep(circ.eqns.triRectEqn,  '3', '3', common);
 
     common.setContent = 'Touch the numbers near the circle to change the number of triangles.';
     common.show = [...show, circ._fill0, circ._selector];
@@ -194,7 +195,7 @@ class Content extends LessonContent {
       circ._selector.selector.select(leastSides.toString());
       circ.rotateArea(leastSides, 0);
     };
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+    this.addEqnStep(circ.eqns.triRectEqn,  '3', '3', common);
 
     common.setContent = 'As the number of triangles is |increased| the |area appoximation| becomes |better|.';
     common.showOnly = [circ, circ._tri2];
