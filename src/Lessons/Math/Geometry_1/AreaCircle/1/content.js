@@ -162,9 +162,20 @@ class Content extends LessonContent {
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
     common.setContent = 'The |area| equation can be rewritten in terms of the |border| instead of the |base|.';
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['2', '0'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['2', '0'], '3', common);
+    this.addEqnsStep([
+      [circ.eqns.triRectEqn, ['1', '0'], ['1', '0']],
+      [circ.eqns.borderEqn, '0', '0'],
+      ], common);
+    this.addEqnsStep([
+      [circ.eqns.triRectEqn, ['1', '0'], ['2', '0']],
+      [circ.eqns.borderEqn, '0', '0'],
+      ], common);
+    this.addEqnsStep([
+      [circ.eqns.triRectEqn, ['2', '0'], '3'],
+      [circ.eqns.borderEqn, '0', '0'],
+      ], common);
+    // this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['2', '0'], common);
+    // this.addEqnStep(circ.eqns.triRectEqn, ['2', '0'], '3', common);
 
     common.setSteadyState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);

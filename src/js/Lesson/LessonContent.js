@@ -799,11 +799,11 @@ class LessonContent {
   }
 
   addEqnsStep(
-    equations: Array<{
-      eqnOrNav: { eqn: Equation } & Equation,  // or navigator
-      fromForm: string | Array<string>,
-      toForm: string | Array<string>,
-    }>,
+    equations: Array<[
+      { eqn: Equation } & Equation,  // or navigator
+      string | Array<string>,
+      string | Array<string>,
+    ]>,
     ...sectionObjects: Array<Object>
   ) {
     // const nav = equationOrNavigator;
@@ -825,12 +825,14 @@ class LessonContent {
         }
         console.log(equations)
         equations.forEach((equation) => {
-          const fromForm = equation.fromForm;
-          const toForm = equation.toForm;
-          const nav = equation.eqnOrNav;
-          let eqn = equation.eqnOrNav;
+          const [nav, fromForm, toForm] = equation;
+          console.log(equation)
+          // const fromForm = equation.fromForm;
+          // const toForm = equation.toForm;
+          // const nav = equation.eqnOrNav;
+          let eqn = nav;
           if (eqn.eqn) {
-            ({ eqn } = equation.eqnOrNav);
+            ({ eqn } = nav);
           }
           let formChange = true;
           if (Array.isArray(fromForm)) {
@@ -880,8 +882,9 @@ class LessonContent {
           userSections.setSteadyState();
         }
         equations.forEach((equation) => {
-          const nav = equation.eqnOrNav;
-          const { toForm } = equation;
+          const [nav, fromForm, toForm] = equation;
+          // const nav = equation.eqnOrNav;
+          // const { toForm } = equation;
           if (Array.isArray(toForm)) {
             nav.showForm(toForm[0], toForm[1]);
           } else {
@@ -899,11 +902,11 @@ class LessonContent {
     toForm: string | Array<string>,
     ...sectionObjects: Array<Object>
   ) {
-    this.addEqnsStep([{
-      eqnOrNav: equationOrNavigator,
+    this.addEqnsStep([[
+      equationOrNavigator,
       fromForm,
       toForm,
-    }], ...sectionObjects);
+    ]], ...sectionObjects);
   //   const nav = equationOrNavigator;
   //   let eqn = equationOrNavigator;
   //   if (eqn.eqn) {
