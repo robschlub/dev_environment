@@ -118,8 +118,8 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   selectorClicked(title: string) {
     const sides = this.layout.polygonSides;
     const sideNum = parseInt(title, 10);
-    this.eqns.triRectEqn.showForm('1', sides.indexOf(sideNum));
-    this.showTriangles(sideNum, 'tris', false);
+    this.eqns.triRectEqn.showForm('3', sides.indexOf(sideNum));
+    this.showTriangles(sideNum, 'tris', true);
   }
 
   rotateArea(numSides: number, toAngle: number | null) {

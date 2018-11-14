@@ -69,17 +69,17 @@ class Content extends LessonContent {
     });
     // common.setContent = 'Curves don\'t line up with straight lines.';
     // this.addSection(common, { show: [circ._circle, circ._grid] });
-    common.setContent = 'However, |we can do it| if we start by making an |approximation| of a circle, that we later |refine|.';
+    common.setContent = 'However, |we can do it| if we start by making an |approximation| of a circle, that we then |refine| later.';
     this.addSection(common, { show: [circ._grid, circ._circle] });
     // this.addSection(common, { show: [circ._circle] });
 
     const leastSides = layout.polygonSides[0];
     const mostSides = layout.polygonSides[2];
-    common.setContent = `Start by splitting the circle into |${leastSides} equal pieces|.`;
+    common.setContent = `Start by splitting the circle into |equal| pieces, for example we will use |${leastSides}|.`;
     this.addSection(common, { show: [circ._circle] });
     this.addSection(common, { show: [circ._circle, circ._lines0] });
 
-    common.setContent = `These pieces can be made into |${leastSides} equal triangles|.`;
+    common.setContent = `These pieces can then be made into ${leastSides} |equal triangles| which is where we will focus.`;
     this.addSection(common, { show: [circ._circle, circ._lines0] });
     this.addSection(common, { show: [circ._circle, circ._lines0, circ._poly0] });
     this.addSection(common, { show: [circ._backgroundCircle, circ._lines0, circ._poly0] });
@@ -151,17 +151,18 @@ class Content extends LessonContent {
     common.show = [...show, circ._fill0];
     this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
 
-    common.setContent = `Similarly, the |border_| of |all triangles| is |${leastSides}| times the |base| lengths of |one triangle|.`;
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
     common.show = [...show, circ._fill0, circ._border0];
-    common.setContent = `Similarly, the |border| of |all triangles| is |${leastSides}| times the |base| lengths of |one triangle|.`;
+    common.setContent = `Similarly, the outside |border_| of |all triangles| is |${leastSides}| |base| lengths.`;
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+
+    common.setContent = `Similarly, the outside |border| of |all triangles| is |${leastSides}| |base| lengths.`;
     common.setSteadyState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
       circ.eqns.borderEqn.showForm('0', '0');
     };
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
-    common.setContent = 'The |area| equation can be rewritten in terms of the |border| instead of the |base|.';
+    common.setContent = 'The last terms of the |area| equation can be seen as the |border| and so the equation can be rearranged.';
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['1', '0'], ['1', '0']],
       [circ.eqns.borderEqn, '0', '0'],
@@ -188,8 +189,8 @@ class Content extends LessonContent {
     common.setContent = 'Now, what happens when we |increase| the number of triangles?';
     this.addEqnStep(circ.eqns.triRectEqn,  '3', '3', common);
 
-    common.setContent = 'Touch the numbers near the circle to change the number of triangles.';
-    common.show = [...show, circ._fill0, circ._selector];
+    common.setContent = '|Touch| the numbers beneath the circle to change the number of triangles.';
+    common.show = [...show, circ._fill0, circ._border0, circ._selector];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
       circ._selector.selector.select(leastSides.toString());
@@ -201,43 +202,34 @@ class Content extends LessonContent {
     common.showOnly = [circ, circ._tri2];
     show = [
       circ._backgroundCircle, circ._lines2, circ._poly2,
-      circ._tri2._height, circ._tri2._base, circ._fill2,
+      circ._tri2._height, circ._tri2._base, circ._fill2, circ._border2,
     ];
-    common.show = [...show, circ._selector];
+    common.show = [...show];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
       circ._selector.selector.select(mostSides.toString());
       circ.rotateArea(leastSides, 0);
     };
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '2'], ['1', '2'], common);
+    this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '3', '4', common);
 
-    common.setContent = 'Also the |height| gets closer to the |radius| length, and the outside |border| gets closer to the circle |circumference|.';
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '2'], ['1', '2'], common, {title: 'asdf'});
+    common.setContent = 'Also the |height| gets closer to the |radius| length.';
+    this.addEqnStep(circ.eqns.triRectEqn, '4', '4', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '4', '5', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '5', '6', common);
 
-    common.setContent = 'If we look closer at equation for area, the last two terms are the same as the border length.';
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '2'], ['1', '2'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['1', '2'], ['2', '2'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['2', '2'], ['3'], common);
+    common.setContent = 'And the outside |border| gets closer to the circle |circumference| which is |2πr|.';
+    this.addEqnStep(circ.eqns.triRectEqn, '6', '6', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '6', '7', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '7', '8', common);
 
-    common.setContent = 'Now, we is assume a large number of triangles, then the |height| is approximately equal to the |radius|.';
-    common.hide = [circ._selector];
-    this.addEqnStep(circ.eqns.triRectEqn, ['3'], ['3'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['3'], ['4'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['4'], ['5'], common);
-
-    common.setContent = 'And the border is approximately equal to the circle circumference |2πr|.';
-    common.hide = [circ._selector];
-    this.addEqnStep(circ.eqns.triRectEqn, ['5'], ['5'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['5'], ['6'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['6'], ['7'], common);
-
-    common.setContent = 'We can rearrange the equation to get a general relationship for area.';
-    this.addEqnStep(circ.eqns.triRectEqn, ['7'], ['7'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['7'], ['8'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['8'], ['9'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['9'], ['10'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['10'], ['11'], common);
-    this.addEqnStep(circ.eqns.triRectEqn, ['11'], ['12'], common);
+    common.setContent = 'We can now simplify the equation.';
+    this.addEqnStep(circ.eqns.triRectEqn, '8', '8', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '8', '9', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '9', '10', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '10', '11', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '11', '12', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '12', '13', common);
   }
 }
 

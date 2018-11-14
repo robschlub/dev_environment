@@ -154,7 +154,7 @@ export default function commonLessonLayout() {
   };
 
   layout.triangleAreaEquation = new Point(2.5, 0);
-  layout.borderEquation = new Point(2.4, -0.6);
+  layout.borderEquation = new Point(2.8, 0.6);
 
   layout.selector = {
     position: new Point(0, -1.4),
