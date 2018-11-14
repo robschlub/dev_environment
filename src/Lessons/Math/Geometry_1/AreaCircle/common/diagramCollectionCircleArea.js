@@ -102,23 +102,32 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     addTriRectEquation(this.diagram, this.layout, this, 'triRectEqn');
     addBorderEquation(this.diagram, this.layout, this, 'borderEqn');
 
-    this.eqns.triRectEqn.collection._b.onClick = this.pulseBase.bind(this);
-    this.eqns.triRectEqn.collection._b.isTouchable = true;
-    this.eqns.triRectEqn.collection._h.onClick = this.pulseHeight.bind(this);
-    this.eqns.triRectEqn.collection._h.isTouchable = true;
-    this.eqns.triRectEqn.collection._r.onClick = this.pulseRadius.bind(this);
-    this.eqns.triRectEqn.collection._r.isTouchable = true;
-    this.eqns.triRectEqn.collection._r_.onClick = this.pulseRadius.bind(this);
-    this.eqns.triRectEqn.collection._r_.isTouchable = true;
-    this.eqns.triRectEqn.collection._border.onClick = this.pulseBorder.bind(this);
-    this.eqns.triRectEqn.collection._border.isTouchable = true;
-    this.eqns.triRectEqn.collection.hasTouchableElements = true;
+    const triRect = this.eqns.triRectEqn.collection;
+    const border = this.eqns.borderEqn.collection;
 
-    this.eqns.borderEqn.collection._border.onClick = this.pulseBorder.bind(this);
-    this.eqns.borderEqn.collection._border.isTouchable = true;
-    this.eqns.borderEqn.collection._b.onClick = this.pulseBase.bind(this);
-    this.eqns.borderEqn.collection._b.isTouchable = true;
-    this.eqns.borderEqn.collection.hasTouchableElements = true;
+    triRect._b.onClick = this.pulseBase.bind(this);
+    triRect._b.isTouchable = true;
+    triRect._h.onClick = this.pulseHeight.bind(this);
+    triRect._h.isTouchable = true;
+    triRect._r.onClick = this.pulseRadius.bind(this);
+    triRect._r.isTouchable = true;
+    triRect._r_.onClick = this.pulseRadius.bind(this);
+    triRect._r_.isTouchable = true;
+    triRect._border.onClick = this.pulseBorder.bind(this);
+    triRect._border.isTouchable = true;
+    triRect.hasTouchableElements = true;
+    triRect._Area.isTouchable = true;
+    triRect._Area.onClick = this.togglePolygonArea.bind(this);
+    triRect._AreaCircle.isTouchable = true;
+    triRect._AreaCircle.onClick = this.toggleCircleArea.bind(this);
+    triRect._AreaTri.isTouchable = true;
+    triRect._AreaTri.onClick = this.toggleTriangleArea.bind(this);
+
+    border._border.onClick = this.pulseBorder.bind(this);
+    border._border.isTouchable = true;
+    border._b.onClick = this.pulseBase.bind(this);
+    border._b.isTouchable = true;
+    border.hasTouchableElements = true;
   }
 
   addSelector() {
@@ -209,6 +218,49 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
+  togglePolygonArea(numSides: number | null = null) {
+    this.layout.polygonSides.forEach((sides, index) => {
+      // $FlowFixMe
+      const poly = this[`_poly${index}`];
+      // const tri = this[`_tri${index}`];
+      const fill = this[`_fill${index}`];
+      if (poly.isShown) {
+        if (fill.isShown) {
+          fill.hide();
+        } else {
+          fill.show();
+        }
+      }
+    });
+    this.diagram.animateNextFrame();
+  }
+
+  toggleTriangleArea(numSides: number | null = null) {
+    this.layout.polygonSides.forEach((sides, index) => {
+      // $FlowFixMe
+      const tri = this[`_tri${index}`];
+      const height = tri._height;
+      const fill = tri._fill;
+      if (height.isShown) {
+        if (fill.isShown) {
+          fill.hide();
+        } else {
+          fill.show();
+        }
+      }
+    });
+    this.diagram.animateNextFrame();
+  }
+
+  toggleCircleArea(numSides: number | null = null) {
+    if (this._circleFill.isShown) {
+      this._circleFill.hide();
+    } else {
+      this._circleFill.show();
+    }
+    this.diagram.animateNextFrame();
+  }
+
   showTriangles(
     numSides: number,
     area: 'tri' | 'tris' | 'circle' | 'none',
@@ -284,6 +336,6 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.setPosition(this.layout.position);
     this.addEquations();
     this.hasTouchableElements = true;
-    // console.log(this)
+    console.log(this)
   }
 }
