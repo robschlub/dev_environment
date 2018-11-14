@@ -58,7 +58,7 @@ export function addTriRectEquation(
       most: sides[2].toString(),
       h: [' h ', colHeight],
       b: ['b', colBorder],
-      border: ['border', colBorder],
+      border: ['Border', colBorder],
       _2_: ['2', colText],
       pi: ['π ', colText],
       r: ['r', colText],
@@ -207,56 +207,6 @@ export function addTriRectEquation(
     eqn.sup('r_', '_2'),
   ]);
 
-  // eqn.addForm('4', [
-  //   eqn.bottomComment('AreaCircle', 'circle'),
-  //   'equals',
-  //   eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
-  //   'h',
-  //   'mul_',
-  //   '_2_', 'pi', 'r',
-  // ]);
-
-  // eqn.addForm('5', [
-  //   eqn.bottomComment('AreaCircle', 'circle'),
-  //   'equals',
-  //   eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
-  //   'r_',
-  //   'mul_',
-  //   '_2_', 'pi', 'r',
-  // ]);
-
-  // eqn.addForm('6', [
-  //   eqn.bottomComment('AreaCircle', 'circle'),
-  //   'equals',
-  //   eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x_'), 'space',
-  //   'r_',
-  //   'mul_',
-  //   eqn.strike('_2_', 'x'), 'pi', 'r',
-  // ]);
-
-  // eqn.addForm('7', [
-  //   eqn.bottomComment('AreaCircle', 'circle'),
-  //   'equals',
-  //   'pi', 'r',
-  //   'mul_',
-  //   'r_',
-  // ]);
-
-  // eqn.addForm('8', [
-  //   eqn.bottomComment('AreaCircle', 'circle'),
-  //   'equals',
-  //   'pi', 'r', 'space',
-  //   'r_',
-  // ]);
-
-  // eqn.addForm('9', [
-  //   eqn.bottomComment('AreaCircle', 'triangle'),
-  //   'equals',
-  //   'pi',
-  //   eqn.sup(['r', 'space'], '_2'),
-  // ]);
-
-
   eqn.collection.setPosition(layout.triangleAreaEquation);
   eqn.setCurrentForm('0');
   // eslint-disable-next-line no-param-reassign
@@ -270,15 +220,15 @@ export function addBorderEquation(
   addToCollection: DiagramElementCollection,
   name: string,
 ) {
-  const { sides } = layout.polygons;
+  const sides = layout.polygonSides;
   const eqn = diagram.equation.makeEqn();
   const colBorder = layout.colors.border;
   const colText = layout.colors.diagram.text.base;
   // const colLine = layout.colors.line;
   eqn.createElements(
     {
-      border: 'Border',
-      triangles: 'all triangles',
+      border: ['Border', colBorder],
+      triangles: ['all triangles', colBorder],
       equals: ' = ',
       least: sides[0].toString(),
       medium: sides[1].toString(),
@@ -304,7 +254,7 @@ export function addBorderEquation(
   eqn.addForm('0', [border('least')], { formType: '1' });
   eqn.addForm('0', [border('least')], { formType: '2' });
 
-  eqn.collection.setPosition(layout.triangleAreaEquation);
+  eqn.collection.setPosition(layout.borderEquation);
   eqn.setCurrentForm('0');
   // eslint-disable-next-line no-param-reassign
   addToCollection.eqns[name] = eqn;

@@ -9,7 +9,7 @@ import {
 import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
 import {
-  addTriRectEquation,
+  addTriRectEquation, addBorderEquation,
 } from './equations';
 
 export default class CircleAreaCollection extends CommonDiagramCollection {
@@ -81,22 +81,23 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       );
       this.add(`poly${index}`, poly);
 
-      const border = this.diagram.shapes.polygon(
-        lay.default, lay.border, { sides: sideNum },
-      );
-      this.add(`border${index}`, border);
-
       const height = this.diagram.objects.line(this.layout.triangle.height(sideNum));
       tri.add('height', height);
 
       const base = this.diagram.objects.line(this.layout.triangle.base(sideNum));
       tri.add('base', base);
       this.add(`tri${index}`, tri);
+
+      const border = this.diagram.shapes.polygon(
+        lay.default, lay.border, { sides: sideNum },
+      );
+      this.add(`border${index}`, border);
     });
   }
 
   addEquations() {
     addTriRectEquation(this.diagram, this.layout, this, 'triRectEqn');
+    addBorderEquation(this.diagram, this.layout, this, 'borderEqn');
   }
 
   addSelector() {
@@ -140,6 +141,17 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       tri._height.updateLabel(newR);
       tri._base.updateLabel(newR);
     }
+    this.diagram.animateNextFrame();
+  }
+
+  pulseBorder() {
+    this.layout.polygonSides.forEach((sides, index) => {
+      // $FlowFixMe
+      const border = this[`_border${index}`];
+      if (border.isShown) {
+        border.pulseThickNow(1, 1.02, 5);
+      }
+    });
     this.diagram.animateNextFrame();
   }
 

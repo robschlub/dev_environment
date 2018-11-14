@@ -92,6 +92,8 @@ class Content extends LessonContent {
       all: click(circ.rotateArea, [circ, leastSides, null], colors.diagram.action),
       Each: click(circ.rotateArea, [circ, leastSides, null], colors.diagram.action),
       each_: click(circ.rotateArea, [circ, leastSides, null], colors.diagram.action),
+      border: click(circ.pulseBorder, [circ], colors.border),
+      border_: highlight(colors.border),
     };
     this.addSection(common, {
       show: [
@@ -146,11 +148,20 @@ class Content extends LessonContent {
     common.show = [...show, circ._fill0];
     this.addEqnStep(circ.eqns.triRectEqn, '0', ['1', '0'], common);
 
+    common.setContent = `In addition, the |border_| of the triangles consists of ${leastSides} base lengths.`;
+    this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
+    common.show = [...show, circ._fill0, circ._border0];
+    common.setContent = `In addition, the |border| of the triangles consists of ${leastSides} base lengths.`;
+    this.addSection(common, {
+      setSteadyState: () => {
+        circ.setScenario(circ, layout.collection.scenarios.left);
+        circ._tri0._fill.show();
+        circ.eqns.triRectEqn.showForm('1', '0');
+        circ.eqns.borderEqn.showForm('0', '0');
+      },
+    });
+
     common.setContent = 'The area of the |triangles|, is a rough |approximation| of the |circle| area.';
-    // common.modifiers = {
-    //   triangles: click(circ.showTriangles, [circ, 6, 'tris', false], colors.areaTriLabel),
-    //   circle: click(circ.showTriangles, [circ, 6, 'circle', false], colors.areaCircleLabel),
-    // };
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
     common.setContent = 'Now, what happens when we |increase| the number of triangles?';
