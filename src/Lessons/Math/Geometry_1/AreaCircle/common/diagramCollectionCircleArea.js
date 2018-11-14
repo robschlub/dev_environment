@@ -93,6 +93,9 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
       );
       this.add(`border${index}`, border);
     });
+
+    const radius = this.diagram.objects.line(this.layout.circle.radiusLine);
+    this.add('radius', radius);
   }
 
   addEquations() {

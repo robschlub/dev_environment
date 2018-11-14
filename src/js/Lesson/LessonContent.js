@@ -818,10 +818,8 @@ class LessonContent {
             done();
           }
         }
-        console.log(equations)
         equations.forEach((equation) => {
           const [nav, fromForm, toForm] = equation;
-          console.log(equation)
           let eqn = nav;
           if (eqn.eqn) {
             ({ eqn } = nav);

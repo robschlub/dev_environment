@@ -221,6 +221,12 @@ class Content extends LessonContent {
     common.setContent = 'Also the |height| gets closer to the |radius| length.';
     this.addEqnStep(circ.eqns.triRectEqn, '4', '4', common);
     this.addEqnStep(circ.eqns.triRectEqn, '4', '5', common);
+    common.show = [
+      circ._backgroundCircle, circ._lines2, circ._poly2,
+      circ._fill2,
+      circ._border2,
+      circ._radius
+    ];
     this.addEqnStep(circ.eqns.triRectEqn, '5', '6', common);
 
     common.setContent = 'And the outside |border| gets closer to the circle |circumference| which is |2πr|.';
@@ -235,6 +241,12 @@ class Content extends LessonContent {
     this.addEqnStep(circ.eqns.triRectEqn, '10', '11', common);
     this.addEqnStep(circ.eqns.triRectEqn, '11', '12', common);
     this.addEqnStep(circ.eqns.triRectEqn, '12', '13', common);
+
+    common.show = [
+      circ._circle, circ._radius
+    ];
+    common.setContent = "So we can see the |area of a circle| is related to its |radius|."
+    this.addEqnStep(circ.eqns.triRectEqn, '13', '13', common);
   }
 }
 

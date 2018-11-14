@@ -62,6 +62,19 @@ export default function commonLessonLayout() {
       color: layout.colors.diagram.disabledDark,
       width,
     },
+    radiusLine: {
+      vertexSpaceStart: 'start',
+      length: 1.25 - width,
+      width,
+      angle: 0,
+      color: layout.colors.height,
+      label: {
+        text: 'r',
+        location: 'top',
+        orientation: 'horizontal',
+        offset: -0.02,
+      },
+    },
   };
 
   layout.polygonSides = [
