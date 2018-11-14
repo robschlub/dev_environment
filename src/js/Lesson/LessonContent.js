@@ -798,77 +798,177 @@ class LessonContent {
     this.sections.push(s);
   }
 
+  addEqnsStep(
+    equations: Array<{
+      eqnOrNav: { eqn: Equation } & Equation,  // or navigator
+      fromForm: string | Array<string>,
+      toForm: string | Array<string>,
+    }>,
+    ...sectionObjects: Array<Object>
+  ) {
+    // const nav = equationOrNavigator;
+    // let eqn = equationOrNavigator;
+    // if (eqn.eqn) {
+    //   ({ eqn } = equationOrNavigator);
+    // }
+    const userSections = Object.assign({}, ...sectionObjects);
+
+    const eqnSection = {
+      transitionFromPrev: (done) => {
+        let time = null;
+        let count = 0;
+        const eqnDone = () => {
+          count += 1;
+          if (count === equations.length) {
+            done();
+          }
+        }
+        console.log(equations)
+        equations.forEach((equation) => {
+          const fromForm = equation.fromForm;
+          const toForm = equation.toForm;
+          const nav = equation.eqnOrNav;
+          let eqn = equation.eqnOrNav;
+          if (eqn.eqn) {
+            ({ eqn } = equation.eqnOrNav);
+          }
+          let formChange = true;
+          if (Array.isArray(fromForm)) {
+            nav.showForm(fromForm[0], fromForm[1]);
+            if (Array.isArray(toForm)) {
+              if (fromForm[0] === toForm[0]
+                && fromForm[1] === toForm[1]) {
+                formChange = false;
+              }
+            }
+          } else {
+            nav.showForm(fromForm);
+            if (typeof toForm === 'string') {
+              if (fromForm === toForm) {
+                formChange = false;
+              }
+            }
+          }
+          let nextForm;
+          if (Array.isArray(toForm)) {
+            nextForm = eqn.getForm(toForm[0], toForm[1]);
+          } else {
+            nextForm = eqn.getForm(toForm);
+          }
+          // const nextForm = eqn.getForm(toForm);
+          if (nextForm != null && nextForm.time != null) {
+            if (typeof nextForm.time === 'number') {
+              ({ time } = nextForm);
+            } else if (nextForm.time.fromPrev != null) {
+              time = nextForm.time.fromPrev;
+            }
+          }
+          const cleanup = () => {
+            eqn.collection.stop(true, true);
+            eqnDone();
+          };
+
+          if (nextForm != null && formChange) {
+            nextForm.animatePositionsTo(0, 0.5, time, 0.5, cleanup);
+          } else {
+            eqnDone();
+          }
+        });
+      },
+      setSteadyState: () => {
+        if (userSections.setSteadyState != null) {
+          userSections.setSteadyState();
+        }
+        equations.forEach((equation) => {
+          const nav = equation.eqnOrNav;
+          const { toForm } = equation;
+          if (Array.isArray(toForm)) {
+            nav.showForm(toForm[0], toForm[1]);
+          } else {
+            nav.showForm(toForm);
+          }
+        });
+      },
+    };
+    const section = Object.assign({}, ...sectionObjects, eqnSection);
+    this.addSection(section);
+  }
   addEqnStep(
     equationOrNavigator: { eqn: Equation } & Equation,
     fromForm: string | Array<string>,
     toForm: string | Array<string>,
     ...sectionObjects: Array<Object>
   ) {
-    const nav = equationOrNavigator;
-    let eqn = equationOrNavigator;
-    if (eqn.eqn) {
-      ({ eqn } = equationOrNavigator);
-    }
-    const userSections = Object.assign({}, ...sectionObjects);
+    this.addEqnsStep([{
+      eqnOrNav: equationOrNavigator,
+      fromForm,
+      toForm,
+    }], ...sectionObjects);
+  //   const nav = equationOrNavigator;
+  //   let eqn = equationOrNavigator;
+  //   if (eqn.eqn) {
+  //     ({ eqn } = equationOrNavigator);
+  //   }
+  //   const userSections = Object.assign({}, ...sectionObjects);
 
-    const eqnSection = {
-      transitionFromPrev: (done) => {
-        let time = null;
-        let formChange = true;
-        if (Array.isArray(fromForm)) {
-          nav.showForm(fromForm[0], fromForm[1]);
-          if (Array.isArray(toForm)) {
-            if (fromForm[0] === toForm[0]
-              && fromForm[1] === toForm[1]) {
-              formChange = false;
-            }
-          }
-        } else {
-          nav.showForm(fromForm);
-          if (typeof toForm === 'string') {
-            if (fromForm === toForm) {
-              formChange = false;
-            }
-          }
-        }
-        let nextForm;
-        if (Array.isArray(toForm)) {
-          nextForm = eqn.getForm(toForm[0], toForm[1]);
-        } else {
-          nextForm = eqn.getForm(toForm);
-        }
-        // const nextForm = eqn.getForm(toForm);
-        if (nextForm != null && nextForm.time != null) {
-          if (typeof nextForm.time === 'number') {
-            ({ time } = nextForm);
-          } else if (nextForm.time.fromPrev != null) {
-            time = nextForm.time.fromPrev;
-          }
-        }
-        const cleanup = () => {
-          eqn.collection.stop(true, true);
-          done();
-        };
+  //   const eqnSection = {
+  //     transitionFromPrev: (done) => {
+  //       let time = null;
+  //       let formChange = true;
+  //       if (Array.isArray(fromForm)) {
+  //         nav.showForm(fromForm[0], fromForm[1]);
+  //         if (Array.isArray(toForm)) {
+  //           if (fromForm[0] === toForm[0]
+  //             && fromForm[1] === toForm[1]) {
+  //             formChange = false;
+  //           }
+  //         }
+  //       } else {
+  //         nav.showForm(fromForm);
+  //         if (typeof toForm === 'string') {
+  //           if (fromForm === toForm) {
+  //             formChange = false;
+  //           }
+  //         }
+  //       }
+  //       let nextForm;
+  //       if (Array.isArray(toForm)) {
+  //         nextForm = eqn.getForm(toForm[0], toForm[1]);
+  //       } else {
+  //         nextForm = eqn.getForm(toForm);
+  //       }
+  //       // const nextForm = eqn.getForm(toForm);
+  //       if (nextForm != null && nextForm.time != null) {
+  //         if (typeof nextForm.time === 'number') {
+  //           ({ time } = nextForm);
+  //         } else if (nextForm.time.fromPrev != null) {
+  //           time = nextForm.time.fromPrev;
+  //         }
+  //       }
+  //       const cleanup = () => {
+  //         eqn.collection.stop(true, true);
+  //         done();
+  //       };
 
-        if (nextForm != null && formChange) {
-          nextForm.animatePositionsTo(0, 0.5, time, 0.5, cleanup);
-        } else {
-          done();
-        }
-      },
-      setSteadyState: () => {
-        if (userSections.setSteadyState != null) {
-          userSections.setSteadyState();
-        }
-        if (Array.isArray(toForm)) {
-          nav.showForm(toForm[0], toForm[1]);
-        } else {
-          nav.showForm(toForm);
-        }
-      },
-    };
-    const section = Object.assign({}, ...sectionObjects, eqnSection);
-    this.addSection(section);
+  //       if (nextForm != null && formChange) {
+  //         nextForm.animatePositionsTo(0, 0.5, time, 0.5, cleanup);
+  //       } else {
+  //         done();
+  //       }
+  //     },
+  //     setSteadyState: () => {
+  //       if (userSections.setSteadyState != null) {
+  //         userSections.setSteadyState();
+  //       }
+  //       if (Array.isArray(toForm)) {
+  //         nav.showForm(toForm[0], toForm[1]);
+  //       } else {
+  //         nav.showForm(toForm);
+  //       }
+  //     },
+  //   };
+  //   const section = Object.assign({}, ...sectionObjects, eqnSection);
+  //   this.addSection(section);
   }
 }
 
