@@ -43,11 +43,12 @@ export function addTriRectEquation(
   const colAreaTri = layout.colors.areaTriLabel;
   const colAreaPoly = layout.colors.areaPolyLabel;
   const colAreaCircle = layout.colors.areaCircleLabel;
+  const colRadius = layout.colors.radius;
 
   eqn.createElements(
     {
-      AreaTri: ['area', colAreaTri],
-      AreaPoly: ['area', colAreaPoly],
+      // AreaTri: ['area', colAreaTri],
+      Area: ['Area', colAreaPoly],
       // AreaCircle: ['area', colAreaCircle],
       triangle: ['triangle', colAreaTri],
       triangles: ['all triangles', colAreaPoly],
@@ -61,8 +62,8 @@ export function addTriRectEquation(
       border: ['border', colBorder],
       _2_: ['2', colText],
       pi: ['π', colText],
-      r: ['r', colText],
-      r_: ['r', colText],
+      r: ['r', colRadius],
+      r_: ['r', colRadius],
       mul: ' \u00D7 ',
       mul_: ' \u00D7 ',
       _1: '1',
@@ -81,7 +82,7 @@ export function addTriRectEquation(
   eqn.formAlignment.scale = 1.0;
 
   eqn.addForm('0', [
-    eqn.bottomComment('AreaTri', 'triangle'),
+    eqn.bottomComment('Area', 'triangle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -90,7 +91,7 @@ export function addTriRectEquation(
   ]);
 
   const trianglesArea = numSides => eqn.phrase([
-    eqn.bottomComment('AreaPoly', 'triangles'),
+    eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -104,7 +105,7 @@ export function addTriRectEquation(
   eqn.addForm('1', [trianglesArea('most')], { formType: '2' });
 
   const triangleAreaRearranged = numSides => eqn.phrase([
-    eqn.bottomComment('AreaPoly', 'triangles'),
+    eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -116,7 +117,7 @@ export function addTriRectEquation(
   eqn.addForm('2', [triangleAreaRearranged('most')], { formType: '2' });
 
   eqn.addForm('3', [
-    eqn.bottomComment('AreaPoly', 'triangles'),
+    eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -125,7 +126,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('4', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
@@ -134,7 +135,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('5', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     eqn.topComment('h', 'r_', 'bt'),
@@ -143,7 +144,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('6', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
@@ -152,7 +153,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('7', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
@@ -161,7 +162,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('8', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
@@ -170,7 +171,7 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('9', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'mul_',
@@ -183,7 +184,7 @@ export function addTriRectEquation(
   });
 
   eqn.addForm('10', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x'), 'space',
     'mul_',
@@ -195,14 +196,14 @@ export function addTriRectEquation(
     },
   });
   eqn.addForm('11', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     'pi', 'space',  'r', 'space', 
     'r_',
   ]);
 
   eqn.addForm('12', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
     'equals',
     'pi', 'space', 
     eqn.strike('r', 'x'), 'space', 
@@ -210,7 +211,14 @@ export function addTriRectEquation(
   ]);
 
   eqn.addForm('13', [
-    eqn.bottomComment('AreaPoly', 'circle'),
+    eqn.bottomComment('Area', 'circle'),
+    'equals',
+    'pi', 'space', 
+    eqn.sup('r_', ['space', '_2']),
+  ]);
+
+  eqn.addForm('14', [
+    'Area',
     'equals',
     'pi', 'space', 
     eqn.sup('r_', ['space', '_2']),
@@ -237,7 +245,6 @@ export function addBorderEquation(
   eqn.createElements(
     {
       border: ['border', colBorder],
-      triangles: ['all triangles', colBorder],
       equals: '  =  ',
       least: sides[0].toString(),
       medium: sides[1].toString(),
@@ -253,7 +260,7 @@ export function addBorderEquation(
   eqn.formAlignment.scale = 1.0;
 
   const border = numSides => eqn.phrase([
-    eqn.bottomComment('border', 'triangles'),
+    'border',
     'equals',
     'b',
     'mul',

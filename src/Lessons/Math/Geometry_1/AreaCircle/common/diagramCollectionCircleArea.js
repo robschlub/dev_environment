@@ -233,6 +233,6 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.setPosition(this.layout.position);
     this.addEquations();
     this.hasTouchableElements = true;
-    console.log(this)
+    // console.log(this)
   }
 }

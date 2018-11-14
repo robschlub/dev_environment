@@ -2431,7 +2431,6 @@ export class Equation {
           direction,
           mag,
         };
-        console.log(this.form[name][formType].elementMods)
       }
     });
     const form = this.form[name][formType];

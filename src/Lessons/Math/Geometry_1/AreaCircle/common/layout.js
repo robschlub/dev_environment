@@ -16,6 +16,7 @@ const cssColorNames = [
   'areaCircleLabel',
   'height',
   'border',
+  'radius',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -44,6 +45,12 @@ export default function commonLessonLayout() {
     },
   };
 
+  layout.polygonSides = [
+    6,
+    10,
+    50,
+  ];
+
   layout.circle = {
     default: {
       radius: 1.25,
@@ -66,8 +73,8 @@ export default function commonLessonLayout() {
       vertexSpaceStart: 'start',
       length: 1.25 - width,
       width,
-      angle: 0,
-      color: layout.colors.height,
+      angle: -Math.PI * 2 / layout.polygonSides[2] / 2,
+      color: layout.colors.radius,
       label: {
         text: 'r',
         location: 'top',
@@ -76,12 +83,6 @@ export default function commonLessonLayout() {
       },
     },
   };
-
-  layout.polygonSides = [
-    6,
-    10,
-    50,
-  ];
 
   layout.polygon = {
     default: {
@@ -126,8 +127,8 @@ export default function commonLessonLayout() {
           text: 'h',
           location: 'top',
           orientation: 'horizontal',
-          offset: -0.02,
-          linePosition: 0.5 + 0.4 * sideNum / Math.max(...layout.polygonSides),
+          offset: 0.02,
+          // linePosition: 0.5 + 0.4 * sideNum / Math.max(...layout.polygonSides),
         },
       };
     },
