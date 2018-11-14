@@ -26,6 +26,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   _poly25: DiagramElementPrimative;
   _lines25: DiagramElementPrimative;
   _fill25: DiagramElementPrimative;
+  triRotation: number;
 
   addGrid() {
     const lay = this.layout.grid;
@@ -51,6 +52,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   }
 
   addTriangles() {
+    this.triRotation = 0;
     const lay = this.layout.polygon;
     this.layout.polygonSides.forEach((sideNum) => {
       const tri = this.diagram.shapes.collection(new Transform().rotate(0));
@@ -122,26 +124,20 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   rotateArea(numSides: number, toAngle: number | null) {
     // $FlowFixMe
     const tri = this[`_tri${numSides}`];
-    // // $FlowFixMe
-    // const base = this[`_base${numSides}`];
-    // // $FlowFixMe
-    // const triFill = this[`_triFill${numSides}`];
-    const r = tri.transform.r();
+    const r = this.triRotation;
     if (r != null) {
       let newR = r + Math.PI * 2 / numSides;
-      if (toAngle != null) {
-        newR = toAngle;
-      }
       if (newR > Math.PI * 2) {
         newR -= Math.PI * 2;
+      }
+      if (toAngle != null) {
+        newR = toAngle;
+      } else {
+        this.triRotation = newR;
       }
       tri.transform.updateRotation(newR);
       tri._height.updateLabel(newR);
       tri._base.updateLabel(newR);
-      // height.transform.updateRotation(newR);
-      // height.updateLabel();
-      // triFill.transform.updateRotation(newR + Math.PI * 2 / numSides / 2);
-      // base.setPoints()
     }
     this.diagram.animateNextFrame();
   }

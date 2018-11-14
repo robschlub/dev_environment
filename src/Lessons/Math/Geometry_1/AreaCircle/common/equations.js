@@ -52,17 +52,17 @@ export function addTriRectEquation(
       triangle: ['triangle', colAreaTri],
       triangles: ['all triangles', colAreaPoly],
       circle: ['circle', colAreaCircle],
-      equals: ' = ',
+      equals: ' =  ',
       least: sides[0].toString(),
       medium: sides[1].toString(),
       most: sides[2].toString(),
-      h: ['h', colHeight],
+      h: [' h ', colHeight],
       b: ['b', colBorder],
       border: ['border', colBorder],
       _2_: ['2', colText],
       pi: ['π ', colText],
       r: ['r', colText],
-      r_: ['r ', colText],
+      r_: [' r ', colText],
       mul: ' \u00D7 ',
       mul_: ' \u00D7 ',
       _1: '1',
@@ -70,7 +70,8 @@ export function addTriRectEquation(
       v: diagram.equation.vinculum(colText),
       x: diagram.equation.xStrike(strikeColor),
       x_: diagram.equation.xStrike(strikeColor),
-      bt: diagram.equation.brace('top', 3, strikeColor),
+      bt: diagram.equation.brace('top', 1, strikeColor),
+      bt_: diagram.equation.brace('top', 2, strikeColor),
     },
     colText,
   );
@@ -108,7 +109,7 @@ export function addTriRectEquation(
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
     'mul_',
-    eqn.topComment(['b', 'mul', numSides], 'border', 'bt'),
+    eqn.topComment(['b', 'mul', numSides], 'border', 'bt_'),
   ]);
   eqn.addForm('2', [triangleAreaRearranged('least')], { formType: '0' });
   eqn.addForm('2', [triangleAreaRearranged('medium')], { formType: '1' });
@@ -119,58 +120,141 @@ export function addTriRectEquation(
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'h',
-    'mul',
+    'mul_',
     'border',
   ]);
 
   eqn.addForm('4', [
-    eqn.bottomComment('AreaCircle', 'circle'),
+    eqn.bottomComment('AreaPoly', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
-    'h',
-    'mul',
-    '_2_', 'pi', 'r',
+    eqn.topComment('h', 'r_', 'bt'),
+    'mul_',
+    'border',
   ]);
 
   eqn.addForm('5', [
-    eqn.bottomComment('AreaCircle', 'circle'),
+    eqn.bottomComment('AreaPoly', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
-    'mul',
-    '_2_', 'pi', 'r',
+    'mul_',
+    'border',
   ]);
 
   eqn.addForm('6', [
-    eqn.bottomComment('AreaCircle', 'circle'),
+    eqn.bottomComment('AreaPoly', 'triangles'),
     'equals',
-    eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x_'), 'space',
+    eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
-    'mul',
-    eqn.strike('_2_', 'x'), 'pi', 'r',
+    'mul_',
+    eqn.topComment('border', ['_2_', 'pi', 'r'], 'bt_'),
   ]);
 
   eqn.addForm('7', [
-    eqn.bottomComment('AreaCircle', 'circle'),
+    eqn.bottomComment('AreaPoly', 'triangles'),
     'equals',
-    'pi', 'r',
-    'mul',
+    eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
+    'mul_',
+    '_2_', 'pi', 'r',
   ]);
 
   eqn.addForm('8', [
-    eqn.bottomComment('AreaCircle', 'circle'),
+    eqn.bottomComment('AreaPoly', 'triangles'),
     'equals',
-    'pi', 'r', 'space',
+    eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
+    'mul_',
+    '_2_', 'pi', 'r',
+    'r_',
+  ], {
+    elementMods: {
+      r_: { style: 'curved', direction: 'up', mag: 0.9 },
+    },
+  });
+
+  eqn.addForm('9', [
+    eqn.bottomComment('AreaPoly', 'triangles'),
+    'equals',
+    eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x'), 'space',
+    'mul_',
+    eqn.strike('_2_', 'x_'), 'pi', 'r',
+    'r_',
+  ], {
+    elementMods: {
+      r_: { style: 'linear' },
+    },
+  });
+  eqn.addForm('10', [
+    eqn.bottomComment('AreaPoly', 'triangles'),
+    'equals',
+    'pi', 'r',
     'r_',
   ]);
 
-  eqn.addForm('9', [
-    eqn.bottomComment('AreaCircle', 'triangle'),
+  eqn.addForm('11', [
+    eqn.bottomComment('AreaPoly', 'triangles'),
     'equals',
     'pi',
-    eqn.sup(['r', 'space'], '_2'),
+    eqn.strike('r', 'x'),
+    eqn.sup('r_', '_2'),
   ]);
+
+  eqn.addForm('12', [
+    eqn.bottomComment('AreaPoly', 'triangles'),
+    'equals',
+    'pi',
+    eqn.sup('r_', '_2'),
+  ]);
+
+  // eqn.addForm('4', [
+  //   eqn.bottomComment('AreaCircle', 'circle'),
+  //   'equals',
+  //   eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
+  //   'h',
+  //   'mul_',
+  //   '_2_', 'pi', 'r',
+  // ]);
+
+  // eqn.addForm('5', [
+  //   eqn.bottomComment('AreaCircle', 'circle'),
+  //   'equals',
+  //   eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
+  //   'r_',
+  //   'mul_',
+  //   '_2_', 'pi', 'r',
+  // ]);
+
+  // eqn.addForm('6', [
+  //   eqn.bottomComment('AreaCircle', 'circle'),
+  //   'equals',
+  //   eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x_'), 'space',
+  //   'r_',
+  //   'mul_',
+  //   eqn.strike('_2_', 'x'), 'pi', 'r',
+  // ]);
+
+  // eqn.addForm('7', [
+  //   eqn.bottomComment('AreaCircle', 'circle'),
+  //   'equals',
+  //   'pi', 'r',
+  //   'mul_',
+  //   'r_',
+  // ]);
+
+  // eqn.addForm('8', [
+  //   eqn.bottomComment('AreaCircle', 'circle'),
+  //   'equals',
+  //   'pi', 'r', 'space',
+  //   'r_',
+  // ]);
+
+  // eqn.addForm('9', [
+  //   eqn.bottomComment('AreaCircle', 'triangle'),
+  //   'equals',
+  //   'pi',
+  //   eqn.sup(['r', 'space'], '_2'),
+  // ]);
 
 
   eqn.collection.setPosition(layout.triangleAreaEquation);
