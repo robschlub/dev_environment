@@ -70,7 +70,7 @@ class Content extends LessonContent {
 
     
     common.setContent = `Start by splitting the circle into |equal| pieces, for example we will use |${leastSides}|.`;
-    this.addSection(common, { show: [circ._circle] });
+    this.addSection(common, { show: [circ._circle] }, { title: 'Approximation' });
     this.addSection(common, { show: [circ._circle, circ._lines0] });
 
 
@@ -91,6 +91,7 @@ class Content extends LessonContent {
       each_: click(circ.rotateArea, [circ, leastSides, null], colors.diagram.action),
       border: click(circ.pulseBorder, [circ], colors.border),
       border_: highlight(colors.border),
+      circumference: click(circ.pulseCircumference, [circ], colors.circumference),
     };
     this.addSection(common, {
       show: [
@@ -168,7 +169,7 @@ class Content extends LessonContent {
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['1', '0'], ['1', '0']],
       [circ.eqns.borderEqn, '0', '0'],
-      ], common, {title: 'qwreq'});
+      ], common);
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['1', '0'], ['2', '0']],
       [circ.eqns.borderEqn, '0', '0'],
@@ -191,12 +192,12 @@ class Content extends LessonContent {
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
 
 
-    common.setContent = 'The |border| of the |triangles|, is a rough |approximation| of the |circle circumference|.';
+    common.setContent = 'The |border| of the |triangles|, is a rough |approximation| of the circle |circumference|.';
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
 
 
     common.setContent = 'Now, what happens when we |increase| the number of triangles?';
-    this.addEqnStep(circ.eqns.triRectEqn,  '3', '3', common);
+    this.addEqnStep(circ.eqns.triRectEqn,  '3', '3', common, { title: 'Refine Approximation' });
 
 
     common.setContent = '|Touch| the numbers beneath the circle to change the number of triangles.';
@@ -257,7 +258,7 @@ class Content extends LessonContent {
     ];
     common.setContent = "So we have found the |area of a circle| and can see it is related to its |radius|."
     this.addSection(common, {
-      'title': 'summary',
+      'title': 'Area',
       content: 'So we can see the |area of a circle| is related to its |radius|.',
       transitionFromPrev: (done) => {
         circ.eqns.triRectEqn.showForm('14');

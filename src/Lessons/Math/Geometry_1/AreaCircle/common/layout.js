@@ -17,6 +17,7 @@ const cssColorNames = [
   'height',
   'border',
   'radius',
+  'circumference',
 ];
 
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
@@ -66,7 +67,7 @@ export default function commonLessonLayout() {
       color: layout.colors.areaCircle,
     },
     back: {
-      color: layout.colors.diagram.disabledDark,
+      color: layout.colors.circumference,
       width,
     },
     radiusLine: {

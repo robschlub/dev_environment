@@ -101,6 +101,24 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   addEquations() {
     addTriRectEquation(this.diagram, this.layout, this, 'triRectEqn');
     addBorderEquation(this.diagram, this.layout, this, 'borderEqn');
+
+    this.eqns.triRectEqn.collection._b.onClick = this.pulseBase.bind(this);
+    this.eqns.triRectEqn.collection._b.isTouchable = true;
+    this.eqns.triRectEqn.collection._h.onClick = this.pulseHeight.bind(this);
+    this.eqns.triRectEqn.collection._h.isTouchable = true;
+    this.eqns.triRectEqn.collection._r.onClick = this.pulseRadius.bind(this);
+    this.eqns.triRectEqn.collection._r.isTouchable = true;
+    this.eqns.triRectEqn.collection._r_.onClick = this.pulseRadius.bind(this);
+    this.eqns.triRectEqn.collection._r_.isTouchable = true;
+    this.eqns.triRectEqn.collection._border.onClick = this.pulseBorder.bind(this);
+    this.eqns.triRectEqn.collection._border.isTouchable = true;
+    this.eqns.triRectEqn.collection.hasTouchableElements = true;
+
+    this.eqns.borderEqn.collection._border.onClick = this.pulseBorder.bind(this);
+    this.eqns.borderEqn.collection._border.isTouchable = true;
+    this.eqns.borderEqn.collection._b.onClick = this.pulseBase.bind(this);
+    this.eqns.borderEqn.collection._b.isTouchable = true;
+    this.eqns.borderEqn.collection.hasTouchableElements = true;
   }
 
   addSelector() {
@@ -155,6 +173,39 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
         border.pulseThickNow(1, 1.02, 5);
       }
     });
+    this.diagram.animateNextFrame();
+  }
+
+  pulseHeight() {
+    this.layout.polygonSides.forEach((sides, index) => {
+      // $FlowFixMe
+      const tri = this[`_tri${index}`];
+      const height = tri._height;
+      if (height.isShown) {
+        height.pulseWidth(1, 3);
+      }
+    });
+    this.diagram.animateNextFrame();
+  }
+
+  pulseBase() {
+    this.layout.polygonSides.forEach((sides, index) => {
+      // $FlowFixMe
+      const tri = this[`_tri${index}`];
+      const base = tri._base;
+      if (base.isShown) {
+        base.pulseWidth(1, 3);
+      }
+    });
+    this.diagram.animateNextFrame();
+  }
+
+  pulseRadius() {
+    this._radius.pulseWidth(1, 3);
+  }
+
+  pulseCircumference() {
+    this._backgroundCircle.pulseThickNow(1, 1.02, 5);
     this.diagram.animateNextFrame();
   }
 
