@@ -165,7 +165,7 @@ class Content extends LessonContent {
     };
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
-    common.setContent = 'As the number of triangles is |increased| the area appoximation becomes |better|.';
+    common.setContent = 'As the number of triangles is |increased| the |area appoximation| becomes |better|.';
     common.showOnly = [circ, circ._tri2];
     show = [
       circ._backgroundCircle, circ._lines2, circ._poly2,
