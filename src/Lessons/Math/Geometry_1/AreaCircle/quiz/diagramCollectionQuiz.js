@@ -54,6 +54,12 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.add('area', area);
   }
 
+  // addQuestion() {
+  //   const question = this.diagram.objects.label(this.layout.question);
+  //   this.question = question;
+  //   this.add('question', question.eqn.collection);
+  // }
+
   addCircumference() {
     const lay = this.layout.circumference;
     const circumference = this.diagram.shapes.collection(new Transform()
@@ -82,7 +88,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     const areaMax = 10;
     const area = round(rand(areaMin, areaMax), 1);
     const findRadius = () => {
-      const question = `What is the radius of a circle with area ${area}`;
+      const question = `What is the radius of a circle with area ${area}?`;
       this.answer = round(Math.sqrt(area / Math.PI), 2);
       this._radius.label.setText('radius = ?');
       this._circumference.hideAll();
@@ -92,12 +98,12 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     };
 
     const findCircumference = () => {
-      const question = `What is the circumference of a circle with area ${area}`;
+      const question = `What is the circumference of a circle with area ${area}?`;
       this.answer = round(Math.sqrt(area / Math.PI), 2);
       this._radius.hideAll();
       // this._radius.label.setText('radius = ?');
       this._circumference.showAll();
-      this._circumference.label.setText('circumference = ?')
+      this._circumference.label.setText('circumference = ?');
       this._area.label.setText(`area = ${area}`);
       this._area._label.setPosition(this.layout.area.positions.middle);
       return question;
@@ -109,7 +115,10 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     ];
 
     const chosenQuestion = randElement(possibleQuestions);
-    console.log(chosenQuestion(), this.answer);
+    const question = document.getElementById('id_lesson__quiz_question');
+    if (question != null) {
+      question.innerHTML = chosenQuestion();
+    }
   }
 
   constructor(
@@ -128,6 +137,8 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.addCircle();
     this.addRadius();
     this.addCircumference();
+    this.addInput('input', '?', 3);
+    // this.addQuestion();
     // this.add('input', this.makeEntryBox('a1', '?', 3));
     // this._input.setPosition(this.layout.input);
     this.hasTouchableElements = true;

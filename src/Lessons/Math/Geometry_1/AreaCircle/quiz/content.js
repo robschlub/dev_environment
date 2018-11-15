@@ -31,14 +31,12 @@ class Content extends LessonContent {
     const quiz = diag._quiz;
 
     // this.addSection({
-    //   title: 'Enter_title_here',
+      // title: 'Enter_title_here',
     //   setContent: ['What is the area of a circle'],
     // });
     this.addSection({
       title: 'Enter_title_here',
-      setContent: [
-        'Enter_question_here',
-      ],
+      setContent: '<p id="id_lesson__quiz_question">asdf</p>',
       modifiers: {
       },
       setInfo: `<ul>
@@ -56,7 +54,8 @@ class Content extends LessonContent {
         quiz, quiz._circle,
       ],
       show: [
-        quiz._radius, quiz._circumference, quiz._area,
+        quiz._radius, quiz._circumference, quiz._area, quiz._input,
+        quiz._check,
       ],
       setSteadyState: () => {
         quiz.newProblem();

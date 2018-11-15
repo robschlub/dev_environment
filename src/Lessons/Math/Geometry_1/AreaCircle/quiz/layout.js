@@ -77,5 +77,12 @@ export default function lessonLayout() {
       position: new Point(rad * 1.8, 0),
     },
   };
+  layout.question = {
+    label: '?',
+    color: layout.colors.diagram.text.base,
+    hAlign: 'center',
+    scale: 1,
+    position: new Point(0, 1.8),
+  };
   return layout;
 }
