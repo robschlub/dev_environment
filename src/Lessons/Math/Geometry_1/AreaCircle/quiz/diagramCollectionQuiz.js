@@ -44,6 +44,11 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.add('radius', radius);
   }
 
+  addDiameter() {
+    const diameter = this.diagram.objects.line(this.layout.diameter);
+    this.add('diameter', diameter)
+  }
+
   addArea() {
     const area = this.diagram.shapes.collection(new Transform().translate(0, 0));
     const fill = this.diagram.shapes.polygon(this.layout.area.fill);
@@ -109,9 +114,23 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       return question;
     };
 
+    const findDiameter = () => {
+      const question = `What is the diameter of a circle with area ${area}?`;
+      this.answer = round(Math.sqrt(area / Math.PI) * 2, 2);
+      this._radius.hideAll();
+      // this._radius.label.setText('radius = ?');
+      this._circumference.hideAll();
+      this._diameter.showAll();
+      this._diameter.label.setText('diameter = ?');
+      this._area.label.setText(`area = ${area}`);
+      this._area._label.setPosition(this.layout.area.positions.low);
+      return question;
+    };
+
     const possibleQuestions = [
-      findRadius,
-      findCircumference,
+      // findRadius,
+      // findCircumference,
+      findDiameter,
     ];
 
     const chosenQuestion = randElement(possibleQuestions);
@@ -136,6 +155,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.addArea();
     this.addCircle();
     this.addRadius();
+    this.addDiameter();
     this.addCircumference();
     this.addInput('input', '?', 8, 2);
     // this.addQuestion();
@@ -159,6 +179,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     // this.moveToFuturePositions(1, this.updateAngles.bind(this));
     // this._input.enable();
     // this._input.setValue('');
+    this._check.show();
     this.diagram.animateNextFrame();
   }
 
@@ -171,9 +192,11 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   findAnswer() {
     // this._input.disable();
-    if (this.answer === true) {
+    const answer = parseFloat(this._input.getValue());
+    if (this.answer === answer) {
       return 'correct';
     }
+    console.log(this.answer, answer)
     return 'incorrect';
   }
 }

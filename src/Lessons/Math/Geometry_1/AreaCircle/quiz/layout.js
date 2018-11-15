@@ -13,12 +13,12 @@ import {
 export default function lessonLayout() {
   const layout: Object = commonLessonLayout();
   layout.quiz = {
-    check: new Point(1.3, -1.7),
+    check: new Point(2.2, -1.7),
     input: new Point(0, -1.7),
     // position: new Point(0, 0),
     // answer: new Point(0, -1.7),
     // nextSteps: new Point(0, -1.9),
-    // newProblem: new Point(0, -1.7),
+    newProblem: new Point(2.2, -1.7),
     // showAnotherAnswer: new Point(-1, -1.7),
   };
 
@@ -52,6 +52,19 @@ export default function lessonLayout() {
   layout.radius = {
     vertexSpaceStart: 'start',
     length: rad - width,
+    width,
+    angle: 0,
+    color: layout.colors.radius,
+    label: {
+      text: 'r',
+      location: 'top',
+      orientation: 'horizontal',
+      offset: 0.02,
+    },
+  };
+  layout.diameter = {
+    vertexSpaceStart: 'center',
+    length: (rad - width) * 2,
     width,
     angle: 0,
     color: layout.colors.radius,
