@@ -10,6 +10,9 @@ import {
 import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
+import {
+  setHTML, highlight,
+} from '../../../../../js/tools/htmlGenerator';
 
 import CommonQuizMixin from '../../../../LessonsCommon/DiagramCollectionQuiz';
 import type { TypeMessages } from '../../../../LessonsCommon/DiagramCollectionQuiz';
@@ -59,12 +62,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.add('area', area);
   }
 
-  // addQuestion() {
-  //   const question = this.diagram.objects.label(this.layout.question);
-  //   this.question = question;
-  //   this.add('question', question.eqn.collection);
-  // }
-
   addCircumference() {
     const lay = this.layout.circumference;
     const circumference = this.diagram.shapes.collection(new Transform()
@@ -88,58 +85,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.add('circumference', circumference);
   }
 
-  generateQuestion() {
-    const areaMin = 1;
-    const areaMax = 10;
-    const area = round(rand(areaMin, areaMax), 1);
-    const findRadius = () => {
-      const question = `What is the radius of a circle with area ${area}?`;
-      this.answer = round(Math.sqrt(area / Math.PI), 2);
-      this._radius.label.setText('radius = ?');
-      this._circumference.hideAll();
-      this._area.label.setText(`Area = ${area}`);
-      this._area._label.setPosition(this.layout.area.positions.low);
-      return question;
-    };
-
-    const findCircumference = () => {
-      const question = `What is the circumference of a circle with area ${area}?`;
-      this.answer = round(Math.sqrt(area / Math.PI), 2);
-      this._radius.hideAll();
-      // this._radius.label.setText('radius = ?');
-      this._circumference.showAll();
-      this._circumference.label.setText('circumference = ?');
-      this._area.label.setText(`area = ${area}`);
-      this._area._label.setPosition(this.layout.area.positions.middle);
-      return question;
-    };
-
-    const findDiameter = () => {
-      const question = `What is the diameter of a circle with area ${area}?`;
-      this.answer = round(Math.sqrt(area / Math.PI) * 2, 2);
-      this._radius.hideAll();
-      // this._radius.label.setText('radius = ?');
-      this._circumference.hideAll();
-      this._diameter.showAll();
-      this._diameter.label.setText('diameter = ?');
-      this._area.label.setText(`area = ${area}`);
-      this._area._label.setPosition(this.layout.area.positions.low);
-      return question;
-    };
-
-    const possibleQuestions = [
-      // findRadius,
-      // findCircumference,
-      findDiameter,
-    ];
-
-    const chosenQuestion = randElement(possibleQuestions);
-    const question = document.getElementById('id_lesson__quiz_question');
-    if (question != null) {
-      question.innerHTML = chosenQuestion();
-    }
-  }
-
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -158,9 +103,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.addDiameter();
     this.addCircumference();
     this.addInput('input', '?', 8, 2);
-    // this.addQuestion();
-    // this.add('input', this.makeEntryBox('a1', '?', 3));
-    // this._input.setPosition(this.layout.input);
     this.hasTouchableElements = true;
     console.log(this)
   }
@@ -198,5 +140,100 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     }
     console.log(this.answer, answer)
     return 'incorrect';
+  }
+
+  generateQuestion() {
+    const area = round(rand(3, 350), 1);
+    const radius = round(rand(1, 10), 1);
+    const circumference = round(radius * 2 * Math.PI, 1);
+    const diameter = round(radius * 2, 1);
+
+    const findRadius = () => {
+      const question = `What is the |radius| of a circle with |area| ${area}?`;
+      this.answer = round(Math.sqrt(area / Math.PI), 2);
+      this._radius.showAll();
+      this._radius.label.setText('radius = ?');
+      this._circumference.hideAll();
+      this._area.label.setText(`Area = ${area}`);
+      this._area._label.setPosition(this.layout.area.positions.low);
+      return question;
+    };
+
+    const findCircumference = () => {
+      const question = `What is the |circumference| of a circle with |area| ${area}?`;
+      this.answer = round(Math.sqrt(area / Math.PI), 2);
+      this._circumference.showAll();
+      this._circumference.label.setText('circumference = ?');
+      this._area.label.setText(`area = ${area}`);
+      this._area._label.setPosition(this.layout.area.positions.middle);
+      return question;
+    };
+
+    const findDiameter = () => {
+      const question = `What is the |diameter| of a circle with |area| ${area}?`;
+      this.answer = round(Math.sqrt(area / Math.PI) * 2, 2);
+      this._diameter.showAll();
+      this._diameter.label.setText('diameter = ?');
+      this._area.label.setText(`area = ${area}`);
+      this._area._label.setPosition(this.layout.area.positions.low);
+      return question;
+    };
+
+    const findAreaFromRadius = () => {
+      const question = `What is the |area| of a circle with |radius| ${radius}?`;
+      this.answer = round(radius ** 2 * Math.PI, 2);
+      this._radius.showAll();
+      this._radius.label.setText(`radius = ${radius}`);
+      this._area.label.setText('Area = ?');
+      this._area._label.setPosition(this.layout.area.positions.low);
+      return question;
+    }
+
+    const findAreaFromDiameter = () => {
+      const question = `What is the |area| of a circle with |diameter| ${diameter}?`;
+      this.answer = round((diameter / 2) ** 2 * Math.PI, 2);
+      this._diameter.showAll();
+      this._diameter.label.setText(`diameter = ${diameter}`);
+      this._area.label.setText('Area = ?');
+      this._area._label.setPosition(this.layout.area.positions.low);
+      return question;
+    }
+
+    const findAreaFromCircumference = () => {
+      const question = `What is the |area| of a circle with |circumference ${circumference}|?`;
+      this.answer = round((circumference / 2 / Math.PI) ** 2 * Math.PI, 2);
+      this._circumference.showAll();
+      this._circumference.label.setText(`circumference = ${circumference}`);
+      this._area.label.setText('Area = ?');
+      this._area._label.setPosition(this.layout.area.positions.middle);
+      return question;
+    }
+
+    this._circumference.hideAll();
+    this._radius.hideAll();
+    this._diameter.hideAll();
+
+    const possibleQuestions = [
+      findRadius,
+      findCircumference,
+      findDiameter,
+      findAreaFromRadius,
+      findAreaFromDiameter,
+      findAreaFromCircumference,
+    ];
+
+    const modifiers = {
+      diamter: highlight(this.layout.colors.radius),
+      radius: highlight(this.layout.colors.radius),
+      circumference: highlight(this.layout.colors.radius),
+    };
+
+    const chosenQuestion = randElement(possibleQuestions);
+    const question = document.getElementById('id_lesson__quiz_question');
+    if (question != null) {
+      setHTML(question, chosenQuestion(), modifiers);
+      // question.innerHTML = applyModifiers(chosenQuestion(), modifiers);
+      // console.log(applyModifiers(chosenQuestion(), modifiers));
+    }
   }
 }

@@ -2,7 +2,7 @@
 
 import commonLessonLayout from '../common/layout';
 import {
-  Point, Transform,
+  Point, Transform, polarToRect,
 } from '../../../../../js/diagram/tools/g2';
 // const cssColorNames = [
 //   'latin',
@@ -96,8 +96,9 @@ export default function lessonLayout() {
       label: 'c',
       color: layout.colors.radius,
       hAlign: 'left',
+      vAlign: 'bottom',
       scale: 0.7,
-      position: new Point(rad * 1.8, 0),
+      position: polarToRect(rad * 1.3, 1),
     },
   };
   layout.question = {

@@ -58,8 +58,8 @@ export default class EquationLabel {
       eqn.createElements({ base: labelTextOrEquation }, color);
       eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(position);
       eqn.formAlignment.fixTo = new Point(0, 0);
-      eqn.formAlignment.hAlign = 'center';
-      eqn.formAlignment.vAlign = 'middle';
+      eqn.formAlignment.hAlign = hAlign;
+      eqn.formAlignment.vAlign = vAlign;
       eqn.formAlignment.scale = scale;
       eqn.addForm('base', ['base']);
       eqn.setCurrentForm('base');

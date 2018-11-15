@@ -1,7 +1,7 @@
 // @flow
 import {
   LessonContent,
-  // interactiveItem,
+  interactiveItem,
 } from '../../../../../js/Lesson/LessonContent';
 // import {
 //   click, centerH,
@@ -46,7 +46,7 @@ class Content extends LessonContent {
       infoModifiers: {
       },
       interactiveElements: [
-        // interactiveItem(quiz._check),
+        interactiveItem(quiz._input, 'topleft'),
       ],
       setEnterState: () => {
       },
@@ -54,7 +54,7 @@ class Content extends LessonContent {
         quiz, quiz._circle,
       ],
       show: [
-        quiz._radius, quiz._circumference, quiz._area, quiz._input,
+        quiz._area, quiz._input,
         quiz._check,
       ],
       setSteadyState: () => {
