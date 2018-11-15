@@ -27,13 +27,13 @@ class Content extends LessonContent {
   }
 
   addSections() {
-    // const diag = this.diagram.elements;
-    // const quiz = diag._quiz;
+    const diag = this.diagram.elements;
+    const quiz = diag._quiz;
 
-    this.addSection({
-      title: 'Enter_title_here',
-      setContent: ['Enter_content_here'],
-    });
+    // this.addSection({
+    //   title: 'Enter_title_here',
+    //   setContent: ['What is the area of a circle'],
+    // });
     this.addSection({
       title: 'Enter_title_here',
       setContent: [
@@ -53,10 +53,13 @@ class Content extends LessonContent {
       setEnterState: () => {
       },
       showOnly: [
+        quiz, quiz._circle,
       ],
       show: [
+        quiz._radius, quiz._circumference,
       ],
       setSteadyState: () => {
+        console.log(quiz)
       },
     });
   }

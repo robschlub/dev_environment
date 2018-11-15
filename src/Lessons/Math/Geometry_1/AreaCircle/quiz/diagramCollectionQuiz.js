@@ -31,6 +31,34 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   futurePositions: Object;
 
+  addCircle() {
+    const circle = this.diagram.shapes.polygon(this.layout.circle);
+    this.add('circle', circle);
+  }
+
+  addRadius() {
+    const radius = this.diagram.objects.line(this.layout.radius);
+    this.add('radius', radius);
+  }
+
+  addCircumference() {
+    const circumference = this.diagram.shapes.collection(new Transform().translate(0, 0));
+    const line = this.diagram.shapes.polygon(this.layout.circumference.line);
+    const arrow = this.diagram.shapes.arrow(
+      this.layout.circumference.arrow.width,
+      0,
+      this.layout.circumference.arrow.height,
+      0,
+      this.layout.circumference.arrow.color,
+      this.layout.circumference.arrow.position,
+      this.layout.circumference.arrow.tip,
+      this.layout.circumference.arrow.rotation,
+    );
+    circumference.add('line', line);
+    circumference.add('arrow', arrow);
+    this.add('circumference', circumference);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -43,9 +71,13 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       {},
       transform,
     );
+    this.addCircle();
+    this.addRadius();
+    this.addCircumference();
     // this.add('input', this.makeEntryBox('a1', '?', 3));
     // this._input.setPosition(this.layout.input);
     this.hasTouchableElements = true;
+    console.log(this)
   }
 
   tryAgain() {
