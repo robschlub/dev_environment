@@ -5,6 +5,9 @@ import {
   Transform,
 } from '../../../../../js/diagram/tools/g2';
 import {
+  round, rand, randElement,
+} from '../../../../../js/diagram/tools/mathtools';
+import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
 
@@ -41,6 +44,16 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.add('radius', radius);
   }
 
+  addArea() {
+    const area = this.diagram.shapes.collection(new Transform().translate(0, 0));
+    const fill = this.diagram.shapes.polygon(this.layout.area.fill);
+    const label = this.diagram.objects.label(this.layout.area.label);
+    area.add('fill', fill);
+    area.add('label', label.eqn.collection);
+    area.label = label;
+    this.add('area', area);
+  }
+
   addCircumference() {
     const lay = this.layout.circumference;
     const circumference = this.diagram.shapes.collection(new Transform()
@@ -64,6 +77,41 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.add('circumference', circumference);
   }
 
+  generateQuestion() {
+    const areaMin = 1;
+    const areaMax = 10;
+    const area = round(rand(areaMin, areaMax), 1);
+    const findRadius = () => {
+      const question = `What is the radius of a circle with area ${area}`;
+      this.answer = round(Math.sqrt(area / Math.PI), 2);
+      this._radius.label.setText('radius = ?');
+      this._circumference.hideAll();
+      this._area.label.setText(`Area = ${area}`);
+      this._area._label.setPosition(this.layout.area.positions.low);
+      return question;
+    };
+
+    const findCircumference = () => {
+      const question = `What is the circumference of a circle with area ${area}`;
+      this.answer = round(Math.sqrt(area / Math.PI), 2);
+      this._radius.hideAll();
+      // this._radius.label.setText('radius = ?');
+      this._circumference.showAll();
+      this._circumference.label.setText('circumference = ?')
+      this._area.label.setText(`area = ${area}`);
+      this._area._label.setPosition(this.layout.area.positions.middle);
+      return question;
+    };
+
+    const possibleQuestions = [
+      findRadius,
+      findCircumference,
+    ];
+
+    const chosenQuestion = randElement(possibleQuestions);
+    console.log(chosenQuestion(), this.answer);
+  }
+
   constructor(
     diagram: LessonDiagram,
     layout: Object,
@@ -76,6 +124,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       {},
       transform,
     );
+    this.addArea();
     this.addCircle();
     this.addRadius();
     this.addCircumference();
@@ -94,6 +143,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   newProblem() {
     super.newProblem();
+    this.generateQuestion();
     // this.calculateFuturePositions();
     // this.moveToFuturePositions(1, this.updateAngles.bind(this));
     // this._input.enable();

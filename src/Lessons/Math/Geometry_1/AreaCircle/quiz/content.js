@@ -56,9 +56,10 @@ class Content extends LessonContent {
         quiz, quiz._circle,
       ],
       show: [
-        quiz._radius, quiz._circumference,
+        quiz._radius, quiz._circumference, quiz._area,
       ],
       setSteadyState: () => {
+        quiz.newProblem();
         console.log(quiz)
       },
     });

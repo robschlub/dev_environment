@@ -21,6 +21,24 @@ export default function lessonLayout() {
     color: layout.colors.lines,
     transform: new Transform().translate(0, 0),
   };
+  layout.area = {
+    fill: {
+      radius: rad,
+      sides: 100,
+      fill: true,
+      color: layout.colors.areaPoly,
+      transform: new Transform().translate(0, 0),
+    },
+    label: {
+      label: 'Area = ?',
+      color: layout.colors.lines,
+      scale: 0.7,
+    },
+    positions: {
+      middle: new Point(0, 0),
+      low: new Point(0, -0.4),
+    },
+  };
   layout.radius = {
     vertexSpaceStart: 'start',
     length: rad - width,
@@ -31,7 +49,7 @@ export default function lessonLayout() {
       text: 'r',
       location: 'top',
       orientation: 'horizontal',
-      offset: -0.02,
+      offset: 0.02,
     },
   };
   layout.circumference = {
@@ -54,8 +72,9 @@ export default function lessonLayout() {
     label: {
       label: 'c',
       color: layout.colors.radius,
+      hAlign: 'left',
       scale: 0.7,
-      position: new Point(0, rad * 1.3),
+      position: new Point(rad * 1.8, 0),
     },
   };
   return layout;
