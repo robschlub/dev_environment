@@ -2,7 +2,7 @@
 
 import { Transform } from '../../../../../js/diagram/tools/g2';
 import lessonLayout from './layout';
-// import * as html from '../../../../../js/tools/htmlGenerator';
+import * as html from '../../../../../js/tools/htmlGenerator';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
 import details from '../details';
 
@@ -26,20 +26,25 @@ export default class QR_TODO extends PopupBoxCollection {
     );
     this.hasTouchableElements = true;
 
-    const modifiers = {};
+    const modifiers = { radius: html.highlight(this.layout.colors.radius) };
 
-    this.setTitle('TODO');
-    this.setDescription('TODO', modifiers);
+    this.setTitle('Area of a Circle');
+    this.setDescription('|Circle area| is the product of |π| and the |radius| squared.', modifiers);
     this.setLink(details.details.uid);
   }
 
   show() {
-    this.setDiagramSize(2.5, 1.3);
+    this.setDiagramSize(2.5, 1.7);
     super.show();
     const collection = this._collection;
-    collection.showAll();
-    collection.transform.updateScale(0.7, 0.7);
-    // collection.setPosition(this.layout.position);
+    collection.show();
+    collection._circle.show();
+    collection._radius.showAll();
+    collection.eqns.triRectEqn.showForm('14');
+    collection.eqns.triRectEqn.getCurrentForm().arrange(1.5, 'center', 'middle');
+    collection.setScenario(collection._radius, { rotation: 0 });
+    collection.transform.updateScale(0.5, 0.5);
+    collection.setPosition(this.layout.position);
     this.diagram.animateNextFrame();
   }
 }

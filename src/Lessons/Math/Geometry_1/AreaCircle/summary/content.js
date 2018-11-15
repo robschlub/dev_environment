@@ -32,7 +32,7 @@ class Content extends LessonContent {
 
     this.addSection({
       title: 'Summary',
-      setContent: '|Circle area| can be calculated from squaring the |radius| and multiplying by |π|.',
+      setContent: '|Circle area| is the product of |π| and the |radius| squared.',
       modifiers: { radius: highlight(colors.radius) },
       showOnly: [circ],
       show: [circ._circle, circ._radius],

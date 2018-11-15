@@ -817,7 +817,7 @@ class LessonContent {
           if (count === equations.length) {
             done();
           }
-        }
+        };
         equations.forEach((equation) => {
           const [nav, fromForm, toForm] = equation;
           let eqn = nav;
@@ -872,7 +872,7 @@ class LessonContent {
           userSections.setSteadyState();
         }
         equations.forEach((equation) => {
-          const [nav, fromForm, toForm] = equation;
+          const [nav, , toForm] = equation;
           // const nav = equation.eqnOrNav;
           // const { toForm } = equation;
           if (Array.isArray(toForm)) {
@@ -886,6 +886,7 @@ class LessonContent {
     const section = Object.assign({}, ...sectionObjects, eqnSection);
     this.addSection(section);
   }
+
   addEqnStep(
     equationOrNavigator: { eqn: Equation } & Equation,
     fromForm: string | Array<string>,
