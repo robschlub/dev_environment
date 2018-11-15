@@ -84,7 +84,6 @@ export default class SizeCollection extends CommonDiagramCollection {
     lineOffset: number,
     labelOffset: number,
   }) {
-    console.log(layout.sideLength)
     const color = this.layout.colors.reference;
 
     const square = this.diagram.shapes.polygon({

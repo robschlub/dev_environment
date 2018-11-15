@@ -393,7 +393,7 @@ export function addSquareRectEquation(
       Width: 'Width',
       Height: 'Height',
       mul: '  \u00D7  ',
-      A: 'A',
+      A: 'B',
       _2: '2',
     },
     colText,
