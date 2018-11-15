@@ -160,7 +160,7 @@ export function addTriRectEquation(
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
     'mul_',
-    eqn.topComment('border', ['_2_', 'space', 'pi', 'space',  'r'], 'bt_'),
+    eqn.topComment('border', ['_2_', 'space', 'pi', 'space', 'r'], 'bt_'),
   ]);
 
   eqn.addForm('8', [
@@ -169,7 +169,7 @@ export function addTriRectEquation(
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'r_',
     'mul_',
-    '_2_', 'space', 'pi', 'space',  'r',
+    '_2_', 'space', 'pi', 'space', 'r',
   ]);
 
   eqn.addForm('9', [
@@ -177,7 +177,7 @@ export function addTriRectEquation(
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
     'mul_',
-    '_2_', 'space',  'pi', 'space',  'r', 'space', 
+    '_2_', 'space', 'pi', 'space', 'r', 'space',
     'r_',
   ], {
     elementMods: {

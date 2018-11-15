@@ -26,13 +26,13 @@ class Content extends LessonContent {
     this.diagram = new LessonDiagram(htmlId, layout);
   }
 
-  setElementContent() {
-    const { selector } = this.diagram.elements._circ._selector;
-    layout.polygonSides.forEach((numSides) => {
-      selector.add(numSides.toString(), `${numSides.toString()}`);
-    });
-    selector.selectWithoutExecution('1');
-  }
+  // setElementContent() {
+    // const { selector } = this.diagram.elements._circ._selector;
+    // layout.polygonSides.forEach((numSides) => {
+    //   selector.add(numSides.toString(), `${numSides.toString()}`);
+    // });
+    // selector.selectWithoutExecution('1');
+  // }
 
   addSections() {
     const diag = this.diagram.elements;
@@ -52,6 +52,7 @@ class Content extends LessonContent {
       transitionFromAny: (done) => { done(); },
     };
     const leastSides = layout.polygonSides[0];
+    const midSides = layout.polygonSides[1];
     const mostSides = layout.polygonSides[2];
 
     common.setSteadyState = () => {
@@ -68,7 +69,6 @@ class Content extends LessonContent {
     common.setContent = 'However, |we can do it| if we start by making an |approximation| of a circle, that we then |refine| later.';
     this.addSection(common, { show: [circ._grid, circ._circle] });
 
-    
     common.setContent = `Start by splitting the circle into |equal| pieces, for example we will use |${leastSides}|.`;
     this.addSection(common, { show: [circ._circle] }, { title: 'Approximation' });
     this.addSection(common, { show: [circ._circle, circ._lines0] });
@@ -93,6 +93,9 @@ class Content extends LessonContent {
       border_: highlight(colors.border),
       circumference: click(circ.pulseCircumference, [circ], colors.circumference),
     };
+    common.modifiers[`${leastSides}`] = click(circ.selectorClicked, [circ, leastSides.toString()], colors.diagram.action);
+    common.modifiers[`${midSides}`] = click(circ.selectorClicked, [circ, midSides.toString()], colors.diagram.action);
+    common.modifiers[`${mostSides}`] = click(circ.selectorClicked, [circ, mostSides.toString()], colors.diagram.action);
     this.addSection(common, {
       show: [
         circ._backgroundCircle, circ._lines0, circ._poly0,
@@ -169,15 +172,15 @@ class Content extends LessonContent {
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['1', '0'], ['1', '0']],
       [circ.eqns.borderEqn, '0', '0'],
-      ], common);
+    ], common);
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['1', '0'], ['2', '0']],
       [circ.eqns.borderEqn, '0', '0'],
-      ], common);
+    ], common);
     this.addEqnsStep([
       [circ.eqns.triRectEqn, ['2', '0'], '3'],
       [circ.eqns.borderEqn, '0', '0'],
-      ], common);
+    ], common);
 
 
     common.setSteadyState = () => {
@@ -197,17 +200,17 @@ class Content extends LessonContent {
 
 
     common.setContent = 'Now, what happens when we |increase| the number of triangles?';
-    this.addEqnStep(circ.eqns.triRectEqn,  '3', '3', common, { title: 'Refine Approximation' });
+    this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common, { title: 'Refine Approximation' });
 
-
-    common.setContent = '|Touch| the numbers beneath the circle to change the number of triangles.';
-    common.show = [...show, circ._fill0, circ._border0, circ._selector];
+    common.setContent = `Examine |${leastSides}|, |${midSides}| and |${mostSides}| triangles to see how the approximations change.`;
+    // common.setContent = '|Touch| the numbers beneath the circle to change the number of triangles.';
+    common.show = [...show, circ._fill0, circ._border0];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
-      circ._selector.selector.select(leastSides.toString());
+      // circ._selector.selector.select(leastSides.toString());
       circ.rotateArea(leastSides, 0);
     };
-    this.addEqnStep(circ.eqns.triRectEqn,  '3', '3', common);
+    this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
 
 
     common.setContent = 'As the number of triangles is |increased| the |area appoximation| becomes |better|.';
@@ -219,7 +222,7 @@ class Content extends LessonContent {
     common.show = [...show];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
-      circ._selector.selector.select(mostSides.toString());
+      // circ._selector.selector.select(mostSides.toString());
       circ.rotateArea(leastSides, 0);
     };
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);

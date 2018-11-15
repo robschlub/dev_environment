@@ -130,20 +130,20 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     border.hasTouchableElements = true;
   }
 
-  addSelector() {
-    addSelectorHTML(
-      this.diagram,
-      this,
-      'selector',
-      'lesson__circle_area_selector',
-      this.selectorClicked.bind(this),
-      'horizontal',
-      '',
-      'middle',
-      'center',
-    );
-    this._selector.setPosition(this.layout.selector.position);
-  }
+  // addSelector() {
+  //   addSelectorHTML(
+  //     this.diagram,
+  //     this,
+  //     'selector',
+  //     'lesson__circle_area_selector',
+  //     this.selectorClicked.bind(this),
+  //     'horizontal',
+  //     '',
+  //     'middle',
+  //     'center',
+  //   );
+  //   this._selector.setPosition(this.layout.selector.position);
+  // }
 
   selectorClicked(title: string) {
     const sides = this.layout.polygonSides;
@@ -332,7 +332,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.addGrid();
     this.addCircles();
     this.addTriangles();
-    this.addSelector();
+    // this.addSelector();
     this.setPosition(this.layout.position);
     this.addEquations();
     this.hasTouchableElements = true;
