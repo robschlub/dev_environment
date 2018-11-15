@@ -6,26 +6,44 @@ import {
 import {
   DiagramElementPrimative,
 } from '../../../../../js/diagram/Element';
-import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
+// import { addSelectorHTML } from '../../../../LessonsCommon/tools/selector';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import {
   addTriRectEquation, addBorderEquation,
 } from './equations';
 
+type TypeTri = {
+  fill: DiagramElementPrimative;
+  height: TypeLine;
+  base: TypeLine;
+};
+
 export default class CircleAreaCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
-  _selector: DiagramElementPrimative;
+  // _selector: DiagramElementPrimative;
   _circle: DiagramElementPrimative;
   _circleFill: DiagramElementPrimative;
+
+  _tri6: TypeTri;
+  _tri10: TypeTri;
+  _tri50: TypeTri;
+
   _poly6: DiagramElementPrimative;
+  _poly10: DiagramElementPrimative;
+  _poly50: DiagramElementPrimative;
+
   _fill6: DiagramElementPrimative;
+  _fill10: DiagramElementPrimative;
+  _fill50: DiagramElementPrimative;
+
   _lines6: DiagramElementPrimative;
-  _poly9: DiagramElementPrimative;
-  _lines9: DiagramElementPrimative;
-  _fill9: DiagramElementPrimative;
-  _poly25: DiagramElementPrimative;
-  _lines25: DiagramElementPrimative;
-  _fill25: DiagramElementPrimative;
+  _lines10: DiagramElementPrimative;
+  _lines50: DiagramElementPrimative;
+
+  _radius: TypeLine;
+  _backgroundCircle: DiagramElementPrimative;
+
   triRotation: number;
 
   addGrid() {
@@ -210,7 +228,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
   }
 
   pulseRadius() {
-    this._radius.pulseWidth(1, 3);
+    this._radius.pulseWidth();
   }
 
   pulseCircumference() {
@@ -218,11 +236,11 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  togglePolygonArea(numSides: number | null = null) {
+  togglePolygonArea() {
     this.layout.polygonSides.forEach((sides, index) => {
       // $FlowFixMe
       const poly = this[`_poly${index}`];
-      // const tri = this[`_tri${index}`];
+      // $FlowFixMe
       const fill = this[`_fill${index}`];
       if (poly.isShown) {
         if (fill.isShown) {
@@ -235,7 +253,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  toggleTriangleArea(numSides: number | null = null) {
+  toggleTriangleArea() {
     this.layout.polygonSides.forEach((sides, index) => {
       // $FlowFixMe
       const tri = this[`_tri${index}`];
@@ -252,7 +270,7 @@ export default class CircleAreaCollection extends CommonDiagramCollection {
     this.diagram.animateNextFrame();
   }
 
-  toggleCircleArea(numSides: number | null = null) {
+  toggleCircleArea() {
     if (this._circleFill.isShown) {
       this._circleFill.hide();
     } else {

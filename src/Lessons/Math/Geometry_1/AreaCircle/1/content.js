@@ -26,14 +26,6 @@ class Content extends LessonContent {
     this.diagram = new LessonDiagram(htmlId, layout);
   }
 
-  // setElementContent() {
-    // const { selector } = this.diagram.elements._circ._selector;
-    // layout.polygonSides.forEach((numSides) => {
-    //   selector.add(numSides.toString(), `${numSides.toString()}`);
-    // });
-    // selector.selectWithoutExecution('1');
-  // }
-
   addSections() {
     const diag = this.diagram.elements;
     const circ = diag._circ;
@@ -203,7 +195,6 @@ class Content extends LessonContent {
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common, { title: 'Refine Approximation' });
 
     common.setContent = `Examine |${leastSides}|, |${midSides}| and |${mostSides}| triangles to see how the approximations change.`;
-    // common.setContent = '|Touch| the numbers beneath the circle to change the number of triangles.';
     common.show = [...show, circ._fill0, circ._border0];
     common.setEnterState = () => {
       circ.setScenario(circ, layout.collection.scenarios.left);
@@ -236,7 +227,7 @@ class Content extends LessonContent {
       circ._backgroundCircle, circ._lines2, circ._poly2,
       circ._fill2,
       circ._border2,
-      circ._radius
+      circ._radius,
     ];
     this.addEqnStep(circ.eqns.triRectEqn, '5', '6', common);
 
@@ -257,11 +248,11 @@ class Content extends LessonContent {
 
 
     common.show = [
-      circ._circle, circ._radius
+      circ._circle, circ._radius,
     ];
-    common.setContent = "So we have found the |area of a circle| and can see it is related to its |radius|."
+    common.setContent = 'So we have found the |area of a circle| and can see it is related to its |radius|.';
     this.addSection(common, {
-      'title': 'Area',
+      title: 'Area',
       content: 'So we can see the |area of a circle| is related to its |radius|.',
       transitionFromPrev: (done) => {
         circ.eqns.triRectEqn.showForm('14');
@@ -270,11 +261,11 @@ class Content extends LessonContent {
       setSteadyState: () => {
         circ.eqns.triRectEqn.showForm('14');
         circ.setScenario(circ, layout.collection.scenarios.left);
-        circ.setScenario(circ._radius, { rotation: 0});
+        circ.setScenario(circ._radius, { rotation: 0 });
       },
       setLeaveState: () => {
         circ._radius.transform.updateRotation(layout.circle.radiusLine.angle);
-      }
+      },
     });
   }
 }

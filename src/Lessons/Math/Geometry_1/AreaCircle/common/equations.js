@@ -110,7 +110,7 @@ export function addTriRectEquation(
     eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
-    'space','h', 'space',
+    'space', 'h', 'space',
     'mul_',
     eqn.topComment(['b', 'mul', numSides], 'border', 'bt_'),
   ]);
@@ -122,7 +122,7 @@ export function addTriRectEquation(
     eqn.bottomComment('Area', 'triangles'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
-    'space','h', 'space',
+    'space', 'h', 'space',
     'mul_',
     'border',
   ]);
@@ -140,7 +140,7 @@ export function addTriRectEquation(
     eqn.bottomComment('Area', 'circle'),
     'equals',
     eqn.sfrac('_1', '_2', 'v', 0.6), 'space',
-    eqn.topComment([ 'space', 'h', 'space'], 'r_', 'bt'),
+    eqn.topComment(['space', 'h', 'space'], 'r_', 'bt'),
     'mul_',
     'border',
   ]);
@@ -190,7 +190,7 @@ export function addTriRectEquation(
     'equals',
     eqn.strike(eqn.sfrac('_1', '_2', 'v', 0.6), 'x'), 'space',
     'mul_',
-    eqn.strike('_2_', 'x_'), 'space',  'pi', 'space', 'r', 'space', 
+    eqn.strike('_2_', 'x_'), 'space', 'pi', 'space', 'r', 'space',
     'r_',
   ], {
     elementMods: {
@@ -200,29 +200,29 @@ export function addTriRectEquation(
   eqn.addForm('11', [
     eqn.bottomComment('Area', 'circle'),
     'equals',
-    'pi', 'space',  'r', 'space', 
+    'pi', 'space', 'r', 'space',
     'r_',
   ]);
 
   eqn.addForm('12', [
     eqn.bottomComment('Area', 'circle'),
     'equals',
-    'pi', 'space', 
-    eqn.strike('r', 'x'), 'space', 
+    'pi', 'space',
+    eqn.strike('r', 'x'), 'space',
     eqn.sup('r_', ['space', '_2']),
   ]);
 
   eqn.addForm('13', [
     eqn.bottomComment('Area', 'circle'),
     'equals',
-    'pi', 'space', 
+    'pi', 'space',
     eqn.sup('r_', ['space', '_2']),
   ]);
 
   eqn.addForm('14', [
     'AreaCircle',
     'equals',
-    'pi', 'space', 
+    'pi', 'space',
     eqn.sup('r_', ['space', '_2']),
   ]);
 
