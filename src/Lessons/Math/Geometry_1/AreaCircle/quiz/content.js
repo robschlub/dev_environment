@@ -39,15 +39,13 @@ class Content extends LessonContent {
       setContent: '<p id="id_lesson__quiz_question">asdf</p>',
       modifiers: {
       },
-      setInfo: `<ul>
-          <li></li>
-          </ul>
-      `,
+      setInfo: [
+      'Touch the answer box to enter the answer, then touch the check button to submit.'],
       infoModifiers: {
       },
-      interactiveElements: [
-        interactiveItem(quiz._input, 'topleft'),
-      ],
+      // interactiveElements: [
+      //   interactiveItem(quiz._input),
+      // ],
       setEnterState: () => {
       },
       showOnly: [
@@ -59,7 +57,6 @@ class Content extends LessonContent {
       ],
       setSteadyState: () => {
         quiz.newProblem();
-        console.log(quiz)
       },
     });
   }

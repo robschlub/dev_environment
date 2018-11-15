@@ -32,7 +32,7 @@ type TypeInteractiveElement = DiagramElementCollection
                               | HTMLElement;
 type TypeInteractiveElementLocation = 'center' | 'zero' | ''
                                       | 'topleft' | 'topright'
-                                      | 'vertexLeft';
+                                      | 'vertexLeft' | Point;
 type TypeInteractiveElements = Array<{
     element: TypeInteractiveElement,
     location: TypeInteractiveElementLocation,
@@ -718,6 +718,12 @@ class LessonContent {
           } else {
             diagramPosition = new Point(0, 0);
           }
+        } else if (location instanceof Point) {
+          const rect = element.getDiagramBoundingRect();
+          diagramPosition = new Point(
+            rect.left + location.x * rect.width,
+            rect.bottom + location.y * rect.height,
+          );
         } else {
           diagramPosition = element
             .getVertexSpaceDiagramPosition(element.interactiveLocation);
@@ -746,6 +752,11 @@ class LessonContent {
             cssPosition = new Point(
               rect.left - rectBase.left + rect.width * 0.05,
               rect.top - rectBase.top + rect.height * 0.5,
+            );
+          } else if (location instanceof Point) {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * location.x,
+              rect.top - rectBase.top + rect.height * location.y,
             );
           } else {
             cssPosition = new Point(

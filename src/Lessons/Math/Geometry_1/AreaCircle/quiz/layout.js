@@ -18,6 +18,8 @@ export default function lessonLayout() {
     // position: new Point(0, 0),
     // answer: new Point(0, -1.7),
     // nextSteps: new Point(0, -1.9),
+    inputInteractiveLocation: new Point(-0.54, 0.15),
+    checkInteractiveLocation: new Point(-0.28, 0.15),
     newProblem: new Point(2.2, -1.7),
     // showAnotherAnswer: new Point(-1, -1.7),
   };

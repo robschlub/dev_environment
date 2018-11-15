@@ -104,7 +104,9 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.addCircumference();
     this.addInput('input', '?', 8, 2);
     this.hasTouchableElements = true;
-    console.log(this)
+
+    this._input.interactiveLocation = this.layout.quiz.inputInteractiveLocation;
+    this._check.interactiveLocation = this.layout.quiz.checkInteractiveLocation;
   }
 
   tryAgain() {
