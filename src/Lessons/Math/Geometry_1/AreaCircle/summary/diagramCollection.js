@@ -5,11 +5,11 @@ import lessonLayout from './layout';
 // eslint-disable-next-line import/no-cycle
 import LessonDiagram from './diagram';
 
-// import ParallelCollection from '../common/diagramCollectionParallel';
+import CircleAreaCollection from '../common/diagramCollectionCircleArea';
 import CommonLessonDiagramCollection from '../common/diagramCollection';
 
 export default class DiagramCollection extends CommonLessonDiagramCollection {
-  // _parallel: ParallelCollection;
+  _circ: CircleAreaCollection;
 
   constructor(
     diagram: LessonDiagram,
@@ -18,6 +18,6 @@ export default class DiagramCollection extends CommonLessonDiagramCollection {
     const layout = lessonLayout();
     super(diagram, layout, transform);
 
-    // this.add('parallel', new ParallelCollection(diagram, this.layout));
+    this.add('circ', new CircleAreaCollection(diagram, this.layout));
   }
 }

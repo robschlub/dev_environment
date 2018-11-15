@@ -488,7 +488,6 @@ export class DiagramObjectLine extends DiagramElementCollection {
       label.pulseScaleNow(1, 1.5);
     }
     this.animateNextFrame();
-
   }
 
   addArrow(
