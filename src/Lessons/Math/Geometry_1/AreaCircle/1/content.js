@@ -32,7 +32,7 @@ class Content extends LessonContent {
 
     const common = {
       setContent: '',
-      setInfo: '',
+      setInfo: [],
       modifiers: {},
       infoModifiers: {},
       setEnterState: () => {},
@@ -101,7 +101,7 @@ class Content extends LessonContent {
     common.setInfo = ['Touch |Each| to change the height and base to a different triangle'];
     common.infoModifiers = {
       Each: highlight(colors.diagram.action),
-    }
+    };
     this.addSection(common, {
       show: [
         circ._backgroundCircle, circ._lines0, circ._poly0,
@@ -113,7 +113,7 @@ class Content extends LessonContent {
     common.setInfo = ['Touch |each| to change the height and base to a different triangle'];
     common.infoModifiers = {
       each: highlight(colors.diagram.action),
-    }
+    };
     common.setContent = 'And therefore |each_| triangle has the same |area|.';
     let show = [
       circ._backgroundCircle, circ._lines0, circ._poly0,
@@ -138,7 +138,7 @@ class Content extends LessonContent {
       b: highlight(colors.border),
       border: highlight(colors.border),
       circumference: highlight(colors.circumference),
-    }
+    };
     this.addSection(common, {
       show: [...show],
       transitionFromPrev: (done) => {
@@ -172,7 +172,6 @@ class Content extends LessonContent {
 
     common.show = [...show, circ._fill0, circ._border0];
     common.setContent = `Similarly, the outside |border_| of |all triangles| is |${leastSides}| |base| lengths.`;
-    console.log(common.setContent, common.modifiers);
 
     this.addEqnStep(circ.eqns.triRectEqn, ['1', '0'], ['1', '0'], common);
 
@@ -247,7 +246,7 @@ class Content extends LessonContent {
     common.setContent = 'The |border| of the |triangles|, is a rough |approximation| of the circle |circumference|.';
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
 
-    common.setInfo = [ 
+    common.setInfo = [
       'Touch |Area| in the equation to toggle the area fill.',
       'Touch |h| in the equation to highlight the triangle height.',
       'Touch |border| in the equation to highlight the triangle base.',
@@ -255,7 +254,7 @@ class Content extends LessonContent {
     common.setContent = 'Now, what happens when we |increase| the number of triangles?';
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common, { title: 'Refine Approximation' });
 
-    common.setInfo = [ 
+    common.setInfo = [
       `Touch |${leastSides}_|, |${midSides}_| or |${mostSides}_| to change the number of triangles.`,
       'Touch |Area| in the equation to toggle the area fill.',
       'Touch |h| in the equation to highlight the triangle height.',
@@ -276,7 +275,7 @@ class Content extends LessonContent {
     };
     this.addEqnStep(circ.eqns.triRectEqn, '3', '3', common);
 
-    common.setInfo = [ 
+    common.setInfo = [
       'Touch |Area| in the equation to toggle the area fill.',
       'Touch |h| in the equation to highlight the triangle height.',
       'Touch |border| in the equation to highlight the triangle base.',
@@ -299,7 +298,7 @@ class Content extends LessonContent {
 
     common.setContent = 'Also the |height| gets closer to the circle\'s |radius| length.';
     this.addEqnStep(circ.eqns.triRectEqn, '4', '4', common);
-    common.setInfo = [ 
+    common.setInfo = [
       'Touch |Area| in the equation to toggle the area fill.',
       'Touch |r| in the equation to highlight the circle\'s radius.',
       'Touch |border| in the equation to highlight the triangle base.',
@@ -315,7 +314,7 @@ class Content extends LessonContent {
 
     common.setInfo = [
       'Touch |border| to highlight the border.',
-      'Touch |circumference| to highlight the circle\'s circumference.', 
+      'Touch |circumference| to highlight the circle\'s circumference.',
       'Touch |Area| in the equation to toggle the area fill.',
       'Touch |r| in the equation to highlight the circle\'s radius.',
       'Touch |border| in the equation to highlight the triangle base.',
@@ -325,7 +324,7 @@ class Content extends LessonContent {
     this.addEqnStep(circ.eqns.triRectEqn, '6', '7', common);
     common.setInfo = [
       'Touch |border| to highlight the border.',
-      'Touch |circumference| to highlight the circle\'s circumference.', 
+      'Touch |circumference| to highlight the circle\'s circumference.',
       'Touch |Area| in the equation to toggle the area fill.',
       'Touch |r| in the equation to highlight the circle\'s radius.',
     ];

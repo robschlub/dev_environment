@@ -49,7 +49,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
 
   addDiameter() {
     const diameter = this.diagram.objects.line(this.layout.diameter);
-    this.add('diameter', diameter)
+    this.add('diameter', diameter);
   }
 
   addArea() {
@@ -140,7 +140,6 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     if (this.answer === answer) {
       return 'correct';
     }
-    console.log(this.answer, answer)
     return 'incorrect';
   }
 
@@ -189,7 +188,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       this._area.label.setText('Area = ?');
       this._area._label.setPosition(this.layout.area.positions.low);
       return question;
-    }
+    };
 
     const findAreaFromDiameter = () => {
       const question = `What is the |area| of a circle with |diameter| ${diameter}?`;
@@ -199,7 +198,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       this._area.label.setText('Area = ?');
       this._area._label.setPosition(this.layout.area.positions.low);
       return question;
-    }
+    };
 
     const findAreaFromCircumference = () => {
       const question = `What is the |area| of a circle with |circumference ${circumference}|?`;
@@ -209,7 +208,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
       this._area.label.setText('Area = ?');
       this._area._label.setPosition(this.layout.area.positions.middle);
       return question;
-    }
+    };
 
     this._circumference.hideAll();
     this._radius.hideAll();

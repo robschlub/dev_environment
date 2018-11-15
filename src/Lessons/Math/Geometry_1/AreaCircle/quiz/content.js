@@ -1,7 +1,7 @@
 // @flow
 import {
   LessonContent,
-  interactiveItem,
+  // interactiveItem,
 } from '../../../../../js/Lesson/LessonContent';
 // import {
 //   click, centerH,
@@ -31,7 +31,7 @@ class Content extends LessonContent {
     const quiz = diag._quiz;
 
     // this.addSection({
-      // title: 'Enter_title_here',
+    // title: 'Enter_title_here',
     //   setContent: ['What is the area of a circle'],
     // });
     this.addSection({
@@ -40,7 +40,7 @@ class Content extends LessonContent {
       modifiers: {
       },
       setInfo: [
-      'Touch the answer box to enter the answer, then touch the check button to submit.'],
+        'Touch the answer box to enter the answer, then touch the check button to submit.'],
       infoModifiers: {
       },
       // interactiveElements: [

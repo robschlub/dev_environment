@@ -226,7 +226,8 @@ const CommonQuizMixin = superclass => class extends superclass {
     id: string,
     defaultText: string = '',
     numDigits: number = 10,
-    decimalPlaces: number = 0) {
+    decimalPlaces: number = 0,
+  ) {
     this.add('input', this.makeEntryBox('input1', defaultText, numDigits, decimalPlaces));
     if (this.layout.quiz) {
       if (this.layout.quiz.input) {
