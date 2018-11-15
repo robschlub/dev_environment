@@ -13,6 +13,8 @@ import { DiagramObjectLine } from './Line';
 import type {
   TypeLineOptions,
 } from './Line';
+import type { TypeLabelOptions } from './EquationLabel';
+import EquationLabel from './EquationLabel';
 
 export default class DiagramObjects {
   webgl: WebGLInstance;
@@ -58,6 +60,13 @@ export default class DiagramObjects {
     return new DiagramObjectLine(
       this.shapes, this.equation, this.isTouchDevice, this.animateNextFrame,
       optionsToUse,
+    );
+  }
+
+  label(...options: Array<TypeLabelOptions>) {
+    const optionsToUse = Object.assign({}, ...options);
+    return new EquationLabel(
+      this.equation, optionsToUse,
     );
   }
 

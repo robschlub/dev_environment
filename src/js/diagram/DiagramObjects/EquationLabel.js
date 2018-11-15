@@ -5,7 +5,9 @@ import {
   Point, Transform, polarToRect,
 } from '../tools/g2';
 import { Equation } from '../DiagramElements/Equation/GLEquation';
-
+import type {
+  TypeVAlign, TypeHAlign,
+} from '../DiagramElements/Equation/GLEquation';
 // export type TypeEquationLabel = {
 //   eqn: Equation;
 //   updateRotation: (number, Point, number, number) => void;
@@ -13,6 +15,17 @@ import { Equation } from '../DiagramElements/Equation/GLEquation';
 //   getText: void => string;
 //   // updateScale: (Point) => void;
 // };
+
+export type TypeLabelOptions = {
+  label?: string | Equation | Array<string>,
+  color?: Array<number>,
+  scale?: number,
+  position?: Point,
+  form?: string,
+  formType?: string,
+  vAlign?: TypeVAlign,
+  hAlign?: TypeHAlign,
+};
 
 export default class EquationLabel {
   eqn: Equation;
@@ -22,16 +35,28 @@ export default class EquationLabel {
 
   constructor(
     equations: Object,
-    // diagram: Diagram,
-    labelTextOrEquation: string | Equation | Array<string> = '',
-    color: Array<number>,
-    scale: number = 0.7,
+    options: TypeLabelOptions = {},
   ) {
+    const defaultOptions = {
+      label: '',
+      color: [0, 0, 1, 1],
+      scale: 0.7,
+      position: new Point(0, 0),
+      form: '0',
+      formType: 'base',
+      vAlign: 'middle',
+      hAlign: 'center',
+    };
+    const optionsToUse = Object.assign({}, defaultOptions, options);
+    const labelTextOrEquation = optionsToUse.label;
+    const { color, scale, position } = optionsToUse;
+    const { form, formType } = optionsToUse;
+    const { vAlign, hAlign } = optionsToUse;
     let eqn;
     if (typeof labelTextOrEquation === 'string') {
       eqn = equations.makeEqn();
       eqn.createElements({ base: labelTextOrEquation }, color);
-      eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(0, 0);
+      eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(position);
       eqn.formAlignment.fixTo = new Point(0, 0);
       eqn.formAlignment.hAlign = 'center';
       eqn.formAlignment.vAlign = 'middle';
@@ -47,15 +72,15 @@ export default class EquationLabel {
         elements[`_${index}`] = labelText;
       });
       eqn.createElements(elements, color);
-      eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(0, 0);
+      eqn.collection.transform = new Transform().scale(1, 1).rotate(0).translate(position);
       eqn.formAlignment.fixTo = new Point(0, 0);
-      eqn.formAlignment.hAlign = 'center';
-      eqn.formAlignment.vAlign = 'middle';
+      eqn.formAlignment.hAlign = hAlign;
+      eqn.formAlignment.vAlign = vAlign;
       eqn.formAlignment.scale = scale;
       labelTextOrEquation.forEach((labelText, index) => {
         eqn.addForm(`${index}`, [`_${index}`]);
       });
-      eqn.setCurrentForm('0');
+      eqn.setCurrentForm(form, formType);
     }
     this.eqn = eqn;
   }

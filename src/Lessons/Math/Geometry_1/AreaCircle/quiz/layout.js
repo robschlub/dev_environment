@@ -51,6 +51,12 @@ export default function lessonLayout() {
       color: layout.colors.radius,
       tip: new Point(0, 0),
     },
+    label: {
+      label: 'c',
+      color: layout.colors.radius,
+      scale: 0.7,
+      position: new Point(0, rad * 1.3),
+    },
   };
   return layout;
 }

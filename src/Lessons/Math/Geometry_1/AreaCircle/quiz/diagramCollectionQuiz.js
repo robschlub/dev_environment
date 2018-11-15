@@ -42,20 +42,25 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
   }
 
   addCircumference() {
-    const circumference = this.diagram.shapes.collection(new Transform().translate(0, 0));
-    const line = this.diagram.shapes.polygon(this.layout.circumference.line);
+    const lay = this.layout.circumference;
+    const circumference = this.diagram.shapes.collection(new Transform()
+      .translate(0, 0));
+    const line = this.diagram.shapes.polygon(lay.line);
     const arrow = this.diagram.shapes.arrow(
-      this.layout.circumference.arrow.width,
+      lay.arrow.width,
       0,
-      this.layout.circumference.arrow.height,
+      lay.arrow.height,
       0,
-      this.layout.circumference.arrow.color,
-      this.layout.circumference.arrow.position,
-      this.layout.circumference.arrow.tip,
-      this.layout.circumference.arrow.rotation,
+      lay.arrow.color,
+      lay.arrow.position,
+      lay.arrow.tip,
+      lay.arrow.rotation,
     );
+    const label = this.diagram.objects.label(lay.label);
     circumference.add('line', line);
     circumference.add('arrow', arrow);
+    circumference.add('label', label.eqn.collection);
+    circumference.label = label;
     this.add('circumference', circumference);
   }
 

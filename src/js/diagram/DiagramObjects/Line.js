@@ -129,7 +129,7 @@ class LineLabel extends EquationLabel {
     orientation: TypeLineLabelOrientation = 'horizontal',
     linePosition: number = 0.5,     // number where 0 is end1, and 1 is end2
   ) {
-    super(equation, labelText, color);
+    super(equation, { label: labelText, color });
     this.offset = offset;
     this.location = location;
     this.subLocation = subLocation;
