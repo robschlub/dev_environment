@@ -137,7 +137,7 @@ export default class QuizParallel1Collection extends CommonQuizMixin(CommonDiagr
     this.addCircle();
     this.addRadius();
     this.addCircumference();
-    this.addInput('input', '?', 3);
+    this.addInput('input', '?', 8, 2);
     // this.addQuestion();
     // this.add('input', this.makeEntryBox('a1', '?', 3));
     // this._input.setPosition(this.layout.input);

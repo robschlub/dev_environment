@@ -222,8 +222,17 @@ const CommonQuizMixin = superclass => class extends superclass {
     );
   }
 
-  addInput(id: string, defaultText: string = '', numDigits: number = 10) {
-    this.add('input', this.makeEntryBox('input1', defaultText, numDigits));
+  addInput(
+    id: string,
+    defaultText: string = '',
+    numDigits: number = 10,
+    decimalPlaces: number = 0) {
+    this.add('input', this.makeEntryBox('input1', defaultText, numDigits, decimalPlaces));
+    if (this.layout.quiz) {
+      if (this.layout.quiz.input) {
+        this._input.setPosition(this.layout.quiz.input);
+      }
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -231,6 +240,7 @@ const CommonQuizMixin = superclass => class extends superclass {
     id: string,
     placeholder: string = '',
     numDigits: number = 10,
+    decimalPlaces: number = 0,
   ) {
     const container = document.createElement('div');
     container.classList.add('lesson__quiz_input_container');
@@ -248,13 +258,30 @@ const CommonQuizMixin = superclass => class extends superclass {
     input.oninput = () => {
       const str = input.value.slice();
       let validStr = '';
+      let decimalCount = 0;
+      let decimal = false;
       for (let i = 0; i < str.length; i += 1) {
         if (validStr.length >= numDigits) {
           i = str.length;
         } else {
           const char = str.charAt(i);
-          if (char >= '0' && char <= '9') {
-            validStr = `${validStr}${char}`;
+          if (
+            (char >= '0' && char <= '9')
+            || (char === '.' && decimalPlaces > 0)) {
+            let valid = true;
+            if (decimal === false && char === '.') {
+              decimal = true;
+            } else if (decimal === true && char === '.') {
+              valid = false;
+            } else if (decimal === true) {
+              decimalCount += 1;
+              if (decimalCount > decimalPlaces) {
+                valid = false;
+              }
+            }
+            if (valid) {
+              validStr = `${validStr}${char}`;
+            }
           }
         }
       }

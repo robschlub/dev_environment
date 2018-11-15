@@ -12,6 +12,16 @@ import {
 /* eslint-disable key-spacing, comma-spacing, no-multi-spaces, space-in-parens */
 export default function lessonLayout() {
   const layout: Object = commonLessonLayout();
+  layout.quiz = {
+    check: new Point(1.3, -1.7),
+    input: new Point(0, -1.7),
+    // position: new Point(0, 0),
+    // answer: new Point(0, -1.7),
+    // nextSteps: new Point(0, -1.9),
+    // newProblem: new Point(0, -1.7),
+    // showAnotherAnswer: new Point(-1, -1.7),
+  };
+
   const width = 0.01;
   const rad = 1;
   layout.circle = {
