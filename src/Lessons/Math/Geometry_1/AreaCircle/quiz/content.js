@@ -35,7 +35,7 @@ class Content extends LessonContent {
     //   setContent: ['What is the area of a circle'],
     // });
     this.addSection({
-      title: 'Enter_title_here',
+      title: 'Area of a Circle',
       setContent: '<p id="id_lesson__quiz_question">asdf</p>',
       modifiers: {
       },

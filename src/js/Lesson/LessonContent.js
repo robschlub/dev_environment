@@ -178,9 +178,28 @@ class Section {
     if (typeof info === 'string') {
       info = [info];
     }
-    info.forEach((element) => {
+
+    let contentInBullets = [];
+    if (info.length > 1) {
+      info.forEach((line) => {
+        contentInBullets.push(`<li>${line}</li>`);
+      });
+      htmlText = '<ul>';
+    } else {
+      contentInBullets = info;
+    }
+
+    contentInBullets.forEach((element) => {
       htmlText = `${htmlText}${element}`;
     });
+
+    if (info.length > 1) {
+      htmlText = `${htmlText}</ul>`;
+    }
+
+    // info.forEach((element) => {
+    //   htmlText = `${htmlText}${element}`;
+    // });
     // htmlText += '\n';
     htmlText = applyModifiers(htmlText, this.infoModifiers);
 

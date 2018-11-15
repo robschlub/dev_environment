@@ -34,6 +34,10 @@ class Content extends LessonContent {
       title: 'Summary',
       setContent: '|Circle area| is the product of |π| and the |radius| squared.',
       modifiers: { radius: highlight(colors.radius) },
+      setInfo: [
+        'Touch |Area| in the equation to toggle the area fill.',
+        'Touch |r| in the equation to highlight the circle\'s radius.',
+      ],
       showOnly: [circ],
       show: [circ._circle, circ._radius],
       setSteadyState: () => {
