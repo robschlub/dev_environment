@@ -1,5 +1,4 @@
 // @flow
-// import * as vertexShapes from './DrawingObjects/VertexObject/vertexShapes';
 import WebGLInstance from './webgl/webgl';
 import getShaders from './webgl/shaders';
 
@@ -7,7 +6,6 @@ import {
   Rect, Point, Transform,
   spaceToSpaceTransform, minAngleDiff,
 } from './tools/g2';
-import * as tools from './tools/mathtools';
 import { isTouchDevice } from '../tools/tools';
 import {
   DiagramElementCollection, DiagramElementPrimative,
@@ -16,36 +14,9 @@ import GlobalAnimation from './webgl/GlobalAnimation';
 // eslint-disable-next-line import/no-cycle
 import Gesture from './Gesture';
 import DrawContext2D from './DrawContext2D';
-
-import {
-  PolyLine, PolyLineCorners,
-} from './DiagramElements/PolyLine';
-import type {
-  TypePolyLineBorderToPoint,
-} from './DiagramElements/PolyLine';
-import {
-  Polygon, PolygonFilled, PolygonLine,
-} from './DiagramElements/Polygon';
-import RadialLines from './DiagramElements/RadialLines';
-import HorizontalLine from './DiagramElements/HorizontalLine';
-import RectangleFilled from './DiagramElements/RectangleFilled';
-import type { TypeRectangleFilledReference } from './DiagramElements/RectangleFilled';
-import Lines from './DiagramElements/Lines';
-import Arrow from './DiagramElements/Arrow';
-import { AxisProperties } from './DiagramElements/Plot/AxisProperties';
-import Axis from './DiagramElements/Plot/Axis';
-
-import {
-  DiagramText, DiagramFont, TextObject,
-} from './DrawingObjects/TextObject/TextObject';
-import HTMLObject from './DrawingObjects/HTMLObject/HTMLObject';
-import Integral from './DiagramElements/Equation/Integral';
-import {
-  EquationForm, createEquationElements, Equation,
-} from './DiagramElements/Equation/GLEquation';
-// import type { EquationElementsType } from './DiagramElements/Equation/GLEquation';
-import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
-// import { DiagramEquationNew } from './Equation';
+import DiagramPrimatives from './DiagramPrimatives/DiagramPrimatives';
+import DiagramEquation from './DiagramEquation/DiagramEquation';
+import DiagramObjects from './DiagramObjects/DiagramObjects';
 
 // There are several coordinate spaces that need to be considered for a
 // diagram.
@@ -62,507 +33,6 @@ import HTMLEquation from './DiagramElements/Equation/HTMLEquation';
 // It is then transformed by the element colleciton
 // It is then transformed by the diagram
 // it is then transformed into GL Space
-
-// eslint-disable-next-line no-use-before-define
-function equation(diagram: Diagram, high: boolean = false) {
-  let webgl = diagram.webglLow;
-  let draw2D = diagram.draw2DLow;
-  if (high) {
-    webgl = diagram.webglHigh;
-    draw2D = diagram.draw2DHigh;
-  }
-  function elements(
-    elems: Object,
-    colorOrFont: Array<number> | DiagramFont = [],
-    firstTransform: Transform = new Transform('elements'),
-  ): DiagramElementCollection {
-    return createEquationElements(
-      elems,
-      draw2D,
-      colorOrFont,
-      diagram.limits,
-      firstTransform,
-    );
-  }
-
-  function vinculum(color: Array<number> = [1, 1, 1, 1]) {
-    return diagram.shapes.horizontalLine(
-      new Point(0, 0),
-      1, 1, 0,
-      color,
-      new Transform('vinculum').scale(1, 1).translate(0, 0),
-    );
-  }
-
-  function strike(color: Array<number> = [1, 1, 1, 1]) {
-    return diagram.shapes.horizontalLine(
-      new Point(0, 0),
-      1, 1, 0,
-      color,
-      new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
-    );
-  }
-
-  function xStrike(color: Array<number> = [1, 1, 1, 1]) {
-    const cross = diagram.shapes.collection(new Transform('strike').scale(1, 1).rotate(0).translate(0, 0));
-    const strike1 = diagram.shapes.horizontalLine(
-      new Point(0, 0),
-      1, 1, 0,
-      color,
-      new Transform('strike').scale(1, 1).rotate(0).translate(0, 0),
-    );
-    const strike2 = strike1._dup();
-    cross.add('s1', strike1);
-    cross.add('s2', strike2);
-    return cross;
-  }
-
-  function integral(
-    numLines: number = 1,
-    color: Array<number> = [1, 1, 1, 1],
-  ) {
-    return new Integral(
-      webgl,
-      color,
-      numLines,
-      new Transform('integral').scale(1, 1).translate(0, 0),
-      diagram.limits,
-    );
-  }
-
-  function make(equationCollection: DiagramElementCollection) {
-    return new EquationForm(equationCollection);
-  }
-
-  function makeHTML(id: string = '', classes: string | Array<string> = []) {
-    return new HTMLEquation(id, classes);
-  }
-
-  function makeEqn() {
-    return new Equation(
-      draw2D,
-      diagram.limits,
-      // diagram.diagramToGLSpaceTransform,
-    );
-  }
-
-  function makeDescription(id: string) {
-    return diagram.shapes.htmlElement(
-      document.createElement('div'),
-      id,
-      'lesson__equation_description',
-      new Point(0, 0), 'middle', 'left',
-    );
-  }
-
-  return {
-    elements,
-    vinculum,
-    integral,
-    make,
-    makeHTML,
-    makeEqn,
-    strike,
-    xStrike,
-    makeDescription,
-  };
-}
-
-// eslint-disable-next-line no-use-before-define
-function shapes(diagram: Diagram, high: boolean = false) {
-  let webgl = diagram.webglLow;
-  let draw2D = diagram.draw2DLow;
-  if (high) {
-    webgl = diagram.webglHigh;
-    draw2D = diagram.draw2DHigh;
-  }
-
-  function polyLine(
-    points: Array<Point>,
-    close: boolean,
-    lineWidth: number,
-    color: Array<number>,
-    borderToPoint: TypePolyLineBorderToPoint = 'never',
-    transform: Transform | Point = new Transform(),
-  ) {
-    return PolyLine(
-      webgl, points, close, lineWidth,
-      color, borderToPoint, transform, diagram.limits,
-    );
-  }
-
-  function text(
-    textInput: string,
-    location: Point,
-    color: Array<number>,
-    fontInput: DiagramFont | null = null,
-  ) {
-    let font = new DiagramFont(
-      'Times New Roman',
-      'italic',
-      0.2,
-      '200',
-      'center',
-      'middle',
-      color,
-    );
-    if (fontInput !== null) {
-      font = fontInput;
-    }
-    const dT = new DiagramText(new Point(0, 0), textInput, font);
-    const to = new TextObject(draw2D, [dT]);
-    return new DiagramElementPrimative(
-      to,
-      new Transform().scale(1, 1).translate(location.x, location.y),
-      color,
-      diagram.limits,
-    );
-  }
-
-  function htmlElement(
-    elementToAdd: HTMLElement | Array<HTMLElement>,
-    id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
-    classes: string = '',
-    location: Point = new Point(0, 0),
-    alignV: 'top' | 'bottom' | 'middle' = 'middle',
-    alignH: 'left' | 'right' | 'center' = 'left',
-  ) {
-    const element = document.createElement('div');
-    if (classes && element) {
-      const classArray = classes.split(' ');
-      classArray.forEach(c => element.classList.add(c.trim()));
-    }
-    if (Array.isArray(elementToAdd)) {
-      elementToAdd.forEach(e => element.appendChild(e));
-    } else {
-      element.appendChild(elementToAdd);
-    }
-    element.style.position = 'absolute';
-    element.setAttribute('id', id);
-    diagram.htmlCanvas.appendChild(element);
-    const hT = new HTMLObject(diagram.htmlCanvas, id, new Point(0, 0), alignV, alignH);
-    const diagramElement = new DiagramElementPrimative(
-      hT,
-      new Transform().scale(1, 1).translate(location.x, location.y),
-      [1, 1, 1, 1],
-      diagram.limits,
-    );
-    // diagramElement.setFirstTransform();
-    return diagramElement;
-  }
-
-  function htmlText(
-    textInput: string,
-    id: string = `id__temp_${Math.round(Math.random() * 10000)}`,
-    classes: string = '',
-    location: Point = new Point(0, 0),
-    alignV: 'top' | 'bottom' | 'middle' = 'middle',
-    alignH: 'left' | 'right' | 'center' = 'left',
-  ) {
-    // const inside = document.createTextNode(textInput);
-    const inside = document.createElement('div');
-    inside.innerHTML = textInput;
-    return this.htmlElement(inside, id, classes, location, alignV, alignH);
-  }
-
-  function arrow(
-    width: number = 1,
-    legWidth: number = 0.5,
-    height: number = 1,
-    legHeight: number = 0.5,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-    tip: Point = new Point(0, 0),
-    rotation: number = 0,
-  ) {
-    return Arrow(
-      webgl, width, legWidth, height, legHeight,
-      tip, rotation, color, transform, diagram.limits,
-    );
-  }
-  function lines(
-    linePairs: Array<Array<Point>>,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return Lines(webgl, linePairs, color, transform, diagram.limits);
-  }
-  function grid(
-    bounds: Rect,
-    xStep: number,
-    yStep: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    const linePairs = [];
-    // const xLimit = tools.roundNum(bounds.righ + xStep);
-    for (let x = bounds.left; tools.roundNum(x, 8) <= bounds.right; x += xStep) {
-      linePairs.push([new Point(x, bounds.top), new Point(x, bounds.bottom)]);
-    }
-    for (let y = bounds.bottom; tools.roundNum(y, 8) <= bounds.top; y += yStep) {
-      linePairs.push([new Point(bounds.left, y), new Point(bounds.right, y)]);
-    }
-    return lines(linePairs, color, transform);
-  }
-
-  function polyLineCorners(
-    points: Array<Point>,
-    close: boolean,
-    cornerLength: number,
-    lineWidth: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return PolyLineCorners(
-      webgl, points, close,
-      cornerLength, lineWidth, color, transform, diagram.limits,
-    );
-  }
-  function polygon(
-    numSides: number,
-    radius: number,
-    lineWidth: number,
-    rotation: number,
-    direction: -1 | 1,
-    numSidesToDraw: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return Polygon(
-      webgl, numSides, radius, lineWidth,
-      rotation, direction, numSidesToDraw, color, transform, diagram.limits,
-    );
-  }
-  function polygonFilled(
-    numSides: number,
-    radius: number,
-    rotation: number,
-    numSidesToDraw: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-    textureLocation: string = '',
-    textureCoords: Rect = new Rect(0, 0, 1, 1),
-  ) {
-    return PolygonFilled(
-      webgl, numSides, radius,
-      rotation, numSidesToDraw, color, transform, diagram.limits, textureLocation, textureCoords,
-    );
-  }
-  function polygonLine(
-    numSides: number,
-    radius: number,
-    rotation: number,
-    direction: -1 | 1,
-    numSidesToDraw: number,
-    numLines: number,     // equivalent to thickness - integer
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return PolygonLine(
-      webgl, numSides, radius,
-      rotation, direction, numSidesToDraw, numLines, color, transform, diagram.limits,
-    );
-  }
-  function horizontalLine(
-    start: Point,
-    length: number,
-    width: number,
-    rotation: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return HorizontalLine(
-      webgl, start, length, width,
-      rotation, color, transform, diagram.limits,
-    );
-  }
-  function rectangleFilled(
-    topLeft: TypeRectangleFilledReference,
-    width: number,
-    height: number,
-    cornerRadius: number,
-    cornerSides: number,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return RectangleFilled(
-      webgl, topLeft, width, height,
-      cornerRadius, cornerSides, color, transform, diagram.limits,
-    );
-  }
-  function radialLines(
-    innerRadius: number = 0,
-    outerRadius: number = 1,
-    width: number = 0.05,
-    dAngle: number = Math.PI / 4,
-    color: Array<number>,
-    transform: Transform | Point = new Transform(),
-  ) {
-    return RadialLines(
-      webgl, innerRadius, outerRadius, width,
-      dAngle, color, transform, diagram.limits,
-    );
-  }
-  function collection(transformOrPoint: Transform | Point = new Transform()) {
-    let transform = new Transform();
-    if (transformOrPoint instanceof Point) {
-      transform = transform.translate(transformOrPoint.x, transformOrPoint.y);
-    } else {
-      transform = transformOrPoint._dup();
-    }
-    return new DiagramElementCollection(transform, diagram.limits);
-  }
-  function axes(
-    width: number = 1,
-    height: number = 1,
-    limits: Rect = new Rect(-1, -1, 2, 2),
-    yAxisLocation: number = 0,
-    xAxisLocation: number = 0,
-    stepX: number = 0.1,
-    stepY: number = 0.1,
-    fontSize: number = 0.13,
-    showGrid: boolean = true,
-    color: Array<number> = [1, 1, 1, 0],
-    gridColor: Array<number> = [1, 1, 1, 0],
-    location: Transform | Point = new Transform(),
-    decimalPlaces: number = 1,
-  ) {
-    const lineWidth = 0.01;
-    const xProps = new AxisProperties('x', 0);
-
-    xProps.minorTicks.mode = 'off';
-    xProps.minorGrid.mode = 'off';
-    xProps.majorGrid.mode = 'off';
-
-    xProps.length = width;
-    xProps.width = lineWidth;
-    xProps.limits = { min: limits.left, max: limits.right };
-    xProps.color = color.slice();
-    xProps.title = '';
-
-    xProps.majorTicks.start = limits.left;
-    xProps.majorTicks.step = stepX;
-    xProps.majorTicks.length = lineWidth * 5;
-    xProps.majorTicks.offset = -xProps.majorTicks.length / 2;
-    xProps.majorTicks.width = lineWidth * 2;
-    xProps.majorTicks.labelMode = 'off';
-    xProps.majorTicks.labels = tools.range(
-      xProps.limits.min,
-      xProps.limits.max,
-      stepX,
-    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
-      if (v === yAxisLocation.toString() && yAxisLocation === xAxisLocation) {
-        return `${v}     `;
-      }
-      return v;
-    });
-
-    // xProps.majorTicks.labels[xProps.majorTicks.labels / 2] = '   0';
-    xProps.majorTicks.labelOffset = new Point(
-      0,
-      xProps.majorTicks.offset - fontSize * 0.1,
-    );
-    xProps.majorTicks.labelsHAlign = 'center';
-    xProps.majorTicks.labelsVAlign = 'top';
-    xProps.majorTicks.fontColor = color.slice();
-    xProps.majorTicks.fontSize = fontSize;
-    xProps.majorTicks.fontWeight = '400';
-
-    const xAxis = new Axis(
-      webgl, draw2D, xProps,
-      new Transform().scale(1, 1).rotate(0)
-        .translate(0, xAxisLocation - limits.bottom * height / 2),
-      diagram.limits,
-    );
-
-    const yProps = new AxisProperties('x', 0);
-    yProps.minorTicks.mode = 'off';
-    yProps.minorGrid.mode = 'off';
-    yProps.majorGrid.mode = 'off';
-
-    yProps.length = height;
-    yProps.width = xProps.width;
-    yProps.limits = { min: limits.bottom, max: limits.top };
-    yProps.color = xProps.color;
-    yProps.title = '';
-    yProps.rotation = Math.PI / 2;
-
-    yProps.majorTicks.step = stepY;
-    yProps.majorTicks.start = limits.bottom;
-    yProps.majorTicks.length = xProps.majorTicks.length;
-    yProps.majorTicks.offset = -yProps.majorTicks.length / 2;
-    yProps.majorTicks.width = xProps.majorTicks.width;
-    yProps.majorTicks.labelMode = 'off';
-    yProps.majorTicks.labels = tools.range(
-      yProps.limits.min,
-      yProps.limits.max,
-      stepY,
-    ).map(v => v.toFixed(decimalPlaces)).map((v) => {
-      if (v === xAxisLocation.toString() && yAxisLocation === xAxisLocation) {
-        return '';
-      }
-      return v;
-    });
-
-    // yProps.majorTicks.labels[3] = '';
-    yProps.majorTicks.labelOffset = new Point(
-      yProps.majorTicks.offset - fontSize * 0.2,
-      0,
-    );
-    yProps.majorTicks.labelsHAlign = 'right';
-    yProps.majorTicks.labelsVAlign = 'middle';
-    yProps.majorTicks.fontColor = xProps.majorTicks.fontColor;
-    yProps.majorTicks.fontSize = fontSize;
-    yProps.majorTicks.fontWeight = xProps.majorTicks.fontWeight;
-
-    const yAxis = new Axis(
-      webgl, draw2D, yProps,
-      new Transform().scale(1, 1).rotate(0)
-        .translate(yAxisLocation - limits.left * width / 2, 0),
-      diagram.limits,
-    );
-
-    let transform = new Transform();
-    if (location instanceof Point) {
-      transform = transform.translate(location.x, location.y);
-    } else {
-      transform = location._dup();
-    }
-    const xy = collection(transform);
-    if (showGrid) {
-      const gridLines = grid(
-        new Rect(0, 0, width, height),
-        tools.roundNum(stepX * width / limits.width, 8),
-        tools.roundNum(stepY * height / limits.height, 8),
-        gridColor, new Transform().scale(1, 1).rotate(0).translate(0, 0),
-      );
-      xy.add('grid', gridLines);
-    }
-    xy.add('y', yAxis);
-    xy.add('x', xAxis);
-    return xy;
-  }
-
-  return {
-    polyLine,
-    polyLineCorners,
-    polygon,
-    polygonFilled,
-    polygonLine,
-    horizontalLine,
-    arrow,
-    collection,
-    lines,
-    grid,
-    text,
-    radialLines,
-    htmlText,
-    htmlElement,
-    axes,
-    rectangleFilled,
-  };
-}
-
 class Diagram {
   canvasLow: HTMLCanvasElement;
   canvasHigh: HTMLCanvasElement;
@@ -595,6 +65,10 @@ class Diagram {
   equation: Object;
   equationLow: Object;
   equationHigh: Object;
+  objects: DiagramObjects;
+  objectsLow: DiagramObjects;
+  objectsHigh: DiagramObjects;
+
   backgroundColor: Array<number>;
   fontScale: number;
   layout: Object;
@@ -711,6 +185,9 @@ class Diagram {
     this.equationLow = this.getEquations(false);
     this.equationHigh = this.getEquations(true);
     this.equation = this.equationLow;
+    this.objectsLow = this.getObjects(false);
+    this.objectsHigh = this.getObjects(true);
+    this.objects = this.objectsLow;
     this.createDiagramElements();
     if (this.elements.name === '') {
       this.elements.name = 'diagramRoot';
@@ -724,11 +201,39 @@ class Diagram {
   }
 
   getShapes(high: boolean = false) {
-    return shapes(this, high);
+    let webgl = this.webglLow;
+    let draw2D = this.draw2DLow;
+    if (high) {
+      webgl = this.webglHigh;
+      draw2D = this.draw2DHigh;
+    }
+    return new DiagramPrimatives(
+      webgl, draw2D,
+      this.htmlCanvas, this.limits,
+    );
   }
 
   getEquations(high: boolean = false) {
-    return equation(this, high);
+    let shapes = this.shapesLow;
+    if (high) {
+      shapes = this.shapesHigh;
+    }
+    return new DiagramEquation(shapes);
+  }
+
+  getObjects(high: boolean = false) {
+    let shapes = this.shapesLow;
+    let equation = this.equationLow;
+    if (high) {
+      shapes = this.shapesHigh;
+      equation = this.equationHigh;
+    }
+    return new DiagramObjects(
+      shapes,
+      equation,
+      this.isTouchDevice,
+      this.animateNextFrame.bind(this),
+    );
   }
 
   sizeHtmlText() {
@@ -1070,8 +575,8 @@ class Diagram {
     return true;
   }
 
-  stop(flag: ?mixed) {
-    this.elements.stop(flag);
+  stop(cancelled: boolean = true, forceSetToEndOfPlan: boolean = false) {
+    this.elements.stop(cancelled, forceSetToEndOfPlan);
   }
 
   // To add elements to a diagram, either this method can be overridden,

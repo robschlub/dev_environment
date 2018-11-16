@@ -7,6 +7,8 @@ import {
   DiagramElementPrimative, DiagramElementCollection,
 } from '../diagram/Element';
 import { setOnClicks, applyModifiers } from '../tools/htmlGenerator';
+// import type { TypeEquationNavigator } from '../'
+import { Equation } from '../diagram/DiagramElements/Equation/GLEquation';
 
 function initializeItemSelector(
   methodToExecute: Function,
@@ -29,7 +31,8 @@ type TypeInteractiveElement = DiagramElementCollection
                               | string
                               | HTMLElement;
 type TypeInteractiveElementLocation = 'center' | 'zero' | ''
-                                      | 'topleft' | 'topright';
+                                      | 'topleft' | 'topright'
+                                      | 'vertexLeft' | Point;
 type TypeInteractiveElements = Array<{
     element: TypeInteractiveElement,
     location: TypeInteractiveElementLocation,
@@ -175,9 +178,34 @@ class Section {
     if (typeof info === 'string') {
       info = [info];
     }
-    info.forEach((element) => {
+
+    let contentInBullets = [];
+    if (info.length > 1) {
+      info.forEach((line) => {
+        if (line.startsWith('<li>') || line.startsWith('<ul>') || line.startsWith('</ul>')) {
+          contentInBullets.push(line);
+        } else {
+          contentInBullets.push(`<li>${line}</li>`);
+        }
+      });
+      if (info[0] !== '<ul>') {
+        htmlText = '<ul>';
+      }
+    } else {
+      contentInBullets = info;
+    }
+
+    contentInBullets.forEach((element) => {
       htmlText = `${htmlText}${element}`;
     });
+
+    if (info.length > 1 && info[0] !== '<ul>') {
+      htmlText = `${htmlText}</ul>`;
+    }
+
+    // info.forEach((element) => {
+    //   htmlText = `${htmlText}${element}`;
+    // });
     // htmlText += '\n';
     htmlText = applyModifiers(htmlText, this.infoModifiers);
 
@@ -246,7 +274,7 @@ class Section {
             elementIsVisible = true;
           }
         } else if (element instanceof DiagramElementPrimative
-                   && element.vertices instanceof HTMLObject) {
+                   && element.drawingObject instanceof HTMLObject) {
           if (element.isShown) {
             elementIsVisible = true;
           }
@@ -406,7 +434,7 @@ class Section {
       this.interactiveElementsOnly.forEach((element) => {
         if (element instanceof DiagramElementCollection
           || element instanceof DiagramElementPrimative) {
-          this.replaceOrAddInteractiveElement(element, 'center');
+          this.replaceOrAddInteractiveElement(element, '');
         } else {
           this.replaceOrAddInteractiveElement(element.element, element.location);
         }
@@ -434,7 +462,7 @@ class Section {
       diagramElements.forEach((element) => {
         this.interactiveElementList.push({
           element,
-          location: 'center',
+          location: '',
         });
       });
     }
@@ -444,7 +472,7 @@ class Section {
       this.interactiveElements.forEach((element) => {
         if (element instanceof DiagramElementCollection
           || element instanceof DiagramElementPrimative) {
-          this.replaceOrAddInteractiveElement(element, 'center');
+          this.replaceOrAddInteractiveElement(element, '');
         } else {
           this.replaceOrAddInteractiveElement(element.element, element.location);
         }
@@ -697,6 +725,30 @@ class LessonContent {
         } else if (location === 'topright') {
           const rect = element.getDiagramBoundingRect();
           diagramPosition = new Point(rect.right, rect.top);
+        } else if (location === 'vertexLeft') {
+          const borders = element.getVertexSpaceBoundaries();
+          let minXPoint;
+          borders.forEach((border) => {
+            border.forEach((borderPoint) => {
+              if (minXPoint == null) {
+                minXPoint = borderPoint._dup();
+              } else if (minXPoint.x > borderPoint.x) {
+                minXPoint = borderPoint._dup();
+              }
+            });
+          });
+          if (minXPoint) {
+            minXPoint.y = 0;
+            diagramPosition = element.getVertexSpaceDiagramPosition(minXPoint);
+          } else {
+            diagramPosition = new Point(0, 0);
+          }
+        } else if (location instanceof Point) {
+          const rect = element.getDiagramBoundingRect();
+          diagramPosition = new Point(
+            rect.left + location.x * rect.width,
+            rect.bottom + location.y * rect.height,
+          );
         } else {
           diagramPosition = element
             .getVertexSpaceDiagramPosition(element.interactiveLocation);
@@ -720,6 +772,16 @@ class LessonContent {
             cssPosition = new Point(
               rect.left - rectBase.left + rect.width * 0.95,
               rect.top - rectBase.top + rect.height * 0.25,
+            );
+          } else if (location === 'vertexLeft') {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * 0.05,
+              rect.top - rectBase.top + rect.height * 0.5,
+            );
+          } else if (location instanceof Point) {
+            cssPosition = new Point(
+              rect.left - rectBase.left + rect.width * location.x,
+              rect.top - rectBase.top + rect.height * location.y,
             );
           } else {
             cssPosition = new Point(
@@ -770,6 +832,173 @@ class LessonContent {
       s[key] = section[key];
     });
     this.sections.push(s);
+  }
+
+  addEqnsStep(
+    equations: Array<[
+      { eqn: Equation } & Equation,  // or navigator
+      string | Array<string>,        // From form
+      string | Array<string>,        // To Form
+    ]>,
+    ...sectionObjects: Array<Object>
+  ) {
+    const userSections = Object.assign({}, ...sectionObjects);
+
+    const eqnSection = {
+      transitionFromPrev: (done) => {
+        let time = null;
+        let count = 0;
+        const eqnDone = () => {
+          count += 1;
+          if (count === equations.length) {
+            done();
+          }
+        };
+        equations.forEach((equation) => {
+          const [nav, fromForm, toForm] = equation;
+          let eqn = nav;
+          if (eqn.eqn) {
+            ({ eqn } = nav);
+          }
+          let formChange = true;
+          if (Array.isArray(fromForm)) {
+            nav.showForm(fromForm[0], fromForm[1]);
+            if (Array.isArray(toForm)) {
+              if (fromForm[0] === toForm[0]
+                && fromForm[1] === toForm[1]) {
+                formChange = false;
+              }
+            }
+          } else {
+            nav.showForm(fromForm);
+            if (typeof toForm === 'string') {
+              if (fromForm === toForm) {
+                formChange = false;
+              }
+            }
+          }
+          let nextForm;
+          if (Array.isArray(toForm)) {
+            nextForm = eqn.getForm(toForm[0], toForm[1]);
+          } else {
+            nextForm = eqn.getForm(toForm);
+          }
+          // const nextForm = eqn.getForm(toForm);
+          if (nextForm != null && nextForm.time != null) {
+            if (typeof nextForm.time === 'number') {
+              ({ time } = nextForm);
+            } else if (nextForm.time.fromPrev != null) {
+              time = nextForm.time.fromPrev;
+            }
+          }
+          const cleanup = () => {
+            eqn.collection.stop(true, true);
+            eqnDone();
+          };
+
+          if (nextForm != null && formChange) {
+            nextForm.animatePositionsTo(0, 0.5, time, 0.5, cleanup);
+          } else {
+            eqnDone();
+          }
+        });
+      },
+      setSteadyState: () => {
+        if (userSections.setSteadyState != null) {
+          userSections.setSteadyState();
+        }
+        equations.forEach((equation) => {
+          const [nav, , toForm] = equation;
+          // const nav = equation.eqnOrNav;
+          // const { toForm } = equation;
+          if (Array.isArray(toForm)) {
+            nav.showForm(toForm[0], toForm[1]);
+          } else {
+            nav.showForm(toForm);
+          }
+        });
+      },
+    };
+    const section = Object.assign({}, ...sectionObjects, eqnSection);
+    this.addSection(section);
+  }
+
+  addEqnStep(
+    equationOrNavigator: { eqn: Equation } & Equation,
+    fromForm: string | Array<string>,
+    toForm: string | Array<string>,
+    ...sectionObjects: Array<Object>
+  ) {
+    this.addEqnsStep([[
+      equationOrNavigator,
+      fromForm,
+      toForm,
+    ]], ...sectionObjects);
+  //   const nav = equationOrNavigator;
+  //   let eqn = equationOrNavigator;
+  //   if (eqn.eqn) {
+  //     ({ eqn } = equationOrNavigator);
+  //   }
+  //   const userSections = Object.assign({}, ...sectionObjects);
+
+  //   const eqnSection = {
+  //     transitionFromPrev: (done) => {
+  //       let time = null;
+  //       let formChange = true;
+  //       if (Array.isArray(fromForm)) {
+  //         nav.showForm(fromForm[0], fromForm[1]);
+  //         if (Array.isArray(toForm)) {
+  //           if (fromForm[0] === toForm[0]
+  //             && fromForm[1] === toForm[1]) {
+  //             formChange = false;
+  //           }
+  //         }
+  //       } else {
+  //         nav.showForm(fromForm);
+  //         if (typeof toForm === 'string') {
+  //           if (fromForm === toForm) {
+  //             formChange = false;
+  //           }
+  //         }
+  //       }
+  //       let nextForm;
+  //       if (Array.isArray(toForm)) {
+  //         nextForm = eqn.getForm(toForm[0], toForm[1]);
+  //       } else {
+  //         nextForm = eqn.getForm(toForm);
+  //       }
+  //       // const nextForm = eqn.getForm(toForm);
+  //       if (nextForm != null && nextForm.time != null) {
+  //         if (typeof nextForm.time === 'number') {
+  //           ({ time } = nextForm);
+  //         } else if (nextForm.time.fromPrev != null) {
+  //           time = nextForm.time.fromPrev;
+  //         }
+  //       }
+  //       const cleanup = () => {
+  //         eqn.collection.stop(true, true);
+  //         done();
+  //       };
+
+  //       if (nextForm != null && formChange) {
+  //         nextForm.animatePositionsTo(0, 0.5, time, 0.5, cleanup);
+  //       } else {
+  //         done();
+  //       }
+  //     },
+  //     setSteadyState: () => {
+  //       if (userSections.setSteadyState != null) {
+  //         userSections.setSteadyState();
+  //       }
+  //       if (Array.isArray(toForm)) {
+  //         nav.showForm(toForm[0], toForm[1]);
+  //       } else {
+  //         nav.showForm(toForm);
+  //       }
+  //     },
+  //   };
+  //   const section = Object.assign({}, ...sectionObjects, eqnSection);
+  //   this.addSection(section);
   }
 }
 

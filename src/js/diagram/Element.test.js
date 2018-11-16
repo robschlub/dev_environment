@@ -1,8 +1,8 @@
 import {
   DiagramElementPrimative,
   DiagramElementCollection,
-  AnimationPhase,
 } from './Element';
+import { AnimationPhase } from './AnimationPhase';
 import {
   Point, Transform, TransformLimit,
 } from './tools/g2';
@@ -137,18 +137,21 @@ describe('Animationa and Movement', () => {
         test('Three phase animation plan', () => {
           // Phase 1 rotates to 1 radian in 1 second
           const phase1 = new AnimationPhase(
+            null,
             new Transform().scale(1, 1).rotate(1).translate(0, 0),
-            1, 1, linear,
+            1, 1, null, true, linear,
           );
           // Phase 2 rotates back to 0 radians in 1 second
           const phase2 = new AnimationPhase(
+            null,
             new Transform().scale(1, 1).rotate(0).translate(0, 0),
-            1, -1, linear,
+            1, -1, null, true, linear,
           );
           // Phase 3 rotates to -1 radians in 1 second
           const phase3 = new AnimationPhase(
+            null,
             new Transform().scale(1, 1).rotate(-1).translate(0, 0),
-            1, -1, linear,
+            1, -1, null, true, linear,
           );
           const callback = jest.fn();         // Callback mock
           expect(callback.mock.calls).toHaveLength(0);
@@ -362,7 +365,7 @@ describe('Animationa and Movement', () => {
       });
       test('pulse thick', () => {
         const draw = jest.fn();
-        element.vertices.drawWithTransformMatrix = draw;
+        element.drawingObject.drawWithTransformMatrix = draw;
         element.pulseThickNow(1, 1.2, 5);
         element.draw(identity, 0.0);
         element.draw(identity, 0.5);
@@ -549,7 +552,7 @@ describe('Animationa and Movement', () => {
         const copy = square._dup();
         expect(copy).toEqual(square);
         expect(copy).not.toBe(square);
-        expect(copy.vertices).toBe(square.vertices);
+        expect(copy.drawingObject).toBe(square.drawingObject);
 
         // change a default value DiagramElement base class
         square.isShown = false;
@@ -629,8 +632,8 @@ describe('Animationa and Movement', () => {
       // new Point(0.5, 0), 0.1, Point.Unity()));
       expect(collection.transform.round()).toEqual(new Transform()
         .scale(1, 1).rotate(0.1).translate(0.5, 0));
-      const velocity = new Transform().scale(0, 0).rotate(0.1).translate(0, 0);
-      expect(collection.state.movement.velocity).toEqual(velocity);
+      const velocity = new Transform().scale(0, 0).rotate(0.1).translate(-0.5, 0);
+      expect(collection.state.movement.velocity.isEqualTo(velocity)).toBe(true);
 
       const moveFreeProps = collection.move.freely;
       moveFreeProps.deceleration = new TransformLimit(1, 0.01, 1);
@@ -643,7 +646,7 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isMovingFreely).toBe(true);
 
       collection.draw(new Transform(), 10);
-      expect(collection.state.movement.velocity).toEqual(velocity);
+      expect(collection.state.movement.velocity.isEqualTo(velocity)).toEqual(true);
 
       // After one second, should have rotated to:
       //  rotation: 0.1 + 0.1*1 - 0.5*0.01*1*1
@@ -652,7 +655,7 @@ describe('Animationa and Movement', () => {
       expect(collection.state.movement.velocity.round()).toEqual(new Transform()
         .scale(0, 0).rotate(0.09).translate(0, 0));
       expect(collection.transform.round()).toEqual(new Transform()
-        .scale(1, 1).rotate(0.195).translate(0.5, 0));
+        .scale(1, 1).rotate(0.195).translate(0.38, 0));
 
       // At 5 seconds, velocity becomes 0, so rotation is
       //  rotation: 0.1 + 0.1*5 - 0.5*0.01*5*5
@@ -663,7 +666,7 @@ describe('Animationa and Movement', () => {
       expect(collection.state.isMovingFreely).toBe(false);
       expect(collection.state.movement.velocity).toEqual(collection.state.movement.velocity.zero());
       expect(collection.transform.round()).toEqual(new Transform()
-        .scale(1, 1).rotate(0.475).translate(0.5, 0));
+        .scale(1, 1).rotate(0.475).translate(0.38, 0));
 
       // Check all the callbacks were called once
       expect(callbackAnim.mock.calls).toHaveLength(1);
@@ -787,7 +790,8 @@ describe('Animationa and Movement', () => {
         expect(collection.order).not.toBe(copy.order);
         expect(collection._square).toEqual(copy._square);
         expect(collection._square).not.toBe(copy._square);
-        expect(collection._square.vertices).toBe(copy._square.vertices);
+        expect(collection._square.drawingObject)
+          .toBe(copy._square.drawingObject);
         expect(collection.transform).toEqual(copy.transform);
         expect(collection.transform).not.toBe(copy.transform);
         expect(collection._square).toBe(collection.elements.square);

@@ -1,10 +1,10 @@
 // @flow
 
 import {
-  Transform, Point,
+  Transform, Point, getMaxTimeFromVelocity,
 } from '../../js/diagram/tools/g2';
 import {
-  DiagramElement, DiagramElementCollection, getMaxTimeFromVelocity,
+  DiagramElement, DiagramElementCollection,
 } from '../../js/diagram/Element';
 import Diagram from '../../js/diagram/Diagram';
 
@@ -112,7 +112,7 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
   moveToScenario(
     element: DiagramElement,
     scenario: TypeScenario = null,
-    animationTime: ?number = null,
+    animationTimeOrVelocity: ?number = null,    // null uses velocity
     callback: ?() => void = null,
     rotDirection: -1 | 1 | 0 | 2 = 0,
   ) {
@@ -120,10 +120,10 @@ export default class CommonDiagramCollection extends DiagramElementCollection {
     const target = getTarget(element, scenario, this.layout);
     let time = 1;
     const estimatedTime = this.getTimeToMoveToScenario(element, scenario, rotDirection);
-    if (animationTime == null) {
+    if (animationTimeOrVelocity == null) {
       time = estimatedTime;
     } else {
-      time = animationTime;
+      time = animationTimeOrVelocity;
     }
     if (time > 0 && estimatedTime !== 0) {
       element.animateTo(target, time, 0, rotDirection, callback);

@@ -48,9 +48,9 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
 
     this.add('lines', new ThreeLinesCollection(diagram, this.layout));
     this._lines.setPosition(this.layout.quizA1.position);
-    this._lines._line1._label._label.vertices.setText('');
-    this._lines._line2._label._label.vertices.setText('');
-    this._lines._line3._label._label.vertices.setText('');
+    // this._lines._line1._label._label.drawingObject.setText('');
+    // this._lines._line2._label._label.drawingObject.setText('');
+    // this._lines._line3._label._label.drawingObject.setText('');
     this._lines._line1.isMovable = false;
     this._lines._line1.isTouchable = false;
     this._lines._line1.hasTouchableElements = false;
@@ -137,7 +137,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
 
     // $FlowFixMe
     const knownAngleElement = this._lines[`_angle${knownAngle}`];
-    knownAngleElement._label._a.vertices.setText(`${knownAngleValue}º`);
+    knownAngleElement._label._a.drawingObject.setText(`${knownAngleValue}º`);
     knownAngleElement.label.eqn.showForm('a');
     knownAngleElement._arc.show();
     knownAngleElement.show();
@@ -146,7 +146,7 @@ export default class QuizAngle1Collection extends CommonQuizMixin(CommonDiagramC
 
     // $FlowFixMe
     const unknownAngleElement = this._lines[`_angle${unknownAngle}`];
-    unknownAngleElement._label._a.vertices.setText('?º');
+    unknownAngleElement._label._a.drawingObject.setText('?º');
     unknownAngleElement.label.eqn.showForm('a');
     unknownAngleElement._arc.show();
     unknownAngleElement.show();

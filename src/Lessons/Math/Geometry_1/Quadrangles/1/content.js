@@ -458,31 +458,35 @@ class Content extends LessonContent {
 
     this.addSection(common, {
       interactiveElements: [
-        rect._navAB._prev,
-        rect._navAB._prevDescription,
-        rect._navAB._refresh,
+        // rect._navAB.prev,
+        // rect._navAB.prevDescription,
+        // rect._navAB.refresh,
+        // rect._navAB.nextDescription,
+        // rect._navAB.next,
       ],
       setSteadyState: () => {
-        rect._navAB.showAll();
+        // rect._navAB.showAll();
         rect._rect._angleB.showForm('0');
-        rect.abEqn.showForm('0');
+        rect._navAB.showForm('0');
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-        rect._navAB.updateButtons();
+        // rect._navAB.updateButtons();
       },
     });
 
     this.addSection(common, {
       interactiveElements: [
-        rect._navAB._prev,
-        rect._navAB._prevDescription,
-        rect._navAB._refresh,
+        // rect._navAB.prev,
+        // rect._navAB.prevDescription,
+        // rect._navAB.refresh,
+        // rect._navAB.next,
+        // rect._navAB.nextDescription,
       ],
       setSteadyState: () => {
-        rect._navAB.showAll();
+        // rect._navAB.showAll();
         rect._rect._angleB.showForm('1');
-        rect.abEqn.showForm('6');
+        rect._navAB.showForm('6');
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-        rect._navAB.updateButtons();
+        // rect._navAB.updateButtons();
         rect.pulseAngleB();
       },
     });
@@ -567,9 +571,9 @@ class Content extends LessonContent {
         rect._rect._angleB.showForm('1');
         rect._rect._angleC.showForm('0');
         rect._rect._angleD.showForm('0');
-        rect._navAD.showAll();
-        rect._navAD.updateButtons();
-        rect.adEqn.showForm('0');
+        rect._navAD.showForm('0');
+        // rect._navAD.updateButtons();
+        // rect.adEqn.showForm('0');
       },
     });
 
@@ -579,10 +583,11 @@ class Content extends LessonContent {
         rect._rect._angleB.showForm('1');
         rect._rect._angleC.showForm('0');
         rect._rect._angleD.showForm('1');
-        rect._navAD.showAll();
-        rect.adEqn.showForm('4');
+        rect._navAD.showForm('0');
+        // rect._navAD.showAll();
+        // rect.adEqn.showForm('4');
         rect._rect._angleD.showForm('1');
-        rect._navAD.updateButtons();
+        // rect._navAD.updateButtons();
         rect.pulseAngleD();
       },
     });
@@ -628,9 +633,10 @@ class Content extends LessonContent {
         rect._rect._angleC.showForm('0');
         rect._rect._angleD.showForm('1');
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-        rect._navBC.showAll();
-        rect.bcEqn.showForm('0');
-        rect._navBC.updateButtons();
+        rect._navBC.showForm('0');
+        // rect._navBC.showAll();
+        // rect.bcEqn.showForm('0');
+        // rect._navBC.updateButtons();
       },
     });
 
@@ -648,9 +654,10 @@ class Content extends LessonContent {
         rect._rect._angleC.showForm('1');
         rect._rect._angleD.showForm('1');
         rect.setScenario(rect._rect, layout.rect.scenarios.analysis);
-        rect._navBC.showAll();
-        rect.bcEqn.showForm('11');
-        rect._navBC.updateButtons();
+        rect._navBC.showForm('0');
+        // rect._navBC.showAll();
+        // rect.bcEqn.showForm('11');
+        // rect._navBC.updateButtons();
         rect.pulseAngleC();
       },
     });

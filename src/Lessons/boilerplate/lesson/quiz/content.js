@@ -1,10 +1,11 @@
 // @flow
 import {
-  LessonContent, interactiveItem,
+  LessonContent,
+  // interactiveItem,
 } from '../../../../../js/Lesson/LessonContent';
-import {
-  click, centerH,
-} from '../../../../../js/tools/htmlGenerator';
+// import {
+//   click, centerH,
+// } from '../../../../../js/tools/htmlGenerator';
 import LessonDiagram from './diagram';
 import lessonLayout from './layout';
 import imgLink from '../tile.png';
@@ -12,7 +13,7 @@ import imgLinkGrey from '../tile-grey.png';
 import details from '../details';
 
 const layout = lessonLayout();
-const { colors } = layout;
+// const { colors } = layout;
 
 class Content extends LessonContent {
   setTitle() {
@@ -26,8 +27,8 @@ class Content extends LessonContent {
   }
 
   addSections() {
-    const diag = this.diagram.elements;
-    //const quiz = diag._quiz;
+    // const diag = this.diagram.elements;
+    // const quiz = diag._quiz;
 
     this.addSection({
       title: 'Enter_title_here',
