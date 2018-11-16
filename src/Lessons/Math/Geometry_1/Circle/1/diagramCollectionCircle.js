@@ -73,7 +73,7 @@ function makeMoon(shapes: Object) {
 
 function makeRing(shapes: Object) {
   return shapes.polygon({
-    side: layout.circlePoints,
+    sides: layout.circlePoints,
     radius: layout.ring.radius,
     color: colors.anchor,
     point: new Point(0, 0),
@@ -86,7 +86,7 @@ function makeRing(shapes: Object) {
 function makeCircleShape(shapes: Object, radius) {
   return shapes.polygon({
     sides: layout.circlePoints,
-    length: radius,
+    radius,
     width: layout.linewidth,
     color: colors.circle,
     transform: new Transform().scale(1, 1).translate(0, 0),
