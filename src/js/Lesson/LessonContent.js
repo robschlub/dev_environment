@@ -182,9 +182,15 @@ class Section {
     let contentInBullets = [];
     if (info.length > 1) {
       info.forEach((line) => {
-        contentInBullets.push(`<li>${line}</li>`);
+        if (line.startsWith('<li>') || line.startsWith('<ul>') || line.startsWith('</ul>')) {
+          contentInBullets.push(line);
+        } else {
+          contentInBullets.push(`<li>${line}</li>`);
+        }
       });
-      htmlText = '<ul>';
+      if (info[0] !== '<ul>') {
+        htmlText = '<ul>';
+      };
     } else {
       contentInBullets = info;
     }
@@ -193,7 +199,7 @@ class Section {
       htmlText = `${htmlText}${element}`;
     });
 
-    if (info.length > 1) {
+    if (info.length > 1 && info[0] !== '<ul>') {
       htmlText = `${htmlText}</ul>`;
     }
 
