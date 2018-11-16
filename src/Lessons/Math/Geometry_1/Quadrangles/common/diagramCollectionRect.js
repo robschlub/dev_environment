@@ -6,20 +6,8 @@ import {
 import {
   DiagramElementCollection,
 } from '../../../../../js/diagram/Element';
-// import { Equation } from '../../../../../js/diagram/DiagramElements/Equation/GLEquation';
-// import {
-//   removeRandElement, rand,
-// } from '../../../../../js/diagram/tools/mathtools';
 import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection';
-// import type { TypeScenario } from '../../../../LessonsCommon/DiagramCollection';
-
-// import makeTriangle from '../../../../LessonsCommon/tools/triangle';
-// import type {
-//   TypeTriangle, TypeTriangleAngle, TypeTriangleLabel,
-// } from '../../../../LessonsCommon/tools/triangle';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
-
-import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 import {
@@ -30,7 +18,6 @@ import type {
   TypeADEquationCollection, TypeADEquation,
   TypeBCEquationCollection, TypeBCEquation,
 } from './equationAngles';
-import makeEquationNavigator from '../../../../LessonsCommon/tools/equationNavigator';
 
 export default class RectCollection extends CommonDiagramCollection {
   diagram: LessonDiagram;
@@ -67,24 +54,30 @@ export default class RectCollection extends CommonDiagramCollection {
   }
 
   addRect() {
-    const makeL = (p1, p2, labelText, show) => {
-      const line = makeLine(
-        this.diagram, 'end', 1, this.layout.lineWidth,
-        this.layout.colors.lines, show,
-      );
-      line.setEndPoints(p1, p2);
-      line.setPosition(p1);
-      line.addLabel(labelText, 0.05, 'inside', 'top', 'horizontal');
+    const makeL = (p1, p2, labelText) => {
+      const line = this.diagram.objects.line({
+        p1,
+        p2,
+        width: this.layout.lineWidth,
+        color: this.layout.colors.lines,
+        label: {
+          text: labelText,
+          offset: 0.05,
+          location: 'inside',
+          subLocation: 'top',
+          orientation: 'horizontal',
+        },
+      });
       const name = Array.isArray(labelText) ? labelText[0] : labelText;
       this._rect.add(`line${name}`, line);
     };
     const { points } = this.layout.rect;
     const halfLine = this.layout.lineWidth / 2;
-    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), ['C', 'A'], true);
-    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), ['D', 'B'], true);
-    makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A', true);
-    makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B', true);
-    makeL(points[0], points[2], 'E', true);
+    makeL(points[2].sub(0, halfLine), points[3].add(0, halfLine), ['C', 'A']);
+    makeL(points[3].add(halfLine, 0), points[0].sub(halfLine, 0), ['D', 'B']);
+    makeL(points[0].add(0, halfLine), points[1].sub(0, halfLine), 'A');
+    makeL(points[1].sub(halfLine, 0), points[2].add(halfLine, 0), 'B');
+    makeL(points[0], points[2], 'E');
   }
 
   addRightAngles() {
@@ -162,10 +155,18 @@ export default class RectCollection extends CommonDiagramCollection {
 
   pulseSideLabels() {
     const scale = 1.8;
-    this._rect._lineA._label.pulseScaleNow(1, scale);
-    this._rect._lineB._label.pulseScaleNow(1, scale);
-    this._rect._lineC._label.pulseScaleNow(1, scale);
-    this._rect._lineD._label.pulseScaleNow(1, scale);
+    if (this._rect._lineA._label) {
+      this._rect._lineA._label.pulseScaleNow(1, scale);
+    }
+    if (this._rect._lineB._label) {
+      this._rect._lineB._label.pulseScaleNow(1, scale);
+    }
+    if (this._rect._lineC._label) {
+      this._rect._lineC._label.pulseScaleNow(1, scale);
+    }
+    if (this._rect._lineD._label) {
+      this._rect._lineD._label.pulseScaleNow(1, scale);
+    }
     this.diagram.animateNextFrame();
   }
 
@@ -265,14 +266,22 @@ export default class RectCollection extends CommonDiagramCollection {
 
   toggleOppositeSides() {
     if (this.oppositeSidesFlag) {
-      this._rect._lineA._label.pulseScaleNow(1, 2);
-      this._rect._lineC._label.pulseScaleNow(1, 2);
+      if (this._rect._lineA._label) {
+        this._rect._lineA._label.pulseScaleNow(1, 2);
+      }
+      if (this._rect._lineC._label) {
+        this._rect._lineC._label.pulseScaleNow(1, 2);
+      }
       this._rect._lineA.pulseWidth();
       this._rect._lineC.pulseWidth();
       this.oppositeSidesFlag = false;
     } else {
-      this._rect._lineB._label.pulseScaleNow(1, 2);
-      this._rect._lineD._label.pulseScaleNow(1, 2);
+      if (this._rect._lineB._label) {
+        this._rect._lineB._label.pulseScaleNow(1, 2);
+      }
+      if (this._rect._lineD._label) {
+        this._rect._lineD._label.pulseScaleNow(1, 2);
+      }
       this._rect._lineB.pulseWidth();
       this._rect._lineD.pulseWidth();
       this.oppositeSidesFlag = true;
@@ -284,10 +293,9 @@ export default class RectCollection extends CommonDiagramCollection {
     this.abEqn = makeABEquation(this.diagram, this.layout);
     this.adEqn = makeADEquation(this.diagram, this.layout);
     this.bcEqn = makeBCEquation(this.diagram, this.layout);
-    const makeNav = eqn => makeEquationNavigator(
-      this.diagram, eqn, 0.07, new Point(1.1, 0),
-      this.layout.colors.diagram.disabled,
-      this.layout.colors.diagram.disabledDark,
+    const makeNav = eqn => this.diagram.objects.equationNavigator(
+      eqn, new Point(0, -0.4), 'twoLine',
+      'arrows', 'center',
     );
     const navAB = makeNav(this.abEqn);
     const navAD = makeNav(this.adEqn);

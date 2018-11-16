@@ -45,17 +45,20 @@ function makeRadius(shapes: Object, layout: Object) {
   radius.isMovable = true;
   radius.pulse.transformMethod = s => new Transform().scale(1, s);
 
-  for (let i = 0; i < radius.vertices.border[0].length; i += 1) {
-    radius.vertices.border[0][i].y *= 10;
+  for (let i = 0; i < radius.drawingObject.border[0].length; i += 1) {
+    radius.drawingObject.border[0][i].y *= 10;
   }
   return radius;
 }
 
 function makeAnchor(shapes: Object, layout: Object) {
-  return shapes.polygonFilled(
-    anchorPoints, layout.linewidth * 2, 0,
-    anchorPoints, colors.anchor, new Point(0, 0),
-  );
+  return shapes.polygon({
+    fill: true,
+    sides: anchorPoints,
+    radius: layout.linewidth * 2,
+    color: colors.anchor,
+    point: new Point(0, 0),
+  });
 }
 
 function makeReference(shapes: Object, layout: Object) {

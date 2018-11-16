@@ -11,11 +11,11 @@ import { Equation } from '../../../js/diagram/DiagramElements/Equation/GLEquatio
 import { makeAngle } from './angle';
 import type { TypeAngle } from './angle';
 // import makeEquationLabel from './equationLabel';
-import { makeLine } from './line';
+// import { makeLine } from './line';
 import type {
   TypeLineLabelLocation, TypeLineLabelSubLocation,
   TypeLineLabelOrientation, TypeLine,
-} from './line';
+} from '../../../js/diagram/DiagramObjects/Line';
 
 export type TypeTriangle = {
   p1: Point;
@@ -122,12 +122,12 @@ export default function makeTriangle(
     triangle.point1.transform.updateTranslation(newP1._dup());
     triangle.point2.transform.updateTranslation(newP2._dup());
     triangle.point3.transform.updateTranslation(newP3._dup());
-    triangle._line.vertices.change([newP1, newP2, newP3]);
-    const [b1, b2, b3] = triangle._line.vertices.border[0];
+    triangle._line.drawingObject.change([newP1, newP2, newP3]);
+    const [b1, b2, b3] = triangle._line.drawingObject.border[0];
     triangle.b1 = b1;
     triangle.b2 = b2;
     triangle.b3 = b3;
-    const [ib1, ib2, ib3] = triangle._line.vertices.holeBorder[0];
+    const [ib1, ib2, ib3] = triangle._line.drawingObject.holeBorder[0];
     triangle.ib1 = ib1;
     triangle.ib2 = ib2;
     triangle.ib3 = ib3;
@@ -155,10 +155,13 @@ export default function makeTriangle(
   };
 
   triangle.makePoint = (index: number) => {
-    const point = diagram.shapes.polygonFilled(
-      100, 1, 0,
-      100, [1, 0, 0, 1], new Transform().scale(1, 1).translate(0, 0),
-    );
+    const point = diagram.shapes.polygon({
+      fill: true,
+      sides: 100,
+      radius: 1,
+      color: [1, 0, 0, 1],
+      transform: new Transform().scale(1, 1).translate(0, 0),
+    });
     const update = () => {
       const t1 = triangle.point1.transform.t();
       const t2 = triangle.point2.transform.t();
@@ -218,14 +221,18 @@ export default function makeTriangle(
     showLine: boolean = false,
     dimensionLineWidth: number = 0.01,
   ) {
-    const dimension = makeLine(
-      diagram, 'center', 1,
-      dimensionLineWidth, dimensionColor, showLine,
-    );
     const point1 = triangle[`p${index1}`];
     const point2 = triangle[`p${index2}`];
-    dimension.setEndPoints(point1, point2, offset);
-    dimension.offset = offset;
+    const dimension = diagram.objects.line({
+      vertexSpaceStart: 'center',
+      p1: point1,
+      p2: point2,
+      width: dimensionLineWidth,
+      color: dimensionColor,
+      showLine,
+      offset,
+    });
+
     triangle.add(`dimension${index1}${index2}`, dimension);
     triangle.dimensionList.push([index1, index2]);
     return dimension;

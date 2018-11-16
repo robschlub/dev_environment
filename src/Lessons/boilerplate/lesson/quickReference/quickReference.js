@@ -6,11 +6,11 @@ import * as html from '../../../../../js/tools/htmlGenerator';
 import PopupBoxCollection from '../../../../LessonsCommon/DiagramCollectionPopup';
 import details from '../details';
 
-import TODOCollection from '../common/diagramCollectionTODO';
+import XCollection from '../common/diagramCollectionX';
 
 
-export default class QRQuadrangle extends PopupBoxCollection {
-  _collection: TODOCollection;
+export default class QR_TODO extends PopupBoxCollection {
+  _collection: XCollection;
 
   constructor(
     diagram: Object,
@@ -22,7 +22,7 @@ export default class QRQuadrangle extends PopupBoxCollection {
       layout,
       transform,
       'collection',
-      TODOCollection,
+      XCollection,
     );
     this.hasTouchableElements = true;
 

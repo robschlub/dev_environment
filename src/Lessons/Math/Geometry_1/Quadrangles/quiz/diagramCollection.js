@@ -56,7 +56,7 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
   }
 
   updateQuad() {
-    this._quad._line.vertices.change([this.p1, this.p2, this.p3, this.p4]);
+    this._quad._line.drawingObject.change([this.p1, this.p2, this.p3, this.p4]);
   }
 
   updatePoints() {
@@ -92,10 +92,13 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     };
 
     const makeP = () => {
-      const point = this.diagram.shapes.polygon(
-        4, 0.1, 0.01, 0, 1, 4, [0, 0, 0, 0.01],
-        new Transform().translate(0, 0),
-      );
+      const point = this.diagram.shapes.polygon({
+        sides: 4,
+        radius: 0.1,
+        width: 0.01,
+        color: [0, 0, 0, 0.01],
+        transform: new Transform().translate(0, 0),
+      });
       return point;
     };
     quad.add('p1', makeP());
@@ -178,7 +181,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
       diagram, layout, 'q1', {}, transform,
     );
     this.add('quad', this.makeQuad());
-    this.add('input', this.makeEntryBox('a1', '?', 3));
+    // this.add('input', this.makeEntryBox('a1', '?', 3));
+    this.addInput('a1', '?', 3);
     this._input.setPosition(this.layout.input);
   }
 
@@ -202,8 +206,8 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
 
   tryAgain() {
     super.tryAgain();
-    this._input.enable();
-    this._input.setValue('');
+    // this._input.enable();
+    // this._input.setValue('');
   }
 
 
@@ -213,15 +217,15 @@ export default class DiagramCollection extends CommonQuizMixin(CommonDiagramColl
     this.calculateFuturePositions();
     this.showAngles(false);
     this.moveToFuturePositions(1, this.updateAngles.bind(this));
-    this._input.enable();
-    this._input.setValue('');
+    // this._input.enable();
+    // this._input.setValue('');
     this.diagram.animateNextFrame();
   }
 
   showAnswer() {
     super.showAnswer();
-    this._input.setValue(this.answer);
-    this._input.disable();
+    // this._input.setValue(this.answer);
+    // this._input.disable();
     this.diagram.animateNextFrame();
   }
 

@@ -61,7 +61,7 @@ export default function commonLessonLayout() {
       },
     },
     equation: {
-      position: new Point(-1.3, 1.57),
+      position: new Point(-1.2, 1.1),
       scale: 1.2,
     },
     boundary: new Rect(

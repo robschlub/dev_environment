@@ -11,8 +11,8 @@ import CommonDiagramCollection from '../../../../LessonsCommon/DiagramCollection
 // import { makeAngle } from '../../../../LessonsCommon/tools/angle';
 // import type { TypeAngle } from '../../../../LessonsCommon/tools/angle';
 
-import { makeLine } from '../../../../LessonsCommon/tools/line';
-import type { TypeLine } from '../../../../LessonsCommon/tools/line';
+// import { makeLine } from '../../../../LessonsCommon/tools/line';
+import type { TypeLine } from '../../../../../js/diagram/DiagramObjects/Line';
 
 import makeTriangle from '../../../../LessonsCommon/tools/triangle';
 import type { TypeTriangle } from '../../../../LessonsCommon/tools/triangle';
@@ -42,12 +42,12 @@ export default class SSSCollection extends CommonDiagramCollection {
   _triangleShaddow: TypeTriangle;
 
   addLines() {
-    const make = length => makeLine(
-      this.diagram,
-      'end',
-      length, this.layout.corner.width,
-      this.layout.colors.line, true,
-    );
+    const make = length => this.diagram.objects.line({
+      vertexSpaceStart: 'start',
+      length,
+      width: this.layout.corner.width,
+      color: this.layout.colors.line,
+    });
     const line1 = make(this.layout.corner.SSSProps.length1);
     const line2 = make(this.layout.corner.SSSProps.length2);
     const line3 = make(this.layout.corner.SSSProps.length3);
@@ -81,16 +81,13 @@ export default class SSSCollection extends CommonDiagramCollection {
   }
 
   addCircles() {
-    const make = (radius, color) => this.diagram.shapes.polygon(
-      this.layout.corner.SSSProps.circleSides,
+    const make = (radius, color) => this.diagram.shapes.polygon({
+      sides: this.layout.corner.SSSProps.circleSides,
       radius,
-      this.layout.corner.width / 2,
-      0,
-      1,
-      this.layout.corner.SSSProps.circleSides,
+      width: this.layout.corner.width / 2,
       color,
-      new Transform('circle').scale(1, 1).rotate(0).translate(0, 0),
-    );
+      transform: new Transform('circle').scale(1, 1).rotate(0).translate(0, 0),
+    });
     const circ2 = make(this.layout.corner.SSSProps.length2, this.layout.colors.construction);
     const circ3 = make(this.layout.corner.SSSProps.length3, this.layout.colors.construction);
     const circ2Shaddow = make(this.layout.corner.SSSProps.length2, this.layout.colors.construction);
@@ -105,12 +102,13 @@ export default class SSSCollection extends CommonDiagramCollection {
 
   addIntersects() {
     const { SSSProps } = this.layout.corner;
-    const makeIntersectPoint = () => this.diagram.shapes.polygonFilled(
-      SSSProps.intersectPointSides,
-      SSSProps.intersectPointRadius, 0, SSSProps.intersectPointSides,
-      this.layout.colors.intersect,
-      new Transform('intersect').translate(0, 0),
-    );
+    const makeIntersectPoint = () => this.diagram.shapes.polygon({
+      fill: true,
+      sides: SSSProps.intersectPointSides,
+      radius: SSSProps.intersectPointRadius,
+      color: this.layout.colors.intersect,
+      transform: new Transform('intersect').translate(0, 0),
+    });
     this.add('intersectUp', makeIntersectPoint());
     this.add('intersectDown', makeIntersectPoint());
   }
@@ -158,7 +156,7 @@ export default class SSSCollection extends CommonDiagramCollection {
         callback();
       }
     };
-    this.animateCustomTo(custom, 2, 0, finish);
+    this.animateCustomToWithDelay(0, custom, 2, 0, finish, false);
     this.diagram.animateNextFrame();
   }
 
@@ -208,11 +206,12 @@ export default class SSSCollection extends CommonDiagramCollection {
   }
 
   addSymmetryLine() {
-    const line = makeLine(
-      this.diagram, 'center', this.diagram.limits.width,
-      this.layout.corner.width / 3, this.layout.colors.diagram.dimensions,
-      true,
-    );
+    const line = this.diagram.objects.line({
+      vertexSpaceStart: 'center',
+      length: this.diagram.limits.width,
+      width: this.layout.corner.width / 3,
+      color: this.layout.colors.diagram.disabled,
+    });
     this.add('symmetry', line);
   }
 

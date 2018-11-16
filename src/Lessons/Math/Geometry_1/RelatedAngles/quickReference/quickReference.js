@@ -13,24 +13,24 @@ function showThreeLines(
   toggleFunction: Function,
   color: Array<number>,
 ) {
-  threeLines.transform.updateScale(0.7, 0.7);
+  threeLines.transform.updateScale(0.6, 0.6);
   threeLines.transform.updateRotation(0);
   threeLines.calculateFuturePositions('corresponding');
   threeLines.setFuturePositions();
-  threeLines.setPosition(0, 0.22);
+  threeLines.setPosition(0, 0.3);
   threeLines.show();
-  threeLines._line1.show();
-  threeLines._line1._end1.show();
-  threeLines._line1._end2.show();
-  threeLines._line1._mid.show();
-  threeLines._line2.show();
-  threeLines._line2._end1.show();
-  threeLines._line2._end2.show();
-  threeLines._line2._mid.show();
-  threeLines._line3.show();
-  threeLines._line3._end1.show();
-  threeLines._line3._end2.show();
-  threeLines._line3._mid.show();
+  threeLines._line1.showAll();
+  // threeLines._line1._end1.show();
+  // threeLines._line1._end2.show();
+  // threeLines._line1._mid.show();
+  threeLines._line2.showAll();
+  // threeLines._line2._end1.show();
+  // threeLines._line2._end2.show();
+  // threeLines._line2._mid.show();
+  threeLines._line3.showAll();
+  // threeLines._line3._end1.show();
+  // threeLines._line3._end2.show();
+  // threeLines._line3._mid.show();
 
   toggleFunction();
   threeLines._line1.setColor(color);
@@ -207,14 +207,14 @@ export class QROppositeAngles extends PopupBoxCollection {
     opp.show();
     opp._angleA.show();
     opp._angleC.show();
-    opp._line1.show();
-    opp._line1._end1.show();
-    opp._line1._end2.show();
-    opp._line1._mid.show();
-    opp._line2.show();
-    opp._line2._end1.show();
-    opp._line2._end2.show();
-    opp._line2._mid.show();
+    opp._line1.showAll();
+    // opp._line1._end1.show();
+    // opp._line1._end2.show();
+    // opp._line1._mid.show();
+    opp._line2.showAll();
+    // opp._line2._end1.show();
+    // opp._line2._end2.show();
+    // opp._line2._mid.show();
 
     opp.setFuturePositions();
     opp._angleA._arc.show();
