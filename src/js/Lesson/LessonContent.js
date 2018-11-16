@@ -190,7 +190,7 @@ class Section {
       });
       if (info[0] !== '<ul>') {
         htmlText = '<ul>';
-      };
+      }
     } else {
       contentInBullets = info;
     }
